@@ -26,7 +26,6 @@ AC_PROG_CXX
 
 AC_LANG(C++)
 
-
 AX_CHECK_COMPILE_FLAG([-std=c++11],
                       [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++11"])
 if test "${stdfailed-true}"; then
@@ -36,6 +35,8 @@ fi
 if "${stdfailed-true}"; then
   AC_ERROR([Unable to turn on C++11 mode with this compiler.])
 fi
+
+CF_GXX_WARNINGS
 
 AC_CONFIG_FILES([
   Makefile
