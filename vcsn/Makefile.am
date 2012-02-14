@@ -11,4 +11,12 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-
+vcsndir = $(includedir)/vcsn
+nobase_vcsn_HEADERS =				\
+  alphabets/char.hh				\
+  alphabets/setalpha.hh				\
+  core/mutable_automaton.hh			\
+  core/kind.hh					\
+  weights/b.hh					\
+  weights/z.hh					\
+  algos/dotty.hh
