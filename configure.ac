@@ -19,9 +19,10 @@ AC_PREREQ([2.61])
 
 AC_INIT([vaucanson], [2.0a], [vaucanson-bugs@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux])
-AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-xz color-tests parallel-tests])
+AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-xz
+                  color-tests parallel-tests silent-rules])
+AM_SILENT_RULES([yes])
 
-AC_PROG_CC
 AC_PROG_CXX
 
 AC_LANG(C++)
