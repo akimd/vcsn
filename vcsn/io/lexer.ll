@@ -2,7 +2,7 @@
 #include <string>
 #include <cassert>
 #include <stack>
-#include "parser.hh"
+#include "io/parse-rat-exp.hh"
 
 static unsigned int brace_level = 0;
 static unsigned int weight_level = 0;

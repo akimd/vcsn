@@ -23,3 +23,7 @@ nobase_vcsn_HEADERS =				\
   misc/escape.hh                                \
   weights/b.hh					\
   weights/z.hh
+
+BUILT_SOURCES =
+EXTRA_DIST =
+include io/local.mk
