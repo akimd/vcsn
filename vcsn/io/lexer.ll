@@ -14,20 +14,20 @@ extern int errors;
 
 #define STEP()					\
  do {						\
-   yylloc->first_line = yylloc->last_line;	\
-   yylloc->first_column = yylloc->last_column;	\
- } while (0)
+   yylloc->begin.line   = yylloc->end.line;	\
+   yylloc->begin.column = yylloc->end.column;	\
+ } while (false)
 
 #define COL(Col)				\
-  yylloc->last_column += (Col)
+  yylloc->end.column += (Col)
 
 #define LINE(Line)				\
   do{						\
-    yylloc->last_column = 1;			\
-    yylloc->last_line += (Line);		\
- } while (0)
+    yylloc->end.column = 1;			\
+    yylloc->end.line += (Line);                 \
+ } while (false)
 
-#define YY_USE_ACTION				\
+#define YY_USER_ACTION				\
   COL(yyleng);
 
 #define TOK(Token)       \
@@ -43,6 +43,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 %%
 %{
+  STEP();
 %}
 
 <INITIAL>{ /* Vcsn Syntax */
