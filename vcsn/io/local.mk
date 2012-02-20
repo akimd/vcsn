@@ -20,7 +20,7 @@ $(BISONXX): $(BISONXX_IN)
 BISONXXFLAGS =					\
   $(if $(V:0=),--verbose)
 AM_BISONFLAGS =					\
-  --report=all
+  -Wall -Werror --report=all
 
 # We do not use Automake features here.
 SOURCES_PARSE_RAT_EXP_YY =			\
