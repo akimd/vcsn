@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# Like mv $1 $2, but if the files are the same, just delete $1.
+# Status is 0 if $2 is changed, 1 otherwise.
+
+usage ()
+{
+  cat <<EOF
+usage: $0 [OPTION...] SOURCE DESTINATION
+
+Rename SOURCE as DESTINATION, but preserve the timestamps of
+DESTINATION if SOURCE and DESTINATION have equal contents.
+
+Options:
+  -c, --color       display the diffs in color if colordiff is available
+  -h, --help        display this message and exit
+  -I, --ignore-matching-lines REGEXP
+                    ignore differences in lines matching REGEXP
+  -s, --silent      do not report anything
+  -v, --verbose     display the diffs
+EOF
+  exit 0
+}
+
+diff=diff
+diffflags=-u
+verbose=false
+
+while test $# != 0
+do
+  case $1 in
+    (-c|--color)
+      # The Emacs shell and compilation-mode are really bad at
+      # displaying colors.
+      if (colordiff --version) >/dev/null 2>&1 \
+          && test -z "$INSIDE_EMACS"; then
+        diff=colordiff
+      fi
+      ;;
+
+    (-h|--help)
+      usage ;;
+
+    (-I|--ignore-matching-lines)
+      shift
+      diffflags="$diffflags -I $1";;
+
+    (-s|--silent)
+      verbose=false;;
+
+    (-v|--verbose)
+      verbose=true;;
+
+    (*)
+      if test -z "$new"; then
+        new=$1
+      else
+        old=$1
+      fi
+      ;;
+  esac
+  shift
+done
+
+if $verbose; then
+  exec 5>&1
+else
+  exec 5>/dev/null
+fi
+
+if test -r "$old" && $diff $diffflags "$old" "$new" >&5; then
+  echo >&5 "$old is unchanged"
+  # The file might have actually changed, but changes that are
+  # ignored.  In that case, we want the latest contents, but the
+  # oldest time stamp.  Since mv preserves time stamps, just set the
+  # time stamps of the new one to that of the old one.
+  touch -r "$old" "$new"
+fi
+mv -f "$new" "$old"
