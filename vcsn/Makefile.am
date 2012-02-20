@@ -20,3 +20,7 @@ nobase_vcsn_HEADERS =				\
   weights/b.hh					\
   weights/z.hh					\
   algos/dotty.hh
+
+BUILT_SOURCES =
+EXTRA_DIST =
+include io/local.mk
