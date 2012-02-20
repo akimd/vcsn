@@ -11,6 +11,6 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I build-aux/m4
 
 SUBDIRS = vcsn tests
