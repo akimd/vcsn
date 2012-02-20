@@ -20,22 +20,33 @@ sub quote ($)
   $in;
 }
 
+# Parse and pretty-print.
+sub pp ($$)
+{
+  my ($prog, $in) = @_;
+  $in = quote($in);
+  my $res = `echo  '$in' | $prog`;
+  die "failed to run: echo '$in' | $prog: $?"
+    if $? && $? != 256;
+  chomp($res);
+  $res;
+}
+
 sub check_rat_exp
 {
-  my ($verbose, @file) = @_;
+  my ($verbose, $prog, @file) = @_;
 
   foreach(@file)
     {
+      print STDERR "$file\n";
       open(IN, $_);
       foreach(<IN>)
         {
           $_ =~ m/\|([^|]*)\|([^|]*)\|/;
-          my $l = quote $1;
-          my $r = quote $2;
-          my $L = `echo  '$l' | ./main`;
-          chomp($L);
-          my $R = `echo  '$r' | ./main`;
-          chomp($R);
+          my $l = $1;
+          my $r = $2;
+          my $L = pp($prog, $l);
+          my $R = pp($prog, $r);
 
           if($L eq $R)
             {
@@ -47,9 +58,9 @@ sub check_rat_exp
               if ($verbose)
                 {
                   print "$l:\n";
-                  `echo  '$l' | ./main`;
+                  pp($prog, $l);
                   print "$r:\n";
-                  `echo  '$r' | ./main`;
+                  pp($prog, $r);
                 }
               ++$fail;
             }
@@ -57,7 +68,7 @@ sub check_rat_exp
     }
 }
 
-my $verbose = 0;
+my $verbose = 1;
 check_rat_exp($verbose, @ARGV);
 
 exit !!$fail;
