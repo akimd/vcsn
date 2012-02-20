@@ -60,6 +60,6 @@ $(addprefix $(srcdir)/, $(SOURCES_PARSE_RAT_EXP_YY)): io/parse-rat-exp.stamp
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
 
-check_PROGRAMS = rat-exp
-rat_exp_SOURCES = io/lexer.ll $(SOURCES_PARSE_RAT_EXP_YY)
+check_PROGRAMS = io/rat-exp
+io_rat_exp_SOURCES = io/lexer.ll $(SOURCES_PARSE_RAT_EXP_YY)
 
