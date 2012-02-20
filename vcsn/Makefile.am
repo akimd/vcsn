@@ -23,7 +23,8 @@ nobase_vcsn_HEADERS =				\
   misc/escape.hh				\
   weights/b.hh					\
   weights/poly.hh				\
-  weights/z.hh
+  weights/z.hh					\
+  algos/dotty.hh
 
 BUILT_SOURCES =
 EXTRA_DIST =
