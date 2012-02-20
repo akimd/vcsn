@@ -55,7 +55,7 @@ sub check_rat_exp
             }
           else
             {
-              print "$FAIL: $l == $L != $r == $R\n";
+              print "$FAIL: $l == $r: $L != $R\n";
               if ($verbose)
                 {
                   print "$l:\n";
