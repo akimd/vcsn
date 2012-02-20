@@ -22,8 +22,9 @@
     std::string* sval;
   };
 
-  #define YY_DECL\
-    int rat_exp_parse_lex(YYSTYPE* yylval, const rat_exp_parse_::location*)
+  #define YY_DECL                                                       \
+    int rat_exp_parse_lex(YYSTYPE* yylval,                              \
+                          rat_exp_parse_::location* yylloc)
   YY_DECL;
 }
 
