@@ -11,7 +11,7 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-m4_pattern_forbid([^VCSN_])
+m4_pattern_forbid([^(TC|VCSN)_])
 
 # VCSN_HEADER
 
@@ -39,6 +39,15 @@ if "${stdfailed-true}"; then
 fi
 
 CF_GXX_WARNINGS
+
+## -------------------- ##
+## Auxiliary programs.  ##
+## -------------------- ##
+
+TC_PROG([flex], [>= 2.5.4], [FLEX], [Flex scanner generator])
+AM_PROG_LEX
+TC_PROG([bison], [>= 2.4], [BISON], [Bison parser generator])
+AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 
 AC_CONFIG_FILES([
   Makefile

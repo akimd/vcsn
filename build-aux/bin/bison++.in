@@ -1,0 +1,297 @@
+#! /bin/sh
+
+# Exit status.
+status=0
+
+# Any tool failure is a failure of the script.
+set -e
+
+: ${BISON='@BISON@'}
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo "$i"
+  done | sed >&2 -e "s/^/$me: /"
+}
+
+verbose ()
+{
+  if "$verbose"; then
+    stderr "$@"
+  fi
+}
+
+fatal ()
+{
+  stderr "$@"
+  exit 1
+}
+
+usage ()
+{
+  cat <<EOF
+usage: bison++ OPTIONS... -- INPUT OUTPUT BISON-OPTIONS
+
+Options:
+  -h, --help             display this message and exit successfully
+  --location-dir=DIR     where to install position.hh and location.hh.
+                         E.g., "\$(top_srcdir)/include/foo"
+  --location-prefix=DIR  where #include must look for these headers.
+                         E.g., "foo"
+  --verbose              display diffs
+EOF
+  exit 0
+}
+
+me=$(basename $0)
+fuse_switch='@abs_srcdir@/fuse-switch'
+move_if_change='@abs_srcdir@/move-if-change --color'
+verbose=false
+
+## ---------------------- ##
+## Command line parsing.  ##
+## ---------------------- ##
+
+get_options ()
+{
+  while test $# != 0
+  do
+    # Handle --option=value by splitting apart and putting back on argv.
+    case $1 in
+      (--*=*)
+	opt=$(echo "$1" | sed -e 's/=.*//')
+	val=$(echo "$1" | sed -e 's/[^=]*=//')
+	shift
+	set dummy "$opt" "$val" ${1+"$@"}; shift
+	;;
+    esac
+
+    case $1 in
+      (-h | --help   )    usage;;
+      (--location-dir)    shift; location_dir=$1;;
+      (--location-prefix) shift; location_prefix=$1/;;
+      (--verbose)         verbose=:
+                          move_if_change="$move_if_change --verbose";;
+      (--) shift; break;;
+      (*) fatal "invalid argument: $1";;
+     esac
+     shift
+  done
+
+  input=$1
+  shift
+  output=$1
+  shift
+  bisonflags="$@"
+}
+
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+get_options "$@"
+
+input_base=$(basename "$input")
+input_dir=$(dirname "$input")
+
+output_base=$(basename "$output")
+output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
+output_dir=$(dirname "$output")
+
+: ${location_dir=$output_dir}
+
+# The namespace we are in.
+# FIXME: We need $srcdir to be able to compute it.
+namespace=parse
+
+if $BISON --xml --version >/dev/null 2>&1; then
+  bisonflags="$bisonflags --xml"
+fi
+
+# Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
+# be an absolute path depending on how ./configure is called ...
+# In that case
+
+#   bison $(srcdir)/parsetiger.yy [...]
+
+# will hard code the path in the maintainer's tree.  Hence, do not use
+# paths with Bison, chdir there.
+
+# A tmp dir.
+tmp=$output_base_noext.dir
+rm -rf $tmp
+mkdir $tmp
+
+# Compile in this dir.
+# Don't use `ln -s' as its semantics of paths sucks.
+cp $input $tmp
+cd $tmp
+set +e
+$BISON $bisonflags $input_base -o $output_base
+status=$?
+set -e
+
+
+# fix_bison_output FILE
+# ---------------------
+# Fixes in place.
+fix_bison_output ()
+{
+  local file="$1"
+  local base
+  base=$(basename "$file")
+  local base_noext
+  base_noext=$(echo "$file" | sed -e 's/\..*//')
+  perl -pi -e "
+# Fix doxygen tags.
+s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
+
+# Fix sync lines for composite paths.
+s|(^#line.*)$base_noext|\$1$input_dir/$base_noext|g
+  if '$input_dir' ne '$output_dir';
+
+# In case position.hh and location.hh were moved.
+s{include \"(position.hh|location.hh)\"}
+ {include <$location_prefix\$1>}g
+  if '$location_prefix' ne '';
+
+# Kill trailing blanks.
+s/[ \t]+\$//;
+"  "$1"
+
+  # Fuse the switches of the parser.
+  case $file in
+    (*.cc) $fuse_switch $file
+          # diff -uw $file.bak $file || true
+          ;;
+  esac
+}
+
+# compile_xml_file XML XSL OUT-EXT
+# --------------------------------
+# By transforming XML = FILE.xml with XSL.xsl, create FILE.OUT-EXT if needed.
+# "Needed" means FILE.OUT-EXT does not exist, or XML was updated.
+compile_xml_file ()
+{
+  local xml="$1"
+  local xsl="$2.xsl"
+  local out
+  out=$(basename "$xml" ".xml").$3
+
+  # "cmp NON-EXISTENT FILE" does what we want: fail.
+  if ! cmp -s "$xml" "$(out "$xml")" \
+      || test ! -f "$(out "$out")"; then
+    local compile="xsltproc $($BISON --print-datadir)/xslt/$xsl"
+    if ! $compile "$xml" >"$(tmp "$out")"; then
+      stderr "cannot convert $xml report to $out"
+      # Produce a stub for the HTML for sake of the Makefile.
+      cat >"$(tmp "$out")" <<EOF
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+  <head>
+    <title>Cannot run xsltproc</title>
+  </head>
+  <body>
+    <p>Cannot run xsltproc</p>
+  </body>
+</html>
+EOF
+    fi
+    install "$out"
+  fi
+}
+
+# out FILE
+# --------
+# Return path name of FILE once installed in its destination directory.
+out ()
+{
+  local f
+  f=$(basename "$1")
+  case $f in
+    (position.hh|location.hh) echo "$location_dir/$f";;
+    (*)                       echo "$output_dir/$f";;
+  esac
+}
+
+# out FILE
+# --------
+# Return path name of FILE in the tmp directory.
+tmp ()
+{
+  echo "$tmp/$(basename "$1")"
+}
+
+# install FILE
+# ------------
+# Install FILE in its destination directory.
+install ()
+{
+  local dest
+  dest=$(out "$1")
+  local dir
+  dir=$(dirname "$dest")
+  mkdir -p "$dir" ||
+    fatal "cannot create $dir"
+  $move_if_change "$(tmp "$1")" "$dest"
+}
+
+# Go back to where we were and use relative paths instead of using
+# absolute file names.  The messages look nicer.
+cd ..
+for file in $tmp/*
+do
+  base=$(basename $file)
+  base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
+  case $status:$base in
+    (*:$input_base)
+	# Leave it here.
+	;;
+
+    # Success or not, install it.
+    (*:*.xml)
+	# Computing the HTML is slow.  Do it when the XML changed.
+	fix_bison_output "$file"
+	compile_xml_file "$file" "xml2xhtml" "html"
+	# Compiling the dot output is quite long, it would be better
+	# to do that from the Makefile, so that -j applies.
+	# compile_xml_file "$file" "xml2dot" "dot"
+	install "$file"
+	;;
+
+    (0:*.hh)
+	fix_bison_output "$file"
+	# To save cycles, if the file differs only on sync lines,
+	# update it (to be right), but keep the original timestamps.
+	if test -r "$(out "$file")" &&
+	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q \
+                "$file" "$(out "$file")"
+        then
+	    touch -r "$(out "$file")" "$file"
+	    cp "$(out "$file")" "$(out "$file").bak"
+	    verbose "kept the stamps of $file"
+	fi
+	install "$file"
+	;;
+
+    (*:*.output)
+	install "$file"
+	;;
+
+    (0:*)
+	fix_bison_output "$file"
+	install "$file"
+	;;
+  esac
+done
+
+# Get rid of the tmp dir.
+# rm -rf $tmp
+exit $status

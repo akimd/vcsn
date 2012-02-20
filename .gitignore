@@ -1,15 +1,18 @@
-*~
-build-aux/
-*.in
-aclocal.m4
-autom4te.cache
-config.log
-config.status
-configure
-Makefile
 *.o
-\#*#
+*~
 .#*
 .deps
+/aclocal.m4
+/autom4te.cache
+/build-aux/depcomp
+/build-aux/install-sh
+/build-aux/missing
+/build-aux/ylwrap
+/config.log
+/config.status
+/configure
+Makefile
+Makefile.in
+\#*#
 
 
