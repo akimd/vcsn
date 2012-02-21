@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_set>
 #include <algorithm>
+#include "crange.hh"
 
 namespace vcsn
 {
@@ -213,19 +214,6 @@ namespace vcsn
     }
 
 
-  protected:
-    // Restrict the interface of a container to begin/end.
-    template<class C>
-    struct container_range
-    {
-    public:
-      container_range(C& cont) : cont_(cont) {}
-      typename C::iterator begin() { return cont_.begin(); }
-      typename C::iterator end()   { return cont_.end(); }
-    private:
-      C& cont_;
-    };
-
   public:
 
     container_range<tr_cont_t>
@@ -239,6 +227,35 @@ namespace vcsn
 
     container_range<st_cont_t>
     finals() { return container_range<st_cont_t>(finals_); }
+
+    container_range<tr_vector_t>
+    out(state_t s) { return container_range<tr_vector_t>(s->succ); }
+
+    container_filter_range<tr_vector_t>
+    out(state_t s, label_t w)
+    {
+      return container_filter_range<tr_vector_t>
+	(s->succ,
+	 [&] (transition_t i) { return a_.equals(i->label, w); });
+    }
+
+    container_range<tr_vector_t>
+    in(state_t s) { return container_range<tr_vector_t>(s->pred); }
+
+    container_filter_range<tr_vector_t>
+    in(state_t s, label_t w)
+    {
+      return container_filter_range<tr_vector_t>
+	(s->pred,
+	 [&] (transition_t i) { return a_.equals(i->label, w); });
+    }
+
+    container_filter_range<tr_vector_t>
+    outin(state_t s, state_t d)
+    {
+      return container_filter_range<tr_vector_t>
+	(s->succ, [&] (transition_t i) { return (i->dst == d); });
+    }
 
     state_t src_of(transition_t t) const     { return t->src; }
     state_t dst_of(transition_t t) const     { return t->dst; }

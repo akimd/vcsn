@@ -15,8 +15,9 @@ vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =				\
   alphabets/char.hh				\
   alphabets/setalpha.hh				\
-  core/mutable_automaton.hh			\
+  core/crange.hh				\
   core/kind.hh					\
+  core/mutable_automaton.hh			\
   weights/b.hh					\
   weights/z.hh					\
   algos/dotty.hh
