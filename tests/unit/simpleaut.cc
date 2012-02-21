@@ -33,7 +33,8 @@ int main()
   aut.set_transition(s1, s2, 'c', 42);
   aut.set_transition(s2, s3, 'a', 1);
   aut.set_transition(s2, s1, 'b', 1);
-  aut.set_transition(s1, s1, 'd', 2);
+  int v = aut.add_transition(aut.set_transition(s1, s1, 'd', 2), 40);
+  assert(v == 42);
   aut.set_transition(s1, s3, 'd', 1);
   vcsn::dotty(aut, std::cout);
 
@@ -50,12 +51,15 @@ int main()
       assert(aut.has_transition(i));
     }
   std::cerr << "Between s1 and s1" << std::endl;
-  for (auto i: aut.outin(s1, s2))
+  for (auto i: aut.outin(s1, s1))
     {
       std::cerr << aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
 
+  aut.add_transition(s1, s1, 'd', -42);
+  auto tj = aut.outin(s1, s1);
+  assert(tj.begin() == tj.end());
 
   aut.del_state(s1);
   vcsn::dotty(aut, std::cout);

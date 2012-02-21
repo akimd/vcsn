@@ -131,10 +131,12 @@ namespace vcsn
       set_initial(s, w_.unit());
     }
 
-    void
+    weight_t
     add_initial(state_t s, weight_t k)
     {
-      set_initial(s, w_.add(s->initial, k));
+      k = w_.add(s->initial, k);
+      set_initial(s, k);
+      return k;
     }
 
     bool
@@ -159,10 +161,12 @@ namespace vcsn
       set_final(s, w_.unit());
     }
 
-    void
+    weight_t
     add_final(state_t s, weight_t k)
     {
-      set_final(s, w_.add(s->final, k));
+      k = w_.add(s->final, k);
+      set_final(s, k);
+      return k;
     }
 
     bool
@@ -265,6 +269,48 @@ namespace vcsn
     {
       return set_transition(src, dst, w, w_.unit());
     }
+
+    weight_t
+    set_transition(transition_t t, weight_t k)
+    {
+      if (w_.is_zero(k))
+	del_transition(t);
+      else
+	t->weight = k;
+      return k;
+    }
+
+    weight_t
+    add_transition(state_t src, state_t dst, label_t w, weight_t k)
+    {
+      transition_t t = get_transition(src, dst, w);
+      if (t)
+	{
+	  k = w_.add(t->weight, k);
+	  set_transition(t, k);
+	}
+      else
+	{
+	  set_transition(src, dst, w, k);
+	}
+      return k;
+    }
+
+    weight_t
+    add_transition(state_t src, state_t dst, label_t w)
+    {
+      return add_transition(src, dst, w, w_.unit());
+    }
+
+    weight_t
+    add_transition(transition_t t, weight_t k)
+    {
+      k = w_.add(t->weight, k);
+      set_transition(t, k);
+      return k;
+    }
+
+
 
   public:
 
