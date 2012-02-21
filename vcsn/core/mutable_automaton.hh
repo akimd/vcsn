@@ -139,6 +139,12 @@ namespace vcsn
       return k;
     }
 
+    void
+    unset_initial(state_t s)
+    {
+      set_initial(s, w_.zero());
+    }
+
     bool
     is_initial(state_t s)
     {
@@ -167,6 +173,12 @@ namespace vcsn
       k = w_.add(s->final, k);
       set_final(s, k);
       return k;
+    }
+
+    void
+    unset_final(state_t s)
+    {
+      set_final(s, w_.zero());
     }
 
     bool
