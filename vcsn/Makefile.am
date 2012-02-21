@@ -20,4 +20,5 @@ nobase_vcsn_HEADERS =				\
   core/mutable_automaton.hh			\
   weights/b.hh					\
   weights/z.hh					\
-  algos/dotty.hh
+  algos/dotty.hh				\
+  factory/ladybird.hh
