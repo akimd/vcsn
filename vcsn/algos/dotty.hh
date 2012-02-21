@@ -17,7 +17,7 @@ namespace vcsn
 
     bool show_unit = w.show_unit();
 
-    out << "digraph {\n  rankdir=LR\n  node [shape=circle];\n";
+    out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
     for (auto s : aut.states())
       {
 	unsigned n = names[s] = names.size();
