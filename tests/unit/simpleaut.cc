@@ -41,17 +41,30 @@ int main()
   for (auto i: aut.out(s1, 'd'))
     {
       std::cerr << aut.dst_of(i) << std::endl;
+      assert(aut.has_transition(i));
     }
   std::cerr << "Entering s1 by b" << std::endl;
   for (auto i: aut.in(s1, 'b'))
     {
       std::cerr << aut.src_of(i) << std::endl;
+      assert(aut.has_transition(i));
     }
   std::cerr << "Between s1 and s1" << std::endl;
   for (auto i: aut.outin(s1, s2))
     {
       std::cerr << aut.src_of(i) << std::endl;
+      assert(aut.has_transition(i));
     }
 
+
+  aut.del_state(s1);
+  vcsn::dotty(aut, std::cout);
+  assert(!aut.has_state(s1));
+  assert(aut.has_state(s2));
+  assert(aut.has_state(s3));
+
+  aut.set_transition(s2, s3, 'a', 0);
+
+  vcsn::dotty(aut, std::cout);
 
 }

@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include "crange.hh"
+#include <cassert>
 
 namespace vcsn
 {
@@ -95,6 +96,10 @@ namespace vcsn
     {
       auto i = states_.find(s);
       assert(i != states_.end());
+      for (auto t : s->succ)
+	transitions_.erase(t);
+      for (auto t : s->pred)
+	transitions_.erase(t);
       states_.erase(i);
     }
 
@@ -172,15 +177,76 @@ namespace vcsn
     size_t nb_finals() const { return finals_.size(); }
 
     transition_t
+    get_transition(state_t src, state_t dst, label_t w)
+    {
+      tr_vector_t& succ = src->succ;
+      auto i =
+	std::find_if(begin(succ), end(succ),
+		     [&] (const transition_t& t)
+		     { return t->dst == dst && a_.equals(t->label, w); });
+      if (i == end(succ))
+	return 0;
+      return *i;
+    }
+
+    bool
+    has_transition(transition_t t)
+    {
+      return transitions_.find(t) != transitions_.end();
+    }
+
+    bool
+    has_transition(state_t src, state_t dst, label_t w)
+    {
+      return get_transition(src, dst, w);
+    }
+
+    void
+    del_transition(transition_t t)
+    {
+      assert(has_transition(t));
+
+      transitions_.erase(t);
+
+      auto& succ = t->src->succ;
+      auto ts = std::find(succ.begin(), succ.end(), t);
+      assert(ts != succ.end());
+      *ts = succ.back();
+      succ.pop_back();
+
+      auto& pred = t->dst->pred;
+      auto tp = std::find(pred.begin(), pred.end(), t);
+      assert(tp != succ.end());
+      *tp = pred.back();
+      pred.pop_back();
+    }
+
+    void
+    del_transition(state_t src, state_t dst, label_t w)
+    {
+      transition_t t = get_transition(src, dst, w);
+      if (t)
+	del_transition(t);
+    }
+
+    transition_t
     set_transition(state_t src, state_t dst, label_t w, weight_t k)
     {
       transition_t t = get_transition(src, dst, w);
       if (t)
 	{
-	  t->label = w;
-	  t->weight = k;
+	  if (!w_.is_zero(k))
+	    {
+	      t->label = w;
+	      t->weight = k;
+	    }
+	  else
+	    {
+	      del_transition(t);
+	      t = 0;
+	    }
 	}
-      else
+      else if (!w_.is_zero(k))
 	{
 	  t = new stored_transition_t;
 	  t->src = src;
@@ -200,20 +266,6 @@ namespace vcsn
       return set_transition(src, dst, w, w_.unit());
     }
 
-    transition_t
-    get_transition(state_t src, state_t dst, label_t w)
-    {
-      tr_vector_t& succ = src->succ;
-      auto i =
-	std::find_if(begin(succ), end(succ),
-		     [&] (const transition_t& t)
-		     { return t->dst == dst && a_.equals(t->label, w); });
-      if (i == end(succ))
-	return 0;
-      return *i;
-    }
-
-
   public:
 
     container_range<tr_cont_t>
@@ -228,9 +280,11 @@ namespace vcsn
     container_range<st_cont_t>
     finals() { return container_range<st_cont_t>(finals_); }
 
+    // Invalidated by del_transition() and del_state().
     container_range<tr_vector_t>
     out(state_t s) { return container_range<tr_vector_t>(s->succ); }
 
+    // Invalidated by del_transition() and del_state().
     container_filter_range<tr_vector_t>
     out(state_t s, label_t w)
     {
@@ -239,9 +293,11 @@ namespace vcsn
 	 [&] (transition_t i) { return a_.equals(i->label, w); });
     }
 
+    // Invalidated by del_transition() and del_state().
     container_range<tr_vector_t>
     in(state_t s) { return container_range<tr_vector_t>(s->pred); }
 
+    // Invalidated by del_transition() and del_state().
     container_filter_range<tr_vector_t>
     in(state_t s, label_t w)
     {
@@ -250,6 +306,7 @@ namespace vcsn
 	 [&] (transition_t i) { return a_.equals(i->label, w); });
     }
 
+    // Invalidated by del_transition() and del_state().
     container_filter_range<tr_vector_t>
     outin(state_t s, state_t d)
     {
