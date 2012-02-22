@@ -49,7 +49,8 @@ sub check_rat_exp
           my $L = pp($prog, $l);
           my $R = pp($prog, $r);
 
-          if($L eq $R)
+          # Empty result is a sign of failure.
+          if ($L ne '' && $L eq $R)
             {
               print "$PASS: $l == $r\n";
             }
