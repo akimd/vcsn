@@ -32,14 +32,14 @@
 {
   #include <cassert>
   #include <sstream>
-  #define MAKE_(Out, In)                        \
+  #define STRING_(Out, In)                        \
     do {                                        \
       std::stringstream o;                      \
       o << In;                                  \
       Out = new std::string(o.str());           \
     } while (false)
-  #define MAKE(Out, In)                         \
-    MAKE_(Out, '(' << In << ')')
+  #define STRING(Out, In)                         \
+    STRING_(Out, '(' << In << ')')
 }
 
 %printer { debug_stream() << *$$; } <sval>;
@@ -75,29 +75,29 @@ exps:
 
 exp:
   term
-| exp "." exp  { MAKE($$, *$1 << '.' << *$3); }
-| exp "+" exp  { MAKE($$, *$1 << '+' << *$3); }
+| exp "." exp  { STRING($$, *$1 << '.' << *$3); }
+| exp "+" exp  { STRING($$, *$1 << '+' << *$3); }
 ;
 
 term:
-  lexp weights.opt { if (!$2->empty()) MAKE($$, *$1 << "r{" << *$2 << '}'); }
+  lexp weights.opt { if (!$2->empty()) STRING($$, *$1 << "r{" << *$2 << '}'); }
 ;
 
 lexp:
-   weights.opt factors { if ($1->empty()) $$ = $2; else MAKE($$, "l{" << *$1 << '}' << *$2); }
-| lexp weights factors { MAKE($$, *$1 << "#(l{" << *$2 << '}' << *$3 << ")"); }
+   weights.opt factors { if ($1->empty()) $$ = $2; else STRING($$, "l{" << *$1 << '}' << *$2); }
+| lexp weights factors { STRING($$, *$1 << "#(l{" << *$2 << '}' << *$3 << ")"); }
 ;
 
 factors:
   factor
-| factors factor       { MAKE($$, *$1 << '#' << *$2); }
+| factors factor       { STRING($$, *$1 << '#' << *$2); }
 ;
 
 factor:
-  factor "*"                      { MAKE($$, *$1 << '*'); }
-| ONE                          { MAKE($$, "\\e"); }
-| ZERO                         { MAKE($$, "\\z"); }
-| WORD                         { MAKE($$, *$1); }
+  factor "*"                      { STRING($$, *$1 << '*'); }
+| ONE                          { STRING($$, "\\e"); }
+| ZERO                         { STRING($$, "\\z"); }
+| WORD                         { STRING($$, *$1); }
 | "(" exp ")"                  { $$ = $2; assert($1 == $3); }
 ;
 
@@ -107,8 +107,8 @@ weights.opt:
 ;
 
 weights:
-  "weight"           { MAKE_($$, *$1); }
-| "weight" weights   { MAKE_($$, *$1 << ", " << *$2); }
+  "weight"           { STRING_($$, *$1); }
+| "weight" weights   { STRING_($$, *$1 << ", " << *$2); }
 ;
 
 %%
