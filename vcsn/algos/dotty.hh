@@ -14,10 +14,10 @@ namespace vcsn
     typedef typename A::state_t state_t;
     std::unordered_map<state_t, unsigned> names;
 
-    auto& w = aut.get_weights();
-    auto& al = aut.get_alphabet();
+    auto& ws = aut.weightset();
+    auto& al = aut.alphabet();
 
-    bool show_unit = w.show_unit();
+    bool show_unit = ws.show_unit();
 
     out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
     for (auto s : aut.states())
@@ -30,7 +30,7 @@ namespace vcsn
 	    out << "  I" << n
 		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  I" << n << " -> " << n;
-	    if (show_unit || !w.is_unit(k))
+	    if (show_unit || !ws.is_unit(k))
 	      out << " [label=\"{" << k << "}\"]";
 	    out << "\n";
 	  }
@@ -40,7 +40,7 @@ namespace vcsn
 	    out << "  F" << n
 		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  " << n << " -> F" << n;
-	    if (show_unit || !w.is_unit(k))
+	    if (show_unit || !ws.is_unit(k))
 	      out << " [label=\"{" << k << "}\"]";
 	    out << "\n";
 	  }
@@ -54,7 +54,7 @@ namespace vcsn
 	out << "  " << src << " -> " << dst
 	    << " [label=\"";
 	auto k = aut.weight_of(t);
-	if (show_unit || !w.is_unit(k))
+	if (show_unit || !ws.is_unit(k))
 	  out << "{" << k << "}";
 	str_escape(out, al.format(aut.label_of(t))) << "\"]\n";
       }

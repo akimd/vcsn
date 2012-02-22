@@ -10,7 +10,7 @@
 
 namespace vcsn
 {
-  template<class Alphabet, class Weights, class Kind>
+  template<class Alphabet, class WeightSet, class Kind>
   class mutable_automaton
   {
   protected:
@@ -18,15 +18,15 @@ namespace vcsn
     class stored_transition_t;
   public:
     typedef Alphabet alphabet_t;
-    typedef Weights weights_t;
-    typedef typename weights_t::value_t weight_t;
+    typedef WeightSet weightset_t;
+    typedef typename weightset_t::value_t weight_t;
     typedef typename label_trait<Kind, Alphabet>::label_t label_t;
 
     typedef stored_state_t* state_t;
     typedef stored_transition_t* transition_t;
   protected:
     const alphabet_t& a_;
-    const weights_t& w_;
+    const weightset_t& ws_;
 
     struct stored_transition_t
     {
@@ -51,8 +51,9 @@ namespace vcsn
 
   public:
 
-    mutable_automaton(const alphabet_t& a, const weights_t& w = weights_t())
-      : a_(a), w_(w)
+    mutable_automaton(const alphabet_t& a,
+		      const weightset_t& ws = weightset_t())
+      : a_(a), ws_(ws)
     {
     }
 
@@ -64,14 +65,14 @@ namespace vcsn
 	delete s;
     }
 
-    const weights_t&
-    get_weights() const
+    const weightset_t&
+    weightset() const
     {
-      return w_;
+      return ws_;
     }
 
     const alphabet_t&
-    get_alphabet() const
+    alphabet() const
     {
       return a_;
     }
@@ -80,7 +81,7 @@ namespace vcsn
     add_state()
     {
       state_t res = new stored_state_t;
-      res->final = res->initial = w_.zero();
+      res->final = res->initial = ws_.zero();
       states_.insert(res);
       return res;
     }
@@ -119,7 +120,7 @@ namespace vcsn
     set_initial(state_t s, weight_t k)
     {
       s->initial = k;
-      if (w_.is_zero(k))
+      if (ws_.is_zero(k))
 	initials_.erase(s);
       else
 	initials_.insert(s);
@@ -128,13 +129,13 @@ namespace vcsn
     void
     set_initial(state_t s)
     {
-      set_initial(s, w_.unit());
+      set_initial(s, ws_.unit());
     }
 
     weight_t
     add_initial(state_t s, weight_t k)
     {
-      k = w_.add(s->initial, k);
+      k = ws_.add(s->initial, k);
       set_initial(s, k);
       return k;
     }
@@ -142,20 +143,20 @@ namespace vcsn
     void
     unset_initial(state_t s)
     {
-      set_initial(s, w_.zero());
+      set_initial(s, ws_.zero());
     }
 
     bool
     is_initial(state_t s)
     {
-      return !w_.is_zero(s->initial);
+      return !ws_.is_zero(s->initial);
     }
 
     void
     set_final(state_t s, weight_t k)
     {
       s->final = k;
-      if (w_.is_zero(k))
+      if (ws_.is_zero(k))
 	finals_.erase(s);
       else
 	finals_.insert(s);
@@ -164,13 +165,13 @@ namespace vcsn
     void
     set_final(state_t s)
     {
-      set_final(s, w_.unit());
+      set_final(s, ws_.unit());
     }
 
     weight_t
     add_final(state_t s, weight_t k)
     {
-      k = w_.add(s->final, k);
+      k = ws_.add(s->final, k);
       set_final(s, k);
       return k;
     }
@@ -178,13 +179,13 @@ namespace vcsn
     void
     unset_final(state_t s)
     {
-      set_final(s, w_.zero());
+      set_final(s, ws_.zero());
     }
 
     bool
     is_final(state_t s)
     {
-      return !w_.is_zero(s->final);
+      return !ws_.is_zero(s->final);
     }
 
     size_t nb_states() const { return states_.size(); }
@@ -193,13 +194,13 @@ namespace vcsn
     size_t nb_finals() const { return finals_.size(); }
 
     transition_t
-    get_transition(state_t src, state_t dst, label_t w)
+    get_transition(state_t src, state_t dst, label_t l)
     {
       tr_vector_t& succ = src->succ;
       auto i =
 	std::find_if(begin(succ), end(succ),
 		     [&] (const transition_t& t)
-		     { return t->dst == dst && a_.equals(t->label, w); });
+		     { return t->dst == dst && a_.equals(t->label, l); });
       if (i == end(succ))
 	return 0;
       return *i;
@@ -212,9 +213,9 @@ namespace vcsn
     }
 
     bool
-    has_transition(state_t src, state_t dst, label_t w)
+    has_transition(state_t src, state_t dst, label_t l)
     {
-      return get_transition(src, dst, w);
+      return get_transition(src, dst, l);
     }
 
     void
@@ -238,22 +239,22 @@ namespace vcsn
     }
 
     void
-    del_transition(state_t src, state_t dst, label_t w)
+    del_transition(state_t src, state_t dst, label_t l)
     {
-      transition_t t = get_transition(src, dst, w);
+      transition_t t = get_transition(src, dst, l);
       if (t)
 	del_transition(t);
     }
 
     transition_t
-    set_transition(state_t src, state_t dst, label_t w, weight_t k)
+    set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
-      transition_t t = get_transition(src, dst, w);
+      transition_t t = get_transition(src, dst, l);
       if (t)
 	{
-	  if (!w_.is_zero(k))
+	  if (!ws_.is_zero(k))
 	    {
-	      t->label = w;
+	      t->label = l;
 	      t->weight = k;
 	    }
 	  else
@@ -262,12 +263,12 @@ namespace vcsn
 	      t = 0;
 	    }
 	}
-      else if (!w_.is_zero(k))
+      else if (!ws_.is_zero(k))
 	{
 	  t = new stored_transition_t;
 	  t->src = src;
 	  t->dst = dst;
-	  t->label = w;
+	  t->label = l;
 	  t->weight = k;
 	  transitions_.insert(t);
 	  src->succ.push_back(t);
@@ -277,15 +278,15 @@ namespace vcsn
     }
 
     transition_t
-    set_transition(state_t src, state_t dst, label_t w)
+    set_transition(state_t src, state_t dst, label_t l)
     {
-      return set_transition(src, dst, w, w_.unit());
+      return set_transition(src, dst, l, ws_.unit());
     }
 
     weight_t
     set_transition(transition_t t, weight_t k)
     {
-      if (w_.is_zero(k))
+      if (ws_.is_zero(k))
 	del_transition(t);
       else
 	t->weight = k;
@@ -293,31 +294,31 @@ namespace vcsn
     }
 
     weight_t
-    add_transition(state_t src, state_t dst, label_t w, weight_t k)
+    add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
-      transition_t t = get_transition(src, dst, w);
+      transition_t t = get_transition(src, dst, l);
       if (t)
 	{
-	  k = w_.add(t->weight, k);
+	  k = ws_.add(t->weight, k);
 	  set_transition(t, k);
 	}
       else
 	{
-	  set_transition(src, dst, w, k);
+	  set_transition(src, dst, l, k);
 	}
       return k;
     }
 
     weight_t
-    add_transition(state_t src, state_t dst, label_t w)
+    add_transition(state_t src, state_t dst, label_t l)
     {
-      return add_transition(src, dst, w, w_.unit());
+      return add_transition(src, dst, l, ws_.unit());
     }
 
     weight_t
     add_transition(transition_t t, weight_t k)
     {
-      k = w_.add(t->weight, k);
+      k = ws_.add(t->weight, k);
       set_transition(t, k);
       return k;
     }
@@ -344,11 +345,11 @@ namespace vcsn
 
     // Invalidated by del_transition() and del_state().
     container_filter_range<tr_vector_t>
-    out(state_t s, label_t w)
+    out(state_t s, label_t l)
     {
       return container_filter_range<tr_vector_t>
 	(s->succ,
-	 [&] (transition_t i) { return a_.equals(i->label, w); });
+	 [&] (transition_t i) { return a_.equals(i->label, l); });
     }
 
     // Invalidated by del_transition() and del_state().
@@ -357,11 +358,11 @@ namespace vcsn
 
     // Invalidated by del_transition() and del_state().
     container_filter_range<tr_vector_t>
-    in(state_t s, label_t w)
+    in(state_t s, label_t l)
     {
       return container_filter_range<tr_vector_t>
 	(s->pred,
-	 [&] (transition_t i) { return a_.equals(i->label, w); });
+	 [&] (transition_t i) { return a_.equals(i->label, l); });
     }
 
     // Invalidated by del_transition() and del_state().
