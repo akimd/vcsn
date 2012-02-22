@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include "../misc/escape.hh"
 
 namespace vcsn
 {
@@ -14,6 +15,7 @@ namespace vcsn
     std::unordered_map<state_t, unsigned> names;
 
     auto& w = aut.get_weights();
+    auto& al = aut.get_alphabet();
 
     bool show_unit = w.show_unit();
 
@@ -54,7 +56,7 @@ namespace vcsn
 	auto k = aut.weight_of(t);
 	if (show_unit || !w.is_unit(k))
 	  out << "{" << k << "}";
-	out << aut.label_of(t) << "\"]\n";
+	str_escape(out, al.format(aut.label_of(t))) << "\"]\n";
       }
     out << "}" << std::endl;
   }

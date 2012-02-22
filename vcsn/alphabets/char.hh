@@ -2,6 +2,7 @@
 #define VCSN_ALPHABETS_CHAR_HH
 
 #include <string>
+#include <iostream>
 
 namespace vcsn
 {
@@ -65,6 +66,31 @@ namespace vcsn
     equals(const letter_t& l1, const letter_t& l2) const
     {
       return l1 == l2;
+    }
+
+    std::ostream&
+    output(std::ostream& o, const letter_t& w) const
+    {
+      return o << w;
+    }
+
+    std::ostream&
+    output(std::ostream& o, const word_t& w) const
+    {
+      return o << format(w);
+    }
+
+    const std::string
+    format(const letter_t w) const
+    {
+      return std::string(1, w);
+    }
+
+    const std::string&
+    format(const word_t& w) const
+    {
+      static std::string emptyword("\\e");
+      return w.empty() ? emptyword : w;
     }
 
     // word_t mirror(const word_t& w)

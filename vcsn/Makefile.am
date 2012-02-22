@@ -13,12 +13,13 @@
 
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =				\
+  algos/dotty.hh				\
   alphabets/char.hh				\
   alphabets/setalpha.hh				\
   core/crange.hh				\
   core/kind.hh					\
   core/mutable_automaton.hh			\
+  factory/ladybird.hh                           \
+  misc/escape.hh                                \
   weights/b.hh					\
-  weights/z.hh					\
-  algos/dotty.hh				\
-  factory/ladybird.hh
+  weights/z.hh
