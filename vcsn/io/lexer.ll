@@ -6,8 +6,7 @@
 
 static unsigned int brace_level = 0;
 static unsigned int weight_level = 0;
-static std::string* weight_string;
-static std::string* string_acu;
+static std::string* sval = 0;
 std::stack<unsigned int> brace_context_level;
 void switch_context(std::string context_name);
 extern int errors;
@@ -60,7 +59,8 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "\\z"                         return TOK(ZERO);
 
   "{"                           {
-    weight_string = new std::string();
+    assert (!sval);
+    sval = new std::string();
     yy_push_state(VCSN_WEIGHT);
   } // lex vcsn weight language FIXME: delete or no
   {vcsn_character}              {
@@ -80,10 +80,11 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     weight_level += '{';
   } // push brace
   "}"                           {
-    if(0 == weight_level)
+    if (0 == weight_level)
     {
       yy_pop_state();
-      yylval->sval = weight_string;
+      yylval->sval = sval;
+      sval = 0;
       return TOK(WEIGHT);
     }
     else
@@ -104,26 +105,27 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     else
     {
       --brace_level;
-      weight_string += ')';
+      sval += ')';
     }
   } // pop parenthesis
   ([a-zA-Z0-9]|\\[(){}])+       {
-    *weight_string += yytext;
+    *sval += yytext;
   }
 }
 
 <VCSN_WORD>{ /* Word with Vcsn Syntax*/
   {vcsn_character}              {
-    *string_acu += yytext;
+    *sval += yytext;
   }
   \"                            {
     yy_pop_state();
-    yylval->sval = string_acu;
+    yylval->sval = sval;
+    sval = 0;
     return TOK(WORD);
   }
   \<{vcsn_character}*\>         { // FIXME: check
     // \\l\(([^)]|\\))*\)
-    *string_acu += yytext;
+    *sval += yytext;
   }
   .                             exit(51);
 }
