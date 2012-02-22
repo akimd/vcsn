@@ -61,7 +61,7 @@
                  WORD    "word"
 ;
 
-%type <sval> exp factor factors lexp term weights weights.opt;
+%type <sval> exp factor factors lexp term weights weights.opt word;
 
 %left "+"
 %left "."
@@ -90,15 +90,19 @@ lexp:
 
 factors:
   factor
-| factors factor       { STRING($$, *$1 << '#' << *$2); }
+| factors factor  { STRING($$, *$1 << '#' << *$2); }
 ;
 
 factor:
-  factor "*"                      { STRING($$, *$1 << '*'); }
-| ONE                          { STRING($$, "\\e"); }
-| ZERO                         { STRING($$, "\\z"); }
-| WORD                         { STRING($$, *$1); }
-| "(" exp ")"                  { $$ = $2; assert($1 == $3); }
+  word
+| factor "*"   { STRING($$, *$1 << '*'); }
+| "(" exp ")"  { $$ = $2; assert($1 == $3); }
+;
+
+word:
+  ZERO  { STRING($$, "\\z"); }
+| ONE   { STRING($$, "\\e"); }
+| WORD  { STRING($$, *$1); }
 ;
 
 weights.opt:
