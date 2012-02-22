@@ -32,12 +32,14 @@
 {
   #include <cassert>
   #include <sstream>
-  #define MAKE(Out, In)                         \
+  #define MAKE_(Out, In)                        \
     do {                                        \
       std::stringstream o;                      \
-      o << '(' << In << ')';                    \
+      o << In;                                  \
       Out = new std::string(o.str());           \
     } while (false)
+  #define MAKE(Out, In)                         \
+    MAKE_(Out, '(' << In << ')')
 }
 
 %printer { debug_stream() << *$$; } <sval>;
@@ -59,37 +61,55 @@
                  WORD    "word"
 ;
 
-%type <sval> exp
+%type <sval> exp factor factors lexp term weights weights.opt;
 
-%nonassoc RWEIGHT
-%nonassoc "(" ")" ONE ZERO
 %left "+"
-%nonassoc WORD
 %left "."
-%nonassoc "weight"
-%nonassoc LWEIGHT
-%nonassoc CONCAT
-%nonassoc "*"
-
 
 %start exps
 %%
 
-exps : exp { std::cout << *$1 << std::endl; }
+exps:
+  exp { std::cout << *$1 << std::endl; }
 ;
 
-exp :
-"(" exp ")"                    { $$ = $2; assert($1 == $3); }
-| exp "*"                      { MAKE($$, *$1 << '*'); }
-| exp "." exp                  { MAKE($$, *$1 << '.' << *$3); }
-| exp "+" exp                  { MAKE($$, *$1 << "<<" << *$3); }
-| exp exp       %prec CONCAT   { MAKE($$, *$1 << '#' << *$2); }
-| "weight" exp  %prec LWEIGHT  { MAKE($$, "{l" << *$1 << '}' << *$2 ); }
-| exp "weight"  %prec RWEIGHT  { MAKE($$, *$1 << "{r" << *$2 << '}'); }
-| ONE                          { MAKE($$, ("\\e")); }
-| ZERO                         { MAKE($$, ("\\z")); }
+exp:
+  term
+| exp "." exp  { MAKE($$, *$1 << '.' << *$3); }
+| exp "+" exp  { MAKE($$, *$1 << '+' << *$3); }
+;
+
+term:
+  lexp weights.opt { if (!$2->empty()) MAKE($$, *$1 << "r{" << *$2 << '}'); }
+;
+
+lexp:
+   weights.opt factors { if ($1->empty()) $$ = $2; else MAKE($$, "l{" << *$1 << '}' << *$2); }
+| lexp weights factors { MAKE($$, *$1 << "#(l{" << *$2 << '}' << *$3 << ")"); }
+;
+
+factors:
+  factor
+| factors factor       { MAKE($$, *$1 << '#' << *$2); }
+;
+
+factor:
+  factor "*"                      { MAKE($$, *$1 << '*'); }
+| ONE                          { MAKE($$, "\\e"); }
+| ZERO                         { MAKE($$, "\\z"); }
 | WORD                         { MAKE($$, *$1); }
-  ;
+| "(" exp ")"                  { $$ = $2; assert($1 == $3); }
+;
+
+weights.opt:
+  /* empty */ { $$ = new std::string(); }
+| weights
+;
+
+weights:
+  "weight"           { MAKE_($$, *$1); }
+| "weight" weights   { MAKE_($$, *$1 << ", " << *$2); }
+;
 
 %%
 
