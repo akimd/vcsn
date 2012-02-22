@@ -108,7 +108,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
       sval += ')';
     }
   } // pop parenthesis
-  ([a-zA-Z0-9]|\\[(){}])+       {
+  ([^(){}]|\\[(){}])+       {
     *sval += yytext;
   }
 }
