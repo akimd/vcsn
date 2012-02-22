@@ -19,9 +19,10 @@ nobase_vcsn_HEADERS =				\
   core/crange.hh				\
   core/kind.hh					\
   core/mutable_automaton.hh			\
-  factory/ladybird.hh                           \
-  misc/escape.hh                                \
+  factory/ladybird.hh				\
+  misc/escape.hh				\
   weights/b.hh					\
+  weights/poly.hh				\
   weights/z.hh
 
 BUILT_SOURCES =
