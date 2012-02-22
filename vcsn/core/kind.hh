@@ -3,7 +3,7 @@
 
 namespace vcsn
 {
-  struct labels_are_letter
+  struct labels_are_letters
   {
   };
 
@@ -17,7 +17,7 @@ namespace vcsn
   };
 
   template <class Alphabet>
-  struct label_trait<labels_are_letter, Alphabet>
+  struct label_trait<labels_are_letters, Alphabet>
   {
     typedef typename Alphabet::letter_t label_t;
   };

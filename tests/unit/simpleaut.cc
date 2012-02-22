@@ -21,7 +21,8 @@ int main()
 
   //  b semiring;
 
-  vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_letter> aut(alpha); // deuxième paramettre par défaut
+  vcsn::mutable_automaton<alpha_t, vcsn::z,
+			  vcsn::labels_are_letters> aut(alpha);
 
   //mutable_automaton<alpha_t, RatExp<b, alpha_t> >, labels_are_letter> aut(alpha, semiring);
 
