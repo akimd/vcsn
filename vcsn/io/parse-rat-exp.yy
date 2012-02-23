@@ -13,13 +13,19 @@
 
 %code requires
 {
+  #include <list>
   #include <string>
   #include "location.hh"
+
+  typedef std::string weight_type;
+  typedef std::list<weight_type*> weights_type;
 
   union YYSTYPE
   {
     int ival;
     std::string* sval;
+    weight_type* weight;
+    weights_type* weights;
   };
 
   #define YY_DECL                                                       \
@@ -40,6 +46,83 @@
     } while (false)
   #define STRING(Out, In)                         \
     STRING_(Out, '(' << In << ')')
+
+  #define MAKE(Kind, ...)                         \
+    make_ ## Kind(__VA_ARGS__)
+
+  static
+  weights_type*
+  make_weights(weight_type* w)
+  {
+    return new weights_type {w};
+  }
+
+  static
+  weights_type*
+  make_weights(weight_type* w, weights_type* ws)
+  {
+    ws->push_front(w);
+    return ws;
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const weights_type& ws)
+  {
+    o << "{";
+    bool first = true;
+    for (weight_type* w: ws)
+      {
+        if (!first)
+          o << ", ";
+        first = false;
+        o << *w;
+      }
+    o << "}";
+    return o;
+  }
+
+  std::string*
+  make_term(std::string *lexp, weights_type* ws)
+  {
+    assert(lexp);
+    std::string* res = lexp;
+    if (ws)
+      {
+        STRING(res, "r" << *ws << *lexp);
+        delete lexp;
+        delete ws;
+      }
+    return res;
+  }
+
+  std::string*
+  make_term(weights_type* ws, std::string *term)
+  {
+    assert(term);
+    std::string *res = term;
+    if (ws)
+      {
+        STRING(res, "l" << *ws << *term);
+        delete term;
+        delete ws;
+      }
+    return res;
+  }
+
+  std::string*
+  make_term(std::string* lexp, weights_type* ws, std::string *factors)
+  {
+    assert(lexp);
+    assert(ws);
+    assert(factors);
+    std::string* res;
+    STRING(res, *lexp << "#(l" << *ws << *factors << ")");
+    delete lexp;
+    delete ws;
+    delete factors;
+    return res;
+  }
+
 }
 
 %printer { debug_stream() << *$$; } <sval>;
@@ -57,11 +140,11 @@
         ZERO "\\z"
 ;
 
-%token  <sval>   WEIGHT  "weight"
-                 WORD    "word"
-;
+%token  <sval> WORD    "word";
+%token <weight> WEIGHT  "weight"
 
-%type <sval> exp factor factors lexp term weights weights.opt word;
+%type <sval> exp factor factors lexp term word;
+%type <weights> weights weights.opt
 
 %left "+"
 %left "."
@@ -80,12 +163,12 @@ exp:
 ;
 
 term:
-  lexp weights.opt { if (!$2->empty()) STRING($$, *$1 << "r{" << *$2 << '}'); }
+  lexp weights.opt { $$ = MAKE(term, $1, $2); }
 ;
 
 lexp:
-   weights.opt factors { if ($1->empty()) $$ = $2; else STRING($$, "l{" << *$1 << '}' << *$2); }
-| lexp weights factors { STRING($$, *$1 << "#(l{" << *$2 << '}' << *$3 << ")"); }
+  weights.opt factors  { $$ = MAKE(term, $1, $2); }
+| lexp weights factors { $$ = MAKE(term, $1, $2, $3); }
 ;
 
 factors:
@@ -106,13 +189,13 @@ word:
 ;
 
 weights.opt:
-  /* empty */ { $$ = new std::string(); }
+  /* empty */ { $$ = nullptr; }
 | weights
 ;
 
 weights:
-  "weight"           { STRING_($$, *$1); }
-| "weight" weights   { STRING_($$, *$1 << ", " << *$2); }
+  "weight"           { $$ = MAKE(weights, $1); }
+| "weight" weights   { $$ = MAKE(weights, $1, $2); }
 ;
 
 %%
