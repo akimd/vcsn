@@ -15,11 +15,13 @@
 {
   #include <string>
   #include "location.hh"
+  #include <core/rat_exp/node.hh>
 
   union YYSTYPE
   {
     int ival;
     std::string* sval;
+    vcsn::rat_exp::exp *nodeval;
   };
 
   #define YY_DECL                                                       \
@@ -45,21 +47,24 @@
 
 %destructor { delete $$; } <sval>;
 
-%token <ival>   LPAREN "("
-                RPAREN ")"
+%destructor { delete $$; } <rat_exp *> <rat_concat *> <rat_plus *> <rat_kleene *>
+        <rat_one *> <rat_zero *> <rat_atom *> <rat_word *> <rat_left_weight *>
+        <rat_right_weight *>
 
-%token  PLUS "+"
-        DOT  "."
-        STAR "*"
-        ONE  "\\e"
-        ZERO "\\z"
+%token <ival>   LPAREN          "("
+                RPAREN          ")"
+%token  PLUS            "+"
+        DOT             "."
+        STAR            "*"
+        ONE             "\\e"
+        ZERO            "\\z"
 ;
 
 %token  <sval>   WEIGHT  "weight"
                  WORD    "word"
 ;
 
-%type <sval> exp
+%type <nodeval> exp
 
 %nonassoc RWEIGHT
 %nonassoc "(" ")" ONE ZERO
@@ -72,23 +77,49 @@
 %nonassoc "*"
 
 
-%start exps
+%start exp
 %%
 
-exps : exp { std::cout << *$1 << std::endl; }
-;
-
 exp :
-"(" exp ")"                    { $$ = $2; assert($1 == $3); }
-| exp "*"                      { MAKE($$, *$1 << '*'); }
-| exp "." exp                  { MAKE($$, *$1 << '.' << *$3); }
-| exp "+" exp                  { MAKE($$, *$1 << "<<" << *$3); }
-| exp exp       %prec CONCAT   { MAKE($$, *$1 << '#' << *$2); }
-| "weight" exp  %prec LWEIGHT  { MAKE($$, "{l" << *$1 << '}' << *$2 ); }
-| exp "weight"  %prec RWEIGHT  { MAKE($$, *$1 << "{r" << *$2 << '}'); }
-| ONE                          { MAKE($$, ("\\e")); }
-| ZERO                         { MAKE($$, ("\\z")); }
-| WORD                         { MAKE($$, *$1); }
+"(" exp ")"                             {
+  $$ = $2;
+ }
+| exp "*"                               {
+  $$ = new vcsn::rat_exp::kleene($1);
+  }
+| exp "." exp                           {
+  vcsn::rat_exp::concat *tmp = new vcsn::rat_exp::concat();
+  tmp->push_front($1);
+  tmp->push_front($3);
+  $$ = tmp;
+  }
+| exp "+" exp                           {
+  vcsn::rat_exp::plus *tmp = new vcsn::rat_exp::plus();
+  tmp->push_front($1);
+  tmp->push_front($3);
+  $$ = tmp;
+  }
+| exp exp       %prec CONCAT            {
+  vcsn::rat_exp::concat *tmp = new vcsn::rat_exp::concat();
+  tmp->push_front($1);
+  tmp->push_front($2);
+  $$ = tmp;
+ }
+| "weight" exp  %prec LWEIGHT           {
+  $$ = new vcsn::rat_exp::left_weight($1, $2);
+  }
+| exp "weight"  %prec RWEIGHT           {
+  $$ = new vcsn::rat_exp::right_weight($1, $2);
+  }
+| ONE                                   {
+  $$ = new vcsn::rat_exp::one();
+  }
+| ZERO                                  {
+  $$ = new vcsn::rat_exp::zero();
+  }
+| WORD                                  {
+  $$ = new vcsn::rat_exp::word($1);
+  }
   ;
 
 %%
