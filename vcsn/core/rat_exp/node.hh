@@ -124,31 +124,35 @@ namespace vcsn {
     class left_weight : public exp
     {
     public:
-      left_weight(std::string *left_weight, exp *right_rat_exp);
+      typedef weights_type weight;
+    public:
+      left_weight(weight *left_weight, exp *right_rat_exp);
       ~left_weight();
     public:
       virtual void accept(vcsn::rat_exp::visitor &v);
       exp *get_exp();
-      std::string *get_weight();
+      weight *get_weight();
 
     private:
-      std::string *l_weight_;
+      weight *l_weight_;
       exp *r_exp_;
     };
 
     class right_weight : public exp
     {
     public:
-      right_weight(exp *left_rat_exp, std::string *right_weight);
+      typedef weights_type weight;
+    public:
+      right_weight(exp *left_rat_exp, weight *right_weight);
       ~right_weight();
     public:
       virtual void accept(vcsn::rat_exp::visitor &v);
       exp *get_exp();
-      std::string *get_weight();
+      weight *get_weight();
 
     private:
       exp *l_exp_;
-      std::string *r_weight_;
+      weight *r_weight_;
     };
 
   } // !rat_exp

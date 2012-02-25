@@ -270,7 +270,7 @@ namespace vcsn {
     /////////////////
 
     inline
-    left_weight::left_weight(std::string *l_weight, exp *r_exp) :
+    left_weight::left_weight(left_weight::weight *l_weight, exp *r_exp) :
       l_weight_(l_weight),
       r_exp_(r_exp)
     { }
@@ -297,7 +297,7 @@ namespace vcsn {
     }
 
     inline
-    std::string *
+    left_weight::weight *
     left_weight::get_weight()
     {
       return l_weight_;
@@ -308,7 +308,7 @@ namespace vcsn {
     //////////////////
 
     inline
-    right_weight::right_weight(exp *l_exp, std::string *r_weight) :
+    right_weight::right_weight(exp *l_exp, right_weight::weight *r_weight) :
       l_exp_(l_exp),
       r_weight_(r_weight)
     { }
@@ -335,7 +335,7 @@ namespace vcsn {
     }
 
     inline
-    std::string *
+    right_weight::weight *
     right_weight::get_weight()
     {
       return r_weight_;

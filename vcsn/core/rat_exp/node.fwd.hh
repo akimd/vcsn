@@ -4,27 +4,30 @@
 namespace vcsn {
   namespace rat_exp {
 
-  class word;
+    typedef std::string weight_type;
+    typedef std::list<weight_type *> weights_type;
 
-  class exp;
+    class exp;
 
-  class concat;
+    class concat; //
 
-  class plus;
+    class plus; //
 
-  class kleene;
+    class kleene; //
 
-  class one;
+    class one; //
 
-  class zero;
+    class zero; //
 
-  class word;
+    class word;
 
-  class left_weight;
+    class left_weight; //
 
-  class right_weight;
+    class right_weight; //
 
   } // !rat_exp
 } // !vcsn
+
+#include "rat-exp.hh"
 
 #endif // !VCSN_CORE_RAT_EXP_NODE_FWD_HH_
