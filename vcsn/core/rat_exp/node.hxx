@@ -30,6 +30,13 @@ namespace vcsn {
     }
 
     inline
+    concat &
+    concat::push_back(exp *l_exp)
+    {
+      sub_node_.push_back(l_exp);
+    }
+
+    inline
     void
     concat::accept(vcsn::rat_exp::visitor &v)
     {
@@ -112,6 +119,13 @@ namespace vcsn {
     plus::push_front(exp *l_exp)
     {
       sub_node_.push_front(l_exp);
+    }
+
+    inline
+    plus &
+    plus::push_back(exp *l_exp)
+    {
+      sub_node_.push_back(l_exp);
     }
 
     inline

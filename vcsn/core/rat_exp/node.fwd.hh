@@ -1,6 +1,9 @@
 #ifndef VCSN_CORE_RAT_EXP_NODE_FWD_HH_
 # define VCSN_CORE_RAT_EXP_NODE_FWD_HH_
 
+# include <string>
+# include <list>
+
 namespace vcsn {
   namespace rat_exp {
 
@@ -27,7 +30,5 @@ namespace vcsn {
 
   } // !rat_exp
 } // !vcsn
-
-#include "rat-exp.hh"
 
 #endif // !VCSN_CORE_RAT_EXP_NODE_FWD_HH_

@@ -45,6 +45,7 @@ namespace vcsn {
 
     public:
       concat &push_front(exp *left_rat_exp);
+      concat &push_back(exp *left_rat_exp);
       virtual void accept(vcsn::rat_exp::visitor &v);
 
     private:
@@ -64,6 +65,7 @@ namespace vcsn {
       ~plus();
     public:
       plus &push_front(exp *left_rat_exp);
+      plus &push_back(exp *left_rat_exp);
       virtual void accept(vcsn::rat_exp::visitor &v);
 
       const_iterator begin() const;
