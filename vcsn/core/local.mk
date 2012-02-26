@@ -11,22 +11,4 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-vcsndir = $(includedir)/vcsn
-nobase_vcsn_HEADERS =				\
-  algos/dotty.hh				\
-  alphabets/char.hh				\
-  alphabets/setalpha.hh				\
-  core/crange.hh				\
-  core/kind.hh					\
-  core/mutable_automaton.hh			\
-  factory/ladybird.hh				\
-  misc/escape.hh				\
-  weights/b.hh					\
-  weights/poly.hh				\
-  weights/z.hh					\
-  algos/dotty.hh
-
-BUILT_SOURCES =
-EXTRA_DIST =
-include io/local.mk
-include core/local.mk
+io_rat_exp_SOURCES += core/rat_exp/visitor.cc
