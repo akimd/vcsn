@@ -17,6 +17,7 @@
   #include <string>
   #include "location.hh"
   #include <core/rat_exp/node.hh>
+  #include <core/rat_exp/rat-exp.hh>
 
   union YYSTYPE
   {
@@ -25,6 +26,7 @@
     vcsn::rat_exp::weight_type* weight;
     vcsn::rat_exp::weights_type* weights;
     vcsn::rat_exp::exp *nodeval;
+    vcsn::rat_exp::concat *concatval;
   };
 
   #define YY_DECL                                                       \
@@ -125,6 +127,8 @@
     return res;
   }
 
+  // define the factory
+  vcsn::rat_exp::RatExp<int> fact; // FIXME: specialization
 }
 
 %printer { debug_stream() << *$$; } <sval>;
@@ -132,9 +136,9 @@
 
 %destructor { delete $$; } <sval>;
 
-%destructor { delete $$; } <rat_exp *> <rat_concat *> <rat_plus *> <rat_kleene *>
-        <rat_one *> <rat_zero *> <rat_atom *> <rat_word *> <rat_left_weight *>
-        <rat_right_weight *>
+%destructor { delete $$; } <rat_exp *> <rat_concat *> <rat_plus *>
+        <rat_kleene *> <rat_one *> <rat_zero *> <rat_atom *> <rat_word *>
+        <rat_left_weight *> <rat_right_weight *>
 
 %token <ival>   LPAREN          "("
                 RPAREN          ")"
@@ -150,7 +154,8 @@
 
 // FIXME: check
 %type <weights> weights weights.opt;
-%type <nodeval> exp term lexp factors factor word;
+%type <nodeval> exp term lexp factor word;
+%type <concatval> factors;
 
 
 %left "+"
@@ -160,27 +165,15 @@
 %%
 
 exp:
-  term                          {
-  $$ = $1;
- }
-| exp "." exp                   {
-  vcsn::rat_exp::concat *tmp = new vcsn::rat_exp::concat();
-  tmp->push_front($1);
-  tmp->push_front($3);
-  $$ = tmp;
- }
-| exp "+" exp                   {
-  vcsn::rat_exp::plus *tmp = new vcsn::rat_exp::plus();
-  tmp->push_front($1);
-  tmp->push_front($3);
-  $$ = tmp;
-  }
+  term                          { $$ = $1; }
+| exp "." exp                   { $$ = fact.op_mul($1, $3); }
+| exp "+" exp                   { $$ = fact.op_add($1, $3); }
 ;
 
 term:
   lexp weights.opt              {
     if($2 != nullptr)
-      $$ = new vcsn::rat_exp::right_weight($1, $2);
+      $$ = fact.op_right_weight($1, $2);
     else
       $$ = $1;
   }
@@ -189,75 +182,41 @@ term:
 lexp:
   weights.opt factors           {
     if($1 != nullptr)
-      $$ = new vcsn::rat_exp::left_weight($1, $2);
+      $$ = fact.op_left_weight($1, $2);
     else
       $$ = $2;
   }
 | lexp weights factors          {
-  vcsn::rat_exp::left_weight *right = new vcsn::rat_exp::left_weight($2, $3);
-  vcsn::rat_exp::concat *tmp = new vcsn::rat_exp::concat();
-  tmp->push_front(right);
-  tmp->push_front($1);
-  $$ = tmp;
+    vcsn::rat_exp::left_weight *right = fact.op_left_weight($2, $3);
+    $$ = fact.op_mul($1, right);
   }
 ;
 
 factors:
-  factor                        {
-    vcsn::rat_exp::concat *tmp = new vcsn::rat_exp::concat();
-    tmp->push_front($1);
-    $$ = $1;
-  }
-| factors factor                {
-  vcsn::rat_exp::concat *tmp = dynamic_cast<vcsn::rat_exp::concat *> ($2);
-  assert(tmp != nullptr);
-  tmp->push_front($1);
-  $$ = tmp;
-}
+  factor                        { $$ = fact.op_mul($1); }
+| factors factor                { $$ = fact.op_mul($1, $2); }
 ;
 
 factor:
-  word                          {
-    $$ = $1;
-  }
-| factor "*"                    {
-  $$ = new vcsn::rat_exp::kleene($1);
- }
-| "(" exp ")"                   {
- $$ = $2; assert($1 == $3);
-  }
+  word                          { $$ = $1; }
+| factor "*"                    { $$ = fact.op_kleene($1); }
+| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 word:
-  ZERO                          {
-    $$ = new vcsn::rat_exp::zero();
-  }
-| ONE                           {
-  $$ = new vcsn::rat_exp::one();
-  }
-| WORD                          {
-  $$ = new vcsn::rat_exp::word($1);
-  }
+  ZERO                          { $$ = fact.op_zero(); }
+| ONE                           { $$ = fact.op_one(); }
+| WORD                          { $$ = fact.op_word($1); }
 ;
 
 weights.opt:
-  /* empty */                   {
-  $$ = nullptr;
-}
-| weights                       {
-  $$ = $1;
-  }
+  /* empty */                   { $$ = nullptr; }
+| weights                       { $$ = $1; }
 ;
 
 weights:
-  "weight"                      {
-    $$ = new weights_type();
-    $$->push_front($1);
-  }
-| "weight" weights              {
-  $$ = $2;
-  $$->push_front($1);
-  }
+  "weight"                      { $$ = fact.op_weight($1); }
+| "weight" weights              { $$ = fact.op_weight($1, $2); }
 ;
 
 %%
