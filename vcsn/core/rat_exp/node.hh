@@ -43,6 +43,7 @@ namespace vcsn {
       concat &push_front(exp *left_rat_exp);
       concat &push_back(exp *left_rat_exp);
       size_t size() const;
+
       virtual void accept(vcsn::rat_exp::visitor &v);
 
     private:
@@ -62,8 +63,10 @@ namespace vcsn {
       ~plus();
     public:
       plus &push_front(exp *left_rat_exp);
+
       plus &push_back(exp *left_rat_exp);
       size_t size() const;
+
       virtual void accept(vcsn::rat_exp::visitor &v);
 
       const_iterator begin() const;
@@ -117,6 +120,7 @@ namespace vcsn {
     public:
       virtual void accept(vcsn::rat_exp::visitor &v);
       std::string *get_word();
+
     private:
       std::string *word_;
     };

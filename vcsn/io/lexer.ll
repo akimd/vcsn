@@ -59,8 +59,12 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "\\z"                         return TOK(ZERO);
 
   "{"                           {
+<<<<<<< HEAD
     assert (!sval);
     sval = new std::string();
+=======
+    weight_string = new std::string();
+>>>>>>> 88834fde866f4fdee23adc0c00ae234391a07e11
     yy_push_state(VCSN_WEIGHT);
   } // lex vcsn weight language FIXME: delete or no
   {vcsn_character}              {
@@ -80,11 +84,18 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     weight_level += '{';
   } // push brace
   "}"                           {
+<<<<<<< HEAD
     if (0 == weight_level)
     {
       yy_pop_state();
       yylval->sval = sval;
       sval = 0;
+=======
+    if(0 == weight_level)
+    {
+      yy_pop_state();
+      yylval->sval = weight_string;
+>>>>>>> 88834fde866f4fdee23adc0c00ae234391a07e11
       return TOK(WEIGHT);
     }
     else
@@ -105,27 +116,47 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     else
     {
       --brace_level;
+<<<<<<< HEAD
       sval += ')';
     }
   } // pop parenthesis
   ([^(){}]|\\[(){}])+       {
     *sval += yytext;
+=======
+      weight_string += ')';
+    }
+  } // pop parenthesis
+  ([a-zA-Z0-9]|\\[(){}])+       {
+    *weight_string += yytext;
+>>>>>>> 88834fde866f4fdee23adc0c00ae234391a07e11
   }
 }
 
 <VCSN_WORD>{ /* Word with Vcsn Syntax*/
   {vcsn_character}              {
+<<<<<<< HEAD
     *sval += yytext;
   }
   \"                            {
     yy_pop_state();
     yylval->sval = sval;
     sval = 0;
+=======
+    *string_acu += yytext;
+  }
+  \"                            {
+    yy_pop_state();
+    yylval->sval = string_acu;
+>>>>>>> 88834fde866f4fdee23adc0c00ae234391a07e11
     return TOK(WORD);
   }
   \<{vcsn_character}*\>         { // FIXME: check
     // \\l\(([^)]|\\))*\)
+<<<<<<< HEAD
     *sval += yytext;
+=======
+    *string_acu += yytext;
+>>>>>>> 88834fde866f4fdee23adc0c00ae234391a07e11
   }
   .                             exit(51);
 }

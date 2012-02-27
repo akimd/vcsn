@@ -2,7 +2,7 @@
 # define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
 
 # include <iostream>
-# include "visitor.hh"
+# include <core/rat_exp/visitor.hh>
 
 namespace vcsn {
   namespace rat_exp {

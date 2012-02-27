@@ -30,6 +30,7 @@ namespace vcsn {
     }
 
     inline
+
     concat &
     concat::push_back(exp *l_exp)
     {
@@ -44,6 +45,7 @@ namespace vcsn {
     }
 
     inline
+
     void
     concat::accept(vcsn::rat_exp::visitor &v)
     {

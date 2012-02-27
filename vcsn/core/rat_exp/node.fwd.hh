@@ -12,21 +12,21 @@ namespace vcsn {
 
     class exp;
 
-    class concat; //
+    class concat;
 
-    class plus; //
+    class plus;
 
-    class kleene; //
+    class kleene;
 
-    class one; //
+    class one;
 
-    class zero; //
+    class zero;
 
     class word;
 
-    class left_weight; //
+    class left_weight;
 
-    class right_weight; //
+    class right_weight;
 
   } // !rat_exp
 } // !vcsn
