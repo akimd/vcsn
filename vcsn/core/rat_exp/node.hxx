@@ -37,6 +37,13 @@ namespace vcsn {
     }
 
     inline
+    size_t
+    concat::size() const
+    {
+      return sub_node_.size();
+    }
+
+    inline
     void
     concat::accept(vcsn::rat_exp::visitor &v)
     {
@@ -126,6 +133,13 @@ namespace vcsn {
     plus::push_back(exp *l_exp)
     {
       sub_node_.push_back(l_exp);
+    }
+
+    inline
+    size_t
+    plus::size() const
+    {
+      return sub_node_.size();
     }
 
     inline
@@ -277,6 +291,13 @@ namespace vcsn {
     word::accept(vcsn::rat_exp::visitor &v)
     {
       v.visit(*this);
+    }
+
+    inline
+    std::string *
+    word::get_word()
+    {
+      return word_;
     }
 
     /////////////////

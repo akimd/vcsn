@@ -26,10 +26,6 @@ namespace vcsn {
       typedef node_list::const_reverse_iterator const_reverse_iterator;
       typedef node_list::reverse_iterator reverse_iterator;
 
-      // typename node_list::const_iterator const_iterator;
-      // typename node_list::iterator iterator;
-      // typename node_list::const_reverse_iterator const_reverse_iterator;
-      // typename node_list::reverse_iterator reverse_iterator;
     public:
       concat();
       ~concat();
@@ -46,6 +42,7 @@ namespace vcsn {
     public:
       concat &push_front(exp *left_rat_exp);
       concat &push_back(exp *left_rat_exp);
+      size_t size() const;
       virtual void accept(vcsn::rat_exp::visitor &v);
 
     private:
@@ -66,6 +63,7 @@ namespace vcsn {
     public:
       plus &push_front(exp *left_rat_exp);
       plus &push_back(exp *left_rat_exp);
+      size_t size() const;
       virtual void accept(vcsn::rat_exp::visitor &v);
 
       const_iterator begin() const;
@@ -118,7 +116,7 @@ namespace vcsn {
       ~word();
     public:
       virtual void accept(vcsn::rat_exp::visitor &v);
-
+      std::string *get_word();
     private:
       std::string *word_;
     };
