@@ -1,6 +1,7 @@
 #include <cassert>
 
-#include "print_visitor.hh"
+#include <core/rat_exp/print_visitor.hh>
+#include <core/rat_exp/node.hh>
 
 namespace vcsn {
   namespace rat_exp {
@@ -11,7 +12,7 @@ namespace vcsn {
 
     PrintVisitor::~PrintVisitor()
     {
-      out << std::flush;
+      out_ << std::endl;
     }
 
     void
@@ -24,17 +25,17 @@ namespace vcsn {
     PrintVisitor::visit(vcsn::rat_exp::concat& v)
     {
       for(unsigned i = v.size(); i != 1; --i)
-        out << '(';
+        out_ << '(';
 
       concat::const_iterator end = v.end();
-      concat::cons_iterator it   = v.begin();
-      it->accept(*this);
+      concat::const_iterator it  = v.begin();
+      (* it)->accept(*this);
       ++it;
       for(; end != it; ++it)
       {
-        out << '*';
-        it->accept(*this);
-        out << ')';
+        out_ << '.';
+        (* it)->accept(*this);
+        out_ << ')';
       }
     }
 
@@ -42,17 +43,17 @@ namespace vcsn {
     PrintVisitor::visit(vcsn::rat_exp::plus& v)
     {
       for(unsigned i = v.size(); i != 1; --i)
-        out << '(';
+        out_ << '(';
 
       concat::const_iterator end = v.end();
-      concat::cons_iterator it   = v.begin();
-      it->accept(*this);
+      concat::const_iterator it  = v.begin();
+      (* it)->accept(*this);
       ++it;
       for(; end != it; ++it)
       {
-        out << '+';
-        it->accept(*this);
-        out << ')';
+        out_ << '+';
+        (* it)->accept(*this);
+        out_ << ')';
       }
     }
 
@@ -60,30 +61,30 @@ namespace vcsn {
     PrintVisitor::visit(vcsn::rat_exp::kleene& v)
     {
       exp *sub_exp = v.get_sub();
-      if(sub_exp!= nullptr)
+      if(sub_exp != nullptr)
       {
-        out << '(';
-        sub_exp->acept(*this);
-        out << ")*";
+        out_ << '(';
+        sub_exp->accept(*this);
+        out_ << ")*";
       }
     }
 
     void
     PrintVisitor::visit(vcsn::rat_exp::one& v)
     {
-      out << "\\e";
+      out_ << "\\e";
     }
 
     void
     PrintVisitor::visit(vcsn::rat_exp::zero& v)
     {
-      out << "\\z";
+      out_ << "\\z";
     }
 
     void
     PrintVisitor::visit(vcsn::rat_exp::word& v)
     {
-      assert(false);
+      out_ << *v.get_word();
     }
 
     void
@@ -92,13 +93,15 @@ namespace vcsn {
       exp *sub_node = v.get_exp();
       if(sub_node != nullptr)
       {
-        out << "({"
-            << *v.get_weight() // FIXME: weight could not be printed
-                               // like that.
-            << '}';
-
+        out_ << '(';
+        for(weight_type *s : (*v.get_weight()))
+        {
+          out_ << '{'
+               << *s
+               << '}';
+        }
         sub_node->accept(*this);
-        out << ')';
+        out_ << ')';
       }
     }
 
@@ -108,12 +111,15 @@ namespace vcsn {
       exp *sub_node = v.get_exp();
       if(sub_node != nullptr)
       {
-        out << '(';
+        out_ << '(';
         sub_node->accept(*this);
-        out << '{'
-            << *v.get_weight() // FIXME: weight could not be printed
-                               // like that
-            << "})";
+        for(weight_type *s : (*v.get_weight()))
+        {
+          out_ << '{'
+               << *s
+               << '}';
+        }
+        out_ << ')';
       }
     }
 

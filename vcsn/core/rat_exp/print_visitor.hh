@@ -1,8 +1,8 @@
-#ifndef VCSN_CORE_RAT_EXP_VISITOR_HH_
-# define VCSN_CORE_RAT_EXP_VISITOR_HH_
+#ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
+# define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
 
+# include <iostream>
 # include "visitor.hh"
-# include "iostream"
 
 namespace vcsn {
   namespace rat_exp {
@@ -29,4 +29,4 @@ namespace vcsn {
   } // !rat_exp
 } // !vcsn
 
-#endif // !VCSN_CORE_RAT_EXP_VISITOR_HH_
+#endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
