@@ -13,11 +13,13 @@
 
 %code requires
 {
+  #include <iostream>
   #include <list>
   #include <string>
   #include "location.hh"
   #include <core/rat_exp/node.hh>
   #include <core/rat_exp/rat-exp.hh>
+  #include <core/rat_exp/print_visitor.hh>
 
   union YYSTYPE
   {
@@ -154,15 +156,22 @@
 
 // FIXME: check
 %type <weights> weights weights.opt;
-%type <nodeval> exp term lexp factor word;
+%type <nodeval> exps exp term lexp factor word;
 %type <concatval> factors;
 
 
 %left "+"
 %left "."
 
-%start exp
+%start exps
 %%
+
+exps:
+  exp                           {
+    vcsn::rat_exp::PrintVisitor print(std::cout);
+    $1->accept(print);
+    $$ = $1;
+ }
 
 exp:
   term                          { $$ = $1; }
