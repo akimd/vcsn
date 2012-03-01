@@ -4,7 +4,8 @@
 namespace vcsn {
   namespace rat_exp {
 
-    class visitor;
+    template<template<class> class T>
+    class GenVisitor;
 
   } // !rat_exp
 } // !vcsn
