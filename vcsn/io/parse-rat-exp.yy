@@ -19,7 +19,7 @@
   #include "location.hh"
   #include <core/rat_exp/node.hh>
   #include <core/rat_exp/rat-exp.hh>
-  #include <core/rat_exp/print_visitor.hh>
+  #include <core/rat_exp/print_debug_visitor.hh>
 
   union YYSTYPE
   {
@@ -167,7 +167,7 @@
 
 exps:
   exp                           {
-    vcsn::rat_exp::PrintVisitor print(std::cout);
+    vcsn::rat_exp::PrintDebugVisitor print(std::cout);
     $1->accept(print);
     $$ = $1;
  }
