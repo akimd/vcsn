@@ -7,12 +7,29 @@
 namespace vcsn {
   namespace rat_exp {
 
+    /////////
+    // Exp //
+    /////////
+
+    inline
+    exp::exp(DynamicType dyn_type) :
+      dyn_type_(dyn_type)
+    { }
+
+    inline
+    exp::DynamicType
+    exp::getType() const
+    {
+      return dyn_type_;
+    }
+
     ////////////
     // Concat //
     ////////////
 
     inline
-    concat::concat()
+    concat::concat() :
+      exp(CONCAT)
     { }
 
     inline
@@ -47,7 +64,14 @@ namespace vcsn {
     inline
 
     void
-    concat::accept(vcsn::rat_exp::visitor &v)
+    concat::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    concat::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -113,7 +137,8 @@ namespace vcsn {
     //////////
 
     inline
-    plus::plus()
+    plus::plus() :
+      exp(PLUS)
     { }
 
     inline
@@ -146,7 +171,14 @@ namespace vcsn {
 
     inline
     void
-    plus::accept(vcsn::rat_exp::visitor &v)
+    plus::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    plus::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -212,6 +244,7 @@ namespace vcsn {
 
     inline
     kleene::kleene(exp *sub_exp) :
+      exp(KLEENE),
       sub_exp_(sub_exp)
     { }
 
@@ -223,7 +256,14 @@ namespace vcsn {
 
     inline
     void
-    kleene::accept(vcsn::rat_exp::visitor &v)
+    kleene::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    kleene::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -235,12 +275,20 @@ namespace vcsn {
       return sub_exp_;
     }
 
+    inline
+    const exp *
+    kleene::get_sub() const
+    {
+      return sub_exp_;
+    }
+
     /////////////
     // One cst //
     /////////////
 
     inline
-    one::one()
+    one::one() :
+      exp(ONE)
     { }
 
     inline
@@ -249,7 +297,14 @@ namespace vcsn {
 
     inline
     void
-    one::accept(vcsn::rat_exp::visitor &v)
+    one::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    one::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -259,7 +314,8 @@ namespace vcsn {
     //////////////
 
     inline
-    zero::zero()
+    zero::zero() :
+      exp(ZERO)
     { }
 
     inline
@@ -268,7 +324,14 @@ namespace vcsn {
 
     inline
     void
-    zero::accept(vcsn::rat_exp::visitor &v)
+    zero::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    zero::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -279,6 +342,7 @@ namespace vcsn {
 
     inline
     word::word(std::string *word) :
+      exp(WORD),
       word_(word)
     { }
 
@@ -290,7 +354,14 @@ namespace vcsn {
 
     inline
     void
-    word::accept(vcsn::rat_exp::visitor &v)
+    word::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    word::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -302,12 +373,20 @@ namespace vcsn {
       return word_;
     }
 
+    inline
+    const std::string *
+    word::get_word() const
+    {
+      return word_;
+    }
+
     /////////////////
     // Left Weight //
     /////////////////
 
     inline
     left_weight::left_weight(left_weight::weight *l_weight, exp *r_exp) :
+      exp(LEFT_WEIGHT),
       l_weight_(l_weight),
       r_exp_(r_exp)
     { }
@@ -321,7 +400,14 @@ namespace vcsn {
 
     inline
     void
-    left_weight::accept(vcsn::rat_exp::visitor &v)
+    left_weight::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    left_weight::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -334,8 +420,22 @@ namespace vcsn {
     }
 
     inline
+    const exp *
+    left_weight::get_exp() const
+    {
+      return r_exp_;
+    }
+
+    inline
     left_weight::weight *
     left_weight::get_weight()
+    {
+      return l_weight_;
+    }
+
+    inline
+    const left_weight::weight *
+    left_weight::get_weight() const
     {
       return l_weight_;
     }
@@ -346,6 +446,7 @@ namespace vcsn {
 
     inline
     right_weight::right_weight(exp *l_exp, right_weight::weight *r_weight) :
+      exp(RIGHT_WEIGHT),
       l_exp_(l_exp),
       r_weight_(r_weight)
     { }
@@ -359,7 +460,14 @@ namespace vcsn {
 
     inline
     void
-    right_weight::accept(vcsn::rat_exp::visitor &v)
+    right_weight::accept(visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    inline
+    void
+    right_weight::accept(ConstVisitor &v) const
     {
       v.visit(*this);
     }
@@ -372,8 +480,22 @@ namespace vcsn {
     }
 
     inline
+    const exp *
+    right_weight::get_exp() const
+    {
+      return l_exp_;
+    }
+
+    inline
     right_weight::weight *
     right_weight::get_weight()
+    {
+      return r_weight_;
+    }
+
+    inline
+    const right_weight::weight *
+    right_weight::get_weight() const
     {
       return r_weight_;
     }

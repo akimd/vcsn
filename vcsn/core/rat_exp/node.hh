@@ -13,7 +13,25 @@ namespace vcsn {
     class exp
     {
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v) = 0;
+      virtual void accept(visitor &v) = 0;
+      virtual void accept(ConstVisitor &v) const = 0;
+    protected:
+      enum DynamicType {
+        CONCAT,
+        PLUS,
+        KLEENE,
+        ONE,
+        ZERO,
+        WORD,
+        LEFT_WEIGHT,
+        RIGHT_WEIGHT
+      };
+    protected:
+      exp(DynamicType dyn_type);
+    public:
+      DynamicType getType() const;
+    protected:
+      const DynamicType dyn_type_;
     };
 
     class concat : public exp
@@ -44,7 +62,8 @@ namespace vcsn {
       concat &push_back(exp *left_rat_exp);
       size_t size() const;
 
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
 
     private:
       node_list sub_node_;
@@ -67,7 +86,8 @@ namespace vcsn {
       plus &push_back(exp *left_rat_exp);
       size_t size() const;
 
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
 
       const_iterator begin() const;
       iterator begin();
@@ -87,8 +107,10 @@ namespace vcsn {
       kleene(exp *sub_exp);
       ~kleene();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
       exp *get_sub();
+      const exp *get_sub() const;
 
     private:
       exp *sub_exp_;
@@ -100,7 +122,8 @@ namespace vcsn {
       one();
       ~one();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
     };
 
     class zero : public exp
@@ -109,7 +132,8 @@ namespace vcsn {
       zero();
       ~zero();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
     };
 
     class word : public exp
@@ -118,8 +142,10 @@ namespace vcsn {
       word(std::string *word);
       ~word();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
       std::string *get_word();
+      const std::string *get_word() const;
 
     private:
       std::string *word_;
@@ -133,9 +159,13 @@ namespace vcsn {
       left_weight(weight *left_weight, exp *right_rat_exp);
       ~left_weight();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
       exp *get_exp();
       weight *get_weight();
+
+      const exp *get_exp() const;
+      const weight *get_weight() const;
 
     private:
       weight *l_weight_;
@@ -150,9 +180,13 @@ namespace vcsn {
       right_weight(exp *left_rat_exp, weight *right_weight);
       ~right_weight();
     public:
-      virtual void accept(vcsn::rat_exp::visitor &v);
+      virtual void accept(visitor &v);
+      virtual void accept(ConstVisitor &v) const;
       exp *get_exp();
       weight *get_weight();
+
+      const exp *get_exp() const;
+      const weight *get_weight() const;
 
     private:
       exp *l_exp_;
