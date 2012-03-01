@@ -16,13 +16,13 @@ namespace vcsn {
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::exp& v)
+    PrintVisitor::visit(exp& v)
     {
       assert(false);
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::concat& v)
+    PrintVisitor::visit(concat& v)
     {
       for(unsigned i = v.size(); i != 1; --i)
         out_ << '(';
@@ -40,7 +40,7 @@ namespace vcsn {
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::plus& v)
+    PrintVisitor::visit(plus& v)
     {
       for(unsigned i = v.size(); i != 1; --i)
         out_ << '(';
@@ -58,7 +58,7 @@ namespace vcsn {
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::kleene& v)
+    PrintVisitor::visit(kleene& v)
     {
       exp *sub_exp = v.get_sub();
       if(sub_exp != nullptr)
@@ -70,25 +70,25 @@ namespace vcsn {
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::one& v)
+    PrintVisitor::visit(one& v)
     {
       out_ << "\\e";
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::zero& v)
+    PrintVisitor::visit(zero& v)
     {
       out_ << "\\z";
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::word& v)
+    PrintVisitor::visit(word& v)
     {
       out_ << *v.get_word();
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::left_weight& v)
+    PrintVisitor::visit(left_weight& v)
     {
       exp *sub_node = v.get_exp();
       if(sub_node != nullptr)
@@ -106,7 +106,7 @@ namespace vcsn {
     }
 
     void
-    PrintVisitor::visit(vcsn::rat_exp::right_weight& v)
+    PrintVisitor::visit(right_weight& v)
     {
       exp *sub_node = v.get_exp();
       if(sub_node != nullptr)

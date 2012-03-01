@@ -13,15 +13,15 @@ namespace vcsn {
       PrintVisitor(std::ostream &out);
       virtual ~PrintVisitor();
     public:
-      virtual void visit(vcsn::rat_exp::exp &           v);
-      virtual void visit(vcsn::rat_exp::concat &        v);
-      virtual void visit(vcsn::rat_exp::plus &          v);
-      virtual void visit(vcsn::rat_exp::kleene &        v);
-      virtual void visit(vcsn::rat_exp::one &           v);
-      virtual void visit(vcsn::rat_exp::zero &          v);
-      virtual void visit(vcsn::rat_exp::word &          v);
-      virtual void visit(vcsn::rat_exp::left_weight &   v);
-      virtual void visit(vcsn::rat_exp::right_weight &  v);
+      virtual void visit(exp &           v);
+      virtual void visit(concat &        v);
+      virtual void visit(plus &          v);
+      virtual void visit(kleene &        v);
+      virtual void visit(one &           v);
+      virtual void visit(zero &          v);
+      virtual void visit(word &          v);
+      virtual void visit(left_weight &   v);
+      virtual void visit(right_weight &  v);
     private:
       std::ostream &out_;
     };
