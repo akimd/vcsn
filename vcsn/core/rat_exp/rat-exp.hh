@@ -17,7 +17,6 @@ namespace vcsn {
       concat *op_mul(exp *l, concat *r);
       concat *op_mul(concat *l, exp *r);
 
-
       plus *op_add(exp *l,  exp *r);
       plus *op_add(exp *l,  plus *r);
       plus *op_add(plus *l, exp *r);
@@ -27,8 +26,8 @@ namespace vcsn {
       one  *op_one();
       zero *op_zero();
 
-      left_weight  *op_left_weight(weights_type *l, exp *r);
-      right_weight *op_right_weight(exp *l,         weights_type *r);
+      left_weight  *op_weight(weights_type *l,  exp *r);
+      right_weight *op_weight(exp *l,          weights_type *r);
 
       word *op_word(std::string *w);
 

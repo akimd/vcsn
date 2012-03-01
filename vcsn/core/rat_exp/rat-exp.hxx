@@ -106,12 +106,12 @@ namespace vcsn {
     template<class WeightSet>
     inline
     left_weight *
-    RatExp<WeightSet>::op_left_weight(weights_type *l, exp *r)
+    RatExp<WeightSet>::op_weight(weights_type *l, exp *r)
     {
       // l->remove_if(weight_set_.is_one);
       // FIXME: check trivial identity
       // if(l.end() != find_if(l.begin(), l.end(), weight_set.is_zero))
-      return new left_weight(l, r);
+        return new left_weight(l, r);
       // else
       // {
       //   delete l;
@@ -123,12 +123,12 @@ namespace vcsn {
     template<class WeightSet>
     inline
     right_weight *
-    RatExp<WeightSet>::op_right_weight(exp *l, weights_type *r)
+    RatExp<WeightSet>::op_weight(exp *l, weights_type *r)
     {
       // r->remove_if(weight_set_.is_one);
       // FIXME: check trivial identity
       // if(r.end() != find_if(r.begin(), r.end(), weight_set.is_zero))
-      return new right_weight(l, r);
+        return new right_weight(l, r);
       // else
       // {
       //   delete l;

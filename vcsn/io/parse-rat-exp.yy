@@ -154,7 +154,6 @@
 %token  <sval> WORD    "word";
 %token <weight> WEIGHT  "weight"
 
-// FIXME: check
 %type <weights> weights weights.opt;
 %type <nodeval> exps exp term lexp factor word;
 %type <concatval> factors;
@@ -182,7 +181,7 @@ exp:
 term:
   lexp weights.opt              {
     if($2 != nullptr)
-      $$ = fact.op_right_weight($1, $2);
+      $$ = fact.op_weight($1, $2);
     else
       $$ = $1;
   }
@@ -190,13 +189,15 @@ term:
 
 lexp:
   weights.opt factors           {
+    vcsn::rat_exp::exp *factors = $2;
     if($1 != nullptr)
-      $$ = fact.op_left_weight($1, $2);
+      $$ = fact.op_weight($1, factors);
     else
-      $$ = $2;
+      $$ = factors;
   }
 | lexp weights factors          {
-    vcsn::rat_exp::left_weight *right = fact.op_left_weight($2, $3);
+    vcsn::rat_exp::exp *factors = $3;
+    vcsn::rat_exp::left_weight *right = fact.op_weight($2, factors);
     $$ = fact.op_mul($1, right);
   }
 ;
