@@ -4,8 +4,8 @@
 # include <list>
 # include <string>
 
-# include "node.fwd.hh"
-# include "visitor.fwd.hh"
+# include <core/rat_exp/node.fwd.hh>
+# include <core/rat_exp/visitor.hh>
 
 namespace vcsn {
   namespace rat_exp {
@@ -162,6 +162,6 @@ namespace vcsn {
   } // !rat_exp
 } // !vcsn
 
-#include "node.hxx"
+#include <core/rat_exp/node.hxx>
 
 #endif // !VCSN_RAT_EXP_NODE_HH_

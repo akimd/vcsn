@@ -2,9 +2,11 @@
 # define VCSN_CORE_RAT_EXP_RAT_EXP_HXX_
 
 # include <algorithm>
+# include <cassert>
 
-# include "rat-exp.hh"
-# include "node.hh"
+# include <misc/cast.hh>
+# include <core/rat_exp/rat-exp.hh>
+# include <core/rat_exp/node.hh>
 
 namespace vcsn {
   namespace rat_exp {

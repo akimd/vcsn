@@ -3,7 +3,7 @@
 
 # include <string>
 
-# include "node.fwd.hh"
+# include <core/rat_exp/node.fwd.hh>
 
 namespace vcsn {
   namespace rat_exp {
@@ -42,6 +42,6 @@ namespace vcsn {
   } // !rat_exp
 } // !vcsn
 
-#include "rat-exp.hxx"
+#include <core/rat_exp/rat-exp.hxx>
 
 #endif // !VCSN_CORE_RAT_EXP_RAT_EXP_HH_

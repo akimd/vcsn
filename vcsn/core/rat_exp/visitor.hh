@@ -1,7 +1,8 @@
 #ifndef VCSN_CORE_RAT_EXP_VISITOR_HH_
 # define VCSN_CORE_RAT_EXP_VISITOR_HH_
 
-# include "node.fwd.hh"
+# include <misc/static.hh>
+# include <core/rat_exp/node.fwd.hh>
 
 namespace vcsn {
   namespace rat_exp {
