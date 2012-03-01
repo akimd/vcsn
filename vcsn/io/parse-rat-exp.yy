@@ -190,6 +190,10 @@ term:
 lexp:
   weights.opt factors           {
     vcsn::rat_exp::exp *factors = $2;
+    if(1 == $2->size())
+    {
+      factors = *$2->begin();
+    }
     if($1 != nullptr)
       $$ = fact.op_weight($1, factors);
     else
@@ -197,6 +201,10 @@ lexp:
   }
 | lexp weights factors          {
     vcsn::rat_exp::exp *factors = $3;
+    if(1 == $3->size())
+    {
+      factors = *$3->begin();
+    }
     vcsn::rat_exp::left_weight *right = fact.op_weight($2, factors);
     $$ = fact.op_mul($1, right);
   }

@@ -103,11 +103,36 @@ namespace vcsn {
       return new zero();
     }
 
+    inline
+    void
+    push_front_weights(weights_type *that, weights_type *here)
+    {
+      for(weight_type *w : *that)
+        here->push_front(w);
+    }
+
+    inline
+    void
+    push_back_weights(weights_type *that, weights_type *here)
+    {
+      for(weight_type *w : *that)
+        here->push_back(w);
+    }
+
     template<class WeightSet>
     inline
     left_weight *
     RatExp<WeightSet>::op_weight(weights_type *l, exp *r)
     {
+      if(exp::LEFT_WEIGHT == r->getType())
+      {
+        left_weight *tmp = down_cast<left_weight *> (r);
+        assert(tmp);
+        push_front_weights(l, tmp->get_weight());
+        return tmp;
+      }
+      else
+      {
       // l->remove_if(weight_set_.is_one);
       // FIXME: check trivial identity
       // if(l.end() != find_if(l.begin(), l.end(), weight_set.is_zero))
@@ -118,6 +143,7 @@ namespace vcsn {
       //   delete r;
       //   return nullptr;
       // }
+      }
     }
 
     template<class WeightSet>
@@ -125,6 +151,15 @@ namespace vcsn {
     right_weight *
     RatExp<WeightSet>::op_weight(exp *l, weights_type *r)
     {
+      if(exp::RIGHT_WEIGHT == l->getType())
+      {
+        right_weight *tmp = down_cast<right_weight *>(l);
+        assert(tmp);
+        push_back_weights(r, tmp->get_weight());
+        return tmp;
+      }
+      else
+      {
       // r->remove_if(weight_set_.is_one);
       // FIXME: check trivial identity
       // if(r.end() != find_if(r.begin(), r.end(), weight_set.is_zero))
@@ -135,6 +170,7 @@ namespace vcsn {
       //   delete r;
       //   return nullptr;
       // }
+      }
     }
 
     template<class WeightSet>
