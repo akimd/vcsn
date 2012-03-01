@@ -11,40 +11,24 @@
 namespace vcsn {
   namespace rat_exp {
 
+    // {
+    // Implement function for concatenation operators.
+
     template<class WeightSet>
     inline
     concat *
-    RatExp<WeightSet>::op_mul(exp *e)
+    mul(exp *l, exp *r)
     {
       concat *res = new concat();
-      res->push_front(e);
+      res->push_back(l);
+      res->push_back(r);
       return res;
     }
 
     template<class WeightSet>
     inline
     concat *
-    RatExp<WeightSet>::op_mul(exp *l,    exp *r)
-    {
-      concat *res = new concat();
-      res->push_front(r);
-      res->push_front(l);
-      return res;
-    }
-
-    template<class WeightSet>
-    inline
-    concat *
-    RatExp<WeightSet>::op_mul(exp *l, concat *r)
-    {
-      r->push_front(l);
-      return l;
-    }
-
-    template<class WeightSet>
-    inline
-    concat *
-    RatExp<WeightSet>::op_mul(concat *l, exp *r)
+    mul(concat *l, exp *r)
     {
       l->push_back(r);
       return l;
@@ -52,13 +36,144 @@ namespace vcsn {
 
     template<class WeightSet>
     inline
+    concat *
+    mul(exp *l, concat *r)
+    {
+      r->push_front(l);
+      return r;
+    }
+
+    template<class WeightSet>
+    inline
+    concat *
+    mul(concat *l, concat *r)
+    {
+      for(auto i : *r)
+        l->push_back(i);
+      return l;
+    }
+
+    // }
+
+    template<class WeightSet>
+    inline
+    concat *
+    RatExp<WeightSet>::op_mul(exp *e)
+    {
+      if(exp::CONCAT == e->getType())
+      {
+        concat *res = down_cast<concat *>(e);
+        assert(res);
+        return res;
+      }
+      else
+      {
+        concat *res = new concat();
+        res->push_front(e);
+        return res;
+      }
+    }
+
+    template<class WeightSet>
+    inline
+    concat *
+    RatExp<WeightSet>::op_mul(exp *l,    exp *r)
+    {
+      if(exp::CONCAT == l->getType())
+      {
+        concat *left = down_cast<concat *>(l);
+        assert(left);
+        if(exp::CONCAT == r->getType())
+        {
+          concat *right = down_cast<concat *>(r);
+          assert(right);
+          return mul<WeightSet>(left, right);
+        }
+        else
+        {
+          return mul<WeightSet>(left, r);
+        }
+      }
+      else if(exp::CONCAT == r->getType())
+      {
+        concat *right = down_cast<concat *>(r);
+        assert(right);
+        return mul<WeightSet>(l, right);
+      }
+      else
+      {
+        return mul<WeightSet>(l, r);
+      }
+    }
+
+    template<class WeightSet>
+    inline
+    concat *
+    RatExp<WeightSet>::op_mul(exp *l, concat *r)
+    {
+      if(exp::CONCAT == l->getType())
+      {
+        concat *left = down_cast<concat *>(l);
+        assert(left);
+        return mul<WeightSet>(left, r);
+      }
+      else
+      {
+        return mul<WeightSet>(l, r);
+      }
+    }
+
+    template<class WeightSet>
+    inline
+    concat *
+    RatExp<WeightSet>::op_mul(concat *l, exp *r)
+    {
+      if(exp::CONCAT == r->getType())
+      {
+        concat *right = down_cast<concat *>(r);
+        assert(right);
+        return mul<WeightSet>(l, right);
+      }
+      else
+        return mul<WeightSet>(l, r);
+    }
+
+    template<class WeightSet>
+    inline
     plus *
     RatExp<WeightSet>::op_add(exp *l,  exp *r)
     {
-      plus *res = new plus;
-      res->push_front(r);
-      res->push_front(l);
-      return res;
+      if(exp::PLUS == l->getType())
+      {
+        plus *res = down_cast<plus *>(l);
+        assert(res);
+        if(exp::PLUS == r->getType())
+        {
+          plus *right = down_cast<plus *>(r);
+          assert(right);
+          for(exp * it : *right)
+            res->push_back(it);
+        }
+        else
+        {
+          res->push_back(r);
+        }
+        return res;
+      }
+      else if(exp::PLUS == r->getType())
+      {
+        plus *res = down_cast<plus *>(r);
+        assert(res);
+        res->push_front(l);
+        return res;
+      }
+      else
+      {
+        plus *res = new plus;
+        res->push_front(r);
+        res->push_front(l);
+        return res;
+      }
     }
 
     template<class WeightSet>
