@@ -38,8 +38,8 @@ namespace vcsn {
     RatExp *
     RatExpFactory<WeightSet>::op_add(RatExp *l, RatExp *r)
     {
-      assert(l);
-      assert(r);
+      l = cleanNode(l);
+      r = cleanNode(r);
       RatExpNode<WeightSet> *left = down_cast<RatExpNode<WeightSet> *>(l);
       assert(left);
       RatExpNode<WeightSet> *right = down_cast<RatExpNode<WeightSet> *>(r);

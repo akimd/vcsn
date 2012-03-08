@@ -175,11 +175,12 @@
 
 exps:
   exp                           {
-  vcsn::rat_exp::RatExpNode<foo> *down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>($1);
+  vcsn::rat_exp::RatExp *node = fact.cleanNode($1);
+  vcsn::rat_exp::RatExpNode<foo> *down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>(node);
   assert(down);
   vcsn::rat_exp::PrintDebugVisitor<foo> print(std::cout);
   down->accept(print);
-  $$ = $1;
+  $$ = node;
  }
 
 exp:
@@ -210,7 +211,7 @@ factors:
 factor:
   word                          { $$ = $1; }
 | factor "*"                    { $$ = fact.op_kleene($1); }
-| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
+| "(" exp ")"                   { $$ = fact.cleanNode($2); assert($1 == $3); }
 ;
 
 word:
