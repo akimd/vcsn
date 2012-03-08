@@ -7,26 +7,27 @@
 namespace vcsn {
   namespace rat_exp {
 
-    class PrintDebugVisitor : public ConstVisitor
+    template<class WeightSet>
+    class PrintDebugVisitor : public visitor_traits<WeightSet>::ConstVisitor
     {
     public:
       PrintDebugVisitor(std::ostream &out);
       virtual ~PrintDebugVisitor();
     public:
-      virtual void visit(const vcsn::rat_exp::exp &           v);
-      virtual void visit(const vcsn::rat_exp::concat &        v);
-      virtual void visit(const vcsn::rat_exp::plus &          v);
-      virtual void visit(const vcsn::rat_exp::kleene &        v);
-      virtual void visit(const vcsn::rat_exp::one &           v);
-      virtual void visit(const vcsn::rat_exp::zero &          v);
-      virtual void visit(const vcsn::rat_exp::word &          v);
-      virtual void visit(const vcsn::rat_exp::left_weight &   v);
-      virtual void visit(const vcsn::rat_exp::right_weight &  v);
+      virtual void visit(const RatExpNode<WeightSet> &           v);
+      virtual void visit(const RatExpConcat<WeightSet> &        v);
+      virtual void visit(const RatExpPlus<WeightSet> &          v);
+      virtual void visit(const RatExpKleene<WeightSet> &        v);
+      virtual void visit(const RatExpOne<WeightSet> &           v);
+      virtual void visit(const RatExpZero<WeightSet> &          v);
+      virtual void visit(const RatExpWord<WeightSet> &          v);
     private:
       std::ostream &out_;
     };
 
   } // !rat_exp
 } // !vcsn
+
+# include <core/rat_exp/print_debug_visitor.hxx>
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_DEBUG_VISITOR_HH_
