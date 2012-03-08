@@ -7,497 +7,532 @@
 namespace vcsn {
   namespace rat_exp {
 
-    /////////
-    // Exp //
-    /////////
-
     inline
-    exp::exp(DynamicType dyn_type) :
-      dyn_type_(dyn_type)
+    RatExp::~RatExp()
     { }
 
+    ////////////////
+    // RatExpNode //
+    ////////////////
+
+    template<class WeightSet>
     inline
-    exp::DynamicType
-    exp::getType() const
+    RatExpNode<WeightSet>::RatExpNode(DynamicType dyn_type,
+                                      WeightType weight_type) :
+      dyn_type_(dyn_type),
+      weight_type_(weight_type)
+    { }
+
+    template<class WeightSet>
+    inline
+    RatExpNode<WeightSet>::~RatExpNode()
+    { }
+
+    template<class WeightSet>
+    inline
+    typename RatExpNode<WeightSet>::DynamicType
+    RatExpNode<WeightSet>::getType() const
     {
       return dyn_type_;
     }
 
-    ////////////
-    // Concat //
-    ////////////
-
+    template<class WeightSet>
     inline
-    concat::concat() :
-      exp(CONCAT)
+    typename RatExpNode<WeightSet>::WeightType
+    RatExpNode<WeightSet>::getWeightType() const
+    {
+      return weight_type_;
+    }
+
+    //////////////////
+    // LRWeightNode //
+    //////////////////
+
+    template<class WeightSet>
+    inline
+    LRWeightNode<WeightSet>::LRWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type) :
+      RatExpNode<WeightSet>(dyn_type, RatExpNode<WeightSet>::LR_WEIGHT),
+      lw_(weightset_t::one()),
+      rw_(weightset_t::one())
     { }
 
+    template<class WeightSet>
     inline
-    concat::~concat()
+    LRWeightNode<WeightSet>::~LRWeightNode()
+    { }
+
+    template<class WeightSet>
+    inline
+    const typename LRWeightNode<WeightSet>::weight_t &
+    LRWeightNode<WeightSet>::left_weight() const
+    {
+      return lw_;
+    }
+
+    template<class WeightSet>
+    inline
+    typename LRWeightNode<WeightSet>::weight_t &
+    LRWeightNode<WeightSet>::left_weight()
+    {
+      return lw_;
+    }
+
+    template<class WeightSet>
+    inline
+    const typename LRWeightNode<WeightSet>::weight_t &
+    LRWeightNode<WeightSet>::right_weight() const
+    {
+      return rw_;
+    }
+
+    template<class WeightSet>
+    inline
+    typename LRWeightNode<WeightSet>::weight_t &
+    LRWeightNode<WeightSet>::right_weight()
+    {
+      return rw_;
+    }
+
+    /////////////////
+    // LWeightNode //
+    /////////////////
+
+    template<class WeightSet>
+    inline
+    LWeightNode<WeightSet>::LWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type) :
+      RatExpNode<WeightSet>(dyn_type, RatExpNode<WeightSet>::L_WEIGHT),
+      lw_(weightset_t::one())
+    { }
+
+    template<class WeightSet>
+    inline
+    LWeightNode<WeightSet>::~LWeightNode()
+    { }
+
+    template<class WeightSet>
+    inline
+    const typename LWeightNode<WeightSet>::weight_t &
+    LWeightNode<WeightSet>::left_weight() const
+    {
+      return lw_;
+    }
+
+    template<class WeightSet>
+    inline
+    typename LWeightNode<WeightSet>::weight_t &
+    LWeightNode<WeightSet>::left_weight()
+    {
+      return lw_;
+    }
+
+    //////////////////
+    // RatExpConcat //
+    //////////////////
+
+    template<class WeightSet>
+    inline
+    RatExpConcat<WeightSet>::RatExpConcat() :
+      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::CONCAT)
+    { }
+
+    template<class WeightSet>
+    inline
+    RatExpConcat<WeightSet>::~RatExpConcat()
     {
       for(auto t : sub_node_)
         delete t;
     }
 
+    template<class WeightSet>
     inline
-    concat &
-    concat::push_front(exp *l_exp)
+    typename RatExpConcat<WeightSet>::const_iterator
+    RatExpConcat<WeightSet>::begin() const
     {
-      sub_node_.push_front(l_exp);
+      return sub_node_.begin();
     }
 
+    template<class WeightSet>
     inline
-
-    concat &
-    concat::push_back(exp *l_exp)
+    typename RatExpConcat<WeightSet>::const_iterator
+    RatExpConcat<WeightSet>::end() const
     {
-      sub_node_.push_back(l_exp);
+      return sub_node_.end();
     }
 
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::iterator
+    RatExpConcat<WeightSet>::begin()
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::iterator
+    RatExpConcat<WeightSet>::end()
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::const_reverse_iterator
+    RatExpConcat<WeightSet>::rbegin() const
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::const_reverse_iterator
+    RatExpConcat<WeightSet>::rend() const
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::reverse_iterator
+    RatExpConcat<WeightSet>::rbegin()
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpConcat<WeightSet>::reverse_iterator
+    RatExpConcat<WeightSet>::rend()
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    RatExpConcat<WeightSet> &
+    RatExpConcat<WeightSet>::push_back(RatExpNode<WeightSet> *elt)
+    {
+      sub_node_.push_back(elt);
+      return *this;
+    }
+
+    template<class WeightSet>
+    inline
+    RatExpConcat<WeightSet> &
+    RatExpConcat<WeightSet>::push_front(RatExpNode<WeightSet> *elt)
+    {
+      sub_node_.push_front(elt);
+      return *this;
+    }
+
+    template<class WeightSet>
     inline
     size_t
-    concat::size() const
+    RatExpConcat<WeightSet>::size() const
     {
       return sub_node_.size();
     }
 
+    template<class WeightSet>
     inline
-
     void
-    concat::accept(visitor &v)
+    RatExpConcat<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     void
-    concat::accept(ConstVisitor &v) const
+    RatExpConcat<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
     {
       v.visit(*this);
     }
 
-    inline
-    concat::const_iterator
-    concat::begin() const
-    {
-      return sub_node_.begin();
-    }
+    //////////////////
+    // RatExpPlus //
+    //////////////////
 
+    template<class WeightSet>
     inline
-    concat::iterator
-    concat::begin()
-    {
-      return sub_node_.begin();
-    }
-
-    inline
-    concat::const_iterator
-    concat::end() const
-    {
-      return sub_node_.end();
-    }
-
-    inline
-    concat::iterator
-    concat::end()
-    {
-      return sub_node_.end();
-    }
-
-    inline
-    concat::const_reverse_iterator
-    concat::rbegin() const
-    {
-      return sub_node_.rbegin();
-    }
-
-    inline
-    concat::reverse_iterator
-    concat::rbegin()
-    {
-      return sub_node_.rbegin();
-    }
-
-    inline
-    concat::const_reverse_iterator
-    concat::rend() const
-    {
-      return sub_node_.rend();
-    }
-
-    inline
-    concat::reverse_iterator
-    concat::rend()
-    {
-      return sub_node_.rend();
-    }
-
-    //////////
-    // Plus //
-    //////////
-
-    inline
-    plus::plus() :
-      exp(PLUS)
+    RatExpPlus<WeightSet>::RatExpPlus() :
+      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::PLUS)
     { }
 
+    template<class WeightSet>
     inline
-    plus::~plus()
+    RatExpPlus<WeightSet>::~RatExpPlus()
     {
       for(auto t : sub_node_)
         delete t;
     }
 
+    template<class WeightSet>
     inline
-    plus &
-    plus::push_front(exp *l_exp)
+    typename RatExpPlus<WeightSet>::const_iterator
+    RatExpPlus<WeightSet>::begin() const
     {
-      sub_node_.push_front(l_exp);
+      return sub_node_.begin();
     }
 
+    template<class WeightSet>
     inline
-    plus &
-    plus::push_back(exp *l_exp)
+    typename RatExpPlus<WeightSet>::const_iterator
+    RatExpPlus<WeightSet>::end() const
     {
-      sub_node_.push_back(l_exp);
+      return sub_node_.end();
     }
 
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::iterator
+    RatExpPlus<WeightSet>::begin()
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::iterator
+    RatExpPlus<WeightSet>::end()
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::const_reverse_iterator
+    RatExpPlus<WeightSet>::rbegin() const
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::const_reverse_iterator
+    RatExpPlus<WeightSet>::rend() const
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::reverse_iterator
+    RatExpPlus<WeightSet>::rbegin()
+    {
+      return sub_node_.begin();
+    }
+
+    template<class WeightSet>
+    inline
+    typename RatExpPlus<WeightSet>::reverse_iterator
+    RatExpPlus<WeightSet>::rend()
+    {
+      return sub_node_.end();
+    }
+
+    template<class WeightSet>
+    inline
+    RatExpPlus<WeightSet> &
+    RatExpPlus<WeightSet>::push_back(RatExpNode<WeightSet> *elt)
+    {
+      sub_node_.push_back(elt);
+      return *this;
+    }
+
+    template<class WeightSet>
+    inline
+    RatExpPlus<WeightSet> &
+    RatExpPlus<WeightSet>::push_front(RatExpNode<WeightSet> *elt)
+    {
+      sub_node_.push_front(elt);
+      return *this;
+    }
+
+    template<class WeightSet>
     inline
     size_t
-    plus::size() const
+    RatExpPlus<WeightSet>::size() const
     {
       return sub_node_.size();
     }
 
+    template<class WeightSet>
     inline
     void
-    plus::accept(visitor &v)
+    RatExpPlus<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     void
-    plus::accept(ConstVisitor &v) const
+    RatExpPlus<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
     {
       v.visit(*this);
     }
 
-    inline
-    plus::const_iterator
-    plus::begin() const
-    {
-      return sub_node_.begin();
-    }
+    //////////////////
+    // RatExpKleene //
+    //////////////////
 
+    template<class WeightSet>
     inline
-    plus::iterator plus::begin()
-    {
-      return sub_node_.begin();
-    }
-
-    inline
-    plus::const_iterator
-    plus::end() const
-    {
-      return sub_node_.end();
-    }
-
-    inline
-    plus::iterator
-    plus::end()
-    {
-      return sub_node_.end();
-    }
-
-    inline
-    plus::const_reverse_iterator
-    plus::rbegin() const
-    {
-      return sub_node_.rbegin();
-    }
-
-    inline
-    plus::reverse_iterator
-    plus::rbegin()
-    {
-      return sub_node_.rbegin();
-    }
-
-    inline
-    plus::const_reverse_iterator
-    plus::rend() const
-    {
-      return sub_node_.rend();
-    }
-
-    inline
-    plus::reverse_iterator
-    plus::rend()
-    {
-      return sub_node_.rend();
-    }
-
-    ////////////
-    // Kleene //
-    ////////////
-
-    inline
-    kleene::kleene(exp *sub_exp) :
-      exp(KLEENE),
+    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet> * sub_exp) :
+      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::KLEENE),
       sub_exp_(sub_exp)
     { }
 
+    template<class WeightSet>
     inline
-    kleene::~kleene()
+    RatExpKleene<WeightSet>::~RatExpKleene()
     {
       delete sub_exp_;
     }
 
+    template<class WeightSet>
     inline
-    void
-    kleene::accept(visitor &v)
-    {
-      v.visit(*this);
-    }
-
-    inline
-    void
-    kleene::accept(ConstVisitor &v) const
-    {
-      v.visit(*this);
-    }
-
-    inline
-    exp *
-    kleene::get_sub()
+    RatExpNode<WeightSet> *
+    RatExpKleene<WeightSet>::getSubNode()
     {
       return sub_exp_;
     }
 
+    template<class WeightSet>
     inline
-    const exp *
-    kleene::get_sub() const
+    const RatExpNode<WeightSet> *
+    RatExpKleene<WeightSet>::getSubNode() const
     {
       return sub_exp_;
     }
 
-    /////////////
-    // One cst //
-    /////////////
-
-    inline
-    one::one() :
-      exp(ONE)
-    { }
-
-    inline
-    one::~one()
-    { }
-
+    template<class WeightSet>
     inline
     void
-    one::accept(visitor &v)
+    RatExpKleene<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     void
-    one::accept(ConstVisitor &v) const
+    RatExpKleene<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
     {
       v.visit(*this);
     }
 
-    //////////////
-    // Zero cst //
-    //////////////
+    ///////////////
+    // RatExpOne //
+    ///////////////
 
+    template<class WeightSet>
     inline
-    zero::zero() :
-      exp(ZERO)
+    RatExpOne<WeightSet>::RatExpOne() :
+      LWeightNode<WeightSet>(RatExpNode<WeightSet>::ONE)
     { }
 
+    template<class WeightSet>
     inline
-    zero::~zero()
+    RatExpOne<WeightSet>::~RatExpOne()
     { }
 
+    template<class WeightSet>
     inline
     void
-    zero::accept(visitor &v)
+    RatExpOne<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     void
-    zero::accept(ConstVisitor &v) const
+    RatExpOne<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
     {
       v.visit(*this);
     }
 
-    //////////
-    // Word //
-    //////////
+    ////////////////
+    // RatExpZero //
+    ////////////////
 
+    template<class WeightSet>
     inline
-    word::word(std::string *word) :
-      exp(WORD),
+    RatExpZero<WeightSet>::RatExpZero() :
+      LWeightNode<WeightSet>(RatExpNode<WeightSet>::ZERO)
+    { }
+
+    template<class WeightSet>
+    inline
+    RatExpZero<WeightSet>::~RatExpZero()
+    { }
+
+    template<class WeightSet>
+    inline
+    void
+    RatExpZero<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
+    {
+      v.visit(*this);
+    }
+
+    template<class WeightSet>
+    inline
+    void
+    RatExpZero<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
+    {
+      v.visit(*this);
+    }
+
+    ////////////////
+    // RatExpWord //
+    ////////////////
+
+    template<class WeightSet>
+    inline
+    RatExpWord<WeightSet>::RatExpWord(std::string *word) :
+      LWeightNode<WeightSet>(RatExpNode<WeightSet>::WORD),
       word_(word)
     { }
 
+    template<class WeightSet>
     inline
-    word::~word()
+    RatExpWord<WeightSet>::~RatExpWord()
     {
       delete word_;
     }
 
+    template<class WeightSet>
     inline
     void
-    word::accept(visitor &v)
+    RatExpWord<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     void
-    word::accept(ConstVisitor &v) const
+    RatExpWord<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const
     {
       v.visit(*this);
     }
 
+    template<class WeightSet>
     inline
     std::string *
-    word::get_word()
+    RatExpWord<WeightSet>::get_word()
     {
       return word_;
     }
 
+    template<class WeightSet>
     inline
     const std::string *
-    word::get_word() const
+    RatExpWord<WeightSet>::get_word() const
     {
       return word_;
-    }
-
-    /////////////////
-    // Left Weight //
-    /////////////////
-
-    inline
-    left_weight::left_weight(left_weight::weight *l_weight, exp *r_exp) :
-      exp(LEFT_WEIGHT),
-      l_weight_(l_weight),
-      r_exp_(r_exp)
-    { }
-
-    inline
-    left_weight::~left_weight()
-    {
-      delete r_exp_;
-      delete l_weight_;
-    }
-
-    inline
-    void
-    left_weight::accept(visitor &v)
-    {
-      v.visit(*this);
-    }
-
-    inline
-    void
-    left_weight::accept(ConstVisitor &v) const
-    {
-      v.visit(*this);
-    }
-
-    inline
-    exp *
-    left_weight::get_exp()
-    {
-      return r_exp_;
-    }
-
-    inline
-    const exp *
-    left_weight::get_exp() const
-    {
-      return r_exp_;
-    }
-
-    inline
-    left_weight::weight *
-    left_weight::get_weight()
-    {
-      return l_weight_;
-    }
-
-    inline
-    const left_weight::weight *
-    left_weight::get_weight() const
-    {
-      return l_weight_;
-    }
-
-    //////////////////
-    // Right Weight //
-    //////////////////
-
-    inline
-    right_weight::right_weight(exp *l_exp, right_weight::weight *r_weight) :
-      exp(RIGHT_WEIGHT),
-      l_exp_(l_exp),
-      r_weight_(r_weight)
-    { }
-
-    inline
-    right_weight::~right_weight()
-    {
-      delete r_weight_;
-      delete l_exp_;
-    }
-
-    inline
-    void
-    right_weight::accept(visitor &v)
-    {
-      v.visit(*this);
-    }
-
-    inline
-    void
-    right_weight::accept(ConstVisitor &v) const
-    {
-      v.visit(*this);
-    }
-
-    inline
-    exp *
-    right_weight::get_exp()
-    {
-      return l_exp_;
-    }
-
-    inline
-    const exp *
-    right_weight::get_exp() const
-    {
-      return l_exp_;
-    }
-
-    inline
-    right_weight::weight *
-    right_weight::get_weight()
-    {
-      return r_weight_;
-    }
-
-    inline
-    const right_weight::weight *
-    right_weight::get_weight() const
-    {
-      return r_weight_;
     }
 
   } // !exp

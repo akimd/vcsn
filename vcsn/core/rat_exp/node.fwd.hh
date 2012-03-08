@@ -10,23 +10,28 @@ namespace vcsn {
     typedef std::string weight_type;
     typedef std::list<weight_type *> weights_type;
 
-    class exp;
+    class RatExp;
 
-    class concat;
+    template<class WeightSet>
+    class RatExpNode;
 
-    class plus;
+    template<class WeightSet>
+    class RatExpConcat;
 
-    class kleene;
+    template<class WeightSet>
+    class RatExpPlus;
 
-    class one;
+    template<class WeightSet>
+    class RatExpKleene;
 
-    class zero;
+    template<class WeightSet>
+    class RatExpOne;
 
-    class word;
+    template<class WeightSet>
+    class RatExpZero;
 
-    class left_weight;
-
-    class right_weight;
+    template<class WeightSet>
+    class RatExpWord;
 
   } // !rat_exp
 } // !vcsn
