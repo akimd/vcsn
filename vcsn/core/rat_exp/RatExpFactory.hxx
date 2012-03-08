@@ -340,6 +340,47 @@ namespace vcsn {
       return l;
     }
 
+
+    template<class WeightSet>
+    inline
+    RatExp *
+    RatExpFactory<WeightSet>::cleanNode(RatExp *e)
+    {
+      RatExpNode<WeightSet> *expr = down_cast<RatExpNode<WeightSet> *>(e);
+      assert(expr);
+
+      switch(expr->getType())
+      {
+      case RatExpNode<WeightSet>::PLUS:
+      {
+        RatExpPlus<WeightSet> *plus = down_cast<RatExpPlus<WeightSet> *>(expr);
+        assert(plus);
+        if(1 == plus->size())
+        {
+          expr = *plus->begin();
+          plus->erase(plus->begin());
+          delete plus;
+        }
+        break;
+      }
+      case RatExpNode<WeightSet>::CONCAT:
+      {
+        RatExpConcat<WeightSet> *concat = down_cast<RatExpConcat<WeightSet> *>(expr);
+        assert(concat);
+        if(1 == concat->size())
+        {
+          expr = *concat->begin();
+          concat->erase(concat->begin());
+          delete concat;
+        }
+        break;
+      }
+      default:
+        break;
+      }
+      return expr;
+    }
+
   } // !rat_exp
 } // !vcsn
 
