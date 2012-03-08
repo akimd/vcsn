@@ -18,8 +18,18 @@
   #include <string>
   #include "location.hh"
   #include <core/rat_exp/node.hh>
-  #include <core/rat_exp/rat-exp.hh>
+  #include <core/rat_exp/RatExpFactory.hh>
   #include <core/rat_exp/print_debug_visitor.hh>
+
+  struct foo
+  {
+    typedef int value_t;
+    static int one() { return 1; }
+    static int zero() { return 0; }
+    static void op_mul_eq(int i, std::string *str) {
+      i *= atoi(str->c_str());
+      }
+  }; // FIXME
 
   union YYSTYPE
   {
@@ -27,8 +37,7 @@
     std::string* sval;
     vcsn::rat_exp::weight_type* weight;
     vcsn::rat_exp::weights_type* weights;
-    vcsn::rat_exp::exp *nodeval;
-    vcsn::rat_exp::concat *concatval;
+    vcsn::rat_exp::RatExp *nodeval;
   };
 
   #define YY_DECL                                                       \
@@ -56,20 +65,20 @@
   typedef vcsn::rat_exp::weight_type weight_type;
   typedef vcsn::rat_exp::weights_type weights_type;
 
-  static
-  weights_type*
-  make_weights(weight_type* w)
-  {
-    return new weights_type {w};
-  }
+  // static
+  // weights_type*
+  // make_weights(weight_type* w)
+  // {
+  //   return new weights_type {w};
+  // }
 
-  static
-  weights_type*
-  make_weights(weight_type* w, weights_type* ws)
-  {
-    ws->push_front(w);
-    return ws;
-  }
+  // static
+  // weights_type*
+  // make_weights(weight_type* w, weights_type* ws)
+  // {
+  //   ws->push_front(w);
+  //   return ws;
+  // }
 
   std::ostream&
   operator<<(std::ostream& o, const weights_type& ws)
@@ -130,7 +139,7 @@
   }
 
   // define the factory
-  vcsn::rat_exp::RatExp<int> fact; // FIXME: specialization
+  vcsn::rat_exp::RatExpFactory<foo> fact; // FIXME: specialization
 }
 
 %printer { debug_stream() << *$$; } <sval>;
@@ -155,8 +164,7 @@
 %token <weight> WEIGHT  "weight"
 
 %type <weights> weights weights.opt;
-%type <nodeval> exps exp term lexp factor word;
-%type <concatval> factors;
+%type <nodeval> exps exp term lexp factor word factors;
 
 
 %left "+"
@@ -167,9 +175,11 @@
 
 exps:
   exp                           {
-    vcsn::rat_exp::PrintDebugVisitor print(std::cout);
-    $1->accept(print);
-    $$ = $1;
+  vcsn::rat_exp::RatExpNode<foo> *down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>($1);
+  assert(down);
+  vcsn::rat_exp::PrintDebugVisitor<foo> print(std::cout);
+  down->accept(print);
+  $$ = $1;
  }
 
 exp:
@@ -188,26 +198,8 @@ term:
 ;
 
 lexp:
-  weights.opt factors           {
-    vcsn::rat_exp::exp *factors = $2;
-    if(1 == $2->size())
-    {
-      factors = *$2->begin();
-    }
-    if($1 != nullptr)
-      $$ = fact.op_weight($1, factors);
-    else
-      $$ = factors;
-  }
-| lexp weights factors          {
-    vcsn::rat_exp::exp *factors = $3;
-    if(1 == $3->size())
-    {
-      factors = *$3->begin();
-    }
-    vcsn::rat_exp::left_weight *right = fact.op_weight($2, factors);
-    $$ = fact.op_mul($1, right);
-  }
+  weights.opt factors           { $$ = fact.op_weight($1, $2); }
+| lexp weights factors          { $$ = fact.op_mul($1, fact.op_weight($2, $3)); }
 ;
 
 factors:
