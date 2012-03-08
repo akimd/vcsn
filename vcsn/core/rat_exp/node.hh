@@ -116,6 +116,7 @@ namespace vcsn {
       RatExpConcat<WeightSet> &push_back(RatExpNode<WeightSet> *elt);
       RatExpConcat<WeightSet> &push_front(RatExpNode<WeightSet> *elt);
       size_t size() const;
+      void erase(iterator it);
 
     public:
       virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
@@ -151,6 +152,7 @@ namespace vcsn {
       RatExpPlus<WeightSet> &push_back(RatExpNode<WeightSet> *elt);
       RatExpPlus<WeightSet> &push_front(RatExpNode<WeightSet> *elt);
       size_t size() const;
+      void erase(iterator it);
 
     public:
       virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);

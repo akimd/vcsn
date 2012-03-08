@@ -236,6 +236,14 @@ namespace vcsn {
     template<class WeightSet>
     inline
     void
+    RatExpConcat<WeightSet>::erase(iterator it)
+    {
+      sub_node_.erase(it);
+    }
+
+    template<class WeightSet>
+    inline
+    void
     RatExpConcat<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor &v)
     {
       v.visit(*this);
@@ -355,6 +363,14 @@ namespace vcsn {
     RatExpPlus<WeightSet>::size() const
     {
       return sub_node_.size();
+    }
+
+    template<class WeightSet>
+    inline
+    void
+    RatExpPlus<WeightSet>::erase(iterator it)
+    {
+      sub_node_.erase(it);
     }
 
     template<class WeightSet>
