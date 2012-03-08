@@ -7,23 +7,32 @@
 namespace vcsn {
   namespace rat_exp {
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     class GenVisitor
     {
     public:
-      virtual void visit(typename ConstNess<exp>::type &           v);
-      virtual void visit(typename ConstNess<concat>::type &        v);
-      virtual void visit(typename ConstNess<plus>::type &          v);
-      virtual void visit(typename ConstNess<kleene>::type &        v);
-      virtual void visit(typename ConstNess<one>::type &           v);
-      virtual void visit(typename ConstNess<zero>::type &          v);
-      virtual void visit(typename ConstNess<word>::type &          v);
-      virtual void visit(typename ConstNess<left_weight>::type &   v);
-      virtual void visit(typename ConstNess<right_weight>::type &  v);
+      typedef WeightSet weightset_t;
+    public:
+      virtual void visit(typename ConstNess<RatExpNode<WeightSet> >::type &          v);
+      virtual void visit(typename ConstNess<RatExpConcat<WeightSet> >::type &        v);
+      virtual void visit(typename ConstNess<RatExpPlus<WeightSet> >::type &          v);
+      virtual void visit(typename ConstNess<RatExpKleene<WeightSet> >::type &        v);
+      virtual void visit(typename ConstNess<RatExpOne<WeightSet> >::type &           v);
+      virtual void visit(typename ConstNess<RatExpZero<WeightSet> >::type &          v);
+      virtual void visit(typename ConstNess<RatExpWord<WeightSet> >::type &          v);
+      // virtual void visit(typename ConstNess<left_weight>::type &   v);
+      // virtual void visit(typename ConstNess<right_weight>::type &  v);
     };
 
-    typedef GenVisitor<misc::id_traits> visitor;
-    typedef GenVisitor<misc::constify_traits> ConstVisitor;
+    template<class WeightSet>
+    struct visitor_traits
+    {
+      typedef GenVisitor<WeightSet, misc::id_traits> Visitor;
+      typedef GenVisitor<WeightSet, misc::constify_traits> ConstVisitor;
+    };
+
+    // typedef GenVisitor<misc::id_traits> Visitor;
+    // typedef GenVisitor<misc::constify_traits> ConstVisitor;
 
   } // !rat_exp
 } // !vcsn

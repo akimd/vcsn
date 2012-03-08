@@ -11,6 +11,5 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-io_rat_exp_SOURCES +=							\
-	core/rat_exp/print_visitor.cc					\
-	core/rat_exp/print_debug_visitor.cc
+io_rat_exp_SOURCES +=
+

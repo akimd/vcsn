@@ -16,80 +16,60 @@ namespace vcsn {
     // GenVisitor<ConstNess>::~GenVisitor()
     // { }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::exp>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpNode<WeightSet> >::type &)
     {
       assert(false);
     }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::concat>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpConcat<WeightSet> >::type & v)
     {
       for(auto t : v)
         t->accept(*this);
     }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::plus>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpPlus<WeightSet> >::type & v)
     {
       for(auto t : v)
         t->accept(*this);
     }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::kleene>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpKleene<WeightSet> >::type & v)
     {
-      typename ConstNess<exp>::type *sub_exp = v.get_sub();
+      typename ConstNess<RatExpNode<WeightSet> >::type *sub_exp = v.getSubNode();
 
       if(sub_exp!= nullptr)
         sub_exp->accept(*this);
     }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::one>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpOne<WeightSet> >::type &)
     { }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::zero>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpZero<WeightSet> >::type &)
     { }
 
-    template<template<class> class ConstNess>
+    template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::word>::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpWord<WeightSet> >::type &)
     { }
-
-    template<template<class> class ConstNess>
-    inline
-    void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::left_weight>::type & v)
-    {
-      typename ConstNess<exp>::type *sub_node = v.get_exp();
-      if(sub_node != nullptr)
-        sub_node->accept(*this);
-    }
-
-    template<template<class> class ConstNess>
-    inline
-    void
-    GenVisitor<ConstNess>::visit(typename ConstNess<vcsn::rat_exp::right_weight>::type & v)
-    {
-      typename ConstNess<exp>::type *sub_node = v.get_exp();
-      if(sub_node != nullptr)
-        sub_node->accept(*this);
-    }
 
   } // !rat_exp
 } // !vcsn
