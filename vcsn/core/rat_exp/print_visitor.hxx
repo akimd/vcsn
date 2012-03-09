@@ -6,25 +6,25 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet>
+    template <class WeightSet>
     PrintVisitor<WeightSet>::PrintVisitor(std::ostream &out) :
       out_(out)
     { }
 
-    template<class WeightSet>
+    template <class WeightSet>
     PrintVisitor<WeightSet>::~PrintVisitor()
     {
       out_ << std::flush;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpNode<WeightSet> &v)
     {
       assert(false);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet> &v)
     {
@@ -45,7 +45,7 @@ namespace vcsn
       print_weight(v.right_weight());
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet> &v)
     {
@@ -66,7 +66,7 @@ namespace vcsn
       print_weight(v.right_weight());
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet> &v)
     {
@@ -81,21 +81,21 @@ namespace vcsn
       print_weight(v.right_weight());
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpOne<WeightSet> &v)
     {
       out_ << "\\e";
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpZero<WeightSet> &v)
     {
       out_ << "\\z";
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet> &v)
     {

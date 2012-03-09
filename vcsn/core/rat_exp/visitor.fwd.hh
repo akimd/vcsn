@@ -6,7 +6,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<template<class> class T>
+    template <template <class> class T>
     class GenVisitor;
 
   } // !rat_exp

@@ -18,7 +18,7 @@ namespace vcsn
       assert(false);
     }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpConcat<WeightSet> >::type& v)
@@ -27,7 +27,7 @@ namespace vcsn
         t->accept(*this);
     }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpPlus<WeightSet> >::type& v)
@@ -36,7 +36,7 @@ namespace vcsn
         t->accept(*this);
     }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpKleene<WeightSet> >::type& v)
@@ -47,19 +47,19 @@ namespace vcsn
         sub_exp->accept(*this);
     }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpOne<WeightSet> >::type &)
     { }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpZero<WeightSet> >::type &)
     { }
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     inline
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpWord<WeightSet> >::type &)

@@ -10,7 +10,7 @@
 
 namespace vcsn
 {
-  template<class Alphabet, class WeightSet, class Kind>
+  template <class Alphabet, class WeightSet, class Kind>
   class mutable_automaton
   {
   protected:

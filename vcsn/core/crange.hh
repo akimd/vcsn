@@ -6,7 +6,7 @@
 namespace vcsn
 {
   // Restrict the interface of a container to begin/end.
-  template<class C>
+  template <class C>
   struct container_range
   {
   public:
@@ -19,7 +19,7 @@ namespace vcsn
 
 
 
-  template<class C>
+  template <class C>
   struct container_filter_range
   {
   public:

@@ -9,7 +9,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet, template<class> class ConstNess>
+    template <class WeightSet, template <class> class ConstNess>
     class GenVisitor
     {
     public:
@@ -24,7 +24,7 @@ namespace vcsn
       virtual void visit(typename ConstNess<RatExpWord<WeightSet> >::type &          v);
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     struct visitor_traits
     {
       typedef GenVisitor<WeightSet, misc::id_traits> Visitor;

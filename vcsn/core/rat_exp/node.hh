@@ -18,7 +18,7 @@ namespace vcsn
       virtual ~RatExp() = 0;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpNode : public RatExp
     {
     public:
@@ -54,7 +54,7 @@ namespace vcsn
       const WeightType weight_type_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class LRWeightNode : public RatExpNode<WeightSet>
     {
     public:
@@ -75,7 +75,7 @@ namespace vcsn
       weight_t rw_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class LWeightNode : public RatExpNode<WeightSet>
     {
     public:
@@ -92,7 +92,7 @@ namespace vcsn
       weight_t lw_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpConcat : public LRWeightNode<WeightSet>
     {
     public:
@@ -128,7 +128,7 @@ namespace vcsn
       node_list sub_node_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpPlus : public LRWeightNode<WeightSet>
     {
     public:
@@ -164,7 +164,7 @@ namespace vcsn
       node_list sub_node_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpKleene : public LRWeightNode<WeightSet>
     {
     public:
@@ -181,7 +181,7 @@ namespace vcsn
       RatExpNode<WeightSet> *sub_exp_;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpOne : public LWeightNode<WeightSet>
     {
     public:
@@ -192,7 +192,7 @@ namespace vcsn
       virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpZero : public LWeightNode<WeightSet>
     {
     public:
@@ -203,7 +203,7 @@ namespace vcsn
       virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
     };
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpWord : public LWeightNode<WeightSet>
     {
     public:

@@ -9,7 +9,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet>
+    template <class WeightSet>
     class PrintVisitor : public visitor_traits<WeightSet>::ConstVisitor
     {
     public:

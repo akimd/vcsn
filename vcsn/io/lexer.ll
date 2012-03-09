@@ -98,7 +98,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     weight_level += '(';
   } // push parenthesis
   ")"                           {
-    if(0 == brace_level)
+    if (0 == brace_level)
     {
       assert(brace_level == 0);
     }
@@ -135,7 +135,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 void
 switch_context(std::string context_name)
 {
-  if("vcsn" == context_name)
+  if ("vcsn" == context_name)
   {
     yy_push_state(INITIAL);
     brace_context_level.push(0);

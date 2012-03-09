@@ -13,7 +13,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExp *
     RatExpFactory<WeightSet>::op_mul(RatExp* e)
@@ -23,7 +23,7 @@ namespace vcsn
       return op_mul(expr);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExp *
     RatExpFactory<WeightSet>::op_mul(RatExp* l, RatExp* r)
@@ -35,7 +35,7 @@ namespace vcsn
       return op_mul(left, right);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExp *
     RatExpFactory<WeightSet>::op_add(RatExp* l, RatExp* r)
@@ -49,7 +49,7 @@ namespace vcsn
       return op_add(left, right);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExp *
     RatExpFactory<WeightSet>::op_kleene(RatExp* e)
@@ -61,7 +61,7 @@ namespace vcsn
 
     // Implement function for concatenation operators.
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpConcat<WeightSet> *
     mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
@@ -72,7 +72,7 @@ namespace vcsn
       return res;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpConcat<WeightSet> *
     mul(RatExpConcat<WeightSet>* l, RatExpNode<WeightSet>* r)
@@ -81,7 +81,7 @@ namespace vcsn
       return l;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpConcat<WeightSet> *
     mul(RatExpNode<WeightSet>* l, RatExpConcat<WeightSet>* r)
@@ -90,7 +90,7 @@ namespace vcsn
       return r;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpConcat<WeightSet> *
     mul(RatExpConcat<WeightSet>* l, RatExpConcat<WeightSet>* r)
@@ -102,7 +102,7 @@ namespace vcsn
 
     // End
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* e)
@@ -123,7 +123,7 @@ namespace vcsn
       // }
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
@@ -172,7 +172,7 @@ namespace vcsn
       }
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
@@ -224,7 +224,7 @@ namespace vcsn
       }
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpKleene<WeightSet> *
     RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
@@ -232,7 +232,7 @@ namespace vcsn
       return new RatExpKleene<WeightSet>(e);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpOne<WeightSet>  *
     RatExpFactory<WeightSet>::op_one()
@@ -240,7 +240,7 @@ namespace vcsn
       return new RatExpOne<WeightSet>();
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpZero<WeightSet> *
     RatExpFactory<WeightSet>::op_zero()
@@ -248,7 +248,7 @@ namespace vcsn
       return new RatExpZero<WeightSet>();
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     RatExpWord<WeightSet> *
     RatExpFactory<WeightSet>::op_word(std::string *w)
@@ -256,7 +256,7 @@ namespace vcsn
       return new RatExpWord<WeightSet>(w);
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     weights_type *
     RatExpFactory<WeightSet>::op_weight(weight_type* w)
@@ -266,7 +266,7 @@ namespace vcsn
       return res;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     RatExp *
     RatExpFactory<WeightSet>::op_weight(weights_type* w, RatExp* e)
     {
@@ -297,7 +297,7 @@ namespace vcsn
       }
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     RatExp *
     RatExpFactory<WeightSet>::op_weight(RatExp* e, weights_type* w)
     {
@@ -374,7 +374,7 @@ namespace vcsn
       return e;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     weights_type *
     RatExpFactory<WeightSet>::op_weight(weight_type* w, weights_type* l)
@@ -383,7 +383,7 @@ namespace vcsn
       return l;
     }
 
-    template<class WeightSet>
+    template <class WeightSet>
     inline
     weights_type *
     RatExpFactory<WeightSet>::op_weight(weights_type* l, weight_type* w)

@@ -6,7 +6,7 @@
 
 namespace vcsn
 {
-  template<class Alphabet, class WeightSet>
+  template <class Alphabet, class WeightSet>
   struct polynomial
   {
   public:

@@ -7,13 +7,13 @@ namespace vcsn
   namespace misc
   {
 
-    template<typename T>
+    template <typename T>
     struct constify_traits
     {
       typedef const T type;
     };
 
-    template<typename T>
+    template <typename T>
     struct id_traits
     {
       typedef T type;

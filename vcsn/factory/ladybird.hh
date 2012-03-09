@@ -7,7 +7,7 @@
 
 namespace vcsn
 {
-  template<class Weights>
+  template <class Weights>
   mutable_automaton<set_alphabet<char_letters>, Weights, labels_are_letters>
   ladybird(unsigned n, Weights w = Weights())
   {
@@ -20,7 +20,7 @@ namespace vcsn
     aut.set_initial(p);
     aut.set_final(p);
     auto x = p;
-    for(unsigned i = 1; i < n; ++i)
+    for (unsigned i = 1; i < n; ++i)
       {
 	auto y = aut.add_state();
 	aut.add_transition(x, y, 'a');

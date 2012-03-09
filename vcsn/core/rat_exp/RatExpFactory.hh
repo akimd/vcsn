@@ -10,7 +10,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet>
+    template <class WeightSet>
     class RatExpFactory
     {
     public:
