@@ -1,6 +1,7 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
 #define VCSN_ALPHABETS_SETALPHA_HH
 
+#include <initializer_list>
 #include <set>
 
 namespace vcsn
@@ -13,6 +14,11 @@ namespace vcsn
     alphabet_t alphabet_;
 
   public:
+    set_alphabet() = default;
+    set_alphabet(const std::initializer_list<typename L::letter_t>& l)
+      : alphabet_(l)
+    {}
+
     set_alphabet&
     add_letter(typename L::letter_t l)
     {

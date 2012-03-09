@@ -9,12 +9,7 @@ int main()
 {
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
 
-  alpha_t alpha;
-  alpha
-    .add_letter('a')
-    .add_letter('b')
-    .add_letter('c')
-    .add_letter('d');
+  alpha_t alpha{'a', 'b', 'c', 'd'};
 
   //for (auto c : alpha)
   //std::cerr << c << std::endl;
