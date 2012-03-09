@@ -60,7 +60,7 @@
     STRING_(Out, '(' << In << ')')
 
   #define MAKE(Kind, ...)                         \
-    make_ ## Kind(__VA_ARGS__)
+    fact.op_ ## Kind(__VA_ARGS__)
 
   typedef vcsn::rat_exp::weight_type weight_type;
   typedef vcsn::rat_exp::weights_type weights_type;
@@ -187,39 +187,34 @@ exps:
 
 exp:
   term                          { $$ = $1; }
-| exp "." exp                   { $$ = fact.op_mul($1, $3); }
-| exp "+" exp                   { $$ = fact.op_add($1, $3); }
+| exp "." exp                   { $$ = MAKE(mul, $1, $3); }
+| exp "+" exp                   { $$ = MAKE(add, $1, $3); }
 ;
 
 term:
-  lexp weights.opt              {
-    if($2 != nullptr)
-      $$ = fact.op_weight($1, $2);
-    else
-      $$ = $1;
-  }
+  lexp weights.opt              { $$ = $2 ? MAKE(weight, $1, $2) : $1; }
 ;
 
 lexp:
-  weights.opt factors           { $$ = fact.op_weight($1, $2); }
-| lexp weights factors          { $$ = fact.op_mul($1, fact.op_weight($2, $3)); }
+  weights.opt factors           { $$ = MAKE(weight, $1, $2); }
+| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(weight, $2, $3)); }
 ;
 
 factors:
-  factor                        { $$ = fact.op_mul($1); }
-| factors factor                { $$ = fact.op_mul($1, $2); }
+  factor                        { $$ = MAKE(mul, $1); }
+| factors factor                { $$ = MAKE(mul, $1, $2); }
 ;
 
 factor:
   word                          { $$ = $1; }
-| factor "*"                    { $$ = fact.op_kleene($1); }
+| factor "*"                    { $$ = MAKE(kleene, $1); }
 | "(" exp ")"                   { $$ = fact.cleanNode($2); assert($1 == $3); }
 ;
 
 word:
-  ZERO                          { $$ = fact.op_zero(); }
-| ONE                           { $$ = fact.op_one(); }
-| WORD                          { $$ = fact.op_word($1); }
+  ZERO                          { $$ = MAKE(zero); }
+| ONE                           { $$ = MAKE(one); }
+| WORD                          { $$ = MAKE(word, $1); }
 ;
 
 weights.opt:
@@ -228,8 +223,8 @@ weights.opt:
 ;
 
 weights:
-  "weight"                      { $$ = fact.op_weight($1); }
-| "weight" weights              { $$ = fact.op_weight($1, $2); }
+  "weight"                      { $$ = MAKE(weight, $1); }
+| "weight" weights              { $$ = MAKE(weight, $1, $2); }
 ;
 
 %%
