@@ -38,33 +38,9 @@
 {
   #include <cassert>
   #include <sstream>
-  #define STRING_(Out, In)                        \
-    do {                                        \
-      std::stringstream o;                      \
-      o << In;                                  \
-      Out = new std::string(o.str());           \
-    } while (false)
-  #define STRING(Out, In)                         \
-    STRING_(Out, '(' << In << ')')
-
 
   typedef vcsn::rat_exp::weight_type weight_type;
   typedef vcsn::rat_exp::weights_type weights_type;
-
-  // static
-  // weights_type*
-  // make_weights(weight_type* w)
-  // {
-  //   return new weights_type {w};
-  // }
-
-  // static
-  // weights_type*
-  // make_weights(weight_type* w, weights_type* ws)
-  // {
-  //   ws->push_front(w);
-  //   return ws;
-  // }
 
   namespace std
   {
@@ -83,48 +59,6 @@
       o << "}";
       return o;
     }
-  }
-
-  std::string*
-  make_term(std::string *lexp, weights_type* ws)
-  {
-    assert(lexp);
-    std::string* res = lexp;
-    if (ws)
-      {
-        STRING(res, "r" << *ws << *lexp);
-        delete lexp;
-        delete ws;
-      }
-    return res;
-  }
-
-  std::string*
-  make_term(weights_type* ws, std::string *term)
-  {
-    assert(term);
-    std::string *res = term;
-    if (ws)
-      {
-        STRING(res, "l" << *ws << *term);
-        delete term;
-        delete ws;
-      }
-    return res;
-  }
-
-  std::string*
-  make_term(std::string* lexp, weights_type* ws, std::string *factors)
-  {
-    assert(lexp);
-    assert(ws);
-    assert(factors);
-    std::string* res;
-    STRING(res, *lexp << "#(l" << *ws << *factors << ")");
-    delete lexp;
-    delete ws;
-    delete factors;
-    return res;
   }
 
   struct foo
