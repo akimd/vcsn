@@ -19,24 +19,14 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>::RatExpNode(DynamicType dyn_type,
-                                      WeightType weight_type) :
-      dyn_type_(dyn_type),
-      weight_type_(weight_type)
+    RatExpNode<WeightSet>::RatExpNode(WeightType weight_type)
+      : weight_type_(weight_type)
     { }
 
     template <class WeightSet>
     inline
     RatExpNode<WeightSet>::~RatExpNode()
     { }
-
-    template <class WeightSet>
-    inline
-    typename RatExpNode<WeightSet>::DynamicType
-    RatExpNode<WeightSet>::get_type() const
-    {
-      return dyn_type_;
-    }
 
     template <class WeightSet>
     inline
@@ -52,10 +42,10 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LRWeightNode<WeightSet>::LRWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type) :
-      RatExpNode<WeightSet>(dyn_type, RatExpNode<WeightSet>::LR_WEIGHT),
-      lw_(weightset_t::one()),
-      rw_(weightset_t::one())
+    LRWeightNode<WeightSet>::LRWeightNode()
+      : RatExpNode<WeightSet>(RatExpNode<WeightSet>::LR_WEIGHT)
+      , lw_(weightset_t::one())
+      , rw_(weightset_t::one())
     { }
 
     template <class WeightSet>
@@ -101,9 +91,9 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LWeightNode<WeightSet>::LWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type) :
-      RatExpNode<WeightSet>(dyn_type, RatExpNode<WeightSet>::L_WEIGHT),
-      lw_(weightset_t::one())
+    LWeightNode<WeightSet>::LWeightNode()
+      : RatExpNode<WeightSet>(RatExpNode<WeightSet>::L_WEIGHT)
+      , lw_(weightset_t::one())
     { }
 
     template <class WeightSet>
@@ -133,8 +123,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>::RatExpConcat() :
-      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::CONCAT)
+    RatExpConcat<WeightSet>::RatExpConcat()
+      : LRWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -265,8 +255,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpPlus<WeightSet>::RatExpPlus() :
-      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::PLUS)
+    RatExpPlus<WeightSet>::RatExpPlus()
+      : LRWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -397,9 +387,9 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet> * sub_exp) :
-      LRWeightNode<WeightSet>(RatExpNode<WeightSet>::KLEENE),
-      sub_exp_(sub_exp)
+    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet> * sub_exp)
+      : LRWeightNode<WeightSet>()
+      , sub_exp_(sub_exp)
     { }
 
     template <class WeightSet>
@@ -447,8 +437,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpOne<WeightSet>::RatExpOne() :
-      LWeightNode<WeightSet>(RatExpNode<WeightSet>::ONE)
+    RatExpOne<WeightSet>::RatExpOne()
+      : LWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -478,8 +468,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpZero<WeightSet>::RatExpZero() :
-      LWeightNode<WeightSet>(RatExpNode<WeightSet>::ZERO)
+    RatExpZero<WeightSet>::RatExpZero()
+      : LWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -509,10 +499,10 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpWord<WeightSet>::RatExpWord(std::string *word) :
-      LWeightNode<WeightSet>(RatExpNode<WeightSet>::WORD),
-      word_(word)
-    { }
+    RatExpWord<WeightSet>::RatExpWord(std::string *word)
+      : LWeightNode<WeightSet>()
+      , word_(word)
+    {}
 
     template <class WeightSet>
     inline

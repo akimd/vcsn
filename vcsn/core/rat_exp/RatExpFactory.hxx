@@ -109,7 +109,7 @@ namespace vcsn
     {
       return e;
 
-      // if (RatExpConcat<WeightSet>::CONCAT == e->get_type())
+      // if (RatExpConcat<WeightSet>::CONCAT == e->type())
       // {
       //   RatExpConcat<WeightSet> *res = down_cast<RatExpConcat<WeightSet> *>(e);
       //   assert(res);
@@ -131,25 +131,25 @@ namespace vcsn
       // Trivial Identity
       // E.0 = 0.E = 0
       // E.1 = 1.E = E
-      if(RatExpNode<WeightSet>::ZERO == l->get_type()
-         || (RatExpNode<WeightSet>::ONE == r->get_type()))
+      if(RatExpNode<WeightSet>::ZERO == l->type()
+         || (RatExpNode<WeightSet>::ONE == r->type()))
       {
         delete r;
         return l;
       }
-      if(RatExpNode<WeightSet>::ZERO == r->get_type()
-         || (RatExpNode<WeightSet>::ONE == l->get_type()))
+      if(RatExpNode<WeightSet>::ZERO == r->type()
+         || (RatExpNode<WeightSet>::ONE == l->type()))
       {
         delete l;
         return r;
       }
       // END: Trivial Identity
 
-      if (RatExpNode<WeightSet>::CONCAT == l->get_type())
+      if (RatExpNode<WeightSet>::CONCAT == l->type())
       {
         RatExpConcat<WeightSet> *left = down_cast<RatExpConcat<WeightSet> *>(l);
         assert(left);
-        if (RatExpNode<WeightSet>::CONCAT == r->get_type())
+        if (RatExpNode<WeightSet>::CONCAT == r->type())
         {
           RatExpConcat<WeightSet> *right = down_cast<RatExpConcat<WeightSet> *>(r);
           assert(right);
@@ -160,7 +160,7 @@ namespace vcsn
           return mul<WeightSet>(left, r);
         }
       }
-      else if (RatExpNode<WeightSet>::CONCAT == r->get_type())
+      else if (RatExpNode<WeightSet>::CONCAT == r->type())
       {
         RatExpConcat<WeightSet> *right = down_cast<RatExpConcat<WeightSet> *>(r);
         assert(right);
@@ -179,23 +179,23 @@ namespace vcsn
     {
       // Trivial Identity
       // E+0 = 0+E = E
-      if(RatExpNode<WeightSet>::ZERO == l->get_type())
+      if(RatExpNode<WeightSet>::ZERO == l->type())
       {
         delete l;
         return r;
       }
-      if(RatExpNode<WeightSet>::ZERO == r->get_type())
+      if(RatExpNode<WeightSet>::ZERO == r->type())
       {
         delete r;
         return l;
       }
       // END: Trivial Identity
 
-      if (RatExpNode<WeightSet>::PLUS == l->get_type())
+      if (RatExpNode<WeightSet>::PLUS == l->type())
       {
         RatExpPlus<WeightSet>* res = down_cast<RatExpPlus<WeightSet> *>(l);
         assert(res);
-        if (RatExpNode<WeightSet>::PLUS == r->get_type())
+        if (RatExpNode<WeightSet>::PLUS == r->type())
         {
           RatExpPlus<WeightSet>* right = down_cast<RatExpPlus<WeightSet> *>(r);
           assert(right);
@@ -208,7 +208,7 @@ namespace vcsn
         }
         return res;
       }
-      else if (RatExpNode<WeightSet>::PLUS == r->get_type())
+      else if (RatExpNode<WeightSet>::PLUS == r->type())
       {
         RatExpPlus<WeightSet>* res = down_cast<RatExpPlus<WeightSet> *>(r);
         assert(res);
@@ -400,7 +400,7 @@ namespace vcsn
       RatExpNode<WeightSet>* expr = down_cast<RatExpNode<WeightSet> *>(e);
       assert(expr);
 
-      switch (expr->get_type())
+      switch (expr->type())
       {
       case RatExpNode<WeightSet>::PLUS:
       {
