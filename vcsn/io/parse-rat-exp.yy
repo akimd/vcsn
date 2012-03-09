@@ -1,15 +1,13 @@
 // -*- mode: c++ -*-
-%pure-parser
 %require "2.5"
 %language "C++"
 
-%name-prefix "rat_exp_parse_"
-%expect 0
-%error-verbose
-%defines
 %debug
-
+%defines
+%error-verbose
+%expect 0
 %locations
+%name-prefix "rat_exp_parse_"
 
 %code requires
 {
@@ -27,7 +25,7 @@
     std::string* sval;
     vcsn::rat_exp::weight_type* weight;
     vcsn::rat_exp::weights_type* weights;
-    vcsn::rat_exp::RatExp *nodeval;
+    vcsn::rat_exp::RatExp* nodeval;
   };
 
   #define YY_DECL                                                       \
@@ -49,8 +47,6 @@
   #define STRING(Out, In)                         \
     STRING_(Out, '(' << In << ')')
 
-  #define MAKE(Kind, ...)                         \
-    fact.op_ ## Kind(__VA_ARGS__)
 
   typedef vcsn::rat_exp::weight_type weight_type;
   typedef vcsn::rat_exp::weights_type weights_type;
@@ -158,6 +154,8 @@
 
   // define the factory
   vcsn::rat_exp::RatExpFactory<foo> fact; // FIXME: specialization
+  #define MAKE(Kind, ...)                         \
+    fact.op_ ## Kind(__VA_ARGS__)
 }
 
 %printer { debug_stream() << $$; } <ival>;
