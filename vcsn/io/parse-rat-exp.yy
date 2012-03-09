@@ -70,20 +70,23 @@
   //   return ws;
   // }
 
-  std::ostream&
-  operator<<(std::ostream& o, const weights_type& ws)
+  namespace std
   {
-    o << "{";
-    bool first = true;
-    for (weight_type* w: ws)
-      {
-        if (!first)
-          o << ", ";
-        first = false;
-        o << *w;
-      }
-    o << "}";
-    return o;
+    std::ostream&
+    operator<<(std::ostream& o, const weights_type& ws)
+    {
+      o << "{";
+      bool first = true;
+      for (weight_type* w: ws)
+        {
+          if (!first)
+            o << ", ";
+          first = false;
+          o << *w;
+        }
+      o << "}";
+      return o;
+    }
   }
 
   std::string*
@@ -157,14 +160,9 @@
   vcsn::rat_exp::RatExpFactory<foo> fact; // FIXME: specialization
 }
 
-%printer { debug_stream() << *$$; } <sval>;
 %printer { debug_stream() << $$; } <ival>;
-
-%destructor { delete $$; } <sval>;
-
-%destructor { delete $$; } <rat_exp *> <rat_concat *> <rat_plus *>
-        <rat_kleene *> <rat_one *> <rat_zero *> <rat_atom *> <rat_word *>
-        <rat_left_weight *> <rat_right_weight *>
+%printer { debug_stream() << *$$; } <sval> <weight> <weights> <nodeval>;
+%destructor { delete $$; } <sval> <weight> <weights> <nodeval>;
 
 %token <ival>   LPAREN          "("
                 RPAREN          ")"
