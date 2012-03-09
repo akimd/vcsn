@@ -174,14 +174,16 @@
 %%
 
 exps:
-  exp                           {
-  vcsn::rat_exp::RatExp *node = fact.cleanNode($1);
-  vcsn::rat_exp::RatExpNode<foo> *down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>(node);
-  assert(down);
-  vcsn::rat_exp::PrintDebugVisitor<foo> print(std::cout);
-  down->accept(print);
-  $$ = node;
- }
+  exp
+  {
+    auto node = fact.cleanNode($1);
+    auto down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>(node);
+    assert(down);
+    vcsn::rat_exp::PrintDebugVisitor<foo> print(std::cout);
+    down->accept(print);
+    $$ = node;
+  }
+;
 
 exp:
   term                          { $$ = $1; }
