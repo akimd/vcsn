@@ -1,9 +1,11 @@
 #ifndef VCSN_MISC_STATIC_HH_
 #define VCSN_MISC_STATIC_HH_
 
-namespace vcsn {
+namespace vcsn
+{
 
-  namespace misc {
+  namespace misc
+  {
 
     template<typename T>
     struct constify_traits

@@ -4,8 +4,10 @@
 # include <iostream>
 # include <core/rat_exp/visitor.hh>
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     template<class WeightSet>
     class PrintDebugVisitor : public visitor_traits<WeightSet>::ConstVisitor

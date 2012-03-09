@@ -1,8 +1,10 @@
 #ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 #define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     template<class WeightSet>
     PrintVisitor<WeightSet>::PrintVisitor(std::ostream &out) :

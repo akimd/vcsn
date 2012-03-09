@@ -4,8 +4,10 @@
 # include <string>
 # include <list>
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     typedef std::string weight_type;
     typedef std::list<weight_type *> weights_type;

@@ -7,8 +7,10 @@
 # include <core/rat_exp/node.fwd.hh>
 # include <core/rat_exp/visitor.hh>
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     class RatExp
     {

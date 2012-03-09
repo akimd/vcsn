@@ -5,8 +5,10 @@
 # include <core/rat_exp/node.hh>
 # include <cassert>
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     // template<template<class> class ConstNess>
     // GenVisitor<ConstNess>::GenVisitor()

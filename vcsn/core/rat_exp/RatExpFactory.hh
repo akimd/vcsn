@@ -5,8 +5,10 @@
 
 # include <core/rat_exp/node.fwd.hh>
 
-namespace vcsn {
-  namespace rat_exp {
+namespace vcsn
+{
+  namespace rat_exp
+  {
 
     template<class WeightSet>
     class RatExpFactory
