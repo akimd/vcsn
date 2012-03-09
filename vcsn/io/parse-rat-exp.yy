@@ -21,16 +21,6 @@
   #include <core/rat_exp/RatExpFactory.hh>
   #include <core/rat_exp/print_debug_visitor.hh>
 
-  struct foo
-  {
-    typedef int value_t;
-    static int one() { return 1; }
-    static int zero() { return 0; }
-    static void op_mul_eq(int i, std::string *str) {
-      i *= atoi(str->c_str());
-      }
-  }; // FIXME
-
   union YYSTYPE
   {
     int ival;
@@ -138,6 +128,31 @@
     return res;
   }
 
+  struct foo
+  {
+    typedef int value_t;
+    static int one() { return 1; }
+    static int zero() { return 0; }
+    static void op_mul_eq(int i, std::string *str) {
+      i *= atoi(str->c_str());
+    }
+  }; // FIXME
+
+  namespace vcsn
+  {
+    namespace rat_exp
+    {
+      std::ostream&
+      operator<<(std::ostream& o, const RatExp& r)
+      {
+        auto down = down_cast<const vcsn::rat_exp::RatExpNode<foo>*>(&r);
+        vcsn::rat_exp::PrintDebugVisitor<foo> print(o);
+        down->accept(print);
+        return o;
+      }
+    }
+  }
+
   // define the factory
   vcsn::rat_exp::RatExpFactory<foo> fact; // FIXME: specialization
 }
@@ -176,12 +191,8 @@
 exps:
   exp
   {
-    auto node = fact.cleanNode($1);
-    auto down = down_cast<vcsn::rat_exp::RatExpNode<foo> *>(node);
-    assert(down);
-    vcsn::rat_exp::PrintDebugVisitor<foo> print(std::cout);
-    down->accept(print);
-    $$ = node;
+    $$ = fact.cleanNode($1);
+    std::cout << *$$;
   }
 ;
 
