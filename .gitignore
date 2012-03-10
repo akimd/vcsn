@@ -14,5 +14,10 @@
 Makefile
 Makefile.in
 \#*#
-
-
+*bak
+bison++
+*log
+*stamp
+vcsn/parse-rat-exp.dir/
+vcsn/lexer.cc
+vcsn/io/rat-exp
