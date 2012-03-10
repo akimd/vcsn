@@ -28,6 +28,7 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet> &v)
     {
+      print_weight(v.left_weight());
       for(unsigned i = v.size(); i != 1; --i)
         out_ << '(';
 
@@ -41,12 +42,14 @@ namespace vcsn
         (* it)->accept(*this);
         out_ << ')';
       }
+      print_weight(v.right_weight());
     }
 
     template<class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet> &v)
     {
+      print_weight(v.left_weight());
       for(unsigned i = v.size(); i != 1; --i)
         out_ << '(';
 
@@ -60,12 +63,14 @@ namespace vcsn
         (* it)->accept(*this);
         out_ << ')';
       }
+      print_weight(v.right_weight());
     }
 
     template<class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet> &v)
     {
+      print_weight(v.left_weight());
       RatExpNode<WeightSet> *sub_exp = v.get_sub();
       if(sub_exp != nullptr)
       {
@@ -73,6 +78,7 @@ namespace vcsn
         sub_exp->accept(*this);
         out_ << ")*";
       }
+      print_weight(v.right_weight());
     }
 
     template<class WeightSet>
@@ -94,6 +100,18 @@ namespace vcsn
     PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet> &v)
     {
       out_ << *v.get_word();
+    }
+
+    template<class WeightSet>
+    void
+    PrintVisitor<WeightSet>::print_weight(const weight_t &w)
+    {
+      if(!WeightSet::is_unit(w))
+      {
+        out_ << '{'
+             << w
+             << '}';
+      }
     }
 
   } // !rat_exp

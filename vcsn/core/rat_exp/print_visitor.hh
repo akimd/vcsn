@@ -13,6 +13,9 @@ namespace vcsn
     class PrintVisitor : public visitor_traits<WeightSet>::ConstVisitor
     {
     public:
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+    public:
       PrintVisitor(std::ostream &out);
       virtual ~PrintVisitor();
     public:
@@ -23,6 +26,8 @@ namespace vcsn
       virtual void visit(const RatExpOne<WeightSet> &           v);
       virtual void visit(const RatExpZero<WeightSet> &          v);
       virtual void visit(const RatExpWord<WeightSet> &          v);
+    protected:
+      void print_weight(weight_t &w);
     private:
       std::ostream &out_;
     };
