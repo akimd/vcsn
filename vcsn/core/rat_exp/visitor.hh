@@ -22,8 +22,6 @@ namespace vcsn
       virtual void visit(typename ConstNess<RatExpOne<WeightSet> >::type &           v);
       virtual void visit(typename ConstNess<RatExpZero<WeightSet> >::type &          v);
       virtual void visit(typename ConstNess<RatExpWord<WeightSet> >::type &          v);
-      // virtual void visit(typename ConstNess<left_weight>::type &   v);
-      // virtual void visit(typename ConstNess<right_weight>::type &  v);
     };
 
     template<class WeightSet>
@@ -32,9 +30,6 @@ namespace vcsn
       typedef GenVisitor<WeightSet, misc::id_traits> Visitor;
       typedef GenVisitor<WeightSet, misc::constify_traits> ConstVisitor;
     };
-
-    // typedef GenVisitor<misc::id_traits> Visitor;
-    // typedef GenVisitor<misc::constify_traits> ConstVisitor;
 
   } // !rat_exp
 } // !vcsn

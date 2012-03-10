@@ -30,9 +30,7 @@ namespace vcsn
         KLEENE,
         ONE,
         ZERO,
-        WORD,
-        LEFT_WEIGHT,
-        RIGHT_WEIGHT
+        WORD
       };
       enum WeightType {
         L_WEIGHT,
@@ -115,14 +113,14 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
     public:
-      RatExpConcat<WeightSet> &push_back(RatExpNode<WeightSet> *elt);
-      RatExpConcat<WeightSet> &push_front(RatExpNode<WeightSet> *elt);
+      RatExpConcat<WeightSet> &push_back(RatExpNode<WeightSet>* elt);
+      RatExpConcat<WeightSet> &push_front(RatExpNode<WeightSet>* elt);
       size_t size() const;
       void erase(iterator it);
 
     public:
-      virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
-      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const;
+      virtual void accept(typename RatExpNode<WeightSet>::Visitor& v);
+      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
 
     private:
       node_list sub_node_;
@@ -151,14 +149,14 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
     public:
-      RatExpPlus<WeightSet> &push_back(RatExpNode<WeightSet> *elt);
-      RatExpPlus<WeightSet> &push_front(RatExpNode<WeightSet> *elt);
+      RatExpPlus<WeightSet> &push_back(RatExpNode<WeightSet>* elt);
+      RatExpPlus<WeightSet> &push_front(RatExpNode<WeightSet>* elt);
       size_t size() const;
       void erase(iterator it);
 
     public:
-      virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
-      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const;
+      virtual void accept(typename RatExpNode<WeightSet>::Visitor& v);
+      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
 
     private:
       node_list sub_node_;
@@ -168,14 +166,14 @@ namespace vcsn
     class RatExpKleene : public LRWeightNode<WeightSet>
     {
     public:
-      RatExpKleene(RatExpNode<WeightSet> *sub_exp);
+      RatExpKleene(RatExpNode<WeightSet>* sub_exp);
       virtual ~RatExpKleene();
     public:
       RatExpNode<WeightSet> *getSubNode();
       const RatExpNode<WeightSet> *getSubNode() const;
     public:
-      virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
-      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const;
+      virtual void accept(typename RatExpNode<WeightSet>::Visitor& v);
+      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
 
     private:
       RatExpNode<WeightSet> *sub_exp_;
@@ -188,8 +186,8 @@ namespace vcsn
       RatExpOne();
       virtual ~RatExpOne();
     public:
-      virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
-      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const;
+      virtual void accept(typename RatExpNode<WeightSet>::Visitor& v);
+      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
     };
 
     template<class WeightSet>
@@ -199,8 +197,8 @@ namespace vcsn
       RatExpZero();
       virtual ~RatExpZero();
     public:
-      virtual void accept(typename RatExpNode<WeightSet>::Visitor &v);
-      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor &v) const;
+      virtual void accept(typename RatExpNode<WeightSet>::Visitor& v);
+      virtual void accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const;
     };
 
     template<class WeightSet>

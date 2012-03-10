@@ -10,14 +10,6 @@ namespace vcsn
   namespace rat_exp
   {
 
-    // template<template<class> class ConstNess>
-    // GenVisitor<ConstNess>::GenVisitor()
-    // { }
-
-    // template<template<class> class ConstNess>
-    // GenVisitor<ConstNess>::~GenVisitor()
-    // { }
-
     template<class WeightSet, template<class> class ConstNess>
     inline
     void
@@ -29,29 +21,29 @@ namespace vcsn
     template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpConcat<WeightSet> >::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpConcat<WeightSet> >::type& v)
     {
-      for(auto t : v)
+      for (auto t : v)
         t->accept(*this);
     }
 
     template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpPlus<WeightSet> >::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpPlus<WeightSet> >::type& v)
     {
-      for(auto t : v)
+      for (auto t : v)
         t->accept(*this);
     }
 
     template<class WeightSet, template<class> class ConstNess>
     inline
     void
-    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpKleene<WeightSet> >::type & v)
+    GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpKleene<WeightSet> >::type& v)
     {
       typename ConstNess<RatExpNode<WeightSet> >::type *sub_exp = v.getSubNode();
 
-      if(sub_exp!= nullptr)
+      if (sub_exp!= nullptr)
         sub_exp->accept(*this);
     }
 

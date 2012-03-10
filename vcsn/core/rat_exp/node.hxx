@@ -141,7 +141,7 @@ namespace vcsn
     inline
     RatExpConcat<WeightSet>::~RatExpConcat()
     {
-      for(auto t : sub_node_)
+      for (auto t : sub_node_)
         delete t;
     }
 
@@ -273,7 +273,7 @@ namespace vcsn
     inline
     RatExpPlus<WeightSet>::~RatExpPlus()
     {
-      for(auto t : sub_node_)
+      for (auto t : sub_node_)
         delete t;
     }
 

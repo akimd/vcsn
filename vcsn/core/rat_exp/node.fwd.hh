@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     typedef std::string weight_type;
-    typedef std::list<weight_type *> weights_type;
+    typedef std::list<weight_type*> weights_type;
 
     class RatExp;
 
