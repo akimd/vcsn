@@ -121,7 +121,7 @@
 exps:
   exp
   {
-    $$ = fact.cleanNode($1);
+    $$ = fact.clean_node($1);
     std::cout << *$$;
   }
 ;
@@ -149,7 +149,7 @@ factors:
 factor:
   word                          { $$ = $1; }
 | factor "*"                    { $$ = MAKE(kleene, $1); }
-| "(" exp ")"                   { $$ = fact.cleanNode($2); assert($1 == $3); }
+| "(" exp ")"                   { $$ = fact.clean_node($2); assert($1 == $3); }
 ;
 
 word:

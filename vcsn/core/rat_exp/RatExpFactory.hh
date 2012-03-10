@@ -38,7 +38,7 @@ namespace vcsn
       LRWeightNode<WeightSet> *op_weight(LRWeightNode<WeightSet> *e,
                                          weights_type *w);
 
-      RatExp *cleanNode(RatExp *e);
+      RatExp *clean_node(RatExp *e);
     protected:
       // RatExpConcat's method
       RatExpConcat<WeightSet> *op_mul(RatExpNode<WeightSet> *e);

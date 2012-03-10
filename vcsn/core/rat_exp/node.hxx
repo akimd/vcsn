@@ -33,7 +33,7 @@ namespace vcsn
     template<class WeightSet>
     inline
     typename RatExpNode<WeightSet>::DynamicType
-    RatExpNode<WeightSet>::getType() const
+    RatExpNode<WeightSet>::get_type() const
     {
       return dyn_type_;
     }
@@ -41,7 +41,7 @@ namespace vcsn
     template<class WeightSet>
     inline
     typename RatExpNode<WeightSet>::WeightType
-    RatExpNode<WeightSet>::getWeightType() const
+    RatExpNode<WeightSet>::get_weight_type() const
     {
       return weight_type_;
     }

@@ -49,8 +49,8 @@ namespace vcsn
       virtual void accept(Visitor &v) = 0;
       virtual void accept(ConstVisitor &v) const = 0;
     public:
-      DynamicType getType() const;
-      WeightType getWeightType() const;
+      DynamicType get_type() const;
+      WeightType get_weight_type() const;
     protected:
       const DynamicType dyn_type_;
       const WeightType weight_type_;
