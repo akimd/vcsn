@@ -65,8 +65,9 @@
   {
     typedef int value_t;
     static int one() { return 1; }
+    static bool is_unit(const int i) { return i == 1; }
     static int zero() { return 0; }
-    static void op_mul_eq(int i, std::string *str) {
+    static void op_mul_eq(int &i, std::string *str) {
       i *= atoi(str->c_str());
     }
   }; // FIXME
