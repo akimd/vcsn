@@ -61,8 +61,8 @@ namespace vcsn
       for (unsigned i = v.size(); i != 0; --i)
         out_ << '(';
 
-      typename RatExpConcat<WeightSet>::const_iterator end = v.end();
-      typename RatExpConcat<WeightSet>::const_iterator it  = v.begin();
+      auto end = v.end();
+      auto it  = v.begin();
       (* it)->accept(*this);
       ++it;
       for (; end != it; ++it)

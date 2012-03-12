@@ -311,8 +311,8 @@ namespace vcsn
       case RatExpNode<WeightSet>::L_WEIGHT:
       {
         LWeightNode<WeightSet>* rweight = down_cast<LWeightNode<WeightSet> *>(expr);
-          assert(rweight);
-          return op_weight(rweight, w);
+        assert(rweight);
+        return op_weight(rweight, w);
       }
       case RatExpNode<WeightSet>::LR_WEIGHT:
       {
