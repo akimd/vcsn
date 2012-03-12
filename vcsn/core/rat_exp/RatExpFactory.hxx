@@ -104,28 +104,47 @@ namespace vcsn
 
     template<class WeightSet>
     inline
-    RatExpConcat<WeightSet> *
+    RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* e)
     {
-      if (RatExpConcat<WeightSet>::CONCAT == e->get_type())
-      {
-        RatExpConcat<WeightSet> *res = down_cast<RatExpConcat<WeightSet> *>(e);
-        assert(res);
-        return res;
-      }
-      else
-      {
-        RatExpConcat<WeightSet> *res = new RatExpConcat<WeightSet>();
-        res->push_front(e);
-        return res;
-      }
+      return e;
+
+      // if (RatExpConcat<WeightSet>::CONCAT == e->get_type())
+      // {
+      //   RatExpConcat<WeightSet> *res = down_cast<RatExpConcat<WeightSet> *>(e);
+      //   assert(res);
+      //   return res;
+      // }
+      // else
+      // {
+      //   RatExpConcat<WeightSet> *res = new RatExpConcat<WeightSet>();
+      //   res->push_front(e);
+      //   return res;
+      // }
     }
 
     template<class WeightSet>
     inline
-    RatExpConcat<WeightSet> *
+    RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
     {
+      // Trivial Identity
+      // E.0 = 0.E = 0
+      // E.1 = 1.E = E
+      if(RatExpNode<WeightSet>::ZERO == l->get_type()
+         || (RatExpNode<WeightSet>::ONE == r->get_type()))
+      {
+        delete r;
+        return l;
+      }
+      if(RatExpNode<WeightSet>::ZERO == r->get_type()
+         || (RatExpNode<WeightSet>::ONE == l->get_type()))
+      {
+        delete l;
+        return r;
+      }
+      // END: Trivial Identity
+
       if (RatExpNode<WeightSet>::CONCAT == l->get_type())
       {
         RatExpConcat<WeightSet> *left = down_cast<RatExpConcat<WeightSet> *>(l);
@@ -155,9 +174,23 @@ namespace vcsn
 
     template<class WeightSet>
     inline
-    RatExpPlus<WeightSet> *
+    RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
     {
+      // Trivial Identity
+      // E+0 = 0+E = E
+      if(RatExpNode<WeightSet>::ZERO == l->get_type())
+      {
+        delete l;
+        return r;
+      }
+      if(RatExpNode<WeightSet>::ZERO == r->get_type())
+      {
+        delete r;
+        return l;
+      }
+      // END: Trivial Identity
+
       if (RatExpNode<WeightSet>::PLUS == l->get_type())
       {
         RatExpPlus<WeightSet>* res = down_cast<RatExpPlus<WeightSet> *>(l);
@@ -248,14 +281,14 @@ namespace vcsn
       {
         LWeightNode<WeightSet>* lweight = down_cast<LWeightNode<WeightSet> *>(expr);
         assert(lweight);
-        return op_weight(w, lweight);
+        return op_weight(lweight, w);
       }
 
       case RatExpNode<WeightSet>::LR_WEIGHT:
       {
-        LRWeightNode<WeightSet>* lweight = down_cast<LRWeightNode<WeightSet> *>(expr);
-        assert(lweight);
-        return op_weight(w, lweight);
+        LRWeightNode<WeightSet>* lrweight = down_cast<LRWeightNode<WeightSet> *>(expr);
+        assert(lrweight);
+        return op_weight(w, lrweight);
       }
 
       default:
@@ -294,29 +327,50 @@ namespace vcsn
     }
 
     template<class WeightSet>
-    LWeightNode<WeightSet> *
-    RatExpFactory<WeightSet>::op_weight(weights_type* w, LWeightNode<WeightSet>* e)
+    RatExpNode<WeightSet> *
+    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e, weights_type* w)
     {
       for (auto i : *w)
+      {
+        if(WeightSet::is_zero(WeightSet::op_conv(i)))
+        {
+          delete e;
+          return new RatExpZero<WeightSet>();
+        }
         WeightSet::op_mul_eq(e->left_weight(), i);
+      }
       return e;
     }
 
     template<class WeightSet>
-    LRWeightNode<WeightSet> *
+    RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_weight(weights_type* w, LRWeightNode<WeightSet>* e)
     {
       for (auto i : *w)
+      {
+        if(WeightSet::is_zero(WeightSet::op_conv(i)))
+        {
+          delete e;
+          return new RatExpZero<WeightSet>();
+        }
         WeightSet::op_mul_eq(e->left_weight(), i);
+      }
       return e;
     }
 
     template<class WeightSet>
-    LRWeightNode<WeightSet> *
+    RatExpNode<WeightSet> *
     RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e, weights_type* w)
     {
       for (auto i : *w)
+      {
+        if(WeightSet::is_zero(WeightSet::op_conv(i)))
+        {
+          delete e;
+          return new RatExpZero<WeightSet>();
+        }
         WeightSet::op_mul_eq(e->right_weight(), i);
+      }
       return e;
     }
 

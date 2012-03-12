@@ -62,6 +62,7 @@ namespace vcsn
       typedef typename weightset_t::value_t weight_t;
     protected:
       LRWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type);
+    public:
       virtual ~LRWeightNode() = 0;
     public:
       const weight_t &left_weight() const;
@@ -82,6 +83,7 @@ namespace vcsn
       typedef typename weightset_t::value_t weight_t;
     protected:
       LWeightNode(typename RatExpNode<WeightSet>::DynamicType dyn_type);
+    public:
       virtual ~LWeightNode() = 0;
     public:
       const weight_t &left_weight() const;

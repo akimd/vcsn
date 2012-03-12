@@ -31,17 +31,17 @@ namespace vcsn
 
       RatExp *op_weight(weights_type* w, RatExp* e);
       RatExp *op_weight(RatExp* e, weights_type* w);
-      LWeightNode<WeightSet> *op_weight(weights_type* w, LWeightNode<WeightSet>* e);
-      LRWeightNode<WeightSet> *op_weight(weights_type* w, LRWeightNode<WeightSet>* e);
-      LRWeightNode<WeightSet> *op_weight(LRWeightNode<WeightSet>* e, weights_type* w);
+      RatExpNode<WeightSet> *op_weight(LWeightNode<WeightSet>* e, weights_type* w);
+      RatExpNode<WeightSet> *op_weight(weights_type* w, LRWeightNode<WeightSet>* e);
+      RatExpNode<WeightSet> *op_weight(LRWeightNode<WeightSet>* e, weights_type* w);
 
       RatExp *clean_node(RatExp* e);
     protected:
       // RatExpConcat's method
-      RatExpConcat<WeightSet> *op_mul(RatExpNode<WeightSet>* e);
-      RatExpConcat<WeightSet> *op_mul(RatExpNode<WeightSet>* l,  RatExpNode<WeightSet>* r);
+      RatExpNode<WeightSet> *op_mul(RatExpNode<WeightSet>* e);
+      RatExpNode<WeightSet> *op_mul(RatExpNode<WeightSet>* l,  RatExpNode<WeightSet>* r);
       // RatExpPlus's method
-      RatExpPlus<WeightSet> *op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r);
+      RatExpNode<WeightSet> *op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r);
       // RatExpKleene's method
       RatExpKleene<WeightSet> *op_kleene(RatExpNode<WeightSet>* e);
 
