@@ -43,7 +43,7 @@ namespace vcsn
       // RatExpPlus's method
       RatExpNode<WeightSet> *op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r);
       // RatExpKleene's method
-      RatExpKleene<WeightSet> *op_kleene(RatExpNode<WeightSet>* e);
+      RatExpNode<WeightSet> *op_kleene(RatExpNode<WeightSet>* e);
 
     };
 

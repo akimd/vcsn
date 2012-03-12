@@ -217,7 +217,15 @@ namespace vcsn
     RatExpKleene<WeightSet>*
     RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
     {
-      return new RatExpKleene<WeightSet>(e);
+      if (RatExpNode<WeightSet>::ZERO == e->get_type())
+      {
+        // Trivial identity
+        // (0)* == 1
+        delete e;
+        return new RatExpOne<WeightSet>;
+      }
+      else
+        return new RatExpKleene<WeightSet>(e);
     }
 
     template <class WeightSet>
