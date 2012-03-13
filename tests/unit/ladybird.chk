@@ -1,6 +1,9 @@
+#! /bin/sh
+
+# To be loaded from checker.
 prog=unit/ladybird-b
 
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
   node [shape=circle];

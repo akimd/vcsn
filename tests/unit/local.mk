@@ -10,4 +10,5 @@ unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 
 dist_TESTS +=					\
-  unit/ladybird.chk
+  unit/ladybird.chk				\
+  unit/simplaw.chk
