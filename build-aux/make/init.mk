@@ -29,6 +29,7 @@ M4SHFLAGS =
 MAINTAINERCLEANFILES =
 MOSTLYCLEANFILES =
 SUFFIXES =
+TEST_EXTENSIONS =
 ## Do not initialize TESTS: automake would import the TESTS support
 ## into every Makefile.
 TESTS_ENVIRONMENT =
