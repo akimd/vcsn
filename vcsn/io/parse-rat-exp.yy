@@ -61,40 +61,41 @@
     }
   }
 
-  struct foo
-  {
-    typedef int value_t;
-    static int one() { return 1; }
-    static bool is_unit(const int i) { return i == 1; }
-    static bool is_zero(const int i) { return i == 0; }
-    static int zero() { return 0; }
-    static void op_mul_eq(int &i, std::string *str) {
-      i *= atoi(str->c_str());
-    }
-    static int op_conv(std::string *str) {
-      return atoi(str->c_str());
-    }
-  }; // FIXME
-
   namespace vcsn
   {
     namespace rat_exp
     {
+      struct foo
+      {
+        typedef int value_t;
+        static int one() { return 1; }
+        static bool is_unit(const int i) { return i == 1; }
+        static bool is_zero(const int i) { return i == 0; }
+        static int zero() { return 0; }
+        static void op_mul_eq(int &i, std::string *str) {
+          i *= atoi(str->c_str());
+        }
+        static int op_conv(std::string *str) {
+          return atoi(str->c_str());
+        }
+      }; // FIXME
+
       std::ostream&
       operator<<(std::ostream& o, const RatExp& r)
       {
-        auto down = down_cast<const vcsn::rat_exp::RatExpNode<foo>*>(&r);
-        vcsn::rat_exp::PrintDebugVisitor<foo> print(o);
+        auto down = down_cast<const RatExpNode<foo>*>(&r);
+        PrintDebugVisitor<foo> print(o);
         down->accept(print);
         return o;
       }
+
+      // Define the factory.
+      RatExpFactory<foo> fact; // FIXME: specialization
+#define MAKE(Kind, ...)                         \
+      fact.op_ ## Kind(__VA_ARGS__)
     }
   }
 
-  // define the factory
-  vcsn::rat_exp::RatExpFactory<foo> fact; // FIXME: specialization
-  #define MAKE(Kind, ...)                         \
-    fact.op_ ## Kind(__VA_ARGS__)
 }
 
 %printer { debug_stream() << $$; } <ival>;
