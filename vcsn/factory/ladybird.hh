@@ -11,8 +11,7 @@ namespace vcsn
   mutable_automaton<set_alphabet<char_letters>, Weights, labels_are_letters>
   ladybird(unsigned n, Weights w = Weights())
   {
-    set_alphabet<char_letters> alpha;
-    alpha.add_letter('a').add_letter('b').add_letter('c');
+    set_alphabet<char_letters> alpha {'a', 'b', 'c'};
     mutable_automaton<set_alphabet<char_letters>,
 		      Weights, labels_are_letters> aut(alpha, w);
 
