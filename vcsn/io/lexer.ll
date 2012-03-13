@@ -75,40 +75,23 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 <SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
   "{"                           {
     ++weight_level;
-    weight_level += '{';
+    *sval += yytext;
   } // push brace
   "}"                           {
-    if (0 == weight_level)
-    {
-      yy_pop_state();
-      yylval->sval = sval;
-      sval = 0;
-      return TOK(WEIGHT);
-    }
+    if (weight_level)
+      {
+        --weight_level;
+        *sval += yytext;
+      }
     else
-    {
-      --weight_level;
-      weight_level += '}';
-    }
-  } // pop brace or leace
-  "("                           {
-    ++brace_level;
-    weight_level += '(';
-  } // push parenthesis
-  ")"                           {
-    if (0 == brace_level)
-    {
-      assert(brace_level == 0);
-    }
-    else
-    {
-      --brace_level;
-      sval += ')';
-    }
-  } // pop parenthesis
-  ([^(){}]|\\[(){}])+       {
-    *sval += yytext;
+      {
+        yy_pop_state();
+        yylval->sval = sval;
+        sval = 0;
+        return TOK(WEIGHT);
+      }
   }
+  [^{}]+       { *sval += yytext; }
 }
 
 <SC_WORD>{ /* Word with Vcsn Syntax*/
@@ -122,7 +105,6 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     return TOK(WORD);
   }
   \<{vcsn_character}*\>         { // FIXME: check
-    // \\l\(([^)]|\\))*\)
     *sval += yytext;
   }
   .                             exit(51);
