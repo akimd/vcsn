@@ -53,7 +53,6 @@ AC_CONFIG_FILES([
   Makefile
   vcsn/Makefile
   tests/Makefile
-  tests/unit/Makefile
 ])
 
 AC_OUTPUT
