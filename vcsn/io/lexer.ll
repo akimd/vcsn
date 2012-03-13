@@ -29,8 +29,8 @@ extern int errors;
 #define YY_USER_ACTION				\
   COL(yyleng);
 
-#define TOK(Token)       \
-  rat_exp_parse_::parser::token::Token
+#define TOK(Token)                              \
+  vcsn::rat_exp::parser::token::Token
 %}
 %option noyywrap nounput stack debug
 

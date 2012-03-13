@@ -7,7 +7,8 @@
 %error-verbose
 %expect 0
 %locations
-%name-prefix "rat_exp_parse_"
+%define namespace "vcsn::rat_exp"
+%name-prefix "vcsn::rat_exp::"
 
 %code requires
 {
@@ -18,38 +19,37 @@
   #include <core/rat_exp/node.hh>
   #include <core/rat_exp/RatExpFactory.hh>
   #include <core/rat_exp/print_debug_visitor.hh>
+}
 
-  union YYSTYPE
+%code provides
+{
+  namespace vcsn
   {
-    int ival;
-    std::string* sval;
-    vcsn::rat_exp::weight_type* weight;
-    vcsn::rat_exp::weights_type* weights;
-    vcsn::rat_exp::RatExp* nodeval;
-  };
-
+    namespace rat_exp
+    {
+      int
+      lex(parser::semantic_type* yylval, parser::location_type* yylloc);
+    }
+  }
   #define YY_DECL                                                       \
-    int rat_exp_parse_lex(YYSTYPE* yylval,                              \
-                          rat_exp_parse_::location* yylloc)
-  YY_DECL;
+    int                                                                 \
+    vcsn::rat_exp::lex(vcsn::rat_exp::parser::semantic_type* yylval,    \
+                     vcsn::rat_exp::parser::location_type* yylloc)
 }
 
 %code
 {
-  #include <cassert>
-  #include <sstream>
-
-  typedef vcsn::rat_exp::weight_type weight_type;
-  typedef vcsn::rat_exp::weights_type weights_type;
+#include <cassert>
+#include <sstream>
 
   namespace std
   {
     std::ostream&
-    operator<<(std::ostream& o, const weights_type& ws)
+    operator<<(std::ostream& o, const vcsn::rat_exp::weights_type& ws)
     {
       o << "{";
       bool first = true;
-      for (weight_type* w: ws)
+      for (auto w: ws)
         {
           if (!first)
             o << ", ";
@@ -97,6 +97,15 @@
   }
 
 }
+
+%union
+{
+  int ival;
+  std::string* sval;
+  weight_type* weight;
+  weights_type* weights;
+  RatExp* nodeval;
+};
 
 %printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << *$$; } <sval> <weight> <weights> <nodeval>;
@@ -177,14 +186,14 @@ weights:
 %%
 
 void
-rat_exp_parse_::parser::error (const location_type& l, const std::string& m)
+vcsn::rat_exp::parser::error(const location_type& l, const std::string& m)
 {
   std::cerr << l << ": " << m << std::endl;
 }
 
 int main()
 {
-  rat_exp_parse_::parser p;
+  vcsn::rat_exp::parser p;
   extern int yy_flex_debug;
   yy_flex_debug = !!getenv("YYSCAN");
   p.set_debug_level(!!getenv("YYDEBUG"));
