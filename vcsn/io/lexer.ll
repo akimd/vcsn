@@ -35,7 +35,7 @@ extern int errors;
 %option noyywrap nounput stack debug
 
 
-%x VCSN_WEIGHT VCSN_WORD
+%x SC_WEIGHT SC_WORD
 
 vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
@@ -61,20 +61,18 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "{"                           {
     assert (!sval);
     sval = new std::string();
-    yy_push_state(VCSN_WEIGHT);
-  } // lex vcsn weight language FIXME: delete or no
+    yy_push_state(SC_WEIGHT);
+  }
   {vcsn_character}              {
     yylval->sval = new std::string(yytext);
     return TOK(WORD);
-    // yy_push_state(VCSN_WORD);
   }
   "\n"                          continue;
   .                             exit(51); // FIXME
 
 }
 
-<VCSN_WEIGHT>{ /* Weight with Vcsn Syntax*/
-
+<SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
   "{"                           {
     ++weight_level;
     weight_level += '{';
@@ -113,7 +111,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   }
 }
 
-<VCSN_WORD>{ /* Word with Vcsn Syntax*/
+<SC_WORD>{ /* Word with Vcsn Syntax*/
   {vcsn_character}              {
     *sval += yytext;
   }
