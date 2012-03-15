@@ -241,8 +241,7 @@ namespace vcsn
     void
     del_transition(state_t src, state_t dst, label_t l)
     {
-      transition_t t = get_transition(src, dst, l);
-      if (t)
+      if (transition_t t = get_transition(src, dst, l))
 	del_transition(t);
     }
 
@@ -296,8 +295,7 @@ namespace vcsn
     weight_t
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
-      transition_t t = get_transition(src, dst, l);
-      if (t)
+      if (transition_t t = get_transition(src, dst, l))
 	{
 	  k = ws_.add(t->weight, k);
 	  set_weight(t, k);
