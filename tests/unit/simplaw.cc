@@ -12,9 +12,9 @@ int main()
   alpha_t alpha{'a', 'b', 'c', 'd'};
   vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_words> aut(alpha);
 
-  auto s1 = aut.add_state();
-  auto s2 = aut.add_state();
-  auto s3 = aut.add_state();
+  auto s1 = aut.new_state();
+  auto s2 = aut.new_state();
+  auto s3 = aut.new_state();
 
   aut.set_initial(s1);
   aut.set_final(s2, 10);

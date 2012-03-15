@@ -78,7 +78,7 @@ namespace vcsn
     }
 
     state_t
-    add_state()
+    new_state()
     {
       state_t res = new stored_state_t;
       res->final = res->initial = ws_.zero();

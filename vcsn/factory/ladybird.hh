@@ -15,13 +15,13 @@ namespace vcsn
     mutable_automaton<set_alphabet<char_letters>,
 		      Weights, labels_are_letters> aut(alpha, w);
 
-    auto p = aut.add_state();
+    auto p = aut.new_state();
     aut.set_initial(p);
     aut.set_final(p);
     auto x = p;
     for (unsigned i = 1; i < n; ++i)
       {
-	auto y = aut.add_state();
+	auto y = aut.new_state();
 	aut.add_transition(x, y, 'a');
 	aut.add_transition(y, y, 'b');
 	aut.add_transition(y, y, 'c');
