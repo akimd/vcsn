@@ -75,7 +75,7 @@ namespace vcsn
       out_ << "w(" << *v.get_word() << ')';
     }
 
-  } // rat_exp
-} // vcsn
+  } // namespace rat_exp
+} // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_DEBUG_VISITOR_HXX

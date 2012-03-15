@@ -19,13 +19,13 @@ namespace vcsn
       PrintVisitor(std::ostream& out, const bool show_unit = false);
       virtual ~PrintVisitor();
     public:
-      virtual void visit(const RatExpNode<WeightSet> &          v);
-      virtual void visit(const RatExpConcat<WeightSet> &        v);
-      virtual void visit(const RatExpPlus<WeightSet> &          v);
-      virtual void visit(const RatExpKleene<WeightSet> &        v);
-      virtual void visit(const RatExpOne<WeightSet> &           v);
-      virtual void visit(const RatExpZero<WeightSet> &          v);
-      virtual void visit(const RatExpWord<WeightSet> &          v);
+      virtual void visit(const RatExpNode<WeightSet>& v);
+      virtual void visit(const RatExpConcat<WeightSet>& v);
+      virtual void visit(const RatExpPlus<WeightSet>& v);
+      virtual void visit(const RatExpKleene<WeightSet>& v);
+      virtual void visit(const RatExpOne<WeightSet>& v);
+      virtual void visit(const RatExpZero<WeightSet>& v);
+      virtual void visit(const RatExpWord<WeightSet>& v);
     private:
       std::ostream &out_;
       const bool show_unit_;

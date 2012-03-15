@@ -12,7 +12,7 @@ namespace vcsn
     PrintVisitor<WeightSet>::PrintVisitor(std::ostream& out, const bool show_unit)
       : out_(out)
       , show_unit_(show_unit)
-    { }
+    {}
 
     template <class WeightSet>
     PrintVisitor<WeightSet>::~PrintVisitor()
@@ -66,10 +66,10 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet>& v)
     {
-      out_ << *v.get_word();
+      out_ <<* v.get_word();
     }
 
-  } // rat_exp
-} // vcsn
+  } // !rat_exp
+} // !vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
