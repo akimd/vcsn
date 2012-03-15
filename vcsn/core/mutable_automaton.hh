@@ -284,7 +284,7 @@ namespace vcsn
     }
 
     weight_t
-    set_transition(transition_t t, weight_t k)
+    set_weight(transition_t t, weight_t k)
     {
       if (ws_.is_zero(k))
 	del_transition(t);
@@ -300,7 +300,7 @@ namespace vcsn
       if (t)
 	{
 	  k = ws_.add(t->weight, k);
-	  set_transition(t, k);
+	  set_weight(t, k);
 	}
       else
 	{
@@ -316,10 +316,10 @@ namespace vcsn
     }
 
     weight_t
-    add_transition(transition_t t, weight_t k)
+    add_weight(transition_t t, weight_t k)
     {
       k = ws_.add(t->weight, k);
-      set_transition(t, k);
+      set_weight(t, k);
       return k;
     }
 

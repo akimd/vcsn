@@ -29,7 +29,7 @@ int main()
   aut.set_transition(s1, s2, 'c', 42);
   aut.set_transition(s2, s3, 'a', 1);
   aut.set_transition(s2, s1, 'b', 1);
-  int v = aut.add_transition(aut.set_transition(s1, s1, 'd', 2), 40);
+  int v = aut.add_weight(aut.set_transition(s1, s1, 'd', 2), 40);
   assert(v == 42);
   aut.set_transition(s1, s3, 'd', 1);
   vcsn::dotty(aut, std::cout);
@@ -66,5 +66,4 @@ int main()
   aut.set_transition(s2, s3, 'a', 0);
 
   vcsn::dotty(aut, std::cout);
-
 }
