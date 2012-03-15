@@ -1,4 +1,6 @@
-%{                                                      /* -*- C++ -*-  */
+%option noyywrap nounput stack debug
+
+%{
 #include <string>
 #include <cassert>
 #include <stack>
@@ -16,13 +18,9 @@
 #define TOK(Token)                              \
   vcsn::rat_exp::parser::token::Token
 %}
-%option noyywrap nounput stack debug
-
-
 %x SC_WEIGHT SC_WORD
 
-vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
-
+char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 %%
 %{
@@ -51,7 +49,7 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
     sval = new std::string();
     yy_push_state(SC_WEIGHT);
   }
-  {vcsn_character}              {
+  {char}                        {
     yylval->sval = new std::string(yytext);
     return TOK(WORD);
   }
@@ -82,18 +80,20 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 }
 
 <SC_WORD>{ /* Word with Vcsn Syntax*/
-  {vcsn_character}              {
-    *sval += yytext;
-  }
+  {char}                        { *sval += yytext; }
   \"                            {
     yy_pop_state();
     yylval->sval = sval;
     return TOK(WORD);
   }
-  \<{vcsn_character}*\>         { // FIXME: check
+  \<{char}*\>         { // FIXME: check
     *sval += yytext;
   }
   .                             exit(51);
 }
 
 %%
+
+// Local Variables:
+// mode: C++
+// End:
