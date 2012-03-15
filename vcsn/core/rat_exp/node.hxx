@@ -28,14 +28,6 @@ namespace vcsn
     RatExpNode<WeightSet>::~RatExpNode()
     { }
 
-    template <class WeightSet>
-    inline
-    typename RatExpNode<WeightSet>::WeightType
-    RatExpNode<WeightSet>::get_weight_type() const
-    {
-      return weight_type_;
-    }
-
     //////////////////
     // LRWeightNode //
     //////////////////

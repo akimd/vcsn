@@ -33,7 +33,7 @@ namespace vcsn
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpConcat<WeightSet>& v)
     {
-      print_weight(v.left_weight());
+      print_weight(v.left_weight(), v.get_weight_set());
       out_ << '.';
       for (unsigned i = v.size(); i != 0; --i)
         out_ << '(';
@@ -49,14 +49,14 @@ namespace vcsn
         out_ << ')';
       }
       out_ << ')';
-      print_weight(v.right_weight());
+      print_weight(v.right_weight(), v.get_weight_set());
     }
 
     template <class WeightSet>
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpPlus<WeightSet>& v)
     {
-      print_weight(v.left_weight());
+      print_weight(v.left_weight(), v.get_weight_set());
       out_ << '+';
       for (unsigned i = v.size(); i != 0; --i)
         out_ << '(';
@@ -72,14 +72,14 @@ namespace vcsn
         out_ << ')';
       }
       out_ << ')';
-      print_weight(v.right_weight());
+      print_weight(v.right_weight(), v.get_weight_set());
     }
 
     template <class WeightSet>
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
-      print_weight(v.left_weight());
+      print_weight(v.left_weight(), v.get_weight_set());
       const RatExpNode<WeightSet> * sub_exp = v.getSubNode();
       if (sub_exp != nullptr)
       {
@@ -87,7 +87,7 @@ namespace vcsn
         sub_exp->accept(*this);
         out_ << ")*";
       }
-      print_weight(v.right_weight());
+      print_weight(v.right_weight(), v.get_weight_set());
     }
 
     template <class WeightSet>
@@ -108,15 +108,15 @@ namespace vcsn
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpWord<WeightSet>& v)
     {
-      print_weight(v.left_weight());
+      print_weight(v.left_weight(), v.get_weight_set());
       out_ << "w(" << *v.get_word() << ')';
     }
 
     template<class WeightSet>
     void
-    PrintDebugVisitor<WeightSet>::print_weight(const weight_t &w)
+    PrintDebugVisitor<WeightSet>::print_weight(const weight_t& w, const weightset_t& ws)
     {
-      if (!WeightSet::is_unit(w))
+      if (!ws.is_unit(w))
       {
         out_ << '{'
              << w
