@@ -28,8 +28,7 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::op_mul(RatExp* e)
     {
-      auto expr = down_cast<RatExpNode<WeightSet>*>(e);
-      return op_mul(expr);
+      return op_mul(down_cast<node_t*>(e));
     }
 
     template <class WeightSet>
@@ -37,8 +36,8 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::op_mul(RatExp* l, RatExp* r)
     {
-      auto left = down_cast<RatExpNode<WeightSet>*>(l);
-      auto right = down_cast<RatExpNode<WeightSet>*>(r);
+      auto left = down_cast<node_t*>(l);
+      auto right = down_cast<node_t*>(r);
       return op_mul(left, right);
     }
 
@@ -47,10 +46,8 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::op_add(RatExp* l, RatExp* r)
     {
-      l = clean_node(l);
-      r = clean_node(r);
-      auto left = down_cast<RatExpNode<WeightSet>*>(l);
-      auto right = down_cast<RatExpNode<WeightSet>*>(r);
+      auto left = down_cast<node_t*>(clean_node(l));
+      auto right = down_cast<node_t*>(clean_node(r));
       return op_add(left, right);
     }
 
@@ -59,8 +56,7 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::op_kleene(RatExp* e)
     {
-      auto expr = down_cast<RatExpNode<WeightSet>*>(e);
-      return op_kleene(expr);
+      return op_kleene(down_cast<node_t*>(e));
     }
 
     // Implement function for concatenation operators.
@@ -70,7 +66,7 @@ namespace vcsn
     RatExpConcat<WeightSet>*
     mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
     {
-      RatExpConcat<WeightSet>* res = new RatExpConcat<WeightSet>();
+      auto res = new RatExpConcat<WeightSet>();
       res->push_back(l);
       res->push_back(r);
       return res;
@@ -108,8 +104,9 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* e)
+    auto
+    RatExpFactory<WeightSet>::op_mul(node_t* e)
+      -> node_t*
     {
       return e;
 
@@ -129,30 +126,29 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
+    auto
+    RatExpFactory<WeightSet>::op_mul(node_t* l, node_t* r)
+      -> node_t*
     {
       // Trivial Identity
       // E.0 = 0.E = 0
       // E.1 = 1.E = E
-      if (RatExpNode<WeightSet>::ZERO == l->type()
-          || RatExpNode<WeightSet>::ONE == r->type())
+      if (node_t::ZERO == l->type() || node_t::ONE == r->type())
       {
         delete r;
         return l;
       }
-      if (RatExpNode<WeightSet>::ZERO == r->type()
-          || RatExpNode<WeightSet>::ONE == l->type())
+      if (node_t::ZERO == r->type() || node_t::ONE == l->type())
       {
         delete l;
         return r;
       }
       // END: Trivial Identity
 
-      if (RatExpNode<WeightSet>::CONCAT == l->type())
+      if (node_t::CONCAT == l->type())
       {
         auto left = down_cast<RatExpConcat<WeightSet>*>(l);
-        if (RatExpNode<WeightSet>::CONCAT == r->type())
+        if (node_t::CONCAT == r->type())
         {
           auto right = down_cast<RatExpConcat<WeightSet>*>(r);
           return mul<WeightSet>(left, right);
@@ -162,7 +158,7 @@ namespace vcsn
           return mul<WeightSet>(left, r);
         }
       }
-      else if (RatExpNode<WeightSet>::CONCAT == r->type())
+      else if (node_t::CONCAT == r->type())
       {
         auto right = down_cast<RatExpConcat<WeightSet>*>(r);
         return mul<WeightSet>(l, right);
@@ -175,27 +171,28 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_add(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
+    auto
+    RatExpFactory<WeightSet>::op_add(node_t* l, node_t* r)
+      -> node_t*
     {
       // Trivial Identity
       // E+0 = 0+E = E
-      if (RatExpNode<WeightSet>::ZERO == l->type())
+      if (node_t::ZERO == l->type())
       {
         delete l;
         return r;
       }
-      if (RatExpNode<WeightSet>::ZERO == r->type())
+      if (node_t::ZERO == r->type())
       {
         delete r;
         return l;
       }
       // END: Trivial Identity
 
-      if (RatExpNode<WeightSet>::PLUS == l->type())
+      if (node_t::PLUS == l->type())
       {
         auto res = down_cast<RatExpPlus<WeightSet>*>(l);
-        if (RatExpNode<WeightSet>::PLUS == r->type())
+        if (node_t::PLUS == r->type())
         {
           auto right = down_cast<RatExpPlus<WeightSet>*>(r);
           for (auto it : *right)
@@ -207,7 +204,7 @@ namespace vcsn
         }
         return res;
       }
-      else if (RatExpNode<WeightSet>::PLUS == r->type())
+      else if (node_t::PLUS == r->type())
       {
         auto res = down_cast<RatExpPlus<WeightSet>*>(r);
         res->push_front(l);
@@ -224,8 +221,9 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>*
+    auto
     RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
+      -> node_t*
     {
       if (RatExpNode<WeightSet>::ZERO == e->type())
       {
@@ -282,16 +280,16 @@ namespace vcsn
       if (!w)
         return e;
       // if w
-      auto expr = down_cast<RatExpNode<WeightSet>*>(e);
+      auto expr = down_cast<node_t*>(e);
       switch (expr->weight_type())
       {
-      case RatExpNode<WeightSet>::L_WEIGHT:
+      case node_t::L_WEIGHT:
       {
         auto lweight = down_cast<LWeightNode<WeightSet>*>(expr);
         return op_weight(lweight, w);
       }
 
-      case RatExpNode<WeightSet>::LR_WEIGHT:
+      case node_t::LR_WEIGHT:
       {
         auto lrweight = down_cast<LRWeightNode<WeightSet>*>(expr);
         return op_weight(w, lrweight);
@@ -310,15 +308,15 @@ namespace vcsn
       if (!w)
         return e;
       // if w
-      auto expr = down_cast<RatExpNode<WeightSet>*>(e);
+      auto expr = down_cast<node_t*>(e);
       switch (expr->weight_type())
       {
-      case RatExpNode<WeightSet>::L_WEIGHT:
+      case node_t::L_WEIGHT:
       {
         auto rweight = down_cast<LWeightNode<WeightSet>*>(expr);
         return op_weight(rweight, w);
       }
-      case RatExpNode<WeightSet>::LR_WEIGHT:
+      case node_t::LR_WEIGHT:
       {
         auto rweight = down_cast<LRWeightNode<WeightSet>*>(expr);
         return op_weight(rweight, w);
@@ -330,8 +328,10 @@ namespace vcsn
     }
 
     template<class WeightSet>
-    RatExpNode<WeightSet> *
-    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e, weight_str_container* w)
+    auto
+    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e,
+                                        weight_str_container* w)
+      -> node_t*
     {
       for (auto i : *w)
       {
@@ -347,8 +347,10 @@ namespace vcsn
     }
 
     template<class WeightSet>
-    RatExpNode<WeightSet> *
-    RatExpFactory<WeightSet>::op_weight(weight_str_container* w, LRWeightNode<WeightSet>* e)
+    auto
+    RatExpFactory<WeightSet>::op_weight(weight_str_container* w,
+                                        LRWeightNode<WeightSet>* e)
+      -> node_t*
     {
       for (auto i : *w)
       {
@@ -364,8 +366,10 @@ namespace vcsn
     }
 
     template<class WeightSet>
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w)
+    auto
+    RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e,
+                                        weight_str_container* w)
+      -> node_t*
     {
       for (auto i : *w)
       {
@@ -403,27 +407,27 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::clean_node(RatExp* e)
     {
-      auto expr = down_cast<RatExpNode<WeightSet>*>(e);
+      auto res = down_cast<node_t*>(e);
 
-      switch (expr->type())
+      switch (res->type())
       {
-      case RatExpNode<WeightSet>::PLUS:
+      case node_t::PLUS:
       {
-        auto plus = down_cast<RatExpPlus<WeightSet>*>(expr);
+        auto plus = down_cast<RatExpPlus<WeightSet>*>(res);
         if (1 == plus->size())
         {
-          expr = *plus->begin();
+          res = *plus->begin();
           plus->erase(plus->begin());
           delete plus;
         }
         break;
       }
-      case RatExpNode<WeightSet>::CONCAT:
+      case node_t::CONCAT:
       {
-        auto concat = down_cast<RatExpConcat<WeightSet>*>(expr);
+        auto concat = down_cast<RatExpConcat<WeightSet>*>(res);
         if (1 == concat->size())
         {
-          expr = *concat->begin();
+          res = *concat->begin();
           concat->erase(concat->begin());
           delete concat;
         }
@@ -432,7 +436,7 @@ namespace vcsn
       default:
         break;
       }
-      return expr;
+      return res;
     }
 
   } // namespace rat_exp
