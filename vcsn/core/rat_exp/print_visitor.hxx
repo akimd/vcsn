@@ -1,6 +1,8 @@
 #ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 # define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 
+# include <core/rat_exp/general_print.hh>
+
 namespace vcsn
 {
   namespace rat_exp
@@ -28,57 +30,29 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet>& v)
     {
-      print_weight(v.left_weight());
-      for (unsigned i = v.size(); i != 1; --i)
-        out_ << '(';
-
-      typename RatExpConcat<WeightSet>::const_iterator end = v.end();
-      typename RatExpConcat<WeightSet>::const_iterator it  = v.begin();
-      (* it)->accept(*this);
-      ++it;
-      for (; end != it; ++it)
-      {
-        out_ << '.';
-        (* it)->accept(*this);
-        out_ << ')';
-      }
-      print_weight(v.right_weight());
+      print_iterable<RatExpConcat<WeightSet> >(v, '.', out_, *this);
     }
 
     template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet>& v)
     {
-      print_weight(v.left_weight());
-      for (unsigned i = v.size(); i != 1; --i)
-        out_ << '(';
-
-      typename RatExpConcat<WeightSet>::const_iterator end = v.end();
-      typename RatExpConcat<WeightSet>::const_iterator it  = v.begin();
-      (* it)->accept(*this);
-      ++it;
-      for (; end != it; ++it)
-      {
-        out_ << '+';
-        (* it)->accept(*this);
-        out_ << ')';
-      }
-      print_weight(v.right_weight());
+      print_iterable<RatExpPlus<WeightSet> >(v, '.', out_, *this);
     }
 
     template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
-      print_weight(v.left_weight());
-      RatExpNode<WeightSet> *sub_exp = v.get_sub();
+      print_weight(v.left_weight(), v.get_weight_set(), out_);
+      auto sub_exp = v.get_sub();
       if (sub_exp != nullptr)
       {
         out_ << '(';
         sub_exp->accept(*this);
         out_ << ")*";
       }
-      print_weight(v.right_weight());
+      print_weight(v.right_weight(), v.get_weight_set(), out_);
     }
 
     template <class WeightSet>
@@ -100,18 +74,6 @@ namespace vcsn
     PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet>& v)
     {
       out_ << *v.get_word();
-    }
-
-    template<class WeightSet>
-    void
-    PrintVisitor<WeightSet>::print_weight(const weight_t& w)
-    {
-      if (!WeightSet::is_unit(w))
-      {
-        out_ << '{'
-             << w
-             << '}';
-      }
     }
 
   } // rat_exp

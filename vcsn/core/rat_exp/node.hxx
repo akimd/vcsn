@@ -459,7 +459,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpNode<WeightSet> *
-    RatExpKleene<WeightSet>::getSubNode()
+    RatExpKleene<WeightSet>::get_sub()
     {
       return sub_exp_;
     }
@@ -467,7 +467,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     const RatExpNode<WeightSet> *
-    RatExpKleene<WeightSet>::getSubNode() const
+    RatExpKleene<WeightSet>::get_sub() const
     {
       return sub_exp_;
     }

@@ -26,8 +26,6 @@ namespace vcsn
       virtual void visit(const RatExpOne<WeightSet> &           v);
       virtual void visit(const RatExpZero<WeightSet> &          v);
       virtual void visit(const RatExpWord<WeightSet> &          v);
-    protected:
-      void print_weight(weight_t& w);
     private:
       std::ostream &out_;
     };

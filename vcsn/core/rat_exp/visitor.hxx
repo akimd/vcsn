@@ -41,7 +41,7 @@ namespace vcsn
     void
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpKleene<WeightSet> >::type& v)
     {
-      typename ConstNess<RatExpNode<WeightSet> >::type *sub_exp = v.getSubNode();
+      typename ConstNess<RatExpNode<WeightSet> >::type *sub_exp = v.get_sub();
 
       if (sub_exp!= nullptr)
         sub_exp->accept(*this);

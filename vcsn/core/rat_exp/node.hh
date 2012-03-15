@@ -218,8 +218,8 @@ namespace vcsn
       RatExpKleene(RatExpNode<WeightSet>* sub_exp, const weightset_t& ws);
       virtual ~RatExpKleene();
     public:
-      RatExpNode<WeightSet> *getSubNode();
-      const RatExpNode<WeightSet> *getSubNode() const;
+      RatExpNode<WeightSet> *get_sub();
+      const RatExpNode<WeightSet> *get_sub() const;
     public:
       virtual DynamicType type() const { return root_type::KLEENE; };
 
