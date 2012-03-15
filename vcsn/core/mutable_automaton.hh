@@ -27,6 +27,7 @@ namespace vcsn
   protected:
     const alphabet_t& a_;
     const weightset_t& ws_;
+    static const weightset_t& st_ws_;
 
     struct stored_transition_t
     {
@@ -51,8 +52,13 @@ namespace vcsn
 
   public:
 
+    mutable_automaton(const alphabet_t& a)
+      : a_(a), ws_(st_ws_)
+    {
+    }
+
     mutable_automaton(const alphabet_t& a,
-		      const weightset_t& ws = weightset_t())
+		      const weightset_t& ws)
       : a_(a), ws_(ws)
     {
     }
@@ -383,6 +389,10 @@ namespace vcsn
     st_cont_t states_;
     tr_cont_t transitions_;
   };
+
+  template <class Alphabet, class WeightSet, class Kind>
+  const typename mutable_automaton<Alphabet, WeightSet, Kind>::weightset_t&
+  mutable_automaton<Alphabet, WeightSet, Kind>::st_ws_ = WeightSet();
 }
 
 #endif // MUTABLE_AUTOMATON
