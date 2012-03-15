@@ -4,12 +4,8 @@
 #include <stack>
 #include "io/parse-rat-exp.hh"
 
-static unsigned int brace_level = 0;
 static unsigned int weight_level = 0;
 static std::string* sval = 0;
-std::stack<unsigned int> brace_context_level;
-void switch_context(std::string context_name);
-extern int errors;
 
 #define STEP()					\
  do {						\
@@ -111,17 +107,3 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 }
 
 %%
-
-void
-switch_context(std::string context_name)
-{
-  if ("vcsn" == context_name)
-  {
-    yy_push_state(INITIAL);
-    brace_context_level.push(0);
-  }
-}
-// "\\s{[a-zA-Z]*}{"             {
-//   std::string str_yytext(yytext);
-//   switch_context(std::string(str_yytext.begin() + 3, str_yytext.end() - 1));
-// }
