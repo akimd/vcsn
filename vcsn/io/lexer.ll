@@ -4,23 +4,14 @@
 #include <stack>
 #include "io/parse-rat-exp.hh"
 
-#define STEP()					\
- do {						\
-   yylloc->begin.line   = yylloc->end.line;	\
-   yylloc->begin.column = yylloc->end.column;	\
- } while (false)
-
-#define COL(Col)				\
-  yylloc->end.column += (Col)
-
 #define LINE(Line)				\
   do{						\
     yylloc->end.column = 1;			\
-    yylloc->end.line += (Line);                 \
+    yylloc->lines (Line);                       \
  } while (false)
 
 #define YY_USER_ACTION				\
-  COL(yyleng);
+  yylloc->columns (yyleng);
 
 #define TOK(Token)                              \
   vcsn::rat_exp::parser::token::Token
@@ -39,7 +30,8 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   unsigned int nesting = 0;
   // Grow a string before returning it.
   std::string* sval = 0;
-  STEP();
+
+  yylloc->step();
 %}
 
 <INITIAL>{ /* Vcsn Syntax */
