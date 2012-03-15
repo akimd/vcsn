@@ -43,7 +43,7 @@ namespace vcsn
       typedef typename visitor_traits<WeightSet>::ConstVisitor ConstVisitor;
 
     public:
-      RatExpNode(WeightType weight_type);
+      RatExpNode();
       virtual ~RatExpNode() = 0;
     public:
       virtual void accept(Visitor &v) = 0;
@@ -61,20 +61,32 @@ namespace vcsn
     public:
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
+      typedef RatExpNode<WeightSet> super_type;
+      typedef typename super_type::WeightType WeightType;
     protected:
       LRWeightNode();
+      LRWeightNode(const weightset_t& ws);
     public:
       virtual ~LRWeightNode() = 0;
     public:
+      const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
       const weight_t &right_weight() const;
       weight_t &right_weight();
+
+      virtual WeightType weight_type() const;
     protected:
+      const static weightset_t st_ws_;
+      const weightset_t& ws_;
       weight_t lw_;
       weight_t rw_;
     };
+
+    template<class WeightSet>
+    const typename LRWeightNode<WeightSet>::weightset_t
+    LRWeightNode<WeightSet>::st_ws_ = WeightSet();
 
     template <class WeightSet>
     class LWeightNode : public RatExpNode<WeightSet>
@@ -82,16 +94,28 @@ namespace vcsn
     public:
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
+      typedef RatExpNode<WeightSet> super_type;
+      typedef typename super_type::WeightType WeightType;
     protected:
       LWeightNode();
+      LWeightNode(const weightset_t& ws);
     public:
       virtual ~LWeightNode() = 0;
     public:
+      const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
       weight_t &left_weight();
+
+      virtual WeightType weight_type() const;
     protected:
+      const static weightset_t st_ws_;
+      const weightset_t& ws_;
       weight_t lw_;
     };
+
+    template <class WeightSet>
+    const typename LWeightNode<WeightSet>::weightset_t
+    LWeightNode<WeightSet>::st_ws_ = WeightSet();
 
     template <class WeightSet>
     class RatExpConcat : public LRWeightNode<WeightSet>
@@ -100,6 +124,8 @@ namespace vcsn
       typedef LRWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
       typedef std::list<RatExpNode<WeightSet> *> node_list;
 
       typedef typename node_list::const_iterator         const_iterator;
@@ -108,6 +134,7 @@ namespace vcsn
       typedef typename node_list::reverse_iterator       reverse_iterator;
     public:
       RatExpConcat();
+      RatExpConcat(weightset_t& ws);
       virtual ~RatExpConcat();
     public:
       virtual DynamicType type() const { return root_type::CONCAT; };
@@ -141,6 +168,8 @@ namespace vcsn
       typedef LRWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
       typedef std::list<RatExpNode<WeightSet> *> node_list;
 
       typedef typename node_list::const_iterator         const_iterator;
@@ -149,6 +178,7 @@ namespace vcsn
       typedef typename node_list::reverse_iterator       reverse_iterator;
     public:
       RatExpPlus();
+      RatExpPlus(const weightset_t& ws);
       virtual ~RatExpPlus();
     public:
       virtual DynamicType type() const { return root_type::PLUS; };
@@ -182,7 +212,12 @@ namespace vcsn
       typedef LRWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
-      RatExpKleene(RatExpNode<WeightSet> *sub_exp);
+
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+    public:
+      RatExpKleene(RatExpNode<WeightSet>* sub_exp);
+      RatExpKleene(RatExpNode<WeightSet>* sub_exp, const weightset_t& ws);
       virtual ~RatExpKleene();
     public:
       RatExpNode<WeightSet> *getSubNode();
@@ -204,6 +239,9 @@ namespace vcsn
       typedef LWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+    public:
       RatExpOne();
       virtual ~RatExpOne();
     public:
@@ -220,6 +258,9 @@ namespace vcsn
       typedef LWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+    public:
       RatExpZero();
       virtual ~RatExpZero();
     public:
@@ -236,7 +277,11 @@ namespace vcsn
       typedef LWeightNode<WeightSet> super_type;
       typedef RatExpNode<WeightSet> root_type;
       typedef typename root_type::DynamicType DynamicType;
-      RatExpWord(std::string *word);
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+    public:
+      RatExpWord(std::string* word);
+      RatExpWord(std::string* word, const weightset_t& ws);
       virtual ~RatExpWord();
     public:
       virtual DynamicType type() const { return root_type::WORD; };

@@ -217,7 +217,7 @@ namespace vcsn
     RatExpKleene<WeightSet>*
     RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
     {
-      if (RatExpNode<WeightSet>::ZERO == e->get_type())
+      if (RatExpNode<WeightSet>::ZERO == e->type())
       {
         // Trivial identity
         // (0)* == 1

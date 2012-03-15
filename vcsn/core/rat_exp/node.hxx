@@ -43,9 +43,18 @@ namespace vcsn
     template <class WeightSet>
     inline
     LRWeightNode<WeightSet>::LRWeightNode()
-      : RatExpNode<WeightSet>(RatExpNode<WeightSet>::LR_WEIGHT)
-      , lw_(weightset_t::one())
-      , rw_(weightset_t::one())
+      : ws_(st_ws_)
+    {
+      lw_ = ws_.unit();
+      rw_ = ws_.unit();
+    }
+
+    template <class WeightSet>
+    inline
+    LRWeightNode<WeightSet>::LRWeightNode(const weightset_t &ws)
+      : ws_(ws)
+      , lw_(ws.unit())
+      , rw_(ws.unit())
     { }
 
     template <class WeightSet>
@@ -85,6 +94,22 @@ namespace vcsn
       return rw_;
     }
 
+    template <class WeightSet>
+    inline
+    const typename LRWeightNode<WeightSet>::weightset_t &
+    LRWeightNode<WeightSet>::get_weight_set() const
+    {
+      return ws_;
+    }
+
+    template <class WeightSet>
+    inline
+    typename LRWeightNode<WeightSet>::WeightType
+    LRWeightNode<WeightSet>::weight_type() const
+    {
+      return super_type::LR_WEIGHT;
+    }
+
     /////////////////
     // LWeightNode //
     /////////////////
@@ -92,8 +117,16 @@ namespace vcsn
     template <class WeightSet>
     inline
     LWeightNode<WeightSet>::LWeightNode()
-      : RatExpNode<WeightSet>(RatExpNode<WeightSet>::L_WEIGHT)
-      , lw_(weightset_t::one())
+      : ws_(st_ws_)
+    {
+      lw_ = ws_.unit();
+    }
+
+    template <class WeightSet>
+    inline
+    LWeightNode<WeightSet>::LWeightNode(const weightset_t& ws)
+      : ws_(ws)
+      , lw_(ws.unit())
     { }
 
     template <class WeightSet>
@@ -117,6 +150,22 @@ namespace vcsn
       return lw_;
     }
 
+    template <class WeightSet>
+    inline
+    const typename LWeightNode<WeightSet>::weightset_t &
+    LWeightNode<WeightSet>::get_weight_set() const
+    {
+      return ws_;
+    }
+
+    template <class WeightSet>
+    inline
+    typename LWeightNode<WeightSet>::WeightType
+    LWeightNode<WeightSet>::weight_type() const
+    {
+      return super_type::L_WEIGHT;
+    }
+
     //////////////////
     // RatExpConcat //
     //////////////////
@@ -124,7 +173,12 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpConcat<WeightSet>::RatExpConcat()
-      : LRWeightNode<WeightSet>()
+    { }
+
+    template <class WeightSet>
+    inline
+    RatExpConcat<WeightSet>::RatExpConcat(weightset_t &ws)
+      : LRWeightNode<WeightSet>(ws)
     { }
 
     template <class WeightSet>
@@ -256,7 +310,12 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpPlus<WeightSet>::RatExpPlus()
-      : LRWeightNode<WeightSet>()
+    { }
+
+    template <class WeightSet>
+    inline
+    RatExpPlus<WeightSet>::RatExpPlus(const weightset_t &ws)
+      : LRWeightNode<WeightSet>(ws)
     { }
 
     template <class WeightSet>
@@ -387,8 +446,15 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet> * sub_exp)
+    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet>* sub_exp)
       : LRWeightNode<WeightSet>()
+      , sub_exp_(sub_exp)
+    { }
+
+    template <class WeightSet>
+    inline
+    RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet>* sub_exp, const weightset_t& ws)
+      : LRWeightNode<WeightSet>(RatExpNode<WeightSet>::KLEENE, ws)
       , sub_exp_(sub_exp)
     { }
 
@@ -438,7 +504,6 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpOne<WeightSet>::RatExpOne()
-      : LWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -469,7 +534,6 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpZero<WeightSet>::RatExpZero()
-      : LWeightNode<WeightSet>()
     { }
 
     template <class WeightSet>
@@ -502,7 +566,14 @@ namespace vcsn
     RatExpWord<WeightSet>::RatExpWord(std::string *word)
       : LWeightNode<WeightSet>()
       , word_(word)
-    {}
+    { }
+
+    template <class WeightSet>
+    inline
+    RatExpWord<WeightSet>::RatExpWord(std::string *word, const weightset_t& ws)
+      : LWeightNode<WeightSet>(ws)
+      , word_(word)
+    { }
 
     template <class WeightSet>
     inline
