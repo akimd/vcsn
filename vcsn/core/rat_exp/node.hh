@@ -50,9 +50,7 @@ namespace vcsn
       virtual void accept(ConstVisitor &v) const = 0;
     public:
       virtual DynamicType type() const = 0;
-      WeightType get_weight_type() const;
-    protected:
-      const WeightType weight_type_;
+      virtual WeightType weight_type() const = 0;
     };
 
     template <class WeightSet>

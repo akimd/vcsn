@@ -19,8 +19,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpNode<WeightSet>::RatExpNode(WeightType weight_type)
-      : weight_type_(weight_type)
+    RatExpNode<WeightSet>::RatExpNode()
     { }
 
     template <class WeightSet>

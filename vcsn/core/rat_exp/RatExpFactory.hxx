@@ -14,6 +14,16 @@ namespace vcsn
   {
 
     template <class WeightSet>
+    RatExpFactory<WeightSet>::RatExpFactory()
+      : ws_(0)
+    { }
+
+    template <class WeightSet>
+    RatExpFactory<WeightSet>::RatExpFactory(const WeightSet& ws)
+      : ws_(&ws)
+    { }
+
+    template <class WeightSet>
     inline
     RatExp*
     RatExpFactory<WeightSet>::op_mul(RatExp* e)
@@ -249,22 +259,25 @@ namespace vcsn
     RatExpWord<WeightSet>*
     RatExpFactory<WeightSet>::op_word(std::string* w)
     {
-      return new RatExpWord<WeightSet>(w);
+      if (ws_ != nullptr)
+        return new RatExpWord<WeightSet>(w, *ws_);
+      else
+        return new RatExpWord<WeightSet>(w);
     }
 
     template <class WeightSet>
     inline
-    weights_type*
-    RatExpFactory<WeightSet>::op_weight(weight_type* w)
+    typename RatExpFactory<WeightSet>::weight_str_container*
+    RatExpFactory<WeightSet>::op_weight(std::string* w)
     {
-      weights_type* res = new weights_type();
+      weight_str_container* res = new weight_str_container();
       res->push_front(w);
       return res;
     }
 
     template <class WeightSet>
     RatExp*
-    RatExpFactory<WeightSet>::op_weight(weights_type* w, RatExp* e)
+    RatExpFactory<WeightSet>::op_weight(weight_str_container* w, RatExp* e)
     {
       if (!w)
         return e;
@@ -292,7 +305,7 @@ namespace vcsn
 
     template <class WeightSet>
     RatExp*
-    RatExpFactory<WeightSet>::op_weight(RatExp* e, weights_type* w)
+    RatExpFactory<WeightSet>::op_weight(RatExp* e, weight_str_container* w)
     {
       if (!w)
         return e;
@@ -317,60 +330,61 @@ namespace vcsn
     }
 
     template<class WeightSet>
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e,
-                                        weights_type* w)
+    RatExpNode<WeightSet> *
+    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e, weight_str_container* w)
     {
       for (auto i : *w)
       {
-        if (WeightSet::is_zero(WeightSet::op_conv(i)))
+        weight_t new_weight = ws_->op_conv(*i);
+        if (ws_->is_zero(new_weight))
         {
           delete e;
           return new RatExpZero<WeightSet>();
         }
-        WeightSet::op_mul_eq(e->left_weight(), i);
+        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
+      }
+      return e;
+    }
+
+    template<class WeightSet>
+    RatExpNode<WeightSet> *
+    RatExpFactory<WeightSet>::op_weight(weight_str_container* w, LRWeightNode<WeightSet>* e)
+    {
+      for (auto i : *w)
+      {
+        weight_t new_weight = ws_->op_conv(*i);
+        if (ws_->is_zero(new_weight))
+        {
+          delete e;
+          return new RatExpZero<WeightSet>();
+        }
+        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
       }
       return e;
     }
 
     template<class WeightSet>
     RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_weight(weights_type* w,
-                                        LRWeightNode<WeightSet>* e)
+    RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w)
     {
       for (auto i : *w)
       {
-        if (WeightSet::is_zero(WeightSet::op_conv(i)))
+        weight_t new_weight = ws_->op_conv(*i);
+        if (ws_->is_zero(new_weight))
         {
           delete e;
           return new RatExpZero<WeightSet>();
         }
-        WeightSet::op_mul_eq(e->left_weight(), i);
-      }
-      return e;
-    }
-
-    template<class WeightSet>
-    RatExpNode<WeightSet>*
-    RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e,
-                                        weights_type* w)
-    {
-      for (auto i : *w)
-      {
-        if (WeightSet::is_zero(WeightSet::op_conv(i)))
-        {
-          delete e;
-          return new RatExpZero<WeightSet>();
-        }
-        WeightSet::op_mul_eq(e->right_weight(), i);
+        e->right_weight() = ws_->mul(e->right_weight(), new_weight);
       }
       return e;
     }
 
     template <class WeightSet>
     inline
-    weights_type*
     RatExpFactory<WeightSet>::op_weight(weight_type* w, weights_type* l)
+    typename RatExpFactory<WeightSet>::weight_str_container*
+    RatExpFactory<WeightSet>::op_weight(weight_str* w, weight_str_container* l)
     {
       l->push_front(w);
       return l;
@@ -378,8 +392,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    weights_type*
-    RatExpFactory<WeightSet>::op_weight(weights_type* l, weight_type* w)
+    typename RatExpFactory<WeightSet>::weight_str_container*
+    RatExpFactory<WeightSet>::op_weight(weight_str_container* l, weight_str* w)
     {
       l->push_front(w);
       return l;

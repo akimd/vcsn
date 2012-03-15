@@ -39,13 +39,17 @@
 
 %code
 {
-#include <cassert>
-#include <sstream>
+  #include <cassert>
+  #include <sstream>
+  #include <weights/z.hh>
+
+  typedef std::string weight_str;
+  typedef std::list<weight_str *> weight_str_container;
 
   namespace std
   {
     std::ostream&
-    operator<<(std::ostream& o, const vcsn::rat_exp::weights_type& ws)
+    operator<<(std::ostream& o, const weight_str_container& ws)
     {
       o << "{";
       bool first = true;
@@ -90,20 +94,24 @@
       }
 
       // Define the factory.
-      RatExpFactory<foo> fact; // FIXME: specialization
+      RatExpFactory<vcsn::z> fact; // FIXME: specialization
 #define MAKE(Kind, ...)                         \
       fact.op_ ## Kind(__VA_ARGS__)
     }
   }
 
+  // define the factory
+  vcsn::rat_exp::RatExpFactory<vcsn::z> fact; // FIXME: specialization
+  #define MAKE(Kind, ...)                         \
+    fact.op_ ## Kind(__VA_ARGS__)
 }
 
 %union
 {
   int ival;
   std::string* sval;
-  weight_type* weight;
-  weights_type* weights;
+  std::string* weight;
+  std::list<std::string *>* weights;
   RatExp* nodeval;
 };
 
