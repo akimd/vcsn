@@ -12,9 +12,11 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    print_weight(const typename WeightSet::value_t& w, const WeightSet& ws, std::ostream& out)
+    print_weight(const typename WeightSet::value_t& w,
+                 const WeightSet& ws, std::ostream& out,
+                 const double show_unit)
     {
-      if (!ws.is_unit(w))
+      if (show_unit || !ws.is_unit(w))
       {
         out << '{'
             << w
@@ -27,12 +29,13 @@ namespace vcsn
     print_iterable(const Iterate& o,
                    const char op,
                    std::ostream& out,
-                   typename visitor_traits<typename Iterate::weightset_t>::ConstVisitor& v)
+                   typename visitor_traits<typename Iterate::weightset_t>::ConstVisitor& v,
+                   const bool show_unit)
     {
       unsigned size = o.size();
       if (0 != size)
       {
-        print_weight(o.left_weight(), o.get_weight_set(), out);
+        print_weight(o.left_weight(), o.get_weight_set(), out, show_unit);
 
         if (debug)
           out << op;
@@ -51,7 +54,7 @@ namespace vcsn
         }
         out << ')';
 
-        print_weight(o.right_weight(), o.get_weight_set(), out);
+        print_weight(o.right_weight(), o.get_weight_set(), out, show_unit);
       }
     }
 
@@ -60,18 +63,19 @@ namespace vcsn
     print_post_exp(const PostExp& e,
                    const char op,
                    std::ostream& out,
-                   typename visitor_traits<typename PostExp::weightset_t>::ConstVisitor& v)
+                   typename visitor_traits<typename PostExp::weightset_t>::ConstVisitor& v,
+                   const bool show_unit)
     {
       auto sub_exp = e.get_sub();
       if (sub_exp != nullptr)
       {
-        print_weight(e.left_weight(), e.get_weight_set(), out);
+        print_weight(e.left_weight(), e.get_weight_set(), out, show_unit);
         if (debug)
           out << op;
         out << '(';
         sub_exp->accept(v);
         out << ')' << op;
-        print_weight(e.right_weight(), e.get_weight_set(), out);
+        print_weight(e.right_weight(), e.get_weight_set(), out, show_unit);
       }
     }
 

@@ -16,7 +16,7 @@ namespace vcsn
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
-      PrintDebugVisitor(std::ostream& out);
+      PrintDebugVisitor(std::ostream& out, bool show_unit = false);
       virtual ~PrintDebugVisitor();
     public:
       virtual void visit(const RatExpNode<WeightSet> &          v);
@@ -28,6 +28,7 @@ namespace vcsn
       virtual void visit(const RatExpWord<WeightSet> &          v);
     private:
       std::ostream &out_;
+      const bool show_unit_;
     };
 
   } // rat_exp
