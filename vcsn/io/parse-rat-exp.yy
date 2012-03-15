@@ -83,7 +83,7 @@
       std::ostream&
       operator<<(std::ostream& o, const RatExp& r)
       {
-        auto down = down_cast<const RatExpNode<foo>*>(&r);
+        const RatExpNode<foo>* down = down_cast<const RatExpNode<foo>*>(&r);
         PrintDebugVisitor<foo> print(o);
         down->accept(print);
         return o;

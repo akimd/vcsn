@@ -4,7 +4,17 @@
 # ifdef NDEBUG
 #  define down_cast static_cast
 # else
-#  define down_cast dynamic_cast
+
+template <typename T, typename U>
+inline
+T
+down_cast(U t)
+{
+  T res = dynamic_cast<const T>(t);
+  assert(res);
+  return res;
+}
+
 # endif
 
 #endif // !VCSN_MISC_CAST_HH_
