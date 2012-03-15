@@ -224,7 +224,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpKleene<WeightSet>*
+    RatExpNode<WeightSet>*
     RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
     {
       if (RatExpNode<WeightSet>::ZERO == e->type())
@@ -283,7 +283,7 @@ namespace vcsn
         return e;
       // if w
       auto expr = down_cast<RatExpNode<WeightSet>*>(e);
-      switch (expr->get_weight_type())
+      switch (expr->weight_type())
       {
       case RatExpNode<WeightSet>::L_WEIGHT:
       {
@@ -311,7 +311,7 @@ namespace vcsn
         return e;
       // if w
       auto expr = down_cast<RatExpNode<WeightSet>*>(e);
-      switch (expr->get_weight_type())
+      switch (expr->weight_type())
       {
       case RatExpNode<WeightSet>::L_WEIGHT:
       {
@@ -382,7 +382,6 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpFactory<WeightSet>::op_weight(weight_type* w, weights_type* l)
     typename RatExpFactory<WeightSet>::weight_str_container*
     RatExpFactory<WeightSet>::op_weight(weight_str* w, weight_str_container* l)
     {
