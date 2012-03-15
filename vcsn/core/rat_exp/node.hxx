@@ -605,7 +605,7 @@ namespace vcsn
       return word_;
     }
 
-  } // !exp
-} // !vcsn
+  } // exp
+} // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_NODE_HXX_

@@ -58,8 +58,8 @@ namespace vcsn
       const WeightSet* ws_;
     };
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 # include <core/rat_exp/RatExpFactory.hxx>
 

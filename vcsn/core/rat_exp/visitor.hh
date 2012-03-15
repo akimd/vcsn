@@ -31,8 +31,8 @@ namespace vcsn
       typedef GenVisitor<WeightSet, misc::constify_traits> ConstVisitor;
     };
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 # include <core/rat_exp/visitor.hxx>
 

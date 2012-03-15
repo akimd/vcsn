@@ -32,8 +32,8 @@ namespace vcsn
       std::ostream &out_;
     };
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 # include <core/rat_exp/print_debug_visitor.hxx>
 

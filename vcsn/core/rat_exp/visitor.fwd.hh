@@ -9,7 +9,7 @@ namespace vcsn
     template <template <class> class T>
     class GenVisitor;
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_VISITOR_FWD_HH_

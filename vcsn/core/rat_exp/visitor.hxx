@@ -65,7 +65,7 @@ namespace vcsn
     GenVisitor<WeightSet, ConstNess>::visit(typename ConstNess<RatExpWord<WeightSet> >::type &)
     { }
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_VISITOR_HXX_

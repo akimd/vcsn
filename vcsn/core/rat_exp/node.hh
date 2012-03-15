@@ -292,8 +292,8 @@ namespace vcsn
       std::string *word_;
     };
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 #include <core/rat_exp/node.hxx>
 

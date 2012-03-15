@@ -124,7 +124,7 @@ namespace vcsn
       }
     }
 
-  } // !rat_exp
-} // !vcsn
+  } // rat_exp
+} // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_DEBUG_VISITOR_HXX
