@@ -111,7 +111,7 @@
   int ival;
   std::string* sval;
   std::string* weight;
-  std::list<std::string *>* weights;
+  std::list<std::string*>* weights;
   RatExp* nodeval;
 };
 

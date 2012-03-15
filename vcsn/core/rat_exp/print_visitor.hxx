@@ -7,7 +7,7 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    PrintVisitor<WeightSet>::PrintVisitor(std::ostream &out) :
+    PrintVisitor<WeightSet>::PrintVisitor(std::ostream& out) :
       out_(out)
     { }
 
@@ -19,14 +19,14 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpNode<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpNode<WeightSet>& v)
     {
       assert(false);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet>& v)
     {
       print_weight(v.left_weight());
       for (unsigned i = v.size(); i != 1; --i)
@@ -47,7 +47,7 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet>& v)
     {
       print_weight(v.left_weight());
       for (unsigned i = v.size(); i != 1; --i)
@@ -68,7 +68,7 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
       print_weight(v.left_weight());
       RatExpNode<WeightSet> *sub_exp = v.get_sub();
@@ -83,28 +83,28 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpOne<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpOne<WeightSet>&)
     {
       out_ << "\\e";
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpZero<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpZero<WeightSet>&)
     {
       out_ << "\\z";
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet> &v)
+    PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet>& v)
     {
       out_ << *v.get_word();
     }
 
     template<class WeightSet>
     void
-    PrintVisitor<WeightSet>::print_weight(const weight_t &w)
+    PrintVisitor<WeightSet>::print_weight(const weight_t& w)
     {
       if (!WeightSet::is_unit(w))
       {
