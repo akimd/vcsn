@@ -4,9 +4,6 @@
 #include <stack>
 #include "io/parse-rat-exp.hh"
 
-static unsigned int weight_level = 0;
-static std::string* sval = 0;
-
 #define STEP()					\
  do {						\
    yylloc->begin.line   = yylloc->end.line;	\
@@ -38,6 +35,10 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 %%
 %{
+  // Count the number of opened braces.
+  unsigned int nesting = 0;
+  // Grow a string before returning it.
+  std::string* sval = 0;
   STEP();
 %}
 
@@ -55,7 +56,6 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "\\z"                         return TOK(ZERO);
 
   "{"                           {
-    assert (!sval);
     sval = new std::string();
     yy_push_state(SC_WEIGHT);
   }
@@ -70,20 +70,19 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 <SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
   "{"                           {
-    ++weight_level;
+    ++nesting;
     *sval += yytext;
   } // push brace
   "}"                           {
-    if (weight_level)
+    if (nesting)
       {
-        --weight_level;
+        --nesting;
         *sval += yytext;
       }
     else
       {
         yy_pop_state();
         yylval->sval = sval;
-        sval = 0;
         return TOK(WEIGHT);
       }
   }
@@ -97,7 +96,6 @@ vcsn_character      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   \"                            {
     yy_pop_state();
     yylval->sval = sval;
-    sval = 0;
     return TOK(WORD);
   }
   \<{vcsn_character}*\>         { // FIXME: check
