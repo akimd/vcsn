@@ -1,5 +1,7 @@
 #ifndef VCSN_WEIGHTS_Z_HH
-#define VCSN_WEIGHTS_Z_HH
+# define VCSN_WEIGHTS_Z_HH
+
+# include <string>
 
 namespace vcsn
 {
@@ -49,6 +51,13 @@ namespace vcsn
     {
       return false;
     }
+
+    value_t
+    op_conv(const std::string &str) const
+    {
+      return atoi(str.c_str());
+    }
+
   };
 }
 
