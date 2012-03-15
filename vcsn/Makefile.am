@@ -19,6 +19,7 @@ nobase_vcsn_HEADERS =                           \
   core/crange.hh                                \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
+  core/rat_exp/general_print.hh			\
   core/rat_exp/RatExpFactory.hh                 \
   core/rat_exp/RatExpFactory.hxx                \
   core/rat_exp/node.fwd.hh                      \
