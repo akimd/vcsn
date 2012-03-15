@@ -10,7 +10,7 @@ namespace vcsn
   namespace rat_exp
   {
 
-    template<class WeightSet>
+    template <class WeightSet>
     void
     print_weight(const typename WeightSet::value_t& w, const WeightSet& ws, std::ostream& out)
     {
@@ -22,7 +22,7 @@ namespace vcsn
       }
     }
 
-    template <class Iterate, bool debug = false>
+    template <bool debug = false, class Iterate>
     void
     print_iterable(const Iterate& o,
                    const char op,
@@ -52,6 +52,26 @@ namespace vcsn
         out << ')';
 
         print_weight(o.right_weight(), o.get_weight_set(), out);
+      }
+    }
+
+    template <bool debug = false, class PostExp>
+    void
+    print_post_exp(const PostExp& e,
+                   const char op,
+                   std::ostream& out,
+                   typename visitor_traits<typename PostExp::weightset_t>::ConstVisitor& v)
+    {
+      auto sub_exp = e.get_sub();
+      if (sub_exp != nullptr)
+      {
+        print_weight(e.left_weight(), e.get_weight_set(), out);
+        if (debug)
+          out << op;
+        out << '(';
+        sub_exp->accept(v);
+        out << ')' << op;
+        print_weight(e.right_weight(), e.get_weight_set(), out);
       }
     }
 

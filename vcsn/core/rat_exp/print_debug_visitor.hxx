@@ -34,29 +34,21 @@ namespace vcsn
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpConcat<WeightSet>& v)
     {
-      print_iterable<RatExpConcat<WeightSet>, true>(v, '.', out_, *this);
+      print_iterable<true>(v, '.', out_, *this);
     }
 
     template <class WeightSet>
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpPlus<WeightSet>& v)
     {
-      print_iterable<RatExpPlus<WeightSet>, true>(v, '+', out_, *this);
+      print_iterable<true>(v, '+', out_, *this);
     }
 
     template <class WeightSet>
     void
     PrintDebugVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
-      print_weight(v.left_weight(), v.get_weight_set(), out_);
-      const RatExpNode<WeightSet> * sub_exp = v.getSubNode();
-      if (sub_exp != nullptr)
-      {
-        out_ << "*(";
-        sub_exp->accept(*this);
-        out_ << ")*";
-      }
-      print_weight(v.right_weight(), v.get_weight_set(), out_);
+      print_post_exp<true>(v, '*', out_, *this);
     }
 
     template <class WeightSet>
