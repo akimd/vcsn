@@ -84,11 +84,6 @@
       fact.op_ ## Kind(__VA_ARGS__)
     }
   }
-
-  // define the factory
-  vcsn::rat_exp::RatExpFactory<vcsn::z> fact; // FIXME: specialization
-  #define MAKE(Kind, ...)                         \
-    fact.op_ ## Kind(__VA_ARGS__)
 }
 
 %union
