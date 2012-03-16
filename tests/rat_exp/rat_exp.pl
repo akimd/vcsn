@@ -43,12 +43,21 @@ sub check_rat_exp
       open(IN, $_);
       foreach(<IN>)
         {
-          $_ =~ m/\|([^|]*)\|([^|]*)\|/;
+          $_ =~ m/\|([^|]*)\|([^|]*)\|([^|]*)\|/;
           my $l = $1;
           my $r = $2;
+          my $exec_right = $3;
           my $L = pp($prog, $l);
-          my $R = pp($prog, $r);
+          my $R;
 
+          if (length(quote($exec_right)) == 0)
+            {
+              $R = pp($prog, $r);
+            }
+          else
+            {
+              $R = quote($r);
+            }
           # Empty result is a sign of failure.
           if ($L ne '' && $L eq $R)
             {
