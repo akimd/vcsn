@@ -4,8 +4,9 @@ my $blue = `tput setaf 4`;
 my $cyan = `tput setaf 6`;
 my $green = `tput setaf 2`;
 my $red = `tput setaf 1`;
-my $std = `tput setaf 0`;
+my $black = `tput setaf 0`;
 my $white = `tput setaf 7`;
+my $std = `tput init`;
 
 my $FAIL = "${red}FAIL$std";
 my $PASS = "${green}PASS$std";
