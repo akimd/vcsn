@@ -25,8 +25,6 @@ nobase_vcsn_HEADERS =                           \
   core/rat_exp/node.fwd.hh                      \
   core/rat_exp/node.hh                          \
   core/rat_exp/node.hxx                         \
-  core/rat_exp/print_debug_visitor.hh           \
-  core/rat_exp/print_debug_visitor.hxx          \
   core/rat_exp/print_visitor.hh                 \
   core/rat_exp/print_visitor.hxx                \
   core/rat_exp/visitor.fwd.hh                   \

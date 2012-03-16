@@ -9,9 +9,12 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    PrintVisitor<WeightSet>::PrintVisitor(std::ostream& out, const bool show_unit)
+    PrintVisitor<WeightSet>::PrintVisitor(std::ostream& out,
+                                          const bool show_unit,
+                                          const bool debug)
       : out_(out)
       , show_unit_(show_unit)
+      , debug_(debug)
     {}
 
     template <class WeightSet>
@@ -31,21 +34,22 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpConcat<WeightSet>& v)
     {
-      print_iterable(v, '.', out_, *this, show_unit_);
+      print_iterable(v, '.', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpPlus<WeightSet>& v)
     {
-      print_iterable(v, '.', out_, *this, show_unit_);
+      print_iterable(v, '.', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
     PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
-      print_post_exp(v, '*', out_, *this, show_unit_);
+
+      print_post_exp(v, '*', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>

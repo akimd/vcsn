@@ -24,13 +24,14 @@ namespace vcsn
       }
     }
 
-    template <bool debug = false, class Iterate>
+    template <class Iterate>
     void
     print_iterable(const Iterate& o,
                    const char op,
                    std::ostream& out,
                    typename visitor_traits<typename Iterate::weightset_t>::ConstVisitor& v,
-                   const bool show_unit)
+                   const bool show_unit,
+                   const bool debug)
     {
       unsigned size = o.size();
       if (0 != size)
@@ -58,13 +59,14 @@ namespace vcsn
       }
     }
 
-    template <bool debug = false, class PostExp>
+    template <class PostExp>
     void
     print_post_exp(const PostExp& e,
                    const char op,
                    std::ostream& out,
                    typename visitor_traits<typename PostExp::weightset_t>::ConstVisitor& v,
-                   const bool show_unit)
+                   const bool show_unit,
+                   const bool debug)
     {
       auto sub_exp = e.get_sub();
       if (sub_exp != nullptr)
