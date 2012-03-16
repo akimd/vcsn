@@ -146,8 +146,8 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
     public:
-      RatExpConcat<WeightSet> &push_back(RatExpNode<WeightSet>* elt);
-      RatExpConcat<WeightSet> &push_front(RatExpNode<WeightSet>* elt);
+      RatExpConcat<WeightSet>& push_back(RatExpNode<WeightSet>* elt);
+      RatExpConcat<WeightSet>& push_front(RatExpNode<WeightSet>* elt);
       size_t size() const;
       void erase(iterator it);
 
@@ -190,8 +190,8 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
     public:
-      RatExpPlus<WeightSet> &push_back(RatExpNode<WeightSet>* elt);
-      RatExpPlus<WeightSet> &push_front(RatExpNode<WeightSet>* elt);
+      RatExpPlus<WeightSet>& push_back(RatExpNode<WeightSet>* elt);
+      RatExpPlus<WeightSet>& push_front(RatExpNode<WeightSet>* elt);
       size_t size() const;
       void erase(iterator it);
 
