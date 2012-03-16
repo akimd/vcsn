@@ -17,11 +17,6 @@ namespace vcsn
     ::visit(typename ConstNess<Type<WeightSet>>::type& Name)
 
 
-    VISIT(RatExpNode, )
-    {
-      assert(false);
-    }
-
     VISIT(RatExpConcat, v)
     {
       for (auto t : v)
