@@ -130,7 +130,7 @@ exps:
   exp
   {
     $$ = fact.clean_node($1);
-    std::cout << *$$;
+    std::cout << *$$ << std::endl;
   }
 ;
 
