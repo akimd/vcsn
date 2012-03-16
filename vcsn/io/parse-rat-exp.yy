@@ -44,7 +44,7 @@
   #include <weights/z.hh>
 
   typedef std::string weight_str;
-  typedef std::list<weight_str *> weight_str_container;
+  typedef std::list<weight_str*> weight_str_container;
 
   namespace std
   {
@@ -95,29 +95,28 @@
 {
   int ival;
   std::string* sval;
-  std::string* weight;
   std::list<std::string*>* weights;
-  RatExp* nodeval;
+  RatExp* node;
 };
 
 %printer { debug_stream() << $$; } <ival>;
-%printer { debug_stream() << *$$; } <sval> <weight> <weights> <nodeval>;
-%destructor { delete $$; } <sval> <weight> <weights> <nodeval>;
+%printer { debug_stream() << *$$; } <sval> <weights> <node>;
+%destructor { delete $$; } <sval> <weights> <node>;
 
-%token <ival>   LPAREN          "("
-                RPAREN          ")"
-%token  PLUS            "+"
-        DOT             "."
-        STAR            "*"
-        ONE             "\\e"
-        ZERO            "\\z"
+%token <ival>   LPAREN  "("
+                RPAREN  ")"
+%token  PLUS  "+"
+        DOT   "."
+        STAR  "*"
+        ONE   "\\e"
+        ZERO  "\\z"
 ;
 
-%token  <sval> WORD    "word";
-%token <weight> WEIGHT  "weight"
+%token  <sval> WORD    "word"
+               WEIGHT  "weight";
 
 %type <weights> weights weights.opt;
-%type <nodeval> exps exp term lexp factor word factors;
+%type <node> exps exp term lexp factor word factors;
 
 
 %left "+"
