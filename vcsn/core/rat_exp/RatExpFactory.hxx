@@ -16,12 +16,12 @@ namespace vcsn
     template <class WeightSet>
     RatExpFactory<WeightSet>::RatExpFactory()
       : ws_(0)
-    { }
+    {}
 
     template <class WeightSet>
     RatExpFactory<WeightSet>::RatExpFactory(const WeightSet& ws)
       : ws_(&ws)
-    { }
+    {}
 
     template <class WeightSet>
     inline

@@ -42,7 +42,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LRWeightNode<WeightSet>::LRWeightNode(const weightset_t &ws)
+    LRWeightNode<WeightSet>::LRWeightNode(const weightset_t& ws)
       : ws_(ws)
       , lw_(ws.unit())
       , rw_(ws.unit())
@@ -168,7 +168,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>::RatExpConcat(weightset_t &ws)
+    RatExpConcat<WeightSet>::RatExpConcat(weightset_t& ws)
       : LRWeightNode<WeightSet>(ws)
     {}
 
@@ -250,7 +250,7 @@ namespace vcsn
     RatExpConcat<WeightSet>::push_back(RatExpNode<WeightSet>* elt)
     {
       sub_node_.push_back(elt);
-      return *this;
+      return* this;
     }
 
     template <class WeightSet>
@@ -259,7 +259,7 @@ namespace vcsn
     RatExpConcat<WeightSet>::push_front(RatExpNode<WeightSet>* elt)
     {
       sub_node_.push_front(elt);
-      return *this;
+      return* this;
     }
 
     template <class WeightSet>
@@ -283,7 +283,7 @@ namespace vcsn
     void
     RatExpConcat<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor& v)
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     template <class WeightSet>
@@ -291,7 +291,7 @@ namespace vcsn
     void
     RatExpConcat<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     //////////////////
@@ -305,7 +305,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpPlus<WeightSet>::RatExpPlus(const weightset_t &ws)
+    RatExpPlus<WeightSet>::RatExpPlus(const weightset_t& ws)
       : LRWeightNode<WeightSet>(ws)
     {}
 
@@ -387,7 +387,7 @@ namespace vcsn
     RatExpPlus<WeightSet>::push_back(RatExpNode<WeightSet>* elt)
     {
       sub_node_.push_back(elt);
-      return *this;
+      return* this;
     }
 
     template <class WeightSet>
@@ -396,7 +396,7 @@ namespace vcsn
     RatExpPlus<WeightSet>::push_front(RatExpNode<WeightSet>* elt)
     {
       sub_node_.push_front(elt);
-      return *this;
+      return* this;
     }
 
     template <class WeightSet>
@@ -420,7 +420,7 @@ namespace vcsn
     void
     RatExpPlus<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor& v)
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     template <class WeightSet>
@@ -428,7 +428,7 @@ namespace vcsn
     void
     RatExpPlus<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     //////////////////
@@ -447,7 +447,7 @@ namespace vcsn
     RatExpKleene<WeightSet>::RatExpKleene(RatExpNode<WeightSet>* sub_exp, const weightset_t& ws)
       : LRWeightNode<WeightSet>(RatExpNode<WeightSet>::KLEENE, ws)
       , sub_exp_(sub_exp)
-    { }
+    {}
 
     template <class WeightSet>
     inline
@@ -477,7 +477,7 @@ namespace vcsn
     void
     RatExpKleene<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor& v)
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     template <class WeightSet>
@@ -485,7 +485,7 @@ namespace vcsn
     void
     RatExpKleene<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     ///////////////
@@ -507,7 +507,7 @@ namespace vcsn
     void
     RatExpOne<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor& v)
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     template <class WeightSet>
@@ -515,7 +515,7 @@ namespace vcsn
     void
     RatExpOne<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     ////////////////
@@ -537,7 +537,7 @@ namespace vcsn
     void
     RatExpZero<WeightSet>::accept(typename RatExpNode<WeightSet>::Visitor& v)
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     template <class WeightSet>
@@ -545,7 +545,7 @@ namespace vcsn
     void
     RatExpZero<WeightSet>::accept(typename RatExpNode<WeightSet>::ConstVisitor& v) const
     {
-      v.visit(* this);
+      v.visit(*this);
     }
 
     ////////////////
@@ -557,14 +557,14 @@ namespace vcsn
     RatExpWord<WeightSet>::RatExpWord(std::string* word)
       : LWeightNode<WeightSet>()
       , word_(word)
-    { }
+    {}
 
     template <class WeightSet>
     inline
-    RatExpWord<WeightSet>::RatExpWord(std::string *word, const weightset_t& ws)
+    RatExpWord<WeightSet>::RatExpWord(std::string* word, const weightset_t& ws)
       : LWeightNode<WeightSet>(ws)
       , word_(word)
-    { }
+    {}
 
     template <class WeightSet>
     inline
@@ -599,7 +599,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    const std::string *
+    const std::string*
     RatExpWord<WeightSet>::get_word() const
     {
       return word_;
