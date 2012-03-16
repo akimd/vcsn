@@ -151,21 +151,21 @@ namespace vcsn
         if (node_t::CONCAT == r->type())
         {
           auto right = down_cast<RatExpConcat<WeightSet>*>(r);
-          return mul<WeightSet>(left, right);
+          return mul(left, right);
         }
         else
         {
-          return mul<WeightSet>(left, r);
+          return mul(left, r);
         }
       }
       else if (node_t::CONCAT == r->type())
       {
         auto right = down_cast<RatExpConcat<WeightSet>*>(r);
-        return mul<WeightSet>(l, right);
+        return mul(l, right);
       }
       else
       {
-        return mul<WeightSet>(l, r);
+        return mul(l, r);
       }
     }
 
