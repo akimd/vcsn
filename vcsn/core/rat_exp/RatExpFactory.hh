@@ -45,7 +45,6 @@ namespace vcsn
       node_t* op_weight(weight_str_container* w, LRWeightNode<WeightSet>* e);
       node_t* op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w);
 
-      RatExp* clean_node(RatExp* e);
     protected:
       // RatExpConcat's method
       node_t* op_mul(node_t* e);

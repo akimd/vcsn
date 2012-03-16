@@ -46,8 +46,8 @@ namespace vcsn
     RatExp*
     RatExpFactory<WeightSet>::op_add(RatExp* l, RatExp* r)
     {
-      auto left = down_cast<node_t*>(clean_node(l));
-      auto right = down_cast<node_t*>(clean_node(r));
+      auto left = down_cast<node_t*>(l);
+      auto right = down_cast<node_t*>(r);
       return op_add(left, right);
     }
 
@@ -400,43 +400,6 @@ namespace vcsn
     {
       l->push_front(w);
       return l;
-    }
-
-    template<class WeightSet>
-    inline
-    RatExp*
-    RatExpFactory<WeightSet>::clean_node(RatExp* e)
-    {
-      auto res = down_cast<node_t*>(e);
-
-      switch (res->type())
-      {
-      case node_t::PLUS:
-      {
-        auto plus = down_cast<RatExpPlus<WeightSet>*>(res);
-        if (1 == plus->size())
-        {
-          res = *plus->begin();
-          plus->erase(plus->begin());
-          delete plus;
-        }
-        break;
-      }
-      case node_t::CONCAT:
-      {
-        auto concat = down_cast<RatExpConcat<WeightSet>*>(res);
-        if (1 == concat->size())
-        {
-          res = *concat->begin();
-          concat->erase(concat->begin());
-          delete concat;
-        }
-        break;
-      }
-      default:
-        break;
-      }
-      return res;
     }
 
   } // namespace rat_exp

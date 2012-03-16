@@ -123,7 +123,7 @@
 exps:
   exp
   {
-    $$ = fact.clean_node($1);
+    $$ = $1;
     std::cout << *$$ << std::endl;
   }
 ;
@@ -144,14 +144,14 @@ lexp:
 ;
 
 factors:
-  factor                        { $$ = MAKE(mul, $1); }
+  factor                        { $$ = $1; }
 | factors factor                { $$ = MAKE(mul, $1, $2); }
 ;
 
 factor:
   word                          { $$ = $1; }
 | factor "*"                    { $$ = MAKE(kleene, $1); }
-| "(" exp ")"                   { $$ = fact.clean_node($2); assert($1 == $3); }
+| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 word:
