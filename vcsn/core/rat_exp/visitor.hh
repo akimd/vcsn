@@ -14,14 +14,17 @@ namespace vcsn
     {
     public:
       typedef WeightSet weightset_t;
-    public:
-      virtual void visit(typename ConstNess<RatExpNode<WeightSet> >::type &          v);
-      virtual void visit(typename ConstNess<RatExpConcat<WeightSet> >::type &        v);
-      virtual void visit(typename ConstNess<RatExpPlus<WeightSet> >::type &          v);
-      virtual void visit(typename ConstNess<RatExpKleene<WeightSet> >::type &        v);
-      virtual void visit(typename ConstNess<RatExpOne<WeightSet> >::type &           v);
-      virtual void visit(typename ConstNess<RatExpZero<WeightSet> >::type &          v);
-      virtual void visit(typename ConstNess<RatExpWord<WeightSet> >::type &          v);
+#define VISIT(Type)                                                     \
+      virtual void visit(typename ConstNess<Type<WeightSet> >::type& v)
+
+      VISIT(RatExpNode);
+      VISIT(RatExpConcat);
+      VISIT(RatExpPlus);
+      VISIT(RatExpKleene);
+      VISIT(RatExpOne);
+      VISIT(RatExpZero);
+      VISIT(RatExpWord);
+#undef VISIT
     };
 
     template <class WeightSet>
