@@ -48,21 +48,22 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpKleene<WeightSet>& v)
     {
-
       print_post_exp(v, '*', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpOne<WeightSet>&)
+    PrintVisitor<WeightSet>::visit(const RatExpOne<WeightSet>& v)
     {
+      print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ << "\\e";
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const RatExpZero<WeightSet>&)
+    PrintVisitor<WeightSet>::visit(const RatExpZero<WeightSet>& v)
     {
+      print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ << "\\z";
     }
 
@@ -70,6 +71,7 @@ namespace vcsn
     void
     PrintVisitor<WeightSet>::visit(const RatExpWord<WeightSet>& v)
     {
+      print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ <<* v.get_word();
     }
 
