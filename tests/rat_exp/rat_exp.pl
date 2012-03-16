@@ -1,10 +1,10 @@
 #! /usr/bin/perl
 
+my $black = `tput setaf 0`;
 my $blue = `tput setaf 4`;
 my $cyan = `tput setaf 6`;
 my $green = `tput setaf 2`;
 my $red = `tput setaf 1`;
-my $black = `tput setaf 0`;
 my $white = `tput setaf 7`;
 my $std = `tput init`;
 
@@ -40,7 +40,6 @@ sub check_rat_exp
 
   foreach(@file)
     {
-      print STDERR "$file\n";
       open(IN, $_);
       foreach(<IN>)
         {
@@ -62,7 +61,7 @@ sub check_rat_exp
           # Empty result is a sign of failure.
           if ($L ne '' && $L eq $R)
             {
-              print "$PASS: $l == $r\n";
+              print "$PASS: $l == $r == $L\n";
             }
           else
             {
