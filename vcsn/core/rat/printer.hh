@@ -20,15 +20,14 @@ namespace vcsn
               const bool show_unit = false, const bool debug = false);
       virtual ~printer();
     public:
-      virtual void visit(const concat<WeightSet>& v);
-      virtual void visit(const plus<WeightSet>& v);
-      virtual void visit(const kleene<WeightSet>& v);
-      virtual void visit(const one<WeightSet>& v);
-      virtual void visit(const zero<WeightSet>& v);
-      virtual void visit(const word<WeightSet>& v);
+      virtual void visit(const concat<weightset_t>& v);
+      virtual void visit(const plus<weightset_t>& v);
+      virtual void visit(const kleene<weightset_t>& v);
+      virtual void visit(const one<weightset_t>& v);
+      virtual void visit(const zero<weightset_t>& v);
+      virtual void visit(const word<weightset_t>& v);
     private:
-      void print_weight(const typename WeightSet::value_t& w,
-                        const WeightSet& ws);
+      void print_weight(const weight_t& w, const weightset_t& ws);
       /// Traverse n-ary node (+ and .).
       template <typename NAry>
       void print_iterable(const NAry& n, const char op);
