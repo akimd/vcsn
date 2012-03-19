@@ -9,5 +9,5 @@ CHK_LOG_COMPILER = $(srcdir)/checker
 
 TESTS = $(dist_TESTS)
 
-include rat_exp/local.mk
+include rat/local.mk
 include unit/local.mk

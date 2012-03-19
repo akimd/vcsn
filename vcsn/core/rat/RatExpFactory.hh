@@ -4,11 +4,11 @@
 # include <string>
 # include <list>
 
-# include <core/rat_exp/node.fwd.hh>
+# include <core/rat/node.fwd.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet>
@@ -58,9 +58,9 @@ namespace vcsn
       const WeightSet* ws_;
     };
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
-# include <core/rat_exp/RatExpFactory.hxx>
+# include <core/rat/RatExpFactory.hxx>
 
 #endif // !VCSN_CORE_RAT_EXP_RAT_EXP_HH_

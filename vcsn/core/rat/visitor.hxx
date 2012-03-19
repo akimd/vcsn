@@ -1,13 +1,13 @@
 #ifndef VCSN_CORE_RAT_EXP_VISITOR_HXX_
 # define VCSN_CORE_RAT_EXP_VISITOR_HXX_
 
-# include <core/rat_exp/visitor.hh>
-# include <core/rat_exp/node.hh>
+# include <core/rat/visitor.hh>
+# include <core/rat/node.hh>
 # include <cassert>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 #define VISIT(Type, Name)                                       \
     template<class WeightSet, template<class> class ConstNess>  \
@@ -46,7 +46,7 @@ namespace vcsn
 
 #undef VISIT
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_VISITOR_HXX_

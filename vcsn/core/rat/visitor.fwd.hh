@@ -3,13 +3,13 @@
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <template <class> class T>
     class GenVisitor;
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_VISITOR_FWD_HH_

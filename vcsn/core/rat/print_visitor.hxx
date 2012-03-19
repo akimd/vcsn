@@ -1,11 +1,11 @@
 #ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 # define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
 
-# include <core/rat_exp/general_print.hh>
+# include <core/rat/general_print.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet>
@@ -75,7 +75,7 @@ namespace vcsn
       out_ <<* v.get_word();
     }
 
-  } // !rat_exp
+  } // !rat
 } // !vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX

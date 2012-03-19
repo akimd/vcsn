@@ -2,11 +2,11 @@
 # define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
 
 # include <iostream>
-# include <core/rat_exp/visitor.hh>
+# include <core/rat/visitor.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet>
@@ -32,9 +32,9 @@ namespace vcsn
       const bool debug_;
     };
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
-# include <core/rat_exp/print_visitor.hxx>
+# include <core/rat/print_visitor.hxx>
 
 #endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_

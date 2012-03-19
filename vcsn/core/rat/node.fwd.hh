@@ -3,7 +3,7 @@
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     class RatExp;
@@ -29,7 +29,7 @@ namespace vcsn
     template <class WeightSet>
     class RatExpWord;
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_NODE_FWD_HH_

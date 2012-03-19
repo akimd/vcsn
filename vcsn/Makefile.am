@@ -19,17 +19,17 @@ nobase_vcsn_HEADERS =                           \
   core/crange.hh                                \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/rat_exp/general_print.hh			\
-  core/rat_exp/RatExpFactory.hh                 \
-  core/rat_exp/RatExpFactory.hxx                \
-  core/rat_exp/node.fwd.hh                      \
-  core/rat_exp/node.hh                          \
-  core/rat_exp/node.hxx                         \
-  core/rat_exp/print_visitor.hh                 \
-  core/rat_exp/print_visitor.hxx                \
-  core/rat_exp/visitor.fwd.hh                   \
-  core/rat_exp/visitor.hh                       \
-  core/rat_exp/visitor.hxx                      \
+  core/rat/general_print.hh			\
+  core/rat/RatExpFactory.hh                 \
+  core/rat/RatExpFactory.hxx                \
+  core/rat/node.fwd.hh                      \
+  core/rat/node.hh                          \
+  core/rat/node.hxx                         \
+  core/rat/print_visitor.hh                 \
+  core/rat/print_visitor.hxx                \
+  core/rat/visitor.fwd.hh                   \
+  core/rat/visitor.hh                       \
+  core/rat/visitor.hxx                      \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
   misc/escape.hh                                \

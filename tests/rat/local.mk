@@ -11,9 +11,9 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_noinst_SCRIPTS += rat_exp/rat_exp.pl
-TEST_EXTENSIONS += .rat_exp
-RAT_EXP_LOG_COMPILER = $(srcdir)/rat_exp/rat_exp.pl
-AM_RAT_EXP_LOG_FLAGS = $(top_builddir)/vcsn/io/rat-exp
+dist_noinst_SCRIPTS += rat/rat
+TEST_EXTENSIONS += .rat
+RAT_LOG_COMPILER = $(srcdir)/rat/rat
+AM_RAT_LOG_FLAGS = $(top_builddir)/vcsn/io/rat-exp
 
-dist_TESTS += rat_exp/test.rat_exp
+dist_TESTS += rat/test.rat

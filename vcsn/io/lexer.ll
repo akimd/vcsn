@@ -16,7 +16,7 @@
   yylloc->columns (yyleng);
 
 #define TOK(Token)                              \
-  vcsn::rat_exp::parser::token::Token
+  vcsn::rat::parser::token::Token
 %}
 %x SC_WEIGHT SC_WORD
 

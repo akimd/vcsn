@@ -3,11 +3,11 @@
 
 # include <iostream>
 
-# include <core/rat_exp/visitor.hh>
+# include <core/rat/visitor.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet>
@@ -81,7 +81,7 @@ namespace vcsn
       }
     }
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
 

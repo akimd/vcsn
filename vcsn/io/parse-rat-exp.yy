@@ -7,8 +7,8 @@
 %error-verbose
 %expect 0
 %locations
-%define namespace "vcsn::rat_exp"
-%name-prefix "vcsn::rat_exp::"
+%define namespace "vcsn::rat"
+%name-prefix "vcsn::rat::"
 
 %code requires
 {
@@ -16,16 +16,16 @@
   #include <list>
   #include <string>
   #include "location.hh"
-  #include <core/rat_exp/node.hh>
-  #include <core/rat_exp/RatExpFactory.hh>
-  #include <core/rat_exp/print_visitor.hh>
+  #include <core/rat/node.hh>
+  #include <core/rat/RatExpFactory.hh>
+  #include <core/rat/print_visitor.hh>
 }
 
 %code provides
 {
   namespace vcsn
   {
-    namespace rat_exp
+    namespace rat
     {
       int
       lex(parser::semantic_type* yylval, parser::location_type* yylloc);
@@ -33,8 +33,8 @@
   }
   #define YY_DECL                                                       \
     int                                                                 \
-    vcsn::rat_exp::lex(vcsn::rat_exp::parser::semantic_type* yylval,    \
-                     vcsn::rat_exp::parser::location_type* yylloc)
+    vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
+                     vcsn::rat::parser::location_type* yylloc)
 }
 
 %code
@@ -67,7 +67,7 @@
 
   namespace vcsn
   {
-    namespace rat_exp
+    namespace rat
     {
       std::ostream&
       operator<<(std::ostream& o, const RatExp& r)
@@ -173,14 +173,14 @@ weights:
 %%
 
 void
-vcsn::rat_exp::parser::error(const location_type& l, const std::string& m)
+vcsn::rat::parser::error(const location_type& l, const std::string& m)
 {
   std::cerr << l << ": " << m << std::endl;
 }
 
 int main()
 {
-  vcsn::rat_exp::parser p;
+  vcsn::rat::parser p;
   extern int yy_flex_debug;
   yy_flex_debug = !!getenv("YYSCAN");
   p.set_debug_level(!!getenv("YYDEBUG"));

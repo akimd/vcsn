@@ -5,12 +5,12 @@
 # include <cassert>
 
 # include <misc/cast.hh>
-# include <core/rat_exp/RatExpFactory.hh>
-# include <core/rat_exp/node.hh>
+# include <core/rat/RatExpFactory.hh>
+# include <core/rat/node.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet>
@@ -402,7 +402,7 @@ namespace vcsn
       return l;
     }
 
-  } // namespace rat_exp
+  } // namespace rat
 } // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_EXP_RAT_EXP_HXX_

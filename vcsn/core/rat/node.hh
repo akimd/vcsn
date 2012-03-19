@@ -4,12 +4,12 @@
 # include <list>
 # include <string>
 
-# include <core/rat_exp/node.fwd.hh>
-# include <core/rat_exp/visitor.hh>
+# include <core/rat/node.fwd.hh>
+# include <core/rat/visitor.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     class RatExp
@@ -292,9 +292,9 @@ namespace vcsn
       std::string *word_;
     };
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
-#include <core/rat_exp/node.hxx>
+#include <core/rat/node.hxx>
 
 #endif // !VCSN_RAT_EXP_NODE_HH_

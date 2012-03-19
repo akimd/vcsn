@@ -2,11 +2,11 @@
 # define VCSN_CORE_RAT_EXP_VISITOR_HH_
 
 # include <misc/static.hh>
-# include <core/rat_exp/node.fwd.hh>
+# include <core/rat/node.fwd.hh>
 
 namespace vcsn
 {
-  namespace rat_exp
+  namespace rat
   {
 
     template <class WeightSet, template <class> class ConstNess>
@@ -33,9 +33,9 @@ namespace vcsn
       typedef GenVisitor<WeightSet, misc::constify_traits> ConstVisitor;
     };
 
-  } // rat_exp
+  } // rat
 } // vcsn
 
-# include <core/rat_exp/visitor.hxx>
+# include <core/rat/visitor.hxx>
 
 #endif // !VCSN_CORE_RAT_EXP_VISITOR_HH_
