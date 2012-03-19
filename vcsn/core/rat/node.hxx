@@ -278,6 +278,30 @@ namespace vcsn
       sub_node_.erase(it);
     }
 
+    template <class WeightSet>
+    inline
+    void
+    nary<WeightSet>::erase(iterator begin, iterator end)
+    {
+      sub_node_.erase(begin, end);
+    }
+
+    template <class WeightSet>
+    inline
+    void
+    nary<WeightSet>::clear()
+    {
+      sub_node_.clear();
+    }
+
+    template <class WeightSet>
+    inline
+    void
+    nary<WeightSet>::splice(iterator it, nary<WeightSet>& right)
+    {
+      assert(this->type() == right.type());
+      sub_node_.splice(it, right.sub_node_);
+    }
 
     /*---------.
     | concat.  |

@@ -120,6 +120,9 @@ namespace vcsn
       nary<weightset_t>& push_front(node_t* elt);
       size_t size() const;
       void erase(iterator it);
+      void erase(iterator begin, iterator end);
+      void clear();
+      void splice(iterator it, nary<WeightSet>& right);
 
     private:
       nodes_t sub_node_;
