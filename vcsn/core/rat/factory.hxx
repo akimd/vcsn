@@ -59,49 +59,6 @@ namespace vcsn
       return op_kleene(down_cast<node_t*>(e));
     }
 
-    // Implement function for concatenation operators.
-
-    template <class WeightSet>
-    inline
-    concat<WeightSet>*
-    mul(node<WeightSet>* l, node<WeightSet>* r)
-    {
-      auto res = new concat<WeightSet>();
-      res->push_back(l);
-      res->push_back(r);
-      return res;
-    }
-
-    template <class WeightSet>
-    inline
-    concat<WeightSet>*
-    mul(concat<WeightSet>* l, node<WeightSet>* r)
-    {
-      l->push_back(r);
-      return l;
-    }
-
-    template <class WeightSet>
-    inline
-    concat<WeightSet>*
-    mul(node<WeightSet>* l, concat<WeightSet>* r)
-    {
-      r->push_front(l);
-      return r;
-    }
-
-    template <class WeightSet>
-    inline
-    concat<WeightSet>*
-    mul(concat<WeightSet>* l, concat<WeightSet>* r)
-    {
-      for (auto i : *r)
-        l->push_back(i);
-      return l;
-    }
-
-    // End
-
     template <class WeightSet>
     inline
     auto
@@ -151,21 +108,29 @@ namespace vcsn
           if (node_t::CONCAT == r->type())
             {
               auto right = down_cast<concat_t*>(r);
-              return mul(left, right);
+              for (auto i : *right)
+                left->push_back(i);
+              // FIXME: Leak right
+              return left;
             }
           else
             {
-              return mul(left, r);
+              left->push_back(r);
+              return left;
             }
         }
       else if (node_t::CONCAT == r->type())
         {
           auto right = down_cast<concat_t*>(r);
-          return mul(l, right);
+          right->push_front(l);
+          return right;
         }
       else
         {
-          return mul(l, r);
+          auto res = new concat_t();
+          res->push_back(l);
+          res->push_back(r);
+          return res;
         }
     }
 
