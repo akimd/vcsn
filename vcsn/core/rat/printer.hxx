@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_PRINT_VISITOR_HXX
-# define VCSN_CORE_RAT_PRINT_VISITOR_HXX
+#ifndef VCSN_CORE_RAT_PRINTER_HXX
+# define VCSN_CORE_RAT_PRINTER_HXX
 
 # include <core/rat/general_print.hh>
 
@@ -9,7 +9,7 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    PrintVisitor<WeightSet>::PrintVisitor(std::ostream& out,
+    printer<WeightSet>::printer(std::ostream& out,
                                           const bool show_unit,
                                           const bool debug)
       : out_(out)
@@ -18,42 +18,42 @@ namespace vcsn
     {}
 
     template <class WeightSet>
-    PrintVisitor<WeightSet>::~PrintVisitor()
+    printer<WeightSet>::~printer()
     {
       out_ << std::flush;
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const node<WeightSet>& v)
+    printer<WeightSet>::visit(const node<WeightSet>& v)
     {
       assert(false);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const concat<WeightSet>& v)
+    printer<WeightSet>::visit(const concat<WeightSet>& v)
     {
       print_iterable(v, '.', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const plus<WeightSet>& v)
+    printer<WeightSet>::visit(const plus<WeightSet>& v)
     {
       print_iterable(v, '.', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const kleene<WeightSet>& v)
+    printer<WeightSet>::visit(const kleene<WeightSet>& v)
     {
       print_post_exp(v, '*', out_, *this, show_unit_, debug_);
     }
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const one<WeightSet>& v)
+    printer<WeightSet>::visit(const one<WeightSet>& v)
     {
       print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ << "\\e";
@@ -61,7 +61,7 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const zero<WeightSet>& v)
+    printer<WeightSet>::visit(const zero<WeightSet>& v)
     {
       print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ << "\\z";
@@ -69,7 +69,7 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    PrintVisitor<WeightSet>::visit(const word<WeightSet>& v)
+    printer<WeightSet>::visit(const word<WeightSet>& v)
     {
       print_weight(v.left_weight(), v.get_weight_set(), out_, show_unit_);
       out_ <<* v.get_word();
@@ -78,4 +78,4 @@ namespace vcsn
   } // !rat
 } // !vcsn
 
-#endif // !VCSN_CORE_RAT_PRINT_VISITOR_HXX
+#endif // !VCSN_CORE_RAT_PRINTER_HXX

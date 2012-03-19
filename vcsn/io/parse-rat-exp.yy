@@ -18,7 +18,7 @@
   #include "location.hh"
   #include <core/rat/node.hh>
   #include <core/rat/factory.hh>
-  #include <core/rat/print_visitor.hh>
+  #include <core/rat/printer.hh>
 }
 
 %code provides
@@ -73,7 +73,7 @@
       operator<<(std::ostream& o, const RatExp& r)
       {
         const node<vcsn::z>* down = down_cast<const node<vcsn::z>*>(&r);
-        PrintVisitor<vcsn::z> print(o, true, true);
+        printer<vcsn::z> print(o, true, true);
         down->accept(print);
         return o;
       }

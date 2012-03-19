@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_PRINT_VISITOR_HH_
-# define VCSN_CORE_RAT_PRINT_VISITOR_HH_
+#ifndef VCSN_CORE_RAT_PRINTER_HH_
+# define VCSN_CORE_RAT_PRINTER_HH_
 
 # include <iostream>
 # include <core/rat/visitor.hh>
@@ -10,14 +10,15 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    class PrintVisitor : public visitor_traits<WeightSet>::ConstVisitor
+    class printer : public visitor_traits<WeightSet>::ConstVisitor
     {
     public:
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
-      PrintVisitor(std::ostream& out, const bool show_unit = false, const bool debug = false);
-      virtual ~PrintVisitor();
+      printer(std::ostream& out,
+              const bool show_unit = false, const bool debug = false);
+      virtual ~printer();
     public:
       virtual void visit(const node<WeightSet>& v);
       virtual void visit(const concat<WeightSet>& v);
@@ -27,7 +28,7 @@ namespace vcsn
       virtual void visit(const zero<WeightSet>& v);
       virtual void visit(const word<WeightSet>& v);
     private:
-      std::ostream &out_;
+      std::ostream& out_;
       const bool show_unit_;
       const bool debug_;
     };
@@ -35,6 +36,6 @@ namespace vcsn
   } // rat
 } // vcsn
 
-# include <core/rat/print_visitor.hxx>
+# include <core/rat/printer.hxx>
 
-#endif // !VCSN_CORE_RAT_PRINT_VISITOR_HH_
+#endif // !VCSN_CORE_RAT_PRINTER_HH_
