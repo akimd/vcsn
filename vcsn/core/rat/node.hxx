@@ -157,24 +157,24 @@ namespace vcsn
       return super_type::L_WEIGHT;
     }
 
-    //////////////////
-    // concat //
-    //////////////////
+    /*-------.
+    | nary.  |
+    `-------*/
 
     template <class WeightSet>
     inline
-    concat<WeightSet>::concat()
+    nary<WeightSet>::nary()
     {}
 
     template <class WeightSet>
     inline
-    concat<WeightSet>::concat(weightset_t& ws)
+    nary<WeightSet>::nary(weightset_t& ws)
       : weighted<WeightSet>(ws)
     {}
 
     template <class WeightSet>
     inline
-    concat<WeightSet>::~concat()
+    nary<WeightSet>::~nary()
     {
       for (auto t : sub_node_)
         delete t;
@@ -182,72 +182,72 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::const_iterator
-    concat<WeightSet>::begin() const
+    typename nary<WeightSet>::const_iterator
+    nary<WeightSet>::begin() const
     {
       return sub_node_.begin();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::const_iterator
-    concat<WeightSet>::end() const
+    typename nary<WeightSet>::const_iterator
+    nary<WeightSet>::end() const
     {
       return sub_node_.end();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::iterator
-    concat<WeightSet>::begin()
+    typename nary<WeightSet>::iterator
+    nary<WeightSet>::begin()
     {
       return sub_node_.begin();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::iterator
-    concat<WeightSet>::end()
+    typename nary<WeightSet>::iterator
+    nary<WeightSet>::end()
     {
       return sub_node_.end();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::const_reverse_iterator
-    concat<WeightSet>::rbegin() const
+    typename nary<WeightSet>::const_reverse_iterator
+    nary<WeightSet>::rbegin() const
     {
       return sub_node_.begin();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::const_reverse_iterator
-    concat<WeightSet>::rend() const
+    typename nary<WeightSet>::const_reverse_iterator
+    nary<WeightSet>::rend() const
     {
       return sub_node_.end();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::reverse_iterator
-    concat<WeightSet>::rbegin()
+    typename nary<WeightSet>::reverse_iterator
+    nary<WeightSet>::rbegin()
     {
       return sub_node_.begin();
     }
 
     template <class WeightSet>
     inline
-    typename concat<WeightSet>::reverse_iterator
-    concat<WeightSet>::rend()
+    typename nary<WeightSet>::reverse_iterator
+    nary<WeightSet>::rend()
     {
       return sub_node_.end();
     }
 
     template <class WeightSet>
     inline
-    concat<WeightSet> &
-    concat<WeightSet>::push_back(node_t* elt)
+    nary<WeightSet> &
+    nary<WeightSet>::push_back(node_t* elt)
     {
       sub_node_.push_back(elt);
       return* this;
@@ -255,8 +255,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    concat<WeightSet> &
-    concat<WeightSet>::push_front(node_t* elt)
+    nary<WeightSet> &
+    nary<WeightSet>::push_front(node_t* elt)
     {
       sub_node_.push_front(elt);
       return* this;
@@ -265,7 +265,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     size_t
-    concat<WeightSet>::size() const
+    nary<WeightSet>::size() const
     {
       return sub_node_.size();
     }
@@ -273,10 +273,22 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    concat<WeightSet>::erase(iterator it)
+    nary<WeightSet>::erase(iterator it)
     {
       sub_node_.erase(it);
     }
+
+
+    /*---------.
+    | concat.  |
+    `---------*/
+
+    template <class WeightSet>
+    inline
+    concat<WeightSet>::concat(weightset_t& ws)
+      : super_type(ws)
+    {}
+
 
     template <class WeightSet>
     inline
@@ -294,126 +306,16 @@ namespace vcsn
       v.visit(*this);
     }
 
-    //////////////////
-    // plus //
-    //////////////////
+    /*-------.
+    | plus.  |
+    `-------*/
+
 
     template <class WeightSet>
     inline
-    plus<WeightSet>::plus()
+    plus<WeightSet>::plus(weightset_t& ws)
+      : super_type(ws)
     {}
-
-    template <class WeightSet>
-    inline
-    plus<WeightSet>::plus(const weightset_t& ws)
-      : weighted<WeightSet>(ws)
-    {}
-
-    template <class WeightSet>
-    inline
-    plus<WeightSet>::~plus()
-    {
-      for (auto t : sub_node_)
-        delete t;
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::const_iterator
-    plus<WeightSet>::begin() const
-    {
-      return sub_node_.begin();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::const_iterator
-    plus<WeightSet>::end() const
-    {
-      return sub_node_.end();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::iterator
-    plus<WeightSet>::begin()
-    {
-      return sub_node_.begin();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::iterator
-    plus<WeightSet>::end()
-    {
-      return sub_node_.end();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::const_reverse_iterator
-    plus<WeightSet>::rbegin() const
-    {
-      return sub_node_.begin();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::const_reverse_iterator
-    plus<WeightSet>::rend() const
-    {
-      return sub_node_.end();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::reverse_iterator
-    plus<WeightSet>::rbegin()
-    {
-      return sub_node_.begin();
-    }
-
-    template <class WeightSet>
-    inline
-    typename plus<WeightSet>::reverse_iterator
-    plus<WeightSet>::rend()
-    {
-      return sub_node_.end();
-    }
-
-    template <class WeightSet>
-    inline
-    plus<WeightSet> &
-    plus<WeightSet>::push_back(node_t* elt)
-    {
-      sub_node_.push_back(elt);
-      return* this;
-    }
-
-    template <class WeightSet>
-    inline
-    plus<WeightSet> &
-    plus<WeightSet>::push_front(node_t* elt)
-    {
-      sub_node_.push_front(elt);
-      return* this;
-    }
-
-    template <class WeightSet>
-    inline
-    size_t
-    plus<WeightSet>::size() const
-    {
-      return sub_node_.size();
-    }
-
-    template <class WeightSet>
-    inline
-    void
-    plus<WeightSet>::erase(iterator it)
-    {
-      sub_node_.erase(it);
-    }
 
     template <class WeightSet>
     inline
@@ -431,9 +333,9 @@ namespace vcsn
       v.visit(*this);
     }
 
-    //////////////////
-    // kleene //
-    //////////////////
+    /*---------.
+    | kleene.  |
+    `---------*/
 
     template <class WeightSet>
     inline
