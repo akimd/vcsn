@@ -24,7 +24,6 @@ namespace vcsn
       factory();
       factory(const weightset_t& ws);
     public:
-      exp* op_mul(exp* e);
       exp* op_mul(exp* l, exp* r);
       exp* op_add(exp* l, exp* r);
       exp* op_kleene(exp* e);
@@ -59,7 +58,6 @@ namespace vcsn
 
     protected:
       // concat's method
-      node_t* op_mul(node_t* e);
       node_t* op_mul(node_t* l,  node_t* r);
       // plus's method
       node_t* op_add(node_t* l, node_t* r);

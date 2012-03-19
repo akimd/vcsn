@@ -26,14 +26,6 @@ namespace vcsn
     template <class WeightSet>
     inline
     exp*
-    factory<WeightSet>::op_mul(exp* e)
-    {
-      return op_mul(down_cast<node_t*>(e));
-    }
-
-    template <class WeightSet>
-    inline
-    exp*
     factory<WeightSet>::op_mul(exp* l, exp* r)
     {
       auto left = down_cast<node_t*>(l);
@@ -57,28 +49,6 @@ namespace vcsn
     factory<WeightSet>::op_kleene(exp* e)
     {
       return op_kleene(down_cast<node_t*>(e));
-    }
-
-    template <class WeightSet>
-    inline
-    auto
-    factory<WeightSet>::op_mul(node_t* e)
-      -> node_t*
-    {
-      return e;
-
-      // if (concat<WeightSet>::CONCAT == e->type())
-      // {
-      auto res = down_cast<concat_t*>(e);
-      //   assert(res);
-      //   return res;
-      // }
-      // else
-      // {
-      //   concat<WeightSet>*res = new concat<WeightSet>();
-      //   res->push_front(e);
-      //   return res;
-      // }
     }
 
     template <class WeightSet>
