@@ -34,16 +34,28 @@ namespace vcsn
       weight_str_container* op_weight(weight_str_container* l, weight_str* w);
 
       // exp constants' method
-      one<WeightSet>* op_one();
-      zero<WeightSet>* op_zero();
+#define DEFINE(Type)                            \
+      typedef Type<weightset_t> Type ## _t;
+      DEFINE(one);
+      DEFINE(zero);
+      DEFINE(word);
+      DEFINE(left_weighted);
+      DEFINE(weighted);
+      DEFINE(kleene);
+      DEFINE(concat);
+      DEFINE(plus);
+#undef DEFINE
+
+      one_t* op_one();
+      zero_t* op_zero();
       // word's method
-      word<WeightSet>* op_word(std::string* w);
+      word_t* op_word(std::string* w);
 
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);
-      node_t* op_weight(left_weighted<WeightSet>* e, weight_str_container* w);
-      node_t* op_weight(weight_str_container* w, weighted<WeightSet>* e);
-      node_t* op_weight(weighted<WeightSet>* e, weight_str_container* w);
+      node_t* op_weight(left_weighted_t* e, weight_str_container* w);
+      node_t* op_weight(weight_str_container* w, weighted_t* e);
+      node_t* op_weight(weighted_t* e, weight_str_container* w);
 
     protected:
       // concat's method
@@ -55,7 +67,7 @@ namespace vcsn
       node_t* op_kleene(node_t* e);
 
     private:
-      const WeightSet* ws_;
+      const weightset_t* ws_;
     };
 
   } // rat
