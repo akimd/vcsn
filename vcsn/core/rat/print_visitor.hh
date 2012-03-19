@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
-# define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
+#ifndef VCSN_CORE_RAT_PRINT_VISITOR_HH_
+# define VCSN_CORE_RAT_PRINT_VISITOR_HH_
 
 # include <iostream>
 # include <core/rat/visitor.hh>
@@ -37,4 +37,4 @@ namespace vcsn
 
 # include <core/rat/print_visitor.hxx>
 
-#endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HH_
+#endif // !VCSN_CORE_RAT_PRINT_VISITOR_HH_

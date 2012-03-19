@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXPE_GENERAL_PRINT_HH
-# define VCSN_CORE_RAT_EXPE_GENERAL_PRINT_HH
+#ifndef VCSN_CORE_RATE_GENERAL_PRINT_HH
+# define VCSN_CORE_RATE_GENERAL_PRINT_HH
 
 # include <iostream>
 
@@ -85,4 +85,4 @@ namespace vcsn
 } // vcsn
 
 
-#endif // VCSN_CORE_RAT_EXPE_GENERAL_PRINT_HH
+#endif // VCSN_CORE_RATE_GENERAL_PRINT_HH

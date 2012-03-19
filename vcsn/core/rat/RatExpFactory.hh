@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_RAT_EXP_HH_
-# define VCSN_CORE_RAT_EXP_RAT_EXP_HH_
+#ifndef VCSN_CORE_RAT_RAT_EXP_HH_
+# define VCSN_CORE_RAT_RAT_EXP_HH_
 
 # include <string>
 # include <list>
@@ -63,4 +63,4 @@ namespace vcsn
 
 # include <core/rat/RatExpFactory.hxx>
 
-#endif // !VCSN_CORE_RAT_EXP_RAT_EXP_HH_
+#endif // !VCSN_CORE_RAT_RAT_EXP_HH_

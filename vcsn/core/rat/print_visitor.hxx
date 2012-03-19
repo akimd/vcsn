@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
-# define VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
+#ifndef VCSN_CORE_RAT_PRINT_VISITOR_HXX
+# define VCSN_CORE_RAT_PRINT_VISITOR_HXX
 
 # include <core/rat/general_print.hh>
 
@@ -78,4 +78,4 @@ namespace vcsn
   } // !rat
 } // !vcsn
 
-#endif // !VCSN_CORE_RAT_EXP_PRINT_VISITOR_HXX
+#endif // !VCSN_CORE_RAT_PRINT_VISITOR_HXX

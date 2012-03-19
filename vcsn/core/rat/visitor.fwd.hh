@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_VISITOR_FWD_HH_
-# define VCSN_CORE_RAT_EXP_VISITOR_FWD_HH_
+#ifndef VCSN_CORE_RAT_VISITOR_FWD_HH_
+# define VCSN_CORE_RAT_VISITOR_FWD_HH_
 
 namespace vcsn
 {
@@ -12,4 +12,4 @@ namespace vcsn
   } // rat
 } // vcsn
 
-#endif // !VCSN_CORE_RAT_EXP_VISITOR_FWD_HH_
+#endif // !VCSN_CORE_RAT_VISITOR_FWD_HH_

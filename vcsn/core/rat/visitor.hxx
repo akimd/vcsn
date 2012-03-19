@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_VISITOR_HXX_
-# define VCSN_CORE_RAT_EXP_VISITOR_HXX_
+#ifndef VCSN_CORE_RAT_VISITOR_HXX_
+# define VCSN_CORE_RAT_VISITOR_HXX_
 
 # include <core/rat/visitor.hh>
 # include <core/rat/node.hh>
@@ -49,4 +49,4 @@ namespace vcsn
   } // rat
 } // vcsn
 
-#endif // !VCSN_CORE_RAT_EXP_VISITOR_HXX_
+#endif // !VCSN_CORE_RAT_VISITOR_HXX_

@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_EXP_RAT_EXP_HXX_
-# define VCSN_CORE_RAT_EXP_RAT_EXP_HXX_
+#ifndef VCSN_CORE_RAT_RAT_EXP_HXX_
+# define VCSN_CORE_RAT_RAT_EXP_HXX_
 
 # include <algorithm>
 # include <cassert>
@@ -405,4 +405,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_EXP_RAT_EXP_HXX_
+#endif // !VCSN_CORE_RAT_RAT_EXP_HXX_
