@@ -31,8 +31,8 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hxx                          \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
+  misc/const_traits.hh                          \
   misc/escape.hh                                \
-  misc/static.hh                                \
   weights/b.hh                                  \
   weights/poly.hh                               \
   weights/z.hh
