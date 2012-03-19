@@ -78,9 +78,9 @@ namespace vcsn
           if (node_t::CONCAT == r->type())
             {
               auto right = down_cast<concat_t*>(r);
-              for (auto i : *right)
-                left->push_back(i);
-              // FIXME: Leak right
+              left->splice(left->end(), *right);
+              right->clear();
+              delete right;
               return left;
             }
           else
@@ -130,8 +130,8 @@ namespace vcsn
           if (node_t::PLUS == r->type())
             {
               auto right = down_cast<plus_t*>(r);
-              for (auto it : *right)
-                res->push_back(it);
+              res->splice(res->end(), *right);
+              delete right;
             }
           else
             {
