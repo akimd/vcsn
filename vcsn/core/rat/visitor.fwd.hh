@@ -7,7 +7,7 @@ namespace vcsn
   {
 
     template <template <class> class T>
-    class GenVisitor;
+    class gen_visitor;
 
   } // rat
 } // vcsn

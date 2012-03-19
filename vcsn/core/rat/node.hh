@@ -39,15 +39,15 @@ namespace vcsn
           LR_WEIGHT
         };
     protected:
-      typedef typename visitor_traits<WeightSet>::Visitor Visitor;
-      typedef typename visitor_traits<WeightSet>::ConstVisitor ConstVisitor;
+      typedef typename visitor_traits<WeightSet>::visitor visitor;
+      typedef typename visitor_traits<WeightSet>::const_visitor const_visitor;
 
     public:
       node();
       virtual ~node() = 0;
     public:
-      virtual void accept(Visitor &v) = 0;
-      virtual void accept(ConstVisitor &v) const = 0;
+      virtual void accept(visitor &v) = 0;
+      virtual void accept(const_visitor &v) const = 0;
     public:
       virtual DynamicType type() const = 0;
       virtual WeightType weight_type() const = 0;
@@ -152,8 +152,8 @@ namespace vcsn
       void erase(iterator it);
 
     public:
-      virtual void accept(typename node_t::Visitor& v);
-      virtual void accept(typename node_t::ConstVisitor& v) const;
+      virtual void accept(typename node_t::visitor& v);
+      virtual void accept(typename node_t::const_visitor& v) const;
 
     private:
       nodes_t sub_node_;
@@ -196,8 +196,8 @@ namespace vcsn
       void erase(iterator it);
 
     public:
-      virtual void accept(typename node_t::Visitor& v);
-      virtual void accept(typename node_t::ConstVisitor& v) const;
+      virtual void accept(typename node_t::visitor& v);
+      virtual void accept(typename node_t::const_visitor& v) const;
 
     private:
       nodes_t sub_node_;
@@ -223,8 +223,8 @@ namespace vcsn
     public:
       virtual DynamicType type() const { return node_t::KLEENE; };
 
-      virtual void accept(typename node_t::Visitor &v);
-      virtual void accept(typename node_t::ConstVisitor &v) const;
+      virtual void accept(typename node_t::visitor &v);
+      virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
       node_t *sub_exp_;
@@ -245,8 +245,8 @@ namespace vcsn
     public:
       virtual DynamicType type() const { return node_t::ONE; };
 
-      virtual void accept(typename node_t::Visitor &v);
-      virtual void accept(typename node_t::ConstVisitor &v) const;
+      virtual void accept(typename node_t::visitor &v);
+      virtual void accept(typename node_t::const_visitor &v) const;
     };
 
     template <class WeightSet>
@@ -264,8 +264,8 @@ namespace vcsn
     public:
       virtual DynamicType type() const { return node_t::ZERO; };
 
-      virtual void accept(typename node_t::Visitor &v);
-      virtual void accept(typename node_t::ConstVisitor &v) const;
+      virtual void accept(typename node_t::visitor &v);
+      virtual void accept(typename node_t::const_visitor &v) const;
     };
 
     template <class WeightSet>
@@ -284,8 +284,8 @@ namespace vcsn
     public:
       virtual DynamicType type() const { return node_t::WORD; };
 
-      virtual void accept(typename node_t::Visitor &v);
-      virtual void accept(typename node_t::ConstVisitor &v) const;
+      virtual void accept(typename node_t::visitor &v);
+      virtual void accept(typename node_t::const_visitor &v) const;
       std::string *get_word();
       const std::string *get_word() const;
     private:

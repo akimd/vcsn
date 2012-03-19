@@ -13,7 +13,7 @@ namespace vcsn
     template<class WeightSet, template<class> class ConstNess>  \
     inline                                                      \
     void                                                        \
-    GenVisitor<WeightSet, ConstNess>                            \
+    gen_visitor<WeightSet, ConstNess>                            \
     ::visit(typename ConstNess<Type<WeightSet>>::type& Name)
 
 

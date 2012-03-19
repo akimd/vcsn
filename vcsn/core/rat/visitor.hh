@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     template <class WeightSet, template <class> class ConstNess>
-    class GenVisitor
+    class gen_visitor
     {
     public:
       typedef WeightSet weightset_t;
@@ -29,8 +29,8 @@ namespace vcsn
     template <class WeightSet>
     struct visitor_traits
     {
-      typedef GenVisitor<WeightSet, misc::id_traits> Visitor;
-      typedef GenVisitor<WeightSet, misc::constify_traits> ConstVisitor;
+      typedef gen_visitor<WeightSet, misc::id_traits> visitor;
+      typedef gen_visitor<WeightSet, misc::constify_traits> const_visitor;
     };
 
   } // rat

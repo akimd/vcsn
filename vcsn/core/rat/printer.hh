@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    class printer : public visitor_traits<WeightSet>::ConstVisitor
+    class printer : public visitor_traits<WeightSet>::const_visitor
     {
     public:
       typedef WeightSet weightset_t;

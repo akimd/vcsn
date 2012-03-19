@@ -281,7 +281,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    concat<WeightSet>::accept(typename node_t::Visitor& v)
+    concat<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -289,7 +289,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    concat<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    concat<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -418,7 +418,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    plus<WeightSet>::accept(typename node_t::Visitor& v)
+    plus<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -426,7 +426,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    plus<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    plus<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -477,7 +477,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    kleene<WeightSet>::accept(typename node_t::Visitor& v)
+    kleene<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -485,7 +485,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    kleene<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    kleene<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -507,7 +507,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    one<WeightSet>::accept(typename node_t::Visitor& v)
+    one<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -515,7 +515,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    one<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    one<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -537,7 +537,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    zero<WeightSet>::accept(typename node_t::Visitor& v)
+    zero<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -545,7 +545,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    zero<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    zero<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -578,7 +578,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    word<WeightSet>::accept(typename node_t::Visitor& v)
+    word<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -586,7 +586,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    word<WeightSet>::accept(typename node_t::ConstVisitor& v) const
+    word<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
