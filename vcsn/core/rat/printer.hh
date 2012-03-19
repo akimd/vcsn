@@ -29,8 +29,7 @@ namespace vcsn
     private:
       void print_weight(const weight_t& w, const weightset_t& ws);
       /// Traverse n-ary node (+ and .).
-      template <typename NAry>
-      void print_iterable(const NAry& n, const char op);
+      void print(const nary<weightset_t>& n, const char op);
 
       std::ostream& out_;
       const bool show_unit_;

@@ -25,14 +25,14 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const concat<WeightSet>& v)
     {
-      print_iterable(v, '.');
+      print(v, '.');
     }
 
     template <class WeightSet>
     void
     printer<WeightSet>::visit(const plus<WeightSet>& v)
     {
-      print_iterable(v, '+');
+      print(v, '+');
     }
 
     template <class WeightSet>
@@ -85,9 +85,8 @@ namespace vcsn
     }
 
     template <class WeightSet>
-    template <typename NAry>
     void
-    printer<WeightSet>::print_iterable(const NAry& n, const char op)
+    printer<WeightSet>::print(const nary<weightset_t>& n, const char op)
     {
       size_t size = n.size();
       if (size)
