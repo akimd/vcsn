@@ -16,15 +16,8 @@ namespace vcsn
     {
     public:
       virtual ~exp() = 0;
-    };
 
-    template <class WeightSet>
-    class node : public exp
-    {
-    public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
-      enum DynamicType
+      enum type_t
         {
           CONCAT,
           PLUS,
@@ -33,11 +26,15 @@ namespace vcsn
           ZERO,
           WORD,
         };
-      enum WeightType
-        {
-          L_WEIGHT,
-          LR_WEIGHT
-        };
+      virtual type_t type() const = 0;
+    };
+
+    template <class WeightSet>
+    class node : public exp
+    {
+    public:
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
     protected:
       typedef typename visitor_traits<WeightSet>::visitor visitor;
       typedef typename visitor_traits<WeightSet>::const_visitor const_visitor;
@@ -49,7 +46,11 @@ namespace vcsn
       virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
     public:
-      virtual DynamicType type() const = 0;
+      enum WeightType
+        {
+          L_WEIGHT,
+          LR_WEIGHT
+        };
       virtual WeightType weight_type() const = 0;
     };
 
@@ -121,7 +122,7 @@ namespace vcsn
     public:
       typedef LRWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
       typedef std::list<node_t*> nodes_t;
@@ -135,7 +136,7 @@ namespace vcsn
       concat(weightset_t& ws);
       virtual ~concat();
     public:
-      virtual DynamicType type() const { return node_t::CONCAT; };
+      virtual type_t type() const { return node_t::CONCAT; };
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -165,7 +166,7 @@ namespace vcsn
     public:
       typedef LRWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
       typedef std::list<node_t*> nodes_t;
@@ -179,7 +180,7 @@ namespace vcsn
       plus(const weightset_t& ws);
       virtual ~plus();
     public:
-      virtual DynamicType type() const { return node_t::PLUS; };
+      virtual type_t type() const { return node_t::PLUS; };
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -209,7 +210,7 @@ namespace vcsn
     public:
       typedef LRWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
 
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
@@ -221,7 +222,7 @@ namespace vcsn
       node_t *get_sub();
       const node_t *get_sub() const;
     public:
-      virtual DynamicType type() const { return node_t::KLEENE; };
+      virtual type_t type() const { return node_t::KLEENE; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
@@ -236,14 +237,14 @@ namespace vcsn
     public:
       typedef LWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
       one();
       virtual ~one();
     public:
-      virtual DynamicType type() const { return node_t::ONE; };
+      virtual type_t type() const { return node_t::ONE; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
@@ -255,14 +256,14 @@ namespace vcsn
     public:
       typedef LWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
       zero();
       virtual ~zero();
     public:
-      virtual DynamicType type() const { return node_t::ZERO; };
+      virtual type_t type() const { return node_t::ZERO; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
@@ -274,7 +275,7 @@ namespace vcsn
     public:
       typedef LWeightNode<WeightSet> super_type;
       typedef node<WeightSet> node_t;
-      typedef typename node_t::DynamicType DynamicType;
+      typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
@@ -282,7 +283,7 @@ namespace vcsn
       word(std::string* word, const weightset_t& ws);
       virtual ~word();
     public:
-      virtual DynamicType type() const { return node_t::WORD; };
+      virtual type_t type() const { return node_t::WORD; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
