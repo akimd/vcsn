@@ -20,7 +20,6 @@ namespace vcsn
               const bool show_unit = false, const bool debug = false);
       virtual ~printer();
     public:
-      virtual void visit(const node<WeightSet>& v);
       virtual void visit(const concat<WeightSet>& v);
       virtual void visit(const plus<WeightSet>& v);
       virtual void visit(const kleene<WeightSet>& v);

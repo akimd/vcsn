@@ -10,8 +10,8 @@ namespace vcsn
 
     template <class WeightSet>
     printer<WeightSet>::printer(std::ostream& out,
-                                          const bool show_unit,
-                                          const bool debug)
+                                const bool show_unit,
+                                const bool debug)
       : out_(out)
       , show_unit_(show_unit)
       , debug_(debug)
@@ -21,13 +21,6 @@ namespace vcsn
     printer<WeightSet>::~printer()
     {
       out_ << std::flush;
-    }
-
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const node<WeightSet>& v)
-    {
-      assert(false);
     }
 
     template <class WeightSet>
