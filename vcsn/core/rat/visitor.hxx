@@ -46,7 +46,7 @@ namespace vcsn
 
 #undef VISIT
 
-  } // rat
-} // vcsn
+  } // namespace rat
+} // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_VISITOR_HXX_

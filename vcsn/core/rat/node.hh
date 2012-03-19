@@ -208,7 +208,6 @@ namespace vcsn
       node_t *sub_exp_;
     };
 
-
     /*--------.
     | leafs.  |
     `--------*/
@@ -304,8 +303,8 @@ namespace vcsn
       std::string *word_;
     };
 
-  } // rat
-} // vcsn
+  } // namespace rat
+} // namespace vcsn
 
 #include <core/rat/node.hxx>
 

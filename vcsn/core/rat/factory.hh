@@ -68,8 +68,8 @@ namespace vcsn
       const weightset_t* ws_;
     };
 
-  } // rat
-} // vcsn
+  } // namespace rat
+} // namespace vcsn
 
 # include <core/rat/factory.hxx>
 

@@ -37,8 +37,8 @@ namespace vcsn
       const bool debug_;
     };
 
-  } // rat
-} // vcsn
+  } // namespace rat
+} // namespace vcsn
 
 # include <core/rat/printer.hxx>
 

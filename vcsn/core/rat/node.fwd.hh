@@ -29,7 +29,7 @@ namespace vcsn
     template <class WeightSet>
     class word;
 
-  } // rat
-} // vcsn
+  } // namespace rat
+} // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_NODE_FWD_HH_
