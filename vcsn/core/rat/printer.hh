@@ -27,7 +27,7 @@ namespace vcsn
       virtual void visit(const zero<weightset_t>& v);
       virtual void visit(const word<weightset_t>& v);
     private:
-      void print_weight(const weight_t& w, const weightset_t& ws);
+      void print(const weight_t& w, const weightset_t& ws);
       /// Traverse n-ary node (+ and .).
       void print(const nary<weightset_t>& n, const char op);
 

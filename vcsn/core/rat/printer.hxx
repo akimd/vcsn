@@ -39,23 +39,22 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const kleene<WeightSet>& v)
     {
-      if (const auto& sub = v.get_sub())
-        {
-          print_weight(v.left_weight(), v.get_weight_set());
-          if (debug_)
-            out_ << '*';
-          out_ << '(';
-          sub->accept(*this);
-          out_ << ")*";
-          print_weight(v.right_weight(), v.get_weight_set());
-        }
+      const auto& sub = v.get_sub();
+      assert(sub);
+      print(v.left_weight(), v.get_weight_set());
+      if (debug_)
+        out_ << '*';
+      out_ << '(';
+      sub->accept(*this);
+      out_ << ")*";
+      print(v.right_weight(), v.get_weight_set());
     }
 
     template <class WeightSet>
     void
     printer<WeightSet>::visit(const one<WeightSet>& v)
     {
-      print_weight(v.left_weight(), v.get_weight_set());
+      print(v.left_weight(), v.get_weight_set());
       out_ << "\\e";
     }
 
@@ -63,7 +62,7 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const zero<WeightSet>& v)
     {
-      print_weight(v.left_weight(), v.get_weight_set());
+      print(v.left_weight(), v.get_weight_set());
       out_ << "\\z";
     }
 
@@ -71,14 +70,14 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const word<WeightSet>& v)
     {
-      print_weight(v.left_weight(), v.get_weight_set());
+      print(v.left_weight(), v.get_weight_set());
       out_ <<* v.get_word();
     }
 
     template <class WeightSet>
     void
-    printer<WeightSet>::print_weight(const typename WeightSet::value_t& w,
-                                     const WeightSet& ws)
+    printer<WeightSet>::print(const typename WeightSet::value_t& w,
+                              const WeightSet& ws)
     {
       if (show_unit_ || !ws.is_unit(w))
         out_ << '{' << w << '}';
@@ -88,17 +87,16 @@ namespace vcsn
     void
     printer<WeightSet>::print(const nary<weightset_t>& n, const char op)
     {
-      size_t size = n.size();
-      if (size)
-      {
-        print_weight(n.left_weight(), n.get_weight_set());
+      assert(n.size());
 
-        if (debug_)
-          out_ << op;
-        for (unsigned i = size; i != 0; --i)
-          out_ << '(';
-        bool first = true;
-        for (auto i: n)
+      print(n.left_weight(), n.get_weight_set());
+
+      if (debug_)
+        out_ << op;
+      for (unsigned i = n.size(); i != 0; --i)
+        out_ << '(';
+      bool first = true;
+      for (auto i: n)
         {
           if (!first)
             out_ << op;
@@ -106,13 +104,12 @@ namespace vcsn
           i->accept(*this);
           out_ << ')';
         }
-        out_ << ')';
+      out_ << ')';
 
-        print_weight(n.right_weight(), n.get_weight_set());
-      }
+      print(n.right_weight(), n.get_weight_set());
     }
 
-  } // !rat
-} // !vcsn
+  } // namespace rat
+} // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_PRINTER_HXX
