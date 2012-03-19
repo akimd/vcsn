@@ -63,10 +63,10 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>*
-    mul(RatExpNode<WeightSet>* l, RatExpNode<WeightSet>* r)
+    concat<WeightSet>*
+    mul(node<WeightSet>* l, node<WeightSet>* r)
     {
-      auto res = new RatExpConcat<WeightSet>();
+      auto res = new concat<WeightSet>();
       res->push_back(l);
       res->push_back(r);
       return res;
@@ -74,8 +74,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>*
-    mul(RatExpConcat<WeightSet>* l, RatExpNode<WeightSet>* r)
+    concat<WeightSet>*
+    mul(concat<WeightSet>* l, node<WeightSet>* r)
     {
       l->push_back(r);
       return l;
@@ -83,8 +83,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>*
-    mul(RatExpNode<WeightSet>* l, RatExpConcat<WeightSet>* r)
+    concat<WeightSet>*
+    mul(node<WeightSet>* l, concat<WeightSet>* r)
     {
       r->push_front(l);
       return r;
@@ -92,8 +92,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    RatExpConcat<WeightSet>*
-    mul(RatExpConcat<WeightSet>* l, RatExpConcat<WeightSet>* r)
+    concat<WeightSet>*
+    mul(concat<WeightSet>* l, concat<WeightSet>* r)
     {
       for (auto i : *r)
         l->push_back(i);
@@ -110,15 +110,15 @@ namespace vcsn
     {
       return e;
 
-      // if (RatExpConcat<WeightSet>::CONCAT == e->type())
+      // if (concat<WeightSet>::CONCAT == e->type())
       // {
-      auto res = down_cast<RatExpConcat<WeightSet>*>(e);
+      auto res = down_cast<concat<WeightSet>*>(e);
       //   assert(res);
       //   return res;
       // }
       // else
       // {
-      //   RatExpConcat<WeightSet>*res = new RatExpConcat<WeightSet>();
+      //   concat<WeightSet>*res = new concat<WeightSet>();
       //   res->push_front(e);
       //   return res;
       // }
@@ -147,10 +147,10 @@ namespace vcsn
 
       if (node_t::CONCAT == l->type())
       {
-        auto left = down_cast<RatExpConcat<WeightSet>*>(l);
+        auto left = down_cast<concat<WeightSet>*>(l);
         if (node_t::CONCAT == r->type())
         {
-          auto right = down_cast<RatExpConcat<WeightSet>*>(r);
+          auto right = down_cast<concat<WeightSet>*>(r);
           return mul(left, right);
         }
         else
@@ -160,7 +160,7 @@ namespace vcsn
       }
       else if (node_t::CONCAT == r->type())
       {
-        auto right = down_cast<RatExpConcat<WeightSet>*>(r);
+        auto right = down_cast<concat<WeightSet>*>(r);
         return mul(l, right);
       }
       else
@@ -191,10 +191,10 @@ namespace vcsn
 
       if (node_t::PLUS == l->type())
       {
-        auto res = down_cast<RatExpPlus<WeightSet>*>(l);
+        auto res = down_cast<plus<WeightSet>*>(l);
         if (node_t::PLUS == r->type())
         {
-          auto right = down_cast<RatExpPlus<WeightSet>*>(r);
+          auto right = down_cast<plus<WeightSet>*>(r);
           for (auto it : *right)
             res->push_back(it);
         }
@@ -206,13 +206,13 @@ namespace vcsn
       }
       else if (node_t::PLUS == r->type())
       {
-        auto res = down_cast<RatExpPlus<WeightSet>*>(r);
+        auto res = down_cast<plus<WeightSet>*>(r);
         res->push_front(l);
         return res;
       }
       else
       {
-        RatExpPlus<WeightSet>* res = new RatExpPlus<WeightSet>();
+        plus<WeightSet>* res = new plus<WeightSet>();
         res->push_front(r);
         res->push_front(l);
         return res;
@@ -222,45 +222,45 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    factory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
+    factory<WeightSet>::op_kleene(node<WeightSet>* e)
       -> node_t*
     {
-      if (RatExpNode<WeightSet>::ZERO == e->type())
+      if (node<WeightSet>::ZERO == e->type())
       {
         // Trivial identity
         // (0)* == 1
         delete e;
-        return new RatExpOne<WeightSet>;
+        return new one<WeightSet>;
       }
       else
-        return new RatExpKleene<WeightSet>(e);
+        return new kleene<WeightSet>(e);
     }
 
     template <class WeightSet>
     inline
-    RatExpOne<WeightSet> *
+    one<WeightSet> *
     factory<WeightSet>::op_one()
     {
-      return new RatExpOne<WeightSet>();
+      return new one<WeightSet>();
     }
 
     template <class WeightSet>
     inline
-    RatExpZero<WeightSet>*
+    zero<WeightSet>*
     factory<WeightSet>::op_zero()
     {
-      return new RatExpZero<WeightSet>();
+      return new zero<WeightSet>();
     }
 
     template <class WeightSet>
     inline
-    RatExpWord<WeightSet>*
+    word<WeightSet>*
     factory<WeightSet>::op_word(std::string* w)
     {
       if (ws_ != nullptr)
-        return new RatExpWord<WeightSet>(w, *ws_);
+        return new word<WeightSet>(w, *ws_);
       else
-        return new RatExpWord<WeightSet>(w);
+        return new word<WeightSet>(w);
     }
 
     template <class WeightSet>
@@ -339,7 +339,7 @@ namespace vcsn
         if (ws_->is_zero(new_weight))
         {
           delete e;
-          return new RatExpZero<WeightSet>();
+          return new zero<WeightSet>();
         }
         e->left_weight() = ws_->mul(e->left_weight(), new_weight);
       }
@@ -358,7 +358,7 @@ namespace vcsn
         if (ws_->is_zero(new_weight))
         {
           delete e;
-          return new RatExpZero<WeightSet>();
+          return new zero<WeightSet>();
         }
         e->left_weight() = ws_->mul(e->left_weight(), new_weight);
       }
@@ -377,7 +377,7 @@ namespace vcsn
         if (ws_->is_zero(new_weight))
         {
           delete e;
-          return new RatExpZero<WeightSet>();
+          return new zero<WeightSet>();
         }
         e->right_weight() = ws_->mul(e->right_weight(), new_weight);
       }

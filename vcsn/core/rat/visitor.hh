@@ -17,12 +17,12 @@ namespace vcsn
 #define VISIT(Type)                                                     \
       virtual void visit(typename ConstNess<Type<WeightSet> >::type& v)
 
-      VISIT(RatExpConcat);
-      VISIT(RatExpPlus);
-      VISIT(RatExpKleene);
-      VISIT(RatExpOne);
-      VISIT(RatExpZero);
-      VISIT(RatExpWord);
+      VISIT(concat);
+      VISIT(plus);
+      VISIT(kleene);
+      VISIT(one);
+      VISIT(zero);
+      VISIT(word);
 #undef VISIT
     };
 

@@ -17,31 +17,31 @@ namespace vcsn
     ::visit(typename ConstNess<Type<WeightSet>>::type& Name)
 
 
-    VISIT(RatExpConcat, v)
+    VISIT(concat, v)
     {
       for (auto t : v)
         t->accept(*this);
     }
 
-    VISIT(RatExpPlus, v)
+    VISIT(plus, v)
     {
       for (auto t : v)
         t->accept(*this);
     }
 
-    VISIT(RatExpKleene, v)
+    VISIT(kleene, v)
     {
       if (auto sub = v.get_sub())
         sub->accept(*this);
     }
 
-    VISIT(RatExpOne, )
+    VISIT(one, )
     {}
 
-    VISIT(RatExpZero, )
+    VISIT(zero, )
     {}
 
-    VISIT(RatExpWord, )
+    VISIT(word, )
     {}
 
 #undef VISIT

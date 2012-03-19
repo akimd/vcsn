@@ -9,25 +9,25 @@ namespace vcsn
     class RatExp;
 
     template <class WeightSet>
-    class RatExpNode;
+    class node;
 
     template <class WeightSet>
-    class RatExpConcat;
+    class concat;
 
     template <class WeightSet>
-    class RatExpPlus;
+    class plus;
 
     template <class WeightSet>
-    class RatExpKleene;
+    class kleene;
 
     template <class WeightSet>
-    class RatExpOne;
+    class one;
 
     template <class WeightSet>
-    class RatExpZero;
+    class zero;
 
     template <class WeightSet>
-    class RatExpWord;
+    class word;
 
   } // rat
 } // vcsn

@@ -19,7 +19,7 @@ namespace vcsn
       typedef typename weightset_t::value_t weight_t;
       typedef std::string weight_str;
       typedef std::list<weight_str *> weight_str_container;
-      typedef RatExpNode<weightset_t> node_t;
+      typedef node<weightset_t> node_t;
     public:
       factory();
       factory(const weightset_t& ws);
@@ -34,10 +34,10 @@ namespace vcsn
       weight_str_container* op_weight(weight_str_container* l, weight_str* w);
 
       // RatExp constants' method
-      RatExpOne<WeightSet>* op_one();
-      RatExpZero<WeightSet>* op_zero();
-      // RatExpWord's method
-      RatExpWord<WeightSet>* op_word(std::string* w);
+      one<WeightSet>* op_one();
+      zero<WeightSet>* op_zero();
+      // word's method
+      word<WeightSet>* op_word(std::string* w);
 
       RatExp* op_weight(weight_str_container* w, RatExp* e);
       RatExp* op_weight(RatExp* e, weight_str_container* w);
@@ -46,12 +46,12 @@ namespace vcsn
       node_t* op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w);
 
     protected:
-      // RatExpConcat's method
+      // concat's method
       node_t* op_mul(node_t* e);
       node_t* op_mul(node_t* l,  node_t* r);
-      // RatExpPlus's method
+      // plus's method
       node_t* op_add(node_t* l, node_t* r);
-      // RatExpKleene's method
+      // kleene's method
       node_t* op_kleene(node_t* e);
 
     private:

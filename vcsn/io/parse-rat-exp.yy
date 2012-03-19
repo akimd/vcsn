@@ -72,7 +72,7 @@
       std::ostream&
       operator<<(std::ostream& o, const RatExp& r)
       {
-        const RatExpNode<vcsn::z>* down = down_cast<const RatExpNode<vcsn::z>*>(&r);
+        const node<vcsn::z>* down = down_cast<const node<vcsn::z>*>(&r);
         PrintVisitor<vcsn::z> print(o, true, true);
         down->accept(print);
         return o;
