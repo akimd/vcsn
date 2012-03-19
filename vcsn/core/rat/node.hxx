@@ -28,12 +28,12 @@ namespace vcsn
     {}
 
     //////////////////
-    // LRWeightNode //
+    // weighted //
     //////////////////
 
     template <class WeightSet>
     inline
-    LRWeightNode<WeightSet>::LRWeightNode()
+    weighted<WeightSet>::weighted()
       : ws_(st_ws_)
     {
       lw_ = ws_.unit();
@@ -42,7 +42,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LRWeightNode<WeightSet>::LRWeightNode(const weightset_t& ws)
+    weighted<WeightSet>::weighted(const weightset_t& ws)
       : ws_(ws)
       , lw_(ws.unit())
       , rw_(ws.unit())
@@ -50,64 +50,64 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LRWeightNode<WeightSet>::~LRWeightNode()
+    weighted<WeightSet>::~weighted()
     {}
 
     template <class WeightSet>
     inline
-    const typename LRWeightNode<WeightSet>::weight_t &
-    LRWeightNode<WeightSet>::left_weight() const
+    const typename weighted<WeightSet>::weight_t &
+    weighted<WeightSet>::left_weight() const
     {
       return lw_;
     }
 
     template <class WeightSet>
     inline
-    typename LRWeightNode<WeightSet>::weight_t &
-    LRWeightNode<WeightSet>::left_weight()
+    typename weighted<WeightSet>::weight_t &
+    weighted<WeightSet>::left_weight()
     {
       return lw_;
     }
 
     template <class WeightSet>
     inline
-    const typename LRWeightNode<WeightSet>::weight_t &
-    LRWeightNode<WeightSet>::right_weight() const
+    const typename weighted<WeightSet>::weight_t &
+    weighted<WeightSet>::right_weight() const
     {
       return rw_;
     }
 
     template <class WeightSet>
     inline
-    typename LRWeightNode<WeightSet>::weight_t &
-    LRWeightNode<WeightSet>::right_weight()
+    typename weighted<WeightSet>::weight_t &
+    weighted<WeightSet>::right_weight()
     {
       return rw_;
     }
 
     template <class WeightSet>
     inline
-    const typename LRWeightNode<WeightSet>::weightset_t &
-    LRWeightNode<WeightSet>::get_weight_set() const
+    const typename weighted<WeightSet>::weightset_t &
+    weighted<WeightSet>::get_weight_set() const
     {
       return ws_;
     }
 
     template <class WeightSet>
     inline
-    typename LRWeightNode<WeightSet>::WeightType
-    LRWeightNode<WeightSet>::weight_type() const
+    typename weighted<WeightSet>::WeightType
+    weighted<WeightSet>::weight_type() const
     {
       return super_type::LR_WEIGHT;
     }
 
     /////////////////
-    // LWeightNode //
+    // left_weighted //
     /////////////////
 
     template <class WeightSet>
     inline
-    LWeightNode<WeightSet>::LWeightNode()
+    left_weighted<WeightSet>::left_weighted()
       : ws_(st_ws_)
     {
       lw_ = ws_.unit();
@@ -115,44 +115,44 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    LWeightNode<WeightSet>::LWeightNode(const weightset_t& ws)
+    left_weighted<WeightSet>::left_weighted(const weightset_t& ws)
       : ws_(ws)
       , lw_(ws.unit())
     {}
 
     template <class WeightSet>
     inline
-    LWeightNode<WeightSet>::~LWeightNode()
+    left_weighted<WeightSet>::~left_weighted()
     {}
 
     template <class WeightSet>
     inline
-    const typename LWeightNode<WeightSet>::weight_t &
-    LWeightNode<WeightSet>::left_weight() const
+    const typename left_weighted<WeightSet>::weight_t &
+    left_weighted<WeightSet>::left_weight() const
     {
       return lw_;
     }
 
     template <class WeightSet>
     inline
-    typename LWeightNode<WeightSet>::weight_t &
-    LWeightNode<WeightSet>::left_weight()
+    typename left_weighted<WeightSet>::weight_t &
+    left_weighted<WeightSet>::left_weight()
     {
       return lw_;
     }
 
     template <class WeightSet>
     inline
-    const typename LWeightNode<WeightSet>::weightset_t &
-    LWeightNode<WeightSet>::get_weight_set() const
+    const typename left_weighted<WeightSet>::weightset_t &
+    left_weighted<WeightSet>::get_weight_set() const
     {
       return ws_;
     }
 
     template <class WeightSet>
     inline
-    typename LWeightNode<WeightSet>::WeightType
-    LWeightNode<WeightSet>::weight_type() const
+    typename left_weighted<WeightSet>::WeightType
+    left_weighted<WeightSet>::weight_type() const
     {
       return super_type::L_WEIGHT;
     }
@@ -169,7 +169,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     concat<WeightSet>::concat(weightset_t& ws)
-      : LRWeightNode<WeightSet>(ws)
+      : weighted<WeightSet>(ws)
     {}
 
     template <class WeightSet>
@@ -306,7 +306,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     plus<WeightSet>::plus(const weightset_t& ws)
-      : LRWeightNode<WeightSet>(ws)
+      : weighted<WeightSet>(ws)
     {}
 
     template <class WeightSet>
@@ -438,14 +438,14 @@ namespace vcsn
     template <class WeightSet>
     inline
     kleene<WeightSet>::kleene(node_t* sub_exp)
-      : LRWeightNode<WeightSet>()
+      : weighted<WeightSet>()
       , sub_exp_(sub_exp)
     {}
 
     template <class WeightSet>
     inline
     kleene<WeightSet>::kleene(node_t* sub_exp, const weightset_t& ws)
-      : LRWeightNode<WeightSet>(node_t::KLEENE, ws)
+      : weighted<WeightSet>(node_t::KLEENE, ws)
       , sub_exp_(sub_exp)
     {}
 
@@ -557,14 +557,14 @@ namespace vcsn
     template <class WeightSet>
     inline
     word<WeightSet>::word(std::string* word)
-      : LWeightNode<WeightSet>()
+      : left_weighted<WeightSet>()
       , word_(word)
     {}
 
     template <class WeightSet>
     inline
     word<WeightSet>::word(std::string* word, const weightset_t& ws)
-      : LWeightNode<WeightSet>(ws)
+      : left_weighted<WeightSet>(ws)
       , word_(word)
     {}
 

@@ -41,9 +41,9 @@ namespace vcsn
 
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);
-      node_t* op_weight(LWeightNode<WeightSet>* e, weight_str_container* w);
-      node_t* op_weight(weight_str_container* w, LRWeightNode<WeightSet>* e);
-      node_t* op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w);
+      node_t* op_weight(left_weighted<WeightSet>* e, weight_str_container* w);
+      node_t* op_weight(weight_str_container* w, weighted<WeightSet>* e);
+      node_t* op_weight(weighted<WeightSet>* e, weight_str_container* w);
 
     protected:
       // concat's method

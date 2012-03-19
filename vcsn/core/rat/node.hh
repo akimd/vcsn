@@ -55,7 +55,7 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class LRWeightNode : public node<WeightSet>
+    class weighted : public node<WeightSet>
     {
     public:
       typedef WeightSet weightset_t;
@@ -63,10 +63,10 @@ namespace vcsn
       typedef node<WeightSet> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      LRWeightNode();
-      LRWeightNode(const weightset_t& ws);
+      weighted();
+      weighted(const weightset_t& ws);
     public:
-      virtual ~LRWeightNode() = 0;
+      virtual ~weighted() = 0;
     public:
       const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
@@ -84,11 +84,11 @@ namespace vcsn
     };
 
     template<class WeightSet>
-    const typename LRWeightNode<WeightSet>::weightset_t
-    LRWeightNode<WeightSet>::st_ws_ = WeightSet();
+    const typename weighted<WeightSet>::weightset_t
+    weighted<WeightSet>::st_ws_ = WeightSet();
 
     template <class WeightSet>
-    class LWeightNode : public node<WeightSet>
+    class left_weighted : public node<WeightSet>
     {
     public:
       typedef WeightSet weightset_t;
@@ -96,10 +96,10 @@ namespace vcsn
       typedef node<WeightSet> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      LWeightNode();
-      LWeightNode(const weightset_t& ws);
+      left_weighted();
+      left_weighted(const weightset_t& ws);
     public:
-      virtual ~LWeightNode() = 0;
+      virtual ~left_weighted() = 0;
     public:
       const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
@@ -113,14 +113,14 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    const typename LWeightNode<WeightSet>::weightset_t
-    LWeightNode<WeightSet>::st_ws_ = WeightSet();
+    const typename left_weighted<WeightSet>::weightset_t
+    left_weighted<WeightSet>::st_ws_ = WeightSet();
 
     template <class WeightSet>
-    class concat : public LRWeightNode<WeightSet>
+    class concat : public weighted<WeightSet>
     {
     public:
-      typedef LRWeightNode<WeightSet> super_type;
+      typedef weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
@@ -161,10 +161,10 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class plus : public LRWeightNode<WeightSet>
+    class plus : public weighted<WeightSet>
     {
     public:
-      typedef LRWeightNode<WeightSet> super_type;
+      typedef weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
@@ -205,10 +205,10 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class kleene : public LRWeightNode<WeightSet>
+    class kleene : public weighted<WeightSet>
     {
     public:
-      typedef LRWeightNode<WeightSet> super_type;
+      typedef weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
 
@@ -232,10 +232,10 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class one : public LWeightNode<WeightSet>
+    class one : public left_weighted<WeightSet>
     {
     public:
-      typedef LWeightNode<WeightSet> super_type;
+      typedef left_weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
@@ -251,10 +251,10 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class zero : public LWeightNode<WeightSet>
+    class zero : public left_weighted<WeightSet>
     {
     public:
-      typedef LWeightNode<WeightSet> super_type;
+      typedef left_weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;
@@ -270,10 +270,10 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class word : public LWeightNode<WeightSet>
+    class word : public left_weighted<WeightSet>
     {
     public:
-      typedef LWeightNode<WeightSet> super_type;
+      typedef left_weighted<WeightSet> super_type;
       typedef node<WeightSet> node_t;
       typedef typename node_t::type_t type_t;
       typedef WeightSet weightset_t;

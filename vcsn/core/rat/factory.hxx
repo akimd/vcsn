@@ -134,39 +134,39 @@ namespace vcsn
       // E.0 = 0.E = 0
       // E.1 = 1.E = E
       if (node_t::ZERO == l->type() || node_t::ONE == r->type())
-      {
-        delete r;
-        return l;
-      }
+        {
+          delete r;
+          return l;
+        }
       if (node_t::ZERO == r->type() || node_t::ONE == l->type())
-      {
-        delete l;
-        return r;
-      }
+        {
+          delete l;
+          return r;
+        }
       // END: Trivial Identity
 
       if (node_t::CONCAT == l->type())
-      {
-        auto left = down_cast<concat<WeightSet>*>(l);
-        if (node_t::CONCAT == r->type())
+        {
+          auto left = down_cast<concat<WeightSet>*>(l);
+          if (node_t::CONCAT == r->type())
+            {
+              auto right = down_cast<concat<WeightSet>*>(r);
+              return mul(left, right);
+            }
+          else
+            {
+              return mul(left, r);
+            }
+        }
+      else if (node_t::CONCAT == r->type())
         {
           auto right = down_cast<concat<WeightSet>*>(r);
-          return mul(left, right);
+          return mul(l, right);
         }
-        else
-        {
-          return mul(left, r);
-        }
-      }
-      else if (node_t::CONCAT == r->type())
-      {
-        auto right = down_cast<concat<WeightSet>*>(r);
-        return mul(l, right);
-      }
       else
-      {
-        return mul(l, r);
-      }
+        {
+          return mul(l, r);
+        }
     }
 
     template <class WeightSet>
@@ -178,45 +178,45 @@ namespace vcsn
       // Trivial Identity
       // E+0 = 0+E = E
       if (node_t::ZERO == l->type())
-      {
-        delete l;
-        return r;
-      }
+        {
+          delete l;
+          return r;
+        }
       if (node_t::ZERO == r->type())
-      {
-        delete r;
-        return l;
-      }
+        {
+          delete r;
+          return l;
+        }
       // END: Trivial Identity
 
       if (node_t::PLUS == l->type())
-      {
-        auto res = down_cast<plus<WeightSet>*>(l);
-        if (node_t::PLUS == r->type())
         {
-          auto right = down_cast<plus<WeightSet>*>(r);
-          for (auto it : *right)
-            res->push_back(it);
+          auto res = down_cast<plus<WeightSet>*>(l);
+          if (node_t::PLUS == r->type())
+            {
+              auto right = down_cast<plus<WeightSet>*>(r);
+              for (auto it : *right)
+                res->push_back(it);
+            }
+          else
+            {
+              res->push_back(r);
+            }
+          return res;
         }
-        else
-        {
-          res->push_back(r);
-        }
-        return res;
-      }
       else if (node_t::PLUS == r->type())
-      {
-        auto res = down_cast<plus<WeightSet>*>(r);
-        res->push_front(l);
-        return res;
-      }
+        {
+          auto res = down_cast<plus<WeightSet>*>(r);
+          res->push_front(l);
+          return res;
+        }
       else
-      {
-        plus<WeightSet>* res = new plus<WeightSet>();
-        res->push_front(r);
-        res->push_front(l);
-        return res;
-      }
+        {
+          plus<WeightSet>* res = new plus<WeightSet>();
+          res->push_front(r);
+          res->push_front(l);
+          return res;
+        }
     }
 
     template <class WeightSet>
@@ -226,12 +226,12 @@ namespace vcsn
       -> node_t*
     {
       if (node<WeightSet>::ZERO == e->type())
-      {
-        // Trivial identity
-        // (0)* == 1
-        delete e;
-        return new one<WeightSet>;
-      }
+        {
+          // Trivial identity
+          // (0)* == 1
+          delete e;
+          return new one<WeightSet>;
+        }
       else
         return new kleene<WeightSet>(e);
     }
@@ -282,23 +282,23 @@ namespace vcsn
       // if w
       auto expr = down_cast<node_t*>(e);
       switch (expr->weight_type())
-      {
-      case node_t::L_WEIGHT:
-      {
-        auto lweight = down_cast<LWeightNode<WeightSet>*>(expr);
-        return op_weight(lweight, w);
-      }
+        {
+        case node_t::L_WEIGHT:
+          {
+            auto lweight = down_cast<left_weighted<WeightSet>*>(expr);
+            return op_weight(lweight, w);
+          }
 
-      case node_t::LR_WEIGHT:
-      {
-        auto lrweight = down_cast<LRWeightNode<WeightSet>*>(expr);
-        return op_weight(w, lrweight);
-      }
+        case node_t::LR_WEIGHT:
+          {
+            auto lrweight = down_cast<weighted<WeightSet>*>(expr);
+            return op_weight(w, lrweight);
+          }
 
-      default:
-        assert(false);
-        return 0;
-      }
+        default:
+          assert(false);
+          return 0;
+        }
     }
 
     template <class WeightSet>
@@ -310,77 +310,77 @@ namespace vcsn
       // if w
       auto expr = down_cast<node_t*>(e);
       switch (expr->weight_type())
-      {
-      case node_t::L_WEIGHT:
-      {
-        auto rweight = down_cast<LWeightNode<WeightSet>*>(expr);
-        return op_weight(rweight, w);
-      }
-      case node_t::LR_WEIGHT:
-      {
-        auto rweight = down_cast<LRWeightNode<WeightSet>*>(expr);
-        return op_weight(rweight, w);
-      }
-      default:
-        assert(false);
-        return 0;
-      }
+        {
+        case node_t::L_WEIGHT:
+          {
+            auto rweight = down_cast<left_weighted<WeightSet>*>(expr);
+            return op_weight(rweight, w);
+          }
+        case node_t::LR_WEIGHT:
+          {
+            auto rweight = down_cast<weighted<WeightSet>*>(expr);
+            return op_weight(rweight, w);
+          }
+        default:
+          assert(false);
+          return 0;
+        }
     }
 
     template<class WeightSet>
     auto
-    factory<WeightSet>::op_weight(LWeightNode<WeightSet>* e,
+    factory<WeightSet>::op_weight(left_weighted<WeightSet>* e,
                                   weight_str_container* w)
       -> node_t*
     {
       for (auto i : *w)
-      {
-        weight_t new_weight = ws_->op_conv(*i);
-        if (ws_->is_zero(new_weight))
         {
-          delete e;
-          return new zero<WeightSet>();
+          weight_t new_weight = ws_->op_conv(*i);
+          if (ws_->is_zero(new_weight))
+            {
+              delete e;
+              return new zero<WeightSet>();
+            }
+          e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
-        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
-      }
       return e;
     }
 
     template<class WeightSet>
     auto
     factory<WeightSet>::op_weight(weight_str_container* w,
-                                        LRWeightNode<WeightSet>* e)
+                                  weighted<WeightSet>* e)
       -> node_t*
     {
       for (auto i : *w)
-      {
-        weight_t new_weight = ws_->op_conv(*i);
-        if (ws_->is_zero(new_weight))
         {
-          delete e;
-          return new zero<WeightSet>();
+          weight_t new_weight = ws_->op_conv(*i);
+          if (ws_->is_zero(new_weight))
+            {
+              delete e;
+              return new zero<WeightSet>();
+            }
+          e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
-        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
-      }
       return e;
     }
 
     template<class WeightSet>
     auto
-    factory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e,
-                                        weight_str_container* w)
+    factory<WeightSet>::op_weight(weighted<WeightSet>* e,
+                                  weight_str_container* w)
       -> node_t*
     {
       for (auto i : *w)
-      {
-        weight_t new_weight = ws_->op_conv(*i);
-        if (ws_->is_zero(new_weight))
         {
-          delete e;
-          return new zero<WeightSet>();
+          weight_t new_weight = ws_->op_conv(*i);
+          if (ws_->is_zero(new_weight))
+            {
+              delete e;
+              return new zero<WeightSet>();
+            }
+          e->right_weight() = ws_->mul(e->right_weight(), new_weight);
         }
-        e->right_weight() = ws_->mul(e->right_weight(), new_weight);
-      }
       return e;
     }
 
