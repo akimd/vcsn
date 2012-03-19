@@ -93,8 +93,7 @@ namespace vcsn
 
       if (debug_)
         out_ << op;
-      for (unsigned i = n.size(); i != 0; --i)
-        out_ << '(';
+      out_ << '(';
       bool first = true;
       for (auto i: n)
         {
@@ -102,7 +101,6 @@ namespace vcsn
             out_ << op;
           first = false;
           i->accept(*this);
-          out_ << ')';
         }
       out_ << ')';
 
