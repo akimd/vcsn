@@ -27,6 +27,12 @@ namespace vcsn
       virtual void visit(const zero<WeightSet>& v);
       virtual void visit(const word<WeightSet>& v);
     private:
+      void print_weight(const typename WeightSet::value_t& w,
+                        const WeightSet& ws);
+      /// Traverse n-ary node (+ and .).
+      template <typename NAry>
+      void print_iterable(const NAry& n, const char op);
+
       std::ostream& out_;
       const bool show_unit_;
       const bool debug_;
