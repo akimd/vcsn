@@ -12,7 +12,7 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    class RatExpFactory
+    class factory
     {
     public:
       typedef WeightSet weightset_t;
@@ -21,8 +21,8 @@ namespace vcsn
       typedef std::list<weight_str *> weight_str_container;
       typedef RatExpNode<weightset_t> node_t;
     public:
-      RatExpFactory();
-      RatExpFactory(const weightset_t& ws);
+      factory();
+      factory(const weightset_t& ws);
     public:
       RatExp* op_mul(RatExp* e);
       RatExp* op_mul(RatExp* l, RatExp* r);
@@ -61,6 +61,6 @@ namespace vcsn
   } // rat
 } // vcsn
 
-# include <core/rat/RatExpFactory.hxx>
+# include <core/rat/factory.hxx>
 
 #endif // !VCSN_CORE_RAT_RAT_EXP_HH_

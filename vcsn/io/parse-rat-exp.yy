@@ -17,7 +17,7 @@
   #include <string>
   #include "location.hh"
   #include <core/rat/node.hh>
-  #include <core/rat/RatExpFactory.hh>
+  #include <core/rat/factory.hh>
   #include <core/rat/print_visitor.hh>
 }
 
@@ -79,7 +79,7 @@
       }
 
       // Define the factory.
-      RatExpFactory<vcsn::z> fact; // FIXME: specialization
+      factory<vcsn::z> fact; // FIXME: specialization
 #define MAKE(Kind, ...)                         \
       fact.op_ ## Kind(__VA_ARGS__)
     }

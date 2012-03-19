@@ -5,7 +5,7 @@
 # include <cassert>
 
 # include <misc/cast.hh>
-# include <core/rat/RatExpFactory.hh>
+# include <core/rat/factory.hh>
 # include <core/rat/node.hh>
 
 namespace vcsn
@@ -14,19 +14,19 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    RatExpFactory<WeightSet>::RatExpFactory()
+    factory<WeightSet>::factory()
       : ws_(0)
     {}
 
     template <class WeightSet>
-    RatExpFactory<WeightSet>::RatExpFactory(const WeightSet& ws)
+    factory<WeightSet>::factory(const WeightSet& ws)
       : ws_(&ws)
     {}
 
     template <class WeightSet>
     inline
     RatExp*
-    RatExpFactory<WeightSet>::op_mul(RatExp* e)
+    factory<WeightSet>::op_mul(RatExp* e)
     {
       return op_mul(down_cast<node_t*>(e));
     }
@@ -34,7 +34,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExp*
-    RatExpFactory<WeightSet>::op_mul(RatExp* l, RatExp* r)
+    factory<WeightSet>::op_mul(RatExp* l, RatExp* r)
     {
       auto left = down_cast<node_t*>(l);
       auto right = down_cast<node_t*>(r);
@@ -44,7 +44,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExp*
-    RatExpFactory<WeightSet>::op_add(RatExp* l, RatExp* r)
+    factory<WeightSet>::op_add(RatExp* l, RatExp* r)
     {
       auto left = down_cast<node_t*>(l);
       auto right = down_cast<node_t*>(r);
@@ -54,7 +54,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExp*
-    RatExpFactory<WeightSet>::op_kleene(RatExp* e)
+    factory<WeightSet>::op_kleene(RatExp* e)
     {
       return op_kleene(down_cast<node_t*>(e));
     }
@@ -105,7 +105,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    RatExpFactory<WeightSet>::op_mul(node_t* e)
+    factory<WeightSet>::op_mul(node_t* e)
       -> node_t*
     {
       return e;
@@ -127,7 +127,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    RatExpFactory<WeightSet>::op_mul(node_t* l, node_t* r)
+    factory<WeightSet>::op_mul(node_t* l, node_t* r)
       -> node_t*
     {
       // Trivial Identity
@@ -172,7 +172,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    RatExpFactory<WeightSet>::op_add(node_t* l, node_t* r)
+    factory<WeightSet>::op_add(node_t* l, node_t* r)
       -> node_t*
     {
       // Trivial Identity
@@ -222,7 +222,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    RatExpFactory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
+    factory<WeightSet>::op_kleene(RatExpNode<WeightSet>* e)
       -> node_t*
     {
       if (RatExpNode<WeightSet>::ZERO == e->type())
@@ -239,7 +239,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpOne<WeightSet> *
-    RatExpFactory<WeightSet>::op_one()
+    factory<WeightSet>::op_one()
     {
       return new RatExpOne<WeightSet>();
     }
@@ -247,7 +247,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpZero<WeightSet>*
-    RatExpFactory<WeightSet>::op_zero()
+    factory<WeightSet>::op_zero()
     {
       return new RatExpZero<WeightSet>();
     }
@@ -255,7 +255,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     RatExpWord<WeightSet>*
-    RatExpFactory<WeightSet>::op_word(std::string* w)
+    factory<WeightSet>::op_word(std::string* w)
     {
       if (ws_ != nullptr)
         return new RatExpWord<WeightSet>(w, *ws_);
@@ -265,8 +265,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename RatExpFactory<WeightSet>::weight_str_container*
-    RatExpFactory<WeightSet>::op_weight(std::string* w)
+    typename factory<WeightSet>::weight_str_container*
+    factory<WeightSet>::op_weight(std::string* w)
     {
       weight_str_container* res = new weight_str_container();
       res->push_front(w);
@@ -275,7 +275,7 @@ namespace vcsn
 
     template <class WeightSet>
     RatExp*
-    RatExpFactory<WeightSet>::op_weight(weight_str_container* w, RatExp* e)
+    factory<WeightSet>::op_weight(weight_str_container* w, RatExp* e)
     {
       if (!w)
         return e;
@@ -303,7 +303,7 @@ namespace vcsn
 
     template <class WeightSet>
     RatExp*
-    RatExpFactory<WeightSet>::op_weight(RatExp* e, weight_str_container* w)
+    factory<WeightSet>::op_weight(RatExp* e, weight_str_container* w)
     {
       if (!w)
         return e;
@@ -329,7 +329,7 @@ namespace vcsn
 
     template<class WeightSet>
     auto
-    RatExpFactory<WeightSet>::op_weight(LWeightNode<WeightSet>* e,
+    factory<WeightSet>::op_weight(LWeightNode<WeightSet>* e,
                                         weight_str_container* w)
       -> node_t*
     {
@@ -348,7 +348,7 @@ namespace vcsn
 
     template<class WeightSet>
     auto
-    RatExpFactory<WeightSet>::op_weight(weight_str_container* w,
+    factory<WeightSet>::op_weight(weight_str_container* w,
                                         LRWeightNode<WeightSet>* e)
       -> node_t*
     {
@@ -367,7 +367,7 @@ namespace vcsn
 
     template<class WeightSet>
     auto
-    RatExpFactory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e,
+    factory<WeightSet>::op_weight(LRWeightNode<WeightSet>* e,
                                         weight_str_container* w)
       -> node_t*
     {
@@ -386,8 +386,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename RatExpFactory<WeightSet>::weight_str_container*
-    RatExpFactory<WeightSet>::op_weight(weight_str* w, weight_str_container* l)
+    typename factory<WeightSet>::weight_str_container*
+    factory<WeightSet>::op_weight(weight_str* w, weight_str_container* l)
     {
       l->push_front(w);
       return l;
@@ -395,8 +395,8 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename RatExpFactory<WeightSet>::weight_str_container*
-    RatExpFactory<WeightSet>::op_weight(weight_str_container* l, weight_str* w)
+    typename factory<WeightSet>::weight_str_container*
+    factory<WeightSet>::op_weight(weight_str_container* l, weight_str* w)
     {
       l->push_front(w);
       return l;
