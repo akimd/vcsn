@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     inline
-    RatExp::~RatExp()
+    exp::~exp()
     {}
 
     ////////////////

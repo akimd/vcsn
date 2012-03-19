@@ -24,23 +24,23 @@ namespace vcsn
       factory();
       factory(const weightset_t& ws);
     public:
-      RatExp* op_mul(RatExp* e);
-      RatExp* op_mul(RatExp* l, RatExp* r);
-      RatExp* op_add(RatExp* l, RatExp* r);
-      RatExp* op_kleene(RatExp* e);
+      exp* op_mul(exp* e);
+      exp* op_mul(exp* l, exp* r);
+      exp* op_add(exp* l, exp* r);
+      exp* op_kleene(exp* e);
 
       weight_str_container* op_weight(weight_str* w);
       weight_str_container* op_weight(weight_str* w, weight_str_container* l);
       weight_str_container* op_weight(weight_str_container* l, weight_str* w);
 
-      // RatExp constants' method
+      // exp constants' method
       one<WeightSet>* op_one();
       zero<WeightSet>* op_zero();
       // word's method
       word<WeightSet>* op_word(std::string* w);
 
-      RatExp* op_weight(weight_str_container* w, RatExp* e);
-      RatExp* op_weight(RatExp* e, weight_str_container* w);
+      exp* op_weight(weight_str_container* w, exp* e);
+      exp* op_weight(exp* e, weight_str_container* w);
       node_t* op_weight(LWeightNode<WeightSet>* e, weight_str_container* w);
       node_t* op_weight(weight_str_container* w, LRWeightNode<WeightSet>* e);
       node_t* op_weight(LRWeightNode<WeightSet>* e, weight_str_container* w);

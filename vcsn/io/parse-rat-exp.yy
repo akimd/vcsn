@@ -70,7 +70,7 @@
     namespace rat
     {
       std::ostream&
-      operator<<(std::ostream& o, const RatExp& r)
+      operator<<(std::ostream& o, const exp& r)
       {
         const node<vcsn::z>* down = down_cast<const node<vcsn::z>*>(&r);
         printer<vcsn::z> print(o, true, true);
@@ -91,7 +91,7 @@
   int ival;
   std::string* sval;
   std::list<std::string*>* weights;
-  RatExp* node;
+  exp* node;
 };
 
 %printer { debug_stream() << $$; } <ival>;

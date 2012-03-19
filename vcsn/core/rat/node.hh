@@ -12,14 +12,14 @@ namespace vcsn
   namespace rat
   {
 
-    class RatExp
+    class exp
     {
     public:
-      virtual ~RatExp() = 0;
+      virtual ~exp() = 0;
     };
 
     template <class WeightSet>
-    class node : public RatExp
+    class node : public exp
     {
     public:
       typedef WeightSet weightset_t;

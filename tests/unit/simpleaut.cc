@@ -19,7 +19,7 @@ int main()
   vcsn::mutable_automaton<alpha_t, vcsn::z,
 			  vcsn::labels_are_letters> aut(alpha);
 
-  //mutable_automaton<alpha_t, RatExp<b, alpha_t> >, labels_are_letter> aut(alpha, semiring);
+  //mutable_automaton<alpha_t, exp<b, alpha_t> >, labels_are_letter> aut(alpha, semiring);
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();

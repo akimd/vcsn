@@ -6,7 +6,7 @@ namespace vcsn
   namespace rat
   {
 
-    class RatExp;
+    class exp;
 
     template <class WeightSet>
     class node;
