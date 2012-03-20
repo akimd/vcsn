@@ -24,9 +24,9 @@ namespace vcsn
       factory();
       factory(const weightset_t& ws);
     public:
-      exp* op_mul(exp* l, exp* r);
-      exp* op_add(exp* l, exp* r);
-      exp* op_kleene(exp* e);
+      exp* op_prod(exp* l, exp* r);
+      exp* op_sum(exp* l, exp* r);
+      exp* op_star(exp* e);
 
       weight_str_container* op_weight(weight_str* w);
       weight_str_container* op_weight(weight_str* w, weight_str_container* l);
@@ -40,9 +40,9 @@ namespace vcsn
       DEFINE(word);
       DEFINE(left_weighted);
       DEFINE(weighted);
-      DEFINE(kleene);
-      DEFINE(concat);
-      DEFINE(plus);
+      DEFINE(star);
+      DEFINE(prod);
+      DEFINE(sum);
 #undef DEFINE
 
       one_t* op_one();
@@ -58,11 +58,11 @@ namespace vcsn
 
     protected:
       // concat's method
-      node_t* op_mul(node_t* l,  node_t* r);
+      node_t* op_prod(node_t* l,  node_t* r);
       // plus's method
-      node_t* op_add(node_t* l, node_t* r);
+      node_t* op_sum(node_t* l, node_t* r);
       // kleene's method
-      node_t* op_kleene(node_t* e);
+      node_t* op_star(node_t* e);
 
     private:
       const weightset_t* ws_;

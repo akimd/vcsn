@@ -17,19 +17,19 @@ namespace vcsn
     ::visit(typename ConstNess<Type<WeightSet>>::type& Name)
 
 
-    VISIT(concat, v)
+    VISIT(prod, v)
     {
       for (auto t : v)
         t->accept(*this);
     }
 
-    VISIT(plus, v)
+    VISIT(sum, v)
     {
       for (auto t : v)
         t->accept(*this);
     }
 
-    VISIT(kleene, v)
+    VISIT(star, v)
     {
       if (auto sub = v.get_sub())
         sub->accept(*this);

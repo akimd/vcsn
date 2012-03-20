@@ -309,7 +309,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    concat<WeightSet>::concat(weightset_t& ws)
+    prod<WeightSet>::prod(weightset_t& ws)
       : super_type(ws)
     {}
 
@@ -317,7 +317,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    concat<WeightSet>::accept(typename node_t::visitor& v)
+    prod<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -325,7 +325,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    concat<WeightSet>::accept(typename node_t::const_visitor& v) const
+    prod<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -337,14 +337,14 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    plus<WeightSet>::plus(weightset_t& ws)
+    sum<WeightSet>::sum(weightset_t& ws)
       : super_type(ws)
     {}
 
     template <class WeightSet>
     inline
     void
-    plus<WeightSet>::accept(typename node_t::visitor& v)
+    sum<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -352,7 +352,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    plus<WeightSet>::accept(typename node_t::const_visitor& v) const
+    sum<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -363,21 +363,21 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    kleene<WeightSet>::kleene(node_t* sub_exp)
+    star<WeightSet>::star(node_t* sub_exp)
       : weighted<WeightSet>()
       , sub_exp_(sub_exp)
     {}
 
     template <class WeightSet>
     inline
-    kleene<WeightSet>::kleene(node_t* sub_exp, const weightset_t& ws)
+    star<WeightSet>::star(node_t* sub_exp, const weightset_t& ws)
       : weighted<WeightSet>(node_t::KLEENE, ws)
       , sub_exp_(sub_exp)
     {}
 
     template <class WeightSet>
     inline
-    kleene<WeightSet>::~kleene()
+    star<WeightSet>::~star()
     {
       delete sub_exp_;
     }
@@ -385,7 +385,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    kleene<WeightSet>::get_sub()
+    star<WeightSet>::get_sub()
       -> node_t *
     {
       return sub_exp_;
@@ -394,7 +394,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    kleene<WeightSet>::get_sub() const
+    star<WeightSet>::get_sub() const
       -> const node_t *
     {
       return sub_exp_;
@@ -403,7 +403,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    kleene<WeightSet>::accept(typename node_t::visitor& v)
+    star<WeightSet>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -411,7 +411,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     void
-    kleene<WeightSet>::accept(typename node_t::const_visitor& v) const
+    star<WeightSet>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }

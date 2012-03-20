@@ -12,13 +12,13 @@ namespace vcsn
     class node;
 
     template <class WeightSet>
-    class concat;
+    class prod;
 
     template <class WeightSet>
-    class plus;
+    class sum;
 
     template <class WeightSet>
-    class kleene;
+    class star;
 
     template <class WeightSet>
     class one;

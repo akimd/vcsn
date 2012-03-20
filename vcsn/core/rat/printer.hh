@@ -20,9 +20,9 @@ namespace vcsn
               const bool show_unit = false, const bool debug = false);
       virtual ~printer();
     public:
-      virtual void visit(const concat<weightset_t>& v);
-      virtual void visit(const plus<weightset_t>& v);
-      virtual void visit(const kleene<weightset_t>& v);
+      virtual void visit(const prod<weightset_t>& v);
+      virtual void visit(const sum<weightset_t>& v);
+      virtual void visit(const star<weightset_t>& v);
       virtual void visit(const one<weightset_t>& v);
       virtual void visit(const zero<weightset_t>& v);
       virtual void visit(const word<weightset_t>& v);

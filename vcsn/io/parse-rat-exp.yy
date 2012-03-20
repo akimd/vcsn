@@ -130,8 +130,8 @@ exps:
 
 exp:
   term                          { $$ = $1; }
-| exp "." exp                   { $$ = MAKE(mul, $1, $3); }
-| exp "+" exp                   { $$ = MAKE(add, $1, $3); }
+| exp "." exp                   { $$ = MAKE(prod, $1, $3); }
+| exp "+" exp                   { $$ = MAKE(sum, $1, $3); }
 ;
 
 term:
@@ -140,17 +140,17 @@ term:
 
 lexp:
   weights.opt factors           { $$ = MAKE(weight, $1, $2); }
-| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(weight, $2, $3)); }
+| lexp weights factors          { $$ = MAKE(prod, $1, MAKE(weight, $2, $3)); }
 ;
 
 factors:
   factor                        { $$ = $1; }
-| factors factor                { $$ = MAKE(mul, $1, $2); }
+| factors factor                { $$ = MAKE(prod, $1, $2); }
 ;
 
 factor:
   word                          { $$ = $1; }
-| factor "*"                    { $$ = MAKE(kleene, $1); }
+| factor "*"                    { $$ = MAKE(star, $1); }
 | "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 

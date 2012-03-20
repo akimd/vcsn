@@ -23,21 +23,21 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    printer<WeightSet>::visit(const concat<WeightSet>& v)
+    printer<WeightSet>::visit(const prod<WeightSet>& v)
     {
       print(v, '.');
     }
 
     template <class WeightSet>
     void
-    printer<WeightSet>::visit(const plus<WeightSet>& v)
+    printer<WeightSet>::visit(const sum<WeightSet>& v)
     {
       print(v, '+');
     }
 
     template <class WeightSet>
     void
-    printer<WeightSet>::visit(const kleene<WeightSet>& v)
+    printer<WeightSet>::visit(const star<WeightSet>& v)
     {
       const auto& sub = v.get_sub();
       assert(sub);

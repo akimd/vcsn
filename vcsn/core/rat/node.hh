@@ -129,7 +129,7 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class concat : public nary<WeightSet>
+    class prod : public nary<WeightSet>
     {
     public:
       typedef nary<WeightSet> super_type;
@@ -144,8 +144,8 @@ namespace vcsn
       typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
       typedef typename nodes_t::reverse_iterator       reverse_iterator;
     public:
-      concat() = default;
-      concat(weightset_t& ws);
+      prod() = default;
+      prod(weightset_t& ws);
     public:
       virtual type_t type() const { return node_t::CONCAT; };
 
@@ -155,7 +155,7 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class plus : public nary<WeightSet>
+    class sum : public nary<WeightSet>
     {
     public:
       typedef nary<WeightSet> super_type;
@@ -170,8 +170,8 @@ namespace vcsn
       typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
       typedef typename nodes_t::reverse_iterator       reverse_iterator;
     public:
-      plus() = default;
-      plus(weightset_t& ws);
+      sum() = default;
+      sum(weightset_t& ws);
 
     public:
       virtual type_t type() const { return node_t::PLUS; };
@@ -182,7 +182,7 @@ namespace vcsn
     };
 
     template <class WeightSet>
-    class kleene : public weighted<WeightSet>
+    class star : public weighted<WeightSet>
     {
     public:
       typedef weighted<WeightSet> super_type;
@@ -192,9 +192,9 @@ namespace vcsn
       typedef WeightSet weightset_t;
       typedef typename weightset_t::value_t weight_t;
     public:
-      kleene(node_t* sub_exp);
-      kleene(node_t* sub_exp, const weightset_t& ws);
-      virtual ~kleene();
+      star(node_t* sub_exp);
+      star(node_t* sub_exp, const weightset_t& ws);
+      virtual ~star();
     public:
       node_t *get_sub();
       const node_t *get_sub() const;

@@ -26,35 +26,35 @@ namespace vcsn
     template <class WeightSet>
     inline
     exp*
-    factory<WeightSet>::op_mul(exp* l, exp* r)
+    factory<WeightSet>::op_prod(exp* l, exp* r)
     {
       auto left = down_cast<node_t*>(l);
       auto right = down_cast<node_t*>(r);
-      return op_mul(left, right);
+      return op_prod(left, right);
     }
 
     template <class WeightSet>
     inline
     exp*
-    factory<WeightSet>::op_add(exp* l, exp* r)
+    factory<WeightSet>::op_sum(exp* l, exp* r)
     {
       auto left = down_cast<node_t*>(l);
       auto right = down_cast<node_t*>(r);
-      return op_add(left, right);
+      return op_sum(left, right);
     }
 
     template <class WeightSet>
     inline
     exp*
-    factory<WeightSet>::op_kleene(exp* e)
+    factory<WeightSet>::op_star(exp* e)
     {
-      return op_kleene(down_cast<node_t*>(e));
+      return op_star(down_cast<node_t*>(e));
     }
 
     template <class WeightSet>
     inline
     auto
-    factory<WeightSet>::op_mul(node_t* l, node_t* r)
+    factory<WeightSet>::op_prod(node_t* l, node_t* r)
       -> node_t*
     {
       // Trivial Identity
@@ -74,10 +74,10 @@ namespace vcsn
 
       if (node_t::CONCAT == l->type())
         {
-          auto left = down_cast<concat_t*>(l);
+          auto left = down_cast<prod_t*>(l);
           if (node_t::CONCAT == r->type())
             {
-              auto right = down_cast<concat_t*>(r);
+              auto right = down_cast<prod_t*>(r);
               left->splice(left->end(), *right);
               right->clear();
               delete right;
@@ -91,13 +91,13 @@ namespace vcsn
         }
       else if (node_t::CONCAT == r->type())
         {
-          auto right = down_cast<concat_t*>(r);
+          auto right = down_cast<prod_t*>(r);
           right->push_front(l);
           return right;
         }
       else
         {
-          auto res = new concat_t();
+          auto res = new prod_t();
           res->push_back(l);
           res->push_back(r);
           return res;
@@ -107,7 +107,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    factory<WeightSet>::op_add(node_t* l, node_t* r)
+    factory<WeightSet>::op_sum(node_t* l, node_t* r)
       -> node_t*
     {
       // Trivial Identity
@@ -126,10 +126,10 @@ namespace vcsn
 
       if (node_t::PLUS == l->type())
         {
-          auto res = down_cast<plus_t*>(l);
+          auto res = down_cast<sum_t*>(l);
           if (node_t::PLUS == r->type())
             {
-              auto right = down_cast<plus_t*>(r);
+              auto right = down_cast<sum_t*>(r);
               res->splice(res->end(), *right);
               delete right;
             }
@@ -141,13 +141,13 @@ namespace vcsn
         }
       else if (node_t::PLUS == r->type())
         {
-          auto res = down_cast<plus_t*>(r);
+          auto res = down_cast<sum_t*>(r);
           res->push_front(l);
           return res;
         }
       else
         {
-          plus_t* res = new plus_t();
+          sum_t* res = new sum_t();
           res->push_front(r);
           res->push_front(l);
           return res;
@@ -157,7 +157,7 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    factory<WeightSet>::op_kleene(node_t* e)
+    factory<WeightSet>::op_star(node_t* e)
       -> node_t*
     {
       if (node_t::ZERO == e->type())
@@ -168,7 +168,7 @@ namespace vcsn
           return new one_t;
         }
       else
-        return new kleene_t(e);
+        return new star_t(e);
     }
 
     template <class WeightSet>
