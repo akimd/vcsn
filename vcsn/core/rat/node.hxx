@@ -13,9 +13,10 @@ namespace vcsn
     exp::~exp()
     {}
 
-    ////////////////
-    // node //
-    ////////////////
+
+    /*-------.
+    | node.  |
+    `-------*/
 
     template <class WeightSet>
     inline
@@ -27,9 +28,11 @@ namespace vcsn
     node<WeightSet>::~node()
     {}
 
-    //////////////////
-    // weighted //
-    //////////////////
+
+
+    /*-----------.
+    | weighted.  |
+    `-----------*/
 
     template <class WeightSet>
     inline
@@ -101,9 +104,9 @@ namespace vcsn
       return super_type::LR_WEIGHT;
     }
 
-    /////////////////
-    // left_weighted //
-    /////////////////
+    /*----------------.
+    | left_weighted.  |
+    `----------------*/
 
     template <class WeightSet>
     inline
@@ -303,9 +306,9 @@ namespace vcsn
       sub_node_.splice(it, right.sub_node_);
     }
 
-    /*---------.
-    | concat.  |
-    `---------*/
+    /*-------.
+    | prod.  |
+    `-------*/
 
     template <class WeightSet>
     inline
@@ -330,10 +333,11 @@ namespace vcsn
       v.visit(*this);
     }
 
-    /*-------.
-    | plus.  |
-    `-------*/
 
+
+    /*------.
+    | sum.  |
+    `------*/
 
     template <class WeightSet>
     inline
@@ -357,9 +361,10 @@ namespace vcsn
       v.visit(*this);
     }
 
-    /*---------.
-    | kleene.  |
-    `---------*/
+
+    /*-------.
+    | star.  |
+    `-------*/
 
     template <class WeightSet>
     inline
@@ -416,9 +421,9 @@ namespace vcsn
       v.visit(*this);
     }
 
-    ///////////////
-    // one //
-    ///////////////
+    /*------.
+    | one.  |
+    `------*/
 
     template <class WeightSet>
     inline
@@ -446,9 +451,9 @@ namespace vcsn
       v.visit(*this);
     }
 
-    ////////////////
-    // zero //
-    ////////////////
+    /*-------.
+    | zero.  |
+    `-------*/
 
     template <class WeightSet>
     inline
@@ -476,9 +481,9 @@ namespace vcsn
       v.visit(*this);
     }
 
-    ////////////////
-    // word //
-    ////////////////
+    /*-------.
+    | word.  |
+    `-------*/
 
     template <class WeightSet>
     inline

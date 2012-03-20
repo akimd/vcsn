@@ -29,6 +29,11 @@ namespace vcsn
       virtual type_t type() const = 0;
     };
 
+
+    /*-------.
+    | node.  |
+    `-------*/
+
     template <class WeightSet>
     class node : public exp
     {
@@ -53,6 +58,10 @@ namespace vcsn
         };
       virtual WeightType weight_type() const = 0;
     };
+
+    /*-----------.
+    | weighted.  |
+    `-----------*/
 
     template <class WeightSet>
     class weighted : public node<WeightSet>
@@ -83,6 +92,10 @@ namespace vcsn
       weight_t rw_;
     };
 
+
+    /*-------.
+    | nary.  |
+    `-------*/
     template<class WeightSet>
     const typename weighted<WeightSet>::weightset_t
     weighted<WeightSet>::st_ws_ = WeightSet();
@@ -128,6 +141,10 @@ namespace vcsn
       nodes_t sub_node_;
     };
 
+    /*-------.
+    | prod.  |
+    `-------*/
+
     template <class WeightSet>
     class prod : public nary<WeightSet>
     {
@@ -153,6 +170,10 @@ namespace vcsn
       virtual void accept(typename node_t::visitor& v);
       virtual void accept(typename node_t::const_visitor& v) const;
     };
+
+    /*------.
+    | sum.  |
+    `------*/
 
     template <class WeightSet>
     class sum : public nary<WeightSet>
@@ -181,6 +202,10 @@ namespace vcsn
       virtual void accept(typename node_t::const_visitor& v) const;
     };
 
+    /*-------.
+    | star.  |
+    `-------*/
+
     template <class WeightSet>
     class star : public weighted<WeightSet>
     {
@@ -208,9 +233,10 @@ namespace vcsn
       node_t *sub_exp_;
     };
 
-    /*--------.
-    | leafs.  |
-    `--------*/
+
+    /*-------.
+    | leaf.  |
+    `-------*/
 
     template <class WeightSet>
     class left_weighted : public node<WeightSet>
