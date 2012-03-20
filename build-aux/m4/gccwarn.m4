@@ -25,6 +25,8 @@ EOF
   cf_save_CXXFLAGS="$CXXFLAGS"
   ac_cv_prog_gxx_warn_flags="-W -Wall"
   for cf_opt in \
+   Wnoexcept \
+   Wzero-as-null-pointer-constant \
    Wcast-align \
    Wpointer-arith \
    Wwrite-strings \
