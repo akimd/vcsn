@@ -79,7 +79,6 @@ namespace vcsn
             {
               auto right = down_cast<prod_t*>(r);
               left->splice(left->end(), *right);
-              right->clear();
               delete right;
               return left;
             }
