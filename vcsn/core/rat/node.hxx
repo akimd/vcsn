@@ -164,10 +164,6 @@ namespace vcsn
     | nary.  |
     `-------*/
 
-    template <class WeightSet>
-    inline
-    nary<WeightSet>::nary()
-    {}
 
     template <class WeightSet>
     inline
