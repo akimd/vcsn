@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_CRANGE_HH
-#define VCSN_CORE_CRANGE_HH
+# define VCSN_CORE_CRANGE_HH
 
-#include <boost/iterator/filter_iterator.hpp>
+# include <boost/iterator/filter_iterator.hpp>
 
 namespace vcsn
 {
@@ -43,4 +43,4 @@ namespace vcsn
   };
 }
 
-#endif // VCSN_CORE_CRANGE_HH
+#endif // !VCSN_CORE_CRANGE_HH

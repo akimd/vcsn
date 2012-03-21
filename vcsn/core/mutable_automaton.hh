@@ -1,12 +1,13 @@
 #ifndef VCSN_CORE_MUTABLE_AUTOMATON_HH
-#define VCSN_CORE_MUTABLE_AUTOMATON_HH
+# define VCSN_CORE_MUTABLE_AUTOMATON_HH
 
-#include "kind.hh"
-#include <vector>
-#include <unordered_set>
-#include <algorithm>
-#include "crange.hh"
-#include <cassert>
+# include <vector>
+# include <unordered_set>
+# include <algorithm>
+# include <cassert>
+
+# include "crange.hh"
+# include "kind.hh"
 
 namespace vcsn
 {
@@ -395,4 +396,4 @@ namespace vcsn
   mutable_automaton<Alphabet, WeightSet, Kind>::st_ws_ = WeightSet();
 }
 
-#endif // MUTABLE_AUTOMATON
+#endif // !MUTABLE_AUTOMATON
