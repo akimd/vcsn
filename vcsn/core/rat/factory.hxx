@@ -164,7 +164,7 @@ namespace vcsn
           // Trivial identity
           // (0)* == 1
           delete e;
-          return new one_t(ws_->unit());
+          return op_one();
         }
       else
         return new star_t(ws_->unit(), ws_->unit(), e);
@@ -274,7 +274,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t(ws_->unit());
+              return op_zero();
             }
           e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
@@ -293,7 +293,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t(ws_->unit());
+              return op_zero();
             }
           e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
@@ -312,7 +312,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t(ws_->unit());
+              return op_zero();
             }
           e->right_weight() = ws_->mul(e->right_weight(), new_weight);
         }
