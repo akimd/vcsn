@@ -30,13 +30,13 @@ namespace vcsn
 
 
 
-    /*-----------.
-    | weighted.  |
-    `-----------*/
+    /*--------.
+    | inner.  |
+    `--------*/
 
     template <class Weight>
     inline
-    weighted<Weight>::weighted(const weight_t& l, const weight_t& r)
+    inner<Weight>::inner(const weight_t& l, const weight_t& r)
       : lw_(l)
       , rw_(r)
     {}
@@ -44,13 +44,13 @@ namespace vcsn
 
     template <class Weight>
     inline
-    weighted<Weight>::~weighted()
+    inner<Weight>::~inner()
     {}
 
     template <class Weight>
     inline
     auto
-    weighted<Weight>::left_weight() const
+    inner<Weight>::left_weight() const
       -> const weight_t&
     {
       return lw_;
@@ -59,7 +59,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    weighted<Weight>::left_weight()
+    inner<Weight>::left_weight()
       -> weight_t&
     {
       return lw_;
@@ -68,7 +68,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    weighted<Weight>::right_weight() const
+    inner<Weight>::right_weight() const
       -> const weight_t&
     {
       return rw_;
@@ -77,7 +77,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    weighted<Weight>::right_weight()
+    inner<Weight>::right_weight()
       -> weight_t&
     {
       return rw_;
@@ -86,7 +86,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    weighted<Weight>::weight_type() const
+    inner<Weight>::weight_type() const
       -> WeightType
     {
       return super_type::LR_WEIGHT;

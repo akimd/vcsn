@@ -58,21 +58,21 @@ namespace vcsn
       virtual WeightType weight_type() const = 0;
     };
 
-    /*-----------.
-    | weighted.  |
-    `-----------*/
+    /*--------.
+    | inner.  |
+    `--------*/
 
     template <class Weight>
-    class weighted : public node<Weight>
+    class inner : public node<Weight>
     {
     public:
       typedef Weight weight_t;
       typedef node<weight_t> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      weighted(const weight_t& l, const weight_t& r);
+      inner(const weight_t& l, const weight_t& r);
     public:
-      virtual ~weighted() = 0;
+      virtual ~inner() = 0;
     public:
       const weight_t &left_weight() const;
       weight_t &left_weight();
@@ -92,11 +92,11 @@ namespace vcsn
     `-------*/
 
     template <class Weight>
-    class nary: public weighted<Weight>
+    class nary: public inner<Weight>
     {
     public:
       typedef Weight weight_t;
-      typedef weighted<weight_t> super_type;
+      typedef inner<weight_t> super_type;
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
       typedef std::list<node_t*> nodes_t;
@@ -192,11 +192,11 @@ namespace vcsn
     `-------*/
 
     template <class Weight>
-    class star : public weighted<Weight>
+    class star : public inner<Weight>
     {
     public:
       typedef Weight weight_t;
-      typedef weighted<weight_t> super_type;
+      typedef inner<weight_t> super_type;
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
 

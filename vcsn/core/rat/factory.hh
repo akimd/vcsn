@@ -39,7 +39,7 @@ namespace vcsn
       DEFINE(zero);
       DEFINE(atom);
       DEFINE(leaf);
-      DEFINE(weighted);
+      DEFINE(inner);
       DEFINE(star);
       DEFINE(prod);
       DEFINE(sum);
@@ -53,8 +53,8 @@ namespace vcsn
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);
       node_t* op_weight(leaf_t* e, weight_str_container* w);
-      node_t* op_weight(weight_str_container* w, weighted_t* e);
-      node_t* op_weight(weighted_t* e, weight_str_container* w);
+      node_t* op_weight(weight_str_container* w, inner_t* e);
+      node_t* op_weight(inner_t* e, weight_str_container* w);
 
     protected:
       // concat's method
