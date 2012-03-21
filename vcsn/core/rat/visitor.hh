@@ -22,7 +22,7 @@ namespace vcsn
       VISIT(star);
       VISIT(one);
       VISIT(zero);
-      VISIT(word);
+      VISIT(atom);
 #undef VISIT
     };
 

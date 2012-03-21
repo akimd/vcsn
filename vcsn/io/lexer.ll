@@ -51,7 +51,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   }
   {char}                        {
     yylval->sval = new std::string(yytext);
-    return TOK(WORD);
+    return TOK(ATOM);
   }
   "\n"                          continue;
   .                             exit(51); // FIXME
@@ -84,7 +84,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   \"                            {
     yy_pop_state();
     yylval->sval = sval;
-    return TOK(WORD);
+    return TOK(ATOM);
   }
   \<{char}*\>         { // FIXME: check
     *sval += yytext;

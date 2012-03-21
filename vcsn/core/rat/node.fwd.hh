@@ -27,7 +27,7 @@ namespace vcsn
     class zero;
 
     template <class Weight>
-    class word;
+    class atom;
 
   } // namespace rat
 } // namespace vcsn

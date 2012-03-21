@@ -41,7 +41,7 @@ namespace vcsn
     VISIT(zero, )
     {}
 
-    VISIT(word, )
+    VISIT(atom, )
     {}
 
 #undef VISIT

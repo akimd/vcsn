@@ -108,11 +108,11 @@
         ZERO  "\\z"
 ;
 
-%token  <sval> WORD    "word"
+%token  <sval> ATOM    "atom"
                WEIGHT  "weight";
 
 %type <weights> weights weights.opt;
-%type <node> exps exp term lexp factor word factors;
+%type <node> exps exp term lexp factor leaf factors;
 
 
 %left "+"
@@ -150,15 +150,15 @@ factors:
 ;
 
 factor:
-  word                          { $$ = $1; }
+  leaf                          { $$ = $1; }
 | factor "*"                    { $$ = MAKE(star, $1); }
 | "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
-word:
+leaf:
   ZERO                          { $$ = MAKE(zero); }
 | ONE                           { $$ = MAKE(one); }
-| WORD                          { $$ = MAKE(word, $1); }
+| ATOM                          { $$ = MAKE(atom, $1); }
 ;
 
 weights.opt:

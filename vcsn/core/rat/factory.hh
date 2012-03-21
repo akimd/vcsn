@@ -37,7 +37,7 @@ namespace vcsn
       typedef Type<weight_t> Type ## _t
       DEFINE(one);
       DEFINE(zero);
-      DEFINE(word);
+      DEFINE(atom);
       DEFINE(left_weighted);
       DEFINE(weighted);
       DEFINE(star);
@@ -47,8 +47,8 @@ namespace vcsn
 
       one_t* op_one();
       zero_t* op_zero();
-      // word's method
-      word_t* op_word(std::string* w);
+      // atom's method
+      atom_t* op_atom(std::string* w);
 
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);

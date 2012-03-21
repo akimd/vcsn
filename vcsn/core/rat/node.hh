@@ -279,7 +279,7 @@ namespace vcsn
     };
 
     template <class Weight>
-    class word : public left_weighted<Weight>
+    class atom : public left_weighted<Weight>
     {
     public:
       typedef Weight weight_t;
@@ -287,17 +287,17 @@ namespace vcsn
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
     public:
-      word(const weight_t& l, std::string* word);
-      virtual ~word();
+      atom(const weight_t& l, std::string* atom);
+      virtual ~atom();
     public:
       virtual type_t type() const { return node_t::WORD; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
-      std::string *get_word();
-      const std::string *get_word() const;
+      std::string *get_atom();
+      const std::string *get_atom() const;
     private:
-      std::string *word_;
+      std::string *atom_;
     };
 
   } // namespace rat

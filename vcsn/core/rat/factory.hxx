@@ -191,10 +191,10 @@ namespace vcsn
     template <class WeightSet>
     inline
     auto
-    factory<WeightSet>::op_word(std::string* w)
-      -> word_t*
+    factory<WeightSet>::op_atom(std::string* w)
+      -> atom_t*
     {
-      return new word_t(ws_->unit(), w);
+      return new atom_t(ws_->unit(), w);
     }
 
     template <class WeightSet>

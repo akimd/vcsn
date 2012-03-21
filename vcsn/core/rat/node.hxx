@@ -454,27 +454,27 @@ namespace vcsn
     }
 
     /*-------.
-    | word.  |
+    | atom.  |
     `-------*/
 
     template <class Weight>
     inline
-    word<Weight>::word(const weight_t& w, std::string* word)
+    atom<Weight>::atom(const weight_t& w, std::string* atom)
       : super_type(w)
-      , word_(word)
+      , atom_(atom)
     {}
 
     template <class Weight>
     inline
-    word<Weight>::~word()
+    atom<Weight>::~atom()
     {
-      delete word_;
+      delete atom_;
     }
 
     template <class Weight>
     inline
     void
-    word<Weight>::accept(typename node_t::visitor& v)
+    atom<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
@@ -482,7 +482,7 @@ namespace vcsn
     template <class Weight>
     inline
     void
-    word<Weight>::accept(typename node_t::const_visitor& v) const
+    atom<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -490,17 +490,17 @@ namespace vcsn
     template <class Weight>
     inline
     std::string*
-    word<Weight>::get_word()
+    atom<Weight>::get_atom()
     {
-      return word_;
+      return atom_;
     }
 
     template <class Weight>
     inline
     const std::string*
-    word<Weight>::get_word() const
+    atom<Weight>::get_atom() const
     {
-      return word_;
+      return atom_;
     }
 
   } // namespace exp

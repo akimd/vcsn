@@ -24,7 +24,7 @@ namespace vcsn
       virtual void visit(const star<weight_t>& v);
       virtual void visit(const one<weight_t>& v);
       virtual void visit(const zero<weight_t>& v);
-      virtual void visit(const word<weight_t>& v);
+      virtual void visit(const atom<weight_t>& v);
     private:
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).

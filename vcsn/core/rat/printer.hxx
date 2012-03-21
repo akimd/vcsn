@@ -68,10 +68,10 @@ namespace vcsn
 
     template <class Weight>
     void
-    printer<Weight>::visit(const word<weight_t>& v)
+    printer<Weight>::visit(const atom<weight_t>& v)
     {
       print_left_weight(v);
-      out_ <<* v.get_word();
+      out_ <<* v.get_atom();
     }
 
     template <class Weight>
