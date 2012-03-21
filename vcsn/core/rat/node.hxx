@@ -58,7 +58,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    const typename weighted<WeightSet>::weight_t &
+    const typename weighted<WeightSet>::weight_t&
     weighted<WeightSet>::left_weight() const
     {
       return lw_;
@@ -66,7 +66,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename weighted<WeightSet>::weight_t &
+    typename weighted<WeightSet>::weight_t&
     weighted<WeightSet>::left_weight()
     {
       return lw_;
@@ -74,7 +74,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    const typename weighted<WeightSet>::weight_t &
+    const typename weighted<WeightSet>::weight_t&
     weighted<WeightSet>::right_weight() const
     {
       return rw_;
@@ -82,7 +82,7 @@ namespace vcsn
 
     template <class WeightSet>
     inline
-    typename weighted<WeightSet>::weight_t &
+    typename weighted<WeightSet>::weight_t&
     weighted<WeightSet>::right_weight()
     {
       return rw_;
@@ -253,7 +253,7 @@ namespace vcsn
     nary<WeightSet>::push_back(node_t* elt)
     {
       sub_node_.push_back(elt);
-      return* this;
+      return *this;
     }
 
     template <class WeightSet>
@@ -262,7 +262,7 @@ namespace vcsn
     nary<WeightSet>::push_front(node_t* elt)
     {
       sub_node_.push_front(elt);
-      return* this;
+      return *this;
     }
 
     template <class WeightSet>
