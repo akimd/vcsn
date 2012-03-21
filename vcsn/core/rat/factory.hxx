@@ -216,23 +216,15 @@ namespace vcsn
         return e;
       // if w
       auto expr = down_cast<node_t*>(e);
-      switch (expr->weight_type())
+      if (expr->is_leaf())
         {
-        case node_t::L_WEIGHT:
-          {
-            auto lweight = down_cast<leaf_t*>(expr);
-            return op_weight(lweight, w);
-          }
-
-        case node_t::LR_WEIGHT:
-          {
-            auto lrweight = down_cast<inner_t*>(expr);
-            return op_weight(w, lrweight);
-          }
-
-        default:
-          assert(false);
-          return 0;
+          auto lweight = down_cast<leaf_t*>(expr);
+          return op_weight(lweight, w);
+        }
+      else
+        {
+          auto lrweight = down_cast<inner_t*>(expr);
+          return op_weight(w, lrweight);
         }
     }
 
@@ -244,21 +236,15 @@ namespace vcsn
         return e;
       // if w
       auto expr = down_cast<node_t*>(e);
-      switch (expr->weight_type())
+      if (expr->is_leaf())
         {
-        case node_t::L_WEIGHT:
-          {
-            auto rweight = down_cast<leaf_t*>(expr);
-            return op_weight(rweight, w);
-          }
-        case node_t::LR_WEIGHT:
-          {
-            auto rweight = down_cast<inner_t*>(expr);
-            return op_weight(rweight, w);
-          }
-        default:
-          assert(false);
-          return 0;
+          auto rweight = down_cast<leaf_t*>(expr);
+          return op_weight(rweight, w);
+        }
+      else
+        {
+          auto rweight = down_cast<inner_t*>(expr);
+          return op_weight(rweight, w);
         }
     }
 

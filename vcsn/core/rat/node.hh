@@ -46,16 +46,11 @@ namespace vcsn
     public:
       node();
       virtual ~node() = 0;
+      virtual bool is_leaf() const = 0;
+
     public:
       virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
-    public:
-      enum WeightType
-        {
-          L_WEIGHT,
-          LR_WEIGHT
-        };
-      virtual WeightType weight_type() const = 0;
     };
 
     /*--------.
@@ -68,11 +63,11 @@ namespace vcsn
     public:
       typedef Weight weight_t;
       typedef node<weight_t> super_type;
-      typedef typename super_type::WeightType WeightType;
     protected:
       inner(const weight_t& l, const weight_t& r);
     public:
       virtual ~inner() = 0;
+      virtual bool is_leaf() const { return false; };
     public:
       const weight_t &left_weight() const;
       weight_t &left_weight();
@@ -80,7 +75,6 @@ namespace vcsn
       const weight_t &right_weight() const;
       weight_t &right_weight();
 
-      virtual WeightType weight_type() const;
     protected:
       weight_t lw_;
       weight_t rw_;
@@ -227,16 +221,15 @@ namespace vcsn
     public:
       typedef Weight weight_t;
       typedef node<weight_t> super_type;
-      typedef typename super_type::WeightType WeightType;
     protected:
       leaf(const weight_t& l);
     public:
       virtual ~leaf() = 0;
+      virtual bool is_leaf() const { return true; };
     public:
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
-      virtual WeightType weight_type() const;
     protected:
       weight_t lw_;
     };

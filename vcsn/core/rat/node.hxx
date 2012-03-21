@@ -83,14 +83,6 @@ namespace vcsn
       return rw_;
     }
 
-    template <class Weight>
-    inline
-    auto
-    inner<Weight>::weight_type() const
-      -> WeightType
-    {
-      return super_type::LR_WEIGHT;
-    }
 
     /*-------.
     | leaf.  |
@@ -124,16 +116,6 @@ namespace vcsn
       -> weight_t &
     {
       return lw_;
-    }
-
-
-    template <class Weight>
-    inline
-    auto
-    leaf<Weight>::weight_type() const
-      -> WeightType
-    {
-      return super_type::L_WEIGHT;
     }
 
 
