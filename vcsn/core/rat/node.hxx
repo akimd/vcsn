@@ -20,7 +20,8 @@ namespace vcsn
 
     template <class Weight>
     inline
-    node<Weight>::node()
+    node<Weight>::node(const weight_t& l)
+      : lw_(l)
     {}
 
     template <class Weight>
@@ -28,6 +29,23 @@ namespace vcsn
     node<Weight>::~node()
     {}
 
+    template <class Weight>
+    inline
+    auto
+    node<Weight>::left_weight() const
+      -> const weight_t&
+    {
+      return lw_;
+    }
+
+    template <class Weight>
+    inline
+    auto
+    node<Weight>::left_weight()
+      -> weight_t&
+    {
+      return lw_;
+    }
 
 
     /*--------.
@@ -37,7 +55,7 @@ namespace vcsn
     template <class Weight>
     inline
     inner<Weight>::inner(const weight_t& l, const weight_t& r)
-      : lw_(l)
+      : super_type(l)
       , rw_(r)
     {}
 
@@ -47,23 +65,6 @@ namespace vcsn
     inner<Weight>::~inner()
     {}
 
-    template <class Weight>
-    inline
-    auto
-    inner<Weight>::left_weight() const
-      -> const weight_t&
-    {
-      return lw_;
-    }
-
-    template <class Weight>
-    inline
-    auto
-    inner<Weight>::left_weight()
-      -> weight_t&
-    {
-      return lw_;
-    }
 
     template <class Weight>
     inline
@@ -91,7 +92,7 @@ namespace vcsn
     template <class Weight>
     inline
     leaf<Weight>::leaf(const weight_t& w)
-      : lw_(w)
+      : super_type(w)
     {}
 
 
@@ -99,24 +100,6 @@ namespace vcsn
     inline
     leaf<Weight>::~leaf()
     {}
-
-    template <class Weight>
-    inline
-    auto
-    leaf<Weight>::left_weight() const
-      -> const weight_t &
-    {
-      return lw_;
-    }
-
-    template <class Weight>
-    inline
-    auto
-    leaf<Weight>::left_weight()
-      -> weight_t &
-    {
-      return lw_;
-    }
 
 
     /*-------.

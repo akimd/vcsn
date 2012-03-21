@@ -44,13 +44,20 @@ namespace vcsn
       typedef typename visitor_traits<Weight>::const_visitor const_visitor;
 
     public:
-      node();
+      node(const weight_t& l);
       virtual ~node() = 0;
       virtual bool is_leaf() const = 0;
 
     public:
       virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
+
+    public:
+      const weight_t &left_weight() const;
+      weight_t &left_weight();
+
+    protected:
+      weight_t lw_;
     };
 
     /*--------.
@@ -69,14 +76,10 @@ namespace vcsn
       virtual ~inner() = 0;
       virtual bool is_leaf() const { return false; };
     public:
-      const weight_t &left_weight() const;
-      weight_t &left_weight();
-
       const weight_t &right_weight() const;
       weight_t &right_weight();
 
     protected:
-      weight_t lw_;
       weight_t rw_;
     };
 
@@ -226,12 +229,6 @@ namespace vcsn
     public:
       virtual ~leaf() = 0;
       virtual bool is_leaf() const { return true; };
-    public:
-      const weight_t &left_weight() const;
-      weight_t &left_weight();
-
-    protected:
-      weight_t lw_;
     };
 
 
