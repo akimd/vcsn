@@ -2,9 +2,10 @@
 # define VCSN_CORE_MUTABLE_AUTOMATON_HH
 
 # include <vector>
-# include <unordered_set>
+
 # include <algorithm>
 # include <cassert>
+# include <list>
 
 # include "crange.hh"
 # include "kind.hh"
@@ -48,8 +49,8 @@ namespace vcsn
       tr_vector_t pred;
     };
 
-    typedef std::unordered_set<state_t> st_cont_t;
-    typedef std::unordered_set<transition_t> tr_cont_t;
+    typedef std::list<state_t> st_cont_t;
+    typedef std::list<transition_t> tr_cont_t;
 
   public:
 
@@ -89,25 +90,25 @@ namespace vcsn
     {
       state_t res = new stored_state_t;
       res->final = res->initial = ws_.zero();
-      states_.insert(res);
+      states_.push_back(res);
       return res;
     }
 
     bool
     has_state(state_t s) const
     {
-      return states_.find(s) != states_.end();
+      return std::find(states_.begin(), states_.end(), s) != states_.end();
     }
 
     void
     del_state(state_t s)
     {
-      auto i = states_.find(s);
+      auto i = std::find(states_.begin(), states_.end(), s);
       assert(i != states_.end());
       for (auto t : s->succ)
-	transitions_.erase(t);
+	transitions_.remove(t);
       for (auto t : s->pred)
-	transitions_.erase(t);
+	transitions_.remove(t);
       states_.erase(i);
     }
 
@@ -128,9 +129,9 @@ namespace vcsn
     {
       s->initial = k;
       if (ws_.is_zero(k))
-	initials_.erase(s);
+	initials_.remove(s);
       else
-	initials_.insert(s);
+	initials_.push_back(s);
     }
 
     void
@@ -164,9 +165,9 @@ namespace vcsn
     {
       s->final = k;
       if (ws_.is_zero(k))
-	finals_.erase(s);
+	finals_.remove(s);
       else
-	finals_.insert(s);
+	finals_.remove(s);
     }
 
     void
@@ -216,7 +217,7 @@ namespace vcsn
     bool
     has_transition(transition_t t)
     {
-      return transitions_.find(t) != transitions_.end();
+      return std::find(transitions_.begin(), transitions_.end(), t) != transitions_.end();
     }
 
     bool
@@ -230,7 +231,7 @@ namespace vcsn
     {
       assert(has_transition(t));
 
-      transitions_.erase(t);
+      transitions_.remove(t);
 
       auto& succ = t->src->succ;
       auto ts = std::find(succ.begin(), succ.end(), t);
@@ -276,7 +277,7 @@ namespace vcsn
 	  t->dst = dst;
 	  t->label = l;
 	  t->weight = k;
-	  transitions_.insert(t);
+	  transitions_.push_back(t);
 	  src->succ.push_back(t);
 	  dst->pred.push_back(t);
 	}
