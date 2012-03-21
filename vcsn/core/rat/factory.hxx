@@ -212,20 +212,10 @@ namespace vcsn
     exp*
     factory<WeightSet>::op_weight(weight_str_container* w, exp* e)
     {
-      if (!w)
-        return e;
-      // if w
-      auto expr = down_cast<node_t*>(e);
-      if (expr->is_leaf())
-        {
-          auto lweight = down_cast<leaf_t*>(expr);
-          return op_weight(lweight, w);
-        }
+      if (w)
+        return op_weight(down_cast<node_t*>(e), w);
       else
-        {
-          auto lrweight = down_cast<inner_t*>(expr);
-          return op_weight(w, lrweight);
-        }
+        return e;
     }
 
     template <class WeightSet>
