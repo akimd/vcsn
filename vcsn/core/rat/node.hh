@@ -34,15 +34,14 @@ namespace vcsn
     | node.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     class node : public exp
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
+      typedef Weight weight_t;
     protected:
-      typedef typename visitor_traits<WeightSet>::visitor visitor;
-      typedef typename visitor_traits<WeightSet>::const_visitor const_visitor;
+      typedef typename visitor_traits<Weight>::visitor visitor;
+      typedef typename visitor_traits<Weight>::const_visitor const_visitor;
 
     public:
       node();
@@ -63,21 +62,18 @@ namespace vcsn
     | weighted.  |
     `-----------*/
 
-    template <class WeightSet>
-    class weighted : public node<WeightSet>
+    template <class Weight>
+    class weighted : public node<Weight>
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
-      typedef node<WeightSet> super_type;
+      typedef Weight weight_t;
+      typedef node<weight_t> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      weighted();
-      weighted(const weightset_t& ws);
+      weighted(const weight_t& l, const weight_t& r);
     public:
       virtual ~weighted() = 0;
     public:
-      const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
@@ -86,8 +82,6 @@ namespace vcsn
 
       virtual WeightType weight_type() const;
     protected:
-      const static weightset_t st_ws_;
-      const weightset_t& ws_;
       weight_t lw_;
       weight_t rw_;
     };
@@ -96,19 +90,15 @@ namespace vcsn
     /*-------.
     | nary.  |
     `-------*/
-    template<class WeightSet>
-    const typename weighted<WeightSet>::weightset_t
-    weighted<WeightSet>::st_ws_ = WeightSet();
 
-    template <class WeightSet>
-    class nary: public weighted<WeightSet>
+    template <class Weight>
+    class nary: public weighted<Weight>
     {
     public:
-      typedef weighted<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef weighted<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
       typedef std::list<node_t*> nodes_t;
 
       typedef typename nodes_t::const_iterator         const_iterator;
@@ -116,8 +106,7 @@ namespace vcsn
       typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
       typedef typename nodes_t::reverse_iterator       reverse_iterator;
     public:
-      nary() = default;
-      nary(weightset_t& ws);
+      nary(const weight_t& l, const weight_t& r);
       virtual ~nary();
     public:
       const_iterator begin() const;
@@ -129,13 +118,13 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
     public:
-      nary<weightset_t>& push_back(node_t* elt);
-      nary<weightset_t>& push_front(node_t* elt);
+      nary& push_back(node_t* elt);
+      nary& push_front(node_t* elt);
       size_t size() const;
       void erase(iterator it);
       void erase(iterator begin, iterator end);
       void clear();
-      void splice(iterator it, nary<WeightSet>& right);
+      void splice(iterator it, nary& right);
 
     private:
       nodes_t sub_node_;
@@ -145,15 +134,14 @@ namespace vcsn
     | prod.  |
     `-------*/
 
-    template <class WeightSet>
-    class prod : public nary<WeightSet>
+    template <class Weight>
+    class prod : public nary<Weight>
     {
     public:
-      typedef nary<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef nary<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
       typedef std::list<node_t*> nodes_t;
 
       typedef typename nodes_t::const_iterator         const_iterator;
@@ -161,8 +149,7 @@ namespace vcsn
       typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
       typedef typename nodes_t::reverse_iterator       reverse_iterator;
     public:
-      prod() = default;
-      prod(weightset_t& ws);
+      prod(const weight_t& l, const weight_t& r);
     public:
       virtual type_t type() const { return node_t::CONCAT; };
 
@@ -175,15 +162,14 @@ namespace vcsn
     | sum.  |
     `------*/
 
-    template <class WeightSet>
-    class sum : public nary<WeightSet>
+    template <class Weight>
+    class sum : public nary<Weight>
     {
     public:
-      typedef nary<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef nary<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
       typedef std::list<node_t*> nodes_t;
 
       typedef typename nodes_t::const_iterator         const_iterator;
@@ -191,8 +177,7 @@ namespace vcsn
       typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
       typedef typename nodes_t::reverse_iterator       reverse_iterator;
     public:
-      sum() = default;
-      sum(weightset_t& ws);
+      sum(const weight_t& l, const weight_t& r);
 
     public:
       virtual type_t type() const { return node_t::PLUS; };
@@ -206,19 +191,17 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    template <class WeightSet>
-    class star : public weighted<WeightSet>
+    template <class Weight>
+    class star : public weighted<Weight>
     {
     public:
-      typedef weighted<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef weighted<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
 
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
     public:
-      star(node_t* sub_exp);
-      star(node_t* sub_exp, const weightset_t& ws);
+      star(const weight_t& l, const weight_t& r, node_t* exp);
       virtual ~star();
     public:
       node_t *get_sub();
@@ -238,46 +221,37 @@ namespace vcsn
     | leaf.  |
     `-------*/
 
-    template <class WeightSet>
-    class left_weighted : public node<WeightSet>
+    template <class Weight>
+    class left_weighted : public node<Weight>
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
-      typedef node<WeightSet> super_type;
+      typedef Weight weight_t;
+      typedef node<weight_t> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      left_weighted();
-      left_weighted(const weightset_t& ws);
+      left_weighted(const weight_t& l);
     public:
       virtual ~left_weighted() = 0;
     public:
-      const weightset_t &get_weight_set() const;
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
       virtual WeightType weight_type() const;
     protected:
-      const static weightset_t st_ws_;
-      const weightset_t& ws_;
       weight_t lw_;
     };
 
-    template <class WeightSet>
-    const typename left_weighted<WeightSet>::weightset_t
-    left_weighted<WeightSet>::st_ws_ = WeightSet();
 
-    template <class WeightSet>
-    class one : public left_weighted<WeightSet>
+    template <class Weight>
+    class one : public left_weighted<Weight>
     {
     public:
-      typedef left_weighted<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef left_weighted<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
     public:
-      one();
+      one(const weight_t& l);
       virtual ~one();
     public:
       virtual type_t type() const { return node_t::ONE; };
@@ -286,17 +260,16 @@ namespace vcsn
       virtual void accept(typename node_t::const_visitor &v) const;
     };
 
-    template <class WeightSet>
-    class zero : public left_weighted<WeightSet>
+    template <class Weight>
+    class zero : public left_weighted<Weight>
     {
     public:
-      typedef left_weighted<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef left_weighted<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
     public:
-      zero();
+      zero(const weight_t& l);
       virtual ~zero();
     public:
       virtual type_t type() const { return node_t::ZERO; };
@@ -305,18 +278,16 @@ namespace vcsn
       virtual void accept(typename node_t::const_visitor &v) const;
     };
 
-    template <class WeightSet>
-    class word : public left_weighted<WeightSet>
+    template <class Weight>
+    class word : public left_weighted<Weight>
     {
     public:
-      typedef left_weighted<WeightSet> super_type;
-      typedef node<WeightSet> node_t;
+      typedef Weight weight_t;
+      typedef left_weighted<weight_t> super_type;
+      typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
     public:
-      word(std::string* word);
-      word(std::string* word, const weightset_t& ws);
+      word(const weight_t& l, std::string* word);
       virtual ~word();
     public:
       virtual type_t type() const { return node_t::WORD; };

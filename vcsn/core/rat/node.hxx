@@ -18,14 +18,14 @@ namespace vcsn
     | node.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    node<WeightSet>::node()
+    node<Weight>::node()
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    node<WeightSet>::~node()
+    node<Weight>::~node()
     {}
 
 
@@ -34,72 +34,60 @@ namespace vcsn
     | weighted.  |
     `-----------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    weighted<WeightSet>::weighted()
-      : ws_(st_ws_)
-    {
-      lw_ = ws_.unit();
-      rw_ = ws_.unit();
-    }
-
-    template <class WeightSet>
-    inline
-    weighted<WeightSet>::weighted(const weightset_t& ws)
-      : ws_(ws)
-      , lw_(ws.unit())
-      , rw_(ws.unit())
+    weighted<Weight>::weighted(const weight_t& l, const weight_t& r)
+      : lw_(l)
+      , rw_(r)
     {}
 
-    template <class WeightSet>
+
+    template <class Weight>
     inline
-    weighted<WeightSet>::~weighted()
+    weighted<Weight>::~weighted()
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    const typename weighted<WeightSet>::weight_t&
-    weighted<WeightSet>::left_weight() const
+    auto
+    weighted<Weight>::left_weight() const
+      -> const weight_t&
     {
       return lw_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename weighted<WeightSet>::weight_t&
-    weighted<WeightSet>::left_weight()
+    auto
+    weighted<Weight>::left_weight()
+      -> weight_t&
     {
       return lw_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    const typename weighted<WeightSet>::weight_t&
-    weighted<WeightSet>::right_weight() const
+    auto
+    weighted<Weight>::right_weight() const
+      -> const weight_t&
     {
       return rw_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename weighted<WeightSet>::weight_t&
-    weighted<WeightSet>::right_weight()
+    auto
+    weighted<Weight>::right_weight()
+      -> weight_t&
     {
       return rw_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    const typename weighted<WeightSet>::weightset_t &
-    weighted<WeightSet>::get_weight_set() const
-    {
-      return ws_;
-    }
-
-    template <class WeightSet>
-    inline
-    typename weighted<WeightSet>::WeightType
-    weighted<WeightSet>::weight_type() const
+    auto
+    weighted<Weight>::weight_type() const
+      -> WeightType
     {
       return super_type::LR_WEIGHT;
     }
@@ -108,223 +96,214 @@ namespace vcsn
     | left_weighted.  |
     `----------------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    left_weighted<WeightSet>::left_weighted()
-      : ws_(st_ws_)
-    {
-      lw_ = ws_.unit();
-    }
-
-    template <class WeightSet>
-    inline
-    left_weighted<WeightSet>::left_weighted(const weightset_t& ws)
-      : ws_(ws)
-      , lw_(ws.unit())
+    left_weighted<Weight>::left_weighted(const weight_t& w)
+      : lw_(w)
     {}
 
-    template <class WeightSet>
+
+    template <class Weight>
     inline
-    left_weighted<WeightSet>::~left_weighted()
+    left_weighted<Weight>::~left_weighted()
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    const typename left_weighted<WeightSet>::weight_t &
-    left_weighted<WeightSet>::left_weight() const
+    auto
+    left_weighted<Weight>::left_weight() const
+      -> const weight_t &
     {
       return lw_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename left_weighted<WeightSet>::weight_t &
-    left_weighted<WeightSet>::left_weight()
+    auto
+    left_weighted<Weight>::left_weight()
+      -> weight_t &
     {
       return lw_;
     }
 
-    template <class WeightSet>
-    inline
-    const typename left_weighted<WeightSet>::weightset_t &
-    left_weighted<WeightSet>::get_weight_set() const
-    {
-      return ws_;
-    }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename left_weighted<WeightSet>::WeightType
-    left_weighted<WeightSet>::weight_type() const
+    auto
+    left_weighted<Weight>::weight_type() const
+      -> WeightType
     {
       return super_type::L_WEIGHT;
     }
+
 
     /*-------.
     | nary.  |
     `-------*/
 
-
-    template <class WeightSet>
+    template <class Weight>
     inline
-    nary<WeightSet>::nary(weightset_t& ws)
-      : weighted<WeightSet>(ws)
-    {}
+    nary<Weight>::nary(const weight_t& l, const weight_t& r)
+      : super_type(l, r)
+    {
+    }
 
-    template <class WeightSet>
+
+    template <class Weight>
     inline
-    nary<WeightSet>::~nary()
+    nary<Weight>::~nary()
     {
       for (auto t : sub_node_)
         delete t;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::const_iterator
-    nary<WeightSet>::begin() const
+    typename nary<Weight>::const_iterator
+    nary<Weight>::begin() const
     {
       return sub_node_.begin();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::const_iterator
-    nary<WeightSet>::end() const
+    typename nary<Weight>::const_iterator
+    nary<Weight>::end() const
     {
       return sub_node_.end();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::iterator
-    nary<WeightSet>::begin()
+    typename nary<Weight>::iterator
+    nary<Weight>::begin()
     {
       return sub_node_.begin();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::iterator
-    nary<WeightSet>::end()
+    typename nary<Weight>::iterator
+    nary<Weight>::end()
     {
       return sub_node_.end();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::const_reverse_iterator
-    nary<WeightSet>::rbegin() const
+    typename nary<Weight>::const_reverse_iterator
+    nary<Weight>::rbegin() const
     {
       return sub_node_.begin();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::const_reverse_iterator
-    nary<WeightSet>::rend() const
+    typename nary<Weight>::const_reverse_iterator
+    nary<Weight>::rend() const
     {
       return sub_node_.end();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::reverse_iterator
-    nary<WeightSet>::rbegin()
+    typename nary<Weight>::reverse_iterator
+    nary<Weight>::rbegin()
     {
       return sub_node_.begin();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    typename nary<WeightSet>::reverse_iterator
-    nary<WeightSet>::rend()
+    typename nary<Weight>::reverse_iterator
+    nary<Weight>::rend()
     {
       return sub_node_.end();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    nary<WeightSet> &
-    nary<WeightSet>::push_back(node_t* elt)
+    nary<Weight> &
+    nary<Weight>::push_back(node_t* elt)
     {
       sub_node_.push_back(elt);
       return *this;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    nary<WeightSet> &
-    nary<WeightSet>::push_front(node_t* elt)
+    nary<Weight> &
+    nary<Weight>::push_front(node_t* elt)
     {
       sub_node_.push_front(elt);
       return *this;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     size_t
-    nary<WeightSet>::size() const
+    nary<Weight>::size() const
     {
       return sub_node_.size();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    nary<WeightSet>::erase(iterator it)
+    nary<Weight>::erase(iterator it)
     {
       sub_node_.erase(it);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    nary<WeightSet>::erase(iterator begin, iterator end)
+    nary<Weight>::erase(iterator begin, iterator end)
     {
       sub_node_.erase(begin, end);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    nary<WeightSet>::clear()
+    nary<Weight>::clear()
     {
       sub_node_.clear();
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    nary<WeightSet>::splice(iterator it, nary<WeightSet>& right)
+    nary<Weight>::splice(iterator it, nary<Weight>& right)
     {
       assert(this->type() == right.type());
       sub_node_.splice(it, right.sub_node_);
     }
 
+
     /*-------.
     | prod.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    prod<WeightSet>::prod(weightset_t& ws)
-      : super_type(ws)
+    prod<Weight>::prod(const weight_t& l, const weight_t& r)
+      : super_type(l, r)
     {}
 
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    prod<WeightSet>::accept(typename node_t::visitor& v)
+    prod<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    prod<WeightSet>::accept(typename node_t::const_visitor& v) const
+    prod<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -335,24 +314,24 @@ namespace vcsn
     | sum.  |
     `------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    sum<WeightSet>::sum(weightset_t& ws)
-      : super_type(ws)
+    sum<Weight>::sum(const weight_t& l, const weight_t& r)
+      : super_type(l, r)
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    sum<WeightSet>::accept(typename node_t::visitor& v)
+    sum<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    sum<WeightSet>::accept(typename node_t::const_visitor& v) const
+    sum<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -362,87 +341,83 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    star<WeightSet>::star(node_t* sub_exp)
-      : weighted<WeightSet>()
+    star<Weight>::star(const weight_t& l, const weight_t& r, node_t* sub_exp)
+      : super_type(l, r)
       , sub_exp_(sub_exp)
     {}
 
-    template <class WeightSet>
-    inline
-    star<WeightSet>::star(node_t* sub_exp, const weightset_t& ws)
-      : weighted<WeightSet>(node_t::KLEENE, ws)
-      , sub_exp_(sub_exp)
-    {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    star<WeightSet>::~star()
+    star<Weight>::~star()
     {
       delete sub_exp_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     auto
-    star<WeightSet>::get_sub()
+    star<Weight>::get_sub()
       -> node_t *
     {
       return sub_exp_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     auto
-    star<WeightSet>::get_sub() const
+    star<Weight>::get_sub() const
       -> const node_t *
     {
       return sub_exp_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    star<WeightSet>::accept(typename node_t::visitor& v)
+    star<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    star<WeightSet>::accept(typename node_t::const_visitor& v) const
+    star<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
+
 
     /*------.
     | one.  |
     `------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    one<WeightSet>::one()
+    one<Weight>::one(const weight_t& w)
+      : super_type(w)
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    one<WeightSet>::~one()
+    one<Weight>::~one()
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    one<WeightSet>::accept(typename node_t::visitor& v)
+    one<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    one<WeightSet>::accept(typename node_t::const_visitor& v) const
+    one<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -451,28 +426,29 @@ namespace vcsn
     | zero.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    zero<WeightSet>::zero()
+    zero<Weight>::zero(const weight_t& w)
+      : super_type(w)
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    zero<WeightSet>::~zero()
+    zero<Weight>::~zero()
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    zero<WeightSet>::accept(typename node_t::visitor& v)
+    zero<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    zero<WeightSet>::accept(typename node_t::const_visitor& v) const
+    zero<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
@@ -481,55 +457,48 @@ namespace vcsn
     | word.  |
     `-------*/
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    word<WeightSet>::word(std::string* word)
-      : left_weighted<WeightSet>()
+    word<Weight>::word(const weight_t& w, std::string* word)
+      : super_type(w)
       , word_(word)
     {}
 
-    template <class WeightSet>
+    template <class Weight>
     inline
-    word<WeightSet>::word(std::string* word, const weightset_t& ws)
-      : left_weighted<WeightSet>(ws)
-      , word_(word)
-    {}
-
-    template <class WeightSet>
-    inline
-    word<WeightSet>::~word()
+    word<Weight>::~word()
     {
       delete word_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    word<WeightSet>::accept(typename node_t::visitor& v)
+    word<Weight>::accept(typename node_t::visitor& v)
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     void
-    word<WeightSet>::accept(typename node_t::const_visitor& v) const
+    word<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     std::string*
-    word<WeightSet>::get_word()
+    word<Weight>::get_word()
     {
       return word_;
     }
 
-    template <class WeightSet>
+    template <class Weight>
     inline
     const std::string*
-    word<WeightSet>::get_word() const
+    word<Weight>::get_word() const
     {
       return word_;
     }

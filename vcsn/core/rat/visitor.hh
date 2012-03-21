@@ -9,13 +9,13 @@ namespace vcsn
   namespace rat
   {
 
-    template <class WeightSet, template <class> class ConstNess>
+    template <class Weight, template <class> class ConstNess>
     class gen_visitor
     {
     public:
-      typedef WeightSet weightset_t;
+      typedef Weight weight_t;
 #define VISIT(Type)                                                     \
-      virtual void visit(typename ConstNess<Type<WeightSet> >::type& v)
+      virtual void visit(typename ConstNess<Type<weight_t>>::type& v)
 
       VISIT(prod);
       VISIT(sum);
@@ -26,11 +26,11 @@ namespace vcsn
 #undef VISIT
     };
 
-    template <class WeightSet>
+    template <class Weight>
     struct visitor_traits
     {
-      typedef gen_visitor<WeightSet, misc::id_traits> visitor;
-      typedef gen_visitor<WeightSet, misc::constify_traits> const_visitor;
+      typedef gen_visitor<Weight, misc::id_traits> visitor;
+      typedef gen_visitor<Weight, misc::constify_traits> const_visitor;
     };
 
   } // namespace rat

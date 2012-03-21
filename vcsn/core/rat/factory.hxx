@@ -96,7 +96,7 @@ namespace vcsn
         }
       else
         {
-          auto res = new prod_t();
+          auto res = new prod_t(ws_->unit(), ws_->unit());
           res->push_back(l);
           res->push_back(r);
           return res;
@@ -146,7 +146,7 @@ namespace vcsn
         }
       else
         {
-          sum_t* res = new sum_t();
+          sum_t* res = new sum_t(ws_->unit(), ws_->unit());
           res->push_front(r);
           res->push_front(l);
           return res;
@@ -164,10 +164,10 @@ namespace vcsn
           // Trivial identity
           // (0)* == 1
           delete e;
-          return new one_t;
+          return new one_t(ws_->unit());
         }
       else
-        return new star_t(e);
+        return new star_t(ws_->unit(), ws_->unit(), e);
     }
 
     template <class WeightSet>
@@ -176,7 +176,7 @@ namespace vcsn
     factory<WeightSet>::op_one()
       -> one_t*
     {
-      return new one_t();
+      return new one_t(ws_->unit());
     }
 
     template <class WeightSet>
@@ -185,7 +185,7 @@ namespace vcsn
     factory<WeightSet>::op_zero()
       -> zero_t*
     {
-      return new zero_t();
+      return new zero_t(ws_->unit());
     }
 
     template <class WeightSet>
@@ -194,10 +194,7 @@ namespace vcsn
     factory<WeightSet>::op_word(std::string* w)
       -> word_t*
     {
-      if (ws_ != nullptr)
-        return new word_t(w, *ws_);
-      else
-        return new word_t(w);
+      return new word_t(ws_->unit(), w);
     }
 
     template <class WeightSet>
@@ -277,7 +274,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t();
+              return new zero_t(ws_->unit());
             }
           e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
@@ -296,7 +293,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t();
+              return new zero_t(ws_->unit());
             }
           e->left_weight() = ws_->mul(e->left_weight(), new_weight);
         }
@@ -315,7 +312,7 @@ namespace vcsn
           if (ws_->is_zero(new_weight))
             {
               delete e;
-              return new zero_t();
+              return new zero_t(ws_->unit());
             }
           e->right_weight() = ws_->mul(e->right_weight(), new_weight);
         }

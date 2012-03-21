@@ -9,28 +9,27 @@ namespace vcsn
   namespace rat
   {
 
-    template <class WeightSet>
-    class printer : public visitor_traits<WeightSet>::const_visitor
+    template <class Weight>
+    class printer : public visitor_traits<Weight>::const_visitor
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
+      typedef Weight weight_t;
     public:
       printer(std::ostream& out,
               const bool show_unit = false, const bool debug = false);
       virtual ~printer();
     public:
-      virtual void visit(const prod<weightset_t>& v);
-      virtual void visit(const sum<weightset_t>& v);
-      virtual void visit(const star<weightset_t>& v);
-      virtual void visit(const one<weightset_t>& v);
-      virtual void visit(const zero<weightset_t>& v);
-      virtual void visit(const word<weightset_t>& v);
+      virtual void visit(const prod<weight_t>& v);
+      virtual void visit(const sum<weight_t>& v);
+      virtual void visit(const star<weight_t>& v);
+      virtual void visit(const one<weight_t>& v);
+      virtual void visit(const zero<weight_t>& v);
+      virtual void visit(const word<weight_t>& v);
     private:
-      void print(const weight_t& w, const weightset_t& ws);
+      void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
-      void print(const nary<weightset_t>& n, const char op);
-      void print_left_weight(const left_weighted<WeightSet>& v);
+      void print(const nary<weight_t>& n, const char op);
+      void print_left_weight(const left_weighted<weight_t>& v);
 
       std::ostream& out_;
       const bool show_unit_;

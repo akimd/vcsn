@@ -10,11 +10,11 @@ namespace vcsn
   namespace rat
   {
 #define VISIT(Type, Name)                                       \
-    template<class WeightSet, template<class> class ConstNess>  \
+    template<class Weight, template<class> class ConstNess>     \
     inline                                                      \
     void                                                        \
-    gen_visitor<WeightSet, ConstNess>                            \
-    ::visit(typename ConstNess<Type<WeightSet>>::type& Name)
+    gen_visitor<Weight, ConstNess>                              \
+    ::visit(typename ConstNess<Type<Weight>>::type& Name)
 
 
     VISIT(prod, v)

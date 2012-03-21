@@ -72,8 +72,9 @@
       std::ostream&
       operator<<(std::ostream& o, const exp& r)
       {
-        const node<vcsn::z>* down = down_cast<const node<vcsn::z>*>(&r);
-        printer<vcsn::z> print(o, true, true);
+        const node<vcsn::z::value_t>* down =
+          down_cast<const node<vcsn::z::value_t>*>(&r);
+        printer<vcsn::z::value_t> print(o, true, true);
         down->accept(print);
         return o;
       }

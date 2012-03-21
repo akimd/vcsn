@@ -19,7 +19,7 @@ namespace vcsn
       typedef typename weightset_t::value_t weight_t;
       typedef std::string weight_str;
       typedef std::list<weight_str *> weight_str_container;
-      typedef node<weightset_t> node_t;
+      typedef node<weight_t> node_t;
     public:
       factory();
       factory(const weightset_t& ws);
@@ -34,7 +34,7 @@ namespace vcsn
 
       // exp constants' method
 #define DEFINE(Type)                            \
-      typedef Type<weightset_t> Type ## _t;
+      typedef Type<weight_t> Type ## _t
       DEFINE(one);
       DEFINE(zero);
       DEFINE(word);

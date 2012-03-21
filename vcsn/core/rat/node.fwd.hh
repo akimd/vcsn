@@ -8,25 +8,25 @@ namespace vcsn
 
     class exp;
 
-    template <class WeightSet>
+    template <class Weight>
     class node;
 
-    template <class WeightSet>
+    template <class Weight>
     class prod;
 
-    template <class WeightSet>
+    template <class Weight>
     class sum;
 
-    template <class WeightSet>
+    template <class Weight>
     class star;
 
-    template <class WeightSet>
+    template <class Weight>
     class one;
 
-    template <class WeightSet>
+    template <class Weight>
     class zero;
 
-    template <class WeightSet>
+    template <class Weight>
     class word;
 
   } // namespace rat
