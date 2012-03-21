@@ -38,7 +38,7 @@ namespace vcsn
       DEFINE(one);
       DEFINE(zero);
       DEFINE(atom);
-      DEFINE(left_weighted);
+      DEFINE(leaf);
       DEFINE(weighted);
       DEFINE(star);
       DEFINE(prod);
@@ -52,7 +52,7 @@ namespace vcsn
 
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);
-      node_t* op_weight(left_weighted_t* e, weight_str_container* w);
+      node_t* op_weight(leaf_t* e, weight_str_container* w);
       node_t* op_weight(weight_str_container* w, weighted_t* e);
       node_t* op_weight(weighted_t* e, weight_str_container* w);
 

@@ -222,16 +222,16 @@ namespace vcsn
     `-------*/
 
     template <class Weight>
-    class left_weighted : public node<Weight>
+    class leaf : public node<Weight>
     {
     public:
       typedef Weight weight_t;
       typedef node<weight_t> super_type;
       typedef typename super_type::WeightType WeightType;
     protected:
-      left_weighted(const weight_t& l);
+      leaf(const weight_t& l);
     public:
-      virtual ~left_weighted() = 0;
+      virtual ~leaf() = 0;
     public:
       const weight_t &left_weight() const;
       weight_t &left_weight();
@@ -243,11 +243,11 @@ namespace vcsn
 
 
     template <class Weight>
-    class one : public left_weighted<Weight>
+    class one : public leaf<Weight>
     {
     public:
       typedef Weight weight_t;
-      typedef left_weighted<weight_t> super_type;
+      typedef leaf<weight_t> super_type;
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
     public:
@@ -261,11 +261,11 @@ namespace vcsn
     };
 
     template <class Weight>
-    class zero : public left_weighted<Weight>
+    class zero : public leaf<Weight>
     {
     public:
       typedef Weight weight_t;
-      typedef left_weighted<weight_t> super_type;
+      typedef leaf<weight_t> super_type;
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
     public:
@@ -279,11 +279,11 @@ namespace vcsn
     };
 
     template <class Weight>
-    class atom : public left_weighted<Weight>
+    class atom : public leaf<Weight>
     {
     public:
       typedef Weight weight_t;
-      typedef left_weighted<weight_t> super_type;
+      typedef leaf<weight_t> super_type;
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
     public:

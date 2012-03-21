@@ -220,7 +220,7 @@ namespace vcsn
         {
         case node_t::L_WEIGHT:
           {
-            auto lweight = down_cast<left_weighted_t*>(expr);
+            auto lweight = down_cast<leaf_t*>(expr);
             return op_weight(lweight, w);
           }
 
@@ -248,7 +248,7 @@ namespace vcsn
         {
         case node_t::L_WEIGHT:
           {
-            auto rweight = down_cast<left_weighted_t*>(expr);
+            auto rweight = down_cast<leaf_t*>(expr);
             return op_weight(rweight, w);
           }
         case node_t::LR_WEIGHT:
@@ -264,7 +264,7 @@ namespace vcsn
 
     template<class WeightSet>
     auto
-    factory<WeightSet>::op_weight(left_weighted_t* e,
+    factory<WeightSet>::op_weight(leaf_t* e,
                                   weight_str_container* w)
       -> node_t*
     {

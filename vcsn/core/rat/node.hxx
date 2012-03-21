@@ -92,26 +92,26 @@ namespace vcsn
       return super_type::LR_WEIGHT;
     }
 
-    /*----------------.
-    | left_weighted.  |
-    `----------------*/
+    /*-------.
+    | leaf.  |
+    `-------*/
 
     template <class Weight>
     inline
-    left_weighted<Weight>::left_weighted(const weight_t& w)
+    leaf<Weight>::leaf(const weight_t& w)
       : lw_(w)
     {}
 
 
     template <class Weight>
     inline
-    left_weighted<Weight>::~left_weighted()
+    leaf<Weight>::~leaf()
     {}
 
     template <class Weight>
     inline
     auto
-    left_weighted<Weight>::left_weight() const
+    leaf<Weight>::left_weight() const
       -> const weight_t &
     {
       return lw_;
@@ -120,7 +120,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    left_weighted<Weight>::left_weight()
+    leaf<Weight>::left_weight()
       -> weight_t &
     {
       return lw_;
@@ -130,7 +130,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    left_weighted<Weight>::weight_type() const
+    leaf<Weight>::weight_type() const
       -> WeightType
     {
       return super_type::L_WEIGHT;

@@ -29,7 +29,7 @@ namespace vcsn
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
       void print(const nary<weight_t>& n, const char op);
-      void print_left_weight(const left_weighted<weight_t>& v);
+      void print_left_weight(const leaf<weight_t>& v);
 
       std::ostream& out_;
       const bool show_unit_;

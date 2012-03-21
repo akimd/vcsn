@@ -108,7 +108,7 @@ namespace vcsn
 
     template <class Weight>
     void
-    printer<Weight>::print_left_weight(const left_weighted<weight_t>& v)
+    printer<Weight>::print_left_weight(const leaf<weight_t>& v)
     {
       print(v.left_weight());
     }
