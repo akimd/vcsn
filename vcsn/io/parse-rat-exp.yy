@@ -69,15 +69,6 @@
   {
     namespace rat
     {
-      std::ostream&
-      operator<<(std::ostream& o, const exp& r)
-      {
-        const node<vcsn::z::value_t>* down =
-          down_cast<const node<vcsn::z::value_t>*>(&r);
-        printer<vcsn::z::value_t> print(o, true, true);
-        down->accept(print);
-        return o;
-      }
 
       // Define the factory.
       factory* fact;
@@ -98,7 +89,7 @@
 };
 
 %printer { debug_stream() << $$; } <ival>;
-%printer { debug_stream() << *$$; } <sval> <weights> <node>;
+%printer { debug_stream() << *$$; } <sval> <weights>; // FIXME: <node>;
 %destructor { delete $$; } <sval> <weights> <node>;
 
 %token <ival>   LPAREN  "("
