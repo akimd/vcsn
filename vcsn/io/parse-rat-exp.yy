@@ -134,7 +134,7 @@ exp:
 ;
 
 term:
-  lexp weights.opt              { $$ = $2 ? MAKE(weight, $1, $2) : $1; }
+  lexp weights.opt              { $$ = MAKE(weight, $1, $2); }
 ;
 
 lexp:
