@@ -80,9 +80,9 @@
       }
 
       // Define the factory.
-      factory_<vcsn::z> fact; // FIXME: specialization
+      factory* fact;
 #define MAKE(Kind, ...)                         \
-      fact.op_ ## Kind(__VA_ARGS__)
+      fact->op_ ## Kind(__VA_ARGS__)
     }
   }
 }
@@ -182,6 +182,8 @@ vcsn::rat::parser::error(const location_type& l, const std::string& m)
 int main()
 {
   vcsn::rat::parser p;
+  vcsn::rat::factory_<vcsn::z> zfact; // FIXME: specialization
+  vcsn::rat::fact = &zfact;
   extern int yy_flex_debug;
   yy_flex_debug = !!getenv("YYSCAN");
   p.set_debug_level(!!getenv("YYDEBUG"));

@@ -11,26 +11,41 @@ namespace vcsn
   namespace rat
   {
 
-    template <class WeightSet>
-    class factory_
+    class factory
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
       typedef std::string weight_str;
-      typedef std::list<weight_str *> weight_str_container;
-      typedef node<weight_t> node_t;
-    public:
-      factory_();
-      factory_(const weightset_t& ws);
-    public:
-      exp* op_prod(exp* l, exp* r);
-      exp* op_sum(exp* l, exp* r);
-      exp* op_star(exp* e);
+      typedef std::list<weight_str*> weight_str_container;
+
+      virtual exp* op_prod(exp* l, exp* r) = 0;
+      virtual exp* op_sum(exp* l, exp* r) = 0;
+      virtual exp* op_star(exp* e) = 0;
+      virtual exp* op_one() = 0;
+      virtual exp* op_zero() = 0;
+      virtual exp* op_atom(std::string* w) = 0;
+      virtual exp* op_weight(weight_str_container* w, exp* e) = 0;
+      virtual exp* op_weight(exp* e, weight_str_container* w) = 0;
 
       weight_str_container* op_weight(weight_str* w);
       weight_str_container* op_weight(weight_str* w, weight_str_container* l);
       weight_str_container* op_weight(weight_str_container* l, weight_str* w);
+    };
+
+    template <class WeightSet>
+    class factory_ : public factory
+    {
+    public:
+      typedef WeightSet weightset_t;
+      typedef factory super_type;
+      typedef typename weightset_t::value_t weight_t;
+      typedef node<weight_t> node_t;
+    public:
+      factory_();
+      factory_(const weightset_t& ws);
+
+      virtual exp* op_prod(exp* l, exp* r);
+      virtual exp* op_sum(exp* l, exp* r);
+      virtual exp* op_star(exp* e);
 
       // exp constants' method
 #define DEFINE(Type)                            \
@@ -47,22 +62,19 @@ namespace vcsn
 
       one_t* op_one();
       zero_t* op_zero();
-      // atom's method
       atom_t* op_atom(std::string* w);
 
+      using super_type::op_weight;
       exp* op_weight(weight_str_container* w, exp* e);
       exp* op_weight(exp* e, weight_str_container* w);
+
+    protected:
+      node_t* op_prod(node_t* l, node_t* r);
+      node_t* op_sum(node_t* l, node_t* r);
+      node_t* op_star(node_t* e);
       node_t* op_weight(leaf_t* e, weight_str_container* w);
       node_t* op_weight(weight_str_container* w, inner_t* e);
       node_t* op_weight(inner_t* e, weight_str_container* w);
-
-    protected:
-      // concat's method
-      node_t* op_prod(node_t* l,  node_t* r);
-      // plus's method
-      node_t* op_sum(node_t* l, node_t* r);
-      // kleene's method
-      node_t* op_star(node_t* e);
 
     private:
       const weightset_t* ws_;

@@ -13,14 +13,56 @@ namespace vcsn
   namespace rat
   {
 
+    /*----------.
+    | factory.  |
+    `----------*/
+
+    inline
+    auto
+    factory::op_weight(std::string* w)
+      -> weight_str_container*
+    {
+      weight_str_container* res = new weight_str_container();
+      res->push_front(w);
+      return res;
+    }
+
+
+    inline
+    auto
+    factory::op_weight(weight_str* w, weight_str_container* l)
+      -> weight_str_container*
+    {
+      l->push_front(w);
+      return l;
+    }
+
+    inline
+    auto
+    factory::op_weight(weight_str_container* l, weight_str* w)
+      -> weight_str_container*
+    {
+      // FIXME: Sounds very wrong, need a test.
+      l->push_front(w);
+      return l;
+    }
+
+
+
+    /*-----------.
+    | factory_.  |
+    `-----------*/
+
     template <class WeightSet>
     factory_<WeightSet>::factory_()
-      : ws_(0)
+      : super_type()
+      , ws_(0)
     {}
 
     template <class WeightSet>
     factory_<WeightSet>::factory_(const WeightSet& ws)
-      : ws_(&ws)
+      : super_type()
+      , ws_(&ws)
     {}
 
     template <class WeightSet>
@@ -197,16 +239,6 @@ namespace vcsn
       return new atom_t(ws_->unit(), w);
     }
 
-    template <class WeightSet>
-    inline
-    auto
-    factory_<WeightSet>::op_weight(std::string* w)
-      -> weight_str_container*
-    {
-      weight_str_container* res = new weight_str_container();
-      res->push_front(w);
-      return res;
-    }
 
     template <class WeightSet>
     exp*
@@ -293,26 +325,6 @@ namespace vcsn
           e->right_weight() = ws_->mul(e->right_weight(), new_weight);
         }
       return e;
-    }
-
-    template <class WeightSet>
-    inline
-    auto
-    factory_<WeightSet>::op_weight(weight_str* w, weight_str_container* l)
-      -> weight_str_container*
-    {
-      l->push_front(w);
-      return l;
-    }
-
-    template <class WeightSet>
-    inline
-    auto
-    factory_<WeightSet>::op_weight(weight_str_container* l, weight_str* w)
-      -> weight_str_container*
-    {
-      l->push_front(w);
-      return l;
     }
 
   } // namespace rat
