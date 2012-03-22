@@ -202,8 +202,10 @@ main()
   if (vcsn::rat::exp* e = vcsn::rat::parse<weightset_t>())
     {
       const auto* down = down_cast<const vcsn::rat::node<weight_t>*>(e);
-      vcsn::rat::printer<weight_t> print(std::cout, true, true);
+      vcsn::rat::printer<weightset_t>
+        print(std::cout, weightset_t(), true, true);
       down->accept(print);
+      std::cout << std::endl;
       return 0;
     }
   return 1;

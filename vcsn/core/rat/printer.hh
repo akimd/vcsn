@@ -9,13 +9,18 @@ namespace vcsn
   namespace rat
   {
 
-    template <class Weight>
-    class printer : public visitor_traits<Weight>::const_visitor
+    template <class WeightSet>
+    class printer
+      : public visitor_traits<typename WeightSet::value_t>::const_visitor
     {
     public:
-      typedef Weight weight_t;
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+      typedef typename visitor_traits<weight_t>::const_visitor super_type;
+
     public:
       printer(std::ostream& out,
+              const weightset_t& ws,
               const bool show_unit = false, const bool debug = false);
       virtual ~printer();
     public:
@@ -32,6 +37,7 @@ namespace vcsn
       void print_left_weight(const leaf<weight_t>& v);
 
       std::ostream& out_;
+      const weightset_t& ws_;
       const bool show_unit_;
       const bool debug_;
     };
