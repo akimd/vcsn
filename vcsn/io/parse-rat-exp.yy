@@ -83,6 +83,8 @@
       factory* fact;
 #define MAKE(Kind, ...)                         \
       fact->op_ ## Kind(__VA_ARGS__)
+
+      exp* result;
     }
   }
 }
@@ -112,7 +114,7 @@
                WEIGHT  "weight";
 
 %type <weights> weights weights.opt;
-%type <node> exps exp term lexp factor leaf factors;
+%type <node> exp term lexp factor leaf factors;
 
 
 %left "+"
@@ -122,11 +124,7 @@
 %%
 
 exps:
-  exp
-  {
-    $$ = $1;
-    std::cout << *$$ << std::endl;
-  }
+  exp  { result = $1; }
 ;
 
 exp:
@@ -173,19 +171,49 @@ weights:
 
 %%
 
-void
-vcsn::rat::parser::error(const location_type& l, const std::string& m)
+extern int yy_flex_debug;
+namespace vcsn
 {
-  std::cerr << l << ": " << m << std::endl;
+  namespace rat
+  {
+    void
+    vcsn::rat::parser::error(const location_type& l, const std::string& m)
+    {
+      std::cerr << l << ": " << m << std::endl;
+    }
+
+    template <typename WeightSet>
+    static
+    exp*
+    parse()
+    {
+      typedef WeightSet weightset_t;
+      typedef typename weightset_t::value_t weight_t;
+      parser p;
+      factory_<weightset_t> zfact; // FIXME: specialization
+      fact = &zfact;
+      yy_flex_debug = !!getenv("YYSCAN");
+      p.set_debug_level(!!getenv("YYDEBUG"));
+      result = 0;
+      if (p.parse())
+        return 0;
+      else
+        return result;
+    }
+  }
 }
 
-int main()
+int
+main()
 {
-  vcsn::rat::parser p;
-  vcsn::rat::factory_<vcsn::z> zfact; // FIXME: specialization
-  vcsn::rat::fact = &zfact;
-  extern int yy_flex_debug;
-  yy_flex_debug = !!getenv("YYSCAN");
-  p.set_debug_level(!!getenv("YYDEBUG"));
-  return p.parse();
+  typedef vcsn::z weightset_t;
+  typedef typename weightset_t::value_t weight_t;
+  if (vcsn::rat::exp* e = vcsn::rat::parse<weightset_t>())
+    {
+      const auto* down = down_cast<const vcsn::rat::node<weight_t>*>(e);
+      vcsn::rat::printer<weight_t> print(std::cout, true, true);
+      down->accept(print);
+      return 0;
+    }
+  return 1;
 }
