@@ -31,10 +31,10 @@
       lex(parser::semantic_type* yylval, parser::location_type* yylloc);
     }
   }
-  #define YY_DECL                                                       \
-    int                                                                 \
+  #define YY_DECL                                               \
+    int                                                         \
     vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
-                     vcsn::rat::parser::location_type* yylloc)
+                   vcsn::rat::parser::location_type* yylloc)
 }
 
 %code
@@ -80,7 +80,7 @@
       }
 
       // Define the factory.
-      factory<vcsn::z> fact; // FIXME: specialization
+      factory_<vcsn::z> fact; // FIXME: specialization
 #define MAKE(Kind, ...)                         \
       fact.op_ ## Kind(__VA_ARGS__)
     }

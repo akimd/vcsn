@@ -12,7 +12,7 @@ namespace vcsn
   {
 
     template <class WeightSet>
-    class factory
+    class factory_
     {
     public:
       typedef WeightSet weightset_t;
@@ -21,8 +21,8 @@ namespace vcsn
       typedef std::list<weight_str *> weight_str_container;
       typedef node<weight_t> node_t;
     public:
-      factory();
-      factory(const weightset_t& ws);
+      factory_();
+      factory_(const weightset_t& ws);
     public:
       exp* op_prod(exp* l, exp* r);
       exp* op_sum(exp* l, exp* r);
