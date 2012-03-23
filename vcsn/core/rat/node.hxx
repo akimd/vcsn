@@ -1,8 +1,8 @@
 #ifndef VCSN_CORE_RAT_NODE_HXX_
 # define VCSN_CORE_RAT_NODE_HXX_
 
-# include <core/rat/node.hh>
-# include <core/rat/visitor.hh>
+# include <vcsn/core/rat/node.hh>
+# include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {

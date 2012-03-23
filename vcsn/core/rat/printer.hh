@@ -2,7 +2,7 @@
 # define VCSN_CORE_RAT_PRINTER_HH_
 
 # include <iostream>
-# include <core/rat/visitor.hh>
+# include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
 {
@@ -45,6 +45,6 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-# include <core/rat/printer.hxx>
+# include <vcsn/core/rat/printer.hxx>
 
 #endif // !VCSN_CORE_RAT_PRINTER_HH_

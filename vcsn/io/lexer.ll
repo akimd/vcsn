@@ -4,7 +4,7 @@
 #include <string>
 #include <cassert>
 #include <stack>
-#include "io/parse-rat-exp.hh"
+#include <vcsn/io/parse-rat-exp.hh>
 
 #define LINE(Line)				\
   do{						\

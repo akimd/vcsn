@@ -4,9 +4,9 @@
 # include <algorithm>
 # include <cassert>
 
-# include <misc/cast.hh>
-# include <core/rat/factory.hh>
-# include <core/rat/node.hh>
+# include <vcsn/misc/cast.hh>
+# include <vcsn/core/rat/factory.hh>
+# include <vcsn/core/rat/node.hh>
 
 namespace vcsn
 {

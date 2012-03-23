@@ -13,6 +13,8 @@
 
 include $(top_srcdir)/build-aux/make/init.mk
 
+AM_CPPFLAGS += -I$(top_srcdir)
+
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
   algos/dotty.hh                                \

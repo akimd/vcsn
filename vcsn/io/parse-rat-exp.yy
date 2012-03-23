@@ -16,9 +16,9 @@
   #include <list>
   #include <string>
   #include "location.hh"
-  #include <core/rat/node.hh>
-  #include <core/rat/factory.hh>
-  #include <core/rat/printer.hh>
+  #include <vcsn/core/rat/node.hh>
+  #include <vcsn/core/rat/factory.hh>
+  #include <vcsn/core/rat/printer.hh>
 }
 
 %code provides
@@ -41,7 +41,7 @@
 {
   #include <cassert>
   #include <sstream>
-  #include <weights/z.hh>
+  #include <vcsn/weights/z.hh>
 
   typedef std::string weight_str;
   typedef std::list<weight_str*> weight_str_container;

@@ -4,7 +4,7 @@
 # include <string>
 # include <list>
 
-# include <core/rat/node.fwd.hh>
+# include <vcsn/core/rat/node.fwd.hh>
 
 namespace vcsn
 {
@@ -82,6 +82,6 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <core/rat/factory.hxx>
+# include <vcsn/core/rat/factory.hxx>
 
 #endif // !VCSN_CORE_RAT_RAT_EXP_HH_
