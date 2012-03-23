@@ -23,25 +23,53 @@
 
 %code provides
 {
+  extern int yy_flex_debug;
+
+  #define YY_DECL                                               \
+    int                                                         \
+    vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
+                   vcsn::rat::parser::location_type* yylloc)
+
   namespace vcsn
   {
     namespace rat
     {
       int
       lex(parser::semantic_type* yylval, parser::location_type* yylloc);
+
+      template <typename WeightSet>
+      exp*
+      parse()
+      {
+        typedef WeightSet weightset_t;
+        typedef typename weightset_t::value_t weight_t;
+
+        // Factory.
+        extern factory* fact;
+        factory_<weightset_t> f;
+        fact = &f;
+
+        // Scanner.
+        yy_flex_debug = !!getenv("YYSCAN");
+
+        // Parser.
+        parser p;
+        p.set_debug_level(!!getenv("YYDEBUG"));
+        extern exp* result;
+        result = 0;
+        if (p.parse())
+          return 0;
+        else
+          return result;
+      }
     }
   }
-  #define YY_DECL                                               \
-    int                                                         \
-    vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
-                   vcsn::rat::parser::location_type* yylloc)
 }
 
 %code
 {
   #include <cassert>
   #include <sstream>
-  #include <vcsn/weights/z.hh>
 
   typedef std::string weight_str;
   typedef std::list<weight_str*> weight_str_container;
@@ -69,8 +97,6 @@
   {
     namespace rat
     {
-
-      // Define the factory.
       factory* fact;
       exp* result;
     }
@@ -159,7 +185,6 @@ weights:
 
 %%
 
-extern int yy_flex_debug;
 namespace vcsn
 {
   namespace rat
@@ -169,41 +194,5 @@ namespace vcsn
     {
       std::cerr << l << ": " << m << std::endl;
     }
-
-    template <typename WeightSet>
-    static
-    exp*
-    parse()
-    {
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
-      parser p;
-      factory_<weightset_t> zfact; // FIXME: specialization
-      fact = &zfact;
-      yy_flex_debug = !!getenv("YYSCAN");
-      p.set_debug_level(!!getenv("YYDEBUG"));
-      result = 0;
-      if (p.parse())
-        return 0;
-      else
-        return result;
-    }
   }
-}
-
-int
-main()
-{
-  typedef vcsn::z weightset_t;
-  typedef typename weightset_t::value_t weight_t;
-  if (vcsn::rat::exp* e = vcsn::rat::parse<weightset_t>())
-    {
-      const auto* down = down_cast<const vcsn::rat::node<weight_t>*>(e);
-      vcsn::rat::printer<weightset_t>
-        print(std::cout, weightset_t(), true, true);
-      down->accept(print);
-      std::cout << std::endl;
-      return 0;
-    }
-  return 1;
 }

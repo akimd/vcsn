@@ -14,6 +14,11 @@
 dist_noinst_SCRIPTS += rat/rat
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
-AM_RAT_LOG_FLAGS = $(top_builddir)/vcsn/io/rat-exp
+AM_RAT_LOG_FLAGS = rat/pprat
 
 dist_TESTS += rat/test.rat
+
+check_PROGRAMS += rat/pprat
+AM_CPPFLAGS += $(top_srcdir)/vcsn
+
+rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la

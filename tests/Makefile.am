@@ -12,6 +12,7 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 include $(top_srcdir)/build-aux/make/init.mk
+check_PROGRAMS =
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir)
