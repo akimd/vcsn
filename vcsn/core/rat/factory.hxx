@@ -278,7 +278,7 @@ namespace vcsn
     {
       for (auto i : *w)
         {
-          weight_t new_weight = ws_->op_conv(*i);
+          weight_t new_weight = ws_->conv(*i);
           if (ws_->is_zero(new_weight))
             {
               delete e;
@@ -316,7 +316,7 @@ namespace vcsn
     {
       for (auto i : *w)
         {
-          weight_t new_weight = ws_->op_conv(*i);
+          weight_t new_weight = ws_->conv(*i);
           if (ws_->is_zero(new_weight))
             {
               delete e;

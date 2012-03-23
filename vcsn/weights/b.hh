@@ -1,6 +1,9 @@
 #ifndef VCSN_WEIGHTS_B_HH
 #define VCSN_WEIGHTS_B_HH
 
+#include <string>
+#include <cassert>
+
 namespace vcsn
 {
   class b
@@ -48,6 +51,12 @@ namespace vcsn
     show_unit() const
     {
       return false;
+    }
+
+    bool
+    conv(std::string& str) const
+    {
+      return str[0] != '0';
     }
   };
 }

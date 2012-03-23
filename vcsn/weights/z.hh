@@ -53,7 +53,7 @@ namespace vcsn
     }
 
     value_t
-    op_conv(const std::string &str) const
+    conv(const std::string &str) const
     {
       return atoi(str.c_str());
     }
