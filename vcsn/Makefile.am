@@ -42,4 +42,3 @@ nobase_vcsn_HEADERS =                           \
   weights/z.hh
 
 include io/local.mk
-include core/local.mk
