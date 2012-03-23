@@ -38,14 +38,16 @@ sub check_rat_exp($$$)
 {
   my ($prog, $file, $verbose) = @_;
 
-  open(IN, $file);
+  open(IN, $file)
+    or die "$file: cannot open: $!\n";
   foreach(<IN>)
     {
+      chomp;
       s/\s*#.*//;
       next
         unless $_;
       m/^(.*) (=|==) (.*)$/
-        or die "$file:$.: invalid input: $_";
+        or die "$file:$.: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
       my $L = pp($prog, $l);
 
