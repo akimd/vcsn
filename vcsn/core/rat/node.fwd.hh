@@ -12,6 +12,12 @@ namespace vcsn
     class node;
 
     template <class Weight>
+    class inner;
+
+    template <class Weight>
+    class leaf;
+
+    template <class Weight>
     class prod;
 
     template <class Weight>
