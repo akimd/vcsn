@@ -17,7 +17,7 @@ namespace vcsn
 
   inline
   auto
-  factory::op_weight(std::string* w)
+  factory::weight(std::string* w)
     -> weight_str_container*
   {
     weight_str_container* res = new weight_str_container();
@@ -28,7 +28,7 @@ namespace vcsn
 
   inline
   auto
-  factory::op_weight(weight_str* w, weight_str_container* l)
+  factory::weight(weight_str* w, weight_str_container* l)
     -> weight_str_container*
   {
     l->push_front(w);
@@ -37,7 +37,7 @@ namespace vcsn
 
   inline
   auto
-  factory::op_weight(weight_str_container* l, weight_str* w)
+  factory::weight(weight_str_container* l, weight_str* w)
     -> weight_str_container*
   {
     // FIXME: Sounds very wrong, need a test.
@@ -66,38 +66,38 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_prod(exp_t* l, exp_t* r)
+  factory_<WeightSet>::mul(exp_t* l, exp_t* r)
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
     auto right = down_cast<node_t*>(r);
-    return op_prod(left, right);
+    return mul(left, right);
   }
 
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_sum(exp_t* l, exp_t* r)
+  factory_<WeightSet>::add(exp_t* l, exp_t* r)
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
     auto right = down_cast<node_t*>(r);
-    return op_sum(left, right);
+    return add(left, right);
   }
 
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_star(exp_t* e)
+  factory_<WeightSet>::star(exp_t* e)
     -> exp_t*
   {
-    return op_star(down_cast<node_t*>(e));
+    return star(down_cast<node_t*>(e));
   }
 
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_prod(node_t* l, node_t* r)
+  factory_<WeightSet>::mul(node_t* l, node_t* r)
     -> node_t*
   {
     // Trivial Identity
@@ -149,7 +149,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_sum(node_t* l, node_t* r)
+  factory_<WeightSet>::add(node_t* l, node_t* r)
     -> node_t*
   {
     // Trivial Identity
@@ -199,7 +199,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_star(node_t* e)
+  factory_<WeightSet>::star(node_t* e)
     -> node_t*
   {
     if (node_t::ZERO == e->type())
@@ -207,7 +207,7 @@ namespace vcsn
         // Trivial identity
         // (0)* == 1
         delete e;
-        return op_one();
+        return unit();
       }
     else
       return new star_t(ws_->unit(), ws_->unit(), e);
@@ -216,7 +216,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_one()
+  factory_<WeightSet>::unit()
     -> one_t*
   {
     return new one_t(ws_->unit());
@@ -225,7 +225,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_zero()
+  factory_<WeightSet>::zero()
     -> zero_t*
   {
     return new zero_t(ws_->unit());
@@ -234,7 +234,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::op_atom(std::string* w)
+  factory_<WeightSet>::atom(std::string* w)
     -> atom_t*
   {
     return new atom_t(ws_->unit(), w);
@@ -243,18 +243,18 @@ namespace vcsn
 
   template <class WeightSet>
   auto
-  factory_<WeightSet>::op_weight(weight_str_container* w, exp_t* e)
+  factory_<WeightSet>::weight(weight_str_container* w, exp_t* e)
     -> exp_t*
   {
     if (w)
-      return op_weight(down_cast<node_t*>(e), w);
+      return weight(down_cast<node_t*>(e), w);
     else
       return e;
   }
 
   template <class WeightSet>
   auto
-  factory_<WeightSet>::op_weight(exp_t* e, weight_str_container* w)
+  factory_<WeightSet>::weight(exp_t* e, weight_str_container* w)
     -> exp_t*
   {
     if (!w)
@@ -264,18 +264,18 @@ namespace vcsn
     if (expr->is_leaf())
       {
         auto rweight = down_cast<leaf_t*>(expr);
-        return op_weight(rweight, w);
+        return weight(rweight, w);
       }
     else
       {
         auto rweight = down_cast<inner_t*>(expr);
-        return op_weight(rweight, w);
+        return weight(rweight, w);
       }
   }
 
   template<class WeightSet>
   auto
-  factory_<WeightSet>::op_weight(leaf_t* e,
+  factory_<WeightSet>::weight(leaf_t* e,
                                  weight_str_container* w)
     -> node_t*
   {
@@ -285,7 +285,7 @@ namespace vcsn
         if (ws_->is_zero(new_weight))
           {
             delete e;
-            return op_zero();
+            return zero();
           }
         e->left_weight() = ws_->mul(e->left_weight(), new_weight);
       }
@@ -294,17 +294,17 @@ namespace vcsn
 
   template<class WeightSet>
   auto
-  factory_<WeightSet>::op_weight(weight_str_container* w,
+  factory_<WeightSet>::weight(weight_str_container* w,
                                  inner_t* e)
     -> node_t*
   {
     for (auto i : *w)
       {
-        weight_t new_weight = ws_->op_conv(*i);
+        weight_t new_weight = ws_->conv(*i);
         if (ws_->is_zero(new_weight))
           {
             delete e;
-            return op_zero();
+            return zero();
           }
         e->left_weight() = ws_->mul(e->left_weight(), new_weight);
       }
@@ -313,7 +313,7 @@ namespace vcsn
 
   template<class WeightSet>
   auto
-  factory_<WeightSet>::op_weight(inner_t* e,
+  factory_<WeightSet>::weight(inner_t* e,
                                  weight_str_container* w)
     -> node_t*
   {
@@ -323,7 +323,7 @@ namespace vcsn
         if (ws_->is_zero(new_weight))
           {
             delete e;
-            return op_zero();
+            return zero();
           }
         e->right_weight() = ws_->mul(e->right_weight(), new_weight);
       }

@@ -72,9 +72,6 @@
 
       // Define the factory.
       factory* fact;
-#define MAKE(Kind, ...)                         \
-      fact->op_ ## Kind(__VA_ARGS__)
-
       exp* result;
     }
   }
@@ -120,34 +117,34 @@ exps:
 
 exp:
   term                          { $$ = $1; }
-| exp "." exp                   { $$ = MAKE(prod, $1, $3); }
-| exp "+" exp                   { $$ = MAKE(sum, $1, $3); }
+| exp "." exp                   { $$ = fact->mul($1, $3); }
+| exp "+" exp                   { $$ = fact->add($1, $3); }
 ;
 
 term:
-  lexp weights.opt              { $$ = MAKE(weight, $1, $2); }
+  lexp weights.opt              { $$ = fact->weight($1, $2); }
 ;
 
 lexp:
-  weights.opt factors           { $$ = MAKE(weight, $1, $2); }
-| lexp weights factors          { $$ = MAKE(prod, $1, MAKE(weight, $2, $3)); }
+  weights.opt factors           { $$ = fact->weight($1, $2); }
+| lexp weights factors          { $$ = fact->mul($1, fact->weight($2, $3)); }
 ;
 
 factors:
   factor                        { $$ = $1; }
-| factors factor                { $$ = MAKE(prod, $1, $2); }
+| factors factor                { $$ = fact->mul($1, $2); }
 ;
 
 factor:
   leaf                          { $$ = $1; }
-| factor "*"                    { $$ = MAKE(star, $1); }
+| factor "*"                    { $$ = fact->star($1); }
 | "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 leaf:
-  ZERO                          { $$ = MAKE(zero); }
-| ONE                           { $$ = MAKE(one); }
-| ATOM                          { $$ = MAKE(atom, $1); }
+  ZERO                          { $$ = fact->zero(); }
+| ONE                           { $$ = fact->unit(); }
+| ATOM                          { $$ = fact->atom($1); }
 ;
 
 weights.opt:
@@ -156,8 +153,8 @@ weights.opt:
 ;
 
 weights:
-  "weight"                      { $$ = MAKE(weight, $1); }
-| "weight" weights              { $$ = MAKE(weight, $1, $2); }
+  "weight"                      { $$ = fact->weight($1); }
+| "weight" weights              { $$ = fact->weight($1, $2); }
 ;
 
 %%
