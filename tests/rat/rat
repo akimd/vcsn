@@ -34,53 +34,49 @@ sub pp ($$)
   $res;
 }
 
-sub check_rat_exp
+sub check_rat_exp($$$)
 {
-  my ($verbose, $prog, @file) = @_;
+  my ($prog, $file, $verbose) = @_;
 
-  foreach(@file)
+  open(IN, $file);
+  foreach(<IN>)
     {
-      open(IN, $_);
-      foreach(<IN>)
-        {
-          $_ =~ m/\|([^|]*)\|([^|]*)\|([^|]*)\|/;
-          my $l = $1;
-          my $r = $2;
-          my $exec_right = $3;
-          my $L = pp($prog, $l);
-          my $R;
+      s/\s*#.*//;
+      next
+        unless $_;
+      m/^(.*) (=|==) (.*)$/
+        or die "$file:$.: invalid input: $_";
+      my ($l, $op, $r) = ($1, $2, $3);
+      my $L = pp($prog, $l);
 
-          if (length(quote($exec_right)) == 0)
+      # == tests that boths are equivalent.
+      # =  check the actual result.
+
+      my $R = $op eq '=' ? quote($r) : pp($prog, $r);
+      # Empty result is a sign of failure.
+      if ($L ne '' && $L eq $R)
+        {
+          print "$PASS: $l == $r == $L\n";
+        }
+      else
+        {
+          print "$FAIL: $l == $r: $L != $R\n";
+          if ($verbose)
             {
-              $R = pp($prog, $r);
+              print "$l:\n";
+              pp($prog, $l);
+              print "$r:\n";
+              pp($prog, $r);
             }
-          else
-            {
-              $R = quote($r);
-            }
-          # Empty result is a sign of failure.
-          if ($L ne '' && $L eq $R)
-            {
-              print "$PASS: $l == $r == $L\n";
-            }
-          else
-            {
-              print "$FAIL: $l == $r: $L != $R\n";
-              if ($verbose)
-                {
-                  print "$l:\n";
-                  pp($prog, $l);
-                  print "$r:\n";
-                  pp($prog, $r);
-                }
-              ++$fail;
-            }
+          ++$fail;
         }
     }
 }
 
 my $verbose = 1;
-check_rat_exp($verbose, @ARGV);
+my $prog = shift @ARGV;
+check_rat_exp($prog, $_, $verbose)
+  foreach @ARGV;
 
 exit !!$fail;
 
