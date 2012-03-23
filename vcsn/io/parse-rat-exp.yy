@@ -112,7 +112,14 @@
 };
 
 %printer { debug_stream() << $$; } <ival>;
-%printer { debug_stream() << *$$; } <sval> <weights>; // FIXME: <node>;
+%printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
+%printer
+{
+  if ($$)
+    debug_stream() << '[' << *$$ << ']';
+  else
+    debug_stream() << "nullptr";
+} <weights>; // FIXME: <node>;
 %destructor { delete $$; } <sval> <weights> <node>;
 
 %token <ival>   LPAREN  "("
