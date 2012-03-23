@@ -46,15 +46,24 @@ sub check_rat_exp($$$)
       s/\s*#.*//;
       next
         unless $_;
+
+      if (/%weight: (.*)/)
+        {
+          $ws = $1;
+          print "WeightSet: $ws\n"
+            if $verbose;
+          next;
+        }
+
       m/^(.*) (=>|==) (.*)$/
         or die "$file:$.: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
-      my $L = pp($prog, $l);
+      my $L = pp("$prog $ws", $l);
 
       # == tests that boths are equivalent.
       # =  check the actual result.
 
-      my $R = $op eq '=>' ? quote($r) : pp($prog, $r);
+      my $R = $op eq '=>' ? quote($r) : pp("$prog $ws", $r);
       # Empty result is a sign of failure.
       if ($L ne '' && $L eq $R)
         {
@@ -65,8 +74,8 @@ sub check_rat_exp($$$)
           print "$FAIL: $l $op $r: $L vs. $R\n";
           if ($verbose)
             {
-              print "      $l: " . pp($prog, $l) . "\n";
-              print "      $r: " . pp($prog, $r) . "\n";
+              print "      $l: " . pp("$prog $ws", $l) . "\n";
+              print "      $r: " . pp("$prog $ws", $r) . "\n";
             }
           ++$fail;
         }

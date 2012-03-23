@@ -16,7 +16,15 @@ TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
 AM_RAT_LOG_FLAGS = rat/pprat
 
-dist_TESTS += rat/test.rat rat/z.rat
+dist_TESTS +=					\
+  $(XFAIL_TESTS)				\
+  rat/test.rat					\
+  rat/z.rat
+
+XFAIL_TESTS +=					\
+  rat/wrong-weight-set.rat			\
+  rat/invalid-weight-set.rat			\
+  rat/wrong-weight-set.rat
 
 check_PROGRAMS += rat/pprat
 AM_CPPFLAGS += $(top_srcdir)/vcsn
