@@ -12,12 +12,12 @@ namespace vcsn
 {
 
   /*----------.
-    | factory.  |
-    `----------*/
+  | factory.  |
+  `----------*/
 
   inline
   auto
-  factory::weight(std::string* w)
+  factory::weight(std::string* w) const
     -> weight_str_container*
   {
     weight_str_container* res = new weight_str_container();
@@ -28,7 +28,7 @@ namespace vcsn
 
   inline
   auto
-  factory::weight(weight_str* w, weight_str_container* l)
+  factory::weight(weight_str* w, weight_str_container* l) const
     -> weight_str_container*
   {
     l->push_front(w);
@@ -37,7 +37,7 @@ namespace vcsn
 
   inline
   auto
-  factory::weight(weight_str_container* l, weight_str* w)
+  factory::weight(weight_str_container* l, weight_str* w) const
     -> weight_str_container*
   {
     // FIXME: Sounds very wrong, need a test.
@@ -48,8 +48,8 @@ namespace vcsn
 
 
   /*-----------.
-    | factory_.  |
-    `-----------*/
+  | factory_.  |
+  `-----------*/
 
   template <class WeightSet>
   factory_<WeightSet>::factory_()
@@ -66,7 +66,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::mul(exp_t* l, exp_t* r)
+  factory_<WeightSet>::mul(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -77,7 +77,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::add(exp_t* l, exp_t* r)
+  factory_<WeightSet>::add(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -88,7 +88,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::star(exp_t* e)
+  factory_<WeightSet>::star(exp_t* e) const
     -> exp_t*
   {
     return star(down_cast<node_t*>(e));
@@ -97,7 +97,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::mul(node_t* l, node_t* r)
+  factory_<WeightSet>::mul(node_t* l, node_t* r) const
     -> node_t*
   {
     // Trivial Identity
@@ -149,7 +149,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::add(node_t* l, node_t* r)
+  factory_<WeightSet>::add(node_t* l, node_t* r) const
     -> node_t*
   {
     // Trivial Identity
@@ -199,7 +199,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::star(node_t* e)
+  factory_<WeightSet>::star(node_t* e) const
     -> node_t*
   {
     if (node_t::ZERO == e->type())
@@ -216,7 +216,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::unit()
+  factory_<WeightSet>::unit() const
     -> one_t*
   {
     return new one_t(ws_->unit());
@@ -225,7 +225,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::zero()
+  factory_<WeightSet>::zero() const
     -> zero_t*
   {
     return new zero_t(ws_->unit());
@@ -234,7 +234,7 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::atom(std::string* w)
+  factory_<WeightSet>::atom(std::string* w) const
     -> atom_t*
   {
     return new atom_t(ws_->unit(), w);
@@ -243,7 +243,7 @@ namespace vcsn
 
   template <class WeightSet>
   auto
-  factory_<WeightSet>::weight(weight_str_container* w, exp_t* e)
+  factory_<WeightSet>::weight(weight_str_container* w, exp_t* e) const
     -> exp_t*
   {
     if (w)
@@ -254,7 +254,7 @@ namespace vcsn
 
   template <class WeightSet>
   auto
-  factory_<WeightSet>::weight(exp_t* e, weight_str_container* w)
+  factory_<WeightSet>::weight(exp_t* e, weight_str_container* w) const
     -> exp_t*
   {
     if (!w)
@@ -276,7 +276,7 @@ namespace vcsn
   template<class WeightSet>
   auto
   factory_<WeightSet>::weight(leaf_t* e,
-                                 weight_str_container* w)
+                              weight_str_container* w) const
     -> node_t*
   {
     for (auto i : *w)
@@ -295,7 +295,7 @@ namespace vcsn
   template<class WeightSet>
   auto
   factory_<WeightSet>::weight(weight_str_container* w,
-                                 inner_t* e)
+                              inner_t* e) const
     -> node_t*
   {
     for (auto i : *w)
@@ -313,8 +313,8 @@ namespace vcsn
 
   template<class WeightSet>
   auto
-  factory_<WeightSet>::weight(inner_t* e,
-                                 weight_str_container* w)
+  factory_<WeightSet>::weight(inner_t* e, 
+                              weight_str_container* w) const
     -> node_t*
   {
     for (auto i : *w)
