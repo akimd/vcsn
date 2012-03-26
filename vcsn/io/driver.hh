@@ -19,7 +19,10 @@ namespace vcsn
       exp* parse_string(const std::string& e);
       const factory* factory_;
 
+      /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
+      /// The string \a s is invalid at \a l.
+      void invalid(const location& l, const std::string& s);
 
     private:
       exp* parse();

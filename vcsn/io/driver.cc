@@ -17,6 +17,12 @@ namespace vcsn
       std::cerr << l << ": " << m << std::endl;
     }
 
+    void
+    driver::invalid(const location& l, const std::string& s)
+    {
+      error(l, "invalid character: " + s);
+    }
+
     exp*
     driver::parse()
     {

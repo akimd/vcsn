@@ -49,7 +49,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
   {char}  yylval->sval = new std::string(yytext); return TOK(ATOM);
   "\n"    continue;
-  .       exit(51); // FIXME
+  .       driver_.invalid(*yylloc, yytext);
 
 }
 
@@ -75,16 +75,10 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 }
 
 <SC_WORD>{ /* Word with Vcsn Syntax*/
-  {char}                        { *sval += yytext; }
-  \"                            {
-    yy_pop_state();
-    yylval->sval = sval;
-    return TOK(ATOM);
-  }
-  \<{char}*\>         { // FIXME: check
-    *sval += yytext;
-  }
-  .                             exit(51);
+  {char}        *sval += yytext;
+  \"            yy_pop_state(); yylval->sval = sval; return TOK(ATOM);
+  \<{char}*\>   *sval += yytext;  // FIXME: check
+  .             driver_.invalid(*yylloc, yytext);
 }
 
 %%
@@ -114,7 +108,10 @@ namespace vcsn
       yy_flex_debug = !!getenv("YYSCAN");
       yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
-        exit(1); //FIXME:
+        {
+          std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
+          exit(1);
+        }
       yypush_buffer_state(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
     }
