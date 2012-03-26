@@ -35,27 +35,21 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 <INITIAL>{ /* Vcsn Syntax */
 
-  "("                           yylval->ival = 0; return TOK(LPAREN);
-  ")"                           yylval->ival = 0; return TOK(RPAREN);
+  "("     yylval->ival = 0; return TOK(LPAREN);
+  ")"     yylval->ival = 0; return TOK(RPAREN);
 
-  "["                           yylval->ival = 1; return TOK(LPAREN);
-  "]"                           yylval->ival = 1; return TOK(RPAREN);
-  "+"                           return TOK(PLUS);
-  "."                           return TOK(DOT);
-  "*"                           return TOK(STAR);
-  "\\e"                         return TOK(ONE);
-  "\\z"                         return TOK(ZERO);
+  "["     yylval->ival = 1; return TOK(LPAREN);
+  "]"     yylval->ival = 1; return TOK(RPAREN);
+  "+"     return TOK(PLUS);
+  "."     return TOK(DOT);
+  "*"     return TOK(STAR);
+  "\\e"   return TOK(ONE);
+  "\\z"   return TOK(ZERO);
 
-  "{"                           {
-    sval = new std::string();
-    yy_push_state(SC_WEIGHT);
-  }
-  {char}                        {
-    yylval->sval = new std::string(yytext);
-    return TOK(ATOM);
-  }
-  "\n"                          continue;
-  .                             exit(51); // FIXME
+  "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
+  {char}  yylval->sval = new std::string(yytext); return TOK(ATOM);
+  "\n"    continue;
+  .       exit(51); // FIXME
 
 }
 
