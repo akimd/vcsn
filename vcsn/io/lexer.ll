@@ -94,6 +94,37 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 %%
 
+namespace vcsn
+{
+  namespace rat
+  {
+    void
+    scan_file(const std::string& f)
+    {
+      yy_flex_debug = !!getenv("YYSCAN");
+      yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
+      if (!yyin)
+        exit(1); //FIXME:
+      yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
+    }
+
+    void
+    scan_string(const std::string& e)
+    {
+      yy_flex_debug = !!getenv("YYSCAN");
+      yyin = 0;
+      yy_switch_to_buffer(yy_scan_string(e.c_str()));
+    }
+
+    void
+    scan_close()
+    {
+      if (yyin)
+        fclose(yyin);
+    }
+  }
+}
+
 // Local Variables:
 // mode: C++
 // End:

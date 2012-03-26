@@ -17,14 +17,12 @@
   #include <string>
   #include "location.hh"
   #include <vcsn/core/rat/node.hh>
-  #include <vcsn/core/rat/factory_.hh>
+  #include <vcsn/core/rat/factory.hh>
   #include <vcsn/core/rat/printer.hh>
 }
 
 %code provides
 {
-  extern int yy_flex_debug;
-
   #define YY_DECL                                               \
     int                                                         \
     vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
@@ -37,31 +35,16 @@
       int
       lex(parser::semantic_type* yylval, parser::location_type* yylloc);
 
-      template <typename WeightSet>
-      exp*
-      parse()
-      {
-        typedef WeightSet weightset_t;
-        typedef typename weightset_t::value_t weight_t;
+      /// Prepare scanner to load file f.
+      void scan_file(const std::string& f);
+      /// Prepare scanner to read string e.
+      void scan_string(const std::string& e);
+      /// Close input.
+      void scan_close();
 
-        // Factory.
-        extern factory* fact;
-        factory_<weightset_t> f;
-        fact = &f;
+      exp* parse_file(const std::string& f, const factory& fact);
 
-        // Scanner.
-        yy_flex_debug = !!getenv("YYSCAN");
-
-        // Parser.
-        parser p;
-        p.set_debug_level(!!getenv("YYDEBUG"));
-        extern exp* result;
-        result = 0;
-        if (p.parse())
-          return 0;
-        else
-          return result;
-      }
+      exp* parse_string(const std::string& e, const factory& fact);
     }
   }
 }
@@ -97,7 +80,7 @@
   {
     namespace rat
     {
-      factory* fact;
+      const factory* fact;
       exp* result;
     }
   }
@@ -200,6 +183,43 @@ namespace vcsn
     vcsn::rat::parser::error(const location_type& l, const std::string& m)
     {
       std::cerr << l << ": " << m << std::endl;
+    }
+
+    static
+    exp*
+    parse(const factory& f)
+    {
+      // Factory.
+      extern const factory* fact;
+      const factory* old_fact = fact;
+      fact = &f;
+
+      // Parser.
+      parser p;
+      p.set_debug_level(!!getenv("YYDEBUG"));
+      extern exp* result;
+      exp* res = 0;
+      std::swap(result, res);
+      if (p.parse())
+        result = 0;
+      scan_close();
+      fact = old_fact;
+      std::swap(result, res);
+      return res;
+    }
+
+    exp*
+    parse_file(const std::string& f, const factory& fact)
+    {
+      scan_file(f);
+      return parse(fact);
+    }
+
+    exp*
+    parse_string(const std::string& e, const factory& fact)
+    {
+      scan_string(e);
+      return parse(fact);
     }
   }
 }

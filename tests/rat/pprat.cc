@@ -2,6 +2,7 @@
 
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/z.hh>
+#include <vcsn/core/rat/factory_.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 
 static
@@ -23,7 +24,8 @@ pp()
 {
   typedef WeightSet weightset_t;
   typedef typename weightset_t::value_t weight_t;
-  if (vcsn::rat::exp* e = vcsn::rat::parse<weightset_t>())
+  vcsn::factory_<weightset_t> factory;
+  if (vcsn::rat::exp* e = vcsn::rat::parse_file("-", factory))
     {
       const auto* down = down_cast<const vcsn::rat::node<weight_t>*>(e);
       vcsn::rat::printer<weightset_t>
