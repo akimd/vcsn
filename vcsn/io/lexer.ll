@@ -4,6 +4,7 @@
 #include <string>
 #include <cassert>
 #include <stack>
+#include <iostream>
 #include <vcsn/io/parse-rat-exp.hh>
 
 #define LINE(Line)				\
@@ -98,6 +99,21 @@ namespace vcsn
 {
   namespace rat
   {
+    // Beware of the dummy Flex interface.  One would like to use:
+    //
+    // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
+    //
+    // and
+    //
+    // yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
+    //
+    // but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
+    // effect calling yypush_buffer_state saves the new state instead
+    // of the old one.
+    //
+    // So do it in two steps, quite different from what is suggested
+    // in the document: save the old context, switch to the new one.
+
     void
     scan_file(const std::string& f)
     {
@@ -105,6 +121,7 @@ namespace vcsn
       yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
         exit(1); //FIXME:
+      yypush_buffer_state(YY_CURRENT_BUFFER);
       yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
     }
 
@@ -113,14 +130,16 @@ namespace vcsn
     {
       yy_flex_debug = !!getenv("YYSCAN");
       yyin = 0;
-      yy_switch_to_buffer(yy_scan_string(e.c_str()));
+      yypush_buffer_state(YY_CURRENT_BUFFER);
+      yy_scan_bytes(e.c_str(), e.size());
     }
 
     void
     scan_close()
     {
-      if (yyin)
-        fclose(yyin);
+      yypop_buffer_state();
+      //if (yyin)
+      //fclose(yyin);
     }
   }
 }
