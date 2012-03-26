@@ -48,7 +48,8 @@
   }
 }
 
-%param { driver& driver_ }
+%parse-param { driver& driver_ }
+%lex-param   { driver& driver_ }
 
 %code
 {
