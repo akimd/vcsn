@@ -250,7 +250,7 @@ namespace vcsn
     else
       {
         auto rweight = down_cast<inner_t*>(expr);
-        return weight(rweight, w);
+        return weight(w, rweight);
       }
   }
 
