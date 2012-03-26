@@ -19,12 +19,12 @@ namespace vcsn
 
       enum type_t
         {
-          CONCAT,
-          PLUS,
-          KLEENE,
-          ONE,
-          ZERO,
-          WORD,
+          ZERO   = 0,
+          ONE    = 1,
+          WORD   = 2,
+          PLUS   = 3,
+          CONCAT = 4,
+          KLEENE = 5,
         };
       virtual type_t type() const = 0;
     };
