@@ -38,10 +38,12 @@ sub check_rat_exp($$$)
 {
   my ($prog, $file, $verbose) = @_;
 
-  open(IN, $file)
+  use IO::File;
+  my $in = new IO::File($file)
     or die "$file: cannot open: $!\n";
-  foreach(<IN>)
+  while ($_ = $in->getline())
     {
+      my $line = $in->input_line_number;
       chomp;
       s/\s*#.*//;
       next
@@ -56,7 +58,7 @@ sub check_rat_exp($$$)
         }
 
       m/^(.*) (=>|==) (.*)$/
-        or die "$file:$.: invalid input: \"$_\"";
+        or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
       my $L = pp("$prog $ws", $l);
 
@@ -71,7 +73,7 @@ sub check_rat_exp($$$)
         }
       else
         {
-          print "$FAIL: $l $op $r: $L vs. $R\n";
+          print "$file:$line: $FAIL: $l $op $r: $L vs. $R\n";
           if ($verbose)
             {
               print "      $l: " . pp("$prog $ws", $l) . "\n";
