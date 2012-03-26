@@ -113,13 +113,13 @@ namespace vcsn
     // E+0 = 0+E = E
     if (node_t::ZERO == l->type())
       {
-        delete r;
-        return l;
+        delete l;
+        return r;
       }
     if (node_t::ZERO == r->type())
       {
-        delete l;
-        return r;
+        delete r;
+        return l;
       }
     // END: Trivial Identity
 

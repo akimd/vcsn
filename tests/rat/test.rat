@@ -33,5 +33,9 @@ a+\e == (a+\e)
 
 # Trivial identities.
 \z*  => \e
-a+\z => \z
+a+\z => a
+\z+a => a
+a\z  => \z
+\za  => \z
 a\e  => a
+\ea  => a
