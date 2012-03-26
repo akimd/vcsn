@@ -36,7 +36,7 @@ AC_LANG(C++)
 
 AX_CHECK_COMPILE_FLAG([-std=c++11],
                       [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++11"])
-if test "${stdfailed-true}"; then
+if "${stdfailed-true}"; then
   AX_CHECK_COMPILE_FLAG([-std=c++0x],
                         [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++0x"])
 fi
