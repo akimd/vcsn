@@ -27,6 +27,5 @@ XFAIL_TESTS +=					\
   rat/wrong-weight-set.rat
 
 check_PROGRAMS += rat/pprat
-AM_CPPFLAGS += $(top_srcdir)/vcsn
 
 rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la
