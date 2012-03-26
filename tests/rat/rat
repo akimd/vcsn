@@ -1,5 +1,7 @@
 #! /usr/bin/perl
 
+use File::Basename;
+
 my $black = `tput setaf 0`;
 my $blue = `tput setaf 4`;
 my $cyan = `tput setaf 6`;
@@ -54,6 +56,13 @@ sub check_rat_exp($$$)
           $ws = $1;
           print "WeightSet: $ws\n"
             if $verbose;
+          next;
+        }
+
+      if (/%include: (.*)/)
+        {
+          my $f = dirname($file) . "/" . $1;
+          check_rat_exp($prog, $f, $verbose);
           next;
         }
 

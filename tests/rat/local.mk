@@ -18,9 +18,10 @@ AM_RAT_LOG_FLAGS = rat/pprat
 
 dist_TESTS +=					\
   $(XFAIL_TESTS)				\
-  rat/test.rat					\
+  rat/b.rat					\
   rat/rat.rat					\
   rat/z.rat
+EXTRA_DIST += rat/common.rat
 
 XFAIL_TESTS +=					\
   rat/wrong-weight-set.rat			\

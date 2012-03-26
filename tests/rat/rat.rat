@@ -1,6 +1,6 @@
 %weight: rat
+%include: common.rat
 
-a => a
 {\e}a => a
 {x}a => {x}a
 {x}{y}a => {(x.y)}a

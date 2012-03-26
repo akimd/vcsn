@@ -1,5 +1,3 @@
-%weight: b
-
 # The base cases.
 a  => a
 \e => \e
