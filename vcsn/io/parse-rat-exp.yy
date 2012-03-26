@@ -18,6 +18,7 @@
   #include "location.hh"
   #include <vcsn/core/rat/node.hh>
   #include <vcsn/core/rat/factory.hh>
+  #include <vcsn/io/driver.hh>
 }
 
 %code provides
@@ -25,14 +26,17 @@
   #define YY_DECL                                               \
     int                                                         \
     vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
-                   vcsn::rat::parser::location_type* yylloc)
+                   vcsn::rat::parser::location_type* yylloc,    \
+                   vcsn::rat::driver& driver_)
 
   namespace vcsn
   {
     namespace rat
     {
       int
-      lex(parser::semantic_type* yylval, parser::location_type* yylloc);
+      lex(parser::semantic_type* yylval,
+          parser::location_type* yylloc,
+          vcsn::rat::driver& driver_);
 
       /// Prepare scanner to load file f.
       void scan_file(const std::string& f);
@@ -40,13 +44,11 @@
       void scan_string(const std::string& e);
       /// Close input.
       void scan_close();
-
-      exp* parse_file(const std::string& f, const factory& fact);
-
-      exp* parse_string(const std::string& e, const factory& fact);
     }
   }
 }
+
+%param { driver& driver_ }
 
 %code
 {
@@ -82,7 +84,7 @@
       // Define the factory.
       const factory* fact;
 #define MAKE(Kind, ...)                         \
-      fact->Kind(__VA_ARGS__)
+      driver_.factory_->Kind(__VA_ARGS__)
       exp* result;
     }
   }
@@ -105,7 +107,7 @@
   else
     debug_stream() << "nullptr";
 } <weights>;
-%printer { fact->print(debug_stream(), $$); } <node>;
+%printer { driver_.factory_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval> <weights> <node>;
 
 %token <ival>   LPAREN  "("
@@ -185,44 +187,7 @@ namespace vcsn
     void
     vcsn::rat::parser::error(const location_type& l, const std::string& m)
     {
-      std::cerr << l << ": " << m << std::endl;
-    }
-
-    static
-    exp*
-    parse(const factory& f)
-    {
-      // Factory.
-      extern const factory* fact;
-      const factory* old_fact = fact;
-      fact = &f;
-
-      // Parser.
-      parser p;
-      p.set_debug_level(!!getenv("YYDEBUG"));
-      extern exp* result;
-      exp* res = 0;
-      std::swap(result, res);
-      if (p.parse())
-        result = 0;
-      scan_close();
-      fact = old_fact;
-      std::swap(result, res);
-      return res;
-    }
-
-    exp*
-    parse_file(const std::string& f, const factory& fact)
-    {
-      scan_file(f);
-      return parse(fact);
-    }
-
-    exp*
-    parse_string(const std::string& e, const factory& fact)
-    {
-      scan_string(e);
-      return parse(fact);
+      driver_.error(l, m);
     }
   }
 }

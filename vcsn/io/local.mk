@@ -61,4 +61,7 @@ $(addprefix $(srcdir)/, $(SOURCES_PARSE_RAT_EXP_YY)): io/parse-rat-exp.stamp
 	fi
 
 check_LTLIBRARIES = librat.la
-librat_la_SOURCES = io/lexer.ll $(SOURCES_PARSE_RAT_EXP_YY)
+librat_la_SOURCES = 				\
+  $(SOURCES_PARSE_RAT_EXP_YY)			\
+  io/driver.hh io/driver.cc			\
+  io/lexer.ll

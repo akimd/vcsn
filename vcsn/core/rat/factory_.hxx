@@ -316,7 +316,8 @@ namespace vcsn
   factory_<WeightSet>::conv(const std::string& s) const
     -> value_t
   {
-    return vcsn::rat::parse_string(s, *this);
+    vcsn::rat::driver d(*this);
+    return d.parse_string(s);
   }
 
   template<class WeightSet>

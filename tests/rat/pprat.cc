@@ -3,7 +3,7 @@
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/z.hh>
 #include <vcsn/core/rat/factory_.hh>
-#include <vcsn/io/parse-rat-exp.hh>
+#include <vcsn/io/driver.hh>
 
 static
 void
@@ -26,7 +26,8 @@ pp(const WeightSet& ws)
   typedef WeightSet weightset_t;
   typedef typename weightset_t::value_t weight_t;
   vcsn::factory_<weightset_t> factory(ws);
-  if (vcsn::rat::exp* e = vcsn::rat::parse_file("-", factory))
+  vcsn::rat::driver d(factory);
+  if (vcsn::rat::exp* e = d.parse_file("-"))
     factory.print(std::cout, e) << std::endl;
   return 1;
 }
