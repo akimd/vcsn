@@ -54,7 +54,7 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const one<weight_t>& v)
     {
-      print_left_weight(v);
+      print(v.left_weight());
       out_ << "\\e";
     }
 
@@ -62,7 +62,7 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const zero<weight_t>& v)
     {
-      print_left_weight(v);
+      print(v.left_weight());
       out_ << "\\z";
     }
 
@@ -70,7 +70,7 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const atom<weight_t>& v)
     {
-      print_left_weight(v);
+      print(v.left_weight());
       out_ <<* v.get_atom();
     }
 
@@ -110,12 +110,6 @@ namespace vcsn
       print(n.right_weight());
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::print_left_weight(const leaf<weight_t>& v)
-    {
-      print(v.left_weight());
-    }
 
   } // namespace rat
 } // namespace vcsn
