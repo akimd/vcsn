@@ -1,0 +1,8 @@
+%weight: rat
+
+a => a
+{\e}a => a
+{x}a => {x}a
+{x}{y}a => {(x.y)}a
+{x}a{y} => {(x.y)}a
+a{x}{y} => {(x.y)}a

@@ -13,8 +13,9 @@ usage(const char* prog, int status)
     "usage: " << prog << " WEIGHT-SET\n"
     "\n"
     "WEIGHT-SET:\n"
-    "  z  for Z\n"
-    "  b  for Boolean\n";
+    "  z    for Z\n"
+    "  b    for Boolean\n"
+    "  rat  for RatExp<b>\n";
   exit(status);
 }
 
@@ -41,6 +42,11 @@ main(int argc, const char* argv[])
     return pp(vcsn::z());
   else if (w == "b")
     return pp(vcsn::b());
+  else if (w == "rat")
+    {
+      vcsn::factory_<vcsn::b> rat{ vcsn::b() };
+      return pp(rat);
+    }
   else
     usage(argv[0], EXIT_FAILURE);
 }

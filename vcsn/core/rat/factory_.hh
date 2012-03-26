@@ -47,6 +47,11 @@ namespace vcsn
     zero_t* zero() const;
     atom_t* atom(std::string* w) const;
 
+    bool is_zero(value_t v) const;
+    bool is_unit(value_t v) const;
+    bool show_unit() const;
+    value_t conv(const std::string& s) const;
+
     virtual
     std::ostream&
     print(std::ostream& o, const value_t v) const;

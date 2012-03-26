@@ -181,6 +181,22 @@ namespace vcsn
 
   template <class WeightSet>
   inline
+  bool
+  factory_<WeightSet>::is_unit(value_t v) const
+  {
+    return dynamic_cast<one_t*>(v);
+  }
+
+  template <class WeightSet>
+  inline
+  bool
+  factory_<WeightSet>::show_unit() const
+  {
+    return false;
+  }
+
+  template <class WeightSet>
+  inline
   auto
   factory_<WeightSet>::zero() const
     -> zero_t*
@@ -188,6 +204,13 @@ namespace vcsn
     return new zero_t(ws_->unit());
   }
 
+  template <class WeightSet>
+  inline
+  bool
+  factory_<WeightSet>::is_zero(value_t v) const
+  {
+    return dynamic_cast<zero_t*>(v);
+  }
 
   template <class WeightSet>
   inline
@@ -286,6 +309,14 @@ namespace vcsn
         e->right_weight() = ws_->mul(e->right_weight(), new_weight);
       }
     return e;
+  }
+
+  template<class WeightSet>
+  auto
+  factory_<WeightSet>::conv(const std::string& s) const
+    -> value_t
+  {
+    return vcsn::rat::parse_string(s, *this);
   }
 
   template<class WeightSet>
