@@ -113,7 +113,7 @@
 
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
-%token  PLUS  "+"
+%token  SUM  "+"
         DOT   "."
         STAR  "*"
         ONE   "\\e"

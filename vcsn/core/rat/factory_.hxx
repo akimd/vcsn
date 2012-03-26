@@ -72,10 +72,10 @@ namespace vcsn
       }
     // END: Trivial Identity
 
-    if (node_t::CONCAT == l->type())
+    if (node_t::PROD == l->type())
       {
         auto left = down_cast<prod_t*>(l);
-        if (node_t::CONCAT == r->type())
+        if (node_t::PROD == r->type())
           {
             auto right = down_cast<prod_t*>(r);
             left->splice(left->end(), *right);
@@ -88,7 +88,7 @@ namespace vcsn
             return left;
           }
       }
-    else if (node_t::CONCAT == r->type())
+    else if (node_t::PROD == r->type())
       {
         auto right = down_cast<prod_t*>(r);
         right->push_front(l);
@@ -123,10 +123,10 @@ namespace vcsn
       }
     // END: Trivial Identity
 
-    if (node_t::PLUS == l->type())
+    if (node_t::SUM == l->type())
       {
         auto res = down_cast<sum_t*>(l);
-        if (node_t::PLUS == r->type())
+        if (node_t::SUM == r->type())
           {
             auto right = down_cast<sum_t*>(r);
             res->splice(res->end(), *right);
@@ -138,7 +138,7 @@ namespace vcsn
           }
         return res;
       }
-    else if (node_t::PLUS == r->type())
+    else if (node_t::SUM == r->type())
       {
         auto res = down_cast<sum_t*>(r);
         res->push_front(l);

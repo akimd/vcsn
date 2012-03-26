@@ -19,12 +19,12 @@ namespace vcsn
 
       enum type_t
         {
-          ZERO   = 0,
-          ONE    = 1,
-          WORD   = 2,
-          PLUS   = 3,
-          CONCAT = 4,
-          KLEENE = 5,
+          ZERO = 0,
+          ONE  = 1,
+          ATOM = 2,
+          SUM  = 3,
+          PROD = 4,
+          STAR = 5,
         };
       virtual type_t type() const = 0;
     };
@@ -148,7 +148,7 @@ namespace vcsn
     public:
       prod(const weight_t& l, const weight_t& r);
     public:
-      virtual type_t type() const { return node_t::CONCAT; };
+      virtual type_t type() const { return node_t::PROD; };
 
     public:
       virtual void accept(typename node_t::visitor& v);
@@ -177,7 +177,7 @@ namespace vcsn
       sum(const weight_t& l, const weight_t& r);
 
     public:
-      virtual type_t type() const { return node_t::PLUS; };
+      virtual type_t type() const { return node_t::SUM; };
 
     public:
       virtual void accept(typename node_t::visitor& v);
@@ -204,7 +204,7 @@ namespace vcsn
       node_t *get_sub();
       const node_t *get_sub() const;
     public:
-      virtual type_t type() const { return node_t::KLEENE; };
+      virtual type_t type() const { return node_t::STAR; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
@@ -280,7 +280,7 @@ namespace vcsn
       atom(const weight_t& l, std::string* atom);
       virtual ~atom();
     public:
-      virtual type_t type() const { return node_t::WORD; };
+      virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;

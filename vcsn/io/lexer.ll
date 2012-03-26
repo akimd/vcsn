@@ -19,7 +19,7 @@
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
 %}
-%x SC_WEIGHT SC_WORD
+%x SC_WEIGHT SC_ATOM
 
 char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
@@ -40,7 +40,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
   "["     yylval->ival = 1; return TOK(LPAREN);
   "]"     yylval->ival = 1; return TOK(RPAREN);
-  "+"     return TOK(PLUS);
+  "+"     return TOK(SUM);
   "."     return TOK(DOT);
   "*"     return TOK(STAR);
   "\\e"   return TOK(ONE);
@@ -74,7 +74,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   [^{}]+       { *sval += yytext; }
 }
 
-<SC_WORD>{ /* Word with Vcsn Syntax*/
+<SC_ATOM>{ /* Word with Vcsn Syntax*/
   {char}        *sval += yytext;
   \"            yy_pop_state(); yylval->sval = sval; return TOK(ATOM);
   \<{char}*\>   *sval += yytext;  // FIXME: check
