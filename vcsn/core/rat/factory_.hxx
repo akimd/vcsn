@@ -16,7 +16,7 @@ namespace vcsn
   template <class WeightSet>
   factory_<WeightSet>::factory_()
     : super_type()
-    , ws_(0)
+    , ws_(nullptr)
   {}
 
   template <class WeightSet>

@@ -1,8 +1,7 @@
 #ifndef VCSN_WEIGHTS_B_HH
-#define VCSN_WEIGHTS_B_HH
+# define VCSN_WEIGHTS_B_HH
 
-#include <string>
-#include <cassert>
+# include <string>
 
 namespace vcsn
 {

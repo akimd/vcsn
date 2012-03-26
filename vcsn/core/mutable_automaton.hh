@@ -210,7 +210,7 @@ namespace vcsn
 		     [&] (const transition_t& t)
 		     { return t->dst == dst && a_.equals(t->label, l); });
       if (i == end(succ))
-	return 0;
+	return nullptr;
       return *i;
     }
 
@@ -267,7 +267,7 @@ namespace vcsn
 	  else
 	    {
 	      del_transition(t);
-	      t = 0;
+	      t = nullptr;
 	    }
 	}
       else if (!ws_.is_zero(k))

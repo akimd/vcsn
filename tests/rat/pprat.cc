@@ -3,6 +3,7 @@
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/z.hh>
 #include <vcsn/core/rat/factory_.hh>
+#include <vcsn/core/rat/printer.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 
 static

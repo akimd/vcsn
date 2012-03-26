@@ -9,11 +9,11 @@
 #define LINE(Line)				\
   do{						\
     yylloc->end.column = 1;			\
-    yylloc->lines (Line);                       \
+    yylloc->lines(Line);                        \
  } while (false)
 
 #define YY_USER_ACTION				\
-  yylloc->columns (yyleng);
+  yylloc->columns(yyleng);
 
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
