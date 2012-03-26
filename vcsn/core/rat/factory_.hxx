@@ -293,7 +293,7 @@ namespace vcsn
   factory_<WeightSet>::print(std::ostream& o, const value_t v) const
   {
     const auto* down = down_cast<const node_t*>(v);
-    rat::printer<weightset_t> print(o, *ws_, true, true);
+    rat::printer<weightset_t> print(o, *ws_);
     down->accept(print);
     return o;
   }

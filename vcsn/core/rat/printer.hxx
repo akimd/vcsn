@@ -9,11 +9,9 @@ namespace vcsn
     template <class WeightSet>
     printer<WeightSet>::printer(std::ostream& out,
                                 const weightset_t& ws,
-                                const bool show_unit,
                                 const bool debug)
       : out_(out)
       , ws_(ws)
-      , show_unit_(show_unit)
       , debug_(debug)
     {}
 
@@ -80,7 +78,7 @@ namespace vcsn
     void
     printer<WeightSet>::print(const weight_t& w)
     {
-      if (show_unit_ || !ws_.is_unit(w))
+      if (ws_.show_unit() || !ws_.is_unit(w))
         {
           out_ << '{';
           ws_.print(out_, w);

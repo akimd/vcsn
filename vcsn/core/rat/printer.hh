@@ -21,7 +21,7 @@ namespace vcsn
     public:
       printer(std::ostream& out,
               const weightset_t& ws,
-              const bool show_unit = false, const bool debug = false);
+              const bool debug = false);
       virtual ~printer();
     public:
       virtual void visit(const prod<weight_t>& v);
@@ -38,7 +38,6 @@ namespace vcsn
 
       std::ostream& out_;
       const weightset_t& ws_;
-      const bool show_unit_;
       const bool debug_;
     };
 
