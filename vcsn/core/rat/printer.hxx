@@ -46,7 +46,7 @@ namespace vcsn
         out_ << '*';
       out_ << '(';
       sub->accept(*this);
-      out_ << ")*";
+      out_ << "*)";
       print(v.right_weight());
     }
 

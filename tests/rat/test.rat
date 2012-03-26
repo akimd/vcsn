@@ -7,7 +7,7 @@ a  => a
 a+b => (a+b)
 ab => (a.b)
 a.b => (a.b)
-a* => (a)*
+a* => (a*)
 
 # Precedence and associativity.
 (a+b)* == ((a+b)*)
