@@ -79,7 +79,10 @@
   {
     namespace rat
     {
+      // Define the factory.
       const factory* fact;
+#define MAKE(Kind, ...)                         \
+      fact->Kind(__VA_ARGS__)
       exp* result;
     }
   }
@@ -133,34 +136,34 @@ exps:
 
 exp:
   term                          { $$ = $1; }
-| exp "." exp                   { $$ = fact->mul($1, $3); }
-| exp "+" exp                   { $$ = fact->add($1, $3); }
+| exp "." exp                   { $$ = MAKE(mul, $1, $3); }
+| exp "+" exp                   { $$ = MAKE(add, $1, $3); }
 ;
 
 term:
-  lexp weights.opt              { $$ = fact->weight($1, $2); }
+  lexp weights.opt              { $$ = MAKE(weight, $1, $2); }
 ;
 
 lexp:
-  weights.opt factors           { $$ = fact->weight($1, $2); }
-| lexp weights factors          { $$ = fact->mul($1, fact->weight($2, $3)); }
+  weights.opt factors           { $$ = MAKE(weight, $1, $2); }
+| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(weight, $2, $3)); }
 ;
 
 factors:
   factor                        { $$ = $1; }
-| factors factor                { $$ = fact->mul($1, $2); }
+| factors factor                { $$ = MAKE(mul, $1, $2); }
 ;
 
 factor:
   leaf                          { $$ = $1; }
-| factor "*"                    { $$ = fact->star($1); }
+| factor "*"                    { $$ = MAKE(star, $1); }
 | "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 leaf:
-  ZERO                          { $$ = fact->zero(); }
-| ONE                           { $$ = fact->unit(); }
-| ATOM                          { $$ = fact->atom($1); }
+  ZERO                          { $$ = MAKE(zero); }
+| ONE                           { $$ = MAKE(unit); }
+| ATOM                          { $$ = MAKE(atom, $1); }
 ;
 
 weights.opt:
@@ -169,8 +172,8 @@ weights.opt:
 ;
 
 weights:
-  "weight"                      { $$ = fact->weight($1); }
-| "weight" weights              { $$ = fact->weight($1, $2); }
+  "weight"                      { $$ = MAKE(weight, $1); }
+| "weight" weights              { $$ = MAKE(weight, $1, $2); }
 ;
 
 %%
