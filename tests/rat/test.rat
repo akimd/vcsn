@@ -1,10 +1,15 @@
 %weight: b
 
-a == (a)
-\e == (\e)
-a+b == (a+b)
-a* == (a*)
+# The base cases.
+a  => a
+\e => \e
+\z => \z
+a+b => (a+b)
+ab => (a.b)
+a.b => (a.b)
+a* => (a)*
 
+# Precedence and associativity.
 (a+b)* == ((a+b)*)
 a*b* == (a*)(b*)
 a*+b* == ((a*)+(b*))
@@ -23,8 +28,10 @@ a == (a)
 a+b+c == (a+b)+c
 a+\e == (a+\e)
 \e+\e == (\e+\e)
-a+\z == \z
-a\e == a
 (abc).(def) == abcdef
 (a+b)+(c+d) == a+b+c+d
-\z* == \e
+
+# Trivial identities.
+\z*  => \e
+a+\z => \z
+a\e  => a
