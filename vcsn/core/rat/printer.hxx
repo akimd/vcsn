@@ -81,7 +81,11 @@ namespace vcsn
     printer<WeightSet>::print(const weight_t& w)
     {
       if (show_unit_ || !ws_.is_unit(w))
-        out_ << '{' << w << '}';
+        {
+          out_ << '{';
+          ws_.print(out_, w);
+          out_ << '}';
+        }
     }
 
     template <class WeightSet>

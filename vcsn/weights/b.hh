@@ -2,6 +2,7 @@
 # define VCSN_WEIGHTS_B_HH
 
 # include <string>
+# include <ostream>
 
 namespace vcsn
 {
@@ -56,6 +57,12 @@ namespace vcsn
     conv(std::string& str) const
     {
       return str[0] != '0';
+    }
+
+    std::ostream&
+    print(std::ostream& o, const value_t v) const
+    {
+      return o << (v ? "true" : "false");
     }
   };
 }

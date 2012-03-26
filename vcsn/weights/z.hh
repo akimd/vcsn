@@ -2,6 +2,7 @@
 # define VCSN_WEIGHTS_Z_HH
 
 # include <string>
+# include <ostream>
 
 namespace vcsn
 {
@@ -58,6 +59,11 @@ namespace vcsn
       return atoi(str.c_str());
     }
 
+    std::ostream&
+    print(std::ostream& o, const value_t v) const
+    {
+      return o << v;
+    }
   };
 }
 
