@@ -24,7 +24,6 @@ namespace vcsn
     typedef exp_t* value_t;
 
   public:
-    factory_();
     factory_(const weightset_t& ws);
 
     virtual exp_t* mul(exp_t* l, exp_t* r) const;

@@ -14,12 +14,6 @@ namespace vcsn
   `-----------*/
 
   template <class WeightSet>
-  factory_<WeightSet>::factory_()
-    : super_type()
-    , ws_(nullptr)
-  {}
-
-  template <class WeightSet>
   factory_<WeightSet>::factory_(const WeightSet& ws)
     : super_type()
     , ws_(&ws)

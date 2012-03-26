@@ -21,16 +21,15 @@ usage(const char* prog, int status)
 
 template <typename WeightSet>
 int
-pp()
+pp(const WeightSet& ws)
 {
   typedef WeightSet weightset_t;
   typedef typename weightset_t::value_t weight_t;
-  vcsn::factory_<weightset_t> factory;
+  vcsn::factory_<weightset_t> factory(ws);
   if (vcsn::rat::exp* e = vcsn::rat::parse_file("-", factory))
     {
       const auto* down = down_cast<const vcsn::rat::node<weight_t>*>(e);
-      vcsn::rat::printer<weightset_t>
-        print(std::cout, weightset_t(), true, true);
+      vcsn::rat::printer<weightset_t> print(std::cout, ws, true, true);
       down->accept(print);
       std::cout << std::endl;
       return 0;
@@ -46,9 +45,9 @@ main(int argc, const char* argv[])
   std::string w(argv[1]);
 
   if (w == "z")
-    return pp<vcsn::z>();
+    return pp(vcsn::z());
   else if (w == "b")
-    return pp<vcsn::b>();
+    return pp(vcsn::b());
   else
     usage(argv[0], EXIT_FAILURE);
 }
