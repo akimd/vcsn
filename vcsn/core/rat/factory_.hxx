@@ -3,6 +3,7 @@
 
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/node.hh>
+#include <vcsn/core/rat/printer.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 
 namespace vcsn
@@ -285,6 +286,16 @@ namespace vcsn
         e->right_weight() = ws_->mul(e->right_weight(), new_weight);
       }
     return e;
+  }
+
+  template<class WeightSet>
+  std::ostream&
+  factory_<WeightSet>::print(std::ostream& o, const value_t v) const
+  {
+    const auto* down = down_cast<const node_t*>(v);
+    rat::printer<weightset_t> print(o, *ws_, true, true);
+    down->accept(print);
+    return o;
   }
 
 } // namespace vcsn

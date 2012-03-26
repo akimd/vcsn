@@ -47,6 +47,10 @@ namespace vcsn
     zero_t* zero() const;
     atom_t* atom(std::string* w) const;
 
+    virtual
+    std::ostream&
+    print(std::ostream& o, const value_t v) const;
+
     using super_type::weight;
     exp_t* weight(weight_str_container* w, exp_t* e) const;
     exp_t* weight(exp_t* e, weight_str_container* w) const;

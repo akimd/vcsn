@@ -101,7 +101,8 @@
     debug_stream() << '[' << *$$ << ']';
   else
     debug_stream() << "nullptr";
-} <weights>; // FIXME: <node>;
+} <weights>;
+%printer { fact->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval> <weights> <node>;
 
 %token <ival>   LPAREN  "("
