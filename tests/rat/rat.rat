@@ -6,3 +6,6 @@ a => a
 {x}{y}a => {(x.y)}a
 {x}a{y} => {(x.y)}a
 a{x}{y} => {(x.y)}a
+
+# Some trivial identities.
+{x}{y}a{\z}+{y}a{\e} => {y}a
