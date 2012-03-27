@@ -26,12 +26,6 @@ namespace vcsn
   public:
     factory_(const weightset_t& ws);
 
-    virtual exp_t* mul(exp_t* l, exp_t* r) const;
-    virtual exp_t* add(exp_t* l, exp_t* r) const;
-    virtual exp_t* star(exp_t* e) const;
-    virtual exp_t* weight(exp_t* e, std::string* w) const;
-    virtual exp_t* weight(std::string* w, exp_t* e) const;
-
     // exp constants' method
 #define DEFINE(Type)                            \
     typedef rat::Type<weight_t> Type ## _t
@@ -45,20 +39,25 @@ namespace vcsn
     DEFINE(sum);
 #undef DEFINE
 
-    one_t* unit() const;
-    zero_t* zero() const;
-    atom_t* atom(std::string* w) const;
+    // Specialization from factory.
+    virtual zero_t* zero() const;
+    virtual one_t* unit() const;
+    virtual atom_t* atom(std::string* w) const;
+    virtual exp_t* add(exp_t* l, exp_t* r) const;
+    virtual exp_t* mul(exp_t* l, exp_t* r) const;
+    virtual exp_t* star(exp_t* e) const;
+    virtual exp_t* weight(exp_t* e, std::string* w) const;
+    virtual exp_t* weight(std::string* w, exp_t* e) const;
 
+    // When used as WeightSet for automata.
     bool is_zero(value_t v) const;
     bool is_unit(value_t v) const;
     bool show_unit() const;
     value_t conv(const std::string& s) const;
-
-    virtual
-    std::ostream&
-    print(std::ostream& o, const value_t v) const;
+    virtual std::ostream& print(std::ostream& o, const value_t v) const;
 
   protected:
+    // Concrete type implementation.
     node_t* mul(node_t* l, node_t* r) const;
     node_t* add(node_t* l, node_t* r) const;
     node_t* star(node_t* e) const;

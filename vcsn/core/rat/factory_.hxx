@@ -20,15 +20,36 @@ namespace vcsn
     , ws_(&ws)
   {}
 
+
+  /*------------------------------------------------.
+  | Implemetation of factory pure virtual methods.  |
+  `------------------------------------------------*/
+
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::mul(exp_t* l, exp_t* r) const
-    -> exp_t*
+  factory_<WeightSet>::zero() const
+    -> zero_t*
   {
-    auto left = down_cast<node_t*>(l);
-    auto right = down_cast<node_t*>(r);
-    return mul(left, right);
+    return new zero_t(ws_->unit());
+  }
+
+  template <class WeightSet>
+  inline
+  auto
+  factory_<WeightSet>::unit() const
+    -> one_t*
+  {
+    return new one_t(ws_->unit());
+  }
+
+  template <class WeightSet>
+  inline
+  auto
+  factory_<WeightSet>::atom(std::string* w) const
+    -> atom_t*
+  {
+    return new atom_t(ws_->unit(), w);
   }
 
   template <class WeightSet>
@@ -45,11 +66,103 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
+  factory_<WeightSet>::mul(exp_t* l, exp_t* r) const
+    -> exp_t*
+  {
+    auto left = down_cast<node_t*>(l);
+    auto right = down_cast<node_t*>(r);
+    return mul(left, right);
+  }
+
+  template <class WeightSet>
+  inline
+  auto
   factory_<WeightSet>::star(exp_t* e) const
     -> exp_t*
   {
     return star(down_cast<node_t*>(e));
   }
+
+
+  template<class WeightSet>
+  auto
+  factory_<WeightSet>::weight(std::string* w, exp_t* e) const
+    -> exp_t*
+  {
+    // The weight might not be needed (e = 0), but check its syntax
+    // anyway.
+    auto res = weight(ws_->conv(*w), down_cast<node_t*>(e));
+    delete w;
+    return res;
+  }
+
+  template<class WeightSet>
+  auto
+  factory_<WeightSet>::weight(exp_t* e, std::string* w) const
+    -> exp_t*
+  {
+    auto res = weight(down_cast<node_t*>(e), ws_->conv(*w));
+    delete w;
+    return res;
+  }
+
+
+  /*-----------------.
+  | Concrete types.  |
+  `-----------------*/
+
+
+
+  template <class WeightSet>
+  inline
+  auto
+  factory_<WeightSet>::add(node_t* l, node_t* r) const
+    -> node_t*
+  {
+    // Trivial Identity
+    // E+0 = 0+E = E
+    if (node_t::ZERO == l->type())
+      {
+        delete l;
+        return r;
+      }
+    if (node_t::ZERO == r->type())
+      {
+        delete r;
+        return l;
+      }
+    // END: Trivial Identity
+
+    if (node_t::SUM == l->type())
+      {
+        auto res = down_cast<sum_t*>(l);
+        if (node_t::SUM == r->type())
+          {
+            auto right = down_cast<sum_t*>(r);
+            res->splice(res->end(), *right);
+            delete right;
+          }
+        else
+          {
+            res->push_back(r);
+          }
+        return res;
+      }
+    else if (node_t::SUM == r->type())
+      {
+        auto res = down_cast<sum_t*>(r);
+        res->push_front(l);
+        return res;
+      }
+    else
+      {
+        sum_t* res = new sum_t(ws_->unit(), ws_->unit());
+        res->push_front(r);
+        res->push_front(l);
+        return res;
+      }
+  }
+
 
   template <class WeightSet>
   inline
@@ -119,56 +232,6 @@ namespace vcsn
   template <class WeightSet>
   inline
   auto
-  factory_<WeightSet>::add(node_t* l, node_t* r) const
-    -> node_t*
-  {
-    // Trivial Identity
-    // E+0 = 0+E = E
-    if (node_t::ZERO == l->type())
-      {
-        delete l;
-        return r;
-      }
-    if (node_t::ZERO == r->type())
-      {
-        delete r;
-        return l;
-      }
-    // END: Trivial Identity
-
-    if (node_t::SUM == l->type())
-      {
-        auto res = down_cast<sum_t*>(l);
-        if (node_t::SUM == r->type())
-          {
-            auto right = down_cast<sum_t*>(r);
-            res->splice(res->end(), *right);
-            delete right;
-          }
-        else
-          {
-            res->push_back(r);
-          }
-        return res;
-      }
-    else if (node_t::SUM == r->type())
-      {
-        auto res = down_cast<sum_t*>(r);
-        res->push_front(l);
-        return res;
-      }
-    else
-      {
-        sum_t* res = new sum_t(ws_->unit(), ws_->unit());
-        res->push_front(r);
-        res->push_front(l);
-        return res;
-      }
-  }
-
-  template <class WeightSet>
-  inline
-  auto
   factory_<WeightSet>::star(node_t* e) const
     -> node_t*
   {
@@ -183,83 +246,9 @@ namespace vcsn
       return new star_t(ws_->unit(), ws_->unit(), e);
   }
 
-  template <class WeightSet>
-  inline
-  auto
-  factory_<WeightSet>::unit() const
-    -> one_t*
-  {
-    return new one_t(ws_->unit());
-  }
-
-  template <class WeightSet>
-  inline
-  bool
-  factory_<WeightSet>::is_unit(value_t v) const
-  {
-    return dynamic_cast<one_t*>(v);
-  }
-
-  template <class WeightSet>
-  inline
-  bool
-  factory_<WeightSet>::show_unit() const
-  {
-    return false;
-  }
-
-  template <class WeightSet>
-  inline
-  auto
-  factory_<WeightSet>::zero() const
-    -> zero_t*
-  {
-    return new zero_t(ws_->unit());
-  }
-
-  template <class WeightSet>
-  inline
-  bool
-  factory_<WeightSet>::is_zero(value_t v) const
-  {
-    return dynamic_cast<zero_t*>(v);
-  }
-
-  template <class WeightSet>
-  inline
-  auto
-  factory_<WeightSet>::atom(std::string* w) const
-    -> atom_t*
-  {
-    return new atom_t(ws_->unit(), w);
-  }
-
-
   /*----------.
   | weights.  |
   `----------*/
-
-  template<class WeightSet>
-  auto
-  factory_<WeightSet>::weight(std::string* w, exp_t* e) const
-    -> exp_t*
-  {
-    // The weight might not be needed (e = 0), but check its syntax
-    // anyway.
-    auto res = weight(ws_->conv(*w), down_cast<node_t*>(e));
-    delete w;
-    return res;
-  }
-
-  template<class WeightSet>
-  auto
-  factory_<WeightSet>::weight(exp_t* e, std::string* w) const
-    -> exp_t*
-  {
-    auto res = weight(down_cast<node_t*>(e), ws_->conv(*w));
-    delete w;
-    return res;
-  }
 
   template<class WeightSet>
   auto
@@ -303,6 +292,38 @@ namespace vcsn
       }
     return e;
   }
+
+  /*---------------------------------.
+  | factory_ as a WeightSet itself.  |
+  `---------------------------------*/
+
+  template <class WeightSet>
+  inline
+  bool
+  factory_<WeightSet>::is_unit(value_t v) const
+  {
+    return dynamic_cast<one_t*>(v);
+  }
+
+  template <class WeightSet>
+  inline
+  bool
+  factory_<WeightSet>::show_unit() const
+  {
+    return false;
+  }
+
+
+  template <class WeightSet>
+  inline
+  bool
+  factory_<WeightSet>::is_zero(value_t v) const
+  {
+    return dynamic_cast<zero_t*>(v);
+  }
+
+
+
 
 
   template<class WeightSet>
