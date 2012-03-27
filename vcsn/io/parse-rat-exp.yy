@@ -56,28 +56,6 @@
   #include <cassert>
   #include <sstream>
 
-  typedef std::string weight_str;
-  typedef std::list<weight_str*> weight_str_container;
-
-  namespace std
-  {
-    std::ostream&
-    operator<<(std::ostream& o, const weight_str_container& ws)
-    {
-      o << "{";
-      bool first = true;
-      for (auto w: ws)
-        {
-          if (!first)
-            o << ", ";
-          first = false;
-          o << *w;
-        }
-      o << "}";
-      return o;
-    }
-  }
-
   namespace vcsn
   {
     namespace rat
@@ -95,21 +73,13 @@
 {
   int ival;
   std::string* sval;
-  std::list<std::string*>* weights;
   exp* node;
 };
 
 %printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
-%printer
-{
-  if ($$)
-    debug_stream() << '[' << *$$ << ']';
-  else
-    debug_stream() << "nullptr";
-} <weights>;
 %printer { driver_.factory_->print(debug_stream(), $$); } <node>;
-%destructor { delete $$; } <sval> <weights> <node>;
+%destructor { delete $$; } <sval> <node>;
 
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
@@ -123,8 +93,7 @@
 %token  <sval> ATOM    "atom"
                WEIGHT  "weight";
 
-%type <weights> weights weights.opt;
-%type <node> exp term lexp factor leaf factors;
+%type <node> exp term lexp factor leaf factors weights weights.opt;
 
 
 %left "+"
@@ -144,12 +113,12 @@ exp:
 ;
 
 term:
-  lexp weights.opt              { $$ = MAKE(weight, $1, $2); }
+  lexp weights.opt              { $$ = MAKE(mul, $1, $2); }
 ;
 
 lexp:
-  weights.opt factors           { $$ = MAKE(weight, $1, $2); }
-| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(weight, $2, $3)); }
+  weights.opt factors           { $$ = MAKE(mul, $1, $2); }
+| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(mul, $2, $3)); }
 ;
 
 factors:
@@ -170,12 +139,12 @@ leaf:
 ;
 
 weights.opt:
-  /* empty */                   { $$ = nullptr; }
+  /* empty */                   { $$ = MAKE(unit); }
 | weights                       { $$ = $1; }
 ;
 
 weights:
-  "weight"                      { $$ = MAKE(weight, $1); }
+  "weight"                      { $$ = MAKE(weight, MAKE(unit), $1); }
 | "weight" weights              { $$ = MAKE(weight, $1, $2); }
 ;
 

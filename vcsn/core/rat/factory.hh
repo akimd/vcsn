@@ -23,12 +23,8 @@ namespace vcsn
     virtual exp_t* unit() const = 0;
     virtual exp_t* zero() const = 0;
     virtual exp_t* atom(std::string* w) const = 0;
-    virtual exp_t* weight(weight_str_container* w, exp_t* e) const = 0;
-    virtual exp_t* weight(exp_t* e, weight_str_container* w) const = 0;
-
-    weight_str_container* weight(weight_str* w) const;
-    weight_str_container* weight(weight_str* w, weight_str_container* l) const;
-    weight_str_container* weight(weight_str_container* l, weight_str* w) const;
+    virtual exp_t* weight(std::string* w, exp_t* e) const = 0;
+    virtual exp_t* weight(exp_t* e, std::string* w) const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
   };

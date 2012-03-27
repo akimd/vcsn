@@ -222,94 +222,67 @@ namespace vcsn
   }
 
 
-  template <class WeightSet>
+  /*----------.
+  | weights.  |
+  `----------*/
+
+  template<class WeightSet>
   auto
-  factory_<WeightSet>::weight(weight_str_container* w, exp_t* e) const
+  factory_<WeightSet>::weight(std::string* w, exp_t* e) const
     -> exp_t*
   {
-    if (w)
-      return weight(down_cast<node_t*>(e), w);
-    else
-      return e;
+    // The weight might not be needed (e = 0), but check its syntax
+    // anyway.
+    auto res = weight(ws_->conv(*w), down_cast<node_t*>(e));
+    delete w;
+    return res;
   }
 
-  template <class WeightSet>
+  template<class WeightSet>
   auto
-  factory_<WeightSet>::weight(exp_t* e, weight_str_container* w) const
+  factory_<WeightSet>::weight(exp_t* e, std::string* w) const
     -> exp_t*
   {
-    if (!w)
-      return e;
-    // if w
-    auto expr = down_cast<node_t*>(e);
-    if (expr->is_leaf())
+    auto res = weight(down_cast<node_t*>(e), ws_->conv(*w));
+    delete w;
+    return res;
+  }
+
+  template<class WeightSet>
+  auto
+  factory_<WeightSet>::weight(const weight_t& w, node_t* e) const
+    -> node_t*
+  {
+    if (ws_->is_zero(w))
       {
-        auto rweight = down_cast<leaf_t*>(expr);
-        return weight(rweight, w);
+        delete e;
+        e = zero();
       }
     else
-      {
-        auto rweight = down_cast<inner_t*>(expr);
-        return weight(w, rweight);
-      }
-  }
-
-  template<class WeightSet>
-  auto
-  factory_<WeightSet>::weight(leaf_t* e,
-                              weight_str_container* w) const
-    -> node_t*
-  {
-    for (auto i : *w)
-      {
-        weight_t new_weight = ws_->conv(*i);
-        if (ws_->is_zero(new_weight))
-          {
-            delete e;
-            return zero();
-          }
-        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
-      }
+      e->left_weight() = ws_->mul(e->left_weight(), w);
     return e;
   }
 
   template<class WeightSet>
   auto
-  factory_<WeightSet>::weight(weight_str_container* w,
-                              inner_t* e) const
+  factory_<WeightSet>::weight(node_t* e, const weight_t& w) const
     -> node_t*
   {
-    for (auto i : *w)
+    if (ws_->is_zero(w))
       {
-        weight_t new_weight = ws_->conv(*i);
-        if (ws_->is_zero(new_weight))
-          {
-            delete e;
-            return zero();
-          }
-        e->left_weight() = ws_->mul(e->left_weight(), new_weight);
+        delete e;
+        e = zero();
+      }
+    else if (auto in = maybe_down_cast<inner_t*>(e))
+      in->right_weight() = ws_->mul(in->right_weight(), w);
+    else
+      {
+        auto leaf = down_cast<leaf_t*>(e);
+        leaf->left_weight() = ws_->mul(leaf->left_weight(), w);
       }
     return e;
   }
 
-  template<class WeightSet>
-  auto
-  factory_<WeightSet>::weight(inner_t* e,
-                              weight_str_container* w) const
-    -> node_t*
-  {
-    for (auto i : *w)
-      {
-        weight_t new_weight = ws_->conv(*i);
-        if (ws_->is_zero(new_weight))
-          {
-            delete e;
-            return zero();
-          }
-        e->right_weight() = ws_->mul(e->right_weight(), new_weight);
-      }
-    return e;
-  }
 
   template<class WeightSet>
   auto

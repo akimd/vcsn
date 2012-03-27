@@ -29,6 +29,8 @@ namespace vcsn
     virtual exp_t* mul(exp_t* l, exp_t* r) const;
     virtual exp_t* add(exp_t* l, exp_t* r) const;
     virtual exp_t* star(exp_t* e) const;
+    virtual exp_t* weight(exp_t* e, std::string* w) const;
+    virtual exp_t* weight(std::string* w, exp_t* e) const;
 
     // exp constants' method
 #define DEFINE(Type)                            \
@@ -56,17 +58,12 @@ namespace vcsn
     std::ostream&
     print(std::ostream& o, const value_t v) const;
 
-    using super_type::weight;
-    exp_t* weight(weight_str_container* w, exp_t* e) const;
-    exp_t* weight(exp_t* e, weight_str_container* w) const;
-
   protected:
     node_t* mul(node_t* l, node_t* r) const;
     node_t* add(node_t* l, node_t* r) const;
     node_t* star(node_t* e) const;
-    node_t* weight(leaf_t* e, weight_str_container* w) const;
-    node_t* weight(weight_str_container* w, inner_t* e) const;
-    node_t* weight(inner_t* e, weight_str_container* w) const;
+    node_t* weight(node_t* e, const weight_t& w) const;
+    node_t* weight(const weight_t& w, node_t* e) const;
 
   private:
     const weightset_t* ws_;
