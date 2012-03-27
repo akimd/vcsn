@@ -57,16 +57,29 @@ namespace vcsn
   factory_<WeightSet>::mul(node_t* l, node_t* r) const
     -> node_t*
   {
-    // Trivial Identity
+    // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0
-    // E.1 = 1.E = E
-    if (node_t::ZERO == l->type() || node_t::ONE == r->type())
+    if (node_t::ZERO == l->type())
       {
         delete r;
         return l;
       }
-    if (node_t::ZERO == r->type() || node_t::ONE == l->type())
+    if (node_t::ZERO == r->type())
       {
+        delete l;
+        return r;
+      }
+    // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
+    // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
+    if (node_t::ONE == r->type())
+      {
+        weight(l, r->left_weight());
+        delete r;
+        return l;
+      }
+    if (node_t::ONE == l->type())
+      {
+        weight(l->left_weight(), r);
         delete l;
         return r;
       }
@@ -253,13 +266,17 @@ namespace vcsn
   factory_<WeightSet>::weight(const weight_t& w, node_t* e) const
     -> node_t*
   {
-    if (ws_->is_zero(w))
+    // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
+    if (e->type() != node_t::ZERO)
       {
-        delete e;
-        e = zero();
+        if (ws_->is_zero(w))
+          {
+            delete e;
+            e = zero();
+          }
+        else
+          e->left_weight() = ws_->mul(w, e->left_weight());
       }
-    else
-      e->left_weight() = ws_->mul(e->left_weight(), w);
     return e;
   }
 
@@ -268,17 +285,21 @@ namespace vcsn
   factory_<WeightSet>::weight(node_t* e, const weight_t& w) const
     -> node_t*
   {
-    if (ws_->is_zero(w))
+    // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
+    if (e->type() != node_t::ZERO)
       {
-        delete e;
-        e = zero();
-      }
-    else if (auto in = maybe_down_cast<inner_t*>(e))
-      in->right_weight() = ws_->mul(in->right_weight(), w);
-    else
-      {
-        auto leaf = down_cast<leaf_t*>(e);
-        leaf->left_weight() = ws_->mul(leaf->left_weight(), w);
+        if (ws_->is_zero(w))
+          {
+            delete e;
+            e = zero();
+          }
+        else if (auto in = maybe_down_cast<inner_t*>(e))
+          in->right_weight() = ws_->mul(in->right_weight(), w);
+        else
+          {
+            auto leaf = down_cast<leaf_t*>(e);
+            leaf->left_weight() = ws_->mul(leaf->left_weight(), w);
+          }
       }
     return e;
   }

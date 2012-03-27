@@ -29,7 +29,7 @@ a+\e == (a+\e)
 (abc).(def) == abcdef
 (a+b)+(c+d) == a+b+c+d
 
-# Trivial identities.
+# Trivial identities, called T in TAF-Kit's documentation.
 \z*  => \e
 a+\z => a
 \z+a => a

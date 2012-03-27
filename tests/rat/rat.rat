@@ -1,11 +1,30 @@
 %weight: rat
 %include: common.rat
 
-{\e}a => a
 {x}a => {x}a
+
+# Trivial identities: T_K in TAF-Kit's documentation.
+{\z}a => \z
+a{\z} => \z
+{x}\z => \z
+\z{x} => \z
+{\e}a => a
+a{\e} => a
+
+# Trivial identities: A_K in TAF-Kit's documentation.
 {x}{y}a => {(x.y)}a
 {x}a{y} => {(x.y)}a
 a{x}{y} => {(x.y)}a
+({x}(a.b)){y} => {x}(a.b){y}
 
-# Some trivial identities.
+# Trivial identities: U_K in TAF-Kit's documentation.
+\e{x} => {x}\e
+ab({x}\e) => (a.b){x}
+({x}\e)(ab) => {x}(a.b)
+
+# Trivial identities: C_{at} in TAF-Kit's documentation.
+\e{x} => {x}\e
+a{x} => {x}a
+
+# More complex computations.
 {x}{y}a{\z}+{y}a{\e} => {y}a
