@@ -29,8 +29,8 @@ sub pp ($$)
 {
   my ($prog, $in) = @_;
   $in = quote($in);
-  my $res = `echo  '$in' | $prog`;
-  die "failed to run: echo '$in' | $prog: $?"
+  my $res = `$prog -e '$in'`;
+  die "failed to run: $prog -e '$in': $?"
     if $? && $? != 256;
   chomp($res);
   $res;
@@ -69,12 +69,12 @@ sub check_rat_exp($$$)
       m/^(.*) (=>|==) (.*)$/
         or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
-      my $L = pp("$prog $ws", $l);
+      my $L = pp("$prog -w $ws", $l);
 
       # == tests that boths are equivalent.
       # =  check the actual result.
 
-      my $R = $op eq '=>' ? quote($r) : pp("$prog $ws", $r);
+      my $R = $op eq '=>' ? quote($r) : pp("$prog -w $ws", $r);
       # Empty result is a sign of failure.
       if ($L ne '' && $L eq $R)
         {
@@ -85,8 +85,8 @@ sub check_rat_exp($$$)
           print "$file:$line: $FAIL: $l $op $r: $L vs. $R\n";
           if ($verbose)
             {
-              print "      $l: " . pp("$prog $ws", $l) . "\n";
-              print "      $r: " . pp("$prog $ws", $r) . "\n";
+              print "      $l: " . pp("$prog -w $ws", $l) . "\n";
+              print "      $r: " . pp("$prog -w $ws", $r) . "\n";
             }
           ++$fail;
         }
