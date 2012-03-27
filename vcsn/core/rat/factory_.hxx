@@ -170,63 +170,59 @@ namespace vcsn
   factory_<WeightSet>::mul(node_t* l, node_t* r) const
     -> node_t*
   {
+    node_t* res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0
     if (node_t::ZERO == l->type())
       {
         delete r;
-        return l;
+        res = l;
       }
-    if (node_t::ZERO == r->type())
+    else if (node_t::ZERO == r->type())
       {
         delete l;
-        return r;
+        res = r;
       }
     // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
     // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
-    if (node_t::ONE == r->type())
+    else if (node_t::ONE == r->type())
       {
-        weight(l, r->left_weight());
+        res = weight(l, r->left_weight());
         delete r;
-        return l;
       }
-    if (node_t::ONE == l->type())
+    else if (node_t::ONE == l->type())
       {
-        weight(l->left_weight(), r);
+        res = weight(l->left_weight(), r);
         delete l;
-        return r;
       }
     // END: Trivial Identity
-
-    if (node_t::PROD == l->type())
+    else if (auto left = maybe_down_cast<prod_t*>(l))
       {
-        auto left = down_cast<prod_t*>(l);
-        if (node_t::PROD == r->type())
+        if (auto right = maybe_down_cast<prod_t*>(r))
           {
-            auto right = down_cast<prod_t*>(r);
             left->splice(left->end(), *right);
             delete right;
-            return left;
+            res = left;
           }
         else
           {
             left->push_back(r);
-            return left;
+            res = left;
           }
       }
-    else if (node_t::PROD == r->type())
+    else if (auto right = maybe_down_cast<prod_t*>(r))
       {
-        auto right = down_cast<prod_t*>(r);
         right->push_front(l);
-        return right;
+        res = right;
       }
     else
       {
-        auto res = new prod_t(ws_->unit(), ws_->unit());
-        res->push_back(l);
-        res->push_back(r);
-        return res;
+        auto prod = new prod_t(ws_->unit(), ws_->unit());
+        prod->push_back(l);
+        prod->push_back(r);
+        res = prod;
       }
+    return res;
   }
 
   template <class WeightSet>
