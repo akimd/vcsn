@@ -29,7 +29,7 @@ sub pp ($$)
 {
   my ($prog, $in) = @_;
   $in = quote($in);
-  my $res = `$prog -e '$in'`;
+  my $res = `valgrind --leak-check=full $prog -e '$in'`;
   die "failed to run: $prog -e '$in': $?"
     if $? && $? != 256;
   chomp($res);

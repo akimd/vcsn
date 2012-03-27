@@ -46,7 +46,10 @@ pp(const std::string& w, const char* s, bool file)
     factory = &z_fact;
   vcsn::rat::driver d(*factory);
   if (vcsn::rat::exp* e = file ? d.parse_file(s) : d.parse_string(s))
-    factory->print(std::cout, e) << std::endl;
+    {
+      factory->print(std::cout, e) << std::endl;
+      delete e;
+    }
   else
     exit(EXIT_FAILURE);
 }
