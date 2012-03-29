@@ -37,6 +37,7 @@ nobase_vcsn_HEADERS =                           \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \
+  misc/container.hh                             \
   misc/escape.hh                                \
   weights/b.hh                                  \
   weights/poly.hh                               \

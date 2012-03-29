@@ -37,19 +37,19 @@ int main()
   std::cerr << "Leaving s1 by d" << std::endl;
   for (auto i: aut.out(s1, 'd'))
     {
-      std::cerr << aut.dst_of(i) << std::endl;
+      std::cerr << *aut.dst_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
   std::cerr << "Entering s1 by b" << std::endl;
   for (auto i: aut.in(s1, 'b'))
     {
-      std::cerr << aut.src_of(i) << std::endl;
+      std::cerr << *aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
   std::cerr << "Between s1 and s1" << std::endl;
   for (auto i: aut.outin(s1, s1))
     {
-      std::cerr << aut.src_of(i) << std::endl;
+      std::cerr << *aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
 
