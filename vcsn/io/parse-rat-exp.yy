@@ -54,19 +54,9 @@
 %code
 {
   #include <cassert>
-  #include <sstream>
 
-  namespace vcsn
-  {
-    namespace rat
-    {
-      // Define the factory.
-      const factory* fact;
 #define MAKE(Kind, ...)                         \
       driver_.factory_->Kind(__VA_ARGS__)
-      exp* result;
-    }
-  }
 }
 
 %union
@@ -103,7 +93,7 @@
 %%
 
 exps:
-  exp  { result = $1; }
+  exp  { driver_.result_ = $1; }
 ;
 
 exp:

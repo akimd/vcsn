@@ -29,13 +29,11 @@ namespace vcsn
       // Parser.
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
-      extern exp* result;
-      exp* res = 0;
-      std::swap(result, res);
       if (p.parse())
-        result = 0;
+        result_ = 0;
       scan_close();
-      std::swap(result, res);
+      exp* res = 0;
+      std::swap(result_, res);
       return res;
     }
 

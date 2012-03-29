@@ -26,6 +26,8 @@ namespace vcsn
 
     private:
       exp* parse();
+      exp* result_;
+      friend class parser;
     };
 
   }
