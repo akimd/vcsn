@@ -60,7 +60,7 @@ $(addprefix $(srcdir)/, $(SOURCES_PARSE_RAT_EXP_YY)): io/parse-rat-exp.stamp
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
 
-check_LTLIBRARIES = librat.la
+pkglib_LTLIBRARIES = librat.la
 librat_la_SOURCES = 				\
   $(SOURCES_PARSE_RAT_EXP_YY)			\
   io/driver.hh io/driver.cc			\
