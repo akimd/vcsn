@@ -3,6 +3,7 @@
 
 # include <string>
 # include <ostream>
+# include <cassert>
 
 namespace vcsn
 {
@@ -53,10 +54,25 @@ namespace vcsn
       return false;
     }
 
-    bool
+    value_t
     conv(std::string& str) const
     {
-      return str[0] != '0';
+      if (str.size())
+       {
+         if ('0' == str[0])
+           return false;
+         else if ('1' == str[0])
+           return true;
+       }
+      else
+       {
+         if (str == "true")
+           return true;
+         else if (str == "false")
+           return false;
+       }
+      assert(false);
+      return false;
     }
 
     std::ostream&
