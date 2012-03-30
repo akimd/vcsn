@@ -1,0 +1,15 @@
+* 2012-03-30
+** G++ 4.7 is required
+We use constructs that are not supported by 4.6 (e.g., constructor
+delegation).
+
+** zrr
+As a demonstration that rational expressions can be weights of
+rational expressions, pprat supports '-w zrr' (Rat<Rat<Z>>):
+
+   $ pprat -w zr -e '{{{2}{3}a}u}x{{{4}{5}\e}\e}'
+   {{{120}a}u}x
+
+Local Variables:
+mode: outline
+End:
