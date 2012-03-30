@@ -25,6 +25,8 @@ usage(const char* prog, int status)
       "  b    for Boolean\n"
       "  br   for RatExp<b>\n"
       "  z    for Z\n"
+      "  zr   for RatExt<Z>\n"
+      "  zrr  for RatExp<RatExp<Z>>\n"
       ;
   else
     std::cerr << "Try `" << prog << " -h' for more information."
@@ -61,6 +63,8 @@ main(int argc, char* const argv[])
   DEFINE(b, vcsn::b, vcsn::b());
   DEFINE(br, vcsn::factory_<vcsn::b>, factories["b"].get());
   DEFINE(z, vcsn::z, vcsn::z());
+  DEFINE(zr, vcsn::factory_<vcsn::z>, factories["z"].get());
+  DEFINE(zrr, vcsn::factory_<vcsn::factory_<vcsn::z>>, factories["zr"].get());
 #undef DEFINE
   std::string w = "b";
   while ((opt = getopt(argc, argv, "e:f:hw:")) != -1)

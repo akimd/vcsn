@@ -1,0 +1,6 @@
+%weight: zr
+%include: common.rat
+
+{x}a => {x}a
+{{0}x}a => \z
+{{1}\e}a => a

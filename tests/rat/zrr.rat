@@ -1,0 +1,7 @@
+%weight: zrr
+%include: common.rat
+
+{{{1}\e}a}b => {a}b
+{{{0}a}u}x  => \z
+{{{2}{3}a}u}x => {{{6}a}u}x
+{{{2}{3}a}u}x{{{4}{5}\e}\e} => {{{120}a}u}x
