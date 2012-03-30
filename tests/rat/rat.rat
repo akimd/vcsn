@@ -1,4 +1,4 @@
-%weight: rat
+%weight: br
 %include: common.rat
 
 {x}a => {x}a

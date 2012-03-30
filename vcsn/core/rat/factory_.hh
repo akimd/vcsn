@@ -25,6 +25,10 @@ namespace vcsn
 
   public:
     factory_(const weightset_t& ws);
+    /// Construct with \a t as weight-set.
+    /// \a *t must be castable to weightset_t.
+    template <typename T>
+    factory_(const T* t);
 
     // exp constants' method
 #define DEFINE(Type)                            \

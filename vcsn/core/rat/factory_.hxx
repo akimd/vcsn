@@ -18,6 +18,14 @@ namespace vcsn
   factory_<WeightSet>::factory_(const WeightSet& ws)
     : super_type()
     , ws_(&ws)
+  {
+    assert(ws_);
+  }
+
+  template <class WeightSet>
+  template <typename T>
+  factory_<WeightSet>::factory_(const T* t)
+    : factory_(*dynamic_cast<const weightset_t*>(t))
   {}
 
 
