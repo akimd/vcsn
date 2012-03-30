@@ -25,7 +25,15 @@ namespace vcsn
       void invalid(const location& l, const std::string& s);
 
     private:
+      /// Prepare scanner to load file f.
+      void scan_open(FILE *f);
+      /// Prepare scanner to read string e.
+      void scan_open(const std::string& e);
+      /// Parse this stream.
       exp* parse();
+      /// Close the scanner.
+      void scan_close();
+
       exp* result_;
       friend class parser;
     };

@@ -103,21 +103,15 @@ namespace vcsn
     // in the document: save the old context, switch to the new one.
 
     void
-    scan_file(const std::string& f)
+    driver::scan_open(FILE *f)
     {
       yy_flex_debug = !!getenv("YYSCAN");
-      yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
-      if (!yyin)
-        {
-          std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
-          exit(1);
-        }
       yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
+      yy_switch_to_buffer(yy_create_buffer(f, YY_BUF_SIZE));
     }
 
     void
-    scan_string(const std::string& e)
+    driver::scan_open(const std::string& e)
     {
       yy_flex_debug = !!getenv("YYSCAN");
       yyin = 0;
@@ -126,7 +120,7 @@ namespace vcsn
     }
 
     void
-    scan_close()
+    driver::scan_close()
     {
       yypop_buffer_state();
       //if (yyin)

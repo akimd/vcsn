@@ -37,13 +37,6 @@
       lex(parser::semantic_type* yylval,
           parser::location_type* yylloc,
           vcsn::rat::driver& driver_);
-
-      /// Prepare scanner to load file f.
-      void scan_file(const std::string& f);
-      /// Prepare scanner to read string e.
-      void scan_string(const std::string& e);
-      /// Close input.
-      void scan_close();
     }
   }
 }

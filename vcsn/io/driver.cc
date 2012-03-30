@@ -1,3 +1,5 @@
+#include <cstring> // strerror
+
 #include <vcsn/io/driver.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 
@@ -40,14 +42,23 @@ namespace vcsn
     exp*
     driver::parse_file(const std::string& f)
     {
-      scan_file(f);
-      return parse();
+      FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
+      if (!yyin)
+        {
+          std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
+          exit(1);
+        }
+      scan_open(yyin);
+      auto res = parse();
+      if (f != "-")
+        fclose(yyin);
+      return res;
     }
 
     exp*
     driver::parse_string(const std::string& e)
     {
-      scan_string(e);
+      scan_open(e);
       return parse();
     }
   }
