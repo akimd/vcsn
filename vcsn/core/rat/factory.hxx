@@ -1,4 +1,0 @@
-namespace vcsn
-{
-
-} // namespace vcsn

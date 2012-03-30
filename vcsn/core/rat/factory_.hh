@@ -33,14 +33,14 @@ namespace vcsn
     // exp constants' method
 #define DEFINE(Type)                            \
     typedef rat::Type<weight_t> Type ## _t
-    DEFINE(one);
-    DEFINE(zero);
-    DEFINE(atom);
     DEFINE(leaf);
+    DEFINE(zero);
+    DEFINE(one);
+    DEFINE(atom);
     DEFINE(inner);
-    DEFINE(star);
-    DEFINE(prod);
     DEFINE(sum);
+    DEFINE(prod);
+    DEFINE(star);
 #undef DEFINE
 
     // Specialization from factory.
@@ -62,8 +62,8 @@ namespace vcsn
 
   protected:
     // Concrete type implementation.
-    node_t* mul(node_t* l, node_t* r) const;
     node_t* add(node_t* l, node_t* r) const;
+    node_t* mul(node_t* l, node_t* r) const;
     node_t* star(node_t* e) const;
     node_t* weight(node_t* e, const weight_t& w) const;
     node_t* weight(const weight_t& w, node_t* e) const;

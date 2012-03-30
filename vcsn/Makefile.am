@@ -24,7 +24,8 @@ nobase_vcsn_HEADERS =                           \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
   core/rat/factory.hh                           \
-  core/rat/factory.hxx                          \
+  core/rat/factory_.hh                          \
+  core/rat/factory_.hxx                         \
   core/rat/node.fwd.hh                          \
   core/rat/node.hh                              \
   core/rat/node.hxx                             \
