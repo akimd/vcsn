@@ -4,6 +4,7 @@
 # ifdef NDEBUG
 #  define down_cast static_cast
 #  define maybe_down_cast static_cast
+
 # else
 
 template <typename T, typename U>
@@ -14,16 +15,31 @@ maybe_down_cast(U t)
   return dynamic_cast<const T>(t);
 }
 
-template <typename T, typename U>
-inline
-T
-down_cast(U t)
+struct down_caster
 {
-  T res = maybe_down_cast<T>(t);
-  assert(res);
-  return res;
-}
+  down_caster(const char* f, int l)
+    : file(f), line(l)
+  {}
+  const char* file;
+  int line;
 
-# endif
+  template <typename T, typename U>
+  inline
+  T
+  cast(U t)
+  {
+    T res = maybe_down_cast<T>(t);
+    if (!res)
+      {
+        std::cerr << file << ":" << line << ": failed down_cast" << std::endl;
+        abort();
+      }
+    return res;
+  }
+};
+
+#define down_cast                               \
+  down_caster(__FILE__, __LINE__).cast
+#endif
 
 #endif // !VCSN_MISC_CAST_HH_
