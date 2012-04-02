@@ -28,10 +28,19 @@ struct down_caster
   T
   cast(U t)
   {
+    if (!t)
+      {
+        std::cerr << file << ":" << line << ": down_casting nullptr"
+                  << " from " << typeid(U).name() << " to " << typeid(T).name()
+                  << std::endl;
+        abort();
+      }
     T res = maybe_down_cast<T>(t);
     if (!res)
       {
-        std::cerr << file << ":" << line << ": failed down_cast" << std::endl;
+        std::cerr << file << ":" << line << ": failed down_cast"
+                  << " from " << typeid(U).name() << " to " << typeid(T).name()
+                  << std::endl;
         abort();
       }
     return res;
