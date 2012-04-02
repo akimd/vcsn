@@ -1,30 +1,30 @@
 %weight: br
 %include: common.rat
 
-{x}a => {x}a
+{c}a => {c}a
 
 # Trivial identities: T_K in TAF-Kit's documentation.
 {\z}a => \z
 a{\z} => \z
-{x}\z => \z
-\z{x} => \z
+{c}\z => \z
+\z{c} => \z
 {\e}a => a
 a{\e} => a
 
 # Trivial identities: A_K in TAF-Kit's documentation.
-{x}{y}a => {(x.y)}a
-{x}a{y} => {(x.y)}a
-a{x}{y} => {(x.y)}a
-({x}(a.b)){y} => {x}(a.b){y}
+{c}{d}a => {(c.d)}a
+{c}a{d} => {(c.d)}a
+a{c}{d} => {(c.d)}a
+({c}(a.b)){d} => {c}(a.b){d}
 
 # Trivial identities: U_K in TAF-Kit's documentation.
-\e{x} => {x}\e
-ab({x}\e) => (a.b){x}
-({x}\e)(ab) => {x}(a.b)
+\e{c} => {c}\e
+ab({c}\e) => (a.b){c}
+({c}\e)(ab) => {c}(a.b)
 
 # Trivial identities: C_{at} in TAF-Kit's documentation.
-\e{x} => {x}\e
-a{x} => {x}a
+\e{c} => {c}\e
+a{c} => {c}a
 
-# More complex computations.
-{x}{y}a{\z}+{y}a{\e} => {y}a
+# More complec computations.
+{c}{d}a{\z}+{d}a{\e} => {d}a

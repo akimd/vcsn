@@ -26,6 +26,13 @@ namespace vcsn
       return *this;
     }
 
+    /// Whether \a l is a letter.
+    bool
+    has(typename L::letter_t l) const
+    {
+      return alphabet_.find(l) != alphabet_.end();
+    }
+
     typedef typename alphabet_t::const_iterator iterator_t;
     iterator_t begin() const
     {

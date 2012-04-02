@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cassert>
+#include <stdexcept>
 
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/node.hh>
@@ -56,6 +57,9 @@ namespace vcsn
   FACTORY_::atom(const std::string& w) const
     -> atom_t*
   {
+    for (auto c: w)
+      if (!a_.has(c))
+        throw std::domain_error("invalid word: " + w + ": invalid letter: " + c);
     return new atom_t(ws_->unit(), w);
   }
 

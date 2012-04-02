@@ -26,7 +26,7 @@ a == (a)
 a+b+c == (a+b)+c
 a+\e == (a+\e)
 \e+\e == (\e+\e)
-(abc).(def) == abcdef
+(abc).(cba) == abccba
 (a+b)+(c+d) == a+b+c+d
 
 # Trivial identities, called T in TAF-Kit's documentation.

@@ -116,9 +116,11 @@ factor:
 ;
 
 leaf:
-  ZERO                          { $$ = MAKE(zero); }
-| ONE                           { $$ = MAKE(unit); }
-| ATOM                          { $$ = MAKE(atom, *$1); delete $1; }
+  ZERO     { $$ = MAKE(zero); }
+| ONE      { $$ = MAKE(unit); }
+| ATOM     { try { $$ = MAKE(atom, *$1); }
+             catch (std::exception& e) { error(@$, e.what()); YYERROR; }
+             delete $1; }
 ;
 
 weights.opt:
