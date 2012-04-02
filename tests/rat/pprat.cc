@@ -7,6 +7,8 @@
 #include <vcsn/weights/z.hh>
 #include <vcsn/core/rat/factory_.hh>
 #include <vcsn/io/driver.hh>
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
 
 static
 void
@@ -49,22 +51,26 @@ pp(const std::shared_ptr<vcsn::factory> factory, const char* s, bool file)
     exit(EXIT_FAILURE);
 }
 
+#define COMMA ,
+
 int
 main(int argc, char* const argv[])
 {
   int opt;
   std::map<std::string, std::shared_ptr<vcsn::factory>> factories;
+  typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
+  alpha_t alpha{'a', 'b', 'c', 'd'};
 #define DEFINE(Name, Param, Arg)                                        \
   factories                                                             \
     .insert(std::make_pair                                              \
             (std::string(#Name),                                        \
-             std::shared_ptr<vcsn::factory_<Param>>                     \
-             (new vcsn::factory_<Param>{ Arg })))
+             std::shared_ptr<vcsn::factory_<alpha_t, Param>>            \
+             (new vcsn::factory_<alpha_t, Param>{ alpha, Arg })))
   DEFINE(b, vcsn::b, vcsn::b());
-  DEFINE(br, vcsn::factory_<vcsn::b>, factories["b"].get());
+  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, factories["b"].get());
   DEFINE(z, vcsn::z, vcsn::z());
-  DEFINE(zr, vcsn::factory_<vcsn::z>, factories["z"].get());
-  DEFINE(zrr, vcsn::factory_<vcsn::factory_<vcsn::z>>, factories["zr"].get());
+  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, factories["z"].get());
+  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, factories["zr"].get());
 #undef DEFINE
   std::string w = "b";
   while ((opt = getopt(argc, argv, "e:f:hw:")) != -1)

@@ -14,56 +14,59 @@ namespace vcsn
   | factory_.  |
   `-----------*/
 
-  template <class WeightSet>
-  factory_<WeightSet>::factory_(const WeightSet& ws)
+  template <typename Alphabet, typename WeightSet>
+  factory_<Alphabet, WeightSet>::factory_(const Alphabet& a,
+                                          const WeightSet& ws)
     : super_type()
+    , a_(a)
     , ws_(&ws)
   {
     assert(ws_);
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   template <typename T>
-  factory_<WeightSet>::factory_(const T* t)
-    : factory_(*dynamic_cast<const weightset_t*>(t))
+  factory_<Alphabet, WeightSet>::factory_(const Alphabet& a,
+                                          const T* t)
+    : factory_(a, *dynamic_cast<const weightset_t*>(t))
   {}
 
 
-  /*------------------------------------------------.
-  | Implemetation of factory pure virtual methods.  |
-  `------------------------------------------------*/
+  /*-------------------------------------------------.
+  | Implementation of factory pure virtual methods.  |
+  `-------------------------------------------------*/
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::zero() const
+  factory_<Alphabet, WeightSet>::zero() const
     -> zero_t*
   {
     return new zero_t(ws_->unit());
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::unit() const
+  factory_<Alphabet, WeightSet>::unit() const
     -> one_t*
   {
     return new one_t(ws_->unit());
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::atom(std::string* w) const
+  factory_<Alphabet, WeightSet>::atom(std::string* w) const
     -> atom_t*
   {
     return new atom_t(ws_->unit(), w);
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::add(exp_t* l, exp_t* r) const
+  factory_<Alphabet, WeightSet>::add(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -71,10 +74,10 @@ namespace vcsn
     return add(left, right);
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::mul(exp_t* l, exp_t* r) const
+  factory_<Alphabet, WeightSet>::mul(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -82,19 +85,19 @@ namespace vcsn
     return mul(left, right);
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::star(exp_t* e) const
+  factory_<Alphabet, WeightSet>::star(exp_t* e) const
     -> exp_t*
   {
     return star(down_cast<node_t*>(e));
   }
 
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   auto
-  factory_<WeightSet>::weight(std::string* w, exp_t* e) const
+  factory_<Alphabet, WeightSet>::weight(std::string* w, exp_t* e) const
     -> exp_t*
   {
     // The weight might not be needed (e = 0), but check its syntax
@@ -104,9 +107,9 @@ namespace vcsn
     return res;
   }
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   auto
-  factory_<WeightSet>::weight(exp_t* e, std::string* w) const
+  factory_<Alphabet, WeightSet>::weight(exp_t* e, std::string* w) const
     -> exp_t*
   {
     auto res = weight(down_cast<node_t*>(e), ws_->conv(*w));
@@ -115,16 +118,15 @@ namespace vcsn
   }
 
 
+
   /*-----------------.
   | Concrete types.  |
   `-----------------*/
 
-
-
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::add(node_t* l, node_t* r) const
+  factory_<Alphabet, WeightSet>::add(node_t* l, node_t* r) const
     -> node_t*
   {
     // Trivial Identity
@@ -172,10 +174,10 @@ namespace vcsn
   }
 
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::mul(node_t* l, node_t* r) const
+  factory_<Alphabet, WeightSet>::mul(node_t* l, node_t* r) const
     -> node_t*
   {
     node_t* res = nullptr;
@@ -233,10 +235,10 @@ namespace vcsn
     return res;
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   auto
-  factory_<WeightSet>::star(node_t* e) const
+  factory_<Alphabet, WeightSet>::star(node_t* e) const
     -> node_t*
   {
     if (node_t::ZERO == e->type())
@@ -254,9 +256,9 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   auto
-  factory_<WeightSet>::weight(const weight_t& w, node_t* e) const
+  factory_<Alphabet, WeightSet>::weight(const weight_t& w, node_t* e) const
     -> node_t*
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
@@ -273,9 +275,9 @@ namespace vcsn
     return e;
   }
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   auto
-  factory_<WeightSet>::weight(node_t* e, const weight_t& w) const
+  factory_<Alphabet, WeightSet>::weight(node_t* e, const weight_t& w) const
     -> node_t*
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
@@ -301,27 +303,27 @@ namespace vcsn
   | factory_ as a WeightSet itself.  |
   `---------------------------------*/
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   bool
-  factory_<WeightSet>::is_unit(value_t v) const
+  factory_<Alphabet, WeightSet>::is_unit(value_t v) const
   {
     return dynamic_cast<one_t*>(v);
   }
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   bool
-  factory_<WeightSet>::show_unit() const
+  factory_<Alphabet, WeightSet>::show_unit() const
   {
     return false;
   }
 
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   inline
   bool
-  factory_<WeightSet>::is_zero(value_t v) const
+  factory_<Alphabet, WeightSet>::is_zero(value_t v) const
   {
     return dynamic_cast<zero_t*>(v);
   }
@@ -330,18 +332,18 @@ namespace vcsn
 
 
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   auto
-  factory_<WeightSet>::conv(const std::string& s) const
+  factory_<Alphabet, WeightSet>::conv(const std::string& s) const
     -> value_t
   {
     vcsn::rat::driver d(*this);
     return d.parse_string(s);
   }
 
-  template<class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   std::ostream&
-  factory_<WeightSet>::print(std::ostream& o, const value_t v) const
+  factory_<Alphabet, WeightSet>::print(std::ostream& o, const value_t v) const
   {
     const auto* down = down_cast<const node_t*>(v);
     rat::printer<weightset_t> print(o, *ws_);

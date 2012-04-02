@@ -10,10 +10,11 @@
 namespace vcsn
 {
 
-  template <class WeightSet>
+  template <typename Alphabet, typename WeightSet>
   class factory_ : public factory
   {
   public:
+    typedef Alphabet alphabet_t;
     typedef WeightSet weightset_t;
     typedef factory super_type;
     typedef typename weightset_t::value_t weight_t;
@@ -24,11 +25,15 @@ namespace vcsn
     typedef exp_t* value_t;
 
   public:
-    factory_(const weightset_t& ws);
+    /// Constructor.
+    /// \param a    the alphabet for the labels.
+    /// \param ws   the type of the weights (e.g., "bool", "int").
+    factory_(const alphabet_t& a, const weightset_t& ws);
     /// Construct with \a t as weight-set.
-    /// \a *t must be castable to weightset_t.
+    /// \param a    the alphabet for the labels.
+    /// \param t    \a *t must be castable to weightset_t.
     template <typename T>
-    factory_(const T* t);
+    factory_(const alphabet_t& a, const T* t);
 
     // exp constants' method
 #define DEFINE(Type)                            \
@@ -69,6 +74,7 @@ namespace vcsn
     node_t* weight(const weight_t& w, node_t* e) const;
 
   private:
+    const alphabet_t& a_;
     const weightset_t* ws_;
   };
 
