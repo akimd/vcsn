@@ -118,7 +118,7 @@ factor:
 leaf:
   ZERO                          { $$ = MAKE(zero); }
 | ONE                           { $$ = MAKE(unit); }
-| ATOM                          { $$ = MAKE(atom, $1); }
+| ATOM                          { $$ = MAKE(atom, *$1); delete $1; }
 ;
 
 weights.opt:

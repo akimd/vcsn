@@ -71,7 +71,7 @@ namespace vcsn
     printer<WeightSet>::visit(const atom<weight_t>& v)
     {
       print(v.left_weight());
-      out_ <<* v.get_atom();
+      out_ << v.get_atom();
     }
 
     template <class WeightSet>

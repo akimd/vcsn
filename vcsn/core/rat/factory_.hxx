@@ -8,6 +8,7 @@
 
 namespace vcsn
 {
+
   /*-----------.
   | factory_.  |
   `-----------*/
@@ -52,7 +53,7 @@ namespace vcsn
     return new one_t(ws_->unit());
   }
 
-  FACTORY_::atom(std::string* w) const
+  FACTORY_::atom(const std::string& w) const
     -> atom_t*
   {
     return new atom_t(ws_->unit(), w);

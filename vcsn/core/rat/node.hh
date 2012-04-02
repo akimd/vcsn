@@ -277,17 +277,15 @@ namespace vcsn
       typedef node<weight_t> node_t;
       typedef typename node_t::type_t type_t;
     public:
-      atom(const weight_t& l, std::string* atom);
-      virtual ~atom();
+      atom(const weight_t& l, const std::string& atom);
     public:
       virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
-      std::string *get_atom();
-      const std::string *get_atom() const;
+      const std::string& get_atom() const;
     private:
-      std::string *atom_;
+      std::string atom_;
     };
 
   } // namespace rat

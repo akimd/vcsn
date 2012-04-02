@@ -19,7 +19,7 @@ namespace vcsn
 
     virtual exp_t* zero() const = 0;
     virtual exp_t* unit() const = 0;
-    virtual exp_t* atom(std::string* w) const = 0;
+    virtual exp_t* atom(const std::string& w) const = 0;
     virtual exp_t* add(exp_t* l, exp_t* r) const = 0;
     virtual exp_t* mul(exp_t* l, exp_t* r) const = 0;
     virtual exp_t* star(exp_t* e) const = 0;

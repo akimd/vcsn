@@ -51,7 +51,7 @@ namespace vcsn
     // Specialization from factory.
     virtual zero_t* zero() const;
     virtual one_t* unit() const;
-    virtual atom_t* atom(std::string* w) const;
+    virtual atom_t* atom(const std::string& w) const;
     virtual exp_t* add(exp_t* l, exp_t* r) const;
     virtual exp_t* mul(exp_t* l, exp_t* r) const;
     virtual exp_t* star(exp_t* e) const;

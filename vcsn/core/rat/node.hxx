@@ -424,17 +424,10 @@ namespace vcsn
 
     template <class Weight>
     inline
-    atom<Weight>::atom(const weight_t& w, std::string* atom)
+    atom<Weight>::atom(const weight_t& w, const std::string& atom)
       : super_type(w)
       , atom_(atom)
     {}
-
-    template <class Weight>
-    inline
-    atom<Weight>::~atom()
-    {
-      delete atom_;
-    }
 
     template <class Weight>
     inline
@@ -454,15 +447,7 @@ namespace vcsn
 
     template <class Weight>
     inline
-    std::string*
-    atom<Weight>::get_atom()
-    {
-      return atom_;
-    }
-
-    template <class Weight>
-    inline
-    const std::string*
+    const std::string&
     atom<Weight>::get_atom() const
     {
       return atom_;
