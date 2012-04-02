@@ -24,14 +24,19 @@ sub quote ($)
   $in;
 }
 
-# Parse and pretty-print.
+=item C<pp($prog, $in)>
+
+Parse and pretty-print.  If it fails, prepend "! " to the error
+message and return it as result.
+
+=cut
 sub pp ($$)
 {
   my ($prog, $in) = @_;
   $in = quote($in);
-  my $res = `valgrind --leak-check=full $prog -e '$in'`;
-  die "failed to run: $prog -e '$in': $?"
-    if $? && $? != 256;
+  my $res = `$prog -e '$in' 2>&1`;
+  $res = "! $res"
+    if $?;
   chomp($res);
   $res;
 }
@@ -66,29 +71,49 @@ sub check_rat_exp($$$)
           next;
         }
 
-      m/^(.*) (=>|==) (.*)$/
+      m/^(.*) (=>|==|!) (.*)$/
         or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
       my $L = pp("$prog -w $ws", $l);
 
       # == tests that boths are equivalent.
-      # =  check the actual result.
-
-      my $R = $op eq '=>' ? quote($r) : pp("$prog -w $ws", $r);
-      # Empty result is a sign of failure.
-      if ($L ne '' && $L eq $R)
+      # => check the actual result.
+      # !  error, with the given error message.
+      if ($op eq '!')
         {
-          print "$PASS: $l $op $r => $L\n";
+          if ($L eq "! $r")
+            {
+              print "$PASS: $l $op $r\n";
+            }
+          else
+            {
+              print "$file:$line: $FAIL: $l $op $r\n";
+              ++$fail;
+              if ($verbose)
+                {
+                  print "      exp: ! $r\n";
+                  print "      eff: $L\n";
+                }
+            }
         }
       else
         {
-          print "$file:$line: $FAIL: $l $op $r: $L vs. $R\n";
-          if ($verbose)
+          my $R = $op eq '=>' ? quote($r) : pp("$prog -w $ws", $r);
+          # Empty result is a sign of failure.
+          if ($L ne '' && $L eq $R)
             {
-              print "      $l: " . pp("$prog -w $ws", $l) . "\n";
-              print "      $r: " . pp("$prog -w $ws", $r) . "\n";
+              print "$PASS: $l $op $r => $L\n";
             }
-          ++$fail;
+          else
+            {
+              print "$file:$line: $FAIL: $l $op $r\n";
+              ++$fail;
+              if ($verbose)
+                {
+                  print "      exp: $R\n";
+                  print "      eff: $L\n";
+                }
+            }
         }
     }
 }

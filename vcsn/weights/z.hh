@@ -3,6 +3,8 @@
 
 # include <string>
 # include <ostream>
+# include <stdexcept>
+# include <boost/lexical_cast.hpp>
 
 namespace vcsn
 {
@@ -56,7 +58,14 @@ namespace vcsn
     value_t
     conv(const std::string &str) const
     {
-      return atoi(str.c_str());
+      try
+        {
+          return boost::lexical_cast<value_t>(str);
+        }
+      catch (std::bad_cast& e)
+        {
+          throw std::domain_error("invalid integer: " + str);
+        }
     }
 
     std::ostream&

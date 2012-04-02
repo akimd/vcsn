@@ -48,7 +48,10 @@ pp(const std::shared_ptr<vcsn::factory> factory, const char* s, bool file)
       delete e;
     }
   else
-    exit(EXIT_FAILURE);
+    {
+      std::cerr << d.errors << std::endl;
+      exit(EXIT_FAILURE);
+    }
 }
 
 #define COMMA ,

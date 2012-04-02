@@ -1,3 +1,24 @@
+* 2012-04-02
+** Alphabets are checked
+pprat is hard-coded to use a, b, c, d for all the alphabets
+(including for inner rational expressions):
+
+  $ pprat  -w b -e 'y'
+  1.1: invalid word: y: invalid letter: y
+
+** Weights are checked
+As follows:
+
+  $ pprat  -w b -e '{12}a'
+  1.1-5: invalid Boolean: 12
+
+Unfortunately the locations are bad currently for complex weights:
+
+  $ pprat  -w zr -e '{x}a'
+  1.1-4: 1.1: invalid word: x: invalid letter: x
+
+To be fixed.
+
 * 2012-03-30
 ** G++ 4.7 is required
 We use constructs that are not supported by 4.6 (e.g., constructor

@@ -300,7 +300,9 @@ namespace vcsn
     -> value_t
   {
     vcsn::rat::driver d(*this);
-    return d.parse_string(s);
+    if (value_t res = d.parse_string(s))
+      return res;
+    throw std::domain_error(d.errors);
   }
 
   FACTORY_::print(std::ostream& o, const value_t v) const

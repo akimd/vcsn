@@ -1,9 +1,10 @@
 #ifndef VCSN_WEIGHTS_B_HH
 # define VCSN_WEIGHTS_B_HH
 
-# include <string>
-# include <ostream>
 # include <cassert>
+# include <ostream>
+# include <stdexcept>
+# include <string>
 
 namespace vcsn
 {
@@ -57,22 +58,12 @@ namespace vcsn
     value_t
     conv(std::string& str) const
     {
-      if (str.size())
-       {
-         if ('0' == str[0])
-           return false;
-         else if ('1' == str[0])
-           return true;
-       }
+      if (str == "0")
+        return false;
+      else if (str == "1")
+        return true;
       else
-       {
-         if (str == "true")
-           return true;
-         else if (str == "false")
-           return false;
-       }
-      assert(false);
-      return false;
+        throw std::domain_error("invalid Boolean: " + str);
     }
 
     std::ostream&

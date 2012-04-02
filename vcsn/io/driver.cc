@@ -1,4 +1,5 @@
 #include <cstring> // strerror
+#include <sstream>
 
 #include <vcsn/io/driver.hh>
 #include <vcsn/io/parse-rat-exp.hh>
@@ -16,7 +17,11 @@ namespace vcsn
     void
     driver::error(const location& l, const std::string& m)
     {
-      std::cerr << l << ": " << m << std::endl;
+      std::stringstream er;
+      er  << l << ": " << m;
+      if (errors.empty())
+        errors += (errors.empty() ? "" : "\n") + er.str();
+      // std::cerr << l << ": " << m << std::endl;
     }
 
     void
@@ -26,11 +31,12 @@ namespace vcsn
     }
 
     exp*
-    driver::parse()
+    driver::parse(const location& l)
     {
       // Parser.
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
+      location_ = l;
       if (p.parse())
         result_ = 0;
       scan_close();
@@ -56,10 +62,10 @@ namespace vcsn
     }
 
     exp*
-    driver::parse_string(const std::string& e)
+    driver::parse_string(const std::string& e, const location& l)
     {
       scan_open(e);
-      return parse();
+      return parse(l);
     }
   }
 }

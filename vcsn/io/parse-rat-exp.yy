@@ -52,6 +52,11 @@
       driver_.factory_->Kind(__VA_ARGS__)
 }
 
+%initial-action
+{
+  @$ = driver_.location_;
+}
+
 %union
 {
   int ival;
@@ -129,8 +134,16 @@ weights.opt:
 ;
 
 weights:
-  "weight"                      { $$ = MAKE(weight, MAKE(unit), $1); }
-| "weight" weights              { $$ = MAKE(weight, $1, $2); }
+  "weight"
+  {
+    try { $$ = MAKE(weight, MAKE(unit), $1); }
+    catch (std::exception& e) { error(@$ + 1, e.what()); YYERROR; }
+  }
+| "weight" weights
+  {
+    try { $$ = MAKE(weight, $1, $2); }
+    catch (std::exception& e) { error(@1 + 1, e.what()); YYERROR; }
+  }
 ;
 
 %%
