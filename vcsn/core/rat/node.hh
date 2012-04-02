@@ -45,7 +45,6 @@ namespace vcsn
 
     public:
       node(const weight_t& l);
-      virtual ~node() = 0;
       virtual bool is_leaf() const = 0;
 
     public:
@@ -73,7 +72,6 @@ namespace vcsn
     protected:
       inner(const weight_t& l, const weight_t& r);
     public:
-      virtual ~inner() = 0;
       virtual bool is_leaf() const { return false; };
     public:
       const weight_t &right_weight() const;
@@ -227,7 +225,6 @@ namespace vcsn
     protected:
       leaf(const weight_t& l);
     public:
-      virtual ~leaf() = 0;
       virtual bool is_leaf() const { return true; };
     };
 
@@ -242,7 +239,6 @@ namespace vcsn
       typedef typename node_t::type_t type_t;
     public:
       one(const weight_t& l);
-      virtual ~one();
     public:
       virtual type_t type() const { return node_t::ONE; };
 
@@ -260,7 +256,6 @@ namespace vcsn
       typedef typename node_t::type_t type_t;
     public:
       zero(const weight_t& l);
-      virtual ~zero();
     public:
       virtual type_t type() const { return node_t::ZERO; };
 

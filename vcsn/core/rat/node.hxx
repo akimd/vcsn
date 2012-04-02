@@ -26,11 +26,6 @@ namespace vcsn
 
     template <class Weight>
     inline
-    node<Weight>::~node()
-    {}
-
-    template <class Weight>
-    inline
     auto
     node<Weight>::left_weight() const
       -> const weight_t&
@@ -59,13 +54,6 @@ namespace vcsn
       , rw_(r)
     {}
 
-
-    template <class Weight>
-    inline
-    inner<Weight>::~inner()
-    {}
-
-
     template <class Weight>
     inline
     auto
@@ -93,12 +81,6 @@ namespace vcsn
     inline
     leaf<Weight>::leaf(const weight_t& w)
       : super_type(w)
-    {}
-
-
-    template <class Weight>
-    inline
-    leaf<Weight>::~leaf()
     {}
 
 
@@ -368,11 +350,6 @@ namespace vcsn
 
     template <class Weight>
     inline
-    one<Weight>::~one()
-    {}
-
-    template <class Weight>
-    inline
     void
     one<Weight>::accept(typename node_t::visitor& v)
     {
@@ -395,11 +372,6 @@ namespace vcsn
     inline
     zero<Weight>::zero(const weight_t& w)
       : super_type(w)
-    {}
-
-    template <class Weight>
-    inline
-    zero<Weight>::~zero()
     {}
 
     template <class Weight>
