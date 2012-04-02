@@ -12,8 +12,7 @@ namespace vcsn
   dotty(A& aut, std::ostream& out)
   {
     typedef typename A::state_t state_t;
-    typedef typename A::bare_state_t bare_state_t;
-    std::unordered_map<bare_state_t, unsigned> names;
+    std::unordered_map<state_t, unsigned> names;
 
     auto& ws = aut.weightset();
     auto& al = aut.alphabet();
@@ -21,10 +20,9 @@ namespace vcsn
     bool show_unit = ws.show_unit();
 
     out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
-    // FIXME: for (auto s : aut.states())
-    for (auto s = aut.states().begin(); s != aut.states().end(); ++s)
+    for (auto s : aut.states())
       {
-	unsigned n = names[*s] = names.size();
+	unsigned n = names[s] = names.size();
 	out << "  " << n << "\n";
 	if (aut.is_initial(s))
 	  {
@@ -48,11 +46,10 @@ namespace vcsn
 	  }
       }
 
-    // FIXME: for (auto t : aut.transitions())
-    for (auto t = aut.transitions().begin(); t != aut.transitions().end(); ++t)
+    for (auto t : aut.transitions())
       {
-	unsigned src = names[*aut.src_of(t)];
-	unsigned dst = names[*aut.dst_of(t)];
+	unsigned src = names[aut.src_of(t)];
+	unsigned dst = names[aut.dst_of(t)];
 
 	out << "  " << src << " -> " << dst
 	    << " [label=\"";

@@ -9,11 +9,9 @@
 
 # include "crange.hh"
 # include "kind.hh"
-# include <vcsn/misc/container.hh>
 
 namespace vcsn
 {
-
   template <class Alphabet, class WeightSet, class Kind>
   class mutable_automaton
   {
@@ -26,24 +24,13 @@ namespace vcsn
     typedef typename weightset_t::value_t weight_t;
     typedef typename label_trait<Kind, Alphabet>::label_t label_t;
 
-    typedef stored_state_t* bare_state_t;
-    typedef stored_transition_t* bare_transition_t;
+    typedef stored_state_t* state_t;
+    typedef stored_transition_t* transition_t;
   protected:
     const alphabet_t& a_;
     const weightset_t& ws_;
     static const weightset_t& st_ws_;
 
-    typedef std::list<bare_state_t> st_cont_t;
-    typedef std::list<bare_transition_t> tr_cont_t;
-
-  public:
-    typedef typename st_cont_t::iterator state_t;
-    typedef typename tr_cont_t::iterator transition_t;
-
-    typedef typename st_cont_t::const_iterator const_state_t;
-    typedef typename tr_cont_t::const_iterator const_transition_t;
-
-  protected:
     struct stored_transition_t
     {
       state_t src;
@@ -62,6 +49,9 @@ namespace vcsn
       tr_vector_t pred;
     };
 
+    typedef std::list<state_t> st_cont_t;
+    typedef std::list<transition_t> tr_cont_t;
+
   public:
 
     mutable_automaton(const alphabet_t& a)
@@ -78,7 +68,7 @@ namespace vcsn
     ~mutable_automaton()
     {
       for (auto t : transitions_)
-        delete t;
+	delete t;
       for (auto s : states_)
 	delete s;
     }
@@ -98,50 +88,50 @@ namespace vcsn
     state_t
     new_state()
     {
-      states_.push_back(new stored_state_t);
-      state_t res = last(states_);
-      (* res)->final = (* res)->initial = ws_.zero();
+      state_t res = new stored_state_t;
+      res->final = res->initial = ws_.zero();
+      states_.push_back(res);
       return res;
     }
 
     bool
     has_state(state_t s) const
     {
-      return std::find(states_.begin(), states_.end(), *s) != states_.end();
+      return std::find(states_.begin(), states_.end(), s) != states_.end();
     }
 
     void
     del_state(state_t s)
     {
-      auto i = std::find(states_.begin(), states_.end(), *s);
+      auto i = std::find(states_.begin(), states_.end(), s);
       assert(i != states_.end());
-      for (auto t : (* s)->succ)
-	transitions_.erase(t);
-      for (auto t : (* s)->pred)
-	transitions_.erase(t);
+      for (auto t : s->succ)
+	transitions_.remove(t);
+      for (auto t : s->pred)
+	transitions_.remove(t);
       states_.erase(i);
     }
 
     weight_t
     get_initial_weight(state_t s)
     {
-      return (* s)->initial;
+      return s->initial;
     }
 
     weight_t
     get_final_weight(state_t s)
     {
-      return (* s)->final;
+      return s->final;
     }
 
     void
     set_initial(state_t s, weight_t k)
     {
-      (* s)->initial = k;
+      s->initial = k;
       if (ws_.is_zero(k))
-	initials_.erase(s);
+	initials_.remove(s);
       else
-	initials_.push_back(*s);
+	initials_.push_back(s);
     }
 
     void
@@ -167,17 +157,17 @@ namespace vcsn
     bool
     is_initial(state_t s)
     {
-      return !ws_.is_zero((* s)->initial);
+      return !ws_.is_zero(s->initial);
     }
 
     void
     set_final(state_t s, weight_t k)
     {
-      (* s)->final = k;
+      s->final = k;
       if (ws_.is_zero(k))
-	finals_.erase(s);
+	finals_.remove(s);
       else
-	finals_.push_back(*s);
+	finals_.remove(s);
     }
 
     void
@@ -203,7 +193,7 @@ namespace vcsn
     bool
     is_final(state_t s)
     {
-      return !ws_.is_zero((* s)->final);
+      return !ws_.is_zero(s->final);
     }
 
     size_t nb_states() const { return states_.size(); }
@@ -214,21 +204,20 @@ namespace vcsn
     transition_t
     get_transition(state_t src, state_t dst, label_t l)
     {
-      tr_vector_t& succ = (* src)->succ;
+      tr_vector_t& succ = src->succ;
       auto i =
 	std::find_if(begin(succ), end(succ),
 		     [&] (const transition_t& t)
-		     { return *(* t)->dst == *dst && a_.equals((* t)->label, l); });
+		     { return t->dst == dst && a_.equals(t->label, l); });
       if (i == end(succ))
-	return end(transitions_);
+	return nullptr;
       return *i;
     }
-
 
     bool
     has_transition(transition_t t)
     {
-      return std::find(transitions_.begin(), transitions_.end(), *t) != transitions_.end();
+      return std::find(transitions_.begin(), transitions_.end(), t) != transitions_.end();
     }
 
     bool
@@ -242,15 +231,15 @@ namespace vcsn
     {
       assert(has_transition(t));
 
-      transitions_.erase(t);
+      transitions_.remove(t);
 
-      auto& succ = (* (* t)->src)->succ;
+      auto& succ = t->src->succ;
       auto ts = std::find(succ.begin(), succ.end(), t);
       assert(ts != succ.end());
       *ts = succ.back();
       succ.pop_back();
 
-      auto& pred = (* (* t)->dst)->pred;
+      auto& pred = t->dst->pred;
       auto tp = std::find(pred.begin(), pred.end(), t);
       assert(tp != succ.end());
       *tp = pred.back();
@@ -268,29 +257,29 @@ namespace vcsn
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       transition_t t = get_transition(src, dst, l);
-      if (end(transitions_) != t)
+      if (t)
 	{
 	  if (!ws_.is_zero(k))
 	    {
-	      (* t)->label = l;
-	      (* t)->weight = k;
+	      t->label = l;
+	      t->weight = k;
 	    }
 	  else
 	    {
 	      del_transition(t);
-	      t = end(transitions_);
+	      t = nullptr;
 	    }
 	}
       else if (!ws_.is_zero(k))
 	{
-          transitions_.push_back(new stored_transition_t);
-	  t = last(transitions_);
-	  (* t)->src = src;
-	  (* t)->dst = dst;
-	  (* t)->label = l;
-	  (* t)->weight = k;
-	  (* src)->succ.push_back(t);
-	  (* dst)->pred.push_back(t);
+	  t = new stored_transition_t;
+	  t->src = src;
+	  t->dst = dst;
+	  t->label = l;
+	  t->weight = k;
+	  transitions_.push_back(t);
+	  src->succ.push_back(t);
+	  dst->pred.push_back(t);
 	}
       return t;
     }
@@ -307,17 +296,16 @@ namespace vcsn
       if (ws_.is_zero(k))
 	del_transition(t);
       else
-	(* t)->weight = k;
+	t->weight = k;
       return k;
     }
 
     weight_t
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
-      transition_t t = get_transition(src, dst, l);
-      if (end(transitions_) != t)
+      if (transition_t t = get_transition(src, dst, l))
 	{
-	  k = ws_.add((* t)->weight, k);
+	  k = ws_.add(t->weight, k);
 	  set_weight(t, k);
 	}
       else
@@ -336,7 +324,7 @@ namespace vcsn
     weight_t
     add_weight(transition_t t, weight_t k)
     {
-      k = ws_.add((* t)->weight, k);
+      k = ws_.add(t->weight, k);
       set_weight(t, k);
       return k;
     }
@@ -366,8 +354,8 @@ namespace vcsn
     out(state_t s, label_t l)
     {
       return container_filter_range<tr_vector_t>
-	((* s)->succ,
-	 [&] (transition_t i) { return a_.equals((* i)->label, l); });
+	(s->succ,
+	 [&] (transition_t i) { return a_.equals(i->label, l); });
     }
 
     // Invalidated by del_transition() and del_state().
@@ -379,8 +367,8 @@ namespace vcsn
     in(state_t s, label_t l)
     {
       return container_filter_range<tr_vector_t>
-	((* s)->pred,
-	 [&] (transition_t i) { return a_.equals((* i)->label, l); });
+	(s->pred,
+	 [&] (transition_t i) { return a_.equals(i->label, l); });
     }
 
     // Invalidated by del_transition() and del_state().
@@ -388,13 +376,13 @@ namespace vcsn
     outin(state_t s, state_t d)
     {
       return container_filter_range<tr_vector_t>
-	((* s)->succ, [&] (transition_t i) { return ((* i)->dst == d); });
+	(s->succ, [&] (transition_t i) { return (i->dst == d); });
     }
 
-    state_t src_of(transition_t t) const     { return (* t)->src; }
-    state_t dst_of(transition_t t) const     { return (* t)->dst; }
-    label_t label_of(transition_t t) const   { return (* t)->label; }
-    weight_t weight_of(transition_t t) const { return (* t)->weight; }
+    state_t src_of(transition_t t) const     { return t->src; }
+    state_t dst_of(transition_t t) const     { return t->dst; }
+    label_t label_of(transition_t t) const   { return t->label; }
+    weight_t weight_of(transition_t t) const { return t->weight; }
 
   protected:
 
@@ -407,6 +395,6 @@ namespace vcsn
   template <class Alphabet, class WeightSet, class Kind>
   const typename mutable_automaton<Alphabet, WeightSet, Kind>::weightset_t&
   mutable_automaton<Alphabet, WeightSet, Kind>::st_ws_ = WeightSet();
-} // namepsace vcsn
+}
 
 #endif // !MUTABLE_AUTOMATON
