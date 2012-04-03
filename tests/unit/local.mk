@@ -1,4 +1,4 @@
-noinst_PROGRAMS =				\
+check_PROGRAMS +=				\
   unit/ladybird-b 				\
   unit/ladybird-z				\
   unit/poly					\
@@ -13,7 +13,8 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 
 unit_TESTS =					\
   unit/ladybird.chk				\
-  unit/simplaw.chk
+  unit/simplaw.chk				\
+  unit/poly.chk
 
 dist_TESTS += $(unit_TESTS)
 

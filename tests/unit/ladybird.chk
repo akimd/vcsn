@@ -21,3 +21,6 @@ digraph A {
 }
 EOF
 run 0 out.exp 2
+
+prog=unit/ladybird-z
+run 0 out.exp 2
