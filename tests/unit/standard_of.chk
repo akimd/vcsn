@@ -1,0 +1,63 @@
+#! /bin/sh
+
+check ()
+{
+  run 0 out.exp rat/pprat -s "$@"
+}
+
+# B: "\z".
+cat >out.exp <<\EOF
+digraph A {
+  rankdir=LR
+  node [shape=circle];
+  1
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1
+}
+EOF
+check -w b -e '\z'
+
+# B: "\e".
+cat >out.exp <<\EOF
+digraph A {
+  rankdir=LR
+  node [shape=circle];
+  1
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1
+}
+EOF
+check -w b -e '\e'
+
+# B: "a"
+cat >out.exp <<\EOF
+digraph A {
+  rankdir=LR
+  node [shape=circle];
+  1
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1
+  2
+  F2 [style=invis,shape=none,label="",width=0,height=0]
+  2 -> F2
+  1 -> 2 [label="a"]
+}
+EOF
+check -w b -e 'a'
+
+
+# Z: "{12}\e".
+cat >out.exp <<\EOF
+digraph A {
+  rankdir=LR
+  node [shape=circle];
+  1
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1 [label="{12}"]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1
+}
+EOF
+check -w z -e '{12}\e'

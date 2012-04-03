@@ -11,10 +11,13 @@ unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
 unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 
-unit_TESTS =					\
-  unit/ladybird.chk				\
-  unit/simplaw.chk				\
-  unit/poly.chk
+unit_TESTS =                                    \
+  unit/ladybird.chk                             \
+  unit/poly.chk                                 \
+  unit/simplaw.chk                              \
+  unit/standard_of.chk
+
+unit/standard_of.log: rat/pprat
 
 dist_TESTS += $(unit_TESTS)
 
