@@ -31,9 +31,19 @@ namespace vcsn
     factory_(const alphabet_t& a, const weightset_t& ws);
     /// Construct with \a t as weight-set.
     /// \param a    the alphabet for the labels.
-    /// \param t    \a *t must be castable to weightset_t.
+    /// \param t    \a t must be castable to weightset_t.
     template <typename T>
-    factory_(const alphabet_t& a, const T* t);
+    factory_(const alphabet_t& a, const T& t);
+
+    const alphabet_t& alphabet() const
+    {
+      return a_;
+    }
+
+    const weightset_t& weightset() const
+    {
+      return ws_;
+    }
 
     // exp constants' method
 #define DEFINE(Type)                            \
@@ -75,7 +85,7 @@ namespace vcsn
 
   private:
     const alphabet_t& a_;
-    const weightset_t* ws_;
+    const weightset_t& ws_;
   };
 
 } // namespace vcsn

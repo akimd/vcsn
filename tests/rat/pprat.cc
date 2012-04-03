@@ -70,10 +70,10 @@ main(int argc, char* const argv[])
              std::shared_ptr<vcsn::factory_<alpha_t, Param>>            \
              (new vcsn::factory_<alpha_t, Param>{ alpha, Arg })))
   DEFINE(b, vcsn::b, vcsn::b());
-  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, factories["b"].get());
+  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, *factories["b"]);
   DEFINE(z, vcsn::z, vcsn::z());
-  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, factories["z"].get());
-  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, factories["zr"].get());
+  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, *factories["z"]);
+  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, *factories["zr"]);
 #undef DEFINE
   std::string w = "b";
   while ((opt = getopt(argc, argv, "e:f:hw:")) != -1)

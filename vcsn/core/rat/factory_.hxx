@@ -19,16 +19,14 @@ namespace vcsn
                                           const WeightSet& ws)
     : super_type()
     , a_(a)
-    , ws_(&ws)
-  {
-    assert(ws_);
-  }
+    , ws_(ws)
+  {}
 
   template <typename Alphabet, typename WeightSet>
   template <typename T>
   factory_<Alphabet, WeightSet>::factory_(const Alphabet& a,
-                                          const T* t)
-    : factory_(a, *dynamic_cast<const weightset_t*>(t))
+                                          const T& t)
+    : factory_(a, dynamic_cast<const weightset_t&>(t))
   {}
 
 
@@ -45,13 +43,13 @@ namespace vcsn
   FACTORY_::zero() const
     -> zero_t*
   {
-    return new zero_t(ws_->unit());
+    return new zero_t(ws_.unit());
   }
 
   FACTORY_::unit() const
     -> one_t*
   {
-    return new one_t(ws_->unit());
+    return new one_t(ws_.unit());
   }
 
   FACTORY_::atom(const std::string& w) const
@@ -60,7 +58,7 @@ namespace vcsn
     for (auto c: w)
       if (!a_.has(c))
         throw std::domain_error("invalid word: " + w + ": invalid letter: " + c);
-    return new atom_t(ws_->unit(), w);
+    return new atom_t(ws_.unit(), w);
   }
 
   FACTORY_::add(exp_t* l, exp_t* r) const
@@ -91,7 +89,7 @@ namespace vcsn
   {
     // The weight might not be needed (e = 0), but check its syntax
     // anyway.
-    auto res = weight(ws_->conv(*w), down_cast<node_t*>(e));
+    auto res = weight(ws_.conv(*w), down_cast<node_t*>(e));
     delete w;
     return res;
   }
@@ -99,7 +97,7 @@ namespace vcsn
   FACTORY_::weight(exp_t* e, std::string* w) const
     -> exp_t*
   {
-    auto res = weight(down_cast<node_t*>(e), ws_->conv(*w));
+    auto res = weight(down_cast<node_t*>(e), ws_.conv(*w));
     delete w;
     return res;
   }
@@ -150,7 +148,7 @@ namespace vcsn
       }
     else
       {
-        sum_t* res = new sum_t(ws_->unit(), ws_->unit());
+        sum_t* res = new sum_t(ws_.unit(), ws_.unit());
         res->push_front(r);
         res->push_front(l);
         return res;
@@ -208,7 +206,7 @@ namespace vcsn
       }
     else
       {
-        auto prod = new prod_t(ws_->unit(), ws_->unit());
+        auto prod = new prod_t(ws_.unit(), ws_.unit());
         prod->push_back(l);
         prod->push_back(r);
         res = prod;
@@ -227,7 +225,7 @@ namespace vcsn
         return unit();
       }
     else
-      return new star_t(ws_->unit(), ws_->unit(), e);
+      return new star_t(ws_.unit(), ws_.unit(), e);
   }
 
 
@@ -241,13 +239,13 @@ namespace vcsn
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
     if (e->type() != node_t::ZERO)
       {
-        if (ws_->is_zero(w))
+        if (ws_.is_zero(w))
           {
             delete e;
             e = zero();
           }
         else
-          e->left_weight() = ws_->mul(w, e->left_weight());
+          e->left_weight() = ws_.mul(w, e->left_weight());
       }
     return e;
   }
@@ -258,17 +256,17 @@ namespace vcsn
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
     if (e->type() != node_t::ZERO)
       {
-        if (ws_->is_zero(w))
+        if (ws_.is_zero(w))
           {
             delete e;
             e = zero();
           }
         else if (auto in = maybe_down_cast<inner_t*>(e))
-          in->right_weight() = ws_->mul(in->right_weight(), w);
+          in->right_weight() = ws_.mul(in->right_weight(), w);
         else
           {
             auto leaf = down_cast<leaf_t*>(e);
-            leaf->left_weight() = ws_->mul(leaf->left_weight(), w);
+            leaf->left_weight() = ws_.mul(leaf->left_weight(), w);
           }
       }
     return e;
@@ -309,7 +307,7 @@ namespace vcsn
     -> std::ostream&
   {
     const auto* down = down_cast<const node_t*>(v);
-    rat::printer<weightset_t> print(o, *ws_);
+    rat::printer<weightset_t> print(o, ws_);
     down->accept(print);
     return o;
   }
