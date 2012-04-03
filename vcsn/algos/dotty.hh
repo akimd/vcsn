@@ -15,7 +15,7 @@ namespace vcsn
     std::unordered_map<state_t, unsigned> names;
 
     auto& ws = aut.weightset();
-    auto& al = aut.alphabet();
+    auto& es = aut.entryset();
 
     bool show_unit = ws.show_unit();
 
@@ -46,17 +46,14 @@ namespace vcsn
 	  }
       }
 
-    for (auto t : aut.transitions())
+    for (auto t : aut.entries())
       {
 	unsigned src = names[aut.src_of(t)];
 	unsigned dst = names[aut.dst_of(t)];
 
 	out << "  " << src << " -> " << dst
 	    << " [label=\"";
-	auto k = aut.weight_of(t);
-	if (show_unit || !ws.is_unit(k))
-	  out << "{" << k << "}";
-	str_escape(out, al.format(aut.label_of(t))) << "\"]\n";
+	str_escape(out, es.format(aut.entry_at(t))) << "\"]\n";
       }
     out << "}" << std::endl;
   }

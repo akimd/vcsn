@@ -11,10 +11,8 @@ digraph A {
   1 -> F1
   2
   1 -> 2 [label="a"]
-  2 -> 2 [label="b"]
-  2 -> 2 [label="c"]
-  2 -> 1 [label="c"]
-  2 -> 1 [label="a"]
+  2 -> 2 [label="b + c"]
+  2 -> 1 [label="a + c"]
 }
 EOF
 

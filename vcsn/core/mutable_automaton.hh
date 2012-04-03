@@ -11,6 +11,8 @@
 # include "crange.hh"
 # include "kind.hh"
 # include "transition.hh"
+# include "vcsn/weights/poly.hh"
+# include "entryiter.hh"
 
 namespace vcsn
 {
@@ -21,17 +23,21 @@ namespace vcsn
   class mutable_automaton
   {
   public:
+    typedef unsigned state_t;
+    typedef unsigned transition_t;
+
     typedef Alphabet alphabet_t;
     typedef WeightSet weightset_t;
     typedef typename weightset_t::value_t weight_t;
     typedef typename label_trait<Kind, Alphabet>::label_t label_t;
-
-    typedef unsigned state_t;
-    typedef unsigned transition_t;
+    typedef polynomial<Alphabet, WeightSet> entryset_t;
+    typedef typename entryset_t::value_t entry_t;
   protected:
     const alphabet_t& a_;
     const weightset_t& ws_;
     static const weightset_t& st_ws_;
+    const entryset_t es_;
+    // FIXME: es_ already contains a_ and ws_.  Why store these twice?
 
     typedef transition_tuple<state_t, label_t, WeightSet> stored_transition_t;
 
@@ -61,13 +67,13 @@ namespace vcsn
   public:
 
     mutable_automaton(const alphabet_t& a)
-      : a_(a), ws_(st_ws_)
+    : a_(a), ws_(st_ws_), es_(a, st_ws_)
     {
     }
 
     mutable_automaton(const alphabet_t& a,
 		      const weightset_t& ws)
-      : a_(a), ws_(ws)
+      : a_(a), ws_(ws), es_(a, ws)
     {
     }
 
@@ -96,6 +102,12 @@ namespace vcsn
     alphabet() const
     {
       return a_;
+    }
+
+    const entryset_t&
+    entryset() const
+    {
+      return es_;
     }
 
     state_t
@@ -320,6 +332,15 @@ namespace vcsn
     state_t src_of(transition_t t) const     { return transitions_[t].src; }
     state_t dst_of(transition_t t) const     { return transitions_[t].dst; }
     label_t label_of(transition_t t) const   { return transitions_[t].label; }
+
+    // Convert the label to a word, in the case of a labels_are_letters.
+    // Same as label_of for labels_are_words.
+    typename alphabet_t::word_t
+    word_label_of(transition_t t) const
+    {
+      return a_.to_word(label_of(t));
+    }
+
     weight_t weight_of(transition_t t) const
     {
       return transitions_[t].get_weight();
@@ -444,10 +465,13 @@ namespace vcsn
       return k;
     }
 
-    container_filter_range<boost::integer_range<transition_t> >
+    typedef container_filter_range<boost::integer_range<transition_t>>
+      transitions_output_t;
+
+    transitions_output_t
     transitions() const
     {
-      return container_filter_range<boost::integer_range<transition_t> >
+      return transitions_output_t
 	(boost::irange<transition_t>(0U, transitions_.size()),
 	 [&] (transition_t i) { return transitions_[i].src != invalid; });
     }
@@ -525,6 +549,30 @@ namespace vcsn
       return container_filter_range<tr_cont_t>
 	(ss.succ,
 	 [&] (transition_t i) { return (transitions_[i].dst == d); });
+    }
+
+
+    entry_iterator<mutable_automaton, transitions_output_t>
+    entries() const
+    {
+      return
+	entry_iterator<mutable_automaton, transitions_output_t>(*this,
+								transitions());
+    }
+
+    entry_t
+    entry_at(state_t s, state_t d) const
+    {
+      entry_t e;
+      for (auto t : outin(s, d))
+	es_.assoc(e, word_label_of(t), weight_of(t));
+      return e;
+    }
+
+    entry_t
+    entry_at(transition_t t) const
+    {
+      return entry_at(src_of(t), dst_of(t));
     }
 
   };

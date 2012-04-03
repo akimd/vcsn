@@ -10,6 +10,7 @@ namespace vcsn
   struct container_range
   {
   public:
+    typedef typename C::value_type value_type;
     typedef typename C::const_iterator const_iterator;
   public:
     container_range(const C& cont) : cont_(cont) {}
@@ -25,6 +26,7 @@ namespace vcsn
   struct container_filter_range
   {
   public:
+    typedef typename C::value_type value_type;
     typedef std::function<bool(typename C::value_type)> predicate_t;
     typedef boost::filter_iterator<predicate_t, typename C::const_iterator> const_iterator;
   public:

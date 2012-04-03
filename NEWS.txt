@@ -25,6 +25,17 @@ later.
 
 ** mutable_automaton does not store any weight when WeightSet == b.
 
+** mutable_automaton has a read-only entry interface
+
+  entries() is a pseudo container that filters transitions()
+    to see each (src,dst) pair at most once.
+
+  entry_at(src, dst) and entry_at(t) return a polynomial describing
+    the entry between (src, dst) or (src_of(t), dst_of(t)).
+
+  entryset() returns the WeightSet that can be used to manipulate
+    these polynomials.
+
 ** make check-rat, make check-unit
 
 There is a check target for each subdirectory of tests/.

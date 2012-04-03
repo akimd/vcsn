@@ -22,6 +22,7 @@ nobase_vcsn_HEADERS =                           \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/crange.hh                                \
+  core/entryiter.hh				\
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
   core/transition.hh				\
