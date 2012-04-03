@@ -10,6 +10,9 @@
 #include <vcsn/alphabets/char.hh>
 #include <vcsn/alphabets/setalpha.hh>
 
+#include <vcsn/algos/dotty.hh>
+#include <vcsn/core/mutable_automaton.hh>
+
 static
 void
 usage(const char* prog, int status)
@@ -36,15 +39,56 @@ usage(const char* prog, int status)
   exit(status);
 }
 
+// FIXME: No globals.
 
+enum type
+  {
+    b, br,
+    z, zr, zrr,
+  };
 
+using alpha_t
+  = vcsn::set_alphabet<vcsn::char_letters>;
+alpha_t alpha{'a', 'b', 'c', 'd'};
+
+#define COMMA ,
+
+template <type Type>
+struct factory{};
+
+#define DEFINE(Name, Param, Arg)                        \
+  auto fact_ ## Name                                    \
+  = vcsn::factory_<alpha_t, Param>{ alpha, Arg };       \
+                                                        \
+  template <>                                           \
+  struct factory<Name>                                  \
+  {                                                     \
+    const vcsn::factory_<alpha_t, Param>&               \
+      get()                                             \
+    {                                                   \
+      return fact_ ## Name;                             \
+    }                                                   \
+  };
+
+  DEFINE(b, vcsn::b, vcsn::b());
+  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, fact_b);
+  DEFINE(z, vcsn::z, vcsn::z());
+  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, fact_z);
+  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, fact_zr);
+#undef DEFINE
+
+template<typename Factory>
 void
-pp(const std::shared_ptr<vcsn::factory> factory, const char* s, bool file)
+pp(const Factory& factory, const char* s, bool file)
 {
-  vcsn::rat::driver d(*factory);
+  using weightset_t
+    = typename Factory::weightset_t;
+  using automaton_t
+    = vcsn::mutable_automaton<alpha_t, weightset_t, vcsn::labels_are_words>;
+  vcsn::rat::driver d(factory);
   if (vcsn::rat::exp* e = file ? d.parse_file(s) : d.parse_string(s))
     {
-      factory->print(std::cout, e) << std::endl;
+      factory.print(std::cout, e) << std::endl;
       delete e;
     }
   else
@@ -54,44 +98,62 @@ pp(const std::shared_ptr<vcsn::factory> factory, const char* s, bool file)
     }
 }
 
-#define COMMA ,
+void
+pp(const type& ws, const char* s, bool file)
+{
+  switch (ws)
+    {
+#define CASE(Name)                              \
+      case Name:                                \
+        pp(fact_ ## Name, s, file);             \
+      break;
+      CASE(b);
+      CASE(br);
+      CASE(z);
+      CASE(zr);
+      CASE(zrr);
+#undef CASE
+    }
+}
 
 int
 main(int argc, char* const argv[])
 {
-  int opt;
-  std::map<std::string, std::shared_ptr<vcsn::factory>> factories;
-  typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
-  alpha_t alpha{'a', 'b', 'c', 'd'};
-#define DEFINE(Name, Param, Arg)                                        \
-  factories                                                             \
-    .insert(std::make_pair                                              \
-            (std::string(#Name),                                        \
-             std::shared_ptr<vcsn::factory_<alpha_t, Param>>            \
-             (new vcsn::factory_<alpha_t, Param>{ alpha, Arg })))
-  DEFINE(b, vcsn::b, vcsn::b());
-  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, *factories["b"]);
-  DEFINE(z, vcsn::z, vcsn::z());
-  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, *factories["z"]);
-  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, *factories["zr"]);
+  using map = std::map<std::string, type>;
+  using pair = std::pair<std::string, type>;
+
+  map factories;
+#define DEFINE(Name)                            \
+  factories.insert(pair(#Name, Name))
+  DEFINE(b);
+  DEFINE(br);
+  DEFINE(z);
+  DEFINE(zr);
+  DEFINE(zrr);
 #undef DEFINE
-  std::string w = "b";
+
+  type w = b;
+  int opt;
   while ((opt = getopt(argc, argv, "e:f:hw:")) != -1)
     switch (opt)
       {
       case 'e':
-        pp(factories[w], optarg, false);
+        pp(w, optarg, false);
         break;
       case 'f':
-        pp(factories[w], optarg, true);
+        pp(w, optarg, true);
         break;
       case 'w':
-        w = optarg;
-        if (factories.find(w) == end(factories))
-          {
-            std::cerr << w << ": invalid weight set" << std::endl;
-            usage(argv[0], EXIT_FAILURE);
-          }
+        {
+          map::iterator i = factories.find(optarg);
+          if (i == end(factories))
+            {
+              std::cerr << optarg << ": invalid weight set" << std::endl;
+              usage(argv[0], EXIT_FAILURE);
+            }
+          else
+            w = i->second;
+        }
         break;
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
@@ -103,5 +165,5 @@ main(int argc, char* const argv[])
   argc -= optind;
   argv += optind;
   for (int i = 0; i < argc; ++i)
-    pp(factories[w], argv[i], false);
+    pp(w, argv[i], false);
 }
