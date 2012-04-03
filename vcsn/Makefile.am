@@ -18,6 +18,7 @@ AM_CPPFLAGS += -I$(top_srcdir)
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
   algos/dotty.hh                                \
+  algos/standard_of.hh                          \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/crange.hh                                \

@@ -1,4 +1,21 @@
 * 2012-04-03
+** standard-of
+Initial version of standard-of is implemented.  Can be tested with
+pprat's new option -s:
+
+  $ pprat -wz -s '{123}a'
+  digraph A {
+    rankdir=LR
+    node [shape=circle];
+    1
+    I1 [style=invis,shape=none,label="",width=0,height=0]
+    I1 -> 1
+    2
+    F2 [style=invis,shape=none,label="",width=0,height=0]
+    2 -> F2
+    1 -> 2 [label="{123}a"]
+  }
+
 ** mutable_automaton uses unsigned for state_t and transition_t.
 
 This allows to store states in a std::vector<stored_state_t>.
@@ -12,25 +29,23 @@ later.
 
 There is a check target for each subdirectory of tests/.
 
-
-
 * 2012-04-02
 ** Alphabets are checked
 pprat is hard-coded to use a, b, c, d for all the alphabets
 (including for inner rational expressions):
 
-  $ pprat  -w b -e 'y'
+  $ pprat -w b -e 'y'
   1.1: invalid word: y: invalid letter: y
 
 ** Weights are checked
 As follows:
 
-  $ pprat  -w b -e '{12}a'
+  $ pprat -w b -e '{12}a'
   1.1-5: invalid Boolean: 12
 
 Unfortunately the locations are bad currently for complex weights:
 
-  $ pprat  -w zr -e '{x}a'
+  $ pprat -w zr -e '{x}a'
   1.1-4: 1.1: invalid word: x: invalid letter: x
 
 To be fixed.

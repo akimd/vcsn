@@ -11,6 +11,7 @@
 #include <vcsn/alphabets/setalpha.hh>
 
 #include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/standard_of.hh>
 #include <vcsn/core/mutable_automaton.hh>
 
 static
@@ -25,6 +26,7 @@ usage(const char* prog, int status)
       "  -w WEIGHT-SET   define the kind of the weights [b]\n"
       "  -e EXP          pretty-print the rational expression EXP\n"
       "  -f FILE         pretty-print the rational expression in FILE\n"
+      "  -s              display the standard automaton instead of expression\n"
       "\n"
       "WEIGHT-SET:\n"
       "  b    for Boolean\n"
@@ -39,13 +41,20 @@ usage(const char* prog, int status)
   exit(status);
 }
 
-// FIXME: No globals.
-
 enum type
   {
     b, br,
     z, zr, zrr,
   };
+
+
+struct context
+{
+  type weight;
+  bool standard_of;
+};
+
+// FIXME: No globals.
 
 using alpha_t
   = vcsn::set_alphabet<vcsn::char_letters>;
@@ -79,7 +88,8 @@ struct factory{};
 
 template<typename Factory>
 void
-pp(const Factory& factory, const char* s, bool file)
+pp(const context& ctx, const Factory& factory,
+   const char* s, bool file)
 {
   using weightset_t
     = typename Factory::weightset_t;
@@ -88,7 +98,16 @@ pp(const Factory& factory, const char* s, bool file)
   vcsn::rat::driver d(factory);
   if (vcsn::rat::exp* e = file ? d.parse_file(s) : d.parse_string(s))
     {
-      factory.print(std::cout, e) << std::endl;
+      if (ctx.standard_of)
+        {
+          auto aut =
+            vcsn::rat::standard_of<automaton_t>(factory.alphabet(),
+                                                factory.weightset(),
+                                                *e);
+          vcsn::dotty(aut, std::cout);
+        }
+      else
+        factory.print(std::cout, e) << std::endl;
       delete e;
     }
   else
@@ -99,13 +118,13 @@ pp(const Factory& factory, const char* s, bool file)
 }
 
 void
-pp(const type& ws, const char* s, bool file)
+pp(const context& ctx, const char* s, bool file)
 {
-  switch (ws)
+  switch (ctx.weight)
     {
 #define CASE(Name)                              \
       case Name:                                \
-        pp(fact_ ## Name, s, file);             \
+        pp(ctx, fact_ ## Name, s, file);        \
       break;
       CASE(b);
       CASE(br);
@@ -132,16 +151,26 @@ main(int argc, char* const argv[])
   DEFINE(zrr);
 #undef DEFINE
 
-  type w = b;
+  context ctx =
+    {
+      .weight = b,
+      .standard_of = false,
+    };
   int opt;
-  while ((opt = getopt(argc, argv, "e:f:hw:")) != -1)
+  while ((opt = getopt(argc, argv, "e:f:hsw:")) != -1)
     switch (opt)
       {
       case 'e':
-        pp(w, optarg, false);
+        pp(ctx, optarg, false);
         break;
       case 'f':
-        pp(w, optarg, true);
+        pp(ctx, optarg, true);
+        break;
+      case 'h':
+        usage(argv[0], EXIT_SUCCESS);
+        break;
+      case 's':
+        ctx.standard_of = true;
         break;
       case 'w':
         {
@@ -152,11 +181,8 @@ main(int argc, char* const argv[])
               usage(argv[0], EXIT_FAILURE);
             }
           else
-            w = i->second;
+            ctx.weight = i->second;
         }
-        break;
-      case 'h':
-        usage(argv[0], EXIT_SUCCESS);
         break;
       case '?':
         usage(argv[0], EXIT_FAILURE);
@@ -165,5 +191,5 @@ main(int argc, char* const argv[])
   argc -= optind;
   argv += optind;
   for (int i = 0; i < argc; ++i)
-    pp(w, argv[i], false);
+    pp(ctx, argv[i], false);
 }
