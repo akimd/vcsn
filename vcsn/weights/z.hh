@@ -5,6 +5,7 @@
 # include <ostream>
 # include <stdexcept>
 # include <boost/lexical_cast.hpp>
+# include <sstream>
 
 namespace vcsn
 {
@@ -72,6 +73,14 @@ namespace vcsn
     print(std::ostream& o, const value_t v) const
     {
       return o << v;
+    }
+
+    std::string
+    format(const value_t v) const
+    {
+      std::stringstream s;
+      print(s, v);
+      return s.str();
     }
   };
 }

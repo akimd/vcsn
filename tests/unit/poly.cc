@@ -15,10 +15,10 @@ int main()
 
   poly_t::value_t u = poly.unit();
   poly.assoc(u, "ab", 12);
-  poly.output(std::cout, u) << std::endl;
+  poly.print(std::cout, u) << std::endl;
 
   u = poly.add(u, u);
-  poly.output(std::cout, u) << std::endl;
+  poly.print(std::cout, u) << std::endl;
 
   assert(!poly.is_zero(u));
   assert(poly.is_zero(poly.zero()));
@@ -29,7 +29,7 @@ int main()
   assert(u == v);
 
   u = poly.mul(u, u);
-  poly.output(std::cout, u) << std::endl;
+  poly.print(std::cout, u) << std::endl;
 
   poly.add_assoc(v, "ab", 96 - 24);
   poly.assoc(v, "", 4);

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <iostream>
+#include <sstream>
 
 namespace vcsn
 {
@@ -15,7 +16,7 @@ namespace vcsn
 
     typedef std::map<word_t, weight_t> value_t;
 
-    polynomial(Alphabet a, WeightSet ws = WeightSet())
+    polynomial(const Alphabet& a, const WeightSet& ws = WeightSet())
       : a_(a), ws_(ws)
     {
       unit_[a_.identity()] = ws_.unit();
@@ -90,7 +91,7 @@ namespace vcsn
     }
 
     std::ostream&
-    output(std::ostream& out, const value_t& v)
+    print(std::ostream& out, const value_t& v) const
     {
       bool first = true;
       bool show_unit = ws_.show_unit();
@@ -102,7 +103,10 @@ namespace vcsn
 	  first = false;
 
 	  if (show_unit || !ws_.is_unit(i.second))
-	    out << "{" << i.second << "}";
+	    {
+	      out << "{";
+	      ws_.print(out, i.second) << "}";
+	    }
 	  a_.output(out, i.first);
 	}
 
@@ -112,9 +116,17 @@ namespace vcsn
       return out;
     }
 
+    std::string
+    format(const value_t& v) const
+    {
+      std::ostringstream s;
+      print(s, v);
+      return s.str();
+    }
+
   private:
-    Alphabet a_;
-    WeightSet ws_;
+    const Alphabet& a_;
+    const WeightSet& ws_;
     value_t unit_;
     value_t zero_;
   };

@@ -69,7 +69,13 @@ namespace vcsn
     std::ostream&
     print(std::ostream& o, const value_t v) const
     {
-      return o << (v ? "true" : "false");
+      return o << (v ? "0" : "1");
+    }
+
+    std::string
+    format(const value_t v) const
+    {
+      return v ? "0" : "1";
     }
   };
 }
