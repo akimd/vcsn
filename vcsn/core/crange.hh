@@ -10,17 +10,14 @@ namespace vcsn
   struct container_range
   {
   public:
-    typedef typename C::iterator iterator;
     typedef typename C::const_iterator const_iterator;
   public:
-    container_range(C& cont) : cont_(cont) {}
+    container_range(const C& cont) : cont_(cont) {}
 
-    iterator begin() { return cont_.begin(); }
-    iterator end()   { return cont_.end(); }
     const_iterator begin() const { return cont_.begin(); }
     const_iterator end() const   { return cont_.end(); }
   private:
-    C& cont_;
+    const C& cont_;
   };
 
 
@@ -29,33 +26,22 @@ namespace vcsn
   {
   public:
     typedef std::function<bool(typename C::value_type)> predicate_t;
-    typedef boost::filter_iterator<predicate_t, typename C::iterator> iterator_t;
-    typedef boost::filter_iterator<predicate_t, typename C::const_iterator> const_iterator_t;
+    typedef boost::filter_iterator<predicate_t, typename C::const_iterator> const_iterator;
   public:
-    container_filter_range(C& cont, predicate_t predicate)
+    container_filter_range(const C& cont, predicate_t predicate)
       : cont_(cont), predicate_(predicate) {}
 
-    iterator_t begin()
+    const_iterator begin() const
     {
-      return iterator_t(predicate_, cont_.begin(), cont_.end());
+      return const_iterator(predicate_, cont_.begin(), cont_.end());
     }
 
-    iterator_t end()
+    const_iterator end() const
     {
-      return iterator_t(predicate_, cont_.end(), cont_.end());
-    }
-
-    const_iterator_t begin() const
-    {
-      return iterator_t(predicate_, cont_.begin(), cont_.end());
-    }
-
-    const_iterator_t end() const
-    {
-      return iterator_t(predicate_, cont_.end(), cont_.end());
+      return const_iterator(predicate_, cont_.end(), cont_.end());
     }
   private:
-    C& cont_;
+    const C& cont_;
     predicate_t predicate_;
   };
 }

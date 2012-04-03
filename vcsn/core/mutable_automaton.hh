@@ -6,12 +6,16 @@
 # include <algorithm>
 # include <cassert>
 # include <list>
+# include <boost/range/irange.hpp>
 
 # include "crange.hh"
 # include "kind.hh"
 
 namespace vcsn
 {
+  // Invalid transition or state.
+  constexpr unsigned invalid = -1U;
+
   template <class Alphabet, class WeightSet, class Kind>
   class mutable_automaton
   {
@@ -24,8 +28,8 @@ namespace vcsn
     typedef typename weightset_t::value_t weight_t;
     typedef typename label_trait<Kind, Alphabet>::label_t label_t;
 
-    typedef stored_state_t* state_t;
-    typedef stored_transition_t* transition_t;
+    typedef unsigned state_t;
+    typedef unsigned transition_t;
   protected:
     const alphabet_t& a_;
     const weightset_t& ws_;
@@ -39,18 +43,28 @@ namespace vcsn
       state_t dst;
     };
 
-    typedef std::vector<transition_t> tr_vector_t;
+    typedef std::vector<stored_transition_t> tr_store_t;
+    typedef std::vector<transition_t> tr_cont_t;
 
     struct stored_state_t
     {
       weight_t initial;
       weight_t final;
-      tr_vector_t succ;
-      tr_vector_t pred;
+      tr_cont_t succ;
+      tr_cont_t pred;
     };
 
-    typedef std::list<state_t> st_cont_t;
-    typedef std::list<transition_t> tr_cont_t;
+    typedef std::vector<stored_state_t> st_store_t;
+    typedef std::vector<state_t> st_cont_t;
+
+    typedef std::vector<unsigned> free_store_t;
+
+    st_cont_t initials_;
+    st_cont_t finals_;
+    st_store_t states_;
+    free_store_t states_fs_;
+    tr_store_t transitions_;
+    free_store_t transitions_fs_;
 
   public:
 
@@ -67,10 +81,6 @@ namespace vcsn
 
     ~mutable_automaton()
     {
-      for (auto t : transitions_)
-	delete t;
-      for (auto s : states_)
-	delete s;
     }
 
     const weightset_t&
@@ -88,50 +98,96 @@ namespace vcsn
     state_t
     new_state()
     {
-      state_t res = new stored_state_t;
-      res->final = res->initial = ws_.zero();
-      states_.push_back(res);
-      return res;
+      state_t s;
+      if (states_fs_.empty())
+	{
+	  s = states_.size();
+	  states_.resize(s + 1);
+	}
+      else
+	{
+	  s = states_fs_.back();
+	  states_fs_.pop_back();
+	}
+      stored_state_t& ss = states_[s];
+      ss.final = ss.initial = ws_.zero();
+      return s;
     }
 
     bool
     has_state(state_t s) const
     {
-      return std::find(states_.begin(), states_.end(), s) != states_.end();
+      // Any number outside our container is not a state.
+      // (This includes "invalid".)
+      if (s >= states_.size())
+	return false;
+      const stored_state_t& ss = states_[s];
+
+      // Erased states have 'invalid' has their first successor.
+      return ss.succ.empty() || ss.succ.front() != invalid;
     }
 
+
+  protected:
+    void
+    del_transitions(tr_cont_t& tc)
+    {
+      transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
+      tc.clear();
+    }
+
+  public:
     void
     del_state(state_t s)
     {
-      auto i = std::find(states_.begin(), states_.end(), s);
-      assert(i != states_.end());
-      for (auto t : s->succ)
-	transitions_.remove(t);
-      for (auto t : s->pred)
-	transitions_.remove(t);
-      states_.erase(i);
+      assert(has_state(s));
+      stored_state_t& ss = states_[s];
+      del_transitions(ss.succ);
+      del_transitions(ss.pred);
+      ss.succ.push_back(invalid); // So has_state() can work.
+      states_fs_.push_back(s);
     }
 
-    weight_t
-    get_initial_weight(state_t s)
+    const weight_t&
+    get_initial_weight(state_t s) const
     {
-      return s->initial;
+      return states_[s].initial;
     }
 
-    weight_t
-    get_final_weight(state_t s)
+    const weight_t&
+    get_final_weight(state_t s) const
     {
-      return s->final;
+      return states_[s].final;
     }
 
     void
     set_initial(state_t s, weight_t k)
     {
-      s->initial = k;
+      assert(has_state(s));
+      stored_state_t& ss = states_[s];
+
+      weight_t oldk = ss.initial;
+      if (oldk == k)
+	return;
+
+      ss.initial = k;
       if (ws_.is_zero(k))
-	initials_.remove(s);
-      else
-	initials_.push_back(s);
+	{
+	  st_cont_t::iterator pos = std::find(begin(initials_),
+					      end(initials_), s);
+	  // pos must be here because the old weight was nonzero.
+	  assert(pos != end(initials_));
+
+	  // Remove the state from the initials_ vector.  Since this
+	  // vector is not ordered, we can just fill the hole with the
+	  // last value.
+	  *pos = initials_.back();
+	  initials_.pop_back();
+	}
+      else if (ws_.is_zero(oldk))
+	{
+	  initials_.push_back(s);
+	}
     }
 
     void
@@ -143,7 +199,7 @@ namespace vcsn
     weight_t
     add_initial(state_t s, weight_t k)
     {
-      k = ws_.add(s->initial, k);
+      k = ws_.add(get_initial_weight(s), k);
       set_initial(s, k);
       return k;
     }
@@ -155,19 +211,39 @@ namespace vcsn
     }
 
     bool
-    is_initial(state_t s)
+    is_initial(state_t s) const
     {
-      return !ws_.is_zero(s->initial);
+      return !ws_.is_zero(get_initial_weight(s));
     }
 
     void
     set_final(state_t s, weight_t k)
     {
-      s->final = k;
+      assert(has_state(s));
+      stored_state_t& ss = states_[s];
+
+      weight_t oldk = ss.final;
+      if (oldk == k)
+	return;
+
+      ss.final = k;
       if (ws_.is_zero(k))
-	finals_.remove(s);
-      else
-	finals_.remove(s);
+	{
+	  st_cont_t::iterator pos = std::find(begin(finals_),
+					      end(finals_), s);
+	  // pos must be here because the old weight was nonzero.
+	  assert(pos != end(finals_));
+
+	  // Remove the state from the finals_ vector.  Since this
+	  // vector is not ordered, we can just fill the hole with the
+	  // last value.
+	  *pos = finals_.back();
+	  finals_.pop_back();
+	}
+      else if (ws_.is_zero(oldk))
+	{
+	  finals_.push_back(s);
+	}
     }
 
     void
@@ -179,7 +255,7 @@ namespace vcsn
     weight_t
     add_final(state_t s, weight_t k)
     {
-      k = ws_.add(s->final, k);
+      k = ws_.add(get_final_weight(s), k);
       set_final(s, k);
       return k;
     }
@@ -191,9 +267,9 @@ namespace vcsn
     }
 
     bool
-    is_final(state_t s)
+    is_final(state_t s) const
     {
-      return !ws_.is_zero(s->final);
+      return !ws_.is_zero(get_final_weight(s));
     }
 
     size_t nb_states() const { return states_.size(); }
@@ -202,54 +278,74 @@ namespace vcsn
     size_t nb_finals() const { return finals_.size(); }
 
     transition_t
-    get_transition(state_t src, state_t dst, label_t l)
+    get_transition(state_t src, state_t dst, label_t l) const
     {
-      tr_vector_t& succ = src->succ;
+      assert(has_state(src));
+      assert(has_state(dst));
+      // FIXME: We should search in dst->pred if it is smaller
+      // than src->succ.
+      const tr_cont_t& succ = states_[src].succ;
       auto i =
-	std::find_if(begin(succ), end(succ),
-		     [&] (const transition_t& t)
-		     { return t->dst == dst && a_.equals(t->label, l); });
+	std::find_if(begin(succ), end(succ), [&] (const transition_t& t)
+		     { const stored_transition_t& st = transitions_[t];
+		       return st.dst == dst && a_.equals(st.label, l); });
       if (i == end(succ))
-	return nullptr;
+	return invalid;
       return *i;
     }
 
     bool
-    has_transition(transition_t t)
+    has_transition(transition_t t) const
     {
-      return std::find(transitions_.begin(), transitions_.end(), t) != transitions_.end();
+      // Any number outside our container is not a transition.
+      // (This includes "invalid".)
+      if (t >= transitions_.size())
+	return false;
+
+      // Erased transition have invalid source state.
+      return transitions_[t].src != invalid;
     }
 
     bool
-    has_transition(state_t src, state_t dst, label_t l)
+    has_transition(state_t src, state_t dst, label_t l) const
     {
-      return get_transition(src, dst, l);
+      return get_transition(src, dst, l) != invalid;
     }
+
+    state_t src_of(transition_t t) const     { return transitions_[t].src; }
+    state_t dst_of(transition_t t) const     { return transitions_[t].dst; }
+    label_t label_of(transition_t t) const   { return transitions_[t].label; }
+    weight_t weight_of(transition_t t) const { return transitions_[t].weight; }
 
     void
     del_transition(transition_t t)
     {
       assert(has_transition(t));
+      stored_transition_t& st = transitions_[t];
 
-      transitions_.remove(t);
-
-      auto& succ = t->src->succ;
-      auto ts = std::find(succ.begin(), succ.end(), t);
-      assert(ts != succ.end());
-      *ts = succ.back();
+      // Remove transition from source and destination.
+      auto& succ = states_[st.src].succ;
+      auto tsucc = std::find(succ.begin(), succ.end(), t);
+      assert(tsucc != succ.end());
+      *tsucc = succ.back();
       succ.pop_back();
 
-      auto& pred = t->dst->pred;
-      auto tp = std::find(pred.begin(), pred.end(), t);
-      assert(tp != succ.end());
-      *tp = pred.back();
+      auto& pred = states_[st.dst].pred;
+      auto tpred = std::find(pred.begin(), pred.end(), t);
+      assert(tpred != succ.end());
+      *tpred = pred.back();
       pred.pop_back();
+
+      // Actually erase the transition.
+      st.src = invalid;
+      transitions_fs_.push_back(t);
     }
 
     void
     del_transition(state_t src, state_t dst, label_t l)
     {
-      if (transition_t t = get_transition(src, dst, l))
+      transition_t t = get_transition(src, dst, l);
+      if (t != invalid)
 	del_transition(t);
     }
 
@@ -257,29 +353,39 @@ namespace vcsn
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       transition_t t = get_transition(src, dst, l);
-      if (t)
+      if (t != invalid)
 	{
 	  if (!ws_.is_zero(k))
 	    {
-	      t->label = l;
-	      t->weight = k;
+	      stored_transition_t& st = transitions_[t];
+	      st.label = l;
+	      st.weight = k;
 	    }
 	  else
 	    {
 	      del_transition(t);
-	      t = nullptr;
+	      t = invalid;
 	    }
 	}
       else if (!ws_.is_zero(k))
 	{
-	  t = new stored_transition_t;
-	  t->src = src;
-	  t->dst = dst;
-	  t->label = l;
-	  t->weight = k;
-	  transitions_.push_back(t);
-	  src->succ.push_back(t);
-	  dst->pred.push_back(t);
+	  if (transitions_fs_.empty())
+	    {
+	      t = transitions_.size();
+	      transitions_.resize(t + 1);
+	    }
+	  else
+	    {
+	      t = transitions_fs_.back();
+	      transitions_fs_.pop_back();
+	    }
+	  stored_transition_t& st = transitions_[t];
+	  st.src = src;
+	  st.dst = dst;
+	  st.label = l;
+	  st.weight = k;
+	  states_[src].succ.push_back(t);
+	  states_[dst].pred.push_back(t);
 	}
       return t;
     }
@@ -296,16 +402,17 @@ namespace vcsn
       if (ws_.is_zero(k))
 	del_transition(t);
       else
-	t->weight = k;
+	transitions_[t].weight = k;
       return k;
     }
 
     weight_t
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
-      if (transition_t t = get_transition(src, dst, l))
+      transition_t t = get_transition(src, dst, l);
+      if (t != invalid)
 	{
-	  k = ws_.add(t->weight, k);
+	  k = ws_.add(weight_of(t), k);
 	  set_weight(t, k);
 	}
       else
@@ -324,72 +431,94 @@ namespace vcsn
     weight_t
     add_weight(transition_t t, weight_t k)
     {
-      k = ws_.add(t->weight, k);
+      k = ws_.add(weight_of(t), k);
       set_weight(t, k);
       return k;
     }
 
+    container_filter_range<boost::integer_range<transition_t> >
+    transitions() const
+    {
+      return container_filter_range<boost::integer_range<transition_t> >
+	(boost::irange<transition_t>(0U, transitions_.size()),
+	 [&] (transition_t i) { return transitions_[i].src != invalid; });
+    }
 
+    container_filter_range<boost::integer_range<state_t> >
+    states() const
+    {
+      return container_filter_range<boost::integer_range<state_t> >
+	(boost::irange<state_t>(0U, states_.size()),
+	 [&] (state_t i) {
+	  const stored_state_t& ss = states_[i];
+	  return ss.succ.empty() || ss.succ.front() != invalid;
+	});
+    }
 
-  public:
+    container_range<st_cont_t>
+    initials() const
+    {
+      return container_range<st_cont_t>(initials_);
+    }
 
+    container_range<st_cont_t>
+    finals() const
+    {
+      return container_range<st_cont_t>(finals_);
+    }
+
+    // Invalidated by del_transition() and del_state().
     container_range<tr_cont_t>
-    transitions() { return container_range<tr_cont_t>(transitions_); }
-
-    container_range<st_cont_t>
-    states() { return container_range<st_cont_t>(states_); }
-
-    container_range<st_cont_t>
-    initials() { return container_range<st_cont_t>(initials_); }
-
-    container_range<st_cont_t>
-    finals() { return container_range<st_cont_t>(finals_); }
-
-    // Invalidated by del_transition() and del_state().
-    container_range<tr_vector_t>
-    out(state_t s) { return container_range<tr_vector_t>(s->succ); }
-
-    // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_vector_t>
-    out(state_t s, label_t l)
+    out(state_t s) const
     {
-      return container_filter_range<tr_vector_t>
-	(s->succ,
-	 [&] (transition_t i) { return a_.equals(i->label, l); });
+      assert(has_state(s));
+      const stored_state_t& ss = states_[s];
+      return container_range<tr_cont_t>(ss.succ);
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_vector_t>
-    in(state_t s) { return container_range<tr_vector_t>(s->pred); }
-
-    // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_vector_t>
-    in(state_t s, label_t l)
+    container_filter_range<tr_cont_t>
+    out(state_t s, label_t l) const
     {
-      return container_filter_range<tr_vector_t>
-	(s->pred,
-	 [&] (transition_t i) { return a_.equals(i->label, l); });
+      assert(has_state(s));
+      const stored_state_t& ss = states_[s];
+      return container_filter_range<tr_cont_t>
+	(ss.succ,
+	 [&] (transition_t i) { return a_.equals(transitions_[i].label, l); });
     }
 
     // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_vector_t>
-    outin(state_t s, state_t d)
+    container_range<tr_cont_t>
+    in(state_t s) const
     {
-      return container_filter_range<tr_vector_t>
-	(s->succ, [&] (transition_t i) { return (i->dst == d); });
+      assert(has_state(s));
+      const stored_state_t& ss = states_[s];
+      return container_range<tr_cont_t>(ss.pred);
     }
 
-    state_t src_of(transition_t t) const     { return t->src; }
-    state_t dst_of(transition_t t) const     { return t->dst; }
-    label_t label_of(transition_t t) const   { return t->label; }
-    weight_t weight_of(transition_t t) const { return t->weight; }
+    // Invalidated by del_transition() and del_state().
+    container_filter_range<tr_cont_t>
+    in(state_t s, label_t l) const
+    {
+      assert(has_state(s));
+      const stored_state_t& ss = states_[s];
+      return container_filter_range<tr_cont_t>
+	(ss.pred,
+	 [&] (transition_t i) { return a_.equals(transitions_[i].label, l); });
+    }
 
-  protected:
+    // Invalidated by del_transition() and del_state().
+    container_filter_range<tr_cont_t>
+    outin(state_t s, state_t d) const
+    {
+      assert(has_state(s));
+      assert(has_state(d));
+      const stored_state_t& ss = states_[s];
+      return container_filter_range<tr_cont_t>
+	(ss.succ,
+	 [&] (transition_t i) { return (transitions_[i].dst == d); });
+    }
 
-    st_cont_t initials_;
-    st_cont_t finals_;
-    st_cont_t states_;
-    tr_cont_t transitions_;
   };
 
   template <class Alphabet, class WeightSet, class Kind>
