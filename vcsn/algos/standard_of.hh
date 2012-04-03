@@ -35,16 +35,11 @@ namespace vcsn
       }
 
       virtual void
-      visit(const prod<weight_t>&)
-      {}
-
-      virtual void
-      visit(const sum<weight_t>&)
-      {}
-
-      virtual void
-      visit(const star<weight_t>&)
-      {}
+      visit(const zero<weight_t>&)
+      {
+        auto i = res_.new_state();
+        initial_ = i;
+      }
 
       virtual void
       visit(const one<weight_t>& v)
@@ -56,21 +51,28 @@ namespace vcsn
       }
 
       virtual void
-      visit(const zero<weight_t>&)
-      {
-        auto i = res_.new_state();
-        initial_ = i;
-      }
-
-      virtual void
       visit(const atom<weight_t>& e)
       {
         auto i = res_.new_state();
         auto f = res_.new_state();
         initial_ = i;
+        initial_weight_ = ws_.unit();
         res_.add_transition(i, f, e.get_atom(), e.left_weight());
         res_.set_final(f);
       }
+
+      virtual void
+      visit(const sum<weight_t>&)
+      {}
+
+      virtual void
+      visit(const prod<weight_t>&)
+      {}
+
+      virtual void
+      visit(const star<weight_t>&)
+      {}
+
 
     private:
       weightset_t ws_;
