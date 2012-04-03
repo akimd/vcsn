@@ -15,7 +15,13 @@ namespace vcsn
     word_t
     to_word(const letter_t l) const
     {
-      return word_t(l, 1);
+      return word_t(1, l);
+    }
+
+    const word_t&
+    to_word(const word_t& l) const
+    {
+      return l;
     }
 
     word_t
