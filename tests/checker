@@ -142,8 +142,8 @@ rst_expect ()
 }
 
 
-# run EXPECTED-EXIT-STATUS EXPECTED-OUTPUT [SUCS-OPTIONS]
-# -------------------------------------------------------
+# run EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
+# ------------------------------------------------------------
 run ()
 {
   # Expected exit status.
@@ -157,6 +157,9 @@ run ()
 $out_exp
 EOF
   fi
+  # program to run
+  local prog=$1
+  shift
   # Effective exit status, output and error.
   local sta_eff=0
   # Be robust to set -e.
@@ -171,7 +174,7 @@ EOF
   cat <<EOF
 
 test $number:
-	sucs $@
+	$prog $@
 status: $sta_eff
 EOF
   number=`expr $number + 1`

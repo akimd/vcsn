@@ -1,8 +1,5 @@
 #! /bin/sh
 
-# To be loaded from checker.
-prog=unit/ladybird-b
-
 cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
@@ -20,7 +17,6 @@ digraph A {
   2 -> 1 [label="a"]
 }
 EOF
-run 0 out.exp 2
 
-prog=unit/ladybird-z
-run 0 out.exp 2
+run 0 out.exp unit/ladybird-b 2
+run 0 out.exp unit/ladybird-z 2

@@ -1,8 +1,5 @@
 #! /bin/sh
 
-# To be loaded from checker.
-prog=unit/simplaw
-
 cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
@@ -20,4 +17,4 @@ digraph A {
   3 -> 2 [label="{2}\\e"]
 }
 EOF
-run 0 out.exp 2
+run 0 out.exp unit/simplaw
