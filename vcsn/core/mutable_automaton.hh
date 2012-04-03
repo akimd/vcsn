@@ -136,6 +136,8 @@ namespace vcsn
     del_transitions(tr_cont_t& tc)
     {
       transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
+      for (auto t: tc)
+	transitions_[t].src = invalid;
       tc.clear();
     }
 
