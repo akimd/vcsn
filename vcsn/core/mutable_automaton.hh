@@ -78,7 +78,7 @@ namespace vcsn
     }
 
     mutable_automaton(mutable_automaton&& that)
-      : a_(that.a_), ws_(that.ws_)
+    : a_(that.a_), ws_(that.ws_), es_(that.es_)
     {
       std::swap(initials_, that.initials_);
       std::swap(finals_, that.finals_);
