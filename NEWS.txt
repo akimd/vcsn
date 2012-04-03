@@ -6,6 +6,10 @@ Likewise for transitions.  Erased elements are marked (so they are
 skipped over during iteration), and added to a free store to be reused
 later.
 
+** make check-rat, make check-unit
+
+There is a check target for each subdirectory of tests/.
+
 * 2012-04-02
 ** Alphabets are checked
 pprat is hard-coded to use a, b, c, d for all the alphabets

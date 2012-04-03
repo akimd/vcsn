@@ -16,20 +16,29 @@ TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
 AM_RAT_LOG_FLAGS = rat/pprat
 
-dist_TESTS +=					\
-  $(XFAIL_TESTS)				\
+rat_TESTS =					\
+  $(rat_XFAIL_TESTS)				\
   rat/b.rat					\
   rat/br.rat					\
   rat/z.rat					\
   rat/zr.rat					\
   rat/zrr.rat
+
+dist_TESTS += $(rat_TESTS)
 EXTRA_DIST += rat/common.rat
 
-XFAIL_TESTS +=					\
+rat_XFAIL_TESTS =				\
   rat/wrong-weight-set.rat			\
   rat/invalid-weight-set.rat			\
   rat/wrong-weight-set.rat
 
+XFAIL_TESTS += $(rat_XFAIL_TESTS)
+
 check_PROGRAMS += rat/pprat
 
 rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la
+
+.PHONY: check-rat
+check-rat:
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(rat_TESTS)'
+
