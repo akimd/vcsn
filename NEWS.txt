@@ -1,14 +1,18 @@
 * 2012-04-03
-** mutable_automaton use unsigned for state_t and transition_t.
+** mutable_automaton uses unsigned for state_t and transition_t.
 
 This allows to store states in a std::vector<stored_state_t>.
 Likewise for transitions.  Erased elements are marked (so they are
 skipped over during iteration), and added to a free store to be reused
 later.
 
+** mutable_automaton does not store any weight when WeightSet == b.
+
 ** make check-rat, make check-unit
 
 There is a check target for each subdirectory of tests/.
+
+
 
 * 2012-04-02
 ** Alphabets are checked

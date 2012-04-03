@@ -10,6 +10,7 @@
 
 # include "crange.hh"
 # include "kind.hh"
+# include "transition.hh"
 
 namespace vcsn
 {
@@ -19,9 +20,6 @@ namespace vcsn
   template <class Alphabet, class WeightSet, class Kind>
   class mutable_automaton
   {
-  protected:
-    class stored_state_t;
-    class stored_transition_t;
   public:
     typedef Alphabet alphabet_t;
     typedef WeightSet weightset_t;
@@ -35,13 +33,7 @@ namespace vcsn
     const weightset_t& ws_;
     static const weightset_t& st_ws_;
 
-    struct stored_transition_t
-    {
-      state_t src;
-      label_t label;
-      weight_t weight;
-      state_t dst;
-    };
+    typedef transition_tuple<state_t, label_t, WeightSet> stored_transition_t;
 
     typedef std::vector<stored_transition_t> tr_store_t;
     typedef std::vector<transition_t> tr_cont_t;
@@ -315,7 +307,10 @@ namespace vcsn
     state_t src_of(transition_t t) const     { return transitions_[t].src; }
     state_t dst_of(transition_t t) const     { return transitions_[t].dst; }
     label_t label_of(transition_t t) const   { return transitions_[t].label; }
-    weight_t weight_of(transition_t t) const { return transitions_[t].weight; }
+    weight_t weight_of(transition_t t) const
+    {
+      return transitions_[t].get_weight();
+    }
 
     void
     del_transition(transition_t t)
@@ -359,7 +354,7 @@ namespace vcsn
 	    {
 	      stored_transition_t& st = transitions_[t];
 	      st.label = l;
-	      st.weight = k;
+	      st.set_weight(k);
 	    }
 	  else
 	    {
@@ -383,7 +378,7 @@ namespace vcsn
 	  st.src = src;
 	  st.dst = dst;
 	  st.label = l;
-	  st.weight = k;
+	  st.set_weight(k);
 	  states_[src].succ.push_back(t);
 	  states_[dst].pred.push_back(t);
 	}
@@ -402,7 +397,7 @@ namespace vcsn
       if (ws_.is_zero(k))
 	del_transition(t);
       else
-	transitions_[t].weight = k;
+	transitions_[t].set_weight(k);
       return k;
     }
 
