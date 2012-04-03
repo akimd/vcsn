@@ -32,6 +32,14 @@ AC_SUBST([LIBTOOL_DEPS])
 
 AC_PROG_CXX
 
+if test x$GXX = xyes; then
+   case x`$CXX -dumpversion`x in
+   xx|x2*|x3*|x4.[[0123456]]*)
+     AC_MSG_ERROR([GNU g++ version 4.7 or later is required]);;
+   *);;
+   esac
+fi
+
 AC_LANG(C++)
 
 AX_CHECK_COMPILE_FLAG([-std=c++11],
