@@ -77,7 +77,9 @@ namespace vcsn
       std::swap(initials_, that.initials_);
       std::swap(finals_, that.finals_);
       std::swap(states_, that.states_);
+      std::swap(states_fs_, that.states_fs_);
       std::swap(transitions_, that.transitions_);
+      std::swap(transitions_fs_, that.transitions_fs_);
     }
 
     ~mutable_automaton()
