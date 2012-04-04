@@ -292,8 +292,16 @@ namespace vcsn
       return !ws_.is_zero(get_final_weight(s));
     }
 
-    size_t nb_states() const { return states_.size(); }
-    size_t nb_transitions() const { return transitions_.size(); }
+    size_t nb_states() const
+    {
+      return states_.size() - states_fs_.size();
+    }
+
+    size_t nb_transitions() const
+    {
+      return transitions_.size() - transitions_fs_.size();
+    }
+
     size_t nb_initials() const { return initials_.size(); }
     size_t nb_finals() const { return finals_.size(); }
 

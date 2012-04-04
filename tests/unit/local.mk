@@ -14,6 +14,7 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 unit_TESTS =                                    \
   unit/ladybird.chk                             \
   unit/poly.chk                                 \
+  unit/simpleaut.chk                            \
   unit/simplaw.chk                              \
   unit/standard_of.chk
 

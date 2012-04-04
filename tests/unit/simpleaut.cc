@@ -33,29 +33,33 @@ int main()
   assert(v == 42);
   aut.set_transition(s1, s3, 'd', 1);
   vcsn::dotty(aut, std::cout);
+  assert(aut.nb_states() == 3);
+  assert(aut.nb_transitions() == 5);
 
-  std::cerr << "Leaving s1 by d" << std::endl;
+  std::cout << "Leaving s1 by d" << std::endl;
   for (auto i: aut.out(s1, 'd'))
     {
-      std::cerr << aut.dst_of(i) << std::endl;
+      std::cout << aut.dst_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
-  std::cerr << "Entering s1 by b" << std::endl;
+  std::cout << "Entering s1 by b" << std::endl;
   for (auto i: aut.in(s1, 'b'))
     {
-      std::cerr << aut.src_of(i) << std::endl;
+      std::cout << aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
-  std::cerr << "Between s1 and s1" << std::endl;
+  std::cout << "Between s1 and s1" << std::endl;
   for (auto i: aut.outin(s1, s1))
     {
-      std::cerr << aut.src_of(i) << std::endl;
+      std::cout << aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
 
   aut.add_transition(s1, s1, 'd', -42);
   auto tj = aut.outin(s1, s1);
   assert(tj.begin() == tj.end());
+  assert(aut.nb_states() == 3);
+  assert(aut.nb_transitions() == 4);
 
   aut.del_state(s1);
   vcsn::dotty(aut, std::cout);
@@ -63,7 +67,12 @@ int main()
   assert(aut.has_state(s2));
   assert(aut.has_state(s3));
 
+  assert(aut.nb_states() == 2);
+  assert(aut.nb_transitions() == 1);
+
   aut.set_transition(s2, s3, 'a', 0);
 
   vcsn::dotty(aut, std::cout);
+  assert(aut.nb_states() == 2);
+  assert(aut.nb_transitions() == 0);
 }
