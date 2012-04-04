@@ -4,6 +4,9 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 
+# define ECHO(S) std::cerr << S << std::endl
+# define V(S) #S ": " << S << " "
+
 namespace vcsn
 {
   namespace rat
@@ -62,8 +65,34 @@ namespace vcsn
       }
 
       virtual void
-      visit(const sum<weight_t>&)
-      {}
+      visit(const sum<weight_t>& e)
+      {
+        bool first = true;
+        state_t initial = res_.invalid_state();
+        weight_t initial_weight = ws_.unit();
+        for (auto c: e)
+          {
+            c->accept(*this);
+            if (first)
+              {
+                initial = initial_;
+                initial_weight = initial_weight_;
+                first = false;
+              }
+            else
+              {
+                // FIXME: initial_weight_!
+                for (auto t: res_.out(initial_))
+                  res_.add_transition(initial,
+                                      res_.dst_of(t),
+                                      res_.label_of(t),
+                                      res_.weight_of(t));
+                res_.del_state(initial_);
+              }
+          }
+        initial_ = initial;
+        initial_weight_ = initial_weight;
+      }
 
       virtual void
       visit(const prod<weight_t>&)

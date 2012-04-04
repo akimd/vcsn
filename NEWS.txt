@@ -1,3 +1,7 @@
+* 2012-04-04
+** standard-of
+Initial work on "+".
+
 * 2012-04-03
 ** standard-of
 Initial version of standard-of is implemented.  Can be tested with
