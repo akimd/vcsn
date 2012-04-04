@@ -77,7 +77,7 @@ namespace vcsn
     private:
       weightset_t ws_;
       automaton_t res_;
-      state_t initial_ = vcsn::invalid;
+      state_t initial_ = automaton_t::invalid_state();
       weight_t initial_weight_ = ws_.unit();
     };
 
