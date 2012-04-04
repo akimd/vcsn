@@ -128,6 +128,8 @@ namespace vcsn
 	  states_fs_.pop_back();
 	}
       stored_state_t& ss = states_[s];
+      // De-invalidate this state: remove the invalid transition.
+      ss.succ.clear();
       ss.final = ss.initial = ws_.zero();
       return s;
     }
@@ -517,7 +519,7 @@ namespace vcsn
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_cont_t&>
+    container_range<const tr_cont_t&>
     out(state_t s) const
     {
       assert(has_state(s));
