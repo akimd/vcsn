@@ -20,13 +20,13 @@ namespace vcsn
       using alphabet_t = typename automaton_t::alphabet_t;
       using state_t = typename automaton_t::state_t;
 
-      standard_of_visitor(const typename Aut::alphabet_t& alpha,
-                          const WeightSet& ws)
+      standard_of_visitor(const alphabet_t& alpha,
+                          const weightset_t& ws)
         : ws_(ws)
         , res_(alpha, ws)
       {}
 
-      Aut
+      automaton_t
       operator()(const exp& v)
       {
         down_cast<const node<weight_t>*>(&v)->accept(*this);
@@ -37,8 +37,8 @@ namespace vcsn
       virtual void
       visit(const zero<weight_t>&)
       {
-        auto i = res_.new_state();
-        initial_ = i;
+        initial_ = res_.new_state();
+        initial_weight_ = ws_.unit();
       }
 
       virtual void
@@ -76,7 +76,7 @@ namespace vcsn
 
     private:
       weightset_t ws_;
-      Aut res_;
+      automaton_t res_;
       state_t initial_ = vcsn::invalid;
       weight_t initial_weight_ = ws_.unit();
     };
