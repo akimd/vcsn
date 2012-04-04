@@ -528,7 +528,7 @@ namespace vcsn
 
     // Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
-    out(state_t s, label_t l) const
+    out(state_t s, const label_t& l) const
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
@@ -549,7 +549,7 @@ namespace vcsn
 
     // Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
-    in(state_t s, label_t l) const
+    in(state_t s, const label_t& l) const
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
