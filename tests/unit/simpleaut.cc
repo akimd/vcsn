@@ -39,23 +39,24 @@ int main()
   std::cout << "Leaving s1 by d" << std::endl;
   for (auto i: aut.out(s1, 'd'))
     {
-      std::cout << aut.dst_of(i) << std::endl;
+      std::cout << i << " " << aut.dst_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
   std::cout << "Entering s1 by b" << std::endl;
   for (auto i: aut.in(s1, 'b'))
     {
-      std::cout << aut.src_of(i) << std::endl;
+      std::cout << i << " " << aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
   std::cout << "Between s1 and s1" << std::endl;
   for (auto i: aut.outin(s1, s1))
     {
-      std::cout << aut.src_of(i) << std::endl;
+      std::cout << i << " " << aut.src_of(i) << std::endl;
       assert(aut.has_transition(i));
     }
 
   aut.add_transition(s1, s1, 'd', -42);
+  vcsn::dotty(aut, std::cout);
   auto tj = aut.outin(s1, s1);
   assert(tj.begin() == tj.end());
   assert(aut.nb_states() == 3);

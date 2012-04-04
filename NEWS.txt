@@ -2,6 +2,33 @@
 ** standard-of
 Initial work on "+".
 
+** mutable_automata are implemented using a pre() and post() states
+
+  What is missing is the correct '$' letter on the initial and final
+  transitions.  The current value is the default value for label_t.
+
+  The previous interface has been preserved (but maybe we should
+  clean it) except for one change:
+
+    initial() and final() have been changed to return a pseudo
+    container of transitions.  These transitions give us both
+    the weight and the initial/final state.
+
+  The following methods are new:
+
+    pre(), post()         returns the pre-initial and post-final state.
+    all_states()          returns all states, including pre() and post()
+    all_transitions()     returns all transitions, including initial and
+                            final transitions
+    all_entries()         likewise for entries
+    all_out(s), all_in(s) likewise for outgoing and ingoing transitions
+
+
+  The methods get_initial_weight(s) and get_final_weight(s) are slower
+  now, because they need to locate the corresponding initial/final
+  transition.  For the same reason, is_initial(), is_final() are also
+  slower.
+
 * 2012-04-03
 ** standard-of
 Initial version of standard-of is implemented.  Can be tested with

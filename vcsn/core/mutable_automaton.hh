@@ -14,8 +14,12 @@
 # include "vcsn/weights/poly.hh"
 # include "entryiter.hh"
 
-#define ECHO(S) std::cerr << S << std::endl
-#define V(S) #S ": " << S << " "
+#ifndef ECHO
+#  define ECHO(S) std::cerr << S << std::endl
+#endif
+#ifndef V
+#  define V(S) #S ": " << S << "  "
+#endif
 
 namespace vcsn
 {
@@ -46,8 +50,6 @@ namespace vcsn
 
     struct stored_state_t
     {
-      weight_t initial;
-      weight_t final;
       tr_cont_t succ;
       tr_cont_t pred;
     };
@@ -57,34 +59,39 @@ namespace vcsn
 
     typedef std::vector<unsigned> free_store_t;
 
-    st_cont_t initials_;
-    st_cont_t finals_;
     st_store_t states_;
     free_store_t states_fs_;
     tr_store_t transitions_;
     free_store_t transitions_fs_;
 
+      // FIXME: use special char
+    label_t prepost_label_;
+
   public:
     // Invalid transition or state.
     static constexpr state_t      invalid_state()      { return -1U; }
     static constexpr transition_t invalid_transition() { return -1U; }
-
-    mutable_automaton(const alphabet_t& a)
-      : a_(a), ws_(st_ws_), es_(a, st_ws_)
-    {
-    }
+    // pseudo-initial and final states.
+    // The code below assumes that pre() and post() are the first
+    // two states of the automaton.  In other words, all other states
+    // have greater numbers.  We also assume that pre()<post().
+    static constexpr state_t      pre()  { return 0U; }
+    static constexpr state_t      post()  { return 1U; }
 
     mutable_automaton(const alphabet_t& a,
 		      const weightset_t& ws)
-      : a_(a), ws_(ws), es_(a, ws)
+      : a_(a), ws_(ws), es_(a, ws), states_(2), prepost_label_{}
+    {
+    }
+
+    mutable_automaton(const alphabet_t& a)
+      : mutable_automaton(a, st_ws_)
     {
     }
 
     mutable_automaton(mutable_automaton&& that)
       : a_(that.a_), ws_(that.ws_), es_(that.es_)
     {
-      std::swap(initials_, that.initials_);
-      std::swap(finals_, that.finals_);
       std::swap(states_, that.states_);
       std::swap(states_fs_, that.states_fs_);
       std::swap(transitions_, that.transitions_);
@@ -130,7 +137,6 @@ namespace vcsn
       stored_state_t& ss = states_[s];
       // De-invalidate this state: remove the invalid transition.
       ss.succ.clear();
-      ss.final = ss.initial = ws_.zero();
       return s;
     }
 
@@ -149,12 +155,42 @@ namespace vcsn
 
 
   protected:
+    // Remove t from the outgoing transitions of the source state.
     void
-    del_transitions(tr_cont_t& tc)
+    del_transition_from_src(transition_t t)
     {
-      transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
+      stored_transition_t& st = transitions_[t];
+      auto& succ = states_[st.src].succ;
+      auto tsucc = std::find(succ.begin(), succ.end(), t);
+      assert(tsucc != succ.end());
+      *tsucc = succ.back();
+      succ.pop_back();
+    }
+
+    // Remove t from the ingoing transition of the destination state.
+    void
+    del_transition_from_dst(transition_t t)
+    {
+      stored_transition_t& st = transitions_[t];
+      auto& pred = states_[st.dst].pred;
+      auto tpred = std::find(pred.begin(), pred.end(), t);
+      assert(tpred != pred.end());
+      *tpred = pred.back();
+      pred.pop_back();
+    }
+
+    void
+    del_transition_container(tr_cont_t& tc, bool from_succ)
+    {
       for (auto t: tc)
-	transitions_[t].src = invalid_state();
+	{
+	  if (from_succ)
+	    del_transition_from_dst(t);
+	  else
+	    del_transition_from_src(t);
+	  transitions_[t].src = invalid_state();
+	}
+      transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
       tc.clear();
     }
 
@@ -163,53 +199,38 @@ namespace vcsn
     del_state(state_t s)
     {
       assert(has_state(s));
+      assert(s > post()); // Cannot erase pre() and post().
       stored_state_t& ss = states_[s];
-      del_transitions(ss.succ);
-      del_transitions(ss.pred);
+      del_transition_container(ss.pred, false);
+      del_transition_container(ss.succ, true);
       ss.succ.push_back(invalid_transition()); // So has_state() can work.
       states_fs_.push_back(s);
     }
 
-    const weight_t&
+    const weight_t
     get_initial_weight(state_t s) const
     {
-      return states_[s].initial;
+      transition_t t = get_transition(pre(), s, prepost_label_);
+      if (t == invalid_transition())
+	return ws_.zero();
+      else
+	return weight_of(t);
     }
 
-    const weight_t&
+    const weight_t
     get_final_weight(state_t s) const
     {
-      return states_[s].final;
+      transition_t t = get_transition(s, post(), prepost_label_);
+      if (t == invalid_transition())
+	return ws_.zero();
+      else
+	return weight_of(t);
     }
 
     void
     set_initial(state_t s, weight_t k)
     {
-      assert(has_state(s));
-      stored_state_t& ss = states_[s];
-
-      weight_t oldk = ss.initial;
-      if (oldk == k)
-	return;
-
-      ss.initial = k;
-      if (ws_.is_zero(k))
-	{
-	  st_cont_t::iterator pos = std::find(begin(initials_),
-					      end(initials_), s);
-	  // pos must be here because the old weight was nonzero.
-	  assert(pos != end(initials_));
-
-	  // Remove the state from the initials_ vector.  Since this
-	  // vector is not ordered, we can just fill the hole with the
-	  // last value.
-	  *pos = initials_.back();
-	  initials_.pop_back();
-	}
-      else if (ws_.is_zero(oldk))
-	{
-	  initials_.push_back(s);
-	}
+      set_transition(pre(), s, prepost_label_, k);
     }
 
     void
@@ -221,9 +242,7 @@ namespace vcsn
     weight_t
     add_initial(state_t s, weight_t k)
     {
-      k = ws_.add(get_initial_weight(s), k);
-      set_initial(s, k);
-      return k;
+      return add_transition(pre(), s, prepost_label_, k);
     }
 
     void
@@ -235,37 +254,13 @@ namespace vcsn
     bool
     is_initial(state_t s) const
     {
-      return !ws_.is_zero(get_initial_weight(s));
+      return has_transition(pre(), s, prepost_label_);
     }
 
     void
     set_final(state_t s, weight_t k)
     {
-      assert(has_state(s));
-      stored_state_t& ss = states_[s];
-
-      weight_t oldk = ss.final;
-      if (oldk == k)
-	return;
-
-      ss.final = k;
-      if (ws_.is_zero(k))
-	{
-	  st_cont_t::iterator pos = std::find(begin(finals_),
-					      end(finals_), s);
-	  // pos must be here because the old weight was nonzero.
-	  assert(pos != end(finals_));
-
-	  // Remove the state from the finals_ vector.  Since this
-	  // vector is not ordered, we can just fill the hole with the
-	  // last value.
-	  *pos = finals_.back();
-	  finals_.pop_back();
-	}
-      else if (ws_.is_zero(oldk))
-	{
-	  finals_.push_back(s);
-	}
+      set_transition(s, post(), prepost_label_, k);
     }
 
     void
@@ -277,9 +272,7 @@ namespace vcsn
     weight_t
     add_final(state_t s, weight_t k)
     {
-      k = ws_.add(get_final_weight(s), k);
-      set_final(s, k);
-      return k;
+      return add_transition(s, post(), prepost_label_, k);
     }
 
     void
@@ -291,21 +284,24 @@ namespace vcsn
     bool
     is_final(state_t s) const
     {
-      return !ws_.is_zero(get_final_weight(s));
+      return has_transition(s, post(), prepost_label_);
     }
 
     size_t nb_states() const
     {
-      return states_.size() - states_fs_.size();
+      return states_.size() - states_fs_.size() - 2;
     }
 
     size_t nb_transitions() const
     {
-      return transitions_.size() - transitions_fs_.size();
+      return (transitions_.size()
+	      - transitions_fs_.size()
+	      - nb_initials()
+	      - nb_finals());
     }
 
-    size_t nb_initials() const { return initials_.size(); }
-    size_t nb_finals() const { return finals_.size(); }
+    size_t nb_initials() const { return states_[pre()].succ.size(); }
+    size_t nb_finals() const { return states_[post()].pred.size(); }
 
     transition_t
     get_transition(state_t src, state_t dst, label_t l) const
@@ -363,23 +359,11 @@ namespace vcsn
     del_transition(transition_t t)
     {
       assert(has_transition(t));
-      stored_transition_t& st = transitions_[t];
-
       // Remove transition from source and destination.
-      auto& succ = states_[st.src].succ;
-      auto tsucc = std::find(succ.begin(), succ.end(), t);
-      assert(tsucc != succ.end());
-      *tsucc = succ.back();
-      succ.pop_back();
-
-      auto& pred = states_[st.dst].pred;
-      auto tpred = std::find(pred.begin(), pred.end(), t);
-      assert(tpred != succ.end());
-      *tpred = pred.back();
-      pred.pop_back();
-
+      del_transition_from_src(t);
+      del_transition_from_dst(t);
       // Actually erase the transition.
-      st.src = invalid_state();
+      transitions_[t].src = invalid_state();
       transitions_fs_.push_back(t);
     }
 
@@ -394,6 +378,9 @@ namespace vcsn
     transition_t
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
+      // It's illegal to connect pre() to post().
+      assert(src != pre() || dst != post());
+
       transition_t t = get_transition(src, dst, l);
       if (t != invalid_transition())
 	{
@@ -486,41 +473,74 @@ namespace vcsn
     {
       return transitions_output_t
 	(boost::irange<transition_t>(0U, transitions_.size()),
-	 [=] (transition_t i) -> bool {
-	    return transitions_[i].src != this->invalid_state();
+	 [=] (transition_t i) {
+	  state_t src = transitions_[i].src;
+	  if (src == this->invalid_state() || src == this->pre())
+	    return false;
+	  return transitions_[i].dst != this->post();
+	});
+    }
+
+    transitions_output_t
+    all_transitions() const
+    {
+      return transitions_output_t
+	(boost::irange<transition_t>(0U, transitions_.size()),
+	 [=] (transition_t i) {
+	  state_t src = transitions_[i].src;
+	  return src != this->invalid_state();
 	});
     }
 
     typedef container_filter_range<boost::integer_range<state_t>>
       states_output_t;
 
+  protected:
     states_output_t
-    states() const
+    state_range(state_t b, state_t e) const
     {
       return states_output_t
-	(boost::irange<state_t>(0U, states_.size()),
-	 [=] (state_t i) -> bool {
+	(boost::irange<state_t>(b, e), [=] (state_t i) {
 	  const stored_state_t& ss = states_[i];
 	  return (ss.succ.empty()
 		  || ss.succ.front() != this->invalid_transition());
 	});
     }
 
-    container_range<st_cont_t&>
+  public:
+    // all states excluding pre()/post()
+    states_output_t
+    states() const     { return state_range(post() + 1, states_.size()); }
+
+    // all states including pre()/post()
+    states_output_t
+    all_states() const { return state_range(0U, states_.size()); }
+
+    container_range<tr_cont_t&>
     initials() const
     {
-      return initials_;
+      return out(pre());
     }
 
     container_range<st_cont_t&>
     finals() const
     {
-      return finals_;
+      return in(post());
+    }
+
+    // Invalidated by del_transition() and del_state().
+    container_filter_range<const tr_cont_t&>
+    out(state_t s) const
+    {
+      assert(has_state(s));
+      return container_filter_range<const tr_cont_t&>
+	(states_[s].succ,
+	 [=] (transition_t i) { return transitions_[i].dst != this->post(); });
     }
 
     // Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
-    out(state_t s) const
+    all_out(state_t s) const
     {
       assert(has_state(s));
       return states_[s].succ;
@@ -540,12 +560,23 @@ namespace vcsn
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_cont_t&>
+    container_filter_range<const tr_cont_t&>
     in(state_t s) const
+    {
+      assert(has_state(s));
+      return container_filter_range<const tr_cont_t&>
+	(states_[s].succ,
+	 [=] (transition_t i) { return transitions_[i].src != this->pre(); });
+    }
+
+    // Invalidated by del_transition() and del_state().
+    container_range<tr_cont_t&>
+    all_in(state_t s) const
     {
       assert(has_state(s));
       return states_[s].pred;
     }
+
 
     // Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
@@ -577,8 +608,16 @@ namespace vcsn
     entries() const
     {
       return
-	entry_iterator<mutable_automaton, transitions_output_t>(*this,
-								transitions());
+	entry_iterator<mutable_automaton,
+		       transitions_output_t>(*this, transitions());
+    }
+
+    entry_iterator<mutable_automaton, transitions_output_t>
+    all_entries() const
+    {
+      return
+	entry_iterator<mutable_automaton,
+		       transitions_output_t>(*this, all_transitions());
     }
 
     entry_t
