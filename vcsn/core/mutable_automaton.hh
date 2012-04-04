@@ -14,6 +14,9 @@
 # include "vcsn/weights/poly.hh"
 # include "entryiter.hh"
 
+#define ECHO(S) std::cerr << S << std::endl
+#define V(S) #S ": " << S << " "
+
 namespace vcsn
 {
   template <class Alphabet, class WeightSet, class Kind>
@@ -303,7 +306,7 @@ namespace vcsn
       // than src->succ.
       const tr_cont_t& succ = states_[src].succ;
       auto i =
-	std::find_if(begin(succ), end(succ), [&] (const transition_t& t)
+	std::find_if(begin(succ), end(succ), [=,&l,&dst] (const transition_t& t)
 		     { const stored_transition_t& st = transitions_[t];
 		       return st.dst == dst && a_.equals(st.label, l); });
       if (i == end(succ))
@@ -473,85 +476,90 @@ namespace vcsn
     {
       return transitions_output_t
 	(boost::irange<transition_t>(0U, transitions_.size()),
-	 [&] (transition_t i) {
+	 [=] (transition_t i) -> bool {
 	    return transitions_[i].src != this->invalid_state();
 	});
     }
 
-    container_filter_range<boost::integer_range<state_t> >
+    typedef container_filter_range<boost::integer_range<state_t>>
+      states_output_t;
+
+    states_output_t
     states() const
     {
-      return container_filter_range<boost::integer_range<state_t> >
+      return states_output_t
 	(boost::irange<state_t>(0U, states_.size()),
-	 [&] (state_t i) {
+	 [=] (state_t i) -> bool {
 	  const stored_state_t& ss = states_[i];
-	  return ss.succ.empty() ||
-	    ss.succ.front() != this->invalid_transition();
+	  return (ss.succ.empty()
+		  || ss.succ.front() != this->invalid_transition());
 	});
     }
 
-    container_range<st_cont_t>
+    container_range<st_cont_t&>
     initials() const
     {
-      return container_range<st_cont_t>(initials_);
+      return initials_;
     }
 
-    container_range<st_cont_t>
+    container_range<st_cont_t&>
     finals() const
     {
-      return container_range<st_cont_t>(finals_);
+      return finals_;
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_cont_t>
+    container_range<tr_cont_t&>
     out(state_t s) const
     {
       assert(has_state(s));
-      const stored_state_t& ss = states_[s];
-      return container_range<tr_cont_t>(ss.succ);
+      return states_[s].succ;
     }
 
     // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_cont_t>
+    container_filter_range<const tr_cont_t&>
     out(state_t s, label_t l) const
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<tr_cont_t>
+      return container_filter_range<const tr_cont_t&>
 	(ss.succ,
-	 [&] (transition_t i) { return a_.equals(transitions_[i].label, l); });
+	 [=,&l] (transition_t i) {
+	  return a_.equals(transitions_[i].label, l);
+	});
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_cont_t>
+    container_range<tr_cont_t&>
     in(state_t s) const
     {
       assert(has_state(s));
-      const stored_state_t& ss = states_[s];
-      return container_range<tr_cont_t>(ss.pred);
+      return states_[s].pred;
     }
 
     // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_cont_t>
+    container_filter_range<const tr_cont_t&>
     in(state_t s, label_t l) const
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<tr_cont_t>
+      return container_filter_range<const tr_cont_t&>
 	(ss.pred,
-	 [&] (transition_t i) { return a_.equals(transitions_[i].label, l); });
+	 [=,&l] (transition_t i) {
+	  return a_.equals(transitions_[i].label, l);
+	});
     }
 
     // Invalidated by del_transition() and del_state().
-    container_filter_range<tr_cont_t>
+    container_filter_range<const tr_cont_t&>
     outin(state_t s, state_t d) const
     {
       assert(has_state(s));
       assert(has_state(d));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<tr_cont_t>
+      return container_filter_range<const tr_cont_t&>
 	(ss.succ,
-	 [&] (transition_t i) { return (transitions_[i].dst == d); });
+	 [=] (transition_t i) { return this->transitions_[i].dst == d; });
     }
 
 

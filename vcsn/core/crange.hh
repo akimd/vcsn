@@ -2,6 +2,7 @@
 # define VCSN_CORE_CRANGE_HH
 
 # include <boost/iterator/filter_iterator.hpp>
+# include <type_traits>
 
 namespace vcsn
 {
@@ -10,15 +11,17 @@ namespace vcsn
   struct container_range
   {
   public:
-    typedef typename C::value_type value_type;
-    typedef typename C::const_iterator const_iterator;
+    typedef typename std::remove_reference<C>::type unref_C;
+    typedef typename unref_C::value_type value_type;
+
+    typedef typename unref_C::const_iterator const_iterator;
   public:
-    container_range(const C& cont) : cont_(cont) {}
+    container_range(const unref_C& cont) : cont_(cont) {}
 
     const_iterator begin() const { return cont_.begin(); }
     const_iterator end() const   { return cont_.end(); }
   private:
-    const C& cont_;
+    const C cont_;
   };
 
 
@@ -26,11 +29,12 @@ namespace vcsn
   struct container_filter_range
   {
   public:
-    typedef typename C::value_type value_type;
-    typedef std::function<bool(typename C::value_type)> predicate_t;
-    typedef boost::filter_iterator<predicate_t, typename C::const_iterator> const_iterator;
+    typedef typename std::remove_reference<C>::type unref_C;
+    typedef typename unref_C::value_type value_type;
+    typedef std::function<bool(value_type)> predicate_t;
+    typedef boost::filter_iterator<predicate_t, typename unref_C::const_iterator> const_iterator;
   public:
-    container_filter_range(const C& cont, predicate_t predicate)
+    container_filter_range(const unref_C& cont, predicate_t predicate)
       : cont_(cont), predicate_(predicate) {}
 
     const_iterator begin() const
@@ -43,7 +47,7 @@ namespace vcsn
       return const_iterator(predicate_, cont_.end(), cont_.end());
     }
   private:
-    const C& cont_;
+    const C cont_;
     predicate_t predicate_;
   };
 }
