@@ -22,6 +22,7 @@ namespace vcsn
     set_alphabet&
     add_letter(typename L::letter_t l)
     {
+      assert(l != alphabet_.special_letter());
       alphabet_.insert(l);
       return *this;
     }

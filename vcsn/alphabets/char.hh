@@ -74,10 +74,15 @@ namespace vcsn
       return l1 == l2;
     }
 
+  protected:
+    letter_t special_letter() const { return 255; }
+
+  public:
     std::ostream&
-    output(std::ostream& o, const letter_t& w) const
+    output(std::ostream& o, const letter_t& l) const
     {
-      return o << w;
+      if (l != special_letter())
+	return o << l;
     }
 
     std::ostream&
@@ -87,21 +92,61 @@ namespace vcsn
     }
 
     const std::string
-    format(const letter_t w) const
+    format(const letter_t l) const
     {
-      return std::string(1, w);
+      if (l != special_letter())
+	return std::string(1, l);
+      else
+	return std::string();
     }
 
-    const std::string&
+    inline
+    const std::string
     format(const word_t& w) const
     {
-      static std::string emptyword("\\e");
-      return w.empty() ? emptyword : w;
+      size_t s = w.size();
+
+      if (s == 0)
+	return "\\e";
+
+      // If the string starts or ends with the special
+      // letter, just skip it.  If the resulting string
+      // is empty, just format it this way.  (We DON'T
+      // wan't to format it as "\\e".)
+      if (w[0] == special_letter())
+	return (s == 1) ? "" : w.substr(1);
+
+      if (s > 1 && w[s - 1] == special_letter())
+	return w.substr(0, s - 1);
+
+      return w;
     }
 
-    // word_t mirror(const word_t& w)
+    // Special character, used to label transitions
+    // from pre() and post()
+    template<class T = letter_t>
+    inline
+    T special() const;
 
+    // word_t mirror(const word_t& w)
   };
+
+  template<>
+  inline
+  char_letters::letter_t
+  char_letters::special<char_letters::letter_t>() const
+  {
+    return special_letter();
+  }
+
+  template<>
+  inline
+  char_letters::word_t
+  char_letters::special<char_letters::word_t>() const
+  {
+    return word_t(1, special_letter());
+  }
+
 }
 
 #endif // VCSN_ALPHABETS_CHAR_HH

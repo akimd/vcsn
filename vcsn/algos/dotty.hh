@@ -11,13 +11,7 @@ namespace vcsn
   void
   dotty(A& aut, std::ostream& out)
   {
-    typedef typename A::state_t state_t;
-    std::unordered_map<state_t, unsigned> names;
-
-    auto& ws = aut.weightset();
-    auto& es = aut.entryset();
-
-    bool show_unit = ws.show_unit();
+    std::unordered_map<typename A::state_t, unsigned> names;
 
     out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
 
@@ -25,6 +19,8 @@ namespace vcsn
     for (auto s : aut.states())
       {
 	unsigned n = names[s] = names.size();
+	// We have to output them all, in case some of them have no
+	// connection.
 	out << "  " << n << "\n";
       }
 
@@ -36,33 +32,30 @@ namespace vcsn
 	if (src == aut.pre())
 	  {
 	    unsigned n = names[dst];
-	    auto k = aut.weight_of(t);
 	    out << "  I" << n
 		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  I" << n << " -> " << n;
-	    if (show_unit || !ws.is_unit(k))
-	      out << " [label=\"{" << k << "}\"]";
-	    out << "\n";
 	  }
 	else if (dst == aut.post())
 	  {
 	    unsigned n = names[src];
-	    auto k = aut.weight_of(t);
 	    out << "  F" << n
 		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  " << n << " -> F" << n;
-	    if (show_unit || !ws.is_unit(k))
-	      out << " [label=\"{" << k << "}\"]";
-	    out << "\n";
 	  }
 	else
 	  {
 	    unsigned ns = names[src];
 	    unsigned nd = names[dst];
-	    out << "  " << ns << " -> " << nd
-		<< " [label=\"";
-	    str_escape(out, es.format(aut.entry_at(t))) << "\"]\n";
+	    out << "  " << ns << " -> " << nd;
 	  }
+	std::string s = aut.entryset().format(aut.entry_at(t));
+	if (!s.empty())
+	  {
+	    out << " [label=\"";
+	    str_escape(out, s) << "\"]";
+	  }
+	out << "\n";
       }
     out << "}" << std::endl;
   }

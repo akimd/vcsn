@@ -64,7 +64,6 @@ namespace vcsn
     tr_store_t transitions_;
     free_store_t transitions_fs_;
 
-      // FIXME: use special char
     label_t prepost_label_;
 
   public:
@@ -80,7 +79,8 @@ namespace vcsn
 
     mutable_automaton(const alphabet_t& a,
 		      const weightset_t& ws)
-      : a_(a), ws_(ws), es_(a, ws), states_(2), prepost_label_{}
+      : a_(a), ws_(ws), es_(a, ws), states_(2),
+	prepost_label_(a.template special<label_t>())
     {
     }
 
