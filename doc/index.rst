@@ -6,9 +6,8 @@
 Welcome to Vaucanson's documentation!
 =====================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
    weightsets
+   automata
