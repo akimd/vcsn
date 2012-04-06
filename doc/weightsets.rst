@@ -6,7 +6,7 @@ type*.
 
 The storage type (such as ``int``, ``bool``, ``float``, or more
 complex types) is mainly an implementation issue: it specifies how
-weights are stored on transitions and passed around between function.
+weights are stored on transitions and passed around between functions.
 
 The storage type does **not** indicate how the weight should be
 interpreted.  For instance an integer stored by ``int`` could be
@@ -41,9 +41,9 @@ Here is the required interface of a *Weight Set* object::
     std::string format(const value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
 
-Implementations of weight sets with complex storage type may decide to
-input them as `const value_t&` and output them as `const value_t&`
-instead of the above pass-by-copy specification.
+Implementations of weight sets with a complex storage type may decide
+to receive them as `const value_t&` and emit them as `const value_t&`
+instead of the above pass-by-copy specifications.
 
 Detailed interface
 ------------------
@@ -111,14 +111,14 @@ The following weight sets are implemented:
 .. cpp:class:: b
 
    The classical Boolean semiring :math:`(\mathbb{B},\lor,\land,0,1)`,
-   with element stored as ``bool``.
+   with elements stored as ``bool``.
 
    Defined in ``vcsn/weights/b.hh``.
 
 .. cpp:class:: z
 
    The usual integer semiring :math:`(\mathbb{Z},+,\times,0,1)`,
-   with element stored as ``int``.
+   with elements stored as ``int``.
 
    Defined in ``vcsn/weights/z.hh``.
 
