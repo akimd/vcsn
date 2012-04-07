@@ -1,3 +1,5 @@
+.. default-domain:: cpp
+
 Weight Sets
 ===========
 
@@ -48,35 +50,35 @@ instead of the above pass-by-copy specifications.
 Detailed interface
 ------------------
 
-.. cpp:type:: value_t
+.. type:: value_t
 
    The storage type of the weight set's elements.
 
-.. cpp:function:: value_t add(const value_t l, const value_t r) const
+.. function:: value_t add(const value_t l, const value_t r) const
 
    Add two weights and return a new one.
 
-.. cpp:function:: value_t add(const value_t l, const value_t r) const
+.. function:: value_t add(const value_t l, const value_t r) const
 
    Multiply two weights and return a new one.
 
-.. cpp:function:: value_t zero() const
+.. function:: value_t zero() const
 
    Return the weight that is neutral for the addition.
 
-.. cpp:function:: value_t unit() const
+.. function:: value_t unit() const
 
    Return the weight that is neutral for the multiplication.
 
-.. cpp:function:: bool is_zero(const value_t v) const
+.. function:: bool is_zero(const value_t v) const
 
    Whether ``v == zero()``.
 
-.. cpp:function:: bool is_unit(const value_t v) const
+.. function:: bool is_unit(const value_t v) const
 
    Whether ``v == unit()``.
 
-.. cpp:function:: bool show_unit() const
+.. function:: bool show_unit() const
 
    Whether it is customary to show the unit weight for this weight
    set.  For instance in a rational expression with weights in
@@ -86,16 +88,16 @@ Detailed interface
    {oo}b`` even though ``oo`` is the unit element, so there is no risk
    to confuse it with ``{1}a + {1}b``.
 
-.. cpp:function:: value_t conv(std::string& str) const
+.. function:: value_t conv(std::string& str) const
 
    Convert a string ``str`` into a weight.  A ``std::domain_error``
    exception is raised of the string cannot be parsed.
 
-.. cpp:function:: std::string format(const value_t v) const
+.. function:: std::string format(const value_t v) const
 
    Format a weight ``v`` as a string.
 
-.. cpp:function:: std::ostream& print(std::ostream& o, const value_t v) const
+.. function:: std::ostream& print(std::ostream& o, const value_t v) const
 
    Print a weight ``v`` on the output stream ``o`` and return ``o``.
 
@@ -108,27 +110,27 @@ Available Weight Sets
 
 The following weight sets are implemented:
 
-.. cpp:class:: b
+.. class:: b
 
    The classical Boolean semiring :math:`(\mathbb{B},\lor,\land,0,1)`,
    with elements stored as ``bool``.
 
    Defined in ``vcsn/weights/b.hh``.
 
-.. cpp:class:: z
+.. class:: z
 
    The usual integer semiring :math:`(\mathbb{Z},+,\times,0,1)`,
    with elements stored as ``int``.
 
    Defined in ``vcsn/weights/z.hh``.
 
-.. cpp:class:: polynomial<A, W>
+.. class:: polynomial<A, W>
 
    Polynomials with letters in the alphabet ``A`` and weights in ``W``.
 
    Defined in ``vcsn/weights/poly.hh``.
 
-.. cpp:class:: factory_<A, W>
+.. class:: factory_<A, W>
 
    Rational expression over the alphabet ``A`` with weight in ``W``.
 
