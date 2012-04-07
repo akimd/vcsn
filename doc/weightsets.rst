@@ -124,6 +124,13 @@ The following weight sets are implemented:
 
    Defined in ``vcsn/weights/z.hh``.
 
+.. class:: z_min
+
+   The usual integer semiring :math:`(\mathbb{Z},\min,+,\infty,0)`,
+   with elements stored as ``int``.
+
+   Defined in ``vcsn/weights/z_min.hh``.
+
 .. class:: polynomial<A, W>
 
    Polynomials with letters in the alphabet ``A`` and weights in ``W``.
