@@ -136,7 +136,5 @@ The following weight sets are implemented:
 
    Defined in ``vcsn/core/rat/factory_.hh``.
 
-.. todo::
-
-   Document polynomial and rational expression will have to be
-   documented separately.
+.. todo:: Polynomial and rational expressions have to be documented
+          separately.

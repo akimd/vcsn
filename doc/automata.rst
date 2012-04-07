@@ -525,6 +525,8 @@ Iteration on entries
 	// ...
      }
 
+.. todo:: Functions for setting entries are missing.
+
 Available Automata
 ------------------
 
