@@ -11,16 +11,22 @@ namespace vcsn
   struct polynomial
   {
   public:
+    typedef Alphabet alphabet_t;
+    typedef WeightSet weightset_t;
+
     typedef typename Alphabet::word_t word_t;
     typedef typename WeightSet::value_t weight_t;
 
     typedef std::map<word_t, weight_t> value_t;
 
-    polynomial(const Alphabet& a, const WeightSet& ws = WeightSet())
+    polynomial(const alphabet_t& a, const weightset_t& ws = weightset_t())
       : a_(a), ws_(ws)
     {
       unit_[a_.identity()] = ws_.unit();
     }
+
+    const alphabet_t&  alphabet() const  { return a_; }
+    const weightset_t& weightset() const { return ws_; }
 
     value_t&
     assoc(value_t& v, const word_t& w, const weight_t& k) const
@@ -125,8 +131,8 @@ namespace vcsn
     }
 
   private:
-    const Alphabet& a_;
-    const WeightSet& ws_;
+    const alphabet_t& a_;
+    const weightset_t& ws_;
     value_t unit_;
     value_t zero_;
   };
