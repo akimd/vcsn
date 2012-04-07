@@ -79,8 +79,9 @@ Here is the interface of an automaton::
     state_t src_of(transition_t t) const;
     state_t dst_of(transition_t t) const;
     label_t label_of(transition_t t) const;
-    alphabet_t::word_t word_label_of(transition_t t) const;
     weight_t weight_of(transition_t t) const;
+
+    alphabet_t::word_t word_label_of(transition_t t) const;
 
     // Edition of states
     state_t new_state();
@@ -280,7 +281,10 @@ Queries on transitions
 
 .. function:: bool has_transition(state_t src, state_t dst, label_t l) const
 
-   Syntactic sugar for::
+   Whether the automaton has a transition labeled by *l* between
+   states *src* and *dst*.
+
+   This is actually syntactic sugar for::
 
       return get_transition(src, dst, l) != invalid_transition();
 
@@ -289,16 +293,9 @@ Queries on transitions
    Whether the automaton has a valid transition corresponding to *t*.
 
 .. function:: state_t src_of(transition_t t) const
-
-   Return the source for the transition *t*.
-
-.. function:: state_t dst_of(transition_t t) const
-
-   Return the destination for the transition *t*.
-
-.. function:: label_t label_of(transition_t t) const
-
-   Return the label for the transition *t*.
+              state_t dst_of(transition_t t) const
+              label_t label_of(transition_t t) const
+              weight_t weight_of(transition_t t) const
 
 .. function:: alphabet_t::word_t word_label_of(transition_t t) const
 
@@ -309,9 +306,6 @@ Queries on transitions
 
       return alphabet().to_word(label_of(t));
 
-.. function:: weight_t weight_of(transition_t t) const
-
-   Return the weight associated to transition *t*.
 
 Edition of states
 ~~~~~~~~~~~~~~~~~
@@ -324,16 +318,13 @@ Edition of states
    Delete the state *s*.
 
 .. function:: void set_initial(state_t s, weight_t k)
+              void set_initial(state_t s)
 
    Set the state *s* to be initial with weight *k*.  If the state *s*
    was already initial, its initial weight is replaced by *k*.  If *k*
    is ``weightset().zero()``, then the state becomes non initial.
 
-.. function:: void set_initial(state_t s)
-
-   Syntactic sugar for::
-
-      set_initial(s, weightset().unit());
+   If *k* is omitted, it default to ``weightset().unit()``.
 
 .. function:: weight_t add_initial(state_t s, weight_t k)
 
@@ -388,11 +379,14 @@ Edition of transitions
    no such transition, this method has no effect.
 
 .. function:: transition_t set_transition(state_t src, state_t dst, label_t l, weight_t k)
+              transition_t set_transition(state_t src, state_t dst, label_t l)
 
    Sets a transition between *src* and *dst* with label *l* and weight
    *k*.  If a transition between *src* and *dst* with label *l*
    already exists, its weight is replaced by *k*.  If *k* equals to
    ``weightset().zero()``, the transition is deleted.
+
+   If *k* is omitted, it defaults to ``weightset().unit()``.
 
    .. Note::
 
@@ -403,21 +397,13 @@ Edition of transitions
       There is no check performed on the label of such transitions.
       Maybe we want one?
 
-.. function:: transition_t set_transition(state_t src, state_t dst, label_t l)
-
-   Syntactic sugar for::
-
-      return set_transition(src, dst, l, weightset().unit());
-
 .. function:: weight_t add_transition(state_t src, state_t dst, label_t l, weight_t k)
+              weight_t add_transition(state_t src, state_t dst, label_t l)
 
    Add *k* to the weight of a transition from *src* to *dst* labeled
    by *l* if such a transition exists, or create the transition otherwise.
 
-.. function:: weight_t add_transition(state_t src, state_t dst, label_t l)
-
-   Syntactic sugar for::
-      return add_transition(src, dst, l, weightset().unit());
+   If *k* is omitted, it defaults to ``weightset().unit()``.
 
 .. function:: weight_t set_weight(transition_t t, weight_t k)
 
@@ -439,25 +425,17 @@ fictive types.  These pseudo containers contain the minimum interface
 can be iterated over using a classical STL-loop.
 
 .. function:: state_container states() const
+              state_container all_states() const
 
-   All states of the automaton, excluding :func:`pre` and
-   :func:`post`.
-
-.. function:: state_container all_states() const
-
-   All states of the automaton, including :func:`pre` and
-   :func:`post`.
+   All states of the automaton.  The first flavor excludes :func:`pre`
+   and :func:`post` states, while the second includes them.
 
 .. function:: transition_container transitions() const
+              transition_container all_transitions() const
 
-   All transitions of the automaton, excluding initial and final
-   transitions.
-
-.. function:: transition_container all_transitions() const
-
-   All transitions of the automaton, including initial transitions
-   (that have :func:`pre` as source state) and final transitions
-   (that have :func:`post` as destination state).
+   All transitions of the automaton.  The first
+   flavor excludes initial and final transitions, while
+   the second flavor include them.
 
 .. function:: transition_container initials() const
 
@@ -488,24 +466,20 @@ can be iterated over using a classical STL-loop.
      }
 
 .. function:: transition_container out(state_t s) const
+              transition_container all_out(state_t s) const
 
-   All outgoing transitions of state *s*, excluding final transitions.
-
-.. function:: transition_container all_out(state_t s) const
-
-   All outgoing transitions of state *s*, including any final transitions.
+   All outgoing transitions of state *s*.  The first flavor
+   excludes final transitions, while the second flavor include them.
 
 .. function:: transition_container out(state_t s, const label_t& l) const
 
    All outgoing transitions of state *s* with label *l*.
 
 .. function:: transition_container in(state_t s) const
+              transition_container all_in(state_t s) const
 
-   All incoming transitions of state *s*, excluding initial transitions.
-
-.. function:: transition_container all_in(state_t s) const
-
-   All incoming transitions of state *s*, including any initial transitions.
+   All incoming transitions of state *s*.  The first flavor
+   excludes initial transitions, while the second flavor include them.
 
 .. function:: transition_container in(state_t s, const label_t& l) const
 
@@ -530,14 +504,18 @@ Iteration on entries
       return entry_at(src_of(t), dst_of(t));
 
 .. function:: transition_container entries() const
+              transition_container all_entries() const
 
    A container that will iterate over all pairs of states that are
-   connected in the automaton.  Ignoring :func:`pre` and
-   :func:`post` pairs. For each pair, a random transition is
-   selected, so that :func:`entry_at` can by used to compute the
-   entry between this pair of states.
+   connected in the automaton.  The first flavor excludes pairs the
+   contain :func:`pre` or :func:`post`, while the second flavor includes
+   them.
 
-   The way to iterator over all entries of an automaton `aut` is as
+   For each pair, a random transition is selected, so that
+   :func:`entry_at` can by used to compute the entry between this pair
+   of states.
+
+   One way to iterate over all entries of an automaton `aut` is as
    follows::
 
      for (auto t : aut.entries()) {
@@ -546,14 +524,6 @@ Iteration on entries
 	auto dst = aut.dst_of(t);
 	// ...
      }
-
-.. function:: transition_container all_entries() const
-
-   A container that will iterate over all pairs of states that are
-   connected in the automaton, including :func:`pre` and
-   :func:`post` pairs.  For each pair, a random transition is
-   selected, so that :func:`entry_at` can by used to compute
-   the entry between this pair of states.
 
 Available Automata
 ------------------
