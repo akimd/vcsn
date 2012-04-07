@@ -18,3 +18,21 @@ EOF
 
 run 0 out.exp unit/ladybird-b 2
 run 0 out.exp unit/ladybird-z 2
+
+cat >out.exp <<\EOF
+digraph A {
+  rankdir=LR
+  node [shape=circle];
+  1
+  2
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1 [label="{0}"]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1 [label="{0}"]
+  1 -> 2 [label="{0}a"]
+  2 -> 2 [label="{0}b + {0}c"]
+  2 -> 1 [label="{0}a + {0}c"]
+}
+EOF
+
+run 0 out.exp unit/ladybird-zmin 2

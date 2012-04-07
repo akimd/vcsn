@@ -1,5 +1,6 @@
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/z.hh>
+#include <vcsn/weights/z_min.hh>
 #include <vcsn/factory/ladybird.hh>
 #include <vcsn/algos/dotty.hh>
 #include <iostream>

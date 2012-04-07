@@ -42,7 +42,8 @@ nobase_vcsn_HEADERS =                           \
   misc/const_traits.hh                          \
   misc/escape.hh                                \
   weights/b.hh                                  \
-  weights/poly.hh                               \
-  weights/z.hh
+  weights/poly.hh				\
+  weights/z.hh					\
+  weights/z_min.hh
 
 include io/local.mk
