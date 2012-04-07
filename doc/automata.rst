@@ -8,15 +8,45 @@ It allows modifications, forward and backward traversal.   We will probably
 split these features as separate concept, in the future.
 
 An automaton may have several initial and final states, each with its
-own initial and final weight.  Internally, these initial and final
-weights are represented as weights on transitions leaving a
-*pre-initial* state or reaching a *post-final* states.
+own initial and final weight.
+
+.. digraph:: ex1
+
+  rankdir=LR
+  node [shape=circle]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I2 [style=invis,shape=none,label="",width=0,height=0]
+  F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1 [label="{2}"]
+  I2 -> 2
+  1 -> 3 [label="a"]
+  2 -> 3 [label="{2}b"]
+  2 -> F2 [label="{3}"]
+  3 -> F3
+
+Internally, these initial and final weights are represented as weights
+on transitions leaving a *pre-initial* state or reaching a
+*post-final* states.
+
+.. digraph:: ex1prepost
+
+  rankdir=LR
+  node [shape=circle]
+  pre [shape=ellipse]
+  post [shape=ellipse]
+  pre -> 1 [label="{2}"]
+  pre -> 2
+  1 -> 3 [label="a"]
+  2 -> 3 [label="{2}b"]
+  2 -> post [label="{3}"]
+  3 -> post
 
 Some people will want to consider these two special states are mostly
 implementation detail, and work only on the states that really belong
-to the automaton.  In some algorithm however it is easier to consider
+to the automaton.  In some algorithms however it is easier to consider
 these two states as part of the automaton.  The following interface
-accommodate both situations.
+accommodates both situations.
 
 The transition that leave the *pre-initial* state are called *initial
 transition*.  The destinations of these transitions are called
