@@ -554,3 +554,20 @@ Iteration on entries
    :func:`post` pairs.  For each pair, a random transition is
    selected, so that :func:`entry_at` can by used to compute
    the entry between this pair of states.
+
+Available Automata
+------------------
+
+.. class:: mutable_automaton<Alphabet, WeightSet, Kind>
+
+   An automaton on the alphabet *Alphabet* with weights in *WeightSet*
+   and kind *Kind*, implementing all the above interface,
+
+   Defined in ``vcsn/core/mutable_automaton.hh``.
+
+   .. function:: mutable_automaton(const Alphabet& a, const WeightSet& ws)
+                 mutable_automaton(const Alphabet& a)
+
+     The constructor for a mutable automaton takes an instance of a
+     generator set *a* and an instance of the weight set *ws*.  The
+     latter can be omitted if ``WeightSet`` has a default constructor.
