@@ -39,11 +39,8 @@ namespace vcsn
     typedef typename weightset_t::value_t weight_t;
     typedef typename entryset_t::value_t entry_t;
   protected:
-    const alphabet_t& a_;
-    const weightset_t& ws_;
     static const weightset_t& st_ws_;
     const entryset_t es_;
-    // FIXME: es_ already contains a_ and ws_.  Why store these twice?
 
     typedef transition_tuple<state_t, label_t, WeightSet> stored_transition_t;
 
@@ -71,7 +68,7 @@ namespace vcsn
   public:
     mutable_automaton(const alphabet_t& a,
 		      const weightset_t& ws)
-      : a_(a), ws_(ws), es_(a, ws), states_(2),
+      : es_(a, ws), states_(2),
 	prepost_label_(a.template special<label_t>())
     {
     }
@@ -82,7 +79,7 @@ namespace vcsn
     }
 
     mutable_automaton(mutable_automaton&& that)
-      : a_(that.a_), ws_(that.ws_), es_(that.es_)
+      : es_(that.es_)
     {
       std::swap(states_, that.states_);
       std::swap(states_fs_, that.states_fs_);
@@ -97,8 +94,8 @@ namespace vcsn
     // Related sets
     ///////////////
 
-    const weightset_t& weightset() const { return ws_; }
-    const alphabet_t&  alphabet() const  { return a_; }
+    const weightset_t& weightset() const { return es_.weightset(); }
+    const alphabet_t&  alphabet() const  { return es_.alphabet(); }
     const entryset_t&  entryset() const  { return es_; }
 
     // Special states and transitions
