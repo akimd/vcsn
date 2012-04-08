@@ -96,6 +96,12 @@ namespace vcsn
       return v.empty();
     }
 
+    static constexpr bool
+    show_unit()
+    {
+      return true;
+    }
+
     std::ostream&
     print(std::ostream& out, const value_t& v) const
     {

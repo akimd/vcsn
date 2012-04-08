@@ -52,8 +52,8 @@ namespace vcsn
       return v == zero();
     }
 
-    bool
-    show_unit() const
+    static constexpr bool
+    show_unit()
     {
       return true;
     }
