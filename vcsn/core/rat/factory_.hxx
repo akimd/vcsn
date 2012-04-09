@@ -282,12 +282,6 @@ namespace vcsn
     return dynamic_cast<one_t*>(v);
   }
 
-  FACTORY_::show_unit() const
-    -> bool
-  {
-    return false;
-  }
-
   FACTORY_::is_zero(value_t v) const
     -> bool
   {

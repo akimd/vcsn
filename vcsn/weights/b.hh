@@ -49,11 +49,8 @@ namespace vcsn
       return !v;
     }
 
-    static constexpr bool
-    show_unit()
-    {
-      return false;
-    }
+    static constexpr bool show_unit() { return false; }
+    static constexpr bool is_positive_semiring() { return true; }
 
     value_t
     conv(std::string& str) const

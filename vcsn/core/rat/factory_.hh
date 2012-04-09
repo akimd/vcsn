@@ -71,7 +71,17 @@ namespace vcsn
     // When used as WeightSet for automata.
     bool is_zero(value_t v) const;
     bool is_unit(value_t v) const;
-    bool show_unit() const;
+
+    static constexpr bool show_unit()
+    {
+      return false;
+    }
+
+    static constexpr bool is_positive_semiring()
+    {
+      return weightset_t::is_positive_semiring();
+    }
+
     value_t conv(const std::string& s) const;
     virtual std::ostream& print(std::ostream& o, const value_t v) const;
 

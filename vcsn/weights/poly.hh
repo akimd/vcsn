@@ -96,10 +96,10 @@ namespace vcsn
       return v.empty();
     }
 
-    static constexpr bool
-    show_unit()
+    static constexpr bool show_unit() { return true; }
+    static constexpr bool is_positive_semiring()
     {
-      return true;
+      return weightset_t::is_positive_semiring();
     }
 
     std::ostream&
