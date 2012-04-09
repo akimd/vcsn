@@ -16,32 +16,33 @@ include $(top_srcdir)/build-aux/make/init.mk
 AM_CPPFLAGS += -I$(top_srcdir)
 
 vcsndir = $(includedir)/vcsn
-nobase_vcsn_HEADERS =                           \
-  algos/dotty.hh                                \
-  algos/standard_of.hh                          \
-  alphabets/char.hh                             \
-  alphabets/setalpha.hh                         \
-  core/crange.hh                                \
+nobase_vcsn_HEADERS =				\
+  algos/dotty.hh				\
+  algos/product.hh				\
+  algos/standard_of.hh				\
+  alphabets/char.hh				\
+  alphabets/setalpha.hh				\
+  core/crange.hh				\
   core/entryiter.hh				\
-  core/kind.hh                                  \
-  core/mutable_automaton.hh                     \
+  core/kind.hh					\
+  core/mutable_automaton.hh			\
   core/transition.hh				\
-  core/rat/factory.hh                           \
-  core/rat/factory_.hh                          \
-  core/rat/factory_.hxx                         \
-  core/rat/node.fwd.hh                          \
-  core/rat/node.hh                              \
-  core/rat/node.hxx                             \
-  core/rat/printer.hh                           \
-  core/rat/printer.hxx                          \
-  core/rat/visitor.fwd.hh                       \
-  core/rat/visitor.hh                           \
-  core/rat/visitor.hxx                          \
-  factory/ladybird.hh                           \
-  misc/cast.hh                                  \
-  misc/const_traits.hh                          \
-  misc/escape.hh                                \
-  weights/b.hh                                  \
+  core/rat/factory.hh				\
+  core/rat/factory_.hh				\
+  core/rat/factory_.hxx				\
+  core/rat/node.fwd.hh				\
+  core/rat/node.hh				\
+  core/rat/node.hxx				\
+  core/rat/printer.hh				\
+  core/rat/printer.hxx				\
+  core/rat/visitor.fwd.hh			\
+  core/rat/visitor.hh				\
+  core/rat/visitor.hxx				\
+  factory/ladybird.hh				\
+  misc/cast.hh					\
+  misc/const_traits.hh				\
+  misc/escape.hh				\
+  weights/b.hh					\
   weights/poly.hh				\
   weights/z.hh					\
   weights/z_min.hh

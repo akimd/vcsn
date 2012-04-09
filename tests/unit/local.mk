@@ -3,6 +3,7 @@ check_PROGRAMS +=				\
   unit/ladybird-z				\
   unit/ladybird-zmin				\
   unit/poly					\
+  unit/product					\
   unit/simplaw					\
   unit/simpleaut
 
@@ -15,11 +16,12 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
 
-unit_TESTS =                                    \
-  unit/ladybird.chk                             \
-  unit/poly.chk                                 \
-  unit/simpleaut.chk                            \
-  unit/simplaw.chk                              \
+unit_TESTS =					\
+  unit/ladybird.chk				\
+  unit/poly.chk					\
+  unit/product.chk				\
+  unit/simpleaut.chk				\
+  unit/simplaw.chk				\
   unit/standard_of.chk
 
 unit/standard_of.log: rat/pprat
