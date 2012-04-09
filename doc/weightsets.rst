@@ -36,7 +36,7 @@ Here is the required interface of a *Weight Set* object::
     bool is_zero(const value_t v) const;
     bool is_unit(const value_t v) const;
 
-    bool show_unit() const;
+    static constexpr bool show_unit();
 
     value_t conv(std::string& str) const;
 
@@ -78,7 +78,7 @@ Detailed interface
 
    Whether ``v == unit()``.
 
-.. function:: bool show_unit() const
+.. function:: static constexpr bool show_unit()
 
    Whether it is customary to show the unit weight for this weight
    set.  For instance in a rational expression with weights in
