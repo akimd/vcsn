@@ -1,12 +1,12 @@
 .. default-domain:: cpp
 
-Weight Sets
+Weight-Sets
 ===========
 
 A weight in Vaucanson2 has two types: a *storage type* and a *semantic
 type*.
 
-The storage type (such as ``int``, ``bool``, ``float``, or more
+The :dfn:`storage type` (such as ``bool``, ``int``, ``float``, or more
 complex types) is mainly an implementation issue: it specifies how
 weights are stored on transitions and passed around between functions.
 
@@ -14,16 +14,16 @@ The storage type does **not** indicate how the weight should be
 interpreted.  For instance an integer stored by ``int`` could be
 interpreted as an element of the semiring
 :math:`(\mathbb{Z},+,\times,0,1)` or as an element of the semiring
-:math:`(\mathbb{Z},\min,+,\infty,0)`.
+:math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`.
 
-*Weight Sets* objects store the semantic information associated to the
-weights.  Ideally you should have one weight set instantiated
+A :dfn:`weight-set` object store the semantic information associated
+to the weights.  Ideally you should have one weight-set instantiated
 somewhere in order to manipulate weights.
 
 Overview
 --------
 
-Here is the required interface of a *Weight Set* object::
+Here is the required interface of a *Weight-Set* object::
 
     typedef ... value_t;
 
@@ -37,13 +37,14 @@ Here is the required interface of a *Weight Set* object::
     bool is_unit(const value_t v) const;
 
     static constexpr bool show_unit();
+    static constexpr bool is_positive_semiring();
 
     value_t conv(std::string& str) const;
 
     std::string format(const value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
 
-Implementations of weight sets with a complex storage type may decide
+Implementations of weight-sets with a complex storage type may decide
 to receive them as `const value_t&` and emit them as `const value_t&`
 instead of the above pass-by-copy specifications.
 
@@ -52,7 +53,7 @@ Detailed interface
 
 .. type:: value_t
 
-   The storage type of the weight set's elements.
+   The storage type of the weight-set's elements.
 
 .. function:: value_t add(const value_t l, const value_t r) const
 
@@ -84,9 +85,21 @@ Detailed interface
    set.  For instance in a rational expression with weights in
    :math:`(\mathbb{Z},+,\times,0,1)` we prefer ``a + b`` to the more
    explicit ``{1}a + {1}b``, however in
-   :math:`(\mathbb{Z},\min,+,\infty,0)` we want to display ``{oo}a +
+   :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` we want to display ``{oo}a +
    {oo}b`` even though ``oo`` is the unit element, so there is no risk
    to confuse it with ``{1}a + {1}b``.
+
+.. function:: static constexpr bool is_positive_semiring()
+
+   Whether this weight-set is a *positive semiring*.
+
+   A :dfn:`positive semiring` :math:`(\mathbb{K},+,\times,0,1)` is
+   positive of it is *zero-divisor-free* and *zero-sum-free*:
+   :math:`\forall k,\ell\in\mathbb{K}\setminus\{0\}, k\times\ell \ne 0`
+   and :math:`k + \ell \ne 0`.
+
+   For instance :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` is a positive
+   semiring, but :math:`(\mathbb{Z},+,\times,0,1)` is not.
 
 .. function:: value_t conv(std::string& str) const
 
@@ -105,10 +118,10 @@ Detailed interface
    instead of ``std::cout << format(v)``, because no intermediate
    string is created.
 
-Available Weight Sets
+Available Weight-Sets
 ---------------------
 
-The following weight sets are implemented:
+The following weight-sets are implemented:
 
 .. class:: b
 
@@ -126,7 +139,7 @@ The following weight sets are implemented:
 
 .. class:: z_min
 
-   The usual integer semiring :math:`(\mathbb{Z},\min,+,\infty,0)`,
+   The usual integer semiring :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`,
    with elements stored as ``int``.
 
    Defined in ``vcsn/weights/z_min.hh``.
