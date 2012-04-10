@@ -3,6 +3,14 @@
 Automata
 ========
 
+.. index::
+   single: pre-initial
+   single: post-final
+   pair: initial; transition
+   pair: initial; state
+   pair: final; transition
+   pair: final; state
+
 Currently there is only one automaton class implemented in Vaucanson2.
 It allows modifications, forward and backward traversal.   We will probably
 split these features as separate concept, in the future.
@@ -26,8 +34,8 @@ own initial and final weight.
   3 -> F3
 
 Internally, these initial and final weights are represented as weights
-on transitions leaving a *pre-initial* state or reaching a
-*post-final* states.
+on transitions leaving a :dfn:`pre-initial` state or reaching a
+:dfn:`post-final` states.
 
 .. digraph:: ex1prepost
 
@@ -48,11 +56,11 @@ to the automaton.  In some algorithms however it is easier to consider
 these two states as part of the automaton.  The following interface
 accommodates both situations.
 
-The transition that leave the *pre-initial* state are called *initial
-transition*.  The destinations of these transitions are called
-*initial states*.  Similarly, transition reaching the *post-initial*
-state are called *final transitions*, and their sources are the *final
-states*.
+Transitions that leave the *pre-initial* state are called
+:dfn:`initial transitions`.  The destinations of these transitions are
+called :dfn:`initial states`.  Similarly, transition reaching the
+:dfn:`post-initial` state are called :dfn:`final transitions`, and
+their sources are the :dfn:`final states`.
 
 .. Note::
 
@@ -354,7 +362,7 @@ Edition of states
    was already initial, its initial weight is replaced by *k*.  If *k*
    is ``weightset().zero()``, then the state becomes non initial.
 
-   If *k* is omitted, it default to ``weightset().unit()``.
+   If *k* is omitted, it defaults to ``weightset().unit()``.
 
 .. function:: weight_t add_initial(state_t s, weight_t k)
 

@@ -3,6 +3,8 @@
 Weight-Sets
 ===========
 
+.. index:: storage type, weight-set
+
 A weight in Vaucanson2 has two types: a *storage type* and a *semantic
 type*.
 
@@ -91,10 +93,12 @@ Detailed interface
 
 .. function:: static constexpr bool is_positive_semiring()
 
+   .. index:: positive semiring
+
    Whether this weight-set is a *positive semiring*.
 
    A :dfn:`positive semiring` :math:`(\mathbb{K},+,\times,0,1)` is
-   positive of it is *zero-divisor-free* and *zero-sum-free*:
+   positive if it is *zero-divisor-free* and *zero-sum-free*:
    :math:`\forall k,\ell\in\mathbb{K}\setminus\{0\}, k\times\ell \ne 0`
    and :math:`k + \ell \ne 0`.
 
@@ -139,7 +143,9 @@ The following weight-sets are implemented:
 
 .. class:: z_min
 
-   The usual integer semiring :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`,
+   .. index:: tropical semiring
+
+   The tropical semiring :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`,
    with elements stored as ``int``.
 
    Defined in ``vcsn/weights/z_min.hh``.
@@ -152,7 +158,7 @@ The following weight-sets are implemented:
 
 .. class:: factory_<A, W>
 
-   Rational expression over the alphabet ``A`` with weight in ``W``.
+   Rational expressions over the alphabet ``A`` with weight in ``W``.
 
    Defined in ``vcsn/core/rat/factory_.hh``.
 
