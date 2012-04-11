@@ -1,5 +1,5 @@
 #ifndef VCSN_FACTORY_LADYBIRD_HH
-#define VCSN_FACTORY_LADYBIRD_HH
+# define VCSN_FACTORY_LADYBIRD_HH
 
 #include "vcsn/alphabets/char.hh"
 #include "vcsn/alphabets/setalpha.hh"
@@ -33,4 +33,4 @@ namespace vcsn
   }
 }
 
-#endif // VCSN_FACTORY_LADYBIRD_HH
+#endif // !VCSN_FACTORY_LADYBIRD_HH

@@ -1,5 +1,5 @@
-#ifndef VCSN_RAT_NODE_HH_
-# define VCSN_RAT_NODE_HH_
+#ifndef VCSN_CORE_RAT_NODE_HH
+# define VCSN_CORE_RAT_NODE_HH
 
 # include <list>
 # include <string>
@@ -288,4 +288,4 @@ namespace vcsn
 
 #include <vcsn/core/rat/node.hxx>
 
-#endif // !VCSN_RAT_NODE_HH_
+#endif // !VCSN_CORE_RAT_NODE_HH

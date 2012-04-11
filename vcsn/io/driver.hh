@@ -1,5 +1,5 @@
-#ifndef VCSN_RAT_DRIVER_HH
-# define VCSN_RAT_DRIVER_HH
+#ifndef VCSN_IO_DRIVER_HH
+# define VCSN_IO_DRIVER_HH
 
 # include <vcsn/core/rat/node.hh>
 # include <vcsn/core/rat/factory.hh>
@@ -46,4 +46,4 @@ namespace vcsn
 
   }
 }
-#endif // ! VCSN_RAT_DRIVER_HH
+#endif // !VCSN_IO_DRIVER_HH

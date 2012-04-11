@@ -82,4 +82,4 @@ namespace vcsn
   };
 }
 
-#endif // VCSN_WEIGHTS_Z_HH
+#endif // !VCSN_WEIGHTS_Z_HH

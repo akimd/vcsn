@@ -1,5 +1,5 @@
 #ifndef VCSN_CORE_KIND_HH
-#define VCSN_CORE_KIND_HH
+# define VCSN_CORE_KIND_HH
 
 namespace vcsn
 {
@@ -29,4 +29,4 @@ namespace vcsn
   };
 }
 
-#endif // VCSN_CORE_KIND_HH
+#endif // !VCSN_CORE_KIND_HH

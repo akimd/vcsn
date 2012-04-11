@@ -645,4 +645,4 @@ namespace vcsn
   mutable_automaton<GenSet, WeightSet, Kind>::st_ws_ = WeightSet();
 }
 
-#endif // !MUTABLE_AUTOMATON
+#endif // !VCSN_CORE_MUTABLE_AUTOMATON_HH

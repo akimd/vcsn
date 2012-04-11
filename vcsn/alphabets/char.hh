@@ -1,5 +1,5 @@
 #ifndef VCSN_ALPHABETS_CHAR_HH
-#define VCSN_ALPHABETS_CHAR_HH
+# define VCSN_ALPHABETS_CHAR_HH
 
 #include <string>
 #include <iostream>
@@ -149,4 +149,4 @@ namespace vcsn
 
 }
 
-#endif // VCSN_ALPHABETS_CHAR_HH
+#endif // !VCSN_ALPHABETS_CHAR_HH

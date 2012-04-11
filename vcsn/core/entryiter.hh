@@ -46,4 +46,4 @@ namespace
 
 }
 
-#endif // VCSN_CORE_ENTRYITER_HH
+#endif // !VCSN_CORE_ENTRYITER_HH

@@ -1,5 +1,5 @@
 #ifndef VCSN_MISC_ESCAPE_HH
-#define VCSN_MISC_ESCAPE_HH
+# define VCSN_MISC_ESCAPE_HH
 
 namespace vcsn
 {
@@ -27,4 +27,4 @@ namespace vcsn
   }
 }
 
-#endif // VCSN_MISC_ESCAPE_HH
+#endif // !VCSN_MISC_ESCAPE_HH

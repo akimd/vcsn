@@ -1,5 +1,5 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
-#define VCSN_ALPHABETS_SETALPHA_HH
+# define VCSN_ALPHABETS_SETALPHA_HH
 
 #include <initializer_list>
 #include <set>
@@ -47,4 +47,4 @@ namespace vcsn
   };
 }
 
-#endif // VCSN_ALPHABETS_SETALPHA_HH
+#endif // !VCSN_ALPHABETS_SETALPHA_HH

@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_POLY_HH
-#define VCSN_CORE_POLY_HH
+#ifndef VCSN_WEIGHTS_POLY_HH
+# define VCSN_WEIGHTS_POLY_HH
 
 #include <map>
 #include <iostream>
@@ -145,4 +145,4 @@ namespace vcsn
 
 }
 
-#endif // VCSN_CORE_POLY_HH
+#endif // !VCSN_WEIGHTS_POLY_HH

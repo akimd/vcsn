@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_PRINTER_HH_
-# define VCSN_CORE_RAT_PRINTER_HH_
+#ifndef VCSN_CORE_RAT_PRINTER_HH
+# define VCSN_CORE_RAT_PRINTER_HH
 
 # include <iostream>
 # include <vcsn/core/rat/visitor.hh>
@@ -45,4 +45,4 @@ namespace vcsn
 
 # include <vcsn/core/rat/printer.hxx>
 
-#endif // !VCSN_CORE_RAT_PRINTER_HH_
+#endif // !VCSN_CORE_RAT_PRINTER_HH

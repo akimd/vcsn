@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_NODE_FWD_HH_
-# define VCSN_CORE_RAT_NODE_FWD_HH_
+#ifndef VCSN_CORE_RAT_NODE_FWD_HH
+# define VCSN_CORE_RAT_NODE_FWD_HH
 
 namespace vcsn
 {
@@ -38,4 +38,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_NODE_FWD_HH_
+#endif // !VCSN_CORE_RAT_NODE_FWD_HH

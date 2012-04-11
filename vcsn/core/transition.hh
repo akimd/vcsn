@@ -48,4 +48,4 @@ namespace vcsn
 
 }
 
-#endif // VCSN_CORE_TRANSITION_HH
+#endif // !VCSN_CORE_TRANSITION_HH

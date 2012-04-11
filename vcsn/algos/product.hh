@@ -1,5 +1,5 @@
 #ifndef VCSN_ALGOS_PRODUCT_HH
-#define VCSN_ALGOS_PRODUCT_HH
+# define VCSN_ALGOS_PRODUCT_HH
 
 #include <iostream>
 #include <map>
@@ -72,4 +72,4 @@ namespace vcsn
   }
 }
 
-#endif // VCSN_ALGOS_PRODUCT_HH
+#endif // !VCSN_ALGOS_PRODUCT_HH

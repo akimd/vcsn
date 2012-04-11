@@ -1,5 +1,5 @@
 #ifndef VCSN_ALGOS_DOTTY_HH
-#define VCSN_ALGOS_DOTTY_HH
+# define VCSN_ALGOS_DOTTY_HH
 
 #include <iostream>
 #include <unordered_map>
@@ -61,4 +61,4 @@ namespace vcsn
   }
 }
 
-#endif // VCSN_ALGOS_DOTTY_HH
+#endif // !VCSN_ALGOS_DOTTY_HH

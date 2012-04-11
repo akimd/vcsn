@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_VISITOR_HH_
-# define VCSN_CORE_RAT_VISITOR_HH_
+#ifndef VCSN_CORE_RAT_VISITOR_HH
+# define VCSN_CORE_RAT_VISITOR_HH
 
 # include <vcsn/misc/const_traits.hh>
 # include <vcsn/core/rat/node.fwd.hh>
@@ -38,4 +38,4 @@ namespace vcsn
 
 # include <vcsn/core/rat/visitor.hxx>
 
-#endif // !VCSN_CORE_RAT_VISITOR_HH_
+#endif // !VCSN_CORE_RAT_VISITOR_HH

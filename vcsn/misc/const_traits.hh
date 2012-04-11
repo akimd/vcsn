@@ -1,5 +1,5 @@
-#ifndef VCSN_MISC_STATIC_HH_
-#define VCSN_MISC_STATIC_HH_
+#ifndef VCSN_MISC_CONST_TRAITS_HH
+# define VCSN_MISC_CONST_TRAITS_HH
 
 namespace vcsn
 {
@@ -23,4 +23,4 @@ namespace vcsn
 
 } // !vcsn
 
-#endif // !VCSN_MISC_STATIC_HH_
+#endif // !VCSN_MISC_CONST_TRAITS_HH

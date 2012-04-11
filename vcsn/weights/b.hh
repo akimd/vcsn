@@ -77,4 +77,4 @@ namespace vcsn
   };
 }
 
-#endif // VCSN_WEIGHTS_B_HH
+#endif // !VCSN_WEIGHTS_B_HH

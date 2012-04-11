@@ -1,6 +1,5 @@
-#ifndef VCSN_MISC_CAST_HH_
-
-# define VCSN_MISC_CAST_HH_
+#ifndef VCSN_MISC_CAST_HH
+# define VCSN_MISC_CAST_HH
 # ifdef NDEBUG
 #  define down_cast static_cast
 #  define maybe_down_cast static_cast
@@ -51,4 +50,4 @@ struct down_caster
   down_caster(__FILE__, __LINE__).cast
 #endif
 
-#endif // !VCSN_MISC_CAST_HH_
+#endif // !VCSN_MISC_CAST_HH
