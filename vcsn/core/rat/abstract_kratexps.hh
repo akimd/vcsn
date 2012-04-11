@@ -9,7 +9,7 @@
 namespace vcsn
 {
 
-  class factory
+  class abstract_kratexps
   {
   public:
     using exp_t = rat::exp;

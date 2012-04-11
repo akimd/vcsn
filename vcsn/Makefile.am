@@ -26,8 +26,7 @@ nobase_vcsn_HEADERS =                           \
   core/entryiter.hh                             \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/transition.hh                            \
-  core/rat/factory.hh                           \
+  core/rat/abstract_kratexps.hh                 \
   core/rat/kratexps.hh                          \
   core/rat/kratexps.hxx                         \
   core/rat/node.fwd.hh                          \
@@ -38,6 +37,7 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.fwd.hh                       \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
+  core/transition.hh                            \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \

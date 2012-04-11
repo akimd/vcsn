@@ -5,18 +5,18 @@
 # include <list>
 
 # include <vcsn/core/rat/node.fwd.hh>
-# include <vcsn/core/rat/factory.hh>
+# include <vcsn/core/rat/abstract_kratexps.hh>
 
 namespace vcsn
 {
 
   template <typename GenSet, typename WeightSet>
-  class kratexps : public factory
+  class kratexps : public abstract_kratexps
   {
   public:
     using genset_t = GenSet;
     using weightset_t = WeightSet;
-    using super_type = factory;
+    using super_type = abstract_kratexps;
     using weight_t = typename weightset_t::value_t;
     using node_t = rat::node<weight_t>;
     using exp_t = rat::exp;
@@ -58,7 +58,7 @@ namespace vcsn
     DEFINE(star);
 #undef DEFINE
 
-    // Specialization from factory.
+    // Specialization from abstract_kratexps.
     virtual zero_t* zero() const;
     virtual one_t* unit() const;
     virtual atom_t* atom(const std::string& w) const;

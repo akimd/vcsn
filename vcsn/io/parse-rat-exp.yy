@@ -17,7 +17,7 @@
   #include <string>
   #include "location.hh"
   #include <vcsn/core/rat/node.hh>
-  #include <vcsn/core/rat/factory.hh>
+  #include <vcsn/core/rat/abstract_kratexps.hh>
   #include <vcsn/io/driver.hh>
 }
 

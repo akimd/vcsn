@@ -9,7 +9,7 @@ namespace vcsn
   namespace rat
   {
 
-    driver::driver(const factory& f)
+    driver::driver(const abstract_kratexps& f)
     {
       kratexps = &f;
     }

@@ -28,29 +28,29 @@ namespace vcsn
   {}
 
 
-  /*-------------------------------------------------.
-  | Implementation of factory pure virtual methods.  |
-  `-------------------------------------------------*/
+  /*-----------------------------------------------------------.
+  | Implementation of abstract_kratexps pure virtual methods.  |
+  `-----------------------------------------------------------*/
 
-#define FACTORY_                                        \
-  template <typename GenSet, typename WeightSet>      \
+#define DEFINE                                          \
+  template <typename GenSet, typename WeightSet>        \
   inline                                                \
   auto                                                  \
   kratexps<GenSet, WeightSet>
 
-  FACTORY_::zero() const
+  DEFINE::zero() const
     -> zero_t*
   {
     return new zero_t(ws_.unit());
   }
 
-  FACTORY_::unit() const
+  DEFINE::unit() const
     -> one_t*
   {
     return new one_t(ws_.unit());
   }
 
-  FACTORY_::atom(const std::string& w) const
+  DEFINE::atom(const std::string& w) const
     -> atom_t*
   {
     for (auto c: w)
@@ -59,7 +59,7 @@ namespace vcsn
     return new atom_t(ws_.unit(), w);
   }
 
-  FACTORY_::add(exp_t* l, exp_t* r) const
+  DEFINE::add(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -67,7 +67,7 @@ namespace vcsn
     return add(left, right);
   }
 
-  FACTORY_::mul(exp_t* l, exp_t* r) const
+  DEFINE::mul(exp_t* l, exp_t* r) const
     -> exp_t*
   {
     auto left = down_cast<node_t*>(l);
@@ -75,14 +75,14 @@ namespace vcsn
     return mul(left, right);
   }
 
-  FACTORY_::star(exp_t* e) const
+  DEFINE::star(exp_t* e) const
     -> exp_t*
   {
     return star(down_cast<node_t*>(e));
   }
 
 
-  FACTORY_::weight(std::string* w, exp_t* e) const
+  DEFINE::weight(std::string* w, exp_t* e) const
     -> exp_t*
   {
     // The weight might not be needed (e = 0), but check its syntax
@@ -92,7 +92,7 @@ namespace vcsn
     return res;
   }
 
-  FACTORY_::weight(exp_t* e, std::string* w) const
+  DEFINE::weight(exp_t* e, std::string* w) const
     -> exp_t*
   {
     auto res = weight(down_cast<node_t*>(e), ws_.conv(*w));
@@ -106,7 +106,7 @@ namespace vcsn
   | Concrete types.  |
   `-----------------*/
 
-  FACTORY_::add(node_t* l, node_t* r) const
+  DEFINE::add(node_t* l, node_t* r) const
     -> node_t*
   {
     // Trivial Identity
@@ -154,7 +154,7 @@ namespace vcsn
   }
 
 
-  FACTORY_::mul(node_t* l, node_t* r) const
+  DEFINE::mul(node_t* l, node_t* r) const
     -> node_t*
   {
     node_t* res = nullptr;
@@ -212,7 +212,7 @@ namespace vcsn
     return res;
   }
 
-  FACTORY_::star(node_t* e) const
+  DEFINE::star(node_t* e) const
     -> node_t*
   {
     if (node_t::ZERO == e->type())
@@ -231,7 +231,7 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  FACTORY_::weight(const weight_t& w, node_t* e) const
+  DEFINE::weight(const weight_t& w, node_t* e) const
     -> node_t*
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
@@ -248,7 +248,7 @@ namespace vcsn
     return e;
   }
 
-  FACTORY_::weight(node_t* e, const weight_t& w) const
+  DEFINE::weight(node_t* e, const weight_t& w) const
     -> node_t*
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
@@ -274,19 +274,19 @@ namespace vcsn
   | kratexps as a WeightSet itself.  |
   `---------------------------------*/
 
-  FACTORY_::is_unit(value_t v) const
+  DEFINE::is_unit(value_t v) const
     -> bool
   {
     return dynamic_cast<one_t*>(v);
   }
 
-  FACTORY_::is_zero(value_t v) const
+  DEFINE::is_zero(value_t v) const
     -> bool
   {
     return dynamic_cast<zero_t*>(v);
   }
 
-  FACTORY_::conv(const std::string& s) const
+  DEFINE::conv(const std::string& s) const
     -> value_t
   {
     vcsn::rat::driver d(*this);
@@ -295,7 +295,7 @@ namespace vcsn
     throw std::domain_error(d.errors);
   }
 
-  FACTORY_::print(std::ostream& o, const value_t v) const
+  DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
     const auto* down = down_cast<const node_t*>(v);
@@ -304,6 +304,6 @@ namespace vcsn
     return o;
   }
 
-#undef FACTORY_
+#undef DEFINE
 
 } // namespace vcsn
