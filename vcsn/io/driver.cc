@@ -11,7 +11,7 @@ namespace vcsn
 
     driver::driver(const factory& f)
     {
-      factory_ = &f;
+      kratexps = &f;
     }
 
     void

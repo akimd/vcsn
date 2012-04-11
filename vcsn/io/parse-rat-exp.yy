@@ -49,7 +49,7 @@
   #include <cassert>
 
 #define MAKE(Kind, ...)                         \
-      driver_.factory_->Kind(__VA_ARGS__)
+      driver_.kratexps->Kind(__VA_ARGS__)
 }
 
 %initial-action
@@ -66,7 +66,7 @@
 
 %printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
-%printer { driver_.factory_->print(debug_stream(), $$); } <node>;
+%printer { driver_.kratexps->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval> <node>;
 
 %token <ival>   LPAREN  "("

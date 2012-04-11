@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_FACTORY__HH
-# define VCSN_CORE_RAT_FACTORY__HH
+#ifndef VCSN_CORE_RAT_KRATEXPS_HH
+# define VCSN_CORE_RAT_KRATEXPS_HH
 
 # include <string>
 # include <list>
@@ -11,29 +11,29 @@ namespace vcsn
 {
 
   template <typename GenSet, typename WeightSet>
-  class factory_ : public factory
+  class kratexps : public factory
   {
   public:
-    typedef GenSet genset_t;
-    typedef WeightSet weightset_t;
-    typedef factory super_type;
-    typedef typename weightset_t::value_t weight_t;
-    typedef rat::node<weight_t> node_t;
-    typedef rat::exp exp_t;
+    using genset_t = GenSet;
+    using weightset_t = WeightSet;
+    using super_type = factory;
+    using weight_t = typename weightset_t::value_t;
+    using node_t = rat::node<weight_t>;
+    using exp_t = rat::exp;
 
     // When taken as a WeightSet, our values.
-    typedef exp_t* value_t;
+    using value_t = exp_t*;
 
   public:
     /// Constructor.
     /// \param a    the generator set for the labels.
     /// \param ws   the type of the weights (e.g., "bool", "int").
-    factory_(const genset_t& gs, const weightset_t& ws);
+    kratexps(const genset_t& gs, const weightset_t& ws);
     /// Construct with \a t as weight-set.
     /// \param a    the generator set for the labels.
     /// \param t    \a t must be castable to weightset_t.
     template <typename T>
-    factory_(const genset_t& gs, const T& t);
+    kratexps(const genset_t& gs, const T& t);
 
     const genset_t& genset() const
     {
@@ -47,7 +47,7 @@ namespace vcsn
 
     // exp constants' method
 #define DEFINE(Type)                            \
-    typedef rat::Type<weight_t> Type ## _t
+    using Type ## _t = rat::Type<weight_t>
     DEFINE(leaf);
     DEFINE(zero);
     DEFINE(one);
@@ -100,6 +100,6 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <vcsn/core/rat/factory_.hxx>
+# include <vcsn/core/rat/kratexps.hxx>
 
-#endif // !VCSN_CORE_RAT_FACTORY__HH
+#endif // !VCSN_CORE_RAT_KRATEXPS_HH

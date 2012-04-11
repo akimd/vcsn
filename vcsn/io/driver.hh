@@ -17,7 +17,7 @@ namespace vcsn
       driver(const factory& f);
       exp* parse_file(const std::string& f);
       exp* parse_string(const std::string& e, const location& l = location());
-      const factory* factory_;
+      const factory* kratexps;
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);

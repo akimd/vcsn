@@ -5,7 +5,7 @@
 
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/z.hh>
-#include <vcsn/core/rat/factory_.hh>
+#include <vcsn/core/rat/kratexps.hh>
 #include <vcsn/io/driver.hh>
 #include <vcsn/alphabets/char.hh>
 #include <vcsn/alphabets/setalpha.hh>
@@ -67,12 +67,12 @@ struct factory{};
 
 #define DEFINE(Name, Param, Arg)                        \
   auto fact_ ## Name                                    \
-  = vcsn::factory_<alpha_t, Param>{ alpha, Arg };       \
+  = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };       \
                                                         \
   template <>                                           \
   struct factory<Name>                                  \
   {                                                     \
-    const vcsn::factory_<alpha_t, Param>&               \
+    const vcsn::kratexps<alpha_t, Param>&               \
       get()                                             \
     {                                                   \
       return fact_ ## Name;                             \
@@ -80,10 +80,10 @@ struct factory{};
   };
 
   DEFINE(b, vcsn::b, vcsn::b());
-  DEFINE(br, vcsn::factory_<alpha_t COMMA vcsn::b>, fact_b);
+  DEFINE(br, vcsn::kratexps<alpha_t COMMA vcsn::b>, fact_b);
   DEFINE(z, vcsn::z, vcsn::z());
-  DEFINE(zr, vcsn::factory_<alpha_t COMMA vcsn::z>, fact_z);
-  DEFINE(zrr, vcsn::factory_<alpha_t COMMA vcsn::factory_<alpha_t COMMA vcsn::z>>, fact_zr);
+  DEFINE(zr, vcsn::kratexps<alpha_t COMMA vcsn::z>, fact_z);
+  DEFINE(zrr, vcsn::kratexps<alpha_t COMMA vcsn::kratexps<alpha_t COMMA vcsn::z>>, fact_zr);
 #undef DEFINE
 
 template<typename Factory>

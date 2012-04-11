@@ -11,11 +11,11 @@ namespace vcsn
 {
 
   /*-----------.
-  | factory_.  |
+  | kratexps.  |
   `-----------*/
 
   template <typename GenSet, typename WeightSet>
-  factory_<GenSet, WeightSet>::factory_(const GenSet& gs, const WeightSet& ws)
+  kratexps<GenSet, WeightSet>::kratexps(const GenSet& gs, const WeightSet& ws)
     : super_type()
     , gs_(gs)
     , ws_(ws)
@@ -23,8 +23,8 @@ namespace vcsn
 
   template <typename GenSet, typename WeightSet>
   template <typename T>
-  factory_<GenSet, WeightSet>::factory_(const GenSet& gs, const T& t)
-    : factory_(gs, dynamic_cast<const weightset_t&>(t))
+  kratexps<GenSet, WeightSet>::kratexps(const GenSet& gs, const T& t)
+    : kratexps(gs, dynamic_cast<const weightset_t&>(t))
   {}
 
 
@@ -36,7 +36,7 @@ namespace vcsn
   template <typename GenSet, typename WeightSet>      \
   inline                                                \
   auto                                                  \
-  factory_<GenSet, WeightSet>
+  kratexps<GenSet, WeightSet>
 
   FACTORY_::zero() const
     -> zero_t*
@@ -271,7 +271,7 @@ namespace vcsn
   }
 
   /*---------------------------------.
-  | factory_ as a WeightSet itself.  |
+  | kratexps as a WeightSet itself.  |
   `---------------------------------*/
 
   FACTORY_::is_unit(value_t v) const
