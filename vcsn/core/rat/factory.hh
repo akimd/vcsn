@@ -12,8 +12,8 @@ namespace vcsn
   class factory
   {
   public:
-    typedef rat::exp exp_t;
-    typedef exp_t* value_t;
+    using exp_t = rat::exp;
+    using value_t = exp_t*;
 
     virtual exp_t* zero() const = 0;
     virtual exp_t* unit() const = 0;

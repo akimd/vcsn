@@ -38,10 +38,10 @@ namespace vcsn
     class node : public exp
     {
     public:
-      typedef Weight weight_t;
+      using weight_t = Weight;
     protected:
-      typedef typename visitor_traits<Weight>::visitor visitor;
-      typedef typename visitor_traits<Weight>::const_visitor const_visitor;
+      using visitor = typename visitor_traits<Weight>::visitor;
+      using const_visitor = typename visitor_traits<Weight>::const_visitor;
 
     public:
       node(const weight_t& l);
@@ -67,8 +67,8 @@ namespace vcsn
     class inner : public node<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef node<weight_t> super_type;
+      using weight_t = Weight;
+      using super_type = node<weight_t>;
     protected:
       inner(const weight_t& l, const weight_t& r);
     public:
@@ -90,16 +90,16 @@ namespace vcsn
     class nary: public inner<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef inner<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
-      typedef std::list<node_t*> nodes_t;
+      using weight_t = Weight;
+      using super_type = inner<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
+      using nodes_t = std::list<node_t*>;
 
-      typedef typename nodes_t::const_iterator         const_iterator;
-      typedef typename nodes_t::iterator               iterator;
-      typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
-      typedef typename nodes_t::reverse_iterator       reverse_iterator;
+      using const_iterator = typename nodes_t::const_iterator        ;
+      using iterator = typename nodes_t::iterator              ;
+      using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
+      using reverse_iterator = typename nodes_t::reverse_iterator      ;
     public:
       nary(const weight_t& l, const weight_t& r);
       virtual ~nary();
@@ -133,16 +133,16 @@ namespace vcsn
     class prod : public nary<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef nary<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
-      typedef std::list<node_t*> nodes_t;
+      using weight_t = Weight;
+      using super_type = nary<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
+      using nodes_t = std::list<node_t*>;
 
-      typedef typename nodes_t::const_iterator         const_iterator;
-      typedef typename nodes_t::iterator               iterator;
-      typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
-      typedef typename nodes_t::reverse_iterator       reverse_iterator;
+      using const_iterator = typename nodes_t::const_iterator        ;
+      using iterator = typename nodes_t::iterator              ;
+      using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
+      using reverse_iterator = typename nodes_t::reverse_iterator      ;
     public:
       prod(const weight_t& l, const weight_t& r);
     public:
@@ -161,16 +161,16 @@ namespace vcsn
     class sum : public nary<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef nary<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
-      typedef std::list<node_t*> nodes_t;
+      using weight_t = Weight;
+      using super_type = nary<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
+      using nodes_t = std::list<node_t*>;
 
-      typedef typename nodes_t::const_iterator         const_iterator;
-      typedef typename nodes_t::iterator               iterator;
-      typedef typename nodes_t::const_reverse_iterator const_reverse_iterator;
-      typedef typename nodes_t::reverse_iterator       reverse_iterator;
+      using const_iterator = typename nodes_t::const_iterator        ;
+      using iterator = typename nodes_t::iterator              ;
+      using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
+      using reverse_iterator = typename nodes_t::reverse_iterator      ;
     public:
       sum(const weight_t& l, const weight_t& r);
 
@@ -190,10 +190,10 @@ namespace vcsn
     class star : public inner<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef inner<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
+      using weight_t = Weight;
+      using super_type = inner<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
 
     public:
       star(const weight_t& l, const weight_t& r, node_t* exp);
@@ -220,8 +220,8 @@ namespace vcsn
     class leaf : public node<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef node<weight_t> super_type;
+      using weight_t = Weight;
+      using super_type = node<weight_t>;
     protected:
       leaf(const weight_t& l);
     public:
@@ -233,10 +233,10 @@ namespace vcsn
     class one : public leaf<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef leaf<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
+      using weight_t = Weight;
+      using super_type = leaf<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
     public:
       one(const weight_t& l);
     public:
@@ -250,10 +250,10 @@ namespace vcsn
     class zero : public leaf<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef leaf<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
+      using weight_t = Weight;
+      using super_type = leaf<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
     public:
       zero(const weight_t& l);
     public:
@@ -267,10 +267,10 @@ namespace vcsn
     class atom : public leaf<Weight>
     {
     public:
-      typedef Weight weight_t;
-      typedef leaf<weight_t> super_type;
-      typedef node<weight_t> node_t;
-      typedef typename node_t::type_t type_t;
+      using weight_t = Weight;
+      using super_type = leaf<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
     public:
       atom(const weight_t& l, const std::string& atom);
     public:
