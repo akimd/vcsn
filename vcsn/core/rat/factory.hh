@@ -12,8 +12,6 @@ namespace vcsn
   class factory
   {
   public:
-    typedef std::string weight_str;
-    typedef std::list<weight_str*> weight_str_container;
     typedef rat::exp exp_t;
     typedef exp_t* value_t;
 
