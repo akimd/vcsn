@@ -3,16 +3,7 @@
 
 # ifdef NDEBUG
 #  define down_cast static_cast
-#  define maybe_down_cast static_cast
 # else
-
-template <typename T, typename U>
-inline
-T
-maybe_down_cast(U t)
-{
-  return dynamic_cast<const T>(t);
-}
 
 namespace vcsn
 {

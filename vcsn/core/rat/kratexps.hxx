@@ -183,10 +183,12 @@ namespace vcsn
         delete l;
       }
     // END: Trivial Identity
-    else if (auto left = maybe_down_cast<prod_t*>(l))
+    else if (l->type() == node_t::PROD)
       {
-        if (auto right = maybe_down_cast<prod_t*>(r))
+        auto left = down_cast<prod_t*>(l);
+        if (r->type() == node_t::PROD)
           {
+            auto right = down_cast<prod_t*>(r);
             left->splice(left->end(), *right);
             delete right;
             res = left;
@@ -197,8 +199,9 @@ namespace vcsn
             res = left;
           }
       }
-    else if (auto right = maybe_down_cast<prod_t*>(r))
+    else if (r->type() == node_t::PROD)
       {
+        auto right = down_cast<prod_t*>(r);
         right->push_front(l);
         res = right;
       }
@@ -259,8 +262,13 @@ namespace vcsn
             delete e;
             e = zero();
           }
-        else if (auto in = maybe_down_cast<inner_t*>(e))
-          in->right_weight() = ws_.mul(in->right_weight(), w);
+        else if (e->type() == node_t::SUM
+                 || e->type() == node_t::PROD
+                 || e->type() == node_t::STAR)
+          {
+            auto in = down_cast<inner_t*>(e);
+            in->right_weight() = ws_.mul(in->right_weight(), w);
+          }
         else
           {
             auto leaf = down_cast<leaf_t*>(e);
