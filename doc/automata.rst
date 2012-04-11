@@ -73,7 +73,7 @@ Overview
 
 Here is the interface of an automaton::
 
-    typedef ... alphabet_t;
+    typedef ... genset_t;
     typedef ... weightset_t;
     typedef ... kind_t;
     typedef ... entryset_t;
@@ -86,15 +86,15 @@ Here is the interface of an automaton::
     typedef ... entry_t;
 
     // Related sets
-    const alphabet_t&  alphabet() const;
+    const genset_t&  genset() const;
     const weightset_t& weightset() const;
     const entryset_t&  entryset() const;
 
     // Special states and transitions
     state_t      pre() const;
     state_t      post() const;
-    state_t      invalid_state() const;
-    transition_t invalid_transition() const;
+    state_t      null_state() const;
+    transition_t null_transition() const;
 
     // Statistics
     size_t nb_states() const;
@@ -119,7 +119,7 @@ Here is the interface of an automaton::
     label_t label_of(transition_t t) const;
     weight_t weight_of(transition_t t) const;
 
-    alphabet_t::word_t word_label_of(transition_t t) const;
+    genset_t::word_t word_label_of(transition_t t) const;
 
     // Edition of states
     state_t new_state();
@@ -179,7 +179,7 @@ Detailed interface
 Types
 ~~~~~
 
-.. type:: alphabet_t
+.. type:: genset_t
 
    The type of the generator set of the automaton.
 
@@ -195,7 +195,7 @@ Types
 
    The type of the entry set of the automaton, i.e., a polynomial set
    whose elements can be used to represent the entries of the
-   automaton: ``polynomial<alphabet_t,weightset_t>``.
+   automaton: ``polynomial<genset_t,weightset_t>``.
 
 .. type:: state_t
 
@@ -208,8 +208,8 @@ Types
 .. type:: label_t
 
    The type use to label the automaton.  This usually depends on :type:`kind_t`.  For
-   ``labels_are_letters``, the transitions are labeled by ``alphabet_t::letter_t``,
-   while for ``labels_are_words`` they are labeled by ``alphabet_t::word_t``.
+   ``labels_are_letters``, the transitions are labeled by ``genset_t::letter_t``,
+   while for ``labels_are_words`` they are labeled by ``genset_t::word_t``.
 
 .. type:: weight_t
 
@@ -221,7 +221,7 @@ Types
 
 Related sets
 ~~~~~~~~~~~~
-.. function:: const alphabet_t&  alphabet() const
+.. function:: const genset_t&  genset() const
 
    Return the generator set used by this automaton.
 
@@ -244,13 +244,13 @@ Special states and transitions
 
    Return the post-initial state.
 
-.. function:: state_t invalid_state() const
+.. function:: state_t null_state() const
 
    Return a value that is an invalid state.  Such a state may for
    instance be used to initialize a :type:`state_t` variable at the start
    of an algorithm.
 
-.. function:: transition_t invalid_transition() const
+.. function:: transition_t null_transition() const
 
    Return a value that is an invalid transition.  Such a transition is
    for instance returned by :func:`get_transition` when no
@@ -315,7 +315,7 @@ Queries on transitions
 .. function:: transition_t get_transition(state_t src, state_t dst, label_t l) const
 
    Get a transition connecting *src* to *dst* with label *l*.  If no such transition
-   exists, return :func:`invalid_transition`.
+   exists, return :func:`null_transition`.
 
 .. function:: bool has_transition(state_t src, state_t dst, label_t l) const
 
@@ -324,7 +324,7 @@ Queries on transitions
 
    This is actually syntactic sugar for::
 
-      return get_transition(src, dst, l) != invalid_transition();
+      return get_transition(src, dst, l) != null_transition();
 
 .. function:: bool has_transition(transition_t t) const
 
@@ -335,14 +335,14 @@ Queries on transitions
               label_t label_of(transition_t t) const
               weight_t weight_of(transition_t t) const
 
-.. function:: alphabet_t::word_t word_label_of(transition_t t) const
+.. function:: genset_t::word_t word_label_of(transition_t t) const
 
    Return the label for the transition *t* as a word.  For
    ``labels_are_words`` automata, this is strictly equivalent to
    :func:`label_of`, while for ``labels_are_letters`` this
    is equivalent to::
 
-      return alphabet().to_word(label_of(t));
+      return genset().to_word(label_of(t));
 
 
 Edition of states
@@ -426,14 +426,10 @@ Edition of transitions
 
    If *k* is omitted, it defaults to ``weightset().unit()``.
 
-   .. Note::
-
-      :func:`pre` can only be used as a source, and
-      :func:`post` can only be used as a destination.  Furthermore,
-      These two states cannot be connected directly by a transition.
-
-      There is no check performed on the label of such transitions.
-      Maybe we want one?
+   :func:`pre` can only be used as a source, and `post` can only be
+   :func:used as a destination.  The :func:`pre` and `post` states
+   :func:should generally not be connected directly, unless you know
+   :func:what you are doing.
 
 .. function:: weight_t add_transition(state_t src, state_t dst, label_t l, weight_t k)
               weight_t add_transition(state_t src, state_t dst, label_t l)
@@ -568,15 +564,15 @@ Iteration on entries
 Available Automata
 ------------------
 
-.. class:: mutable_automaton<Alphabet, WeightSet, Kind>
+.. class:: mutable_automaton<GenSet, WeightSet, Kind>
 
-   An automaton on the alphabet *Alphabet* with weights in *WeightSet*
-   and kind *Kind*, implementing all the above interface,
+   An automaton on the generator set *GenSet* with weights in
+   *WeightSet* and kind *Kind*, implementing all the above interface,
 
    Defined in ``vcsn/core/mutable_automaton.hh``.
 
-   .. function:: mutable_automaton(const Alphabet& a, const WeightSet& ws)
-                 mutable_automaton(const Alphabet& a)
+   .. function:: mutable_automaton(const GenSet& gs, const WeightSet& ws)
+                 mutable_automaton(const GenSet& gs)
 
      The constructor for a mutable automaton takes an instance of a
      generator set *a* and an instance of the weight set *ws*.  The

@@ -67,11 +67,11 @@ Detailed interface
 
 .. function:: value_t zero() const
 
-   Return the weight that is neutral for the addition.
+   Return the weight that is the identity element for the addition.
 
 .. function:: value_t unit() const
 
-   Return the weight that is neutral for the multiplication.
+   Return the weight that is the identity element for the multiplication.
 
 .. function:: bool is_zero(const value_t v) const
 
@@ -87,8 +87,8 @@ Detailed interface
    set.  For instance in a rational expression with weights in
    :math:`(\mathbb{Z},+,\times,0,1)` we prefer ``a + b`` to the more
    explicit ``{1}a + {1}b``, however in
-   :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` we want to display ``{oo}a +
-   {oo}b`` even though ``oo`` is the unit element, so there is no risk
+   :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` we want to display ``{0}a +
+   {0}b`` even though ``0`` is the unit element, so there is no risk
    to confuse it with ``{1}a + {1}b``.
 
 .. function:: static constexpr bool is_positive_semiring()
@@ -97,10 +97,10 @@ Detailed interface
 
    Whether this weight-set is a *positive semiring*.
 
-   A :dfn:`positive semiring` :math:`(\mathbb{K},+,\times,0,1)` is
-   positive if it is *zero-divisor-free* and *zero-sum-free*:
-   :math:`\forall k,\ell\in\mathbb{K}\setminus\{0\}, k\times\ell \ne 0`
-   and :math:`k + \ell \ne 0`.
+   :math:`(\mathbb{K},+,\times,0,1)` is a :dfn:`positive semiring` if
+   it is *zero-divisor-free* and *zero-sum-free*: :math:`\forall
+   k,\ell\in\mathbb{K}\setminus\{0\}, k\times\ell \ne 0` and
+   :math:`k + \ell \ne 0`.
 
    For instance :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` is a positive
    semiring, but :math:`(\mathbb{Z},+,\times,0,1)` is not.
@@ -118,7 +118,7 @@ Detailed interface
 
    Print a weight ``v`` on the output stream ``o`` and return ``o``.
 
-   This is usually more efficient to call ``print(std::cout, v)``
+   It is usually more efficient to call ``print(std::cout, v)``
    instead of ``std::cout << format(v)``, because no intermediate
    string is created.
 
@@ -150,7 +150,7 @@ The following weight-sets are implemented:
 
    Defined in ``vcsn/weights/z_min.hh``.
 
-.. class:: polynomial<A, W>
+.. class:: polynomials<A, W>
 
    Polynomials with letters in the alphabet ``A`` and weights in ``W``.
 
