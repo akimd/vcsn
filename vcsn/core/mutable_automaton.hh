@@ -520,13 +520,13 @@ namespace vcsn
     }
 
     container_range<tr_cont_t&>
-    initials() const
+    initial_transitions() const
     {
       return out(pre());
     }
 
     container_range<st_cont_t&>
-    finals() const
+    final_transitions() const
     {
       return in(post());
     }
