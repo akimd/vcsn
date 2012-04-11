@@ -4,9 +4,6 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 
-# define ECHO(S) std::cerr << S << std::endl
-# define V(S) #S ": " << S << " "
-
 namespace vcsn
 {
   namespace rat

@@ -14,13 +14,6 @@
 # include "vcsn/weights/poly.hh"
 # include "entryiter.hh"
 
-#ifndef ECHO
-#  define ECHO(S) std::cerr << S << std::endl
-#endif
-#ifndef V
-#  define V(S) #S ": " << S << "  "
-#endif
-
 namespace vcsn
 {
   template <class GenSet, class WeightSet, class Kind>
