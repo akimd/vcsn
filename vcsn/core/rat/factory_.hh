@@ -10,11 +10,11 @@
 namespace vcsn
 {
 
-  template <typename Alphabet, typename WeightSet>
+  template <typename GenSet, typename WeightSet>
   class factory_ : public factory
   {
   public:
-    typedef Alphabet alphabet_t;
+    typedef GenSet genset_t;
     typedef WeightSet weightset_t;
     typedef factory super_type;
     typedef typename weightset_t::value_t weight_t;
@@ -26,18 +26,18 @@ namespace vcsn
 
   public:
     /// Constructor.
-    /// \param a    the alphabet for the labels.
+    /// \param a    the generator set for the labels.
     /// \param ws   the type of the weights (e.g., "bool", "int").
-    factory_(const alphabet_t& a, const weightset_t& ws);
+    factory_(const genset_t& gs, const weightset_t& ws);
     /// Construct with \a t as weight-set.
-    /// \param a    the alphabet for the labels.
+    /// \param a    the generator set for the labels.
     /// \param t    \a t must be castable to weightset_t.
     template <typename T>
-    factory_(const alphabet_t& a, const T& t);
+    factory_(const genset_t& gs, const T& t);
 
-    const alphabet_t& alphabet() const
+    const genset_t& genset() const
     {
-      return a_;
+      return gs_;
     }
 
     const weightset_t& weightset() const
@@ -94,7 +94,7 @@ namespace vcsn
     node_t* weight(const weight_t& w, node_t* e) const;
 
   private:
-    const alphabet_t& a_;
+    const genset_t& gs_;
     const weightset_t& ws_;
   };
 

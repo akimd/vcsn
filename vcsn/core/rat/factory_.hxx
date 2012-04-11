@@ -14,19 +14,17 @@ namespace vcsn
   | factory_.  |
   `-----------*/
 
-  template <typename Alphabet, typename WeightSet>
-  factory_<Alphabet, WeightSet>::factory_(const Alphabet& a,
-                                          const WeightSet& ws)
+  template <typename GenSet, typename WeightSet>
+  factory_<GenSet, WeightSet>::factory_(const GenSet& gs, const WeightSet& ws)
     : super_type()
-    , a_(a)
+    , gs_(gs)
     , ws_(ws)
   {}
 
-  template <typename Alphabet, typename WeightSet>
+  template <typename GenSet, typename WeightSet>
   template <typename T>
-  factory_<Alphabet, WeightSet>::factory_(const Alphabet& a,
-                                          const T& t)
-    : factory_(a, dynamic_cast<const weightset_t&>(t))
+  factory_<GenSet, WeightSet>::factory_(const GenSet& gs, const T& t)
+    : factory_(gs, dynamic_cast<const weightset_t&>(t))
   {}
 
 
@@ -35,10 +33,10 @@ namespace vcsn
   `-------------------------------------------------*/
 
 #define FACTORY_                                        \
-  template <typename Alphabet, typename WeightSet>      \
+  template <typename GenSet, typename WeightSet>      \
   inline                                                \
   auto                                                  \
-  factory_<Alphabet, WeightSet>
+  factory_<GenSet, WeightSet>
 
   FACTORY_::zero() const
     -> zero_t*
@@ -56,7 +54,7 @@ namespace vcsn
     -> atom_t*
   {
     for (auto c: w)
-      if (!a_.has(c))
+      if (!gs_.has(c))
         throw std::domain_error("invalid word: " + w + ": invalid letter: " + c);
     return new atom_t(ws_.unit(), w);
   }

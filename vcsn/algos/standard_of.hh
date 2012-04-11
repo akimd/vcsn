@@ -20,10 +20,10 @@ namespace vcsn
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
       using super_type = typename visitor_traits<weight_t>::const_visitor;
-      using alphabet_t = typename automaton_t::alphabet_t;
+      using genset_t = typename automaton_t::genset_t;
       using state_t = typename automaton_t::state_t;
 
-      standard_of_visitor(const alphabet_t& alpha,
+      standard_of_visitor(const genset_t& alpha,
                           const weightset_t& ws)
         : ws_(ws)
         , res_(alpha, ws)
@@ -112,7 +112,7 @@ namespace vcsn
 
     template <class Aut, class WeightSet>
     Aut
-    standard_of(const typename Aut::alphabet_t& alpha, const WeightSet& ws,
+    standard_of(const typename Aut::genset_t& alpha, const WeightSet& ws,
                 const exp& e)
     {
       standard_of_visitor<Aut, WeightSet> standard(alpha, ws);

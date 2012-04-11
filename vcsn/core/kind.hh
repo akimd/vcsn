@@ -11,21 +11,21 @@ namespace vcsn
   {
   };
 
-  template <class Kind, class Alphabet>
+  template <class Kind, class GenSet>
   struct label_trait
   {
   };
 
-  template <class Alphabet>
-  struct label_trait<labels_are_letters, Alphabet>
+  template <class GenSet>
+  struct label_trait<labels_are_letters, GenSet>
   {
-    typedef typename Alphabet::letter_t label_t;
+    typedef typename GenSet::letter_t label_t;
   };
 
-  template <class Alphabet>
-  struct label_trait<labels_are_words, Alphabet>
+  template <class GenSet>
+  struct label_trait<labels_are_words, GenSet>
   {
-    typedef typename Alphabet::word_t label_t;
+    typedef typename GenSet::word_t label_t;
   };
 }
 

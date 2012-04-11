@@ -101,7 +101,7 @@ pp(const context& ctx, const Factory& factory,
       if (ctx.standard_of)
         {
           auto aut =
-            vcsn::rat::standard_of<automaton_t>(factory.alphabet(),
+            vcsn::rat::standard_of<automaton_t>(factory.genset(),
                                                 factory.weightset(),
                                                 *e);
           vcsn::dotty(aut, std::cout);

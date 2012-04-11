@@ -23,19 +23,19 @@
 
 namespace vcsn
 {
-  template <class Alphabet, class WeightSet, class Kind>
+  template <class GenSet, class WeightSet, class Kind>
   class mutable_automaton
   {
   public:
-    typedef Alphabet alphabet_t;
+    typedef GenSet genset_t;
     typedef WeightSet weightset_t;
     typedef Kind kind_t;
-    typedef polynomials<Alphabet, WeightSet> entryset_t;
+    typedef polynomials<GenSet, WeightSet> entryset_t;
 
     typedef unsigned state_t;
     typedef unsigned transition_t;
 
-    typedef typename label_trait<Kind, Alphabet>::label_t label_t;
+    typedef typename label_trait<Kind, GenSet>::label_t label_t;
     typedef typename weightset_t::value_t weight_t;
     typedef typename entryset_t::value_t entry_t;
   protected:
@@ -66,15 +66,15 @@ namespace vcsn
     label_t prepost_label_;
 
   public:
-    mutable_automaton(const alphabet_t& a,
+    mutable_automaton(const genset_t& gs,
 		      const weightset_t& ws)
-      : es_(a, ws), states_(2),
-	prepost_label_(a.template special<label_t>())
+      : es_(gs, ws), states_(2),
+	prepost_label_(gs.template special<label_t>())
     {
     }
 
-    mutable_automaton(const alphabet_t& a)
-      : mutable_automaton(a, st_ws_)
+    mutable_automaton(const genset_t& gs)
+      : mutable_automaton(gs, st_ws_)
     {
     }
 
@@ -95,7 +95,7 @@ namespace vcsn
     ///////////////
 
     const weightset_t& weightset() const { return es_.weightset(); }
-    const alphabet_t&  alphabet() const  { return es_.alphabet(); }
+    const genset_t&  genset() const  { return es_.genset(); }
     const entryset_t&  entryset() const  { return es_; }
 
     // Special states and transitions
@@ -185,7 +185,7 @@ namespace vcsn
       auto i =
 	std::find_if(begin(succ), end(succ), [=,&l,&dst] (const transition_t& t)
 		     { const stored_transition_t& st = transitions_[t];
-		       return st.dst == dst && this->alphabet().equals(st.label, l); });
+		       return st.dst == dst && this->genset().equals(st.label, l); });
       if (i == end(succ))
 	return invalid_transition();
       return *i;
@@ -220,10 +220,10 @@ namespace vcsn
 
     // Convert the label to a word, in the case of a labels_are_letters.
     // Same as label_of for labels_are_words.
-    typename alphabet_t::word_t
+    typename genset_t::word_t
     word_label_of(transition_t t) const
     {
-      return alphabet().to_word(label_of(t));
+      return genset().to_word(label_of(t));
     }
 
     // Edition of states
@@ -558,7 +558,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
 	(ss.succ,
 	 [=,&l] (transition_t i) {
-	  return this->alphabet().equals(transitions_[i].label, l);
+	  return this->genset().equals(transitions_[i].label, l);
 	});
     }
 
@@ -589,7 +589,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
 	(ss.pred,
 	 [=,&l] (transition_t i) {
-	  return this->alphabet().equals(transitions_[i].label, l);
+	  return this->genset().equals(transitions_[i].label, l);
 	});
     }
 
@@ -640,9 +640,9 @@ namespace vcsn
     }
   };
 
-  template <class Alphabet, class WeightSet, class Kind>
-  const typename mutable_automaton<Alphabet, WeightSet, Kind>::weightset_t&
-  mutable_automaton<Alphabet, WeightSet, Kind>::st_ws_ = WeightSet();
+  template <class GenSet, class WeightSet, class Kind>
+  const typename mutable_automaton<GenSet, WeightSet, Kind>::weightset_t&
+  mutable_automaton<GenSet, WeightSet, Kind>::st_ws_ = WeightSet();
 }
 
 #endif // !MUTABLE_AUTOMATON

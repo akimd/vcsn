@@ -7,25 +7,25 @@
 
 namespace vcsn
 {
-  template <class Alphabet, class WeightSet>
+  template <class GenSet, class WeightSet>
   struct polynomials
   {
   public:
-    typedef Alphabet alphabet_t;
+    typedef GenSet genset_t;
     typedef WeightSet weightset_t;
 
-    typedef typename Alphabet::word_t word_t;
+    typedef typename GenSet::word_t word_t;
     typedef typename WeightSet::value_t weight_t;
 
     typedef std::map<word_t, weight_t> value_t;
 
-    polynomials(const alphabet_t& a, const weightset_t& ws = weightset_t())
-      : a_(a), ws_(ws)
+    polynomials(const genset_t& gs, const weightset_t& ws = weightset_t())
+      : gs_(gs), ws_(ws)
     {
-      unit_[a_.identity()] = ws_.unit();
+      unit_[gs_.identity()] = ws_.unit();
     }
 
-    const alphabet_t&  alphabet() const  { return a_; }
+    const genset_t&  genset() const  { return gs_; }
     const weightset_t& weightset() const { return ws_; }
 
     value_t&
@@ -62,7 +62,7 @@ namespace vcsn
       for (auto i: l)
 	for (auto j: r)
 	  add_assoc(p,
-		    a_.concat(i.first, j.first),
+		    gs_.concat(i.first, j.first),
 		    ws_.mul(i.second, j.second));
       return p;
     }
@@ -78,7 +78,7 @@ namespace vcsn
     {
       if (v.size() != 1)
 	return false;
-      auto i = v.find(a_.identity());
+      auto i = v.find(gs_.identity());
       if (i == v.end())
 	return false;
       return ws_.is_unit(i->second);
@@ -119,7 +119,7 @@ namespace vcsn
 	      out << "{";
 	      ws_.print(out, i.second) << "}";
 	    }
-	  a_.output(out, i.first);
+	  gs_.output(out, i.first);
 	}
 
       if (first)
@@ -137,7 +137,7 @@ namespace vcsn
     }
 
   private:
-    const alphabet_t& a_;
+    const genset_t& gs_;
     const weightset_t& ws_;
     value_t unit_;
     value_t zero_;
