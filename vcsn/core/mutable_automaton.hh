@@ -114,13 +114,13 @@ namespace vcsn
     // Statistics
     /////////////
 
-    size_t nb_states() const { return states_.size() - states_fs_.size() - 2; }
-    size_t nb_initials() const { return states_[pre()].succ.size(); }
-    size_t nb_finals() const { return states_[post()].pred.size(); }
-    size_t nb_transitions() const
+    size_t num_states() const { return states_.size() - states_fs_.size() - 2; }
+    size_t num_initials() const { return states_[pre()].succ.size(); }
+    size_t num_finals() const { return states_[post()].pred.size(); }
+    size_t num_transitions() const
     {
       return (transitions_.size()
-	      - transitions_fs_.size() - nb_initials() - nb_finals());
+	      - transitions_fs_.size() - num_initials() - num_finals());
     }
 
     // Queries on states

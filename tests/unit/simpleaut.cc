@@ -33,8 +33,8 @@ int main()
   assert(v == 42);
   aut.set_transition(s1, s3, 'd', 1);
   vcsn::dotty(aut, std::cout);
-  assert(aut.nb_states() == 3);
-  assert(aut.nb_transitions() == 5);
+  assert(aut.num_states() == 3);
+  assert(aut.num_transitions() == 5);
 
   std::cout << "Leaving s1 by d" << std::endl;
   for (auto i: aut.out(s1, 'd'))
@@ -59,8 +59,8 @@ int main()
   vcsn::dotty(aut, std::cout);
   auto tj = aut.outin(s1, s1);
   assert(tj.begin() == tj.end());
-  assert(aut.nb_states() == 3);
-  assert(aut.nb_transitions() == 4);
+  assert(aut.num_states() == 3);
+  assert(aut.num_transitions() == 4);
 
   aut.del_state(s1);
   vcsn::dotty(aut, std::cout);
@@ -68,12 +68,12 @@ int main()
   assert(aut.has_state(s2));
   assert(aut.has_state(s3));
 
-  assert(aut.nb_states() == 2);
-  assert(aut.nb_transitions() == 1);
+  assert(aut.num_states() == 2);
+  assert(aut.num_transitions() == 1);
 
   aut.set_transition(s2, s3, 'a', 0);
 
   vcsn::dotty(aut, std::cout);
-  assert(aut.nb_states() == 2);
-  assert(aut.nb_transitions() == 0);
+  assert(aut.num_states() == 2);
+  assert(aut.num_transitions() == 0);
 }
