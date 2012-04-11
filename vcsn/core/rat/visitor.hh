@@ -13,24 +13,24 @@ namespace vcsn
     class gen_visitor
     {
     public:
-      typedef Weight weight_t;
+      using weight_t = Weight;
 #define VISIT(Type)                                                     \
       virtual void visit(typename ConstNess<Type<weight_t>>::type& v)
 
-      VISIT(prod);
-      VISIT(sum);
-      VISIT(star);
-      VISIT(one);
       VISIT(zero);
+      VISIT(one);
       VISIT(atom);
+      VISIT(sum);
+      VISIT(prod);
+      VISIT(star);
 #undef VISIT
     };
 
     template <class Weight>
     struct visitor_traits
     {
-      typedef gen_visitor<Weight, misc::id_traits> visitor;
-      typedef gen_visitor<Weight, misc::constify_traits> const_visitor;
+      using visitor = gen_visitor<Weight, misc::id_traits>;
+      using const_visitor = gen_visitor<Weight, misc::constify_traits>;
     };
 
   } // namespace rat

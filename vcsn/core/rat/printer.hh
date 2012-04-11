@@ -14,9 +14,9 @@ namespace vcsn
       : public visitor_traits<typename WeightSet::value_t>::const_visitor
     {
     public:
-      typedef WeightSet weightset_t;
-      typedef typename weightset_t::value_t weight_t;
-      typedef typename visitor_traits<weight_t>::const_visitor super_type;
+      using weightset_t = WeightSet;
+      using weight_t = typename weightset_t::value_t;
+      using super_type = typename visitor_traits<weight_t>::const_visitor;
 
     public:
       printer(std::ostream& out,
