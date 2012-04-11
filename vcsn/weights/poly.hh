@@ -8,7 +8,7 @@
 namespace vcsn
 {
   template <class Alphabet, class WeightSet>
-  struct polynomial
+  struct polynomials
   {
   public:
     typedef Alphabet alphabet_t;
@@ -19,7 +19,7 @@ namespace vcsn
 
     typedef std::map<word_t, weight_t> value_t;
 
-    polynomial(const alphabet_t& a, const weightset_t& ws = weightset_t())
+    polynomials(const alphabet_t& a, const weightset_t& ws = weightset_t())
       : a_(a), ws_(ws)
     {
       unit_[a_.identity()] = ws_.unit();

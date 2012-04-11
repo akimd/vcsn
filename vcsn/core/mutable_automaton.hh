@@ -30,7 +30,7 @@ namespace vcsn
     typedef Alphabet alphabet_t;
     typedef WeightSet weightset_t;
     typedef Kind kind_t;
-    typedef polynomial<Alphabet, WeightSet> entryset_t;
+    typedef polynomials<Alphabet, WeightSet> entryset_t;
 
     typedef unsigned state_t;
     typedef unsigned transition_t;

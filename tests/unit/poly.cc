@@ -10,7 +10,7 @@ int main()
 
   alpha_t alpha{ 'a', 'b', 'c', 'd' };
 
-  typedef vcsn::polynomial<alpha_t, vcsn::z> poly_t;
+  typedef vcsn::polynomials<alpha_t, vcsn::z> poly_t;
   poly_t poly(alpha);
 
   poly_t::value_t u = poly.unit();
