@@ -108,8 +108,8 @@ namespace vcsn
     static constexpr state_t      pre()  { return 0U; }
     static constexpr state_t      post()  { return 1U; }
     // Invalid transition or state.
-    static constexpr state_t      invalid_state()      { return -1U; }
-    static constexpr transition_t invalid_transition() { return -1U; }
+    static constexpr state_t      null_state()      { return -1U; }
+    static constexpr transition_t null_transition() { return -1U; }
 
     // Statistics
     /////////////
@@ -130,13 +130,13 @@ namespace vcsn
     has_state(state_t s) const
     {
       // Any number outside our container is not a state.
-      // (This includes "invalid_state()".)
+      // (This includes "null_state()".)
       if (s >= states_.size())
 	return false;
       const stored_state_t& ss = states_[s];
 
       // Erased states have 'invalid' has their first successor.
-      return ss.succ.empty() || ss.succ.front() != invalid_transition();
+      return ss.succ.empty() || ss.succ.front() != null_transition();
     }
 
     bool
@@ -155,7 +155,7 @@ namespace vcsn
     get_initial_weight(state_t s) const
     {
       transition_t t = get_transition(pre(), s, prepost_label_);
-      if (t == invalid_transition())
+      if (t == null_transition())
 	return weightset().zero();
       else
 	return weight_of(t);
@@ -165,7 +165,7 @@ namespace vcsn
     get_final_weight(state_t s) const
     {
       transition_t t = get_transition(s, post(), prepost_label_);
-      if (t == invalid_transition())
+      if (t == null_transition())
 	return weightset().zero();
       else
 	return weight_of(t);
@@ -187,26 +187,26 @@ namespace vcsn
 		     { const stored_transition_t& st = transitions_[t];
 		       return st.dst == dst && this->genset().equals(st.label, l); });
       if (i == end(succ))
-	return invalid_transition();
+	return null_transition();
       return *i;
     }
 
     bool
     has_transition(state_t src, state_t dst, label_t l) const
     {
-      return get_transition(src, dst, l) != invalid_transition();
+      return get_transition(src, dst, l) != null_transition();
     }
 
     bool
     has_transition(transition_t t) const
     {
       // Any number outside our container is not a transition.
-      // (This includes "invalid_transition()".)
+      // (This includes "null_transition()".)
       if (t >= transitions_.size())
 	return false;
 
       // Erased transition have invalid source state.
-      return transitions_[t].src != invalid_state();
+      return transitions_[t].src != null_state();
     }
 
     state_t src_of(transition_t t) const     { return transitions_[t].src; }
@@ -263,7 +263,7 @@ namespace vcsn
 	    del_transition_from_dst(t);
 	  else
 	    del_transition_from_src(t);
-	  transitions_[t].src = invalid_state();
+	  transitions_[t].src = null_state();
 	}
       transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
       tc.clear();
@@ -298,7 +298,7 @@ namespace vcsn
       stored_state_t& ss = states_[s];
       del_transition_container(ss.pred, false);
       del_transition_container(ss.succ, true);
-      ss.succ.push_back(invalid_transition()); // So has_state() can work.
+      ss.succ.push_back(null_transition()); // So has_state() can work.
       states_fs_.push_back(s);
     }
 
@@ -361,7 +361,7 @@ namespace vcsn
       del_transition_from_src(t);
       del_transition_from_dst(t);
       // Actually erase the transition.
-      transitions_[t].src = invalid_state();
+      transitions_[t].src = null_state();
       transitions_fs_.push_back(t);
     }
 
@@ -369,7 +369,7 @@ namespace vcsn
     del_transition(state_t src, state_t dst, label_t l)
     {
       transition_t t = get_transition(src, dst, l);
-      if (t != invalid_transition())
+      if (t != null_transition())
 	del_transition(t);
     }
 
@@ -384,7 +384,7 @@ namespace vcsn
       assert(dst != pre());
 
       transition_t t = get_transition(src, dst, l);
-      if (t != invalid_transition())
+      if (t != null_transition())
 	{
 	  if (!weightset().is_zero(k))
 	    {
@@ -395,7 +395,7 @@ namespace vcsn
 	  else
 	    {
 	      del_transition(t);
-	      t = invalid_transition();
+	      t = null_transition();
 	    }
 	}
       else if (!weightset().is_zero(k))
@@ -425,7 +425,7 @@ namespace vcsn
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       transition_t t = get_transition(src, dst, l);
-      if (t != invalid_transition())
+      if (t != null_transition())
 	{
 	  k = weightset().add(weight_of(t), k);
 	  set_weight(t, k);
@@ -479,7 +479,7 @@ namespace vcsn
 	(boost::irange<state_t>(b, e), [=] (state_t i) {
 	  const stored_state_t& ss = states_[i];
 	  return (ss.succ.empty()
-		  || ss.succ.front() != this->invalid_transition());
+		  || ss.succ.front() != this->null_transition());
 	});
     }
 
@@ -502,7 +502,7 @@ namespace vcsn
 	(boost::irange<transition_t>(0U, transitions_.size()),
 	 [=] (transition_t i) {
 	  state_t src = transitions_[i].src;
-	  if (src == this->invalid_state() || src == this->pre())
+	  if (src == this->null_state() || src == this->pre())
 	    return false;
 	  return transitions_[i].dst != this->post();
 	});
@@ -515,7 +515,7 @@ namespace vcsn
 	(boost::irange<transition_t>(0U, transitions_.size()),
 	 [=] (transition_t i) {
 	  state_t src = transitions_[i].src;
-	  return src != this->invalid_state();
+	  return src != this->null_state();
 	});
     }
 

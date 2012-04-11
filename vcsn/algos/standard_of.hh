@@ -68,7 +68,7 @@ namespace vcsn
       visit(const sum<weight_t>& e)
       {
         bool first = true;
-        state_t initial = res_.invalid_state();
+        state_t initial = res_.null_state();
         weight_t initial_weight = ws_.unit();
         for (auto c: e)
           {
@@ -106,7 +106,7 @@ namespace vcsn
     private:
       weightset_t ws_;
       automaton_t res_;
-      state_t initial_ = automaton_t::invalid_state();
+      state_t initial_ = automaton_t::null_state();
       weight_t initial_weight_ = ws_.unit();
     };
 
