@@ -371,9 +371,9 @@ namespace vcsn
     {
       // It's illegal to connect pre() to post().
       assert(src != pre() || dst != post());
-      // It's illegal to leave post()
+      // It's illegal to leave post().
       assert(src != post());
-      // It's illegal to go to post()
+      // It's illegal to go to pre().
       assert(dst != pre());
 
       transition_t t = get_transition(src, dst, l);
@@ -512,13 +512,13 @@ namespace vcsn
 	});
     }
 
-    container_range<tr_cont_t&>
+    container_filter_range<const tr_cont_t&>
     initial_transitions() const
     {
       return out(pre());
     }
 
-    container_range<st_cont_t&>
+    container_filter_range<const tr_cont_t&>
     final_transitions() const
     {
       return in(post());
