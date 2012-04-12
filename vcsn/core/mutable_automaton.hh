@@ -561,7 +561,7 @@ namespace vcsn
     {
       assert(has_state(s));
       return container_filter_range<const tr_cont_t&>
-	(states_[s].succ,
+	(states_[s].pred,
 	 [=] (transition_t i) { return transitions_[i].src != this->pre(); });
     }
 
