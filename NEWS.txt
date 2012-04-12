@@ -1,3 +1,13 @@
+* 2012-04-11
+** Many renamings
+  alphabet_t/alphabet() -> genset_t/genset(), etc.
+  factory -> abstract_kratexp.
+  factory_ -> kratexp.
+  initials() -> initial_transitions(), etc.
+  invalid_state -> null_state, etc.
+  nb_state() -> num_states(), etc.
+  polynomial -> polynomials, etc.
+
 * 2012-04-09
 ** product
 
