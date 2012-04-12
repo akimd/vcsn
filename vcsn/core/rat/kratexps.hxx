@@ -111,22 +111,22 @@ namespace vcsn
   {
     // Trivial Identity
     // E+0 = 0+E = E
-    if (node_t::ZERO == l->type())
+    if (l->type() == node_t::ZERO)
       {
         delete l;
         return r;
       }
-    if (node_t::ZERO == r->type())
+    if (r->type() == node_t::ZERO)
       {
         delete r;
         return l;
       }
     // END: Trivial Identity
 
-    if (node_t::SUM == l->type())
+    if (l->type() == node_t::SUM)
       {
         auto res = down_cast<sum_t*>(l);
-        if (node_t::SUM == r->type())
+        if (r->type() == node_t::SUM)
           {
             auto right = down_cast<sum_t*>(r);
             res->splice(res->end(), *right);
@@ -138,7 +138,7 @@ namespace vcsn
           }
         return res;
       }
-    else if (node_t::SUM == r->type())
+    else if (r->type() == node_t::SUM)
       {
         auto res = down_cast<sum_t*>(r);
         res->push_front(l);
@@ -147,8 +147,8 @@ namespace vcsn
     else
       {
         sum_t* res = new sum_t(ws_.unit(), ws_.unit());
-        res->push_front(r);
-        res->push_front(l);
+        res->push_back(l);
+        res->push_back(r);
         return res;
       }
   }
@@ -160,24 +160,24 @@ namespace vcsn
     node_t* res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0
-    if (node_t::ZERO == l->type())
+    if (l->type() == node_t::ZERO)
       {
         delete r;
         res = l;
       }
-    else if (node_t::ZERO == r->type())
+    else if (r->type() == node_t::ZERO)
       {
         delete l;
         res = r;
       }
     // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
     // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
-    else if (node_t::ONE == r->type())
+    else if (r->type() == node_t::ONE)
       {
         res = weight(l, r->left_weight());
         delete r;
       }
-    else if (node_t::ONE == l->type())
+    else if (l->type() == node_t::ONE)
       {
         res = weight(l->left_weight(), r);
         delete l;
@@ -218,7 +218,7 @@ namespace vcsn
   DEFINE::star(node_t* e) const
     -> node_t*
   {
-    if (node_t::ZERO == e->type())
+    if (e->type() == node_t::ZERO)
       {
         // Trivial identity
         // (0)* == 1
@@ -262,9 +262,7 @@ namespace vcsn
             delete e;
             e = zero();
           }
-        else if (e->type() == node_t::SUM
-                 || e->type() == node_t::PROD
-                 || e->type() == node_t::STAR)
+        else if (e->is_inner())
           {
             auto in = down_cast<inner_t*>(e);
             in->right_weight() = ws_.mul(in->right_weight(), w);

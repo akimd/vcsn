@@ -17,6 +17,7 @@ namespace vcsn
     public:
       virtual ~exp() = 0;
 
+      /// The possible types of nodes.
       enum type_t
         {
           ZERO = 0,
@@ -26,7 +27,16 @@ namespace vcsn
           PROD = 4,
           STAR = 5,
         };
+
+      /// The type of this node.
       virtual type_t type() const = 0;
+
+      /// Whether sum, prod, or star.
+      bool is_inner() const
+      {
+        type_t t = type();
+        return t == SUM || t == PROD || t == STAR;
+      }
     };
 
 
@@ -45,7 +55,6 @@ namespace vcsn
 
     public:
       node(const weight_t& l);
-      virtual bool is_leaf() const = 0;
 
     public:
       virtual void accept(visitor &v) = 0;
@@ -71,8 +80,6 @@ namespace vcsn
       using super_type = node<weight_t>;
     protected:
       inner(const weight_t& l, const weight_t& r);
-    public:
-      virtual bool is_leaf() const { return false; };
     public:
       const weight_t &right_weight() const;
       weight_t &right_weight();
@@ -224,8 +231,6 @@ namespace vcsn
       using super_type = node<weight_t>;
     protected:
       leaf(const weight_t& l);
-    public:
-      virtual bool is_leaf() const { return true; };
     };
 
 
