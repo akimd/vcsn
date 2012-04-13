@@ -35,7 +35,7 @@ namespace vcsn
     static const weightset_t& st_ws_;
     const entryset_t es_;
 
-    typedef transition_tuple<state_t, label_t, WeightSet> stored_transition_t;
+    typedef transition_tuple<state_t, label_t, weight_t> stored_transition_t;
 
     typedef std::vector<stored_transition_t> tr_store_t;
     typedef std::vector<transition_t> tr_cont_t;

@@ -20,27 +20,26 @@ namespace vcsn
     State dst;
   };
 
-  template<class State, class Label, class WeightSet>
+  template<class State, class Label, class Weight>
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
   {
-    typedef typename WeightSet::value_t weight_t;
+    typedef Weight weight_t;
     weight_t weight;
 
     weight_t get_weight() const { return weight; }
     void set_weight(weight_t& k) { weight = k; }
   };
 
-  // For Boolean automata we do not store the weights, which are
-  // always true.  We have to specialize on the WeightSet, not on
-  // weight_t, because 'bool' could be used to encode a different
-  // WeightSet (like F₂ a.k.a. ℤ/2ℤ) for which we want to store the
-  // two values.
+  // We do not store the Boolean weights, which are assumed to be
+  // always true.  This is correct for weight in the Boolean ring, as
+  // well as for for those in the F₂ (a.k.a. ℤ/2ℤ) field, both encoded
+  // using the bool type.
   template<class State, class Label>
-  struct transition_tuple<State, Label, b>
+  struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
   {
-    typedef typename b::value_t weight_t;
+    typedef bool weight_t;
 
     weight_t get_weight() const { return true; }
     void set_weight(weight_t& k) { assert(k == true); }
