@@ -84,8 +84,33 @@ namespace vcsn
       }
 
       virtual void
-      visit(const prod<weight_t>&)
-      {}
+      visit(const prod<weight_t>& e)
+      {
+        (*e.begin())->accept(*this);
+        state_t initial = initial_;
+        weight_t initial_weight = initial_weight_;
+        // Store transitions by copy.
+        using transs_t = std::vector<typename automaton_t::transition_t>;
+        for (auto c: boost::make_iterator_range(e, 1, 0))
+          {
+            // The set of the current final transitions.
+            auto ftrans_ = res_.final_transitions();
+            transs_t ftrans{ begin(ftrans_), end(ftrans_) };
+            c->accept(*this);
+            // Branch all the former final transitions to the new
+            // initial state.  FIXME: initial_weight_!
+            for (auto t: ftrans)
+              {
+                res_.set_transition(res_.src_of(t),
+                                    initial_,
+                                    res_.label_of(t),
+                                    res_.weight_of(t));
+                res_.del_transition(t);
+              }
+          }
+        initial_ = initial;
+        initial_weight_ = initial_weight;
+      }
 
       virtual void
       visit(const star<weight_t>&)
