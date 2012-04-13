@@ -15,4 +15,4 @@ include build-aux/make/init.mk
 ACLOCAL_AMFLAGS = -I build-aux/m4
 
 SUBDIRS = vcsn tests
-EXTRA_DIST += NEWS.txt
+EXTRA_DIST += NEWS.txt TODO.txt

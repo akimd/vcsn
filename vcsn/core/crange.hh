@@ -15,13 +15,22 @@ namespace vcsn
     typedef typename unref_C::value_type value_type;
 
     typedef typename unref_C::const_iterator const_iterator;
+  private:
+    const C cont_;
   public:
     container_range(const unref_C& cont) : cont_(cont) {}
 
-    const_iterator begin() const { return cont_.begin(); }
-    const_iterator end() const   { return cont_.end(); }
-  private:
-    const C cont_;
+    /// Forward function Name to the container.
+#define DEFINE(Name)                                    \
+    auto Name() const -> decltype(this->cont_.Name())   \
+    {                                                   \
+      return cont_.Name();                              \
+    }
+    DEFINE(begin);
+    DEFINE(end);
+    DEFINE(empty);
+    DEFINE(size);
+#undef DEFINE
   };
 
 
@@ -32,10 +41,12 @@ namespace vcsn
     typedef typename std::remove_reference<C>::type unref_C;
     typedef typename unref_C::value_type value_type;
     typedef std::function<bool(value_type)> predicate_t;
-    typedef boost::filter_iterator<predicate_t, typename unref_C::const_iterator> const_iterator;
+    using const_iterator
+      = boost::filter_iterator<predicate_t, typename unref_C::const_iterator>;
   public:
     container_filter_range(const unref_C& cont, predicate_t predicate)
-      : cont_(cont), predicate_(predicate) {}
+      : cont_(cont), predicate_(predicate)
+    {}
 
     const_iterator begin() const
     {
@@ -46,6 +57,17 @@ namespace vcsn
     {
       return const_iterator(predicate_, cont_.end(), cont_.end());
     }
+
+    bool empty() const
+    {
+      return begin() != end();
+    }
+
+    size_t size() const
+    {
+      return std::distance(begin(), end());
+    }
+
   private:
     const C cont_;
     predicate_t predicate_;
