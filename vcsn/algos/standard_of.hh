@@ -86,27 +86,42 @@ namespace vcsn
       virtual void
       visit(const prod<weight_t>& e)
       {
+        // Store transitions by copy.
+        using transs_t = std::vector<typename automaton_t::transition_t>;
+        // The set of the final states that were introduced in pending
+        // parts of the automaton (for instance in we are in the rhs
+        // of "a+bc", recording the final state for "a").
+        std::set<state_t> other_finals;
+        for (auto t: res_.final_transitions())
+          other_finals.insert(res_.src_of(t));
+
+        // Traverse the first part of the product.
         (*e.begin())->accept(*this);
         state_t initial = initial_;
         weight_t initial_weight = initial_weight_;
-        // Store transitions by copy.
-        using transs_t = std::vector<typename automaton_t::transition_t>;
         for (auto c: boost::make_iterator_range(e, 1, 0))
           {
             // The set of the current final transitions.
-            auto ftrans_ = res_.final_transitions();
-            transs_t ftrans{ begin(ftrans_), end(ftrans_) };
+            auto ftr_ = res_.final_transitions();
+            transs_t ftr{ begin(ftr_), end(ftr_) };
+
+            // Visit the next member of the product.
             c->accept(*this);
-            // Branch all the former final transitions to the new
-            // initial state.  FIXME: initial_weight_!
-            for (auto t: ftrans)
-              {
-                res_.set_transition(res_.src_of(t),
-                                    initial_,
-                                    res_.label_of(t),
-                                    res_.weight_of(t));
-                res_.del_transition(t);
-              }
+
+            // Branch all the previously added final transitions to
+            // the successors of the new initial state.
+            for (auto t1: ftr)
+              if (other_finals.find(res_.src_of(t1)) == other_finals.end())
+                {
+                  for (auto t2: res_.out(initial_))
+                    res_.set_transition
+                      (res_.src_of(t1),
+                       res_.dst_of(t2),
+                       res_.label_of(t2),
+                       ws_.mul(res_.weight_of(t1), res_.weight_of(t2)));
+                  res_.del_transition(t1);
+                }
+            res_.del_state(initial_);
           }
         initial_ = initial;
         initial_weight_ = initial_weight;
