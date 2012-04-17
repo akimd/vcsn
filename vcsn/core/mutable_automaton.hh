@@ -61,8 +61,8 @@ namespace vcsn
   public:
     mutable_automaton(const genset_t& gs,
 		      const weightset_t& ws)
-      : es_(gs, ws), states_(2),
-	prepost_label_(gs.template special<label_t>())
+      : es_(gs, ws), states_(2)
+      , prepost_label_(gs.template special<label_t>())
     {
     }
 
