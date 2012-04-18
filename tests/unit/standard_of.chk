@@ -164,6 +164,19 @@ check -w z -e '{12}\e' <<\EOF
   I1 -> 1
 EOF
 
+# Z: "{12}(ab){23}".
+check -w z -e '{12}(ab){23}' <<\EOF
+  1
+  2
+  3
+  1 -> 2 [label="{12}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  I1 -> 1
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  3 -> F3 [label="{23}"]
+  2 -> 3 [label="b"]
+EOF
+
 # Z: "{12}\e+{23}a+{34}b".
 check -w z -e '{12}\e+{23}a+{34}b' <<\EOF
   1

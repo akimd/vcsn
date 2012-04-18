@@ -6,6 +6,8 @@ An expression such as "{12}\e" used to leave the weight in the initial
 transition; it is now on the final transition.  More generally the
 initial transition always has unit as weight.
 
+The product of expressions now handles the left and right weights.
+
 * 2012-04-11
 ** Many renamings
   alphabet_t/alphabet() -> genset_t/genset(), etc.

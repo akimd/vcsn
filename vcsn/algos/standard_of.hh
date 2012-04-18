@@ -90,9 +90,14 @@ namespace vcsn
         for (auto t: res_.final_transitions())
           other_finals.insert(res_.src_of(t));
 
-        // Traverse the first part of the product.
+        // Traverse the first part of the product, handle left_weight.
         (*e.begin())->accept(*this);
+        if (e.left_weight() != ws_.unit())
+          for (auto t: res_.out(initial_))
+            res_.mul_weight(t, e.left_weight());
         state_t initial = initial_;
+
+        // Then the remainder.
         for (auto c: boost::make_iterator_range(e, 1, 0))
           {
             // The set of the current final transitions.
@@ -117,6 +122,11 @@ namespace vcsn
                 }
             res_.del_state(initial_);
           }
+        if (e.right_weight() != ws_.unit())
+          for (auto t: res_.final_transitions())
+            if (other_finals.find(res_.src_of(t)) == other_finals.end())
+              res_.mul_weight(t, e.right_weight());
+
         initial_ = initial;
       }
 
