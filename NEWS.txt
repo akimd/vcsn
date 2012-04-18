@@ -30,7 +30,8 @@ An expression such as "{12}\e" used to leave the weight in the initial
 transition; it is now on the final transition.  More generally the
 initial transition always has unit as weight.
 
-The product of expressions now handles the left and right weights.
+The product and sum of expressions now handle the left and right
+weights.
 
 Accepting initial states in expressions such as "\e+a" are no longer
 lost.

@@ -35,6 +35,16 @@ namespace vcsn
         return std::move(res_);
       }
 
+      using states_t = std::set<state_t>;
+      states_t
+      finals()
+      {
+        states_t res;
+        for (auto t: res_.final_transitions())
+          res.insert(res_.src_of(t));
+        return res;
+      }
+
       virtual void
       visit(const zero<weight_t>&)
       {
@@ -62,14 +72,29 @@ namespace vcsn
       void
       apply_left_weight(const inner<weight_t>& e)
       {
-        if (e.left_weight() != ws_.unit())
+        weight_t w = e.left_weight();
+        if (w != ws_.unit())
           for (auto t: res_.all_out(initial_))
-            res_.mul_weight(t, e.left_weight());
+            res_.mul_weight(t, w);
+      }
+
+      /// Apply the right weight to all the "fresh" final states,
+      /// i.e., those that are not part of "other_finals".
+      void
+      apply_right_weight(const inner<weight_t>& e,
+                         const std::set<state_t>& other_finals)
+      {
+        weight_t w = e.right_weight();
+        if (w != ws_.unit())
+          for (auto t: res_.final_transitions())
+            if (other_finals.find(res_.src_of(t)) == other_finals.end())
+              res_.mul_weight(t, w);
       }
 
       virtual void
       visit(const sum<weight_t>& e)
       {
+        states_t other_finals = finals();
         (*e.begin())->accept(*this);
         state_t initial = initial_;
         for (auto c: boost::make_iterator_range(e, 1, 0))
@@ -84,19 +109,16 @@ namespace vcsn
           }
         initial_ = initial;
         apply_left_weight(e);
+        apply_right_weight(e, other_finals);
       }
 
       virtual void
       visit(const prod<weight_t>& e)
       {
-        // Store transitions by copy.
-        using transs_t = std::vector<typename automaton_t::transition_t>;
         // The set of the final states that were introduced in pending
         // parts of the automaton (for instance in we are in the rhs
         // of "a+bc", recording the final state for "a").
-        std::set<state_t> other_finals;
-        for (auto t: res_.final_transitions())
-          other_finals.insert(res_.src_of(t));
+        states_t other_finals = finals();
 
         // Traverse the first part of the product, handle left_weight.
         (*e.begin())->accept(*this);
@@ -108,6 +130,8 @@ namespace vcsn
           {
             // The set of the current final transitions.
             auto ftr_ = res_.final_transitions();
+            // Store transitions by copy.
+            using transs_t = std::vector<typename automaton_t::transition_t>;
             transs_t ftr{ begin(ftr_), end(ftr_) };
 
             // Visit the next member of the product.
@@ -128,11 +152,7 @@ namespace vcsn
                 }
             res_.del_state(initial_);
           }
-        if (e.right_weight() != ws_.unit())
-          for (auto t: res_.final_transitions())
-            if (other_finals.find(res_.src_of(t)) == other_finals.end())
-              res_.mul_weight(t, e.right_weight());
-
+        apply_right_weight(e, other_finals);
         initial_ = initial;
       }
 
