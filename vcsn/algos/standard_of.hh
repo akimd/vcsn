@@ -59,6 +59,14 @@ namespace vcsn
         res_.set_final(f);
       }
 
+      void
+      apply_left_weight(const inner<weight_t>& e)
+      {
+        if (e.left_weight() != ws_.unit())
+          for (auto t: res_.all_out(initial_))
+            res_.mul_weight(t, e.left_weight());
+      }
+
       virtual void
       visit(const sum<weight_t>& e)
       {
@@ -75,6 +83,7 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
+        apply_left_weight(e);
       }
 
       virtual void
@@ -91,10 +100,8 @@ namespace vcsn
 
         // Traverse the first part of the product, handle left_weight.
         (*e.begin())->accept(*this);
-        if (e.left_weight() != ws_.unit())
-          for (auto t: res_.out(initial_))
-            res_.mul_weight(t, e.left_weight());
         state_t initial = initial_;
+        apply_left_weight(e);
 
         // Then the remainder.
         for (auto c: boost::make_iterator_range(e, 1, 0))
