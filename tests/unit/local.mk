@@ -1,4 +1,5 @@
-check_PROGRAMS +=				\
+# Not check_PROGRAMS, see below why.
+EXTRA_PROGRAMS +=				\
   unit/ladybird-b 				\
   unit/ladybird-z				\
   unit/ladybird-zmin				\
@@ -23,10 +24,17 @@ unit_TESTS =					\
   unit/simpleaut.chk				\
   unit/simplaw.chk				\
   unit/standard_of.chk
-
-unit/standard_of.log: rat/pprat
-
 dist_TESTS += $(unit_TESTS)
+
+# Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
+# the dependencies, so that the test suite does not make useless
+# compilations.
+unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
+unit/poly.log: unit/poly
+unit/product.log: unit/product
+unit/simpleaut.log: unit/simpleaut
+unit/simplaw.log: unit/simplaw
+unit/standard_of.log: rat/pprat
 
 .PHONY: check-unit
 check-unit:
