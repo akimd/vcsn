@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
-#include "../misc/escape.hh"
+#include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
@@ -11,18 +11,27 @@ namespace vcsn
   void
   dotty(A& aut, std::ostream& out)
   {
-    std::unordered_map<typename A::state_t, unsigned> names;
+    using state_t = typename A::state_t;
+    std::unordered_map<state_t, unsigned> names;
 
     out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
 
-    // Name all states.
+    // Name all the states.
     for (auto s : aut.states())
-      {
-	unsigned n = names[s] = names.size();
-	// We have to output them all, in case some of them have no
-	// connection.
-	out << "  " << n << "\n";
-      }
+      names[s] = names.size();
+
+    // Output the states that are not part of an entry.
+    {
+      std::set<state_t> reachable;
+      for (auto t : aut.all_entries())
+        {
+          reachable.insert(aut.src_of(t));
+          reachable.insert(aut.dst_of(t));
+        }
+      for (auto s : aut.states())
+        if (reachable.find(s) == reachable.end())
+        out << "  " << names[s] << "\n";
+    }
 
     for (auto t : aut.all_entries())
       {

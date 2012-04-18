@@ -4,8 +4,6 @@ cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
   node [shape=circle];
-  1
-  2
   I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
   F1 [style=invis,shape=none,label="",width=0,height=0]
@@ -23,8 +21,6 @@ cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
   node [shape=circle];
-  1
-  2
   I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1 [label="{0}"]
   F1 [style=invis,shape=none,label="",width=0,height=0]
