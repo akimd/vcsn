@@ -455,9 +455,13 @@ namespace vcsn
     weight_t
     add_weight(transition_t t, weight_t k)
     {
-      k = weightset().add(weight_of(t), k);
-      set_weight(t, k);
-      return k;
+      return set_weight(t, weightset().add(weight_of(t), k));
+    }
+
+    weight_t
+    mul_weight(transition_t t, weight_t k)
+    {
+      return set_weight(t, weightset().mul(weight_of(t), k));
     }
 
     // Iteration on states and transitions

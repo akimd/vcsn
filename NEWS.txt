@@ -1,3 +1,11 @@
+* 2012-04-18
+** mutable_automata::mul_weight
+
+** Many fixes in the handling of the weights
+An expression such as "{12}\e" used to leave the weight in the initial
+transition; it is now on the final transition.  More generally the
+initial transition always has unit as weight.
+
 * 2012-04-11
 ** Many renamings
   alphabet_t/alphabet() -> genset_t/genset(), etc.
