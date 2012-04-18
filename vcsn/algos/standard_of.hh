@@ -31,7 +31,7 @@ namespace vcsn
       operator()(const exp& v)
       {
         down_cast<const node<weight_t>*>(&v)->accept(*this);
-        res_.set_initial(initial_, initial_weight_);
+        res_.set_initial(initial_);
         return std::move(res_);
       }
 
@@ -39,7 +39,6 @@ namespace vcsn
       visit(const zero<weight_t>&)
       {
         initial_ = res_.new_state();
-        initial_weight_ = ws_.unit();
       }
 
       virtual void
@@ -47,8 +46,7 @@ namespace vcsn
       {
         auto i = res_.new_state();
         initial_ = i;
-        initial_weight_ = v.left_weight();
-        res_.set_final(i);
+        res_.set_final(i, v.left_weight());
       }
 
       virtual void
@@ -57,7 +55,6 @@ namespace vcsn
         auto i = res_.new_state();
         auto f = res_.new_state();
         initial_ = i;
-        initial_weight_ = ws_.unit();
         res_.add_transition(i, f, e.get_atom(), e.left_weight());
         res_.set_final(f);
       }
@@ -67,7 +64,6 @@ namespace vcsn
       {
         (*e.begin())->accept(*this);
         state_t initial = initial_;
-        weight_t initial_weight = initial_weight_;
         for (auto c: boost::make_iterator_range(e, 1, 0))
           {
             c->accept(*this);
@@ -80,7 +76,6 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
-        initial_weight_ = initial_weight;
       }
 
       virtual void
@@ -98,7 +93,6 @@ namespace vcsn
         // Traverse the first part of the product.
         (*e.begin())->accept(*this);
         state_t initial = initial_;
-        weight_t initial_weight = initial_weight_;
         for (auto c: boost::make_iterator_range(e, 1, 0))
           {
             // The set of the current final transitions.
@@ -124,7 +118,6 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
-        initial_weight_ = initial_weight;
       }
 
       virtual void
@@ -136,7 +129,6 @@ namespace vcsn
       weightset_t ws_;
       automaton_t res_;
       state_t initial_ = automaton_t::null_state();
-      weight_t initial_weight_ = ws_.unit();
     };
 
     template <class Aut, class WeightSet>

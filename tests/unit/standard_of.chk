@@ -159,9 +159,9 @@ EOF
 check -w z -e '{12}\e' <<\EOF
   1
   F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1
+  1 -> F1 [label="{12}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1 [label="{12}"]
+  I1 -> 1
 EOF
 
 # Z: "{12}\e+{23}a+{34}b".
@@ -170,9 +170,9 @@ check -w z -e '{12}\e+{23}a+{34}b' <<\EOF
   2
   3
   F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1
+  1 -> F1 [label="{12}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1 [label="{12}"]
+  I1 -> 1
   F2 [style=invis,shape=none,label="",width=0,height=0]
   2 -> F2
   1 -> 2 [label="{23}a"]
