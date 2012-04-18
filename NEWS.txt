@@ -8,6 +8,9 @@ initial transition always has unit as weight.
 
 The product of expressions now handles the left and right weights.
 
+Accepting initial states in expressions such as "\e+a" are no longer
+lost.
+
 * 2012-04-11
 ** Many renamings
   alphabet_t/alphabet() -> genset_t/genset(), etc.

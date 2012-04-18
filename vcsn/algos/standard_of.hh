@@ -67,8 +67,7 @@ namespace vcsn
         for (auto c: boost::make_iterator_range(e, 1, 0))
           {
             c->accept(*this);
-            // FIXME: initial_weight_!
-            for (auto t: res_.out(initial_))
+            for (auto t: res_.all_out(initial_))
               res_.add_transition(initial,
                                   res_.dst_of(t),
                                   res_.label_of(t),
