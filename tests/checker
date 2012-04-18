@@ -118,20 +118,23 @@ rst_expect ()
 {
   local base=$1
   shift
-  rst_subsubsection "$me: $base"
-  # Dump something, it is really surprising in the logs to see
-  # nothing.
-  rst_pre "Expected $base for $me"      $base.exp
+  # Whether this test passed.
+  local res=0
 
   test -f $base.exp ||
     fatal "missing reference file: $base.exp"
 
+  rst_subsubsection "$me: $base"
+  # Dump something, it is really surprising in the logs to see
+  # nothing.
+  rst_pre "Expected $base for $me" $base.exp
   # --strip-trailing-cr helps to fight \r.
   if ! diff --strip-trailing-cr -u                              \
             --label="Expected $base ($base.exp)"  $base.exp     \
             --label="Effective $base ($base.eff)" $base.eff     \
             "$@"                                                \
             >$base.diff; then
+    res=1
     rst_pre "Effective $base for $me"   $base.eff
     rst_pre "Diffs on $base for $me"    $base.diff
     # If exit is already set, e.g. to "exit SKIP", don't alter it.
@@ -139,11 +142,15 @@ rst_expect ()
       ('' | true) exit=false;;
     esac
   fi
+  return $res
 }
 
 
 # run EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
 # ------------------------------------------------------------
+# If "EXPECTED-OUTPUT" is "out.exp", then use the content of that file
+# as expected output, otherwise EXPECTED-OUTPUT is the expected
+# output.
 run ()
 {
   # Expected exit status.
@@ -160,23 +167,35 @@ EOF
   # program to run
   local prog=$1
   shift
+
+  # First, run the test, so that the title can include the status of
+  # the run.
+  local fail=
   # Effective exit status, output and error.
   local sta_eff=0
   # Be robust to set -e.
-  rst_subsubsection $number
   $builddir/$prog "$@" >out.eff 2>err.eff || sta_eff=$?
   if test $sta_eff -ne $sta_exp; then
     echo "$me: FAIL: $number (expected status: $sta_exp, effective: $sta_eff)"
     exit=false
+    fail="FAIL: "
   fi
-  rst_expect out
-  rst_pre "Standard error" err.eff
-  cat <<EOF
+  {
+      rst_expect out || fail="FAIL: "
+      rst_pre "Standard error" err.eff || fail="FAIL: "
+  } >stdout.tmp
+  rst_subsection "${fail}Test $number: $@"
+  cat stdout.tmp - <<EOF
 
-test $number:
-	$prog $@
-status: $sta_eff
+command
+  $prog $@
+
+status
+  $sta_eff
+
 EOF
+
+
   number=`expr $number + 1`
 }
 
