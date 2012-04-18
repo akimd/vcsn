@@ -1,6 +1,8 @@
 * 2012-04-18
 ** mutable_automata::mul_weight
 
+** RatExp::head and tail
+
 ** dotty
 In order to improve the readability of its output, it no longer
 "defines" the reachable states.  See the following diff:

@@ -4,6 +4,8 @@
 # include <list>
 # include <string>
 
+# include <boost/range.hpp>
+
 # include <vcsn/core/rat/node.fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
 
@@ -127,6 +129,20 @@ namespace vcsn
       void erase(iterator begin, iterator end);
       void clear();
       void splice(iterator it, nary& right);
+
+      /// The first item of this nary.
+      const node_t* head() const { return *begin(); }
+      node_t* head() { return *begin(); }
+
+      /// The non-first items.
+      auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0))
+      {
+        return boost::make_iterator_range(*this, 1, 0);
+      }
+      auto tail() -> decltype(boost::make_iterator_range(*this, 1, 0))
+      {
+        return boost::make_iterator_range(*this, 1, 0);
+      }
 
     private:
       nodes_t sub_node_;

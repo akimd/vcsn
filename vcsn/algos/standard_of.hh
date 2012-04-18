@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_STANDARD_OF_HH
 # define VCSN_ALGOS_STANDARD_OF_HH
 
-# include <boost/range.hpp>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 
@@ -95,9 +94,9 @@ namespace vcsn
       visit(const sum<weight_t>& e)
       {
         states_t other_finals = finals();
-        (*e.begin())->accept(*this);
+        e.head()->accept(*this);
         state_t initial = initial_;
-        for (auto c: boost::make_iterator_range(e, 1, 0))
+        for (auto c: e.tail())
           {
             c->accept(*this);
             for (auto t: res_.all_out(initial_))
@@ -121,12 +120,12 @@ namespace vcsn
         states_t other_finals = finals();
 
         // Traverse the first part of the product, handle left_weight.
-        (*e.begin())->accept(*this);
+        e.head()->accept(*this);
         state_t initial = initial_;
         apply_left_weight(e);
 
         // Then the remainder.
-        for (auto c: boost::make_iterator_range(e, 1, 0))
+        for (auto c: e.tail())
           {
             // The set of the current final transitions.
             auto ftr_ = res_.final_transitions();
