@@ -156,8 +156,26 @@ namespace vcsn
       }
 
       virtual void
-      visit(const star<weight_t>&)
-      {}
+      visit(const star<weight_t>& e)
+      {
+        states_t other_finals = finals();
+        e.get_sub()->accept(*this);
+        // The "final weight of the initial state", starred.
+        weight_t w = ws_.star(res_.get_final_weight(initial_));
+        // Branch all the final states to the successors of initial.
+        for (auto ti: res_.all_out(initial_))
+          {
+            res_.lmul_weight(ti, w);
+            for (auto tf: res_.final_transitions())
+              if (other_finals.find(res_.src_of(tf)) == other_finals.end())
+                res_.add_transition
+                  (res_.src_of(tf),
+                   res_.dst_of(ti),
+                   res_.label_of(ti),
+                   ws_.mul(ws_.mul(res_.weight_of(tf), w), res_.weight_of(ti)));
+          }
+        res_.set_final(initial_, w);
+      }
 
 
     private:
