@@ -3,6 +3,7 @@
 
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/misc/echo.hh>
 
 namespace vcsn
 {
@@ -27,9 +28,9 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(const exp& v)
+      operator()(const exp_t v)
       {
-        down_cast<const node<weight_t>*>(&v)->accept(*this);
+        std::dynamic_pointer_cast<const node<weight_t>>(v)->accept(*this);
         res_.set_initial(initial_);
         return std::move(res_);
       }
@@ -186,7 +187,7 @@ namespace vcsn
     template <class Aut, class WeightSet>
     Aut
     standard_of(const typename Aut::genset_t& alpha, const WeightSet& ws,
-                const exp& e)
+                const exp_t e)
     {
       standard_of_visitor<Aut, WeightSet> standard(alpha, ws);
       auto res = standard(e);

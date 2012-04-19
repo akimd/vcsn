@@ -51,6 +51,8 @@ namespace vcsn
     {
     public:
       using weight_t = Weight;
+      using node_t = rat::node<weight_t>;
+      using kvalue_t = std::shared_ptr<node_t>;
     protected:
       using visitor = typename visitor_traits<Weight>::visitor;
       using const_visitor = typename visitor_traits<Weight>::const_visitor;
@@ -80,6 +82,7 @@ namespace vcsn
     public:
       using weight_t = Weight;
       using super_type = node<weight_t>;
+      using kvalue_t = typename super_type::kvalue_t;
     protected:
       inner(const weight_t& l, const weight_t& r);
     public:
@@ -103,14 +106,15 @@ namespace vcsn
       using super_type = inner<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-      using nodes_t = std::list<node_t*>;
+      using kvalue_t = typename super_type::kvalue_t;
+      using nodes_t = std::list<kvalue_t>;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
+
       nary(const weight_t& l, const weight_t& r);
-      virtual ~nary();
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -121,8 +125,8 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
 
-      nary& push_back(node_t* elt);
-      nary& push_front(node_t* elt);
+      nary& push_back(kvalue_t elt);
+      nary& push_front(kvalue_t elt);
       size_t size() const;
       void erase(iterator it);
       void erase(iterator begin, iterator end);
@@ -130,8 +134,8 @@ namespace vcsn
       void splice(iterator it, nary& right);
 
       /// The first item of this nary.
-      const node_t* head() const { return *begin(); }
-      node_t* head() { return *begin(); }
+      const kvalue_t head() const { return *begin(); }
+      kvalue_t head() { return *begin(); }
 
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0))
@@ -159,7 +163,8 @@ namespace vcsn
       using super_type = nary<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-      using nodes_t = std::list<node_t*>;
+      using kvalue_t = typename node_t::kvalue_t;
+      using nodes_t = std::list<kvalue_t>;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -187,7 +192,8 @@ namespace vcsn
       using super_type = nary<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-      using nodes_t = std::list<node_t*>;
+      using typename node_t::kvalue_t;
+      using nodes_t = std::list<kvalue_t>;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -216,13 +222,13 @@ namespace vcsn
       using super_type = inner<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
+      using typename node_t::kvalue_t;
 
     public:
-      star(const weight_t& l, const weight_t& r, node_t* exp);
-      virtual ~star();
+      star(const weight_t& l, const weight_t& r, kvalue_t exp);
     public:
-      node_t *get_sub();
-      const node_t *get_sub() const;
+      kvalue_t get_sub();
+      const kvalue_t get_sub() const;
     public:
       virtual type_t type() const { return node_t::STAR; };
 
@@ -230,7 +236,7 @@ namespace vcsn
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      node_t *sub_exp_;
+      kvalue_t sub_exp_;
     };
 
 

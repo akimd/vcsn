@@ -19,12 +19,11 @@ namespace vcsn
     using super_type = abstract_kratexps;
     using weight_t = typename weightset_t::value_t;
     using node_t = rat::node<weight_t>;
-    using exp_t = rat::exp;
 
     // When taken as a WeightSet, our (abstract) value type.
-    using value_t = exp_t*;
+    using value_t = rat::exp_t;
     // Concrete value type.
-    using kvalue_t = node_t*;
+    using kvalue_t = std::shared_ptr<node_t>;
 
   public:
     /// Constructor.
@@ -61,9 +60,9 @@ namespace vcsn
 #undef DEFINE
 
     // Specialization from abstract_kratexps.
-    virtual kvalue_t zero() const;
-    virtual kvalue_t unit() const;
-    virtual kvalue_t atom(const std::string& w) const;
+    virtual value_t zero() const;
+    virtual value_t unit() const;
+    virtual value_t atom(const std::string& w) const;
     virtual value_t add(value_t l, value_t r) const;
     virtual value_t mul(value_t l, value_t r) const;
     virtual value_t star(value_t e) const;
@@ -91,7 +90,7 @@ namespace vcsn
     // Concrete type implementation.
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
-    kvalue_t star(kvalue_t e) const;
+    value_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;
 

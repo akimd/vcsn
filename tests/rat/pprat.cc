@@ -103,7 +103,7 @@ pp(const context& ctx, const Factory& factory,
           auto aut =
             vcsn::rat::standard_of<automaton_t>(factory.genset(),
                                                 factory.weightset(),
-                                                *e);
+                                                e);
           vcsn::dotty(aut, std::cout);
         }
       else

@@ -30,8 +30,9 @@ namespace vcsn
       error(l, "invalid character: " + s);
     }
 
-    exp*
+    auto
     driver::parse(const location& l)
+      -> exp_t
     {
       // Parser.
       parser p(*this);
@@ -40,13 +41,14 @@ namespace vcsn
       if (p.parse())
         result_ = 0;
       scan_close();
-      exp* res = 0;
+      exp_t res = 0;
       std::swap(result_, res);
       return res;
     }
 
-    exp*
+    auto
     driver::parse_file(const std::string& f)
+      -> exp_t
     {
       FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
@@ -61,8 +63,9 @@ namespace vcsn
       return res;
     }
 
-    exp*
+    auto
     driver::parse_string(const std::string& e, const location& l)
+      -> exp_t
     {
       scan_open(e);
       return parse(l);

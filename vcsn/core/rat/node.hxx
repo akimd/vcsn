@@ -98,14 +98,6 @@ namespace vcsn
 
     template <class Weight>
     inline
-    nary<Weight>::~nary()
-    {
-      for (auto t : sub_node_)
-        delete t;
-    }
-
-    template <class Weight>
-    inline
     typename nary<Weight>::const_iterator
     nary<Weight>::begin() const
     {
@@ -171,7 +163,7 @@ namespace vcsn
     template <class Weight>
     inline
     nary<Weight> &
-    nary<Weight>::push_back(node_t* elt)
+    nary<Weight>::push_back(kvalue_t elt)
     {
       sub_node_.push_back(elt);
       return *this;
@@ -180,7 +172,7 @@ namespace vcsn
     template <class Weight>
     inline
     nary<Weight> &
-    nary<Weight>::push_front(node_t* elt)
+    nary<Weight>::push_front(kvalue_t elt)
     {
       sub_node_.push_front(elt);
       return *this;
@@ -290,24 +282,16 @@ namespace vcsn
 
     template <class Weight>
     inline
-    star<Weight>::star(const weight_t& l, const weight_t& r, node_t* sub_exp)
+    star<Weight>::star(const weight_t& l, const weight_t& r, kvalue_t sub_exp)
       : super_type(l, r)
       , sub_exp_(sub_exp)
     {}
-
-
-    template <class Weight>
-    inline
-    star<Weight>::~star()
-    {
-      delete sub_exp_;
-    }
 
     template <class Weight>
     inline
     auto
     star<Weight>::get_sub()
-      -> node_t *
+      -> kvalue_t
     {
       return sub_exp_;
     }
@@ -316,7 +300,7 @@ namespace vcsn
     inline
     auto
     star<Weight>::get_sub() const
-      -> const node_t *
+      -> const kvalue_t
     {
       return sub_exp_;
     }

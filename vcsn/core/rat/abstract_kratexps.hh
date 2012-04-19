@@ -3,6 +3,7 @@
 
 # include <string>
 # include <list>
+# include <memory>  // shared_ptr
 # include <sstream>
 
 # include <vcsn/core/rat/node.fwd.hh>
@@ -13,8 +14,7 @@ namespace vcsn
   class abstract_kratexps
   {
   public:
-    using exp_t = rat::exp;
-    using value_t = exp_t*;
+    using value_t = rat::exp_t;
 
     virtual value_t zero() const = 0;
     virtual value_t unit() const = 0;

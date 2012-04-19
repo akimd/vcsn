@@ -14,9 +14,11 @@ namespace vcsn
     class driver
     {
     public:
+      /// The type of the parse result.
+      using exp_t = std::shared_ptr<exp>;
       driver(const abstract_kratexps& f);
-      exp* parse_file(const std::string& f);
-      exp* parse_string(const std::string& e, const location& l = location());
+      exp_t parse_file(const std::string& f);
+      exp_t parse_string(const std::string& e, const location& l = location());
       const abstract_kratexps* kratexps;
 
       /// Report an error \a m at \a l.
@@ -36,11 +38,11 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open(const std::string& e);
       /// Parse this stream.
-      exp* parse(const location& l = location());
+      exp_t parse(const location& l = location());
       /// Close the scanner.
       void scan_close();
 
-      exp* result_;
+      exp_t result_;
       friend class parser;
     };
 

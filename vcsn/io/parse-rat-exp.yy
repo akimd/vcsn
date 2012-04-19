@@ -19,6 +19,20 @@
   #include <vcsn/core/rat/node.hh>
   #include <vcsn/core/rat/abstract_kratexps.hh>
   #include <vcsn/io/driver.hh>
+
+  namespace vcsn
+  {
+    namespace rat
+    {
+      struct sem_type
+      {
+        int ival;
+        std::string* sval;
+        driver::exp_t node;
+      };
+    }
+  }
+#define YYSTYPE vcsn::rat::sem_type
 }
 
 %code provides
@@ -57,17 +71,10 @@
   @$ = driver_.location_;
 }
 
-%union
-{
-  int ival;
-  std::string* sval;
-  exp* node;
-};
-
 %printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { driver_.kratexps->print(debug_stream(), $$); } <node>;
-%destructor { delete $$; } <sval> <node>;
+%destructor { delete $$; } <sval>;
 
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
