@@ -173,6 +173,7 @@ namespace vcsn
                    ws_.mul(ws_.mul(res_.weight_of(tf), w), res_.weight_of(ti)));
           }
         res_.set_final(initial_, w);
+        apply_weights(e, other_finals);
       }
 
 

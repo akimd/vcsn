@@ -1,3 +1,9 @@
+* 2012-04-19
+** standard-of is fully implemented
+Support for star was implemented, and checked for B and Z.  For
+implementation reasons, one cannot yet use rational expressions as
+weights.
+
 * 2012-04-18
 ** mutable_automata::mul_weight
 
@@ -27,7 +33,7 @@ In order to improve the readability of its output, it no longer
    }
 
 
-** Many fixes in the handling of the weights
+** standard-of: many fixes in the handling of the weights
 An expression such as "{12}\e" used to leave the weight in the initial
 transition; it is now on the final transition.  More generally the
 initial transition always has unit as weight.
