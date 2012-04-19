@@ -159,7 +159,9 @@ run ()
   # Expected output.
   local out_exp=$1
   shift
-  if test "$out_exp" != out.exp; then
+  if test -z "$out_exp"; then
+    : >out.exp
+  elif test "$out_exp" != out.exp; then
     cat >out.exp <<EOF
 $out_exp
 EOF
@@ -171,30 +173,38 @@ EOF
   # First, run the test, so that the title can include the status of
   # the run.
   local fail=
-  # Effective exit status, output and error.
-  local sta_eff=0
-  # Be robust to set -e.
-  $builddir/$prog "$@" >out.eff 2>err.eff || sta_eff=$?
-  if test $sta_eff -ne $sta_exp; then
-    echo "$me: FAIL: $number (expected status: $sta_exp, effective: $sta_eff)"
-    exit=false
-    fail="FAIL: "
-  fi
+  # Subshell: be robust to set -e *and* catch messages from the shell,
+  # such as "Abort trap".
+  ($builddir/$prog "$@") >out.eff 2>err.eff
+  # Effective exit status.
+  local sta_eff=$?
   {
-      rst_expect out || fail="FAIL: "
-      rst_pre "Standard error" err.eff || fail="FAIL: "
-  } >stdout.tmp
-  rst_subsection "${fail}Test $number: $@"
-  cat stdout.tmp - <<EOF
-
+    cat <<EOF
 command
   $prog $@
 
+EOF
+    if test $sta_eff -eq $sta_exp; then
+      cat <<EOF
 status
   $sta_eff
 
 EOF
+    else
+      cat <<EOF
+status (FAIL)
+  expected:  $sta_exp
+  effective: $sta_eff
 
+EOF
+      exit=false
+      fail="FAIL: "
+    fi
+    rst_pre "Standard error" err.eff || fail="FAIL: "
+    rst_expect out || fail="FAIL: "
+  } >stdout.tmp
+  rst_subsection "${fail}Test $number: $@"
+  cat stdout.tmp
 
   number=`expr $number + 1`
 }
