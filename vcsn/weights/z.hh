@@ -15,6 +15,18 @@ namespace vcsn
     typedef int value_t;
 
     value_t
+    zero() const
+    {
+      return 0;
+    }
+
+    value_t
+    unit() const
+    {
+      return 1;
+    }
+
+    value_t
     add(const value_t l, const value_t r) const
     {
       return l + r;
@@ -27,27 +39,24 @@ namespace vcsn
     }
 
     value_t
-    unit() const
+    star(const value_t v) const
     {
-      return 1;
-    }
-
-    value_t
-    zero() const
-    {
-      return 0;
-    }
-
-    bool
-    is_unit(const value_t v) const
-    {
-      return v == 1;
+      if (is_zero(v))
+        return unit();
+      else
+        throw std::domain_error("star: invalid integer: " + format(v));
     }
 
     bool
     is_zero(const value_t v) const
     {
       return v == 0;
+    }
+
+    bool
+    is_unit(const value_t v) const
+    {
+      return v == 1;
     }
 
     static constexpr bool show_unit() { return false; }

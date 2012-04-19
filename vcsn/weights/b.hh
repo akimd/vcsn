@@ -14,6 +14,18 @@ namespace vcsn
     typedef bool value_t;
 
     value_t
+    zero() const
+    {
+      return false;
+    }
+
+    value_t
+    unit() const
+    {
+      return true;
+    }
+
+    value_t
     add(const value_t l, const value_t r) const
     {
       return l || r;
@@ -26,16 +38,11 @@ namespace vcsn
     }
 
     value_t
-    unit() const
+    star(const value_t) const
     {
-      return true;
+      return unit();
     }
 
-    value_t
-    zero() const
-    {
-      return false;
-    }
 
     bool
     is_unit(const value_t v) const
