@@ -459,7 +459,13 @@ namespace vcsn
     }
 
     weight_t
-    mul_weight(transition_t t, weight_t k)
+    lmul_weight(transition_t t, weight_t k)
+    {
+      return set_weight(t, weightset().mul(k, weight_of(t)));
+    }
+
+    weight_t
+    rmul_weight(transition_t t, weight_t k)
     {
       return set_weight(t, weightset().mul(weight_of(t), k));
     }

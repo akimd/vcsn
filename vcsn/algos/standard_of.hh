@@ -74,7 +74,7 @@ namespace vcsn
         weight_t w = e.left_weight();
         if (w != ws_.unit())
           for (auto t: res_.all_out(initial_))
-            res_.mul_weight(t, w);
+            res_.lmul_weight(t, w);
       }
 
       /// Apply the right weight to all the "fresh" final states,
@@ -87,7 +87,7 @@ namespace vcsn
         if (w != ws_.unit())
           for (auto t: res_.final_transitions())
             if (other_finals.find(res_.src_of(t)) == other_finals.end())
-              res_.mul_weight(t, w);
+              res_.rmul_weight(t, w);
       }
 
       virtual void
