@@ -3,6 +3,7 @@
 
 # include <string>
 # include <list>
+# include <sstream>
 
 # include <vcsn/core/rat/node.fwd.hh>
 
@@ -25,6 +26,12 @@ namespace vcsn
     virtual value_t weight(value_t e, std::string* w) const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
+    std::string format(const value_t v) const
+    {
+      std::stringstream s;
+      print(s, v);
+      return s.str();
+    }
   };
 
 } // namespace vcsn
