@@ -105,14 +105,13 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using nodes_t = std::list<node_t*>;
 
-      using const_iterator = typename nodes_t::const_iterator        ;
-      using iterator = typename nodes_t::iterator              ;
+      using const_iterator = typename nodes_t::const_iterator;
+      using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
-      using reverse_iterator = typename nodes_t::reverse_iterator      ;
-    public:
+      using reverse_iterator = typename nodes_t::reverse_iterator;
       nary(const weight_t& l, const weight_t& r);
       virtual ~nary();
-    public:
+
       const_iterator begin() const;
       const_iterator end() const;
       iterator begin();
@@ -121,7 +120,7 @@ namespace vcsn
       const_reverse_iterator rend() const;
       reverse_iterator rbegin();
       reverse_iterator rend();
-    public:
+
       nary& push_back(node_t* elt);
       nary& push_front(node_t* elt);
       size_t size() const;
@@ -162,10 +161,10 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using nodes_t = std::list<node_t*>;
 
-      using const_iterator = typename nodes_t::const_iterator        ;
-      using iterator = typename nodes_t::iterator              ;
+      using const_iterator = typename nodes_t::const_iterator;
+      using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
-      using reverse_iterator = typename nodes_t::reverse_iterator      ;
+      using reverse_iterator = typename nodes_t::reverse_iterator;
     public:
       prod(const weight_t& l, const weight_t& r);
     public:
@@ -190,10 +189,10 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using nodes_t = std::list<node_t*>;
 
-      using const_iterator = typename nodes_t::const_iterator        ;
-      using iterator = typename nodes_t::iterator              ;
+      using const_iterator = typename nodes_t::const_iterator;
+      using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
-      using reverse_iterator = typename nodes_t::reverse_iterator      ;
+      using reverse_iterator = typename nodes_t::reverse_iterator;
     public:
       sum(const weight_t& l, const weight_t& r);
 
