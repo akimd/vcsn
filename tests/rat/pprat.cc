@@ -96,7 +96,7 @@ pp(const context& ctx, const Factory& factory,
   using automaton_t
     = vcsn::mutable_automaton<alpha_t, weightset_t, vcsn::labels_are_words>;
   vcsn::rat::driver d(factory);
-  if (vcsn::rat::exp* e = file ? d.parse_file(s) : d.parse_string(s))
+  if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
       if (ctx.standard_of)
         {
@@ -108,7 +108,6 @@ pp(const context& ctx, const Factory& factory,
         }
       else
         factory.print(std::cout, e) << std::endl;
-      delete e;
     }
   else
     {
