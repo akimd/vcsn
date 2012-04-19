@@ -136,6 +136,7 @@ pp(const context& ctx, const char* s, bool file)
 
 int
 main(int argc, char* const argv[])
+try
 {
   using map = std::map<std::string, type>;
   using pair = std::pair<std::string, type>;
@@ -191,4 +192,9 @@ main(int argc, char* const argv[])
   argv += optind;
   for (int i = 0; i < argc; ++i)
     pp(ctx, argv[i], false);
+}
+catch (const std::exception& e)
+{
+  std::cerr << argv[0] << ": " << e.what() << std::endl;
+  exit(EXIT_FAILURE);
 }
