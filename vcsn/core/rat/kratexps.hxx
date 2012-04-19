@@ -39,19 +39,19 @@ namespace vcsn
   kratexps<GenSet, WeightSet>
 
   DEFINE::zero() const
-    -> zero_t*
+    -> kvalue_t
   {
     return new zero_t(ws_.unit());
   }
 
   DEFINE::unit() const
-    -> one_t*
+    -> kvalue_t
   {
     return new one_t(ws_.unit());
   }
 
   DEFINE::atom(const std::string& w) const
-    -> atom_t*
+    -> kvalue_t
   {
     for (auto c: w)
       if (!gs_.has(c))
@@ -59,43 +59,43 @@ namespace vcsn
     return new atom_t(ws_.unit(), w);
   }
 
-  DEFINE::add(exp_t* l, exp_t* r) const
-    -> exp_t*
+  DEFINE::add(value_t l, value_t r) const
+    -> value_t
   {
-    auto left = down_cast<node_t*>(l);
-    auto right = down_cast<node_t*>(r);
+    auto left = down_cast<kvalue_t>(l);
+    auto right = down_cast<kvalue_t>(r);
     return add(left, right);
   }
 
-  DEFINE::mul(exp_t* l, exp_t* r) const
-    -> exp_t*
+  DEFINE::mul(value_t l, value_t r) const
+    -> value_t
   {
-    auto left = down_cast<node_t*>(l);
-    auto right = down_cast<node_t*>(r);
+    auto left = down_cast<kvalue_t>(l);
+    auto right = down_cast<kvalue_t>(r);
     return mul(left, right);
   }
 
-  DEFINE::star(exp_t* e) const
-    -> exp_t*
+  DEFINE::star(value_t e) const
+    -> value_t
   {
-    return star(down_cast<node_t*>(e));
+    return star(down_cast<kvalue_t>(e));
   }
 
 
-  DEFINE::weight(std::string* w, exp_t* e) const
-    -> exp_t*
+  DEFINE::weight(std::string* w, value_t e) const
+    -> value_t
   {
     // The weight might not be needed (e = 0), but check its syntax
     // anyway.
-    auto res = weight(ws_.conv(*w), down_cast<node_t*>(e));
+    auto res = weight(ws_.conv(*w), down_cast<kvalue_t>(e));
     delete w;
     return res;
   }
 
-  DEFINE::weight(exp_t* e, std::string* w) const
-    -> exp_t*
+  DEFINE::weight(value_t e, std::string* w) const
+    -> value_t
   {
-    auto res = weight(down_cast<node_t*>(e), ws_.conv(*w));
+    auto res = weight(down_cast<kvalue_t>(e), ws_.conv(*w));
     delete w;
     return res;
   }
@@ -106,8 +106,8 @@ namespace vcsn
   | Concrete types.  |
   `-----------------*/
 
-  DEFINE::add(node_t* l, node_t* r) const
-    -> node_t*
+  DEFINE::add(kvalue_t l, kvalue_t r) const
+    -> kvalue_t
   {
     // Trivial Identity
     // E+0 = 0+E = E
@@ -154,10 +154,10 @@ namespace vcsn
   }
 
 
-  DEFINE::mul(node_t* l, node_t* r) const
-    -> node_t*
+  DEFINE::mul(kvalue_t l, kvalue_t r) const
+    -> kvalue_t
   {
-    node_t* res = nullptr;
+    kvalue_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0
     if (l->type() == node_t::ZERO)
@@ -215,8 +215,8 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::star(node_t* e) const
-    -> node_t*
+  DEFINE::star(kvalue_t e) const
+    -> kvalue_t
   {
     if (e->type() == node_t::ZERO)
       {
@@ -234,8 +234,8 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  DEFINE::weight(const weight_t& w, node_t* e) const
-    -> node_t*
+  DEFINE::weight(const weight_t& w, kvalue_t e) const
+    -> kvalue_t
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
     if (e->type() != node_t::ZERO)
@@ -251,8 +251,8 @@ namespace vcsn
     return e;
   }
 
-  DEFINE::weight(node_t* e, const weight_t& w) const
-    -> node_t*
+  DEFINE::weight(kvalue_t e, const weight_t& w) const
+    -> kvalue_t
   {
     // Trivial identity $T_K$: {k}0 => 0, 0{k} => 0.
     if (e->type() != node_t::ZERO)
@@ -304,7 +304,7 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    const auto* down = down_cast<const node_t*>(v);
+    const auto* down = down_cast<const kvalue_t>(v);
     rat::printer<weightset_t> print(o, ws_);
     down->accept(print);
     return o;

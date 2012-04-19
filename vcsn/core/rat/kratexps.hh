@@ -21,8 +21,10 @@ namespace vcsn
     using node_t = rat::node<weight_t>;
     using exp_t = rat::exp;
 
-    // When taken as a WeightSet, our values.
+    // When taken as a WeightSet, our (abstract) value type.
     using value_t = exp_t*;
+    // Concrete value type.
+    using kvalue_t = node_t*;
 
   public:
     /// Constructor.
@@ -59,14 +61,14 @@ namespace vcsn
 #undef DEFINE
 
     // Specialization from abstract_kratexps.
-    virtual zero_t* zero() const;
-    virtual one_t* unit() const;
-    virtual atom_t* atom(const std::string& w) const;
-    virtual exp_t* add(exp_t* l, exp_t* r) const;
-    virtual exp_t* mul(exp_t* l, exp_t* r) const;
-    virtual exp_t* star(exp_t* e) const;
-    virtual exp_t* weight(exp_t* e, std::string* w) const;
-    virtual exp_t* weight(std::string* w, exp_t* e) const;
+    virtual kvalue_t zero() const;
+    virtual kvalue_t unit() const;
+    virtual kvalue_t atom(const std::string& w) const;
+    virtual value_t add(value_t l, value_t r) const;
+    virtual value_t mul(value_t l, value_t r) const;
+    virtual value_t star(value_t e) const;
+    virtual value_t weight(value_t e, std::string* w) const;
+    virtual value_t weight(std::string* w, value_t e) const;
 
     // When used as WeightSet for automata.
     bool is_zero(value_t v) const;
@@ -87,11 +89,11 @@ namespace vcsn
 
   protected:
     // Concrete type implementation.
-    node_t* add(node_t* l, node_t* r) const;
-    node_t* mul(node_t* l, node_t* r) const;
-    node_t* star(node_t* e) const;
-    node_t* weight(node_t* e, const weight_t& w) const;
-    node_t* weight(const weight_t& w, node_t* e) const;
+    kvalue_t add(kvalue_t l, kvalue_t r) const;
+    kvalue_t mul(kvalue_t l, kvalue_t r) const;
+    kvalue_t star(kvalue_t e) const;
+    kvalue_t weight(kvalue_t e, const weight_t& w) const;
+    kvalue_t weight(const weight_t& w, kvalue_t e) const;
 
   private:
     const genset_t& gs_;
