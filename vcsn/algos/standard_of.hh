@@ -68,26 +68,26 @@ namespace vcsn
         res_.set_final(f);
       }
 
+      /// Apply the left weight to initial state, and the right weight
+      /// to all the "fresh" final states, i.e., those that are not
+      /// part of "other_finals".
       void
-      apply_left_weight(const inner<weight_t>& e)
+      apply_weights(const inner<weight_t>& e,
+                    const std::set<state_t>& other_finals)
       {
-        weight_t w = e.left_weight();
-        if (w != ws_.unit())
-          for (auto t: res_.all_out(initial_))
-            res_.lmul_weight(t, w);
-      }
-
-      /// Apply the right weight to all the "fresh" final states,
-      /// i.e., those that are not part of "other_finals".
-      void
-      apply_right_weight(const inner<weight_t>& e,
-                         const std::set<state_t>& other_finals)
-      {
-        weight_t w = e.right_weight();
-        if (w != ws_.unit())
-          for (auto t: res_.final_transitions())
-            if (other_finals.find(res_.src_of(t)) == other_finals.end())
-              res_.rmul_weight(t, w);
+        {
+          weight_t w = e.left_weight();
+          if (w != ws_.unit())
+            for (auto t: res_.all_out(initial_))
+              res_.lmul_weight(t, w);
+        }
+        {
+          weight_t w = e.right_weight();
+          if (w != ws_.unit())
+            for (auto t: res_.final_transitions())
+              if (other_finals.find(res_.src_of(t)) == other_finals.end())
+                res_.rmul_weight(t, w);
+        }
       }
 
       virtual void
@@ -107,8 +107,7 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
-        apply_left_weight(e);
-        apply_right_weight(e, other_finals);
+        apply_weights(e, other_finals);
       }
 
       virtual void
@@ -122,7 +121,6 @@ namespace vcsn
         // Traverse the first part of the product, handle left_weight.
         e.head()->accept(*this);
         state_t initial = initial_;
-        apply_left_weight(e);
 
         // Then the remainder.
         for (auto c: e.tail())
@@ -151,8 +149,8 @@ namespace vcsn
                 }
             res_.del_state(initial_);
           }
-        apply_right_weight(e, other_finals);
         initial_ = initial;
+        apply_weights(e, other_finals);
       }
 
       virtual void
