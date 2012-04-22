@@ -20,8 +20,26 @@ AM_CPPFLAGS += -I$(top_srcdir)
 dist_noinst_SCRIPTS += checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_COMPILER = $(srcdir)/checker
+$(chk_TESTS:.chk=.log): $(CHK_LOG_COMPILER)
 
 TESTS = $(dist_TESTS)
+# Lazy test suite.
+RECHECK_LOGS =
 
 include rat/local.mk
 include unit/local.mk
+
+AM_RST2HTMLFLAGS = -d -t
+.log.html:
+	@list='$(RST2HTML) rst2html rst2html.py';			\
+	for r2h in $$list; do						\
+	  if ($$r2h --version) >/dev/null 2>&1; then			\
+	    R2H=$$r2h;							\
+	  fi;								\
+	done;								\
+	if test -z "$$R2H"; then					\
+	  echo >&2 "cannot find rst2html, cannot create $@";		\
+	  exit 2;							\
+	fi;								\
+	$$R2H $(AM_RST2HTMLFLAGS) $(RST2HTMLFLAGS) $< >$@.tmp
+	@mv $@.tmp $@

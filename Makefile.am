@@ -16,3 +16,6 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 
 SUBDIRS = vcsn tests
 EXTRA_DIST += NEWS.txt TODO.txt
+
+check-html: all
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) $@

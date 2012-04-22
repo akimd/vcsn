@@ -15,6 +15,7 @@ dist_noinst_SCRIPTS += rat/rat
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
 AM_RAT_LOG_FLAGS = rat/pprat
+$(rat_TESTS:.rat=.log): $(RAT_LOG_COMPILER) rat/pprat rat/common.rat
 
 rat_TESTS =					\
   $(rat_XFAIL_TESTS)				\
@@ -34,7 +35,7 @@ rat_XFAIL_TESTS =				\
 
 XFAIL_TESTS += $(rat_XFAIL_TESTS)
 
-check_PROGRAMS += rat/pprat
+EXTRA_PROGRAMS += rat/pprat
 
 rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la
 
