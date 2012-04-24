@@ -119,11 +119,6 @@ namespace vcsn
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
 
-      nary(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
-      nary(const nary& that)
-        : super_type(that)
-        , sub_node_(that.sub_node_)
-      {}
       const_iterator begin() const;
       const_iterator end() const;
       const_reverse_iterator rbegin() const;
@@ -138,6 +133,13 @@ namespace vcsn
       {
         return boost::make_iterator_range(*this, 1, 0);
       }
+
+    protected:
+      nary(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
+      nary(const nary& that)
+        : super_type(that)
+        , sub_node_(that.sub_node_)
+      {}
 
     private:
       nodes_t sub_node_;
@@ -162,12 +164,11 @@ namespace vcsn
       using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
-    public:
+
       prod(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
-    public:
+
       virtual type_t type() const { return node_t::PROD; };
 
-    public:
       virtual void accept(typename node_t::visitor& v);
       virtual void accept(typename node_t::const_visitor& v) const;
     };
@@ -191,13 +192,11 @@ namespace vcsn
       using iterator = typename nodes_t::iterator;
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
-    public:
+
       sum(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
 
-    public:
       virtual type_t type() const { return node_t::SUM; };
 
-    public:
       virtual void accept(typename node_t::visitor& v);
       virtual void accept(typename node_t::const_visitor& v) const;
     };
@@ -216,13 +215,12 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
 
-    public:
       star(const weight_t& l, const weight_t& r, kvalue_t exp);
-    public:
+
+      virtual type_t type() const { return node_t::STAR; };
+
       kvalue_t get_sub();
       const kvalue_t get_sub() const;
-    public:
-      virtual type_t type() const { return node_t::STAR; };
 
       virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
@@ -255,9 +253,9 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-    public:
+
       one(const weight_t& l);
-    public:
+
       virtual type_t type() const { return node_t::ONE; };
 
       virtual void accept(typename node_t::visitor &v);
@@ -272,9 +270,9 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-    public:
+
       zero(const weight_t& l);
-    public:
+
       virtual type_t type() const { return node_t::ZERO; };
 
       virtual void accept(typename node_t::visitor &v);
@@ -289,9 +287,9 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-    public:
+
       atom(const weight_t& l, const std::string& atom);
-    public:
+
       virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::visitor &v);
