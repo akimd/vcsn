@@ -119,36 +119,23 @@ namespace vcsn
     // E+0 = 0+E = E
     if (l->type() == node_t::ZERO)
       return r;
-    if (r->type() == node_t::ZERO)
+    else if (r->type() == node_t::ZERO)
       return l;
     // END: Trivial Identity
-
-    if (l->type() == node_t::SUM)
-      {
-        auto res = std::dynamic_pointer_cast<sum_t>(l);
-        if (r->type() == node_t::SUM)
-          {
-            auto right = std::dynamic_pointer_cast<sum_t>(r);
-            res->insert(res->end(), *right);
-          }
-        else
-          {
-            res->push_back(r);
-          }
-        return res;
-      }
-    else if (r->type() == node_t::SUM)
-      {
-        auto res = std::dynamic_pointer_cast<sum_t>(r);
-        res->push_front(l);
-        return res;
-      }
     else
       {
-        auto res = std::make_shared<sum_t>(ws_.unit(), ws_.unit());
-        res->push_back(l);
-        res->push_back(r);
-        return res;
+        typename node_t::nodes_t ns;
+        if (l->type() == node_t::SUM)
+          for (auto n: *std::dynamic_pointer_cast<sum_t>(l))
+            ns.push_back(n);
+        else
+          ns.push_back(l);
+        if (r->type() == node_t::SUM)
+          for (auto n: *std::dynamic_pointer_cast<sum_t>(r))
+            ns.push_back(n);
+        else
+          ns.push_back(r);
+        return std::make_shared<sum_t>(ws_.unit(), ws_.unit(), ns);
       }
   }
 
@@ -170,33 +157,20 @@ namespace vcsn
     else if (l->type() == node_t::ONE)
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
-    else if (l->type() == node_t::PROD)
-      {
-        auto left = std::dynamic_pointer_cast<prod_t>(l);
-        if (r->type() == node_t::PROD)
-          {
-            auto right = std::dynamic_pointer_cast<prod_t>(r);
-            left->insert(left->end(), *right);
-            res = left;
-          }
-        else
-          {
-            left->push_back(r);
-            res = left;
-          }
-      }
-    else if (r->type() == node_t::PROD)
-      {
-        auto right = std::dynamic_pointer_cast<prod_t>(r);
-        right->push_front(l);
-        res = right;
-      }
     else
       {
-        auto prod = std::make_shared<prod_t>(ws_.unit(), ws_.unit());
-        prod->push_back(l);
-        prod->push_back(r);
-        res = prod;
+        typename node_t::nodes_t ns;
+        if (l->type() == node_t::PROD)
+          for (auto n: *std::dynamic_pointer_cast<prod_t>(l))
+            ns.push_back(n);
+        else
+          ns.push_back(l);
+        if (r->type() == node_t::PROD)
+          for (auto n: *std::dynamic_pointer_cast<prod_t>(r))
+            ns.push_back(n);
+        else
+          ns.push_back(r);
+        res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(), ns);
       }
     return res;
   }
