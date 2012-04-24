@@ -66,6 +66,7 @@ namespace vcsn
 
     mutable_automaton(mutable_automaton&& that)
       : es_(that.es_)
+      , prepost_label_(that.prepost_label_)
     {
       std::swap(states_, that.states_);
       std::swap(states_fs_, that.states_fs_);
