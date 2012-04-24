@@ -1,9 +1,9 @@
 #ifndef VCSN_FACTORY_LADYBIRD_HH
 # define VCSN_FACTORY_LADYBIRD_HH
 
-#include "vcsn/alphabets/char.hh"
-#include "vcsn/alphabets/setalpha.hh"
-#include "vcsn/core/mutable_automaton.hh"
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/core/mutable_automaton.hh>
 
 namespace vcsn
 {

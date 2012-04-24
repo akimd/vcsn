@@ -21,7 +21,7 @@ syntax(char* argv0)
 int
 main(int argc, char** argv)
 {
-  if ((argc != 2 && argc != 3))
+  if (argc != 2 && argc != 3)
     syntax(argv[0]);
 
   int n = atoi(argv[1]);
