@@ -11,25 +11,25 @@ namespace vcsn
 
     template <class WeightSet>
     class printer
-      : public visitor_traits<typename WeightSet::value_t>::const_visitor
+      : public const_visitor<typename WeightSet::value_t>
     {
     public:
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
-      using super_type = typename visitor_traits<weight_t>::const_visitor;
+      using super_type = const_visitor<weight_t>;
 
-    public:
       printer(std::ostream& out,
               const weightset_t& ws,
               const bool debug = false);
       virtual ~printer();
-    public:
+
       virtual void visit(const prod<weight_t>& v);
       virtual void visit(const sum<weight_t>& v);
       virtual void visit(const star<weight_t>& v);
       virtual void visit(const one<weight_t>& v);
       virtual void visit(const zero<weight_t>& v);
       virtual void visit(const atom<weight_t>& v);
+
     private:
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).

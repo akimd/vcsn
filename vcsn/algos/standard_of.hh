@@ -11,13 +11,13 @@ namespace vcsn
   {
     template <class Aut, class WeightSet>
     class standard_of_visitor
-      : public visitor_traits<typename WeightSet::value_t>::const_visitor
+      : public const_visitor<typename WeightSet::value_t>
     {
     public:
       using automaton_t = Aut;
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
-      using super_type = typename visitor_traits<weight_t>::const_visitor;
+      using super_type = const_visitor<weight_t>;
       using genset_t = typename automaton_t::genset_t;
       using state_t = typename automaton_t::state_t;
 

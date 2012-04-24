@@ -159,14 +159,6 @@ namespace vcsn
     template <class Weight>
     inline
     void
-    prod<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
-
-    template <class Weight>
-    inline
-    void
     prod<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
@@ -184,14 +176,6 @@ namespace vcsn
                      const nodes_t& ns)
       : super_type(l, r, ns)
     {}
-
-    template <class Weight>
-    inline
-    void
-    sum<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
 
     template <class Weight>
     inline
@@ -231,13 +215,6 @@ namespace vcsn
       return sub_exp_;
     }
 
-    template <class Weight>
-    inline
-    void
-    star<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
 
     template <class Weight>
     inline
@@ -261,14 +238,6 @@ namespace vcsn
     template <class Weight>
     inline
     void
-    one<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
-
-    template <class Weight>
-    inline
-    void
     one<Weight>::accept(typename node_t::const_visitor& v) const
     {
       v.visit(*this);
@@ -283,14 +252,6 @@ namespace vcsn
     zero<Weight>::zero(const weight_t& w)
       : super_type(w)
     {}
-
-    template <class Weight>
-    inline
-    void
-    zero<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
 
     template <class Weight>
     inline
@@ -310,14 +271,6 @@ namespace vcsn
       : super_type(w)
       , atom_(atom)
     {}
-
-    template <class Weight>
-    inline
-    void
-    atom<Weight>::accept(typename node_t::visitor& v)
-    {
-      v.visit(*this);
-    }
 
     template <class Weight>
     inline

@@ -1,20 +1,16 @@
-#ifndef VCSN_CORE_RAT_VISITOR_HXX_
-# define VCSN_CORE_RAT_VISITOR_HXX_
-
-# include <vcsn/core/rat/visitor.hh>
-# include <vcsn/core/rat/node.hh>
-# include <cassert>
+#include <vcsn/core/rat/visitor.hh>
+#include <vcsn/core/rat/node.hh>
+#include <cassert>
 
 namespace vcsn
 {
   namespace rat
   {
 #define VISIT(Type, Name)                                       \
-    template<class Weight, template<class> class ConstNess>     \
+    template<class Weight>                                      \
     inline                                                      \
     void                                                        \
-    gen_visitor<Weight, ConstNess>                              \
-    ::visit(typename ConstNess<Type<Weight>>::type& Name)
+    const_visitor<Weight>::visit(const Type<Weight>& Name)
 
 
     VISIT(prod, v)
@@ -48,5 +44,3 @@ namespace vcsn
 
   } // namespace rat
 } // namespace vcsn
-
-#endif // !VCSN_CORE_RAT_VISITOR_HXX_

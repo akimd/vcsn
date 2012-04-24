@@ -54,17 +54,13 @@ namespace vcsn
       using node_t = rat::node<weight_t>;
       using kvalue_t = std::shared_ptr<node_t>;
       using nodes_t = std::list<kvalue_t>;
-    protected:
-      using visitor = typename visitor_traits<Weight>::visitor;
-      using const_visitor = typename visitor_traits<Weight>::const_visitor;
+      using const_visitor = vcsn::rat::const_visitor<weight_t>;
 
-    public:
       node(const weight_t& l);
       node(const node& that)
         : lw_(that.lw_)
       {}
 
-      virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
 
       const weight_t &left_weight() const;
@@ -169,7 +165,6 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::PROD; };
 
-      virtual void accept(typename node_t::visitor& v);
       virtual void accept(typename node_t::const_visitor& v) const;
     };
 
@@ -197,7 +192,6 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::SUM; };
 
-      virtual void accept(typename node_t::visitor& v);
       virtual void accept(typename node_t::const_visitor& v) const;
     };
 
@@ -222,7 +216,6 @@ namespace vcsn
       kvalue_t get_sub();
       const kvalue_t get_sub() const;
 
-      virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
@@ -258,7 +251,6 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::ONE; };
 
-      virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
     };
 
@@ -275,7 +267,6 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::ZERO; };
 
-      virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
     };
 
@@ -292,7 +283,6 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::ATOM; };
 
-      virtual void accept(typename node_t::visitor &v);
       virtual void accept(typename node_t::const_visitor &v) const;
       const std::string& get_atom() const;
     private:
