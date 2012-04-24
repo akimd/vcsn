@@ -34,7 +34,6 @@ nobase_vcsn_HEADERS =                           \
   core/rat/node.hxx                             \
   core/rat/printer.hh                           \
   core/rat/printer.hxx                          \
-  core/rat/visitor.fwd.hh                       \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
