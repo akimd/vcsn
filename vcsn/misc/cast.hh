@@ -1,6 +1,8 @@
 #ifndef VCSN_MISC_CAST_HH
 # define VCSN_MISC_CAST_HH
 
+# include <iostream>
+
 # ifdef NDEBUG
 #  define down_cast         static_cast
 #  define down_pointer_cast std::static_pointer_cast
@@ -26,7 +28,7 @@ namespace vcsn
       {}
       const char* file;
       int line;
-    
+
       template <typename T, typename U>
       void
       error(const char* msg)
