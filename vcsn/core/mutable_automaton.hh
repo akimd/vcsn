@@ -32,7 +32,6 @@ namespace vcsn
     typedef typename weightset_t::value_t weight_t;
     typedef typename entryset_t::value_t entry_t;
   protected:
-    static const weightset_t& st_ws_;
     const entryset_t es_;
 
     typedef transition_tuple<state_t, label_t, weight_t> stored_transition_t;
@@ -55,19 +54,13 @@ namespace vcsn
     free_store_t states_fs_;
     tr_store_t transitions_;
     free_store_t transitions_fs_;
-
     label_t prepost_label_;
 
   public:
-    mutable_automaton(const genset_t& gs,
-		      const weightset_t& ws)
-      : es_(gs, ws), states_(2)
+    mutable_automaton(const genset_t& gs, const weightset_t& ws)
+      : es_(gs, ws)
+      , states_(2)
       , prepost_label_(gs.template special<label_t>())
-    {
-    }
-
-    mutable_automaton(const genset_t& gs)
-      : mutable_automaton(gs, st_ws_)
     {
     }
 
@@ -644,10 +637,6 @@ namespace vcsn
       return entry_at(src_of(t), dst_of(t));
     }
   };
-
-  template <class GenSet, class WeightSet, class Kind>
-  const typename mutable_automaton<GenSet, WeightSet, Kind>::weightset_t&
-  mutable_automaton<GenSet, WeightSet, Kind>::st_ws_ = WeightSet();
 }
 
 #endif // !VCSN_CORE_MUTABLE_AUTOMATON_HH

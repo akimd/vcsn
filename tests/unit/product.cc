@@ -11,12 +11,13 @@ int main()
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
   typedef vcsn::mutable_automaton<alpha_t, vcsn::z,
 				  vcsn::labels_are_letters> automaton_t;
+  vcsn::z z;
   alpha_t alpha{'a', 'b', 'c'};
 
 
 
   // {2}(a*b*a*)
-  automaton_t aut1(alpha);
+  automaton_t aut1(alpha, z);
   auto s1 = aut1.new_state();
   auto s2 = aut1.new_state();
   auto s3 = aut1.new_state();
@@ -32,7 +33,7 @@ int main()
   aut1.set_transition(s3, s3, 'a');
 
   // ({3}(ab))*
-  automaton_t aut2(alpha);
+  automaton_t aut2(alpha, z);
   auto t1 = aut2.new_state();
   auto t2 = aut2.new_state();
   aut2.set_initial(t1, 3);

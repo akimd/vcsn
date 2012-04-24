@@ -7,10 +7,12 @@
 
 int main()
 {
+  vcsn::z z;
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
-
   alpha_t alpha{'a', 'b', 'c', 'd'};
-  vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_words> aut(alpha);
+  using automaton_t =
+    vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_words>;
+  automaton_t aut(alpha, z);
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();

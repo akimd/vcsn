@@ -8,18 +8,12 @@
 int main()
 {
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
-
   alpha_t alpha{'a', 'b', 'c', 'd'};
 
-  //for (auto c : alpha)
-  //std::cerr << c << std::endl;
-
-  //  b semiring;
-
-  vcsn::mutable_automaton<alpha_t, vcsn::z,
-			  vcsn::labels_are_letters> aut(alpha);
-
-  //mutable_automaton<alpha_t, exp<b, alpha_t> >, labels_are_letter> aut(alpha, semiring);
+  using automaton_t =
+    vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_letters>;
+  vcsn::z z;
+  automaton_t aut(alpha, z);
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();
