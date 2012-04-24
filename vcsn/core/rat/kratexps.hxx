@@ -129,7 +129,7 @@ namespace vcsn
         if (r->type() == node_t::SUM)
           {
             auto right = std::dynamic_pointer_cast<sum_t>(r);
-            res->splice(res->end(), *right);
+            res->insert(res->end(), *right);
           }
         else
           {
@@ -158,7 +158,7 @@ namespace vcsn
   {
     kvalue_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
-    // E.0 = 0.E = 0
+    // E.0 = 0.E = 0.
     if (l->type() == node_t::ZERO)
       res = l;
     else if (r->type() == node_t::ZERO)
@@ -176,7 +176,7 @@ namespace vcsn
         if (r->type() == node_t::PROD)
           {
             auto right = std::dynamic_pointer_cast<prod_t>(r);
-            left->splice(left->end(), *right);
+            left->insert(left->end(), *right);
             res = left;
           }
         else

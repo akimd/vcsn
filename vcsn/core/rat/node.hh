@@ -131,7 +131,7 @@ namespace vcsn
       void erase(iterator it);
       void erase(iterator begin, iterator end);
       void clear();
-      void splice(iterator it, nary& right);
+      void insert(iterator it, const nary& right);
 
       /// The first item of this nary.
       const kvalue_t head() const { return *begin(); }

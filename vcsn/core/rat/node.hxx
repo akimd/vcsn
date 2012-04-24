@@ -213,10 +213,11 @@ namespace vcsn
     template <class Weight>
     inline
     void
-    nary<Weight>::splice(iterator it, nary<Weight>& right)
+    nary<Weight>::insert(iterator it, const nary<Weight>& right)
     {
       assert(this->type() == right.type());
-      sub_node_.splice(it, right.sub_node_);
+      sub_node_.insert(it,
+                       std::begin(right.sub_node_), std::end(right.sub_node_));
     }
 
 
