@@ -40,7 +40,7 @@ if test x$GXX = xyes; then
    esac
 fi
 
-AC_LANG(C++)
+AC_LANG([C++])
 
 AX_CHECK_COMPILE_FLAG([-std=c++11],
                       [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++11"])
@@ -53,6 +53,26 @@ if "${stdfailed-true}"; then
 fi
 
 CF_GXX_WARNINGS
+
+# For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
+# stringstreams.  This is well known, ancient, yet still the case
+# today (G++ 4.7, XCode 4.2).
+# http://stackoverflow.com/questions/7623070/stringstream-not-working-with-doubles-when-glibcxx-debug-enabled
+AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
+               [ac_cv_GLIBCXX_DEBUG],
+[AC_RUN_IFELSE(
+[AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG_PEDANTIC
+#include <sstream>],
+[  std::stringstream o;
+  o << 42;
+  return !(o.str() == "42");
+])], [ac_cv_GLIBCXX_DEBUG=yes],
+     [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
+     [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])])
+case $ac_cv_GLIBCXX_DEBUG in yes)
+  CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
+esac
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
