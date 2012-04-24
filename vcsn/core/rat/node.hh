@@ -126,28 +126,15 @@ namespace vcsn
       {}
       const_iterator begin() const;
       const_iterator end() const;
-      iterator begin();
-      iterator end();
       const_reverse_iterator rbegin() const;
       const_reverse_iterator rend() const;
-      reverse_iterator rbegin();
-      reverse_iterator rend();
-
       size_t size() const;
-      void erase(iterator it);
-      void erase(iterator begin, iterator end);
-      void clear();
 
       /// The first item of this nary.
       const kvalue_t head() const { return *begin(); }
-      kvalue_t head() { return *begin(); }
 
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0))
-      {
-        return boost::make_iterator_range(*this, 1, 0);
-      }
-      auto tail() -> decltype(boost::make_iterator_range(*this, 1, 0))
       {
         return boost::make_iterator_range(*this, 1, 0);
       }

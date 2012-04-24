@@ -118,22 +118,6 @@ namespace vcsn
 
     template <class Weight>
     inline
-    typename nary<Weight>::iterator
-    nary<Weight>::begin()
-    {
-      return sub_node_.begin();
-    }
-
-    template <class Weight>
-    inline
-    typename nary<Weight>::iterator
-    nary<Weight>::end()
-    {
-      return sub_node_.end();
-    }
-
-    template <class Weight>
-    inline
     auto
     nary<Weight>::rbegin() const
       -> const_reverse_iterator
@@ -152,51 +136,12 @@ namespace vcsn
 
     template <class Weight>
     inline
-    typename nary<Weight>::reverse_iterator
-    nary<Weight>::rbegin()
-    {
-      return sub_node_.begin();
-    }
-
-    template <class Weight>
-    inline
-    typename nary<Weight>::reverse_iterator
-    nary<Weight>::rend()
-    {
-      return sub_node_.end();
-    }
-
-    template <class Weight>
-    inline
     size_t
     nary<Weight>::size() const
     {
       return sub_node_.size();
     }
 
-    template <class Weight>
-    inline
-    void
-    nary<Weight>::erase(iterator it)
-    {
-      sub_node_.erase(it);
-    }
-
-    template <class Weight>
-    inline
-    void
-    nary<Weight>::erase(iterator begin, iterator end)
-    {
-      sub_node_.erase(begin, end);
-    }
-
-    template <class Weight>
-    inline
-    void
-    nary<Weight>::clear()
-    {
-      sub_node_.clear();
-    }
 
 
     /*-------.
