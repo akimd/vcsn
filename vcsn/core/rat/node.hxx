@@ -98,16 +98,18 @@ namespace vcsn
 
     template <class Weight>
     inline
-    typename nary<Weight>::const_iterator
+    auto
     nary<Weight>::begin() const
+      -> const_iterator
     {
       return sub_node_.begin();
     }
 
     template <class Weight>
     inline
-    typename nary<Weight>::const_iterator
+    auto
     nary<Weight>::end() const
+      -> const_iterator
     {
       return sub_node_.end();
     }
@@ -130,16 +132,18 @@ namespace vcsn
 
     template <class Weight>
     inline
-    typename nary<Weight>::const_reverse_iterator
+    auto
     nary<Weight>::rbegin() const
+      -> const_reverse_iterator
     {
       return sub_node_.begin();
     }
 
     template <class Weight>
     inline
-    typename nary<Weight>::const_reverse_iterator
+    auto
     nary<Weight>::rend() const
+      -> const_reverse_iterator
     {
       return sub_node_.end();
     }
@@ -162,8 +166,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    nary<Weight> &
+    auto
     nary<Weight>::push_back(kvalue_t elt)
+      -> nary&
     {
       sub_node_.push_back(elt);
       return *this;
@@ -171,8 +176,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    nary<Weight> &
+    auto
     nary<Weight>::push_front(kvalue_t elt)
+      -> nary&
     {
       sub_node_.push_front(elt);
       return *this;
@@ -212,8 +218,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    void
-    nary<Weight>::insert(iterator it, const nary<Weight>& right)
+    auto
+    nary<Weight>::insert(iterator it, const nary& right)
+      -> void
     {
       assert(this->type() == right.type());
       sub_node_.insert(it,

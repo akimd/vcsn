@@ -192,7 +192,7 @@ namespace vcsn
       using super_type = nary<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-      using typename node_t::kvalue_t;
+      using kvalue_t = typename node_t::kvalue_t;
       using nodes_t = std::list<kvalue_t>;
 
       using const_iterator = typename nodes_t::const_iterator;
@@ -222,7 +222,7 @@ namespace vcsn
       using super_type = inner<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
-      using typename node_t::kvalue_t;
+      using kvalue_t = typename node_t::kvalue_t;
 
     public:
       star(const weight_t& l, const weight_t& r, kvalue_t exp);
