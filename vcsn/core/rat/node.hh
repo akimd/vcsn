@@ -133,13 +133,10 @@ namespace vcsn
       reverse_iterator rbegin();
       reverse_iterator rend();
 
-      nary& push_back(kvalue_t elt);
-      nary& push_front(kvalue_t elt);
       size_t size() const;
       void erase(iterator it);
       void erase(iterator begin, iterator end);
       void clear();
-      void insert(iterator it, const nary& right);
 
       /// The first item of this nary.
       const kvalue_t head() const { return *begin(); }

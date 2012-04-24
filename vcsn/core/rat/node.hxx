@@ -168,26 +168,6 @@ namespace vcsn
 
     template <class Weight>
     inline
-    auto
-    nary<Weight>::push_back(kvalue_t elt)
-      -> nary&
-    {
-      sub_node_.push_back(elt);
-      return *this;
-    }
-
-    template <class Weight>
-    inline
-    auto
-    nary<Weight>::push_front(kvalue_t elt)
-      -> nary&
-    {
-      sub_node_.push_front(elt);
-      return *this;
-    }
-
-    template <class Weight>
-    inline
     size_t
     nary<Weight>::size() const
     {
@@ -216,17 +196,6 @@ namespace vcsn
     nary<Weight>::clear()
     {
       sub_node_.clear();
-    }
-
-    template <class Weight>
-    inline
-    auto
-    nary<Weight>::insert(iterator it, const nary& right)
-      -> void
-    {
-      assert(this->type() == right.type());
-      sub_node_.insert(it,
-                       std::begin(right.sub_node_), std::end(right.sub_node_));
     }
 
 
