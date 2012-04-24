@@ -73,10 +73,6 @@ namespace vcsn
       std::swap(transitions_fs_, that.transitions_fs_);
     }
 
-    ~mutable_automaton()
-    {
-    }
-
     // Related sets
     ///////////////
 
