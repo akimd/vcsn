@@ -1,9 +1,9 @@
 #ifndef VCSN_WEIGHTS_POLY_HH
 # define VCSN_WEIGHTS_POLY_HH
 
-#include <map>
-#include <iostream>
-#include <sstream>
+# include <map>
+# include <iostream>
+# include <sstream>
 
 namespace vcsn
 {

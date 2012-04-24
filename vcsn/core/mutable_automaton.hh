@@ -88,8 +88,8 @@ namespace vcsn
     ///////////////
 
     const weightset_t& weightset() const { return es_.weightset(); }
-    const genset_t&  genset() const  { return es_.genset(); }
-    const entryset_t&  entryset() const  { return es_; }
+    const genset_t& genset() const { return es_.genset(); }
+    const entryset_t& entryset() const { return es_; }
 
     // Special states and transitions
     /////////////////////////////////
@@ -178,7 +178,8 @@ namespace vcsn
       auto i =
 	std::find_if(begin(succ), end(succ), [=,&l,&dst] (const transition_t& t)
 		     { const stored_transition_t& st = transitions_[t];
-		       return st.dst == dst && this->genset().equals(st.label, l); });
+		       return (st.dst == dst
+                               && this->genset().equals(st.label, l)); });
       if (i == end(succ))
 	return null_transition();
       return *i;
@@ -473,7 +474,8 @@ namespace vcsn
     // Iteration on states and transitions
     //////////////////////////////////////
 
-    typedef container_filter_range<boost::integer_range<state_t>> states_output_t;
+    using states_output_t =
+      container_filter_range<boost::integer_range<state_t>>;
   protected:
     states_output_t
     state_range(state_t b, state_t e) const
