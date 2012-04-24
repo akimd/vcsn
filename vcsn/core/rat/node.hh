@@ -61,11 +61,9 @@ namespace vcsn
     public:
       node(const weight_t& l);
 
-    public:
       virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
 
-    public:
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
@@ -84,13 +82,12 @@ namespace vcsn
       using weight_t = Weight;
       using super_type = node<weight_t>;
       using kvalue_t = typename super_type::kvalue_t;
-    protected:
-      inner(const weight_t& l, const weight_t& r);
-    public:
+
       const weight_t &right_weight() const;
       weight_t &right_weight();
 
     protected:
+      inner(const weight_t& l, const weight_t& r);
       weight_t rw_;
     };
 
