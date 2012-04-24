@@ -7,8 +7,8 @@ namespace vcsn
   std::ostream&
   str_escape(std::ostream& os, const std::string& str)
   {
-    for (std::string::const_iterator i = str.begin(); i != str.end(); ++i)
-      switch (*i)
+    for (auto c: str)
+      switch (c)
 	{
 	case '\\':
 	  os << "\\\\";
@@ -20,7 +20,7 @@ namespace vcsn
 	  os << "\\n";
 	  break;
 	default:
-	  os << *i;
+	  os << c;
 	  break;
 	}
     return os;
