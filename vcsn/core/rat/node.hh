@@ -53,6 +53,7 @@ namespace vcsn
       using weight_t = Weight;
       using node_t = rat::node<weight_t>;
       using kvalue_t = std::shared_ptr<node_t>;
+      using nodes_t = std::list<kvalue_t>;
     protected:
       using visitor = typename visitor_traits<Weight>::visitor;
       using const_visitor = typename visitor_traits<Weight>::const_visitor;
@@ -107,7 +108,7 @@ namespace vcsn
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename super_type::kvalue_t;
-      using nodes_t = std::list<kvalue_t>;
+      using nodes_t = typename super_type::nodes_t;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -164,7 +165,7 @@ namespace vcsn
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
-      using nodes_t = std::list<kvalue_t>;
+      using nodes_t = typename node_t::nodes_t;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
