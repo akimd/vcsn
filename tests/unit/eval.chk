@@ -1,0 +1,13 @@
+#! /bin/sh
+cat >out.exp <<\EOF
+PASS: aa
+PASS: bbb
+PASS: aabab
+PASS: abab
+PASS: aaaa
+PASS: b
+PASS: a
+PASS: caa
+PASS: aabab
+EOF
+run 0 out.exp unit/eval
