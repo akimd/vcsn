@@ -17,7 +17,7 @@ m4_pattern_forbid([^(TC|VCSN)_])
 
 AC_PREREQ([2.61])
 
-AC_INIT([vaucanson], [2.0a], [vaucanson-bugs@lrde.epita.fr])
+AC_INIT([Vaucanson], [2.0a], [vaucanson-bugs@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
@@ -62,7 +62,7 @@ TC_PROG([flex], [>= 2.5.4], [FLEX], [Flex scanner generator])
 AM_PROG_LEX
 TC_PROG([bison], [>= 2.4], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
-
+AC_CONFIG_HEADERS([vcsn/config.h:vcsn/config.in.h])
 AC_CONFIG_FILES([
   Makefile
   vcsn/Makefile

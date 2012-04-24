@@ -8,6 +8,7 @@
 /Makefile.in
 /aclocal.m4
 /autom4te.cache
+/build-aux/bin/bison++
 /build-aux/config.guess
 /build-aux/config.sub
 /build-aux/depcomp
@@ -25,9 +26,9 @@
 /configure
 /tests/Makefile.in
 /vcsn/Makefile.in
+/vcsn/config.in.h
 /vcsn/io/rat-exp
 /vcsn/lexer.cc
 /vcsn/parse-rat-exp.dir/
 Makefile
 \#*#
-bison++
