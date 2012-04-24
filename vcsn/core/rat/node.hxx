@@ -90,8 +90,10 @@ namespace vcsn
 
     template <class Weight>
     inline
-    nary<Weight>::nary(const weight_t& l, const weight_t& r)
+    nary<Weight>::nary(const weight_t& l, const weight_t& r,
+                       const nodes_t& ns)
       : super_type(l, r)
+      , sub_node_(ns)
     {
     }
 
@@ -234,8 +236,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    prod<Weight>::prod(const weight_t& l, const weight_t& r)
-      : super_type(l, r)
+    prod<Weight>::prod(const weight_t& l, const weight_t& r,
+                       const nodes_t& ns)
+      : super_type(l, r, ns)
     {}
 
 
@@ -263,8 +266,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    sum<Weight>::sum(const weight_t& l, const weight_t& r)
-      : super_type(l, r)
+    sum<Weight>::sum(const weight_t& l, const weight_t& r,
+                     const nodes_t& ns)
+      : super_type(l, r, ns)
     {}
 
     template <class Weight>

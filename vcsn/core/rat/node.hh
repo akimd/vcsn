@@ -60,6 +60,9 @@ namespace vcsn
 
     public:
       node(const weight_t& l);
+      node(const node& that)
+        : lw_(that.lw_)
+      {}
 
       virtual void accept(visitor &v) = 0;
       virtual void accept(const_visitor &v) const = 0;
@@ -88,6 +91,10 @@ namespace vcsn
 
     protected:
       inner(const weight_t& l, const weight_t& r);
+      inner(const inner& that)
+        : super_type(that)
+        , rw_(that.rw_)
+      {}
       weight_t rw_;
     };
 
@@ -112,8 +119,11 @@ namespace vcsn
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
 
-      nary(const weight_t& l, const weight_t& r);
-
+      nary(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
+      nary(const nary& that)
+        : super_type(that)
+        , sub_node_(that.sub_node_)
+      {}
       const_iterator begin() const;
       const_iterator end() const;
       iterator begin();
@@ -169,7 +179,7 @@ namespace vcsn
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
     public:
-      prod(const weight_t& l, const weight_t& r);
+      prod(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
     public:
       virtual type_t type() const { return node_t::PROD; };
 
@@ -198,7 +208,7 @@ namespace vcsn
       using const_reverse_iterator = typename nodes_t::const_reverse_iterator;
       using reverse_iterator = typename nodes_t::reverse_iterator;
     public:
-      sum(const weight_t& l, const weight_t& r);
+      sum(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
 
     public:
       virtual type_t type() const { return node_t::SUM; };
