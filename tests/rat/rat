@@ -41,9 +41,9 @@ sub pp ($$)
   $res;
 }
 
-sub check_rat_exp($$$)
+sub check_rat_exp($$)
 {
-  my ($prog, $file, $verbose) = @_;
+  my ($prog, $file) = @_;
 
   use IO::File;
   my $in = new IO::File($file)
@@ -59,15 +59,17 @@ sub check_rat_exp($$$)
       if (/%weight: (.*)/)
         {
           $ws = $1;
-          print "WeightSet: $ws\n"
-            if $verbose;
+          my $title = "WeightSet: $ws";
+          print "$title\n";
+          $title =~ s/./-/g;
+          print "$title\n";
           next;
         }
 
       if (/%include: (.*)/)
         {
           my $f = dirname($file) . "/" . $1;
-          check_rat_exp($prog, $f, $verbose);
+          check_rat_exp($prog, $f);
           next;
         }
 
@@ -87,13 +89,12 @@ sub check_rat_exp($$$)
             }
           else
             {
-              print "$file:$line: $FAIL: $l $op $r\n";
               ++$fail;
-              if ($verbose)
-                {
-                  print "      exp: ! $r\n";
-                  print "      eff: $L\n";
-                }
+              print "- $file:$line: $FAIL: $l $op $r\n";
+              print "\n";
+              print "  - exp: ! $r\n";
+              print "  - eff: $L\n";
+              print "\n";
             }
         }
       else
@@ -102,25 +103,23 @@ sub check_rat_exp($$$)
           # Empty result is a sign of failure.
           if ($L ne '' && $L eq $R)
             {
-              print "$PASS: $l $op $r => $L\n";
+              print "- $PASS: $l $op $r => $L\n";
             }
           else
             {
-              print "$file:$line: $FAIL: $l $op $r\n";
               ++$fail;
-              if ($verbose)
-                {
-                  print "      exp: $R\n";
-                  print "      eff: $L\n";
-                }
+              print "- $file:$line: $FAIL: $l $op $r\n";
+              print "\n";
+              print "   - exp: $R\n";
+              print "   - eff: $L\n";
+              print "\n";
             }
         }
     }
 }
 
-my $verbose = 1;
 my $prog = shift @ARGV;
-check_rat_exp($prog, $_, $verbose)
+check_rat_exp($prog, $_)
   foreach @ARGV;
 
 exit !!$fail;
