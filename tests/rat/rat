@@ -85,7 +85,7 @@ sub check_rat_exp($$)
         {
           if ($L eq "! $r")
             {
-              print "$PASS: $l $op $r\n";
+              print "- $PASS: $l $op $r\n";
             }
           else
             {
