@@ -9,7 +9,7 @@ namespace vcsn
   {
 
     class exp;
-    using exp_t = std::shared_ptr<exp>;
+    using exp_t = std::shared_ptr<const exp>;
 
     template <class Weight>
     class node;

@@ -52,7 +52,9 @@ namespace vcsn
     public:
       using weight_t = Weight;
       using node_t = rat::node<weight_t>;
-      using kvalue_t = std::shared_ptr<node_t>;
+      using self_t = node;
+      using kvalue_t = std::shared_ptr<const node_t>;
+      using wvalue_t = std::shared_ptr<node_t>;
       using nodes_t = std::list<kvalue_t>;
       using const_visitor = vcsn::rat::const_visitor<weight_t>;
 
@@ -61,14 +63,22 @@ namespace vcsn
         : lw_(that.lw_)
       {}
 
+      using shared_t = std::shared_ptr<const node>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
+
       virtual void accept(const_visitor &v) const = 0;
 
       const weight_t &left_weight() const;
       weight_t &left_weight();
 
     protected:
+      virtual kvalue_t clone_() const = 0;
       weight_t lw_;
     };
+
 
     /*--------.
     | inner.  |
@@ -81,9 +91,16 @@ namespace vcsn
       using weight_t = Weight;
       using super_type = node<weight_t>;
       using kvalue_t = typename super_type::kvalue_t;
+      using self_t = inner;
 
       const weight_t &right_weight() const;
       weight_t &right_weight();
+
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
     protected:
       inner(const weight_t& l, const weight_t& r);
@@ -91,6 +108,9 @@ namespace vcsn
         : super_type(that)
         , rw_(that.rw_)
       {}
+
+      virtual kvalue_t clone_() const = 0;
+
       weight_t rw_;
     };
 
@@ -109,6 +129,7 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using kvalue_t = typename super_type::kvalue_t;
       using nodes_t = typename super_type::nodes_t;
+      using self_t = nary;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -137,9 +158,17 @@ namespace vcsn
         , sub_node_(that.sub_node_)
       {}
 
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
+      virtual kvalue_t clone_() const = 0;
+
     private:
       nodes_t sub_node_;
     };
+
 
     /*-------.
     | prod.  |
@@ -155,6 +184,7 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using nodes_t = typename node_t::nodes_t;
+      using self_t = prod;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -163,10 +193,22 @@ namespace vcsn
 
       prod(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
 
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
+
       virtual type_t type() const { return node_t::PROD; };
 
       virtual void accept(typename node_t::const_visitor& v) const;
+    protected:
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
+
 
     /*------.
     | sum.  |
@@ -182,6 +224,7 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using nodes_t = std::list<kvalue_t>;
+      using self_t = sum;
 
       using const_iterator = typename nodes_t::const_iterator;
       using iterator = typename nodes_t::iterator;
@@ -189,10 +232,20 @@ namespace vcsn
       using reverse_iterator = typename nodes_t::reverse_iterator;
 
       sum(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
       virtual type_t type() const { return node_t::SUM; };
 
       virtual void accept(typename node_t::const_visitor& v) const;
+    protected:
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
 
     /*-------.
@@ -208,8 +261,14 @@ namespace vcsn
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
+      using self_t = star;
 
       star(const weight_t& l, const weight_t& r, kvalue_t exp);
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
       virtual type_t type() const { return node_t::STAR; };
 
@@ -220,6 +279,11 @@ namespace vcsn
 
     private:
       kvalue_t sub_exp_;
+
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
 
 
@@ -232,9 +296,19 @@ namespace vcsn
     {
     public:
       using weight_t = Weight;
-      using super_type = node<weight_t>;
+      using node_t = node<weight_t>;
+      using type_t = typename node_t::type_t;
+      using kvalue_t = typename node_t::kvalue_t;
+      using super_type = node_t;
+      using self_t = leaf;
     protected:
       leaf(const weight_t& l);
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
+      virtual kvalue_t clone_() const = 0;
     };
 
 
@@ -246,12 +320,24 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
+      using kvalue_t = typename node_t::kvalue_t;
+      using self_t = one;
 
       one(const weight_t& l);
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
       virtual type_t type() const { return node_t::ONE; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
+    protected:
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
 
     template <class Weight>
@@ -262,13 +348,26 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
+      using kvalue_t = typename node_t::kvalue_t;
+      using self_t = zero;
 
       zero(const weight_t& l);
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
       virtual type_t type() const { return node_t::ZERO; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
+    protected:
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
+
 
     template <class Weight>
     class atom : public leaf<Weight>
@@ -278,8 +377,15 @@ namespace vcsn
       using super_type = leaf<weight_t>;
       using node_t = node<weight_t>;
       using type_t = typename node_t::type_t;
+      using kvalue_t = typename node_t::kvalue_t;
+      using self_t = atom;
 
       atom(const weight_t& l, const std::string& atom);
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const
+      {
+        return std::static_pointer_cast<const self_t>(clone_());
+      };
 
       virtual type_t type() const { return node_t::ATOM; };
 
@@ -287,6 +393,11 @@ namespace vcsn
       const std::string& get_atom() const;
     private:
       std::string atom_;
+
+      virtual kvalue_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
     };
 
   } // namespace rat
