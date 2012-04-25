@@ -23,7 +23,7 @@ namespace vcsn
     // When taken as a WeightSet, our (abstract) value type.
     using value_t = rat::exp_t;
     // Concrete value type.
-    using kvalue_t = std::shared_ptr<node_t>;
+    using kvalue_t = typename node_t::kvalue_t;
 
   public:
     /// Constructor.

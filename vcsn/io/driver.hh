@@ -14,8 +14,7 @@ namespace vcsn
     class driver
     {
     public:
-      /// The type of the parse result.
-      using exp_t = std::shared_ptr<exp>;
+      using exp_t = vcsn::rat::exp_t;
       driver(const abstract_kratexps& f);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
