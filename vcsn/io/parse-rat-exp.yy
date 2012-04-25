@@ -88,7 +88,7 @@
 %token  <sval> ATOM    "atom"
                WEIGHT  "weight";
 
-%type <node> exp term lexp factor leaf factors weights weights.opt;
+%type <node> exp exps term lexp factor leaf factors weights weights.opt;
 
 
 %left "+"
@@ -98,7 +98,8 @@
 %%
 
 exps:
-  exp  { driver_.result_ = $1; }
+  // Provide a value for $$ only for sake of traces: shows the result.
+  exp  { $$ = driver_.result_ = $1; }
 ;
 
 exp:
