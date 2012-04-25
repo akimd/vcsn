@@ -1,3 +1,12 @@
+* 2012-04-25
+** Expressions overhaul
+They are immutable: we no longer make side effects on expressions.
+They are shared_ptr, no longer plain pointers.  They *can* be used
+like the other values, by value.
+
+** standard-of: star is fixed
+Standard-of seems to be correct.
+
 * 2012-04-19
 ** standard-of is fully implemented
 Support for star was implemented, and checked for B and Z.  For
