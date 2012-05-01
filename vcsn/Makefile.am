@@ -17,6 +17,7 @@ AM_CPPFLAGS += -I$(top_srcdir)
 
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
+  algos/determinize.hh				\
   algos/dotty.hh                                \
   algos/product.hh                              \
   algos/standard_of.hh                          \
