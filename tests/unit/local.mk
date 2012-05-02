@@ -1,6 +1,7 @@
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=				\
   unit/eval					\
+  unit/determinize				\
   unit/ladybird-b 				\
   unit/ladybird-z				\
   unit/ladybird-zmin				\
@@ -20,6 +21,7 @@ unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
 
 unit_TESTS =					\
   unit/eval.chk					\
+  unit/determinize.chk				\
   unit/ladybird.chk				\
   unit/poly.chk					\
   unit/product.chk				\
@@ -32,6 +34,7 @@ dist_TESTS += $(unit_TESTS)
 # the dependencies, so that the test suite does not make useless
 # compilations.
 unit/eval.log: unit/eval
+unit/determinize.log: unit/determinize
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/poly.log: unit/poly
 unit/product.log: unit/product
