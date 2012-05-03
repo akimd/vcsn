@@ -199,6 +199,8 @@ namespace vcsn
                      v);
                 }
           }
+        for (auto tf: res_.final_transitions())
+          res_.rmul_weight(tf, w);
         res_.set_final(initial_, w);
         apply_weights(e, other_finals);
       }
