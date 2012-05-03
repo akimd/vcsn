@@ -63,23 +63,23 @@ namespace vcsn
   DEFINE::add(value_t l, value_t r) const
     -> value_t
   {
-    auto left = std::static_pointer_cast<const node_t>(l);
-    auto right = std::static_pointer_cast<const node_t>(r);
+    auto left = down_pointer_cast<const node_t>(l);
+    auto right = down_pointer_cast<const node_t>(r);
     return add(left, right);
   }
 
   DEFINE::mul(value_t l, value_t r) const
     -> value_t
   {
-    auto left = std::static_pointer_cast<const node_t>(l);
-    auto right = std::static_pointer_cast<const node_t>(r);
+    auto left = down_pointer_cast<const node_t>(l);
+    auto right = down_pointer_cast<const node_t>(r);
     return mul(left, right);
   }
 
   DEFINE::star(value_t e) const
     -> value_t
   {
-    return star(std::static_pointer_cast<const node_t>(e));
+    return star(down_pointer_cast<const node_t>(e));
   }
 
 
@@ -94,7 +94,7 @@ namespace vcsn
     if (e->type() == node_t::ZERO || ws_.is_zero(v))
       return zero();
     else
-      return weight(v, std::static_pointer_cast<const node_t>(e));
+      return weight(v, down_pointer_cast<const node_t>(e));
   }
 
   DEFINE::weight(value_t e, std::string* w) const
@@ -106,7 +106,7 @@ namespace vcsn
     if (e->type() == node_t::ZERO || ws_.is_zero(v))
       return zero();
     else
-      return weight(std::static_pointer_cast<const node_t>(e), v);
+      return weight(down_pointer_cast<const node_t>(e), v);
   }
 
 
@@ -129,12 +129,12 @@ namespace vcsn
       {
         typename node_t::nodes_t ns;
         if (l->type() == node_t::SUM)
-          for (auto n: *std::static_pointer_cast<const sum_t>(l))
+          for (auto n: *down_pointer_cast<const sum_t>(l))
             ns.push_back(n);
         else
           ns.push_back(l);
         if (r->type() == node_t::SUM)
-          for (auto n: *std::static_pointer_cast<const sum_t>(r))
+          for (auto n: *down_pointer_cast<const sum_t>(r))
             ns.push_back(n);
         else
           ns.push_back(r);
@@ -164,12 +164,12 @@ namespace vcsn
       {
         typename node_t::nodes_t ns;
         if (l->type() == node_t::PROD)
-          for (auto n: *std::static_pointer_cast<const prod_t>(l))
+          for (auto n: *down_pointer_cast<const prod_t>(l))
             ns.push_back(n);
         else
           ns.push_back(l);
         if (r->type() == node_t::PROD)
-          for (auto n: *std::static_pointer_cast<const prod_t>(r))
+          for (auto n: *down_pointer_cast<const prod_t>(r))
             ns.push_back(n);
         else
           ns.push_back(r);
@@ -189,7 +189,7 @@ namespace vcsn
 //      // Trivial identity
 //      // (k1)* == (k*)1
 //      return weight(ws_.star(e->left_weight()),
-//                    std::static_pointer_cast<const leaf_t>(unit()));
+//                    down_pointer_cast<const leaf_t>(unit()));
     else
       return std::make_shared<star_t>(ws_.unit(), ws_.unit(), e);
   }
@@ -213,7 +213,7 @@ namespace vcsn
     using wvalue_t = typename node_t::wvalue_t;
     if (e->is_inner())
       {
-        auto inner = std::static_pointer_cast<const inner_t>(e);
+        auto inner = down_pointer_cast<const inner_t>(e);
         auto res = std::const_pointer_cast<inner_t>(inner->clone());
         res->right_weight() = ws_.mul(inner->right_weight(), w);
         return res;
@@ -256,7 +256,7 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    const auto down = std::static_pointer_cast<const node_t>(v);
+    const auto down = down_pointer_cast<const node_t>(v);
     rat::printer<weightset_t> print(o, ws_);
     down->accept(print);
     return o;
