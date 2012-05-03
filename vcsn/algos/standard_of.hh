@@ -3,10 +3,6 @@
 
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/echo.hh>
-
-# undef ECHO
-# define ECHO(S)
 
 namespace vcsn
 {
@@ -164,40 +160,21 @@ namespace vcsn
         e.get_sub()->accept(*this);
         // The "final weight of the initial state", starred.
         weight_t w = ws_.star(res_.get_final_weight(initial_));
-        ECHOV(ws_.format(w));
         // Branch all the final states (but initial) to the successors
         // of initial.
         for (auto ti: res_.out(initial_))
           {
-            ECHO("BEFORE: "
-                 << V(res_.src_of(ti))
-                 << V(res_.dst_of(ti))
-                 << V(res_.label_of(ti))
-                 << V(ws_.format(res_.weight_of(ti))));
             res_.lmul_weight(ti, w);
-            ECHO("AFTER:  "
-                 << V(res_.src_of(ti))
-                 << V(res_.dst_of(ti))
-                 << V(res_.label_of(ti))
-                 << V(ws_.format(res_.weight_of(ti))));
             for (auto tf: res_.final_transitions())
               if (res_.src_of(tf) != initial_
                   && other_finals.find(res_.src_of(tf)) == other_finals.end())
-                {
-                  // Note that the weight of ti has already been
-                  // multiplied, on the left, by w.
-                  weight_t v = ws_.mul(res_.weight_of(tf), res_.weight_of(ti));
-                  ECHO(V(res_.src_of(tf))
-                       << V(res_.dst_of(ti))
-                       << V(res_.label_of(ti))
-                       << V(ws_.format(res_.weight_of(ti)))
-                       << V(ws_.format(v)));
-                  res_.add_transition
-                    (res_.src_of(tf),
-                     res_.dst_of(ti),
-                     res_.label_of(ti),
-                     v);
-                }
+                // Note that the weight of ti has already been
+                // multiplied, on the left, by w.
+                res_.add_transition
+                  (res_.src_of(tf),
+                   res_.dst_of(ti),
+                   res_.label_of(ti),
+                   ws_.mul(res_.weight_of(tf), res_.weight_of(ti)));
           }
         for (auto tf: res_.final_transitions())
           res_.rmul_weight(tf, w);
