@@ -20,8 +20,7 @@ namespace vcsn
       using genset_t = typename automaton_t::genset_t;
       using state_t = typename automaton_t::state_t;
 
-      standard_of_visitor(const genset_t& alpha,
-                          const weightset_t& ws)
+      standard_of_visitor(const genset_t& alpha, const weightset_t& ws)
         : ws_(ws)
         , res_(alpha, ws)
       {}
@@ -32,16 +31,6 @@ namespace vcsn
         std::dynamic_pointer_cast<const node<weight_t>>(v)->accept(*this);
         res_.set_initial(initial_);
         return std::move(res_);
-      }
-
-      using states_t = std::set<state_t>;
-      states_t
-      finals()
-      {
-        states_t res;
-        for (auto t: res_.final_transitions())
-          res.insert(res_.src_of(t));
-        return res;
       }
 
       virtual void
@@ -66,6 +55,17 @@ namespace vcsn
         initial_ = i;
         res_.add_transition(i, f, e.get_atom(), e.left_weight());
         res_.set_final(f);
+      }
+
+      /// The current set of final states.
+      using states_t = std::set<state_t>;
+      states_t
+      finals()
+      {
+        states_t res;
+        for (auto t: res_.final_transitions())
+          res.insert(res_.src_of(t));
+        return res;
       }
 
       /// Apply the left weight to initial state, and the right weight
