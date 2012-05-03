@@ -15,10 +15,12 @@ namespace vcsn
       , debug_(debug)
     {}
 
+
     template <class WeightSet>
-    printer<WeightSet>::~printer()
+    void
+    printer<WeightSet>::visit(const sum<weight_t>& v)
     {
-      out_ << std::flush;
+      print(v, '+');
     }
 
     template <class WeightSet>
@@ -30,32 +32,22 @@ namespace vcsn
 
     template <class WeightSet>
     void
-    printer<WeightSet>::visit(const sum<weight_t>& v)
-    {
-      print(v, '+');
-    }
-
-    template <class WeightSet>
-    void
     printer<WeightSet>::visit(const star<weight_t>& v)
     {
       const auto& sub = v.get_sub();
       assert(sub);
       print(v.left_weight());
+
+      bool parens = parens_(v);
       if (debug_)
         out_ << '*';
-      out_ << '(';
+      if (parens)
+        out_ << '(';
       sub->accept(*this);
-      out_ << "*)";
+      out_ << "*";
+      if (parens)
+        out_ << ')';
       print(v.right_weight());
-    }
-
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const one<weight_t>& v)
-    {
-      print(v.left_weight());
-      out_ << "\\e";
     }
 
     template <class WeightSet>
@@ -64,6 +56,14 @@ namespace vcsn
     {
       print(v.left_weight());
       out_ << "\\z";
+    }
+
+    template <class WeightSet>
+    void
+    printer<WeightSet>::visit(const one<weight_t>& v)
+    {
+      print(v.left_weight());
+      out_ << "\\e";
     }
 
     template <class WeightSet>
@@ -94,9 +94,11 @@ namespace vcsn
 
       print(n.left_weight());
 
+      bool parens = parens_(n);
       if (debug_)
         out_ << op;
-      out_ << '(';
+      if (parens)
+        out_ << '(';
       bool first = true;
       for (auto i: n)
         {
@@ -105,7 +107,8 @@ namespace vcsn
           first = false;
           i->accept(*this);
         }
-      out_ << ')';
+      if (parens)
+        out_ << ')';
 
       print(n.right_weight());
     }

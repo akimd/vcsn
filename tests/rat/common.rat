@@ -5,32 +5,32 @@ x ! 1.1: invalid word: x: invalid letter: x
 a  => a
 \e => \e
 \z => \z
-a+b => (a+b)
-ab => (a.b)
-a.b => (a.b)
-a* => (a*)
+a+b => a+b
+ab => a.b
+a.b => a.b
+a* => a*
 
 # Precedence and associativity.
-(a+b)* == ((a+b)*)
-a*b* == (a*)(b*)
-a*+b* == ((a*)+(b*))
-a+b* == (a+(b*))
-a.b* == (a.(b*))
-ab* == a(b*)
-aa* == a(a*)
-a** == (a*)*
-(a+b).c+b == ((a+b).c)+b
-(a+\e)*+b == ((a+\e)*)+b
-(ab)* == (((a)b)*)
-\e+a == (\e+a)
-abc == ((ab)c)
-a == (a)
-(a(bc)) == a(bc)
-a+b+c == (a+b)+c
-a+\e == (a+\e)
-\e+\e == (\e+\e)
-(abc).(cba) == abccba
-(a+b)+(c+d) == a+b+c+d
+(a+b)* => (a+b)*
+a*b* => (a*).(b*)
+a*+b* => (a*)+(b*)
+a+b* => a+(b*)
+a.b* => a.(b*)
+ab* => a.(b*)
+aa* => a.(a*)
+a** => (a*)*
+(a+b).c+b => ((a+b).c)+b
+(a+\e)*+b => ((a+\e)*)+b
+(ab)* => (a.b)*
+\e+a => \e+a
+abc => a.b.c
+(a) => a
+a(bc) == a.b.c
+(a+b)+c => a+b+c
+(a+\e) => a+\e
+(\e+\e) => \e+\e
+(abc).(cba) => a.b.c.c.b.a
+(a+b)+(c+d) => a+b+c+d
 
 # Trivial identities, called T in TAF-Kit's documentation.
 \z*  => \e

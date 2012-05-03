@@ -16,9 +16,9 @@ a{\z} => \z
 a{\e} => a
 
 # Trivial identities: A_K in TAF-Kit's documentation.
-{c}{d}a => {(c.d)}a
-{c}a{d} => {(c.d)}a
-a{c}{d} => {(c.d)}a
+{c}{d}a => {c.d}a
+{c}a{d} => {c.d}a
+a{c}{d} => {c.d}a
 ({c}(a.b)){d} => {c}(a.b){d}
 
 # Trivial identities: U_K in TAF-Kit's documentation.

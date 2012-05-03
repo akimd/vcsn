@@ -21,8 +21,16 @@ namespace vcsn
       printer(std::ostream& out,
               const weightset_t& ws,
               const bool debug = false);
-      virtual ~printer();
 
+      void
+      operator()(const node<weightset_t>& v)
+      {
+        top_ = true;
+        visit(v);
+        out_ << std::flush;
+      }
+
+    private:
       virtual void visit(const prod<weight_t>& v);
       virtual void visit(const sum<weight_t>& v);
       virtual void visit(const star<weight_t>& v);
@@ -30,14 +38,32 @@ namespace vcsn
       virtual void visit(const zero<weight_t>& v);
       virtual void visit(const atom<weight_t>& v);
 
-    private:
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
       void print(const nary<weight_t>& n, const char op);
 
+      /// Whether the visited node, if sum, prod, or star, requires
+      /// outer parens.  The top level node does not these parens,
+      /// unless debug mode, or is an inner node with weights.
+      bool parens_(const inner<weight_t>& n)
+      {
+        bool res =
+          !top_
+          || ws_.show_unit()
+          || !ws_.is_unit(n.left_weight())
+          || !ws_.is_unit(n.right_weight());
+        top_ = false;
+        return res;
+      }
+
+      /// Output stream.
       std::ostream& out_;
       const weightset_t& ws_;
+      /// Whether to be overly verbose.
       const bool debug_;
+      /// Whether the visited node is the top-level node.  Used by
+      /// parens_.
+      bool top_ = true;
     };
 
   } // namespace rat

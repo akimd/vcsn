@@ -1,4 +1,18 @@
 * 2012-05-03
+** RatExp: improved pretty-printing
+The outermost pair of parentheses is removed if useless.  For
+instance:
+
+   (a.b) => a.b
+   (a+b+c) => a+b+c
+   (a*) => a*
+
+But in the following examples they are kept.
+
+   {3}(a.b){4}
+   {3}(a*)
+   (a+b){4}
+
 ** standard-of: star is fixed
 Standard-of seems to be correct.
 
