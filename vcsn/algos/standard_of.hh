@@ -26,9 +26,9 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(const exp_t v)
+      operator()(std::shared_ptr<const node<weight_t>> v)
       {
-        std::dynamic_pointer_cast<const node<weight_t>>(v)->accept(*this);
+        v->accept(*this);
         res_.set_initial(initial_);
         return std::move(res_);
       }
@@ -194,9 +194,14 @@ namespace vcsn
     standard_of(const typename Aut::genset_t& alpha, const WeightSet& ws,
                 const exp_t e)
     {
+      using weightset_t = WeightSet;
+      using weight_t = typename weightset_t::value_t;
+      // Make sure the type is right.
+      std::shared_ptr<const node<weight_t>> v =
+        std::dynamic_pointer_cast<const node<weight_t>>(e);
+      assert(v);
       standard_of_visitor<Aut, WeightSet> standard(alpha, ws);
-      auto res = standard(e);
-      return res;
+      return standard(v);
     }
 
   } // rat::
