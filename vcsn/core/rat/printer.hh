@@ -52,8 +52,8 @@ namespace vcsn
       void print(const nary<weight_t>& n, const char op);
 
       /// Whether the visited node, if sum, prod, or star, requires
-      /// outer parens.  The top level node does not these parens,
-      /// unless debug mode, or is an inner node with weights.
+      /// outer parens.  The top level node does not need parens,
+      /// unless debug mode, or is a sum/prod/star node with weights.
       bool parens_(const inner<weight_t>& n)
       {
         bool res =
