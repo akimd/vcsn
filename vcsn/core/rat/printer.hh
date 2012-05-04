@@ -17,17 +17,26 @@ namespace vcsn
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
       using super_type = const_visitor<weight_t>;
+      using node_t = node<weight_t>;
 
       printer(std::ostream& out,
               const weightset_t& ws,
               const bool debug = false);
 
+      /// Entry point: print \a v.
       void
-      operator()(const node<weightset_t>& v)
+      operator()(const node_t& v)
       {
         top_ = true;
-        visit(v);
+        v.accept(*this);
         out_ << std::flush;
+      }
+
+      /// Entry point: print \a v.
+      void
+      operator()(std::shared_ptr<const node_t> v)
+      {
+        operator()(*v);
       }
 
     private:

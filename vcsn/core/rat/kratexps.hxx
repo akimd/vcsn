@@ -256,9 +256,8 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    const auto down = down_pointer_cast<const node_t>(v);
     rat::printer<weightset_t> print(o, ws_);
-    down->accept(print);
+    print(down_pointer_cast<const node_t>(v));
     return o;
   }
 
