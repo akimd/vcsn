@@ -1,3 +1,9 @@
+* 2012-05-07
+** RatExp: in some case the weights could be lost
+"Associativity" was applied too eagerly, which would result in loss of
+some weights.  E.g. {a}bb{c}dd resulted in b.b.d.d, not it evaluates
+to {a}(b.b).{c}(d.d).
+
 * 2012-05-03
 ** RatExp: improved pretty-printing
 The outermost pair of parentheses is removed if useless.  For

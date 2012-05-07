@@ -120,8 +120,14 @@ namespace vcsn
   {
     assert(type == node_t::SUM || type == node_t::PROD);
     if (v->type() == type)
-      for (auto n: *down_pointer_cast<const nary_t>(v))
-        res.push_back(n);
+      {
+        const auto& nary = *down_pointer_cast<const nary_t>(v);
+        if (ws_.is_unit(nary.left_weight())
+            && ws_.is_unit(nary.right_weight()))
+          res.insert(std::end(res), std::begin(nary), std::end(nary));
+        else
+          res.push_back(v);
+      }
     else
       res.push_back(v);
   }

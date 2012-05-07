@@ -9,6 +9,9 @@ a{x} ! 1.2-5: 1.1: invalid word: x: invalid letter: x
 
 # Check associativities.
 {a}b{c}d{a} => ({a}b.{c}d){a}
+{a}bb{c}dd{a} => ({a}(b.b).{c}(d.d)){a}
+{a}b.b{c}d.d{a} => {a}b.b.{c}d.{a}d
+{a}ab*{c}ab*{d} => ({a}(a.(b*)).{c}(a.(b*))){d}
 
 # Trivial identities: T_K in TAF-Kit's documentation.
 {\z}a => \z
