@@ -43,3 +43,28 @@ AM_RST2HTMLFLAGS = -d -t
 	fi;								\
 	$$R2H $(AM_RST2HTMLFLAGS) $(RST2HTMLFLAGS) $< >$@.tmp
 	@mv $@.tmp $@
+
+## Taken from Automake's contrib/check-html.am
+TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
+
+mostlyclean-local: mostlyclean-check-html
+.PHONY: mostlyclean-check-html
+mostlyclean-check-html:
+## Expand $(TEST_LOGS) only once, to avoid exceeding line length limits.
+	list='$(TEST_LOGS:.log=.html)'; test -z "$$list" || rm -f $$list
+	rm -f $(TEST_SUITE_HTML)
+
+# Be sure to run check first, and then to convert the result.
+# Beware of concurrent executions.  Run "check" not "check-TESTS", as
+# check-SCRIPTS and other dependencies are rebuilt by the former only.
+# And expect check to fail.
+check-html recheck-html:
+	@target=`echo $@ | sed 's/-html$$//'`; \
+	rv=0; $(MAKE) $(AM_MAKEFLAGS) $$target || rv=$$?; \
+## The nullification of $(TEST_LOGS) is required to ensure that
+## "make recheck-html" do not try to uselessly re-run tests.
+	$(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML) TEST_LOGS= || exit 4; \
+	exit $$rv
+
+.PHONY: check-html recheck-html
+.MAKE: check-html recheck-html
