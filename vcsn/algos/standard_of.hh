@@ -53,7 +53,7 @@ namespace vcsn
         auto i = res_.new_state();
         auto f = res_.new_state();
         initial_ = i;
-        res_.add_transition(i, f, e.get_atom(), e.left_weight());
+        res_.add_transition(i, f, e.value(), e.left_weight());
         res_.set_final(f);
       }
 
@@ -157,7 +157,7 @@ namespace vcsn
       visit(const star<weight_t>& e)
       {
         states_t other_finals = finals();
-        e.get_sub()->accept(*this);
+        e.sub()->accept(*this);
         // The "final weight of the initial state", starred.
         weight_t w = ws_.star(res_.get_final_weight(initial_));
         // Branch all the final states (but initial) to the successors

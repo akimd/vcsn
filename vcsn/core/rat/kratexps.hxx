@@ -193,7 +193,7 @@ namespace vcsn
   DEFINE::word(atom_t l, atom_t r) const
     -> kvalue_t
   {
-    return atom(l->get_atom() + r->get_atom());
+    return atom(l->value() + r->value());
   }
 
   DEFINE::star(kvalue_t e) const

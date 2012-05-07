@@ -34,7 +34,7 @@ namespace vcsn
     void
     printer<WeightSet>::visit(const star<weight_t>& v)
     {
-      const auto& sub = v.get_sub();
+      const auto& sub = v.sub();
       assert(sub);
       print(v.left_weight());
 
@@ -71,7 +71,7 @@ namespace vcsn
     printer<WeightSet>::visit(const atom<weight_t>& v)
     {
       print(v.left_weight());
-      out_ << v.get_atom();
+      out_ << v.value();
     }
 
     template <class WeightSet>

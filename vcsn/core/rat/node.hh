@@ -272,8 +272,7 @@ namespace vcsn
 
       virtual type_t type() const { return node_t::STAR; };
 
-      kvalue_t get_sub();
-      const kvalue_t get_sub() const;
+      const kvalue_t sub() const;
 
       virtual void accept(typename node_t::const_visitor &v) const;
 
@@ -380,7 +379,7 @@ namespace vcsn
       using kvalue_t = typename node_t::kvalue_t;
       using self_t = atom;
 
-      atom(const weight_t& l, const std::string& atom);
+      atom(const weight_t& l, const std::string& value);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
       {
@@ -390,9 +389,9 @@ namespace vcsn
       virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
-      const std::string& get_atom() const;
+      const std::string& value() const;
     private:
-      std::string atom_;
+      std::string value_;
 
       virtual kvalue_t clone_() const
       {

@@ -27,7 +27,7 @@ namespace vcsn
 
     VISIT(star, v)
     {
-      if (auto sub = v.get_sub())
+      if (auto sub = v.sub())
         sub->accept(*this);
     }
 

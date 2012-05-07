@@ -200,16 +200,7 @@ namespace vcsn
     template <class Weight>
     inline
     auto
-    star<Weight>::get_sub()
-      -> kvalue_t
-    {
-      return sub_exp_;
-    }
-
-    template <class Weight>
-    inline
-    auto
-    star<Weight>::get_sub() const
+    star<Weight>::sub() const
       -> const kvalue_t
     {
       return sub_exp_;
@@ -267,9 +258,9 @@ namespace vcsn
 
     template <class Weight>
     inline
-    atom<Weight>::atom(const weight_t& w, const std::string& atom)
+    atom<Weight>::atom(const weight_t& w, const std::string& value)
       : super_type(w)
-      , atom_(atom)
+      , value_(value)
     {}
 
     template <class Weight>
@@ -283,9 +274,9 @@ namespace vcsn
     template <class Weight>
     inline
     const std::string&
-    atom<Weight>::get_atom() const
+    atom<Weight>::value() const
     {
-      return atom_;
+      return value_;
     }
 
   } // namespace exp
