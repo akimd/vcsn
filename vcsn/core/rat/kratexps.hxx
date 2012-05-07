@@ -10,33 +10,15 @@
 namespace vcsn
 {
 
-  /*-----------.
-  | kratexps.  |
-  `-----------*/
-
-  template <typename GenSet, typename WeightSet>
-  kratexps<GenSet, WeightSet>::kratexps(const GenSet& gs, const WeightSet& ws)
-    : super_type()
-    , gs_(gs)
-    , ws_(ws)
-  {}
-
-  template <typename GenSet, typename WeightSet>
-  template <typename T>
-  kratexps<GenSet, WeightSet>::kratexps(const GenSet& gs, const T& t)
-    : kratexps(gs, dynamic_cast<const weightset_t&>(t))
-  {}
-
-
   /*-----------------------------------------------------------.
   | Implementation of abstract_kratexps pure virtual methods.  |
   `-----------------------------------------------------------*/
 
-#define DEFINE                                          \
-  template <typename GenSet, typename WeightSet>        \
-  inline                                                \
-  auto                                                  \
-  kratexps<GenSet, WeightSet>
+#define DEFINE                                                  \
+  template <typename GenSet, typename WeightSet, typename Kind> \
+  inline                                                        \
+  auto                                                          \
+  kratexps<GenSet, WeightSet, Kind>
 
   DEFINE::zero() const
     -> value_t

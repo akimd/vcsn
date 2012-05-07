@@ -5,17 +5,20 @@
 # include <list>
 
 # include <vcsn/core/rat/node.hh>
+# include <vcsn/core/rat/kind.hh>
 # include <vcsn/core/rat/abstract_kratexps.hh>
 
 namespace vcsn
 {
 
-  template <typename GenSet, typename WeightSet>
+  template <typename GenSet, typename WeightSet,
+            typename Kind = atoms_are_letters>
   class kratexps : public abstract_kratexps
   {
   public:
     using genset_t = GenSet;
     using weightset_t = WeightSet;
+    using kind_t = Kind;
     using super_type = abstract_kratexps;
     using weight_t = typename weightset_t::value_t;
     using node_t = rat::node<weight_t>;
@@ -30,12 +33,18 @@ namespace vcsn
     /// Constructor.
     /// \param a    the generator set for the labels.
     /// \param ws   the type of the weights (e.g., "bool", "int").
-    kratexps(const genset_t& gs, const weightset_t& ws);
+    kratexps(const genset_t& gs, const weightset_t& ws)
+      : super_type()
+      , gs_(gs)
+      , ws_(ws)
+    {}
     /// Construct with \a t as weight-set.
     /// \param a    the generator set for the labels.
     /// \param t    \a t must be castable to weightset_t.
     template <typename T>
-    kratexps(const genset_t& gs, const T& t);
+    kratexps(const genset_t& gs, const T& t)
+      : kratexps(gs, dynamic_cast<const weightset_t&>(t))
+    {}
 
     const genset_t& genset() const
     {
