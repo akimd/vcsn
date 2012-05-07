@@ -41,7 +41,7 @@ usage(const char* prog, int status)
   exit(status);
 }
 
-enum type
+enum class type
   {
     b, br,
     z, zr, zrr,
@@ -107,7 +107,7 @@ pp(const context& ctx, const char* s, bool file)
   switch (ctx.weight)
     {
 #define CASE(Name)                              \
-      case Name:                                \
+      case type::Name:                          \
         pp(ctx, fact_ ## Name, s, file);        \
       break;
       CASE(b);
@@ -128,7 +128,7 @@ try
 
   map factories;
 #define DEFINE(Name)                            \
-  factories.insert(pair(#Name, Name))
+  factories.insert(pair(#Name, type::Name))
   DEFINE(b);
   DEFINE(br);
   DEFINE(z);
@@ -138,7 +138,7 @@ try
 
   context ctx =
     {
-      .weight = b,
+      .weight = type::b,
       .standard_of = false,
     };
   int opt;
