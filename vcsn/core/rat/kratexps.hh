@@ -4,7 +4,7 @@
 # include <string>
 # include <list>
 
-# include <vcsn/core/rat/node.fwd.hh>
+# include <vcsn/core/rat/node.hh>
 # include <vcsn/core/rat/abstract_kratexps.hh>
 
 namespace vcsn
@@ -19,6 +19,7 @@ namespace vcsn
     using super_type = abstract_kratexps;
     using weight_t = typename weightset_t::value_t;
     using node_t = rat::node<weight_t>;
+    using nodes_t = typename node_t::nodes_t;
 
     // When taken as a WeightSet, our (abstract) value type.
     using value_t = rat::exp_t;
@@ -54,6 +55,7 @@ namespace vcsn
     DEFINE(one);
     DEFINE(atom);
     DEFINE(inner);
+    DEFINE(nary);
     DEFINE(sum);
     DEFINE(prod);
     DEFINE(star);
@@ -93,6 +95,11 @@ namespace vcsn
     value_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;
+    /// A list denoting the gathering of \a l and \a r, applying
+    /// associativity if possible.
+    /// \param type  the kind of nodes on which to apply associativity.
+    ///              must be SUM or PROD.
+    nodes_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
 
   private:
     const genset_t& gs_;

@@ -7,6 +7,9 @@
 {x}a ! 1.1-4: 1.1: invalid word: x: invalid letter: x
 a{x} ! 1.2-5: 1.1: invalid word: x: invalid letter: x
 
+# Check associativities.
+{a}b{c}d{a} => ({a}b.{c}d){a}
+
 # Trivial identities: T_K in TAF-Kit's documentation.
 {\z}a => \z
 a{\z} => \z
@@ -30,5 +33,5 @@ ab({c}\e) => (a.b){c}
 \e{c} => {c}\e
 a{c} => {c}a
 
-# More complec computations.
+# More complex computations.
 {c}{d}a{\z}+{d}a{\e} => {d}a

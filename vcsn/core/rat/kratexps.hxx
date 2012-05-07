@@ -115,6 +115,24 @@ namespace vcsn
   | Concrete types.  |
   `-----------------*/
 
+  DEFINE::gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const
+    -> nodes_t
+  {
+    assert(type == node_t::SUM || type == node_t::PROD);
+    nodes_t res;
+    if (l->type() == type)
+      for (auto n: *down_pointer_cast<const nary_t>(l))
+        res.push_back(n);
+    else
+      res.push_back(l);
+    if (r->type() == type)
+      for (auto n: *down_pointer_cast<const nary_t>(r))
+        res.push_back(n);
+    else
+      res.push_back(r);
+    return res;
+  }
+
   DEFINE::add(kvalue_t l, kvalue_t r) const
     -> kvalue_t
   {
@@ -126,20 +144,8 @@ namespace vcsn
       return l;
     // END: Trivial Identity
     else
-      {
-        typename node_t::nodes_t ns;
-        if (l->type() == node_t::SUM)
-          for (auto n: *down_pointer_cast<const sum_t>(l))
-            ns.push_back(n);
-        else
-          ns.push_back(l);
-        if (r->type() == node_t::SUM)
-          for (auto n: *down_pointer_cast<const sum_t>(r))
-            ns.push_back(n);
-        else
-          ns.push_back(r);
-        return std::make_shared<sum_t>(ws_.unit(), ws_.unit(), ns);
-      }
+      return std::make_shared<sum_t>(ws_.unit(), ws_.unit(),
+                                     gather(node_t::SUM, l, r));
   }
 
 
@@ -161,20 +167,8 @@ namespace vcsn
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
     else
-      {
-        typename node_t::nodes_t ns;
-        if (l->type() == node_t::PROD)
-          for (auto n: *down_pointer_cast<const prod_t>(l))
-            ns.push_back(n);
-        else
-          ns.push_back(l);
-        if (r->type() == node_t::PROD)
-          for (auto n: *down_pointer_cast<const prod_t>(r))
-            ns.push_back(n);
-        else
-          ns.push_back(r);
-        res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(), ns);
-      }
+      res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(),
+                                     gather(node_t::PROD, l, r));
     return res;
   }
 
