@@ -73,48 +73,46 @@ sub check_rat_exp($$)
           next;
         }
 
-      m/^(.*) (=>|==|!) (.*)$/
+      m/^(.*\S)\s*(=>|==|!)\s*(.*)$/
         or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
       my $L = pp("$prog -w $ws", $l);
 
+=item C<fail($expression, $expected, $effective)>
+
+Register the failure of the evaluation of C<$expression>: instead of
+C<$expected>, it evaluated to C<$effective>.
+
+=cut
+      sub fail($$$)
+      {
+        my ($expr, $expt, $eff) = @_;
+        ++$fail;
+        print "- $file:$line: $FAIL: $expr\n";
+        print "\n";
+        print "  - exp: $expt\n";
+        print "  - eff: $eff\n";
+        print "\n";
+      }
+
       # == tests that boths are equivalent.
       # => check the actual result.
       # !  error, with the given error message.
-      if ($op eq '!')
-        {
-          if ($L eq "! $r")
-            {
-              print "- $PASS: $l $op $r\n";
-            }
-          else
-            {
-              ++$fail;
-              print "- $file:$line: $FAIL: $l $op $r\n";
-              print "\n";
-              print "  - exp: ! $r\n";
-              print "  - eff: $L\n";
-              print "\n";
-            }
-        }
+      my $R =
+        ($op eq '=>'   ? quote($r)
+         : $op eq '==' ? pp("$prog -w $ws", $r)
+         : "! $r"); # $op eq '!',
+      # Empty result is a sign of failure.
+      if ($L ne '' && $L eq $R)
+      {
+        print "- $PASS: $l $op $r";
+        print " (=> $L)" if $L ne $r;
+        print "\n";
+      }
       else
-        {
-          my $R = $op eq '=>' ? quote($r) : pp("$prog -w $ws", $r);
-          # Empty result is a sign of failure.
-          if ($L ne '' && $L eq $R)
-            {
-              print "- $PASS: $l $op $r => $L\n";
-            }
-          else
-            {
-              ++$fail;
-              print "- $file:$line: $FAIL: $l $op $r\n";
-              print "\n";
-              print "   - exp: $R\n";
-              print "   - eff: $L\n";
-              print "\n";
-            }
-        }
+      {
+        fail("$l $op $r", $R, $L);
+      }
     }
 }
 
