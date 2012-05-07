@@ -58,6 +58,33 @@ namespace vcsn
     return mul(left, right);
   }
 
+  DEFINE::word(value_t l, value_t r) const
+    -> value_t
+  {
+    return word(l, r, kind_t());
+  }
+
+  DEFINE::word(value_t l, value_t r, atoms_are_words) const
+    -> value_t
+  {
+    if (l->type() == node_t::ATOM
+        && r->type() == node_t::ATOM)
+      {
+        auto lhs = down_pointer_cast<const atom_t>(l);
+        auto rhs = down_pointer_cast<const atom_t>(r);
+        if (ws_.is_unit(lhs->left_weight())
+            && ws_.is_unit(rhs->left_weight()))
+          return word(lhs, rhs);
+      }
+    return mul(l, r);
+  }
+
+  DEFINE::word(value_t l, value_t r, atoms_are_letters) const
+    -> value_t
+  {
+    return mul(l, r);
+  }
+
   DEFINE::star(value_t e) const
     -> value_t
   {
@@ -161,6 +188,12 @@ namespace vcsn
       res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(),
                                      gather(node_t::PROD, l, r));
     return res;
+  }
+
+  DEFINE::word(atom_t l, atom_t r) const
+    -> kvalue_t
+  {
+    return atom(l->get_atom() + r->get_atom());
   }
 
   DEFINE::star(kvalue_t e) const

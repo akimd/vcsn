@@ -119,13 +119,12 @@ lexp:
 
 factors:
   factor                        { $$ = $1; }
-| factors factor                { $$ = MAKE(mul, $1, $2); }
+| factors factor                { $$ = MAKE(word, $1, $2); }
 ;
 
 factor:
   leaf                          { $$ = $1; }
 | factor "*"                    { $$ = MAKE(star, $1); }
-| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 leaf:
@@ -134,6 +133,7 @@ leaf:
 | ATOM     { try { $$ = MAKE(atom, *$1); }
              catch (std::exception& e) { error(@$, e.what()); YYERROR; }
              delete $1; }
+| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
 weights.opt:

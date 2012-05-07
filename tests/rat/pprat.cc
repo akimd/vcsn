@@ -67,7 +67,7 @@ struct factory{};
 
 #define DEFINE(Name, Param, Arg)                        \
   auto fact_ ## Name                                    \
-  = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };       \
+    = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };     \
                                                         \
   template <>                                           \
   struct factory<Name>                                  \
