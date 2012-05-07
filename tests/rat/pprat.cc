@@ -56,28 +56,13 @@ struct context
 
 // FIXME: No globals.
 
-using alpha_t
-  = vcsn::set_alphabet<vcsn::char_letters>;
+using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
 alpha_t alpha{'a', 'b', 'c', 'd'};
 
 #define COMMA ,
 
-template <type Type>
-struct factory{};
-
 #define DEFINE(Name, Param, Arg)                        \
-  auto fact_ ## Name                                    \
-    = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };     \
-                                                        \
-  template <>                                           \
-  struct factory<Name>                                  \
-  {                                                     \
-    const vcsn::kratexps<alpha_t, Param>&               \
-      get()                                             \
-    {                                                   \
-      return fact_ ## Name;                             \
-    }                                                   \
-  };
+  auto fact_ ## Name = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };
 
   DEFINE(b, vcsn::b, vcsn::b());
   DEFINE(br, vcsn::kratexps<alpha_t COMMA vcsn::b>, fact_b);
