@@ -27,6 +27,7 @@ namespace vcsn
   {
     typedef typename GenSet::word_t label_t;
   };
+
 }
 
 #endif // !VCSN_CORE_KIND_HH
