@@ -19,7 +19,7 @@
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
 %}
-%x SC_WEIGHT SC_ATOM
+%x SC_WEIGHT
 
 char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
@@ -47,7 +47,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "\\z"   return TOK(ZERO);
 
   "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
-  {char}  yylval->sval = new std::string(yytext); return TOK(ATOM);
+  {char}  yylval->cval = *yytext; return TOK(LETTER);
   "\n"    continue;
   .       driver_.invalid(*yylloc, yytext);
 
@@ -72,13 +72,6 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
       }
   }
   [^{}]+       { *sval += yytext; }
-}
-
-<SC_ATOM>{ /* Word with Vcsn Syntax*/
-  {char}        *sval += yytext;
-  \"            yy_pop_state(); yylval->sval = sval; return TOK(ATOM);
-  \<{char}*\>   *sval += yytext;  // FIXME: check
-  .             driver_.invalid(*yylloc, yytext);
 }
 
 %%

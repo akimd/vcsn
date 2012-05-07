@@ -28,6 +28,7 @@
       {
         int ival;
         std::string* sval;
+        char cval;
         driver::exp_t node;
       };
     }
@@ -71,7 +72,7 @@
   @$ = driver_.location_;
 }
 
-%printer { debug_stream() << $$; } <ival>;
+%printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { driver_.kratexps->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
@@ -85,8 +86,8 @@
         ZERO  "\\z"
 ;
 
-%token  <sval> ATOM    "atom"
-               WEIGHT  "weight";
+%token <cval> LETTER  "letter";
+%token <sval> WEIGHT  "weight";
 
 %type <node> exp exps term lexp factor leaf factors weights weights.opt;
 
@@ -130,9 +131,8 @@ factor:
 leaf:
   ZERO     { $$ = MAKE(zero); }
 | ONE      { $$ = MAKE(unit); }
-| ATOM     { try { $$ = MAKE(atom, *$1); }
-             catch (std::exception& e) { error(@$, e.what()); YYERROR; }
-             delete $1; }
+| LETTER   { try { $$ = MAKE(atom, {$1}); }
+             catch (std::exception& e) { error(@$, e.what()); YYERROR; } }
 | "(" exp ")"                   { $$ = $2; assert($1 == $3); }
 ;
 
