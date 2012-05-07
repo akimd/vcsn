@@ -95,10 +95,16 @@ namespace vcsn
     value_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;
+
+    /// Push \a v in \a res, applying associativity if possible.
+    /// \param type  the kind of nodes on which to apply associativity.
+    ///              Must be SUM or PROD.
+    void gather(nodes_t& res, rat::exp::type_t type, kvalue_t v) const;
+
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \param type  the kind of nodes on which to apply associativity.
-    ///              must be SUM or PROD.
+    ///              Must be SUM or PROD.
     nodes_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
 
   private:

@@ -115,21 +115,24 @@ namespace vcsn
   | Concrete types.  |
   `-----------------*/
 
+  DEFINE::gather(nodes_t& res, rat::exp::type_t type, kvalue_t v) const
+    -> void
+  {
+    assert(type == node_t::SUM || type == node_t::PROD);
+    if (v->type() == type)
+      for (auto n: *down_pointer_cast<const nary_t>(v))
+        res.push_back(n);
+    else
+      res.push_back(v);
+  }
+
   DEFINE::gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const
     -> nodes_t
   {
     assert(type == node_t::SUM || type == node_t::PROD);
     nodes_t res;
-    if (l->type() == type)
-      for (auto n: *down_pointer_cast<const nary_t>(l))
-        res.push_back(n);
-    else
-      res.push_back(l);
-    if (r->type() == type)
-      for (auto n: *down_pointer_cast<const nary_t>(r))
-        res.push_back(n);
-    else
-      res.push_back(r);
+    gather(res, type, l);
+    gather(res, type, r);
     return res;
   }
 
