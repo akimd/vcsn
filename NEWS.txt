@@ -1,3 +1,62 @@
+* 2012-05-10
+** RatExp: support for the kind of atoms
+As a major overhaul, the rational expressions (vcsn::rat::node) are
+now parameterized by Atom, which denotes the atom value.  The kratexps
+structure is now parameterized by the Kind, from which it is deduced,
+from the GenSet parameter, whether we should use word_t or letter_t
+atoms.
+
+** pprat: an option -a
+To provide user-access to these feature, pprat now supports an option
+-a, which accepts "letters" or "words" as argument, with obvious
+meaning.  For instance:
+
+  pprat -a letters 'abc' => a.b.c
+  pprat -a letters 'abc.abc' => a.b.c.a.b.c
+  pprat -w br -al '{aa}bb{c}dd{a}' => ({a.a}(b.b).{c}(d.d)){a}
+
+  pprat -a words 'abc' => abc
+  pprat -a words 'abc.abc' => abc.abc
+  pprat -w br -aw '{aa}bb{c}dd{a}' => ({aa}bb.{c}dd){a}
+
+Of course, this also works with the "standard-of" option:
+
+  $ pprat -w br -al '{aa}({dd}\e+bb)*'
+  {a.a}(({d.d}\e+(b.b))*)
+  $ pprat -s -w br -al '{aa}({dd}\e+bb)*'
+  digraph A {
+    rankdir=LR
+    node [shape=circle];
+    F1 [style=invis,shape=none,label="",width=0,height=0]
+    1 -> F1 [label="{a.a.((d.d)*)}"]
+    3 -> 2 [label="{(d.d)*}b"]
+    I1 [style=invis,shape=none,label="",width=0,height=0]
+    I1 -> 1
+    1 -> 2 [label="{a.a.((d.d)*)}b"]
+    F3 [style=invis,shape=none,label="",width=0,height=0]
+    3 -> F3 [label="{(d.d)*}"]
+    2 -> 3 [label="b"]
+  }
+
+versus:
+
+  $ pprat  -w br -aw '{aa}({dd}\e+bb)*' 
+  {aa}(({dd}\e+bb)*)
+  $ pprat -s -w br -aw '{aa}({dd}\e+bb)*'
+  digraph A {
+    rankdir=LR
+    node [shape=circle];
+    F1 [style=invis,shape=none,label="",width=0,height=0]
+    1 -> F1 [label="{aa.(dd*)}"]
+    2 -> 2 [label="{dd*}bb"]
+    F2 [style=invis,shape=none,label="",width=0,height=0]
+    2 -> F2 [label="{dd*}"]
+    1 -> 2 [label="{aa.(dd*)}bb"]
+    I1 [style=invis,shape=none,label="",width=0,height=0]
+    I1 -> 1
+  }
+
+
 * 2012-05-07
 ** RatExp: in some case the weights could be lost
 "Associativity" was applied too eagerly, which would result in loss of
