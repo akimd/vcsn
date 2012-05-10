@@ -1,8 +1,8 @@
 #ifndef VCSN_ALPHABETS_CHAR_HH
 # define VCSN_ALPHABETS_CHAR_HH
 
-#include <string>
-#include <iostream>
+# include <string>
+# include <iostream>
 
 namespace vcsn
 {

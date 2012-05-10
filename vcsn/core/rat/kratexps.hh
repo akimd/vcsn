@@ -28,7 +28,7 @@ namespace vcsn
     /// Type of printer visitor.
     using printer_t = rat::printer<genset_t, weightset_t, kind_t>;
     /// Type of nodes.
-#define DEFINE(Type)                                            \
+# define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<atom_value_t, weight_t>
     DEFINE(node);
     DEFINE(leaf);
@@ -40,7 +40,7 @@ namespace vcsn
     DEFINE(sum);
     DEFINE(prod);
     DEFINE(star);
-#undef DEFINE
+# undef DEFINE
     using nodes_t = typename node_t::nodes_t;
 
     /// When taken as a WeightSet, our (abstract) value type.
