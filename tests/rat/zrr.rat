@@ -1,5 +1,5 @@
 %weight: zrr
-%include: common.rat
+%include: common-weights.rat
 
 # Check the alphabets.
 {{{2}b}c}d => {{{2}b}c}d

@@ -11,11 +11,13 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_noinst_SCRIPTS += rat/rat
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
 AM_RAT_LOG_FLAGS = rat/pprat
-$(rat_TESTS:.rat=.log): $(RAT_LOG_COMPILER) rat/pprat rat/common.rat
+AM_RAT_LOG_DEPS =				\
+  $(RAT_LOG_COMPILER)				\
+  rat/common.rat rat/common-weights.rat
+$(rat_TESTS:.rat=.log): rat/pprat $(AM_RAT_LOG_DEPS)
 
 rat_TESTS =					\
   $(rat_XFAIL_TESTS)				\
@@ -26,7 +28,7 @@ rat_TESTS =					\
   rat/zrr.rat
 
 dist_TESTS += $(rat_TESTS)
-EXTRA_DIST += rat/common.rat
+EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
 rat_XFAIL_TESTS =				\
   rat/wrong-weight-set.rat			\
@@ -36,7 +38,6 @@ rat_XFAIL_TESTS =				\
 XFAIL_TESTS += $(rat_XFAIL_TESTS)
 
 EXTRA_PROGRAMS += rat/pprat
-
 rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la
 
 .PHONY: check-rat

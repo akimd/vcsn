@@ -1,0 +1,24 @@
+# Test cases independant of the weightsets.
+
+%atoms: letters
+%include: common.rat
+# Base cases.
+ab => a.b
+
+# Precedence and associativity.
+(ab)* => (a.b)*
+abc => a.b.c
+a(bc) == a.b.c
+(abc).(cba) => a.b.c.c.b.a
+
+
+%atoms: words
+%include: common.rat
+# Base cases.
+ab => ab
+
+# Precedence and associativity.
+(ab)* => ab*
+abc => abc
+# FIXME: a(bc) == a.(bc)
+(abc).(cba) => abc.cba

@@ -1,5 +1,5 @@
 %weight: zr
-%include: common.rat
+%include: common-weights.rat
 
 {a}b => {a}b
 {{0}a}b => \z
