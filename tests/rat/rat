@@ -1,5 +1,6 @@
-#! /usr/bin/perl
+#! /usr/bin/perl -w
 
+use strict;
 use File::Basename;
 
 my $black = `tput setaf 0`;
@@ -15,13 +16,28 @@ my $PASS = "${green}PASS$std";
 
 my $fail = 0;
 
-sub quote ($)
+# The tested program.
+my $prog = shift @ARGV;
+# The current atom kind (argument for -a).
+my $atoms = 'letters';
+# The current weightset (argument for -w).
+my $ws = 'b';
+
+sub quote($)
 {
   my ($in) = @_;
-  $in =~ s/(["$\\`])/\\$1/g;
+  $in =~ s/([\"\$\\\`])/\\$1/g;
   $in =~ s/^[ \t]*//g;
   $in =~ s/[ \t]*$//g;
   $in;
+}
+
+sub rst_title($)
+{
+  my ($s) = @_;
+  print "$s\n";
+  $s =~ s/./-/g;
+  print "$s\n";
 }
 
 =item C<pp($prog, $in)>
@@ -30,7 +46,7 @@ Parse and pretty-print.  If it fails, prepend "! " to the error
 message and return it as result.
 
 =cut
-sub pp ($$)
+sub pp($$)
 {
   my ($prog, $in) = @_;
   $in = quote($in);
@@ -41,9 +57,16 @@ sub pp ($$)
   $res;
 }
 
-sub check_rat_exp($$)
+=item C<check_rat_exp($file)
+
+Run C<$prog> on the content of C<$file>.
+
+=cut
+
+sub check_rat_exp($);
+sub check_rat_exp($)
 {
-  my ($prog, $file) = @_;
+  my ($file) = @_;
 
   use IO::File;
   my $in = new IO::File($file)
@@ -56,27 +79,37 @@ sub check_rat_exp($$)
       next
         unless $_;
 
+      if (/%atoms: (.*)/)
+        {
+          if ($atoms ne $1)
+            {
+              $atoms = $1;
+              rst_title "Atoms: $atoms";
+            }
+          next;
+        }
+
       if (/%weight: (.*)/)
         {
-          $ws = $1;
-          my $title = "WeightSet: $ws";
-          print "$title\n";
-          $title =~ s/./-/g;
-          print "$title\n";
+          if ($ws ne $1)
+            {
+              $ws = $1;
+              rst_title "WeightSet: $ws";
+            }
           next;
         }
 
       if (/%include: (.*)/)
         {
           my $f = dirname($file) . "/" . $1;
-          check_rat_exp($prog, $f);
+          check_rat_exp($f);
           next;
         }
 
       m/^(.*\S)\s*(=>|==|!)\s*(.*)$/
         or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
-      my $L = pp("$prog -w $ws", $l);
+      my $L = pp("$prog -a $atoms -w $ws", $l);
 
 =item C<fail($expression, $expected, $effective)>
 
@@ -84,7 +117,7 @@ Register the failure of the evaluation of C<$expression>: instead of
 C<$expected>, it evaluated to C<$effective>.
 
 =cut
-      sub fail($$$)
+      local *fail = sub ($$$)
       {
         my ($expr, $expt, $eff) = @_;
         ++$fail;
@@ -93,14 +126,14 @@ C<$expected>, it evaluated to C<$effective>.
         print "  - exp: $expt\n";
         print "  - eff: $eff\n";
         print "\n";
-      }
+      };
 
       # == tests that boths are equivalent.
       # => check the actual result.
       # !  error, with the given error message.
       my $R =
-        ($op eq '=>'   ? quote($r)
-         : $op eq '==' ? pp("$prog -w $ws", $r)
+        ($op eq '=>'   ? $r
+         : $op eq '==' ? pp("$prog -a $atoms -w $ws", $r)
          : "! $r"); # $op eq '!',
       # Empty result is a sign of failure.
       if ($L ne '' && $L eq $R)
@@ -116,8 +149,7 @@ C<$expected>, it evaluated to C<$effective>.
     }
 }
 
-my $prog = shift @ARGV;
-check_rat_exp($prog, $_)
+check_rat_exp($_)
   foreach @ARGV;
 
 exit !!$fail;
