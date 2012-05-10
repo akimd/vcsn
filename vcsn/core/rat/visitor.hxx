@@ -6,12 +6,11 @@ namespace vcsn
 {
   namespace rat
   {
-#define VISIT(Type, Name)                                       \
-    template<class Weight>                                      \
-    inline                                                      \
-    void                                                        \
-    const_visitor<Weight>::visit(const Type<Weight>& Name)
-
+#define VISIT(Type, Name)                                               \
+    template <typename Atom, typename Weight>                           \
+    inline                                                              \
+    void                                                                \
+    const_visitor<Atom, Weight>::visit(const Type<Atom, Weight>& Name)
 
     VISIT(prod, v)
     {

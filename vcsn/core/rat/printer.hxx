@@ -6,33 +6,38 @@ namespace vcsn
   namespace rat
   {
 
-    template <class WeightSet>
-    printer<WeightSet>::printer(std::ostream& out,
-                                const weightset_t& ws,
-                                const bool debug)
+    template <typename GenSet, typename WeightSet, typename Kind>
+    inline
+    printer<GenSet, WeightSet, Kind>::printer(std::ostream& out,
+                                              const weightset_t& ws,
+                                              const bool debug)
       : out_(out)
       , ws_(ws)
       , debug_(debug)
     {}
 
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const sum<weight_t>& v)
+# define DEFINE                                                         \
+    template <typename GenSet, typename WeightSet, typename Kind>       \
+    inline                                                              \
+    auto                                                                \
+    printer<GenSet, WeightSet, Kind>
+
+# define VISIT(Type)                          \
+    DEFINE::visit(const Type ## _t& v)        \
+      -> void
+
+    VISIT(sum)
     {
       print(v, '+');
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const prod<weight_t>& v)
+    VISIT(prod)
     {
       print(v, '.');
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const star<weight_t>& v)
+    VISIT(star)
     {
       const auto& sub = v.sub();
       assert(sub);
@@ -50,33 +55,26 @@ namespace vcsn
       print(v.right_weight());
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const zero<weight_t>& v)
+    VISIT(zero)
     {
       print(v.left_weight());
       out_ << "\\z";
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const one<weight_t>& v)
+    VISIT(one)
     {
       print(v.left_weight());
       out_ << "\\e";
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::visit(const atom<weight_t>& v)
+    VISIT(atom)
     {
       print(v.left_weight());
       out_ << v.value();
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::print(const weight_t& w)
+    DEFINE::print(const weight_t& w)
+      -> void
     {
       if (ws_.show_unit() || !ws_.is_unit(w))
         {
@@ -86,9 +84,8 @@ namespace vcsn
         }
     }
 
-    template <class WeightSet>
-    void
-    printer<WeightSet>::print(const nary<weight_t>& n, const char op)
+    DEFINE::print(const nary_t& n, const char op)
+      -> void
     {
       assert(n.size());
 
@@ -113,6 +110,8 @@ namespace vcsn
       print(n.right_weight());
     }
 
+# undef VISIT
+# undef DEFINE
 
   } // namespace rat
 } // namespace vcsn

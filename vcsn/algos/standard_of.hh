@@ -8,17 +8,34 @@ namespace vcsn
 {
   namespace rat
   {
-    template <class Aut, class WeightSet>
+    template <class Aut,
+              class GenSet = typename Aut::genset_t,
+              class WeightSet = typename Aut::weightset_t,
+              class Kind = typename atom_kind<typename Aut::kind_t>::type>
     class standard_of_visitor
-      : public const_visitor<typename WeightSet::value_t>
+      : public const_visitor<typename atom_trait<Kind, GenSet>::type,
+                             typename WeightSet::value_t>
     {
     public:
       using automaton_t = Aut;
+      using genset_t = GenSet;
       using weightset_t = WeightSet;
+      using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
-      using super_type = const_visitor<weight_t>;
-      using genset_t = typename automaton_t::genset_t;
+      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
       using state_t = typename automaton_t::state_t;
+
+      using super_type = const_visitor<atom_value_t, weight_t>;
+      using node_t = typename super_type::node_t;
+      using inner_t = typename super_type::inner_t;
+      using nary_t = typename super_type::nary_t;
+      using prod_t = typename super_type::prod_t;
+      using sum_t = typename super_type::sum_t;
+      using leaf_t = typename super_type::leaf_t;
+      using star_t = typename super_type::star_t;
+      using zero_t = typename super_type::zero_t;
+      using one_t = typename super_type::one_t;
+      using atom_t = typename super_type::atom_t;
 
       standard_of_visitor(const genset_t& alpha, const weightset_t& ws)
         : ws_(ws)
@@ -26,7 +43,7 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(std::shared_ptr<const node<weight_t>> v)
+      operator()(std::shared_ptr<const node_t> v)
       {
         v->accept(*this);
         res_.set_initial(initial_);
@@ -34,13 +51,13 @@ namespace vcsn
       }
 
       virtual void
-      visit(const zero<weight_t>&)
+      visit(const zero_t&)
       {
         initial_ = res_.new_state();
       }
 
       virtual void
-      visit(const one<weight_t>& v)
+      visit(const one_t& v)
       {
         auto i = res_.new_state();
         initial_ = i;
@@ -48,7 +65,7 @@ namespace vcsn
       }
 
       virtual void
-      visit(const atom<weight_t>& e)
+      visit(const atom_t& e)
       {
         auto i = res_.new_state();
         auto f = res_.new_state();
@@ -72,8 +89,7 @@ namespace vcsn
       /// to all the "fresh" final states, i.e., those that are not
       /// part of "other_finals".
       void
-      apply_weights(const inner<weight_t>& e,
-                    const std::set<state_t>& other_finals)
+      apply_weights(const inner_t& e, const states_t& other_finals)
       {
         {
           weight_t w = e.left_weight();
@@ -91,7 +107,7 @@ namespace vcsn
       }
 
       virtual void
-      visit(const sum<weight_t>& e)
+      visit(const sum_t& e)
       {
         states_t other_finals = finals();
         e.head()->accept(*this);
@@ -111,7 +127,7 @@ namespace vcsn
       }
 
       virtual void
-      visit(const prod<weight_t>& e)
+      visit(const prod_t& e)
       {
         // The set of the final states that were introduced in pending
         // parts of the automaton (for instance in we are in the rhs
@@ -154,7 +170,7 @@ namespace vcsn
       }
 
       virtual void
-      visit(const star<weight_t>& e)
+      visit(const star_t& e)
       {
         states_t other_finals = finals();
         e.sub()->accept(*this);
@@ -189,18 +205,25 @@ namespace vcsn
       state_t initial_ = automaton_t::null_state();
     };
 
-    template <class Aut, class WeightSet>
+    template <class Aut,
+              class GenSet = typename Aut::genset_t,
+              class WeightSet = typename Aut::weightset_t,
+              class Kind = typename atom_kind<typename Aut::kind_t>::type>
     Aut
-    standard_of(const typename Aut::genset_t& alpha, const WeightSet& ws,
+    standard_of(const GenSet& alpha, const WeightSet& ws,
                 const exp_t e)
     {
+      using genset_t = GenSet;
       using weightset_t = WeightSet;
+      using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
+      using atom_value_t = typename atom_trait<Kind, GenSet>::type;
+      using node_t = rat::node<atom_value_t, weight_t>;
       // Make sure the type is right.
-      std::shared_ptr<const node<weight_t>> v =
-        std::dynamic_pointer_cast<const node<weight_t>>(e);
+      std::shared_ptr<const node_t> v =
+        std::dynamic_pointer_cast<const node_t>(e);
       assert(v);
-      standard_of_visitor<Aut, WeightSet> standard(alpha, ws);
+      standard_of_visitor<Aut, GenSet, WeightSet, Kind> standard(alpha, ws);
       return standard(v);
     }
 

@@ -9,15 +9,28 @@ namespace vcsn
   namespace rat
   {
 
-    template <class WeightSet>
+    template <typename GenSet, typename WeightSet, typename Kind>
     class printer
-      : public const_visitor<typename WeightSet::value_t>
+      : public const_visitor<typename atom_trait<Kind, GenSet>::type,
+                             typename WeightSet::value_t>
     {
     public:
+      using genset_t = GenSet;
       using weightset_t = WeightSet;
+      using kind_t = Kind;
+      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
       using weight_t = typename weightset_t::value_t;
-      using super_type = const_visitor<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = const_visitor<atom_value_t, weight_t>;
+      using node_t = typename super_type::node_t;
+      using inner_t = typename super_type::inner_t;
+      using nary_t = typename super_type::nary_t;
+      using prod_t = typename super_type::prod_t;
+      using sum_t = typename super_type::sum_t;
+      using leaf_t = typename super_type::leaf_t;
+      using star_t = typename super_type::star_t;
+      using zero_t = typename super_type::zero_t;
+      using one_t = typename super_type::one_t;
+      using atom_t = typename super_type::atom_t;
 
       printer(std::ostream& out,
               const weightset_t& ws,
@@ -40,21 +53,21 @@ namespace vcsn
       }
 
     private:
-      virtual void visit(const prod<weight_t>& v);
-      virtual void visit(const sum<weight_t>& v);
-      virtual void visit(const star<weight_t>& v);
-      virtual void visit(const one<weight_t>& v);
-      virtual void visit(const zero<weight_t>& v);
-      virtual void visit(const atom<weight_t>& v);
+      virtual void visit(const prod_t& v);
+      virtual void visit(const sum_t& v);
+      virtual void visit(const star_t& v);
+      virtual void visit(const one_t& v);
+      virtual void visit(const zero_t& v);
+      virtual void visit(const atom_t& v);
 
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
-      void print(const nary<weight_t>& n, const char op);
+      void print(const nary_t& n, const char op);
 
       /// Whether the visited node, if sum, prod, or star, requires
       /// outer parens.  The top level node does not need parens,
       /// unless debug mode, or is a sum/prod/star node with weights.
-      bool parens_(const inner<weight_t>& n)
+      bool parens_(const inner_t& n)
       {
         bool res =
           !top_

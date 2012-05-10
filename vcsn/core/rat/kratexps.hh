@@ -7,6 +7,7 @@
 # include <vcsn/core/rat/node.hh>
 # include <vcsn/core/rat/kind.hh>
 # include <vcsn/core/rat/abstract_kratexps.hh>
+# include <vcsn/core/rat/printer.hh>
 
 namespace vcsn
 {
@@ -20,13 +21,31 @@ namespace vcsn
     using weightset_t = WeightSet;
     using kind_t = Kind;
     using super_type = abstract_kratexps;
+    using letter_t = typename genset_t::letter_t;
+    using word_t = typename genset_t::word_t;
+    using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
     using weight_t = typename weightset_t::value_t;
-    using node_t = rat::node<weight_t>;
+    /// Type of printer visitor.
+    using printer_t = rat::printer<genset_t, weightset_t, kind_t>;
+    /// Type of nodes.
+#define DEFINE(Type)                                            \
+    using Type ## _t = rat::Type<atom_value_t, weight_t>
+    DEFINE(node);
+    DEFINE(leaf);
+    DEFINE(zero);
+    DEFINE(one);
+    DEFINE(atom);
+    DEFINE(inner);
+    DEFINE(nary);
+    DEFINE(sum);
+    DEFINE(prod);
+    DEFINE(star);
+#undef DEFINE
     using nodes_t = typename node_t::nodes_t;
 
-    // When taken as a WeightSet, our (abstract) value type.
+    /// When taken as a WeightSet, our (abstract) value type.
     using value_t = rat::exp_t;
-    // Concrete value type.
+    /// Concrete value type.
     using kvalue_t = typename node_t::kvalue_t;
 
   public:
@@ -56,29 +75,29 @@ namespace vcsn
       return ws_;
     }
 
-    // exp constants' method
-#define DEFINE(Type)                            \
-    using Type ## _t = rat::Type<weight_t>
-    DEFINE(leaf);
-    DEFINE(zero);
-    DEFINE(one);
-    DEFINE(atom);
-    DEFINE(inner);
-    DEFINE(nary);
-    DEFINE(sum);
-    DEFINE(prod);
-    DEFINE(star);
-#undef DEFINE
-
     // Specialization from abstract_kratexps.
     virtual value_t zero() const;
     virtual value_t unit() const;
-    virtual value_t atom(const std::string& w) const;
+
+    virtual value_t atom(const word_t& w) const;
+    template <typename K>
+    typename std::enable_if<std::is_same<K, atoms_are_letters>::value,
+                            value_t>::type
+    atom_(const word_t& w) const;
+
+    template <typename K>
+    typename std::enable_if<std::is_same<K, atoms_are_words>::value,
+                            value_t>::type
+    atom_(const word_t& w) const;
+
+
     virtual value_t add(value_t l, value_t r) const;
     virtual value_t mul(value_t l, value_t r) const;
+
     virtual value_t word(value_t l, value_t r) const;
-    virtual value_t word(value_t l, value_t r, atoms_are_words) const;
     virtual value_t word(value_t l, value_t r, atoms_are_letters) const;
+    virtual value_t word(value_t l, value_t r, atoms_are_words) const;
+
     virtual value_t star(value_t e) const;
     virtual value_t weight(value_t e, std::string* w) const;
     virtual value_t weight(std::string* w, value_t e) const;
@@ -104,7 +123,6 @@ namespace vcsn
     // Concrete type implementation.
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
-    kvalue_t word(atom_t l, atom_t r) const;
     value_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;

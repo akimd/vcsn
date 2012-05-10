@@ -8,21 +8,27 @@ namespace vcsn
   namespace rat
   {
 
-    template <class Weight>
+    template <typename Atom, typename Weight>
     class const_visitor
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-#define VISIT(Type)                                                     \
-      virtual void visit(const Type<weight_t>& v)
+      using node_t = node<atom_value_t, weight_t>;
+      using inner_t = inner<atom_value_t, weight_t>;
+      using nary_t = nary<atom_value_t, weight_t>;
+      using leaf_t = leaf<atom_value_t, weight_t>;
+# define DEFINE(Type)                                   \
+      using Type ## _t = Type<atom_value_t, weight_t>;        \
+      virtual void visit(const Type ## _t& v)
 
-      VISIT(zero);
-      VISIT(one);
-      VISIT(atom);
-      VISIT(sum);
-      VISIT(prod);
-      VISIT(star);
-#undef VISIT
+      DEFINE(zero);
+      DEFINE(one);
+      DEFINE(atom);
+      DEFINE(sum);
+      DEFINE(prod);
+      DEFINE(star);
+# undef DEFINE
     };
 
   } // namespace rat

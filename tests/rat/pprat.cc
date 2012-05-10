@@ -23,10 +23,11 @@ usage(const char* prog, int status)
       "usage: " << prog << " [OPTION...] [EXP...]\n"
       "\n"
       "Options:\n"
-      "  -w WEIGHT-SET   define the kind of the weights [b]\n"
-      "  -e EXP          pretty-print the rational expression EXP\n"
-      "  -f FILE         pretty-print the rational expression in FILE\n"
-      "  -s              display the standard automaton instead of expression\n"
+      "  -a letters|words  kind of the atoms [letters]\n"
+      "  -w WEIGHT-SET     define the kind of the weights [b]\n"
+      "  -e EXP            pretty-print the rational expression EXP\n"
+      "  -f FILE           pretty-print the rational expression in FILE\n"
+      "  -s                display the standard automaton instead of expression\n"
       "\n"
       "WEIGHT-SET:\n"
       "  b    for Boolean\n"
@@ -50,6 +51,7 @@ enum class type
 
 struct context
 {
+  bool atoms_are_letters;
   type weight;
   bool standard_of;
 };
@@ -59,16 +61,31 @@ struct context
 using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
 alpha_t alpha{'a', 'b', 'c', 'd'};
 
-#define COMMA ,
+using aal = vcsn::atoms_are_letters;
+using aaw = vcsn::atoms_are_words;
+using b = vcsn::b;
+using z = vcsn::z;
+template <typename T, typename Kind>
+using kre = vcsn::kratexps<alpha_t, T, Kind>;
+template <typename T>
+using krel = kre<T, aal>;
+template <typename T>
+using krew = kre<T, aaw>;
 
-#define DEFINE(Name, Param, Arg)                        \
-  auto fact_ ## Name = vcsn::kratexps<alpha_t, Param>{ alpha, Arg };
+#define DEFINE(Name, Kind, Param, Arg)                  \
+  auto fact_ ## Name = kre<Param, Kind>{ alpha, Arg };
 
-  DEFINE(b, vcsn::b, vcsn::b());
-  DEFINE(br, vcsn::kratexps<alpha_t COMMA vcsn::b>, fact_b);
-  DEFINE(z, vcsn::z, vcsn::z());
-  DEFINE(zr, vcsn::kratexps<alpha_t COMMA vcsn::z>, fact_z);
-  DEFINE(zrr, vcsn::kratexps<alpha_t COMMA vcsn::kratexps<alpha_t COMMA vcsn::z>>, fact_zr);
+  DEFINE(b,   aal, b,             b());
+  DEFINE(br,  aal, krel<b>,       fact_b);
+  DEFINE(z,   aal, z,             z());
+  DEFINE(zr,  aal, krel<z>,       fact_z);
+  DEFINE(zrr, aal, krel<krel<z>>, fact_zr);
+
+  DEFINE(bw,   aaw, b,             b());
+  DEFINE(brw,  aaw, krew<b>,       fact_bw);
+  DEFINE(zw,   aaw, z,             z());
+  DEFINE(zrw,  aaw, krew<z>,       fact_zw);
+  DEFINE(zrrw, aaw, krew<krew<z>>, fact_zrw);
 #undef DEFINE
 
 template<typename Factory>
@@ -78,8 +95,12 @@ pp(const context& ctx, const Factory& factory,
 {
   using weightset_t
     = typename Factory::weightset_t;
+  using atom_kind_t
+    = typename Factory::kind_t;
+  using label_kind_t
+    = typename vcsn::label_kind<atom_kind_t>::type;
   using automaton_t
-    = vcsn::mutable_automaton<alpha_t, weightset_t, vcsn::labels_are_words>;
+    = vcsn::mutable_automaton<alpha_t, weightset_t, label_kind_t>;
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
@@ -108,7 +129,10 @@ pp(const context& ctx, const char* s, bool file)
     {
 #define CASE(Name)                              \
       case type::Name:                          \
-        pp(ctx, fact_ ## Name, s, file);        \
+        if (ctx.atoms_are_letters)              \
+          pp(ctx, fact_ ## Name, s, file);      \
+        else                                    \
+          pp(ctx, fact_ ## Name ## w, s, file); \
       break;
       CASE(b);
       CASE(br);
@@ -138,13 +162,30 @@ try
 
   context ctx =
     {
+      .atoms_are_letters = true,
       .weight = type::b,
       .standard_of = false,
     };
   int opt;
-  while ((opt = getopt(argc, argv, "e:f:hsw:")) != -1)
+  while ((opt = getopt(argc, argv, "a:e:f:hsw:")) != -1)
     switch (opt)
       {
+      case 'a':
+        {
+          std::string s = optarg;
+          if (s == "l" || s == "letter" || s == "letters")
+            ctx.atoms_are_letters = true;
+          else if (s == "w" || s == "word" || s == "words")
+            ctx.atoms_are_letters = false;
+          else
+            {
+              std::cerr
+                << argv[0] << ": invalid argument for -a: " << s << std::endl;
+              goto fail;
+            }
+          break;
+        }
+        break;
       case 'e':
         pp(ctx, optarg, false);
         break;
@@ -163,13 +204,14 @@ try
           if (i == end(factories))
             {
               std::cerr << optarg << ": invalid weight set" << std::endl;
-              usage(argv[0], EXIT_FAILURE);
+              goto fail;
             }
           else
             ctx.weight = i->second;
         }
         break;
       case '?':
+      fail:
         usage(argv[0], EXIT_FAILURE);
         break;
       }

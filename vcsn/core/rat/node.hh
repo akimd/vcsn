@@ -7,6 +7,7 @@
 # include <boost/range.hpp>
 
 # include <vcsn/core/rat/node.fwd.hh>
+# include <vcsn/core/rat/kind.hh>
 # include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -46,17 +47,18 @@ namespace vcsn
     | node.  |
     `-------*/
 
-    template <class Weight>
+    template <typename Atom, typename Weight>
     class node : public exp
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using node_t = rat::node<weight_t>;
+      using node_t = rat::node<atom_value_t, weight_t>;
       using self_t = node;
       using kvalue_t = std::shared_ptr<const node_t>;
       using wvalue_t = std::shared_ptr<node_t>;
       using nodes_t = std::list<kvalue_t>;
-      using const_visitor = vcsn::rat::const_visitor<weight_t>;
+      using const_visitor = vcsn::rat::const_visitor<atom_value_t, weight_t>;
 
       node(const weight_t& l);
       node(const node& that)
@@ -84,12 +86,13 @@ namespace vcsn
     | inner.  |
     `--------*/
 
-    template <class Weight>
-    class inner : public node<Weight>
+    template <typename Atom, typename Weight>
+    class inner : public node<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = node<weight_t>;
+      using super_type = node<atom_value_t, weight_t>;
       using kvalue_t = typename super_type::kvalue_t;
       using self_t = inner;
 
@@ -119,13 +122,14 @@ namespace vcsn
     | nary.  |
     `-------*/
 
-    template <class Weight>
-    class nary: public inner<Weight>
+    template <typename Atom, typename Weight>
+    class nary: public inner<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = inner<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = inner<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename super_type::kvalue_t;
       using nodes_t = typename super_type::nodes_t;
@@ -174,13 +178,14 @@ namespace vcsn
     | prod.  |
     `-------*/
 
-    template <class Weight>
-    class prod : public nary<Weight>
+    template <typename Atom, typename Weight>
+    class prod : public nary<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = nary<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = nary<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using nodes_t = typename node_t::nodes_t;
@@ -214,13 +219,14 @@ namespace vcsn
     | sum.  |
     `------*/
 
-    template <class Weight>
-    class sum : public nary<Weight>
+    template <typename Atom, typename Weight>
+    class sum : public nary<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = nary<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = nary<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using nodes_t = std::list<kvalue_t>;
@@ -252,13 +258,14 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    template <class Weight>
-    class star : public inner<Weight>
+    template <typename Atom, typename Weight>
+    class star : public inner<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = inner<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = inner<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using self_t = star;
@@ -290,12 +297,13 @@ namespace vcsn
     | leaf.  |
     `-------*/
 
-    template <class Weight>
-    class leaf : public node<Weight>
+    template <typename Atom, typename Weight>
+    class leaf : public node<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using node_t = node<weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using super_type = node_t;
@@ -311,13 +319,14 @@ namespace vcsn
     };
 
 
-    template <class Weight>
-    class one : public leaf<Weight>
+    template <typename Atom, typename Weight>
+    class one : public leaf<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = leaf<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = leaf<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using self_t = one;
@@ -339,13 +348,14 @@ namespace vcsn
       }
     };
 
-    template <class Weight>
-    class zero : public leaf<Weight>
+    template <typename Atom, typename Weight>
+    class zero : public leaf<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = leaf<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = leaf<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using self_t = zero;
@@ -368,18 +378,19 @@ namespace vcsn
     };
 
 
-    template <class Weight>
-    class atom : public leaf<Weight>
+    template <typename Atom, typename Weight>
+    class atom : public leaf<Atom, Weight>
     {
     public:
+      using atom_value_t = Atom;
       using weight_t = Weight;
-      using super_type = leaf<weight_t>;
-      using node_t = node<weight_t>;
+      using super_type = leaf<atom_value_t, weight_t>;
+      using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
       using self_t = atom;
 
-      atom(const weight_t& l, const std::string& value);
+      atom(const weight_t& l, const atom_value_t& value);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
       {
@@ -389,9 +400,10 @@ namespace vcsn
       virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
-      const std::string& value() const;
+      const atom_value_t& value() const;
+
     private:
-      std::string value_;
+      atom_value_t value_;
 
       virtual kvalue_t clone_() const
       {

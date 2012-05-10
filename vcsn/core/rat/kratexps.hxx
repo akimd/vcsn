@@ -4,7 +4,6 @@
 
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/node.hh>
-#include <vcsn/core/rat/printer.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 
 namespace vcsn
@@ -32,15 +31,44 @@ namespace vcsn
     return std::make_shared<one_t>(ws_.unit());
   }
 
-  DEFINE::atom(const std::string& w) const
+  DEFINE::atom(const word_t& w) const
     -> value_t
   {
-    for (auto c: w)
-      if (!gs_.has(c))
-        throw std::domain_error("invalid word: " + w
-                                + ": invalid letter: " + c);
+    return atom_<kind_t>(w);
+  }
+
+  template <typename GenSet, typename WeightSet, typename Kind>
+  template <typename K>
+  inline
+  auto
+  kratexps<GenSet, WeightSet, Kind>::atom_(const word_t& w) const
+    -> typename std::enable_if<std::is_same<K, atoms_are_letters>::value,
+                               value_t>::type
+  {
+    if (w.size() != 1)
+      throw std::domain_error("invalid atom: " + w);
+    letter_t l = w[0];
+    if (!gs_.has(l))
+      throw std::domain_error("invalid word: " + w
+                              + ": invalid letter: " + l);
+    return std::make_shared<atom_t>(ws_.unit(), l);
+  }
+
+  template <typename GenSet, typename WeightSet, typename Kind>
+  template <typename K>
+  inline
+  auto
+  kratexps<GenSet, WeightSet, Kind>::atom_(const word_t& w) const
+    -> typename std::enable_if<std::is_same<K, atoms_are_words>::value,
+                               value_t>::type
+  {
+    for (auto l: w)
+      if (!gs_.has(l))
+          throw std::domain_error("invalid word: " + w
+                                  + ": invalid letter: " + l);
     return std::make_shared<atom_t>(ws_.unit(), w);
   }
+
 
   DEFINE::add(value_t l, value_t r) const
     -> value_t
@@ -74,7 +102,7 @@ namespace vcsn
         auto rhs = down_pointer_cast<const atom_t>(r);
         if (ws_.is_unit(lhs->left_weight())
             && ws_.is_unit(rhs->left_weight()))
-          return word(lhs, rhs);
+          return atom(gs_.concat(lhs->value(), rhs->value()));
       }
     return mul(l, r);
   }
@@ -190,12 +218,6 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::word(atom_t l, atom_t r) const
-    -> kvalue_t
-  {
-    return atom(l->value() + r->value());
-  }
-
   DEFINE::star(kvalue_t e) const
     -> value_t
   {
@@ -274,7 +296,7 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    rat::printer<weightset_t> print(o, ws_);
+    printer_t print{o, ws_};
     print(down_pointer_cast<const node_t>(v));
     return o;
   }

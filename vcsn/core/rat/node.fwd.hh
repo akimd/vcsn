@@ -11,32 +11,22 @@ namespace vcsn
     class exp;
     using exp_t = std::shared_ptr<const exp>;
 
-    template <class Weight>
-    class node;
+# define DEFINE(Node)                           \
+    template <typename Atom, typename Weight>   \
+    class Node
 
-    template <class Weight>
-    class inner;
+    DEFINE(node);
+    DEFINE(leaf);
+    DEFINE(zero);
+    DEFINE(one);
+    DEFINE(atom);
+    DEFINE(inner);
+    DEFINE(nary);
+    DEFINE(sum);
+    DEFINE(prod);
+    DEFINE(star);
 
-    template <class Weight>
-    class leaf;
-
-    template <class Weight>
-    class prod;
-
-    template <class Weight>
-    class sum;
-
-    template <class Weight>
-    class star;
-
-    template <class Weight>
-    class one;
-
-    template <class Weight>
-    class zero;
-
-    template <class Weight>
-    class atom;
+# undef DEFINE
 
   } // namespace rat
 } // namespace vcsn
