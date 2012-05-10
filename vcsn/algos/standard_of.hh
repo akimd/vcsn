@@ -220,8 +220,7 @@ namespace vcsn
       using atom_value_t = typename atom_trait<Kind, GenSet>::type;
       using node_t = rat::node<atom_value_t, weight_t>;
       // Make sure the type is right.
-      std::shared_ptr<const node_t> v =
-        std::dynamic_pointer_cast<const node_t>(e);
+      auto v = std::dynamic_pointer_cast<const node_t>(e);
       assert(v);
       standard_of_visitor<Aut, GenSet, WeightSet, Kind> standard(alpha, ws);
       return standard(v);
