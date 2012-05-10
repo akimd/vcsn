@@ -142,7 +142,7 @@ namespace vcsn
   char_letters::word_t
   char_letters::special<char_letters::word_t>() const
   {
-    return word_t(1, special_letter());
+    return word_t{special_letter()};
   }
 
 }
