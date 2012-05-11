@@ -172,7 +172,7 @@ EOF
 
   # First, run the test, so that the title can include the status of
   # the run.
-  local fail=
+  local fail=false
   # Subshell: be robust to set -e *and* catch messages from the shell,
   # such as "Abort trap".
   ($builddir/$prog "$@") >out.eff 2>err.eff
@@ -198,11 +198,16 @@ status (FAIL)
 
 EOF
       exit=false
-      fail="FAIL: "
+      fail=true
     fi
-    rst_pre "Standard error" err.eff || fail="FAIL: "
-    rst_expect out || fail="FAIL: "
+    rst_pre "Standard error" err.eff || fail=true
+    rst_expect out || fail=true
   } >stdout.tmp
+  if $fail; then
+    fail="${BASH_SOURCE[1]}:${BASH_LINENO[1]}: FAIL: "
+  else
+    fail=
+  fi
   rst_subsection "${fail}Test $number: $@"
   cat stdout.tmp
 
