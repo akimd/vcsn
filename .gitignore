@@ -20,6 +20,7 @@
 /build-aux/m4/ltversion.m4
 /build-aux/m4/lt~obsolete.m4
 /build-aux/missing
+/build-aux/test-driver
 /build-aux/ylwrap
 /config.log
 /config.status
