@@ -14,20 +14,22 @@ namespace vcsn
     using state_t = typename A::state_t;
     std::unordered_map<state_t, unsigned> names;
 
-    out << "digraph A {\n  rankdir=LR\n  node [shape=circle];\n";
+    out << "digraph A {\n  rankdir=LR\n  node [shape=circle]\n";
 
     // Name all the states.
     for (auto s : aut.states())
       names[s] = names.size();
 
-    // Output the "pre" initial states.
+    // Output the pre-initial and post-final states.
+    out <<
+      "  {\n"
+      "    node [style=invis,shape=none,label=\"\",width=0,height=0]\n";
     for (auto t : aut.initial_transitions())
-      {
-        auto dst = aut.dst_of(t);
-        unsigned n = names[dst];
-        out << "  I" << n
-            << " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
-      }
+      out << "    I" << names[aut.dst_of(t)] << '\n';
+    // Output the "post" final states.
+    for (auto t : aut.final_transitions())
+      out << "    F" << names[aut.src_of(t)] << '\n';
+    out << "  }\n";
 
     // Output the states that are not part of an entry.
     {
@@ -41,16 +43,6 @@ namespace vcsn
         if (reachable.find(s) == reachable.end())
           out << "  " << names[s] << "\n";
     }
-
-    // Output the "post" final states.
-    for (auto t : aut.final_transitions())
-      {
-        auto src = aut.src_of(t);
-        unsigned n = names[src];
-        out << "  F" << n
-            << " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
-      }
-
 
     for (auto t : aut.all_entries())
       {

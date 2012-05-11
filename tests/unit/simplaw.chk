@@ -3,9 +3,12 @@
 cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
-  node [shape=circle];
-  I1 [style=invis,shape=none,label="",width=0,height=0]
-  F2 [style=invis,shape=none,label="",width=0,height=0]
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F2
+  }
   I1 -> 1
   2 -> F2 [label="{10}"]
   1 -> 2 [label="{42}ca"]

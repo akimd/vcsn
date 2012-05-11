@@ -3,11 +3,14 @@
 cat >out.exp <<\EOF
 digraph A {
   rankdir=LR
-  node [shape=circle];
-  I1 [style=invis,shape=none,label="",width=0,height=0]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  F2 [style=invis,shape=none,label="",width=0,height=0]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F1
+    F2
+    F3
+  }
   I1 -> 1 [label="{2}"]
   1 -> F1
   2 -> F2
@@ -21,9 +24,12 @@ digraph A {
 }
 digraph A {
   rankdir=LR
-  node [shape=circle];
-  I1 [style=invis,shape=none,label="",width=0,height=0]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F1
+  }
   I1 -> 1 [label="{3}"]
   1 -> F1
   1 -> 2 [label="a"]
@@ -31,10 +37,13 @@ digraph A {
 }
 digraph A {
   rankdir=LR
-  node [shape=circle];
-  I1 [style=invis,shape=none,label="",width=0,height=0]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  F4 [style=invis,shape=none,label="",width=0,height=0]
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F1
+    F4
+  }
   I1 -> 1 [label="{6}"]
   1 -> F1
   1 -> 2 [label="a"]
