@@ -20,6 +20,15 @@ namespace vcsn
     for (auto s : aut.states())
       names[s] = names.size();
 
+    // Output the "pre" initial states.
+    for (auto t : aut.initial_transitions())
+      {
+        auto dst = aut.dst_of(t);
+        unsigned n = names[dst];
+        out << "  I" << n
+            << " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
+      }
+
     // Output the states that are not part of an entry.
     {
       std::set<state_t> reachable;
@@ -30,8 +39,18 @@ namespace vcsn
         }
       for (auto s : aut.states())
         if (reachable.find(s) == reachable.end())
-        out << "  " << names[s] << "\n";
+          out << "  " << names[s] << "\n";
     }
+
+    // Output the "post" final states.
+    for (auto t : aut.final_transitions())
+      {
+        auto src = aut.src_of(t);
+        unsigned n = names[src];
+        out << "  F" << n
+            << " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
+      }
+
 
     for (auto t : aut.all_entries())
       {
@@ -41,15 +60,11 @@ namespace vcsn
 	if (src == aut.pre())
 	  {
 	    unsigned n = names[dst];
-	    out << "  I" << n
-		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  I" << n << " -> " << n;
 	  }
 	else if (dst == aut.post())
 	  {
 	    unsigned n = names[src];
-	    out << "  F" << n
-		<< " [style=invis,shape=none,label=\"\",width=0,height=0]\n";
 	    out << "  " << n << " -> F" << n;
 	  }
 	else

@@ -1,3 +1,37 @@
+* 2012-05-11
+** dotty: define initial/final states first
+In order to improve readibility, instead of
+
+  digraph A {
+    rankdir=LR
+    node [shape=circle];
+    F1 [style=invis,shape=none,label="",width=0,height=0]
+    1 -> F1 [label="{a.a.((d.d)*)}"]
+    3 -> 2 [label="{(d.d)*}b"]
+    I1 [style=invis,shape=none,label="",width=0,height=0]
+    I1 -> 1
+    1 -> 2 [label="{a.a.((d.d)*)}b"]
+    F3 [style=invis,shape=none,label="",width=0,height=0]
+    3 -> F3 [label="{(d.d)*}"]
+    2 -> 3 [label="b"]
+  }
+
+we now produce
+
+  digraph A {
+    rankdir=LR
+    node [shape=circle];
+    I1 [style=invis,shape=none,label="",width=0,height=0]
+    F1 [style=invis,shape=none,label="",width=0,height=0]
+    F3 [style=invis,shape=none,label="",width=0,height=0]
+    1 -> F1 [label="{a.a.((d.d)*)}"]
+    3 -> 2 [label="{(d.d)*}b"]
+    I1 -> 1
+    1 -> 2 [label="{a.a.((d.d)*)}b"]
+    3 -> F3 [label="{(d.d)*}"]
+    2 -> 3 [label="b"]
+  }
+
 * 2012-05-10
 ** RatExp: support for the kind of atoms
 As a major overhaul, the rational expressions (vcsn::rat::node) are

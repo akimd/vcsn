@@ -35,18 +35,18 @@ EOF
 
 # B: "\e".
 check -w b -e '\e' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 # B: "a"
 check -w b -e 'a' <<\EOF
-  1 -> 2 [label="a"]
-  F2 [style=invis,shape=none,label="",width=0,height=0]
-  2 -> F2
   I1 [style=invis,shape=none,label="",width=0,height=0]
+  F2 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
+  2 -> F2
   I1 -> 1
 EOF
 
@@ -56,22 +56,22 @@ EOF
 
 # B: "a+b"
 check -w b -e 'a+b' <<\EOF
-  1 -> 2 [label="a"]
-  F2 [style=invis,shape=none,label="",width=0,height=0]
-  2 -> F2
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
+  F2 [style=invis,shape=none,label="",width=0,height=0]
   F3 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
+  2 -> F2
+  I1 -> 1
   3 -> F3
   1 -> 3 [label="b"]
 EOF
 
 # B: "abc".
 check -w b -e 'abc' <<\EOF
-  1 -> 2 [label="a"]
-  F4 [style=invis,shape=none,label="",width=0,height=0]
-  4 -> F4
   I1 [style=invis,shape=none,label="",width=0,height=0]
+  F4 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
+  4 -> F4
   I1 -> 1
   2 -> 3 [label="b"]
   3 -> 4 [label="c"]
@@ -79,37 +79,37 @@ EOF
 
 # B: "ab+cd".
 check -w b -e 'ab+cd' <<\EOF
-  1 -> 2 [label="a"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
   F3 [style=invis,shape=none,label="",width=0,height=0]
+  F5 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
+  I1 -> 1
   3 -> F3
   2 -> 3 [label="b"]
   1 -> 4 [label="c"]
-  F5 [style=invis,shape=none,label="",width=0,height=0]
   5 -> F5
   4 -> 5 [label="d"]
 EOF
 
 # B: "a(b+c)d".
 check -w b -e 'a(b+c)d' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  F4 [style=invis,shape=none,label="",width=0,height=0]
   1 -> 2 [label="a"]
   5 -> 4 [label="d"]
-  F4 [style=invis,shape=none,label="",width=0,height=0]
   4 -> F4
   2 -> 3 [label="b"]
   3 -> 4 [label="d"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
   2 -> 5 [label="c"]
 EOF
 
 # B: "(ab+cd+abcd)abc".
 check -w b -e '(ab+cd+abcd)abc' <<\EOF
-  1 -> 2 [label="a"]
-  F12 [style=invis,shape=none,label="",width=0,height=0]
-  12 -> F12
   I1 [style=invis,shape=none,label="",width=0,height=0]
+  F12 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
+  12 -> F12
   I1 -> 1
   6 -> 7 [label="a"]
   2 -> 3 [label="b"]
@@ -131,67 +131,67 @@ EOF
 ## --------- ##
 
 check -e '\z*' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -e '\e*' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -e 'a*' <<\EOF
-  1 -> 2 [label="a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
   2 -> F2
   2 -> 2 [label="a"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -e '(a+b)*' <<\EOF
-  1 -> 2 [label="a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
   2 -> F2
   2 -> 2 [label="a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3
   1 -> 3 [label="b"]
   3 -> 2 [label="a"]
   2 -> 3 [label="b"]
   3 -> 3 [label="b"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -e '(ab)*' <<\EOF
-  1 -> 2 [label="a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
   1 -> F1
   3 -> 2 [label="a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3
   2 -> 3 [label="b"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -e 'a**' <<\EOF
-  1 -> 2 [label="a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="a"]
   2 -> F2
   2 -> 2 [label="a"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
@@ -203,9 +203,9 @@ EOF
 
 # Z: "{12}\e".
 check -w z -e '{12}\e' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1 [label="{12}"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
@@ -215,53 +215,53 @@ EOF
 
 # Z: "\e+a+\e"
 check -w z -e '\e+a+\e' <<\EOF
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1 [label="{2}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
+  F1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1 [label="{2}"]
+  I1 -> 1
   2 -> F2
   1 -> 2 [label="a"]
 EOF
 
 # Z: "{12}\e+{23}a+{34}b".
 check -w z -e '{12}\e+{23}a+{34}b' <<\EOF
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1 [label="{12}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
+  F1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1 [label="{12}"]
+  I1 -> 1
   2 -> F2
   1 -> 2 [label="{23}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3
   1 -> 3 [label="{34}b"]
 EOF
 
 # left weight.
 check -w z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1 [label="{132}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
+  F1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1 [label="{132}"]
+  I1 -> 1
   2 -> F2
   1 -> 2 [label="{12}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3
   1 -> 3 [label="{120}b"]
 EOF
 
 # right weight.
 check -w z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
-  F1 [style=invis,shape=none,label="",width=0,height=0]
-  1 -> F1 [label="{40}"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
+  F1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> F1 [label="{40}"]
+  I1 -> 1
   2 -> F2 [label="{10}"]
   1 -> 2 [label="a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3 [label="{10}"]
   1 -> 3 [label="{2}b"]
 EOF
@@ -272,10 +272,10 @@ EOF
 
 # Z: "{12}(ab){23}".
 check -w z -e '{12}(ab){23}' <<\EOF
-  1 -> 2 [label="{12}a"]
   I1 [style=invis,shape=none,label="",width=0,height=0]
-  I1 -> 1
   F3 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{12}a"]
+  I1 -> 1
   3 -> F3 [label="{23}"]
   2 -> 3 [label="b"]
 EOF
@@ -285,79 +285,79 @@ EOF
 ## --------- ##
 
 check -w z -e '\z*' <<\EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 fail -w z -e '\e*'
 
 check -w z -e '({2}a)*' <<\EOF
-  1 -> 2 [label="{2}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{2}a"]
   2 -> F2
   2 -> 2 [label="{2}a"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -w z -e '{2}a*{3}' <<\EOF
-  1 -> 2 [label="{2}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{2}a"]
   2 -> F2 [label="{3}"]
   2 -> 2 [label="a"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1 [label="{6}"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -w z -e '({2}a+{3}b)*' <<\EOF
-  1 -> 2 [label="{2}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{2}a"]
   2 -> F2
   2 -> 2 [label="{2}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3
   1 -> 3 [label="{3}b"]
   3 -> 2 [label="{2}a"]
   2 -> 3 [label="{3}b"]
   3 -> 3 [label="{3}b"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -w z -e '{2}({3}a+{5}b)*{7}' <<EOF
-  1 -> 2 [label="{6}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F2 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
+  F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{6}a"]
   2 -> F2 [label="{7}"]
   2 -> 2 [label="{3}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3 [label="{7}"]
   1 -> 3 [label="{10}b"]
   3 -> 2 [label="{3}a"]
   2 -> 3 [label="{5}b"]
   3 -> 3 [label="{5}b"]
-  F1 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1 [label="{14}"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
 check -w z -e '{2}({3}(ab){5})*{7}' <<EOF
-  1 -> 2 [label="{6}a"]
+  I1 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
+  1 -> 2 [label="{6}a"]
   1 -> F1 [label="{14}"]
   3 -> 2 [label="{15}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3 [label="{35}"]
   2 -> 3 [label="b"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
 EOF
 
@@ -368,26 +368,26 @@ fail -w z -e 'a**'
 ## ---------- ##
 
 check -w zr '({d}\e+abc)*' <<EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
+  F4 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1 [label="{d*}"]
   4 -> 2 [label="{d*}a"]
-  F4 [style=invis,shape=none,label="",width=0,height=0]
   4 -> F4 [label="{d*}"]
   1 -> 2 [label="{d*}a"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
   2 -> 3 [label="b"]
   3 -> 4 [label="c"]
 EOF
 
 check -w zr '({d}\e+ab{c})*' <<EOF
+  I1 [style=invis,shape=none,label="",width=0,height=0]
   F1 [style=invis,shape=none,label="",width=0,height=0]
+  F3 [style=invis,shape=none,label="",width=0,height=0]
   1 -> F1 [label="{d*}"]
   3 -> 2 [label="{c.(d*)}a"]
-  I1 [style=invis,shape=none,label="",width=0,height=0]
   I1 -> 1
   1 -> 2 [label="{d*}a"]
-  F3 [style=invis,shape=none,label="",width=0,height=0]
   3 -> F3 [label="{c.(d*)}"]
   2 -> 3 [label="b"]
 EOF
