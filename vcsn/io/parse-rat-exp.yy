@@ -103,11 +103,16 @@
 %token <cval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
-%type <node> exp exps term lexp factor leaf factors weights weights.opt;
+%type <node> exp exps weights;
 
-
+%left RWEIGHT
 %left "+"
 %left "."
+%right "weight" // Match longest series of "weight".
+%left LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
+%left "(" "\\z" "\\e" "letter"
+%left CONCAT
+%right "*"
 
 %start exps
 %%
@@ -118,41 +123,16 @@ exps:
 ;
 
 exp:
-  term                          { $$ = $1; }
-| exp "." exp                   { $$ = MAKE(mul, $1, $3); }
-| exp "+" exp                   { $$ = MAKE(add, $1, $3); }
-;
-
-term:
-  lexp weights.opt              { $$ = MAKE(mul, $1, $2); }
-;
-
-lexp:
-  weights.opt factors           { $$ = MAKE(mul, $1, $2); }
-| lexp weights factors          { $$ = MAKE(mul, $1, MAKE(mul, $2, $3)); }
-;
-
-factors:
-  factor                        { $$ = $1; }
-| factors factor                { $$ = MAKE(word, $1, $2); }
-;
-
-factor:
-  leaf                          { $$ = $1; }
-| factor "*"                    { $$ = MAKE(star, $1); }
-;
-
-leaf:
-  ZERO     { $$ = MAKE(zero); }
-| ONE      { $$ = MAKE(unit); }
-| LETTER   { try { $$ = MAKE(atom, {$1}); }
-             catch (std::exception& e) { error(@$, e.what()); YYERROR; } }
-| "(" exp ")"                   { $$ = $2; assert($1 == $3); }
-;
-
-weights.opt:
-  /* empty */                   { $$ = MAKE(unit); }
-| weights                       { $$ = $1; }
+  exp "." exp                 { $$ = MAKE(mul, $1, $3); }
+| exp "+" exp                 { $$ = MAKE(add, $1, $3); }
+| weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
+| exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }
+| exp exp %prec CONCAT        { $$ = MAKE(word, $1, $2); }
+| exp "*"                     { $$ = MAKE(star, $1); }
+| ZERO                        { $$ = MAKE(zero); }
+| ONE                         { $$ = MAKE(unit); }
+| LETTER                      { TRY(@$, $$ = MAKE(atom, {$1})); }
+| "(" exp ")"                 { $$ = $2; assert($1 == $3); }
 ;
 
 weights:
