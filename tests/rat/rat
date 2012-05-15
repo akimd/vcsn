@@ -35,7 +35,7 @@ sub quote($)
 sub rst_title($)
 {
   my ($s) = @_;
-  print "$s\n";
+  print "\n$s\n";
   $s =~ s/./-/g;
   print "$s\n";
 }
