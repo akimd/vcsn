@@ -63,8 +63,21 @@
 {
   #include <cassert>
 
+  /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
       driver_.kratexps->Kind(__VA_ARGS__)
+
+  /// Run Stm, and bounces exceptions into parse errors at Loc.
+#define TRY(Loc, Stm)                           \
+  try                                           \
+    {                                           \
+      Stm;                                      \
+    }                                           \
+  catch (std::exception& e)                     \
+    {                                           \
+      error(Loc, e.what());                     \
+      YYERROR;                                  \
+    }
 }
 
 %initial-action
@@ -74,6 +87,7 @@
 
 %printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
+%printer { debug_stream() << '{' << *$$ << '}'; } "weight";
 %printer { driver_.kratexps->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
@@ -142,16 +156,8 @@ weights.opt:
 ;
 
 weights:
-  "weight"
-  {
-    try { $$ = MAKE(weight, MAKE(unit), $1); }
-    catch (std::exception& e) { error(@$ + 1, e.what()); YYERROR; }
-  }
-| "weight" weights
-  {
-    try { $$ = MAKE(weight, $1, $2); }
-    catch (std::exception& e) { error(@1 + 1, e.what()); YYERROR; }
-  }
+  "weight"          { TRY(@$ + 1, $$ = MAKE(weight, MAKE(unit), $1)); }
+| "weight" weights  { TRY(@$ + 1, $$ = MAKE(weight, $1, $2)); }
 ;
 
 %%
