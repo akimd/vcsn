@@ -4,6 +4,3 @@ crange should not feature size and empty if !VCSN_DEBUG.
 Local Variables:
 mode: outline
 End:
-
-
-
