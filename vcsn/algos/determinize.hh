@@ -2,90 +2,81 @@
 # define VCSN_ALGOS_DETERMINIZE_HH
 
 # include <set>
-# include <utility>
 # include <stack>
 # include <map>
 
-namespace vcsn {
-
-  template <class Aut>
-  struct determinize_functor
+namespace vcsn
+{
+  namespace details
   {
-    using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
-    using state_set = std::set<state_t>;
-    using stack = std::stack<state_set>;
-    using map = std::map<state_set, state_t>;
-
-    automaton_t operator()(const automaton_t& a)
+    template <class Aut>
+    struct determinize_functor
     {
-      state_set initial;
-      for (auto t : a.initial_transitions())
-        initial.insert(a.dst_of(t));
+      using automaton_t = Aut;
+      using state_t = typename automaton_t::state_t;
+      using state_set = std::set<state_t>;
+      using stack = std::stack<state_set>;
+      using map = std::map<state_set, state_t>;
 
-      automaton_t out(a.genset(), a.weightset());
-      if (initial.empty()) // No initial state
-        return out;
-      // Lambda functions
-      // Set the state final in the automaton `out' if necessary.
-      auto set_final = [&] (state_set s, state_t st) {
-        for (auto e : s)
-          {
+      automaton_t operator()(const automaton_t& a)
+      {
+        state_set initial;
+        for (auto t : a.initial_transitions())
+          initial.insert(a.dst_of(t));
+
+        automaton_t out(a.genset(), a.weightset());
+        if (initial.empty())
+          return out;
+
+        stack st;
+        map m;
+        // Create a new state. Insert in the output automaton, in the
+        // map, and push in the stack.
+        auto push_new_state = [&] (state_set ss) -> state_t {
+          state_t res = out.new_state();
+          m[ss] = res;
+
+          for (auto e : ss)
             if (a.is_final(e))
               {
-                out.set_final(st);
-                return;
+                out.set_final(res);
+                break;
+              }
+          st.push(ss);
+          return res;
+        };
+
+
+        out.set_initial(push_new_state(initial));
+
+        while (!st.empty())
+          {
+            auto ss = st.top();
+            st.pop();
+            const auto& genset = a.genset();
+            for (auto gen : genset)
+              {
+                state_set next;
+                for (auto s : ss)
+                  for (auto t : a.out(s, gen))
+                    next.insert(a.dst_of(t));
+                auto i = m.find(next);
+                state_t n = (i == m.end()) ? push_new_state(next) : i->second;
+
+                out.add_transition(m[ss], n, gen);
               }
           }
-      };
-
-      // Create the initial state
-      state_t init = out.new_state();
-      out.set_initial(init);
-      set_final(initial, init);
-
-      // Create the stack and the map
-      stack st;
-      map m;
-      // Push the initial state on the stack and the map
-      m[initial] = init;
-      st.push(initial);
-
-      while (!st.empty())
-        {
-          auto elt = st.top();
-          st.pop();
-          const auto& genset = a.genset();
-          // For each label
-          for (auto label : genset)
-            {
-              state_set states;
-              // For each element
-              for (auto st : elt)
-                // For each output transition
-                for (auto tr : a.out(st, label))
-                  states.insert(a.dst_of(tr));
-              // If the state doesn't exist in the map.
-              // Create it.
-              if (m.end() == m.find(states))
-                {
-                  m[states] = out.new_state();
-                  set_final(states, m[states]);
-                  st.push(states);
-                }
-              out.add_transition(m[elt], m[states], label);
-            }
-        }
-      return out;
-    }
-  };
+        return out;
+      }
+    };
+  } // namespace details
 
   template <class Aut>
   inline
   Aut
   determinize(const Aut& aut)
   {
-    determinize_functor<Aut> df;
+    details::determinize_functor<Aut> df;
     return df(aut);
   }
 } // namespace vcsn
