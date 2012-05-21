@@ -42,13 +42,8 @@ automaton_t factory(int n, alpha_t& alpha, vcsn::b& b)
   return res;
 }
 
-bool check_idempotence(size_t n, bool display_aut)
+bool idempotence(std::string str, automaton_t& aut, bool display_aut)
 {
-  alpha_t alpha {'a', 'b'};
-  vcsn::b b;
-
-  automaton_t aut = factory(n, alpha, b);
-
   auto determ = vcsn::determinize(aut);
   auto id = vcsn::determinize(determ);
   std::stringstream determ_string;
@@ -57,29 +52,42 @@ bool check_idempotence(size_t n, bool display_aut)
   vcsn::dotty(id, id_string);
   if (!determ_string.str().compare(id_string.str()))
     {
-      std::cout <<"PASS: Check Idempotence for: " << n << std::endl;
+      std::cout <<"PASS: Check Idempotence for " << str << std::endl;
       if (display_aut)
         std::cout << determ_string.str();
-      return true;
+      return false;
     }
   else
     {
-      std::cout << "FAIL: determinize(aut) != determinize(determinize(aut)) for size: "
-                << n << std::endl;
-      return false;
+      std::cout << "FAIL: determinize(aut) != determinize(determinize(aut)) for "
+                << str << std::endl;
+      return true;
     }
+}
+
+bool check_simple(size_t n, bool display_aut)
+{
+  alpha_t alpha {'a', 'b'};
+  vcsn::b b;
+
+  automaton_t aut = factory(n, alpha, b);
+  std::stringstream ss;
+  ss << "simple automaton " << n;
+  return idempotence(ss.str(), aut, display_aut);
 }
 
 int main()
 {
+  int exit = 0;
   vcsn::b b;
 
-  check_idempotence(5, true);
-  check_idempotence(10, false);
-  // FIXME: This test segfault due the genset.
-  // auto ladybird = vcsn::ladybird<vcsn::b>(4, b);
+  exit |= check_simple(5, true);
+  exit |= check_simple(10, false);
 
-  // auto determ_ladybird = vcsn::determinize(ladybird);
+  auto ladybird = vcsn::ladybird<vcsn::b>(4, b);
 
-  // vcsn::dotty(determ_ladybird, std::cout);
+  auto determ_ladybird = vcsn::determinize(ladybird);
+
+  exit |= idempotence("ladybird 4", ladybird, true);
+  return exit;
 }
