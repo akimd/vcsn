@@ -1,6 +1,11 @@
 * debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
+* vcsn/alphabets/char.cc
+  char_letters::special_letter(...) is protected and
+  set_alpha<T>::add_letter(...) (in file vcsn/alphabets/setalpha.hh)
+  need it.
+
 Local Variables:
 mode: outline
 End:
