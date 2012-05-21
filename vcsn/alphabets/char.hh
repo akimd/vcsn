@@ -81,6 +81,7 @@ namespace vcsn
     {
       if (l != special_letter())
 	return o << l;
+      return o;
     }
 
     std::ostream&
