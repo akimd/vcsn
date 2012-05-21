@@ -7,13 +7,18 @@
 
 namespace vcsn
 {
-  template <class Weights>
-  mutable_automaton<set_alphabet<char_letters>, Weights, labels_are_letters>
-  ladybird(unsigned n, Weights w = Weights())
+  namespace details
   {
-    set_alphabet<char_letters> alpha {'a', 'b', 'c'};
-    mutable_automaton<set_alphabet<char_letters>,
-		      Weights, labels_are_letters> aut(alpha, w);
+    using ladybird_genset_t = set_alphabet<char_letters>;
+  } // namespace details
+
+  template <class WeightSet>
+  mutable_automaton<details::ladybird_genset_t, WeightSet, labels_are_letters>
+  ladybird(unsigned n, WeightSet ws = WeightSet())
+  {
+    static details::ladybird_genset_t alpha {'a', 'b', 'c'};
+    mutable_automaton<details::ladybird_genset_t,
+                      WeightSet, labels_are_letters> aut(alpha, ws);
 
     auto p = aut.new_state();
     aut.set_initial(p);
