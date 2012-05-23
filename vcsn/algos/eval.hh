@@ -1,80 +1,82 @@
 #ifndef VCSN_ALGOS_EVAL_HH
 # define VCSN_ALGOS_EVAL_HH
 
-# include <algorithm>
-# include <map>
+# include <vector>
+# include <utility>
 # include <cassert>
 
-//# include <vcsn/core/crange.hh>
-
-namespace vcsn {
-
-  template <class Aut>
-  class eval_functor
+namespace vcsn
+{
+  namespace details
   {
-    using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
-    using word_t = typename automaton_t::genset_t::word_t;
-    using weightset_t = typename automaton_t::weightset_t;
-    using weight_t = typename weightset_t::value_t;
-    using weights = std::map<state_t, weight_t>;
-
-  public:
-    eval_functor(const automaton_t& a)
-    : a_(a)
-    , w_(a_.weightset())
-    {}
-
-    weight_t operator()(const word_t& word) const
+    template <class Aut>
+    class eval_functor
     {
-      // Initialize
-      const weight_t zero = w_.zero();
-      weights v1;
-      weights v2;
-      for (auto s : a_.states())
-        v1.insert(std::make_pair(s, zero));
+      using automaton_t = Aut;
+      using state_t = typename automaton_t::state_t;
+      using word_t = typename automaton_t::genset_t::word_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+      using weights = std::map<state_t, weight_t>;
 
-      for (auto init : a_.initial_transitions())
-        v1[a_.dst_of(init)] = w_.unit();
+    public:
+      eval_functor(const automaton_t& a)
+      : a_(a)
+      , ws_(a_.weightset())
+      {}
 
-      // Computation
-      for (auto l : word)
-        {
-          for (auto& w : v2)
-            w.second = zero;
-          for (auto w : v1)
-            {
-              if (zero != w.second)
-                {
-                  for (auto t : a_.out(w.first, l))
-                    {
-                      auto& weight = v2[a_.dst_of(t)];
-                      weight = w_.add(weight, w_.mul(w.second, a_.weight_of(t)));
-                    }
-                }
-            }
-          std::swap(v1, v2);
-        }
-      weight_t res = zero;
-      for (auto w : v1)
-        {
-          if (zero != w.second)
-            res = w_.add(res, w_.mul(w.second, a_.get_final_weight(w.first)));
-        }
-      return res;
-    }
+      weight_t operator()(const word_t& word) const
+      {
+        // Initialize
+        const weight_t zero = ws_.zero();
+        const weight_t unit = ws_.unit();
+        weights v1;
+        weights v2;
 
-  private:
-    const automaton_t& a_;
-    const weightset_t& w_;
-  };
+        for (auto init : a_.initial_transitions())
+          v1[a_.dst_of(init)] = unit;
+
+        // Computation
+        for (auto l : word)
+          {
+            for (auto& w : v2) // FIXME: (1) set zero
+              w.second = zero;
+            for (auto w : v1)
+              if (zero != w.second) // delete if bench >
+                for (auto tr : a_.out(w.first, l))
+                  {
+                    auto& weight = v2[a_.dst_of(tr)];
+                    weight =
+                      ws_.add(weight,
+                              ws_.mul(w.second, a_.weight_of(tr)));
+                  }
+              // w = zero.
+            std::swap(v1, v2);
+          }
+        weight_t res = zero;
+        for (auto f : a_.final_transitions())
+          res = ws_.add(res,
+                        ws_.mul(v1[a_.src_of(f)], a_.weight_of(f)));
+        // for (auto w : v1)
+        //   if (zero != w.second)
+        //     res =
+        //       ws_.add(res,
+        //               ws_.mul(w.second, a_.get_final_weight(w.first)));
+        return res;
+      }
+    private:
+      const automaton_t& a_;
+      const weightset_t& ws_;
+    };
+
+  } // namespace details
 
   template <class Aut>
   inline
   typename Aut::weight_t
   eval(const Aut& a, const typename Aut::genset_t::word_t& w)
   {
-    eval_functor<Aut> evalf(a);
+    details::eval_functor<Aut> evalf(a);
     return evalf(w);
   }
 
