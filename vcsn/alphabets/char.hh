@@ -108,10 +108,9 @@ namespace vcsn
       if (s == 0)
 	return "\\e";
 
-      // If the string starts or ends with the special
-      // letter, just skip it.  If the resulting string
-      // is empty, just format it this way.  (We DON'T
-      // wan't to format it as "\\e".)
+      // If the string starts or ends with the special letter, skip
+      // it.  If the resulting string is empty, format it this way.
+      // (We DON'T want to format it as "\\e".)
       if (w[0] == special_letter())
 	return (s == 1) ? "" : w.substr(1);
 
