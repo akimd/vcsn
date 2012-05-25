@@ -18,7 +18,7 @@ namespace vcsn
       using inner_t = inner<atom_value_t, weight_t>;
       using nary_t = nary<atom_value_t, weight_t>;
       using leaf_t = leaf<atom_value_t, weight_t>;
-# define DEFINE(Type)                                   \
+# define DEFINE(Type)                                         \
       using Type ## _t = Type<atom_value_t, weight_t>;        \
       virtual void visit(const Type ## _t& v)
 
