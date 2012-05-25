@@ -296,7 +296,7 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    printer_t print{o, ws_};
+    printer_t print{o, gs_, ws_};
     print(down_pointer_cast<const node_t>(v));
     return o;
   }

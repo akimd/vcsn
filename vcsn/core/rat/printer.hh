@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {
@@ -33,6 +34,7 @@ namespace vcsn
       using atom_t = typename super_type::atom_t;
 
       printer(std::ostream& out,
+              const genset_t& gs,
               const weightset_t& ws,
               const bool debug = false);
 
@@ -80,6 +82,7 @@ namespace vcsn
 
       /// Output stream.
       std::ostream& out_;
+      const genset_t& gs_;
       const weightset_t& ws_;
       /// Whether to be overly verbose.
       const bool debug_;

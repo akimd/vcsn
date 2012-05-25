@@ -9,9 +9,11 @@ namespace vcsn
     template <typename GenSet, typename WeightSet, typename Kind>
     inline
     printer<GenSet, WeightSet, Kind>::printer(std::ostream& out,
+                                              const genset_t& gs,
                                               const weightset_t& ws,
                                               const bool debug)
       : out_(out)
+      , gs_(gs)
       , ws_(ws)
       , debug_(debug)
     {}
@@ -70,7 +72,7 @@ namespace vcsn
     VISIT(atom)
     {
       print(v.left_weight());
-      out_ << v.value();
+      gs_.output(out_, v.value());
     }
 
     DEFINE::print(const weight_t& w)
