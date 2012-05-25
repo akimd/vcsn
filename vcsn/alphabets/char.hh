@@ -80,7 +80,7 @@ namespace vcsn
     output(std::ostream& o, const letter_t& l) const
     {
       if (l != special_letter())
-	return o << l;
+	o << l;
       return o;
     }
 
