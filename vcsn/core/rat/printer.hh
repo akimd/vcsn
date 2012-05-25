@@ -66,16 +66,27 @@ namespace vcsn
       /// Traverse n-ary node (+ and .).
       void print(const nary_t& n, const char op);
 
+      /// Whether w is displayed.
+      bool shows_(const weight_t& w)
+      {
+        return ws_.show_unit() || !ws_.is_unit(w);
+      }
+
+      /// Whether one of the weights shows.
+      bool shows_weight_(const node_t& n)
+      {
+        return
+          shows_(n.left_weight())
+          || (n.is_inner()
+              && shows_(static_cast<const inner_t&>(n).right_weight()));
+      }
+
       /// Whether the visited node, if sum, prod, or star, requires
       /// outer parens.  The top level node does not need parens,
       /// unless debug mode, or is a sum/prod/star node with weights.
       bool parens_(const inner_t& n)
       {
-        bool res =
-          !top_
-          || ws_.show_unit()
-          || !ws_.is_unit(n.left_weight())
-          || !ws_.is_unit(n.right_weight());
+        bool res = !top_ || shows_weight_(n);
         top_ = false;
         return res;
       }
