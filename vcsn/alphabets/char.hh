@@ -72,6 +72,19 @@ namespace vcsn
       return l1 == l2;
     }
 
+    bool
+    is_letter(const word_t& w) const
+    {
+      return w.size() == 1;
+    }
+
+
+    bool
+    is_letter(const letter_t&) const
+    {
+      return true;
+    }
+
   protected:
     letter_t special_letter() const { return 255; }
 

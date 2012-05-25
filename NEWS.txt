@@ -10,6 +10,18 @@
    This algorithm return the determinize automaton passed in
    arguments. This algorithm is defined in vcsn/algos/determinize.hh.
 
+* 2012-05-25
+** RatExp: changes in the display
+Fixed the output of "atoms are words" expressions.  For instance
+"(ab)*" used to be displayed as "ab*" (which is wrong as it is parsed
+as "a(b*)").  It is now properly displayed as "(ab)*".
+
+** RatExp: slight changes in the grammar
+A star is now valid after a weight:
+
+  $ pprat -w z '{2}ab{3}*'
+  ({2}(a.b){3})*
+
 * 2012-05-11
 ** dotty: define initial/final states first
 In order to improve readibility, instead of

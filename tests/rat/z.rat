@@ -21,10 +21,12 @@ a{1}{2}b == a({1}({2}b))
 {3}(ab) => {3}(a.b)
 {3}ab => {3}(a.b)
 {2}{3}ab => {6}(a.b)
+{2}ab{3}* => ({2}(a.b){3})*
 %atoms: words
 {3}ab => {3}ab
 {3}(ab) => {3}ab
 {2}{3}ab => {6}ab
+{2}ab{3}* => ({6}(ab))*
 
 # Check computations on Z.
 {2}{3}a   => {6}a

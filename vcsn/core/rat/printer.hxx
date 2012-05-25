@@ -43,18 +43,29 @@ namespace vcsn
     {
       const auto& sub = v.sub();
       assert(sub);
-      print(v.left_weight());
 
       bool parens = parens_(v);
       if (debug_)
         out_ << '*';
       if (parens)
         out_ << '(';
-      sub->accept(*this);
+      print(v.left_weight());
+
+      {
+        // If our argument shows weight, then add inner parens, so
+        // that ({2}a)* => ({2}a)*, not => {2}a* (which is actually
+        // read as {2}(a*)).
+        bool innerp = shows_weight_(*sub);
+        if (innerp)
+          out_ << '(';
+        sub->accept(*this);
+        if (innerp)
+          out_ << ')';
+      }
       out_ << "*";
+      print(v.right_weight());
       if (parens)
         out_ << ')';
-      print(v.right_weight());
     }
 
     VISIT(zero)
@@ -72,7 +83,12 @@ namespace vcsn
     VISIT(atom)
     {
       print(v.left_weight());
+      bool p = parens_(v);
+      if (p)
+        out_ << '(';
       gs_.output(out_, v.value());
+      if (p)
+        out_ << ')';
     }
 
     DEFINE::print(const weight_t& w)

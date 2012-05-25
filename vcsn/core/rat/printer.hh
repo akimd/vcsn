@@ -81,14 +81,19 @@ namespace vcsn
               && shows_(static_cast<const inner_t&>(n).right_weight()));
       }
 
-      /// Whether the visited node, if sum, prod, or star, requires
-      /// outer parens.  The top level node does not need parens,
-      /// unless debug mode, or is a sum/prod/star node with weights.
+      /// Whether the visited node requires outer parens.  The top
+      /// level node does not need parens, unless debug mode, or is a
+      /// sum/prod/star node with weights.
       bool parens_(const inner_t& n)
       {
         bool res = !top_ || shows_weight_(n);
         top_ = false;
         return res;
+      }
+
+      bool parens_(const atom_t& n)
+      {
+        return !top_ && !gs_.is_letter(n.value());
       }
 
       /// Output stream.
