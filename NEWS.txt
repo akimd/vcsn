@@ -1,3 +1,10 @@
+* 2012-05-28
+** eval: Add evaluation algoritms
+
+   This algorithm evaluate a word over an automaton. This alorithm is
+   defined in vcsn/algos/eval.hh and his defined in the `vcsn'
+   namespace.
+
 * 2012-05-11
 ** dotty: define initial/final states first
 In order to improve readibility, instead of
