@@ -50,18 +50,13 @@ namespace vcsn
                       ws_.add(weight,
                               ws_.mul(w.second, a_.weight_of(tr)));
                   }
-              // w = zero.
+              // (1) w = zero.
             std::swap(v1, v2);
           }
         weight_t res = zero;
         for (auto f : a_.final_transitions())
           res = ws_.add(res,
                         ws_.mul(v1[a_.src_of(f)], a_.weight_of(f)));
-        // for (auto w : v1)
-        //   if (zero != w.second)
-        //     res =
-        //       ws_.add(res,
-        //               ws_.mul(w.second, a_.get_final_weight(w.first)));
         return res;
       }
     private:
