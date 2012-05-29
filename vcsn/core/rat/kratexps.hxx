@@ -184,14 +184,16 @@ namespace vcsn
   {
     // Trivial Identity
     // E+0 = 0+E = E
+    kvalue_t res = nullptr;
     if (l->type() == node_t::ZERO)
-      return r;
+      res = r;
     else if (r->type() == node_t::ZERO)
-      return l;
+      res = l;
     // END: Trivial Identity
     else
-      return std::make_shared<sum_t>(ws_.unit(), ws_.unit(),
-                                     gather(node_t::SUM, l, r));
+      res = std::make_shared<sum_t>(ws_.unit(), ws_.unit(),
+                                    gather(node_t::SUM, l, r));
+    return res;
   }
 
 
