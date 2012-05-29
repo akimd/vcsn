@@ -24,12 +24,19 @@
   {
     namespace rat
     {
+      // (Complex) objects such as shared_ptr cannot be put in a
+      // union, even in C++11.  So cheat, and store a struct instead
+      // of an union.
       struct sem_type
       {
-        int ival;
-        std::string* sval;
-        char cval;
         driver::exp_t node;
+        // These guys _can_ be put into a union.
+        union
+        {
+          int ival;
+          std::string* sval;
+          char cval;
+        };
       };
     }
   }
