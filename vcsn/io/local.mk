@@ -34,8 +34,9 @@ BUILT_SOURCES += $(SOURCES_PARSE_RAT_EXP_YY)
 # Compile the parser and save cycles.
 # This code comes from "Handling Tools that Produce Many Outputs",
 # from the Automake documentation.
-EXTRA_DIST +=					\
-  io/parse-rat-exp.stamp			\
+EXTRA_DIST +=                                   \
+  io/parse-rat-exp.txt                          \
+  io/parse-rat-exp.stamp                        \
   io/parse-rat-exp.yy
 # The dependency is on bison++.in and not bison++, since bison++ is
 # regenerated at distribution time, and voids the time stamps (which

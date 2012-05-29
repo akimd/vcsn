@@ -26,7 +26,7 @@
     {
       // (Complex) objects such as shared_ptr cannot be put in a
       // union, even in C++11.  So cheat, and store a struct instead
-      // of an union.
+      // of an union.  See parse-rat-exp.txt.
       struct sem_type
       {
         driver::exp_t node;
@@ -37,6 +37,7 @@
           std::string* sval;
           char cval;
         };
+        bool parens = false;
       };
     }
   }
@@ -134,12 +135,22 @@ exp:
 | exp "+" exp                 { $$ = MAKE(add, $1, $3); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }
-| exp exp %prec CONCAT        { $$ = MAKE(word, $1, $2); }
+| exp exp %prec CONCAT
+  {
+    // See parse-rat-exp.txt.
+    if (!$<parens>1 && !$<parens>2)
+      $$ = MAKE(word, $1, $2);
+    else
+      {
+        $$ = MAKE(mul, $1, $2);
+        $<parens>$ = $<parens>2;
+      }
+  }
 | exp "*"                     { $$ = MAKE(star, $1); }
 | ZERO                        { $$ = MAKE(zero); }
 | ONE                         { $$ = MAKE(unit); }
 | LETTER                      { TRY(@$, $$ = MAKE(atom, {$1})); }
-| "(" exp ")"                 { $$ = $2; assert($1 == $3); }
+| "(" exp ")"                 { assert($1 == $3); $$ = $2; $<parens>$ = true; }
 ;
 
 weights:

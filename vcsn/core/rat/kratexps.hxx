@@ -95,14 +95,33 @@ namespace vcsn
   DEFINE::word(value_t l, value_t r, atoms_are_words) const
     -> value_t
   {
-    if (l->type() == node_t::ATOM
-        && r->type() == node_t::ATOM)
+    if (r->type() == node_t::ATOM)
       {
-        auto lhs = down_pointer_cast<const atom_t>(l);
         auto rhs = down_pointer_cast<const atom_t>(r);
-        if (ws_.is_unit(lhs->left_weight())
-            && ws_.is_unit(rhs->left_weight()))
-          return atom(gs_.concat(lhs->value(), rhs->value()));
+        if (ws_.is_unit(rhs->left_weight()))
+          switch (l->type())
+            {
+            case node_t::ATOM:
+              {
+                auto lhs = down_pointer_cast<const atom_t>(l);
+                if (ws_.is_unit(lhs->left_weight()))
+                  return atom(gs_.concat(lhs->value(), rhs->value()));
+              }
+              break;
+
+              // If we are calling word on "(ab).a, b", then we really
+              // want "(ab).(ab)".
+            case node_t::PROD:
+              {
+                const auto& prod = *down_pointer_cast<const prod_t>(l);
+                nodes_t nodes {prod.begin(), prod.end()-1};
+                nodes.push_back(down_pointer_cast<const node_t>(word(*(prod.end()-1), r)));
+                return std::make_shared<prod_t>(ws_.unit(), ws_.unit(), nodes);
+              }
+            default:
+              // Fall thru.
+              ;
+            }
       }
     return mul(l, r);
   }

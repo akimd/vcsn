@@ -1,3 +1,13 @@
+* 2012-05-30
+** RatExp: atoms are words
+Expressions such as "(ab)(ab)" used to be equivalent to "(abab)" (a
+single four-letter atom).  Now:
+
+  pprat -aw '(ab)(ab)'   => (ab).(ab)
+  pprat -aw 'abab'       => abab
+  pprat -aw 'ab.ab'      => (ab).(ab)
+  pprat -aw 'ab(ab)abc*' => (ab).(ab).(ab).(c*)
+
 * 2012-05-28
 ** eval: Add evaluation algoritms
 
@@ -327,6 +337,10 @@ rational expressions, pprat supports '-w zrr' (Rat<Rat<Z>>):
    $ pprat -w zr -e '{{{2}{3}a}u}x{{{4}{5}\e}\e}'
    {{{120}a}u}x
 
+--
 Local Variables:
 mode: outline
+coding: utf-8
+ispell-dictionary: "american"
+fill-column: 76
 End:

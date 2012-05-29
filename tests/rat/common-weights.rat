@@ -20,5 +20,9 @@ ab => ab
 # Precedence and associativity.
 (ab)* => (ab)*
 abc => abc
-# FIXME: a(bc) == a.(bc)
+a(bc) => a.(bc)
+ab(ab) => (ab).(ab)
+(ab)ab => (ab).(ab)
+ab(ab)ab => (ab).(ab).(ab)
+ab(ab)abc*  => (ab).(ab).(ab).(c*)
 (abc).(cba) => (abc).(cba)
