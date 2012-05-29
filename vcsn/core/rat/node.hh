@@ -55,9 +55,11 @@ namespace vcsn
       using weight_t = Weight;
       using node_t = rat::node<atom_value_t, weight_t>;
       using self_t = node;
+      /// Same as value_t, but K is statically known.
       using kvalue_t = std::shared_ptr<const node_t>;
+      /// Same as kvalue_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<node_t>;
-      using nodes_t = std::list<kvalue_t>;
+      using nodes_t = std::vector<kvalue_t>;
       using const_visitor = vcsn::rat::const_visitor<atom_value_t, weight_t>;
 
       node(const weight_t& l);
@@ -229,7 +231,7 @@ namespace vcsn
       using node_t = node<atom_value_t, weight_t>;
       using type_t = typename node_t::type_t;
       using kvalue_t = typename node_t::kvalue_t;
-      using nodes_t = std::list<kvalue_t>;
+      using nodes_t = typename node_t::nodes_t;
       using self_t = sum;
 
       using const_iterator = typename nodes_t::const_iterator;
@@ -238,6 +240,7 @@ namespace vcsn
       using reverse_iterator = typename nodes_t::reverse_iterator;
 
       sum(const weight_t& l, const weight_t& r, const nodes_t& ns = nodes_t());
+
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
       {
