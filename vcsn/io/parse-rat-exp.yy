@@ -139,7 +139,7 @@ exp:
   {
     // See parse-rat-exp.txt.
     if (!$<parens>1 && !$<parens>2)
-      $$ = MAKE(word, $1, $2);
+      $$ = MAKE(concat, $1, $2);
     else
       {
         $$ = MAKE(mul, $1, $2);

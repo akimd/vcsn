@@ -24,7 +24,7 @@ namespace vcsn
     virtual value_t mul(value_t l, value_t r) const = 0;
     /// Implicit product.  If both \a l and \a r are weightless word,
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
-    virtual value_t word(value_t l, value_t r) const = 0;
+    virtual value_t concat(value_t l, value_t r) const = 0;
     virtual value_t star(value_t e) const = 0;
     virtual value_t weight(std::string* w, value_t e) const = 0;
     virtual value_t weight(value_t e, std::string* w) const = 0;

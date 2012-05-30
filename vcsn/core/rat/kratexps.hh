@@ -93,11 +93,9 @@ namespace vcsn
 
     virtual value_t add(value_t l, value_t r) const;
     virtual value_t mul(value_t l, value_t r) const;
-
-    virtual value_t word(value_t l, value_t r) const;
-    virtual value_t word(value_t l, value_t r, atoms_are_letters) const;
-    virtual value_t word(value_t l, value_t r, atoms_are_words) const;
-
+    /// When concatenating two atoms, possibly make a single one,
+    /// or make the product.
+    virtual value_t concat(value_t l, value_t r) const;
     virtual value_t star(value_t e) const;
     virtual value_t weight(value_t e, std::string* w) const;
     virtual value_t weight(std::string* w, value_t e) const;
@@ -123,6 +121,8 @@ namespace vcsn
     // Concrete type implementation.
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
+    value_t concat(value_t l, value_t r, atoms_are_letters) const;
+    value_t concat(value_t l, value_t r, atoms_are_words) const;
     value_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;

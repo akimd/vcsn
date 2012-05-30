@@ -86,50 +86,10 @@ namespace vcsn
     return mul(left, right);
   }
 
-  DEFINE::word(value_t l, value_t r) const
+  DEFINE::concat(value_t l, value_t r) const
     -> value_t
   {
-    return word(l, r, kind_t());
-  }
-
-  DEFINE::word(value_t l, value_t r, atoms_are_words) const
-    -> value_t
-  {
-    if (r->type() == node_t::ATOM)
-      {
-        auto rhs = down_pointer_cast<const atom_t>(r);
-        if (ws_.is_unit(rhs->left_weight()))
-          switch (l->type())
-            {
-            case node_t::ATOM:
-              {
-                auto lhs = down_pointer_cast<const atom_t>(l);
-                if (ws_.is_unit(lhs->left_weight()))
-                  return atom(gs_.concat(lhs->value(), rhs->value()));
-              }
-              break;
-
-              // If we are calling word on "(ab).a, b", then we really
-              // want "(ab).(ab)".
-            case node_t::PROD:
-              {
-                const auto& prod = *down_pointer_cast<const prod_t>(l);
-                nodes_t nodes {prod.begin(), prod.end()-1};
-                nodes.push_back(down_pointer_cast<const node_t>(word(*(prod.end()-1), r)));
-                return std::make_shared<prod_t>(ws_.unit(), ws_.unit(), nodes);
-              }
-            default:
-              // Fall thru.
-              ;
-            }
-      }
-    return mul(l, r);
-  }
-
-  DEFINE::word(value_t l, value_t r, atoms_are_letters) const
-    -> value_t
-  {
-    return mul(l, r);
+    return concat(l, r, kind_t());
   }
 
   DEFINE::star(value_t e) const
@@ -237,6 +197,47 @@ namespace vcsn
       res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(),
                                      gather(node_t::PROD, l, r));
     return res;
+  }
+
+  DEFINE::concat(value_t l, value_t r, atoms_are_words) const
+    -> value_t
+  {
+    if (r->type() == node_t::ATOM)
+      {
+        auto rhs = down_pointer_cast<const atom_t>(r);
+        if (ws_.is_unit(rhs->left_weight()))
+          switch (l->type())
+            {
+            case node_t::ATOM:
+              {
+                auto lhs = down_pointer_cast<const atom_t>(l);
+                if (ws_.is_unit(lhs->left_weight()))
+                  return atom(gs_.concat(lhs->value(), rhs->value()));
+              }
+              break;
+
+              // If we are calling word on "(ab).a, b", then we really
+              // want "(ab).(ab)".
+            case node_t::PROD:
+              {
+                const auto& prod = *down_pointer_cast<const prod_t>(l);
+                nodes_t nodes {prod.begin(), prod.end()-1};
+                nodes.push_back
+                  (down_pointer_cast<const node_t>(concat(*(prod.end()-1), r)));
+                return std::make_shared<prod_t>(ws_.unit(), ws_.unit(), nodes);
+              }
+            default:
+              // Fall thru.
+              ;
+            }
+      }
+    return mul(l, r);
+  }
+
+  DEFINE::concat(value_t l, value_t r, atoms_are_letters) const
+    -> value_t
+  {
+    return mul(l, r);
   }
 
   DEFINE::star(kvalue_t e) const

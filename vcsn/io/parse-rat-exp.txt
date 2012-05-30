@@ -63,15 +63,15 @@ and simply use the product to apply a weight.
 * Dealing with "atoms are words"
 Everything was fine with "atoms are letters", but "atoms are words" adds its
 own complexity.  We want "abcd" to be a single atom, which means that we
-want "exp: exp exp" to concatenate atoms (using word()) rather that multiply
-them (mul()).
+want "exp: exp exp" to concatenate atoms (using concat()) rather that
+multiply them (mul()).
 
 But then, since (of course) parens are syntax-only, "(ab)(ab)" also results
 in "abab".  Wrong.
 
 One idea is to have a new non-terminal, say "atom", that would collect all
 the letters together, so "exp: exp exp" would always use mul(), never
-word().  Wrong again: "ab*" will be parsed as "(ab)*".
+concat().  Wrong again: "ab*" will be parsed as "(ab)*".
 
 I don't see how to avoid remembering whether the atoms were put in
 parentheses or not.  Yet this is not something that we want to "see" in our
@@ -97,12 +97,11 @@ Victory!
 
 No, not yet.  Consider "(ab)cd".  At this point, "(ab)c . d", the parser
 will already have converted this concat by an explicit product since the
-first word is in parens, so the stack contains "prod(word(a, b), word(c)",
-and when "d" arrives, again, this is a product, so it results in
-"((ab).c).d)".  The trick then is twofold: make the "parens" field of
-"(ab).c" be "false" to enable the call to "word()" rather than "mul()", and
-teach "word(prod(<exp>, <word1>), <word2>)" to return "prod(<exp>,
-<word1+2>)".
+first word is in parens, so the stack contains "prod(atom(ab), atom(c)", and
+when "d" arrives, again, this is a product, so it results in "((ab).c).d)".
+The trick then is twofold: make the "parens" field of "(ab).c" be "false" to
+enable the call to "concat()" rather than "mul()", and teach
+"concat(prod(<exp>, <word1>), <word2>)" to return "prod(<exp>, <word1+2>)".
 
 * How about glr?
 Most probably several of these complications can be avoided thanks to GLR.
