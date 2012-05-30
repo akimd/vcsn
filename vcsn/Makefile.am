@@ -17,8 +17,9 @@ AM_CPPFLAGS += -I$(top_srcdir)
 
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
-  algos/determinize.hh				\
+  algos/determinize.hh                          \
   algos/dotty.hh                                \
+  algos/eval.hh                                 \
   algos/product.hh                              \
   algos/standard_of.hh                          \
   alphabets/char.hh                             \
@@ -28,6 +29,7 @@ nobase_vcsn_HEADERS =                           \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
   core/rat/abstract_kratexps.hh                 \
+  core/rat/kind.hh                              \
   core/rat/kratexps.hh                          \
   core/rat/kratexps.hxx                         \
   core/rat/node.fwd.hh                          \
