@@ -95,7 +95,12 @@ namespace vcsn
   DEFINE::star(value_t e) const
     -> value_t
   {
-    return star(down_pointer_cast<const node_t>(e));
+    if (e->type() == node_t::ZERO)
+      // Trivial identity
+      // (0)* == 1
+      return unit();
+    else
+      return star(down_pointer_cast<const node_t>(e));
   }
 
 
@@ -241,19 +246,9 @@ namespace vcsn
   }
 
   DEFINE::star(kvalue_t e) const
-    -> value_t
+    -> kvalue_t
   {
-    if (e->type() == node_t::ZERO)
-      // Trivial identity
-      // (0)* == 1
-      return unit();
-//    else if (e->type() == node_t::ONE)
-//      // Trivial identity
-//      // (k1)* == (k*)1
-//      return weight(ws_.star(e->left_weight()),
-//                    down_pointer_cast<const leaf_t>(unit()));
-    else
-      return std::make_shared<star_t>(ws_.unit(), ws_.unit(), e);
+    return std::make_shared<star_t>(ws_.unit(), ws_.unit(), e);
   }
 
 

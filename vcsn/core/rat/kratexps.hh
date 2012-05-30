@@ -123,7 +123,7 @@ namespace vcsn
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
     value_t concat(value_t l, value_t r, atoms_are_letters) const;
     value_t concat(value_t l, value_t r, atoms_are_words) const;
-    value_t star(kvalue_t e) const;
+    kvalue_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;
 
