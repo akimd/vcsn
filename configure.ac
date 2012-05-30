@@ -80,7 +80,7 @@ esac
 
 TC_PROG([flex], [>= 2.5.4], [FLEX], [Flex scanner generator])
 AM_PROG_LEX
-TC_PROG([bison], [>= 2.4], [BISON], [Bison parser generator])
+TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 AC_CONFIG_HEADERS([vcsn/config.h:vcsn/config.in.h])
 AC_CONFIG_FILES([
