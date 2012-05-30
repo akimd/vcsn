@@ -14,25 +14,24 @@
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
 AM_RAT_LOG_FLAGS = rat/pprat
-AM_RAT_LOG_DEPS =				\
-  $(RAT_LOG_COMPILER)				\
+AM_RAT_LOG_DEPS =                               \
+  $(RAT_LOG_COMPILER)                           \
   rat/common.rat rat/common-weights.rat
 $(rat_TESTS:.rat=.log): rat/pprat $(AM_RAT_LOG_DEPS)
 
-rat_TESTS =					\
-  $(rat_XFAIL_TESTS)				\
-  rat/b.rat					\
-  rat/br.rat					\
-  rat/z.rat					\
-  rat/zr.rat					\
+rat_TESTS =                                     \
+  $(rat_XFAIL_TESTS)                            \
+  rat/interface.rat                             \
+  rat/b.rat                                     \
+  rat/br.rat                                    \
+  rat/z.rat                                     \
+  rat/zr.rat                                    \
   rat/zrr.rat
 
 dist_TESTS += $(rat_TESTS)
 EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
-rat_XFAIL_TESTS =				\
-  rat/wrong-weight-set.rat			\
-  rat/invalid-weight-set.rat			\
+rat_XFAIL_TESTS =                               \
   rat/wrong-weight-set.rat
 
 XFAIL_TESTS += $(rat_XFAIL_TESTS)

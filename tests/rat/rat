@@ -43,7 +43,7 @@ sub rst_title($)
 =item C<pp($prog, $in)>
 
 Parse and pretty-print.  If it fails, prepend "! " to the error
-message and return it as result.
+message and return it as result.  Strip the "try -h" line.
 
 =cut
 sub pp($$)
@@ -51,8 +51,11 @@ sub pp($$)
   my ($prog, $in) = @_;
   $in = quote($in);
   my $res = `$prog -e '$in' 2>&1`;
-  $res = "! $res"
-    if $?;
+  if ($?)
+    {
+      $res = "! $res";
+      $res =~ s/\nTry .* -h' for more.*//;
+    }
   chomp($res);
   $res;
 }

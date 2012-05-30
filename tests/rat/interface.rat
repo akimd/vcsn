@@ -1,0 +1,8 @@
+# Check that we detect invalid weight sets.
+
+%weight: watcher
+{12}a ! watcher: invalid weight set (-w)
+
+%weight: b
+%atoms: mots
+{12}a ! mots: invalid atom kind (-a)

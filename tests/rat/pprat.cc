@@ -179,8 +179,7 @@ try
             ctx.atoms_are_letters = false;
           else
             {
-              std::cerr
-                << argv[0] << ": invalid argument for -a: " << s << std::endl;
+              std::cerr << optarg << ": invalid atom kind (-a)" << std::endl;
               goto fail;
             }
           break;
@@ -203,7 +202,7 @@ try
           map::iterator i = factories.find(optarg);
           if (i == end(factories))
             {
-              std::cerr << optarg << ": invalid weight set" << std::endl;
+              std::cerr << optarg << ": invalid weight set (-w)" << std::endl;
               goto fail;
             }
           else
