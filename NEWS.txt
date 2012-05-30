@@ -9,16 +9,11 @@ single four-letter atom).  Now:
   pprat -aw 'ab(ab)abc*' => (ab).(ab).(ab).(c*)
 
 * 2012-05-28
-** eval: Add evaluation algoritms
+** New algorithm: eval, evaluates a word over an (weighted) automaton
+Defined in vcsn/algos/eval.hh as vcsn::eval.
 
-   This algorithm evaluate a word over an automaton. This alorithm is
-   defined in vcsn/algos/eval.hh and his defined in the `vcsn'
-   namespace.
-
-** determinize: Add automaton determinization algorithms
-
-   This algorithm return the determinize automaton passed in
-   arguments. This algorithm is defined in vcsn/algos/determinize.hh.
+** New algorithm: determinize, Boolean automaton determinization
+Defined in vcsn/algos/determinize.hh as vcsn::determinize.
 
 * 2012-05-25
 ** RatExp: changes in the display
