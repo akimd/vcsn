@@ -36,7 +36,6 @@ EOF
     CXXFLAGS="$cf_save_CXXFLAGS $ac_cv_prog_gxx_warn_flags -$cf_opt"
     if AC_TRY_EVAL(ac_compile); then
       ac_cv_prog_gxx_warn_flags="$ac_cv_prog_gxx_warn_flags -$cf_opt"
-      test "$cf_opt" = Wcast-qual && ac_cv_prog_gxx_warn_flags="$ac_cv_prog_gxx_warn_flags -DXTSTRINGDEFINES"
     fi
   done
   rm -f conftest*
