@@ -217,7 +217,7 @@ namespace vcsn
       using weightset_t = WeightSet;
       using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
-      using atom_value_t = typename atom_trait<Kind, GenSet>::type;
+      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
       using node_t = rat::node<atom_value_t, weight_t>;
       // Make sure the type is right.
       auto v = std::dynamic_pointer_cast<const node_t>(e);

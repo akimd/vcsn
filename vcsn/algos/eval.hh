@@ -21,8 +21,8 @@ namespace vcsn
 
     public:
       eval_functor(const automaton_t& a)
-      : a_(a)
-      , ws_(a_.weightset())
+        : a_(a)
+        , ws_(a_.weightset())
       {}
 
       weight_t operator()(const word_t& word) const

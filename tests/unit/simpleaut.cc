@@ -13,7 +13,7 @@ int main()
   using automaton_t =
     vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_letters>;
   vcsn::z z;
-  automaton_t aut(alpha, z);
+  automaton_t aut{alpha, z};
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();

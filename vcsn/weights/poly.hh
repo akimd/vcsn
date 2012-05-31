@@ -14,8 +14,8 @@ namespace vcsn
     typedef GenSet genset_t;
     typedef WeightSet weightset_t;
 
-    typedef typename GenSet::word_t word_t;
-    typedef typename WeightSet::value_t weight_t;
+    typedef typename genset_t::word_t word_t;
+    typedef typename weightset_t::value_t weight_t;
 
     typedef std::map<word_t, weight_t> value_t;
 

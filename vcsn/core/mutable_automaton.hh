@@ -22,13 +22,13 @@ namespace vcsn
   public:
     typedef GenSet genset_t;
     typedef WeightSet weightset_t;
-    typedef Kind kind_t;
     typedef polynomials<GenSet, WeightSet> entryset_t;
+    using kind_t = Kind;
 
     typedef unsigned state_t;
     typedef unsigned transition_t;
 
-    typedef typename label_trait<Kind, GenSet>::label_t label_t;
+    typedef typename label_trait<Kind, genset_t>::label_t label_t;
     typedef typename weightset_t::value_t weight_t;
     typedef typename entryset_t::value_t entry_t;
   protected:
