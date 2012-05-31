@@ -49,7 +49,7 @@ enum class type
   };
 
 
-struct context
+struct options
 {
   bool atoms_are_letters;
   type weight;
@@ -95,7 +95,7 @@ using krew = kre<T, aaw>;
 
 template<typename Factory>
 void
-pp(const context& ctx, const Factory& factory,
+pp(const options& opts, const Factory& factory,
    const char* s, bool file)
 {
   using atom_kind_t
@@ -107,7 +107,7 @@ pp(const context& ctx, const Factory& factory,
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
-      if (ctx.standard_of)
+      if (opts.standard_of)
         {
           auto aut =
             vcsn::rat::standard_of<automaton_t>(factory.genset(),
@@ -126,16 +126,16 @@ pp(const context& ctx, const Factory& factory,
 }
 
 void
-pp(const context& ctx, const char* s, bool file)
+pp(const options& opts, const char* s, bool file)
 {
-  switch (ctx.weight)
+  switch (opts.weight)
     {
-#define CASE(Name)                              \
-      case type::Name:                          \
-        if (ctx.atoms_are_letters)              \
-          pp(ctx, fact_ ## Name, s, file);      \
-        else                                    \
-          pp(ctx, fact_ ## Name ## w, s, file); \
+#define CASE(Name)                                      \
+      case type::Name:                                  \
+        if (opts.atoms_are_letters)                     \
+          pp(opts, fact_ ## Name, s, file);             \
+        else                                            \
+          pp(opts, fact_ ## Name ## w, s, file);        \
       break;
       CASE(b);
       CASE(br);
@@ -163,7 +163,7 @@ try
   DEFINE(zrr);
 #undef DEFINE
 
-  context ctx =
+  options opts =
     {
       .atoms_are_letters = true,
       .weight = type::b,
@@ -177,9 +177,9 @@ try
         {
           std::string s = optarg;
           if (s == "l" || s == "letter" || s == "letters")
-            ctx.atoms_are_letters = true;
+            opts.atoms_are_letters = true;
           else if (s == "w" || s == "word" || s == "words")
-            ctx.atoms_are_letters = false;
+            opts.atoms_are_letters = false;
           else
             {
               std::cerr << optarg << ": invalid atom kind (-a)" << std::endl;
@@ -189,16 +189,16 @@ try
         }
         break;
       case 'e':
-        pp(ctx, optarg, false);
+        pp(opts, optarg, false);
         break;
       case 'f':
-        pp(ctx, optarg, true);
+        pp(opts, optarg, true);
         break;
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
         break;
       case 's':
-        ctx.standard_of = true;
+        opts.standard_of = true;
         break;
       case 'w':
         {
@@ -209,7 +209,7 @@ try
               goto fail;
             }
           else
-            ctx.weight = i->second;
+            opts.weight = i->second;
         }
         break;
       case '?':
@@ -220,7 +220,7 @@ try
   argc -= optind;
   argv += optind;
   for (int i = 0; i < argc; ++i)
-    pp(ctx, argv[i], false);
+    pp(opts, argv[i], false);
 }
 catch (const std::exception& e)
 {
