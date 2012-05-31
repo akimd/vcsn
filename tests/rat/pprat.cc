@@ -103,8 +103,7 @@ pp(const context& ctx, const Factory& factory,
   using label_kind_t
     = typename vcsn::label_kind<atom_kind_t>::type;
   using automaton_t
-    = vcsn::mutable_automaton<context_t<typename Factory::weightset_t>,
-                                        label_kind_t>;
+    = vcsn::mutable_automaton<typename Factory::context_t, label_kind_t>;
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
