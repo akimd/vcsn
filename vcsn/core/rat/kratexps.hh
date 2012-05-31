@@ -12,13 +12,14 @@
 namespace vcsn
 {
 
-  template <typename GenSet, typename WeightSet,
+  template <typename Context,
             typename Kind = atoms_are_letters>
   class kratexps : public abstract_kratexps
   {
   public:
-    using genset_t = GenSet;
-    using weightset_t = WeightSet;
+    using context_t = Context;
+    using genset_t = typename context_t::genset_t;
+    using weightset_t = typename context_t::weightset_t;
     using kind_t = Kind;
     using super_type = abstract_kratexps;
     using letter_t = typename genset_t::letter_t;

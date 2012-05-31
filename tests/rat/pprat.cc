@@ -60,13 +60,18 @@ struct context
 
 using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
 alpha_t alpha{'a', 'b', 'c', 'd'};
-
+template <typename WeightSet>
+struct context_t
+{
+  using genset_t = alpha_t;
+  using weightset_t = WeightSet;
+};
 using aal = vcsn::atoms_are_letters;
 using aaw = vcsn::atoms_are_words;
 using b = vcsn::b;
 using z = vcsn::z;
 template <typename T, typename Kind>
-using kre = vcsn::kratexps<alpha_t, T, Kind>;
+using kre = vcsn::kratexps<context_t<T>, Kind>;
 template <typename T>
 using krel = kre<T, aal>;
 template <typename T>
@@ -97,13 +102,9 @@ pp(const context& ctx, const Factory& factory,
     = typename Factory::kind_t;
   using label_kind_t
     = typename vcsn::label_kind<atom_kind_t>::type;
-  struct context_t
-  {
-    using genset_t = alpha_t;
-    using weightset_t = typename Factory::weightset_t;
-  };
   using automaton_t
-    = vcsn::mutable_automaton<context_t, label_kind_t>;
+    = vcsn::mutable_automaton<context_t<typename Factory::weightset_t>,
+                                        label_kind_t>;
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {

@@ -13,11 +13,11 @@ namespace vcsn
   | Implementation of abstract_kratexps pure virtual methods.  |
   `-----------------------------------------------------------*/
 
-#define DEFINE                                                  \
-  template <typename GenSet, typename WeightSet, typename Kind> \
-  inline                                                        \
-  auto                                                          \
-  kratexps<GenSet, WeightSet, Kind>
+#define DEFINE                                  \
+  template <typename Context, typename Kind>    \
+  inline                                        \
+  auto                                          \
+  kratexps<Context, Kind>
 
   DEFINE::zero() const
     -> value_t
@@ -37,11 +37,11 @@ namespace vcsn
     return atom_<kind_t>(w);
   }
 
-  template <typename GenSet, typename WeightSet, typename Kind>
+  template <typename Context, typename Kind>
   template <typename K>
   inline
   auto
-  kratexps<GenSet, WeightSet, Kind>::atom_(const word_t& w) const
+  kratexps<Context, Kind>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, atoms_are_letters>::value,
                                value_t>::type
   {
@@ -54,11 +54,11 @@ namespace vcsn
     return std::make_shared<atom_t>(ws_.unit(), l);
   }
 
-  template <typename GenSet, typename WeightSet, typename Kind>
+  template <typename Context, typename Kind>
   template <typename K>
   inline
   auto
-  kratexps<GenSet, WeightSet, Kind>::atom_(const word_t& w) const
+  kratexps<Context, Kind>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, atoms_are_words>::value,
                                value_t>::type
   {
