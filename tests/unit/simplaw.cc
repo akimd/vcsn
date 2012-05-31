@@ -10,8 +10,13 @@ int main()
   vcsn::z z;
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
   alpha_t alpha{'a', 'b', 'c', 'd'};
+  struct context_t
+  {
+    using genset_t = alpha_t;
+    using weightset_t = vcsn::z;
+  };
   using automaton_t =
-    vcsn::mutable_automaton<alpha_t, vcsn::z, vcsn::labels_are_words>;
+    vcsn::mutable_automaton<context_t, vcsn::labels_are_words>;
   automaton_t aut(alpha, z);
 
   auto s1 = aut.new_state();

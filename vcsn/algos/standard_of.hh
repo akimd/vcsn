@@ -9,17 +9,18 @@ namespace vcsn
   namespace rat
   {
     template <class Aut,
-              class GenSet = typename Aut::genset_t,
-              class WeightSet = typename Aut::weightset_t,
+              class Context = typename Aut::context_t,
               class Kind = typename atom_kind<typename Aut::kind_t>::type>
     class standard_of_visitor
-      : public const_visitor<typename atom_trait<Kind, GenSet>::type,
-                             typename WeightSet::value_t>
+      : public const_visitor<typename atom_trait<Kind,
+                                                 typename Context::genset_t>::type,
+                             typename Context::weightset_t::value_t>
     {
     public:
       using automaton_t = Aut;
-      using genset_t = GenSet;
-      using weightset_t = WeightSet;
+      using context_t = Context;
+      using genset_t = typename context_t::genset_t;
+      using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
       using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
@@ -206,15 +207,16 @@ namespace vcsn
     };
 
     template <class Aut,
-              class GenSet = typename Aut::genset_t,
-              class WeightSet = typename Aut::weightset_t,
+              class Context = typename Aut::context_t,
               class Kind = typename atom_kind<typename Aut::kind_t>::type>
     Aut
-    standard_of(const GenSet& alpha, const WeightSet& ws,
+    standard_of(const typename Context::genset_t& alpha,
+                const typename Context::weightset_t& ws,
                 const exp_t e)
     {
-      using genset_t = GenSet;
-      using weightset_t = WeightSet;
+      using context_t = Context;
+      using genset_t = typename context_t::genset_t;
+      using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
       using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
@@ -222,7 +224,7 @@ namespace vcsn
       // Make sure the type is right.
       auto v = std::dynamic_pointer_cast<const node_t>(e);
       assert(v);
-      standard_of_visitor<Aut, GenSet, WeightSet, Kind> standard(alpha, ws);
+      standard_of_visitor<Aut, context_t, kind_t> standard{alpha, ws};
       return standard(v);
     }
 

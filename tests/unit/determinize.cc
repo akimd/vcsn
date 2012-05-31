@@ -9,12 +9,9 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/factory/ladybird.hh>
 
-typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
-typedef vcsn::mutable_automaton<alpha_t,
-                                vcsn::b,
-                                vcsn::labels_are_letters> automaton_t;
+using automaton_t = decltype(vcsn::ladybird(0, vcsn::b()));
 
-automaton_t factory(int n, alpha_t& alpha, vcsn::b& b)
+automaton_t factory(int n, automaton_t::genset_t& alpha, vcsn::b& b)
 {
   assert(n > 1);
 
@@ -67,7 +64,7 @@ bool idempotence(std::string str, automaton_t& aut, bool display_aut)
 
 bool check_simple(size_t n, bool display_aut)
 {
-  alpha_t alpha {'a', 'b'};
+  automaton_t::genset_t alpha {'a', 'b'};
   vcsn::b b;
 
   automaton_t aut = factory(n, alpha, b);

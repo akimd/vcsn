@@ -9,7 +9,12 @@
 int main()
 {
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
-  typedef vcsn::mutable_automaton<alpha_t, vcsn::z,
+  struct context_t
+  {
+    using genset_t = alpha_t;
+    using weightset_t = vcsn::z;
+  };
+  typedef vcsn::mutable_automaton<context_t,
 				  vcsn::labels_are_letters> automaton_t;
   vcsn::z z;
   alpha_t alpha{'a', 'b', 'c'};

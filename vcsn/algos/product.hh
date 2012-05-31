@@ -19,8 +19,7 @@ namespace vcsn
     // compatible.
     const auto& ws = laut.weightset();
 
-    typedef mutable_automaton<typename A::genset_t,
-                              typename A::weightset_t,
+    typedef mutable_automaton<typename A::context_t,
 			      typename A::kind_t> automaton_t;
     automaton_t aut(laut.genset(), ws);
     typedef typename automaton_t::state_t state_t;

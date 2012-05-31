@@ -9,8 +9,13 @@ int main()
   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
 
   alpha_t alpha{ 'a', 'b', 'c', 'd' };
+  struct context_t
+  {
+    using genset_t = alpha_t;
+    using weightset_t = vcsn::z;
+  };
 
-  typedef vcsn::polynomials<alpha_t, vcsn::z> poly_t;
+  using poly_t = vcsn::polynomials<context_t>;
   poly_t poly(alpha);
 
   poly_t::value_t u = poly.unit();

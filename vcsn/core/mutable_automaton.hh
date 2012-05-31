@@ -16,14 +16,15 @@
 
 namespace vcsn
 {
-  template <class GenSet, class WeightSet, class Kind>
+  template <typename Context, class Kind>
   class mutable_automaton
   {
   public:
-    typedef GenSet genset_t;
-    typedef WeightSet weightset_t;
-    typedef polynomials<GenSet, WeightSet> entryset_t;
+    using context_t = Context;
+    using genset_t = typename context_t::genset_t;
+    using weightset_t = typename context_t::weightset_t;
     using kind_t = Kind;
+    using entryset_t = polynomials<context_t>;
 
     typedef unsigned state_t;
     typedef unsigned transition_t;

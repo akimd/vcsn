@@ -7,12 +7,13 @@
 
 namespace vcsn
 {
-  template <class GenSet, class WeightSet>
+  template <class Context>
   struct polynomials
   {
   public:
-    typedef GenSet genset_t;
-    typedef WeightSet weightset_t;
+    using context_t = Context;
+    using genset_t = typename context_t::genset_t;
+    using weightset_t = typename context_t::weightset_t;
 
     typedef typename genset_t::word_t word_t;
     typedef typename weightset_t::value_t weight_t;

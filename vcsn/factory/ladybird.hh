@@ -9,16 +9,23 @@ namespace vcsn
 {
   namespace details
   {
-    using ladybird_genset_t = set_alphabet<char_letters>;
+    template <class WeightSet>
+    struct ladybird_context
+    {
+      using genset_t = set_alphabet<char_letters>;
+      using weightset_t = WeightSet;
+    };
   } // namespace details
 
   template <class WeightSet>
-  mutable_automaton<details::ladybird_genset_t, WeightSet, labels_are_letters>
+  mutable_automaton<details::ladybird_context<WeightSet>, labels_are_letters>
   ladybird(unsigned n, WeightSet ws = WeightSet())
   {
-    static details::ladybird_genset_t alpha {'a', 'b', 'c'};
-    mutable_automaton<details::ladybird_genset_t,
-                      WeightSet, labels_are_letters> aut(alpha, ws);
+    // Yes, typedef, not using, as it fails with using.
+    typedef typename details::ladybird_context<WeightSet> context_t;
+    using genset_t = typename context_t::genset_t;
+    static genset_t alpha {'a', 'b', 'c'};
+    mutable_automaton<context_t, labels_are_letters> aut(alpha, ws);
 
     auto p = aut.new_state();
     aut.set_initial(p);
