@@ -10,14 +10,16 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename GenSet, typename WeightSet, typename Kind>
+    template <typename Context, typename Kind>
     class printer
-      : public const_visitor<typename atom_trait<Kind, GenSet>::type,
-                             typename WeightSet::value_t>
+      : public const_visitor<typename atom_trait<Kind,
+                                                 typename Context::genset_t>::type,
+                             typename Context::weightset_t::value_t>
     {
     public:
-      using genset_t = GenSet;
-      using weightset_t = WeightSet;
+      using context_t = Context;
+      using genset_t = typename context_t::genset_t;
+      using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
       using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
       using weight_t = typename weightset_t::value_t;

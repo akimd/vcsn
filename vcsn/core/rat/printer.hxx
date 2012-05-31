@@ -6,12 +6,12 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename GenSet, typename WeightSet, typename Kind>
+    template <typename Context, typename Kind>
     inline
-    printer<GenSet, WeightSet, Kind>::printer(std::ostream& out,
-                                              const genset_t& gs,
-                                              const weightset_t& ws,
-                                              const bool debug)
+    printer<Context, Kind>::printer(std::ostream& out,
+                                    const genset_t& gs,
+                                    const weightset_t& ws,
+                                    const bool debug)
       : out_(out)
       , gs_(gs)
       , ws_(ws)
@@ -19,11 +19,11 @@ namespace vcsn
     {}
 
 
-# define DEFINE                                                         \
-    template <typename GenSet, typename WeightSet, typename Kind>       \
-    inline                                                              \
-    auto                                                                \
-    printer<GenSet, WeightSet, Kind>
+# define DEFINE                                 \
+    template <typename Context, typename Kind>  \
+    inline                                      \
+    auto                                        \
+    printer<Context, Kind>
 
 # define VISIT(Type)                          \
     DEFINE::visit(const Type ## _t& v)        \

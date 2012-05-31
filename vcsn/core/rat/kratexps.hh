@@ -27,7 +27,7 @@ namespace vcsn
     using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
-    using printer_t = rat::printer<genset_t, weightset_t, kind_t>;
+    using printer_t = rat::printer<context_t, kind_t>;
     /// Type of nodes.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<atom_value_t, weight_t>
