@@ -31,26 +31,16 @@ AC_SUBST([LIBTOOL_DEPS])
 
 
 AC_PROG_CXX
-
-if test x$GXX = xyes; then
-   case x`$CXX -dumpversion`x in
-   xx|x2*|x3*|x4.[[0123456]]*)
-     AC_MSG_ERROR([GNU g++ version 4.7 or later is required]);;
-   *);;
-   esac
-fi
-
 AC_LANG([C++])
-
-AX_CHECK_COMPILE_FLAG([-std=c++11],
-                      [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++11"])
-if "${stdfailed-true}"; then
-  AX_CHECK_COMPILE_FLAG([-std=c++0x],
-                        [stdfailed=false  CXXFLAGS="$CXXFLAGS -std=c++0x"])
-fi
-if "${stdfailed-true}"; then
-  AC_ERROR([Unable to turn on C++11 mode with this compiler.])
-fi
+AX_CHECK_COMPILE_FLAG([-std=c++11 -stdlib=libc++],
+                      [CXXFLAGS="$CXXFLAGS -std=c++11 -stdlib=libc++"
+                       stdpass=true])
+${stdpass-false} ||
+  AX_CHECK_COMPILE_FLAG([-std=c++11],
+                        [CXXFLAGS="$CXXFLAGS -std=c++11"
+                         stdpass=true])
+${stdpass-false} ||
+  AC_ERROR([unable to turn on C++11 mode with this compiler.])
 
 CF_GXX_WARNINGS
 
