@@ -167,7 +167,8 @@ namespace vcsn
       // than src->succ.
       const tr_cont_t& succ = states_[src].succ;
       auto i =
-	std::find_if(begin(succ), end(succ), [=,&l,&dst] (const transition_t& t)
+	std::find_if(begin(succ), end(succ),
+                     [=,&l,&dst] (const transition_t& t) -> bool
 		     { const stored_transition_t& st = transitions_[t];
 		       return (st.dst == dst
                                && this->genset().equals(st.label, l)); });
@@ -472,11 +473,13 @@ namespace vcsn
     state_range(state_t b, state_t e) const
     {
       return states_output_t
-	(boost::irange<state_t>(b, e), [=] (state_t i) {
-	  const stored_state_t& ss = states_[i];
-	  return (ss.succ.empty()
-		  || ss.succ.front() != this->null_transition());
-	});
+	(boost::irange<state_t>(b, e),
+         [=] (state_t i) -> bool
+         {
+           const stored_state_t& ss = states_[i];
+           return (ss.succ.empty()
+                   || ss.succ.front() != this->null_transition());
+         });
     }
 
   public:
@@ -496,12 +499,13 @@ namespace vcsn
     {
       return transitions_output_t
 	(boost::irange<transition_t>(0U, transitions_.size()),
-	 [=] (transition_t i) {
-	  state_t src = transitions_[i].src;
-	  if (src == this->null_state() || src == this->pre())
-	    return false;
-	  return transitions_[i].dst != this->post();
-	});
+	 [=] (transition_t i) -> bool
+         {
+           state_t src = transitions_[i].src;
+           if (src == this->null_state() || src == this->pre())
+             return false;
+           return transitions_[i].dst != this->post();
+         });
     }
 
     transitions_output_t
@@ -509,10 +513,10 @@ namespace vcsn
     {
       return transitions_output_t
 	(boost::irange<transition_t>(0U, transitions_.size()),
-	 [=] (transition_t i) {
-	  state_t src = transitions_[i].src;
-	  return src != this->null_state();
-	});
+	 [=] (transition_t i)
+         {
+           return transitions_[i].src != this->null_state();
+         });
     }
 
     container_filter_range<const tr_cont_t&>
