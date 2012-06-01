@@ -20,7 +20,7 @@ namespace vcsn
 
     using value_t = std::map<word_t, weight_t>;
 
-    polynomials(const genset_t& gs, const weightset_t& ws = weightset_t())
+    polynomials(const genset_t& gs, const weightset_t& ws)
       : gs_(gs), ws_(ws)
     {
       unit_[gs_.identity()] = ws_.unit();

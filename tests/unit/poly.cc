@@ -9,6 +9,7 @@ int main()
   using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
 
   alpha_t alpha{ 'a', 'b', 'c', 'd' };
+  vcsn::z z;
   struct context_t
   {
     using genset_t = alpha_t;
@@ -16,7 +17,7 @@ int main()
   };
 
   using poly_t = vcsn::polynomials<context_t>;
-  poly_t poly(alpha);
+  poly_t poly(alpha, z);
 
   poly_t::value_t u = poly.unit();
   poly.assoc(u, "ab", 12);
