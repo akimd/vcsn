@@ -1,18 +1,18 @@
 #ifndef VCSN_CORE_MUTABLE_AUTOMATON_HH
 # define VCSN_CORE_MUTABLE_AUTOMATON_HH
 
-# include <vector>
-
 # include <algorithm>
 # include <cassert>
 # include <list>
+# include <vector>
+
 # include <boost/range/irange.hpp>
 
-# include "crange.hh"
-# include "kind.hh"
-# include "transition.hh"
-# include "vcsn/weights/poly.hh"
-# include "entryiter.hh"
+# include <vcsn/core/crange.hh>
+# include <vcsn/core/entryiter.hh>
+# include <vcsn/core/kind.hh>
+# include <vcsn/core/transition.hh>
+# include <vcsn/weights/poly.hh>
 
 namespace vcsn
 {
