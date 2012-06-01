@@ -12,7 +12,7 @@ namespace vcsn
   class z
   {
   public:
-    typedef int value_t;
+    using value_t = int;
 
     value_t
     zero() const

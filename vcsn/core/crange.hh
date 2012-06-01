@@ -11,10 +11,10 @@ namespace vcsn
   struct container_range
   {
   public:
-    typedef typename std::remove_reference<C>::type unref_C;
-    typedef typename unref_C::value_type value_type;
+    using unref_C = typename std::remove_reference<C>::type;
+    using value_type = typename unref_C::value_type;
 
-    typedef typename unref_C::const_iterator const_iterator;
+    using const_iterator = typename unref_C::const_iterator;
   private:
     const C cont_;
   public:
@@ -38,9 +38,9 @@ namespace vcsn
   struct container_filter_range
   {
   public:
-    typedef typename std::remove_reference<C>::type unref_C;
-    typedef typename unref_C::value_type value_type;
-    typedef std::function<bool(value_type)> predicate_t;
+    using unref_C = typename std::remove_reference<C>::type;
+    using value_type = typename unref_C::value_type;
+    using predicate_t = std::function<bool(value_type)>;
     using const_iterator
       = boost::filter_iterator<predicate_t, typename unref_C::const_iterator>;
   public:

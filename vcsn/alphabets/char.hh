@@ -9,8 +9,8 @@ namespace vcsn
   class char_letters
   {
   public:
-    typedef char letter_t;
-    typedef std::string word_t;
+    using letter_t = char;
+    using word_t = std::string;
 
     word_t
     to_word(const letter_t l) const

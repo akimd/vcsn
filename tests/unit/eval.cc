@@ -24,7 +24,7 @@
 
 int main()
 {
-  typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
+  using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
   struct context_t
   {
     using genset_t = alpha_t;

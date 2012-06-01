@@ -1,9 +1,9 @@
 #ifndef VCSN_ALGOS_DOTTY_HH
 # define VCSN_ALGOS_DOTTY_HH
 
-#include <iostream>
-#include <unordered_map>
-#include <vcsn/misc/escape.hh>
+# include <iostream>
+# include <unordered_map>
+# include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {

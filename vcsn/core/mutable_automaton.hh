@@ -26,19 +26,19 @@ namespace vcsn
     using kind_t = Kind;
     using entryset_t = polynomials<context_t>;
 
-    typedef unsigned state_t;
-    typedef unsigned transition_t;
+    using state_t = unsigned;
+    using transition_t = unsigned;
 
-    typedef typename label_trait<Kind, genset_t>::label_t label_t;
-    typedef typename weightset_t::value_t weight_t;
-    typedef typename entryset_t::value_t entry_t;
+    using label_t = typename label_trait<Kind, genset_t>::label_t;
+    using weight_t = typename weightset_t::value_t;
+    using entry_t = typename entryset_t::value_t;
   protected:
     const entryset_t es_;
 
-    typedef transition_tuple<state_t, label_t, weight_t> stored_transition_t;
+    using stored_transition_t = transition_tuple<state_t, label_t, weight_t>;
 
-    typedef std::vector<stored_transition_t> tr_store_t;
-    typedef std::vector<transition_t> tr_cont_t;
+    using tr_store_t = std::vector<stored_transition_t>;
+    using tr_cont_t = std::vector<transition_t>;
 
     struct stored_state_t
     {
@@ -46,10 +46,10 @@ namespace vcsn
       tr_cont_t pred;
     };
 
-    typedef std::vector<stored_state_t> st_store_t;
-    typedef std::vector<state_t> st_cont_t;
+    using st_store_t = std::vector<stored_state_t>;
+    using st_cont_t = std::vector<state_t>;
 
-    typedef std::vector<unsigned> free_store_t;
+    using free_store_t = std::vector<unsigned>;
 
     st_store_t states_;
     free_store_t states_fs_;
@@ -488,8 +488,8 @@ namespace vcsn
     states_output_t
     all_states() const { return state_range(0U, states_.size()); }
 
-    typedef container_filter_range<boost::integer_range<transition_t>>
-      transitions_output_t;
+    using transitions_output_t =
+      container_filter_range<boost::integer_range<transition_t>>;
 
     transitions_output_t
     transitions() const

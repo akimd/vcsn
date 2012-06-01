@@ -15,10 +15,10 @@ namespace vcsn
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
 
-    typedef typename genset_t::word_t word_t;
-    typedef typename weightset_t::value_t weight_t;
+    using word_t = typename genset_t::word_t;
+    using weight_t = typename weightset_t::value_t;
 
-    typedef std::map<word_t, weight_t> value_t;
+    using value_t = std::map<word_t, weight_t>;
 
     polynomials(const genset_t& gs, const weightset_t& ws = weightset_t())
       : gs_(gs), ws_(ws)

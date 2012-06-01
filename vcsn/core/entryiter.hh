@@ -9,14 +9,13 @@ namespace
   template <class Automaton, class C>
   class entry_iterator
   {
-    typedef typename Automaton::state_t state_t;
-    typedef typename Automaton::transition_t transition_t;
-    typedef typename std::pair<state_t, state_t> entry_pos_t;
+    using state_t = typename Automaton::state_t;
+    using transition_t = typename Automaton::transition_t;
+    using entry_pos_t = typename std::pair<state_t, state_t>;
 
-    typedef std::function<bool(typename C::value_type)> predicate_t;
-    typedef boost::filter_iterator<predicate_t,
-				   typename C::const_iterator>
-              const_iterator;
+    using predicate_t = std::function<bool(typename C::value_type)>;
+    using const_iterator =
+      boost::filter_iterator<predicate_t, typename C::const_iterator>;
 
     const Automaton& a_;
     std::set<entry_pos_t> seen_;

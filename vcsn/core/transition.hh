@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_TRANSITION_HH
 # define VCSN_CORE_TRANSITION_HH
 
-#include "vcsn/weights/b.hh"
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
@@ -24,7 +24,7 @@ namespace vcsn
   struct transition_tuple
     : possibly_labeled_transition_tuple<State, Label>
   {
-    typedef Weight weight_t;
+    using weight_t = Weight;
     weight_t weight;
 
     weight_t get_weight() const { return weight; }
@@ -39,7 +39,7 @@ namespace vcsn
   struct transition_tuple<State, Label, bool>
     : possibly_labeled_transition_tuple<State, Label>
   {
-    typedef bool weight_t;
+    using weight_t = bool;
 
     weight_t get_weight() const { return true; }
     void set_weight(weight_t& k) { assert(k == true); }

@@ -10,13 +10,13 @@ namespace vcsn
     template <typename T>
     struct constify_traits
     {
-      typedef const T type;
+      using type = const T;
     };
 
     template <typename T>
     struct id_traits
     {
-      typedef T type;
+      using type = T;
     };
 
   } // !misc

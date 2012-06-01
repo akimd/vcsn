@@ -14,7 +14,7 @@ namespace vcsn
   class z_min
   {
   public:
-    typedef int value_t;
+    using value_t = int;
 
     value_t
     add(const value_t l, const value_t r) const

@@ -8,7 +8,7 @@
 int main()
 {
   vcsn::z z;
-  typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
+  using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
   alpha_t alpha{'a', 'b', 'c', 'd'};
   struct context_t
   {

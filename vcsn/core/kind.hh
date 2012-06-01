@@ -19,13 +19,13 @@ namespace vcsn
   template <class GenSet>
   struct label_trait<labels_are_letters, GenSet>
   {
-    typedef typename GenSet::letter_t label_t;
+    using label_t = typename GenSet::letter_t;
   };
 
   template <class GenSet>
   struct label_trait<labels_are_words, GenSet>
   {
-    typedef typename GenSet::word_t label_t;
+    using label_t = typename GenSet::word_t;
   };
 
 }

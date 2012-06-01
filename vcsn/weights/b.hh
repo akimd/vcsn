@@ -11,7 +11,7 @@ namespace vcsn
   class b
   {
   public:
-    typedef bool value_t;
+    using value_t = bool;
 
     value_t
     zero() const

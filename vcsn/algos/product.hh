@@ -18,13 +18,15 @@ namespace vcsn
     // FIXME: we should ensure that the alphabet and weightsets are
     // compatible.
     const auto& ws = laut.weightset();
-
-    typedef mutable_automaton<typename A::context_t,
-			      typename A::kind_t> automaton_t;
+    // Yes, typedef, not using, as G++ 4.7 and 4.8 fails with using.
+    // <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540>.
+    typedef
+      mutable_automaton<typename A::context_t, typename A::kind_t>
+      automaton_t;
     automaton_t aut(laut.genset(), ws);
-    typedef typename automaton_t::state_t state_t;
+    using state_t = typename automaton_t::state_t;
 
-    typedef std::pair<typename A::state_t, typename B::state_t> pair_t;
+    using pair_t = std::pair<typename A::state_t, typename B::state_t>;
     std::map<pair_t, typename automaton_t::state_t> pmap;
 
     pair_t ppre(laut.pre(), raut.pre());
