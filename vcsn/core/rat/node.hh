@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_RAT_NODE_HH
 # define VCSN_CORE_RAT_NODE_HH
 
-# include <list>
+# include <vector>
 # include <string>
 
 # include <boost/range.hpp>
