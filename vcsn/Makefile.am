@@ -40,6 +40,7 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
+  ctx/char.hh                                   \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \

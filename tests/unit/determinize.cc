@@ -12,12 +12,10 @@
 struct context_t
 {
   using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-  genset_t gs_ = genset_t{'a', 'b', 'c'};
+  genset_t gs_;
   using weightset_t = vcsn::b;
-  weightset_t ws_ = weightset_t{};
+  weightset_t ws_;
 };
-
-context_t context{};
 
 using automaton_t =
   vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
@@ -76,7 +74,8 @@ bool idempotence(std::string str, automaton_t& aut, bool display_aut)
 
 bool check_simple(size_t n, bool display_aut)
 {
-  automaton_t aut = factory(context, n);
+  context_t ctx{.gs_ = {'a', 'b'}, .ws_ = {}};
+  automaton_t aut = factory(ctx, n);
   std::stringstream ss;
   ss << "simple automaton " << n;
   return idempotence(ss.str(), aut, display_aut);
@@ -88,7 +87,8 @@ int main()
   exit |= check_simple(5, true);
   exit |= check_simple(10, false);
 
-  auto ladybird = vcsn::ladybird<context_t>(4, context);
+  context_t ctx{.gs_ = {'a', 'b', 'c'}, .ws_ = {}};
+  auto ladybird = vcsn::ladybird<context_t>(4, ctx);
   auto determ_ladybird = vcsn::determinize(ladybird);
 
   exit |= idempotence("ladybird 4", ladybird, true);

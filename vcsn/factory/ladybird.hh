@@ -30,6 +30,14 @@ namespace vcsn
     aut.add_transition(x, p, 'a');
     return aut;
   }
+
+  template <class Context>
+  inline
+  mutable_automaton<Context, labels_are_letters>
+  make_ladybird(unsigned n, const Context& ctx)
+  {
+    return ladybird(n, ctx);
+  }
 }
 
 #endif // !VCSN_FACTORY_LADYBIRD_HH

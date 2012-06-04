@@ -3,10 +3,8 @@
 #include <iostream>
 
 #include <vcsn/algos/dotty.hh>
+#include <vcsn/ctx/char.hh>
 #include <vcsn/factory/ladybird.hh>
-#include <vcsn/weights/b.hh>
-#include <vcsn/weights/z.hh>
-#include <vcsn/weights/z_min.hh>
 
 void
 syntax(const char* argv0)
@@ -27,14 +25,7 @@ main(int argc, char const** argv)
   if (n <= 0)
     syntax(argv[0]);
 
-  struct context_t
-  {
-    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-    genset_t gs_ = genset_t{};
-    using weightset_t = vcsn:: W;
-    weightset_t ws_ = weightset_t{};
-  };
-  context_t ctx;
-  auto lb = vcsn::ladybird<context_t>(n, ctx);
+  vcsn::ctx::char_<vcsn::W> ctx;
+  auto lb = vcsn::make_ladybird(n, ctx);
   vcsn::dotty(lb, std::cout);
 }
