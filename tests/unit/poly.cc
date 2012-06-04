@@ -1,21 +1,13 @@
-#include <vcsn/weights/z.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
-#include <vcsn/weights/poly.hh>
 #include <cassert>
+#include <vcsn/ctx/char.hh>
+#include <vcsn/weights/poly.hh>
 
 int main()
 {
-  struct context_t
-  {
-    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-    genset_t gs_ = { 'a', 'b', 'c', 'd' };
-    using weightset_t = vcsn::z;
-    weightset_t ws_ = weightset_t{};
-  };
-  context_t context;
+  using context_t = vcsn::ctx::char_z;
+  context_t ctx {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = {}};
   using poly_t = vcsn::polynomials<context_t>;
-  poly_t poly(context);
+  poly_t poly(ctx);
 
   poly_t::value_t u = poly.unit();
   poly.assoc(u, "ab", 12);

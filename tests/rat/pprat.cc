@@ -3,16 +3,12 @@
 #include <map>
 #include <getopt.h>
 
-#include <vcsn/weights/b.hh>
-#include <vcsn/weights/z.hh>
-#include <vcsn/core/rat/kratexps.hh>
-#include <vcsn/io/driver.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
-
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/rat/kratexps.hh>
+#include <vcsn/ctx/char.hh>
+#include <vcsn/io/driver.hh>
 
 static
 void
@@ -58,20 +54,12 @@ struct options
 
 // FIXME: No globals.
 
-template <typename WeightSet>
-struct context_t
-{
-  using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-  genset_t gs_;
-  using weightset_t = WeightSet;
-  weightset_t ws_;
-};
 using aal = vcsn::atoms_are_letters;
 using aaw = vcsn::atoms_are_words;
 using b = vcsn::b;
 using z = vcsn::z;
 template <typename T, typename Kind>
-using kre = vcsn::kratexps<context_t<T>, Kind>;
+using kre = vcsn::kratexps<vcsn::ctx::char_<T>, Kind>;
 template <typename T>
 using krel = kre<T, aal>;
 template <typename T>
@@ -79,7 +67,7 @@ using krew = kre<T, aaw>;
 
 #define DEFINE(Name, Kind, Param, Arg)                                  \
   auto ctx_ ## Name =                                                   \
-    context_t<Param> {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = Arg };        \
+    vcsn::ctx::char_<Param> {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = Arg }; \
   auto fact_ ## Name =                                                  \
     kre<Param, Kind>{ ctx_ ## Name };
 

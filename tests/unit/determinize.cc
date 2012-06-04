@@ -1,22 +1,13 @@
 #include <iostream>
 #include <sstream>
 
-#include <vcsn/weights/b.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
-#include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/dotty.hh>
+#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/ctx/char.hh>
 #include <vcsn/factory/ladybird.hh>
 
-struct context_t
-{
-  using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-  genset_t gs_;
-  using weightset_t = vcsn::b;
-  weightset_t ws_;
-};
-
+using context_t = vcsn::ctx::char_b;
 using automaton_t =
   vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
 
