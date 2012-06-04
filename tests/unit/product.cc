@@ -2,21 +2,14 @@
 
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/product.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/ctx/char.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/weights/z.hh>
 
 int main()
 {
-  struct context_t
-  {
-    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-    genset_t gs_ = {'a', 'b', 'c'};
-    using weightset_t = vcsn::z;
-    weightset_t ws_;
-  };
-  context_t ctx;
+  using context_t = vcsn::ctx::char_z;
+  context_t ctx { .gs_ = {'a', 'b', 'c'} };
   using automaton_t =
     vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
 

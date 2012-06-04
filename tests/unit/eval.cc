@@ -3,10 +3,8 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/product.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/ctx/char.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/weights/z.hh>
 
 #define EVAL(automaton, str, strResult)                                 \
   do {                                                                  \
@@ -24,14 +22,8 @@
 
 int main()
 {
-  struct context_t
-  {
-    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-    genset_t gs_ = genset_t{'a', 'b', 'c'};
-    using weightset_t = vcsn::z;
-    weightset_t ws_ = weightset_t{};
-  };
-  context_t ctx;
+  using context_t = vcsn::ctx::char_z;
+  context_t ctx {.gs_ = {'a', 'b', 'c'}, .ws_ = {}};
   auto aut = vcsn::make_mutable_automaton(ctx);
   int res = 0;
   // Test empty automaton
