@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_DOTTY_HH
 
 # include <iostream>
+# include <set>
 # include <unordered_map>
 # include <vcsn/misc/escape.hh>
 

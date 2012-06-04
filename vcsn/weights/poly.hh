@@ -140,8 +140,8 @@ namespace vcsn
   private:
     const genset_t& gs_;
     const weightset_t& ws_;
-    value_t unit_;
     value_t zero_;
+    value_t unit_;
   };
 
 }

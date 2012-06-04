@@ -1,9 +1,10 @@
 #ifndef VCSN_ALGOS_EVAL_HH
 # define VCSN_ALGOS_EVAL_HH
 
-# include <vector>
-# include <utility>
 # include <cassert>
+# include <map>
+# include <utility>
+# include <vector>
 
 namespace vcsn
 {

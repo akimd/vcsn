@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include <vcsn/weights/z.hh>
-#include <vcsn/alphabets/char.hh>
-#include <vcsn/alphabets/setalpha.hh>
-#include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/product.hh>
+#include <vcsn/alphabets/char.hh>
+#include <vcsn/alphabets/setalpha.hh>
+#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/weights/z.hh>
 
 #define EVAL(automaton, str, strResult)                                 \
   do {                                                                  \

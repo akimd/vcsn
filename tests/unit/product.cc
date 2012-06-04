@@ -1,10 +1,11 @@
-#include <vcsn/weights/z.hh>
+#include <iostream>
+
+#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/product.hh>
 #include <vcsn/alphabets/char.hh>
 #include <vcsn/alphabets/setalpha.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/algos/dotty.hh>
-#include <vcsn/algos/product.hh>
-#include <iostream>
+#include <vcsn/weights/z.hh>
 
 int main()
 {
