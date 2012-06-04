@@ -53,27 +53,24 @@ namespace vcsn
     /// Constructor.
     /// \param a    the generator set for the labels.
     /// \param ws   the type of the weights (e.g., "bool", "int").
-    kratexps(const genset_t& gs, const weightset_t& ws)
+    kratexps(const context_t& ctx)
       : super_type()
-      , gs_(gs)
-      , ws_(ws)
+      , ctx_(ctx)
     {}
-    /// Construct with \a t as weight-set.
-    /// \param a    the generator set for the labels.
-    /// \param t    \a t must be castable to weightset_t.
-    template <typename T>
-    kratexps(const genset_t& gs, const T& t)
-      : kratexps(gs, dynamic_cast<const weightset_t&>(t))
-    {}
+
+    const context_t& context() const
+    {
+      return ctx_;
+    }
 
     const genset_t& genset() const
     {
-      return gs_;
+      return ctx_.gs_;
     }
 
     const weightset_t& weightset() const
     {
-      return ws_;
+      return ctx_.ws_;
     }
 
     // Specialization from abstract_kratexps.
@@ -140,8 +137,7 @@ namespace vcsn
     nodes_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
 
   private:
-    const genset_t& gs_;
-    const weightset_t& ws_;
+    const context_t& ctx_;
   };
 
 } // namespace vcsn

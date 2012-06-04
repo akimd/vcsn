@@ -24,7 +24,7 @@ namespace vcsn
         for (auto t : a.initial_transitions())
           initial.insert(a.dst_of(t));
 
-        automaton_t out(a.genset(), a.weightset());
+        automaton_t out(a.context());
         if (initial.empty())
           return out;
 

@@ -7,17 +7,17 @@
 
 int main()
 {
-  vcsn::z z;
-  using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
-  alpha_t alpha{'a', 'b', 'c', 'd'};
   struct context_t
   {
-    using genset_t = alpha_t;
+    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+    genset_t gs_ = {'a', 'b', 'c', 'd'};
     using weightset_t = vcsn::z;
+    weightset_t ws_;
   };
+  context_t ctx;
   using automaton_t =
     vcsn::mutable_automaton<context_t, vcsn::labels_are_words>;
-  automaton_t aut(alpha, z);
+  automaton_t aut(ctx);
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();

@@ -15,15 +15,9 @@ namespace vcsn
   A
   product(const A& laut, const B& raut)
   {
-    // FIXME: we should ensure that the alphabet and weightsets are
-    // compatible.
-    const auto& ws = laut.weightset();
-    // Yes, typedef, not using, as G++ 4.7 and 4.8 fails with using.
-    // <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540>.
-    typedef
-      mutable_automaton<typename A::context_t, typename A::kind_t>
-      automaton_t;
-    automaton_t aut(laut.genset(), ws);
+    // FIXME: ensure that alphabets and weightsets are compatible.
+    using automaton_t = A;
+    automaton_t aut(laut.context());
     using state_t = typename automaton_t::state_t;
 
     using pair_t = std::pair<typename A::state_t, typename B::state_t>;
@@ -50,7 +44,7 @@ namespace vcsn
 
 	    for (auto ri : raut.out(psrc.second, label))
 	      {
-		auto weight = ws.mul(lweight, raut.weight_of(ri));
+		auto weight = aut.weightset().mul(lweight, raut.weight_of(ri));
 		pair_t pdst(ldst, raut.dst_of(ri));
 
 		auto iter = pmap.find(pdst);

@@ -7,26 +7,12 @@
 
 namespace vcsn
 {
-  namespace details
+  template <class Context>
+  mutable_automaton<Context, labels_are_letters>
+  ladybird(unsigned n, const Context& ctx)
   {
-    template <class WeightSet>
-    struct ladybird_context
-    {
-      using genset_t = set_alphabet<char_letters>;
-      using weightset_t = WeightSet;
-    };
-  } // namespace details
-
-  template <class WeightSet>
-  mutable_automaton<details::ladybird_context<WeightSet>, labels_are_letters>
-  ladybird(unsigned n, WeightSet ws = WeightSet())
-  {
-    // Yes, typedef, not using, as G++ 4.7 and 4.8 fails with using.
-    // <http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540>.
-    typedef typename details::ladybird_context<WeightSet> context_t;
-    using genset_t = typename context_t::genset_t;
-    static genset_t alpha {'a', 'b', 'c'};
-    mutable_automaton<context_t, labels_are_letters> aut(alpha, ws);
+    using context_t = Context;
+    mutable_automaton<context_t, labels_are_letters> aut(ctx);
 
     auto p = aut.new_state();
     aut.set_initial(p);

@@ -9,21 +9,19 @@
 
 int main()
 {
-  using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
   struct context_t
   {
-    using genset_t = alpha_t;
+    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+    genset_t gs_ = {'a', 'b', 'c'};
     using weightset_t = vcsn::z;
+    weightset_t ws_;
   };
-  using  automaton_t =
+  context_t ctx;
+  using automaton_t =
     vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
-  vcsn::z z;
-  alpha_t alpha{'a', 'b', 'c'};
-
-
 
   // {2}(a*b*a*)
-  automaton_t aut1(alpha, z);
+  automaton_t aut1(ctx);
   auto s1 = aut1.new_state();
   auto s2 = aut1.new_state();
   auto s3 = aut1.new_state();
@@ -39,7 +37,7 @@ int main()
   aut1.set_transition(s3, s3, 'a');
 
   // ({3}(ab))*
-  automaton_t aut2(alpha, z);
+  automaton_t aut2(ctx);
   auto t1 = aut2.new_state();
   auto t2 = aut2.new_state();
   aut2.set_initial(t1, 3);

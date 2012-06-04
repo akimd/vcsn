@@ -24,19 +24,15 @@
 
 int main()
 {
-  using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
   struct context_t
   {
-    using genset_t = alpha_t;
+    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+    genset_t gs_ = genset_t{'a', 'b', 'c'};
     using weightset_t = vcsn::z;
+    weightset_t ws_ = weightset_t{};
   };
-  using automaton_t =
-    vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
-
-  alpha_t alpha{'a', 'b', 'c'};
-
-  vcsn::z z;
-  automaton_t aut(alpha, z);
+  context_t ctx;
+  auto aut = vcsn::make_mutable_automaton(ctx);
   int res = 0;
   // Test empty automaton
   EVAL(aut, "aa", 0);

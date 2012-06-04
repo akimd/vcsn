@@ -20,14 +20,15 @@ namespace vcsn
 
     using value_t = std::map<word_t, weight_t>;
 
-    polynomials(const genset_t& gs, const weightset_t& ws)
-      : gs_(gs), ws_(ws)
+    polynomials(const context_t& ctx)
+      : ctx_(ctx)
     {
-      unit_[gs_.identity()] = ws_.unit();
+      unit_[ctx_.gs_.identity()] = ctx_.ws_.unit();
     }
 
-    const genset_t&  genset() const  { return gs_; }
-    const weightset_t& weightset() const { return ws_; }
+    const context_t& context() const { return ctx_; }
+    const genset_t& genset() const { return ctx_.gs_; }
+    const weightset_t& weightset() const { return ctx_.ws_; }
 
     value_t&
     assoc(value_t& v, const word_t& w, const weight_t& k) const
@@ -43,7 +44,7 @@ namespace vcsn
       if (i == v.end())
 	assoc(v, w, k);
       else
-	i->second = ws_.add(i->second, k);
+	i->second = ctx_.ws_.add(i->second, k);
       return v;
     }
 
@@ -63,8 +64,8 @@ namespace vcsn
       for (auto i: l)
 	for (auto j: r)
 	  add_assoc(p,
-		    gs_.concat(i.first, j.first),
-		    ws_.mul(i.second, j.second));
+		    ctx_.gs_.concat(i.first, j.first),
+		    ctx_.ws_.mul(i.second, j.second));
       return p;
     }
 
@@ -79,10 +80,10 @@ namespace vcsn
     {
       if (v.size() != 1)
 	return false;
-      auto i = v.find(gs_.identity());
+      auto i = v.find(ctx_.gs_.identity());
       if (i == v.end())
 	return false;
-      return ws_.is_unit(i->second);
+      return ctx_.ws_.is_unit(i->second);
     }
 
     const value_t&
@@ -107,7 +108,7 @@ namespace vcsn
     print(std::ostream& out, const value_t& v) const
     {
       bool first = true;
-      bool show_unit = ws_.show_unit();
+      bool show_unit = ctx_.ws_.show_unit();
 
       for (auto& i: v)
 	{
@@ -115,12 +116,12 @@ namespace vcsn
 	    out << " + ";
 	  first = false;
 
-	  if (show_unit || !ws_.is_unit(i.second))
+	  if (show_unit || !ctx_.ws_.is_unit(i.second))
 	    {
 	      out << "{";
-	      ws_.print(out, i.second) << "}";
+	      ctx_.ws_.print(out, i.second) << "}";
 	    }
-	  gs_.output(out, i.first);
+	  ctx_.gs_.output(out, i.first);
 	}
 
       if (first)
@@ -138,8 +139,7 @@ namespace vcsn
     }
 
   private:
-    const genset_t& gs_;
-    const weightset_t& ws_;
+    const context_t& ctx_;
     value_t zero_;
     value_t unit_;
   };

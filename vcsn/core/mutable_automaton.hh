@@ -58,10 +58,10 @@ namespace vcsn
     label_t prepost_label_;
 
   public:
-    mutable_automaton(const genset_t& gs, const weightset_t& ws)
-      : es_(gs, ws)
+    mutable_automaton(const context_t& ctx)
+      : es_(ctx)
       , states_(2)
-      , prepost_label_(gs.template special<label_t>())
+      , prepost_label_(ctx.gs_.template special<label_t>())
     {
     }
 
@@ -78,6 +78,7 @@ namespace vcsn
     // Related sets
     ///////////////
 
+    const context_t& context() const { return es_.context(); }
     const weightset_t& weightset() const { return es_.weightset(); }
     const genset_t& genset() const { return es_.genset(); }
     const entryset_t& entryset() const { return es_; }
@@ -639,6 +640,14 @@ namespace vcsn
       return entry_at(src_of(t), dst_of(t));
     }
   };
+
+  template <typename Context, class Kind = labels_are_letters>
+  mutable_automaton<Context, Kind>
+  make_mutable_automaton(const Context& ctx)
+  {
+    return mutable_automaton<Context, Kind>(ctx);
+  }
+
 }
 
 #endif // !VCSN_CORE_MUTABLE_AUTOMATON_HH

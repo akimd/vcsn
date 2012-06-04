@@ -22,13 +22,13 @@ namespace vcsn
   DEFINE::zero() const
     -> value_t
   {
-    return std::make_shared<zero_t>(ws_.unit());
+    return std::make_shared<zero_t>(weightset().unit());
   }
 
   DEFINE::unit() const
     -> value_t
   {
-    return std::make_shared<one_t>(ws_.unit());
+    return std::make_shared<one_t>(weightset().unit());
   }
 
   DEFINE::atom(const word_t& w) const
@@ -48,10 +48,10 @@ namespace vcsn
     if (w.size() != 1)
       throw std::domain_error("invalid atom: " + w);
     letter_t l = w[0];
-    if (!gs_.has(l))
+    if (!genset().has(l))
       throw std::domain_error("invalid word: " + w
                               + ": invalid letter: " + l);
-    return std::make_shared<atom_t>(ws_.unit(), l);
+    return std::make_shared<atom_t>(weightset().unit(), l);
   }
 
   template <typename Context, typename Kind>
@@ -63,10 +63,10 @@ namespace vcsn
                                value_t>::type
   {
     for (auto l: w)
-      if (!gs_.has(l))
+      if (!genset().has(l))
           throw std::domain_error("invalid word: " + w
                                   + ": invalid letter: " + l);
-    return std::make_shared<atom_t>(ws_.unit(), w);
+    return std::make_shared<atom_t>(weightset().unit(), w);
   }
 
 
@@ -109,10 +109,10 @@ namespace vcsn
   {
     // The weight might not be needed (e = 0), but check its syntax
     // anyway.
-    auto v = ws_.conv(*w);
+    auto v = weightset().conv(*w);
     delete w;
     // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
-    if (e->type() == node_t::ZERO || ws_.is_zero(v))
+    if (e->type() == node_t::ZERO || weightset().is_zero(v))
       return zero();
     else
       return weight(v, down_pointer_cast<const node_t>(e));
@@ -121,10 +121,10 @@ namespace vcsn
   DEFINE::weight(value_t e, std::string* w) const
     -> value_t
   {
-    auto v = ws_.conv(*w);
+    auto v = weightset().conv(*w);
     delete w;
     // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
-    if (e->type() == node_t::ZERO || ws_.is_zero(v))
+    if (e->type() == node_t::ZERO || weightset().is_zero(v))
       return zero();
     else
       return weight(down_pointer_cast<const node_t>(e), v);
@@ -143,8 +143,8 @@ namespace vcsn
     if (v->type() == type)
       {
         const auto& nary = *down_pointer_cast<const nary_t>(v);
-        if (ws_.is_unit(nary.left_weight())
-            && ws_.is_unit(nary.right_weight()))
+        if (weightset().is_unit(nary.left_weight())
+            && weightset().is_unit(nary.right_weight()))
           res.insert(std::end(res), std::begin(nary), std::end(nary));
         else
           res.push_back(v);
@@ -175,7 +175,8 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else
-      res = std::make_shared<sum_t>(ws_.unit(), ws_.unit(),
+      res = std::make_shared<sum_t>(weightset().unit(),
+                                    weightset().unit(),
                                     gather(node_t::SUM, l, r));
     return res;
   }
@@ -199,7 +200,8 @@ namespace vcsn
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
     else
-      res = std::make_shared<prod_t>(ws_.unit(), ws_.unit(),
+      res = std::make_shared<prod_t>(weightset().unit(),
+                                     weightset().unit(),
                                      gather(node_t::PROD, l, r));
     return res;
   }
@@ -210,14 +212,14 @@ namespace vcsn
     if (r->type() == node_t::ATOM)
       {
         auto rhs = down_pointer_cast<const atom_t>(r);
-        if (ws_.is_unit(rhs->left_weight()))
+        if (weightset().is_unit(rhs->left_weight()))
           switch (l->type())
             {
             case node_t::ATOM:
               {
                 auto lhs = down_pointer_cast<const atom_t>(l);
-                if (ws_.is_unit(lhs->left_weight()))
-                  return atom(gs_.concat(lhs->value(), rhs->value()));
+                if (weightset().is_unit(lhs->left_weight()))
+                  return atom(genset().concat(lhs->value(), rhs->value()));
               }
               break;
 
@@ -229,7 +231,9 @@ namespace vcsn
                 nodes_t nodes {prod.begin(), prod.end()-1};
                 nodes.push_back
                   (down_pointer_cast<const node_t>(concat(*(prod.end()-1), r)));
-                return std::make_shared<prod_t>(ws_.unit(), ws_.unit(), nodes);
+                return std::make_shared<prod_t>(weightset().unit(),
+                                                weightset().unit(),
+                                                nodes);
               }
             default:
               // Fall thru.
@@ -248,7 +252,7 @@ namespace vcsn
   DEFINE::star(kvalue_t e) const
     -> kvalue_t
   {
-    return std::make_shared<star_t>(ws_.unit(), ws_.unit(), e);
+    return std::make_shared<star_t>(weightset().unit(), weightset().unit(), e);
   }
 
 
@@ -260,7 +264,7 @@ namespace vcsn
     -> kvalue_t
   {
     auto res = std::const_pointer_cast<node_t>(e->clone());
-    res->left_weight() = ws_.mul(w, e->left_weight());
+    res->left_weight() = weightset().mul(w, e->left_weight());
     return res;
   }
 
@@ -272,7 +276,7 @@ namespace vcsn
       {
         auto inner = down_pointer_cast<const inner_t>(e);
         auto res = std::const_pointer_cast<inner_t>(inner->clone());
-        res->right_weight() = ws_.mul(inner->right_weight(), w);
+        res->right_weight() = weightset().mul(inner->right_weight(), w);
         return res;
       }
     else
@@ -280,7 +284,7 @@ namespace vcsn
         // Not the same as calling weight(w, e), as the product might
         // not be commutative.
         wvalue_t res = std::const_pointer_cast<node_t>(e->clone());
-        res->left_weight() = ws_.mul(e->left_weight(), w);
+        res->left_weight() = weightset().mul(e->left_weight(), w);
         return res;
       }
   }
@@ -313,7 +317,7 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    printer_t print{o, gs_, ws_};
+    printer_t print{o, genset(), weightset()};
     print(down_pointer_cast<const node_t>(v));
     return o;
   }

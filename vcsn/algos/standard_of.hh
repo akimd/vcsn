@@ -38,9 +38,9 @@ namespace vcsn
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
 
-      standard_of_visitor(const genset_t& alpha, const weightset_t& ws)
-        : ws_(ws)
-        , res_(alpha, ws)
+      standard_of_visitor(const context_t& ctx)
+        : ws_(ctx.ws_)
+        , res_(ctx)
       {}
 
       automaton_t
@@ -210,9 +210,7 @@ namespace vcsn
               class Context = typename Aut::context_t,
               class Kind = typename atom_kind<typename Aut::kind_t>::type>
     Aut
-    standard_of(const typename Context::genset_t& alpha,
-                const typename Context::weightset_t& ws,
-                const exp_t e)
+    standard_of(const Context& ctx, const exp_t e)
     {
       using context_t = Context;
       using genset_t = typename context_t::genset_t;
@@ -224,7 +222,7 @@ namespace vcsn
       // Make sure the type is right.
       auto v = std::dynamic_pointer_cast<const node_t>(e);
       assert(v);
-      standard_of_visitor<Aut, context_t, kind_t> standard{alpha, ws};
+      standard_of_visitor<Aut, context_t, kind_t> standard{ctx};
       return standard(v);
     }
 

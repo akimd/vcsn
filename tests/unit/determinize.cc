@@ -9,13 +9,26 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/factory/ladybird.hh>
 
-using automaton_t = decltype(vcsn::ladybird(0, vcsn::b()));
+struct context_t
+{
+  using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+  genset_t gs_ = genset_t{'a', 'b', 'c'};
+  using weightset_t = vcsn::b;
+  weightset_t ws_ = weightset_t{};
+};
 
-automaton_t factory(int n, automaton_t::genset_t& alpha, vcsn::b& b)
+context_t context{};
+
+using automaton_t =
+  vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
+
+// (a+b)*a(a+b)^n.
+automaton_t
+factory(const context_t& ctx, unsigned n)
 {
   assert(n > 1);
 
-  automaton_t res {alpha, b};
+  automaton_t res(ctx);
 
   auto init = res.new_state();
   res.set_initial(init);
@@ -23,7 +36,6 @@ automaton_t factory(int n, automaton_t::genset_t& alpha, vcsn::b& b)
   res.set_transition(init, init, 'b');
 
   auto prev = res.new_state();
-
   res.set_transition(init, prev, 'a');
 
   --n;
@@ -64,10 +76,7 @@ bool idempotence(std::string str, automaton_t& aut, bool display_aut)
 
 bool check_simple(size_t n, bool display_aut)
 {
-  automaton_t::genset_t alpha {'a', 'b'};
-  vcsn::b b;
-
-  automaton_t aut = factory(n, alpha, b);
+  automaton_t aut = factory(context, n);
   std::stringstream ss;
   ss << "simple automaton " << n;
   return idempotence(ss.str(), aut, display_aut);
@@ -76,13 +85,10 @@ bool check_simple(size_t n, bool display_aut)
 int main()
 {
   int exit = 0;
-  vcsn::b b;
-
   exit |= check_simple(5, true);
   exit |= check_simple(10, false);
 
-  auto ladybird = vcsn::ladybird<vcsn::b>(4, b);
-
+  auto ladybird = vcsn::ladybird<context_t>(4, context);
   auto determ_ladybird = vcsn::determinize(ladybird);
 
   exit |= idempotence("ladybird 4", ladybird, true);

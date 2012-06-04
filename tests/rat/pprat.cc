@@ -58,13 +58,13 @@ struct options
 
 // FIXME: No globals.
 
-using alpha_t = vcsn::set_alphabet<vcsn::char_letters>;
-alpha_t alpha{'a', 'b', 'c', 'd'};
 template <typename WeightSet>
 struct context_t
 {
-  using genset_t = alpha_t;
+  using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+  genset_t gs_;
   using weightset_t = WeightSet;
+  weightset_t ws_;
 };
 using aal = vcsn::atoms_are_letters;
 using aaw = vcsn::atoms_are_words;
@@ -77,8 +77,11 @@ using krel = kre<T, aal>;
 template <typename T>
 using krew = kre<T, aaw>;
 
-#define DEFINE(Name, Kind, Param, Arg)                  \
-  auto fact_ ## Name = kre<Param, Kind>{ alpha, Arg };
+#define DEFINE(Name, Kind, Param, Arg)                                  \
+  auto ctx_ ## Name =                                                   \
+    context_t<Param> {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = Arg };        \
+  auto fact_ ## Name =                                                  \
+    kre<Param, Kind>{ ctx_ ## Name };
 
   DEFINE(b,   aal, b,             b());
   DEFINE(br,  aal, krel<b>,       fact_b);
@@ -109,10 +112,7 @@ pp(const options& opts, const Factory& factory,
     {
       if (opts.standard_of)
         {
-          auto aut =
-            vcsn::rat::standard_of<automaton_t>(factory.genset(),
-                                                factory.weightset(),
-                                                e);
+          auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
           vcsn::dotty(aut, std::cout);
         }
       else

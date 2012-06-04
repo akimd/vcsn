@@ -27,6 +27,14 @@ main(int argc, char const** argv)
   if (n <= 0)
     syntax(argv[0]);
 
-  auto lb = vcsn::ladybird<vcsn:: W>(n);
+  struct context_t
+  {
+    using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
+    genset_t gs_ = genset_t{};
+    using weightset_t = vcsn:: W;
+    weightset_t ws_ = weightset_t{};
+  };
+  context_t ctx;
+  auto lb = vcsn::ladybird<context_t>(n, ctx);
   vcsn::dotty(lb, std::cout);
 }
