@@ -23,7 +23,7 @@ namespace vcsn
     polynomials(const context_t& ctx)
       : ctx_(ctx)
     {
-      unit_[ctx_.gs_.identity()] = ctx_.ws_.unit();
+      unit_[genset().identity()] = weightset().unit();
     }
 
     const context_t& context() const { return ctx_; }
@@ -44,7 +44,7 @@ namespace vcsn
       if (i == v.end())
 	assoc(v, w, k);
       else
-	i->second = ctx_.ws_.add(i->second, k);
+	i->second = weightset().add(i->second, k);
       return v;
     }
 
@@ -64,8 +64,8 @@ namespace vcsn
       for (auto i: l)
 	for (auto j: r)
 	  add_assoc(p,
-		    ctx_.gs_.concat(i.first, j.first),
-		    ctx_.ws_.mul(i.second, j.second));
+		    genset().concat(i.first, j.first),
+		    weightset().mul(i.second, j.second));
       return p;
     }
 
@@ -80,10 +80,10 @@ namespace vcsn
     {
       if (v.size() != 1)
 	return false;
-      auto i = v.find(ctx_.gs_.identity());
+      auto i = v.find(genset().identity());
       if (i == v.end())
 	return false;
-      return ctx_.ws_.is_unit(i->second);
+      return weightset().is_unit(i->second);
     }
 
     const value_t&
@@ -108,7 +108,7 @@ namespace vcsn
     print(std::ostream& out, const value_t& v) const
     {
       bool first = true;
-      bool show_unit = ctx_.ws_.show_unit();
+      bool show_unit = weightset().show_unit();
 
       for (auto& i: v)
 	{
@@ -116,12 +116,12 @@ namespace vcsn
 	    out << " + ";
 	  first = false;
 
-	  if (show_unit || !ctx_.ws_.is_unit(i.second))
+	  if (show_unit || !weightset().is_unit(i.second))
 	    {
 	      out << "{";
-	      ctx_.ws_.print(out, i.second) << "}";
+	      weightset().print(out, i.second) << "}";
 	    }
-	  ctx_.gs_.output(out, i.first);
+	  genset().output(out, i.first);
 	}
 
       if (first)
