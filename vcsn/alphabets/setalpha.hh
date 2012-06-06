@@ -1,8 +1,8 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
 # define VCSN_ALPHABETS_SETALPHA_HH
 
-#include <initializer_list>
-#include <set>
+# include <initializer_list>
+# include <set>
 
 namespace vcsn
 {
