@@ -1,3 +1,34 @@
+* 2012-06-05
+** Contexts
+"Contexts" were introduced to factor two aspects that are required through
+out the library: the GenSet type (i.e., the nature of the generators), and
+the WeightSet type (i.e., the nature of the weights).  Not only do contexts
+define these types, they must also be instantiated so that "run-time"
+details be known: for instance the set of generators is dynamic (what are
+the allowed letters), and on occasion the weightset also needs run-time
+information (e.g., when RatExp are parameterized by RatExp, what is the
+alphabet of the latter ones?).
+
+As an example of the changes on the user side, consider the product
+test-case.
+
+Before:
+
+   typedef vcsn::set_alphabet<vcsn::char_letters> alpha_t;
+   typedef vcsn::mutable_automaton<alpha_t, vcsn::z,
+                                  vcsn::labels_are_letters> automaton_t;
+   vcsn::z z;
+   alpha_t alpha{'a', 'b', 'c'};
+   automaton_t aut1(alpha, z);
+
+After:
+
+   using context_t = vcsn::ctx::char_z;
+   context_t ctx { .gs_ = {'a', 'b', 'c'} };
+   using automaton_t =
+     vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
+   automaton_t aut1(ctx);
+
 * 2012-05-30
 ** RatExp: atoms are words
 Expressions such as "(ab)(ab)" used to be equivalent to "(abab)" (a
