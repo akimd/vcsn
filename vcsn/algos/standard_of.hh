@@ -39,7 +39,7 @@ namespace vcsn
       using atom_t = typename super_type::atom_t;
 
       standard_of_visitor(const context_t& ctx)
-        : ws_(ctx.ws_)
+        : ws_(ctx.weightset())
         , res_(ctx)
       {}
 

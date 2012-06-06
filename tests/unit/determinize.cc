@@ -65,7 +65,7 @@ bool idempotence(std::string str, automaton_t& aut, bool display_aut)
 
 bool check_simple(size_t n, bool display_aut)
 {
-  context_t ctx{.gs_ = {'a', 'b'}, .ws_ = {}};
+  context_t ctx{{'a', 'b'}};
   automaton_t aut = factory(ctx, n);
   std::stringstream ss;
   ss << "simple automaton " << n;
@@ -78,7 +78,7 @@ int main()
   exit |= check_simple(5, true);
   exit |= check_simple(10, false);
 
-  context_t ctx{.gs_ = {'a', 'b', 'c'}, .ws_ = {}};
+  context_t ctx{{'a', 'b', 'c'}};
   auto ladybird = vcsn::ladybird<context_t>(4, ctx);
   auto determ_ladybird = vcsn::determinize(ladybird);
 

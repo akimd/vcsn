@@ -9,7 +9,7 @@
 int main()
 {
   using context_t = vcsn::ctx::char_z;
-  context_t ctx { .gs_ = {'a', 'b', 'c'} };
+  context_t ctx { {'a', 'b', 'c'} };
   using automaton_t =
     vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
 

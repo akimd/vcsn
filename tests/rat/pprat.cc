@@ -58,6 +58,7 @@ using aal = vcsn::atoms_are_letters;
 using aaw = vcsn::atoms_are_words;
 using b = vcsn::b;
 using z = vcsn::z;
+
 template <typename T, typename Kind>
 using kre = vcsn::kratexps<vcsn::ctx::char_<T>, Kind>;
 template <typename T>
@@ -65,10 +66,10 @@ using krel = kre<T, aal>;
 template <typename T>
 using krew = kre<T, aaw>;
 
-#define DEFINE(Name, Kind, Param, Arg)                                  \
-  auto ctx_ ## Name =                                                   \
-    vcsn::ctx::char_<Param> {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = Arg }; \
-  auto fact_ ## Name =                                                  \
+#define DEFINE(Name, Kind, Param, Arg)                          \
+  auto ctx_ ## Name =                                           \
+    vcsn::ctx::char_<Param> {{'a', 'b', 'c', 'd'}, Arg };       \
+  auto fact_ ## Name =                                          \
     kre<Param, Kind>{ ctx_ ## Name };
 
   DEFINE(b,   aal, b,             b());

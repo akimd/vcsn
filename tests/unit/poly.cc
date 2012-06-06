@@ -5,7 +5,7 @@
 int main()
 {
   using context_t = vcsn::ctx::char_z;
-  context_t ctx {.gs_ = {'a', 'b', 'c', 'd'}, .ws_ = {}};
+  context_t ctx {{'a', 'b', 'c', 'd'}};
   using poly_t = vcsn::polynomials<context_t>;
   poly_t poly(ctx);
 

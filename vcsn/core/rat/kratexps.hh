@@ -65,12 +65,12 @@ namespace vcsn
 
     const genset_t& genset() const
     {
-      return ctx_.gs_;
+      return ctx_.genset();
     }
 
     const weightset_t& weightset() const
     {
-      return ctx_.ws_;
+      return ctx_.weightset();
     }
 
     // Specialization from abstract_kratexps.

@@ -27,8 +27,8 @@ namespace vcsn
     }
 
     const context_t& context() const { return ctx_; }
-    const genset_t& genset() const { return ctx_.gs_; }
-    const weightset_t& weightset() const { return ctx_.ws_; }
+    const genset_t& genset() const { return ctx_.genset(); }
+    const weightset_t& weightset() const { return ctx_.weightset(); }
 
     value_t&
     assoc(value_t& v, const word_t& w, const weight_t& k) const

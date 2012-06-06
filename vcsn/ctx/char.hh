@@ -3,6 +3,7 @@
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
+# include <vcsn/ctx/ctx.hh>
 # include <vcsn/weights/b.hh>
 # include <vcsn/weights/z.hh>
 # include <vcsn/weights/z_min.hh>
@@ -12,13 +13,8 @@ namespace vcsn
   namespace ctx
   {
     template <typename WeightSet>
-    struct char_
-    {
-      using genset_t = vcsn::set_alphabet<vcsn::char_letters>;
-      genset_t gs_;
-      using weightset_t = WeightSet;
-      weightset_t ws_;
-    };
+    using char_ = context<vcsn::set_alphabet<vcsn::char_letters>,
+                          WeightSet>;
 
     using char_b = char_<vcsn::b>;
     using char_z = char_<vcsn::z>;

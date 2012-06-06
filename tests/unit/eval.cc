@@ -23,7 +23,7 @@
 int main()
 {
   using context_t = vcsn::ctx::char_z;
-  context_t ctx {.gs_ = {'a', 'b', 'c'}, .ws_ = {}};
+  context_t ctx({'a', 'b', 'c'});
   auto aut = vcsn::make_mutable_automaton(ctx);
   int res = 0;
   // Test empty automaton
