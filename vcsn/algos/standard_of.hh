@@ -13,19 +13,16 @@ namespace vcsn
     template <class Aut,
               class Context = typename Aut::context_t>
     class standard_of_visitor
-      : public const_visitor<typename Context::label_t,
-                             typename Context::weightset_t::value_t>
+      : public Context::const_visitor
     {
     public:
       using automaton_t = Aut;
       using context_t = Context;
-      using genset_t = typename context_t::genset_t;
       using weightset_t = typename context_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
-      using atom_value_t = typename context_t::label_t;
       using state_t = typename automaton_t::state_t;
 
-      using super_type = const_visitor<atom_value_t, weight_t>;
+      using super_type = typename Context::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
@@ -205,7 +202,7 @@ namespace vcsn
       state_t initial_ = automaton_t::null_state();
     };
 
-    /// \param Aut      relative the generated automaton
+    /// \param Aut      relative the generated automaton.
     /// \param Context  relative to the RatExp.
     template <class Aut,
               class Context = typename Aut::context_t>
@@ -213,13 +210,8 @@ namespace vcsn
     standard_of(const Context& ctx, const exp_t e)
     {
       using context_t = Context;
-      using genset_t = typename context_t::genset_t;
-      using weightset_t = typename context_t::weightset_t;
-      using weight_t = typename weightset_t::value_t;
-      using atom_value_t = typename context_t::label_t;
-      using node_t = rat::node<atom_value_t, weight_t>;
       // Make sure the type is right.
-      auto v = std::dynamic_pointer_cast<const node_t>(e);
+      auto v = std::dynamic_pointer_cast<const typename context_t::node_t>(e);
       assert(v);
       standard_of_visitor<Aut, context_t> standard{ctx};
       return standard(v);

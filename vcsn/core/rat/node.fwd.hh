@@ -26,6 +26,8 @@ namespace vcsn
     DEFINE(prod);
     DEFINE(star);
 
+    DEFINE(const_visitor);
+
 # undef DEFINE
 
   } // namespace rat

@@ -12,17 +12,12 @@ namespace vcsn
 
     template <typename Context>
     class printer
-      : public const_visitor<typename Context::label_t,
-                             typename Context::weightset_t::value_t>
+      : public Context::const_visitor
     {
     public:
       using context_t = Context;
-      using genset_t = typename context_t::genset_t;
-      using weightset_t = typename context_t::weightset_t;
-      using kind_t = typename context_t::kind_t;
-      using atom_value_t = typename context_t::label_t;
-      using weight_t = typename weightset_t::value_t;
-      using super_type = const_visitor<atom_value_t, weight_t>;
+      using weight_t = typename context_t::weightset_t::value_t;
+      using super_type = typename context_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
