@@ -6,11 +6,11 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename Context, typename Kind>
+    template <typename Context>
     inline
-    printer<Context, Kind>::printer(std::ostream& out,
-                                    const context_t& ctx,
-                                    const bool debug)
+    printer<Context>::printer(std::ostream& out,
+                              const context_t& ctx,
+                              const bool debug)
       : out_(out)
       , ctx_(ctx)
       , debug_(debug)
@@ -18,10 +18,10 @@ namespace vcsn
 
 
 # define DEFINE                                 \
-    template <typename Context, typename Kind>  \
+    template <typename Context>                 \
     inline                                      \
     auto                                        \
-    printer<Context, Kind>
+    printer<Context>
 
 # define VISIT(Type)                          \
     DEFINE::visit(const Type ## _t& v)        \

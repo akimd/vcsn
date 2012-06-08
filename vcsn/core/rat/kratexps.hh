@@ -12,22 +12,21 @@
 namespace vcsn
 {
 
-  template <typename Context,
-            typename Kind = labels_are_letters>
+  template <typename Context>
   class kratexps : public abstract_kratexps
   {
   public:
     using context_t = Context;
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
-    using kind_t = Kind;
+    using kind_t = typename context_t::kind_t;
     using super_type = abstract_kratexps;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using atom_value_t = typename label_trait<kind_t, genset_t>::type;
+    using atom_value_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
-    using printer_t = rat::printer<context_t, kind_t>;
+    using printer_t = rat::printer<context_t>;
     /// Type of nodes.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<atom_value_t, weight_t>

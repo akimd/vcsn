@@ -14,10 +14,10 @@ namespace vcsn
   `-----------------------------------------------------------*/
 
 #define DEFINE                                  \
-  template <typename Context, typename Kind>    \
+  template <typename Context>                   \
   inline                                        \
   auto                                          \
-  kratexps<Context, Kind>
+  kratexps<Context>
 
   DEFINE::zero() const
     -> value_t
@@ -37,11 +37,11 @@ namespace vcsn
     return atom_<kind_t>(w);
   }
 
-  template <typename Context, typename Kind>
+  template <typename Context>
   template <typename K>
   inline
   auto
-  kratexps<Context, Kind>::atom_(const word_t& w) const
+  kratexps<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
                                value_t>::type
   {
@@ -54,11 +54,11 @@ namespace vcsn
     return std::make_shared<atom_t>(weightset().unit(), l);
   }
 
-  template <typename Context, typename Kind>
+  template <typename Context>
   template <typename K>
   inline
   auto
-  kratexps<Context, Kind>::atom_(const word_t& w) const
+  kratexps<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
                                value_t>::type
   {

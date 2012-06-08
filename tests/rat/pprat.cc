@@ -61,7 +61,7 @@ using b = vcsn::b;
 using z = vcsn::z;
 
 template <typename T, typename Kind>
-using kre = vcsn::kratexps<vcsn::ctx::char_<T>, Kind>;
+using kre = vcsn::kratexps<vcsn::ctx::char_<T, Kind>>;
 template <typename T>
 using krel = kre<T, lal>;
 template <typename T>
@@ -69,9 +69,8 @@ using krew = kre<T, law>;
 
 #define DEFINE(Name, Kind, Param, Arg)                          \
   auto ctx_ ## Name =                                           \
-    vcsn::ctx::char_<Param> {{'a', 'b', 'c', 'd'}, Arg };       \
-  auto fact_ ## Name =                                          \
-    kre<Param, Kind>{ ctx_ ## Name };
+    vcsn::ctx::char_<Param, Kind> {{'a', 'b', 'c', 'd'}, Arg }; \
+  auto fact_ ## Name = kre<Param, Kind>{ ctx_ ## Name };
 
   DEFINE(b,   lal, b,             b());
   DEFINE(br,  lal, krel<b>,       fact_b);
