@@ -12,9 +12,10 @@ namespace vcsn
 {
   namespace ctx
   {
-    template <typename WeightSet>
+    template <typename WeightSet, typename Kind = labels_are_letters>
     using char_ = context<vcsn::set_alphabet<vcsn::char_letters>,
-                          WeightSet>;
+                          WeightSet,
+                          Kind>;
 
     using char_b = char_<vcsn::b>;
     using char_z = char_<vcsn::z>;

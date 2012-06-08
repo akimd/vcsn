@@ -16,20 +16,20 @@
 
 namespace vcsn
 {
-  template <typename Context, class Kind>
+  template <typename Context>
   class mutable_automaton
   {
   public:
     using context_t = Context;
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
-    using kind_t = Kind;
+    using kind_t = typename context_t::kind_t;
     using entryset_t = polynomials<context_t>;
 
     using state_t = unsigned;
     using transition_t = unsigned;
 
-    using label_t = typename label_trait<Kind, genset_t>::label_t;
+    using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
     using entry_t = typename entryset_t::value_t;
   protected:
@@ -641,11 +641,11 @@ namespace vcsn
     }
   };
 
-  template <typename Context, class Kind = labels_are_letters>
-  mutable_automaton<Context, Kind>
+  template <typename Context>
+  mutable_automaton<Context>
   make_mutable_automaton(const Context& ctx)
   {
-    return mutable_automaton<Context, Kind>(ctx);
+    return mutable_automaton<Context>(ctx);
   }
 
 }

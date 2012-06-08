@@ -8,11 +8,13 @@
 namespace vcsn
 {
   template <class Context>
-  mutable_automaton<Context, labels_are_letters>
+  typename std::enable_if<std::is_same<typename Context::kind_t,
+                                       labels_are_letters>::value,
+                          mutable_automaton<Context>>::type
   ladybird(unsigned n, const Context& ctx)
   {
     using context_t = Context;
-    mutable_automaton<context_t, labels_are_letters> aut(ctx);
+    mutable_automaton<context_t> aut(ctx);
 
     auto p = aut.new_state();
     aut.set_initial(p);
@@ -33,7 +35,9 @@ namespace vcsn
 
   template <class Context>
   inline
-  mutable_automaton<Context, labels_are_letters>
+  typename std::enable_if<std::is_same<typename Context::kind_t,
+                                       labels_are_letters>::value,
+                          mutable_automaton<Context>>::type
   make_ladybird(unsigned n, const Context& ctx)
   {
     return ladybird(n, ctx);

@@ -90,18 +90,22 @@ void
 pp(const options& opts, const Factory& factory,
    const char* s, bool file)
 {
-  using atom_kind_t
-    = typename Factory::kind_t;
-  using label_kind_t
-    = typename vcsn::label_kind<atom_kind_t>::type;
-  using automaton_t
-    = vcsn::mutable_automaton<typename Factory::context_t, label_kind_t>;
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
       if (opts.standard_of)
         {
-          auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
+          using atom_kind_t
+            = typename Factory::kind_t;
+          using label_kind_t
+            = typename vcsn::label_kind<atom_kind_t>::type;
+          using context_t =
+            vcsn::ctx::context<typename Factory::genset_t,
+                               typename Factory::weightset_t,
+                               label_kind_t>;
+          context_t ctx{factory.genset(), factory.weightset()};
+          using automaton_t = vcsn::mutable_automaton<context_t>;
+          auto aut = vcsn::rat::standard_of<automaton_t>(ctx, e);
           vcsn::dotty(aut, std::cout);
         }
       else

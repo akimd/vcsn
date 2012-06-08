@@ -1,3 +1,48 @@
+* 2012-06-08
+** Contexts
+The Kind parameter is now part of the context.  The same type of Kind is now
+use for both RatExps and automata.  This results in many significant
+simplifictions.
+
+For instance, again, the test case for product:
+
+Before:
+
+   using context_t = vcsn::ctx::char_z;
+   context_t ctx { {'a', 'b', 'c'} };
+   using automaton_t =
+     vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
+   automaton_t aut1(ctx);
+
+After:
+
+  using context_t = vcsn::ctx::char_z;
+  context_t ctx { {'a', 'b', 'c'} };
+  using automaton_t = vcsn::mutable_automaton<context_t>;
+
+Or the source of pprat:
+
+Before:
+
+  using atom_kind_t
+    = typename Factory::kind_t;
+  using label_kind_t
+    = typename vcsn::label_kind<atom_kind_t>::type;
+  using context_t =
+    vcsn::ctx::context<typename Factory::genset_t,
+                       typename Factory::weightset_t,
+                       label_kind_t>;
+  context_t ctx{factory.genset(), factory.weightset()};
+  using automaton_t = vcsn::mutable_automaton<context_t>;
+  auto aut = vcsn::rat::standard_of<automaton_t>(ctx, e);
+
+After:
+
+  using context_t = typename Factory::context_t;
+  using automaton_t = vcsn::mutable_automaton<context_t>;
+  auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
+
+
 * 2012-06-05
 ** Contexts
 "Contexts" were introduced to factor two aspects that are required through
@@ -24,7 +69,7 @@ Before:
 After:
 
    using context_t = vcsn::ctx::char_z;
-   context_t ctx { .gs_ = {'a', 'b', 'c'} };
+   context_t ctx { {'a', 'b', 'c'} };
    using automaton_t =
      vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
    automaton_t aut1(ctx);

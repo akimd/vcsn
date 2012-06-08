@@ -6,10 +6,9 @@
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z;
-  using automaton_t =
-    vcsn::mutable_automaton<context_t, vcsn::labels_are_words>;
+  using context_t = vcsn::ctx::char_<vcsn::z, vcsn::labels_are_words>;
   context_t ctx {{'a', 'b', 'c', 'd'}};
+  using automaton_t = vcsn::mutable_automaton<context_t>;
   automaton_t aut(ctx);
 
   auto s1 = aut.new_state();

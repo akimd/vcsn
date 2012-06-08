@@ -8,8 +8,7 @@
 #include <vcsn/factory/ladybird.hh>
 
 using context_t = vcsn::ctx::char_b;
-using automaton_t =
-  vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
+using automaton_t = vcsn::mutable_automaton<context_t>;
 
 // (a+b)*a(a+b)^n.
 automaton_t

@@ -10,8 +10,7 @@ int main()
 {
   using context_t = vcsn::ctx::char_z;
   context_t ctx { {'a', 'b', 'c'} };
-  using automaton_t =
-    vcsn::mutable_automaton<context_t, vcsn::labels_are_letters>;
+  using automaton_t = vcsn::mutable_automaton<context_t>;
 
   // {2}(a*b*a*)
   automaton_t aut1(ctx);
