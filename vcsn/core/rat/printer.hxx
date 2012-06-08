@@ -94,7 +94,7 @@ namespace vcsn
     DEFINE::print(const weight_t& w)
       -> void
     {
-      if (ws_.show_unit() || !ws_.is_unit(w))
+      if (shows_(w))
         {
           out_ << '{';
           ws_.print(out_, w);
