@@ -36,8 +36,7 @@ namespace vcsn
       using atom_t = typename super_type::atom_t;
 
       printer(std::ostream& out,
-              const genset_t& gs,
-              const weightset_t& ws,
+              const context_t& ctx,
               const bool debug = false);
 
       /// Entry point: print \a v.
@@ -71,7 +70,7 @@ namespace vcsn
       /// Whether w is displayed.
       bool shows_(const weight_t& w)
       {
-        return ws_.show_unit() || !ws_.is_unit(w);
+        return ctx_.weightset().show_unit() || !ctx_.weightset().is_unit(w);
       }
 
       /// Whether one of the weights shows.
@@ -95,13 +94,12 @@ namespace vcsn
 
       bool parens_(const atom_t& n)
       {
-        return !top_ && !gs_.is_letter(n.value());
+        return !top_ && !ctx_.genset().is_letter(n.value());
       }
 
       /// Output stream.
       std::ostream& out_;
-      const genset_t& gs_;
-      const weightset_t& ws_;
+      const context_t& ctx_;
       /// Whether to be overly verbose.
       const bool debug_;
       /// Whether the visited node is the top-level node.  Used by

@@ -9,12 +9,10 @@ namespace vcsn
     template <typename Context, typename Kind>
     inline
     printer<Context, Kind>::printer(std::ostream& out,
-                                    const genset_t& gs,
-                                    const weightset_t& ws,
+                                    const context_t& ctx,
                                     const bool debug)
       : out_(out)
-      , gs_(gs)
-      , ws_(ws)
+      , ctx_(ctx)
       , debug_(debug)
     {}
 
@@ -86,7 +84,7 @@ namespace vcsn
       bool p = parens_(v);
       if (p)
         out_ << '(';
-      gs_.output(out_, v.value());
+      ctx_.genset().output(out_, v.value());
       if (p)
         out_ << ')';
     }
@@ -97,7 +95,7 @@ namespace vcsn
       if (shows_(w))
         {
           out_ << '{';
-          ws_.print(out_, w);
+          ctx_.weightset().print(out_, w);
           out_ << '}';
         }
     }
