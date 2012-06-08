@@ -12,7 +12,7 @@ namespace vcsn
 
     template <typename Context, typename Kind>
     class printer
-      : public const_visitor<typename atom_trait<Kind,
+      : public const_visitor<typename label_trait<Kind,
                                                  typename Context::genset_t>::type,
                              typename Context::weightset_t::value_t>
     {
@@ -21,7 +21,7 @@ namespace vcsn
       using genset_t = typename context_t::genset_t;
       using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
-      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
+      using atom_value_t = typename label_trait<kind_t, genset_t>::type;
       using weight_t = typename weightset_t::value_t;
       using super_type = const_visitor<atom_value_t, weight_t>;
       using node_t = typename super_type::node_t;

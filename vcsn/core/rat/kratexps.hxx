@@ -42,7 +42,7 @@ namespace vcsn
   inline
   auto
   kratexps<Context, Kind>::atom_(const word_t& w) const
-    -> typename std::enable_if<std::is_same<K, atoms_are_letters>::value,
+    -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
                                value_t>::type
   {
     if (w.size() != 1)
@@ -59,7 +59,7 @@ namespace vcsn
   inline
   auto
   kratexps<Context, Kind>::atom_(const word_t& w) const
-    -> typename std::enable_if<std::is_same<K, atoms_are_words>::value,
+    -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
                                value_t>::type
   {
     for (auto l: w)
@@ -206,7 +206,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r, atoms_are_words) const
+  DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
     if (r->type() == node_t::ATOM)
@@ -243,7 +243,7 @@ namespace vcsn
     return mul(l, r);
   }
 
-  DEFINE::concat(value_t l, value_t r, atoms_are_letters) const
+  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
     -> value_t
   {
     return mul(l, r);

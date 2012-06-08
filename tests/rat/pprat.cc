@@ -5,6 +5,7 @@
 
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/standard_of.hh>
+#include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/core/rat/kratexps.hh>
 #include <vcsn/ctx/char.hh>
@@ -54,17 +55,17 @@ struct options
 
 // FIXME: No globals.
 
-using aal = vcsn::atoms_are_letters;
-using aaw = vcsn::atoms_are_words;
+using lal = vcsn::labels_are_letters;
+using law = vcsn::labels_are_words;
 using b = vcsn::b;
 using z = vcsn::z;
 
 template <typename T, typename Kind>
 using kre = vcsn::kratexps<vcsn::ctx::char_<T>, Kind>;
 template <typename T>
-using krel = kre<T, aal>;
+using krel = kre<T, lal>;
 template <typename T>
-using krew = kre<T, aaw>;
+using krew = kre<T, law>;
 
 #define DEFINE(Name, Kind, Param, Arg)                          \
   auto ctx_ ## Name =                                           \
@@ -72,17 +73,17 @@ using krew = kre<T, aaw>;
   auto fact_ ## Name =                                          \
     kre<Param, Kind>{ ctx_ ## Name };
 
-  DEFINE(b,   aal, b,             b());
-  DEFINE(br,  aal, krel<b>,       fact_b);
-  DEFINE(z,   aal, z,             z());
-  DEFINE(zr,  aal, krel<z>,       fact_z);
-  DEFINE(zrr, aal, krel<krel<z>>, fact_zr);
+  DEFINE(b,   lal, b,             b());
+  DEFINE(br,  lal, krel<b>,       fact_b);
+  DEFINE(z,   lal, z,             z());
+  DEFINE(zr,  lal, krel<z>,       fact_z);
+  DEFINE(zrr, lal, krel<krel<z>>, fact_zr);
 
-  DEFINE(bw,   aaw, b,             b());
-  DEFINE(brw,  aaw, krew<b>,       fact_bw);
-  DEFINE(zw,   aaw, z,             z());
-  DEFINE(zrw,  aaw, krew<z>,       fact_zw);
-  DEFINE(zrrw, aaw, krew<krew<z>>, fact_zrw);
+  DEFINE(bw,   law, b,             b());
+  DEFINE(brw,  law, krew<b>,       fact_bw);
+  DEFINE(zw,   law, z,             z());
+  DEFINE(zrw,  law, krew<z>,       fact_zw);
+  DEFINE(zrrw, law, krew<krew<z>>, fact_zrw);
 #undef DEFINE
 
 template<typename Factory>
@@ -95,17 +96,9 @@ pp(const options& opts, const Factory& factory,
     {
       if (opts.standard_of)
         {
-          using atom_kind_t
-            = typename Factory::kind_t;
-          using label_kind_t
-            = typename vcsn::label_kind<atom_kind_t>::type;
-          using context_t =
-            vcsn::ctx::context<typename Factory::genset_t,
-                               typename Factory::weightset_t,
-                               label_kind_t>;
-          context_t ctx{factory.genset(), factory.weightset()};
+          using context_t = typename Factory::context_t;
           using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut = vcsn::rat::standard_of<automaton_t>(ctx, e);
+          auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
           vcsn::dotty(aut, std::cout);
         }
       else

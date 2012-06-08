@@ -4,16 +4,16 @@
 # include <string>
 # include <list>
 
-# include <vcsn/core/rat/node.hh>
-# include <vcsn/core/rat/kind.hh>
+# include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/abstract_kratexps.hh>
+# include <vcsn/core/rat/node.hh>
 # include <vcsn/core/rat/printer.hh>
 
 namespace vcsn
 {
 
   template <typename Context,
-            typename Kind = atoms_are_letters>
+            typename Kind = labels_are_letters>
   class kratexps : public abstract_kratexps
   {
   public:
@@ -24,7 +24,7 @@ namespace vcsn
     using super_type = abstract_kratexps;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
+    using atom_value_t = typename label_trait<kind_t, genset_t>::type;
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
     using printer_t = rat::printer<context_t, kind_t>;
@@ -79,12 +79,12 @@ namespace vcsn
 
     virtual value_t atom(const word_t& w) const;
     template <typename K>
-    typename std::enable_if<std::is_same<K, atoms_are_letters>::value,
+    typename std::enable_if<std::is_same<K, labels_are_letters>::value,
                             value_t>::type
     atom_(const word_t& w) const;
 
     template <typename K>
-    typename std::enable_if<std::is_same<K, atoms_are_words>::value,
+    typename std::enable_if<std::is_same<K, labels_are_words>::value,
                             value_t>::type
     atom_(const word_t& w) const;
 
@@ -119,8 +119,8 @@ namespace vcsn
     // Concrete type implementation.
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
-    value_t concat(value_t l, value_t r, atoms_are_letters) const;
-    value_t concat(value_t l, value_t r, atoms_are_words) const;
+    value_t concat(value_t l, value_t r, labels_are_letters) const;
+    value_t concat(value_t l, value_t r, labels_are_words) const;
     kvalue_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;

@@ -6,8 +6,8 @@
 
 # include <boost/range.hpp>
 
+# include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/node.fwd.hh>
-# include <vcsn/core/rat/kind.hh>
 # include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn

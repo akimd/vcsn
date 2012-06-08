@@ -29,7 +29,6 @@ nobase_vcsn_HEADERS =                           \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
   core/rat/abstract_kratexps.hh                 \
-  core/rat/kind.hh                              \
   core/rat/kratexps.hh                          \
   core/rat/kratexps.hxx                         \
   core/rat/node.fwd.hh                          \

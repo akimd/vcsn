@@ -8,12 +8,15 @@ namespace vcsn
 {
   namespace rat
   {
+    /// \param Aut      relative the generated automaton
+    /// \param Context  relative to the RatExp.
+    /// \param Kind     relative to the RatExp.
     template <class Aut,
               class Context = typename Aut::context_t,
-              class Kind = typename atom_kind<typename Aut::kind_t>::type>
+              class Kind = typename Aut::kind_t>
     class standard_of_visitor
-      : public const_visitor<typename atom_trait<Kind,
-                                                 typename Context::genset_t>::type,
+      : public const_visitor<typename label_trait<Kind,
+                                                  typename Context::genset_t>::type,
                              typename Context::weightset_t::value_t>
     {
     public:
@@ -23,7 +26,7 @@ namespace vcsn
       using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
-      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
+      using atom_value_t = typename label_trait<kind_t, genset_t>::type;
       using state_t = typename automaton_t::state_t;
 
       using super_type = const_visitor<atom_value_t, weight_t>;
@@ -206,9 +209,12 @@ namespace vcsn
       state_t initial_ = automaton_t::null_state();
     };
 
+    /// \param Aut      relative the generated automaton
+    /// \param Context  relative to the RatExp.
+    /// \param Kind     relative to the RatExp.
     template <class Aut,
               class Context = typename Aut::context_t,
-              class Kind = typename atom_kind<typename Aut::kind_t>::type>
+              class Kind = typename Aut::kind_t>
     Aut
     standard_of(const Context& ctx, const exp_t e)
     {
@@ -217,7 +223,7 @@ namespace vcsn
       using weightset_t = typename context_t::weightset_t;
       using kind_t = Kind;
       using weight_t = typename weightset_t::value_t;
-      using atom_value_t = typename atom_trait<kind_t, genset_t>::type;
+      using atom_value_t = typename label_trait<kind_t, genset_t>::type;
       using node_t = rat::node<atom_value_t, weight_t>;
       // Make sure the type is right.
       auto v = std::dynamic_pointer_cast<const node_t>(e);
