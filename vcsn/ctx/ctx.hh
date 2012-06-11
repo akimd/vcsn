@@ -1,6 +1,7 @@
 #ifndef VCSN_CTX_CTX_HH
 # define VCSN_CTX_CTX_HH
 
+# include <memory>
 # include <vcsn/core/rat/node.fwd.hh>
 # include <vcsn/core/kind.hh>
 
@@ -16,6 +17,8 @@ namespace vcsn
     public:
       using genset_t = GenSet;
       using weightset_t = WeightSet;
+      using genset_ptr = std::shared_ptr<const genset_t>;
+      using weightset_ptr = std::shared_ptr<const weightset_t>;
       using kind_t = Kind;
 
       /// Type of transition labels, and type of RatExp atoms.
@@ -27,23 +30,29 @@ namespace vcsn
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
-      context(const genset_t& gs = {}, const weightset_t& ws = {})
+      context(const genset_ptr& gs, const weightset_ptr& ws)
         : gs_(gs)
         , ws_(ws)
       {}
 
-      const genset_t& genset() const
+      context(const genset_t& gs = {},
+              const weightset_t& ws = {})
+        : context(std::make_shared<const genset_t>(gs), 
+                  std::make_shared<const weightset_t>(ws))
+      {}
+
+      const genset_ptr& genset() const
       {
         return gs_;
       }
-      const weightset_t& weightset() const
+      const weightset_ptr& weightset() const
       {
         return ws_;
       }
 
     private:
-      genset_t gs_;
-      weightset_t ws_;
+      genset_ptr gs_;
+      weightset_ptr ws_;
     };
   }
 };

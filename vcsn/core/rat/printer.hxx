@@ -84,7 +84,7 @@ namespace vcsn
       bool p = parens_(v);
       if (p)
         out_ << '(';
-      ctx_.genset().output(out_, v.value());
+      ctx_.genset()->output(out_, v.value());
       if (p)
         out_ << ')';
     }
@@ -95,7 +95,7 @@ namespace vcsn
       if (shows_(w))
         {
           out_ << '{';
-          ctx_.weightset().print(out_, w);
+          ctx_.weightset()->print(out_, w);
           out_ << '}';
         }
     }

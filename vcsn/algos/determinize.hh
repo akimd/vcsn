@@ -53,7 +53,7 @@ namespace vcsn
           {
             auto ss = st.top();
             st.pop();
-            const auto& genset = a.genset();
+            const auto& genset = *a.genset();
             for (auto gen : genset)
               {
                 state_set next;

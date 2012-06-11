@@ -44,7 +44,7 @@ namespace vcsn
 
 	    for (auto ri : raut.out(psrc.second, label))
 	      {
-		auto weight = aut.weightset().mul(lweight, raut.weight_of(ri));
+		auto weight = aut.weightset()->mul(lweight, raut.weight_of(ri));
 		pair_t pdst(ldst, raut.dst_of(ri));
 
 		auto iter = pmap.find(pdst);

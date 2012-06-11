@@ -15,6 +15,8 @@ namespace vcsn
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
 
+    using genset_ptr = typename context_t::genset_ptr;
+    using weightset_ptr = typename context_t::weightset_ptr;
     using word_t = typename genset_t::word_t;
     using weight_t = typename weightset_t::value_t;
 
@@ -23,12 +25,12 @@ namespace vcsn
     polynomials(const context_t& ctx)
       : ctx_(ctx)
     {
-      unit_[genset().identity()] = weightset().unit();
+      unit_[genset()->identity()] = weightset()->unit();
     }
 
     const context_t& context() const { return ctx_; }
-    const genset_t& genset() const { return ctx_.genset(); }
-    const weightset_t& weightset() const { return ctx_.weightset(); }
+    const genset_ptr& genset() const { return ctx_.genset(); }
+    const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
     value_t&
     assoc(value_t& v, const word_t& w, const weight_t& k) const
@@ -44,7 +46,7 @@ namespace vcsn
       if (i == v.end())
 	assoc(v, w, k);
       else
-	i->second = weightset().add(i->second, k);
+	i->second = weightset()->add(i->second, k);
       return v;
     }
 
@@ -64,8 +66,8 @@ namespace vcsn
       for (auto i: l)
 	for (auto j: r)
 	  add_assoc(p,
-		    genset().concat(i.first, j.first),
-		    weightset().mul(i.second, j.second));
+		    genset()->concat(i.first, j.first),
+		    weightset()->mul(i.second, j.second));
       return p;
     }
 
@@ -80,10 +82,10 @@ namespace vcsn
     {
       if (v.size() != 1)
 	return false;
-      auto i = v.find(genset().identity());
+      auto i = v.find(genset()->identity());
       if (i == v.end())
 	return false;
-      return weightset().is_unit(i->second);
+      return weightset()->is_unit(i->second);
     }
 
     const value_t&
@@ -108,7 +110,7 @@ namespace vcsn
     print(std::ostream& out, const value_t& v) const
     {
       bool first = true;
-      bool show_unit = weightset().show_unit();
+      bool show_unit = weightset()->show_unit();
 
       for (auto& i: v)
 	{
@@ -116,12 +118,12 @@ namespace vcsn
 	    out << " + ";
 	  first = false;
 
-	  if (show_unit || !weightset().is_unit(i.second))
+	  if (show_unit || !weightset()->is_unit(i.second))
 	    {
 	      out << "{";
-	      weightset().print(out, i.second) << "}";
+	      weightset()->print(out, i.second) << "}";
 	    }
-	  genset().output(out, i.first);
+	  genset()->output(out, i.first);
 	}
 
       if (first)

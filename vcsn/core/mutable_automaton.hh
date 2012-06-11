@@ -24,6 +24,9 @@ namespace vcsn
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
     using kind_t = typename context_t::kind_t;
+
+    using genset_ptr = typename context_t::genset_ptr;
+    using weightset_ptr = typename context_t::weightset_ptr;
     using entryset_t = polynomials<context_t>;
 
     using state_t = unsigned;
@@ -61,7 +64,7 @@ namespace vcsn
     mutable_automaton(const context_t& ctx)
       : es_(ctx)
       , states_(2)
-      , prepost_label_(ctx.genset().template special<label_t>())
+      , prepost_label_(ctx.genset()->template special<label_t>())
     {
     }
 
@@ -79,8 +82,8 @@ namespace vcsn
     ///////////////
 
     const context_t& context() const { return es_.context(); }
-    const weightset_t& weightset() const { return es_.weightset(); }
-    const genset_t& genset() const { return es_.genset(); }
+    const weightset_ptr& weightset() const { return es_.weightset(); }
+    const genset_ptr& genset() const { return es_.genset(); }
     const entryset_t& entryset() const { return es_; }
 
     // Special states and transitions
@@ -141,7 +144,7 @@ namespace vcsn
     {
       transition_t t = get_transition(pre(), s, prepost_label_);
       if (t == null_transition())
-        return weightset().zero();
+        return weightset()->zero();
       else
         return weight_of(t);
     }
@@ -151,7 +154,7 @@ namespace vcsn
     {
       transition_t t = get_transition(s, post(), prepost_label_);
       if (t == null_transition())
-        return weightset().zero();
+        return weightset()->zero();
       else
         return weight_of(t);
     }
@@ -172,7 +175,7 @@ namespace vcsn
                      [=,&l,&dst] (const transition_t& t) -> bool
                      { const stored_transition_t& st = transitions_[t];
                        return (st.dst == dst
-                               && this->genset().equals(st.label, l)); });
+                               && this->genset()->equals(st.label, l)); });
       if (i == end(succ))
         return null_transition();
       return *i;
@@ -210,7 +213,7 @@ namespace vcsn
     typename genset_t::word_t
     word_label_of(transition_t t) const
     {
-      return genset().to_word(label_of(t));
+      return genset()->to_word(label_of(t));
     }
 
     // Edition of states
@@ -298,7 +301,7 @@ namespace vcsn
     void
     set_initial(state_t s)
     {
-      set_initial(s, weightset().unit());
+      set_initial(s, weightset()->unit());
     }
 
     weight_t
@@ -310,7 +313,7 @@ namespace vcsn
     void
     unset_initial(state_t s)
     {
-      set_initial(s, weightset().zero());
+      set_initial(s, weightset()->zero());
     }
 
     void
@@ -322,7 +325,7 @@ namespace vcsn
     void
     set_final(state_t s)
     {
-      set_final(s, weightset().unit());
+      set_final(s, weightset()->unit());
     }
 
     weight_t
@@ -334,7 +337,7 @@ namespace vcsn
     void
     unset_final(state_t s)
     {
-      set_final(s, weightset().zero());
+      set_final(s, weightset()->zero());
     }
 
     // Edition of transitions
@@ -373,7 +376,7 @@ namespace vcsn
       transition_t t = get_transition(src, dst, l);
       if (t != null_transition())
         {
-          if (!weightset().is_zero(k))
+          if (!weightset()->is_zero(k))
             {
               stored_transition_t& st = transitions_[t];
               st.label = l;
@@ -385,7 +388,7 @@ namespace vcsn
               t = null_transition();
             }
         }
-      else if (!weightset().is_zero(k))
+      else if (!weightset()->is_zero(k))
         {
           if (transitions_fs_.empty())
             {
@@ -414,7 +417,7 @@ namespace vcsn
       transition_t t = get_transition(src, dst, l);
       if (t != null_transition())
         {
-          k = weightset().add(weight_of(t), k);
+          k = weightset()->add(weight_of(t), k);
           set_weight(t, k);
         }
       else
@@ -427,19 +430,19 @@ namespace vcsn
     weight_t
     add_transition(state_t src, state_t dst, label_t l)
     {
-      return add_transition(src, dst, l, weightset().unit());
+      return add_transition(src, dst, l, weightset()->unit());
     }
 
     transition_t
     set_transition(state_t src, state_t dst, label_t l)
     {
-      return set_transition(src, dst, l, weightset().unit());
+      return set_transition(src, dst, l, weightset()->unit());
     }
 
     weight_t
     set_weight(transition_t t, weight_t k)
     {
-      if (weightset().is_zero(k))
+      if (weightset()->is_zero(k))
         del_transition(t);
       else
         transitions_[t].set_weight(k);
@@ -449,19 +452,19 @@ namespace vcsn
     weight_t
     add_weight(transition_t t, weight_t k)
     {
-      return set_weight(t, weightset().add(weight_of(t), k));
+      return set_weight(t, weightset()->add(weight_of(t), k));
     }
 
     weight_t
     lmul_weight(transition_t t, weight_t k)
     {
-      return set_weight(t, weightset().mul(k, weight_of(t)));
+      return set_weight(t, weightset()->mul(k, weight_of(t)));
     }
 
     weight_t
     rmul_weight(transition_t t, weight_t k)
     {
-      return set_weight(t, weightset().mul(weight_of(t), k));
+      return set_weight(t, weightset()->mul(weight_of(t), k));
     }
 
     // Iteration on states and transitions
@@ -559,7 +562,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
         (ss.succ,
          [=,&l] (transition_t i) {
-          return this->genset().equals(transitions_[i].label, l);
+          return this->genset()->equals(transitions_[i].label, l);
         });
     }
 
@@ -590,7 +593,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
         (ss.pred,
          [=,&l] (transition_t i) {
-          return this->genset().equals(transitions_[i].label, l);
+          return this->genset()->equals(transitions_[i].label, l);
         });
     }
 

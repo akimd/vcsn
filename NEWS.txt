@@ -1,3 +1,14 @@
+* 2012-06-11
+** Contexts aggregate shared pointers
+Now contexts are mutable, and hold (shared) pointers to (immutable) gensets
+and weightsets.  This way, we can alter contexts (e.g., the ladybird factory
+can add the letters it needs in a new genset), yet there is good sharing,
+and identity can still be used to distinguish, for instance, two gensets
+defined equally.
+
+It is also simpler to really expose them as pointers, so every
+"weightset().mul", etc. must be rewritten as "weightset()->mul".
+
 * 2012-06-08
 ** Contexts
 The Kind parameter is now part of the context.  The same type of Kind is now

@@ -20,6 +20,8 @@ namespace vcsn
     using genset_t = typename context_t::genset_t;
     using weightset_t = typename context_t::weightset_t;
     using kind_t = typename context_t::kind_t;
+    using genset_ptr = typename context_t::genset_ptr;
+    using weightset_ptr = typename context_t::weightset_ptr;
     using super_type = abstract_kratexps;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
@@ -62,12 +64,12 @@ namespace vcsn
       return ctx_;
     }
 
-    const genset_t& genset() const
+    const genset_ptr& genset() const
     {
       return ctx_.genset();
     }
 
-    const weightset_t& weightset() const
+    const weightset_ptr& weightset() const
     {
       return ctx_.weightset();
     }

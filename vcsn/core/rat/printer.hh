@@ -64,7 +64,7 @@ namespace vcsn
       /// Whether w is displayed.
       bool shows_(const weight_t& w)
       {
-        return ctx_.weightset().show_unit() || !ctx_.weightset().is_unit(w);
+        return ctx_.weightset()->show_unit() || !ctx_.weightset()->is_unit(w);
       }
 
       /// Whether one of the weights shows.
@@ -88,7 +88,7 @@ namespace vcsn
 
       bool parens_(const atom_t& n)
       {
-        return !top_ && !ctx_.genset().is_letter(n.value());
+        return !top_ && !ctx_.genset()->is_letter(n.value());
       }
 
       /// Output stream.
