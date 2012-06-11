@@ -32,7 +32,7 @@ do
     (-c|--color)
       # The Emacs shell and compilation-mode are really bad at
       # displaying colors.
-      if (colordiff --version) >/dev/null 2>&1 \
+      if (colordiff /dev/null /dev/null) >/dev/null 2>&1 \
           && test -z "$INSIDE_EMACS"; then
         diff=colordiff
       fi
