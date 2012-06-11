@@ -86,6 +86,7 @@ namespace vcsn
     }
 
   protected:
+    /// Use special().
     letter_t special_letter() const { return 255; }
 
   public:

@@ -52,8 +52,7 @@ namespace vcsn
 
   public:
     /// Constructor.
-    /// \param a    the generator set for the labels.
-    /// \param ws   the type of the weights (e.g., "bool", "int").
+    /// \param ctx    the generator set for the labels, and the weight set.
     kratexps(const context_t& ctx)
       : super_type()
       , ctx_(ctx)
