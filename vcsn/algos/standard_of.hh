@@ -197,7 +197,7 @@ namespace vcsn
 
 
     private:
-      weightset_t ws_;
+      const weightset_t& ws_;
       automaton_t res_;
       state_t initial_ = automaton_t::null_state();
     };
