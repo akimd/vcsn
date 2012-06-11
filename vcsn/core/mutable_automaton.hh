@@ -196,9 +196,9 @@ namespace vcsn
       return transitions_[t].src != null_state();
     }
 
-    state_t src_of(transition_t t) const     { return transitions_[t].src; }
-    state_t dst_of(transition_t t) const     { return transitions_[t].dst; }
-    label_t label_of(transition_t t) const   { return transitions_[t].label; }
+    state_t src_of(transition_t t) const   { return transitions_[t].src; }
+    state_t dst_of(transition_t t) const   { return transitions_[t].dst; }
+    label_t label_of(transition_t t) const { return transitions_[t].label; }
 
     weight_t weight_of(transition_t t) const
     {
