@@ -141,7 +141,7 @@ namespace vcsn
     }
 
   private:
-    const context_t& ctx_;
+    context_t ctx_;
     value_t zero_;
     value_t unit_;
   };
