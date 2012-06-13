@@ -5,6 +5,7 @@ EXTRA_PROGRAMS +=				\
   unit/ladybird-b 				\
   unit/ladybird-z				\
   unit/ladybird-zmin				\
+  unit/lift					\
   unit/poly					\
   unit/product					\
   unit/simplaw					\
@@ -23,10 +24,11 @@ unit_TESTS =					\
   unit/eval.chk					\
   unit/determinize.chk				\
   unit/ladybird.chk				\
+  unit/lift.chk					\
   unit/poly.chk					\
   unit/product.chk				\
-  unit/simpleaut.chk				\
   unit/simplaw.chk				\
+  unit/simpleaut.chk				\
   unit/standard_of.chk
 dist_TESTS += $(unit_TESTS)
 
@@ -36,10 +38,11 @@ dist_TESTS += $(unit_TESTS)
 unit/eval.log: unit/eval
 unit/determinize.log: unit/determinize
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
+unit/lift.log: unit/lift
 unit/poly.log: unit/poly
 unit/product.log: unit/product
-unit/simpleaut.log: unit/simpleaut
 unit/simplaw.log: unit/simplaw
+unit/simpleaut.log: unit/simpleaut
 unit/standard_of.log: rat/pprat
 
 .PHONY: check-unit

@@ -1,4 +1,10 @@
 * 2012-06-14
+** lift
+A new algorithm which creates, from an automaton, another one with the same
+states and transitions, but the new automaton features only spontaneous
+transitions, whose weights correspond to the labels (and weights) of the
+initial one.
+
 ** RatExps: fix is_unit
 is_unit simply checked that the expression was \e, but did not check that
 weight itself was the unit.

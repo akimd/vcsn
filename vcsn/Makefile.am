@@ -20,6 +20,7 @@ nobase_vcsn_HEADERS =                           \
   algos/determinize.hh                          \
   algos/dotty.hh                                \
   algos/eval.hh                                 \
+  algos/lift.hh                                 \
   algos/product.hh                              \
   algos/standard_of.hh                          \
   alphabets/char.hh                             \
