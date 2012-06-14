@@ -10,7 +10,7 @@ namespace vcsn
 {
   template <class A>
   void
-  dotty(A& aut, std::ostream& out)
+  dotty(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
     std::unordered_map<state_t, unsigned> names;
