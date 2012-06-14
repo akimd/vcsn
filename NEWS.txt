@@ -3,6 +3,9 @@
 is_unit simply checked that the expression was \e, but did not check that
 weight itself was the unit.
 
+** VCSN_DEBUG
+This variable allows to force the display of weights.
+
 * 2012-06-11
 ** Contexts aggregate shared pointers
 Now contexts are mutable, and hold (shared) pointers to (immutable) gensets

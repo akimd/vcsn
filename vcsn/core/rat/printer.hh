@@ -31,7 +31,7 @@ namespace vcsn
 
       printer(std::ostream& out,
               const context_t& ctx,
-              const bool debug = false);
+              const bool debug = !!getenv("VCSN_DEBUG"));
 
       /// Entry point: print \a v.
       void
