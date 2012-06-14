@@ -7,7 +7,13 @@ PASS: abab
 PASS: aaaa
 PASS: b
 PASS: a
+PASS: a
+PASS: abab
+PASS: aabab
 PASS: caa
+PASS: aabab
+PASS: a
+PASS: abab
 PASS: aabab
 EOF
 run 0 out.exp unit/eval

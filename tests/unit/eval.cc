@@ -48,16 +48,29 @@ int main()
   EVAL(aut, "b", 0);
   EVAL(aut, "a", 2);
 
+  aut.set_initial(s1, 2);
+
+  EVAL(aut, "a", 4);
+  EVAL(aut, "abab", 8);
+  EVAL(aut, "aabab", 12);
+
   auto s3 = aut.new_state();
 
   aut.set_transition(s1, s3, 'c');
   aut.set_transition(s3, s1, 'a');
   aut.set_transition(s3, s2, 'a');
 
-  EVAL(aut, "caa", 3);
+  EVAL(aut, "caa", 6);
 
   auto prod = product(aut, aut);
-  EVAL(prod, "aabab", 36);
+  EVAL(prod, "aabab", 144);
+
+
+  aut.set_final(s2, 3);
+
+  EVAL(aut, "a", 12);
+  EVAL(aut, "abab", 24);
+  EVAL(aut, "aabab", 36);
 
   return res;
 }

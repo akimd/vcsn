@@ -30,12 +30,11 @@ namespace vcsn
       {
         // Initialize
         const weight_t zero = ws_.zero();
-        const weight_t unit = ws_.unit();
         weights v1;
         weights v2;
 
         for (auto init : a_.initial_transitions())
-          v1[a_.dst_of(init)] = unit;
+          v1[a_.dst_of(init)] = a_.weight_of(init);
 
         // Computation
         for (auto l : word)
