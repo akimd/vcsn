@@ -80,12 +80,12 @@ namespace vcsn
     virtual value_t atom(const word_t& w) const;
     template <typename K>
     typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                            value_t>::type
+                            kvalue_t>::type
     atom_(const word_t& w) const;
 
     template <typename K>
     typename std::enable_if<std::is_same<K, labels_are_words>::value,
-                            value_t>::type
+                            kvalue_t>::type
     atom_(const word_t& w) const;
 
 
@@ -116,8 +116,12 @@ namespace vcsn
     value_t conv(const std::string& s) const;
     virtual std::ostream& print(std::ostream& o, const value_t v) const;
 
-  protected:
+  public:
     // Concrete type implementation.
+    kvalue_t zero_() const;
+    kvalue_t unit_() const;
+    kvalue_t zero_(const weight_t& w) const;
+    kvalue_t unit_(const weight_t& w) const;
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
     value_t concat(value_t l, value_t r, labels_are_letters) const;

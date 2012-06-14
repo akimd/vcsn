@@ -22,13 +22,13 @@ namespace vcsn
   DEFINE::zero() const
     -> value_t
   {
-    return std::make_shared<zero_t>(weightset()->unit());
+    return zero_();
   }
 
   DEFINE::unit() const
     -> value_t
   {
-    return std::make_shared<one_t>(weightset()->unit());
+    return unit_();
   }
 
   DEFINE::atom(const word_t& w) const
@@ -43,7 +43,7 @@ namespace vcsn
   auto
   kratexps<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                               value_t>::type
+                               kvalue_t>::type
   {
     if (w.size() != 1)
       throw std::domain_error("invalid atom: " + w);
@@ -60,7 +60,7 @@ namespace vcsn
   auto
   kratexps<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
-                               value_t>::type
+                               kvalue_t>::type
   {
     for (auto l: w)
       if (!genset()->has(l))
@@ -135,6 +135,31 @@ namespace vcsn
   /*-----------------.
   | Concrete types.  |
   `-----------------*/
+
+  DEFINE::zero_() const
+    -> kvalue_t
+  {
+    return zero_(weightset()->unit());
+  }
+
+  DEFINE::unit_() const
+    -> kvalue_t
+  {
+    return unit_(weightset()->unit());
+  }
+
+  DEFINE::zero_(const weight_t& w) const
+    -> kvalue_t
+  {
+    return std::make_shared<zero_t>(w);
+  }
+
+  DEFINE::unit_(const weight_t& w) const
+    -> kvalue_t
+  {
+    return std::make_shared<one_t>(w);
+  }
+
 
   DEFINE::gather(nodes_t& res, rat::exp::type_t type, kvalue_t v) const
     -> void
