@@ -163,34 +163,26 @@ namespace vcsn
   DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
-    if (r->type() == kratexp_t::ATOM)
+    if (r->type() == kratexp_t::ATOM
+        && weightset()->is_unit(r->left_weight()))
       {
-        if (weightset()->is_unit(r->left_weight()))
-          switch (l->type())
-            {
-            case kratexp_t::ATOM:
-              if (weightset()->is_unit(l->left_weight()))
-                return atom(genset()->concat(down_pointer_cast<const atom_t>(l)->value(),
-                                             down_pointer_cast<const atom_t>(r)->value()));
-              break;
-
-              // If we are calling word on "(ab).a, b", then we really
-              // want "(ab).(ab)".
-            case kratexp_t::PROD:
-              {
-                const auto& prod = *down_pointer_cast<const prod_t>(l);
-                kratexps_t kratexps {prod.begin(), prod.end()-1};
-                kratexps.push_back
-                  (down_pointer_cast<const kratexp_t>(concat(*(prod.end()-1), r)));
-                return std::make_shared<prod_t>(weightset()->unit(),
-                                                weightset()->unit(),
-                                                kratexps);
-              }
-            default:
-              // Fall thru.
-              ;
-            }
-      }
+        if (l->type() == kratexp_t::ATOM
+            && weightset()->is_unit(l->left_weight()))
+          return atom(genset()->concat
+                      (down_pointer_cast<const atom_t>(l)->value(),
+                       down_pointer_cast<const atom_t>(r)->value()));
+        else if (l->type() == kratexp_t::PROD)
+          {
+            // If we are calling word on "(ab).a, b", then we really
+            // want "(ab).(ab)".
+            const auto& prod = *down_pointer_cast<const prod_t>(l);
+            kratexps_t kratexps {prod.begin(), prod.end()-1};
+            kratexps.push_back(concat(*(prod.end()-1), r));
+            return std::make_shared<prod_t>(weightset()->unit(),
+                                            weightset()->unit(),
+                                            kratexps);
+          }
+        }
     return mul(l, r);
   }
 
@@ -208,7 +200,7 @@ namespace vcsn
       // (0)* == 1
       return unit();
     else
-      return std::make_shared<star_t>(weightset()->unit(), 
+      return std::make_shared<star_t>(weightset()->unit(),
                                       weightset()->unit(),
                                       e);
   }
@@ -287,7 +279,7 @@ namespace vcsn
     -> std::ostream&
   {
     printer_t print{o, context()};
-    print(down_pointer_cast<const kratexp_t>(v));
+    print(v);
     return o;
   }
 
