@@ -5,6 +5,39 @@ states and transitions, but the new automaton features only spontaneous
 transitions, whose weights correspond to the labels (and weights) of the
 initial one.
 
+For instance:
+
+  $ pprat -aw -wz  -sl '({2}\e+{3}a){4}'
+  digraph A {
+    rankdir=LR
+    node [shape=circle]
+    {
+      node [style=invis,shape=none,label="",width=0,height=0]
+      I1
+      F1
+      F2
+    }
+    1 -> F1 [label="{8}"]
+    I1 -> 1
+    2 -> F2 [label="{4}"]
+    1 -> 2 [label="{3}a"]
+  }
+
+  digraph A {
+    rankdir=LR
+    node [shape=circle]
+    {
+      node [style=invis,shape=none,label="",width=0,height=0]
+      I1
+      F1
+      F2
+    }
+    1 -> F1 [label="{{8}\\e}"]
+    I1 -> 1
+    2 -> F2 [label="{{4}\\e}"]
+    1 -> 2 [label="{{3}a}\\e"]
+  }
+
 ** RatExps: fix is_unit
 is_unit simply checked that the expression was \e, but did not check that
 weight itself was the unit.

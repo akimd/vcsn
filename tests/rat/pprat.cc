@@ -4,6 +4,7 @@
 #include <getopt.h>
 
 #include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/lift.hh>
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
@@ -24,6 +25,7 @@ usage(const char* prog, int status)
       "  -w WEIGHT-SET     define the kind of the weights [b]\n"
       "  -e EXP            pretty-print the rational expression EXP\n"
       "  -f FILE           pretty-print the rational expression in FILE\n"
+      "  -l                display the lifted standard automaton instead of expression\n"
       "  -s                display the standard automaton instead of expression\n"
       "\n"
       "WEIGHT-SET:\n"
@@ -51,6 +53,7 @@ struct options
   bool atoms_are_letters;
   type weight;
   bool standard_of;
+  bool lift;
 };
 
 // FIXME: No globals.
@@ -93,12 +96,15 @@ pp(const options& opts, const Factory& factory,
   vcsn::rat::driver d(factory);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
-      if (opts.standard_of)
+      if (opts.standard_of || opts.lift)
         {
           using context_t = typename Factory::context_t;
           using automaton_t = vcsn::mutable_automaton<context_t>;
           auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
-          vcsn::dotty(aut, std::cout);
+          if (opts.standard_of)
+            vcsn::dotty(aut, std::cout);
+          if (opts.lift)
+            vcsn::dotty(vcsn::lift(aut), std::cout);
         }
       else
         factory.print(std::cout, e) << std::endl;
@@ -153,9 +159,10 @@ try
       .atoms_are_letters = true,
       .weight = type::b,
       .standard_of = false,
+      .lift = false,
     };
   int opt;
-  while ((opt = getopt(argc, argv, "a:e:f:hsw:")) != -1)
+  while ((opt = getopt(argc, argv, "a:e:f:hlsw:")) != -1)
     switch (opt)
       {
       case 'a':
@@ -181,6 +188,9 @@ try
         break;
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
+        break;
+      case 'l':
+        opts.lift = true;
         break;
       case 's':
         opts.standard_of = true;
