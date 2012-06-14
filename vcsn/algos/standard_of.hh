@@ -23,7 +23,7 @@ namespace vcsn
       using state_t = typename automaton_t::state_t;
 
       using super_type = typename Context::const_visitor;
-      using node_t = typename super_type::node_t;
+      using kratexp_t = typename super_type::kratexp_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
@@ -40,7 +40,7 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(std::shared_ptr<const node_t> v)
+      operator()(std::shared_ptr<const kratexp_t> v)
       {
         v->accept(*this);
         res_.set_initial(initial_);
@@ -211,7 +211,7 @@ namespace vcsn
     {
       using context_t = Context;
       // Make sure the type is right.
-      auto v = std::dynamic_pointer_cast<const typename context_t::node_t>(e);
+      auto v = std::dynamic_pointer_cast<const typename context_t::kratexp_t>(e);
       assert(v);
       standard_of_visitor<Aut, context_t> standard{ctx};
       return standard(v);

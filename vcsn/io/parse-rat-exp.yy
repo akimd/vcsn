@@ -16,7 +16,7 @@
   #include <list>
   #include <string>
   #include "location.hh"
-  #include <vcsn/core/rat/node.hh>
+  #include <vcsn/core/rat/kratexp.hh>
   #include <vcsn/core/rat/abstract_kratexpset.hh>
   #include <vcsn/io/driver.hh>
 
@@ -29,7 +29,7 @@
       // of an union.  See parse-rat-exp.txt.
       struct sem_type
       {
-        driver::exp_t node;
+        driver::exp_t kratexp;
         // These guys _can_ be put into a union.
         union
         {
@@ -96,7 +96,7 @@
 %printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '{' << *$$ << '}'; } "weight";
-%printer { driver_.kratexpset->print(debug_stream(), $$); } <node>;
+%printer { driver_.kratexpset->print(debug_stream(), $$); } <kratexp>;
 %destructor { delete $$; } <sval>;
 
 %token <ival>   LPAREN  "("
@@ -111,7 +111,7 @@
 %token <cval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
-%type <node> exp exps weights;
+%type <kratexp> exp exps weights;
 
 %left RWEIGHT
 %left "+"

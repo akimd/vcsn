@@ -1,7 +1,7 @@
 #ifndef VCSN_IO_DRIVER_HH
 # define VCSN_IO_DRIVER_HH
 
-# include <vcsn/core/rat/node.hh>
+# include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/abstract_kratexpset.hh>
 # include <vcsn/io/location.hh>
 

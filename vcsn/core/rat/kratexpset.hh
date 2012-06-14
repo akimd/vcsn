@@ -6,7 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/abstract_kratexpset.hh>
-# include <vcsn/core/rat/node.hh>
+# include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 
 namespace vcsn
@@ -29,10 +29,10 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
     using printer_t = rat::printer<context_t>;
-    /// Type of nodes.
+    /// Type of kratexps.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<atom_value_t, weight_t>
-    DEFINE(node);
+    DEFINE(kratexp);
     DEFINE(leaf);
     DEFINE(zero);
     DEFINE(one);
@@ -43,12 +43,12 @@ namespace vcsn
     DEFINE(prod);
     DEFINE(star);
 # undef DEFINE
-    using nodes_t = typename node_t::nodes_t;
+    using kratexps_t = typename kratexp_t::kratexps_t;
 
     /// When taken as a WeightSet, our (abstract) value type.
     using value_t = rat::exp_t;
     /// Concrete value type.
-    using kvalue_t = typename node_t::kvalue_t;
+    using kvalue_t = typename kratexp_t::kvalue_t;
 
   public:
     /// Constructor.
@@ -131,15 +131,15 @@ namespace vcsn
     kvalue_t weight(const weight_t& w, kvalue_t e) const;
 
     /// Push \a v in \a res, applying associativity if possible.
-    /// \param type  the kind of nodes on which to apply associativity.
+    /// \param type  the kind of kratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    void gather(nodes_t& res, rat::exp::type_t type, kvalue_t v) const;
+    void gather(kratexps_t& res, rat::exp::type_t type, kvalue_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
-    /// \param type  the kind of nodes on which to apply associativity.
+    /// \param type  the kind of kratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    nodes_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
+    kratexps_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
 
   private:
     const context_t& ctx_;

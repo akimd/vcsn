@@ -1,7 +1,7 @@
-#ifndef VCSN_CORE_RAT_NODE_HXX_
-# define VCSN_CORE_RAT_NODE_HXX_
+#ifndef VCSN_CORE_RAT_KRATEXP_HXX_
+# define VCSN_CORE_RAT_KRATEXP_HXX_
 
-# include <vcsn/core/rat/node.hh>
+# include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -25,21 +25,21 @@ namespace vcsn
     auto                                        \
     Node<Atom, Weight>
 
-    /*-------.
-    | node.  |
-    `-------*/
+    /*----------.
+    | kratexp.  |
+    `----------*/
 
-    DEFINE_CTOR(node)(const weight_t& l)
+    DEFINE_CTOR(kratexp)(const weight_t& l)
       : lw_(l)
     {}
 
-    DEFINE(node)::left_weight() const
+    DEFINE(kratexp)::left_weight() const
       -> const weight_t&
     {
       return lw_;
     }
 
-    DEFINE(node)::left_weight()
+    DEFINE(kratexp)::left_weight()
       -> weight_t&
     {
       return lw_;
@@ -82,9 +82,9 @@ namespace vcsn
     `-------*/
 
     DEFINE_CTOR(nary)(const weight_t& l, const weight_t& r,
-                       const nodes_t& ns)
+                       const kratexps_t& ns)
       : super_type(l, r)
-      , sub_node_(ns)
+      , sub_kratexp_(ns)
     {
     }
 
@@ -92,31 +92,31 @@ namespace vcsn
     DEFINE(nary)::begin() const
       -> const_iterator
     {
-      return sub_node_.begin();
+      return sub_kratexp_.begin();
     }
 
     DEFINE(nary)::end() const
       -> const_iterator
     {
-      return sub_node_.end();
+      return sub_kratexp_.end();
     }
 
     DEFINE(nary)::rbegin() const
       -> const_reverse_iterator
     {
-      return sub_node_.begin();
+      return sub_kratexp_.begin();
     }
 
     DEFINE(nary)::rend() const
       -> const_reverse_iterator
     {
-      return sub_node_.end();
+      return sub_kratexp_.end();
     }
 
     DEFINE(nary)::size() const
       -> size_t
     {
-      return sub_node_.size();
+      return sub_kratexp_.size();
     }
 
 
@@ -126,12 +126,12 @@ namespace vcsn
     `-------*/
 
     DEFINE_CTOR(prod)(const weight_t& l, const weight_t& r,
-                       const nodes_t& ns)
+                       const kratexps_t& ns)
       : super_type(l, r, ns)
     {}
 
 
-    DEFINE(prod)::accept(typename node_t::const_visitor& v) const
+    DEFINE(prod)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -144,11 +144,11 @@ namespace vcsn
     `------*/
 
     DEFINE_CTOR(sum)(const weight_t& l, const weight_t& r,
-                     const nodes_t& ns)
+                     const kratexps_t& ns)
       : super_type(l, r, ns)
     {}
 
-    DEFINE(sum)::accept(typename node_t::const_visitor& v) const
+    DEFINE(sum)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -171,7 +171,7 @@ namespace vcsn
     }
 
 
-    DEFINE(star)::accept(typename node_t::const_visitor& v) const
+    DEFINE(star)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -186,7 +186,7 @@ namespace vcsn
       : super_type(w)
     {}
 
-    DEFINE(one)::accept(typename node_t::const_visitor& v) const
+    DEFINE(one)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -200,7 +200,7 @@ namespace vcsn
       : super_type(w)
     {}
 
-    DEFINE(zero)::accept(typename node_t::const_visitor& v) const
+    DEFINE(zero)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -215,7 +215,7 @@ namespace vcsn
       , value_(value)
     {}
 
-    DEFINE(atom)::accept(typename node_t::const_visitor& v) const
+    DEFINE(atom)::accept(typename kratexp_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -233,4 +233,4 @@ namespace vcsn
   } // namespace exp
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_NODE_HXX_
+#endif // !VCSN_CORE_RAT_KRATEXP_HXX_

@@ -6,7 +6,7 @@
 # include <memory>  // shared_ptr
 # include <sstream>
 
-# include <vcsn/core/rat/node.fwd.hh>
+# include <vcsn/core/rat/fwd.hh>
 
 namespace vcsn
 {

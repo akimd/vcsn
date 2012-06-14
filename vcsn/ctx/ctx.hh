@@ -2,7 +2,7 @@
 # define VCSN_CTX_CTX_HH
 
 # include <memory>
-# include <vcsn/core/rat/node.fwd.hh>
+# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 
 namespace vcsn
@@ -25,8 +25,8 @@ namespace vcsn
       using label_t = typename label_trait<kind_t, genset_t>::label_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
-      /// Type of RatExp nodes.
-      using node_t = rat::node<label_t, weight_t>;
+      /// Type of RatExp kratexps.
+      using kratexp_t = rat::kratexp<label_t, weight_t>;
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 

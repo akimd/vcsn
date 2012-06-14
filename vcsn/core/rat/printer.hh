@@ -18,7 +18,7 @@ namespace vcsn
       using context_t = Context;
       using weight_t = typename context_t::weightset_t::value_t;
       using super_type = typename context_t::const_visitor;
-      using node_t = typename super_type::node_t;
+      using kratexp_t = typename super_type::kratexp_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
@@ -35,7 +35,7 @@ namespace vcsn
 
       /// Entry point: print \a v.
       void
-      operator()(const node_t& v)
+      operator()(const kratexp_t& v)
       {
         top_ = true;
         v.accept(*this);
@@ -44,7 +44,7 @@ namespace vcsn
 
       /// Entry point: print \a v.
       void
-      operator()(std::shared_ptr<const node_t> v)
+      operator()(std::shared_ptr<const kratexp_t> v)
       {
         operator()(*v);
       }
@@ -58,7 +58,7 @@ namespace vcsn
       virtual void visit(const atom_t& v);
 
       void print(const weight_t& w);
-      /// Traverse n-ary node (+ and .).
+      /// Traverse n-ary kratexp (+ and .).
       void print(const nary_t& n, const char op);
 
       /// Whether w is displayed.
@@ -68,7 +68,7 @@ namespace vcsn
       }
 
       /// Whether one of the weights shows.
-      bool shows_weight_(const node_t& n)
+      bool shows_weight_(const kratexp_t& n)
       {
         return
           shows_(n.left_weight())
@@ -76,9 +76,9 @@ namespace vcsn
               && shows_(static_cast<const inner_t&>(n).right_weight()));
       }
 
-      /// Whether the visited node requires outer parens.  The top
-      /// level node does not need parens, unless debug mode, or is a
-      /// sum/prod/star node with weights.
+      /// Whether the visited kratexp requires outer parens.  The top
+      /// level kratexp does not need parens, unless debug mode, or is a
+      /// sum/prod/star kratexp with weights.
       bool parens_(const inner_t& n)
       {
         bool res = !top_ || shows_weight_(n);
@@ -96,7 +96,7 @@ namespace vcsn
       const context_t& ctx_;
       /// Whether to be overly verbose.
       const bool debug_;
-      /// Whether the visited node is the top-level node.  Used by
+      /// Whether the visited kratexp is the top-level kratexp.  Used by
       /// parens_.
       bool top_ = true;
     };

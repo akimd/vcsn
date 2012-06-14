@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_RAT_VISITOR_HH
 # define VCSN_CORE_RAT_VISITOR_HH
 
-# include <vcsn/core/rat/node.fwd.hh>
+# include <vcsn/core/rat/fwd.hh>
 
 namespace vcsn
 {
@@ -14,7 +14,7 @@ namespace vcsn
     public:
       using atom_value_t = Atom;
       using weight_t = Weight;
-      using node_t = node<atom_value_t, weight_t>;
+      using kratexp_t = kratexp<atom_value_t, weight_t>;
       using inner_t = inner<atom_value_t, weight_t>;
       using nary_t = nary<atom_value_t, weight_t>;
       using leaf_t = leaf<atom_value_t, weight_t>;

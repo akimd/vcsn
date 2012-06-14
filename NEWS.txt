@@ -1,7 +1,7 @@
 * 2012-06-14
-** kratexps -> kratexpset
-For consistency with weightset -> weight, genset -> gen, kratexps (note the
-s) is renamed as kratexpset.
+** kratexpset/kratexp
+For consistency with weightset/weight, genset/gen, kratexps (note the s) is
+renamed as kratexpset and rat::node as rat::kratexp.
 
 ** lift
 A new algorithm which creates, from an automaton, another one with the same

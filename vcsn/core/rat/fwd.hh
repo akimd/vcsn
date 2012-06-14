@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_NODE_FWD_HH
-# define VCSN_CORE_RAT_NODE_FWD_HH
+#ifndef VCSN_CORE_RAT_FWD_HH
+# define VCSN_CORE_RAT_FWD_HH
 
 # include <memory>
 
@@ -15,7 +15,7 @@ namespace vcsn
     template <typename Atom, typename Weight>   \
     class Node
 
-    DEFINE(node);
+    DEFINE(kratexp);
     DEFINE(leaf);
     DEFINE(zero);
     DEFINE(one);
@@ -33,4 +33,4 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_NODE_FWD_HH
+#endif // !VCSN_CORE_RAT_FWD_HH
