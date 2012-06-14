@@ -42,10 +42,10 @@ namespace vcsn
     for (auto t: a.all_transitions())
       if (a.src_of(t) == a.pre())
         res.add_initial
-          (map[a.dst_of(t)], kre.unit_(a.weight_of(t)));
+          (map[a.dst_of(t)], kre.unit(a.weight_of(t)));
       else if (a.dst_of(t) == a.post())
         res.add_final
-          (map[a.src_of(t)], kre.unit_(a.weight_of(t)));
+          (map[a.src_of(t)], kre.unit(a.weight_of(t)));
       else
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],

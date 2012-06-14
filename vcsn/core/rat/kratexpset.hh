@@ -5,7 +5,6 @@
 # include <list>
 
 # include <vcsn/core/kind.hh>
-# include <vcsn/core/rat/abstract_kratexpset.hh>
 # include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 
@@ -13,7 +12,7 @@ namespace vcsn
 {
 
   template <typename Context>
-  class kratexpset : public abstract_kratexpset
+  class kratexpset
   {
   public:
     using context_t = Context;
@@ -22,7 +21,6 @@ namespace vcsn
     using kind_t = typename context_t::kind_t;
     using genset_ptr = typename context_t::genset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using super_type = abstract_kratexpset;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
     using atom_value_t = typename context_t::label_t;
@@ -45,17 +43,15 @@ namespace vcsn
 # undef DEFINE
     using kratexps_t = typename kratexp_t::kratexps_t;
 
-    /// When taken as a WeightSet, our (abstract) value type.
-    using value_t = rat::exp_t;
     /// Concrete value type.
+    using value_t = typename kratexp_t::kvalue_t;
     using kvalue_t = typename kratexp_t::kvalue_t;
 
   public:
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
     kratexpset(const context_t& ctx)
-      : super_type()
-      , ctx_(ctx)
+      : ctx_(ctx)
     {}
 
     const context_t& context() const
@@ -73,11 +69,7 @@ namespace vcsn
       return ctx_.weightset();
     }
 
-    // Specialization from abstract_kratexpset.
-    virtual value_t zero() const;
-    virtual value_t unit() const;
-
-    virtual value_t atom(const word_t& w) const;
+    kvalue_t atom(const word_t& w) const;
     template <typename K>
     typename std::enable_if<std::is_same<K, labels_are_letters>::value,
                             kvalue_t>::type
@@ -88,19 +80,8 @@ namespace vcsn
                             kvalue_t>::type
     atom_(const word_t& w) const;
 
-
-    virtual value_t add(value_t l, value_t r) const;
-    virtual value_t mul(value_t l, value_t r) const;
-    /// When concatenating two atoms, possibly make a single one,
-    /// or make the product.
-    virtual value_t concat(value_t l, value_t r) const;
-    virtual value_t star(value_t e) const;
-    virtual value_t weight(value_t e, std::string* w) const;
-    virtual value_t weight(std::string* w, value_t e) const;
-
     // When used as WeightSet for automata.
-    bool is_zero(value_t v) const;
-    bool is_unit(value_t v) const;
+    bool is_zero(kvalue_t v) const;
     bool is_unit(kvalue_t v) const;
 
     static constexpr bool show_unit()
@@ -113,19 +94,20 @@ namespace vcsn
       return weightset_t::is_positive_semiring();
     }
 
-    value_t conv(const std::string& s) const;
-    virtual std::ostream& print(std::ostream& o, const value_t v) const;
+    kvalue_t conv(const std::string& s) const;
+    std::ostream& print(std::ostream& o, const kvalue_t v) const;
 
   public:
     // Concrete type implementation.
-    kvalue_t zero_() const;
-    kvalue_t unit_() const;
-    kvalue_t zero_(const weight_t& w) const;
-    kvalue_t unit_(const weight_t& w) const;
+    kvalue_t zero() const;
+    kvalue_t unit() const;
+    kvalue_t zero(const weight_t& w) const;
+    kvalue_t unit(const weight_t& w) const;
     kvalue_t add(kvalue_t l, kvalue_t r) const;
     kvalue_t mul(kvalue_t l, kvalue_t r) const;
-    value_t concat(value_t l, value_t r, labels_are_letters) const;
-    value_t concat(value_t l, value_t r, labels_are_words) const;
+    kvalue_t concat(kvalue_t l, kvalue_t r) const;
+    kvalue_t concat(kvalue_t l, kvalue_t r, labels_are_letters) const;
+    kvalue_t concat(kvalue_t l, kvalue_t r, labels_are_words) const;
     kvalue_t star(kvalue_t e) const;
     kvalue_t weight(kvalue_t e, const weight_t& w) const;
     kvalue_t weight(const weight_t& w, kvalue_t e) const;

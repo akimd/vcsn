@@ -5,6 +5,12 @@
 
 namespace vcsn
 {
+
+  class abstract_kratexpset;
+
+  template <typename Context>
+  class concrete_abstract_kratexpset;
+
   namespace rat
   {
 

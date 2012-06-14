@@ -2,9 +2,10 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/kratexp.hh>
+#include <vcsn/io/driver.hh>
 #include <vcsn/io/parse-rat-exp.hh>
+#include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {
@@ -19,20 +20,8 @@ namespace vcsn
   auto                                          \
   kratexpset<Context>
 
-  DEFINE::zero() const
-    -> value_t
-  {
-    return zero_();
-  }
-
-  DEFINE::unit() const
-    -> value_t
-  {
-    return unit_();
-  }
-
   DEFINE::atom(const word_t& w) const
-    -> value_t
+    -> kvalue_t
   {
     return atom_<kind_t>(w);
   }
@@ -70,91 +59,31 @@ namespace vcsn
   }
 
 
-  DEFINE::add(value_t l, value_t r) const
-    -> value_t
-  {
-    auto left = down_pointer_cast<const kratexp_t>(l);
-    auto right = down_pointer_cast<const kratexp_t>(r);
-    return add(left, right);
-  }
-
-  DEFINE::mul(value_t l, value_t r) const
-    -> value_t
-  {
-    auto left = down_pointer_cast<const kratexp_t>(l);
-    auto right = down_pointer_cast<const kratexp_t>(r);
-    return mul(left, right);
-  }
-
-  DEFINE::concat(value_t l, value_t r) const
-    -> value_t
+  DEFINE::concat(kvalue_t l, kvalue_t r) const
+    -> kvalue_t
   {
     return concat(l, r, kind_t());
   }
 
-  DEFINE::star(value_t e) const
-    -> value_t
-  {
-    if (e->type() == kratexp_t::ZERO)
-      // Trivial identity
-      // (0)* == 1
-      return unit();
-    else
-      return star(down_pointer_cast<const kratexp_t>(e));
-  }
-
-
-  DEFINE::weight(std::string* w, value_t e) const
-    -> value_t
-  {
-    // The weight might not be needed (e = 0), but check its syntax
-    // anyway.
-    auto v = weightset()->conv(*w);
-    delete w;
-    // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
-    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(v))
-      return zero();
-    else
-      return weight(v, down_pointer_cast<const kratexp_t>(e));
-  }
-
-  DEFINE::weight(value_t e, std::string* w) const
-    -> value_t
-  {
-    auto v = weightset()->conv(*w);
-    delete w;
-    // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
-    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(v))
-      return zero();
-    else
-      return weight(down_pointer_cast<const kratexp_t>(e), v);
-  }
-
-
-
-  /*-----------------.
-  | Concrete types.  |
-  `-----------------*/
-
-  DEFINE::zero_() const
+  DEFINE::zero() const
     -> kvalue_t
   {
-    return zero_(weightset()->unit());
+    return zero(weightset()->unit());
   }
 
-  DEFINE::unit_() const
+  DEFINE::unit() const
     -> kvalue_t
   {
-    return unit_(weightset()->unit());
+    return unit(weightset()->unit());
   }
 
-  DEFINE::zero_(const weight_t& w) const
+  DEFINE::zero(const weight_t& w) const
     -> kvalue_t
   {
     return std::make_shared<zero_t>(w);
   }
 
-  DEFINE::unit_(const weight_t& w) const
+  DEFINE::unit(const weight_t& w) const
     -> kvalue_t
   {
     return std::make_shared<one_t>(w);
@@ -231,21 +160,18 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_words) const
-    -> value_t
+  DEFINE::concat(kvalue_t l, kvalue_t r, labels_are_words) const
+    -> kvalue_t
   {
     if (r->type() == kratexp_t::ATOM)
       {
-        auto rhs = down_pointer_cast<const atom_t>(r);
-        if (weightset()->is_unit(rhs->left_weight()))
+        if (weightset()->is_unit(r->left_weight()))
           switch (l->type())
             {
             case kratexp_t::ATOM:
-              {
-                auto lhs = down_pointer_cast<const atom_t>(l);
-                if (weightset()->is_unit(lhs->left_weight()))
-                  return atom(genset()->concat(lhs->value(), rhs->value()));
-              }
+              if (weightset()->is_unit(l->left_weight()))
+                return atom(genset()->concat(down_pointer_cast<const atom_t>(l)->value(),
+                                             down_pointer_cast<const atom_t>(r)->value()));
               break;
 
               // If we are calling word on "(ab).a, b", then we really
@@ -268,8 +194,8 @@ namespace vcsn
     return mul(l, r);
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
-    -> value_t
+  DEFINE::concat(kvalue_t l, kvalue_t r, labels_are_letters) const
+    -> kvalue_t
   {
     return mul(l, r);
   }
@@ -277,7 +203,14 @@ namespace vcsn
   DEFINE::star(kvalue_t e) const
     -> kvalue_t
   {
-    return std::make_shared<star_t>(weightset()->unit(), weightset()->unit(), e);
+    if (e->type() == kratexp_t::ZERO)
+      // Trivial identity
+      // (0)* == 1
+      return unit();
+    else
+      return std::make_shared<star_t>(weightset()->unit(), 
+                                      weightset()->unit(),
+                                      e);
   }
 
 
@@ -288,16 +221,24 @@ namespace vcsn
   DEFINE::weight(const weight_t& w, kvalue_t e) const
     -> kvalue_t
   {
-    auto res = std::const_pointer_cast<kratexp_t>(e->clone());
-    res->left_weight() = weightset()->mul(w, e->left_weight());
-    return res;
+    // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
+    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
+      return zero();
+    else
+      {
+        auto res = std::const_pointer_cast<kratexp_t>(e->clone());
+        res->left_weight() = weightset()->mul(w, e->left_weight());
+        return res;
+      }
   }
 
   DEFINE::weight(kvalue_t e, const weight_t& w) const
     -> kvalue_t
   {
-    using wvalue_t = typename kratexp_t::wvalue_t;
-    if (e->is_inner())
+    // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
+    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
+      return zero();
+    else if (e->is_inner())
       {
         auto inner = down_pointer_cast<const inner_t>(e);
         auto res = std::const_pointer_cast<inner_t>(inner->clone());
@@ -308,6 +249,7 @@ namespace vcsn
       {
         // Not the same as calling weight(w, e), as the product might
         // not be commutative.
+        using wvalue_t = typename kratexp_t::wvalue_t;
         wvalue_t res = std::const_pointer_cast<kratexp_t>(e->clone());
         res->left_weight() = weightset()->mul(e->left_weight(), w);
         return res;
@@ -318,16 +260,10 @@ namespace vcsn
   | kratexpset as a WeightSet itself.  |
   `-----------------------------------*/
 
-  DEFINE::is_zero(value_t v) const
+  DEFINE::is_zero(kvalue_t v) const
     -> bool
   {
     return v->type() == kratexp_t::ZERO;
-  }
-
-  DEFINE::is_unit(value_t v) const
-    -> bool
-  {
-    return is_unit(down_pointer_cast<const kratexp_t>(v));
   }
 
   DEFINE::is_unit(kvalue_t v) const
@@ -337,15 +273,16 @@ namespace vcsn
   }
 
   DEFINE::conv(const std::string& s) const
-    -> value_t
+    -> kvalue_t
   {
-    vcsn::rat::driver d(*this);
-    if (value_t res = d.parse_string(s))
-      return res;
+    vcsn::concrete_abstract_kratexpset<context_t> fac{context()};
+    vcsn::rat::driver d(fac);
+    if (auto res = d.parse_string(s))
+      return down_pointer_cast<const kratexp_t>(res);
     throw std::domain_error(d.errors);
   }
 
-  DEFINE::print(std::ostream& o, const value_t v) const
+  DEFINE::print(std::ostream& o, const kvalue_t v) const
     -> std::ostream&
   {
     printer_t print{o, context()};

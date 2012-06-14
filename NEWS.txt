@@ -1,4 +1,14 @@
 * 2012-06-14
+** kratexpset/abstract_kratexpset
+kratexpset, i.e. the object that provides operation on kratexps (with
+specified Gen and Weight), used to derive from abstract_kratexp (which is
+"opaque": it does not know the precise type that is used underneath).
+
+Now, from abstract_kratexp we derive a concrete_abstract_kratexpset
+which *agreggates* a kratexpset.  This means that kratexpset no longer
+derives from a weakly-typed ancestor, and can provide simple and
+strongly-typed routines.
+
 ** kratexpset/kratexp
 For consistency with weightset/weight, genset/gen, kratexps (note the s) is
 renamed as kratexpset and rat::node as rat::kratexp.

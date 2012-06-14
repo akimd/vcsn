@@ -2,7 +2,7 @@
 # define VCSN_IO_DRIVER_HH
 
 # include <vcsn/core/rat/kratexp.hh>
-# include <vcsn/core/rat/abstract_kratexpset.hh>
+# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/io/location.hh>
 
 namespace vcsn

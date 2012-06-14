@@ -8,6 +8,7 @@
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexpset.hh>
 #include <vcsn/ctx/char.hh>
 #include <vcsn/io/driver.hh>
@@ -64,50 +65,51 @@ using b = vcsn::b;
 using z = vcsn::z;
 
 template <typename T, typename Kind>
-using kre = vcsn::kratexpset<vcsn::ctx::char_<T, Kind>>;
+using ks = vcsn::kratexpset<vcsn::ctx::char_<T, Kind>>;
 template <typename T>
-using krel = kre<T, lal>;
+using ksl = ks<T, lal>;
 template <typename T>
-using krew = kre<T, law>;
+using ksw = ks<T, law>;
 
 #define DEFINE(Name, Kind, Param, Arg)                          \
   auto ctx_ ## Name =                                           \
     vcsn::ctx::char_<Param, Kind> {{'a', 'b', 'c', 'd'}, Arg }; \
-  auto fact_ ## Name = kre<Param, Kind>{ ctx_ ## Name };
+  auto ks_ ## Name = ks<Param, Kind>{ ctx_ ## Name };
 
-  DEFINE(b,   lal, b,             b());
-  DEFINE(br,  lal, krel<b>,       fact_b);
-  DEFINE(z,   lal, z,             z());
-  DEFINE(zr,  lal, krel<z>,       fact_z);
-  DEFINE(zrr, lal, krel<krel<z>>, fact_zr);
+  DEFINE(b,   lal, b,           b());
+  DEFINE(br,  lal, ksl<b>,      ks_b);
+  DEFINE(z,   lal, z,           z());
+  DEFINE(zr,  lal, ksl<z>,      ks_z);
+  DEFINE(zrr, lal, ksl<ksl<z>>, ks_zr);
 
-  DEFINE(bw,   law, b,             b());
-  DEFINE(brw,  law, krew<b>,       fact_bw);
-  DEFINE(zw,   law, z,             z());
-  DEFINE(zrw,  law, krew<z>,       fact_zw);
-  DEFINE(zrrw, law, krew<krew<z>>, fact_zrw);
+  DEFINE(bw,   law, b,           b());
+  DEFINE(brw,  law, ksw<b>,      ks_bw);
+  DEFINE(zw,   law, z,           z());
+  DEFINE(zrw,  law, ksw<z>,      ks_zw);
+  DEFINE(zrrw, law, ksw<ksw<z>>, ks_zrw);
 #undef DEFINE
 
-template<typename Factory>
+template<typename KSet>
 void
-pp(const options& opts, const Factory& factory,
+pp(const options& opts, const KSet& kset,
    const char* s, bool file)
 {
-  vcsn::rat::driver d(factory);
+  using context_t = typename KSet::context_t;
+  vcsn::concrete_abstract_kratexpset<context_t> fac{kset.context()};
+  vcsn::rat::driver d(fac);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
       if (opts.standard_of || opts.lift)
         {
-          using context_t = typename Factory::context_t;
           using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut = vcsn::rat::standard_of<automaton_t>(factory.context(), e);
+          auto aut = vcsn::rat::standard_of<automaton_t>(kset.context(), e);
           if (opts.standard_of)
             vcsn::dotty(aut, std::cout);
           if (opts.lift)
             vcsn::dotty(vcsn::lift(aut), std::cout);
         }
       else
-        factory.print(std::cout, e) << std::endl;
+        fac.print(std::cout, e) << std::endl;
     }
   else
     {
@@ -124,9 +126,9 @@ pp(const options& opts, const char* s, bool file)
 #define CASE(Name)                                      \
       case type::Name:                                  \
         if (opts.atoms_are_letters)                     \
-          pp(opts, fact_ ## Name, s, file);             \
+          pp(opts, ks_ ## Name, s, file);               \
         else                                            \
-          pp(opts, fact_ ## Name ## w, s, file);        \
+          pp(opts, ks_ ## Name ## w, s, file);          \
       break;
       CASE(b);
       CASE(br);
@@ -144,9 +146,9 @@ try
   using map = std::map<std::string, type>;
   using pair = std::pair<std::string, type>;
 
-  map factories;
+  map ksets;
 #define DEFINE(Name)                            \
-  factories.insert(pair(#Name, type::Name))
+  ksets.insert(pair(#Name, type::Name))
   DEFINE(b);
   DEFINE(br);
   DEFINE(z);
@@ -197,8 +199,8 @@ try
         break;
       case 'w':
         {
-          map::iterator i = factories.find(optarg);
-          if (i == end(factories))
+          map::iterator i = ksets.find(optarg);
+          if (i == end(ksets))
             {
               std::cerr << optarg << ": invalid weight set (-w)" << std::endl;
               goto fail;
