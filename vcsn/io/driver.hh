@@ -2,7 +2,7 @@
 # define VCSN_IO_DRIVER_HH
 
 # include <vcsn/core/rat/node.hh>
-# include <vcsn/core/rat/abstract_kratexps.hh>
+# include <vcsn/core/rat/abstract_kratexpset.hh>
 # include <vcsn/io/location.hh>
 
 namespace vcsn
@@ -15,10 +15,10 @@ namespace vcsn
     {
     public:
       using exp_t = vcsn::rat::exp_t;
-      driver(const abstract_kratexps& f);
+      driver(const abstract_kratexpset& f);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
-      const abstract_kratexps* kratexps;
+      const abstract_kratexpset* kratexpset;
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);

@@ -9,15 +9,15 @@
 namespace vcsn
 {
 
-  /*-----------------------------------------------------------.
-  | Implementation of abstract_kratexps pure virtual methods.  |
-  `-----------------------------------------------------------*/
+  /*-------------------------------------------------------------.
+  | Implementation of abstract_kratexpset pure virtual methods.  |
+  `-------------------------------------------------------------*/
 
 #define DEFINE                                  \
   template <typename Context>                   \
   inline                                        \
   auto                                          \
-  kratexps<Context>
+  kratexpset<Context>
 
   DEFINE::zero() const
     -> value_t
@@ -41,7 +41,7 @@ namespace vcsn
   template <typename K>
   inline
   auto
-  kratexps<Context>::atom_(const word_t& w) const
+  kratexpset<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
                                kvalue_t>::type
   {
@@ -58,7 +58,7 @@ namespace vcsn
   template <typename K>
   inline
   auto
-  kratexps<Context>::atom_(const word_t& w) const
+  kratexpset<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
                                kvalue_t>::type
   {
@@ -314,9 +314,9 @@ namespace vcsn
       }
   }
 
-  /*---------------------------------.
-  | kratexps as a WeightSet itself.  |
-  `---------------------------------*/
+  /*-----------------------------------.
+  | kratexpset as a WeightSet itself.  |
+  `-----------------------------------*/
 
   DEFINE::is_zero(value_t v) const
     -> bool

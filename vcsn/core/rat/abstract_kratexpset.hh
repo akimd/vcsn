@@ -11,7 +11,7 @@
 namespace vcsn
 {
 
-  class abstract_kratexps
+  class abstract_kratexpset
   {
   public:
     using value_t = rat::exp_t;

@@ -8,7 +8,7 @@
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/core/rat/kratexps.hh>
+#include <vcsn/core/rat/kratexpset.hh>
 #include <vcsn/ctx/char.hh>
 #include <vcsn/io/driver.hh>
 
@@ -64,7 +64,7 @@ using b = vcsn::b;
 using z = vcsn::z;
 
 template <typename T, typename Kind>
-using kre = vcsn::kratexps<vcsn::ctx::char_<T, Kind>>;
+using kre = vcsn::kratexpset<vcsn::ctx::char_<T, Kind>>;
 template <typename T>
 using krel = kre<T, lal>;
 template <typename T>

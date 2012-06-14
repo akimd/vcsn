@@ -29,9 +29,9 @@ nobase_vcsn_HEADERS =                           \
   core/entryiter.hh                             \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/rat/abstract_kratexps.hh                 \
-  core/rat/kratexps.hh                          \
-  core/rat/kratexps.hxx                         \
+  core/rat/abstract_kratexpset.hh               \
+  core/rat/kratexpset.hh                        \
+  core/rat/kratexpset.hxx                       \
   core/rat/node.fwd.hh                          \
   core/rat/node.hh                              \
   core/rat/node.hxx                             \

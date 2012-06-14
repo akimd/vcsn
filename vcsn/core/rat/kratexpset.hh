@@ -1,11 +1,11 @@
-#ifndef VCSN_CORE_RAT_KRATEXPS_HH
-# define VCSN_CORE_RAT_KRATEXPS_HH
+#ifndef VCSN_CORE_RAT_KRATEXPSET_HH
+# define VCSN_CORE_RAT_KRATEXPSET_HH
 
 # include <string>
 # include <list>
 
 # include <vcsn/core/kind.hh>
-# include <vcsn/core/rat/abstract_kratexps.hh>
+# include <vcsn/core/rat/abstract_kratexpset.hh>
 # include <vcsn/core/rat/node.hh>
 # include <vcsn/core/rat/printer.hh>
 
@@ -13,7 +13,7 @@ namespace vcsn
 {
 
   template <typename Context>
-  class kratexps : public abstract_kratexps
+  class kratexpset : public abstract_kratexpset
   {
   public:
     using context_t = Context;
@@ -22,7 +22,7 @@ namespace vcsn
     using kind_t = typename context_t::kind_t;
     using genset_ptr = typename context_t::genset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using super_type = abstract_kratexps;
+    using super_type = abstract_kratexpset;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
     using atom_value_t = typename context_t::label_t;
@@ -53,7 +53,7 @@ namespace vcsn
   public:
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    kratexps(const context_t& ctx)
+    kratexpset(const context_t& ctx)
       : super_type()
       , ctx_(ctx)
     {}
@@ -73,7 +73,7 @@ namespace vcsn
       return ctx_.weightset();
     }
 
-    // Specialization from abstract_kratexps.
+    // Specialization from abstract_kratexpset.
     virtual value_t zero() const;
     virtual value_t unit() const;
 
@@ -147,6 +147,6 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <vcsn/core/rat/kratexps.hxx>
+# include <vcsn/core/rat/kratexpset.hxx>
 
-#endif // !VCSN_CORE_RAT_KRATEXPS_HH
+#endif // !VCSN_CORE_RAT_KRATEXPSET_HH

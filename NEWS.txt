@@ -1,4 +1,8 @@
 * 2012-06-14
+** kratexps -> kratexpset
+For consistency with weightset -> weight, genset -> gen, kratexps (note the
+s) is renamed as kratexpset.
+
 ** lift
 A new algorithm which creates, from an automaton, another one with the same
 states and transitions, but the new automaton features only spontaneous
