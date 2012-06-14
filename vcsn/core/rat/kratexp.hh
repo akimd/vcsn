@@ -55,11 +55,10 @@ namespace vcsn
       using weight_t = Weight;
       using kratexp_t = rat::kratexp<atom_value_t, weight_t>;
       using self_t = kratexp;
-      /// Same as value_t, but K is statically known.
-      using kvalue_t = std::shared_ptr<const kratexp_t>;
-      /// Same as kvalue_t, but writable.  Use with care.
+      using value_t = std::shared_ptr<const kratexp_t>;
+      /// Same as value_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<kratexp_t>;
-      using kratexps_t = std::vector<kvalue_t>;
+      using kratexps_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<atom_value_t, weight_t>;
 
       kratexp(const weight_t& l);
@@ -79,7 +78,7 @@ namespace vcsn
       weight_t &left_weight();
 
     protected:
-      virtual kvalue_t clone_() const = 0;
+      virtual value_t clone_() const = 0;
       weight_t lw_;
     };
 
@@ -95,7 +94,7 @@ namespace vcsn
       using atom_value_t = Atom;
       using weight_t = Weight;
       using super_type = kratexp<atom_value_t, weight_t>;
-      using kvalue_t = typename super_type::kvalue_t;
+      using value_t = typename super_type::value_t;
       using self_t = inner;
 
       const weight_t &right_weight() const;
@@ -114,7 +113,7 @@ namespace vcsn
         , rw_(that.rw_)
       {}
 
-      virtual kvalue_t clone_() const = 0;
+      virtual value_t clone_() const = 0;
 
       weight_t rw_;
     };
@@ -133,7 +132,7 @@ namespace vcsn
       using super_type = inner<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename super_type::kvalue_t;
+      using value_t = typename super_type::value_t;
       using kratexps_t = typename super_type::kratexps_t;
       using self_t = nary;
 
@@ -149,7 +148,7 @@ namespace vcsn
       size_t size() const;
 
       /// The first item of this nary.
-      const kvalue_t head() const { return *begin(); }
+      const value_t head() const { return *begin(); }
 
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0))
@@ -169,7 +168,7 @@ namespace vcsn
       {
         return std::static_pointer_cast<const self_t>(clone_());
       };
-      virtual kvalue_t clone_() const = 0;
+      virtual value_t clone_() const = 0;
 
     private:
       kratexps_t sub_kratexp_;
@@ -189,7 +188,7 @@ namespace vcsn
       using super_type = nary<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using kratexps_t = typename kratexp_t::kratexps_t;
       using self_t = prod;
 
@@ -210,7 +209,7 @@ namespace vcsn
 
       virtual void accept(typename kratexp_t::const_visitor& v) const;
     protected:
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }
@@ -230,7 +229,7 @@ namespace vcsn
       using super_type = nary<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using kratexps_t = typename kratexp_t::kratexps_t;
       using self_t = sum;
 
@@ -251,7 +250,7 @@ namespace vcsn
 
       virtual void accept(typename kratexp_t::const_visitor& v) const;
     protected:
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }
@@ -270,10 +269,10 @@ namespace vcsn
       using super_type = inner<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using self_t = star;
 
-      star(const weight_t& l, const weight_t& r, kvalue_t exp);
+      star(const weight_t& l, const weight_t& r, value_t exp);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
       {
@@ -282,14 +281,14 @@ namespace vcsn
 
       virtual type_t type() const { return kratexp_t::STAR; };
 
-      const kvalue_t sub() const;
+      const value_t sub() const;
 
       virtual void accept(typename kratexp_t::const_visitor &v) const;
 
     private:
-      kvalue_t sub_exp_;
+      value_t sub_exp_;
 
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }
@@ -308,7 +307,7 @@ namespace vcsn
       using weight_t = Weight;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using super_type = kratexp_t;
       using self_t = leaf;
     protected:
@@ -318,7 +317,7 @@ namespace vcsn
       {
         return std::static_pointer_cast<const self_t>(clone_());
       };
-      virtual kvalue_t clone_() const = 0;
+      virtual value_t clone_() const = 0;
     };
 
 
@@ -331,7 +330,7 @@ namespace vcsn
       using super_type = leaf<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using self_t = one;
 
       one(const weight_t& l);
@@ -345,7 +344,7 @@ namespace vcsn
 
       virtual void accept(typename kratexp_t::const_visitor &v) const;
     protected:
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }
@@ -360,7 +359,7 @@ namespace vcsn
       using super_type = leaf<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using self_t = zero;
 
       zero(const weight_t& l);
@@ -374,7 +373,7 @@ namespace vcsn
 
       virtual void accept(typename kratexp_t::const_visitor &v) const;
     protected:
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }
@@ -390,7 +389,7 @@ namespace vcsn
       using super_type = leaf<atom_value_t, weight_t>;
       using kratexp_t = kratexp<atom_value_t, weight_t>;
       using type_t = typename kratexp_t::type_t;
-      using kvalue_t = typename kratexp_t::kvalue_t;
+      using value_t = typename kratexp_t::value_t;
       using self_t = atom;
 
       atom(const weight_t& l, const atom_value_t& value);
@@ -408,7 +407,7 @@ namespace vcsn
     private:
       atom_value_t value_;
 
-      virtual kvalue_t clone_() const
+      virtual value_t clone_() const
       {
         return std::make_shared<self_t>(*this);
       }

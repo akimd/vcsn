@@ -159,13 +159,13 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    DEFINE_CTOR(star)(const weight_t& l, const weight_t& r, kvalue_t sub_exp)
+    DEFINE_CTOR(star)(const weight_t& l, const weight_t& r, value_t sub_exp)
       : super_type(l, r)
       , sub_exp_(sub_exp)
     {}
 
     DEFINE(star)::sub() const
-      -> const kvalue_t
+      -> const value_t
     {
       return sub_exp_;
     }

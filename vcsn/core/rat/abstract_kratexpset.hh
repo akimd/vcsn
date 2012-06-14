@@ -58,7 +58,6 @@ namespace vcsn
     using value_t = rat::exp_t;
     /// Concrete value type.
     using kratexp_t = rat::kratexp<atom_value_t, weight_t>;
-    using kvalue_t = typename kratexp_t::kvalue_t;
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.

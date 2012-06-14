@@ -21,7 +21,7 @@ namespace vcsn
   kratexpset<Context>
 
   DEFINE::atom(const word_t& w) const
-    -> kvalue_t
+    -> value_t
   {
     return atom_<kind_t>(w);
   }
@@ -32,7 +32,7 @@ namespace vcsn
   auto
   kratexpset<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                               kvalue_t>::type
+                               value_t>::type
   {
     if (w.size() != 1)
       throw std::domain_error("invalid atom: " + w);
@@ -49,7 +49,7 @@ namespace vcsn
   auto
   kratexpset<Context>::atom_(const word_t& w) const
     -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
-                               kvalue_t>::type
+                               value_t>::type
   {
     for (auto l: w)
       if (!genset()->has(l))
@@ -59,38 +59,38 @@ namespace vcsn
   }
 
 
-  DEFINE::concat(kvalue_t l, kvalue_t r) const
-    -> kvalue_t
+  DEFINE::concat(value_t l, value_t r) const
+    -> value_t
   {
     return concat(l, r, kind_t());
   }
 
   DEFINE::zero() const
-    -> kvalue_t
+    -> value_t
   {
     return zero(weightset()->unit());
   }
 
   DEFINE::unit() const
-    -> kvalue_t
+    -> value_t
   {
     return unit(weightset()->unit());
   }
 
   DEFINE::zero(const weight_t& w) const
-    -> kvalue_t
+    -> value_t
   {
     return std::make_shared<zero_t>(w);
   }
 
   DEFINE::unit(const weight_t& w) const
-    -> kvalue_t
+    -> value_t
   {
     return std::make_shared<one_t>(w);
   }
 
 
-  DEFINE::gather(kratexps_t& res, rat::exp::type_t type, kvalue_t v) const
+  DEFINE::gather(kratexps_t& res, rat::exp::type_t type, value_t v) const
     -> void
   {
     assert(type == kratexp_t::SUM || type == kratexp_t::PROD);
@@ -107,7 +107,7 @@ namespace vcsn
       res.push_back(v);
   }
 
-  DEFINE::gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const
+  DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
     -> kratexps_t
   {
     assert(type == kratexp_t::SUM || type == kratexp_t::PROD);
@@ -117,12 +117,12 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::add(kvalue_t l, kvalue_t r) const
-    -> kvalue_t
+  DEFINE::add(value_t l, value_t r) const
+    -> value_t
   {
     // Trivial Identity
     // E+0 = 0+E = E
-    kvalue_t res = nullptr;
+    value_t res = nullptr;
     if (l->type() == kratexp_t::ZERO)
       res = r;
     else if (r->type() == kratexp_t::ZERO)
@@ -136,10 +136,10 @@ namespace vcsn
   }
 
 
-  DEFINE::mul(kvalue_t l, kvalue_t r) const
-    -> kvalue_t
+  DEFINE::mul(value_t l, value_t r) const
+    -> value_t
   {
-    kvalue_t res = nullptr;
+    value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
     if (l->type() == kratexp_t::ZERO)
@@ -160,8 +160,8 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(kvalue_t l, kvalue_t r, labels_are_words) const
-    -> kvalue_t
+  DEFINE::concat(value_t l, value_t r, labels_are_words) const
+    -> value_t
   {
     if (r->type() == kratexp_t::ATOM)
       {
@@ -194,14 +194,14 @@ namespace vcsn
     return mul(l, r);
   }
 
-  DEFINE::concat(kvalue_t l, kvalue_t r, labels_are_letters) const
-    -> kvalue_t
+  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
+    -> value_t
   {
     return mul(l, r);
   }
 
-  DEFINE::star(kvalue_t e) const
-    -> kvalue_t
+  DEFINE::star(value_t e) const
+    -> value_t
   {
     if (e->type() == kratexp_t::ZERO)
       // Trivial identity
@@ -218,8 +218,8 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  DEFINE::weight(const weight_t& w, kvalue_t e) const
-    -> kvalue_t
+  DEFINE::weight(const weight_t& w, value_t e) const
+    -> value_t
   {
     // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
     if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
@@ -232,8 +232,8 @@ namespace vcsn
       }
   }
 
-  DEFINE::weight(kvalue_t e, const weight_t& w) const
-    -> kvalue_t
+  DEFINE::weight(value_t e, const weight_t& w) const
+    -> value_t
   {
     // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
     if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
@@ -260,20 +260,21 @@ namespace vcsn
   | kratexpset as a WeightSet itself.  |
   `-----------------------------------*/
 
-  DEFINE::is_zero(kvalue_t v) const
+  DEFINE::is_zero(value_t v) const
     -> bool
   {
     return v->type() == kratexp_t::ZERO;
   }
 
-  DEFINE::is_unit(kvalue_t v) const
+  DEFINE::is_unit(value_t v) const
     -> bool
   {
-    return v->type() == kratexp_t::ONE && weightset()->is_unit(v->left_weight());
+    return (v->type() == kratexp_t::ONE
+            && weightset()->is_unit(v->left_weight()));
   }
 
   DEFINE::conv(const std::string& s) const
-    -> kvalue_t
+    -> value_t
   {
     vcsn::concrete_abstract_kratexpset<context_t> fac{context()};
     vcsn::rat::driver d(fac);
@@ -282,7 +283,7 @@ namespace vcsn
     throw std::domain_error(d.errors);
   }
 
-  DEFINE::print(std::ostream& o, const kvalue_t v) const
+  DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
     printer_t print{o, context()};

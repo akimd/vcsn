@@ -43,9 +43,8 @@ namespace vcsn
 # undef DEFINE
     using kratexps_t = typename kratexp_t::kratexps_t;
 
-    /// Concrete value type.
-    using value_t = typename kratexp_t::kvalue_t;
-    using kvalue_t = typename kratexp_t::kvalue_t;
+    /// The value this is a set of: typeful shared pointers.
+    using value_t = typename kratexp_t::value_t;
 
   public:
     /// Constructor.
@@ -69,20 +68,20 @@ namespace vcsn
       return ctx_.weightset();
     }
 
-    kvalue_t atom(const word_t& w) const;
+    value_t atom(const word_t& w) const;
     template <typename K>
     typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                            kvalue_t>::type
+                            value_t>::type
     atom_(const word_t& w) const;
 
     template <typename K>
     typename std::enable_if<std::is_same<K, labels_are_words>::value,
-                            kvalue_t>::type
+                            value_t>::type
     atom_(const word_t& w) const;
 
     // When used as WeightSet for automata.
-    bool is_zero(kvalue_t v) const;
-    bool is_unit(kvalue_t v) const;
+    bool is_zero(value_t v) const;
+    bool is_unit(value_t v) const;
 
     static constexpr bool show_unit()
     {
@@ -94,34 +93,34 @@ namespace vcsn
       return weightset_t::is_positive_semiring();
     }
 
-    kvalue_t conv(const std::string& s) const;
-    std::ostream& print(std::ostream& o, const kvalue_t v) const;
+    value_t conv(const std::string& s) const;
+    std::ostream& print(std::ostream& o, const value_t v) const;
 
   public:
     // Concrete type implementation.
-    kvalue_t zero() const;
-    kvalue_t unit() const;
-    kvalue_t zero(const weight_t& w) const;
-    kvalue_t unit(const weight_t& w) const;
-    kvalue_t add(kvalue_t l, kvalue_t r) const;
-    kvalue_t mul(kvalue_t l, kvalue_t r) const;
-    kvalue_t concat(kvalue_t l, kvalue_t r) const;
-    kvalue_t concat(kvalue_t l, kvalue_t r, labels_are_letters) const;
-    kvalue_t concat(kvalue_t l, kvalue_t r, labels_are_words) const;
-    kvalue_t star(kvalue_t e) const;
-    kvalue_t weight(kvalue_t e, const weight_t& w) const;
-    kvalue_t weight(const weight_t& w, kvalue_t e) const;
+    value_t zero() const;
+    value_t unit() const;
+    value_t zero(const weight_t& w) const;
+    value_t unit(const weight_t& w) const;
+    value_t add(value_t l, value_t r) const;
+    value_t mul(value_t l, value_t r) const;
+    value_t concat(value_t l, value_t r) const;
+    value_t concat(value_t l, value_t r, labels_are_letters) const;
+    value_t concat(value_t l, value_t r, labels_are_words) const;
+    value_t star(value_t e) const;
+    value_t weight(value_t e, const weight_t& w) const;
+    value_t weight(const weight_t& w, value_t e) const;
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \param type  the kind of kratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    void gather(kratexps_t& res, rat::exp::type_t type, kvalue_t v) const;
+    void gather(kratexps_t& res, rat::exp::type_t type, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \param type  the kind of kratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    kratexps_t gather(rat::exp::type_t type, kvalue_t l, kvalue_t r) const;
+    kratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
 
   private:
     const context_t& ctx_;
