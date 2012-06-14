@@ -44,20 +44,13 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    using genset_t = typename context_t::genset_t;
-    using weightset_t = typename context_t::weightset_t;
-    using kind_t = typename context_t::kind_t;
-    using genset_ptr = typename context_t::genset_ptr;
-    using weightset_ptr = typename context_t::weightset_ptr;
     using super_type = abstract_kratexpset;
-    using letter_t = typename genset_t::letter_t;
-    using word_t = typename genset_t::word_t;
+    using word_t = typename context_t::genset_t::word_t;
     using atom_value_t = typename context_t::label_t;
-    using weight_t = typename weightset_t::value_t;
-    /// When taken as a WeightSet, our (abstract) value type.
-    using value_t = rat::exp_t;
+    using weight_t = typename context_t::weight_t;
+    using value_t = typename super_type::value_t;
     /// Concrete value type.
-    using kratexp_t = rat::kratexp<atom_value_t, weight_t>;
+    using kratexp_t = typename context_t::kratexp_t;
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
@@ -65,6 +58,23 @@ namespace vcsn
       : super_type()
       , ks_(ctx)
     {}
+
+    /// From weak to strong typing.
+    std::shared_ptr<const kratexp_t>
+    down(const value_t& v) const
+    {
+      return down_pointer_cast<const kratexp_t>(v);
+    }
+
+    /// From string, to typed weight.
+    /// \param w  is deleted
+    weight_t
+    down(std::string* w) const
+    {
+      auto res = ks_.weightset()->conv(*w);
+      delete w;
+      return res;
+    }
 
     // Specialization from abstract_kratexpset.
     virtual value_t zero() const
@@ -84,48 +94,39 @@ namespace vcsn
 
     virtual value_t add(value_t l, value_t r) const
     {
-      auto left = down_pointer_cast<const kratexp_t>(l);
-      auto right = down_pointer_cast<const kratexp_t>(r);
-      return ks_.add(left, right);
+      return ks_.add(down(l), down(r));
     }
 
     virtual value_t mul(value_t l, value_t r) const
     {
-      auto left = down_pointer_cast<const kratexp_t>(l);
-      auto right = down_pointer_cast<const kratexp_t>(r);
-      return ks_.mul(left, right);
+      return ks_.mul(down(l), down(r));
     }
 
     /// When concatenating two atoms, possibly make a single one,
     /// or make the product.
     virtual value_t concat(value_t l, value_t r) const
     {
-      return ks_.concat(down_pointer_cast<const kratexp_t>(l),
-                        down_pointer_cast<const kratexp_t>(r));
+      return ks_.concat(down(l), down(r));
     }
 
-    virtual value_t star(value_t e) const
+    virtual value_t star(value_t v) const
     {
-      return ks_.star(down_pointer_cast<const kratexp_t>(e));
+      return ks_.star(down(v));
     }
 
-    virtual value_t weight(std::string* w, value_t e) const
+    virtual value_t weight(std::string* w, value_t v) const
     {
-      auto v = ks_.weightset()->conv(*w);
-      delete w;
-      return ks_.weight(v, down_pointer_cast<const kratexp_t>(e));
+      return ks_.weight(down(w), down(v));
     }
 
-    virtual value_t weight(value_t e, std::string* w) const
+    virtual value_t weight(value_t v, std::string* w) const
     {
-      auto v = ks_.weightset()->conv(*w);
-      delete w;
-      return ks_.weight(down_pointer_cast<const kratexp_t>(e), v);
+      return ks_.weight(down(v), down(w));
     }
 
     virtual std::ostream& print(std::ostream& o, value_t v) const
     {
-      return ks_.print(o, down_pointer_cast<const kratexp_t>(v));
+      return ks_.print(o, down(v));
     }
 
   private:
