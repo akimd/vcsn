@@ -302,7 +302,13 @@ namespace vcsn
   DEFINE::is_unit(value_t v) const
     -> bool
   {
-    return v->type() == node_t::ONE;
+    return is_unit(down_pointer_cast<const node_t>(v));
+  }
+
+  DEFINE::is_unit(kvalue_t v) const
+    -> bool
+  {
+    return v->type() == node_t::ONE && weightset()->is_unit(v->left_weight());
   }
 
   DEFINE::conv(const std::string& s) const

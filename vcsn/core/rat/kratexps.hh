@@ -101,6 +101,7 @@ namespace vcsn
     // When used as WeightSet for automata.
     bool is_zero(value_t v) const;
     bool is_unit(value_t v) const;
+    bool is_unit(kvalue_t v) const;
 
     static constexpr bool show_unit()
     {

@@ -1,3 +1,8 @@
+* 2012-06-14
+** RatExps: fix is_unit
+is_unit simply checked that the expression was \e, but did not check that
+weight itself was the unit.
+
 * 2012-06-11
 ** Contexts aggregate shared pointers
 Now contexts are mutable, and hold (shared) pointers to (immutable) gensets
