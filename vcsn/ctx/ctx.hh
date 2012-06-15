@@ -26,7 +26,7 @@ namespace vcsn
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
       /// Type of RatExp kratexps.
-      using kratexp_t = rat::kratexp<label_t, weight_t>;
+      using node_t = rat::node<label_t, weight_t>;
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 

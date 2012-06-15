@@ -93,7 +93,7 @@ namespace vcsn
   DEFINE::gather(kratexps_t& res, rat::exp::type_t type, value_t v) const
     -> void
   {
-    assert(type == kratexp_t::SUM || type == kratexp_t::PROD);
+    assert(type == node_t::SUM || type == node_t::PROD);
     if (v->type() == type)
       {
         const auto& nary = *down_pointer_cast<const nary_t>(v);
@@ -110,7 +110,7 @@ namespace vcsn
   DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
     -> kratexps_t
   {
-    assert(type == kratexp_t::SUM || type == kratexp_t::PROD);
+    assert(type == node_t::SUM || type == node_t::PROD);
     kratexps_t res;
     gather(res, type, l);
     gather(res, type, r);
@@ -123,15 +123,15 @@ namespace vcsn
     // Trivial Identity
     // E+0 = 0+E = E
     value_t res = nullptr;
-    if (l->type() == kratexp_t::ZERO)
+    if (l->type() == node_t::ZERO)
       res = r;
-    else if (r->type() == kratexp_t::ZERO)
+    else if (r->type() == node_t::ZERO)
       res = l;
     // END: Trivial Identity
     else
       res = std::make_shared<sum_t>(weightset()->unit(),
                                     weightset()->unit(),
-                                    gather(kratexp_t::SUM, l, r));
+                                    gather(node_t::SUM, l, r));
     return res;
   }
 
@@ -142,36 +142,36 @@ namespace vcsn
     value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
-    if (l->type() == kratexp_t::ZERO)
+    if (l->type() == node_t::ZERO)
       res = l;
-    else if (r->type() == kratexp_t::ZERO)
+    else if (r->type() == node_t::ZERO)
       res = r;
     // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
     // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
-    else if (r->type() == kratexp_t::ONE)
+    else if (r->type() == node_t::ONE)
       res = weight(l, r->left_weight());
-    else if (l->type() == kratexp_t::ONE)
+    else if (l->type() == node_t::ONE)
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
     else
       res = std::make_shared<prod_t>(weightset()->unit(),
                                      weightset()->unit(),
-                                     gather(kratexp_t::PROD, l, r));
+                                     gather(node_t::PROD, l, r));
     return res;
   }
 
   DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
-    if (r->type() == kratexp_t::ATOM
+    if (r->type() == node_t::ATOM
         && weightset()->is_unit(r->left_weight()))
       {
-        if (l->type() == kratexp_t::ATOM
+        if (l->type() == node_t::ATOM
             && weightset()->is_unit(l->left_weight()))
           return atom(genset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
-        else if (l->type() == kratexp_t::PROD)
+        else if (l->type() == node_t::PROD)
           {
             // If we are calling word on "(ab).a, b", then we really
             // want "(ab).(ab)".
@@ -195,7 +195,7 @@ namespace vcsn
   DEFINE::star(value_t e) const
     -> value_t
   {
-    if (e->type() == kratexp_t::ZERO)
+    if (e->type() == node_t::ZERO)
       // Trivial identity
       // (0)* == 1
       return unit();
@@ -214,11 +214,11 @@ namespace vcsn
     -> value_t
   {
     // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
-    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
+    if (e->type() == node_t::ZERO || weightset()->is_zero(w))
       return zero();
     else
       {
-        auto res = std::const_pointer_cast<kratexp_t>(e->clone());
+        auto res = std::const_pointer_cast<node_t>(e->clone());
         res->left_weight() = weightset()->mul(w, e->left_weight());
         return res;
       }
@@ -228,7 +228,7 @@ namespace vcsn
     -> value_t
   {
     // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
-    if (e->type() == kratexp_t::ZERO || weightset()->is_zero(w))
+    if (e->type() == node_t::ZERO || weightset()->is_zero(w))
       return zero();
     else if (e->is_inner())
       {
@@ -241,8 +241,8 @@ namespace vcsn
       {
         // Not the same as calling weight(w, e), as the product might
         // not be commutative.
-        using wvalue_t = typename kratexp_t::wvalue_t;
-        wvalue_t res = std::const_pointer_cast<kratexp_t>(e->clone());
+        using wvalue_t = typename node_t::wvalue_t;
+        wvalue_t res = std::const_pointer_cast<node_t>(e->clone());
         res->left_weight() = weightset()->mul(e->left_weight(), w);
         return res;
       }
@@ -255,13 +255,13 @@ namespace vcsn
   DEFINE::is_zero(value_t v) const
     -> bool
   {
-    return v->type() == kratexp_t::ZERO;
+    return v->type() == node_t::ZERO;
   }
 
   DEFINE::is_unit(value_t v) const
     -> bool
   {
-    return (v->type() == kratexp_t::ONE
+    return (v->type() == node_t::ONE
             && weightset()->is_unit(v->left_weight()));
   }
 
@@ -271,7 +271,7 @@ namespace vcsn
     vcsn::concrete_abstract_kratexpset<context_t> fac{context()};
     vcsn::rat::driver d(fac);
     if (auto res = d.parse_string(s))
-      return down_pointer_cast<const kratexp_t>(res);
+      return down_pointer_cast<const node_t>(res);
     throw std::domain_error(d.errors);
   }
 

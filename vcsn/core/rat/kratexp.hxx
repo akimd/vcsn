@@ -25,21 +25,21 @@ namespace vcsn
     auto                                        \
     Node<Atom, Weight>
 
-    /*----------.
-    | kratexp.  |
-    `----------*/
+    /*-------.
+    | node.  |
+    `-------*/
 
-    DEFINE_CTOR(kratexp)(const weight_t& l)
+    DEFINE_CTOR(node)(const weight_t& l)
       : lw_(l)
     {}
 
-    DEFINE(kratexp)::left_weight() const
+    DEFINE(node)::left_weight() const
       -> const weight_t&
     {
       return lw_;
     }
 
-    DEFINE(kratexp)::left_weight()
+    DEFINE(node)::left_weight()
       -> weight_t&
     {
       return lw_;
@@ -131,7 +131,7 @@ namespace vcsn
     {}
 
 
-    DEFINE(prod)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(prod)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -148,7 +148,7 @@ namespace vcsn
       : super_type(l, r, ns)
     {}
 
-    DEFINE(sum)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(sum)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -171,7 +171,7 @@ namespace vcsn
     }
 
 
-    DEFINE(star)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(star)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -186,7 +186,7 @@ namespace vcsn
       : super_type(w)
     {}
 
-    DEFINE(one)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(one)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -200,7 +200,7 @@ namespace vcsn
       : super_type(w)
     {}
 
-    DEFINE(zero)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(zero)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);
@@ -215,7 +215,7 @@ namespace vcsn
       , value_(value)
     {}
 
-    DEFINE(atom)::accept(typename kratexp_t::const_visitor& v) const
+    DEFINE(atom)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);

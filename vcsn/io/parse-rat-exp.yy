@@ -29,7 +29,7 @@
       // of an union.  See parse-rat-exp.txt.
       struct sem_type
       {
-        driver::exp_t kratexp;
+        driver::exp_t node;
         // These guys _can_ be put into a union.
         union
         {
@@ -96,7 +96,7 @@
 %printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '{' << *$$ << '}'; } "weight";
-%printer { driver_.kratexpset->print(debug_stream(), $$); } <kratexp>;
+%printer { driver_.kratexpset->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
 %token <ival>   LPAREN  "("
@@ -111,7 +111,7 @@
 %token <cval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
-%type <kratexp> exp exps weights;
+%type <node> exp exps weights;
 
 %left RWEIGHT
 %left "+"

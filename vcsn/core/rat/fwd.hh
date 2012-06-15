@@ -21,7 +21,7 @@ namespace vcsn
     template <typename Atom, typename Weight>   \
     class Node
 
-    DEFINE(kratexp);
+    DEFINE(node);
     DEFINE(leaf);
     DEFINE(zero);
     DEFINE(one);

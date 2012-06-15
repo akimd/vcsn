@@ -50,7 +50,7 @@ namespace vcsn
     using weight_t = typename context_t::weight_t;
     using value_t = typename super_type::value_t;
     /// Concrete value type.
-    using kratexp_t = typename context_t::kratexp_t;
+    using node_t = typename context_t::node_t;
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
@@ -60,10 +60,10 @@ namespace vcsn
     {}
 
     /// From weak to strong typing.
-    std::shared_ptr<const kratexp_t>
+    std::shared_ptr<const node_t>
     down(const value_t& v) const
     {
-      return down_pointer_cast<const kratexp_t>(v);
+      return down_pointer_cast<const node_t>(v);
     }
 
     /// From string, to typed weight.

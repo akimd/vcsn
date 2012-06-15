@@ -30,7 +30,7 @@ namespace vcsn
     /// Type of kratexps.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<atom_value_t, weight_t>
-    DEFINE(kratexp);
+    DEFINE(node);
     DEFINE(leaf);
     DEFINE(zero);
     DEFINE(one);
@@ -41,10 +41,10 @@ namespace vcsn
     DEFINE(prod);
     DEFINE(star);
 # undef DEFINE
-    using kratexps_t = typename kratexp_t::kratexps_t;
+    using kratexps_t = typename node_t::kratexps_t;
 
     /// The value this is a set of: typeful shared pointers.
-    using value_t = typename kratexp_t::value_t;
+    using value_t = typename node_t::value_t;
 
   public:
     /// Constructor.
