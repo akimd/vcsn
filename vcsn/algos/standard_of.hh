@@ -40,7 +40,7 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(std::shared_ptr<const node_t> v)
+      operator()(const typename context_t::kratexp_t& v)
       {
         v->accept(*this);
         res_.set_initial(initial_);
@@ -207,14 +207,25 @@ namespace vcsn
     template <class Aut,
               class Context = typename Aut::context_t>
     Aut
+    standard_of(const Context& ctx, const typename Context::kratexp_t& e)
+    {
+      standard_of_visitor<Aut, Context> standard{ctx};
+      return standard(e);
+    }
+
+    /// \param Aut      relative the generated automaton.
+    /// \param Context  relative to the RatExp.
+    template <class Aut,
+              class Context = typename Aut::context_t>
+    Aut
     standard_of(const Context& ctx, const exp_t e)
     {
       using context_t = Context;
-      // Make sure the type is right.
-      auto v = std::dynamic_pointer_cast<const typename context_t::node_t>(e);
+      // Type check.
+      typename context_t::kratexp_t v =
+        std::dynamic_pointer_cast<const typename context_t::node_t>(e);
       assert(v);
-      standard_of_visitor<Aut, context_t> standard{ctx};
-      return standard(v);
+      return standard_of<Aut, Context>(ctx, v);
     }
 
   } // rat::

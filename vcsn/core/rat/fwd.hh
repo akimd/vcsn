@@ -36,6 +36,9 @@ namespace vcsn
 
 # undef DEFINE
 
+    template <typename Label, typename Weight>
+    using kratexp = std::shared_ptr<const node<Label, Weight>>;
+
   } // namespace rat
 } // namespace vcsn
 

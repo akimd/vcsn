@@ -11,7 +11,7 @@ strongly-typed routines.
 
 ** kratexpset/kratexp
 For consistency with weightset/weight, genset/gen, kratexps (note the s) is
-renamed as kratexpset and rat::node as rat::kratexp.
+renamed as kratexpset and std::shared_ptr<const rat::node> as kratexp.
 
 ** lift
 A new algorithm which creates, from an automaton, another one with the same
