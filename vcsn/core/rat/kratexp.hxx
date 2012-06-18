@@ -15,15 +15,15 @@ namespace vcsn
 
 
 #define DEFINE_CTOR(Node)                       \
-    template <typename Atom, typename Weight>   \
+    template <typename Label, typename Weight>  \
     inline                                      \
-    Node<Atom, Weight>::Node
+    Node<Label, Weight>::Node
 
 #define DEFINE(Node)                            \
-    template <typename Atom, typename Weight>   \
+    template <typename Label, typename Weight>  \
     inline                                      \
     auto                                        \
-    Node<Atom, Weight>
+    Node<Label, Weight>
 
     /*-------.
     | node.  |
@@ -210,7 +210,7 @@ namespace vcsn
     | atom.  |
     `-------*/
 
-    DEFINE_CTOR(atom)(const weight_t& w, const atom_value_t& value)
+    DEFINE_CTOR(atom)(const weight_t& w, const label_t& value)
       : super_type(w)
       , value_(value)
     {}
@@ -222,7 +222,7 @@ namespace vcsn
     }
 
     DEFINE(atom)::value() const
-      -> const atom_value_t&
+      -> const label_t&
     {
       return value_;
     }

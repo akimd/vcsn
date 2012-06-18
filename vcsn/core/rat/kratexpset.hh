@@ -23,13 +23,13 @@ namespace vcsn
     using weightset_ptr = typename context_t::weightset_ptr;
     using letter_t = typename genset_t::letter_t;
     using word_t = typename genset_t::word_t;
-    using atom_value_t = typename context_t::label_t;
+    using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
     using printer_t = rat::printer<context_t>;
     /// Type of kratexps.
 # define DEFINE(Type)                                           \
-    using Type ## _t = rat::Type<atom_value_t, weight_t>
+    using Type ## _t = rat::Type<label_t, weight_t>
     DEFINE(node);
     DEFINE(leaf);
     DEFINE(zero);

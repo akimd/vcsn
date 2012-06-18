@@ -46,7 +46,7 @@ namespace vcsn
     using context_t = Context;
     using super_type = abstract_kratexpset;
     using word_t = typename context_t::genset_t::word_t;
-    using atom_value_t = typename context_t::label_t;
+    using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
     using value_t = typename super_type::value_t;
     /// Concrete value type.

@@ -18,7 +18,7 @@ namespace vcsn
     using exp_t = std::shared_ptr<const exp>;
 
 # define DEFINE(Node)                           \
-    template <typename Atom, typename Weight>   \
+    template <typename Label, typename Weight>  \
     class Node
 
     DEFINE(node);

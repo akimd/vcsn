@@ -7,10 +7,10 @@ namespace vcsn
   namespace rat
   {
 #define VISIT(Type, Name)                                               \
-    template <typename Atom, typename Weight>                           \
+    template <typename Label, typename Weight>                          \
     inline                                                              \
     void                                                                \
-    const_visitor<Atom, Weight>::visit(const Type<Atom, Weight>& Name)
+    const_visitor<Label, Weight>::visit(const Type<Label, Weight>& Name)
 
     VISIT(prod, v)
     {

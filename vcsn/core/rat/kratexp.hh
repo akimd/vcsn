@@ -47,19 +47,19 @@ namespace vcsn
     | node.  |
     `-------*/
 
-    template <typename Atom, typename Weight>
+    template <typename Label, typename Weight>
     class node : public exp
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using node_t = rat::node<atom_value_t, weight_t>;
+      using node_t = rat::node<label_t, weight_t>;
       using self_t = node;
       using value_t = std::shared_ptr<const node_t>;
       /// Same as value_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<node_t>;
       using kratexps_t = std::vector<value_t>;
-      using const_visitor = vcsn::rat::const_visitor<atom_value_t, weight_t>;
+      using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
       node(const weight_t& l);
       node(const node& that)
@@ -87,13 +87,13 @@ namespace vcsn
     | inner.  |
     `--------*/
 
-    template <typename Atom, typename Weight>
-    class inner : public node<Atom, Weight>
+    template <typename Label, typename Weight>
+    class inner : public node<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = node<atom_value_t, weight_t>;
+      using super_type = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
       using self_t = inner;
 
@@ -123,14 +123,14 @@ namespace vcsn
     | nary.  |
     `-------*/
 
-    template <typename Atom, typename Weight>
-    class nary: public inner<Atom, Weight>
+    template <typename Label, typename Weight>
+    class nary: public inner<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = inner<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = inner<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename super_type::value_t;
       using kratexps_t = typename super_type::kratexps_t;
@@ -179,14 +179,14 @@ namespace vcsn
     | prod.  |
     `-------*/
 
-    template <typename Atom, typename Weight>
-    class prod : public nary<Atom, Weight>
+    template <typename Label, typename Weight>
+    class prod : public nary<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = nary<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = nary<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using kratexps_t = typename node_t::kratexps_t;
@@ -220,14 +220,14 @@ namespace vcsn
     | sum.  |
     `------*/
 
-    template <typename Atom, typename Weight>
-    class sum : public nary<Atom, Weight>
+    template <typename Label, typename Weight>
+    class sum : public nary<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = nary<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = nary<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using kratexps_t = typename node_t::kratexps_t;
@@ -260,14 +260,14 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    template <typename Atom, typename Weight>
-    class star : public inner<Atom, Weight>
+    template <typename Label, typename Weight>
+    class star : public inner<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = inner<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = inner<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using self_t = star;
@@ -299,13 +299,13 @@ namespace vcsn
     | leaf.  |
     `-------*/
 
-    template <typename Atom, typename Weight>
-    class leaf : public node<Atom, Weight>
+    template <typename Label, typename Weight>
+    class leaf : public node<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using node_t = node<atom_value_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using super_type = node_t;
@@ -321,14 +321,14 @@ namespace vcsn
     };
 
 
-    template <typename Atom, typename Weight>
-    class one : public leaf<Atom, Weight>
+    template <typename Label, typename Weight>
+    class one : public leaf<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = leaf<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = leaf<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using self_t = one;
@@ -350,14 +350,14 @@ namespace vcsn
       }
     };
 
-    template <typename Atom, typename Weight>
-    class zero : public leaf<Atom, Weight>
+    template <typename Label, typename Weight>
+    class zero : public leaf<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = leaf<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = leaf<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using self_t = zero;
@@ -380,19 +380,19 @@ namespace vcsn
     };
 
 
-    template <typename Atom, typename Weight>
-    class atom : public leaf<Atom, Weight>
+    template <typename Label, typename Weight>
+    class atom : public leaf<Label, Weight>
     {
     public:
-      using atom_value_t = Atom;
+      using label_t = Label;
       using weight_t = Weight;
-      using super_type = leaf<atom_value_t, weight_t>;
-      using node_t = node<atom_value_t, weight_t>;
+      using super_type = leaf<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using self_t = atom;
 
-      atom(const weight_t& l, const atom_value_t& value);
+      atom(const weight_t& l, const label_t& value);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
       {
@@ -402,10 +402,10 @@ namespace vcsn
       virtual type_t type() const { return node_t::ATOM; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
-      const atom_value_t& value() const;
+      const label_t& value() const;
 
     private:
-      atom_value_t value_;
+      label_t value_;
 
       virtual value_t clone_() const
       {
