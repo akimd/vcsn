@@ -60,7 +60,7 @@ namespace vcsn
 
     bool empty() const
     {
-      return begin() != end();
+      return begin() == end();
     }
 
     size_t size() const
