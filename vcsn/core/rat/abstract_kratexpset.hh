@@ -12,6 +12,12 @@
 namespace vcsn
 {
 
+  /// Abstract wrapper around a (typeful) kratexpset.
+  ///
+  /// Use it when you want to avoid depending on the kratexpset
+  /// parameters (e.g., from a parser).  To use it, actually create a
+  /// derived class (concrete_abstract_kratexpset) with the given
+  /// parameters, but handle as a reference to an abstract_kratexpset.
   class abstract_kratexpset
   {
   public:
@@ -39,6 +45,7 @@ namespace vcsn
     }
   };
 
+  /// Wrapper around a kratexpset.
   template <typename Context>
   class concrete_abstract_kratexpset : public abstract_kratexpset
   {

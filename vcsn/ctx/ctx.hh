@@ -36,8 +36,7 @@ namespace vcsn
         , ws_(ws)
       {}
 
-      context(const genset_t& gs = {},
-              const weightset_t& ws = {})
+      context(const genset_t& gs = {}, const weightset_t& ws = {})
         : context(std::make_shared<const genset_t>(gs), 
                   std::make_shared<const weightset_t>(ws))
       {}
