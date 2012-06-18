@@ -18,7 +18,9 @@ namespace vcsn
   private:
     const C cont_;
   public:
-    container_range(const unref_C& cont) : cont_(cont) {}
+    container_range(const unref_C& cont)
+      : cont_(cont)
+    {}
 
     /// Forward function Name to the container.
 #define DEFINE(Name)                                    \
@@ -28,6 +30,9 @@ namespace vcsn
     }
     DEFINE(begin);
     DEFINE(end);
+    /// The first element.
+    /// \pre !empty().
+    DEFINE(front);
     DEFINE(empty);
     DEFINE(size);
 #undef DEFINE
@@ -56,6 +61,16 @@ namespace vcsn
     const_iterator end() const
     {
       return const_iterator(predicate_, cont_.end(), cont_.end());
+    }
+
+    /// The first element.
+    /// \pre !empty().
+    /// \note: we don't return by reference, as begin returns
+    /// a temporary.
+    value_type front() const
+    {
+      assert(!empty());
+      return *begin();
     }
 
     bool empty() const
