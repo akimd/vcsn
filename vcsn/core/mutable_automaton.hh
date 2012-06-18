@@ -577,7 +577,7 @@ namespace vcsn
     }
 
     // Invalidated by del_transition() and del_state().
-    container_range<tr_cont_t&>
+    container_range<const tr_cont_t&>
     all_in(state_t s) const
     {
       assert(has_state(s));
