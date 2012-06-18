@@ -1,3 +1,7 @@
+* 2012-06-18
+** standard_of is part of vcsn::
+It used to be in vcsn::rat::.
+
 * 2012-06-14
 ** kratexpset/abstract_kratexpset
 kratexpset, i.e. the object that provides operation on kratexps (with

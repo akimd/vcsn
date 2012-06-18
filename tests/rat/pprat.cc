@@ -102,7 +102,7 @@ pp(const options& opts, const KSet& kset,
       if (opts.standard_of || opts.lift)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut = vcsn::rat::standard_of<automaton_t>(kset.context(), e);
+          auto aut = vcsn::standard_of<automaton_t>(kset.context(), e);
           if (opts.standard_of)
             vcsn::dotty(aut, std::cout);
           if (opts.lift)

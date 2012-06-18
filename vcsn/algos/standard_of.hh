@@ -202,33 +202,34 @@ namespace vcsn
       state_t initial_ = automaton_t::null_state();
     };
 
-    /// \param Aut      relative the generated automaton.
-    /// \param Context  relative to the RatExp.
-    template <class Aut,
-              class Context = typename Aut::context_t>
-    Aut
-    standard_of(const Context& ctx, const typename Context::kratexp_t& e)
-    {
-      standard_of_visitor<Aut, Context> standard{ctx};
-      return standard(e);
-    }
-
-    /// \param Aut      relative the generated automaton.
-    /// \param Context  relative to the RatExp.
-    template <class Aut,
-              class Context = typename Aut::context_t>
-    Aut
-    standard_of(const Context& ctx, const exp_t e)
-    {
-      using context_t = Context;
-      // Type check.
-      typename context_t::kratexp_t v =
-        std::dynamic_pointer_cast<const typename context_t::node_t>(e);
-      assert(v);
-      return standard_of<Aut, Context>(ctx, v);
-    }
-
   } // rat::
+
+  /// \param Aut      relative the generated automaton.
+  /// \param Context  relative to the RatExp.
+  template <class Aut,
+            class Context = typename Aut::context_t>
+  Aut
+  standard_of(const Context& ctx, const typename Context::kratexp_t& e)
+  {
+    rat::standard_of_visitor<Aut, Context> standard{ctx};
+    return standard(e);
+  }
+
+  /// \param Aut      relative the generated automaton.
+  /// \param Context  relative to the RatExp.
+  template <class Aut,
+            class Context = typename Aut::context_t>
+  Aut
+  standard_of(const Context& ctx, const rat::exp_t e)
+  {
+    using context_t = Context;
+    // Type check.
+    typename context_t::kratexp_t v =
+      std::dynamic_pointer_cast<const typename context_t::node_t>(e);
+    assert(v);
+    return standard_of<Aut, Context>(ctx, v);
+  }
+
 } // vcsn::
 
 #endif // !VCSN_ALGOS_STANDARD_OF_HH
