@@ -40,17 +40,18 @@ sub rst_title($)
   print "$s\n";
 }
 
-=item C<pp($prog, $in)>
+=item C<pp($in)>
 
 Parse and pretty-print.  If it fails, prepend "! " to the error
 message and return it as result.  Strip the "try -h" line.
 
 =cut
-sub pp($$)
+sub pp($)
 {
-  my ($prog, $in) = @_;
+  my ($in) = @_;
   $in = quote($in);
-  my $res = `$prog -e '$in' 2>&1`;
+  my $cmd = "$prog -A $atoms -W $ws -e '$in'";
+  my $res = `$cmd 2>&1`;
   if ($?)
     {
       $res = "! $res";
@@ -112,7 +113,7 @@ sub check_rat_exp($)
       m/^(.*\S)\s*(=>|==|!)\s*(.*)$/
         or die "$file:$line: invalid input: \"$_\"";
       my ($l, $op, $r) = ($1, $2, $3);
-      my $L = pp("$prog -a $atoms -w $ws", $l);
+      my $L = pp($l);
 
 =item C<fail($expression, $expected, $effective)>
 
@@ -136,7 +137,7 @@ C<$expected>, it evaluated to C<$effective>.
       # !  error, with the given error message.
       my $R =
         ($op eq '=>'   ? $r
-         : $op eq '==' ? pp("$prog -a $atoms -w $ws", $r)
+         : $op eq '==' ? pp($r)
          : "! $r"); # $op eq '!',
       # Empty result is a sign of failure.
       if ($L ne '' && $L eq $R)

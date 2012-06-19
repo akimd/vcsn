@@ -21,13 +21,16 @@ usage(const char* prog, int status)
     std::cout <<
       "usage: " << prog << " [OPTION...] [EXP...]\n"
       "\n"
-      "Options:\n"
-      "  -a letters|words  kind of the atoms [letters]\n"
-      "  -w WEIGHT-SET     define the kind of the weights [b]\n"
+      "Context:\n"
+      "  -A letters|words  kind of the atoms [letters]\n"
+      "  -W WEIGHT-SET     define the kind of the weights [b]\n"
       "  -e EXP            pretty-print the rational expression EXP\n"
       "  -f FILE           pretty-print the rational expression in FILE\n"
-      "  -l                display the lifted standard automaton instead of expression\n"
-      "  -s                display the standard automaton instead of expression\n"
+      "\n"
+      "Operations:\n"
+      "  -l    display the lifted standard automaton instead of expression\n"
+      "  -s    display the standard automaton instead of expression\n"
+      "  -a    display the aut-to-exp of the standard automaton\n"
       "\n"
       "WEIGHT-SET:\n"
       "  b    for Boolean\n"
@@ -48,13 +51,12 @@ enum class type
     z, zr, zrr,
   };
 
-
 struct options
 {
-  bool atoms_are_letters;
-  type weight;
-  bool standard_of;
-  bool lift;
+  bool atoms_are_letters = true;
+  type weight = type::b;
+  bool standard_of = false;
+  bool lift = false;
 };
 
 // FIXME: No globals.
@@ -156,18 +158,12 @@ try
   DEFINE(zrr);
 #undef DEFINE
 
-  options opts =
-    {
-      .atoms_are_letters = true,
-      .weight = type::b,
-      .standard_of = false,
-      .lift = false,
-    };
+  options opts;
   int opt;
-  while ((opt = getopt(argc, argv, "a:e:f:hlsw:")) != -1)
+  while ((opt = getopt(argc, argv, "A:ae:f:hlsW:")) != -1)
     switch (opt)
       {
-      case 'a':
+      case 'A':
         {
           std::string s = optarg;
           if (s == "l" || s == "letter" || s == "letters")
@@ -181,6 +177,9 @@ try
             }
           break;
         }
+        break;
+      case 'a':
+        opts.aut_to_exp = true;
         break;
       case 'e':
         pp(opts, optarg, false);
@@ -197,7 +196,7 @@ try
       case 's':
         opts.standard_of = true;
         break;
-      case 'w':
+      case 'W':
         {
           map::iterator i = ksets.find(optarg);
           if (i == end(ksets))

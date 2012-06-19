@@ -1,4 +1,6 @@
 * 2012-06-19
+** pprat: -a and -w are renamed -A and -W
+
 ** new factory: de Bruijn
 Builds automata for (a+b)aa^n.
 

@@ -28,7 +28,7 @@ fail ()
 ## --- ##
 
 # B: "\z".
-check -w b -e '\z' <<\EOF
+check -W b -e '\z' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -37,7 +37,7 @@ check -w b -e '\z' <<\EOF
 EOF
 
 # B: "\e".
-check -w b -e '\e' <<\EOF
+check -W b -e '\e' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -48,7 +48,7 @@ check -w b -e '\e' <<\EOF
 EOF
 
 # B: "a"
-check -w b -e 'a' <<\EOF
+check -W b -e 'a' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -64,7 +64,7 @@ EOF
 ## -------- ##
 
 # B: "a+b"
-check -w b -e 'a+b' <<\EOF
+check -W b -e 'a+b' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -79,7 +79,7 @@ check -w b -e 'a+b' <<\EOF
 EOF
 
 # B: "abc".
-check -w b -e 'abc' <<\EOF
+check -W b -e 'abc' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -93,7 +93,7 @@ check -w b -e 'abc' <<\EOF
 EOF
 
 # B: "ab+cd".
-check -w b -e 'ab+cd' <<\EOF
+check -W b -e 'ab+cd' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -110,7 +110,7 @@ check -w b -e 'ab+cd' <<\EOF
 EOF
 
 # B: "a(b+c)d".
-check -w b -e 'a(b+c)d' <<\EOF
+check -W b -e 'a(b+c)d' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -126,7 +126,7 @@ check -w b -e 'a(b+c)d' <<\EOF
 EOF
 
 # B: "(ab+cd+abcd)abc".
-check -w b -e '(ab+cd+abcd)abc' <<\EOF
+check -W b -e '(ab+cd+abcd)abc' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -244,7 +244,7 @@ EOF
 
 
 # Z: "{12}\e".
-check -w z -e '{12}\e' <<\EOF
+check -W z -e '{12}\e' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -259,7 +259,7 @@ EOF
 ## -------- ##
 
 # Z: "\e+a+\e"
-check -w z -e '\e+a+\e' <<\EOF
+check -W z -e '\e+a+\e' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -273,7 +273,7 @@ check -w z -e '\e+a+\e' <<\EOF
 EOF
 
 # Z: "{12}\e+{23}a+{34}b".
-check -w z -e '{12}\e+{23}a+{34}b' <<\EOF
+check -W z -e '{12}\e+{23}a+{34}b' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -290,7 +290,7 @@ check -w z -e '{12}\e+{23}a+{34}b' <<\EOF
 EOF
 
 # left weight.
-check -w z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
+check -W z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -307,7 +307,7 @@ check -w z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
 EOF
 
 # right weight.
-check -w z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
+check -W z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -328,7 +328,7 @@ EOF
 ## ------------ ##
 
 # Z: "{12}(ab){23}".
-check -w z -e '{12}(ab){23}' <<\EOF
+check -W z -e '{12}(ab){23}' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -344,7 +344,7 @@ EOF
 ## Z: star.  ##
 ## --------- ##
 
-check -w z -e '\z*' <<\EOF
+check -W z -e '\z*' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -354,9 +354,9 @@ check -w z -e '\z*' <<\EOF
   I1 -> 1
 EOF
 
-fail -w z -e '\e*'
+fail -W z -e '\e*'
 
-check -w z -e '({2}a)*' <<\EOF
+check -W z -e '({2}a)*' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -370,7 +370,7 @@ check -w z -e '({2}a)*' <<\EOF
   I1 -> 1
 EOF
 
-check -w z -e '{2}a*{3}' <<\EOF
+check -W z -e '{2}a*{3}' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -384,7 +384,7 @@ check -w z -e '{2}a*{3}' <<\EOF
   I1 -> 1
 EOF
 
-check -w z -e '({2}a+{3}b)*' <<\EOF
+check -W z -e '({2}a+{3}b)*' <<\EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -404,7 +404,7 @@ check -w z -e '({2}a+{3}b)*' <<\EOF
   I1 -> 1
 EOF
 
-check -w z -e '{2}({3}a+{5}b)*{7}' <<EOF
+check -W z -e '{2}({3}a+{5}b)*{7}' <<EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -424,7 +424,7 @@ check -w z -e '{2}({3}a+{5}b)*{7}' <<EOF
   I1 -> 1
 EOF
 
-check -w z -e '{2}({3}(ab){5})*{7}' <<EOF
+check -W z -e '{2}({3}(ab){5})*{7}' <<EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -439,13 +439,13 @@ check -w z -e '{2}({3}(ab){5})*{7}' <<EOF
   I1 -> 1
 EOF
 
-fail -w z -e 'a**'
+fail -W z -e 'a**'
 
 ## ---------- ##
 ## ZR: star.  ##
 ## ---------- ##
 
-check -w zr '({d}\e+abc)*' <<EOF
+check -W zr '({d}\e+abc)*' <<EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
@@ -461,7 +461,7 @@ check -w zr '({d}\e+abc)*' <<EOF
   3 -> 4 [label="c"]
 EOF
 
-check -w zr '({d}\e+ab{c})*' <<EOF
+check -W zr '({d}\e+ab{c})*' <<EOF
   {
     node [style=invis,shape=none,label="",width=0,height=0]
     I1
