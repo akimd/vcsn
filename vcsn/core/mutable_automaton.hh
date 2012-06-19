@@ -367,7 +367,8 @@ namespace vcsn
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       // It's illegal to connect pre() to post().
-      assert(src != pre() || dst != post());
+      // FIXME: reenable except for labels_are_empty.
+      // assert(src != pre() || dst != post());
       // It's illegal to leave post().
       assert(src != post());
       // It's illegal to go to pre().
