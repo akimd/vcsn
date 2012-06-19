@@ -26,6 +26,6 @@ main(int argc, char const** argv)
     syntax(argv[0]);
 
   vcsn::ctx::char_<vcsn::W> ctx;
-  auto lb = vcsn::make_ladybird(n, ctx);
+  auto lb = vcsn::ladybird(n, ctx);
   vcsn::dotty(lb, std::cout);
 }
