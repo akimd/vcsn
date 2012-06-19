@@ -1,4 +1,18 @@
 * 2012-06-19
+** aut_to_exp
+An initial version of aut_to_exp is available.  The new pprat option -a
+provides an access to this algorithm: apply aut_to_exp to the standard_of an
+expression.
+
+  pprat      -a 'a*'     => \e+(a.(a*))
+  pprat      -a '(a+b)c' => (a.c)+(b.c)
+  pprat -W z -a '{2}({3}a+{5}b){7}c{11}' => (({6}a.{7}c)+({10}b.{7}c)){11}
+
+Currently, the only "heuristic" implemented eliminates the states in order.
+There are probably possible improvements.
+
+  pprat -a '(a+b)*' | wc -c => 265
+
 ** pprat: -a and -w are renamed -A and -W
 
 ** new factory: de Bruijn

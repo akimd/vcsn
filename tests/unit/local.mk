@@ -35,6 +35,7 @@ dist_TESTS += $(unit_TESTS)
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
+unit/aut_to_exp.log: rat/pprat
 unit/eval.log: unit/eval
 unit/determinize.log: unit/determinize
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin

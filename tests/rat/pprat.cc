@@ -6,6 +6,7 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/algos/standard_of.hh>
+#include <vcsn/algos/aut_to_exp.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/core/rat/abstract_kratexpset.hh>
@@ -57,6 +58,7 @@ struct options
   type weight = type::b;
   bool standard_of = false;
   bool lift = false;
+  bool aut_to_exp = false;
 };
 
 // FIXME: No globals.
@@ -101,7 +103,7 @@ pp(const options& opts, const KSet& kset,
   vcsn::rat::driver d(fac);
   if (auto e = file ? d.parse_file(s) : d.parse_string(s))
     {
-      if (opts.standard_of || opts.lift)
+      if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
           auto aut = vcsn::standard_of<automaton_t>(kset.context(), e);
@@ -109,6 +111,8 @@ pp(const options& opts, const KSet& kset,
             vcsn::dotty(aut, std::cout);
           if (opts.lift)
             vcsn::dotty(vcsn::lift(aut), std::cout);
+          if (opts.aut_to_exp)
+            std::cout << kset.format(vcsn::aut_to_exp(aut)) << std::endl;
         }
       else
         fac.print(std::cout, e) << std::endl;
