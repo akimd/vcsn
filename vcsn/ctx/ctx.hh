@@ -28,6 +28,7 @@ namespace vcsn
       /// Type of RatExp kratexps objects.
       using node_t = rat::node<label_t, weight_t>;
       using kratexp_t = std::shared_ptr<const node_t>;
+      using kratexpset_t = typename vcsn::kratexpset<context>;
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 

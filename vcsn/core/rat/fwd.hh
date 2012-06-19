@@ -40,6 +40,11 @@ namespace vcsn
     using kratexp = std::shared_ptr<const node<Label, Weight>>;
 
   } // namespace rat
+
+  // kratexpset.hh.
+  template <typename Context>
+  class kratexpset;
+
 } // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_FWD_HH
