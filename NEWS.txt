@@ -16,7 +16,7 @@ There are probably possible improvements.
 ** pprat: -a and -w are renamed -A and -W
 
 ** new factory: de Bruijn
-Builds automata for (a+b)aa^n.
+Builds automata for (a+b)a(a+b)^n.
 
 * 2012-06-18
 ** standard_of is part of vcsn::
