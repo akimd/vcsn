@@ -8,28 +8,32 @@
 
 namespace vcsn
 {
-  template <typename Context>
-  using lifted_context_t =
-    ctx::context<typename Context::genset_t,
-		 kratexpset<Context>,
-		 labels_are_words>;
+
+  namespace details
+  {
+    template <typename Context>
+    using lifted_context_t =
+      ctx::context<typename Context::genset_t,
+                   kratexpset<Context>,
+                   labels_are_words>;
+
+    template <typename Aut>
+    using lifted_automaton_t =
+      mutable_automaton<lifted_context_t<typename Aut::context_t>>;
+  }
 
   template <typename Aut>
-  using lifted_automaton_t =
-    mutable_automaton<lifted_context_t<typename Aut::context_t>>;
-
-  template <typename Aut>
-  lifted_automaton_t<Aut>
+  details::lifted_automaton_t<Aut>
   lift(const Aut& a)
   {
     using kre_t = kratexpset<typename Aut::context_t>;
     kre_t kre{a.context()};
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
-    typedef lifted_context_t<typename Aut::context_t> ctx_t;
+    typedef details::lifted_context_t<typename Aut::context_t> ctx_t;
     ctx_t ctx{a.context().genset(), std::make_shared<const kre_t>(kre)};
     using auto_in_t = Aut;
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
-    typedef lifted_automaton_t<auto_in_t> auto_out_t;
+    typedef details::lifted_automaton_t<auto_in_t> auto_out_t;
     using state_in_t = typename auto_in_t::state_t;
     using state_out_t = typename auto_out_t::state_t;
     auto res = make_mutable_automaton(ctx);
