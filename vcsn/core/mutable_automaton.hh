@@ -439,6 +439,17 @@ namespace vcsn
       return set_transition(src, dst, l, weightset()->unit());
     }
 
+    std::string
+    format_transition(transition_t t) const
+    {
+      std::ostringstream o;
+      o << src_of(t)
+        << " -- {" << weightset()->format(weight_of(t)) << "}"
+        << genset()->format(word_label_of(t))
+        << " --> " << dst_of(t);
+      return o.str();
+    }
+
     weight_t
     set_weight(transition_t t, weight_t k)
     {
