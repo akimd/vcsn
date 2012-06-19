@@ -95,6 +95,12 @@ namespace vcsn
 
     value_t conv(const std::string& s) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
+    std::string format(const value_t v) const
+    {
+      std::stringstream s;
+      print(s, v);
+      return s.str();
+    }
 
   public:
     // Concrete type implementation.

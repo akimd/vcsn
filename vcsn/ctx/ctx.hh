@@ -51,6 +51,12 @@ namespace vcsn
         return ws_;
       }
 
+      std::string format(const kratexp_t& e) const
+      {
+        kratexpset_t k{*this};
+        return k.format(e);
+      }
+
     private:
       genset_ptr gs_;
       weightset_ptr ws_;
