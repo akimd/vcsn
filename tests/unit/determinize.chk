@@ -1,7 +1,7 @@
 #! /bin/sh
 
 cat >out.exp <<\EOF
-PASS: Check Idempotence for simple automaton 5
+PASS: Check Idempotence for de Bruijn 3
 digraph A {
   rankdir=LR
   node [shape=circle]
@@ -59,7 +59,7 @@ digraph A {
   3 -> 11 [label="a"]
   3 -> 12 [label="b"]
 }
-PASS: Check Idempotence for simple automaton 10
+PASS: Check Idempotence for de Bruijn 8
 PASS: Check Idempotence for ladybird 4
 digraph A {
   rankdir=LR

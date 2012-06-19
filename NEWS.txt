@@ -1,3 +1,7 @@
+* 2012-06-19
+** new factory: de Bruijn
+Builds automata for (a+b)aa^n.
+
 * 2012-06-18
 ** standard_of is part of vcsn::
 It used to be in vcsn::rat::.

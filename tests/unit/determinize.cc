@@ -5,82 +5,66 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/char.hh>
+#include <vcsn/factory/de_bruijn.hh>
 #include <vcsn/factory/ladybird.hh>
 
 using context_t = vcsn::ctx::char_b;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
-// (a+b)*a(a+b)^n.
-automaton_t
-factory(const context_t& ctx, unsigned n)
+std::string
+to_string(const automaton_t& a)
 {
-  assert(n > 1);
-
-  automaton_t res(ctx);
-
-  auto init = res.new_state();
-  res.set_initial(init);
-  res.set_transition(init, init, 'a');
-  res.set_transition(init, init, 'b');
-
-  auto prev = res.new_state();
-  res.set_transition(init, prev, 'a');
-
-  --n;
-
-  while (--n)
-    {
-      auto next = res.new_state();
-      res.set_transition(prev, next, 'a');
-      res.set_transition(prev, next, 'b');
-      prev = next;
-    }
-  res.set_final(prev);
-  return res;
+  std::stringstream o;
+  vcsn::dotty(a, o);
+  return o.str();
 }
 
-bool idempotence(std::string str, automaton_t& aut, bool display_aut)
+/// true iff idempotent.
+bool
+idempotence(std::string str, automaton_t& aut, bool display_aut)
 {
-  auto determ = vcsn::determinize(aut);
-  auto id = vcsn::determinize(determ);
-  std::stringstream determ_string;
-  std::stringstream id_string;
-  vcsn::dotty(determ, determ_string);
-  vcsn::dotty(id, id_string);
-  if (!determ_string.str().compare(id_string.str()))
+  auto d1 = vcsn::determinize(aut);
+  auto d2 = vcsn::determinize(d1);
+  std::string d1s = to_string(d1);
+  std::string d2s = to_string(d2);
+
+  if (d1s == d2s)
     {
-      std::cout <<"PASS: Check Idempotence for " << str << std::endl;
+      std::cout << "PASS: Check Idempotence for " << str << std::endl;
       if (display_aut)
-        std::cout << determ_string.str();
-      return false;
+        std::cout << d1s;
+      return true;
     }
   else
     {
       std::cout << "FAIL: determinize(aut) != determinize(determinize(aut)) for "
                 << str << std::endl;
-      return true;
+      return false;
     }
 }
 
-bool check_simple(size_t n, bool display_aut)
+/// true iff passes.
+bool
+check_simple(size_t n, bool display_aut)
 {
   context_t ctx{{'a', 'b'}};
-  automaton_t aut = factory(ctx, n);
+  automaton_t aut = vcsn::de_bruijn(n, ctx);
   std::stringstream ss;
-  ss << "simple automaton " << n;
+  ss << "de Bruijn " << n;
   return idempotence(ss.str(), aut, display_aut);
 }
 
+
 int main()
 {
-  int exit = 0;
-  exit |= check_simple(5, true);
-  exit |= check_simple(10, false);
+  int errs = 0;
+  errs += !check_simple(3, true);
+  errs += !check_simple(8, false);
 
   context_t ctx{{'a', 'b', 'c'}};
   auto ladybird = vcsn::ladybird<context_t>(4, ctx);
   auto determ_ladybird = vcsn::determinize(ladybird);
 
-  exit |= idempotence("ladybird 4", ladybird, true);
-  return exit;
+  errs += !idempotence("ladybird 4", ladybird, true);
+  return !!errs;
 }
