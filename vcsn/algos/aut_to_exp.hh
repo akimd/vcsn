@@ -14,11 +14,10 @@ namespace vcsn
   using state_chooser_t =
     std::function<typename Lifted::state_t(const Lifted&)>;
 
-  template <typename Aut,
-            typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
-  aut_to_exp(const Aut& a,
-             const state_chooser_t<Aut>& next_state)
+  template <typename Aut>
+  typename Aut::context_t::kratexp_t
+  aut_to_exp2(const Aut& a,
+             state_chooser_t<Aut> next_state)
   {
     // State elimination is performed on the lifted automaton.
     auto aut = lift(a);
@@ -60,14 +59,11 @@ namespace vcsn
     return a.states().front();
   }
 
-  template <class Aut,
-            typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
+  template <class Aut>
+  typename Aut::context_t::kratexp_t
   aut_to_exp(const Aut& a)
   {
-    state_chooser_t<Aut> next =
-      next_in_order<details::lifted_automaton_t<Aut>>;
-    return aut_to_exp(a, next);
+    return aut_to_exp2(a, next_in_order<details::lifted_automaton_t<Aut>>);
   }
 
   /*-----------------.
@@ -85,7 +81,7 @@ namespace vcsn
       {
         size_t in = 0;
         size_t loops = 0;
-        // Don't count the loops as out-degree.
+        // Don't count the loops in the degree.
         for (auto t: a.all_out(s))
           if (a.dst_of(t) != s)
             ++in;
@@ -107,14 +103,11 @@ namespace vcsn
     return best;
   }
 
-  template <class Aut,
-            typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
+  template <class Aut>
+  typename Aut::context_t::kratexp_t
   aut_to_exp_in_degree(const Aut& a)
   {
-    state_chooser_t<Aut> next =
-      next_in_degree<details::lifted_automaton_t<Aut>>;
-    return aut_to_exp(a, next);
+    return aut_to_exp2(a, next_in_degree<details::lifted_automaton_t<Aut>>);
   }
 } // vcsn::
 
