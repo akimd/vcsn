@@ -24,6 +24,7 @@ usage(const char* prog, int status)
       "\n"
       "Context:\n"
       "  -A letters|words  kind of the atoms [letters]\n"
+      "  -H HEURISTICS     define the aut-to-exp heuristics to use [order]\n"
       "  -W WEIGHT-SET     define the kind of the weights [b]\n"
       "  -e EXP            pretty-print the rational expression EXP\n"
       "  -f FILE           pretty-print the rational expression in FILE\n"
@@ -52,6 +53,12 @@ enum class type
   z, zr, zrr,
 };
 
+enum class heuristics
+{
+  order,
+  degree,
+};
+
 struct options
 {
   bool atoms_are_letters = true;
@@ -59,6 +66,7 @@ struct options
   bool standard_of = false;
   bool lift = false;
   bool aut_to_exp = false;
+  heuristics next = heuristics::order;
 };
 
 // FIXME: No globals.
@@ -112,7 +120,15 @@ pp(const options& opts, const KSet& kset,
           if (opts.lift)
             vcsn::dotty(vcsn::lift(aut), std::cout);
           if (opts.aut_to_exp)
-            std::cout << kset.format(vcsn::aut_to_exp(aut)) << std::endl;
+            switch (opts.next)
+            {
+            case heuristics::degree:
+              std::cout << kset.format(vcsn::aut_to_exp_in_degree(aut)) << std::endl;
+              break;
+            case heuristics::order:
+              std::cout << kset.format(vcsn::aut_to_exp(aut)) << std::endl;
+              break;
+            }
         }
       else
         fac.print(std::cout, e) << std::endl;
@@ -164,7 +180,7 @@ try
 
   options opts;
   int opt;
-  while ((opt = getopt(argc, argv, "A:ae:f:hlsW:")) != -1)
+  while ((opt = getopt(argc, argv, "A:ae:f:H:hlsW:")) != -1)
     switch (opt)
       {
       case 'A':
@@ -191,6 +207,20 @@ try
       case 'f':
         pp(opts, optarg, true);
         break;
+      case 'H':
+        {
+          std::string s = optarg;
+          if (s == "d" || s == "degree")
+            opts.next = heuristics::degree;
+          else if (s == "o" || s == "order")
+            opts.next = heuristics::order;
+          else
+            {
+              std::cerr << optarg << ": invalid heuristics (-H)" << std::endl;
+              goto fail;
+            }
+          break;
+        }
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
         break;

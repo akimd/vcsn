@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_AUT_TO_EXP_HH
 # define VCSN_ALGOS_AUT_TO_EXP_HH
 
+#include <vcsn/misc/echo.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/kratexp.hh>
@@ -24,6 +25,7 @@ namespace vcsn
     while (aut.num_states())
       {
         auto s = next_state(aut);
+        ECHO(V(s));
 
         // The loop's weight.
         auto loops = aut.outin(s, s);
@@ -47,14 +49,71 @@ namespace vcsn
     return aut.get_initial_weight(aut.post());
   }
 
+  /*----------------.
+  | next in order.  |
+  `----------------*/
+
+  template <class Aut>
+  typename Aut::state_t
+  next_in_order(const Aut& a)
+  {
+    return a.states().front();
+  }
+
   template <class Aut,
             typename Context = typename Aut::context_t>
-  std::shared_ptr<const typename Context::node_t>
-  aut_to_exp(Aut& a)
+  typename Context::kratexp_t
+  aut_to_exp(const Aut& a)
   {
     state_chooser_t<Aut> next =
-      [] (const details::lifted_automaton_t<Aut>& a)
-      { return a.states().front(); };
+      next_in_order<details::lifted_automaton_t<Aut>>;
+    return aut_to_exp(a, next);
+  }
+
+  /*-----------------.
+  | Highest degree.  |
+  `-----------------*/
+
+  template <class Aut>
+  typename Aut::state_t
+  next_in_degree(const Aut& a)
+  {
+    typename Aut::state_t best = 0;
+    size_t loops_best = std::numeric_limits<size_t>::max();
+    size_t degree_best = 0;
+    for (auto s: a.states())
+      {
+        size_t in = 0;
+        size_t loops = 0;
+        // Don't count the loops as out-degree.
+        for (auto t: a.all_out(s))
+          if (a.dst_of(t) != s)
+            ++in;
+          else
+            ++loops;
+        size_t out = a.all_in(s).size() - loops;
+        size_t degree = in * out;
+        // We prefer to delete a state that has no loop transition.
+        if (degree_best < degree
+            || (degree_best == degree && loops < loops_best))
+          {
+            best = s;
+            degree_best = degree;
+            loops_best = loops;
+            ECHO(V(best) << V(degree_best) << V(loops_best));
+          }
+      }
+    assert (best);
+    return best;
+  }
+
+  template <class Aut,
+            typename Context = typename Aut::context_t>
+  typename Context::kratexp_t
+  aut_to_exp_in_degree(const Aut& a)
+  {
+    state_chooser_t<Aut> next =
+      next_in_degree<details::lifted_automaton_t<Aut>>;
     return aut_to_exp(a, next);
   }
 } // vcsn::
