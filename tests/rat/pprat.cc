@@ -176,7 +176,7 @@ try
             opts.atoms_are_letters = false;
           else
             {
-              std::cerr << optarg << ": invalid atom kind (-a)" << std::endl;
+              std::cerr << optarg << ": invalid atom kind (-A)" << std::endl;
               goto fail;
             }
           break;
@@ -205,7 +205,7 @@ try
           map::iterator i = ksets.find(optarg);
           if (i == end(ksets))
             {
-              std::cerr << optarg << ": invalid weight set (-w)" << std::endl;
+              std::cerr << optarg << ": invalid weight set (-W)" << std::endl;
               goto fail;
             }
           else
