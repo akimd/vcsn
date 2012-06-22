@@ -47,10 +47,10 @@ usage(const char* prog, int status)
 }
 
 enum class type
-  {
-    b, br,
-    z, zr, zrr,
-  };
+{
+  b, br,
+  z, zr, zrr,
+};
 
 struct options
 {
