@@ -22,12 +22,12 @@ namespace
     const C cont_;
     predicate_t predicate_;
   public:
-    entry_iterator(const Automaton& a, const C&& cont)
+    entry_iterator(const Automaton& a, const C& cont)
       : a_(a), cont_(cont)
-      , predicate_([&] (transition_t i) -> bool
+      , predicate_([this] (transition_t i) -> bool
                    {
                      // Process each position once.
-                     entry_pos_t pos { a.src_of(i), a.dst_of(i) };
+                     entry_pos_t pos { a_.src_of(i), a_.dst_of(i) };
                      return seen_.insert(pos).second;
                    })
     {

@@ -172,7 +172,7 @@ namespace vcsn
       const tr_cont_t& succ = states_[src].succ;
       auto i =
         std::find_if(begin(succ), end(succ),
-                     [=,&l,&dst] (const transition_t& t) -> bool
+                     [this,l,dst] (const transition_t& t) -> bool
                      { const stored_transition_t& st = transitions_[t];
                        return (st.dst == dst
                                && this->genset()->equals(st.label, l)); });
@@ -490,7 +490,7 @@ namespace vcsn
     {
       return states_output_t
         (boost::irange<state_t>(b, e),
-         [=] (state_t i) -> bool
+         [this] (state_t i) -> bool
          {
            const stored_state_t& ss = states_[i];
            return (ss.succ.empty()
@@ -515,7 +515,7 @@ namespace vcsn
     {
       return transitions_output_t
         (boost::irange<transition_t>(0U, transitions_.size()),
-         [=] (transition_t i) -> bool
+         [this] (transition_t i) -> bool
          {
            state_t src = transitions_[i].src;
            if (src == this->null_state() || src == this->pre())
@@ -529,7 +529,7 @@ namespace vcsn
     {
       return transitions_output_t
         (boost::irange<transition_t>(0U, transitions_.size()),
-         [=] (transition_t i)
+         [this] (transition_t i)
          {
            return transitions_[i].src != this->null_state();
          });
@@ -554,7 +554,7 @@ namespace vcsn
       assert(has_state(s));
       return container_filter_range<const tr_cont_t&>
         (states_[s].succ,
-         [=] (transition_t i) { return transitions_[i].dst != this->post(); });
+         [this] (transition_t i) { return transitions_[i].dst != this->post(); });
     }
 
     // Invalidated by del_transition() and del_state().
@@ -573,7 +573,7 @@ namespace vcsn
       const stored_state_t& ss = states_[s];
       return container_filter_range<const tr_cont_t&>
         (ss.succ,
-         [=,&l] (transition_t i) {
+         [this,l] (transition_t i) {
           return this->genset()->equals(transitions_[i].label, l);
         });
     }
@@ -585,7 +585,7 @@ namespace vcsn
       assert(has_state(s));
       return container_filter_range<const tr_cont_t&>
         (states_[s].pred,
-         [=] (transition_t i) { return transitions_[i].src != this->pre(); });
+         [this] (transition_t i) { return transitions_[i].src != this->pre(); });
     }
 
     // Invalidated by del_transition() and del_state().
@@ -604,7 +604,7 @@ namespace vcsn
       const stored_state_t& ss = states_[s];
       return container_filter_range<const tr_cont_t&>
         (ss.pred,
-         [=,&l] (transition_t i) {
+         [this,l] (transition_t i) {
           return this->genset()->equals(transitions_[i].label, l);
         });
     }
@@ -618,7 +618,7 @@ namespace vcsn
       const stored_state_t& ss = states_[s];
       return container_filter_range<const tr_cont_t&>
         (ss.succ,
-         [=] (transition_t i) { return this->transitions_[i].dst == d; });
+         [this,d] (transition_t i) { return this->transitions_[i].dst == d; });
     }
 
     // Iteration on entries
