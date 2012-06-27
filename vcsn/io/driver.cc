@@ -17,7 +17,7 @@ namespace vcsn
     void
     driver::error(const location& l, const std::string& m)
     {
-      std::stringstream er;
+      std::ostringstream er;
       er  << l << ": " << m;
       if (errors.empty())
         errors += (errors.empty() ? "" : "\n") + er.str();

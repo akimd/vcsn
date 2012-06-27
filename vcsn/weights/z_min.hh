@@ -82,7 +82,7 @@ namespace vcsn
     std::string
     format(const value_t v) const
     {
-      std::stringstream s;
+      std::ostringstream s;
       print(s, v);
       return s.str();
     }

@@ -3,7 +3,9 @@
 
 # include <iostream>
 # include <set>
+# include <sstream>
 # include <unordered_map>
+
 # include <vcsn/misc/escape.hh>
 
 namespace vcsn
@@ -82,7 +84,7 @@ namespace vcsn
   dotty(const A& aut)
   {
     std::ostringstream o;
-    o << aut;
+    dotty(aut, o);
     return o.str();
   }
 }

@@ -97,7 +97,7 @@ namespace vcsn
     std::ostream& print(std::ostream& o, const value_t v) const;
     std::string format(const value_t v) const
     {
-      std::stringstream s;
+      std::ostringstream s;
       print(s, v);
       return s.str();
     }
