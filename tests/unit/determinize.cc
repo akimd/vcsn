@@ -11,22 +11,14 @@
 using context_t = vcsn::ctx::char_b;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
-std::string
-to_string(const automaton_t& a)
-{
-  std::stringstream o;
-  vcsn::dotty(a, o);
-  return o.str();
-}
-
 /// true iff idempotent.
 bool
 idempotence(std::string str, automaton_t& aut, bool display_aut)
 {
   auto d1 = vcsn::determinize(aut);
   auto d2 = vcsn::determinize(d1);
-  std::string d1s = to_string(d1);
-  std::string d2s = to_string(d2);
+  std::string d1s = vcsn::dotty(d1);
+  std::string d2s = vcsn::dotty(d2);
 
   if (d1s == d2s)
     {

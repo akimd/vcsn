@@ -76,6 +76,15 @@ namespace vcsn
       }
     out << "}" << std::endl;
   }
+
+  template <class A>
+  std::string
+  dotty(const A& aut)
+  {
+    std::ostringstream o;
+    o << aut;
+    return o.str();
+  }
 }
 
 #endif // !VCSN_ALGOS_DOTTY_HH
