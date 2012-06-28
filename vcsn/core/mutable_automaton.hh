@@ -258,8 +258,8 @@ namespace vcsn
       transitions_fs_.insert(transitions_fs_.end(), tc.begin(), tc.end());
       tc.clear();
     }
-  public:
 
+  public:
     state_t
     new_state()
     {
@@ -484,6 +484,7 @@ namespace vcsn
 
     using states_output_t =
       container_filter_range<boost::integer_range<state_t>>;
+
   protected:
     states_output_t
     state_range(state_t b, state_t e) const

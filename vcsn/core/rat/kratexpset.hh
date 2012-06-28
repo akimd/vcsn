@@ -79,7 +79,7 @@ namespace vcsn
                             value_t>::type
     atom_(const word_t& w) const;
 
-    // When used as WeightSet for automata.
+    /// When used as WeightSet for automata.
     bool is_zero(value_t v) const;
     bool is_unit(value_t v) const;
 
@@ -111,6 +111,7 @@ namespace vcsn
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
+    /// Implementation details for concat.
     value_t concat(value_t l, value_t r, labels_are_letters) const;
     value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;

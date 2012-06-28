@@ -53,8 +53,10 @@ namespace vcsn
 
       std::string format(const kratexp_t& e) const
       {
-        kratexpset_t k{*this};
-        return k.format(e);
+        kratexpset_t ks{*this};
+        return ks.format(e);
+      }
+
       }
 
     private:

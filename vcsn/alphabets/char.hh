@@ -91,7 +91,7 @@ namespace vcsn
 
   public:
     std::ostream&
-    output(std::ostream& o, const letter_t& l) const
+    print(std::ostream& o, const letter_t& l) const
     {
       if (l != special_letter())
 	o << l;
@@ -99,12 +99,12 @@ namespace vcsn
     }
 
     std::ostream&
-    output(std::ostream& o, const word_t& w) const
+    print(std::ostream& o, const word_t& w) const
     {
       return o << format(w);
     }
 
-    const std::string
+    std::string
     format(const letter_t l) const
     {
       if (l != special_letter())
@@ -113,8 +113,7 @@ namespace vcsn
 	return std::string();
     }
 
-    inline
-    const std::string
+    std::string
     format(const word_t& w) const
     {
       size_t s = w.size();
@@ -137,7 +136,6 @@ namespace vcsn
     // Special character, used to label transitions
     // from pre() and post()
     template<class T = letter_t>
-    inline
     T special() const;
 
     // word_t mirror(const word_t& w)

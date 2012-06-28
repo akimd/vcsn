@@ -18,7 +18,7 @@ namespace vcsn
     using genset_ptr = typename context_t::genset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
     using word_t = typename genset_t::word_t;
-    using weight_t = typename weightset_t::value_t;
+    using weight_t = typename context_t::weight_t;
 
     using value_t = std::map<word_t, weight_t>;
 
@@ -123,7 +123,7 @@ namespace vcsn
 	      out << "{";
 	      weightset()->print(out, i.second) << "}";
 	    }
-	  genset()->output(out, i.first);
+	  genset()->print(out, i.first);
 	}
 
       if (first)

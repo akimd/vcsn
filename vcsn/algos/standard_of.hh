@@ -19,7 +19,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = Context;
       using weightset_t = typename context_t::weightset_t;
-      using weight_t = typename weightset_t::value_t;
+      using weight_t = typename context_t::weight_t;
       using state_t = typename automaton_t::state_t;
 
       using super_type = typename Context::const_visitor;
@@ -204,7 +204,7 @@ namespace vcsn
 
   } // rat::
 
-  /// \param Aut      relative the generated automaton.
+  /// \param Aut      relative to the generated automaton.
   /// \param Context  relative to the RatExp.
   template <class Aut,
             class Context = typename Aut::context_t>
@@ -215,7 +215,7 @@ namespace vcsn
     return standard(e);
   }
 
-  /// \param Aut      relative the generated automaton.
+  /// \param Aut      relative to the generated automaton.
   /// \param Context  relative to the RatExp.
   template <class Aut,
             class Context = typename Aut::context_t>
