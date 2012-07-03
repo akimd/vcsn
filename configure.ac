@@ -54,9 +54,15 @@ AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
 [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
 #define _GLIBCXX_DEBUG_PEDANTIC
 #include <sstream>],
-[  std::stringstream o;
-  o << 42;
-  return !(o.str() == "42");
+[  {
+     std::stringstream o;
+     assert (o.str() == "");
+  }
+  {
+     std::stringstream o;
+      o << 42;
+      assert (o.str() == "42");
+  }
 ])], [ac_cv_GLIBCXX_DEBUG=yes],
      [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
      [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])])
