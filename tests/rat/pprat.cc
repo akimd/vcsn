@@ -32,8 +32,9 @@ usage(const char* prog, int status)
       "\n"
       "Operations:\n"
       "  -t    transpose the rational expression (accumulates)\n"
-      "  -l    display the lifted standard automaton instead of expression\n"
       "  -s    display the standard automaton instead of expression\n"
+      "  -l    display the lifted standard automaton instead of expression\n"
+      "  -T    transpose the automaton\n"
       "  -a    display the aut-to-exp of the standard automaton\n"
       "\n"
       "WEIGHT-SET:\n"
@@ -66,6 +67,7 @@ struct options
   bool atoms_are_letters = true;
   type weight = type::b;
   size_t transpose = 0;
+  bool aut_transpose = false;
   bool standard_of = false;
   bool lift = false;
   bool aut_to_exp = false;
@@ -118,7 +120,14 @@ pp(const options& opts, const KSet& kset,
       for (size_t i = 0; i < opts.transpose; ++i)
         e = kset.transpose(e);
 
-      if (opts.standard_of || opts.lift || opts.aut_to_exp)
+      if (opts.aut_transpose)
+        {
+          using automaton_t = vcsn::mutable_automaton<context_t>;
+          auto aut1 = vcsn::standard_of<automaton_t>(kset.context(), e);
+          auto aut2 = vcsn::transpose(aut1);
+          vcsn::dotty(aut2, std::cout);
+        }
+      else if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
           auto aut = vcsn::standard_of<automaton_t>(kset.context(), e);
@@ -187,7 +196,7 @@ try
 
   options opts;
   int opt;
-  while ((opt = getopt(argc, argv, "A:ae:f:H:hlstW:")) != -1)
+  while ((opt = getopt(argc, argv, "A:ae:f:H:hlsTtW:")) != -1)
     switch (opt)
       {
       case 'A':
@@ -236,6 +245,9 @@ try
         break;
       case 's':
         opts.standard_of = true;
+        break;
+      case 'T':
+        ++opts.aut_transpose;
         break;
       case 't':
         ++opts.transpose;

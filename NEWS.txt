@@ -1,3 +1,38 @@
+* 2012-07-09
+** transposition
+The "transpose" operation is implemented on words, weights, kratexps, and
+automata.  pprat provides support to transpose on kratexps (option -t):
+
+  pprat -W zrr -t {{{2}ab}cd}abcd   =>   {{{2}ba}dc}dcba
+  pprat -W zrr -t {ab}(abcd)*{cd}   =>   ({dc}(dcba)*{ba})
+
+and on (standard) automata (option -T):
+
+  $ pprat -A w -W br    -s '{ab}(\e+a+b({abc}c{bcd})*){cd}' > forward.dot
+  $ pprat -A w -W br -T -s '{ab}(\e+a+b({abc}c{bcd})*){cd}' > transpose.dot
+  $ diff -W80 -t  -y forward.dot transpose.dot
+  digraph A {                            digraph A {
+    rankdir=LR                             rankdir=LR
+    node [shape=circle]                    node [shape=circle]
+    {                                      {
+      node [style=invis,shape=none,la        node [style=invis,shape=none,la
+      I1                                     I1
+                                      >      I2
+                                      >      I4
+      F1                                     F1
+      F2                              <
+      F4                              <
+    }                                      }
+    1 -> F1 [label="{(ab).(cd)}"]     |    I1 -> 1 [label="{(dc).(ba)}"]
+    I1 -> 1                           |    1 -> F1
+    2 -> F2 [label="{cd}"]            |    I2 -> 2 [label="{dc}"]
+    1 -> 2 [label="{ab}a"]            |    2 -> 1 [label="{ba}a"]
+    4 -> F4 [label="{cd}"]            |    I4 -> 4 [label="{dc}"]
+    4 -> 4 [label="{(abc).(bcd)}c"]   |    4 -> 4 [label="{(dcb).(cba)}c"]
+    1 -> 3 [label="{ab}b"]            |    3 -> 1 [label="{ba}b"]
+    3 -> 4 [label="{(abc).(bcd)}c"]   |    4 -> 3 [label="{(dcb).(cba)}c"]
+  }                                      }
+
 * 2012-06-19
 ** aut_to_exp
 An initial version of aut_to_exp is available.  The new pprat option -a

@@ -9,7 +9,8 @@ EXTRA_PROGRAMS +=				\
   unit/poly					\
   unit/product					\
   unit/simplaw					\
-  unit/simpleaut
+  unit/simpleaut				\
+  unit/transpose
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
@@ -29,7 +30,8 @@ unit_TESTS =					\
   unit/product.chk				\
   unit/simplaw.chk				\
   unit/simpleaut.chk				\
-  unit/standard_of.chk
+  unit/standard_of.chk				\
+  unit/transpose.chk
 dist_TESTS += $(unit_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
@@ -45,6 +47,7 @@ unit/product.log: unit/product
 unit/simplaw.log: unit/simplaw
 unit/simpleaut.log: unit/simpleaut
 unit/standard_of.log: rat/pprat
+unit/transpose.log: unit/transpose
 
 .PHONY: check-unit
 check-unit:
