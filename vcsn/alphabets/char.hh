@@ -15,7 +15,7 @@ namespace vcsn
     word_t
     to_word(const letter_t l) const
     {
-      return word_t{l};
+      return {l};
     }
 
     const word_t&
@@ -27,7 +27,7 @@ namespace vcsn
     word_t
     concat(const letter_t l, const letter_t r) const
     {
-      return word_t{l, r};
+      return {l, r};
     }
 
     word_t
@@ -51,7 +51,7 @@ namespace vcsn
     word_t
     identity() const
     {
-      return word_t{};
+      return {};
     }
 
     bool
@@ -108,9 +108,9 @@ namespace vcsn
     format(const letter_t l) const
     {
       if (l != special_letter())
-	return std::string{l};
+	return {l};
       else
-	return std::string();
+	return {};
     }
 
     std::string
@@ -154,7 +154,7 @@ namespace vcsn
   char_letters::word_t
   char_letters::special<char_letters::word_t>() const
   {
-    return word_t{special_letter()};
+    return {special_letter()};
   }
 
 }
