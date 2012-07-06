@@ -24,6 +24,7 @@ rat_TESTS =                                     \
   rat/interface.rat                             \
   rat/b.rat                                     \
   rat/br.rat                                    \
+  rat/transpose.rat                             \
   rat/z.rat                                     \
   rat/zr.rat                                    \
   rat/zrr.rat

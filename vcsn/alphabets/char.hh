@@ -60,6 +60,19 @@ namespace vcsn
       return w.empty();
     }
 
+    word_t
+    transpose(const word_t& w) const
+    {
+      // C++11 lacks std::rbegin/rend...
+      return {w.rbegin(), w.rend()};
+    }
+
+    letter_t
+    transpose(letter_t l) const
+    {
+      return l;
+    }
+
     bool
     equals(const word_t& w1, const word_t& w2) const
     {

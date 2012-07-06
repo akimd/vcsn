@@ -121,6 +121,7 @@ namespace vcsn
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;
     value_t weight(const weight_t& w, value_t e) const;
+    value_t transpose(value_t e) const;
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \param type  the kind of kratexps on which to apply associativity.

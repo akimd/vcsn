@@ -6,6 +6,7 @@
 #include <vcsn/io/driver.hh>
 #include <vcsn/io/parse-rat-exp.hh>
 #include <vcsn/misc/cast.hh>
+#include <vcsn/core/rat/transpose.hh>
 
 namespace vcsn
 {
@@ -277,6 +278,13 @@ namespace vcsn
   {
     printer_t print{o, context()};
     return print(v);
+  }
+
+  DEFINE::transpose(const value_t v) const
+    -> value_t
+  {
+    details::transposer<Context> tr{context()};
+    return tr(v);
   }
 
 #undef DEFINE

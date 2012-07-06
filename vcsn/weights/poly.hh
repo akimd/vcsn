@@ -106,6 +106,15 @@ namespace vcsn
       return weightset_t::is_positive_semiring();
     }
 
+    value_t
+    transpose(const value_t v) const
+    {
+      value_t res;
+      for (const auto& i: v)
+	res[genset()->transpose(i.first)] = weightset()->transpose(i.second);
+      return res;
+    }
+
     std::ostream&
     print(std::ostream& out, const value_t& v) const
     {

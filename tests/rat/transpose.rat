@@ -1,0 +1,22 @@
+%weight: b
+%atoms: l
+-t \e => \e
+-t \z => \z
+-t a => a
+-t ab => b.a
+-t abc+aba => (a.b.a)+(c.b.a)
+-t (ab)* => (b.a)*
+
+%atoms: w
+-t \e => \e
+-t \z => \z
+-t a => a
+-t ab => ba
+-t abc+aba => (aba)+(cba)
+-t (ab)* => (ba)*
+
+%weight: zrr
+-t {{{2}ab}cd}abcd => {{{2}ba}dc}dcba
+-t {ab}(abcd)*{cd} => ({dc}(dcba)*{ba})
+-tt {{{2}ab}cd}abcd => {{{2}ab}cd}abcd
+-tt {ab}(abcd)*{cd} => ({ab}(abcd)*{cd})

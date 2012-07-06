@@ -60,6 +60,12 @@ namespace vcsn
     static constexpr bool is_positive_semiring() { return true; }
 
     value_t
+    transpose(const value_t v) const
+    {
+      return v;
+    }
+
+    value_t
     conv(std::string& str) const
     {
       if (str == "0")

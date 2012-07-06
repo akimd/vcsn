@@ -7,6 +7,7 @@
 #include <vcsn/algos/lift.hh>
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/algos/aut_to_exp.hh>
+#include <vcsn/algos/transpose.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/core/rat/abstract_kratexpset.hh>
@@ -30,6 +31,7 @@ usage(const char* prog, int status)
       "  -f FILE           pretty-print the rational expression in FILE\n"
       "\n"
       "Operations:\n"
+      "  -t    transpose the rational expression (accumulates)\n"
       "  -l    display the lifted standard automaton instead of expression\n"
       "  -s    display the standard automaton instead of expression\n"
       "  -a    display the aut-to-exp of the standard automaton\n"
@@ -63,6 +65,7 @@ struct options
 {
   bool atoms_are_letters = true;
   type weight = type::b;
+  size_t transpose = 0;
   bool standard_of = false;
   bool lift = false;
   bool aut_to_exp = false;
@@ -112,6 +115,9 @@ pp(const options& opts, const KSet& kset,
   if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
     {
       auto e = kset.context().downcast(exp);
+      for (size_t i = 0; i < opts.transpose; ++i)
+        e = kset.transpose(e);
+
       if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
@@ -181,7 +187,7 @@ try
 
   options opts;
   int opt;
-  while ((opt = getopt(argc, argv, "A:ae:f:H:hlsW:")) != -1)
+  while ((opt = getopt(argc, argv, "A:ae:f:H:hlstW:")) != -1)
     switch (opt)
       {
       case 'A':
@@ -230,6 +236,9 @@ try
         break;
       case 's':
         opts.standard_of = true;
+        break;
+      case 't':
+        ++opts.transpose;
         break;
       case 'W':
         {
