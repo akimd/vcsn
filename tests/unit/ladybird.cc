@@ -9,9 +9,8 @@
 void
 syntax(const char* argv0)
 {
-  const char* prog = (prog = strrchr(argv0, '/')) ? prog + 1 : argv0;
   std::cerr << "Usage: " << std::endl
-	    << '\t' << prog << " n" << std::endl;
+	    << '\t' << argv0 << " n" << std::endl;
   exit(1);
 }
 
