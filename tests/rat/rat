@@ -29,7 +29,7 @@ sub quote($)
   $in =~ s/([\"\$\\\`])/\\$1/g;
   $in =~ s/^[ \t]*//g;
   $in =~ s/[ \t]*$//g;
-  $in;
+  "'$in'";
 }
 
 sub rst_title($)
@@ -49,8 +49,8 @@ message and return it as result.  Strip the "try -h" line.
 sub pp($)
 {
   my ($in) = @_;
-  $in = quote($in);
-  my $cmd = "$prog -A $atoms -W $ws -e '$in'";
+  $in = join (' ', map { quote($_) } split (' ', $in));
+  my $cmd = "$prog -A $atoms -W $ws $in";
   my $res = `$cmd 2>&1`;
   if ($?)
     {
