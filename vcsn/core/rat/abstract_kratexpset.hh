@@ -25,6 +25,7 @@ namespace vcsn
 
     virtual value_t zero() const = 0;
     virtual value_t unit() const = 0;
+    /// Throws std::domain_error if w is not a valid label_t.
     virtual value_t atom(const std::string& w) const = 0;
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.
@@ -95,6 +96,26 @@ namespace vcsn
     }
 
     virtual value_t atom(const word_t& w) const
+    {
+      return atom_<typename context_t::kind_t>(w);
+    }
+
+    template <typename Kind>
+    auto
+    atom_(const word_t& w) const
+      -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
+                                 value_t>::type
+    {
+      if (!ks_.genset()->is_letter(w))
+        throw std::domain_error("invalid atom: " + w + ": not a letter");
+      return ks_.atom(w[0]);
+    }
+
+    template <typename Kind>
+    auto
+    atom_(const word_t& w) const
+      -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
+                                 value_t>::type
     {
       return ks_.atom(w);
     }

@@ -1,8 +1,5 @@
 # Test cases independant of both the weightset and the atom kind.
 
-# Error cases.
-x ! 1.1: invalid word: x: invalid letter: x
-
 # Base cases.
 a  => a
 \e => \e

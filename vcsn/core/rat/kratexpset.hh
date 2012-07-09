@@ -68,16 +68,20 @@ namespace vcsn
       return ctx_.weightset();
     }
 
-    value_t atom(const word_t& w) const;
-    template <typename K>
-    typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                            value_t>::type
-    atom_(const word_t& w) const;
+    auto atom(const label_t& v) const
+      -> value_t;
 
-    template <typename K>
-    typename std::enable_if<std::is_same<K, labels_are_words>::value,
-                            value_t>::type
-    atom_(const word_t& w) const;
+    template <typename Kind>
+    auto
+    atom_(const letter_t& v) const
+      -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
+                                 value_t>::type;
+
+    template <typename Kind>
+    auto
+    atom_(const word_t& w) const
+      -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
+                                 value_t>::type;
 
     /// When used as WeightSet for automata.
     bool is_zero(value_t v) const;

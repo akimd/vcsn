@@ -20,41 +20,38 @@ namespace vcsn
   auto                                          \
   kratexpset<Context>
 
-  DEFINE::atom(const word_t& w) const
-    -> value_t
+
+  DEFINE::atom(const label_t& v) const
+  -> value_t
   {
-    return atom_<kind_t>(w);
+    return atom_<kind_t>(v);
   }
 
   template <typename Context>
-  template <typename K>
+  template <typename Kind>
   inline
   auto
-  kratexpset<Context>::atom_(const word_t& w) const
-    -> typename std::enable_if<std::is_same<K, labels_are_letters>::value,
-                               value_t>::type
+  kratexpset<Context>::atom_(const letter_t& v) const
+    -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
+                             value_t>::type
   {
-    if (w.size() != 1)
-      throw std::domain_error("invalid atom: " + w);
-    letter_t l = w[0];
-    if (!genset()->has(l))
-      throw std::domain_error("invalid word: " + w
-                              + ": invalid letter: " + l);
-    return std::make_shared<atom_t>(weightset()->unit(), l);
+    if (!genset()->has(v))
+      throw std::domain_error("invalid letter: " + std::string{v});
+    return std::make_shared<atom_t>(weightset()->unit(), v);
   }
 
   template <typename Context>
-  template <typename K>
+  template <typename Kind>
   inline
   auto
   kratexpset<Context>::atom_(const word_t& w) const
-    -> typename std::enable_if<std::is_same<K, labels_are_words>::value,
+    -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
                                value_t>::type
   {
     for (auto l: w)
       if (!genset()->has(l))
-          throw std::domain_error("invalid word: " + w
-                                  + ": invalid letter: " + l);
+        throw std::domain_error("invalid word: " + w
+                                + ": invalid letter: " + std::string{l});
     return std::make_shared<atom_t>(weightset()->unit(), w);
   }
 
