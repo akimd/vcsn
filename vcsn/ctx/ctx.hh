@@ -1,6 +1,7 @@
 #ifndef VCSN_CTX_CTX_HH
 # define VCSN_CTX_CTX_HH
 
+# include <cassert>
 # include <memory>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
@@ -57,6 +58,12 @@ namespace vcsn
         return ks.format(e);
       }
 
+      kratexp_t
+      downcast(const rat::exp_t& e) const
+      {
+        kratexp_t res = std::dynamic_pointer_cast<const node_t>(e);
+        assert(res);
+        return res;
       }
 
     private:

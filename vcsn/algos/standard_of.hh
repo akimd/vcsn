@@ -222,12 +222,7 @@ namespace vcsn
   Aut
   standard_of(const Context& ctx, const rat::exp_t e)
   {
-    using context_t = Context;
-    // Type check.
-    typename context_t::kratexp_t v =
-      std::dynamic_pointer_cast<const typename context_t::node_t>(e);
-    assert(v);
-    return standard_of<Aut, Context>(ctx, v);
+    return standard_of<Aut, Context>(ctx, Context::downcast(e));
   }
 
 } // vcsn::

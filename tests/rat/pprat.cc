@@ -109,8 +109,9 @@ pp(const options& opts, const KSet& kset,
   using context_t = typename KSet::context_t;
   vcsn::concrete_abstract_kratexpset<context_t> fac{kset.context()};
   vcsn::rat::driver d(fac);
-  if (auto e = file ? d.parse_file(s) : d.parse_string(s))
+  if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
     {
+      auto e = kset.context().downcast(exp);
       if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
@@ -131,7 +132,7 @@ pp(const options& opts, const KSet& kset,
             }
         }
       else
-        fac.print(std::cout, e) << std::endl;
+        kset.print(std::cout, e) << std::endl;
     }
   else
     {
