@@ -34,19 +34,20 @@ namespace vcsn
               const bool debug = !!getenv("VCSN_DEBUG"));
 
       /// Entry point: print \a v.
-      void
+      std::ostream&
       operator()(const node_t& v)
       {
         top_ = true;
         v.accept(*this);
         out_ << std::flush;
+        return out_;
       }
 
       /// Entry point: print \a v.
-      void
-      operator()(std::shared_ptr<const node_t> v)
+      std::ostream&
+      operator()(const std::shared_ptr<const node_t>& v)
       {
-        operator()(*v);
+        return operator()(*v);
       }
 
     private:

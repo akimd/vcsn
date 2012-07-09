@@ -112,7 +112,7 @@ namespace vcsn
       bool first = true;
       bool show_unit = weightset()->show_unit();
 
-      for (auto& i: v)
+      for (const auto& i: v)
 	{
 	  if (!first)
 	    out << " + ";

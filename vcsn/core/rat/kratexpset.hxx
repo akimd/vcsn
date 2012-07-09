@@ -276,8 +276,7 @@ namespace vcsn
     -> std::ostream&
   {
     printer_t print{o, context()};
-    print(v);
-    return o;
+    return print(v);
   }
 
 #undef DEFINE
