@@ -34,13 +34,13 @@ namespace vcsn
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
       context(const genset_ptr& gs, const weightset_ptr& ws)
-        : gs_(gs)
-        , ws_(ws)
+        : gs_{gs}
+        , ws_{ws}
       {}
 
       context(const genset_t& gs = {}, const weightset_t& ws = {})
-        : context(std::make_shared<const genset_t>(gs), 
-                  std::make_shared<const weightset_t>(ws))
+        : context{std::make_shared<const genset_t>(gs),
+                  std::make_shared<const weightset_t>(ws)}
       {}
 
       const genset_ptr& genset() const

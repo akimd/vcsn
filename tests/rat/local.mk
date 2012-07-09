@@ -43,4 +43,3 @@ rat_pprat_LDADD = $(top_builddir)/vcsn/librat.la
 .PHONY: check-rat
 check-rat:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(rat_TESTS)'
-
