@@ -148,9 +148,18 @@ rst_expect ()
 
 # run EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
 # ------------------------------------------------------------
-# If "EXPECTED-OUTPUT" is "out.exp", then use the content of that file
-# as expected output, otherwise EXPECTED-OUTPUT is the expected
-# output.
+#
+# If EXPECTED-OUTPUT is
+#
+# - '-' then use stdin of this command as expected output.
+#
+# - 'out.exp', then use the content of that file as expected output,
+#    otherwise EXPECTED-OUTPUT is the expected output.
+#
+# - 'stdout', then don't check the output, but leave it in the file
+#   named "stdout".
+#
+# $builddir will prepended to PROG, unless PROG is '-PROG'.
 run ()
 {
   # Expected exit status.
@@ -159,31 +168,37 @@ run ()
   # Expected output.
   local out_exp=$1
   shift
-  if test -z "$out_exp"; then
-    : >out.exp
-  elif test "$out_exp" != out.exp; then
+  case $out_exp in
+    ('') : >out.exp;;
+    (-) cat >out.exp;;
+    (out.exp|stdout);;
+    (*)
     cat >out.exp <<EOF
 $out_exp
 EOF
-  fi
+    ;;
+  esac
   # program to run
   local prog=$1
   shift
 
-  # First, run the test, so that the title can include the status of
-  # the run.
+  case $prog in
+    (-*) prog=${prog#-};;
+    (*)  prog=$builddir/$prog;;
+  esac
   local fail=false
-  # Subshell: be robust to set -e *and* catch messages from the shell,
-  # such as "Abort trap".
-  ($builddir/$prog "$@") >out.eff 2>err.eff
   # Effective exit status.
-  local sta_eff=$?
+  local sta_eff=0
+  # Subshell: catch messages from the shell, such as "Abort trap".
+  ($prog "$@") >out.eff 2>err.eff \
+    || sta_eff=$?
   {
     cat <<EOF
 command
   $prog $@
 
 EOF
+    # Is the exit status correct?
     if test $sta_eff -eq $sta_exp; then
       cat <<EOF
 status
@@ -200,11 +215,23 @@ EOF
       exit=false
       fail=true
     fi
+
+    # Stdout.
+    case $out_exp in
+      (stdout)
+      # Produce nice logs (with the following rst_expect).
+      cp out.eff out.exp
+      # Prepare stdout.
+      cp out.eff stdout
+      ;;
+    esac
     rst_pre "Standard error" err.eff || fail=true
     rst_expect out || fail=true
   } >stdout.tmp
   if $fail; then
-    fail="${BASH_SOURCE[1]}:${BASH_LINENO[1]}: FAIL: "
+    fail="FAIL: "
+    test -n "$BASH_VERSION" \
+      && fail="${BASH_SOURCE[1]}:${BASH_LINENO[1]}:$fail"
   else
     fail=
   fi
