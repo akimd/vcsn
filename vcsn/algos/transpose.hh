@@ -88,11 +88,10 @@ namespace vcsn
       }
 
 
-      /*-----------------------------------.
-      | non-const methods that transpose.  |
-      `-----------------------------------*/
+      /*--------------------.
+      | non-const methods.  |
+      `--------------------*/
 
-#if 0
 # define DEFINE(Signature, Value)               \
       auto                                      \
       Signature                                 \
@@ -101,25 +100,41 @@ namespace vcsn
         return aut_.Value;                      \
       }
 
+      /*-----------------------------------.
+      | non-const methods that transpose.  |
+      `-----------------------------------*/
+
+      DEFINE(set_initial(state_t s),     set_final(s));
+      DEFINE(set_final(state_t s),       set_initial(s));
+      DEFINE(unset_initial(state_t s),   unset_final(s));
+      DEFINE(unset_final(state_t s),     unset_initial(s));
+
       DEFINE(del_transition(state_t s, state_t d, label_t l),
-             del_transition(d, s, l));
+             del_transition(d, s, aut_.genset()->transpose(l)));
       DEFINE(add_transition(state_t s, state_t d, label_t l, weight_t k),
-             add_transition(d, s, l, k));
+             add_transition(d, s,
+                            aut_.genset()->transpose(l),
+                            aut_.weightset()->transpose(k)));
       DEFINE(add_transition(state_t s, state_t d, label_t l),
-             add_transition(d, s, l));
+             add_transition(d, s, aut_.genset()->transpose(l)));
       DEFINE(set_transition(state_t s, state_t d, label_t l, weight_t k),
-             set_transition(d, s, l, k));
-      DEFINE(set_initial(state_t s),         set_final(s));
-      DEFINE(set_final(state_t s),           set_initial(s));
-      DEFINE(set_initial(state_t s, weight_t k), set_final(s, k));
-      DEFINE(set_final(state_t s, weight_t k),   set_initial(s, k));
-      DEFINE(add_initial(state_t s, weight_t k), add_final(s, k));
-      DEFINE(add_final(state_t s, weight_t k),   add_initial(s, k));
-      DEFINE(unset_initial(state_t s),       unset_final(s));
-      DEFINE(unset_final(state_t s),         unset_initial(s));
+             set_transition(d, s,
+                            aut_.genset()->transpose(l),
+                            aut_.weightset()->transpose(k)));
+      DEFINE(set_initial(state_t s, weight_t k),
+             set_final(s, aut_.weightset()->transpose(k)));
+      DEFINE(set_final(state_t s, weight_t k),
+             set_initial(s, aut_.weightset()->transpose(k)));
+      DEFINE(add_initial(state_t s, weight_t k),
+             add_final(s, aut_.weightset()->transpose(k)));
+      DEFINE(add_final(state_t s, weight_t k),
+             add_initial(s, aut_.weightset()->transpose(k)));
+
+
+      // Forwarded, does not transpose.
+      DEFINE(del_state(state_t s),       del_state(s));
 
 # undef DEFINE
-#endif
 
       /*-----------------------------------.
       | constexpr methods that transpose.  |
@@ -167,7 +182,6 @@ namespace vcsn
       DEFINE(transitions);
       DEFINE(weightset);
 # undef DEFINE
-
     };
   }
 

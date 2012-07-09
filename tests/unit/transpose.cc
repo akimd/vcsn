@@ -70,17 +70,26 @@ check_mutable_automaton()
   auto aut2 = vcsn::transpose(aut1);
   vcsn::dotty(aut2, std::cout);
 
+# define ASSERT_WEIGHT(Aut, Src, Dst, Lbl, Wgt)                         \
+  ASSERT_EQ(Aut.weightset()                                             \
+            ->format(Aut.weight_of(Aut.get_transition(Src, Dst, Lbl))), \
+            Wgt);
+
   // Check has_transition and get_transition.
   assert(aut1.has_transition(s0, s1, "cd"));
   // FIXME: we would really like to have equality here on kratexp.
-  ASSERT_EQ(aut1.weightset()
-            ->format(aut1.weight_of(aut1.get_transition(s0, s1, "cd"))),
-            "a.b.c.d");
+  ASSERT_WEIGHT(aut1, s0, s1, "cd", "a.b.c.d");
   assert(aut2.has_transition(s1, s0, "dc"));
-  ASSERT_EQ(aut2.weightset()
-            ->format(aut2.weight_of(aut2.get_transition(s1, s0, "dc"))),
-            "d.c.b.a");
+  ASSERT_WEIGHT(aut2, s1, s0, "dc", "d.c.b.a");
 
+  // Now change the transposed automaton, and check the modifications
+  // on the original.
+  aut2.set_transition(s1, s0, "dc", ks_b.conv("bbaa"));
+  ASSERT_WEIGHT(aut1, s0, s1, "cd", "a.a.b.b");
+  aut2.del_state(s2);
+  aut2.set_initial(s1);
+
+  vcsn::dotty(aut1, std::cout);
   return res;
 }
 
