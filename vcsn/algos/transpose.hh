@@ -43,32 +43,40 @@ namespace vcsn
         return aut_.Value;                      \
       }
 
-      DEFINE(get_transition(state_t s, state_t d, label_t l),
-             get_transition(d, s, l));
-      DEFINE(has_transition(state_t s, state_t d, label_t l),
-             has_transition(d, s, l));
       DEFINE(is_initial(state_t s),          is_final(s));
       DEFINE(is_final(state_t s),            is_initial(s));
       DEFINE(all_in(state_t s),              all_out(s));
       DEFINE(all_out(state_t s),             all_in(s));
       DEFINE(in(state_t s),                  out(s));
       DEFINE(out(state_t s),                 in(s));
-      DEFINE(in(state_t s, label_t l),       out(s, l));
-      DEFINE(out(state_t s, label_t l),      in(s, l));
       DEFINE(outin(state_t s, state_t d),    outin(d, s));
       DEFINE(src_of(transition_t t),         dst_of(t));
       DEFINE(dst_of(transition_t t),         src_of(t));
       DEFINE(initial_transitions(),          final_transitions());
       DEFINE(final_transitions(),            initial_transitions());
 
-      DEFINE(label_of(transition_t t),       genset()->transpose(aut_.label_of(t)));
-      DEFINE(word_label_of(transition_t t),  genset()->transpose(aut_.word_label_of(t)));
+      DEFINE(in(state_t s, label_t l),
+             out(s, aut_.genset()->transpose(l)));
+      DEFINE(out(state_t s, label_t l),
+             in(s, aut_.genset()->transpose(l)));
+      DEFINE(get_transition(state_t s, state_t d, label_t l),
+             get_transition(d, s, aut_.genset()->transpose(l)));
+      DEFINE(has_transition(state_t s, state_t d, label_t l),
+             has_transition(d, s, aut_.genset()->transpose(l)));
+      DEFINE(label_of(transition_t t),
+             genset()->transpose(aut_.label_of(t)));
+      DEFINE(word_label_of(transition_t t),
+             genset()->transpose(aut_.word_label_of(t)));
 
-      DEFINE(get_initial_weight(state_t s),  weightset()->transpose(aut_.get_final_weight(s)));
-      DEFINE(get_final_weight(state_t s),    weightset()->transpose(aut_.get_initial_weight(s)));
-      DEFINE(weight_of(transition_t t),      weightset()->transpose(aut_.weight_of(t)));
+      DEFINE(get_initial_weight(state_t s),
+             weightset()->transpose(aut_.get_final_weight(s)));
+      DEFINE(get_final_weight(state_t s),
+             weightset()->transpose(aut_.get_initial_weight(s)));
+      DEFINE(weight_of(transition_t t),
+             weightset()->transpose(aut_.weight_of(t)));
 
-      DEFINE(entry_at(state_t s, state_t d), entryset().transpose(aut_.entry_at(d, s)));
+      DEFINE(entry_at(state_t s, state_t d),
+             entryset().transpose(aut_.entry_at(d, s)));
 
 # undef DEFINE
 
@@ -132,7 +140,7 @@ namespace vcsn
       {
         return automaton_t::post();
       }
-      
+
       /*--------------------------.
       | forwarded const methods.  |
       `--------------------------*/

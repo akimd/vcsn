@@ -52,6 +52,12 @@ namespace vcsn
         return ws_;
       }
 
+      kratexpset_t
+      make_kratexpset() const
+      {
+        return *this;
+      }
+
       std::string format(const kratexp_t& e) const
       {
         kratexpset_t ks{*this};
