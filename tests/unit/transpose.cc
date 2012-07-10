@@ -3,6 +3,9 @@
 #include <vcsn/misc/echo.hh>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/transpose.hh>
+#include <vcsn/algos/determinize.hh>
+#include <vcsn/algos/standard_of.hh>
+#include <vcsn/core/rat/kratexpset.hh>
 #include <vcsn/ctx/char.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/factory/de_bruijn.hh>
@@ -93,6 +96,23 @@ check_mutable_automaton()
   return res;
 }
 
+bool
+check_minimization()
+{
+  using context_t = vcsn::ctx::char_b;
+  using automaton_t = vcsn::mutable_automaton<context_t>;
+  using tr_automaton_t = vcsn::details::transpose_automaton<automaton_t>;
+  context_t ctx{{'a', 'b'}};
+  auto ks = ctx.make_kratexpset();
+  auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
+  auto& au1 = *aut.original_automaton(); //vcsn::dotty(au1, std::cout);
+  auto au2 = vcsn::transpose(au1);       //vcsn::dotty(au2, std::cout);
+  auto au3 = vcsn::determinize(au2);     //vcsn::dotty(au3, std::cout);
+  auto au4 = vcsn::transpose(au3);       //vcsn::dotty(au4, std::cout);
+  auto au5 = vcsn::determinize(au4);     vcsn::dotty(au5, std::cout);
+  return true;
+}
+
 int main()
 {
   unsigned errs = 0;
@@ -104,9 +124,8 @@ int main()
     errs += !check_idempotence(aut);
   }
 
-  {
-    errs += !check_mutable_automaton();
-  }
+  errs += !check_mutable_automaton();
+  errs += !check_minimization();
 
   return !!errs;
 }

@@ -1,3 +1,26 @@
+* 2012-07-10
+** transposition
+Transposition on automaton is a read/write view: operations such as
+del_state, add_transition, etc. on a transposed automaton actually modify
+the wrapped automaton: set_final calls set_initial and so forth.
+
+As an extreme example, the following snippet:
+
+  using context_t = vcsn::ctx::char_b;
+  using automaton_t = vcsn::mutable_automaton<context_t>;
+  using tr_automaton_t = vcsn::details::transpose_automaton<automaton_t>;
+  context_t ctx{{'a', 'b'}};
+  auto ks = ctx.make_kratexpset();
+  auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
+
+applies the standard-of algorithm to a transposed mutable_automaton.  In
+other words,
+
+  aut.original_automaton();
+
+is the transposition of a standard automaton, except that it is a
+mutable_automaton, not a transpose_automaton<mutable_automaton>.
+
 * 2012-07-09
 ** transposition
 The "transpose" operation is implemented on words, weights, kratexps, and
