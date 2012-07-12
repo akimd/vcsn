@@ -11,6 +11,33 @@ We should find a mean to forbid transition from pre to post.  This was
 the case initially, but it is a useless constraint in aut-to-exp.
 Maybe it should be efforced only in non labels_are_empty case.
 
+* labels_are_empty
+Implement support.
+
+* automata: handle with shared_ptr
+One would rely like to have a transpose_automaton that is able to
+build its underlying automaton.  This means that using a const& to
+keep the original automaton is not the best model: pointers would be
+better.  But then there are issues with memory tracking, issues that
+we already know how to handle thanks to shared_ptr.
+
+* rename contexts
+char_b should be char_b_lal, etc.
+
+* libraries for contexts
+libvcsn-char_b_lal etc. would make the compilation of pprat etc. much
+easier, and save cycles.
+
+* compilation jit
+Well, you know what I mean.
+
+* char.hh:
+choose bw "word_t w", and const&.
+
+* move files around
+vcsn/ should be headers only, move lib else.  The hierarchy and the
+namespaces do not match.
+
 Local Variables:
 mode: outline
 End:
