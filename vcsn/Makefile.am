@@ -11,10 +11,6 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-include $(top_srcdir)/build-aux/make/init.mk
-
-AM_CPPFLAGS += -I$(top_srcdir)
-
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
   algos/aut_to_exp.hh                           \
@@ -53,5 +49,3 @@ nobase_vcsn_HEADERS =                           \
   weights/poly.hh                               \
   weights/z.hh                                  \
   weights/z_min.hh
-
-include io/local.mk

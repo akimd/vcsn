@@ -10,13 +10,6 @@
 # `COPYING' file in the root directory.
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
-include build-aux/make/init.mk
-include lib/local.mk
 
-ACLOCAL_AMFLAGS = -I build-aux/m4
-
-SUBDIRS = vcsn tests
-EXTRA_DIST += NEWS.txt TODO.txt
-
-check-html: all
-	cd tests && $(MAKE) $(AM_MAKEFLAGS) $@
+AM_CPPFLAGS += -I$(top_srcdir)
+include lib/vcsn/local.mk

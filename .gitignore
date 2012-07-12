@@ -28,7 +28,6 @@
 /tests/Makefile.in
 /vcsn/Makefile.in
 /vcsn/config.in.h
-/vcsn/io/rat-exp
 /vcsn/lexer.cc
 /vcsn/parse-rat-exp.dir/
 Makefile

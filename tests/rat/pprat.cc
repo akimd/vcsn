@@ -13,7 +13,7 @@
 #include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexpset.hh>
 #include <vcsn/ctx/char.hh>
-#include <vcsn/io/driver.hh>
+#include <lib/vcsn/driver.hh>
 
 static
 void

@@ -21,7 +21,7 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
 
-unit_transpose_LDADD = $(top_builddir)/vcsn/librat.la
+unit_transpose_LDADD = $(top_builddir)/lib/libvcsn.la
 
 unit_TESTS =					\
   unit/determinize.chk				\

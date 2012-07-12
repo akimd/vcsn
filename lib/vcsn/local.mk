@@ -14,8 +14,6 @@
 # A Bison wrapper for C++.
 BISONXX = $(top_builddir)/build-aux/bin/bison++
 BISONXX_IN = $(top_srcdir)/build-aux/bin/bison++.in
-$(BISONXX): $(BISONXX_IN)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) build-aux/bin/bison++
 
 BISONXXFLAGS =					\
   $(if $(V:0=),--verbose)
@@ -24,30 +22,30 @@ AM_BISONFLAGS =					\
 
 # We do not use Automake features here.
 SOURCES_PARSE_RAT_EXP_YY =			\
-  io/stack.hh					\
-  io/position.hh				\
-  io/location.hh				\
-  io/parse-rat-exp.hh				\
-  io/parse-rat-exp.cc
+  lib/vcsn/stack.hh				\
+  lib/vcsn/position.hh				\
+  lib/vcsn/location.hh				\
+  lib/vcsn/parse-rat-exp.hh			\
+  lib/vcsn/parse-rat-exp.cc
 BUILT_SOURCES += $(SOURCES_PARSE_RAT_EXP_YY)
 
 # Compile the parser and save cycles.
 # This code comes from "Handling Tools that Produce Many Outputs",
 # from the Automake documentation.
-EXTRA_DIST +=                                   \
-  io/parse-rat-exp.txt                          \
-  io/parse-rat-exp.stamp                        \
-  io/parse-rat-exp.yy
+EXTRA_DIST +=					\
+  lib/vcsn/parse-rat-exp.txt			\
+  lib/vcsn/parse-rat-exp.stamp			\
+  lib/vcsn/parse-rat-exp.yy
 # The dependency is on bison++.in and not bison++, since bison++ is
 # regenerated at distribution time, and voids the time stamps (which
 # we don't want!).
-io/parse-rat-exp.stamp: io/parse-rat-exp.yy $(BISONXX_IN)
+lib/vcsn/parse-rat-exp.stamp: lib/vcsn/parse-rat-exp.yy $(BISONXX_IN)
 	$(AM_V_GEN)mkdir -p $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(MAKE) $(BISONXX)
 	$(AM_V_at)$(BISONXX) $(BISONXXFLAGS) --	\
-	  $< $(srcdir)/io/parse-rat-exp.cc	\
+	  $< $(srcdir)/lib/vcsn/parse-rat-exp.cc	\
 	  $(AM_BISONFLAGS) $(BISONFLAGS)
 	$(AM_V_at)mv -f $@.tmp $@
 
@@ -55,14 +53,14 @@ io/parse-rat-exp.stamp: io/parse-rat-exp.yy $(BISONXX_IN)
 ## trying to compile from *.cc to *.lo, it will not apply VPATH
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
-$(addprefix $(srcdir)/, $(SOURCES_PARSE_RAT_EXP_YY)): io/parse-rat-exp.stamp
+$(addprefix $(srcdir)/, $(SOURCES_PARSE_RAT_EXP_YY)): lib/vcsn/parse-rat-exp.stamp
 	@if test -f $@; then :; else		\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
 
-pkglib_LTLIBRARIES = librat.la
-librat_la_SOURCES = 				\
+pkglib_LTLIBRARIES = lib/libvcsn.la
+lib_libvcsn_la_SOURCES =			\
   $(SOURCES_PARSE_RAT_EXP_YY)			\
-  io/driver.hh io/driver.cc			\
-  io/lexer.ll
+  lib/vcsn/driver.hh lib/vcsn/driver.cc		\
+  lib/vcsn/lexer.ll

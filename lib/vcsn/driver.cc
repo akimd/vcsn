@@ -1,8 +1,8 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/io/driver.hh>
-#include <vcsn/io/parse-rat-exp.hh>
+#include <lib/vcsn/driver.hh>
+#include <lib/vcsn/parse-rat-exp.hh>
 
 namespace vcsn
 {

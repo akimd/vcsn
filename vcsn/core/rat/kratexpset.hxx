@@ -2,9 +2,9 @@
 #include <cassert>
 #include <stdexcept>
 
+#include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexp.hh>
-#include <vcsn/io/driver.hh>
-#include <vcsn/io/parse-rat-exp.hh>
+#include <lib/vcsn/driver.hh>// FIXME: non-installed dependency.
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/transpose.hh>
 

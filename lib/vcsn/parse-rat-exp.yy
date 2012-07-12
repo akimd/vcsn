@@ -18,7 +18,7 @@
   #include "location.hh"
   #include <vcsn/core/rat/kratexp.hh>
   #include <vcsn/core/rat/abstract_kratexpset.hh>
-  #include <vcsn/io/driver.hh>
+  #include <lib/vcsn/driver.hh>
 
   namespace vcsn
   {
