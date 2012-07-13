@@ -6,12 +6,20 @@
 # include <utility>
 # include <vector>
 
+# include <vcsn/core/kind.hh>
+
 namespace vcsn
 {
   namespace details
   {
-    template <class Aut>
-    class eval_functor
+    template <typename Aut, typename Enable = void>
+    class evaluator; // undefined
+
+    template <typename Aut>
+    class evaluator
+    <Aut,
+     typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
+                                          labels_are_letters>::value>::type>
     {
       using automaton_t = Aut;
       using state_t = typename automaton_t::state_t;
@@ -21,7 +29,7 @@ namespace vcsn
       using weights = std::map<state_t, weight_t>;
 
     public:
-      eval_functor(const automaton_t& a)
+      evaluator(const automaton_t& a)
         : a_(a)
         , ws_(*a_.weightset())
       {}
@@ -68,11 +76,14 @@ namespace vcsn
 
   template <class Aut>
   inline
-  typename Aut::weight_t
+  auto
   eval(const Aut& a, const typename Aut::genset_t::word_t& w)
+    -> typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
+                                            labels_are_letters>::value,
+                               typename Aut::weight_t>::type
   {
-    details::eval_functor<Aut> evalf(a);
-    return evalf(w);
+    details::evaluator<Aut> e(a);
+    return e(w);
   }
 
 } // namespace vcsn
