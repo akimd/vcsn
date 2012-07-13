@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_CHAR_Z_MIN_LAL_HH
-# define VCSN_CTX_CHAR_Z_MIN_LAL_HH
+#ifndef VCSN_CTX_CHAR_Z_MIN_LAW_HH
+# define VCSN_CTX_CHAR_Z_MIN_LAW_HH
 
 # include <vcsn/ctx/char.hh>
 # include <vcsn/weights/z_min.hh>
@@ -15,10 +15,10 @@ namespace vcsn
 {
   namespace ctx
   {
-    using char_z_min_lal = char_<vcsn::z_min, labels_are_letters>;
+    using char_z_min_law = char_<vcsn::z_min, labels_are_words>;
   }
 
-  VCSN_CTX_INSTANTIATE(ctx::char_z_min_lal);
+  VCSN_CTX_INSTANTIATE(ctx::char_z_min_law);
 };
 
-#endif // !VCSN_CTX_CHAR_Z_MIN_LAL_HH
+#endif // !VCSN_CTX_CHAR_Z_MIN_LAW_HH

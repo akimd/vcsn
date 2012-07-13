@@ -12,11 +12,12 @@
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexpset.hh>
-#include <vcsn/ctx/char.hh>
 #include <vcsn/ctx/char_b_lal.hh>
-#include <vcsn/weights/b.hh>
-#include <vcsn/weights/z.hh>
-#include <vcsn/weights/z_min.hh>
+#include <vcsn/ctx/char_b_law.hh>
+#include <vcsn/ctx/char_z_lal.hh>
+#include <vcsn/ctx/char_z_law.hh>
+#include <vcsn/ctx/char_z_min_lal.hh>
+#include <vcsn/ctx/char_z_min_law.hh>
 #include <lib/vcsn/driver.hh>
 
 static

@@ -14,19 +14,31 @@ EXTRA_PROGRAMS +=				\
 
 unit_determinize_LDADD = $(libchar_b_lal)
 
+unit_eval_LDADD = $(libchar_z_lal)
+
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
 unit_ladybird_b_LDADD = $(libchar_b_lal)
 
 unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
+unit_ladybird_z_LDADD = $(libchar_z_lal)
 
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
+unit_ladybird_zmin_LDADD = $(libchar_z_min_lal)
 
 unit_lift_LDADD = $(libchar_b_lal)
 
-unit_transpose_LDADD = $(libvcsn)
+unit_poly_LDADD = $(libchar_z_lal)
+
+unit_product_LDADD = $(libchar_z_lal)
+
+unit_simpleaut_LDADD = $(libchar_z_lal)
+
+unit_simplaw_LDADD = $(libchar_z_law)
+
+unit_transpose_LDADD = $(libchar_b_lal) $(libchar_z_lal) $(libvcsn)
 
 unit_TESTS =					\
   unit/determinize.chk				\

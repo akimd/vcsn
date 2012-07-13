@@ -15,6 +15,12 @@ include $(top_srcdir)/build-aux/make/init.mk
 check_PROGRAMS =
 
 libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
+libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
+libchar_z_lal = $(top_builddir)/lib/libchar_z_lal.la
+libchar_z_law = $(top_builddir)/lib/libchar_z_law.la
+libchar_z_min_lal = $(top_builddir)/lib/libchar_z_min_lal.la
+libchar_z_min_law = $(top_builddir)/lib/libchar_z_min_law.la
+
 libvcsn = $(top_builddir)/lib/libvcsn.la
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)

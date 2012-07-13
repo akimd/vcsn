@@ -2,13 +2,12 @@
 
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/product.hh>
-#include <vcsn/ctx/char.hh>
+#include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/weights/z.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z;
+  using context_t = vcsn::ctx::char_z_lal;
   context_t ctx { {'a', 'b', 'c'} };
   using automaton_t = vcsn::mutable_automaton<context_t>;
 

@@ -15,4 +15,25 @@ AM_CPPFLAGS += -I$(top_srcdir)
 include lib/vcsn/local.mk
 
 pkglib_LTLIBRARIES += lib/libchar_b_lal.la
-lib_libchar_b_lal_la_SOURCES = lib/ctx/char_b_lal.cc
+lib_libchar_b_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_b_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_lal
+
+pkglib_LTLIBRARIES += lib/libchar_b_law.la
+lib_libchar_b_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_b_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_law
+
+pkglib_LTLIBRARIES += lib/libchar_z_lal.la
+lib_libchar_z_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_z_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lal
+
+pkglib_LTLIBRARIES += lib/libchar_z_law.la
+lib_libchar_z_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_z_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_law
+
+pkglib_LTLIBRARIES += lib/libchar_z_min_lal.la
+lib_libchar_z_min_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_z_min_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_min_lal
+
+pkglib_LTLIBRARIES += lib/libchar_z_min_law.la
+lib_libchar_z_min_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_z_min_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_min_law

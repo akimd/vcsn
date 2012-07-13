@@ -2,14 +2,14 @@
 
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/ctx/char.hh>
+#include <vcsn/ctx/char_z_law.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_<vcsn::z, vcsn::labels_are_words>;
+  using context_t = vcsn::ctx::char_z_law;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using automaton_t = vcsn::mutable_automaton<context_t>;
-  automaton_t aut(ctx);
+  automaton_t aut{ctx};
 
   auto s1 = aut.new_state();
   auto s2 = aut.new_state();
