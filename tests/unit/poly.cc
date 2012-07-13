@@ -1,10 +1,10 @@
 #include <cassert>
-#include <vcsn/ctx/char.hh>
+#include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/weights/poly.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z;
+  using context_t = vcsn::ctx::char_z_lal;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using poly_t = vcsn::polynomials<context_t>;
   poly_t poly(ctx);

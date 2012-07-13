@@ -38,6 +38,9 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
   ctx/char.hh                                   \
+  ctx/char_b_lal.hh                             \
+  ctx/char_z_lal.hh                             \
+  ctx/char_z_min_lal.hh                         \
   ctx/ctx.hh                                    \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \

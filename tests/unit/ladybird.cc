@@ -3,7 +3,12 @@
 #include <iostream>
 
 #include <vcsn/algos/dotty.hh>
-#include <vcsn/ctx/char.hh>
+// CTX(WeightSet) => char_WeightSet_lal.
+#define CTX(WS) CTX_(WS)
+// Two layers to force the evaluation of W.
+#define CTX_(WS) char_ ## WS ## _lal
+#define HEADER(WS) <vcsn/ctx/CTX(W).hh>
+#include HEADER(W)
 #include <vcsn/factory/ladybird.hh>
 
 void
@@ -24,7 +29,7 @@ main(int argc, char const** argv)
   if (n <= 0)
     syntax(argv[0]);
 
-  vcsn::ctx::char_<vcsn::W> ctx;
+  vcsn::ctx::CTX(W) ctx;
   auto lb = vcsn::ladybird(n, ctx);
   vcsn::dotty(lb, std::cout);
 }

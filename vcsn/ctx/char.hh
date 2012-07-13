@@ -4,9 +4,6 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/weights/b.hh>
-# include <vcsn/weights/z.hh>
-# include <vcsn/weights/z_min.hh>
 
 namespace vcsn
 {
@@ -16,10 +13,6 @@ namespace vcsn
     using char_ = context<vcsn::set_alphabet<vcsn::char_letters>,
                           WeightSet,
                           Kind>;
-
-    using char_b = char_<vcsn::b>;
-    using char_z = char_<vcsn::z>;
-    using char_z_min = char_<vcsn::z_min>;
   }
 };
 

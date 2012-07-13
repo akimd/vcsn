@@ -13,3 +13,6 @@
 
 AM_CPPFLAGS += -I$(top_srcdir)
 include lib/vcsn/local.mk
+
+pkglib_LTLIBRARIES += lib/libchar_b_lal.la
+lib_libchar_b_lal_la_SOURCES = lib/ctx/char_b_lal.cc

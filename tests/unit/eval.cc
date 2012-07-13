@@ -3,7 +3,7 @@
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/eval.hh>
 #include <vcsn/algos/product.hh>
-#include <vcsn/ctx/char.hh>
+#include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/core/mutable_automaton.hh>
 
 #define EVAL(automaton, str, strResult)                                 \
@@ -22,8 +22,8 @@
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z;
-  context_t ctx({'a', 'b', 'c'});
+  using context_t = vcsn::ctx::char_z_lal;
+  context_t ctx{{'a', 'b', 'c'}};
   auto aut = vcsn::make_mutable_automaton(ctx);
   int res = 0;
   // Test empty automaton

@@ -38,7 +38,7 @@ rat_XFAIL_TESTS =                               \
 XFAIL_TESTS += $(rat_XFAIL_TESTS)
 
 EXTRA_PROGRAMS += rat/pprat
-rat_pprat_LDADD = $(top_builddir)/lib/libvcsn.la
+rat_pprat_LDADD = $(libchar_b_lal) $(libvcsn)
 
 .PHONY: check-rat
 check-rat:

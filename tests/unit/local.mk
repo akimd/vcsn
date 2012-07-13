@@ -12,8 +12,11 @@ EXTRA_PROGRAMS +=				\
   unit/simpleaut				\
   unit/transpose
 
+unit_determinize_LDADD = $(libchar_b_lal)
+
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
+unit_ladybird_b_LDADD = $(libchar_b_lal)
 
 unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
@@ -21,7 +24,9 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
 
-unit_transpose_LDADD = $(top_builddir)/lib/libvcsn.la
+unit_lift_LDADD = $(libchar_b_lal)
+
+unit_transpose_LDADD = $(libvcsn)
 
 unit_TESTS =					\
   unit/determinize.chk				\

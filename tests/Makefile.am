@@ -14,6 +14,9 @@
 include $(top_srcdir)/build-aux/make/init.mk
 check_PROGRAMS =
 
+libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
+libvcsn = $(top_builddir)/lib/libvcsn.la
+
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir)
 
