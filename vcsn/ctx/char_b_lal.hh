@@ -32,8 +32,7 @@ namespace vcsn
 
   MAYBE_EXTERN template
   bool
-  eval(const mutable_automaton<ctx::char_b_lal>& aut,
-       const typename ctx::char_b_lal::word_t& w);
+  eval(const mutable_automaton<ctx::char_b_lal>& aut, const std::string& w);
 };
 
 #endif // !VCSN_CTX_CHAR_B_LAL_HH

@@ -5,6 +5,7 @@
 # include <vcsn/weights/z.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dotty.hh>
+# include <vcsn/algos/eval.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/standard_of.hh>
 
@@ -20,6 +21,13 @@ namespace vcsn
   }
 
   VCSN_CTX_INSTANTIATE(ctx::char_z_lal);
+
+  MAYBE_EXTERN template
+  class details::evaluator<mutable_automaton<ctx::char_z_lal>>;
+
+  MAYBE_EXTERN template
+  int
+  eval(const mutable_automaton<ctx::char_z_lal>& aut, const std::string& w);
 };
 
 #endif // !VCSN_CTX_CHAR_Z_LAL_HH
