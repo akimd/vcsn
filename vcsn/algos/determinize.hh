@@ -1,17 +1,23 @@
 #ifndef VCSN_ALGOS_DETERMINIZE_HH
 # define VCSN_ALGOS_DETERMINIZE_HH
 
+# include <map>
 # include <set>
 # include <stack>
-# include <map>
+# include <type_traits>
+
+# include <vcsn/core/kind.hh>
 
 namespace vcsn
 {
 
   template <class Aut>
   inline
-  Aut
+  auto
   determinize(const Aut& a)
+    -> typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
+                                            labels_are_letters>::value,
+                               Aut>::type
   {
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
