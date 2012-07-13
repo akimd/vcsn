@@ -3,6 +3,7 @@
 
 # include <cassert>
 # include <memory>
+# include <string>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 
@@ -24,6 +25,7 @@ namespace vcsn
 
       /// Type of transition labels, and type of RatExp atoms.
       using label_t = typename label_trait<kind_t, genset_t>::label_t;
+      using word_t = typename genset_t::word_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
       /// Type of RatExp kratexps objects.

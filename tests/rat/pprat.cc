@@ -3,9 +3,7 @@
 #include <map>
 #include <getopt.h>
 
-#include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/lift.hh>
-#include <vcsn/algos/standard_of.hh>
 #include <vcsn/algos/aut_to_exp.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/kind.hh>
