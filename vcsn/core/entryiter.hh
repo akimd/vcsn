@@ -4,7 +4,7 @@
 #include <set>
 #include <utility>
 
-namespace
+namespace vcsn
 {
   template <class Automaton, class C>
   class entry_iterator
