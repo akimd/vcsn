@@ -80,6 +80,7 @@ namespace vcsn
   }
 
   template <class A>
+  inline
   std::string
   dotty(const A& aut)
   {
