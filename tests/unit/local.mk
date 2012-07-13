@@ -25,8 +25,8 @@ unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
 unit_ladybird_z_LDADD = $(libchar_z_lal)
 
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
-unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=z_min
-unit_ladybird_zmin_LDADD = $(libchar_z_min_lal)
+unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
+unit_ladybird_zmin_LDADD = $(libchar_zmin_lal)
 
 unit_lift_LDADD = $(libchar_b_lal)
 

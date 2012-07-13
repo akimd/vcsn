@@ -18,8 +18,8 @@ libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
 libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
 libchar_z_lal = $(top_builddir)/lib/libchar_z_lal.la
 libchar_z_law = $(top_builddir)/lib/libchar_z_law.la
-libchar_z_min_lal = $(top_builddir)/lib/libchar_z_min_lal.la
-libchar_z_min_law = $(top_builddir)/lib/libchar_z_min_law.la
+libchar_zmin_lal = $(top_builddir)/lib/libchar_zmin_lal.la
+libchar_zmin_law = $(top_builddir)/lib/libchar_zmin_law.la
 
 libvcsn = $(top_builddir)/lib/libvcsn.la
 

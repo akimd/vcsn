@@ -30,10 +30,10 @@ pkglib_LTLIBRARIES += lib/libchar_z_law.la
 lib_libchar_z_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_z_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_law
 
-pkglib_LTLIBRARIES += lib/libchar_z_min_lal.la
-lib_libchar_z_min_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_min_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_min_lal
+pkglib_LTLIBRARIES += lib/libchar_zmin_lal.la
+lib_libchar_zmin_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zmin_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_lal
 
-pkglib_LTLIBRARIES += lib/libchar_z_min_law.la
-lib_libchar_z_min_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_min_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_min_law
+pkglib_LTLIBRARIES += lib/libchar_zmin_law.la
+lib_libchar_zmin_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zmin_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_law

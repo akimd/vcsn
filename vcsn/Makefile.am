@@ -42,8 +42,8 @@ nobase_vcsn_HEADERS =                           \
   ctx/char_b_law.hh                             \
   ctx/char_z_lal.hh                             \
   ctx/char_z_law.hh                             \
-  ctx/char_z_min_lal.hh                         \
-  ctx/char_z_min_law.hh                         \
+  ctx/char_zmin_lal.hh                         \
+  ctx/char_zmin_law.hh                         \
   ctx/ctx.hh                                    \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \
@@ -54,4 +54,4 @@ nobase_vcsn_HEADERS =                           \
   weights/b.hh                                  \
   weights/poly.hh                               \
   weights/z.hh                                  \
-  weights/z_min.hh
+  weights/zmin.hh

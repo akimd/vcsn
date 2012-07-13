@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTS_Z_MIN_HH
-# define VCSN_WEIGHTS_Z_MIN_HH
+#ifndef VCSN_WEIGHTS_ZMIN_HH
+# define VCSN_WEIGHTS_ZMIN_HH
 
 # include <string>
 # include <ostream>
@@ -11,7 +11,7 @@
 
 namespace vcsn
 {
-  class z_min
+  class zmin
   {
   public:
     using value_t = int;
@@ -34,7 +34,7 @@ namespace vcsn
       if (0 <= v)
         return unit();
       else
-        throw std::domain_error("z_min: star: invalid value: " + format(v));
+        throw std::domain_error("zmin: star: invalid value: " + format(v));
     }
 
     value_t
@@ -104,4 +104,4 @@ namespace vcsn
   };
 }
 
-#endif // !VCSN_WEIGHTS_Z_MIN_HH
+#endif // !VCSN_WEIGHTS_ZMIN_HH
