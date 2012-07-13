@@ -25,21 +25,16 @@ namespace vcsn
   MAYBE_EXTERN template
   auto
   determinize(const mutable_automaton<ctx::char_b_lal>& aut)
-    -> typename std::enable_if<std::is_same<typename mutable_automaton<ctx::char_b_lal>::context_t::kind_t,
-                                            labels_are_letters>::value,
-                               mutable_automaton<ctx::char_b_lal>>::type;
+    -> mutable_automaton<ctx::char_b_lal>;
 
   MAYBE_EXTERN template
   class details::evaluator<mutable_automaton<ctx::char_b_lal>,
-                           typename std::enable_if<std::is_same<typename ctx::char_b_lal::kind_t,
-                                                                labels_are_letters>::value>::type>;
+                           typename std::enable_if<true>::type>;
 
   MAYBE_EXTERN template
-  typename mutable_automaton<ctx::char_b_lal>::weight_t
+  bool
   eval(const mutable_automaton<ctx::char_b_lal>& aut,
-       const typename mutable_automaton<ctx::char_b_lal>::genset_t::word_t& w);
-
-
+       const typename ctx::char_b_lal::word_t& w);
 };
 
 #endif // !VCSN_CTX_CHAR_B_LAL_HH
