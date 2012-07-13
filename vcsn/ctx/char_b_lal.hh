@@ -28,8 +28,7 @@ namespace vcsn
     -> mutable_automaton<ctx::char_b_lal>;
 
   MAYBE_EXTERN template
-  class details::evaluator<mutable_automaton<ctx::char_b_lal>,
-                           typename std::enable_if<true>::type>;
+  class details::evaluator<mutable_automaton<ctx::char_b_lal>>;
 
   MAYBE_EXTERN template
   bool
