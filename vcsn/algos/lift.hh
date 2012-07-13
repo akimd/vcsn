@@ -23,6 +23,7 @@ namespace vcsn
   }
 
   template <typename Aut>
+  inline
   details::lifted_automaton_t<Aut>
   lift(const Aut& a)
   {
