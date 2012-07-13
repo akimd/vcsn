@@ -29,6 +29,15 @@ namespace vcsn
     }
 
     value_t
+    star(const value_t v) const
+    {
+      if (0 <= v)
+        return unit();
+      else
+        throw std::domain_error("z_min: star: invalid value: " + format(v));
+    }
+
+    value_t
     unit() const
     {
       return 0;

@@ -44,7 +44,7 @@ namespace vcsn
       if (is_zero(v))
         return unit();
       else
-        throw std::domain_error("star: invalid integer: " + format(v));
+        throw std::domain_error("z: star: invalid value: " + format(v));
     }
 
     bool
