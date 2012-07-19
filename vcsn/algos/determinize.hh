@@ -25,18 +25,13 @@ namespace vcsn
     using stack = std::stack<state_set>;
     using map = std::map<state_set, state_t>;
 
-    state_set initial;
-    for (auto t : a.initial_transitions())
-      initial.insert(a.dst_of(t));
-
     automaton_t res{a.context()};
-    if (initial.empty())
-      return res;
-
+    // The stack of (input) sets of states waiting to be processed.
     stack st;
+    // set of input states -> output state.
     map m;
-    // Create a new state. Insert in the output automaton, in the
-    // map, and push in the stack.
+    // Create a new output state from SS. Insert in the output
+    // automaton, in the map, and push in the stack.
     auto push_new_state =
       [&res,&m,&a,&st] (state_set ss) -> state_t
       {
@@ -53,6 +48,12 @@ namespace vcsn
         return r;
       };
 
+    // The input initial states.
+    state_set initial;
+    for (auto t : a.initial_transitions())
+      initial.insert(a.dst_of(t));
+    if (initial.empty())
+      return res;
     res.set_initial(push_new_state(initial));
 
     while (!st.empty())
