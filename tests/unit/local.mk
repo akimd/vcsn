@@ -12,6 +12,8 @@ EXTRA_PROGRAMS +=				\
   unit/simpleaut				\
   unit/transpose
 
+noinst_HEADERS = unit/test.hh
+
 unit_determinize_LDADD = $(libchar_b_lal)
 
 unit_eval_LDADD = $(libchar_z_lal)

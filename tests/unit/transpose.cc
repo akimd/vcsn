@@ -1,24 +1,10 @@
-#include <iostream>
-
-#include <vcsn/misc/echo.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/rat/kratexpset.hh>
 #include <vcsn/ctx/char_b_lal.hh>
 #include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/factory/de_bruijn.hh>
-
-#define ASSERT_EQ(Lhs, Rhs)                                     \
-  do {                                                          \
-    auto lhs = Lhs;                                             \
-    auto rhs = Rhs;                                             \
-    if (lhs != rhs)                                             \
-      {                                                         \
-        ECHOH("assertion failed: " #Lhs " == " #Rhs);           \
-        ECHOH("    " << lhs << " != " << rhs);                  \
-        res = false;                                            \
-      }                                                         \
-  } while (false)
+#include <tests/unit/test.hh>
 
 template <typename Aut>
 bool
