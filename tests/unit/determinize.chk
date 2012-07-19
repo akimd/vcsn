@@ -1,7 +1,8 @@
 #! /bin/sh
 
 cat >out.exp <<\EOF
-PASS: Check Idempotence for de Bruijn 3
+Check idempotence for de Bruijn 3
+States: 5 -> 16
 digraph A {
   rankdir=LR
   node [shape=circle]
@@ -59,8 +60,10 @@ digraph A {
   3 -> 11 [label="a"]
   3 -> 12 [label="b"]
 }
-PASS: Check Idempotence for de Bruijn 8
-PASS: Check Idempotence for ladybird 4
+Check idempotence for de Bruijn 8
+States: 10 -> 512
+Check idempotence for ladybird 4
+States: 4 -> 16
 digraph A {
   rankdir=LR
   node [shape=circle]
@@ -130,5 +133,7 @@ digraph A {
   4 -> 4 [label="b"]
   4 -> 14 [label="c"]
 }
+Check idempotence for ladybird 8
+States: 8 -> 256
 EOF
 run 0 out.exp unit/determinize

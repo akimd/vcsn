@@ -1,12 +1,11 @@
-#include <iostream>
-#include <sstream>
-
+#include <tests/unit/test.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/char_b_lal.hh>
 #include <vcsn/factory/de_bruijn.hh>
 #include <vcsn/factory/ladybird.hh>
+#include <tests/unit/test.hh>
 
 using context_t = vcsn::ctx::char_b_lal;
 using automaton_t = vcsn::mutable_automaton<context_t>;
@@ -15,29 +14,22 @@ using automaton_t = vcsn::mutable_automaton<context_t>;
 bool
 idempotence(const std::string& str, automaton_t& aut, bool display_aut)
 {
+  bool res = true;
   auto d1 = vcsn::determinize(aut);
   auto d2 = vcsn::determinize(d1);
-  std::string d1s = vcsn::dotty(d1);
-  std::string d2s = vcsn::dotty(d2);
+  std::cout
+    << "Check idempotence for " << str << std::endl
+    << "States: " << aut.num_states() << " -> " << d1.num_states() << std::endl;
+  if (display_aut)
+    vcsn::dotty(d1, std::cout);
 
-  if (d1s == d2s)
-    {
-      std::cout << "PASS: Check Idempotence for " << str << std::endl;
-      if (display_aut)
-        std::cout << d1s;
-      return true;
-    }
-  else
-    {
-      std::cout << "FAIL: determinize(aut) != determinize(determinize(aut)) for "
-                << str << std::endl;
-      return false;
-    }
+  ASSERT_EQ(vcsn::dotty(d1), vcsn::dotty(d2));
+  return res;
 }
 
 /// true iff passes.
 bool
-check_simple(size_t n, bool display_aut)
+check_de_bruijn(size_t n, bool display_aut)
 {
   context_t ctx{{'a', 'b'}};
   automaton_t aut = vcsn::de_bruijn(n, ctx);
@@ -47,16 +39,25 @@ check_simple(size_t n, bool display_aut)
 }
 
 
+/// true iff passes.
+bool
+check_ladybird(size_t n, bool display_aut)
+{
+  context_t ctx{{'a', 'b', 'c'}};
+  auto ladybird = vcsn::ladybird<context_t>(n, ctx);
+  auto determ_ladybird = vcsn::determinize(ladybird);
+  std::ostringstream ss;
+  ss << "ladybird " << n;
+  return idempotence(ss.str(), ladybird, display_aut);
+}
+
+
 int main()
 {
   int errs = 0;
-  errs += !check_simple(3, true);
-  errs += !check_simple(8, false);
-
-  context_t ctx{{'a', 'b', 'c'}};
-  auto ladybird = vcsn::ladybird<context_t>(4, ctx);
-  auto determ_ladybird = vcsn::determinize(ladybird);
-
-  errs += !idempotence("ladybird 4", ladybird, true);
+  errs += !check_de_bruijn(3, true);
+  errs += !check_de_bruijn(8, false);
+  errs += !check_ladybird(4, true);
+  errs += !check_ladybird(8, false);
   return !!errs;
 }
