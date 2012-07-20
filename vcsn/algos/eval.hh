@@ -12,15 +12,12 @@ namespace vcsn
 {
   namespace details
   {
-    template <typename Aut, typename Enable = void>
-    class evaluator; // undefined
-
     template <typename Aut>
     class evaluator
-    <Aut,
-     typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
-                                          labels_are_letters>::value>::type>
     {
+      static_assert(Aut::context_t::is_lal,
+                    "requires labels_are_letters");
+
       using automaton_t = Aut;
       using state_t = typename automaton_t::state_t;
       using word_t = typename automaton_t::genset_t::word_t;
@@ -78,9 +75,7 @@ namespace vcsn
   inline
   auto
   eval(const Aut& a, const typename Aut::genset_t::word_t& w)
-    -> typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
-                                            labels_are_letters>::value,
-                               typename Aut::weight_t>::type
+    -> typename Aut::weight_t
   {
     details::evaluator<Aut> e(a);
     return e(w);

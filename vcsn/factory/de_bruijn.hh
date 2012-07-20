@@ -9,22 +9,22 @@ namespace vcsn
 {
   // (a+b)*a(a+b)^n.
   template <class Context>
-  typename std::enable_if<std::is_same<typename Context::kind_t,
-                                       labels_are_letters>::value,
-                          mutable_automaton<Context>>::type
+  mutable_automaton<Context>
   de_bruijn(unsigned n, const Context& ctx)
   {
+    static_assert(Context::is_lal,
+                  "requires labels_are_letters");
     using context_t = Context;
     mutable_automaton<context_t> res{ctx};
-    
+
     auto init = res.new_state();
     res.set_initial(init);
     res.set_transition(init, init, 'a');
     res.set_transition(init, init, 'b');
-    
+
     auto prev = res.new_state();
     res.set_transition(init, prev, 'a');
-    
+
     while (n--)
       {
         auto next = res.new_state();

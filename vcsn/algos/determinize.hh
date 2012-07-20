@@ -13,12 +13,14 @@ namespace vcsn
 
   template <class Aut>
   inline
-  auto
+  Aut
   determinize(const Aut& a)
-    -> typename std::enable_if<std::is_same<typename Aut::context_t::kind_t,
-                                            labels_are_letters>::value,
-                               Aut>::type
   {
+    static_assert(Aut::context_t::is_lal,
+                  "requires labels_are_letters");
+    static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+                  "requires Boolean labels");
+
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
     using state_set = std::set<state_t>;

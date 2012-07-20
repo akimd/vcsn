@@ -22,6 +22,11 @@ namespace vcsn
       using genset_ptr = std::shared_ptr<const genset_t>;
       using weightset_ptr = std::shared_ptr<const weightset_t>;
       using kind_t = Kind;
+      enum
+        {
+          is_lal = std::is_same<kind_t, labels_are_letters>::value,
+          is_law = std::is_same<kind_t, labels_are_words>::value,
+        };
 
       /// Type of transition labels, and type of RatExp atoms.
       using label_t = typename label_trait<kind_t, genset_t>::label_t;

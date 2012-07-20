@@ -8,11 +8,11 @@
 namespace vcsn
 {
   template <class Context>
-  typename std::enable_if<std::is_same<typename Context::kind_t,
-                                       labels_are_letters>::value,
-                          mutable_automaton<Context>>::type
+  mutable_automaton<Context>
   ladybird(unsigned n, const Context& ctx)
   {
+    static_assert(Context::is_lal,
+                  "requires labels_are_letters");
     using context_t = Context;
     mutable_automaton<context_t> aut{ctx};
 
