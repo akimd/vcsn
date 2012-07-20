@@ -45,7 +45,6 @@ check_ladybird(size_t n, bool display_aut)
 {
   context_t ctx{{'a', 'b', 'c'}};
   auto ladybird = vcsn::ladybird<context_t>(n, ctx);
-  auto determ_ladybird = vcsn::determinize(ladybird);
   std::ostringstream ss;
   ss << "ladybird " << n;
   return idempotence(ss.str(), ladybird, display_aut);
