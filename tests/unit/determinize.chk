@@ -18,6 +18,18 @@ digraph A {
   3 -> 3 [label="a + b"]
   2 -> 3 [label="a + b"]
 }
+Check idempotence for empty
+States: 0 -> 1
+digraph A {
+  rankdir=LR
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+  }
+  I1 -> 1
+  1 -> 1 [label="a + b"]
+}
 Check idempotence for de Bruijn 3
 States: 5 -> 16
 digraph A {

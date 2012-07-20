@@ -56,6 +56,7 @@ check_completeness()
 {
   bool res = true;
   context_t ctx{{'a', 'b'}};
+  // Thompson 'a'.
   {
     automaton_t aut{ctx};
     auto s0 = aut.new_state();
@@ -64,6 +65,11 @@ check_completeness()
     aut.set_final(s1);
     aut.add_transition(s0, s1, 'a');
     res &= idempotence("Thompson 'a'", aut, true);
+  }
+  // Empty automaton.
+  {
+    automaton_t aut{ctx};
+    res &= idempotence("empty", aut, true);
   }
   return res;
 }
