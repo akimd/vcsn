@@ -53,8 +53,6 @@ namespace vcsn
     state_set initial;
     for (auto t : a.initial_transitions())
       initial.insert(a.dst_of(t));
-    if (initial.empty())
-      return res;
     res.set_initial(push_new_state(initial));
 
     while (!st.empty())
