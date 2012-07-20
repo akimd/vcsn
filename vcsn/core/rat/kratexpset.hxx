@@ -23,10 +23,10 @@ namespace vcsn
 
 
   DEFINE::atom(const label_t& v) const
-  -> value_t
+    -> value_t
   {
-    // It make look useless to bounce on atom_<context_t>, after all
-    // we already parameterized by Context, but that's needed for
+    // Bouncing on atom_<context_t> seems useless ---after all we are
+    // already parameterized by Context--- but that's needed for
     // enable_if to work.
     return atom_<context_t>(v);
   }
