@@ -66,6 +66,14 @@ check_completeness()
     aut.add_transition(s0, s1, 'a');
     res &= idempotence("Thompson 'a'", aut, true);
   }
+  // \e
+  {
+    automaton_t aut{ctx};
+    auto s0 = aut.new_state();
+    aut.set_initial(s0);
+    aut.set_final(s0);
+    res &= idempotence("'\\e'", aut, true);
+  }
   // Empty automaton.
   {
     automaton_t aut{ctx};
