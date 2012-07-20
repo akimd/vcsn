@@ -4,7 +4,7 @@
 # include <string>
 # include <list>
 
-# include <vcsn/core/kind.hh>
+# include <vcsn/ctx/ctx.hh>
 # include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 
@@ -114,11 +114,11 @@ namespace vcsn
   private:
     template <typename Ctx>
     value_t
-    atom_(typename std::enable_if<Ctx::is_lal, letter_t>::type v) const;
+    atom_(if_lal<Ctx, letter_t> v) const;
 
     template <typename Ctx>
     value_t
-    atom_(const typename std::enable_if<Ctx::is_law, word_t>::type& w) const;
+    atom_(const if_law<Ctx, word_t>& w) const;
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \param type  the kind of kratexps on which to apply associativity.

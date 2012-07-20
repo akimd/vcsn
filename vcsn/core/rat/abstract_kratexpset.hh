@@ -141,7 +141,7 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const word_t& v) const
-      -> typename std::enable_if<Ctx::is_lal, value_t>::type
+      -> if_lal<Ctx, value_t>
     {
       if (!ks_.genset()->is_letter(v))
         throw std::domain_error("invalid atom: " + v + ": not a letter");
@@ -151,7 +151,7 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const word_t& v) const
-      -> typename std::enable_if<Ctx::is_law, value_t>::type
+      -> if_law<Ctx, value_t>
     {
       return ks_.atom(v);
     }

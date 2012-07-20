@@ -4,6 +4,8 @@
 # include <cassert>
 # include <memory>
 # include <string>
+# include <type_traits>
+
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 
@@ -83,7 +85,22 @@ namespace vcsn
       genset_ptr gs_;
       weightset_ptr ws_;
     };
+
   }
+
+  // Provide "overloading" on parameter types, for instance to require
+  // letter_t when labels_are_letters, and word_t when
+  // labels_are_words.  See kratexpset::atom and kratexpset::atom_ for
+  // an example.
+  //
+  // It is very tempting to turns these guys into members of
+  // ctx::context, but then, instead of "(if_lal<Ctx, letter_t> v)",
+  // one must write "(typename Cxx::template if_lal<letter_t> v)".
+  template <typename Ctx, typename R>
+  using if_lal = typename std::enable_if<Ctx::is_lal, R>::type;
+
+  template <typename Ctx, typename R>
+  using if_law = typename std::enable_if<Ctx::is_law, R>::type;
 };
 
 #endif // !VCSN_CTX_CTX_HH

@@ -25,6 +25,9 @@ namespace vcsn
   DEFINE::atom(const label_t& v) const
   -> value_t
   {
+    // It make look useless to bounce on atom_<context_t>, after all
+    // we already parameterized by Context, but that's needed for
+    // enable_if to work.
     return atom_<context_t>(v);
   }
 
@@ -32,7 +35,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(typename std::enable_if<Ctx::is_lal, letter_t>::type v) const
+  kratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
     -> value_t
   {
     if (!genset()->has(v))
@@ -44,7 +47,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(const typename std::enable_if<Ctx::is_law, word_t>::type& w) const
+  kratexpset<Context>::atom_(const if_law<Ctx, word_t>& w) const
     -> value_t
   {
     for (auto l: w)
