@@ -55,9 +55,7 @@ namespace vcsn
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
            ctx.genset()->to_word(""),
-           kre.weight
-           (a.weight_of(t),
-            kre.template atom_<typename Aut::kind_t>(a.label_of(t))));
+           kre.weight(a.weight_of(t), kre.atom(a.label_of(t))));
     return res;
   }
 
