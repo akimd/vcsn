@@ -97,27 +97,7 @@ namespace vcsn
 
     virtual value_t atom(const word_t& w) const
     {
-      return atom_<typename context_t::kind_t>(w);
-    }
-
-    template <typename Kind>
-    auto
-    atom_(const word_t& w) const
-      -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
-                                 value_t>::type
-    {
-      if (!ks_.genset()->is_letter(w))
-        throw std::domain_error("invalid atom: " + w + ": not a letter");
-      return ks_.atom(w[0]);
-    }
-
-    template <typename Kind>
-    auto
-    atom_(const word_t& w) const
-      -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
-                                 value_t>::type
-    {
-      return ks_.atom(w);
+      return atom_<context_t>(w);
     }
 
     virtual value_t add(value_t l, value_t r) const
@@ -158,6 +138,24 @@ namespace vcsn
     }
 
   private:
+    template <typename Ctx>
+    auto
+    atom_(const word_t& v) const
+      -> typename std::enable_if<Ctx::is_lal, value_t>::type
+    {
+      if (!ks_.genset()->is_letter(v))
+        throw std::domain_error("invalid atom: " + v + ": not a letter");
+      return ks_.atom(v[0]);
+    }
+
+    template <typename Ctx>
+    auto
+    atom_(const word_t& v) const
+      -> typename std::enable_if<Ctx::is_law, value_t>::type
+    {
+      return ks_.atom(v);
+    }
+
     kratexpset<context_t> ks_;
   };
 } // namespace vcsn

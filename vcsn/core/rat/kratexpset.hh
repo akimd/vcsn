@@ -71,18 +71,6 @@ namespace vcsn
     auto atom(const label_t& v) const
       -> value_t;
 
-    template <typename Kind>
-    auto
-    atom_(const letter_t& v) const
-      -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
-                                 value_t>::type;
-
-    template <typename Kind>
-    auto
-    atom_(const word_t& w) const
-      -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
-                                 value_t>::type;
-
     /// When used as WeightSet for automata.
     bool is_zero(value_t v) const;
     bool is_unit(value_t v) const;
@@ -122,6 +110,15 @@ namespace vcsn
     value_t weight(value_t e, const weight_t& w) const;
     value_t weight(const weight_t& w, value_t e) const;
     value_t transpose(value_t e) const;
+
+  private:
+    template <typename Ctx>
+    value_t
+    atom_(typename std::enable_if<Ctx::is_lal, letter_t>::type v) const;
+
+    template <typename Ctx>
+    value_t
+    atom_(const typename std::enable_if<Ctx::is_law, word_t>::type& w) const;
 
     /// Push \a v in \a res, applying associativity if possible.
     /// \param type  the kind of kratexps on which to apply associativity.

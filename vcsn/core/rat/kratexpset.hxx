@@ -25,16 +25,15 @@ namespace vcsn
   DEFINE::atom(const label_t& v) const
   -> value_t
   {
-    return atom_<kind_t>(v);
+    return atom_<context_t>(v);
   }
 
   template <typename Context>
-  template <typename Kind>
+  template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(const letter_t& v) const
-    -> typename std::enable_if<std::is_same<Kind, labels_are_letters>::value,
-                             value_t>::type
+  kratexpset<Context>::atom_(typename std::enable_if<Ctx::is_lal, letter_t>::type v) const
+    -> value_t
   {
     if (!genset()->has(v))
       throw std::domain_error("invalid letter: " + std::string{v});
@@ -42,12 +41,11 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <typename Kind>
+  template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(const word_t& w) const
-    -> typename std::enable_if<std::is_same<Kind, labels_are_words>::value,
-                               value_t>::type
+  kratexpset<Context>::atom_(const typename std::enable_if<Ctx::is_law, word_t>::type& w) const
+    -> value_t
   {
     for (auto l: w)
       if (!genset()->has(l))
