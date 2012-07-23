@@ -1,11 +1,13 @@
-%option noyywrap nounput stack debug prefix="rat" outfile="lex.yy.c"
+/* See <http://www.graphviz.org/content/dot-language>. */
+
+%option noyywrap nounput debug prefix="dot" outfile="lex.yy.c"
 
 %{
 #include <string>
 #include <cassert>
 #include <stack>
 #include <iostream>
-#include <lib/vcsn/rat/parse.hh>
+#include <lib/vcsn/dot/parse.hh>
 
 #define LINE(Line)				\
   do{						\
@@ -17,11 +19,15 @@
   yylloc->columns(yyleng);
 
 #define TOK(Token)                              \
-  vcsn::rat::parser::token::Token
+  vcsn::dot::parser::token::Token
 %}
-%x SC_WEIGHT
 
-char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
+%x SC_COMMENT SC_STRING
+
+alpha   [a-zA-Z\200-\377]
+digit   [0-9]
+ID      {alpha}(_|{alpha}|{digit})*
+NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
 
 %%
 %{
@@ -29,56 +35,62 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   unsigned int nesting = 0;
   // Grow a string before returning it.
   std::string* sval = 0;
-
   yylloc->step();
 %}
 
 <INITIAL>{ /* Vcsn Syntax */
 
-  "("     yylval->ival = 0; return TOK(LPAREN);
-  ")"     yylval->ival = 0; return TOK(RPAREN);
+  "digraph"  return TOK(DIGRAPH);
+  "edge"     return TOK(EDGE);
+  "graph"    return TOK(GRAPH);
+  "node"     return TOK(NODE);
+  "{"        return TOK(LBRACE);
+  "}"        return TOK(RBRACE);
+  "["        return TOK(LBRACKET);
+  "]"        return TOK(RBRACKET);
+  "="        return TOK(EQ);
+  "->"       return TOK(ARROW);
+  ";"        return TOK(SEMI);
 
-  "["     yylval->ival = 1; return TOK(LPAREN);
-  "]"     yylval->ival = 1; return TOK(RPAREN);
-  "+"     return TOK(SUM);
-  "."     return TOK(DOT);
-  "*"     return TOK(STAR);
-  "\\e"   return TOK(ONE);
-  "\\z"   return TOK(ZERO);
-
-  "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
-  {char}  yylval->cval = *yytext; return TOK(LETTER);
-  "\n"    continue;
-  .       driver_.invalid(*yylloc, yytext);
-
+  "//".*     continue;
+  "/*"       BEGIN SC_COMMENT;
+  "\""       yylval->sval = new std::string; BEGIN SC_STRING;
+  {ID}|{NUM} {
+               yylval->sval = new std::string{yytext, size_t(yyleng)};
+               return TOK(ID);
+             }
+  .          driver_.error(*yylloc, std::string{"invalid character: "}+yytext);
 }
 
-<SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
-  "{"                           {
-    ++nesting;
-    *sval += yytext;
-  } // push brace
-  "}"                           {
-    if (nesting)
-      {
-        --nesting;
-        *sval += yytext;
-      }
-    else
-      {
-        yy_pop_state();
-        yylval->sval = sval;
-        return TOK(WEIGHT);
-      }
-  }
-  [^{}]+       { *sval += yytext; }
+<SC_COMMENT>{
+  [^*\n]*        continue;
+  "*"+[^*/\n]*   continue;
+  "\n"+          LINE(yyleng);
+  "*"+"/"        BEGIN(INITIAL);
+}
+
+<SC_STRING>{ /* Handling of the strings.  Initial " is eaten. */
+     \" {
+       BEGIN INITIAL;
+       return TOK(ID);
+     }
+
+     \\\"      *yylval->sval += '"';
+     \\.       yylval->sval->append(yytext, yyleng);
+     [^\\""]+  yylval->sval->append(yytext, yyleng);
+
+     <<EOF>> {
+       driver_.error(*yylloc, "unexpected end of file in a string");
+       BEGIN INITIAL;
+       return TOK(ID);
+     }
 }
 
 %%
 
 namespace vcsn
 {
-  namespace rat
+  namespace dot
   {
     // Beware of the dummy Flex interface.  One would like to use:
     //

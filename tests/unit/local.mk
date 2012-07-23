@@ -6,6 +6,7 @@ EXTRA_PROGRAMS +=				\
   unit/ladybird-z				\
   unit/ladybird-zmin				\
   unit/lift					\
+  unit/parse-dot				\
   unit/poly					\
   unit/product					\
   unit/simplaw					\
@@ -31,6 +32,8 @@ unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
 unit_ladybird_zmin_LDADD = $(libchar_zmin_lal)
 
 unit_lift_LDADD = $(libchar_b_lal)
+
+unit_parse_dot_LDADD = $(libvcsn)
 
 unit_poly_LDADD = $(libchar_z_lal)
 

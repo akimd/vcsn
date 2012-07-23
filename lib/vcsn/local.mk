@@ -18,12 +18,19 @@ BISONXX_IN = $(top_srcdir)/build-aux/bin/bison++.in
 BISONXXFLAGS =					\
   $(if $(V:0=),--verbose)
 AM_BISONFLAGS =					\
-  -Wall -Werror --report=all
-
-include lib/vcsn/rat/local.mk
+  -Wall --report=all # -Werror
 
 pkglib_LTLIBRARIES = lib/libvcsn.la
-lib_libvcsn_la_SOURCES =			\
+lib_libvcsn_la_SOURCES =
+
+include lib/vcsn/dot/local.mk
+lib_libvcsn_la_SOURCES +=			\
+  $(SOURCES_DOT_PARSE_YY)			\
+  lib/vcsn/dot/driver.hh lib/vcsn/dot/driver.cc	\
+  lib/vcsn/dot/scan.ll
+
+include lib/vcsn/rat/local.mk
+lib_libvcsn_la_SOURCES +=			\
   $(SOURCES_RAT_PARSE_YY)			\
   lib/vcsn/rat/driver.hh lib/vcsn/rat/driver.cc	\
   lib/vcsn/rat/scan.ll
