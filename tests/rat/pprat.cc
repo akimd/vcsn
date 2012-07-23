@@ -18,6 +18,7 @@
 #include <vcsn/ctx/char_zmin_law.hh>
 
 #include <lib/vcsn/rat/driver.hh>
+
 static
 void
 usage(const char* prog, int status)

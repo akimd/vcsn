@@ -1,5 +1,5 @@
-#ifndef VCSN_IO_DRIVER_HH
-# define VCSN_IO_DRIVER_HH
+#ifndef LIB_VCSN_RAT_DRIVER_HH
+# define LIB_VCSN_RAT_DRIVER_HH
 
 # include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/fwd.hh>
@@ -47,4 +47,4 @@ namespace vcsn
 
   }
 }
-#endif // !VCSN_IO_DRIVER_HH
+#endif // !LIB_VCSN_RAT_DRIVER_HH

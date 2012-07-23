@@ -32,7 +32,7 @@ namespace vcsn
 
     /// The nesting limit for parser traces, as specified per
     /// $YYDEBUG.
-    int
+    static int
     debug_level_()
     {
       int res = 0;
