@@ -4,7 +4,7 @@
 
 #include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexp.hh>
-#include <lib/vcsn/driver.hh>// FIXME: non-installed dependency.
+#include <lib/vcsn/rat/driver.hh>// FIXME: non-installed dependency.
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/transpose.hh>
 

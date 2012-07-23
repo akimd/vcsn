@@ -3,7 +3,7 @@
 
 # include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/fwd.hh>
-# include <lib/vcsn/location.hh>
+# include <lib/vcsn/rat/location.hh>
 
 namespace vcsn
 {

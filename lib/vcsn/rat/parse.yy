@@ -18,7 +18,7 @@
   #include "location.hh"
   #include <vcsn/core/rat/kratexp.hh>
   #include <vcsn/core/rat/abstract_kratexpset.hh>
-  #include <lib/vcsn/driver.hh>
+  #include <lib/vcsn/rat/driver.hh>
 
   namespace vcsn
   {
@@ -26,7 +26,7 @@
     {
       // (Complex) objects such as shared_ptr cannot be put in a
       // union, even in C++11.  So cheat, and store a struct instead
-      // of an union.  See parse-rat-exp.txt.
+      // of an union.  See README.txt.
       struct sem_type
       {
         driver::exp_t node;
@@ -137,7 +137,7 @@ exp:
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp exp %prec CONCAT
   {
-    // See parse-rat-exp.txt.
+    // See README.txt.
     if (!$<parens>1 && !$<parens>2)
       $$ = MAKE(concat, $1, $2);
     else

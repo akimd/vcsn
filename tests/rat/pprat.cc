@@ -16,8 +16,8 @@
 #include <vcsn/ctx/char_z_law.hh>
 #include <vcsn/ctx/char_zmin_lal.hh>
 #include <vcsn/ctx/char_zmin_law.hh>
-#include <lib/vcsn/driver.hh>
 
+#include <lib/vcsn/rat/driver.hh>
 static
 void
 usage(const char* prog, int status)
