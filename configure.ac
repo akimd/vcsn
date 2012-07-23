@@ -22,7 +22,8 @@ AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
 AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-xz
-                  color-tests parallel-tests nostdinc silent-rules])
+                  color-tests parallel-tests nostdinc silent-rules
+                  subdir-objects])
 AM_SILENT_RULES([yes])
 
 LT_PREREQ([2.2.6])
