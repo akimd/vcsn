@@ -62,6 +62,11 @@
   }
 }
 
+%code top
+{
+#include <vcsn/misc/echo.hh>
+}
+
 %parse-param { driver& driver_ }
 %lex-param   { driver& driver_ }
 
@@ -90,11 +95,14 @@
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %destructor { delete $$; } <sval>;
 
-%type <exp> a a_list.0 a_list.1 attr_list attr_list.opt;
+%type <exp> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %printer
 {
   if ($$)
-    driver_.kratexpset_->print(debug_stream(), $$);
+    {
+      assert(driver_.kratexpset_);
+      driver_.kratexpset_->print(debug_stream(), $$);
+    }
   else
     debug_stream() << "nullptr";
 } <exp>;
@@ -114,7 +122,7 @@ stmt:
   node_stmt
 | edge_stmt
 | attr_stmt
-| ID "=" ID {}
+| attr_assign
 | subgraph
 ;
 
@@ -133,15 +141,55 @@ attr_list.opt:
 | attr_list    { $$ = $1; }
 ;
 
-a:
-  ID         { $$ = 0; delete $1; }
-| ID "=" ID
+attr_assign:
+  ID[var] "=" ID[val]
   {
-    if (*$1 == "label" && !$3->empty())
-      $$ = driver_.kratexpset_->conv(*$3);
+    if (*$var == "label" && !$val->empty())
+      {
+        if (!driver_.kratexpset_)
+          {
+            if (driver_.context_.empty())
+              {
+                error(@$, "no vcsn_context defined");
+                YYERROR;
+              }
+            if (driver_.letters_.empty())
+              {
+                error(@$, "no letters defined");
+                YYERROR;
+              }
+            if (driver_.context_ == "char_b_lal")
+              {
+                auto ctx = new ctx::char_b_lal{driver_.letters_};
+                driver_.kratexpset_ =
+                  new concrete_abstract_kratexpset<vcsn::ctx::char_b_lal>{*ctx};
+              }
+            else
+              {
+                error(@$, "unknown context: " + driver_.context_);
+                YYERROR;
+              }
+          }
+        $$ = driver_.kratexpset_->conv(*$val);
+      }
+    else if (*$var == "vcsn_context")
+      {
+        assert(!driver_.kratexpset_);
+        std::swap(driver_.context_ , *$val);
+      }
+    else if (*$var == "vcsn_genset")
+      {
+        assert(!driver_.kratexpset_);
+        for (auto l: *$val)
+          driver_.letters_.insert(l);
+      }
     delete $1;
     delete $3;
   }
+
+a:
+  ID           { $$ = 0; delete $1; }
+| attr_assign  { $$ = $1; }
 ;
 
 a_list.1:

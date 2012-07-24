@@ -18,7 +18,7 @@ namespace vcsn
     public:
       using exp_t = vcsn::rat::exp_t;
       using automaton_t = mutable_automaton<ctx::char_b_lal>;
-      driver(const abstract_kratexpset& f);
+      driver();
 
       automaton_t parse_file(const std::string& f);
       automaton_t parse_string(const std::string& e,
@@ -44,7 +44,12 @@ namespace vcsn
       /// Close the scanner.
       void scan_close();
 
-      const abstract_kratexpset* kratexpset_;
+      /// The name of the context.
+      std::string context_;
+      /// The letters gathered so far.
+      std::set<char> letters_;
+      /// Defined when context_ and letters_ are known.
+      abstract_kratexpset* kratexpset_ = nullptr;
       friend class parser;
     };
 

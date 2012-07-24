@@ -9,8 +9,8 @@ namespace vcsn
   namespace dot
   {
 
-    driver::driver(const abstract_kratexpset& f)
-      : kratexpset_{&f}
+    driver::driver()
+      : kratexpset_{nullptr}
     {}
 
     void
@@ -37,7 +37,7 @@ namespace vcsn
       // Parser.
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
-      auto res = p.parse();
+      p.parse();
       scan_close();
       return {ctx::char_b_lal{}};
     }
