@@ -1,12 +1,7 @@
 #! /bin/sh
 
-# Exit status.
-status=0
-
 # Any tool failure is a failure of the script.
 set -e
-
-: ${BISON='@BISON@'}
 
 stderr ()
 {
@@ -45,11 +40,6 @@ Options:
 EOF
   exit 0
 }
-
-me=$(basename $0)
-fuse_switch='@abs_srcdir@/fuse-switch'
-move_if_change='@abs_srcdir@/move-if-change --color'
-verbose=false
 
 ## ---------------------- ##
 ## Command line parsing.  ##
@@ -92,58 +82,6 @@ noext ()
 {
   echo "$1" | sed -e 's/\.[^.]*$//'
 }
-
-## ------ ##
-## Main.  ##
-## ------ ##
-
-get_options "$@"
-
-input_base=$(basename "$input")
-input_dir=$(dirname "$input")
-
-output_noext=$(noext "$output")
-output_base=$(basename "$output")
-output_base_noext=$(noext "$output_base")
-output_dir=$(dirname "$output")
-
-: ${location_dir=$output_dir}
-
-# The namespace we are in.
-# FIXME: We need $srcdir to be able to compute it.
-namespace=parse
-
-if $BISON --xml --version >/dev/null 2>&1; then
-  bisonflags="$bisonflags --xml"
-fi
-
-# Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
-# be an absolute path depending on how ./configure is called ...
-# In that case
-
-#   bison $(srcdir)/parsetiger.yy [...]
-
-# will hard code the path in the maintainer's tree.  Hence, do not use
-# paths with Bison, chdir there.
-
-# A tmp dir.
-tmp=$output_noext.dir
-rm -rf $tmp
-mkdir -p $tmp
-
-# Compile in this dir.
-# Don't use `ln -s' as its semantics of paths sucks.
-cp $input $tmp
-here=$(pwd)
-cd $tmp
-set +e
-$BISON $bisonflags $input_base -o $output_base
-status=$?
-set -e
-# Go back to where we were and use relative paths instead of using
-# absolute file names.  The messages look nicer.
-cd $here
-
 
 # fix_bison_output FILE
 # ---------------------
@@ -251,6 +189,67 @@ install ()
     fatal "cannot create $dir"
   $move_if_change "$(tmp "$1")" "$dest"
 }
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+# Exit status.
+status=0
+
+: ${BISON='@BISON@'}
+
+me=$(basename $0)
+fuse_switch='@abs_srcdir@/fuse-switch'
+move_if_change='@abs_srcdir@/move-if-change --color'
+verbose=false
+
+get_options "$@"
+
+input_base=$(basename "$input")
+input_dir=$(dirname "$input")
+
+output_noext=$(noext "$output")
+output_base=$(basename "$output")
+output_base_noext=$(noext "$output_base")
+output_dir=$(dirname "$output")
+
+: ${location_dir=$output_dir}
+
+# The namespace we are in.
+# FIXME: We need $srcdir to be able to compute it.
+namespace=parse
+
+if $BISON --xml --version >/dev/null 2>&1; then
+  bisonflags="$bisonflags --xml"
+fi
+
+# Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
+# be an absolute path depending on how ./configure is called ...
+# In that case
+
+#   bison $(srcdir)/parsetiger.yy [...]
+
+# will hard code the path in the maintainer's tree.  Hence, do not use
+# paths with Bison, chdir there.
+
+# A tmp dir.
+tmp=$output_noext.dir
+rm -rf $tmp
+mkdir -p $tmp
+
+# Compile in this dir.
+# Don't use `ln -s' as its semantics of paths sucks.
+cp $input $tmp
+here=$(pwd)
+cd $tmp
+set +e
+$BISON $bisonflags $input_base -o $output_base
+status=$?
+set -e
+# Go back to where we were and use relative paths instead of using
+# absolute file names.  The messages look nicer.
+cd $here
 
 for file in $tmp/*
 do
