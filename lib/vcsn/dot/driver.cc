@@ -13,24 +13,8 @@ namespace vcsn
       : kratexpset_{nullptr}
     {}
 
-    void
-    driver::error(const location& l, const std::string& m)
-    {
-      std::ostringstream er;
-      er  << l << ": " << m;
-      if (!!getenv("YYDEBUG"))
-        std::cerr << er.str() << std::endl;
-      errors += (errors.empty() ? "" : "\n") + er.str();
-    }
-
-    void
-    driver::invalid(const location& l, const std::string& s)
-    {
-      error(l, "invalid character: " + s);
-    }
-
     auto
-    driver::parse(const location& l)
+    driver::parse_(const location& l)
       -> automaton_t
     {
       location_ = l;
@@ -53,7 +37,7 @@ namespace vcsn
           exit(1);
         }
       scan_open(yyin);
-      parse();
+      parse_();
       if (f != "-")
         fclose(yyin);
       return {ctx::char_b_lal{}};
@@ -64,7 +48,44 @@ namespace vcsn
       -> automaton_t
     {
       scan_open(e);
-      return parse(l);
+      return parse_(l);
     }
+
+    void
+    driver::make_kratexpset()
+    {
+      if (!kratexpset_)
+        {
+          if (context_.empty())
+            throw std::domain_error("no vcsn_context defined");
+          if (letters_.empty())
+            throw std::domain_error("no vcsn_letters defined");
+          if (context_ == "char_b_lal")
+            {
+              auto ctx = new ctx::char_b_lal{letters_};
+              kratexpset_ =
+                new concrete_abstract_kratexpset<vcsn::ctx::char_b_lal>{*ctx};
+            }
+          else
+            throw std::domain_error("unknown context: " + context_);
+        }
+    }
+
+    void
+    driver::error(const location& l, const std::string& m)
+    {
+      std::ostringstream er;
+      er  << l << ": " << m;
+      if (!!getenv("YYDEBUG"))
+        std::cerr << er.str() << std::endl;
+      errors += (errors.empty() ? "" : "\n") + er.str();
+    }
+
+    void
+    driver::invalid(const location& l, const std::string& s)
+    {
+      error(l, "invalid character: " + s);
+    }
+
   }
 }

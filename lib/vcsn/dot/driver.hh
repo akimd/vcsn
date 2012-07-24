@@ -23,6 +23,11 @@ namespace vcsn
       automaton_t parse_file(const std::string& f);
       automaton_t parse_string(const std::string& e,
                                const location& l = location());
+
+      /// From context_ and letters_, build kratexpset_.
+      /// \throw std::
+      void make_kratexpset();
+
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
       /// The string \a s is invalid at \a l.
@@ -40,7 +45,7 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open(const std::string& e);
       /// Parse this stream.
-      automaton_t parse(const location& l = location{});
+      automaton_t parse_(const location& l = location{});
       /// Close the scanner.
       void scan_close();
 

@@ -65,6 +65,18 @@
 %code top
 {
 #include <vcsn/misc/echo.hh>
+
+  /// Run Stm, and bounces exceptions into parse errors at Loc.
+#define TRY(Loc, Stm)                           \
+  try                                           \
+    {                                           \
+      Stm;                                      \
+    }                                           \
+  catch (std::exception& e)                     \
+    {                                           \
+      error(Loc, e.what());                     \
+      YYERROR;                                  \
+    }
 }
 
 %parse-param { driver& driver_ }
@@ -146,30 +158,7 @@ attr_assign:
   {
     if (*$var == "label" && !$val->empty())
       {
-        if (!driver_.kratexpset_)
-          {
-            if (driver_.context_.empty())
-              {
-                error(@$, "no vcsn_context defined");
-                YYERROR;
-              }
-            if (driver_.letters_.empty())
-              {
-                error(@$, "no letters defined");
-                YYERROR;
-              }
-            if (driver_.context_ == "char_b_lal")
-              {
-                auto ctx = new ctx::char_b_lal{driver_.letters_};
-                driver_.kratexpset_ =
-                  new concrete_abstract_kratexpset<vcsn::ctx::char_b_lal>{*ctx};
-              }
-            else
-              {
-                error(@$, "unknown context: " + driver_.context_);
-                YYERROR;
-              }
-          }
+        TRY(@$, driver_.make_kratexpset());
         $$ = driver_.kratexpset_->conv(*$val);
       }
     else if (*$var == "vcsn_context")
