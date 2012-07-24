@@ -37,6 +37,9 @@ namespace vcsn
     virtual value_t weight(std::string* w, value_t e) const = 0;
     virtual value_t weight(value_t e, std::string* w) const = 0;
 
+    /// Parsing.
+    virtual value_t conv(const std::string& s) const = 0;
+
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
     std::string format(const value_t v) const
     {
@@ -130,6 +133,12 @@ namespace vcsn
     virtual value_t weight(value_t v, std::string* w) const override
     {
       return ks_.weight(down(v), down(w));
+    }
+
+    /// Parsing.
+    virtual value_t conv(const std::string& s) const override
+    {
+      return ks_.conv(s);
     }
 
     virtual std::ostream& print(std::ostream& o, value_t v) const override
