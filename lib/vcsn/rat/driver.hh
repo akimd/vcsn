@@ -36,7 +36,7 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open(const std::string& e);
       /// Parse this stream.
-      exp_t parse(const location& l = location());
+      exp_t parse(const location& l = location{});
       /// Close the scanner.
       void scan_close();
 

@@ -62,15 +62,15 @@ namespace vcsn
 
   public:
     mutable_automaton(const context_t& ctx)
-      : es_(ctx)
-      , states_(2)
-      , prepost_label_(ctx.genset()->template special<label_t>())
+      : es_{ctx}
+      , states_{2}
+      , prepost_label_{ctx.genset()->template special<label_t>()}
     {
     }
 
     mutable_automaton(mutable_automaton&& that)
-      : es_(that.es_)
-      , prepost_label_(that.prepost_label_)
+      : es_{that.es_}
+      , prepost_label_{that.prepost_label_}
     {
       std::swap(states_, that.states_);
       std::swap(states_fs_, that.states_fs_);
