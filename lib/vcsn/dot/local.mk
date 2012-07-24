@@ -44,7 +44,7 @@ lib/vcsn/dot/parse.stamp: lib/vcsn/dot/parse.yy $(BISONXX_IN)
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
 $(addprefix $(srcdir)/, $(SOURCES_DOT_PARSE_YY)): lib/vcsn/dot/parse.stamp
-	@if test -f $@; then :; else		\
+	@if test ! -f $@; then			\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi

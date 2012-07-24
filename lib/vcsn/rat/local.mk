@@ -45,7 +45,7 @@ lib/vcsn/rat/parse.stamp: lib/vcsn/rat/parse.yy $(BISONXX_IN)
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
 $(addprefix $(srcdir)/, $(SOURCES_RAT_PARSE_YY)): lib/vcsn/rat/parse.stamp
-	@if test -f $@; then :; else		\
+	@if test ! -f $@; then			\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
