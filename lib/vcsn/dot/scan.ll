@@ -32,7 +32,7 @@
 alpha   [a-zA-Z\200-\377]
 digit   [0-9]
 ID      {alpha}(_|{alpha}|{digit})*
-NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
+NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
 %%
 %{
