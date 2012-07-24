@@ -9,14 +9,16 @@ namespace vcsn
   template <class L>
   class set_alphabet: public L
   {
-  private:
-    using letters_t = std::set<typename L::letter_t>;
-    letters_t alphabet_;
-
   public:
+    using letters_t = std::set<typename L::letter_t>;
+
     set_alphabet() = default;
     set_alphabet(const std::initializer_list<typename L::letter_t>& l)
-      : alphabet_(l)
+      : alphabet_{l}
+    {}
+
+    set_alphabet(const letters_t& l)
+      : alphabet_{l}
     {}
 
     set_alphabet&
@@ -44,6 +46,9 @@ namespace vcsn
     {
       return alphabet_.end();
     }
+
+  private:
+    letters_t alphabet_;
   };
 }
 
