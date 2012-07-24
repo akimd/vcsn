@@ -30,7 +30,7 @@ namespace vcsn
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.
     virtual value_t mul(value_t l, value_t r) const = 0;
-    /// Implicit product.  If both \a l and \a r are weightless word,
+    /// Implicit product.  If both \a l and \a r are weightless words,
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
     virtual value_t star(value_t e) const = 0;
@@ -87,7 +87,11 @@ namespace vcsn
       return res;
     }
 
-    // Specialization from abstract_kratexpset.
+
+    /*-------------------------------------------.
+    | Specializations from abstract_kratexpset.  |
+    `-------------------------------------------*/
+
     virtual value_t zero() const override
     {
       return ks_.zero();
