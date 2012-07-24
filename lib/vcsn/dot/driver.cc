@@ -65,6 +65,7 @@ namespace vcsn
               auto ctx = new ctx::char_b_lal{letters_};
               kratexpset_ =
                 new concrete_abstract_kratexpset<vcsn::ctx::char_b_lal>{*ctx};
+              aut_ = new automaton_t{*ctx};
             }
           else
             throw std::domain_error("unknown context: " + context_);
@@ -87,5 +88,17 @@ namespace vcsn
       error(l, "invalid character: " + s);
     }
 
+    auto
+    driver::state_(const std::string& s)
+      -> state_t
+    {
+      assert(aut_);
+      auto i = stmap_.find(s);
+      if (i == std::end(stmap_))
+        // FIXME: optimize.
+        return stmap_[s] = aut_->new_state();
+      else
+        return i->second;
+    }
   }
 }

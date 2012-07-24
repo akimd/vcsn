@@ -30,11 +30,17 @@
       // of an union.  See lib/vcsn/rat/README.txt.
       struct sem_type
       {
+        // An abstract kratexp.
         driver::exp_t exp;
+        // A set of states.
+        driver::states_t states;
+        // Unlabeled transitions.
+        std::set<std::pair<driver::state_t, driver::state_t>> transitions;
         // These guys _can_ be put into a union.
         union
         {
           std::string* sval;
+          driver::state_t state;
         };
       };
     }
@@ -107,6 +113,14 @@
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %destructor { delete $$; } <sval>;
 
+// A single state.
+%type <state> node_id;
+%printer { debug_stream() << $$; } <state>;
+
+// Set of nodes, including for subgraphs.
+%type <states> nodes;
+
+// Rational expressions labeling the edges.
 %type <exp> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %printer
 {
@@ -121,7 +135,10 @@
 %%
 
 graph:
-  "digraph" id.opt "{" stmt_list "}"  {}
+  "digraph" id.opt "{" stmt_list "}"
+  {
+    delete $2;
+  }
 ;
 
 stmt_list:
@@ -146,6 +163,12 @@ attr_stmt:
 
 attr_list:
   "[" a_list.0 "]" attr_list.opt
+  {
+    if ($2)
+      std::swap($$, $2);
+    else
+      std::swap($$, $4);
+  }
 ;
 
 attr_list.opt:
@@ -191,22 +214,67 @@ comma.opt:
 ;
 
 a_list.0:
-  /* empty. */ {}
-| a_list.1
+  /* empty. */ { $$ = 0; }
+| a_list.1     { $$ = $1; }
+;
+
+nodes:
+  node_id   { $$.push_back($node_id); }
+| subgraph  { $$ = $<states>subgraph; }
+;
+
+// Transform the right-recursion from the original grammar into a left
+// one, because parsing 1->2->3 as 1(->2)(->3) is ugly and painful to
+// handle (we must maintain some state to know what is the current
+// source, 1, when arriving to ->2, and 2 when arriving to ->3).
+//
+// ((1->2)->3 is more natural.
+//
+// We "cheat": when maintaining a path, we flatten it in two
+// components: the total set of transitions (as a list of pairs of
+// states), and the set of ending states (using the <states> field
+// selector), as they will be used as set of starting states if there
+// is another "->" afterward.
+%type <transitions> path;
+%printer
+{
+  bool first = true;
+  debug_stream() << "{";
+  for (auto t: $$)
+    {
+      if (!first)
+        debug_stream() << ", ";
+      debug_stream() << t.first << "->" << t.second;
+      first = false;
+    }
+  debug_stream() << "}";
+} <transitions>;
+path:
+  nodes[from] "->" nodes[to]
+  {
+    for (auto s1: $from)
+      for (auto s2: $to)
+        $$.insert(std::make_pair(s1, s2));
+    $<states>$ = $to;
+  }
+| path[from]  "->" nodes[to]
+  {
+    std::swap($$, $from);
+    for (auto s1: $<states>from)
+      for (auto s2: $to)
+        $<transitions>$.insert(std::make_pair(s1, s2));
+    $<states>$ = $to;
+  }
 ;
 
 edge_stmt:
-  node_id  edgeRHS attr_list.opt
-| subgraph edgeRHS attr_list.opt
-
-edgeRHS:
-  "->" node_id  edgeRHS.opt
-| "->" subgraph edgeRHS.opt
-;
-
-edgeRHS.opt:
-  /* empty. */ {}
-| edgeRHS
+  path attr_list.opt[label]
+  {
+    if ($label)
+      for (auto t: $path)
+        // FIXME: use label.
+        driver_.aut_->add_transition(t.first, t.second, 'a');
+  }
 ;
 
 node_stmt:
@@ -215,10 +283,16 @@ node_stmt:
 
 node_id:
   ID
+  {
+    // We need the automaton to exist.
+    TRY(@$, driver_.make_kratexpset());
+    $$ = driver_.state_(*$1);
+    delete $1;
+  }
 ;
 
 subgraph:
-  "subgraph" id.opt "{" stmt_list "}"  {}
+  "subgraph" id.opt "{" stmt_list "}"  { delete $2; }
 |                   "{" stmt_list "}"  {}
 ;
 
