@@ -19,6 +19,27 @@
   #include <string>
   #include "location.hh"
   #include <lib/vcsn/dot/driver.hh>
+
+  namespace vcsn
+  {
+    namespace dot
+    {
+
+      // (Complex) objects such as shared_ptr cannot be put in a
+      // union, even in C++11.  So cheat, and store a struct instead
+      // of an union.  See lib/vcsn/rat/README.txt.
+      struct sem_type
+      {
+        driver::exp_t exp;
+        // These guys _can_ be put into a union.
+        union
+        {
+          std::string* sval;
+        };
+      };
+    }
+  }
+#define YYSTYPE vcsn::dot::sem_type
 }
 
 %code provides
@@ -49,11 +70,6 @@
   @$ = driver_.location_;
 }
 
-%union
-{
-  std::string* sval = 0;
-};
-
 %token
   DIGRAPH  "digraph"
   EDGE     "edge"
@@ -65,13 +81,23 @@
   RBRACKET "]"
   EQ       "="
   ARROW    "->"
+  COMMA    ","
   SEMI     ";"
 ;
+
 %token <sval> ID;
 %type <sval> id.opt;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %destructor { delete $$; } <sval>;
 
+%type <exp> a a_list.0 a_list.1 attr_list attr_list.opt;
+%printer
+{
+  if ($$)
+    driver_.kratexpset_->print(debug_stream(), $$);
+  else
+    debug_stream() << "nullptr";
+} <exp>;
 %%
 
 graph:
@@ -79,7 +105,7 @@ graph:
 ;
 
 stmt_list:
-/* empty. */
+  /* empty. */
 | stmt ";" stmt_list
 | stmt     stmt_list
 ;
@@ -103,15 +129,28 @@ attr_list:
 ;
 
 attr_list.opt:
-  /* empty. */ {}
-| attr_list
+  /* empty. */ { $$ = 0; }
+| attr_list    { $$ = $1; }
+;
+
+a:
+  ID         { $$ = 0; delete $1; }
+| ID "=" ID
+  {
+    if (*$1 == "label" && !$3->empty())
+      $$ = driver_.kratexpset_->conv(*$3);
+    delete $1;
+    delete $3;
+  }
 ;
 
 a_list.1:
-  ID                   {}
-| ID "=" ID            {}
-| ID         a_list.1  {}
-| ID "=" ID  a_list.1  {}
+  a comma.opt a_list.0  { if ($1) std::swap($$, $1); else std::swap($$, $3); }
+;
+
+comma.opt:
+  /* empty. */
+| ","
 ;
 
 a_list.0:
@@ -123,7 +162,7 @@ edge_stmt:
   node_id  edgeRHS attr_list.opt
 | subgraph edgeRHS attr_list.opt
 
-edgeRHS:       
+edgeRHS:
   "->" node_id  edgeRHS.opt
 | "->" subgraph edgeRHS.opt
 ;

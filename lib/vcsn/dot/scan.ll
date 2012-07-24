@@ -50,6 +50,7 @@ NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
   "]"        return TOK(RBRACKET);
   "="        return TOK(EQ);
   "->"       return TOK(ARROW);
+  ","        return TOK(COMMA);
   ";"        return TOK(SEMI);
 
   "//".*     continue;
@@ -59,6 +60,8 @@ NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
                yylval->sval = new std::string{yytext, size_t(yyleng)};
                return TOK(ID);
              }
+  [ \t]+     continue;
+  \n+        LINE(yyleng);
   .          driver_.error(*yylloc, std::string{"invalid character: "}+yytext);
 }
 

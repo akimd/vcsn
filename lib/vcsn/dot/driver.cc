@@ -9,9 +9,9 @@ namespace vcsn
   namespace dot
   {
 
-    driver::driver()
-    {
-    }
+    driver::driver(const abstract_kratexpset& f)
+      : kratexpset_{&f}
+    {}
 
     void
     driver::error(const location& l, const std::string& m)
@@ -31,7 +31,7 @@ namespace vcsn
 
     auto
     driver::parse(const location& l)
-      -> exp_t
+      -> automaton_t
     {
       location_ = l;
       // Parser.
@@ -39,11 +39,12 @@ namespace vcsn
       p.set_debug_level(!!getenv("YYDEBUG"));
       auto res = p.parse();
       scan_close();
+      return {ctx::char_b_lal{}};
     }
 
     auto
     driver::parse_file(const std::string& f)
-      -> exp_t
+      -> automaton_t
     {
       FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
@@ -52,16 +53,15 @@ namespace vcsn
           exit(1);
         }
       scan_open(yyin);
-      //auto res = 
       parse();
       if (f != "-")
         fclose(yyin);
-      //      return res;
+      return {ctx::char_b_lal{}};
     }
 
     auto
     driver::parse_string(const std::string& e, const location& l)
-      -> exp_t
+      -> automaton_t
     {
       scan_open(e);
       return parse(l);

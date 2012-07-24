@@ -1,6 +1,10 @@
 #ifndef LIB_VCSN_DOT_DRIVER_HH
 # define LIB_VCSN_DOT_DRIVER_HH
 
+# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/fwd.hh>
+# include <vcsn/ctx/char_b_lal.hh>
+
 # include <lib/vcsn/dot/location.hh>
 
 namespace vcsn
@@ -12,10 +16,13 @@ namespace vcsn
     class driver
     {
     public:
-      using exp_t = void;
-      driver();
-      exp_t parse_file(const std::string& f);
-      exp_t parse_string(const std::string& e, const location& l = location());
+      using exp_t = vcsn::rat::exp_t;
+      using automaton_t = mutable_automaton<ctx::char_b_lal>;
+      driver(const abstract_kratexpset& f);
+
+      automaton_t parse_file(const std::string& f);
+      automaton_t parse_string(const std::string& e,
+                               const location& l = location());
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
       /// The string \a s is invalid at \a l.
@@ -33,10 +40,11 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open(const std::string& e);
       /// Parse this stream.
-      void parse(const location& l = location());
+      automaton_t parse(const location& l = location{});
       /// Close the scanner.
       void scan_close();
 
+      const abstract_kratexpset* kratexpset_;
       friend class parser;
     };
 
