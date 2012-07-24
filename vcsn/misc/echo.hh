@@ -1,6 +1,7 @@
 #ifndef VCSN_MISC_ECHO_HH
 # define VCSN_MISC_ECHO_HH
 
+# include <iostream>
 # include <set>
 # include <vector>
 
