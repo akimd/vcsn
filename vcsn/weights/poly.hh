@@ -23,7 +23,7 @@ namespace vcsn
     using value_t = std::map<word_t, weight_t>;
 
     polynomials(const context_t& ctx)
-      : ctx_(ctx)
+      : ctx_{ctx}
     {
       unit_[genset()->identity()] = weightset()->unit();
     }
