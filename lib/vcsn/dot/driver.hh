@@ -41,13 +41,13 @@ namespace vcsn
 
     private:
       /// Prepare scanner to load file f.
-      void scan_open(FILE *f);
+      void scan_open_(FILE *f);
       /// Prepare scanner to read string e.
-      void scan_open(const std::string& e);
+      void scan_open_(const std::string& e);
       /// Parse this stream.
       automaton_t parse_(const location& l = location{});
       /// Close the scanner.
-      void scan_close();
+      void scan_close_();
 
       /// The name of the context.
       std::string context_;

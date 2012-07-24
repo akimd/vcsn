@@ -45,7 +45,7 @@ namespace vcsn
     }
 
     auto
-    driver::parse(const location& l)
+    driver::parse_(const location& l)
       -> exp_t
     {
       location_ = l;
@@ -60,7 +60,7 @@ namespace vcsn
       ++nesting;
       if (p.parse())
         result_ = 0;
-      scan_close();
+      scan_close_();
       --nesting;
       exp_t res = 0;
       std::swap(result_, res);
@@ -77,8 +77,8 @@ namespace vcsn
           std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
           exit(1);
         }
-      scan_open(yyin);
-      auto res = parse();
+      scan_open_(yyin);
+      auto res = parse_();
       if (f != "-")
         fclose(yyin);
       return res;
@@ -88,8 +88,8 @@ namespace vcsn
     driver::parse_string(const std::string& e, const location& l)
       -> exp_t
     {
-      scan_open(e);
-      return parse(l);
+      scan_open_(e);
+      return parse_(l);
     }
   }
 }

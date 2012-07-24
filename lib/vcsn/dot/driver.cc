@@ -22,7 +22,7 @@ namespace vcsn
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
       p.parse();
-      scan_close();
+      scan_close_();
       return {ctx::char_b_lal{}};
     }
 
@@ -36,7 +36,7 @@ namespace vcsn
           std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
           exit(1);
         }
-      scan_open(yyin);
+      scan_open_(yyin);
       parse_();
       if (f != "-")
         fclose(yyin);
@@ -47,7 +47,7 @@ namespace vcsn
     driver::parse_string(const std::string& e, const location& l)
       -> automaton_t
     {
-      scan_open(e);
+      scan_open_(e);
       return parse_(l);
     }
 

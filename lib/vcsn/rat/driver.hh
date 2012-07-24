@@ -32,13 +32,13 @@ namespace vcsn
 
     private:
       /// Prepare scanner to load file f.
-      void scan_open(FILE *f);
+      void scan_open_(FILE *f);
       /// Prepare scanner to read string e.
-      void scan_open(const std::string& e);
+      void scan_open_(const std::string& e);
       /// Parse this stream.
-      exp_t parse(const location& l = location{});
+      exp_t parse_(const location& l = location{});
       /// Close the scanner.
-      void scan_close();
+      void scan_close_();
 
       const abstract_kratexpset* kratexpset_;
       exp_t result_;

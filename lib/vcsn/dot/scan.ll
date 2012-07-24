@@ -111,7 +111,7 @@ namespace vcsn
     // in the document: save the old context, switch to the new one.
 
     void
-    driver::scan_open(FILE *f)
+    driver::scan_open_(FILE *f)
     {
       yy_flex_debug = !!getenv("YYSCAN");
       yypush_buffer_state(YY_CURRENT_BUFFER);
@@ -119,7 +119,7 @@ namespace vcsn
     }
 
     void
-    driver::scan_open(const std::string& e)
+    driver::scan_open_(const std::string& e)
     {
       yy_flex_debug = !!getenv("YYSCAN");
       yyin = 0;
@@ -128,7 +128,7 @@ namespace vcsn
     }
 
     void
-    driver::scan_close()
+    driver::scan_close_()
     {
       yypop_buffer_state();
       //if (yyin)
