@@ -99,6 +99,11 @@ namespace vcsn
     static constexpr state_t      null_state()      { return -1U; }
     static constexpr transition_t null_transition() { return -1U; }
 
+    label_t prepost_label() const
+    {
+      return prepost_label_;
+    }
+
     // Statistics
     /////////////
 
