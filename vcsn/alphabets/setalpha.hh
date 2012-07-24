@@ -10,8 +10,8 @@ namespace vcsn
   class set_alphabet: public L
   {
   private:
-    using genset_t = std::set<typename L::letter_t>;
-    genset_t alphabet_;
+    using letters_t = std::set<typename L::letter_t>;
+    letters_t alphabet_;
 
   public:
     set_alphabet() = default;
@@ -34,7 +34,7 @@ namespace vcsn
       return alphabet_.find(l) != alphabet_.end();
     }
 
-    using iterator_t = typename genset_t::const_iterator;
+    using iterator_t = typename letters_t::const_iterator;
     iterator_t begin() const
     {
       return alphabet_.begin();
