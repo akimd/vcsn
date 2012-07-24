@@ -18,9 +18,9 @@ namespace vcsn
     {
       std::ostringstream er;
       er  << l << ": " << m;
-      if (errors.empty())
-        errors += (errors.empty() ? "" : "\n") + er.str();
-      // std::cerr << l << ": " << m << std::endl;
+      if (!!getenv("YYDEBUG"))
+        std::cerr << er.str() << std::endl;
+      errors += (errors.empty() ? "" : "\n") + er.str();
     }
 
     void
