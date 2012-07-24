@@ -21,7 +21,8 @@ AM_BISONFLAGS =					\
   -Wall --report=all # -Werror
 
 pkglib_LTLIBRARIES = lib/libvcsn.la
-lib_libvcsn_la_SOURCES =
+lib_libvcsn_la_SOURCES =			\
+  lib/vcsn/misc/escape.cc
 
 include lib/vcsn/dot/local.mk
 lib_libvcsn_la_SOURCES +=			\

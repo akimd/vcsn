@@ -13,37 +13,37 @@ EXTRA_PROGRAMS +=				\
   unit/simpleaut				\
   unit/transpose
 
+AM_LDADD = $(libvcsn)
+
 noinst_HEADERS = unit/test.hh
 
-unit_determinize_LDADD = $(libchar_b_lal)
+unit_determinize_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
 unit_eval_LDADD = $(libchar_z_lal)
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
-unit_ladybird_b_LDADD = $(libchar_b_lal)
+unit_ladybird_b_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
 unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
-unit_ladybird_z_LDADD = $(libchar_z_lal)
+unit_ladybird_z_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
-unit_ladybird_zmin_LDADD = $(libchar_zmin_lal)
+unit_ladybird_zmin_LDADD = $(libchar_zmin_lal) $(AM_LDADD)
 
-unit_lift_LDADD = $(libchar_b_lal)
+unit_lift_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
-unit_parse_dot_LDADD = $(libvcsn)
+unit_poly_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
-unit_poly_LDADD = $(libchar_z_lal)
+unit_product_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
-unit_product_LDADD = $(libchar_z_lal)
+unit_simpleaut_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
-unit_simpleaut_LDADD = $(libchar_z_lal)
+unit_simplaw_LDADD = $(libchar_z_law) $(AM_LDADD)
 
-unit_simplaw_LDADD = $(libchar_z_law)
-
-unit_transpose_LDADD = $(libchar_b_lal) $(libchar_z_lal) $(libvcsn)
+unit_transpose_LDADD = $(libchar_b_lal) $(libchar_z_lal) $(AM_LDADD)
 
 unit_TESTS =					\
   unit/determinize.chk				\
