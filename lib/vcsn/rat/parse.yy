@@ -67,7 +67,7 @@
 %parse-param { driver& driver_ }
 %lex-param   { driver& driver_ }
 
-%code
+%code top
 {
   #include <cassert>
 
