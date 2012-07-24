@@ -88,6 +88,10 @@ get_options ()
   bisonflags="$@"
 }
 
+noext ()
+{
+  echo "$1" | sed -e 's/\.[^.]*$//'
+}
 
 ## ------ ##
 ## Main.  ##
@@ -98,8 +102,9 @@ get_options "$@"
 input_base=$(basename "$input")
 input_dir=$(dirname "$input")
 
+output_noext=$(noext "$output")
 output_base=$(basename "$output")
-output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
+output_base_noext=$(noext "$output_base")
 output_dir=$(dirname "$output")
 
 : ${location_dir=$output_dir}
@@ -122,18 +127,22 @@ fi
 # paths with Bison, chdir there.
 
 # A tmp dir.
-tmp=$output_base_noext.dir
+tmp=$output_noext.dir
 rm -rf $tmp
-mkdir $tmp
+mkdir -p $tmp
 
 # Compile in this dir.
 # Don't use `ln -s' as its semantics of paths sucks.
 cp $input $tmp
+here=$(pwd)
 cd $tmp
 set +e
 $BISON $bisonflags $input_base -o $output_base
 status=$?
 set -e
+# Go back to where we were and use relative paths instead of using
+# absolute file names.  The messages look nicer.
+cd $here
 
 
 # fix_bison_output FILE
@@ -243,11 +252,10 @@ install ()
   $move_if_change "$(tmp "$1")" "$dest"
 }
 
-# Go back to where we were and use relative paths instead of using
-# absolute file names.  The messages look nicer.
-cd ..
 for file in $tmp/*
 do
+  test $file != "$tmp/*" ||
+    fatal "did not find any file in $tmp"
   base=$(basename $file)
   base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
   case $status:$base in
