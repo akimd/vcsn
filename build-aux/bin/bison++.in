@@ -224,15 +224,6 @@ if $BISON --xml --version >/dev/null 2>&1; then
   bisonflags="$bisonflags --xml"
 fi
 
-# Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
-# be an absolute path depending on how ./configure is called ...
-# In that case
-
-#   bison $(srcdir)/parsetiger.yy [...]
-
-# will hard code the path in the maintainer's tree.  Hence, do not use
-# paths with Bison, chdir there.
-
 # A tmp dir.
 tmp=$output_noext.dir
 rm -rf $tmp
@@ -240,16 +231,10 @@ mkdir -p $tmp
 
 # Compile in this dir.
 # Don't use `ln -s' as its semantics of paths sucks.
-cp $input $tmp
-here=$(pwd)
-cd $tmp
 set +e
-$BISON $bisonflags $input_base -o $output_base
+$BISON $bisonflags $input -o $tmp/$output_base
 status=$?
 set -e
-# Go back to where we were and use relative paths instead of using
-# absolute file names.  The messages look nicer.
-cd $here
 
 for file in $tmp/*
 do
