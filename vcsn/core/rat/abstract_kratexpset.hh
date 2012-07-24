@@ -85,54 +85,54 @@ namespace vcsn
     }
 
     // Specialization from abstract_kratexpset.
-    virtual value_t zero() const
+    virtual value_t zero() const override
     {
       return ks_.zero();
     }
 
-    virtual value_t unit() const
+    virtual value_t unit() const override
     {
       return ks_.unit();
     }
 
-    virtual value_t atom(const word_t& w) const
+    virtual value_t atom(const word_t& w) const override
     {
       return atom_<context_t>(w);
     }
 
-    virtual value_t add(value_t l, value_t r) const
+    virtual value_t add(value_t l, value_t r) const override
     {
       return ks_.add(down(l), down(r));
     }
 
-    virtual value_t mul(value_t l, value_t r) const
+    virtual value_t mul(value_t l, value_t r) const override
     {
       return ks_.mul(down(l), down(r));
     }
 
     /// When concatenating two atoms, possibly make a single one,
     /// or make the product.
-    virtual value_t concat(value_t l, value_t r) const
+    virtual value_t concat(value_t l, value_t r) const override
     {
       return ks_.concat(down(l), down(r));
     }
 
-    virtual value_t star(value_t v) const
+    virtual value_t star(value_t v) const override
     {
       return ks_.star(down(v));
     }
 
-    virtual value_t weight(std::string* w, value_t v) const
+    virtual value_t weight(std::string* w, value_t v) const override
     {
       return ks_.weight(down(w), down(v));
     }
 
-    virtual value_t weight(value_t v, std::string* w) const
+    virtual value_t weight(value_t v, std::string* w) const override
     {
       return ks_.weight(down(v), down(w));
     }
 
-    virtual std::ostream& print(std::ostream& o, value_t v) const
+    virtual std::ostream& print(std::ostream& o, value_t v) const override
     {
       return ks_.print(o, down(v));
     }
