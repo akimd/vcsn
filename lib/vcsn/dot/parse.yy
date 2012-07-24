@@ -274,6 +274,12 @@ edge_stmt:
       for (auto t: $path)
         // FIXME: use label.
         driver_.aut_->add_transition(t.first, t.second, 'a');
+    else
+      for (auto t: $path)
+        if (t.first == driver_.aut_->pre()
+            || t.second == driver_.aut_->post())
+          driver_.aut_->add_transition(t.first, t.second,
+                                       driver_.aut_->prepost_label());
   }
 ;
 

@@ -97,12 +97,23 @@ namespace vcsn
       -> state_t
     {
       assert(aut_);
-      auto i = stmap_.find(s);
-      if (i == std::end(stmap_))
-        // FIXME: optimize.
-        return stmap_[s] = aut_->new_state();
+      state_t res;
+      // The pre state has multiple instances with names starting by
+      // "I", and likewise for the post state with "F".
+      if (s[0] == 'I')
+        res = aut_->pre();
+      else if (s[0] == 'F')
+        res = aut_->post();
       else
-        return i->second;
+        {
+          auto i = stmap_.find(s);
+          if (i == std::end(stmap_))
+            // FIXME: optimize.
+            res = stmap_[s] = aut_->new_state();
+          else
+            res = i->second;
+        }
+      return res;
     }
   }
 }
