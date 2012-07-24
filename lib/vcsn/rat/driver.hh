@@ -18,7 +18,6 @@ namespace vcsn
       driver(const abstract_kratexpset& f);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
-      const abstract_kratexpset* kratexpset;
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
@@ -41,6 +40,7 @@ namespace vcsn
       /// Close the scanner.
       void scan_close();
 
+      const abstract_kratexpset* kratexpset_;
       exp_t result_;
       friend class parser;
     };

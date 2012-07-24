@@ -10,9 +10,8 @@ namespace vcsn
   {
 
     driver::driver(const abstract_kratexpset& f)
-    {
-      kratexpset = &f;
-    }
+      : kratexpset_{&f}
+    {}
 
     void
     driver::error(const location& l, const std::string& m)

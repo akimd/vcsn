@@ -73,7 +73,7 @@
 
   /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
-      driver_.kratexpset->Kind(__VA_ARGS__)
+      driver_.kratexpset_->Kind(__VA_ARGS__)
 
   /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
@@ -96,7 +96,7 @@
 %printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '{' << *$$ << '}'; } "weight";
-%printer { driver_.kratexpset->print(debug_stream(), $$); } <node>;
+%printer { driver_.kratexpset_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
 %token <ival>   LPAREN  "("
