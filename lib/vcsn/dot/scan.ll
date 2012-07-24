@@ -2,6 +2,11 @@
 
 %option noyywrap nounput debug prefix="dot" outfile="lex.yy.c"
 
+%top{
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+}
+
 %{
 #include <string>
 #include <cassert>
@@ -31,10 +36,6 @@ NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
 
 %%
 %{
-  // Count the number of opened braces.
-  unsigned int nesting = 0;
-  // Grow a string before returning it.
-  std::string* sval = 0;
   yylloc->step();
 %}
 
@@ -90,7 +91,6 @@ NUM     [-]?(.{digit}+|{digit}+(.{digit}*)?)
 }
 
 %%
-
 namespace vcsn
 {
   namespace dot

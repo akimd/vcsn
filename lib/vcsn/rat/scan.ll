@@ -1,5 +1,10 @@
 %option noyywrap nounput stack debug prefix="rat" outfile="lex.yy.c"
 
+%top{
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+}
+
 %{
 #include <string>
 #include <cassert>
