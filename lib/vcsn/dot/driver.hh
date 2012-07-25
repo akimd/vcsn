@@ -29,7 +29,7 @@ namespace vcsn
 
       automaton_t* parse_file(const std::string& f);
       automaton_t* parse_string(const std::string& e,
-                                const location& l = location());
+                                const location& l = location{});
 
       /// From context_ and letters_, build kratexpset_.
       /// \throw std::
@@ -64,7 +64,7 @@ namespace vcsn
       abstract_kratexpset* kratexpset_ = nullptr;
 
       /// The automaton being constructed.
-      automaton_t* aut_;
+      automaton_t* aut_ = nullptr;
       /// Mapping from state name to state number.
       std::map<std::string, state_t> stmap_;
       /// Convert a named state to a state number.
