@@ -115,6 +115,85 @@ namespace vcsn
       return res;
     }
 
+    /// Parse the entry "s".
+    ///
+    /// Somewhat more general than a mere reversal of "format",
+    /// in particular "a+a" is properly understood as "{2}a" in
+    /// char_z.
+    value_t
+    conv(const std::string& s) const
+    {
+      value_t res;
+      std::istringstream i{s};
+      std::ostringstream o;
+
+#define SKIP_SPACES()                           \
+      while (isspace(i.peek()))                 \
+        i.ignore()
+
+      do
+        {
+          // Possibly a weight in braces.
+          SKIP_SPACES();
+          weight_t w = weightset()->unit();
+          if (i.peek() == '{')
+            {
+              i.get();
+              size_t level = 1;
+              o.clear();
+              o.str("");
+              while (true)
+                {
+                  if (i.peek() == '{')
+                    ++level;
+                  else if (i.peek() == '}'
+                           && !--level)
+                    {
+                      i.ignore();
+                      break;
+                    }
+                  o << char(i.get());
+                }
+              w = weightset()->conv(o.str());
+            }
+
+          // The label: letters, or \e.
+          SKIP_SPACES();
+          std::string label;
+          if (i.peek() == '\\')
+            {
+              i.ignore();
+              if (i.peek() != 'e')
+                throw std::domain_error("invalid polynomial: " + s
+                                        + "unexpected \\"
+                                        + std::string{char(i.peek())});
+              i.ignore();
+            }
+          else
+            while (genset()->has(i.peek()))
+              label += char(i.get());
+          add_assoc(res, label, w);
+
+          // EOF, or "+".
+          SKIP_SPACES();
+          if (i.peek() == -1)
+            break;
+          else if (i.peek() == '+')
+            i.ignore();
+          else
+            {
+              throw std::domain_error("invalid polynomial: " + s
+                                      + "unexpected "
+                                      + std::string{char(i.peek())});
+              i.ignore();
+            }
+        }
+      while (true);
+#undef SKIP_SPACES
+
+      return res;
+    }
+
     std::ostream&
     print(std::ostream& out, const value_t& v) const
     {
