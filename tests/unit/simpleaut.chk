@@ -3,6 +3,8 @@
 cat >out.exp <<\EOF
 digraph
 {
+  vcsn_context=char_z_lal
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
   {
@@ -27,6 +29,8 @@ Between s1 and s1
 5 2
 digraph
 {
+  vcsn_context=char_z_lal
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
   {
@@ -43,6 +47,8 @@ digraph
 }
 digraph
 {
+  vcsn_context=char_z_lal
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
   {
@@ -54,6 +60,8 @@ digraph
 }
 digraph
 {
+  vcsn_context=char_z_lal
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
   {

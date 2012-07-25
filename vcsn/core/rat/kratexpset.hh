@@ -51,7 +51,7 @@ namespace vcsn
     {
       std::string res{"kratexpset<"};
       res += context_t::name();
-      res += '}';
+      res += '>';
       return res;
     }
 

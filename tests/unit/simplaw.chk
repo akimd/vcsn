@@ -3,6 +3,8 @@
 cat >out.exp <<\EOF
 digraph
 {
+  vcsn_context=char_z_law
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
   {

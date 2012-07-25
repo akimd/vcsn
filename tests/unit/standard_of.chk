@@ -1,13 +1,35 @@
 #! /bin/sh
 
+# weighset PPRAT-ARGUMENTS
+# ------------------------
+weighset()
+{
+  while test $# != 0
+  do
+    if test "$1" = '-W'; then
+      case $2 in
+        (zr) echo 'kratexpset<char_z_lal>';;
+         (*) echo "$2";;
+      esac
+      return 0
+    fi
+    shift
+  done
+  echo 'b'
+  return 0
+}
+
 # check PPRAT-ARGUMENTS
 # ---------------------
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
-  cat >out.exp <<\EOF
+  ws=$(weighset "$@")
+  cat >out.exp <<EOF
 digraph
 {
+  vcsn_context=char_${ws}_lal
+  vcsn_genset="abcd"
   rankdir=LR
   node [shape=circle]
 EOF

@@ -1,4 +1,71 @@
+* 2012-07-25
+** Metadata are embedded in the Dot file
+The pseudo name "A" which was used in every dotty output is no longer
+defined, as it is both optional and useless.  The context name and the
+alphabet are also provided.  For instance:
+
+  $ ./tests/unit/ladybird-b 2 | sed 4q
+  digraph
+  {
+    vcsn_context=char_b_lal
+    vcsn_genset="abc"
+  $ pprat -s -W z 'abc' | sed 4q
+  digraph
+  {
+    vcsn_context=char_z_lal
+    vcsn_genset="abcd"
+  $ pprat -s -W zr -A w 'abc' | sed 4q
+  digraph
+  {
+    vcsn_context=char_kratexpset<char_z_law>_law
+    vcsn_genset="abcd"
+
+This is an experimentation, and the current choice is somewhat
+unsatisfactory.  Instead of
+
+    vcsn_context=char_b_lal
+    vcsn_genset="abc"
+
+it is probably more sensible to use
+
+    vcsn_context="char_b_lal{abc}"
+
+or maybe
+
+    vcsn_context="char{abc}_b_lal"
+
+so that when weightsets depend for instance upon an alphabet, it can be
+specified too.  Instead of
+
+    vcsn_context=char_kratexpset<char_z_law>_law
+    vcsn_genset="abcd"
+
+(which does not define the alphabet used for the weightset), one would
+expect:
+
+    vcsn_context=char_kratexpset<char_z_law{xyz}>_law{abcd}
+
+or maybe
+
+    vcsn_context=char{abcd}_kratexpset<char{xyz}_z_law>_law
+
+Also, the name "kratexpset" is of course open to discussion:
+
+    vcsn_context=char_rat<char_z_laz{xyw}>_law{abcd}
+
+** polynomials::conv
+It is now possible to read back polynomials such as "a+b+{2}a".
+
+** static_assert
+It is used more extensively to forbid meaningless calls, such as
+determinizing a law automaton.
+
 * 2012-07-13
+** Precompiled contexts
+Several predefined contexts come with their own header (e.g.,
+"ctx/char_b_lal"), and their own library (e.g., "libchar_b_lal").  This is
+provide for char_{b,z,zmin}_{lal,law}.
+
 ** z_min renamed zmin
 Consistently with Vaucanson 1.4.
 

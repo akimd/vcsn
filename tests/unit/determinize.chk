@@ -5,6 +5,8 @@ Check idempotence for Thompson 'a'
 States: 2 -> 3
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="ab"
   rankdir=LR
   node [shape=circle]
   {
@@ -23,6 +25,8 @@ Check idempotence for '\e'
 States: 1 -> 2
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="ab"
   rankdir=LR
   node [shape=circle]
   {
@@ -39,6 +43,8 @@ Check idempotence for empty
 States: 0 -> 1
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="ab"
   rankdir=LR
   node [shape=circle]
   {
@@ -52,6 +58,8 @@ Check idempotence for de Bruijn 3
 States: 5 -> 16
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="ab"
   rankdir=LR
   node [shape=circle]
   {
@@ -114,6 +122,8 @@ Check idempotence for ladybird 4
 States: 4 -> 16
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="abc"
   rankdir=LR
   node [shape=circle]
   {

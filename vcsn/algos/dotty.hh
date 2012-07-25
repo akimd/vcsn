@@ -10,6 +10,21 @@
 
 namespace vcsn
 {
+
+  namespace
+  {
+    template <typename GenSet>
+    inline
+    std::string
+    format_alphabet(const GenSet& gs)
+    {
+      std::string res;
+      for (auto l: gs)
+        res += l;
+      return res;
+    }
+  }
+
   template <class A>
   void
   dotty(const A& aut, std::ostream& out)
@@ -19,8 +34,9 @@ namespace vcsn
 
     out <<
       "digraph\n"
-      "{\n";
-    out <<
+      "{\n"
+      "  vcsn_context=" << aut.context().name() << "\n"
+      "  vcsn_genset=\"" << format_alphabet(*aut.genset()) << "\"\n"
       "  rankdir=LR\n"
       "  node [shape=circle]\n";
 

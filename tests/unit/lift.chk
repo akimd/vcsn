@@ -3,6 +3,8 @@
 cat >lady4.dot <<\EOF
 digraph
 {
+  vcsn_context=char_b_lal
+  vcsn_genset="abc"
   rankdir=LR
   node [shape=circle]
   {
@@ -28,7 +30,8 @@ EOF
 ## There is an inversion c+a instead of a+c, I didn't check why.
 perl -pe 's{\[label="(.*?)"\]}'                                 \
       -e '{$_ = "\[label=\"{$1}\\\\e\"\]"; s/\s//g; $_}eg;'     \
-      -e 's{a\+c}{c+a}g'                                        \
+      -e 's{a\+c}{c+a}g;'                                       \
+      -e 's{char_b_lal}{char_kratexpset<char_b_lal>_law}g;'     \
    < lady4.dot >lady4.lifted.out
 
 cat lady4.dot lady4.lifted.out > out.exp
