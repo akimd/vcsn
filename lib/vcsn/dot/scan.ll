@@ -9,8 +9,6 @@
 
 %{
 #include <string>
-#include <cassert>
-#include <stack>
 #include <iostream>
 #include <lib/vcsn/dot/parse.hh>
 
