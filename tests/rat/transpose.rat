@@ -1,5 +1,5 @@
 %weight: b
-%atoms: l
+%labels: l
 -t \e => \e
 -t \z => \z
 -t a => a
@@ -7,7 +7,7 @@
 -t abc+aba => (a.b.a)+(c.b.a)
 -t (ab)* => (b.a)*
 
-%atoms: w
+%labels: w
 -t \e => \e
 -t \z => \z
 -t a => a

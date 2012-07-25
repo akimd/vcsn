@@ -17,8 +17,8 @@ check 'a' 'a'
 check 'a.b' 'ab'
 check '\e+(a.(a*))' 'a*'
 check 'a+b' 'a+b'
-check '({2}a.b){3}' -W z -A l -a '{2}(ab){3}'
-check '{6}ab'       -W z -A w -a '{2}(ab){3}'
+check '({2}a.b){3}' -W z -L l -a '{2}(ab){3}'
+check '{6}ab'       -W z -L w -a '{2}(ab){3}'
 
 
 check '(({6}a.{7}c)+({10}b.{7}c)){11}' \

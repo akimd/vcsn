@@ -17,12 +17,12 @@ a{1}{2}b == a({1}({2}b))
 {1}a == a{1}
 {1}a == a
 
-%atoms: letters
+%labels: letters
 {3}(ab) => {3}(a.b)
 {3}ab => {3}(a.b)
 {2}{3}ab => {6}(a.b)
 {2}ab{3}* => ({2}(a.b){3})*
-%atoms: words
+%labels: words
 {3}ab => {3}ab
 {3}(ab) => {3}ab
 {2}{3}ab => {6}ab

@@ -30,7 +30,7 @@ check 'abc' <<EOF
   3 -> 4 [label="c"]                   |    4 -> 3 [label="c"]
 EOF
 
-check -A w -W br '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
+check -L w -W br '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
                                        >      I2
                                        >      I4
     F2                                 <

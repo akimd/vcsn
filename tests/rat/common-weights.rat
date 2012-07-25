@@ -1,6 +1,6 @@
 # Test cases independant of the weightsets.
 
-%atoms: letters
+%labels: letters
 %include: common.rat
 # Base cases.
 ab => a.b
@@ -14,7 +14,7 @@ a(bc) == a.b.c
 (abc).(cba) => a.b.c.c.b.a
 
 
-%atoms: words
+%labels: words
 %include: common.rat
 # Base cases.
 ab => ab

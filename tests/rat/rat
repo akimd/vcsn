@@ -19,7 +19,7 @@ my $fail = 0;
 # The tested program.
 my $prog = shift @ARGV;
 # The current atom kind (argument for -a).
-my $atoms = 'letters';
+my $labels = 'letters';
 # The current weightset (argument for -w).
 my $ws = 'b';
 
@@ -50,7 +50,7 @@ sub pp($)
 {
   my ($in) = @_;
   $in = join (' ', map { quote($_) } split (' ', $in));
-  my $cmd = "$prog -A $atoms -W $ws $in";
+  my $cmd = "$prog -L $labels -W $ws $in";
   my $res = `$cmd 2>&1`;
   if ($?)
     {
@@ -83,12 +83,12 @@ sub check_rat_exp($)
       next
         unless $_;
 
-      if (/%atoms: (.*)/)
+      if (/%labels: (.*)/)
         {
-          if ($atoms ne $1)
+          if ($labels ne $1)
             {
-              $atoms = $1;
-              rst_title "Atoms: $atoms";
+              $labels = $1;
+              rst_title "Labels: $labels";
             }
           next;
         }

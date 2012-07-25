@@ -60,20 +60,20 @@ anyway, let's avoid more compile-time and code-bloat.
 The trick is simple: store the weights W as a rational-expression: "{W}\e",
 and simply use the product to apply a weight.
 
-* Dealing with "atoms are words"
-Everything was fine with "atoms are letters", but "atoms are words" adds its
-own complexity.  We want "abcd" to be a single atom, which means that we
-want "exp: exp exp" to concatenate atoms (using concat()) rather that
+* Dealing with "labels are words"
+Everything was fine with "labels are letters", but "labels are words" adds
+its own complexity.  We want "abcd" to be a single label, which means that
+we want "exp: exp exp" to concatenate labels (using concat()) rather that
 multiply them (mul()).
 
 But then, since (of course) parens are syntax-only, "(ab)(ab)" also results
 in "abab".  Wrong.
 
-One idea is to have a new non-terminal, say "atom", that would collect all
+One idea is to have a new non-terminal, say "label", that would collect all
 the letters together, so "exp: exp exp" would always use mul(), never
 concat().  Wrong again: "ab*" will be parsed as "(ab)*".
 
-I don't see how to avoid remembering whether the atoms were put in
+I don't see how to avoid remembering whether the labels were put in
 parentheses or not.  Yet this is not something that we want to "see" in our
 AST, so ideally we should store this in the parser only.  A decoration of
 the semantic value for the expressions would do the trick, yet it means that

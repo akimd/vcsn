@@ -4,5 +4,5 @@
 {12}a ! watcher: invalid weight set (-W)
 
 %weight: b
-%atoms: mots
-{12}a ! mots: invalid atom kind (-A)
+%labels: mots
+{12}a ! mots: invalid label kind (-L)

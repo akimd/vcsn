@@ -1,4 +1,8 @@
 * 2012-07-25
+** pprat uses -L for labels instead of -A
+For consistency, since we now also use the name "labels" to denote the
+leaves of rational expressions (others that \z and \e), -A is renamed -L.
+
 ** Metadata are embedded in the Dot file
 The pseudo name "A" which was used in every dotty output is no longer
 defined, as it is both optional and useless.  The context name and the
@@ -9,12 +13,12 @@ alphabet are also provided.  For instance:
   {
     vcsn_context=char_b_lal
     vcsn_genset="abc"
-  $ pprat -s -W z 'abc' | sed 4q
+  $ pprat -s -L z 'abc' | sed 4q
   digraph
   {
     vcsn_context=char_z_lal
     vcsn_genset="abcd"
-  $ pprat -s -W zr -A w 'abc' | sed 4q
+  $ pprat -s -L zr -A w 'abc' | sed 4q
   digraph
   {
     vcsn_context=char_kratexpset<char_z_law>_law

@@ -28,8 +28,8 @@ usage(const char* prog, int status)
       "usage: " << prog << " [OPTION...] [EXP...]\n"
       "\n"
       "Context:\n"
-      "  -A letters|words  kind of the atoms [letters]\n"
       "  -H HEURISTICS     define the aut-to-exp heuristics to use [order]\n"
+      "  -L letters|words  kind of the labels [letters]\n"
       "  -W WEIGHT-SET     define the kind of the weights [b]\n"
       "  -e EXP            pretty-print the rational expression EXP\n"
       "  -f FILE           pretty-print the rational expression in FILE\n"
@@ -68,7 +68,7 @@ enum class heuristics
 
 struct options
 {
-  bool atoms_are_letters = true;
+  bool labels_are_letters = true;
   type weight = type::b;
   size_t transpose = 0;
   bool aut_transpose = false;
@@ -167,7 +167,7 @@ pp(const options& opts, const char* s, bool file)
     {
 #define CASE(Name)                                      \
       case type::Name:                                  \
-        if (opts.atoms_are_letters)                     \
+        if (opts.labels_are_letters)                     \
           pp(opts, ks_ ## Name, s, file);               \
         else                                            \
           pp(opts, ks_ ## Name ## w, s, file);          \
@@ -200,24 +200,9 @@ try
 
   options opts;
   int opt;
-  while ((opt = getopt(argc, argv, "A:ae:f:H:hlsTtW:")) != -1)
+  while ((opt = getopt(argc, argv, "ae:f:H:hL:lsTtW:")) != -1)
     switch (opt)
       {
-      case 'A':
-        {
-          std::string s = optarg;
-          if (s == "l" || s == "letter" || s == "letters")
-            opts.atoms_are_letters = true;
-          else if (s == "w" || s == "word" || s == "words")
-            opts.atoms_are_letters = false;
-          else
-            {
-              std::cerr << optarg << ": invalid atom kind (-A)" << std::endl;
-              goto fail;
-            }
-          break;
-        }
-        break;
       case 'a':
         opts.aut_to_exp = true;
         break;
@@ -243,6 +228,21 @@ try
         }
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
+        break;
+      case 'L':
+        {
+          std::string s = optarg;
+          if (s == "l" || s == "letter" || s == "letters")
+            opts.labels_are_letters = true;
+          else if (s == "w" || s == "word" || s == "words")
+            opts.labels_are_letters = false;
+          else
+            {
+              std::cerr << optarg << ": invalid label kind (-L)" << std::endl;
+              goto fail;
+            }
+          break;
+        }
         break;
       case 'l':
         opts.lift = true;
