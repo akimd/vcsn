@@ -13,13 +13,13 @@
 # define VV(S)                                                          \
   "<" #S ":" __HERE__ << ">" << S << "</" << #S << ">"
 
-# define ECHO(S) std::cerr << S << std::endl
+# define SHOW(S) std::cerr << S << std::endl
 
-# define ECHOV(S) ECHO(V(S))
+# define SHOWV(S) SHOW(V(S))
 
 # define __HERE__ __FILE__ ": " << __LINE__
 
-# define ECHOH(S) ECHO(__HERE__ << ": " << S)
+# define SHOWH(S) SHOW(__HERE__ << ": " << S)
 
 namespace std
 {

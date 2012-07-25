@@ -11,8 +11,8 @@
     auto rhs = Rhs;                                             \
     if (lhs != rhs)                                             \
       {                                                         \
-        ECHOH("assertion failed: " #Lhs " == " #Rhs);           \
-        ECHOH("    " << lhs << " != " << rhs);                  \
+        SHOWH("assertion failed: " #Lhs " == " #Rhs);           \
+        SHOWH("    " << lhs << " != " << rhs);                  \
         res = false;                                            \
       }                                                         \
   } while (false)

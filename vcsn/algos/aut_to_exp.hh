@@ -25,7 +25,7 @@ namespace vcsn
     while (aut.num_states())
       {
         auto s = next_state(aut);
-        ECHO(V(s));
+        SHOW(V(s));
 
         // The loop's weight.
         auto loops = aut.outin(s, s);
@@ -100,10 +100,10 @@ namespace vcsn
             best = s;
             degree_best = degree;
             loops_best = loops;
-            ECHO(V(best) << V(degree_best) << V(loops_best));
+            SHOW(V(best) << V(degree_best) << V(loops_best));
           }
       }
-    assert (best);
+    assert(best);
     return best;
   }
 
