@@ -66,7 +66,7 @@ namespace vcsn
     }
 
     value_t
-    conv(std::string& str) const
+    conv(const std::string& str) const
     {
       if (str == "0")
         return false;
