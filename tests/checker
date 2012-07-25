@@ -2,7 +2,7 @@
 
 set -e
 
-me=`basename $1 .chk`
+me=$(basename $1 .chk)
 
 # Number of the current test.
 number=1
@@ -238,9 +238,8 @@ EOF
   rst_subsection "${fail}Test $number: $@"
   cat stdout.tmp
 
-  number=`expr $number + 1`
+  number=$(expr $number + 1)
 }
-
 
 # cleanup
 # -------
@@ -254,7 +253,8 @@ cleanup ()
   fi
   exit $status
 }
-trap cleanup 0 1 2 13 15
+trap cleanup 0
+trap 'exit 1' 1 2 13 15
 rm -rf $me.dir
 mkdir $me.dir
 cd $me.dir
