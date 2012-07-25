@@ -1,8 +1,3 @@
 #! /bin/sh
 
-cat >out.exp <<\EOF
-\e + {12}ab
-{2}\e + {24}ab
-{4}\e + {96}ab + {576}abab
-EOF
-run 0 out.exp unit/poly
+run 0 '' unit/poly
