@@ -1,3 +1,7 @@
+* check labels in mutable_automaton
+Currently, we can add_transition(p, q, 'z') even if z is not part of
+the alphabet.
+
 * debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 

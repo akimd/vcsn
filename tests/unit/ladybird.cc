@@ -29,7 +29,7 @@ main(int argc, char const** argv)
   if (n <= 0)
     syntax(argv[0]);
 
-  vcsn::ctx::CTX(W) ctx;
+  vcsn::ctx::CTX(W) ctx{{'a', 'b', 'c'}};
   auto lb = vcsn::ladybird(n, ctx);
   vcsn::dotty(lb, std::cout);
 }
