@@ -42,9 +42,10 @@ nobase_vcsn_HEADERS =                           \
   ctx/char_b_law.hh                             \
   ctx/char_z_lal.hh                             \
   ctx/char_z_law.hh                             \
-  ctx/char_zmin_lal.hh                         \
-  ctx/char_zmin_law.hh                         \
+  ctx/char_zmin_lal.hh                          \
+  ctx/char_zmin_law.hh                          \
   ctx/ctx.hh                                    \
+  ctx/fwd.hh                                    \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \

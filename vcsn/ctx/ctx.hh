@@ -8,6 +8,7 @@
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
+# include <vcsn/ctx/fwd.hh>
 
 namespace vcsn
 {
@@ -15,7 +16,7 @@ namespace vcsn
   {
     template <typename GenSet,
               typename WeightSet,
-              typename Kind = labels_are_letters>
+              typename Kind>
     class context
     {
     public:
