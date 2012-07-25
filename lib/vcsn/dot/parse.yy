@@ -30,8 +30,6 @@
       // of an union.  See lib/vcsn/rat/README.txt.
       struct sem_type
       {
-        // An abstract kratexp.
-        driver::exp_t exp;
         // A set of states.
         driver::states_t states;
         // Unlabeled transitions.
@@ -41,6 +39,7 @@
         {
           std::string* sval;
           driver::state_t state;
+          driver::automaton_t::entry_t* entry;
         };
       };
     }
@@ -121,17 +120,17 @@
 %type <states> nodes;
 
 // Rational expressions labeling the edges.
-%type <exp> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
+%type <entry> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %printer
 {
   if ($$)
     {
       assert(driver_.kratexpset_);
-      driver_.kratexpset_->print(debug_stream(), $$);
+      driver_.aut_->entryset().print(debug_stream(), *$$);
     }
   else
     debug_stream() << "nullptr";
-} <exp>;
+} <entry>;
 %%
 
 graph:
@@ -164,25 +163,30 @@ attr_stmt:
 attr_list:
   "[" a_list.0 "]" attr_list.opt
   {
+    $$ = nullptr;
     if ($2)
       std::swap($$, $2);
     else
       std::swap($$, $4);
+    delete $2;
+    delete $4;
   }
 ;
 
 attr_list.opt:
-  /* empty. */ { $$ = 0; }
+  /* empty. */ { $$ = nullptr; }
 | attr_list    { $$ = $1; }
 ;
 
 attr_assign:
   ID[var] "=" ID[val]
   {
+    $$ = nullptr;
     if (*$var == "label" && !$val->empty())
       {
         TRY(@$, driver_.make_kratexpset());
-        $$ = driver_.kratexpset_->conv(*$val);
+        driver::automaton_t::entryset_t es{driver_.aut_->context()};
+        $$ = new driver::automaton_t::entry_t{es.conv(*$val)};
       }
     else if (*$var == "vcsn_context")
       {
@@ -200,12 +204,21 @@ attr_assign:
   }
 
 a:
-  ID           { $$ = 0; delete $1; }
+  ID           { $$ = nullptr; delete $1; }
 | attr_assign  { $$ = $1; }
 ;
 
 a_list.1:
-  a comma.opt a_list.0  { if ($1) std::swap($$, $1); else std::swap($$, $3); }
+  a comma.opt a_list.0
+  {
+    $$ = nullptr;
+    if ($1)
+      std::swap($$, $1);
+    else
+      std::swap($$, $3);
+    delete $1;
+    delete $3;
+  }
 ;
 
 comma.opt:
@@ -214,7 +227,7 @@ comma.opt:
 ;
 
 a_list.0:
-  /* empty. */ { $$ = 0; }
+  /* empty. */ { $$ = nullptr; }
 | a_list.1     { $$ = $1; }
 ;
 
@@ -271,15 +284,22 @@ edge_stmt:
   path attr_list.opt[label]
   {
     if ($label)
-      for (auto t: $path)
-        // FIXME: use label.
-        driver_.aut_->add_transition(t.first, t.second, 'a');
+      {
+        for (auto l: *$label)
+          for (auto t: $path)
+            // FIXME: Hack.  entries are always about words, but we
+            // want letters.  "l.first[0]" is a hack for lal.
+            driver_.aut_->add_transition(t.first, t.second,
+                                         l.first[0], l.second);
+      }
     else
       for (auto t: $path)
-        if (t.first == driver_.aut_->pre()
-            || t.second == driver_.aut_->post())
+        {
+          assert (t.first == driver_.aut_->pre()
+                  || t.second == driver_.aut_->post());
           driver_.aut_->add_transition(t.first, t.second,
                                        driver_.aut_->prepost_label());
+        }
   }
 ;
 
