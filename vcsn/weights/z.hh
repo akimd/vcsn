@@ -12,6 +12,11 @@ namespace vcsn
   class z
   {
   public:
+    static std::string name()
+    {
+      return "z";
+    }
+
     using value_t = int;
 
     value_t

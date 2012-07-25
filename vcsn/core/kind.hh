@@ -20,12 +20,20 @@ namespace vcsn
   struct label_trait<labels_are_letters, GenSet>
   {
     using label_t = typename GenSet::letter_t;
+    static std::string name()
+    {
+      return  "lal";
+    }
   };
 
   template <class GenSet>
   struct label_trait<labels_are_words, GenSet>
   {
     using label_t = typename GenSet::word_t;
+    static std::string name()
+    {
+      return  "law";
+    }
   };
 
 }

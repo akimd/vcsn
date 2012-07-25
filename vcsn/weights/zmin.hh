@@ -14,6 +14,11 @@ namespace vcsn
   class zmin
   {
   public:
+    static std::string name()
+    {
+      return "zmin";
+    }
+
     using value_t = int;
 
     value_t

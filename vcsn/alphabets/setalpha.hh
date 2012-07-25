@@ -12,6 +12,11 @@ namespace vcsn
   public:
     using letters_t = std::set<typename L::letter_t>;
 
+    static std::string name()
+    {
+      return "char";
+    }
+
     set_alphabet() = default;
     set_alphabet(const std::initializer_list<typename L::letter_t>& l)
       : alphabet_{l}

@@ -53,6 +53,15 @@ namespace vcsn
                   std::make_shared<const weightset_t>(ws)}
       {}
 
+      /// The name of this context, built from its parameters.
+      /// E.g., "char_b_lal", "char_zmin_law".
+      static std::string name()
+      {
+        return (genset_t::name()
+                + "_" + weightset_t::name()
+                + "_" + label_trait<kind_t, genset_t>::name());
+      }
+
       const genset_ptr& genset() const
       {
         return gs_;

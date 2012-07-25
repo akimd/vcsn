@@ -28,6 +28,14 @@ namespace vcsn
       unit_[genset()->identity()] = weightset()->unit();
     }
 
+    static std::string name()
+    {
+      std::string res {"polynomials<"};
+      res += Context::name();
+      res += ">";
+      return res;
+    }
+
     const context_t& context() const { return ctx_; }
     const genset_ptr& genset() const { return ctx_.genset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }

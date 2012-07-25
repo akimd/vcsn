@@ -47,6 +47,14 @@ namespace vcsn
     using value_t = typename node_t::value_t;
 
   public:
+    static std::string name()
+    {
+      std::string res{"kratexpset<"};
+      res += context_t::name();
+      res += '}';
+      return res;
+    }
+
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
     kratexpset(const context_t& ctx)

@@ -11,6 +11,11 @@ namespace vcsn
   class b
   {
   public:
+    static std::string name()
+    {
+      return "b";
+    }
+
     using value_t = bool;
 
     value_t
