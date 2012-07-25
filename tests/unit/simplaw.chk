@@ -1,7 +1,8 @@
 #! /bin/sh
 
 cat >out.exp <<\EOF
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {

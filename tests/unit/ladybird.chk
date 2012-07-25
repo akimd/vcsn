@@ -1,7 +1,8 @@
 #! /bin/sh
 
 cat >out.exp <<\EOF
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -21,7 +22,8 @@ run 0 out.exp unit/ladybird-b 2
 run 0 out.exp unit/ladybird-z 2
 
 cat >out.exp <<\EOF
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {

@@ -3,7 +3,8 @@
 cat >out.exp <<\EOF
 Check idempotence for Thompson 'a'
 States: 2 -> 3
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -20,7 +21,8 @@ digraph A {
 }
 Check idempotence for '\e'
 States: 1 -> 2
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -35,7 +37,8 @@ digraph A {
 }
 Check idempotence for empty
 States: 0 -> 1
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -47,7 +50,8 @@ digraph A {
 }
 Check idempotence for de Bruijn 3
 States: 5 -> 16
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -108,7 +112,8 @@ Check idempotence for de Bruijn 8
 States: 10 -> 512
 Check idempotence for ladybird 4
 States: 4 -> 16
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {

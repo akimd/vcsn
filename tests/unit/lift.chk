@@ -1,7 +1,8 @@
 #! /bin/sh
 
 cat >lady4.dot <<\EOF
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {

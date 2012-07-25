@@ -17,7 +17,12 @@ namespace vcsn
     using state_t = typename A::state_t;
     std::unordered_map<state_t, unsigned> names;
 
-    out << "digraph A {\n  rankdir=LR\n  node [shape=circle]\n";
+    out <<
+      "digraph\n"
+      "{\n";
+    out <<
+      "  rankdir=LR\n"
+      "  node [shape=circle]\n";
 
     // Name all the states.
     for (auto s : aut.states())

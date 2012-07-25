@@ -47,7 +47,8 @@ EOF
 
 
 run 0 - unit/transpose <<EOF
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -61,7 +62,8 @@ digraph A {
   2 -> 3 [label="cd"]
   I3 -> 3 [label="{a.b.c.d}"]
 }
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -75,7 +77,8 @@ digraph A {
   3 -> 2 [label="dc"]
   3 -> F3 [label="{d.c.b.a}"]
 }
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
@@ -88,7 +91,8 @@ digraph A {
   1 -> 2 [label="{a.a.b.b}cd"]
   2 -> F2
 }
-digraph A {
+digraph
+{
   rankdir=LR
   node [shape=circle]
   {
