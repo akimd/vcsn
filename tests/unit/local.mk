@@ -65,6 +65,7 @@ unit_TESTS =					\
   unit/eval.chk					\
   unit/ladybird.chk				\
   unit/lift.chk					\
+  unit/parse-dot.chk				\
   unit/poly.chk					\
   unit/product.chk				\
   unit/simplaw.chk				\
@@ -81,6 +82,7 @@ unit/determinize.log: unit/determinize
 unit/eval.log: unit/eval
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/lift.log: unit/lift
+unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
 unit/product.log: unit/product
 unit/simplaw.log: unit/simplaw

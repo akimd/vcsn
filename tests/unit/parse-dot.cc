@@ -8,7 +8,10 @@ main (int argc, char* const argv[])
   for (int i = 1; i < argc; ++i)
     {
       auto aut = d.parse_file(argv[i]);
-      dotty(*aut, std::cerr);
       std::cerr << d.errors << std::endl;
+      if (aut)
+        dotty(*aut, std::cout);
+      else
+        return 1;
     }
 }

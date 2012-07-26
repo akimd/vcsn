@@ -1,0 +1,111 @@
+#! /bin/sh
+
+# check PARSE-DOT-ARGS
+# --------------------
+check ()
+{
+  cat >in.tmp
+  sed -n '/^--*$/q;p'             in.tmp >in.dot
+  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
+  cp in.dot /tmp
+  cp out.exp /tmp
+  run 0 out.exp unit/parse-dot in.dot "$@"
+}
+
+fail ()
+{
+  cat >in.dot
+  run 1 '' unit/parse-dot in.dot
+}
+
+# Check invalid input.
+fail <<EOF
+digraph
+{
+  vcsn_context=char_b_lal
+  vcsn_alphabet="a"
+  I1 -> 1
+  1 -> 2 [label=a]
+  2 -> F2
+}
+EOF
+
+fail <<EOF
+digraph
+{
+  vcsn_contxt=char_b_lal
+  vcsn_genset="a"
+  I1 -> 1
+  1 -> 2 [label=a]
+  2 -> F2
+}
+EOF
+
+fail <<EOF
+digraph
+{
+  vcsn_context=unknown
+  vcsn_genset="a"
+  I1 -> 1
+  1 -> 2 [label=a]
+  2 -> F2
+}
+EOF
+
+## -------------- ##
+## Proper input.  ##
+## -------------- ##
+
+check <<EOF
+digraph
+{
+  vcsn_context=char_b_lal
+  vcsn_genset="a"
+  I1 -> 1
+  1 -> 2 [label=a]
+  2 -> F2
+}
+---
+digraph
+{
+  vcsn_context=char_b_lal
+  vcsn_genset="a"
+  rankdir=LR
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F2
+  }
+  I1 -> 1
+  1 -> 2 [label="a"]
+  2 -> F2
+}
+EOF
+
+check <<EOF
+digraph
+{
+  vcsn_context=char_b_lal
+  vcsn_genset="a"
+  I1 -> 1
+  {1 2} -> 2 [label=a]
+  2 -> F2
+}
+---
+digraph
+{
+  vcsn_context=char_b_lal
+  vcsn_genset="a"
+  rankdir=LR
+  node [shape=circle]
+  {
+    node [style=invis,shape=none,label="",width=0,height=0]
+    I1
+    F2
+  }
+  I1 -> 1
+  1 -> 2 [label="a"]
+  2 -> F2
+}
+EOF
