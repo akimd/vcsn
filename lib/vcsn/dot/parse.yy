@@ -33,7 +33,9 @@
         // A set of states.
         driver::states_t states;
         // Unlabeled transitions.
-        std::set<std::pair<driver::state_t, driver::state_t>> transitions;
+        using transitions_t =
+          std::set<std::pair<driver::state_t, driver::state_t>>;
+        transitions_t transitions;
         // These guys _can_ be put into a union.
         union
         {
@@ -67,9 +69,45 @@
   }
 }
 
-%code top
+%code
 {
 #include <vcsn/misc/echo.hh>
+
+  namespace vcsn
+  {
+    namespace dot
+    {
+      std::ostream&
+      operator<<(std::ostream& o, const driver::states_t ss)
+      {
+        bool first = true;
+        o << '{';
+        for (auto s: ss)
+          {
+            if (!first)
+              o << ", ";
+            o << s;
+            first = false;
+          }
+        return o << '}';
+      }
+
+      std::ostream&
+      operator<<(std::ostream& o, const sem_type::transitions_t ts)
+      {
+        bool first = true;
+        o << '{';
+        for (auto t: ts)
+          {
+            if (!first)
+              o << ", ";
+            o << t.first << "->" << t.second;
+            first = false;
+          }
+        return o << '}';
+      }
+    }
+  }
 
   /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
@@ -113,11 +151,12 @@
 %destructor { delete $$; } <sval>;
 
 // A single state.
-%type <state> node_id;
+%type <state> node_id node_stmt;
 %printer { debug_stream() << $$; } <state>;
 
 // Set of nodes, including for subgraphs.
-%type <states> nodes;
+%type <states> nodes stmt stmt_list edge_stmt subgraph;
+%printer { debug_stream() << $$; } <states>;
 
 // Rational expressions labeling the edges.
 %type <entry> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
@@ -141,17 +180,36 @@ graph:
 ;
 
 stmt_list:
-  /* empty. */
-| stmt ";" stmt_list
-| stmt     stmt_list
+  /* empty. */  {}
+| stmt_list stmt semi.opt
+  {
+    // Preserve the set of states.
+    std::swap($$, $1);
+    for (auto s: $2)
+      $$.push_back(s);
+  }
 ;
 
 stmt:
   node_stmt
+  {
+    $$.push_back($1);
+  }
 | edge_stmt
+  {
+    std::swap($$, $1);
+  }
 | attr_stmt
+  {
+  }
 | attr_assign
+  {
+    assert(!$1);
+  }
 | subgraph
+  {
+    std::swap($$, $1);
+  }
 ;
 
 attr_stmt:
@@ -226,6 +284,11 @@ comma.opt:
 | ","
 ;
 
+semi.opt:
+  /* empty. */
+| ";"
+;
+
 a_list.0:
   /* empty. */ { $$ = nullptr; }
 | a_list.1     { $$ = $1; }
@@ -249,19 +312,8 @@ nodes:
 // selector), as they will be used as set of starting states if there
 // is another "->" afterward.
 %type <transitions> path;
-%printer
-{
-  bool first = true;
-  debug_stream() << "{";
-  for (auto t: $$)
-    {
-      if (!first)
-        debug_stream() << ", ";
-      debug_stream() << t.first << "->" << t.second;
-      first = false;
-    }
-  debug_stream() << "}";
-} <transitions>;
+%printer { debug_stream() << $$ /* << " (states: " << $<states>$ << ')' */; }
+  <transitions>;
 path:
   nodes[from] "->" nodes[to]
   {
@@ -305,6 +357,10 @@ edge_stmt:
 
 node_stmt:
   node_id attr_list.opt
+  {
+    std::swap($$, $1);
+    delete $2;
+  }
 ;
 
 node_id:
@@ -318,8 +374,8 @@ node_id:
 ;
 
 subgraph:
-  "subgraph" id.opt "{" stmt_list "}"  { delete $2; }
-|                   "{" stmt_list "}"  {}
+  "subgraph" id.opt "{" stmt_list "}"  { std::swap($$, $stmt_list); delete $2; }
+|                   "{" stmt_list "}"  { std::swap($$, $stmt_list); }
 ;
 
 id.opt:
