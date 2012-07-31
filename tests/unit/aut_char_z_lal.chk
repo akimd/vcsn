@@ -72,4 +72,4 @@ digraph
   1 -> F1 [label="{10}"]
 }
 EOF
-run 0 out.exp unit/simpleaut
+run 0 out.exp unit/aut_char_z_lal

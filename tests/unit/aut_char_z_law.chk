@@ -20,4 +20,4 @@ digraph
   3 -> 2 [label="{2}\\e"]
 }
 EOF
-run 0 out.exp unit/simplaw
+run 0 out.exp unit/aut_char_z_law
