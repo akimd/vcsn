@@ -1,3 +1,49 @@
+* 2012-07-31
+** dot-parser
+It is now possible to load an automaton from its dotty output.  Actually, it
+is possible to write simpler automata.  This is no yet fully generic: it
+works properly only for char_b_lal.
+
+The test program unit/parse-dot gives access to it.  When fed with the
+following input file:
+
+  digraph
+  {
+    vcsn_context=char_b_lal vcsn_genset="a"
+    {1} -> {2 3} -> {4 5 6} [label=a]
+    I -> 1
+    {4 5 6} -> F
+  }
+
+it produces an automaton, and dumps it using the dotty algorithm:
+
+  digraph
+  {
+    vcsn_context=char_b_lal
+    vcsn_genset="a"
+    rankdir=LR
+    node [shape=circle]
+    {
+      node [style=invis,shape=none,label="",width=0,height=0]
+      I1
+      F4
+      F5
+      F6
+    }
+    1 -> 2 [label="a"]
+    1 -> 3 [label="a"]
+    2 -> 4 [label="a"]
+    2 -> 5 [label="a"]
+    2 -> 6 [label="a"]
+    3 -> 4 [label="a"]
+    3 -> 5 [label="a"]
+    3 -> 6 [label="a"]
+    I1 -> 1
+    4 -> F4
+    5 -> F5
+    6 -> F6
+  }
+
 * 2012-07-25
 ** pprat uses -L for labels instead of -A
 For consistency, since we now also use the name "labels" to denote the
