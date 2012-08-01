@@ -4,12 +4,14 @@
 # include <string>
 # include <iostream>
 
+# include <vcsn/empty.hh>
+
 namespace vcsn
 {
   class char_letters
   {
   public:
-    struct empty_t {};
+    using empty_t = ::vcsn::empty_t;
     using letter_t = char;
     using word_t = std::string;
 

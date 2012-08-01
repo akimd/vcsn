@@ -24,6 +24,8 @@ kept:
     1 -> 3
   }
 
+In that case, the transitions do not store labels.
+
 ** lift now returns a labels-are-empty automaton/ratexp
 Accordingly, pprat -l (lift) now displays:
 

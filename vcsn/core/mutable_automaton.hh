@@ -179,9 +179,11 @@ namespace vcsn
       auto i =
         std::find_if(begin(succ), end(succ),
                      [this,l,dst] (const transition_t& t) -> bool
-                     { const stored_transition_t& st = transitions_[t];
+                     {
+                       const stored_transition_t& st = transitions_[t];
                        return (st.dst == dst
-                               && this->genset()->equals(st.label, l)); });
+                               && this->genset()->equals(st.get_label(), l));
+                     });
       if (i == end(succ))
         return null_transition();
       return *i;
@@ -207,7 +209,10 @@ namespace vcsn
 
     state_t src_of(transition_t t) const   { return transitions_[t].src; }
     state_t dst_of(transition_t t) const   { return transitions_[t].dst; }
-    label_t label_of(transition_t t) const { return transitions_[t].label; }
+    label_t label_of(transition_t t) const
+    {
+      return transitions_[t].get_label();
+    }
 
     weight_t weight_of(transition_t t) const
     {
@@ -386,7 +391,7 @@ namespace vcsn
           if (!weightset()->is_zero(k))
             {
               stored_transition_t& st = transitions_[t];
-              st.label = l;
+              st.set_label(l);
               st.set_weight(k);
             }
           else
@@ -410,7 +415,7 @@ namespace vcsn
           stored_transition_t& st = transitions_[t];
           st.src = src;
           st.dst = dst;
-          st.label = l;
+          st.set_label(l);
           st.set_weight(k);
           states_[src].succ.push_back(t);
           states_[dst].pred.push_back(t);
@@ -581,7 +586,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
         (ss.succ,
          [this,l] (transition_t i) {
-          return this->genset()->equals(transitions_[i].label, l);
+          return this->genset()->equals(transitions_[i].get_label(), l);
         });
     }
 
@@ -612,7 +617,7 @@ namespace vcsn
       return container_filter_range<const tr_cont_t&>
         (ss.pred,
          [this,l] (transition_t i) {
-          return this->genset()->equals(transitions_[i].label, l);
+          return this->genset()->equals(transitions_[i].get_label(), l);
         });
     }
 
