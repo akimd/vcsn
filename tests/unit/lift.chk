@@ -29,9 +29,9 @@ EOF
 ## label="b + c" -> label="{b+c}\e"
 ## There is an inversion c+a instead of a+c, I didn't check why.
 perl -pe 's{\[label="(.*?)"\]}'                                 \
-      -e '{$_ = "\[label=\"{$1}\\\\e\"\]"; s/\s//g; $_}eg;'     \
+      -e '{$_ = "\[label=\"{$1}\"\]"; s/\s//g; $_}eg;'          \
       -e 's{a\+c}{c+a}g;'                                       \
-      -e 's{char_b_lal}{char_kratexpset<char_b_lal>_law}g;'     \
+      -e 's{char_b_lal}{char_kratexpset<char_b_lal>_lae}g;'     \
    < lady4.dot >lady4.lifted.out
 
 cat lady4.dot lady4.lifted.out > out.exp

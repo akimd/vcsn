@@ -15,7 +15,7 @@ namespace vcsn
     using lifted_context_t =
       ctx::context<typename Context::genset_t,
                    kratexpset<Context>,
-                   labels_are_words>;
+                   labels_are_empty>;
 
     template <typename Aut>
     using lifted_automaton_t =
@@ -54,7 +54,7 @@ namespace vcsn
       else
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
-           ctx.genset()->to_word(""),
+           {},
            kre.weight(a.weight_of(t), kre.atom(a.label_of(t))));
     return res;
   }
