@@ -1,4 +1,7 @@
-%option noyywrap nounput stack debug prefix="rat" outfile="lex.yy.c"
+%option nounput noyywrap
+%option debug
+%option prefix="rat" outfile="lex.yy.c"
+%option stack noyy_top_state
 
 %top{
 #pragma GCC diagnostic ignored "-Wsign-compare"

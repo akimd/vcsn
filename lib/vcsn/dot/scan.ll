@@ -1,6 +1,8 @@
 /* See <http://www.graphviz.org/content/dot-language>. */
 
-%option noyywrap nounput debug prefix="dot" outfile="lex.yy.c"
+%option nounput noyywrap
+%option debug
+%option prefix="dot" outfile="lex.yy.c"
 
 %top{
 #pragma GCC diagnostic ignored "-Wsign-compare"
