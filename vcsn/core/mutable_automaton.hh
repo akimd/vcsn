@@ -35,6 +35,7 @@ namespace vcsn
     using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
     using entry_t = typename entryset_t::value_t;
+
   protected:
     const entryset_t es_;
 
@@ -64,13 +65,13 @@ namespace vcsn
     mutable_automaton(const context_t& ctx)
       : es_{ctx}
       , states_{2}
-      , prepost_label_{ctx.genset()->template special<label_t>()}
+      , prepost_label_(ctx.genset()->template special<label_t>())
     {
     }
 
     mutable_automaton(mutable_automaton&& that)
       : es_{that.es_}
-      , prepost_label_{that.prepost_label_}
+      , prepost_label_(that.prepost_label_)
     {
       std::swap(states_, that.states_);
       std::swap(states_fs_, that.states_fs_);

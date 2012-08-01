@@ -9,8 +9,15 @@ namespace vcsn
   class char_letters
   {
   public:
+    struct empty_t {};
     using letter_t = char;
     using word_t = std::string;
+
+    word_t
+    to_word(const empty_t) const
+    {
+      return {};
+    }
 
     word_t
     to_word(const letter_t l) const
@@ -74,15 +81,21 @@ namespace vcsn
     }
 
     bool
-    equals(const word_t& w1, const word_t& w2) const
+    equals(empty_t, empty_t) const
     {
-      return w1 == w2;
+      return true;
     }
 
     bool
     equals(const letter_t& l1, const letter_t& l2) const
     {
       return l1 == l2;
+    }
+
+    bool
+    equals(const word_t& w1, const word_t& w2) const
+    {
+      return w1 == w2;
     }
 
     bool
@@ -153,6 +166,14 @@ namespace vcsn
 
     // word_t mirror(const word_t& w)
   };
+
+  template<>
+  inline
+  char_letters::empty_t
+  char_letters::special<char_letters::empty_t>() const
+  {
+    return {};
+  }
 
   template<>
   inline

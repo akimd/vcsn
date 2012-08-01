@@ -35,6 +35,16 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
+  kratexpset<Context>::atom_(if_lae<Ctx, label_t> v) const
+    -> value_t
+  {
+    return std::make_shared<atom_t>(weightset()->unit(), v);
+  }
+
+  template <typename Context>
+  template <typename Ctx>
+  inline
+  auto
   kratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
     -> value_t
   {
@@ -159,6 +169,18 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::concat(value_t l, value_t r, labels_are_empty) const
+    -> value_t
+  {
+    return mul(l, r);
+  }
+
+  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
+    -> value_t
+  {
+    return mul(l, r);
+  }
+
   DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
@@ -182,12 +204,6 @@ namespace vcsn
                                             kratexps);
           }
         }
-    return mul(l, r);
-  }
-
-  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
-    -> value_t
-  {
     return mul(l, r);
   }
 

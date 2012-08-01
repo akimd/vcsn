@@ -219,7 +219,8 @@ namespace vcsn
 	      out << "{";
 	      weightset()->print(out, i.second) << "}";
 	    }
-	  genset()->print(out, i.first);
+          if (!context_t::is_lae)
+            genset()->print(out, i.first);
 	}
 
       if (first)

@@ -3,17 +3,28 @@
 
 namespace vcsn
 {
+  struct labels_are_empty
+  {};
+
   struct labels_are_letters
-  {
-  };
+  {};
 
   struct labels_are_words
-  {
-  };
+  {};
 
   template <class Kind, class GenSet>
   struct label_trait
   {
+  };
+
+  template <class GenSet>
+  struct label_trait<labels_are_empty, GenSet>
+  {
+    using label_t = typename GenSet::empty_t;
+    static std::string name()
+    {
+      return  "lae";
+    }
   };
 
   template <class GenSet>

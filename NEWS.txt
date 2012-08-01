@@ -1,3 +1,29 @@
+* 2012-08-01
+** labels are empty
+Initial work on labels-are-empty automata.  See the unit/char_z_lae test.
+The labels are not displayed, but the "{...}" to denote the weights, are
+kept:
+
+  digraph
+  {
+    vcsn_context=char_z_lae
+    vcsn_genset=""
+    rankdir=LR
+    node [shape=circle]
+    {
+      node [style=invis,shape=none,label="",width=0,height=0]
+      I1
+      F2
+    }
+    I1 -> 1
+    2 -> F2 [label="{10}"]
+    1 -> 2 [label="{51}"]
+    2 -> 3 [label="{3}"]
+    2 -> 1
+    1 -> 1 [label="{42}"]
+    1 -> 3
+  }
+
 * 2012-07-31
 ** dot-parser
 It is now possible to load an automaton from its dotty output.  Actually, it
@@ -457,7 +483,7 @@ Of course, this also works with the "standard-of" option:
 
 versus:
 
-  $ pprat  -w br -aw '{aa}({dd}\e+bb)*' 
+  $ pprat  -w br -aw '{aa}({dd}\e+bb)*'
   {aa}(({dd}\e+bb)*)
   $ pprat -s -w br -aw '{aa}({dd}\e+bb)*'
   digraph A {

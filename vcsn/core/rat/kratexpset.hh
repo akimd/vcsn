@@ -112,6 +112,7 @@ namespace vcsn
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
     /// Implementation details for concat.
+    value_t concat(value_t l, value_t r, labels_are_empty) const;
     value_t concat(value_t l, value_t r, labels_are_letters) const;
     value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;
@@ -120,6 +121,10 @@ namespace vcsn
     value_t transpose(value_t e) const;
 
   private:
+    template <typename Ctx>
+    value_t
+    atom_(if_lae<Ctx, label_t> v) const;
+
     template <typename Ctx>
     value_t
     atom_(if_lal<Ctx, letter_t> v) const;
