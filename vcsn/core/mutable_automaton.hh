@@ -12,6 +12,7 @@
 # include <vcsn/core/entryiter.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/transition.hh>
+# include <vcsn/ctx/ctx.hh>
 # include <vcsn/weights/poly.hh>
 
 namespace vcsn
@@ -635,8 +636,11 @@ namespace vcsn
                 { return this->transitions_[i].dst == d; }};
     }
 
-    // Iteration on entries
-    ///////////////////////
+
+
+    /*----------.
+    | entries.  |
+    `----------*/
 
     entry_iterator<mutable_automaton, transitions_output_t>
     entries() const
@@ -653,16 +657,61 @@ namespace vcsn
     entry_t
     entry_at(state_t s, state_t d) const
     {
-      entry_t e;
+      entry_t res;
       for (auto t : outin(s, d))
-        es_.assoc(e, word_label_of(t), weight_of(t));
-      return e;
+        es_.assoc(res, word_label_of(t), weight_of(t));
+      return res;
     }
 
     entry_t
     entry_at(transition_t t) const
     {
       return entry_at(src_of(t), dst_of(t));
+    }
+
+    void
+    add_entry(state_t src, state_t dst, const entry_t& es)
+    {
+      add_entry_<context_t>(src, dst, es);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lae<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        add_transition(src, dst, {}, e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lal<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        // FIXME: Hack.  entries are always about words, but we
+        // want letters.  "e.first[0]" is a hack for lal.
+        add_transition(src, dst, e.first[0], e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+              if_law<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        add_transition(src, dst, e.first, e.second);
+    }
+
+    // Remove all the transitions between s and d.
+    void
+    del_entry(state_t s, state_t d)
+    {
+      // FIXME: Beware that according to the comments of outin,
+      // del_transition invalidates its result.
+      for (auto t : outin(s, d))
+        del_transition(t);
     }
   };
 
@@ -672,7 +721,6 @@ namespace vcsn
   {
     return {ctx};
   }
-
 }
 
 #endif // !VCSN_CORE_MUTABLE_AUTOMATON_HH

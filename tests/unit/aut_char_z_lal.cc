@@ -1,14 +1,17 @@
+#include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/char_z_lal.hh>
 
-int main()
-{
-  using context_t = vcsn::ctx::char_z_lal;
-  context_t ctx {{'a', 'b', 'c', 'd'}};
+using context_t = vcsn::ctx::char_z_lal;
+using automaton_t = vcsn::mutable_automaton<context_t>;
+using entry_t = automaton_t::entry_t;
 
-  using automaton_t = vcsn::mutable_automaton<context_t>;
+bool
+check_various(const context_t& ctx)
+{
+  bool res = true;
   automaton_t aut{ctx};
 
   auto s1 = aut.new_state();
@@ -20,11 +23,11 @@ int main()
   aut.set_transition(s2, s3, 'a', 1);
   aut.set_transition(s2, s1, 'b', 1);
   int v = aut.add_weight(aut.set_transition(s1, s1, 'd', 2), 40);
-  assert(v == 42);
+  ASSERT_EQ(v, 42);
   aut.set_transition(s1, s3, 'd', 1);
   vcsn::dotty(aut, std::cout);
-  assert(aut.num_states() == 3);
-  assert(aut.num_transitions() == 5);
+  ASSERT_EQ(aut.num_states(), 3u);
+  ASSERT_EQ(aut.num_transitions(), 5u);
 
   std::cout << "Leaving s1 by d" << std::endl;
   for (auto i: aut.out(s1, 'd'))
@@ -49,8 +52,8 @@ int main()
   vcsn::dotty(aut, std::cout);
   auto tj = aut.outin(s1, s1);
   assert(tj.begin() == tj.end());
-  assert(aut.num_states() == 3);
-  assert(aut.num_transitions() == 4);
+  ASSERT_EQ(aut.num_states(), 3u);
+  ASSERT_EQ(aut.num_transitions(), 4u);
 
   aut.del_state(s1);
   vcsn::dotty(aut, std::cout);
@@ -58,12 +61,55 @@ int main()
   assert(aut.has_state(s2));
   assert(aut.has_state(s3));
 
-  assert(aut.num_states() == 2);
-  assert(aut.num_transitions() == 1);
+  ASSERT_EQ(aut.num_states(), 2u);
+  ASSERT_EQ(aut.num_transitions(), 1u);
 
   aut.set_transition(s2, s3, 'a', 0);
 
   vcsn::dotty(aut, std::cout);
-  assert(aut.num_states() == 2);
-  assert(aut.num_transitions() == 0);
+  ASSERT_EQ(aut.num_states(), 2u);
+  ASSERT_EQ(aut.num_transitions(), 0u);
+  return res;
+}
+
+bool
+check_del_entry(const context_t& ctx)
+{
+  bool res = true;
+  automaton_t aut{ctx};
+  std::vector<automaton_t::state_t> s;
+
+  size_t size = 3;
+  for (size_t i = 0; i < size; ++i)
+    s.push_back(aut.new_state());
+  aut.set_initial(s[0]);
+  aut.set_final(s[size-1]);
+
+  aut.add_entry(s[0], s[1], aut.entryset().conv("{3}a+{4}b"));
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[0], s[1], 'a')), 3);
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[0], s[1], 'b')), 4);
+  ASSERT_EQ(aut.has_transition(s[0], s[1], 'c'), false);
+
+  aut.add_entry(s[1], s[2], aut.entryset().conv("{5}c+{6}d"));
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'c')), 5);
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'd')), 6);
+
+  aut.del_entry(s[0], s[1]);
+  ASSERT_EQ(aut.has_transition(s[0], s[1], 'a'), false);
+  ASSERT_EQ(aut.has_transition(s[0], s[1], 'b'), false);
+  ASSERT_EQ(aut.has_transition(s[0], s[1], 'c'), false);
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'c')), 5);
+  ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'd')), 6);
+
+  return res;
+}
+
+
+int main()
+{
+  size_t nerrs = 0;
+  context_t ctx {{'a', 'b', 'c', 'd'}};
+  nerrs += !check_various(ctx);
+  nerrs += !check_del_entry(ctx);
+  return !!nerrs;
 }

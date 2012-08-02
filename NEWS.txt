@@ -1,3 +1,10 @@
+* 2012-09-24
+** mutable_automaton::add_entry and del_entry
+The first of these new functions allows to add directly a list of transition
+between two states by passing the corresponding entry_t (this is most useful
+when reading an automaton with entries, such as with the Dot parser).  The
+second one removes every existing transition between two states.
+
 * 2012-08-01
 ** labels are empty
 Initial work on labels-are-empty automata.  See the unit/char_z_lae test.

@@ -336,14 +336,8 @@ edge_stmt:
   path attr_list.opt[label]
   {
     if ($label)
-      {
-        for (auto l: *$label)
-          for (auto t: $path)
-            // FIXME: Hack.  entries are always about words, but we
-            // want letters.  "l.first[0]" is a hack for lal.
-            driver_.aut_->add_transition(t.first, t.second,
-                                         l.first[0], l.second);
-      }
+      for (auto t: $path)
+        driver_.aut_->add_entry(t.first, t.second, *$label);
     else
       for (auto t: $path)
         {
