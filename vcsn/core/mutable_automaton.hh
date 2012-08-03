@@ -500,14 +500,14 @@ namespace vcsn
     states_output_t
     state_range(state_t b, state_t e) const
     {
-      return states_output_t
-        (boost::irange<state_t>(b, e),
+      return
+        {boost::irange<state_t>(b, e),
          [this] (state_t i) -> bool
          {
            const stored_state_t& ss = states_[i];
            return (ss.succ.empty()
                    || ss.succ.front() != this->null_transition());
-         });
+         }};
     }
 
   public:
@@ -525,26 +525,30 @@ namespace vcsn
     transitions_output_t
     transitions() const
     {
-      return transitions_output_t
-        (boost::irange<transition_t>(0U, transitions_.size()),
-         [this] (transition_t i) -> bool
-         {
-           state_t src = transitions_[i].src;
-           if (src == this->null_state() || src == this->pre())
-             return false;
-           return transitions_[i].dst != this->post();
-         });
+      return
+        {
+          boost::irange<transition_t>(0U, transitions_.size()),
+          [this] (transition_t i) -> bool
+            {
+              state_t src = transitions_[i].src;
+              if (src == this->null_state() || src == this->pre())
+                return false;
+              return transitions_[i].dst != this->post();
+            }
+        };
     }
 
     transitions_output_t
     all_transitions() const
     {
-      return transitions_output_t
-        (boost::irange<transition_t>(0U, transitions_.size()),
-         [this] (transition_t i)
-         {
-           return transitions_[i].src != this->null_state();
-         });
+      return
+        {
+          boost::irange<transition_t>(0U, transitions_.size()),
+          [this] (transition_t i)
+            {
+              return transitions_[i].src != this->null_state();
+            }
+        };
     }
 
     container_filter_range<const tr_cont_t&>
@@ -564,9 +568,9 @@ namespace vcsn
     out(state_t s) const
     {
       assert(has_state(s));
-      return container_filter_range<const tr_cont_t&>
-        (states_[s].succ,
-         [this] (transition_t i) { return transitions_[i].dst != this->post(); });
+      return {states_[s].succ,
+              [this] (transition_t i)
+                { return transitions_[i].dst != this->post(); }};
     }
 
     // Invalidated by del_transition() and del_state().
@@ -583,11 +587,10 @@ namespace vcsn
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<const tr_cont_t&>
-        (ss.succ,
-         [this,l] (transition_t i) {
-          return this->genset()->equals(transitions_[i].get_label(), l);
-        });
+      return {ss.succ,
+              [this,l] (transition_t i) {
+                return this->genset()->equals(transitions_[i].get_label(), l);
+            }};
     }
 
     // Invalidated by del_transition() and del_state().
@@ -595,9 +598,9 @@ namespace vcsn
     in(state_t s) const
     {
       assert(has_state(s));
-      return container_filter_range<const tr_cont_t&>
-        (states_[s].pred,
-         [this] (transition_t i) { return transitions_[i].src != this->pre(); });
+      return {states_[s].pred,
+              [this] (transition_t i)
+                { return transitions_[i].src != this->pre(); }};
     }
 
     // Invalidated by del_transition() and del_state().
@@ -614,11 +617,10 @@ namespace vcsn
     {
       assert(has_state(s));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<const tr_cont_t&>
-        (ss.pred,
-         [this,l] (transition_t i) {
-          return this->genset()->equals(transitions_[i].get_label(), l);
-        });
+      return {ss.pred,
+              [this,l] (transition_t i) {
+                return this->genset()->equals(transitions_[i].get_label(), l);
+        }};
     }
 
     // Invalidated by del_transition() and del_state().
@@ -628,9 +630,9 @@ namespace vcsn
       assert(has_state(s));
       assert(has_state(d));
       const stored_state_t& ss = states_[s];
-      return container_filter_range<const tr_cont_t&>
-        (ss.succ,
-         [this,d] (transition_t i) { return this->transitions_[i].dst == d; });
+      return {ss.succ,
+              [this,d] (transition_t i)
+                { return this->transitions_[i].dst == d; }};
     }
 
     // Iteration on entries
@@ -672,7 +674,7 @@ namespace vcsn
   mutable_automaton<Context>
   make_mutable_automaton(const Context& ctx)
   {
-    return mutable_automaton<Context>(ctx);
+    return {ctx};
   }
 
 }
