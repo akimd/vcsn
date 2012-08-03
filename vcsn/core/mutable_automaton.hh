@@ -641,17 +641,13 @@ namespace vcsn
     entry_iterator<mutable_automaton, transitions_output_t>
     entries() const
     {
-      return
-        entry_iterator<mutable_automaton,
-                       transitions_output_t>(*this, transitions());
+      return { *this, transitions() };
     }
 
     entry_iterator<mutable_automaton, transitions_output_t>
     all_entries() const
     {
-      return
-        entry_iterator<mutable_automaton,
-                       transitions_output_t>(*this, all_transitions());
+      return { *this, all_transitions() };
     }
 
     entry_t
