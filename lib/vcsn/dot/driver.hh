@@ -1,11 +1,11 @@
 #ifndef LIB_VCSN_DOT_DRIVER_HH
 # define LIB_VCSN_DOT_DRIVER_HH
 
-# include <vector>
-
+# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/ctx/char_b_lal.hh>
+# include <vcsn/algos/edit-automaton.hh>
 
 # include <lib/vcsn/dot/location.hh>
 
@@ -20,10 +20,7 @@ namespace vcsn
     public:
       using exp_t = vcsn::rat::exp_t;
       using automaton_t = mutable_automaton<ctx::char_b_lal>;
-      using state_t = automaton_t::state_t;
-
-      /// A set of states.
-      using states_t = std::vector<state_t>;
+      using state_t = unsigned;
 
       driver();
 
@@ -63,14 +60,8 @@ namespace vcsn
       /// Defined when context_ and letters_ are known.
       abstract_kratexpset* kratexpset_ = nullptr;
 
-      /// The automaton being constructed.
-      automaton_t* aut_ = nullptr;
-      /// Mapping from state name to state number.
-      std::map<std::string, state_t> stmap_;
-      /// Convert a named state to a state number.
-      state_t state_(const std::string& s);
-
-
+      /// An automaton editor that stores the one being built.
+      vcsn::edit_automaton<automaton_t>* edit_;
       friend class parser;
     };
 

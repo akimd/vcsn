@@ -4,6 +4,7 @@
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
 
+# include <vcsn/ctx/char_b_lal.hh>
 namespace vcsn
 {
   namespace dot
@@ -11,6 +12,7 @@ namespace vcsn
 
     driver::driver()
       : kratexpset_{nullptr}
+      , edit_{nullptr}
     {}
 
     auto
@@ -21,13 +23,13 @@ namespace vcsn
       // Parser.
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
-      if (p.parse())
-        {
-          delete aut_;
-          aut_ = nullptr;
-        }
+      automaton_t* res = nullptr;
+      if (!p.parse())
+        std::swap(res, edit_->result());
+      delete edit_;
+      edit_ = nullptr;
       scan_close_();
-      return aut_;
+      return res;
     }
 
     auto
@@ -71,8 +73,9 @@ namespace vcsn
             {
               using ctx_t = ctx::char_b_lal;
               auto ctx = new ctx_t{ls};
+              using automaton_t = mutable_automaton<ctx_t>;
               kratexpset_ = new concrete_abstract_kratexpset<ctx_t>{*ctx};
-              aut_ = new mutable_automaton<ctx_t>{*ctx};
+              edit_ = new edit_automaton<automaton_t>{*ctx};
             }
           else
             throw std::domain_error("unknown context: " + context_);
@@ -93,30 +96,6 @@ namespace vcsn
     driver::invalid(const location& l, const std::string& s)
     {
       error(l, "invalid character: " + s);
-    }
-
-    auto
-    driver::state_(const std::string& s)
-      -> state_t
-    {
-      assert(aut_);
-      state_t res;
-      // The pre state has multiple instances with names starting by
-      // "I", and likewise for the post state with "F".
-      if (s[0] == 'I')
-        res = aut_->pre();
-      else if (s[0] == 'F')
-        res = aut_->post();
-      else
-        {
-          auto i = stmap_.find(s);
-          if (i == std::end(stmap_))
-            // FIXME: optimize.
-            res = stmap_[s] = aut_->new_state();
-          else
-            res = i->second;
-        }
-      return res;
     }
   }
 }

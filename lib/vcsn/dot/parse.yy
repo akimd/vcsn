@@ -23,24 +23,19 @@
   {
     namespace dot
     {
-
       // (Complex) objects such as shared_ptr cannot be put in a
       // union, even in C++11.  So cheat, and store a struct instead
       // of an union.  See lib/vcsn/rat/README.txt.
       struct sem_type
       {
         // A set of states.
-        driver::states_t states;
+        using states_t = std::vector<std::string>;
+        states_t states;
+        std::string state;
         // Unlabeled transitions.
-        using transitions_t =
-          std::set<std::pair<driver::state_t, driver::state_t>>;
+        using transitions_t = std::vector<std::pair<std::string, std::string>>;
         transitions_t transitions;
-        // These guys _can_ be put into a union.
-        union
-        {
-          std::string* sval;
-          driver::state_t state;
-        };
+        std::string* sval;
       };
     }
   }
@@ -77,7 +72,7 @@
     namespace dot
     {
       std::ostream&
-      operator<<(std::ostream& o, const driver::states_t ss)
+      operator<<(std::ostream& o, const sem_type::states_t ss)
       {
         bool first = true;
         o << '{';
@@ -309,7 +304,7 @@ path:
   {
     for (auto s1: $from)
       for (auto s2: $to)
-        $$.insert(std::make_pair(s1, s2));
+        $$.emplace_back(s1, s2);
     $<states>$ = $to;
   }
 | path[from]  "->" nodes[to]
@@ -317,7 +312,7 @@ path:
     std::swap($$, $from);
     for (auto s1: $<states>from)
       for (auto s2: $to)
-        $<transitions>$.insert(std::make_pair(s1, s2));
+        $<transitions>$.emplace_back(s1, s2);
     $<states>$ = $to;
   }
 ;
@@ -326,7 +321,7 @@ edge_stmt:
   path attr_list.opt[label]
   {
     for (auto t: $path)
-      add_entry(*driver_.aut_, t.first, t.second, $label);
+      driver_.edit_->add_entry(t.first, t.second, $label);
     delete $label;
     $label = nullptr;
   }
@@ -343,10 +338,18 @@ node_stmt:
 node_id:
   ID
   {
-    // We need the automaton to exist.
+    // We need the editor to exist.
     TRY(@$, driver_.make_kratexpset());
-    $$ = driver_.state_(*$1);
+    $$ = *$1;
     delete $1;
+    if ($$[0] == 'I')
+      driver_.edit_->add_pre($$);
+    else if ($$[0] == 'F')
+      driver_.edit_->add_post($$);
+    else
+      // This is not needed, but it ensures that the states will be
+      // numbered by their order of appearance in the file.
+      driver_.edit_->add_state($$);
   }
 ;
 
