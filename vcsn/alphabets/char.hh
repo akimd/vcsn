@@ -101,11 +101,10 @@ namespace vcsn
     }
 
     bool
-    is_letter(const word_t& w) const
+    is_letter(const empty_t&) const
     {
-      return w.size() == 1;
+      return false;
     }
-
 
     bool
     is_letter(const letter_t&) const
@@ -113,11 +112,23 @@ namespace vcsn
       return true;
     }
 
+    bool
+    is_letter(const word_t& w) const
+    {
+      return w.size() == 1;
+    }
+
   protected:
     /// Use special().
     letter_t special_letter() const { return 255; }
 
   public:
+    std::ostream&
+    print(std::ostream& o, const empty_t&) const
+    {
+      return o << "EMPTY";
+    }
+
     std::ostream&
     print(std::ostream& o, const letter_t& l) const
     {
