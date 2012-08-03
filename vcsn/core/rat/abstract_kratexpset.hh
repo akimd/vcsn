@@ -154,6 +154,16 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const word_t& v) const
+      -> if_lae<Ctx, value_t>
+    {
+      if (!v.empty())
+        throw std::domain_error("invalid atom: " + v + ": not empty");
+      return ks_.atom({});
+    }
+
+    template <typename Ctx>
+    auto
+    atom_(const word_t& v) const
       -> if_lal<Ctx, value_t>
     {
       if (!ks_.genset()->is_letter(v))
