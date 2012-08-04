@@ -5,6 +5,8 @@
 # include <iostream>
 # include <sstream>
 
+# include <vcsn/weights/fwd.hh>
+
 namespace vcsn
 {
   template <class Context>
