@@ -64,12 +64,15 @@ namespace vcsn
             throw std::domain_error("no vcsn_context defined");
           if (letters_.empty())
             throw std::domain_error("no vcsn_letters defined");
+          std::set<char> ls;
+          for (auto l: letters_)
+            ls.insert(l);
           if (context_ == "char_b_lal")
             {
-              auto ctx = new ctx::char_b_lal{letters_};
-              kratexpset_ =
-                new concrete_abstract_kratexpset<vcsn::ctx::char_b_lal>{*ctx};
-              aut_ = new automaton_t{*ctx};
+              using ctx_t = ctx::char_b_lal;
+              auto ctx = new ctx_t{ls};
+              kratexpset_ = new concrete_abstract_kratexpset<ctx_t>{*ctx};
+              aut_ = new mutable_automaton<ctx_t>{*ctx};
             }
           else
             throw std::domain_error("unknown context: " + context_);

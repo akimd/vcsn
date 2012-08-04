@@ -59,7 +59,7 @@ namespace vcsn
       /// The name of the context.
       std::string context_;
       /// The letters gathered so far.
-      std::set<char> letters_;
+      std::string letters_;
       /// Defined when context_ and letters_ are known.
       abstract_kratexpset* kratexpset_ = nullptr;
 

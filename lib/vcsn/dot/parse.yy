@@ -249,16 +249,15 @@ attr_assign:
     else if (*$var == "vcsn_context")
       {
         assert(!driver_.kratexpset_);
-        std::swap(driver_.context_ , *$val);
+        std::swap(driver_.context_, *$val);
       }
     else if (*$var == "vcsn_genset")
       {
         assert(!driver_.kratexpset_);
-        for (auto l: *$val)
-          driver_.letters_.insert(l);
+        std::swap(driver_.letters_, *$val);
       }
-    delete $1;
-    delete $3;
+    delete $var;
+    delete $val;
   }
 
 a:
