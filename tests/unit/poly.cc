@@ -10,7 +10,7 @@ check_assoc()
   bool res = true;
   using context_t = vcsn::ctx::char_z_lal;
   context_t ctx {{'a', 'b', 'c', 'd'}};
-  using poly_t = vcsn::polynomials<context_t>;
+  using poly_t = vcsn::polynomialset<context_t>;
   poly_t poly{ctx};
 
   poly_t::value_t u = poly.unit();
@@ -48,7 +48,7 @@ check_conv()
 
   using context_t = vcsn::ctx::char_z_lal;
   context_t ctx {{'a', 'b', 'c', 'd'}};
-  using poly_t = vcsn::polynomials<context_t>;
+  using poly_t = vcsn::polynomialset<context_t>;
   poly_t poly{ctx};
 
 #define CHECK(In, Out)                                   \

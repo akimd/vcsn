@@ -15,9 +15,9 @@ namespace vcsn
   template <class Context>
   class polynomial;
 
-  class abstract_polynomials;
+  class abstract_polynomialset;
   template <class Context>
-  class polynomials;
+  class polynomialset;
 
   // zmin.hh.
   class zmin;

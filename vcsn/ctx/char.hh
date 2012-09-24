@@ -17,7 +17,7 @@ namespace vcsn
 
 #define VCSN_CTX_INSTANTIATE(Ctx)                                       \
   MAYBE_EXTERN template                                                 \
-  class polynomials<Ctx>;                                               \
+  class polynomialset<Ctx>;                                             \
                                                                         \
   MAYBE_EXTERN template                                                 \
   class mutable_automaton<Ctx>;                                         \

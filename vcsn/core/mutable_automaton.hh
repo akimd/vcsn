@@ -28,7 +28,7 @@ namespace vcsn
 
     using genset_ptr = typename context_t::genset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using entryset_t = polynomials<context_t>;
+    using entryset_t = polynomialset<context_t>;
 
     using state_t = unsigned;
     using transition_t = unsigned;

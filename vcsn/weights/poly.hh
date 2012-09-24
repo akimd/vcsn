@@ -10,7 +10,7 @@
 namespace vcsn
 {
   template <class Context>
-  struct polynomials
+  struct polynomialset
   {
   public:
     using context_t = Context;
@@ -24,7 +24,7 @@ namespace vcsn
 
     using value_t = std::map<word_t, weight_t>;
 
-    polynomials(const context_t& ctx)
+    polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
       unit_[genset()->identity()] = weightset()->unit();
@@ -32,7 +32,7 @@ namespace vcsn
 
     static std::string name()
     {
-      std::string res {"polynomials<"};
+      std::string res {"polynomialset<"};
       res += Context::name();
       res += ">";
       return res;
