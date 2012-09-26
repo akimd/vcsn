@@ -16,6 +16,7 @@ nobase_vcsn_HEADERS =                           \
   algos/aut_to_exp.hh                           \
   algos/determinize.hh                          \
   algos/dotty.hh                                \
+  algos/edit-automaton.hh                       \
   algos/eval.hh                                 \
   algos/lift.hh                                 \
   algos/product.hh                              \

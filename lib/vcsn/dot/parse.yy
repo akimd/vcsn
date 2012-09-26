@@ -40,7 +40,6 @@
         {
           std::string* sval;
           driver::state_t state;
-          driver::automaton_t::entry_t* entry;
         };
       };
     }
@@ -70,6 +69,7 @@
 
 %code
 {
+#include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/misc/echo.hh>
 
   namespace vcsn
@@ -146,7 +146,7 @@
 
 %token <sval> ID;
 %type <sval> id.opt;
-%printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
+%printer { debug_stream() << '"' << ($$ ? *$$ : "nullptr") << '"'; } <sval>;
 %destructor { delete $$; } <sval>;
 
 // A single state.
@@ -158,17 +158,7 @@
 %printer { debug_stream() << $$; } <states>;
 
 // Rational expressions labeling the edges.
-%type <entry> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
-%printer
-{
-  if ($$)
-    {
-      assert(driver_.kratexpset_);
-      driver_.aut_->entryset().print(debug_stream(), *$$);
-    }
-  else
-    debug_stream() << "nullptr";
-} <entry>;
+%type <sval> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %%
 
 graph:
@@ -212,9 +202,9 @@ stmt:
 ;
 
 attr_stmt:
-  "graph" attr_list
-| "node"  attr_list
-| "edge"  attr_list
+  "graph" attr_list { delete $2; $2 = nullptr; }
+| "node"  attr_list { delete $2; $2 = nullptr; }
+| "edge"  attr_list { delete $2; $2 = nullptr; }
 ;
 
 attr_list:
@@ -240,11 +230,7 @@ attr_assign:
   {
     $$ = nullptr;
     if (*$var == "label" && !$val->empty())
-      {
-        TRY(@$, driver_.make_kratexpset());
-        driver::automaton_t::entryset_t es{driver_.aut_->context()};
-        $$ = new driver::automaton_t::entry_t{es.conv(*$val)};
-      }
+      std::swap($$, $val);
     else if (*$var == "vcsn_context")
       {
         assert(!driver_.kratexpset_);
@@ -333,17 +319,10 @@ path:
 edge_stmt:
   path attr_list.opt[label]
   {
-    if ($label)
-      for (auto t: $path)
-        driver_.aut_->add_entry(t.first, t.second, *$label);
-    else
-      for (auto t: $path)
-        {
-          assert (t.first == driver_.aut_->pre()
-                  || t.second == driver_.aut_->post());
-          driver_.aut_->add_transition(t.first, t.second,
-                                       driver_.aut_->prepost_label());
-        }
+    for (auto t: $path)
+      add_entry(*driver_.aut_, t.first, t.second, $label);
+    delete $label;
+    $label = nullptr;
   }
 ;
 

@@ -1,3 +1,9 @@
+* 2012-09-26
+** add_entry
+In addition to the add_entry method of mutable_automaton, there is now an
+add_entry _algorithm_, which is templated by the automaton type.  This
+algorithm provides an abstract interface to an unknown type of automaton.
+
 * 2012-09-24
 ** renamings
 For consistency, polynomials is renamed polynomialset.
