@@ -20,6 +20,7 @@ nobase_vcsn_HEADERS =                           \
   algos/lift.hh                                 \
   algos/product.hh                              \
   algos/standard_of.hh                          \
+  algos/transpose.hh                            \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/crange.hh                                \
@@ -35,6 +36,7 @@ nobase_vcsn_HEADERS =                           \
   core/rat/kratexpset.hxx                       \
   core/rat/printer.hh                           \
   core/rat/printer.hxx                          \
+  core/rat/transpose.hh                         \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \

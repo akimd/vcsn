@@ -23,7 +23,6 @@ BUILT_SOURCES += $(SOURCES_PARSE_DOT_EXP_YY)
 # This code comes from "Handling Tools that Produce Many Outputs",
 # from the Automake documentation.
 EXTRA_DIST +=					\
-  lib/vcsn/dot/README.txt			\
   lib/vcsn/dot/parse.stamp			\
   lib/vcsn/dot/parse.yy
 # The dependency is on bison++.in and not bison++, since bison++ is
