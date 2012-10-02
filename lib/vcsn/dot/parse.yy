@@ -1,6 +1,5 @@
 // -*- mode: c++ -*-
 // See <http://www.graphviz.org/content/dot-language>.
-
 %require "2.5"
 %language "C++"
 

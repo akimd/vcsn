@@ -1,4 +1,5 @@
 // -*- mode: c++ -*-
+
 %require "2.5"
 %language "C++"
 

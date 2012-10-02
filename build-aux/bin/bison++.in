@@ -92,7 +92,7 @@ fix_bison_output ()
   local base
   base=$(basename "$file")
   local base_noext
-  base_noext=$(echo "$file" | sed -e 's/\..*//')
+  base_noext=$(noext "$base")
   perl -pi -e "
 # Fix doxygen tags.
 s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
@@ -241,7 +241,6 @@ do
   test $file != "$tmp/*" ||
     fatal "did not find any file in $tmp"
   base=$(basename $file)
-  base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
   case $status:$base in
     (*:$input_base)
 	# Leave it here.
