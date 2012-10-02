@@ -89,26 +89,34 @@ noext ()
 fix_bison_output ()
 {
   local file="$1"
-  local base
-  base=$(basename "$file")
-  local base_noext
-  base_noext=$(noext "$base")
-  perl -pi -e "
-# Fix doxygen tags.
-s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
+  perl -pi \
+    -e "
+BEGIN
+{
+  \$location_prefix = '$location_prefix';
+  \$namespace = '$namespace';
+  \$output_dir = '$output_dir';
+  \$tmp = '$tmp';
+}" \
+ -e '
+BEGIN
+{
+  ($TMP = uc $tmp) =~ s/[^A-Z0-9]+/_/g;
+  ($OUTPUT_DIR = uc $output_dir) =~ s/[^A-Z0-9]+/_/g;
+}
 
-# Fix sync lines for composite paths.
-s|(^#line.*)$base_noext|\$1$input_dir/$base_noext|g
-  if '$input_dir' ne '$output_dir';
+# We compiled in a tmp directory, remove references to it.
+s{$tmp/}{$output_dir/}g;
+s{$TMP}{$OUTPUT_DIR}g;
 
 # In case position.hh and location.hh were moved.
 s{include \"(position.hh|location.hh)\"}
  {include <$location_prefix\$1>}g
-  if '$location_prefix' ne '';
+  if $location_prefix ne "";
 
 # Kill trailing blanks.
 s/[ \t]+\$//;
-"  "$1"
+'  "$file"
 
   # Fuse the switches of the parser.
   case $file in
@@ -168,7 +176,7 @@ out ()
   esac
 }
 
-# out FILE
+# tmp FILE
 # --------
 # Return path name of FILE in the tmp directory.
 tmp ()
