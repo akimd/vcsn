@@ -18,7 +18,13 @@ SOURCES_RAT_PARSE_YY =				\
   lib/vcsn/rat/location.hh			\
   lib/vcsn/rat/parse.hh				\
   lib/vcsn/rat/parse.cc
-BUILT_SOURCES += $(SOURCES_PARSE_RAT_EXP_YY)
+BUILT_SOURCES += $(SOURCES_RAT_PARSE_YY)
+MAINTAINERCLEANFILES +=					\
+  $(addprefix $(srcdir)/,$(SOURCES_RAT_PARSE_YY))	\
+  $(srcdir)/lib/vcsn/rat/parse.html			\
+  $(srcdir)/lib/vcsn/rat/parse.output			\
+  $(srcdir)/lib/vcsn/rat/parse.stamp			\
+  $(srcdir)/lib/vcsn/rat/parse.xml
 
 # Compile the parser and save cycles.
 # This code comes from "Handling Tools that Produce Many Outputs",

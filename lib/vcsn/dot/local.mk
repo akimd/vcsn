@@ -17,7 +17,13 @@ SOURCES_DOT_PARSE_YY =				\
   lib/vcsn/dot/location.hh			\
   lib/vcsn/dot/parse.hh				\
   lib/vcsn/dot/parse.cc
-BUILT_SOURCES += $(SOURCES_PARSE_DOT_EXP_YY)
+BUILT_SOURCES += $(SOURCES_DOT_PARSE_YY)
+MAINTAINERCLEANFILES +=					\
+  $(addprefix $(srcdir)/,$(SOURCES_DOT_PARSE_YY))	\
+  $(srcdir)/lib/vcsn/dot/parse.html			\
+  $(srcdir)/lib/vcsn/dot/parse.output			\
+  $(srcdir)/lib/vcsn/dot/parse.stamp			\
+  $(srcdir)/lib/vcsn/dot/parse.xml
 
 # Compile the parser and save cycles.
 # This code comes from "Handling Tools that Produce Many Outputs",
