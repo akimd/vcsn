@@ -115,7 +115,7 @@ s{include \"(position.hh|location.hh)\"}
   if $location_prefix ne "";
 
 # Kill trailing blanks.
-s/[ \t]+\$//;
+s/[ \t]+$//;
 '  "$file"
 
   # Fuse the switches of the parser.
