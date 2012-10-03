@@ -24,6 +24,11 @@ pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =			\
   lib/vcsn/misc/escape.cc
 
+# kratexpset.hxx depends on rat/driver.hh which requires
+# rat/location.hh.  The dot parser, loads kratexpset.hxx, so we _must_
+# compile the rat parser first.
+lib/vcsn/dot/parser.stamp: lib/vcsn/rat/parser.stamp
+
 include lib/vcsn/dot/local.mk
 lib_libvcsn_la_SOURCES +=			\
   $(SOURCES_DOT_PARSE_YY)			\
