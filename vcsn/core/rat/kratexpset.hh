@@ -47,10 +47,10 @@ namespace vcsn
     using value_t = typename node_t::value_t;
 
   public:
-    static std::string name()
+    std::string name() const
     {
       std::string res{"kratexpset<"};
-      res += context_t::name();
+      res += ctx_.name();
       res += '>';
       return res;
     }

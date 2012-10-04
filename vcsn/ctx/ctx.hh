@@ -14,10 +14,17 @@ namespace vcsn
 {
   namespace ctx
   {
+    class abstract_context
+    {
+    public:
+      virtual std::string name() const = 0;
+      virtual std::string genset_string() const = 0;
+    };
+
     template <typename GenSet,
               typename WeightSet,
               typename Kind>
-    class context
+    class context: public abstract_context
     {
     public:
       using genset_t = GenSet;
@@ -56,11 +63,19 @@ namespace vcsn
 
       /// The name of this context, built from its parameters.
       /// E.g., "char_b_lal", "char_zmin_law".
-      static std::string name()
+      virtual std::string name() const override final
       {
-        return (genset_t::name()
-                + "_" + weightset_t::name()
+        return (gs_->name()
+                + "_" + ws_->name()
                 + "_" + label_trait<kind_t, genset_t>::name());
+      }
+
+      virtual std::string genset_string() const override final
+      {
+        std::string res;
+        for (auto l: *gs_)
+          res += l;
+        return res;
       }
 
       const genset_ptr& genset() const
