@@ -146,7 +146,13 @@
 
 %token <sval> ID;
 %type <sval> id.opt;
-%printer { debug_stream() << '"' << ($$ ? *$$ : "nullptr") << '"'; } <sval>;
+%printer
+{
+  if ($$)
+    debug_stream() << '"' << *$$ << '"';
+  else
+    debug_stream() << "nullptr";
+} <sval>;
 %destructor { delete $$; } <sval>;
 
 // A single state.
