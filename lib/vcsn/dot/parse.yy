@@ -234,12 +234,12 @@ attr_assign:
       std::swap($$, $val);
     else if (*$var == "vcsn_context")
       {
-        assert(!driver_.kratexpset_);
+        assert(!driver_.edit_);
         std::swap(driver_.context_, *$val);
       }
     else if (*$var == "vcsn_genset")
       {
-        assert(!driver_.kratexpset_);
+        assert(!driver_.edit_);
         std::swap(driver_.letters_, *$val);
       }
     delete $var;
@@ -339,7 +339,7 @@ node_id:
   ID
   {
     // We need the editor to exist.
-    TRY(@$, driver_.make_kratexpset());
+    TRY(@$, driver_.setup());
     $$ = *$1;
     delete $1;
     if ($$[0] == 'I')

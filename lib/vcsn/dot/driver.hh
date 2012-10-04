@@ -2,7 +2,6 @@
 # define LIB_VCSN_DOT_DRIVER_HH
 
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/core/rat/kratexp.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/ctx/char_b_lal.hh>
 # include <vcsn/algos/edit-automaton.hh>
@@ -28,9 +27,9 @@ namespace vcsn
       automaton_t* parse_string(const std::string& e,
                                 const location& l = location{});
 
-      /// From context_ and letters_, build kratexpset_.
-      /// \throw std::
-      void make_kratexpset();
+      /// From context_ and letters_, build edit_.
+      /// \throw std::exception on invalid contexts.
+      void setup();
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
@@ -57,9 +56,6 @@ namespace vcsn
       std::string context_;
       /// The letters gathered so far.
       std::string letters_;
-      /// Defined when context_ and letters_ are known.
-      abstract_kratexpset* kratexpset_ = nullptr;
-
       /// An automaton editor that stores the one being built.
       vcsn::edit_automaton<automaton_t>* edit_;
       friend class parser;

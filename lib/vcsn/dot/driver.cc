@@ -11,8 +11,7 @@ namespace vcsn
   {
 
     driver::driver()
-      : kratexpset_{nullptr}
-      , edit_{nullptr}
+      : edit_{nullptr}
     {}
 
     auto
@@ -58,9 +57,9 @@ namespace vcsn
     }
 
     void
-    driver::make_kratexpset()
+    driver::setup()
     {
-      if (!kratexpset_)
+      if (!edit_)
         {
           if (context_.empty())
             throw std::domain_error("no vcsn_context defined");
@@ -74,7 +73,6 @@ namespace vcsn
               using ctx_t = ctx::char_b_lal;
               auto ctx = new ctx_t{ls};
               using automaton_t = mutable_automaton<ctx_t>;
-              kratexpset_ = new concrete_abstract_kratexpset<ctx_t>{*ctx};
               edit_ = new edit_automaton<automaton_t>{*ctx};
             }
           else
