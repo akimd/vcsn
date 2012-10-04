@@ -23,7 +23,7 @@ namespace vcsn
     using label_t = typename GenSet::empty_t;
     static std::string name()
     {
-      return  "lae";
+      return "lae";
     }
   };
 
@@ -33,7 +33,7 @@ namespace vcsn
     using label_t = typename GenSet::letter_t;
     static std::string name()
     {
-      return  "lal";
+      return "lal";
     }
   };
 
@@ -43,7 +43,7 @@ namespace vcsn
     using label_t = typename GenSet::word_t;
     static std::string name()
     {
-      return  "law";
+      return "law";
     }
   };
 
