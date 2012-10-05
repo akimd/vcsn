@@ -23,7 +23,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(ctx::char_zmin_lal);
+  VCSN_CTX_INSTANTIATE(char_zmin_lal);
 
   MAYBE_EXTERN template
   class details::evaluator<mutable_automaton<ctx::char_zmin_lal>>;

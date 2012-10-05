@@ -22,7 +22,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(ctx::char_z_lae);
+  VCSN_CTX_INSTANTIATE(char_z_lae);
 };
 
 #endif // !VCSN_CTX_CHAR_Z_LAE_HH

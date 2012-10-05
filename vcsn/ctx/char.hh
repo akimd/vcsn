@@ -15,7 +15,7 @@ namespace vcsn
                           Kind>;
   }
 
-#define VCSN_CTX_INSTANTIATE(Ctx)                                       \
+# define VCSN_CTX_INSTANTIATE_1(Ctx)                                    \
   MAYBE_EXTERN template                                                 \
   class polynomialset<Ctx>;                                             \
                                                                         \
@@ -49,6 +49,8 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class rat::standard_of_visitor<mutable_automaton<Ctx>>;
 
+# define VCSN_CTX_INSTANTIATE(Ctx)              \
+  VCSN_CTX_INSTANTIATE_1(ctx::Ctx)
 
 }
 

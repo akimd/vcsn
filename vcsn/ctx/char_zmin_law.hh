@@ -21,7 +21,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(ctx::char_zmin_law);
+  VCSN_CTX_INSTANTIATE(char_zmin_law);
 };
 
 #endif // !VCSN_CTX_CHAR_ZMIN_LAW_HH
