@@ -3,6 +3,15 @@
 
 # include <vcsn/ctx/char.hh>
 # include <vcsn/weights/z.hh>
+
+namespace vcsn
+{
+  namespace ctx
+  {
+    using char_z_lal = char_<vcsn::z, labels_are_letters>;
+  }
+}
+
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dotty.hh>
 # include <vcsn/algos/eval.hh>
@@ -15,11 +24,6 @@
 
 namespace vcsn
 {
-  namespace ctx
-  {
-    using char_z_lal = char_<vcsn::z, labels_are_letters>;
-  }
-
   VCSN_CTX_INSTANTIATE(ctx::char_z_lal);
 
   MAYBE_EXTERN template

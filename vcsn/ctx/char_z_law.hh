@@ -3,6 +3,15 @@
 
 # include <vcsn/ctx/char.hh>
 # include <vcsn/weights/z.hh>
+
+namespace vcsn
+{
+  namespace ctx
+  {
+    using char_z_law = char_<vcsn::z, labels_are_words>;
+  }
+}
+
 # include <vcsn/algos/dotty.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/standard_of.hh>
@@ -13,11 +22,6 @@
 
 namespace vcsn
 {
-  namespace ctx
-  {
-    using char_z_law = char_<vcsn::z, labels_are_words>;
-  }
-
   VCSN_CTX_INSTANTIATE(ctx::char_z_law);
 };
 

@@ -3,6 +3,15 @@
 
 # include <vcsn/ctx/char.hh>
 # include <vcsn/weights/b.hh>
+
+namespace vcsn
+{
+  namespace ctx
+  {
+    using char_b_law = char_<vcsn::b, labels_are_words>;
+  }
+}
+
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dotty.hh>
 # include <vcsn/algos/eval.hh>
@@ -15,11 +24,6 @@
 
 namespace vcsn
 {
-  namespace ctx
-  {
-    using char_b_law = char_<vcsn::b, labels_are_words>;
-  }
-
   VCSN_CTX_INSTANTIATE(ctx::char_b_law);
 };
 
