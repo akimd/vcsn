@@ -1,55 +1,100 @@
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/algos/dotty.hh>
 #include <map>
+#include <boost/type_traits.hpp>
 
 namespace vcsn
 {
-  using dotty_stream_map_t = std::map<std::string, dotty_stream_t*>;
-  dotty_stream_map_t& dotty_stream_map()
+  template <typename Fun>
+  class Registry
   {
-    static dotty_stream_map_t instance;
+  public:
+    Registry(const std::string& n)
+      : name_(n)
+    {}
+    Registry() = delete;
+    //    ~Registry() = delete;
+
+    using map_t = std::map<std::string, Fun*>;
+
+    bool set(const std::string& ctx, const Fun& fn)
+    {
+      if (getenv("YYDEBUG"))
+        std::cerr << "Register(" << name_ << ").set(" << ctx << ")\n";
+      map_[ctx] = fn;
+      return true;
+    }
+
+    const Fun& get(const std::string& ctx)
+    {
+      if (getenv("YYDEBUG"))
+        std::cerr << "Register(" << name_ << ").get(" << ctx << ")\n";
+      auto i = map_.find(ctx);
+      if (i == map_.end())
+        throw std::runtime_error(name_
+                                 + ": no implementation available for "
+                                 + ctx);
+      else
+        return *i->second;
+    }
+
+    template <typename... Args>
+    auto
+    call(const std::string& ctx, Args&&... args)
+    // I failed to find a means in plain C++...
+      -> typename boost::function_traits<Fun>::result_type
+    {
+      return (get(ctx))(std::forward<Args>(args)...);
+    }
+
+  private:
+    std::string name_;
+    map_t map_;
+  };
+
+  /*---------------.
+  | dotty_stream.  |
+  `---------------*/
+
+  Registry<dotty_stream_t>&
+  dotty_stream_registry()
+  {
+    static Registry<dotty_stream_t> instance{"dotty_stream"};
     return instance;
   }
 
   bool dotty_register(const std::string& ctx, const dotty_stream_t& fn)
   {
-    dotty_stream_map()[ctx] = fn;
-    return true;
+    return dotty_stream_registry().set(ctx, fn);
   }
 
   void
   dotty(const abstract_mutable_automaton& aut, std::ostream& out)
   {
-    std::string ctx = aut.abstract_context().name();
-    auto i = dotty_stream_map().find(ctx);
-    if (i == dotty_stream_map().end())
-      throw std::runtime_error("dotty: no implementation available for " + ctx);
-    else
-      (i->second)(aut, out);
+    dotty_stream_registry().call(aut.abstract_context().name(),
+                                 aut, out);
   }
 
-  // FIXME: Code duplication.
-  using dotty_string_map_t = std::map<std::string, dotty_string_t*>;
-  dotty_string_map_t& dotty_string_map()
+  /*---------------.
+  | dotty_string.  |
+  `---------------*/
+
+  Registry<dotty_string_t>&
+  dotty_string_registry()
   {
-    static dotty_string_map_t instance;
+    static Registry<dotty_string_t> instance{"dotty_string"};
     return instance;
   }
 
   bool dotty_register(const std::string& ctx, const dotty_string_t& fn)
   {
-    dotty_string_map()[ctx] = fn;
-    return true;
+    return dotty_string_registry().set(ctx, fn);
   }
 
   std::string
   dotty(const abstract_mutable_automaton& aut)
   {
-    std::string ctx = aut.abstract_context().name();
-    auto i = dotty_string_map().find(ctx);
-    if (i == dotty_string_map().end())
-      throw std::runtime_error("dotty: no implementation available for " + ctx);
-    else
-      (i->second)(aut);
+    return dotty_string_registry().call(aut.abstract_context().name(),
+                                        aut);
   }
 }
