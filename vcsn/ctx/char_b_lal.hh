@@ -44,7 +44,11 @@ namespace vcsn
   register_char_b_lal_functions()
   {
     dotty_register("char_b_lal",
-                   abstract_dotty<mutable_automaton<ctx::char_b_lal>>);
+                   static_cast<const dotty_stream_t&>
+                   (abstract_dotty<mutable_automaton<ctx::char_b_lal>>));
+    dotty_register("char_b_lal",
+                   static_cast<const dotty_string_t&>
+                   (abstract_dotty<mutable_automaton<ctx::char_b_lal>>));
     return true;
   }
 

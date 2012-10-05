@@ -32,6 +32,17 @@ namespace vcsn
   dotty<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);     \
                                                                         \
   MAYBE_EXTERN template                                                 \
+  void                                                                  \
+  abstract_dotty<mutable_automaton<Ctx>>                                \
+  (const abstract_mutable_automaton& aut,                               \
+   std::ostream& out);                                                  \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  std::string                                                           \
+  abstract_dotty<mutable_automaton<Ctx>>                                \
+  (const abstract_mutable_automaton& aut);                              \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
   details::lifted_automaton_t<mutable_automaton<Ctx>>                   \
   lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
                                                                         \

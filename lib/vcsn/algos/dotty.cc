@@ -4,16 +4,16 @@
 
 namespace vcsn
 {
-  using dotty_map_t = std::map<std::string, dotty_t*>;
-  dotty_map_t& map()
+  using dotty_stream_map_t = std::map<std::string, dotty_stream_t*>;
+  dotty_stream_map_t& dotty_stream_map()
   {
-    static dotty_map_t instance;
+    static dotty_stream_map_t instance;
     return instance;
   }
 
-  bool dotty_register(const std::string& ctx, const dotty_t& fn)
+  bool dotty_register(const std::string& ctx, const dotty_stream_t& fn)
   {
-    map()[ctx] = fn;
+    dotty_stream_map()[ctx] = fn;
     return true;
   }
 
@@ -21,10 +21,35 @@ namespace vcsn
   dotty(const abstract_mutable_automaton& aut, std::ostream& out)
   {
     std::string ctx = aut.abstract_context().name();
-    auto i = map().find(ctx);
-    if (i == map().end())
+    auto i = dotty_stream_map().find(ctx);
+    if (i == dotty_stream_map().end())
       throw std::runtime_error("dotty: no implementation available for " + ctx);
     else
       (i->second)(aut, out);
+  }
+
+  // FIXME: Code duplication.
+  using dotty_string_map_t = std::map<std::string, dotty_string_t*>;
+  dotty_string_map_t& dotty_string_map()
+  {
+    static dotty_string_map_t instance;
+    return instance;
+  }
+
+  bool dotty_register(const std::string& ctx, const dotty_string_t& fn)
+  {
+    dotty_string_map()[ctx] = fn;
+    return true;
+  }
+
+  std::string
+  dotty(const abstract_mutable_automaton& aut)
+  {
+    std::string ctx = aut.abstract_context().name();
+    auto i = dotty_string_map().find(ctx);
+    if (i == dotty_string_map().end())
+      throw std::runtime_error("dotty: no implementation available for " + ctx);
+    else
+      (i->second)(aut);
   }
 }
