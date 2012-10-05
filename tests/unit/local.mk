@@ -37,7 +37,7 @@ unit_aut_char_z_law_LDADD = $(libchar_z_law) $(AM_LDADD)
 
 unit_determinize_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
-unit_eval_LDADD = $(libchar_z_lal)
+unit_eval_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b

@@ -15,6 +15,10 @@ namespace vcsn
                           Kind>;
   }
 
+  /*-------------------------------------------------------.
+  | Instantiate the function that work for every context.  |
+  `-------------------------------------------------------*/
+
 # define VCSN_CTX_INSTANTIATE_1(Ctx)                                    \
   MAYBE_EXTERN template                                                 \
   class polynomialset<Ctx>;                                             \
@@ -49,8 +53,38 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class rat::standard_of_visitor<mutable_automaton<Ctx>>;
 
+
+  /*----------------------------------.
+  | Register the abstract functions.  |
+  `----------------------------------*/
+
+# if VCSN_INSTANTIATION
+#  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
+  namespace ctx                                                 \
+  {                                                             \
+    inline                                                      \
+    bool                                                        \
+    register_functions()                                        \
+    {                                                           \
+      dotty_register(#Ctx,                                      \
+                     static_cast<const dotty_stream_t&>         \
+                     (abstract_dotty<mutable_automaton<Ctx>>)); \
+      dotty_register(#Ctx,                                      \
+                     static_cast<const dotty_string_t&>         \
+                     (abstract_dotty<mutable_automaton<Ctx>>)); \
+      return true;                                              \
+    }                                                           \
+                                                                \
+    static bool registered = register_functions();              \
+  }
+# else
+#  define VCSN_CTX_INSTANTIATE_2(Ctx)
+# endif
+
+
 # define VCSN_CTX_INSTANTIATE(Ctx)              \
-  VCSN_CTX_INSTANTIATE_1(ctx::Ctx)
+  VCSN_CTX_INSTANTIATE_1(ctx::Ctx)              \
+  VCSN_CTX_INSTANTIATE_2(Ctx)
 
 }
 
