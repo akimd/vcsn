@@ -24,7 +24,10 @@ namespace vcsn
       p.set_debug_level(!!getenv("YYDEBUG"));
       automaton_t* res = nullptr;
       if (!p.parse())
-        std::swap(res, edit_->result());
+        {
+          res = edit_->result();
+          edit_->reset();
+        }
       delete edit_;
       edit_ = nullptr;
       scan_close_();

@@ -40,8 +40,23 @@ namespace vcsn
   | edit_automaton<Aut>.  |
   `----------------------*/
 
+  class automaton_editor
+  {
+  public:
+    virtual ~automaton_editor() {}
+    virtual void add_state(const std::string& s) = 0;
+    virtual void add_pre(const std::string& s) = 0;
+    virtual void add_post(const std::string& s) = 0;
+    virtual void add_entry(const std::string& src, const std::string& dst,
+                           const std::string* entry) = 0;
+    /// The final result.
+    virtual abstract_mutable_automaton* result() = 0;
+    /// Forget about the current automaton, but do not free it.
+    virtual void reset() = 0;
+  };
+
   template <typename Aut>
-  class edit_automaton
+  class edit_automaton: public automaton_editor
   {
   public:
     using automaton_t = Aut;
@@ -60,35 +75,41 @@ namespace vcsn
       delete res_;
     }
 
-    void
-    add_state(const std::string& s)
+    virtual void
+    add_state(const std::string& s) override final
     {
       state_(s);
     }
 
-    void
-    add_pre(const std::string& s)
+    virtual void
+    add_pre(const std::string& s) override final
     {
       smap_.insert({s, res_->pre()});
     }
 
-    void
-    add_post(const std::string& s)
+    virtual void
+    add_post(const std::string& s) override final
     {
       smap_.insert({s, res_->post()});
     }
 
-    void
+    virtual void
     add_entry(const std::string& src, const std::string& dst,
-              const std::string* entry)
+              const std::string* entry) override final
     {
       vcsn::add_entry(*res_, state_(src), state_(dst), entry);
     }
 
-    automaton_t*&
-    result()
+    virtual abstract_mutable_automaton*
+    result() override final
     {
       return res_;
+    }
+
+    virtual void
+    reset() override final
+    {
+      res_ = nullptr;
     }
 
   private:

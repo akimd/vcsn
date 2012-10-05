@@ -17,9 +17,7 @@ namespace vcsn
     class driver
     {
     public:
-      using exp_t = vcsn::rat::exp_t;
-      using automaton_t = mutable_automaton<ctx::char_b_lal>;
-      using state_t = unsigned;
+      using automaton_t = abstract_mutable_automaton;
 
       driver();
 
@@ -57,7 +55,7 @@ namespace vcsn
       /// The letters gathered so far.
       std::string letters_;
       /// An automaton editor that stores the one being built.
-      vcsn::edit_automaton<automaton_t>* edit_;
+      vcsn::automaton_editor* edit_;
       friend class parser;
     };
 
