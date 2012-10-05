@@ -17,8 +17,15 @@
 
 namespace vcsn
 {
+  class abstract_mutable_automaton
+  {
+  public:
+    virtual const ctx::abstract_context& abstract_context() const = 0;
+    virtual ~abstract_mutable_automaton() {}
+  };
+
   template <typename Context>
-  class mutable_automaton
+  class mutable_automaton: public abstract_mutable_automaton
   {
   public:
     using context_t = Context;
@@ -84,6 +91,10 @@ namespace vcsn
     ///////////////
 
     const context_t& context() const { return es_.context(); }
+    virtual const ctx::abstract_context& abstract_context() const
+    {
+      return context();
+    }
     const weightset_ptr& weightset() const { return es_.weightset(); }
     const genset_ptr& genset() const { return es_.genset(); }
     const entryset_t& entryset() const { return es_; }

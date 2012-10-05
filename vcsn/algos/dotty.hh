@@ -6,10 +6,16 @@
 # include <sstream>
 # include <unordered_map>
 
+# include <vcsn/core/fwd.hh>
+
 # include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
+
+  /*---------------------------.
+  | dotty(automaton, stream).  |
+  `---------------------------*/
 
   template <class A>
   void
@@ -86,6 +92,23 @@ namespace vcsn
     out << "}" << std::endl;
   }
 
+  template <typename Aut>
+  void abstract_dotty(const abstract_mutable_automaton& aut, std::ostream& out)
+  {
+    dotty(dynamic_cast<const Aut&>(aut), out);
+  }
+
+  using dotty_t =
+    auto (const abstract_mutable_automaton& aut, std::ostream& out) -> void;
+
+  void dotty(const abstract_mutable_automaton& aut, std::ostream& out);
+
+  bool dotty_register(const std::string& ctx, const dotty_t& fn);
+
+  /*-------------------.
+  | dotty(automaton).  |
+  `-------------------*/
+
   template <class A>
   inline
   std::string
@@ -95,6 +118,7 @@ namespace vcsn
     dotty(aut, o);
     return o.str();
   }
+
 }
 
 #endif // !VCSN_ALGOS_DOTTY_HH

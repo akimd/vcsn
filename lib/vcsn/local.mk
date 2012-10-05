@@ -22,6 +22,7 @@ AM_BISONFLAGS =					\
 
 pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =			\
+  lib/vcsn/algos/dotty.cc			\
   lib/vcsn/misc/escape.cc
 
 # kratexpset.hxx depends on rat/driver.hh which requires
