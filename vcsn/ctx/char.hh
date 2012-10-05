@@ -66,12 +66,19 @@ namespace vcsn
     bool                                                        \
     register_functions()                                        \
     {                                                           \
-      dotty_register(#Ctx,                                      \
-                     static_cast<const dotty_stream_t&>         \
-                     (abstract_dotty<mutable_automaton<Ctx>>)); \
-      dotty_register(#Ctx,                                      \
-                     static_cast<const dotty_string_t&>         \
-                     (abstract_dotty<mutable_automaton<Ctx>>)); \
+      /* dotty. */                                              \
+      dotty_register                                            \
+        (#Ctx,                                                  \
+         static_cast<const dotty_stream_t&>                     \
+         (abstract_dotty<mutable_automaton<Ctx>>));             \
+      dotty_register                                            \
+      (#Ctx,                                                    \
+       static_cast<const dotty_string_t&>                       \
+       (abstract_dotty<mutable_automaton<Ctx>>));               \
+      /* edit-automaton. */                                     \
+      make_automaton_editor_register                            \
+      (#Ctx,                                                    \
+       abstract_make_automaton_editor<mutable_automaton<Ctx>>); \
       return true;                                              \
     }                                                           \
                                                                 \

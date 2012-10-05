@@ -23,6 +23,7 @@ AM_BISONFLAGS =					\
 pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =			\
   lib/vcsn/algos/dotty.cc			\
+  lib/vcsn/algos/edit-automaton.cc		\
   lib/vcsn/algos/registry.hh			\
   lib/vcsn/misc/escape.cc
 

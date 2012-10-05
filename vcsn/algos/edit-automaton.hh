@@ -1,6 +1,10 @@
 #ifndef VCSN_ALGOS_EDIT_AUTOMATON_HH
 # define VCSN_ALGOS_EDIT_AUTOMATON_HH
 
+# include <map>
+# include <vcsn/core/fwd.hh>
+# include <vcsn/ctx/fwd.hh>
+
 namespace vcsn
 {
 
@@ -133,6 +137,25 @@ namespace vcsn
     state_map smap_;
     automaton_t* res_;
   };
+
+  template <typename Aut>
+  automaton_editor*
+  abstract_make_automaton_editor(const ctx::abstract_context& ctx)
+  {
+    const auto& c = dynamic_cast<const typename Aut::context_t&>(ctx);
+    return new edit_automaton<Aut>(c);
+  }
+
+  using make_automaton_editor_t =
+    auto (const ctx::abstract_context& aut) -> automaton_editor*;
+
+  bool
+  make_automaton_editor_register(const std::string& ctx,
+                                 const make_automaton_editor_t& fn);
+
+  /// Abstract.
+  automaton_editor*
+  make_automaton_editor(const ctx::abstract_context& ctx);
 
 } // vcsn::
 

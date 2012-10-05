@@ -12,6 +12,7 @@ namespace vcsn
   }
 }
 
+# include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/dotty.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/lift.hh>
