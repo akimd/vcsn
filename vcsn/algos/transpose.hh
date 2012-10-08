@@ -12,10 +12,11 @@ namespace vcsn
   namespace details
   {
     template <typename Aut>
-    class transpose_automaton
+    class transpose_automaton: public abstract_mutable_automaton
     {
     public:
       /// The type of automaton to wrap.
+      using super_t = abstract_mutable_automaton;
       using automaton_t = Aut;
       using context_t = typename automaton_t::context_t;
       using state_t = typename automaton_t::state_t;
@@ -31,6 +32,11 @@ namespace vcsn
       transpose_automaton(automaton_t& aut)
         : aut_{&aut}
       {}
+
+      transpose_automaton(transpose_automaton&& aut)
+      {
+        std::swap(aut_, aut.aut_);
+      }
 
       /// Forward constructor.
       template <typename... Args>
@@ -186,11 +192,12 @@ namespace vcsn
 # define DEFINE(Name)                           \
       auto                                      \
       Name() const                              \
-        -> decltype(aut_->Name())                \
+        -> decltype(aut_->Name())               \
       {                                         \
-        return aut_->Name();                     \
+        return aut_->Name();                    \
       }
 
+      DEFINE(abstract_context);
       DEFINE(all_entries);
       DEFINE(all_states);
       DEFINE(all_transitions);

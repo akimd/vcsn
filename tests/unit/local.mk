@@ -91,7 +91,7 @@ unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
 unit/product.log: unit/product
 unit/standard_of.log: rat/pprat
-unit/transpose.log: unit/transpose
+unit/transpose.log: rat/pprat unit/transpose
 
 .PHONY: check-unit
 check-unit:
