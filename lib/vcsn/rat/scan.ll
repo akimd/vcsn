@@ -101,7 +101,8 @@ namespace vcsn
     // of the old one.
     //
     // So do it in two steps, quite different from what is suggested
-    // in the document: save the old context, switch to the new one.
+    // in the documentation: save the old context, switch to the new
+    // one.
 
     void
     driver::scan_open_(FILE *f)
@@ -124,8 +125,6 @@ namespace vcsn
     driver::scan_close_()
     {
       yypop_buffer_state();
-      //if (yyin)
-      //fclose(yyin);
     }
   }
 }
