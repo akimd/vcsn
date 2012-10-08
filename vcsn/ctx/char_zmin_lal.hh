@@ -18,6 +18,7 @@ namespace vcsn
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/standard_of.hh>
+# include <vcsn/algos/transpose.hh>
 
 # ifndef MAYBE_EXTERN
 #  define MAYBE_EXTERN extern

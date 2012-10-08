@@ -86,6 +86,11 @@ namespace vcsn
           (#Ctx,                                                        \
            abstract_make_context<Ctx>);                                 \
                                                                         \
+        /* transpose. */                                                \
+        transpose_register                                              \
+          (#Ctx,                                                        \
+           abstract_transpose<aut_t>);                                  \
+                                                                        \
         return true;                                                    \
       }                                                                 \
                                                                         \

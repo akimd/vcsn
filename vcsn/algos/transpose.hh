@@ -222,6 +222,21 @@ namespace vcsn
     return details::transpose_automaton<Aut>{aut};
   }
 
+  template <typename Aut>
+  abstract_mutable_automaton*
+  abstract_transpose(abstract_mutable_automaton& aut)
+  {
+    return new details::transpose_automaton<Aut>{dynamic_cast<Aut&>(aut)};
+  }
+
+  using transpose_t =
+    auto (abstract_mutable_automaton& aut)
+    -> abstract_mutable_automaton*;
+
+  bool transpose_register(const std::string& ctx, const transpose_t& fn);
+
+  abstract_mutable_automaton*
+  transpose(abstract_mutable_automaton& aut);
 } // vcsn::
 
 #endif // !VCSN_ALGOS_TRANSPOSE_HH
