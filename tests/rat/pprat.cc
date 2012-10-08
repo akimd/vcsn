@@ -14,8 +14,6 @@
 #include <vcsn/ctx/char_b_law.hh>
 #include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/ctx/char_z_law.hh>
-#include <vcsn/ctx/char_zmin_lal.hh>
-#include <vcsn/ctx/char_zmin_law.hh>
 
 #include <lib/vcsn/rat/driver.hh>
 

@@ -38,10 +38,7 @@ rat_XFAIL_TESTS =                               \
 XFAIL_TESTS += $(rat_XFAIL_TESTS)
 
 EXTRA_PROGRAMS += rat/pprat
-rat_pprat_LDADD = 				\
-  $(libchar_b_lal) $(libchar_b_law)		\
-  $(libchar_z_lal) $(libchar_z_law)		\
-  $(libvcsn)
+rat_pprat_LDADD = $(all_libctx) $(libvcsn)
 
 .PHONY: check-rat
 check-rat:
