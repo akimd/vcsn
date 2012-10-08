@@ -53,7 +53,7 @@ unit_ladybird_zmin_LDADD = $(libchar_zmin_lal) $(AM_LDADD)
 
 unit_lift_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
-unit_parse_dot_LDADD = $(libchar_b_lal) $(AM_LDADD)
+unit_parse_dot_LDADD = $(all_libctx) $(AM_LDADD)
 
 unit_poly_LDADD = $(libchar_z_lal) $(AM_LDADD)
 

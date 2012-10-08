@@ -1,3 +1,9 @@
+* 2012-10-08
+** dot-parser
+Because it uses only algorithms made abstract (make_context,
+make_automaton_editor, and dotty), the dot parser now works for any of the
+precompiled contexts!
+
 * 2012-09-26
 ** add_entry
 In addition to the add_entry method of mutable_automaton, there is now an

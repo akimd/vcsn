@@ -3,8 +3,9 @@
 
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
+#include <vcsn/algos/make-context.hh>
+#include <vcsn/algos/edit-automaton.hh>
 
-# include <vcsn/ctx/char_b_lal.hh>
 namespace vcsn
 {
   namespace dot
@@ -68,18 +69,9 @@ namespace vcsn
             throw std::domain_error("no vcsn_context defined");
           if (letters_.empty())
             throw std::domain_error("no vcsn_letters defined");
-          std::set<char> ls;
-          for (auto l: letters_)
-            ls.insert(l);
-          if (context_ == "char_b_lal")
-            {
-              using ctx_t = ctx::char_b_lal;
-              auto ctx = new ctx_t{ls};
-              using automaton_t = mutable_automaton<ctx_t>;
-              edit_ = new edit_automaton<automaton_t>{*ctx};
-            }
-          else
-            throw std::domain_error("unknown context: " + context_);
+          auto* ctx = make_context(context_, letters_);
+          edit_ = make_automaton_editor(*ctx);
+          assert(edit_);
         }
     }
 

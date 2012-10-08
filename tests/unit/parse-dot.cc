@@ -1,5 +1,4 @@
 #include <lib/vcsn/dot/driver.hh>
-#include <vcsn/ctx/char_b_lal.hh>
 
 int
 main (int argc, char* const argv[])
