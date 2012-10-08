@@ -59,37 +59,38 @@ namespace vcsn
   `----------------------------------*/
 
 # if VCSN_INSTANTIATION
-#  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
-  namespace ctx                                                 \
-  {                                                             \
-    inline                                                      \
-    bool                                                        \
-    register_functions()                                        \
-    {                                                           \
-      /* dotty. */                                              \
-      dotty_register                                            \
-        (#Ctx,                                                  \
-         static_cast<const dotty_stream_t&>                     \
-         (abstract_dotty<mutable_automaton<Ctx>>));             \
-      dotty_register                                            \
-      (#Ctx,                                                    \
-       static_cast<const dotty_string_t&>                       \
-       (abstract_dotty<mutable_automaton<Ctx>>));               \
-                                                                \
-      /* edit-automaton. */                                     \
-      make_automaton_editor_register                            \
-      (#Ctx,                                                    \
-       abstract_make_automaton_editor<mutable_automaton<Ctx>>); \
-                                                                \
-      /* make-context. */                                       \
-      make_context_register                                     \
-      (#Ctx,                                                    \
-       abstract_make_context<Ctx>);                             \
-                                                                \
-      return true;                                              \
-    }                                                           \
-                                                                \
-    static bool registered = register_functions();              \
+#  define VCSN_CTX_INSTANTIATE_2(Ctx)                                   \
+  namespace ctx                                                         \
+  {                                                                     \
+    namespace                                                           \
+    {                                                                   \
+      bool                                                              \
+      register_functions()                                              \
+      {                                                                 \
+        using aut_t = mutable_automaton<Ctx>;                           \
+        /* dotty. */                                                    \
+        dotty_register                                                  \
+          (#Ctx,                                                        \
+           static_cast<const dotty_stream_t&>(abstract_dotty<aut_t>));  \
+        dotty_register                                                  \
+          (#Ctx,                                                        \
+           static_cast<const dotty_string_t&>(abstract_dotty<aut_t>));  \
+                                                                        \
+        /* edit-automaton. */                                           \
+        make_automaton_editor_register                                  \
+          (#Ctx,                                                        \
+           abstract_make_automaton_editor<aut_t>);                      \
+                                                                        \
+        /* make-context. */                                             \
+        make_context_register                                           \
+          (#Ctx,                                                        \
+           abstract_make_context<Ctx>);                                 \
+                                                                        \
+        return true;                                                    \
+      }                                                                 \
+                                                                        \
+      static bool registered = register_functions();                    \
+    }                                                                   \
   }
 # else
 #  define VCSN_CTX_INSTANTIATE_2(Ctx)
