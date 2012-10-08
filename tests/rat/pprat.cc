@@ -108,31 +108,34 @@ using ksw = ks<T, law>;
   DEFINE(zrrw, law, ksw<ksw<z>>, ks_zrw);
 #undef DEFINE
 
-template<typename KSet>
+template<typename Context>
 void
-pp(const options& opts, const KSet& kset,
+pp(const options& opts, const Context& ctx,
    const char* s, bool file)
 {
-  using context_t = typename KSet::context_t;
-  vcsn::concrete_abstract_kratexpset<context_t> fac{kset.context()};
+  using context_t = Context;
+  vcsn::concrete_abstract_kratexpset<context_t> fac{ctx};
+  using kset_t = vcsn::kratexpset<context_t>;
+  kset_t kset{ctx};
+
   vcsn::rat::driver d(fac);
   if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
     {
-      auto e = kset.context().downcast(exp);
+      auto e = ctx.downcast(exp);
       for (size_t i = 0; i < opts.transpose; ++i)
         e = kset.transpose(e);
 
       if (opts.aut_transpose)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut1 = vcsn::standard_of<automaton_t>(kset.context(), e);
+          auto aut1 = vcsn::standard_of<automaton_t>(ctx, e);
           auto aut2 = vcsn::transpose(aut1);
           vcsn::dotty(aut2, std::cout);
         }
       else if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
           using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut = vcsn::standard_of<automaton_t>(kset.context(), e);
+          auto aut = vcsn::standard_of<automaton_t>(ctx, e);
           if (opts.standard_of)
             vcsn::dotty(aut, std::cout);
           if (opts.lift)
@@ -163,12 +166,12 @@ pp(const options& opts, const char* s, bool file)
 {
   switch (opts.weight)
     {
-#define CASE(Name)                                      \
-      case type::Name:                                  \
-        if (opts.labels_are_letters)                     \
-          pp(opts, ks_ ## Name, s, file);               \
-        else                                            \
-          pp(opts, ks_ ## Name ## w, s, file);          \
+#define CASE(Name)                              \
+      case type::Name:                          \
+        if (opts.labels_are_letters)            \
+          pp(opts, ctx_ ## Name, s, file);      \
+        else                                    \
+          pp(opts, ctx_ ## Name ## w, s, file); \
       break;
       CASE(b);
       CASE(br);
