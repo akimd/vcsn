@@ -75,10 +75,17 @@ namespace vcsn
       (#Ctx,                                                    \
        static_cast<const dotty_string_t&>                       \
        (abstract_dotty<mutable_automaton<Ctx>>));               \
+                                                                \
       /* edit-automaton. */                                     \
       make_automaton_editor_register                            \
       (#Ctx,                                                    \
        abstract_make_automaton_editor<mutable_automaton<Ctx>>); \
+                                                                \
+      /* make-context. */                                       \
+      make_context_register                                     \
+      (#Ctx,                                                    \
+       abstract_make_context<Ctx>);                             \
+                                                                \
       return true;                                              \
     }                                                           \
                                                                 \
