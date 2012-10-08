@@ -26,6 +26,7 @@ lib_libvcsn_la_SOURCES =			\
   lib/vcsn/algos/edit-automaton.cc		\
   lib/vcsn/algos/make-context.cc		\
   lib/vcsn/algos/registry.hh			\
+  lib/vcsn/algos/standard-of.cc			\
   lib/vcsn/algos/transpose.cc			\
   lib/vcsn/misc/escape.cc
 

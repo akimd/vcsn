@@ -82,6 +82,12 @@ namespace vcsn
       return l;
     }
 
+    empty_t
+    transpose(empty_t) const
+    {
+      return {};
+    }
+
     bool
     equals(empty_t, empty_t) const
     {

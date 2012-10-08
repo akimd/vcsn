@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_STANDARD_OF_HH
 # define VCSN_ALGOS_STANDARD_OF_HH
 
+# include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 
@@ -222,8 +223,30 @@ namespace vcsn
   Aut
   standard_of(const Context& ctx, const rat::exp_t e)
   {
-    return standard_of<Aut, Context>(ctx, Context::downcast(e));
+    return standard_of<Aut, Context>(ctx, ctx.downcast(e));
   }
+
+  /*-----------------------.
+  | abstract standard-of.  |
+  `-----------------------*/
+
+  template <typename Aut>
+  abstract_mutable_automaton*
+  abstract_standard_of(const ctx::abstract_context& ctx, const rat::exp_t e)
+  {
+    return new Aut{standard_of<Aut, typename Aut::context_t>
+        (dynamic_cast<const typename Aut::context_t&>(ctx),
+         e)};
+  }
+
+  using standard_of_t =
+    auto (const ctx::abstract_context& ctx, const rat::exp_t e)
+    -> abstract_mutable_automaton*;
+
+  bool standard_of_register(const std::string& ctx, const standard_of_t& fn);
+
+  abstract_mutable_automaton*
+  standard_of(const ctx::abstract_context& ctx, const rat::exp_t e);
 
 } // vcsn::
 
