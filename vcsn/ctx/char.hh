@@ -74,37 +74,33 @@ namespace vcsn
         using taut_t = details::transpose_automaton<aut_t>;             \
         /* dotty. */                                                    \
         dotty_register                                                  \
-          ("mutable_automaton<" #Ctx ">",                               \
+          (aut_t::sname(),                                              \
            static_cast<const dotty_stream_t&>(abstract_dotty<aut_t>));  \
         dotty_register                                                  \
-          ("mutable_automaton<" #Ctx ">",                               \
+          (aut_t::sname(),                                              \
            static_cast<const dotty_string_t&>(abstract_dotty<aut_t>));  \
         dotty_register                                                  \
-          ("transpose_automaton<mutable_automaton<" #Ctx ">>",          \
+          (taut_t::sname(),                                             \
            static_cast<const dotty_stream_t&>(abstract_dotty<taut_t>)); \
         dotty_register                                                  \
-          ("transpose_automaton<mutable_automaton<" #Ctx ">>",          \
+          (taut_t::sname(),                                             \
            static_cast<const dotty_string_t&>(abstract_dotty<taut_t>)); \
                                                                         \
         /* edit-automaton. */                                           \
         make_automaton_editor_register                                  \
-          (#Ctx,                                                        \
-           abstract_make_automaton_editor<aut_t>);                      \
+          (Ctx::sname(), abstract_make_automaton_editor<aut_t>);        \
                                                                         \
         /* make-context. */                                             \
         make_context_register                                           \
-          (#Ctx,                                                        \
-           abstract_make_context<Ctx>);                                 \
+          (Ctx::sname(), abstract_make_context<Ctx>);                   \
                                                                         \
         /* standard_of. */                                              \
         standard_of_register                                            \
-          (#Ctx,                                                        \
-           abstract_standard_of<aut_t>);                                \
+          (Ctx::sname(), abstract_standard_of<aut_t>);                  \
                                                                         \
         /* transpose. */                                                \
         transpose_register                                              \
-          ("mutable_automaton<" #Ctx ">",                               \
-           abstract_transpose<aut_t>);                                  \
+          (aut_t::sname(), abstract_transpose<aut_t>);                  \
                                                                         \
         return true;                                                    \
       }                                                                 \
