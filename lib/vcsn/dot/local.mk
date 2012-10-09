@@ -13,8 +13,6 @@
 
 SOURCES_DOT_PARSE_YY =				\
   lib/vcsn/dot/stack.hh				\
-  lib/vcsn/dot/position.hh			\
-  lib/vcsn/dot/location.hh			\
   lib/vcsn/dot/parse.hh				\
   lib/vcsn/dot/parse.cc
 BUILT_SOURCES += $(SOURCES_DOT_PARSE_YY)

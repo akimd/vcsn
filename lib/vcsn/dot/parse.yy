@@ -9,6 +9,7 @@
 %expect 0
 %locations
 %define namespace "vcsn::dot"
+%define location_type "vcsn::rat::location"
 %name-prefix "vcsn::dot::"
 
 %code requires
@@ -16,7 +17,7 @@
   #include <iostream>
   #include <list>
   #include <string>
-  #include "location.hh"
+  #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
   namespace vcsn

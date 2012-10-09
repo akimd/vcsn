@@ -6,7 +6,7 @@
 # include <vcsn/ctx/char_b_lal.hh>
 # include <vcsn/algos/edit-automaton.hh>
 
-# include <lib/vcsn/dot/location.hh>
+# include <lib/vcsn/rat/location.hh>
 
 namespace vcsn
 {
@@ -18,27 +18,28 @@ namespace vcsn
     {
     public:
       using automaton_t = abstract_mutable_automaton;
+      using location_t = vcsn::rat::location;
 
       driver();
 
       automaton_t* parse_file(const std::string& f);
       automaton_t* parse_string(const std::string& e,
-                                const location& l = location{});
+                                const location_t& l = location_t{});
 
       /// From context_ and letters_, build edit_.
       /// \throw std::exception on invalid contexts.
       void setup();
 
       /// Report an error \a m at \a l.
-      void error(const location& l, const std::string& m);
+      void error(const location_t& l, const std::string& m);
       /// The string \a s is invalid at \a l.
-      void invalid(const location& l, const std::string& s);
+      void invalid(const location_t& l, const std::string& s);
 
       /// The error messages.
       std::string errors;
 
       /// The inital location.
-      location location_;
+      location_t location_;
 
     private:
       /// Prepare scanner to load file f.
@@ -46,7 +47,7 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open_(const std::string& e);
       /// Parse this stream.
-      automaton_t* parse_(const location& l = location{});
+      automaton_t* parse_(const location_t& l = location_t{});
       /// Close the scanner.
       void scan_close_();
 

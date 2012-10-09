@@ -16,7 +16,7 @@ namespace vcsn
     {}
 
     auto
-    driver::parse_(const location& l)
+    driver::parse_(const location_t& l)
       -> automaton_t*
     {
       location_ = l;
@@ -53,7 +53,7 @@ namespace vcsn
     }
 
     auto
-    driver::parse_string(const std::string& e, const location& l)
+    driver::parse_string(const std::string& e, const location_t& l)
       -> automaton_t*
     {
       scan_open_(e);
@@ -76,7 +76,7 @@ namespace vcsn
     }
 
     void
-    driver::error(const location& l, const std::string& m)
+    driver::error(const location_t& l, const std::string& m)
     {
       std::ostringstream er;
       er  << l << ": " << m;
@@ -86,7 +86,7 @@ namespace vcsn
     }
 
     void
-    driver::invalid(const location& l, const std::string& s)
+    driver::invalid(const location_t& l, const std::string& s)
     {
       error(l, "invalid character: " + s);
     }
