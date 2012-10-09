@@ -47,12 +47,9 @@ namespace vcsn
     using value_t = typename node_t::value_t;
 
   public:
-    std::string name() const
+    static std::string sname()
     {
-      std::string res{"kratexpset<"};
-      res += ctx_.name();
-      res += '>';
-      return res;
+      return "kratexpset<" + context_t::sname() + '>';
     }
 
     /// Constructor.

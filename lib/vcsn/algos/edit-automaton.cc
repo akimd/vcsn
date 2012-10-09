@@ -21,7 +21,7 @@ namespace vcsn
   automaton_editor*
   make_automaton_editor(const ctx::abstract_context& ctx)
   {
-    return make_automaton_editor_registry().call(ctx.name(),
+    return make_automaton_editor_registry().call(ctx.vname(),
                                                  ctx);
   }
 }

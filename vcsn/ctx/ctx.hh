@@ -17,7 +17,7 @@ namespace vcsn
     class abstract_context
     {
     public:
-      virtual std::string name() const = 0;
+      virtual std::string vname() const = 0;
       virtual std::string genset_string() const = 0;
     };
 
@@ -63,11 +63,16 @@ namespace vcsn
 
       /// The name of this context, built from its parameters.
       /// E.g., "char_b_lal", "char_zmin_law".
-      virtual std::string name() const override final
+      static std::string sname()
       {
-        return (gs_->name()
-                + "_" + ws_->name()
+        return (genset_t::sname()
+                + "_" + weightset_t::sname()
                 + "_" + label_trait<kind_t, genset_t>::name());
+      }
+
+      virtual std::string vname() const override final
+      {
+        return sname();
       }
 
       virtual std::string genset_string() const override final

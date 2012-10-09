@@ -92,9 +92,14 @@ namespace vcsn
     // Related sets
     ///////////////
 
+    static std::string sname()
+    {
+      return "mutable_automaton<" + context_t::sname() + ">";
+    }
+
     virtual std::string vname() const override
     {
-      return "mutable_automaton<" + context().name() + ">";
+      return sname();
     }
 
     const context_t& context() const { return es_.context(); }

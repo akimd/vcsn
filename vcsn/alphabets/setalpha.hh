@@ -12,7 +12,7 @@ namespace vcsn
   public:
     using letters_t = std::set<typename L::letter_t>;
 
-    static std::string name()
+    static std::string sname()
     {
       return "char";
     }

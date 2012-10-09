@@ -11,7 +11,7 @@ namespace vcsn
   class b
   {
   public:
-    static std::string name()
+    static std::string sname()
     {
       return "b";
     }

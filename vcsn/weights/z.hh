@@ -12,7 +12,7 @@ namespace vcsn
   class z
   {
   public:
-    static std::string name()
+    static std::string sname()
     {
       return "z";
     }

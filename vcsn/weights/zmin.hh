@@ -14,7 +14,7 @@ namespace vcsn
   class zmin
   {
   public:
-    static std::string name()
+    static std::string sname()
     {
       return "zmin";
     }

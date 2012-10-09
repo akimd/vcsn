@@ -30,12 +30,9 @@ namespace vcsn
       unit_[genset()->identity()] = weightset()->unit();
     }
 
-    std::string name() const
+    std::string sname() const
     {
-      std::string res {"polynomialset<"};
-      res += ctx_.name();
-      res += ">";
-      return res;
+      return "polynomialset<" + context_t::sname() + ">";
     }
 
     const context_t& context() const { return ctx_; }
