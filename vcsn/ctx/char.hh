@@ -90,6 +90,10 @@ namespace vcsn
         make_automaton_editor_register                                  \
           (Ctx::sname(), abstract_make_automaton_editor<aut_t>);        \
                                                                         \
+        /* dotty. */                                                    \
+        lift_register                                                   \
+          (aut_t::sname(), abstract_lift<aut_t>);                       \
+                                                                        \
         /* make-context. */                                             \
         make_context_register                                           \
           (Ctx::sname(), abstract_make_context<Ctx>);                   \

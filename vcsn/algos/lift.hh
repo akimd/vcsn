@@ -59,6 +59,25 @@ namespace vcsn
     return res;
   }
 
+
+  /// Abstract but parameterized.
+  template <typename Aut>
+  abstract_mutable_automaton*
+  abstract_lift(const abstract_mutable_automaton& aut)
+  {
+    return new details::lifted_automaton_t<Aut>
+      (lift(dynamic_cast<const Aut&>(aut)));
+  }
+
+  using lift_t =
+    auto (const abstract_mutable_automaton& aut) -> abstract_mutable_automaton*;
+
+  bool lift_register(const std::string& ctx, const lift_t& fn);
+
+  /// Abstract.
+  abstract_mutable_automaton* lift(const abstract_mutable_automaton& aut);
+
+
 } // vcsn::
 
 #endif // !VCSN_ALGOS_LIFT_HH
