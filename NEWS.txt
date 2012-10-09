@@ -1,3 +1,9 @@
+* 2012-10-09
+** automata provide a vname
+To dispatch algorithms such as dotty, we not only need to know the context
+type name, but also the automaton type name, as mutable_automaton and
+transpose_automaton are two different types for instance.
+
 * 2012-10-08
 ** dot-parser
 Because it uses only algorithms made abstract (make_context,

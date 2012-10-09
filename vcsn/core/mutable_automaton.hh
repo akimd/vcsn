@@ -22,6 +22,8 @@ namespace vcsn
   public:
     virtual const ctx::abstract_context& abstract_context() const = 0;
     virtual ~abstract_mutable_automaton() {}
+    /// A key to recognize the type of the automaton.
+    virtual std::string vname() const = 0;
   };
 
   template <typename Context>
@@ -90,11 +92,17 @@ namespace vcsn
     // Related sets
     ///////////////
 
+    virtual std::string vname() const override
+    {
+      return "mutable_automaton<" + context().name() + ">";
+    }
+
     const context_t& context() const { return es_.context(); }
-    virtual const ctx::abstract_context& abstract_context() const
+    virtual const ctx::abstract_context& abstract_context() const override
     {
       return context();
     }
+
     const weightset_ptr& weightset() const { return es_.weightset(); }
     const genset_ptr& genset() const { return es_.genset(); }
     const entryset_t& entryset() const { return es_; }

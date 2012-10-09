@@ -50,6 +50,11 @@ namespace vcsn
         return aut_;
       }
 
+      virtual std::string vname() const override
+      {
+        return "transpose_automaton<" + aut_->vname() + ">";
+      }
+
       /*-------------------------------.
       | const methods that transpose.  |
       `-------------------------------*/
