@@ -1,7 +1,7 @@
 #ifndef LIB_VCSN_RAT_DRIVER_HH
 # define LIB_VCSN_RAT_DRIVER_HH
 
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <lib/vcsn/rat/location.hh>
 
@@ -16,6 +16,7 @@ namespace vcsn
     public:
       using exp_t = vcsn::rat::exp_t;
       driver(const abstract_kratexpset& f);
+      driver(const ctx::abstract_context& ctx);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
 

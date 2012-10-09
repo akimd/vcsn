@@ -1,6 +1,7 @@
 #include <cstring> // strerror
 #include <sstream>
 
+#include <vcsn/algos/make-context.hh> // make_kratexpset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
@@ -11,6 +12,10 @@ namespace vcsn
 
     driver::driver(const abstract_kratexpset& f)
       : kratexpset_{&f}
+    {}
+
+    driver::driver(const ctx::abstract_context& ctx)
+      : kratexpset_{make_kratexpset(ctx)}
     {}
 
     void
