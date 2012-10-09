@@ -20,7 +20,7 @@ namespace vcsn
   abstract_mutable_automaton*
   transpose(abstract_mutable_automaton& aut)
   {
-    return transpose_registry().call(aut.abstract_context().name(),
+    return transpose_registry().call(aut.vname(),
                                      aut);
   }
 }

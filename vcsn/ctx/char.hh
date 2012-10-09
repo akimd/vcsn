@@ -103,7 +103,7 @@ namespace vcsn
                                                                         \
         /* transpose. */                                                \
         transpose_register                                              \
-          (#Ctx,                                                        \
+          ("mutable_automaton<" #Ctx ">",                               \
            abstract_transpose<aut_t>);                                  \
                                                                         \
         return true;                                                    \
