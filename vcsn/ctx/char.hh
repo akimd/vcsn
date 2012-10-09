@@ -15,6 +15,21 @@ namespace vcsn
                           Kind>;
   }
 
+
+# define VCSN_CTX_INSTANTIATE_DOTTY(Aut)                                \
+  MAYBE_EXTERN template                                                 \
+  void dotty<Aut>(const Aut& aut, std::ostream& out);                   \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  std::string dotty<Aut>(const Aut& aut);                               \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  void abstract_dotty<Aut>(const abstract_mutable_automaton& aut,       \
+                           std::ostream& out);                          \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  std::string abstract_dotty<Aut>(const abstract_mutable_automaton& aut);
+
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
   `-------------------------------------------------------*/
@@ -27,24 +42,11 @@ namespace vcsn
   class mutable_automaton<Ctx>;                                         \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  void                                                                  \
-  dotty<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut,      \
-                                std::ostream& out);                     \
+  class details::transpose_automaton<mutable_automaton<Ctx>>;           \
                                                                         \
-  MAYBE_EXTERN template                                                 \
-  std::string                                                           \
-  dotty<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);     \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
-  void                                                                  \
-  abstract_dotty<mutable_automaton<Ctx>>                                \
-  (const abstract_mutable_automaton& aut,                               \
-   std::ostream& out);                                                  \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
-  std::string                                                           \
-  abstract_dotty<mutable_automaton<Ctx>>                                \
-  (const abstract_mutable_automaton& aut);                              \
+  VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
+  VCSN_CTX_INSTANTIATE_DOTTY                                            \
+  (details::transpose_automaton<mutable_automaton<Ctx>>);               \
                                                                         \
   MAYBE_EXTERN template                                                 \
   details::lifted_automaton_t<mutable_automaton<Ctx>>                   \
@@ -52,6 +54,7 @@ namespace vcsn
                                                                         \
   MAYBE_EXTERN template                                                 \
   class rat::standard_of_visitor<mutable_automaton<Ctx>>;
+
 
 
   /*----------------------------------.
@@ -68,13 +71,20 @@ namespace vcsn
       register_functions()                                              \
       {                                                                 \
         using aut_t = mutable_automaton<Ctx>;                           \
+        using taut_t = details::transpose_automaton<aut_t>;             \
         /* dotty. */                                                    \
         dotty_register                                                  \
-          (#Ctx,                                                        \
+          ("mutable_automaton<" #Ctx ">",                               \
            static_cast<const dotty_stream_t&>(abstract_dotty<aut_t>));  \
         dotty_register                                                  \
-          (#Ctx,                                                        \
+          ("mutable_automaton<" #Ctx ">",                               \
            static_cast<const dotty_string_t&>(abstract_dotty<aut_t>));  \
+        dotty_register                                                  \
+          ("transpose_automaton<mutable_automaton<" #Ctx ">>",          \
+           static_cast<const dotty_stream_t&>(abstract_dotty<taut_t>)); \
+        dotty_register                                                  \
+          ("transpose_automaton<mutable_automaton<" #Ctx ">>",          \
+           static_cast<const dotty_string_t&>(abstract_dotty<taut_t>)); \
                                                                         \
         /* edit-automaton. */                                           \
         make_automaton_editor_register                                  \
