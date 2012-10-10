@@ -41,10 +41,12 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class mutable_automaton<Ctx>;                                         \
                                                                         \
-  MAYBE_EXTERN template                                                 \
-  class details::transpose_automaton<mutable_automaton<Ctx>>;           \
-                                                                        \
   /* aut_to_exp. */                                                     \
+  MAYBE_EXTERN template                                                 \
+  Ctx::kratexp_t                                                        \
+  aut_to_exp<mutable_automaton<Ctx>>                                    \
+  (const mutable_automaton<Ctx>& aut,                                   \
+    const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
                                                                         \
   /* dotty. */                                                          \
   VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
@@ -58,7 +60,13 @@ namespace vcsn
                                                                         \
   /* standard_of. */                                                    \
   MAYBE_EXTERN template                                                 \
-  class rat::standard_of_visitor<mutable_automaton<Ctx>>;
+  class rat::standard_of_visitor<mutable_automaton<Ctx>>;               \
+                                                                        \
+  /* transpose. */                                                      \
+  MAYBE_EXTERN template                                                 \
+  class details::transpose_automaton<mutable_automaton<Ctx>>;           \
+  MAYBE_EXTERN template                                                 \
+  class details::transposer<Ctx>;
 
 
 
