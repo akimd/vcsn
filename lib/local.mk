@@ -15,6 +15,7 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir)
 include lib/vcsn/local.mk
 
+# char_b
 pkglib_LTLIBRARIES += lib/libchar_b_lal.la
 lib_libchar_b_lal_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_b_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_lal
@@ -23,6 +24,7 @@ pkglib_LTLIBRARIES += lib/libchar_b_law.la
 lib_libchar_b_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_b_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_law
 
+# char_z
 pkglib_LTLIBRARIES += lib/libchar_z_lae.la
 lib_libchar_z_lae_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_z_lae_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lae
@@ -35,6 +37,7 @@ pkglib_LTLIBRARIES += lib/libchar_z_law.la
 lib_libchar_z_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_z_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_law
 
+# char_zmin
 pkglib_LTLIBRARIES += lib/libchar_zmin_lal.la
 lib_libchar_zmin_lal_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_zmin_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_lal
