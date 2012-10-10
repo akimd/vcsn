@@ -4,6 +4,10 @@
 
 namespace vcsn
 {
+  /*-------------------------.
+  | transpose for automata.  |
+  `-------------------------*/
+
   Registry<transpose_t>&
   transpose_registry()
   {
@@ -22,5 +26,29 @@ namespace vcsn
   {
     return transpose_registry().call(aut.vname(),
                                      aut);
+  }
+
+  /*-----------------------.
+  | transpose for ratexp.  |
+  `-----------------------*/
+
+  Registry<transpose_exp_t>&
+  transpose_exp_registry()
+  {
+    static Registry<transpose_exp_t> instance{"transpose"};
+    return instance;
+  }
+
+  bool
+  transpose_exp_register(const std::string& ctx, const transpose_exp_t& fn)
+  {
+    return transpose_exp_registry().set(ctx, fn);
+  }
+
+  rat::exp_t
+  transpose(const ctx::abstract_context& ctx, const rat::exp_t e)
+  {
+    return transpose_exp_registry().call(ctx.vname(),
+                                         ctx, e);
   }
 }

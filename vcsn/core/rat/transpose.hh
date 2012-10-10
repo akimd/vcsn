@@ -125,21 +125,14 @@ namespace vcsn
     };
   }
 
-#if 0
   /// \param Aut      relative to the generated automaton.
   /// \param Context  relative to the RatExp.
   template <class Context>
   typename Context::kratexp_t
-  transpose(const Context& ctx, const rat::exp_t e)
+  transpose(const Context& ctx, const typename Context::kratexp_t& v)
   {
-    using context_t = Context;
-    // Type check.
-    typename context_t::kratexp_t v =
-      std::dynamic_pointer_cast<const typename context_t::node_t>(e);
-    assert(v);
-    return transpose(ctx, v);
+    return ctx.make_kratexpset().transpose(v);
   }
-#endif
 
 }
 

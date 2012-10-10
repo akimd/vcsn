@@ -107,6 +107,8 @@ namespace vcsn
         /* transpose. */                                                \
         transpose_register                                              \
           (aut_t::sname(), abstract_transpose<aut_t>);                  \
+        transpose_exp_register                                          \
+          (Ctx::sname(), abstract_transpose_exp<Ctx>);                  \
                                                                         \
         return true;                                                    \
       }                                                                 \

@@ -247,6 +247,31 @@ namespace vcsn
 
   abstract_mutable_automaton*
   transpose(abstract_mutable_automaton& aut);
+
+
+  /*---------------------------.
+  | transpose for rat::exp_t.  |
+  `---------------------------*/
+
+  template <typename Context>
+  rat::exp_t
+  abstract_transpose_exp(const ctx::abstract_context& ctx, const rat::exp_t e)
+  {
+    return transpose
+      (dynamic_cast<const Context&>(ctx),
+       std::dynamic_pointer_cast<const typename Context::node_t>(e));
+  }
+
+  using transpose_exp_t =
+    auto (const ctx::abstract_context& ctx, const rat::exp_t e)
+    -> rat::exp_t;
+
+  bool transpose_exp_register(const std::string& ctx,
+                              const transpose_exp_t& fn);
+
+  rat::exp_t
+  transpose(const ctx::abstract_context& ctx, const rat::exp_t e);
+
 } // vcsn::
 
 #endif // !VCSN_ALGOS_TRANSPOSE_HH
