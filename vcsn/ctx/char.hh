@@ -72,6 +72,13 @@ namespace vcsn
       {                                                                 \
         using aut_t = mutable_automaton<Ctx>;                           \
         using taut_t = details::transpose_automaton<aut_t>;             \
+                                                                        \
+        /* aut_to_exp. */                                               \
+        aut_to_exp_register                                             \
+          (aut_t::sname(), abstract_aut_to_exp<aut_t>);                 \
+        aut_to_exp_in_degree_register                                   \
+          (aut_t::sname(), abstract_aut_to_exp_in_degree<aut_t>);       \
+                                                                        \
         /* dotty. */                                                    \
         dotty_register                                                  \
           (aut_t::sname(),                                              \

@@ -12,6 +12,7 @@ namespace vcsn
   }
 }
 
+# include <vcsn/algos/aut_to_exp.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dotty.hh>
