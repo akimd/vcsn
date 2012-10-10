@@ -44,14 +44,19 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class details::transpose_automaton<mutable_automaton<Ctx>>;           \
                                                                         \
+  /* aut_to_exp. */                                                     \
+                                                                        \
+  /* dotty. */                                                          \
   VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
   VCSN_CTX_INSTANTIATE_DOTTY                                            \
   (details::transpose_automaton<mutable_automaton<Ctx>>);               \
                                                                         \
+  /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
   details::lifted_automaton_t<mutable_automaton<Ctx>>                   \
   lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
                                                                         \
+  /* standard_of. */                                                    \
   MAYBE_EXTERN template                                                 \
   class rat::standard_of_visitor<mutable_automaton<Ctx>>;
 
