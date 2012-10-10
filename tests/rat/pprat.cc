@@ -3,17 +3,19 @@
 #include <map>
 #include <getopt.h>
 
-#include <vcsn/algos/lift.hh>
 #include <vcsn/algos/aut_to_exp.hh>
+#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/lift.hh>
+#include <vcsn/algos/make-context.hh>
+#include <vcsn/algos/standard_of.hh>
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/kind.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/core/rat/abstract_kratexpset.hh>
 #include <vcsn/core/rat/kratexpset.hh>
-#include <vcsn/ctx/char_b_lal.hh>
-#include <vcsn/ctx/char_b_law.hh>
-#include <vcsn/ctx/char_z_lal.hh>
-#include <vcsn/ctx/char_z_law.hh>
+#include <vcsn/ctx/char.hh>
+#include <vcsn/weights/b.hh>
+#include <vcsn/weights/z.hh>
 
 #include <lib/vcsn/rat/driver.hh>
 
@@ -162,22 +164,80 @@ pp(const options& opts, const Context& ctx,
 }
 
 void
+transpose(const vcsn::ctx::abstract_context& ctx, const vcsn::rat::exp_t e)
+{
+  auto *aut1 = vcsn::standard_of(ctx, e);
+  if (!!getenv("DEBUG"))
+    {
+      std::cerr << aut1->vname() << std::endl;
+      vcsn::dotty(*aut1, std::cout);
+    }
+  auto *aut2 = vcsn::transpose(*aut1);
+  if (!!getenv("DEBUG"))
+    std::cerr << aut2->vname() << std::endl;
+  vcsn::dotty(*aut2, std::cout);
+  delete aut2;
+  delete aut1;
+}
+
+void
+abstract_pp(const options& opts, const vcsn::ctx::abstract_context& ctx,
+            const char* s, bool file)
+{
+  vcsn::rat::driver d(ctx);
+  auto* kset = vcsn::make_kratexpset(ctx);
+  if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
+    {
+      for (size_t i = 0; i < opts.transpose; ++i)
+        exp = vcsn::transpose(ctx, exp);
+
+      if (opts.aut_transpose)
+        transpose(ctx, exp);
+      else if (opts.standard_of || opts.lift || opts.aut_to_exp)
+        {
+          auto aut = vcsn::standard_of(ctx, exp);
+          if (opts.standard_of)
+            vcsn::dotty(*aut, std::cout);
+          if (opts.lift)
+            vcsn::dotty(*vcsn::lift(*aut), std::cout);
+          if (opts.aut_to_exp)
+            switch (opts.next)
+            {
+            case heuristics::degree:
+              std::cout << kset->format(vcsn::aut_to_exp_in_degree(*aut)) << std::endl;
+              break;
+            case heuristics::order:
+              std::cout << kset->format(vcsn::aut_to_exp(*aut)) << std::endl;
+              break;
+            }
+        }
+      else
+        kset->print(std::cout, exp) << std::endl;
+    }
+  else
+    {
+      std::cerr << d.errors << std::endl;
+      exit(EXIT_FAILURE);
+    }
+}
+
+void
 pp(const options& opts, const char* s, bool file)
 {
   switch (opts.weight)
     {
-#define CASE(Name)                              \
-      case type::Name:                          \
-        if (opts.labels_are_letters)            \
-          pp(opts, ctx_ ## Name, s, file);      \
-        else                                    \
-          pp(opts, ctx_ ## Name ## w, s, file); \
+#define CASE(Name, Fun)                                 \
+      case type::Name:                                  \
+        if (opts.labels_are_letters)                    \
+          Fun(opts, ctx_ ## Name, s, file);             \
+        else                                            \
+          Fun(opts, ctx_ ## Name ## w, s, file);        \
       break;
-      CASE(b);
-      CASE(br);
-      CASE(z);
-      CASE(zr);
-      CASE(zrr);
+      CASE(b, abstract_pp);
+      CASE(br, pp);
+      CASE(z, abstract_pp);
+      CASE(zr, pp);
+      CASE(zrr, pp);
 #undef CASE
     }
 }
