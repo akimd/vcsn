@@ -15,7 +15,7 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir)
 include lib/vcsn/local.mk
 
-# char_b
+# char_b.
 pkglib_LTLIBRARIES += lib/libchar_b_lal.la
 lib_libchar_b_lal_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_b_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_lal
@@ -24,12 +24,16 @@ pkglib_LTLIBRARIES += lib/libchar_b_law.la
 lib_libchar_b_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_b_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_law
 
-# char_br
+# char_br.
+pkglib_LTLIBRARIES += lib/libchar_br_lal.la
+lib_libchar_br_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_br_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_lal
+
 pkglib_LTLIBRARIES += lib/libchar_br_law.la
 lib_libchar_br_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_br_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_law
 
-# char_z
+# char_z.
 pkglib_LTLIBRARIES += lib/libchar_z_lae.la
 lib_libchar_z_lae_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_z_lae_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lae
@@ -42,7 +46,25 @@ pkglib_LTLIBRARIES += lib/libchar_z_law.la
 lib_libchar_z_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_z_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_law
 
-# char_zmin
+# char_zr.
+pkglib_LTLIBRARIES += lib/libchar_zr_lal.la
+lib_libchar_zr_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zr_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zr_lal
+
+pkglib_LTLIBRARIES += lib/libchar_zr_law.la
+lib_libchar_zr_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zr_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zr_law
+
+# char_zrr.
+pkglib_LTLIBRARIES += lib/libchar_zrr_lal.la
+lib_libchar_zrr_lal_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zrr_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zrr_lal
+
+pkglib_LTLIBRARIES += lib/libchar_zrr_law.la
+lib_libchar_zrr_law_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_zrr_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zrr_law
+
+# char_zmin.
 pkglib_LTLIBRARIES += lib/libchar_zmin_lal.la
 lib_libchar_zmin_lal_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_zmin_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_lal

@@ -1,6 +1,13 @@
-* 2012-10-10
+* 2012-10-12
 ** pprat works with abstract algorithms
-For the precompiled contexts, pprat now uses abstract algorithms!
+pprat now uses *only* abstract (aka, dynamic) algorithms!  On OS X, it is
+now a 77KB program; it was 11MB before.
+
+This schedules its death: either it will be replaced by a set of smaller
+grain commands (vcsn-determinize, vcsn-standard-of, etc.) from which test
+cases will be easier to write, or it will be replaced by some early
+implementation of a TAF-Kit-like *unified* program (instead of one per
+context).
 
 * 2012-10-09
 ** automata provide a vname

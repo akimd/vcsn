@@ -69,7 +69,7 @@ enum class heuristics
 struct options
 {
   bool labels_are_letters = true;
-  type weight = type::b;
+  std::string context = "char_b_lal";
   size_t transpose = 0;
   bool aut_transpose = false;
   bool standard_of = false;
@@ -77,91 +77,6 @@ struct options
   bool aut_to_exp = false;
   heuristics next = heuristics::order;
 };
-
-// FIXME: No globals.
-
-using lal = vcsn::labels_are_letters;
-using law = vcsn::labels_are_words;
-using b = vcsn::b;
-using z = vcsn::z;
-
-template <typename T, typename Kind>
-using ks = vcsn::kratexpset<vcsn::ctx::char_<T, Kind>>;
-template <typename T>
-using ksl = ks<T, lal>;
-template <typename T>
-using ksw = ks<T, law>;
-
-#define DEFINE(Name, Kind, Param, Arg)                          \
-  auto ctx_ ## Name =                                           \
-    vcsn::ctx::char_<Param, Kind> {{'a', 'b', 'c', 'd'}, Arg }; \
-  auto ks_ ## Name = ks<Param, Kind>{ ctx_ ## Name };
-
-  DEFINE(b,   lal, b,           b());
-  DEFINE(br,  lal, ksl<b>,      ks_b);
-  DEFINE(z,   lal, z,           z());
-  DEFINE(zr,  lal, ksl<z>,      ks_z);
-  DEFINE(zrr, lal, ksl<ksl<z>>, ks_zr);
-
-  DEFINE(bw,   law, b,           b());
-  DEFINE(brw,  law, ksw<b>,      ks_bw);
-  DEFINE(zw,   law, z,           z());
-  DEFINE(zrw,  law, ksw<z>,      ks_zw);
-  DEFINE(zrrw, law, ksw<ksw<z>>, ks_zrw);
-#undef DEFINE
-
-template<typename Context>
-void
-pp(const options& opts, const Context& ctx,
-   const char* s, bool file)
-{
-  using context_t = Context;
-  vcsn::concrete_abstract_kratexpset<context_t> fac{ctx};
-  using kset_t = vcsn::kratexpset<context_t>;
-  kset_t kset{ctx};
-
-  vcsn::rat::driver d(fac);
-  if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
-    {
-      auto e = ctx.downcast(exp);
-      for (size_t i = 0; i < opts.transpose; ++i)
-        e = kset.transpose(e);
-
-      if (opts.aut_transpose)
-        {
-          using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut1 = vcsn::standard_of<automaton_t>(ctx, e);
-          auto aut2 = vcsn::transpose(aut1);
-          vcsn::dotty(aut2, std::cout);
-        }
-      else if (opts.standard_of || opts.lift || opts.aut_to_exp)
-        {
-          using automaton_t = vcsn::mutable_automaton<context_t>;
-          auto aut = vcsn::standard_of<automaton_t>(ctx, e);
-          if (opts.standard_of)
-            vcsn::dotty(aut, std::cout);
-          if (opts.lift)
-            vcsn::dotty(vcsn::lift(aut), std::cout);
-          if (opts.aut_to_exp)
-            switch (opts.next)
-            {
-            case heuristics::degree:
-              std::cout << kset.format(vcsn::aut_to_exp_in_degree(aut)) << std::endl;
-              break;
-            case heuristics::order:
-              std::cout << kset.format(vcsn::aut_to_exp(aut)) << std::endl;
-              break;
-            }
-        }
-      else
-        kset.print(std::cout, e) << std::endl;
-    }
-  else
-    {
-      std::cerr << d.errors << std::endl;
-      exit(EXIT_FAILURE);
-    }
-}
 
 void
 transpose(const vcsn::ctx::abstract_context& ctx, const vcsn::rat::exp_t e)
@@ -224,39 +139,31 @@ abstract_pp(const options& opts, const vcsn::ctx::abstract_context& ctx,
 void
 pp(const options& opts, const char* s, bool file)
 {
-  switch (opts.weight)
-    {
-#define CASE(Name, Fun)                                 \
-      case type::Name:                                  \
-        if (opts.labels_are_letters)                    \
-          Fun(opts, ctx_ ## Name, s, file);             \
-        else                                            \
-          Fun(opts, ctx_ ## Name ## w, s, file);        \
-      break;
-      CASE(b, abstract_pp);
-      CASE(br, pp);
-      CASE(z, abstract_pp);
-      CASE(zr, pp);
-      CASE(zrr, pp);
-#undef CASE
-    }
+  std::string ctx = opts.context;
+  if (opts.labels_are_letters)
+    for (char& c: ctx)
+      if (c == 'w')
+        c = 'l';
+  if (!!getenv("YYDEBUG"))
+    std::cerr << "Loading: " << ctx << std::endl;
+  abstract_pp(opts, *vcsn::make_context(ctx, "abcd"), s, file);
 }
 
 int
 main(int argc, char* const argv[])
 try
 {
-  using map = std::map<std::string, type>;
-  using pair = std::pair<std::string, type>;
+  using map = std::map<std::string, std::string>;
+  using pair = std::pair<std::string, std::string>;
 
   map ksets;
-#define DEFINE(Name)                            \
-  ksets.insert(pair(#Name, type::Name))
-  DEFINE(b);
-  DEFINE(br);
-  DEFINE(z);
-  DEFINE(zr);
-  DEFINE(zrr);
+#define DEFINE(Key, Name)                         \
+  ksets.insert(pair(#Key, Name))
+  DEFINE(b,   "char_b_law");
+  DEFINE(br,  "char_kratexpset<char_b_law>_law");
+  DEFINE(z,   "char_z_law");
+  DEFINE(zr,  "char_kratexpset<char_z_law>_law");
+  DEFINE(zrr, "char_kratexpset<char_kratexpset<char_z_law>_law>_law");
 #undef DEFINE
 
   options opts;
@@ -326,7 +233,7 @@ try
               goto fail;
             }
           else
-            opts.weight = i->second;
+            opts.context = i->second;
         }
         break;
       case '?':
