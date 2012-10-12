@@ -16,6 +16,7 @@ check_PROGRAMS =
 
 libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
 libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
+libchar_br_law = $(top_builddir)/lib/libchar_br_law.la
 libchar_z_lae = $(top_builddir)/lib/libchar_z_lae.la
 libchar_z_lal = $(top_builddir)/lib/libchar_z_lal.la
 libchar_z_law = $(top_builddir)/lib/libchar_z_law.la
@@ -24,6 +25,7 @@ libchar_zmin_law = $(top_builddir)/lib/libchar_zmin_law.la
 
 all_libctx =						\
   $(libchar_b_lal) $(libchar_b_law)			\
+  $(libchar_br_law)					\
   $(libchar_z_lae) $(libchar_z_lal) $(libchar_z_law)	\
   $(libchar_zmin_lal) $(libchar_zmin_law)
 

@@ -15,6 +15,57 @@ namespace vcsn
   | make_context.  |
   `---------------*/
 
+  /* Some contexts, such as "char_br_lal", use RatExps as weight set.
+     But RatExps need a context, and a genset.  Other weight sets,
+     such as b or zmin, do not need a genset to be buildable.
+
+     So we must define a mean instantiate a weightset with or without
+     an alphabet, depending on its need.
+
+     We rely on partial template specialization to do so, which
+     requires that we use a struct (named weightsetter).
+
+     For some reason, the prototype of make_context is really needed
+     to please the compiler, which needs it to compile weightsetter.
+     */
+
+  template <typename Ctx>
+  Ctx*
+  make_context(const typename Ctx::genset_t::letters_t& ls);
+
+  template <typename WeightSet>
+  struct weightsetter
+  {
+    static
+    WeightSet
+    // FIXME: Breaking the abstraction over set<char>.
+    make(const std::set<char>&)
+    {
+      return {};
+    }
+  };
+
+  template <typename Ctx>
+  struct weightsetter<kratexpset<Ctx>>
+  {
+    static
+    kratexpset<Ctx>
+    make(const typename Ctx::genset_t::letters_t& ls)
+    {
+      return {*make_context<Ctx>(ls)};
+    }
+  };
+
+  template <typename Ctx>
+  Ctx*
+  make_context(const typename Ctx::genset_t::letters_t& ls)
+  {
+    auto gs = typename Ctx::genset_t(ls);
+    auto ws = weightsetter<typename Ctx::weightset_t>::make(ls);
+    // FIXME: memory management.
+    return new Ctx(gs, ws);
+  }
+
   template <typename Ctx>
   ctx::abstract_context*
   abstract_make_context(const std::string& letters)
@@ -22,8 +73,7 @@ namespace vcsn
     std::set<char> ls;
     for (auto l: letters)
       ls.insert(l);
-    auto* res = new Ctx{ls};
-    return res;
+    return make_context<Ctx>(ls);
   }
 
   using make_context_t =
