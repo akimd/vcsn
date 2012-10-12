@@ -9,13 +9,6 @@
 #include <vcsn/algos/make-context.hh>
 #include <vcsn/algos/standard_of.hh>
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/core/kind.hh>
-#include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/core/rat/abstract_kratexpset.hh>
-#include <vcsn/core/rat/kratexpset.hh>
-#include <vcsn/ctx/char.hh>
-#include <vcsn/weights/b.hh>
-#include <vcsn/weights/z.hh>
 
 #include <lib/vcsn/rat/driver.hh>
 
