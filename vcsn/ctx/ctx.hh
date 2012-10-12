@@ -51,6 +51,11 @@ namespace vcsn
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
+      context(const context& that)
+        : gs_{that.gs_}
+        , ws_{that.ws_}
+      {}
+
       context(const genset_ptr& gs, const weightset_ptr& ws)
         : gs_{gs}
         , ws_{ws}
