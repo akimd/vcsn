@@ -12,31 +12,8 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 include $(top_srcdir)/build-aux/make/init.mk
+include $(top_srcdir)/common.mk
 check_PROGRAMS =
-
-libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
-libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
-libchar_br_lal = $(top_builddir)/lib/libchar_br_lal.la
-libchar_br_law = $(top_builddir)/lib/libchar_br_law.la
-libchar_z_lae = $(top_builddir)/lib/libchar_z_lae.la
-libchar_z_lal = $(top_builddir)/lib/libchar_z_lal.la
-libchar_z_law = $(top_builddir)/lib/libchar_z_law.la
-libchar_zr_lal = $(top_builddir)/lib/libchar_zr_lal.la
-libchar_zr_law = $(top_builddir)/lib/libchar_zr_law.la
-libchar_zrr_lal = $(top_builddir)/lib/libchar_zrr_lal.la
-libchar_zrr_law = $(top_builddir)/lib/libchar_zrr_law.la
-libchar_zmin_lal = $(top_builddir)/lib/libchar_zmin_lal.la
-libchar_zmin_law = $(top_builddir)/lib/libchar_zmin_law.la
-
-all_libctx =						\
-  $(libchar_b_lal) $(libchar_b_law)			\
-  $(libchar_br_lal) $(libchar_br_law)			\
-  $(libchar_z_lae) $(libchar_z_lal) $(libchar_z_law)	\
-  $(libchar_zr_lal) $(libchar_zr_law)			\
-  $(libchar_zrr_lal) $(libchar_zrr_law)			\
-  $(libchar_zmin_lal) $(libchar_zmin_law)
-
-libvcsn = $(top_builddir)/lib/libvcsn.la
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir)

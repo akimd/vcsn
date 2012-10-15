@@ -11,8 +11,6 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
-AM_CPPFLAGS += -I$(top_srcdir)
 include lib/vcsn/local.mk
 
 # char_b.
