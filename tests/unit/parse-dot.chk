@@ -22,10 +22,10 @@ fail ()
 fail <<EOF
 digraph
 {
-  vcsn_context=char_b_lal
-  vcsn_alphabet="a"
+  vcsn_context = "char_b_lal"
+  vcsn_alphabet = "a"
   I1 -> 1
-  1 -> 2 [label=a]
+  1 -> 2 [label = a]
   2 -> F2
 }
 EOF
@@ -33,10 +33,10 @@ EOF
 fail <<EOF
 digraph
 {
-  vcsn_contxt=char_b_lal
-  vcsn_genset="a"
+  vcsn_contxt = char_b_lal
+  vcsn_genset = "a"
   I1 -> 1
-  1 -> 2 [label=a]
+  1 -> 2 [label = a]
   2 -> F2
 }
 EOF
@@ -44,10 +44,10 @@ EOF
 fail <<EOF
 digraph
 {
-  vcsn_context=unknown
-  vcsn_genset="a"
+  vcsn_context = "unknown"
+  vcsn_genset = "a"
   I1 -> 1
-  1 -> 2 [label=a]
+  1 -> 2 [label = a]
   2 -> F2
 }
 EOF
@@ -59,26 +59,26 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context=char_b_lal
-  vcsn_genset="a"
+  vcsn_context = "char_b_lal"
+  vcsn_genset = "a"
   I1 -> 1
-  1 -> 2 [label=a]
+  1 -> 2 [label = a]
   2 -> F2
 }
 ---
 digraph
 {
-  vcsn_context=char_b_lal
-  vcsn_genset="a"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_b_lal"
+  vcsn_genset = "a"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
     F2
   }
   I1 -> 1
-  1 -> 2 [label="a"]
+  1 -> 2 [label = "a"]
   2 -> F2
 }
 EOF
@@ -86,8 +86,8 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context=char_b_lal
-  vcsn_genset="a"
+  vcsn_context = "char_b_lal"
+  vcsn_genset = "a"
   {
     1
   }
@@ -107,19 +107,19 @@ digraph
   {
     11 12 13 14 15
   }
-  [label=a]
+  [label = a]
   I -> 1
   { 11 12 13 14 15 } -> F
 }
 ---
 digraph
 {
-  vcsn_context=char_b_lal
-  vcsn_genset="a"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_b_lal"
+  vcsn_genset = "a"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
     F11
     F12
@@ -127,46 +127,46 @@ digraph
     F14
     F15
   }
-  1 -> 2 [label="a"]
-  1 -> 3 [label="a"]
-  2 -> 4 [label="a"]
-  2 -> 5 [label="a"]
-  2 -> 6 [label="a"]
-  3 -> 4 [label="a"]
-  3 -> 5 [label="a"]
-  3 -> 6 [label="a"]
-  4 -> 7 [label="a"]
-  4 -> 8 [label="a"]
-  4 -> 9 [label="a"]
-  4 -> 10 [label="a"]
-  5 -> 7 [label="a"]
-  5 -> 8 [label="a"]
-  5 -> 9 [label="a"]
-  5 -> 10 [label="a"]
-  6 -> 7 [label="a"]
-  6 -> 8 [label="a"]
-  6 -> 9 [label="a"]
-  6 -> 10 [label="a"]
-  7 -> 11 [label="a"]
-  7 -> 12 [label="a"]
-  7 -> 13 [label="a"]
-  7 -> 14 [label="a"]
-  7 -> 15 [label="a"]
-  8 -> 11 [label="a"]
-  8 -> 12 [label="a"]
-  8 -> 13 [label="a"]
-  8 -> 14 [label="a"]
-  8 -> 15 [label="a"]
-  9 -> 11 [label="a"]
-  9 -> 12 [label="a"]
-  9 -> 13 [label="a"]
-  9 -> 14 [label="a"]
-  9 -> 15 [label="a"]
-  10 -> 11 [label="a"]
-  10 -> 12 [label="a"]
-  10 -> 13 [label="a"]
-  10 -> 14 [label="a"]
-  10 -> 15 [label="a"]
+  1 -> 2 [label = "a"]
+  1 -> 3 [label = "a"]
+  2 -> 4 [label = "a"]
+  2 -> 5 [label = "a"]
+  2 -> 6 [label = "a"]
+  3 -> 4 [label = "a"]
+  3 -> 5 [label = "a"]
+  3 -> 6 [label = "a"]
+  4 -> 7 [label = "a"]
+  4 -> 8 [label = "a"]
+  4 -> 9 [label = "a"]
+  4 -> 10 [label = "a"]
+  5 -> 7 [label = "a"]
+  5 -> 8 [label = "a"]
+  5 -> 9 [label = "a"]
+  5 -> 10 [label = "a"]
+  6 -> 7 [label = "a"]
+  6 -> 8 [label = "a"]
+  6 -> 9 [label = "a"]
+  6 -> 10 [label = "a"]
+  7 -> 11 [label = "a"]
+  7 -> 12 [label = "a"]
+  7 -> 13 [label = "a"]
+  7 -> 14 [label = "a"]
+  7 -> 15 [label = "a"]
+  8 -> 11 [label = "a"]
+  8 -> 12 [label = "a"]
+  8 -> 13 [label = "a"]
+  8 -> 14 [label = "a"]
+  8 -> 15 [label = "a"]
+  9 -> 11 [label = "a"]
+  9 -> 12 [label = "a"]
+  9 -> 13 [label = "a"]
+  9 -> 14 [label = "a"]
+  9 -> 15 [label = "a"]
+  10 -> 11 [label = "a"]
+  10 -> 12 [label = "a"]
+  10 -> 13 [label = "a"]
+  10 -> 14 [label = "a"]
+  10 -> 15 [label = "a"]
   I1 -> 1
   11 -> F11
   12 -> F12

@@ -3,22 +3,22 @@
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context=char_z_lal
-  vcsn_genset="abcd"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abcd"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
     F2
   }
   I1 -> 1
-  2 -> F2 [label="{10}"]
-  1 -> 2 [label="{42}c"]
-  2 -> 3 [label="a"]
-  2 -> 1 [label="b"]
-  1 -> 1 [label="{42}d"]
-  1 -> 3 [label="d"]
+  2 -> F2 [label = "{10}"]
+  1 -> 2 [label = "{42}c"]
+  2 -> 3 [label = "a"]
+  2 -> 1 [label = "b"]
+  1 -> 1 [label = "{42}d"]
+  1 -> 3 [label = "d"]
 }
 Leaving s1 by d
 5 2
@@ -29,47 +29,47 @@ Between s1 and s1
 5 2
 digraph
 {
-  vcsn_context=char_z_lal
-  vcsn_genset="abcd"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abcd"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
     F2
   }
   I1 -> 1
-  2 -> F2 [label="{10}"]
-  1 -> 2 [label="{42}c"]
-  2 -> 3 [label="a"]
-  2 -> 1 [label="b"]
-  1 -> 3 [label="d"]
+  2 -> F2 [label = "{10}"]
+  1 -> 2 [label = "{42}c"]
+  2 -> 3 [label = "a"]
+  2 -> 1 [label = "b"]
+  1 -> 3 [label = "d"]
 }
 digraph
 {
-  vcsn_context=char_z_lal
-  vcsn_genset="abcd"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abcd"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     F1
   }
-  1 -> F1 [label="{10}"]
-  1 -> 2 [label="a"]
+  1 -> F1 [label = "{10}"]
+  1 -> 2 [label = "a"]
 }
 digraph
 {
-  vcsn_context=char_z_lal
-  vcsn_genset="abcd"
-  rankdir=LR
-  node [shape=circle]
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abcd"
+  rankdir = LR
+  node [shape = circle]
   {
-    node [style=invis,shape=none,label="",width=0,height=0]
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
     F1
   }
   2
-  1 -> F1 [label="{10}"]
+  1 -> F1 [label = "{10}"]
 }
 EOF
 run 0 out.exp unit/aut_char_z_lal

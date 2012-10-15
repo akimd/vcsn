@@ -27,10 +27,10 @@ namespace vcsn
     out <<
       "digraph\n"
       "{\n"
-      "  vcsn_context=" << aut.context().sname() << "\n"
-      "  vcsn_genset=\"" << aut.context().genset_string() << "\"\n"
-      "  rankdir=LR\n"
-      "  node [shape=circle]\n";
+      "  vcsn_context = \"" << aut.context().sname() << "\"\n"
+      "  vcsn_genset = \"" << aut.context().genset_string() << "\"\n"
+      "  rankdir = LR\n"
+      "  node [shape = circle]\n";
 
     // Name all the states.
     for (auto s : aut.states())
@@ -39,7 +39,7 @@ namespace vcsn
     // Output the pre-initial and post-final states.
     out <<
       "  {\n"
-      "    node [style=invis,shape=none,label=\"\",width=0,height=0]\n";
+      "    node [style = invis, shape = none, label = \"\", width = 0, height = 0]\n";
     for (auto t : aut.initial_transitions())
       out << "    I" << names[aut.dst_of(t)] << '\n';
     // Output the "post" final states.
@@ -84,7 +84,7 @@ namespace vcsn
 	std::string s = aut.entryset().format(aut.entry_at(t));
 	if (!s.empty())
 	  {
-	    out << " [label=\"";
+	    out << " [label = \"";
 	    str_escape(out, s) << "\"]";
 	  }
 	out << "\n";
