@@ -80,13 +80,12 @@ namespace vcsn
     {
       template <typename Aut>
       rat::exp_t
-      aut_to_exp(const dyn::abstract_automaton& aut)
+      aut_to_exp(const automaton& aut)
       {
-        return ::vcsn::aut_to_exp(dynamic_cast<const Aut&>(aut));
+        return ::vcsn::aut_to_exp(dynamic_cast<const Aut&>(*aut));
       }
 
-      using aut_to_exp_t =
-        auto (const dyn::abstract_automaton& aut) -> rat::exp_t;
+      using aut_to_exp_t = auto (const automaton& aut) -> rat::exp_t;
 
       bool aut_to_exp_register(const std::string& ctx, const aut_to_exp_t& fn);
     }
@@ -150,9 +149,9 @@ namespace vcsn
     {
       template <typename Aut>
       rat::exp_t
-      aut_to_exp_in_degree(const dyn::abstract_automaton& aut)
+      aut_to_exp_in_degree(const automaton& aut)
       {
-        return ::vcsn::aut_to_exp_in_degree(dynamic_cast<const Aut&>(aut));
+        return ::vcsn::aut_to_exp_in_degree(dynamic_cast<const Aut&>(*aut));
       }
 
       bool aut_to_exp_in_degree_register(const std::string& ctx,

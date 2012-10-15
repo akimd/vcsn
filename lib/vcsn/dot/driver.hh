@@ -17,14 +17,14 @@ namespace vcsn
     class driver
     {
     public:
-      using automaton_t = dyn::abstract_automaton;
+      using automaton_t = dyn::automaton;
       using location_t = vcsn::rat::location;
 
       driver();
 
-      automaton_t* parse_file(const std::string& f);
-      automaton_t* parse_string(const std::string& e,
-                                const location_t& l = location_t{});
+      automaton_t parse_file(const std::string& f);
+      automaton_t parse_string(const std::string& e,
+                               const location_t& l = location_t{});
 
       /// From context_ and letters_, build edit_.
       /// \throw std::exception on invalid contexts.
@@ -47,7 +47,7 @@ namespace vcsn
       /// Prepare scanner to read string e.
       void scan_open_(const std::string& e);
       /// Parse this stream.
-      automaton_t* parse_(const location_t& l = location_t{});
+      automaton_t parse_(const location_t& l = location_t{});
       /// Close the scanner.
       void scan_close_();
 

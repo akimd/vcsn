@@ -60,23 +60,23 @@ namespace vcsn
   }
 
 
-  /// Abstract but parameterized.
-  template <typename Aut>
-  dyn::abstract_automaton*
-  abstract_lift(const dyn::abstract_automaton& aut)
+  namespace dyn
   {
-    return new details::lifted_automaton_t<Aut>
-      (lift(dynamic_cast<const Aut&>(aut)));
+    namespace details
+    {
+      template <typename Aut>
+      automaton
+      lift(const automaton& aut)
+      {
+        return std::make_shared<vcsn::details::lifted_automaton_t<Aut>>
+          (lift(dynamic_cast<const Aut&>(*aut)));
+      }
+
+      using lift_t = auto (const automaton& aut) -> automaton;
+
+      bool lift_register(const std::string& ctx, const lift_t& fn);
+    }
   }
-
-  using lift_t =
-    auto (const dyn::abstract_automaton& aut) -> dyn::abstract_automaton*;
-
-  bool lift_register(const std::string& ctx, const lift_t& fn);
-
-  /// Abstract.
-  dyn::abstract_automaton* lift(const dyn::abstract_automaton& aut);
-
 
 } // vcsn::
 

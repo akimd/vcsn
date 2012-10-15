@@ -4,50 +4,58 @@
 
 namespace vcsn
 {
-
-  /*---------------.
-  | dotty_stream.  |
-  `---------------*/
-
-  Registry<dotty_stream_t>&
-  dotty_stream_registry()
+  namespace dyn
   {
-    static Registry<dotty_stream_t> instance{"dotty_stream"};
-    return instance;
-  }
+    /*---------------.
+    | dotty_stream.  |
+    `---------------*/
 
-  bool dotty_register(const std::string& ctx, const dotty_stream_t& fn)
-  {
-    return dotty_stream_registry().set(ctx, fn);
-  }
+    namespace details
+    {
+      Registry<dotty_stream_t>&
+      dotty_stream_registry()
+      {
+        static Registry<dotty_stream_t> instance{"dotty_stream"};
+        return instance;
+      }
 
-  void
-  dotty(const dyn::abstract_automaton& aut, std::ostream& out)
-  {
-    dotty_stream_registry().call(aut.vname(),
-                                 aut, out);
-  }
+      bool dotty_register(const std::string& ctx, const dotty_stream_t& fn)
+      {
+        return dotty_stream_registry().set(ctx, fn);
+      }
+    }
 
-  /*---------------.
-  | dotty_string.  |
-  `---------------*/
+    void
+    dotty(const dyn::automaton& aut, std::ostream& out)
+    {
+      details::dotty_stream_registry().call(aut->vname(),
+                                            aut, out);
+    }
 
-  Registry<dotty_string_t>&
-  dotty_string_registry()
-  {
-    static Registry<dotty_string_t> instance{"dotty_string"};
-    return instance;
-  }
+    /*---------------.
+    | dotty_string.  |
+    `---------------*/
 
-  bool dotty_register(const std::string& ctx, const dotty_string_t& fn)
-  {
-    return dotty_string_registry().set(ctx, fn);
-  }
+    namespace details
+    {
+      Registry<dotty_string_t>&
+      dotty_string_registry()
+      {
+        static Registry<dotty_string_t> instance{"dotty_string"};
+        return instance;
+      }
 
-  std::string
-  dotty(const dyn::abstract_automaton& aut)
-  {
-    return dotty_string_registry().call(aut.vname(),
-                                        aut);
+      bool dotty_register(const std::string& ctx, const dotty_string_t& fn)
+      {
+        return dotty_string_registry().set(ctx, fn);
+      }
+    }
+
+    std::string
+    dotty(const dyn::automaton& aut)
+    {
+      return details::dotty_string_registry().call(aut->vname(),
+                                                   aut);
+    }
   }
 }

@@ -229,24 +229,29 @@ namespace vcsn
   /*-----------------------.
   | abstract standard-of.  |
   `-----------------------*/
-
-  template <typename Aut>
-  dyn::abstract_automaton*
-  abstract_standard_of(const ctx::abstract_context& ctx, const rat::exp_t e)
+  namespace dyn
   {
-    return new Aut{standard_of<Aut, typename Aut::context_t>
-        (dynamic_cast<const typename Aut::context_t&>(ctx),
-         e)};
+    namespace details
+    {
+      template <typename Aut>
+      automaton
+      standard_of(const ctx::abstract_context& ctx, const rat::exp_t& e)
+      {
+        return
+          std::make_shared<Aut>
+          (standard_of<Aut, typename Aut::context_t>
+           (dynamic_cast<const typename Aut::context_t&>(ctx),
+            e));
+      }
+
+      using standard_of_t =
+        auto (const ctx::abstract_context& ctx, const rat::exp_t& e)
+        -> automaton;
+
+      bool standard_of_register(const std::string& ctx,
+                                const standard_of_t& fn);
+    }
   }
-
-  using standard_of_t =
-    auto (const ctx::abstract_context& ctx, const rat::exp_t e)
-    -> dyn::abstract_automaton*;
-
-  bool standard_of_register(const std::string& ctx, const standard_of_t& fn);
-
-  dyn::abstract_automaton*
-  standard_of(const ctx::abstract_context& ctx, const rat::exp_t e);
 
 } // vcsn::
 

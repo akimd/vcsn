@@ -232,21 +232,24 @@ namespace vcsn
     return details::transpose_automaton<Aut>{aut};
   }
 
-  template <typename Aut>
-  dyn::abstract_automaton*
-  abstract_transpose(dyn::abstract_automaton& aut)
+
+  namespace dyn
   {
-    return new details::transpose_automaton<Aut>{dynamic_cast<Aut&>(aut)};
+    namespace details
+    {
+      template <typename Aut>
+      automaton
+      transpose(automaton& aut)
+      {
+        return std::make_shared<vcsn::details::transpose_automaton<Aut>>
+          (dynamic_cast<Aut&>(*aut));
+      }
+
+      using transpose_t = auto (automaton& aut) -> dyn::automaton;
+
+      bool transpose_register(const std::string& ctx, const transpose_t& fn);
+    }
   }
-
-  using transpose_t =
-    auto (dyn::abstract_automaton& aut)
-    -> dyn::abstract_automaton*;
-
-  bool transpose_register(const std::string& ctx, const transpose_t& fn);
-
-  dyn::abstract_automaton*
-  transpose(dyn::abstract_automaton& aut);
 
 
   /*---------------------------.

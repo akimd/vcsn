@@ -4,10 +4,8 @@
 #include <getopt.h>
 
 #include <vcsn/algos/dyn.hh>
-#include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/algos/make-context.hh>
-#include <vcsn/algos/standard_of.hh>
 #include <vcsn/algos/transpose.hh>
 
 #include <lib/vcsn/rat/driver.hh>
@@ -74,18 +72,16 @@ struct options
 void
 transpose(const vcsn::ctx::abstract_context& ctx, const vcsn::rat::exp_t e)
 {
-  auto *aut1 = vcsn::standard_of(ctx, e);
+  auto aut1 = vcsn::dyn::standard_of(ctx, e);
   if (!!getenv("DEBUG"))
     {
       std::cerr << aut1->vname() << std::endl;
-      vcsn::dotty(*aut1, std::cout);
+      vcsn::dyn::dotty(aut1, std::cout);
     }
-  auto *aut2 = vcsn::transpose(*aut1);
+  auto aut2 = vcsn::dyn::transpose(aut1);
   if (!!getenv("DEBUG"))
     std::cerr << aut2->vname() << std::endl;
-  vcsn::dotty(*aut2, std::cout);
-  delete aut2;
-  delete aut1;
+  vcsn::dyn::dotty(aut2, std::cout);
 }
 
 void
@@ -103,19 +99,19 @@ abstract_pp(const options& opts, const vcsn::ctx::abstract_context& ctx,
         transpose(ctx, exp);
       else if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
-          auto aut = vcsn::standard_of(ctx, exp);
+          auto aut = vcsn::dyn::standard_of(ctx, exp);
           if (opts.standard_of)
-            vcsn::dotty(*aut, std::cout);
+            vcsn::dyn::dotty(aut, std::cout);
           if (opts.lift)
-            vcsn::dotty(*vcsn::lift(*aut), std::cout);
+            vcsn::dyn::dotty(vcsn::dyn::lift(aut), std::cout);
           if (opts.aut_to_exp)
             switch (opts.next)
             {
             case heuristics::degree:
-              std::cout << kset->format(vcsn::dyn::aut_to_exp_in_degree(*aut)) << std::endl;
+              std::cout << kset->format(vcsn::dyn::aut_to_exp_in_degree(aut)) << std::endl;
               break;
             case heuristics::order:
-              std::cout << kset->format(vcsn::dyn::aut_to_exp(*aut)) << std::endl;
+              std::cout << kset->format(vcsn::dyn::aut_to_exp(aut)) << std::endl;
               break;
             }
         }

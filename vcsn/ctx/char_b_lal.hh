@@ -46,9 +46,9 @@ namespace vcsn
   namespace
   {
     static bool register_char_b_lal =
-      determinize_register
+      dyn::details::determinize_register
       (mutable_automaton<ctx::char_b_lal>::sname(),
-       abstract_determinize<mutable_automaton<ctx::char_b_lal>>);
+       dyn::details::determinize<mutable_automaton<ctx::char_b_lal>>);
   }
 #endif
 };

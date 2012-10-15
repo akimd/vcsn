@@ -17,16 +17,16 @@ namespace vcsn
 
     auto
     driver::parse_(const location_t& l)
-      -> automaton_t*
+      -> automaton_t
     {
       location_ = l;
       // Parser.
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
-      automaton_t* res = nullptr;
+      automaton_t res = nullptr;
       if (!p.parse())
         {
-          res = edit_->result();
+          res.reset(edit_->result());
           edit_->reset();
         }
       delete edit_;
@@ -37,7 +37,7 @@ namespace vcsn
 
     auto
     driver::parse_file(const std::string& f)
-      -> automaton_t*
+      -> automaton_t
     {
       FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
@@ -54,7 +54,7 @@ namespace vcsn
 
     auto
     driver::parse_string(const std::string& e, const location_t& l)
-      -> automaton_t*
+      -> automaton_t
     {
       scan_open_(e);
       return parse_(l);

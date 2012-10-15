@@ -4,28 +4,35 @@
 
 namespace vcsn
 {
-  /*-------------------------.
-  | transpose for automata.  |
-  `-------------------------*/
-
-  Registry<transpose_t>&
-  transpose_registry()
+  namespace dyn
   {
-    static Registry<transpose_t> instance{"transpose"};
-    return instance;
-  }
+    /*-------------------------.
+    | transpose for automata.  |
+    `-------------------------*/
 
-  bool
-  transpose_register(const std::string& ctx, const transpose_t& fn)
-  {
-    return transpose_registry().set(ctx, fn);
-  }
+    namespace details
+    {
+      Registry<transpose_t>&
+      transpose_registry()
+      {
+        static Registry<transpose_t> instance{"transpose"};
+        return instance;
+      }
 
-  dyn::abstract_automaton*
-  transpose(dyn::abstract_automaton& aut)
-  {
-    return transpose_registry().call(aut.vname(),
-                                     aut);
+      bool
+      transpose_register(const std::string& ctx, const transpose_t& fn)
+      {
+        return transpose_registry().set(ctx, fn);
+      }
+    }
+
+    automaton
+    transpose(automaton& aut)
+    {
+      return details::transpose_registry().call(aut->vname(),
+                                                aut);
+    }
+
   }
 
   /*-----------------------.

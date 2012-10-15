@@ -77,23 +77,29 @@ namespace vcsn
     return res;
   }
 
-  /*-----------------------.
-  | abstract determinize.  |
-  `-----------------------*/
+  /*----------------------.
+  | dynamic determinize.  |
+  `----------------------*/
 
-  template <typename Aut>
-  dyn::abstract_automaton*
-  abstract_determinize(const dyn::abstract_automaton& aut)
+  namespace dyn
   {
-    return new Aut(determinize(dynamic_cast<const Aut&>(aut)));
+    namespace details
+    {
+
+      template <typename Aut>
+      dyn::automaton
+      determinize(const dyn::automaton& aut)
+      {
+        return
+          std::make_shared<Aut>(determinize(dynamic_cast<const Aut&>(*aut)));
+      }
+
+      using determinize_t =
+        auto (const dyn::automaton& aut) -> dyn::automaton;
+      bool determinize_register(const std::string& ctx,
+                                const determinize_t& fn);
+    }
   }
-
-  using determinize_t =
-    auto (const dyn::abstract_automaton& aut)
-    -> dyn::abstract_automaton*;
-  bool determinize_register(const std::string& ctx, const determinize_t& fn);
-
-  dyn::abstract_automaton* determinize(const dyn::abstract_automaton& aut);
 
 } // namespace vcsn
 

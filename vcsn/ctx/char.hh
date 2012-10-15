@@ -23,12 +23,17 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   std::string dotty<Aut>(const Aut& aut);                               \
                                                                         \
-  MAYBE_EXTERN template                                                 \
-  void abstract_dotty<Aut>(const dyn::abstract_automaton& aut,       \
-                           std::ostream& out);                          \
+  namespace dyn                                                         \
+  {                                                                     \
+    namespace details                                                   \
+    {                                                                   \
+      MAYBE_EXTERN template                                             \
+        void dotty<Aut>(const dyn::automaton& aut, std::ostream& out);  \
                                                                         \
-  MAYBE_EXTERN template                                                 \
-  std::string abstract_dotty<Aut>(const dyn::abstract_automaton& aut);
+      MAYBE_EXTERN template                                             \
+        std::string dotty<Aut>(const dyn::automaton& aut);              \
+    }                                                                   \
+  }
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
@@ -51,7 +56,7 @@ namespace vcsn
   /* dotty. */                                                          \
   VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
   VCSN_CTX_INSTANTIATE_DOTTY                                            \
-  (details::transpose_automaton<mutable_automaton<Ctx>>);               \
+  (vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);         \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -93,26 +98,30 @@ namespace vcsn
           (aut_t::sname(), dyn::details::aut_to_exp_in_degree<aut_t>);  \
                                                                         \
         /* dotty. */                                                    \
-        dotty_register                                                  \
+        dyn::details::dotty_register                                    \
           (aut_t::sname(),                                              \
-           static_cast<const dotty_stream_t&>(abstract_dotty<aut_t>));  \
-        dotty_register                                                  \
+           static_cast<const dyn::details::dotty_stream_t&>             \
+           (dyn::details::dotty<aut_t>));                               \
+        dyn::details::dotty_register                                    \
           (aut_t::sname(),                                              \
-           static_cast<const dotty_string_t&>(abstract_dotty<aut_t>));  \
-        dotty_register                                                  \
+           static_cast<const dyn::details::dotty_string_t&>             \
+           (dyn::details::dotty<aut_t>));                               \
+        dyn::details::dotty_register                                    \
           (taut_t::sname(),                                             \
-           static_cast<const dotty_stream_t&>(abstract_dotty<taut_t>)); \
-        dotty_register                                                  \
+           static_cast<const dyn::details::dotty_stream_t&>             \
+           (dyn::details::dotty<taut_t>));                              \
+        dyn::details::dotty_register                                    \
           (taut_t::sname(),                                             \
-           static_cast<const dotty_string_t&>(abstract_dotty<taut_t>)); \
+           static_cast<const dyn::details::dotty_string_t&>             \
+           (dyn::details::dotty<taut_t>));                              \
                                                                         \
         /* edit-automaton. */                                           \
         make_automaton_editor_register                                  \
           (Ctx::sname(), abstract_make_automaton_editor<aut_t>);        \
                                                                         \
         /* dotty. */                                                    \
-        lift_register                                                   \
-          (aut_t::sname(), abstract_lift<aut_t>);                       \
+        dyn::details::lift_register                                     \
+          (aut_t::sname(), dyn::details::lift<aut_t>);                  \
                                                                         \
         /* make-context. */                                             \
         make_context_register                                           \
@@ -121,12 +130,12 @@ namespace vcsn
           (Ctx::sname(), abstract_make_kratexpset<Ctx>);                \
                                                                         \
         /* standard_of. */                                              \
-        standard_of_register                                            \
-          (Ctx::sname(), abstract_standard_of<aut_t>);                  \
+        dyn::details::standard_of_register                              \
+          (Ctx::sname(), dyn::details::standard_of<aut_t>);             \
                                                                         \
         /* transpose. */                                                \
-        transpose_register                                              \
-          (aut_t::sname(), abstract_transpose<aut_t>);                  \
+        dyn::details::transpose_register                                \
+          (aut_t::sname(), dyn::details::transpose<aut_t>);             \
         transpose_exp_register                                          \
           (Ctx::sname(), abstract_transpose_exp<Ctx>);                  \
                                                                         \
