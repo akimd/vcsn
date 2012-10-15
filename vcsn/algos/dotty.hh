@@ -93,18 +93,18 @@ namespace vcsn
   }
 
   template <typename Aut>
-  void abstract_dotty(const abstract_mutable_automaton& aut,
+  void abstract_dotty(const dyn::abstract_automaton& aut,
                       std::ostream& out)
   {
     dotty(dynamic_cast<const Aut&>(aut), out);
   }
 
   using dotty_stream_t =
-    auto (const abstract_mutable_automaton& aut, std::ostream& out) -> void;
+    auto (const dyn::abstract_automaton& aut, std::ostream& out) -> void;
 
   bool dotty_register(const std::string& ctx, const dotty_stream_t& fn);
 
-  void dotty(const abstract_mutable_automaton& aut, std::ostream& out);
+  void dotty(const dyn::abstract_automaton& aut, std::ostream& out);
 
 
   /*-------------------.
@@ -124,18 +124,18 @@ namespace vcsn
 
   /// Abstract but parameterized.
   template <typename Aut>
-  std::string abstract_dotty(const abstract_mutable_automaton& aut)
+  std::string abstract_dotty(const dyn::abstract_automaton& aut)
   {
     return dotty(dynamic_cast<const Aut&>(aut));
   }
 
   using dotty_string_t =
-    auto (const abstract_mutable_automaton& aut) -> std::string;
+    auto (const dyn::abstract_automaton& aut) -> std::string;
 
   bool dotty_register(const std::string& ctx, const dotty_string_t& fn);
 
   /// Abstract.
-  std::string dotty(const abstract_mutable_automaton& aut);
+  std::string dotty(const dyn::abstract_automaton& aut);
 
 }
 

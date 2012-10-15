@@ -22,7 +22,7 @@ namespace vcsn
   }
 
   void
-  dotty(const abstract_mutable_automaton& aut, std::ostream& out)
+  dotty(const dyn::abstract_automaton& aut, std::ostream& out)
   {
     dotty_stream_registry().call(aut.vname(),
                                  aut, out);
@@ -45,7 +45,7 @@ namespace vcsn
   }
 
   std::string
-  dotty(const abstract_mutable_automaton& aut)
+  dotty(const dyn::abstract_automaton& aut)
   {
     return dotty_string_registry().call(aut.vname(),
                                         aut);

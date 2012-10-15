@@ -8,6 +8,7 @@
 
 # include <boost/range/irange.hpp>
 
+# include <vcsn/core/automaton.hh>
 # include <vcsn/core/crange.hh>
 # include <vcsn/core/entryiter.hh>
 # include <vcsn/core/kind.hh>
@@ -17,17 +18,9 @@
 
 namespace vcsn
 {
-  class abstract_mutable_automaton
-  {
-  public:
-    virtual const ctx::abstract_context& abstract_context() const = 0;
-    virtual ~abstract_mutable_automaton() {}
-    /// A key to recognize the type of the automaton.
-    virtual std::string vname() const = 0;
-  };
 
   template <typename Context>
-  class mutable_automaton: public abstract_mutable_automaton
+  class mutable_automaton: public dyn::abstract_automaton
   {
   public:
     using context_t = Context;

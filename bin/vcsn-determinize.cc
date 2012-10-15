@@ -13,8 +13,9 @@ main (int argc, char* const argv[])
       std::cerr << d.errors << std::endl;
       if (aut)
         {
+          // FIXME: Remove vcsn:: when in dyn::
           auto *res = vcsn::determinize(*aut);
-          dotty(*res, std::cout);
+          vcsn::dotty(*res, std::cout);
         }
       else
         return 1;

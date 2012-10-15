@@ -82,18 +82,18 @@ namespace vcsn
   `-----------------------*/
 
   template <typename Aut>
-  abstract_mutable_automaton*
-  abstract_determinize(const abstract_mutable_automaton& aut)
+  dyn::abstract_automaton*
+  abstract_determinize(const dyn::abstract_automaton& aut)
   {
     return new Aut(determinize(dynamic_cast<const Aut&>(aut)));
   }
 
   using determinize_t =
-    auto (const abstract_mutable_automaton& aut)
-    -> abstract_mutable_automaton*;
+    auto (const dyn::abstract_automaton& aut)
+    -> dyn::abstract_automaton*;
   bool determinize_register(const std::string& ctx, const determinize_t& fn);
 
-  abstract_mutable_automaton* determinize(const abstract_mutable_automaton& aut);
+  dyn::abstract_automaton* determinize(const dyn::abstract_automaton& aut);
 
 } // namespace vcsn
 

@@ -29,7 +29,7 @@ namespace vcsn
     }
 
     rat::exp_t
-    aut_to_exp(const abstract_mutable_automaton& aut)
+    aut_to_exp(const dyn::abstract_automaton& aut)
     {
       return details::aut_to_exp_registry().call(aut.vname(),
                                                  aut);
@@ -56,7 +56,7 @@ namespace vcsn
     }
 
     rat::exp_t
-    aut_to_exp_in_degree(const abstract_mutable_automaton& aut)
+    aut_to_exp_in_degree(const dyn::abstract_automaton& aut)
     {
       return details::aut_to_exp_in_degree_registry().call(aut.vname(),
                                                            aut);

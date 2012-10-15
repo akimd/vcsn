@@ -8,8 +8,8 @@ namespace vcsn
 {
   namespace dyn
   {
-    rat::exp_t aut_to_exp(const abstract_mutable_automaton& aut);
-    rat::exp_t aut_to_exp_in_degree(const abstract_mutable_automaton& aut);
+    rat::exp_t aut_to_exp(const dyn::abstract_automaton& aut);
+    rat::exp_t aut_to_exp_in_degree(const dyn::abstract_automaton& aut);
   }
 }
 

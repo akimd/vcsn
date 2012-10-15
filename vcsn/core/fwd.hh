@@ -1,6 +1,8 @@
 #ifndef VCSN_CORE_FWD_HH
 # define VCSN_CORE_FWD_HH
 
+# include <memory> // shared_ptr
+
 namespace vcsn
 {
 
@@ -11,9 +13,14 @@ namespace vcsn
   template <class C>
   struct container_filter_range;
 
-  // mutable_automaton.hh
-  class abstract_mutable_automaton;
+  // automaton.hh
+  namespace dyn
+  {
+    class abstract_automaton;
+    using automaton = std::shared_ptr<abstract_automaton>;
+  }
 
+  // mutable_automaton.hh
   template <typename Context>
   class mutable_automaton;
 

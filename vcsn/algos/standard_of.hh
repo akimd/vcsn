@@ -231,7 +231,7 @@ namespace vcsn
   `-----------------------*/
 
   template <typename Aut>
-  abstract_mutable_automaton*
+  dyn::abstract_automaton*
   abstract_standard_of(const ctx::abstract_context& ctx, const rat::exp_t e)
   {
     return new Aut{standard_of<Aut, typename Aut::context_t>
@@ -241,11 +241,11 @@ namespace vcsn
 
   using standard_of_t =
     auto (const ctx::abstract_context& ctx, const rat::exp_t e)
-    -> abstract_mutable_automaton*;
+    -> dyn::abstract_automaton*;
 
   bool standard_of_register(const std::string& ctx, const standard_of_t& fn);
 
-  abstract_mutable_automaton*
+  dyn::abstract_automaton*
   standard_of(const ctx::abstract_context& ctx, const rat::exp_t e);
 
 } // vcsn::

@@ -21,8 +21,8 @@ namespace vcsn
     return transpose_registry().set(ctx, fn);
   }
 
-  abstract_mutable_automaton*
-  transpose(abstract_mutable_automaton& aut)
+  dyn::abstract_automaton*
+  transpose(dyn::abstract_automaton& aut)
   {
     return transpose_registry().call(aut.vname(),
                                      aut);

@@ -17,7 +17,7 @@ namespace vcsn
     return standard_of_registry().set(ctx, fn);
   }
 
-  abstract_mutable_automaton*
+  dyn::abstract_automaton*
   standard_of(const ctx::abstract_context& ctx, const rat::exp_t e)
   {
     return standard_of_registry().call(ctx.vname(),

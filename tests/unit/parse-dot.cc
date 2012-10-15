@@ -9,7 +9,8 @@ main (int argc, char* const argv[])
       auto aut = d.parse_file(argv[i]);
       std::cerr << d.errors << std::endl;
       if (aut)
-        dotty(*aut, std::cout);
+        // FIXME: To remove when in dyn::
+        vcsn::dotty(*aut, std::cout);
       else
         return 1;
     }

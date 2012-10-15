@@ -16,8 +16,8 @@ namespace vcsn
     return lift_registry().set(ctx, fn);
   }
 
-  abstract_mutable_automaton*
-  lift(const abstract_mutable_automaton& aut)
+  dyn::abstract_automaton*
+  lift(const dyn::abstract_automaton& aut)
   {
     return lift_registry().call(aut.vname(),
                                 aut);

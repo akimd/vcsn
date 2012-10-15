@@ -21,8 +21,8 @@ namespace vcsn
     return determinize_registry().set(ctx, fn);
   }
 
-  abstract_mutable_automaton*
-  determinize(const abstract_mutable_automaton& aut)
+  dyn::abstract_automaton*
+  determinize(const dyn::abstract_automaton& aut)
   {
     return determinize_registry().call(aut.vname(),
                                        aut);

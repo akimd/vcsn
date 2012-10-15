@@ -54,7 +54,7 @@ namespace vcsn
     virtual void add_entry(const std::string& src, const std::string& dst,
                            const std::string* entry) = 0;
     /// The final result.
-    virtual abstract_mutable_automaton* result() = 0;
+    virtual dyn::abstract_automaton* result() = 0;
     /// Forget about the current automaton, but do not free it.
     virtual void reset() = 0;
   };
@@ -104,7 +104,7 @@ namespace vcsn
       vcsn::add_entry(*res_, state_(src), state_(dst), entry);
     }
 
-    virtual abstract_mutable_automaton*
+    virtual dyn::abstract_automaton*
     result() override final
     {
       return res_;

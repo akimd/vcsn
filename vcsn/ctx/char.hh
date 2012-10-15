@@ -24,11 +24,11 @@ namespace vcsn
   std::string dotty<Aut>(const Aut& aut);                               \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  void abstract_dotty<Aut>(const abstract_mutable_automaton& aut,       \
+  void abstract_dotty<Aut>(const dyn::abstract_automaton& aut,       \
                            std::ostream& out);                          \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  std::string abstract_dotty<Aut>(const abstract_mutable_automaton& aut);
+  std::string abstract_dotty<Aut>(const dyn::abstract_automaton& aut);
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |

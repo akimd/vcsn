@@ -17,7 +17,7 @@ namespace vcsn
     class driver
     {
     public:
-      using automaton_t = abstract_mutable_automaton;
+      using automaton_t = dyn::abstract_automaton;
       using location_t = vcsn::rat::location;
 
       driver();
