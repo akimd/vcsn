@@ -6,7 +6,7 @@
 # include <stack>
 # include <type_traits>
 
-# include <vcsn/core/kind.hh>
+# include <vcsn/core/fwd.hh>
 
 namespace vcsn
 {

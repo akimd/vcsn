@@ -1,6 +1,8 @@
 #ifndef VCSN_CORE_KIND_HH
 # define VCSN_CORE_KIND_HH
 
+# include <string>
+
 namespace vcsn
 {
   struct labels_are_empty
