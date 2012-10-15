@@ -3,7 +3,7 @@
 #include <map>
 #include <getopt.h>
 
-#include <vcsn/algos/aut_to_exp.hh>
+#include <vcsn/algos/dyn.hh>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/algos/lift.hh>
 #include <vcsn/algos/make-context.hh>
@@ -112,10 +112,10 @@ abstract_pp(const options& opts, const vcsn::ctx::abstract_context& ctx,
             switch (opts.next)
             {
             case heuristics::degree:
-              std::cout << kset->format(vcsn::aut_to_exp_in_degree(*aut)) << std::endl;
+              std::cout << kset->format(vcsn::dyn::aut_to_exp_in_degree(*aut)) << std::endl;
               break;
             case heuristics::order:
-              std::cout << kset->format(vcsn::aut_to_exp(*aut)) << std::endl;
+              std::cout << kset->format(vcsn::dyn::aut_to_exp(*aut)) << std::endl;
               break;
             }
         }

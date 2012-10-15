@@ -74,19 +74,23 @@ namespace vcsn
   | abstract aut_to_exp.  |
   `----------------------*/
 
-  template <typename Aut>
-  rat::exp_t
-  abstract_aut_to_exp(const abstract_mutable_automaton& aut)
+  namespace dyn
   {
-    return aut_to_exp(dynamic_cast<const Aut&>(aut));
+    namespace details
+    {
+      template <typename Aut>
+      rat::exp_t
+      aut_to_exp(const abstract_mutable_automaton& aut)
+      {
+        return ::vcsn::aut_to_exp(dynamic_cast<const Aut&>(aut));
+      }
+
+      using aut_to_exp_t =
+        auto (const abstract_mutable_automaton& aut) -> rat::exp_t;
+
+      bool aut_to_exp_register(const std::string& ctx, const aut_to_exp_t& fn);
+    }
   }
-
-  using aut_to_exp_t =
-    auto (const abstract_mutable_automaton& aut) -> rat::exp_t;
-
-  bool aut_to_exp_register(const std::string& ctx, const aut_to_exp_t& fn);
-
-  rat::exp_t aut_to_exp(const abstract_mutable_automaton& aut);
 
 
   /*-----------------.
@@ -140,18 +144,21 @@ namespace vcsn
   | abstract aut_to_exp_in_degree.  |
   `--------------------------------*/
 
-  template <typename Aut>
-  rat::exp_t
-  abstract_aut_to_exp_in_degree(const abstract_mutable_automaton& aut)
+  namespace dyn
   {
-    return aut_to_exp_in_degree(dynamic_cast<const Aut&>(aut));
+    namespace details
+    {
+      template <typename Aut>
+      rat::exp_t
+      aut_to_exp_in_degree(const abstract_mutable_automaton& aut)
+      {
+        return ::vcsn::aut_to_exp_in_degree(dynamic_cast<const Aut&>(aut));
+      }
+
+      bool aut_to_exp_in_degree_register(const std::string& ctx,
+                                         const aut_to_exp_t& fn);
+    }
   }
-
-  bool aut_to_exp_in_degree_register(const std::string& ctx,
-                                     const aut_to_exp_t& fn);
-
-  rat::exp_t aut_to_exp_in_degree(const abstract_mutable_automaton& aut);
-
 
 } // vcsn::
 

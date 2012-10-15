@@ -87,10 +87,10 @@ namespace vcsn
         using taut_t = details::transpose_automaton<aut_t>;             \
                                                                         \
         /* aut_to_exp. */                                               \
-        aut_to_exp_register                                             \
-          (aut_t::sname(), abstract_aut_to_exp<aut_t>);                 \
-        aut_to_exp_in_degree_register                                   \
-          (aut_t::sname(), abstract_aut_to_exp_in_degree<aut_t>);       \
+        dyn::details::aut_to_exp_register                               \
+          (aut_t::sname(), dyn::details::aut_to_exp<aut_t>);            \
+        dyn::details::aut_to_exp_in_degree_register                     \
+          (aut_t::sname(), dyn::details::aut_to_exp_in_degree<aut_t>);  \
                                                                         \
         /* dotty. */                                                    \
         dotty_register                                                  \
