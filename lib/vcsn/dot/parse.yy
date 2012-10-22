@@ -340,7 +340,7 @@ node_id:
   ID
   {
     // We need the editor to exist.
-    TRY(@$, driver_.setup());
+    TRY(@$, driver_.setup_());
     $$ = *$1;
     delete $1;
     if ($$[0] == 'I')

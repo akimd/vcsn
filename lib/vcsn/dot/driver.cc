@@ -61,7 +61,7 @@ namespace vcsn
     }
 
     void
-    driver::setup()
+    driver::setup_()
     {
       if (!edit_)
         {

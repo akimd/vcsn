@@ -26,10 +26,6 @@ namespace vcsn
       automaton_t parse_string(const std::string& e,
                                const location_t& l = location_t{});
 
-      /// From context_ and letters_, build edit_.
-      /// \throw std::exception on invalid contexts.
-      void setup();
-
       /// Report an error \a m at \a l.
       void error(const location_t& l, const std::string& m);
       /// The string \a s is invalid at \a l.
@@ -38,10 +34,10 @@ namespace vcsn
       /// The error messages.
       std::string errors;
 
-      /// The inital location.
-      location_t location_;
-
     private:
+      /// From context_ and letters_, build edit_.
+      /// \throw std::exception on invalid contexts.
+      void setup_();
       /// Prepare scanner to load file f.
       void scan_open_(FILE *f);
       /// Prepare scanner to read string e.
@@ -51,6 +47,8 @@ namespace vcsn
       /// Close the scanner.
       void scan_close_();
 
+      /// The inital location.
+      location_t location_;
       /// The name of the context.
       std::string context_;
       /// The letters gathered so far.

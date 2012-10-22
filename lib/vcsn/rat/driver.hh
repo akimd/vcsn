@@ -28,9 +28,6 @@ namespace vcsn
       /// The error messages.
       std::string errors;
 
-      /// The inital location.
-      location location_;
-
     private:
       /// Prepare scanner to load file f.
       void scan_open_(FILE *f);
@@ -41,6 +38,8 @@ namespace vcsn
       /// Close the scanner.
       void scan_close_();
 
+      /// The inital location.
+      location location_;
       const abstract_kratexpset* kratexpset_;
       exp_t result_;
       friend class parser;
