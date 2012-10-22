@@ -2,6 +2,12 @@
 ** dyn::parse_file and parse_string
 They construct dyn::automaton's.
 
+** dyn::eval
+For bad reasons, currently works only for char_b_lal
+
+** vcsn-determinize and vcsn-evaluate
+Two new shell commands to write tests.
+
 * 2012-10-12
 ** pprat works with abstract algorithms
 pprat now uses *only* abstract (aka, dynamic) algorithms!  On OS X, it is

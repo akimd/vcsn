@@ -26,6 +26,7 @@ lib_libvcsn_la_SOURCES =			\
   lib/vcsn/algos/determinize.cc			\
   lib/vcsn/algos/dotty.cc			\
   lib/vcsn/algos/edit-automaton.cc		\
+  lib/vcsn/algos/eval.cc			\
   lib/vcsn/algos/lift.cc			\
   lib/vcsn/algos/make-context.cc		\
   lib/vcsn/algos/parse.cc			\

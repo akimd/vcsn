@@ -18,6 +18,8 @@ namespace vcsn
     void dotty(const automaton& aut, std::ostream& out);
     std::string dotty(const automaton& aut);
 
+    std::string eval(const automaton& aut, const std::string& s);
+
     automaton lift(const automaton& aut);
 
     automaton parse_file(const std::string& f);

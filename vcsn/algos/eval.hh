@@ -6,6 +6,8 @@
 # include <utility>
 # include <vector>
 
+# include <boost/lexical_cast.hpp>
+
 # include <vcsn/core/kind.hh>
 
 namespace vcsn
@@ -80,6 +82,31 @@ namespace vcsn
     details::evaluator<Aut> e(a);
     return e(w);
   }
+
+  /*----------------.
+  | abstract eval.  |
+  `----------------*/
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Aut>
+      auto
+      eval(const automaton& aut, const std::string& s)
+        -> std::string
+      {
+        auto res = ::vcsn::eval(dynamic_cast<const Aut&>(*aut), s);
+        return boost::lexical_cast<std::string>(res);
+      }
+
+      using eval_t = auto (const automaton& aut, const std::string& s)
+        -> std::string;
+
+      bool eval_register(const std::string& ctx, const eval_t& fn);
+    }
+  }
+
 
 } // namespace vcsn
 
