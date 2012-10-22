@@ -24,8 +24,13 @@ namespace vcsn
       parser p(*this);
       p.set_debug_level(!!getenv("YYDEBUG"));
       automaton_t res = nullptr;
-      if (!p.parse())
+      // If success.
+      if (p.parse() == 0)
         {
+          // If the graph is empty, we have not set up the editor,
+          // which did not build an automaton.  Do it now.
+          if (!edit_)
+            setup_();
           res.reset(edit_->result());
           edit_->reset();
         }
