@@ -50,42 +50,9 @@ check_ladybird(size_t n, bool display_aut)
   return idempotence(ss.str(), ladybird, display_aut);
 }
 
-// check completeness of the determinized automaton.
-bool
-check_completeness()
-{
-  bool res = true;
-  context_t ctx{{'a', 'b'}};
-  // Thompson 'a'.
-  {
-    automaton_t aut{ctx};
-    auto s0 = aut.new_state();
-    aut.set_initial(s0);
-    auto s1 = aut.new_state();
-    aut.set_final(s1);
-    aut.add_transition(s0, s1, 'a');
-    res &= idempotence("Thompson 'a'", aut, true);
-  }
-  // \e
-  {
-    automaton_t aut{ctx};
-    auto s0 = aut.new_state();
-    aut.set_initial(s0);
-    aut.set_final(s0);
-    res &= idempotence("'\\e'", aut, true);
-  }
-  // Empty automaton.
-  {
-    automaton_t aut{ctx};
-    res &= idempotence("empty", aut, true);
-  }
-  return res;
-}
-
 int main()
 {
   int errs = 0;
-  errs += !check_completeness();
   errs += !check_de_bruijn(3, true);
   errs += !check_de_bruijn(8, false);
   errs += !check_ladybird(4, true);
