@@ -1,3 +1,7 @@
+* 2012-10-22
+** dyn::parse_file and parse_string
+They construct dyn::automaton's.
+
 * 2012-10-12
 ** pprat works with abstract algorithms
 pprat now uses *only* abstract (aka, dynamic) algorithms!  On OS X, it is

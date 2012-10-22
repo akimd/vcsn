@@ -20,6 +20,9 @@ namespace vcsn
 
     automaton lift(const automaton& aut);
 
+    automaton parse_file(const std::string& f);
+    automaton parse_string(const std::string& s);
+
     automaton standard_of(const ctx::abstract_context& ctx,
                           const rat::exp_t& e);
 
