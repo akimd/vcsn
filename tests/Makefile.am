@@ -13,6 +13,11 @@
 
 include $(top_srcdir)/build-aux/make/init.mk
 include $(top_srcdir)/common.mk
+
+## ------- ##
+## Tests.  ##
+## ------- ##
+
 check_PROGRAMS =
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
@@ -69,3 +74,22 @@ check-html recheck-html:
 
 .PHONY: check-html recheck-html
 .MAKE: check-html recheck-html
+
+## ------------------- ##
+## Tests environment.  ##
+## ------------------- ##
+
+# By default, tests are buildcheck.
+AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
+
+# Use the wrappers to run the non-installed executables.
+BUILDCHECK_ENVIRONMENT +=                                       \
+  PATH=$(abs_top_builddir)/bin:$$PATH; export PATH;
+
+INSTALLCHECK_ENVIRONMENT +=                                     \
+  PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;
+
+# Run the tests with the install-environment.
+installcheck-local:
+	$(MAKE) $(AM_MAKEFLAGS)                                 \
+	  AM_TESTS_ENVIRONMENT='$$(INSTALLCHECK_ENVIRONMENT)' check
