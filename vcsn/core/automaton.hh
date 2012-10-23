@@ -17,7 +17,7 @@ namespace vcsn
       /// A key to recognize the type of the automaton.
       virtual std::string vname() const = 0;
     };
-    
+
     using automaton = std::shared_ptr<abstract_automaton>;
   }
 }
