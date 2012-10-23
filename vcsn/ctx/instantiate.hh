@@ -76,71 +76,78 @@ namespace vcsn
   | Register the abstract functions.  |
   `----------------------------------*/
 
+  namespace ctx
+  {
+    namespace details
+    {
+      template <typename Ctx>
+      bool
+      register_functions()
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using taut_t = vcsn::details::transpose_automaton<aut_t>;
+
+        // aut_to_exp.
+        dyn::details::aut_to_exp_register
+          (aut_t::sname(), dyn::details::aut_to_exp<aut_t>);
+        dyn::details::aut_to_exp_in_degree_register
+          (aut_t::sname(), dyn::details::aut_to_exp_in_degree<aut_t>);
+
+        // dotty.
+        dyn::details::dotty_register
+          (aut_t::sname(),
+           static_cast<const dyn::details::dotty_stream_t&>
+           (dyn::details::dotty<aut_t>));
+        dyn::details::dotty_register
+          (aut_t::sname(),
+           static_cast<const dyn::details::dotty_string_t&>
+           (dyn::details::dotty<aut_t>));
+        dyn::details::dotty_register
+          (taut_t::sname(),
+           static_cast<const dyn::details::dotty_stream_t&>
+           (dyn::details::dotty<taut_t>));
+        dyn::details::dotty_register
+          (taut_t::sname(),
+           static_cast<const dyn::details::dotty_string_t&>
+           (dyn::details::dotty<taut_t>));
+
+        // edit-automaton.
+        make_automaton_editor_register
+          (Ctx::sname(), abstract_make_automaton_editor<aut_t>);
+
+        // lift.
+        dyn::details::lift_register
+          (aut_t::sname(), dyn::details::lift<aut_t>);
+
+        // make-context.
+        make_context_register
+          (Ctx::sname(), abstract_make_context<Ctx>);
+        make_kratexpset_register
+          (Ctx::sname(), abstract_make_kratexpset<Ctx>);
+
+        // standard_of.
+        dyn::details::standard_of_register
+          (Ctx::sname(), dyn::details::standard_of<aut_t>);
+
+        // transpose.
+        dyn::details::transpose_register
+          (aut_t::sname(), dyn::details::transpose<aut_t>);
+        transpose_exp_register
+          (Ctx::sname(), abstract_transpose_exp<Ctx>);
+
+        return true;
+      }
+    }
+  }
+
 # if VCSN_INSTANTIATION
-#  define VCSN_CTX_INSTANTIATE_2(Ctx)                                   \
-  namespace ctx                                                         \
-  {                                                                     \
-    namespace                                                           \
-    {                                                                   \
-      bool                                                              \
-      register_functions()                                              \
-      {                                                                 \
-        using aut_t = mutable_automaton<Ctx>;                           \
-        using taut_t = details::transpose_automaton<aut_t>;             \
-                                                                        \
-        /* aut_to_exp. */                                               \
-        dyn::details::aut_to_exp_register                               \
-          (aut_t::sname(), dyn::details::aut_to_exp<aut_t>);            \
-        dyn::details::aut_to_exp_in_degree_register                     \
-          (aut_t::sname(), dyn::details::aut_to_exp_in_degree<aut_t>);  \
-                                                                        \
-        /* dotty. */                                                    \
-        dyn::details::dotty_register                                    \
-          (aut_t::sname(),                                              \
-           static_cast<const dyn::details::dotty_stream_t&>             \
-           (dyn::details::dotty<aut_t>));                               \
-        dyn::details::dotty_register                                    \
-          (aut_t::sname(),                                              \
-           static_cast<const dyn::details::dotty_string_t&>             \
-           (dyn::details::dotty<aut_t>));                               \
-        dyn::details::dotty_register                                    \
-          (taut_t::sname(),                                             \
-           static_cast<const dyn::details::dotty_stream_t&>             \
-           (dyn::details::dotty<taut_t>));                              \
-        dyn::details::dotty_register                                    \
-          (taut_t::sname(),                                             \
-           static_cast<const dyn::details::dotty_string_t&>             \
-           (dyn::details::dotty<taut_t>));                              \
-                                                                        \
-        /* edit-automaton. */                                           \
-        make_automaton_editor_register                                  \
-          (Ctx::sname(), abstract_make_automaton_editor<aut_t>);        \
-                                                                        \
-        /* dotty. */                                                    \
-        dyn::details::lift_register                                     \
-          (aut_t::sname(), dyn::details::lift<aut_t>);                  \
-                                                                        \
-        /* make-context. */                                             \
-        make_context_register                                           \
-          (Ctx::sname(), abstract_make_context<Ctx>);                   \
-        make_kratexpset_register                                        \
-          (Ctx::sname(), abstract_make_kratexpset<Ctx>);                \
-                                                                        \
-        /* standard_of. */                                              \
-        dyn::details::standard_of_register                              \
-          (Ctx::sname(), dyn::details::standard_of<aut_t>);             \
-                                                                        \
-        /* transpose. */                                                \
-        dyn::details::transpose_register                                \
-          (aut_t::sname(), dyn::details::transpose<aut_t>);             \
-        transpose_exp_register                                          \
-          (Ctx::sname(), abstract_transpose_exp<Ctx>);                  \
-                                                                        \
-        return true;                                                    \
-      }                                                                 \
-                                                                        \
-      static bool registered = register_functions();                    \
-    }                                                                   \
+#  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
+  namespace ctx                                                 \
+  {                                                             \
+    namespace details                                           \
+    {                                                           \
+      static bool registered = register_functions<Ctx>();       \
+    }                                                           \
   }
 # else
 #  define VCSN_CTX_INSTANTIATE_2(Ctx)
