@@ -3,6 +3,7 @@
 
 # include <vcsn/ctx/char.hh>
 # include <vcsn/weights/zmin.hh>
+
 namespace vcsn
 {
   namespace ctx
@@ -11,17 +12,7 @@ namespace vcsn
   }
 }
 
-# include <vcsn/algos/aut_to_exp.hh>
-# include <vcsn/algos/edit-automaton.hh>
-# include <vcsn/algos/dotty.hh>
-# include <vcsn/algos/lift.hh>
-# include <vcsn/algos/make-context.hh>
-# include <vcsn/algos/standard_of.hh>
-# include <vcsn/algos/transpose.hh>
-
-# ifndef MAYBE_EXTERN
-#  define MAYBE_EXTERN extern
-# endif
+# include <vcsn/ctx/instantiate.hh>
 
 namespace vcsn
 {
