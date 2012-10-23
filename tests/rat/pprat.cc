@@ -45,12 +45,6 @@ usage(const char* prog, int status)
   exit(status);
 }
 
-enum class type
-{
-  b, br,
-  z, zr, zrr,
-};
-
 enum class heuristics
 {
   order,
