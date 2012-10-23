@@ -36,6 +36,17 @@ namespace vcsn
   MAYBE_EXTERN template
   int
   eval(const mutable_automaton<ctx::char_z_lal>& aut, const std::string& w);
+
+# if VCSN_INSTANTIATION
+  namespace
+  {
+    static bool register_char_z_lal =
+      dyn::details::eval_register
+      (mutable_automaton<ctx::char_z_lal>::sname(),
+       dyn::details::eval<mutable_automaton<ctx::char_z_lal>>)
+      ;
+  }
+#endif
 };
 
 #endif // !VCSN_CTX_CHAR_Z_LAL_HH
