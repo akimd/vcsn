@@ -102,9 +102,29 @@ run 0 out.exp -vcsn-determinize empty.dot
 run 0 out.exp -vcsn-determinize out.exp
 
 
-cat >out.exp <<\EOF
-Check idempotence for de Bruijn 3
-States: 5 -> 16
+## ----------------------- ##
+## Determinize de bruijn.  ##
+## ----------------------- ##
+
+# check_de_bruijn SIZE
+# --------------------
+check_de_bruijn ()
+{
+  run 0 stdout -vcsn-de-bruijn char_b_lal $1
+  mv stdout de-bruijn-$1.dot
+
+  run 0 stdout -vcsn-determinize de-bruijn-$1.dot
+  mv stdout out.exp
+
+  # Idempotence.
+  run 0 out.exp -vcsn-determinize out.exp
+}
+
+
+check_de_bruijn 3
+# Check the output (2^4 is still ok).
+mv out.exp de-bruijn-3-det.dot
+cat >out.exp <<EOF
 digraph
 {
   vcsn_context = "char_b_lal"
@@ -165,8 +185,18 @@ digraph
   3 -> 11 [label = "a"]
   3 -> 12 [label = "b"]
 }
-Check idempotence for de Bruijn 8
-States: 10 -> 512
+EOF
+run 0 out.exp -cat de-bruijn-3-det.dot
+
+
+check_de_bruijn 8
+
+
+## ---------------- ##
+## determinize.cc.  ##
+## ---------------- ##
+
+cat >out.exp <<\EOF
 Check idempotence for ladybird 4
 States: 4 -> 16
 digraph
@@ -245,3 +275,5 @@ Check idempotence for ladybird 8
 States: 8 -> 256
 EOF
 run 0 out.exp unit/determinize
+
+
