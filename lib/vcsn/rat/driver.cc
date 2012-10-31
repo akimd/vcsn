@@ -14,7 +14,7 @@ namespace vcsn
       : kratexpset_{&f}
     {}
 
-    driver::driver(const ctx::abstract_context& ctx)
+    driver::driver(const dyn::context& ctx)
       : kratexpset_{make_kratexpset(ctx)}
     {}
 

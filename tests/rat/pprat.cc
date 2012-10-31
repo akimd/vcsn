@@ -64,7 +64,7 @@ struct options
 };
 
 void
-transpose(const vcsn::ctx::abstract_context& ctx, const vcsn::rat::exp_t e)
+transpose(const vcsn::dyn::context& ctx, const vcsn::rat::exp_t e)
 {
   auto aut1 = vcsn::dyn::standard_of(ctx, e);
   if (!!getenv("DEBUG"))
@@ -79,7 +79,7 @@ transpose(const vcsn::ctx::abstract_context& ctx, const vcsn::rat::exp_t e)
 }
 
 void
-abstract_pp(const options& opts, const vcsn::ctx::abstract_context& ctx,
+abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::rat::driver d(ctx);

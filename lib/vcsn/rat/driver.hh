@@ -16,7 +16,7 @@ namespace vcsn
     public:
       using exp_t = vcsn::rat::exp_t;
       driver(const abstract_kratexpset& f);
-      driver(const ctx::abstract_context& ctx);
+      driver(const dyn::context& ctx);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
 

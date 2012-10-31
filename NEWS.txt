@@ -1,3 +1,8 @@
+* 2012-10-31
+** dyn::context
+For consistency with dyn::automaton, vcsn::ctx::abstract_context is renamed
+vcsn::dyn::context.  Eventually, we might turn it into a shared pointer too.
+
 * 2012-10-22
 ** dyn::parse_file and parse_string
 They construct dyn::automaton's.

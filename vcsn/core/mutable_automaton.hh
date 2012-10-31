@@ -96,7 +96,7 @@ namespace vcsn
     }
 
     const context_t& context() const { return es_.context(); }
-    virtual const ctx::abstract_context& abstract_context() const override
+    virtual const dyn::context& abstract_context() const override
     {
       return context();
     }

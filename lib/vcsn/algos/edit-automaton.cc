@@ -12,14 +12,14 @@ namespace vcsn
   }
 
   bool
-  make_automaton_editor_register(const std::string& ctx, 
+  make_automaton_editor_register(const std::string& ctx,
                                  const make_automaton_editor_t& fn)
   {
     return make_automaton_editor_registry().set(ctx, fn);
   }
 
   automaton_editor*
-  make_automaton_editor(const ctx::abstract_context& ctx)
+  make_automaton_editor(const dyn::context& ctx)
   {
     return make_automaton_editor_registry().call(ctx.vname(),
                                                  ctx);

@@ -12,19 +12,23 @@
 
 namespace vcsn
 {
-  namespace ctx
+
+  namespace dyn
   {
-    class abstract_context
+    class context
     {
     public:
       virtual std::string vname() const = 0;
       virtual std::string genset_string() const = 0;
     };
+  }
 
+  namespace ctx
+  {
     template <typename GenSet,
               typename WeightSet,
               typename Kind>
-    class context: public abstract_context
+    class context: public dyn::context
     {
     public:
       using genset_t = GenSet;

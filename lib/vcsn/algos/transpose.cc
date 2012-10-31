@@ -53,7 +53,7 @@ namespace vcsn
   }
 
   rat::exp_t
-  transpose(const ctx::abstract_context& ctx, const rat::exp_t e)
+  transpose(const dyn::context& ctx, const rat::exp_t e)
   {
     return transpose_exp_registry().call(ctx.vname(),
                                          ctx, e);

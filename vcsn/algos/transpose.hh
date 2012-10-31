@@ -258,7 +258,7 @@ namespace vcsn
 
   template <typename Context>
   rat::exp_t
-  abstract_transpose_exp(const ctx::abstract_context& ctx, const rat::exp_t e)
+  abstract_transpose_exp(const dyn::context& ctx, const rat::exp_t e)
   {
     return transpose
       (dynamic_cast<const Context&>(ctx),
@@ -266,14 +266,14 @@ namespace vcsn
   }
 
   using transpose_exp_t =
-    auto (const ctx::abstract_context& ctx, const rat::exp_t e)
+    auto (const dyn::context& ctx, const rat::exp_t e)
     -> rat::exp_t;
 
   bool transpose_exp_register(const std::string& ctx,
                               const transpose_exp_t& fn);
 
   rat::exp_t
-  transpose(const ctx::abstract_context& ctx, const rat::exp_t e);
+  transpose(const dyn::context& ctx, const rat::exp_t e);
 
 } // vcsn::
 

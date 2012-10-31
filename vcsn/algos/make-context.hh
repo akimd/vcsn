@@ -67,7 +67,7 @@ namespace vcsn
   }
 
   template <typename Ctx>
-  ctx::abstract_context*
+  dyn::context*
   abstract_make_context(const std::string& letters)
   {
     std::set<char> ls;
@@ -77,14 +77,14 @@ namespace vcsn
   }
 
   using make_context_t =
-    auto (const std::string& gens) -> ctx::abstract_context*;
+    auto (const std::string& gens) -> dyn::context*;
 
   bool
   make_context_register(const std::string& ctx,
                         const make_context_t& fn);
 
   /// Abstract.
-  ctx::abstract_context*
+  dyn::context*
   make_context(const std::string& name, const std::string& gens);
 
 
@@ -94,13 +94,13 @@ namespace vcsn
 
   template <typename Ctx>
   abstract_kratexpset*
-  abstract_make_kratexpset(const ctx::abstract_context& ctx)
+  abstract_make_kratexpset(const dyn::context& ctx)
   {
     return new concrete_abstract_kratexpset<Ctx>(dynamic_cast<const Ctx&>(ctx));
   }
 
   using make_kratexpset_t =
-    auto (const ctx::abstract_context& ctx) -> abstract_kratexpset*;
+    auto (const dyn::context& ctx) -> abstract_kratexpset*;
 
   bool
   make_kratexpset_register(const std::string& ctx,
@@ -108,7 +108,7 @@ namespace vcsn
 
   /// Abstract.
   abstract_kratexpset*
-  make_kratexpset(const ctx::abstract_context& ctx);
+  make_kratexpset(const dyn::context& ctx);
 
 } // vcsn::
 

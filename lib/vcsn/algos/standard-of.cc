@@ -25,7 +25,7 @@ namespace vcsn
     }
 
     automaton
-    standard_of(const ctx::abstract_context& ctx, const rat::exp_t& e)
+    standard_of(const dyn::context& ctx, const rat::exp_t& e)
     {
       return details::standard_of_registry().call(ctx.vname(),
                                                   ctx, e);

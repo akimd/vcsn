@@ -22,7 +22,7 @@ namespace vcsn
     return make_context_registry().set(ctx, fn);
   }
 
-  ctx::abstract_context*
+  dyn::context*
   make_context(const std::string& name, const std::string& gens)
   {
     return make_context_registry().call(name, gens);
@@ -47,7 +47,7 @@ namespace vcsn
   }
 
   abstract_kratexpset*
-  make_kratexpset(const ctx::abstract_context& ctx)
+  make_kratexpset(const dyn::context& ctx)
   {
     return make_kratexpset_registry().call(ctx.vname(), ctx);
   }

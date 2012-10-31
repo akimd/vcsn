@@ -3,10 +3,13 @@
 
 namespace vcsn
 {
+  namespace dyn
+  {
+    class context;
+  }
+
   namespace ctx
   {
-    class abstract_context;
-
     template <typename GenSet,
               typename WeightSet,
               typename Kind>

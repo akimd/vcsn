@@ -235,7 +235,7 @@ namespace vcsn
     {
       template <typename Aut>
       automaton
-      standard_of(const ctx::abstract_context& ctx, const rat::exp_t& e)
+      standard_of(const context& ctx, const rat::exp_t& e)
       {
         return
           std::make_shared<Aut>
@@ -245,8 +245,7 @@ namespace vcsn
       }
 
       using standard_of_t =
-        auto (const ctx::abstract_context& ctx, const rat::exp_t& e)
-        -> automaton;
+        auto (const context& ctx, const rat::exp_t& e) -> automaton;
 
       bool standard_of_register(const std::string& ctx,
                                 const standard_of_t& fn);
