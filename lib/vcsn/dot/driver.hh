@@ -1,9 +1,8 @@
 #ifndef LIB_VCSN_DOT_DRIVER_HH
 # define LIB_VCSN_DOT_DRIVER_HH
 
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/ctx/char_b_lal.hh>
 # include <vcsn/algos/edit-automaton.hh>
 
 # include <lib/vcsn/rat/location.hh>

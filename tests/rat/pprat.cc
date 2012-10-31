@@ -83,7 +83,7 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::rat::driver d(ctx);
-  auto* kset = vcsn::make_kratexpset(ctx);
+  auto* kset = vcsn::dyn::make_kratexpset(ctx);
   if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
     {
       for (size_t i = 0; i < opts.transpose; ++i)
@@ -129,7 +129,7 @@ pp(const options& opts, const char* s, bool file)
         c = 'l';
   if (!!getenv("YYDEBUG"))
     std::cerr << "Loading: " << ctx << std::endl;
-  abstract_pp(opts, *vcsn::make_context(ctx, "abcd"), s, file);
+  abstract_pp(opts, *vcsn::dyn::make_context(ctx, "abcd"), s, file);
 }
 
 int

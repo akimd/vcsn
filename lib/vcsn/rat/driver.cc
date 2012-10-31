@@ -1,7 +1,7 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/algos/make-context.hh> // make_kratexpset.
+#include <vcsn/algos/dyn.hh> // make_kratexpset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 

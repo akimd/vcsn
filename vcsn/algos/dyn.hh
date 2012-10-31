@@ -22,6 +22,10 @@ namespace vcsn
 
     automaton lift(const automaton& aut);
 
+    context* make_context(const std::string& name, const std::string& gens);
+
+    abstract_kratexpset* make_kratexpset(const context& ctx);
+
     automaton parse_file(const std::string& f);
     automaton parse_string(const std::string& s);
 

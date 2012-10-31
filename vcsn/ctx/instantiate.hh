@@ -112,8 +112,8 @@ namespace vcsn
         lift_register(aut_t::sname(), lift<aut_t>);
 
         // make-context.
-        make_context_register(Ctx::sname(), abstract_make_context<Ctx>);
-        make_kratexpset_register(Ctx::sname(), abstract_make_kratexpset<Ctx>);
+        make_context_register(Ctx::sname(), make_context<Ctx>);
+        make_kratexpset_register(Ctx::sname(), make_kratexpset<Ctx>);
 
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);

@@ -1,9 +1,11 @@
+#include <cassert>
 #include <cstring> // strerror
 #include <sstream>
 
+#include <vcsn/core/automaton.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
-#include <vcsn/algos/make-context.hh>
+#include <vcsn/algos/dyn.hh>
 #include <vcsn/algos/edit-automaton.hh>
 
 namespace vcsn
@@ -74,7 +76,7 @@ namespace vcsn
             throw std::domain_error("no vcsn_context defined");
           if (letters_.empty())
             throw std::domain_error("no vcsn_letters defined");
-          auto* ctx = make_context(context_, letters_);
+          auto* ctx = vcsn::dyn::make_context(context_, letters_);
           edit_ = make_automaton_editor(*ctx);
           assert(edit_);
         }

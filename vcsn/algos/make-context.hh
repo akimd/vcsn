@@ -66,49 +66,57 @@ namespace vcsn
     return new Ctx(gs, ws);
   }
 
-  template <typename Ctx>
-  dyn::context*
-  abstract_make_context(const std::string& letters)
+
+  /*----------.
+  | dynamic.  |
+  `----------*/
+
+  namespace dyn
   {
-    std::set<char> ls;
-    for (auto l: letters)
-      ls.insert(l);
-    return make_context<Ctx>(ls);
+    namespace details
+    {
+      /*---------------.
+      | make_context.  |
+      `---------------*/
+
+      template <typename Ctx>
+      dyn::context*
+      make_context(const std::string& letters)
+      {
+        std::set<char> ls;
+        for (auto l: letters)
+          ls.insert(l);
+        return vcsn::make_context<Ctx>(ls);
+      }
+
+      using make_context_t =
+        auto (const std::string& gens) -> context*;
+
+      bool
+      make_context_register(const std::string& ctx,
+                            const make_context_t& fn);
+
+      /*------------------.
+      | make_kratexpset.  |
+      `------------------*/
+
+      template <typename Ctx>
+      abstract_kratexpset*
+      make_kratexpset(const dyn::context& ctx)
+      {
+        return new concrete_abstract_kratexpset<Ctx>
+          (dynamic_cast<const Ctx&>(ctx));
+      }
+
+      using make_kratexpset_t =
+        auto (const context& ctx) -> abstract_kratexpset*;
+
+      bool
+      make_kratexpset_register(const std::string& ctx,
+                               const make_kratexpset_t& fn);
+
+    }
   }
-
-  using make_context_t =
-    auto (const std::string& gens) -> dyn::context*;
-
-  bool
-  make_context_register(const std::string& ctx,
-                        const make_context_t& fn);
-
-  /// Abstract.
-  dyn::context*
-  make_context(const std::string& name, const std::string& gens);
-
-
-  /*------------------.
-  | make_kratexpset.  |
-  `------------------*/
-
-  template <typename Ctx>
-  abstract_kratexpset*
-  abstract_make_kratexpset(const dyn::context& ctx)
-  {
-    return new concrete_abstract_kratexpset<Ctx>(dynamic_cast<const Ctx&>(ctx));
-  }
-
-  using make_kratexpset_t =
-    auto (const dyn::context& ctx) -> abstract_kratexpset*;
-
-  bool
-  make_kratexpset_register(const std::string& ctx,
-                           const make_kratexpset_t& fn);
-
-  /// Abstract.
-  abstract_kratexpset*
-  make_kratexpset(const dyn::context& ctx);
 
 } // vcsn::
 
