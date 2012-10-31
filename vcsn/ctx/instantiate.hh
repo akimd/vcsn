@@ -84,6 +84,34 @@ namespace vcsn
     {
       template <typename Ctx>
       bool
+      register_kind_functions(labels_are_empty)
+      {
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_kind_functions(labels_are_letters)
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::details;
+
+        // de_bruijn.
+        de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
+        // eval
+        eval_register(aut_t::sname(), eval<aut_t>);
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_kind_functions(labels_are_words)
+      {
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
       register_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
@@ -95,9 +123,6 @@ namespace vcsn
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
         aut_to_exp_in_degree_register(aut_t::sname(),
                                       aut_to_exp_in_degree<aut_t>);
-
-        // de_bruijn.
-        //de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
 
         // dotty.
         dotty_register(aut_t::sname(),
@@ -127,6 +152,7 @@ namespace vcsn
         transpose_register(aut_t::sname(), transpose<aut_t>);
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
 
+        register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
       }
     }
