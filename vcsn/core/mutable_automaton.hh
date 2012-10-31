@@ -96,11 +96,6 @@ namespace vcsn
     }
 
     const context_t& context() const { return es_.context(); }
-    virtual const dyn::context& abstract_context() const override
-    {
-      return context();
-    }
-
     const weightset_ptr& weightset() const { return es_.weightset(); }
     const genset_ptr& genset() const { return es_.genset(); }
     const entryset_t& entryset() const { return es_; }

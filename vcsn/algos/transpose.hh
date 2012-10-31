@@ -207,7 +207,6 @@ namespace vcsn
         return aut_->Name();                    \
       }
 
-      DEFINE(abstract_context);
       DEFINE(all_entries);
       DEFINE(all_states);
       DEFINE(all_transitions);

@@ -12,7 +12,6 @@ namespace vcsn
     class abstract_automaton
     {
     public:
-      virtual const context& abstract_context() const = 0;
       virtual ~abstract_automaton() {}
       /// A key to recognize the type of the automaton.
       virtual std::string vname() const = 0;
