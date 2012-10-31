@@ -1,3 +1,6 @@
+#include <cassert>
+#include <stdexcept>
+
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/algos/dyn.hh>
 #include <lib/vcsn/dot/driver.hh>

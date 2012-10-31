@@ -65,6 +65,7 @@
 
 %code
 {
+#include <cassert>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/misc/echo.hh>
 
