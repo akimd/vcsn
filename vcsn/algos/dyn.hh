@@ -13,6 +13,8 @@ namespace vcsn
     rat::exp_t aut_to_exp(const automaton& aut);
     rat::exp_t aut_to_exp_in_degree(const automaton& aut);
 
+    automaton de_bruijn(const context& ctx, unsigned n);
+
     automaton determinize(const automaton& aut);
 
     void dotty(const automaton& aut, std::ostream& out);

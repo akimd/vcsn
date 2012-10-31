@@ -3,6 +3,29 @@
 For consistency with dyn::automaton, vcsn::ctx::abstract_context is renamed
 vcsn::dyn::context.  Eventually, we might turn it into a shared pointer too.
 
+** dyn::de_bruijn, bin/vcsn-de-bruijn
+New tools, useful for tests for instance.
+
+  $ vcsn-de-bruijn char_b_lal 2
+  digraph
+  {
+    vcsn_context = "char_b_lal"
+    vcsn_genset = "ab"
+    rankdir = LR
+    node [shape = circle]
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I1
+      F4
+    }
+    I1 -> 1
+    1 -> 1 [label = "a + b"]
+    1 -> 2 [label = "a"]
+    2 -> 3 [label = "a + b"]
+    3 -> 4 [label = "a + b"]
+    4 -> F4
+  }
+
 * 2012-10-22
 ** dyn::parse_file and parse_string
 They construct dyn::automaton's.

@@ -42,6 +42,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::details;
 
+        de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
         determinize_register(aut_t::sname(), determinize<aut_t>);
         eval_register(aut_t::sname(), eval<aut_t>);
         return true;

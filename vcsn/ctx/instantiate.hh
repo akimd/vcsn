@@ -11,6 +11,8 @@
 # include <vcsn/algos/standard_of.hh>
 # include <vcsn/algos/transpose.hh>
 
+# include <vcsn/factory/de_bruijn.hh>
+
 namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_DOTTY(Aut)                                \
@@ -93,6 +95,9 @@ namespace vcsn
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
         aut_to_exp_in_degree_register(aut_t::sname(),
                                       aut_to_exp_in_degree<aut_t>);
+
+        // de_bruijn.
+        //de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
 
         // dotty.
         dotty_register(aut_t::sname(),

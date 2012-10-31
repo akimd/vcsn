@@ -11,6 +11,10 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-bin_PROGRAMS += bin/vcsn-determinize bin/vcsn-evaluate
+bin_PROGRAMS +=					\
+  bin/vcsn-de-bruijn				\
+  bin/vcsn-determinize 				\
+  bin/vcsn-evaluate
+bin_vcsn_de_bruijn_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_determinize_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_evaluate_LDADD = $(all_libctx) $(libvcsn)

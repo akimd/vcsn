@@ -23,6 +23,7 @@ AM_BISONFLAGS =					\
 pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =			\
   lib/vcsn/algos/aut-to-exp.cc			\
+  lib/vcsn/algos/de_bruijn.cc			\
   lib/vcsn/algos/determinize.cc			\
   lib/vcsn/algos/dotty.cc			\
   lib/vcsn/algos/edit-automaton.cc		\

@@ -35,6 +35,32 @@ namespace vcsn
     res.set_final(prev);
     return res;
   }
+
+  /*---------------------.
+  | abstract de-bruijn.  |
+  `---------------------*/
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Ctx>
+      automaton
+      de_bruijn(const dyn::context& ctx, unsigned n)
+      {
+        return std::make_shared<mutable_automaton<Ctx>>
+          (de_bruijn<Ctx>(n, dynamic_cast<const Ctx&>(ctx)));
+      }
+
+      using de_bruijn_t =
+        auto (const dyn::context& ctx, unsigned n)
+        -> automaton;
+
+      bool de_bruijn_register(const std::string& ctx,
+                              const de_bruijn_t& fn);
+    }
+  }
+
 }
 
 #endif // !VCSN_FACTORY_DE_BRUIJN_HH
