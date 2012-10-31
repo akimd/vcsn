@@ -275,5 +275,3 @@ Check idempotence for ladybird 8
 States: 8 -> 256
 EOF
 run 0 out.exp unit/determinize
-
-
