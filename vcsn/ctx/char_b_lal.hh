@@ -33,15 +33,22 @@ namespace vcsn
 # if VCSN_INSTANTIATION
   namespace
   {
-    static bool register_char_b_lal =
-      dyn::details::determinize_register
-      (mutable_automaton<ctx::char_b_lal>::sname(),
-       dyn::details::determinize<mutable_automaton<ctx::char_b_lal>>)
-      &
-      dyn::details::eval_register
-      (mutable_automaton<ctx::char_b_lal>::sname(),
-       dyn::details::eval<mutable_automaton<ctx::char_b_lal>>)
-      ;
+    namespace details
+    {
+      template <typename Ctx>
+      bool
+      register_functions()
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::details;
+
+        determinize_register(aut_t::sname(), determinize<aut_t>);
+        eval_register(aut_t::sname(), eval<aut_t>);
+        return true;
+      }
+
+      static bool register_char_b_lal = register_functions<ctx::char_b_lal>();
+    }
   }
 #endif
 };
