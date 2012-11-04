@@ -15,26 +15,36 @@ namespace vcsn
       class abstract_ratexp
       {
       public:
-        using ratexp_t = std::shared_ptr<rat::exp>;
+        using exp_t = vcsn::rat::exp_t;
+        abstract_ratexp(const dyn::context& ctx, const exp_t& ratexp)
+          : ctx_(ctx)
+          , ratexp_(ratexp)
+        {}
+        ~abstract_ratexp() {}
 
-        virtual ~abstract_ratexp() {}
-        // virtual std::string vname() const
-        virtual const abstract_context& context()
+        const dyn::context& ctx()
         {
-          reutrn ctx_;
+          return ctx_;
         }
-        virtual exp_t ratexp() const
+        const exp_t& ratexp() const
         {
           return ratexp_;
         }
       protected:
-        const abstract_context ctx_;
-        const ratexp_t ratexp_;
+        const dyn::context& ctx_;
+        const exp_t& ratexp_;
       };
 
     } // namespace details
 
     using ratexp = std::shared_ptr<details::abstract_ratexp>;
+
+    inline
+    ratexp
+    make_ratexp(const dyn::context& ctx, const rat::exp_t& ratexp)
+    {
+      return std::make_shared<ratexp::element_type>(ratexp::element_type(ctx, ratexp));
+    }
 
   } // namespace dyn
 } // namespace vcsn

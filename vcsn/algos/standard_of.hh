@@ -4,6 +4,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
@@ -235,17 +236,16 @@ namespace vcsn
     {
       template <typename Aut>
       automaton
-      standard_of(const context& ctx, const rat::exp_t& e)
+      standard_of(const dyn::ratexp& e)
       {
-        return
-          std::make_shared<Aut>
+        return std::make_shared<Aut>
           (standard_of<Aut, typename Aut::context_t>
-           (dynamic_cast<const typename Aut::context_t&>(ctx),
-            e));
+           (dynamic_cast<const typename Aut::context_t&>(e->ctx()),
+            e->ratexp()));
       }
 
       using standard_of_t =
-        auto (const context& ctx, const rat::exp_t& e) -> automaton;
+        auto (const dyn::ratexp& e) -> automaton;
 
       bool standard_of_register(const std::string& ctx,
                                 const standard_of_t& fn);

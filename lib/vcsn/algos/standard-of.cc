@@ -25,10 +25,9 @@ namespace vcsn
     }
 
     automaton
-    standard_of(const dyn::context& ctx, const rat::exp_t& e)
+    standard_of(const dyn::ratexp& e)
     {
-      return details::standard_of_registry().call(ctx.vname(),
-                                                  ctx, e);
+      return details::standard_of_registry().call(e->ctx().vname(), e);
     }
   }
 }

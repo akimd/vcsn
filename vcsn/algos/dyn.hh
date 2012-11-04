@@ -4,6 +4,7 @@
 # include <iosfwd>
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/fwd.hh>
+# include <vcsn/dyn/ratexp.hh>
 # include <vcsn/ctx/fwd.hh>
 
 namespace vcsn
@@ -31,7 +32,7 @@ namespace vcsn
     automaton parse_file(const std::string& f);
     automaton parse_string(const std::string& s);
 
-    automaton standard_of(const context& ctx, const rat::exp_t& e);
+    automaton standard_of(const dyn::ratexp& e);
 
     automaton transpose(automaton& aut);
   }

@@ -64,7 +64,7 @@ namespace vcsn
                                                                         \
   /* standard_of. */                                                    \
   MAYBE_EXTERN template                                                 \
-  class rat::standard_of_visitor<mutable_automaton<Ctx>>;               \
+  class rat::standard_of_visitor<mutable_automaton<Ctx>, Ctx>;          \
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
