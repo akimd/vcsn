@@ -1,19 +1,128 @@
 #! /bin/sh
-cat >out.exp <<\EOF
-PASS: aa
-PASS: bbb
-PASS: aabab
-PASS: abab
-PASS: aaaa
-PASS: b
-PASS: a
-PASS: a
-PASS: abab
-PASS: aabab
-PASS: caa
-PASS: aabab
-PASS: a
-PASS: abab
-PASS: aabab
+
+cat > simple.dot <<EOF
+digraph
+{
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "ab"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  I1 -> 1
+  2 -> F2
+  1 -> 1 [label = "a + b"]
+  1 -> 2 [label = "{2}a"]
+  2 -> 2 [label = "a + b"]
+}
 EOF
-run 0 out.exp unit/eval
+
+run 0 6 ../bin/vcsn-evaluate simple.dot aabab
+run 0 4 ../bin/vcsn-evaluate simple.dot abab
+run 0 8 ../bin/vcsn-evaluate simple.dot aaaa
+run 0 0 ../bin/vcsn-evaluate simple.dot b
+run 0 2 ../bin/vcsn-evaluate simple.dot a
+
+cat > initial-weight.dot <<EOF
+digraph
+{
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "ab"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  I1 -> 1 [label = "{2}"]
+  2 -> F2
+  1 -> 1 [label = "a + b"]
+  1 -> 2 [label = "{2}a"]
+  2 -> 2 [label = "a + b"]
+}
+EOF
+
+run 0 4 ../bin/vcsn-evaluate initial-weight.dot a
+run 0 8 ../bin/vcsn-evaluate initial-weight.dot abab
+run 0 12 ../bin/vcsn-evaluate initial-weight.dot aabab
+
+cat > more-letters.dot <<EOF
+digraph
+{
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abc"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  I1 -> 1 [label = "{2}"]
+  2 -> F2
+  1 -> 1 [label = "a + b"]
+  1 -> 2 [label = "{2}a"]
+  2 -> 2 [label = "a + b"]
+  1 -> 3 [label = "c"]
+  3 -> 1 [label = "a"]
+  3 -> 2 [label = "a"]
+}
+EOF
+
+run 0 6 ../bin/vcsn-evaluate more-letters.dot caa
+
+cat > prod.dot <<EOF
+digraph
+{
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abc"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  I1 -> 1 [label = "{2}"]
+  2 -> F2
+  1 -> 1 [label = "a + b"]
+  1 -> 2 [label = "{2}a"]
+  2 -> 2 [label = "a + b"]
+  1 -> 3 [label = "c"]
+  3 -> 1 [label = "a"]
+  3 -> 2 [label = "a"]
+}
+EOF
+
+run 0 144 ../bin/vcsn-evaluate prod.dot aabab
+
+cat > complex.dot <<EOF
+digraph
+{
+  vcsn_context = "char_z_lal"
+  vcsn_genset = "abc"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  I1 -> 1 [label = "{2}"]
+  2 -> F2 [label = "{3}"]
+  1 -> 1 [label = "a + b"]
+  1 -> 2 [label = "{2}a"]
+  2 -> 2 [label = "a + b"]
+  1 -> 3 [label = "c"]
+  3 -> 1 [label = "a"]
+  3 -> 2 [label = "a"]
+}
+EOF
+
+run 0 12 ../bin/vcsn-evaluate complex.dot a
+run 0 24 ../bin/vcsn-evaluate complex.dot abab
+run 0 36 ../bin/vcsn-evaluate complex.dot aabab

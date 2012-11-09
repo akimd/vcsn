@@ -17,7 +17,6 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_char_z_lal                           \
   unit/aut_char_z_law                           \
   unit/determinize                              \
-  unit/eval                                     \
   unit/ladybird-b                               \
   unit/ladybird-z                               \
   unit/ladybird-zmin                            \
@@ -36,8 +35,6 @@ unit_aut_char_z_lal_LDADD = $(libchar_z_lal) $(AM_LDADD)
 unit_aut_char_z_law_LDADD = $(libchar_z_law) $(AM_LDADD)
 
 unit_determinize_LDADD = $(libchar_b_lal) $(AM_LDADD)
-
-unit_eval_LDADD = $(libchar_z_lal) $(AM_LDADD)
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
@@ -84,7 +81,7 @@ unit/aut_char_z_lal.log: unit/aut_char_z_lal
 unit/aut_char_z_law.log: unit/aut_char_z_law
 unit/aut_to_exp.log: rat/pprat
 unit/determinize.log: unit/determinize
-unit/eval.log: unit/eval
+unit/eval.log: unit/eval.chk
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/lift.log: unit/lift
 unit/parse-dot.log: unit/parse-dot
