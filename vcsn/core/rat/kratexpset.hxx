@@ -102,7 +102,7 @@ namespace vcsn
   DEFINE::gather(kratexps_t& res, rat::exp::type_t type, value_t v) const
     -> void
   {
-    assert(type == node_t::SUM || type == node_t::PROD);
+    assert(type == type_t::sum || type == type_t::prod);
     if (v->type() == type)
       {
         const auto& nary = *down_pointer_cast<const nary_t>(v);
@@ -119,7 +119,7 @@ namespace vcsn
   DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
     -> kratexps_t
   {
-    assert(type == node_t::SUM || type == node_t::PROD);
+    assert(type == type_t::sum || type == type_t::prod);
     kratexps_t res;
     gather(res, type, l);
     gather(res, type, r);
@@ -132,15 +132,15 @@ namespace vcsn
     // Trivial Identity
     // E+0 = 0+E = E
     value_t res = nullptr;
-    if (l->type() == node_t::ZERO)
+    if (l->type() == type_t::zero)
       res = r;
-    else if (r->type() == node_t::ZERO)
+    else if (r->type() == type_t::zero)
       res = l;
     // END: Trivial Identity
     else
       res = std::make_shared<sum_t>(weightset()->unit(),
                                     weightset()->unit(),
-                                    gather(node_t::SUM, l, r));
+                                    gather(type_t::sum, l, r));
     return res;
   }
 
@@ -151,21 +151,21 @@ namespace vcsn
     value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
-    if (l->type() == node_t::ZERO)
+    if (l->type() == type_t::zero)
       res = l;
-    else if (r->type() == node_t::ZERO)
+    else if (r->type() == type_t::zero)
       res = r;
     // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
     // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
-    else if (r->type() == node_t::ONE)
+    else if (r->type() == type_t::one)
       res = weight(l, r->left_weight());
-    else if (l->type() == node_t::ONE)
+    else if (l->type() == type_t::one)
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
     else
       res = std::make_shared<prod_t>(weightset()->unit(),
                                      weightset()->unit(),
-                                     gather(node_t::PROD, l, r));
+                                     gather(type_t::prod, l, r));
     return res;
   }
 
@@ -184,15 +184,15 @@ namespace vcsn
   DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
-    if (r->type() == node_t::ATOM
+    if (r->type() == type_t::atom
         && weightset()->is_unit(r->left_weight()))
       {
-        if (l->type() == node_t::ATOM
+        if (l->type() == type_t::atom
             && weightset()->is_unit(l->left_weight()))
           return atom(genset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
-        else if (l->type() == node_t::PROD)
+        else if (l->type() == type_t::prod)
           {
             // If we are calling word on "(ab).a, b", then we really
             // want "(ab).(ab)".
@@ -210,7 +210,7 @@ namespace vcsn
   DEFINE::star(value_t e) const
     -> value_t
   {
-    if (e->type() == node_t::ZERO)
+    if (e->type() == type_t::zero)
       // Trivial identity
       // (0)* == 1
       return unit();
@@ -229,7 +229,7 @@ namespace vcsn
     -> value_t
   {
     // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
-    if (e->type() == node_t::ZERO || weightset()->is_zero(w))
+    if (e->type() == type_t::zero || weightset()->is_zero(w))
       return zero();
     else
       {
@@ -243,7 +243,7 @@ namespace vcsn
     -> value_t
   {
     // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
-    if (e->type() == node_t::ZERO || weightset()->is_zero(w))
+    if (e->type() == type_t::zero || weightset()->is_zero(w))
       return zero();
     else if (e->is_inner())
       {
@@ -270,13 +270,13 @@ namespace vcsn
   DEFINE::is_zero(value_t v) const
     -> bool
   {
-    return v->type() == node_t::ZERO;
+    return v->type() == type_t::zero;
   }
 
   DEFINE::is_unit(value_t v) const
     -> bool
   {
-    return (v->type() == node_t::ONE
+    return (v->type() == type_t::one
             && weightset()->is_unit(v->left_weight()));
   }
 

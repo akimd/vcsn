@@ -21,14 +21,14 @@ namespace vcsn
       virtual ~exp() = 0;
 
       /// The possible types of kratexps.
-      enum type_t
+      enum class type_t
         {
-          ZERO = 0,
-          ONE  = 1,
-          ATOM = 2,
-          SUM  = 3,
-          PROD = 4,
-          STAR = 5,
+          zero = 0,
+          one  = 1,
+          atom = 2,
+          sum  = 3,
+          prod = 4,
+          star = 5,
         };
 
       /// The type of this node.
@@ -38,7 +38,7 @@ namespace vcsn
       bool is_inner() const
       {
         type_t t = type();
-        return t == SUM || t == PROD || t == STAR;
+        return t == type_t::sum || t == type_t::prod || t == type_t::star;
       }
     };
 
@@ -205,7 +205,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::PROD; };
+      virtual type_t type() const { return type_t::prod; };
 
       virtual void accept(typename node_t::const_visitor& v) const;
     protected:
@@ -246,7 +246,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::SUM; };
+      virtual type_t type() const { return type_t::sum; };
 
       virtual void accept(typename node_t::const_visitor& v) const;
     protected:
@@ -279,7 +279,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::STAR; };
+      virtual type_t type() const { return type_t::star; };
 
       const value_t sub() const;
 
@@ -340,7 +340,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::ONE; };
+      virtual type_t type() const { return type_t::one; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
     protected:
@@ -369,7 +369,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::ZERO; };
+      virtual type_t type() const { return type_t::zero; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
     protected:
@@ -399,7 +399,7 @@ namespace vcsn
         return std::static_pointer_cast<const self_t>(clone_());
       };
 
-      virtual type_t type() const { return node_t::ATOM; };
+      virtual type_t type() const { return type_t::atom; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
       const label_t& value() const;

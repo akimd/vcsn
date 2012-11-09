@@ -41,6 +41,8 @@ namespace vcsn
     DEFINE(prod);
     DEFINE(star);
 # undef DEFINE
+
+    using type_t = typename node_t::type_t;
     using kratexps_t = typename node_t::kratexps_t;
 
     /// The value this is a set of: typeful shared pointers.
