@@ -19,8 +19,7 @@ namespace vcsn
             typename Aut::state_t src, typename Aut::state_t dst,
             const std::string& entry)
   {
-    assert (src != a.pre());
-    assert (dst != a.post());
+    assert (src != a.pre() || dst != a.post());
     a.add_entry(src, dst, a.entryset().conv(entry));
   }
 

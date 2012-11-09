@@ -428,7 +428,8 @@ namespace vcsn
           stored_transition_t& st = transitions_[t];
           st.src = src;
           st.dst = dst;
-          st.set_label(l);
+          st.set_label(l); // FIXME: We src == pre() || dst == post(),
+                           // label must be empty.
           st.set_weight(k);
           states_[src].succ.push_back(t);
           states_[dst].pred.push_back(t);
