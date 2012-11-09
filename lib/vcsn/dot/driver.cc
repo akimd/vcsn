@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cstring> // strerror
 #include <sstream>
+#include <stdexcept>
 
 #include <vcsn/core/automaton.hh>
 #include <lib/vcsn/dot/driver.hh>
