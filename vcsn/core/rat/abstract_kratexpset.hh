@@ -21,6 +21,7 @@ namespace vcsn
   class abstract_kratexpset
   {
   public:
+    using context_t = dyn::context;
     using value_t = rat::exp_t;
 
     virtual value_t zero() const = 0;
@@ -39,6 +40,8 @@ namespace vcsn
 
     /// Parsing.
     virtual value_t conv(const std::string& s) const = 0;
+
+    virtual const context_t& ctx() const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
     std::string format(const value_t v) const
@@ -148,6 +151,11 @@ namespace vcsn
     virtual std::ostream& print(std::ostream& o, value_t v) const override
     {
       return ks_.print(o, down(v));
+    }
+
+    virtual const context_t& ctx() const override
+    {
+      return ks_.ctx();
     }
 
   private:

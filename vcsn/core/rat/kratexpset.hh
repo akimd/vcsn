@@ -119,6 +119,8 @@ namespace vcsn
     value_t weight(const weight_t& w, value_t e) const;
     value_t transpose(value_t e) const;
 
+    const context_t& ctx() const;
+
   private:
     template <typename Ctx>
     value_t

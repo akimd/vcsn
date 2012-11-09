@@ -304,6 +304,12 @@ namespace vcsn
     return tr(v);
   }
 
+  DEFINE::ctx() const
+    -> const context_t&
+  {
+    return ctx_;
+  }
+
 #undef DEFINE
 
 } // namespace vcsn
