@@ -64,9 +64,9 @@ struct options
 };
 
 void
-transpose(const vcsn::dyn::context& ctx, const vcsn::rat::exp_t e)
+transpose(const vcsn::dyn::ratexp& e)
 {
-  auto aut1 = vcsn::dyn::standard_of(ctx, e);
+  auto aut1 = vcsn::dyn::standard_of(e);
   if (!!getenv("DEBUG"))
     {
       std::cerr << aut1->vname() << std::endl;
@@ -90,10 +90,10 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
         exp = vcsn::transpose(ctx, exp);
 
       if (opts.aut_transpose)
-        transpose(ctx, exp);
+        transpose(vcsn::dyn::make_ratexp(ctx, exp));
       else if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
-          auto aut = vcsn::dyn::standard_of(ctx, exp);
+          auto aut = vcsn::dyn::standard_of(vcsn::dyn::make_ratexp(ctx, exp));
           if (opts.standard_of)
             vcsn::dyn::dotty(aut, std::cout);
           if (opts.lift)
