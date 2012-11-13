@@ -75,7 +75,7 @@ run 0 out.exp -vcsn-determinize out.exp
 ## -------------------------- ##
 ## Determinize Thompson(\z).  ##
 ## -------------------------- ##
-cat >empty.Dot <<EOF
+cat >empty.dot <<EOF
 digraph
 {
   vcsn_context = "char_b_lal"
