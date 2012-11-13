@@ -1,5 +1,6 @@
 #include <cassert>
 #include <vcsn/ctx/char_z_lal.hh>
+#include <vcsn/ctx/char_zmin_lal.hh>
 #include <vcsn/weights/poly.hh>
 #include <tests/unit/test.hh>
 
@@ -99,10 +100,50 @@ check_conv()
   return res;
 }
 
+
+template <class T>
+static
+bool
+check_star_fail(T& poly, const std::string& str)
+{
+  try
+    {
+      poly.star(poly.conv(str));
+    }
+  catch (std::domain_error&)
+    {
+      return true;
+    }
+  return false;
+}
+
+
+static
+bool
+check_star()
+{
+  bool res = true;
+
+  using context_t = vcsn::ctx::char_zmin_lal;
+  context_t ctx {{'a', 'b'}};
+  using poly_t = vcsn::polynomialset<context_t>;
+  poly_t poly{ctx};
+
+  ASSERT_EQ(poly.format(poly.star(poly.conv("{123}\\e"))), "{0}\\e");
+  ASSERT_EQ(poly.format(poly.star(poly.conv("{oo}\\e"))), "{0}\\e");
+  ASSERT_EQ(poly.format(poly.star(poly.conv("{123}\\e+{oo}\\e"))), "{0}\\e");
+  ASSERT_EQ(poly.format(poly.star(poly.conv("\\z"))), "{0}\\e");
+  ASSERT_EQ(check_star_fail(poly, "{-1}\\e"), true);
+  ASSERT_EQ(check_star_fail(poly, "{123}a"), true);
+  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{oo}a"), true);
+  return res;
+}
+
 int main()
 {
   size_t errs = 0;
   errs += !check_assoc();
   errs += !check_conv();
+  errs += !check_star();
   return !!errs;
 }

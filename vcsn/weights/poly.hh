@@ -78,6 +78,27 @@ namespace vcsn
       return p;
     }
 
+    value_t
+    star(const value_t& v) const
+    {
+      // The only starable polynomials are scalars (if they are
+      // starable too).
+      auto s = v.size();
+      if (s == 0)
+	return unit();
+      if (s == 1)
+	{
+	  auto i = v.find(genset()->identity());
+	  if (i != v.end())
+	    {
+	      value_t p;
+	      add_assoc(p, i->first, weightset()->star(i->second));
+	      return p;
+	    }
+	}
+      throw std::domain_error("polynomial: star: invalid value: " + format(v));
+    }
+
     const value_t&
     unit() const
     {
