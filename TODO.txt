@@ -31,6 +31,28 @@ choose bw "word_t w", and const&.
 * move files around
 The hierarchy and the namespaces do not match.
 
+* have a consuming version of conv()
+The conversion function of weights currently takes a string and returns
+a weight.  It would be convenient to have a conversion that is equivalent
+to the >> operator: i.e., it reads the leading weight, and return the rest.
+(Should we use a stream-based interface or an iterator-based interface?)
+Similar conversion functions should be made available for labels.
+
+This is especially important when parsing weights with a recursive
+structure (e.g., polynomials or rational expressions).  For instance
+in
+
+	      while (genset()->has(i.peek()))
+		label += char(i.get());
+
+polynomialset::conv() wrongly assumes that letters are represented by
+characters.  This will break with integer alphabets.
+
+* should polynomial honor the kind?
+Currently polynomials maps words to weights.  However when polynomial
+are used to represent entries of a LAL automaton, it would make sense
+to map only letters to weights.  Can this be useful elsewhere?
+
 Local Variables:
 mode: outline
 End:
