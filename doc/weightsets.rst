@@ -13,12 +13,12 @@ complex types) is mainly an implementation issue: it specifies how
 weights are stored on transitions and passed around between functions.
 
 The storage type does **not** indicate how the weight should be
-interpreted.  For instance an integer stored by ``int`` could be
+interpreted.  For instance an integer stored as an ``int`` could be
 interpreted as an element of the semiring
 :math:`(\mathbb{Z},+,\times,0,1)` or as an element of the semiring
 :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`.
 
-A :dfn:`weight-set` object store the semantic information associated
+A :dfn:`weight-set` object stores the semantic information associated
 to the weights.  Ideally you should have one weight-set instantiated
 somewhere in order to manipulate weights.
 
@@ -27,24 +27,26 @@ Overview
 
 Here is the required interface of a *Weight-Set* object::
 
-    typedef ... value_t;
+  static std::string sname();
 
-    value_t add(const value_t l, const value_t r) const;
-    value_t mul(const value_t l, const value_t r) const;
+  typedef ... value_t;
 
-    value_t zero() const;
-    value_t unit() const;
+  value_t add(const value_t l, const value_t r) const;
+  value_t mul(const value_t l, const value_t r) const;
 
-    bool is_zero(const value_t v) const;
-    bool is_unit(const value_t v) const;
+  value_t zero() const;
+  value_t unit() const;
 
-    static constexpr bool show_unit();
-    static constexpr bool is_positive_semiring();
+  bool is_zero(const value_t v) const;
+  bool is_unit(const value_t v) const;
 
-    value_t conv(std::string& str) const;
+  static constexpr bool show_unit();
+  static constexpr bool is_positive_semiring();
 
-    std::string format(const value_t v) const;
-    std::ostream& print(std::ostream& o, const value_t v) const;
+  value_t conv(std::string& str) const;
+
+  std::string format(const value_t v) const;
+  std::ostream& print(std::ostream& o, const value_t v) const;
 
 Implementations of weight-sets with a complex storage type may decide
 to receive them as `const value_t&` and emit them as `const value_t&`
@@ -52,6 +54,10 @@ instead of the above pass-by-copy specifications.
 
 Detailed interface
 ------------------
+
+.. function:: static std::string sname()
+
+   The (static) name of the weight-set (i.e., it's class name).
 
 .. type:: value_t
 
@@ -61,9 +67,16 @@ Detailed interface
 
    Add two weights and return a new one.
 
-.. function:: value_t add(const value_t l, const value_t r) const
+.. function:: value_t mul(const value_t l, const value_t r) const
 
    Multiply two weights and return a new one.
+
+.. function:: value_t star(const value_t v) const
+
+   Return the star of the value ``v``.
+   Raises ``std::domain_error`` if ``v`` is not starable.
+
+   .. todo:: We do not have a ``is_starable`` method.
 
 .. function:: value_t zero() const
 
@@ -105,10 +118,14 @@ Detailed interface
    For instance :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)` is a positive
    semiring, but :math:`(\mathbb{Z},+,\times,0,1)` is not.
 
+.. function:: value_t transpose(const value_t v) const
+
+   Return the transpose of the value ``v``.
+
 .. function:: value_t conv(std::string& str) const
 
    Convert a string ``str`` into a weight.  A ``std::domain_error``
-   exception is raised of the string cannot be parsed.
+   exception is raised if the string cannot be parsed.
 
 .. function:: std::string format(const value_t v) const
 
@@ -125,42 +142,9 @@ Detailed interface
 Available Weight-Sets
 ---------------------
 
-The following weight-sets are implemented:
+.. toctree::
+   :maxdepth: 2
 
-.. class:: b
-
-   The classical Boolean semiring :math:`(\mathbb{B},\lor,\land,0,1)`,
-   with elements stored as ``bool``.
-
-   Defined in ``vcsn/weights/b.hh``.
-
-.. class:: z
-
-   The usual integer semiring :math:`(\mathbb{Z},+,\times,0,1)`,
-   with elements stored as ``int``.
-
-   Defined in ``vcsn/weights/z.hh``.
-
-.. class:: z_min
-
-   .. index:: tropical semiring
-
-   The tropical semiring :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`,
-   with elements stored as ``int``.
-
-   Defined in ``vcsn/weights/z_min.hh``.
-
-.. class:: polynomials<A, W>
-
-   Polynomials with letters in the alphabet ``A`` and weights in ``W``.
-
-   Defined in ``vcsn/weights/poly.hh``.
-
-.. class:: factory_<A, W>
-
-   Rational expressions over the alphabet ``A`` with weight in ``W``.
-
-   Defined in ``vcsn/core/rat/factory_.hh``.
-
-.. todo:: Polynomial and rational expressions have to be documented
-          separately.
+   scalars
+   poly
+   kratexp
