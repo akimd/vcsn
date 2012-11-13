@@ -122,7 +122,7 @@ namespace vcsn
       return res;
     }
 
-    /// Parse the entry "s".
+    /// Parse "s" as a polynomial.
     ///
     /// Somewhat more general than a mere reversal of "format",
     /// in particular "a+a" is properly understood as "{2}a" in
@@ -143,6 +143,7 @@ namespace vcsn
           // Possibly a weight in braces.
           SKIP_SPACES();
           weight_t w = weightset()->unit();
+          bool default_w = true;
           if (i.peek() == '{')
             {
               i.get();
@@ -162,24 +163,39 @@ namespace vcsn
                   o << char(i.get());
                 }
               w = weightset()->conv(o.str());
+              default_w = false;
             }
 
           // The label: letters, or \e.
           SKIP_SPACES();
           std::string label;
+          bool empty = false;
           if (i.peek() == '\\')
             {
               i.ignore();
-              if (i.peek() != 'e')
+              char c = i.peek();
+              if (c == 'z')
+                empty = true;
+              else if (c != 'e')
                 throw std::domain_error("invalid polynomial: " + s
-                                        + "unexpected \\"
+                                        + " unexpected \\"
                                         + std::string{char(i.peek())});
               i.ignore();
             }
           else
-            while (genset()->has(i.peek()))
-              label += char(i.get());
-          add_assoc(res, label, w);
+            {
+              // FIXME: This wrongly assumes that letters are
+              // characters.  It will break with integer or string
+              // alphabets.
+              while (genset()->has(i.peek()))
+                label += char(i.get());
+              if (label.empty() && default_w)
+                throw std::domain_error("invalid polynomial: " + s
+                                        + " contains an empty label "
+                                        "(did you mean \\e or \\z?)");
+            }
+          if (!empty)
+            add_assoc(res, label, w);
 
           // EOF, or "+".
           SKIP_SPACES();
@@ -190,7 +206,7 @@ namespace vcsn
           else
             {
               throw std::domain_error("invalid polynomial: " + s
-                                      + "unexpected "
+                                      + " unexpected "
                                       + std::string{char(i.peek())});
               i.ignore();
             }

@@ -3,6 +3,23 @@
 #include <vcsn/weights/poly.hh>
 #include <tests/unit/test.hh>
 
+template <class T>
+static
+bool
+check_conv_fail(T& poly, const std::string& str)
+{
+  try
+    {
+      poly.conv(str);
+    }
+  catch (std::domain_error&)
+    {
+      return true;
+    }
+  return false;
+}
+
+
 static
 bool
 check_assoc()
@@ -53,18 +70,31 @@ check_conv()
 
 #define CHECK(In, Out)                                   \
   ASSERT_EQ(poly.format(poly.conv(In)), Out);
+#define CHECK_FAIL(In)                                   \
+  ASSERT_EQ(check_conv_fail(poly, In), true);
 
   CHECK("\\e", "\\e");
+  CHECK("\\z", "\\z");
+  CHECK_FAIL("");
   CHECK("a", "a");
   CHECK("a+b", "a + b");
   CHECK("a+a+a", "{3}a");
   CHECK("a+b+a", "{2}a + b");
+  CHECK_FAIL("a++a");
+  CHECK_FAIL("+a");
+  CHECK_FAIL("a+");
   CHECK("{2}a+{3}b+{5}c+{10}a+{10}c+{10}b+{10}d",
         "{12}a + {13}b + {15}c + {10}d");
+  CHECK_FAIL("{2}a++{3}a");
+  CHECK_FAIL("+{1}a");
+  CHECK_FAIL("{2}a+");
+  CHECK("{2}+a", "{2}\\e + a");
+  CHECK("  {2}  ", "{2}\\e");
   // Check long numbers before smaller ones to exercise some issues
   // when reusing an ostringstream: we might keep previous characters.
   CHECK("{1000}a + {1}a + {0}a",
         "{1001}a");
+#undef CHECK_FAIL
 #undef CHECK
   return res;
 }
