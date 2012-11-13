@@ -98,7 +98,7 @@ digraph
 }
 EOF
 
-run 0 144 ../bin/vcsn-evaluate prod.dot aabab
+run 0 12 ../bin/vcsn-evaluate prod.dot aabab
 
 cat > complex.dot <<EOF
 digraph
