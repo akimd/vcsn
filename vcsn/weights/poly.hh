@@ -40,21 +40,51 @@ namespace vcsn
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
     value_t&
-    assoc(value_t& v, const word_t& w, const weight_t& k) const
+    del_weight(value_t& v, const word_t& w) const
     {
-      v[w] = k;
+      v.erase(w);
       return v;
     }
 
     value_t&
-    add_assoc(value_t& v, const word_t& w, const weight_t& k) const
+    set_weight(value_t& v, const word_t& w, const weight_t k) const
+    {
+      if (weightset()->is_zero(k))
+	del_weight(v, w);
+      else
+	v[w] = k;
+      return v;
+    }
+
+    value_t&
+    add_weight(value_t& v, const word_t& w, const weight_t k) const
     {
       auto i = v.find(w);
       if (i == v.end())
-	assoc(v, w, k);
+	{
+	  set_weight(v, w, k);
+	}
       else
-	i->second = weightset()->add(i->second, k);
+	{
+	  // Do not use set_weight() because it would lookup w
+	  // again and we already have the right iterator.
+	  auto w2 = weightset()->add(i->second, k);
+	  if (weightset()->is_zero(w2))
+	    v.erase(i);
+	  else
+	    i->second = w2;
+	}
       return v;
+    }
+
+    const weight_t
+    get_weight(value_t& v, const word_t& w) const
+    {
+      auto i = v.find(w);
+      if (i == v.end())
+	return weightset()->zero();
+      else
+	return i->second;
     }
 
     value_t
@@ -62,7 +92,7 @@ namespace vcsn
     {
       value_t p = l;
       for (auto& i : r)
-	add_assoc(p, i.first, i.second);
+	add_weight(p, i.first, i.second);
       return p;
     }
 
@@ -72,7 +102,7 @@ namespace vcsn
       value_t p;
       for (auto i: l)
 	for (auto j: r)
-	  add_assoc(p,
+	  add_weight(p,
 		    genset()->concat(i.first, j.first),
 		    weightset()->mul(i.second, j.second));
       return p;
@@ -92,7 +122,7 @@ namespace vcsn
 	  if (i != v.end())
 	    {
 	      value_t p;
-	      add_assoc(p, i->first, weightset()->star(i->second));
+	      add_weight(p, i->first, weightset()->star(i->second));
 	      return p;
 	    }
 	}
@@ -216,7 +246,7 @@ namespace vcsn
                                         "(did you mean \\e or \\z?)");
             }
           if (!empty)
-            add_assoc(res, label, w);
+            add_weight(res, label, w);
 
           // EOF, or "+".
           SKIP_SPACES();

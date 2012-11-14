@@ -32,7 +32,7 @@ check_assoc()
   poly_t poly{ctx};
 
   poly_t::value_t u = poly.unit();
-  poly.assoc(u, "ab", 12);
+  poly.set_weight(u, "ab", 12);
   ASSERT_EQ(poly.format(u), "\\e + {12}ab");
 
   u = poly.add(u, u);
@@ -42,16 +42,16 @@ check_assoc()
   assert(poly.is_zero(poly.zero()));
 
   poly_t::value_t v;
-  poly.assoc(v, "ab", 24);
-  poly.assoc(v, "", 2);
+  poly.set_weight(v, "ab", 24);
+  poly.set_weight(v, "", 2);
   assert(u == v);
 
   u = poly.mul(u, u);
   ASSERT_EQ(poly.format(u), "{4}\\e + {96}ab + {576}abab");
 
-  poly.add_assoc(v, "ab", 96 - 24);
-  poly.assoc(v, "", 4);
-  poly.assoc(v, "abab", 576);
+  poly.add_weight(v, "ab", 96 - 24);
+  poly.set_weight(v, "", 4);
+  poly.set_weight(v, "abab", 576);
   assert(u == v);
 
   return res;
@@ -91,6 +91,7 @@ check_conv()
   CHECK_FAIL("{2}a+");
   CHECK("{2}+a", "{2}\\e + a");
   CHECK("  {2}  ", "{2}\\e");
+  CHECK("a+{1}a+{-2}a", "\\z");
   // Check long numbers before smaller ones to exercise some issues
   // when reusing an ostringstream: we might keep previous characters.
   CHECK("{1000}a + {1}a + {0}a",
@@ -135,7 +136,9 @@ check_star()
   ASSERT_EQ(poly.format(poly.star(poly.conv("\\z"))), "{0}\\e");
   ASSERT_EQ(check_star_fail(poly, "{-1}\\e"), true);
   ASSERT_EQ(check_star_fail(poly, "{123}a"), true);
-  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{oo}a"), true);
+  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{12}a"), true);
+  ASSERT_EQ(poly.format(poly.star(poly.conv("{12}\\e+{oo}a"))), "{0}\\e");
+  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{oo}a+{3}a"), true);
   return res;
 }
 
