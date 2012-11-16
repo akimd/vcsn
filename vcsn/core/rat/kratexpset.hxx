@@ -184,26 +184,68 @@ namespace vcsn
   DEFINE::concat(value_t l, value_t r, labels_are_words) const
     -> value_t
   {
-    if (r->type() == type_t::atom
+    // Implicit concatenation between l and r.
+    auto rt = r->type();
+    auto lt = l->type();
+    if (rt == type_t::atom
         && weightset()->is_unit(r->left_weight()))
       {
-        if (l->type() == type_t::atom
+        if (lt == type_t::atom
             && weightset()->is_unit(l->left_weight()))
           return atom(genset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
-        else if (l->type() == type_t::prod)
-          {
-            // If we are calling word on "(ab).a, b", then we really
-            // want "(ab).(ab)".
-            const auto& prod = *down_pointer_cast<const prod_t>(l);
-            kratexps_t kratexps {prod.begin(), prod.end()-1};
-            kratexps.push_back(concat(*(prod.end()-1), r));
-            return std::make_shared<prod_t>(weightset()->unit(),
-                                            weightset()->unit(),
-                                            kratexps);
-          }
+        else if (lt == type_t::prod)
+	  {
+	    const auto& prodl = *down_pointer_cast<const prod_t>(l);
+	    if (weightset()->is_unit(prodl.left_weight())
+		&& weightset()->is_unit(prodl.right_weight()))
+	      {
+		// Concat of "(ab).a" and "b" is "(ab).(ab)".
+		kratexps_t kratexps { prodl.begin(), prodl.end() };
+		kratexps.back() = concat(kratexps.back(), r);
+		return std::make_shared<prod_t>(weightset()->unit(),
+						weightset()->unit(),
+						kratexps);
+	      }
+	  }
         }
+    // The following cases do not when parsing an expression.
+    else if (rt == type_t::prod)
+      {
+	const auto& prodr = *down_pointer_cast<const prod_t>(r);
+	if (weightset()->is_unit(prodr.left_weight())
+	    && weightset()->is_unit(prodr.right_weight()))
+	  {
+	    if (lt == type_t::atom
+		&& weightset()->is_unit(l->left_weight()))
+	      {
+		// Concat of "a" and "b.(ab)", is "(ab).(ab)".
+		kratexps_t kratexps { prodr.begin(), prodr.end() };
+		kratexps.front() = concat(l, kratexps.front());
+		return std::make_shared<prod_t>(weightset()->unit(),
+						weightset()->unit(),
+						kratexps);
+	      }
+	    else if (lt == type_t::prod)
+	      {
+		const auto& prodl = *down_pointer_cast<const prod_t>(l);
+		if (weightset()->is_unit(prodl.left_weight())
+		    && weightset()->is_unit(prodl.right_weight()))
+		  {
+		    // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
+		    kratexps_t kratexps { prodl.begin(), prodl.end() };
+		    kratexps.back() = concat(kratexps.back(), *prodr.begin());
+		    kratexps.insert(kratexps.end(),
+				    prodr.begin() + 1, prodr.end());
+		    return std::make_shared<prod_t>(weightset()->unit(),
+						    weightset()->unit(),
+						    kratexps);
+		  }
+	      }
+	  }
+      }
+    // Fall back to explicit concatenation.
     return mul(l, r);
   }
 
