@@ -41,7 +41,7 @@ namespace vcsn
     /// Parsing.
     virtual value_t conv(const std::string& s) const = 0;
 
-    virtual const context_t& ctx() const = 0;
+    virtual const context_t& context() const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
     std::string format(const value_t v) const
@@ -153,9 +153,9 @@ namespace vcsn
       return ks_.print(o, down(v));
     }
 
-    virtual const context_t& ctx() const override
+    virtual const context_t& context() const override
     {
-      return ks_.ctx();
+      return ks_.context();
     }
 
   private:
