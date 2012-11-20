@@ -21,7 +21,8 @@ include $(top_srcdir)/common.mk
 check_PROGRAMS =
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
-AM_CPPFLAGS += -I$(top_srcdir)
+AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
+AM_LDFLAGS += -lxerces-c
 
 dist_noinst_SCRIPTS += checker
 TEST_EXTENSIONS += .chk
