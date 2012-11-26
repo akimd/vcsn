@@ -3,7 +3,7 @@
 Scalar Weights
 ==============
 
-The following classes implement the :doc:`Weight-Set interface <weightsets>`.
+The following classes implement the :doc:`Weight Set interface <weightsets>`.
 
 .. class:: b
 

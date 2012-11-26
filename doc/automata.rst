@@ -73,6 +73,7 @@ Overview
 
 Here is the interface of an automaton::
 
+    typedef ... context_t;
     typedef ... genset_t;
     typedef ... weightset_t;
     typedef ... kind_t;
@@ -85,7 +86,8 @@ Here is the interface of an automaton::
     typedef ... weight_t;
     typedef ... entry_t;
 
-    // Related sets
+    // Context and related sets
+    const context_t&  context() const;
     const genset_t&  genset() const;
     const weightset_t& weightset() const;
     const entryset_t&  entryset() const;
@@ -179,17 +181,21 @@ Detailed interface
 Types
 ~~~~~
 
+.. type:: context_t
+
+   The :doc:`context<contexts>` of the automaton.
+
 .. type:: genset_t
 
-   The type of the generator set of the automaton.
+   The type of the :doc:`generator set<gensets>` of the automaton, as specified by the :doc:`context<contexts>`.
 
 .. type:: weightset_t
 
-   The type of the weight set of the automaton.
+   The type of the :doc:`weight set<weightsets>` of the automaton, as specified by the :doc:`context<contexts>`.
 
 .. type:: kind_t
 
-   The kind of the automaton.
+   The kind of the automaton, as specified by the :doc:`context<contexts>`.
 
 .. type:: entryset_t
 
@@ -207,7 +213,7 @@ Types
 
 .. type:: label_t
 
-   The type use to label the automaton.  This usually depends on :type:`kind_t`.  For
+   The type use to label the automaton.  Depending on the :type:`kind_t` spe.  For
    ``labels_are_letters``, the transitions are labeled by ``genset_t::letter_t``,
    while for ``labels_are_words`` they are labeled by ``genset_t::word_t``.
 
@@ -219,17 +225,22 @@ Types
 
    The type used to represent entry in this automaton.  Equal to ``entryset_t::weight_t``.
 
-Related sets
-~~~~~~~~~~~~
-.. function:: const genset_t&  genset() const
+Context and related sets
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-   Return the generator set used by this automaton.
+.. function:: const context_t& context() const
+
+   The :doc:`context<contexts>` of the automaton.
+
+.. function:: const genset_t& genset() const
+
+   Return the :doc:`generator set<gensets>` of the automaton, as specified by the :doc:`context<contexts>`.
 
 .. function:: const weightset_t& weightset() const
 
-   Return the weight set used by this automaton.
+   Return the :doc:`weight set<weightsets>` of the automaton, as specified by the :doc:`context<contexts>`.
 
-.. function:: const entryset_t&  entryset() const
+.. function:: const entryset_t& entryset() const
 
    Return the entry set used by this automaton.
 
@@ -564,16 +575,28 @@ Iteration on entries
 Available Automata
 ------------------
 
-.. class:: mutable_automaton<GenSet, WeightSet, Kind>
+.. class:: mutable_automaton<Context>
 
-   An automaton on the generator set *GenSet* with weights in
-   *WeightSet* and kind *Kind*, implementing all the above interface,
+   An automaton on the generator set ``Context::genset_t``, with
+   weights in ``Context::weightset_t`` and kind ``Context::kind_t``,
+   implementing all the above interface,
 
    Defined in ``vcsn/core/mutable_automaton.hh``.
 
-   .. function:: mutable_automaton(const GenSet& gs, const WeightSet& ws)
-                 mutable_automaton(const GenSet& gs)
+   .. function:: mutable_automaton(const Context& ctx)
 
-     The constructor for a mutable automaton takes an instance of a
-     generator set *a* and an instance of the weight set *ws*.  The
-     latter can be omitted if ``WeightSet`` has a default constructor.
+     The constructor for a mutable automaton takes an instance of a context.
+
+.. function:: mutable_automaton<Context> make_mutable_automaton(const Context& ctx)
+
+   Helper function to build a ``mutable_automaton``, inferring the
+   ``Context`` type.  Compare::
+
+     vcsn::ctx::char_z_lal ctx{{'a', 'b', 'c'}};
+     auto a = vcsn::mutable_automaton<vcsn::ctx::char_z_lal>(ctx);
+
+   with::
+
+     vcsn::ctx::char_z_lal ctx{{'a', 'b', 'c'}};
+     auto a = vcsn::make_mutable_automaton(ctx);
+

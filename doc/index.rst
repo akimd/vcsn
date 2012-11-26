@@ -7,7 +7,9 @@ Vaucanson Developer's Reference
 ===============================
 
 .. toctree::
-   :maxdepth: 2
 
    weightsets
+   gensets
+   kinds
+   contexts
    automata

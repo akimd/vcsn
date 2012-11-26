@@ -9,7 +9,7 @@ words), and coefficients are weights.  For instance::
 
   {3}ab + {4}\e + a
 
-is a polynomial over the alphabet :math:`\{a,b\}`, and the weight-set
+is a polynomial over the alphabet :math:`\{a,b\}`, and the weight set
 :cpp:class:`z` (for instance).  It has three monomials: ``{3}ab``,
 ``{4}\e`` and ``a``.
 
@@ -34,7 +34,7 @@ weights.  The above example implement the following mapping::
 Overview
 --------
 
-``polynomialset`` implements the :doc:`Weight-Set interface
+``polynomialset`` implements the :doc:`Weight Set interface
 <weightsets>` (they are more usually used as *entries* rather than
 *weights*) and adds a few other methods specific to the handling of
 polynomials::
@@ -67,7 +67,7 @@ polynomials::
     value_t& add_weight(value_t& v, const word_t& w, const weight_t k) const;
     const value_t get_weight(value_t& v, const word_t& w) const;
 
-    // Weight-set interface
+    // weight set interface
     std::string sname() const;
     value_t add(const value_t& l, const value_t& r) const;
     value_t mul(const value_t& l, const value_t& r) const;
@@ -88,7 +88,7 @@ New methods
 -----------
 
 We only describe methods that are not part of the
-:doc:`Weight-Set interface <weightsets>`.
+:doc:`Weight Set interface <weightsets>`.
 
 
 .. function:: polynomialset<context_t>(const context_t& ctx)

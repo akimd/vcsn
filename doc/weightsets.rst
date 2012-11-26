@@ -1,6 +1,6 @@
 .. default-domain:: cpp
 
-Weight-Sets
+Weight Sets
 ===========
 
 .. index:: storage type, weight-set
@@ -18,14 +18,14 @@ interpreted as an element of the semiring
 :math:`(\mathbb{Z},+,\times,0,1)` or as an element of the semiring
 :math:`(\mathbb{Z}\cup\{\infty\},\min,+,\infty,0)`.
 
-A :dfn:`weight-set` object stores the semantic information associated
-to the weights.  Ideally you should have one weight-set instantiated
+A :dfn:`weight set` object stores the semantic information associated
+to the weights.  Ideally you should have one weight set instantiated
 somewhere in order to manipulate weights.
 
 Overview
 --------
 
-Here is the required interface of a *Weight-Set* object::
+Here is the required interface of a *Weight Set* object::
 
   static std::string sname();
 
@@ -48,7 +48,7 @@ Here is the required interface of a *Weight-Set* object::
   std::string format(const value_t v) const;
   std::ostream& print(std::ostream& o, const value_t v) const;
 
-Implementations of weight-sets with a complex storage type may decide
+Implementations of weight sets with a complex storage type may decide
 to receive them as `const value_t&` and emit them as `const value_t&`
 instead of the above pass-by-copy specifications.
 
@@ -57,11 +57,11 @@ Detailed interface
 
 .. function:: static std::string sname()
 
-   The (static) name of the weight-set (i.e., it's class name).
+   The (static) name of the weight set (i.e., its class name).
 
 .. type:: value_t
 
-   The storage type of the weight-set's elements.
+   The storage type of the weight set's elements.
 
 .. function:: value_t add(const value_t l, const value_t r) const
 
@@ -108,7 +108,7 @@ Detailed interface
 
    .. index:: positive semiring
 
-   Whether this weight-set is a *positive semiring*.
+   Whether this weight set is a *positive semiring*.
 
    :math:`(\mathbb{K},+,\times,0,1)` is a :dfn:`positive semiring` if
    it is *zero-divisor-free* and *zero-sum-free*: :math:`\forall
@@ -139,7 +139,7 @@ Detailed interface
    instead of ``std::cout << format(v)``, because no intermediate
    string is created.
 
-Available Weight-Sets
+Available Weight Sets
 ---------------------
 
 .. toctree::
