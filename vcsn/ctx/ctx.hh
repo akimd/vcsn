@@ -76,7 +76,7 @@ namespace vcsn
       {
         return (genset_t::sname()
                 + "_" + weightset_t::sname()
-                + "_" + label_trait<kind_t, genset_t>::name());
+                + "_" + kind_t::sname());
       }
 
       virtual std::string vname() const override final
