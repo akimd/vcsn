@@ -9,7 +9,7 @@
 # include <vcsn/algos/xml/ios.hh>
 # include <vcsn/config.h>
 # include <vcsn/algos/xml/structure.hh>
-// FIXME: # include <vcsn/algos/xml/exception.hh>
+# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
@@ -55,15 +55,10 @@ namespace vcsn
   public:
     using structure_t = Structure;
 
-    XML(const structure_t& s)
-    try
+    XML(const structure_t& s) throw (xercesc::XMLException)
       : s_(s)
     {
       xercesc::XMLPlatformUtils::Initialize();
-    }
-    catch (xercesc::XMLException& e)
-    {
-      //FIXME: throw details::XercesException("Initialization failed");
     }
 
     ~XML()
