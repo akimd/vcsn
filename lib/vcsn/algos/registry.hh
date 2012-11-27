@@ -2,6 +2,7 @@
 # define LIB_VCSN_LIB_ALGOS_REGISTRY_HH
 
 # include <map>
+# include <stdexcept>
 # include <boost/type_traits.hpp>
 
 namespace vcsn
