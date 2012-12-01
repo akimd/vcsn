@@ -61,10 +61,9 @@
 }
 
 %% Child description
-\newcommand{\child}[4]{
+\newcommand{\child}[3]{
   \item \xtag{#1}, #2
-  #3
-  See \autoref{#4} for more details.
+  See \autoref{#3} for more details\xspace
 }
 \newcommand{\children}[1]{
   \begin{itemize}
@@ -73,9 +72,7 @@
 }
 
 %% Ref to examples
-\newcommand{\example}[2]{
-  \\See \hyperref[#1]{\nameref{#1}}, lines #2 for a complete example.
-}
+\newcommand{\example}[2]{See \hyperref[#1]{\nameref{#1}}, lines #2 for a complete example\xspace}
 
 \newcommand{\version}{1.0}
 
@@ -120,9 +117,9 @@ machines and regular expressions' XML description.
 
 \item \emph{SHOULD NOT}\\This phrase, or the phrase \emph{NOT
     RECOMMENDED} mean that there may exist valid reasons in particular
-  circumstances when the particular behaviour is acceptable or even
+  circumstances when the particular behavior is acceptable or even
   useful, but the full implications should be understood and the case
-  carefully weighed before implementing any behaviour described with
+  carefully weighed before implementing any behavior described with
   this label.
 
 \item \emph{MAY}\\This word, or the adjective \emph{OPTIONAL}, mean
@@ -135,7 +132,7 @@ machines and regular expressions' XML description.
   reduced functionality. In the same vein an implementation which does
   include a particular option MUST be prepared to interoperate with
   another implementation which does not include the option (except, of
-  course, for the feature the option provides.)
+  course, for the feature the option provides).
 \end{itemize}
 
 \subsection{FSMXML}
@@ -151,8 +148,8 @@ of occurrences and a brief description of what they stand for.
 \subsubsection{Attributes}
 
 The attributes of the element are listed in a table like the following:
-~\\\attrs{}
-~\\in which:
+\\\attrs{}
+\\in which:
 
 \paragraph*{Name}
 Gives the name of the attribute.
@@ -184,7 +181,7 @@ Gives the type of the value:
   values (implicitly) defined in the XML document.
 \item \emph{URI}\\A Uniform Resource Identifier (URI), is a compact
   string of characters used to identify or name a resource.
-\item \emph{integer}, \emph{float}, \emph{string}
+\item \emph{integer}, \emph{float}, \emph{string}.
 \end{itemize}
 
 \paragraph*{Default}
@@ -207,7 +204,7 @@ Gives a complete description of the attribute.
 \label{fsmxml}
 
 The top-level \emph{root} element, which carries version information,
-etc.  \example{automatonA1}{1 and 72}
+etc. \example{automatonA1}{1 and 72}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -218,9 +215,12 @@ etc.  \example{automatonA1}{1 and 72}
 
 \subsubsection*{Children}
 \children{
-  \child{expression}{A regular expression.}{Occurs 0 or more
-    times.}{expression}
-  \child{automaton}{An automaton.}{Occurs 0 or more times.}{automaton}
+
+  \child{expression}{A regular expression. Occurs 0 or more
+    times.}{expression}.
+
+  \child{automaton}{An automaton. Occurs 0 or more times.}{automaton}.
+
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -233,17 +233,20 @@ described by the following elements:
 \subsection{\xtag{valueType}}
 \label{valueType}
 
-The top-level element of the type part.  \example{automatonA1}{5-16}
+The top-level element of the type part. \example{automatonA1}{5-16}.
 
 \subsubsection*{Attributes}
 None.
 
 \subsubsection*{Children}
 \children{
-  \child{weightset}{The weight set.}{Occurs 1 time, is required.}
-  {weightset}
-  \child{labelSet}{The alphabet.}{Occurs 1 time, is required.}
-  {labelSet}
+
+  \child{weightset}{The weight set. Occurs 1 time, is required.}
+  {weightset}.
+
+  \child{labelSet}{The alphabet. Occurs 1 time, is required.}
+  {labelSet}.
+
 }
 
 \subsection{\xtag{labelSet}}
@@ -285,7 +288,7 @@ None.
 
 When \xattr{type} is set to ``free'', and \xattr{genKind} to
 ``simple'', the \xtag{labelSet} inherits the following new attributes
-and children.  \example{automatonA1}{9-15}
+and children. \example{automatonA1}{9-15}.
 
 \paragraph*{Attributes}
 
@@ -295,16 +298,15 @@ and children.  \example{automatonA1}{9-15}
 }
 \paragraph*{Children}
 \children{
-  \child{labelGen}{A label set generator.}{Occurs 1 or more
-    times.}{labelGen}
+  \child{labelGen}{A labelSet generator. Occurs 1 or more
+    times.}{labelGen}.
 }
 
-\paragraph{Free label set with ``tuple'' generators}
+\paragraph{Free LabelSet with ``tuple'' generators}
 
 When \xattr{type} is set to ``free'', and \xattr{genKind} to
 ``tuple'', the \xtag{labelSet} inherits the following new attributes
-and children.  \example{automatonPdp1}{9-33}
-
+and children. \example{automatonPdp1}{9-33}.
 
   \attr{genDim}{Required}{integer}{none}{Greater than 1} {Dimension of
     the tuple.}
@@ -312,16 +314,16 @@ and children.  \example{automatonPdp1}{9-33}
 \paragraph*{Children}
 \children{
   \child{genSort}{List of sort of generator for each ``free'' label
-    set.}  {Occurs 1 time, is required.}{genSort}
-  \child{labelGen}{A label set generator.}{Occurs 1 or more
-    times.}{labelGen}
+    set. Occurs 1 time, is required.}{genSort}.
+  \child{labelGen}{A labelSet generator. Occurs 1 or more
+    times.}{labelGen}.
 }
 
-\subsubsection{Product Label Set}
+\subsubsection{Product LabelSet}
 
 When \xattr{type} is set to ``product'', the \xtag{labelSet} describes
 a product of free label sets and inherits the following new attributes
-and children.  \example{automatonPhim1}{9-26}
+and children. \example{automatonPhim1}{9-26}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -330,8 +332,8 @@ and children.  \example{automatonPhim1}{9-26}
 }
 \subsubsection*{Children}
 \children{
-  \child{labelSet}{A \texttt{free} label set.}{Occurs \xval{prodDim}
-    times.}{free label set}
+  \child{labelSet}{A \texttt{free} labelSet. Occurs \xval{prodDim}
+    times.}{freeLabelSet}.
 }
 
 \subsection{\xtag{genSort}}
@@ -339,14 +341,14 @@ and children.  \example{automatonPhim1}{9-26}
 
 Describes the sort of the generator of each item of the tuple in a
 ``free'' label set with ``tuple'' generators.
-\example{automatonPdp1}{13-16}
+\example{automatonPdp1}{13-16}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{genCompSort}{Sort of an item within the generator.}  {Occurs
-    \xval{genDim} times.}{genCompSort}
+  \child{genCompSort}{Sort of an item within the generator. Occurs
+    \xval{genDim} times.}{genCompSort}.
 }
 
 \subsection{\xtag{genCompSort}}
@@ -354,7 +356,7 @@ None.
 
 Describes the sort of the \xval{k}th coordinate/component in a
 ``tuple'' generator, \xval{k} being the position of the element in the
-list within \xtag{genSort}.  \example{automatonPdp1}{18-19}
+list within \xtag{genSort}. \example{automatonPdp1}{18-19}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -376,7 +378,7 @@ inherits the following new attributes:
 
 Describes a generator of label set when its \xattr{genDescript} is set
 to ``enum'' and \xattr{genKind} to ``simple''.
-\example{automatonA1}{13-14}
+\example{automatonA1}{13-14}.
 
 \paragraph*{Attributes}
 \attrs{
@@ -393,14 +395,14 @@ None.
 
 Describes a generator of labelSet when its \xattr{genDescript} is set
 to ``enum'' and \xattr{genKind} to ``tuple''.
-\example{automatonPhim1}{17-32}
+\example{automatonPhim1}{17-32}.
 
 \paragraph*{Attributes}
 None.
 \paragraph*{Children}
 \children{
-  \child{monCompGen}{A ``tuple'' label set generator.}  {Occurs
-    \xval{genDim} times.}{monCompGen}
+  \child{monCompGen}{A ``tuple'' label set generator. Occurs
+    \xval{genDim} times.}{monCompGen}.
 }
 
 \subsubsection{``range'' and ``set'' generators}
@@ -416,7 +418,7 @@ we let these investigations to more expert people.
 Gives the \xval{k}th coordinate/component in a ``tuple'' generator,
 \xval{k} being the position of the element in the list within
 \xtag{labelGen}.
-\example{automatonPhim1}{18-19}
+\example{automatonPhim1}{18-19}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -447,14 +449,14 @@ None.
 
 When \xattr{type} is set to ``numerical'', \xtag{weightSet} describes
 a numerical weight set and inherits the following new attributes and
-children.  \example{automatonA1}{6-8}
+children. \example{automatonA1}{6-8}.
 
 \subsubsection*{Attributes}
 \attrs{
   \attr{set}{Required}{token}{none}{``B'', ``N'', ``Z'', ``Q'', ``R'',
     ``C''} {The set on which is described the weight set.}
   \attr{operation}{Required}{token, string}{none}{``classical'',
-    ``minPlus'', ``maxPlus''}{Set the operations to work with into the
+    ``minPlus'', ``maxPlus''…}{Set the operations to work with into the
     weight set. This is not an exhaustive list.}
 }
 \subsubsection*{Children}
@@ -464,52 +466,52 @@ children.  \example{automatonA1}{6-8}
 
 When \xattr{type} is set to ``series'', the \xtag{weightSet} describes
 a series weight set and inherits the following new attributes and
-children.  \example{automatonD2rw}{6-19}
+children. \example{automatonD2rw}{6-19}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{weightSet}{A weight set.}{Occurs 1 time.}{weightset}
-  \child{labelSet}{A label set.}{Occurs 1 time.}{labelSet}
+  \child{weightSet}{A weight set. Occurs 1 time.}{weightset}.
+  \child{labelSet}{A label set. Occurs 1 time.}{labelSet}.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\RegExpBody}[2]{
-  \item #1 #2
-  See \autoref{RegExpBody} for more details.
+\newcommand{\RegExpBody}[1]{
+  \item #1
+  See \autoref{RegExpBody} for more details\xspace
 }
 
 
 \section{Regular Expressions}
 
 \subsection{\xtag{expressions}}
-\label{expressions}
+\label{expression}
 
 Holds the complete representation of a regular expression.
-\example{regExpC1}{4-52}
+\example{regExpC1}{4-52}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{valueType}{The regular expression's type.}  {Occurs 1
-    time.}{valueType}
-  \child{typedExpression}{The regular expression's body.}  {Occurs 1
-    time.}{typedExpression}
+  \child{valueType}{The regular expression's type. Occurs 1
+    time.}{valueType}.
+  \child{typedExpression}{The regular expression's body. Occurs 1
+    time.}{typedExpression}.
 }
 
 \subsection{\xtag{typedExpression}}
 \label{typedExpression}
 
-Holds the typed regular expression.  \example{regExpC1}{17-51}
+Holds the typed regular expression. \example{regExpC1}{17-51}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Typed regular expression.}  {Occurs 1 time.}
+  \RegExpBody{Typed regular expression. Occurs 1 time}.
 }
 
 \subsection{Regular Expression's Body}
@@ -517,7 +519,7 @@ None.
 
 A regular expression's body is represented by a recursive tree of
 elements, listed below.  Any of these elements is seen as a ``Typed
-regular expression''.  \example{regExpC1}{18-50}
+regular expression''. \example{regExpC1}{18-50}.
 
 \subsubsection{\xtag{sum}}
 \label{sum}
@@ -528,8 +530,8 @@ Sum of two expressions.
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Left Typed regular expression.}  {Occurs 1 time.}
-  \RegExpBody{Right Typed regular expression.}  {Occurs 1 time.}
+  \RegExpBody{Left Typed regular expression. Occurs 1 time}.
+  \RegExpBody{Right Typed regular expression. Occurs 1 time}.
 }
 
 \subsubsection{\xtag{product}}
@@ -541,8 +543,8 @@ Product of two expressions.
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Left Typed regular expression.}  {Occurs 1 time.}
-  \RegExpBody{Right Typed regular expression.}  {Occurs 1 time.}
+  \RegExpBody{Left Typed regular expression. Occurs 1 time}.
+  \RegExpBody{Right Typed regular expression. Occurs 1 time}.
 }
 
 \subsubsection{\xtag{star}}
@@ -554,7 +556,7 @@ Star of an expression.
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Typed regular expression to starify.}  {Occurs 1 time.}
+  \RegExpBody{Typed regular expression to starify. Occurs 1 time}.
 }
 
 \subsubsection{\xtag{rightExtMul} and \xtag{leftExtMul}}
@@ -566,44 +568,44 @@ Represents the right/left scalar multiplication of an expression.
 None.
 \subsubsection*{Children}
 \children{
-  \child{weight}{Weight for the multiplication.}{Occurs 1
-    time.}{weight}
-  \RegExpBody{Typed regular expression to multiply.}  {Occurs 1 time.}
+  \child{weight}{Weight for the multiplication. Occurs 1
+    time.}{weight}.
+  \RegExpBody{Typed regular expression to multiply. Occurs 1 time}.
 }
 
 \subsubsection{\xtag{monElmt}}
 \label{monElmt}
 
-Represents a label set element, which is a concatenation of label set
-generators.
+Represents a \emph{labelSet} element, which is a concatenation of
+\emph{labelSet} generators.
 
 \paragraph{On a free Label Set}
 \label{monElmtFree}
 
-Represents a label set element on a free label set.
-\example{automatonA1}{26-28}
+Represents a \emph{labelSet} element on a free \emph{labelSet}.
+\example{automatonA1}{26-28}.
 
 \paragraph*{Attributes}
 None.
 
 \paragraph*{Children}
 \children{
-  \child{labelGen}{A label set Generator.}{Occurs as many time as
-    wanted.}{labelGen}
+  \child{labelGen}{A \emph{labelSet} Generator. Occurs as many time as
+    wanted.}{labelGen}.
 }
 
 \paragraph{On a product Label Set.}
 
-Represents a label set element on a product label set.
-\example{automatonPhim1}{35-42}
+Represents a \emph{labelSet} element on a product \emph{labelSet}.
+\example{automatonPhim1}{35-42}.
 
 \paragraph*{Attributes}
 None.
 
 \paragraph*{Children}
 \children{
-\item \xtag{monElmt} or \xtag{one} A label set element or the identity
-  of a \texttt{free} label set. Occurs \xval{prodDim} times.  See
+\item \xtag{monElmt} or \xtag{one} A \emph{labelSet} element or the identity
+  of a \texttt{free} \emph{labelSet}. Occurs \xval{prodDim} times.  See
   \autoref{monElmtFree} and \autoref{one} for more details.
 }
 
@@ -621,7 +623,7 @@ None.
 \label{one}
 
 Represents the identity series or the identity symbol of a
-\texttt{free} label set.
+\texttt{free} \emph{labelSet}.
 
 \subsubsection*{Attributes}
 None.
@@ -635,8 +637,8 @@ Represents the weight of an expression.
 
 \subsubsection{On a Numerical Weight Set}
 
-Represents the weight of an expression with a numerical weightset.
-\example{automatonC1}{47-47}
+Represents the weight of an expression with a numerical \emph{weightSet}.
+\example{automatonC1}{47-47}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -647,15 +649,15 @@ None.
 
 \subsubsection{On a Series Weight Set}
 
-Represents the weight of an expression with a series weight set.
-\example{automatonD2rw}{39-43}
+Represents the weight of an expression with a series \emph{weightSet}.
+\example{automatonD2rw}{39-43}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Typed regular expression taken into the weight set.}
-  {Occurs 1 time.}
+  \RegExpBody{Typed regular expression taken into the
+    \emph{weightSet}. Occurs 1 time.}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -665,7 +667,7 @@ None.
 \label{automaton}
 
 Holds the complete representation of an automaton.
-\example{automatonA1}{4-70}
+\example{automatonA1}{4-70}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -676,37 +678,37 @@ Holds the complete representation of an automaton.
 
 \subsubsection*{Children}
 \children{
-  \child{valueType}{The automaton's type.}  {Occurs 1
-    time.}{valueType}
-  \child{automatonStruct}{The automaton's content.}  {Occurs 1
-    time.}{automatonStruct}
+  \child{valueType}{The automaton's type. Occurs 1
+    time.}{valueType}.
+  \child{automatonStruct}{The automaton's content. Occurs 1
+    time.}{automatonStruct}.
 }
 
 \subsection{\xtag{automatonStruct}}
 \label{automatonStruct}
 
-Holds the automaton's content.  \example{automatonA1}{17-69}
+Holds the automaton's content. \example{automatonA1}{17-69}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{states}{Lists the automaton's states.}{Occurs 1
-    time.}{states}
-  \child{transitions}{Lists the automaton's transitions.}  {Occurs 1
-    time.}{transitions}
+  \child{states}{Lists the automaton's states. Occurs 1
+    time.}{states}.
+  \child{transitions}{Lists the automaton's transitions. Occurs 1
+    time.}{transitions}.
 }
 
 \subsection{\xtag{states}}
 \label{states}
 
-Holds the automaton's states.  \example{automatonA1}{18-22}
+Holds the automaton's states. \example{automatonA1}{18-22}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{state}{Adds a state.}{Occurs 0 or more times.}{state}
+  \child{state}{Adds a state. Occurs 0 or more times.}{state}.
 }
 
 \subsection{\xtag{state}}
@@ -716,7 +718,7 @@ Describes a state.
 \xattr{key} is usually used to define in which order should be
 processed the states.
 \xattr{name} allows you to give a more explicit name.
-\example{automatonA1}{19-21}
+\example{automatonA1}{19-21}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -732,25 +734,24 @@ None.
 \label{transitions}
 
 Holds the automaton's transitions and initial/final properties of
-states.  \example{automatonA1}{23-68}
+states. \example{automatonA1}{23-68}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{transition}{Adds a transition.}{Occurs 0 or more
-    times.}{transition}
-  \child{initial}{Adds the initial property to a state.}  {Occurs 0 or
-    more times.}{initialfinal}
-  \child{final}{Adds the final property to a state.}  {Occurs 0 or
-    more times.}{initialfinal}
+  \child{transition}{Adds a transition. Occurs 0 or more
+    times.}{transition}.
+  \child{initial}{Adds the initial property to a state. Occurs 0 or
+    more times.}{initialfinal}.
+  \child{final}{Adds the final property to a state. Occurs 0 or
+    more times.}{initialfinal}.
 }
 
 \subsection{\xtag{transition}}
 \label{transition}
 
-Describes a transition.
-\example{automatonA1}{24-30}
+Describes a transition. \example{automatonA1}{24-30}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -761,14 +762,14 @@ Describes a transition.
 }
 \subsubsection*{Children}
 \children{
-  \child{label}{Label of the transition.}{Occurs 1 time}{label}
+  \child{label}{Label of the transition. Occurs 1 time}{label}.
 }
 
 \subsection{\xtag{initial} and \xtag{final}}
 \label{initialfinal}
 
 Adds the initial/final property to a state.
-\example{automatonA1}{66-67}
+\example{automatonA1}{66-67}.
 
 \subsubsection*{Attributes}
 \attrs{
@@ -777,19 +778,19 @@ Adds the initial/final property to a state.
 }
 \subsubsection*{Children}
 \children{
-  \child{label}{Label of the transition.}{Occurs 1 time}{label}
+  \child{label}{Label of the transition. Occurs 1 time}{label}.
 }
 
 \subsection{\xtag{label}}
 \label{label}
 
-Holds the label of a transition.  \example{automatonA1}{25-29}
+Holds the label of a transition. \example{automatonA1}{25-29}.
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Typed regular expression.}{Occurs 1 time.}
+  \RegExpBody{Typed regular expression. Occurs 1 time}.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
