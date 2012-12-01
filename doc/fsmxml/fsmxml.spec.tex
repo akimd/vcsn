@@ -215,7 +215,7 @@ The top-level \emph{root} element, which carries version information, etc.
 
 \subsubsection*{Children}
 \children{
-  \child{regExp}{A regular expression.}{Occurs 0 or more times.}{regExp}
+  \child{expression}{A regular expression.}{Occurs 0 or more times.}{expression}
   \child{automaton}{An automaton.}{Occurs 0 or more times.}{automaton}
 }
 
@@ -237,32 +237,32 @@ None.
 
 \subsubsection*{Children}
 \children{
-  \child{semiring}{The semiring.}{Occurs 1 time, is required.}{semiring}
-  \child{monoid}{The alphabet.}{Occurs 1 time, is required.}{monoid}
+  \child{weightset}{The weight set.}{Occurs 1 time, is required.}{weightset}
+  \child{labelSet}{The alphabet.}{Occurs 1 time, is required.}{labelSet}
 }
 
-\subsection{\xtag{monoid}}
-\label{monoid}
+\subsection{\xtag{labelSet}}
+\label{labelSet}
 
-Holds the description of a monoid.
+Holds the description of a labelSet.
 
 \subsubsection*{Attributes}
 \attrs{
   \attr{type}{Required, Pivot}{token}{none}{``unit'', ``free'', ``product''}
-       {Type of the monoid.}
+       {Type of the labelSet.}
 }
 
-\subsubsection{Unit monoid}
+\subsubsection{Unit Label Set}
 
 When \xattr{type} is set to ``unit'', it is equivalent to the lack of
-monoids. It enables the possibility to describe valued graphs within the
+label sets. It enables the possibility to describe valued graphs within the
 same format.
 
-\subsubsection{Free monoid}
-\label{freemonoid}
+\subsubsection{Free Label Set}
+\label{freeLabelSet}
 
-When \xattr{type} is set to ``free'', the \xtag{monoid} describes a
-free monoid and inherits the following new
+When \xattr{type} is set to ``free'', the \xtag{labelSet} describes a
+free labelSet and inherits the following new
 attributes and children.
 
 
@@ -270,8 +270,6 @@ attributes and children.
 \attrs{
   \attr{genKind}{Required, Pivot}{token}{none}{``simple'', ``tuple''}
        {Kind of the generators.}
-  %\attr{identitySymbol}{Required}{string}{none}{}
-  %     {Symbol of the identity of the monoid. FIXME Restrictions?}
   \attr{genDescript}{Required, Pivot}{token}{``enum''}{``enum'', ``range'', ``set''}
        {How are described the generators.}
 }
@@ -279,10 +277,10 @@ attributes and children.
 \subsubsection*{Children}
 None.
 
-\paragraph{Free monoid with ``simple'' generators}
+\paragraph{Free Label Set with ``simple'' generators}
 
 When \xattr{type} is set to ``free'', and \xattr{genKind} to ``simple'',
-the \xtag{monoid} inherits the following new attributes and children.
+the \xtag{labelSet} inherits the following new attributes and children.
 \example{automatonA1}{9-15}
 
 \paragraph*{Attributes}
@@ -293,13 +291,13 @@ the \xtag{monoid} inherits the following new attributes and children.
 }
 \paragraph*{Children}
 \children{
-  \child{monGen}{A monoid generator.}{Occurs 1 or more times.}{monGen}
+  \child{labelGen}{A label set generator.}{Occurs 1 or more times.}{labelGen}
 }
 
-\paragraph{Free monoid with ``tuple'' generators}
+\paragraph{Free label set with ``tuple'' generators}
 
 When \xattr{type} is set to ``free'', and \xattr{genKind} to ``tuple'',
-the \xtag{monoid} inherits the following new attributes and children.
+the \xtag{labelSet} inherits the following new attributes and children.
 \example{automatonPdp1}{9-33}
 
 \paragraph*{Attributes}
@@ -309,15 +307,15 @@ the \xtag{monoid} inherits the following new attributes and children.
 }
 \paragraph*{Children}
 \children{
-  \child{genSort}{List of sort of generator for each ``free'' monoid.}
+  \child{genSort}{List of sort of generator for each ``free'' label set.}
   {Occurs 1 time, is required.}{genSort}
-  \child{monGen}{A monoid generator.}{Occurs 1 or more times.}{monGen}
+  \child{labelGen}{A label set generator.}{Occurs 1 or more times.}{labelGen}
 }
 
-\subsubsection{Product Monoid}
+\subsubsection{Product Label Set}
 
-When \xattr{type} is set to ``product'', the \xtag{monoid} describes a
-product of free monoids and inherits the following new attributes and children.
+When \xattr{type} is set to ``product'', the \xtag{labelSet} describes a
+product of free label sets and inherits the following new attributes and children.
 \example{automatonPhim1}{9-26}
 
 \subsubsection*{Attributes}
@@ -327,14 +325,14 @@ product of free monoids and inherits the following new attributes and children.
 }
 \subsubsection*{Children}
 \children{
-  \child{monoid}{A \texttt{free} monoid.}{Occurs \xval{prodDim} times.}{freemonoid}
+  \child{labelSet}{A \texttt{free} label set.}{Occurs \xval{prodDim} times.}{free label set}
 }
 
 \subsection{\xtag{genSort}}
 \label{genSort}
 
 Describes the sort of the generator of each item of the tuple in a ``free''
-monoid with ``tuple'' generators.
+label set with ``tuple'' generators.
 \example{automatonPdp1}{13-16}
 
 \subsubsection*{Attributes}
@@ -361,16 +359,16 @@ being the position of the element in the list within \xtag{genSort}.
 \subsubsection*{Children}
 None.
 
-\subsection{\xtag{monGen}}
-\label{monGen}
+\subsection{\xtag{labelGen}}
+\label{labelGen}
 
 \subsubsection{``enum'' generators}
-When \xattr{genDescript} is set to ``enum'', the \xtag{monGen} inherits
+When \xattr{genDescript} is set to ``enum'', the \xtag{labelGen} inherits
 the following new attributes:
 
 \paragraph{``enum'' generator of ``simple'' sort}
 
-Describes a generator of monoid when its \xattr{genDescript} is set to
+Describes a generator of label set when its \xattr{genDescript} is set to
 ``enum'' and \xattr{genKind} to ``simple''.
 \example{automatonA1}{13-14}
 
@@ -382,14 +380,14 @@ Describes a generator of monoid when its \xattr{genDescript} is set to
   }
 }
 
-If used within a \xtag{monoid}, should also be \emph{Unique}.
+If used within a \xtag{labelSet}, should also be \emph{Unique}.
 If used within a \xtag{monElmt}, should also be \emph{Valid}.
 \paragraph*{Children}
 None.
 
 \paragraph{``enum'' generator of ``tuple'' sort}
 
-Describes a generator of monoid when its \xattr{genDescript} is set to
+Describes a generator of labelSet when its \xattr{genDescript} is set to
 ``enum'' and \xattr{genKind} to ``tuple''.
 \example{automatonPhim1}{17-32}
 
@@ -397,7 +395,7 @@ Describes a generator of monoid when its \xattr{genDescript} is set to
 None.
 \paragraph*{Children}
 \children{
-  \child{monCompGen}{A ``tuple'' monoid generator.}
+  \child{monCompGen}{A ``tuple'' label set generator.}
   {Occurs \xval{genDim} times.}{monCompGen}
 }
 
@@ -412,7 +410,7 @@ we let these investigations to more expert people.
 \label{monCompGen}
 
 Gives the \xval{k}th coordinate/component in a ``tuple'' generator,
-\xval{k} being the position of the element in the list within \xtag{monGen}.
+\xval{k} being the position of the element in the list within \xtag{labelGen}.
 \example{automatonPhim1}{18-19}
 
 \subsubsection*{Attributes}
@@ -426,53 +424,49 @@ Gives the \xval{k}th coordinate/component in a ``tuple'' generator,
 \subsubsection*{Children}
 None.
 
-\subsection{\xtag{semiring}}
-\label{semiring}
+\subsection{\xtag{weightSet}}
+\label{weightset}
 
-Holds a semiring description.
+Holds a weight set description.
 
 \subsubsection*{Attributes}
 \attrs{
   \attr{type}{Required, Pivot}{token}{none}{``numerical'', ``series''}
-       {Type of the semiring.}
+       {Type of the weight set.}
 }
 
 \subsubsection*{Children}
 None.
 
-\subsubsection{Numerical semiring}
+\subsubsection{Numerical Weight Set}
 
-When \xattr{type} is set to ``numerical'', \xtag{semiring} describes a
-numerical semiring and inherits the following new attributes and children.
+When \xattr{type} is set to ``numerical'', \xtag{weightSet} describes a
+numerical weight set and inherits the following new attributes and children.
 \example{automatonA1}{6-8}
 
 \subsubsection*{Attributes}
 \attrs{
   \attr{set}{Required}{token}{none}{``B'', ``N'', ``Z'', ``Q'', ``R'', ``C''}
-       {The set on which is described the semiring.}
+       {The set on which is described the weight set.}
   \attr{operation}{Required}{token, string}{none}{``classical'', ``minPlus'',
     ``maxPlus''}{Set the operations to work with into the
-      semiring. This is not an exhaustive list.}
-  %\attr{identitySymbol}{}{string}{none}{}
-  %     {Necessary for some numerical semirings with non classical operations.}
-  %\attr{zeroSymbol}{}{string}{none}{}
-  %     {Necessary for some numerical semirings with non classical operations.}
+      weight set. This is not an exhaustive list.}
 }
 \subsubsection*{Children}
   None.
 
-\subsubsection{Series semiring}
+\subsubsection{Series Weight Set}
 
-When \xattr{type} is set to ``series'', the \xtag{semiring} describes a
-series semiring and inherits the following new attributes and children.
+When \xattr{type} is set to ``series'', the \xtag{weightSet} describes a
+series weight set and inherits the following new attributes and children.
 \example{automatonD2rw}{6-19}
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \child{semiring}{A semiring.}{Occurs 1 time.}{semiring}
-  \child{monoid}{A monoid.}{Occurs 1 time.}{monoid}
+  \child{weightSet}{A weight set.}{Occurs 1 time.}{weightset}
+  \child{labelSet}{A label set.}{Occurs 1 time.}{labelSet}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -485,8 +479,8 @@ None.
 
 \section{Regular Expressions}
 
-\subsection{\xtag{regExp}}
-\label{regExp}
+\subsection{\xtag{expressions}}
+\label{expressions}
 
 Holds the complete representation of a regular expression.
 \example{regExpC1}{4-52}
@@ -497,12 +491,12 @@ None.
 \children{
   \child{valueType}{The regular expression's type.}
   {Occurs 1 time.}{valueType}
-  \child{typedRegExp}{The regular expression's body.}
-  {Occurs 1 time.}{typedRegExp}
+  \child{typedExpression}{The regular expression's body.}
+  {Occurs 1 time.}{typedExpression}
 }
 
-\subsection{\xtag{typedRegExp}}
-\label{typedRegExp}
+\subsection{\xtag{typedExpression}}
+\label{typedExpression}
 
 Holds the typed regular expression.
 \example{regExpC1}{17-51}
@@ -515,7 +509,7 @@ None.
        {Occurs 1 time.}
 }
 
-\subsection{Regular expression's body}
+\subsection{Regular Expression's Body}
 \label{RegExpBody}
 
 A regular expression's body is represented by a recursive tree of
@@ -583,12 +577,12 @@ None.
 \subsubsection{\xtag{monElmt}}
 \label{monElmt}
 
-Represents a monoid element, which is a concatenation of monoid generators.
+Represents a label set element, which is a concatenation of label set generators.
 
-\paragraph{On a free monoid}
+\paragraph{On a free Label Set}
 \label{monElmtFree}
 
-Represents a monoid element on a free monoid.
+Represents a label set element on a free label set.
 \example{automatonA1}{26-28}
 
 \paragraph*{Attributes}
@@ -596,12 +590,12 @@ None.
 
 \paragraph*{Children}
 \children{
-  \child{monGen}{A monoid Generator.}{Occurs as many time as wanted.}{monGen}
+  \child{labelGen}{A label set Generator.}{Occurs as many time as wanted.}{labelGen}
 }
 
-\paragraph{On a product monoid.}
+\paragraph{On a product Label Set.}
 
-Represents a monoid element on a product monoid.
+Represents a label set element on a product label set.
 \example{automatonPhim1}{35-42}
 
 \paragraph*{Attributes}
@@ -609,8 +603,8 @@ None.
 
 \paragraph*{Children}
 \children{
-  \item \xtag{monElmt} or \xtag{one}  A monoid element or the identity of
-    a \texttt{free} monoid. Occurs \xval{prodDim} times.
+  \item \xtag{monElmt} or \xtag{one}  A label set element or the identity of
+    a \texttt{free} label set. Occurs \xval{prodDim} times.
     See \autoref{monElmtFree} and \autoref{one} for more details.
 }
 
@@ -627,7 +621,7 @@ None.
 \subsubsection{\xtag{one}}
 \label{one}
 
-Represents the identity series or the identity symbol of a \texttt{free} monoid.
+Represents the identity series or the identity symbol of a \texttt{free} label set.
 
 \subsubsection*{Attributes}
 None.
@@ -639,9 +633,9 @@ None.
 
 Represents the weight of an expression.
 
-\subsubsection{On a numerical semiring}
+\subsubsection{On a Numerical Weight Set}
 
-Represents the weight of an expression with a numerical semiring.
+Represents the weight of an expression with a numerical weightset.
 \example{automatonC1}{47-47}
 
 \subsubsection*{Attributes}
@@ -651,16 +645,16 @@ Represents the weight of an expression with a numerical semiring.
 \subsubsection*{Children}
 None.
 
-\subsubsection{On a series semiring}
+\subsubsection{On a Series Weight Set}
 
-Represents the weight of an expression with a series semiring.
+Represents the weight of an expression with a series weight set.
 \example{automatonD2rw}{39-43}
 
 \subsubsection*{Attributes}
 None.
 \subsubsection*{Children}
 \children{
-  \RegExpBody{Typed regular expression taken into the semiring.}
+  \RegExpBody{Typed regular expression taken into the weight set.}
        {Occurs 1 time.}
 }
 
