@@ -1,0 +1,972 @@
+\documentclass[a4paper]{article}
+\usepackage{ifthen}
+\usepackage{tabularx}
+\usepackage{graphics}
+\usepackage{geometry}
+\usepackage{lscape}
+\usepackage{hyperref}
+\usepackage{vaucanson-g}
+\usepackage{moreverb}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Give a numbering to paragraphs and subparagrahs and
+%% display them into the table of content.
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+
+%% Display paragraphs as sections.
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
+  {-3.25ex\@plus -1ex \@minus -.2ex}%
+  {1.5ex \@plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+
+%% Use to replace 'see subsection x.x.x' with 'see Section x.x.x'
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Macro used :
+%%  - to organize attributes, tag and values into tables.
+%%  - to highlight attributes, tag and values.
+
+%% XML Tag.
+\newcommand{\xtag}[1]{\texttt{<#1>}}
+%% XML Attribute.
+\newcommand{\xattr}[1]{\texttt{#1}}
+%% Attributes values
+\newcommand{\xval}[1]{\texttt{#1}}
+
+%% Attributes description
+\newcommand{\attr}[6]{
+  \begin{tabular}{| p{0.175\textwidth} | p{0.175\textwidth} | p{0.175\textwidth} | p{0.175\textwidth} | p{0.175\textwidth} |}
+    \hline
+    \xattr{#1} & #2 & #3 & #4 & #5\\\hline
+    \multicolumn{5}{| l |}{#6}\\\hline
+  \end{tabular}\\
+}
+\newcommand{\attrs}[1]{
+  \attr{\emph{Name}}
+       {\emph{Info}}
+       {\emph{Type}}
+       {\emph{Default}}
+       {\emph{Values}}
+       {\emph{Description}}
+  #1
+}
+
+%% Child description
+\newcommand{\child}[4]{
+  \item \xtag{#1}, #2
+  #3
+  See \autoref{#4} for more details.
+}
+\newcommand{\children}[1]{
+  \begin{itemize}
+    #1
+  \end{itemize}
+}
+
+%% Ref to examples
+\newcommand{\example}[2]{
+  \\See \hyperref[#1]{\nameref{#1}}, lines #2 for a complete example.
+}
+
+\newcommand{\version}{1.0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%% Title
+\title{Finite State Machine XML (FSMXML)\\
+  Specifications}
+\author{The {\sc Vaucanson} Group}
+\date{\today}
+\maketitle
+
+%% Abstract
+\begin{abstract}
+This document describes FSMXML. FSMXML provides generic finite state
+machines and regular expressions' XML description.
+\end{abstract}
+
+%% Table of content
+\tableofcontents{}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Terminology}
+
+\subsection{General}
+
+\begin{itemize}
+  \item \emph{MUST}\\This word, or the terms \emph{REQUIRED} or \emph{SHALL},
+mean that the definition is an absolute requirement of the specification.
+
+  \item \emph{MUST NOT}\\This phrase, or the phrase \emph{SHALL NOT}, mean that
+the definition is an absolute prohibition of the specification.
+
+  \item \emph{SHOULD}\\This word, or the adjective \emph{RECOMMENDED}, mean
+that there may exist valid reasons in particular circumstances to ignore
+a particular item, but the full implications must be understood and
+carefully weighed before choosing a different course.
+
+  \item \emph{SHOULD NOT}\\This phrase, or the phrase \emph{NOT RECOMMENDED}
+mean that there may exist valid reasons in particular circumstances when
+the particular behaviour is acceptable or even useful, but the full
+implications should be understood and the case carefully weighed
+before implementing any behaviour described with this label.
+
+  \item \emph{MAY}\\This word, or the adjective \emph{OPTIONAL}, mean that an
+item is truly optional.  One vendor may choose to include the item because
+a particular marketplace requires it or because the vendor feels that
+it enhances the product while another vendor may omit the same item.
+An implementation which does not include a particular option MUST be
+prepared to interoperate with another implementation which does
+include the option, though perhaps with reduced functionality. In the
+same vein an implementation which does include a particular option
+MUST be prepared to interoperate with another implementation which
+does not include the option (except, of course, for the feature the
+option provides.)
+\end{itemize}
+
+\subsection{FSMXML}
+
+Each element of the FSMXML format is described in a section with the following
+2 parts:
+
+\subsubsection{Children}
+
+Describes the required/allowed children of the element, their
+number of occurrences and a brief description of what they stand for.
+
+\subsubsection{Attributes}
+
+The attributes of the element are listed in a table like the following:
+~\\\attrs{}
+~\\in which:
+
+\paragraph*{Name}
+Gives the name of the attribute.
+
+\paragraph*{Info}
+Gives informations about the attribute:
+\begin{itemize}
+  \item \emph{Required}\\The attribute is mandatory. 
+  \item \emph{Pivot}\\Depending on the attribute's value, the form of the
+    children should differ.
+  \item \emph{Unique}\\When the same element can be used more than once, it
+    means that one shall not declare twice the same value in each of
+    those elements.
+  \item \emph{Valid}\\Implies that the value must have already been
+    defined previously in the XML document.
+\end{itemize}
+
+\paragraph*{Type}
+Gives the type of the value:
+\begin{itemize}
+  \item \emph{token}\\Is used for a string which takes only
+    a couple of already defined values, listed in the \emph{Values} column.
+  \item \emph{ID}\\Is used for a string which represents an identifier,
+    that can be used many times in the document to refer to the unique same
+    ``concept''.
+  \item \emph{generator}\\Is used for a string which only takes
+    a couple of values (implicitly) defined in the XML document.
+  \item \emph{weight}\\Is used for a string which only takes
+    a couple of values (implicitly) defined in the XML document.
+  \item \emph{URI}\\A Uniform Resource Identifier (URI), is a compact string
+of characters used to identify or name a resource.
+  \item \emph{integer}, \emph{float}, \emph{string}
+\end{itemize}
+
+\paragraph*{Default}
+Since some attributes are always required and would usually take the same
+value, a default value is possible. Omitting the attribute will implicitly
+stand for the default value.
+
+\paragraph*{Values}
+When \emph{Type} is set to \xval{token}, lists all the possible
+values that can take the attribute.
+
+\paragraph*{Description}
+Gives a complete description of the attribute.
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{FSMXML}
+
+\subsection{\xtag{fsmxml}}
+\label{fsmxml}
+
+The top-level \emph{root} element, which carries version information, etc.
+\example{automatonA1}{1 and 72}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{xmlns}{}{URI}{none}{}{Sets the namespace.}
+  \attr{version}{}{float}{none}{}{Sets the version of FSMXML used.
+				  This one is \version}
+}
+
+\subsubsection*{Children}
+\children{
+  \child{regExp}{A regular expression.}{Occurs 0 or more times.}{regExp}
+  \child{automaton}{An automaton.}{Occurs 0 or more times.}{automaton}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Type}
+
+Regular expressions and automata are described over a type, which can be 
+described in the same way for both objects. In FSMXML this type is described
+by the following elements:
+
+\subsection{\xtag{valueType}}
+\label{valueType}
+
+The top-level element of the type part.
+\example{automatonA1}{5-16}
+
+\subsubsection*{Attributes}
+None.
+
+\subsubsection*{Children}
+\children{
+  \child{semiring}{The semiring.}{Occurs 1 time, is required.}{semiring}
+  \child{monoid}{The alphabet.}{Occurs 1 time, is required.}{monoid}
+}
+
+\subsection{\xtag{monoid}}
+\label{monoid}
+
+Holds the description of a monoid.
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{type}{Required, Pivot}{token}{none}{``unit'', ``free'', ``product''}
+       {Type of the monoid.}
+}
+
+\subsubsection{Unit monoid}
+
+When \xattr{type} is set to ``unit'', it is equivalent to the lack of
+monoids. It enables the possibility to describe valued graphs within the
+same format.
+
+\subsubsection{Free monoid}
+\label{freemonoid}
+
+When \xattr{type} is set to ``free'', the \xtag{monoid} describes a
+free monoid and inherits the following new
+attributes and children.
+
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{genKind}{Required, Pivot}{token}{none}{``simple'', ``tuple''}
+       {Kind of the generators.}
+  %\attr{identitySymbol}{Required}{string}{none}{}
+  %     {Symbol of the identity of the monoid. FIXME Restrictions?}
+  \attr{genDescript}{Required, Pivot}{token}{``enum''}{``enum'', ``range'', ``set''}
+       {How are described the generators.}
+}
+
+\subsubsection*{Children}
+\children{
+  \child{writingData}{Representation data.}{Occurs 0 or 1
+    time.}{writingDataMonoid}
+}
+
+\paragraph{Free monoid with ``simple'' generators}
+
+When \xattr{type} is set to ``free'', and \xattr{genKind} to ``simple'',
+the \xtag{monoid} inherits the following new attributes and children.
+\example{automatonA1}{9-15}
+
+\paragraph*{Attributes}
+
+\attrs{
+  \attr{genSort}{Requied}{token}{none}{``letter'', ``digit'', ``integer'', ``alphanum''}
+       {Sort of the generators.}
+}
+\paragraph*{Children}
+\children{
+  \child{monGen}{A monoid generator.}{Occurs 1 or more times.}{monGen}
+}
+
+\paragraph{Free monoid with ``tuple'' generators}
+
+When \xattr{type} is set to ``free'', and \xattr{genKind} to ``tuple'',
+the \xtag{monoid} inherits the following new attributes and children.
+\example{automatonPdp1}{9-33}
+
+\paragraph*{Attributes}
+\attrs{
+  \attr{genDim}{Required}{integer}{none}{Greater than 1}
+       {Dimension of the tuple.}
+}
+\paragraph*{Children}
+\children{
+  \child{genSort}{List of sort of generator for each ``free'' monoid.}
+	{Occurs 1 time, is required.}{genSort}
+  \child{monGen}{A monoid generator.}{Occurs 1 or more times.}{monGen}
+}
+
+\subsubsection{Product Monoid}
+
+When \xattr{type} is set to ``product'', the \xtag{monoid} describes a
+product of free monoids and inherits the following new attributes and children.
+\example{automatonPhim1}{9-26}
+
+\subsubsection*{Attributes}
+\attrs{
+    \attr{prodDim}{Required}{integer}{none}{Greater than 1}
+	 {Dimension of the product.}
+}
+\subsubsection*{Children}
+\children{
+  \child{writingData}{Representation data.}{Occurs 0 or 1
+    time.}{writingDataSemiring}
+  \child{monoid}{A \texttt{free} monoid.}{Occurs \xval{prodDim} times.}{freemonoid}
+}
+
+\subsection{\xtag{genSort}}
+\label{genSort}
+
+Describes the sort of the generator of each item of the tuple in a ``free''
+monoid with ``tuple'' generators.
+\example{automatonPdp1}{13-16}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{genCompSort}{Sort of an item within the generator.}
+	{Occurs \xval{genDim} times.}{genCompSort}
+}
+
+\subsection{\xtag{genCompSort}}
+\label{genCompSort}
+
+Describes the sort of the \xval{k}th coordinate/component in a ``tuple''
+generator, \xval{k}
+being the position of the element in the list within \xtag{genSort}.
+\example{automatonPdp1}{18-19}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{value}{Required}{token}{none}{``letter'', ``digit'', ``integer''}
+       {Sort of a coordinate/component of the ``tuple'' generator.}
+}
+\subsubsection*{Children}
+None.
+
+\subsection{\xtag{monGen}}
+\label{monGen}
+
+\subsubsection{``enum'' generators} 
+When \xattr{genDescript} is set to ``enum'', the \xtag{monGen} inherits
+the following new attributes:
+
+\paragraph{``enum'' generator of ``simple'' sort}
+
+Describes a generator of monoid when its \xattr{genDescript} is set to
+``enum'' and \xattr{genKind} to ``simple''.
+\example{automatonA1}{13-14}
+
+\paragraph*{Attributes}
+\attrs{
+  \attr{value}{Required}{generator}{none}{}{
+    Gives the value of the generator. Should fit \xattr{genSort}
+    restriction.
+  }
+}
+
+If used within a \xtag{monoid}, should also be \emph{Unique}.
+If used within a \xtag{monElmt}, should also be \emph{Valid}.
+\paragraph*{Children}
+None.
+
+\paragraph{``enum'' generator of ``tuple'' sort}
+
+Describes a generator of monoid when its \xattr{genDescript} is set to
+``enum'' and \xattr{genKind} to ``tuple''.
+\example{automatonPhim1}{17-32}
+
+\paragraph*{Attributes}
+None.
+\paragraph*{Children}
+\children{
+  \child{monCompGen}{A ``tuple'' monoid generator.}
+	{Occurs \xval{genDim} times.}{monCompGen}
+}
+
+\subsubsection{``range'' and ``set'' generators}
+
+Even if these \texttt{Tokens} are present in FSMXML, no further
+investigations were done. Since {\sc Vaucanson} only use enumerations,
+we let these investigations to more expert people.
+% FIXME : reformulation ?
+
+\subsection{\xtag{monCompGen}}
+\label{monCompGen}
+
+Gives the \xval{k}th coordinate/component in a ``tuple'' generator,
+\xval{k} being the position of the element in the list within \xtag{monGen}.
+\example{automatonPhim1}{18-19}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{value}{Required}{generator}{none}{}{
+    Gives the value of the coordinate/component. Should fit the associated 
+    \xval{genCompSort}.
+  }
+}
+
+\subsubsection*{Children}
+None.
+
+\subsection{\xtag{semiring}}
+\label{semiring}
+
+Holds a semiring description.
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{type}{Required, Pivot}{token}{none}{``numerical'', ``series''}
+       {Type of the semiring.}
+}
+
+\subsubsection*{Children}
+\children{
+  \child{writingData}{Representation data.}{Occurs 0 or 1
+    time.}{writingDataSemiring}
+}
+
+\subsubsection{Numerical semiring}
+
+When \xattr{type} is set to ``numerical'', \xtag{semiring} describes a
+numerical semiring and inherits the following new attributes and children.
+\example{automatonA1}{6-8}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{set}{Required}{token}{none}{``B'', ``N'', ``Z'', ``Q'', ``R'', ``C''}
+       {The set on which is described the semiring.}
+  \attr{operation}{Required}{token, string}{none}{``classical'', ``minPlus'',
+    ``maxPlus''}{Set the operations to work with into the
+      semiring. This is not an exhaustive list.}
+  %\attr{identitySymbol}{}{string}{none}{}
+  %     {Necessary for some numerical semirings with non classical operations.}
+  %\attr{zeroSymbol}{}{string}{none}{}
+  %     {Necessary for some numerical semirings with non classical operations.}
+}
+\subsubsection*{Children}
+  None.
+
+\subsubsection{Series semiring}
+
+When \xattr{type} is set to ``series'', the \xtag{semiring} describes a
+series semiring and inherits the following new attributes and children.
+\example{automatonD2rw}{6-19}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{semiring}{A semiring.}{Occurs 1 time.}{semiring}
+  \child{monoid}{A monoid.}{Occurs 1 time.}{monoid}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\RegExpBody}[2]{
+  \item #1 #2
+  See \autoref{RegExpBody} for more details.
+}
+
+
+\section{Regular Expressions}
+
+\subsection{\xtag{regExp}}
+\label{regExp}
+
+Holds the complete representation of a regular expression.
+\example{regExpC1}{4-52}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{valueType}{The regular expression's type.}
+	{Occurs 1 time.}{valueType}
+  \child{typedRegExp}{The regular expression's body.}
+	{Occurs 1 time.}{typedRegExp}
+}
+
+\subsection{\xtag{typedRegExp}}
+\label{typedRegExp}
+
+Holds the typed regular expression.
+\example{regExpC1}{17-51}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Typed regular expression.}
+	     {Occurs 1 time.}
+}
+
+\subsection{Regular expression's body}
+\label{RegExpBody}
+
+A regular expression's body is represented by a recursive tree of
+elements, listed below.
+Any of these elements is seen as a ``Typed regular expression''.
+\example{regExpC1}{18-50}
+
+\subsubsection{\xtag{sum}}
+\label{sum}
+
+Sum of two expressions.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Left Typed regular expression.}
+	     {Occurs 1 time.}
+  \RegExpBody{Right Typed regular expression.}
+	     {Occurs 1 time.}
+}
+
+\subsubsection{\xtag{product}}
+\label{product}
+
+Product of two expressions.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Left Typed regular expression.}
+	     {Occurs 1 time.}
+  \RegExpBody{Right Typed regular expression.}
+	     {Occurs 1 time.}
+}
+
+\subsubsection{\xtag{star}}
+\label{star}
+
+Star of an expression.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Typed regular expression to starify.}
+	     {Occurs 1 time.}
+}
+
+\subsubsection{\xtag{rightExtMul} and \xtag{leftExtMul}}
+\label{rightExtMulleftExtMul}
+
+Represents the right/left scalar multiplication of an expression.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{weight}{Weight for the multiplication.}{Occurs 1 time.}{weight}
+  \RegExpBody{Typed regular expression to multiply.}
+	     {Occurs 1 time.}
+}
+
+\subsubsection{\xtag{monElmt}}
+\label{monElmt}
+
+Represents a monoid element, which is a concatenation of monoid generators.
+
+\paragraph{On a free monoid}
+\label{monElmtFree}
+
+Represents a monoid element on a free monoid.
+\example{automatonA1}{26-28}
+
+\paragraph*{Attributes}
+None.
+
+\paragraph*{Children}
+\children{
+  \child{monGen}{A monoid Generator.}{Occurs as many time as wanted.}{monGen}
+}
+
+\paragraph{On a product monoid.}
+
+Represents a monoid element on a product monoid.
+\example{automatonPhim1}{35-42}
+
+\paragraph*{Attributes}
+None.
+
+\paragraph*{Children}
+\children{
+  \item \xtag{monElmt} or \xtag{one}  A monoid element or the identity of
+    a \texttt{free} monoid. Occurs \xval{prodDim} times.
+    See \autoref{monElmtFree} and \autoref{one} for more details.
+}
+
+\subsubsection{\xtag{zero}}
+\label{zero}
+
+Represents the null series.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+None.
+
+\subsubsection{\xtag{one}}
+\label{one}
+
+Represents the identity series or the identity symbol of a \texttt{free} monoid.
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+None.
+
+\subsection{\xtag{weight}}
+\label{weight}
+
+Represents the weight of an expression.
+
+\subsubsection{On a numerical semiring}
+
+Represents the weight of an expression with a numerical semiring.
+\example{automatonC1}{47-47}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{value}{Required}{weight}{none}{}{Weight's value.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{On a series semiring}
+
+Represents the weight of an expression with a series semiring.
+\example{automatonD2rw}{39-43}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Typed regular expression taken into the semiring.}
+	     {Occurs 1 time.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Automata}
+
+\subsection{\xtag{automaton}}
+\label{automaton}
+
+Holds the complete representation of an automaton.
+\example{automatonA1}{4-70}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{name}{}{string}{}{}{Name of the automaton.}
+  \attr{readingDir}{}{token}{left}{``left'', ``right''}{Reading direction of the automaton.}
+}
+
+\subsubsection*{Children}
+\children{
+  \child{geometricData}{The automaton's geometry data.}
+	{Occurs 0 or 1 time.}{geometricDataAutomaton}
+  \child{drawingData}{The automaton's drawing data.}
+	{Occurs 0 or 1 time.}{drawingData}
+  \child{valueType}{The automaton's type.}
+	{Occurs 1 time.}{valueType}
+  \child{automatonStruct}{The automaton's content.}
+	{Occurs 1 time.}{automatonStruct}
+}
+
+\subsection{\xtag{automatonStruct}}
+\label{automatonStruct}
+
+Holds the automaton's content.
+\example{automatonA1}{17-69}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{states}{Lists the automaton's states.}{Occurs 1 time.}{states}
+  \child{transitions}{Lists the automaton's transitions.}
+	{Occurs 1 time.}{transitions}
+}
+
+\subsection{\xtag{states}}
+\label{states}
+
+Holds the automaton's states.
+\example{automatonA1}{18-22}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{state}{Adds a state.}{Occurs 0 or more times.}{state}
+}
+
+\subsection{\xtag{state}}
+\label{state}
+
+Describes a state.
+\xattr{key} is usually used to define in which order should be
+processed the states.
+\xattr{name} allows you to give a more explicit name.
+\example{automatonA1}{19-21}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{id}{Required, Unique}{ID}{none}{}
+       {Id of the state.}
+  \attr{key}{}{integer}{0}{Positive integer}{Possible key of the state.}
+  \attr{name}{}{string}{none}{}{Name of the state.}
+  %attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
+   % \autoref{drawingclass} for more details.}
+}
+\subsubsection*{Children}
+\children{
+  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
+    time.}{geometricDataState}
+  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
+}
+
+\subsection{\xtag{transitions}}
+\label{transitions}
+
+Holds the automaton's transitions and initial/final properties of states.
+\example{automatonA1}{23-68}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \child{transition}{Adds a transition.}{Occurs 0 or more times.}{transition}
+  \child{initial}{Adds the initial property to a state.}
+	{Occurs 0 or more times.}{initialfinal}
+  \child{final}{Adds the final property to a state.}
+	{Occurs 0 or more times.}{initialfinal}
+}
+
+\subsection{\xtag{transition}}
+\label{transition}
+
+Describes a transition.
+\example{automatonA1}{24-30}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{source}{Required}{ID}{none}{Valid ID}
+       {Source of the transition.}
+  \attr{target}{Required}{ID}{none}{Valid ID}
+       {Target of the transition.}
+  %\attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
+   % \autoref{drawingclass} for more details.}
+}
+\subsubsection*{Children}
+\children{
+  \child{label}{Label of the transition.}{Occurs 1 time}{label}
+  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
+    time.}{geometricDataTransition}
+  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
+}
+
+\subsection{\xtag{initial} and \xtag{final}}
+\label{initialfinal}
+
+Adds the initial/final property to a state.
+\example{automatonA1}{66-67}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{state}{Required}{ID}{none}{Valid ID}
+       {State to give the initial/final property.}
+  %\attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
+   % \autoref{drawingclass} for more details.}
+}
+\subsubsection*{Children}
+\children{
+  \child{label}{Label of the transition.}{Occurs 1 time}{label}
+  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
+    time.}{geometricData}
+  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
+}
+
+\subsection{\xtag{label}}
+\label{label}
+
+Holds the label of a transition.
+\example{automatonA1}{25-29}
+
+\subsubsection*{Attributes}
+None.
+\subsubsection*{Children}
+\children{
+  \RegExpBody{Typed regular expression.}{Occurs 1 time.}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Automaton's optional properties}
+
+\subsection{\xtag{writingData}}
+
+Stores informations that might be useful for input / output.
+
+\subsubsection{for monoid}
+\label{writingDataMonoid}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{identitySymbol}{}{string}{}{}
+       {How to display the monoid identity.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{for semiring}
+\label{writingDataSemiring}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{identitySymbol}{}{string}{}{}
+       {How to display the semiring identity.}
+  \attr{zeroSymbol}{}{string}{}{}
+       {How to display the semiring zero.}
+}
+\subsubsection*{Children}
+None.
+
+\subsection{\xtag{geometricData}}
+\label{geometricData}
+
+Stores informations on geometric representation.
+
+\subsubsection{for the automaton}
+\label{geometricDataAutomaton}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{x}{}{float}{}{}
+       {Gives the relative horizontal origin.}
+  \attr{y}{}{float}{}{}
+       {Gives the relative vertical origin.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{for states}
+\label{geometricDataState}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{x}{}{float}{}{}
+       {Gives state horizontal position.}
+  \attr{y}{}{float}{}{}
+       {Gives state vertical position.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{for the transitions}
+\label{geometricDataTransition}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{TransitionType}{Pivot}{token}{none}{``EdgeL'', ``EdgeR'', ``ArcL'', ``ArcR'', ``Loop''}
+       {The type of the transition.}
+  \attr{loopDir}{}{integer}{}{Between 0 and 360}
+       {Only available if ``Loop'' is set. The angle of the loop direction.}
+  \attr{labelPos}{}{float}{}{Between 0 and 100}
+       {Position of the label on the arrow. 0 is the source, 100 the target.}
+  \attr{labelDist}{}{float}{}{Greater than 0}
+       {Distance between the arrow and the label.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{for initial states}
+\label{geometricDataInitial}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{initialDir}{}{integer}{}{Between 0 and 360}
+       {The angle of the input arrow.}
+  \attr{labelPos}{}{float}{}{Between 0 and 100}
+       {Position of the label on the arrow. 0 is the source, 100 the target.}
+  \attr{labelDist}{}{float}{}{Greater than 0}
+       {Distance between the arrow and the label.}
+}
+\subsubsection*{Children}
+None.
+
+\subsubsection{for final states}
+\label{geometricDataFinal}
+
+\subsubsection*{Attributes}
+\attrs{
+  \attr{finalDir}{}{integer}{}{Between 0 and 360}
+       {The angle of the output arrow.}
+  \attr{finalMod}{}{token}{}{``circle'',``arrow''}
+       {How should be represented a final state.}
+  \attr{labelPos}{}{float}{}{Between 0 and 100}
+       {Position of the label on the arrow. 0 is the source, 100 the target.}
+  \attr{labelDist}{}{float}{}{Greater than 0}
+       {Distance between the arrow and the label.}
+}
+\subsubsection*{Children}
+None.
+
+\subsection{\xtag{drawingData}}
+\label{drawingData}
+
+Not yet specified. % TODO
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\appendix
+
+%\setcounter{tocdepth}{5}
+%\setcounter{secnumdepth}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Macro for figures
+\include{macros}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figures
+\include{automatonA1}
+\include{automatonPdp1}
+\include{automatonC1}
+\include{automatonPhim1}
+\include{automatonD2fmp}
+\include{automatonD2rw}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% ispell-local-dictionary: "american"
+%%% End:
