@@ -26,11 +26,10 @@ nobase_vcsn_HEADERS =                           \
   algos/standard_of.hh                          \
   algos/transpose.hh                            \
   algos/xml.hh                                  \
-  algos/xml/automaton-printer.hh                \
   algos/xml/ios.hh                              \
   algos/xml/ios.hxx                             \
-  algos/xml/kratexpvisitor.hh                   \
-  algos/xml/kratexpvisitor.hxx                  \
+  algos/xml/ratexpvisitor.hh                    \
+  algos/xml/ratexpvisitor.hxx                   \
   algos/xml/structure.hh                        \
   algos/xml/tools.hh                            \
   alphabets/char.hh                             \

@@ -43,6 +43,9 @@ namespace vcsn
     automaton transpose(automaton& aut);
 
     ratexp transpose(const ratexp& e);
+
+    void xml(const dyn::ratexp& e, std::ostream& out);
+    std::string xml(const dyn::ratexp& e);
   }
 }
 

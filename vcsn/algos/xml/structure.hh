@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_XML_STRUCTURE_HH
 # define VCSN_ALGOS_XML_STRUCTURE_HH
 
+# include <vcsn/core/rat/kratexp.hh>
+
 namespace vcsn
 {
   namespace details
@@ -14,15 +16,14 @@ namespace vcsn
 
     template <typename Context>
     void
-    print_value_type(const std::pair<std::shared_ptr<const rat::exp>, Context> ratexp,
-                     xercesc::DOMDocument& doc,
+    print_value_type(const Context& ctx, xercesc::DOMDocument& doc,
                      xercesc::DOMElement& root)
     {
       // Create the weightset node and sub-node
       auto semiring = details::create_node(doc, "semiring");
 
       details::set_attribute(semiring, "type", "numerical");
-      details::set_attribute(semiring, "set", ratexp.second.weightset()->sname());
+      details::set_attribute(semiring, "set", ctx.weightset()->sname());
       details::set_attribute(semiring, "operations", "classical");
 
       root.appendChild(semiring);

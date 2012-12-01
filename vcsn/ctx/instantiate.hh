@@ -11,6 +11,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/standard_of.hh>
 # include <vcsn/algos/transpose.hh>
+# include <vcsn/algos/xml.hh>
 
 # include <vcsn/factory/de_bruijn.hh>
 
@@ -32,6 +33,28 @@ namespace vcsn
                                                                         \
       MAYBE_EXTERN template                                             \
         std::string dotty<Aut>(const dyn::automaton& aut);              \
+    }                                                                   \
+  }
+
+# define VCSN_CTX_INSTANTIATE_XML(Ctx)                                  \
+  MAYBE_EXTERN template                                                 \
+  void xml<Ctx>(std::ostream& out,                                      \
+                const Ctx& ctx,                                         \
+                const rat::exp& exp);                                   \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  std::string xml<Ctx>(const Ctx& cxt,                                  \
+                       const rat::exp& exp);                            \
+                                                                        \
+  namespace dyn                                                         \
+  {                                                                     \
+    namespace details                                                   \
+    {                                                                   \
+      MAYBE_EXTERN template                                             \
+      void xml<Ctx>(std::ostream& out, const dyn::ratexp& exp);         \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+        std::string xml<Ctx>(const dyn::ratexp&);                       \
     }                                                                   \
   }
 
@@ -76,7 +99,10 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class details::transpose_automaton<mutable_automaton<Ctx>>;           \
   MAYBE_EXTERN template                                                 \
-  class details::transposer<Ctx>;
+  class details::transposer<Ctx>;                                       \
+                                                                        \
+  /* xml. */                                                            \
+  VCSN_CTX_INSTANTIATE_XML(Ctx);
 
 
 
@@ -160,6 +186,12 @@ namespace vcsn
         // transpose.
         transpose_register(aut_t::sname(), transpose<aut_t>);
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
+
+        // xml.
+        xml_register(Ctx::sname(),
+                     static_cast<const xml_stream_t&>(xml<Ctx>));
+        xml_register(Ctx::sname(),
+                     static_cast<const xml_string_t&>(xml<Ctx>));
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
