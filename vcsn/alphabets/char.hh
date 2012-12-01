@@ -178,6 +178,12 @@ namespace vcsn
       return w;
     }
 
+    std::string
+    format(const empty_t&) const
+    {
+      return "EMPTY";
+    }
+
     // Special character, used to label transitions
     // from pre() and post()
     template<class T = letter_t>
