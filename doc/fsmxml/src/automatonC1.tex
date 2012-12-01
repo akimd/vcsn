@@ -13,7 +13,7 @@
   \State[p]{(0,0)}{A}\State[q]{(6,0)}{B}
   %
   \Initial{A}\Final{B}
-  % transitions 
+  % transitions
   \EdgeL{A}{B}{b}
   %
   \LoopN{A}{a}\LoopS{A}{b}
@@ -25,31 +25,31 @@
 \end{figure}
 
 %% Automaton Type
-{\footnotesize 
+{\footnotesize
 \begin{listing}[5]{1}
-<fsmxml  xmlns   = "http://vaucanson-project.org" 
-         version = "1.0" > 
+<fsmxml  xmlns   = "http://vaucanson-project.org"
+         version = "1.0" >
 
 <automaton name = "c1" >
   <valueType>
     <semiring  type       = 'numerical'
                set        = 'N'
-               operations = 'classical' /> 
+               operations = 'classical' />
     <monoid    type       = 'free'
-               genSort    = 'simple' 
-               genKind    = 'digit' 
-               genDescript = 'enum' > 
-      <monGen value="0"/>
-      <monGen value="1"/>
+               genSort    = 'simple'
+               genKind    = 'digit'
+               genDescript = 'enum' >
+      <monGen value="a"/>
+      <monGen value="b"/>
     </monoid>
   </valueType>
 \end{listing}
 }
 
-\newpage 
+\newpage
 
 %% Automaton Content
-{\footnotesize 
+{\footnotesize
 \begin{listingcont}
   <automatonStruct>
     <states>
@@ -60,42 +60,42 @@
       <transition  source="0"  target="0" >
         <label>
           <monElmt>
-            <monGen value="0"/>
+            <monGen value="a"/>
           </monElmt>
         </label>
       </transition>
       <transition  source="0"  target="0" >
         <label>
           <monElmt>
-            <monGen value="1"/>
+            <monGen value="b"/>
           </monElmt>
         </label>
       </transition>
       <transition  source="0"  target="1" >
         <label>
           <monElmt>
-            <monGen value="1"/>
+            <monGen value="b"/>
           </monElmt>
         </label>
       </transition>
       <transition  source="1"  target="1" >
         <label>
-	  <leftExtMul>
+    <leftExtMul>
             <weight value="2"/>
-	    <monElmt>
-	      <monGen value="0"/>
-	    </monElmt>
-	  </leftExtMul>
+      <monElmt>
+        <monGen value="a"/>
+      </monElmt>
+    </leftExtMul>
         </label>
       </transition>
       <transition  source="1"  target="1" >
         <label>
-	  <leftExtMul>
+    <leftExtMul>
             <weight value="2"/>
-	    <monElmt>
-	      <monGen value="1"/>
-	    </monElmt>
-	  </leftExtMul>
+      <monElmt>
+        <monGen value="b"/>
+      </monElmt>
+    </leftExtMul>
         </label>
       </transition>
       <initial  state="0"/>
@@ -110,26 +110,26 @@
 
 \newpage
 
-\subsection{A rational expression for 
+\subsection{A rational expression for
 $|\mathcal{C}_{1}| = (a+b)^{*}(b\cdot(2\,a + 2\,b)^{*})$}
 \label{regExpC1}
 
-{\footnotesize 
-\begin{listing}[5]{1} 
-<fsmxml  xmlns   = "http://vaucanson-project.org" 
-         version = "1.0" > 
+{\footnotesize
+\begin{listing}[5]{1}
+<fsmxml  xmlns   = "http://vaucanson-project.org"
+         version = "1.0" >
 
 <regExp name = "c1-behaviour" >
   <valueType>
     <semiring  type        = 'numerical'
                set         = 'N'
-               operations  = 'classical' /> 
+               operations  = 'classical' />
     <monoid    type        = 'free'
-               genSort     = 'simple' 
-               genKind     = 'digit' 
-               genDescript = 'enum' > 
-      <monGen value="0"/>
-      <monGen value="1"/>
+               genSort     = 'simple'
+               genKind     = 'digit'
+               genDescript = 'enum' >
+      <monGen value="a"/>
+      <monGen value="b"/>
     </monoid>
   </valueType>
   <typedRegExp>
@@ -137,31 +137,31 @@ $|\mathcal{C}_{1}| = (a+b)^{*}(b\cdot(2\,a + 2\,b)^{*})$}
       <star>
         <sum>
           <monElmt>
-            <monGen value="0"/>
+            <monGen value="a"/>
           </monElmt>
           <monElmt>
-            <monGen value="1"/>
+            <monGen value="b"/>
           </monElmt>
         </sum>
       </star>
       <product>
         <monElmt>
-          <monGen value="1"/>
+          <monGen value="b"/>
         </monElmt>
         <star>
           <sum>
-	    <leftExtMul>
+      <leftExtMul>
               <weight value="2"/>
-	      <monElmt>
-		<monGen value="0"/>
-	      </monElmt>
-	    </leftExtMul>
-	    <leftExtMul>
+        <monElmt>
+    <monGen value="a"/>
+        </monElmt>
+      </leftExtMul>
+      <leftExtMul>
               <weight value="2"/>
-	      <monElmt>
-		<monGen value="1"/>
-	      </monElmt>
-	    </leftExtMul>
+        <monElmt>
+    <monGen value="b"/>
+        </monElmt>
+      </leftExtMul>
           </sum>
         </star>
       </product>
@@ -173,8 +173,5 @@ $|\mathcal{C}_{1}| = (a+b)^{*}(b\cdot(2\,a + 2\,b)^{*})$}
 \end{listing}
 }
 
-\clearpage
-
-~
 \clearpage
 \newpage
