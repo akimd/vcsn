@@ -157,7 +157,7 @@ Gives the name of the attribute.
 \paragraph*{Info}
 Gives informations about the attribute:
 \begin{itemize}
-  \item \emph{Required}\\The attribute is mandatory. 
+  \item \emph{Required}\\The attribute is mandatory.
   \item \emph{Pivot}\\Depending on the attribute's value, the form of the
     children should differ.
   \item \emph{Unique}\\When the same element can be used more than once, it
@@ -210,7 +210,7 @@ The top-level \emph{root} element, which carries version information, etc.
 \attrs{
   \attr{xmlns}{}{URI}{none}{}{Sets the namespace.}
   \attr{version}{}{float}{none}{}{Sets the version of FSMXML used.
-				  This one is \version}
+          This one is \version}
 }
 
 \subsubsection*{Children}
@@ -222,7 +222,7 @@ The top-level \emph{root} element, which carries version information, etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type}
 
-Regular expressions and automata are described over a type, which can be 
+Regular expressions and automata are described over a type, which can be
 described in the same way for both objects. In FSMXML this type is described
 by the following elements:
 
@@ -277,10 +277,7 @@ attributes and children.
 }
 
 \subsubsection*{Children}
-\children{
-  \child{writingData}{Representation data.}{Occurs 0 or 1
-    time.}{writingDataMonoid}
-}
+None.
 
 \paragraph{Free monoid with ``simple'' generators}
 
@@ -313,7 +310,7 @@ the \xtag{monoid} inherits the following new attributes and children.
 \paragraph*{Children}
 \children{
   \child{genSort}{List of sort of generator for each ``free'' monoid.}
-	{Occurs 1 time, is required.}{genSort}
+  {Occurs 1 time, is required.}{genSort}
   \child{monGen}{A monoid generator.}{Occurs 1 or more times.}{monGen}
 }
 
@@ -326,12 +323,10 @@ product of free monoids and inherits the following new attributes and children.
 \subsubsection*{Attributes}
 \attrs{
     \attr{prodDim}{Required}{integer}{none}{Greater than 1}
-	 {Dimension of the product.}
+   {Dimension of the product.}
 }
 \subsubsection*{Children}
 \children{
-  \child{writingData}{Representation data.}{Occurs 0 or 1
-    time.}{writingDataSemiring}
   \child{monoid}{A \texttt{free} monoid.}{Occurs \xval{prodDim} times.}{freemonoid}
 }
 
@@ -347,7 +342,7 @@ None.
 \subsubsection*{Children}
 \children{
   \child{genCompSort}{Sort of an item within the generator.}
-	{Occurs \xval{genDim} times.}{genCompSort}
+  {Occurs \xval{genDim} times.}{genCompSort}
 }
 
 \subsection{\xtag{genCompSort}}
@@ -369,7 +364,7 @@ None.
 \subsection{\xtag{monGen}}
 \label{monGen}
 
-\subsubsection{``enum'' generators} 
+\subsubsection{``enum'' generators}
 When \xattr{genDescript} is set to ``enum'', the \xtag{monGen} inherits
 the following new attributes:
 
@@ -403,7 +398,7 @@ None.
 \paragraph*{Children}
 \children{
   \child{monCompGen}{A ``tuple'' monoid generator.}
-	{Occurs \xval{genDim} times.}{monCompGen}
+  {Occurs \xval{genDim} times.}{monCompGen}
 }
 
 \subsubsection{``range'' and ``set'' generators}
@@ -423,7 +418,7 @@ Gives the \xval{k}th coordinate/component in a ``tuple'' generator,
 \subsubsection*{Attributes}
 \attrs{
   \attr{value}{Required}{generator}{none}{}{
-    Gives the value of the coordinate/component. Should fit the associated 
+    Gives the value of the coordinate/component. Should fit the associated
     \xval{genCompSort}.
   }
 }
@@ -443,10 +438,7 @@ Holds a semiring description.
 }
 
 \subsubsection*{Children}
-\children{
-  \child{writingData}{Representation data.}{Occurs 0 or 1
-    time.}{writingDataSemiring}
-}
+None.
 
 \subsubsection{Numerical semiring}
 
@@ -504,9 +496,9 @@ None.
 \subsubsection*{Children}
 \children{
   \child{valueType}{The regular expression's type.}
-	{Occurs 1 time.}{valueType}
+  {Occurs 1 time.}{valueType}
   \child{typedRegExp}{The regular expression's body.}
-	{Occurs 1 time.}{typedRegExp}
+  {Occurs 1 time.}{typedRegExp}
 }
 
 \subsection{\xtag{typedRegExp}}
@@ -520,7 +512,7 @@ None.
 \subsubsection*{Children}
 \children{
   \RegExpBody{Typed regular expression.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 \subsection{Regular expression's body}
@@ -541,9 +533,9 @@ None.
 \subsubsection*{Children}
 \children{
   \RegExpBody{Left Typed regular expression.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
   \RegExpBody{Right Typed regular expression.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 \subsubsection{\xtag{product}}
@@ -556,9 +548,9 @@ None.
 \subsubsection*{Children}
 \children{
   \RegExpBody{Left Typed regular expression.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
   \RegExpBody{Right Typed regular expression.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 \subsubsection{\xtag{star}}
@@ -571,7 +563,7 @@ None.
 \subsubsection*{Children}
 \children{
   \RegExpBody{Typed regular expression to starify.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 \subsubsection{\xtag{rightExtMul} and \xtag{leftExtMul}}
@@ -585,7 +577,7 @@ None.
 \children{
   \child{weight}{Weight for the multiplication.}{Occurs 1 time.}{weight}
   \RegExpBody{Typed regular expression to multiply.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 \subsubsection{\xtag{monElmt}}
@@ -669,7 +661,7 @@ None.
 \subsubsection*{Children}
 \children{
   \RegExpBody{Typed regular expression taken into the semiring.}
-	     {Occurs 1 time.}
+       {Occurs 1 time.}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -689,14 +681,10 @@ Holds the complete representation of an automaton.
 
 \subsubsection*{Children}
 \children{
-  \child{geometricData}{The automaton's geometry data.}
-	{Occurs 0 or 1 time.}{geometricDataAutomaton}
-  \child{drawingData}{The automaton's drawing data.}
-	{Occurs 0 or 1 time.}{drawingData}
   \child{valueType}{The automaton's type.}
-	{Occurs 1 time.}{valueType}
+  {Occurs 1 time.}{valueType}
   \child{automatonStruct}{The automaton's content.}
-	{Occurs 1 time.}{automatonStruct}
+  {Occurs 1 time.}{automatonStruct}
 }
 
 \subsection{\xtag{automatonStruct}}
@@ -711,7 +699,7 @@ None.
 \children{
   \child{states}{Lists the automaton's states.}{Occurs 1 time.}{states}
   \child{transitions}{Lists the automaton's transitions.}
-	{Occurs 1 time.}{transitions}
+  {Occurs 1 time.}{transitions}
 }
 
 \subsection{\xtag{states}}
@@ -742,15 +730,9 @@ processed the states.
        {Id of the state.}
   \attr{key}{}{integer}{0}{Positive integer}{Possible key of the state.}
   \attr{name}{}{string}{none}{}{Name of the state.}
-  %attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
-   % \autoref{drawingclass} for more details.}
 }
 \subsubsection*{Children}
-\children{
-  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
-    time.}{geometricDataState}
-  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
-}
+None.
 
 \subsection{\xtag{transitions}}
 \label{transitions}
@@ -764,9 +746,9 @@ None.
 \children{
   \child{transition}{Adds a transition.}{Occurs 0 or more times.}{transition}
   \child{initial}{Adds the initial property to a state.}
-	{Occurs 0 or more times.}{initialfinal}
+  {Occurs 0 or more times.}{initialfinal}
   \child{final}{Adds the final property to a state.}
-	{Occurs 0 or more times.}{initialfinal}
+  {Occurs 0 or more times.}{initialfinal}
 }
 
 \subsection{\xtag{transition}}
@@ -781,15 +763,10 @@ Describes a transition.
        {Source of the transition.}
   \attr{target}{Required}{ID}{none}{Valid ID}
        {Target of the transition.}
-  %\attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
-   % \autoref{drawingclass} for more details.}
 }
 \subsubsection*{Children}
 \children{
   \child{label}{Label of the transition.}{Occurs 1 time}{label}
-  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
-    time.}{geometricDataTransition}
-  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
 }
 
 \subsection{\xtag{initial} and \xtag{final}}
@@ -802,15 +779,10 @@ Adds the initial/final property to a state.
 \attrs{
   \attr{state}{Required}{ID}{none}{Valid ID}
        {State to give the initial/final property.}
-  %\attr{drawingclass}{}{string}{none}{}{Associate to a drawing class. See
-   % \autoref{drawingclass} for more details.}
 }
 \subsubsection*{Children}
 \children{
   \child{label}{Label of the transition.}{Occurs 1 time}{label}
-  \child{geometricData}{Adds geometry data.}{Occurs 0 or 1
-    time.}{geometricData}
-  \child{drawingData}{Adds drawing data.}{Occurs 0 or 1 time.}{drawingData}
 }
 
 \subsection{\xtag{label}}
@@ -825,122 +797,6 @@ None.
 \children{
   \RegExpBody{Typed regular expression.}{Occurs 1 time.}
 }
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Automaton's optional properties}
-
-\subsection{\xtag{writingData}}
-
-Stores informations that might be useful for input / output.
-
-\subsubsection{for monoid}
-\label{writingDataMonoid}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{identitySymbol}{}{string}{}{}
-       {How to display the monoid identity.}
-}
-\subsubsection*{Children}
-None.
-
-\subsubsection{for semiring}
-\label{writingDataSemiring}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{identitySymbol}{}{string}{}{}
-       {How to display the semiring identity.}
-  \attr{zeroSymbol}{}{string}{}{}
-       {How to display the semiring zero.}
-}
-\subsubsection*{Children}
-None.
-
-\subsection{\xtag{geometricData}}
-\label{geometricData}
-
-Stores informations on geometric representation.
-
-\subsubsection{for the automaton}
-\label{geometricDataAutomaton}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{x}{}{float}{}{}
-       {Gives the relative horizontal origin.}
-  \attr{y}{}{float}{}{}
-       {Gives the relative vertical origin.}
-}
-\subsubsection*{Children}
-None.
-
-\subsubsection{for states}
-\label{geometricDataState}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{x}{}{float}{}{}
-       {Gives state horizontal position.}
-  \attr{y}{}{float}{}{}
-       {Gives state vertical position.}
-}
-\subsubsection*{Children}
-None.
-
-\subsubsection{for the transitions}
-\label{geometricDataTransition}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{TransitionType}{Pivot}{token}{none}{``EdgeL'', ``EdgeR'', ``ArcL'', ``ArcR'', ``Loop''}
-       {The type of the transition.}
-  \attr{loopDir}{}{integer}{}{Between 0 and 360}
-       {Only available if ``Loop'' is set. The angle of the loop direction.}
-  \attr{labelPos}{}{float}{}{Between 0 and 100}
-       {Position of the label on the arrow. 0 is the source, 100 the target.}
-  \attr{labelDist}{}{float}{}{Greater than 0}
-       {Distance between the arrow and the label.}
-}
-\subsubsection*{Children}
-None.
-
-\subsubsection{for initial states}
-\label{geometricDataInitial}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{initialDir}{}{integer}{}{Between 0 and 360}
-       {The angle of the input arrow.}
-  \attr{labelPos}{}{float}{}{Between 0 and 100}
-       {Position of the label on the arrow. 0 is the source, 100 the target.}
-  \attr{labelDist}{}{float}{}{Greater than 0}
-       {Distance between the arrow and the label.}
-}
-\subsubsection*{Children}
-None.
-
-\subsubsection{for final states}
-\label{geometricDataFinal}
-
-\subsubsection*{Attributes}
-\attrs{
-  \attr{finalDir}{}{integer}{}{Between 0 and 360}
-       {The angle of the output arrow.}
-  \attr{finalMod}{}{token}{}{``circle'',``arrow''}
-       {How should be represented a final state.}
-  \attr{labelPos}{}{float}{}{Between 0 and 100}
-       {Position of the label on the arrow. 0 is the source, 100 the target.}
-  \attr{labelDist}{}{float}{}{Greater than 0}
-       {Distance between the arrow and the label.}
-}
-\subsubsection*{Children}
-None.
-
-\subsection{\xtag{drawingData}}
-\label{drawingData}
-
-Not yet specified. % TODO
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
