@@ -20,23 +20,23 @@ namespace vcsn
                      xercesc::DOMElement& root)
     {
       // Create the weightset node and sub-node
-      auto semiring = details::create_node(doc, "semiring");
+      auto weight_set = details::create_node(doc, "weightSet");
 
-      details::set_attribute(semiring, "type", "numerical");
-      details::set_attribute(semiring, "set", ctx.weightset()->sname());
-      details::set_attribute(semiring, "operations", "classical");
+      details::set_attribute(weight_set, "type", "numerical");
+      details::set_attribute(weight_set, "set", ctx.weightset()->sname());
+      details::set_attribute(weight_set, "operations", "classical");
 
-      root.appendChild(semiring);
+      root.appendChild(weight_set);
 
       // Create the generator set node and sub-node
-      auto monoid = details::create_node(doc, "monoid");
+      auto value_set = details::create_node(doc, "valueSet");
 
-      details::set_attribute(monoid, "genDescript", "enum");
-      details::set_attribute(monoid, "genKind", "digit");
-      details::set_attribute(monoid, "genSort", "simple");
-      details::set_attribute(monoid, "type", "free");
+      details::set_attribute(value_set, "genDescript", "enum");
+      details::set_attribute(value_set, "genKind", "digit");
+      details::set_attribute(value_set, "genSort", "simple");
+      details::set_attribute(value_set, "type", "free");
 
-      root.appendChild(monoid);
+      root.appendChild(value_set);
 
     }
 
