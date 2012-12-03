@@ -102,37 +102,45 @@ machines and regular expressions' XML description.
 \subsection{General}
 
 \begin{itemize}
-\item \emph{MUST}\\This word, or the terms \emph{REQUIRED} or
-  \emph{SHALL}, mean that the definition is an absolute requirement of
-  the specification.
+\item \emph{MUST}
 
-\item \emph{MUST NOT}\\This phrase, or the phrase \emph{SHALL NOT},
-  mean that the definition is an absolute prohibition of the
-  specification.
+  This word, or the terms \emph{REQUIRED} or \emph{SHALL}, mean that
+  the definition is an absolute requirement of the specification.
 
-\item \emph{SHOULD}\\This word, or the adjective \emph{RECOMMENDED},
-  mean that there may exist valid reasons in particular circumstances
-  to ignore a particular item, but the full implications must be
-  understood and carefully weighed before choosing a different course.
+\item \emph{MUST NOT}
 
-\item \emph{SHOULD NOT}\\This phrase, or the phrase \emph{NOT
-    RECOMMENDED} mean that there may exist valid reasons in particular
-  circumstances when the particular behavior is acceptable or even
-  useful, but the full implications should be understood and the case
-  carefully weighed before implementing any behavior described with
-  this label.
+  This phrase, or the phrase \emph{SHALL NOT}, mean that the
+  definition is an absolute prohibition of the specification.
 
-\item \emph{MAY}\\This word, or the adjective \emph{OPTIONAL}, mean
-  that an item is truly optional.  One vendor may choose to include
-  the item because a particular marketplace requires it or because the
-  vendor feels that it enhances the product while another vendor may
-  omit the same item.  An implementation which does not include a
-  particular option MUST be prepared to interoperate with another
-  implementation which does include the option, though perhaps with
-  reduced functionality. In the same vein an implementation which does
-  include a particular option MUST be prepared to interoperate with
-  another implementation which does not include the option (except, of
-  course, for the feature the option provides).
+\item \emph{SHOULD}
+
+  This word, or the adjective \emph{RECOMMENDED}, mean that there may
+  exist valid reasons in particular circumstances to ignore a
+  particular item, but the full implications must be understood and
+  carefully weighed before choosing a different course.
+
+\item \emph{SHOULD NOT}
+
+  This phrase, or the phrase \emph{NOT RECOMMENDED} mean that there
+  may exist valid reasons in particular circumstances when the
+  particular behavior is acceptable or even useful, but the full
+  implications should be understood and the case carefully weighed
+  before implementing any behavior described with this label.
+
+\item \emph{MAY}
+
+  This word, or the adjective \emph{OPTIONAL}, mean that an item is
+  truly optional.  One vendor may choose to include the item because a
+  particular marketplace requires it or because the vendor feels that
+  it enhances the product while another vendor may omit the same item.
+  An implementation which does not include a particular option MUST be
+  prepared to interoperate with another implementation which does
+  include the option, though perhaps with reduced functionality. In
+  the same vein an implementation which does include a particular
+  option MUST be prepared to interoperate with another implementation
+  which does not include the option (except, of course, for the
+  feature the option provides).
+
 \end{itemize}
 
 \subsection{FSMXML}
@@ -157,30 +165,55 @@ Gives the name of the attribute.
 \paragraph*{Info}
 Gives informations about the attribute:
 \begin{itemize}
-  \item \emph{Required}\\The attribute is mandatory.
-  \item \emph{Pivot}\\Depending on the attribute's value, the form of the
-    children should differ.
-  \item \emph{Unique}\\When the same element can be used more than once, it
-    means that one shall not declare twice the same value in each of
-    those elements.
-  \item \emph{Valid}\\Implies that the value must have already been
-    defined previously in the XML document.
+\item \emph{Required}
+
+The attribute is mandatory.
+
+\item \emph{Pivot}
+
+  Depending on the attribute's value, the form of the children should
+  differ.
+
+\item \emph{Unique}
+
+  When the same element can be used more than once, it means that one
+  shall not declare twice the same value in each of those elements.
+
+\item \emph{Valid}
+
+  Implies that the value must have already been defined previously in
+  the XML document.
 \end{itemize}
 
 \paragraph*{Type}
 Gives the type of the value:
 \begin{itemize}
-\item \emph{token}\\Is used for a string which takes only a couple of
-  already defined values, listed in the \emph{Values} column.
-\item \emph{ID}\\Is used for a string which represents an identifier,
-  that can be used many times in the document to refer to the unique
-  same ``concept''.
-\item \emph{generator}\\Is used for a string which only takes a couple
-  of values (implicitly) defined in the XML document.
-\item \emph{weight}\\Is used for a string which only takes a couple of
-  values (implicitly) defined in the XML document.
-\item \emph{URI}\\A Uniform Resource Identifier (URI), is a compact
-  string of characters used to identify or name a resource.
+\item \emph{token}
+
+  Is used for a string which takes only a couple of already defined
+  values, listed in the \emph{Values} column.
+
+\item \emph{ID}
+
+  Is used for a string which represents an identifier, that can be
+  used many times in the document to refer to the unique same
+  ``concept''.
+
+\item \emph{generator}
+
+  Is used for a string which only takes a couple of values
+  (implicitly) defined in the XML document.
+
+\item \emph{weight}
+
+  Is used for a string which only takes a couple of values
+  (implicitly) defined in the XML document.
+
+\item \emph{URI}
+
+  A Uniform Resource Identifier (URI), is a compact string of
+  characters used to identify or name a resource.
+
 \item \emph{integer}, \emph{float}, \emph{string}.
 \end{itemize}
 
