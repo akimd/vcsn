@@ -40,11 +40,11 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   void xml<Ctx>(std::ostream& out,                                      \
                 const Ctx& ctx,                                         \
-                const rat::exp& exp);                                   \
+                const rat::exp_t exp);                                  \
                                                                         \
   MAYBE_EXTERN template                                                 \
   std::string xml<Ctx>(const Ctx& cxt,                                  \
-                       const rat::exp& exp);                            \
+                       const rat::exp_t exp);                           \
                                                                         \
   namespace dyn                                                         \
   {                                                                     \

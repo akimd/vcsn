@@ -19,7 +19,7 @@ namespace vcsn
   namespace details
   {
     template <typename Context>
-    void print(const Context& ctx, const rat::exp& exp,
+    void print(const Context& ctx, const rat::exp_t exp,
                xercesc::DOMDocument& doc, xercesc::DOMElement& node)
     {
       using xml_visitor = rat::xml_kratexp_visitor<Context>;
@@ -32,7 +32,7 @@ namespace vcsn
       details::print_value_type(ctx, doc, *value_type);
 
       xml_visitor v(doc, *rat_exp_node, ctx);
-      v(static_cast<const node_t&>(exp));
+      v(static_cast<const node_t&>(*exp));
     }
 
   } // namespace details
@@ -44,7 +44,7 @@ namespace vcsn
     using context_t = Context;
 
     XML(const context_t& ctx,
-        const rat::exp& exp) throw (xercesc::XMLException)
+        const rat::exp_t exp) throw (xercesc::XMLException)
       : ctx_(ctx)
       , exp_ (exp)
     {
@@ -82,7 +82,7 @@ namespace vcsn
 
   private:
     const context_t& ctx_;
-    const rat::exp& exp_;
+    const rat::exp_t exp_;
     xercesc::DOMImplementation* impl_;
     xercesc::DOMDocument* doc_;
     xercesc::DOMElement* root_;
@@ -91,7 +91,7 @@ namespace vcsn
   template <class Context>
   inline
   void
-  xml(std::ostream& out, const Context& ctx, const rat::exp& exp)
+  xml(std::ostream& out, const Context& ctx, const rat::exp_t exp)
   {
     XML<Context> x(ctx, exp);
     x.print(out);
@@ -100,12 +100,13 @@ namespace vcsn
   template <class Context>
   inline
   std::string
-  xml(const Context& ctx, const rat::exp& exp)
+  xml(const Context& ctx, const rat::exp_t exp)
   {
     std::ostringstream o;
     xml(o, ctx, exp);
     return o.str();
   }
+
   /*-------------.
   | abstract xml |
   `-------------*/
@@ -118,14 +119,14 @@ namespace vcsn
       std::string
       xml(const dyn::ratexp& exp)
       {
-        return xml(dynamic_cast<const Ctx&>(exp->ctx()), *exp->ratexp());
+        return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
       }
 
       template <typename Ctx>
       void
       xml(std::ostream& out, const dyn::ratexp& exp)
       {
-        return xml(out, dynamic_cast<const Ctx&>(exp->ctx()), *exp->ratexp());
+        return xml(out, dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
       }
 
       using xml_string_t =
@@ -134,8 +135,8 @@ namespace vcsn
       using xml_stream_t =
         auto (std::ostream&out, const dyn::ratexp& e) -> void;
 
-      bool xml_register(const std::string&ctx, const xml_stream_t& fn);
-      bool xml_register(const std::string&ctx, const xml_string_t& fn);
+      bool xml_register(const std::string& ctx, const xml_stream_t& fn);
+      bool xml_register(const std::string& ctx, const xml_string_t& fn);
 
     } // namespace details
   } // namespace dyn
