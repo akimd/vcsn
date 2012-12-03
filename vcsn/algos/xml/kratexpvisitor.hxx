@@ -38,86 +38,90 @@ namespace vcsn
       operator()(*v);
     }
 
-# define VISIT(Type, Name)                                              \
-    template <typename Context>                                         \
-    inline                                                              \
-    void                                                                \
+# define VISIT(Type, Name)                                      \
+    template <typename Context>                                 \
+    inline                                                      \
+    void                                                        \
     xml_kratexp_visitor<Context>::visit(const Type##_t& Name)
 
     VISIT(prod, v)
     {
-      print_weight(v, root_);
-      auto mul = details::create_node(doc_, "mul");
-      root_.appendChild(mul);
+      auto prod = details::create_node(doc_, "mul");
+      root_.appendChild(prod);
+      print_weight(v.left_weight(), *prod, "left");
       for (auto t : v)
         {
-          this_t child(doc_, *mul, ctx_);
+          this_t child(doc_, *prod, ctx_);
           t->accept(child);
         }
+      print_weight(v.right_weight(), *prod, "right");
     }
 
     VISIT(sum, v)
     {
-      print_weight(v, root_);
       auto plus = details::create_node(doc_, "plus");
       root_.appendChild(plus);
+      print_weight(v.left_weight(), *plus, "left");
       for (auto t : v)
         {
           this_t child(doc_, *plus, ctx_);
           t->accept(child);
         }
-
+      print_weight(v.right_weight(), *plus, "right");
     }
 
     VISIT(star, v)
     {
-      print_weight(v, root_);
       if (auto sub = v.sub())
         {
           auto star = details::create_node(doc_, "star");
           root_.appendChild(star);
+          print_weight(v.left_weight(), *star, "left");
           this_t child(doc_, *star, ctx_);
           sub->accept(child);
+          print_weight(v.left_weight(), *star, "right");
         }
     }
 
     VISIT(one, v)
     {
-      print_weight(v, root_);
-      auto node = details::create_node(doc_, "one");
-      root_.appendChild(node);
+      auto one = details::create_node(doc_, "one");
+      root_.appendChild(one);
+      print_weight(v.left_weight(), *one, "left");
     }
 
     VISIT(zero, v)
     {
-      print_weight(v, root_);
-      auto node = details::create_node(doc_, "zero");
-      root_.appendChild(node);
+      auto zero = details::create_node(doc_, "zero");
+      root_.appendChild(zero);
+      print_weight(v.left_weight(), *zero, "left");
     }
 
     VISIT(atom, v)
     {
-      auto label = details::create_node(doc_, "atom");
+      auto atom = details::create_node(doc_, "atom");
+      root_.appendChild(atom);
 
-      print_weight(v, *label);
+      print_weight(v.left_weight(), *atom, "left");
 
-      auto monElmt = details::create_node(doc_, "monElmt");
-      auto monGen = details::create_node(doc_, "monGen");
+      auto label = details::create_node(doc_, "label");
+      atom->appendChild(label);
 
-      details::set_attribute(monGen, "value", ctx_.genset()->format(v.value()));
-      monElmt->appendChild(monGen);
-      label->appendChild(monElmt);
-      root_.appendChild(label);
+      details::set_attribute(label, "value",
+                             ctx_.genset()->format(v.value()));
     }
 
     template <typename Context>
     void
-    xml_kratexp_visitor<Context>::print_weight(const node_t& n, dom_elt_t& root)
+    xml_kratexp_visitor<Context>::print_weight(const weight_t& w,
+                                               dom_elt_t& root,
+                                               const std::string& side)
     {
-      if (shows_(n.left_weight()))
+      if (shows_(w))
         {
-          auto weight = details::create_node(doc_, "weight");
-          details::set_attribute(weight, "value", ws_->format(n.left_weight()));
+          assert(side == "left" || side == "right");
+          auto weight = details::create_node(doc_, side + "Weight");
+          details::set_attribute(weight, "value", ws_->format(w));
           root.appendChild(weight);
         }
     }
