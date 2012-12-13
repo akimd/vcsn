@@ -122,7 +122,7 @@ namespace vcsn
   private:
     template <typename Ctx>
     value_t
-    atom_(if_lae<Ctx, label_t> v) const;
+    atom_(if_lau<Ctx, label_t> v) const;
 
     template <typename Ctx>
     value_t

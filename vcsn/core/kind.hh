@@ -9,7 +9,7 @@ namespace vcsn
   {
     static std::string sname()
     {
-      return "lae";
+      return "lau";
     }
   };
 

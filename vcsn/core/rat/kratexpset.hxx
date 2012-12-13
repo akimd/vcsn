@@ -35,7 +35,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(if_lae<Ctx, label_t> v) const
+  kratexpset<Context>::atom_(if_lau<Ctx, label_t> v) const
     -> value_t
   {
     return std::make_shared<atom_t>(weightset()->unit(), v);

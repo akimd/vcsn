@@ -50,7 +50,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/char_br_lal.hh                            \
   ctx/char_br_law.hh                            \
   ctx/char_z_lal.hh                             \
-  ctx/char_z_lae.hh                             \
+  ctx/char_z_lau.hh                             \
   ctx/char_z_law.hh                             \
   ctx/char_zr_lal.hh                            \
   ctx/char_zr_law.hh                            \

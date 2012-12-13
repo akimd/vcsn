@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vcsn/algos/dotty.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/ctx/char_z_lae.hh>
+#include <vcsn/ctx/char_z_lau.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z_lae;
+  using context_t = vcsn::ctx::char_z_lau;
   context_t ctx {{}};
 
   using automaton_t = vcsn::mutable_automaton<context_t>;

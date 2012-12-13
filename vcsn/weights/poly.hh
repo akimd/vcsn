@@ -285,7 +285,7 @@ namespace vcsn
 	      out << "{";
 	      weightset()->print(out, i.second) << "}";
 	    }
-          if (!context_t::is_lae)
+          if (!context_t::is_lau)
             genset()->print(out, i.first);
 	}
 

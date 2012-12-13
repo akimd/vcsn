@@ -693,7 +693,7 @@ namespace vcsn
     template <typename Ctx>
     void
     add_entry_(state_t src, state_t dst,
-               if_lae<Ctx, const entry_t&> es)
+               if_lau<Ctx, const entry_t&> es)
     {
       for (auto e: es)
         add_transition(src, dst, {}, e.second);

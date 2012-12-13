@@ -162,7 +162,7 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const word_t& v) const
-      -> if_lae<Ctx, value_t>
+      -> if_lau<Ctx, value_t>
     {
       if (!v.empty())
         throw std::domain_error("invalid atom: " + v + ": not empty");

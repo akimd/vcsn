@@ -32,9 +32,9 @@ lib_libchar_br_law_la_SOURCES = lib/ctx/libctx.cc
 lib_libchar_br_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_law
 
 # char_z.
-pkglib_LTLIBRARIES += lib/libchar_z_lae.la
-lib_libchar_z_lae_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_lae_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lae
+pkglib_LTLIBRARIES += lib/libchar_z_lau.la
+lib_libchar_z_lau_la_SOURCES = lib/ctx/libctx.cc
+lib_libchar_z_lau_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lau
 
 pkglib_LTLIBRARIES += lib/libchar_z_lal.la
 lib_libchar_z_lal_la_SOURCES = lib/ctx/libctx.cc

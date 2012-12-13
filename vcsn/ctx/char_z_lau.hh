@@ -8,7 +8,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using char_z_lae = char_<vcsn::z, labels_are_unit>;
+    using char_z_lau = char_<vcsn::z, labels_are_unit>;
   }
 }
 
@@ -16,7 +16,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(char_z_lae);
+  VCSN_CTX_INSTANTIATE(char_z_lau);
 };
 
 #endif // !VCSN_CTX_CHAR_Z_LAE_HH
