@@ -11,9 +11,9 @@
 namespace vcsn
 {
 
-  /*-------------------------------------------------------------.
+  /*------------------------------------------------------------.
   | Implementation of abstract_ratexpset pure virtual methods.  |
-  `-------------------------------------------------------------*/
+  `------------------------------------------------------------*/
 
 #define DEFINE                                  \
   template <typename Context>                   \
@@ -196,54 +196,54 @@ namespace vcsn
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
         else if (lt == type_t::prod)
-	  {
-	    const auto& prodl = *down_pointer_cast<const prod_t>(l);
-	    if (weightset()->is_unit(prodl.left_weight())
-		&& weightset()->is_unit(prodl.right_weight()))
-	      {
-		// Concat of "(ab).a" and "b" is "(ab).(ab)".
-		ratexps_t ratexps { prodl.begin(), prodl.end() };
-		ratexps.back() = concat(ratexps.back(), r);
-		return std::make_shared<prod_t>(weightset()->unit(),
-						weightset()->unit(),
-						ratexps);
-	      }
-	  }
+          {
+            const auto& prodl = *down_pointer_cast<const prod_t>(l);
+            if (weightset()->is_unit(prodl.left_weight())
+                && weightset()->is_unit(prodl.right_weight()))
+              {
+                // Concat of "(ab).a" and "b" is "(ab).(ab)".
+                ratexps_t ratexps { prodl.begin(), prodl.end() };
+                ratexps.back() = concat(ratexps.back(), r);
+                return std::make_shared<prod_t>(weightset()->unit(),
+                                                weightset()->unit(),
+                                                ratexps);
+              }
+          }
         }
     // The following cases do not when parsing an expression.
     else if (rt == type_t::prod)
       {
-	const auto& prodr = *down_pointer_cast<const prod_t>(r);
-	if (weightset()->is_unit(prodr.left_weight())
-	    && weightset()->is_unit(prodr.right_weight()))
-	  {
-	    if (lt == type_t::atom
-		&& weightset()->is_unit(l->left_weight()))
-	      {
-		// Concat of "a" and "b.(ab)", is "(ab).(ab)".
-		ratexps_t ratexps { prodr.begin(), prodr.end() };
-		ratexps.front() = concat(l, ratexps.front());
-		return std::make_shared<prod_t>(weightset()->unit(),
-						weightset()->unit(),
-						ratexps);
-	      }
-	    else if (lt == type_t::prod)
-	      {
-		const auto& prodl = *down_pointer_cast<const prod_t>(l);
-		if (weightset()->is_unit(prodl.left_weight())
-		    && weightset()->is_unit(prodl.right_weight()))
-		  {
-		    // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
-		    ratexps_t ratexps { prodl.begin(), prodl.end() };
-		    ratexps.back() = concat(ratexps.back(), *prodr.begin());
-		    ratexps.insert(ratexps.end(),
-				    prodr.begin() + 1, prodr.end());
-		    return std::make_shared<prod_t>(weightset()->unit(),
-						    weightset()->unit(),
-						    ratexps);
-		  }
-	      }
-	  }
+        const auto& prodr = *down_pointer_cast<const prod_t>(r);
+        if (weightset()->is_unit(prodr.left_weight())
+            && weightset()->is_unit(prodr.right_weight()))
+          {
+            if (lt == type_t::atom
+                && weightset()->is_unit(l->left_weight()))
+              {
+                // Concat of "a" and "b.(ab)", is "(ab).(ab)".
+                ratexps_t ratexps { prodr.begin(), prodr.end() };
+                ratexps.front() = concat(l, ratexps.front());
+                return std::make_shared<prod_t>(weightset()->unit(),
+                                                weightset()->unit(),
+                                                ratexps);
+              }
+            else if (lt == type_t::prod)
+              {
+                const auto& prodl = *down_pointer_cast<const prod_t>(l);
+                if (weightset()->is_unit(prodl.left_weight())
+                    && weightset()->is_unit(prodl.right_weight()))
+                  {
+                    // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
+                    ratexps_t ratexps { prodl.begin(), prodl.end() };
+                    ratexps.back() = concat(ratexps.back(), *prodr.begin());
+                    ratexps.insert(ratexps.end(),
+                                    prodr.begin() + 1, prodr.end());
+                    return std::make_shared<prod_t>(weightset()->unit(),
+                                                    weightset()->unit(),
+                                                    ratexps);
+                  }
+              }
+          }
       }
     // Fall back to explicit concatenation.
     return mul(l, r);
@@ -305,9 +305,9 @@ namespace vcsn
       }
   }
 
-  /*-----------------------------------.
+  /*----------------------------------.
   | ratexpset as a WeightSet itself.  |
-  `-----------------------------------*/
+  `----------------------------------*/
 
   DEFINE::is_zero(value_t v) const
     -> bool

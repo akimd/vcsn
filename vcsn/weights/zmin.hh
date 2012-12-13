@@ -79,7 +79,7 @@ namespace vcsn
     conv(const std::string &str) const
     {
       if (str == "oo")
-	return zero();
+        return zero();
 
       try
         {
@@ -95,7 +95,7 @@ namespace vcsn
     print(std::ostream& o, const value_t v) const
     {
       if (v == zero())
-	return o << "oo";
+        return o << "oo";
       return o << v;
     }
 

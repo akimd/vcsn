@@ -15,7 +15,7 @@ void
 syntax(const char* argv0)
 {
   std::cerr << "Usage: " << std::endl
-	    << '\t' << argv0 << " n" << std::endl;
+            << '\t' << argv0 << " n" << std::endl;
   exit(1);
 }
 

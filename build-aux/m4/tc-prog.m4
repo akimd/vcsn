@@ -27,29 +27,29 @@ if test -n "$$3" ; then
   AC_CACHE_CHECK([for $1 $tc_req $tc_ver],
     [ac_cv_$3_version],
     [ac_cv_$3_actual_version=`$$3 --version | \
-	sed -n ['/^[^0-9]*\([0-9][0-9.]*[0-9]\).*$/{s//\1/;p;q;}']`
+        sed -n ['/^[^0-9]*\([0-9][0-9.]*[0-9]\).*$/{s//\1/;p;q;}']`
     if test -z "$ac_cv_$3_actual_version"; then
-    	ac_cv_$3_version=no
+        ac_cv_$3_version=no
     else
-	ac_cv_$3_version=yes
+        ac_cv_$3_version=yes
     fi
     if test x$ac_cv_$3_version = xyes ; then
       AS_VERSION_COMPARE([$ac_cv_$3_actual_version], [$tc_ver],
-			 [tc_cmp='<'],
-			 [tc_cmp='='],
-			 [tc_cmp='>'])
+                         [tc_cmp='<'],
+                         [tc_cmp='='],
+                         [tc_cmp='>'])
       case $tc_req:$tc_cmp in
-	'<:<' | \
-	'<=:<' | '<=:=' |\
-	'==:=' | \
-	'!=:<' | '!=:>' |\
-	'>=:>' | '>=:=' |\
-	'>:>')
-	  ac_cv_$3_version=yes
-	  ;;
-	*)
-	  ac_cv_$3_version=no
-	  ;;
+        '<:<' | \
+        '<=:<' | '<=:=' |\
+        '==:=' | \
+        '!=:<' | '!=:>' |\
+        '>=:>' | '>=:=' |\
+        '>:>')
+          ac_cv_$3_version=yes
+          ;;
+        *)
+          ac_cv_$3_version=no
+          ;;
       esac
     fi])
 fi

@@ -62,32 +62,32 @@ namespace vcsn
 
     for (auto t : aut.all_entries())
       {
-	auto src = aut.src_of(t);
-	auto dst = aut.dst_of(t);
+        auto src = aut.src_of(t);
+        auto dst = aut.dst_of(t);
 
-	if (src == aut.pre())
-	  {
-	    unsigned n = names[dst];
-	    out << "  I" << n << " -> " << n;
-	  }
-	else if (dst == aut.post())
-	  {
-	    unsigned n = names[src];
-	    out << "  " << n << " -> F" << n;
-	  }
-	else
-	  {
-	    unsigned ns = names[src];
-	    unsigned nd = names[dst];
-	    out << "  " << ns << " -> " << nd;
-	  }
-	std::string s = aut.entryset().format(aut.entry_at(t));
-	if (!s.empty())
-	  {
-	    out << " [label = \"";
-	    str_escape(out, s) << "\"]";
-	  }
-	out << "\n";
+        if (src == aut.pre())
+          {
+            unsigned n = names[dst];
+            out << "  I" << n << " -> " << n;
+          }
+        else if (dst == aut.post())
+          {
+            unsigned n = names[src];
+            out << "  " << n << " -> F" << n;
+          }
+        else
+          {
+            unsigned ns = names[src];
+            unsigned nd = names[dst];
+            out << "  " << ns << " -> " << nd;
+          }
+        std::string s = aut.entryset().format(aut.entry_at(t));
+        if (!s.empty())
+          {
+            out << " [label = \"";
+            str_escape(out, s) << "\"]";
+          }
+        out << "\n";
       }
     out << "}" << std::endl;
   }

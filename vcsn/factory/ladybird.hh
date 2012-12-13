@@ -22,12 +22,12 @@ namespace vcsn
     auto x = p;
     for (unsigned i = 1; i < n; ++i)
       {
-	auto y = aut.new_state();
-	aut.add_transition(x, y, 'a');
-	aut.add_transition(y, y, 'b');
-	aut.add_transition(y, y, 'c');
-	aut.add_transition(y, p, 'c');
-	x = y;
+        auto y = aut.new_state();
+        aut.add_transition(x, y, 'a');
+        aut.add_transition(y, y, 'b');
+        aut.add_transition(y, y, 'c');
+        aut.add_transition(y, p, 'c');
+        x = y;
       }
     aut.add_transition(x, p, 'a');
     return aut;

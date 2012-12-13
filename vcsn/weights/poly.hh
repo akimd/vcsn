@@ -50,9 +50,9 @@ namespace vcsn
     set_weight(value_t& v, const word_t& w, const weight_t k) const
     {
       if (weightset()->is_zero(k))
-	del_weight(v, w);
+        del_weight(v, w);
       else
-	v[w] = k;
+        v[w] = k;
       return v;
     }
 
@@ -61,19 +61,19 @@ namespace vcsn
     {
       auto i = v.find(w);
       if (i == v.end())
-	{
-	  set_weight(v, w, k);
-	}
+        {
+          set_weight(v, w, k);
+        }
       else
-	{
-	  // Do not use set_weight() because it would lookup w
-	  // again and we already have the right iterator.
-	  auto w2 = weightset()->add(i->second, k);
-	  if (weightset()->is_zero(w2))
-	    v.erase(i);
-	  else
-	    i->second = w2;
-	}
+        {
+          // Do not use set_weight() because it would lookup w
+          // again and we already have the right iterator.
+          auto w2 = weightset()->add(i->second, k);
+          if (weightset()->is_zero(w2))
+            v.erase(i);
+          else
+            i->second = w2;
+        }
       return v;
     }
 
@@ -82,9 +82,9 @@ namespace vcsn
     {
       auto i = v.find(w);
       if (i == v.end())
-	return weightset()->zero();
+        return weightset()->zero();
       else
-	return i->second;
+        return i->second;
     }
 
     value_t
@@ -92,7 +92,7 @@ namespace vcsn
     {
       value_t p = l;
       for (auto& i : r)
-	add_weight(p, i.first, i.second);
+        add_weight(p, i.first, i.second);
       return p;
     }
 
@@ -101,10 +101,10 @@ namespace vcsn
     {
       value_t p;
       for (auto i: l)
-	for (auto j: r)
-	  add_weight(p,
-		    genset()->concat(i.first, j.first),
-		    weightset()->mul(i.second, j.second));
+        for (auto j: r)
+          add_weight(p,
+                    genset()->concat(i.first, j.first),
+                    weightset()->mul(i.second, j.second));
       return p;
     }
 
@@ -115,17 +115,17 @@ namespace vcsn
       // starable too).
       auto s = v.size();
       if (s == 0)
-	return unit();
+        return unit();
       if (s == 1)
-	{
-	  auto i = v.find(genset()->identity());
-	  if (i != v.end())
-	    {
-	      value_t p;
-	      add_weight(p, i->first, weightset()->star(i->second));
-	      return p;
-	    }
-	}
+        {
+          auto i = v.find(genset()->identity());
+          if (i != v.end())
+            {
+              value_t p;
+              add_weight(p, i->first, weightset()->star(i->second));
+              return p;
+            }
+        }
       throw std::domain_error("polynomial: star: invalid value: " + format(v));
     }
 
@@ -139,10 +139,10 @@ namespace vcsn
     is_unit(const value_t& v) const
     {
       if (v.size() != 1)
-	return false;
+        return false;
       auto i = v.find(genset()->identity());
       if (i == v.end())
-	return false;
+        return false;
       return weightset()->is_unit(i->second);
     }
 
@@ -169,7 +169,7 @@ namespace vcsn
     {
       value_t res;
       for (const auto& i: v)
-	res[genset()->transpose(i.first)] = weightset()->transpose(i.second);
+        res[genset()->transpose(i.first)] = weightset()->transpose(i.second);
       return res;
     }
 
@@ -275,22 +275,22 @@ namespace vcsn
       bool show_unit = weightset()->show_unit();
 
       for (const auto& i: v)
-	{
-	  if (!first)
-	    out << " + ";
-	  first = false;
+        {
+          if (!first)
+            out << " + ";
+          first = false;
 
-	  if (show_unit || !weightset()->is_unit(i.second))
-	    {
-	      out << "{";
-	      weightset()->print(out, i.second) << "}";
-	    }
+          if (show_unit || !weightset()->is_unit(i.second))
+            {
+              out << "{";
+              weightset()->print(out, i.second) << "}";
+            }
           if (!context_t::is_lau)
             genset()->print(out, i.first);
-	}
+        }
 
       if (first)
-	out << "\\z";
+        out << "\\z";
 
       return out;
     }

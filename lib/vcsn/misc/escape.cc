@@ -8,20 +8,20 @@ namespace vcsn
   {
     for (auto c: str)
       switch (c)
-	{
-	case '\\':
-	  os << "\\\\";
-	  break;
-	case '"':
-	  os << "\\\"";
-	  break;
-	case '\n':
-	  os << "\\n";
-	  break;
-	default:
-	  os << c;
-	  break;
-	}
+        {
+        case '\\':
+          os << "\\\\";
+          break;
+        case '"':
+          os << "\\\"";
+          break;
+        case '\n':
+          os << "\\n";
+          break;
+        default:
+          os << c;
+          break;
+        }
     return os;
   }
 }

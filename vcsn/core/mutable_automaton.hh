@@ -672,8 +672,8 @@ namespace vcsn
     {
       entry_t res;
       for (auto t : outin(s, d))
-	// Bypass set_weight(), because we know that the weight is
-	// nonzero, and that there is only one weight per letter.
+        // Bypass set_weight(), because we know that the weight is
+        // nonzero, and that there is only one weight per letter.
         res[word_label_of(t)] = weight_of(t);
       return res;
     }

@@ -42,8 +42,8 @@ This is especially important when parsing weights with a recursive
 structure (e.g., polynomials or rational expressions).  For instance
 in
 
-	      while (genset()->has(i.peek()))
-		label += char(i.get());
+              while (genset()->has(i.peek()))
+                label += char(i.get());
 
 polynomialset::conv() wrongly assumes that letters are represented by
 characters.  This will break with integer alphabets.

@@ -14,13 +14,13 @@
 #include <iostream>
 #include <lib/vcsn/dot/parse.hh>
 
-#define LINE(Line)				\
-  do{						\
-    yylloc->end.column = 1;			\
+#define LINE(Line)                              \
+  do{                                           \
+    yylloc->end.column = 1;                     \
     yylloc->lines(Line);                        \
  } while (false)
 
-#define YY_USER_ACTION				\
+#define YY_USER_ACTION                          \
   yylloc->columns(yyleng);
 
 #define TOK(Token)                              \

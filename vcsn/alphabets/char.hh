@@ -139,7 +139,7 @@ namespace vcsn
     print(std::ostream& o, const letter_t& l) const
     {
       if (l != special_letter())
-	o << l;
+        o << l;
       return o;
     }
 
@@ -153,9 +153,9 @@ namespace vcsn
     format(const letter_t l) const
     {
       if (l != special_letter())
-	return {l};
+        return {l};
       else
-	return {};
+        return {};
     }
 
     std::string
@@ -164,16 +164,16 @@ namespace vcsn
       size_t s = w.size();
 
       if (s == 0)
-	return "\\e";
+        return "\\e";
 
       // If the string starts or ends with the special letter, skip
       // it.  If the resulting string is empty, format it this way.
       // (We DON'T want to format it as "\\e".)
       if (w[0] == special_letter())
-	return (s == 1) ? "" : w.substr(1);
+        return (s == 1) ? "" : w.substr(1);
 
       if (s > 1 && w[s - 1] == special_letter())
-	return w.substr(0, s - 1);
+        return w.substr(0, s - 1);
 
       return w;
     }
