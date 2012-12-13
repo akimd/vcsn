@@ -46,7 +46,7 @@ namespace vcsn
 
     VISIT(prod, v)
     {
-      auto prod = details::create_node(doc_, "mul");
+      auto prod = details::create_node(doc_, "prod");
       root_.appendChild(prod);
       print_weight(v.left_weight(), *prod, "left");
       for (auto t : v)
