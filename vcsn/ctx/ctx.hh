@@ -38,7 +38,7 @@ namespace vcsn
       using kind_t = Kind;
       enum
         {
-          is_lae = std::is_same<kind_t, labels_are_empty>::value,
+          is_lae = std::is_same<kind_t, labels_are_unit>::value,
           is_lal = std::is_same<kind_t, labels_are_letters>::value,
           is_law = std::is_same<kind_t, labels_are_words>::value,
         };

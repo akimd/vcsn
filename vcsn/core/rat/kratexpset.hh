@@ -111,7 +111,7 @@ namespace vcsn
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
     /// Implementation details for concat.
-    value_t concat(value_t l, value_t r, labels_are_empty) const;
+    value_t concat(value_t l, value_t r, labels_are_unit) const;
     value_t concat(value_t l, value_t r, labels_are_letters) const;
     value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;

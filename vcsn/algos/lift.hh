@@ -15,7 +15,7 @@ namespace vcsn
     using lifted_context_t =
       ctx::context<typename Context::genset_t,
                    kratexpset<Context>,
-                   labels_are_empty>;
+                   labels_are_unit>;
 
     template <typename Aut>
     using lifted_automaton_t =

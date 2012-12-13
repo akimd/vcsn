@@ -8,7 +8,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using char_z_lae = char_<vcsn::z, labels_are_empty>;
+    using char_z_lae = char_<vcsn::z, labels_are_unit>;
   }
 }
 

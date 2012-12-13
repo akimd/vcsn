@@ -169,7 +169,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_empty) const
+  DEFINE::concat(value_t l, value_t r, labels_are_unit) const
     -> value_t
   {
     return mul(l, r);

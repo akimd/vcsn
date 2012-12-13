@@ -5,7 +5,7 @@
 
 namespace vcsn
 {
-  struct labels_are_empty
+  struct labels_are_unit
   {
     static std::string sname()
     {
@@ -35,7 +35,7 @@ namespace vcsn
   };
 
   template <class GenSet>
-  struct label_trait<labels_are_empty, GenSet>
+  struct label_trait<labels_are_unit, GenSet>
   {
     using label_t = typename GenSet::empty_t;
   };
