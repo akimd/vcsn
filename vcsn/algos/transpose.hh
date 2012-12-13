@@ -3,8 +3,8 @@
 
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/core/rat/kratexpset.hh>
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn
 {

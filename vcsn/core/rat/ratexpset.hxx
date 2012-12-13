@@ -2,8 +2,8 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <vcsn/core/rat/abstract_kratexpset.hh>
-#include <vcsn/core/rat/kratexp.hh>
+#include <vcsn/core/rat/abstract_ratexpset.hh>
+#include <vcsn/core/rat/ratexp.hh>
 #include <lib/vcsn/rat/driver.hh>// FIXME: non-installed dependency.
 #include <vcsn/misc/cast.hh>
 #include <vcsn/core/rat/transpose.hh>
@@ -12,14 +12,14 @@ namespace vcsn
 {
 
   /*-------------------------------------------------------------.
-  | Implementation of abstract_kratexpset pure virtual methods.  |
+  | Implementation of abstract_ratexpset pure virtual methods.  |
   `-------------------------------------------------------------*/
 
 #define DEFINE                                  \
   template <typename Context>                   \
   inline                                        \
   auto                                          \
-  kratexpset<Context>
+  ratexpset<Context>
 
 
   DEFINE::atom(const label_t& v) const
@@ -35,7 +35,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(if_lau<Ctx, label_t> v) const
+  ratexpset<Context>::atom_(if_lau<Ctx, label_t> v) const
     -> value_t
   {
     return std::make_shared<atom_t>(weightset()->unit(), v);
@@ -45,7 +45,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
+  ratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
     -> value_t
   {
     if (!genset()->has(v))
@@ -57,7 +57,7 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  kratexpset<Context>::atom_(const if_law<Ctx, word_t>& w) const
+  ratexpset<Context>::atom_(const if_law<Ctx, word_t>& w) const
     -> value_t
   {
     for (auto l: w)
@@ -99,7 +99,7 @@ namespace vcsn
   }
 
 
-  DEFINE::gather(kratexps_t& res, rat::exp::type_t type, value_t v) const
+  DEFINE::gather(ratexps_t& res, rat::exp::type_t type, value_t v) const
     -> void
   {
     assert(type == type_t::sum || type == type_t::prod);
@@ -117,10 +117,10 @@ namespace vcsn
   }
 
   DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
-    -> kratexps_t
+    -> ratexps_t
   {
     assert(type == type_t::sum || type == type_t::prod);
-    kratexps_t res;
+    ratexps_t res;
     gather(res, type, l);
     gather(res, type, r);
     return res;
@@ -202,11 +202,11 @@ namespace vcsn
 		&& weightset()->is_unit(prodl.right_weight()))
 	      {
 		// Concat of "(ab).a" and "b" is "(ab).(ab)".
-		kratexps_t kratexps { prodl.begin(), prodl.end() };
-		kratexps.back() = concat(kratexps.back(), r);
+		ratexps_t ratexps { prodl.begin(), prodl.end() };
+		ratexps.back() = concat(ratexps.back(), r);
 		return std::make_shared<prod_t>(weightset()->unit(),
 						weightset()->unit(),
-						kratexps);
+						ratexps);
 	      }
 	  }
         }
@@ -221,11 +221,11 @@ namespace vcsn
 		&& weightset()->is_unit(l->left_weight()))
 	      {
 		// Concat of "a" and "b.(ab)", is "(ab).(ab)".
-		kratexps_t kratexps { prodr.begin(), prodr.end() };
-		kratexps.front() = concat(l, kratexps.front());
+		ratexps_t ratexps { prodr.begin(), prodr.end() };
+		ratexps.front() = concat(l, ratexps.front());
 		return std::make_shared<prod_t>(weightset()->unit(),
 						weightset()->unit(),
-						kratexps);
+						ratexps);
 	      }
 	    else if (lt == type_t::prod)
 	      {
@@ -234,13 +234,13 @@ namespace vcsn
 		    && weightset()->is_unit(prodl.right_weight()))
 		  {
 		    // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
-		    kratexps_t kratexps { prodl.begin(), prodl.end() };
-		    kratexps.back() = concat(kratexps.back(), *prodr.begin());
-		    kratexps.insert(kratexps.end(),
+		    ratexps_t ratexps { prodl.begin(), prodl.end() };
+		    ratexps.back() = concat(ratexps.back(), *prodr.begin());
+		    ratexps.insert(ratexps.end(),
 				    prodr.begin() + 1, prodr.end());
 		    return std::make_shared<prod_t>(weightset()->unit(),
 						    weightset()->unit(),
-						    kratexps);
+						    ratexps);
 		  }
 	      }
 	  }
@@ -306,7 +306,7 @@ namespace vcsn
   }
 
   /*-----------------------------------.
-  | kratexpset as a WeightSet itself.  |
+  | ratexpset as a WeightSet itself.  |
   `-----------------------------------*/
 
   DEFINE::is_zero(value_t v) const
@@ -325,7 +325,7 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    vcsn::concrete_abstract_kratexpset<context_t> fac{context()};
+    vcsn::concrete_abstract_ratexpset<context_t> fac{context()};
     vcsn::rat::driver d(fac);
     if (auto res = d.parse_string(s))
       return down_pointer_cast<const node_t>(res);

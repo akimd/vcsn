@@ -32,12 +32,12 @@ nobase_vcsn_HEADERS =                           \
   core/fwd.hh                                   \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/rat/abstract_kratexpset.hh               \
+  core/rat/abstract_ratexpset.hh               \
   core/rat/fwd.hh                               \
-  core/rat/kratexp.hh                           \
-  core/rat/kratexp.hxx                          \
-  core/rat/kratexpset.hh                        \
-  core/rat/kratexpset.hxx                       \
+  core/rat/ratexp.hh                           \
+  core/rat/ratexp.hxx                          \
+  core/rat/ratexpset.hh                        \
+  core/rat/ratexpset.hxx                       \
   core/rat/printer.hh                           \
   core/rat/printer.hxx                          \
   core/rat/transpose.hh                         \

@@ -1,5 +1,5 @@
 #include <vcsn/core/rat/visitor.hh>
-#include <vcsn/core/rat/kratexp.hh>
+#include <vcsn/core/rat/ratexp.hh>
 #include <cassert>
 
 namespace vcsn

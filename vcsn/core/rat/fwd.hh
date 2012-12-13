@@ -6,10 +6,10 @@
 namespace vcsn
 {
 
-  class abstract_kratexpset;
+  class abstract_ratexpset;
 
   template <typename Context>
-  class concrete_abstract_kratexpset;
+  class concrete_abstract_ratexpset;
 
   namespace rat
   {
@@ -37,13 +37,13 @@ namespace vcsn
 # undef DEFINE
 
     template <typename Label, typename Weight>
-    using kratexp = std::shared_ptr<const node<Label, Weight>>;
+    using ratexp = std::shared_ptr<const node<Label, Weight>>;
 
   } // namespace rat
 
-  // kratexpset.hh.
+  // ratexpset.hh.
   template <typename Context>
-  class kratexpset;
+  class ratexpset;
 
 } // namespace vcsn
 

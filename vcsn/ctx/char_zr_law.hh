@@ -9,7 +9,7 @@ namespace vcsn
   namespace ctx
   {
     using char_z_law = char_<vcsn::z, labels_are_words>;
-    using char_zr_law = char_<vcsn::kratexpset<char_z_law>, labels_are_words>;
+    using char_zr_law = char_<vcsn::ratexpset<char_z_law>, labels_are_words>;
   }
 }
 

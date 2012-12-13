@@ -4,7 +4,7 @@
 #include <vcsn/misc/echo.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn
 {
@@ -16,7 +16,7 @@ namespace vcsn
 
   template <typename Aut,
             typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
+  typename Context::ratexp_t
   aut_to_exp(const Aut& a,
              const state_chooser_t<Aut>& next_state)
   {
@@ -62,7 +62,7 @@ namespace vcsn
 
   template <class Aut,
             typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
+  typename Context::ratexp_t
   aut_to_exp(const Aut& a)
   {
     state_chooser_t<Aut> next =
@@ -131,7 +131,7 @@ namespace vcsn
 
   template <class Aut,
             typename Context = typename Aut::context_t>
-  typename Context::kratexp_t
+  typename Context::ratexp_t
   aut_to_exp_in_degree(const Aut& a)
   {
     state_chooser_t<Aut> next =

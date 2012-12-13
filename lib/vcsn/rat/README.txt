@@ -1,5 +1,5 @@
 This parser is in charge of reading a weighted rational expression,
-and to build the corresponding AST (see kratexps.hh).
+and to build the corresponding AST (see ratexps.hh).
 
 * Directives, or LL-style?
 The precedence between the different operators are very tricky to

@@ -83,7 +83,7 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::rat::driver d(ctx);
-  auto* kset = vcsn::dyn::make_kratexpset(ctx);
+  auto* kset = vcsn::dyn::make_ratexpset(ctx);
   if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
     {
       for (size_t i = 0; i < opts.transpose; ++i)
@@ -143,10 +143,10 @@ try
 #define DEFINE(Key, Name)                         \
   ksets.insert(pair(#Key, Name))
   DEFINE(b,   "char_b_law");
-  DEFINE(br,  "char_kratexpset<char_b_law>_law");
+  DEFINE(br,  "char_ratexpset<char_b_law>_law");
   DEFINE(z,   "char_z_law");
-  DEFINE(zr,  "char_kratexpset<char_z_law>_law");
-  DEFINE(zrr, "char_kratexpset<char_kratexpset<char_z_law>_law>_law");
+  DEFINE(zr,  "char_ratexpset<char_z_law>_law");
+  DEFINE(zrr, "char_ratexpset<char_ratexpset<char_z_law>_law>_law");
 #undef DEFINE
 
   options opts;

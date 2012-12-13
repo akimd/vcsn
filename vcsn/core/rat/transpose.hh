@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     /*-----------------------.
-    | transposing kratexps.  |
+    | transposing ratexps.  |
     `-----------------------*/
 
     /// \param Context  relative to the RatExp.
@@ -22,7 +22,7 @@ namespace vcsn
       using context_t = Context;
       using weightset_t = typename context_t::weightset_t;
       using weight_t = typename context_t::weight_t;
-      using kratexp_t = typename context_t::kratexp_t;
+      using ratexp_t = typename context_t::ratexp_t;
       using super_type = typename Context::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
@@ -40,8 +40,8 @@ namespace vcsn
         , res_{}
       {}
 
-      kratexp_t
-      operator()(const kratexp_t& e)
+      ratexp_t
+      operator()(const ratexp_t& e)
       {
         e->accept(*this);
         return std::move(res_);
@@ -87,7 +87,7 @@ namespace vcsn
       virtual void
       visit(const sum_t& e)
       {
-        kratexp_t res = ks_.zero();
+        ratexp_t res = ks_.zero();
         for (auto v: e)
           {
             v->accept(*this);
@@ -101,7 +101,7 @@ namespace vcsn
       virtual void
       visit(const prod_t& e)
       {
-        kratexp_t res = ks_.unit();
+        ratexp_t res = ks_.unit();
         for (auto v: e)
           {
             v->accept(*this);
@@ -120,18 +120,18 @@ namespace vcsn
       }
 
     private:
-      typename context_t::kratexpset_t ks_;
-      kratexp_t res_;
+      typename context_t::ratexpset_t ks_;
+      ratexp_t res_;
     };
   }
 
   /// \param Aut      relative to the generated automaton.
   /// \param Context  relative to the RatExp.
   template <class Context>
-  typename Context::kratexp_t
-  transpose(const Context& ctx, const typename Context::kratexp_t& v)
+  typename Context::ratexp_t
+  transpose(const Context& ctx, const typename Context::ratexp_t& v)
   {
-    return ctx.make_kratexpset().transpose(v);
+    return ctx.make_ratexpset().transpose(v);
   }
 
 }

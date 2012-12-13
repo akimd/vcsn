@@ -47,7 +47,7 @@ namespace vcsn
                                                                         \
   /* aut_to_exp. */                                                     \
   MAYBE_EXTERN template                                                 \
-  Ctx::kratexp_t                                                        \
+  Ctx::ratexp_t                                                        \
   aut_to_exp<mutable_automaton<Ctx>>                                    \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
@@ -143,7 +143,7 @@ namespace vcsn
 
         // make-context.
         make_context_register(Ctx::sname(), make_context<Ctx>);
-        make_kratexpset_register(Ctx::sname(), make_kratexpset<Ctx>);
+        make_ratexpset_register(Ctx::sname(), make_ratexpset<Ctx>);
 
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);

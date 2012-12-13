@@ -10,7 +10,7 @@ bool
 check_concat(const context_t& ctx)
 {
   bool res = true;
-  auto ks = ctx.make_kratexpset();
+  auto ks = ctx.make_ratexpset();
 
 #define CHECK(A, B, C) \
   ASSERT_EQ(ks.format(ks.concat(ks.conv(A), ks.conv(B))), C);

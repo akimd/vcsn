@@ -36,8 +36,8 @@ lib_libvcsn_la_SOURCES =			\
   lib/vcsn/algos/transpose.cc			\
   lib/vcsn/misc/escape.cc
 
-# kratexpset.hxx depends on rat/driver.hh which requires
-# rat/location.hh.  The dot parser, loads kratexpset.hxx, so we _must_
+# ratexpset.hxx depends on rat/driver.hh which requires
+# rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
 # compile the rat parser first.
 lib/vcsn/dot/parser.stamp: lib/vcsn/rat/parser.stamp
 

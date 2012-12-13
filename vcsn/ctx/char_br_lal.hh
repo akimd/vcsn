@@ -9,7 +9,7 @@ namespace vcsn
   namespace ctx
   {
     using char_b_lal = char_<vcsn::b, labels_are_letters>;
-    using char_br_lal = char_<vcsn::kratexpset<char_b_lal>, labels_are_letters>;
+    using char_br_lal = char_<vcsn::ratexpset<char_b_lal>, labels_are_letters>;
   }
 }
 

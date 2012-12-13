@@ -41,7 +41,7 @@ namespace vcsn
       {}
 
       automaton_t
-      operator()(const typename context_t::kratexp_t& v)
+      operator()(const typename context_t::ratexp_t& v)
       {
         v->accept(*this);
         res_.set_initial(initial_);
@@ -210,7 +210,7 @@ namespace vcsn
   template <class Aut,
             class Context = typename Aut::context_t>
   Aut
-  standard_of(const Context& ctx, const typename Context::kratexp_t& e)
+  standard_of(const Context& ctx, const typename Context::ratexp_t& e)
   {
     rat::standard_of_visitor<Aut, Context> standard{ctx};
     return standard(e);

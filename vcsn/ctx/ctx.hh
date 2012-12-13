@@ -48,10 +48,10 @@ namespace vcsn
       using word_t = typename genset_t::word_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
-      /// Type of RatExp kratexps objects.
+      /// Type of RatExp ratexps objects.
       using node_t = rat::node<label_t, weight_t>;
-      using kratexp_t = std::shared_ptr<const node_t>;
-      using kratexpset_t = typename vcsn::kratexpset<context>;
+      using ratexp_t = std::shared_ptr<const node_t>;
+      using ratexpset_t = typename vcsn::ratexpset<context>;
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
@@ -101,22 +101,22 @@ namespace vcsn
         return ws_;
       }
 
-      kratexpset_t
-      make_kratexpset() const
+      ratexpset_t
+      make_ratexpset() const
       {
         return *this;
       }
 
-      std::string format(const kratexp_t& e) const
+      std::string format(const ratexp_t& e) const
       {
-        kratexpset_t ks{*this};
+        ratexpset_t ks{*this};
         return ks.format(e);
       }
 
-      kratexp_t
+      ratexp_t
       downcast(const rat::exp_t& e) const
       {
-        kratexp_t res = std::dynamic_pointer_cast<const node_t>(e);
+        ratexp_t res = std::dynamic_pointer_cast<const node_t>(e);
         assert(res);
         return res;
       }
@@ -130,7 +130,7 @@ namespace vcsn
 
   // Provide "overloading" on parameter types, for instance to require
   // letter_t when labels_are_letters, and word_t when
-  // labels_are_words.  See kratexpset::atom and kratexpset::atom_ for
+  // labels_are_words.  See ratexpset::atom and ratexpset::atom_ for
   // an example.
   //
   // It is very tempting to turns these guys into members of

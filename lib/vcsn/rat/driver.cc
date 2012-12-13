@@ -1,7 +1,7 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/algos/dyn.hh> // make_kratexpset.
+#include <vcsn/algos/dyn.hh> // make_ratexpset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
@@ -10,12 +10,12 @@ namespace vcsn
   namespace rat
   {
 
-    driver::driver(const abstract_kratexpset& f)
-      : kratexpset_{&f}
+    driver::driver(const abstract_ratexpset& f)
+      : ratexpset_{&f}
     {}
 
     driver::driver(const dyn::context& ctx)
-      : kratexpset_{make_kratexpset(ctx)}
+      : ratexpset_{make_ratexpset(ctx)}
     {}
 
     void

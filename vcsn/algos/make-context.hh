@@ -6,7 +6,7 @@
 
 # include <vcsn/core/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/core/rat/abstract_kratexpset.hh>
+# include <vcsn/core/rat/abstract_ratexpset.hh>
 
 namespace vcsn
 {
@@ -46,10 +46,10 @@ namespace vcsn
   };
 
   template <typename Ctx>
-  struct weightsetter<kratexpset<Ctx>>
+  struct weightsetter<ratexpset<Ctx>>
   {
     static
-    kratexpset<Ctx>
+    ratexpset<Ctx>
     make(const typename Ctx::genset_t::letters_t& ls)
     {
       return {*make_context<Ctx>(ls)};
@@ -97,23 +97,23 @@ namespace vcsn
                             const make_context_t& fn);
 
       /*------------------.
-      | make_kratexpset.  |
+      | make_ratexpset.  |
       `------------------*/
 
       template <typename Ctx>
-      abstract_kratexpset*
-      make_kratexpset(const dyn::context& ctx)
+      abstract_ratexpset*
+      make_ratexpset(const dyn::context& ctx)
       {
-        return new concrete_abstract_kratexpset<Ctx>
+        return new concrete_abstract_ratexpset<Ctx>
           (dynamic_cast<const Ctx&>(ctx));
       }
 
-      using make_kratexpset_t =
-        auto (const context& ctx) -> abstract_kratexpset*;
+      using make_ratexpset_t =
+        auto (const context& ctx) -> abstract_ratexpset*;
 
       bool
-      make_kratexpset_register(const std::string& ctx,
-                               const make_kratexpset_t& fn);
+      make_ratexpset_register(const std::string& ctx,
+                               const make_ratexpset_t& fn);
 
     }
   }

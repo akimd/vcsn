@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_ABSTRACT_KRATEXPSET_HH
-# define VCSN_CORE_RAT_ABSTRACT_KRATEXPSET_HH
+#ifndef VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
+# define VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
 
 # include <string>
 # include <list>
@@ -7,18 +7,18 @@
 # include <sstream>
 
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/kratexpset.hh>
+# include <vcsn/core/rat/ratexpset.hh>
 
 namespace vcsn
 {
 
-  /// Abstract wrapper around a (typeful) kratexpset.
+  /// Abstract wrapper around a (typeful) ratexpset.
   ///
-  /// Use it when you want to avoid depending on the kratexpset
+  /// Use it when you want to avoid depending on the ratexpset
   /// parameters (e.g., from a parser).  To use it, actually create a
-  /// derived class (concrete_abstract_kratexpset) with the given
-  /// parameters, but handle as a reference to an abstract_kratexpset.
-  class abstract_kratexpset
+  /// derived class (concrete_abstract_ratexpset) with the given
+  /// parameters, but handle as a reference to an abstract_ratexpset.
+  class abstract_ratexpset
   {
   public:
     using context_t = dyn::context;
@@ -52,13 +52,13 @@ namespace vcsn
     }
   };
 
-  /// Wrapper around a kratexpset.
+  /// Wrapper around a ratexpset.
   template <typename Context>
-  class concrete_abstract_kratexpset : public abstract_kratexpset
+  class concrete_abstract_ratexpset : public abstract_ratexpset
   {
   public:
     using context_t = Context;
-    using super_type = abstract_kratexpset;
+    using super_type = abstract_ratexpset;
     using word_t = typename context_t::genset_t::word_t;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
@@ -68,7 +68,7 @@ namespace vcsn
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    concrete_abstract_kratexpset(const context_t& ctx)
+    concrete_abstract_ratexpset(const context_t& ctx)
       : super_type()
       , ks_(ctx)
     {}
@@ -92,7 +92,7 @@ namespace vcsn
 
 
     /*-------------------------------------------.
-    | Specializations from abstract_kratexpset.  |
+    | Specializations from abstract_ratexpset.  |
     `-------------------------------------------*/
 
     virtual value_t zero() const override
@@ -187,8 +187,8 @@ namespace vcsn
       return ks_.atom(v);
     }
 
-    kratexpset<context_t> ks_;
+    ratexpset<context_t> ks_;
   };
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_ABSTRACT_KRATEXPSET_HH
+#endif // !VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH

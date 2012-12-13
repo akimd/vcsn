@@ -35,32 +35,32 @@ namespace vcsn
     }
 
 
-    /*------------------.
-    | make_kratexpset.  |
-    `------------------*/
+    /*-----------------.
+    | make_ratexpset.  |
+    `-----------------*/
 
     namespace details
     {
 
-      Registry<make_kratexpset_t>&
-      make_kratexpset_registry()
+      Registry<make_ratexpset_t>&
+      make_ratexpset_registry()
       {
-        static Registry<make_kratexpset_t> instance{"make_kratexpset"};
+        static Registry<make_ratexpset_t> instance{"make_ratexpset"};
         return instance;
       }
 
       bool
-      make_kratexpset_register(const std::string& ctx,
-                               const make_kratexpset_t& fn)
+      make_ratexpset_register(const std::string& ctx,
+                              const make_ratexpset_t& fn)
       {
-        return make_kratexpset_registry().set(ctx, fn);
+        return make_ratexpset_registry().set(ctx, fn);
       }
     }
 
-    abstract_kratexpset*
-    make_kratexpset(const context& ctx)
+    abstract_ratexpset*
+    make_ratexpset(const context& ctx)
     {
-      return details::make_kratexpset_registry().call(ctx.vname(), ctx);
+      return details::make_ratexpset_registry().call(ctx.vname(), ctx);
     }
   }
 }

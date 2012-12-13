@@ -17,8 +17,8 @@
   #include <list>
   #include <string>
   #include "location.hh"
-  #include <vcsn/core/rat/kratexp.hh>
-  #include <vcsn/core/rat/abstract_kratexpset.hh>
+  #include <vcsn/core/rat/ratexp.hh>
+  #include <vcsn/core/rat/abstract_ratexpset.hh>
   #include <lib/vcsn/rat/driver.hh>
 
   namespace vcsn
@@ -74,7 +74,7 @@
 
   /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
-  driver_.kratexpset_->Kind(__VA_ARGS__)
+  driver_.ratexpset_->Kind(__VA_ARGS__)
 
   /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
@@ -97,7 +97,7 @@
 %printer { debug_stream() << $$; } <ival> <cval>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '{' << *$$ << '}'; } "weight";
-%printer { driver_.kratexpset_->print(debug_stream(), $$); } <node>;
+%printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
 %token <ival>   LPAREN  "("

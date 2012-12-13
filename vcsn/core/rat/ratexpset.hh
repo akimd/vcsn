@@ -1,18 +1,18 @@
-#ifndef VCSN_CORE_RAT_KRATEXPSET_HH
-# define VCSN_CORE_RAT_KRATEXPSET_HH
+#ifndef VCSN_CORE_RAT_RATEXPSET_HH
+# define VCSN_CORE_RAT_RATEXPSET_HH
 
 # include <string>
 # include <list>
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 
 namespace vcsn
 {
 
   template <typename Context>
-  class kratexpset
+  class ratexpset
   {
   public:
     using context_t = Context;
@@ -27,7 +27,7 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
     using printer_t = rat::printer<context_t>;
-    /// Type of kratexps.
+    /// Type of ratexps.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<label_t, weight_t>
     DEFINE(node);
@@ -43,7 +43,7 @@ namespace vcsn
 # undef DEFINE
 
     using type_t = typename node_t::type_t;
-    using kratexps_t = typename node_t::kratexps_t;
+    using ratexps_t = typename node_t::ratexps_t;
 
     /// The value this is a set of: typeful shared pointers.
     using value_t = typename node_t::value_t;
@@ -51,12 +51,12 @@ namespace vcsn
   public:
     static std::string sname()
     {
-      return "kratexpset<" + context_t::sname() + '>';
+      return "ratexpset<" + context_t::sname() + '>';
     }
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    kratexpset(const context_t& ctx)
+    ratexpset(const context_t& ctx)
       : ctx_(ctx)
     {}
 
@@ -133,15 +133,15 @@ namespace vcsn
     atom_(const if_law<Ctx, word_t>& w) const;
 
     /// Push \a v in \a res, applying associativity if possible.
-    /// \param type  the kind of kratexps on which to apply associativity.
+    /// \param type  the kind of ratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    void gather(kratexps_t& res, rat::exp::type_t type, value_t v) const;
+    void gather(ratexps_t& res, rat::exp::type_t type, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
-    /// \param type  the kind of kratexps on which to apply associativity.
+    /// \param type  the kind of ratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    kratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
+    ratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
 
   private:
     const context_t& ctx_;
@@ -149,6 +149,6 @@ namespace vcsn
 
 } // namespace vcsn
 
-# include <vcsn/core/rat/kratexpset.hxx>
+# include <vcsn/core/rat/ratexpset.hxx>
 
-#endif // !VCSN_CORE_RAT_KRATEXPSET_HH
+#endif // !VCSN_CORE_RAT_RATEXPSET_HH

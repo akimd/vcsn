@@ -1,4 +1,7 @@
 * 2012-12-13
+** krat -> rat
+kratexp, kratexpset etc. are renamed as ratexp, ratexpset, etc.
+
 ** labels are unit
 labels-are-empty/lae were mapped to labels-are-unit/lau.
 

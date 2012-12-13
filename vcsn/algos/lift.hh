@@ -3,8 +3,8 @@
 
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/core/rat/kratexpset.hh>
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn
 {
@@ -14,7 +14,7 @@ namespace vcsn
     template <typename Context>
     using lifted_context_t =
       ctx::context<typename Context::genset_t,
-                   kratexpset<Context>,
+                   ratexpset<Context>,
                    labels_are_unit>;
 
     template <typename Aut>
@@ -27,7 +27,7 @@ namespace vcsn
   details::lifted_automaton_t<Aut>
   lift(const Aut& a)
   {
-    using kre_t = kratexpset<typename Aut::context_t>;
+    using kre_t = ratexpset<typename Aut::context_t>;
     kre_t kre{a.context()};
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
     typedef details::lifted_context_t<typename Aut::context_t> ctx_t;

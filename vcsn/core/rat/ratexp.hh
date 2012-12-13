@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_KRATEXP_HH
-# define VCSN_CORE_RAT_KRATEXP_HH
+#ifndef VCSN_CORE_RAT_RATEXP_HH
+# define VCSN_CORE_RAT_RATEXP_HH
 
 # include <vector>
 # include <string>
@@ -20,7 +20,7 @@ namespace vcsn
     public:
       virtual ~exp() = 0;
 
-      /// The possible types of kratexps.
+      /// The possible types of ratexps.
       enum class type_t
         {
           zero = 0,
@@ -58,7 +58,7 @@ namespace vcsn
       using value_t = std::shared_ptr<const node_t>;
       /// Same as value_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<node_t>;
-      using kratexps_t = std::vector<value_t>;
+      using ratexps_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
       node(const weight_t& l);
@@ -133,13 +133,13 @@ namespace vcsn
       using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename super_type::value_t;
-      using kratexps_t = typename super_type::kratexps_t;
+      using ratexps_t = typename super_type::ratexps_t;
       using self_t = nary;
 
-      using const_iterator = typename kratexps_t::const_iterator;
-      using iterator = typename kratexps_t::iterator;
-      using const_reverse_iterator = typename kratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename kratexps_t::reverse_iterator;
+      using const_iterator = typename ratexps_t::const_iterator;
+      using iterator = typename ratexps_t::iterator;
+      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
+      using reverse_iterator = typename ratexps_t::reverse_iterator;
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -157,10 +157,10 @@ namespace vcsn
       }
 
     protected:
-      nary(const weight_t& l, const weight_t& r, const kratexps_t& ns = kratexps_t());
+      nary(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
       nary(const nary& that)
         : super_type(that)
-        , sub_kratexp_(that.sub_kratexp_)
+        , sub_ratexp_(that.sub_ratexp_)
       {}
 
       using shared_t = std::shared_ptr<const self_t>;
@@ -171,7 +171,7 @@ namespace vcsn
       virtual value_t clone_() const = 0;
 
     private:
-      kratexps_t sub_kratexp_;
+      ratexps_t sub_ratexp_;
     };
 
 
@@ -189,15 +189,15 @@ namespace vcsn
       using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
-      using kratexps_t = typename node_t::kratexps_t;
+      using ratexps_t = typename node_t::ratexps_t;
       using self_t = prod;
 
-      using const_iterator = typename kratexps_t::const_iterator;
-      using iterator = typename kratexps_t::iterator;
-      using const_reverse_iterator = typename kratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename kratexps_t::reverse_iterator;
+      using const_iterator = typename ratexps_t::const_iterator;
+      using iterator = typename ratexps_t::iterator;
+      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
+      using reverse_iterator = typename ratexps_t::reverse_iterator;
 
-      prod(const weight_t& l, const weight_t& r, const kratexps_t& ns = kratexps_t());
+      prod(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
@@ -230,15 +230,15 @@ namespace vcsn
       using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
-      using kratexps_t = typename node_t::kratexps_t;
+      using ratexps_t = typename node_t::ratexps_t;
       using self_t = sum;
 
-      using const_iterator = typename kratexps_t::const_iterator;
-      using iterator = typename kratexps_t::iterator;
-      using const_reverse_iterator = typename kratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename kratexps_t::reverse_iterator;
+      using const_iterator = typename ratexps_t::const_iterator;
+      using iterator = typename ratexps_t::iterator;
+      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
+      using reverse_iterator = typename ratexps_t::reverse_iterator;
 
-      sum(const weight_t& l, const weight_t& r, const kratexps_t& ns = kratexps_t());
+      sum(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const
@@ -416,6 +416,6 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-#include <vcsn/core/rat/kratexp.hxx>
+#include <vcsn/core/rat/ratexp.hxx>
 
-#endif // !VCSN_CORE_RAT_KRATEXP_HH
+#endif // !VCSN_CORE_RAT_RATEXP_HH

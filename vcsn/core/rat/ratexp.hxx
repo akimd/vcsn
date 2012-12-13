@@ -1,7 +1,7 @@
-#ifndef VCSN_CORE_RAT_KRATEXP_HXX_
-# define VCSN_CORE_RAT_KRATEXP_HXX_
+#ifndef VCSN_CORE_RAT_RATEXP_HXX_
+# define VCSN_CORE_RAT_RATEXP_HXX_
 
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/visitor.hh>
 
 namespace vcsn
@@ -82,9 +82,9 @@ namespace vcsn
     `-------*/
 
     DEFINE_CTOR(nary)(const weight_t& l, const weight_t& r,
-                       const kratexps_t& ns)
+                       const ratexps_t& ns)
       : super_type(l, r)
-      , sub_kratexp_(ns)
+      , sub_ratexp_(ns)
     {
     }
 
@@ -92,31 +92,31 @@ namespace vcsn
     DEFINE(nary)::begin() const
       -> const_iterator
     {
-      return sub_kratexp_.begin();
+      return sub_ratexp_.begin();
     }
 
     DEFINE(nary)::end() const
       -> const_iterator
     {
-      return sub_kratexp_.end();
+      return sub_ratexp_.end();
     }
 
     DEFINE(nary)::rbegin() const
       -> const_reverse_iterator
     {
-      return sub_kratexp_.begin();
+      return sub_ratexp_.begin();
     }
 
     DEFINE(nary)::rend() const
       -> const_reverse_iterator
     {
-      return sub_kratexp_.end();
+      return sub_ratexp_.end();
     }
 
     DEFINE(nary)::size() const
       -> size_t
     {
-      return sub_kratexp_.size();
+      return sub_ratexp_.size();
     }
 
 
@@ -126,7 +126,7 @@ namespace vcsn
     `-------*/
 
     DEFINE_CTOR(prod)(const weight_t& l, const weight_t& r,
-                       const kratexps_t& ns)
+                       const ratexps_t& ns)
       : super_type(l, r, ns)
     {}
 
@@ -144,7 +144,7 @@ namespace vcsn
     `------*/
 
     DEFINE_CTOR(sum)(const weight_t& l, const weight_t& r,
-                     const kratexps_t& ns)
+                     const ratexps_t& ns)
       : super_type(l, r, ns)
     {}
 
@@ -233,4 +233,4 @@ namespace vcsn
   } // namespace exp
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_KRATEXP_HXX_
+#endif // !VCSN_CORE_RAT_RATEXP_HXX_

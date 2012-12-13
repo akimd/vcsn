@@ -1,5 +1,5 @@
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/core/rat/kratexpset.hh>
+#include <vcsn/core/rat/ratexpset.hh>
 #include <vcsn/ctx/char_b_lal.hh>
 #include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/core/mutable_automaton.hh>
@@ -33,12 +33,12 @@ check_mutable_automaton()
   bool res = true;
   // labels_are_letters for weights.
   auto ctx_b = vcsn::ctx::char_b_lal{{'a', 'b', 'c', 'd'}};
-  auto ks_b = ctx_b.make_kratexpset();
+  auto ks_b = ctx_b.make_ratexpset();
   // labels_are_words for labels.
   auto ctx_br =
     vcsn::ctx::char_<decltype(ks_b), vcsn::labels_are_words>
     {{'a', 'b', 'c', 'd'}, ks_b};
-  //  auto ks_br = ctx_br.make_kratexpset();
+  //  auto ks_br = ctx_br.make_ratexpset();
 
   auto aut1 = vcsn::make_mutable_automaton(ctx_br);
 
@@ -63,7 +63,7 @@ check_mutable_automaton()
 
   // Check has_transition and get_transition.
   assert(aut1.has_transition(s0, s1, "cd"));
-  // FIXME: we would really like to have equality here on kratexp.
+  // FIXME: we would really like to have equality here on ratexp.
   ASSERT_WEIGHT(aut1, s0, s1, "cd", "a.b.c.d");
   assert(aut2.has_transition(s1, s0, "dc"));
   ASSERT_WEIGHT(aut2, s1, s0, "dc", "d.c.b.a");
@@ -86,7 +86,7 @@ check_minimization()
   using automaton_t = vcsn::mutable_automaton<context_t>;
   using tr_automaton_t = vcsn::details::transpose_automaton<automaton_t>;
   context_t ctx{{'a', 'b'}};
-  auto ks = ctx.make_kratexpset();
+  auto ks = ctx.make_ratexpset();
   auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
   auto& au1 = *aut.original_automaton(); //vcsn::dotty(au1, std::cout);
   auto au2 = vcsn::transpose(au1);       //vcsn::dotty(au2, std::cout);
