@@ -2,7 +2,6 @@
 # define LIB_VCSN_RAT_DRIVER_HH
 
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <lib/vcsn/rat/location.hh>
 
