@@ -16,6 +16,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
   bin/vcsn-evaluate                             \
+  bin/vcsn-exp-to-xml				\
   bin/vcsn-lift                                 \
   bin/vcsn-standard-of                          \
   bin/vcsn-transpose
@@ -27,3 +28,4 @@ bin_vcsn_evaluate_LDADD    = $(all_libctx) $(libvcsn)
 bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_standard_of_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_transpose_LDADD   = $(all_libctx) $(libvcsn)
+bin_vcsn_exp_to_xml_LDADD = $(all_libctx) $(libvcsn)
