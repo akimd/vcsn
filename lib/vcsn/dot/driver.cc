@@ -96,7 +96,7 @@ namespace vcsn
     void
     driver::invalid(const location_t& l, const std::string& s)
     {
-      error(l, "invalid character: " + s);
+      error(l, "invalid input: " + s);
     }
   }
 }

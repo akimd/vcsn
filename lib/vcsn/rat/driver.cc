@@ -31,7 +31,7 @@ namespace vcsn
     void
     driver::invalid(const location& l, const std::string& s)
     {
-      error(l, "invalid character: " + s);
+      error(l, "invalid input: " + s);
     }
 
     /// The nesting limit for parser traces, as specified per
