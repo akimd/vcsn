@@ -11,8 +11,8 @@ namespace vcsn
 {
   namespace dyn
   {
-    rat::exp_t aut_to_exp(const automaton& aut);
-    rat::exp_t aut_to_exp_in_degree(const automaton& aut);
+    ratexp aut_to_exp(const automaton& aut);
+    ratexp aut_to_exp_in_degree(const automaton& aut);
 
     automaton de_bruijn(const context& ctx, unsigned n);
 
@@ -32,9 +32,11 @@ namespace vcsn
     automaton parse_file(const std::string& f);
     automaton parse_string(const std::string& s);
 
-    automaton standard_of(const dyn::ratexp& e);
+    automaton standard_of(const ratexp& e);
 
     automaton transpose(automaton& aut);
+
+    ratexp transpose(const ratexp& e);
   }
 }
 

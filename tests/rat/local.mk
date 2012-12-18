@@ -21,6 +21,8 @@ $(rat_TESTS:.rat=.log): rat/pprat $(AM_RAT_LOG_DEPS)
 
 rat_TESTS =                                     \
   $(rat_XFAIL_TESTS)                            \
+  rat/cat.chk					\
+  rat/vcsn-transpose.chk			\
   rat/interface.rat                             \
   rat/b.rat                                     \
   rat/br.rat                                    \
@@ -28,6 +30,9 @@ rat_TESTS =                                     \
   rat/z.rat                                     \
   rat/zr.rat                                    \
   rat/zrr.rat
+
+rat/cat.log: $(top_builddir)/bin/vcsn-cat
+rat/vcsn-transpose.log: $(top_builddir)/bin/vcsn-transpose
 
 dist_TESTS += $(rat_TESTS)
 EXTRA_DIST += $(AM_RAT_LOG_DEPS)

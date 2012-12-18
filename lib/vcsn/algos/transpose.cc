@@ -33,29 +33,32 @@ namespace vcsn
                                                 aut);
     }
 
-  }
 
     /*-----------------------.
     | transpose for ratexp.  |
     `-----------------------*/
 
-  Registry<transpose_exp_t>&
-  transpose_exp_registry()
-  {
-    static Registry<transpose_exp_t> instance{"transpose"};
-    return instance;
-  }
+    namespace details
+    {
+      Registry<transpose_exp_t>&
+      transpose_exp_registry()
+      {
+        static Registry<transpose_exp_t> instance{"transpose"};
+        return instance;
+      }
 
-  bool
-  transpose_exp_register(const std::string& ctx, const transpose_exp_t& fn)
-  {
-    return transpose_exp_registry().set(ctx, fn);
-  }
+      bool
+      transpose_exp_register(const std::string& ctx, const transpose_exp_t& fn)
+      {
+        return transpose_exp_registry().set(ctx, fn);
+      }
+    }
 
-  rat::exp_t
-  transpose(const dyn::context& ctx, const rat::exp_t e)
-  {
-    return transpose_exp_registry().call(ctx.vname(),
-                                         ctx, e);
+    ratexp
+    transpose(const dyn::ratexp& e)
+    {
+      return details::transpose_exp_registry().call(e->ctx().vname(),
+                                                    e);
+    }
   }
 }

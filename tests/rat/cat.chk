@@ -1,0 +1,10 @@
+#! /bin/sh
+
+# check CONTEXT INPUT OUTPUT
+# --------------------------
+check ()
+{
+  run 0 $3 -vcsn-cat $1 abcd $2
+}
+
+check char_b_lal "abcd" "a.b.c.d"

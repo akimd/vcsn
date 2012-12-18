@@ -1,0 +1,10 @@
+#! /bin/sh
+
+# check CONTEXT INPUT OUTPUT
+# --------------------------
+check ()
+{
+  run 0 $3 -vcsn-transpose $1 abcd $2
+}
+
+check char_b_lal "abcd" "d.c.b.a"

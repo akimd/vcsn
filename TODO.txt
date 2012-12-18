@@ -1,3 +1,12 @@
+* input and output
+input (with drivers) and output are too complex, they should be
+oneliners.  The case of ratexp:
+
+  auto* kset = vcsn::dyn::make_ratexpset(*ctx);
+  std::cout << kset->format(exp->ratexp()) << std::endl;
+
+is really nasty.  Fix vcsn-cat.cc and vcsn-transpose.cc.
+
 * check labels in mutable_automaton
 Currently, we can add_transition(p, q, 'z') even if z is not part of
 the alphabet.

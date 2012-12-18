@@ -249,35 +249,28 @@ namespace vcsn
           (dynamic_cast<Aut&>(*aut));
       }
 
-      using transpose_t = auto (automaton& aut) -> dyn::automaton;
+      using transpose_t = auto (automaton& aut) -> automaton;
 
       bool transpose_register(const std::string& ctx, const transpose_t& fn);
+
+
+      /* ratexp. */
+      template <typename Context>
+      ratexp
+      abstract_transpose_exp(const ratexp& e)
+      {
+        const auto& exp =
+          std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
+        auto res = transpose (dynamic_cast<const Context&>(e->ctx()), exp);
+        return make_ratexp (e->ctx(), res);
+      }
+
+      using transpose_exp_t = auto (const ratexp& e) -> ratexp;
+
+      bool transpose_exp_register(const std::string& ctx,
+                                  const transpose_exp_t& fn);
     }
   }
-
-
-  /*---------------------------.
-  | transpose for rat::exp_t.  |
-  `---------------------------*/
-
-  template <typename Context>
-  rat::exp_t
-  abstract_transpose_exp(const dyn::context& ctx, const rat::exp_t e)
-  {
-    return transpose
-      (dynamic_cast<const Context&>(ctx),
-       std::dynamic_pointer_cast<const typename Context::node_t>(e));
-  }
-
-  using transpose_exp_t =
-    auto (const dyn::context& ctx, const rat::exp_t e)
-    -> rat::exp_t;
-
-  bool transpose_exp_register(const std::string& ctx,
-                              const transpose_exp_t& fn);
-
-  rat::exp_t
-  transpose(const dyn::context& ctx, const rat::exp_t e);
 
 } // vcsn::
 

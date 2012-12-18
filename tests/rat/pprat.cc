@@ -3,12 +3,10 @@
 #include <map>
 #include <getopt.h>
 
-#include <vcsn/algos/dyn.hh>
-#include <vcsn/algos/lift.hh>
-#include <vcsn/algos/make-context.hh>
-#include <vcsn/algos/transpose.hh>
-
 #include <lib/vcsn/rat/driver.hh>
+#include <vcsn/algos/dyn.hh>
+#include <vcsn/core/automaton.hh>
+#include <vcsn/core/rat/abstract_ratexpset.hh> // kset->format
 
 static
 void
@@ -64,53 +62,54 @@ struct options
 };
 
 void
-transpose(const vcsn::dyn::ratexp& e)
-{
-  auto aut1 = vcsn::dyn::standard_of(e);
-  if (!!getenv("DEBUG"))
-    {
-      std::cerr << aut1->vname() << std::endl;
-      vcsn::dyn::dotty(aut1, std::cout);
-    }
-  auto aut2 = vcsn::dyn::transpose(aut1);
-  if (!!getenv("DEBUG"))
-    std::cerr << aut2->vname() << std::endl;
-  vcsn::dyn::dotty(aut2, std::cout);
-}
-
-void
 abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::rat::driver d(ctx);
   auto* kset = vcsn::dyn::make_ratexpset(ctx);
-  if (auto exp = file ? d.parse_file(s) : d.parse_string(s))
+  if (auto ratexp = file ? d.parse_file(s) : d.parse_string(s))
     {
+      vcsn::dyn::ratexp exp = vcsn::dyn::make_ratexp(ctx, ratexp);
       for (size_t i = 0; i < opts.transpose; ++i)
-        exp = vcsn::transpose(ctx, exp);
+        exp = vcsn::dyn::transpose(exp);
 
       if (opts.aut_transpose)
-        transpose(vcsn::dyn::make_ratexp(ctx, exp));
+        {
+          auto aut1 = vcsn::dyn::standard_of(exp);
+          if (!!getenv("DEBUG"))
+            {
+              std::cerr << aut1->vname() << std::endl;
+              vcsn::dyn::dotty(aut1, std::cout);
+            }
+          auto aut2 = vcsn::dyn::transpose(aut1);
+          if (!!getenv("DEBUG"))
+            std::cerr << aut2->vname() << std::endl;
+          vcsn::dyn::dotty(aut2, std::cout);
+        }
       else if (opts.standard_of || opts.lift || opts.aut_to_exp)
         {
-          auto aut = vcsn::dyn::standard_of(vcsn::dyn::make_ratexp(ctx, exp));
+          auto aut = vcsn::dyn::standard_of(exp);
           if (opts.standard_of)
             vcsn::dyn::dotty(aut, std::cout);
           if (opts.lift)
             vcsn::dyn::dotty(vcsn::dyn::lift(aut), std::cout);
           if (opts.aut_to_exp)
-            switch (opts.next)
             {
-            case heuristics::degree:
-              std::cout << kset->format(vcsn::dyn::aut_to_exp_in_degree(aut)) << std::endl;
-              break;
-            case heuristics::order:
-              std::cout << kset->format(vcsn::dyn::aut_to_exp(aut)) << std::endl;
-              break;
+              vcsn::dyn::ratexp e;
+              switch (opts.next)
+                {
+                case heuristics::degree:
+                  e = vcsn::dyn::aut_to_exp_in_degree(aut);
+                  break;
+                case heuristics::order:
+                  e = vcsn::dyn::aut_to_exp(aut);
+                  break;
+                }
+              std::cout << kset->format(e->ratexp()) << std::endl;
             }
         }
       else
-        kset->print(std::cout, exp) << std::endl;
+        kset->print(std::cout, exp->ratexp()) << std::endl;
     }
   else
     {
