@@ -27,13 +27,10 @@ digraph
 EOF
 
 ## label = "b + c" -> label = "{b+c}\e"
-## There is an inversion c+a instead of a+c, I didn't check why.
 perl -p -e '
     s{\[label = "(.*?)"\]}
      {$_ = $1; s/\s//g; "\[label = \"{$_}\"\]"}eg;
-    s{a\+c}{c+a}g;
     s{char_b_lal}{char_ratexpset<char_b_lal>_lau}g;
-   ' < lady4.dot >lady4.lifted.out
+   ' < lady4.dot >out.exp
 
-cat lady4.dot lady4.lifted.out > out.exp
-run 0 out.exp unit/lift
+run 0 out.exp -vcsn-lift lady4.dot

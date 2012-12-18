@@ -21,7 +21,6 @@ EXTRA_PROGRAMS +=                               \
   unit/ladybird-b                               \
   unit/ladybird-z                               \
   unit/ladybird-zmin                            \
-  unit/lift                                     \
   unit/parse-dot                                \
   unit/poly                                     \
   unit/product                                  \
@@ -48,8 +47,6 @@ unit_ladybird_z_LDADD = $(libchar_z_lal) $(AM_LDADD)
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
 unit_ladybird_zmin_LDADD = $(libchar_zmin_lal) $(AM_LDADD)
-
-unit_lift_LDADD = $(libchar_b_lal) $(AM_LDADD)
 
 unit_parse_dot_LDADD = $(all_libctx) $(AM_LDADD)
 
@@ -86,7 +83,7 @@ unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
 unit/eval.log: unit/eval.chk
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
-unit/lift.log: unit/lift
+unit/lift.log: $(top_builddir)/bin/vcsn-lift
 unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
 unit/product.log: unit/product
