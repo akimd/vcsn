@@ -89,16 +89,15 @@ namespace vcsn
         return vcsn::make_context<Ctx>(ls);
       }
 
-      using make_context_t =
-        auto (const std::string& gens) -> context*;
+      using make_context_t = auto (const std::string& gens) -> context*;
 
       bool
       make_context_register(const std::string& ctx,
                             const make_context_t& fn);
 
-      /*------------------.
+      /*-----------------.
       | make_ratexpset.  |
-      `------------------*/
+      `-----------------*/
 
       template <typename Ctx>
       abstract_ratexpset*
@@ -108,12 +107,11 @@ namespace vcsn
           (dynamic_cast<const Ctx&>(ctx));
       }
 
-      using make_ratexpset_t =
-        auto (const context& ctx) -> abstract_ratexpset*;
+      using make_ratexpset_t = auto (const context& ctx) -> abstract_ratexpset*;
 
       bool
       make_ratexpset_register(const std::string& ctx,
-                               const make_ratexpset_t& fn);
+                              const make_ratexpset_t& fn);
 
     }
   }
