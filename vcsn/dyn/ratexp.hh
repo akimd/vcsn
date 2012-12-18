@@ -32,7 +32,8 @@ namespace vcsn
         }
       protected:
         const dyn::context& ctx_;
-        const exp_t& ratexp_;
+        /// A shared_ptr to the abstract_ratexp.
+        const exp_t ratexp_;
       };
 
     } // namespace details
