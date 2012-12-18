@@ -63,49 +63,49 @@ void
 abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
-      vcsn::dyn::ratexp exp =
-        file ? vcsn::dyn::read_ratexp_file(s, ctx)
-        : vcsn::dyn::read_ratexp_string(s, ctx);
-      for (size_t i = 0; i < opts.transpose; ++i)
-        exp = vcsn::dyn::transpose(exp);
+  vcsn::dyn::ratexp exp =
+    file ? vcsn::dyn::read_ratexp_file(s, ctx)
+    : vcsn::dyn::read_ratexp_string(s, ctx);
+  for (size_t i = 0; i < opts.transpose; ++i)
+    exp = vcsn::dyn::transpose(exp);
 
-      if (opts.aut_transpose)
+  if (opts.aut_transpose)
+    {
+      auto aut1 = vcsn::dyn::standard_of(exp);
+      if (!!getenv("DEBUG"))
         {
-          auto aut1 = vcsn::dyn::standard_of(exp);
-          if (!!getenv("DEBUG"))
-            {
-              std::cerr << aut1->vname() << std::endl;
-              vcsn::dyn::dotty(aut1, std::cout);
-            }
-          auto aut2 = vcsn::dyn::transpose(aut1);
-          if (!!getenv("DEBUG"))
-            std::cerr << aut2->vname() << std::endl;
-          vcsn::dyn::dotty(aut2, std::cout);
+          std::cerr << aut1->vname() << std::endl;
+          vcsn::dyn::dotty(aut1, std::cout);
         }
-      else if (opts.standard_of || opts.lift || opts.aut_to_exp)
+      auto aut2 = vcsn::dyn::transpose(aut1);
+      if (!!getenv("DEBUG"))
+        std::cerr << aut2->vname() << std::endl;
+      vcsn::dyn::dotty(aut2, std::cout);
+    }
+  else if (opts.standard_of || opts.lift || opts.aut_to_exp)
+    {
+      auto aut = vcsn::dyn::standard_of(exp);
+      if (opts.standard_of)
+        vcsn::dyn::print(aut, std::cout);
+      if (opts.lift)
+        vcsn::dyn::print(vcsn::dyn::lift(aut), std::cout);
+      if (opts.aut_to_exp)
         {
-          auto aut = vcsn::dyn::standard_of(exp);
-          if (opts.standard_of)
-            vcsn::dyn::dotty(aut, std::cout);
-          if (opts.lift)
-            vcsn::dyn::dotty(vcsn::dyn::lift(aut), std::cout);
-          if (opts.aut_to_exp)
+          vcsn::dyn::ratexp e;
+          switch (opts.next)
             {
-              vcsn::dyn::ratexp e;
-              switch (opts.next)
-                {
-                case heuristics::degree:
-                  e = vcsn::dyn::aut_to_exp_in_degree(aut);
-                  break;
-                case heuristics::order:
-                  e = vcsn::dyn::aut_to_exp(aut);
-                  break;
-                }
-              vcsn::dyn::print(e, std::cout) << std::endl;
+            case heuristics::degree:
+              e = vcsn::dyn::aut_to_exp_in_degree(aut);
+              break;
+            case heuristics::order:
+              e = vcsn::dyn::aut_to_exp(aut);
+              break;
             }
+          vcsn::dyn::print(e, std::cout) << std::endl;
         }
-      else
-        vcsn::dyn::print(exp, std::cout) << std::endl;
+    }
+  else
+    vcsn::dyn::print(exp, std::cout) << std::endl;
 }
 
 void
