@@ -9,9 +9,9 @@ namespace vcsn
   namespace details
   {
 
-    /*-----------------------.
+    /*----------------------.
     | transposing ratexps.  |
-    `-----------------------*/
+    `----------------------*/
 
     /// \param Context  relative to the RatExp.
     template <class Context>

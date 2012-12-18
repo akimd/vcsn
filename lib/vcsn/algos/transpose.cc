@@ -35,9 +35,9 @@ namespace vcsn
 
   }
 
-  /*-----------------------.
-  | transpose for ratexp.  |
-  `-----------------------*/
+    /*-----------------------.
+    | transpose for ratexp.  |
+    `-----------------------*/
 
   Registry<transpose_exp_t>&
   transpose_exp_registry()

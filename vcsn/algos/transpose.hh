@@ -232,10 +232,15 @@ namespace vcsn
   }
 
 
+  /*-----------------.
+  | dyn::transpose.  |
+  `-----------------*/
+
   namespace dyn
   {
     namespace details
     {
+      /* automaton. */
       template <typename Aut>
       automaton
       transpose(automaton& aut)
