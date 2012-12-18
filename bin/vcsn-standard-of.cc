@@ -2,22 +2,22 @@
 #include <cassert>
 
 #include <vcsn/algos/dyn.hh>
-#include <vcsn/dyn/ratexp.hh>
-
-#include <lib/vcsn/rat/driver.hh>
 
 int main(const int argc, char *const argv[])
 {
-  assert(argc == 3);
+  assert(argc == 4);
+  std::string ctx_str = argv[1];
+  std::string genset_str = argv[2];
+  std::string ratexp_str = argv[3];
+
+  // Input.
   using namespace vcsn::dyn;
+  vcsn::dyn::context* ctx = make_context(ctx_str, genset_str);
+  vcsn::dyn::ratexp exp = read_ratexp_string(ratexp_str, *ctx);
 
-  std::string cname = argv[1];
-  context* ctx  = make_context(cname, "ab");
-  vcsn::rat::driver d(*ctx);
+  // Process.
+  vcsn::dyn::automaton aut = standard_of(exp);
 
-  auto exp = d.parse_string(argv[2]);
-
-  auto dyn_exp = make_ratexp(*ctx, exp);
-
-  dotty(standard_of(dyn_exp), std::cout);
+  // Output.
+  print(aut, std::cout) << std::endl;
 }

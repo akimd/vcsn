@@ -9,6 +9,6 @@ main (int argc, char* const argv[])
     {
       automaton a = read_automaton_file(argv[i]);
       automaton d = determinize(a);
-      dotty(d, std::cout);
+      print(d, std::cout);
     }
 }
