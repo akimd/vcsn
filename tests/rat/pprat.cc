@@ -6,7 +6,6 @@
 #include <lib/vcsn/rat/driver.hh>
 #include <vcsn/algos/dyn.hh>
 #include <vcsn/core/automaton.hh>
-#include <vcsn/core/rat/abstract_ratexpset.hh> // kset->format
 
 static
 void
@@ -66,7 +65,6 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::rat::driver d(ctx);
-  auto* kset = vcsn::dyn::make_ratexpset(ctx);
   if (auto ratexp = file ? d.parse_file(s) : d.parse_string(s))
     {
       vcsn::dyn::ratexp exp = vcsn::dyn::make_ratexp(ctx, ratexp);
@@ -105,11 +103,11 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
                   e = vcsn::dyn::aut_to_exp(aut);
                   break;
                 }
-              std::cout << kset->format(e->ratexp()) << std::endl;
+              vcsn::dyn::print(e, std::cout) << std::endl;
             }
         }
       else
-        kset->print(std::cout, exp->ratexp()) << std::endl;
+        vcsn::dyn::print(exp, std::cout) << std::endl;
     }
   else
     {

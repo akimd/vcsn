@@ -21,6 +21,7 @@ nobase_vcsn_HEADERS =                           \
   algos/eval.hh                                 \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
+  algos/print.hh                                \
   algos/product.hh                              \
   algos/standard_of.hh                          \
   algos/transpose.hh                            \

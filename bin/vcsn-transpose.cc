@@ -3,7 +3,6 @@
 
 #include <vcsn/algos/dyn.hh>
 #include <vcsn/dyn/ratexp.hh>
-#include <vcsn/core/rat/abstract_ratexpset.hh> // kset->format
 
 #include <lib/vcsn/rat/driver.hh>
 
@@ -26,6 +25,5 @@ int main(const int argc, char *const argv[])
   vcsn::dyn::ratexp res = transpose (exp);
 
   // Output.
-  vcsn::abstract_ratexpset* ratexpset = vcsn::dyn::make_ratexpset(*ctx);
-  std::cout << ratexpset->format(res->ratexp()) << std::endl;
+  print(res, std::cout) << std::endl;
 }

@@ -1,10 +1,8 @@
 #include <iostream>
 #include <cassert>
 
-#include <vcsn/algos/dyn.hh> // make_context
+#include <vcsn/algos/dyn.hh>
 #include <vcsn/dyn/ratexp.hh>
-// FIXME: REMOVE THIS AND USE DYN::OUTPUT.
-#include <vcsn/core/rat/abstract_ratexpset.hh> // kset->format
 
 #include <lib/vcsn/rat/driver.hh>
 
@@ -31,7 +29,5 @@ int main(const int argc, char *const argv[])
   // Process.
 
   // Output.
-  // FIXME: oneliner.
-  vcsn::abstract_ratexpset* ratexpset = vcsn::dyn::make_ratexpset(*ctx);
-  std::cout << ratexpset->format(exp->ratexp()) << std::endl;
+  print(exp, std::cout) << std::endl;
 }

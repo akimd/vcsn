@@ -8,6 +8,7 @@
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
+# include <vcsn/algos/print.hh>
 # include <vcsn/algos/standard_of.hh>
 # include <vcsn/algos/transpose.hh>
 
@@ -47,7 +48,7 @@ namespace vcsn
                                                                         \
   /* aut_to_exp. */                                                     \
   MAYBE_EXTERN template                                                 \
-  Ctx::ratexp_t                                                        \
+  Ctx::ratexp_t                                                         \
   aut_to_exp<mutable_automaton<Ctx>>                                    \
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
@@ -61,6 +62,11 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   details::lifted_automaton_t<mutable_automaton<Ctx>>                   \
   lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
+                                                                        \
+  /* print. */                                                          \
+  MAYBE_EXTERN template                                                 \
+  std::ostream&                                                         \
+  print<Ctx>(const Ctx& ctx, const rat::exp_t& e, std::ostream& o);     \
                                                                         \
   /* standard_of. */                                                    \
   MAYBE_EXTERN template                                                 \
@@ -144,6 +150,9 @@ namespace vcsn
         // make-context.
         make_context_register(Ctx::sname(), make_context<Ctx>);
         make_ratexpset_register(Ctx::sname(), make_ratexpset<Ctx>);
+
+        // print
+        print_exp_register(Ctx::sname(), print<Ctx>);
 
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);

@@ -32,6 +32,9 @@ namespace vcsn
     automaton parse_file(const std::string& f);
     automaton parse_string(const std::string& s);
 
+    std::ostream& print(const automaton& a, std::ostream& o);
+    std::ostream& print(const ratexp& e, std::ostream& o);
+
     automaton standard_of(const ratexp& e);
 
     automaton transpose(automaton& aut);
