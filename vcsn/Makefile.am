@@ -33,14 +33,14 @@ nobase_vcsn_HEADERS =                           \
   core/fwd.hh                                   \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/rat/abstract_ratexpset.hh               \
+  core/rat/abstract_ratexpset.hh                \
   core/rat/fwd.hh                               \
-  core/rat/ratexp.hh                           \
-  core/rat/ratexp.hxx                          \
-  core/rat/ratexpset.hh                        \
-  core/rat/ratexpset.hxx                       \
   core/rat/printer.hh                           \
   core/rat/printer.hxx                          \
+  core/rat/ratexp.hh                            \
+  core/rat/ratexp.hxx                           \
+  core/rat/ratexpset.hh                         \
+  core/rat/ratexpset.hxx                        \
   core/rat/transpose.hh                         \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
@@ -53,12 +53,12 @@ nobase_vcsn_HEADERS =                           \
   ctx/char_z_lal.hh                             \
   ctx/char_z_lau.hh                             \
   ctx/char_z_law.hh                             \
+  ctx/char_zmin_lal.hh                          \
+  ctx/char_zmin_law.hh                          \
   ctx/char_zr_lal.hh                            \
   ctx/char_zr_law.hh                            \
   ctx/char_zrr_lal.hh                           \
   ctx/char_zrr_law.hh                           \
-  ctx/char_zmin_lal.hh                          \
-  ctx/char_zmin_law.hh                          \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \

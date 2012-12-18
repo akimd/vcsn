@@ -26,7 +26,7 @@ namespace vcsn
     }
 
     void
-    dotty(const dyn::automaton& aut, std::ostream& out)
+    dotty(const automaton& aut, std::ostream& out)
     {
       details::dotty_stream_registry().call(aut->vname(),
                                             aut, out);
@@ -52,7 +52,7 @@ namespace vcsn
     }
 
     std::string
-    dotty(const dyn::automaton& aut)
+    dotty(const automaton& aut)
     {
       return details::dotty_string_registry().call(aut->vname(),
                                                    aut);
