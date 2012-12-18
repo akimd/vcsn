@@ -4,9 +4,9 @@
 # Check the alphabets.
 {{{2}b}c}d => {{{2}b}c}d
 # {{{x}b}c}d ! 1.4: invalid word: x: invalid letter: x
-{{{3}x}c}d ! 1.1-10: 1.1-7: 1.4: invalid word: x: invalid letter: x
-{{{4}b}x}d ! 1.1-10: 1.7: invalid word: x: invalid letter: x
-{{{5}b}c}x ! 1.10: invalid word: x: invalid letter: x
+{{{3}x}c}d ! {{{3}x}c}d: 1.1-10: 1.1-7: 1.4: invalid word: x: invalid letter: x
+{{{4}b}x}d ! {{{4}b}x}d: 1.1-10: 1.7: invalid word: x: invalid letter: x
+{{{5}b}c}x ! {{{5}b}c}x: 1.10: invalid word: x: invalid letter: x
 
 
 # Check weight products.

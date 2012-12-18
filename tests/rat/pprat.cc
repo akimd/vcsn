@@ -3,7 +3,6 @@
 #include <map>
 #include <getopt.h>
 
-#include <lib/vcsn/rat/driver.hh>
 #include <vcsn/algos/dyn.hh>
 #include <vcsn/core/automaton.hh>
 
@@ -64,10 +63,9 @@ void
 abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
-  vcsn::rat::driver d(ctx);
-  if (auto ratexp = file ? d.parse_file(s) : d.parse_string(s))
-    {
-      vcsn::dyn::ratexp exp = vcsn::dyn::make_ratexp(ctx, ratexp);
+      vcsn::dyn::ratexp exp =
+        file ? vcsn::dyn::read_ratexp_file(s, ctx)
+        : vcsn::dyn::read_ratexp_string(s, ctx);
       for (size_t i = 0; i < opts.transpose; ++i)
         exp = vcsn::dyn::transpose(exp);
 
@@ -108,12 +106,6 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
         }
       else
         vcsn::dyn::print(exp, std::cout) << std::endl;
-    }
-  else
-    {
-      std::cerr << d.errors << std::endl;
-      exit(EXIT_FAILURE);
-    }
 }
 
 void

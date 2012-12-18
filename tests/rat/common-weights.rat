@@ -5,7 +5,7 @@
 # Base cases.
 ab => a.b
 # Error cases.
-x ! 1.1: invalid letter: x
+x ! x: 1.1: invalid letter: x
 
 # Precedence and associativity.
 (ab)* => (a.b)*
@@ -19,12 +19,12 @@ a(bc) == a.b.c
 # Base cases.
 ab => ab
 # Error cases.
-x ! 1.1: invalid word: x: invalid letter: x
+x ! x: 1.1: invalid word: x: invalid letter: x
 # Yes, the message is not as nice as one might expect, because
 # when reading a ratexp, we actually read letter by letter, and
 # only afterwards this is turned into a word, by concatenation.
 # So first we see that 'x' is a not a valid letter.
-axb ! 1.2: invalid word: x: invalid letter: x
+axb ! axb: 1.2: invalid word: x: invalid letter: x
 
 # Precedence and associativity.
 (ab)* => (ab)*

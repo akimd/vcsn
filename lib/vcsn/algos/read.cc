@@ -4,6 +4,7 @@
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/algos/dyn.hh>
 #include <lib/vcsn/dot/driver.hh>
+#include <lib/vcsn/rat/driver.hh>
 
 namespace vcsn
 {
@@ -34,10 +35,31 @@ namespace vcsn
       return res;
     }
 
+
+    /*--------------.
+    | read_ratexp.  |
+    `--------------*/
+
+    ratexp
+    read_ratexp_file(const std::string& f, const dyn::context& ctx)
+    {
+      vcsn::rat::driver d(ctx);
+      auto exp = d.parse_file(f);
       if (!d.errors.empty())
-        throw new std::runtime_error(d.errors);
-      return aut;
+        throw std::runtime_error(d.errors);
+      return make_ratexp(ctx, exp);
     }
+
+    ratexp
+    read_ratexp_string(const std::string& s, const dyn::context& ctx)
+    {
+      vcsn::rat::driver d(ctx);
+      auto exp = d.parse_string(s);
+      if (!d.errors.empty())
+        throw std::runtime_error(d.errors);
+      return make_ratexp(ctx, exp);
+    }
+
   }
 
 } // vcsn::

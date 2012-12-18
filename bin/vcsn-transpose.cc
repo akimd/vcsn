@@ -15,15 +15,12 @@ int main(const int argc, char *const argv[])
 
   // Input.
   using namespace vcsn::dyn;
-  context* ctx  = make_context(ctx_str, genset_str);
-  vcsn::rat::driver d(*ctx);
-  // FIXME: be sure to keep ratexp alive!
-  auto ratexp = d.parse_string(ratexp_str);
-  vcsn::dyn::ratexp exp = make_ratexp(*ctx, ratexp);
+  vcsn::dyn::context* ctx = make_context(ctx_str, genset_str);
+  vcsn::dyn::ratexp exp = read_ratexp_string(ratexp_str, *ctx);
 
   // Process.
-  vcsn::dyn::ratexp res = transpose (exp);
+  exp = transpose (exp);
 
   // Output.
-  print(res, std::cout) << std::endl;
+  print(exp, std::cout) << std::endl;
 }

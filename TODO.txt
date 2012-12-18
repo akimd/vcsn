@@ -1,7 +1,3 @@
-* input
-input (with drivers) and is too complex, it should be a oneliner.  Fix
-vcsn-cat.cc and vcsn-transpose.cc etc.
-
 * check labels in mutable_automaton
 Currently, we can add_transition(p, q, 'z') even if z is not part of
 the alphabet.

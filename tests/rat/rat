@@ -23,13 +23,15 @@ my $labels = 'letters';
 # The current weightset (argument for -w).
 my $ws = 'b';
 
+# Strip leading and trailing blanks, and quote for shell.
 sub quote($)
 {
   my ($in) = @_;
-  $in =~ s/([\"\$\\\`])/\\$1/g;
   $in =~ s/^[ \t]*//g;
   $in =~ s/[ \t]*$//g;
-  "'$in'";
+
+  $in =~ s/([\"\$\\\`])/\\$1/g;
+  "\"$in\"";
 }
 
 sub rst_title($)

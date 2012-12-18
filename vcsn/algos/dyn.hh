@@ -32,6 +32,9 @@ namespace vcsn
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
 
+    ratexp read_ratexp_file(const std::string& f, const dyn::context& ctx);
+    ratexp read_ratexp_string(const std::string& s, const dyn::context& ctx);
+
     std::ostream& print(const automaton& a, std::ostream& o);
     std::ostream& print(const ratexp& e, std::ostream& o);
 
