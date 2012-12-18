@@ -29,8 +29,8 @@ namespace vcsn
 
     abstract_ratexpset* make_ratexpset(const context& ctx);
 
-    automaton parse_file(const std::string& f);
-    automaton parse_string(const std::string& s);
+    automaton read_automaton_file(const std::string& f);
+    automaton read_automaton_string(const std::string& s);
 
     std::ostream& print(const automaton& a, std::ostream& o);
     std::ostream& print(const ratexp& e, std::ostream& o);
