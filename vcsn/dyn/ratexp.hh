@@ -43,7 +43,7 @@ namespace vcsn
     ratexp
     make_ratexp(const dyn::context& ctx, const rat::exp_t& ratexp)
     {
-      return std::make_shared<ratexp::element_type>(ratexp::element_type(ctx, ratexp));
+      return std::make_shared<ratexp::element_type>(ctx, ratexp);
     }
 
   } // namespace dyn
