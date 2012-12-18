@@ -20,11 +20,11 @@ digraph
 }
 EOF
 
-run 0 6 ../bin/vcsn-evaluate simple.dot aabab
-run 0 4 ../bin/vcsn-evaluate simple.dot abab
-run 0 8 ../bin/vcsn-evaluate simple.dot aaaa
-run 0 0 ../bin/vcsn-evaluate simple.dot b
-run 0 2 ../bin/vcsn-evaluate simple.dot a
+run 0 6 -vcsn-evaluate simple.dot aabab
+run 0 4 -vcsn-evaluate simple.dot abab
+run 0 8 -vcsn-evaluate simple.dot aaaa
+run 0 0 -vcsn-evaluate simple.dot b
+run 0 2 -vcsn-evaluate simple.dot a
 
 cat > initial-weight.dot <<EOF
 digraph
@@ -46,9 +46,9 @@ digraph
 }
 EOF
 
-run 0 4 ../bin/vcsn-evaluate initial-weight.dot a
-run 0 8 ../bin/vcsn-evaluate initial-weight.dot abab
-run 0 12 ../bin/vcsn-evaluate initial-weight.dot aabab
+run 0 4  -vcsn-evaluate initial-weight.dot a
+run 0 8  -vcsn-evaluate initial-weight.dot abab
+run 0 12 -vcsn-evaluate initial-weight.dot aabab
 
 cat > more-letters.dot <<EOF
 digraph
@@ -73,7 +73,7 @@ digraph
 }
 EOF
 
-run 0 6 ../bin/vcsn-evaluate more-letters.dot caa
+run 0 6 -vcsn-evaluate more-letters.dot caa
 
 cat > prod.dot <<EOF
 digraph
@@ -98,7 +98,7 @@ digraph
 }
 EOF
 
-run 0 12 ../bin/vcsn-evaluate prod.dot aabab
+run 0 12 -vcsn-evaluate prod.dot aabab
 
 cat > complex.dot <<EOF
 digraph
@@ -123,6 +123,6 @@ digraph
 }
 EOF
 
-run 0 12 ../bin/vcsn-evaluate complex.dot a
-run 0 24 ../bin/vcsn-evaluate complex.dot abab
-run 0 36 ../bin/vcsn-evaluate complex.dot aabab
+run 0 12 -vcsn-evaluate complex.dot a
+run 0 24 -vcsn-evaluate complex.dot abab
+run 0 36 -vcsn-evaluate complex.dot aabab
