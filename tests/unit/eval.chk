@@ -1,5 +1,12 @@
 #! /bin/sh
 
+# check AUTOMATON INPUT OUTPUT
+# ----------------------------
+check ()
+{
+  run 0 $3 -vcsn-evaluate $1 $2
+}
+
 cat > simple.dot <<EOF
 digraph
 {
@@ -20,11 +27,11 @@ digraph
 }
 EOF
 
-run 0 6 -vcsn-evaluate simple.dot aabab
-run 0 4 -vcsn-evaluate simple.dot abab
-run 0 8 -vcsn-evaluate simple.dot aaaa
-run 0 0 -vcsn-evaluate simple.dot b
-run 0 2 -vcsn-evaluate simple.dot a
+check simple.dot aabab 6
+check simple.dot abab 4
+check simple.dot aaaa 8
+check simple.dot b 0
+check simple.dot a 2
 
 cat > initial-weight.dot <<EOF
 digraph
@@ -98,7 +105,7 @@ digraph
 }
 EOF
 
-run 0 12 -vcsn-evaluate prod.dot aabab
+check prod.dot aabab 12
 
 cat > complex.dot <<EOF
 digraph
@@ -123,6 +130,6 @@ digraph
 }
 EOF
 
-run 0 12 -vcsn-evaluate complex.dot a
-run 0 24 -vcsn-evaluate complex.dot abab
-run 0 36 -vcsn-evaluate complex.dot aabab
+check complex.dot a 12
+check complex.dot abab 24
+check complex.dot aabab 36
