@@ -10,7 +10,7 @@ namespace vcsn
 
   namespace ctx
   {
-    template <typename GenSet,
+    template <typename LabelSet,
               typename WeightSet,
               typename Kind>
     class context;

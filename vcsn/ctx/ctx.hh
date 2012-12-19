@@ -19,21 +19,21 @@ namespace vcsn
     {
     public:
       virtual std::string vname() const = 0;
-      virtual std::string genset_string() const = 0;
+      virtual std::string labelset_string() const = 0;
     };
   }
 
   namespace ctx
   {
-    template <typename GenSet,
+    template <typename LabelSet,
               typename WeightSet,
               typename Kind>
     class context: public dyn::context
     {
     public:
-      using genset_t = GenSet;
+      using labelset_t = LabelSet;
       using weightset_t = WeightSet;
-      using genset_ptr = std::shared_ptr<const genset_t>;
+      using labelset_ptr = std::shared_ptr<const labelset_t>;
       using weightset_ptr = std::shared_ptr<const weightset_t>;
       using kind_t = Kind;
       enum
@@ -44,8 +44,8 @@ namespace vcsn
         };
 
       /// Type of transition labels, and type of RatExp atoms.
-      using label_t = typename label_trait<kind_t, genset_t>::label_t;
-      using word_t = typename genset_t::word_t;
+      using label_t = typename label_trait<kind_t, labelset_t>::label_t;
+      using word_t = typename labelset_t::word_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
       /// Type of RatExp ratexps objects.
@@ -60,13 +60,13 @@ namespace vcsn
         , ws_{that.ws_}
       {}
 
-      context(const genset_ptr& gs, const weightset_ptr& ws)
+      context(const labelset_ptr& gs, const weightset_ptr& ws)
         : gs_{gs}
         , ws_{ws}
       {}
 
-      context(const genset_t& gs = {}, const weightset_t& ws = {})
-        : context{std::make_shared<const genset_t>(gs),
+      context(const labelset_t& gs = {}, const weightset_t& ws = {})
+        : context{std::make_shared<const labelset_t>(gs),
                   std::make_shared<const weightset_t>(ws)}
       {}
 
@@ -74,7 +74,7 @@ namespace vcsn
       /// E.g., "char_b_lal", "char_zmin_law".
       static std::string sname()
       {
-        return (genset_t::sname()
+        return (labelset_t::sname()
                 + "_" + weightset_t::sname()
                 + "_" + kind_t::sname());
       }
@@ -84,7 +84,7 @@ namespace vcsn
         return sname();
       }
 
-      virtual std::string genset_string() const override final
+      virtual std::string labelset_string() const override final
       {
         std::string res;
         for (auto l: *gs_)
@@ -92,7 +92,7 @@ namespace vcsn
         return res;
       }
 
-      const genset_ptr& genset() const
+      const labelset_ptr& labelset() const
       {
         return gs_;
       }
@@ -122,7 +122,7 @@ namespace vcsn
       }
 
     private:
-      genset_ptr gs_;
+      labelset_ptr gs_;
       weightset_ptr ws_;
     };
 

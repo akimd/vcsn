@@ -89,7 +89,7 @@ namespace vcsn
 
       bool parens_(const atom_t& n)
       {
-        return !top_ && !ctx_.genset()->is_letter(n.value());
+        return !top_ && !ctx_.labelset()->is_letter(n.value());
       }
 
       /// Output stream.

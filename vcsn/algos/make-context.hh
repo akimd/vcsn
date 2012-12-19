@@ -16,8 +16,8 @@ namespace vcsn
   `---------------*/
 
   /* Some contexts, such as "char_br_lal", use RatExps as weight set.
-     But RatExps need a context, and a genset.  Other weight sets,
-     such as b or zmin, do not need a genset to be buildable.
+     But RatExps need a context, and a labelset.  Other weight sets,
+     such as b or zmin, do not need a labelset to be buildable.
 
      So we must define a mean instantiate a weightset with or without
      an alphabet, depending on its need.
@@ -31,7 +31,7 @@ namespace vcsn
 
   template <typename Ctx>
   Ctx*
-  make_context(const typename Ctx::genset_t::letters_t& ls);
+  make_context(const typename Ctx::labelset_t::letters_t& ls);
 
   template <typename WeightSet>
   struct weightsetter
@@ -50,7 +50,7 @@ namespace vcsn
   {
     static
     ratexpset<Ctx>
-    make(const typename Ctx::genset_t::letters_t& ls)
+    make(const typename Ctx::labelset_t::letters_t& ls)
     {
       return {*make_context<Ctx>(ls)};
     }
@@ -58,9 +58,9 @@ namespace vcsn
 
   template <typename Ctx>
   Ctx*
-  make_context(const typename Ctx::genset_t::letters_t& ls)
+  make_context(const typename Ctx::labelset_t::letters_t& ls)
   {
-    auto gs = typename Ctx::genset_t(ls);
+    auto gs = typename Ctx::labelset_t(ls);
     auto ws = weightsetter<typename Ctx::weightset_t>::make(ls);
     // FIXME: memory management.
     return new Ctx(gs, ws);

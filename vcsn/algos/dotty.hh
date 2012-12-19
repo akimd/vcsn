@@ -28,7 +28,7 @@ namespace vcsn
       "digraph\n"
       "{\n"
       "  vcsn_context = \"" << aut.context().sname() << "\"\n"
-      "  vcsn_genset = \"" << aut.context().genset_string() << "\"\n"
+      "  vcsn_genset = \"" << aut.context().labelset_string() << "\"\n"
       "  rankdir = LR\n"
       "  node [shape = circle]\n";
 

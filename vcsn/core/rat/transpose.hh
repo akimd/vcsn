@@ -80,7 +80,7 @@ namespace vcsn
       virtual void
       visit(const atom_t& e)
       {
-        res_ = ks_.atom(ks_.genset()->transpose(e.value()));
+        res_ = ks_.atom(ks_.labelset()->transpose(e.value()));
         apply_weights(e);
       }
 

@@ -29,27 +29,27 @@ namespace vcsn
     }
   };
 
-  template <class Kind, class GenSet>
+  template <class Kind, class LabelSet>
   struct label_trait
   {
   };
 
-  template <class GenSet>
-  struct label_trait<labels_are_unit, GenSet>
+  template <class LabelSet>
+  struct label_trait<labels_are_unit, LabelSet>
   {
-    using label_t = typename GenSet::empty_t;
+    using label_t = typename LabelSet::empty_t;
   };
 
-  template <class GenSet>
-  struct label_trait<labels_are_letters, GenSet>
+  template <class LabelSet>
+  struct label_trait<labels_are_letters, LabelSet>
   {
-    using label_t = typename GenSet::letter_t;
+    using label_t = typename LabelSet::letter_t;
   };
 
-  template <class GenSet>
-  struct label_trait<labels_are_words, GenSet>
+  template <class LabelSet>
+  struct label_trait<labels_are_words, LabelSet>
   {
-    using label_t = typename GenSet::word_t;
+    using label_t = typename LabelSet::word_t;
   };
 
 }

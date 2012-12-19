@@ -24,11 +24,11 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    using genset_t = typename context_t::genset_t;
+    using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
     using kind_t = typename context_t::kind_t;
 
-    using genset_ptr = typename context_t::genset_ptr;
+    using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
     using entryset_t = polynomialset<context_t>;
 
@@ -68,7 +68,7 @@ namespace vcsn
     mutable_automaton(const context_t& ctx)
       : es_{ctx}
       , states_{2}
-      , prepost_label_(ctx.genset()->template special<label_t>())
+      , prepost_label_(ctx.labelset()->template special<label_t>())
     {
     }
 
@@ -97,7 +97,7 @@ namespace vcsn
 
     const context_t& context() const { return es_.context(); }
     const weightset_ptr& weightset() const { return es_.weightset(); }
-    const genset_ptr& genset() const { return es_.genset(); }
+    const labelset_ptr& labelset() const { return es_.labelset(); }
     const entryset_t& entryset() const { return es_; }
 
     // Special states and transitions
@@ -195,7 +195,7 @@ namespace vcsn
                      {
                        const stored_transition_t& st = transitions_[t];
                        return (st.dst == dst
-                               && this->genset()->equals(st.get_label(), l));
+                               && this->labelset()->equals(st.get_label(), l));
                      });
       if (i == end(succ))
         return null_transition();
@@ -234,10 +234,10 @@ namespace vcsn
 
     // Convert the label to a word, in the case of a labels_are_letters.
     // Same as label_of for labels_are_words.
-    typename genset_t::word_t
+    typename labelset_t::word_t
     word_label_of(transition_t t) const
     {
-      return genset()->to_word(label_of(t));
+      return labelset()->to_word(label_of(t));
     }
 
     // Edition of states
@@ -471,7 +471,7 @@ namespace vcsn
       std::ostringstream o;
       o << src_of(t)
         << " -- {" << weightset()->format(weight_of(t)) << "}"
-        << genset()->format(word_label_of(t))
+        << labelset()->format(word_label_of(t))
         << " --> " << dst_of(t);
       return o.str();
     }
@@ -603,7 +603,7 @@ namespace vcsn
       const stored_state_t& ss = states_[s];
       return {ss.succ,
               [this,l] (transition_t i) {
-                return this->genset()->equals(transitions_[i].get_label(), l);
+                return this->labelset()->equals(transitions_[i].get_label(), l);
             }};
     }
 
@@ -633,7 +633,7 @@ namespace vcsn
       const stored_state_t& ss = states_[s];
       return {ss.pred,
               [this,l] (transition_t i) {
-                return this->genset()->equals(transitions_[i].get_label(), l);
+                return this->labelset()->equals(transitions_[i].get_label(), l);
         }};
     }
 

@@ -84,17 +84,17 @@ namespace vcsn
       DEFINE(final_transitions(),            initial_transitions());
 
       DEFINE(in(state_t s, label_t l),
-             out(s, aut_->genset()->transpose(l)));
+             out(s, aut_->labelset()->transpose(l)));
       DEFINE(out(state_t s, label_t l),
-             in(s, aut_->genset()->transpose(l)));
+             in(s, aut_->labelset()->transpose(l)));
       DEFINE(get_transition(state_t s, state_t d, label_t l),
-             get_transition(d, s, aut_->genset()->transpose(l)));
+             get_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(has_transition(state_t s, state_t d, label_t l),
-             has_transition(d, s, aut_->genset()->transpose(l)));
+             has_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(label_of(transition_t t),
-             genset()->transpose(aut_->label_of(t)));
+             labelset()->transpose(aut_->label_of(t)));
       DEFINE(word_label_of(transition_t t),
-             genset()->transpose(aut_->word_label_of(t)));
+             labelset()->transpose(aut_->word_label_of(t)));
 
       DEFINE(get_initial_weight(state_t s),
              weightset()->transpose(aut_->get_final_weight(s)));
@@ -148,16 +148,16 @@ namespace vcsn
 
       DEFINE(del_transition(transition_t t), del_transition(t));
       DEFINE(del_transition(state_t s, state_t d, label_t l),
-             del_transition(d, s, aut_->genset()->transpose(l)));
+             del_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(add_transition(state_t s, state_t d, label_t l, weight_t k),
              add_transition(d, s,
-                            aut_->genset()->transpose(l),
+                            aut_->labelset()->transpose(l),
                             aut_->weightset()->transpose(k)));
       DEFINE(add_transition(state_t s, state_t d, label_t l),
-             add_transition(d, s, aut_->genset()->transpose(l)));
+             add_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(set_transition(state_t s, state_t d, label_t l, weight_t k),
              set_transition(d, s,
-                            aut_->genset()->transpose(l),
+                            aut_->labelset()->transpose(l),
                             aut_->weightset()->transpose(k)));
       DEFINE(set_initial(state_t s, weight_t k),
              set_final(s, aut_->weightset()->transpose(k)));
@@ -212,7 +212,7 @@ namespace vcsn
       DEFINE(all_transitions);
       DEFINE(context);
       DEFINE(entryset);
-      DEFINE(genset);
+      DEFINE(labelset);
       DEFINE(num_finals);
       DEFINE(num_initials);
       DEFINE(num_states);

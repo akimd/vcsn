@@ -14,12 +14,12 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    using genset_t = typename context_t::genset_t;
+    using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
 
-    using genset_ptr = typename context_t::genset_ptr;
+    using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using word_t = typename genset_t::word_t;
+    using word_t = typename labelset_t::word_t;
     using weight_t = typename context_t::weight_t;
 
     using value_t = std::map<word_t, weight_t>;
@@ -27,7 +27,7 @@ namespace vcsn
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
-      unit_[genset()->identity()] = weightset()->unit();
+      unit_[labelset()->identity()] = weightset()->unit();
     }
 
     std::string sname() const
@@ -36,7 +36,7 @@ namespace vcsn
     }
 
     const context_t& context() const { return ctx_; }
-    const genset_ptr& genset() const { return ctx_.genset(); }
+    const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
     value_t&
@@ -103,7 +103,7 @@ namespace vcsn
       for (auto i: l)
         for (auto j: r)
           add_weight(p,
-                    genset()->concat(i.first, j.first),
+                    labelset()->concat(i.first, j.first),
                     weightset()->mul(i.second, j.second));
       return p;
     }
@@ -118,7 +118,7 @@ namespace vcsn
         return unit();
       if (s == 1)
         {
-          auto i = v.find(genset()->identity());
+          auto i = v.find(labelset()->identity());
           if (i != v.end())
             {
               value_t p;
@@ -140,7 +140,7 @@ namespace vcsn
     {
       if (v.size() != 1)
         return false;
-      auto i = v.find(genset()->identity());
+      auto i = v.find(labelset()->identity());
       if (i == v.end())
         return false;
       return weightset()->is_unit(i->second);
@@ -169,7 +169,7 @@ namespace vcsn
     {
       value_t res;
       for (const auto& i: v)
-        res[genset()->transpose(i.first)] = weightset()->transpose(i.second);
+        res[labelset()->transpose(i.first)] = weightset()->transpose(i.second);
       return res;
     }
 
@@ -238,7 +238,7 @@ namespace vcsn
               // FIXME: This wrongly assumes that letters are
               // characters.  It will break with integer or string
               // alphabets.
-              while (genset()->has(i.peek()))
+              while (labelset()->has(i.peek()))
                 label += char(i.get());
               if (label.empty() && default_w)
                 throw std::domain_error("invalid polynomial: " + s
@@ -286,7 +286,7 @@ namespace vcsn
               weightset()->print(out, i.second) << "}";
             }
           if (!context_t::is_lau)
-            genset()->print(out, i.first);
+            labelset()->print(out, i.first);
         }
 
       if (first)

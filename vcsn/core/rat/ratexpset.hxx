@@ -48,7 +48,7 @@ namespace vcsn
   ratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
     -> value_t
   {
-    if (!genset()->has(v))
+    if (!labelset()->has(v))
       throw std::domain_error("invalid letter: " + std::string{v});
     return std::make_shared<atom_t>(weightset()->unit(), v);
   }
@@ -61,7 +61,7 @@ namespace vcsn
     -> value_t
   {
     for (auto l: w)
-      if (!genset()->has(l))
+      if (!labelset()->has(l))
         throw std::domain_error("invalid word: " + w
                                 + ": invalid letter: " + std::string{l});
     return std::make_shared<atom_t>(weightset()->unit(), w);
@@ -192,7 +192,7 @@ namespace vcsn
       {
         if (lt == type_t::atom
             && weightset()->is_unit(l->left_weight()))
-          return atom(genset()->concat
+          return atom(labelset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
         else if (lt == type_t::prod)

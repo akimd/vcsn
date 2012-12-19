@@ -13,7 +13,7 @@ namespace vcsn
   {
     template <typename Context>
     using lifted_context_t =
-      ctx::context<typename Context::genset_t,
+      ctx::context<typename Context::labelset_t,
                    ratexpset<Context>,
                    labels_are_unit>;
 
@@ -31,7 +31,7 @@ namespace vcsn
     kre_t kre{a.context()};
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
     typedef details::lifted_context_t<typename Aut::context_t> ctx_t;
-    ctx_t ctx{a.context().genset(), std::make_shared<const kre_t>(kre)};
+    ctx_t ctx{a.context().labelset(), std::make_shared<const kre_t>(kre)};
     using auto_in_t = Aut;
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
     typedef details::lifted_automaton_t<auto_in_t> auto_out_t;

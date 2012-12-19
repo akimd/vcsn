@@ -59,7 +59,7 @@ namespace vcsn
   public:
     using context_t = Context;
     using super_type = abstract_ratexpset;
-    using word_t = typename context_t::genset_t::word_t;
+    using word_t = typename context_t::labelset_t::word_t;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
     using value_t = typename super_type::value_t;
@@ -174,7 +174,7 @@ namespace vcsn
     atom_(const word_t& v) const
       -> if_lal<Ctx, value_t>
     {
-      if (!ks_.genset()->is_letter(v))
+      if (!ks_.labelset()->is_letter(v))
         throw std::domain_error("invalid atom: " + v + ": not a letter");
       return ks_.atom(v[0]);
     }

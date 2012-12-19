@@ -28,7 +28,7 @@ namespace vcsn
     using stack = std::stack<state_set>;
     using map = std::map<state_set, state_t>;
 
-    const auto& letters = *a.genset();
+    const auto& letters = *a.labelset();
     automaton_t res{a.context()};
     // The stack of (input) sets of states waiting to be processed.
     stack st;

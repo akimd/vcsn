@@ -16,13 +16,13 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    using genset_t = typename context_t::genset_t;
+    using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
     using kind_t = typename context_t::kind_t;
-    using genset_ptr = typename context_t::genset_ptr;
+    using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using letter_t = typename genset_t::letter_t;
-    using word_t = typename genset_t::word_t;
+    using letter_t = typename labelset_t::letter_t;
+    using word_t = typename labelset_t::word_t;
     using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
     /// Type of printer visitor.
@@ -65,9 +65,9 @@ namespace vcsn
       return ctx_;
     }
 
-    const genset_ptr& genset() const
+    const labelset_ptr& labelset() const
     {
-      return ctx_.genset();
+      return ctx_.labelset();
     }
 
     const weightset_ptr& weightset() const
