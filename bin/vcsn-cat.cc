@@ -21,5 +21,5 @@ int main(const int argc, char *const argv[])
   // Process.
 
   // Output.
-  print(exp, std::cout) << std::endl;
+  print(exp, std::cout, FileType::text) << std::endl;
 }

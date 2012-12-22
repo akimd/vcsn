@@ -8,5 +8,5 @@ main (int argc, char* const argv[])
   using namespace vcsn::dyn;
   automaton a = read_automaton_file(argv[1]);
   automaton d = lift(a);
-  print(d, std::cout);
+  print(d, std::cout, FileType::dotty);
 }

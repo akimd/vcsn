@@ -19,5 +19,5 @@ int main(const int argc, char *const argv[])
   vcsn::dyn::automaton aut = standard_of(exp);
 
   // Output.
-  print(aut, std::cout) << std::endl;
+  print(aut, std::cout, FileType::dotty) << std::endl;
 }
