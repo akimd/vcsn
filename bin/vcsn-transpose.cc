@@ -36,7 +36,7 @@ work_exp(const std::string& ctx_name, const std::string& labelset,
   exp = transpose (exp);
 
   // Output.
-  print(exp, std::cout) << std::endl;
+  print(exp, std::cout, FileType::text) << std::endl;
 }
 
 int main(int argc, char *const argv[])

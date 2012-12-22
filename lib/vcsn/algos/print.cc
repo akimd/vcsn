@@ -13,9 +13,22 @@ namespace vcsn
     `---------------------------*/
 
     std::ostream&
-    print(const dyn::automaton& aut, std::ostream& out)
+    print(const dyn::automaton& aut, std::ostream& out, FileType type)
     {
-      dotty(aut, out);
+      switch (type)
+        {
+        case FileType::dotty:
+          dotty(aut, out);
+          break;
+        case FileType::text:
+          throw
+            std::domain_error("invalid output format for automaton."
+                              "Could not print automaton as `text' output.");
+          break;
+        case FileType::xml:
+          //xml(out, aut); // FIXME:
+          break;
+        }
       return out;
     }
 
@@ -40,10 +53,22 @@ namespace vcsn
     }
 
     std::ostream&
-    print(const ratexp& exp, std::ostream& out)
+    print(const ratexp& exp, std::ostream& out, FileType type)
     {
-      return details::print_exp_registry().call(exp->ctx().vname(),
-                                                exp, out);
+      switch (type)
+        {
+        case FileType::dotty:
+          std::domain_error("invalid output format for expression."
+                            "Could not print expression as `dotty' output.");
+          return out;
+        case FileType::text:
+          return details::print_exp_registry().call(exp->ctx().vname(),
+                                                    exp, out);
+        case FileType::xml:
+          xml(exp, out);
+          return out;
+        }
+      return out;
     }
   }
 }

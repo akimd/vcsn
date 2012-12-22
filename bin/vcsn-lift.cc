@@ -15,5 +15,5 @@ main (int argc, char* const argv[])
   auto res = lift(aut);
 
   // Output.
-  print(res, std::cout) << std::endl;
+  print(res, std::cout, FileType::dotty) << std::endl;
 }

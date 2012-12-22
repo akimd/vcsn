@@ -31,7 +31,7 @@ work_exp(const std::string& ctx_name, const std::string& labelset,
   // Process.
 
   // Output.
-  print(exp, std::cout) << std::endl;
+  print(exp, std::cout, FileType::text) << std::endl;
 }
 
 int main(int argc, char *const argv[])

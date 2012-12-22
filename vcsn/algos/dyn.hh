@@ -11,6 +11,13 @@ namespace vcsn
 {
   namespace dyn
   {
+    enum class FileType
+    {
+      dotty,
+      text,
+      xml
+    };
+
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
@@ -35,8 +42,8 @@ namespace vcsn
     ratexp read_ratexp_file(const std::string& f, const dyn::context& ctx);
     ratexp read_ratexp_string(const std::string& s, const dyn::context& ctx);
 
-    std::ostream& print(const automaton& a, std::ostream& o);
-    std::ostream& print(const ratexp& e, std::ostream& o);
+    std::ostream& print(const automaton& a, std::ostream& o, FileType type);
+    std::ostream& print(const ratexp& e, std::ostream& o, FileType type);
 
     automaton standard_of(const ratexp& e);
 
