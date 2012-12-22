@@ -6,11 +6,11 @@
 # include <xercesc/dom/DOMImplementationRegistry.hpp>
 
 # include <vcsn/algos/xml/ios.hh>
-# include <vcsn/algos/xml/kratexpvisitor.hh>
+# include <vcsn/algos/xml/ratexpvisitor.hh>
 # include <vcsn/algos/xml/structure.hh>
 # include <vcsn/algos/xml/tools.hh>
 # include <vcsn/config.h>
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
@@ -22,8 +22,8 @@ namespace vcsn
     void print(const Context& ctx, const rat::exp_t exp,
                xercesc::DOMDocument& doc, xercesc::DOMElement& node)
     {
-      using xml_visitor = rat::xml_kratexp_visitor<Context>;
-      using node_t = typename rat::xml_kratexp_visitor<Context>::node_t;
+      using xml_visitor = rat::xml_ratexp_visitor<Context>;
+      using node_t = typename rat::xml_ratexp_visitor<Context>::node_t;
 
       auto rat_exp_node = details::create_node(doc, "expression");
       node.appendChild(rat_exp_node);

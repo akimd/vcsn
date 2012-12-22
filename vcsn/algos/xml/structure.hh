@@ -1,7 +1,7 @@
 #ifndef VCSN_ALGOS_XML_STRUCTURE_HH
 # define VCSN_ALGOS_XML_STRUCTURE_HH
 
-# include <vcsn/core/rat/kratexp.hh>
+# include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn
 {
