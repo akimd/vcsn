@@ -10,7 +10,7 @@ namespace vcsn
   {
 
     template <typename Context>
-    xml_kratexp_visitor<Context>::xml_kratexp_visitor(xercesc::DOMDocument& doc,
+    xml_ratexp_visitor<Context>::xml_ratexp_visitor(xercesc::DOMDocument& doc,
                                                       xercesc::DOMElement& root,
                                                       const context_t& ctx)
       : doc_(doc)
@@ -20,20 +20,20 @@ namespace vcsn
     {}
 
     template <typename Context>
-    xml_kratexp_visitor<Context>::~xml_kratexp_visitor()
+    xml_ratexp_visitor<Context>::~xml_ratexp_visitor()
     {}
 
 
     template <typename Context>
     void
-    xml_kratexp_visitor<Context>::operator()(const node_t& v)
+    xml_ratexp_visitor<Context>::operator()(const node_t& v)
     {
       v.accept(*this);
     }
 
     template <typename Context>
     void
-    xml_kratexp_visitor<Context>::operator()(const node_ptr& v)
+    xml_ratexp_visitor<Context>::operator()(const node_ptr& v)
     {
       operator()(*v);
     }
@@ -42,7 +42,7 @@ namespace vcsn
     template <typename Context>                                 \
     inline                                                      \
     void                                                        \
-    xml_kratexp_visitor<Context>::visit(const Type##_t& Name)
+    xml_ratexp_visitor<Context>::visit(const Type##_t& Name)
 
     VISIT(prod, v)
     {
@@ -108,12 +108,12 @@ namespace vcsn
       atom->appendChild(label);
 
       details::set_attribute(label, "value",
-                             ctx_.genset()->format(v.value()));
+                             ctx_.labelset()->format(v.value()));
     }
 
     template <typename Context>
     void
-    xml_kratexp_visitor<Context>::print_weight(const weight_t& w,
+    xml_ratexp_visitor<Context>::print_weight(const weight_t& w,
                                                dom_elt_t& root,
                                                const std::string& side)
     {
@@ -128,7 +128,7 @@ namespace vcsn
 
     template <typename Context>
     bool
-    xml_kratexp_visitor<Context>::shows_(const weight_t& w) const
+    xml_ratexp_visitor<Context>::shows_(const weight_t& w) const
     {
       return ws_->show_unit() || !ws_->is_unit(w);
     }

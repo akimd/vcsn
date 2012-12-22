@@ -10,14 +10,14 @@ namespace vcsn
   namespace rat
   {
     template <typename Context>
-    class xml_kratexp_visitor : public Context::const_visitor
+    class xml_ratexp_visitor : public Context::const_visitor
     {
     public:
       using context_t  = Context;
       using weight_t   = typename context_t::weightset_t::value_t;
       using weight_ptr = std::shared_ptr<const typename context_t::weightset_t>;
       using label_t    = typename context_t::weightset_t::value_t;
-      using this_t     = xml_kratexp_visitor<context_t>;
+      using this_t     = xml_ratexp_visitor<context_t>;
       using super_type = typename context_t::const_visitor;
       using node_t     = typename super_type::node_t;
       using node_ptr   = std::shared_ptr<const node_t>;
@@ -32,10 +32,10 @@ namespace vcsn
       using atom_t     = typename super_type::atom_t;
       using dom_elt_t  = xercesc::DOMElement;
 
-      xml_kratexp_visitor(xercesc::DOMDocument& doc,
+      xml_ratexp_visitor(xercesc::DOMDocument& doc,
                           xercesc::DOMElement& root,
                           const context_t& ctx);
-      ~xml_kratexp_visitor();
+      ~xml_ratexp_visitor();
 
       void operator()(const node_t& v);
       void operator()(const node_ptr& v);
@@ -59,6 +59,6 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
-# include <vcsn/algos/xml/kratexpvisitor.hxx>
+# include <vcsn/algos/xml/ratexpvisitor.hxx>
 
 #endif // !VCSN_ALGOS_XML_KRATEXPVISITOR_HH
