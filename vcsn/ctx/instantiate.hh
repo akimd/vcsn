@@ -54,7 +54,7 @@ namespace vcsn
         void xml<Ctx>(std::ostream& out, const dyn::ratexp exp);        \
                                                                         \
       MAYBE_EXTERN template                                             \
-        std::string xml<Ctx>(const dyn::ratexp);                        \
+        std::string xml<Ctx>(const dyn::ratexp exp);                    \
     }                                                                   \
   }
 
