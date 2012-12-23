@@ -2,8 +2,8 @@
 # define VCSN_DYN_RATEXEP_HH
 
 # include <memory>
-# include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/ctx/ctx.hh>
 
 namespace vcsn
 {
