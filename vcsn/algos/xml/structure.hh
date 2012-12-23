@@ -44,7 +44,7 @@ namespace vcsn
       details::set_attribute(value_set, "genSort", "simple");
       details::set_attribute(value_set, "type", "free");
 
-      for (auto l: *ctx.genset())
+      for (auto l: *ctx.labelset())
         {
           auto value_elt = details::create_node(doc, "valueSetElt");
           details::set_attribute(value_elt, "value", {l});
