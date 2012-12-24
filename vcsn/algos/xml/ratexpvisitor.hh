@@ -53,7 +53,7 @@ namespace vcsn
 
       xercesc::DOMDocument& doc_;
       xercesc::DOMElement& root_;
-      const context_t ctx_;
+      const context_t& ctx_;
       const weight_ptr ws_;
     };
   } // namespace rat
