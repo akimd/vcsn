@@ -4,7 +4,7 @@
 #include <vcsn/algos/xml.hh>
 
 int
-main(const int , char const* [])
+main(const int argc, char const* argv[])
 {
   using namespace vcsn::dyn;
 
@@ -13,7 +13,7 @@ main(const int , char const* [])
   vcsn::rat::driver d(*ctx);
   for (int i = 1; i < argc; ++i)
     {
-      auto exp = d.parse_file(argv[i]);
-      vcsn::xml(std::cout, *ctx, exp);
+      auto exp = read_ratexp_file(argv[i], *ctx);
+      print(exp, std::cout, FileType::xml);
     }
 }
