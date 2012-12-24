@@ -32,7 +32,7 @@ usage(const char* prog, int status)
       "  b    for Boolean\n"
       "  br   for RatExp<b>\n"
       "  z    for Z\n"
-      "  zr   for RatExt<Z>\n"
+      "  zr   for RatExp<Z>\n"
       "  zrr  for RatExp<RatExp<Z>>\n"
       ;
   else
