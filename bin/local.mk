@@ -28,4 +28,6 @@ bin_vcsn_evaluate_LDADD    = $(all_libctx) $(libvcsn)
 bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_standard_of_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_transpose_LDADD   = $(all_libctx) $(libvcsn)
-bin_vcsn_exp_to_xml_LDADD = $(all_libctx) $(libvcsn)
+bin_vcsn_exp_to_xml_LDADD  = $(all_libctx) $(libvcsn)
+
+bin_vcsn_cat_SOURCES = bin/parse-args.cc bin/vcsn-cat.cc
