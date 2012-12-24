@@ -2,60 +2,39 @@
 #include <cassert>
 
 #include <vcsn/algos/dyn.hh>
-#include <vcsn/dyn/ratexp.hh>
-
 #include <lib/vcsn/rat/driver.hh>
+#include "parse-args.hh"
 
 void
-work_aut(const std::string& file)
+work_aut(const options opts)
 {
-  // Input.
   using namespace vcsn::dyn;
-  vcsn::dyn::automaton aut = read_automaton_file(file);
-
-  // Process.
-
+  // Input.
+  auto aut = read_automaton_file(opts.file);
   // Output.
-  print(aut, std::cout) << std::endl;
+  print(aut, std::cout, opts.output_format) << std::endl;
 }
 
 void
-work_exp(const std::string& ctx_name, const std::string& labelset,
-         const std::string& file)
+work_exp(const options opts)
 {
   // Input.
   using namespace vcsn::dyn;
-  vcsn::dyn::context* ctx = make_context(ctx_name, labelset);
-  vcsn::dyn::ratexp exp = read_ratexp_file(file, *ctx);
-
-  // Process.
+  auto ctx = make_context(opts.context, opts.labelset_describ);
+  auto exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
 
   // Output.
-  print(exp, std::cout, FileType::text) << std::endl;
+  print(exp, std::cout, opts.output_format) << std::endl;
 }
 
-int main(int argc, char *const argv[])
+int main(int argc, char* const argv[])
 try
   {
-    assert(2 < argc);
-    std::string opt = argv[1];
-    argc -= 2;
-    argv += 2;
-    if (opt == "-a")
-      {
-        assert(1 == argc);
-        work_aut(argv[0]);
-      }
-    else if (opt == "-e")
-      {
-        assert(3 == argc);
-        work_exp(argv[0], argv[1], argv[2]);
-      }
+    auto opts = parse_args(&argc, &argv);
+    if (opts.is_automaton)
+      work_aut(opts);
     else
-      {
-        std::cerr << argv[0] << ": invalid option: " << opt << std::endl;
-        exit(EXIT_FAILURE);
-      }
+      work_exp(opts);
   }
  catch (const std::exception& e)
    {
