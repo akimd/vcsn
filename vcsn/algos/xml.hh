@@ -91,7 +91,7 @@ namespace vcsn
   template <class Context>
   inline
   void
-  xml(std::ostream& out, const Context& ctx, const rat::exp_t exp)
+  xml(const Context& ctx, const vcsn::rat::exp_t exp, std::ostream& out)
   {
     XML<Context> x(ctx, exp);
     x.print(out);
@@ -103,7 +103,7 @@ namespace vcsn
   xml(const Context& ctx, const rat::exp_t exp)
   {
     std::ostringstream o;
-    xml(o, ctx, exp);
+    xml(ctx, exp, o);
     return o.str();
   }
 

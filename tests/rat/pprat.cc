@@ -86,9 +86,10 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
     {
       auto aut = vcsn::dyn::standard_of(exp);
       if (opts.standard_of)
-        vcsn::dyn::print(aut, std::cout);
+        vcsn::dyn::print(aut, std::cout, vcsn::dyn::FileType::dotty);
       if (opts.lift)
-        vcsn::dyn::print(vcsn::dyn::lift(aut), std::cout);
+        vcsn::dyn::print(vcsn::dyn::lift(aut), std::cout,
+                         vcsn::dyn::FileType::dotty);
       if (opts.aut_to_exp)
         {
           vcsn::dyn::ratexp e;
@@ -101,11 +102,12 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
               e = vcsn::dyn::aut_to_exp(aut);
               break;
             }
-          vcsn::dyn::print(e, std::cout) << std::endl;
+          vcsn::dyn::print(e, std::cout, vcsn::dyn::FileType::dotty)
+            << std::endl;
         }
     }
   else
-    vcsn::dyn::print(exp, std::cout) << std::endl;
+    vcsn::dyn::print(exp, std::cout, vcsn::dyn::FileType::dotty) << std::endl;
 }
 
 void
