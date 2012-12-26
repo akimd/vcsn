@@ -17,10 +17,7 @@ string_to_file_type(const std::string str)
   else if (str == "xml")
     return FileType::xml;
   else
-    {
-      throw std::domain_error(str + " is an invalid file type.");
-      return FileType::xml;
-    }
+    throw std::domain_error(str + " is an invalid file type.");
 }
 
 void
