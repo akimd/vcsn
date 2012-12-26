@@ -28,7 +28,7 @@ namespace vcsn
     void
     xml(const dyn::ratexp e, std::ostream& out)
     {
-      details::xml_stream_registry().call(e->ctx().vname(), out, e);
+      details::xml_stream_registry().call(e->ctx().vname(), e, out);
     }
 
     /*-------------.
