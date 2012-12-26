@@ -1,4 +1,5 @@
 #include <vcsn/algos/xml.hh>
+#include <vcsn/ctx/ctx.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
