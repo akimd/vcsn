@@ -117,23 +117,23 @@ namespace vcsn
     {
       template <typename Ctx>
       std::string
-      xml(const dyn::ratexp& exp)
+      xml(const dyn::ratexp exp)
       {
         return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
       }
 
       template <typename Ctx>
       void
-      xml(std::ostream& out, const dyn::ratexp& exp)
+      xml(std::ostream& out, const dyn::ratexp exp)
       {
         return xml(out, dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
       }
 
       using xml_string_t =
-        auto (const dyn::ratexp& e) -> std::string;
+        auto (const dyn::ratexp e) -> std::string;
 
       using xml_stream_t =
-        auto (std::ostream&out, const dyn::ratexp& e) -> void;
+        auto (std::ostream& out, const dyn::ratexp e) -> void;
 
       bool xml_register(const std::string& ctx, const xml_stream_t& fn);
       bool xml_register(const std::string& ctx, const xml_string_t& fn);
