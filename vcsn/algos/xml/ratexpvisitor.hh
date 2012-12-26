@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_XML_KRATEXPVISITOR_HH
 # define VCSN_ALGOS_XML_KRATEXPVISITOR_HH
 
+# include <memory>
+
 # include <xercesc/dom/DOM.hpp>
 # include <xercesc/util/XMLString.hpp>
 # include <xercesc/util/PlatformUtils.hpp>
