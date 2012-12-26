@@ -12,11 +12,10 @@ struct options
   std::string labelset_describ = "abcd";
   vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dotty;
   vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dotty;
-  int nb_args_read = 0;
 };
 
 vcsn::dyn::FileType string_to_file_type(const std::string str);
-options parse_args(const int argc, char* const argv[]);
+options parse_args(int* argc, char** argv[]);
 void usage(const char* prog, int exit_status);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_

@@ -9,9 +9,7 @@ int main(int argc, char * argv[])
 {
   using namespace vcsn::dyn;
 
-  auto opts = parse_args(argc, argv);
-  argc -= opts.nb_args_read;
-  argv += opts.nb_args_read;
+  auto opts = parse_args(&argc, &argv);
 
   assert (argc == 2);
   std::string ratexp_str = argv[1];
