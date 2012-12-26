@@ -38,9 +38,9 @@ namespace vcsn
 
 # define VCSN_CTX_INSTANTIATE_XML(Ctx)                                  \
   MAYBE_EXTERN template                                                 \
-  void xml<Ctx>(std::ostream& out,                                      \
-                const Ctx& ctx,                                         \
-                const rat::exp_t exp);                                  \
+  void xml<Ctx>(const Ctx& ctx,                                         \
+                const rat::exp_t exp,                                   \
+                std::ostream& out);                                     \
                                                                         \
   MAYBE_EXTERN template                                                 \
   std::string xml<Ctx>(const Ctx& cxt,                                  \
@@ -51,7 +51,7 @@ namespace vcsn
     namespace details                                                   \
     {                                                                   \
       MAYBE_EXTERN template                                             \
-        void xml<Ctx>(std::ostream& out, const dyn::ratexp exp);        \
+        void xml<Ctx>(const dyn::ratexp exp, std::ostream& out);        \
                                                                         \
       MAYBE_EXTERN template                                             \
         std::string xml<Ctx>(const dyn::ratexp exp);                    \
