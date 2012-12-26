@@ -66,7 +66,7 @@ parse_args(int* argc, char* const * argv[])
     ADD(zr,  "char_ratexpset<char_z_law>_law");
     ADD(zrr, "char_ratexpset<char_ratexpset<char_z_law>_law>_law");
 #undef ADD
-  while ((opt = getopt(argc, argv, "g:hi:o:L:W:?")) != -1)
+  while ((opt = getopt(*argc, *argv, "g:hi:o:L:W:?")) != -1)
     switch (opt)
       {
       case 'a':
@@ -80,7 +80,7 @@ parse_args(int* argc, char* const * argv[])
         opts.labelset_describ = optarg;
         break;
       case 'h':
-        usage(argv[0], EXIT_SUCCESS);
+        usage(argv[0][0], EXIT_SUCCESS);
         break;
       case 'i':
         opts.input_format = string_to_file_type(optarg);
@@ -116,9 +116,10 @@ parse_args(int* argc, char* const * argv[])
         }
       case '?':
       fail:
-        usage(argv[0], EXIT_FAILURE);
+        usage(argv[0][0], EXIT_FAILURE);
         break;
       }
-  opts.nb_args_read = optind;
+  *argc -= optind;
+  *argv += optind;
   return opts;
 }
