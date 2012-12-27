@@ -15,6 +15,8 @@ namespace vcsn
   namespace rat
   {
 
+    /// The abstract, non-parameterized, root for all rational
+    /// expression node types.
     class exp
     {
     public:
@@ -47,6 +49,10 @@ namespace vcsn
     | node.  |
     `-------*/
 
+    /// The abstract parameterized, root for all rational expression
+    /// types.
+    ///
+    /// All the nodes have a left weight, implemented here.
     template <typename Label, typename Weight>
     class node : public exp
     {
@@ -87,6 +93,9 @@ namespace vcsn
     | inner.  |
     `--------*/
 
+    /// An inner node.
+    ///
+    /// Adds a right weight.
     template <typename Label, typename Weight>
     class inner : public node<Label, Weight>
     {
@@ -123,6 +132,9 @@ namespace vcsn
     | nary.  |
     `-------*/
 
+    /// An inner node with multiple children.
+    ///
+    /// Implements the Composite Design Pattern.
     template <typename Label, typename Weight>
     class nary: public inner<Label, Weight>
     {
@@ -299,6 +311,7 @@ namespace vcsn
     | leaf.  |
     `-------*/
 
+    /// The root from which derive the final node types.
     template <typename Label, typename Weight>
     class leaf : public node<Label, Weight>
     {

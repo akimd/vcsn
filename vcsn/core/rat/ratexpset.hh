@@ -11,6 +11,7 @@
 namespace vcsn
 {
 
+  /// An abstract factory for ratexp.
   template <typename Context>
   class ratexpset
   {

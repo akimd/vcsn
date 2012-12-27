@@ -43,6 +43,7 @@ namespace vcsn
   | edit_automaton<Aut>.  |
   `----------------------*/
 
+  /// Abstract Builder (the design pattern) for automata.
   class automaton_editor
   {
   public:
@@ -58,6 +59,12 @@ namespace vcsn
     virtual void reset() = 0;
   };
 
+
+  /// Concrete Builder (the design pattern) for automata.
+  ///
+  /// Returns (via result()) an allocated automaton.
+  ///
+  /// FIXME: cannot be reused for several automata.
   template <typename Aut>
   class edit_automaton: public automaton_editor
   {
