@@ -11,8 +11,8 @@ crange should not feature size and empty if !VCSN_DEBUG.
   need it.
 
 * mutable_automaton::set_transition
-We should find a mean to forbid transition from pre to post.  This was
-the case initially, but it is a useless constraint in aut-to-exp.
+We should find a means to forbid transition from pre to post.  This
+was the case initially, but it is a useless constraint in aut-to-exp.
 Maybe it should be efforced only in non labels_are_unit case.
 
 * automata: handle with shared_ptr
