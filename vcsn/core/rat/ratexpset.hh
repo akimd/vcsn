@@ -50,31 +50,16 @@ namespace vcsn
     using value_t = typename node_t::value_t;
 
   public:
-    static std::string sname()
-    {
-      return "ratexpset<" + context_t::sname() + '>';
-    }
+    /// Static description key.
+    static std::string sname();
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    ratexpset(const context_t& ctx)
-      : ctx_(ctx)
-    {}
+    ratexpset(const context_t& ctx);
 
-    const context_t& context() const
-    {
-      return ctx_;
-    }
-
-    const labelset_ptr& labelset() const
-    {
-      return ctx_.labelset();
-    }
-
-    const weightset_ptr& weightset() const
-    {
-      return ctx_.weightset();
-    }
+    const context_t& context() const;
+    const labelset_ptr& labelset() const;
+    const weightset_ptr& weightset() const;
 
     auto atom(const label_t& v) const
       -> value_t;
@@ -95,12 +80,7 @@ namespace vcsn
 
     value_t conv(const std::string& s) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
-    std::string format(const value_t v) const
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
-    }
+    std::string format(const value_t v) const;
 
   public:
     // Concrete type implementation.

@@ -11,9 +11,17 @@
 namespace vcsn
 {
 
-  /*------------------------------------------------------------.
-  | Implementation of abstract_ratexpset pure virtual methods.  |
-  `------------------------------------------------------------*/
+  template <typename Context>
+  ratexpset<Context>::ratexpset(const context_t& ctx)
+    : ctx_(ctx)
+  {}
+
+  template <typename Context>
+  std::string
+  ratexpset<Context>::sname()
+  {
+    return "ratexpset<" + context_t::sname() + '>';
+  }
 
 #define DEFINE                                  \
   template <typename Context>                   \
@@ -21,6 +29,32 @@ namespace vcsn
   auto                                          \
   ratexpset<Context>
 
+  DEFINE::context() const -> const context_t&
+  {
+    return ctx_;
+  }
+
+  DEFINE::labelset() const -> const labelset_ptr&
+  {
+    return ctx_.labelset();
+  }
+
+  DEFINE::weightset() const -> const weightset_ptr&
+  {
+    return ctx_.weightset();
+  }
+
+  DEFINE::format(const value_t v) const -> std::string
+  {
+    std::ostringstream s;
+    print(s, v);
+    return s.str();
+  }
+
+
+  /*------------------------------------------------------------.
+  | Implementation of abstract_ratexpset pure virtual methods.  |
+  `------------------------------------------------------------*/
 
   DEFINE::atom(const label_t& v) const
     -> value_t
