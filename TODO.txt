@@ -1,3 +1,12 @@
+* "check" algorithm
+There should be a means to check that the invariants are verifired.  A
+separate algorithm would do.  In particular check the alphabet, that
+the special letter labels the initial and final transitions etc.
+
+* edit-automaton
+Currently it converts the \e in initial/final labels to the
+special-letter.  Is this what we want?
+
 * check labels in mutable_automaton
 Currently, we can add_transition(p, q, 'z') even if z is not part of
 the alphabet.

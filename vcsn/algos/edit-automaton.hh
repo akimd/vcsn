@@ -20,7 +20,18 @@ namespace vcsn
             const std::string& entry)
   {
     assert (src != a.pre() || dst != a.post());
-    a.add_entry(src, dst, a.entryset().conv(entry));
+    auto w = a.entryset().conv(entry);
+    // Initial and final weights are _not_ labeled by the empty word.
+    // Yet, the dot parser does not know that.
+    // FIXME: decide whose responsibility this is.
+    if (src == a.pre() || dst == a.post())
+      {
+        assert(w.size() == 1);
+        assert(begin(w)->first == a.labelset()->identity());
+        a.add_transition(src, dst, a.prepost_label(), begin(w)->second);
+      }
+    else
+      a.add_entry(src, dst, w);
   }
 
   /// Add transitions from src to dst, possibly being pre() xor post().

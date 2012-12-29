@@ -1,0 +1,16 @@
+#! /bin/sh
+
+# check CONTEXT RATEXP
+# --------------------
+# Check that vcsn-cat is idempotent on the standard-of RATEXP.
+check ()
+{
+  echo "$2" > input.rat
+  run 0 stdout -vcsn-standard-of "$1" abcd input.rat
+  mv stdout out.exp
+  run 0 out.exp -vcsn-cat -a out.exp
+}
+
+check char_b_lal "abcd"
+check char_z_lal "{3}\\e"
+check char_z_lal "{3}(\\e+a)"

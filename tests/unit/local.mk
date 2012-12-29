@@ -69,7 +69,8 @@ unit_TESTS =                                    \
   unit/poly.chk                                 \
   unit/product.chk                              \
   unit/standard_of.chk                          \
-  unit/transpose.chk
+  unit/transpose.chk				\
+  unit/vcsn-cat.chk
 dist_TESTS += $(unit_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
@@ -81,7 +82,6 @@ unit/aut_char_z_law.log: unit/aut_char_z_law
 unit/aut_to_exp.log: rat/pprat
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
-unit/eval.log: unit/eval.chk
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
