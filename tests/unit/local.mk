@@ -21,7 +21,6 @@ EXTRA_PROGRAMS +=                               \
   unit/ladybird-b                               \
   unit/ladybird-z                               \
   unit/ladybird-zmin                            \
-  unit/parse-dot                                \
   unit/poly                                     \
   unit/product                                  \
   unit/transpose
@@ -48,8 +47,6 @@ unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
 unit_ladybird_zmin_LDADD = $(libchar_zmin_lal) $(AM_LDADD)
 
-unit_parse_dot_LDADD = $(all_libctx) $(AM_LDADD)
-
 unit_poly_LDADD = $(libchar_z_lal) $(libchar_zmin_lal) $(AM_LDADD)
 
 unit_product_LDADD = $(libchar_z_lal) $(AM_LDADD)
@@ -65,7 +62,6 @@ unit_TESTS =                                    \
   unit/eval.chk                                 \
   unit/ladybird.chk                             \
   unit/lift.chk                                 \
-  unit/parse-dot.chk                            \
   unit/poly.chk                                 \
   unit/product.chk                              \
   unit/standard_of.chk                          \
@@ -83,7 +79,6 @@ unit/aut_to_exp.log: rat/pprat
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
-unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
 unit/product.log: unit/product
 unit/standard_of.log: rat/pprat

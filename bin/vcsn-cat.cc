@@ -35,24 +35,30 @@ work_exp(const std::string& ctx_name, const std::string& labelset,
 }
 
 int main(int argc, char *const argv[])
-{
-  assert(2 < argc);
-  std::string opt = argv[1];
-  argc -= 2;
-  argv += 2;
-  if (opt == "-a")
-    {
-      assert(1 == argc);
-      work_aut(argv[0]);
-    }
-  else if (opt == "-e")
-    {
-      assert(3 == argc);
-      work_exp(argv[0], argv[1], argv[2]);
-    }
-  else
-    {
-      std::cerr << argv[0] << ": invalid option: " << opt << std::endl;
-      exit(EXIT_FAILURE);
-    }
-}
+try
+  {
+    assert(2 < argc);
+    std::string opt = argv[1];
+    argc -= 2;
+    argv += 2;
+    if (opt == "-a")
+      {
+        assert(1 == argc);
+        work_aut(argv[0]);
+      }
+    else if (opt == "-e")
+      {
+        assert(3 == argc);
+        work_exp(argv[0], argv[1], argv[2]);
+      }
+    else
+      {
+        std::cerr << argv[0] << ": invalid option: " << opt << std::endl;
+        exit(EXIT_FAILURE);
+      }
+  }
+ catch (const std::exception& e)
+   {
+     std::cerr << e.what() << std::endl;
+     exit(EXIT_FAILURE);
+   }
