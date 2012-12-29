@@ -83,7 +83,6 @@ unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
 unit/eval.log: unit/eval.chk
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
-unit/lift.log: $(top_builddir)/bin/vcsn-lift
 unit/parse-dot.log: unit/parse-dot
 unit/poly.log: unit/poly
 unit/product.log: unit/product

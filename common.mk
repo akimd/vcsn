@@ -11,6 +11,11 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
+
+## ----------- ##
+## Libraries.  ##
+## ----------- ##
+
 libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
 libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
 libchar_br_lau = $(top_builddir)/lib/libchar_br_lau.la
@@ -35,3 +40,24 @@ all_libctx =                                            \
   $(libchar_zmin_lal) $(libchar_zmin_law)
 
 libvcsn = $(top_builddir)/lib/libvcsn.la
+
+## ---------- ##
+## Programs.  ##
+## ---------- ##
+
+vcsn_cat = $(top_builddir)/bin/vcsn-cat
+vcsn_de_bruijn = $(top_builddir)/bin/vcsn-de-bruijn
+vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
+vcsn_evaluate = $(top_builddir)/bin/vcsn-evaluate
+vcsn_lift = $(top_builddir)/bin/vcsn-lift
+vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
+vcsn_transpose = $(top_builddir)/bin/vcsn-transpose
+
+all_vcsn =                                      \
+  $(vcsn_cat)                                   \
+  $(vcsn_de_bruijn)                             \
+  $(vcsn_determinize)                           \
+  $(vcsn_evaluate)                              \
+  $(vcsn_lift)                                  \
+  $(vcsn_standard_of)                           \
+  $(vcsn_transpose)

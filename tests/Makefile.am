@@ -26,7 +26,7 @@ AM_CPPFLAGS += -I$(top_srcdir)
 dist_noinst_SCRIPTS += checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_COMPILER = $(srcdir)/checker
-$(unit_TESTS:.chk=.log): $(CHK_LOG_COMPILER)
+$(unit_TESTS:.chk=.log): $(CHK_LOG_COMPILER) $(all_vcsn)
 
 TESTS = $(dist_TESTS)
 # Lazy test suite.
