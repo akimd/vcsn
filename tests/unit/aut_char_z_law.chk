@@ -12,11 +12,12 @@ digraph
     I1
     F2
   }
+  { 1 2 3 }
   I1 -> 1
-  2 -> F2 [label = "{10}"]
   1 -> 2 [label = "{42}ca"]
-  2 -> 3 [label = "a"]
+  2 -> F2 [label = "{10}"]
   2 -> 1 [label = "ba"]
+  2 -> 3 [label = "a"]
   3 -> 2 [label = "{2}\\e"]
 }
 EOF

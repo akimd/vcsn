@@ -56,6 +56,7 @@ check -W b -e '\z' <<\EOF
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
   }
+  { 1 }
   I1 -> 1
 EOF
 
@@ -66,8 +67,9 @@ check -W b -e '\e' <<\EOF
     I1
     F1
   }
-  1 -> F1
+  { 1 }
   I1 -> 1
+  1 -> F1
 EOF
 
 # B: "a"
@@ -77,9 +79,10 @@ check -W b -e 'a' <<\EOF
     I1
     F2
   }
+  { 1 2 }
+  I1 -> 1
   1 -> 2 [label = "a"]
   2 -> F2
-  I1 -> 1
 EOF
 
 ## -------- ##
@@ -94,11 +97,12 @@ check -W b -e 'a+b' <<\EOF
     F2
     F3
   }
-  1 -> 2 [label = "a"]
-  2 -> F2
+  { 1 2 3 }
   I1 -> 1
-  3 -> F3
+  1 -> 2 [label = "a"]
   1 -> 3 [label = "b"]
+  2 -> F2
+  3 -> F3
 EOF
 
 # B: "abc".
@@ -108,11 +112,12 @@ check -W b -e 'abc' <<\EOF
     I1
     F4
   }
-  1 -> 2 [label = "a"]
-  4 -> F4
+  { 1 2 3 4 }
   I1 -> 1
+  1 -> 2 [label = "a"]
   2 -> 3 [label = "b"]
   3 -> 4 [label = "c"]
+  4 -> F4
 EOF
 
 # B: "ab+cd".
@@ -123,13 +128,14 @@ check -W b -e 'ab+cd' <<\EOF
     F3
     F5
   }
-  1 -> 2 [label = "a"]
+  { 1 2 3 4 5 }
   I1 -> 1
-  3 -> F3
-  2 -> 3 [label = "b"]
+  1 -> 2 [label = "a"]
   1 -> 4 [label = "c"]
-  5 -> F5
+  2 -> 3 [label = "b"]
+  3 -> F3
   4 -> 5 [label = "d"]
+  5 -> F5
 EOF
 
 # B: "a(b+c)d".
@@ -139,13 +145,14 @@ check -W b -e 'a(b+c)d' <<\EOF
     I1
     F4
   }
-  1 -> 2 [label = "a"]
-  5 -> 4 [label = "d"]
-  4 -> F4
-  2 -> 3 [label = "b"]
-  3 -> 4 [label = "d"]
+  { 1 2 3 4 5 }
   I1 -> 1
+  1 -> 2 [label = "a"]
+  2 -> 3 [label = "b"]
   2 -> 5 [label = "c"]
+  3 -> 4 [label = "d"]
+  4 -> F4
+  5 -> 4 [label = "d"]
 EOF
 
 # B: "(ab+cd+abcd)abc".
@@ -155,21 +162,22 @@ check -W b -e '(ab+cd+abcd)abc' <<\EOF
     I1
     F12
   }
-  1 -> 2 [label = "a"]
-  12 -> F12
+  { 1 2 3 4 5 6 7 8 9 10 11 12 }
   I1 -> 1
-  6 -> 7 [label = "a"]
-  2 -> 3 [label = "b"]
+  1 -> 2 [label = "a"]
   1 -> 4 [label = "c"]
-  10 -> 7 [label = "a"]
-  4 -> 6 [label = "d"]
   1 -> 5 [label = "a"]
+  2 -> 3 [label = "b"]
+  3 -> 7 [label = "a"]
+  4 -> 6 [label = "d"]
   5 -> 8 [label = "b"]
+  6 -> 7 [label = "a"]
+  7 -> 11 [label = "b"]
   8 -> 9 [label = "c"]
   9 -> 10 [label = "d"]
-  3 -> 7 [label = "a"]
-  7 -> 11 [label = "b"]
+  10 -> 7 [label = "a"]
   11 -> 12 [label = "c"]
+  12 -> F12
 EOF
 
 
@@ -183,8 +191,9 @@ check -e '\z*' <<\EOF
     I1
     F1
   }
-  1 -> F1
+  { 1 }
   I1 -> 1
+  1 -> F1
 EOF
 
 check -e '\e*' <<\EOF
@@ -193,8 +202,9 @@ check -e '\e*' <<\EOF
     I1
     F1
   }
-  1 -> F1
+  { 1 }
   I1 -> 1
+  1 -> F1
 EOF
 
 check -e 'a*' <<\EOF
@@ -204,11 +214,12 @@ check -e 'a*' <<\EOF
     F2
     F1
   }
+  { 1 2 }
+  I1 -> 1
+  1 -> F1
   1 -> 2 [label = "a"]
   2 -> F2
   2 -> 2 [label = "a"]
-  1 -> F1
-  I1 -> 1
 EOF
 
 check -e '(a+b)*' <<\EOF
@@ -219,16 +230,17 @@ check -e '(a+b)*' <<\EOF
     F3
     F1
   }
+  { 1 2 3 }
+  I1 -> 1
+  1 -> F1
   1 -> 2 [label = "a"]
+  1 -> 3 [label = "b"]
   2 -> F2
   2 -> 2 [label = "a"]
-  3 -> F3
-  1 -> 3 [label = "b"]
-  3 -> 2 [label = "a"]
   2 -> 3 [label = "b"]
+  3 -> F3
+  3 -> 2 [label = "a"]
   3 -> 3 [label = "b"]
-  1 -> F1
-  I1 -> 1
 EOF
 
 check -e '(ab)*' <<\EOF
@@ -238,12 +250,13 @@ check -e '(ab)*' <<\EOF
     F3
     F1
   }
-  1 -> 2 [label = "a"]
-  1 -> F1
-  3 -> 2 [label = "a"]
-  3 -> F3
-  2 -> 3 [label = "b"]
+  { 1 2 3 }
   I1 -> 1
+  1 -> F1
+  1 -> 2 [label = "a"]
+  2 -> 3 [label = "b"]
+  3 -> F3
+  3 -> 2 [label = "a"]
 EOF
 
 check -e 'a**' <<\EOF
@@ -253,11 +266,12 @@ check -e 'a**' <<\EOF
     F2
     F1
   }
+  { 1 2 }
+  I1 -> 1
+  1 -> F1
   1 -> 2 [label = "a"]
   2 -> F2
   2 -> 2 [label = "a"]
-  1 -> F1
-  I1 -> 1
 EOF
 
 
@@ -273,8 +287,9 @@ check -W z -e '{12}\e' <<\EOF
     I1
     F1
   }
-  1 -> F1 [label = "{12}"]
+  { 1 }
   I1 -> 1
+  1 -> F1 [label = "{12}"]
 EOF
 
 ## -------- ##
@@ -289,10 +304,11 @@ check -W z -e '\e+a+\e' <<\EOF
     F1
     F2
   }
-  1 -> F1 [label = "{2}"]
+  { 1 2 }
   I1 -> 1
-  2 -> F2
+  1 -> F1 [label = "{2}"]
   1 -> 2 [label = "a"]
+  2 -> F2
 EOF
 
 # Z: "{12}\e+{23}a+{34}b".
@@ -304,12 +320,13 @@ check -W z -e '{12}\e+{23}a+{34}b' <<\EOF
     F2
     F3
   }
-  1 -> F1 [label = "{12}"]
+  { 1 2 3 }
   I1 -> 1
-  2 -> F2
+  1 -> F1 [label = "{12}"]
   1 -> 2 [label = "{23}a"]
-  3 -> F3
   1 -> 3 [label = "{34}b"]
+  2 -> F2
+  3 -> F3
 EOF
 
 # left weight.
@@ -321,12 +338,13 @@ check -W z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
     F2
     F3
   }
-  1 -> F1 [label = "{132}"]
+  { 1 2 3 }
   I1 -> 1
-  2 -> F2
+  1 -> F1 [label = "{132}"]
   1 -> 2 [label = "{12}a"]
-  3 -> F3
   1 -> 3 [label = "{120}b"]
+  2 -> F2
+  3 -> F3
 EOF
 
 # right weight.
@@ -338,12 +356,13 @@ check -W z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
     F2
     F3
   }
-  1 -> F1 [label = "{40}"]
+  { 1 2 3 }
   I1 -> 1
-  2 -> F2 [label = "{10}"]
+  1 -> F1 [label = "{40}"]
   1 -> 2 [label = "a"]
-  3 -> F3 [label = "{10}"]
   1 -> 3 [label = "{2}b"]
+  2 -> F2 [label = "{10}"]
+  3 -> F3 [label = "{10}"]
 EOF
 
 ## ------------ ##
@@ -357,10 +376,11 @@ check -W z -e '{12}(ab){23}' <<\EOF
     I1
     F3
   }
-  1 -> 2 [label = "{12}a"]
+  { 1 2 3 }
   I1 -> 1
-  3 -> F3 [label = "{23}"]
+  1 -> 2 [label = "{12}a"]
   2 -> 3 [label = "b"]
+  3 -> F3 [label = "{23}"]
 EOF
 
 ## --------- ##
@@ -373,8 +393,9 @@ check -W z -e '\z*' <<\EOF
     I1
     F1
   }
-  1 -> F1
+  { 1 }
   I1 -> 1
+  1 -> F1
 EOF
 
 fail -W z -e '\e*'
@@ -386,11 +407,12 @@ check -W z -e '({2}a)*' <<\EOF
     F2
     F1
   }
+  { 1 2 }
+  I1 -> 1
+  1 -> F1
   1 -> 2 [label = "{2}a"]
   2 -> F2
   2 -> 2 [label = "{2}a"]
-  1 -> F1
-  I1 -> 1
 EOF
 
 check -W z -e '{2}a*{3}' <<\EOF
@@ -400,11 +422,12 @@ check -W z -e '{2}a*{3}' <<\EOF
     F2
     F1
   }
+  { 1 2 }
+  I1 -> 1
+  1 -> F1 [label = "{6}"]
   1 -> 2 [label = "{2}a"]
   2 -> F2 [label = "{3}"]
   2 -> 2 [label = "a"]
-  1 -> F1 [label = "{6}"]
-  I1 -> 1
 EOF
 
 check -W z -e '({2}a+{3}b)*' <<\EOF
@@ -415,16 +438,17 @@ check -W z -e '({2}a+{3}b)*' <<\EOF
     F3
     F1
   }
+  { 1 2 3 }
+  I1 -> 1
+  1 -> F1
   1 -> 2 [label = "{2}a"]
+  1 -> 3 [label = "{3}b"]
   2 -> F2
   2 -> 2 [label = "{2}a"]
-  3 -> F3
-  1 -> 3 [label = "{3}b"]
-  3 -> 2 [label = "{2}a"]
   2 -> 3 [label = "{3}b"]
+  3 -> F3
+  3 -> 2 [label = "{2}a"]
   3 -> 3 [label = "{3}b"]
-  1 -> F1
-  I1 -> 1
 EOF
 
 check -W z -e '{2}({3}a+{5}b)*{7}' <<EOF
@@ -435,16 +459,17 @@ check -W z -e '{2}({3}a+{5}b)*{7}' <<EOF
     F3
     F1
   }
+  { 1 2 3 }
+  I1 -> 1
+  1 -> F1 [label = "{14}"]
   1 -> 2 [label = "{6}a"]
+  1 -> 3 [label = "{10}b"]
   2 -> F2 [label = "{7}"]
   2 -> 2 [label = "{3}a"]
-  3 -> F3 [label = "{7}"]
-  1 -> 3 [label = "{10}b"]
-  3 -> 2 [label = "{3}a"]
   2 -> 3 [label = "{5}b"]
+  3 -> F3 [label = "{7}"]
+  3 -> 2 [label = "{3}a"]
   3 -> 3 [label = "{5}b"]
-  1 -> F1 [label = "{14}"]
-  I1 -> 1
 EOF
 
 check -W z -e '{2}({3}(ab){5})*{7}' <<EOF
@@ -454,12 +479,13 @@ check -W z -e '{2}({3}(ab){5})*{7}' <<EOF
     F3
     F1
   }
-  1 -> 2 [label = "{6}a"]
-  1 -> F1 [label = "{14}"]
-  3 -> 2 [label = "{15}a"]
-  3 -> F3 [label = "{35}"]
-  2 -> 3 [label = "b"]
+  { 1 2 3 }
   I1 -> 1
+  1 -> F1 [label = "{14}"]
+  1 -> 2 [label = "{6}a"]
+  2 -> 3 [label = "b"]
+  3 -> F3 [label = "{35}"]
+  3 -> 2 [label = "{15}a"]
 EOF
 
 fail -W z -e 'a**'
@@ -475,13 +501,14 @@ check -W zr '({d}\e+abc)*' <<EOF
     F1
     F4
   }
-  1 -> F1 [label = "{d*}"]
-  4 -> 2 [label = "{d*}a"]
-  4 -> F4 [label = "{d*}"]
-  1 -> 2 [label = "{d*}a"]
+  { 1 2 3 4 }
   I1 -> 1
+  1 -> F1 [label = "{d*}"]
+  1 -> 2 [label = "{d*}a"]
   2 -> 3 [label = "b"]
   3 -> 4 [label = "c"]
+  4 -> F4 [label = "{d*}"]
+  4 -> 2 [label = "{d*}a"]
 EOF
 
 check -W zr '({d}\e+ab{c})*' <<EOF
@@ -491,10 +518,11 @@ check -W zr '({d}\e+ab{c})*' <<EOF
     F1
     F3
   }
-  1 -> F1 [label = "{d*}"]
-  3 -> 2 [label = "{c.(d*)}a"]
+  { 1 2 3 }
   I1 -> 1
+  1 -> F1 [label = "{d*}"]
   1 -> 2 [label = "{d*}a"]
-  3 -> F3 [label = "{c.(d*)}"]
   2 -> 3 [label = "b"]
+  3 -> F3 [label = "{c.(d*)}"]
+  3 -> 2 [label = "{c.(d*)}a"]
 EOF
