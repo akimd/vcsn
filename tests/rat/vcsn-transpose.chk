@@ -4,7 +4,8 @@
 # --------------------------
 check ()
 {
-  run 0 $3 -vcsn-transpose $1 abcd $2
+  echo "$2" > input.rat
+  run 0 $3 -vcsn-transpose "$1" abcd input.rat
 }
 
 check char_b_lal "abcd" "d.c.b.a"

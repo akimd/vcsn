@@ -1,5 +1,9 @@
 #! /bin/sh
 
+## ------------- ##
+## Using pprat.  ##
+## ------------- ##
+
 # check PPRAT-ARGUMENTS
 # ---------------------
 check ()
@@ -45,6 +49,10 @@ check -L w -W br '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
   3 -> 4 [label = "{(abc).(bcd)}c"]    |    4 -> 3 [label = "{(dcb).(cba)}c"]
 EOF
 
+
+## ---------------------- ##
+## Using unit/transpose.  ##
+## ---------------------- ##
 
 run 0 - unit/transpose <<EOF
 digraph
