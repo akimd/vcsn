@@ -21,7 +21,7 @@ idempotence(const std::string& str, automaton_t& aut, bool display_aut)
     << "Check idempotence for " << str << std::endl
     << "States: " << aut.num_states() << " -> " << d1.num_states() << std::endl;
   if (display_aut)
-    vcsn::dotty(d1, std::cout);
+    std::cout << vcsn::dotty(d1) << '\n';
 
   ASSERT_EQ(vcsn::dotty(d1), vcsn::dotty(d2));
   return res;

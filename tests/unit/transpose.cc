@@ -51,10 +51,10 @@ check_mutable_automaton()
   aut1.add_transition(s0, s1, "cd", ks_b.conv("abcd"));
   aut1.add_transition(s1, s2, "cd");
   aut1.set_initial(s2, ks_b.conv("abcd"));
-  vcsn::dotty(aut1, std::cout);
+  std::cout << vcsn::dotty(aut1) << '\n';
 
   auto aut2 = vcsn::transpose(aut1);
-  vcsn::dotty(aut2, std::cout);
+  std::cout << vcsn::dotty(aut2) << '\n';
 
 # define ASSERT_WEIGHT(Aut, Src, Dst, Lbl, Wgt)                         \
   ASSERT_EQ(Aut.weightset()                                             \
@@ -75,7 +75,7 @@ check_mutable_automaton()
   aut2.del_state(s2);
   aut2.set_initial(s1);
 
-  vcsn::dotty(aut1, std::cout);
+  std::cout << vcsn::dotty(aut1) << '\n';
   return res;
 }
 
@@ -88,11 +88,11 @@ check_minimization()
   context_t ctx{{'a', 'b'}};
   auto ks = ctx.make_ratexpset();
   auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
-  auto& au1 = *aut.original_automaton(); //vcsn::dotty(au1, std::cout);
-  auto au2 = vcsn::transpose(au1);       //vcsn::dotty(au2, std::cout);
-  auto au3 = vcsn::determinize(au2);     //vcsn::dotty(au3, std::cout);
-  auto au4 = vcsn::transpose(au3);       //vcsn::dotty(au4, std::cout);
-  auto au5 = vcsn::determinize(au4);     vcsn::dotty(au5, std::cout);
+  auto& au1 = *aut.original_automaton(); //std::cout << vcsn::dotty(au1) << '\n';
+  auto au2 = vcsn::transpose(au1);       //std::cout << vcsn::dotty(au2) << '\n';
+  auto au3 = vcsn::determinize(au2);     //std::cout << vcsn::dotty(au2) << '\n';
+  auto au4 = vcsn::transpose(au3);       //std::cout << vcsn::dotty(au4) << '\n';
+  auto au5 = vcsn::determinize(au4);     std::cout << vcsn::dotty(au5) << '\n';
   return true;
 }
 

@@ -22,5 +22,5 @@ int main()
   aut.set_transition(s2, s1, "ba", 1);
   aut.set_transition(s3, s2, "", 2);
 
-  vcsn::dotty(aut, std::cout);
+  std::cout << vcsn::dotty(aut) << '\n';
 }

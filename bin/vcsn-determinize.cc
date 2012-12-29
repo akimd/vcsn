@@ -4,11 +4,16 @@
 int
 main (int argc, char* const argv[])
 {
+  assert(2 == argc);
+  std::string file = argv[1];
+
+  // Input.
   using namespace vcsn::dyn;
-  for (int i = 1; i < argc; ++i)
-    {
-      automaton a = read_automaton_file(argv[i]);
-      automaton d = determinize(a);
-      print(d, std::cout);
-    }
+  vcsn::dyn::automaton aut = read_automaton_file(file);
+
+  // Process.
+  aut = determinize(aut);
+
+  // Output.
+  print(aut, std::cout) << std::endl;
 }

@@ -11,7 +11,7 @@ main (int argc, char* const argv[])
       std::cerr << d.errors << std::endl;
       if (aut)
         // FIXME: To remove when in dyn::
-        vcsn::dyn::dotty(aut, std::cout);
+        std::cout << vcsn::dyn::dotty(aut) << '\n';
       else
         return 1;
     }

@@ -31,5 +31,5 @@ main(int argc, char const** argv)
 
   vcsn::ctx::CTX(W) ctx{{'a', 'b', 'c'}};
   auto lb = vcsn::ladybird(n, ctx);
-  vcsn::dotty(lb, std::cout);
+  std::cout << vcsn::dotty(lb) << '\n';
 }

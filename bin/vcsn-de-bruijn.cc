@@ -13,5 +13,5 @@ main (int argc, char* const argv[])
   using namespace vcsn::dyn;
   context* ctx = make_context(cname, "ab");
   automaton a = de_bruijn(*ctx, n);
-  print(a, std::cout);
+  print(a, std::cout) << "\n";
 }

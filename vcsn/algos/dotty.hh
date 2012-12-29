@@ -103,7 +103,7 @@ namespace vcsn
             out << "\n";
           }
       }
-    out << "}" << std::endl;
+    out << "}";
   }
 
   namespace dyn

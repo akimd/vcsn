@@ -4,9 +4,16 @@
 int
 main (int argc, char* const argv[])
 {
-  assert(argc == 2);
+  assert(2 == argc);
+  std::string file = argv[1];
+
+  // Input.
   using namespace vcsn::dyn;
-  automaton a = read_automaton_file(argv[1]);
-  automaton d = lift(a);
-  print(d, std::cout);
+  vcsn::dyn::automaton aut = read_automaton_file(file);
+
+  // Process.
+  auto res = lift(aut);
+
+  // Output.
+  print(res, std::cout) << std::endl;
 }

@@ -22,7 +22,7 @@ int main()
   int v = aut.add_weight(aut.set_transition(s1, s1, {}, 2), 40);
   assert(v == 42);
   aut.set_transition(s1, s3, {}, 1);
-  vcsn::dotty(aut, std::cout);
+  std::cout << vcsn::dotty(aut) << '\n';
   assert(aut.num_states() == 3);
   assert(aut.num_transitions() == 5);
 
@@ -42,13 +42,13 @@ int main()
 #undef CHECK
 
   aut.add_transition(s1, s1, {}, -42);
-  vcsn::dotty(aut, std::cout);
+  std::cout << vcsn::dotty(aut) << '\n';
   assert(aut.outin(s1, s1).empty());
   assert(aut.num_states() == 3);
   assert(aut.num_transitions() == 4);
 
   aut.del_state(s1);
-  vcsn::dotty(aut, std::cout);
+  std::cout << vcsn::dotty(aut) << '\n';
   assert(!aut.has_state(s1));
   assert(aut.has_state(s2));
   assert(aut.has_state(s3));
@@ -58,7 +58,7 @@ int main()
 
   aut.set_transition(s2, s3, {}, 0);
 
-  vcsn::dotty(aut, std::cout);
+  std::cout << vcsn::dotty(aut) << '\n';
   assert(aut.num_states() == 2);
   assert(aut.num_transitions() == 0);
 }

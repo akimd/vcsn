@@ -36,10 +36,10 @@ int main()
   aut2.set_transition(t1, t2, 'a');
   aut2.set_transition(t2, t1, 'b', 3);
 
-  vcsn::dotty(aut1, std::cout);
-  vcsn::dotty(aut2, std::cout);
+  std::cout << vcsn::dotty(aut1) << '\n';
+  std::cout << vcsn::dotty(aut2) << '\n';
 
   automaton_t prod = product(aut1, aut2);
 
-  vcsn::dotty(prod, std::cout);
+  std::cout << vcsn::dotty(prod) << '\n';
 }
