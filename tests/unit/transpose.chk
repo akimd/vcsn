@@ -52,6 +52,21 @@ check 'char_ratexpset<char_b_law>_law' '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
 EOF
 
 
+# involution AUTOMATON
+# --------------------
+# Check that transposition is an involution on AUTOMATON.
+involution ()
+{
+  run 0 stdout -vcsn-transpose -a $1
+  mv stdout transpose.out
+  cp $1 out.exp
+  run 0 out.exp -vcsn-transpose -a transpose.out
+}
+
+vcsn-de-bruijn char_z_lal 2 > in.dot
+involution in.dot
+
+
 ## ---------------------- ##
 ## Using unit/transpose.  ##
 ## ---------------------- ##
