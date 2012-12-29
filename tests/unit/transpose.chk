@@ -1,22 +1,24 @@
 #! /bin/sh
 
-## ------------- ##
-## Using pprat.  ##
-## ------------- ##
+## ----------------------------------- ##
+## Using vcsn-transpose for automata.  ##
+## ----------------------------------- ##
 
-# check PPRAT-ARGUMENTS
-# ---------------------
+# check CONTEXT RATEXP < DIFF
+# ---------------------------
+# Compare the standard-of RATEXP to its transposed, expect DIFF.
 check ()
 {
-  run 0 stdout rat/pprat -s "$@"
+  echo "$2" >input.rat
+  run 0 stdout -vcsn-standard-of "$1" abcd input.rat
   mv stdout forward.out
-  run 0 stdout rat/pprat -T "$@"
+  run 0 stdout -vcsn-transpose -a forward.out
   mv stdout transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
 }
 
-check 'a' <<EOF
+check char_b_lal 'a' <<EOF
     I1                                 |      I2
     F2                                 |      F1
   I1 -> 1                              |    I2 -> 2
@@ -24,7 +26,7 @@ check 'a' <<EOF
   2 -> F2                              |    2 -> 1 [label = "a"]
 EOF
 
-check 'abc' <<EOF
+check char_b_lal 'abc' <<EOF
     I1                                 |      I4
     F4                                 |      F1
   I1 -> 1                              |    I4 -> 4
@@ -34,7 +36,7 @@ check 'abc' <<EOF
   4 -> F4                              |    4 -> 3 [label = "c"]
 EOF
 
-check -L w -W br '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
+check 'char_ratexpset<char_b_law>_law' '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
                                        >      I2
                                        >      I4
     F2                                 <
