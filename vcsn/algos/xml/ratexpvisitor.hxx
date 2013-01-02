@@ -3,6 +3,7 @@
 
 # include <xercesc/dom/DOM.hpp>
 # include <vcsn/algos/xml/tools.hh>
+# include <vcsn/algos/xml/weight-visitor.hh>
 
 namespace vcsn
 {
@@ -11,8 +12,8 @@ namespace vcsn
 
     template <typename Context>
     xml_ratexp_visitor<Context>::xml_ratexp_visitor(xercesc::DOMDocument& doc,
-                                                      xercesc::DOMElement& root,
-                                                      const context_t& ctx)
+                                                    xercesc::DOMElement& root,
+                                                    const context_t& ctx)
       : doc_(doc)
       , root_(root)
       , ctx_(ctx)
@@ -118,12 +119,7 @@ namespace vcsn
                                                const std::string& side)
     {
       if (shows_(w))
-        {
-          assert(side == "left" || side == "right");
-          auto weight = details::create_node(doc_, side + "Weight");
-          details::set_attribute(weight, "value", ws_->format(w));
-          root.appendChild(weight);
-        }
+        vcsn::details::print_weight(doc_, root, side + "Weight", ws_, w);
     }
 
     template <typename Context>
