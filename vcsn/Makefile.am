@@ -32,6 +32,8 @@ nobase_vcsn_HEADERS =                           \
   algos/xml/ratexpvisitor.hxx                   \
   algos/xml/structure.hh                        \
   algos/xml/tools.hh                            \
+  algos/xml/weight-visitor.hh                   \
+  algos/xml/weight-visitor.hxx                  \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/automaton.hh                             \
