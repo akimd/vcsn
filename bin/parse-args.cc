@@ -25,7 +25,7 @@ usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
     std::cout
-      << "usage: " << prog << "[OPTIONS...] exp\n"
+      << "usage: " << prog << " [OPTIONS...] exp\n"
       "\n"
       "Context:\n"
       "  -L letter|words        kind of the labels.\n"

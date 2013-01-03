@@ -23,7 +23,7 @@ namespace vcsn
         case FileType::text:
           throw
             std::domain_error("invalid output format for automaton."
-                              "Could not print automaton as `text' output.");
+                              " Could not print automaton as text output.");
           break;
         case FileType::xml:
           //xml(out, aut); // FIXME:
@@ -59,8 +59,7 @@ namespace vcsn
         {
         case FileType::dotty:
           std::domain_error("invalid output format for expression."
-                            "Could not print expression as `dotty' output.");
-          return out;
+                            " Could not print expression as dotty output.");
         case FileType::text:
           return details::print_exp_registry().call(exp->ctx().vname(),
                                                     exp, out);
