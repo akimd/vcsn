@@ -12,8 +12,15 @@ namespace vcsn
   namespace details
   {
     inline
+    char*
+    transcode(const XMLCh* s)
+    {
+      return xercesc::XMLString::transcode(s);
+    }
+
+    inline
     XMLCh*
-    transcode (const char* ccp)
+    transcode(const char* ccp)
     {
       return xercesc::XMLString::transcode(ccp);
     }
