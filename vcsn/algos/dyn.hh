@@ -57,6 +57,10 @@ namespace vcsn
 
     void xml(const dyn::ratexp e, std::ostream& out);
     std::string xml(const dyn::ratexp e);
+
+    ratexp xml_read_stream(const context& ctx, std::istream& in);
+    ratexp xml_read_file(const context& ctx, const std::string& path);
+    ratexp xml_read_string(const context& ctx, const std::string& exp);
   }
 }
 

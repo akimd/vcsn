@@ -2,9 +2,14 @@
 # define VCSN_ALGOS_XML_HH
 
 # include <sstream>
+# include <fstream>
 
 # include <xercesc/dom/DOMImplementationRegistry.hpp>
+# include <xercesc/sax2/XMLReaderFactory.hpp>
+# include <xercesc/framework/MemBufInputSource.hpp>
 
+# include <vcsn/algos/xml/expression-handlers.hh>
+# include <vcsn/algos/xml/error-handlers.hh>
 # include <vcsn/algos/xml/ios.hh>
 # include <vcsn/algos/xml/ratexpvisitor.hh>
 # include <vcsn/algos/xml/structure.hh>
@@ -137,6 +142,127 @@ namespace vcsn
 
       bool xml_register(const std::string& ctx, const xml_stream_t& fn);
       bool xml_register(const std::string& ctx, const xml_string_t& fn);
+
+    } // namespace details
+  } // namespace dyn
+
+  /*------------.
+  | reading xml |
+  `------------*/
+
+  template <typename Context>
+  vcsn::rat::exp_t
+  xml(const Context& ctx, std::istream& in)
+  {
+    assert(false);
+  }
+
+  namespace details
+  {
+
+    template <typename Context>
+    vcsn::rat::exp_t
+    xml_file(const Context& ctx, const char* path)
+    {
+      using namespace xercesc;
+      // Create the parser
+      auto parser = std::unique_ptr<SAX2XMLReader>(XMLReaderFactory::createXMLReader());
+
+      // Define and set content and error handler
+      details::ExpressionHandler<Context> handler;
+      details::XMLErrorHandler error;
+      parser->setContentHandler(&handler);
+      parser->setErrorHandler(&error);
+
+      // Parse
+      parser->parse(path);
+
+      // return the result
+      // FIXME: return handler.getExp();
+    }
+
+  } // namespace details
+
+  template <typename Context>
+  vcsn::rat::exp_t
+  xml_file(const Context& ctx, const std::string& path)
+  {
+    return details::xml_file(ctx, path.c_str());
+  }
+
+  template <typename Context>
+  vcsn::rat::exp_t
+  xml_string(const Context& ctx, const std::string& exp)
+  {
+    using namespace xercesc;
+    MemBufInputSource input((XMLByte*) exp.c_str(), // The buffer location in bytes.
+                            exp.size(),             // The buffer size.
+                            "xml_string",           // A fake id.
+                            false);                 // Xerces don't delete the buffer.
+    // Create the parser
+    auto parser
+      = std::unique_ptr<SAX2XMLReader>(XMLReaderFactory::createXMLReader());
+
+    // Define and set content and error handler
+    details::ExpressionHandler<Context> handler;
+    details::XMLErrorHandler error;
+    parser->setContentHandler(&handler);
+    parser->setErrorHandler(&error);
+
+    // Parse
+    parser->parse(input);
+
+    // return the result
+    // FIXME: return handler.getExp();
+  }
+
+  /*-------------.
+  | abstract xml |
+  `-------------*/
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Ctx>
+      vcsn::dyn::ratexp
+      xml(const dyn::context& ctx, std::istream& in)
+      {
+        return make_ratexp(ctx, xml(dynamic_cast<const Ctx&>(ctx), in));
+      }
+
+      template <typename Ctx>
+      vcsn::dyn::ratexp
+      xml_file(const dyn::context& ctx, const std::string& path)
+      {
+        return make_ratexp(ctx, xml_file(dynamic_cast<const Ctx&>(ctx), path));
+      }
+
+      template <typename Ctx>
+      vcsn::dyn::ratexp
+      xml_string(const dyn::context& ctx, const std::string& exp)
+      {
+        return make_ratexp(ctx, xml_string(dynamic_cast<const Ctx&>(ctx), exp));
+      }
+
+      using xml_read_stream_t =
+        auto (const dyn::context& ctx, std::istream& in)
+        -> vcsn::dyn::ratexp;
+
+      using xml_read_file_t =
+        auto (const dyn::context& ctx, const std::string& path)
+        -> vcsn::dyn::ratexp;
+
+      using xml_read_string_t =
+        auto (const dyn::context& ctx, const std::string& exp)
+        -> vcsn::dyn::ratexp;
+
+      bool xml_register(const std::string& cxt,
+                        const xml_read_stream_t& fn);
+      bool xml_file_register(const std::string& ctx,
+                             const xml_read_file_t& fn);
+      bool xml_string_register(const std::string& cxt,
+                               const xml_read_string_t& fn);
 
     } // namespace details
   } // namespace dyn

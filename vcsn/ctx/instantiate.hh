@@ -46,6 +46,18 @@ namespace vcsn
   std::string xml<Ctx>(const Ctx& cxt,                                  \
                        const rat::exp_t exp);                           \
                                                                         \
+  MAYBE_EXTERN template                                                 \
+  rat::exp_t xml<Ctx>(const Ctx& ctx,                                   \
+                      std::istream& in);                                \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  rat::exp_t xml_file<Ctx>(const Ctx& ctx,                              \
+                           const std::string& path);                    \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  rat::exp_t xml_string<Ctx>(const Ctx& ctx,                            \
+                            const std::string& exp);                    \
+                                                                        \
   namespace dyn                                                         \
   {                                                                     \
     namespace details                                                   \
@@ -55,6 +67,18 @@ namespace vcsn
                                                                         \
       MAYBE_EXTERN template                                             \
         std::string xml<Ctx>(const dyn::ratexp exp);                    \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+      dyn::ratexp xml<Ctx>(const dyn::context& ctx,                     \
+                           std::istream& in);                           \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+      dyn::ratexp xml_file<Ctx>(const dyn::context& ctx,                \
+                                const std::string& path);               \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+      dyn::ratexp xml_string<Ctx>(const dyn::context& ctx,              \
+                                  const std::string& exp);              \
     }                                                                   \
   }
 
@@ -188,10 +212,21 @@ namespace vcsn
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
 
         // xml.
-        xml_register(Ctx::sname(),
-                     static_cast<const xml_stream_t&>(xml<Ctx>));
-        xml_register(Ctx::sname(),
-                     static_cast<const xml_string_t&>(xml<Ctx>));
+        xml_register
+          (Ctx::sname(),
+           static_cast<const xml_stream_t&>(xml<Ctx>));
+        xml_register
+          (Ctx::sname(),
+           static_cast<const xml_string_t&>(xml<Ctx>));
+        xml_register
+          (Ctx::sname(),
+           static_cast<const xml_read_stream_t&>(xml<Ctx>));
+        xml_file_register
+          (Ctx::sname(),
+           static_cast<const xml_read_file_t&>(xml_file<Ctx>));
+        xml_string_register
+          (Ctx::sname(),
+           static_cast<const xml_read_string_t&>(xml_string<Ctx>));
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
