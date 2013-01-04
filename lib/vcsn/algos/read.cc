@@ -41,23 +41,53 @@ namespace vcsn
     `--------------*/
 
     ratexp
-    read_ratexp_file(const std::string& f, const dyn::context& ctx)
+    read_ratexp_file(const std::string& f,
+                     const dyn::context& ctx,
+                     FileType type)
     {
-      vcsn::rat::driver d(ctx);
-      auto exp = d.parse_file(f);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return make_ratexp(ctx, exp);
+      switch (type)
+        {
+        case FileType::dotty:
+          throw std::domain_error("Invalid input format for expression."
+                                  " Could not read expression as dotty input.");
+        case FileType::text:
+          {
+            vcsn::rat::driver d(ctx);
+            auto exp = d.parse_file(f);
+            if (!d.errors.empty())
+              throw std::runtime_error(d.errors);
+            return make_ratexp(ctx, exp);
+          }
+        case FileType::xml:
+          throw std::domain_error("Invalid input format for expression."
+                                  " Could not read expression as xml input.");
+          // FIXME: return xml_read_file(ctx, f);
+        }
     }
 
     ratexp
-    read_ratexp_string(const std::string& s, const dyn::context& ctx)
+    read_ratexp_string(const std::string& s,
+                       const dyn::context& ctx,
+                       FileType type)
     {
-      vcsn::rat::driver d(ctx);
-      auto exp = d.parse_string(s);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return make_ratexp(ctx, exp);
+      switch (type)
+        {
+        case FileType::dotty:
+          throw std::domain_error("Invalid input format for expression."
+                                  " Could not read expression as dotty input.");
+        case FileType::text:
+          {
+            vcsn::rat::driver d(ctx);
+            auto exp = d.parse_string(s);
+            if (!d.errors.empty())
+              throw std::runtime_error(d.errors);
+            return make_ratexp(ctx, exp);
+          }
+        case FileType::xml:
+          throw std::domain_error("Invalid input format for expression."
+                                  " Could not read expression as xml input.");
+          // FIXME: return xml_read_string(ctx, s);
+        }
     }
 
   }
