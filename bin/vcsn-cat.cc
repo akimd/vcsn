@@ -16,7 +16,8 @@ int main(int argc, char * argv[])
 
   // Input.
   vcsn::dyn::context* ctx = make_context(opts.context, opts.labelset_describ);
-  vcsn::dyn::ratexp exp = read_ratexp_string(ratexp_str, *ctx);
+  vcsn::dyn::ratexp exp = read_ratexp_string(ratexp_str, *ctx,
+                                             opts.input_format);
 
   // Output.
   print(exp, std::cout, opts.output_format) << std::endl;
