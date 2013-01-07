@@ -5,8 +5,8 @@
 #include <lib/vcsn/rat/driver.hh>
 #include "parse-args.hh"
 
-void
-work_aut(const options opts)
+static void
+work_aut(const options& opts)
 {
   using namespace vcsn::dyn;
   // Input.
@@ -15,11 +15,11 @@ work_aut(const options opts)
   print(aut, std::cout, opts.output_format) << std::endl;
 }
 
-void
-work_exp(const options opts)
+static void
+work_exp(const options& opts)
 {
-  // Input.
   using namespace vcsn::dyn;
+  // Input.
   auto ctx = make_context(opts.context, opts.labelset_describ);
   auto exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
 
@@ -30,7 +30,7 @@ work_exp(const options opts)
 int main(int argc, char* const argv[])
 try
   {
-    auto opts = parse_args(&argc, &argv);
+    auto opts = parse_args(argc, argv);
     if (opts.is_automaton)
       work_aut(opts);
     else

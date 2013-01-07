@@ -17,7 +17,7 @@ struct options
 };
 
 vcsn::dyn::FileType string_to_file_type(const std::string str);
-options parse_args(int* argc, char* const * argv[]);
+options parse_args(int& argc, char* const*& argv);
 void usage(const char* prog, int exit_status);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_

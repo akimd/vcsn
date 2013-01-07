@@ -6,7 +6,7 @@
 
 int main(int argc, char * const argv[])
 {
-  auto opts = parse_args(&argc, &argv);
+  auto opts = parse_args(argc, argv);
 
   // Input.
   using namespace vcsn::dyn;

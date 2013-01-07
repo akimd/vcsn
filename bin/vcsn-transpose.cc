@@ -36,7 +36,7 @@ work_exp(options opts)
 
  int main(int argc, char*const argv[])
  {
-   auto opts = parse_args(&argc, &argv);
+   auto opts = parse_args(argc, argv);
 
    if (opts.is_automaton)
      work_aut(opts);
