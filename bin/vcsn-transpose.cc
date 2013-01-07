@@ -34,12 +34,17 @@ work_exp(options opts)
   print(exp, std::cout, opts.output_format) << std::endl;
 }
 
- int main(int argc, char*const argv[])
- {
-   auto opts = parse_args(argc, argv);
-
-   if (opts.is_automaton)
-     work_aut(opts);
-   else
-     work_exp(opts);
- }
+int main(int argc, char* const argv[])
+try
+  {
+    auto opts = parse_args(argc, argv);
+    if (opts.is_automaton)
+      work_aut(opts);
+    else
+      work_exp(opts);
+  }
+ catch (const std::exception& e)
+   {
+     std::cerr << e.what() << std::endl;
+     exit(EXIT_FAILURE);
+   }
