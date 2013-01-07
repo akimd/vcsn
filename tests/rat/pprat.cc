@@ -64,8 +64,8 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
             const char* s, bool file)
 {
   vcsn::dyn::ratexp exp =
-    file ? vcsn::dyn::read_ratexp_file(s, ctx)
-    : vcsn::dyn::read_ratexp_string(s, ctx);
+    file ? vcsn::dyn::read_ratexp_file(s, ctx, vcsn::dyn::FileType::text)
+    : vcsn::dyn::read_ratexp_string(s, ctx, vcsn::dyn::FileType::text);
   for (size_t i = 0; i < opts.transpose; ++i)
     exp = vcsn::dyn::transpose(exp);
 
