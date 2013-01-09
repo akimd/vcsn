@@ -30,13 +30,20 @@ usage(const char* prog, int exit_status)
       "Context:\n"
       "  -a                 FILE contains an automaton\n"
       "  -e                 FILE contains an expression\n"
+      "  -C CONTEXT         the context to use\n"
       "  -L letter|words    kind of the labels\n"
       "  -W WEIGHT-SET      define the kind of the weights\n"
       "  -g STRING          generator set definition\n"
+      "\n"
       "Format:\n"
       "  -i FORMAT          input format\n"
       "  -o FORMAT          output format\n"
-      "WEIGHT-SET:\n"
+      "\n"
+      "Context:\n"
+      "  char_(b|z|zmin)_la(l|u|w)\n"
+      "  etc.\n"
+      "\n"
+      "WeightSet:\n"
       "  b        for Boolean\n"
       "  br       for RatExp<b>\n"
       "  z        for Z\n"
@@ -67,18 +74,19 @@ parse_args(int& argc, char* const*& argv)
     ADD(zr,  "char_ratexpset<char_z_law>_law");
     ADD(zrr, "char_ratexpset<char_ratexpset<char_z_law>_law>_law");
 #undef ADD
-  while ((opt = getopt(argc, argv, "aeg:hi:o:L:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "aC:eg:hi:o:L:W:?")) != -1)
     switch (opt)
       {
       case 'a':
         opts.is_automaton = true;
         opts.input_format = vcsn::dyn::FileType::dotty;
-        opts.output_format = vcsn::dyn::FileType::dotty;
+        break;
+      case 'C':
+        opts.context = optarg;
         break;
       case 'e':
         opts.is_automaton = false;
         opts.input_format = vcsn::dyn::FileType::text;
-        opts.output_format = vcsn::dyn::FileType::text;
         break;
       case 'g':
         opts.labelset_describ = optarg;
@@ -110,7 +118,10 @@ parse_args(int& argc, char* const*& argv)
         {
           map::iterator i = ksets.find(optarg);
           if (i == end(ksets))
-            opts.context = optarg;
+            {
+              std::cerr << optarg << ": invalid weight set (-W)" << std::endl;
+              goto fail;
+            }
           else
             opts.context = i->second;
           break;

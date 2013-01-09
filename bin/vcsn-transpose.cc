@@ -11,12 +11,12 @@ void
 work_aut(options opts)
 {
   using namespace vcsn::dyn;
-  //  Input.
+  // Input.
   automaton aut = read_automaton_file(opts.file);
   // Process.
   auto res = transpose(aut);
   // Output.
-  print(res, std::cout, opts.output_format);
+  print(res, std::cout, opts.output_format) << std::endl;;
 }
 
 void

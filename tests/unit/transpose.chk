@@ -10,9 +10,10 @@
 check ()
 {
   echo "$2" >input.rat
-  run 0 stdout -vcsn-standard-of "$1" abcd input.rat
+  run 0 stdout -vcsn-standard-of -e -C "$1" -g abcd -o dotty input.rat
   mv stdout forward.out
-  run 0 stdout -vcsn-transpose -a forward.out
+  cat forward.out
+  run 0 stdout -vcsn-transpose -i dotty -o dotty -a forward.out
   mv stdout transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out

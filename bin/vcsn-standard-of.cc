@@ -5,22 +5,23 @@
 #include "parse-args.hh"
 
 int main(int argc, char * const argv[])
-{
-  auto opts = parse_args(argc, argv);
+try
+  {
+    auto opts = parse_args(argc, argv);
 
-  // Input.
-  using namespace vcsn::dyn;
-  if (!opts.is_automaton)
-    {
-      vcsn::dyn::context* ctx = make_context(opts.context,
-                                             opts.labelset_describ);
-      vcsn::dyn::ratexp exp =read_ratexp_string(opts.file, *ctx,
-                                                opts.input_format);
+    // Input.
+    using namespace vcsn::dyn;
+    context* ctx = make_context(opts.context, opts.labelset_describ);
+    ratexp exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
 
-      // Process.
-      vcsn::dyn::automaton aut = standard_of(exp);
+    // Process.
+    automaton aut = standard_of(exp);
 
-      // Output.
-      print(aut, std::cout, opts.output_format) << std::endl;
-    }
-}
+    // Output.
+    print(aut, std::cout, opts.output_format) << std::endl;
+  }
+ catch (const std::exception& e)
+   {
+     std::cerr << e.what() << std::endl;
+     exit(EXIT_FAILURE);
+   }

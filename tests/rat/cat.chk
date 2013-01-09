@@ -5,7 +5,7 @@
 check ()
 {
   echo "$2" > input.rat
-  run 0 $3 -vcsn-cat -e "$1" abcd input.rat
+  run 0 $3 -vcsn-cat -e -C "$1" -g abcd input.rat
 }
 
 check char_b_lal "abcd" "a.b.c.d"

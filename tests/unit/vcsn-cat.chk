@@ -6,7 +6,7 @@
 check ()
 {
   echo "$2" > input.rat
-  run 0 stdout -vcsn-standard-of "$1" abcd input.rat
+  run 0 stdout -vcsn-standard-of -e -C "$1" -g abcd input.rat
   mv stdout out.exp
   run 0 out.exp -vcsn-cat -a out.exp
 }
