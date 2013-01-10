@@ -3,7 +3,7 @@
 
 # include <vcsn/algos/aut_to_exp.hh>
 # include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/dotty.hh>
+# include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/lift.hh>
@@ -19,20 +19,20 @@ namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_DOTTY(Aut)                                \
   MAYBE_EXTERN template                                                 \
-  void dotty<Aut>(const Aut& aut, std::ostream& out);                   \
+  void dot<Aut>(const Aut& aut, std::ostream& out);                     \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  std::string dotty<Aut>(const Aut& aut);                               \
+  std::string dot<Aut>(const Aut& aut);                                 \
                                                                         \
   namespace dyn                                                         \
   {                                                                     \
     namespace details                                                   \
     {                                                                   \
       MAYBE_EXTERN template                                             \
-        void dotty<Aut>(const dyn::automaton& aut, std::ostream& out);  \
+        void dot<Aut>(const dyn::automaton& aut, std::ostream& out);    \
                                                                         \
       MAYBE_EXTERN template                                             \
-        std::string dotty<Aut>(const dyn::automaton& aut);              \
+        std::string dot<Aut>(const dyn::automaton& aut);                \
     }                                                                   \
   }
 
@@ -76,7 +76,7 @@ namespace vcsn
   (const mutable_automaton<Ctx>& aut,                                   \
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
                                                                         \
-  /* dotty. */                                                          \
+  /* dot. */                                                            \
   VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
   VCSN_CTX_INSTANTIATE_DOTTY                                            \
   (vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);         \
@@ -156,15 +156,15 @@ namespace vcsn
         aut_to_exp_in_degree_register(aut_t::sname(),
                                       aut_to_exp_in_degree<aut_t>);
 
-        // dotty.
-        dotty_register(aut_t::sname(),
-                       static_cast<const dotty_stream_t&>(dotty<aut_t>));
-        dotty_register(aut_t::sname(),
-                       static_cast<const dotty_string_t&>(dotty<aut_t>));
-        dotty_register(taut_t::sname(),
-                       static_cast<const dotty_stream_t&>(dotty<taut_t>));
-        dotty_register(taut_t::sname(),
-                       static_cast<const dotty_string_t&>(dotty<taut_t>));
+        // dot.
+        dot_register(aut_t::sname(),
+                     static_cast<const dot_stream_t&>(dot<aut_t>));
+        dot_register(aut_t::sname(),
+                     static_cast<const dot_string_t&>(dot<aut_t>));
+        dot_register(taut_t::sname(),
+                     static_cast<const dot_stream_t&>(dot<taut_t>));
+        dot_register(taut_t::sname(),
+                     static_cast<const dot_string_t&>(dot<taut_t>));
 
         // edit-automaton.
         make_automaton_editor_register(Ctx::sname(),

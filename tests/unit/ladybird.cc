@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 
-#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/dot.hh>
 // CTX(WeightSet) => char_WeightSet_lal.
 #define CTX(WS) CTX_(WS)
 // Two layers to force the evaluation of W.
@@ -31,5 +31,5 @@ main(int argc, char const** argv)
 
   vcsn::ctx::CTX(W) ctx{{'a', 'b', 'c'}};
   auto lb = vcsn::ladybird(n, ctx);
-  std::cout << vcsn::dotty(lb) << '\n';
+  std::cout << vcsn::dot(lb) << '\n';
 }

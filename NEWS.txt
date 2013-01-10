@@ -1,5 +1,9 @@
 * 2013-01-10
-** dotty
+** dotty -> dot
+The name "dotty" was incorrect (as it denotes a program instead of the
+format).  Therefore, every occurrence of "dotty" is now mapped to "dot".
+
+** dot
 The Dot output (input and output) now uses ", " as a label separator,
 instead of " + ".
 

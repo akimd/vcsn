@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/char_z_law.hh>
 
@@ -22,5 +22,5 @@ int main()
   aut.set_transition(s2, s1, "ba", 1);
   aut.set_transition(s3, s2, "", 2);
 
-  std::cout << vcsn::dotty(aut) << '\n';
+  std::cout << vcsn::dot(aut) << '\n';
 }

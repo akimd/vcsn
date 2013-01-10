@@ -10,8 +10,8 @@ vcsn::dyn::FileType
 string_to_file_type(const std::string str)
 {
   using vcsn::dyn::FileType;
-  if (str == "dotty")
-    return FileType::dotty;
+  if (str == "dot")
+    return FileType::dot;
   else if (str == "text")
     return FileType::text;
   else if (str == "xml")
@@ -79,7 +79,7 @@ parse_args(int& argc, char* const*& argv)
       {
       case 'a':
         opts.is_automaton = true;
-        opts.input_format = vcsn::dyn::FileType::dotty;
+        opts.input_format = vcsn::dyn::FileType::dot;
         break;
       case 'C':
         opts.context = optarg;

@@ -13,7 +13,7 @@ namespace vcsn
   {
     enum class FileType
     {
-      dotty,
+      dot,
       text,
       xml
     };
@@ -25,8 +25,8 @@ namespace vcsn
 
     automaton determinize(const automaton& aut);
 
-    void dotty(const automaton& aut, std::ostream& out);
-    std::string dotty(const automaton& aut);
+    void dot(const automaton& aut, std::ostream& out);
+    std::string dot(const automaton& aut);
 
     std::string eval(const automaton& aut, const std::string& s);
 

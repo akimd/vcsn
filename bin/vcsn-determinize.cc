@@ -15,5 +15,5 @@ main (int argc, char* const argv[])
   aut = determinize(aut);
 
   // Output.
-  print(aut, std::cout, FileType::dotty) << std::endl;
+  print(aut, std::cout, FileType::dot) << std::endl;
 }

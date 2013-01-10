@@ -12,8 +12,8 @@ struct options
   bool lal = true;
   std::string context = "char_b_lal";
   std::string labelset_describ = "abcd";
-  vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dotty;
-  vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dotty;
+  vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dot;
+  vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dot;
 };
 
 vcsn::dyn::FileType string_to_file_type(const std::string str);

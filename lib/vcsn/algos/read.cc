@@ -47,9 +47,9 @@ namespace vcsn
     {
       switch (type)
         {
-        case FileType::dotty:
+        case FileType::dot:
           throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as dotty input.");
+                                  " Could not read expression as dot input.");
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
@@ -72,9 +72,9 @@ namespace vcsn
     {
       switch (type)
         {
-        case FileType::dotty:
+        case FileType::dot:
           throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as dotty input.");
+                                  " Could not read expression as dot input.");
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);

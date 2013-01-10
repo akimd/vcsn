@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/dot.hh>
 #include <vcsn/algos/product.hh>
 #include <vcsn/ctx/char_z_lal.hh>
 #include <vcsn/core/mutable_automaton.hh>
@@ -36,10 +36,10 @@ int main()
   aut2.set_transition(t1, t2, 'a');
   aut2.set_transition(t2, t1, 'b', 3);
 
-  std::cout << vcsn::dotty(aut1) << '\n';
-  std::cout << vcsn::dotty(aut2) << '\n';
+  std::cout << vcsn::dot(aut1) << '\n';
+  std::cout << vcsn::dot(aut2) << '\n';
 
   automaton_t prod = product(aut1, aut2);
 
-  std::cout << vcsn::dotty(prod) << '\n';
+  std::cout << vcsn::dot(prod) << '\n';
 }

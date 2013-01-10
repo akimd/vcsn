@@ -15,27 +15,27 @@
 BISONXX = $(top_builddir)/build-aux/bin/bison++
 BISONXX_IN = $(top_srcdir)/build-aux/bin/bison++.in
 
-BISONXXFLAGS =					\
+BISONXXFLAGS =                                  \
   $(if $(V:0=),--verbose)
-AM_BISONFLAGS =					\
+AM_BISONFLAGS =                                 \
   -Wall --report=all # -Werror
 
 pkglib_LTLIBRARIES = lib/libvcsn.la
-lib_libvcsn_la_SOURCES =			\
-  lib/vcsn/algos/aut-to-exp.cc			\
-  lib/vcsn/algos/de_bruijn.cc			\
-  lib/vcsn/algos/determinize.cc			\
-  lib/vcsn/algos/dotty.cc			\
-  lib/vcsn/algos/edit-automaton.cc		\
-  lib/vcsn/algos/eval.cc			\
-  lib/vcsn/algos/lift.cc			\
-  lib/vcsn/algos/make-context.cc		\
-  lib/vcsn/algos/print.cc			\
-  lib/vcsn/algos/read.cc			\
-  lib/vcsn/algos/registry.hh			\
-  lib/vcsn/algos/standard-of.cc			\
-  lib/vcsn/algos/transpose.cc			\
-  lib/vcsn/algos/xml.cc				\
+lib_libvcsn_la_SOURCES =                        \
+  lib/vcsn/algos/aut-to-exp.cc                  \
+  lib/vcsn/algos/de_bruijn.cc                   \
+  lib/vcsn/algos/determinize.cc                 \
+  lib/vcsn/algos/dot.cc                         \
+  lib/vcsn/algos/edit-automaton.cc              \
+  lib/vcsn/algos/eval.cc                        \
+  lib/vcsn/algos/lift.cc                        \
+  lib/vcsn/algos/make-context.cc                \
+  lib/vcsn/algos/print.cc                       \
+  lib/vcsn/algos/read.cc                        \
+  lib/vcsn/algos/registry.hh                    \
+  lib/vcsn/algos/standard-of.cc                 \
+  lib/vcsn/algos/transpose.cc                   \
+  lib/vcsn/algos/xml.cc                         \
   lib/vcsn/misc/escape.cc
 
 # ratexpset.hxx depends on rat/driver.hh which requires
@@ -44,13 +44,13 @@ lib_libvcsn_la_SOURCES =			\
 lib/vcsn/dot/parser.stamp: lib/vcsn/rat/parser.stamp
 
 include lib/vcsn/dot/local.mk
-lib_libvcsn_la_SOURCES +=			\
-  $(SOURCES_DOT_PARSE_YY)			\
-  lib/vcsn/dot/driver.hh lib/vcsn/dot/driver.cc	\
+lib_libvcsn_la_SOURCES +=                       \
+  $(SOURCES_DOT_PARSE_YY)                       \
+  lib/vcsn/dot/driver.hh lib/vcsn/dot/driver.cc \
   lib/vcsn/dot/scan.ll
 
 include lib/vcsn/rat/local.mk
-lib_libvcsn_la_SOURCES +=			\
-  $(SOURCES_RAT_PARSE_YY)			\
-  lib/vcsn/rat/driver.hh lib/vcsn/rat/driver.cc	\
+lib_libvcsn_la_SOURCES +=                       \
+  $(SOURCES_RAT_PARSE_YY)                       \
+  lib/vcsn/rat/driver.hh lib/vcsn/rat/driver.cc \
   lib/vcsn/rat/scan.ll

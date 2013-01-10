@@ -1,6 +1,6 @@
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/algos/print.hh>
-#include <vcsn/algos/dyn.hh> // dotty
+#include <vcsn/algos/dyn.hh> // dot
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
@@ -17,8 +17,8 @@ namespace vcsn
     {
       switch (type)
         {
-        case FileType::dotty:
-          dotty(aut, out);
+        case FileType::dot:
+          dot(aut, out);
           break;
         case FileType::text:
           throw
@@ -57,9 +57,9 @@ namespace vcsn
     {
       switch (type)
         {
-        case FileType::dotty:
+        case FileType::dot:
           std::domain_error("invalid output format for expression."
-                            " Could not print expression as dotty output.");
+                            " Could not print expression as dot output.");
         case FileType::text:
           return details::print_exp_registry().call(exp->ctx().vname(),
                                                     exp, out);

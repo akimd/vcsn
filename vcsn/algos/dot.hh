@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_DOTTY_HH
-# define VCSN_ALGOS_DOTTY_HH
+#ifndef VCSN_ALGOS_DOT_HH
+# define VCSN_ALGOS_DOT_HH
 
 # include <algorithm>
 # include <cassert>
@@ -17,13 +17,13 @@
 namespace vcsn
 {
 
-  /*---------------------------.
-  | dotty(automaton, stream).  |
-  `---------------------------*/
+  /*-------------------------.
+  | dot(automaton, stream).  |
+  `-------------------------*/
 
   template <class A>
   void
-  dotty(const A& aut, std::ostream& out)
+  dot(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
     using transition_t = typename A::transition_t;
@@ -112,30 +112,30 @@ namespace vcsn
     namespace details
     {
       template <typename Aut>
-      void dotty(const automaton& aut, std::ostream& out)
+      void dot(const automaton& aut, std::ostream& out)
       {
-        dotty(dynamic_cast<const Aut&>(*aut), out);
+        dot(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      using dotty_stream_t =
+      using dot_stream_t =
         auto (const automaton& aut, std::ostream& out) -> void;
-      bool dotty_register(const std::string& ctx, const dotty_stream_t& fn);
+      bool dot_register(const std::string& ctx, const dot_stream_t& fn);
     }
   }
 
 
-  /*-------------------.
-  | dotty(automaton).  |
-  `-------------------*/
+  /*-----------------.
+  | dot(automaton).  |
+  `-----------------*/
 
   /// The automaton in Dot as a string.  Exact type.
   template <class A>
   inline
   std::string
-  dotty(const A& aut)
+  dot(const A& aut)
   {
     std::ostringstream o;
-    dotty(aut, o);
+    dot(aut, o);
     return o.str();
   }
 
@@ -145,16 +145,16 @@ namespace vcsn
     {
       /// Abstract but parameterized.
       template <typename Aut>
-      std::string dotty(const automaton& aut)
+      std::string dot(const automaton& aut)
       {
-        return dotty(dynamic_cast<const Aut&>(*aut));
+        return dot(dynamic_cast<const Aut&>(*aut));
       }
 
-      using dotty_string_t = auto (const automaton& aut) -> std::string;
+      using dot_string_t = auto (const automaton& aut) -> std::string;
 
-      bool dotty_register(const std::string& ctx, const dotty_string_t& fn);
+      bool dot_register(const std::string& ctx, const dot_string_t& fn);
     }
   }
 }
 
-#endif // !VCSN_ALGOS_DOTTY_HH
+#endif // !VCSN_ALGOS_DOT_HH

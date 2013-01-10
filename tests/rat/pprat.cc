@@ -75,21 +75,21 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
       if (!!getenv("DEBUG"))
         {
           std::cerr << aut1->vname() << std::endl;
-          vcsn::dyn::dotty(aut1, std::cout);
+          vcsn::dyn::dot(aut1, std::cout);
         }
       auto aut2 = vcsn::dyn::transpose(aut1);
       if (!!getenv("DEBUG"))
         std::cerr << aut2->vname() << std::endl;
-      vcsn::dyn::dotty(aut2, std::cout);
+      vcsn::dyn::dot(aut2, std::cout);
     }
   else if (opts.standard_of || opts.lift || opts.aut_to_exp)
     {
       auto aut = vcsn::dyn::standard_of(exp);
       if (opts.standard_of)
-        vcsn::dyn::print(aut, std::cout, vcsn::dyn::FileType::dotty) << '\n';
+        vcsn::dyn::print(aut, std::cout, vcsn::dyn::FileType::dot) << '\n';
       if (opts.lift)
         vcsn::dyn::print(vcsn::dyn::lift(aut), std::cout,
-                         vcsn::dyn::FileType::dotty) << '\n';
+                         vcsn::dyn::FileType::dot) << '\n';
       if (opts.aut_to_exp)
         {
           vcsn::dyn::ratexp e;
@@ -102,12 +102,12 @@ abstract_pp(const options& opts, const vcsn::dyn::context& ctx,
               e = vcsn::dyn::aut_to_exp(aut);
               break;
             }
-          vcsn::dyn::print(e, std::cout, vcsn::dyn::FileType::dotty)
+          vcsn::dyn::print(e, std::cout, vcsn::dyn::FileType::dot)
             << std::endl;
         }
     }
   else
-    vcsn::dyn::print(exp, std::cout, vcsn::dyn::FileType::dotty) << std::endl;
+    vcsn::dyn::print(exp, std::cout, vcsn::dyn::FileType::dot) << std::endl;
 }
 
 void

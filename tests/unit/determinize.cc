@@ -1,6 +1,6 @@
 #include <tests/unit/test.hh>
 #include <vcsn/algos/determinize.hh>
-#include <vcsn/algos/dotty.hh>
+#include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/char_b_lal.hh>
 #include <vcsn/factory/de_bruijn.hh>
@@ -21,9 +21,9 @@ idempotence(const std::string& str, automaton_t& aut, bool display_aut)
     << "Check idempotence for " << str << std::endl
     << "States: " << aut.num_states() << " -> " << d1.num_states() << std::endl;
   if (display_aut)
-    std::cout << vcsn::dotty(d1) << '\n';
+    std::cout << vcsn::dot(d1) << '\n';
 
-  ASSERT_EQ(vcsn::dotty(d1), vcsn::dotty(d2));
+  ASSERT_EQ(vcsn::dot(d1), vcsn::dot(d2));
   return res;
 }
 
