@@ -9,7 +9,6 @@
 # include <vcsn/algos/xml/ratexpvisitor.hh>
 # include <vcsn/algos/xml/structure.hh>
 # include <vcsn/algos/xml/tools.hh>
-# include <vcsn/config.h>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/dyn/ratexp.hh>
 
@@ -107,37 +106,40 @@ namespace vcsn
     return o.str();
   }
 
-  /*-------------.
-  | abstract xml |
-  `-------------*/
+
+  /*-----------.
+  | dyn::xml.  |
+  `-----------*/
 
   namespace dyn
   {
     namespace details
     {
-      template <typename Ctx>
-      std::string
-      xml(const dyn::ratexp exp)
-      {
-        return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
-      }
-
+      // ratexp, ostream -> ostream
       template <typename Ctx>
       void
-      xml(const dyn::ratexp exp, std::ostream& out)
+      xml(const dyn::ratexp& exp, std::ostream& out)
       {
         return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp(), out);
       }
 
-      using xml_string_t =
-        auto (const dyn::ratexp e) -> std::string;
-
       using xml_stream_t =
-        auto (const dyn::ratexp e, std::ostream& out) -> void;
+        auto (const dyn::ratexp& e, std::ostream& out) -> void;
 
       bool xml_register(const std::string& ctx, const xml_stream_t& fn);
-      bool xml_register(const std::string& ctx, const xml_string_t& fn);
 
+
+      // ratexp -> string
+      template <typename Ctx>
+      std::string
+      xml(const dyn::ratexp& exp)
+      {
+        return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
+      }
+
+      using xml_string_t = auto (const dyn::ratexp& e) -> std::string;
+
+      bool xml_register(const std::string& ctx, const xml_string_t& fn);
     } // namespace details
   } // namespace dyn
 } // namespace vcsn

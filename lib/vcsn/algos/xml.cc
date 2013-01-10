@@ -27,7 +27,7 @@ namespace vcsn
     } // namespace details
 
     void
-    xml(const dyn::ratexp e, std::ostream& out)
+    xml(const dyn::ratexp& e, std::ostream& out)
     {
       details::xml_stream_registry().call(e->ctx().vname(), e, out);
     }
@@ -52,7 +52,7 @@ namespace vcsn
     } // namespace details
 
     std::string
-    xml(const dyn::ratexp e)
+    xml(const dyn::ratexp& e)
     {
       return details::xml_string_registry().call(e->ctx().vname(), e);
     }
