@@ -30,8 +30,8 @@ digraph
   1 -> 2 [label = "a"]
   1 -> 3 [label = "b"]
   2 -> F2
-  2 -> 3 [label = "a + b"]
-  3 -> 3 [label = "a + b"]
+  2 -> 3 [label = "a, b"]
+  3 -> 3 [label = "a, b"]
 }
 EOF
 run 0 out.exp -vcsn-determinize a.dot
@@ -66,8 +66,8 @@ digraph
   { 1 2 }
   I1 -> 1
   1 -> F1
-  1 -> 2 [label = "a + b"]
-  2 -> 2 [label = "a + b"]
+  1 -> 2 [label = "a, b"]
+  2 -> 2 [label = "a, b"]
 }
 EOF
 run 0 out.exp -vcsn-determinize epsilon.dot
@@ -97,7 +97,7 @@ digraph
   }
   { 1 }
   I1 -> 1
-  1 -> 1 [label = "a + b"]
+  1 -> 1 [label = "a, b"]
 }
 EOF
 run 0 out.exp -vcsn-determinize empty.dot
@@ -225,11 +225,11 @@ digraph
   I1 -> 1
   1 -> F1
   1 -> 2 [label = "a"]
-  1 -> 3 [label = "b + c"]
+  1 -> 3 [label = "b, c"]
   2 -> 2 [label = "b"]
   2 -> 4 [label = "a"]
   2 -> 5 [label = "c"]
-  3 -> 3 [label = "a + b + c"]
+  3 -> 3 [label = "a, b, c"]
   4 -> 4 [label = "b"]
   4 -> 14 [label = "c"]
   4 -> 16 [label = "a"]
@@ -256,7 +256,7 @@ digraph
   10 -> 12 [label = "a"]
   11 -> F11
   11 -> 9 [label = "b"]
-  11 -> 11 [label = "a + c"]
+  11 -> 11 [label = "a, c"]
   12 -> F12
   12 -> 8 [label = "a"]
   12 -> 12 [label = "c"]

@@ -17,10 +17,10 @@ namespace vcsn
   void
   add_entry(Aut& a,
             typename Aut::state_t src, typename Aut::state_t dst,
-            const std::string& entry)
+            const std::string& entry, const char sep = '+')
   {
     assert (src != a.pre() || dst != a.post());
-    auto w = a.entryset().conv(entry);
+    auto w = a.entryset().conv(entry, sep);
     // Initial and final weights are _not_ labeled by the empty word.
     // Yet, the dot parser does not know that.
     // FIXME: decide whose responsibility this is.
@@ -39,10 +39,10 @@ namespace vcsn
   void
   add_entry(Aut& a,
             typename Aut::state_t src, typename Aut::state_t dst,
-            const std::string* entry)
+            const std::string* entry, const char sep = '+')
   {
     if (entry)
-      add_entry(a, src, dst, *entry);
+      add_entry(a, src, dst, *entry, sep);
     else
       {
         assert (src == a.pre() || dst == a.post());
@@ -68,6 +68,16 @@ namespace vcsn
     virtual dyn::abstract_automaton* result() = 0;
     /// Forget about the current automaton, but do not free it.
     virtual void reset() = 0;
+
+    /// Set the label separator.  Defaults to '+'.
+    void set_separator(char c)
+    {
+      sep_ = c;
+    }
+
+  protected:
+    /// The label separator.
+    char sep_ = '+';
   };
 
 
@@ -118,7 +128,7 @@ namespace vcsn
     add_entry(const std::string& src, const std::string& dst,
               const std::string* entry) override final
     {
-      vcsn::add_entry(*res_, state_(src), state_(dst), entry);
+      vcsn::add_entry(*res_, state_(src), state_(dst), entry, sep_);
     }
 
     virtual dyn::abstract_automaton*
@@ -132,6 +142,8 @@ namespace vcsn
     {
       res_ = nullptr;
     }
+
+
 
   private:
     state_t

@@ -173,13 +173,16 @@ namespace vcsn
       return res;
     }
 
-    /// Parse "s" as a polynomial.
+    /// Construct from a string.
     ///
     /// Somewhat more general than a mere reversal of "format",
     /// in particular "a+a" is properly understood as "{2}a" in
     /// char_z.
+    ///
+    /// \param s    the string to parse
+    /// \param sep  the separator between monomials.
     value_t
-    conv(const std::string& s) const
+    conv(const std::string& s, const char sep = '+') const
     {
       value_t res;
       std::istringstream i{s};
@@ -248,11 +251,11 @@ namespace vcsn
           if (!empty)
             add_weight(res, label, w);
 
-          // EOF, or "+".
+          // EOF, or sep (e.g., '+').
           SKIP_SPACES();
           if (i.peek() == -1)
             break;
-          else if (i.peek() == '+')
+          else if (i.peek() == sep)
             i.ignore();
           else
             {
@@ -269,38 +272,40 @@ namespace vcsn
     }
 
     std::ostream&
-    print(std::ostream& out, const value_t& v) const
+    print(std::ostream& out, const value_t& v,
+          const std::string& sep = " + ") const
     {
       bool first = true;
       bool show_unit = weightset()->show_unit();
 
-      for (const auto& i: v)
-        {
-          if (!first)
-            out << " + ";
-          first = false;
-
-          if (show_unit || !weightset()->is_unit(i.second))
-            {
-              out << "{";
-              weightset()->print(out, i.second) << "}";
-            }
-          if (!context_t::is_lau)
-            labelset()->print(out, i.first);
-        }
-
-      if (first)
+      if (v.empty())
         out << "\\z";
+      else
+        for (const auto& i: v)
+          {
+            if (!first)
+              out << sep;
+            first = false;
+
+            if (show_unit || !weightset()->is_unit(i.second))
+              {
+                out << "{";
+                weightset()->print(out, i.second) << "}";
+              }
+            // FIXME: Should be invisible.
+            if (!context_t::is_lau)
+              labelset()->print(out, i.first);
+          }
 
       return out;
     }
 
     std::string
-    format(const value_t& v) const
+    format(const value_t& v, const std::string& sep = " + ") const
     {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
+      std::ostringstream o;
+      print(o, v, sep);
+      return o.str();
     }
 
   private:

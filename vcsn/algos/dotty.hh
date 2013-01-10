@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_DOTTY_HH
 
 # include <algorithm>
+# include <cassert>
 # include <iostream>
 # include <set>
 # include <sstream>
@@ -94,7 +95,7 @@ namespace vcsn
                 unsigned nd = names[dst];
                 out << "  " << ns << " -> " << nd;
               }
-            std::string s = aut.entryset().format(aut.entry_at(t));
+            std::string s = aut.entryset().format(aut.entry_at(t), ", ");
             if (!s.empty())
               {
                 out << " [label = \"";

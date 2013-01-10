@@ -16,8 +16,8 @@ digraph
   I1 -> 1
   1 -> F1
   1 -> 2 [label = "a"]
-  2 -> 1 [label = "a + c"]
-  2 -> 2 [label = "b + c"]
+  2 -> 1 [label = "a, c"]
+  2 -> 2 [label = "b, c"]
 }
 EOF
 
@@ -41,8 +41,8 @@ digraph
   I1 -> 1 [label = "{0}"]
   1 -> F1 [label = "{0}"]
   1 -> 2 [label = "{0}a"]
-  2 -> 1 [label = "{0}a + {0}c"]
-  2 -> 2 [label = "{0}b + {0}c"]
+  2 -> 1 [label = "{0}a, {0}c"]
+  2 -> 2 [label = "{0}b, {0}c"]
 }
 EOF
 
