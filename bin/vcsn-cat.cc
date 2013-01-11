@@ -2,7 +2,6 @@
 #include <cassert>
 
 #include <vcsn/algos/dyn.hh>
-#include <lib/vcsn/rat/driver.hh>
 #include "parse-args.hh"
 
 static void
