@@ -57,6 +57,7 @@ unit_TESTS =                                    \
   unit/aut_char_z_lau.chk                       \
   unit/aut_char_z_lal.chk                       \
   unit/aut_char_z_law.chk                       \
+  unit/aut_to_exp.chk                           \
   unit/concat.chk				\
   unit/determinize.chk                          \
   unit/eval.chk                                 \
@@ -75,7 +76,6 @@ dist_TESTS += $(unit_TESTS)
 unit/aut_char_z_lau.log: unit/aut_char_z_lau
 unit/aut_char_z_lal.log: unit/aut_char_z_lal
 unit/aut_char_z_law.log: unit/aut_char_z_law
-unit/aut_to_exp.log: rat/pprat
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin

@@ -1,25 +1,23 @@
 #! /bin/sh
 
-# check EXP-OUT PPRAT-ARGUMENTS
-# -----------------------------
+# check EXP-OUT VCSN-STANDARD-OF-ARGS...
+# --------------------------------------
 check ()
 {
-  echo "$1" >out.exp
-  run 0 out.exp rat/pprat -s "$@"
+  local out_exp=$1
+  shift
+  run 0 stdout -vcsn-standard-of "$@"
+  mv stdout std.dot
+  run 0 "$out_exp" -vcsn-aut-to-exp -Af std.dot
 }
 
-fail ()
-{
-  run 1 '' rat/pprat -s "$@"
-}
-
-check 'a' 'a'
-check 'a.b' 'ab'
-check '\e+(a.(a*))' 'a*'
-check 'a+b' 'a+b'
-check '({2}a.b){3}' -W z -L l -a '{2}(ab){3}'
-check '{6}ab'       -W z -L w -a '{2}(ab){3}'
+check 'a'           -e 'a'
+check 'a.b'         -e 'ab'
+check '\e+(a.(a*))' -e 'a*'
+check 'a+b'         -e 'a+b'
+check '({2}a.b){3}' -W z -L l -e '{2}(ab){3}'
+check '{6}ab'       -W z -L w -e '{2}(ab){3}'
 
 
 check '(({6}a.{7}c)+({10}b.{7}c)){11}' \
-      -W z -a '{2}({3}a+{5}b){7}c{11}'
+      -W z -e '{2}({3}a+{5}b){7}c{11}'

@@ -1,6 +1,21 @@
 * 2013-01-11
+** vcsn-*: option overhaul
+The different tools had already too many different calling conventions.
+They are now (quite) consistent.
+
+** vcsn-aut-to-exp
+Calls the default implementation of aut-to-exp.
+
+  $ vcsn-standard-of -Wz     -e '{2}(ab){3}' | vcsn-aut-to-exp -Af -
+  ({2}a.b){3}
+  $ vcsn-standard-of -Wz -Lw -e '{2}(ab){3}' | vcsn-aut-to-exp -Af -
+  {6}ab
+
 ** vcsn-lift
 It now also supports lifting rational expressions.
+
+  $ vcsn-lift -C char_b_lal -Ee 'abc'
+  {a.b.c}\e
 
 * 2013-01-10
 ** dotty -> dot
