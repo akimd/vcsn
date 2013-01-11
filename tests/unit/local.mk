@@ -81,8 +81,7 @@ unit/concat.log: unit/concat
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/poly.log: unit/poly
 unit/product.log: unit/product
-unit/standard_of.log: rat/pprat
-unit/transpose.log: rat/pprat unit/transpose
+unit/transpose.log: unit/transpose
 
 .PHONY: check-unit
 check-unit:

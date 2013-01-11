@@ -7,12 +7,14 @@
 int main(int argc, char * const argv[])
 try
   {
-    auto opts = parse_args(argc, argv);
+    options opts;
+    opts.is_automaton = false;
+    opts.input_format = vcsn::dyn::FileType::text;
+    parse_args(opts, argc, argv);
 
     // Input.
     using namespace vcsn::dyn;
-    context* ctx = make_context(opts.context, opts.labelset_describ);
-    ratexp exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
+    ratexp exp = read_ratexp(opts);
 
     // Process.
     automaton aut = standard_of(exp);

@@ -1,26 +1,28 @@
 #! /bin/sh
 
-# weighset PPRAT-ARGUMENTS
-# ------------------------
+# weighset VCSN-STANDARD-OF-ARGUMENTS
+# -----------------------------------
 weighset()
 {
   while test $# != 0
   do
-    if test "$1" = '-W'; then
-      case $2 in
-        (zr) echo 'ratexpset<char_z_lal>';;
-         (*) echo "$2";;
-      esac
-      return 0
-    fi
+    case $1 in
+      (-W) case $2 in
+            (zr) echo 'ratexpset<char_z_lal>';;
+            (*) echo "$2";;
+           esac
+           return 0;;
+      (-C) echo "$2"
+           return 0;;
+    esac
     shift
   done
   echo 'b'
   return 0
 }
 
-# check PPRAT-ARGUMENTS
-# ---------------------
+# check VCSN_STANDARD-OF-ARGUMENTS
+# --------------------------------
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
@@ -38,12 +40,12 @@ EOF
 }
 EOF
 
-  run 0 out.exp rat/pprat -s "$@"
+  run 0 out.exp -vcsn-standard-of "$@" -o dot
 }
 
 fail ()
 {
-  run 1 '' rat/pprat -s "$@"
+  run 1 '' -vcsn-standard-of -C "$@"
 }
 
 ## --- ##
@@ -494,7 +496,7 @@ fail -W z -e 'a**'
 ## ZR: star.  ##
 ## ---------- ##
 
-check -W zr '({d}\e+abc)*' <<EOF
+check -W zr -e '({d}\e+abc)*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
@@ -511,7 +513,7 @@ check -W zr '({d}\e+abc)*' <<EOF
   4 -> 2 [label = "{d*}a"]
 EOF
 
-check -W zr '({d}\e+ab{c})*' <<EOF
+check -W zr -e '({d}\e+ab{c})*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1

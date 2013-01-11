@@ -4,7 +4,11 @@
 #include <map>
 #include <stdexcept>
 
+// Temporary.
+#include <boost/algorithm/string/replace.hpp>
+
 #include "parse-args.hh"
+#include <vcsn/algos/dyn.hh>
 
 vcsn::dyn::FileType
 string_to_file_type(const std::string str)
@@ -20,16 +24,37 @@ string_to_file_type(const std::string str)
     throw std::domain_error(str + " is an invalid file type.");
 }
 
+vcsn::dyn::automaton
+read_automaton(const options& opts)
+{
+  return
+    opts.input_is_file
+    ? vcsn::dyn::read_automaton_file(opts.input)
+    : vcsn::dyn::read_automaton_string(opts.input);
+}
+
+vcsn::dyn::ratexp
+read_ratexp(const options& opts)
+{
+  auto ctx = vcsn::dyn::make_context(opts.context, opts.labelset_describ);
+  return
+    opts.input_is_file
+    ? vcsn::dyn::read_ratexp_file(opts.input, *ctx, opts.input_format)
+    : vcsn::dyn::read_ratexp_string(opts.input, *ctx, opts.input_format);
+}
+
 void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
     std::cout
-      << "usage: " << prog << " [OPTIONS...] FILE\n"
+      << "usage: " << prog << " [OPTIONS...]\n"
       "\n"
       "Context:\n"
-      "  -a                 FILE contains an automaton\n"
-      "  -e                 FILE contains an expression\n"
+      "  -A                 input is an automaton\n"
+      "  -E                 input is a rational expression\n"
+      "  -e STRING          the input is STRING\n"
+      "  -f FILE            the input is FILE\n"
       "  -C CONTEXT         the context to use\n"
       "  -L letter|words    kind of the labels\n"
       "  -W WEIGHT-SET      define the kind of the weights\n"
@@ -56,14 +81,23 @@ usage(const char* prog, int exit_status)
   exit(exit_status);
 }
 
-options
-parse_args(int& argc, char* const*& argv)
+// Convert "w" to "l" for "brutal" assembled context names.
+void
+apply_label_kind(options& opts)
 {
-  const char* prog = argv[0];
+  using boost::algorithm::replace_all;
+  if (opts.lal)
+    replace_all(opts.context, "law", "lal");
+  else
+    replace_all(opts.context, "lal", "law");
+}
+
+void
+parse_args(options& opts, int& argc, char* const*& argv)
+{
   using map = std::map<std::string, std::string>;
   using pair = std::pair<std::string, std::string>;
 
-  options opts;
   int opt;
   map ksets;
 #define ADD(Key, Name)                          \
@@ -74,19 +108,27 @@ parse_args(int& argc, char* const*& argv)
     ADD(zr,  "char_ratexpset<char_z_law>_law");
     ADD(zrr, "char_ratexpset<char_ratexpset<char_z_law>_law>_law");
 #undef ADD
-  while ((opt = getopt(argc, argv, "aC:eg:hi:o:L:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hi:o:L:W:?")) != -1)
     switch (opt)
       {
-      case 'a':
+      case 'A':
         opts.is_automaton = true;
         opts.input_format = vcsn::dyn::FileType::dot;
         break;
       case 'C':
         opts.context = optarg;
         break;
-      case 'e':
+      case 'E':
         opts.is_automaton = false;
         opts.input_format = vcsn::dyn::FileType::text;
+        break;
+      case 'e':
+        opts.input = optarg;
+        opts.input_is_file = false;
+        break;
+      case 'f':
+        opts.input = optarg;
+        opts.input_is_file = true;
         break;
       case 'g':
         opts.labelset_describ = optarg;
@@ -112,6 +154,7 @@ parse_args(int& argc, char* const*& argv)
               std::cerr << optarg << ": invalid label kind (-L)" << std::endl;
               goto fail;
             }
+          apply_label_kind(opts);
           break;
         }
       case 'W':
@@ -123,7 +166,10 @@ parse_args(int& argc, char* const*& argv)
               goto fail;
             }
           else
-            opts.context = i->second;
+            {
+              opts.context = i->second;
+              apply_label_kind(opts);
+            }
           break;
         }
       case '?':
@@ -133,11 +179,12 @@ parse_args(int& argc, char* const*& argv)
       }
   argc -= optind;
   argv += optind;
-  if (argc < 1)
-    {
-      std::cerr << "invalid number of arguments: " << argc << std::endl;
-      usage(prog, EXIT_FAILURE);
-    }
-  opts.file = argv[0];
-  return opts;
+}
+
+options
+parse_args(int& argc, char* const*& argv)
+{
+  options res;
+  parse_args(res, argc, argv);
+  return res;
 }

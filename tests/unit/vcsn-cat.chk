@@ -5,10 +5,9 @@
 # Check that vcsn-cat is idempotent on the standard-of RATEXP.
 check ()
 {
-  echo "$2" > input.rat
-  run 0 stdout -vcsn-standard-of -e -C "$1" -g abcd input.rat
+  run 0 stdout -vcsn-standard-of -E -C "$1" -g abcd -e "$2"
   mv stdout out.exp
-  run 0 out.exp -vcsn-cat -a out.exp
+  run 0 out.exp -vcsn-cat -Af out.exp
 }
 
 check char_b_lal "abcd"
@@ -26,7 +25,7 @@ check ()
   sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
   cp in.dot /tmp
   cp out.exp /tmp
-  run 0 out.exp -vcsn-cat -a in.dot
+  run 0 out.exp -vcsn-cat -Af in.dot
   $exit
 }
 

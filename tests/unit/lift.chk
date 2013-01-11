@@ -1,5 +1,9 @@
 #! /bin/sh
 
+## ---------- ##
+## Automata.  ##
+## ---------- ##
+
 cat >lady4.dot <<\EOF
 digraph
 {
@@ -34,4 +38,13 @@ perl -p -e '
     s{char_b_lal}{char_ratexpset<char_b_lal>_lau}g;
    ' < lady4.dot >out.exp
 
-run 0 out.exp -vcsn-lift lady4.dot
+run 0 out.exp -vcsn-lift -Af lady4.dot
+
+## ------------- ##
+## Expressions.  ##
+## ------------- ##
+
+run 0 '{a.b.c}\e' -vcsn-lift -C char_b_lal -g abc -Ee "abc"
+
+# FIXME: no support yet for the printer.
+# run 0 '{{2}a.b.c}\e' -vcsn-lift -C char_z_lal -g abc -Ee "{2}abc"

@@ -12,7 +12,7 @@ work_aut(options opts)
 {
   using namespace vcsn::dyn;
   // Input.
-  automaton aut = read_automaton_file(opts.file);
+  automaton aut = read_automaton(opts);
   // Process.
   auto res = transpose(aut);
   // Output.
@@ -22,10 +22,9 @@ work_aut(options opts)
 void
 work_exp(options opts)
 {
-  // Input.
   using namespace vcsn::dyn;
-  context* ctx = make_context(opts.context, opts.labelset_describ);
-  ratexp exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
+  // Input.
+  ratexp exp = read_ratexp(opts);
 
   // Process.
   exp = transpose(exp);

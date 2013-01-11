@@ -12,6 +12,7 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 bin_PROGRAMS +=                                 \
+  bin/vcsn-aut-to-exp                           \
   bin/vcsn-cat                                  \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
@@ -20,6 +21,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-standard-of                          \
   bin/vcsn-transpose
 
+bin_vcsn_aut_to_exp_LDADD  = $(all_libctx) $(libvcsn)
 bin_vcsn_cat_LDADD         = $(all_libctx) $(libvcsn)
 bin_vcsn_de_bruijn_LDADD   = $(all_libctx) $(libvcsn)
 bin_vcsn_determinize_LDADD = $(all_libctx) $(libvcsn)
@@ -28,6 +30,7 @@ bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_standard_of_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_transpose_LDADD   = $(all_libctx) $(libvcsn)
 
+bin_vcsn_aut_to_exp_SOURCES  = bin/parse-args.cc bin/vcsn-aut-to-exp.cc
 bin_vcsn_cat_SOURCES         = bin/parse-args.cc bin/vcsn-cat.cc
 bin_vcsn_lift_SOURCES        = bin/parse-args.cc bin/vcsn-lift.cc
 bin_vcsn_standard_of_SOURCES = bin/parse-args.cc bin/vcsn-standard-of.cc

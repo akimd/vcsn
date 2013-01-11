@@ -9,7 +9,7 @@ work_aut(const options& opts)
 {
   using namespace vcsn::dyn;
   // Input.
-  auto aut = read_automaton_file(opts.file);
+  auto aut = read_automaton(opts);
 
   // Process.
   aut = lift(aut);
@@ -23,8 +23,7 @@ work_exp(const options& opts)
 {
   using namespace vcsn::dyn;
   // Input.
-  auto ctx = make_context(opts.context, opts.labelset_describ);
-  auto exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
+  auto exp = read_ratexp(opts);
 
   // Process.
   exp = lift(exp);

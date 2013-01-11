@@ -8,7 +8,8 @@
 struct options
 {
   bool is_automaton = true;
-  std::string file;
+  std::string input;
+  bool input_is_file = true;
   bool lal = true;
   std::string context = "char_b_lal";
   std::string labelset_describ = "abcd";
@@ -17,7 +18,13 @@ struct options
 };
 
 vcsn::dyn::FileType string_to_file_type(const std::string str);
-options parse_args(int& argc, char* const*& argv);
 void usage(const char* prog, int exit_status);
+
+/// Read the command line arguments.
+void parse_args(options& opts, int& argc, char* const*& argv);
+options parse_args(int& argc, char* const*& argv);
+
+vcsn::dyn::automaton read_automaton(const options& opts);
+vcsn::dyn::ratexp read_ratexp(const options& opts);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_

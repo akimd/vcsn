@@ -10,10 +10,10 @@
 check ()
 {
   echo "$2" >input.rat
-  run 0 stdout -vcsn-standard-of -e -C "$1" -g abcd -o dot input.rat
+  run 0 stdout -vcsn-standard-of -E -C "$1" -g abcd -o dot -f input.rat
   mv stdout forward.out
   cat forward.out
-  run 0 stdout -vcsn-transpose -i dot -o dot -a forward.out
+  run 0 stdout -vcsn-transpose -i dot -o dot -A -f forward.out
   mv stdout transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
@@ -58,10 +58,10 @@ EOF
 # Check that transposition is an involution on AUTOMATON.
 involution ()
 {
-  run 0 stdout -vcsn-transpose -a $1
+  run 0 stdout -vcsn-transpose -A -f $1
   mv stdout transpose.out
   cp $1 out.exp
-  run 0 out.exp -vcsn-transpose -a transpose.out
+  run 0 out.exp -vcsn-transpose -A -f transpose.out
 }
 
 vcsn-de-bruijn char_z_lal 2 > in.dot
