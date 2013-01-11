@@ -28,6 +28,7 @@ bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_standard_of_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_transpose_LDADD   = $(all_libctx) $(libvcsn)
 
-bin_vcsn_cat_SOURCES = bin/parse-args.cc bin/vcsn-cat.cc
+bin_vcsn_cat_SOURCES         = bin/parse-args.cc bin/vcsn-cat.cc
+bin_vcsn_lift_SOURCES        = bin/parse-args.cc bin/vcsn-lift.cc
 bin_vcsn_standard_of_SOURCES = bin/parse-args.cc bin/vcsn-standard-of.cc
 bin_vcsn_transpose_SOURCES   = bin/parse-args.cc bin/vcsn-transpose.cc

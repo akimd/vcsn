@@ -1,19 +1,49 @@
 #include <iostream>
+#include <cassert>
+
 #include <vcsn/algos/dyn.hh>
+#include "parse-args.hh"
 
-int
-main (int argc, char* const argv[])
+static void
+work_aut(const options& opts)
 {
-  assert(2 == argc);
-  std::string file = argv[1];
-
-  // Input.
   using namespace vcsn::dyn;
-  vcsn::dyn::automaton aut = read_automaton_file(file);
+  // Input.
+  auto aut = read_automaton_file(opts.file);
 
   // Process.
-  auto res = lift(aut);
+  aut = lift(aut);
 
   // Output.
-  print(res, std::cout, FileType::dot) << std::endl;
+  print(aut, std::cout, opts.output_format) << std::endl;
 }
+
+static void
+work_exp(const options& opts)
+{
+  using namespace vcsn::dyn;
+  // Input.
+  auto ctx = make_context(opts.context, opts.labelset_describ);
+  auto exp = read_ratexp_file(opts.file, *ctx, opts.input_format);
+
+  // Process.
+  exp = lift(exp);
+
+  // Output.
+  print(exp, std::cout, opts.output_format) << std::endl;
+}
+
+int main(int argc, char* const argv[])
+try
+  {
+    auto opts = parse_args(argc, argv);
+    if (opts.is_automaton)
+      work_aut(opts);
+    else
+      work_exp(opts);
+  }
+ catch (const std::exception& e)
+   {
+     std::cerr << e.what() << std::endl;
+     exit(EXIT_FAILURE);
+   }

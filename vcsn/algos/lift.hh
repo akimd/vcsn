@@ -94,7 +94,53 @@ namespace vcsn
 
       bool lift_automaton_register(const std::string& ctx,
                                    const lift_automaton_t& fn);
+    }
+  }
 
+
+  /*---------------.
+  | lift(ratexp).  |
+  `---------------*/
+
+  namespace details
+  {
+    template <typename Exp>
+    using lifted_ratexp_t =
+      typename lifted_context_t<typename Exp::context_t>::ratexp_t;
+
+  }
+
+  /// \param Exp  Ctx::ratexp_t = vcsn::rat::node<Label, Weight>.
+  template <typename Context>
+  inline
+  typename details::lifted_context_t<Context>::ratexp_t
+  lift(const Context& ctx, const typename Context::ratexp_t& e)
+  {
+    return details::lift_context(ctx).make_ratexpset().unit(e);
+  }
+
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Context>
+      ratexp
+      lift(const ratexp& e)
+      {
+        const auto& ctx =
+          dynamic_cast<const Context&>(e->ctx());
+        const auto& exp =
+          std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
+        auto res = ::vcsn::lift(ctx, exp);
+        // FIXME: Poor memory management model.
+        return
+          make_ratexp(*new ::vcsn::details::lifted_context_t<Context>{::vcsn::details::lift_context(ctx)},
+                      res);
+      }
+
+      using lift_exp_t = auto (const ratexp& aut) -> ratexp;
+      bool lift_exp_register(const std::string& ctx, const lift_exp_t& fn);
     }
   }
 

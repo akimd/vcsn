@@ -31,6 +31,7 @@ namespace vcsn
     std::string eval(const automaton& aut, const std::string& s);
 
     automaton lift(const automaton& aut);
+    ratexp lift(const ratexp& aut);
 
     context* make_context(const std::string& name, const std::string& gens);
 
