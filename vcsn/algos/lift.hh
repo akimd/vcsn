@@ -9,6 +9,10 @@
 namespace vcsn
 {
 
+  /*------------------.
+  | lift(automaton).  |
+  `------------------*/
+
   namespace details
   {
     template <typename Context>
@@ -16,6 +20,18 @@ namespace vcsn
       ctx::context<typename Context::labelset_t,
                    ratexpset<Context>,
                    labels_are_unit>;
+
+    // lift(ctx) -> ctx
+    template <typename Context>
+    lifted_context_t<Context>
+    lift_context(const Context& ctx)
+    {
+      using rs_in_t = typename Context::ratexpset_t;
+      auto rs_in = ctx.make_ratexpset();
+      typedef details::lifted_context_t<Context> ctx_out_t;
+      return ctx_out_t{ctx.labelset(),
+                       std::make_shared<const rs_in_t>(rs_in)};
+    }
 
     template <typename Aut>
     using lifted_automaton_t =
@@ -27,17 +43,19 @@ namespace vcsn
   details::lifted_automaton_t<Aut>
   lift(const Aut& a)
   {
-    using kre_t = ratexpset<typename Aut::context_t>;
-    kre_t kre{a.context()};
-    // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
-    typedef details::lifted_context_t<typename Aut::context_t> ctx_t;
-    ctx_t ctx{a.context().labelset(), std::make_shared<const kre_t>(kre)};
     using auto_in_t = Aut;
+    using ctx_in_t = typename auto_in_t::context_t;
+    using state_in_t = typename auto_in_t::state_t;
+
+    // Produce RatExps of the same context as the original automaton.
+    using rs_in_t = ratexpset<ctx_in_t>;
+    rs_in_t rs_in{a.context()};
+
+    auto ctx_out = details::lift_context(a.context());
     // Not using: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=53540.
     typedef details::lifted_automaton_t<auto_in_t> auto_out_t;
-    using state_in_t = typename auto_in_t::state_t;
     using state_out_t = typename auto_out_t::state_t;
-    auto res = make_mutable_automaton(ctx);
+    auto_out_t res{ctx_out};
     std::map<state_in_t, state_out_t> map;
     map[a.pre()] = res.pre();
     map[a.post()] = res.post();
@@ -47,15 +65,15 @@ namespace vcsn
     for (auto t: a.all_transitions())
       if (a.src_of(t) == a.pre())
         res.add_initial
-          (map[a.dst_of(t)], kre.unit(a.weight_of(t)));
+          (map[a.dst_of(t)], rs_in.unit(a.weight_of(t)));
       else if (a.dst_of(t) == a.post())
         res.add_final
-          (map[a.src_of(t)], kre.unit(a.weight_of(t)));
+          (map[a.src_of(t)], rs_in.unit(a.weight_of(t)));
       else
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
            {},
-           kre.weight(a.weight_of(t), kre.atom(a.label_of(t))));
+           rs_in.weight(a.weight_of(t), rs_in.atom(a.label_of(t))));
     return res;
   }
 
