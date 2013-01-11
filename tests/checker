@@ -125,18 +125,20 @@ rst_expect ()
     fatal "missing reference file: $base.exp"
 
   rst_subsubsection "$me: $base"
-  # Dump something, it is really surprising in the logs to see
-  # nothing.
-  rst_pre "Expected $base for $me" $base.exp
   # --strip-trailing-cr helps to fight \r.
-  if ! diff --strip-trailing-cr -u                              \
-            --label="Expected $base ($base.exp)"  $base.exp     \
-            --label="Effective $base ($base.eff)" $base.eff     \
-            "$@"                                                \
+  if diff --strip-trailing-cr -u                              \
+            --label="Expected $base ($base.exp)"  $base.exp   \
+            --label="Effective $base ($base.eff)" $base.eff   \
+            "$@"                                              \
             >$base.diff; then
-    res=1
+    # Dump something, it is really surprising in the logs to see
+    # nothing.
+    rst_pre "Expected (and effective) $base for $me" $base.exp
+  else
+    rst_pre "Expected $base for $me"    $base.exp
     rst_pre "Effective $base for $me"   $base.eff
     rst_pre "Diffs on $base for $me"    $base.diff
+    res=1
     # If exit is already set, e.g. to "exit SKIP", don't alter it.
     case $exit in
       ('' | true) exit=false;;
