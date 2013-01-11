@@ -261,8 +261,8 @@ namespace vcsn
       {
         const auto& exp =
           std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
-        auto res = transpose (dynamic_cast<const Context&>(e->ctx()), exp);
-        return make_ratexp (e->ctx(), res);
+        auto res = transpose(dynamic_cast<const Context&>(e->ctx()), exp);
+        return make_ratexp(e->ctx(), res);
       }
 
       using transpose_exp_t = auto (const ratexp& e) -> ratexp;
