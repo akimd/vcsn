@@ -7,26 +7,32 @@ namespace vcsn
 
   namespace dyn
   {
+    /*------------------.
+    | lift(automaton).  |
+    `------------------*/
+
     namespace details
     {
-      Registry<lift_t>&
-      lift_registry()
+      Registry<lift_automaton_t>&
+      lift_automaton_registry()
       {
-        static Registry<lift_t> instance{"lift"};
+        static Registry<lift_automaton_t> instance{"lift"};
         return instance;
       }
 
-      bool lift_register(const std::string& ctx, const lift_t& fn)
+      bool lift_automaton_register(const std::string& ctx,
+                                   const lift_automaton_t& fn)
       {
-        return lift_registry().set(ctx, fn);
+        return lift_automaton_registry().set(ctx, fn);
       }
     }
 
     automaton
     lift(const automaton& aut)
     {
-      return details::lift_registry().call(aut->vname(),
-                                           aut);
+      return details::lift_automaton_registry().call(aut->vname(),
+                                                     aut);
+    }
     }
   }
 }

@@ -87,12 +87,14 @@ namespace vcsn
       lift(const automaton& aut)
       {
         return std::make_shared<vcsn::details::lifted_automaton_t<Aut>>
-          (lift(dynamic_cast<const Aut&>(*aut)));
+          (::vcsn::lift(dynamic_cast<const Aut&>(*aut)));
       }
 
-      using lift_t = auto (const automaton& aut) -> automaton;
+      using lift_automaton_t = auto (const automaton& aut) -> automaton;
 
-      bool lift_register(const std::string& ctx, const lift_t& fn);
+      bool lift_automaton_register(const std::string& ctx,
+                                   const lift_automaton_t& fn);
+
     }
   }
 

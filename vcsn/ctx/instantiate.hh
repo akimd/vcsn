@@ -171,7 +171,7 @@ namespace vcsn
                                        abstract_make_automaton_editor<aut_t>);
 
         // lift.
-        lift_register(aut_t::sname(), lift<aut_t>);
+        lift_automaton_register(aut_t::sname(), lift<aut_t>);
 
         // make-context.
         make_context_register(Ctx::sname(), make_context<Ctx>);
