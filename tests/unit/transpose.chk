@@ -1,8 +1,46 @@
 #! /bin/sh
 
-## ----------------------------------- ##
-## Using vcsn-transpose for automata.  ##
-## ----------------------------------- ##
+## ------------------------ ##
+## vcsn-transpose(ratexp).  ##
+## ------------------------ ##
+
+# check INPUT OUTPUT
+# ------------------
+check ()
+{
+  run 0 "$2" -vcsn-transpose $ctx -E -e "$1"
+}
+
+check2 ()
+{
+  check "$1" "$2"
+  check "$2" "$1"
+}
+
+ctx='-C char_b_lal'
+check '\e' '\e'
+check '\z' '\z'
+check 'a' 'a'
+check 'ab' 'b.a'
+check 'abc+aba' '(a.b.a)+(c.b.a)'
+check '(ab)*' '(b.a)*'
+
+ctx='-C char_b_law'
+check '\e' '\e'
+check '\z' '\z'
+check 'a' 'a'
+check 'ab' 'ba'
+check 'abc+aba' '(aba)+(cba)'
+check '(ab)*' '(ba)*'
+
+ctx='-W zrr -Lw'
+check2 '{{{2}ab}cd}abcd' '{{{2}ba}dc}dcba'
+check2 '({ab}(abcd)*{cd})' '({dc}(dcba)*{ba})'
+
+
+## --------------------------- ##
+## vcsn-transpose(automaton).  ##
+## --------------------------- ##
 
 # check CONTEXT RATEXP < DIFF
 # ---------------------------

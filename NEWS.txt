@@ -1,4 +1,8 @@
 * 2013-01-11
+** pprat is removed
+It was designed for the test suite.  The vcsn-* tools are now sufficient for
+the test suite, and are exposed to the user.
+
 ** vcsn-*: option overhaul
 The different tools had already too many different calling conventions.
 They are now (quite) consistent.

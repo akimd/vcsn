@@ -3,9 +3,9 @@
 
 # Check the alphabets.
 {c}a => {c}a
-{a}x ! {a}x: 1.4: invalid word: x: invalid letter: x
-{x}a ! {x}a: 1.1-4: 1.1: invalid word: x: invalid letter: x
-a{x} ! a{x}: 1.2-5: 1.1: invalid word: x: invalid letter: x
+{a}x ! 1.4: invalid word: x: invalid letter: x
+{x}a ! 1.1-4: 1.1: invalid word: x: invalid letter: x
+a{x} ! 1.2-5: 1.1: invalid word: x: invalid letter: x
 
 # Check associativities.
 %labels: letters

@@ -13,11 +13,10 @@
 
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
-AM_RAT_LOG_FLAGS = rat/pprat
 AM_RAT_LOG_DEPS =                               \
   $(RAT_LOG_COMPILER)                           \
   rat/common.rat rat/common-weights.rat
-$(rat_TESTS:.rat=.log): rat/pprat $(AM_RAT_LOG_DEPS)
+$(rat_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
 rat_TESTS =                                     \
   $(rat_XFAIL_TESTS)                            \
@@ -26,7 +25,6 @@ rat_TESTS =                                     \
   rat/interface.rat                             \
   rat/b.rat                                     \
   rat/br.rat                                    \
-  rat/transpose.rat                             \
   rat/z.rat                                     \
   rat/zr.rat                                    \
   rat/zrr.rat
@@ -41,9 +39,6 @@ rat_XFAIL_TESTS =                               \
   rat/wrong-weight-set.rat
 
 XFAIL_TESTS += $(rat_XFAIL_TESTS)
-
-EXTRA_PROGRAMS += rat/pprat
-rat_pprat_LDADD = $(all_libctx) $(libvcsn)
 
 .PHONY: check-rat
 check-rat:

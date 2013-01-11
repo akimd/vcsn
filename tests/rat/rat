@@ -17,7 +17,7 @@ my $PASS = "${green}PASS$std";
 my $fail = 0;
 
 # The tested program.
-my $prog = shift @ARGV;
+my $prog = 'vcsn-cat';
 # The current atom kind (argument for -a).
 my $labels = 'letters';
 # The current weightset (argument for -w).
@@ -52,7 +52,7 @@ sub pp($)
 {
   my ($in) = @_;
   $in = join (' ', map { quote($_) } split (' ', $in));
-  my $cmd = "$prog -L $labels -W $ws $in";
+  my $cmd = "$prog -L $labels -W $ws -E -e $in";
   my $res = `$cmd 2>&1`;
   if ($?)
     {
