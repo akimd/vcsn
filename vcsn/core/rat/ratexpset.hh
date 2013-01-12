@@ -52,6 +52,8 @@ namespace vcsn
   public:
     /// Static description key.
     static std::string sname();
+    /// Dynamic description key.
+    virtual std::string vname(bool full = true) const;
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.

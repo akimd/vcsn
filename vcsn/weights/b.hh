@@ -16,6 +16,11 @@ namespace vcsn
       return "b";
     }
 
+    std::string vname(bool) const
+    {
+      return sname();
+    }
+
     using value_t = bool;
 
     value_t

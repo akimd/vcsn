@@ -23,6 +23,13 @@ namespace vcsn
     return "ratexpset<" + context_t::sname() + '>';
   }
 
+  template <typename Context>
+  std::string
+  ratexpset<Context>::vname(bool full) const
+  {
+    return "ratexpset<" + context().vname(full) + '>';
+  }
+
 #define DEFINE                                  \
   template <typename Context>                   \
   inline                                        \
