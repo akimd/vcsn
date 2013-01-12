@@ -13,8 +13,9 @@
 
 TEST_EXTENSIONS += .rat
 RAT_LOG_COMPILER = $(srcdir)/rat/rat
-AM_RAT_LOG_DEPS =                               \
-  $(RAT_LOG_COMPILER)                           \
+AM_RAT_LOG_DEPS =				\
+  $(RAT_LOG_COMPILER)				\
+  $(all_vcsn)					\
   rat/common.rat rat/common-weights.rat
 $(rat_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
