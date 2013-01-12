@@ -1,8 +1,10 @@
 #ifndef LIB_VCSN_LIB_ALGOS_REGISTRY_HH
 # define LIB_VCSN_LIB_ALGOS_REGISTRY_HH
 
+# include <iostream>
 # include <map>
 # include <stdexcept>
+
 # include <boost/type_traits.hpp>
 
 namespace vcsn
@@ -19,16 +21,18 @@ namespace vcsn
 
     using map_t = std::map<std::string, Fun*>;
 
-    bool set(const std::string& ctx, const Fun& fn)
+    bool set(std::string ctx, const Fun& fn)
     {
+      ctx = vcsn::dyn::context::sname(ctx);
       if (getenv("YYDEBUG"))
         std::cerr << "Register(" << name_ << ").set(" << ctx << ")\n";
       map_[ctx] = fn;
       return true;
     }
 
-    const Fun& get(const std::string& ctx)
+    const Fun& get(std::string ctx)
     {
+      ctx = vcsn::dyn::context::sname(ctx);
       if (getenv("YYDEBUG"))
         std::cerr << "Register(" << name_ << ").get(" << ctx << ")\n";
       auto i = map_.find(ctx);

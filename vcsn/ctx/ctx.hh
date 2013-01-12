@@ -18,8 +18,15 @@ namespace vcsn
     class context
     {
     public:
-      virtual std::string vname() const = 0;
+      /// A description of the context, sufficient to build it.
+      /// \param full  whether to include the genset.
+      ///              if false, same as sname.
+      virtual std::string vname(bool full = true) const = 0;
       virtual std::string labelset_string() const = 0;
+
+      /// Convert a dynamic name into a static one.
+      /// (from vname to sname, i.e., strip generators).
+      static std::string sname(const std::string& vname);
     };
   }
 
@@ -72,16 +79,17 @@ namespace vcsn
 
       /// The name of this context, built from its parameters.
       /// E.g., "lal_char_b", "law_char_zmin".
-      static std::string sname()
+      static std::string sname(const std::string& gs = "")
       {
         return (kind_t::sname()
                 + "_" + labelset_t::sname()
+                + (gs.empty() ? "" : ("(" + gs + ")"))
                 + "_" + weightset_t::sname());
       }
 
-      virtual std::string vname() const override final
+      virtual std::string vname(bool full = true) const override final
       {
-        return sname();
+        return sname(full ? labelset_string() : "");
       }
 
       virtual std::string labelset_string() const override final

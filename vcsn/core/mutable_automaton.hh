@@ -90,9 +90,9 @@ namespace vcsn
       return "mutable_automaton<" + context_t::sname() + ">";
     }
 
-    virtual std::string vname() const override
+    virtual std::string vname(bool full = true) const override
     {
-      return sname();
+      return "mutable_automaton<" + context().vname(full) + ">";
     }
 
     const context_t& context() const { return es_.context(); }

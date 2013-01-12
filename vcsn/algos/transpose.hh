@@ -55,9 +55,9 @@ namespace vcsn
         return "transpose_automaton<" + automaton_t::sname() + ">";
       }
 
-      virtual std::string vname() const override
+      virtual std::string vname(bool full = true) const override
       {
-        return sname();
+        return "transpose_automaton<" + aut_->vname(full) + ">";
       }
 
       /*-------------------------------.

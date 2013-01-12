@@ -13,8 +13,10 @@ namespace vcsn
     {
     public:
       virtual ~abstract_automaton() {}
-      /// A key to recognize the type of the automaton.
-      virtual std::string vname() const = 0;
+      /// A description of the automaton, sufficient to build it.
+      /// \param full  whether to include the genset.
+      ///              if false, same as sname.
+      virtual std::string vname(bool full = true) const = 0;
     };
 
     using automaton = std::shared_ptr<abstract_automaton>;
