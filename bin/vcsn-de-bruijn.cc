@@ -11,7 +11,7 @@ main (int argc, char* const argv[])
   std::string cname = argv[1];
   size_t n = boost::lexical_cast<size_t>(argv[2]);
   using namespace vcsn::dyn;
-  context* ctx = make_context(cname, "ab");
-  automaton a = de_bruijn(*ctx, n);
+  context ctx = make_context(cname, "ab");
+  automaton a = de_bruijn(ctx, n);
   print(a, std::cout, FileType::dot) << "\n";
 }

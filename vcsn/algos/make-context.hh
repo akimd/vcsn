@@ -33,35 +33,38 @@ namespace vcsn
   Ctx
   make_context(const typename Ctx::labelset_t::letters_t& ls);
 
-  template <typename WeightSet>
-  struct weightsetter
+  namespace details
   {
-    static
-    WeightSet
-    // FIXME: Breaking the abstraction over set<char>.
-    make(const std::set<char>&)
+    template <typename WeightSet>
+    struct weightsetter
     {
-      return {};
-    }
-  };
+      static
+      WeightSet
+      // FIXME: Breaking the abstraction over set<char>.
+      make(const std::set<char>&)
+      {
+        return {};
+      }
+    };
 
-  template <typename Ctx>
-  struct weightsetter<ratexpset<Ctx>>
-  {
-    static
-    ratexpset<Ctx>
-    make(const typename Ctx::labelset_t::letters_t& ls)
+    template <typename Ctx>
+    struct weightsetter<ratexpset<Ctx>>
     {
-      return {make_context<Ctx>(ls)};
-    }
-  };
+      static
+      ratexpset<Ctx>
+      make(const typename Ctx::labelset_t::letters_t& ls)
+      {
+        return {make_context<Ctx>(ls)};
+      }
+    };
+  }
 
   template <typename Ctx>
   Ctx
   make_context(const typename Ctx::labelset_t::letters_t& ls)
   {
     auto gs = typename Ctx::labelset_t(ls);
-    auto ws = weightsetter<typename Ctx::weightset_t>::make(ls);
+    auto ws = details::weightsetter<typename Ctx::weightset_t>::make(ls);
     return Ctx(gs, ws);
   }
 
@@ -79,7 +82,7 @@ namespace vcsn
       `---------------*/
 
       template <typename Ctx>
-      dyn::context
+      context
       make_context(const std::string& letters)
       {
         std::set<char> ls;
@@ -100,7 +103,7 @@ namespace vcsn
 
       template <typename Ctx>
       abstract_ratexpset*
-      make_ratexpset(const dyn::context& ctx)
+      make_ratexpset(const context& ctx)
       {
         return new concrete_abstract_ratexpset<Ctx>
           (dynamic_cast<const Ctx&>(*ctx));

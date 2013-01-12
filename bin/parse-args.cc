@@ -39,8 +39,8 @@ read_ratexp(const options& opts)
   auto ctx = vcsn::dyn::make_context(opts.context, opts.labelset_describ);
   return
     opts.input_is_file
-    ? vcsn::dyn::read_ratexp_file(opts.input, *ctx, opts.input_format)
-    : vcsn::dyn::read_ratexp_string(opts.input, *ctx, opts.input_format);
+    ? vcsn::dyn::read_ratexp_file(opts.input, ctx, opts.input_format)
+    : vcsn::dyn::read_ratexp_string(opts.input, ctx, opts.input_format);
 }
 
 void
