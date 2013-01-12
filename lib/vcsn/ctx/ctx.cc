@@ -4,7 +4,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    std::string context::sname(const std::string& vname)
+    std::string abstract_context::sname(const std::string& vname)
     {
       std::string res;
       int nesting = 0;

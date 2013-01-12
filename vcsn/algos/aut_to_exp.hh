@@ -83,7 +83,8 @@ namespace vcsn
       aut_to_exp(const automaton& aut)
       {
         const Aut& a = dynamic_cast<const Aut&>(*aut);
-        return make_ratexp(a.context(), aut_to_exp(a));
+        return make_ratexp(std::make_shared<typename Aut::context_t>(a.context()),
+                           aut_to_exp(a));
       }
 
       using aut_to_exp_t = auto (const automaton& aut) -> ratexp;

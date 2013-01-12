@@ -15,7 +15,7 @@ namespace vcsn
 
   namespace dyn
   {
-    class context
+    class abstract_context
     {
     public:
       /// A description of the context, sufficient to build it.
@@ -28,6 +28,8 @@ namespace vcsn
       /// (from vname to sname, i.e., strip generators).
       static std::string sname(const std::string& vname);
     };
+
+    using context = std::shared_ptr<const abstract_context>;
   }
 
   namespace ctx
@@ -35,7 +37,7 @@ namespace vcsn
     template <typename LabelSet,
               typename WeightSet,
               typename Kind>
-    class context: public dyn::context
+    class context: public dyn::abstract_context
     {
     public:
       using labelset_t = LabelSet;

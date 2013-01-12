@@ -28,10 +28,11 @@ namespace vcsn
       }
     }
 
-    context*
+    context
     make_context(const std::string& name, const std::string& gens)
     {
-      return details::make_context_registry().call(context::sname(name), gens);
+      return details::make_context_registry()
+        .call(abstract_context::sname(name), gens);
     }
 
 
@@ -60,7 +61,7 @@ namespace vcsn
     abstract_ratexpset*
     make_ratexpset(const context& ctx)
     {
-      return details::make_ratexpset_registry().call(ctx.vname(), ctx);
+      return details::make_ratexpset_registry().call(ctx->vname(), ctx);
     }
   }
 }

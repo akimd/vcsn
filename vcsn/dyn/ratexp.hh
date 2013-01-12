@@ -22,16 +22,17 @@ namespace vcsn
         {}
         ~abstract_ratexp() {}
 
-        const dyn::context& ctx()
+        const dyn::abstract_context& ctx()
         {
-          return ctx_;
+          return *ctx_;
         }
         const exp_t& ratexp() const
         {
           return ratexp_;
         }
       protected:
-        const dyn::context& ctx_;
+        /// A shared_ptr to the abstract_context.
+        const dyn::context ctx_;
         /// A shared_ptr to the abstract_ratexp.
         const exp_t ratexp_;
       };
@@ -45,6 +46,18 @@ namespace vcsn
     make_ratexp(const dyn::context& ctx, const rat::exp_t& ratexp)
     {
       return std::make_shared<ratexp::element_type>(ctx, ratexp);
+    }
+
+    template <typename LabelSet,
+              typename WeightSet,
+              typename Kind>
+    inline
+    ratexp
+    make_ratexp(const ctx::context<LabelSet, WeightSet, Kind>& ctx,
+                const rat::exp_t& ratexp)
+    {
+      using ctx_t = ctx::context<LabelSet, WeightSet, Kind>;
+      return make_ratexp(std::make_shared<const ctx_t>(ctx), ratexp);
     }
 
   } // namespace dyn

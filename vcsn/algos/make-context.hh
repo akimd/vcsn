@@ -19,8 +19,8 @@ namespace vcsn
      But RatExps need a context, and a labelset.  Other weight sets,
      such as b or zmin, do not need a labelset to be buildable.
 
-     So we must define a mean instantiate a weightset with or without
-     an alphabet, depending on its need.
+     So we must define a means to instantiate a weightset with or
+     without an alphabet, depending on its need.
 
      We rely on partial template specialization to do so, which
      requires that we use a struct (named weightsetter).
@@ -30,7 +30,7 @@ namespace vcsn
      */
 
   template <typename Ctx>
-  Ctx*
+  Ctx
   make_context(const typename Ctx::labelset_t::letters_t& ls);
 
   template <typename WeightSet>
@@ -52,18 +52,17 @@ namespace vcsn
     ratexpset<Ctx>
     make(const typename Ctx::labelset_t::letters_t& ls)
     {
-      return {*make_context<Ctx>(ls)};
+      return {make_context<Ctx>(ls)};
     }
   };
 
   template <typename Ctx>
-  Ctx*
+  Ctx
   make_context(const typename Ctx::labelset_t::letters_t& ls)
   {
     auto gs = typename Ctx::labelset_t(ls);
     auto ws = weightsetter<typename Ctx::weightset_t>::make(ls);
-    // FIXME: memory management.
-    return new Ctx(gs, ws);
+    return Ctx(gs, ws);
   }
 
 
@@ -80,16 +79,16 @@ namespace vcsn
       `---------------*/
 
       template <typename Ctx>
-      dyn::context*
+      dyn::context
       make_context(const std::string& letters)
       {
         std::set<char> ls;
         for (auto l: letters)
           ls.insert(l);
-        return vcsn::make_context<Ctx>(ls);
+        return std::make_shared<Ctx>(vcsn::make_context<Ctx>(ls));
       }
 
-      using make_context_t = auto (const std::string& gens) -> context*;
+      using make_context_t = auto (const std::string& gens) -> context;
 
       bool
       make_context_register(const std::string& ctx,
@@ -104,7 +103,7 @@ namespace vcsn
       make_ratexpset(const dyn::context& ctx)
       {
         return new concrete_abstract_ratexpset<Ctx>
-          (dynamic_cast<const Ctx&>(ctx));
+          (dynamic_cast<const Ctx&>(*ctx));
       }
 
       using make_ratexpset_t = auto (const context& ctx) -> abstract_ratexpset*;

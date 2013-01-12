@@ -49,7 +49,7 @@ namespace vcsn
       de_bruijn(const dyn::context& ctx, unsigned n)
       {
         return std::make_shared<mutable_automaton<Ctx>>
-          (de_bruijn<Ctx>(n, dynamic_cast<const Ctx&>(ctx)));
+          (de_bruijn<Ctx>(n, dynamic_cast<const Ctx&>(*ctx)));
       }
 
       using de_bruijn_t =
