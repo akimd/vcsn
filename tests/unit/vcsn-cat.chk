@@ -76,7 +76,7 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char(a)_b"
   vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
@@ -85,7 +85,7 @@ digraph
 ---
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char(a)_b"
   vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]
@@ -104,7 +104,7 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char(a)_b"
   vcsn_genset = "a"
   {
     1
@@ -132,7 +132,7 @@ digraph
 ---
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char(a)_b"
   vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]

@@ -7,7 +7,7 @@
 cat >lady4.dot <<\EOF
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char(abc)_b"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
@@ -35,7 +35,7 @@ EOF
 perl -p -e '
     s{\[label = "(.*?)"\]}
      {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"{$_}\"\]"}eg;
-    s{lal_char_b}{lau_char_ratexpset<lal_char_b>}g;
+    s{lal_char\(abc\)_b}{lau_char(abc)_ratexpset<lal_char_b>}g;
    ' < lady4.dot >out.exp
 
 run 0 out.exp -vcsn-lift -Af lady4.dot

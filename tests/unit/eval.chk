@@ -10,7 +10,7 @@ check ()
 cat > simple.dot <<EOF
 digraph
 {
-  vcsn_context = "lal_char_z"
+  vcsn_context = "lal_char(ab)_z"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -36,7 +36,7 @@ check simple.dot a 2
 cat > initial-weight.dot <<EOF
 digraph
 {
-  vcsn_context = "lal_char_z"
+  vcsn_context = "lal_char(ab)_z"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -60,7 +60,7 @@ run 0 12 -vcsn-evaluate initial-weight.dot aabab
 cat > more-letters.dot <<EOF
 digraph
 {
-  vcsn_context = "lal_char_z"
+  vcsn_context = "lal_char(abc)_z"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
@@ -85,7 +85,7 @@ run 0 6 -vcsn-evaluate more-letters.dot caa
 cat > prod.dot <<EOF
 digraph
 {
-  vcsn_context = "lal_char_z"
+  vcsn_context = "lal_char(abc)_z"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
@@ -110,7 +110,7 @@ check prod.dot aabab 12
 cat > complex.dot <<EOF
 digraph
 {
-  vcsn_context = "lal_char_z"
+  vcsn_context = "lal_char(abc)_z"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]

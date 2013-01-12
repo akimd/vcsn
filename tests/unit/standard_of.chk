@@ -30,7 +30,7 @@ check ()
   cat >out.exp <<EOF
 digraph
 {
-  vcsn_context = "lal_char_${ws}"
+  vcsn_context = "lal_char(abcd)_${ws}"
   vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
