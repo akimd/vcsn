@@ -50,6 +50,6 @@ namespace vcsn
     }
   }
 #endif
-};
+}
 
 #endif // !VCSN_CTX_CHAR_B_LAL_HH
