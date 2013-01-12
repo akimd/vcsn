@@ -7,4 +7,4 @@ check ()
   run 0 $3 -vcsn-transpose -C "$1" -g abcd -Ee "$2"
 }
 
-check char_b_lal "abcd" "d.c.b.a"
+check lal_char_b "abcd" "d.c.b.a"

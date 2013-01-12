@@ -2,9 +2,9 @@
 #include <iostream>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/ctx/char_z_lal.hh>
+#include <vcsn/ctx/lal_char_z.hh>
 
-using context_t = vcsn::ctx::char_z_lal;
+using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 using entry_t = automaton_t::entry_t;
 

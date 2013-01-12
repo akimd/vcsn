@@ -3,7 +3,7 @@
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
@@ -22,13 +22,13 @@ digraph
 EOF
 
 run 0 out.exp unit/ladybird-b 2
-perl -pi -e 's/char_b_lal/char_z_lal/g' out.exp
+perl -pi -e 's/lal_char_b/lal_char_z/g' out.exp
 run 0 out.exp unit/ladybird-z 2
 
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "char_zmin_lal"
+  vcsn_context = "lal_char_zmin"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]

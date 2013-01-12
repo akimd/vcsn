@@ -2,12 +2,12 @@
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/ctx/char_b_lal.hh>
+#include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/factory/de_bruijn.hh>
 #include <vcsn/factory/ladybird.hh>
 #include <tests/unit/test.hh>
 
-using context_t = vcsn::ctx::char_b_lal;
+using context_t = vcsn::ctx::lal_char_b;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
 /// true iff idempotent.

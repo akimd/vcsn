@@ -1,7 +1,7 @@
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/rat/ratexpset.hh>
-#include <vcsn/ctx/char_b_lal.hh>
-#include <vcsn/ctx/char_z_lal.hh>
+#include <vcsn/ctx/lal_char_b.hh>
+#include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <tests/unit/test.hh>
 
@@ -11,7 +11,7 @@ check_mutable_automaton()
 {
   bool res = true;
   // labels_are_letters for weights.
-  auto ctx_b = vcsn::ctx::char_b_lal{{'a', 'b', 'c', 'd'}};
+  auto ctx_b = vcsn::ctx::lal_char_b{{'a', 'b', 'c', 'd'}};
   auto ks_b = ctx_b.make_ratexpset();
   // labels_are_words for labels.
   auto ctx_br =
@@ -61,7 +61,7 @@ check_mutable_automaton()
 bool
 check_minimization()
 {
-  using context_t = vcsn::ctx::char_b_lal;
+  using context_t = vcsn::ctx::lal_char_b;
   using automaton_t = vcsn::mutable_automaton<context_t>;
   using tr_automaton_t = vcsn::details::transpose_automaton<automaton_t>;
   context_t ctx{{'a', 'b'}};

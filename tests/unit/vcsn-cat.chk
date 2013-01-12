@@ -10,9 +10,9 @@ check ()
   run 0 out.exp -vcsn-cat -Af out.exp
 }
 
-check char_b_lal "abcd"
-check char_z_lal "{3}\\e"
-check char_z_lal "{3}(\\e+a)"
+check lal_char_b "abcd"
+check lal_char_z "{3}\\e"
+check lal_char_z "{3}(\\e+a)"
 
 
 # check < AUTOMATON
@@ -39,7 +39,7 @@ fail ()
 fail <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_alphabet = "a"
   1 -> 2 [label = a]
   2 -> F2
@@ -50,7 +50,7 @@ EOF
 fail <<EOF
 digraph
 {
-  vcsn_contxt = char_b_lal
+  vcsn_contxt = lal_char_b
   vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
@@ -76,7 +76,7 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
@@ -85,7 +85,7 @@ digraph
 ---
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]
@@ -104,7 +104,7 @@ EOF
 check <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "a"
   {
     1
@@ -132,7 +132,7 @@ digraph
 ---
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]

@@ -6,7 +6,7 @@
 cat >a.dot <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   1 -> 2 [label = "a"]
   2 -> F2
@@ -16,7 +16,7 @@ EOF
 cat >out.exp <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -45,7 +45,7 @@ run 0 out.exp -vcsn-determinize out.exp
 cat >epsilon.dot <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   1 -> F1
   I1 -> 1
@@ -54,7 +54,7 @@ EOF
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -80,14 +80,14 @@ run 0 out.exp -vcsn-determinize out.exp
 cat >empty.dot <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
 }
 EOF
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -113,7 +113,7 @@ run 0 out.exp -vcsn-determinize out.exp
 # --------------------
 check_de_bruijn ()
 {
-  run 0 stdout -vcsn-de-bruijn char_b_lal $1
+  run 0 stdout -vcsn-de-bruijn lal_char_b $1
   mv stdout de-bruijn-$1.dot
 
   run 0 stdout -vcsn-determinize de-bruijn-$1.dot
@@ -130,7 +130,7 @@ mv out.exp de-bruijn-3-det.dot
 cat >out.exp <<EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
@@ -205,7 +205,7 @@ Check idempotence for ladybird 4
 States: 4 -> 16
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]

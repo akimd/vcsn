@@ -1,3 +1,22 @@
+* 2013-01-12
+** contexts are renamed
+Contexts have both a name and an identifier.  The name is used to display in
+a readable form the nature of the context, for instance in Dot output.  The
+identifier is used for instance headers, or predefined contexts, and
+libraries.
+
+So far names and identifiers are equal, but this will change.
+
+As a first step, identifiers/names are now <Kind>_<LabelSet>_<WeightSet>
+instead of <LabelSet>_<WeightSet>_<Kind>.  For instance:
+
+  char_b_lal  => lal_char_b
+  char_br_lal => lal_char_br
+  char_zr_lal => lal_char_zr
+  char_br_lau => lau_char_br
+  char_br_law => law_char_br
+  char_zr_law => law_char_zr
+
 * 2013-01-11
 ** pprat is removed
 It was designed for the test suite.  The vcsn-* tools are now sufficient for

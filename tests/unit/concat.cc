@@ -1,8 +1,8 @@
 #include <tests/unit/test.hh>
 #include <iostream>
-#include <vcsn/ctx/char_z_law.hh>
+#include <vcsn/ctx/law_char_z.hh>
 
-using context_t = vcsn::ctx::char_z_law;
+using context_t = vcsn::ctx::law_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 using entry_t = automaton_t::entry_t;
 

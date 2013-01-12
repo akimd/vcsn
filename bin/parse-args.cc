@@ -65,7 +65,7 @@ usage(const char* prog, int exit_status)
       "  -o FORMAT          output format\n"
       "\n"
       "Context:\n"
-      "  char_(b|z|zmin)_la(l|u|w)\n"
+      "  la(l|u|w)_char_(b|z|zmin)\n"
       "  etc.\n"
       "\n"
       "WeightSet:\n"
@@ -102,11 +102,11 @@ parse_args(options& opts, int& argc, char* const*& argv)
   map ksets;
 #define ADD(Key, Name)                          \
     ksets.insert(pair(#Key, Name))
-    ADD(b,   "char_b_law");
-    ADD(br,  "char_ratexpset<char_b_law>_law");
-    ADD(z,   "char_z_law");
-    ADD(zr,  "char_ratexpset<char_z_law>_law");
-    ADD(zrr, "char_ratexpset<char_ratexpset<char_z_law>_law>_law");
+    ADD(b,   "law_char_b");
+    ADD(br,  "law_char_ratexpset<law_char_b>");
+    ADD(z,   "law_char_z");
+    ADD(zr,  "law_char_ratexpset<law_char_z>");
+    ADD(zrr, "law_char_ratexpset<law_char_ratexpset<law_char_z>>");
 #undef ADD
   while ((opt = getopt(argc, argv, "AC:Ee:f:g:hi:o:L:W:?")) != -1)
     switch (opt)

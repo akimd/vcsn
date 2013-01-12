@@ -15,7 +15,7 @@ namespace vcsn
   | make_context.  |
   `---------------*/
 
-  /* Some contexts, such as "char_br_lal", use RatExps as weight set.
+  /* Some contexts, such as "lal_char_br", use RatExps as weight set.
      But RatExps need a context, and a labelset.  Other weight sets,
      such as b or zmin, do not need a labelset to be buildable.
 

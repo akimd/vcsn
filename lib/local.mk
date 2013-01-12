@@ -14,63 +14,63 @@
 include lib/vcsn/local.mk
 
 # char_b.
-pkglib_LTLIBRARIES += lib/libchar_b_lal.la
-lib_libchar_b_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_b_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_lal
+pkglib_LTLIBRARIES += lib/liblal_char_b.la
+lib_liblal_char_b_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_b
 
-pkglib_LTLIBRARIES += lib/libchar_b_law.la
-lib_libchar_b_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_b_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_b_law
+pkglib_LTLIBRARIES += lib/liblaw_char_b.la
+lib_liblaw_char_b_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_b
 
 # char_br.
-pkglib_LTLIBRARIES += lib/libchar_br_lau.la
-lib_libchar_br_lau_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_br_lau_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_lau
+pkglib_LTLIBRARIES += lib/liblau_char_br.la
+lib_liblau_char_br_la_SOURCES = lib/ctx/libctx.cc
+lib_liblau_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lau_char_br
 
-pkglib_LTLIBRARIES += lib/libchar_br_lal.la
-lib_libchar_br_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_br_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_lal
+pkglib_LTLIBRARIES += lib/liblal_char_br.la
+lib_liblal_char_br_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_br
 
-pkglib_LTLIBRARIES += lib/libchar_br_law.la
-lib_libchar_br_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_br_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_br_law
+pkglib_LTLIBRARIES += lib/liblaw_char_br.la
+lib_liblaw_char_br_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_br
 
 # char_z.
-pkglib_LTLIBRARIES += lib/libchar_z_lau.la
-lib_libchar_z_lau_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_lau_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lau
+pkglib_LTLIBRARIES += lib/liblau_char_z.la
+lib_liblau_char_z_la_SOURCES = lib/ctx/libctx.cc
+lib_liblau_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lau_char_z
 
-pkglib_LTLIBRARIES += lib/libchar_z_lal.la
-lib_libchar_z_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_lal
+pkglib_LTLIBRARIES += lib/liblal_char_z.la
+lib_liblal_char_z_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_z
 
-pkglib_LTLIBRARIES += lib/libchar_z_law.la
-lib_libchar_z_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_z_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_z_law
+pkglib_LTLIBRARIES += lib/liblaw_char_z.la
+lib_liblaw_char_z_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_z
 
 # char_zr.
-pkglib_LTLIBRARIES += lib/libchar_zr_lal.la
-lib_libchar_zr_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zr_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zr_lal
+pkglib_LTLIBRARIES += lib/liblal_char_zr.la
+lib_liblal_char_zr_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zr
 
-pkglib_LTLIBRARIES += lib/libchar_zr_law.la
-lib_libchar_zr_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zr_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zr_law
+pkglib_LTLIBRARIES += lib/liblaw_char_zr.la
+lib_liblaw_char_zr_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zr
 
 # char_zrr.
-pkglib_LTLIBRARIES += lib/libchar_zrr_lal.la
-lib_libchar_zrr_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zrr_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zrr_lal
+pkglib_LTLIBRARIES += lib/liblal_char_zrr.la
+lib_liblal_char_zrr_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zrr
 
-pkglib_LTLIBRARIES += lib/libchar_zrr_law.la
-lib_libchar_zrr_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zrr_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zrr_law
+pkglib_LTLIBRARIES += lib/liblaw_char_zrr.la
+lib_liblaw_char_zrr_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zrr
 
 # char_zmin.
-pkglib_LTLIBRARIES += lib/libchar_zmin_lal.la
-lib_libchar_zmin_lal_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zmin_lal_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_lal
+pkglib_LTLIBRARIES += lib/liblal_char_zmin.la
+lib_liblal_char_zmin_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zmin
 
-pkglib_LTLIBRARIES += lib/libchar_zmin_law.la
-lib_libchar_zmin_law_la_SOURCES = lib/ctx/libctx.cc
-lib_libchar_zmin_law_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=char_zmin_law
+pkglib_LTLIBRARIES += lib/liblaw_char_zmin.la
+lib_liblaw_char_zmin_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zmin

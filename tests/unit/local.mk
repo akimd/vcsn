@@ -13,9 +13,9 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  unit/aut_char_z_lau                           \
-  unit/aut_char_z_lal                           \
-  unit/aut_char_z_law                           \
+  unit/aut_lau_char_z                           \
+  unit/aut_lal_char_z                           \
+  unit/aut_law_char_z                           \
   unit/concat					\
   unit/determinize                              \
   unit/ladybird-b                               \
@@ -29,34 +29,34 @@ AM_LDADD = $(libvcsn)
 
 noinst_HEADERS = unit/test.hh
 
-unit_aut_char_z_lau_LDADD = $(libchar_z_lau) $(AM_LDADD)
-unit_aut_char_z_lal_LDADD = $(libchar_z_lal) $(AM_LDADD)
-unit_aut_char_z_law_LDADD = $(libchar_z_law) $(AM_LDADD)
+unit_aut_lau_char_z_LDADD = $(liblau_char_z) $(AM_LDADD)
+unit_aut_lal_char_z_LDADD = $(liblal_char_z) $(AM_LDADD)
+unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
-unit_determinize_LDADD = $(libchar_b_lal) $(AM_LDADD)
+unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
 unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
-unit_ladybird_b_LDADD = $(libchar_b_lal) $(AM_LDADD)
+unit_ladybird_b_LDADD = $(liblal_char_b) $(AM_LDADD)
 
 unit_ladybird_z_SOURCES = unit/ladybird.cc
 unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
-unit_ladybird_z_LDADD = $(libchar_z_lal) $(AM_LDADD)
+unit_ladybird_z_LDADD = $(liblal_char_z) $(AM_LDADD)
 
 unit_ladybird_zmin_SOURCES = unit/ladybird.cc
 unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
-unit_ladybird_zmin_LDADD = $(libchar_zmin_lal) $(AM_LDADD)
+unit_ladybird_zmin_LDADD = $(liblal_char_zmin) $(AM_LDADD)
 
-unit_poly_LDADD = $(libchar_z_lal) $(libchar_zmin_lal) $(AM_LDADD)
+unit_poly_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 
-unit_product_LDADD = $(libchar_z_lal) $(AM_LDADD)
+unit_product_LDADD = $(liblal_char_z) $(AM_LDADD)
 
-unit_transpose_LDADD = $(libchar_b_lal) $(libchar_z_lal) $(AM_LDADD)
+unit_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(AM_LDADD)
 
 unit_TESTS =                                    \
-  unit/aut_char_z_lau.chk                       \
-  unit/aut_char_z_lal.chk                       \
-  unit/aut_char_z_law.chk                       \
+  unit/aut_lau_char_z.chk                       \
+  unit/aut_lal_char_z.chk                       \
+  unit/aut_law_char_z.chk                       \
   unit/aut_to_exp.chk                           \
   unit/concat.chk				\
   unit/determinize.chk                          \
@@ -73,9 +73,9 @@ dist_TESTS += $(unit_TESTS)
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-unit/aut_char_z_lau.log: unit/aut_char_z_lau
-unit/aut_char_z_lal.log: unit/aut_char_z_lal
-unit/aut_char_z_law.log: unit/aut_char_z_law
+unit/aut_lau_char_z.log: unit/aut_lau_char_z
+unit/aut_lal_char_z.log: unit/aut_lal_char_z
+unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
 unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin

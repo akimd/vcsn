@@ -71,12 +71,12 @@ namespace vcsn
       {}
 
       /// The name of this context, built from its parameters.
-      /// E.g., "char_b_lal", "char_zmin_law".
+      /// E.g., "lal_char_b", "law_char_zmin".
       static std::string sname()
       {
-        return (labelset_t::sname()
-                + "_" + weightset_t::sname()
-                + "_" + kind_t::sname());
+        return (kind_t::sname()
+                + "_" + labelset_t::sname()
+                + "_" + weightset_t::sname());
       }
 
       virtual std::string vname() const override final

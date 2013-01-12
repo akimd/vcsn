@@ -16,28 +16,28 @@
 ## Libraries.  ##
 ## ----------- ##
 
-libchar_b_lal = $(top_builddir)/lib/libchar_b_lal.la
-libchar_b_law = $(top_builddir)/lib/libchar_b_law.la
-libchar_br_lau = $(top_builddir)/lib/libchar_br_lau.la
-libchar_br_lal = $(top_builddir)/lib/libchar_br_lal.la
-libchar_br_law = $(top_builddir)/lib/libchar_br_law.la
-libchar_z_lau = $(top_builddir)/lib/libchar_z_lau.la
-libchar_z_lal = $(top_builddir)/lib/libchar_z_lal.la
-libchar_z_law = $(top_builddir)/lib/libchar_z_law.la
-libchar_zr_lal = $(top_builddir)/lib/libchar_zr_lal.la
-libchar_zr_law = $(top_builddir)/lib/libchar_zr_law.la
-libchar_zrr_lal = $(top_builddir)/lib/libchar_zrr_lal.la
-libchar_zrr_law = $(top_builddir)/lib/libchar_zrr_law.la
-libchar_zmin_lal = $(top_builddir)/lib/libchar_zmin_lal.la
-libchar_zmin_law = $(top_builddir)/lib/libchar_zmin_law.la
+liblal_char_b = $(top_builddir)/lib/liblal_char_b.la
+liblaw_char_b = $(top_builddir)/lib/liblaw_char_b.la
+liblau_char_br = $(top_builddir)/lib/liblau_char_br.la
+liblal_char_br = $(top_builddir)/lib/liblal_char_br.la
+liblaw_char_br = $(top_builddir)/lib/liblaw_char_br.la
+liblau_char_z = $(top_builddir)/lib/liblau_char_z.la
+liblal_char_z = $(top_builddir)/lib/liblal_char_z.la
+liblaw_char_z = $(top_builddir)/lib/liblaw_char_z.la
+liblal_char_zr = $(top_builddir)/lib/liblal_char_zr.la
+liblaw_char_zr = $(top_builddir)/lib/liblaw_char_zr.la
+liblal_char_zrr = $(top_builddir)/lib/liblal_char_zrr.la
+liblaw_char_zrr = $(top_builddir)/lib/liblaw_char_zrr.la
+liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
+liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
 
 all_libctx =                                            \
-  $(libchar_b_lal) $(libchar_b_law)                     \
-  $(libchar_br_lau) $(libchar_br_lal) $(libchar_br_law) \
-  $(libchar_z_lau) $(libchar_z_lal) $(libchar_z_law)    \
-  $(libchar_zr_lal) $(libchar_zr_law)                   \
-  $(libchar_zrr_lal) $(libchar_zrr_law)                 \
-  $(libchar_zmin_lal) $(libchar_zmin_law)
+  $(liblal_char_b) $(liblaw_char_b)                     \
+  $(liblau_char_br) $(liblal_char_br) $(liblaw_char_br) \
+  $(liblau_char_z) $(liblal_char_z) $(liblaw_char_z)    \
+  $(liblal_char_zr) $(liblaw_char_zr)                   \
+  $(liblal_char_zrr) $(liblaw_char_zrr)                 \
+  $(liblal_char_zmin) $(liblaw_char_zmin)
 
 libvcsn = $(top_builddir)/lib/libvcsn.la
 

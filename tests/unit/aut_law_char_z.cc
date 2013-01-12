@@ -2,11 +2,11 @@
 
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/ctx/char_z_law.hh>
+#include <vcsn/ctx/law_char_z.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z_law;
+  using context_t = vcsn::ctx::law_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using automaton_t = vcsn::mutable_automaton<context_t>;
   automaton_t aut{ctx};

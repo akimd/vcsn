@@ -7,7 +7,7 @@
 cat >lady4.dot <<\EOF
 digraph
 {
-  vcsn_context = "char_b_lal"
+  vcsn_context = "lal_char_b"
   vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
@@ -35,7 +35,7 @@ EOF
 perl -p -e '
     s{\[label = "(.*?)"\]}
      {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"{$_}\"\]"}eg;
-    s{char_b_lal}{char_ratexpset<char_b_lal>_lau}g;
+    s{lal_char_b}{lau_char_ratexpset<lal_char_b>}g;
    ' < lady4.dot >out.exp
 
 run 0 out.exp -vcsn-lift -Af lady4.dot
@@ -44,7 +44,7 @@ run 0 out.exp -vcsn-lift -Af lady4.dot
 ## Expressions.  ##
 ## ------------- ##
 
-run 0 '{a.b.c}\e' -vcsn-lift -C char_b_lal -g abc -Ee "abc"
+run 0 '{a.b.c}\e' -vcsn-lift -C lal_char_b -g abc -Ee "abc"
 
 # FIXME: no support yet for the printer.
-# run 0 '{{2}a.b.c}\e' -vcsn-lift -C char_z_lal -g abc -Ee "{2}abc"
+# run 0 '{{2}a.b.c}\e' -vcsn-lift -C lal_char_z -g abc -Ee "{2}abc"

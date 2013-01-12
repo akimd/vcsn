@@ -3,10 +3,10 @@
 #include <iostream>
 
 #include <vcsn/algos/dot.hh>
-// CTX(WeightSet) => char_WeightSet_lal.
+// CTX(WeightSet) => lal_char_WeightSet.
 #define CTX(WS) CTX_(WS)
 // Two layers to force the evaluation of W.
-#define CTX_(WS) char_ ## WS ## _lal
+#define CTX_(WS) lal_char_ ## WS
 #define HEADER(WS) <vcsn/ctx/CTX(W).hh>
 #include HEADER(W)
 #include <vcsn/factory/ladybird.hh>

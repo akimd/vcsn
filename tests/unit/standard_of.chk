@@ -8,7 +8,7 @@ weighset()
   do
     case $1 in
       (-W) case $2 in
-            (zr) echo 'ratexpset<char_z_lal>';;
+            (zr) echo 'ratexpset<lal_char_z>';;
             (*) echo "$2";;
            esac
            return 0;;
@@ -30,7 +30,7 @@ check ()
   cat >out.exp <<EOF
 digraph
 {
-  vcsn_context = "char_${ws}_lal"
+  vcsn_context = "lal_char_${ws}"
   vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]

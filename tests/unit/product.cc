@@ -2,12 +2,12 @@
 
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/product.hh>
-#include <vcsn/ctx/char_z_lal.hh>
+#include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/core/mutable_automaton.hh>
 
 int main()
 {
-  using context_t = vcsn::ctx::char_z_lal;
+  using context_t = vcsn::ctx::lal_char_z;
   context_t ctx { {'a', 'b', 'c'} };
   using automaton_t = vcsn::mutable_automaton<context_t>;
 

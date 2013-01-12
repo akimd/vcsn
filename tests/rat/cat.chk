@@ -8,4 +8,4 @@ check ()
   run 0 $3 -vcsn-cat -E -C "$1" -g abcd -f input.rat
 }
 
-check char_b_lal "abcd" "a.b.c.d"
+check lal_char_b "abcd" "a.b.c.d"
