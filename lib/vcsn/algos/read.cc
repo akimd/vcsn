@@ -63,6 +63,7 @@ namespace vcsn
                                   " Could not read expression as xml input.");
           // FIXME: return xml_read_file(ctx, f);
         }
+      abort();
     }
 
     ratexp
@@ -88,6 +89,7 @@ namespace vcsn
                                   " Could not read expression as xml input.");
           // FIXME: return xml_read_string(ctx, s);
         }
+      abort();
     }
 
   }
