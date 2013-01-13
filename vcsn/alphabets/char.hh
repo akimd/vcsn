@@ -15,6 +15,16 @@ namespace vcsn
     using letter_t = char;
     using word_t = std::string;
 
+    static std::string sname()
+    {
+      return "char_letter";
+    }
+
+    virtual std::string vname(bool = true) const
+    {
+      return sname();
+    }
+
     word_t
     to_word(const empty_t) const
     {

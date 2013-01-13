@@ -10,16 +10,30 @@ namespace vcsn
   class set_alphabet: public L
   {
   public:
-    using letters_t = std::set<typename L::letter_t>;
+    using letter_t = typename L::letter_t;
+    using letters_t = std::set<letter_t>;
 
     static std::string sname()
     {
       return "char";
     }
 
+    virtual std::string vname(bool full = true) const
+    {
+      std::string res = sname();
+      if (full && !alphabet_.empty())
+        {
+          res += '(';
+          for (letter_t c: alphabet_)
+            res += c;
+          res += ')';
+        }
+      return res;
+    }
+
     set_alphabet() = default;
     set_alphabet(const set_alphabet&) = default;
-    set_alphabet(const std::initializer_list<typename L::letter_t>& l)
+    set_alphabet(const std::initializer_list<letter_t>& l)
       : alphabet_{l}
     {}
 
@@ -28,7 +42,7 @@ namespace vcsn
     {}
 
     set_alphabet&
-    add_letter(typename L::letter_t l)
+    add_letter(letter_t l)
     {
       assert(l != alphabet_.special_letter());
       alphabet_.insert(l);
@@ -37,7 +51,7 @@ namespace vcsn
 
     /// Whether \a l is a letter.
     bool
-    has(typename L::letter_t l) const
+    has(letter_t l) const
     {
       return alphabet_.find(l) != alphabet_.end();
     }

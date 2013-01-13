@@ -90,10 +90,8 @@ namespace vcsn
 
       virtual std::string vname(bool full = true) const override final
       {
-        std::string gs = labelset_string();
         return (kind_t::sname()
-                + "_" + labelset_t::sname()
-                + (gs.empty() ? "" : ("(" + gs + ")"))
+                + "_" + labelset()->vname(full)
                 + "_" + weightset()->vname(full));
       }
 
