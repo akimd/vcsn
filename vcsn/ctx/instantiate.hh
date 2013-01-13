@@ -14,6 +14,7 @@
 # include <vcsn/algos/xml.hh>
 
 # include <vcsn/factory/de_bruijn.hh>
+# include <vcsn/factory/ladybird.hh>
 
 namespace vcsn
 {
@@ -128,10 +129,9 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::details;
 
-        // de_bruijn.
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
-        // eval
         eval_register(aut_t::sname(), eval<aut_t>);
+        ladybird_register(Ctx::sname(), ladybird<Ctx>);
         return true;
       }
 

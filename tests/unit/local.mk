@@ -18,9 +18,6 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_law_char_z                           \
   unit/concat					\
   unit/determinize                              \
-  unit/ladybird-b                               \
-  unit/ladybird-z                               \
-  unit/ladybird-zmin                            \
   unit/poly                                     \
   unit/product                                  \
   unit/transpose
@@ -36,18 +33,6 @@ unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
 unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
 unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
-
-unit_ladybird_b_SOURCES = unit/ladybird.cc
-unit_ladybird_b_CPPFLAGS = $(AM_CPPFLAGS) -DW=b
-unit_ladybird_b_LDADD = $(liblal_char_b) $(AM_LDADD)
-
-unit_ladybird_z_SOURCES = unit/ladybird.cc
-unit_ladybird_z_CPPFLAGS = $(AM_CPPFLAGS) -DW=z
-unit_ladybird_z_LDADD = $(liblal_char_z) $(AM_LDADD)
-
-unit_ladybird_zmin_SOURCES = unit/ladybird.cc
-unit_ladybird_zmin_CPPFLAGS = $(AM_CPPFLAGS) -DW=zmin
-unit_ladybird_zmin_LDADD = $(liblal_char_zmin) $(AM_LDADD)
 
 unit_poly_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 
@@ -81,7 +66,6 @@ unit/aut_lal_char_z.log: unit/aut_lal_char_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
-unit/ladybird.log: unit/ladybird-b unit/ladybird-z unit/ladybird-zmin
 unit/poly.log: unit/poly
 unit/product.log: unit/product
 unit/transpose.log: unit/transpose

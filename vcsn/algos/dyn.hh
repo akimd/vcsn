@@ -30,6 +30,8 @@ namespace vcsn
 
     std::string eval(const automaton& aut, const std::string& s);
 
+    automaton ladybird(const context& ctx, unsigned n);
+
     automaton lift(const automaton& aut);
     ratexp lift(const ratexp& aut);
 

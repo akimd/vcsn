@@ -50,6 +50,7 @@ vcsn_cat = $(top_builddir)/bin/vcsn-cat
 vcsn_de_bruijn = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
 vcsn_evaluate = $(top_builddir)/bin/vcsn-evaluate
+vcsn_ladybird = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift = $(top_builddir)/bin/vcsn-lift
 vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
 vcsn_transpose = $(top_builddir)/bin/vcsn-transpose

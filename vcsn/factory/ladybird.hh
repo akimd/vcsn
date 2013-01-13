@@ -32,6 +32,29 @@ namespace vcsn
     aut.add_transition(x, p, 'a');
     return aut;
   }
+
+  /*----------------.
+  | dyn::ladybird.  |
+  `----------------*/
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Ctx>
+      automaton
+      ladybird(const dyn::context& ctx, unsigned n)
+      {
+        return std::make_shared<mutable_automaton<Ctx>>
+          (ladybird<Ctx>(n, dynamic_cast<const Ctx&>(*ctx)));
+      }
+
+      using ladybird_t =
+        auto (const dyn::context& ctx, unsigned n) -> automaton;
+
+      bool ladybird_register(const std::string& ctx, const ladybird_t& fn);
+    }
+  }
 }
 
 #endif // !VCSN_FACTORY_LADYBIRD_HH
