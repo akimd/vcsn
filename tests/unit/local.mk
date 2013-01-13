@@ -33,6 +33,8 @@ unit_aut_lau_char_z_LDADD = $(liblau_char_z) $(AM_LDADD)
 unit_aut_lal_char_z_LDADD = $(liblal_char_z) $(AM_LDADD)
 unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
+unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
+
 unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
 
 unit_ladybird_b_SOURCES = unit/ladybird.cc
