@@ -45,6 +45,7 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 ## Programs.  ##
 ## ---------- ##
 
+vcsn_aut_to_exp = $(top_builddir)/bin/vcsn-aut-to-exp
 vcsn_cat = $(top_builddir)/bin/vcsn-cat
 vcsn_de_bruijn = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
@@ -54,6 +55,7 @@ vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
 vcsn_transpose = $(top_builddir)/bin/vcsn-transpose
 
 all_vcsn =                                      \
+  $(vcsn_aut_to_exp)                            \
   $(vcsn_cat)                                   \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
