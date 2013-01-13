@@ -7,17 +7,12 @@ namespace vcsn
   // b.hh.
   class b;
 
-  // z.hh.
-  class z;
-
-  // poly.hh.
-  class abstract_polynomial;
-  template <class Context>
-  class polynomial;
-
-  class abstract_polynomialset;
+  // polynomialset.hh.
   template <class Context>
   class polynomialset;
+
+  // z.hh.
+  class z;
 
   // zmin.hh.
   class zmin;

@@ -18,7 +18,7 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_law_char_z                           \
   unit/concat					\
   unit/determinize                              \
-  unit/poly                                     \
+  unit/polynomialset                            \
   unit/product                                  \
   unit/transpose
 
@@ -34,7 +34,7 @@ unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
 unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
 
-unit_poly_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
+unit_polynomialset_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 
 unit_product_LDADD = $(liblal_char_z) $(AM_LDADD)
 
@@ -51,7 +51,7 @@ unit_TESTS =                                    \
   unit/eval.chk                                 \
   unit/ladybird.chk                             \
   unit/lift.chk                                 \
-  unit/poly.chk                                 \
+  unit/polynomialset.chk                                 \
   unit/product.chk                              \
   unit/standard_of.chk                          \
   unit/transpose.chk				\
@@ -66,7 +66,7 @@ unit/aut_lal_char_z.log: unit/aut_lal_char_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/determinize.log: unit/determinize
 unit/concat.log: unit/concat
-unit/poly.log: unit/poly
+unit/polynomialset.log: unit/polynomialset
 unit/product.log: unit/product
 unit/transpose.log: unit/transpose
 

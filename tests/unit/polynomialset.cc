@@ -1,17 +1,17 @@
 #include <cassert>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/ctx/lal_char_zmin.hh>
-#include <vcsn/weights/poly.hh>
+#include <vcsn/weights/polynomialset.hh>
 #include <tests/unit/test.hh>
 
 template <class T>
 static
 bool
-check_conv_fail(T& poly, const std::string& str)
+check_conv_fail(T& ps, const std::string& str)
 {
   try
     {
-      poly.conv(str);
+      ps.conv(str);
     }
   catch (std::domain_error&)
     {
@@ -28,30 +28,30 @@ check_assoc()
   bool res = true;
   using context_t = vcsn::ctx::lal_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
-  using poly_t = vcsn::polynomialset<context_t>;
-  poly_t poly{ctx};
+  using ps_t = vcsn::polynomialset<context_t>;
+  ps_t ps{ctx};
 
-  poly_t::value_t u = poly.unit();
-  poly.set_weight(u, "ab", 12);
-  ASSERT_EQ(poly.format(u), "\\e + {12}ab");
+  ps_t::value_t u = ps.unit();
+  ps.set_weight(u, "ab", 12);
+  ASSERT_EQ(ps.format(u), "\\e + {12}ab");
 
-  u = poly.add(u, u);
-  ASSERT_EQ(poly.format(u), "{2}\\e + {24}ab");
+  u = ps.add(u, u);
+  ASSERT_EQ(ps.format(u), "{2}\\e + {24}ab");
 
-  assert(!poly.is_zero(u));
-  assert(poly.is_zero(poly.zero()));
+  assert(!ps.is_zero(u));
+  assert(ps.is_zero(ps.zero()));
 
-  poly_t::value_t v;
-  poly.set_weight(v, "ab", 24);
-  poly.set_weight(v, "", 2);
+  ps_t::value_t v;
+  ps.set_weight(v, "ab", 24);
+  ps.set_weight(v, "", 2);
   assert(u == v);
 
-  u = poly.mul(u, u);
-  ASSERT_EQ(poly.format(u), "{4}\\e + {96}ab + {576}abab");
+  u = ps.mul(u, u);
+  ASSERT_EQ(ps.format(u), "{4}\\e + {96}ab + {576}abab");
 
-  poly.add_weight(v, "ab", 96 - 24);
-  poly.set_weight(v, "", 4);
-  poly.set_weight(v, "abab", 576);
+  ps.add_weight(v, "ab", 96 - 24);
+  ps.set_weight(v, "", 4);
+  ps.set_weight(v, "abab", 576);
   assert(u == v);
 
   return res;
@@ -66,13 +66,13 @@ check_conv()
 
   using context_t = vcsn::ctx::lal_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
-  using poly_t = vcsn::polynomialset<context_t>;
-  poly_t poly{ctx};
+  using ps_t = vcsn::polynomialset<context_t>;
+  ps_t ps{ctx};
 
 #define CHECK(In, Out)                                   \
-  ASSERT_EQ(poly.format(poly.conv(In)), Out);
+  ASSERT_EQ(ps.format(ps.conv(In)), Out);
 #define CHECK_FAIL(In)                                   \
-  ASSERT_EQ(check_conv_fail(poly, In), true);
+  ASSERT_EQ(check_conv_fail(ps, In), true);
 
   CHECK("\\e", "\\e");
   CHECK("\\z", "\\z");
@@ -105,11 +105,11 @@ check_conv()
 template <class T>
 static
 bool
-check_star_fail(T& poly, const std::string& str)
+check_star_fail(T& ps, const std::string& str)
 {
   try
     {
-      poly.star(poly.conv(str));
+      ps.star(ps.conv(str));
     }
   catch (std::domain_error&)
     {
@@ -127,18 +127,18 @@ check_star()
 
   using context_t = vcsn::ctx::lal_char_zmin;
   context_t ctx {{'a', 'b'}};
-  using poly_t = vcsn::polynomialset<context_t>;
-  poly_t poly{ctx};
+  using ps_t = vcsn::polynomialset<context_t>;
+  ps_t ps{ctx};
 
-  ASSERT_EQ(poly.format(poly.star(poly.conv("{123}\\e"))), "{0}\\e");
-  ASSERT_EQ(poly.format(poly.star(poly.conv("{oo}\\e"))), "{0}\\e");
-  ASSERT_EQ(poly.format(poly.star(poly.conv("{123}\\e+{oo}\\e"))), "{0}\\e");
-  ASSERT_EQ(poly.format(poly.star(poly.conv("\\z"))), "{0}\\e");
-  ASSERT_EQ(check_star_fail(poly, "{-1}\\e"), true);
-  ASSERT_EQ(check_star_fail(poly, "{123}a"), true);
-  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{12}a"), true);
-  ASSERT_EQ(poly.format(poly.star(poly.conv("{12}\\e+{oo}a"))), "{0}\\e");
-  ASSERT_EQ(check_star_fail(poly, "{123}\\e+{oo}a+{3}a"), true);
+  ASSERT_EQ(ps.format(ps.star(ps.conv("{123}\\e"))), "{0}\\e");
+  ASSERT_EQ(ps.format(ps.star(ps.conv("{oo}\\e"))), "{0}\\e");
+  ASSERT_EQ(ps.format(ps.star(ps.conv("{123}\\e+{oo}\\e"))), "{0}\\e");
+  ASSERT_EQ(ps.format(ps.star(ps.conv("\\z"))), "{0}\\e");
+  ASSERT_EQ(check_star_fail(ps, "{-1}\\e"), true);
+  ASSERT_EQ(check_star_fail(ps, "{123}a"), true);
+  ASSERT_EQ(check_star_fail(ps, "{123}\\e+{12}a"), true);
+  ASSERT_EQ(ps.format(ps.star(ps.conv("{12}\\e+{oo}a"))), "{0}\\e");
+  ASSERT_EQ(check_star_fail(ps, "{123}\\e+{oo}a+{3}a"), true);
   return res;
 }
 

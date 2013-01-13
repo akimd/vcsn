@@ -14,7 +14,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/weights/poly.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {

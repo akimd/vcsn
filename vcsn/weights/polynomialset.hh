@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTS_POLY_HH
-# define VCSN_WEIGHTS_POLY_HH
+#ifndef VCSN_WEIGHTS_POLYNOMIALSET_HH
+# define VCSN_WEIGHTS_POLYNOMIALSET_HH
 
 # include <map>
 # include <iostream>
@@ -119,7 +119,7 @@ namespace vcsn
     value_t
     star(const value_t& v) const
     {
-      // The only starable polynomials are scalars (if they are
+      // The only starable polynomialsets are scalars (if they are
       // starable too).
       auto s = v.size();
       if (s == 0)
@@ -134,7 +134,7 @@ namespace vcsn
               return p;
             }
         }
-      throw std::domain_error("polynomial: star: invalid value: " + format(v));
+      throw std::domain_error("polynomialset: star: invalid value: " + format(v));
     }
 
     const value_t&
@@ -239,7 +239,7 @@ namespace vcsn
               if (c == 'z')
                 empty = true;
               else if (c != 'e')
-                throw std::domain_error("invalid polynomial: " + s
+                throw std::domain_error("invalid polynomialset: " + s
                                         + " unexpected \\"
                                         + std::string{char(i.peek())});
               i.ignore();
@@ -252,7 +252,7 @@ namespace vcsn
               while (labelset()->has(i.peek()))
                 label += char(i.get());
               if (label.empty() && default_w)
-                throw std::domain_error("invalid polynomial: " + s
+                throw std::domain_error("invalid polynomialset: " + s
                                         + " contains an empty label "
                                         "(did you mean \\e or \\z?)");
             }
@@ -267,7 +267,7 @@ namespace vcsn
             i.ignore();
           else
             {
-              throw std::domain_error("invalid polynomial: " + s
+              throw std::domain_error("invalid polynomialset: " + s
                                       + " unexpected "
                                       + std::string{char(i.peek())});
               i.ignore();
@@ -324,4 +324,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_WEIGHTS_POLY_HH
+#endif // !VCSN_WEIGHTS_POLYNOMIALSET_HH

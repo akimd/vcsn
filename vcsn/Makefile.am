@@ -81,6 +81,6 @@ nobase_vcsn_HEADERS =                           \
   misc/escape.hh                                \
   weights/b.hh                                  \
   weights/fwd.hh                                \
-  weights/poly.hh                               \
+  weights/polynomialset.hh                      \
   weights/z.hh                                  \
   weights/zmin.hh
