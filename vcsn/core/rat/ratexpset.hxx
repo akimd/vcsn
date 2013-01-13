@@ -366,8 +366,7 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    vcsn::concrete_abstract_ratexpset<context_t> fac{context()};
-    vcsn::rat::driver d(fac);
+    vcsn::rat::driver d(std::make_shared<context_t>(context()));
     if (auto res = d.parse_string(s))
       return down_pointer_cast<const node_t>(res);
     throw std::domain_error(d.errors);

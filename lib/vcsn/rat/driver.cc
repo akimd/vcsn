@@ -10,8 +10,8 @@ namespace vcsn
   namespace rat
   {
 
-    driver::driver(const abstract_ratexpset& f)
-      : ratexpset_{&f}
+    driver::driver(const dyn::ratexpset& f)
+      : ratexpset_{f}
     {}
 
     driver::driver(const dyn::context& ctx)

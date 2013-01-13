@@ -35,7 +35,7 @@ namespace vcsn
 
     context make_context(const std::string& name, const std::string& gens);
 
-    abstract_ratexpset* make_ratexpset(const context& ctx);
+    ratexpset make_ratexpset(const context& ctx);
 
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);

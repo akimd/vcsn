@@ -58,7 +58,7 @@ namespace vcsn
       }
     }
 
-    abstract_ratexpset*
+    ratexpset
     make_ratexpset(const context& ctx)
     {
       return details::make_ratexpset_registry().call(ctx->vname(), ctx);

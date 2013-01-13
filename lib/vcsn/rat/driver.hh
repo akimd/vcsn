@@ -15,7 +15,7 @@ namespace vcsn
     {
     public:
       using exp_t = vcsn::rat::exp_t;
-      driver(const abstract_ratexpset& f);
+      driver(const dyn::ratexpset& f);
       driver(const dyn::context& ctx);
       exp_t parse_file(const std::string& f);
       exp_t parse_string(const std::string& e, const location& l = location());
@@ -40,7 +40,7 @@ namespace vcsn
 
       /// The inital location.
       location location_;
-      const abstract_ratexpset* ratexpset_;
+      dyn::ratexpset ratexpset_;
       exp_t result_;
       friend class parser;
     };

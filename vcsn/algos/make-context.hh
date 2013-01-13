@@ -102,14 +102,14 @@ namespace vcsn
       `-----------------*/
 
       template <typename Ctx>
-      abstract_ratexpset*
+      ratexpset
       make_ratexpset(const context& ctx)
       {
-        return new concrete_abstract_ratexpset<Ctx>
+        return std::make_shared<concrete_abstract_ratexpset<Ctx>>
           (dynamic_cast<const Ctx&>(*ctx));
       }
 
-      using make_ratexpset_t = auto (const context& ctx) -> abstract_ratexpset*;
+      using make_ratexpset_t = auto (const context& ctx) -> ratexpset;
 
       bool
       make_ratexpset_register(const std::string& ctx,
