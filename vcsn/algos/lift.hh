@@ -133,10 +133,7 @@ namespace vcsn
         const auto& exp =
           std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
         auto res = ::vcsn::lift(ctx, exp);
-        // FIXME: Poor memory management model.
-        return
-          make_ratexp(*new ::vcsn::details::lifted_context_t<Context>{::vcsn::details::lift_context(ctx)},
-                      res);
+        return make_ratexp(::vcsn::details::lift_context(ctx), res);
       }
 
       using lift_exp_t = auto (const ratexp& aut) -> ratexp;
