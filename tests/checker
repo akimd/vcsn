@@ -192,7 +192,7 @@ EOF
   # Effective exit status.
   local sta_eff=0
   # Subshell: catch messages from the shell, such as "Abort trap".
-  ($prog "$@") >out.eff 2>err.eff \
+  ($PREPROG $prog "$@") >out.eff 2>err.eff \
     || sta_eff=$?
   {
     cat <<EOF
