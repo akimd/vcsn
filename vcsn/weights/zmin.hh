@@ -19,7 +19,7 @@ namespace vcsn
       return "zmin";
     }
 
-    std::string vname(bool) const
+    std::string vname(bool = true) const
     {
       return sname();
     }
