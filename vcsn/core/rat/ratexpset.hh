@@ -127,7 +127,7 @@ namespace vcsn
     ratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
 
   private:
-    const context_t& ctx_;
+    context_t ctx_;
   };
 
 } // namespace vcsn
