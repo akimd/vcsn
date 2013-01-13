@@ -72,6 +72,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \
+  dyn/ratexp.hh                                 \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \
