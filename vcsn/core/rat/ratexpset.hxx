@@ -366,10 +366,11 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    vcsn::rat::driver d(std::make_shared<context_t>(context()));
-    if (auto res = d.parse_string(s))
-      return down_pointer_cast<const node_t>(res);
-    throw std::domain_error(d.errors);
+    vcsn::rat::driver d{std::make_shared<const context_t>(context())};
+    auto res = d.parse_string(s);
+    if (!d.errors.empty())
+      throw std::domain_error(d.errors);
+    return down_pointer_cast<const node_t>(res->ratexp());
   }
 
   DEFINE::print(std::ostream& o, const value_t v) const

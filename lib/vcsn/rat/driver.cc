@@ -10,12 +10,9 @@ namespace vcsn
   namespace rat
   {
 
-    driver::driver(const dyn::ratexpset& f)
-      : ratexpset_{f}
-    {}
-
     driver::driver(const dyn::context& ctx)
-      : ratexpset_{make_ratexpset(ctx)}
+      : context_{ctx}
+      , ratexpset_{dyn::make_ratexpset(ctx)}
     {}
 
     void
@@ -51,7 +48,7 @@ namespace vcsn
 
     auto
     driver::parse_(const location& l)
-      -> exp_t
+      -> dyn::ratexp
     {
       location_ = l;
       // Parser.
@@ -64,17 +61,17 @@ namespace vcsn
       p.set_debug_level(debug_level && nesting < debug_level);
       ++nesting;
       if (p.parse())
-        result_ = 0;
+        result_ = 0; // FIXME: no warning from GCC?  Should be nullptr.
       scan_close_();
       --nesting;
-      exp_t res = 0;
-      std::swap(result_, res);
+      dyn::ratexp res = make_ratexp(context_, result_);
+      result_ = nullptr;
       return res;
     }
 
     auto
     driver::parse_file(const std::string& f)
-      -> exp_t
+      -> dyn::ratexp
     {
       FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
       if (!yyin)
@@ -91,7 +88,7 @@ namespace vcsn
 
     auto
     driver::parse_string(const std::string& e, const location& l)
-      -> exp_t
+      -> dyn::ratexp
     {
       scan_open_(e);
       return parse_(l);

@@ -53,10 +53,10 @@ namespace vcsn
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
-            auto exp = d.parse_file(f);
+            auto res = d.parse_file(f);
             if (!d.errors.empty())
               throw std::runtime_error(d.errors);
-            return make_ratexp(ctx, exp);
+            return res;
           }
         case FileType::xml:
           throw std::domain_error("Invalid input format for expression."
@@ -79,10 +79,10 @@ namespace vcsn
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
-            auto exp = d.parse_string(s);
+            auto res = d.parse_string(s);
             if (!d.errors.empty())
               throw std::runtime_error(d.errors);
-            return make_ratexp(ctx, exp);
+            return res;
           }
         case FileType::xml:
           throw std::domain_error("Invalid input format for expression."
