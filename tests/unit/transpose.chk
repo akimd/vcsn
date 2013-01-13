@@ -17,7 +17,7 @@ check2 ()
   check "$2" "$1"
 }
 
-ctx='-C lal_char_b'
+ctx='-C lal_char(abcd)_b'
 check '\e' '\e'
 check '\z' '\z'
 check 'a' 'a'
@@ -25,7 +25,7 @@ check 'ab' 'b.a'
 check 'abc+aba' '(a.b.a)+(c.b.a)'
 check '(ab)*' '(b.a)*'
 
-ctx='-C law_char_b'
+ctx='-C law_char(abcd)_b'
 check '\e' '\e'
 check '\z' '\z'
 check 'a' 'a'
@@ -57,7 +57,7 @@ check ()
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
 }
 
-check lal_char_b 'a' <<EOF
+check lal_char(abcd)_b 'a' <<EOF
     I1                                 |      I2
     F2                                 |      F1
   I1 -> 1                              |    I2 -> 2
@@ -65,7 +65,7 @@ check lal_char_b 'a' <<EOF
   2 -> F2                              |    2 -> 1 [label = "a"]
 EOF
 
-check lal_char_b 'abc' <<EOF
+check lal_char(abcd)_b 'abc' <<EOF
     I1                                 |      I4
     F4                                 |      F1
   I1 -> 1                              |    I4 -> 4
@@ -75,7 +75,7 @@ check lal_char_b 'abc' <<EOF
   4 -> F4                              |    4 -> 3 [label = "c"]
 EOF
 
-check 'law_char_ratexpset<law_char_b>' '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
+check 'law_char(abcd)_ratexpset<law_char(abcd)_b>' '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
                                        >      I2
                                        >      I4
     F2                                 <
@@ -102,7 +102,7 @@ involution ()
   run 0 out.exp -vcsn-transpose -A -f transpose.out
 }
 
-vcsn-de-bruijn lal_char_z 2 > in.dot
+vcsn-de-bruijn lal_char(abcd)_z 2 > in.dot
 involution in.dot
 
 
@@ -113,7 +113,7 @@ involution in.dot
 run 0 - unit/transpose <<EOF
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
   vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
@@ -131,7 +131,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
   vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
@@ -149,7 +149,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
   vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]

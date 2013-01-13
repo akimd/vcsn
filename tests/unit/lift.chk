@@ -35,7 +35,7 @@ EOF
 perl -p -e '
     s{\[label = "(.*?)"\]}
      {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"{$_}\"\]"}eg;
-    s{lal_char\(abc\)_b}{lau_char(abc)_ratexpset<lal_char_b>}g;
+    s{lal_char\(abc\)_b}{lau_char(abc)_ratexpset<lal_char(abc)_b>}g;
    ' < lady4.dot >out.exp
 
 run 0 out.exp -vcsn-lift -Af lady4.dot

@@ -8,7 +8,7 @@ weighset()
   do
     case $1 in
       (-W) case $2 in
-            (zr) echo 'ratexpset<lal_char_z>';;
+            (zr) echo 'ratexpset<lal_char(abcd)_z>';;
             (*) echo "$2";;
            esac
            return 0;;

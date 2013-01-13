@@ -81,17 +81,20 @@ namespace vcsn
 
       /// The name of this context, built from its parameters.
       /// E.g., "lal_char_b", "law_char_zmin".
-      static std::string sname(const std::string& gs = "")
+      static std::string sname()
       {
         return (kind_t::sname()
                 + "_" + labelset_t::sname()
-                + (gs.empty() ? "" : ("(" + gs + ")"))
                 + "_" + weightset_t::sname());
       }
 
       virtual std::string vname(bool full = true) const override final
       {
-        return sname(full ? labelset_string() : "");
+        std::string gs = labelset_string();
+        return (kind_t::sname()
+                + "_" + labelset_t::sname()
+                + (gs.empty() ? "" : ("(" + gs + ")"))
+                + "_" + weightset()->vname(full));
       }
 
       virtual std::string labelset_string() const override final
