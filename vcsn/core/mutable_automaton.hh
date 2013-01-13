@@ -65,6 +65,8 @@ namespace vcsn
     label_t prepost_label_;
 
   public:
+    mutable_automaton() = delete;
+    mutable_automaton(const mutable_automaton&) = delete;
     mutable_automaton(const context_t& ctx)
       : es_{ctx}
       , states_{2}

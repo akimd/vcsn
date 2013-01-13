@@ -24,6 +24,8 @@ namespace vcsn
 
     using value_t = std::map<word_t, weight_t>;
 
+    polynomialset() = delete;
+    polynomialset(const polynomialset&) = default;
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {

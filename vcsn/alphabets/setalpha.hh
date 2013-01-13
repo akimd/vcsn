@@ -18,6 +18,7 @@ namespace vcsn
     }
 
     set_alphabet() = default;
+    set_alphabet(const set_alphabet&) = default;
     set_alphabet(const std::initializer_list<typename L::letter_t>& l)
       : alphabet_{l}
     {}
