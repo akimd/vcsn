@@ -1,0 +1,81 @@
+#! /bin/sh
+
+# weighset VCSN-STANDARD-OF-ARGUMENTS
+# -----------------------------------
+weighset()
+{
+  while test $# != 0
+  do
+    case $1 in
+      (-W) case $2 in
+            (zr) echo 'ratexpset<lal_char(abcd)_z>';;
+            (*) echo "$2";;
+           esac
+           return 0;;
+      (-C) echo "$2"
+           return 0;;
+    esac
+    shift
+  done
+  echo 'b'
+  return 0
+}
+
+# check VCSN_STANDARD-OF-ARGUMENTS
+# --------------------------------
+# Expected output is on stdin, except the constant bits (see below).
+check ()
+{
+  cat >out.exp
+  run 0 out.exp -vcsn-de-bruijn "$@" -o dot
+}
+
+fail ()
+{
+  run 1 '' -vcsn-standard-of -C "$@"
+}
+
+check -W b -g 'ab' 2 <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  vcsn_genset = "ab"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F4
+  }
+  { 1 2 3 4 }
+  I1 -> 1
+  1 -> 1 [label = "a, b"]
+  1 -> 2 [label = "a"]
+  2 -> 3 [label = "a, b"]
+  3 -> 4 [label = "a, b"]
+  4 -> F4
+}
+EOF
+
+check -W b -g 'xyz' 3 <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(xyz)_b"
+  vcsn_genset = "xyz"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F5
+  }
+  { 1 2 3 4 5 }
+  I1 -> 1
+  1 -> 1 [label = "x, y, z"]
+  1 -> 2 [label = "x"]
+  2 -> 3 [label = "x, y, z"]
+  3 -> 4 [label = "x, y, z"]
+  4 -> 5 [label = "x, y, z"]
+  5 -> F5
+}
+EOF

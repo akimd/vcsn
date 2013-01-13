@@ -113,7 +113,7 @@ run 0 out.exp -vcsn-determinize out.exp
 # --------------------
 check_de_bruijn ()
 {
-  run 0 stdout -vcsn-de-bruijn lal_char_b $1
+  run 0 stdout -vcsn-de-bruijn -C lal_char_b -g ab $1
   mv stdout de-bruijn-$1.dot
 
   run 0 stdout -vcsn-determinize de-bruijn-$1.dot

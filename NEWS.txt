@@ -1,3 +1,16 @@
+* 2013-01-13
+** dyn::ratexpset, dyn::context
+These are now handled by shared pointer, consistently with dyn::automaton
+and dyn::ratexp.
+
+Nasty memory management issues have been fixed.
+
+** vcsn-de-bruijn
+It now supports the same arguments as the other vcsn-* tools.  It also no
+longer requires 'a' and 'b' to be accepted letters, and it uses the whole
+alphabet.  For instance "vcsn-de-bruijn -g 'xyz' 3" generates an automaton
+for "(x+y+z)x(x+y+z)^3".
+
 * 2013-01-12
 ** contexts are renamed
 Contexts have both a name and an identifier.  The name is used to display in

@@ -61,6 +61,7 @@ unit_TESTS =                                    \
   unit/aut_law_char_z.chk                       \
   unit/aut_to_exp.chk                           \
   unit/concat.chk				\
+  unit/de-bruijn.chk                            \
   unit/determinize.chk                          \
   unit/eval.chk                                 \
   unit/ladybird.chk                             \
