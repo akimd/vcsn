@@ -32,9 +32,9 @@ digraph
   3 -> 3 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-determinize a.dot
+run 0 out.exp -vcsn-determinize -f a.dot
 # Idempotence.
-run 0 out.exp -vcsn-determinize out.exp
+run 0 out.exp -vcsn-determinize -f out.exp
 
 
 ## -------------------------- ##
@@ -66,9 +66,9 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-determinize epsilon.dot
+run 0 out.exp -vcsn-determinize -f epsilon.dot
 # Idempotence.
-run 0 out.exp -vcsn-determinize out.exp
+run 0 out.exp -vcsn-determinize -f out.exp
 
 ## -------------------------- ##
 ## Determinize Thompson(\z).  ##
@@ -94,9 +94,9 @@ digraph
   1 -> 1 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-determinize empty.dot
+run 0 out.exp -vcsn-determinize -f empty.dot
 # Idempotence.
-run 0 out.exp -vcsn-determinize out.exp
+run 0 out.exp -vcsn-determinize -f out.exp
 
 
 ## ----------------------- ##
@@ -110,11 +110,11 @@ check_de_bruijn ()
   run 0 stdout -vcsn-de-bruijn -C lal_char_b -g ab $1
   mv stdout de-bruijn-$1.dot
 
-  run 0 stdout -vcsn-determinize de-bruijn-$1.dot
+  run 0 stdout -vcsn-determinize -f de-bruijn-$1.dot
   mv stdout out.exp
 
   # Idempotence.
-  run 0 out.exp -vcsn-determinize out.exp
+  run 0 out.exp -vcsn-determinize -f out.exp
 }
 
 

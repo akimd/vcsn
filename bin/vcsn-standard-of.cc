@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cassert>
 
 #include <vcsn/algos/dyn.hh>
 #include "parse-args.hh"

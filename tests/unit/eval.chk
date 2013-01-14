@@ -4,7 +4,7 @@
 # ----------------------------
 check ()
 {
-  run 0 $3 -vcsn-evaluate $1 $2
+  run 0 "$3" -vcsn-evaluate -f "$1" "$2"
 }
 
 cat > simple.dot <<EOF
@@ -51,9 +51,9 @@ digraph
 }
 EOF
 
-run 0 4  -vcsn-evaluate initial-weight.dot a
-run 0 8  -vcsn-evaluate initial-weight.dot abab
-run 0 12 -vcsn-evaluate initial-weight.dot aabab
+run 0 4  -vcsn-evaluate -f initial-weight.dot a
+run 0 8  -vcsn-evaluate -f initial-weight.dot abab
+run 0 12 -vcsn-evaluate -f initial-weight.dot aabab
 
 cat > more-letters.dot <<EOF
 digraph
@@ -77,7 +77,7 @@ digraph
 }
 EOF
 
-run 0 6 -vcsn-evaluate more-letters.dot caa
+run 0 6 -vcsn-evaluate -f more-letters.dot caa
 
 cat > prod.dot <<EOF
 digraph

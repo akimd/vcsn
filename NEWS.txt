@@ -1,4 +1,7 @@
 * 2013-01-14
+** vcsn-determinize and vcsn-evaluate use the common command line options
+These tools support -C, -g, etc. like the other tools.  See "vcsn-<tool> -h".
+
 ** context names are now complete
 Context names used to describe the "static" structure only (e.g.,
 lal_char_ratexpset<law_char_b>).  It now includes the "dynamic" part,
