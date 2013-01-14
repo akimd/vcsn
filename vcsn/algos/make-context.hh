@@ -31,7 +31,7 @@ namespace vcsn
 
   template <typename Ctx>
   Ctx
-  make_context(const typename Ctx::labelset_t::letters_t& ls);
+  make_context(const std::string& name);
 
   namespace details
   {
@@ -40,8 +40,7 @@ namespace vcsn
     {
       static
       WeightSet
-      // FIXME: Breaking the abstraction over set<char>.
-      make(const std::set<char>&)
+      make(const std::string&)
       {
         return {};
       }
@@ -52,20 +51,55 @@ namespace vcsn
     {
       static
       ratexpset<Ctx>
-      make(const typename Ctx::labelset_t::letters_t& ls)
+      make(const std::string& name)
       {
-        return {make_context<Ctx>(ls)};
+        // name is, for instance, "ratexpset<lal_char(abcd)_z>".
+        assert(name.substr(0, 10) == "ratexpset<");
+        assert(name.substr(name.size() - 1, 1) == ">");
+        std::string ctx = name.substr(10, name.size() - 11);
+        return {make_context<Ctx>(ctx)};
       }
     };
   }
 
   template <typename Ctx>
   Ctx
-  make_context(const typename Ctx::labelset_t::letters_t& ls)
+  make_context(const std::string& name)
   {
+    // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+    //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+    //        |   |    |        weightset
+    //        |   |    +-- gens
+    //        |   +-- labelset
+    //        +-- kind
+    std::string kind = name.substr(0, 3);
+    auto lparen = name.find('(');
+    auto rparen = name.find(')');
+    assert(lparen != std::string::npos);
+    std::string labelset = name.substr(4, lparen - 4);
+    std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
+    std::string weightset = name.substr(rparen + 2);
+
+    if ((Ctx::is_lal && kind != "lal")
+        || (Ctx::is_lau && kind != "lau")
+        || (Ctx::is_law && kind != "law"))
+      {
+        std::string ctxk =
+          Ctx::is_lal ? "lal"
+          : Ctx::is_lau ? "lau"
+          : Ctx::is_law ? "law"
+          : "invalid Context Kind";
+        throw std::runtime_error("make_context: Ctx::is_" + ctxk
+                                 + " but read " + kind + " (" + name + ")");
+      }
+    assert(name[3] == '_');
+
+    typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
     auto gs = typename Ctx::labelset_t(ls);
-    auto ws = details::weightsetter<typename Ctx::weightset_t>::make(ls);
-    return Ctx(gs, ws);
+    auto ws = details::weightsetter<typename Ctx::weightset_t>::make(weightset);
+    auto res = Ctx(gs, ws);
+    assert(res.vname(true) == name);
+    return res;
   }
 
 
@@ -83,15 +117,12 @@ namespace vcsn
 
       template <typename Ctx>
       context
-      make_context(const std::string& letters)
+      make_context(const std::string& name)
       {
-        std::set<char> ls;
-        for (auto l: letters)
-          ls.insert(l);
-        return std::make_shared<Ctx>(vcsn::make_context<Ctx>(ls));
+        return std::make_shared<Ctx>(vcsn::make_context<Ctx>(name));
       }
 
-      using make_context_t = auto (const std::string& gens) -> context;
+      using make_context_t = auto (const std::string& name) -> context;
 
       bool
       make_context_register(const std::string& ctx,

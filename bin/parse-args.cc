@@ -36,7 +36,7 @@ read_automaton(const options& opts)
 vcsn::dyn::ratexp
 read_ratexp(const options& opts)
 {
-  auto ctx = vcsn::dyn::make_context(opts.context, opts.gens);
+  auto ctx = vcsn::dyn::make_context(opts.context);
   return
     opts.input_is_file
     ? vcsn::dyn::read_ratexp_file(opts.input, ctx, opts.input_format)
@@ -177,6 +177,8 @@ parse_args(options& opts, int& argc, char* const*& argv)
         usage(argv[0], EXIT_FAILURE);
         break;
       }
+  using boost::algorithm::replace_all;
+  replace_all(opts.context, "char_", "char(" + opts.gens + ")_");
   argc -= optind;
   argv += optind;
 }

@@ -35,7 +35,7 @@ namespace vcsn
     automaton lift(const automaton& aut);
     ratexp lift(const ratexp& aut);
 
-    context make_context(const std::string& name, const std::string& gens);
+    context make_context(const std::string& name);
 
     ratexpset make_ratexpset(const context& ctx);
 
