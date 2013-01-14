@@ -19,7 +19,7 @@ try
     aut = determinize(aut);
 
     // Output.
-    print(aut, std::cout, FileType::dot) << std::endl;
+    print(aut, std::cout, opts.output_format) << std::endl;
   }
 catch (const std::exception& e)
   {

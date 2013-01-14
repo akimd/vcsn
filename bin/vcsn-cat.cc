@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cassert>
 
 #include <vcsn/algos/dyn.hh>
 #include "parse-args.hh"
@@ -33,8 +32,8 @@ try
     else
       work_exp(opts);
   }
- catch (const std::exception& e)
-   {
-     std::cerr << e.what() << std::endl;
-     exit(EXIT_FAILURE);
-   }
+catch (const std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+  }
