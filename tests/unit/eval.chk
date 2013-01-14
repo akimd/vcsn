@@ -11,7 +11,6 @@ cat > simple.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -37,7 +36,6 @@ cat > initial-weight.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -61,7 +59,6 @@ cat > more-letters.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
-  vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
   {
@@ -86,7 +83,6 @@ cat > prod.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
-  vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
   {
@@ -111,7 +107,6 @@ cat > complex.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
-  vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
   {

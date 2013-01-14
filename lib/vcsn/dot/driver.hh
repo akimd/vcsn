@@ -34,7 +34,7 @@ namespace vcsn
       std::string errors;
 
     private:
-      /// From context_ and letters_, build edit_.
+      /// From context_, build edit_.
       /// \throw std::exception on invalid contexts.
       void setup_();
       /// Prepare scanner to load file f.
@@ -50,8 +50,6 @@ namespace vcsn
       location_t location_;
       /// The name of the context.
       std::string context_;
-      /// The letters gathered so far.
-      std::string letters_;
       /// An automaton editor that stores the one being built.
       vcsn::automaton_editor* edit_;
       friend class parser;

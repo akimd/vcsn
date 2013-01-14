@@ -51,7 +51,6 @@ fail <<EOF
 digraph
 {
   vcsn_contxt = lal_char_b
-  vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
   I1 -> 1
@@ -62,7 +61,6 @@ fail <<EOF
 digraph
 {
   vcsn_context = "unknown"
-  vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
   I1 -> 1
@@ -77,7 +75,6 @@ check <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-  vcsn_genset = "a"
   1 -> 2 [label = a]
   2 -> F2
   I1 -> 1
@@ -86,7 +83,6 @@ digraph
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-  vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]
   {
@@ -105,7 +101,6 @@ check <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-  vcsn_genset = "a"
   {
     1
   }
@@ -133,7 +128,6 @@ digraph
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-  vcsn_genset = "a"
   rankdir = LR
   node [shape = circle]
   {

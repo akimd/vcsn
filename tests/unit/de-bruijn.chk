@@ -39,7 +39,6 @@ check -W b -g 'ab' 2 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -61,7 +60,6 @@ check -W b -g 'xyz' 3 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(xyz)_b"
-  vcsn_genset = "xyz"
   rankdir = LR
   node [shape = circle]
   {

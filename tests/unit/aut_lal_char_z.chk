@@ -4,7 +4,6 @@ cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abcd)_z"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -31,7 +30,6 @@ Between s1 and s1
 digraph
 {
   vcsn_context = "lal_char(abcd)_z"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -50,7 +48,6 @@ digraph
 digraph
 {
   vcsn_context = "lal_char(abcd)_z"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -64,7 +61,6 @@ digraph
 digraph
 {
   vcsn_context = "lal_char(abcd)_z"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {

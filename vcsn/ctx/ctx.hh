@@ -19,10 +19,9 @@ namespace vcsn
     {
     public:
       /// A description of the context, sufficient to build it.
-      /// \param full  whether to include the genset.
+      /// \param full  whether to include the gensets.
       ///              if false, same as sname.
       virtual std::string vname(bool full = true) const = 0;
-      virtual std::string labelset_string() const = 0;
 
       /// Convert a dynamic name into a static one.
       /// (from vname to sname, i.e., strip generators).
@@ -93,14 +92,6 @@ namespace vcsn
         return (kind_t::sname()
                 + "_" + labelset()->vname(full)
                 + "_" + weightset()->vname(full));
-      }
-
-      virtual std::string labelset_string() const override final
-      {
-        std::string res;
-        for (auto l: *gs_)
-          res += l;
-        return res;
       }
 
       const labelset_ptr& labelset() const

@@ -7,7 +7,6 @@ cat >a.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   1 -> 2 [label = "a"]
   2 -> F2
   I1 -> 1
@@ -17,7 +16,6 @@ cat >out.exp <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -46,7 +44,6 @@ cat >epsilon.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   1 -> F1
   I1 -> 1
 }
@@ -55,7 +52,6 @@ cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -81,14 +77,12 @@ cat >empty.dot <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
 }
 EOF
 cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -131,7 +125,6 @@ cat >out.exp <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {
@@ -206,7 +199,6 @@ States: 4 -> 16
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
-  vcsn_genset = "abc"
   rankdir = LR
   node [shape = circle]
   {

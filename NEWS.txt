@@ -1,3 +1,20 @@
+* 2013-01-14
+** context names are now complete
+Context names used to describe the "static" structure only (e.g.,
+lal_char_ratexpset<law_char_b>).  It now includes the "dynamic" part,
+currently only the list of generators (e.g.,
+lal_char(abc)_ratexpset<law_char(xyz)_b>).
+
+This context strings are both printed and read by the various tools.  For
+instance:
+
+  $ vcsn-standard-of -C 'law_char(xyz)_ratexpset<law_char(abc)_z>' \
+        -e '{abc}xyz' | vcsn-aut-to-exp -f -
+  {abc}xyz
+
+Note that the second tool, vcsn-aut-to-exp, found the context in its input,
+the standard automaton in Dot format.
+
 * 2013-01-13
 ** dyn::ratexpset, dyn::context
 These are now handled by shared pointer, consistently with dyn::automaton

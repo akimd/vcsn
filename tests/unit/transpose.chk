@@ -114,7 +114,6 @@ run 0 - unit/transpose <<EOF
 digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -132,7 +131,6 @@ digraph
 digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -150,7 +148,6 @@ digraph
 digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
-  vcsn_genset = "abcd"
   rankdir = LR
   node [shape = circle]
   {
@@ -167,7 +164,6 @@ digraph
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-  vcsn_genset = "ab"
   rankdir = LR
   node [shape = circle]
   {

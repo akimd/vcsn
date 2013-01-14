@@ -239,11 +239,6 @@ attr_assign:
         assert(!driver_.edit_);
         std::swap(driver_.context_, *$val);
       }
-    else if (*$var == "vcsn_genset")
-      {
-        assert(!driver_.edit_);
-        std::swap(driver_.letters_, *$val);
-      }
     delete $var;
     delete $val;
   }
