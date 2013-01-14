@@ -12,7 +12,7 @@ struct options
   bool input_is_file = true;
   bool lal = true;
   std::string context = "lal_char_b";
-  std::string labelset_describ = "abcd";
+  std::string gens = "abcd";
   vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dot;
   vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dot;
 };

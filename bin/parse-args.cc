@@ -36,7 +36,7 @@ read_automaton(const options& opts)
 vcsn::dyn::ratexp
 read_ratexp(const options& opts)
 {
-  auto ctx = vcsn::dyn::make_context(opts.context, opts.labelset_describ);
+  auto ctx = vcsn::dyn::make_context(opts.context, opts.gens);
   return
     opts.input_is_file
     ? vcsn::dyn::read_ratexp_file(opts.input, ctx, opts.input_format)
@@ -131,7 +131,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
         opts.input_is_file = true;
         break;
       case 'g':
-        opts.labelset_describ = optarg;
+        opts.gens = optarg;
         break;
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
