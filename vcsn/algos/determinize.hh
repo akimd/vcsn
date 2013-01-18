@@ -77,9 +77,9 @@ namespace vcsn
     return res;
   }
 
-  /*----------------------.
-  | dynamic determinize.  |
-  `----------------------*/
+  /*-------------------.
+  | dyn::determinize.  |
+  `-------------------*/
 
   namespace dyn
   {
