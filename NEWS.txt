@@ -1,3 +1,7 @@
+* 2013-01-18
+** dyn::product and vcsn-product
+They compute the product of automata.
+
 * 2013-01-14
 ** vcsn-determinize and vcsn-evaluate use the common command line options
 These tools support -C, -g, etc. like the other tools.  See "vcsn-<tool> -h".

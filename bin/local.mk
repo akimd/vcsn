@@ -20,6 +20,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-evaluate                             \
   bin/vcsn-ladybird                             \
   bin/vcsn-lift                                 \
+  bin/vcsn-product                              \
   bin/vcsn-standard-of                          \
   bin/vcsn-transpose
 
@@ -30,6 +31,7 @@ bin_vcsn_determinize_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_evaluate_LDADD    = $(all_libctx) $(libvcsn)
 bin_vcsn_ladybird_LDADD    = $(all_libctx) $(libvcsn)
 bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
+bin_vcsn_product_LDADD     = $(all_libctx) $(libvcsn)
 bin_vcsn_standard_of_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_transpose_LDADD   = $(all_libctx) $(libvcsn)
 
@@ -41,5 +43,6 @@ bin_vcsn_determinize_SOURCES = $(parse_args) bin/vcsn-determinize.cc
 bin_vcsn_evaluate_SOURCES    = $(parse_args) bin/vcsn-evaluate.cc
 bin_vcsn_ladybird_SOURCES    = $(parse_args) bin/vcsn-ladybird.cc
 bin_vcsn_lift_SOURCES        = $(parse_args) bin/vcsn-lift.cc
+bin_vcsn_product_SOURCES     = $(parse_args) bin/vcsn-product.cc
 bin_vcsn_standard_of_SOURCES = $(parse_args) bin/vcsn-standard-of.cc
 bin_vcsn_transpose_SOURCES   = $(parse_args) bin/vcsn-transpose.cc

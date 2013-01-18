@@ -52,6 +52,7 @@ vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
 vcsn_evaluate    = $(top_builddir)/bin/vcsn-evaluate
 vcsn_ladybird    = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift        = $(top_builddir)/bin/vcsn-lift
+vcsn_product     = $(top_builddir)/bin/vcsn-product
 vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
 vcsn_transpose   = $(top_builddir)/bin/vcsn-transpose
 
@@ -63,5 +64,6 @@ all_vcsn =                                      \
   $(vcsn_evaluate)                              \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
+  $(vcsn_product)                               \
   $(vcsn_standard_of)                           \
   $(vcsn_transpose)

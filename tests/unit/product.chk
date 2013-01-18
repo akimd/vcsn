@@ -1,6 +1,7 @@
 #! /bin/sh
 
-cat >out.exp <<\EOF
+# {2}(a*b*a*)
+cat >a.dot <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -25,6 +26,10 @@ digraph
   3 -> F3
   3 -> 3 [label = "a"]
 }
+EOF
+
+# ({3}(ab))*
+cat >b.dot <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -41,6 +46,9 @@ digraph
   1 -> 2 [label = "a"]
   2 -> 1 [label = "{3}b"]
 }
+EOF
+
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -62,4 +70,5 @@ digraph
   4 -> 3 [label = "a"]
 }
 EOF
-run 0 out.exp unit/product
+
+run 0 out.exp -vcsn-product -f a.dot b.dot
