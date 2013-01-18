@@ -51,7 +51,7 @@ unit_TESTS =                                    \
   unit/eval.chk                                 \
   unit/ladybird.chk                             \
   unit/lift.chk                                 \
-  unit/polynomialset.chk                                 \
+  unit/polynomialset.chk                        \
   unit/product.chk                              \
   unit/standard_of.chk                          \
   unit/transpose.chk				\

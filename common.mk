@@ -16,18 +16,18 @@
 ## Libraries.  ##
 ## ----------- ##
 
-liblal_char_b = $(top_builddir)/lib/liblal_char_b.la
-liblaw_char_b = $(top_builddir)/lib/liblaw_char_b.la
-liblau_char_br = $(top_builddir)/lib/liblau_char_br.la
-liblal_char_br = $(top_builddir)/lib/liblal_char_br.la
-liblaw_char_br = $(top_builddir)/lib/liblaw_char_br.la
-liblau_char_z = $(top_builddir)/lib/liblau_char_z.la
-liblal_char_z = $(top_builddir)/lib/liblal_char_z.la
-liblaw_char_z = $(top_builddir)/lib/liblaw_char_z.la
-liblal_char_zr = $(top_builddir)/lib/liblal_char_zr.la
-liblaw_char_zr = $(top_builddir)/lib/liblaw_char_zr.la
-liblal_char_zrr = $(top_builddir)/lib/liblal_char_zrr.la
-liblaw_char_zrr = $(top_builddir)/lib/liblaw_char_zrr.la
+liblal_char_b    = $(top_builddir)/lib/liblal_char_b.la
+liblaw_char_b    = $(top_builddir)/lib/liblaw_char_b.la
+liblau_char_br   = $(top_builddir)/lib/liblau_char_br.la
+liblal_char_br   = $(top_builddir)/lib/liblal_char_br.la
+liblaw_char_br   = $(top_builddir)/lib/liblaw_char_br.la
+liblau_char_z    = $(top_builddir)/lib/liblau_char_z.la
+liblal_char_z    = $(top_builddir)/lib/liblal_char_z.la
+liblaw_char_z    = $(top_builddir)/lib/liblaw_char_z.la
+liblal_char_zr   = $(top_builddir)/lib/liblal_char_zr.la
+liblaw_char_zr   = $(top_builddir)/lib/liblaw_char_zr.la
+liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
+liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
 liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
 liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
 
@@ -45,15 +45,15 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 ## Programs.  ##
 ## ---------- ##
 
-vcsn_aut_to_exp = $(top_builddir)/bin/vcsn-aut-to-exp
-vcsn_cat = $(top_builddir)/bin/vcsn-cat
-vcsn_de_bruijn = $(top_builddir)/bin/vcsn-de-bruijn
+vcsn_aut_to_exp  = $(top_builddir)/bin/vcsn-aut-to-exp
+vcsn_cat         = $(top_builddir)/bin/vcsn-cat
+vcsn_de_bruijn   = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
-vcsn_evaluate = $(top_builddir)/bin/vcsn-evaluate
-vcsn_ladybird = $(top_builddir)/bin/vcsn-ladybird
-vcsn_lift = $(top_builddir)/bin/vcsn-lift
+vcsn_evaluate    = $(top_builddir)/bin/vcsn-evaluate
+vcsn_ladybird    = $(top_builddir)/bin/vcsn-ladybird
+vcsn_lift        = $(top_builddir)/bin/vcsn-lift
 vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
-vcsn_transpose = $(top_builddir)/bin/vcsn-transpose
+vcsn_transpose   = $(top_builddir)/bin/vcsn-transpose
 
 all_vcsn =                                      \
   $(vcsn_aut_to_exp)                            \
