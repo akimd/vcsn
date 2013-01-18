@@ -61,6 +61,7 @@ all_vcsn =                                      \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
   $(vcsn_evaluate)                              \
+  $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_standard_of)                           \
   $(vcsn_transpose)
