@@ -39,6 +39,9 @@ namespace vcsn
 
     ratexpset make_ratexpset(const context& ctx);
 
+    std::ostream& print(const automaton& a, std::ostream& o, FileType type);
+    std::ostream& print(const ratexp& e, std::ostream& o, FileType type);
+
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
 
@@ -49,13 +52,9 @@ namespace vcsn
                               const context& ctx,
                               FileType type);
 
-    std::ostream& print(const automaton& a, std::ostream& o, FileType type);
-    std::ostream& print(const ratexp& e, std::ostream& o, FileType type);
-
     automaton standard_of(const ratexp& e);
 
     automaton transpose(automaton& aut);
-
     ratexp transpose(const ratexp& e);
 
     void xml(const dyn::ratexp e, std::ostream& out);
