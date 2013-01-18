@@ -54,6 +54,7 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
+  ctx/abstract_context.hh                       \
   ctx/char.hh                                   \
   ctx/lal_char_b.hh                             \
   ctx/law_char_b.hh                             \

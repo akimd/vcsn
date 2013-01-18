@@ -5,12 +5,14 @@
 
 namespace vcsn
 {
+  // abstract_context.hh.
   namespace dyn
   {
     class abstract_context;
     using context = std::shared_ptr<const abstract_context>;
   }
 
+  // ctx.hh.
   namespace ctx
   {
     template <typename LabelSet,

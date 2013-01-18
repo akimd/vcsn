@@ -7,6 +7,8 @@
 
 # include <boost/type_traits.hpp>
 
+# include <vcsn/ctx/abstract_context.hh> // sname
+
 namespace vcsn
 {
   template <typename Fun>

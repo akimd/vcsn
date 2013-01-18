@@ -4,32 +4,14 @@
 # include <cassert>
 # include <memory>
 # include <string>
-# include <type_traits>
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/ctx/abstract_context.hh>
 
 namespace vcsn
 {
-
-  namespace dyn
-  {
-    class abstract_context
-    {
-    public:
-      /// A description of the context, sufficient to build it.
-      /// \param full  whether to include the gensets.
-      ///              if false, same as sname.
-      virtual std::string vname(bool full = true) const = 0;
-
-      /// Convert a dynamic name into a static one.
-      /// (from vname to sname, i.e., strip generators).
-      static std::string sname(const std::string& vname);
-    };
-
-    using context = std::shared_ptr<const abstract_context>;
-  }
 
   namespace ctx
   {
@@ -146,6 +128,6 @@ namespace vcsn
 
   template <typename Ctx, typename R>
   using if_law = typename std::enable_if<Ctx::is_law, R>::type;
-};
+}
 
 #endif // !VCSN_CTX_CTX_HH
