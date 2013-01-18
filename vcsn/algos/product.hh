@@ -65,6 +65,32 @@ namespace vcsn
       }
     return aut;
   }
+
+  /*---------------.
+  | dyn::product.  |
+  `---------------*/
+
+  namespace dyn
+  {
+    namespace details
+    {
+
+      template <typename Lhs, typename Rhs>
+      dyn::automaton
+      product(const dyn::automaton& lhs, const dyn::automaton& rhs)
+      {
+        return
+          std::make_shared<Lhs>(product(dynamic_cast<const Lhs&>(*lhs),
+                                        dynamic_cast<const Rhs&>(*rhs)));
+      }
+
+      using product_t =
+        auto (const dyn::automaton& lhs, const dyn::automaton& rhs)
+        -> dyn::automaton;
+      bool product_register(const std::string& lctx, const std::string& rctx,
+                            const product_t& fn);
+    }
+  }
 }
 
 #endif // !VCSN_ALGOS_PRODUCT_HH

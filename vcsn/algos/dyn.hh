@@ -42,6 +42,8 @@ namespace vcsn
     std::ostream& print(const automaton& a, std::ostream& o, FileType type);
     std::ostream& print(const ratexp& e, std::ostream& o, FileType type);
 
+    automaton product(const automaton& lhs, const automaton& rhs);
+
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
 

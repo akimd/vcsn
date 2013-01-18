@@ -9,6 +9,7 @@
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
+# include <vcsn/algos/product.hh>
 # include <vcsn/algos/standard_of.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/xml.hh>
@@ -180,6 +181,9 @@ namespace vcsn
 
         // print
         print_exp_register(Ctx::sname(), print<Ctx>);
+
+        // product
+        product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
 
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);
