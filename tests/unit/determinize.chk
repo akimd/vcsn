@@ -107,7 +107,7 @@ run 0 out.exp -vcsn-determinize -f out.exp
 # --------------------
 check_de_bruijn ()
 {
-  run 0 stdout -vcsn-de-bruijn -C lal_char_b -g ab $1
+  run 0 stdout -vcsn-de-bruijn -C 'lal_char(ab)_b' $1
   mv stdout de-bruijn-$1.dot
 
   run 0 stdout -vcsn-determinize -f de-bruijn-$1.dot
@@ -189,13 +189,28 @@ run 0 out.exp -cat de-bruijn-3-det.dot
 check_de_bruijn 8
 
 
-## ---------------- ##
-## determinize.cc.  ##
-## ---------------- ##
+## ---------------------- ##
+## Determinize ladybird.  ##
+## ---------------------- ##
 
-cat >out.exp <<\EOF
-Check idempotence for ladybird 4
-States: 4 -> 16
+# check_ladybird SIZE
+# -------------------
+check_ladybird ()
+{
+  run 0 stdout -vcsn-ladybird -C 'lal_char(abc)_b' $1
+  mv stdout ladybird-$1.dot
+
+  run 0 stdout -vcsn-determinize -f ladybird-$1.dot
+  mv stdout out.exp
+
+  # Idempotence.
+  run 0 out.exp -vcsn-determinize -f out.exp
+}
+
+
+check_ladybird 4
+mv out.exp ladybird-4-det.dot
+cat >out.exp <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -268,7 +283,8 @@ digraph
   16 -> 15 [label = "c"]
   16 -> 16 [label = "b"]
 }
-Check idempotence for ladybird 8
-States: 8 -> 256
 EOF
-run 0 out.exp unit/determinize
+run 0 out.exp -cat ladybird-4-det.dot
+
+# Don't display, too big.
+check_ladybird 8
