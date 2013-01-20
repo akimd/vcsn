@@ -47,17 +47,15 @@ check2 '({ab}(abcd)*{cd})' '({dc}(dcba)*{ba})'
 # Compare the standard-of RATEXP to its transposed, expect DIFF.
 check ()
 {
-  echo "$2" >input.rat
-  run 0 stdout -vcsn-standard-of -E -C "$1" -g abcd -o dot -f input.rat
+  run 0 stdout -vcsn-standard-of -E -C "$1" -o dot -e "$2"
   mv stdout forward.out
-  cat forward.out
   run 0 stdout -vcsn-transpose -i dot -o dot -A -f forward.out
   mv stdout transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
 }
 
-check lal_char(abcd)_b 'a' <<EOF
+check 'lal_char(abcd)_b' 'a' <<EOF
     I1                                 |      I2
     F2                                 |      F1
   I1 -> 1                              |    I2 -> 2
@@ -65,7 +63,7 @@ check lal_char(abcd)_b 'a' <<EOF
   2 -> F2                              |    2 -> 1 [label = "a"]
 EOF
 
-check lal_char(abcd)_b 'abc' <<EOF
+check 'lal_char(abcd)_b' 'abc' <<EOF
     I1                                 |      I4
     F4                                 |      F1
   I1 -> 1                              |    I4 -> 4
@@ -102,8 +100,9 @@ involution ()
   run 0 out.exp -vcsn-transpose -A -f transpose.out
 }
 
-vcsn-de-bruijn lal_char(abcd)_z 2 > in.dot
-involution in.dot
+run 0 stdout -vcsn-de-bruijn -C 'lal_char(abcd)_z' 2
+mv stdout de-bruin-2.dot
+involution de-bruin-2.dot
 
 
 ## ---------------------- ##
