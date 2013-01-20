@@ -104,6 +104,47 @@ run 0 stdout -vcsn-de-bruijn -C 'lal_char(abcd)_z' 2
 mv stdout de-bruin-2.dot
 involution de-bruin-2.dot
 
+## -------------- ##
+## minimization.  ##
+## -------------- ##
+
+# check_minimization < OUT.EXP
+check_minimization ()
+{
+  cat >res.dot
+  run 0 stdout -vcsn-standard-of "$@"
+  mv stdout a.out
+  run 0 stdout -vcsn-transpose -i dot -o dot -A -f a.out
+  mv stdout at.out
+  run 0 stdout -vcsn-determinize -i dot -o dot -A -f at.out
+  mv stdout atd.out
+  run 0 stdout -vcsn-transpose -i dot -o dot -A -f atd.out
+  mv stdout atdt.out
+  mv res.dot out.exp
+  run 0 out.exp -vcsn-determinize -i dot -o dot -A -f atdt.out
+}
+
+check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  { 1 2 3 }
+  I1 -> 1
+  1 -> 2 [label = "a"]
+  1 -> 3 [label = "b"]
+  2 -> F2
+  2 -> 3 [label = "a, b"]
+  3 -> 3 [label = "a, b"]
+}
+EOF
+
 
 ## ---------------------- ##
 ## Using unit/transpose.  ##
@@ -159,23 +200,5 @@ digraph
   1 -> 1 [label = "{a.b}cd"]
   1 -> 2 [label = "{a.a.b.b}cd"]
   2 -> F2
-}
-digraph
-{
-  vcsn_context = "lal_char(ab)_b"
-  rankdir = LR
-  node [shape = circle]
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F2
-  }
-  { 1 2 3 }
-  I1 -> 1
-  1 -> 2 [label = "a"]
-  1 -> 3 [label = "b"]
-  2 -> F2
-  2 -> 3 [label = "a, b"]
-  3 -> 3 [label = "a, b"]
 }
 EOF

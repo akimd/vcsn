@@ -58,29 +58,11 @@ check_mutable_automaton()
   return res;
 }
 
-bool
-check_minimization()
-{
-  using context_t = vcsn::ctx::lal_char_b;
-  using automaton_t = vcsn::mutable_automaton<context_t>;
-  using tr_automaton_t = vcsn::details::transpose_automaton<automaton_t>;
-  context_t ctx{{'a', 'b'}};
-  auto ks = ctx.make_ratexpset();
-  auto aut = vcsn::standard_of<tr_automaton_t>(ctx, ks.conv("a+a+a+a"));
-  auto& au1 = *aut.original_automaton(); //std::cout << vcsn::dot(au1) << '\n';
-  auto au2 = vcsn::transpose(au1);       //std::cout << vcsn::dot(au2) << '\n';
-  auto au3 = vcsn::determinize(au2);     //std::cout << vcsn::dot(au2) << '\n';
-  auto au4 = vcsn::transpose(au3);       //std::cout << vcsn::dot(au4) << '\n';
-  auto au5 = vcsn::determinize(au4);     std::cout << vcsn::dot(au5) << '\n';
-  return true;
-}
-
 int main()
 {
   unsigned errs = 0;
 
   errs += !check_mutable_automaton();
-  errs += !check_minimization();
 
   return !!errs;
 }
