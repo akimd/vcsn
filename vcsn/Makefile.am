@@ -26,14 +26,22 @@ nobase_vcsn_HEADERS =                           \
   algos/standard_of.hh                          \
   algos/transpose.hh                            \
   algos/xml.hh                                  \
+  algos/xml/error-handlers.hh                   \
+  algos/xml/expression-handlers.hh              \
+  algos/xml/fsmxml.hh                           \
+  algos/xml/handlers-base.hh                    \
   algos/xml/ios.hh                              \
   algos/xml/ios.hxx                             \
   algos/xml/ratexpvisitor.hh                    \
   algos/xml/ratexpvisitor.hxx                   \
+  algos/xml/read.hh                             \
   algos/xml/structure.hh                        \
   algos/xml/tools.hh                            \
+  algos/xml/value-type.hh                       \
   algos/xml/weight-visitor.hh                   \
   algos/xml/weight-visitor.hxx                  \
+  algos/xml/write.hh                            \
+  algos/xml/xml-eq.hh                           \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/automaton.hh                             \

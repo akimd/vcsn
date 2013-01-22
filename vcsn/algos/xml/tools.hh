@@ -10,6 +10,7 @@ namespace vcsn
 {
   namespace details
   {
+
     inline
     char*
     transcode(const XMLCh* s)
@@ -46,6 +47,20 @@ namespace vcsn
     {
       if (!value.empty())
         node->setAttribute(transcode(label), transcode(value));
+    }
+
+    inline
+    bool
+    eq(const XMLCh* const l, const XMLCh* const r)
+    {
+      return xercesc::XMLString::equals(l, r);
+    }
+
+    inline
+    bool
+    eq(const std::string& l, const XMLCh* const r)
+    {
+      return xercesc::XMLString::equals(transcode(l), r);
     }
 
   } // namespace xml

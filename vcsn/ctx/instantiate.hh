@@ -48,6 +48,15 @@ namespace vcsn
   std::string xml<Ctx>(const Ctx& cxt,                                  \
                        const rat::exp_t exp);                           \
                                                                         \
+  MAYBE_EXTERN template                                                 \
+  rat::exp_t xml_file<Ctx>(const Ctx& ctx,                              \
+                           const std::string& path);                    \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  rat::exp_t xml_string<Ctx>(const Ctx& ctx,                            \
+                             const std::string& exp);                   \
+                                                                        \
+                                                                        \
   namespace dyn                                                         \
   {                                                                     \
     namespace details                                                   \
@@ -57,6 +66,14 @@ namespace vcsn
                                                                         \
       MAYBE_EXTERN template                                             \
         std::string xml<Ctx>(const dyn::ratexp& exp);                   \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+        ratexp xml_file<Ctx>(const context& ctx,                        \
+                             const std::string& path);                  \
+                                                                        \
+      MAYBE_EXTERN template                                             \
+        ratexp xml_string<Ctx>(const context& ctx,                      \
+                               const std::string& exp);                 \
     }                                                                   \
   }
 
@@ -197,6 +214,10 @@ namespace vcsn
                      static_cast<const xml_stream_t&>(xml<Ctx>));
         xml_register(Ctx::sname(),
                      static_cast<const xml_string_t&>(xml<Ctx>));
+        xml_file_register(Ctx::sname(),
+                          static_cast<const xml_read_file_t&>(xml_file<Ctx>));
+        xml_string_register(Ctx::sname(),
+                            static_cast<const xml_read_string_t&>(xml_string<Ctx>));
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;

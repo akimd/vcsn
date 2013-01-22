@@ -54,8 +54,55 @@ namespace vcsn
     std::string
     xml(const dyn::ratexp& e)
     {
-      return details::xml_string_registry().call(e->ctx().vname(), e);
+      return details::xml_registry().call(e->ctx().vname(), e);
     }
 
+    /*------.
+    | Read  |
+    `------*/
+
+    namespace details
+    {
+      Registry<xml_read_file_t>&
+      xml_file_registry()
+      {
+        static Registry<xml_read_file_t> instance{"xml_read_file"};
+        return instance;
+      }
+
+      bool xml_file_register(const std::string& ctx,
+                              const xml_read_file_t& fn)
+      {
+        return xml_file_registry().set(ctx, fn);
+      }
+    } // namespace details
+
+    ratexp
+    xml_file(const context& ctx, const std::string& path)
+    {
+      return details::xml_file_registry().call(ctx.vname(), ctx, path);
+    }
+
+    namespace details
+    {
+      Registry<xml_read_string_t>&
+      xml_string_registry()
+      {
+        static Registry<xml_read_string_t> instance{"xml_read_string"};
+        return instance;
+      }
+
+      bool xml_string_register(const std::string& ctx,
+                               const xml_read_string_t& fn)
+      {
+        return xml_string_registry().set(ctx, fn);
+      }
+    } // namespace details
+
+    ratexp
+    xml_string(const context& ctx, const std::string& exp)
+    {
+      return details::xml_string_registry().call(ctx.vname(), ctx, exp);
+    }
   } // namespace dyn
 } // namespace vcsn

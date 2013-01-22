@@ -19,10 +19,14 @@ namespace vcsn
     class Handler : public xercesc::DefaultHandler
     {
     public:
+      using handler_t = xercesc::DefaultHandler;
       using string = const XMLCh* const;
       using attributes = const xercesc::Attributes&;
+      using parser_t = xercesc::SAX2XMLReader;
+      using xsize_t = XMLSize_t;
     public:
-      Handler()
+      Handler(parser_t& parser)
+        : parser_(parser)
       {}
       void startElement(string uri, string localname, string qname,
                         attributes attrs)
@@ -36,6 +40,9 @@ namespace vcsn
       virtual void start(string uri, string localname, string qname,
                          attributes attrs) = 0;
       virtual void end(string uri, string localname, string qname) = 0;
+    protected:
+      xmlEq eq_;
+      parser_t& parser_;
     };
 
   } // namespace details

@@ -59,9 +59,7 @@ namespace vcsn
             return res;
           }
         case FileType::xml:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as xml input.");
-          // FIXME: return xml_read_file(ctx, f);
+          return xml_file(ctx, f);
         }
       abort();
     }
@@ -85,9 +83,7 @@ namespace vcsn
             return res;
           }
         case FileType::xml:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as xml input.");
-          // FIXME: return xml_read_string(ctx, s);
+          return xml_string(ctx, s);
         }
       abort();
     }
