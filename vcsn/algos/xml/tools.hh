@@ -2,8 +2,7 @@
 # define VCSN_ALGOS_XML_TOOLS_HH
 
 # include <xercesc/dom/DOM.hpp>
-// # include <xercesc/util/XMLString.hpp>
-// # include <xercesc/util/PlatformUtils.hpp>
+# include <xercesc/util/XMLString.hpp>
 
 # include <vcsn/config.h>
 
