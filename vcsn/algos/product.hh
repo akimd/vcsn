@@ -19,9 +19,13 @@ namespace vcsn
                   "requires labels_are_letters");
     static_assert(B::context_t::is_lal,
                   "requires labels_are_letters");
-    // FIXME: ensure that alphabets and weightsets are compatible.
+    // FIXME: ensure that weightsets are compatible.
     using automaton_t = A;
-    automaton_t aut(laut.context());
+    auto gs = intersect(*laut.context().labelset(), *raut.context().labelset());
+    auto ls = std::make_shared<typename automaton_t::labelset_t>(gs);
+    using context_t = typename automaton_t::context_t;
+    auto ctx = context_t{ls, laut.context().weightset()};
+    automaton_t aut(ctx);
     using state_t = typename automaton_t::state_t;
 
     using pair_t = std::pair<typename A::state_t, typename B::state_t>;

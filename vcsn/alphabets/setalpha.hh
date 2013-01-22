@@ -1,12 +1,13 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
 # define VCSN_ALPHABETS_SETALPHA_HH
 
+# include <algorithm> // set_intersection
 # include <initializer_list>
 # include <set>
 
 namespace vcsn
 {
-  template <class L>
+  template <typename L>
   class set_alphabet: public L
   {
   public:
@@ -70,6 +71,19 @@ namespace vcsn
   private:
     letters_t alphabet_;
   };
+
+  /// Compute the intersection with another alphabet.
+  template <typename L>
+  set_alphabet<L>
+  intersect(const set_alphabet<L>& lhs, const set_alphabet<L>& rhs)
+  {
+    typename set_alphabet<L>::letters_t res;
+    std::set_intersection(std::begin(lhs), std::end(lhs),
+                          std::begin(rhs), std::end(rhs),
+                          std::inserter(res, std::begin(res)));
+    return {res};
+  }
+
 }
 
 #endif // !VCSN_ALPHABETS_SETALPHA_HH

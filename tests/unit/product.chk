@@ -1,5 +1,63 @@
 #! /bin/sh
 
+## ---------------------- ##
+## (a+b)* x (b+c)* = b*.  ##
+## ---------------------- ##
+
+run 0 stdout -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*'
+mv stdout ab.dot
+run 0 stdout -vcsn-standard-of -C 'lal_char(bc)_b' -e '(b+c)*'
+mv stdout bc.dot
+run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
+digraph
+{
+  vcsn_context = "lal_char(b)_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F1
+    F2
+  }
+  { 1 2 }
+  I1 -> 1
+  1 -> F1
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 2 [label = "b"]
+}
+EOF
+
+## --------------------- ##
+## (a+b)* x (c+d)* = 0.  ##
+## --------------------- ##
+
+run 0 stdout -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*'
+mv stdout ab.dot
+run 0 stdout -vcsn-standard-of -C 'lal_char(cd)_b' -e '(cd)*'
+mv stdout bc.dot
+run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
+digraph
+{
+  vcsn_context = "lal_char_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F1
+  }
+  { 1 }
+  I1 -> 1
+  1 -> F1
+}
+EOF
+
+## ------------ ##
+## lal_char_z.  ##
+## ------------ ##
+
 # {2}(a*b*a*)
 cat >a.dot <<\EOF
 digraph

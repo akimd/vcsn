@@ -1,6 +1,8 @@
 * 2013-01-22
 ** product: strengthened preconditions
-The product of automata requires LAL automata.
+The product of automata requires LAL automata.  The output alphabet is the
+intersection of the ones of the operands.  This works as expected when the
+automata have disjoint alphabets.
 
 * 2013-01-18
 ** dyn::product and vcsn-product
