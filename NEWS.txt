@@ -1,3 +1,7 @@
+* 2013-01-22
+** product: strengthened preconditions
+The product of automata requires LAL automata.
+
 * 2013-01-18
 ** dyn::product and vcsn-product
 They compute the product of automata.

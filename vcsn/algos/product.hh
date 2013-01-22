@@ -15,6 +15,10 @@ namespace vcsn
   A
   product(const A& laut, const B& raut)
   {
+    static_assert(A::context_t::is_lal,
+                  "requires labels_are_letters");
+    static_assert(B::context_t::is_lal,
+                  "requires labels_are_letters");
     // FIXME: ensure that alphabets and weightsets are compatible.
     using automaton_t = A;
     automaton_t aut(laut.context());

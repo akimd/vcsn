@@ -133,6 +133,8 @@ namespace vcsn
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
         eval_register(aut_t::sname(), eval<aut_t>);
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
+        product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
+
         return true;
       }
 
@@ -181,9 +183,6 @@ namespace vcsn
 
         // print
         print_exp_register(Ctx::sname(), print<Ctx>);
-
-        // product
-        product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
 
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);
