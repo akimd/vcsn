@@ -49,26 +49,26 @@ namespace vcsn
     {
       auto prod = details::create_node(doc_, "prod");
       root_.appendChild(prod);
-      print_weight(v.left_weight(), *prod, "left");
+      print_weight(v.left_weight(), *prod);
       for (auto t : v)
         {
           this_t child(doc_, *prod, ctx_);
           t->accept(child);
         }
-      print_weight(v.right_weight(), *prod, "right");
+      print_weight(v.right_weight(), *prod);
     }
 
     VISIT(sum, v)
     {
       auto plus = details::create_node(doc_, "plus");
       root_.appendChild(plus);
-      print_weight(v.left_weight(), *plus, "left");
+      print_weight(v.left_weight(), *plus);
       for (auto t : v)
         {
           this_t child(doc_, *plus, ctx_);
           t->accept(child);
         }
-      print_weight(v.right_weight(), *plus, "right");
+      print_weight(v.right_weight(), *plus);
     }
 
     VISIT(star, v)
@@ -77,10 +77,10 @@ namespace vcsn
         {
           auto star = details::create_node(doc_, "star");
           root_.appendChild(star);
-          print_weight(v.left_weight(), *star, "left");
+          print_weight(v.left_weight(), *star);
           this_t child(doc_, *star, ctx_);
           sub->accept(child);
-          print_weight(v.left_weight(), *star, "right");
+          print_weight(v.left_weight(), *star);
         }
     }
 
@@ -88,38 +88,33 @@ namespace vcsn
     {
       auto one = details::create_node(doc_, "one");
       root_.appendChild(one);
-      print_weight(v.left_weight(), *one, "left");
+      print_weight(v.left_weight(), *one);
     }
 
     VISIT(zero, v)
     {
       auto zero = details::create_node(doc_, "zero");
       root_.appendChild(zero);
-      print_weight(v.left_weight(), *zero, "left");
+      print_weight(v.left_weight(), *zero);
     }
 
     VISIT(atom, v)
     {
-      auto atom = details::create_node(doc_, "atom");
-      root_.appendChild(atom);
-
-      print_weight(v.left_weight(), *atom, "left");
-
       auto label = details::create_node(doc_, "label");
-      atom->appendChild(label);
+      root_.appendChild(label);
 
-      details::set_attribute(label, "value",
-                             ctx_.labelset()->format(v.value()));
+      details::set_attribute(label, "atom", ctx_.labelset()->format(v.value()));;
+
+      print_weight(v.left_weight(), *label);
     }
 
     template <typename Context>
     void
     xml_ratexp_visitor<Context>::print_weight(const weight_t& w,
-                                               dom_elt_t& root,
-                                               const std::string& side)
+                                              dom_elt_t& root)
     {
       if (shows_(w))
-        vcsn::details::print_weight(doc_, root, side + "Weight", ws_, w);
+        vcsn::details::print_weight(doc_, root, ws_, w);
     }
 
     template <typename Context>

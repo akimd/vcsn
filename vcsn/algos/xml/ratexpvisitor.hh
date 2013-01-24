@@ -50,8 +50,7 @@ namespace vcsn
       virtual void visit(const star_t& v);
     private:
       bool shows_(const weight_t& w) const;
-      void print_weight(const weight_t& w, dom_elt_t& root,
-                        const std::string& side);
+      void print_weight(const weight_t& w, dom_elt_t& root);
 
       xercesc::DOMDocument& doc_;
       xercesc::DOMElement& root_;

@@ -13,7 +13,6 @@ namespace vcsn
     void
     print_weight(xercesc::DOMDocument& doc,
                  xercesc::DOMElement& root,
-                 const std::string& node_name, // leftWeight or rightWeight
                  const WeightSet& ws,
                  const Weight& w);
 

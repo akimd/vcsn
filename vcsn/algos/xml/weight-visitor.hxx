@@ -14,14 +14,14 @@ namespace vcsn
     void
     print_weight(xercesc::DOMDocument& doc,
                  xercesc::DOMElement& root,
-                 const std::string& name,
                  const std::shared_ptr<vcsn::ratexpset<Context> const>& ws,
                  const Weight& w)
     {
       using xml_visitor = rat::xml_ratexp_visitor<Context>;
       using node_t = typename rat::xml_ratexp_visitor<Context>::node_t;
 
-      auto rat_exp_node = details::create_node(doc, name);
+      auto rat_exp_node = details::create_node(doc, "weight");
+
       root.appendChild(rat_exp_node);
       xml_visitor v(doc, *rat_exp_node, ws->context());
       v(static_cast<const node_t&>(*w));
@@ -31,12 +31,11 @@ namespace vcsn
     void
     print_weight(xercesc::DOMDocument& doc,
                  xercesc::DOMElement& root,
-                 const std::string& name,
                  const WeightSet& ws,
                  const Weight& w)
     {
-      assert(name == "leftWeight" || name == "rightWeight");
-      auto weight = details::create_node(doc, name);
+      auto weight = details::create_node(doc, "weight");
+
       details::set_attribute(weight, "value", ws->format(w));
       root.appendChild(weight);
     }

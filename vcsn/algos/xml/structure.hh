@@ -41,7 +41,7 @@ namespace vcsn
       auto value_set = details::create_node(doc, "valueSet");
 
       details::set_attribute(value_set, "genDescript", "enum");
-      details::set_attribute(value_set, "genKind", "digit");
+      details::set_attribute(value_set, "genKind", "letter");
       details::set_attribute(value_set, "genSort", "simple");
       details::set_attribute(value_set, "type", "free");
 
