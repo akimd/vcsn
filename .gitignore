@@ -1,10 +1,14 @@
 *.o
+*.la
+*.lo
 *bak
 *log
 *stamp
+stamp-h*
 *~
 .#*
 .deps
+.libs
 /Makefile.in
 /aclocal.m4
 /autom4te.cache
@@ -28,7 +32,10 @@
 /tests/Makefile.in
 /vcsn/Makefile.in
 /vcsn/config.in.h
+/vcsn/config.h
 /vcsn/lexer.cc
 /vcsn/parse-rat-exp.dir/
+/vaucanson-*/
 Makefile
 \#*#
+/libtool
