@@ -19,6 +19,11 @@ namespace vcsn
       return "zmin";
     }
 
+    static std::string opname()
+    {
+      return "minPlus";
+    }
+
     std::string vname(bool = true) const
     {
       return sname();

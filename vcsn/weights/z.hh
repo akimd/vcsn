@@ -17,6 +17,11 @@ namespace vcsn
       return "z";
     }
 
+    static std::string opname()
+    {
+      return "classical";
+    }
+
     std::string vname(bool = true) const
     {
       return sname();

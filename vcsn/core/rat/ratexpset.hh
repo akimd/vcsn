@@ -52,6 +52,8 @@ namespace vcsn
   public:
     /// Static description key.
     static std::string sname();
+    /// Static description of operation type.
+    static std::string opname();
     /// Dynamic description key.
     virtual std::string vname(bool full = true) const;
 

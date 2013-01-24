@@ -37,6 +37,11 @@ namespace vcsn
       return "polynomialset<" + context_t::sname() + ">";
     }
 
+    static std::string opname()
+    {
+      return "classical";
+    }
+
     std::string vname(bool full = true) const
     {
       return "polynomialset<" + context().vname(full) + ">";

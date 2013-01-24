@@ -25,6 +25,13 @@ namespace vcsn
 
   template <typename Context>
   std::string
+  ratexpset<Context>::opname()
+  {
+  return "classical";
+  }
+
+  template <typename Context>
+  std::string
   ratexpset<Context>::vname(bool full) const
   {
     return "ratexpset<" + context().vname(full) + '>';
