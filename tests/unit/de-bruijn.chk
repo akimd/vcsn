@@ -21,13 +21,12 @@ weighset()
   return 0
 }
 
-# check VCSN_STANDARD-OF-ARGUMENTS
+# check VCSN-STANDARD-OF-ARGUMENTS
 # --------------------------------
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
-  cat >out.exp
-  run 0 out.exp -vcsn-de-bruijn "$@" -O dot
+  run 0 - -vcsn-de-bruijn "$@" -O dot
 }
 
 fail ()
@@ -35,7 +34,7 @@ fail ()
   run 1 '' -vcsn-standard-of -C "$@"
 }
 
-check -W b -g 'ab' 2 <<\EOF
+check -C 'lal_char(ab)_b' 2 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -56,7 +55,7 @@ digraph
 }
 EOF
 
-check -W b -g 'xyz' 3 <<\EOF
+check -C 'lal_char(xyz)_b' 3 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(xyz)_b"

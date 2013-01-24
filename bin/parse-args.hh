@@ -10,6 +10,7 @@ struct options
   bool is_automaton = true;
   std::string input;
   bool input_is_file = true;
+  std::string output = "-";
   bool lal = true;
   std::string context = "lal_char_b";
   std::string gens = "abcd";
@@ -24,7 +25,13 @@ void usage(const char* prog, int exit_status);
 void parse_args(options& opts, int& argc, char* const*& argv);
 options parse_args(int& argc, char* const*& argv);
 
+/// Read automaton/ratexp according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
 vcsn::dyn::ratexp read_ratexp(const options& opts);
+
+/// Print automaton/ratexp according to \a opts.
+void print(const options& opts, const vcsn::dyn::automaton& exp);
+void print(const options& opts, const vcsn::dyn::ratexp& exp);
+
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_

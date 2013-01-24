@@ -5,14 +5,14 @@
 # Check that vcsn-cat is idempotent on the standard-of RATEXP.
 check ()
 {
-  run 0 stdout -vcsn-standard-of -E -C "$1" -g abcd -e "$2"
-  mv stdout out.exp
+  run 0 '' -vcsn-standard-of -E -C "$1" -e "$2" -o std.dot
+  cp std.dot out.exp
   run 0 out.exp -vcsn-cat -Af out.exp
 }
 
-check lal_char_b "abcd"
-check lal_char_z "{3}\\e"
-check lal_char_z "{3}(\\e+a)"
+check 'lal_char(abcd)_b' "abcd"
+check 'lal_char(abcd)_z' "{3}\\e"
+check 'lal_char(abcd)_z' "{3}(\\e+a)"
 
 
 # check < AUTOMATON

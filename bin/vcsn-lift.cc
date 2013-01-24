@@ -14,7 +14,7 @@ work_aut(const options& opts)
   aut = lift(aut);
 
   // Output.
-  print(aut, std::cout, opts.output_format) << std::endl;
+  print(opts, aut);
 }
 
 static void
@@ -28,7 +28,7 @@ work_exp(const options& opts)
   exp = lift(exp);
 
   // Output.
-  print(exp, std::cout, opts.output_format) << std::endl;
+  print(opts, exp);
 }
 
 int main(int argc, char* const argv[])

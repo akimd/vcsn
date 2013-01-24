@@ -107,14 +107,11 @@ run 0 out.exp -vcsn-determinize -f out.exp
 # --------------------
 check_de_bruijn ()
 {
-  run 0 stdout -vcsn-de-bruijn -C 'lal_char(ab)_b' $1
-  mv stdout de-bruijn-$1.dot
-
-  run 0 stdout -vcsn-determinize -f de-bruijn-$1.dot
-  mv stdout out.exp
-
+  run 0 '' -vcsn-de-bruijn -C 'lal_char(ab)_b'   -o de-bruijn-$1.dot $1
+  run 0 '' -vcsn-determinize -f de-bruijn-$1.dot -o de-bruijn-$1-d.dot
   # Idempotence.
-  run 0 out.exp -vcsn-determinize -f out.exp
+  cp de-bruijn-$1-d.dot out.exp
+  run 0 out.exp -vcsn-determinize -f de-bruijn-$1-d.dot
 }
 
 
@@ -197,13 +194,10 @@ check_de_bruijn 8
 # -------------------
 check_ladybird ()
 {
-  run 0 stdout -vcsn-ladybird -C 'lal_char(abc)_b' $1
-  mv stdout ladybird-$1.dot
-
-  run 0 stdout -vcsn-determinize -f ladybird-$1.dot
-  mv stdout out.exp
-
+  run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b'  -o ladybird-$1.dot $1
+  run 0 '' -vcsn-determinize -f ladybird-$1.dot -o ladybird-$1-d.dot
   # Idempotence.
+  cp ladybird-$1-d.dot out.exp
   run 0 out.exp -vcsn-determinize -f out.exp
 }
 

@@ -1,6 +1,7 @@
 #include <getopt.h>
 
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <stdexcept>
 
@@ -44,6 +45,38 @@ read_ratexp(const options& opts)
 }
 
 void
+print(const options& opts, const vcsn::dyn::automaton& aut)
+{
+  std::ostream* out = &std::cout;
+  std::ofstream os;
+  if (!opts.output.empty() && opts.output != "-")
+    {
+      os.open(opts.output.c_str());
+      out = &os;
+    }
+  if (!out->good())
+    throw std::runtime_error(opts.output + ": cannot open for writing");
+
+  print(aut, *out, opts.output_format) << std::endl;
+}
+
+void
+print(const options& opts, const vcsn::dyn::ratexp& exp)
+{
+  std::ostream* out = &std::cout;
+  std::ofstream os;
+  if (!opts.output.empty() && opts.output != "-")
+    {
+      os.open(opts.output.c_str());
+      out = &os;
+    }
+  if (!out->good())
+    throw std::runtime_error(opts.output + ": cannot open for writing");
+
+  print(exp, *out, opts.output_format) << std::endl;
+}
+
+void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
@@ -57,6 +90,7 @@ usage(const char* prog, int exit_status)
       "  -f FILE       input is FILE\n"
       "  -I FORMAT     input format (dot, text, xml)\n"
       "  -O FORMAT     output format (dot, text, xml)\n"
+      "  -o FILE       save output into FILE\n"
       "\n"
       "Context:\n"
       "  -C CONTEXT         the context to use\n"
@@ -105,7 +139,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
     ADD(zr,  "law_char_ratexpset<law_char_z>");
     ADD(zrr, "law_char_ratexpset<law_char_ratexpset<law_char_z>>");
 #undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hI:L:O:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hI:L:O:o:W:?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -138,6 +172,9 @@ parse_args(options& opts, int& argc, char* const*& argv)
         break;
       case 'O':
         opts.output_format = string_to_file_type(optarg);
+        break;
+      case 'o':
+        opts.output = optarg;
         break;
       case 'L':
         {

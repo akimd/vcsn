@@ -4,8 +4,7 @@
 ## Automata.  ##
 ## ---------- ##
 
-run 0 stdout -vcsn-ladybird -C 'lal_char(abc)_b' -g 'abc' 4
-mv stdout lady4.dot
+run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b' -o lady4.dot 4
 
 ## label = "b, c" -> label = "{b+c}\e"
 perl -p -e '
@@ -20,7 +19,7 @@ run 0 out.exp -vcsn-lift -Af lady4.dot
 ## Expressions.  ##
 ## ------------- ##
 
-run 0 '{a.b.c}\e' -vcsn-lift -C lal_char_b -g abc -Ee "abc"
+run 0 '{a.b.c}\e' -vcsn-lift -C 'lal_char(abc)_b' -Ee "abc"
 
 # FIXME: no support yet for the printer.
-# run 0 '{{2}a.b.c}\e' -vcsn-lift -C lal_char_z -g abc -Ee "{2}abc"
+# run 0 '{{2}a.b.c}\e' -vcsn-lift -C 'lal_char(abc)_z' -Ee "{2}abc"

@@ -10,7 +10,7 @@ work_aut(const options& opts)
   // Input.
   auto aut = read_automaton(opts);
   // Output.
-  print(aut, std::cout, opts.output_format) << std::endl;
+  print(opts, aut);
 }
 
 static void
@@ -20,7 +20,7 @@ work_exp(const options& opts)
   // Input.
   auto exp = read_ratexp(opts);
   // Output.
-  print(exp, std::cout, opts.output_format) << std::endl;
+  print(opts, exp);
 }
 
 int main(int argc, char* const argv[])

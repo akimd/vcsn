@@ -12,7 +12,7 @@ work_aut(options opts)
   // Process.
   auto res = transpose(aut);
   // Output.
-  print(res, std::cout, opts.output_format) << std::endl;;
+  print(opts, res);
 }
 
 void
@@ -26,7 +26,7 @@ work_exp(options opts)
   exp = transpose(exp);
 
   // Output.
-  print(exp, std::cout, opts.output_format) << std::endl;
+  print(opts, exp);
 }
 
 int main(int argc, char* const argv[])

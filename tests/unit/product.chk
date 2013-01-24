@@ -4,10 +4,8 @@
 ## (a+b)* x (b+c)* = b*.  ##
 ## ---------------------- ##
 
-run 0 stdout -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*'
-mv stdout ab.dot
-run 0 stdout -vcsn-standard-of -C 'lal_char(bc)_b' -e '(b+c)*'
-mv stdout bc.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.dot
 run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
 digraph
 {
@@ -33,10 +31,8 @@ EOF
 ## ab x cd = 0.  ##
 ## ------------- ##
 
-run 0 stdout -vcsn-standard-of -C 'lal_char(ab)_b' -e 'ab'
-mv stdout ab.dot
-run 0 stdout -vcsn-standard-of -C 'lal_char(cd)_b' -e 'cd'
-mv stdout bc.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(ab)_b' -e 'ab' -o ab.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(cd)_b' -e 'cd' -o bc.dot
 run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
 digraph
 {
@@ -58,10 +54,8 @@ EOF
 ## (a+b)* x (c+d)* = \e.  ##
 ## ---------------------- ##
 
-run 0 stdout -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*'
-mv stdout ab.dot
-run 0 stdout -vcsn-standard-of -C 'lal_char(cd)_b' -e '(c+d)*'
-mv stdout bc.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.dot
+run 0 '' -vcsn-standard-of -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.dot
 run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
 digraph
 {

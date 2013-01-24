@@ -24,7 +24,7 @@ try
     auto res = product(lhs, rhs);
 
     // Output.
-    print(res, std::cout, opts.output_format) << std::endl;
+    print(opts, res);
   }
 catch (const std::exception& e)
   {

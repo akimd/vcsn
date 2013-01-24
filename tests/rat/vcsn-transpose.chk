@@ -4,7 +4,7 @@
 # --------------------------
 check ()
 {
-  run 0 $3 -vcsn-transpose -C "$1" -g abcd -Ee "$2"
+  run 0 $3 -vcsn-transpose -C "$1" -Ee "$2"
 }
 
-check lal_char_b "abcd" "d.c.b.a"
+check 'lal_char(abcd)_b' "abcd" "d.c.b.a"

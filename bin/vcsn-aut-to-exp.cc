@@ -16,7 +16,7 @@ try
     ratexp aut = aut_to_exp(exp);
 
     // Output.
-    print(aut, std::cout, opts.output_format) << std::endl;
+    print(opts, aut);
   }
 catch (const std::exception& e)
   {

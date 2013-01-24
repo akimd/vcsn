@@ -3,6 +3,9 @@
 The options to select the input and output format are renamed -I and -O
 (instead of -i and -o).
 
+** new option: -o for output file
+The vcsn-* tools now support '-o FILE' to save the output in FILE.
+
 * 2013-01-22
 ** product: strengthened preconditions
 The product of automata requires LAL automata.  The output alphabet is the

@@ -22,7 +22,7 @@ try
     automaton aut = de_bruijn(ctx, n);
 
     // Output.
-    print(aut, std::cout, opts.output_format) << std::endl;
+    print(opts, aut);
   }
 catch (const std::exception& e)
   {

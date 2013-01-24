@@ -47,10 +47,8 @@ check2 '({ab}(abcd)*{cd})' '({dc}(dcba)*{ba})'
 # Compare the standard-of RATEXP to its transposed, expect DIFF.
 check ()
 {
-  run 0 stdout -vcsn-standard-of -E -C "$1" -O dot -e "$2"
-  mv stdout forward.out
-  run 0 stdout -vcsn-transpose -I dot -O dot -A -f forward.out
-  mv stdout transposed.out
+  run 0 '' -vcsn-standard-of -E -C "$1" -O dot -e "$2" -o forward.out
+  run 0 '' -vcsn-transpose -I dot -O dot -A -f forward.out -o transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
 }
@@ -94,14 +92,12 @@ EOF
 # Check that transposition is an involution on AUTOMATON.
 involution ()
 {
-  run 0 stdout -vcsn-transpose -A -f $1
-  mv stdout transpose.out
+  run 0 '' -vcsn-transpose -A -f $1 -o transpose.out
   cp $1 out.exp
   run 0 out.exp -vcsn-transpose -A -f transpose.out
 }
 
-run 0 stdout -vcsn-de-bruijn -C 'lal_char(abcd)_z' 2
-mv stdout de-bruin-2.dot
+run 0 '' -vcsn-de-bruijn -C 'lal_char(abcd)_z' -o de-bruin-2.dot 2
 involution de-bruin-2.dot
 
 ## -------------- ##
@@ -111,17 +107,11 @@ involution de-bruin-2.dot
 # check_minimization < OUT.EXP
 check_minimization ()
 {
-  cat >res.dot
-  run 0 stdout -vcsn-standard-of "$@"
-  mv stdout a.out
-  run 0 stdout -vcsn-transpose -I dot -O dot -A -f a.out
-  mv stdout at.out
-  run 0 stdout -vcsn-determinize -I dot -O dot -A -f at.out
-  mv stdout atd.out
-  run 0 stdout -vcsn-transpose -I dot -O dot -A -f atd.out
-  mv stdout atdt.out
-  mv res.dot out.exp
-  run 0 out.exp -vcsn-determinize -I dot -O dot -A -f atdt.out
+  run 0 '' -vcsn-standard-of "$@" -o a.out
+  run 0 '' -vcsn-transpose -I dot -O dot -A -f a.out -o at.out
+  run 0 '' -vcsn-determinize -I dot -O dot -A -f at.out -o atd.out
+  run 0 '' -vcsn-transpose -I dot -O dot -A -f atd.out -o atdt.out
+  run 0 -  -vcsn-determinize -I dot -O dot -A -f atdt.out
 }
 
 check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<EOF
