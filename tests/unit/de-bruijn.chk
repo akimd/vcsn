@@ -27,7 +27,7 @@ weighset()
 check ()
 {
   cat >out.exp
-  run 0 out.exp -vcsn-de-bruijn "$@" -o dot
+  run 0 out.exp -vcsn-de-bruijn "$@" -O dot
 }
 
 fail ()

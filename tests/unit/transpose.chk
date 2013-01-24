@@ -47,9 +47,9 @@ check2 '({ab}(abcd)*{cd})' '({dc}(dcba)*{ba})'
 # Compare the standard-of RATEXP to its transposed, expect DIFF.
 check ()
 {
-  run 0 stdout -vcsn-standard-of -E -C "$1" -o dot -e "$2"
+  run 0 stdout -vcsn-standard-of -E -C "$1" -O dot -e "$2"
   mv stdout forward.out
-  run 0 stdout -vcsn-transpose -i dot -o dot -A -f forward.out
+  run 0 stdout -vcsn-transpose -I dot -O dot -A -f forward.out
   mv stdout transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
@@ -114,14 +114,14 @@ check_minimization ()
   cat >res.dot
   run 0 stdout -vcsn-standard-of "$@"
   mv stdout a.out
-  run 0 stdout -vcsn-transpose -i dot -o dot -A -f a.out
+  run 0 stdout -vcsn-transpose -I dot -O dot -A -f a.out
   mv stdout at.out
-  run 0 stdout -vcsn-determinize -i dot -o dot -A -f at.out
+  run 0 stdout -vcsn-determinize -I dot -O dot -A -f at.out
   mv stdout atd.out
-  run 0 stdout -vcsn-transpose -i dot -o dot -A -f atd.out
+  run 0 stdout -vcsn-transpose -I dot -O dot -A -f atd.out
   mv stdout atdt.out
   mv res.dot out.exp
-  run 0 out.exp -vcsn-determinize -i dot -o dot -A -f atdt.out
+  run 0 out.exp -vcsn-determinize -I dot -O dot -A -f atdt.out
 }
 
 check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<EOF

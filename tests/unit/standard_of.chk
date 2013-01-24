@@ -21,7 +21,7 @@ weighset()
   return 0
 }
 
-# check VCSN_STANDARD-OF-ARGUMENTS
+# check VCSN-STANDARD-OF-ARGUMENTS
 # --------------------------------
 # Expected output is on stdin, except the constant bits (see below).
 check ()
@@ -39,7 +39,7 @@ EOF
 }
 EOF
 
-  run 0 out.exp -vcsn-standard-of "$@" -o dot
+  run 0 out.exp -vcsn-standard-of "$@" -O dot
 }
 
 fail ()

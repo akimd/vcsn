@@ -50,23 +50,20 @@ usage(const char* prog, int exit_status)
     std::cout
       << "usage: " << prog << " [OPTIONS...]\n"
       "\n"
+      "Options:\n"
+      "  -A            input is an automaton\n"
+      "  -E            input is a rational expression\n"
+      "  -e STRING     input is STRING\n"
+      "  -f FILE       input is FILE\n"
+      "  -I FORMAT     input format (dot, text, xml)\n"
+      "  -O FORMAT     output format (dot, text, xml)\n"
+      "\n"
       "Context:\n"
-      "  -A                 input is an automaton\n"
-      "  -E                 input is a rational expression\n"
-      "  -e STRING          the input is STRING\n"
-      "  -f FILE            the input is FILE\n"
       "  -C CONTEXT         the context to use\n"
-      "  -L letter|words    kind of the labels\n"
+      "                     la(l|u|w)_char_(b|z|zmin), etc.\n"
+      "  -L letters|words   kind of the labels\n"
       "  -W WEIGHT-SET      define the kind of the weights\n"
       "  -g STRING          generator set definition\n"
-      "\n"
-      "Format:\n"
-      "  -i FORMAT          input format\n"
-      "  -o FORMAT          output format\n"
-      "\n"
-      "Context:\n"
-      "  la(l|u|w)_char_(b|z|zmin)\n"
-      "  etc.\n"
       "\n"
       "WeightSet:\n"
       "  b        for Boolean\n"
@@ -108,7 +105,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
     ADD(zr,  "law_char_ratexpset<law_char_z>");
     ADD(zrr, "law_char_ratexpset<law_char_ratexpset<law_char_z>>");
 #undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hi:o:L:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hI:L:O:W:?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -136,10 +133,10 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
         break;
-      case 'i':
+      case 'I':
         opts.input_format = string_to_file_type(optarg);
         break;
-      case 'o':
+      case 'O':
         opts.output_format = string_to_file_type(optarg);
         break;
       case 'L':

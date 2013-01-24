@@ -1,3 +1,8 @@
+* 2013-01-24
+** options renamed
+The options to select the input and output format are renamed -I and -O
+(instead of -i and -o).
+
 * 2013-01-22
 ** product: strengthened preconditions
 The product of automata requires LAL automata.  The output alphabet is the
