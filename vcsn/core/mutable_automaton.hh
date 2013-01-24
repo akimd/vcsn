@@ -144,7 +144,7 @@ namespace vcsn
         return false;
       const stored_state_t& ss = states_[s];
 
-      // Erased states have 'invalid' has their first successor.
+      // Erased states have 'invalid' as their first successor.
       return ss.succ.empty() || ss.succ.front() != null_transition();
     }
 
