@@ -15,9 +15,7 @@ namespace vcsn
 
   namespace ctx
   {
-    template <typename LabelSet,
-              typename WeightSet,
-              typename Kind>
+    template <typename LabelSet, typename WeightSet>
     class context: public dyn::abstract_context
     {
     public:
@@ -25,7 +23,8 @@ namespace vcsn
       using weightset_t = WeightSet;
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using weightset_ptr = std::shared_ptr<const weightset_t>;
-      using kind_t = Kind;
+
+      using kind_t = typename labelset_t::kind_t;
       enum
         {
           is_lau = std::is_same<kind_t, labels_are_unit>::value,
@@ -34,7 +33,7 @@ namespace vcsn
         };
 
       /// Type of transition labels, and type of RatExp atoms.
-      using label_t = typename label_trait<kind_t, labelset_t>::label_t;
+      using label_t = typename labelset_t::label_t;
       using word_t = typename labelset_t::word_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
@@ -46,39 +45,48 @@ namespace vcsn
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
       context(const context& that)
-        : gs_{that.gs_}
+        : ls_{that.ls_}
         , ws_{that.ws_}
       {}
 
-      context(const labelset_ptr& gs, const weightset_ptr& ws)
-        : gs_{gs}
+      /// \param ls  the labelset
+      /// \param ws  the weight set
+      context(const labelset_ptr& ls, const weightset_ptr& ws)
+        : ls_{ls}
         , ws_{ws}
       {}
 
-      context(const labelset_t& gs = {}, const weightset_t& ws = {})
-        : context{std::make_shared<const labelset_t>(gs),
+      /// \param ls  the labelset
+      /// \param ws  the weight set
+      context(const labelset_t& ls, const weightset_t& ws = {})
+        : context{std::make_shared<const labelset_t>(ls),
                   std::make_shared<const weightset_t>(ws)}
+      {}
+
+      /// \param gs  the generators
+      /// \param ws  the weight set
+      context(const typename labelset_t::letters_t& gs = {},
+              const weightset_t& ws = {})
+        : context{labelset_t{gs}, ws}
       {}
 
       /// The name of this context, built from its parameters.
       /// E.g., "lal_char_b", "law_char_zmin".
       static std::string sname()
       {
-        return (kind_t::sname()
-                + "_" + labelset_t::sname()
+        return (labelset_t::sname()
                 + "_" + weightset_t::sname());
       }
 
       virtual std::string vname(bool full = true) const override final
       {
-        return (kind_t::sname()
-                + "_" + labelset()->vname(full)
+        return (labelset()->vname(full)
                 + "_" + weightset()->vname(full));
       }
 
       const labelset_ptr& labelset() const
       {
-        return gs_;
+        return ls_;
       }
       const weightset_ptr& weightset() const
       {
@@ -106,7 +114,7 @@ namespace vcsn
       }
 
     private:
-      labelset_ptr gs_;
+      labelset_ptr ls_;
       weightset_ptr ws_;
     };
 

@@ -4,7 +4,6 @@
 
 using context_t = vcsn::ctx::law_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
-using entry_t = automaton_t::entry_t;
 
 bool
 check_concat(const context_t& ctx)

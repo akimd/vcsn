@@ -1,14 +1,18 @@
 #ifndef VCSN_CTX_LAW_CHAR_B_HH
 # define VCSN_CTX_LAW_CHAR_B_HH
 
-# include <vcsn/ctx/char.hh>
+# include <vcsn/alphabets/char.hh>
+# include <vcsn/alphabets/setalpha.hh>
+# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/law.hh>
 # include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using law_char_b = char_<vcsn::b, labels_are_words>;
+    using law_char_b = context<Law<vcsn::set_alphabet<vcsn::char_letters>>,
+                               vcsn::b>;
   }
 }
 

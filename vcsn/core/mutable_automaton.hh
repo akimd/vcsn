@@ -70,7 +70,7 @@ namespace vcsn
     mutable_automaton(const context_t& ctx)
       : es_{ctx}
       , states_{2}
-      , prepost_label_(ctx.labelset()->template special<label_t>())
+      , prepost_label_(ctx.labelset()->special())
     {
     }
 

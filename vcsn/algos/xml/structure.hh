@@ -32,6 +32,27 @@ namespace vcsn
 
     template <typename Context>
     void
+    print_gen_set(const Context&,
+                  xercesc::DOMDocument&, xercesc::DOMElement*,
+                  std::true_type)
+    {}
+
+    template <typename Context>
+    void
+    print_gen_set(const Context& ctx,
+                  xercesc::DOMDocument& doc, xercesc::DOMElement* value_set,
+                  std::false_type)
+    {
+      for (auto l: *ctx.labelset())
+        {
+          auto value_elt = details::create_node(doc, "valueSetElt");
+          details::set_attribute(value_elt, "value", {l});
+          value_set->appendChild(value_elt);
+        }
+    }
+
+    template <typename Context>
+    void
     print_label_set(const Context& ctx,
                     xercesc::DOMDocument& doc,
                     xercesc::DOMElement& root)
@@ -44,25 +65,16 @@ namespace vcsn
       details::set_attribute(value_set, "genSort", "simple");
       details::set_attribute(value_set, "type", "free");
 
-      for (auto l: *ctx.labelset())
-        {
-          auto value_elt = details::create_node(doc, "valueSetElt");
-          details::set_attribute(value_elt, "value", {l});
-          value_set->appendChild(value_elt);
-        }
-
+      print_gen_set(ctx, doc, value_set,
+                    typename std::is_same<typename Context::kind_t, labels_are_unit>::type());
       root.appendChild(value_set);
-
     }
 
     template <typename LabelSet,
               typename SubContext,
-              typename Kind,
-              template <typename, typename, typename> class Context>
+              template <typename, typename> class Context>
     void
-    print_weight_set(const Context<LabelSet,
-                                   vcsn::ratexpset<SubContext>,
-                                   Kind>& ctx,
+    print_weight_set(const Context<LabelSet, vcsn::ratexpset<SubContext>>& ctx,
                      xercesc::DOMDocument& doc,
                      xercesc::DOMElement& root)
     {

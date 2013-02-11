@@ -26,12 +26,6 @@ namespace vcsn
     }
 
     word_t
-    to_word(const empty_t) const
-    {
-      return {};
-    }
-
-    word_t
     to_word(const letter_t l) const
     {
       return {l};
@@ -92,18 +86,6 @@ namespace vcsn
       return l;
     }
 
-    empty_t
-    transpose(empty_t) const
-    {
-      return {};
-    }
-
-    bool
-    equals(empty_t, empty_t) const
-    {
-      return true;
-    }
-
     bool
     equals(const letter_t& l1, const letter_t& l2) const
     {
@@ -114,12 +96,6 @@ namespace vcsn
     equals(const word_t& w1, const word_t& w2) const
     {
       return w1 == w2;
-    }
-
-    bool
-    is_letter(const empty_t&) const
-    {
-      return false;
     }
 
     bool
@@ -134,17 +110,11 @@ namespace vcsn
       return w.size() == 1;
     }
 
-  protected:
+  public:
     /// Use special().
     letter_t special_letter() const { return 255; }
 
   public:
-    std::ostream&
-    print(std::ostream& o, const empty_t&) const
-    {
-      return o << "EMPTY";
-    }
-
     std::ostream&
     print(std::ostream& o, const letter_t& l) const
     {
@@ -186,12 +156,6 @@ namespace vcsn
         return w.substr(0, s - 1);
 
       return w;
-    }
-
-    std::string
-    format(const empty_t&) const
-    {
-      return "EMPTY";
     }
 
     // Special character, used to label transitions

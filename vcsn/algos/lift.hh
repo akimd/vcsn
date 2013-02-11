@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_LIFT_HH
 
 # include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/lau.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>
@@ -17,20 +18,16 @@ namespace vcsn
   {
     template <typename Context>
     using lifted_context_t =
-      ctx::context<typename Context::labelset_t,
-                   ratexpset<Context>,
-                   labels_are_unit>;
+      ctx::context<ctx::Lau, ratexpset<Context>>;
 
     // lift(ctx) -> ctx
     template <typename Context>
     lifted_context_t<Context>
     lift_context(const Context& ctx)
     {
-      using rs_in_t = typename Context::ratexpset_t;
       auto rs_in = ctx.make_ratexpset();
       using ctx_out_t = details::lifted_context_t<Context>;
-      return ctx_out_t{ctx.labelset(),
-                       std::make_shared<const rs_in_t>(rs_in)};
+      return ctx_out_t(ctx::Lau{}, rs_in);
     }
 
     template <typename Aut>

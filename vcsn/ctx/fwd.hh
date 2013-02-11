@@ -15,9 +15,7 @@ namespace vcsn
   // ctx.hh.
   namespace ctx
   {
-    template <typename LabelSet,
-              typename WeightSet,
-              typename Kind>
+    template <typename LabelSet, typename WeightSet>
     class context;
   }
 };

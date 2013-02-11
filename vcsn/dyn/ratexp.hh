@@ -48,15 +48,13 @@ namespace vcsn
       return std::make_shared<ratexp::element_type>(ctx, ratexp);
     }
 
-    template <typename LabelSet,
-              typename WeightSet,
-              typename Kind>
+    template <typename LabelSet, typename WeightSet>
     inline
     ratexp
-    make_ratexp(const ctx::context<LabelSet, WeightSet, Kind>& ctx,
+    make_ratexp(const ctx::context<LabelSet, WeightSet>& ctx,
                 const rat::exp_t& ratexp)
     {
-      using ctx_t = ctx::context<LabelSet, WeightSet, Kind>;
+      using ctx_t = ctx::context<LabelSet, WeightSet>;
       return make_ratexp(std::make_shared<const ctx_t>(ctx), ratexp);
     }
 

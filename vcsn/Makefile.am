@@ -55,24 +55,26 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
   ctx/abstract_context.hh                       \
-  ctx/char.hh                                   \
-  ctx/lal_char_b.hh                             \
-  ctx/law_char_b.hh                             \
-  ctx/lau_char_br.hh                            \
-  ctx/lal_char_br.hh                            \
-  ctx/law_char_br.hh                            \
-  ctx/lal_char_z.hh                             \
-  ctx/lau_char_z.hh                             \
-  ctx/law_char_z.hh                             \
-  ctx/lal_char_zmin.hh                          \
-  ctx/law_char_zmin.hh                          \
-  ctx/lal_char_zr.hh                            \
-  ctx/law_char_zr.hh                            \
-  ctx/lal_char_zrr.hh                           \
-  ctx/law_char_zrr.hh                           \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \
+  ctx/lal.hh                                    \
+  ctx/lal_char_b.hh                             \
+  ctx/lal_char_br.hh                            \
+  ctx/lal_char_z.hh                             \
+  ctx/lal_char_zmin.hh                          \
+  ctx/lal_char_zr.hh                            \
+  ctx/lal_char_zrr.hh                           \
+  ctx/lau.hh                                    \
+  ctx/lau_br.hh                                 \
+  ctx/lau_z.hh                                  \
+  ctx/law.hh                                    \
+  ctx/law_char_b.hh                             \
+  ctx/law_char_br.hh                            \
+  ctx/law_char_z.hh                             \
+  ctx/law_char_zmin.hh                          \
+  ctx/law_char_zr.hh                            \
+  ctx/law_char_zrr.hh                           \
   dyn/ratexp.hh                                 \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
