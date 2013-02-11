@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                           
-%                  Vaucanson-G.tex                      
-%                                                           
+%
+%                  Vaucanson-G.tex
+%
 %       Automata drawer based on Pstricks
-%                       
+%
 %                V 0.2 - 03/05/09
 %  modification of StateVar
 %  Chg*LabelScale is relative w.r.t Set*LabelScale
@@ -20,7 +20,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Commands for geometric constructions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% constants 
+%%% constants
 \newcommand{\SQRTwo}{0.717}
 \newcommand{\SQRThree}{1.732}
 \newcommand{\GoldMean}{0.618}
@@ -49,10 +49,10 @@
    \renewcommand{\arraystretch}{1.333}}
 \newcommand{\StackThreeLabelsP}[3]{%
    \renewcommand{\arraystretch}{0.75}%
-   \begin{array}{c}#1\\ + \\ #2 \\ + \\ #3 \end{array}% 
+   \begin{array}{c}#1\\ + \\ #2 \\ + \\ #3 \end{array}%
    \renewcommand{\arraystretch}{1.333}}
 %%% Lined up labels (with +)
-\newcommand{\LineTwoLabelsP}[2]{#1 + #2} 
+\newcommand{\LineTwoLabelsP}[2]{#1 + #2}
 \newcommand{\LineThreeLabelsP}[3]{#1 + #2 + #3}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Scales  --- Default settings
@@ -66,7 +66,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Size = StateDiameter
 %%% The preset sizes are given in cm, and not in "psunits".
-%%% This allows to use different scales for the whole figure 
+%%% This allows to use different scales for the whole figure
 %%% and for the "drawing grid".
 \newlength{\MediumStateDiameter}
 \newlength{\SmallStateDiameter}
@@ -81,12 +81,12 @@
 \setlength{\StateLineWidth}{1.8pt}
 \newcommand{\StateLineStyle}{solid} % style
 \newcommand{\StateLineColor}{black}
-\newif\ifStateLineDbl \StateLineDblfalse 
-\newcommand{\StateLineDblCoef}{0.6} 
-\newcommand{\StateLineDblSep}{0.4} 
+\newif\ifStateLineDbl \StateLineDblfalse
+\newcommand{\StateLineDblCoef}{0.6}
+\newcommand{\StateLineDblSep}{0.4}
 \newcommand{\VSStateLineCoef}{.6} % coef. for very small state
 %%% State background and label
-\newcommand{\StateFillStatus}{solid} 
+\newcommand{\StateFillStatus}{solid}
 \newcommand{\StateFillColor}{white}
 \newcommand{\StateLabelColor}{black}
 \newcommand{\StateLabelScale}{1.7}
@@ -95,8 +95,8 @@
    % As they have usually no labels it useful
    % to have a coloring facility for the "SmallState"
 %%%  Dimmed states (e.g. for non accessible states)
-\newcommand{\DimStateLineStyle}{solid} 
-\newcommand{\DimStateLineCoef}{1} % 
+\newcommand{\DimStateLineStyle}{solid}
+\newcommand{\DimStateLineCoef}{1} %
 \newcommand{\DimStateLineColor}{gray}
 \newcommand{\DimStateLabelColor}{gray}
 \newcommand{\DimStateFillColor}{white}
@@ -107,10 +107,10 @@
 \newlength{\EdgeLineWidth}
 \setlength{\EdgeLineWidth}{1pt}
 \newcommand{\EdgeLineStyle}{solid}
-\newif\ifEdgeLineDbl \EdgeLineDblfalse 
-%\newcommand{\EdgeLineDblStatus}{false} 
-\newcommand{\EdgeLineDblCoef}{0.5} 
-\newcommand{\EdgeLineDblSep}{0.6} 
+\newif\ifEdgeLineDbl \EdgeLineDblfalse
+%\newcommand{\EdgeLineDblStatus}{false}
+\newcommand{\EdgeLineDblCoef}{0.5}
+\newcommand{\EdgeLineDblSep}{0.6}
 \newcommand{\EdgeLineColor}{black}
 % arrow
 \newlength{\EdgeArrowWidth}\setlength{\EdgeArrowWidth}{5pt}
@@ -126,9 +126,9 @@
 % label
 \newcommand{\EdgeLabelColor}{black}
 \newcommand{\EdgeLabelScale}{1.7}
-%%% Dimmed edges 
-\newcommand{\DimEdgeLineCoef}{1.2} 
-\newcommand{\DimEdgeLineStyle}{solid} 
+%%% Dimmed edges
+\newcommand{\DimEdgeLineCoef}{1.2}
+\newcommand{\DimEdgeLineStyle}{solid}
 \newcommand{\DimEdgeLineColor}{gray}
 \newcommand{\DimEdgeLabelColor}{gray}
 %%% Zigzag edges parameter
@@ -140,7 +140,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Edge geometric parameters  --- Default settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Edge 
+% Edge
 \newlength{\EdgeOffset}
 \setlength{\EdgeOffset}{0pt}
 \newcommand{\ForthBackEdgeOffset}{5}% coef
@@ -159,15 +159,15 @@
 \newcommand{\LoopVarAngle}{28}
 % Size of loops (depending on the size of the state)
 \newcommand{\LoopOnMediumState}{7}
-\newcommand{\LoopOnSmallState}{9.6} 
-\newcommand{\LoopOnLargeState}{5.8} 
-\newcommand{\LoopOnVariableState}{5.1} 
-\newcommand{\LoopOnVerySmallState}{15} 
+\newcommand{\LoopOnSmallState}{9.6}
+\newcommand{\LoopOnLargeState}{5.8}
+\newcommand{\LoopOnVariableState}{5.1}
+\newcommand{\LoopOnVerySmallState}{15}
 \newcommand{\CLoopOnMediumState}{8}
 \newcommand{\CLoopOnSmallState}{12}
 \newcommand{\CLoopOnLargeState}{6}
 \newcommand{\CLoopOnVariableState}{5.2}
-%\newcommand{\CLoopOnVerySmallState}{14} 
+%\newcommand{\CLoopOnVerySmallState}{14}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Edge label parameters --- Default settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -187,9 +187,9 @@
 % and the coefficient varies with the diameter
 \newcommand{\ArrowOnStateCoef}{}
 \newcommand{\ArrowOnMediumState}{1.5}
-\newcommand{\ArrowOnSmallState}{1.7} 
+\newcommand{\ArrowOnSmallState}{1.7}
 \newcommand{\ArrowOnLargeState}{1.3}
-\newcommand{\ArrowOnVerySmallState}{5} 
+\newcommand{\ArrowOnVerySmallState}{5}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Shift for aligned labels
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -198,7 +198,7 @@
 \newlength{\VertShift}
 \setlength{\VertShift}{.5\VertShiftD-.5\VertShiftH}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% flags 
+%%%%% flags
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\ifVCFrame
 \newcommand{\HideFrame}{\VCFramefalse}
@@ -219,7 +219,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%   style for the frame around the picture
 \psset{unit=1cm}
-\newpsstyle{VaucFrameStyle}{arrows=-,framesep=0pt,%                   
+\newpsstyle{VaucFrameStyle}{arrows=-,framesep=0pt,%
                      linewidth=0.6pt,linecolor=black,%
                                          linestyle=solid,%
                                          doubleline=false,%
@@ -245,17 +245,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Scaling matters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% The "sizes" (for states) and the "line widths" are given 
-%%% as "lengthes" in a fixed unit (cm or pt), whereas the positions 
+%%% The "sizes" (for states) and the "line widths" are given
+%%% as "lengthes" in a fixed unit (cm or pt), whereas the positions
 %%% are supposed to be given in "psunits".
-%%% This allows to use different scaling parameters 
+%%% This allows to use different scaling parameters
 %%% for the whole figure and for the "drawing grid".
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Scaling commands
 \newcommand{\VCScale}{0.6}% Global scale parameter
 \newcommand{\VCGridScale}{1}% Global scale parameter
-% 
-\newcommand{\FixVCScale}[1]{\renewcommand{\VCScale}{#1}}% v4 pour 
+%
+\newcommand{\FixVCScale}[1]{\renewcommand{\VCScale}{#1}}% v4 pour
 %                                              % cause de syntaxe
 \newcommand{\LargePicture}{\FixVCScale{\LargeScale}}
 \newcommand{\MediumPicture}{\FixVCScale{\MediumScale}}
@@ -263,8 +263,8 @@
 \newcommand{\TinyPicture}{\FixVCScale{\TinyScale}}
 %%% Grid scale commands
 % \newcommand{\VCGridScale}{}% Grid scale parameter
-% 
-\newcommand{\FixVCGridScale}[1]{\renewcommand{\VCGridScale}{#1}}% v4 pour 
+%
+\newcommand{\FixVCGridScale}[1]{\renewcommand{\VCGridScale}{#1}}% v4 pour
 % "grid unit"
 %%%%% Typical figure would look like
 %   \scalebox{\VCScale}{%
@@ -291,19 +291,19 @@
 \scalebox{\VCScale}{\input{\VCDirectory #2}}%
 \psset{unit=1cm}}%
 %%% commands
-\newcommand{\VCPut}[3][0]{\rput{#1}#2{#3}}% 
+\newcommand{\VCPut}[3][0]{\rput{#1}#2{#3}}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% State internal parameters  --- Initial settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newlength{\StateLineWid}
 \setlength{\StateLineWid}{\StateLineWidth}
-\newcommand{\StateLineSty}{\StateLineStyle} 
+\newcommand{\StateLineSty}{\StateLineStyle}
 \newcommand{\StateLineCol}{\StateLineColor}
 %\newcommand{\StateLineDblSta}{\StateLineDblStatus}
 \newcommand{\StateLineDblWid}{\StateLineDblWidth}
 \newcommand{\StateLineDblSp}{\StateLineDblSep}
 \newcommand{\StateFillCol}{\StateFillColor}
-\newcommand{\StateFillSta}{\StateFillStatus} 
+\newcommand{\StateFillSta}{\StateFillStatus}
 \newcommand{\StateLabelSca}{1}
 \newcommand{\StateLabelCol}{\StateLabelColor}
 \newcommand{\StateDimen}{outer}
@@ -321,29 +321,29 @@
 %%%%%  State drawing style
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% flag for hiding -- showing states (used for overlays in slides)
-% the trick is to have two different styles and instead of 
+% the trick is to have two different styles and instead of
 % saving\restoring parameters
 \newif\ifVCShowState
 \newcommand{\HideState}{\VCShowStatefalse}
 \newcommand{\ShowState}{\VCShowStatetrue}
 \ShowState % initialisation
 % the only difference between the two styles is the linestyle
-\newpsstyle{VaucStateStyle}{framesep=0pt,%                   
+\newpsstyle{VaucStateStyle}{framesep=0pt,%
          linewidth=\StateLineWid,linecolor=\StateLineCol,%
          linestyle=\StateLineSty,doubleline=false,%
-         fillcolor=\StateFillCol,fillstyle=\StateFillSta,% 
+         fillcolor=\StateFillCol,fillstyle=\StateFillSta,%
          border=0pt,dimen=\StateDimen,%
          cornersize=relative,framearc=1,framesep=0pt}
-\newpsstyle{VaucStateDblStyle}{framesep=0pt,%                   
+\newpsstyle{VaucStateDblStyle}{framesep=0pt,%
          linewidth=\StateLineDblCoef\StateLineWid,linecolor=\StateLineCol,%
          linestyle=\StateLineSty,doubleline=true,doublesep=\StateLineDblSep\StateLineWid,%
-         fillcolor=\StateFillCol,fillstyle=\StateFillSta,% 
+         fillcolor=\StateFillCol,fillstyle=\StateFillSta,%
          border=0pt,dimen=\StateDblDimen,%
          cornersize=relative,framearc=1,framesep=0pt}
-\newpsstyle{VaucHiddenStateStyle}{framesep=0pt,%                   
+\newpsstyle{VaucHiddenStateStyle}{framesep=0pt,%
          linewidth=\StateLineWid,linecolor=\StateLineCol,%
          linestyle=none,%
-         fillcolor=\StateFillCol,fillstyle=none,% 
+         fillcolor=\StateFillCol,fillstyle=none,%
          border=0pt,dimen=outer,%
          cornersize=relative,framearc=1,framesep=0pt}
 \newcommand{\StateStyle}{%
@@ -369,7 +369,7 @@
 \newcommand{\VCPutStateLabel}[2]%
     {\rput#1{\scalebox{\StateLabelSca}{$ #2 $}}}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%  State parameter changing and setting macros 
+%%%%%  State parameter changing and setting macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% line style
 \newcommand{\ChgStateLineStyle}[1]{\renewcommand{\StateLineSty}{#1}}
@@ -380,7 +380,7 @@
 \newcommand{\StateLineDouble}{\StateLineDbltrue}
 \newcommand{\StateLineSimple}{\StateLineDblfalse}
 %%% line width
-\newcommand{\ChgStateLineWidth}[1]{\setlength{\StateLineWid}{#1\StateLineWidth}}%  
+\newcommand{\ChgStateLineWidth}[1]{\setlength{\StateLineWid}{#1\StateLineWidth}}%
 \newcommand{\RstStateLineWidth}{\ChgStateLineWidth{1}}%
 \newcommand{\SetStateLineWidth}[1]% ATTN the parameter is a length
    {\setlength{\StateLineWidth}{#1}\RstStateLineWidth}
@@ -392,12 +392,12 @@
 %%% background fill status
 \newcommand{\ChgStateFillStatus}[1]{\renewcommand{\StateFillSta}{#1}}
 \newcommand{\RstStateFillStatus}{\ChgStateFillStatus{\StateFillStatus}}
-\newcommand{\SetStateFillStatus}[1]% 
+\newcommand{\SetStateFillStatus}[1]%
     {\renewcommand{\StateFillStatus}{#1}\RstStateFillStatus}
 %%% backgroud color
 \newcommand{\ChgStateFillColor}[1]{\renewcommand{\StateFillCol}{#1}}
 \newcommand{\RstStateFillColor}{\ChgStateFillColor{\StateFillColor}}
-\newcommand{\SetStateFillColor}[1]% 
+\newcommand{\SetStateFillColor}[1]%
     {\renewcommand{\StateFillColor}{#1}\RstStateFillColor}%
 %%% label color
 \newcommand{\ChgStateLabelColor}[1]{\renewcommand{\StateLabelCol}{#1}}
@@ -528,11 +528,11 @@
 %
 \newcommand{\FinalState}[3][{}]%
    {\psset{style=VaucStateDblStyle}\VaucState[#1]{#2}{#3}}
-%%% ecological commands   
+%%% ecological commands
 \newcommand{\StateIF}[3][{}]{\IFState\State[#1]{#2}{#3}\RstVCIF}%
 \newcommand{\StateIFX}[3][{}]{\IFXState\State[#1]{#2}{#3}\RstVCIF}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Very Small State   
+%%% Very Small State
 \newcommand{\VSState}[2]%
     {\renewcommand{\ArrowOnStateCoef}{\ArrowOnVerySmallState}%
          \FixStateDiameter{\VerySmallStateDiameter}%
@@ -585,7 +585,7 @@
 \newcommand{\EdgeArrowSZNum}{\EdgeArrowLengthCoef}
 \newcommand{\EdgeArrowSty}{\EdgeArrowStyle}
 \newcommand{\EdgeArrowIns}{\EdgeArrowInset}
-% border 
+% border
 \newlength{\EdgeLineBord}\setlength{\EdgeLineBord}{0pt}
 %%% Zigzag edge parameter
 \newlength{\ZZSiZ}
@@ -594,7 +594,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Edge geometric parameters  --- Initial settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Edge 
+% Edge
 \newlength{\EdgeOff}
 \setlength{\EdgeOff}{\EdgeOffset}
 % Arc
@@ -666,7 +666,7 @@
         \addtolength{\TransLabelSP}{-\TransLabelZZCoef\ZZSiZ}%
         }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%  Transition parameter changing and setting macros 
+%%%%%  Transition parameter changing and setting macros
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% geometric parameters
 \newcommand{\ChgEdgeOffset}[1]{\setlength{\EdgeOff}{#1}}
@@ -722,7 +722,7 @@
 \newcommand{\SetEdgeLineColor}[1]%
    {\renewcommand{\EdgeLineColor}{#1}\RstEdgeLineColor}
 %
-\newcommand{\ChgEdgeLineStyle}[1]{\renewcommand{\EdgeLineSty}{#1}}  
+\newcommand{\ChgEdgeLineStyle}[1]{\renewcommand{\EdgeLineSty}{#1}}
 \newcommand{\RstEdgeLineStyle}{\ChgEdgeLineStyle{\EdgeLineStyle}}
 \newcommand{\SetEdgeLineStyle}[1]%
    {\renewcommand{\EdgeLineStyle}{#1}\RstEdgeLineStyle}
@@ -859,28 +859,28 @@
    {\EdgeStyle \ncline{#2}{#3} \nbput[npos=#1]{\VaucEdgeLabel{#4}}}
 %
 \newcommand{\ArcL}[4][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucArcL}% 
+   {\EdgeStyle \psset{style=VaucArcL}%
     \ncarc{#2}{#3} \naput[npos=#1]{\VaucEdgeLabel{#4}}}
 \newcommand{\ArcR}[4][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucArcR}% 
+   {\EdgeStyle \psset{style=VaucArcR}%
     \ncarc{#2}{#3} \nbput[npos=#1]{\VaucEdgeLabel{#4}}}
 \newcommand{\LArcL}[4][{\LArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucLArcL}% 
+   {\EdgeStyle \psset{style=VaucLArcL}%
     \ncarc{#2}{#3} \naput[npos=#1]{\VaucEdgeLabel{#4}}}
 \newcommand{\LArcR}[4][{\LArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucLArcR}% 
+   {\EdgeStyle \psset{style=VaucLArcR}%
     \ncarc{#2}{#3} \nbput[npos=#1]{\VaucEdgeLabel{#4}}}
 %
 \newcounter{anglea}\newcounter{angleb}
 \newcommand{\LoopXR}[7]%
    {{\setcounter{anglea}{#2-#4}}%
     {\setcounter{angleb}{#2+#4}}%
-    {\EdgeStyle \psset{angleA=\theanglea,angleB=\theangleb,offset=#5,ncurv=#6}% 
+    {\EdgeStyle \psset{angleA=\theanglea,angleB=\theangleb,offset=#5,ncurv=#6}%
     \nccurve{#3}{#3} \nbput[npos=#1]{\VaucEdgeLabel{#7}}}}
 \newcommand{\LoopXL}[7]%
    {{\setcounter{anglea}{#2+#4}}%
     {\setcounter{angleb}{#2-#4}}%
-    {\EdgeStyle \psset{angleA=\theanglea,angleB=\theangleb,offset=-#5,ncurv=#6}% 
+    {\EdgeStyle \psset{angleA=\theanglea,angleB=\theangleb,offset=-#5,ncurv=#6}%
     \nccurve{#3}{#3} \naput[npos=#1]{\VaucEdgeLabel{#7}}}}
 \newcommand{\LoopR}[4][{\LoopLabelPos}]%
    {\LoopXR{#1}{#2}{#3}{\LoopAng}{\LoopOff}{\LoopSi}{#4}}
@@ -928,17 +928,17 @@
 \newcommand{\Edge}[2]{\EdgeStyle\ncline{#1}{#2}}
 %
 \newcommand{\VArcL}[5][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucLArcL}% 
+   {\EdgeStyle \psset{style=VaucLArcL}%
     \ncarc[#2]{#3}{#4} \naput[npos=#1]{\VaucEdgeLabel{#5}}}
 \newcommand{\VArcR}[5][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{style=VaucLArcR}% 
+   {\EdgeStyle \psset{style=VaucLArcR}%
     \ncarc[#2]{#3}{#4} \nbput[npos=#1]{\VaucEdgeLabel{#5}}}
 %
 \newcommand{\VCurveL}[5][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{angleA=0,angleB=180,ncurv=1}% 
+   {\EdgeStyle \psset{angleA=0,angleB=180,ncurv=1}%
     \nccurve[#2]{#3}{#4} \naput[npos=#1]{\VaucEdgeLabel{#5}}}
 \newcommand{\VCurveR}[5][{\ArcLabelPos}]%
-   {\EdgeStyle \psset{angleA=0,angleB=0,ncurv=1}% 
+   {\EdgeStyle \psset{angleA=0,angleB=0,ncurv=1}%
     \nccurve[#2]{#3}{#4} \nbput[npos=#1]{\VaucEdgeLabel{#5}}}
 %
 \newcommand{\LabelL}[2][{\EdgeLabelPos}]%
@@ -947,5 +947,5 @@
    {\nbput[npos=#1]{\VaucEdgeLabel{#2}}}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\endinput 
+\endinput
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

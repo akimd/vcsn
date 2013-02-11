@@ -4,8 +4,8 @@
   \begin{minipage}[c]{.60\textwidth}
     Ref: ETA p. 699  Fig. V.1.4
 
-    The transducer~$\mathcal{D}_{2}$ that realises the Fibonacci reduction 
-    $a\, b\, b \rightarrow b\, a\, a$, viewed as an automaton on 
+    The transducer~$\mathcal{D}_{2}$ that realises the Fibonacci reduction
+    $a\, b\, b \rightarrow b\, a\, a$, viewed as an automaton on
     $\left\{ a,b \right\}*$ with multiplicities in $\mathrm{Rat}\left\{ a,b \right\}*$.
   \end{minipage}
   \begin{minipage}[c]{.40\textwidth}
@@ -25,7 +25,7 @@
 \Final[s]{B}
 \FinalR[1]{s}{C}{\IOL{1}{a}}
 \FinalL[1]{s}{D}{\IOL{1}{ab}}
-% transitions [.75] 
+% transitions [.75]
 \EdgeL{B}{C}{\IOL{a}{1}}
 \ArcR{C}{D}{\IOL{b}{1}}
 \ArcR{D}{C}{\IOL{a}{ab}}
@@ -41,10 +41,10 @@
   \end{minipage}
 \end{figure}
 
-{\footnotesize 
-\begin{listing}[5]{1} 
-<fsmxml  xmlns   = "http://vaucanson-project.org" 
-         version = "1.0" > 
+{\footnotesize
+\begin{listing}[5]{1}
+<fsmxml  xmlns   = "http://vaucanson-project.org"
+         version = "1.0" >
 
 <automaton name = "d2-rw" >
   <valueType>
@@ -53,19 +53,19 @@
                identitySymbol = "1" >
       <semiring  type       = 'numerical'
                  set        = 'B'
-                 operations = 'classical' /> 
+                 operations = 'classical' />
       <monoid    type       = 'free'
-                 genSort    = 'simple' 
-                 genKind    = 'letter' 
-                 genDescript = 'enum' > 
+                 genSort    = 'simple'
+                 genKind    = 'letter'
+                 genDescript = 'enum' >
         <monGen value="a"/>
         <monGen value="b"/>
       </monoid>
     </semiring>
     <monoid    type       = 'free'
-               genSort    = 'simple' 
-               genKind    = 'letter' 
-               genDescript = 'enum'> 
+               genSort    = 'simple'
+               genKind    = 'letter'
+               genDescript = 'enum'>
       <monGen value="a"/>
       <monGen value="b"/>
     </monoid>
@@ -80,9 +80,9 @@
 \end{listing}
 }
 
-\newpage 
+\newpage
 
-{\footnotesize 
+{\footnotesize
 \begin{listingcont}
     <transitions>
       <transition  source="0"  target="0" >
@@ -130,9 +130,9 @@
 \end{listingcont}
 }
 
-\newpage 
+\newpage
 \enlargethispage*{2ex}
-{\footnotesize 
+{\footnotesize
 \begin{listingcont}
       <transition  source="2"  target="1" >
         <label>

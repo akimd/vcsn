@@ -25,29 +25,29 @@
   \end{minipage}
 \end{figure}
 
-{\footnotesize 
+{\footnotesize
 \begin{listing}[5]{1}
-<fsmxml  xmlns   = "http://vaucanson-project.org" 
-         version = "1.0" > 
+<fsmxml  xmlns   = "http://vaucanson-project.org"
+         version = "1.0" >
 
 <automaton name = "phim1" >
   <valueType>
     <semiring  type       = 'numerical'
                set        = 'B'
-               operations = 'classical' /> 
+               operations = 'classical' />
     <monoid    type       = 'product'
-               prodDim    = "2" > 
+               prodDim    = "2" >
       <monoid    type        = 'free'
-                 genSort     = 'simple' 
-                 genKind     = 'letter' 
-                 genDescript = 'enum' > 
+                 genSort     = 'simple'
+                 genKind     = 'letter'
+                 genDescript = 'enum' >
         <monGen value="x"/>
         <monGen value="y"/>
       </monoid>
       <monoid    type       = 'free'
-                 genSort    = 'simple' 
-                 genKind    = 'letter' 
-                 genDescrip = 'enum' > 
+                 genSort    = 'simple'
+                 genKind    = 'letter'
+                 genDescrip = 'enum' >
         <monGen value="a"/>
         <monGen value="b"/>
         <monGen value="c"/>
@@ -57,9 +57,9 @@
 \end{listing}
 }
 
-\newpage 
+\newpage
 
-{\footnotesize 
+{\footnotesize
 \begin{listingcont}
   <automatonStruct>
     <states>

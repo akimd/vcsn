@@ -16,7 +16,7 @@
   \State[r]{(6,0)}{C}
   %
   \Initial{A}\Final{C}
-  % transitions 
+  % transitions
   \EdgeL{A}{B}{a}\EdgeL{B}{C}{b}
   %
   \LoopN{A}{a}\LoopS{A}{b}
@@ -29,19 +29,19 @@
 
 %% Automaton Type
 %% FIXME http://vaucanson-project.org
-{\footnotesize 
+{\footnotesize
 \begin{listing}[5]{1}
-<fsmxml  xmlns   = "http://vaucanson-project.org" 
-         version = "1.0" > 
+<fsmxml  xmlns   = "http://vaucanson-project.org"
+         version = "1.0" >
 
 <automaton name = "a1" >
   <valueType>
     <semiring  type        = 'numerical'
                set         = 'B'
-               operations  = 'classical' /> 
+               operations  = 'classical' />
     <monoid    type        = 'free'
-               genSort     = 'simple' 
-               genKind     = 'letter' 
+               genSort     = 'simple'
+               genKind     = 'letter'
                genDescript = 'enum' >
       <monGen value="a"/>
       <monGen value="b"/>
@@ -53,7 +53,7 @@
 \newpage
 
 %% Automaton Content
-{\footnotesize 
+{\footnotesize
 \begin{listingcont}
   <automatonStruct>
     <states>
