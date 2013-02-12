@@ -1,5 +1,5 @@
-#ifndef VCSN_DYN_RATEXEP_HH
-# define VCSN_DYN_RATEXEP_HH
+#ifndef VCSN_DYN_RATEXP_HH
+# define VCSN_DYN_RATEXP_HH
 
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
@@ -61,4 +61,4 @@ namespace vcsn
   } // namespace dyn
 } // namespace vcsn
 
-#endif // !VCSN_DYN_RATEXEP_HH
+#endif // !VCSN_DYN_RATEXP_HH

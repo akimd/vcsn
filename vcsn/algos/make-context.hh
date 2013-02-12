@@ -151,4 +151,4 @@ namespace vcsn
 
 } // vcsn::
 
-#endif // !VCSN_ALGOS_EDIT_AUTOMATON_HH
+#endif // !VCSN_ALGOS_MAKE_CONTEXT_HH

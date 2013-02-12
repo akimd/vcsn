@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_Z_LAU_HH
-# define VCSN_CTX_Z_LAU_HH
+#ifndef VCSN_CTX_LAU_Z_HH
+# define VCSN_CTX_LAU_Z_HH
 
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/unitset.hh>
@@ -20,4 +20,4 @@ namespace vcsn
   VCSN_CTX_INSTANTIATE(lau_z);
 };
 
-#endif // !VCSN_CTX_Z_LAU_HH
+#endif // !VCSN_CTX_LAU_Z_HH

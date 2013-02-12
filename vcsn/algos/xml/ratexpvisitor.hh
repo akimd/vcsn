@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_XML_KRATEXPVISITOR_HH
-# define VCSN_ALGOS_XML_KRATEXPVISITOR_HH
+#ifndef VCSN_ALGOS_XML_RATEXPVISITOR_HH
+# define VCSN_ALGOS_XML_RATEXPVISITOR_HH
 
 # include <memory>
 
@@ -63,4 +63,4 @@ namespace vcsn
 
 # include <vcsn/algos/xml/ratexpvisitor.hxx>
 
-#endif // !VCSN_ALGOS_XML_KRATEXPVISITOR_HH
+#endif // !VCSN_ALGOS_XML_RATEXPVISITOR_HH
