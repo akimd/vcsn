@@ -473,7 +473,7 @@ namespace vcsn
       std::ostringstream o;
       o << src_of(t)
         << " -- {" << weightset()->format(weight_of(t)) << "}"
-        << labelset()->format(word_label_of(t))
+        << labelset()->format(label_of(t))
         << " --> " << dst_of(t);
       return o.str();
     }

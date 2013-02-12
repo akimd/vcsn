@@ -120,12 +120,6 @@ namespace vcsn
       std::string
       format(const empty_t&) const
       {
-        return "EMPTY3";
-      }
-
-      std::string
-      format(const word_t&) const
-      {
         return "\\e";
       }
     };
