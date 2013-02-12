@@ -27,7 +27,7 @@ namespace vcsn
     if (src == a.pre() || dst == a.post())
       {
         assert(w.size() == 1);
-        assert(begin(w)->first == a.labelset()->identity());
+        assert(a.labelset()->is_identity(begin(w)->first));
         a.add_transition(src, dst, a.prepost_label(), begin(w)->second);
       }
     else

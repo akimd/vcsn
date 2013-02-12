@@ -105,7 +105,7 @@ namespace vcsn
       return ks_.unit();
     }
 
-    virtual value_t atom(const word_t& w) const override
+    virtual value_t atom(const std::string& w) const override
     {
       return atom_<context_t>(w);
     }
@@ -159,9 +159,10 @@ namespace vcsn
     }
 
   private:
+    // FIXME: These guys should use labelset->conv.
     template <typename Ctx>
     auto
-    atom_(const word_t& v) const
+    atom_(const std::string& v) const
       -> if_lau<Ctx, value_t>
     {
       if (!v.empty())
@@ -171,7 +172,7 @@ namespace vcsn
 
     template <typename Ctx>
     auto
-    atom_(const word_t& v) const
+    atom_(const std::string& v) const
       -> if_lal<Ctx, value_t>
     {
       if (!ks_.labelset()->is_letter(v))
@@ -181,7 +182,7 @@ namespace vcsn
 
     template <typename Ctx>
     auto
-    atom_(const word_t& v) const
+    atom_(const std::string& v) const
       -> if_law<Ctx, value_t>
     {
       return ks_.atom(v);
