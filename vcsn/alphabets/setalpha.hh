@@ -12,6 +12,7 @@ namespace vcsn
   {
   public:
     using letter_t = typename L::letter_t;
+    using word_t = typename L::word_t;
     using letters_t = std::set<letter_t>;
 
     static std::string sname()
@@ -55,6 +56,27 @@ namespace vcsn
     has(letter_t l) const
     {
       return alphabet_.find(l) != alphabet_.end();
+    }
+
+    word_t
+    conv(std::istream& i) const
+    {
+      word_t res;
+      if (i.peek() == '\\')
+        {
+          i.ignore();
+          char c = i.peek();
+          if (c != 'e')
+            throw std::domain_error("invalid label: unexpected \\"
+                                    + std::string{char(i.peek())});
+          i.ignore();
+        }
+      else
+        // FIXME: This wrongly assumes that letters are characters.
+        // It will break with integer or string alphabets.
+        while (has(i.peek()))
+          res = this->concat(res, letter_t(i.get()));
+      return res;
     }
 
     using iterator_t = typename letters_t::const_iterator;

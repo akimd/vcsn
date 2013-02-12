@@ -18,7 +18,7 @@ namespace vcsn
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
       using letter_t = char;
-      using word_t = std::string;
+      using word_t = vcsn::empty_t;
       using letters_t = std::set<letter_t>;
 
       using kind_t = labels_are_unit;
@@ -52,10 +52,16 @@ namespace vcsn
 
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
-      word_t
+      empty_t
       identity() const
       {
         return {};
+      }
+
+      bool
+      is_identity(empty_t) const
+      {
+        return true;
       }
 
       empty_t
@@ -64,25 +70,10 @@ namespace vcsn
         return {};
       }
 
-      // FIXME: KILL ME!
-      // Here to please polynomialset for entries in mutable_automaton.
-      word_t
-      transpose(word_t) const
-      {
-        return {};
-      }
-
       bool
       is_letter(const empty_t&) const
       {
         return false;
-      }
-
-      // FIXME: KILL ME TOO!
-      word_t
-      concat(word_t, word_t) const
-      {
-        return {};
       }
 
       empty_t
@@ -103,11 +94,19 @@ namespace vcsn
         return o << "EMPTY1";
       }
 
-      // FIXME: KILL ME PLEAAAAAAAAASE!
-      std::ostream&
-      print(std::ostream& o, const word_t&) const
+      empty_t
+      conv(std::istream& i) const
       {
-        return o << "EMPTY2";
+        if (i.peek() == '\\')
+          {
+            i.ignore();
+            char c = i.peek();
+            if (c != 'e')
+              throw std::domain_error("invalid label: unexpected \\"
+                                      + std::string{c});
+            i.ignore();
+          }
+        return {};
       }
 
       // KILLME:

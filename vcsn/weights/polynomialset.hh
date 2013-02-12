@@ -1,8 +1,8 @@
 #ifndef VCSN_WEIGHTS_POLYNOMIALSET_HH
 # define VCSN_WEIGHTS_POLYNOMIALSET_HH
 
-# include <map>
 # include <iostream>
+# include <map>
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
@@ -208,7 +208,7 @@ namespace vcsn
           bool default_w = true;
           if (i.peek() == '{')
             {
-              i.get();
+              i.ignore();
               size_t level = 1;
               o.clear();
               o.str("");
@@ -228,36 +228,35 @@ namespace vcsn
               default_w = false;
             }
 
-          // The label: letters, or \e.
+          // Possibly, a label.
           SKIP_SPACES();
-          std::string label;
-          bool empty = false;
+          // Whether the label is \z.
+          bool is_zero = false;
           if (i.peek() == '\\')
             {
               i.ignore();
-              char c = i.peek();
-              if (c == 'z')
-                empty = true;
-              else if (c != 'e')
-                throw std::domain_error("invalid polynomialset: " + s
-                                        + " unexpected \\"
-                                        + std::string{char(i.peek())});
-              i.ignore();
+              if (i.peek() == 'z')
+                {
+                  is_zero = true;
+                  i.ignore();
+                }
+              else
+                i.unget();
             }
-          else
+
+          if (!is_zero)
             {
-              // FIXME: This wrongly assumes that letters are
-              // characters.  It will break with integer or string
-              // alphabets.
-              while (labelset()->has(i.peek()))
-                label += char(i.get());
-              if (label.empty() && default_w)
+              // Register the current position in the stream.
+              std::streampos p = i.tellg();
+              // The label is not \z.
+              word_t label = labelset()->conv(i);
+              // We must have at least a weight or a label.
+              if (default_w && p == i.tellg())
                 throw std::domain_error("invalid polynomialset: " + s
                                         + " contains an empty label "
                                         "(did you mean \\e or \\z?)");
+              add_weight(res, label, w);
             }
-          if (!empty)
-            add_weight(res, label, w);
 
           // EOF, or sep (e.g., '+').
           SKIP_SPACES();

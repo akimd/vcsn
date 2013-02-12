@@ -64,11 +64,13 @@ namespace vcsn
 
       DEFINE(begin);
       DEFINE(concat);
+      DEFINE(conv);
       DEFINE(end);
       DEFINE(equals);
       DEFINE(format);
       DEFINE(has);
       DEFINE(identity);
+      DEFINE(is_identity);
       DEFINE(is_letter);
       DEFINE(print);
       DEFINE(to_word);
