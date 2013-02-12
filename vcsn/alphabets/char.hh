@@ -4,14 +4,11 @@
 # include <string>
 # include <iostream>
 
-# include <vcsn/empty.hh>
-
 namespace vcsn
 {
   class char_letters
   {
   public:
-    using empty_t = ::vcsn::empty_t;
     using letter_t = char;
     using word_t = std::string;
 
@@ -165,14 +162,6 @@ namespace vcsn
 
     // word_t mirror(const word_t& w)
   };
-
-  template<>
-  inline
-  char_letters::empty_t
-  char_letters::special<char_letters::empty_t>() const
-  {
-    return {};
-  }
 
   template<>
   inline
