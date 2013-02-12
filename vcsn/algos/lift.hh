@@ -2,7 +2,7 @@
 # define VCSN_ALGOS_LIFT_HH
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/lau.hh>
+# include <vcsn/ctx/unitset.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>
@@ -18,7 +18,7 @@ namespace vcsn
   {
     template <typename Context>
     using lifted_context_t =
-      ctx::context<ctx::Lau, ratexpset<Context>>;
+      ctx::context<ctx::UnitSet, ratexpset<Context>>;
 
     // lift(ctx) -> ctx
     template <typename Context>
@@ -27,7 +27,7 @@ namespace vcsn
     {
       auto rs_in = ctx.make_ratexpset();
       using ctx_out_t = details::lifted_context_t<Context>;
-      return ctx_out_t(ctx::Lau{}, rs_in);
+      return ctx_out_t(ctx::UnitSet{}, rs_in);
     }
 
     template <typename Aut>

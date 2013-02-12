@@ -4,17 +4,17 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/lal.hh>
+# include <vcsn/ctx/letterset.hh>
 # include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_b = context<Lal<vcsn::set_alphabet<vcsn::char_letters>>,
+    using lal_char_b = context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
     using lal_char_br =
-      context<Lal<vcsn::set_alphabet<vcsn::char_letters>>,
+      context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
               vcsn::ratexpset<lal_char_b>>;
   }
 }

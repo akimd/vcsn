@@ -1,6 +1,6 @@
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/rat/ratexpset.hh>
-#include <vcsn/ctx/law.hh>
+#include <vcsn/ctx/wordset.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/core/mutable_automaton.hh>
@@ -16,7 +16,7 @@ check_mutable_automaton()
   auto ks_b = ctx_b.make_ratexpset();
   // labels_are_words for labels.
   auto ctx_br =
-    vcsn::ctx::context<vcsn::ctx::Law<vcsn::set_alphabet<vcsn::char_letters>>,
+    vcsn::ctx::context<vcsn::ctx::WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
                        decltype(ks_b)>
     {{'a', 'b', 'c', 'd'}, ks_b};
   //  auto ks_br = ctx_br.make_ratexpset();

@@ -4,14 +4,14 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/law.hh>
+# include <vcsn/ctx/wordset.hh>
 # include <vcsn/weights/z.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using law_char_z = context<Law<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_z = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::z>;
   }
 }

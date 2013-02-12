@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_LAU_HH
-# define VCSN_CTX_LAU_HH
+#ifndef VCSN_CTX_UNITSET_HH
+# define VCSN_CTX_UNITSET_HH
 
 # include <iostream>
 # include <set>
@@ -12,7 +12,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    struct Lau
+    struct UnitSet
     {
       using label_t = vcsn::empty_t;
       // FIXME: fishy, but that's what the previous version of the
@@ -23,9 +23,9 @@ namespace vcsn
 
       using kind_t = labels_are_unit;
 
-      Lau() = default;
+      UnitSet() = default;
       // FIXME: KILL
-      Lau(const letters_t&)
+      UnitSet(const letters_t&)
       {}
 
       static std::string sname()
@@ -126,4 +126,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_LAU_HH
+#endif // !VCSN_CTX_UNITSET_HH

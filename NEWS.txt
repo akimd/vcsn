@@ -7,10 +7,10 @@ is troublesome on several regards, the clearest being that the LabelSet
 makes no sense for LAU.
 
 Now contexts are pairs: <LabelSet, WeightSet>, where this time the LabelSet
-(same name as before, different concept) can be a instance of Lau, Law, or
-Lal.  These structures, in turn, are parameterized by the effective set of
-generators to use: for instance,
-Lal<vcsn::set_alphabet<vcsn::char_letters>>.  Of course Lau is not
+(same name as before, different concept) can be a instance of UnitSet for
+LAU, WordSet for LAW, or LetterSet for LAL.  These structures, in turn, are
+parameterized by the effective set of generators to use: for instance,
+LetterSet<vcsn::set_alphabet<vcsn::char_letters>>.  Of course UnitSet is not
 parameterized.
 
 As a first visible consequence, the name of the LAU contexts has changed:

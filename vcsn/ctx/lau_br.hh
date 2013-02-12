@@ -3,8 +3,8 @@
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/ctx/lal.hh>
-# include <vcsn/ctx/lau.hh>
+# include <vcsn/ctx/letterset.hh>
+# include <vcsn/ctx/unitset.hh>
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/weights/b.hh>
 
@@ -12,9 +12,9 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_b = context<Lal<vcsn::set_alphabet<vcsn::char_letters>>,
+    using lal_char_b = context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
-    using lau_br = context<Lau, vcsn::ratexpset<lal_char_b>>;
+    using lau_br = context<UnitSet, vcsn::ratexpset<lal_char_b>>;
   }
 }
 

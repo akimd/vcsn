@@ -58,17 +58,17 @@ nobase_vcsn_HEADERS =                           \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \
-  ctx/lal.hh                                    \
+  ctx/letterset.hh                              \
   ctx/lal_char_b.hh                             \
   ctx/lal_char_br.hh                            \
   ctx/lal_char_z.hh                             \
   ctx/lal_char_zmin.hh                          \
   ctx/lal_char_zr.hh                            \
   ctx/lal_char_zrr.hh                           \
-  ctx/lau.hh                                    \
+  ctx/unitset.hh                                \
   ctx/lau_br.hh                                 \
   ctx/lau_z.hh                                  \
-  ctx/law.hh                                    \
+  ctx/wordset.hh                                \
   ctx/law_char_b.hh                             \
   ctx/law_char_br.hh                            \
   ctx/law_char_z.hh                             \

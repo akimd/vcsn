@@ -2,14 +2,14 @@
 # define VCSN_CTX_Z_LAU_HH
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/lau.hh>
+# include <vcsn/ctx/unitset.hh>
 # include <vcsn/weights/z.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using lau_z = context<Lau, vcsn::z>;
+    using lau_z = context<UnitSet, vcsn::z>;
   }
 }
 

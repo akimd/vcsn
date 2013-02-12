@@ -1,9 +1,10 @@
-#ifndef VCSN_CTX_LAW_HH
-# define VCSN_CTX_LAW_HH
+#ifndef VCSN_CTX_LETTERSET_HH
+# define VCSN_CTX_LETTERSET_HH
 
 # include <memory>
 # include <set>
 
+# include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
 
 namespace vcsn
@@ -11,34 +12,34 @@ namespace vcsn
   namespace ctx
   {
     template <typename GenSet>
-    struct Law
+    struct LetterSet
     {
       using genset_t = GenSet;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
-      using label_t = typename genset_t::word_t;
+      using label_t = typename genset_t::letter_t;
       using letter_t = typename genset_t::letter_t;
       using word_t = typename genset_t::word_t;
       using letters_t = std::set<letter_t>;
 
-      using kind_t = labels_are_words;
+      using kind_t = labels_are_letters;
 
-      Law(const genset_ptr& gs)
+      LetterSet(const genset_ptr& gs)
         : gs_{gs}
       {}
 
-      Law(const genset_t& gs = {})
-        : Law{std::make_shared<const genset_t>(gs)}
+      LetterSet(const genset_t& gs = {})
+        : LetterSet{std::make_shared<const genset_t>(gs)}
       {}
 
       static std::string sname()
       {
-        return "law_" + genset_t::sname();
+        return "lal_" + genset_t::sname();
       }
 
       std::string vname(bool full = true) const
       {
-        return "law_" + genset()->vname(full);
+        return "lal_" + genset()->vname(full);
       }
 
       const genset_ptr& genset() const
@@ -49,7 +50,7 @@ namespace vcsn
       label_t
       special() const
       {
-        return {genset()->special_letter()};
+        return genset()->special_letter();
       }
 
 # define DEFINE(Name)                                                   \
@@ -81,13 +82,13 @@ namespace vcsn
 
     /// Compute the intersection with another alphabet.
     template <typename GenSet>
-    Law<GenSet>
-    intersect(const Law<GenSet>& lhs, const Law<GenSet>& rhs)
+    LetterSet<GenSet>
+    intersect(const LetterSet<GenSet>& lhs, const LetterSet<GenSet>& rhs)
     {
-      return {intersect(lhs->genset(), rhs->genset())};
+      return {intersect(*lhs.genset(), *rhs.genset())};
     }
 
   }
 }
 
-#endif // !VCSN_CTX_LAW_HH
+#endif // !VCSN_CTX_LETTERSET_HH
