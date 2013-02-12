@@ -11,7 +11,8 @@ check_conv_fail(T& ps, const std::string& str)
 {
   try
     {
-      ps.conv(str);
+      auto p = ps.conv(str);
+      std::cerr << "ERROR: " << str << " -> " << ps.format(p) << std::endl;
     }
   catch (std::domain_error&)
     {
