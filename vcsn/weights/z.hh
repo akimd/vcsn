@@ -6,7 +6,7 @@
 # include <stdexcept>
 # include <boost/lexical_cast.hpp>
 # include <sstream>
-# include <misc/star_status>
+# include <vcsn/misc/star_status>
 
 namespace vcsn
 {

@@ -8,7 +8,7 @@
 # include <sstream>
 # include <limits>
 # include <utility>
-# include <misc/star_status>
+# include <vcsn/misc/star_status>
 
 namespace vcsn
 {
