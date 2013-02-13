@@ -4,6 +4,7 @@
 # include <algorithm> // set_intersection
 # include <initializer_list>
 # include <set>
+# include <stdexcept>
 
 namespace vcsn
 {

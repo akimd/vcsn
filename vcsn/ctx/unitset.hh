@@ -7,6 +7,7 @@
 # include <vcsn/empty.hh>
 
 # include <vcsn/core/kind.hh>
+# include <stdexcept>
 
 namespace vcsn
 {
