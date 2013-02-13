@@ -6,7 +6,7 @@
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
-# include <vcsn/misc/star_status>
+# include <vcsn/misc/star_status.hh>
 
 namespace vcsn
 {

@@ -5,7 +5,7 @@
 # include <ostream>
 # include <stdexcept>
 # include <string>
-# include <vcsn/misc/star_status>
+# include <vcsn/misc/star_status.hh>
 
 namespace vcsn
 {
