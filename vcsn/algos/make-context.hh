@@ -79,6 +79,14 @@ namespace vcsn
     //
     // FIXME: regex is not usable in G++ 4.8 yet.
     std::string kind = name.substr(0, 3);
+    auto lparen = name.find('(');
+    auto rparen = name.find(')');
+    if (lparen == std::string::npos)
+      throw std::runtime_error("make_context: missing '(': "
+                               + name);
+    std::string labelset = name.substr(4, lparen - 4);
+    std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
+    std::string weightset = name.substr(rparen + 2);
 
     if ((Ctx::is_lal && kind != "lal")
         || (Ctx::is_lau && kind != "lau")
