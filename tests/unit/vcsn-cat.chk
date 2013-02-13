@@ -1,42 +1,52 @@
 #! /bin/sh
 
-# check CONTEXT RATEXP
-# --------------------
+## --------- ##
+## RatExps.  ##
+## --------- ##
+
+# check_exp CONTEXT INPUT OUTPUT
+# ------------------------------
+check_exp ()
+{
+  run 0 $3 -vcsn-cat -E -C "$1" -e "$2"
+}
+
+check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
+
+
+## ------------------- ##
+## Standard Automata.  ##
+## ------------------- ##
+
+
+# check_stdof CONTEXT RATEXP
+# --------------------------
 # Check that vcsn-cat is idempotent on the standard-of RATEXP.
-check ()
+check_stdof ()
 {
   run 0 '' -vcsn-standard-of -E -C "$1" -e "$2" -o std.dot
   cp std.dot out.exp
   run 0 out.exp -vcsn-cat -Af out.exp
 }
 
-check 'lal_char(abcd)_b' "abcd"
-check 'lal_char(abcd)_z' "{3}\\e"
-check 'lal_char(abcd)_z' "{3}(\\e+a)"
+check_stdof 'lal_char(abcd)_b' "abcd"
+check_stdof 'lal_char(abcd)_z' "{3}\\e"
+check_stdof 'lal_char(abcd)_zmin' "{3}(\\e+a)"
 
 
-# check < AUTOMATON
-# -----------------
-# Check that vcsn-cat can read AUTOMATON, and is idempotent on it.
-check ()
-{
-  cat >in.tmp
-  sed -n '/^--*$/q;p'             in.tmp >in.dot
-  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  cp in.dot /tmp
-  cp out.exp /tmp
-  run 0 out.exp -vcsn-cat -Af in.dot
-  $exit
-}
 
-fail ()
+## ------------------ ##
+## Invalid automata.  ##
+## ------------------ ##
+
+fail_aut ()
 {
   cat >in.dot
   run 1 '' -vcsn-cat -a in.dot
 }
 
 # Check invalid input.
-fail <<EOF
+fail_aut <<EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -47,7 +57,7 @@ digraph
 }
 EOF
 
-fail <<EOF
+fail_aut <<EOF
 digraph
 {
   vcsn_contxt = lal_char_b
@@ -57,7 +67,7 @@ digraph
 }
 EOF
 
-fail <<EOF
+fail_aut <<EOF
 digraph
 {
   vcsn_context = "unknown"
@@ -67,11 +77,25 @@ digraph
 }
 EOF
 
-## -------------- ##
-## Proper input.  ##
-## -------------- ##
+## ------------------ ##
+## General Automata.  ##
+## ------------------ ##
 
-check <<EOF
+# check_aut < AUTOMATON
+# -----------------
+# Check that vcsn-cat can read AUTOMATON, and is idempotent on it.
+check_aut ()
+{
+  cat >in.tmp
+  sed -n '/^--*$/q;p'             in.tmp >in.dot
+  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
+  cp in.dot /tmp
+  cp out.exp /tmp
+  run 0 out.exp -vcsn-cat -Af in.dot
+  $exit
+}
+
+check_aut <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -97,7 +121,7 @@ digraph
 }
 EOF
 
-check <<EOF
+check_aut <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
