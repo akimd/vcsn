@@ -81,7 +81,7 @@ check-html recheck-html:
 ## ------------------- ##
 
 # By default, tests are buildcheck.
-AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
+TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Use the wrappers to run the non-installed executables.
 BUILDCHECK_ENVIRONMENT +=                                       \

@@ -35,11 +35,12 @@ unit_polynomialset_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 unit_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(AM_LDADD)
 
 unit_TESTS =                                    \
-  unit/aut_lau_z.chk                       \
+  unit/accessible.chk                           \
+  unit/aut_lau_z.chk                            \
   unit/aut_lal_char_z.chk                       \
   unit/aut_law_char_z.chk                       \
   unit/aut_to_exp.chk                           \
-  unit/concat.chk				\
+  unit/concat.chk                               \
   unit/de-bruijn.chk                            \
   unit/determinize.chk                          \
   unit/eval.chk                                 \
@@ -48,7 +49,7 @@ unit_TESTS =                                    \
   unit/polynomialset.chk                        \
   unit/product.chk                              \
   unit/standard_of.chk                          \
-  unit/transpose.chk				\
+  unit/transpose.chk                            \
   unit/vcsn-cat.chk
 dist_TESTS += $(unit_TESTS)
 
@@ -61,6 +62,7 @@ unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/concat.log: unit/concat
 unit/polynomialset.log: unit/polynomialset
 unit/transpose.log: unit/transpose
+unit/accessible.log: unit/accessible.chk
 
 .PHONY: check-unit
 check-unit:

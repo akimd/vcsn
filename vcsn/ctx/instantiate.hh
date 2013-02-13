@@ -1,6 +1,7 @@
 #ifndef VCSN_CTX_INSTANTIATE_HH
 # define VCSN_CTX_INSTANTIATE_HH
 
+# include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dot.hh>
@@ -144,6 +145,9 @@ namespace vcsn
         using taut_t = vcsn::details::transpose_automaton<aut_t>;
 
         using namespace dyn::details;
+
+        // accessible.
+        accessible_register(aut_t::sname(), accessible<aut_t>);
 
         // aut_to_exp.
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);

@@ -19,8 +19,7 @@ namespace vcsn
       xml
     };
 
-    void fsm(const automaton& aut, std::ostream& out);
-    std::string fsm(const automaton& aut);
+    automaton accessible(const automaton& aut);
 
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
@@ -33,6 +32,9 @@ namespace vcsn
     std::string dot(const automaton& aut);
 
     std::string eval(const automaton& aut, const std::string& s);
+
+    void fsm(const automaton& aut, std::ostream& out);
+    std::string fsm(const automaton& aut);
 
     automaton ladybird(const context& ctx, unsigned n);
 

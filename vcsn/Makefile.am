@@ -15,6 +15,7 @@ vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
   algos/aut_to_exp.hh                           \
   algos/determinize.hh                          \
+  algos/accessible.hh                           \
   algos/dot.hh                                  \
   algos/dyn.hh                                  \
   algos/edit-automaton.hh                       \
