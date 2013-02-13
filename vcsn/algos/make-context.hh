@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_MAKE_CONTEXT_HH
 
 # include <map>
+# include <regex>
 # include <set>
 
 # include <vcsn/core/fwd.hh>
@@ -72,13 +73,12 @@ namespace vcsn
     //        |   |    +-- gens
     //        |   +-- labelset
     //        +-- kind
+    //
+    // Note that LAU reads: lal_ratexpset<law_char(xyz)_b>.
+    // There is no "char(...)_".
+    //
+    // FIXME: regex is not usable in G++ 4.8 yet.
     std::string kind = name.substr(0, 3);
-    auto lparen = name.find('(');
-    auto rparen = name.find(')');
-    assert(lparen != std::string::npos);
-    std::string labelset = name.substr(4, lparen - 4);
-    std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
-    std::string weightset = name.substr(rparen + 2);
 
     if ((Ctx::is_lal && kind != "lal")
         || (Ctx::is_lau && kind != "lau")
@@ -92,7 +92,25 @@ namespace vcsn
         throw std::runtime_error("make_context: Ctx::is_" + ctxk
                                  + " but read " + kind + " (" + name + ")");
       }
+
     assert(name[3] == '_');
+
+    std::string labelset;
+    std::string genset;
+    std::string weightset;
+    if (kind == "lal" || kind == "law")
+      {
+        auto lparen = name.find('(');
+        auto rparen = name.find(')');
+        assert(lparen != std::string::npos);
+        labelset = name.substr(4, lparen - 4);
+        genset = name.substr(lparen + 1, rparen - lparen - 1);
+        weightset = name.substr(rparen + 2);
+      }
+    else
+      {
+        weightset = name.substr(4);
+      }
 
     typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
     auto gs = typename Ctx::labelset_t(ls);

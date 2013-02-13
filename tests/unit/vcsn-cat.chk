@@ -95,6 +95,35 @@ check_aut ()
   $exit
 }
 
+# lau_z.
+check_aut <<EOF
+digraph
+{
+  vcsn_context = "lau_z"
+  1 -> 2 [label = "{42}\e"]
+  1 -> 2 [label = "{51}\e"]
+  2 -> F2
+  I1 -> 1
+}
+---
+digraph
+{
+  vcsn_context = "lau_z"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  { 1 2 }
+  I1 -> 1
+  1 -> 2 [label = "{93}"]
+  2 -> F2
+}
+EOF
+
+# lal_char(a)_b.
 check_aut <<EOF
 digraph
 {
@@ -121,6 +150,7 @@ digraph
 }
 EOF
 
+# lal_char(a)_b.
 check_aut <<EOF
 digraph
 {
