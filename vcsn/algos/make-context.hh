@@ -95,29 +95,32 @@ namespace vcsn
 
     assert(name[3] == '_');
 
-    std::string labelset;
-    std::string genset;
-    std::string weightset;
     if (kind == "lal" || kind == "law")
       {
         auto lparen = name.find('(');
         auto rparen = name.find(')');
         assert(lparen != std::string::npos);
-        labelset = name.substr(4, lparen - 4);
-        genset = name.substr(lparen + 1, rparen - lparen - 1);
-        weightset = name.substr(rparen + 2);
+        std::string labelset = name.substr(4, lparen - 4);
+        std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
+        std::string weightset = name.substr(rparen + 2);
+
+        typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
+        auto gs = typename Ctx::labelset_t(ls);
+        auto ws =
+          details::weightsetter<typename Ctx::weightset_t>::make(weightset);
+        Ctx res(gs, ws);
+        assert(res.vname(true) == name);
+        return res;
       }
     else
       {
-        weightset = name.substr(4);
+        std::string weightset = name.substr(4);
+        auto ws =
+          details::weightsetter<typename Ctx::weightset_t>::make(weightset);
+        Ctx res(typename Ctx::labelset_t{}, ws);
+        assert(res.vname(true) == name);
+        return res;
       }
-
-    typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
-    auto gs = typename Ctx::labelset_t(ls);
-    auto ws = details::weightsetter<typename Ctx::weightset_t>::make(weightset);
-    auto res = Ctx(gs, ws);
-    assert(res.vname(true) == name);
-    return res;
   }
 
 
