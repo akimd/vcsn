@@ -6,6 +6,7 @@
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
+# include <misc/star_status>
 
 namespace vcsn
 {
@@ -167,9 +168,9 @@ namespace vcsn
     }
 
     static constexpr bool show_unit() { return true; }
-    static constexpr bool is_positive_semiring()
+    static constexpr star_status_t star_status()
     {
-      return weightset_t::is_positive_semiring();
+      return weightset_t::star_status();
     }
 
     value_t

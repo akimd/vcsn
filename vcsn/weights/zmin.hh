@@ -8,6 +8,7 @@
 # include <sstream>
 # include <limits>
 # include <utility>
+# include <misc/star_status>
 
 namespace vcsn
 {
@@ -72,7 +73,7 @@ namespace vcsn
     }
 
     static constexpr bool show_unit() { return true; }
-    static constexpr bool is_positive_semiring() { return true; }
+    static constexpr star_status_t star_status() { return star_status_t::TOPS; }
 
     value_t
     transpose(const value_t v) const

@@ -5,6 +5,7 @@
 # include <ostream>
 # include <stdexcept>
 # include <string>
+# include <misc/star_status>
 
 namespace vcsn
 {
@@ -67,7 +68,7 @@ namespace vcsn
     }
 
     static constexpr bool show_unit() { return false; }
-    static constexpr bool is_positive_semiring() { return true; }
+    static constexpr star_status_t star_status() { return star_status_t::STARABLE; }
 
     value_t
     transpose(const value_t v) const
