@@ -7,6 +7,7 @@
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
+# include <vcsn/misc/star_status.hh>
 
 namespace vcsn
 {
@@ -75,9 +76,9 @@ namespace vcsn
       return false;
     }
 
-    static constexpr bool is_positive_semiring()
+    static constexpr star_status_t star_status()
     {
-      return weightset_t::is_positive_semiring();
+      return weightset_t::star_status();
     }
 
     value_t conv(const std::string& s) const;
