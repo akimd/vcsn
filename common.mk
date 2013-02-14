@@ -30,6 +30,8 @@ liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
 liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
 liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
 liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
+liblal_char_r    = $(top_builddir)/lib/liblal_char_z.la
+liblaw_char_r    = $(top_builddir)/lib/liblaw_char_z.la
 
 all_libctx =                                            \
   $(liblal_char_b) $(liblaw_char_b)                     \
@@ -37,7 +39,8 @@ all_libctx =                                            \
   $(liblau_z) $(liblal_char_z) $(liblaw_char_z)         \
   $(liblal_char_zr) $(liblaw_char_zr)                   \
   $(liblal_char_zrr) $(liblaw_char_zrr)                 \
-  $(liblal_char_zmin) $(liblaw_char_zmin)
+  $(liblal_char_zmin) $(liblaw_char_zmin)               \
+  $(liblal_char_r) $(liblaw_char_r)
 
 libvcsn = $(top_builddir)/lib/libvcsn.la
 
@@ -55,6 +58,7 @@ vcsn_lift        = $(top_builddir)/bin/vcsn-lift
 vcsn_product     = $(top_builddir)/bin/vcsn-product
 vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
 vcsn_transpose   = $(top_builddir)/bin/vcsn-transpose
+vcsn_eps_removal = $(top_builddir)/bin/vcsn-eps-removal
 
 all_vcsn =                                      \
   $(vcsn_aut_to_exp)                            \
@@ -66,4 +70,5 @@ all_vcsn =                                      \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \
   $(vcsn_standard_of)                           \
-  $(vcsn_transpose)
+  $(vcsn_transpose)                             \
+  $(vcsn-eps-removal)

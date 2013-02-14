@@ -12,6 +12,7 @@
 #include<vcsn/core/mutable_automaton.hh>
 #include<vcsn/algos/dot.hh>
 #include<vcsn/algos/eps_removal.hh>
+#include<vcsn/misc/direction.hh>
 #include<iostream>
 #include<stdexcept>
 
@@ -55,13 +56,16 @@ int main() {
 	   	res.set_transition(s[i],s[(i+1)%3],'a');
    res.set_initial(s[0]);
    res.set_final(s[1]);
-	std:: cout << "***LAL***"<< is_valid(res) << std::endl;
+	std:: cout << "***LAL***" << std::endl;
 	print(res);
 	std:: cout << "Lal valid :"<< is_valid(res) << std::endl;
 	std:: cout << "Lal proper :"<< is_proper(res) << std::endl;
 	std:: cout << "eps_removal:"<< std::endl;
-   automaton_t pro = eps_removal(res);
+    automaton_t pro = eps_removal(res);
 	print(pro);
+	std:: cout << "backward_eps_removal:"<< std::endl;
+    automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+	print(pro2);
 	std:: cout << "eps_removal_here:"<< std::endl;
 	eps_removal_here(res); 
 	print(res);
@@ -82,12 +86,16 @@ int main() {
 	   	res.set_transition(s[i],s[(i+2)%3],"");
    res.set_initial(s[0]);
    res.set_final(s[1]);
-	std:: cout << "***LAW***"<< is_valid(res) << std::endl;
+	std:: cout << "***LAW***" << std::endl;
    	printlaw(res);
 	std:: cout << "Law proper :"<< is_proper(res) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(res) << std::endl;
-   automaton_t pro = eps_removal(res);
+	std:: cout << "eps_removal:"<< std::endl;
+    automaton_t pro = eps_removal(res);
    	printlaw(pro);
+	std:: cout << "backward_eps_removal:"<< std::endl;
+    automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+	print(pro2);
 	std:: cout << "Law proper :"<< is_proper(pro) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(pro) << std::endl;
 	std:: cout << "eps_removal_here:"<< std::endl;
@@ -108,7 +116,7 @@ int main() {
 	   	res.set_transition(s[i],s[(i+1)%3],'a',2);
    res.set_initial(s[0]);
    res.set_final(s[1]);
-	std:: cout << "***LAL Z***"<< is_valid(res) << std::endl;
+	std:: cout << "***LAL Z***" << std::endl;
 	print(res);
 	std:: cout << "Lal valid :"<< is_valid(res) << std::endl;
 	std:: cout << "Lal proper :"<< is_proper(res) << std::endl;
@@ -136,7 +144,7 @@ int main() {
 	   	res.set_transition(s[i],s[(i+2)%3],"",-1);
    res.set_initial(s[0]);
    res.set_final(s[1]);
-	std:: cout << "***LAW Z***"<< is_valid(res) << std::endl;
+	std:: cout << "***LAW Z***" << std::endl;
 	std:: cout << "* Circuit of eps-transition" << std::endl;
    	printlaw(res);
 	std:: cout << "Law proper :"<< is_proper(res) << std::endl;
@@ -156,11 +164,17 @@ int main() {
 	std:: cout << "Law proper :"<< is_proper(res) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(res) << std::endl;
 	//dot(res,std::cerr);
+	std:: cout << "eps_removal:"<< std::endl;
 	automaton_t pro = eps_removal(res);
     printlaw(pro);
 	std:: cout << "Law proper :"<< is_proper(pro) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(pro) << std::endl;
-	//dot(pro,std::cerr);
+	std:: cout << "backward_eps_removal:"<< std::endl;
+    automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+	print(pro2);
+	std:: cout << "Law proper :"<< is_proper(pro2) << std::endl;
+	std:: cout << "Law valid :"<< is_valid(pro2) << std::endl;
+	//dot(pro2,std::cerr);
 	std:: cout << "eps_removal_here:"<< std::endl;
 	eps_removal_here(res); 
    	printlaw(res);
@@ -181,7 +195,7 @@ int main() {
 	   	res.set_transition(s[i],s[(i+2)%3],"",-1);
    res.set_initial(s[0]);
    res.set_final(s[1]);
-	std:: cout << "***LAW Z-min+***"<< is_valid(res) << std::endl;
+	std:: cout << "***LAW Z-min+***" << std::endl;
 	std:: cout << "* Circuit of eps-transition" << std::endl;
    	printlaw(res);
 	std:: cout << "Law proper :"<< is_proper(res) << std::endl;
@@ -201,11 +215,17 @@ int main() {
 	std:: cout << "Law proper :"<< is_proper(res) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(res) << std::endl;
 	//dot(res,std::cerr);
+	std:: cout << "eps_removal:"<< std::endl;
 	automaton_t pro = eps_removal(res);
     printlaw(pro);
 	std:: cout << "Law proper :"<< is_proper(pro) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(pro) << std::endl;
-	dot(pro,std::cerr);
+	std:: cout << "backward_eps_removal:"<< std::endl;
+    automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+	print(pro2);
+	std:: cout << "Law proper :"<< is_proper(pro2) << std::endl;
+	std:: cout << "Law valid :"<< is_valid(pro2) << std::endl;
+	dot(pro2,std::cerr);
 	std:: cout << "eps_removal_here:"<< std::endl;
 	eps_removal_here(res); 
    	printlaw(res);

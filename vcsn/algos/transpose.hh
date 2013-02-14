@@ -25,6 +25,14 @@ namespace vcsn
       using entry_t = typename automaton_t::entry_t;
       using weight_t = typename automaton_t::weight_t;
 
+      using labelset_t = typename automaton_t::labelset_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using kind_t = typename automaton_t::kind_t;
+
+      using labelset_ptr = typename automaton_t::labelset_ptr;
+      using weightset_ptr = typename automaton_t::weightset_ptr;
+      using entryset_t = polynomialset<context_t>;
+
     private:
       automaton_t* aut_;
 

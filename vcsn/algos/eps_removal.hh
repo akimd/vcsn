@@ -6,7 +6,9 @@
 #include <unordered_map>
 #include <stdexcept>
 
-# include <vcsn/core/kind.hh>
+#include <vcsn/core/kind.hh>
+#include <vcsn/misc/star_status.hh>
+#include <vcsn/misc/direction.hh>
 
 namespace vcsn
 {
@@ -15,18 +17,16 @@ namespace vcsn
      FIXME
      Shouldn't be a clone() method more suitable ?
   */ 
+  template <typename Aut, typename Aut2>
+  void
+  copy(const Aut& input, Aut2& output) {
+    using in_state_t = typename Aut::state_t;
+    using out_state_t = typename Aut2::state_t;
 
-  template <typename Aut>
-  Aut
-  copy(const Aut& input) {
-    using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
-
-    automaton_t output{input.context()};
-    std::unordered_map<state_t, state_t> output_state;
+    std::unordered_map<in_state_t, out_state_t> output_state;
     
     for(auto s: input.states()) {
-      state_t ns =  output.new_state();
+      out_state_t ns =  output.new_state();
       output_state[s] = ns;
       output.set_initial(ns, input.get_initial_weight(s));
       output.set_final(ns, input.get_final_weight(s));
@@ -34,7 +34,15 @@ namespace vcsn
     for (auto t: input.transitions())
       output.set_transition( output_state[input.src_of(t)], output_state[input.dst_of(t)],
 			      input.label_of(t), input.weight_of(t));
-    return output;
+  }
+
+  template <typename Aut>
+  Aut
+  copy(const Aut& input) {
+    using automaton_t = Aut;
+    automaton_t output{input.context()};
+    copy(input,output);
+	return output;
   }
 
   ///////////
@@ -83,10 +91,9 @@ namespace vcsn
 	/* otherwise the graph reachable from s has already been explored */
       case 'o':
 	return false;
-      case 'c':
+      default: //'c'
 	return true;
       }
-	  return true; //this line should not be reached
     }
    
     epsilon_acyclic(const automaton_t& input) : input(input), empty_word(input.labelset()->identity()) {}
@@ -472,14 +479,29 @@ namespace vcsn
 
   template <class Aut>
   inline
-  void eps_removal_here(Aut & input) {
-    return epsilon_remover<Aut, typename Aut::kind_t>::eps_removal_here(input);
+  void eps_removal_here(Aut & input, direction_t dir = direction_t::FORWARD) {
+  	switch(dir) {
+  	case direction_t::FORWARD :
+  	  epsilon_remover<Aut, typename Aut::kind_t>::eps_removal_here(input);
+  	  return;
+  	case direction_t::BACKWARD :
+  	  auto tr_input = transpose(input);
+  	  using tr_aut_t = decltype(tr_input);
+  	  epsilon_remover<tr_aut_t, typename tr_aut_t::kind_t>::eps_removal_here(tr_input);
+  	}  	  
   }
 
   template <class Aut>
   inline
-  Aut eps_removal(const Aut & input) {
-    return epsilon_remover<Aut, typename Aut::kind_t>::eps_removal(input);
+  Aut eps_removal(const Aut & input, direction_t dir = direction_t::FORWARD) {
+  	switch(dir) {
+  	case direction_t::FORWARD :
+      return epsilon_remover<Aut, typename Aut::kind_t>::eps_removal(input);
+  	default : //direction_t::BACKWARD
+  	  Aut tmp=copy(input);
+  	  eps_removal_here(tmp, direction_t::BACKWARD);
+  	  return tmp;
+  	}
   }
 
   

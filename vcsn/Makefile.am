@@ -18,6 +18,7 @@ nobase_vcsn_HEADERS =                           \
   algos/dot.hh                                  \
   algos/dyn.hh                                  \
   algos/edit-automaton.hh                       \
+  algos/eps_removal.hh                          \
   algos/eval.hh                                 \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
@@ -86,5 +87,6 @@ nobase_vcsn_HEADERS =                           \
   weights/b.hh                                  \
   weights/fwd.hh                                \
   weights/polynomialset.hh                      \
+  weights/r.hh                                  \
   weights/z.hh                                  \
   weights/zmin.hh
