@@ -49,9 +49,12 @@ namespace vcsn
     }
 
     value_t
-    star(const value_t) const
+    star(const value_t v) const
     {
-      return unit();
+      if (!v)
+        return true;
+      else
+        throw std::domain_error("f2: star: invalid value: 1");
     }
 
 
