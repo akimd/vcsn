@@ -3,6 +3,7 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
+# include <vcsn/algos/complete.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
@@ -124,11 +125,12 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::details;
 
+        complete_register(aut_t::sname(), complete<aut_t>);
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
         eval_register(aut_t::sname(), eval<aut_t>);
 
-        // is_complete.
         is_complete_register(aut_t::sname(), is_complete<aut_t>);
+        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);

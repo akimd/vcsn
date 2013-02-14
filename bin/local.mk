@@ -16,6 +16,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-accessible                           \
   bin/vcsn-aut-to-exp                           \
   bin/vcsn-cat                                  \
+  bin/vcsn-complete                             \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
   bin/vcsn-evaluate                             \
@@ -31,6 +32,7 @@ bin_PROGRAMS +=                                 \
 bin_vcsn_accessible_LDADD       = $(all_libctx) $(libvcsn)
 bin_vcsn_aut_to_exp_LDADD       = $(all_libctx) $(libvcsn)
 bin_vcsn_cat_LDADD              = $(all_libctx) $(libvcsn)
+bin_vcsn_complete_LDADD         = $(all_libctx) $(libvcsn)
 bin_vcsn_de_bruijn_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_determinize_LDADD      = $(all_libctx) $(libvcsn)
 bin_vcsn_evaluate_LDADD         = $(all_libctx) $(libvcsn)
@@ -46,6 +48,7 @@ parse_args = bin/parse-args.hh bin/parse-args.cc
 bin_vcsn_accessible_SOURCES       = $(parse_args) bin/vcsn-accessible.cc
 bin_vcsn_aut_to_exp_SOURCES       = $(parse_args) bin/vcsn-aut-to-exp.cc
 bin_vcsn_cat_SOURCES              = $(parse_args) bin/vcsn-cat.cc
+bin_vcsn_complete_SOURCES         = $(parse_args) bin/vcsn-complete.cc
 bin_vcsn_de_bruijn_SOURCES        = $(parse_args) bin/vcsn-de-bruijn.cc
 bin_vcsn_determinize_SOURCES      = $(parse_args) bin/vcsn-determinize.cc
 bin_vcsn_evaluate_SOURCES         = $(parse_args) bin/vcsn-evaluate.cc

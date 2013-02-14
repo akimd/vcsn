@@ -25,6 +25,8 @@ namespace vcsn
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
+    automaton complete(const automaton& aut);
+
     automaton de_bruijn(const context& ctx, unsigned n);
 
     automaton determinize(const automaton& aut);

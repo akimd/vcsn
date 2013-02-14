@@ -13,7 +13,7 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  unit/aut_lau_z                           \
+  unit/aut_lau_z                                \
   unit/aut_lal_char_z                           \
   unit/aut_law_char_z                           \
   unit/concat                                   \
@@ -40,6 +40,7 @@ unit_TESTS =                                    \
   unit/aut_lal_char_z.chk                       \
   unit/aut_law_char_z.chk                       \
   unit/aut_to_exp.chk                           \
+  unit/complete.chk                             \
   unit/concat.chk                               \
   unit/de-bruijn.chk                            \
   unit/determinize.chk                          \
