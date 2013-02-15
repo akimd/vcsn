@@ -7,9 +7,15 @@ namespace vcsn
   // b.hh.
   class b;
 
+  // f2.hh.
+  class f2;
+
   // polynomialset.hh.
   template <class Context>
   class polynomialset;
+
+  // r.hh.
+  class r;
 
   // z.hh.
   class z;

@@ -85,6 +85,7 @@ nobase_vcsn_HEADERS =                           \
   misc/echo.hh                                  \
   misc/escape.hh                                \
   weights/b.hh                                  \
+  weights/f2.hh                                 \
   weights/fwd.hh                                \
   weights/polynomialset.hh                      \
   weights/r.hh                                  \

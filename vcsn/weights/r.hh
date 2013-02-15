@@ -52,7 +52,7 @@ namespace vcsn
     value_t
     star(const value_t v) const
     {
-      if (v > -1 && v < 1)
+      if (-1 < v && v < 1)
         return 1/(1-v);
       else
         throw std::domain_error("r: star: invalid value: " + format(v));
@@ -76,9 +76,7 @@ namespace vcsn
     value_t
     abs(const value_t v) const
     {
-      if(v<0)
-      	return -v;
-      return v;
+      return v < 0 ? -v : v;
     }
 
     value_t
