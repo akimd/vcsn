@@ -21,13 +21,6 @@ namespace vcsn
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(lal_char_z);
-
-  MAYBE_EXTERN template
-  class details::evaluator<mutable_automaton<ctx::lal_char_z>>;
-
-  MAYBE_EXTERN template
-  int
-  eval(const mutable_automaton<ctx::lal_char_z>& aut, const std::string& w);
 };
 
 #endif // !VCSN_CTX_LAL_CHAR_Z_HH

@@ -27,13 +27,6 @@ namespace vcsn
   determinize(const mutable_automaton<ctx::lal_char_b>& aut)
     -> mutable_automaton<ctx::lal_char_b>;
 
-  MAYBE_EXTERN template
-  class details::evaluator<mutable_automaton<ctx::lal_char_b>>;
-
-  MAYBE_EXTERN template
-  bool
-  eval(const mutable_automaton<ctx::lal_char_b>& aut, const std::string& w);
-
 # if VCSN_INSTANTIATION
   namespace
   {
