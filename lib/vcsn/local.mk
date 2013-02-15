@@ -22,7 +22,7 @@ AM_BISONFLAGS =                                 \
 
 pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =                        \
-  lib/vcsn/algos/fsm.cc                         \
+  lib/vcsn/algos/accessible.cc                  \
   lib/vcsn/algos/aut-to-exp.cc                  \
   lib/vcsn/algos/de_bruijn.cc                   \
   lib/vcsn/algos/determinize.cc                 \
@@ -30,6 +30,8 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/edit-automaton.cc              \
   lib/vcsn/algos/eval.cc                        \
   lib/vcsn/algos/is_complete.cc                 \
+  lib/vcsn/algos/is-deterministic.cc            \
+  lib/vcsn/algos/fsm.cc                         \
   lib/vcsn/algos/ladybird.cc                    \
   lib/vcsn/algos/lift.cc                        \
   lib/vcsn/algos/make-context.cc                \
@@ -40,8 +42,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/standard-of.cc                 \
   lib/vcsn/algos/transpose.cc                   \
   lib/vcsn/algos/xml.cc                         \
-  lib/vcsn/algos/accessible.cc                  \
-  lib/vcsn/ctx/ctx.cc	                        \
+  lib/vcsn/ctx/ctx.cc                           \
   lib/vcsn/misc/escape.cc
 
 # ratexpset.hxx depends on rat/driver.hh which requires

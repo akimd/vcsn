@@ -39,6 +39,8 @@ namespace vcsn
 
     bool is_complete(const automaton& aut);
 
+    bool is_deterministic(const automaton& aut);
+
     automaton ladybird(const context& ctx, unsigned n);
 
     automaton lift(const automaton& aut);

@@ -21,7 +21,8 @@ nobase_vcsn_HEADERS =                           \
   algos/edit-automaton.hh                       \
   algos/eps_removal.hh                          \
   algos/eval.hh                                 \
-  algos/fsm.hh	                                \
+  algos/fsm.hh                                  \
+  algos/is-deterministic.hh                     \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
   algos/print.hh                                \

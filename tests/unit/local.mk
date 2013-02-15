@@ -16,7 +16,7 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_lau_z                           \
   unit/aut_lal_char_z                           \
   unit/aut_law_char_z                           \
-  unit/concat					\
+  unit/concat                                   \
   unit/polynomialset                            \
   unit/transpose
 
@@ -45,6 +45,7 @@ unit_TESTS =                                    \
   unit/determinize.chk                          \
   unit/eval.chk                                 \
   unit/is_complete.chk                          \
+  unit/is-deterministic.chk                     \
   unit/ladybird.chk                             \
   unit/lift.chk                                 \
   unit/polynomialset.chk                        \

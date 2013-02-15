@@ -48,19 +48,19 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 ## Programs.  ##
 ## ---------- ##
 
-vcsn_accessible  = $(top_builddir)/bin/vcsn-accessible
-vcsn_aut_to_exp  = $(top_builddir)/bin/vcsn-aut-to-exp
-vcsn_cat         = $(top_builddir)/bin/vcsn-cat
-vcsn_de_bruijn   = $(top_builddir)/bin/vcsn-de-bruijn
-vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
-vcsn_evaluate    = $(top_builddir)/bin/vcsn-evaluate
-vcsn_is_complete = $(top_builddir)/bin/vcsn-is-complete
-vcsn_ladybird    = $(top_builddir)/bin/vcsn-ladybird
-vcsn_lift        = $(top_builddir)/bin/vcsn-lift
-vcsn_product     = $(top_builddir)/bin/vcsn-product
-vcsn_standard_of = $(top_builddir)/bin/vcsn-standard-of
-vcsn_transpose   = $(top_builddir)/bin/vcsn-transpose
-vcsn_eps_removal = $(top_builddir)/bin/vcsn-eps-removal
+vcsn_accessible       = $(top_builddir)/bin/vcsn-accessible
+vcsn_aut_to_exp       = $(top_builddir)/bin/vcsn-aut-to-exp
+vcsn_cat              = $(top_builddir)/bin/vcsn-cat
+vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
+vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
+vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
+vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
+vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
+vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
+vcsn_lift             = $(top_builddir)/bin/vcsn-lift
+vcsn_product          = $(top_builddir)/bin/vcsn-product
+vcsn_standard_of      = $(top_builddir)/bin/vcsn-standard-of
+vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
 
 all_vcsn =                                      \
   $(vcsn_accessible)                            \
@@ -70,6 +70,7 @@ all_vcsn =                                      \
   $(vcsn_determinize)                           \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
+  $(vcsn_is_deterministic)                      \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \

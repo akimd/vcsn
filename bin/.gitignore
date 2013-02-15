@@ -3,6 +3,7 @@
 /vcsn-de-bruijn
 /vcsn-determinize
 /vcsn-evaluate
+/vcsn-is-deterministic
 /vcsn-ladybird
 /vcsn-lift
 /vcsn-product

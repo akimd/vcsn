@@ -9,6 +9,7 @@
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -182,6 +183,8 @@ namespace vcsn
                      static_cast<const fsm_stream_t&>(fsm<taut_t>));
         fsm_register(taut_t::sname(),
                      static_cast<const fsm_string_t&>(fsm<taut_t>));
+        // is-deterministic.
+        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);

@@ -1,0 +1,75 @@
+#ifndef VCSN_ALGOS_IS_DETERMINISTIC_HH
+# define VCSN_ALGOS_IS_DETERMINISTIC_HH
+
+# include <queue>
+# include <unordered_set>
+
+# include "vcsn/core/mutable_automaton.hh"
+
+namespace vcsn
+{
+  template <class Aut>
+  inline bool
+  is_deterministic(const Aut& aut)
+  {
+    using automaton_t = Aut;
+    using state_t = typename automaton_t::state_t;
+    using word_t = typename automaton_t::labelset_t::word_t;
+
+    std::queue<state_t> q;
+    std::unordered_set<state_t> marked;
+    std::unordered_set<word_t> seen;
+    state_t st;
+    state_t succ;
+    word_t wd;
+
+    for (auto init : aut.initial_transitions())
+      {
+        q.push(init);
+        marked.insert (init);
+      }
+
+    while (!q.empty())
+      {
+        st = q.front();
+        q.pop();
+
+        seen.clear();
+        for (auto tr : aut.all_out(st))
+          {
+            succ = aut.dst_of(tr);
+            wd = aut.word_label_of(tr);
+            if (!seen.insert(wd).second)
+              return false;
+
+            if (marked.find(succ) == marked.end())
+              {
+                q.push(succ);
+                marked.insert(succ);
+              }
+          }
+      }
+
+    return true;
+  }
+
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Aut>
+      bool
+      is_deterministic(const dyn::automaton& aut)
+      {
+        return is_deterministic(dynamic_cast<const Aut&>(*aut));
+      }
+
+      using is_deterministic_t = auto (const dyn::automaton& aut) -> bool;
+      bool
+      is_deterministic_register(const std::string& ctx,
+                                const is_deterministic_t& fn);
+    }
+  }
+} // namespace vscn
+
+#endif // !VCSN_ALGOS_IS_DETERMINISTIC_HH
