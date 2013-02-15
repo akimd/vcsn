@@ -59,23 +59,23 @@ nobase_vcsn_HEADERS =                           \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \
-  ctx/letterset.hh                              \
   ctx/lal_char_b.hh                             \
   ctx/lal_char_br.hh                            \
   ctx/lal_char_z.hh                             \
   ctx/lal_char_zmin.hh                          \
   ctx/lal_char_zr.hh                            \
   ctx/lal_char_zrr.hh                           \
-  ctx/unitset.hh                                \
   ctx/lau_br.hh                                 \
   ctx/lau_z.hh                                  \
-  ctx/wordset.hh                                \
   ctx/law_char_b.hh                             \
   ctx/law_char_br.hh                            \
   ctx/law_char_z.hh                             \
   ctx/law_char_zmin.hh                          \
   ctx/law_char_zr.hh                            \
   ctx/law_char_zrr.hh                           \
+  ctx/letterset.hh                              \
+  ctx/unitset.hh                                \
+  ctx/wordset.hh                                \
   dyn/ratexp.hh                                 \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
