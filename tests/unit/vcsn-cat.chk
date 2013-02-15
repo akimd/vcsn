@@ -42,7 +42,6 @@ check_stdof 'lal_char(abcd)_z' "{3}\\e"
 check_stdof 'lal_char(abcd)_zmin' "{3}(\\e+a)"
 
 
-
 ## ------------------ ##
 ## Invalid automata.  ##
 ## ------------------ ##
@@ -50,7 +49,7 @@ check_stdof 'lal_char(abcd)_zmin' "{3}(\\e+a)"
 fail_aut ()
 {
   cat >in.dot
-  run 1 '' -vcsn-cat -a in.dot
+  run 1 '' -vcsn-cat -Af in.dot
 }
 
 # Check invalid input.
