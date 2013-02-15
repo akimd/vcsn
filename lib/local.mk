@@ -35,6 +35,15 @@ pkglib_LTLIBRARIES += lib/liblaw_char_br.la
 lib_liblaw_char_br_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_br
 
+# char_r.
+pkglib_LTLIBRARIES += lib/liblal_char_r.la
+lib_liblal_char_r_la_SOURCES = lib/ctx/libctx.cc
+lib_liblal_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_r
+
+pkglib_LTLIBRARIES += lib/liblaw_char_r.la
+lib_liblaw_char_r_la_SOURCES = lib/ctx/libctx.cc
+lib_liblaw_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_r
+
 # char_z.
 pkglib_LTLIBRARIES += lib/liblau_z.la
 lib_liblau_z_la_SOURCES = lib/ctx/libctx.cc

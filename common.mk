@@ -30,8 +30,8 @@ liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
 liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
 liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
 liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
-liblal_char_r    = $(top_builddir)/lib/liblal_char_z.la
-liblaw_char_r    = $(top_builddir)/lib/liblaw_char_z.la
+liblal_char_r    = $(top_builddir)/lib/liblal_char_r.la
+liblaw_char_r    = $(top_builddir)/lib/liblaw_char_r.la
 
 all_libctx =                                            \
   $(liblal_char_b) $(liblaw_char_b)                     \

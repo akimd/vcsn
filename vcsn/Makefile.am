@@ -61,6 +61,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/instantiate.hh                            \
   ctx/lal_char_b.hh                             \
   ctx/lal_char_br.hh                            \
+  ctx/lal_char_r.hh                             \
   ctx/lal_char_z.hh                             \
   ctx/lal_char_zmin.hh                          \
   ctx/lal_char_zr.hh                            \
@@ -69,6 +70,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/lau_z.hh                                  \
   ctx/law_char_b.hh                             \
   ctx/law_char_br.hh                            \
+  ctx/law_char_r.hh                             \
   ctx/law_char_z.hh                             \
   ctx/law_char_zmin.hh                          \
   ctx/law_char_zr.hh                            \
