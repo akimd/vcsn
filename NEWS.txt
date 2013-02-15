@@ -1,4 +1,4 @@
-* 2013-03-18
+* 2013-02-18
 ** Comment in rational expressions
 The (?#...) construct allows to embed comments in a rational expressions.
 They are discarded.  There is no means to include a closing parenthesis in
@@ -30,6 +30,14 @@ there is no support _at all_ for the weights.
 
 ** New output format: null
 The output is discarded.  This is useful for benching.
+
+* 2013-02-14
+** New algorithms: is-deterministic and complete
+is-deterministic takes an automaton as argument and exits with code status 0
+if the given automaton is deterministic, 2 otherwise.
+
+complete also takes an automaton as argument and make it complete. If the
+given automaton is already complete, then it is unchanged.
 
 * 2013-02-12
 ** Overhaul of the LAU, LAL, LAW implementation
