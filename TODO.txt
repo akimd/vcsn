@@ -1,3 +1,22 @@
+* trivial identities
+As a goal, we want every rational expression to yield the same result
+in lal and law.  This is a failure:
+
+  $ vcsn-cat -C 'lal_char_z' -e 'ab{3}' -E
+  (a.b){3}
+  $ vcsn-cat -C 'law_char_z' -e 'ab{3}' -E
+  {3}ab
+
+Note that TAF-Kit's documentation (Section 2.2.1) precisely reports
+that *both* should yield "{3}ab":
+
+  Caveat: The definition of the identity Cat corresponds to what is
+  actually implemented in Vaucanson 1.4 and is somehow a mistake. A more
+  natural definition would be m{k} ⇒ {k}m with m any element of the
+  monoid. This may be corrected in forthcoming revisions of Vaucanson
+  1.4 but should anyway be reevaluated in connection with the definition
+  of the function derived-term for the weighthed automata.
+
 * "check" algorithm
 There should be a means to check that the invariants are verifired.  A
 separate algorithm would do.  In particular check the alphabet, that
@@ -10,6 +29,11 @@ special-letter.  Is this what we want?
 * check labels in mutable_automaton
 Currently, we can add_transition(p, q, 'z') even if z is not part of
 the alphabet.
+
+No, we do not want mutable_expression to check anything, as it might
+be used by sound algorithms which will never make such mistakes --- so
+it would be a pessimization to check.  Rather check in tools such as
+edit-automaton.
 
 * debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
