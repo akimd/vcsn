@@ -21,7 +21,7 @@ AC_INIT([Vaucanson], [2.0a], [vaucanson-bugs@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
-AM_INIT_AUTOMAKE([1.11 tar-ustar no-define foreign dist-xz
+AM_INIT_AUTOMAKE([1.12 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules
                   subdir-objects])
 AM_SILENT_RULES([yes])
