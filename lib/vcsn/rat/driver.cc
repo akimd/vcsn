@@ -11,9 +11,16 @@ namespace vcsn
   {
 
     driver::driver(const dyn::context& ctx)
-      : context_{ctx}
-      , ratexpset_{dyn::make_ratexpset(ctx)}
-    {}
+    {
+      context(ctx);
+    }
+
+    void
+    driver::context(const dyn::context& ctx)
+    {
+      context_ = ctx;
+      ratexpset_ = dyn::make_ratexpset(ctx);
+    }
 
     void
     driver::error(const location& l, const std::string& m)
@@ -61,7 +68,7 @@ namespace vcsn
       p.set_debug_level(debug_level && nesting < debug_level);
       ++nesting;
       if (p.parse())
-        result_ = 0; // FIXME: no warning from GCC?  Should be nullptr.
+        result_ = nullptr;
       scan_close_();
       --nesting;
       dyn::ratexp res = make_ratexp(context_, result_);

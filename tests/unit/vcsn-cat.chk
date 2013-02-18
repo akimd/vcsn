@@ -4,14 +4,22 @@
 ## RatExps.  ##
 ## --------- ##
 
+# There are not many such tests because rat/ tests cover this
+# extensively.
+
 # check_exp CONTEXT INPUT OUTPUT
 # ------------------------------
+# Check -C and (?@...) support.
 check_exp ()
 {
   run 0 $3 -vcsn-cat -E -C "$1" -e "$2"
+  run 0 $3 -vcsn-cat -E -e "(?@$1)$2"
 }
 
 check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
+check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
+    "{{{42}x}d}a+{{{51}x}d}a+({{{42}y}e}b)*" \
+    "{{{42}x}d}a+{{{51}x}d}a+(({{{42}y}e}b)*)"
 
 
 ## ------------------- ##

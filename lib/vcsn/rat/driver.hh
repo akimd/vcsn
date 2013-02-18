@@ -15,7 +15,12 @@ namespace vcsn
     {
     public:
       using exp_t = vcsn::rat::exp_t;
+
+      driver() = default;
       driver(const dyn::context& ctx);
+      /// Set the context to use.
+      void context(const dyn::context& c);
+
       dyn::ratexp parse_file(const std::string& f);
       dyn::ratexp parse_string(const std::string& e,
                                const location& l = location());

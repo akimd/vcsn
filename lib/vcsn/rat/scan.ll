@@ -14,6 +14,7 @@
 #include <stack>
 #include <iostream>
 #include <lib/vcsn/rat/parse.hh>
+#include <vcsn/algos/dyn.hh>
 
 #define LINE(Line)                              \
   do{                                           \
@@ -27,14 +28,16 @@
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
 %}
-%x SC_WEIGHT
+%x SC_CONTEXT SC_WEIGHT
 
 char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 
 %%
 %{
-  // Count the number of opened braces.
+  // Count the number of opened braces in SC_WEIGHT, and parens in SC_CONTEXT.
   unsigned int nesting = 0;
+  // Build a context string.  "static" only to save build/dtor.
+  static std::string context;
   // Grow a string before returning it.
   std::string* sval = 0;
 
@@ -53,6 +56,9 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "*"     return TOK(STAR);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);
+
+  "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
+  "(?#"[^)]*")"  continue;
 
   "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
   {char}  yylval->cval = *yytext; return TOK(LETTER);
@@ -79,7 +85,28 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
         return TOK(WEIGHT);
       }
   }
-  [^{}]+       { *sval += yytext; }
+  [^{}]+       *sval += yytext;
+}
+
+<SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */
+  "("   {
+    ++nesting;
+    context += yytext;
+  }
+  ")"   {
+    if (nesting)
+      {
+        --nesting;
+        context += yytext;
+      }
+    else
+      {
+        yy_pop_state();
+        driver_.context(dyn::make_context(context));
+        context.clear();
+      }
+  }
+  [^()]+   context += yytext;
 }
 
 %%

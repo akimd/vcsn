@@ -1,3 +1,26 @@
+* 2013-03-18
+** Comment in rational expressions
+The (?#...) construct allows to embed comments in a rational expressions.
+They are discarded.  There is no means to include a closing parenthesis in
+this construct.
+
+** Context in rational expressions
+The (?@...) allows a rational expression to "carry" its context.  Contrast
+for instance the two following runs.
+
+  $ vcsn-cat -C 'lal_char(xyz)_z'  -Ee '{42}x+{51}z'
+  {42}x+{51}z
+  $ vcsn-cat -Ee '(?@lal_char(xyz)_z){42}x+{51}z'
+  {42}x+{51}z
+
+This will be used, eventually, so that TAF-Kit-like tools propagate the
+context in runs such as:
+
+  $ vcsn-cat -Ee '(?@lal_char(xyz)_z){42}x+{51}z' | vcsn-transpose -Ef -
+  1.1-5: invalid Boolean: 42
+
+Currently it fails, as the "default" context is "lal_char(abc)_b".
+
 * 2013-02-12
 ** Overhaul of the LAU, LAL, LAW implementation
 So far a context was a triple: <Kind, LabelSet, WeightSet>, where (for
