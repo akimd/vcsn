@@ -21,6 +21,13 @@ context in runs such as:
 
 Currently it fails, as the "default" context is "lal_char(abc)_b".
 
+** New output format: fsm
+An initial, and rough, support for Open FSM's format is provided.  Currently
+there is no support _at all_ for the weights.
+
+  $ vcsn-de-bruijn -O fsm 12 | fstcompile | fstdeterminize | wc -l
+  1216
+
 * 2013-02-12
 ** Overhaul of the LAU, LAL, LAW implementation
 So far a context was a triple: <Kind, LabelSet, WeightSet>, where (for

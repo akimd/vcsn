@@ -17,12 +17,14 @@ string_to_file_type(const std::string str)
   using vcsn::dyn::FileType;
   if (str == "dot")
     return FileType::dot;
+  else if (str == "fsm")
+    return FileType::fsm;
   else if (str == "text")
     return FileType::text;
   else if (str == "xml")
     return FileType::xml;
   else
-    throw std::domain_error(str + " is an invalid file type.");
+    throw std::domain_error("invalid file type: " + str);
 }
 
 vcsn::dyn::automaton

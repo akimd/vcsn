@@ -20,10 +20,12 @@ namespace vcsn
         case FileType::dot:
           dot(aut, out);
           break;
+        case FileType::fsm:
+          fsm(aut, out);
+          break;
         case FileType::text:
           throw
-            std::domain_error("invalid output format for automaton."
-                              " Could not print automaton as text output.");
+            std::domain_error("invalid output format for automaton: text");
           break;
         case FileType::xml:
           //xml(out, aut); // FIXME:
@@ -58,8 +60,9 @@ namespace vcsn
       switch (type)
         {
         case FileType::dot:
-          std::domain_error("invalid output format for expression."
-                            " Could not print expression as dot output.");
+          std::domain_error("invalid output format for expression: dot");
+        case FileType::fsm:
+          std::domain_error("invalid output format for expression: fsm");
         case FileType::text:
           return details::print_exp_registry().call(exp->ctx().vname(),
                                                     exp, out);

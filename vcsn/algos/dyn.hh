@@ -13,10 +13,14 @@ namespace vcsn
   {
     enum class FileType
     {
+      fsm,
       dot,
       text,
       xml
     };
+
+    void fsm(const automaton& aut, std::ostream& out);
+    std::string fsm(const automaton& aut);
 
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);

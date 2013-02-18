@@ -6,6 +6,7 @@
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/eval.hh>
+# include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -17,48 +18,28 @@
 # include <vcsn/factory/de_bruijn.hh>
 # include <vcsn/factory/ladybird.hh>
 
+/* The purpose of this file is manyfold:
+
+   - *prevent* the instantiation of the algorithms that we will
+      provided by the context library.  This is what the INSTANTIATE
+      macros do.  In this case MAYBE_EXTERN is "extern".
+
+   - instantiate them when building the context libraries.  In this
+     context, MAYBE_EXTERN is "".
+
+   - register the dyn functions.  This is what the register function
+     templates do.
+
+*/
+
 namespace vcsn
 {
-# define VCSN_CTX_INSTANTIATE_DOTTY(Aut)                                \
+# define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
   MAYBE_EXTERN template                                                 \
-  void dot<Aut>(const Aut& aut, std::ostream& out);                     \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
-  std::string dot<Aut>(const Aut& aut);                                 \
-                                                                        \
-  namespace dyn                                                         \
-  {                                                                     \
-    namespace details                                                   \
-    {                                                                   \
-      MAYBE_EXTERN template                                             \
-        void dot<Aut>(const dyn::automaton& aut, std::ostream& out);    \
-                                                                        \
-      MAYBE_EXTERN template                                             \
-        std::string dot<Aut>(const dyn::automaton& aut);                \
-    }                                                                   \
-  }
-
-# define VCSN_CTX_INSTANTIATE_XML(Ctx)                                  \
-  MAYBE_EXTERN template                                                 \
-  void xml<Ctx>(const Ctx& ctx,                                         \
-                const rat::exp_t exp,                                   \
-                std::ostream& out);                                     \
+  void Format<Aut>(const Aut& aut, std::ostream& out);                  \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  std::string xml<Ctx>(const Ctx& cxt,                                  \
-                       const rat::exp_t exp);                           \
-                                                                        \
-  namespace dyn                                                         \
-  {                                                                     \
-    namespace details                                                   \
-    {                                                                   \
-      MAYBE_EXTERN template                                             \
-        void xml<Ctx>(const dyn::ratexp& exp, std::ostream& out);       \
-                                                                        \
-      MAYBE_EXTERN template                                             \
-        std::string xml<Ctx>(const dyn::ratexp& exp);                   \
-    }                                                                   \
-  }
+  std::string Format<Aut>(const Aut& aut);
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
@@ -79,9 +60,14 @@ namespace vcsn
     const state_chooser_t<mutable_automaton<Ctx>>& next_state);         \
                                                                         \
   /* dot. */                                                            \
-  VCSN_CTX_INSTANTIATE_DOTTY(mutable_automaton<Ctx>);                   \
-  VCSN_CTX_INSTANTIATE_DOTTY                                            \
-  (vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);         \
+  VCSN_CTX_INSTANTIATE_PRINT(dot, mutable_automaton<Ctx>);              \
+  VCSN_CTX_INSTANTIATE_PRINT                                            \
+  (dot, vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);    \
+                                                                        \
+  /* fsm. */                                                            \
+  VCSN_CTX_INSTANTIATE_PRINT(fsm, mutable_automaton<Ctx>);              \
+  VCSN_CTX_INSTANTIATE_PRINT                                            \
+  (fsm, vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);    \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -104,7 +90,12 @@ namespace vcsn
   class details::transposer<Ctx>;                                       \
                                                                         \
   /* xml. */                                                            \
-  VCSN_CTX_INSTANTIATE_XML(Ctx);
+  MAYBE_EXTERN template                                                 \
+  void xml<Ctx>(const Ctx& ctx, const rat::exp_t exp, std::ostream& out); \
+                                                                        \
+  MAYBE_EXTERN template                                                 \
+  std::string xml<Ctx>(const Ctx& cxt, const rat::exp_t exp);
+
 
 
 
@@ -172,6 +163,16 @@ namespace vcsn
         // edit-automaton.
         make_automaton_editor_register(Ctx::sname(),
                                        abstract_make_automaton_editor<aut_t>);
+
+        // fsm.
+        fsm_register(aut_t::sname(),
+                     static_cast<const fsm_stream_t&>(fsm<aut_t>));
+        fsm_register(aut_t::sname(),
+                     static_cast<const fsm_string_t&>(fsm<aut_t>));
+        fsm_register(taut_t::sname(),
+                     static_cast<const fsm_stream_t&>(fsm<taut_t>));
+        fsm_register(taut_t::sname(),
+                     static_cast<const fsm_string_t&>(fsm<taut_t>));
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
