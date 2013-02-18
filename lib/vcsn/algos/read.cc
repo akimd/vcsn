@@ -48,8 +48,9 @@ namespace vcsn
       switch (type)
         {
         case FileType::dot:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as dot input.");
+          throw std::domain_error("invalid input format for expression: dot");
+        case FileType::fsm:
+          throw std::domain_error("invalid input format for expression: fsm");
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
@@ -59,8 +60,7 @@ namespace vcsn
             return res;
           }
         case FileType::xml:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as xml input.");
+          throw std::domain_error("invalid input format for expression: xml");
           // FIXME: return xml_read_file(ctx, f);
         }
       abort();
@@ -74,8 +74,7 @@ namespace vcsn
       switch (type)
         {
         case FileType::dot:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as dot input.");
+          throw std::domain_error("invalid input format for expression: dot");
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
@@ -84,9 +83,10 @@ namespace vcsn
               throw std::runtime_error(d.errors);
             return res;
           }
+        case FileType::fsm:
+          throw std::domain_error("invalid input format for expression: fsm");
         case FileType::xml:
-          throw std::domain_error("Invalid input format for expression."
-                                  " Could not read expression as xml input.");
+          throw std::domain_error("invalid input format for expression: xml");
           // FIXME: return xml_read_string(ctx, s);
         }
       abort();
