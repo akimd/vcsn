@@ -1,4 +1,4 @@
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/automaton.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/algos/dyn.hh> // dot
 #include <lib/vcsn/algos/registry.hh>
