@@ -36,6 +36,8 @@ namespace vcsn
     void fsm(const automaton& aut, std::ostream& out);
     std::string fsm(const automaton& aut);
 
+    bool is_complete(const automaton& aut);
+
     automaton ladybird(const context& ctx, unsigned n);
 
     automaton lift(const automaton& aut);

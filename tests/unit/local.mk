@@ -44,6 +44,7 @@ unit_TESTS =                                    \
   unit/de-bruijn.chk                            \
   unit/determinize.chk                          \
   unit/eval.chk                                 \
+  unit/is_complete.chk                          \
   unit/ladybird.chk                             \
   unit/lift.chk                                 \
   unit/polynomialset.chk                        \

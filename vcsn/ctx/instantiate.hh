@@ -8,6 +8,7 @@
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/fsm.hh>
+# include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -124,6 +125,10 @@ namespace vcsn
 
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
         eval_register(aut_t::sname(), eval<aut_t>);
+
+        // is_complete.
+        is_complete_register(aut_t::sname(), is_complete<aut_t>);
+
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
 

@@ -18,6 +18,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
   bin/vcsn-evaluate                             \
+  bin/vcsn-is-complete                          \
   bin/vcsn-ladybird                             \
   bin/vcsn-lift                                 \
   bin/vcsn-product                              \
@@ -30,6 +31,7 @@ bin_vcsn_cat_LDADD         = $(all_libctx) $(libvcsn)
 bin_vcsn_de_bruijn_LDADD   = $(all_libctx) $(libvcsn)
 bin_vcsn_determinize_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_evaluate_LDADD    = $(all_libctx) $(libvcsn)
+bin_vcsn_is_complete_LDADD = $(all_libctx) $(libvcsn)
 bin_vcsn_ladybird_LDADD    = $(all_libctx) $(libvcsn)
 bin_vcsn_lift_LDADD        = $(all_libctx) $(libvcsn)
 bin_vcsn_product_LDADD     = $(all_libctx) $(libvcsn)
@@ -43,6 +45,7 @@ bin_vcsn_cat_SOURCES         = $(parse_args) bin/vcsn-cat.cc
 bin_vcsn_de_bruijn_SOURCES   = $(parse_args) bin/vcsn-de-bruijn.cc
 bin_vcsn_determinize_SOURCES = $(parse_args) bin/vcsn-determinize.cc
 bin_vcsn_evaluate_SOURCES    = $(parse_args) bin/vcsn-evaluate.cc
+bin_vcsn_is_complete_SOURCES = $(parse_args) bin/vcsn-is-complete.cc
 bin_vcsn_ladybird_SOURCES    = $(parse_args) bin/vcsn-ladybird.cc
 bin_vcsn_lift_SOURCES        = $(parse_args) bin/vcsn-lift.cc
 bin_vcsn_product_SOURCES     = $(parse_args) bin/vcsn-product.cc

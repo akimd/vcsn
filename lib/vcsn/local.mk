@@ -29,6 +29,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
   lib/vcsn/algos/eval.cc                        \
+  lib/vcsn/algos/is_complete.cc                 \
   lib/vcsn/algos/ladybird.cc                    \
   lib/vcsn/algos/lift.cc                        \
   lib/vcsn/algos/make-context.cc                \

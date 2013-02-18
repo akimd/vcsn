@@ -54,6 +54,7 @@ vcsn_cat         = $(top_builddir)/bin/vcsn-cat
 vcsn_de_bruijn   = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize = $(top_builddir)/bin/vcsn-determinize
 vcsn_evaluate    = $(top_builddir)/bin/vcsn-evaluate
+vcsn_is_complete = $(top_builddir)/bin/vcsn-is-complete
 vcsn_ladybird    = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift        = $(top_builddir)/bin/vcsn-lift
 vcsn_product     = $(top_builddir)/bin/vcsn-product
@@ -68,6 +69,7 @@ all_vcsn =                                      \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
   $(vcsn_evaluate)                              \
+  $(vcsn_is_complete)                           \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \
