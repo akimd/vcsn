@@ -26,8 +26,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-lift                                 \
   bin/vcsn-product                              \
   bin/vcsn-standard-of                          \
-  bin/vcsn-transpose                            \
-  bin/vcsn-accessible
+  bin/vcsn-transpose
 
 bin_vcsn_accessible_LDADD       = $(all_libctx) $(libvcsn)
 bin_vcsn_aut_to_exp_LDADD       = $(all_libctx) $(libvcsn)
