@@ -13,8 +13,9 @@ namespace vcsn
   {
     enum class FileType
     {
-      fsm,
       dot,
+      fsm,
+      null,
       text,
       xml
     };

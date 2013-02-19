@@ -1,6 +1,6 @@
 #include <vcsn/core/automaton.hh>
 #include <vcsn/algos/print.hh>
-#include <vcsn/algos/dyn.hh> // dot
+#include <vcsn/algos/dyn.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
@@ -22,6 +22,8 @@ namespace vcsn
           break;
         case FileType::fsm:
           fsm(aut, out);
+          break;
+        case FileType::null:
           break;
         case FileType::text:
           throw
@@ -60,15 +62,18 @@ namespace vcsn
       switch (type)
         {
         case FileType::dot:
-          std::domain_error("invalid output format for expression: dot");
+          throw std::domain_error("invalid output format for expression: dot");
         case FileType::fsm:
-          std::domain_error("invalid output format for expression: fsm");
+          throw std::domain_error("invalid output format for expression: fsm");
+        case FileType::null:
+          break;
         case FileType::text:
-          return details::print_exp_registry().call(exp->ctx().vname(),
-                                                    exp, out);
+          details::print_exp_registry().call(exp->ctx().vname(),
+                                             exp, out);
+          break;
         case FileType::xml:
           xml(exp, out);
-          return out;
+          break;
         }
       return out;
     }

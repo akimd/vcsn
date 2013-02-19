@@ -51,6 +51,8 @@ namespace vcsn
           throw std::domain_error("invalid input format for expression: dot");
         case FileType::fsm:
           throw std::domain_error("invalid input format for expression: fsm");
+        case FileType::null:
+          throw std::domain_error("invalid input format for expression: null");
         case FileType::text:
           {
             vcsn::rat::driver d(ctx);
@@ -85,6 +87,8 @@ namespace vcsn
           }
         case FileType::fsm:
           throw std::domain_error("invalid input format for expression: fsm");
+        case FileType::null:
+          throw std::domain_error("invalid input format for expression: null");
         case FileType::xml:
           throw std::domain_error("invalid input format for expression: xml");
           // FIXME: return xml_read_string(ctx, s);

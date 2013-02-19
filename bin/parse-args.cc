@@ -19,6 +19,8 @@ string_to_file_type(const std::string str)
     return FileType::dot;
   else if (str == "fsm")
     return FileType::fsm;
+  else if (str == "null")
+    return FileType::null;
   else if (str == "text")
     return FileType::text;
   else if (str == "xml")
@@ -40,10 +42,16 @@ vcsn::dyn::ratexp
 read_ratexp(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
+  // Be cool, we don't support many formats.
+  vcsn::dyn::FileType fmt
+    = (opts.output_format == vcsn::dyn::FileType::null
+       || opts.output_format == vcsn::dyn::FileType::text
+       ? opts.output_format
+       : vcsn::dyn::FileType::text);
   return
     opts.input_is_file
-    ? vcsn::dyn::read_ratexp_file(opts.input, ctx, opts.input_format)
-    : vcsn::dyn::read_ratexp_string(opts.input, ctx, opts.input_format);
+    ? vcsn::dyn::read_ratexp_file(opts.input, ctx, fmt)
+    : vcsn::dyn::read_ratexp_string(opts.input, ctx, fmt);
 }
 
 void
@@ -75,7 +83,13 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
   if (!out->good())
     throw std::runtime_error(opts.output + ": cannot open for writing");
 
-  print(exp, *out, opts.output_format) << std::endl;
+  // Be cool, we don't support many formats.
+  vcsn::dyn::FileType fmt
+    = (opts.output_format == vcsn::dyn::FileType::null
+       || opts.output_format == vcsn::dyn::FileType::text
+       ? opts.output_format
+       : vcsn::dyn::FileType::text);
+  print(exp, *out, fmt) << std::endl;
 }
 
 void

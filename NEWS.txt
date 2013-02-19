@@ -28,6 +28,9 @@ there is no support _at all_ for the weights.
   $ vcsn-de-bruijn -O fsm 12 | fstcompile | fstdeterminize | wc -l
   1216
 
+** New output format: null
+The output is discarded.  This is useful for benching.
+
 * 2013-02-12
 ** Overhaul of the LAU, LAL, LAW implementation
 So far a context was a triple: <Kind, LabelSet, WeightSet>, where (for
