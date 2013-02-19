@@ -37,7 +37,7 @@ namespace vcsn
     // Create a new output state from SS. Insert in the output
     // automaton, in the map, and push in the stack.
     auto push_new_state =
-      [&res,&m,&a,&st] (state_set ss) -> state_t
+      [&res,&m,&a,&st] (const state_set& ss) -> state_t
       {
         state_t r = res.new_state();
         m[ss] = r;
@@ -53,10 +53,10 @@ namespace vcsn
       };
 
     // The input initial states.
-    state_set initial;
+    state_set next;
     for (auto t : a.initial_transitions())
-      initial.insert(a.dst_of(t));
-    res.set_initial(push_new_state(initial));
+      next.insert(a.dst_of(t));
+    res.set_initial(push_new_state(next));
 
     while (!st.empty())
       {
@@ -64,7 +64,7 @@ namespace vcsn
         st.pop();
         for (auto l: letters)
           {
-            state_set next;
+            next.clear();
             for (auto s : ss)
               for (auto t : a.out(s, l))
                 next.insert(a.dst_of(t));
