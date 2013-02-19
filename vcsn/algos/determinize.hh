@@ -1,13 +1,37 @@
 #ifndef VCSN_ALGOS_DETERMINIZE_HH
 # define VCSN_ALGOS_DETERMINIZE_HH
 
-# include <map>
+# include <functional> // std::hash
+# include <unordered_map>
 # include <set>
 # include <stack>
 # include <string>
 # include <type_traits>
 
 # include <vcsn/dyn/fwd.hh>
+
+namespace std
+{
+  // http://stackoverflow.com/questions/2590677
+  template <class T>
+  inline void hash_combine(std::size_t& seed, const T& v)
+  {
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+  }
+
+  template <typename T>
+  struct hash<set<T>>
+  {
+    size_t operator()(const set<T>& ss) const
+    {
+      size_t res = 0;
+      for (auto s: ss)
+        hash_combine(res, s);
+      return res;
+    }
+  };
+}
 
 namespace vcsn
 {
@@ -26,7 +50,7 @@ namespace vcsn
     using state_t = typename automaton_t::state_t;
     using state_set = std::set<state_t>;
     using stack = std::stack<state_set>;
-    using map = std::map<state_set, state_t>;
+    using map = std::unordered_map<state_set, state_t>;
 
     const auto& letters = *a.labelset();
     automaton_t res{a.context()};
