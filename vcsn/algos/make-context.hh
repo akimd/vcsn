@@ -61,68 +61,88 @@ namespace vcsn
         return {make_context<Ctx>(ctx)};
       }
     };
+
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lau, Ctx>::type
+    make_context(const std::string& name)
+    {
+      // name: lal_ratexpset<law_char(xyz)_b>
+      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+      //       kind         weightset
+      //
+      // There is no "char(...)_".
+      std::string kind = name.substr(0, 3);
+
+      if (kind != "lau")
+        throw std::runtime_error("make_context: Ctx::is_lau but read "
+                                 + kind + ": " + name);
+
+      if (name[3] != '_')
+        throw std::runtime_error("make_context: expected a '_' after " + kind
+                                 + ": " + name);
+
+      std::string weightset = name.substr(4);
+      auto ws = weightsetter<typename Ctx::weightset_t>::make(weightset);
+      Ctx res(typename Ctx::labelset_t{}, ws);
+      assert(res.vname(true) == name);
+      return res;
+    }
+
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lal || Ctx::is_law, Ctx>::type
+    make_context(const std::string& name)
+    {
+      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+      //        |   |    |        weightset
+      //        |   |    +-- gens
+      //        |   +-- labelset
+      //        +-- kind
+      //
+      // FIXME: regex is not usable in G++ 4.8 yet.
+      std::string kind = name.substr(0, 3);
+
+      if ((Ctx::is_lal && kind != "lal")
+          || (Ctx::is_law && kind != "law"))
+        {
+          std::string ctxk =
+            Ctx::is_lal ? "lal"
+            : Ctx::is_law ? "law"
+            : "invalid Context Kind";
+          throw std::runtime_error("make_context: Ctx::is_" + ctxk
+                                   + " but read " + kind + ": " + name);
+        }
+
+      if (name[3] != '_')
+        throw std::runtime_error("make_context: expected a '_' after " + kind
+                                 + ": " + name);
+
+      auto lparen = name.find('(');
+      auto rparen = name.find(')');
+      if (lparen == std::string::npos)
+        throw std::runtime_error("make_context: missing '(': "
+                                 + name);
+      std::string labelset = name.substr(4, lparen - 4);
+      std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
+      std::string weightset = name.substr(rparen + 2);
+
+      typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
+      auto gs = typename Ctx::labelset_t(ls);
+      auto ws = weightsetter<typename Ctx::weightset_t>::make(weightset);
+      Ctx res(gs, ws);
+      assert(res.vname(true) == name);
+      return res;
+    }
+
   }
+
 
   template <typename Ctx>
   Ctx
   make_context(const std::string& name)
   {
-    // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
-    //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-    //        |   |    |        weightset
-    //        |   |    +-- gens
-    //        |   +-- labelset
-    //        +-- kind
-    //
-    // Note that LAU reads: lal_ratexpset<law_char(xyz)_b>.
-    // There is no "char(...)_".
-    //
-    // FIXME: regex is not usable in G++ 4.8 yet.
-    std::string kind = name.substr(0, 3);
-
-    if ((Ctx::is_lal && kind != "lal")
-        || (Ctx::is_lau && kind != "lau")
-        || (Ctx::is_law && kind != "law"))
-      {
-        std::string ctxk =
-          Ctx::is_lal ? "lal"
-          : Ctx::is_lau ? "lau"
-          : Ctx::is_law ? "law"
-          : "invalid Context Kind";
-        throw std::runtime_error("make_context: Ctx::is_" + ctxk
-                                 + " but read " + kind + " (" + name + ")");
-      }
-
-    assert(name[3] == '_');
-
-    if (kind == "lal" || kind == "law")
-      {
-        auto lparen = name.find('(');
-        auto rparen = name.find(')');
-        assert(lparen != std::string::npos);
-        std::string labelset = name.substr(4, lparen - 4);
-        std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
-        std::string weightset = name.substr(rparen + 2);
-
-        typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
-        auto gs = typename Ctx::labelset_t(ls);
-        auto ws =
-          details::weightsetter<typename Ctx::weightset_t>::make(weightset);
-        Ctx res(gs, ws);
-        assert(res.vname(true) == name);
-        return res;
-      }
-    else
-      {
-        std::string weightset = name.substr(4);
-        auto ws =
-          details::weightsetter<typename Ctx::weightset_t>::make(weightset);
-        Ctx res(typename Ctx::labelset_t{}, ws);
-        assert(res.vname(true) == name);
-        return res;
-      }
+    return details::make_context<Ctx>(name);
   }
-
 
   /*----------.
   | dynamic.  |
