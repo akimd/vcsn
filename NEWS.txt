@@ -1,5 +1,5 @@
 * 2013-02-20
-** Generalized quantifier as syntax sugar for rational expressions.
+** Generalized quantifier as syntactic sugar for rational expressions
 The new "(* min, max)" quantifier (postfix, like "*") allows to specify
 "powers" of an expression.  For instance:
 
