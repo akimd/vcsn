@@ -14,8 +14,6 @@ namespace vcsn
     class driver
     {
     public:
-      using exp_t = vcsn::rat::exp_t;
-
       driver() = default;
       driver(const dyn::context& ctx);
       /// Set the context to use.
@@ -47,7 +45,7 @@ namespace vcsn
       location location_;
       dyn::context context_;
       dyn::ratexpset ratexpset_;
-      exp_t result_;
+      vcsn::rat::exp_t result_;
       friend class parser;
     };
 

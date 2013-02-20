@@ -30,7 +30,7 @@
       // of an union.  See README.txt.
       struct sem_type
       {
-        driver::exp_t node;
+        exp_t node;
         // These guys _can_ be put into a union.
         union
         {
