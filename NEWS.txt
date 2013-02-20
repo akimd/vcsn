@@ -1,3 +1,26 @@
+* 2013-02-20
+** Generalized quantifier as syntax sugar for rational expressions.
+The new "(* min, max)" quantifier (postfix, like "*") allows to specify
+"powers" of an expression.  For instance:
+
+  ({a}b)(*0) => \e
+  ({a}b)(*1) => {a}b
+  ({a}b)(*2) => {a}b.{a}b
+  ({a}b)(*5) => {a}b.{a}b.{a}b.{a}b.{a}b
+
+  ({a}b)(*0,1) => \e+{a}b
+  ({a}b)(*0,2) => \e+{a}b+({a}b.{a}b)
+  ({a}b)(*0,3) => \e+{a}b+({a}b.{a}b)+({a}b.{a}b.{a}b)
+
+  ({a}b)(*1,2) => {a}b.(\e+{a}b)
+  ({a}b)(*1,3) => {a}b.(\e+{a}b+({a}b.{a}b))
+
+  ({a}b)(*2,5) => {a}b.{a}b.(\e+{a}b+({a}b.{a}b)+({a}b.{a}b.{a}b))
+
+  ({a}b)(*0,) => ({a}b)*
+  ({a}b)(*1,) => {a}b.(({a}b)*)
+  ({a}b)(*4,) => {a}b.{a}b.{a}b.{a}b.(({a}b)*)
+
 * 2013-02-18
 ** Comment in rational expressions
 The (?#...) construct allows to embed comments in a rational expressions.

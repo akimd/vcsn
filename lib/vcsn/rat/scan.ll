@@ -15,6 +15,7 @@
 #include <iostream>
 #include <lib/vcsn/rat/parse.hh>
 #include <vcsn/algos/dyn.hh>
+#include <boost/lexical_cast.hpp>
 
 #define LINE(Line)                              \
   do{                                           \
@@ -27,7 +28,19 @@
 
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
+
+  namespace vcsn
+  {
+    namespace rat
+    {
+      // Safe conversion to a numeric value.
+      template <typename Out>
+      static Out
+      lexical_cast(driver& d, const location& loc, std::string s);
+    }
+  }
 %}
+
 %x SC_CONTEXT SC_WEIGHT
 
 char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
@@ -54,6 +67,8 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "+"     return TOK(SUM);
   "."     return TOK(DOT);
   "*"     return TOK(STAR);
+  ","     return TOK(COMMA);
+  "(*"    return TOK(LPAREN_STAR);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);
 
@@ -61,10 +76,16 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "(?#"[^)]*")"  continue;
 
   "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
+
+  [0-9]+  {
+            yylval->ival = lexical_cast<int>(driver_, *yylloc, yytext);
+            return TOK(NUMBER);
+          }
+
   {char}  yylval->cval = *yytext; return TOK(LETTER);
   "\n"    continue;
-  \\.|.   driver_.invalid(*yylloc, yytext);
 
+  \\.|.   driver_.invalid(*yylloc, yytext);
 }
 
 <SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
@@ -108,7 +129,6 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   }
   [^()]+   context += yytext;
 }
-
 %%
 
 namespace vcsn
@@ -152,6 +172,24 @@ namespace vcsn
     driver::scan_close_()
     {
       yypop_buffer_state();
+    }
+
+    // Safe conversion to a numeric value.
+    // The name parser_impl_ is chosen so that SCAN_ERROR can be used
+    // from out of the scanner.
+    template <typename Out>
+    Out
+    lexical_cast(driver& d, const location& loc, std::string s)
+    {
+      try
+        {
+          return boost::lexical_cast<Out>(s);
+        }
+      catch (const boost::bad_lexical_cast&)
+        {
+          d.error(loc, "invalid numerical literal: " + s);
+          return 0;
+        }
     }
   }
 }

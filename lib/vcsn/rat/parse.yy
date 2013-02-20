@@ -16,6 +16,7 @@
   #include <iostream>
   #include <list>
   #include <string>
+  #include <tuple>
   #include "location.hh"
   #include <vcsn/core/rat/ratexp.hh>
   #include <vcsn/core/rat/abstract_ratexpset.hh>
@@ -31,6 +32,8 @@
       struct sem_type
       {
         exp_t node;
+        std::tuple<int, int> irange;
+        bool parens = false;
         // These guys _can_ be put into a union.
         union
         {
@@ -38,7 +41,6 @@
           std::string* sval;
           char cval;
         };
-        bool parens = false;
       };
     }
   }
@@ -61,6 +63,56 @@
       lex(parser::semantic_type* yylval,
           parser::location_type* yylloc,
           vcsn::rat::driver& driver_);
+    }
+  }
+}
+
+%code
+{
+  namespace vcsn
+  {
+    namespace rat
+    {
+      static
+      exp_t
+      power(const dyn::ratexpset& es, exp_t e, int min, int max)
+      {
+        exp_t res;
+        if (max == -1)
+          {
+            res = es->star(e);
+            if (min != -1)
+              res = es->concat(power(es, e, min, min), res);
+          }
+        else
+          {
+            if (min == -1)
+              min = 0;
+            if (min == 0)
+              res = es->unit();
+            else
+              {
+                res = e;
+                for (int n = 1; n < min; ++n)
+                  res = es->concat(res, e);
+              }
+            if (min < max)
+              {
+                exp_t sum = es->unit();
+                for (int n = 1; n <= max - min; ++n)
+                  sum = es->add(sum, power(es, e, n, n));
+                res = es->concat(res, sum);
+              }
+          }
+        return res;
+      }
+
+      static
+      exp_t
+      power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
+      {
+        return power(es, e, std::get<0>(range), std::get<1>(range));
+      }
     }
   }
 }
@@ -102,17 +154,23 @@
 
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
+                NUMBER  "number"
+
 %token  SUM  "+"
         DOT   "."
         STAR  "*"
         ONE   "\\e"
         ZERO  "\\z"
+        LPAREN_STAR  "(*"
+        COMMA  ","
 ;
 
 %token <cval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
 %type <node> exp exps weights;
+%type <ival> number.opt;
+%type <irange> power;
 
 %left RWEIGHT
 %left "+"
@@ -121,7 +179,7 @@
 %left LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
 %left "(" "\\z" "\\e" "letter"
 %left CONCAT
-%right "*"
+%right "*" "(*"
 
 %start exps
 %%
@@ -147,11 +205,25 @@ exp:
         $<parens>$ = $<parens>2;
       }
   }
-| exp "*"                     { $$ = MAKE(star, $1); }
+| exp power                   { $$ = power(driver_.ratexpset_, $1, $2); }
 | ZERO                        { $$ = MAKE(zero); }
 | ONE                         { $$ = MAKE(unit); }
 | LETTER                      { TRY(@$, $$ = MAKE(atom, {$1})); }
 | "(" exp ")"                 { assert($1 == $3); $$ = $2; $<parens>$ = true; }
+;
+
+number.opt:
+  /* empty */ { $$ = -1; }
+| "number"    { $$ = $1; }
+;
+
+power:
+  "*"
+   { $$ = std::make_tuple(-1, -1); }
+| "(*" number.opt[min] "," number.opt[max] ")"
+   { $$ = std::make_tuple($min, $max); }
+| "(*" number.opt[n] ")"
+   { $$ = std::make_tuple($n, $n); }
 ;
 
 weights:
