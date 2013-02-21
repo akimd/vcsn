@@ -1,3 +1,8 @@
+* 2013-02-21
+** LabelSet renamings
+The name LetterSet, UnitSet, and WordSet were not compliant.  They have been
+renamed as letterset, unitset, and wordset.
+
 * 2013-02-20
 ** Generalized quantifier as syntactic sugar for rational expressions
 The new "(* min, max)" quantifier (postfix, like "*") allows to specify
@@ -66,15 +71,15 @@ given automaton is already complete, then it is unchanged.
 ** Overhaul of the LAU, LAL, LAW implementation
 So far a context was a triple: <Kind, LabelSet, WeightSet>, where (for
 instance), Kind is labels_are_letters, LabelSet is
-vcsn::set_alphabet<vcsn::char_letters>, and WeightSet is vcsn::zmin).  This
-is troublesome on several regards, the clearest being that the LabelSet
-makes no sense for LAU.
+set_alphabet<char_letters>, and WeightSet is zmin).  This is troublesome on
+several regards, the clearest being that the LabelSet makes no sense for
+LAU.
 
 Now contexts are pairs: <LabelSet, WeightSet>, where this time the LabelSet
 (same name as before, different concept) can be a instance of UnitSet for
 LAU, WordSet for LAW, or LetterSet for LAL.  These structures, in turn, are
 parameterized by the effective set of generators to use: for instance,
-LetterSet<vcsn::set_alphabet<vcsn::char_letters>>.  Of course UnitSet is not
+LetterSet<set_alphabet<char_letters>>.  Of course UnitSet is not
 parameterized.
 
 As a first visible consequence, the name of the LAU contexts has changed:
