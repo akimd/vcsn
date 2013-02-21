@@ -9,7 +9,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lau_z = context<UnitSet, vcsn::z>;
+    using lau_z = context<unitset, vcsn::z>;
   }
 }
 

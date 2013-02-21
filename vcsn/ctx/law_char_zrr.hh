@@ -11,11 +11,11 @@ namespace vcsn
 {
   namespace ctx
   {
-    using law_char_z = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_z = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::z>;
-    using law_char_zr = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_zr = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                 vcsn::ratexpset<law_char_z>>;
-    using law_char_zrr = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_zrr = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                  vcsn::ratexpset<law_char_zr>>;
   }
 }

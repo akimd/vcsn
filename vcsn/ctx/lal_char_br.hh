@@ -11,10 +11,10 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_b = context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using lal_char_b = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
     using lal_char_br =
-      context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
+      context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
               vcsn::ratexpset<lal_char_b>>;
   }
 }

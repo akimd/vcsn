@@ -11,7 +11,7 @@ namespace vcsn
   namespace ctx
   {
     template <typename GenSet>
-    struct WordSet
+    struct wordset
     {
       using genset_t = GenSet;
       using genset_ptr = std::shared_ptr<const genset_t>;
@@ -23,12 +23,12 @@ namespace vcsn
 
       using kind_t = labels_are_words;
 
-      WordSet(const genset_ptr& gs)
+      wordset(const genset_ptr& gs)
         : gs_{gs}
       {}
 
-      WordSet(const genset_t& gs = {})
-        : WordSet{std::make_shared<const genset_t>(gs)}
+      wordset(const genset_t& gs = {})
+        : wordset{std::make_shared<const genset_t>(gs)}
       {}
 
       static std::string sname()
@@ -83,8 +83,8 @@ namespace vcsn
 
     /// Compute the intersection with another alphabet.
     template <typename GenSet>
-    WordSet<GenSet>
-    intersect(const WordSet<GenSet>& lhs, const WordSet<GenSet>& rhs)
+    wordset<GenSet>
+    intersect(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
       return {intersect(lhs->genset(), rhs->genset())};
     }

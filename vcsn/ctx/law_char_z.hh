@@ -11,7 +11,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using law_char_z = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_z = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::z>;
   }
 }

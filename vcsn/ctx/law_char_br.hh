@@ -11,9 +11,9 @@ namespace vcsn
 {
   namespace ctx
   {
-    using law_char_b = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_b = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
-    using law_char_br = context<WordSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using law_char_br = context<wordset<vcsn::set_alphabet<vcsn::char_letters>>,
                                 vcsn::ratexpset<law_char_b>>;
   }
 }

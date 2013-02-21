@@ -13,7 +13,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    struct UnitSet
+    struct unitset
     {
       using label_t = vcsn::empty_t;
       // FIXME: fishy, but that's what the previous version of the
@@ -24,9 +24,9 @@ namespace vcsn
 
       using kind_t = labels_are_unit;
 
-      UnitSet() = default;
+      unitset() = default;
       // FIXME: KILL
-      UnitSet(const letters_t&)
+      unitset(const letters_t&)
       {}
 
       static std::string sname()

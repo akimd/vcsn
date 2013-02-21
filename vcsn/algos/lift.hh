@@ -18,7 +18,7 @@ namespace vcsn
   {
     template <typename Context>
     using lifted_context_t =
-      ctx::context<ctx::UnitSet, ratexpset<Context>>;
+      ctx::context<ctx::unitset, ratexpset<Context>>;
 
     // lift(ctx) -> ctx
     template <typename Context>
@@ -27,7 +27,7 @@ namespace vcsn
     {
       auto rs_in = ctx.make_ratexpset();
       using ctx_out_t = details::lifted_context_t<Context>;
-      return ctx_out_t(ctx::UnitSet{}, rs_in);
+      return ctx_out_t(ctx::unitset{}, rs_in);
     }
 
     template <typename Aut>

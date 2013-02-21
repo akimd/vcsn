@@ -11,7 +11,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_z = context<LetterSet<vcsn::set_alphabet<vcsn::char_letters>>,
+    using lal_char_z = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::z>;
   }
 }
