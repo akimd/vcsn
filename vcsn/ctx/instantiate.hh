@@ -4,6 +4,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
 # include <vcsn/algos/complete.hh>
+# include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/eval.hh>
@@ -160,6 +161,9 @@ namespace vcsn
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
         aut_to_exp_in_degree_register(aut_t::sname(),
                                       aut_to_exp_in_degree<aut_t>);
+
+        // copy.
+        copy_register(aut_t::sname(), copy<aut_t>);
 
         // dot.
         dot_register(aut_t::sname(),
