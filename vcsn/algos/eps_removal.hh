@@ -16,7 +16,7 @@ namespace vcsn
   /* Function that copies an automaton.
      FIXME
      Shouldn't be a clone() method more suitable ?
-  */ 
+  */
   template <typename Aut, typename Aut2>
   void
   copy(const Aut& input, Aut2& output) {
@@ -24,7 +24,7 @@ namespace vcsn
     using out_state_t = typename Aut2::state_t;
 
     std::unordered_map<in_state_t, out_state_t> output_state;
-    
+
     for(auto s: input.states()) {
       out_state_t ns =  output.new_state();
       output_state[s] = ns;
@@ -46,13 +46,13 @@ namespace vcsn
   }
 
   ///////////
-    
+
   /**
      @class epsilon_acylic
      @brief This class provides an algorithm to detect epsilon-circuits.
 
      In this algorithm, only epsilon-transitions are considered.
-     
+
   */
  template <typename Aut>
   class epsilon_acyclic {
@@ -95,9 +95,9 @@ namespace vcsn
 	return true;
       }
     }
-   
+
     epsilon_acyclic(const automaton_t& input) : input(input), empty_word(input.labelset()->identity()) {}
-    
+
     bool is_eps_acyclic() {
       for (auto s: input.states())
 	if(has_epsilon_circuit(s))
@@ -121,11 +121,11 @@ namespace vcsn
      It contains also statics methods that deal with close notions:
      is_valid, is_proper.
      This class is specialized for labels_are_letter automata since all these methods become trivial.
-     
+
   */
-  
+
   template <typename Aut, typename Kind>
-  class epsilon_remover 
+  class epsilon_remover
   {
   	using automaton_t = Aut;
   	using state_t = typename automaton_t::state_t;
@@ -134,7 +134,7 @@ namespace vcsn
   	using weight_t = typename weightset_t::value_t;
   	using label_t = typename automaton_t::label_t;
   	using transition_t = typename automaton_t::transition_t;
-    
+
     /**
       @brief The core of the epsilon-removal
 
@@ -227,7 +227,7 @@ namespace vcsn
 	    epsilon transition closure->first -- e|closure->second --> s
 	    pair-second * star * weigt is added to the final weight of closure->first
 	  */
-	  
+	
 	  if(input.is_final(s))
 	    {
 	      weight_t s_weight=weightset_ptr->mul(star, input.get_final_weight(s));
@@ -239,10 +239,10 @@ namespace vcsn
     }
 
     /**@brief Test whether an automaton is proper.
-       
+
        An automaton is proper if and only if it contains no epsilon-transition.
 
-       @param input The tested automaton 
+       @param input The tested automaton
        @return true iff the automaton is proper
      */
     static bool is_proper(const automaton_t& input)
@@ -252,9 +252,9 @@ namespace vcsn
 	  return false;
       return true;
     }
-    
+
     /**@brief Test whether an automaton is valid.
-       
+
        The behaviour of this method depends on the star_status of the weight_set:
        -- starable : return true;
        -- tops : copy the input and return the result of epsilon_removal on the copy;
@@ -263,7 +263,7 @@ namespace vcsn
                  every simple circuit is zero;
        -- absval : build a copy of the input where each weight is replaced by its absolute value
                  and eturn the result of epsilon_removal on the copy.
-       @param input The tested automaton 
+       @param input The tested automaton
        @return true iff the automaton is valid
      */
     static bool is_valid(const automaton_t& input);
@@ -275,7 +275,7 @@ namespace vcsn
                if it returns false, an exception is launched
        -- non_starable / absval:
                is_valid is called before launching the algorithm.
-       @param input The automaton in which epsilon-transitions will be removed 
+       @param input The automaton in which epsilon-transitions will be removed
        @throw domain_error if the input is not valid
      */
     static void eps_removal_here(automaton_t& input);
@@ -291,7 +291,7 @@ namespace vcsn
   class EpsilonDispatcher {};
 
   /// TOPS : valid iff the epsilon removal succeeds
-  
+
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::TOPS> {
       using automaton_t = Aut;
@@ -372,15 +372,15 @@ namespace vcsn
 
     static void eps_removal_here(Aut & input) {
       epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
-    }   
+    }
 
     static Aut eps_removal(const Aut & input) {
       Aut tmp=copy(input);
       epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(tmp);
       return tmp;
-    }   
+    }
   };
-  
+
   //!STARABLE
 
   // NON_STARABLE : valid iff there is no epsilon-circuit with weight zero
@@ -413,7 +413,7 @@ namespace vcsn
   };
 
   // !NON_STARABLE
-  
+
   template <typename Aut, typename Kind>
   inline
   bool epsilon_remover<Aut,Kind>::is_valid(const Aut & input) {
@@ -459,8 +459,8 @@ namespace vcsn
       return tmp;
     }
   };
-  
- 
+
+
   /*--------------------.
   | eps_removal handler |
   `--------------------*/
@@ -488,7 +488,7 @@ namespace vcsn
   	  auto tr_input = transpose(input);
   	  using tr_aut_t = decltype(tr_input);
   	  epsilon_remover<tr_aut_t, typename tr_aut_t::kind_t>::eps_removal_here(tr_input);
-  	}  	  
+  	}  	
   }
 
   template <class Aut>
@@ -504,8 +504,8 @@ namespace vcsn
   	}
   }
 
-  
- 
+
+
 
   /*----------------.
   | abstract ePS-REM  |

@@ -1,7 +1,7 @@
 /*
 	g++-mp-4.8 -DHAVE_CONFIG_H   -I. -I. -I/opt/local/include -W -Wall -Wnoexcept -Wzero-as-null-pointer-constant -Wcast-align -Wpointer-arith -Wwrite-strings -Wcast-qual -g -O2 -std=c++11 -MT bin/vcsn-eps-removal.o -MD -MP -MF $depbase.Tpo -c -o bin/vcsn-eps-removal.o bin/vcsn-eps-removal.cc &&\
 
-/bin/sh ./libtool  --tag=CXX   --mode=link g++-mp-4.8 -W -Wall -Wnoexcept -Wzero-as-null-pointer-constant -Wcast-align -Wpointer-arith -Wwrite-strings -Wcast-qual -g -O2 -std=c++11 -lxerces-c -L/opt/local/lib -o bin/vcsn-eps-removal bin/parse-args.o bin/vcsn-eps-removal.o ./lib/liblal_char_b.la ./lib/liblaw_char_b.la ./lib/liblau_br.la ./lib/liblal_char_br.la ./lib/liblaw_char_br.la ./lib/liblau_z.la ./lib/liblal_char_z.la ./lib/liblaw_char_z.la ./lib/liblal_char_zr.la ./lib/liblaw_char_zr.la ./lib/liblal_char_zrr.la ./lib/liblaw_char_zrr.la ./lib/liblal_char_zmin.la ./lib/liblaw_char_zmin.la ./lib/libvcsn.la 
+/bin/sh ./libtool  --tag=CXX   --mode=link g++-mp-4.8 -W -Wall -Wnoexcept -Wzero-as-null-pointer-constant -Wcast-align -Wpointer-arith -Wwrite-strings -Wcast-qual -g -O2 -std=c++11 -lxerces-c -L/opt/local/lib -o bin/vcsn-eps-removal bin/parse-args.o bin/vcsn-eps-removal.o ./lib/liblal_char_b.la ./lib/liblaw_char_b.la ./lib/liblau_br.la ./lib/liblal_char_br.la ./lib/liblaw_char_br.la ./lib/liblau_z.la ./lib/liblal_char_z.la ./lib/liblaw_char_z.la ./lib/liblal_char_zr.la ./lib/liblaw_char_zr.la ./lib/liblal_char_zrr.la ./lib/liblaw_char_zrr.la ./lib/liblal_char_zmin.la ./lib/liblaw_char_zmin.la ./lib/libvcsn.la
 */
 
 #include<vcsn/ctx/lal_char_b.hh>
@@ -67,7 +67,7 @@ int main() {
     automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
 	print(pro2);
 	std:: cout << "eps_removal_here:"<< std::endl;
-	eps_removal_here(res); 
+	eps_removal_here(res);
 	print(res);
    }
 /// Test des law booléens
@@ -99,7 +99,7 @@ int main() {
 	std:: cout << "Law proper :"<< is_proper(pro) << std::endl;
 	std:: cout << "Law valid :"<< is_valid(pro) << std::endl;
 	std:: cout << "eps_removal_here:"<< std::endl;
-	eps_removal_here(res); 
+	eps_removal_here(res);
    	printlaw(res);
    }
 /// Test des lal-char-z
@@ -124,7 +124,7 @@ int main() {
    automaton_t pro = eps_removal(res);
 	print(pro);
 	std:: cout << "eps_removal_here:"<< std::endl;
-	eps_removal_here(res); 
+	eps_removal_here(res);
 	print(res);
    }
 
@@ -176,7 +176,7 @@ int main() {
 	std:: cout << "Law valid :"<< is_valid(pro2) << std::endl;
 	//dot(pro2,std::cerr);
 	std:: cout << "eps_removal_here:"<< std::endl;
-	eps_removal_here(res); 
+	eps_removal_here(res);
    	printlaw(res);
    }
 /// Test des law booléens Zmin
@@ -227,8 +227,8 @@ int main() {
 	std:: cout << "Law valid :"<< is_valid(pro2) << std::endl;
 	dot(pro2,std::cerr);
 	std:: cout << "eps_removal_here:"<< std::endl;
-	eps_removal_here(res); 
+	eps_removal_here(res);
    	printlaw(res);
    }
-	  
+	
 }
