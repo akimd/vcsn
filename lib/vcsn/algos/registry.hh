@@ -7,7 +7,7 @@
 
 # include <boost/type_traits.hpp>
 
-# include <vcsn/ctx/abstract_context.hh> // sname
+# include <vcsn/dyn/context.hh> // sname
 
 namespace vcsn
 {

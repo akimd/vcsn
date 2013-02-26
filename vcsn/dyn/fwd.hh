@@ -12,6 +12,10 @@ namespace vcsn
     class abstract_automaton;
     using automaton = std::shared_ptr<abstract_automaton>;
 
+    // vcsn/dyn/context.hh.
+    class abstract_context;
+    using context = std::shared_ptr<const abstract_context>;
+
     // vcsn/dyn/ratexp.hh.
     namespace details
     {

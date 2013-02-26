@@ -8,7 +8,7 @@
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/ctx/abstract_context.hh>
+# include <vcsn/dyn/context.hh>
 
 namespace vcsn
 {

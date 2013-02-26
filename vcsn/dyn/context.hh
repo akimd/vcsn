@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_ABSTRACT_CONTEXT_HH
-# define VCSN_CTX_ABSTRACT_CONTEXT_HH
+#ifndef VCSN_DYN_CONTEXT_HH
+# define VCSN_DYN_CONTEXT_HH
 
 # include <memory>
 # include <string>
@@ -29,4 +29,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_CTX_ABSTRACT_CONTEXT_HH
+#endif // !VCSN_DYN_CONTEXT_HH
