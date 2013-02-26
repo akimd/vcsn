@@ -1,3 +1,13 @@
+* 2013-02-26
+** hierarchy and API clean up
+dyn:: was cleaned.  Some headers were renamed:
+
+  vcsn/ctx/abstract_context.hh -> vcsn/dyn/context.hh
+  vcsn/algos/dyn.hh            -> vcsn/dyn/algos.hh
+  vcsn/core/automaton.hh       -> vcsn/dyn/automaton.hh
+
+dyn::make_automaton was introduced to hide implementation details.
+
 * 2013-02-21
 ** LabelSet renamings
 The name LetterSet, UnitSet, and WordSet were not compliant.  They have been
