@@ -28,7 +28,7 @@ The new "(* min, max)" quantifier (postfix, like "*") allows to specify
 
 * 2013-02-18
 ** Comment in rational expressions
-The (?#...) construct allows to embed comments in a rational expressions.
+The (?#...) construct allows to embed comments in rational expressions.
 They are discarded.  There is no means to include a closing parenthesis in
 this construct.
 
