@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_DYN_HH
-# define VCSN_ALGOS_DYN_HH
+#ifndef VCSN_DYN_ALGOS_HH
+# define VCSN_DYN_ALGOS_HH
 
 # include <iosfwd>
 # include <vcsn/ctx/fwd.hh>
@@ -76,4 +76,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_ALGOS_DYN_HH
+#endif // !VCSN_DYN_ALGOS_HH

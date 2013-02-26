@@ -1,4 +1,4 @@
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/lift.hh>
 #include <lib/vcsn/algos/registry.hh>
 

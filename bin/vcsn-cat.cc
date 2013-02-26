@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include "parse-args.hh"
 
 static void

@@ -3,7 +3,7 @@
 
 # include <string>
 
-# include <vcsn/algos/dyn.hh>
+# include <vcsn/dyn/algos.hh>
 
 struct options
 {

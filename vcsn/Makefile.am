@@ -18,7 +18,7 @@ nobase_vcsn_HEADERS =                           \
   algos/determinize.hh                          \
   algos/accessible.hh                           \
   algos/dot.hh                                  \
-  algos/dyn.hh                                  \
+  dyn/algos.hh                                  \
   algos/edit-automaton.hh                       \
   algos/eps_removal.hh                          \
   algos/eval.hh                                 \

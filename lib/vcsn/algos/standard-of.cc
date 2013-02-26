@@ -1,6 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/standard_of.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn

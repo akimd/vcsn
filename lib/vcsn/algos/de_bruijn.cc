@@ -1,5 +1,5 @@
 #include <vcsn/factory/de_bruijn.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn

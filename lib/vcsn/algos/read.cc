@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 #include <vcsn/ctx/fwd.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/rat/driver.hh>
 

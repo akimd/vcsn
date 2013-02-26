@@ -1,5 +1,5 @@
 #include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/is_complete.hh>
 #include <lib/vcsn/algos/registry.hh>
 

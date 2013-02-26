@@ -14,7 +14,7 @@
 #include <stack>
 #include <iostream>
 #include <lib/vcsn/rat/parse.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <boost/lexical_cast.hpp>
 
 #define LINE(Line)                              \

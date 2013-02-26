@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/product.hh>
 
 namespace vcsn

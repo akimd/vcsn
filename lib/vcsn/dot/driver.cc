@@ -6,7 +6,7 @@
 #include <vcsn/dyn/automaton.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/edit-automaton.hh>
 
 namespace vcsn

@@ -9,7 +9,7 @@
 #include <boost/algorithm/string/replace.hpp>
 
 #include "parse-args.hh"
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 
 vcsn::dyn::FileType
 string_to_file_type(const std::string str)

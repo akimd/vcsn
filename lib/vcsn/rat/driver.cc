@@ -1,7 +1,7 @@
 #include <cstring> // strerror
 #include <sstream>
 
-#include <vcsn/algos/dyn.hh> // make_ratexpset.
+#include <vcsn/dyn/algos.hh> // make_ratexpset.
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 

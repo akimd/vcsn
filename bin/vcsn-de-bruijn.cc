@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <boost/lexical_cast.hpp>
-#include <vcsn/algos/dyn.hh>
+#include <vcsn/dyn/algos.hh>
 #include "parse-args.hh"
 
 int main(int argc, char * const argv[])
