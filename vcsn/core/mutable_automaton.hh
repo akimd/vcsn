@@ -8,7 +8,7 @@
 
 # include <boost/range/irange.hpp>
 
-# include <vcsn/core/automaton.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/crange.hh>
 # include <vcsn/core/entryiter.hh>
 # include <vcsn/core/kind.hh>

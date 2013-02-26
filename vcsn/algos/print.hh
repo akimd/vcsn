@@ -2,7 +2,7 @@
 # define VCSN_ALGOS_PRINT_HH
 
 # include <iosfwd>
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 

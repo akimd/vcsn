@@ -7,7 +7,7 @@
 # include <string>
 # include <type_traits>
 
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {

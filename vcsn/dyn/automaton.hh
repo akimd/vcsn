@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_AUTOMATON_HH
-# define VCSN_CORE_AUTOMATON_HH
+#ifndef VCSN_DYN_AUTOMATON_HH
+# define VCSN_DYN_AUTOMATON_HH
 
 # include <memory> // shared_ptr
 # include <string>
@@ -9,6 +9,9 @@ namespace vcsn
 {
   namespace dyn
   {
+    /// Base class for automata.
+    ///
+    /// FIXME: Should not exist, we should model as we did for ratexp.
     class abstract_automaton
     {
     public:
@@ -23,4 +26,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CORE_AUTOMATON_HH
+#endif // !VCSN_DYN_AUTOMATON_HH

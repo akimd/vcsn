@@ -4,7 +4,7 @@
 # include <queue>
 # include <set>
 
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {

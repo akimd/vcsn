@@ -5,7 +5,7 @@
 # include <set>
 # include <stack>
 
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {

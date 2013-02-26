@@ -2,10 +2,9 @@
 # define VCSN_ALGOS_DYN_HH
 
 # include <iosfwd>
-# include <vcsn/core/fwd.hh>
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {

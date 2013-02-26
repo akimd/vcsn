@@ -1,4 +1,4 @@
-#include <vcsn/core/automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <lib/vcsn/algos/registry.hh>
 

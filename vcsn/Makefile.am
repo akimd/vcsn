@@ -42,7 +42,6 @@ nobase_vcsn_HEADERS =                           \
   algos/xml/weight-visitor.hxx                  \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
-  core/automaton.hh                             \
   core/crange.hh                                \
   core/entryiter.hh                             \
   core/fwd.hh                                   \
@@ -83,6 +82,8 @@ nobase_vcsn_HEADERS =                           \
   ctx/letterset.hh                              \
   ctx/unitset.hh                                \
   ctx/wordset.hh                                \
+  dyn/automaton.hh                              \
+  dyn/fwd.hh                                    \
   dyn/ratexp.hh                                 \
   empty.hh                                      \
   factory/de_bruijn.hh                          \

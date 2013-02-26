@@ -6,21 +6,14 @@
 namespace vcsn
 {
 
-  // crange.hh
+  // vcsn/core/crange.hh
   template <class C>
   struct container_range;
 
   template <class C>
   struct container_filter_range;
 
-  // automaton.hh
-  namespace dyn
-  {
-    class abstract_automaton;
-    using automaton = std::shared_ptr<abstract_automaton>;
-  }
-
-  // mutable_automaton.hh
+  // vcsn/core/mutable_automaton.hh
   template <typename Context>
   class mutable_automaton;
 

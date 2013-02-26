@@ -2,7 +2,7 @@
 # define VCSN_ALGOS_EDIT_AUTOMATON_HH
 
 # include <map>
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 
 namespace vcsn

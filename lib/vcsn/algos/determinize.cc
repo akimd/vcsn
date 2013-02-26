@@ -1,4 +1,4 @@
-#include <vcsn/core/automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/algos/dyn.hh>
 #include <lib/vcsn/algos/registry.hh>

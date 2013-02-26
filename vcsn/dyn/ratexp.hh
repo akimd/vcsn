@@ -12,6 +12,10 @@ namespace vcsn
     namespace details
     {
 
+      /// Aggregate an expression and its context.
+      ///
+      /// FIXME: Improperly named, it is not a base class for
+      /// static ratexps.
       class abstract_ratexp
       {
       public:

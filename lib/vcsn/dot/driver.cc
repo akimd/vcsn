@@ -3,7 +3,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include <vcsn/core/automaton.hh>
+#include <vcsn/dyn/automaton.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
 #include <vcsn/algos/dyn.hh>

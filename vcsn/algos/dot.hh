@@ -9,7 +9,7 @@
 # include <unordered_set>
 # include <vector>
 
-# include <vcsn/core/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 
 # include <vcsn/misc/escape.hh>
 
