@@ -23,6 +23,7 @@ nobase_vcsn_HEADERS =                           \
   algos/eps_removal.hh                          \
   algos/eval.hh                                 \
   algos/fsm.hh                                  \
+  algos/is_complete.hh                          \
   algos/is-deterministic.hh                     \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
@@ -88,8 +89,10 @@ nobase_vcsn_HEADERS =                           \
   factory/ladybird.hh                           \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \
+  misc/direction.hh                             \
   misc/echo.hh                                  \
   misc/escape.hh                                \
+  misc/star_status.hh                           \
   weights/b.hh                                  \
   weights/f2.hh                                 \
   weights/fwd.hh                                \
