@@ -240,8 +240,7 @@ namespace vcsn
       {
         const auto& ctx =
           dynamic_cast<const typename Aut::context_t&>(e->ctx());
-        return std::make_shared<Aut>
-          (standard_of<Aut, typename Aut::context_t>(ctx, e->ratexp()));
+        return make_automaton(ctx, standard_of<Aut>(ctx, e->ratexp()));
       }
 
       using standard_of_t =

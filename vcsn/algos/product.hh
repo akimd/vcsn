@@ -87,9 +87,9 @@ namespace vcsn
       dyn::automaton
       product(const dyn::automaton& lhs, const dyn::automaton& rhs)
       {
-        return
-          std::make_shared<Lhs>(product(dynamic_cast<const Lhs&>(*lhs),
-                                        dynamic_cast<const Rhs&>(*rhs)));
+        const auto& l = dynamic_cast<const Lhs&>(*lhs);
+        const auto& r = dynamic_cast<const Lhs&>(*rhs);
+        return make_automaton(l.context(), product(l, r));
       }
 
       using product_t =

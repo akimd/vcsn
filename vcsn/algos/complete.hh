@@ -85,7 +85,8 @@ namespace vcsn
       dyn::automaton
       complete(const dyn::automaton& aut)
       {
-        return std::make_shared<Aut>(complete(dynamic_cast<const Aut&>(*aut)));
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton<Aut>(a.context(), complete(a));
       }
 
       using complete_t = auto (const dyn::automaton& aut) -> dyn::automaton;

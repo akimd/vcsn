@@ -5,6 +5,7 @@
 # include <set>
 # include <stack>
 
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
@@ -68,12 +69,11 @@ namespace vcsn
       dyn::automaton
       accessible(const dyn::automaton& aut)
       {
-        return std::make_shared<Aut>(
-            accessible(dynamic_cast<const Aut&>(*aut)));
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton<Aut>(a.context(), accessible(a));
       }
 
-      using accessible_t =
-        auto (const dyn::automaton&) -> dyn::automaton;
+      using accessible_t = auto (const dyn::automaton&) -> dyn::automaton;
       bool accessible_register(const std::string& ctx, const accessible_t& fn);
     }
   }

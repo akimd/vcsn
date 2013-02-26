@@ -253,8 +253,10 @@ namespace vcsn
       automaton
       transpose(automaton& aut)
       {
-        return std::make_shared<vcsn::details::transpose_automaton<Aut>>
-          (dynamic_cast<Aut&>(*aut));
+        auto& a = dynamic_cast<Aut&>(*aut);
+        return make_automaton<Aut,
+                              vcsn::details::transpose_automaton<Aut>>
+          (a.context(), a);
       }
 
       using transpose_t = auto (automaton& aut) -> automaton;

@@ -23,6 +23,29 @@ namespace vcsn
     };
 
     using automaton = std::shared_ptr<abstract_automaton>;
+
+
+    /// Build a dyn::automaton.
+    ///
+    /// FIXME: Eventually, we will aggregate the context on the
+    /// side, as for ratexps.
+    template <typename AutIn, typename AutOut = AutIn,
+              typename Ctx = typename AutOut::context_t>
+    inline
+    automaton
+    make_automaton(const Ctx&, AutIn& aut)
+    {
+      return std::make_shared<AutOut>(aut);
+    }
+
+    template <typename AutIn, typename AutOut = AutIn,
+              typename Ctx = typename AutOut::context_t>
+    inline
+    automaton
+    make_automaton(const Ctx&, AutIn&& aut)
+    {
+      return std::make_shared<AutOut>(std::move(aut));
+    }
   }
 }
 

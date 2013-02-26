@@ -90,8 +90,8 @@ namespace vcsn
       dyn::automaton
       determinize(const dyn::automaton& aut)
       {
-        return
-          std::make_shared<Aut>(determinize(dynamic_cast<const Aut&>(*aut)));
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton<Aut>(a.context(), determinize(a));
       }
 
       using determinize_t =

@@ -3,6 +3,7 @@
 
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/unitset.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>
@@ -23,7 +24,7 @@ namespace vcsn
     // lift(ctx) -> ctx
     template <typename Context>
     lifted_context_t<Context>
-    lift_context(const Context& ctx)
+    lift(const Context& ctx)
     {
       auto rs_in = ctx.make_ratexpset();
       using ctx_out_t = details::lifted_context_t<Context>;
@@ -48,7 +49,7 @@ namespace vcsn
     using rs_in_t = ratexpset<ctx_in_t>;
     rs_in_t rs_in{a.context()};
 
-    auto ctx_out = details::lift_context(a.context());
+    auto ctx_out = details::lift(a.context());
     using auto_out_t = details::lifted_automaton_t<auto_in_t>;
     using state_out_t = typename auto_out_t::state_t;
     auto_out_t res{ctx_out};
@@ -82,8 +83,8 @@ namespace vcsn
       automaton
       lift(const automaton& aut)
       {
-        return std::make_shared<vcsn::details::lifted_automaton_t<Aut>>
-          (::vcsn::lift(dynamic_cast<const Aut&>(*aut)));
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton(::vcsn::details::lift(a.context()), lift(a));
       }
 
       using lift_automaton_t = auto (const automaton& aut) -> automaton;
@@ -112,7 +113,7 @@ namespace vcsn
   typename details::lifted_context_t<Context>::ratexp_t
   lift(const Context& ctx, const typename Context::ratexp_t& e)
   {
-    return details::lift_context(ctx).make_ratexpset().unit(e);
+    return details::lift(ctx).make_ratexpset().unit(e);
   }
 
 
@@ -128,8 +129,7 @@ namespace vcsn
           dynamic_cast<const Context&>(e->ctx());
         const auto& exp =
           std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
-        auto res = ::vcsn::lift(ctx, exp);
-        return make_ratexp(::vcsn::details::lift_context(ctx), res);
+        return make_ratexp(::vcsn::details::lift(ctx), ::vcsn::lift(ctx, exp));
       }
 
       using lift_exp_t = auto (const ratexp& aut) -> ratexp;

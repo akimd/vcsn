@@ -45,8 +45,8 @@ namespace vcsn
       automaton
       ladybird(const dyn::context& ctx, unsigned n)
       {
-        return std::make_shared<mutable_automaton<Ctx>>
-          (ladybird<Ctx>(n, dynamic_cast<const Ctx&>(*ctx)));
+        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        return make_automaton(c, ladybird<Ctx>(n, c));
       }
 
       using ladybird_t =
