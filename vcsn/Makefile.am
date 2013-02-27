@@ -25,6 +25,7 @@ nobase_vcsn_HEADERS =                           \
   algos/fsm.hh                                  \
   algos/is_complete.hh                          \
   algos/is-deterministic.hh                     \
+  algos/is-eps-acyclic.hh                       \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
   algos/print.hh                                \

@@ -42,6 +42,8 @@ namespace vcsn
 
     bool is_deterministic(const automaton& aut);
 
+    bool is_eps_acyclic(const automaton& aut);
+
     automaton ladybird(const context& ctx, unsigned n);
 
     automaton lift(const automaton& aut);

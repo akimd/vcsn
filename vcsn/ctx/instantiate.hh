@@ -11,6 +11,7 @@
 # include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -142,6 +143,13 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_words)
       {
+        using aut_t = mutable_automaton<Ctx>;
+
+        using namespace dyn::details;
+
+        // is-eps-acyclic.
+        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
+
         return true;
       }
 
@@ -188,6 +196,7 @@ namespace vcsn
                      static_cast<const fsm_stream_t&>(fsm<taut_t>));
         fsm_register(taut_t::sname(),
                      static_cast<const fsm_string_t&>(fsm<taut_t>));
+
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 

@@ -7,91 +7,13 @@
 # include <stdexcept>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>
 
 namespace vcsn
 {
-  /**
-    @class epsilon_acylic
-    @brief This class provides an algorithm to detect epsilon-circuits.
-
-    In this algorithm, only epsilon-transitions are considered.
-
-  */
-  template <typename Aut>
-  class epsilon_acyclic
-  {
-    using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
-    using label_t = typename automaton_t::label_t;
-    std::unordered_map<state_t, char> tag;
-    /*
-       tag gives the status of the state s;
-       if s is not in the map, the state has not been reached yet;
-       if tag[s]='u', the status is unknown, the graph reachable from s is
-         under exploration
-       if tag[s]='o', the status is "ok": there is no eps-circuit accessible
-         from s
-       if tag[s]='c', there is an eps-circuit accessible from s
-       */
-
-    const automaton_t& input;
-    label_t empty_word;
-    //Return true if an epsilon-circuit is accessible from s by
-    //epsilon-transitions.
-    bool has_epsilon_circuit(state_t s)
-    {
-      auto it = tag.find(s);
-      if (it == tag.end())
-      {
-        tag[s] = 'u';
-        for (auto t : input.out(s, empty_word))
-          if (has_epsilon_circuit(input.dst_of(t)))
-          {
-            tag[s] = 'c';
-            return true;
-          }
-        tag[s] = 'o';
-        return false;
-      }
-
-      switch (it->second)
-      {//switch with respect to tag[s]
-        case 'u':
-          /* s is reached while we are exploring successors of s : there is a
-          ** circuit */
-          tag[s] = 'c';
-          return true;
-          /* otherwise the graph reachable from s has already been explored */
-        case 'o':
-          return false;
-        default: //'c'
-          return true;
-      }
-    }
-
-    epsilon_acyclic(const automaton_t& input)
-      : input(input), empty_word(input.labelset()->identity())
-    {
-    }
-
-    bool is_eps_acyclic()
-    {
-      for (auto s : input.states())
-        if (has_epsilon_circuit(s))
-          return false;
-      return true;
-    }
-
-    public:
-    static bool test(const automaton_t& input)
-    {
-      epsilon_acyclic t{input};
-      return t.is_eps_acyclic();
-    }
-  };
 
   /**
     @class epsilon_remover
@@ -285,7 +207,7 @@ and eturn the result of epsilon_removal on the copy.
     {
       if (remover_t::is_proper(input))
         return true;
-      if (epsilon_acyclic<Aut>::test(input))
+      if (is_eps_acyclic<Aut>(input))
         return true;
       automaton_t tmp = copy(input);
       return remover_t::in_situ_remover(tmp);
@@ -393,7 +315,7 @@ and eturn the result of epsilon_removal on the copy.
       {
         if (epsilon_remover<Aut, typename Aut::kind_t>::is_proper(input))
           return true;
-        return epsilon_acyclic<Aut>::test(input);
+        return is_eps_acyclic<Aut>(input);
       }
 
       static void eps_removal_here(Aut & input)
