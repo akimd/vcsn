@@ -232,7 +232,7 @@ attr_assign:
   ID[var] "=" ID[val]
   {
     $$ = nullptr;
-    if (*$var == "label" && !$val->empty())
+    if (*$var == "label")
       std::swap($$, $val);
     else if (*$var == "vcsn_context")
       {

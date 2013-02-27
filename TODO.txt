@@ -25,6 +25,7 @@ the special letter labels the initial and final transitions etc.
 * edit-automaton
 Currently it converts the \e in initial/final labels to the
 special-letter.  Is this what we want?
+Shouldn't we replace assert() with if (...) throw ... ?
 
 * check labels in mutable_automaton
 Currently, we can add_transition(p, q, 'z') even if z is not part of
