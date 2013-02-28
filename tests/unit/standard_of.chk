@@ -1,15 +1,15 @@
 #! /bin/sh
 
-# weighset VCSN-STANDARD-OF-ARGUMENTS
-# -----------------------------------
-weighset()
+# context VCSN-STANDARD-OF-ARGUMENTS
+# ----------------------------------
+context ()
 {
   while test $# != 0
   do
     case $1 in
       (-W) case $2 in
-            (zr) echo 'ratexpset<lal_char(abcd)_z>';;
-            (*) echo "$2";;
+            (zr) echo 'lal_char(abcd)_ratexpset<lal_char(abcd)_z>';;
+            (*) echo "lal_char(abcd)_$2";;
            esac
            return 0;;
       (-C) echo "$2"
@@ -17,7 +17,7 @@ weighset()
     esac
     shift
   done
-  echo 'b'
+  echo 'lal_char(abcd)_b'
   return 0
 }
 
@@ -26,11 +26,11 @@ weighset()
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
-  ws=$(weighset "$@")
+  ctx=$(context "$@")
   cat >out.exp <<EOF
 digraph
 {
-  vcsn_context = "lal_char(abcd)_${ws}"
+  vcsn_context = "$ctx"
   rankdir = LR
   node [shape = circle]
 EOF
@@ -273,6 +273,27 @@ check -e 'a**' <<\EOF
   1 -> 2 [label = "a"]
   2 -> F2
   2 -> 2 [label = "a"]
+EOF
+
+## ---- ##
+## BR.  ##
+## ---- ##
+
+# Make sure that the initial weight of the rhs of the concatenation is
+# properly handled.
+check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '{x}a({y}\e+{z}a)' <<EOF
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F3
+    F2
+  }
+  { 1 2 3 }
+  I1 -> 1
+  1 -> 2 [label = "{x}a"]
+  2 -> F2 [label = "{y}"]
+  2 -> 3 [label = "{z}a"]
+  3 -> F3
 EOF
 
 

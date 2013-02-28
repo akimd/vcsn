@@ -129,7 +129,7 @@ namespace vcsn
       visit(const prod_t& e)
       {
         // The set of the final states that were introduced in pending
-        // parts of the automaton (for instance in we are in the rhs
+        // parts of the automaton (for instance if we are in the rhs
         // of "a+bc", recording the final state for "a").
         states_t other_finals = finals();
 
@@ -140,7 +140,7 @@ namespace vcsn
         // Then the remainder.
         for (auto c: e.tail())
           {
-            // The set of the current final transitions.
+            // The set of the current (left-hand side) final transitions.
             auto ftr_ = res_.final_transitions();
             // Store transitions by copy.
             using transs_t = std::vector<typename automaton_t::transition_t>;
@@ -154,13 +154,26 @@ namespace vcsn
             for (auto t1: ftr)
               if (other_finals.find(res_.src_of(t1)) == other_finals.end())
                 {
-                  for (auto t2: res_.out(initial_))
-                    res_.set_transition
-                      (res_.src_of(t1),
-                       res_.dst_of(t2),
-                       res_.label_of(t2),
-                       ws_.mul(res_.weight_of(t1), res_.weight_of(t2)));
+                  // Remove the previous final transition first, as we
+                  // might add a final transition for the same state
+                  // later.
+                  //
+                  // For instance on "{2}a+({3}\e+{5}a)", the final
+                  // state s1 of {2}a will be made final thanks to
+                  // {3}\e.  So if we compute the new transitions from
+                  // s1 and then remove t1, we will have removed the
+                  // fact that s1 is final thanks to {3}\e.
+                  //
+                  // Besides, s1 will become final with weight {3}, which
+                  // might interfere with {5}a too.
+                  auto s1 = res_.src_of(t1);
+                  auto w1 = res_.weight_of(t1);
                   res_.del_transition(t1);
+                  for (auto t2: res_.all_out(initial_))
+                    res_.set_transition(s1,
+                                        res_.dst_of(t2),
+                                        res_.label_of(t2),
+                                        ws_.mul(w1, res_.weight_of(t2)));
                 }
             res_.del_state(initial_);
           }
