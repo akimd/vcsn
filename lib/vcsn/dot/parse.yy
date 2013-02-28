@@ -15,8 +15,8 @@
 %code requires
 {
   #include <iostream>
-  #include <list>
   #include <string>
+
   #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
@@ -178,14 +178,14 @@ stmt_list:
     // Preserve the set of states.
     std::swap($$, $1);
     for (auto s: $2)
-      $$.push_back(s);
+      $$.emplace_back(std::move(s));
   }
 ;
 
 stmt:
   node_stmt
   {
-    $$.push_back($1);
+    $$.emplace_back(std::move($1));
   }
 | edge_stmt
   {
@@ -277,7 +277,7 @@ a_list.0:
 ;
 
 nodes:
-  node_id   { $$.push_back($node_id); }
+  node_id   { $$.emplace_back(std::move($node_id)); }
 | subgraph  { $$ = $<states>subgraph; }
 ;
 
