@@ -9,6 +9,7 @@
 # include <type_traits>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
 namespace std
 {

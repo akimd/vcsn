@@ -3,6 +3,7 @@
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
+# include <vcsn/algos/determinize.hh>
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/letterset.hh>
 # include <vcsn/weights/b.hh>
