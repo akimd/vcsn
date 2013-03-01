@@ -1,0 +1,398 @@
+#! /usr/bin/perl -w
+
+=head1 NAME
+
+bench.pl - bench marks for Bison parsers.
+
+=head1 SYNOPSIS
+
+  ./bench.pl [OPTIONS]...
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-b>, B<--bench>=I<bench>
+
+Select the base I<bench> to use.  Defaults to I<ladybird>.
+
+=over 4
+
+=item I<aopt>
+
+Determinization of C<(\e+a)(*$size)>.
+
+=item I<lady>
+
+Determinization of Ladybird of $size.
+
+=item I<pfix>
+
+(a...a)+(a...b)+...+(b...a)+(b...b) for words of size $size.
+
+=back
+
+=item B<-h>, B<--help>
+
+Display this message and exit succesfully.  The more verbose, the more
+details.
+
+=item B<-t>, B<--tool>=I<name>
+
+Select the tool to bench among C<OpnFST>, C<Vcsn 1>, C<Vcsn 2>.
+Defaults to the three of them.
+
+=item B<-i>, B<--iterations>=I<integer>
+
+Say how many times a single test of the bench must be run.  Defaults
+to 10.
+
+=item B<-q>, B<--quiet>
+
+Decrease the verbosity level (defaults to 1).
+
+=item B<-v>, B<--verbose>
+
+Raise the verbosity level (defaults to 1).
+
+=back
+
+=cut
+
+use strict;
+use IO::File;
+
+##################################################################
+
+=head1 VARIABLES
+
+=over 4
+
+=item C<@bench>
+
+The list of benches to run.
+
+=item C<$iterations>
+
+The number of times the parser is run for a bench.
+
+=item C<$verbose>
+
+Verbosity level.
+
+=back
+
+=cut
+
+my @bench;
+my $iterations = 20;
+my $size = 10;
+my @tool;
+my $verbose = 1;
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<verbose($level, $message)>
+
+Report the C<$message> is C<$level> E<lt>= C<$verbose>.
+
+=cut
+
+sub verbose($$)
+{
+  my ($level, $message) = @_;
+  print STDERR $message
+    if $level <= $verbose;
+}
+
+
+##################################################################
+
+=item C<run ($command)>
+
+Run, possibly verbosely, the shell C<$command>.
+
+=cut
+
+sub run ($)
+{
+  my ($command) = @_;
+  verbose 3, "$command\n";
+  system ("$command") == 0
+    or die "$command failed";
+}
+
+######################################################################
+
+=item C<setup_ladybird($size)>
+
+=cut
+
+sub setup_ladybird ($)
+{
+  my ($size) = @_;
+
+  verbose 1, "Ladybird $size\n";
+  # Set up the benches as expected by timethese.
+  my %bench;
+  for my $d (@tool)
+    {
+      my $prog;
+      if ($d eq 'OpnFST')
+        {
+          system "vcsn-ladybird -O fsm $size >$size.fsm";
+          $prog = 'fstdeterminize';
+          $bench{$d} = "fstcompile $size.fsm | $prog >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          system "ladybird-char-b $size >$size.xml";
+          $prog = 'vcsn-char-b';
+          $bench{$d} = "$prog determinize $size.xml \\| data - >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          system "vcsn-ladybird -O dot $size >$size.dot";
+          $prog = 'vcsn-determinize';
+          $bench{$d} = "$prog -O null -f $size.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+      chop($prog = `which $prog`);
+      printf " %s. %s (%s)\n", $d, $bench{$d}, $prog;
+      $bench{$d} = "system ('$bench{$d}');";
+    };
+
+  %bench;
+}
+
+=item C<setup_aopt($size)>
+
+=cut
+
+sub setup_aopt ($)
+{
+  my ($size) = @_;
+
+  verbose 1, "Aopt $size\n";
+  # Set up the benches as expected by timethese.
+  my %res;
+  for my $d (@tool)
+    {
+      my $base = "aopt-$size";
+      my $prog;
+      if ($d eq 'OpnFST')
+        {
+          system "vcsn-standard-of -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' -Ofsm >$base.fsm";
+          $prog = 'fstdeterminize';
+          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          system "vcsn-cat -C 'lal_char(a)_b' -Ee '(\\e+a)(*$size)' | \
+                    sed -e 's/\\\\e/1/g' | \
+                    vcsn-char-b --alphabet=a standard - >$base.xml";
+          $prog = 'vcsn-char-b';
+          $res{$d} = "$prog determinize $base.xml >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          system "vcsn-standard-of -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' >$base.dot";
+          $prog = 'vcsn-determinize';
+          $res{$d} = "$prog -O null -f $base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+      chop($prog = `which $prog`);
+      printf " %s. %s (%s)\n", $d, $res{$d}, $prog;
+      $res{$d} = "system ('$res{$d}');";
+    };
+
+  %res;
+}
+
+=item C<setup_prefix($size)>
+
+=cut
+
+sub setup_prefix ($)
+{
+  my ($size) = @_;
+
+  verbose 1, "Prefix $size\n";
+  my @word = ('a', 'b');
+  for (my $i = 0; $i < $size; ++$i)
+    {
+      @word = map { ("${_}a", "${_}b") } @word;
+    }
+  my $exp = join ('+', @word);
+
+  my %res;
+  for my $d (@tool)
+    {
+      my $base = "prefix-$size";
+      my $prog;
+      if ($d eq 'OpnFST')
+        {
+          system "vcsn-standard-of -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
+          $prog = 'fstdeterminize';
+          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          system "vcsn-char-b --alphabet=ab standard '$exp' >$base.xml";
+          $prog = 'vcsn-char-b';
+          $res{$d} = "$prog determinize $base.xml >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          system "vcsn-standard-of -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
+          $prog = 'vcsn-determinize';
+          $res{$d} = "$prog -O null -f $base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+      chop($prog = `which $prog`);
+      printf " %s. %s (%s)\n", $d, $res{$d}, $prog;
+      $res{$d} = "system ('$res{$d}');";
+    };
+
+  %res;
+}
+
+=item C<bench ($size)>
+
+=cut
+
+sub bench (\%)
+{
+  my ($benchref) = @_;
+  use Benchmark qw (:all :hireswallclock);
+
+  # Run the benches.
+  #
+  # STYLE can be any of 'all', 'none', 'noc', 'nop' or 'auto'.  'all'
+  # shows each of the 5 times available ('wallclock' time, user time,
+  # system time, user time of children, and system time of
+  # children). 'noc' shows all except the two children times. 'nop'
+  # shows only wallclock and the two children times.  'auto' (the
+  # default) will act as 'all' unless the children times are both
+  # zero, in which case it acts as 'noc'.  'none' prevents output.
+  my $res = timethese ($iterations, $benchref, 'nop');
+
+  for my $b (keys %$res)
+    {
+      # The data is stored as a list of values from the time and times
+      # functions:
+      #
+      # ($real, $user, $system, $children_user, $children_system, $iters)
+      printf(" %s. avg time = %.2fs\n",
+             $b, ($res->{$b}->[3] + $res->{$b}->[4]) / $res->{$b}->[5]);
+    }
+
+  # Output the speed result.
+  cmpthese ($res, 'nop');
+}
+
+############################################################################
+
+sub help ($)
+{
+  my ($verbose) = @_;
+  use Pod::Usage;
+  # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
+  pod2usage( { -message => "Bench Bison parsers",
+               -exitval => 0,
+               -verbose => $verbose,
+               -output  => \*STDOUT });
+}
+
+######################################################################
+
+# The end of the directives to parse.
+my $eod = "end of directives";
+# The list of tokens parsed by the following functions.
+my @token;
+
+
+######################################################################
+
+sub getopt ()
+{
+  use Getopt::Long;
+  my %option = (
+    "b|bench=s"      => \@bench,
+    "h|help"         => sub { help ($verbose) },
+    "i|iterations=i" => \$iterations,
+    "t|tool=s"       => \@tool,
+    "q|quiet"        => sub { --$verbose },
+    "v|verbose"      => sub { ++$verbose },
+    );
+  Getopt::Long::Configure ("bundling", "pass_through");
+  GetOptions (%option)
+    or exit 1;
+
+  @tool = ('OpnFST', 'Vcsn 1', 'Vcsn 2')
+    unless @tool;
+}
+
+######################################################################
+
+getopt;
+
+# Create the directory we work in.
+mkdir "benches" or die "cannot create benches"
+  unless -d "benches";
+my $count = 1;
+++$count
+  while -d "benches/$count";
+my $dir = "benches/$count";
+mkdir $dir
+  or die "cannot create $dir";
+chdir $dir
+  or die "cannot chdir $dir";
+
+# The following message is tailored to please Emacs' compilation-mode.
+verbose 1, "Entering directory `$dir'\n";
+
+# Launch the bench marking.
+for my $bench (@bench)
+{
+  $bench =~ m/\A(\w+)\((\d+)\)\z/;
+  ($bench, my $size) = ($1, $2);
+  my %setup =
+    (
+     aopt => \&setup_aopt,
+     lady => \&setup_ladybird,
+     pfix => \&setup_prefix,
+    );
+  die "unknown bench: $bench"
+    unless exists $setup{$bench};
+  my %bench = $setup{$bench}->($size);
+  bench (%bench);
+}
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
