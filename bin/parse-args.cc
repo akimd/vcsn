@@ -57,39 +57,40 @@ read_ratexp(const options& opts)
 void
 print(const options& opts, const vcsn::dyn::automaton& aut)
 {
-  std::ostream* out = &std::cout;
-  std::ofstream os;
-  if (!opts.output.empty() && opts.output != "-")
+  if (opts.output_format != vcsn::dyn::FileType::null)
     {
-      os.open(opts.output.c_str());
-      out = &os;
-    }
-  if (!out->good())
-    throw std::runtime_error(opts.output + ": cannot open for writing");
+      std::ostream* out = &std::cout;
+      std::ofstream os;
+      if (!opts.output.empty() && opts.output != "-")
+        {
+          os.open(opts.output.c_str());
+          out = &os;
+        }
+      if (!out->good())
+        throw std::runtime_error(opts.output + ": cannot open for writing");
 
-  print(aut, *out, opts.output_format) << std::endl;
+      print(aut, *out, opts.output_format) << std::endl;
+    }
 }
 
 void
 print(const options& opts, const vcsn::dyn::ratexp& exp)
 {
-  std::ostream* out = &std::cout;
-  std::ofstream os;
-  if (!opts.output.empty() && opts.output != "-")
+  if (opts.output_format != vcsn::dyn::FileType::null)
     {
-      os.open(opts.output.c_str());
-      out = &os;
-    }
-  if (!out->good())
-    throw std::runtime_error(opts.output + ": cannot open for writing");
+      std::ostream* out = &std::cout;
+      std::ofstream os;
+      if (!opts.output.empty() && opts.output != "-")
+        {
+          os.open(opts.output.c_str());
+          out = &os;
+        }
+      if (!out->good())
+        throw std::runtime_error(opts.output + ": cannot open for writing");
 
-  // Be cool, we don't support many formats.
-  vcsn::dyn::FileType fmt
-    = (opts.output_format == vcsn::dyn::FileType::null
-       || opts.output_format == vcsn::dyn::FileType::text
-       ? opts.output_format
-       : vcsn::dyn::FileType::text);
-  print(exp, *out, fmt) << std::endl;
+      // Be cool, we don't support many formats.
+      print(exp, *out, vcsn::dyn::FileType::text) << std::endl;
+    }
 }
 
 void
