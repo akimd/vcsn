@@ -2,15 +2,15 @@
 %include: common-weights.rat
 
 # Check the alphabets.
-{{{2}b}c}d => {{{2}b}c}d
-# {{{x}b}c}d ! 1.4: invalid word: x: invalid letter: x
-{{{3}x}c}d ! 1.1-10: 1.1-7: 1.4: invalid word: x: invalid letter: x
-{{{4}b}x}d ! 1.1-10: 1.7: invalid word: x: invalid letter: x
-{{{5}b}c}x ! 1.10: invalid word: x: invalid letter: x
+{{{2}x}e}a => {{{2}x}e}a
+# {{{l}x}e}a ! 1.4: invalid word: l: invalid letter: l
+{{{3}l}e}a ! 1.1-10: 1.1-7: 1.4: invalid word: l: invalid letter: l
+{{{4}x}l}a ! 1.1-10: 1.7: invalid word: l: invalid letter: l
+{{{5}x}e}l ! 1.10: invalid word: l: invalid letter: l
 
 
 # Check weight products.
-{{{1}\e}a}b => {a}b
-{{{0}a}b}c  => \z
-{{{2}{3}a}b}c => {{{6}a}b}c
-{{{2}{3}a}b}c{{{4}{5}\e}\e} => {{{120}a}b}c
+{{{1}\e}e}a => {e}a
+{{{0}x}e}a  => \z
+{{{2}{3}x}e}a => {{{6}x}e}a
+{{{2}{3}x}e}a{{{4}{5}\e}\e} => {{{120}x}e}a

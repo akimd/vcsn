@@ -150,13 +150,13 @@ parse_args(options& opts, int& argc, char* const*& argv)
   map ksets;
 #define ADD(Key, Name)                          \
     ksets.insert(pair(#Key, Name))
-    ADD(b,   "law_char_b");
-    ADD(br,  "law_char_ratexpset<law_char_b>");
-    ADD(z,   "law_char_z");
-    ADD(zr,  "law_char_ratexpset<law_char_z>");
-    ADD(zrr, "law_char_ratexpset<law_char_ratexpset<law_char_z>>");
+    ADD(b,   "law_char(abcd)_b");
+    ADD(br,  "law_char(abcd)_ratexpset<law_char(efgh)_b>");
+    ADD(z,   "law_char(abcd)_z");
+    ADD(zr,  "law_char(abcd)_ratexpset<law_char(efgh)_z>");
+    ADD(zrr, "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>");
 #undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:g:hI:L:O:o:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:W:?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -177,9 +177,6 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'f':
         opts.input = optarg;
         opts.input_is_file = true;
-        break;
-      case 'g':
-        opts.gens = optarg;
         break;
       case 'h':
         usage(argv[0], EXIT_SUCCESS);
@@ -228,8 +225,6 @@ parse_args(options& opts, int& argc, char* const*& argv)
         usage(argv[0], EXIT_FAILURE);
         break;
       }
-  using boost::algorithm::replace_all;
-  replace_all(opts.context, "char_", "char(" + opts.gens + ")_");
   argc -= optind;
   argv += optind;
 }

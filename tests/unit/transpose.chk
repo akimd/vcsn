@@ -34,8 +34,8 @@ check 'abc+aba' '(aba)+(cba)'
 check '(ab)*' '(ba)*'
 
 ctx='-W zrr -Lw'
-check2 '{{{2}ab}cd}abcd' '{{{2}ba}dc}dcba'
-check2 '({ab}(abcd)*{cd})' '({dc}(dcba)*{ba})'
+check2 '{{{2}xy}ef}abcd' '{{{2}yx}fe}dcba'
+check2 '({ef}(abcd)*{gh})' '({hg}(dcba)*{fe})'
 
 
 ## --------------------------- ##

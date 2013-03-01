@@ -8,7 +8,7 @@ context ()
   do
     case $1 in
       (-W) case $2 in
-            (zr) echo 'lal_char(abcd)_ratexpset<lal_char(abcd)_z>';;
+            (zr) echo 'lal_char(abcd)_ratexpset<lal_char(efgh)_z>';;
             (*) echo "lal_char(abcd)_$2";;
            esac
            return 0;;
@@ -516,7 +516,7 @@ fail -W z -e 'a**'
 ## ZR: star.  ##
 ## ---------- ##
 
-check -W zr -e '({d}\e+abc)*' <<EOF
+check -W zr -e '({e}\e+abc)*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
@@ -525,15 +525,15 @@ check -W zr -e '({d}\e+abc)*' <<EOF
   }
   { 1 2 3 4 }
   I1 -> 1
-  1 -> F1 [label = "{d*}"]
-  1 -> 2 [label = "{d*}a"]
+  1 -> F1 [label = "{e*}"]
+  1 -> 2 [label = "{e*}a"]
   2 -> 3 [label = "b"]
   3 -> 4 [label = "c"]
-  4 -> F4 [label = "{d*}"]
-  4 -> 2 [label = "{d*}a"]
+  4 -> F4 [label = "{e*}"]
+  4 -> 2 [label = "{e*}a"]
 EOF
 
-check -W zr -e '({d}\e+ab{c})*' <<EOF
+check -W zr -e '({e}\e+ab{f})*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I1
@@ -542,9 +542,9 @@ check -W zr -e '({d}\e+ab{c})*' <<EOF
   }
   { 1 2 3 }
   I1 -> 1
-  1 -> F1 [label = "{d*}"]
-  1 -> 2 [label = "{d*}a"]
+  1 -> F1 [label = "{e*}"]
+  1 -> 2 [label = "{e*}a"]
   2 -> 3 [label = "b"]
-  3 -> F3 [label = "{c.(d*)}"]
-  3 -> 2 [label = "{c.(d*)}a"]
+  3 -> F3 [label = "{f.(e*)}"]
+  3 -> 2 [label = "{f.(e*)}a"]
 EOF
