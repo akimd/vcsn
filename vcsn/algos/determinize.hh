@@ -45,7 +45,7 @@ namespace vcsn
     static_assert(Aut::context_t::is_lal,
                   "requires labels_are_letters");
     static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                  "requires Boolean labels");
+                  "requires Boolean weights");
 
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
