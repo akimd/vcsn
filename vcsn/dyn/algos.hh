@@ -35,6 +35,8 @@ namespace vcsn
 
     std::string eval(const automaton& aut, const std::string& s);
 
+    automaton eps_removal(const automaton& aut);
+
     void fsm(const automaton& aut, std::ostream& out);
     std::string fsm(const automaton& aut);
 

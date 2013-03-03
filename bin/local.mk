@@ -19,6 +19,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-complete                             \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
+  bin/vcsn-eps-removal                          \
   bin/vcsn-evaluate                             \
   bin/vcsn-is-complete                          \
   bin/vcsn-is-deterministic                     \
@@ -40,6 +41,7 @@ bin_vcsn_complete_LDADD         = bin/libtafkit.la
 bin_vcsn_copy_LDADD             = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la
+bin_vcsn_eps_removal_LDADD      = bin/libtafkit.la
 bin_vcsn_evaluate_LDADD         = bin/libtafkit.la
 bin_vcsn_is_complete_LDADD      = bin/libtafkit.la
 bin_vcsn_is_deterministic_LDADD = bin/libtafkit.la

@@ -70,8 +70,8 @@ namespace vcsn
     public:
     static bool in_situ_remover(automaton_t & input)
     {
-      label_t empty_word= input.labelset()->identity();
-      auto weightset_ptr=input.weightset();
+      label_t empty_word = input.labelset()->identity();
+      auto weightset_ptr = input.weightset();
       using state_weight_t = std::pair<state_t, weight_t>;
       std::list<state_weight_t> closure;
       std::list<transition_t> to_erase;
@@ -247,11 +247,11 @@ and eturn the result of epsilon_removal on the copy.
     {
       if (remover_t::is_proper(input))
         return true;
-      if (epsilon_acyclic<Aut>::test(input))
+      if (is_eps_acyclic<Aut>(input))
         return true;
       automaton_t tmp_aut = copy(input);
       //Apply absolute value to the weight of each transition
-      weightset_t* weightset_ptr=input.weightset();
+      auto weightset_ptr = input.weightset();
       for (auto t: tmp_aut.transitions())
         tmp_aut.set_weight(t, weightset_ptr->abs(tmp_aut.weight_of(t)));
       //Apply eps-removal
@@ -262,7 +262,7 @@ and eturn the result of epsilon_removal on the copy.
     {
       bool t=is_valid(input);
       if (!t)
-        throw std::domain_error("Non valid automaton");
+        throw std::domain_error("invalid automaton");
       remover_t::in_situ_remover(input);
     }
 
@@ -270,9 +270,9 @@ and eturn the result of epsilon_removal on the copy.
     {
       bool t = is_valid(input);
       if (!t)
-        throw std::domain_error("Non valid automaton");
+        throw std::domain_error("invalid automaton");
       Aut tmp=copy(input);
-      remover_r::in_situ_remover(tmp);
+      remover_t::in_situ_remover(tmp);
       return tmp;
     }
   };
@@ -434,7 +434,6 @@ and eturn the result of epsilon_removal on the copy.
   }
 
   template <class Aut>
-  inline
   Aut eps_removal(const Aut & input, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
@@ -448,33 +447,27 @@ and eturn the result of epsilon_removal on the copy.
     }
   }
 
-  /*----------------.
-    | abstract ePS-REM  |
-    `----------------*/
+    /*-----------------.
+    | abstract ePS-REM |
+    `-----------------*/
 
-  // TODO
-  /*
+  namespace dyn
+  {
+    namespace details
+    {
+      template <typename Aut>
+      dyn::automaton eps_removal(const dyn::automaton& aut)
+      {
+        return std::make_shared<Aut>(
+                eps_removal(dynamic_cast<const Aut&>(*aut)));
+      }
 
-     namespace dyn
-     {
-     namespace details
-     {
-     template <typename Aut>
-     auto
-     eval(const automaton& aut, const std::string& s)
-     -> std::string
-     {
-     auto res = ::vcsn::eval(dynamic_cast<const Aut&>(*aut), s);
-     return boost::lexical_cast<std::string>(res);
-     }
+     using eps_removal_t = dyn::automaton(const dyn::automaton& aut);
 
-     using eval_t = auto (const automaton& aut, const std::string& s)
-     -> std::string;
-
-     bool eval_register(const std::string& ctx, const eval_t& fn);
-     }
-     }
-     */
+     bool
+     eps_removal_register(const std::string& ctx, const eps_removal_t& fn);
+    }
+  }
 
 } // namespace vcsn
 

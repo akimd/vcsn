@@ -54,6 +54,7 @@ vcsn_cat              = $(top_builddir)/bin/vcsn-cat
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
+vcsn_eps_removal      = $(top_builddir)/bin/vcsn-eps-removal
 vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
 vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
 vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
@@ -70,6 +71,7 @@ all_vcsn =                                      \
   $(vcsn_complete)                              \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
+  $(vcsn_eps_removal)                           \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
   $(vcsn_is_deterministic)                      \

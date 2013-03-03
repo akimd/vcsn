@@ -7,6 +7,7 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
+# include <vcsn/algos/eps-removal.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/is_complete.hh>
@@ -149,6 +150,9 @@ namespace vcsn
 
         // is-eps-acyclic.
         is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
+
+        // eps-removal.
+        eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
 
         return true;
       }
