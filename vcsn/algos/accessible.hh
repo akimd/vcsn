@@ -16,41 +16,38 @@ namespace vcsn
     // FIXME Static assert for label's type
     using automaton_t = Aut;
     using state_t = typename Aut::state_t;
-    // map associating source's states to result's states
-    using map = std::map<state_t, state_t>;
-    // We are exploring the automaton. We can also use a queue.
-    using stack = std::stack<state_t>;
-
-    map seen;
-    stack todo;
 
     automaton_t res{a.context()};
 
+    // a.state -> res.state.
+    using map = std::map<state_t, state_t>;
+    map res_state;
+    res_state[a.pre()] = res.pre();
+    res_state[a.post()] = res.post();
+
+    // Stack of a.states.
+    using stack = std::stack<state_t>;
+    stack todo;
     todo.push(a.pre());
-    // pre and post are automatically created, so we just register them
-    seen[a.pre()] = res.pre();
-    seen[a.post()] = res.post();
 
     while (!todo.empty())
     {
-      const state_t src = todo.top();
+      const state_t asrc = todo.top();
       todo.pop();
 
-      state_t creating_node = seen[src];
-
-      for (auto tr : a.all_out(src))
+      for (auto tr : a.all_out(asrc))
       {
-        state_t dst = a.dst_of(tr);
-        // if the dst state does not exists in the res, let's create it
-        auto inserted = seen.insert(typename map::value_type(dst, a.null_state()));
-        if (inserted.second)
+        state_t adst = a.dst_of(tr);
+        // If the dst state does not exist in res, create it.
+        auto p = res_state.emplace(adst, a.null_state());
+        if (p.second)
         {
-          todo.push(dst);
-          inserted.first->second = res.new_state();
+          todo.push(adst);
+          p.first->second = res.new_state();
         }
 
-        res.add_transition(src, seen[dst], a.label_of(tr),
-            a.weight_of(tr));
+        res.add_transition(res_state[asrc], p.first->second,
+                           a.label_of(tr), a.weight_of(tr));
       }
     }
 
