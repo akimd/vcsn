@@ -1,9 +1,9 @@
 #ifndef VCSN_ALGOS_ACCESSIBLE_HH
 # define VCSN_ALGOS_ACCESSIBLE_HH
 
+# include <deque>
 # include <map>
 # include <set>
-# include <stack>
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
@@ -26,14 +26,14 @@ namespace vcsn
     res_state[a.post()] = res.post();
 
     // Stack of a.states.
-    using stack = std::stack<state_t>;
+    using stack = std::deque<state_t>;
     stack todo;
-    todo.push(a.pre());
+    todo.push_back(a.pre());
 
     while (!todo.empty())
     {
-      const state_t asrc = todo.top();
-      todo.pop();
+      const state_t asrc = todo.front();
+      todo.pop_front();
 
       for (auto tr : a.all_out(asrc))
       {
@@ -42,7 +42,7 @@ namespace vcsn
         auto p = res_state.emplace(adst, a.null_state());
         if (p.second)
         {
-          todo.push(adst);
+          todo.push_back(adst);
           p.first->second = res.new_state();
         }
 

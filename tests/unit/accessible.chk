@@ -32,8 +32,8 @@ digraph
   I1 -> 1
   1 -> 2 [label = "a"]
   1 -> 3 [label = "c"]
-  2 -> 5 [label = "b"]
-  3 -> 4 [label = "d"]
+  2 -> 4 [label = "b"]
+  3 -> 5 [label = "d"]
   4 -> F4
   5 -> F5
 }
