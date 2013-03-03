@@ -398,8 +398,8 @@ and eturn the result of epsilon_removal on the copy.
   };
 
   /*--------------------.
-    | eps_removal handler |
-    `--------------------*/
+  | eps_removal handler |
+  `--------------------*/
 
   template <class Aut>
   inline
@@ -447,9 +447,9 @@ and eturn the result of epsilon_removal on the copy.
     }
   }
 
-    /*-----------------.
-    | abstract ePS-REM |
-    `-----------------*/
+  /*-------------------.
+  | dyn::eps_removal.  |
+  `-------------------*/
 
   namespace dyn
   {
