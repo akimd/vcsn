@@ -44,6 +44,7 @@ unit_TESTS =                                    \
   unit/concat.chk                               \
   unit/de-bruijn.chk                            \
   unit/determinize.chk                          \
+  unit/eps-removal.chk                          \
   unit/eval.chk                                 \
   unit/is_complete.chk                          \
   unit/is-deterministic.chk                     \
