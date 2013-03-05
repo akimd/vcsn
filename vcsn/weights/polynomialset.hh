@@ -253,7 +253,8 @@ namespace vcsn
               word_t label = labelset()->conv(i);
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
-                throw std::domain_error("invalid polynomialset: " + s
+                throw std::domain_error("polynomialset: conv: "
+                                        "invalid value: " + s
                                         + " contains an empty label "
                                         "(did you mean \\e or \\z?)");
               add_weight(res, label, w);
@@ -267,7 +268,7 @@ namespace vcsn
             i.ignore();
           else
             {
-              throw std::domain_error("invalid polynomialset: " + s
+              throw std::domain_error("polynomialset: conv: invalid value: " + s
                                       + " unexpected "
                                       + std::string{char(i.peek())});
               i.ignore();
