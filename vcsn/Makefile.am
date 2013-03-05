@@ -94,6 +94,7 @@ nobase_vcsn_HEADERS =                           \
   misc/direction.hh                             \
   misc/echo.hh                                  \
   misc/escape.hh                                \
+  misc/hash.hh                                  \
   misc/star_status.hh                           \
   weights/b.hh                                  \
   weights/f2.hh                                 \

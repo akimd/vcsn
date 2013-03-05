@@ -10,29 +10,7 @@
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-
-namespace std
-{
-  // http://stackoverflow.com/questions/2590677
-  template <class T>
-  inline void hash_combine(std::size_t& seed, const T& v)
-  {
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
-  }
-
-  template <typename T>
-  struct hash<set<T>>
-  {
-    size_t operator()(const set<T>& ss) const
-    {
-      size_t res = 0;
-      for (auto s: ss)
-        hash_combine(res, s);
-      return res;
-    }
-  };
-}
+# include <vcsn/misc/hash.hh>
 
 namespace vcsn
 {
