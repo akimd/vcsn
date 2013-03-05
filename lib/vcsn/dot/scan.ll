@@ -56,9 +56,9 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
   "//".*     continue;
   "/*"       BEGIN SC_COMMENT;
-  "\""       yylval->sval = new std::string; BEGIN SC_STRING;
+  "\""       yylval->string.clear(); BEGIN SC_STRING;
   {ID}|{NUM} {
-               yylval->sval = new std::string{yytext, size_t(yyleng)};
+               yylval->string.assign(yytext, size_t(yyleng));
                return TOK(ID);
              }
   [ \t]+     continue;
@@ -74,20 +74,20 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 }
 
 <SC_STRING>{ /* Handling of the strings.  Initial " is eaten. */
-     \" {
-       BEGIN INITIAL;
-       return TOK(ID);
-     }
+  \" {
+    BEGIN INITIAL;
+    return TOK(ID);
+  }
 
-     \\\"      *yylval->sval += '"';
-     \\.       yylval->sval->append(yytext, yyleng);
-     [^\\""]+  yylval->sval->append(yytext, yyleng);
+  \\\"      yylval->string += '"';
+  \\.       yylval->string.append(yytext, yyleng);
+  [^\\""]+  yylval->string.append(yytext, yyleng);
 
-     <<EOF>> {
-       driver_.error(*yylloc, "unexpected end of file in a string");
-       BEGIN INITIAL;
-       return TOK(ID);
-     }
+  <<EOF>> {
+    driver_.error(*yylloc, "unexpected end of file in a string");
+    BEGIN INITIAL;
+    return TOK(ID);
+  }
 }
 
 %%

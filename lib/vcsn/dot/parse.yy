@@ -29,14 +29,15 @@
       // of an union.  See lib/vcsn/rat/README.txt.
       struct sem_type
       {
+        // Identifiers (attributes and node names).
+        using string_t = std::string;
+        string_t string;
         // A set of states.
         using states_t = std::vector<std::string>;
         states_t states;
-        std::string state;
-        // Unlabeled transitions.
+        // (Unlabeled) transitions.
         using transitions_t = std::vector<std::pair<std::string, std::string>>;
         transitions_t transitions;
-        std::string* sval;
       };
     }
   }
@@ -141,33 +142,24 @@
   SEMI     ";"
 ;
 
-%token <sval> ID;
-%type <sval> id.opt;
-%printer
-{
-  if ($$)
-    debug_stream() << '"' << *$$ << '"';
-  else
-    debug_stream() << "nullptr";
-} <sval>;
-%destructor { delete $$; } <sval>;
+%token <string> ID;
+%type <string> id.opt;
 
 // A single state.
-%type <state> node_id node_stmt;
-%printer { debug_stream() << $$; } <state>;
+%type <string> node_id node_stmt;
+%printer { debug_stream() << $$; } <string>;
 
 // Set of nodes, including for subgraphs.
 %type <states> nodes stmt stmt_list edge_stmt subgraph;
 %printer { debug_stream() << $$; } <states>;
 
 // Rational expressions labeling the edges.
-%type <sval> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
+%type <string> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %%
 
 graph:
   "digraph" id.opt "{" stmt_list "}"
   {
-    delete $2;
   }
 ;
 
@@ -196,7 +188,6 @@ stmt:
   }
 | attr_assign
   {
-    assert(!$1);
   }
 | subgraph
   {
@@ -205,59 +196,48 @@ stmt:
 ;
 
 attr_stmt:
-  "graph" attr_list { delete $2; $2 = nullptr; }
-| "node"  attr_list { delete $2; $2 = nullptr; }
-| "edge"  attr_list { delete $2; $2 = nullptr; }
+  "graph" attr_list  {}
+| "node"  attr_list  {}
+| "edge"  attr_list  {}
 ;
 
 attr_list:
   "[" a_list.0 "]" attr_list.opt
   {
-    $$ = nullptr;
-    if ($2)
-      std::swap($$, $2);
-    else
-      std::swap($$, $4);
-    delete $2;
-    delete $4;
+    std::swap($$, $2.empty() ? $4 : $2);
   }
 ;
 
 attr_list.opt:
-  /* empty. */ { $$ = nullptr; }
-| attr_list    { $$ = $1; }
+  // This action seems useless, but because Bison initializes $$ with $0
+  // there are very surprising results...
+  /* empty. */ { $$.clear(); }
+| attr_list    { std::swap($$, $1); }
 ;
 
 attr_assign:
   ID[var] "=" ID[val]
   {
-    $$ = nullptr;
-    if (*$var == "label")
+    if ($var == "label")
       std::swap($$, $val);
-    else if (*$var == "vcsn_context")
+    else if ($var == "vcsn_context")
       {
         assert(!driver_.edit_);
-        std::swap(driver_.context_, *$val);
+        std::swap(driver_.context_, $val);
       }
-    delete $var;
-    delete $val;
   }
 
+// A single attribute.  Keep only labels.
 a:
-  ID           { $$ = nullptr; delete $1; }
-| attr_assign  { $$ = $1; }
+  ID           { $$.clear(); }
+| attr_assign  { std::swap($$, $1); }
 ;
 
+// One or more attributes.
 a_list.1:
   a comma.opt a_list.0
   {
-    $$ = nullptr;
-    if ($1)
-      std::swap($$, $1);
-    else
-      std::swap($$, $3);
-    delete $1;
-    delete $3;
+    std::swap($$, $1.empty() ? $3 : $1);
   }
 ;
 
@@ -271,9 +251,10 @@ semi.opt:
 | ";"
 ;
 
+// Zero or more attributes.
 a_list.0:
-  /* empty. */ { $$ = nullptr; }
-| a_list.1     { $$ = $1; }
+  /* empty. */ {}
+| a_list.1     { std::swap($$, $1); }
 ;
 
 nodes:
@@ -289,7 +270,7 @@ nodes:
 // ((1->2)->3 is more natural.
 //
 // We "cheat": when maintaining a path, we flatten it in two
-// components: the total set of transitions (as a list of pairs of
+// components: the total set of transitions (as a list of transitions of
 // states), and the set of ending states (using the <states> field
 // selector), as they will be used as set of starting states if there
 // is another "->" afterward.
@@ -319,8 +300,6 @@ edge_stmt:
   {
     for (auto t: $path)
       driver_.edit_->add_entry(t.first, t.second, $label);
-    delete $label;
-    $label = nullptr;
   }
 ;
 
@@ -328,7 +307,6 @@ node_stmt:
   node_id attr_list.opt
   {
     std::swap($$, $1);
-    delete $2;
   }
 ;
 
@@ -337,8 +315,7 @@ node_id:
   {
     // We need the editor to exist.
     TRY(@$, driver_.setup_());
-    $$ = *$1;
-    delete $1;
+    std::swap($$, $1);
     if ($$[0] == 'I')
       driver_.edit_->add_pre($$);
     else if ($$[0] == 'F')
@@ -351,13 +328,13 @@ node_id:
 ;
 
 subgraph:
-  "subgraph" id.opt "{" stmt_list "}"  { std::swap($$, $stmt_list); delete $2; }
+  "subgraph" id.opt "{" stmt_list "}"  { std::swap($$, $stmt_list); }
 |                   "{" stmt_list "}"  { std::swap($$, $stmt_list); }
 ;
 
 id.opt:
-  /* empty. */ { $$ = new std::string; }
-| ID           { $$ = $1; }
+  /* empty. */ {}
+| ID           { std::swap($$, $1); }
 ;
 %%
 

@@ -20,33 +20,25 @@ namespace vcsn
             const std::string& entry, const char sep = '+')
   {
     assert (src != a.pre() || dst != a.post());
-    auto w = a.entryset().conv(entry, sep);
     // Initial and final weights are _not_ labeled by the empty word.
     // Yet, the dot parser does not know that.
     // FIXME: decide whose responsibility this is.
     if (src == a.pre() || dst == a.post())
       {
-        assert(w.size() == 1);
-        assert(a.labelset()->is_identity(begin(w)->first));
-        a.add_transition(src, dst, a.prepost_label(), begin(w)->second);
+	auto w = a.weightset()->unit();
+	if (!entry.empty())
+	  {
+	    auto e = a.entryset().conv(entry, sep);
+	    assert(e.size() == 1);
+	    assert(a.labelset()->is_identity(begin(e)->first));
+	    w = begin(e)->second;
+	  }
+	a.add_transition(src, dst, a.prepost_label(), w);
       }
     else
-      a.add_entry(src, dst, w);
-  }
-
-  /// Add transitions from src to dst, possibly being pre() xor post().
-  template <typename Aut>
-  void
-  add_entry(Aut& a,
-            typename Aut::state_t src, typename Aut::state_t dst,
-            const std::string* entry, const char sep = '+')
-  {
-    if (entry)
-      add_entry(a, src, dst, *entry, sep);
-    else
       {
-        assert (src == a.pre() || dst == a.post());
-        a.add_transition(src, dst, a.prepost_label());
+	auto e = a.entryset().conv(entry, sep);
+	a.add_entry(src, dst, e);
       }
   }
 
@@ -63,7 +55,7 @@ namespace vcsn
     virtual void add_pre(const std::string& s) = 0;
     virtual void add_post(const std::string& s) = 0;
     virtual void add_entry(const std::string& src, const std::string& dst,
-                           const std::string* entry) = 0;
+                           const std::string& entry) = 0;
     /// The final result.
     virtual dyn::abstract_automaton* result() = 0;
     /// Forget about the current automaton, but do not free it.
@@ -126,7 +118,7 @@ namespace vcsn
 
     virtual void
     add_entry(const std::string& src, const std::string& dst,
-              const std::string* entry) override final
+              const std::string& entry) override final
     {
       vcsn::add_entry(*res_, state_(src), state_(dst), entry, sep_);
     }
