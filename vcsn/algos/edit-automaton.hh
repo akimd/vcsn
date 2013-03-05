@@ -29,8 +29,11 @@ namespace vcsn
 	if (!entry.empty())
 	  {
 	    auto e = a.entryset().conv(entry, sep);
-	    assert(e.size() == 1);
-	    assert(a.labelset()->is_identity(begin(e)->first));
+            if (e.size() != 1
+                || !a.labelset()->is_identity(begin(e)->first))
+              throw std::runtime_error(std::string{"edit_automaton: invalid "}
+                                       + (src == a.pre() ? "initial" : "final")
+                                       + " entry: " + entry);
 	    w = begin(e)->second;
 	  }
 	a.add_transition(src, dst, a.prepost_label(), w);
@@ -120,7 +123,14 @@ namespace vcsn
     add_entry(const std::string& src, const std::string& dst,
               const std::string& entry) override final
     {
-      vcsn::add_entry(*res_, state_(src), state_(dst), entry, sep_);
+      auto s = state_(src);
+      auto d = state_(dst);
+      if (s == res_->pre() && d == res_->post())
+        throw std::runtime_error("edit_automaton: invalid transition "
+                                 "from pre to post: "
+                                 + src + " -> " + dst
+                                 + " (" + entry + ")");
+      vcsn::add_entry(*res_, s, d, entry, sep_);
     }
 
     virtual dyn::abstract_automaton*
