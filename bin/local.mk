@@ -38,7 +38,6 @@ bin_vcsn_accessible_LDADD       = bin/libtafkit.la
 bin_vcsn_aut_to_exp_LDADD       = bin/libtafkit.la
 bin_vcsn_cat_LDADD              = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la
-bin_vcsn_copy_LDADD             = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la
 bin_vcsn_eps_removal_LDADD      = bin/libtafkit.la
