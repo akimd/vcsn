@@ -36,6 +36,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
 %%
 %{
+  std::string s;
   yylloc->step();
 %}
 
@@ -56,9 +57,9 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
   "//".*     continue;
   "/*"       BEGIN SC_COMMENT;
-  "\""       yylval->string.clear(); BEGIN SC_STRING;
+  "\""       BEGIN SC_STRING;
   {ID}|{NUM} {
-               yylval->string.assign(yytext, size_t(yyleng));
+               yylval->string = std::string{yytext, size_t(yyleng)};
                return TOK(ID);
              }
   [ \t]+     continue;
@@ -76,12 +77,13 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 <SC_STRING>{ /* Handling of the strings.  Initial " is eaten. */
   \" {
     BEGIN INITIAL;
+    yylval->string = s;
     return TOK(ID);
   }
 
-  \\\"      yylval->string += '"';
-  \\.       yylval->string.append(yytext, yyleng);
-  [^\\""]+  yylval->string.append(yytext, yyleng);
+  \\\"      s += '"';
+  \\.       s.append(yytext, yyleng);
+  [^\\""]+  s.append(yytext, yyleng);
 
   <<EOF>> {
     driver_.error(*yylloc, "unexpected end of file in a string");

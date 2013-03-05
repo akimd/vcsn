@@ -17,6 +17,8 @@
   #include <iostream>
   #include <string>
 
+  #include <boost/flyweight.hpp>
+  #include <boost/flyweight/no_tracking.hpp>
   #include <lib/vcsn/rat/location.hh>
   #include <lib/vcsn/dot/driver.hh>
 
@@ -30,13 +32,21 @@
       struct sem_type
       {
         // Identifiers (attributes and node names).
-        using string_t = std::string;
+        //
+        // With ref_counting I have a 20% penalty compared to using
+        // std::string.  With no_tracking, I get a 10x speed up (e.g.,
+        // vcsn-cat of a determinized ladybird).  But then we leak.
+        // We should try to have an arena in which the flyweight
+        // performs its allocation, and flush the whole arena once
+        // we're done parsing.
+        using string_t =
+          boost::flyweight<std::string, boost::flyweights::no_tracking>;
         string_t string;
         // A set of states.
-        using states_t = std::vector<std::string>;
+        using states_t = std::vector<string_t>;
         states_t states;
         // (Unlabeled) transitions.
-        using transitions_t = std::vector<std::pair<std::string, std::string>>;
+        using transitions_t = std::vector<std::pair<string_t, string_t>>;
         transitions_t transitions;
       };
     }
@@ -164,7 +174,7 @@ graph:
 ;
 
 stmt_list:
-  /* empty. */  {}
+  /* empty. */  { $$.clear(); }
 | stmt_list stmt semi.opt
   {
     // Preserve the set of states.
@@ -204,32 +214,34 @@ attr_stmt:
 attr_list:
   "[" a_list.0 "]" attr_list.opt
   {
-    std::swap($$, $2.empty() ? $4 : $2);
+    std::swap($$, $2.get().empty() ? $4 : $2);
   }
 ;
 
 attr_list.opt:
   // This action seems useless, but because Bison initializes $$ with $0
   // there are very surprising results...
-  /* empty. */ { $$.clear(); }
+  /* empty. */ { $$ = ""; }
 | attr_list    { std::swap($$, $1); }
 ;
 
 attr_assign:
   ID[var] "=" ID[val]
   {
-    if ($var == "label")
+    static const sem_type::string_t label{"label"};
+    static const sem_type::string_t vcsn_context{"vcsn_context"};
+    if ($var == label)
       std::swap($$, $val);
-    else if ($var == "vcsn_context")
+    else if ($var == vcsn_context)
       {
         assert(!driver_.edit_);
-        std::swap(driver_.context_, $val);
+        driver_.context_ = $val;
       }
   }
 
 // A single attribute.  Keep only labels.
 a:
-  ID           { $$.clear(); }
+  ID           { $$ = ""; }
 | attr_assign  { std::swap($$, $1); }
 ;
 
@@ -237,7 +249,7 @@ a:
 a_list.1:
   a comma.opt a_list.0
   {
-    std::swap($$, $1.empty() ? $3 : $1);
+    std::swap($$, $1.get().empty() ? $3 : $1);
   }
 ;
 
@@ -316,9 +328,9 @@ node_id:
     // We need the editor to exist.
     TRY(@$, driver_.setup_());
     std::swap($$, $1);
-    if ($$[0] == 'I')
+    if ($$.get()[0] == 'I')
       driver_.edit_->add_pre($$);
-    else if ($$[0] == 'F')
+    else if ($$.get()[0] == 'F')
       driver_.edit_->add_post($$);
     else
       // This is not needed, but it ensures that the states will be
