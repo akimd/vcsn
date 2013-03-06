@@ -2,48 +2,30 @@
 # define VCSN_ALGOS_EDIT_AUTOMATON_HH
 
 # include <unordered_map>
+
+# include <boost/flyweight.hpp>
+# include <boost/flyweight/no_tracking.hpp>
+
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 
+namespace std
+{
+  template <typename T>
+  struct hash<boost::flyweight<T, boost::flyweights::no_tracking>>
+  {
+    using value_type = boost::flyweight<T, boost::flyweights::no_tracking>;
+    size_t operator()(const value_type& ss) const
+    {
+      // http://lists.boost.org/boost-users/2013/03/78007.php
+      hash<const void*> hasher;
+      return hasher(&ss.get());
+    }
+  };
+}
+
 namespace vcsn
 {
-
-  /*-----------------.
-  | add_entry<Aut>.  |
-  `-----------------*/
-
-  /// Add transitions from src to dst, labeled by \c entry.
-  template <typename Aut>
-  void
-  add_entry(Aut& a,
-            typename Aut::state_t src, typename Aut::state_t dst,
-            const std::string& entry, const char sep = '+')
-  {
-    assert (src != a.pre() || dst != a.post());
-    // Initial and final weights are _not_ labeled by the empty word.
-    // Yet, the dot parser does not know that.
-    // FIXME: decide whose responsibility this is.
-    if (src == a.pre() || dst == a.post())
-      {
-	auto w = a.weightset()->unit();
-	if (!entry.empty())
-	  {
-	    auto e = a.entryset().conv(entry, sep);
-            if (e.size() != 1
-                || !a.labelset()->is_identity(begin(e)->first))
-              throw std::runtime_error(std::string{"edit_automaton: invalid "}
-                                       + (src == a.pre() ? "initial" : "final")
-                                       + " entry: " + entry);
-	    w = begin(e)->second;
-	  }
-	a.add_transition(src, dst, a.prepost_label(), w);
-      }
-    else
-      {
-	auto e = a.entryset().conv(entry, sep);
-	a.add_entry(src, dst, e);
-      }
-  }
 
   /*----------------------.
   | edit_automaton<Aut>.  |
@@ -53,12 +35,15 @@ namespace vcsn
   class automaton_editor
   {
   public:
+    using string_t =
+      boost::flyweight<std::string, boost::flyweights::no_tracking>;
+
     virtual ~automaton_editor() {}
-    virtual void add_state(const std::string& s) = 0;
-    virtual void add_pre(const std::string& s) = 0;
-    virtual void add_post(const std::string& s) = 0;
-    virtual void add_entry(const std::string& src, const std::string& dst,
-                           const std::string& entry) = 0;
+    virtual void add_state(const string_t& s) = 0;
+    virtual void add_pre(const string_t& s) = 0;
+    virtual void add_post(const string_t& s) = 0;
+    virtual void add_entry(const string_t& src, const string_t& dst,
+                           const string_t& entry) = 0;
     /// The final result.
     virtual dyn::abstract_automaton* result() = 0;
     /// Forget about the current automaton, but do not free it.
@@ -85,15 +70,22 @@ namespace vcsn
   class edit_automaton: public automaton_editor
   {
   public:
+    using super_type = automaton_editor;
     using automaton_t = Aut;
+    using string_t = super_type::string_t;
+
   private:
-    using state_t = typename automaton_t::state_t;
     using context_t = typename automaton_t::context_t;
-    using state_map = std::unordered_map<std::string, state_t>;
+    using entry_t = typename automaton_t::entry_t;
+    using state_t = typename automaton_t::state_t;
+
+    using state_map = std::unordered_map<string_t, state_t>;
+    using entry_map = std::unordered_map<string_t, entry_t>;
 
   public:
     edit_automaton(const context_t& ctx)
       : res_(new automaton_t(ctx))
+      , unit_(res_->entryset().unit())
     {}
 
     ~edit_automaton()
@@ -102,35 +94,58 @@ namespace vcsn
     }
 
     virtual void
-    add_state(const std::string& s) override final
+    add_state(const string_t& s) override final
     {
       state_(s);
     }
 
     virtual void
-    add_pre(const std::string& s) override final
+    add_pre(const string_t& s) override final
     {
       smap_.emplace(s, res_->pre());
     }
 
     virtual void
-    add_post(const std::string& s) override final
+    add_post(const string_t& s) override final
     {
       smap_.emplace(s, res_->post());
     }
 
     virtual void
-    add_entry(const std::string& src, const std::string& dst,
-              const std::string& entry) override final
+    add_entry(const string_t& src, const string_t& dst,
+              const string_t& entry) override final
     {
       auto s = state_(src);
       auto d = state_(dst);
       if (s == res_->pre() && d == res_->post())
         throw std::runtime_error("edit_automaton: invalid transition "
                                  "from pre to post: "
-                                 + src + " -> " + dst
-                                 + " (" + entry + ")");
-      vcsn::add_entry(*res_, s, d, entry, sep_);
+                                 + src.get() + " -> " + dst.get()
+                                 + " (" + entry.get() + ")");
+      if (s == res_->pre() || d == res_->post())
+        {
+          if (entry.get().empty())
+            res_->add_transition(s, d, res_->prepost_label());
+          else
+            {
+              auto e = res_->entryset().conv(entry, sep_);
+              if (e.size() != 1
+                  || !res_->labelset()->is_identity(begin(e)->first))
+                throw std::runtime_error
+                  (std::string{"edit_automaton: invalid "}
+                   + (s == res_->pre() ? "initial" : "final")
+                   + " entry: " + entry.get());
+              auto w = begin(e)->second;
+              res_->add_transition(s, d, res_->prepost_label(), w);
+            }
+        }
+      else
+        {
+          auto p = emap_.emplace(entry, unit_);
+          if (p.second)
+            p.first->second = res_->entryset().conv(entry, sep_);
+          res_->add_entry(s, d, p.first->second);
+        }
     }
 
     virtual dyn::abstract_automaton*
@@ -149,7 +164,7 @@ namespace vcsn
 
   private:
     state_t
-    state_(const std::string& k)
+    state_(const string_t& k)
     {
       auto p = smap_.emplace(k, Aut::null_state());
       if (p.second)
@@ -157,8 +172,10 @@ namespace vcsn
       return p.first->second;
     }
 
-    state_map smap_;
     automaton_t* res_;
+    entry_t unit_;
+    state_map smap_;
+    entry_map emap_;
   };
 
   template <typename Aut>
