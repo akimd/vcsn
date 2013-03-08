@@ -1,3 +1,27 @@
+*2013-03-08
+** determinize speed-up
+Determinization algorithm is five times faster.
+
+Before:
+  $ time bin/vcsn-de-bruijn 18 | bin/vcsn-determinize -Af - -Onull
+  real    0m13.049s
+  user    0m12.773s
+  sys     0m0.276s
+  $ time bin/vcsn-de-bruijn 20 | bin/vcsn-determinize -Af - -Onull
+  real    0m56.780s
+  user    0m55.775s
+  sys     0m0.988s
+
+Now:
+  $ time bin/vcsn-de-bruijn 18 | bin/vcsn-determinize -Af - -Onull
+  real     0m2.181s
+  user     0m2.048s
+  sys      0m0.132s
+  $ time bin/vcsn-de-bruijn 20 | bin/vcsn-determinize -Af - -Onull
+  real     0m8.653s
+  user     0m8.177s
+  sys      0m0.476s
+
 * 2013-02-26
 ** hierarchy and API clean up
 dyn:: was cleaned.  Some headers were renamed:
