@@ -5,8 +5,6 @@
 # include <map>
 # include <stdexcept>
 
-# include <boost/type_traits.hpp>
-
 # include <vcsn/dyn/context.hh> // sname
 
 namespace vcsn
@@ -49,8 +47,7 @@ namespace vcsn
     template <typename... Args>
     auto
     call(const std::string& ctx, Args&&... args)
-    // I failed to find a means in plain C++...
-      -> typename boost::function_traits<Fun>::result_type
+      -> decltype (std::declval<Fun>()(args...))
     {
       return (get(ctx))(std::forward<Args>(args)...);
     }
