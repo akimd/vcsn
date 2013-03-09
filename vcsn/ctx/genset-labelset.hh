@@ -33,6 +33,16 @@ namespace vcsn
         return gs_;
       }
 
+      static std::string sname()
+      {
+        return genset_t::sname();
+      }
+
+      std::string vname(bool full = true) const
+      {
+        return this->genset()->vname(full);
+      }
+
 # define DEFINE(Name)                                                   \
       template <typename... Args>                                       \
       auto                                                              \

@@ -33,14 +33,20 @@ namespace vcsn
         : wordset{std::make_shared<const genset_t>(gs)}
       {}
 
+      const super_type&
+      super() const
+      {
+        return static_cast<const super_type&>(*this);
+      }
+
       static std::string sname()
       {
-        return "law_" + genset_t::sname();
+        return "law_" + super_type::sname();
       }
 
       std::string vname(bool full = true) const
       {
-        return "law_" + this->genset()->vname(full);
+        return "law_" + super().vname(full);
       }
 
       label_t
