@@ -33,8 +33,9 @@ TESTS = $(dist_TESTS)
 # Lazy test suite.
 RECHECK_LOGS =
 
-include rat/local.mk
 include unit/local.mk
+include rat/local.mk
+include tafkit/local.mk
 
 AM_RST2HTMLFLAGS = -d -t
 .log.html:
