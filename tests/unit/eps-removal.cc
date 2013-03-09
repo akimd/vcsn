@@ -29,7 +29,7 @@ void printlaw(const Aut& a)
   print(a);
   unsigned c[2]={0,0};
   for(auto t : a.transitions())
-    c[a.label_of(t) == a.labelset()->identity()]++;
+    c[a.label_of(t) == a.labelset()->empty_word()]++;
   std::cout << " Eps-transitions: " << c[1]
             << " Non eps-trans: " << c[0]
             << std::endl;

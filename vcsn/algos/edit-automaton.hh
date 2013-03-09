@@ -130,7 +130,7 @@ namespace vcsn
             {
               auto e = res_->entryset().conv(entry, sep_);
               if (e.size() != 1
-                  || !res_->labelset()->is_identity(begin(e)->first))
+                  || !res_->labelset()->is_empty_word(begin(e)->first))
                 throw std::runtime_error
                   (std::string{"edit_automaton: invalid "}
                    + (s == res_->pre() ? "initial" : "final")

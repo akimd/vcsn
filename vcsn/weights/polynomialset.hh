@@ -30,7 +30,7 @@ namespace vcsn
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
-      unit_[labelset()->identity()] = weightset()->unit();
+      unit_[labelset()->empty_word()] = weightset()->unit();
     }
 
     std::string sname() const
@@ -127,7 +127,7 @@ namespace vcsn
         return unit();
       if (s == 1)
         {
-          auto i = v.find(labelset()->identity());
+          auto i = v.find(labelset()->empty_word());
           if (i != v.end())
             {
               value_t p;
@@ -149,7 +149,7 @@ namespace vcsn
     {
       if (v.size() != 1)
         return false;
-      auto i = v.find(labelset()->identity());
+      auto i = v.find(labelset()->empty_word());
       if (i == v.end())
         return false;
       return weightset()->is_unit(i->second);

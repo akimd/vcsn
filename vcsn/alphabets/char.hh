@@ -59,13 +59,13 @@ namespace vcsn
     }
 
     word_t
-    identity() const
+    empty_word() const
     {
       return {};
     }
 
     bool
-    is_identity(const word_t& w) const
+    is_empty_word(const word_t& w) const
     {
       return w.empty();
     }

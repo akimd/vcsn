@@ -54,13 +54,13 @@ namespace vcsn
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
       empty_t
-      identity() const
+      empty_word() const
       {
         return {};
       }
 
       bool
-      is_identity(empty_t) const
+      is_empty_word(empty_t) const
       {
         return true;
       }
