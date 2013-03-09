@@ -1,22 +1,17 @@
 #ifndef VCSN_CTX_LAL_CHAR_ZRR_HH
 # define VCSN_CTX_LAL_CHAR_ZRR_HH
 
-# include <vcsn/alphabets/char.hh>
-# include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/letterset.hh>
+# include <vcsn/ctx/lal_char.hh>
 # include <vcsn/weights/z.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_z = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
-                               vcsn::z>;
-    using lal_char_zr = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
-                                vcsn::ratexpset<lal_char_z>>;
-    using lal_char_zrr = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
-                                 vcsn::ratexpset<lal_char_zr>>;
+    using lal_char_z   = context<lal_char, vcsn::z>;
+    using lal_char_zr  = context<lal_char, vcsn::ratexpset<lal_char_z>>;
+    using lal_char_zrr = context<lal_char, vcsn::ratexpset<lal_char_zr>>;
   }
 }
 

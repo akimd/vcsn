@@ -1,18 +1,15 @@
 #ifndef VCSN_CTX_LAL_CHAR_ZMIN_HH
 # define VCSN_CTX_LAL_CHAR_ZMIN_HH
 
-# include <vcsn/alphabets/char.hh>
-# include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/letterset.hh>
+# include <vcsn/ctx/lal_char.hh>
 # include <vcsn/weights/zmin.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    using lal_char_zmin = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
-                                  vcsn::zmin>;
+    using lal_char_zmin = context<lal_char, vcsn::zmin>;
   }
 }
 
