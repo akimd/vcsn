@@ -61,7 +61,7 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
-  dyn/context.hh                       \
+  dyn/context.hh                                \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
   ctx/instantiate.hh                            \
