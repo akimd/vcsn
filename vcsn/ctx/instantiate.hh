@@ -204,6 +204,9 @@ namespace vcsn
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
+        // is-proper.
+        is_proper_register(aut_t::sname(), is_proper<aut_t>);
+
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(Ctx::sname(), lift<Ctx>);

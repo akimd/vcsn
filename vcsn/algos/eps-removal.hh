@@ -447,12 +447,13 @@ and eturn the result of epsilon_removal on the copy.
     }
   }
 
-  /*-------------------.
-  | dyn::eps_removal.  |
-  `-------------------*/
-
   namespace dyn
   {
+
+    /*-------------------.
+    | dyn::eps_removal.  |
+    `-------------------*/
+
     namespace details
     {
       template <typename Aut>
@@ -467,6 +468,25 @@ and eturn the result of epsilon_removal on the copy.
      bool
      eps_removal_register(const std::string& ctx, const eps_removal_t& fn);
     }
+
+    /*-----------------.
+    | dyn::is_proper.  |
+    `-----------------*/
+
+    namespace details
+    {
+      template <typename Aut>
+      bool is_proper(const dyn::automaton& aut)
+      {
+        return is_proper(dynamic_cast<const Aut&>(*aut));
+      }
+
+     using is_proper_t = auto (const dyn::automaton& aut) -> bool;
+
+     bool
+     is_proper_register(const std::string& ctx, const is_proper_t& fn);
+    }
+
   }
 
 } // namespace vcsn

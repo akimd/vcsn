@@ -58,6 +58,7 @@ vcsn_eps_removal      = $(top_builddir)/bin/vcsn-eps-removal
 vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
 vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
 vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
+vcsn_is_proper        = $(top_builddir)/bin/vcsn-is-proper
 vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift             = $(top_builddir)/bin/vcsn-lift
 vcsn_product          = $(top_builddir)/bin/vcsn-product
@@ -75,6 +76,7 @@ all_vcsn =                                      \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
   $(vcsn_is_deterministic)                      \
+  $(vcsn_is_proper)                             \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \

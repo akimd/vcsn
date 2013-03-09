@@ -58,4 +58,23 @@ namespace vcsn
   };
 }
 
+# define REGISTER_DEFINE(Name)                          \
+  namespace details                                     \
+  {                                                     \
+    Registry<Name ## _t>&                               \
+    Name ## _registry()                                 \
+    {                                                   \
+      static Registry<Name ## _t> instance{#Name};      \
+      return instance;                                  \
+    }                                                   \
+                                                        \
+    bool                                                \
+    Name ## _register(const std::string& ctx,           \
+                      const Name ## _t& fn)             \
+    {                                                   \
+      return Name ## _registry().set(ctx, fn);          \
+    }                                                   \
+  }
+
+
 #endif
