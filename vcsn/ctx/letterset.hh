@@ -6,15 +6,17 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
+# include <vcsn/ctx/genset-labelset.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
     template <typename GenSet>
-    struct letterset
+    struct letterset: genset_labelset<GenSet>
     {
       using genset_t = GenSet;
+      using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
       using label_t = typename genset_t::letter_t;
@@ -25,7 +27,7 @@ namespace vcsn
       using kind_t = labels_are_letters;
 
       letterset(const genset_ptr& gs)
-        : gs_{gs}
+        : super_type{gs}
       {}
 
       letterset(const genset_t& gs = {})
@@ -39,47 +41,14 @@ namespace vcsn
 
       std::string vname(bool full = true) const
       {
-        return "lal_" + genset()->vname(full);
-      }
-
-      const genset_ptr& genset() const
-      {
-        return gs_;
+        return "lal_" + this->genset()->vname(full);
       }
 
       label_t
       special() const
       {
-        return genset()->special_letter();
+        return this->genset()->special_letter();
       }
-
-# define DEFINE(Name)                                                   \
-      template <typename... Args>                                       \
-      auto                                                              \
-      Name(Args&&... args) const                                        \
-        -> decltype(this->genset()->Name(std::forward<Args>(args)...))  \
-      {                                                                 \
-        return this->genset()->Name(std::forward<Args>(args)...);       \
-      }
-
-      DEFINE(begin);
-      DEFINE(concat);
-      DEFINE(conv);
-      DEFINE(end);
-      DEFINE(equals);
-      DEFINE(format);
-      DEFINE(has);
-      DEFINE(identity);
-      DEFINE(is_identity);
-      DEFINE(is_letter);
-      DEFINE(print);
-      DEFINE(to_word);
-      DEFINE(transpose);
-
-# undef DEFINE
-
-    private:
-      genset_ptr gs_;
     };
 
     /// Compute the intersection with another alphabet.

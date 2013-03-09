@@ -81,6 +81,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char_zmin.hh                          \
   ctx/law_char_zr.hh                            \
   ctx/law_char_zrr.hh                           \
+  ctx/genset-labelset.hh                        \
   ctx/letterset.hh                              \
   ctx/unitset.hh                                \
   ctx/wordset.hh                                \
