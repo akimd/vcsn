@@ -11,10 +11,22 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-tafkit_TESTS =                                    \
-  tafkit/eps-removal.chk
+tafkit_TESTS =					\
+  tafkit/accessible.chk				\
+  tafkit/aut_to_exp.chk				\
+  tafkit/cat.chk				\
+  tafkit/de-bruijn.chk				\
+  tafkit/determinize.chk			\
+  tafkit/eps-removal.chk			\
+  tafkit/eval.chk				\
+  tafkit/is-deterministic.chk			\
+  tafkit/is_complete.chk			\
+  tafkit/ladybird.chk				\
+  tafkit/lift.chk				\
+  tafkit/product.chk				\
+  tafkit/standard_of.chk
+dist_TESTS += $(tafkit_TESTS)
 
 .PHONY: check-tafkit
 check-tafkit:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(tafkit_TESTS)'
-

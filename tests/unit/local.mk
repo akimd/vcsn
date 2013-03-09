@@ -38,41 +38,27 @@ unit_polynomialset_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 unit_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(AM_LDADD)
 
 unit_TESTS =                                    \
-  unit/accessible.chk                           \
   unit/aut_lau_z.chk                            \
   unit/aut_lal_char_z.chk                       \
   unit/aut_law_char_z.chk                       \
-  unit/aut_to_exp.chk                           \
-  unit/complete.chk                             \
   unit/concat.chk                               \
-  unit/de-bruijn.chk                            \
-  unit/determinize.chk                          \
   unit/eps-removal.chk                          \
-  unit/eval.chk                                 \
-  unit/is_complete.chk                          \
-  unit/is-deterministic.chk                     \
-  unit/ladybird.chk                             \
-  unit/lift.chk                                 \
   unit/polynomialset.chk                        \
-  unit/product.chk                              \
-  unit/standard_of.chk                          \
-  unit/transpose.chk                            \
-  unit/vcsn-cat.chk
+  unit/transpose.chk
 dist_TESTS += $(unit_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-unit/aut_lau_z.log: unit/aut_lau_z
+unit/accessible.log: unit/accessible.chk
 unit/aut_lal_char_z.log: unit/aut_lal_char_z
+unit/aut_lau_z.log: unit/aut_lau_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/concat.log: unit/concat
 unit/eps-removal.log: unit/eps-removal
 unit/polynomialset.log: unit/polynomialset
 unit/transpose.log: unit/transpose
-unit/accessible.log: unit/accessible.chk
 
 .PHONY: check-unit
 check-unit:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(unit_TESTS)'
-
