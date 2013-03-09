@@ -46,7 +46,7 @@ namespace vcsn
       label_t
       special() const
       {
-        return {this->genset()->special_letter()};
+        return this->genset()->template special<label_t>();
       }
     };
 

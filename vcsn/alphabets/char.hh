@@ -107,7 +107,7 @@ namespace vcsn
       return w.size() == 1;
     }
 
-  public:
+  private:
     /// Use special().
     letter_t special_letter() const { return 255; }
 
