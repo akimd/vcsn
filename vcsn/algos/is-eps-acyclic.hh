@@ -36,8 +36,9 @@ namespace vcsn
 
       const automaton_t& input;
       label_t empty_word;
-      //Return true if an epsilon-circuit is accessible from s by
-      //epsilon-transitions.
+
+      // Return true if an epsilon-circuit is accessible from s by
+      // epsilon-transitions.
       bool has_epsilon_circuit(state_t s)
       {
         auto it = tag.find(s);
@@ -57,11 +58,11 @@ namespace vcsn
         switch (it->second)
         {//switch with respect to tag[s]
           case 'u':
-            /* s is reached while we are exploring successors of s : there is a
-            ** circuit */
+            // s is reached while we are exploring successors of s:
+            // there is a circuit.
             tag[s] = 'c';
             return true;
-            /* otherwise the graph reachable from s has already been explored */
+            // Otherwise the graph reachable from s has already been explored.
           case 'o':
             return false;
           default: //'c'
@@ -70,7 +71,8 @@ namespace vcsn
       }
 
       epsilon_acyclic(const automaton_t& input)
-        : input(input), empty_word(input.labelset()->empty_word())
+        : input(input)
+        , empty_word(input.labelset()->identity())
       {
       }
 
