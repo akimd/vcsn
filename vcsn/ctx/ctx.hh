@@ -29,6 +29,7 @@ namespace vcsn
         {
           is_lau = std::is_same<kind_t, labels_are_unit>::value,
           is_lal = std::is_same<kind_t, labels_are_letters>::value,
+          is_lan = std::is_same<kind_t, labels_are_nullable>::value,
           is_law = std::is_same<kind_t, labels_are_words>::value,
         };
 
@@ -133,6 +134,9 @@ namespace vcsn
 
   template <typename Ctx, typename R>
   using if_lal = typename std::enable_if<Ctx::is_lal, R>::type;
+
+  template <typename Ctx, typename R>
+  using if_lan = typename std::enable_if<Ctx::is_lan, R>::type;
 
   template <typename Ctx, typename R>
   using if_law = typename std::enable_if<Ctx::is_law, R>::type;

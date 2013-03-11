@@ -1,9 +1,10 @@
-#ifndef VCSN_CTX_WORDSET_HH
-# define VCSN_CTX_WORDSET_HH
+#ifndef VCSN_CTX_NULLABLESET_HH
+# define VCSN_CTX_NULLABLESET_HH
 
 # include <memory>
 # include <set>
 
+# include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/genset-labelset.hh>
 
@@ -12,25 +13,25 @@ namespace vcsn
   namespace ctx
   {
     template <typename GenSet>
-    struct wordset: genset_labelset<GenSet>
+    struct nullableset: genset_labelset<GenSet>
     {
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
-      using label_t = typename genset_t::word_t;
+      using label_t = typename genset_t::letter_t;
       using letter_t = typename genset_t::letter_t;
       using word_t = typename genset_t::word_t;
       using letters_t = std::set<letter_t>;
 
-      using kind_t = labels_are_words;
+      using kind_t = labels_are_nullable;
 
-      wordset(const genset_ptr& gs)
+      nullableset(const genset_ptr& gs)
         : super_type{gs}
       {}
 
-      wordset(const genset_t& gs = {})
-        : wordset{std::make_shared<const genset_t>(gs)}
+      nullableset(const genset_t& gs = {})
+        : nullableset{std::make_shared<const genset_t>(gs)}
       {}
 
       const super_type&
@@ -41,12 +42,12 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "law_" + super_type::sname();
+        return "lan_" + super_type::sname();
       }
 
       std::string vname(bool full = true) const
       {
-        return "law_" + super().vname(full);
+        return "lan_" + super().vname(full);
       }
 
       label_t
@@ -55,38 +56,34 @@ namespace vcsn
         return this->genset()->template special<label_t>();
       }
 
-      bool
-      is_valid(const label_t& v) const
-      {
-        for (auto l: v)
-          if (!this->has(l))
-            return false;
-        return true;
-      }
-
       label_t
       identity() const
       {
-        return this->empty_word();
+        return this->genset()->identity_letter();
       }
 
       bool
-      is_identity(const label_t& l) const
+      is_identity(label_t l) const
       {
-        return this->is_empty_word(l);
+        return l == identity();
+      }
+
+      bool
+      is_valid(const label_t& v) const
+      {
+        return this->has(v) || v == this->identity();
       }
     };
 
     /// Compute the intersection with another alphabet.
-    // FIXME: Factor in genset_labelset?
     template <typename GenSet>
-    wordset<GenSet>
-    intersect(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
+    nullableset<GenSet>
+    intersect(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
     {
-      return {intersect(lhs->genset(), rhs->genset())};
+      return {intersect(*lhs.genset(), *rhs.genset())};
     }
 
   }
 }
 
-#endif // !VCSN_CTX_WORDSET_HH
+#endif // !VCSN_CTX_NULLABLESET_HH

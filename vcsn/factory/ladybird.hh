@@ -11,8 +11,8 @@ namespace vcsn
   mutable_automaton<Context>
   ladybird(unsigned n, const Context& ctx)
   {
-    static_assert(Context::is_lal,
-                  "requires labels_are_letters");
+    static_assert(Context::is_lal || Context::is_lan,
+                  "requires labels_are_letters or nullable");
     using context_t = Context;
     mutable_automaton<context_t> aut{ctx};
 

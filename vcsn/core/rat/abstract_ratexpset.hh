@@ -163,7 +163,17 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const std::string& v) const
-      -> if_lau<Ctx, value_t>
+      -> if_lal<Ctx, value_t>
+    {
+      if (!ks_.labelset()->is_letter(v))
+        throw std::domain_error("invalid atom: " + v + ": not a letter");
+      return ks_.atom(v[0]);
+    }
+
+    template <typename Ctx>
+    auto
+    atom_(const std::string& v) const
+      -> if_lan<Ctx, value_t>
     {
       if (!v.empty())
         throw std::domain_error("invalid atom: " + v + ": not empty");
@@ -173,11 +183,11 @@ namespace vcsn
     template <typename Ctx>
     auto
     atom_(const std::string& v) const
-      -> if_lal<Ctx, value_t>
+      -> if_lau<Ctx, value_t>
     {
-      if (!ks_.labelset()->is_letter(v))
-        throw std::domain_error("invalid atom: " + v + ": not a letter");
-      return ks_.atom(v[0]);
+      if (!v.empty())
+        throw std::domain_error("invalid atom: " + v + ": not empty");
+      return ks_.atom({});
     }
 
     template <typename Ctx>

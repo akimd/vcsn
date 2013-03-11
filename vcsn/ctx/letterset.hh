@@ -55,6 +55,12 @@ namespace vcsn
       {
         return this->genset()->template special<label_t>();
       }
+
+      bool
+      is_valid(const label_t& v) const
+      {
+        return this->has(v);
+      }
     };
 
     /// Compute the intersection with another alphabet.

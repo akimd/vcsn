@@ -114,7 +114,7 @@ EOF
 ## ------------------ ##
 
 # check_aut < AUTOMATON
-# -----------------
+# ---------------------
 # Check that vcsn-cat can read AUTOMATON, and is idempotent on it.
 check_aut ()
 {
@@ -178,6 +178,34 @@ digraph
   { 1 2 }
   I1 -> 1
   1 -> 2 [label = "a"]
+  2 -> F2
+}
+EOF
+
+# lan_char(a)_b.
+check_aut <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  1 -> 2 [label = a]
+  1 -> 2 [label = "\e"]
+  2 -> F2
+  I1 -> 1
+}
+---
+digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F2
+  }
+  { 1 2 }
+  I1 -> 1
+  1 -> 2 [label = "\\e, a"]
   2 -> F2
 }
 EOF

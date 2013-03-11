@@ -695,21 +695,32 @@ namespace vcsn
     template <typename Ctx>
     void
     add_entry_(state_t src, state_t dst,
-               if_lau<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        add_transition(src, dst, {}, e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
                if_lal<Ctx, const entry_t&> es)
     {
       for (auto e: es)
         // FIXME: Hack.  entries are always about words, but we
         // want letters.  "e.first[0]" is a hack for lal.
         add_transition(src, dst, e.first[0], e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lan<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        // FIXME: Hack.  entries are always about words, but we
+        // want letters.  "e.first[0]" is a hack for lal.
+        add_transition(src, dst, e.first[0], e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lau<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        add_transition(src, dst, {}, e.second);
     }
 
     template <typename Ctx>

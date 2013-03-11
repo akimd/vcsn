@@ -76,6 +76,32 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
+  ratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
+    -> value_t
+  {
+    if (!labelset()->is_valid(v))
+      throw std::domain_error("invalid letter: " + std::string{v});
+    return std::make_shared<atom_t>(weightset()->unit(), v);
+  }
+
+  template <typename Context>
+  template <typename Ctx>
+  inline
+  auto
+  ratexpset<Context>::atom_(if_lan<Ctx, label_t> v) const
+    -> value_t
+  {
+    if (!labelset()->is_valid(v))
+      throw std::domain_error("invalid nullable: " + std::string{v});
+    if (labelset()->is_identity(v))
+      return unit();
+    return std::make_shared<atom_t>(weightset()->unit(), v);
+  }
+
+  template <typename Context>
+  template <typename Ctx>
+  inline
+  auto
   ratexpset<Context>::atom_(if_lau<Ctx, label_t> v) const
     -> value_t
   {
@@ -86,25 +112,14 @@ namespace vcsn
   template <typename Ctx>
   inline
   auto
-  ratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
-    -> value_t
-  {
-    if (!labelset()->has(v))
-      throw std::domain_error("invalid letter: " + std::string{v});
-    return std::make_shared<atom_t>(weightset()->unit(), v);
-  }
-
-  template <typename Context>
-  template <typename Ctx>
-  inline
-  auto
   ratexpset<Context>::atom_(const if_law<Ctx, word_t>& w) const
     -> value_t
   {
-    for (auto l: w)
-      if (!labelset()->has(l))
-        throw std::domain_error("invalid word: " + w
-                                + ": invalid letter: " + std::string{l});
+    if (!labelset()->is_valid(w))
+      throw std::domain_error("invalid word: " + w);
+
+    if (labelset()->is_empty_word(w))
+      return unit();
     return std::make_shared<atom_t>(weightset()->unit(), w);
   }
 
@@ -210,13 +225,19 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_unit) const
+  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
     -> value_t
   {
     return mul(l, r);
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
+  DEFINE::concat(value_t l, value_t r, labels_are_nullable) const
+    -> value_t
+  {
+    return mul(l, r);
+  }
+
+  DEFINE::concat(value_t l, value_t r, labels_are_unit) const
     -> value_t
   {
     return mul(l, r);

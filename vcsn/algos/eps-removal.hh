@@ -70,7 +70,7 @@ namespace vcsn
     public:
     static bool in_situ_remover(automaton_t & input)
     {
-      label_t empty_word = input.labelset()->empty_word();
+      label_t empty_word = input.labelset()->identity();
       auto weightset_ptr = input.weightset();
       using state_weight_t = std::pair<state_t, weight_t>;
       std::list<state_weight_t> closure;
@@ -153,7 +153,7 @@ namespace vcsn
     static bool is_proper(const automaton_t& input)
     {
       for (auto t: input.transitions())
-        if (input.labelset()->is_empty_word(input.label_of(t)))
+        if (input.labelset()->is_identity(input.label_of(t)))
           return false;
       return true;
     }

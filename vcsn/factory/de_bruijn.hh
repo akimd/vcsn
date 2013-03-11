@@ -15,8 +15,8 @@ namespace vcsn
   mutable_automaton<Context>
   de_bruijn(unsigned n, const Context& ctx)
   {
-    static_assert(Context::is_lal,
-                  "requires labels_are_letters");
+    static_assert(Context::is_lal || Context::is_lan,
+                  "requires labels_are_letters or nullable");
     size_t sz =
       std::distance(std::begin(*ctx.labelset()), std::end(*ctx.labelset()));
     if (sz < 2)

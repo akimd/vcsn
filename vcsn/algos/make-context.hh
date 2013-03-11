@@ -89,7 +89,8 @@ namespace vcsn
     }
 
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal || Ctx::is_law, Ctx>::type
+    typename std::enable_if<Ctx::is_lal || Ctx::is_lan || Ctx::is_law,
+                            Ctx>::type
     make_context(const std::string& name)
     {
       // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
@@ -102,11 +103,13 @@ namespace vcsn
       // FIXME: regex is not usable in G++ 4.8 yet.
       std::string kind = name.substr(0, 3);
 
-      if ((Ctx::is_lal && kind != "lal")
+      if ((Ctx::is_lan && kind != "lan")
+          || (Ctx::is_lal && kind != "lal")
           || (Ctx::is_law && kind != "law"))
         {
           std::string ctxk =
             Ctx::is_lal ? "lal"
+            : Ctx::is_lan ? "lan"
             : Ctx::is_law ? "law"
             : "invalid Context Kind";
           throw std::runtime_error("make_context: Ctx::is_" + ctxk

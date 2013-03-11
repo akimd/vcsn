@@ -115,13 +115,6 @@ namespace vcsn
     {
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_unit)
-      {
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
       register_kind_functions(labels_are_letters)
       {
         using aut_t = mutable_automaton<Ctx>;
@@ -137,6 +130,33 @@ namespace vcsn
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
 
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_kind_functions(labels_are_nullable)
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::details;
+
+        de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
+
+        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
+
+        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
+
+        eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
+
+        ladybird_register(Ctx::sname(), ladybird<Ctx>);
+
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_kind_functions(labels_are_unit)
+      {
         return true;
       }
 

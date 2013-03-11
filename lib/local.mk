@@ -18,6 +18,10 @@ pkglib_LTLIBRARIES += lib/liblal_char_b.la
 lib_liblal_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_b
 
+pkglib_LTLIBRARIES += lib/liblan_char_b.la
+lib_liblan_char_b_la_SOURCES = lib/ctx/libctx.cc
+lib_liblan_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_b
+
 pkglib_LTLIBRARIES += lib/liblaw_char_b.la
 lib_liblaw_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_b

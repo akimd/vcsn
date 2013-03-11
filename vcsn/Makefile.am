@@ -73,6 +73,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/lal_char_zmin.hh                          \
   ctx/lal_char_zr.hh                            \
   ctx/lal_char_zrr.hh                           \
+  ctx/lan_char_b.hh                             \
   ctx/lau_br.hh                                 \
   ctx/lau_z.hh                                  \
   ctx/law_char.hh                               \
@@ -85,6 +86,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char_zrr.hh                           \
   ctx/genset-labelset.hh                        \
   ctx/letterset.hh                              \
+  ctx/nullableset.hh                            \
   ctx/unitset.hh                                \
   ctx/wordset.hh                                \
   dyn/automaton.hh                              \

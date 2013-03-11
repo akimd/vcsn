@@ -95,8 +95,10 @@ namespace vcsn
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
     /// Implementation details for concat.
-    value_t concat(value_t l, value_t r, labels_are_unit) const;
+    // FIXME: Should be extrusive.
     value_t concat(value_t l, value_t r, labels_are_letters) const;
+    value_t concat(value_t l, value_t r, labels_are_nullable) const;
+    value_t concat(value_t l, value_t r, labels_are_unit) const;
     value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;
@@ -106,11 +108,15 @@ namespace vcsn
   private:
     template <typename Ctx>
     value_t
-    atom_(if_lau<Ctx, label_t> v) const;
+    atom_(if_lal<Ctx, letter_t> v) const;
 
     template <typename Ctx>
     value_t
-    atom_(if_lal<Ctx, letter_t> v) const;
+    atom_(if_lan<Ctx, label_t> v) const;
+
+    template <typename Ctx>
+    value_t
+    atom_(if_lau<Ctx, label_t> v) const;
 
     template <typename Ctx>
     value_t
