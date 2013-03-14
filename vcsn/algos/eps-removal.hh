@@ -220,8 +220,7 @@ and eturn the result of epsilon_removal on the copy.
     static Aut eps_removal(const automaton_t &input)
     {
       Aut res = copy(input);
-      if (!remover_t::in_situ_remover(res))
-        throw std::domain_error("invalid automaton");
+      eps_removal_here(res);
       return res;
     }
 
@@ -263,10 +262,8 @@ and eturn the result of epsilon_removal on the copy.
 
     static Aut eps_removal(const Aut &input)
     {
-      if (!is_valid(input))
-        throw std::domain_error("invalid automaton");
       Aut res = copy(input);
-      remover_t::in_situ_remover(res);
+      eps_removal_here(res);
       return res;
     }
   };
@@ -290,7 +287,7 @@ and eturn the result of epsilon_removal on the copy.
     static Aut eps_removal(const Aut &input)
     {
       Aut res = copy(input);
-      epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(res);
+      eps_removal_here(res);
       return res;
     }
   };
@@ -319,14 +316,12 @@ and eturn the result of epsilon_removal on the copy.
       epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
     }
 
-      static Aut eps_removal(const Aut &input)
-      {
-        if (!is_valid(input))
-          throw std::domain_error("invalid automaton");
-        Aut res = copy(input);
-        epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(res);
-        return res;
-      }
+    static Aut eps_removal(const Aut &input)
+    {
+      Aut res = copy(input);
+      eps_removal_here(res);
+      return res;
+    }
   };
 
   // !NON_STARABLE
@@ -352,10 +347,9 @@ and eturn the result of epsilon_removal on the copy.
   inline
   Aut epsilon_remover<Aut,Kind>::eps_removal(const Aut &input)
   {
-    if (is_proper(input))
-      return copy(input);
-    return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-      ::eps_removal(input);
+    Aut res = copy(input);
+    eps_removal_here(res);
+    return res;
   }
 
   /*
