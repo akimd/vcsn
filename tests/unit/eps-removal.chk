@@ -40,7 +40,7 @@ States: 3 Initials: 1 Finals: 1 Transitions: 6
  Eps-transitions: 3 Non eps-trans: 3
 Law proper: 0
 Law valid: 0
-Exception: Non valid automaton
+Exception: invalid automaton
 * No circuit of eps-transition
 States: 3 Initials: 1 Finals: 1 Transitions: 5
  Eps-transitions: 2 Non eps-trans: 3
@@ -64,7 +64,7 @@ States: 3 Initials: 1 Finals: 1 Transitions: 6
  Eps-transitions: 3 Non eps-trans: 3
 Law proper: 0
 Law valid: 0
-Exception: Non valid automaton
+Exception: invalid automaton
 * No negative circuit
 States: 3 Initials: 1 Finals: 1 Transitions: 6
  Eps-transitions: 3 Non eps-trans: 3
