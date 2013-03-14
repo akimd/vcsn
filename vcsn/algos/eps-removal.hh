@@ -73,7 +73,6 @@ namespace vcsn
       auto weightset_ptr = input.weightset();
       using state_weight_t = std::pair<state_t, weight_t>;
       std::list<state_weight_t> closure;
-      std::list<transition_t> to_erase;
       /*
          For each state (s), the incoming epsilon-transitions
          are put into the to_erase list; in the same time,
@@ -84,7 +83,6 @@ namespace vcsn
       for (auto s: input.states())
       {
         weight_t star = weightset_ptr->unit();// if there is no eps-loop
-        to_erase.clear();
         closure.clear();
         for (auto t: input.in(s, empty_word))
         {
@@ -100,20 +98,25 @@ namespace vcsn
                 return false;
               }
           else
-            closure.push_back(state_weight_t(src, t_weight));
-          to_erase.push_back(t);
-        }
-        //Incoming epsilon transitions are deleted from input
-        for (auto t: to_erase)
+            closure.emplace_back(src, t_weight);
+          // Incoming epsilon transitions are deleted from input.
           input.del_transition(t);
+        }
         /*
            For each transition (t : s -- label|weight --> dst),
            for each former
            epsilon transition closure->first -- e|closure->second --> s
-           a transition (closure->first -- label | closure->second*star*weight --> dst
+           a transition
+             (closure->first -- label | closure->second*star*weight --> dst)
            is added to the automaton (add, not set !!)
+
+           If (s) is final with weight (weight),
+           for each former
+           epsilon transition closure->first -- e|closure->second --> s
+           pair-second * star * weight is added to the final weight
+           of closure->first
            */
-        for (auto t: input.out(s))
+        for (auto t: input.all_out(s))
         {
           weight_t s_weight = weightset_ptr->mul(star, input.weight_of(t));
           label_t label = input.label_of(t);
@@ -121,21 +124,6 @@ namespace vcsn
           for (auto pair: closure)
             input.add_transition(pair.first, dst, label,
                                  weightset_ptr->mul(pair.second, s_weight));
-        }
-        /*
-           If (s) is final with weight (weight),
-           for each former
-           epsilon transition closure->first -- e|closure->second --> s
-           pair-second * star * weight is added to the final weight of closure->first
-           */
-
-        if (input.is_final(s))
-        {
-          weight_t s_weight = weightset_ptr->mul(star,
-                                                 input.get_final_weight(s));
-          for (auto pair: closure)
-            input.add_final(pair.first,
-                weightset_ptr->mul(pair.second, s_weight));
         }
       }
       return true;
