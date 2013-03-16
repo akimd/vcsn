@@ -13,20 +13,7 @@ namespace vcsn
     | aut_to_exp.  |
     `-------------*/
 
-    namespace details
-    {
-      Registry<aut_to_exp_t>&
-      aut_to_exp_registry()
-      {
-        static Registry<aut_to_exp_t> instance{"aut_to_exp"};
-        return instance;
-      }
-
-      bool aut_to_exp_register(const std::string& ctx, const aut_to_exp_t& fn)
-      {
-        return aut_to_exp_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(aut_to_exp);
 
     ratexp
     aut_to_exp(const automaton& aut)
@@ -39,21 +26,7 @@ namespace vcsn
     | aut_to_exp_in_degree.  |
     `-----------------------*/
 
-    namespace details
-    {
-      Registry<aut_to_exp_t>&
-      aut_to_exp_in_degree_registry()
-      {
-        static Registry<aut_to_exp_t> instance{"aut_to_exp_in_degree"};
-        return instance;
-      }
-
-      bool aut_to_exp_in_degree_register(const std::string& ctx,
-                                         const aut_to_exp_t& fn)
-      {
-        return aut_to_exp_in_degree_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(aut_to_exp_in_degree);
 
     ratexp
     aut_to_exp_in_degree(const automaton& aut)

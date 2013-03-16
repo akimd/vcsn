@@ -10,22 +10,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
-    {
-      Registry<is_deterministic_t>&
-      is_deterministic_registry()
-      {
-        static Registry<is_deterministic_t> instance{"is_deterministic"};
-        return instance;
-      }
-
-      bool
-      is_deterministic_register(const std::string& ctx,
-                                const is_deterministic_t& fn)
-      {
-        return is_deterministic_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(is_deterministic);
 
     bool
     is_deterministic(const automaton& aut)

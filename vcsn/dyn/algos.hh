@@ -4,10 +4,12 @@
 # include <iosfwd>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
+  // vcsn/algo/edit-automaton.hh.
+  class automaton_editor;
+
   namespace dyn
   {
     enum class FileType
@@ -54,6 +56,8 @@ namespace vcsn
     ratexp lift(const ratexp& aut);
 
     context make_context(const std::string& name);
+
+    automaton_editor* make_automaton_editor(const context& ctx);
 
     ratexpset make_ratexpset(const context& ctx);
 

@@ -126,7 +126,7 @@ namespace vcsn
       using xml_stream_t =
         auto (const dyn::ratexp& e, std::ostream& out) -> void;
 
-      bool xml_register(const std::string& ctx, const xml_stream_t& fn);
+      bool xml_stream_register(const std::string& ctx, const xml_stream_t& fn);
 
 
       // ratexp -> string
@@ -139,7 +139,7 @@ namespace vcsn
 
       using xml_string_t = auto (const dyn::ratexp& e) -> std::string;
 
-      bool xml_register(const std::string& ctx, const xml_string_t& fn);
+      bool xml_string_register(const std::string& ctx, const xml_string_t& fn);
     } // namespace details
   } // namespace dyn
 } // namespace vcsn

@@ -41,20 +41,7 @@ namespace vcsn
     | print(ratexp, stream).  |
     `------------------------*/
 
-    namespace details
-    {
-      Registry<print_exp_t>&
-      print_exp_registry()
-      {
-        static Registry<print_exp_t> instance{"print_exp"};
-        return instance;
-      }
-
-      bool print_exp_register(const std::string& ctx, const print_exp_t& fn)
-      {
-        return print_exp_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(print_exp);
 
     std::ostream&
     print(const ratexp& exp, std::ostream& out, FileType type)

@@ -7,22 +7,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    namespace details
-    {
-
-      Registry<standard_of_t>&
-      standard_of_registry()
-      {
-        static Registry<standard_of_t> instance{"standard_of"};
-        return instance;
-      }
-
-      bool
-      standard_of_register(const std::string& ctx, const standard_of_t& fn)
-      {
-        return standard_of_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(standard_of);
 
     automaton
     standard_of(const dyn::ratexp& e)

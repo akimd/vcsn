@@ -12,22 +12,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
-    {
-      Registry<is_eps_acyclic_t>&
-      is_eps_acyclic_registry()
-      {
-        static Registry<is_eps_acyclic_t> instance{"is_eps_acyclic"};
-        return instance;
-      }
-
-      bool
-      is_eps_acyclic_register(const std::string& ctx,
-              const is_eps_acyclic_t& f)
-      {
-        return is_eps_acyclic_registry().set(ctx, f);
-      }
-    }
+    REGISTER_DEFINE(is_eps_acyclic);
 
     bool is_eps_acyclic(const automaton& aut)
     {

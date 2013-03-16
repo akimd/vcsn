@@ -6,6 +6,9 @@
 namespace vcsn
 {
 
+  // vcsn/rat/ratexpset.hh
+  class abstract_ratexpset;
+
   namespace dyn
   {
     // vcsn/dyn/automaton.hh.
@@ -23,6 +26,9 @@ namespace vcsn
     }
 
     using ratexp = std::shared_ptr<details::abstract_ratexp>;
+
+    // vcsn/rat/ratexpset.hh
+    using ratexpset = std::shared_ptr<const abstract_ratexpset>;
   }
 } // namespace vcsn
 

@@ -10,20 +10,7 @@ namespace vcsn
     | dot_stream.  |
     `-------------*/
 
-    namespace details
-    {
-      Registry<dot_stream_t>&
-      dot_stream_registry()
-      {
-        static Registry<dot_stream_t> instance{"dot_stream"};
-        return instance;
-      }
-
-      bool dot_register(const std::string& ctx, const dot_stream_t& fn)
-      {
-        return dot_stream_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(dot_stream);
 
     void
     dot(const automaton& aut, std::ostream& out)
@@ -36,20 +23,7 @@ namespace vcsn
     | dot_string.  |
     `-------------*/
 
-    namespace details
-    {
-      Registry<dot_string_t>&
-      dot_string_registry()
-      {
-        static Registry<dot_string_t> instance{"dot_string"};
-        return instance;
-      }
-
-      bool dot_register(const std::string& ctx, const dot_string_t& fn)
-      {
-        return dot_string_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(dot_string);
 
     std::string
     dot(const automaton& aut)

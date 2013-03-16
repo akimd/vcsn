@@ -198,28 +198,28 @@ namespace vcsn
         copy_register(aut_t::sname(), copy<aut_t>);
 
         // dot.
-        dot_register(aut_t::sname(),
-                     static_cast<const dot_stream_t&>(dot<aut_t>));
-        dot_register(aut_t::sname(),
-                     static_cast<const dot_string_t&>(dot<aut_t>));
-        dot_register(taut_t::sname(),
-                     static_cast<const dot_stream_t&>(dot<taut_t>));
-        dot_register(taut_t::sname(),
-                     static_cast<const dot_string_t&>(dot<taut_t>));
+        dot_stream_register(aut_t::sname(),
+                            static_cast<const dot_stream_t&>(dot<aut_t>));
+        dot_string_register(aut_t::sname(),
+                            static_cast<const dot_string_t&>(dot<aut_t>));
+        dot_stream_register(taut_t::sname(),
+                            static_cast<const dot_stream_t&>(dot<taut_t>));
+        dot_string_register(taut_t::sname(),
+                            static_cast<const dot_string_t&>(dot<taut_t>));
 
         // edit-automaton.
         make_automaton_editor_register(Ctx::sname(),
-                                       abstract_make_automaton_editor<aut_t>);
+                                       make_automaton_editor<aut_t>);
 
         // fsm.
-        fsm_register(aut_t::sname(),
-                     static_cast<const fsm_stream_t&>(fsm<aut_t>));
-        fsm_register(aut_t::sname(),
-                     static_cast<const fsm_string_t&>(fsm<aut_t>));
-        fsm_register(taut_t::sname(),
-                     static_cast<const fsm_stream_t&>(fsm<taut_t>));
-        fsm_register(taut_t::sname(),
-                     static_cast<const fsm_string_t&>(fsm<taut_t>));
+        fsm_stream_register(aut_t::sname(),
+                            static_cast<const fsm_stream_t&>(fsm<aut_t>));
+        fsm_string_register(aut_t::sname(),
+                            static_cast<const fsm_string_t&>(fsm<aut_t>));
+        fsm_stream_register(taut_t::sname(),
+                            static_cast<const fsm_stream_t&>(fsm<taut_t>));
+        fsm_string_register(taut_t::sname(),
+                            static_cast<const fsm_string_t&>(fsm<taut_t>));
 
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
@@ -246,10 +246,10 @@ namespace vcsn
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
 
         // xml.
-        xml_register(Ctx::sname(),
-                     static_cast<const xml_stream_t&>(xml<Ctx>));
-        xml_register(Ctx::sname(),
-                     static_cast<const xml_string_t&>(xml<Ctx>));
+        xml_stream_register(Ctx::sname(),
+                            static_cast<const xml_stream_t&>(xml<Ctx>));
+        xml_string_register(Ctx::sname(),
+                            static_cast<const xml_string_t&>(xml<Ctx>));
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;

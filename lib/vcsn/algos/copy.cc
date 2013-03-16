@@ -12,20 +12,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
-    {
-      Registry<copy_t>&
-      copy_registry()
-      {
-        static Registry<copy_t> instance{"copy"};
-        return instance;
-      }
-
-      bool copy_register(const std::string& ctx, const copy_t& fn)
-      {
-        return copy_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(copy);
 
     automaton
     copy(const automaton& aut)

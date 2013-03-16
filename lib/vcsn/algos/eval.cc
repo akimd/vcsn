@@ -13,20 +13,7 @@ namespace vcsn
     | eval.  |
     `-------*/
 
-    namespace details
-    {
-      Registry<eval_t>&
-      eval_registry()
-      {
-        static Registry<eval_t> instance{"eval"};
-        return instance;
-      }
-
-      bool eval_register(const std::string& ctx, const eval_t& fn)
-      {
-        return eval_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(eval);
 
     std::string
     eval(const automaton& aut, const std::string& s)

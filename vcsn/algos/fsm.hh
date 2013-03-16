@@ -53,7 +53,7 @@ namespace vcsn
 
       using fsm_stream_t =
         auto (const automaton& aut, std::ostream& out) -> void;
-      bool fsm_register(const std::string& ctx, const fsm_stream_t& fn);
+      bool fsm_stream_register(const std::string& ctx, const fsm_stream_t& fn);
     }
   }
 
@@ -86,7 +86,7 @@ namespace vcsn
 
       using fsm_string_t = auto (const automaton& aut) -> std::string;
 
-      bool fsm_register(const std::string& ctx, const fsm_string_t& fn);
+      bool fsm_string_register(const std::string& ctx, const fsm_string_t& fn);
     }
   }
 }

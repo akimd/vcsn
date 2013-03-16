@@ -12,21 +12,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
-    {
-      Registry<is_complete_t>&
-        is_complete_registry()
-        {
-          static Registry<is_complete_t> instance{"is_complete"};
-          return instance;
-        }
-
-      bool is_complete_register(const std::string& ctx,
-          const is_complete_t& fn)
-      {
-        return is_complete_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(is_complete);
 
     bool is_complete(const automaton& aut)
     {

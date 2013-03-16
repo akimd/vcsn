@@ -12,20 +12,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
-    {
-      Registry<accessible_t>&
-      accessible_registry()
-      {
-        static Registry<accessible_t> instance{"accessible"};
-        return instance;
-      }
-
-      bool accessible_register(const std::string& ctx, const accessible_t& fn)
-      {
-        return accessible_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(accessible);
 
     automaton
     accessible(const automaton& aut)

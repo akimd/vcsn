@@ -117,7 +117,7 @@ namespace vcsn
 
       using dot_stream_t =
         auto (const automaton& aut, std::ostream& out) -> void;
-      bool dot_register(const std::string& ctx, const dot_stream_t& fn);
+      bool dot_stream_register(const std::string& ctx, const dot_stream_t& fn);
     }
   }
 
@@ -150,7 +150,7 @@ namespace vcsn
 
       using dot_string_t = auto (const automaton& aut) -> std::string;
 
-      bool dot_register(const std::string& ctx, const dot_string_t& fn);
+      bool dot_string_register(const std::string& ctx, const dot_string_t& fn);
     }
   }
 }

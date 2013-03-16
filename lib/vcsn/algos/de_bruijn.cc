@@ -7,20 +7,7 @@ namespace vcsn
   namespace dyn
   {
 
-    namespace details
-    {
-      Registry<de_bruijn_t>&
-      de_bruijn_registry()
-      {
-        static Registry<de_bruijn_t> instance{"de_bruijn"};
-        return instance;
-      }
-
-      bool de_bruijn_register(const std::string& ctx, const de_bruijn_t& fn)
-      {
-        return de_bruijn_registry().set(ctx, fn);
-      }
-    }
+    REGISTER_DEFINE(de_bruijn);
 
     automaton
     de_bruijn(const context& ctx, unsigned n)

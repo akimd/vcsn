@@ -156,8 +156,10 @@ namespace vcsn
         return make_ratexp(a.context(), aut_to_exp_in_degree(a));
       }
 
+      using aut_to_exp_in_degree_t = auto (const automaton& aut) -> ratexp;
+
       bool aut_to_exp_in_degree_register(const std::string& ctx,
-                                         const aut_to_exp_t& fn);
+                                         const aut_to_exp_in_degree_t& fn);
     }
   }
 
