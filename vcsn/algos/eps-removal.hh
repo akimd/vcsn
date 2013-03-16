@@ -175,11 +175,26 @@ and eturn the result of epsilon_removal on the copy.
   };
 
   /*
-     The implementation of is_valide depends on star_status;
+     The implementation of is_valid depends on star_status;
      the different versions are implemented in EpsilonDispatcher.
      */
+
   template <typename Aut, star_status_t Status>
-  class EpsilonDispatcher {};
+  class basic_EpsilonDispatcher
+  {
+    using automaton_t = Aut;
+  public:
+    static automaton_t eps_removal(const automaton_t &input)
+    {
+      automaton_t res = copy(input);
+      eps_removal_here(res);
+      return res;
+    }
+  };
+
+  template <typename Aut, star_status_t Status>
+  class EpsilonDispatcher : public basic_EpsilonDispatcher<Aut, Status>
+  {};
 
   /// TOPS : valid iff the epsilon removal succeeds
 
@@ -204,14 +219,6 @@ and eturn the result of epsilon_removal on the copy.
       if (!remover_t::in_situ_remover(input))
         throw std::domain_error("invalid automaton");
     }
-
-    static Aut eps_removal(const automaton_t &input)
-    {
-      Aut res = copy(input);
-      eps_removal_here(res);
-      return res;
-    }
-
   };
 
   /// !TOPS
@@ -247,13 +254,6 @@ and eturn the result of epsilon_removal on the copy.
         throw std::domain_error("invalid automaton");
       remover_t::in_situ_remover(input);
     }
-
-    static Aut eps_removal(const Aut &input)
-    {
-      Aut res = copy(input);
-      eps_removal_here(res);
-      return res;
-    }
   };
   /// !ABSVAL
 
@@ -270,13 +270,6 @@ and eturn the result of epsilon_removal on the copy.
     static void eps_removal_here(Aut &input)
     {
       epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
-    }
-
-    static Aut eps_removal(const Aut &input)
-    {
-      Aut res = copy(input);
-      eps_removal_here(res);
-      return res;
     }
   };
 
@@ -302,13 +295,6 @@ and eturn the result of epsilon_removal on the copy.
       if (!is_valid(input))
         throw std::domain_error("invalid automaton");
       epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
-    }
-
-    static Aut eps_removal(const Aut &input)
-    {
-      Aut res = copy(input);
-      eps_removal_here(res);
-      return res;
     }
   };
 
