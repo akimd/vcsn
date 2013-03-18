@@ -67,21 +67,21 @@ vcsn_product          = $(top_builddir)/bin/vcsn-product
 vcsn_standard_of      = $(top_builddir)/bin/vcsn-standard-of
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
 
-all_vcsn =                                      \
-  $(vcsn_accessible)                            \
-  $(vcsn_aut_to_exp)                            \
-  $(vcsn_cat)                                   \
-  $(vcsn_complete)                              \
-  $(vcsn_de_bruijn)                             \
-  $(vcsn_determinize)                           \
-  $(vcsn_eps_removal)                           \
-  $(vcsn_evaluate)                              \
-  $(vcsn_is_complete)                           \
-  $(vcsn_is_deterministic)                      \
-  $(vcsn_is_proper)                             \
-  $(vcsn_ladybird)                              \
-  $(vcsn_lift)                                  \
-  $(vcsn_product)                               \
-  $(vcsn_standard_of)                           \
-  $(vcsn_transpose)                             \
-  $(vcsn-eps-removal)
+all_vcsn =					\
+  $(vcsn_accessible)				\
+  $(vcsn_aut_to_exp)				\
+  $(vcsn_cat)					\
+  $(vcsn_complete)				\
+  $(vcsn_de_bruijn)				\
+  $(vcsn_determinize)				\
+  $(vcsn_eps_removal)				\
+  $(vcsn_eps_removal)				\
+  $(vcsn_evaluate)				\
+  $(vcsn_is_complete)				\
+  $(vcsn_is_deterministic)			\
+  $(vcsn_is_proper)				\
+  $(vcsn_ladybird)				\
+  $(vcsn_lift)					\
+  $(vcsn_product)				\
+  $(vcsn_standard_of)				\
+  $(vcsn_transpose)
