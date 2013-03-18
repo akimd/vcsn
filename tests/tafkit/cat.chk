@@ -65,6 +65,30 @@ digraph
 }
 EOF
 
+## FIXME: Fail to fail.
+##
+## # Invalid label: \e is not valid in LAL.
+## fail_aut <<\EOF
+## digraph
+## {
+##   vcsn_context = "lal_char(a)_b"
+##   1 -> 2 [label = "\e"]
+##   2 -> F2
+##   I1 -> 1
+## }
+## EOF
+##
+## # Invalid label: aa is not valid in LAL.
+## fail_aut <<\EOF
+## digraph
+## {
+##   vcsn_context = "lal_char(a)_b"
+##   1 -> 2 [label = "aa"]
+##   2 -> F2
+##   I1 -> 1
+## }
+## EOF
+
 # No context defined (see the typo in vcsn_context).
 fail_aut <<EOF
 digraph
@@ -186,7 +210,7 @@ EOF
 check_aut <<\EOF
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lan_char(a)_b"
   1 -> 2 [label = a]
   1 -> 2 [label = "\e"]
   2 -> F2
@@ -195,7 +219,7 @@ digraph
 ---
 digraph
 {
-  vcsn_context = "lal_char(a)_b"
+  vcsn_context = "lan_char(a)_b"
   rankdir = LR
   node [shape = circle]
   {

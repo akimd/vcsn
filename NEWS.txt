@@ -1,4 +1,55 @@
-*2013-03-08
+* 2013-03-18
+** New LabelSet: nullableset
+Initial support for "Labels are nullable".
+
+  $ cat lan.dot
+  digraph lan
+  {
+    vcsn_context = "lan_char(a)_b"
+    I1 -> 1
+    2 -> F2
+    1 -> 2 [label = "a"]
+    1 -> 2 [label = "\e"]
+  }
+  $ vcsn-cat -Af lan.dot
+  digraph
+  {
+    vcsn_context = "lan_char(a)_b"
+    rankdir = LR
+    node [shape = circle]
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I1
+      F2
+    }
+    { 1 2 }
+    I1 -> 1
+    1 -> 2 [label = "\\e, a"]
+    2 -> F2
+  }
+  $ vcsn-eps-removal -Af lan.dot
+  digraph
+  {
+    vcsn_context = "lan_char(a)_b"
+    rankdir = LR
+    node [shape = circle]
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I1
+      F2
+      F1
+    }
+    { 1 2 }
+    I1 -> 1
+    1 -> F1
+    1 -> 2 [label = "a"]
+    2 -> F2
+  }
+
+** is-proper
+New dyn algorithm and tool (vcsn-is-proper).
+
+* 2013-03-08
 ** determinize speed-up
 Determinization algorithm is five times faster.
 

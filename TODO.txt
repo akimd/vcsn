@@ -1,9 +1,48 @@
-* is-deterministic
+* Bugs
+** is-deterministic (see tafkit/is-deterministic-fail.chk).
 It fails to check properly that the input automaton is-realtime.  But
 is this a task for vcsn::is-deterministic, for dyn::is-deterministic,
 or vcsn-is-deterministic?  More generally, should all three layers
 have the same specifications?  I vote yes, but efficiency might
 dictate a different choice.
+
+** dot parser (see FIXME in tafkit/cat.chk)
+We accept invalid labels:
+
+  digraph
+  {
+    vcsn_context = "lal_char(a)_b"
+    1 -> 2 [label = "aa"]         // invalid LAL
+    2 -> F2
+    I1 -> 1
+  }
+
+  digraph
+  {
+    vcsn_context = "lal_char(a)_b"
+    1 -> 2 [label = "\e"]        // invalid LAL
+    2 -> F2
+    I1 -> 1
+  }
+
+both are related to our use of entries to parse labels: entries are
+about *words*, while we want them to be about *labels*.  So we are
+missing control in lal (and lan):
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lal<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        // FIXME: Hack.  entries are always about words, but we
+        // want letters.  "e.first[0]" is a hack for lal.
+        add_transition(src, dst, e.first[0], e.second);
+    }
+
+we don't check that there is a single letter in the label here, nor
+that it is not the \e.  Rather than a quick fix, we need to really
+talk about the nature of entries.
 
 * trivial identities
 As a goal, we want every rational expression to yield the same result
