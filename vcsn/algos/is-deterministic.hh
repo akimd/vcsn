@@ -4,7 +4,7 @@
 # include <queue>
 # include <unordered_set>
 
-# include "vcsn/core/mutable_automaton.hh"
+# include <vcsn/core/mutable_automaton.hh>
 
 namespace vcsn
 {
@@ -19,8 +19,6 @@ namespace vcsn
     std::queue<state_t> q;
     std::unordered_set<state_t> marked;
     std::unordered_set<word_t> seen;
-    state_t st;
-    state_t succ;
     word_t wd;
 
     for (auto init : aut.initial_transitions())
@@ -31,13 +29,13 @@ namespace vcsn
 
     while (!q.empty())
       {
-        st = q.front();
+        state_t st = q.front();
         q.pop();
 
         seen.clear();
         for (auto tr : aut.all_out(st))
           {
-            succ = aut.dst_of(tr);
+            state_t succ = aut.dst_of(tr);
             wd = aut.word_label_of(tr);
             if (!seen.insert(wd).second)
               return false;
