@@ -1,0 +1,54 @@
+#! /bin/sh
+
+# FIXME: Fix these failures, and append to is-deterministic.
+
+## ------------ ##
+## lan_char_b.  ##
+## ------------ ##
+
+# check_lan EXPECT < LAL.DOT
+# --------------------------
+check_lan ()
+{
+  cat >lan.dot
+  run 0 "$1" -vcsn-is-deterministic -A -f lan.dot
+}
+
+# This is not realtime.
+check_lan "false" <<EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+
+  I1 -> 1
+  1 -> 2 [label = "a"]
+  1 -> 2 [label = "\e"]
+  2 -> F2
+}
+EOF
+
+
+## ------------ ##
+## law_char_b.  ##
+## ------------ ##
+
+# check_law EXPECT < LAL.DOT
+# --------------------------
+check_law ()
+{
+  cat >law.dot
+  run 0 "$1" -vcsn-is-deterministic -A -f law.dot
+}
+
+# This is not realtime.
+check_law "false" <<EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+
+  I1 -> 1
+  1 -> 2 [label = "aa"]
+  1 -> 2 [label = "ab"]
+  2 -> F2
+}
+EOF

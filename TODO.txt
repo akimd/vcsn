@@ -1,3 +1,10 @@
+* is-deterministic
+It fails to check properly that the input automaton is-realtime.  But
+is this a task for vcsn::is-deterministic, for dyn::is-deterministic,
+or vcsn-is-deterministic?  More generally, should all three layers
+have the same specifications?  I vote yes, but efficiency might
+dictate a different choice.
+
 * trivial identities
 As a goal, we want every rational expression to yield the same result
 in lal and law.  This is a failure:
