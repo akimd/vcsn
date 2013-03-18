@@ -143,6 +143,9 @@ apply_label_kind(options& opts)
 void
 parse_args(options& opts, int& argc, char* const*& argv)
 {
+  if (opts.program.empty())
+    opts.program = argv[0];
+
   using map = std::map<std::string, std::string>;
   using pair = std::pair<std::string, std::string>;
 

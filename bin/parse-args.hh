@@ -7,13 +7,26 @@
 
 struct options
 {
+  /// The name of this program (argv[0]).
+  std::string program;
+
+  /// Whether the input is about an automaton.
   bool is_automaton = true;
-  std::string input;
+  /// Whether \a input is a file name, or a value.
   bool input_is_file = true;
-  std::string output = "-";
-  bool lal = true;
-  std::string context = "lal_char(abcd)_b";
+  /// The input (name or value).
+  std::string input;
+  /// Input format.
   vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dot;
+
+  /// Whether input is LAL (obsolete, FIXME: remove).
+  bool lal = true;
+  /// Context.
+  std::string context = "lal_char(abcd)_b";
+
+  /// Output file name ("-" for stdout).
+  std::string output = "-";
+  /// Output format.
   vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dot;
 };
 
