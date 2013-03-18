@@ -1,13 +1,23 @@
 #! /bin/sh
 
-# check
-# -----
-check ()
+# check_lal EXPECT < LAL.DOT
+# --------------------------
+# Check that is-deterministic(INPUT) = EXPECT in lal, lan, and law.
+check_lal ()
 {
-  run 0 "$1" -vcsn-is-deterministic -A -f -
+  cat >lal.dot
+  run 0 "$1" -vcsn-is-deterministic -A -f lal.dot
+  sed -e 's/lal/lan/' lal.dot > lan.dot
+  run 0 "$1" -vcsn-is-deterministic -A -f lan.dot
+  sed -e 's/lal/law/' lal.dot > law.dot
+  run 0 "$1" -vcsn-is-deterministic -A -f law.dot
 }
 
-check "true" <<EOF
+## ------------ ##
+## lal_char_b.  ##
+## ------------ ##
+
+check_lal "true" <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -23,7 +33,7 @@ digraph
 EOF
 
 
-check "false" <<EOF
+check_lal "false" <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -39,7 +49,7 @@ digraph
 EOF
 
 
-check "true" <<EOF
+check_lal "true" <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -55,7 +65,7 @@ digraph
 EOF
 
 
-check "true" <<EOF
+check_lal "true" <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -72,7 +82,7 @@ digraph
 EOF
 
 
-check "false" <<EOF
+check_lal "false" <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -90,7 +100,7 @@ digraph
 EOF
 
 
-check "true" <<EOF
+check_lal "true" <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -104,7 +114,7 @@ digraph
 EOF
 
 
-check "false" <<EOF
+check_lal "false" <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -116,4 +126,3 @@ digraph
   3 -> F3
 }
 EOF
-
