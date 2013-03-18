@@ -1,0 +1,66 @@
+#! /bin/sh
+
+# check_as EXPECT INPUT SUBST
+# ---------------------------
+# Perform sed SUBST on INPUT, and check that vcsn-is-proper gives EXPECT.
+check_as ()
+{
+  local out
+  out=$(echo "$2" | sed -e "$3")
+  if test "$2" != "$out"; then
+    sed -e "$3" < "$2" > "$out"
+  fi
+  run 0 "$1" -vcsn-is-proper -A -f "$out"
+}
+
+## ----------- ##
+## is-proper.  ##
+## ----------- ##
+
+cat > lal_b.dot <<EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+
+  I1 -> 1
+  1 -> 2 [label = "a"]
+  1 -> 3 [label = "b"]
+  2 -> 1 [label = "b"]
+  3 -> 2 [label = "a"]
+  3 -> 3 [label = "b"]
+  2 -> F2
+}
+EOF
+
+# Try for {lal, lan, law} x {b, z}.
+for ls in lal lan law
+do
+  for ws in b z
+  do
+    check_as true lal_b.dot "s/lal/$ls/;s/_b/_$ws/"
+  done
+done
+
+
+## ------------- ##
+## ! is-proper.  ##
+## ------------- ##
+
+cat > lan_b.dot <<EOF
+digraph
+{
+  vcsn_context = "lan_char(ab)_b"
+  I1 -> 1
+  1 -> 2 [label = "\e, a"]
+  2 -> F2
+}
+EOF
+
+# Try for {lan, law} x {b, z}.
+for ls in lan law
+do
+  for ws in b z
+  do
+    check_as true lal_b.dot "s/lan/$ls/;s/_b/_$ws/"
+  done
+done

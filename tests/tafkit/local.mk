@@ -21,6 +21,7 @@ tafkit_TESTS =                                  \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
   tafkit/is-deterministic-fail.chk              \
+  tafkit/is-proper.chk                          \
   tafkit/is_complete.chk                        \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
