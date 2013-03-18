@@ -202,13 +202,14 @@ and eturn the result of epsilon_removal on the copy.
   class EpsilonDispatcher<Aut, star_status_t::TOPS>
   {
     using automaton_t = Aut;
-    using remover_t = epsilon_remover<Aut, typename Aut::kind_t>;
+    using remover_t = epsilon_remover<automaton_t,
+                                      typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &input)
     {
       if (remover_t::is_proper(input))
         return true;
-      if (is_eps_acyclic<Aut>(input))
+      if (is_eps_acyclic<automaton_t>(input))
         return true;
       automaton_t res = copy(input);
       return remover_t::in_situ_remover(res);
@@ -231,13 +232,14 @@ and eturn the result of epsilon_removal on the copy.
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
-    using remover_t = epsilon_remover<Aut, typename Aut::kind_t>;
+    using remover_t = epsilon_remover<automaton_t,
+                                      typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &input)
     {
       if (remover_t::is_proper(input))
         return true;
-      if (is_eps_acyclic<Aut>(input))
+      if (is_eps_acyclic<automaton_t>(input))
         return true;
       automaton_t tmp_aut = copy(input);
       // Apply absolute value to the weight of each transition.
@@ -261,15 +263,18 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::STARABLE>
   {
+    using automaton_t = Aut;
+    using remover_t = epsilon_remover<automaton_t,
+                                      typename automaton_t::kind_t>;
   public:
-    static bool is_valid(const Aut &)
+    static bool is_valid(const automaton_t &)
     {
       return true;
     }
 
-    static void eps_removal_here(Aut &input)
+    static void eps_removal_here(automaton_t &input)
     {
-      epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
+      remover_t::in_situ_remover(input);
     }
   };
 
@@ -282,19 +287,24 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::NON_STARABLE >
   {
-    public:
-    static bool is_valid(const Aut &input)
+    using automaton_t = Aut;
+    using state_t = typename automaton_t::state_t;
+    using weightset_t = typename automaton_t::weightset_t;
+    using remover_t = epsilon_remover<automaton_t,
+                                      typename automaton_t::kind_t>;
+  public:
+    static bool is_valid(const automaton_t &input)
     {
-      if (epsilon_remover<Aut, typename Aut::kind_t>::is_proper(input))
+      if (remover_t::is_proper(input))
         return true;
-      return is_eps_acyclic<Aut>(input);
+      return is_eps_acyclic<automaton_t>(input);
     }
 
-    static void eps_removal_here(Aut &input)
+    static void eps_removal_here(automaton_t &input)
     {
       if (!is_valid(input))
         throw std::domain_error("invalid automaton");
-      epsilon_remover<Aut, typename Aut::kind_t>::in_situ_remover(input);
+      remover_t::in_situ_remover(input);
     }
   };
 
@@ -333,23 +343,22 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class epsilon_remover<Aut, labels_are_letters>
   {
+    using automaton_t = Aut;
   public:
-    static bool is_proper(Aut &)
+    static bool is_proper(const automaton_t &)
     {
       return true;
     }
 
-    static bool is_valid(Aut &)
+    static bool is_valid(const automaton_t &)
     {
       return true;
     }
 
-    static void eps_removal_here(Aut &)
-    {
-      return;
-    }
+    static void eps_removal_here(automaton_t &)
+    {}
 
-    static Aut eps_removal(const Aut &input)
+    static Aut eps_removal(const automaton_t &input)
     {
       return copy(input);
     }
