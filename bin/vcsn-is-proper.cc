@@ -1,9 +1,11 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-static bool
+static int
 work_aut(const options& opts)
 {
   using namespace vcsn::dyn;
@@ -18,7 +20,7 @@ work_aut(const options& opts)
   return res ? 0 : 2;
 }
 
-static bool
+static int
 work_exp(const options&)
 {
   throw std::runtime_error("not implemented for rational expressions");
