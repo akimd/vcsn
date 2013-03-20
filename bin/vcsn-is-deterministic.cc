@@ -2,29 +2,28 @@
 #include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-int
-main(int argc, char* const argv[])
-try
+struct is_deterministic: vcsn_function
+{
+  static int
+  work_aut(const options& opts)
   {
-    options opts;
-    opts.is_automaton = false;
-    opts.input_format = "text";
-    parse_args(opts, argc, argv);
-
-    if (!opts.is_automaton)
-      throw std::logic_error("error: input must be an automaton");
-
     using namespace vcsn::dyn;
-    automaton aut = read_automaton(opts);
+    // Input.
+    auto aut = read_automaton(opts);
 
-    std::cout << std::boolalpha
-              << is_deterministic(aut)
-              << std::endl;
+    // Process.
+    bool res = vcsn::dyn::is_deterministic(aut);
+
+    // Output.
+    std::cout << (res ? "true" : "false") << std::endl;
+    return res ? 0 : 2;
   }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+};
+
+int main(int argc, char* const argv[])
+{
+  return vcsn_main(argc, argv, is_deterministic{});
+}

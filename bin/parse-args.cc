@@ -220,3 +220,25 @@ parse_args(int& argc, char* const*& argv)
   parse_args(res, argc, argv);
   return res;
 }
+
+
+int
+vcsn_main(int argc, char* const argv[], const vcsn_function& fun)
+{
+  options opts;
+  try
+    {
+      opts = parse_args(argc, argv);
+      return opts.is_automaton ? fun.work_aut(opts) : fun.work_exp(opts);
+    }
+  catch (const std::exception& e)
+    {
+      std::cerr << opts.program << ": " << e.what() << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  catch (...)
+    {
+      std::cerr << opts.program << ": unknown exception caught" << std::endl;
+      exit(EXIT_FAILURE);
+    }
+}

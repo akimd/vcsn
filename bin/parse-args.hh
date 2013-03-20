@@ -44,5 +44,22 @@ vcsn::dyn::ratexp read_ratexp(const options& opts);
 void print(const options& opts, const vcsn::dyn::automaton& exp);
 void print(const options& opts, const vcsn::dyn::ratexp& exp);
 
+/// Function object to dispatch calls for automata or rational expressions.
+struct vcsn_function
+{
+  static int work_aut(const options&)
+  {
+    throw std::runtime_error("not implemented for automata");
+  }
+
+  static int work_exp(const options&)
+  {
+    throw std::runtime_error("not implemented for rational expressions");
+  }
+};
+
+/// Read the command line argument, and based on them, run \a fun's \a
+/// work_aut, or \a work_exp.
+int vcsn_main(int argc, char* const argv[], const vcsn_function& fun);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_
