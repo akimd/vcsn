@@ -17,7 +17,7 @@ struct options
   /// The input (name or value).
   std::string input;
   /// Input format.
-  vcsn::dyn::FileType input_format = vcsn::dyn::FileType::dot;
+  std::string input_format = "dot";
 
   /// Whether input is LAL (obsolete, FIXME: remove).
   bool lal = true;
@@ -27,10 +27,9 @@ struct options
   /// Output file name ("-" for stdout).
   std::string output = "-";
   /// Output format.
-  vcsn::dyn::FileType output_format = vcsn::dyn::FileType::dot;
+  std::string output_format = "dot";
 };
 
-vcsn::dyn::FileType string_to_file_type(const std::string str);
 void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.

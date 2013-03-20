@@ -281,14 +281,10 @@ instead of " + ".
 * 2012-12-26
 ** dyn: input/output
 Routines: dyn::read_(automaton|ratexp)_(file|string) and dyn::print take the
-input format.
-
-The format is described by an argument of type vcsn::dyn::FileType. Available
-input/output are:
-
-- vcsn::dyn::FileType::dotty.
-- vcsn::dyn::FileType::text.
-- vcsn::dyn::FileType::xml.
+input format.  Available input/output are:
+- "dotty".
+- "text".
+- "xml".
 
 * 2012-12-19
 ** genset is replaced by labelset

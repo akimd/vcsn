@@ -41,59 +41,37 @@ namespace vcsn
     `--------------*/
 
     ratexp
-    read_ratexp_file(const std::string& f,
-                     const dyn::context& ctx,
-                     FileType type)
+    read_ratexp_file(const std::string& f, const dyn::context& ctx,
+                     const std::string& type)
     {
-      switch (type)
+      if (type == "text")
         {
-        case FileType::dot:
-          throw std::domain_error("invalid input format for expression: dot");
-        case FileType::fsm:
-          throw std::domain_error("invalid input format for expression: fsm");
-        case FileType::null:
-          throw std::domain_error("invalid input format for expression: null");
-        case FileType::text:
-          {
-            vcsn::rat::driver d(ctx);
-            auto res = d.parse_file(f);
-            if (!d.errors.empty())
-              throw std::runtime_error(d.errors);
-            return res;
-          }
-        case FileType::xml:
-          throw std::domain_error("invalid input format for expression: xml");
-          // FIXME: return xml_read_file(ctx, f);
+          vcsn::rat::driver d(ctx);
+          auto res = d.parse_file(f);
+          if (!d.errors.empty())
+            throw std::runtime_error(d.errors);
+          return res;
         }
-      abort();
+      else
+        throw std::domain_error("invalid input format for expression: "
+                                + type);
     }
 
     ratexp
-    read_ratexp_string(const std::string& s,
-                       const dyn::context& ctx,
-                       FileType type)
+    read_ratexp_string(const std::string& s, const dyn::context& ctx,
+                       const std::string& type)
     {
-      switch (type)
+      if (type == "text")
         {
-        case FileType::dot:
-          throw std::domain_error("invalid input format for expression: dot");
-        case FileType::text:
-          {
-            vcsn::rat::driver d(ctx);
-            auto res = d.parse_string(s);
-            if (!d.errors.empty())
-              throw std::runtime_error(d.errors);
-            return res;
-          }
-        case FileType::fsm:
-          throw std::domain_error("invalid input format for expression: fsm");
-        case FileType::null:
-          throw std::domain_error("invalid input format for expression: null");
-        case FileType::xml:
-          throw std::domain_error("invalid input format for expression: xml");
-          // FIXME: return xml_read_string(ctx, s);
+          vcsn::rat::driver d(ctx);
+          auto res = d.parse_string(s);
+          if (!d.errors.empty())
+            throw std::runtime_error(d.errors);
+          return res;
         }
-      abort();
+      else
+        throw std::domain_error("invalid input format for expression: "
+                                + type);
     }
 
   }

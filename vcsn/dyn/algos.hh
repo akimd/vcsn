@@ -12,15 +12,6 @@ namespace vcsn
 
   namespace dyn
   {
-    enum class FileType
-    {
-      dot,
-      fsm,
-      null,
-      text,
-      xml
-    };
-
     automaton accessible(const automaton& aut);
 
     ratexp aut_to_exp(const automaton& aut);
@@ -61,20 +52,20 @@ namespace vcsn
 
     ratexpset make_ratexpset(const context& ctx);
 
-    std::ostream& print(const automaton& a, std::ostream& o, FileType type);
-    std::ostream& print(const ratexp& e, std::ostream& o, FileType type);
+    std::ostream& print(const automaton& a, std::ostream& o,
+                        const std::string& type);
+    std::ostream& print(const ratexp& e, std::ostream& o,
+                        const std::string& type);
 
     automaton product(const automaton& lhs, const automaton& rhs);
 
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
 
-    ratexp read_ratexp_file(const std::string& f,
-                            const context& ctx,
-                            FileType type);
-    ratexp read_ratexp_string(const std::string& s,
-                              const context& ctx,
-                              FileType type);
+    ratexp read_ratexp_file(const std::string& f, const context& ctx,
+                            const std::string& type);
+    ratexp read_ratexp_string(const std::string& s, const context& ctx,
+                              const std::string& type);
 
     automaton standard_of(const ratexp& e);
 

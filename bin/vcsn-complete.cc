@@ -10,7 +10,7 @@ try
   {
     options opts;
     opts.is_automaton = false;
-    opts.input_format = vcsn::dyn::FileType::text;
+    opts.input_format = "text";
     parse_args(opts, argc, argv);
 
     if (!opts.is_automaton)

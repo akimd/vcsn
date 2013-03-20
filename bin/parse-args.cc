@@ -11,24 +11,6 @@
 #include "parse-args.hh"
 #include <vcsn/dyn/algos.hh>
 
-vcsn::dyn::FileType
-string_to_file_type(const std::string str)
-{
-  using vcsn::dyn::FileType;
-  if (str == "dot")
-    return FileType::dot;
-  else if (str == "fsm")
-    return FileType::fsm;
-  else if (str == "null")
-    return FileType::null;
-  else if (str == "text")
-    return FileType::text;
-  else if (str == "xml")
-    return FileType::xml;
-  else
-    throw std::domain_error("invalid file type: " + str);
-}
-
 vcsn::dyn::automaton
 read_automaton(const options& opts)
 {
@@ -43,11 +25,10 @@ read_ratexp(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   // Be cool, we don't support many formats.
-  vcsn::dyn::FileType fmt
-    = (opts.output_format == vcsn::dyn::FileType::null
-       || opts.output_format == vcsn::dyn::FileType::text
+  std::string fmt
+    = (opts.output_format == "null" || opts.output_format == "text"
        ? opts.output_format
-       : vcsn::dyn::FileType::text);
+       : "text");
   return
     opts.input_is_file
     ? vcsn::dyn::read_ratexp_file(opts.input, ctx, fmt)
@@ -57,7 +38,7 @@ read_ratexp(const options& opts)
 void
 print(const options& opts, const vcsn::dyn::automaton& aut)
 {
-  if (opts.output_format != vcsn::dyn::FileType::null)
+  if (opts.output_format != "null")
     {
       std::ostream* out = &std::cout;
       std::ofstream os;
@@ -69,14 +50,14 @@ print(const options& opts, const vcsn::dyn::automaton& aut)
       if (!out->good())
         throw std::runtime_error(opts.output + ": cannot open for writing");
 
-      print(aut, *out, opts.output_format) << std::endl;
+      vcsn::dyn::print(aut, *out, opts.output_format) << std::endl;
     }
 }
 
 void
 print(const options& opts, const vcsn::dyn::ratexp& exp)
 {
-  if (opts.output_format != vcsn::dyn::FileType::null)
+  if (opts.output_format != "null")
     {
       std::ostream* out = &std::cout;
       std::ofstream os;
@@ -89,7 +70,7 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
         throw std::runtime_error(opts.output + ": cannot open for writing");
 
       // Be cool, we don't support many formats.
-      print(exp, *out, vcsn::dyn::FileType::text) << std::endl;
+      vcsn::dyn::print(exp, *out, "text") << std::endl;
     }
 }
 
@@ -164,14 +145,14 @@ parse_args(options& opts, int& argc, char* const*& argv)
       {
       case 'A':
         opts.is_automaton = true;
-        opts.input_format = vcsn::dyn::FileType::dot;
+        opts.input_format = "dot";
         break;
       case 'C':
         opts.context = optarg;
         break;
       case 'E':
         opts.is_automaton = false;
-        opts.input_format = vcsn::dyn::FileType::text;
+        opts.input_format = "text";
         break;
       case 'e':
         opts.input = optarg;
@@ -185,10 +166,10 @@ parse_args(options& opts, int& argc, char* const*& argv)
         usage(argv[0], EXIT_SUCCESS);
         break;
       case 'I':
-        opts.input_format = string_to_file_type(optarg);
+        opts.input_format = optarg;
         break;
       case 'O':
-        opts.output_format = string_to_file_type(optarg);
+        opts.output_format = optarg;
         break;
       case 'o':
         opts.output = optarg;
