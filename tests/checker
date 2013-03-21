@@ -2,7 +2,9 @@
 
 set -e
 
-me=$(basename $1 .chk)
+# ../../tests/tafkit/transpose.chk => takfit/transpose
+me=${1#${srcdir}/}
+me=${me%.chk}
 
 # Number of the current test.
 number=1
@@ -10,7 +12,7 @@ number=1
 # Exit status of this script.
 exit=true
 
-# Make them absolute.
+# Make them absolute, as we chdir a lot.
 builddir=$(pwd)
 srcdir=$(cd $srcdir && pwd)
 test=$(cd $(dirname $1) && pwd)/$(basename $1)
