@@ -145,8 +145,6 @@ check_aut ()
   cat >in.tmp
   sed -n '/^--*$/q;p'             in.tmp >in.dot
   sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  cp in.dot /tmp
-  cp out.exp /tmp
   run 0 out.exp -vcsn-cat -Af in.dot
   $exit
 }
