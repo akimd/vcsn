@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -ex
+. $(dirname "$0")/common
+
+## ----------- ##
+## Bootstrap.  ##
+## ----------- ##
+
+# Dead links are troublesome.  There can be some for instance with
+# gnulib's configure when a module is obsoleted: its symlinks remain.
+#
+# --no-run-if-empty, -r
+#   OS X does not support -r, and anyway "rm -f" is valid.
+# --verbose, -t
+find . -type l -print | perl -nle '-e || print' | xargs -t rm -f
+
+cd "$DIR_SOURCE"
+./bootstrap

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+. $(dirname "$0")/common
+
+make_()
+{
+  make DESTDIR="$DIR_INSTALL" "$@"
+}
+
+check()
+{
+  make check -j ${JOBS:-2} VERBOSE=1 "$@"
+}
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+cd "$DIR_BUILD"
+check

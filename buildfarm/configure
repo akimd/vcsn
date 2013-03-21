@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -ex
+. $(dirname "$0")/common
+
+## ----------- ##
+## Configure.  ##
+## ----------- ##
+
+
+# Compiler.
+CONFIGUREFLAGS="                                        \
+  CC='ccache gcc-4.8'                                   \
+  CXX='ccache g++-4.8'"
+
+if $(older "$DIR_BUILD/Makefile" "$0"); then
+  cd "$DIR_BUILD"
+  run "$DIR_SOURCE/configure"                   \
+    --prefix="$prefix"                          \
+    --enable-compilation-mode=$COMPILATION_MODE \
+    --enable-dependency-tracking                \
+    --enable-maintainer-mode                    \
+    $CONFIGUREFLAGS                             \
+  ||
+  {
+    sta=$?
+    cat >&2 config.log
+    exit $sta
+  }
+fi
