@@ -26,7 +26,9 @@ tafkit_TESTS =                                  \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
   tafkit/product.chk                            \
-  tafkit/standard_of.chk
+  tafkit/standard_of.chk                        \
+  tafkit/transpose.chk
+
 dist_TESTS += $(tafkit_TESTS)
 
 $(tafkit_TESTS:.chk=.log): $(all_vcsn)

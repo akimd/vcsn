@@ -21,7 +21,6 @@ $(rat_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
 rat_TESTS =                                     \
   $(rat_XFAIL_TESTS)                            \
-  rat/vcsn-transpose.chk			\
   rat/interface.rat                             \
   rat/b.rat                                     \
   rat/br.rat                                    \
