@@ -47,12 +47,12 @@ void print(const options& opts, const vcsn::dyn::ratexp& exp);
 /// Function object to dispatch calls for automata or rational expressions.
 struct vcsn_function
 {
-  static int work_aut(const options&)
+  virtual int work_aut(const options&) const
   {
     throw std::runtime_error("not implemented for automata");
   }
 
-  static int work_exp(const options&)
+  virtual int work_exp(const options&) const
   {
     throw std::runtime_error("not implemented for rational expressions");
   }

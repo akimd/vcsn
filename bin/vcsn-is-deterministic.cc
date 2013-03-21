@@ -7,8 +7,7 @@
 
 struct is_deterministic: vcsn_function
 {
-  static int
-  work_aut(const options& opts)
+  int work_aut(const options& opts) const
   {
     using namespace vcsn::dyn;
     // Input.
