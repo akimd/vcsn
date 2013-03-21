@@ -5,12 +5,17 @@
 # Check that is-deterministic(INPUT) = EXPECT in lal, lan, and law.
 check_lal ()
 {
+  local status
+  case $1 in
+    (true)  status=0;;
+    (false) status=2;;
+  esac
   cat >lal.dot
-  run 0 "$1" -vcsn-is-deterministic -A -f lal.dot
+  run $status "$1" -vcsn-is-deterministic -A -f lal.dot
   sed -e 's/lal/lan/' lal.dot > lan.dot
-  run 0 "$1" -vcsn-is-deterministic -A -f lan.dot
+  run $status "$1" -vcsn-is-deterministic -A -f lan.dot
   sed -e 's/lal/law/' lal.dot > law.dot
-  run 0 "$1" -vcsn-is-deterministic -A -f law.dot
+  run $status "$1" -vcsn-is-deterministic -A -f law.dot
 }
 
 ## ------------ ##

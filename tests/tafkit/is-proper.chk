@@ -10,7 +10,10 @@ check_as ()
   if test "$2" != "$out"; then
     sed -e "$3" < "$2" > "$out"
   fi
-  run 0 "$1" -vcsn-is-proper -A -f "$out"
+  case $1 in
+    (true)  run 0 "$1" -vcsn-is-proper -A -f "$out";;
+    (false) run 2 "$1" -vcsn-is-proper -A -f "$out";;
+  esac
 }
 
 ## ----------- ##
@@ -61,6 +64,6 @@ for ls in lan law
 do
   for ws in b z
   do
-    check_as true lal_b.dot "s/lan/$ls/;s/_b/_$ws/"
+    check_as false lan_b.dot "s/lan/$ls/;s/_b/_$ws/"
   done
 done
