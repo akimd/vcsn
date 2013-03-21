@@ -29,6 +29,8 @@ tafkit_TESTS =                                  \
   tafkit/standard_of.chk
 dist_TESTS += $(tafkit_TESTS)
 
+$(tafkit_TESTS:.chk=.log): $(all_vcsn)
+
 XFAIL_TESTS += tafkit/is-deterministic-fail.chk
 
 .PHONY: check-tafkit

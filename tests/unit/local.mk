@@ -50,7 +50,6 @@ dist_TESTS += $(unit_TESTS)
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-unit/accessible.log: unit/accessible.chk
 unit/aut_lal_char_z.log: unit/aut_lal_char_z
 unit/aut_lau_z.log: unit/aut_lau_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
