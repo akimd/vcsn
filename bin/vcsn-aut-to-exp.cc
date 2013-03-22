@@ -1,25 +1,28 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-int main(int argc, char * const argv[])
-try
+struct aut_to_exp: vcsn_function
+{
+  int work_aut(const options& opts) const
   {
-    options opts = parse_args(argc, argv);
-
-    // Input.
     using namespace vcsn::dyn;
-    automaton exp = read_automaton(opts);
+    // Input.
+    auto aut = read_automaton(opts);
 
     // Process.
-    ratexp aut = aut_to_exp(exp);
+    auto res = vcsn::dyn::aut_to_exp(aut);
 
     // Output.
-    print(opts, aut);
+    print(opts, res);
+    return 0;
   }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+};
+
+int main(int argc, char* const argv[])
+{
+  return vcsn_main(argc, argv, aut_to_exp{});
+}

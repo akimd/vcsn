@@ -2,28 +2,27 @@
 #include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-int
-main(int argc, char* const argv[])
-try
+struct complete: vcsn_function
+{
+  int work_aut(const options& opts) const
   {
-    options opts;
-    opts.is_automaton = false;
-    opts.input_format = "text";
-    parse_args(opts, argc, argv);
-
-    if (!opts.is_automaton)
-      throw std::logic_error("error: input must be a graph");
-
     using namespace vcsn::dyn;
-    automaton aut = read_automaton(opts);
+    // Input.
+    auto aut = read_automaton(opts);
 
-    aut = complete(aut);
-    print (opts, aut);
+    // Process.
+    auto res = vcsn::dyn::complete(aut);
+
+    // Output.
+    print(opts, res);
+    return 0;
   }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+};
+
+int main(int argc, char* const argv[])
+{
+  return vcsn_main(argc, argv, complete{});
+}

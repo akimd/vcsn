@@ -1,28 +1,28 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-int main(int argc, char * const argv[])
-try
+struct determinize: vcsn_function
+{
+  int work_aut(const options& opts) const
   {
-    options opts;
-    opts.is_automaton = false;
-    opts.input_format = "text";
-    parse_args(opts, argc, argv);
-
-    // Input.
     using namespace vcsn::dyn;
-    automaton aut = read_automaton(opts);
+    // Input.
+    auto aut = read_automaton(opts);
 
     // Process.
-    aut = determinize(aut);
+    auto res = vcsn::dyn::determinize(aut);
 
     // Output.
-    print(opts, aut);
+    print(opts, res);
+    return 0;
   }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+};
+
+int main(int argc, char* const argv[])
+{
+  return vcsn_main(argc, argv, determinize{});
+}
