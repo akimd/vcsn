@@ -4,4 +4,5 @@ set -e
 . $(dirname "$0")/common
 
 cd "$DIR_BUILD"
-make -j ${JOBS:-2}
+# Try silent concurrent builds, and on failures, provide better logs.
+make -j ${JOBS:-2} || make V=1
