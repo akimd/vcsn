@@ -59,7 +59,7 @@ sub pp($)
       # Remove invitation to run -h.
       $res =~ s/\nTry .* -h' for more.*//;
       # Remove "vcsn-cat: " and its path in error message.
-      $res =~ s{^(.*/)?vcsn-cat:\s*}{}gm;
+      $res =~ s{^(.*/)?(lt-)?vcsn-cat:\s*}{}gm;
       # Stderr is prefixed by ! in test cases.
       $res =~ s{^}{! }gm;
     }
