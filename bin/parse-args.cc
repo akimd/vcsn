@@ -223,12 +223,15 @@ parse_args(int& argc, char* const*& argv)
 
 
 int
-vcsn_main(int argc, char* const argv[], const vcsn_function& fun)
+vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
+          bool is_automaton)
 {
   options opts;
+  opts.is_automaton = is_automaton;
+  opts.input_format = is_automaton ? "dot" : "text";
   try
     {
-      opts = parse_args(argc, argv);
+      parse_args(opts, argc, argv);
       return opts.is_automaton ? fun.work_aut(opts) : fun.work_exp(opts);
     }
   catch (const std::exception& e)

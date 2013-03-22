@@ -60,6 +60,11 @@ struct vcsn_function
 
 /// Read the command line argument, and based on them, run \a fun's \a
 /// work_aut, or \a work_exp.
-int vcsn_main(int argc, char* const argv[], const vcsn_function& fun);
+/// \param argc         argv size
+/// \param argv         command line arguments
+/// \param fun          the visitor to run
+/// \param is_automaton whether if not specified, input is an automaton.
+int vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
+              bool is_automaton = true);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_
