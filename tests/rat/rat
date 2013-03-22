@@ -56,8 +56,12 @@ sub pp($)
   my $res = `$cmd 2>&1`;
   if ($?)
     {
-      $res = "! $res";
+      # Remove invitation to run -h.
       $res =~ s/\nTry .* -h' for more.*//;
+      # Remove "vcsn-cat: " and its path in error message.
+      $res =~ s{^(.*/)?vcsn-cat:\s*}{}gm;
+      # Stderr is prefixed by ! in test cases.
+      $res =~ s{^}{! }gm;
     }
   chomp($res);
   $res;
