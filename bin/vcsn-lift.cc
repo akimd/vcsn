@@ -1,47 +1,42 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-static void
-work_aut(const options& opts)
+struct lift: vcsn_function
 {
-  using namespace vcsn::dyn;
-  // Input.
-  auto aut = read_automaton(opts);
+  virtual int work_aut(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto aut = read_automaton(opts);
 
-  // Process.
-  aut = lift(aut);
+    // Process.
+    auto res = vcsn::dyn::lift(aut);
 
-  // Output.
-  print(opts, aut);
-}
+    // Output.
+    print(opts, res);
+    return 0;
+  }
 
-static void
-work_exp(const options& opts)
-{
-  using namespace vcsn::dyn;
-  // Input.
-  auto exp = read_ratexp(opts);
+  virtual int work_exp(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_ratexp(opts);
 
-  // Process.
-  exp = lift(exp);
+    // Process.
+    auto res = vcsn::dyn::lift(exp);
 
-  // Output.
-  print(opts, exp);
-}
+    // Output.
+    print(opts, res);
+    return 0;
+  }
+};
 
 int main(int argc, char* const argv[])
-try
-  {
-    auto opts = parse_args(argc, argv);
-    if (opts.is_automaton)
-      work_aut(opts);
-    else
-      work_exp(opts);
-  }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+{
+  return vcsn_main(argc, argv, lift{});
+}

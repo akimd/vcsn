@@ -1,45 +1,42 @@
 #include <iostream>
+#include <stdexcept>
 
 #include <vcsn/dyn/algos.hh>
+
 #include "parse-args.hh"
 
-void
-work_aut(options opts)
+struct transpose: vcsn_function
 {
-  using namespace vcsn::dyn;
-  // Input.
-  automaton aut = read_automaton(opts);
-  // Process.
-  auto res = transpose(aut);
-  // Output.
-  print(opts, res);
-}
+  virtual int work_aut(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto aut = read_automaton(opts);
 
-void
-work_exp(options opts)
-{
-  using namespace vcsn::dyn;
-  // Input.
-  ratexp exp = read_ratexp(opts);
+    // Process.
+    auto res = vcsn::dyn::transpose(aut);
 
-  // Process.
-  exp = transpose(exp);
+    // Output.
+    print(opts, res);
+    return 0;
+  }
 
-  // Output.
-  print(opts, exp);
-}
+  virtual int work_exp(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_ratexp(opts);
+
+    // Process.
+    auto res = vcsn::dyn::transpose(exp);
+
+    // Output.
+    print(opts, res);
+    return 0;
+  }
+};
 
 int main(int argc, char* const argv[])
-try
-  {
-    auto opts = parse_args(argc, argv);
-    if (opts.is_automaton)
-      work_aut(opts);
-    else
-      work_exp(opts);
-  }
-catch (const std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-    exit(EXIT_FAILURE);
-  }
+{
+  return vcsn_main(argc, argv, transpose{});
+}
