@@ -2,6 +2,7 @@
 # define VCSN_BIN_PARSE_ARGS_HH_
 
 # include <string>
+# include <vector>
 
 # include <vcsn/dyn/algos.hh>
 
@@ -28,6 +29,9 @@ struct options
   std::string output = "-";
   /// Output format.
   std::string output_format = "dot";
+
+  /// The remainder of the arguments.
+  std::vector<std::string> argv;
 };
 
 void usage(const char* prog, int exit_status);

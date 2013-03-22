@@ -211,6 +211,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
       }
   argc -= optind;
   argv += optind;
+  opts.argv.insert(opts.argv.end(), argv, argv + argc);
 }
 
 options
