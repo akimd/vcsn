@@ -1,36 +1,15 @@
 #ifndef VCSN_ALGOS_DETERMINIZE_HH
 # define VCSN_ALGOS_DETERMINIZE_HH
 
-// http://stackoverflow.com/questions/12314763/
-// efficient-hashing-of-stdbitset-or-boostdynamic-bitset-for-boosts-unor
-# define BOOST_DYNAMIC_BITSET_DONT_USE_FRIENDS
-
-# include <boost/dynamic_bitset.hpp>
-# include <functional> // std::hash
 # include <stack>
 # include <string>
 # include <type_traits>
 # include <unordered_map>
 # include <vector>
 
-# include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/misc/hash.hh>
-
-namespace std
-{
-  template <>
-  struct hash<boost::dynamic_bitset<>>
-  {
-    size_t operator()(const boost::dynamic_bitset<>& bitset) const
-    {
-      size_t res = 0;
-      for (auto s : bitset.m_bits)
-        hash_combine(res, s);
-      return res;
-    }
-  };
-}
+# include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/dynamic_bitset.hh>
 
 namespace vcsn
 {
@@ -47,7 +26,7 @@ namespace vcsn
     using automaton_t = Aut;
     using label_t = typename automaton_t::label_t;
     using state_t = typename automaton_t::state_t;
-    using state_set = boost::dynamic_bitset<>;
+    using state_set = dynamic_bitset;
     using stack = std::stack<state_set>;
     using map = std::unordered_map<state_set, state_t>;
     using successors_t = std::vector<std::unordered_map<label_t, state_set> >;
@@ -107,7 +86,7 @@ namespace vcsn
         for (auto l: letters)
           {
             next.reset();
-            for (auto s = ss.find_first(); s != boost::dynamic_bitset<>::npos;
+            for (auto s = ss.find_first(); s != ss.npos;
                  s = ss.find_next(s))
               next |= successors[s][l];
             auto i = m.find(next);

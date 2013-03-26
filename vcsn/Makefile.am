@@ -13,20 +13,19 @@
 
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
+  algos/accessible.hh                           \
   algos/aut_to_exp.hh                           \
   algos/complete.hh                             \
   algos/copy.hh                                 \
   algos/determinize.hh                          \
-  algos/accessible.hh                           \
   algos/dot.hh                                  \
-  dyn/algos.hh                                  \
   algos/edit-automaton.hh                       \
   algos/eps-removal.hh                          \
   algos/eval.hh                                 \
   algos/fsm.hh                                  \
-  algos/is_complete.hh                          \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
+  algos/is_complete.hh                          \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
   algos/print.hh                                \
@@ -61,9 +60,9 @@ nobase_vcsn_HEADERS =                           \
   core/rat/visitor.hh                           \
   core/rat/visitor.hxx                          \
   core/transition.hh                            \
-  dyn/context.hh                                \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
+  ctx/genset-labelset.hh                        \
   ctx/instantiate.hh                            \
   ctx/lal_char.hh                               \
   ctx/lal_char_b.hh                             \
@@ -86,12 +85,13 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char_zmin.hh                          \
   ctx/law_char_zr.hh                            \
   ctx/law_char_zrr.hh                           \
-  ctx/genset-labelset.hh                        \
   ctx/letterset.hh                              \
   ctx/nullableset.hh                            \
   ctx/unitset.hh                                \
   ctx/wordset.hh                                \
+  dyn/algos.hh                                  \
   dyn/automaton.hh                              \
+  dyn/context.hh                                \
   dyn/fwd.hh                                    \
   dyn/ratexp.hh                                 \
   empty.hh                                      \
@@ -100,10 +100,13 @@ nobase_vcsn_HEADERS =                           \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \
   misc/direction.hh                             \
+  misc/dynamic_bitset.hh                        \
   misc/echo.hh                                  \
   misc/escape.hh                                \
   misc/hash.hh                                  \
+  misc/set.hh                                   \
   misc/star_status.hh                           \
+  misc/unordered_set.hh                         \
   weights/b.hh                                  \
   weights/f2.hh                                 \
   weights/fwd.hh                                \
