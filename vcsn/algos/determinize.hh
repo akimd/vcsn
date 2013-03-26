@@ -54,15 +54,9 @@ namespace vcsn
 
     const auto& letters = *a.labelset();
     automaton_t res{a.context()};
-    // The stack of (input) sets of states waiting to be processed.
-    stack st;
-    // set of input states -> output state.
-    map m;
-    // Create a new output state from SS. Insert in the output
-    // automaton, in the map, and push in the stack.
 
-    successors_t successors;
-    successors.resize(a.num_all_states());
+    // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
+    successors_t successors{a.num_all_states()};
     for (auto st : a.all_states())
       for (auto l : letters)
         {
@@ -72,13 +66,22 @@ namespace vcsn
             ss.set(a.dst_of(tr));
         }
 
+    // Set of final states.
     state_set finals;
     finals.resize(a.num_all_states());
     for (auto t : a.final_transitions())
       finals.set(a.src_of(t));
 
+    // The (input) sets of states waiting to be processed.
+    stack todo;
+
+    // set of input states -> output state.
+    map m;
+
+    // Create a new output state from SS. Insert in the output
+    // automaton, in the map, and push in the stack.
     auto push_new_state =
-      [&res,&m,&a,&st,&finals] (const state_set& ss) -> state_t
+      [&res,&m,&a,&todo,&finals] (const state_set& ss) -> state_t
       {
         state_t r = res.new_state();
         m[ss] = r;
@@ -86,7 +89,7 @@ namespace vcsn
         if (ss.intersects(finals))
           res.set_final(r);
 
-        st.push(ss);
+        todo.push(ss);
         return r;
       };
 
@@ -97,10 +100,10 @@ namespace vcsn
       next.set(a.dst_of(t));
     res.set_initial(push_new_state(next));
 
-    while (!st.empty())
+    while (!todo.empty())
       {
-        auto ss = st.top();
-        st.pop();
+        auto ss = todo.top();
+        todo.pop();
         for (auto l: letters)
           {
             next.reset();
