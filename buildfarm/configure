@@ -25,11 +25,5 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
     --config-cache                              \
     --prefix="$prefix"                          \
     --enable-dependency-tracking                \
-    $CONFIGUREFLAGS                             \
-  ||
-  {
-    sta=$?
-    cat >&2 config.log
-    exit $sta
-  }
+    $CONFIGUREFLAGS
 fi
