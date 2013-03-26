@@ -135,18 +135,20 @@ export BUILDFARM_HOSTNAME=$(hostname | sed -e 's/\..*//')
 # Directories.  #
 # ------------- #
 
-export DIR_SOURCE=.
+export DIR_ROOT=$PWD
 
-export DIR_BUILD=$DIR_SOURCE
+export DIR_SOURCE=$DIR_ROOT
 
-export DIR_INSTALL=$DIR_SOURCE/install
+export DIR_BUILD=$DIR_ROOT/build
+
+export DIR_INSTALL=$DIR_ROOT/install
 
 # Where we make a temporary install before going into DIR_INSTALL.
 # See buildfarm/install.
-export DIR_STAGE=$(dirname "$DIR_SOURCE")/stage
+export DIR_STAGE=$DIR_ROOT/stage
 
 # Where to put the packages that will be published.
-export DIR_PACKAGES=$(dirname "$DIR_SOURCE")/packages
+export DIR_PACKAGES=$DIR_ROOT/packages
 
 
 ## ------ ##
