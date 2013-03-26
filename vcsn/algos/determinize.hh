@@ -66,11 +66,10 @@ namespace vcsn
     for (auto st : a.all_states())
       for (auto l : letters)
         {
-          state_set ss;
+          state_set& ss = successors[st][l];
           ss.resize(a.num_all_states());
           for (auto tr : a.out(st, l))
-              ss.set(a.dst_of(tr));
-          successors[st][l] = ss;
+            ss.set(a.dst_of(tr));
         }
 
     state_set finals;
