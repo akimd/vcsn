@@ -62,19 +62,19 @@ namespace vcsn
     // automaton, in the map, and push in the stack.
 
     successors_t successors;
-    successors.resize(a.num_states() + 2);
+    successors.resize(a.num_all_states());
     for (auto st : a.all_states())
       for (auto l : letters)
         {
           state_set ss;
-          ss.resize(a.num_states() + 2);
+          ss.resize(a.num_all_states());
           for (auto tr : a.out(st, l))
               ss.set(a.dst_of(tr));
           successors[st][l] = ss;
         }
 
     state_set finals;
-    finals.resize(a.num_states() + 2);
+    finals.resize(a.num_all_states());
     for (auto t : a.final_transitions())
       finals.set(a.src_of(t));
 
@@ -93,7 +93,7 @@ namespace vcsn
 
     // The input initial states.
     state_set next;
-    next.resize(a.num_states() + 2);
+    next.resize(a.num_all_states());
     for (auto t : a.initial_transitions())
       next.set(a.dst_of(t));
     res.set_initial(push_new_state(next));

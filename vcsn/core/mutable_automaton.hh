@@ -123,7 +123,8 @@ namespace vcsn
     // Statistics
     /////////////
 
-    size_t num_states() const { return states_.size() - states_fs_.size() - 2; }
+    size_t num_all_states() const { return states_.size() - states_fs_.size(); }
+    size_t num_states() const { return num_all_states() - 2; }
     size_t num_initials() const { return states_[pre()].succ.size(); }
     size_t num_finals() const { return states_[post()].pred.size(); }
     size_t num_transitions() const
