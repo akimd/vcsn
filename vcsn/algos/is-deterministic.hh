@@ -65,7 +65,7 @@ namespace vcsn
       using is_deterministic_t = auto (const dyn::automaton& aut) -> bool;
       bool
       is_deterministic_register(const std::string& ctx,
-                                const is_deterministic_t& fn);
+                                is_deterministic_t fn);
     }
   }
 } // namespace vscn

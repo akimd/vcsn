@@ -49,7 +49,7 @@ namespace vcsn
 
       using is_complete_t = bool (const dyn::automaton&);
       bool is_complete_register(const std::string& ctx,
-              const is_complete_t& fn);
+              is_complete_t fn);
     }
   }
 }

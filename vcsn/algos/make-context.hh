@@ -170,7 +170,7 @@ namespace vcsn
 
       bool
       make_context_register(const std::string& ctx,
-                            const make_context_t& fn);
+                            make_context_t fn);
 
       /*-----------------.
       | make_ratexpset.  |
@@ -188,7 +188,7 @@ namespace vcsn
 
       bool
       make_ratexpset_register(const std::string& ctx,
-                              const make_ratexpset_t& fn);
+                              make_ratexpset_t fn);
 
     }
   }

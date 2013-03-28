@@ -90,7 +90,7 @@ namespace vcsn
       using lift_automaton_t = auto (const automaton& aut) -> automaton;
 
       bool lift_automaton_register(const std::string& ctx,
-                                   const lift_automaton_t& fn);
+                                   lift_automaton_t fn);
     }
   }
 
@@ -133,7 +133,7 @@ namespace vcsn
       }
 
       using lift_exp_t = auto (const ratexp& aut) -> ratexp;
-      bool lift_exp_register(const std::string& ctx, const lift_exp_t& fn);
+      bool lift_exp_register(const std::string& ctx, lift_exp_t fn);
     }
   }
 

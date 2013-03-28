@@ -433,7 +433,7 @@ and eturn the result of epsilon_removal on the copy.
      using eps_removal_t = dyn::automaton(const dyn::automaton &aut);
 
      bool
-     eps_removal_register(const std::string &ctx, const eps_removal_t &fn);
+     eps_removal_register(const std::string &ctx, eps_removal_t fn);
     }
 
     /*-----------------.
@@ -452,7 +452,7 @@ and eturn the result of epsilon_removal on the copy.
      using is_proper_t = auto (const dyn::automaton &aut) -> bool;
 
      bool
-     is_proper_register(const std::string &ctx, const is_proper_t &fn);
+     is_proper_register(const std::string &ctx, is_proper_t fn);
     }
 
   }

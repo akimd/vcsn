@@ -191,7 +191,7 @@ namespace vcsn
       static constexpr                          \
       auto                                      \
       Signature                                 \
-        -> decltype(aut_->Value)                \
+        -> decltype(automaton_t::Value)         \
       {                                         \
         return automaton_t::Value;              \
       }
@@ -261,7 +261,7 @@ namespace vcsn
 
       using transpose_t = auto (automaton& aut) -> automaton;
 
-      bool transpose_register(const std::string& ctx, const transpose_t& fn);
+      bool transpose_register(const std::string& ctx, transpose_t fn);
 
 
       /* ratexp. */
@@ -279,7 +279,7 @@ namespace vcsn
       using transpose_exp_t = auto (const ratexp& e) -> ratexp;
 
       bool transpose_exp_register(const std::string& ctx,
-                                  const transpose_exp_t& fn);
+                                  transpose_exp_t fn);
     }
   }
 

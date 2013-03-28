@@ -71,7 +71,7 @@ namespace vcsn
       }
 
       using accessible_t = auto (const dyn::automaton&) -> dyn::automaton;
-      bool accessible_register(const std::string& ctx, const accessible_t& fn);
+      bool accessible_register(const std::string& ctx, accessible_t fn);
     }
   }
 }

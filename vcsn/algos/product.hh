@@ -96,7 +96,7 @@ namespace vcsn
         auto (const dyn::automaton& lhs, const dyn::automaton& rhs)
         -> dyn::automaton;
       bool product_register(const std::string& lctx, const std::string& rctx,
-                            const product_t& fn);
+                            product_t fn);
     }
   }
 }

@@ -61,7 +61,7 @@ namespace vcsn
       }
 
       using copy_t = dyn::automaton(const dyn::automaton&);
-      bool copy_register(const std::string& ctx, const copy_t& fn);
+      bool copy_register(const std::string& ctx, copy_t fn);
     }
   }
 } // namespace vcsn

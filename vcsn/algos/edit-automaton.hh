@@ -195,7 +195,7 @@ namespace vcsn
 
       bool
       make_automaton_editor_register(const std::string& ctx,
-                                     const make_automaton_editor_t& fn);
+                                     make_automaton_editor_t fn);
     }
   }
 

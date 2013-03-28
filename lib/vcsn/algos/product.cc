@@ -21,7 +21,7 @@ namespace vcsn
       }
 
       bool product_register(const std::string& lctx, const std::string& rctx,
-                            const product_t& fn)
+                            product_t fn)
       {
         return product_registry().set(lctx + " x " + rctx, fn);
       }

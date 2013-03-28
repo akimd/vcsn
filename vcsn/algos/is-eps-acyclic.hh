@@ -111,7 +111,7 @@ namespace vcsn
 
       using is_eps_acyclic_t = bool(const dyn::automaton&);
       bool is_eps_acyclic_register(const std::string& ctx,
-                                    const is_eps_acyclic_t& fn);
+                                    is_eps_acyclic_t fn);
 
     }
   }

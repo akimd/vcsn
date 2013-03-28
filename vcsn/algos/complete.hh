@@ -91,7 +91,7 @@ namespace vcsn
 
       using complete_t = auto (const dyn::automaton& aut) -> dyn::automaton;
       bool complete_register(const std::string& ctx,
-                             const complete_t& fn);
+                             complete_t fn);
     }
   }
 

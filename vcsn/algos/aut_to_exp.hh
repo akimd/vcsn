@@ -88,7 +88,7 @@ namespace vcsn
 
       using aut_to_exp_t = auto (const automaton& aut) -> ratexp;
 
-      bool aut_to_exp_register(const std::string& ctx, const aut_to_exp_t& fn);
+      bool aut_to_exp_register(const std::string& ctx, aut_to_exp_t fn);
     }
   }
 
@@ -159,7 +159,7 @@ namespace vcsn
       using aut_to_exp_in_degree_t = auto (const automaton& aut) -> ratexp;
 
       bool aut_to_exp_in_degree_register(const std::string& ctx,
-                                         const aut_to_exp_in_degree_t& fn);
+                                         aut_to_exp_in_degree_t fn);
     }
   }
 

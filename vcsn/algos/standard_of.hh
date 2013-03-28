@@ -260,7 +260,7 @@ namespace vcsn
         auto (const dyn::ratexp& e) -> automaton;
 
       bool standard_of_register(const std::string& ctx,
-                                const standard_of_t& fn);
+                                standard_of_t fn);
     }
   }
 

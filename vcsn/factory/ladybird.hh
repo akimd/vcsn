@@ -52,7 +52,7 @@ namespace vcsn
       using ladybird_t =
         auto (const dyn::context& ctx, unsigned n) -> automaton;
 
-      bool ladybird_register(const std::string& ctx, const ladybird_t& fn);
+      bool ladybird_register(const std::string& ctx, ladybird_t fn);
     }
   }
 }

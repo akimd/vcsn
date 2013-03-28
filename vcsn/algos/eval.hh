@@ -103,7 +103,7 @@ namespace vcsn
       using eval_t = auto (const automaton& aut, const std::string& s)
         -> std::string;
 
-      bool eval_register(const std::string& ctx, const eval_t& fn);
+      bool eval_register(const std::string& ctx, eval_t fn);
     }
   }
 

@@ -21,7 +21,7 @@ namespace vcsn
 
     using map_t = std::map<std::string, Fun*>;
 
-    bool set(std::string ctx, const Fun& fn)
+    bool set(std::string ctx, Fun fn)
     {
       ctx = vcsn::dyn::abstract_context::sname(ctx);
       if (getenv("YYDEBUG"))
@@ -70,7 +70,7 @@ namespace vcsn
                                                         \
     bool                                                \
     Name ## _register(const std::string& ctx,           \
-                      const Name ## _t& fn)             \
+                      Name ## _t fn)                    \
     {                                                   \
       return Name ## _registry().set(ctx, fn);          \
     }                                                   \

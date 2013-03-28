@@ -64,7 +64,7 @@ namespace vcsn
       using de_bruijn_t =
         auto (const dyn::context& ctx, unsigned n) -> automaton;
 
-      bool de_bruijn_register(const std::string& ctx, const de_bruijn_t& fn);
+      bool de_bruijn_register(const std::string& ctx, de_bruijn_t fn);
     }
   }
 

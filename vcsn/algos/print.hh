@@ -37,7 +37,7 @@ namespace vcsn
       using print_exp_t =
         auto (const ratexp& aut, std::ostream& o) -> std::ostream&;
 
-      bool print_exp_register(const std::string& ctx, const print_exp_t& fn);
+      bool print_exp_register(const std::string& ctx, print_exp_t fn);
     }
   }
 }
