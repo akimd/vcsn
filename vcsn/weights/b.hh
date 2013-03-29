@@ -68,7 +68,10 @@ namespace vcsn
     }
 
     static constexpr bool show_unit() { return false; }
-    static constexpr star_status_t star_status() { return star_status_t::STARABLE; }
+    static constexpr star_status_t star_status()
+    {
+      return star_status_t::STARABLE;
+    }
 
     value_t
     transpose(const value_t v) const
