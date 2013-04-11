@@ -11,14 +11,14 @@ cat >a.dot <<EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
-  I1 -> 0
+  I0 -> -1
+  -1 -> 0 [label="a"]
   0 -> 1 [label="a"]
-  1 -> 2 [label="a"]
-  2 -> 0 [label="a"]
-  0 -> 2 [label="\e"]
+  1 -> -1 [label="a"]
+  -1 -> 1 [label="\e"]
+  0 -> -1 [label="\e"]
   1 -> 0 [label="\e"]
-  2 -> 1 [label="\e"]
-  1 -> F2
+  0 -> F1
 }
 EOF
 
@@ -30,25 +30,25 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F2
-    F3
+    I0
     F1
+    F2
+    F0
   }
-  { 1 2 3 }
-  I1 -> 1
+  { 0 1 2 }
+  I0 -> 0
+  0 -> F0
+  0 -> 0 [label = "a"]
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
   1 -> F1
+  1 -> 0 [label = "a"]
   1 -> 1 [label = "a"]
   1 -> 2 [label = "a"]
-  1 -> 3 [label = "a"]
   2 -> F2
+  2 -> 0 [label = "a"]
   2 -> 1 [label = "a"]
   2 -> 2 [label = "a"]
-  2 -> 3 [label = "a"]
-  3 -> F3
-  3 -> 1 [label = "a"]
-  3 -> 2 [label = "a"]
-  3 -> 3 [label = "a"]
 }
 EOF
 
@@ -58,14 +58,14 @@ cat >a.dot <<EOF
 digraph
 {
   vcsn_context = "law_char(ab)_z"
-  I1 -> 0
-  0 -> 1 [label="{2}a"]
-  2 -> 3 [label="{2}a"]
-  3 -> 0 [label="{2}a"]
-  0 -> 2 [label="{-1}"]
+  I0 -> -1
+  -1 -> 0 [label="{2}a"]
+  1 -> 2 [label="{2}a"]
+  2 -> -1 [label="{2}a"]
+  -1 -> 1 [label="{-1}"]
+  0 -> -1 [label="{-1}"]
   1 -> 0 [label="{-1}"]
-  2 -> 1 [label="{-1}"]
-  1 -> F2
+  0 -> F1
 }
 EOF
 
@@ -75,14 +75,14 @@ cat >a.dot <<EOF
 digraph
 {
   vcsn_context = "law_char(ab)_z"
-  I1 -> 0
-  0 -> 1 [label="{2}a"]
-  2 -> 3 [label="{2}a"]
-  3 -> 0 [label="{2}a"]
-  0 -> 2 [label="{-1}a"]
+  I0 -> -1
+  -1 -> 0 [label="{2}a"]
+  1 -> 2 [label="{2}a"]
+  2 -> -1 [label="{2}a"]
+  -1 -> 1 [label="{-1}a"]
+  0 -> -1 [label="{-1}"]
   1 -> 0 [label="{-1}"]
-  2 -> 1 [label="{-1}"]
-  1 -> F2
+  0 -> F1
 }
 EOF
 
@@ -94,22 +94,22 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
+    I0
+    F1
     F2
-    F3
   }
-  { 1 2 3 4 }
-  I1 -> 1
-  1 -> 2 [label = "{2}a"]
-  1 -> 3 [label = "{-1}a"]
-  2 -> F2
-  2 -> 2 [label = "{-2}a"]
-  2 -> 3 [label = "a"]
-  3 -> F3 [label = "{-1}"]
-  3 -> 2 [label = "{2}a"]
-  3 -> 3 [label = "{-1}a"]
-  3 -> 4 [label = "{2}a"]
-  4 -> 1 [label = "{2}a"]
+  { 0 1 2 3 }
+  I0 -> 0
+  0 -> 1 [label = "{2}a"]
+  0 -> 2 [label = "{-1}a"]
+  1 -> F1
+  1 -> 1 [label = "{-2}a"]
+  1 -> 2 [label = "a"]
+  2 -> F2 [label = "{-1}"]
+  2 -> 1 [label = "{2}a"]
+  2 -> 2 [label = "{-1}a"]
+  2 -> 3 [label = "{2}a"]
+  3 -> 0 [label = "{2}a"]
 }
 EOF
 
@@ -119,14 +119,14 @@ cat >a.dot <<EOF
 digraph
 {
   vcsn_context = "law_char(ab)_zmin"
-  I1 -> 0
+  I0 -> -1
+  -1 -> 0 [label="{2}a"]
   0 -> 1 [label="{2}a"]
-  1 -> 2 [label="{2}a"]
-  2 -> 0 [label="{2}a"]
-  0 -> 2 [label="{-1}"]
+  1 -> -1 [label="{2}a"]
+  -1 -> 1 [label="{-1}"]
+  0 -> -1 [label="{-1}"]
   1 -> 0 [label="{-1}"]
-  2 -> 1 [label="{-1}"]
-  1 -> F2
+  0 -> F1
 }
 EOF
 

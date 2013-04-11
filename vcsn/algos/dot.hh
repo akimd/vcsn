@@ -36,8 +36,11 @@ namespace vcsn
       "  node [shape = circle]\n";
 
     // Name all the states.
-    for (auto s : aut.states())
-      names[s] = names.size();
+    {
+      size_t num = 0;
+      for (auto s : aut.states())
+        names[s] = num++;
+    }
 
     // Output the pre-initial and post-final states.
     out <<

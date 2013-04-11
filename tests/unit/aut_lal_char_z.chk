@@ -8,17 +8,17 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F2
+    I0
+    F1
   }
-  { 1 2 3 }
-  I1 -> 1
-  1 -> 1 [label = "{42}d"]
-  1 -> 2 [label = "{42}c"]
-  1 -> 3 [label = "d"]
-  2 -> F2 [label = "{10}"]
-  2 -> 1 [label = "b"]
-  2 -> 3 [label = "a"]
+  { 0 1 2 }
+  I0 -> 0
+  0 -> 0 [label = "{42}d"]
+  0 -> 1 [label = "{42}c"]
+  0 -> 2 [label = "d"]
+  1 -> F1 [label = "{10}"]
+  1 -> 0 [label = "b"]
+  1 -> 2 [label = "a"]
 }
 Leaving s1 by d
 5 2
@@ -34,28 +34,15 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F2
-  }
-  { 1 2 3 }
-  I1 -> 1
-  1 -> 2 [label = "{42}c"]
-  1 -> 3 [label = "d"]
-  2 -> F2 [label = "{10}"]
-  2 -> 1 [label = "b"]
-  2 -> 3 [label = "a"]
-}
-digraph
-{
-  vcsn_context = "lal_char(abcd)_z"
-  rankdir = LR
-  node [shape = circle]
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
     F1
   }
-  { 1 2 }
+  { 0 1 2 }
+  I0 -> 0
+  0 -> 1 [label = "{42}c"]
+  0 -> 2 [label = "d"]
   1 -> F1 [label = "{10}"]
+  1 -> 0 [label = "b"]
   1 -> 2 [label = "a"]
 }
 digraph
@@ -65,10 +52,23 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    F1
+    F0
   }
-  { 1 2 }
-  1 -> F1 [label = "{10}"]
+  { 0 1 }
+  0 -> F0 [label = "{10}"]
+  0 -> 1 [label = "a"]
+}
+digraph
+{
+  vcsn_context = "lal_char(abcd)_z"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    F0
+  }
+  { 0 1 }
+  0 -> F0 [label = "{10}"]
 }
 EOF
 run 0 out.exp unit/aut_lal_char_z

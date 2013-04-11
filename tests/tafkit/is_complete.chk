@@ -7,7 +7,7 @@
 cat >a.dot <<EOF
 digraph {
     vcsn_context="lal_char(ab)_b"
-    3 -> 3 [label="a"]
+    2 -> 2 [label="a"]
 }
 EOF
 
@@ -16,7 +16,7 @@ run 2 "false" -vcsn-is-complete -A -I dot -f a.dot
 cat >a.dot <<EOF
 digraph {
     vcsn_context="lal_char(ab)_b"
-    3 -> 3 [label="a, b"]
+    2 -> 2 [label="a, b"]
 }
 EOF
 
@@ -25,8 +25,8 @@ run 2 "false" -vcsn-is-complete -A -I dot -f a.dot
 cat >a.dot <<EOF
 digraph {
     vcsn_context="lal_char(ab)_b"
-    I1 -> 3
-    3 -> 3 [label="a"]
+    I0 -> 2
+    2 -> 2 [label="a"]
 }
 EOF
 
@@ -35,8 +35,8 @@ run 2 "false" -vcsn-is-complete -A -I dot -f a.dot
 cat >a.dot <<EOF
 digraph {
     vcsn_context="lal_char(ab)_b"
-    I1 -> 3
-    3 -> 3 [label="a, b"]
+    I0 -> 2
+    2 -> 2 [label="a, b"]
 }
 EOF
 

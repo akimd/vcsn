@@ -42,16 +42,16 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F4
+    I0
+    F3
   }
-  { 1 2 3 4 }
-  I1 -> 1
-  1 -> 1 [label = "a, b"]
-  1 -> 2 [label = "a"]
+  { 0 1 2 3 }
+  I0 -> 0
+  0 -> 0 [label = "a, b"]
+  0 -> 1 [label = "a"]
+  1 -> 2 [label = "a, b"]
   2 -> 3 [label = "a, b"]
-  3 -> 4 [label = "a, b"]
-  4 -> F4
+  3 -> F3
 }
 EOF
 
@@ -63,16 +63,16 @@ digraph
   node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I1
-    F5
+    I0
+    F4
   }
-  { 1 2 3 4 5 }
-  I1 -> 1
-  1 -> 1 [label = "x, y, z"]
-  1 -> 2 [label = "x"]
+  { 0 1 2 3 4 }
+  I0 -> 0
+  0 -> 0 [label = "x, y, z"]
+  0 -> 1 [label = "x"]
+  1 -> 2 [label = "x, y, z"]
   2 -> 3 [label = "x, y, z"]
   3 -> 4 [label = "x, y, z"]
-  4 -> 5 [label = "x, y, z"]
-  5 -> F5
+  4 -> F4
 }
 EOF
