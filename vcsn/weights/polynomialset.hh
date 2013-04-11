@@ -11,7 +11,7 @@
 namespace vcsn
 {
   template <class Context>
-  struct polynomialset
+  class polynomialset
   {
   public:
     using context_t = Context;

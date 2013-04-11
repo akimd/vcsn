@@ -4,7 +4,7 @@
 # include <vector>
 # include <string>
 
-# include <boost/range.hpp>
+# include <boost/range.hpp> // make_iterator_range
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/fwd.hh>
