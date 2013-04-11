@@ -149,9 +149,12 @@ namespace vcsn
       using self_t = nary;
 
       using const_iterator = typename ratexps_t::const_iterator;
-      using iterator = typename ratexps_t::iterator;
+      // Needed by boost::make_iterator_range, but since we iterate
+      // over const value (well, shared_ptr to const values), make it
+      // a const_iterator anyway.  Otherwise, clang won't compile.
+      using iterator = const_iterator;
       using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename ratexps_t::reverse_iterator;
+      using reverse_iterator = const_reverse_iterator;
 
       const_iterator begin() const;
       const_iterator end() const;
@@ -204,10 +207,10 @@ namespace vcsn
       using ratexps_t = typename node_t::ratexps_t;
       using self_t = prod;
 
-      using const_iterator = typename ratexps_t::const_iterator;
-      using iterator = typename ratexps_t::iterator;
-      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename ratexps_t::reverse_iterator;
+      using const_iterator = typename super_type::const_iterator;
+      using iterator = typename super_type::const_iterator;
+      using const_reverse_iterator = typename super_type::const_reverse_iterator;
+      using reverse_iterator = typename super_type::const_reverse_iterator;
 
       prod(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
@@ -245,10 +248,10 @@ namespace vcsn
       using ratexps_t = typename node_t::ratexps_t;
       using self_t = sum;
 
-      using const_iterator = typename ratexps_t::const_iterator;
-      using iterator = typename ratexps_t::iterator;
-      using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
-      using reverse_iterator = typename ratexps_t::reverse_iterator;
+      using const_iterator = typename super_type::const_iterator;
+      using iterator = typename super_type::const_iterator;
+      using const_reverse_iterator = typename super_type::const_reverse_iterator;
+      using reverse_iterator = typename super_type::const_reverse_iterator;
 
       sum(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
