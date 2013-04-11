@@ -1,3 +1,10 @@
+* 2013-04-11
+** Dot
+The states are now numbered from 0.
+
+** Clang Compatibility
+Clang++ (3.2 and 3.3) can now compile Vaucanson.
+
 * 2013-03-18
 ** New LabelSet: nullableset
 Initial support for "Labels are nullable".
