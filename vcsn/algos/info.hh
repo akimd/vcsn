@@ -22,7 +22,12 @@ namespace vcsn
       << "number of states: " << aut.num_states() << std::endl
       << "number of initial states: " << aut.num_initials() << std::endl
       << "number of final states: " << aut.num_finals() << std::endl
-      << "number of transitions: " << aut.num_transitions()
+      << "number of transitions: " << aut.num_transitions() << std::endl
+      //<< "is complete: " << is_complete(aut) << std::endl
+      << "is deterministic: " << is_deterministic(aut) << std::endl
+      //      << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
+      << "is proper: " << is_proper(aut) << std::endl
+      << "is valid: " << is_valid(aut);
       ;
   }
 

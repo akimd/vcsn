@@ -198,6 +198,9 @@ number of states: 512
 number of initial states: 1
 number of final states: 256
 number of transitions: 1024
+is deterministic: 1
+is proper: 1
+is valid: 1
 EOF
 
 
@@ -292,4 +295,7 @@ number of states: 256
 number of initial states: 1
 number of final states: 128
 number of transitions: 768
+is deterministic: 1
+is proper: 1
+is valid: 1
 EOF
