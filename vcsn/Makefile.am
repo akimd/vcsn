@@ -23,6 +23,7 @@ nobase_vcsn_HEADERS =                           \
   algos/eps-removal.hh                          \
   algos/eval.hh                                 \
   algos/fsm.hh                                  \
+  algos/info.hh                                 \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
   algos/is_complete.hh                          \

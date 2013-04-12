@@ -17,6 +17,8 @@ namespace vcsn
     {
       if (type == "dot")
         dot(aut, out);
+      else if (type == "info")
+        info(aut, out);
       else if (type == "fsm")
         fsm(aut, out);
       else if (type == "null")

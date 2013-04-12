@@ -1,3 +1,8 @@
+* 2013-04-12
+** New output format: info
+This pseudo format displays facts about the automaton (number of states and
+so on).
+
 * 2013-04-11
 ** Dot
 The states are now numbered from 0.

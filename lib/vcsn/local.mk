@@ -28,15 +28,16 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/copy.cc                        \
   lib/vcsn/algos/de_bruijn.cc                   \
   lib/vcsn/algos/determinize.cc                 \
-  lib/vcsn/algos/eps-removal.cc                 \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
+  lib/vcsn/algos/eps-removal.cc                 \
   lib/vcsn/algos/eval.cc                        \
-  lib/vcsn/algos/is_complete.cc                 \
+  lib/vcsn/algos/fsm.cc                         \
+  lib/vcsn/algos/info.cc                        \
   lib/vcsn/algos/is-deterministic.cc            \
   lib/vcsn/algos/is-eps-acyclic.cc              \
   lib/vcsn/algos/is-proper.cc                   \
-  lib/vcsn/algos/fsm.cc                         \
+  lib/vcsn/algos/is_complete.cc                 \
   lib/vcsn/algos/ladybird.cc                    \
   lib/vcsn/algos/lift.cc                        \
   lib/vcsn/algos/make-context.cc                \

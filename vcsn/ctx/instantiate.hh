@@ -10,6 +10,7 @@
 # include <vcsn/algos/eps-removal.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/fsm.hh>
+# include <vcsn/algos/info.hh>
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
@@ -220,6 +221,16 @@ namespace vcsn
                             static_cast<fsm_stream_t&>(fsm<taut_t>));
         fsm_string_register(taut_t::sname(),
                             static_cast<fsm_string_t&>(fsm<taut_t>));
+
+        // info.
+        info_stream_register(aut_t::sname(),
+                             static_cast<info_stream_t&>(info<aut_t>));
+        info_string_register(aut_t::sname(),
+                             static_cast<info_string_t&>(info<aut_t>));
+        info_stream_register(taut_t::sname(),
+                             static_cast<info_stream_t&>(info<taut_t>));
+        info_string_register(taut_t::sname(),
+                             static_cast<info_string_t&>(info<taut_t>));
 
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
