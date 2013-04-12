@@ -26,10 +26,10 @@ check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
 # -----------------------------------
 check_info ()
 {
-  run 0 - -vcsn-cat "$@" -o std.dot
+  run 0 - -vcsn-cat "$@" -O info
 }
 
-check '(?@lal_char(abc)_b)abc' <<EOF
+check_info -Ee '(?@lal_char(abc)_b)abc' <<EOF
 context: lal_char(abc)_b
 sum: 0
 prod: 1
@@ -39,7 +39,7 @@ one: 0
 atom: 3
 EOF
 
-check '(?@lal_char(abc)_b)\e+bc*' <<EOF
+check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<EOF
 context: lal_char(abc)_b
 sum: 1
 prod: 1
