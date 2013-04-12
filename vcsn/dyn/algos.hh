@@ -30,8 +30,8 @@ namespace vcsn
 
     automaton eps_removal(const automaton& aut);
 
-    void info(const automaton& aut, std::ostream& out);
-    std::string info(const automaton& aut);
+    std::ostream& info(const automaton& aut, std::ostream& out);
+    std::ostream& info(const ratexp& exp, std::ostream& out);
 
     void fsm(const automaton& aut, std::ostream& out);
     std::string fsm(const automaton& aut);

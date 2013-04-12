@@ -51,6 +51,8 @@ nobase_vcsn_HEADERS =                           \
   core/mutable_automaton.hh                     \
   core/rat/abstract_ratexpset.hh                \
   core/rat/fwd.hh                               \
+  core/rat/info.hh                              \
+  core/rat/info.hxx                             \
   core/rat/printer.hh                           \
   core/rat/printer.hxx                          \
   core/rat/ratexp.hh                            \

@@ -1,7 +1,7 @@
 * 2013-04-12
 ** New output format: info
 This pseudo format displays facts about the automaton (number of states and
-so on).
+so on) or rational expressions (number of nodes).
 
 ** is-eps-acyclic
 Can now be called on LAL automata, for consistency with is-proper and

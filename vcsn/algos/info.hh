@@ -5,6 +5,8 @@
 # include <sstream>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/core/rat/info.hh>
 
 namespace vcsn
 {
@@ -14,10 +16,10 @@ namespace vcsn
   `--------------------------*/
 
   template <class A>
-  void
+  std::ostream&
   info(const A& aut, std::ostream& out)
   {
-    out
+    return out
       << "context: " << aut.vname(true) << std::endl
       << "number of states: " << aut.num_states() << std::endl
       << "number of initial states: " << aut.num_initials() << std::endl
@@ -36,47 +38,61 @@ namespace vcsn
     namespace details
     {
       template <typename Aut>
-      void info(const automaton& aut, std::ostream& out)
+      std::ostream& info(const automaton& aut, std::ostream& out)
       {
         info(dynamic_cast<const Aut&>(*aut), out);
+        return out;
       }
 
-      using info_stream_t =
-        auto (const automaton& aut, std::ostream& out) -> void;
-      bool info_stream_register(const std::string& ctx, info_stream_t fn);
+      using info_t
+        = auto (const automaton& aut, std::ostream& out) -> std::ostream&;
+      bool info_register(const std::string& ctx, info_t fn);
     }
   }
 
 
-  /*------------------.
-  | info(automaton).  |
-  `------------------*/
+  /*-----------------------.
+  | info(ratexp, stream).  |
+  `-----------------------*/
 
-  /// The automaton in Info as a string.  Exact type.
-  template <class A>
-  inline
-  std::string
-  info(const A& aut)
+  template <class Ctx>
+  void
+  info(const Ctx& ctx, const rat::exp_t& e, std::ostream& o)
   {
-    std::ostringstream o;
-    info(aut, o);
-    return o.str();
+    vcsn::rat::info<Ctx> nfo;
+    nfo(*ctx.downcast(e));
+# define DEFINE(Type)                            \
+    << std::endl << #Type ": " << nfo.Type
+    o
+      << "context: " << ctx.vname(true)
+      DEFINE(sum)
+      DEFINE(prod)
+      DEFINE(star)
+      DEFINE(zero)
+      DEFINE(one)
+      DEFINE(atom)
+      ;
+# undef DEFINE
   }
+
 
   namespace dyn
   {
     namespace details
     {
       /// Abstract but parameterized.
-      template <typename Aut>
-      std::string info(const automaton& aut)
+      template <typename Context>
+      std::ostream& info_exp(const dyn::ratexp& exp, std::ostream& o)
       {
-        return info(dynamic_cast<const Aut&>(*aut));
+        const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
+        vcsn::info<Context>(ctx, exp->ratexp(), o);
+        return o;
       }
 
-      using info_string_t = auto (const automaton& aut) -> std::string;
+      using info_exp_t =
+        auto (const ratexp& aut, std::ostream& o) -> std::ostream&;
 
-      bool info_string_register(const std::string& ctx, info_string_t fn);
+      bool info_exp_register(const std::string& ctx, info_exp_t fn);
     }
   }
 }

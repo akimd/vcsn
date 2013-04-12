@@ -1,0 +1,59 @@
+#ifndef VCSN_CORE_RAT_INFO_HXX
+# define VCSN_CORE_RAT_INFO_HXX
+
+namespace vcsn
+{
+  namespace rat
+  {
+
+# define DEFINE(Type)                           \
+    template <typename Context>                 \
+    inline                                      \
+    auto                                        \
+    info<Context>::visit(const Type ## _t& v)   \
+      -> void
+
+    DEFINE(sum)
+    {
+      ++sum;
+      for (const auto& c: v)
+        c->accept(*this);
+    }
+
+    DEFINE(prod)
+    {
+      ++prod;
+      for (const auto& c: v)
+        c->accept(*this);
+    }
+
+    DEFINE(star)
+    {
+      ++star;
+      v.sub()->accept(*this);
+    }
+
+    DEFINE(zero)
+    {
+      (void) v;
+      ++zero;
+    }
+
+    DEFINE(one)
+    {
+      (void) v;
+      ++one;
+    }
+
+    DEFINE(atom)
+    {
+      (void) v;
+      ++atom;
+    }
+
+# undef DEFINE
+
+  } // namespace rat
+} // namespace vcsn
+
+#endif // !VCSN_CORE_RAT_INFO_HXX

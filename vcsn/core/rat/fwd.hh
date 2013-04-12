@@ -22,6 +22,14 @@ namespace vcsn
     class exp;
     using exp_t = std::shared_ptr<const exp>;
 
+    // info.hh
+    template <typename Context>
+    class info;
+
+    // printer.hh.
+    template <typename Context>
+    class printer;
+
 # define DEFINE(Node)                           \
     template <typename Label, typename Weight>  \
     class Node
@@ -43,7 +51,6 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using ratexp = std::shared_ptr<const node<Label, Weight>>;
-
   } // namespace rat
 
   // ratexpset.hh.

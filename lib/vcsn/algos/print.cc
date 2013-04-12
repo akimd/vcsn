@@ -39,7 +39,9 @@ namespace vcsn
     std::ostream&
     print(const ratexp& exp, std::ostream& out, const std::string& type)
     {
-      if (type == "text")
+      if (type == "info")
+        info(exp, out);
+      else if (type == "text")
         details::print_exp_registry().call(exp->ctx().vname(), exp, out);
       else if(type == "xml")
         xml(exp, out);

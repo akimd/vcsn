@@ -218,14 +218,11 @@ namespace vcsn
                             static_cast<fsm_string_t&>(fsm<taut_t>));
 
         // info.
-        info_stream_register(aut_t::sname(),
-                             static_cast<info_stream_t&>(info<aut_t>));
-        info_string_register(aut_t::sname(),
-                             static_cast<info_string_t&>(info<aut_t>));
-        info_stream_register(taut_t::sname(),
-                             static_cast<info_stream_t&>(info<taut_t>));
-        info_string_register(taut_t::sname(),
-                             static_cast<info_string_t&>(info<taut_t>));
+        info_register(aut_t::sname(),
+                             static_cast<info_t&>(info<aut_t>));
+        info_register(taut_t::sname(),
+                             static_cast<info_t&>(info<taut_t>));
+        info_exp_register(Ctx::sname(), info_exp<Ctx>);
 
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);

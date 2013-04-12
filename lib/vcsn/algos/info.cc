@@ -6,30 +6,30 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*--------------.
-    | info_stream.  |
-    `--------------*/
+    /*------------------.
+    | info(automaton).  |
+    `------------------*/
 
-    REGISTER_DEFINE(info_stream);
+    REGISTER_DEFINE(info);
 
     void
     info(const automaton& aut, std::ostream& out)
     {
-      details::info_stream_registry().call(aut->vname(),
-                                           aut, out);
+      details::info_registry().call(aut->vname(),
+                                    aut, out);
     }
 
-    /*-------------.
-    | info_string.  |
-    `-------------*/
+    /*---------------.
+    | info(ratexp).  |
+    `---------------*/
 
-    REGISTER_DEFINE(info_string);
+    REGISTER_DEFINE(info_exp);
 
-    std::string
-    info(const automaton& aut)
+    void
+    info(const dyn::ratexp& e, std::ostream& out)
     {
-      return details::info_string_registry().call(aut->vname(),
-                                                  aut);
+      details::info_exp_registry().call(e->ctx().vname(),
+                                        e, out);
     }
   }
 }
