@@ -6,9 +6,9 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-------------------------.
-    | transpose for automata.  |
-    `-------------------------*/
+    /*-----------------------.
+    | transpose(automaton).  |
+    `-----------------------*/
 
     REGISTER_DEFINE(transpose);
 
@@ -20,9 +20,9 @@ namespace vcsn
     }
 
 
-    /*-----------------------.
-    | transpose for ratexp.  |
-    `-----------------------*/
+    /*--------------------.
+    | transpose(ratexp).  |
+    `--------------------*/
 
     REGISTER_DEFINE(transpose_exp);
 
