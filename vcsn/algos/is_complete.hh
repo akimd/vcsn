@@ -11,20 +11,21 @@ namespace vcsn
   template <class Aut>
   bool is_complete(const Aut& aut)
   {
+    static_assert(Aut::context_t::is_lal,
+                  "requires labels_are_letters");
+
+    if (aut.num_initials() == 0)
+      return false;
+
     using label_set_t = std::set<typename Aut::labelset_t::letter_t>;
 
     const auto& letters = *aut.labelset();
-    const auto& states = aut.states();
-
-    if (aut.num_initials() == 0)
-        return false;
-
-    for (auto state : states)
+    for (auto state : aut.states())
     {
-      label_set_t missing_letters(letters.begin(), letters.end());
+      label_set_t missing_letters = {std::begin(letters), std::end(letters)};
 
       for (auto tr : aut.all_out(state))
-          missing_letters.erase(aut.label_of(tr));
+        missing_letters.erase(aut.label_of(tr));
 
       if (!missing_letters.empty())
         return false;
@@ -48,8 +49,7 @@ namespace vcsn
       }
 
       using is_complete_t = bool (const dyn::automaton&);
-      bool is_complete_register(const std::string& ctx,
-              is_complete_t fn);
+      bool is_complete_register(const std::string& ctx, is_complete_t fn);
     }
   }
 }
