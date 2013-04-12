@@ -1,10 +1,11 @@
 #ifndef VCSN_ALGOS_EPS_REMOVAL_HH
 # define VCSN_ALGOS_EPS_REMOVAL_HH
 
-# include <utility>
 # include <list>
-# include <unordered_map>
 # include <stdexcept>
+# include <type_traits>
+# include <unordered_map>
+# include <utility>
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
@@ -29,7 +30,7 @@ namespace vcsn
   template <typename Aut, typename Kind>
   class epsilon_remover
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
     using weight_t = typename weightset_t::value_t;
@@ -182,7 +183,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut, star_status_t Status>
   class basic_EpsilonDispatcher
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
   public:
     static automaton_t eps_removal(const automaton_t &input)
     {
@@ -201,7 +202,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::TOPS>
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
     using remover_t = epsilon_remover<automaton_t,
                                       typename automaton_t::kind_t>;
   public:
@@ -229,7 +230,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::ABSVAL>
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
     using remover_t = epsilon_remover<automaton_t,
@@ -263,7 +264,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::STARABLE>
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
     using remover_t = epsilon_remover<automaton_t,
                                       typename automaton_t::kind_t>;
   public:
@@ -287,7 +288,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::NON_STARABLE >
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
     using remover_t = epsilon_remover<automaton_t,
@@ -312,7 +313,7 @@ and eturn the result of epsilon_removal on the copy.
 
   template <typename Aut, typename Kind>
   inline
-  bool epsilon_remover<Aut,Kind>::is_valid(const Aut &input)
+  bool epsilon_remover<Aut,Kind>::is_valid(const automaton_t& input)
   {
     return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
       ::is_valid(input);
@@ -320,7 +321,7 @@ and eturn the result of epsilon_removal on the copy.
 
   template <typename Aut, typename Kind>
   inline
-  void epsilon_remover<Aut,Kind>::eps_removal_here(Aut &input)
+  void epsilon_remover<Aut,Kind>::eps_removal_here(automaton_t& input)
   {
     if (!is_proper(input))
       EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
@@ -329,7 +330,8 @@ and eturn the result of epsilon_removal on the copy.
 
   template <typename Aut, typename Kind>
   inline
-  Aut epsilon_remover<Aut,Kind>::eps_removal(const Aut &input)
+  auto epsilon_remover<Aut,Kind>::eps_removal(const automaton_t& input)
+    -> automaton_t
   {
     Aut res = copy(input);
     eps_removal_here(res);
@@ -343,7 +345,7 @@ and eturn the result of epsilon_removal on the copy.
   template <typename Aut>
   class epsilon_remover<Aut, labels_are_letters>
   {
-    using automaton_t = Aut;
+    using automaton_t = typename std::remove_cv<Aut>::type;
   public:
     static bool is_proper(const automaton_t &)
     {
