@@ -44,6 +44,11 @@ we don't check that there is a single letter in the label here, nor
 that it is not the \e.  Rather than a quick fix, we need to really
 talk about the nature of entries.
 
+** Generators and alphabets
+ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
+Of course, output then fails.  Should ladybird enrich the alphabet?
+Or use what's in there instead of always abc?
+
 * trivial identities
 As a goal, we want every rational expression to yield the same result
 in lal and law.  This is a failure:

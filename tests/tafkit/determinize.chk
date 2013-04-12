@@ -99,23 +99,30 @@ run 0 out.exp -vcsn-determinize -f empty.dot
 run 0 out.exp -vcsn-determinize -f out.exp
 
 
+
 ## ----------------------- ##
 ## Determinize de bruijn.  ##
 ## ----------------------- ##
 
-# check_de_bruijn SIZE
-# --------------------
-check_de_bruijn ()
+# check FAMILY SIZE
+# -----------------
+# Check that determinization is idempotent on FAMILY ("ladybird",
+# or "de-bruijn".  Leave the result in out.exp.
+check ()
 {
-  run 0 '' -vcsn-de-bruijn -C 'lal_char(ab)_b'   -o de-bruijn-$1.dot $1
-  run 0 '' -vcsn-determinize -f de-bruijn-$1.dot -o de-bruijn-$1-d.dot
+  case $1 in
+   (de-bruijn) ctx='lal_char(ab)_b';;
+   (ladybird)  ctx='lal_char(abc)_b';;
+  esac
+  run 0 '' -vcsn-$1          -C "$ctx"    -o $1-$2.dot $2
+  run 0 '' -vcsn-determinize -f $1-$2.dot -o $1-$2-d.dot
   # Idempotence.
-  cp de-bruijn-$1-d.dot out.exp
-  run 0 out.exp -vcsn-determinize -f de-bruijn-$1-d.dot
+  cp $1-$2-d.dot out.exp
+  run 0 out.exp -vcsn-determinize -f $1-$2-d.dot
 }
 
 
-check_de_bruijn 3
+check de-bruijn 3
 # Check the output (2^4 is still ok).
 mv out.exp de-bruijn-3-det.dot
 cat >out.exp <<EOF
@@ -182,27 +189,23 @@ digraph
 EOF
 run 0 out.exp -cat de-bruijn-3-det.dot
 
-
-check_de_bruijn 8
+# Don't display, too big.
+check de-bruijn 8
+mv out.exp de-bruijn-8-det.dot
+run 0 - -vcsn-cat -O info -f de-bruijn-8-det.dot <<EOF
+context: mutable_automaton<lal_char(ab)_b>
+number of states: 512
+number of initial states: 1
+number of final states: 256
+number of transitions: 1024
+EOF
 
 
 ## ---------------------- ##
 ## Determinize ladybird.  ##
 ## ---------------------- ##
 
-# check_ladybird SIZE
-# -------------------
-check_ladybird ()
-{
-  run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b'  -o ladybird-$1.dot $1
-  run 0 '' -vcsn-determinize -f ladybird-$1.dot -o ladybird-$1-d.dot
-  # Idempotence.
-  cp ladybird-$1-d.dot out.exp
-  run 0 out.exp -vcsn-determinize -f out.exp
-}
-
-
-check_ladybird 4
+check ladybird 4
 mv out.exp ladybird-4-det.dot
 cat >out.exp <<EOF
 digraph
@@ -281,4 +284,12 @@ EOF
 run 0 out.exp -cat ladybird-4-det.dot
 
 # Don't display, too big.
-check_ladybird 8
+check ladybird 8
+mv out.exp ladybird-8-det.dot
+run 0 - -vcsn-cat -O info -f ladybird-8-det.dot <<EOF
+context: mutable_automaton<lal_char(abc)_b>
+number of states: 256
+number of initial states: 1
+number of final states: 128
+number of transitions: 768
+EOF
