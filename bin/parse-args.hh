@@ -28,7 +28,7 @@ struct options
   /// Output file name ("-" for stdout).
   std::string output = "-";
   /// Output format.
-  std::string output_format = "dot";
+  std::string output_format = "default";
 
   /// The remainder of the arguments.
   std::vector<std::string> argv;

@@ -50,7 +50,9 @@ print(const options& opts, const vcsn::dyn::automaton& aut)
       if (!out->good())
         throw std::runtime_error(opts.output + ": cannot open for writing");
 
-      vcsn::dyn::print(aut, *out, opts.output_format) << std::endl;
+      std::string fmt =
+        (opts.output_format == "default" ? "dot" : opts.output_format);
+      vcsn::dyn::print(aut, *out, fmt) << std::endl;
     }
 }
 
@@ -69,8 +71,9 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
       if (!out->good())
         throw std::runtime_error(opts.output + ": cannot open for writing");
 
-      // Be cool, we don't support many formats.
-      vcsn::dyn::print(exp, *out, "text") << std::endl;
+      std::string fmt =
+        (opts.output_format == "default" ? "text" : opts.output_format);
+      vcsn::dyn::print(exp, *out, fmt) << std::endl;
     }
 }
 
