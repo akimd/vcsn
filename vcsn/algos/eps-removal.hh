@@ -208,9 +208,8 @@ and eturn the result of epsilon_removal on the copy.
   public:
     static bool is_valid(const automaton_t &input)
     {
-      if (remover_t::is_proper(input))
-        return true;
-      if (is_eps_acyclic<automaton_t>(input))
+      if (remover_t::is_proper(input)
+          || is_eps_acyclic(input))
         return true;
       automaton_t res = copy(input);
       return remover_t::in_situ_remover(res);
@@ -238,9 +237,8 @@ and eturn the result of epsilon_removal on the copy.
   public:
     static bool is_valid(const automaton_t &input)
     {
-      if (remover_t::is_proper(input))
-        return true;
-      if (is_eps_acyclic<automaton_t>(input))
+      if (remover_t::is_proper(input)
+          || is_eps_acyclic(input))
         return true;
       automaton_t tmp_aut = copy(input);
       // Apply absolute value to the weight of each transition.
@@ -296,9 +294,8 @@ and eturn the result of epsilon_removal on the copy.
   public:
     static bool is_valid(const automaton_t &input)
     {
-      if (remover_t::is_proper(input))
-        return true;
-      return is_eps_acyclic<automaton_t>(input);
+      return (remover_t::is_proper(input)
+              || is_eps_acyclic(input));
     }
 
     static void eps_removal_here(automaton_t &input)
