@@ -65,6 +65,12 @@ namespace vcsn
         return true;
       }
 
+      empty_t
+      identity() const
+      {
+        return {};
+      }
+
       bool
       is_identity(empty_t) const
       {
