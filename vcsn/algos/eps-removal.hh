@@ -342,17 +342,17 @@ and eturn the result of epsilon_removal on the copy.
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
   public:
-    static bool is_proper(const automaton_t &)
+    static constexpr bool is_proper(const automaton_t &)
     {
       return true;
     }
 
-    static bool is_valid(const automaton_t &)
+    static constexpr bool is_valid(const automaton_t &)
     {
       return true;
     }
 
-    static void eps_removal_here(automaton_t &)
+    static constexpr void eps_removal_here(automaton_t &)
     {}
 
     static Aut eps_removal(const automaton_t &input)
