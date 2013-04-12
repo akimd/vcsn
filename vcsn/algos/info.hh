@@ -25,7 +25,7 @@ namespace vcsn
       << "number of transitions: " << aut.num_transitions() << std::endl
       //<< "is complete: " << is_complete(aut) << std::endl
       << "is deterministic: " << is_deterministic(aut) << std::endl
-      //      << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
+      << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
       << "is proper: " << is_proper(aut) << std::endl
       << "is valid: " << is_valid(aut);
       ;

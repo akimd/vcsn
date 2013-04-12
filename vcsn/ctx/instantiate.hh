@@ -145,8 +145,6 @@ namespace vcsn
 
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
-        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
-
         eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
@@ -168,9 +166,6 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
 
         using namespace dyn::details;
-
-        // is-eps-acyclic.
-        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
 
         // eps-removal.
         eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
@@ -234,6 +229,9 @@ namespace vcsn
 
         // is-deterministic.
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
+
+        // is-eps-acyclic.
+        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
 
         // is-proper.
         is_proper_register(aut_t::sname(), is_proper<aut_t>);

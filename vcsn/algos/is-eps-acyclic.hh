@@ -10,17 +10,21 @@ namespace vcsn
 {
   namespace
   {
+
+    template <typename Aut, bool is_lal = Aut::context_t::is_lal>
+    struct epsilon_acyclic;
+
     /**
       @class epsilon_acylic
-      @brief This class provides an algorithm to detect epsilon-circuits.
+      @brief Detect epsilon-circuits.
 
       In this algorithm, only epsilon-transitions are considered.
 
     */
     template <typename Aut>
-    struct epsilon_acyclic
+    struct epsilon_acyclic<Aut, false>
     {
-      using automaton_t = Aut;
+      using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
       using label_t = typename automaton_t::label_t;
       std::unordered_map<state_t, char> tag;
@@ -84,8 +88,21 @@ namespace vcsn
         return true;
       }
     };
-  }
 
+    template <typename Aut>
+    struct epsilon_acyclic<Aut, true>
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+
+      constexpr epsilon_acyclic(const automaton_t&)
+      {}
+
+      constexpr bool is_eps_acyclic()
+      {
+        return true;
+      }
+    };
+  }
 
   template <class Aut>
   bool is_eps_acyclic(const Aut& input)

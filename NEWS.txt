@@ -3,6 +3,10 @@
 This pseudo format displays facts about the automaton (number of states and
 so on).
 
+** is-eps-acyclic
+Can now be called on LAL automata, for consistency with is-proper and
+is-valid.
+
 * 2013-04-11
 ** Dot
 The states are now numbered from 0.
