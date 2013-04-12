@@ -68,7 +68,7 @@ namespace vcsn
       */
 
   public:
-    static bool in_situ_remover(automaton_t &input)
+    static bool in_situ_remover(automaton_t& input)
     {
       label_t empty_word = input.labelset()->identity();
       auto weightset_ptr = input.weightset();
@@ -137,7 +137,7 @@ namespace vcsn
       @param input The tested automaton
       @return true iff the automaton is proper
       */
-    static bool is_proper(const automaton_t &input)
+    static bool is_proper(const automaton_t& input)
     {
       for (auto t: input.transitions())
         if (input.labelset()->is_identity(input.label_of(t)))
@@ -158,7 +158,7 @@ and eturn the result of epsilon_removal on the copy.
 @param input The tested automaton
 @return true iff the automaton is valid
 */
-    static bool is_valid(const automaton_t &input);
+    static bool is_valid(const automaton_t& input);
 
     /**@brief Remove the epsilon-transitions of the input
       The behaviour of this method depends on the star_status of the weight_set:
@@ -170,9 +170,9 @@ and eturn the result of epsilon_removal on the copy.
       @param input The automaton in which epsilon-transitions will be removed
       @throw domain_error if the input is not valid
       */
-    static void eps_removal_here(automaton_t &input);
+    static void eps_removal_here(automaton_t& input);
 
-    static automaton_t eps_removal(const automaton_t &input);
+    static automaton_t eps_removal(const automaton_t& input);
   };
 
   /*
@@ -338,9 +338,7 @@ and eturn the result of epsilon_removal on the copy.
     return res;
   }
 
-  /*
-     Special case of labels_are_letters
-     */
+  /* Special case of labels_are_letters */
 
   template <typename Aut>
   class epsilon_remover<Aut, labels_are_letters>
