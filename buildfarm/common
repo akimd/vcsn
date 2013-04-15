@@ -36,10 +36,13 @@ fatal ()
   error 1 "$@"
 }
 
+# run COMMAND...
+# --------------
+# Display the COMMAND, and run it.
 run ()
 {
   stderr "running: $*"
-  eval "$@"
+  "$@"
 }
 
 # find_prog EXE...
@@ -59,6 +62,54 @@ find_prog ()
   done
 }
 
+
+# quote_for_eval_arg ARG
+# ----------------------
+# Aesthetically quote ARG to be evaled later.
+# This function returns two values: QUOTE_FOR_EVAL_RESULT
+# is double-quoted, suitable for a subsequent eval, whereas
+# QUOTE_FOR_EVAL_UNQUOTED_RESULT has merely all characters
+# which are still active within double quotes backslashified.
+#
+# Taken from Libtool.
+quote_for_eval_arg ()
+{
+  case $1 in
+    *[\\\`\"\$]*)
+      local quote_subst='s/\([`"$\\]\)/\\\1/g'
+      quote_for_eval_arg_unquoted_result=`echo "$1" | sed -e "$quote_subst"`;;
+    *)
+      quote_for_eval_arg_unquoted_result="$1";;
+  esac
+
+  case $quote_for_eval_arg_unquoted_result in
+    # Double-quote args containing shell metacharacters to delay
+    # word splitting, command substitution and and variable
+    # expansion for a subsequent eval.
+    # Many Bourne shells cannot handle close brackets correctly
+    # in scan sets, so we specify it separately.
+    *[\[\~\#\^\&\*\(\)\{\}\|\;\<\>\?\'\ \	]*|*]*|"")
+      quote_for_eval_arg_result="\"$quote_for_eval_arg_unquoted_result\"";;
+    *)
+      quote_for_eval_arg_result="$quote_for_eval_arg_unquoted_result";;
+  esac
+}
+
+# quote_for_eval ARG...
+# ---------------------
+quote_for_eval ()
+{
+  local i
+  local sep
+  local res
+  for i
+  do
+    quote_for_eval_arg "$i"
+    res=$res$sep$quote_for_eval_arg_result
+    sep=" "
+  done
+  quote_for_eval_result=$res
+}
 
 # tree_copy SOURCE DEST
 # ---------------------

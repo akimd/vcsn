@@ -7,12 +7,6 @@ set -ex
 ## Configure.  ##
 ## ----------- ##
 
-
-# Compiler.
-CONFIGUREFLAGS="                                \
-  CC='ccache gcc-4.8'                           \
-  CXX='ccache g++-4.8'"
-
 if $(older "$DIR_BUILD/Makefile" "$0"); then
   if test ! -d "$DIR_BUILD"; then
     test ! -e "$DIR_BUILD" \
@@ -25,5 +19,5 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
     --config-cache                              \
     --prefix="$prefix"                          \
     --enable-dependency-tracking                \
-    $CONFIGUREFLAGS
+    "$@"
 fi
