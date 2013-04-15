@@ -71,6 +71,8 @@ namespace vcsn
 
     automaton standard_of(const ratexp& e);
 
+    std::ostream& tikz(const automaton& aut, std::ostream& out);
+
     automaton transpose(automaton& aut);
     ratexp transpose(const ratexp& e);
 

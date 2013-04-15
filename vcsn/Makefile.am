@@ -32,6 +32,7 @@ nobase_vcsn_HEADERS =                           \
   algos/print.hh                                \
   algos/product.hh                              \
   algos/standard_of.hh                          \
+  algos/tikz.hh                                 \
   algos/transpose.hh                            \
   algos/xml.hh                                  \
   algos/xml/ios.hh                              \

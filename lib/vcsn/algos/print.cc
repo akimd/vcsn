@@ -23,6 +23,8 @@ namespace vcsn
         fsm(aut, out);
       else if (type == "null")
         {}
+      else if (type == "tikz")
+        tikz(aut, out);
       else
         throw std::domain_error("invalid output format for automaton: "
                                 + type);

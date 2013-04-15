@@ -1,3 +1,7 @@
+* 2013-04-16
+** New output format: tikz
+Layout is dumb, yet this is useful to prepare LaTeX documents.
+
 * 2013-04-12
 ** New output format: info
 This pseudo format displays facts about the automaton (number of states and

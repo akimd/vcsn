@@ -19,6 +19,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/standard_of.hh>
+# include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/xml.hh>
 
@@ -94,6 +95,12 @@ namespace vcsn
   /* standard_of. */                                                    \
   MAYBE_EXTERN template                                                 \
   class rat::standard_of_visitor<mutable_automaton<Ctx>, Ctx>;          \
+                                                                        \
+  /* tikz. */                                                           \
+  MAYBE_EXTERN template                                                 \
+  std::ostream&                                                         \
+  tikz<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut,       \
+                               std::ostream& out);                      \
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
@@ -210,20 +217,12 @@ namespace vcsn
                                        make_automaton_editor<aut_t>);
 
         // fsm.
-        fsm_stream_register(aut_t::sname(),
-                            static_cast<fsm_stream_t&>(fsm<aut_t>));
-        fsm_string_register(aut_t::sname(),
-                            static_cast<fsm_string_t&>(fsm<aut_t>));
-        fsm_stream_register(taut_t::sname(),
-                            static_cast<fsm_stream_t&>(fsm<taut_t>));
-        fsm_string_register(taut_t::sname(),
-                            static_cast<fsm_string_t&>(fsm<taut_t>));
+        fsm_register(aut_t::sname(), fsm<aut_t>);
+        fsm_register(taut_t::sname(), fsm<taut_t>);
 
         // info.
-        info_register(aut_t::sname(),
-                             static_cast<info_t&>(info<aut_t>));
-        info_register(taut_t::sname(),
-                             static_cast<info_t&>(info<taut_t>));
+        info_register(aut_t::sname(), info<aut_t>);
+        info_register(taut_t::sname(), info<taut_t>);
         info_exp_register(Ctx::sname(), info_exp<Ctx>);
 
         // is-deterministic.
@@ -249,15 +248,16 @@ namespace vcsn
         // standard_of.
         standard_of_register(Ctx::sname(), standard_of<aut_t>);
 
+        // tikz.
+        tikz_register(aut_t::sname(), tikz<aut_t>);
+        tikz_register(taut_t::sname(), tikz<taut_t>);
+
         // transpose.
         transpose_register(aut_t::sname(), transpose<aut_t>);
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
 
         // xml.
-        xml_stream_register(Ctx::sname(),
-                            static_cast<xml_stream_t&>(xml<Ctx>));
-        xml_string_register(Ctx::sname(),
-                            static_cast<xml_string_t&>(xml<Ctx>));
+        xml_register(Ctx::sname(), xml<Ctx>);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
