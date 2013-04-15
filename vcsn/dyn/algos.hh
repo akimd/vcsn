@@ -23,7 +23,7 @@ namespace vcsn
 
     automaton determinize(const automaton& aut);
 
-    void dot(const automaton& aut, std::ostream& out);
+    std::ostream& dot(const automaton& aut, std::ostream& out);
     std::string dot(const automaton& aut);
 
     std::string eval(const automaton& aut, const std::string& s);
@@ -33,8 +33,7 @@ namespace vcsn
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
-    void fsm(const automaton& aut, std::ostream& out);
-    std::string fsm(const automaton& aut);
+    std::ostream& fsm(const automaton& aut, std::ostream& out);
 
     bool is_complete(const automaton& aut);
 
@@ -75,8 +74,7 @@ namespace vcsn
     automaton transpose(automaton& aut);
     ratexp transpose(const ratexp& e);
 
-    void xml(const ratexp& e, std::ostream& out);
-    std::string xml(const ratexp& e);
+    std::ostream& xml(const ratexp& e, std::ostream& out);
   }
 }
 

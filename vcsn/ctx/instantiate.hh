@@ -43,7 +43,7 @@ namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
   MAYBE_EXTERN template                                                 \
-  void Format<Aut>(const Aut& aut, std::ostream& out);                  \
+  std::ostream& Format<Aut>(const Aut& aut, std::ostream& out);         \
                                                                         \
   MAYBE_EXTERN template                                                 \
   std::string Format<Aut>(const Aut& aut);
@@ -72,9 +72,14 @@ namespace vcsn
   (dot, vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);    \
                                                                         \
   /* fsm. */                                                            \
-  VCSN_CTX_INSTANTIATE_PRINT(fsm, mutable_automaton<Ctx>);              \
-  VCSN_CTX_INSTANTIATE_PRINT                                            \
-  (fsm, vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);    \
+  MAYBE_EXTERN template                                                 \
+  std::ostream& fsm<mutable_automaton<Ctx>>                             \
+  (const mutable_automaton<Ctx>& aut, std::ostream& out);               \
+  MAYBE_EXTERN template                                                 \
+  std::ostream&                                                         \
+  fsm<vcsn::details::transpose_automaton<mutable_automaton<Ctx>>>       \
+  (const vcsn::details::transpose_automaton<mutable_automaton<Ctx>>& aut, \
+   std::ostream& out);                                                  \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -98,11 +103,8 @@ namespace vcsn
                                                                         \
   /* xml. */                                                            \
   MAYBE_EXTERN template                                                 \
-  void xml<Ctx>(const Ctx& ctx, const rat::exp_t exp, std::ostream& out); \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
-  std::string xml<Ctx>(const Ctx& cxt, const rat::exp_t exp);
-
+  std::ostream&                                                         \
+  xml<Ctx>(const Ctx& ctx, const rat::exp_t exp, std::ostream& out);
 
 
 

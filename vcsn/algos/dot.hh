@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_DOT_HH
 
 # include <algorithm>
-# include <cassert>
 # include <iostream>
 # include <sstream>
 # include <unordered_map>
@@ -21,12 +20,19 @@ namespace vcsn
   `-------------------------*/
 
   template <class A>
-  void
+  std::ostream&
   dot(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
     using transition_t = typename A::transition_t;
+
+    // Name all the states.
     std::unordered_map<state_t, unsigned> names;
+    {
+      size_t num = 0;
+      for (auto s : aut.states())
+        names[s] = num++;
+    }
 
     out <<
       "digraph\n"
@@ -34,13 +40,6 @@ namespace vcsn
       "  vcsn_context = \"" << aut.context().vname() << "\"\n"
       "  rankdir = LR\n"
       "  node [shape = circle]\n";
-
-    // Name all the states.
-    {
-      size_t num = 0;
-      for (auto s : aut.states())
-        names[s] = num++;
-    }
 
     // Output the pre-initial and post-final states.
     out <<
@@ -105,7 +104,7 @@ namespace vcsn
             out << "\n";
           }
       }
-    out << "}";
+    return out << "}";
   }
 
   namespace dyn
@@ -113,13 +112,13 @@ namespace vcsn
     namespace details
     {
       template <typename Aut>
-      void dot(const automaton& aut, std::ostream& out)
+      std::ostream& dot(const automaton& aut, std::ostream& out)
       {
-        dot(dynamic_cast<const Aut&>(*aut), out);
+        return dot(dynamic_cast<const Aut&>(*aut), out);
       }
 
       using dot_stream_t =
-        auto (const automaton& aut, std::ostream& out) -> void;
+        auto (const automaton& aut, std::ostream& out) -> std::ostream&;
       bool dot_stream_register(const std::string& ctx, dot_stream_t fn);
     }
   }

@@ -2,9 +2,7 @@
 # define VCSN_ALGOS_FSM_HH
 
 # include <algorithm>
-# include <cassert>
 # include <iostream>
-# include <sstream>
 # include <unordered_map>
 # include <vector>
 
@@ -20,7 +18,7 @@ namespace vcsn
   `-------------------------*/
 
   template <class A>
-  void
+  std::ostream&
   fsm(const A& aut, std::ostream& out)
   {
     using label_t = typename A::label_t;
@@ -38,7 +36,7 @@ namespace vcsn
             << std::endl;
       }
     // post is the only final state.
-    out << aut.post() << std::endl;
+    return out << aut.post() << std::endl;
   }
 
   namespace dyn
@@ -46,47 +44,14 @@ namespace vcsn
     namespace details
     {
       template <typename Aut>
-      void fsm(const automaton& aut, std::ostream& out)
+      std::ostream& fsm(const automaton& aut, std::ostream& out)
       {
-        fsm(dynamic_cast<const Aut&>(*aut), out);
+        return fsm(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      using fsm_stream_t =
-        auto (const automaton& aut, std::ostream& out) -> void;
-      bool fsm_stream_register(const std::string& ctx, fsm_stream_t fn);
-    }
-  }
-
-
-  /*-----------------.
-  | fsm(automaton).  |
-  `-----------------*/
-
-  /// The automaton in Att as a string.  Exact type.
-  template <class A>
-  inline
-  std::string
-  fsm(const A& aut)
-  {
-    std::ostringstream o;
-    fsm(aut, o);
-    return o.str();
-  }
-
-  namespace dyn
-  {
-    namespace details
-    {
-      /// Abstract but parameterized.
-      template <typename Aut>
-      std::string fsm(const automaton& aut)
-      {
-        return fsm(dynamic_cast<const Aut&>(*aut));
-      }
-
-      using fsm_string_t = auto (const automaton& aut) -> std::string;
-
-      bool fsm_string_register(const std::string& ctx, fsm_string_t fn);
+      using fsm_t =
+        auto (const automaton& aut, std::ostream& out) -> std::ostream&;
+      bool fsm_register(const std::string& ctx, fsm_t fn);
     }
   }
 }

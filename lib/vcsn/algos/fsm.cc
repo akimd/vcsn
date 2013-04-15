@@ -6,30 +6,17 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-------------.
-    | fsm_stream.  |
-    `-------------*/
+    /*------.
+    | fsm.  |
+    `------*/
 
-    REGISTER_DEFINE(fsm_stream);
+    REGISTER_DEFINE(fsm);
 
     void
     fsm(const automaton& aut, std::ostream& out)
     {
-      details::fsm_stream_registry().call(aut->vname(),
-                                          aut, out);
-    }
-
-    /*-------------.
-    | fsm_string.  |
-    `-------------*/
-
-    REGISTER_DEFINE(fsm_string);
-
-    std::string
-    fsm(const automaton& aut)
-    {
-      return details::fsm_string_registry().call(aut->vname(),
-                                                 aut);
+      details::fsm_registry().call(aut->vname(),
+                                   aut, out);
     }
   }
 }

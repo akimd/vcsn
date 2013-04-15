@@ -89,23 +89,13 @@ namespace vcsn
 
   template <class Context>
   inline
-  void
+  std::ostream&
   xml(const Context& ctx, const vcsn::rat::exp_t exp, std::ostream& out)
   {
     XML<Context> x(ctx, exp);
     x.print(out);
+    return out;
   }
-
-  template <class Context>
-  inline
-  std::string
-  xml(const Context& ctx, const rat::exp_t exp)
-  {
-    std::ostringstream o;
-    xml(ctx, exp, o);
-    return o.str();
-  }
-
 
   /*-----------.
   | dyn::xml.  |
@@ -117,29 +107,16 @@ namespace vcsn
     {
       // ratexp, ostream -> ostream
       template <typename Ctx>
-      void
+      std::ostream&
       xml(const dyn::ratexp& exp, std::ostream& out)
       {
         return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp(), out);
       }
 
-      using xml_stream_t =
-        auto (const dyn::ratexp& e, std::ostream& out) -> void;
+      using xml_t =
+        auto (const dyn::ratexp& e, std::ostream& out) -> std::ostream&;
 
-      bool xml_stream_register(const std::string& ctx, xml_stream_t fn);
-
-
-      // ratexp -> string
-      template <typename Ctx>
-      std::string
-      xml(const dyn::ratexp& exp)
-      {
-        return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp());
-      }
-
-      using xml_string_t = auto (const dyn::ratexp& e) -> std::string;
-
-      bool xml_string_register(const std::string& ctx, xml_string_t fn);
+      bool xml_register(const std::string& ctx, xml_t fn);
     } // namespace details
   } // namespace dyn
 } // namespace vcsn

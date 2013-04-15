@@ -6,28 +6,16 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-------------.
-    | xml_stream.  |
-    `-------------*/
+    /*------.
+    | xml.  |
+    `------*/
 
-    REGISTER_DEFINE(xml_stream); // namespace details
+    REGISTER_DEFINE(xml);
 
     void
     xml(const dyn::ratexp& e, std::ostream& out)
     {
-      details::xml_stream_registry().call(e->ctx().vname(), e, out);
-    }
-
-    /*-------------.
-    | xml_string.  |
-    `-------------*/
-
-    REGISTER_DEFINE(xml_string); // namespace details
-
-    std::string
-    xml(const dyn::ratexp& e)
-    {
-      return details::xml_string_registry().call(e->ctx().vname(), e);
+      details::xml_registry().call(e->ctx().vname(), e, out);
     }
 
   } // namespace dyn
