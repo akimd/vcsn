@@ -54,7 +54,9 @@ AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
 [AC_RUN_IFELSE(
 [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
 #define _GLIBCXX_DEBUG_PEDANTIC
-#include <sstream>],
+#include <cassert>
+#include <sstream>
+],
 [  {
      std::stringstream o;
      assert (o.str() == "");
