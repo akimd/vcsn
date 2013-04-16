@@ -301,7 +301,7 @@ namespace vcsn
                 out << "{";
                 weightset()->print(out, i.second) << "}";
               }
-            // FIXME: Should be invisible.
+            // FIXME: LAU should not have to be treated especially.
             if (!context_t::is_lau)
               labelset()->print(out, i.first);
           }
