@@ -4,9 +4,6 @@
 # include <cassert>
 # include <map>
 # include <utility>
-# include <vector>
-
-# include <boost/lexical_cast.hpp>
 
 # include <vcsn/core/kind.hh>
 
@@ -96,8 +93,9 @@ namespace vcsn
       eval(const automaton& aut, const std::string& s)
         -> std::string
       {
-        auto res = ::vcsn::eval(dynamic_cast<const Aut&>(*aut), s);
-        return boost::lexical_cast<std::string>(res);
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        auto res = ::vcsn::eval(a, s);
+        return a.weightset()->format(res);
       }
 
       using eval_t = auto (const automaton& aut, const std::string& s)

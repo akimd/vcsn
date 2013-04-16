@@ -49,10 +49,9 @@ ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
 Or use what's in there instead of always abc?
 
-** vcsn-eval
-It does not use the weightset to display the result of an evaluation.
-This requires a dyn::print for weights, and therefore, probably a
-dyn::weight.
+** dyn::weight
+Would that be useful?  For the return value of eval for instance.  How
+would the connection with dyn::ratexp (which are weights) be done?
 
 * trivial identities
 As a goal, we want every rational expression to yield the same result
