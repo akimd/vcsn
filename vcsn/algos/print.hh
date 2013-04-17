@@ -13,7 +13,7 @@ namespace vcsn
   | print(ratexp, stream).  |
   `------------------------*/
 
-  template <class Context>
+  template <typename Context>
   inline
   std::ostream&
   print(const Context& ctx, const rat::exp_t& e, std::ostream& o)
