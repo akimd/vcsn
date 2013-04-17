@@ -29,6 +29,16 @@ namespace vcsn
 
     // vcsn/rat/ratexpset.hh
     using ratexpset = std::shared_ptr<const abstract_ratexpset>;
+
+    // vcsn/dyn/weight.hh.
+    namespace details
+    {
+      class abstract_weight;
+      template <typename T>
+      class concrete_weight;
+    }
+    using weight = std::shared_ptr<const details::abstract_weight>;
+
   }
 } // namespace vcsn
 

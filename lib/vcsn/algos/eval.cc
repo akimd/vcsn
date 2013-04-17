@@ -15,7 +15,7 @@ namespace vcsn
 
     REGISTER_DEFINE(eval);
 
-    std::string
+    dyn::weight
     eval(const automaton& aut, const std::string& s)
     {
       return details::eval_registry().call(aut->vname(),

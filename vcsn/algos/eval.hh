@@ -4,6 +4,8 @@
 # include <vector>
 
 # include <vcsn/core/kind.hh>
+# include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/weight.hh>
 
 namespace vcsn
 {
@@ -94,16 +96,17 @@ namespace vcsn
       template <typename Aut>
       auto
       eval(const automaton& aut, const std::string& s)
-        -> std::string
+        -> dyn::weight
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& ctx = a.context();
         auto res = ::vcsn::eval(a, s);
-        return a.weightset()->format(res);
+        return make_weight(ctx, res);
       }
 
       REGISTER_DECLARE(eval,
                        (const automaton& aut, const std::string& s)
-        -> std::string);
+                       -> dyn::weight);
     }
   }
 

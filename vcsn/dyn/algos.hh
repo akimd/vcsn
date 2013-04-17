@@ -26,7 +26,7 @@ namespace vcsn
     std::ostream& dot(const automaton& aut, std::ostream& out);
     std::string dot(const automaton& aut);
 
-    std::string eval(const automaton& aut, const std::string& s);
+    dyn::weight eval(const automaton& aut, const std::string& s);
 
     automaton eps_removal(const automaton& aut);
 
@@ -57,6 +57,8 @@ namespace vcsn
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "dot");
     std::ostream& print(const ratexp& e, std::ostream& o,
+                        const std::string& type = "text");
+    std::ostream& print(const weight& e, std::ostream& o,
                         const std::string& type = "text");
 
     automaton product(const automaton& lhs, const automaton& rhs);

@@ -52,5 +52,24 @@ namespace vcsn
                                 + type);
       return out;
     }
+
+    /*------------------------.
+    | print(weight, stream).  |
+    `------------------------*/
+
+    REGISTER_DEFINE(print_weight);
+
+    std::ostream&
+    print(const dyn::weight& w, std::ostream& out, const std::string& type)
+    {
+      if (type == "text")
+        details::print_weight_registry().call(w->ctx().vname(), w, out);
+      else
+        throw std::domain_error("invalid output format for weight: "
+                                + type);
+      return out;
+    }
+
+
   }
 }

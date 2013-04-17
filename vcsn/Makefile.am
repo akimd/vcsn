@@ -99,6 +99,7 @@ nobase_vcsn_HEADERS =                           \
   dyn/context.hh                                \
   dyn/fwd.hh                                    \
   dyn/ratexp.hh                                 \
+  dyn/weight.hh                                 \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \

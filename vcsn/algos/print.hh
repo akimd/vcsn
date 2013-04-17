@@ -4,6 +4,7 @@
 # include <iosfwd>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/weight.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 
 namespace vcsn
@@ -36,6 +37,37 @@ namespace vcsn
 
       REGISTER_DECLARE(print_exp,
                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
+    }
+  }
+
+  /*------------------------.
+  | print(weight, stream).  |
+  `------------------------*/
+
+  template <typename Context>
+  inline
+  std::ostream&
+  print(const Context& ctx, const typename Context::weight_t& w,
+        std::ostream& o)
+  {
+    return ctx.weightset()->print(o, w);
+  }
+
+  namespace dyn
+  {
+    namespace details
+    {
+      /// Abstract but parameterized.
+      template <typename Context>
+      std::ostream& print(const dyn::weight& w, std::ostream& o)
+      {
+        using weight_t = concrete_abstract_weight<Context>;
+        const auto& typed_w = dynamic_cast<const weight_t&>(*w);
+        return vcsn::print<Context>(typed_w.ctx(), typed_w.weight(), o);
+      }
+
+      REGISTER_DECLARE(print_weight,
+                       (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }
 }

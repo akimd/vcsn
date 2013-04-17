@@ -17,7 +17,7 @@ struct evaluate: vcsn_function
     auto res = vcsn::dyn::eval(aut, opts.argv[0]);
 
     // Output.
-    std::cout << res << std::endl;
+    vcsn::dyn::print(res, std::cout, "text") << std::endl;
     return 0;
   }
 };
