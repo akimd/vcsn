@@ -26,15 +26,15 @@ namespace vcsn
     using automaton_t = Aut;
     using label_t = typename automaton_t::label_t;
     using state_t = typename automaton_t::state_t;
-    using state_set = dynamic_bitset;
-    using stack = std::stack<state_set>;
-    using map = std::unordered_map<state_set, state_t>;
-    using successors_t = std::vector<std::unordered_map<label_t, state_set> >;
 
     const auto& letters = *a.labelset();
     automaton_t res{a.context()};
 
+    // Set of states.
+    using state_set = dynamic_bitset;
+
     // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
+    using successors_t = std::vector<std::unordered_map<label_t, state_set> >;
     successors_t successors{a.num_all_states()};
     for (auto st : a.all_states())
       for (auto l : letters)
@@ -52,9 +52,11 @@ namespace vcsn
       finals.set(a.src_of(t));
 
     // The (input) sets of states waiting to be processed.
+    using stack = std::stack<state_set>;
     stack todo;
 
     // set of input states -> output state.
+    using map = std::unordered_map<state_set, state_t>;
     map m;
 
     // Create a new output state from SS. Insert in the output
