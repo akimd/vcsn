@@ -101,7 +101,7 @@ namespace vcsn
     std::ostream&
     print(std::ostream& o, const value_t v) const
     {
-      if (v == zero())
+      if (is_zero(v))
         return o << "oo";
       return o << v;
     }
