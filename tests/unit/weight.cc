@@ -1,6 +1,72 @@
 #include <tests/unit/test.hh>
 #include <iostream>
+#include <vcsn/weights/b.hh>
+#include <vcsn/weights/f2.hh>
 #include <vcsn/weights/zmin.hh>
+
+// FIXME: Check that invalid conv throws.
+// FIXME: Use Google Tests, or Boost Tests.
+
+// Common behavior for b and f2.
+template <typename WeightSet>
+bool check_bool(const WeightSet& ws)
+{
+  bool res = true;
+
+  // format.
+  ASSERT_EQ(ws.format(ws.zero()), "0");
+  ASSERT_EQ(ws.format(ws.unit()), "1");
+
+  // conv.
+  ASSERT_EQ(ws.format(ws.conv("0")), "0");
+  ASSERT_EQ(ws.format(ws.conv("1")), "1");
+
+  // add: xor.
+  ASSERT_EQ(ws.add(0, 0), 0);
+  ASSERT_EQ(ws.add(0, 1), 1);
+  ASSERT_EQ(ws.add(1, 0), 1);
+  ASSERT_EQ(ws.add(1, 1), 0);
+
+  // mul: and.
+  ASSERT_EQ(ws.add(0, 0), 0);
+  ASSERT_EQ(ws.add(0, 1), 0);
+  ASSERT_EQ(ws.add(1, 0), 0);
+  ASSERT_EQ(ws.add(1, 1), 1);
+
+  return res;
+}
+
+bool check_b()
+{
+  bool res = true;
+  vcsn::f2 ws;
+
+  res &= check_bool(ws);
+
+  // add: or.
+  ASSERT_EQ(ws.add(0, 0), 0);
+  ASSERT_EQ(ws.add(0, 1), 1);
+  ASSERT_EQ(ws.add(1, 0), 1);
+  ASSERT_EQ(ws.add(1, 1), 1);
+
+  return res;
+}
+
+bool check_f2()
+{
+  bool res = true;
+  vcsn::f2 ws;
+
+  res &= check_bool(ws);
+
+  // add: xor.
+  ASSERT_EQ(ws.add(0, 0), 0);
+  ASSERT_EQ(ws.add(0, 1), 1);
+  ASSERT_EQ(ws.add(1, 0), 1);
+  ASSERT_EQ(ws.add(1, 1), 0);
+
+  return res;
+}
 
 bool check_zmin()
 {

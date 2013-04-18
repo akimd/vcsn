@@ -93,13 +93,13 @@ namespace vcsn
     std::ostream&
     print(std::ostream& o, const value_t v) const
     {
-      return o << (v ? "0" : "1");
+      return o << format(v);
     }
 
     std::string
     format(const value_t v) const
     {
-      return v ? "0" : "1";
+      return v ? "1" : "0";
     }
   };
 }
