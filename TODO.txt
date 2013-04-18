@@ -53,6 +53,9 @@ Or use what's in there instead of always abc?
 Would that be useful?  For the return value of eval for instance.  How
 would the connection with dyn::ratexp (which are weights) be done?
 
+* eval.chk
+Cover more case for zmin.
+
 * trivial identities
 As a goal, we want every rational expression to yield the same result
 in lal and law.  This is a failure:

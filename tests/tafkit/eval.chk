@@ -7,6 +7,10 @@ check ()
   run 0 "$3" -vcsn-evaluate -f "$1" "$2"
 }
 
+## ------------ ##
+## lal_char_z.  ##
+## ------------ ##
+
 cat > simple.dot <<EOF
 digraph
 {
@@ -128,3 +132,15 @@ EOF
 check complex.dot a 12
 check complex.dot abab 24
 check complex.dot aabab 36
+
+
+## --------------- ##
+## lal_char_zmin.  ##
+## --------------- ##
+
+run 0 '' -vcsn-standard-of -e '(?@lal_char(abc)_zmin)a' -o a.dot
+
+check a.dot '' oo
+check a.dot 'a' 0
+check a.dot 'aa' oo
+check a.dot 'b' oo

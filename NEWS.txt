@@ -1,3 +1,8 @@
+* 2013-04-18
+** Evaluation is fixed
+Several initializations were incorrect, expecting the zero to be 0 (which is
+not the case for zmin for instance).  There might also be some speed up.
+
 * 2013-04-16
 ** New output format: tikz
 Layout is dumb, yet this is useful to prepare LaTeX documents.

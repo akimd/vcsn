@@ -1,9 +1,7 @@
 #ifndef VCSN_ALGOS_EVAL_HH
 # define VCSN_ALGOS_EVAL_HH
 
-# include <cassert>
-# include <map>
-# include <utility>
+# include <vector>
 
 # include <vcsn/core/kind.hh>
 
@@ -22,7 +20,9 @@ namespace vcsn
       using word_t = typename automaton_t::labelset_t::word_t;
       using weightset_t = typename automaton_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
-      using weights = std::map<state_t, weight_t>;
+
+      // state -> weight.
+      using weights = std::vector<weight_t>;
 
     public:
       evaluator(const automaton_t& a)
@@ -34,8 +34,12 @@ namespace vcsn
       {
         // Initialize
         const weight_t zero = ws_.zero();
+        // v1{a_.num_all_states(), zero} is tempting, but the type
+        // of zero might result in the compiler believing we are building
+        // a vector with two values: a_.num_all_states() and zero.
         weights v1;
-        weights v2;
+        v1.assign(a_.num_all_states(), zero);
+        weights v2{v1};
 
         for (auto init : a_.initial_transitions())
           v1[a_.dst_of(init)] = a_.weight_of(init);
@@ -43,17 +47,16 @@ namespace vcsn
         // Computation
         for (auto l : word)
           {
-            for (auto& w : v2) // FIXME: (1) set zero
-              w.second = zero;
-            for (auto w : v1)
-              if (zero != w.second) // delete if bench >
-                for (auto tr : a_.out(w.first, l))
-                  {
-                    auto& weight = v2[a_.dst_of(tr)];
-                    weight =
-                      ws_.add(weight,
-                              ws_.mul(w.second, a_.weight_of(tr)));
-                  }
+            v2.assign(v2.size(), zero);
+            for (size_t s = 0; s < v1.size(); ++s)
+              if (!ws_.is_zero(v1[s])) // delete if bench >
+                for (auto tr : a_.out(s, l))
+                  // Introducing a reference to v2[a_.dst_of(tr)] is
+                  // tempting, but won't work for std::vector<bool>.
+                  // FIXME: Specialize for Boolean?
+                  v2[a_.dst_of(tr)] =
+                    ws_.add(v2[a_.dst_of(tr)],
+                            ws_.mul(v1[s], a_.weight_of(tr)));
               // (1) w = zero.
             std::swap(v1, v2);
           }
