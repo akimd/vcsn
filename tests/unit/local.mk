@@ -19,7 +19,8 @@ EXTRA_PROGRAMS +=                               \
   unit/concat                                   \
   unit/eps-removal                              \
   unit/polynomialset                            \
-  unit/transpose
+  unit/transpose                                \
+  unit/weight
 
 AM_LDADD = $(libvcsn)
 
@@ -44,7 +45,9 @@ unit_TESTS =                                    \
   unit/concat.chk                               \
   unit/eps-removal.chk                          \
   unit/polynomialset.chk                        \
-  unit/transpose.chk
+  unit/transpose.chk                            \
+  unit/weight.chk
+
 dist_TESTS += $(unit_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
@@ -57,6 +60,7 @@ unit/concat.log: unit/concat
 unit/eps-removal.log: unit/eps-removal
 unit/polynomialset.log: unit/polynomialset
 unit/transpose.log: unit/transpose
+unit/weight.log: unit/weight
 
 .PHONY: check-unit
 check-unit:

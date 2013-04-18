@@ -36,7 +36,8 @@ namespace vcsn
     value_t
     mul(const value_t l, const value_t r) const
     {
-      return l + r;
+      return (is_zero(l) || is_zero(r) ? zero()
+              : l + r);
     }
 
     value_t
