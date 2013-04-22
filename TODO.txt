@@ -76,7 +76,7 @@ that *both* should yield "{3}ab":
   of the function derived-term for the weighthed automata.
 
 * "check" algorithm
-There should be a means to check that the invariants are verifired.  A
+There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
 
