@@ -1,0 +1,18 @@
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/algos/thompson.hh>
+#include <vcsn/dyn/algos.hh>
+#include <lib/vcsn/algos/registry.hh>
+
+namespace vcsn
+{
+  namespace dyn
+  {
+    REGISTER_DEFINE(thompson);
+
+    automaton
+    thomspson(const dyn::ratexp& e)
+    {
+      return details::thompson_registry().call(e->ctx().vname(), e);
+    }
+  }
+}

@@ -1,3 +1,37 @@
+* 2013-04-25
+** New algorithm: Thompson
+Conversion from rational expression to automata.  Requires lan or law.
+The handling of weights might be changed in the near future.
+
+  $ vcsn-thompson -Ee '(?@lan_char(abc)_z){2}(a+{3}b+c)*{5}'
+  digraph
+  {
+    vcsn_context = "lan_char(abc)_z"
+    rankdir = LR
+    node [shape = circle]
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I8
+      F9
+    }
+    { 0 1 2 3 4 5 6 7 8 9 }
+    I8 -> 8
+    0 -> 2 [label = "\\e"]
+    0 -> 4 [label = "\\e"]
+    0 -> 6 [label = "\\e"]
+    1 -> 0 [label = "\\e"]
+    1 -> 9 [label = "{5}\\e"]
+    2 -> 3 [label = "a"]
+    3 -> 1 [label = "\\e"]
+    4 -> 5 [label = "{3}b"]
+    5 -> 1 [label = "\\e"]
+    6 -> 7 [label = "c"]
+    7 -> 1 [label = "\\e"]
+    8 -> 0 [label = "{2}\\e"]
+    8 -> 9 [label = "{10}\\e"]
+    9 -> F9
+  }
+
 * 2013-04-22
 ** standard is the new name for standard-of
 The "of" is useless, inconsistent with the other algorithms, and with the

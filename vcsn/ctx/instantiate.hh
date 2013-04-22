@@ -19,6 +19,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/xml.hh>
@@ -158,6 +159,9 @@ namespace vcsn
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
 
+        // thompson.
+        thompson_register(Ctx::sname(), thompson<aut_t>);
+
         return true;
       }
 
@@ -178,6 +182,9 @@ namespace vcsn
 
         // eps-removal.
         eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
+
+        // thompson.
+        thompson_register(Ctx::sname(), thompson<aut_t>);
 
         return true;
       }

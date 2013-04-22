@@ -46,6 +46,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/read.cc                        \
   lib/vcsn/algos/registry.hh                    \
   lib/vcsn/algos/standard.cc                    \
+  lib/vcsn/algos/thompson.cc                    \
   lib/vcsn/algos/tikz.cc                        \
   lib/vcsn/algos/transpose.cc                   \
   lib/vcsn/algos/xml.cc                         \
