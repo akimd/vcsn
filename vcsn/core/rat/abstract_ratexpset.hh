@@ -165,9 +165,9 @@ namespace vcsn
     atom_(const std::string& v) const
       -> if_lal<Ctx, value_t>
     {
-      if (!ks_.labelset()->is_letter(v))
-        throw std::domain_error("invalid atom: " + v + ": not a letter");
-      return ks_.atom(v[0]);
+      if (ks_.labelset()->is_letter(v))
+        return ks_.atom(v[0]);
+      throw std::domain_error("invalid atom: " + v + ": not a letter");
     }
 
     template <typename Ctx>
@@ -175,9 +175,11 @@ namespace vcsn
     atom_(const std::string& v) const
       -> if_lan<Ctx, value_t>
     {
-      if (!v.empty())
-        throw std::domain_error("invalid atom: " + v + ": not empty");
-      return ks_.atom({});
+      if (v.empty())
+        ks_.atom({});
+      else if (ks_.labelset()->is_letter(v))
+        return ks_.atom(v[0]);
+      throw std::domain_error("invalid atom: " + v + ": neither empty nor a letter");
     }
 
     template <typename Ctx>
@@ -185,9 +187,9 @@ namespace vcsn
     atom_(const std::string& v) const
       -> if_lau<Ctx, value_t>
     {
-      if (!v.empty())
-        throw std::domain_error("invalid atom: " + v + ": not empty");
-      return ks_.atom({});
+      if (v.empty())
+        return ks_.atom({});
+      throw std::domain_error("invalid atom: " + v + ": not empty");
     }
 
     template <typename Ctx>
