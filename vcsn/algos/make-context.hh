@@ -103,8 +103,8 @@ namespace vcsn
       // FIXME: regex is not usable in G++ 4.8 yet.
       std::string kind = name.substr(0, 3);
 
-      if ((Ctx::is_lan && kind != "lan")
-          || (Ctx::is_lal && kind != "lal")
+      if ((Ctx::is_lal && kind != "lal")
+          || (Ctx::is_lan && kind != "lan")
           || (Ctx::is_law && kind != "law"))
         {
           std::string ctxk =
