@@ -39,12 +39,12 @@ EOF
 }
 EOF
 
-  run 0 out.exp -vcsn-standard-of "$@" -O dot
+  run 0 out.exp -vcsn-standard "$@" -O dot
 }
 
 fail ()
 {
-  run 1 '' -vcsn-standard-of -C "$@"
+  run 1 '' -vcsn-standard -C "$@"
 }
 
 ## --- ##

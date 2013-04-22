@@ -11,11 +11,11 @@ check ()
   run 0 "$2" -vcsn-accessible -A -I dot -f "$1"
 }
 
-## -------------------------------- ##
-## Regression: standard-of(ab+cd).  ##
-## -------------------------------- ##
+## ----------------------------- ##
+## Regression: standard(ab+cd).  ##
+## ----------------------------- ##
 
-vcsn-standard-of -e '(?@lal_char(abcd)_b)ab+cd' >a.dot
+vcsn-standard -e '(?@lal_char(abcd)_b)ab+cd' >a.dot
 cat >out.exp <<EOF
 digraph
 {

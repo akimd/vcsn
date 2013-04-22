@@ -44,10 +44,10 @@ check2 '({ef}(abcd)*{gh})' '({hg}(dcba)*{fe})'
 
 # check CONTEXT RATEXP < DIFF
 # ---------------------------
-# Compare the standard-of RATEXP to its transposed, expect DIFF.
+# Compare the standard RATEXP to its transposed, expect DIFF.
 check ()
 {
-  run 0 '' -vcsn-standard-of -E -C "$1" -O dot -e "$2" -o forward.out
+  run 0 '' -vcsn-standard -E -C "$1" -O dot -e "$2" -o forward.out
   run 0 '' -vcsn-transpose -I dot -O dot -A -f forward.out -o transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
@@ -110,7 +110,7 @@ involution de-bruin-2.dot
 # check_minimization < OUT.EXP
 check_minimization ()
 {
-  run 0 '' -vcsn-standard-of "$@" -o a.out
+  run 0 '' -vcsn-standard "$@" -o a.out
   run 0 '' -vcsn-transpose -I dot -O dot -A -f a.out -o at.out
   run 0 '' -vcsn-determinize -I dot -O dot -A -f at.out -o atd.out
   run 0 '' -vcsn-transpose -I dot -O dot -A -f atd.out -o atdt.out

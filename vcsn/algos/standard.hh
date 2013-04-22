@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_STANDARD_OF_HH
-# define VCSN_ALGOS_STANDARD_OF_HH
+#ifndef VCSN_ALGOS_STANDARD_HH
+# define VCSN_ALGOS_STANDARD_HH
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/mutable_automaton.hh>
@@ -14,7 +14,7 @@ namespace vcsn
     /// \param Context  relative to the RatExp.
     template <class Aut,
               class Context = typename Aut::context_t>
-    class standard_of_visitor
+    class standard_visitor
       : public Context::const_visitor
     {
     public:
@@ -36,7 +36,7 @@ namespace vcsn
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
 
-      standard_of_visitor(const context_t& ctx)
+      standard_visitor(const context_t& ctx)
         : ws_(*ctx.weightset())
         , res_(ctx)
       {}
@@ -224,9 +224,9 @@ namespace vcsn
   template <class Aut,
             class Context = typename Aut::context_t>
   Aut
-  standard_of(const Context& ctx, const typename Context::ratexp_t& e)
+  standard(const Context& ctx, const typename Context::ratexp_t& e)
   {
-    rat::standard_of_visitor<Aut, Context> standard{ctx};
+    rat::standard_visitor<Aut, Context> standard{ctx};
     return standard(e);
   }
 
@@ -235,35 +235,35 @@ namespace vcsn
   template <class Aut,
             class Context = typename Aut::context_t>
   Aut
-  standard_of(const Context& ctx, const rat::exp_t e)
+  standard(const Context& ctx, const rat::exp_t e)
   {
-    return standard_of<Aut, Context>(ctx, ctx.downcast(e));
+    return standard<Aut, Context>(ctx, ctx.downcast(e));
   }
 
-  /*-----------------------.
-  | abstract standard-of.  |
-  `-----------------------*/
+  /*--------------------.
+  | abstract standard.  |
+  `--------------------*/
   namespace dyn
   {
     namespace details
     {
       template <typename Aut>
       automaton
-      standard_of(const dyn::ratexp& e)
+      standard(const dyn::ratexp& e)
       {
         const auto& ctx =
           dynamic_cast<const typename Aut::context_t&>(e->ctx());
-        return make_automaton(ctx, standard_of<Aut>(ctx, e->ratexp()));
+        return make_automaton(ctx, standard<Aut>(ctx, e->ratexp()));
       }
 
-      using standard_of_t =
+      using standard_t =
         auto (const dyn::ratexp& e) -> automaton;
 
-      bool standard_of_register(const std::string& ctx,
-                                standard_of_t fn);
+      bool standard_register(const std::string& ctx,
+                                standard_t fn);
     }
   }
 
 } // vcsn::
 
-#endif // !VCSN_ALGOS_STANDARD_OF_HH
+#endif // !VCSN_ALGOS_STANDARD_HH

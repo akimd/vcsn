@@ -31,7 +31,7 @@ nobase_vcsn_HEADERS =                           \
   algos/make-context.hh                         \
   algos/print.hh                                \
   algos/product.hh                              \
-  algos/standard_of.hh                          \
+  algos/standard.hh                             \
   algos/tikz.hh                                 \
   algos/transpose.hh                            \
   algos/xml.hh                                  \

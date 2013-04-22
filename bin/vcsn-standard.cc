@@ -5,7 +5,7 @@
 
 #include "parse-args.hh"
 
-struct standard_of: vcsn_function
+struct standard: vcsn_function
 {
   int work_exp(const options& opts) const
   {
@@ -14,7 +14,7 @@ struct standard_of: vcsn_function
     ratexp exp = read_ratexp(opts);
 
     // Process.
-    automaton aut = vcsn::dyn::standard_of(exp);
+    automaton aut = vcsn::dyn::standard(exp);
 
     // Output.
     print(opts, aut);
@@ -24,5 +24,5 @@ struct standard_of: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, standard_of{}, false);
+  return vcsn_main(argc, argv, standard{}, false);
 }

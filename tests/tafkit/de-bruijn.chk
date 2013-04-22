@@ -31,7 +31,7 @@ check ()
 
 fail ()
 {
-  run 1 '' -vcsn-standard-of -C "$@"
+  run 1 '' -vcsn-standard -C "$@"
 }
 
 check -C 'lal_char(ab)_b' 2 <<\EOF

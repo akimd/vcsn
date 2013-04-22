@@ -69,7 +69,7 @@ namespace vcsn
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
-    automaton standard_of(const ratexp& e);
+    automaton standard(const ratexp& e);
 
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 

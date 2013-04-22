@@ -138,7 +138,7 @@ check complex.dot aabab 36
 ## lal_char_zmin.  ##
 ## --------------- ##
 
-run 0 '' -vcsn-standard-of -e '(?@lal_char(abc)_zmin)a' -o a.dot
+run 0 '' -vcsn-standard -e '(?@lal_char(abc)_zmin)a' -o a.dot
 
 check a.dot '' oo
 check a.dot 'a' 0

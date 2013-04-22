@@ -28,7 +28,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-ladybird                             \
   bin/vcsn-lift                                 \
   bin/vcsn-product                              \
-  bin/vcsn-standard-of                          \
+  bin/vcsn-standard                             \
   bin/vcsn-transpose
 
 noinst_LTLIBRARIES += bin/libtafkit.la
@@ -50,5 +50,5 @@ bin_vcsn_is_proper_LDADD        = bin/libtafkit.la
 bin_vcsn_ladybird_LDADD         = bin/libtafkit.la
 bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la
-bin_vcsn_standard_of_LDADD      = bin/libtafkit.la
+bin_vcsn_standard_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la

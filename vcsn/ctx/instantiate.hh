@@ -18,7 +18,7 @@
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
-# include <vcsn/algos/standard_of.hh>
+# include <vcsn/algos/standard.hh>
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/xml.hh>
@@ -92,9 +92,9 @@ namespace vcsn
   std::ostream&                                                         \
   print<Ctx>(const Ctx& ctx, const rat::exp_t& e, std::ostream& o);     \
                                                                         \
-  /* standard_of. */                                                    \
+  /* standard. */                                                       \
   MAYBE_EXTERN template                                                 \
-  class rat::standard_of_visitor<mutable_automaton<Ctx>, Ctx>;          \
+  class rat::standard_visitor<mutable_automaton<Ctx>, Ctx>;             \
                                                                         \
   /* tikz. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -245,8 +245,8 @@ namespace vcsn
         // print
         print_exp_register(Ctx::sname(), print<Ctx>);
 
-        // standard_of.
-        standard_of_register(Ctx::sname(), standard_of<aut_t>);
+        // standard.
+        standard_register(Ctx::sname(), standard<aut_t>);
 
         // tikz.
         tikz_register(aut_t::sname(), tikz<aut_t>);

@@ -64,7 +64,7 @@ vcsn_is_proper        = $(top_builddir)/bin/vcsn-is-proper
 vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift             = $(top_builddir)/bin/vcsn-lift
 vcsn_product          = $(top_builddir)/bin/vcsn-product
-vcsn_standard_of      = $(top_builddir)/bin/vcsn-standard-of
+vcsn_standard         = $(top_builddir)/bin/vcsn-standard
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
 
 all_vcsn =					\
@@ -83,5 +83,5 @@ all_vcsn =					\
   $(vcsn_ladybird)				\
   $(vcsn_lift)					\
   $(vcsn_product)				\
-  $(vcsn_standard_of)				\
+  $(vcsn_standard)				\
   $(vcsn_transpose)

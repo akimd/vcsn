@@ -58,10 +58,10 @@ EOF
 
 # check_stdof CONTEXT RATEXP
 # --------------------------
-# Check that vcsn-cat is idempotent on the standard-of RATEXP.
+# Check that vcsn-cat is idempotent on the standard RATEXP.
 check_stdof ()
 {
-  run 0 '' -vcsn-standard-of -E -C "$1" -e "$2" -o std.dot
+  run 0 '' -vcsn-standard -E -C "$1" -e "$2" -o std.dot
   cp std.dot out.exp
   run 0 out.exp -vcsn-cat -Af out.exp
 }

@@ -187,7 +187,7 @@ sub setup_aopt ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          system "vcsn-standard-of -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' -Ofsm >$base.fsm";
+          system "vcsn-standard -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' -Ofsm >$base.fsm";
           $prog = 'fstdeterminize';
           $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
         }
@@ -201,7 +201,7 @@ sub setup_aopt ($)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          system "vcsn-standard-of -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' >$base.dot";
+          system "vcsn-standard -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' >$base.dot";
           $prog = 'vcsn-determinize';
           $res{$d} = "$prog -O null -f $base.dot";
         }
@@ -240,7 +240,7 @@ sub setup_prefix ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          system "vcsn-standard-of -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
+          system "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
           $prog = 'fstdeterminize';
           $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
         }
@@ -252,7 +252,7 @@ sub setup_prefix ($)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          system "vcsn-standard-of -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
+          system "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
           $prog = 'vcsn-determinize';
           $res{$d} = "$prog -O null -f $base.dot";
         }
