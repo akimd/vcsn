@@ -70,8 +70,8 @@ namespace vcsn
         return make_automaton<Aut>(a.context(), accessible(a));
       }
 
-      using accessible_t = auto (const dyn::automaton&) -> dyn::automaton;
-      bool accessible_register(const std::string& ctx, accessible_t fn);
+      REGISTER_DECLARE(accessible,
+                       (const dyn::automaton&) -> dyn::automaton);
     }
   }
 }

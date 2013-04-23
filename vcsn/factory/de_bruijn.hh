@@ -61,10 +61,8 @@ namespace vcsn
                          de_bruijn<Ctx>(n, dynamic_cast<const Ctx&>(*ctx)));
       }
 
-      using de_bruijn_t =
-        auto (const dyn::context& ctx, unsigned n) -> automaton;
-
-      bool de_bruijn_register(const std::string& ctx, de_bruijn_t fn);
+      REGISTER_DECLARE(de_bruijn,
+                       (const dyn::context& ctx, unsigned n) -> automaton);
     }
   }
 

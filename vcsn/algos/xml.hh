@@ -113,10 +113,8 @@ namespace vcsn
         return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp(), out);
       }
 
-      using xml_t =
-        auto (const dyn::ratexp& e, std::ostream& out) -> std::ostream&;
-
-      bool xml_register(const std::string& ctx, xml_t fn);
+      REGISTER_DECLARE(xml,
+                       (const ratexp& e, std::ostream& out) -> std::ostream&);
     } // namespace details
   } // namespace dyn
 } // namespace vcsn

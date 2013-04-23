@@ -427,10 +427,8 @@ and eturn the result of epsilon_removal on the copy.
         return make_automaton<Aut>(a.context(), eps_removal(a));
       }
 
-     using eps_removal_t = dyn::automaton(const dyn::automaton &aut);
-
-     bool
-     eps_removal_register(const std::string &ctx, eps_removal_t fn);
+     REGISTER_DECLARE(eps_removal,
+                      (const automaton &aut) -> automaton);
     }
 
     /*-----------------.
@@ -446,10 +444,8 @@ and eturn the result of epsilon_removal on the copy.
         return is_proper(a);
       }
 
-     using is_proper_t = auto (const dyn::automaton &aut) -> bool;
-
-     bool
-     is_proper_register(const std::string &ctx, is_proper_t fn);
+     REGISTER_DECLARE(is_proper,
+                      (const automaton &aut) -> bool);
     }
 
   }

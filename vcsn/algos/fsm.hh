@@ -49,9 +49,8 @@ namespace vcsn
         return fsm(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      using fsm_t =
-        auto (const automaton& aut, std::ostream& out) -> std::ostream&;
-      bool fsm_register(const std::string& ctx, fsm_t fn);
+      REGISTER_DECLARE(fsm,
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

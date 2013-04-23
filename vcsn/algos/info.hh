@@ -44,9 +44,8 @@ namespace vcsn
         return out;
       }
 
-      using info_t
-        = auto (const automaton& aut, std::ostream& out) -> std::ostream&;
-      bool info_register(const std::string& ctx, info_t fn);
+      REGISTER_DECLARE(info,
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 
@@ -89,10 +88,8 @@ namespace vcsn
         return o;
       }
 
-      using info_exp_t =
-        auto (const ratexp& aut, std::ostream& o) -> std::ostream&;
-
-      bool info_exp_register(const std::string& ctx, info_exp_t fn);
+      REGISTER_DECLARE(info_exp,
+                       (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }
 }

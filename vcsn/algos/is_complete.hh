@@ -48,8 +48,8 @@ namespace vcsn
         return is_complete(dynamic_cast<const Aut&>(*aut));
       }
 
-      using is_complete_t = bool (const dyn::automaton&);
-      bool is_complete_register(const std::string& ctx, is_complete_t fn);
+      REGISTER_DECLARE(is_complete,
+                       (const dyn::automaton&) -> bool);
     }
   }
 }

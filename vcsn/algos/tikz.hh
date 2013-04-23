@@ -127,9 +127,8 @@ namespace vcsn
         return tikz(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      using tikz_t =
-        auto (const automaton& aut, std::ostream& out) -> std::ostream&;
-      bool tikz_register(const std::string& ctx, tikz_t fn);
+      REGISTER_DECLARE(tikz,
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

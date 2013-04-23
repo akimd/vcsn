@@ -190,12 +190,8 @@ namespace vcsn
         return new edit_automaton<Aut>(c);
       }
 
-      using make_automaton_editor_t =
-        auto (const dyn::context& aut) -> automaton_editor*;
-
-      bool
-      make_automaton_editor_register(const std::string& ctx,
-                                     make_automaton_editor_t fn);
+      REGISTER_DECLARE(make_automaton_editor,
+                       (const dyn::context& aut) -> automaton_editor*);
     }
   }
 

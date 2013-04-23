@@ -256,11 +256,8 @@ namespace vcsn
         return make_automaton(ctx, standard<Aut>(ctx, e->ratexp()));
       }
 
-      using standard_t =
-        auto (const dyn::ratexp& e) -> automaton;
-
-      bool standard_register(const std::string& ctx,
-                                standard_t fn);
+      REGISTER_DECLARE(standard,
+                       (const dyn::ratexp& e) -> automaton);
     }
   }
 

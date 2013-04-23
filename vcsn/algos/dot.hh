@@ -117,9 +117,8 @@ namespace vcsn
         return dot(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      using dot_stream_t =
-        auto (const automaton& aut, std::ostream& out) -> std::ostream&;
-      bool dot_stream_register(const std::string& ctx, dot_stream_t fn);
+      REGISTER_DECLARE(dot_stream,
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 
@@ -150,9 +149,8 @@ namespace vcsn
         return dot(dynamic_cast<const Aut&>(*aut));
       }
 
-      using dot_string_t = auto (const automaton& aut) -> std::string;
-
-      bool dot_string_register(const std::string& ctx, dot_string_t fn);
+      REGISTER_DECLARE(dot_string,
+                       (const automaton& aut) -> std::string);
     }
   }
 }

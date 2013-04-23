@@ -62,10 +62,8 @@ namespace vcsn
         return is_deterministic(dynamic_cast<const Aut&>(*aut));
       }
 
-      using is_deterministic_t = auto (const dyn::automaton& aut) -> bool;
-      bool
-      is_deterministic_register(const std::string& ctx,
-                                is_deterministic_t fn);
+      REGISTER_DECLARE(is_deterministic,
+                       (const dyn::automaton& aut) -> bool);
     }
   }
 } // namespace vscn

@@ -3,6 +3,7 @@
 
 # include <memory> // shared_ptr
 # include <string>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 
 namespace vcsn

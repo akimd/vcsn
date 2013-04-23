@@ -259,9 +259,8 @@ namespace vcsn
           (a.context(), a);
       }
 
-      using transpose_t = auto (automaton& aut) -> automaton;
-
-      bool transpose_register(const std::string& ctx, transpose_t fn);
+      REGISTER_DECLARE(transpose,
+                       (automaton& aut) -> automaton);
 
 
       /* ratexp. */
@@ -276,10 +275,8 @@ namespace vcsn
         return make_ratexp(ctx, res);
       }
 
-      using transpose_exp_t = auto (const ratexp& e) -> ratexp;
-
-      bool transpose_exp_register(const std::string& ctx,
-                                  transpose_exp_t fn);
+      REGISTER_DECLARE(transpose_exp,
+                       (const ratexp& e) -> ratexp);
     }
   }
 

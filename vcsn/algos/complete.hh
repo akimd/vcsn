@@ -89,9 +89,8 @@ namespace vcsn
         return make_automaton<Aut>(a.context(), complete(a));
       }
 
-      using complete_t = auto (const dyn::automaton& aut) -> dyn::automaton;
-      bool complete_register(const std::string& ctx,
-                             complete_t fn);
+      REGISTER_DECLARE(complete,
+                       (const dyn::automaton& aut) -> dyn::automaton);
     }
   }
 

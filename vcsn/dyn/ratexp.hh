@@ -3,6 +3,7 @@
 
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn

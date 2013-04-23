@@ -60,8 +60,8 @@ namespace vcsn
         return make_automaton<Aut>(a.context(), copy(a));
       }
 
-      using copy_t = dyn::automaton(const dyn::automaton&);
-      bool copy_register(const std::string& ctx, copy_t fn);
+      REGISTER_DECLARE(copy,
+                       (const dyn::automaton&) -> dyn::automaton);
     }
   }
 } // namespace vcsn

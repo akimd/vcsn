@@ -166,11 +166,8 @@ namespace vcsn
         return std::make_shared<Ctx>(vcsn::make_context<Ctx>(name));
       }
 
-      using make_context_t = auto (const std::string& name) -> context;
-
-      bool
-      make_context_register(const std::string& ctx,
-                            make_context_t fn);
+      REGISTER_DECLARE(make_context,
+                       (const std::string& name) -> context);
 
       /*-----------------.
       | make_ratexpset.  |
@@ -184,11 +181,8 @@ namespace vcsn
           (dynamic_cast<const Ctx&>(*ctx));
       }
 
-      using make_ratexpset_t = auto (const context& ctx) -> ratexpset;
-
-      bool
-      make_ratexpset_register(const std::string& ctx,
-                              make_ratexpset_t fn);
+      REGISTER_DECLARE(make_ratexpset,
+                       (const context& ctx) -> ratexpset);
 
     }
   }

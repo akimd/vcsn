@@ -87,10 +87,8 @@ namespace vcsn
         return make_automaton(::vcsn::details::lift(a.context()), lift(a));
       }
 
-      using lift_automaton_t = auto (const automaton& aut) -> automaton;
-
-      bool lift_automaton_register(const std::string& ctx,
-                                   lift_automaton_t fn);
+      REGISTER_DECLARE(lift_automaton,
+                       (const automaton& aut) -> automaton);
     }
   }
 
@@ -132,8 +130,8 @@ namespace vcsn
         return make_ratexp(::vcsn::details::lift(ctx), ::vcsn::lift(ctx, exp));
       }
 
-      using lift_exp_t = auto (const ratexp& aut) -> ratexp;
-      bool lift_exp_register(const std::string& ctx, lift_exp_t fn);
+      REGISTER_DECLARE(lift_exp,
+                       (const ratexp& aut) -> ratexp);
     }
   }
 

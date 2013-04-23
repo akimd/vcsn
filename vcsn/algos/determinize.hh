@@ -117,9 +117,8 @@ namespace vcsn
         return make_automaton<Aut>(a.context(), determinize(a));
       }
 
-      using determinize_t =
-        auto (const dyn::automaton& aut) -> dyn::automaton;
-      bool determinize_register(const std::string& ctx, determinize_t fn);
+      REGISTER_DECLARE(determinize,
+                       (const dyn::automaton& aut) -> dyn::automaton);
     }
   }
 

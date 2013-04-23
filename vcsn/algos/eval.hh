@@ -101,10 +101,9 @@ namespace vcsn
         return a.weightset()->format(res);
       }
 
-      using eval_t = auto (const automaton& aut, const std::string& s)
-        -> std::string;
-
-      bool eval_register(const std::string& ctx, eval_t fn);
+      REGISTER_DECLARE(eval,
+                       (const automaton& aut, const std::string& s)
+        -> std::string);
     }
   }
 

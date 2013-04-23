@@ -126,9 +126,8 @@ namespace vcsn
         return is_eps_acyclic(dynamic_cast<const Aut&>(*aut));
       }
 
-      using is_eps_acyclic_t = bool(const dyn::automaton&);
-      bool is_eps_acyclic_register(const std::string& ctx,
-                                    is_eps_acyclic_t fn);
+      REGISTER_DECLARE(is_eps_acyclic,
+                       (const dyn::automaton&) -> bool);
 
     }
   }
