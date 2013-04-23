@@ -10,7 +10,7 @@ make_()
 
 check()
 {
-  make check -j ${JOBS:-2} VERBOSE=1 "$@"
+  make check -j ${JOBS:-2} "$@"
 }
 
 ## ------ ##
