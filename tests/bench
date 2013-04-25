@@ -22,6 +22,10 @@ Select the base I<bench> to use.  Defaults to I<ladybird>.
 
 Determinization of C<(\e+a)(*$size)>.
 
+=item I<epsr>
+
+Epsilon removal of C<(\e+a)(*$size)>.
+
 =item I<lady>
 
 Determinization of Ladybird of $size.
@@ -124,39 +128,186 @@ sub run ($)
     or die "$command failed";
 }
 
-######################################################################
+sub alphabet ($)
+{
+  my ($ctx) = @_;
+  $ctx =~ /^la[lcwn]_char\((.*?)\)_(b|z|zmin)$/;
+  $1;
+}
 
-=item C<setup_ladybird($size)>
+sub v1_command ($)
+{
+  my ($ctx) = @_;
+  $ctx =~ /^la[lcwn]_(char)\((.*?)\)_(b|z|zmin)$/;
+  "vcsn-$1-$3 --alphabet=$2";
+}
+
+=item C<complete($base)>
+
+Add more files to aid debugging.  E.g. for C<$base.fsm>, also
+generate C<$base.fst>, C<$base.fst.dot> etc.
 
 =cut
 
-sub setup_ladybird ($)
+sub complete ($)
+{
+  my ($base) = @_;
+  run "fstcompile $base.fsm >$base.fst";
+  # For some reason, dot refuses to display this properly if we leave all
+  # these directives.
+  run "fstdraw $base.fst |"
+    . "sed -e '/^ *rankdir =/d;/^ *size =/d;/^ *center =/d;/^ *orientation =/d;'"
+    . "    -e '/^ *ranksep =/d;'"
+    . "    -e '/^ *nodesep =/d;'"
+    . ">$base.fst.dot";
+}
+
+######################################################################
+
+=item C<ladybird($base, $size, $alphabet)>
+
+Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+C<$base.dot> (for TAF-Kit 2) from $ratexp, via Ladybird.
+
+=cut
+
+sub ladybird ($$$)
+{
+  my ($base, $size, $alphabet) = @_;
+
+  verbose 1, "Ladybird $size\n";
+  for my $d (@tool)
+    {
+      my $prog;
+      if ($d eq 'OpnFST')
+        {
+          run "vcsn-ladybird -O fsm $size >$base.fsm";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          run "ladybird-char-b $size >$base.xml";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          run "vcsn-ladybird -O dot $size >$base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+    };
+  complete ($base);
+  $base;
+}
+
+=item C<standard($base, $ratexp, $alphabet)>
+
+Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+C<$base.dot> (for TAF-Kit 2) from $ratexp, via Ladybird.
+
+=cut
+
+sub standard ($$$)
+{
+  my ($base, $exp, $ctx) = @_;
+
+  verbose 1, "Standard $exp\n";
+  for my $d (@tool)
+    {
+      if ($d eq 'OpnFST')
+        {
+          run "vcsn-standard -e '(?\@$ctx)$exp' -Ofsm >$base.fsm";
+          run "fstcompile $base.fsm >$base.fst";
+          run "fstdraw $base.fst >$base.fst.dot";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          run v1_command($ctx) . " standard '$exp' >$base.xml";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          run "vcsn-standard -e '(?\@$ctx)$exp' >$base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+    };
+
+  complete ($base);
+  $base;
+}
+
+=item C<thompson($base, $ratexp, $alphabet)>
+
+Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+C<$base.dot> (for TAF-Kit 2) from $ratexp, via Thompson.
+
+=cut
+
+sub thompson ($$$)
+{
+  my ($base, $ratexp, $ctx) = @_;
+
+  for my $d (@tool)
+    {
+      if ($d eq 'OpnFST')
+        {
+          run "vcsn-thompson -e '(?\@$ctx)$ratexp' -Ofsm >$base.fsm";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          # Generate the RatExp with V2, but translate for V1.
+          run "vcsn-cat -Ee '$ratexp' | \
+                    sed -e 's/\\\\e/1/g' | "
+                    . v1_command ($ctx) . " thompson - >$base.xml";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          run "vcsn-thompson -e '(?\@$ctx)$ratexp' >$base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+    };
+
+  complete ($base);
+  $base;
+}
+
+
+######################################################################
+
+=item C<setup_det_ladybird($size)>
+
+=cut
+
+sub setup_det_ladybird ($)
 {
   my ($size) = @_;
 
   verbose 1, "Ladybird $size\n";
   # Set up the benches as expected by timethese.
   my %bench;
+  my $base = labybird ($size);
   for my $d (@tool)
     {
       my $prog;
       if ($d eq 'OpnFST')
         {
-          system "vcsn-ladybird -O fsm $size >$size.fsm";
           $prog = 'fstdeterminize';
-          $bench{$d} = "fstcompile $size.fsm | $prog >/dev/null";
+          $bench{$d} = "fstcompile $base.fsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
-          system "ladybird-char-b $size >$size.xml";
           $prog = 'vcsn-char-b';
-          $bench{$d} = "$prog determinize $size.xml \\| data - >/dev/null";
+          $bench{$d} = "$prog determinize $base.xml \\| data - >/dev/null";
         }
       elsif ($d eq 'Vcsn 2')
         {
-          system "vcsn-ladybird -O dot $size >$size.dot";
           $prog = 'vcsn-determinize';
-          $bench{$d} = "$prog -O null -f $size.dot";
+          $bench{$d} = "$prog -O null -f $base.dot";
         }
       else
         {
@@ -164,44 +315,40 @@ sub setup_ladybird ($)
         }
       chop($prog = `which $prog`);
       printf " %s. %s (%s)\n", $d, $bench{$d}, $prog;
-      $bench{$d} = "system ('$bench{$d}');";
+      $bench{$d} = "run ('$bench{$d}');";
     };
 
   %bench;
 }
 
-=item C<setup_aopt($size)>
+=item C<setup_det_aopt($size)>
 
 =cut
 
-sub setup_aopt ($)
+sub setup_det_aopt ($)
 {
   my ($size) = @_;
 
   verbose 1, "Aopt $size\n";
+  my $base = "aopt-$size";
+  standard ($base, "(\\e+a)(*$size)", "lal_char(a)_b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)
     {
-      my $base = "aopt-$size";
       my $prog;
       if ($d eq 'OpnFST')
         {
-          system "vcsn-standard -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' -Ofsm >$base.fsm";
           $prog = 'fstdeterminize';
           $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
-          system "vcsn-cat -C 'lal_char(a)_b' -Ee '(\\e+a)(*$size)' | \
-                    sed -e 's/\\\\e/1/g' | \
-                    vcsn-char-b --alphabet=a standard - >$base.xml";
           $prog = 'vcsn-char-b';
           $res{$d} = "$prog determinize $base.xml >/dev/null";
         }
       elsif ($d eq 'Vcsn 2')
         {
-          system "vcsn-standard -C 'lal_char(a)_b' -e '(\\e+a)(*$size)' >$base.dot";
           $prog = 'vcsn-determinize';
           $res{$d} = "$prog -O null -f $base.dot";
         }
@@ -211,7 +358,50 @@ sub setup_aopt ($)
         }
       chop($prog = `which $prog`);
       printf " %s. %s (%s)\n", $d, $res{$d}, $prog;
-      $res{$d} = "system ('$res{$d}');";
+      $res{$d} = "run ('$res{$d}');";
+    };
+
+  %res;
+}
+
+=item C<setup_eps_aopt($size)>
+
+=cut
+
+sub setup_eps_aopt ($)
+{
+  my ($size) = @_;
+
+  verbose 1, "Aopt $size\n";
+  my $base = "tho-aopt-$size";
+  thompson ($base, "(\\e+a)(*$size)", "lan_char(a)_b");
+  # Set up the benches as expected by timethese.
+  my %res;
+  for my $d (@tool)
+    {
+      my $prog;
+      if ($d eq 'OpnFST')
+        {
+          $prog = 'fstepsnormalize';
+          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 1')
+        {
+          $prog = 'vcsn-char-b';
+          $res{$d} = "$prog proper $base.xml >/dev/null";
+        }
+      elsif ($d eq 'Vcsn 2')
+        {
+          $prog = 'vcsn-eps-removal';
+          $res{$d} = "$prog -O null -f $base.dot";
+        }
+      else
+        {
+          die "$d";
+        }
+      chop($prog = `which $prog`);
+      printf " %s. %s (%s)\n", $d, $res{$d}, $prog;
+      $res{$d} = "run ('$res{$d}');";
     };
 
   %res;
@@ -240,19 +430,19 @@ sub setup_prefix ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          system "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
+          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
           $prog = 'fstdeterminize';
           $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
-          system "vcsn-char-b --alphabet=ab standard '$exp' >$base.xml";
+          run "vcsn-char-b --alphabet=ab standard '$exp' >$base.xml";
           $prog = 'vcsn-char-b';
           $res{$d} = "$prog determinize $base.xml >/dev/null";
         }
       elsif ($d eq 'Vcsn 2')
         {
-          system "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
+          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
           $prog = 'vcsn-determinize';
           $res{$d} = "$prog -O null -f $base.dot";
         }
@@ -262,7 +452,7 @@ sub setup_prefix ($)
         }
       chop($prog = `which $prog`);
       printf " %s. %s (%s)\n", $d, $res{$d}, $prog;
-      $res{$d} = "system ('$res{$d}');";
+      $res{$d} = "run ('$res{$d}');";
     };
 
   %res;
@@ -351,10 +541,13 @@ getopt;
 # Create the directory we work in.
 mkdir "benches" or die "cannot create benches"
   unless -d "benches";
-my $count = 1;
-++$count
-  while -d "benches/$count";
-my $dir = "benches/$count";
+my $dir;
+{
+  my $count = 0;
+  do {
+    $dir = sprintf "benches/%03d", ++$count;
+    } while -d $dir;
+}
 mkdir $dir
   or die "cannot create $dir";
 chdir $dir
@@ -370,7 +563,8 @@ for my $bench (@bench)
   ($bench, my $size) = ($1, $2);
   my %setup =
     (
-     aopt => \&setup_aopt,
+     aopt => \&setup_det_aopt,
+     epsr => \&setup_eps_aopt,
      lady => \&setup_ladybird,
      pfix => \&setup_prefix,
     );
