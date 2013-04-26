@@ -17,6 +17,7 @@ namespace vcsn
   | fsm(automaton, stream).  |
   `-------------------------*/
 
+  // http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
   template <class A>
   std::ostream&
   fsm(const A& aut, std::ostream& out)
@@ -27,8 +28,11 @@ namespace vcsn
     std::unordered_map<label_t, unsigned> names;
     for (auto t : aut.all_transitions())
       {
+        const auto& lbl = aut.label_of(t);
         size_t label
-          = names.emplace(aut.label_of(t), names.size() + 1).first->second;
+          = (aut.labelset()->is_identity(lbl)
+             ? 0
+             : names.emplace(lbl, names.size() + 1).first->second);
         out << aut.src_of(t) << '\t'
             << aut.dst_of(t) << '\t'
             << label << '\t'

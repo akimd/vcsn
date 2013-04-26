@@ -56,6 +56,12 @@ namespace vcsn
         return this->genset()->template special<label_t>();
       }
 
+      static constexpr bool
+      is_identity(label_t)
+      {
+        return false;
+      }
+
       bool
       is_valid(const label_t& v) const
       {
