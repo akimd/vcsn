@@ -69,7 +69,7 @@ namespace vcsn
           char c = i.peek();
           if (c != 'e')
             throw std::domain_error("invalid label: unexpected \\"
-                                    + std::string{char(i.peek())});
+                                    + std::string{c});
           i.ignore();
         }
       else
