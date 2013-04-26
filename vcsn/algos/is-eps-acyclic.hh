@@ -97,7 +97,7 @@ namespace vcsn
       constexpr epsilon_acyclic(const automaton_t&)
       {}
 
-      constexpr bool is_eps_acyclic()
+      static constexpr bool is_eps_acyclic()
       {
         return true;
       }

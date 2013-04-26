@@ -352,7 +352,11 @@ and eturn the result of epsilon_removal on the copy.
       return true;
     }
 
-    static constexpr void eps_removal_here(automaton_t &)
+    static
+#ifndef __clang__
+    constexpr
+#endif
+    void eps_removal_here(automaton_t &)
     {}
 
     static Aut eps_removal(const automaton_t &input)
