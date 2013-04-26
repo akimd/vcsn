@@ -1,11 +1,11 @@
 #ifndef VCSN_ALGOS_EPS_REMOVAL_HH
 # define VCSN_ALGOS_EPS_REMOVAL_HH
 
-# include <list>
 # include <stdexcept>
 # include <type_traits>
 # include <unordered_map>
 # include <utility>
+# include <vector>
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
@@ -73,7 +73,7 @@ namespace vcsn
       label_t empty_word = input.labelset()->identity();
       auto weightset_ptr = input.weightset();
       using state_weight_t = std::pair<state_t, weight_t>;
-      std::list<state_weight_t> closure;
+      std::vector<state_weight_t> closure;
       /*
          For each state (s), the incoming epsilon-transitions
          are put into the to_erase list; in the same time,
