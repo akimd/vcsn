@@ -1,3 +1,17 @@
+* 2013-04-26
+** Dot parser
+This parser is now stricter than it used to be: be sure to escape
+backslashes in input Dot files, i.e.,
+
+    0 -> 2 [label = "\e"]
+
+is now invalid, write
+
+    0 -> 2 [label = "\\e"]
+
+This change was made because Graphviz treats "\e" (and renders it) exactly
+like "e".
+
 * 2013-04-25
 ** New algorithm: Thompson
 Conversion from rational expression to automata.  Requires lan or law.

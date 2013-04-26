@@ -82,7 +82,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   }
 
   \\\"      s += '"';
-  \\.       s.append(yytext, yyleng);
+  \\.       s.append(yytext+1, yyleng-1);
   [^\\""]+  s.append(yytext, yyleng);
 
   <<EOF>> {

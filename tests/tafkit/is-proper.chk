@@ -49,12 +49,12 @@ done
 ## ! is-proper.  ##
 ## ------------- ##
 
-cat > lan_b.dot <<EOF
+cat > lan_b.dot <<\EOF
 digraph
 {
   vcsn_context = "lan_char(ab)_b"
   I0 -> 0
-  0 -> 1 [label = "\e, a"]
+  0 -> 1 [label = "\\e, a"]
   1 -> F1
 }
 EOF
