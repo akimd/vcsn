@@ -8,9 +8,9 @@
 %error-verbose
 %expect 0
 %locations
-%define namespace "vcsn::dot"
+%define namespace "vcsn::detail::dot"
 %define location_type "vcsn::rat::location"
-%name-prefix "vcsn::dot::"
+%name-prefix "vcsn::detail::dot::"
 
 %code requires
 {
@@ -24,52 +24,57 @@
 
   namespace vcsn
   {
-    namespace dot
+    namespace detail
     {
-      // (Complex) objects such as shared_ptr cannot be put in a
-      // union, even in C++11.  So cheat, and store a struct instead
-      // of an union.  See lib/vcsn/rat/README.txt.
-      struct sem_type
+      namespace dot
       {
-        // Identifiers (attributes and node names).
-        //
-        // With ref_counting I have a 20% penalty compared to using
-        // std::string.  With no_tracking, I get a 10x speed up (e.g.,
-        // vcsn-cat of a determinized ladybird).  But then we leak.
-        // We should try to have an arena in which the flyweight
-        // performs its allocation, and flush the whole arena once
-        // we're done parsing.
-        using string_t =
-          boost::flyweight<std::string, boost::flyweights::no_tracking>;
-        string_t string;
-        // A set of states.
-        using states_t = std::vector<string_t>;
-        states_t states;
-        // (Unlabeled) transitions.
-        using transitions_t = std::vector<std::pair<string_t, string_t>>;
-        transitions_t transitions;
-      };
+        // (Complex) objects such as shared_ptr cannot be put in a
+        // union, even in C++11.  So cheat, and store a struct instead
+        // of an union.  See lib/vcsn/rat/README.txt.
+        struct sem_type
+        {
+          // Identifiers (attributes and node names).
+          //
+          // With ref_counting I have a 20% penalty compared to using
+          // std::string.  With no_tracking, I get a 10x speed up (e.g.,
+          // vcsn-cat of a determinized ladybird).  But then we leak.
+          // We should try to have an arena in which the flyweight
+          // performs its allocation, and flush the whole arena once
+          // we're done parsing.
+          using string_t =
+            boost::flyweight<std::string, boost::flyweights::no_tracking>;
+          string_t string;
+          // A set of states.
+          using states_t = std::vector<string_t>;
+          states_t states;
+          // (Unlabeled) transitions.
+          using transitions_t = std::vector<std::pair<string_t, string_t>>;
+          transitions_t transitions;
+        };
+      }
     }
   }
-#define YYSTYPE vcsn::dot::sem_type
+#define YYSTYPE vcsn::detail::dot::sem_type
 }
 
 %code provides
 {
-  #define YY_DECL                                               \
-    int                                                         \
-    vcsn::dot::lex(vcsn::dot::parser::semantic_type* yylval,    \
-                   vcsn::dot::parser::location_type* yylloc,    \
-                   vcsn::dot::driver& driver_)
+  #define YY_DECL                                                       \
+    int                                                                 \
+    vcsn::detail::dot::lex(vcsn::detail::dot::parser::semantic_type* yylval, \
+                           vcsn::detail::dot::parser::location_type* yylloc, \
+                           vcsn::detail::dot::driver& driver_)
 
   namespace vcsn
   {
-    namespace dot
+    namespace detail
     {
-      int
-      lex(parser::semantic_type* yylval,
-          parser::location_type* yylloc,
-          vcsn::dot::driver& driver_);
+      namespace dot
+      {
+        int
+        lex(parser::semantic_type* yylval, parser::location_type* yylloc,
+            driver& driver_);
+      }
     }
   }
 }
@@ -82,51 +87,54 @@
 
   namespace vcsn
   {
-    namespace dot
+    namespace detail
     {
-      std::ostream&
-      operator<<(std::ostream& o, const sem_type::states_t ss)
+      namespace dot
       {
-        bool first = true;
-        o << '{';
-        for (auto s: ss)
-          {
-            if (!first)
-              o << ", ";
-            o << s;
-            first = false;
-          }
-        return o << '}';
-      }
+        std::ostream&
+        operator<<(std::ostream& o, const sem_type::states_t ss)
+        {
+          bool first = true;
+          o << '{';
+          for (auto s: ss)
+            {
+              if (!first)
+                o << ", ";
+              o << s;
+              first = false;
+            }
+          return o << '}';
+        }
 
-      std::ostream&
-      operator<<(std::ostream& o, const sem_type::transitions_t ts)
-      {
-        bool first = true;
-        o << '{';
-        for (auto t: ts)
-          {
-            if (!first)
-              o << ", ";
-            o << t.first << "->" << t.second;
-            first = false;
-          }
-        return o << '}';
+        std::ostream&
+        operator<<(std::ostream& o, const sem_type::transitions_t ts)
+        {
+          bool first = true;
+          o << '{';
+          for (auto t: ts)
+            {
+              if (!first)
+                o << ", ";
+              o << t.first << "->" << t.second;
+              first = false;
+            }
+          return o << '}';
+        }
       }
     }
-  }
 
-  /// Run Stm, and bounces exceptions into parse errors at Loc.
+    /// Run Stm, and bounces exceptions into parse errors at Loc.
 #define TRY(Loc, Stm)                           \
-  try                                           \
-    {                                           \
-      Stm;                                      \
-    }                                           \
-  catch (std::exception& e)                     \
-    {                                           \
-      error(Loc, e.what());                     \
-      YYERROR;                                  \
-    }
+    try                                         \
+      {                                         \
+        Stm;                                    \
+      }                                         \
+    catch (std::exception& e)                   \
+      {                                         \
+        error(Loc, e.what());                   \
+        YYERROR;                                \
+      }
+  }
 }
 
 %parse-param { driver& driver_ }
@@ -352,12 +360,15 @@ id.opt:
 
 namespace vcsn
 {
-  namespace dot
+  namespace detail
   {
-    void
-    vcsn::dot::parser::error(const location_type& l, const std::string& m)
+    namespace dot
     {
-      driver_.error(l, m);
+      void
+      parser::error(const location_type& l, const std::string& m)
+      {
+        driver_.error(l, m);
+      }
     }
   }
 }

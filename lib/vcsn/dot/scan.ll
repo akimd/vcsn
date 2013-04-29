@@ -2,7 +2,7 @@
 
 %option nounput noyywrap
 %option debug
-%option prefix="dot" outfile="lex.yy.c"
+%option prefix="detail_dot" outfile="lex.yy.c"
 
 %top{
 #pragma GCC diagnostic ignored "-Wsign-compare"
@@ -24,7 +24,7 @@
   yylloc->columns(yyleng);
 
 #define TOK(Token)                              \
-  vcsn::dot::parser::token::Token
+  vcsn::detail::dot::parser::token::Token
 %}
 
 %x SC_COMMENT SC_STRING
@@ -95,46 +95,49 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 %%
 namespace vcsn
 {
-  namespace dot
+  namespace detail
   {
-    // Beware of the dummy Flex interface.  One would like to use:
-    //
-    // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
-    //
-    // and
-    //
-    // yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
-    //
-    // but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
-    // effect calling yypush_buffer_state saves the new state instead
-    // of the old one.
-    //
-    // So do it in two steps, quite different from what is suggested
-    // in the document: save the old context, switch to the new one.
-
-    void
-    driver::scan_open_(FILE *f)
+    namespace dot
     {
-      yy_flex_debug = !!getenv("YYSCAN");
-      yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_switch_to_buffer(yy_create_buffer(f, YY_BUF_SIZE));
-    }
+      // Beware of the dummy Flex interface.  One would like to use:
+      //
+      // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
+      //
+      // and
+      //
+      // yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
+      //
+      // but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
+      // effect calling yypush_buffer_state saves the new state instead
+      // of the old one.
+      //
+      // So do it in two steps, quite different from what is suggested
+      // in the document: save the old context, switch to the new one.
 
-    void
-    driver::scan_open_(const std::string& e)
-    {
-      yy_flex_debug = !!getenv("YYSCAN");
-      yyin = 0;
-      yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_scan_bytes(e.c_str(), e.size());
-    }
+      void
+      driver::scan_open_(FILE *f)
+      {
+        yy_flex_debug = !!getenv("YYSCAN");
+        yypush_buffer_state(YY_CURRENT_BUFFER);
+        yy_switch_to_buffer(yy_create_buffer(f, YY_BUF_SIZE));
+      }
 
-    void
-    driver::scan_close_()
-    {
-      yypop_buffer_state();
-      //if (yyin)
-      //fclose(yyin);
+      void
+      driver::scan_open_(const std::string& e)
+      {
+        yy_flex_debug = !!getenv("YYSCAN");
+        yyin = 0;
+        yypush_buffer_state(YY_CURRENT_BUFFER);
+        yy_scan_bytes(e.c_str(), e.size());
+      }
+
+      void
+      driver::scan_close_()
+      {
+        yypop_buffer_state();
+        //if (yyin)
+        //fclose(yyin);
+      }
     }
   }
 }
