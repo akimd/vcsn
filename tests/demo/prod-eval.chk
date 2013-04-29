@@ -1,0 +1,20 @@
+#! /bin/sh
+
+run 0 '' -vcsn-standard -e '(?@lal_char(01)_z)(0+1)*1({2}0+{2}1)*' -o bin.dot
+run 0 '' -vcsn-standard -e '(?@lal_char(01)_z)(0+1)*0' -o even.dot
+
+# check INPUT OUTPUT
+# ------------------
+# If INPUT is an even binary number, check that OUTPUT is its value.
+# Otherwise OUTPUT is 0.
+check ()
+{
+  run 0 "$2,$2" demo/prod-eval bin.dot even.dot $1
+}
+
+check '0' '0'
+check '1' '0'
+check '10' '2'
+check '1110' '14'
+check '101010' '42'
+check '101011' '0'

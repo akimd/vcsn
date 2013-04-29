@@ -34,6 +34,7 @@ TESTS = $(dist_TESTS)
 RECHECK_LOGS =
 
 include unit/local.mk
+include demo/local.mk
 include rat/local.mk
 include tafkit/local.mk
 
