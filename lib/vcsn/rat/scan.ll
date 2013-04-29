@@ -9,13 +9,17 @@
 }
 
 %{
-#include <string>
 #include <cassert>
-#include <stack>
 #include <iostream>
+#include <stack>
+#include <string>
+
+#include <boost/lexical_cast.hpp>
+#include <boost/regex.hpp> // FIXME: Neither G++ nor clang++ implement <regex>.
+
+
 #include <lib/vcsn/rat/parse.hh>
 #include <vcsn/dyn/algos.hh>
-#include <boost/lexical_cast.hpp>
 
 #define LINE(Line)                              \
   do{                                           \
@@ -33,10 +37,12 @@
   {
     namespace rat
     {
-      // Safe conversion to a numeric value.
-      template <typename Out>
-      static Out
-      lexical_cast(driver& d, const location& loc, std::string s);
+      namespace
+      {
+        using irange_type = sem_type::irange_type;
+        irange_type
+        quantifier(driver& d, const location& loc, const std::string& s);
+      }
     }
   }
 %}
@@ -66,21 +72,25 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "]"     yylval->ival = 1; return TOK(RPAREN);
   "+"     return TOK(SUM);
   "."     return TOK(DOT);
-  "*"     return TOK(STAR);
   ","     return TOK(COMMA);
-  "(*"    return TOK(LPAREN_STAR);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);
+
+  /* Quantifiers.  */
+  "*"                    {
+      yylval->irange = std::make_tuple(-1, -1);
+      return TOK(STAR);
+  }
+  "(*"[0-9]*,?[0-9]*")"    {
+      yylval->irange = quantifier(driver_, *yylloc, yytext);
+      return TOK(STAR);
+  }
+
 
   "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
   "(?#"[^)]*")"  continue;
 
   "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
-
-  [0-9]+  {
-            yylval->ival = lexical_cast<int>(driver_, *yylloc, yytext);
-            return TOK(NUMBER);
-          }
 
   {char}  yylval->cval = *yytext; return TOK(LETTER);
   "\n"    continue;
@@ -135,6 +145,54 @@ namespace vcsn
 {
   namespace rat
   {
+
+    namespace
+    {
+      // Safe conversion to a numeric value.
+      // The name parser_impl_ is chosen so that SCAN_ERROR can be used
+      // from out of the scanner.
+      template <typename Out>
+      Out
+      lexical_cast(driver& d, const location& loc, const std::string& s)
+      {
+        try
+          {
+            return boost::lexical_cast<Out>(s);
+          }
+        catch (const boost::bad_lexical_cast&)
+          {
+            d.error(loc, "invalid numerical literal: " + s);
+            return 0;
+          }
+      }
+
+      // The value of s, a decimal number, or -1 if empty.
+      int arity(driver& d, const location& loc, const std::string& s)
+      {
+        if (s.empty())
+          return -1;
+        else
+          return lexical_cast<int>(d, loc, s);
+      }
+
+      // Decode a quantifier's value: "(*1,2)" etc.
+      irange_type
+      quantifier(driver& d, const location& loc, const std::string& s)
+      {
+        boost::regex arity_re{"\\(\\*([0-9]*)(,?)([0-9]*)\\)",
+                              boost::regex::extended};
+        boost::smatch minmax;
+        if (!boost::regex_match(s, minmax, arity_re))
+          throw std::runtime_error("cannot match arity: " + s);
+        irange_type res{arity(d, loc, minmax[1].str()),
+                        arity(d, loc, minmax[3].str())};
+        if (minmax[2].str().empty())
+          // No comma: single argument.
+          std::get<1>(res) = std::get<0>(res);
+        return res;
+      }
+    }
+
     // Beware of the dummy Flex interface.  One would like to use:
     //
     // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
@@ -172,24 +230,6 @@ namespace vcsn
     driver::scan_close_()
     {
       yypop_buffer_state();
-    }
-
-    // Safe conversion to a numeric value.
-    // The name parser_impl_ is chosen so that SCAN_ERROR can be used
-    // from out of the scanner.
-    template <typename Out>
-    Out
-    lexical_cast(driver& d, const location& loc, std::string s)
-    {
-      try
-        {
-          return boost::lexical_cast<Out>(s);
-        }
-      catch (const boost::bad_lexical_cast&)
-        {
-          d.error(loc, "invalid numerical literal: " + s);
-          return 0;
-        }
     }
   }
 }

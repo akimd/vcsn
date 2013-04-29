@@ -21,6 +21,10 @@ check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
     "{{{42}x}d}a+{{{51}x}d}a+({{{42}y}e}b)*" \
     "{{{42}x}d}a+{{{51}x}d}a+(({{{42}y}e}b)*)"
 
+# Check that we do support digits as letters.
+check_exp 'lal_char(0123)_b' "0123" "0.1.2.3"
+check_exp 'lal_char(0123)_z' "{0123}0123" "{123}(0.1.2.3)"
+
 
 # check_info EXP-OUT VCSN-CAT-ARGS...
 # -----------------------------------

@@ -1,3 +1,13 @@
+* 2013-04-29
+** Digits as letters
+Recently broken by accident, support for digits as letters is restored.
+
+  $ vcsn-standard -e '(?@lal_char(01)_z)(0+1)*1({2}1+{2}0)*' -o binary.dot
+  $ vcsn-evaluate -f binary.dot '11111111'
+  255
+  $ vcsn-evaluate -f binary.dot '101010'
+  42
+
 * 2013-04-26
 ** Dot parser
 This parser is now stricter than it used to be: be sure to escape

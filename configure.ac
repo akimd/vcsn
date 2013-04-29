@@ -11,7 +11,7 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-m4_pattern_forbid([^(TC|VCSN)_])
+m4_pattern_forbid([^(BOOST|TC|VCSN)_])
 
 # VCSN_HEADER
 
@@ -72,6 +72,9 @@ AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
 case $ac_cv_GLIBCXX_DEBUG in yes)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
+
+BOOST_REQUIRE([1.50])
+BOOST_REGEX
 
 ## --------------------##
 ## Define XML headers. ##

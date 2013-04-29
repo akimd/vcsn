@@ -69,3 +69,4 @@ lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_RAT_PARSE_YY)                       \
   lib/vcsn/rat/driver.hh lib/vcsn/rat/driver.cc \
   lib/vcsn/rat/scan.ll
+lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS)

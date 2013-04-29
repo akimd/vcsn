@@ -32,7 +32,8 @@
       struct sem_type
       {
         exp_t node;
-        std::tuple<int, int> irange;
+        using irange_type = std::tuple<int, int>;
+        irange_type irange;
         bool parens = false;
         // These guys _can_ be put into a union.
         union
@@ -154,23 +155,20 @@
 
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
-                NUMBER  "number"
 
 %token  SUM  "+"
         DOT   "."
-        STAR  "*"
         ONE   "\\e"
         ZERO  "\\z"
         LPAREN_STAR  "(*"
         COMMA  ","
 ;
 
+%token <irange> STAR "*";
 %token <cval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
 %type <node> exp exps weights;
-%type <ival> number.opt;
-%type <irange> power;
 
 %left RWEIGHT
 %left "+"
@@ -205,25 +203,11 @@ exp:
         $<parens>$ = $<parens>2;
       }
   }
-| exp power                   { $$ = power(driver_.ratexpset_, $1, $2); }
-| ZERO                        { $$ = MAKE(zero); }
-| ONE                         { $$ = MAKE(unit); }
-| LETTER                      { TRY(@$, $$ = MAKE(atom, {$1})); }
-| "(" exp ")"                 { assert($1 == $3); $$ = $2; $<parens>$ = true; }
-;
-
-number.opt:
-  /* empty */ { $$ = -1; }
-| "number"    { $$ = $1; }
-;
-
-power:
-  "*"
-   { $$ = std::make_tuple(-1, -1); }
-| "(*" number.opt[min] "," number.opt[max] ")"
-   { $$ = std::make_tuple($min, $max); }
-| "(*" number.opt[n] ")"
-   { $$ = std::make_tuple($n, $n); }
+| exp "*"          { $$ = power(driver_.ratexpset_, $1, $2); }
+| ZERO             { $$ = MAKE(zero); }
+| ONE              { $$ = MAKE(unit); }
+| LETTER           { TRY(@$, $$ = MAKE(atom, {$1})); }
+| "(" exp ")"      { assert($1 == $3); $$ = $2; $<parens>$ = true; }
 ;
 
 weights:
