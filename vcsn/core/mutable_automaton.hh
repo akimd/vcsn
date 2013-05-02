@@ -737,10 +737,17 @@ namespace vcsn
     void
     del_entry(state_t s, state_t d)
     {
-      // FIXME: Beware that according to the comments of outin,
-      // del_transition invalidates its result.
-      for (auto t : outin(s, d))
-        del_transition(t);
+      // removes s -> d
+      auto& ss = states_[s].succ;
+      auto& ds = states_[d].pred;
+      std::remove_if(ss.begin(), ss.end(), [d] (transition_t t) { return t == d; });
+      std::remove_if(ds.begin(), ds.end(), [s] (transition_t t) { return t == s; });
+
+      // removes d -> s
+      ds = states_[d].succ;
+      ss = states_[s].pred;
+      std::remove_if(ss.begin(), ss.end(), [d] (transition_t t) { return t == d; });
+      std::remove_if(ds.begin(), ds.end(), [s] (transition_t t) { return t == s; });
     }
   };
 
