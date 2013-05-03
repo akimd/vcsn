@@ -53,6 +53,17 @@ Or use what's in there instead of always abc?
 Would that be useful?  For the return value of eval for instance.  How
 would the connection with dyn::ratexp (which are weights) be done?
 
+* Benchmarks
+** determinization
+Experiment determinization on (a^p)*+(a^q)*+(a^r)*, with p, q, r primes.
+Possible name: "Chrobak" (reference to Marek Chrobak), "cycles", "gears".
+
+** determinization
+Introduce aaaaa+aaaab+...+bbbbb for length n.
+
+** eps-removal
+(1+a)^n
+
 * eval.chk
 Cover more case for zmin.
 
