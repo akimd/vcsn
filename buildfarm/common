@@ -190,7 +190,10 @@ export DIR_ROOT=$PWD
 
 export DIR_SOURCE=$DIR_ROOT
 
-export DIR_BUILD=$DIR_ROOT/build/$BUILDDIR
+# All the build flavors will be performed here.
+export DIR_ROOT_BUILD=$DIR_ROOT/build
+
+export DIR_BUILD=$DIR_ROOT_BUILD/$BUILDDIR
 
 export DIR_INSTALL=$DIR_ROOT/install
 

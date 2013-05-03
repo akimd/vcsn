@@ -15,7 +15,10 @@ set -ex
 # --verbose, -t
 find . -type l -print | perl -nle '-e || print' | xargs -t rm -f
 
-if $(older "$DIR_SOURCE/configure" "$0"); then
+# If there is not even config.status, something must have gone
+# really wrong in the previous build.  Start from scratch.
+if $(older "$DIR_SOURCE/configure" "$0" "$DIR_SOURCE/configure.ac") \
+    || test ! -e $DIR_BUILD/config.status; then
   cd "$DIR_SOURCE"
   ./bootstrap
   cd "$DIR_ROOT"
