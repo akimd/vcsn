@@ -11,7 +11,7 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
   if test ! -d "$DIR_BUILD"; then
     test ! -e "$DIR_BUILD" \
       || fatal "DIR_BUILD is not a directory: $DIR_BUILD"
-    mkdir "$DIR_BUILD" \
+    mkdir -p "$DIR_BUILD" \
       || fatal "cannot mkdir $DIR_BUILD"
   fi
   cd "$DIR_BUILD"
