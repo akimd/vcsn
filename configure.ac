@@ -45,36 +45,68 @@ ${stdpass-false} ||
 
 CF_GXX_WARNINGS
 
+BOOST_REQUIRE([1.49])
+BOOST_REGEX
+
 # For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
 # stringstreams.  This is well known, ancient, yet still the case
 # today (G++ 4.7, XCode 4.2).
-# http://stackoverflow.com/questions/7623070/stringstream-not-working-with-doubles-when-glibcxx-debug-enabled
+# http://stackoverflow.com/questions/7623070
+#
+# Also, since we are using BOOST_REGEX, do not enable _GLIBCXX_DEBUG
+# if the result fails.
+# https://svn.boost.org/trac/boost/ticket/5911
 AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
                [ac_cv_GLIBCXX_DEBUG],
-[AC_RUN_IFELSE(
+[vcsn_save_LIBS=$LIBS
+LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
+AC_RUN_IFELSE(
 [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
 #define _GLIBCXX_DEBUG_PEDANTIC
 #include <cassert>
 #include <sstream>
-],
-[  {
-     std::stringstream o;
-     assert (o.str() == "");
+],[
+  {
+    std::stringstream o;
+    assert (o.str() == "");
   }
   {
-     std::stringstream o;
-      o << 42;
-      assert (o.str() == "42");
+    std::stringstream o;
+    o << 42;
+    assert (o.str() == "42");
+  }
+  {
+    const boost::regex re("[a-zA-Z]*");
+    assert(boost::regex_match("asdf", re));
   }
 ])], [ac_cv_GLIBCXX_DEBUG=yes],
      [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
-     [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])])
+     [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
+
+if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+  vcsn_save_LIBS=$LIBS
+  LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
+  AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
+  #define _GLIBCXX_DEBUG_PEDANTIC
+  #include <cassert>
+  #include <sstream>
+  #include <boost/regex.hpp>
+  ],[
+    {
+      const boost::regex re("[a-zA-Z]*");
+      assert(boost::regex_match("asdf", re));
+    }
+  ])], [],
+       [ac_cv_GLIBCXX_DEBUG='no (Boost.Regexp)'])
+  LIBS=$vcsn_save_LIBS
+fi
+])
+
 case $ac_cv_GLIBCXX_DEBUG in yes)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
-BOOST_REQUIRE([1.49])
-BOOST_REGEX
 
 ## --------------------##
 ## Define XML headers. ##
