@@ -15,7 +15,7 @@ namespace vcsn
   {
     namespace dot
     {
-      
+
       driver::driver()
         : edit_{nullptr}
       {}
