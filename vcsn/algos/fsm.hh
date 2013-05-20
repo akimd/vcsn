@@ -45,7 +45,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       std::ostream& fsm(const automaton& aut, std::ostream& out)

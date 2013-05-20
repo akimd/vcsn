@@ -12,7 +12,7 @@ namespace vcsn
     automaton
     ladybird(const context& ctx, unsigned n)
     {
-      return details::ladybird_registry().call(ctx->vname(),
+      return detail::ladybird_registry().call(ctx->vname(),
                                                ctx, n);
     }
   }

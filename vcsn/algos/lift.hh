@@ -15,7 +15,7 @@ namespace vcsn
   | lift(automaton).  |
   `------------------*/
 
-  namespace details
+  namespace detail
   {
     template <typename Context>
     using lifted_context_t =
@@ -27,7 +27,7 @@ namespace vcsn
     lift(const Context& ctx)
     {
       auto rs_in = ctx.make_ratexpset();
-      using ctx_out_t = details::lifted_context_t<Context>;
+      using ctx_out_t = detail::lifted_context_t<Context>;
       return ctx_out_t(ctx::unitset{}, rs_in);
     }
 
@@ -38,7 +38,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  details::lifted_automaton_t<Aut>
+  detail::lifted_automaton_t<Aut>
   lift(const Aut& a)
   {
     using auto_in_t = Aut;
@@ -49,8 +49,8 @@ namespace vcsn
     using rs_in_t = ratexpset<ctx_in_t>;
     rs_in_t rs_in{a.context()};
 
-    auto ctx_out = details::lift(a.context());
-    using auto_out_t = details::lifted_automaton_t<auto_in_t>;
+    auto ctx_out = detail::lift(a.context());
+    using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
     using state_out_t = typename auto_out_t::state_t;
     auto_out_t res{ctx_out};
     std::map<state_in_t, state_out_t> map;
@@ -77,14 +77,14 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       automaton
       lift(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton(::vcsn::details::lift(a.context()), lift(a));
+        return make_automaton(::vcsn::detail::lift(a.context()), lift(a));
       }
 
       REGISTER_DECLARE(lift_automaton,
@@ -97,7 +97,7 @@ namespace vcsn
   | lift(ratexp).  |
   `---------------*/
 
-  namespace details
+  namespace detail
   {
     template <typename Exp>
     using lifted_ratexp_t =
@@ -108,16 +108,16 @@ namespace vcsn
   /// \param Exp  Ctx::ratexp_t = vcsn::rat::node<Label, Weight>.
   template <typename Context>
   inline
-  typename details::lifted_context_t<Context>::ratexp_t
+  typename detail::lifted_context_t<Context>::ratexp_t
   lift(const Context& ctx, const typename Context::ratexp_t& e)
   {
-    return details::lift(ctx).make_ratexpset().unit(e);
+    return detail::lift(ctx).make_ratexpset().unit(e);
   }
 
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Context>
       ratexp
@@ -127,7 +127,7 @@ namespace vcsn
           dynamic_cast<const Context&>(e->ctx());
         const auto& exp =
           std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
-        return make_ratexp(::vcsn::details::lift(ctx), ::vcsn::lift(ctx, exp));
+        return make_ratexp(::vcsn::detail::lift(ctx), ::vcsn::lift(ctx, exp));
       }
 
       REGISTER_DECLARE(lift_exp,

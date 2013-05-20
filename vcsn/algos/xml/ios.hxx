@@ -19,7 +19,7 @@ XERCES_CPP_NAMESPACE_END
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     inline
     XMLSize_t
@@ -79,7 +79,7 @@ namespace vcsn
       delete outstream;
     }
 
-  } // namespace details
+  } // namespace detail
 
 } // namespace vcsn
 

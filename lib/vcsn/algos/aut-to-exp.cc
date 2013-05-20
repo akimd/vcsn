@@ -18,7 +18,7 @@ namespace vcsn
     ratexp
     aut_to_exp(const automaton& aut)
     {
-      return details::aut_to_exp_registry().call(aut->vname(),
+      return detail::aut_to_exp_registry().call(aut->vname(),
                                                  aut);
     }
 
@@ -31,7 +31,7 @@ namespace vcsn
     ratexp
     aut_to_exp_in_degree(const automaton& aut)
     {
-      return details::aut_to_exp_in_degree_registry().call(aut->vname(),
+      return detail::aut_to_exp_in_degree_registry().call(aut->vname(),
                                                            aut);
     }
   }

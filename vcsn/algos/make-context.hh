@@ -34,7 +34,7 @@ namespace vcsn
   Ctx
   make_context(const std::string& name);
 
-  namespace details
+  namespace detail
   {
     template <typename WeightSet>
     struct weightsetter
@@ -144,7 +144,7 @@ namespace vcsn
   Ctx
   make_context(const std::string& name)
   {
-    return details::make_context<Ctx>(name);
+    return detail::make_context<Ctx>(name);
   }
 
   /*----------.
@@ -153,7 +153,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       /*---------------.
       | make_context.  |

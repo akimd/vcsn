@@ -425,7 +425,7 @@ and eturn the result of epsilon_removal on the copy.
     | dyn::eps_removal.  |
     `-------------------*/
 
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       dyn::automaton eps_removal(const dyn::automaton &aut)
@@ -442,7 +442,7 @@ and eturn the result of epsilon_removal on the copy.
     | dyn::is_proper.  |
     `-----------------*/
 
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       bool is_proper(const dyn::automaton &aut)

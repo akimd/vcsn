@@ -47,7 +47,7 @@ namespace vcsn
 
     VISIT(prod, v)
     {
-      auto prod = details::create_node(doc_, "prod");
+      auto prod = detail::create_node(doc_, "prod");
       root_.appendChild(prod);
       print_weight(v.left_weight(), *prod, "left");
       for (auto t : v)
@@ -60,7 +60,7 @@ namespace vcsn
 
     VISIT(sum, v)
     {
-      auto plus = details::create_node(doc_, "plus");
+      auto plus = detail::create_node(doc_, "plus");
       root_.appendChild(plus);
       print_weight(v.left_weight(), *plus, "left");
       for (auto t : v)
@@ -75,7 +75,7 @@ namespace vcsn
     {
       if (auto sub = v.sub())
         {
-          auto star = details::create_node(doc_, "star");
+          auto star = detail::create_node(doc_, "star");
           root_.appendChild(star);
           print_weight(v.left_weight(), *star, "left");
           this_t child(doc_, *star, ctx_);
@@ -86,29 +86,29 @@ namespace vcsn
 
     VISIT(one, v)
     {
-      auto one = details::create_node(doc_, "one");
+      auto one = detail::create_node(doc_, "one");
       root_.appendChild(one);
       print_weight(v.left_weight(), *one, "left");
     }
 
     VISIT(zero, v)
     {
-      auto zero = details::create_node(doc_, "zero");
+      auto zero = detail::create_node(doc_, "zero");
       root_.appendChild(zero);
       print_weight(v.left_weight(), *zero, "left");
     }
 
     VISIT(atom, v)
     {
-      auto atom = details::create_node(doc_, "atom");
+      auto atom = detail::create_node(doc_, "atom");
       root_.appendChild(atom);
 
       print_weight(v.left_weight(), *atom, "left");
 
-      auto label = details::create_node(doc_, "label");
+      auto label = detail::create_node(doc_, "label");
       atom->appendChild(label);
 
-      details::set_attribute(label, "value",
+      detail::set_attribute(label, "value",
                              ctx_.labelset()->format(v.value()));
     }
 
@@ -119,7 +119,7 @@ namespace vcsn
                                                const std::string& side)
     {
       if (shows_(w))
-        vcsn::details::print_weight(doc_, root, side + "Weight", ws_, w);
+        vcsn::detail::print_weight(doc_, root, side + "Weight", ws_, w);
     }
 
     template <typename Context>

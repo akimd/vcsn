@@ -9,7 +9,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     template <typename Aut>
     class evaluator
@@ -73,7 +73,7 @@ namespace vcsn
       const weightset_t& ws_;
     };
 
-  } // namespace details
+  } // namespace detail
 
   template <class Aut>
   inline
@@ -81,7 +81,7 @@ namespace vcsn
   eval(const Aut& a, const typename Aut::labelset_t::word_t& w)
     -> typename Aut::weight_t
   {
-    details::evaluator<Aut> e(a);
+    detail::evaluator<Aut> e(a);
     return e(w);
   }
 
@@ -91,7 +91,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       auto

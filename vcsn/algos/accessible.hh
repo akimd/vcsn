@@ -60,7 +60,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <class Aut>
       dyn::automaton

@@ -28,14 +28,14 @@ namespace vcsn
 # if VCSN_INSTANTIATION
   namespace
   {
-    namespace details
+    namespace detail
     {
       template <typename Ctx>
       bool
       register_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
-        using namespace dyn::details;
+        using namespace dyn::detail;
 
         determinize_register(aut_t::sname(), determinize<aut_t>);
         return true;

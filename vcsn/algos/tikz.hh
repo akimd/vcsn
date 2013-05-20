@@ -119,7 +119,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       std::ostream& tikz(const automaton& aut, std::ostream& out)

@@ -10,7 +10,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
 
       /// Aggregate an expression and its context.
@@ -42,9 +42,9 @@ namespace vcsn
         const exp_t ratexp_;
       };
 
-    } // namespace details
+    } // namespace detail
 
-    using ratexp = std::shared_ptr<details::abstract_ratexp>;
+    using ratexp = std::shared_ptr<detail::abstract_ratexp>;
 
     inline
     ratexp

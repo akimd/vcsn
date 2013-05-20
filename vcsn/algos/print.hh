@@ -25,7 +25,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       /// Abstract but parameterized.
       template <typename Context>
@@ -55,7 +55,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       /// Abstract but parameterized.
       template <typename Context>

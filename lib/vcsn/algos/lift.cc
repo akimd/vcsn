@@ -16,7 +16,7 @@ namespace vcsn
     automaton
     lift(const automaton& aut)
     {
-      return details::lift_automaton_registry().call(aut->vname(),
+      return detail::lift_automaton_registry().call(aut->vname(),
                                                      aut);
     }
 
@@ -30,7 +30,7 @@ namespace vcsn
     ratexp
     lift(const ratexp& e)
     {
-      return details::lift_exp_registry().call(e->ctx().vname(),
+      return detail::lift_exp_registry().call(e->ctx().vname(),
                                                e);
     }
   }

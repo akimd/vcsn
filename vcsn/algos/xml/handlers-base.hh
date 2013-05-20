@@ -14,7 +14,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     class Handler : public xercesc::DefaultHandler
     {
@@ -38,7 +38,7 @@ namespace vcsn
       virtual void end(string uri, string localname, string qname) = 0;
     };
 
-  } // namespace details
+  } // namespace detail
 
 } // namespace vcsn
 

@@ -8,7 +8,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
 
       /// Aggregate a weight and its context.
@@ -63,9 +63,9 @@ namespace vcsn
         const weight_t weight_;
       };
 
-    } // namespace details
+    } // namespace detail
 
-    using weight = std::shared_ptr<const details::abstract_weight>;
+    using weight = std::shared_ptr<const detail::abstract_weight>;
 
     template <typename LabelSet, typename WeightSet>
     inline
@@ -74,7 +74,7 @@ namespace vcsn
                 const typename WeightSet::value_t& weight)
     {
       using ctx_t = ctx::context<LabelSet, WeightSet>;
-      return std::make_shared<details::concrete_abstract_weight<ctx_t>>
+      return std::make_shared<detail::concrete_abstract_weight<ctx_t>>
         (std::make_shared<const ctx_t>(ctx), weight);
     }
 

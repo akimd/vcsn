@@ -35,7 +35,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       std::ostream& info(const automaton& aut, std::ostream& out)
@@ -77,7 +77,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       /// Abstract but parameterized.
       template <typename Context>

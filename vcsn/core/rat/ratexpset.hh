@@ -94,7 +94,7 @@ namespace vcsn
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
-    /// Implementation details for concat.
+    /// Implementation detail for concat.
     // FIXME: Should be extrusive.
     value_t concat(value_t l, value_t r, labels_are_letters) const;
     value_t concat(value_t l, value_t r, labels_are_nullable) const;

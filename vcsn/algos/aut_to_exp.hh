@@ -10,7 +10,7 @@ namespace vcsn
 {
   /// A state (inner) from an automaton.
   template <typename Aut,
-            typename Lifted = details::lifted_automaton_t<Aut>>
+            typename Lifted = detail::lifted_automaton_t<Aut>>
   using state_chooser_t =
     std::function<typename Lifted::state_t(const Lifted&)>;
 
@@ -66,7 +66,7 @@ namespace vcsn
   aut_to_exp(const Aut& a)
   {
     state_chooser_t<Aut> next =
-      next_in_order<details::lifted_automaton_t<Aut>>;
+      next_in_order<detail::lifted_automaton_t<Aut>>;
     return aut_to_exp(a, next);
   }
 
@@ -76,7 +76,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       ratexp
@@ -135,7 +135,7 @@ namespace vcsn
   aut_to_exp_in_degree(const Aut& a)
   {
     state_chooser_t<Aut> next =
-      next_in_degree<details::lifted_automaton_t<Aut>>;
+      next_in_degree<detail::lifted_automaton_t<Aut>>;
     return aut_to_exp(a, next);
   }
 
@@ -145,7 +145,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       ratexp

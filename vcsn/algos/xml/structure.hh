@@ -5,7 +5,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
 
     // Prototype
@@ -45,8 +45,8 @@ namespace vcsn
     {
       for (auto l: *ctx.labelset())
         {
-          auto value_elt = details::create_node(doc, "valueSetElt");
-          details::set_attribute(value_elt, "value", {l});
+          auto value_elt = detail::create_node(doc, "valueSetElt");
+          detail::set_attribute(value_elt, "value", {l});
           value_set->appendChild(value_elt);
         }
     }
@@ -58,12 +58,12 @@ namespace vcsn
                     xercesc::DOMElement& root)
     {
       // Create the generator set node and sub-node
-      auto value_set = details::create_node(doc, "valueSet");
+      auto value_set = detail::create_node(doc, "valueSet");
 
-      details::set_attribute(value_set, "genDescript", "enum");
-      details::set_attribute(value_set, "genKind", "digit");
-      details::set_attribute(value_set, "genSort", "simple");
-      details::set_attribute(value_set, "type", "free");
+      detail::set_attribute(value_set, "genDescript", "enum");
+      detail::set_attribute(value_set, "genKind", "digit");
+      detail::set_attribute(value_set, "genSort", "simple");
+      detail::set_attribute(value_set, "type", "free");
 
       print_gen_set(ctx, doc, value_set,
                     typename std::is_same<typename Context::kind_t, labels_are_unit>::type());
@@ -78,9 +78,9 @@ namespace vcsn
                      xercesc::DOMDocument& doc,
                      xercesc::DOMElement& root)
     {
-      auto weight_set = details::create_node(doc, "weightSet");
+      auto weight_set = detail::create_node(doc, "weightSet");
 
-      details::set_attribute(weight_set, "type", "series");
+      detail::set_attribute(weight_set, "type", "series");
       print_weight_set(ctx.weightset()->context(), doc, *weight_set);
       print_label_set(ctx, doc, *weight_set);
 
@@ -93,11 +93,11 @@ namespace vcsn
                      xercesc::DOMDocument& doc,
                      xercesc::DOMElement& root)
     {
-      auto weight_set = details::create_node(doc, "weightSet");
+      auto weight_set = detail::create_node(doc, "weightSet");
 
-      details::set_attribute(weight_set, "type", "numerical");
-      details::set_attribute(weight_set, "set", ctx.weightset()->sname());
-      details::set_attribute(weight_set, "operations", "classical");
+      detail::set_attribute(weight_set, "type", "numerical");
+      detail::set_attribute(weight_set, "set", ctx.weightset()->sname());
+      detail::set_attribute(weight_set, "operations", "classical");
 
       root.appendChild(weight_set);
     }
@@ -112,7 +112,7 @@ namespace vcsn
       print_label_set(ctx, doc, root);
     }
 
-  } // namespace details
+  } // namespace detail
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_XML_STRUCTURE_HH

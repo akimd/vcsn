@@ -87,7 +87,7 @@ XERCES_CPP_NAMESPACE_END
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     class BinCxxInputStream : public xercesc::BinInputStream
     {
@@ -113,7 +113,7 @@ namespace vcsn
       std::istream* in_;
     };
 
-  } // namespace details
+  } // namespace detail
 
 } // namespace vcsn
 

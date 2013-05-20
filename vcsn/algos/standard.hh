@@ -245,7 +245,7 @@ namespace vcsn
   `--------------------*/
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <typename Aut>
       automaton

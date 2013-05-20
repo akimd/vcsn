@@ -12,7 +12,7 @@ namespace vcsn
     automaton
     thomspson(const dyn::ratexp& e)
     {
-      return details::thompson_registry().call(e->ctx().vname(), e);
+      return detail::thompson_registry().call(e->ctx().vname(), e);
     }
   }
 }

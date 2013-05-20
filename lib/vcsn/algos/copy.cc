@@ -17,7 +17,7 @@ namespace vcsn
     automaton
     copy(const automaton& aut)
     {
-      return details::copy_registry().call(aut->vname(), aut);
+      return detail::copy_registry().call(aut->vname(), aut);
     }
   }
 }

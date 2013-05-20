@@ -16,7 +16,7 @@ namespace vcsn
     context
     make_context(const std::string& name)
     {
-      return details::make_context_registry()
+      return detail::make_context_registry()
         .call(abstract_context::sname(name), name);
     }
 
@@ -30,7 +30,7 @@ namespace vcsn
     ratexpset
     make_ratexpset(const context& ctx)
     {
-      return details::make_ratexpset_registry().call(ctx->vname(), ctx);
+      return detail::make_ratexpset_registry().call(ctx->vname(), ctx);
     }
   }
 }

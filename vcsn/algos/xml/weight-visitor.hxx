@@ -8,7 +8,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     template <typename Context, typename Weight>
     void
@@ -21,7 +21,7 @@ namespace vcsn
       using xml_visitor = rat::xml_ratexp_visitor<Context>;
       using node_t = typename rat::xml_ratexp_visitor<Context>::node_t;
 
-      auto rat_exp_node = details::create_node(doc, name);
+      auto rat_exp_node = detail::create_node(doc, name);
       root.appendChild(rat_exp_node);
       xml_visitor v(doc, *rat_exp_node, ws->context());
       v(static_cast<const node_t&>(*w));
@@ -36,11 +36,11 @@ namespace vcsn
                  const Weight& w)
     {
       assert(name == "leftWeight" || name == "rightWeight");
-      auto weight = details::create_node(doc, name);
-      details::set_attribute(weight, "value", ws->format(w));
+      auto weight = detail::create_node(doc, name);
+      detail::set_attribute(weight, "value", ws->format(w));
       root.appendChild(weight);
     }
-  } // namespace details
+  } // namespace detail
 } // namespace vcsn
 #endif // !VCSN_ALGOS_XML_WEIGHT_VISITOR_HXX
 

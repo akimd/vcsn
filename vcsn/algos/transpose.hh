@@ -9,7 +9,7 @@
 namespace vcsn
 {
 
-  namespace details
+  namespace detail
   {
     template <typename Aut>
     class transpose_automaton: public dyn::abstract_automaton
@@ -233,10 +233,10 @@ namespace vcsn
   }
 
   template <class Aut>
-  typename details::transpose_automaton<Aut>
+  typename detail::transpose_automaton<Aut>
   transpose(Aut& aut)
   {
-    return details::transpose_automaton<Aut>{aut};
+    return detail::transpose_automaton<Aut>{aut};
   }
 
 
@@ -246,7 +246,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       /* automaton. */
       template <typename Aut>
@@ -255,7 +255,7 @@ namespace vcsn
       {
         auto& a = dynamic_cast<Aut&>(*aut);
         return make_automaton<Aut,
-                              vcsn::details::transpose_automaton<Aut>>
+                              vcsn::detail::transpose_automaton<Aut>>
           (a.context(), a);
       }
 

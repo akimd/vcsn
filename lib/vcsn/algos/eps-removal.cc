@@ -17,7 +17,7 @@ namespace vcsn
     automaton
     eps_removal(const automaton& aut)
     {
-      return details::eps_removal_registry().call(aut->vname(), aut);
+      return detail::eps_removal_registry().call(aut->vname(), aut);
     }
   }
 }

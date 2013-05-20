@@ -3,7 +3,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
 
     class xmlEq
@@ -61,7 +61,7 @@ namespace vcsn
     };
 
 
-  } // namespace details
+  } // namespace detail
 } // namespace vcsn
 
 # undef TRANS

@@ -59,7 +59,7 @@ namespace vcsn
 }
 
 # define REGISTER_DEFINE(Name)                          \
-  namespace details                                     \
+  namespace detail                                     \
   {                                                     \
     Registry<Name ## _t>&                               \
     Name ## _registry()                                 \

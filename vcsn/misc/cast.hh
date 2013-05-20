@@ -12,12 +12,12 @@
 // <> and of ()).  So expand "down_cast" into a templated function.
 // Actually, make it a functor that can be given the current location.
 #define down_cast                               \
-  ::vcsn::details::down_caster(__FILE__, __LINE__).cast
+  ::vcsn::detail::down_caster(__FILE__, __LINE__).cast
 #define down_pointer_cast down_cast
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     /// A functor that captures the current location (to report
     /// errors), and provides "cast".

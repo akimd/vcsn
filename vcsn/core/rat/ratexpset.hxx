@@ -404,7 +404,7 @@ namespace vcsn
   DEFINE::transpose(const value_t v) const
     -> value_t
   {
-    details::transposer<Context> tr{context()};
+    detail::transposer<Context> tr{context()};
     return tr(v);
   }
 

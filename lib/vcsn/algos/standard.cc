@@ -12,7 +12,7 @@ namespace vcsn
     automaton
     standard(const dyn::ratexp& e)
     {
-      return details::standard_registry().call(e->ctx().vname(), e);
+      return detail::standard_registry().call(e->ctx().vname(), e);
     }
   }
 }

@@ -71,7 +71,7 @@ namespace vcsn
   /* dot. */                                                            \
   VCSN_CTX_INSTANTIATE_PRINT(dot, mutable_automaton<Ctx>);              \
   VCSN_CTX_INSTANTIATE_PRINT                                            \
-  (dot, vcsn::details::transpose_automaton<mutable_automaton<Ctx>>);    \
+  (dot, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);    \
                                                                         \
   /* fsm. */                                                            \
   MAYBE_EXTERN template                                                 \
@@ -79,13 +79,13 @@ namespace vcsn
   (const mutable_automaton<Ctx>& aut, std::ostream& out);               \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  fsm<vcsn::details::transpose_automaton<mutable_automaton<Ctx>>>       \
-  (const vcsn::details::transpose_automaton<mutable_automaton<Ctx>>& aut, \
+  fsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>       \
+  (const vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>& aut, \
    std::ostream& out);                                                  \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
-  details::lifted_automaton_t<mutable_automaton<Ctx>>                   \
+  detail::lifted_automaton_t<mutable_automaton<Ctx>>                   \
   lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
                                                                         \
   /* print. */                                                          \
@@ -109,9 +109,9 @@ namespace vcsn
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
-  class details::transpose_automaton<mutable_automaton<Ctx>>;           \
+  class detail::transpose_automaton<mutable_automaton<Ctx>>;           \
   MAYBE_EXTERN template                                                 \
-  class details::transposer<Ctx>;                                       \
+  class detail::transposer<Ctx>;                                       \
                                                                         \
   /* xml. */                                                            \
   MAYBE_EXTERN template                                                 \
@@ -126,14 +126,14 @@ namespace vcsn
 
   namespace ctx
   {
-    namespace details
+    namespace detail
     {
       template <typename Ctx>
       bool
       register_kind_functions(labels_are_letters)
       {
         using aut_t = mutable_automaton<Ctx>;
-        using namespace dyn::details;
+        using namespace dyn::detail;
 
         complete_register(aut_t::sname(), complete<aut_t>);
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
@@ -153,7 +153,7 @@ namespace vcsn
       register_kind_functions(labels_are_nullable)
       {
         using aut_t = mutable_automaton<Ctx>;
-        using namespace dyn::details;
+        using namespace dyn::detail;
 
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
 
@@ -182,7 +182,7 @@ namespace vcsn
       {
         using aut_t = mutable_automaton<Ctx>;
 
-        using namespace dyn::details;
+        using namespace dyn::detail;
 
         // eps-removal.
         eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
@@ -198,9 +198,9 @@ namespace vcsn
       register_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
-        using taut_t = vcsn::details::transpose_automaton<aut_t>;
+        using taut_t = vcsn::detail::transpose_automaton<aut_t>;
 
-        using namespace dyn::details;
+        using namespace dyn::detail;
 
         // accessible.
         accessible_register(aut_t::sname(), accessible<aut_t>);
@@ -281,7 +281,7 @@ namespace vcsn
 #  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
   namespace ctx                                                 \
   {                                                             \
-    namespace details                                           \
+    namespace detail                                           \
     {                                                           \
       static bool registered = register_functions<Ctx>();       \
     }                                                           \

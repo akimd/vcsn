@@ -6,7 +6,7 @@
 namespace vcsn
 {
 
-  namespace details
+  namespace detail
   {
 
     /*----------------------.

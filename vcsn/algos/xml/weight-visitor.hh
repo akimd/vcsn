@@ -7,7 +7,7 @@
 
 namespace vcsn
 {
-  namespace details
+  namespace detail
   {
     template <typename WeightSet, typename Weight>
     void
@@ -17,7 +17,7 @@ namespace vcsn
                  const WeightSet& ws,
                  const Weight& w);
 
-  } // namespace details
+  } // namespace detail
 } // namespace vcsn
 
 # include <vcsn/algos/xml/weight-visitor.hxx>

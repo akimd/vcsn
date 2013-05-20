@@ -15,7 +15,7 @@ namespace vcsn
     void
     fsm(const automaton& aut, std::ostream& out)
     {
-      details::fsm_registry().call(aut->vname(),
+      detail::fsm_registry().call(aut->vname(),
                                    aut, out);
     }
   }

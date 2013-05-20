@@ -20,24 +20,24 @@ namespace vcsn
     using context = std::shared_ptr<const abstract_context>;
 
     // vcsn/dyn/ratexp.hh.
-    namespace details
+    namespace detail
     {
       class abstract_ratexp;
     }
 
-    using ratexp = std::shared_ptr<details::abstract_ratexp>;
+    using ratexp = std::shared_ptr<detail::abstract_ratexp>;
 
     // vcsn/rat/ratexpset.hh
     using ratexpset = std::shared_ptr<const abstract_ratexpset>;
 
     // vcsn/dyn/weight.hh.
-    namespace details
+    namespace detail
     {
       class abstract_weight;
       template <typename T>
       class concrete_weight;
     }
-    using weight = std::shared_ptr<const details::abstract_weight>;
+    using weight = std::shared_ptr<const detail::abstract_weight>;
 
   }
 } // namespace vcsn

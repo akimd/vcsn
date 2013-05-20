@@ -17,7 +17,7 @@ namespace vcsn
     automaton
     accessible(const automaton& aut)
     {
-      return details::accessible_registry().call(aut->vname(),
+      return detail::accessible_registry().call(aut->vname(),
                                                   aut);
     }
   }

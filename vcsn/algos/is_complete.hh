@@ -40,7 +40,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       template <class Aut>
       bool is_complete(const dyn::automaton& aut)

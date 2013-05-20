@@ -15,7 +15,7 @@ namespace vcsn
     automaton
     complete(const automaton& aut)
     {
-      return details::complete_registry().call(aut->vname(), aut);
+      return detail::complete_registry().call(aut->vname(), aut);
     }
   }
 }

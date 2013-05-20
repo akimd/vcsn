@@ -11,7 +11,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace details
+    namespace detail
     {
       Registry<product_t>&
       product_registry()
@@ -31,7 +31,7 @@ namespace vcsn
     product(const automaton& lhs, const automaton& rhs)
     {
       return
-        details::product_registry().call(lhs->vname() + " x " + rhs->vname(),
+        detail::product_registry().call(lhs->vname() + " x " + rhs->vname(),
                                          lhs, rhs);
     }
   }
