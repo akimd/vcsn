@@ -1,11 +1,13 @@
 #ifndef VCSN_ALGOS_PRODUCT_HH
 # define VCSN_ALGOS_PRODUCT_HH
 
-#include <iostream>
-#include <map>
-#include <utility>
-#include <deque>
-#include "vcsn/core/mutable_automaton.hh"
+# include <deque>
+# include <iostream>
+# include <map>
+# include <utility>
+
+# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+
 
 namespace vcsn
 {

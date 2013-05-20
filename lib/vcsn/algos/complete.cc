@@ -1,6 +1,7 @@
-#include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/algos/complete.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/algos/complete.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {

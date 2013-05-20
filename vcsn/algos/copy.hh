@@ -57,7 +57,7 @@ namespace vcsn
       copy(const dyn::automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton<Aut>(a.context(), copy(a));
+        return make_automaton(a.context(), copy(a));
       }
 
       REGISTER_DECLARE(copy,

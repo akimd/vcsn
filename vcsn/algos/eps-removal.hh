@@ -431,7 +431,7 @@ and eturn the result of epsilon_removal on the copy.
       dyn::automaton eps_removal(const dyn::automaton &aut)
       {
         const auto &a = dynamic_cast<const Aut &>(*aut);
-        return make_automaton<Aut>(a.context(), eps_removal(a));
+        return make_automaton(a.context(), eps_removal(a));
       }
 
      REGISTER_DECLARE(eps_removal,

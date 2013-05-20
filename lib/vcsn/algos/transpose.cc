@@ -1,6 +1,6 @@
-#include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/transpose.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/dyn/algos.hh>
 
 namespace vcsn
 {

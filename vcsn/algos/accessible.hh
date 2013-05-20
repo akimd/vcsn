@@ -67,7 +67,7 @@ namespace vcsn
       accessible(const dyn::automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton<Aut>(a.context(), accessible(a));
+        return make_automaton(a.context(), accessible(a));
       }
 
       REGISTER_DECLARE(accessible,

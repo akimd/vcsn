@@ -5,6 +5,9 @@
 # include <unordered_map>
 # include <unordered_set>
 
+# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/fwd.hh>
+
 namespace vcsn
 {
   template <class Aut>
@@ -86,7 +89,7 @@ namespace vcsn
       complete(const dyn::automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton<Aut>(a.context(), complete(a));
+        return make_automaton(a.context(), complete(a));
       }
 
       REGISTER_DECLARE(complete,

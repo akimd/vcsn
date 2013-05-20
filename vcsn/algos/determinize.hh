@@ -114,7 +114,7 @@ namespace vcsn
       determinize(const dyn::automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton<Aut>(a.context(), determinize(a));
+        return make_automaton(a.context(), determinize(a));
       }
 
       REGISTER_DECLARE(determinize,

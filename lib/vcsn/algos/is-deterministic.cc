@@ -1,6 +1,6 @@
-#include <vcsn/core/mutable_automaton.hh>
-#include <vcsn/algos/is-deterministic.hh>
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/algos/is-deterministic.hh>
+#include <vcsn/dyn/algos.hh>
 
 namespace vcsn
 {

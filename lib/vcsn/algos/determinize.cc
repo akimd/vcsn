@@ -1,7 +1,7 @@
-#include <vcsn/dyn/automaton.hh>
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/determinize.hh>
 #include <vcsn/dyn/algos.hh>
-#include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
