@@ -181,7 +181,7 @@ namespace vcsn
     {
       template <typename Aut>
       automaton
-      thompson(const dyn::ratexp& e)
+      thompson(const ratexp& e)
       {
         const auto& ctx =
           dynamic_cast<const typename Aut::context_t&>(e->ctx());

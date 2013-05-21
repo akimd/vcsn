@@ -96,7 +96,7 @@ namespace vcsn
       template <typename Aut>
       auto
       eval(const automaton& aut, const std::string& s)
-        -> dyn::weight
+        -> weight
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
         const auto& ctx = a.context();
@@ -105,8 +105,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(eval,
-                       (const automaton& aut, const std::string& s)
-                       -> dyn::weight);
+                       (const automaton& aut, const std::string& s) -> weight);
     }
   }
 

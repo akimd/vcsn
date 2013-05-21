@@ -110,15 +110,15 @@ namespace vcsn
     {
 
       template <typename Aut>
-      dyn::automaton
-      determinize(const dyn::automaton& aut)
+      automaton
+      determinize(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_automaton(a.context(), determinize(a));
       }
 
       REGISTER_DECLARE(determinize,
-                       (const dyn::automaton& aut) -> dyn::automaton);
+                       (const automaton& aut) -> automaton);
     }
   }
 

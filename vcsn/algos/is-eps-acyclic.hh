@@ -121,13 +121,13 @@ namespace vcsn
     {
 
       template <typename Aut>
-      bool is_eps_acyclic(const dyn::automaton& aut)
+      bool is_eps_acyclic(const automaton& aut)
       {
         return is_eps_acyclic(dynamic_cast<const Aut&>(*aut));
       }
 
       REGISTER_DECLARE(is_eps_acyclic,
-                       (const dyn::automaton&) -> bool);
+                       (const automaton&) -> bool);
 
     }
   }

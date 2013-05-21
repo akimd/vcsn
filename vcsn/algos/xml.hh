@@ -108,7 +108,7 @@ namespace vcsn
       // ratexp, ostream -> ostream
       template <typename Ctx>
       std::ostream&
-      xml(const dyn::ratexp& exp, std::ostream& out)
+      xml(const ratexp& exp, std::ostream& out)
       {
         return xml(dynamic_cast<const Ctx&>(exp->ctx()), exp->ratexp(), out);
       }

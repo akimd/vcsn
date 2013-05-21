@@ -249,7 +249,7 @@ namespace vcsn
     {
       template <typename Aut>
       automaton
-      standard(const dyn::ratexp& e)
+      standard(const ratexp& e)
       {
         const auto& ctx =
           dynamic_cast<const typename Aut::context_t&>(e->ctx());
@@ -257,7 +257,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(standard,
-                       (const dyn::ratexp& e) -> automaton);
+                       (const ratexp& e) -> automaton);
     }
   }
 

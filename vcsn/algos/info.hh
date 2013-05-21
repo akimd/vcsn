@@ -81,7 +81,7 @@ namespace vcsn
     {
       /// Abstract but parameterized.
       template <typename Context>
-      std::ostream& info_exp(const dyn::ratexp& exp, std::ostream& o)
+      std::ostream& info_exp(const ratexp& exp, std::ostream& o)
       {
         const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
         vcsn::info<Context>(ctx, exp->ratexp(), o);

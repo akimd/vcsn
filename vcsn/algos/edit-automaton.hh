@@ -184,14 +184,14 @@ namespace vcsn
     {
       template <typename Aut>
       automaton_editor*
-      make_automaton_editor(const dyn::context& ctx)
+      make_automaton_editor(const context& ctx)
       {
         const auto& c = dynamic_cast<const typename Aut::context_t&>(*ctx);
         return new edit_automaton<Aut>(c);
       }
 
       REGISTER_DECLARE(make_automaton_editor,
-                       (const dyn::context& aut) -> automaton_editor*);
+                       (const context& aut) -> automaton_editor*);
     }
   }
 

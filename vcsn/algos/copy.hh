@@ -53,15 +53,15 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
-      dyn::automaton
-      copy(const dyn::automaton& aut)
+      automaton
+      copy(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_automaton(a.context(), copy(a));
       }
 
       REGISTER_DECLARE(copy,
-                       (const dyn::automaton&) -> dyn::automaton);
+                       (const automaton&) -> automaton);
     }
   }
 } // namespace vcsn

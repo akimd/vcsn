@@ -29,7 +29,7 @@ namespace vcsn
     {
       /// Abstract but parameterized.
       template <typename Context>
-      std::ostream& print(const dyn::ratexp& exp, std::ostream& o)
+      std::ostream& print(const ratexp& exp, std::ostream& o)
       {
         const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
         return vcsn::print<Context>(ctx, exp->ratexp(), o);
@@ -59,7 +59,7 @@ namespace vcsn
     {
       /// Abstract but parameterized.
       template <typename Context>
-      std::ostream& print(const dyn::weight& w, std::ostream& o)
+      std::ostream& print(const weight& w, std::ostream& o)
       {
         using weight_t = concrete_abstract_weight<Context>;
         const auto& typed_w = dynamic_cast<const weight_t&>(*w);

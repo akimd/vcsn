@@ -57,13 +57,13 @@ namespace vcsn
     {
       template <typename Aut>
       bool
-      is_deterministic(const dyn::automaton& aut)
+      is_deterministic(const automaton& aut)
       {
         return is_deterministic(dynamic_cast<const Aut&>(*aut));
       }
 
       REGISTER_DECLARE(is_deterministic,
-                       (const dyn::automaton& aut) -> bool);
+                       (const automaton& aut) -> bool);
     }
   }
 } // namespace vscn

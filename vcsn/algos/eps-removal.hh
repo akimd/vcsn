@@ -428,7 +428,7 @@ and eturn the result of epsilon_removal on the copy.
     namespace detail
     {
       template <typename Aut>
-      dyn::automaton eps_removal(const dyn::automaton &aut)
+      automaton eps_removal(const automaton& aut)
       {
         const auto &a = dynamic_cast<const Aut &>(*aut);
         return make_automaton(a.context(), eps_removal(a));
@@ -445,7 +445,7 @@ and eturn the result of epsilon_removal on the copy.
     namespace detail
     {
       template <typename Aut>
-      bool is_proper(const dyn::automaton &aut)
+      bool is_proper(const automaton& aut)
       {
         const auto &a = dynamic_cast<const Aut &>(*aut);
         return is_proper(a);

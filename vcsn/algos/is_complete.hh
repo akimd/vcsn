@@ -43,13 +43,13 @@ namespace vcsn
     namespace detail
     {
       template <class Aut>
-      bool is_complete(const dyn::automaton& aut)
+      bool is_complete(const automaton& aut)
       {
         return is_complete(dynamic_cast<const Aut&>(*aut));
       }
 
       REGISTER_DECLARE(is_complete,
-                       (const dyn::automaton&) -> bool);
+                       (const automaton&) -> bool);
     }
   }
 }

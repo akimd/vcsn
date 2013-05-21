@@ -85,15 +85,15 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
-      dyn::automaton
-      complete(const dyn::automaton& aut)
+      automaton
+      complete(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_automaton(a.context(), complete(a));
       }
 
       REGISTER_DECLARE(complete,
-                       (const dyn::automaton& aut) -> dyn::automaton);
+                       (const automaton& aut) -> automaton);
     }
   }
 
