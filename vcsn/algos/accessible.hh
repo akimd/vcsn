@@ -63,15 +63,15 @@ namespace vcsn
     namespace detail
     {
       template <class Aut>
-      dyn::automaton
-      accessible(const dyn::automaton& aut)
+      automaton
+      accessible(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_automaton(a.context(), accessible(a));
       }
 
       REGISTER_DECLARE(accessible,
-                       (const dyn::automaton&) -> dyn::automaton);
+                       (const automaton&) -> automaton);
     }
   }
 }

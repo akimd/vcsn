@@ -188,9 +188,8 @@ namespace vcsn
         return make_automaton(ctx, thompson<Aut>(ctx, e->ratexp()));
       }
 
-      using thompson_t = auto (const dyn::ratexp& e) -> automaton;
-
-      bool thompson_register(const std::string& ctx, thompson_t fn);
+      REGISTER_DECLARE(thompson,
+                       (const ratexp& e) -> automaton);
     }
   }
 

@@ -86,8 +86,8 @@ namespace vcsn
     {
 
       template <typename Lhs, typename Rhs>
-      dyn::automaton
-      product(const dyn::automaton& lhs, const dyn::automaton& rhs)
+      automaton
+      product(const automaton& lhs, const automaton& rhs)
       {
         const auto& l = dynamic_cast<const Lhs&>(*lhs);
         const auto& r = dynamic_cast<const Lhs&>(*rhs);
@@ -95,8 +95,7 @@ namespace vcsn
       }
 
       using product_t =
-        auto (const dyn::automaton& lhs, const dyn::automaton& rhs)
-        -> dyn::automaton;
+        auto (const automaton& lhs, const automaton& rhs) -> automaton;
       bool product_register(const std::string& lctx, const std::string& rctx,
                             product_t fn);
     }
