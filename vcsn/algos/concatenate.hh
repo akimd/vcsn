@@ -114,7 +114,7 @@ namespace vcsn
       /*-------------------.
       | dyn::concatenate.  |
       `-------------------*/
-
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       concatenate(const automaton& lhs, const automaton& rhs)
@@ -130,7 +130,7 @@ namespace vcsn
       /*-------------.
       | dyn::chain.  |
       `-------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       chain(const automaton& a, size_t n)
