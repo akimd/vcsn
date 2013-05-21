@@ -75,10 +75,6 @@ AC_RUN_IFELSE(
     o << 42;
     assert (o.str() == "42");
   }
-  {
-    const boost::regex re("[a-zA-Z]*");
-    assert(boost::regex_match("asdf", re));
-  }
 ])], [ac_cv_GLIBCXX_DEBUG=yes],
      [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
      [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
