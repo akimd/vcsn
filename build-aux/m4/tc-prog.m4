@@ -1,5 +1,7 @@
 #                                                       -*- Autoconf -*-
 
+m4_pattern_forbid([^TC_])
+
 # TC_PROG(PROGRAM, REQUIREMENT, VARIABLE, DESCRIPTION)
 # ----------------------------------------------------
 # Check whether PROGRAM version matches the REQUIREMENT.
