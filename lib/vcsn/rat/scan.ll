@@ -15,7 +15,7 @@
 #include <string>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp> // FIXME: Neither G++ nor clang++ implement <regex>.
+#include <vcsn/misc/regex.hh>
 
 
 #include <lib/vcsn/rat/parse.hh>
@@ -179,10 +179,10 @@ namespace vcsn
       irange_type
       quantifier(driver& d, const location& loc, const std::string& s)
       {
-        boost::regex arity_re{"\\(\\*([0-9]*)(,?)([0-9]*)\\)",
-                              boost::regex::extended};
-        boost::smatch minmax;
-        if (!boost::regex_match(s, minmax, arity_re))
+        std::regex arity_re{"\\(\\*([0-9]*)(,?)([0-9]*)\\)",
+                            std::regex::extended};
+        std::smatch minmax;
+        if (!std::regex_match(s, minmax, arity_re))
           throw std::runtime_error("cannot match arity: " + s);
         irange_type res{arity(d, loc, minmax[1].str()),
                         arity(d, loc, minmax[3].str())};

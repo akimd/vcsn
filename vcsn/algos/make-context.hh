@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_MAKE_CONTEXT_HH
 
 # include <map>
-# include <regex>
 # include <set>
 
 # include <vcsn/dyn/fwd.hh>
@@ -100,7 +99,8 @@ namespace vcsn
       //        |   +-- labelset
       //        +-- kind
       //
-      // FIXME: regex is not usable in G++ 4.8 yet.
+      // If more complexe "parsing" is needed, consider regex.
+      // See vcsn/misc/regex.hh.
       std::string kind = name.substr(0, 3);
 
       if ((Ctx::is_lal && kind != "lal")

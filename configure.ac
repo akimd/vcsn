@@ -46,15 +46,14 @@ ${stdpass-false} ||
 CF_GXX_WARNINGS
 
 BOOST_REQUIRE([1.49])
-BOOST_REGEX
+VCSN_REGEX
 
 # For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
 # stringstreams.  This is well known, ancient, yet still the case
 # today (G++ 4.7, XCode 4.2).
 # http://stackoverflow.com/questions/7623070
 #
-# Also, since we are using BOOST_REGEX, do not enable _GLIBCXX_DEBUG
-# if the result fails.
+# If we use Boost.Regex, do not enable _GLIBCXX_DEBUG if the result fails.
 # https://svn.boost.org/trac/boost/ticket/5911
 AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
                [ac_cv_GLIBCXX_DEBUG],
@@ -79,7 +78,7 @@ AC_RUN_IFELSE(
      [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
      [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
 
-if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
   vcsn_save_LIBS=$LIBS
   LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
   AC_RUN_IFELSE(
