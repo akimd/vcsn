@@ -36,7 +36,7 @@ bool check_bool(const WeightSet& ws)
   return res;
 }
 
-bool check_b()
+static bool check_b()
 {
   bool res = true;
   vcsn::f2 ws;
@@ -52,7 +52,7 @@ bool check_b()
   return res;
 }
 
-bool check_f2()
+static bool check_f2()
 {
   bool res = true;
   vcsn::f2 ws;
@@ -68,7 +68,7 @@ bool check_f2()
   return res;
 }
 
-bool check_zmin()
+static bool check_zmin()
 {
   bool res = true;
   vcsn::zmin ws;

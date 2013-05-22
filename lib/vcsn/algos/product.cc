@@ -14,6 +14,7 @@ namespace vcsn
   {
     namespace detail
     {
+      static
       Registry<product_t>&
       product_registry()
       {

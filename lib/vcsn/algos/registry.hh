@@ -61,8 +61,7 @@ namespace vcsn
 # define REGISTER_DEFINE(Name)                          \
   namespace detail                                      \
   {                                                     \
-    Registry<Name ## _t>& Name ## _registry();          \
-                                                        \
+    static                                              \
     Registry<Name ## _t>&                               \
     Name ## _registry()                                 \
     {                                                   \

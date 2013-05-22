@@ -7,7 +7,7 @@
 using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
-bool
+static bool
 check_various(const context_t& ctx)
 {
   bool res = true;
@@ -71,7 +71,7 @@ check_various(const context_t& ctx)
   return res;
 }
 
-bool
+static bool
 check_del_entry(const context_t& ctx)
 {
   bool res = true;

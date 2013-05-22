@@ -7,7 +7,7 @@
 #include <tests/unit/test.hh>
 
 
-bool
+static bool
 check_mutable_automaton()
 {
   bool res = true;

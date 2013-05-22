@@ -43,7 +43,7 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   prod.context().weightset()->print(std::cout, w);
 }
 
-void
+static void
 dyn_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
