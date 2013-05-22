@@ -11,7 +11,7 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-m4_pattern_forbid([^(BOOST|TC|VCSN)_])
+m4_pattern_forbid([^(BOOST|TC|URBI|VCSN)_])
 
 # VCSN_HEADER
 
@@ -30,7 +30,7 @@ LT_PREREQ([2.2.6])
 LT_INIT([pic-only shared disable-static])
 AC_SUBST([LIBTOOL_DEPS])
 
-
+# C++ compiler.
 AC_PROG_CXX
 AC_LANG([C++])
 AX_CHECK_COMPILE_FLAG([-std=c++11 -stdlib=libc++],
@@ -43,8 +43,32 @@ ${stdpass-false} ||
 ${stdpass-false} ||
   AC_ERROR([unable to turn on C++11 mode with this compiler.])
 
-CF_GXX_WARNINGS
+TC_CXX_WARNINGS(
+  [[-Wall],
+   [-Wextra],
+   [-Wbad-function-cast],
+   [-Wcast-align],
+   [-Wcast-align],
+   [-Wcast-qual],
+   [-Wcast-qual],
+   [-Wextra],
+   [-Wformat],
+   [-Wmissing-declarations],
+   [-Wmissing-prototypes],
+   [-Wno-parentheses],
+   [-Wnoexcept],
+   [-Woverloaded-virtual],
+   [-Wpointer-arith],
+   [-Wstrict-prototypes],
+   [-Wsuggest-attribute=const -Wno-error=suggest-attribute=const],
+   [-Wsuggest-attribute=noreturn -Wno-error=suggest-attribute=noreturn],
+   [-Wsuggest-attribute=pure -Wno-error=suggest-attribute=pure],
+   [-Wwrite-strings],
+   [-Wwrite-strings],
+   [-Wzero-as-null-pointer-constant]
+   ])
 
+# Check for REGEX before _GLIBCXX_DEBUG, see below.
 BOOST_REQUIRE([1.49])
 VCSN_REGEX
 
