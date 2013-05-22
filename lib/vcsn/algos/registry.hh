@@ -59,8 +59,10 @@ namespace vcsn
 }
 
 # define REGISTER_DEFINE(Name)                          \
-  namespace detail                                     \
+  namespace detail                                      \
   {                                                     \
+    Registry<Name ## _t>& Name ## _registry();          \
+                                                        \
     Registry<Name ## _t>&                               \
     Name ## _registry()                                 \
     {                                                   \
@@ -75,6 +77,5 @@ namespace vcsn
       return Name ## _registry().set(ctx, fn);          \
     }                                                   \
   }
-
 
 #endif

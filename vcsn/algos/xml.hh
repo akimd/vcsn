@@ -10,6 +10,7 @@
 # include <vcsn/algos/xml/structure.hh>
 # include <vcsn/algos/xml/tools.hh>
 # include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn

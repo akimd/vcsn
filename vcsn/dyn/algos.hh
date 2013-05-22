@@ -19,6 +19,8 @@ namespace vcsn
 
     automaton complete(const automaton& aut);
 
+    automaton copy(const automaton& aut);
+
     automaton de_bruijn(const context& ctx, unsigned n);
 
     automaton determinize(const automaton& aut);

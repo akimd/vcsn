@@ -77,7 +77,7 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
     }
 }
 
-void
+[[noreturn]] void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
@@ -114,7 +114,7 @@ usage(const char* prog, int exit_status)
 }
 
 // Convert "w" to "l" for "brutal" assembled context names.
-void
+static void
 apply_label_kind(options& opts)
 {
   using boost::algorithm::replace_all;

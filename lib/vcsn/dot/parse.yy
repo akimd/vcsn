@@ -91,7 +91,7 @@
     {
       namespace dot
       {
-        std::ostream&
+        static std::ostream&
         operator<<(std::ostream& o, const sem_type::states_t ss)
         {
           bool first = true;
@@ -106,7 +106,7 @@
           return o << '}';
         }
 
-        std::ostream&
+        static std::ostream&
         operator<<(std::ostream& o, const sem_type::transitions_t ts)
         {
           bool first = true;
