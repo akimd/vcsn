@@ -1,3 +1,4 @@
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/info.hh>
 #include <lib/vcsn/algos/registry.hh>
@@ -12,11 +13,12 @@ namespace vcsn
 
     REGISTER_DEFINE(info);
 
-    void
+    std::ostream&
     info(const automaton& aut, std::ostream& out)
     {
       detail::info_registry().call(aut->vname(),
-                                    aut, out);
+                                   aut, out);
+      return out;
     }
 
     /*---------------.
@@ -25,11 +27,12 @@ namespace vcsn
 
     REGISTER_DEFINE(info_exp);
 
-    void
+    std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)
     {
       detail::info_exp_registry().call(e->ctx().vname(),
-                                        e, out);
+                                       e, out);
+      return out;
     }
   }
 }

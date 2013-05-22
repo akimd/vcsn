@@ -77,7 +77,7 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
     }
 }
 
-[[noreturn]] void
+void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)

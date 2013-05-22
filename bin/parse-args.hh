@@ -34,6 +34,7 @@ struct options
   std::vector<std::string> argv;
 };
 
+[[noreturn]]
 void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.

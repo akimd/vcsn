@@ -2,6 +2,7 @@
 # define VCSN_DYN_ALGOS_HH
 
 # include <iosfwd>
+# include <string>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 

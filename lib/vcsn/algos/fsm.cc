@@ -1,3 +1,4 @@
+#include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/fsm.hh>
 #include <lib/vcsn/algos/registry.hh>
@@ -12,11 +13,12 @@ namespace vcsn
 
     REGISTER_DEFINE(fsm);
 
-    void
+    std::ostream&
     fsm(const automaton& aut, std::ostream& out)
     {
       detail::fsm_registry().call(aut->vname(),
-                                   aut, out);
+                                  aut, out);
+      return out;
     }
   }
 }

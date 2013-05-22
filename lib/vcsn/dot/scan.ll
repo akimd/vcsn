@@ -1,12 +1,18 @@
 /* See <http://www.graphviz.org/content/dot-language>. */
 
-%option nounput noyywrap
+%option noinput nounput noyywrap
 %option debug
 %option prefix="detail_dot" outfile="lex.yy.c"
 
 %top{
 #pragma GCC diagnostic ignored "-Wsign-compare"
-#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+   // Check Clang first, as it does not support -Wzero... but it
+   // defines __GNUC__.
+#if defined __clang__
+# pragma clang diagnostic ignored "-Wnull-conversion"
+#elif defined __GNUC__
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
 }
 
 %{
