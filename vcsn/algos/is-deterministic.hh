@@ -19,24 +19,20 @@ namespace vcsn
     std::queue<state_t> q;
     std::unordered_set<state_t> marked;
     std::unordered_set<word_t> seen;
-    word_t wd;
 
-    for (auto init : aut.initial_transitions())
-      {
-        q.push(init);
-        marked.insert (init);
-      }
+    q.push(aut.pre());
+    marked.insert(aut.pre());
 
     while (!q.empty())
       {
-        state_t st = q.front();
+        state_t st = std::move(q.front());
         q.pop();
 
         seen.clear();
         for (auto tr : aut.all_out(st))
           {
             state_t succ = aut.dst_of(tr);
-            wd = aut.word_label_of(tr);
+            const word_t& wd = aut.word_label_of(tr);
             if (!seen.insert(wd).second)
               return false;
 
