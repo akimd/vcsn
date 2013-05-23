@@ -18,6 +18,20 @@ new_states(Aut& aut, size_t n)
   return std::move(res);
 }
 
+template <typename Aut>
+Aut
+clique(const typename Aut::context_t& ctx, size_t size)
+{
+  Aut res{ctx};
+  const auto& letters = *ctx.labelset();
+  auto ss = new_states(res, size);
+  for (auto s: ss)
+    for (auto d: ss)
+      for (auto l: letters)
+        res.add_transition(s, d, l);
+  return std::move(res);
+}
+
 static bool
 check_various(const context_t& ctx)
 {
@@ -112,12 +126,32 @@ check_entry(const context_t& ctx)
   return res;
 }
 
+static bool
+check_del_transition(const context_t& ctx)
+{
+  bool res = true;
+  automaton_t aut = clique<automaton_t>(ctx, 3);
+  ASSERT_EQ(aut.num_transitions(), 3 * 3 * 4u); // 4 letters.
+  const auto& ss = aut.states();
+  std::vector<automaton_t::state_t> s{std::begin(ss), std::end(ss)};
+
+  aut.del_transition(s[0], s[1]);
+  ASSERT_EQ(aut.num_transitions(), (3 * 3 - 1) * 4u);
+  aut.del_transition(s[0], s[1]);
+  ASSERT_EQ(aut.num_transitions(), (3 * 3 - 1) * 4u);
+
+  aut.del_transition(s[2], s[2]);
+  ASSERT_EQ(aut.num_transitions(), (3 * 3 - 2) * 4u);
+
+  return res;
+}
 
 int main()
 {
   size_t nerrs = 0;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   nerrs += !check_various(ctx);
+  nerrs += !check_del_transition(ctx);
   nerrs += !check_entry(ctx);
   return !!nerrs;
 }

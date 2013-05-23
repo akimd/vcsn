@@ -391,6 +391,17 @@ namespace vcsn
         del_transition(t);
     }
 
+    // Remove all the transitions between s and d.
+    void
+    del_transition(state_t s, state_t d)
+    {
+      // Make a copy of the transition indexes, as the iterators are
+      // invalidated by del_transition(t).
+      auto ts = outin(s, d);
+      for (auto t: tr_cont_t{std::begin(ts), std::end(ts)})
+        del_transition(t);
+    }
+
     transition_t
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
@@ -732,23 +743,6 @@ namespace vcsn
     {
       for (auto e: es)
         add_transition(src, dst, e.first, e.second);
-    }
-
-    // Remove all the transitions between s and d.
-    void
-    del_transition(state_t s, state_t d)
-    {
-      // removes s -> d
-      auto& ss = states_[s].succ;
-      auto& ds = states_[d].pred;
-      std::remove_if(ss.begin(), ss.end(), [d] (transition_t t) { return t == d; });
-      std::remove_if(ds.begin(), ds.end(), [s] (transition_t t) { return t == s; });
-
-      // removes d -> s
-      ds = states_[d].succ;
-      ss = states_[s].pred;
-      std::remove_if(ss.begin(), ss.end(), [d] (transition_t t) { return t == d; });
-      std::remove_if(ds.begin(), ds.end(), [s] (transition_t t) { return t == s; });
     }
   };
 
