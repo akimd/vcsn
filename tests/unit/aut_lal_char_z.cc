@@ -7,6 +7,17 @@
 using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
+template <typename Aut>
+std::vector<typename Aut::state_t>
+new_states(Aut& aut, size_t n)
+{
+  std::vector<typename Aut::state_t> res;
+  res.reserve(n);
+  for (size_t i = 0; i < n; ++i)
+    res.push_back(aut.new_state());
+  return std::move(res);
+}
+
 static bool
 check_various(const context_t& ctx)
 {
@@ -76,11 +87,9 @@ check_del_entry(const context_t& ctx)
 {
   bool res = true;
   automaton_t aut{ctx};
-  std::vector<automaton_t::state_t> s;
 
   size_t size = 3;
-  for (size_t i = 0; i < size; ++i)
-    s.push_back(aut.new_state());
+  auto s = new_states(aut, size);
   aut.set_initial(s[0]);
   aut.set_final(s[size-1]);
 
