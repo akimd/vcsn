@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 #include <vcsn/algos/dot.hh>
+#include <vcsn/algos/info.hh>
 #include <vcsn/algos/eps-removal.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/lal_char_b.hh>
@@ -16,23 +17,7 @@ using namespace vcsn;
 template<typename Aut>
 void print(const Aut& a)
 {
-  std::cout << "States: " << a.num_states()
-            << " Initials: " << a.num_initials()
-            << " Finals: " << a.num_finals()
-            << " Transitions: " << a.num_transitions()
-            << std::endl;
-}
-
-template<typename Aut>
-void printlaw(const Aut& a)
-{
-  print(a);
-  unsigned c[2]={0,0};
-  for(auto t : a.transitions())
-    c[a.label_of(t) == a.labelset()->empty_word()]++;
-  std::cout << " Eps-transitions: " << c[1]
-            << " Non eps-trans: " << c[0]
-            << std::endl;
+  vcsn::info(a, std::cout) << std::endl;
 }
 
 /// Test des lal (booléens)
@@ -53,8 +38,6 @@ static void check_lal_b()
   res.set_final(s[1]);
   std::cout << "***LAL***" << std::endl;
   print(res);
-  std::cout << "Lal valid: "<< is_valid(res) << std::endl;
-  std::cout << "Lal proper: "<< is_proper(res) << std::endl;
   std::cout << "eps_removal:" << std::endl;
   automaton_t pro = eps_removal(res);
   print(pro);
@@ -84,21 +67,18 @@ static void check_law_char_b()
     res.set_transition(s[i],s[(i+2)%3],"");
   res.set_initial(s[0]);
   res.set_final(s[1]);
+
   std::cout << "***LAW***" << std::endl;
-  printlaw(res);
-  std::cout << "Law proper: "<< is_proper(res) << std::endl;
-  std::cout << "Law valid: "<< is_valid(res) << std::endl;
+  print(res);
   std::cout << "eps_removal:" << std::endl;
   automaton_t pro = eps_removal(res);
-  printlaw(pro);
+  print(pro);
   std::cout << "backward_eps_removal:" << std::endl;
   automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
   print(pro2);
-  std::cout << "Law proper: "<< is_proper(pro) << std::endl;
-  std::cout << "Law valid: "<< is_valid(pro) << std::endl;
   std::cout << "eps_removal_here:"<< std::endl;
   eps_removal_here(res);
-  printlaw(res);
+  print(res);
 }
 
 // Test des lal-char-z
@@ -119,8 +99,6 @@ static void check_lal_char_z()
   res.set_final(s[1]);
   std::cout << "***LAL Z***" << std::endl;
   print(res);
-  std::cout << "Lal valid: "<< is_valid(res) << std::endl;
-  std::cout << "Lal proper: "<< is_proper(res) << std::endl;
   std::cout << "eps_removal:" << std::endl;
   automaton_t pro = eps_removal(res);
   print(pro);
@@ -147,40 +125,31 @@ static void check_law_char_z()
     res.set_transition(s[i],s[(i+2)%3],"",-1);
   res.set_initial(s[0]);
   res.set_final(s[1]);
+
   std::cout << "***LAW Z***" << std::endl;
   std::cout << "* Circuit of eps-transition" << std::endl;
-  printlaw(res);
-  std::cout << "Law proper: "<< is_proper(res) << std::endl;
-  std::cout << "Law valid: "<< is_valid(res) << std::endl;
+  print(res);
   try {
     automaton_t pro = eps_removal(res);
-    printlaw(pro);
-    std::cout << "Law proper: "<< is_proper(pro) << std::endl;
-    std::cout << "Law valid: "<< is_valid(pro) << std::endl;
+    print(pro);
   }
   catch(std::domain_error& e) {
     std::cout << "Exception: " << e.what() << std::endl;
   }
   res.del_transition(s[1],s[0], "");
   std::cout << "* No circuit of eps-transition" << std::endl;
-  printlaw(res);
-  std::cout << "Law proper: "<< is_proper(res) << std::endl;
-  std::cout << "Law valid: "<< is_valid(res) << std::endl;
+  print(res);
   //dot(res,std::cerr);
   std::cout << "eps_removal:" << std::endl;
   automaton_t pro = eps_removal(res);
-  printlaw(pro);
-  std::cout << "Law proper: "<< is_proper(pro) << std::endl;
-  std::cout << "Law valid: "<< is_valid(pro) << std::endl;
+  print(pro);
   std::cout << "backward_eps_removal:" << std::endl;
   automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
   print(pro2);
-  std::cout << "Law proper: "<< is_proper(pro2) << std::endl;
-  std::cout << "Law valid: "<< is_valid(pro2) << std::endl;
   //dot(pro2,std::cerr);
   std::cout << "eps_removal_here:"<< std::endl;
   eps_removal_here(res);
-  printlaw(res);
+  print(res);
 }
 
 /// Test des law Zmin
@@ -203,38 +172,28 @@ static void check_law_char_zmin()
   res.set_final(s[1]);
   std::cout << "***LAW Z-min+***" << std::endl;
   std::cout << "* Circuit of eps-transition" << std::endl;
-  printlaw(res);
-  std::cout << "Law proper: "<< is_proper(res) << std::endl;
-  std::cout << "Law valid: "<< is_valid(res) << std::endl;
+  print(res);
   try {
     automaton_t pro = eps_removal(res);
-    printlaw(pro);
-    std::cout << "Law proper: "<< is_proper(pro) << std::endl;
-    std::cout << "Law valid: "<< is_valid(pro) << std::endl;
+    print(pro);
   }
   catch(std::domain_error& e) {
     std::cout << "Exception: " << e.what() << std::endl;
   }
   res.set_transition(s[1],s[0], "",3);
   std::cout << "* No negative circuit" << std::endl;
-  printlaw(res);
-  std::cout << "Law proper: "<< is_proper(res) << std::endl;
-  std::cout << "Law valid: "<< is_valid(res) << std::endl;
+  print(res);
   //dot(res,std::cerr);
   std::cout << "eps_removal:" << std::endl;
   automaton_t pro = eps_removal(res);
-  printlaw(pro);
-  std::cout << "Law proper: "<< is_proper(pro) << std::endl;
-  std::cout << "Law valid: "<< is_valid(pro) << std::endl;
+  print(pro);
   std::cout << "backward_eps_removal:" << std::endl;
   automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
   print(pro2);
-  std::cout << "Law proper: "<< is_proper(pro2) << std::endl;
-  std::cout << "Law valid: "<< is_valid(pro2) << std::endl;
-  dot(pro2,std::cout);
+  dot(pro2, std::cout) << std::endl;
   std::cout << "eps_removal_here:" << std::endl;
   eps_removal_here(res);
-  printlaw(res);
+  print(res);
 }
 
 
