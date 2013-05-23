@@ -15,6 +15,31 @@ namespace vcsn
   | info(automaton, stream).  |
   `--------------------------*/
 
+  namespace detail
+  {
+    template <typename Aut>
+    typename std::enable_if<Aut::context_t::is_lal,
+                            size_t>::type
+    num_eps_transitions(const Aut&)
+    {
+      return 0;
+    }
+
+    template <typename Aut>
+    typename std::enable_if<(Aut::context_t::is_lan
+                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_law),
+                            size_t>::type
+    num_eps_transitions(const Aut& aut)
+    {
+      size_t res = 0;
+      for (auto t : aut.transitions())
+        res += aut.labelset()->is_identity(aut.label_of(t));
+      return res;
+    }
+
+  }
+
   template <class A>
   std::ostream&
   info(const A& aut, std::ostream& out)
@@ -25,6 +50,7 @@ namespace vcsn
       << "number of initial states: " << aut.num_initials() << std::endl
       << "number of final states: " << aut.num_finals() << std::endl
       << "number of transitions: " << aut.num_transitions() << std::endl
+      << "number of eps transitions: " << detail::num_eps_transitions(aut) << std::endl
       //<< "is complete: " << is_complete(aut) << std::endl
       << "is deterministic: " << is_deterministic(aut) << std::endl
       << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
