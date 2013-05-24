@@ -9,7 +9,7 @@
 
 // Common behavior for b and f2.
 template <typename WeightSet>
-bool check_bool(const WeightSet& ws)
+bool check_bool(const WeightSet& ws, bool one_plus_one)
 {
   bool res = true;
 
@@ -21,51 +21,33 @@ bool check_bool(const WeightSet& ws)
   ASSERT_EQ(ws.format(ws.conv("0")), "0");
   ASSERT_EQ(ws.format(ws.conv("1")), "1");
 
-  // add: xor.
+  // add: "or" or "xor".
   ASSERT_EQ(ws.add(0, 0), 0);
   ASSERT_EQ(ws.add(0, 1), 1);
   ASSERT_EQ(ws.add(1, 0), 1);
-  ASSERT_EQ(ws.add(1, 1), 0);
+  ASSERT_EQ(ws.add(1, 1), one_plus_one);
 
   // mul: and.
-  ASSERT_EQ(ws.add(0, 0), 0);
-  ASSERT_EQ(ws.add(0, 1), 0);
-  ASSERT_EQ(ws.add(1, 0), 0);
-  ASSERT_EQ(ws.add(1, 1), 1);
+  ASSERT_EQ(ws.mul(0, 0), 0);
+  ASSERT_EQ(ws.mul(0, 1), 0);
+  ASSERT_EQ(ws.mul(1, 0), 0);
+  ASSERT_EQ(ws.mul(1, 1), 1);
 
   return res;
 }
 
 static bool check_b()
 {
-  bool res = true;
-  vcsn::f2 ws;
-
-  res &= check_bool(ws);
-
+  vcsn::b ws;
   // add: or.
-  ASSERT_EQ(ws.add(0, 0), 0);
-  ASSERT_EQ(ws.add(0, 1), 1);
-  ASSERT_EQ(ws.add(1, 0), 1);
-  ASSERT_EQ(ws.add(1, 1), 1);
-
-  return res;
+  return check_bool(ws, 1);
 }
 
 static bool check_f2()
 {
-  bool res = true;
   vcsn::f2 ws;
-
-  res &= check_bool(ws);
-
   // add: xor.
-  ASSERT_EQ(ws.add(0, 0), 0);
-  ASSERT_EQ(ws.add(0, 1), 1);
-  ASSERT_EQ(ws.add(1, 0), 1);
-  ASSERT_EQ(ws.add(1, 1), 0);
-
-  return res;
+  return check_bool(ws, 0);
 }
 
 static bool check_zmin()
@@ -103,6 +85,8 @@ static bool check_zmin()
 int main()
 {
   size_t nerrs = 0;
+  nerrs += !check_b();
+  nerrs += !check_f2();
   nerrs += !check_zmin();
   return !!nerrs;
 }
