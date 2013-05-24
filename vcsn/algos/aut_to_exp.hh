@@ -49,30 +49,57 @@ namespace vcsn
     return aut.get_initial_weight(aut.post());
   }
 
-  /*----------------.
-  | next in order.  |
-  `----------------*/
+  /*--------------------------.
+  | Naive heuristics degree.  |
+  `--------------------------*/
 
   template <class Aut>
   typename Aut::state_t
-  next_in_order(const Aut& a)
+  next_naive(const Aut& a)
   {
-    return a.states().front();
+    typename Aut::state_t best = 0;
+    bool best_has_loop = false;
+    size_t best_degree = std::numeric_limits<size_t>::max();
+    for (auto s: a.states())
+      {
+        size_t out = 0;
+        // Since we are in LAU, there can be at most one such loop.
+        bool has_loop = false;
+        // Don't count the loops as out-degree.
+        for (auto t: a.all_out(s))
+          if (a.dst_of(t) != s)
+            ++out;
+          else
+            has_loop = true;
+        size_t in = a.all_in(s).size();
+        size_t degree = in * out;
+        // We prefer to delete a state that has no loop transition.
+        if (degree < best_degree
+            || (degree == best_degree && has_loop < best_has_loop))
+          {
+            best = s;
+            best_degree = degree;
+            best_has_loop = has_loop;
+            SHOW(V(best) << V(best_degree) << V(best_has_loop));
+          }
+      }
+    assert(best);
+    return best;
   }
 
   template <class Aut,
             typename Context = typename Aut::context_t>
   typename Context::ratexp_t
-  aut_to_exp(const Aut& a)
+  aut_to_exp_naive(const Aut& a)
   {
     state_chooser_t<Aut> next =
-      next_in_order<detail::lifted_automaton_t<Aut>>;
+      next_naive<detail::lifted_automaton_t<Aut>>;
     return aut_to_exp(a, next);
   }
 
-  /*----------------------.
-  | abstract aut_to_exp.  |
-  `----------------------*/
+  /*------------------.
+  | dyn::aut_to_exp.  |
+  `------------------*/
 
   namespace dyn
   {
@@ -83,79 +110,10 @@ namespace vcsn
       aut_to_exp(const automaton& aut)
       {
         const Aut& a = dynamic_cast<const Aut&>(*aut);
-        return make_ratexp(a.context(), aut_to_exp(a));
+        return make_ratexp(a.context(), aut_to_exp_naive(a));
       }
 
       REGISTER_DECLARE(aut_to_exp,
-                       (const automaton& aut) -> ratexp);
-    }
-  }
-
-
-  /*-----------------.
-  | Highest degree.  |
-  `-----------------*/
-
-  template <class Aut>
-  typename Aut::state_t
-  next_in_degree(const Aut& a)
-  {
-    typename Aut::state_t best = 0;
-    size_t loops_best = std::numeric_limits<size_t>::max();
-    size_t degree_best = 0;
-    for (auto s: a.states())
-      {
-        size_t in = 0;
-        size_t loops = 0;
-        // Don't count the loops as out-degree.
-        for (auto t: a.all_out(s))
-          if (a.dst_of(t) != s)
-            ++in;
-          else
-            ++loops;
-        size_t out = a.all_in(s).size() - loops;
-        size_t degree = in * out;
-        // We prefer to delete a state that has no loop transition.
-        if (degree_best < degree
-            || (degree_best == degree && loops < loops_best))
-          {
-            best = s;
-            degree_best = degree;
-            loops_best = loops;
-            SHOW(V(best) << V(degree_best) << V(loops_best));
-          }
-      }
-    assert(best);
-    return best;
-  }
-
-  template <class Aut,
-            typename Context = typename Aut::context_t>
-  typename Context::ratexp_t
-  aut_to_exp_in_degree(const Aut& a)
-  {
-    state_chooser_t<Aut> next =
-      next_in_degree<detail::lifted_automaton_t<Aut>>;
-    return aut_to_exp(a, next);
-  }
-
-  /*--------------------------------.
-  | abstract aut_to_exp_in_degree.  |
-  `--------------------------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      template <typename Aut>
-      ratexp
-      aut_to_exp_in_degree(const automaton& aut)
-      {
-        const Aut& a = dynamic_cast<const Aut&>(*aut);
-        return make_ratexp(a.context(), aut_to_exp_in_degree(a));
-      }
-
-      REGISTER_DECLARE(aut_to_exp_in_degree,
                        (const automaton& aut) -> ratexp);
     }
   }

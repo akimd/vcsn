@@ -64,6 +64,14 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 ** eps-removal
 (1+a)^n
 
+* aut-to-exp
+** More heuristics
+See what V1 did.
+
+** Incremental
+Transform the current implementation of the "naive" heuristics into
+some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
+
 * eval.chk
 Cover more case for zmin.
 

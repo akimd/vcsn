@@ -207,8 +207,6 @@ namespace vcsn
 
         // aut_to_exp.
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
-        aut_to_exp_in_degree_register(aut_t::sname(),
-                                      aut_to_exp_in_degree<aut_t>);
 
         // copy.
         copy_register(aut_t::sname(), copy<aut_t>);

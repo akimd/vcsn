@@ -26,7 +26,7 @@ tafkit_TESTS =                                  \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
   tafkit/product.chk                            \
-  tafkit/standard.chk                        \
+  tafkit/standard.chk                           \
   tafkit/transpose.chk
 
 dist_TESTS += $(tafkit_TESTS)

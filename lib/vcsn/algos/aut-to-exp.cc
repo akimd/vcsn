@@ -19,20 +19,7 @@ namespace vcsn
     aut_to_exp(const automaton& aut)
     {
       return detail::aut_to_exp_registry().call(aut->vname(),
-                                                 aut);
-    }
-
-    /*-----------------------.
-    | aut_to_exp_in_degree.  |
-    `-----------------------*/
-
-    REGISTER_DEFINE(aut_to_exp_in_degree);
-
-    ratexp
-    aut_to_exp_in_degree(const automaton& aut)
-    {
-      return detail::aut_to_exp_in_degree_registry().call(aut->vname(),
-                                                           aut);
+                                                aut);
     }
   }
 }
