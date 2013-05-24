@@ -52,7 +52,7 @@ number of initial states: 1
 number of final states: 1
 number of transitions: 6
 number of eps transitions: 3
-is deterministic: 1
+is deterministic: N/A
 is eps-acyclic: 0
 is proper: 0
 is valid: 1
@@ -63,7 +63,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -74,7 +74,7 @@ number of initial states: 3
 number of final states: 1
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -85,7 +85,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -130,7 +130,7 @@ number of initial states: 1
 number of final states: 1
 number of transitions: 6
 number of eps transitions: 3
-is deterministic: 1
+is deterministic: N/A
 is eps-acyclic: 0
 is proper: 0
 is valid: 0
@@ -142,7 +142,7 @@ number of initial states: 1
 number of final states: 1
 number of transitions: 5
 number of eps transitions: 2
-is deterministic: 1
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 0
 is valid: 1
@@ -153,7 +153,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 6
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -164,7 +164,7 @@ number of initial states: 3
 number of final states: 1
 number of transitions: 6
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -175,7 +175,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 6
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -187,7 +187,7 @@ number of initial states: 1
 number of final states: 1
 number of transitions: 6
 number of eps transitions: 3
-is deterministic: 1
+is deterministic: N/A
 is eps-acyclic: 0
 is proper: 0
 is valid: 0
@@ -199,7 +199,7 @@ number of initial states: 1
 number of final states: 1
 number of transitions: 6
 number of eps transitions: 3
-is deterministic: 1
+is deterministic: N/A
 is eps-acyclic: 0
 is proper: 0
 is valid: 1
@@ -210,7 +210,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -221,7 +221,7 @@ number of initial states: 3
 number of final states: 1
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
@@ -259,7 +259,7 @@ number of initial states: 1
 number of final states: 3
 number of transitions: 9
 number of eps transitions: 0
-is deterministic: 0
+is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1

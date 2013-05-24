@@ -4,9 +4,10 @@
 # include <iostream>
 # include <sstream>
 
+# include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/core/rat/info.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
-# include <vcsn/core/rat/info.hh>
 
 namespace vcsn
 {
@@ -17,6 +18,26 @@ namespace vcsn
 
   namespace detail
   {
+    // is_deterministic.
+    template <typename Aut>
+    typename std::enable_if<Aut::context_t::is_lal,
+                            std::string>::type
+    is_deterministic(const Aut& a)
+    {
+      return vcsn::is_deterministic(a) ? "1" : "0";
+    }
+
+    template <typename Aut>
+    typename std::enable_if<(Aut::context_t::is_lan
+                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_law),
+                            std::string>::type
+    is_deterministic(const Aut&)
+    {
+      return "N/A";
+    }
+
+    // num_eps_transitions.
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
                             size_t>::type
@@ -52,7 +73,7 @@ namespace vcsn
       << "number of transitions: " << aut.num_transitions() << std::endl
       << "number of eps transitions: " << detail::num_eps_transitions(aut) << std::endl
       //<< "is complete: " << is_complete(aut) << std::endl
-      << "is deterministic: " << is_deterministic(aut) << std::endl
+      << "is deterministic: " << detail::is_deterministic(aut) << std::endl
       << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
       << "is proper: " << is_proper(aut) << std::endl
       << "is valid: " << is_valid(aut);
