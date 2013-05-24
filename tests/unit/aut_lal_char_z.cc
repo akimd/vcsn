@@ -83,7 +83,7 @@ check_various(const context_t& ctx)
 }
 
 static bool
-check_del_entry(const context_t& ctx)
+check_entry(const context_t& ctx)
 {
   bool res = true;
   automaton_t aut{ctx};
@@ -102,7 +102,7 @@ check_del_entry(const context_t& ctx)
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'c')), 5);
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'd')), 6);
 
-  aut.del_entry(s[0], s[1]);
+  aut.del_transition(s[0], s[1]);
   ASSERT_EQ(aut.has_transition(s[0], s[1], 'a'), false);
   ASSERT_EQ(aut.has_transition(s[0], s[1], 'b'), false);
   ASSERT_EQ(aut.has_transition(s[0], s[1], 'c'), false);
@@ -118,6 +118,6 @@ int main()
   size_t nerrs = 0;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   nerrs += !check_various(ctx);
-  nerrs += !check_del_entry(ctx);
+  nerrs += !check_entry(ctx);
   return !!nerrs;
 }

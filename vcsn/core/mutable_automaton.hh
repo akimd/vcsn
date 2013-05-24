@@ -735,7 +735,7 @@ namespace vcsn
 
     // Remove all the transitions between s and d.
     void
-    del_entry(state_t s, state_t d)
+    del_transition(state_t s, state_t d)
     {
       // removes s -> d
       auto& ss = states_[s].succ;
