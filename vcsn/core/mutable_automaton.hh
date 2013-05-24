@@ -54,13 +54,15 @@ namespace vcsn
     };
 
     using st_store_t = std::vector<stored_state_t>;
-    using st_cont_t = std::vector<state_t>;
 
+    /// A list of unused indexes in the states/transitions tables.
     using free_store_t = std::vector<unsigned>;
 
     st_store_t states_;
+    /// Free indexes in states_.
     free_store_t states_fs_;
     tr_store_t transitions_;
+    /// Free indexes in transitions_.
     free_store_t transitions_fs_;
     label_t prepost_label_;
 
@@ -71,8 +73,7 @@ namespace vcsn
       : es_{ctx}
       , states_{2}
       , prepost_label_(ctx.labelset()->special())
-    {
-    }
+    {}
 
     mutable_automaton(mutable_automaton&& that)
       : es_{that.es_}
