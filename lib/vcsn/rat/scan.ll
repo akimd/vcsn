@@ -86,7 +86,8 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       return TOK(STAR);
   }
   "{"[0-9]*,?[0-9]*"}"    {
-      yylval->irange = quantifier(driver_, *yylloc, yytext);
+      yylval->irange = quantifier(driver_, *yylloc,
+                                  std::string{yytext+1, yyleng-2});
       return TOK(STAR);
   }
 
@@ -179,11 +180,15 @@ namespace vcsn
           return lexical_cast<int>(d, loc, s);
       }
 
-      // Decode a quantifier's value: "{1,2}" etc.
+      // Decode a quantifier's value: "1,2" etc.
+      //
+      // We used to include the braces in \a, but a libc++ bug in
+      // regex made the following regex unportable.
+      // http://llvm.org/bugs/show_bug.cgi?id=16135
       irange_type
       quantifier(driver& d, const location& loc, const std::string& s)
       {
-        std::regex arity_re{"\\{([0-9]*)(,?)([0-9]*)\\}",
+        std::regex arity_re{"([0-9]*)(,?)([0-9]*)",
                             std::regex::extended};
         std::smatch minmax;
         if (!std::regex_match(s, minmax, arity_re))
