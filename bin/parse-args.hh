@@ -34,7 +34,7 @@ struct options
   std::vector<std::string> argv;
 };
 
-[[noreturn]]
+// FIXME: GCC 4.8 does not recognize it [[noreturn]]
 void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.
