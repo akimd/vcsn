@@ -4,16 +4,16 @@
 ## Automata.  ##
 ## ---------- ##
 
-run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b' -o lady4.dot 4
+run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b' -o lady4.gv 4
 
 ## label = "b, c" -> label = "<b+c>\e"
 perl -p -e '
     s{\[label = "(.*?)"\]}
      {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"<$_>\"\]"}eg;
     s{(lal_char\(abc\)_b)}{lau_ratexpset<$1>}g;
-   ' < lady4.dot >out.exp
+   ' < lady4.gv >out.exp
 
-run 0 out.exp -vcsn-lift -Af lady4.dot
+run 0 out.exp -vcsn-lift -Af lady4.gv
 
 ## ------------- ##
 ## Expressions.  ##

@@ -6,8 +6,8 @@ check ()
 {
   local out_exp=$1
   shift
-  run 0 stdout -vcsn-standard "$@" -o std.dot
-  run 0 "$out_exp" -vcsn-aut-to-exp -Af std.dot
+  run 0 stdout -vcsn-standard "$@" -o std.gv
+  run 0 "$out_exp" -vcsn-aut-to-exp -Af std.gv
 }
 
 check 'a'           -e 'a'

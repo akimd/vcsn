@@ -11,7 +11,7 @@ check ()
 ## lal_char_z.  ##
 ## ------------ ##
 
-cat > simple.dot <<EOF
+cat > simple.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -30,13 +30,13 @@ digraph
 }
 EOF
 
-check simple.dot aabab 6
-check simple.dot abab 4
-check simple.dot aaaa 8
-check simple.dot b 0
-check simple.dot a 2
+check simple.gv aabab 6
+check simple.gv abab 4
+check simple.gv aaaa 8
+check simple.gv b 0
+check simple.gv a 2
 
-cat > initial-weight.dot <<EOF
+cat > initial-weight.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -55,11 +55,11 @@ digraph
 }
 EOF
 
-run 0 4  -vcsn-evaluate -f initial-weight.dot a
-run 0 8  -vcsn-evaluate -f initial-weight.dot abab
-run 0 12 -vcsn-evaluate -f initial-weight.dot aabab
+run 0 4  -vcsn-evaluate -f initial-weight.gv a
+run 0 8  -vcsn-evaluate -f initial-weight.gv abab
+run 0 12 -vcsn-evaluate -f initial-weight.gv aabab
 
-cat > more-letters.dot <<EOF
+cat > more-letters.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -81,9 +81,9 @@ digraph
 }
 EOF
 
-run 0 6 -vcsn-evaluate -f more-letters.dot caa
+run 0 6 -vcsn-evaluate -f more-letters.gv caa
 
-cat > prod.dot <<EOF
+cat > prod.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -105,9 +105,9 @@ digraph
 }
 EOF
 
-check prod.dot aabab 12
+check prod.gv aabab 12
 
-cat > complex.dot <<EOF
+cat > complex.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -129,18 +129,18 @@ digraph
 }
 EOF
 
-check complex.dot a 12
-check complex.dot abab 24
-check complex.dot aabab 36
+check complex.gv a 12
+check complex.gv abab 24
+check complex.gv aabab 36
 
 
 ## --------------- ##
 ## lal_char_zmin.  ##
 ## --------------- ##
 
-run 0 '' -vcsn-standard -e '(?@lal_char(abc)_zmin)a' -o a.dot
+run 0 '' -vcsn-standard -e '(?@lal_char(abc)_zmin)a' -o a.gv
 
-check a.dot '' oo
-check a.dot 'a' 0
-check a.dot 'aa' oo
-check a.dot 'b' oo
+check a.gv '' oo
+check a.gv 'a' 0
+check a.gv 'aa' oo
+check a.gv 'b' oo

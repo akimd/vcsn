@@ -4,9 +4,9 @@
 ## (a+b)* x (b+c)* = b*.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.dot
-run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.dot
-run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
+run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
+run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
+run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(b)_b"
@@ -31,9 +31,9 @@ EOF
 ## ab x cd = 0.  ##
 ## ------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e 'ab' -o ab.dot
-run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e 'cd' -o bc.dot
-run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
+run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e 'ab' -o ab.gv
+run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e 'cd' -o bc.gv
+run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -54,9 +54,9 @@ EOF
 ## (a+b)* x (c+d)* = \e.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.dot
-run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.dot
-run 0 - -vcsn-product -f ab.dot bc.dot <<EOF
+run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
+run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.gv
+run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -80,7 +80,7 @@ EOF
 ## ------------ ##
 
 # <2>(a*b*a*)
-cat >a.dot <<\EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -108,7 +108,7 @@ digraph
 EOF
 
 # (<3>(ab))*
-cat >b.dot <<\EOF
+cat >b.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -150,4 +150,4 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-product -f a.dot b.dot
+run 0 out.exp -vcsn-product -f a.gv b.gv

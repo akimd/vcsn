@@ -65,8 +65,8 @@ EOF
 # Check that vcsn-cat is idempotent on the standard RATEXP.
 check_stdof ()
 {
-  run 0 '' -vcsn-standard -E -C "$1" -e "$2" -o std.dot
-  cp std.dot out.exp
+  run 0 '' -vcsn-standard -E -C "$1" -e "$2" -o std.gv
+  cp std.gv out.exp
   run 0 out.exp -vcsn-cat -Af out.exp
 }
 
@@ -82,8 +82,8 @@ check_stdof 'lal_char(abcd)_zmin' "<3>(\\e+a)"
 # Check invalid input.
 fail_aut ()
 {
-  cat >in.dot
-  run 1 '' -vcsn-cat -Af in.dot
+  cat >in.gv
+  run 1 '' -vcsn-cat -Af in.gv
 }
 
 # Invalid label: letter not in alphabet.
@@ -176,9 +176,9 @@ EOF
 check_aut ()
 {
   cat >in.tmp
-  sed -n '/^--*$/q;p'             in.tmp >in.dot
+  sed -n '/^--*$/q;p'             in.tmp >in.gv
   sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  run 0 out.exp -vcsn-cat -Af in.dot
+  run 0 out.exp -vcsn-cat -Af in.gv
   $exit
 }
 

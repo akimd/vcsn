@@ -7,7 +7,7 @@ check ()
   run 0 "$2" -vcsn-eps-removal -A -I dot -f "$1"
 }
 
-cat >a.dot <<\EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -52,9 +52,9 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp
 
-cat >a.dot <<\EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_z"
@@ -69,9 +69,9 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-eps-removal -A -I dot -f a.dot
+run 1 "" -vcsn-eps-removal -A -I dot -f a.gv
 
-cat >a.dot <<\EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_z"
@@ -113,9 +113,9 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp
 
-cat >a.dot <<\EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_zmin"
@@ -130,5 +130,5 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-eps-removal -A -I dot -f a.dot
+run 1 "" -vcsn-eps-removal -A -I dot -f a.gv
 

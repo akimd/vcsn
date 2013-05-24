@@ -100,8 +100,8 @@ involution ()
   run 0 out.exp -vcsn-transpose -A -f transpose.out
 }
 
-run 0 '' -vcsn-de-bruijn -C 'lal_char(abcd)_z' -o de-bruin-2.dot 2
-involution de-bruin-2.dot
+run 0 '' -vcsn-de-bruijn -C 'lal_char(abcd)_z' -o de-bruin-2.gv 2
+involution de-bruin-2.gv
 
 ## -------------- ##
 ## minimization.  ##

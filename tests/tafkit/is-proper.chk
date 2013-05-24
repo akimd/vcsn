@@ -20,7 +20,7 @@ check_as ()
 ## is-proper.  ##
 ## ----------- ##
 
-cat > lal_b.dot <<EOF
+cat > lal_b.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -40,7 +40,7 @@ for ls in lal lan law
 do
   for ws in b z
   do
-    check_as true lal_b.dot "s/lal/$ls/;s/_b/_$ws/"
+    check_as true lal_b.gv "s/lal/$ls/;s/_b/_$ws/"
   done
 done
 
@@ -49,7 +49,7 @@ done
 ## ! is-proper.  ##
 ## ------------- ##
 
-cat > lan_b.dot <<\EOF
+cat > lan_b.gv <<\EOF
 digraph
 {
   vcsn_context = "lan_char(ab)_b"
@@ -64,6 +64,6 @@ for ls in lan law
 do
   for ws in b z
   do
-    check_as false lan_b.dot "s/lan/$ls/;s/_b/_$ws/"
+    check_as false lan_b.gv "s/lan/$ls/;s/_b/_$ws/"
   done
 done

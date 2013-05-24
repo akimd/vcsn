@@ -15,7 +15,7 @@ check ()
 ## Regression: standard(ab+cd).  ##
 ## ----------------------------- ##
 
-vcsn-standard -e '(?@lal_char(abcd)_b)ab+cd' >a.dot
+vcsn-standard -e '(?@lal_char(abcd)_b)ab+cd' >a.gv
 cat >out.exp <<EOF
 digraph
 {
@@ -38,13 +38,13 @@ digraph
   4 -> F4
 }
 EOF
-check a.dot out.exp
+check a.gv out.exp
 
 ## ------- ##
 ## Cycle.  ##
 ## ------- ##
 
-cat >a.dot <<EOF
+cat >a.gv <<EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -80,13 +80,13 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp
 
 ## ---------------- ##
 ## No final State.  ##
 ## ---------------- ##
 
-cat >a.dot <<EOF
+cat >a.gv <<EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -115,13 +115,13 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp
 
 ## ------------------ ##
 ## No initial state.  ##
 ## ------------------ ##
 
-cat >a.dot <<EOF
+cat >a.gv <<EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     0 -> 1 [label="a"]
@@ -145,13 +145,13 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp
 
 ## -------------- ##
 ## Simple input.  ##
 ## -------------- ##
 
-cat >a.dot <<EOF
+cat >a.gv <<EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -183,4 +183,4 @@ digraph
 }
 EOF
 
-check a.dot out.exp
+check a.gv out.exp

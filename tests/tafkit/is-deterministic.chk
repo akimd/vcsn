@@ -10,12 +10,12 @@ check_lal ()
     (true)  status=0;;
     (false) status=2;;
   esac
-  cat >lal.dot
-  run $status "$1" -vcsn-is-deterministic -A -f lal.dot
-  sed -e 's/lal/lan/' lal.dot > lan.dot
-  run $status "$1" -vcsn-is-deterministic -A -f lan.dot
-  sed -e 's/lal/law/' lal.dot > law.dot
-  run $status "$1" -vcsn-is-deterministic -A -f law.dot
+  cat >lal.gv
+  run $status "$1" -vcsn-is-deterministic -A -f lal.gv
+  sed -e 's/lal/lan/' lal.gv > lan.gv
+  run $status "$1" -vcsn-is-deterministic -A -f lan.gv
+  sed -e 's/lal/law/' lal.gv > law.gv
+  run $status "$1" -vcsn-is-deterministic -A -f law.gv
 }
 
 ## ------------ ##

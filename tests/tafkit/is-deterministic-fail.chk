@@ -10,8 +10,8 @@
 # --------------------------
 check_lan ()
 {
-  cat >lan.dot
-  run 0 "$1" -vcsn-is-deterministic -A -f lan.dot
+  cat >lan.gv
+  run 0 "$1" -vcsn-is-deterministic -A -f lan.gv
 }
 
 # This is not realtime.
@@ -36,8 +36,8 @@ EOF
 # --------------------------
 check_law ()
 {
-  cat >law.dot
-  run 0 "$1" -vcsn-is-deterministic -A -f law.dot
+  cat >law.gv
+  run 0 "$1" -vcsn-is-deterministic -A -f law.gv
 }
 
 # This is not realtime.

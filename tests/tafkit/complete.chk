@@ -9,7 +9,7 @@ check ()
     run 0 out.exp -vcsn-complete -A -f "$1"
 }
 
-cat > graph.dot <<EOF
+cat > graph.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -46,10 +46,10 @@ digraph
 }
 EOF
 
-check graph.dot
+check graph.gv
 check out.exp # Idempotence.
 
-cat > graph.dot <<EOF
+cat > graph.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -80,11 +80,11 @@ digraph
 }
 EOF
 
-check graph.dot
+check graph.gv
 check out.exp # Idempotence.
 
 
-cat > graph.dot <<EOF
+cat > graph.gv <<EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -113,5 +113,5 @@ digraph
 }
 EOF
 
-check graph.dot
+check graph.gv
 check out.exp # Idempotence.

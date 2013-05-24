@@ -145,7 +145,7 @@ sub v1_command ($)
 =item C<complete($base)>
 
 Add more files to aid debugging.  E.g. for C<$base.fsm>, also
-generate C<$base.fst>, C<$base.fst.dot> etc.
+generate C<$base.fst>, C<$base.fst.gv> etc.
 
 =cut
 
@@ -159,7 +159,7 @@ sub complete ($)
     . "sed -e '/^ *rankdir =/d;/^ *size =/d;/^ *center =/d;/^ *orientation =/d;'"
     . "    -e '/^ *ranksep =/d;'"
     . "    -e '/^ *nodesep =/d;'"
-    . ">$base.fst.dot";
+    . ">$base.fst.gv";
 }
 
 ######################################################################
@@ -167,7 +167,7 @@ sub complete ($)
 =item C<ladybird($base, $size, $alphabet)>
 
 Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.dot> (for TAF-Kit 2) from $ratexp, via Ladybird.
+C<$base.gv> (for TAF-Kit 2) from $ratexp, via Ladybird.
 
 =cut
 
@@ -189,7 +189,7 @@ sub ladybird ($$$)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-ladybird -O dot $size >$base.dot";
+          run "vcsn-ladybird -O dot $size >$base.gv";
         }
       else
         {
@@ -203,7 +203,7 @@ sub ladybird ($$$)
 =item C<standard($base, $ratexp, $alphabet)>
 
 Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.dot> (for TAF-Kit 2) from $ratexp, via Ladybird.
+C<$base.gv> (for TAF-Kit 2) from $ratexp, via Ladybird.
 
 =cut
 
@@ -218,7 +218,7 @@ sub standard ($$$)
         {
           run "vcsn-standard -e '(?\@$ctx)$exp' -Ofsm >$base.fsm";
           run "fstcompile $base.fsm >$base.fst";
-          run "fstdraw $base.fst >$base.fst.dot";
+          run "fstdraw $base.fst >$base.fst.gv";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -226,7 +226,7 @@ sub standard ($$$)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-standard -e '(?\@$ctx)$exp' >$base.dot";
+          run "vcsn-standard -e '(?\@$ctx)$exp' >$base.gv";
         }
       else
         {
@@ -241,7 +241,7 @@ sub standard ($$$)
 =item C<thompson($base, $ratexp, $alphabet)>
 
 Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.dot> (for TAF-Kit 2) from $ratexp, via Thompson.
+C<$base.gv> (for TAF-Kit 2) from $ratexp, via Thompson.
 
 =cut
 
@@ -264,7 +264,7 @@ sub thompson ($$$)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-thompson -e '(?\@$ctx)$ratexp' >$base.dot";
+          run "vcsn-thompson -e '(?\@$ctx)$ratexp' >$base.gv";
         }
       else
         {
@@ -307,7 +307,7 @@ sub setup_det_ladybird ($)
       elsif ($d eq 'Vcsn 2')
         {
           $prog = 'vcsn-determinize';
-          $bench{$d} = "$prog -O null -f $base.dot";
+          $bench{$d} = "$prog -O null -f $base.gv";
         }
       else
         {
@@ -350,7 +350,7 @@ sub setup_det_aopt ($)
       elsif ($d eq 'Vcsn 2')
         {
           $prog = 'vcsn-determinize';
-          $res{$d} = "$prog -O null -f $base.dot";
+          $res{$d} = "$prog -O null -f $base.gv";
         }
       else
         {
@@ -393,7 +393,7 @@ sub setup_eps_aopt ($)
       elsif ($d eq 'Vcsn 2')
         {
           $prog = 'vcsn-eps-removal';
-          $res{$d} = "$prog -O null -f $base.dot";
+          $res{$d} = "$prog -O null -f $base.gv";
         }
       else
         {
@@ -442,9 +442,9 @@ sub setup_prefix ($)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' >$base.dot";
+          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' >$base.gv";
           $prog = 'vcsn-determinize';
-          $res{$d} = "$prog -O null -f $base.dot";
+          $res{$d} = "$prog -O null -f $base.gv";
         }
       else
         {
