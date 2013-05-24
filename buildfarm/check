@@ -10,7 +10,7 @@ make_()
 
 check()
 {
-  make check -j ${NBPROC:-2} "$@"
+  make check -j${NBPROC:-2} "$@"
 }
 
 ## ------ ##
