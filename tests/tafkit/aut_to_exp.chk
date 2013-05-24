@@ -14,9 +14,9 @@ check 'a'           -e 'a'
 check 'a.b'         -e 'ab'
 check '\e+(a.(a*))' -e 'a*'
 check 'a+b'         -e 'a+b'
-check '({2}a.b){3}' -W z -L l -e '{2}(ab){3}'
-check '{6}ab'       -W z -L w -e '{2}(ab){3}'
+check '(<2>a.b)<3>' -W z -L l -e '<2>(ab)<3>'
+check '<6>ab'       -W z -L w -e '<2>(ab)<3>'
 
 
-check '(({6}a.{7}c)+({10}b.{7}c)){11}' \
-      -W z -e '{2}({3}a+{5}b){7}c{11}'
+check '((<6>a.<7>c)+(<10>b.<7>c))<11>' \
+      -W z -e '<2>(<3>a+<5>b)<7>c<11>'

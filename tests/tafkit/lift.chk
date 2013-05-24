@@ -6,10 +6,10 @@
 
 run 0 '' -vcsn-ladybird -C 'lal_char(abc)_b' -o lady4.dot 4
 
-## label = "b, c" -> label = "{b+c}\e"
+## label = "b, c" -> label = "<b+c>\e"
 perl -p -e '
     s{\[label = "(.*?)"\]}
-     {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"{$_}\"\]"}eg;
+     {$_ = $1; s/\s//g; s/,/+/g; "\[label = \"<$_>\"\]"}eg;
     s{(lal_char\(abc\)_b)}{lau_ratexpset<$1>}g;
    ' < lady4.dot >out.exp
 
@@ -19,7 +19,7 @@ run 0 out.exp -vcsn-lift -Af lady4.dot
 ## Expressions.  ##
 ## ------------- ##
 
-run 0 '{a.b.c}\e' -vcsn-lift -C 'lal_char(abc)_b' -Ee "abc"
+run 0 '<a.b.c>\e' -vcsn-lift -C 'lal_char(abc)_b' -Ee "abc"
 
 # FIXME: no support yet for the printer.
-# run 0 '{{2}a.b.c}\e' -vcsn-lift -C 'lal_char(abc)_z' -Ee "{2}abc"
+# run 0 '{<2>a.b.c}\e' -vcsn-lift -C 'lal_char(abc)_z' -Ee "<2>abc"

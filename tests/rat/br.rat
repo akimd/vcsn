@@ -2,46 +2,46 @@
 %include: common-weights.rat
 
 # Check the alphabets.
-{f}a => {f}a
-#{e}x ! 1.4: invalid word: x: invalid letter: x
-#{x}a ! 1.1-4: 1.1: invalid word: x: invalid letter: x
-#a{x} ! 1.2-5: 1.1: invalid word: x: invalid letter: x
-{e}x ! 1.4: invalid word: x
-{x}a ! 1.1-4: 1.1: invalid word: x
-a{x} ! 1.2-5: 1.1: invalid word: x
+<f>a => <f>a
+#<e>x ! 1.4: invalid word: x: invalid letter: x
+#<x>a ! 1.1-4: 1.1: invalid word: x: invalid letter: x
+#a<x> ! 1.2-5: 1.1: invalid word: x: invalid letter: x
+<e>x ! 1.4: invalid word: x
+<x>a ! 1.1-4: 1.1: invalid word: x
+a<x> ! 1.2-5: 1.1: invalid word: x
 
 # Check associativities.
 %labels: letters
-{e}b{f}d{e} => ({e}b.{f}d){e}
-{e}bb{f}dd{e} => ({e}(b.b).{f}(d.d)){e}
-{e}b.b{f}d.d{e} => {e}b.b.{f}d.{e}d
-{e}ab*{f}ab*{g} => ({e}(a.(b*)).{f}(a.(b*))){g}
+<e>b<f>d<e> => (<e>b.<f>d)<e>
+<e>bb<f>dd<e> => (<e>(b.b).<f>(d.d))<e>
+<e>b.b<f>d.d<e> => <e>b.b.<f>d.<e>d
+<e>ab*<f>ab*<g> => (<e>(a.(b*)).<f>(a.(b*)))<g>
 %labels: words
-{e}bb{f}dd{e} => ({e}(bb).{f}(dd)){e}
+<e>bb<f>dd<e> => (<e>(bb).<f>(dd))<e>
 %labels: letters
 
 # Trivial identities: T_K in TAF-Kit's documentation.
-{\z}a => \z
-a{\z} => \z
-{f}\z => \z
-\z{f} => \z
-{\e}a => a
-a{\e} => a
+<\z>a => \z
+a<\z> => \z
+<f>\z => \z
+\z<f> => \z
+<\e>a => a
+a<\e> => a
 
 # Trivial identities: A_K in TAF-Kit's documentation.
-{f}{g}a => {f.g}a
-{f}a{g} => {f.g}a
-a{f}{g} => {f.g}a
-({f}(a.b)){g} => {f}(a.b){g}
+<f><g>a => <f.g>a
+<f>a<g> => <f.g>a
+a<f><g> => <f.g>a
+(<f>(a.b))<g> => <f>(a.b)<g>
 
 # Trivial identities: U_K in TAF-Kit's documentation.
-\e{f} => {f}\e
-ab({f}\e) => (a.b){f}
-({f}\e)(ab) => {f}(a.b)
+\e<f> => <f>\e
+ab(<f>\e) => (a.b)<f>
+(<f>\e)(ab) => <f>(a.b)
 
-# Trivial identities: C_{at} in TAF-Kit's documentation.
-\e{f} => {f}\e
-a{f} => {f}a
+# Trivial identities: C_<at> in TAF-Kit's documentation.
+\e<f> => <f>\e
+a<f> => <f>a
 
 # More complex computations.
-{f}{e}a{\z}+{e}a{\e} => {e}a
+<f><e>a<\z>+<e>a<\e> => <e>a

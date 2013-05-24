@@ -281,7 +281,7 @@ EOF
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '{x}a({y}\e+{z}a)' <<EOF
+check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -290,9 +290,9 @@ check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '{x}a({y}\e+{z}a)' <<EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> 1 [label = "{x}a"]
-  1 -> F1 [label = "{y}"]
-  1 -> 2 [label = "{z}a"]
+  0 -> 1 [label = "<x>a"]
+  1 -> F1 [label = "<y>"]
+  1 -> 2 [label = "<z>a"]
   2 -> F2
 EOF
 
@@ -302,8 +302,8 @@ EOF
 ## --- ##
 
 
-# Z: "{12}\e".
-check -W z -e '{12}\e' <<\EOF
+# Z: "<12>\e".
+check -W z -e '<12>\e' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -311,7 +311,7 @@ check -W z -e '{12}\e' <<\EOF
   }
   { 0 }
   I0 -> 0
-  0 -> F0 [label = "{12}"]
+  0 -> F0 [label = "<12>"]
 EOF
 
 ## -------- ##
@@ -328,13 +328,13 @@ check -W z -e '\e+a+\e' <<\EOF
   }
   { 0 1 }
   I0 -> 0
-  0 -> F0 [label = "{2}"]
+  0 -> F0 [label = "<2>"]
   0 -> 1 [label = "a"]
   1 -> F1
 EOF
 
-# Z: "{12}\e+{23}a+{34}b".
-check -W z -e '{12}\e+{23}a+{34}b' <<\EOF
+# Z: "<12>\e+<23>a+<34>b".
+check -W z -e '<12>\e+<23>a+<34>b' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -344,15 +344,15 @@ check -W z -e '{12}\e+{23}a+{34}b' <<\EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{12}"]
-  0 -> 1 [label = "{23}a"]
-  0 -> 2 [label = "{34}b"]
+  0 -> F0 [label = "<12>"]
+  0 -> 1 [label = "<23>a"]
+  0 -> 2 [label = "<34>b"]
   1 -> F1
   2 -> F2
 EOF
 
 # left weight.
-check -W z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
+check -W z -e '<12>(\e+a+<10>b+<10>\e)' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -362,15 +362,15 @@ check -W z -e '{12}(\e+a+{10}b+{10}\e)' <<\EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{132}"]
-  0 -> 1 [label = "{12}a"]
-  0 -> 2 [label = "{120}b"]
+  0 -> F0 [label = "<132>"]
+  0 -> 1 [label = "<12>a"]
+  0 -> 2 [label = "<120>b"]
   1 -> F1
   2 -> F2
 EOF
 
 # right weight.
-check -W z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
+check -W z -e '(\e+a+<2>b+<3>\e)<10>' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -380,19 +380,19 @@ check -W z -e '(\e+a+{2}b+{3}\e){10}' <<\EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{40}"]
+  0 -> F0 [label = "<40>"]
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "{2}b"]
-  1 -> F1 [label = "{10}"]
-  2 -> F2 [label = "{10}"]
+  0 -> 2 [label = "<2>b"]
+  1 -> F1 [label = "<10>"]
+  2 -> F2 [label = "<10>"]
 EOF
 
 ## ------------ ##
 ## Z: product.  ##
 ## ------------ ##
 
-# Z: "{12}(ab){23}".
-check -W z -e '{12}(ab){23}' <<\EOF
+# Z: "<12>(ab)<23>".
+check -W z -e '<12>(ab)<23>' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -400,9 +400,9 @@ check -W z -e '{12}(ab){23}' <<\EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> 1 [label = "{12}a"]
+  0 -> 1 [label = "<12>a"]
   1 -> 2 [label = "b"]
-  2 -> F2 [label = "{23}"]
+  2 -> F2 [label = "<23>"]
 EOF
 
 ## --------- ##
@@ -422,7 +422,7 @@ EOF
 
 fail -W z -e '\e*'
 
-check -W z -e '({2}a)*' <<\EOF
+check -W z -e '(<2>a)*' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -432,12 +432,12 @@ check -W z -e '({2}a)*' <<\EOF
   { 0 1 }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "{2}a"]
+  0 -> 1 [label = "<2>a"]
   1 -> F1
-  1 -> 1 [label = "{2}a"]
+  1 -> 1 [label = "<2>a"]
 EOF
 
-check -W z -e '{2}a*{3}' <<\EOF
+check -W z -e '<2>a*<3>' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -446,13 +446,13 @@ check -W z -e '{2}a*{3}' <<\EOF
   }
   { 0 1 }
   I0 -> 0
-  0 -> F0 [label = "{6}"]
-  0 -> 1 [label = "{2}a"]
-  1 -> F1 [label = "{3}"]
+  0 -> F0 [label = "<6>"]
+  0 -> 1 [label = "<2>a"]
+  1 -> F1 [label = "<3>"]
   1 -> 1 [label = "a"]
 EOF
 
-check -W z -e '({2}a+{3}b)*' <<\EOF
+check -W z -e '(<2>a+<3>b)*' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -463,17 +463,17 @@ check -W z -e '({2}a+{3}b)*' <<\EOF
   { 0 1 2 }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "{2}a"]
-  0 -> 2 [label = "{3}b"]
+  0 -> 1 [label = "<2>a"]
+  0 -> 2 [label = "<3>b"]
   1 -> F1
-  1 -> 1 [label = "{2}a"]
-  1 -> 2 [label = "{3}b"]
+  1 -> 1 [label = "<2>a"]
+  1 -> 2 [label = "<3>b"]
   2 -> F2
-  2 -> 1 [label = "{2}a"]
-  2 -> 2 [label = "{3}b"]
+  2 -> 1 [label = "<2>a"]
+  2 -> 2 [label = "<3>b"]
 EOF
 
-check -W z -e '{2}({3}a+{5}b)*{7}' <<EOF
+check -W z -e '<2>(<3>a+<5>b)*<7>' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -483,18 +483,18 @@ check -W z -e '{2}({3}a+{5}b)*{7}' <<EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{14}"]
-  0 -> 1 [label = "{6}a"]
-  0 -> 2 [label = "{10}b"]
-  1 -> F1 [label = "{7}"]
-  1 -> 1 [label = "{3}a"]
-  1 -> 2 [label = "{5}b"]
-  2 -> F2 [label = "{7}"]
-  2 -> 1 [label = "{3}a"]
-  2 -> 2 [label = "{5}b"]
+  0 -> F0 [label = "<14>"]
+  0 -> 1 [label = "<6>a"]
+  0 -> 2 [label = "<10>b"]
+  1 -> F1 [label = "<7>"]
+  1 -> 1 [label = "<3>a"]
+  1 -> 2 [label = "<5>b"]
+  2 -> F2 [label = "<7>"]
+  2 -> 1 [label = "<3>a"]
+  2 -> 2 [label = "<5>b"]
 EOF
 
-check -W z -e '{2}({3}(ab){5})*{7}' <<EOF
+check -W z -e '<2>(<3>(ab)<5>)*<7>' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -503,11 +503,11 @@ check -W z -e '{2}({3}(ab){5})*{7}' <<EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{14}"]
-  0 -> 1 [label = "{6}a"]
+  0 -> F0 [label = "<14>"]
+  0 -> 1 [label = "<6>a"]
   1 -> 2 [label = "b"]
-  2 -> F2 [label = "{35}"]
-  2 -> 1 [label = "{15}a"]
+  2 -> F2 [label = "<35>"]
+  2 -> 1 [label = "<15>a"]
 EOF
 
 fail -W z -e 'a**'
@@ -516,7 +516,7 @@ fail -W z -e 'a**'
 ## ZR: star.  ##
 ## ---------- ##
 
-check -W zr -e '({e}\e+abc)*' <<EOF
+check -W zr -e '(<e>\e+abc)*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -525,15 +525,15 @@ check -W zr -e '({e}\e+abc)*' <<EOF
   }
   { 0 1 2 3 }
   I0 -> 0
-  0 -> F0 [label = "{e*}"]
-  0 -> 1 [label = "{e*}a"]
+  0 -> F0 [label = "<e*>"]
+  0 -> 1 [label = "<e*>a"]
   1 -> 2 [label = "b"]
   2 -> 3 [label = "c"]
-  3 -> F3 [label = "{e*}"]
-  3 -> 1 [label = "{e*}a"]
+  3 -> F3 [label = "<e*>"]
+  3 -> 1 [label = "<e*>a"]
 EOF
 
-check -W zr -e '({e}\e+ab{f})*' <<EOF
+check -W zr -e '(<e>\e+ab<f>)*' <<EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -542,9 +542,9 @@ check -W zr -e '({e}\e+ab{f})*' <<EOF
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> F0 [label = "{e*}"]
-  0 -> 1 [label = "{e*}a"]
+  0 -> F0 [label = "<e*>"]
+  0 -> 1 [label = "<e*>a"]
   1 -> 2 [label = "b"]
-  2 -> F2 [label = "{f.(e*)}"]
-  2 -> 1 [label = "{f.(e*)}a"]
+  2 -> F2 [label = "<f.(e*)>"]
+  2 -> 1 [label = "<f.(e*)>a"]
 EOF

@@ -55,7 +55,7 @@
 
 %x SC_CONTEXT SC_WEIGHT
 
-char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
+char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
 %%
 %{
@@ -63,8 +63,6 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   unsigned int nesting = 0;
   // Build a context string.  "static" only to save build/dtor.
   static std::string context;
-  // Grow a string before returning it.
-  std::string* sval = 0;
 
   yylloc->step();
 %}
@@ -96,7 +94,7 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
   "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
   "(?#"[^)]*")"  continue;
 
-  "{"     sval = new std::string(); yy_push_state(SC_WEIGHT);
+  "<"     yylval->sval = new std::string(); yy_push_state(SC_WEIGHT);
 
   {char}  yylval->cval = *yytext; return TOK(LETTER);
   "\n"    continue;
@@ -105,24 +103,24 @@ char      ([a-zA-Z0-9_]|\\[{}()+.*:\"])
 }
 
 <SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
-  "{"                           {
+  "<"                           {
     ++nesting;
-    *sval += yytext;
-  } // push brace
-  "}"                           {
+    *yylval->sval += yytext;
+  }
+
+  ">"                           {
     if (nesting)
       {
         --nesting;
-        *sval += yytext;
+        *yylval->sval += yytext;
       }
     else
       {
         yy_pop_state();
-        yylval->sval = sval;
         return TOK(WEIGHT);
       }
   }
-  [^{}]+       *sval += yytext;
+  [^<>]+       *yylval->sval += yytext;
 }
 
 <SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */

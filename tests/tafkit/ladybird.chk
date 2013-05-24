@@ -36,11 +36,11 @@ digraph
     F0
   }
   { 0 1 }
-  I0 -> 0 [label = "{0}"]
-  0 -> F0 [label = "{0}"]
-  0 -> 1 [label = "{0}a"]
-  1 -> 0 [label = "{0}a, {0}c"]
-  1 -> 1 [label = "{0}b, {0}c"]
+  I0 -> 0 [label = "<0>"]
+  0 -> F0 [label = "<0>"]
+  0 -> 1 [label = "<0>a"]
+  1 -> 0 [label = "<0>a, <0>c"]
+  1 -> 1 [label = "<0>b, <0>c"]
 }
 EOF
 

@@ -107,12 +107,12 @@ check_entry(const context_t& ctx)
   aut.set_initial(s[0]);
   aut.set_final(s[size-1]);
 
-  aut.add_entry(s[0], s[1], aut.entryset().conv("{3}a+{4}b"));
+  aut.add_entry(s[0], s[1], aut.entryset().conv("<3>a+<4>b"));
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[0], s[1], 'a')), 3);
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[0], s[1], 'b')), 4);
   ASSERT_EQ(aut.has_transition(s[0], s[1], 'c'), false);
 
-  aut.add_entry(s[1], s[2], aut.entryset().conv("{5}c+{6}d"));
+  aut.add_entry(s[1], s[2], aut.entryset().conv("<5>c+<6>d"));
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'c')), 5);
   ASSERT_EQ(aut.weight_of(aut.get_transition(s[1], s[2], 'd')), 6);
 

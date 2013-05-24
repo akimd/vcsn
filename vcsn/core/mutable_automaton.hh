@@ -483,11 +483,16 @@ namespace vcsn
     std::string
     format_transition(transition_t t) const
     {
+      constexpr char lbracket = '<';
+      constexpr char rbracket = '>';
+
       std::ostringstream o;
       o << src_of(t)
-        << " -- {" << weightset()->format(weight_of(t)) << "}"
+        << " -- "
+        << lbracket << weightset()->format(weight_of(t)) << rbracket
         << labelset()->format(label_of(t))
-        << " --> " << dst_of(t);
+        << " --> "
+        << dst_of(t);
       return o.str();
     }
 

@@ -34,8 +34,8 @@ check 'abc+aba' '(aba)+(cba)'
 check '(ab)*' '(ba)*'
 
 ctx='-W zrr -Lw'
-check2 '{{{2}xy}ef}abcd' '{{{2}yx}fe}dcba'
-check2 '({ef}(abcd)*{gh})' '({hg}(dcba)*{fe})'
+check2 '<<<2>xy>ef>abcd' '<<<2>yx>fe>dcba'
+check2 '(<ef>(abcd)*<gh>)' '(<hg>(dcba)*<fe>)'
 
 
 ## --------------------------- ##
@@ -71,22 +71,22 @@ check 'lal_char(abcd)_b' 'abc' <<EOF
   3 -> F3                              |    3 -> 2 [label = "c"]
 EOF
 
-check 'law_char(abcd)_ratexpset<law_char(abcd)_b>' '{ab}(\e+a+b({abc}c{bcd})*){cd}' <<EOF
+check 'law_char(abcd)_ratexpset<law_char(abcd)_b>' '<ab>(\e+a+b(<abc>c<bcd>)*)<cd>' <<EOF
                                        >      I1
                                        >      I2
                                        >      I3
     F1                                 <
     F2                                 <
     F3                                 <
-  I0 -> 0                              |    I0 -> 0 [label = "{(dc).(ba)}"]
-  0 -> F0 [label = "{(ab).(cd)}"]      |    I1 -> 1 [label = "{dc}"]
-  0 -> 1 [label = "{ab}a"]             |    I2 -> 2 [label = "{dc}"]
-  0 -> 2 [label = "{ab}b"]             |    I3 -> 3 [label = "{dc}"]
-  1 -> F1 [label = "{cd}"]             |    0 -> F0
-  2 -> F2 [label = "{cd}"]             |    1 -> 0 [label = "{ba}a"]
-  2 -> 3 [label = "{(abc).(bcd)}c"]    |    2 -> 0 [label = "{ba}b"]
-  3 -> F3 [label = "{cd}"]             |    3 -> 2 [label = "{(dcb).(cba)}c"]
-  3 -> 3 [label = "{(abc).(bcd)}c"]    |    3 -> 3 [label = "{(dcb).(cba)}c"]
+  I0 -> 0                              |    I0 -> 0 [label = "<(dc).(ba)>"]
+  0 -> F0 [label = "<(ab).(cd)>"]      |    I1 -> 1 [label = "<dc>"]
+  0 -> 1 [label = "<ab>a"]             |    I2 -> 2 [label = "<dc>"]
+  0 -> 2 [label = "<ab>b"]             |    I3 -> 3 [label = "<dc>"]
+  1 -> F1 [label = "<cd>"]             |    0 -> F0
+  2 -> F2 [label = "<cd>"]             |    1 -> 0 [label = "<ba>a"]
+  2 -> 3 [label = "<(abc).(bcd)>c"]    |    2 -> 0 [label = "<ba>b"]
+  3 -> F3 [label = "<cd>"]             |    3 -> 2 [label = "<(dcb).(cba)>c"]
+  3 -> 3 [label = "<(abc).(bcd)>c"]    |    3 -> 3 [label = "<(dcb).(cba)>c"]
 EOF
 
 

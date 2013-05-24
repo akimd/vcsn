@@ -13,10 +13,10 @@ digraph
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> 0 [label = "{42}d"]
-  0 -> 1 [label = "{42}c"]
+  0 -> 0 [label = "<42>d"]
+  0 -> 1 [label = "<42>c"]
   0 -> 2 [label = "d"]
-  1 -> F1 [label = "{10}"]
+  1 -> F1 [label = "<10>"]
   1 -> 0 [label = "b"]
   1 -> 2 [label = "a"]
 }
@@ -39,9 +39,9 @@ digraph
   }
   { 0 1 2 }
   I0 -> 0
-  0 -> 1 [label = "{42}c"]
+  0 -> 1 [label = "<42>c"]
   0 -> 2 [label = "d"]
-  1 -> F1 [label = "{10}"]
+  1 -> F1 [label = "<10>"]
   1 -> 0 [label = "b"]
   1 -> 2 [label = "a"]
 }
@@ -55,7 +55,7 @@ digraph
     F0
   }
   { 0 1 }
-  0 -> F0 [label = "{10}"]
+  0 -> F0 [label = "<10>"]
   0 -> 1 [label = "a"]
 }
 digraph
@@ -68,7 +68,7 @@ digraph
     F0
   }
   { 0 1 }
-  0 -> F0 [label = "{10}"]
+  0 -> F0 [label = "<10>"]
 }
 EOF
 run 0 out.exp unit/aut_lal_char_z

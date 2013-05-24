@@ -18,12 +18,12 @@ check_exp ()
 
 check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
 check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
-    "{{{42}x}d}a+{{{51}x}d}a+({{{42}y}e}b)*" \
-    "{{{42}x}d}a+{{{51}x}d}a+(({{{42}y}e}b)*)"
+    "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*" \
+    "<<<42>x>d>a+<<<51>x>d>a+((<<<42>y>e>b)*)"
 
 # Check that we do support digits as letters.
 check_exp 'lal_char(0123)_b' "0123" "0.1.2.3"
-check_exp 'lal_char(0123)_z' "{0123}0123" "{123}(0.1.2.3)"
+check_exp 'lal_char(0123)_z' "<0123>0123" "<123>(0.1.2.3)"
 
 
 # check_info EXP-OUT VCSN-CAT-ARGS...
@@ -71,8 +71,8 @@ check_stdof ()
 }
 
 check_stdof 'lal_char(abcd)_b' "abcd"
-check_stdof 'lal_char(abcd)_z' "{3}\\e"
-check_stdof 'lal_char(abcd)_zmin' "{3}(\\e+a)"
+check_stdof 'lal_char(abcd)_z' "<3>\\e"
+check_stdof 'lal_char(abcd)_zmin' "<3>(\\e+a)"
 
 
 ## ------------------ ##
@@ -187,8 +187,8 @@ check_aut <<EOF
 digraph
 {
   vcsn_context = "lau_z"
-  0 -> 1 [label = "{42}"]
-  0 -> 1 [label = "{51}"]
+  0 -> 1 [label = "<42>"]
+  0 -> 1 [label = "<51>"]
   1 -> F1
   I0 -> 0
 }
@@ -205,7 +205,7 @@ digraph
   }
   { 0 1 }
   I0 -> 0
-  0 -> 1 [label = "{93}"]
+  0 -> 1 [label = "<93>"]
   1 -> F1
 }
 EOF

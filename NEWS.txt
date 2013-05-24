@@ -1,3 +1,13 @@
+* 2013-05-24
+** Syntax for rational-expressions has changed!
+Angular brackets are now used for weights.  Instead of
+
+  $ vcsn-standard -e '(?@lal_char(01)_z)(0+1)*1({2}1+{2}0)*' -o binary.dot
+
+run
+
+  $ vcsn-standard -e '(?@lal_char(01)_z)(0+1)*1(<2>1+<2>0)*' -o binary.dot
+
 * 2013-05-23
 ** info output
 Now displays the number of spontaneous transitions (0 for LAL).

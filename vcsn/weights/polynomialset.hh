@@ -207,7 +207,7 @@ namespace vcsn
           SKIP_SPACES();
           weight_t w = weightset()->unit();
           bool default_w = true;
-          if (i.peek() == '{')
+          if (i.peek() == lbracket)
             {
               i.ignore();
               size_t level = 1;
@@ -215,9 +215,9 @@ namespace vcsn
               o.str("");
               while (true)
                 {
-                  if (i.peek() == '{')
+                  if (i.peek() == lbracket)
                     ++level;
-                  else if (i.peek() == '}'
+                  else if (i.peek() == rbracket
                            && !--level)
                     {
                       i.ignore();
@@ -298,8 +298,8 @@ namespace vcsn
 
             if (show_unit || !weightset()->is_unit(i.second))
               {
-                out << "{";
-                weightset()->print(out, i.second) << "}";
+                out << lbracket;
+                weightset()->print(out, i.second) << rbracket;
               }
             // FIXME: LAU should not have to be treated especially.
             if (!context_t::is_lau)
@@ -321,6 +321,11 @@ namespace vcsn
     context_t ctx_;
     value_t zero_;
     value_t unit_;
+
+    /// Left marker for weight in concrete syntax.
+    constexpr static char lbracket = '<';
+    /// Right marker for weight in concrete syntax.
+    constexpr static char rbracket = '>';
   };
 
 }

@@ -68,4 +68,3 @@ int main()
 
   return !!errs;
 }
-#undef EVAL

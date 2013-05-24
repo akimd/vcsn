@@ -94,9 +94,11 @@ namespace vcsn
     {
       if (shows_(w))
         {
-          out_ << '{';
+          const char lbracket = '<';
+          const char rbracket = '>';
+          out_ << lbracket;
           ctx_.weightset()->print(out_, w);
-          out_ << '}';
+          out_ << rbracket;
         }
     }
 
