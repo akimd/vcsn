@@ -8,6 +8,26 @@ run
 
   $ vcsn-standard -e '(?@lal_char(01)_z)(0+1)*1(<2>1+<2>0)*' -o binary.dot
 
+Braces are now used instead of (*...) for generalized quantifiers.
+
+  a{0} => \e
+  a{1} => a
+  a{2} => a.a
+  a{5} => a.a.a.a.a
+
+  a{0,1} => \e+a
+  a{0,2} => \e+a+a.a
+  a{0,3} => \e+a+a.a+a.a.a
+
+  a{1,2} => a.(\e+a
+  a{1,3} => a.(\e+a+a.a)
+
+  a{2,5} => a.a.(\e+a+a.a+a.a.a)
+
+  a{0,} => a*
+  a{1,} => a.(a*)
+  a{4,} => a.a.a.a.(a*)
+
 * 2013-05-23
 ** info output
 Now displays the number of spontaneous transitions (0 for LAL).

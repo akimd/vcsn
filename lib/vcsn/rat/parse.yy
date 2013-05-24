@@ -160,7 +160,6 @@
         DOT   "."
         ONE   "\\e"
         ZERO  "\\z"
-        LPAREN_STAR  "(*"
         COMMA  ","
 ;
 
@@ -177,7 +176,7 @@
 %left LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
 %left "(" "\\z" "\\e" "letter"
 %left CONCAT
-%right "*" "(*"
+%right "*"
 
 %start exps
 %%

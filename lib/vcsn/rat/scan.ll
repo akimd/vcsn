@@ -85,7 +85,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       yylval->irange = std::make_tuple(-1, -1);
       return TOK(STAR);
   }
-  "(*"[0-9]*,?[0-9]*")"    {
+  "{"[0-9]*,?[0-9]*"}"    {
       yylval->irange = quantifier(driver_, *yylloc, yytext);
       return TOK(STAR);
   }
@@ -179,11 +179,11 @@ namespace vcsn
           return lexical_cast<int>(d, loc, s);
       }
 
-      // Decode a quantifier's value: "(*1,2)" etc.
+      // Decode a quantifier's value: "{1,2}" etc.
       irange_type
       quantifier(driver& d, const location& loc, const std::string& s)
       {
-        std::regex arity_re{"\\(\\*([0-9]*)(,?)([0-9]*)\\)",
+        std::regex arity_re{"\\{([0-9]*)(,?)([0-9]*)\\}",
                             std::regex::extended};
         std::smatch minmax;
         if (!std::regex_match(s, minmax, arity_re))

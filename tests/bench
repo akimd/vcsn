@@ -20,11 +20,11 @@ Select the base I<bench> to use.  Defaults to I<ladybird>.
 
 =item I<aopt>
 
-Determinization of C<(\e+a)(*$size)>.
+Determinization of C<(\e+a){$size}>.
 
 =item I<epsr>
 
-Epsilon removal of C<(\e+a)(*$size)>.
+Epsilon removal of C<(\e+a){$size}>.
 
 =item I<lady>
 
@@ -331,7 +331,7 @@ sub setup_det_aopt ($)
 
   verbose 1, "Aopt $size\n";
   my $base = "aopt-$size";
-  standard ($base, "(\\e+a)(*$size)", "lal_char(a)_b");
+  standard ($base, "(\\e+a){$size}", "lal_char(a)_b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)
@@ -374,7 +374,7 @@ sub setup_eps_aopt ($)
 
   verbose 1, "Aopt $size\n";
   my $base = "tho-aopt-$size";
-  thompson ($base, "(\\e+a)(*$size)", "lan_char(a)_b");
+  thompson ($base, "(\\e+a){$size}", "lan_char(a)_b");
   # Set up the benches as expected by timethese.
   my %res;
   for my $d (@tool)
