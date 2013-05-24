@@ -256,7 +256,7 @@ namespace vcsn
       auto& succ = states_[st.src].succ;
       auto tsucc = std::find(succ.begin(), succ.end(), t);
       assert(tsucc != succ.end());
-      *tsucc = succ.back();
+      *tsucc = std::move(succ.back());
       succ.pop_back();
     }
 
@@ -268,7 +268,7 @@ namespace vcsn
       auto& pred = states_[st.dst].pred;
       auto tpred = std::find(pred.begin(), pred.end(), t);
       assert(tpred != pred.end());
-      *tpred = pred.back();
+      *tpred = std::move(pred.back());
       pred.pop_back();
     }
 
