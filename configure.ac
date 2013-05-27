@@ -48,8 +48,6 @@ TC_CXX_WARNINGS(
    [-Wextra],
    [-Wbad-function-cast],
    [-Wcast-align],
-   [-Wcast-align],
-   [-Wcast-qual],
    [-Wcast-qual],
    [-Wextra],
    [-Wformat],
@@ -64,9 +62,7 @@ TC_CXX_WARNINGS(
    [-Wsuggest-attribute=noreturn -Wno-error=suggest-attribute=noreturn],
    [-Wsuggest-attribute=pure -Wno-error=suggest-attribute=pure],
    [-Wwrite-strings],
-   [-Wwrite-strings],
-   [-Wzero-as-null-pointer-constant]
-   ])
+   [-Wzero-as-null-pointer-constant]])
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 BOOST_REQUIRE([1.49])
