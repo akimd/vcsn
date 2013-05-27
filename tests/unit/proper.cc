@@ -3,7 +3,7 @@
 
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/info.hh>
-#include <vcsn/algos/eps-removal.hh>
+#include <vcsn/algos/proper.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/ctx/lal_char_z.hh>
@@ -38,14 +38,14 @@ static void check_lal_b()
   res.set_final(s[1]);
   std::cout << "***LAL***" << std::endl;
   print(res);
-  std::cout << "eps_removal:" << std::endl;
-  automaton_t pro = eps_removal(res);
+  std::cout << "proper:" << std::endl;
+  automaton_t pro = proper(res);
   print(pro);
-  std::cout << "backward_eps_removal:" << std::endl;
-  automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+  std::cout << "backward_proper:" << std::endl;
+  automaton_t pro2 = proper(res, direction_t::BACKWARD);
   print(pro2);
-  std::cout << "eps_removal_here:"<< std::endl;
-  eps_removal_here(res);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
   print(res);
 }
 
@@ -70,14 +70,14 @@ static void check_law_char_b()
 
   std::cout << "***LAW***" << std::endl;
   print(res);
-  std::cout << "eps_removal:" << std::endl;
-  automaton_t pro = eps_removal(res);
+  std::cout << "proper:" << std::endl;
+  automaton_t pro = proper(res);
   print(pro);
-  std::cout << "backward_eps_removal:" << std::endl;
-  automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+  std::cout << "backward_proper:" << std::endl;
+  automaton_t pro2 = proper(res, direction_t::BACKWARD);
   print(pro2);
-  std::cout << "eps_removal_here:"<< std::endl;
-  eps_removal_here(res);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
   print(res);
 }
 
@@ -99,11 +99,11 @@ static void check_lal_char_z()
   res.set_final(s[1]);
   std::cout << "***LAL Z***" << std::endl;
   print(res);
-  std::cout << "eps_removal:" << std::endl;
-  automaton_t pro = eps_removal(res);
+  std::cout << "proper:" << std::endl;
+  automaton_t pro = proper(res);
   print(pro);
-  std::cout << "eps_removal_here:"<< std::endl;
-  eps_removal_here(res);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
   print(res);
 }
 
@@ -130,7 +130,7 @@ static void check_law_char_z()
   std::cout << "* Circuit of eps-transition" << std::endl;
   print(res);
   try {
-    automaton_t pro = eps_removal(res);
+    automaton_t pro = proper(res);
     print(pro);
   }
   catch(std::domain_error& e) {
@@ -140,15 +140,15 @@ static void check_law_char_z()
   std::cout << "* No circuit of eps-transition" << std::endl;
   print(res);
   //dot(res,std::cerr);
-  std::cout << "eps_removal:" << std::endl;
-  automaton_t pro = eps_removal(res);
+  std::cout << "proper:" << std::endl;
+  automaton_t pro = proper(res);
   print(pro);
-  std::cout << "backward_eps_removal:" << std::endl;
-  automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+  std::cout << "backward_proper:" << std::endl;
+  automaton_t pro2 = proper(res, direction_t::BACKWARD);
   print(pro2);
   //dot(pro2,std::cerr);
-  std::cout << "eps_removal_here:"<< std::endl;
-  eps_removal_here(res);
+  std::cout << "proper_here:"<< std::endl;
+  proper_here(res);
   print(res);
 }
 
@@ -174,7 +174,7 @@ static void check_law_char_zmin()
   std::cout << "* Circuit of eps-transition" << std::endl;
   print(res);
   try {
-    automaton_t pro = eps_removal(res);
+    automaton_t pro = proper(res);
     print(pro);
   }
   catch(std::domain_error& e) {
@@ -184,15 +184,15 @@ static void check_law_char_zmin()
   std::cout << "* No negative circuit" << std::endl;
   print(res);
   //dot(res,std::cerr);
-  std::cout << "eps_removal:" << std::endl;
-  automaton_t pro = eps_removal(res);
+  std::cout << "proper:" << std::endl;
+  automaton_t pro = proper(res);
   print(pro);
-  std::cout << "backward_eps_removal:" << std::endl;
-  automaton_t pro2 = eps_removal(res, direction_t::BACKWARD);
+  std::cout << "backward_proper:" << std::endl;
+  automaton_t pro2 = proper(res, direction_t::BACKWARD);
   print(pro2);
   dot(pro2, std::cout) << std::endl;
-  std::cout << "eps_removal_here:" << std::endl;
-  eps_removal_here(res);
+  std::cout << "proper_here:" << std::endl;
+  proper_here(res);
   print(res);
 }
 

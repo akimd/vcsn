@@ -7,7 +7,7 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
-# include <vcsn/algos/eps-removal.hh>
+# include <vcsn/algos/proper.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/info.hh>
@@ -159,7 +159,7 @@ namespace vcsn
 
         is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
-        eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
+        proper_register(aut_t::sname(), proper<aut_t>);
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
 
@@ -184,8 +184,8 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        // eps-removal.
-        eps_removal_register(aut_t::sname(), eps_removal<aut_t>);
+        // proper.
+        proper_register(aut_t::sname(), proper<aut_t>);
 
         // thompson.
         thompson_register(Ctx::sname(), thompson<aut_t>);

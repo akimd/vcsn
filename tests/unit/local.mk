@@ -17,7 +17,7 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_lal_char_z                           \
   unit/aut_law_char_z                           \
   unit/concat                                   \
-  unit/eps-removal                              \
+  unit/proper                                   \
   unit/polynomialset                            \
   unit/transpose                                \
   unit/weight
@@ -32,7 +32,7 @@ unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
 unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
-unit_eps_removal_LDADD = $(all_libctx) $(AM_LDADD)
+unit_proper_LDADD = $(all_libctx) $(AM_LDADD)
 
 unit_polynomialset_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
 
@@ -43,7 +43,7 @@ unit_TESTS =                                    \
   unit/aut_lal_char_z.chk                       \
   unit/aut_law_char_z.chk                       \
   unit/concat.chk                               \
-  unit/eps-removal.chk                          \
+  unit/proper.chk                               \
   unit/polynomialset.chk                        \
   unit/transpose.chk                            \
   unit/weight.chk
@@ -57,7 +57,7 @@ unit/aut_lal_char_z.log: unit/aut_lal_char_z
 unit/aut_lau_z.log: unit/aut_lau_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/concat.log: unit/concat
-unit/eps-removal.log: unit/eps-removal
+unit/proper.log: unit/proper
 unit/polynomialset.log: unit/polynomialset
 unit/transpose.log: unit/transpose
 unit/weight.log: unit/weight

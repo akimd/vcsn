@@ -31,7 +31,7 @@ namespace vcsn
 
     dyn::weight eval(const automaton& aut, const std::string& s);
 
-    automaton eps_removal(const automaton& aut);
+    automaton proper(const automaton& aut);
 
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);

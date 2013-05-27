@@ -20,7 +20,7 @@ nobase_vcsn_HEADERS =                           \
   algos/determinize.hh                          \
   algos/dot.hh                                  \
   algos/edit-automaton.hh                       \
-  algos/eps-removal.hh                          \
+  algos/proper.hh                               \
   algos/eval.hh                                 \
   algos/fsm.hh                                  \
   algos/info.hh                                 \

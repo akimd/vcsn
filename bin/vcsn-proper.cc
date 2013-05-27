@@ -5,7 +5,7 @@
 
 #include "parse-args.hh"
 
-struct eps_removal: vcsn_function
+struct proper: vcsn_function
 {
   int work_aut(const options& opts) const
   {
@@ -14,7 +14,7 @@ struct eps_removal: vcsn_function
     auto aut = read_automaton(opts);
 
     // Process.
-    auto res = vcsn::dyn::eps_removal(aut);
+    auto res = vcsn::dyn::proper(aut);
 
     // Output.
     print(opts, res);
@@ -24,5 +24,5 @@ struct eps_removal: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, eps_removal{});
+  return vcsn_main(argc, argv, proper{});
 }

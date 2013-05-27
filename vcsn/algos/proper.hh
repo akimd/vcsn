@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_EPS_REMOVAL_HH
-# define VCSN_ALGOS_EPS_REMOVAL_HH
+#ifndef VCSN_ALGOS_PROPER_HH
+# define VCSN_ALGOS_PROPER_HH
 
 # include <stdexcept>
 # include <type_traits>
@@ -17,8 +17,8 @@ namespace vcsn
 {
 
   /**
-    @class epsilon_remover
-    @brief This class contains the core of the epsilon-removal algorithm.
+    @class properer
+    @brief This class contains the core of the proper algorithm.
 
     It contains also statics methods that deal with close notions:
     is_valid, is_proper.
@@ -28,7 +28,7 @@ namespace vcsn
   */
 
   template <typename Aut, typename Kind>
-  class epsilon_remover
+  class properer
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
@@ -38,7 +38,7 @@ namespace vcsn
     using transition_t = typename automaton_t::transition_t;
 
     /**
-      @brief The core of the epsilon-removal
+      @brief The core of the proper
 
       For each state s
         if s has an epsilon-loop with weight w
@@ -64,7 +64,7 @@ namespace vcsn
       If the method returns false, the input is corrupted.
 
       @param input The automaton in which epsilon-transitions while be removed
-      @return true if the epsilon-removal succeeds, or false otherwise.
+      @return true if the proper succeeds, or false otherwise.
       */
 
   public:
@@ -152,12 +152,12 @@ namespace vcsn
 
       The behavior of this method depends on the star_status of the weight_set:
       -- starable : return true;
-      -- tops : copy the input and return the result of epsilon_removal on the copy;
+      -- tops : copy the input and return the result of proper on the copy;
       -- non_starable : return true iff the automaton is epsilon-acyclic
 WARNING: for weight_sets with zero divisor, should test whether the weight of
 every simple circuit is zero;
 -- absval : build a copy of the input where each weight is replaced by its absolute value
-and eturn the result of epsilon_removal on the copy.
+and eturn the result of proper on the copy.
 @param input The tested automaton
 @return true iff the automaton is valid
 */
@@ -166,16 +166,16 @@ and eturn the result of epsilon_removal on the copy.
     /**@brief Remove the epsilon-transitions of the input
       The behaviour of this method depends on the star_status of the weight_set:
       -- starable : always valid, does not throw any exception
-      -- tops : the epsilon-removal algo is directly launched on the input;
+      -- tops : the proper algo is directly launched on the input;
       if it returns false, an exception is launched
       -- non_starable / absval:
       is_valid is called before launching the algorithm.
       @param input The automaton in which epsilon-transitions will be removed
       @throw domain_error if the input is not valid
       */
-    static void eps_removal_here(automaton_t& input);
+    static void proper_here(automaton_t& input);
 
-    static automaton_t eps_removal(const automaton_t& input);
+    static automaton_t proper(const automaton_t& input);
   };
 
   /*
@@ -188,10 +188,10 @@ and eturn the result of epsilon_removal on the copy.
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
   public:
-    static automaton_t eps_removal(const automaton_t &input)
+    static automaton_t proper(const automaton_t &input)
     {
       automaton_t res = copy(input);
-      eps_removal_here(res);
+      proper_here(res);
       return res;
     }
   };
@@ -200,14 +200,13 @@ and eturn the result of epsilon_removal on the copy.
   class EpsilonDispatcher : public basic_EpsilonDispatcher<Aut, Status>
   {};
 
-  /// TOPS : valid iff the epsilon removal succeeds
+  /// TOPS : valid iff the proper succeeds
 
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::TOPS>
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
-    using remover_t = epsilon_remover<automaton_t,
-                                      typename automaton_t::kind_t>;
+    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &input)
     {
@@ -218,7 +217,7 @@ and eturn the result of epsilon_removal on the copy.
       return remover_t::in_situ_remover(res);
     }
 
-    static void eps_removal_here(automaton_t &input)
+    static void proper_here(automaton_t &input)
     {
       if (!remover_t::in_situ_remover(input))
         throw std::domain_error("invalid automaton");
@@ -227,7 +226,7 @@ and eturn the result of epsilon_removal on the copy.
 
   /// !TOPS
 
-  /// ABSVAL : valid iff the epsilon-removal succeeds on the "absolute value"
+  /// ABSVAL : valid iff the proper succeeds on the "absolute value"
   /// of the automaton
   template <typename Aut>
   class EpsilonDispatcher<Aut, star_status_t::ABSVAL>
@@ -235,8 +234,7 @@ and eturn the result of epsilon_removal on the copy.
     using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
-    using remover_t = epsilon_remover<automaton_t,
-                                      typename automaton_t::kind_t>;
+    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &input)
     {
@@ -248,11 +246,11 @@ and eturn the result of epsilon_removal on the copy.
       auto weightset_ptr = input.weightset();
       for (auto t: tmp_aut.transitions())
         tmp_aut.set_weight(t, weightset_ptr->abs(tmp_aut.weight_of(t)));
-      // Apply eps-removal.
+      // Apply proper.
       return remover_t::in_situ_remover(tmp_aut);
     }
 
-    static void eps_removal_here(automaton_t &input)
+    static void proper_here(automaton_t &input)
     {
       if (!is_valid(input))
         throw std::domain_error("invalid automaton");
@@ -266,15 +264,14 @@ and eturn the result of epsilon_removal on the copy.
   class EpsilonDispatcher<Aut, star_status_t::STARABLE>
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
-    using remover_t = epsilon_remover<automaton_t,
-                                      typename automaton_t::kind_t>;
+    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &)
     {
       return true;
     }
 
-    static void eps_removal_here(automaton_t &input)
+    static void proper_here(automaton_t &input)
     {
       remover_t::in_situ_remover(input);
     }
@@ -292,8 +289,7 @@ and eturn the result of epsilon_removal on the copy.
     using automaton_t = typename std::remove_cv<Aut>::type;
     using state_t = typename automaton_t::state_t;
     using weightset_t = typename automaton_t::weightset_t;
-    using remover_t = epsilon_remover<automaton_t,
-                                      typename automaton_t::kind_t>;
+    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
   public:
     static bool is_valid(const automaton_t &input)
     {
@@ -301,7 +297,7 @@ and eturn the result of epsilon_removal on the copy.
               || is_eps_acyclic(input));
     }
 
-    static void eps_removal_here(automaton_t &input)
+    static void proper_here(automaton_t &input)
     {
       if (!is_valid(input))
         throw std::domain_error("invalid automaton");
@@ -313,7 +309,7 @@ and eturn the result of epsilon_removal on the copy.
 
   template <typename Aut, typename Kind>
   inline
-  bool epsilon_remover<Aut,Kind>::is_valid(const automaton_t& input)
+  bool properer<Aut,Kind>::is_valid(const automaton_t& input)
   {
     return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
       ::is_valid(input);
@@ -321,27 +317,27 @@ and eturn the result of epsilon_removal on the copy.
 
   template <typename Aut, typename Kind>
   inline
-  void epsilon_remover<Aut,Kind>::eps_removal_here(automaton_t& input)
+  void properer<Aut,Kind>::proper_here(automaton_t& input)
   {
     if (!is_proper(input))
       EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-        ::eps_removal_here(input);
+        ::proper_here(input);
   }
 
   template <typename Aut, typename Kind>
   inline
-  auto epsilon_remover<Aut,Kind>::eps_removal(const automaton_t& input)
+  auto properer<Aut,Kind>::proper(const automaton_t& input)
     -> automaton_t
   {
     Aut res = copy(input);
-    eps_removal_here(res);
+    proper_here(res);
     return res;
   }
 
   /* Special case of labels_are_letters */
 
   template <typename Aut>
-  class epsilon_remover<Aut, labels_are_letters>
+  class properer<Aut, labels_are_letters>
   {
     using automaton_t = typename std::remove_cv<Aut>::type;
   public:
@@ -359,61 +355,61 @@ and eturn the result of epsilon_removal on the copy.
 #ifndef __clang__
     constexpr
 #endif
-    void eps_removal_here(automaton_t &)
+    void proper_here(automaton_t &)
     {}
 
-    static Aut eps_removal(const automaton_t &input)
+    static Aut proper(const automaton_t &input)
     {
       return copy(input);
     }
   };
 
-  /*--------------------.
-  | eps_removal handler |
-  `--------------------*/
+  /*---------------.
+  | proper handler |
+  `---------------*/
 
   template <class Aut>
   inline
   bool is_proper(Aut &input)
   {
-    return epsilon_remover<Aut, typename Aut::kind_t>::is_proper(input);
+    return properer<Aut, typename Aut::kind_t>::is_proper(input);
   }
 
   template <class Aut>
   inline
   bool is_valid(Aut &input)
   {
-    return epsilon_remover<Aut, typename Aut::kind_t>::is_valid(input);
+    return properer<Aut, typename Aut::kind_t>::is_valid(input);
   }
 
   template <class Aut>
   inline
-  void eps_removal_here(Aut &input, direction_t dir = direction_t::FORWARD)
+  void proper_here(Aut &input, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
       case direction_t::FORWARD:
-        epsilon_remover<Aut, typename Aut::kind_t>::eps_removal_here(input);
+        properer<Aut, typename Aut::kind_t>::proper_here(input);
         return;
       case direction_t::BACKWARD:
         auto tr_input = transpose(input);
         using tr_aut_t = decltype(tr_input);
-        epsilon_remover<tr_aut_t, typename tr_aut_t::kind_t>
-          ::eps_removal_here(tr_input);
+        properer<tr_aut_t, typename tr_aut_t::kind_t>
+          ::proper_here(tr_input);
         return;
       }
   }
 
   template <class Aut>
-  Aut eps_removal(const Aut &input, direction_t dir = direction_t::FORWARD)
+  Aut proper(const Aut &input, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
       case direction_t::FORWARD:
-        return epsilon_remover<Aut, typename Aut::kind_t>::eps_removal(input);
+        return properer<Aut, typename Aut::kind_t>::proper(input);
       default: //direction_t::BACKWARD
         Aut res = copy(input);
-        eps_removal_here(res, direction_t::BACKWARD);
+        proper_here(res, direction_t::BACKWARD);
         return res;
       }
   }
@@ -421,21 +417,20 @@ and eturn the result of epsilon_removal on the copy.
   namespace dyn
   {
 
-    /*-------------------.
-    | dyn::eps_removal.  |
-    `-------------------*/
+    /*--------------.
+    | dyn::proper.  |
+    `--------------*/
 
     namespace detail
     {
       template <typename Aut>
-      automaton eps_removal(const automaton& aut)
+      automaton proper(const automaton& aut)
       {
         const auto &a = dynamic_cast<const Aut &>(*aut);
-        return make_automaton(a.context(), eps_removal(a));
+        return make_automaton(a.context(), proper(a));
       }
 
-     REGISTER_DECLARE(eps_removal,
-                      (const automaton &aut) -> automaton);
+     REGISTER_DECLARE(proper, (const automaton &aut) -> automaton);
     }
 
     /*-----------------.
@@ -459,4 +454,4 @@ and eturn the result of epsilon_removal on the copy.
 
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_EPS_REMOVAL_HH
+#endif // !VCSN_ALGOS_PROPER_HH

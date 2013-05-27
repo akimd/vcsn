@@ -30,7 +30,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/determinize.cc                 \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
-  lib/vcsn/algos/eps-removal.cc                 \
+  lib/vcsn/algos/proper.cc                      \
   lib/vcsn/algos/eval.cc                        \
   lib/vcsn/algos/fsm.cc                         \
   lib/vcsn/algos/info.cc                        \

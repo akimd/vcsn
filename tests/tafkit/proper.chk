@@ -4,7 +4,7 @@
 ## ------------------
 check ()
 {
-  run 0 "$2" -vcsn-eps-removal -A -I dot -f "$1"
+  run 0 "$2" -vcsn-proper -A -I dot -f "$1"
 }
 
 cat >a.gv <<\EOF
@@ -69,7 +69,7 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-eps-removal -A -I dot -f a.gv
+run 1 "" -vcsn-proper -A -I dot -f a.gv
 
 cat >a.gv <<\EOF
 digraph
@@ -130,5 +130,5 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-eps-removal -A -I dot -f a.gv
+run 1 "" -vcsn-proper -A -I dot -f a.gv
 

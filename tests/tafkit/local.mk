@@ -17,7 +17,7 @@ tafkit_TESTS =                                  \
   tafkit/cat.chk                                \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
-  tafkit/eps-removal.chk                        \
+  tafkit/proper.chk                             \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
   tafkit/is-deterministic-fail.chk              \

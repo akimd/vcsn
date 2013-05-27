@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/eps-removal.hh>
+#include <vcsn/algos/proper.hh>
 #include <vcsn/dyn/algos.hh>
 
 namespace vcsn
