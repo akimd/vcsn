@@ -44,7 +44,6 @@ namespace vcsn
       return "polynomialset<" + context().vname(full) + ">";
     }
 
-
     const context_t& context() const { return ctx_; }
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
@@ -136,7 +135,8 @@ namespace vcsn
               return p;
             }
         }
-      throw std::domain_error("polynomialset: star: invalid value: " + format(v));
+      throw std::domain_error("polynomialset: star: invalid value: "
+                              + format(v));
     }
 
     const value_t&
