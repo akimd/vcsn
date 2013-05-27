@@ -30,7 +30,6 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/determinize.cc                 \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
-  lib/vcsn/algos/proper.cc                      \
   lib/vcsn/algos/eval.cc                        \
   lib/vcsn/algos/fsm.cc                         \
   lib/vcsn/algos/info.cc                        \
@@ -43,6 +42,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/make-context.cc                \
   lib/vcsn/algos/print.cc                       \
   lib/vcsn/algos/product.cc                     \
+  lib/vcsn/algos/proper.cc                      \
   lib/vcsn/algos/read.cc                        \
   lib/vcsn/algos/registry.hh                    \
   lib/vcsn/algos/standard.cc                    \

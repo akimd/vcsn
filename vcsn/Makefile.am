@@ -20,7 +20,6 @@ nobase_vcsn_HEADERS =                           \
   algos/determinize.hh                          \
   algos/dot.hh                                  \
   algos/edit-automaton.hh                       \
-  algos/proper.hh                               \
   algos/eval.hh                                 \
   algos/fsm.hh                                  \
   algos/info.hh                                 \
@@ -31,6 +30,7 @@ nobase_vcsn_HEADERS =                           \
   algos/make-context.hh                         \
   algos/print.hh                                \
   algos/product.hh                              \
+  algos/proper.hh                               \
   algos/standard.hh                             \
   algos/thompson.hh                             \
   algos/tikz.hh                                 \

@@ -1,3 +1,7 @@
+*2013-05-27
+** Refactoring: eps-removal => proper
+Eps-removal is renamed to Proper.
+
 * 2013-05-24
 ** Syntax for rational-expressions has changed!
 Angular brackets are now used for weights.  Instead of

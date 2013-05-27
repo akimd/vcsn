@@ -17,7 +17,6 @@ tafkit_TESTS =                                  \
   tafkit/cat.chk                                \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
-  tafkit/proper.chk                             \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
   tafkit/is-deterministic-fail.chk              \
@@ -26,6 +25,7 @@ tafkit_TESTS =                                  \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
   tafkit/product.chk                            \
+  tafkit/proper.chk                             \
   tafkit/standard.chk                           \
   tafkit/transpose.chk
 
