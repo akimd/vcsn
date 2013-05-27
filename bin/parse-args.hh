@@ -6,6 +6,7 @@
 # include <vector>
 
 # include <vcsn/dyn/algos.hh>
+# include <vcsn/misc/attributes.hh>
 
 struct options
 {
@@ -35,7 +36,6 @@ struct options
   std::vector<std::string> argv;
 };
 
-// FIXME: GCC 4.8 does not recognize it [[noreturn]]
 void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.

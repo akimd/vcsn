@@ -11,6 +11,7 @@
 # pragma clang diagnostic ignored "-Wnull-conversion"
 #elif defined __GNUC__
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 }
 
@@ -86,8 +87,9 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       return TOK(STAR);
   }
   "{"[0-9]*,?[0-9]*"}"    {
-      yylval->irange = quantifier(driver_, *yylloc,
-                                  std::string{yytext+1, yyleng-2});
+      yylval->irange
+        = quantifier(driver_, *yylloc,
+                     {yytext+1, static_cast<size_t>(yyleng)-2});
       return TOK(STAR);
   }
 

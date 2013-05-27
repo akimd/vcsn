@@ -125,6 +125,9 @@
 {
   #include <cassert>
 
+  # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+  # pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+
   /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
   driver_.ratexpset_->Kind(__VA_ARGS__)

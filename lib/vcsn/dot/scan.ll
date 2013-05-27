@@ -12,6 +12,7 @@
 # pragma clang diagnostic ignored "-Wnull-conversion"
 #elif defined __GNUC__
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 }
 

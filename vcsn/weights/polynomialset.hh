@@ -6,6 +6,7 @@
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
@@ -87,7 +88,7 @@ namespace vcsn
     }
 
     const weight_t
-    get_weight(value_t& v, const word_t& w) const
+    get_weight(value_t& v, const word_t& w) const ATTRIBUTE_PURE
     {
       auto i = v.find(w);
       if (i == v.end())
@@ -145,7 +146,7 @@ namespace vcsn
     }
 
     bool
-    is_unit(const value_t& v) const
+    is_unit(const value_t& v) const ATTRIBUTE_PURE
     {
       if (v.size() != 1)
         return false;

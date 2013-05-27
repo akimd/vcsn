@@ -4,6 +4,8 @@
 # include <vcsn/empty.hh>
 # include <vcsn/weights/b.hh>
 
+# include <vcsn/misc/attributes.hh>
+
 namespace vcsn
 {
 
@@ -63,7 +65,7 @@ namespace vcsn
   {
     using weight_t = bool;
     weight_t get_weight() const { return true; }
-    void set_weight(weight_t& k) { assert(k == true); }
+    void set_weight(weight_t& k) ATTRIBUTE_PURE { assert(k == true); }
   };
 
 }
