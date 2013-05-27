@@ -110,6 +110,7 @@ nobase_vcsn_HEADERS =                           \
   misc/echo.hh                                  \
   misc/escape.hh                                \
   misc/hash.hh                                  \
+  misc/regex.hh                                 \
   misc/set.hh                                   \
   misc/star_status.hh                           \
   misc/unordered_set.hh                         \
