@@ -209,23 +209,23 @@ namespace vcsn
     class EpsilonDispatcher<Aut, star_status_t::TOPS>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
-        if (remover_t::is_proper(input)
+        if (properer_t::is_proper(input)
             || is_eps_acyclic(input))
           return true;
         else
           {
             automaton_t res = copy(input);
-            return remover_t::in_situ_remover(res);
+            return properer_t::in_situ_remover(res);
           }
       }
 
       static void proper_here(automaton_t& input)
       {
-        if (!remover_t::in_situ_remover(input))
+        if (!properer_t::in_situ_remover(input))
           throw std::domain_error("invalid automaton");
       }
     };
@@ -240,11 +240,11 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
-        if (remover_t::is_proper(input)
+        if (properer_t::is_proper(input)
             || is_eps_acyclic(input))
           return true;
         else
@@ -255,7 +255,7 @@ namespace vcsn
             for (auto t: tmp_aut.transitions())
               tmp_aut.set_weight(t, weightset.abs(tmp_aut.weight_of(t)));
             // Apply proper.
-            return remover_t::in_situ_remover(tmp_aut);
+            return properer_t::in_situ_remover(tmp_aut);
           }
       }
 
@@ -263,7 +263,7 @@ namespace vcsn
       {
         if (!is_valid(input))
           throw std::domain_error("invalid automaton");
-        remover_t::in_situ_remover(input);
+        properer_t::in_situ_remover(input);
       }
     };
     /// !ABSVAL
@@ -273,7 +273,7 @@ namespace vcsn
     class EpsilonDispatcher<Aut, star_status_t::STARABLE>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
       static bool is_valid(const automaton_t&)
       {
@@ -282,7 +282,7 @@ namespace vcsn
 
       static void proper_here(automaton_t& input)
       {
-        remover_t::in_situ_remover(input);
+        properer_t::in_situ_remover(input);
       }
     };
 
@@ -298,11 +298,11 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
-        return (remover_t::is_proper(input)
+        return (properer_t::is_proper(input)
                 || is_eps_acyclic(input));
       }
 
@@ -310,7 +310,7 @@ namespace vcsn
       {
         if (!is_valid(input))
           throw std::domain_error("invalid automaton");
-        remover_t::in_situ_remover(input);
+        properer_t::in_situ_remover(input);
       }
     };
 
