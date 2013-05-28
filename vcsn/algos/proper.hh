@@ -16,354 +16,357 @@
 namespace vcsn
 {
 
-  /**
-    @class properer
-    @brief This class contains the core of the proper algorithm.
-
-    It contains also statics methods that deal with close notions:
-    is_valid, is_proper.
-    This class is specialized for labels_are_letter automata since all these
-    methods become trivial.
-
-  */
-
-  template <typename Aut, typename Kind>
-  class properer
+  namespace detail
   {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-    using state_t = typename automaton_t::state_t;
-    using weightset_t = typename automaton_t::weightset_t;
-    using weight_t = typename weightset_t::value_t;
-    using label_t = typename automaton_t::label_t;
-    using transition_t = typename automaton_t::transition_t;
-
     /**
-      @brief The core of the proper
+       @class properer
+       @brief This class contains the core of the proper algorithm.
 
-      For each state s
-        if s has an epsilon-loop with weight w
-            if w is not starable, return false
-              else compute ws = star(w)
-            endif
-            remove the loop
-        else
-          ws = 1
-        endif
-        for each incoming epsilon transition e:p-->s with weight h
-          for each outgoing transition s--a|k-->q
-            add (and not set) transition p-- a | h.ws.k --> q
-          endfor
-          if s is final with weight h
-            add final weight h.ws to p
-          endif
-          remove e
-        endfor
-      endfor
-      return true
+       It contains also statics methods that deal with close notions:
+       is_valid, is_proper.
+       This class is specialized for labels_are_letter automata since all these
+       methods become trivial.
 
-      If the method returns false, the input is corrupted.
+    */
 
-      @param input The automaton in which epsilon-transitions while be removed
-      @return true if the proper succeeds, or false otherwise.
+    template <typename Aut, typename Kind>
+    class properer
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using state_t = typename automaton_t::state_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+      using label_t = typename automaton_t::label_t;
+      using transition_t = typename automaton_t::transition_t;
+
+      /**
+         @brief The core of the epsilon-removal
+
+         For each state s
+         if s has an epsilon-loop with weight w
+         if w is not starable, return false
+         else compute ws = star(w)
+         endif
+         remove the loop
+         else
+         ws = 1
+         endif
+         for each incoming epsilon transition e:p-->s with weight h
+         for each outgoing transition s--a|k-->q
+         add (and not set) transition p-- a | h.ws.k --> q
+         endfor
+         if s is final with weight h
+         add final weight h.ws to p
+         endif
+         remove e
+         endfor
+         endfor
+         return true
+
+         If the method returns false, the input is corrupted.
+
+         @param input The automaton in which epsilon-transitions will be removed
+         @return true if the proper succeeds, or false otherwise.
       */
 
-  public:
-    static bool in_situ_remover(automaton_t& input)
-    {
-      label_t empty_word = input.labelset()->identity();
-      auto weightset_ptr = input.weightset();
-      using state_weight_t = std::pair<state_t, weight_t>;
-      std::vector<state_weight_t> closure;
-      /*
-         For each state (s), the incoming epsilon-transitions
-         are put into the to_erase list; in the same time,
-         for each of these transitions (t), if (t) is a loop,
-         the star of its weight is computed, otherwise,
-         (t) is stored into the closure list.
-         */
-      for (auto s: input.states())
+    public:
+      static bool in_situ_remover(automaton_t& input)
       {
-        weight_t star = weightset_ptr->unit();// if there is no eps-loop
-        closure.clear();
-        const auto& tr = input.in(s, empty_word);
-        std::vector<transition_t> transitions;
-        std::copy(tr.begin(), tr.end(), std::back_inserter(transitions));
-        for (auto t : transitions)
-        {
-          weight_t t_weight = input.weight_of(t);
-          state_t src = input.src_of(t);
-          if (src == s)  //loop
-            try
-              {
-                star = weightset_ptr->star(t_weight);
-              }
-            catch (const std::domain_error &)
-              {
-                return false;
-              }
-          else
-            closure.emplace_back(src, t_weight);
-          // Incoming epsilon transitions are deleted from input.
-          input.del_transition(t);
-        }
+        label_t empty_word = input.labelset()->identity();
+        auto weightset_ptr = input.weightset();
+        using state_weight_t = std::pair<state_t, weight_t>;
+        std::vector<state_weight_t> closure;
         /*
-           For each transition (t : s -- label|weight --> dst),
-           for each former
-           epsilon transition closure->first -- e|closure->second --> s
-           a transition
-             (closure->first -- label | closure->second*star*weight --> dst)
-           is added to the automaton (add, not set !!)
+          For each state (s), the incoming epsilon-transitions
+          are put into the to_erase list; in the same time,
+          for each of these transitions (t), if (t) is a loop,
+          the star of its weight is computed, otherwise,
+          (t) is stored into the closure list.
+        */
+        for (auto s: input.states())
+          {
+            weight_t star = weightset_ptr->unit();// if there is no eps-loop
+            closure.clear();
+            const auto& tr = input.in(s, empty_word);
+            std::vector<transition_t> transitions;
+            std::copy(tr.begin(), tr.end(), std::back_inserter(transitions));
+            for (auto t : transitions)
+              {
+                weight_t t_weight = input.weight_of(t);
+                state_t src = input.src_of(t);
+                if (src == s)  //loop
+                  try
+                    {
+                      star = weightset_ptr->star(t_weight);
+                    }
+                  catch (const std::domain_error &)
+                    {
+                      return false;
+                    }
+                else
+                  closure.emplace_back(src, t_weight);
+                // Incoming epsilon transitions are deleted from input.
+                input.del_transition(t);
+              }
+            /*
+              For each transition (t : s -- label|weight --> dst),
+              for each former
+              epsilon transition closure->first -- e|closure->second --> s
+              a transition
+              (closure->first -- label | closure->second*star*weight --> dst)
+              is added to the automaton (add, not set !!)
 
-           If (s) is final with weight (weight),
-           for each former
-           epsilon transition closure->first -- e|closure->second --> s
-           pair-second * star * weight is added to the final weight
-           of closure->first
-           */
-        for (auto t: input.all_out(s))
-        {
-          weight_t s_weight = weightset_ptr->mul(star, input.weight_of(t));
-          label_t label = input.label_of(t);
-          state_t dst = input.dst_of(t);
-          for (auto pair: closure)
-            input.add_transition(pair.first, dst, label,
-                                 weightset_ptr->mul(pair.second, s_weight));
-        }
+              If (s) is final with weight (weight),
+              for each former
+              epsilon transition closure->first -- e|closure->second --> s
+              pair-second * star * weight is added to the final weight
+              of closure->first
+            */
+            for (auto t: input.all_out(s))
+              {
+                weight_t s_weight = weightset_ptr->mul(star, input.weight_of(t));
+                label_t label = input.label_of(t);
+                state_t dst = input.dst_of(t);
+                for (auto pair: closure)
+                  input.add_transition(pair.first, dst, label,
+                                       weightset_ptr->mul(pair.second, s_weight));
+              }
+          }
+        return true;
       }
-      return true;
+
+      /**@brief Test whether an automaton is proper.
+
+         An automaton is proper if and only if it contains no epsilon-transition.
+
+         @param input The tested automaton
+         @return true iff the automaton is proper
+      */
+      static bool is_proper(const automaton_t& input)
+      {
+        for (auto t: input.transitions())
+          if (input.labelset()->is_identity(input.label_of(t)))
+            return false;
+        return true;
+      }
+
+      /**@brief Test whether an automaton is valid.
+
+         The behavior of this method depends on the star_status of the weight_set:
+         -- starable : return true;
+         -- tops : copy the input and return the result of proper on the copy;
+         -- non_starable : return true iff the automaton is epsilon-acyclic
+         WARNING: for weight_sets with zero divisor, should test whether the weight of
+         every simple circuit is zero;
+         -- absval : build a copy of the input where each weight is replaced by its absolute value
+         and eturn the result of proper on the copy.
+         @param input The tested automaton
+         @return true iff the automaton is valid
+      */
+      static bool is_valid(const automaton_t& input);
+
+      /**@brief Remove the epsilon-transitions of the input
+         The behaviour of this method depends on the star_status of the weight_set:
+         -- starable : always valid, does not throw any exception
+         -- tops : the proper algo is directly launched on the input;
+         if it returns false, an exception is launched
+         -- non_starable / absval:
+         is_valid is called before launching the algorithm.
+         @param input The automaton in which epsilon-transitions will be removed
+         @throw domain_error if the input is not valid
+      */
+      static void proper_here(automaton_t& input);
+
+      static automaton_t proper(const automaton_t& input);
+    };
+
+    /*
+      The implementation of is_valid depends on star_status;
+      the different versions are implemented in EpsilonDispatcher.
+    */
+
+    template <typename Aut, star_status_t Status>
+    class basic_EpsilonDispatcher
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+    public:
+      static automaton_t proper(const automaton_t &input)
+      {
+        automaton_t res = copy(input);
+        proper_here(res);
+        return res;
+      }
+    };
+
+    template <typename Aut, star_status_t Status>
+    class EpsilonDispatcher : public basic_EpsilonDispatcher<Aut, Status>
+    {};
+
+    /// TOPS : valid iff the proper succeeds
+
+    template <typename Aut>
+    class EpsilonDispatcher<Aut, star_status_t::TOPS>
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+    public:
+      static bool is_valid(const automaton_t &input)
+      {
+        if (remover_t::is_proper(input)
+            || is_eps_acyclic(input))
+          return true;
+        automaton_t res = copy(input);
+        return remover_t::in_situ_remover(res);
+      }
+
+      static void proper_here(automaton_t &input)
+      {
+        if (!remover_t::in_situ_remover(input))
+          throw std::domain_error("invalid automaton");
+      }
+    };
+
+    /// !TOPS
+
+    /// ABSVAL : valid iff the proper succeeds on the "absolute value"
+    /// of the automaton
+    template <typename Aut>
+    class EpsilonDispatcher<Aut, star_status_t::ABSVAL>
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using state_t = typename automaton_t::state_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+    public:
+      static bool is_valid(const automaton_t &input)
+      {
+        if (remover_t::is_proper(input)
+            || is_eps_acyclic(input))
+          return true;
+        automaton_t tmp_aut = copy(input);
+        // Apply absolute value to the weight of each transition.
+        auto weightset_ptr = input.weightset();
+        for (auto t: tmp_aut.transitions())
+          tmp_aut.set_weight(t, weightset_ptr->abs(tmp_aut.weight_of(t)));
+        // Apply proper.
+        return remover_t::in_situ_remover(tmp_aut);
+      }
+
+      static void proper_here(automaton_t &input)
+      {
+        if (!is_valid(input))
+          throw std::domain_error("invalid automaton");
+        remover_t::in_situ_remover(input);
+      }
+    };
+    /// !ABSVAL
+
+    // STARABLE : always valid
+    template <typename Aut>
+    class EpsilonDispatcher<Aut, star_status_t::STARABLE>
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+    public:
+      static bool is_valid(const automaton_t &)
+      {
+        return true;
+      }
+
+      static void proper_here(automaton_t &input)
+      {
+        remover_t::in_situ_remover(input);
+      }
+    };
+
+    //!STARABLE
+
+    // NON_STARABLE : valid iff there is no epsilon-circuit with weight zero
+    // Warning: the property tested here is the acyclicity, which is equivalent
+    // only in zero divisor free semirings
+
+    template <typename Aut>
+    class EpsilonDispatcher<Aut, star_status_t::NON_STARABLE >
+    {
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using state_t = typename automaton_t::state_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
+    public:
+      static bool is_valid(const automaton_t &input)
+      {
+        return (remover_t::is_proper(input)
+                || is_eps_acyclic(input));
+      }
+
+      static void proper_here(automaton_t &input)
+      {
+        if (!is_valid(input))
+          throw std::domain_error("invalid automaton");
+        remover_t::in_situ_remover(input);
+      }
+    };
+
+    // !NON_STARABLE
+
+    template <typename Aut, typename Kind>
+    inline
+    bool properer<Aut,Kind>::is_valid(const automaton_t& input)
+    {
+      return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
+        ::is_valid(input);
     }
 
-    /**@brief Test whether an automaton is proper.
-
-      An automaton is proper if and only if it contains no epsilon-transition.
-
-      @param input The tested automaton
-      @return true iff the automaton is proper
-      */
-    static bool is_proper(const automaton_t& input)
+    template <typename Aut, typename Kind>
+    inline
+    void properer<Aut,Kind>::proper_here(automaton_t& input)
     {
-      for (auto t: input.transitions())
-        if (input.labelset()->is_identity(input.label_of(t)))
-          return false;
-      return true;
+      if (!is_proper(input))
+        EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
+          ::proper_here(input);
     }
 
-    /**@brief Test whether an automaton is valid.
-
-      The behavior of this method depends on the star_status of the weight_set:
-      -- starable : return true;
-      -- tops : copy the input and return the result of proper on the copy;
-      -- non_starable : return true iff the automaton is epsilon-acyclic
-WARNING: for weight_sets with zero divisor, should test whether the weight of
-every simple circuit is zero;
--- absval : build a copy of the input where each weight is replaced by its absolute value
-and eturn the result of proper on the copy.
-@param input The tested automaton
-@return true iff the automaton is valid
-*/
-    static bool is_valid(const automaton_t& input);
-
-    /**@brief Remove the epsilon-transitions of the input
-      The behaviour of this method depends on the star_status of the weight_set:
-      -- starable : always valid, does not throw any exception
-      -- tops : the proper algo is directly launched on the input;
-      if it returns false, an exception is launched
-      -- non_starable / absval:
-      is_valid is called before launching the algorithm.
-      @param input The automaton in which epsilon-transitions will be removed
-      @throw domain_error if the input is not valid
-      */
-    static void proper_here(automaton_t& input);
-
-    static automaton_t proper(const automaton_t& input);
-  };
-
-  /*
-     The implementation of is_valid depends on star_status;
-     the different versions are implemented in EpsilonDispatcher.
-     */
-
-  template <typename Aut, star_status_t Status>
-  class basic_EpsilonDispatcher
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-  public:
-    static automaton_t proper(const automaton_t &input)
+    template <typename Aut, typename Kind>
+    inline
+    auto properer<Aut,Kind>::proper(const automaton_t& input)
+      -> automaton_t
     {
-      automaton_t res = copy(input);
+      Aut res = copy(input);
       proper_here(res);
       return res;
     }
-  };
 
-  template <typename Aut, star_status_t Status>
-  class EpsilonDispatcher : public basic_EpsilonDispatcher<Aut, Status>
-  {};
+    /* Special case of labels_are_letters */
 
-  /// TOPS : valid iff the proper succeeds
-
-  template <typename Aut>
-  class EpsilonDispatcher<Aut, star_status_t::TOPS>
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
-  public:
-    static bool is_valid(const automaton_t &input)
+    template <typename Aut>
+    class properer<Aut, labels_are_letters>
     {
-      if (remover_t::is_proper(input)
-          || is_eps_acyclic(input))
+      using automaton_t = typename std::remove_cv<Aut>::type;
+    public:
+      static constexpr bool is_proper(const automaton_t &)
+      {
         return true;
-      automaton_t res = copy(input);
-      return remover_t::in_situ_remover(res);
-    }
+      }
 
-    static void proper_here(automaton_t &input)
-    {
-      if (!remover_t::in_situ_remover(input))
-        throw std::domain_error("invalid automaton");
-    }
-  };
-
-  /// !TOPS
-
-  /// ABSVAL : valid iff the proper succeeds on the "absolute value"
-  /// of the automaton
-  template <typename Aut>
-  class EpsilonDispatcher<Aut, star_status_t::ABSVAL>
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-    using state_t = typename automaton_t::state_t;
-    using weightset_t = typename automaton_t::weightset_t;
-    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
-  public:
-    static bool is_valid(const automaton_t &input)
-    {
-      if (remover_t::is_proper(input)
-          || is_eps_acyclic(input))
+      static constexpr bool is_valid(const automaton_t &)
+      {
         return true;
-      automaton_t tmp_aut = copy(input);
-      // Apply absolute value to the weight of each transition.
-      auto weightset_ptr = input.weightset();
-      for (auto t: tmp_aut.transitions())
-        tmp_aut.set_weight(t, weightset_ptr->abs(tmp_aut.weight_of(t)));
-      // Apply proper.
-      return remover_t::in_situ_remover(tmp_aut);
-    }
+      }
 
-    static void proper_here(automaton_t &input)
-    {
-      if (!is_valid(input))
-        throw std::domain_error("invalid automaton");
-      remover_t::in_situ_remover(input);
-    }
-  };
-  /// !ABSVAL
-
-  // STARABLE : always valid
-  template <typename Aut>
-  class EpsilonDispatcher<Aut, star_status_t::STARABLE>
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
-  public:
-    static bool is_valid(const automaton_t &)
-    {
-      return true;
-    }
-
-    static void proper_here(automaton_t &input)
-    {
-      remover_t::in_situ_remover(input);
-    }
-  };
-
-  //!STARABLE
-
-  // NON_STARABLE : valid iff there is no epsilon-circuit with weight zero
-  // Warning: the property tested here is the acyclicity, which is equivalent
-  // only in zero divisor free semirings
-
-  template <typename Aut>
-  class EpsilonDispatcher<Aut, star_status_t::NON_STARABLE >
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-    using state_t = typename automaton_t::state_t;
-    using weightset_t = typename automaton_t::weightset_t;
-    using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
-  public:
-    static bool is_valid(const automaton_t &input)
-    {
-      return (remover_t::is_proper(input)
-              || is_eps_acyclic(input));
-    }
-
-    static void proper_here(automaton_t &input)
-    {
-      if (!is_valid(input))
-        throw std::domain_error("invalid automaton");
-      remover_t::in_situ_remover(input);
-    }
-  };
-
-  // !NON_STARABLE
-
-  template <typename Aut, typename Kind>
-  inline
-  bool properer<Aut,Kind>::is_valid(const automaton_t& input)
-  {
-    return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-      ::is_valid(input);
-  }
-
-  template <typename Aut, typename Kind>
-  inline
-  void properer<Aut,Kind>::proper_here(automaton_t& input)
-  {
-    if (!is_proper(input))
-      EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-        ::proper_here(input);
-  }
-
-  template <typename Aut, typename Kind>
-  inline
-  auto properer<Aut,Kind>::proper(const automaton_t& input)
-    -> automaton_t
-  {
-    Aut res = copy(input);
-    proper_here(res);
-    return res;
-  }
-
-  /* Special case of labels_are_letters */
-
-  template <typename Aut>
-  class properer<Aut, labels_are_letters>
-  {
-    using automaton_t = typename std::remove_cv<Aut>::type;
-  public:
-    static constexpr bool is_proper(const automaton_t &)
-    {
-      return true;
-    }
-
-    static constexpr bool is_valid(const automaton_t &)
-    {
-      return true;
-    }
-
-    static
+      static
 #ifndef __clang__
-    constexpr
+      constexpr
 #endif
-    void proper_here(automaton_t &)
-    {}
+      void proper_here(automaton_t &)
+      {}
 
-    static Aut proper(const automaton_t &input)
-    {
-      return copy(input);
-    }
-  };
+      static Aut proper(const automaton_t &input)
+      {
+        return copy(input);
+      }
+    };
 
+  }
   /*---------------.
   | proper handler |
   `---------------*/
@@ -372,14 +375,14 @@ and eturn the result of proper on the copy.
   inline
   bool is_proper(Aut &input)
   {
-    return properer<Aut, typename Aut::kind_t>::is_proper(input);
+    return detail::properer<Aut, typename Aut::kind_t>::is_proper(input);
   }
 
   template <class Aut>
   inline
   bool is_valid(Aut &input)
   {
-    return properer<Aut, typename Aut::kind_t>::is_valid(input);
+    return detail::properer<Aut, typename Aut::kind_t>::is_valid(input);
   }
 
   template <class Aut>
@@ -389,12 +392,12 @@ and eturn the result of proper on the copy.
     switch (dir)
       {
       case direction_t::FORWARD:
-        properer<Aut, typename Aut::kind_t>::proper_here(input);
+        detail::properer<Aut, typename Aut::kind_t>::proper_here(input);
         return;
       case direction_t::BACKWARD:
         auto tr_input = transpose(input);
         using tr_aut_t = decltype(tr_input);
-        properer<tr_aut_t, typename tr_aut_t::kind_t>
+        detail::properer<tr_aut_t, typename tr_aut_t::kind_t>
           ::proper_here(tr_input);
         return;
       }
@@ -406,7 +409,7 @@ and eturn the result of proper on the copy.
     switch (dir)
       {
       case direction_t::FORWARD:
-        return properer<Aut, typename Aut::kind_t>::proper(input);
+        return detail::properer<Aut, typename Aut::kind_t>::proper(input);
       default: //direction_t::BACKWARD
         Aut res = copy(input);
         proper_here(res, direction_t::BACKWARD);
