@@ -367,6 +367,8 @@ namespace vcsn
     };
 
   }
+
+
   /*---------------.
   | proper handler |
   `---------------*/
@@ -410,11 +412,13 @@ namespace vcsn
       {
       case direction_t::FORWARD:
         return detail::properer<Aut, typename Aut::kind_t>::proper(input);
-      default: //direction_t::BACKWARD
+      case direction_t::BACKWARD:
+        // FIXME: inconsistent implementation bw fwd and bwd.
         Aut res = copy(input);
         proper_here(res, direction_t::BACKWARD);
         return res;
       }
+    abort();
   }
 
   namespace dyn
