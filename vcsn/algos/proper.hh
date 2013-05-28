@@ -29,7 +29,7 @@ namespace vcsn
 
     */
 
-    template <typename Aut, typename Kind>
+    template <typename Aut, typename Kind = typename Aut::kind_t>
     class properer
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
@@ -210,7 +210,7 @@ namespace vcsn
     class EpsilonDispatcher<Aut, star_status_t::TOPS>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
@@ -241,7 +241,7 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
@@ -274,7 +274,7 @@ namespace vcsn
     class EpsilonDispatcher<Aut, star_status_t::STARABLE>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t>;
     public:
       static bool is_valid(const automaton_t&)
       {
@@ -299,7 +299,7 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using properer_t = properer<automaton_t, typename automaton_t::kind_t>;
+      using properer_t = properer<automaton_t>;
     public:
       static bool is_valid(const automaton_t& input)
       {
@@ -385,14 +385,14 @@ namespace vcsn
   inline
   bool is_proper(Aut& input)
   {
-    return detail::properer<Aut, typename Aut::kind_t>::is_proper(input);
+    return detail::properer<Aut>::is_proper(input);
   }
 
   template <class Aut>
   inline
   bool is_valid(Aut& input)
   {
-    return detail::properer<Aut, typename Aut::kind_t>::is_valid(input);
+    return detail::properer<Aut>::is_valid(input);
   }
 
   template <class Aut>
@@ -402,13 +402,12 @@ namespace vcsn
     switch (dir)
       {
       case direction_t::FORWARD:
-        detail::properer<Aut, typename Aut::kind_t>::proper_here(input);
+        detail::properer<Aut>::proper_here(input);
         return;
       case direction_t::BACKWARD:
         auto tr_input = transpose(input);
         using tr_aut_t = decltype(tr_input);
-        detail::properer<tr_aut_t, typename tr_aut_t::kind_t>
-          ::proper_here(tr_input);
+        detail::properer<tr_aut_t>::proper_here(tr_input);
         return;
       }
   }
@@ -419,7 +418,7 @@ namespace vcsn
     switch (dir)
       {
       case direction_t::FORWARD:
-        return detail::properer<Aut, typename Aut::kind_t>::proper(input);
+        return detail::properer<Aut>::proper(input);
       case direction_t::BACKWARD:
         // FIXME: inconsistent implementation bw fwd and bwd.
         Aut res = copy(input);
