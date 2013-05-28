@@ -89,8 +89,9 @@ namespace vcsn
             weight_t star = weightset.unit();// if there is no eps-loop
             closure.clear();
             const auto& tr = input.in(s, empty_word);
-            std::vector<transition_t> transitions;
-            std::copy(tr.begin(), tr.end(), std::back_inserter(transitions));
+            // Work on a copy, as we remove these transitions in the
+            // loop.
+            std::vector<transition_t> transitions{tr.begin(), tr.end()};
             for (auto t : transitions)
               {
                 weight_t t_weight = input.weight_of(t);
