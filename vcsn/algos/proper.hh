@@ -99,7 +99,7 @@ namespace vcsn
                     {
                       star = weightset_ptr->star(t_weight);
                     }
-                  catch (const std::domain_error &)
+                  catch (const std::domain_error&)
                     {
                       return false;
                     }
@@ -190,7 +190,7 @@ namespace vcsn
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:
-      static automaton_t proper(const automaton_t &input)
+      static automaton_t proper(const automaton_t& input)
       {
         automaton_t res = copy(input);
         proper_here(res);
@@ -210,7 +210,7 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
-      static bool is_valid(const automaton_t &input)
+      static bool is_valid(const automaton_t& input)
       {
         if (remover_t::is_proper(input)
             || is_eps_acyclic(input))
@@ -219,7 +219,7 @@ namespace vcsn
         return remover_t::in_situ_remover(res);
       }
 
-      static void proper_here(automaton_t &input)
+      static void proper_here(automaton_t& input)
       {
         if (!remover_t::in_situ_remover(input))
           throw std::domain_error("invalid automaton");
@@ -238,7 +238,7 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
-      static bool is_valid(const automaton_t &input)
+      static bool is_valid(const automaton_t& input)
       {
         if (remover_t::is_proper(input)
             || is_eps_acyclic(input))
@@ -252,7 +252,7 @@ namespace vcsn
         return remover_t::in_situ_remover(tmp_aut);
       }
 
-      static void proper_here(automaton_t &input)
+      static void proper_here(automaton_t& input)
       {
         if (!is_valid(input))
           throw std::domain_error("invalid automaton");
@@ -268,12 +268,12 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
-      static bool is_valid(const automaton_t &)
+      static bool is_valid(const automaton_t&)
       {
         return true;
       }
 
-      static void proper_here(automaton_t &input)
+      static void proper_here(automaton_t& input)
       {
         remover_t::in_situ_remover(input);
       }
@@ -293,13 +293,13 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using remover_t = properer<automaton_t, typename automaton_t::kind_t>;
     public:
-      static bool is_valid(const automaton_t &input)
+      static bool is_valid(const automaton_t& input)
       {
         return (remover_t::is_proper(input)
                 || is_eps_acyclic(input));
       }
 
-      static void proper_here(automaton_t &input)
+      static void proper_here(automaton_t& input)
       {
         if (!is_valid(input))
           throw std::domain_error("invalid automaton");
@@ -343,12 +343,12 @@ namespace vcsn
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:
-      static constexpr bool is_proper(const automaton_t &)
+      static constexpr bool is_proper(const automaton_t&)
       {
         return true;
       }
 
-      static constexpr bool is_valid(const automaton_t &)
+      static constexpr bool is_valid(const automaton_t&)
       {
         return true;
       }
@@ -357,10 +357,10 @@ namespace vcsn
 #ifndef __clang__
       constexpr
 #endif
-      void proper_here(automaton_t &)
+      void proper_here(automaton_t&)
       {}
 
-      static Aut proper(const automaton_t &input)
+      static Aut proper(const automaton_t& input)
       {
         return copy(input);
       }
@@ -373,21 +373,21 @@ namespace vcsn
 
   template <class Aut>
   inline
-  bool is_proper(Aut &input)
+  bool is_proper(Aut& input)
   {
     return detail::properer<Aut, typename Aut::kind_t>::is_proper(input);
   }
 
   template <class Aut>
   inline
-  bool is_valid(Aut &input)
+  bool is_valid(Aut& input)
   {
     return detail::properer<Aut, typename Aut::kind_t>::is_valid(input);
   }
 
   template <class Aut>
   inline
-  void proper_here(Aut &input, direction_t dir = direction_t::FORWARD)
+  void proper_here(Aut& input, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
@@ -404,7 +404,7 @@ namespace vcsn
   }
 
   template <class Aut>
-  Aut proper(const Aut &input, direction_t dir = direction_t::FORWARD)
+  Aut proper(const Aut& input, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
@@ -429,11 +429,11 @@ namespace vcsn
       template <typename Aut>
       automaton proper(const automaton& aut)
       {
-        const auto &a = dynamic_cast<const Aut &>(*aut);
+        const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_automaton(a.context(), proper(a));
       }
 
-     REGISTER_DECLARE(proper, (const automaton &aut) -> automaton);
+     REGISTER_DECLARE(proper, (const automaton& aut) -> automaton);
     }
 
     /*-----------------.
@@ -445,12 +445,12 @@ namespace vcsn
       template <typename Aut>
       bool is_proper(const automaton& aut)
       {
-        const auto &a = dynamic_cast<const Aut &>(*aut);
+        const auto& a = dynamic_cast<const Aut&>(*aut);
         return is_proper(a);
       }
 
      REGISTER_DECLARE(is_proper,
-                      (const automaton &aut) -> bool);
+                      (const automaton& aut) -> bool);
     }
 
   }
