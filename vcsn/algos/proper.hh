@@ -38,6 +38,7 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
+      using kind_t = Kind;
 
       /**
          @brief The core of the epsilon-removal
@@ -73,7 +74,7 @@ namespace vcsn
       static bool in_situ_remover(automaton_t& input)
       {
         label_t empty_word = input.labelset()->identity();
-        auto weightset_ptr = input.weightset();
+        const auto& weightset = *input.weightset();
         using state_weight_t = std::pair<state_t, weight_t>;
         std::vector<state_weight_t> closure;
         /*
@@ -85,7 +86,7 @@ namespace vcsn
         */
         for (auto s: input.states())
           {
-            weight_t star = weightset_ptr->unit();// if there is no eps-loop
+            weight_t star = weightset.unit();// if there is no eps-loop
             closure.clear();
             const auto& tr = input.in(s, empty_word);
             std::vector<transition_t> transitions;
@@ -97,7 +98,7 @@ namespace vcsn
                 if (src == s)  //loop
                   try
                     {
-                      star = weightset_ptr->star(t_weight);
+                      star = weightset.star(t_weight);
                     }
                   catch (const std::domain_error&)
                     {
@@ -124,12 +125,12 @@ namespace vcsn
             */
             for (auto t: input.all_out(s))
               {
-                weight_t s_weight = weightset_ptr->mul(star, input.weight_of(t));
+                weight_t s_weight = weightset.mul(star, input.weight_of(t));
                 label_t label = input.label_of(t);
                 state_t dst = input.dst_of(t);
                 for (auto pair: closure)
                   input.add_transition(pair.first, dst, label,
-                                       weightset_ptr->mul(pair.second, s_weight));
+                                       weightset.mul(pair.second, s_weight));
               }
           }
         return true;
@@ -215,8 +216,11 @@ namespace vcsn
         if (remover_t::is_proper(input)
             || is_eps_acyclic(input))
           return true;
-        automaton_t res = copy(input);
-        return remover_t::in_situ_remover(res);
+        else
+          {
+            automaton_t res = copy(input);
+            return remover_t::in_situ_remover(res);
+          }
       }
 
       static void proper_here(automaton_t& input)
@@ -243,13 +247,16 @@ namespace vcsn
         if (remover_t::is_proper(input)
             || is_eps_acyclic(input))
           return true;
-        automaton_t tmp_aut = copy(input);
-        // Apply absolute value to the weight of each transition.
-        auto weightset_ptr = input.weightset();
-        for (auto t: tmp_aut.transitions())
-          tmp_aut.set_weight(t, weightset_ptr->abs(tmp_aut.weight_of(t)));
-        // Apply proper.
-        return remover_t::in_situ_remover(tmp_aut);
+        else
+          {
+            automaton_t tmp_aut = copy(input);
+            // Apply absolute value to the weight of each transition.
+            const auto& weightset = *input.weightset();
+            for (auto t: tmp_aut.transitions())
+              tmp_aut.set_weight(t, weightset.abs(tmp_aut.weight_of(t)));
+            // Apply proper.
+            return remover_t::in_situ_remover(tmp_aut);
+          }
       }
 
       static void proper_here(automaton_t& input)
