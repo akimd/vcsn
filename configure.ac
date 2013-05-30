@@ -41,7 +41,35 @@ ${stdpass-false} ||
                         [CXXFLAGS="$CXXFLAGS -std=c++11"
                          stdpass=true])
 ${stdpass-false} ||
-  AC_ERROR([unable to turn on C++11 mode with this compiler.])
+  AC_ERROR([unable to turn on C++11 mode with this compiler])
+
+m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody], [
+  template <typename T>
+    struct check
+    {
+      static_assert(sizeof(int) <= sizeof(T), "not big enough");
+    };
+
+    typedef check<check<bool>> right_angle_brackets;
+
+    int a;
+    decltype(a) b;
+
+    typedef check<int> check_type;
+    check_type c;
+    check_type&& cr = static_cast<check_type&&>(c);
+
+    auto d = a;
+])
+
+AC_CACHE_CHECK([whether $CXX $CXXFLAGS supports C++11 features],
+               [ax_cv_cxx_compile_cxx11],
+[AC_COMPILE_IFELSE([AC_LANG_SOURCE([_AX_CXX_COMPILE_STDCXX_11_testbody])],
+  [ax_cv_cxx_compile_cxx11=yes],
+  [ax_cv_cxx_compile_cxx11=no])])
+
+test "x$ax_cv_cxx_compile_cxx11" = xyes ||
+  AC_ERROR([unable to compile C++11 with this compiler])
 
 TC_CXX_WARNINGS(
   [[-Wall],
