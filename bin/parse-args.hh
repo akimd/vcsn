@@ -1,6 +1,7 @@
 #ifndef VCSN_BIN_PARSE_ARGS_HH_
 # define VCSN_BIN_PARSE_ARGS_HH_
 
+# include <stdexcept>
 # include <string>
 # include <vector>
 
