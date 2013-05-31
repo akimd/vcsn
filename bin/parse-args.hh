@@ -36,6 +36,7 @@ struct options
   std::vector<std::string> argv;
 };
 
+ATTRIBUTE_NORETURN
 void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.

@@ -77,7 +77,6 @@ print(const options& opts, const vcsn::dyn::ratexp& exp)
     }
 }
 
-ATTRIBUTE_NORETURN
 void
 usage(const char* prog, int exit_status)
 {
