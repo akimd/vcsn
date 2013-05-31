@@ -46,7 +46,7 @@ namespace vcsn
       return new BinCxxInputStream(in_);
     }
 
-    static void
+    static inline void
     print_xml(std::ostream& out,
               xercesc::DOMImplementation* impl,
               xercesc::DOMElement* root)

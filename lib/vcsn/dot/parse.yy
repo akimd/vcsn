@@ -85,6 +85,11 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/misc/echo.hh>
 
+#ifdef __GNUC
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+#endif
+
   namespace vcsn
   {
     namespace detail

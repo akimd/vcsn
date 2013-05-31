@@ -125,8 +125,10 @@
 {
   #include <cassert>
 
-  # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
-  # pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+#ifdef __GNUC
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+#endif
 
   /// Call the factory to make a Kind.
 #define MAKE(Kind, ...)                         \
