@@ -103,6 +103,7 @@ nobase_vcsn_HEADERS =                           \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \
+  misc/attributes.hh                            \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \
   misc/direction.hh                             \
