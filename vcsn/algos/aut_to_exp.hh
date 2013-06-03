@@ -92,8 +92,7 @@ namespace vcsn
   typename Context::ratexp_t
   aut_to_exp_naive(const Aut& a)
   {
-    state_chooser_t<Aut> next =
-      next_naive<detail::lifted_automaton_t<Aut>>;
+    state_chooser_t<Aut> next = next_naive<detail::lifted_automaton_t<Aut>>;
     return aut_to_exp(a, next);
   }
 
@@ -109,7 +108,7 @@ namespace vcsn
       ratexp
       aut_to_exp(const automaton& aut)
       {
-        const Aut& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = dynamic_cast<const Aut&>(*aut);
         return make_ratexp(a.context(), aut_to_exp_naive(a));
       }
 
