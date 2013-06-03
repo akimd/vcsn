@@ -1,4 +1,11 @@
 * 2013-10-15
+** vcsn elimininate-state
+This tool allows one to eliminate states one after the other.
+
+  $ vcsn eliminate-state -f lao.gv 2
+
+Its interface is likely to change, or to be completely removed.
+
 ** Smaller libraries
 Some compiler magic was used to reduce the size of the libraries (about 20%
 on Mac OS X using GCC 4.8).  TAF-Kit might start faster.

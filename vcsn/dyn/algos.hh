@@ -83,6 +83,9 @@ namespace vcsn
     automaton double_ring(const context& ctx, unsigned n,
                           std::vector<unsigned> f);
 
+    /// The LAO automaton \a aut with state \a s removed.
+    automaton eliminate_state(const automaton& aut, int s);
+
     /// Output in Extended FSM format.
     std::ostream& efsm(const automaton& aut, std::ostream& out);
 

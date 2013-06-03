@@ -1,5 +1,9 @@
 #! /bin/sh
 
+## ------------ ##
+## aut-to-exp.  ##
+## ------------ ##
+
 # check EXP-IN EXP-OUT
 # --------------------
 # Check that aut-to-exp(standard(EXP-IN)) = EXP-OUT.
@@ -49,3 +53,14 @@ check lal_char_zmin/minab.gv     '((<1>a+b)*)+((a+<1>b)*)'
 check lal_char_zmin/minblocka.gv '((a+b)*).b.((<1>a)*).b.((a+b)*)'
 check lal_char_zmin/slowgrow.gv \
       '((a+b)*).b.((<1>a)*).b.((a+(<1>a.((<1>a)*).b))*)'
+
+
+## ----------------- ##
+## eliminate-state.  ##
+## ----------------- ##
+
+# Eliminate state 0, or 1, or 2.
+for i in 0 1 2
+do
+  run 0 -f $medir/lao-elim-$i.gv -vcsn-eliminate-state -f $medir/lao.gv $i
+done

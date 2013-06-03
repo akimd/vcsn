@@ -36,6 +36,7 @@ all_vcsn =                                      \
   %D%/vcsn-determinize                          \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
+  %D%/vcsn-eliminate-state                      \
   %D%/vcsn-enumerate                            \
   %D%/vcsn-evaluate                             \
   %D%/vcsn-is-ambiguous                         \
@@ -89,6 +90,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_determinize_LDADD      = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
+%C%_vcsn_eliminate_state_LDADD  = bin/libtafkit.la
 %C%_vcsn_enumerate_LDADD        = %D%/libtafkit.la
 %C%_vcsn_evaluate_LDADD         = %D%/libtafkit.la
 %C%_vcsn_is_ambiguous_LDADD     = %D%/libtafkit.la

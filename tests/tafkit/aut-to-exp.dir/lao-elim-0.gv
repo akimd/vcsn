@@ -1,0 +1,19 @@
+digraph
+{
+  vcsn_context = "lao_ratexpset<lal_char(abc)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+  }
+  I0 -> 0 [label = "<a>"]
+  0 -> 0 [label = "<b>"]
+  0 -> 1 [label = "<c>"]
+  1 -> F1
+}

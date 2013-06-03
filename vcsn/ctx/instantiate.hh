@@ -204,6 +204,11 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_one)
       {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::detail;
+
+        REGISTER(eliminate_state, aut_t);
+
         return true;
       }
 
