@@ -8,46 +8,17 @@
 
 namespace vcsn
 {
+
+  /*----------------.
+  | state_chooser.  |
+  `----------------*/
+
   /// A state (inner) from an automaton.
   template <typename Aut,
             typename Lifted = detail::lifted_automaton_t<Aut>>
   using state_chooser_t =
     std::function<typename Lifted::state_t(const Lifted&)>;
 
-  template <typename Aut,
-            typename Context = typename Aut::context_t>
-  typename Context::ratexp_t
-  aut_to_exp(const Aut& a,
-             const state_chooser_t<Aut>& next_state)
-  {
-    // State elimination is performed on the lifted automaton.
-    auto aut = lift(a);
-    while (aut.num_states())
-      {
-        auto s = next_state(aut);
-        SHOW(V(s));
-
-        // The loop's weight.
-        auto loops = aut.outin(s, s);
-        assert(loops.size() == 0 || loops.size() == 1);
-        auto w =
-          loops.empty() ? aut.weightset()->unit()
-          : aut.weightset()->star(aut.weight_of(loops.front()));
-
-        // Get all the predecessors, and successors.
-        auto outs = aut.all_out(s);
-        for (auto in: aut.all_in(s))
-          for (auto out: outs)
-            aut.add_transition
-              (aut.src_of(in), aut.dst_of(out),
-               aut.label_of(in),
-               aut.weightset()->mul(aut.weight_of(in),
-                                    aut.weightset()->mul(w,
-                                                         aut.weight_of(out))));
-        aut.del_state(s);
-      }
-    return aut.get_initial_weight(aut.post());
-  }
 
   /*--------------------------.
   | Naive heuristics degree.  |
@@ -86,6 +57,57 @@ namespace vcsn
     assert(best);
     return best;
   }
+
+  /*------------------.
+  | eliminate_state.  |
+  `------------------*/
+
+  template <typename Aut>
+  void
+  eliminate_state(Aut& aut,
+                  typename Aut::state_t s)
+  {
+    static_assert(Aut::context_t::is_lau,
+                  "requires labels_are_unit");
+    if (!aut.has_state(s))
+      throw std::runtime_error("not a valid state: " + std::to_string(s));
+
+    // The loop's weight.
+    auto loops = aut.outin(s, s);
+    assert(loops.size() == 0 || loops.size() == 1);
+    auto w =
+      loops.empty() ? aut.weightset()->unit()
+      : aut.weightset()->star(aut.weight_of(loops.front()));
+
+    // Get all the predecessors, and successors.
+    auto outs = aut.all_out(s);
+    for (auto in: aut.all_in(s))
+      for (auto out: outs)
+        aut.add_transition
+          (aut.src_of(in), aut.dst_of(out),
+           aut.label_of(in),
+           aut.weightset()->mul(aut.weight_of(in),
+                                aut.weightset()->mul(w,
+                                                     aut.weight_of(out))));
+    aut.del_state(s);
+  }
+  /*-------------.
+  | aut_to_exp.  |
+  `-------------*/
+
+  template <typename Aut,
+            typename Context = typename Aut::context_t>
+  typename Context::ratexp_t
+  aut_to_exp(const Aut& a,
+             const state_chooser_t<Aut>& next_state)
+  {
+    // State elimination is performed on the lifted automaton.
+    auto aut = lift(a);
+    while (aut.num_states())
+      eliminate_state(aut, next_state(aut));
+    return aut.get_initial_weight(aut.post());
+  }
+
 
   template <class Aut,
             typename Context = typename Aut::context_t>
