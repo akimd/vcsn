@@ -22,10 +22,6 @@ Select the base I<bench> to use.  Defaults to I<ladybird>.
 
 Determinization of C<(\e+a){$size}>.
 
-=item I<epsr>
-
-Epsilon removal of C<(\e+a){$size}>.
-
 =item I<lady>
 
 Determinization of Ladybird of $size.
@@ -33,6 +29,10 @@ Determinization of Ladybird of $size.
 =item I<pfix>
 
 (a...a)+(a...b)+...+(b...a)+(b...b) for words of size $size.
+
+=item I<prpr>
+
+Epsilon removal of C<(\e+a){$size}>.
 
 =back
 
@@ -392,7 +392,7 @@ sub setup_eps_aopt ($)
         }
       elsif ($d eq 'Vcsn 2')
         {
-          $prog = 'vcsn-eps-removal';
+          $prog = 'vcsn-proper';
           $res{$d} = "$prog -O null -f $base.gv";
         }
       else
@@ -564,9 +564,9 @@ for my $bench (@bench)
   my %setup =
     (
      aopt => \&setup_det_aopt,
-     epsr => \&setup_eps_aopt,
      lady => \&setup_ladybird,
      pfix => \&setup_prefix,
+     prpr => \&setup_eps_aopt,
     );
   die "unknown bench: $bench"
     unless exists $setup{$bench};
