@@ -36,12 +36,15 @@ AC_LANG([C++])
 AX_CHECK_COMPILE_FLAG([-std=c++11 -stdlib=libc++],
                       [CXXFLAGS="$CXXFLAGS -std=c++11 -stdlib=libc++"
                        stdpass=true])
-${stdpass-false} ||
+if ! "${stdpass-false}"; then
   AX_CHECK_COMPILE_FLAG([-std=c++11],
                         [CXXFLAGS="$CXXFLAGS -std=c++11"
                          stdpass=true])
-${stdpass-false} ||
+fi
+
+if ! "${stdpass-false}"; then
   AC_ERROR([unable to turn on C++11 mode with this compiler])
+fi
 
 m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody], [
   template <typename T>
