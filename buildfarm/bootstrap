@@ -4,7 +4,7 @@ set -ex
 . $(dirname "$0")/common
 
 # Help debugging.
-env
+env >environment.log
 
 ## ----------- ##
 ## Bootstrap.  ##
