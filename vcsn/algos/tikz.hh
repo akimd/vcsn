@@ -7,6 +7,9 @@
 # include <unordered_set>
 # include <vector>
 
+// FIXME: factor dot and tikz.
+# include <vcsn/algos/dot.hh> // format_entry
+
 # include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
@@ -45,7 +48,8 @@ namespace vcsn
       void operator()()
       {
         os_ << "\\begin{tikzpicture}"
-            << "[shorten >=1pt, node distance=2cm, pos=.4, >=stealth', initial text={}]" << std::endl;
+            << "[shorten >=1pt, node distance=2cm, pos=.4, >=stealth',"
+            << " initial text={}]" << std::endl;
         // Name all the states.
         std::unordered_map<state_t, unsigned> names;
         {
@@ -68,33 +72,18 @@ namespace vcsn
 
         for (auto src : aut_.states())
           {
-            // Transitions from src, ordered by destination.
-            // Keep a single destination as we use entries below.
-            // FIXME: A heap might be nice.
-            std::unordered_set<state_t> ds;
-            std::vector<transition_t> ts;
-            for (auto t: aut_.out(src))
-              if (ds.find(aut_.dst_of(t)) == end(ds))
-                {
-                  ds.insert(aut_.dst_of(t));
-                  ts.push_back(t);
-                }
-            std::sort(begin(ts), end(ts),
-                      [this](transition_t a, transition_t b)
-                      {
-                        return aut_.dst_of(a) < aut_.dst_of(b);
-                      });
-            for (const auto& t: ts)
+            std::set<state_t> ds;
+            for (auto t: aut_.all_out(src))
+              ds.insert(aut_.dst_of(t));
+            for (auto dst: ds)
               {
                 unsigned ns = names[src];
-                unsigned nd = names[aut_.dst_of(t)];
+                unsigned nd = names[dst];
                 os_ << "  \\path[->] (" << ns << ")"
                     << " edge"
                     << (ns == nd ? "[loop above]" : "")
                     << " node[above]"
-                    << " {$"
-                    <<   aut_.entryset().format(aut_.entry_at(t), ", ")
-                    << "$}"
+                    << " {$" << format_entry(aut_, src, dst) << "$}"
                     << " (" << nd << ");" << std::endl;
               }
           }

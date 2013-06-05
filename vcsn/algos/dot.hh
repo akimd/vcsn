@@ -15,6 +15,24 @@
 namespace vcsn
 {
 
+  template <typename Aut>
+  std::string
+  format_entry(const Aut& aut,
+               typename Aut::state_t s, typename Aut::state_t d)
+  {
+    using automaton_t = Aut;
+    using context_t = typename automaton_t::context_t;
+    using entryset_t = polynomialset<context_t>;
+    using entry_t = typename entryset_t::value_t;
+
+    entry_t entry;
+    for (auto t : aut.outin(s, d))
+      // Bypass set_weight(), because we know that the weight is
+      // nonzero, and that there is only one weight per letter.
+      entry[aut.word_label_of(t)] = aut.weight_of(t);
+    return entryset_t{aut.context()}.format(entry, ", ");
+  }
+
   /*-------------------------.
   | dot(automaton, stream).  |
   `-------------------------*/
@@ -24,7 +42,6 @@ namespace vcsn
   dot(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
-    using transition_t = typename A::transition_t;
 
     // Name all the states.
     std::unordered_map<state_t, unsigned> names;
@@ -60,25 +77,11 @@ namespace vcsn
 
     for (auto src : aut.all_states())
       {
-        // Transitions from src, ordered by destination.
-        // Keep a single destination as we use entries below.
-        // FIXME: A heap might be nice.
-        std::unordered_set<state_t> ds;
-        std::vector<transition_t> ts;
+        std::set<state_t> ds;
         for (auto t: aut.all_out(src))
-          if (ds.find(aut.dst_of(t)) == end(ds))
-            {
-              ds.insert(aut.dst_of(t));
-              ts.push_back(t);
-            }
-        std::sort(begin(ts), end(ts),
-                  [&aut](transition_t a, transition_t b)
-                  {
-                    return aut.dst_of(a) < aut.dst_of(b);
-                  });
-        for (const auto& t: ts)
+          ds.insert(aut.dst_of(t));
+        for (auto dst: ds)
           {
-            auto dst = aut.dst_of(t);
             if (src == aut.pre())
               {
                 unsigned n = names[dst];
@@ -95,7 +98,7 @@ namespace vcsn
                 unsigned nd = names[dst];
                 out << "  " << ns << " -> " << nd;
               }
-            std::string s = aut.entryset().format(aut.entry_at(t), ", ");
+            std::string s = format_entry(aut, src, dst);
             if (!s.empty())
               {
                 out << " [label = \"";
