@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_STANDARD_HH
 # define VCSN_ALGOS_STANDARD_HH
 
+# include <set>
+
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
