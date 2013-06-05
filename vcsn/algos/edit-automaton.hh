@@ -8,6 +8,7 @@
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace std
 {
@@ -76,7 +77,7 @@ namespace vcsn
 
   private:
     using context_t = typename automaton_t::context_t;
-    using entry_t = typename automaton_t::entry_t;
+    using entry_t = typename polynomialset<context_t>::value_t;
     using state_t = typename automaton_t::state_t;
 
     using state_map = std::unordered_map<string_t, state_t>;
@@ -85,7 +86,8 @@ namespace vcsn
   public:
     edit_automaton(const context_t& ctx)
       : res_(new automaton_t(ctx))
-      , unit_(res_->entryset().unit())
+      , entryset_(ctx)
+      , unit_(entryset_.unit())
     {}
 
     ~edit_automaton()
@@ -128,7 +130,7 @@ namespace vcsn
             res_->add_transition(s, d, res_->prepost_label());
           else
             {
-              auto e = res_->entryset().conv(entry, sep_);
+              auto e = entryset_.conv(entry, sep_);
               if (e.size() != 1
                   || !res_->labelset()->is_empty_word(begin(e)->first))
                 throw std::runtime_error
@@ -143,7 +145,7 @@ namespace vcsn
         {
           auto p = emap_.emplace(entry, unit_);
           if (p.second)
-            p.first->second = res_->entryset().conv(entry, sep_);
+            p.first->second = entryset_.conv(entry, sep_);
           res_->add_entry(s, d, p.first->second);
         }
     }
@@ -173,6 +175,7 @@ namespace vcsn
     }
 
     automaton_t* res_;
+    polynomialset<context_t> entryset_;
     entry_t unit_;
     state_map smap_;
     entry_map emap_;
