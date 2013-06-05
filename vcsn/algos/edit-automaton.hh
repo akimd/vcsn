@@ -6,6 +6,7 @@
 # include <boost/flyweight.hpp>
 # include <boost/flyweight/no_tracking.hpp>
 
+# include <vcsn/ctx/ctx.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/weights/polynomialset.hh>
@@ -146,7 +147,7 @@ namespace vcsn
           auto p = emap_.emplace(entry, unit_);
           if (p.second)
             p.first->second = entryset_.conv(entry, sep_);
-          res_->add_entry(s, d, p.first->second);
+          add_entry(s, d, p.first->second);
         }
     }
 
@@ -162,8 +163,6 @@ namespace vcsn
       res_ = nullptr;
     }
 
-
-
   private:
     state_t
     state_(const string_t& k)
@@ -172,6 +171,52 @@ namespace vcsn
       if (p.second)
         p.first->second = res_->new_state();
       return p.first->second;
+    }
+
+    void
+    add_entry(state_t src, state_t dst, const entry_t& es)
+    {
+      add_entry_<context_t>(src, dst, es);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lal<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        // FIXME: Hack.  entries are always about words, but we
+        // want letters.  "e.first[0]" is a hack for lal.
+        res_->add_transition(src, dst, e.first[0], e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lan<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        // FIXME: Hack.  entries are always about words, but we
+        // want letters.  "e.first[0]" is a hack for lal.
+        res_->add_transition(src, dst, e.first[0], e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_lau<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        res_->add_transition(src, dst, {}, e.second);
+    }
+
+    template <typename Ctx>
+    void
+    add_entry_(state_t src, state_t dst,
+               if_law<Ctx, const entry_t&> es)
+    {
+      for (auto e: es)
+        res_->add_transition(src, dst, e.first, e.second);
     }
 
     automaton_t* res_;

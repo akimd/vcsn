@@ -1,4 +1,11 @@
-*2013-05-27
+* 2013-06-05
+** Support for entries is removed.
+Member types, functions, and variables, about entries, have been removed.
+The services provided by entries in Vaucanson 1 are provided by LAU
+automata, so entries are not as useful in Vaucanson 2.  And anyway, if
+needed, it should rather be a set of free standing functions.
+
+* 2013-05-27
 ** Refactoring: eps-removal => proper
 Eps-removal is renamed to Proper.
 

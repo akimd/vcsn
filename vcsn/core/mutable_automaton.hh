@@ -10,7 +10,6 @@
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/crange.hh>
-# include <vcsn/core/entryiter.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/ctx.hh>
@@ -30,17 +29,15 @@ namespace vcsn
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using entryset_t = polynomialset<context_t>;
 
     using state_t = unsigned;
     using transition_t = unsigned;
 
     using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
-    using entry_t = typename entryset_t::value_t;
 
   protected:
-    const entryset_t es_;
+    const context_t ctx_;
 
     using stored_transition_t = transition_tuple<state_t, label_t, weight_t>;
 
@@ -70,13 +67,13 @@ namespace vcsn
     mutable_automaton() = delete;
     mutable_automaton(const mutable_automaton&) = delete;
     mutable_automaton(const context_t& ctx)
-      : es_{ctx}
+      : ctx_{ctx}
       , states_{2}
       , prepost_label_(ctx.labelset()->special())
     {}
 
     mutable_automaton(mutable_automaton&& that)
-      : es_{that.es_}
+      : ctx_(that.ctx_)
       , prepost_label_(that.prepost_label_)
     {
       std::swap(states_, that.states_);
@@ -98,10 +95,9 @@ namespace vcsn
       return "mutable_automaton<" + context().vname(full) + ">";
     }
 
-    const context_t& context() const { return es_.context(); }
-    const weightset_ptr& weightset() const { return es_.weightset(); }
-    const labelset_ptr& labelset() const { return es_.labelset(); }
-    const entryset_t& entryset() const { return es_; }
+    const context_t& context() const { return ctx_; }
+    const weightset_ptr& weightset() const { return ctx_.weightset(); }
+    const labelset_ptr& labelset() const { return ctx_.labelset(); }
 
     // Special states and transitions
     /////////////////////////////////
@@ -667,87 +663,6 @@ namespace vcsn
       return {ss.succ,
               [this,d] (transition_t i)
                 { return this->transitions_[i].dst == d; }};
-    }
-
-
-
-    /*----------.
-    | entries.  |
-    `----------*/
-
-    entry_iterator<mutable_automaton, transitions_output_t>
-    entries() const
-    {
-      return { *this, transitions() };
-    }
-
-    entry_iterator<mutable_automaton, transitions_output_t>
-    all_entries() const
-    {
-      return { *this, all_transitions() };
-    }
-
-    entry_t
-    entry_at(state_t s, state_t d) const
-    {
-      entry_t res;
-      for (auto t : outin(s, d))
-        // Bypass set_weight(), because we know that the weight is
-        // nonzero, and that there is only one weight per letter.
-        res[word_label_of(t)] = weight_of(t);
-      return res;
-    }
-
-    entry_t
-    entry_at(transition_t t) const
-    {
-      return entry_at(src_of(t), dst_of(t));
-    }
-
-    void
-    add_entry(state_t src, state_t dst, const entry_t& es)
-    {
-      add_entry_<context_t>(src, dst, es);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lal<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        // FIXME: Hack.  entries are always about words, but we
-        // want letters.  "e.first[0]" is a hack for lal.
-        add_transition(src, dst, e.first[0], e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lan<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        // FIXME: Hack.  entries are always about words, but we
-        // want letters.  "e.first[0]" is a hack for lal.
-        add_transition(src, dst, e.first[0], e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lau<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        add_transition(src, dst, {}, e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-              if_law<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        add_transition(src, dst, e.first, e.second);
     }
   };
 

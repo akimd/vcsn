@@ -22,7 +22,6 @@ namespace vcsn
       using state_t = typename automaton_t::state_t;
       using transition_t = typename automaton_t::transition_t;
       using label_t = typename automaton_t::label_t;
-      using entry_t = typename automaton_t::entry_t;
       using weight_t = typename automaton_t::weight_t;
 
       using labelset_t = typename automaton_t::labelset_t;
@@ -31,7 +30,6 @@ namespace vcsn
 
       using labelset_ptr = typename automaton_t::labelset_ptr;
       using weightset_ptr = typename automaton_t::weightset_ptr;
-      using entryset_t = polynomialset<context_t>;
 
     private:
       automaton_t* aut_;
@@ -111,18 +109,7 @@ namespace vcsn
       DEFINE(weight_of(transition_t t),
              weightset()->transpose(aut_->weight_of(t)));
 
-      DEFINE(entry_at(state_t s, state_t d),
-             entryset().transpose(aut_->entry_at(d, s)));
-
 # undef DEFINE
-
-      // Same text, but not the same src_of and dst_of.
-      entry_t
-      entry_at(transition_t t) const
-      {
-        return entry_at(src_of(t), dst_of(t));
-      }
-
 
       /*--------------------.
       | non-const methods.  |
@@ -215,11 +202,9 @@ namespace vcsn
         return aut_->Name();                    \
       }
 
-      DEFINE(all_entries);
       DEFINE(all_states);
       DEFINE(all_transitions);
       DEFINE(context);
-      DEFINE(entryset);
       DEFINE(labelset);
       DEFINE(num_finals);
       DEFINE(num_initials);

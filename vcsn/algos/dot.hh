@@ -5,8 +5,10 @@
 # include <iostream>
 # include <sstream>
 # include <unordered_map>
-# include <unordered_set>
 # include <vector>
+# include <set>
+
+# include <vcsn/weights/polynomialset.hh>
 
 # include <vcsn/dyn/fwd.hh>
 
