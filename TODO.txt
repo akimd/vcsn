@@ -6,6 +6,10 @@ or vcsn-is-deterministic?  More generally, should all three layers
 have the same specifications?  I vote yes, but efficiency might
 dictate a different choice.
 
+** edit-automaton
+Finish cleaning: we must stop reading as word_t, and use only label_t.
+See the item below.
+
 ** dot parser (see FIXME in tafkit/cat.chk)
 We accept invalid labels:
 

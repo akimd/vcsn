@@ -186,18 +186,15 @@ namespace vcsn
     /// Construct from a string.
     ///
     /// Somewhat more general than a mere reversal of "format",
-    /// in particular "a+a" is properly understood as "{2}a" in
+    /// in particular "a+a" is properly understood as "<2>a" in
     /// char_z.
     ///
-    /// \param s    the string to parse
+    /// \param i    the stream to parse
     /// \param sep  the separator between monomials.
     value_t
-    conv(const std::string& s, const char sep = '+') const
+    conv(std::istream& i, const char sep = '+') const
     {
       value_t res;
-      std::istringstream i{s};
-      std::ostringstream o;
-
 #define SKIP_SPACES()                           \
       while (isspace(i.peek()))                 \
         i.ignore()
@@ -212,8 +209,7 @@ namespace vcsn
             {
               i.ignore();
               size_t level = 1;
-              o.clear();
-              o.str("");
+              std::ostringstream o;
               while (true)
                 {
                   if (i.peek() == lbracket)
@@ -254,30 +250,44 @@ namespace vcsn
               word_t label = labelset()->conv(i);
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
-                throw std::domain_error("polynomialset: conv: "
-                                        "invalid value: " + s
-                                        + " contains an empty label "
-                                        "(did you mean \\e or \\z?)");
+                throw std::domain_error
+                  (std::string{"polynomialset: conv: invalid value: "}
+                   + std::string(1, i.peek())
+                   + " contains an empty label (did you mean \\e or \\z?)");
               add_weight(res, label, w);
             }
 
-          // EOF, or sep (e.g., '+').
+          // sep (e.g., '+'), or stop parsing.
           SKIP_SPACES();
-          if (i.peek() == -1)
-            break;
-          else if (i.peek() == sep)
+          if (i.peek() == sep)
             i.ignore();
           else
-            {
-              throw std::domain_error("polynomialset: conv: invalid value: " + s
-                                      + " unexpected "
-                                      + std::string{char(i.peek())});
-              i.ignore();
-            }
+            break;
         }
       while (true);
 #undef SKIP_SPACES
 
+      return res;
+    }
+
+    /// Construct from a string.
+    ///
+    /// Somewhat more general than a mere reversal of "format",
+    /// in particular "a+a" is properly understood as "<2>a" in
+    /// char_z.
+    ///
+    /// \param s    the string to parse
+    /// \param sep  the separator between monomials.
+    value_t
+    conv(const std::string& s, const char sep = '+') const
+    {
+      std::istringstream i{s};
+      value_t res = conv(i, sep);
+
+      if (i.peek() != -1)
+        throw std::domain_error("polynomialset: conv: invalid value: " + s
+                                + " unexpected "
+                                + std::string{char(i.peek())});
       return res;
     }
 
