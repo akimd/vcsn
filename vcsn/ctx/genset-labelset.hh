@@ -10,6 +10,8 @@ namespace vcsn
 {
   namespace ctx
   {
+    /// This class has no modeling purpose, it only serves to factor
+    /// code common to letterset, nullableset and wordset.
     template <typename GenSet>
     struct genset_labelset
     {
@@ -43,6 +45,7 @@ namespace vcsn
         return this->genset()->vname(full);
       }
 
+      /// Use the implementation from genset.
 # define DEFINE(Name)                                                   \
       template <typename... Args>                                       \
       auto                                                              \

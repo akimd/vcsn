@@ -12,6 +12,7 @@ namespace vcsn
 {
   namespace ctx
   {
+    /// Implementation of labels are nullables (letter or empty).
     template <typename GenSet>
     struct nullableset: genset_labelset<GenSet>
     {

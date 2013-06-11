@@ -12,6 +12,7 @@ namespace vcsn
 {
   namespace ctx
   {
+    /// Implementation of labels are letters.
     template <typename GenSet>
     struct letterset: genset_labelset<GenSet>
     {

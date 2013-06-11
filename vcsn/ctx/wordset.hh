@@ -11,6 +11,7 @@ namespace vcsn
 {
   namespace ctx
   {
+    /// Implementation of labels are words.
     template <typename GenSet>
     struct wordset: genset_labelset<GenSet>
     {

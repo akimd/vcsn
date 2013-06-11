@@ -13,6 +13,8 @@ namespace vcsn
 {
   namespace ctx
   {
+    /// Implementation of labels are units: there is a single instance
+    /// of label.
     struct unitset
     {
       using label_t = vcsn::empty_t;
