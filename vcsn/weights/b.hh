@@ -3,8 +3,10 @@
 
 # include <cassert>
 # include <ostream>
+# include <sstream>
 # include <stdexcept>
 # include <string>
+
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
@@ -80,14 +82,22 @@ namespace vcsn
     }
 
     value_t
+    conv(std::istream& i) const
+    {
+      switch (char c = i.get())
+        {
+        case '0': return false;
+        case '1': return true;
+        default:
+          throw std::domain_error("invalid Boolean: " + c);
+        }
+    }
+
+    value_t
     conv(const std::string& str) const
     {
-      if (str == "0")
-        return false;
-      else if (str == "1")
-        return true;
-      else
-        throw std::domain_error("invalid Boolean: " + str);
+      std::istringstream i{str};
+      return conv(i);
     }
 
     std::ostream&

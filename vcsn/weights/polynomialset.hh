@@ -222,6 +222,8 @@ namespace vcsn
                     }
                   o << char(i.get());
                 }
+              // FIXME: should be converted to use conv(std::istream),
+              // but it is not yet available for ratexp.
               w = weightset()->conv(o.str());
               default_w = false;
             }

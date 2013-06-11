@@ -57,7 +57,6 @@ namespace vcsn
         throw std::domain_error("f2: star: invalid value: 1");
     }
 
-
     bool
     is_unit(const value_t v) const
     {
@@ -80,14 +79,22 @@ namespace vcsn
     }
 
     value_t
+    conv(std::istream& i) const
+    {
+      switch (char c = i.get())
+        {
+        case '0': return false;
+        case '1': return true;
+        default:
+          throw std::domain_error("invalid F2: " + c);
+        }
+    }
+
+    value_t
     conv(const std::string& str) const
     {
-      if (str == "0")
-        return false;
-      else if (str == "1")
-        return true;
-      else
-        throw std::domain_error("invalid F2: " + str);
+      std::istringstream i{str};
+      return conv(i);
     }
 
     std::ostream&

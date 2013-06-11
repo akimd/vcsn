@@ -86,16 +86,24 @@ namespace vcsn
     }
 
     value_t
-    conv(const std::string &str) const
+    conv(std::istream& i) const
     {
-      try
+      value_t res;
+      i >> res;
+      if (i.fail())
         {
-          return boost::lexical_cast<value_t>(str);
+          char buf[256];
+          i.getline (buf, sizeof buf);
+          throw std::domain_error(std::string{"invalid double: "} + buf);
         }
-      catch (std::bad_cast& e)
-        {
-          throw std::domain_error("invalid double: " + str);
-        }
+      return res;
+    }
+
+    value_t
+    conv(const std::string& str) const
+    {
+      std::istringstream i{str};
+      return conv(i);
     }
 
     std::ostream&
