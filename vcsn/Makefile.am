@@ -114,6 +114,7 @@ nobase_vcsn_HEADERS =                           \
   misc/regex.hh                                 \
   misc/set.hh                                   \
   misc/star_status.hh                           \
+  misc/stream.hh                                \
   misc/unordered_set.hh                         \
   weights/b.hh                                  \
   weights/f2.hh                                 \

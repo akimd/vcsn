@@ -51,7 +51,8 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/transpose.cc                   \
   lib/vcsn/algos/xml.cc                         \
   lib/vcsn/ctx/ctx.cc                           \
-  lib/vcsn/misc/escape.cc
+  lib/vcsn/misc/escape.cc                       \
+  lib/vcsn/misc/stream.cc
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_

@@ -8,6 +8,7 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -207,24 +208,9 @@ namespace vcsn
           bool default_w = true;
           if (i.peek() == lbracket)
             {
-              i.ignore();
-              size_t level = 1;
-              std::ostringstream o;
-              while (true)
-                {
-                  if (i.peek() == lbracket)
-                    ++level;
-                  else if (i.peek() == rbracket
-                           && !--level)
-                    {
-                      i.ignore();
-                      break;
-                    }
-                  o << char(i.get());
-                }
               // FIXME: should be converted to use conv(std::istream),
               // but it is not yet available for ratexp.
-              w = weightset()->conv(o.str());
+              w = weightset()->conv(bracketed(i, lbracket, rbracket));
               default_w = false;
             }
 
