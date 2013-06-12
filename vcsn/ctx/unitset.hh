@@ -53,6 +53,13 @@ namespace vcsn
         return {};
       }
 
+      /// The special label is indistinguishable for the others.
+      constexpr static bool
+      is_special(label_t)
+      {
+        return true;
+      }
+
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
       empty_t

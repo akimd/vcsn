@@ -57,6 +57,12 @@ namespace vcsn
       }
 
       bool
+      is_special(const label_t& v) const
+      {
+        return v == special();
+      }
+
+      bool
       is_valid(const label_t& v) const
       {
         for (auto l: v)

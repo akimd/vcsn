@@ -58,6 +58,13 @@ namespace vcsn
         return this->genset()->template special<label_t>();
       }
 
+      /// Whether \a l is the special label (for pre/post transitions).
+      bool
+      is_special(label_t l) const
+      {
+        return l == special();
+      }
+
       constexpr label_t
       identity() const
       {
@@ -81,7 +88,7 @@ namespace vcsn
       {
         if (is_identity(l))
           o << "\\e";
-        else if (l != special())
+        else if (!is_special(l))
           o << l;
         return o;
       }
