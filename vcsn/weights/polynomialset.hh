@@ -300,9 +300,7 @@ namespace vcsn
                 out << lbracket;
                 weightset()->print(out, i.second) << rbracket;
               }
-            // FIXME: LAU should not have to be treated especially.
-            if (!context_t::is_lau)
-              labelset()->print(out, i.first);
+            labelset()->print(out, i.first);
           }
 
       return out;

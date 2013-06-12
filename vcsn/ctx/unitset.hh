@@ -113,7 +113,7 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, empty_t) const
       {
-        return o << "EMPTY1";
+        return o;
       }
 
       label_t
