@@ -235,7 +235,11 @@ namespace vcsn
               // Register the current position in the stream.
               std::streampos p = i.tellg();
               // The label is not \z.
-              word_t label = labelset()->conv(i);
+              //
+              // Do not use labelset()->conv, as for instance in LAL,
+              // it will refuse '\e'.  FIXME: we don't check that the
+              // letters are valid.
+              word_t label = labelset()->genset()->conv(i);
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
                 throw std::domain_error
