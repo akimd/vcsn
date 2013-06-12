@@ -56,9 +56,6 @@ namespace vcsn
 
 # define VCSN_CTX_INSTANTIATE_1(Ctx)                                    \
   MAYBE_EXTERN template                                                 \
-  class polynomialset<Ctx>;                                             \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
   class mutable_automaton<Ctx>;                                         \
                                                                         \
   /* aut_to_exp. */                                                     \

@@ -8,7 +8,7 @@
 # include <vector>
 # include <set>
 
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weights/entryset.hh>
 
 # include <vcsn/dyn/fwd.hh>
 
@@ -24,14 +24,14 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using context_t = typename automaton_t::context_t;
-    using entryset_t = polynomialset<context_t>;
+    using entryset_t = entryset<context_t>;
     using entry_t = typename entryset_t::value_t;
 
     entry_t entry;
     for (auto t : aut.outin(s, d))
       // Bypass set_weight(), because we know that the weight is
       // nonzero, and that there is only one weight per letter.
-      entry[aut.word_label_of(t)] = aut.weight_of(t);
+      entry[aut.label_of(t)] = aut.weight_of(t);
     return entryset_t{aut.context()}.format(entry, ", ");
   }
 

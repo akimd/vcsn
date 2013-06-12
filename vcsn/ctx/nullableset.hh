@@ -3,6 +3,7 @@
 
 # include <memory>
 # include <set>
+# include <sstream>
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
@@ -51,13 +52,13 @@ namespace vcsn
         return "lan_" + super().vname(full);
       }
 
-      label_t
+      constexpr label_t
       special() const
       {
         return this->genset()->template special<label_t>();
       }
 
-      label_t
+      constexpr label_t
       identity() const
       {
         return this->genset()->identity_letter();
@@ -70,9 +71,27 @@ namespace vcsn
       }
 
       bool
-      is_valid(const label_t& v) const
+      is_valid(label_t v) const
       {
-        return this->has(v) || v == this->identity();
+        return this->has(v) || is_identity(v);
+      }
+
+      std::ostream&
+      print(std::ostream& o, label_t l) const
+      {
+        if (is_identity(l))
+          o << "\\e";
+        else if (l != special())
+          o << l;
+        return o;
+      }
+
+      std::string
+      format(label_t v) const
+      {
+        std::ostringstream o;
+        print(o, v);
+        return o.str();
       }
     };
 

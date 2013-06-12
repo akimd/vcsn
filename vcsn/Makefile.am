@@ -116,6 +116,7 @@ nobase_vcsn_HEADERS =                           \
   misc/stream.hh                                \
   misc/unordered_set.hh                         \
   weights/b.hh                                  \
+  weights/entryset.hh                           \
   weights/f2.hh                                 \
   weights/fwd.hh                                \
   weights/polynomialset.hh                      \
