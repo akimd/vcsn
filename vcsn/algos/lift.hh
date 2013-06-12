@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_LIFT_HH
 # define VCSN_ALGOS_LIFT_HH
 
+# include <map>
+
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/unitset.hh>
 # include <vcsn/dyn/automaton.hh>
