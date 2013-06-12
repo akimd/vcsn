@@ -7,6 +7,7 @@
 
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/escape.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -173,16 +174,22 @@ namespace vcsn
 
           if (!is_zero)
             {
-              // Register the current position in the stream.
-              std::streampos p = i.tellg();
               // The label is not \z.
-              label_t label = labelset()->conv(i);
-              // We must have at least a weight or a label.
-              if (default_w && p == i.tellg())
-                throw std::domain_error
-                  (std::string{"entryset: conv: invalid value: "}
-                   + std::string(1, i.peek())
-                   + " contains an empty label (did you mean \\e or \\z?)");
+              label_t label = labelset()->special();
+              // Accept an implicit label if there is an explicit weight.
+              try
+                {
+                  label = labelset()->conv(i);
+                }
+              catch (const std::domain_error&)
+                {
+                  // We must have at least a weight or a label.
+                  if (default_w)
+                    throw std::domain_error
+                      (std::string{"entryset: conv: invalid value: "}
+                       + std::string(1, i.peek())
+                       + " contains an empty label (did you mean \\e or \\z?)");
+                }
               add_weight(res, label, w);
             }
 

@@ -9,7 +9,7 @@
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weights/entryset.hh>
 
 namespace std
 {
@@ -78,7 +78,7 @@ namespace vcsn
 
   private:
     using context_t = typename automaton_t::context_t;
-    using entry_t = typename polynomialset<context_t>::value_t;
+    using entry_t = typename entryset<context_t>::value_t;
     using state_t = typename automaton_t::state_t;
 
     using state_map = std::unordered_map<string_t, state_t>;
@@ -88,7 +88,6 @@ namespace vcsn
     edit_automaton(const context_t& ctx)
       : res_(new automaton_t(ctx))
       , entryset_(ctx)
-      , unit_(entryset_.unit())
     {}
 
     ~edit_automaton()
@@ -131,20 +130,30 @@ namespace vcsn
             res_->add_transition(s, d, res_->prepost_label());
           else
             {
+              // Adding a pre/post transition: be sure that it's only
+              // a weight.  Entries see the special label as an empty
+              // one.
               auto e = entryset_.conv(entry, sep_);
-              if (e.size() != 1
-                  || !res_->labelset()->is_empty_word(begin(e)->first))
+              std::cerr << "conv: " << entry
+                        << " -> {" << entryset_.format(e, ";") << '}'
+                        << std::endl;
+              if (e.size() == 1
+                  && (res_->labelset()->is_special(begin(e)->first)
+                      || res_->labelset()->is_identity(begin(e)->first)))
+                {
+                  auto w = begin(e)->second;
+                  res_->add_transition(s, d, res_->prepost_label(), w);
+                }
+              else
                 throw std::runtime_error
                   (std::string{"edit_automaton: invalid "}
                    + (s == res_->pre() ? "initial" : "final")
                    + " entry: " + entry.get());
-              auto w = begin(e)->second;
-              res_->add_transition(s, d, res_->prepost_label(), w);
             }
         }
       else
         {
-          auto p = emap_.emplace(entry, unit_);
+          auto p = emap_.emplace(entry, entry_t{});
           if (p.second)
             p.first->second = entryset_.conv(entry, sep_);
           add_entry(s, d, p.first->second);
@@ -164,6 +173,7 @@ namespace vcsn
     }
 
   private:
+    /// Convert a state name to a state handler.
     state_t
     state_(const string_t& k)
     {
@@ -173,56 +183,21 @@ namespace vcsn
       return p.first->second;
     }
 
+    /// Add transitions between \a src and \a dst, for entry \a es.
     void
     add_entry(state_t src, state_t dst, const entry_t& es)
-    {
-      add_entry_<context_t>(src, dst, es);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lal<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        // FIXME: Hack.  entries are always about words, but we
-        // want letters.  "e.first[0]" is a hack for lal.
-        res_->add_transition(src, dst, e.first[0], e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lan<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        // FIXME: Hack.  entries are always about words, but we
-        // want letters.  "e.first[0]" is a hack for lal.
-        res_->add_transition(src, dst, e.first[0], e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lau<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        res_->add_transition(src, dst, {}, e.second);
-    }
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_law<Ctx, const entry_t&> es)
     {
       for (auto e: es)
         res_->add_transition(src, dst, e.first, e.second);
     }
 
+    /// The automaton under construction.
     automaton_t* res_;
-    polynomialset<context_t> entryset_;
-    entry_t unit_;
+    /// Entries handler.
+    entryset<context_t> entryset_;
+    /// Map state name to state handler.
     state_map smap_;
+    /// Memoize conversion from entry as a string to entry_t.
     entry_map emap_;
   };
 

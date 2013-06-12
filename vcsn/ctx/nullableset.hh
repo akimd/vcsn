@@ -7,6 +7,7 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/escape.hh>
 # include <vcsn/ctx/genset-labelset.hh>
 
 namespace vcsn
@@ -81,6 +82,33 @@ namespace vcsn
       is_valid(label_t v) const
       {
         return this->has(v) || is_identity(v);
+      }
+
+      /// \throws std::domain_error if there is no label here.
+      label_t
+      conv(std::istream& i) const
+      {
+        label_t res;
+        int c = i.peek();
+        if (c == '\\')
+          {
+            i.ignore();
+            c = i.peek();
+            if (c != 'e')
+              throw std::domain_error("invalid label: unexpected \\"
+                                      + str_escape(c));
+            i.ignore();
+            res = identity();
+          }
+        else if (this->has(c))
+          {
+            res = c;
+            i.ignore();
+          }
+        else
+          throw std::domain_error("invalid label: unexpected "
+                                  + str_escape(c));
+        return res;
       }
 
       std::ostream&

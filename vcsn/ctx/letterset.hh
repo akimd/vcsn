@@ -6,6 +6,7 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/escape.hh>
 # include <vcsn/ctx/genset-labelset.hh>
 
 namespace vcsn
@@ -73,6 +74,18 @@ namespace vcsn
       is_valid(label_t v) const
       {
         return this->has(v);
+      }
+
+      /// Read one letter from i, return the corresponding label.
+      label_t
+      conv(std::istream& i) const
+      {
+        int c = i.peek();
+        if (this->has(c))
+          return i.get();
+        else
+          throw std::domain_error("invalid label: unexpected "
+                                  + str_escape(c));
       }
     };
 
