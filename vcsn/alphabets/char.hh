@@ -4,6 +4,8 @@
 # include <string>
 # include <iostream>
 
+# include <vcsn/misc/escape.hh>
+
 namespace vcsn
 {
   class char_letters
@@ -134,7 +136,7 @@ namespace vcsn
       if (l == identity_letter() || l == special_letter())
         return {};
       else
-        return {l};
+        return str_escape(l);
     }
 
     std::string
@@ -142,19 +144,21 @@ namespace vcsn
     {
       size_t s = w.size();
 
+      std::string res;
       if (s == 0
           || (s == 1 && w[0] == identity_letter()))
-        return "\\e";
+        res = "\\e";
 
       // If the string starts or ends with the special letter, skip
       // it.  If the resulting string is empty, format it this way.
       // (We DON'T want to format it as "\\e".)
-      if (w[0] == special_letter())
-        return (s == 1) ? "" : w.substr(1);
-      if (s > 1 && w[s - 1] == special_letter())
-        return w.substr(0, s - 1);
-
-      return w;
+      else if (w[0] == special_letter())
+        res = (s == 1) ? "" : str_escape(w.substr(1));
+      else if (s > 1 && w[s - 1] == special_letter())
+        res = str_escape(w.substr(0, s - 1));
+      else
+        res = str_escape(w);
+      return res;
     }
 
     // Special character, used to label transitions
