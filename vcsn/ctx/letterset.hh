@@ -64,7 +64,7 @@ namespace vcsn
       }
 
       bool
-      is_valid(const label_t& v) const
+      is_valid(label_t v) const
       {
         return this->has(v);
       }

@@ -86,7 +86,7 @@ namespace vcsn
       }
 
       bool
-      is_letter(const empty_t&) const
+      is_letter(empty_t) const
       {
         return false;
       }
@@ -104,12 +104,12 @@ namespace vcsn
       }
 
       std::ostream&
-      print(std::ostream& o, const empty_t&) const
+      print(std::ostream& o, empty_t) const
       {
         return o << "EMPTY1";
       }
 
-      empty_t
+      label_t
       conv(std::istream& i) const
       {
         if (i.peek() == '\\')
@@ -126,13 +126,13 @@ namespace vcsn
 
       // KILLME:
       word_t
-      to_word(const empty_t) const
+      to_word(empty_t) const
       {
         return {};
       }
 
       std::string
-      format(const empty_t&) const
+      format(empty_t) const
       {
         return "\\e";
       }
