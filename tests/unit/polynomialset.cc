@@ -70,9 +70,13 @@ check_conv()
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};
 
-#define CHECK(In, Out)                                   \
-  ASSERT_EQ(ps.format(ps.conv(In)), Out);
-#define CHECK_FAIL(In)                                   \
+#define CHECK(In, Out)                          \
+  do {                                          \
+    if (getenv("VERBOSE"))                      \
+      std::cerr << "check_conv: In: " << In;    \
+    ASSERT_EQ(ps.format(ps.conv(In)), Out);     \
+  } while (false)
+#define CHECK_FAIL(In)                          \
   ASSERT_EQ(check_conv_fail(ps, In), true);
 
   CHECK("\\e", "\\e");
@@ -131,10 +135,18 @@ check_star()
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};
 
-  ASSERT_EQ(ps.format(ps.star(ps.conv("<123>\\e"))), "<0>\\e");
-  ASSERT_EQ(ps.format(ps.star(ps.conv("<oo>\\e"))), "<0>\\e");
-  ASSERT_EQ(ps.format(ps.star(ps.conv("<123>\\e+<oo>\\e"))), "<0>\\e");
-  ASSERT_EQ(ps.format(ps.star(ps.conv("\\z"))), "<0>\\e");
+#define CHECK(In, Out)                                  \
+  do {                                                  \
+    if (getenv("VERBOSE"))                              \
+      std::cerr << "check_star: In: " << In;            \
+    ASSERT_EQ(ps.format(ps.star(ps.conv(In))), Out);    \
+  } while (false)
+
+  CHECK("<123>\\e",         "<0>\\e");
+  CHECK("<oo>\\e",          "<0>\\e");
+  CHECK("<123>\\e+<oo>\\e", "<0>\\e");
+  CHECK("\\z",              "<0>\\e");
+#undef CHECK
   ASSERT_EQ(check_star_fail(ps, "<-1>\\e"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>a"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<12>a"), true);
