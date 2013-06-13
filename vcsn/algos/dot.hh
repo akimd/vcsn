@@ -25,13 +25,11 @@ namespace vcsn
     using automaton_t = Aut;
     using context_t = typename automaton_t::context_t;
     using entryset_t = entryset<context_t>;
-    using entry_t = typename entryset_t::value_t;
 
-    entry_t entry;
-    for (auto t : aut.outin(s, d))
-      // Bypass set_weight(), because we know that the weight is
-      // nonzero, and that there is only one weight per letter.
-      entry[aut.label_of(t)] = aut.weight_of(t);
+    // The main advantage of using entries instead of directly
+    // iterating over aut.outin(s, d) is to get a result which is
+    // sorted (hence more deterministic).
+    auto entry = get_entry(aut, s, d);
     return entryset_t{aut.context()}.format(entry, ", ");
   }
 

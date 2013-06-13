@@ -95,24 +95,28 @@ namespace vcsn
       delete res_;
     }
 
+    /// Register the existence of state named \a s.
     virtual void
     add_state(const string_t& s) override final
     {
       state_(s);
     }
 
+    /// Register that state named \a s is preinitial.
     virtual void
     add_pre(const string_t& s) override final
     {
       smap_.emplace(s, res_->pre());
     }
 
+    /// Register that state named \a s is postfinal.
     virtual void
     add_post(const string_t& s) override final
     {
       smap_.emplace(s, res_->post());
     }
 
+    /// Add transitions from \a src to \a dst, labeled by \a entry.
     virtual void
     add_entry(const string_t& src, const string_t& dst,
               const string_t& entry) override final
@@ -160,12 +164,14 @@ namespace vcsn
         }
     }
 
+    /// Return the built automaton.
     virtual dyn::abstract_automaton*
     result() override final
     {
       return res_;
     }
 
+    /// Detach the built automaton.
     virtual void
     reset() override final
     {

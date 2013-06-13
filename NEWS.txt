@@ -1,3 +1,8 @@
+* 2013-06-13
+** Invalid labels are rejected
+Under some circumstances, some invalid transitions could be accepted by the
+Dot parser (e.g., "aa" or "\e" in LAL).  This is fixed.
+
 * 2013-06-05
 ** Support for entries is removed.
 Member types, functions, and variables, about entries, have been removed.

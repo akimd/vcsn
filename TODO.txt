@@ -6,48 +6,6 @@ or vcsn-is-deterministic?  More generally, should all three layers
 have the same specifications?  I vote yes, but efficiency might
 dictate a different choice.
 
-** edit-automaton
-Finish cleaning: we must stop reading as word_t, and use only label_t.
-See the item below.
-
-** dot parser (see FIXME in tafkit/cat.chk)
-We accept invalid labels:
-
-  digraph
-  {
-    vcsn_context = "lal_char(a)_b"
-    1 -> 2 [label = "aa"]         // invalid LAL
-    2 -> F2
-    I1 -> 1
-  }
-
-  digraph
-  {
-    vcsn_context = "lal_char(a)_b"
-    1 -> 2 [label = "\e"]        // invalid LAL
-    2 -> F2
-    I1 -> 1
-  }
-
-both are related to our use of entries to parse labels: entries are
-about *words*, while we want them to be about *labels*.  So we are
-missing control in lal (and lan):
-
-    template <typename Ctx>
-    void
-    add_entry_(state_t src, state_t dst,
-               if_lal<Ctx, const entry_t&> es)
-    {
-      for (auto e: es)
-        // FIXME: Hack.  entries are always about words, but we
-        // want letters.  "e.first[0]" is a hack for lal.
-        add_transition(src, dst, e.first[0], e.second);
-    }
-
-we don't check that there is a single letter in the label here, nor
-that it is not the \e.  Rather than a quick fix, we need to really
-talk about the nature of entries.
-
 ** Generators and alphabets
 ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
@@ -136,28 +94,6 @@ choose bw "word_t w", and const&.
 
 * move files around
 The hierarchy and the namespaces do not match.
-
-* have a consuming version of conv()
-The conversion function of weights currently takes a string and returns
-a weight.  It would be convenient to have a conversion that is equivalent
-to the >> operator: i.e., it reads the leading weight, and return the rest.
-(Should we use a stream-based interface or an iterator-based interface?)
-Similar conversion functions should be made available for labels.
-
-This is especially important when parsing weights with a recursive
-structure (e.g., polynomials or rational expressions).  For instance
-in
-
-              while (labelset()->has(i.peek()))
-                label += char(i.get());
-
-polynomialset::conv() wrongly assumes that letters are represented by
-characters.  This will break with integer alphabets.
-
-* should polynomial honor the kind?
-Currently polynomials maps words to weights.  However when polynomial
-are used to represent entries of a LAL automaton, it would make sense
-to map only letters to weights.  Can this be useful elsewhere?
 
 Local Variables:
 mode: outline

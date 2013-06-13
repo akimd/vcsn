@@ -13,6 +13,7 @@
 
 namespace vcsn
 {
+  /// Map labels to weights.
   template <class Context>
   class entryset
   {
@@ -272,6 +273,26 @@ namespace vcsn
     /// Right marker for weight in concrete syntax.
     constexpr static char rbracket = '>';
   };
+
+
+  /// Extract the entry between two states of an automaton.
+  template <typename Aut>
+  typename entryset<typename Aut::context_t>::value_t
+  get_entry(const Aut& aut,
+            typename Aut::state_t s, typename Aut::state_t d)
+  {
+    using automaton_t = Aut;
+    using context_t = typename automaton_t::context_t;
+    using entryset_t = entryset<context_t>;
+    using entry_t = typename entryset_t::value_t;
+
+    entry_t res;
+    for (auto t : aut.outin(s, d))
+      // Bypass set_weight(), because we know that the weight is
+      // nonzero, and that there is only one weight per letter.
+      res[aut.label_of(t)] = aut.weight_of(t);
+    return res;
+  }
 
 }
 
