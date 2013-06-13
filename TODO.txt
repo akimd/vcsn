@@ -1,11 +1,4 @@
 * Bugs
-** is-deterministic (see tafkit/is-deterministic-fail.chk).
-It fails to check properly that the input automaton is-realtime.  But
-is this a task for vcsn::is-deterministic, for dyn::is-deterministic,
-or vcsn-is-deterministic?  More generally, should all three layers
-have the same specifications?  I vote yes, but efficiency might
-dictate a different choice.
-
 ** Generators and alphabets
 ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
@@ -36,6 +29,10 @@ some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
 * eval.chk
 Cover more cases for zmin.
+
+* dyn::
+** Implement implicit conversions
+So that, for instance, we can run is-derministic on a proper lan.
 
 * trivial identities
 As a goal, we want every rational expression to yield the same result

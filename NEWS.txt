@@ -1,4 +1,8 @@
 * 2013-06-13
+** is-deterministic
+It is conformant with the specifications: _all_ the states must be
+deterministic, not just the reachable ones.
+
 ** info output adjustments
 It now displays whether the automaton "is complete" and the number of
 deterministic states if LAL, otherwise "N/A".  It also reports "is
