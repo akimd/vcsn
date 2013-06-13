@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <map>
+# include <queue>
 # include <stack>
 # include <string>
 # include <type_traits>
@@ -57,7 +58,7 @@ namespace vcsn
 
     std::map<std::pair<int, int>, std::vector<state_t>> labels;
 
-    int eq_class = 1;
+    int eq_class = 2;
     int nbr_eq_classes_last_loop = 2;
     do
     {
@@ -78,7 +79,7 @@ namespace vcsn
             }
 
             nbr_eq_classes_last_loop = eq_class;
-            eq_class = 0;
+            eq_class = 2;
             for (auto& label : labels) // foreach state having the same label
             {
                 for (auto& st : label.second)
@@ -86,22 +87,38 @@ namespace vcsn
                 ++eq_class;
             }
         }
-
-        for (auto& label : labels) // foreach state having the same label
-        {
-            std::cout << "(" << label.first.first << ", "
-                << label.first.second << ") = ";
-
-            for (auto& st : label.second)
-                std::cout << st << " ";
-            std::cout << std::endl;
-        }
-        std::cout << "==============================\n";
-
-        for (auto& eq : equivalences)
-            std::cout << eq.first << " => " << eq.second << std::endl;
     }
     while (nbr_eq_classes_last_loop != eq_class);
+
+    std::map<int, state_t> eq_to_res;
+    equivalences[a.pre()] = 0;
+    equivalences[a.post()] = 1;
+    eq_to_res[0] = res.pre();
+    eq_to_res[1] = res.post();
+
+    std::queue<state_t> todo;
+    todo.push(a.pre());
+
+    //Work in progress
+    while (!todo.empty())
+    {
+        const state_t asrc = todo.front();
+        todo.pop();
+
+        for (auto tr : a.all_out(asrc))
+        {
+            state_t dst = a.dst_of(tr);
+            auto p = eq_to_res.emplace(equivalences[dst], a.null_state());
+            if (p.second)
+            {
+                todo.push(dst);
+                p.first->second = res.new_state();
+            }
+
+            res.add_transition(eq_to_res[equivalences[asrc]], p.first->second,
+                    a.label_of(tr), a.weight_of(tr));
+        }
+    }
 
     return res;
   }
