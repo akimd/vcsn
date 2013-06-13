@@ -77,7 +77,7 @@ Transform the current implementation of the "naive" heuristics into
 some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
 * eval.chk
-Cover more case for zmin.
+Cover more cases for zmin.
 
 * trivial identities
 As a goal, we want every rational expression to yield the same result
@@ -107,15 +107,6 @@ the special letter labels the initial and final transitions etc.
 Currently it converts the \e in initial/final labels to the
 special-letter.  Is this what we want?
 Shouldn't we replace assert() with if (...) throw ... ?
-
-* check labels in mutable_automaton
-Currently, we can add_transition(p, q, 'z') even if z is not part of
-the alphabet.
-
-No, we do not want mutable_expression to check anything, as it might
-be used by sound algorithms which will never make such mistakes --- so
-it would be a pessimization to check.  Rather check in tools such as
-edit-automaton.
 
 * debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.

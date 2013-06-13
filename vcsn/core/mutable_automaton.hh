@@ -60,6 +60,7 @@ namespace vcsn
     tr_store_t transitions_;
     /// Free indexes in transitions_.
     free_store_t transitions_fs_;
+    /// Label for initial and final transitions.
     label_t prepost_label_;
 
   public:
@@ -397,6 +398,16 @@ namespace vcsn
         del_transition(t);
     }
 
+    /// Set a transition between two states.  Override any possible
+    /// existing transition with same states and label.
+    ///
+    /// \param src  source state
+    /// \param dst  destination state
+    /// \param l    label of the transition
+    /// \param k    weight of the transition
+    ///
+    /// \pre the label is _not checked_, for efficiency.  Letters out
+    /// of the alphabet will be accepted.
     transition_t
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
@@ -447,6 +458,23 @@ namespace vcsn
       return t;
     }
 
+    /// Same as above, with unit weight.
+    transition_t
+    set_transition(state_t src, state_t dst, label_t l)
+    {
+      return set_transition(src, dst, l, weightset()->unit());
+    }
+
+    /// Add a transition between two states.  Merge with an existing
+    /// one with same label.
+    ///
+    /// \param src  source state
+    /// \param dst  destination state
+    /// \param l    label of the transition
+    /// \param k    weight of the transition
+    ///
+    /// \pre the label is _not checked_, for efficiency.  Letters out
+    /// of the alphabet will be accepted.
     weight_t
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
@@ -463,16 +491,11 @@ namespace vcsn
       return k;
     }
 
+    /// Same as above, with unit weight.
     weight_t
     add_transition(state_t src, state_t dst, label_t l)
     {
       return add_transition(src, dst, l, weightset()->unit());
-    }
-
-    transition_t
-    set_transition(state_t src, state_t dst, label_t l)
-    {
-      return set_transition(src, dst, l, weightset()->unit());
     }
 
     std::string
