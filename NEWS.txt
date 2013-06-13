@@ -1,7 +1,8 @@
 * 2013-06-13
 ** info output adjustments
-It now displays whether the automaton "is complete" if LAL, otherwise "N/A".
-It also reports "is deterministic: N/A" for non-LAL.
+It now displays whether the automaton "is complete" and the number of
+deterministic states if LAL, otherwise "N/A".  It also reports "is
+deterministic: N/A" for non-LAL.
 
 ** Invalid labels are rejected
 Under some circumstances, some invalid transitions could be accepted by the

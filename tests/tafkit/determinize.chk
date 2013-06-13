@@ -193,11 +193,12 @@ run 0 out.exp -cat de-bruijn-3-det.gv
 check de-bruijn 8
 mv out.exp de-bruijn-8-det.gv
 run 0 - -vcsn-cat -O info -f de-bruijn-8-det.gv <<EOF
-context: mutable_automaton<lal_char(ab)_b>
+type: mutable_automaton<lal_char(ab)_b>
 number of states: 512
 number of initial states: 1
 number of final states: 256
 number of transitions: 1024
+number of deterministic states: 512
 number of eps transitions: 0
 is complete: 1
 is deterministic: 1
@@ -293,11 +294,12 @@ run 0 out.exp -cat ladybird-4-det.gv
 check ladybird 8
 mv out.exp ladybird-8-det.gv
 run 0 - -vcsn-cat -O info -f ladybird-8-det.gv <<EOF
-context: mutable_automaton<lal_char(abc)_b>
+type: mutable_automaton<lal_char(abc)_b>
 number of states: 256
 number of initial states: 1
 number of final states: 128
 number of transitions: 768
+number of deterministic states: 256
 number of eps transitions: 0
 is complete: 1
 is deterministic: 1

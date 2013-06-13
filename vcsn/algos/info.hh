@@ -13,13 +13,11 @@
 namespace vcsn
 {
 
-  /*--------------------------.
-  | info(automaton, stream).  |
-  `--------------------------*/
-
   namespace detail
   {
-    // is_complete.
+    /*--------------.
+    | is_complete.  |
+    `--------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
                             std::string>::type
@@ -38,13 +36,15 @@ namespace vcsn
       return "N/A";
     }
 
-    // is_deterministic.
+    /*-------------------.
+    | is_deterministic.  |
+    `-------------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
                             std::string>::type
     is_deterministic(const Aut& a)
     {
-      return vcsn::is_deterministic(a) ? "1" : "0";
+      return std::to_string(vcsn::is_deterministic(a));
     }
 
     template <typename Aut>
@@ -57,7 +57,30 @@ namespace vcsn
       return "N/A";
     }
 
-    // num_eps_transitions.
+    /*---------------------------.
+    | num_deterministic_states.  |
+    `---------------------------*/
+    template <typename Aut>
+    typename std::enable_if<Aut::context_t::is_lal,
+                            std::string>::type
+    num_deterministic_states(const Aut& a)
+    {
+      return std::to_string(vcsn::num_deterministic_states(a));
+    }
+
+    template <typename Aut>
+    typename std::enable_if<(Aut::context_t::is_lan
+                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_law),
+                            std::string>::type
+    num_deterministic_states(const Aut&)
+    {
+      return "N/A";
+    }
+
+    /*----------------------.
+    | num_eps_transitions.  |
+    `----------------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
                             size_t>::type
@@ -81,23 +104,32 @@ namespace vcsn
 
   }
 
+  /*--------------------------.
+  | info(automaton, stream).  |
+  `--------------------------*/
+
   template <class A>
   std::ostream&
   info(const A& aut, std::ostream& out)
   {
-    return out
-      << "context: " << aut.vname(true) << std::endl
-      << "number of states: " << aut.num_states() << std::endl
-      << "number of initial states: " << aut.num_initials() << std::endl
-      << "number of final states: " << aut.num_finals() << std::endl
-      << "number of transitions: " << aut.num_transitions() << std::endl
-      << "number of eps transitions: " << detail::num_eps_transitions(aut) << std::endl
-      << "is complete: " << detail::is_complete(aut) << std::endl
-      << "is deterministic: " << detail::is_deterministic(aut) << std::endl
-      << "is eps-acyclic: " << is_eps_acyclic(aut) << std::endl
-      << "is proper: " << is_proper(aut) << std::endl
-      << "is valid: " << is_valid(aut);
-      ;
+#define ECHO(Name, Value)                               \
+    out << Name ": " << Value << std::endl
+    ECHO("type", aut.vname(true));
+    ECHO("number of states", aut.num_states());
+    ECHO("number of initial states", aut.num_initials());
+    ECHO("number of final states", aut.num_finals());
+    ECHO("number of transitions", aut.num_transitions());
+    ECHO("number of deterministic states",
+         detail::num_deterministic_states(aut));
+    ECHO("number of eps transitions", detail::num_eps_transitions(aut));
+    ECHO("is complete", detail::is_complete(aut));
+    ECHO("is deterministic", detail::is_deterministic(aut));
+    ECHO("is eps-acyclic", is_eps_acyclic(aut));
+    ECHO("is proper", is_proper(aut));
+#undef ECHO
+    // No std::endl for the last one.
+    out << "is valid: " << is_valid(aut);
+    return out;
   }
 
   namespace dyn

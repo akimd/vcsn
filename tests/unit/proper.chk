@@ -2,11 +2,12 @@
 
 cat >out.exp <<\EOF
 ***LAL***
-context: mutable_automaton<lal_char(ab)_b>
+type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -14,11 +15,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper:
-context: mutable_automaton<lal_char(ab)_b>
+type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -26,11 +28,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 backward_proper:
-context: mutable_automaton<lal_char(ab)_b>
+type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -38,11 +41,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper_here:
-context: mutable_automaton<lal_char(ab)_b>
+type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -50,11 +54,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 ***LAW***
-context: mutable_automaton<law_char(ab)_b>
+type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
@@ -62,11 +67,12 @@ is eps-acyclic: 0
 is proper: 0
 is valid: 1
 proper:
-context: mutable_automaton<law_char(ab)_b>
+type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -74,11 +80,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 backward_proper:
-context: mutable_automaton<law_char(ab)_b>
+type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 3
 number of final states: 1
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -86,11 +93,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper_here:
-context: mutable_automaton<law_char(ab)_b>
+type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -98,11 +106,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 ***LAL Z***
-context: mutable_automaton<lal_char(ab)_z>
+type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -110,11 +119,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper:
-context: mutable_automaton<lal_char(ab)_z>
+type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -122,11 +132,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper_here:
-context: mutable_automaton<lal_char(ab)_z>
+type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 3
+number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
@@ -135,11 +146,12 @@ is proper: 1
 is valid: 1
 ***LAW Z***
 * Circuit of eps-transition
-context: mutable_automaton<law_char(ab)_z>
+type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
@@ -148,11 +160,12 @@ is proper: 0
 is valid: 0
 Exception: invalid automaton
 * No circuit of eps-transition
-context: mutable_automaton<law_char(ab)_z>
+type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 5
+number of deterministic states: N/A
 number of eps transitions: 2
 is complete: N/A
 is deterministic: N/A
@@ -160,11 +173,12 @@ is eps-acyclic: 1
 is proper: 0
 is valid: 1
 proper:
-context: mutable_automaton<law_char(ab)_z>
+type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -172,11 +186,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 backward_proper:
-context: mutable_automaton<law_char(ab)_z>
+type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 3
 number of final states: 1
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -184,11 +199,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 proper_here:
-context: mutable_automaton<law_char(ab)_z>
+type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -197,11 +213,12 @@ is proper: 1
 is valid: 1
 ***LAW Z-min+***
 * Circuit of eps-transition
-context: mutable_automaton<law_char(ab)_zmin>
+type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
@@ -210,11 +227,12 @@ is proper: 0
 is valid: 0
 Exception: invalid automaton
 * No negative circuit
-context: mutable_automaton<law_char(ab)_zmin>
+type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
 number of transitions: 6
+number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
@@ -222,11 +240,12 @@ is eps-acyclic: 0
 is proper: 0
 is valid: 1
 proper:
-context: mutable_automaton<law_char(ab)_zmin>
+type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -234,11 +253,12 @@ is eps-acyclic: 1
 is proper: 1
 is valid: 1
 backward_proper:
-context: mutable_automaton<law_char(ab)_zmin>
+type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 3
 number of final states: 1
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
@@ -273,11 +293,12 @@ digraph
   2 -> 2 [label = "<1>a"]
 }
 proper_here:
-context: mutable_automaton<law_char(ab)_zmin>
+type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3
 number of transitions: 9
+number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
