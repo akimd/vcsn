@@ -154,8 +154,6 @@ namespace vcsn
 
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
 
-        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
-
         proper_register(aut_t::sname(), proper<aut_t>);
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
@@ -230,9 +228,6 @@ namespace vcsn
         info_register(aut_t::sname(), info<aut_t>);
         info_register(taut_t::sname(), info<taut_t>);
         info_exp_register(Ctx::sname(), info_exp<Ctx>);
-
-        // is-deterministic.
-        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
 
         // is-eps-acyclic.
         is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);

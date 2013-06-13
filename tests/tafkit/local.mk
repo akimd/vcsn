@@ -19,7 +19,6 @@ tafkit_TESTS =                                  \
   tafkit/determinize.chk                        \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
-  tafkit/is-deterministic-fail.chk              \
   tafkit/is-proper.chk                          \
   tafkit/is_complete.chk                        \
   tafkit/ladybird.chk                           \
@@ -32,8 +31,6 @@ tafkit_TESTS =                                  \
 dist_TESTS += $(tafkit_TESTS)
 
 $(tafkit_TESTS:.chk=.log): $(all_vcsn)
-
-XFAIL_TESTS += tafkit/is-deterministic-fail.chk
 
 .PHONY: check-tafkit
 check-tafkit:

@@ -2,7 +2,7 @@
 
 # check_lal EXPECT < LAL.DOT
 # --------------------------
-# Check that is-deterministic(INPUT) = EXPECT in lal, lan, and law.
+# Check that is-deterministic(INPUT) = EXPECT in lal.
 check_lal ()
 {
   local status
@@ -12,15 +12,7 @@ check_lal ()
   esac
   cat >lal.gv
   run $status "$1" -vcsn-is-deterministic -A -f lal.gv
-  sed -e 's/lal/lan/' lal.gv > lan.gv
-  run $status "$1" -vcsn-is-deterministic -A -f lan.gv
-  sed -e 's/lal/law/' lal.gv > law.gv
-  run $status "$1" -vcsn-is-deterministic -A -f law.gv
 }
-
-## ------------ ##
-## lal_char_b.  ##
-## ------------ ##
 
 check_lal "true" <<EOF
 digraph
@@ -119,6 +111,7 @@ digraph
 EOF
 
 
+# Two initial states.
 check_lal "false" <<EOF
 digraph
 {

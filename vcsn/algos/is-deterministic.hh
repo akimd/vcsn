@@ -14,11 +14,16 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
-    using word_t = typename automaton_t::labelset_t::word_t;
+    using label_t = typename automaton_t::labelset_t::label_t;
 
+    static_assert(automaton_t::context_t::is_lal,
+                  "requires labels_are_letters");
+
+    // States to visit.
     std::queue<state_t> q;
+    // States already visited (or already in q).
+    std::unordered_set<label_t> seen;
     std::unordered_set<state_t> marked;
-    std::unordered_set<word_t> seen;
 
     q.push(aut.pre());
     marked.insert(aut.pre());
@@ -32,7 +37,7 @@ namespace vcsn
         for (auto tr : aut.all_out(st))
           {
             state_t succ = aut.dst_of(tr);
-            const word_t& wd = aut.word_label_of(tr);
+            const label_t& wd = aut.label_of(tr);
             if (!seen.insert(wd).second)
               return false;
 
