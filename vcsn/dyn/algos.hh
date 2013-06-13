@@ -189,6 +189,10 @@ namespace vcsn
     /// Build an ratexpset from its context.
     ratexpset make_ratexpset(const context& ctx);
 
+    /// The minimal automaton from \a aut.
+    /// \precondition \a aut is complete and deterministic.
+    automaton minimize(const automaton& aut);
+
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
 

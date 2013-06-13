@@ -62,6 +62,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/left-mult.cc                        \
   %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
+  %D%/algos/minimize.cc                         \
   %D%/algos/print.cc                            \
   %D%/algos/product.cc                          \
   %D%/algos/proper.cc                           \

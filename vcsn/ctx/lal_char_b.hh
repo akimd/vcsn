@@ -52,6 +52,11 @@ namespace vcsn
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>& aut,
    std::ostream& out);
 
+  MAYBE_EXTERN template
+  auto
+  minimize(const mutable_automaton<ctx::lal_char_b>& aut)
+    -> mutable_automaton<ctx::lal_char_b>;
+
 # if VCSN_INSTANTIATION
   namespace
   {
@@ -77,6 +82,7 @@ namespace vcsn
         REGISTER2(difference, aut_t, aut_t);
         REGISTER(fado, aut_t);
         REGISTER(grail, aut_t);
+        REGISTER(minimize, aut_t);
         REGISTER(universal, aut_t);
 #  undef REGISTER2
 #  undef REGISTER
