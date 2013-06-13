@@ -199,6 +199,7 @@ number of initial states: 1
 number of final states: 256
 number of transitions: 1024
 number of eps transitions: 0
+is complete: 1
 is deterministic: 1
 is eps-acyclic: 1
 is proper: 1
@@ -298,6 +299,7 @@ number of initial states: 1
 number of final states: 128
 number of transitions: 768
 number of eps transitions: 0
+is complete: 1
 is deterministic: 1
 is eps-acyclic: 1
 is proper: 1
