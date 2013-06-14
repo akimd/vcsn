@@ -109,7 +109,7 @@ namespace vcsn
                 res.add_transition(map_[ss], n, l);
               }
           }
-        return res;
+        return std::move(res);
       }
 
       /// A map from determinized states to sets of original states.
