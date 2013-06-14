@@ -206,6 +206,7 @@ namespace vcsn
       DEFINE(all_transitions);
       DEFINE(context);
       DEFINE(labelset);
+      DEFINE(num_all_states);
       DEFINE(num_finals);
       DEFINE(num_initials);
       DEFINE(num_states);
