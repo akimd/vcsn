@@ -1,7 +1,6 @@
 #ifndef VCSN_CTX_LAL_CHAR_B_HH
 # define VCSN_CTX_LAL_CHAR_B_HH
 
-# include <vcsn/algos/determinize.hh>
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/lal_char.hh>
 # include <vcsn/weights/b.hh>
@@ -15,6 +14,7 @@ namespace vcsn
 }
 
 # include <vcsn/ctx/instantiate.hh>
+# include <vcsn/algos/determinize.hh>
 
 namespace vcsn
 {
