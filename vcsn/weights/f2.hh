@@ -5,6 +5,8 @@
 # include <ostream>
 # include <stdexcept>
 # include <string>
+
+# include <vcsn/misc/escape.hh>
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
@@ -70,7 +72,9 @@ namespace vcsn
     }
 
     static constexpr bool show_unit() { return false; }
-    static constexpr star_status_t star_status() { return star_status_t::NON_STARABLE; }
+
+    static constexpr
+    star_status_t star_status() { return star_status_t::NON_STARABLE; }
 
     value_t
     transpose(const value_t v) const
@@ -86,7 +90,7 @@ namespace vcsn
         case '0': return false;
         case '1': return true;
         default:
-          throw std::domain_error("invalid F2: " + c);
+          throw std::domain_error("invalid F2: " + str_escape(c));
         }
     }
 

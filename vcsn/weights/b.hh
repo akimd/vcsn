@@ -7,6 +7,7 @@
 # include <stdexcept>
 # include <string>
 
+# include <vcsn/misc/escape.hh>
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
@@ -89,7 +90,7 @@ namespace vcsn
         case '0': return false;
         case '1': return true;
         default:
-          throw std::domain_error("invalid Boolean: " + c);
+          throw std::domain_error("invalid Boolean: " + str_escape(c));
         }
     }
 
