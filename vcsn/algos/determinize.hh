@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_DETERMINIZE_HH
 # define VCSN_ALGOS_DETERMINIZE_HH
 
+# include <set>
 # include <stack>
 # include <string>
 # include <type_traits>
@@ -107,6 +108,23 @@ namespace vcsn
 
                 res.add_transition(map_[ss], n, l);
               }
+          }
+        return res;
+      }
+
+      /// A map from determinized states to sets of original states.
+      std::map<state_t, std::set<state_t>>
+      origins() const
+      {
+        std::map<state_t, std::set<state_t>> res;
+        for (const auto& p: map_)
+          {
+            std::set<state_t> from;
+            const auto& ss = p.first;
+            for (auto s = ss.find_first(); s != ss.npos;
+                 s = ss.find_next(s))
+              from.emplace(s);
+            res.emplace(p.second, std::move(from));
           }
         return res;
       }
