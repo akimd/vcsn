@@ -15,6 +15,7 @@ namespace vcsn
 
 # include <vcsn/ctx/instantiate.hh>
 # include <vcsn/algos/determinize.hh>
+# include <vcsn/algos/universal.hh>
 
 namespace vcsn
 {
@@ -38,6 +39,7 @@ namespace vcsn
         using namespace dyn::detail;
 
         determinize_register(aut_t::sname(), determinize<aut_t>);
+        universal_register(aut_t::sname(), universal<aut_t>);
         return true;
       }
 

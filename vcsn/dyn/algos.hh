@@ -83,6 +83,8 @@ namespace vcsn
     automaton transpose(automaton& aut);
     ratexp transpose(const ratexp& e);
 
+    automaton universal(const automaton& aut);
+
     std::ostream& xml(const ratexp& e, std::ostream& out);
   }
 }

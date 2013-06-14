@@ -49,6 +49,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/thompson.cc                    \
   lib/vcsn/algos/tikz.cc                        \
   lib/vcsn/algos/transpose.cc                   \
+  lib/vcsn/algos/universal.cc                   \
   lib/vcsn/algos/xml.cc                         \
   lib/vcsn/ctx/ctx.cc                           \
   lib/vcsn/misc/escape.cc                       \

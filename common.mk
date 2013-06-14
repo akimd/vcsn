@@ -67,6 +67,7 @@ vcsn_proper           = $(top_builddir)/bin/vcsn-proper
 vcsn_standard         = $(top_builddir)/bin/vcsn-standard
 vcsn_thompson         = $(top_builddir)/bin/vcsn-thompson
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
+vcsn_universal        = $(top_builddir)/bin/vcsn-universal
 
 all_vcsn =                                      \
   $(vcsn_accessible)                            \
@@ -85,4 +86,5 @@ all_vcsn =                                      \
   $(vcsn_product)                               \
   $(vcsn_standard)                              \
   $(vcsn_thompson)                              \
-  $(vcsn_transpose)
+  $(vcsn_transpose)                             \
+  $(vcsn_universal)

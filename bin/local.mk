@@ -30,7 +30,8 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-proper                               \
   bin/vcsn-standard                             \
   bin/vcsn-thompson                             \
-  bin/vcsn-transpose
+  bin/vcsn-transpose                            \
+  bin/vcsn-universal
 
 noinst_LTLIBRARIES += bin/libtafkit.la
 bin_libtafkit_la_SOURCES = bin/parse-args.hh bin/parse-args.cc
@@ -54,3 +55,4 @@ bin_vcsn_proper_LDADD           = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
 bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la
+bin_vcsn_universal_LDADD        = bin/libtafkit.la

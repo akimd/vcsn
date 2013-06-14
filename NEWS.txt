@@ -1,3 +1,32 @@
+* 2013-06-17
+** universal
+New algorithm (static, dynamic, and taf-kit).  Requires a LAL Boolean
+automaton.
+
+  $ vcsn-universal -f a1.gv
+  digraph
+  {
+    vcsn_context = "lal_char(ab)_b"
+    rankdir = LR
+    node [shape = circle]
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I0
+      F2
+    }
+    { 0 1 2 }
+    I0 -> 0
+    0 -> 0 [label = "a, b"]
+    0 -> 1 [label = "a"]
+    1 -> 0 [label = "a, b"]
+    1 -> 1 [label = "a, b"]
+    1 -> 2 [label = "b"]
+    2 -> F2
+    2 -> 0 [label = "a, b"]
+    2 -> 1 [label = "a, b"]
+    2 -> 2 [label = "a, b"]
+  }
+
 * 2013-06-13
 ** is-deterministic
 It is conformant with the specifications: _all_ the states must be

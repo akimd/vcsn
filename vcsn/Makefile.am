@@ -35,6 +35,7 @@ nobase_vcsn_HEADERS =                           \
   algos/thompson.hh                             \
   algos/tikz.hh                                 \
   algos/transpose.hh                            \
+  algos/universal.hh                            \
   algos/xml.hh                                  \
   algos/xml/ios.hh                              \
   algos/xml/ios.hxx                             \
