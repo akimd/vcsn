@@ -7,7 +7,7 @@
 run 0 - unit/transpose <<EOF
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
   node [shape = circle]
   {
@@ -16,15 +16,15 @@ digraph
     I2
   }
   { 0 1 2 }
-  I0 -> 0 [label = "<a.b.c.d>"]
-  I2 -> 2 [label = "<a.b.c.d>"]
-  0 -> 0 [label = "<a.b>cd"]
-  0 -> 1 [label = "<a.b.c.d>cd"]
+  I0 -> 0 [label = "<w.x.y.z>"]
+  I2 -> 2 [label = "<w.x.y.z>"]
+  0 -> 0 [label = "<w.x>cd"]
+  0 -> 1 [label = "<w.x.y.z>cd"]
   1 -> 2 [label = "cd"]
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
   node [shape = circle]
   {
@@ -33,15 +33,15 @@ digraph
     F2
   }
   { 0 1 2 }
-  0 -> F0 [label = "<d.c.b.a>"]
-  0 -> 0 [label = "<b.a>dc"]
-  1 -> 0 [label = "<d.c.b.a>dc"]
-  2 -> F2 [label = "<d.c.b.a>"]
+  0 -> F0 [label = "<z.y.x.w>"]
+  0 -> 0 [label = "<x.w>dc"]
+  1 -> 0 [label = "<z.y.x.w>dc"]
+  2 -> F2 [label = "<z.y.x.w>"]
   2 -> 1 [label = "dc"]
 }
 digraph
 {
-  vcsn_context = "law_char(abcd)_ratexpset<lal_char(abcd)_b>"
+  vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
   node [shape = circle]
   {
@@ -50,9 +50,9 @@ digraph
     F1
   }
   { 0 1 }
-  I0 -> 0 [label = "<a.b.c.d>"]
-  0 -> 0 [label = "<a.b>cd"]
-  0 -> 1 [label = "<a.a.b.b>cd"]
+  I0 -> 0 [label = "<w.x.y.z>"]
+  0 -> 0 [label = "<w.x>cd"]
+  0 -> 1 [label = "<x.x.y.y>cd"]
   1 -> F1
 }
 EOF
