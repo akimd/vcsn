@@ -43,19 +43,19 @@ namespace vcsn
     }
 
     word_t
-    concat(const word_t l, const letter_t r) const
+    concat(const word_t& l, const letter_t r) const
     {
       return l + r;
     }
 
     word_t
-    concat(const letter_t l, const word_t r) const
+    concat(const letter_t l, const word_t& r) const
     {
       return l + r;
     }
 
     word_t
-    concat(const word_t l, const word_t r) const
+    concat(const word_t& l, const word_t& r) const
     {
       return l + r;
     }
@@ -165,8 +165,6 @@ namespace vcsn
     // from pre() and post()
     template<class T = letter_t>
     T special() const;
-
-    // word_t mirror(const word_t& w)
   };
 
   template<>

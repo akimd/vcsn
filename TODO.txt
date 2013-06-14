@@ -86,9 +86,6 @@ we already know how to handle thanks to shared_ptr.
 * compilation jit
 Well, you know what I mean.
 
-* char.hh:
-choose bw "word_t w", and const&.
-
 * move files around
 The hierarchy and the namespaces do not match.
 
