@@ -83,7 +83,7 @@ namespace vcsn
 
     while (!todo.empty())
       {
-        auto ss = todo.top();
+        auto ss = std::move(todo.top());
         todo.pop();
         for (auto l: letters)
           {
