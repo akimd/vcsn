@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2013 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -10,21 +10,6 @@
 # `COPYING' file in the root directory.
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
-include $(top_srcdir)/build-aux/make/init.mk
-include $(top_srcdir)/common.mk
 
-ACLOCAL_AMFLAGS = -I build-aux/m4
-
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
-AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
-AM_LDFLAGS += -lxerces-c
-
-include bin/local.mk
-include lib/local.mk
-include share/local.mk
-
-SUBDIRS = vcsn . tests
-EXTRA_DIST += NEWS.txt TODO.txt
-
-check-html: all
-	cd tests && $(MAKE) $(AM_MAKEFLAGS) $@
+dist_pkgdata_DATA =                             \
+  share/vcsn/a1.gv
