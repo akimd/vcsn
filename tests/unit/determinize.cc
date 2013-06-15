@@ -6,12 +6,13 @@
 using context_t = vcsn::ctx::lal_char_b;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
+template <typename Aut>
 static bool
-check_origins(const context_t& ctx)
+check_origins(const std::string& title, const Aut& nfa)
 {
   bool res = true;
-  auto nfa = vcsn::de_bruijn(2, ctx);
-  vcsn::detail::determinizer<decltype(nfa)> determinize;
+  std::cout << title << std::endl;
+  vcsn::detail::determinizer<Aut> determinize;
   auto dfa = determinize(nfa);
   vcsn::dot(nfa, std::cout) << std::endl;
   vcsn::dot(dfa, std::cout) << std::endl;
@@ -34,6 +35,22 @@ int main()
 {
   size_t nerrs = 0;
   context_t ctx {{'a', 'b'}};
-  nerrs += !check_origins(ctx);
+  nerrs += !check_origins("de bruijn 2", vcsn::de_bruijn(2, ctx));
+  {
+    // Also check the introduction of the sink state.
+    automaton_t aut{ctx};
+    auto si = aut.new_state();
+    auto s0 = aut.new_state();
+    auto s1 = aut.new_state();
+    auto s2 = aut.new_state();
+    aut.set_initial(si);
+    aut.set_final(s0);
+    aut.set_final(s1);
+    aut.set_final(s2);
+    aut.set_transition(si, s0, 'a');
+    aut.set_transition(si, s1, 'a');
+    aut.set_transition(si, s2, 'a');
+    check_origins("simple", aut);
+  }
   return !!nerrs;
 }

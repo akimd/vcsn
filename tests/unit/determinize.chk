@@ -2,6 +2,7 @@
 
 # Check that the table is right.
 run 0 - unit/determinize <<EOF
+de bruijn 2
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -64,4 +65,47 @@ digraph
   5 [label = "0,3"]
   6 [label = "0,1,2,3"]
   7 [label = "0,2,3"]
+simple
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+    F2
+    F3
+  }
+  { 0 1 2 3 }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  0 -> 3 [label = "a"]
+  1 -> F1
+  2 -> F2
+  3 -> F3
+}
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+  }
+  { 0 1 2 }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
+  1 -> F1
+  1 -> 2 [label = "a, b"]
+  2 -> 2 [label = "a, b"]
+}
+  0 [label = "0"]
+  1 [label = "1,2,3"]
+  2 [label = ""]
 EOF
