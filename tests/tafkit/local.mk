@@ -42,6 +42,7 @@
   %D%/ladybird.chk                              \
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
+  %D%/minimize.chk                              \
   %D%/power.chk                                 \
   %D%/product.chk                               \
   %D%/proper.chk                                \
