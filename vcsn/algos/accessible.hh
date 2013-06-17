@@ -10,12 +10,11 @@
 
 namespace vcsn
 {
-  template <class Aut>
+  template <typename Aut>
   Aut accessible(const Aut& a)
   {
-    // FIXME Static assert for label's type
     using automaton_t = Aut;
-    using state_t = typename Aut::state_t;
+    using state_t = typename automaton_t::state_t;
 
     automaton_t res{a.context()};
 
@@ -26,7 +25,7 @@ namespace vcsn
     res_state[a.post()] = res.post();
 
     // Stack of a.states.
-    using stack = std::deque<state_t>;
+    using stack = std::deque<state_t>; // FIXME: Appropriate data type?
     stack todo;
     todo.push_back(a.pre());
 
