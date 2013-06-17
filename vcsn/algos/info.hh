@@ -120,6 +120,8 @@ namespace vcsn
     ECHO("number of initial states", aut.num_initials());
     ECHO("number of final states", aut.num_finals());
     ECHO("number of accessible states", num_accessible_states(aut));
+    ECHO("number of coaccessible states", num_coaccessible_states(aut));
+    ECHO("number of useful states", num_useful_states(aut));
     ECHO("number of transitions", aut.num_transitions());
     ECHO("number of deterministic states",
          detail::num_deterministic_states(aut));

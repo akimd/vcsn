@@ -7,6 +7,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -21,6 +23,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -35,6 +39,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -49,6 +55,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -63,6 +71,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -77,6 +87,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -91,6 +103,8 @@ number of states: 3
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -105,6 +119,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -119,6 +135,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -133,6 +151,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -147,6 +167,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -162,6 +184,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -177,6 +201,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 5
 number of deterministic states: N/A
 number of eps transitions: 2
@@ -191,6 +217,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -205,6 +233,8 @@ number of states: 3
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -219,6 +249,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -234,6 +266,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -249,6 +283,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -263,6 +299,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -277,6 +315,8 @@ number of states: 3
 number of initial states: 3
 number of final states: 1
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -318,6 +358,8 @@ number of states: 3
 number of initial states: 1
 number of final states: 3
 number of accessible states: 3
+number of coaccessible states: 3
+number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0

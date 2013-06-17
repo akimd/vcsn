@@ -198,6 +198,8 @@ number of states: 512
 number of initial states: 1
 number of final states: 256
 number of accessible states: 512
+number of coaccessible states: 512
+number of useful states: 512
 number of transitions: 1024
 number of deterministic states: 512
 number of eps transitions: 0
@@ -300,6 +302,8 @@ number of states: 256
 number of initial states: 1
 number of final states: 128
 number of accessible states: 256
+number of coaccessible states: 255
+number of useful states: 255
 number of transitions: 768
 number of deterministic states: 256
 number of eps transitions: 0
