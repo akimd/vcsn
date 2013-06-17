@@ -7,7 +7,6 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/set.hh>
 
 namespace vcsn
