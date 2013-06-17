@@ -53,6 +53,7 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 vcsn_accessible       = $(top_builddir)/bin/vcsn-accessible
 vcsn_aut_to_exp       = $(top_builddir)/bin/vcsn-aut-to-exp
 vcsn_cat              = $(top_builddir)/bin/vcsn-cat
+vcsn_coaccessible     = $(top_builddir)/bin/vcsn-coaccessible
 vcsn_complement       = $(top_builddir)/bin/vcsn-complement
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
@@ -68,6 +69,7 @@ vcsn_proper           = $(top_builddir)/bin/vcsn-proper
 vcsn_standard         = $(top_builddir)/bin/vcsn-standard
 vcsn_thompson         = $(top_builddir)/bin/vcsn-thompson
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
+vcsn_trim             = $(top_builddir)/bin/vcsn-trim
 vcsn_universal        = $(top_builddir)/bin/vcsn-universal
 
 all_vcsn =                                      \

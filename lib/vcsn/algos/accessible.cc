@@ -14,5 +14,23 @@ namespace vcsn
       return detail::accessible_registry().call(aut->vname(),
                                                   aut);
     }
+
+    REGISTER_DEFINE(coaccessible);
+
+    automaton
+    coaccessible(const automaton& aut)
+    {
+      return detail::coaccessible_registry().call(aut->vname(),
+                                                  aut);
+    }
+
+    REGISTER_DEFINE(trim);
+
+    automaton
+    trim(const automaton& aut)
+    {
+      return detail::trim_registry().call(aut->vname(),
+                                          aut);
+    }
   }
 }

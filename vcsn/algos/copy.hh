@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_COPY_HH
 
 # include <unordered_map>
+# include <set>
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/fwd.hh>
@@ -11,7 +12,8 @@ namespace vcsn
   /// Copy an automaton.
   template <typename AutIn, typename AutOut>
   void
-  copy(const AutIn& in, AutOut& out)
+  copy(const AutIn& in, AutOut& out,
+       std::function<bool(typename AutIn::state_t)> keep_state)
   {
     using in_state_t = typename AutIn::state_t;
     using out_state_t = typename AutOut::state_t;
@@ -19,26 +21,72 @@ namespace vcsn
     std::unordered_map<in_state_t, out_state_t> out_state;
 
     for (auto s : in.states())
-    {
-      out_state_t ns =  out.new_state();
-      out_state[s] = ns;
-      out.set_initial(ns, in.get_initial_weight(s));
-      out.set_final(ns, in.get_final_weight(s));
-    }
+      if (keep_state(s))
+        {
+          out_state_t ns =  out.new_state();
+          out_state[s] = ns;
+          out.set_initial(ns, in.get_initial_weight(s));
+          out.set_final(ns, in.get_final_weight(s));
+        }
     for (auto t : in.transitions())
-      out.set_transition(out_state[in.src_of(t)],
-                         out_state[in.dst_of(t)],
-                         in.label_of(t), in.weight_of(t));
+      if (keep_state(in.src_of(t))
+          && keep_state(in.dst_of(t)))
+        out.set_transition(out_state[in.src_of(t)],
+                           out_state[in.dst_of(t)],
+                           in.label_of(t),
+                           in.weight_of(t));
   }
 
+  template <typename State>
+  bool
+  keep_all_states(State)
+  {
+    return true;
+  }
+
+  /// A copy of \a input keeping only its states that are accepted by
+  /// \a keep_state.
+  template <typename Aut>
+  Aut
+  copy(const Aut& input,
+       std::function<bool(typename Aut::state_t)> keep_state)
+  {
+    using automaton_t = Aut;
+    automaton_t output{input.context()};
+    /// Beware of clashes with std::copy.
+    ::vcsn::copy(input, output, keep_state);
+    return output;
+  }
+
+  /// Convenience wrapper for lambdas for instance.
+  template <typename Aut, typename StatePred>
+  Aut
+  copy(const Aut& input, StatePred keep_state)
+  {
+    return::vcsn::copy(input,
+                       std::function<bool(typename Aut::state_t)>{keep_state});
+  }
+
+  /// A copy of \a input keeping only its states that are members of
+  /// \a keep.
+  template <typename Aut>
+  Aut
+  copy(const Aut& input, const std::set<typename Aut::state_t>& keep)
+  {
+    using state_t = typename Aut::state_t;
+    return ::vcsn::copy(input, [&keep](state_t s)
+                        {
+                          return keep.find(s) != end(keep);
+                        });
+  }
+
+  /// Clone \a input.
+  // FIXME: Is there a means to use default arguments?
   template <typename Aut>
   Aut
   copy(const Aut& input)
   {
-    using automaton_t = Aut;
-    automaton_t output{input.context()};
-    copy(input,output);
-    return output;
+    return ::vcsn::copy(input, {keep_all_states<typename Aut::state_t>});
   }
 
   /*-----------.
@@ -54,7 +102,7 @@ namespace vcsn
       copy(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_automaton(a.context(), copy(a));
+        return make_automaton(a.context(), ::vcsn::copy(a));
       }
 
       REGISTER_DECLARE(copy,

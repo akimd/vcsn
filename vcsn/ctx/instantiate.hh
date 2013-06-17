@@ -203,6 +203,9 @@ namespace vcsn
         // aut_to_exp.
         aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
 
+        // coaccessible.
+        coaccessible_register(aut_t::sname(), coaccessible<aut_t>);
+
         // copy.
         copy_register(aut_t::sname(), copy<aut_t>);
 
@@ -257,6 +260,9 @@ namespace vcsn
         // transpose.
         transpose_register(aut_t::sname(), transpose<aut_t>);
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
+
+        // trim.
+        trim_register(aut_t::sname(), trim<aut_t>);
 
         // xml.
         xml_register(Ctx::sname(), xml<Ctx>);

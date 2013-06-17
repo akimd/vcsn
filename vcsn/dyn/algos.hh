@@ -13,10 +13,14 @@ namespace vcsn
 
   namespace dyn
   {
+    /// The accessible subautomaton of \a aut.
     automaton accessible(const automaton& aut);
 
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
+
+    /// The coaccessible subautomaton of \a aut.
+    automaton coaccessible(const automaton& aut);
 
     /// The complement of \a aut.
     /// \pre aut is lal
@@ -89,6 +93,9 @@ namespace vcsn
 
     automaton transpose(automaton& aut);
     ratexp transpose(const ratexp& e);
+
+    /// The useful subautomaton of \a aut.
+    automaton trim(const automaton& aut);
 
     automaton universal(const automaton& aut);
 

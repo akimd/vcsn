@@ -4,13 +4,18 @@
 # include <deque>
 # include <queue>
 # include <map>
-# include <set>
 
-# include <vcsn/dyn/automaton.hh>
+# include <vcsn/algos/copy.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/set.hh>
 
 namespace vcsn
 {
+
+  /*--------------------------------------------------.
+  | Sets of accessible, coaccessible, useful states.  |
+  `--------------------------------------------------*/
 
   // The set of accessible states, including pre(), and possibly post().
   template <typename Aut>
@@ -46,6 +51,30 @@ namespace vcsn
     return res;
   }
 
+  // The set of coaccessible states, including post(), and possibly pre().
+  template <typename Aut>
+  std::set<typename Aut::state_t>
+  coaccessible_states(const Aut& a)
+  {
+    // FIXME: Get rid of const_cast once transpose fixed.
+    return accessible_states(transpose(const_cast<Aut&>(a)));
+  }
+
+  // The set of coaccessible states, including post(), and possibly pre().
+  template <typename Aut>
+  std::set<typename Aut::state_t>
+  useful_states(const Aut& a)
+  {
+    auto accessible = accessible_states(a);
+    auto coaccessible = coaccessible_states(a);
+    return intersection(accessible, coaccessible);
+  }
+
+
+  /*----------------------------------------------------.
+  | Number of accessible, coaccessible, useful states.  |
+  `----------------------------------------------------*/
+
   /// Number of accessible states, not counting pre() and post().
   template <typename Aut>
   size_t
@@ -61,57 +90,65 @@ namespace vcsn
     return res;
   }
 
+  /// Number of accessible states, not counting pre() and post().
   template <typename Aut>
-  Aut accessible(const Aut& a)
+  size_t
+  num_coaccessible_states(const Aut& a)
   {
-    using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
+    // FIXME: Get rid of const_cast once transpose fixed.
+    return num_accessible_states(transpose(const_cast<Aut&>(a)));
+  }
 
-    automaton_t res{a.context()};
-
-    // a.state -> res.state.
-    using map = std::map<state_t, state_t>;
-    map res_state;
-    res_state[a.pre()] = res.pre();
-    res_state[a.post()] = res.post();
-
-    // Stack of a.states.
-    using stack = std::deque<state_t>; // FIXME: Appropriate data type?
-    stack todo;
-    todo.push_back(a.pre());
-
-    while (!todo.empty())
-    {
-      const state_t asrc = todo.front();
-      todo.pop_front();
-
-      for (auto tr : a.all_out(asrc))
-      {
-        state_t adst = a.dst_of(tr);
-        // If the dst state does not exist in res, create it.
-        auto p = res_state.emplace(adst, a.null_state());
-        if (p.second)
-        {
-          todo.push_back(adst);
-          p.first->second = res.new_state();
-        }
-
-        res.add_transition(res_state[asrc], p.first->second,
-                           a.label_of(tr), a.weight_of(tr));
-      }
-    }
-
+  /// Number of accessible states, not counting pre() and post().
+  template <typename Aut>
+  size_t
+  num_useful_states(const Aut& a)
+  {
+    auto set = useful_states(a);
+    size_t res = set.size();
+    // Don't count pre().
+    if (set.find(a.pre()) != end(set))
+      res -= 1;
+    // Don't count post().
+    if (set.find(a.post()) != end(set))
+      res -= 1;
     return res;
   }
 
-  /*-----------------.
-  | dyn::accessible. |
-  `-----------------*/
+
+  /*-----------------------------------------------.
+  | accessible, coaccessible, useful subautomata.  |
+  `-----------------------------------------------*/
+
+  template <typename Aut>
+  Aut accessible(const Aut& a)
+  {
+    return vcsn::copy(a, accessible_states(a));
+  }
+
+  template <typename Aut>
+  Aut coaccessible(const Aut& a)
+  {
+    return vcsn::copy(a, coaccessible_states(a));
+  }
+
+  template <typename Aut>
+  Aut trim(const Aut& a)
+  {
+    return vcsn::copy(a, useful_states(a));
+  }
+
+
 
   namespace dyn
   {
     namespace detail
     {
+
+      /*------------------.
+      | dyn::accessible.  |
+      `------------------*/
+
       template <class Aut>
       automaton
       accessible(const automaton& aut)
@@ -121,6 +158,36 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(accessible,
+                       (const automaton&) -> automaton);
+
+      /*--------------------.
+      | dyn::coaccessible.  |
+      `--------------------*/
+
+      template <class Aut>
+      automaton
+      coaccessible(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton(a.context(), coaccessible(a));
+      }
+
+      REGISTER_DECLARE(coaccessible,
+                       (const automaton&) -> automaton);
+
+      /*------------.
+      | dyn::trim.  |
+      `------------*/
+
+      template <class Aut>
+      automaton
+      trim(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton(a.context(), trim(a));
+      }
+
+      REGISTER_DECLARE(trim,
                        (const automaton&) -> automaton);
     }
   }

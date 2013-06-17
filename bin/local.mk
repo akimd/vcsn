@@ -16,6 +16,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-accessible                           \
   bin/vcsn-aut-to-exp                           \
   bin/vcsn-cat                                  \
+  bin/vcsn-coaccessible                         \
   bin/vcsn-complement                           \
   bin/vcsn-complete                             \
   bin/vcsn-de-bruijn                            \
@@ -32,6 +33,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-standard                             \
   bin/vcsn-thompson                             \
   bin/vcsn-transpose                            \
+  bin/vcsn-trim                                 \
   bin/vcsn-universal
 
 noinst_LTLIBRARIES += bin/libtafkit.la
@@ -41,6 +43,7 @@ bin_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 bin_vcsn_accessible_LDADD       = bin/libtafkit.la
 bin_vcsn_aut_to_exp_LDADD       = bin/libtafkit.la
 bin_vcsn_cat_LDADD              = bin/libtafkit.la
+bin_vcsn_coaccessible_LDADD     = bin/libtafkit.la
 bin_vcsn_complement_LDADD       = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
@@ -57,4 +60,5 @@ bin_vcsn_proper_LDADD           = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
 bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la
+bin_vcsn_trim_LDADD             = bin/libtafkit.la
 bin_vcsn_universal_LDADD        = bin/libtafkit.la
