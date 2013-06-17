@@ -8,30 +8,27 @@
 
 namespace vcsn
 {
-  /* Function that copies an automaton.
-     FIXME
-     Shouldn't be a clone() method more suitable ?
-     */
-  template <typename Aut, typename Aut2>
+  /// Copy an automaton.
+  template <typename AutIn, typename AutOut>
   void
-  copy(const Aut& input, Aut2& output)
+  copy(const AutIn& in, AutOut& out)
   {
-    using in_state_t = typename Aut::state_t;
-    using out_state_t = typename Aut2::state_t;
+    using in_state_t = typename AutIn::state_t;
+    using out_state_t = typename AutOut::state_t;
 
-    std::unordered_map<in_state_t, out_state_t> output_state;
+    std::unordered_map<in_state_t, out_state_t> out_state;
 
-    for (auto s : input.states())
+    for (auto s : in.states())
     {
-      out_state_t ns =  output.new_state();
-      output_state[s] = ns;
-      output.set_initial(ns, input.get_initial_weight(s));
-      output.set_final(ns, input.get_final_weight(s));
+      out_state_t ns =  out.new_state();
+      out_state[s] = ns;
+      out.set_initial(ns, in.get_initial_weight(s));
+      out.set_final(ns, in.get_final_weight(s));
     }
-    for (auto t : input.transitions())
-      output.set_transition(output_state[input.src_of(t)],
-          output_state[input.dst_of(t)],
-          input.label_of(t), input.weight_of(t));
+    for (auto t : in.transitions())
+      out.set_transition(out_state[in.src_of(t)],
+                         out_state[in.dst_of(t)],
+                         in.label_of(t), in.weight_of(t));
   }
 
   template <typename Aut>
