@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_ACCESSIBLE_HH
 
 # include <deque>
+# include <queue>
 # include <map>
 # include <set>
 
@@ -10,6 +11,56 @@
 
 namespace vcsn
 {
+
+  // The set of accessible states, including pre(), and possibly post().
+  template <typename Aut>
+  std::set<typename Aut::state_t>
+  accessible_states(const Aut& a)
+  {
+    using automaton_t = Aut;
+    using state_t = typename automaton_t::state_t;
+
+    // Reachable states.
+    std::set<state_t> res;
+    res.emplace(a.pre());
+
+    // States work list.
+    using worklist_t = std::queue<state_t>;
+    worklist_t todo;
+    todo.emplace(a.pre());
+
+    while (!todo.empty())
+    {
+      const state_t src = todo.front();
+      todo.pop();
+
+      for (auto tr : a.all_out(src))
+      {
+        state_t dst = a.dst_of(tr);
+        // If we have not seen it already, explore its successors.
+        if (res.emplace(dst).second)
+          todo.emplace(dst);
+      }
+    }
+
+    return res;
+  }
+
+  /// Number of accessible states, not counting pre() and post().
+  template <typename Aut>
+  size_t
+  num_accessible_states(const Aut& a)
+  {
+    auto set = accessible_states(a);
+    size_t res = set.size();
+    // Don't count pre().
+    res -= 1;
+    // Don't count post().
+    if (set.find(a.post()) != end(set))
+      res -= 1;
+    return res;
+  }
+
   template <typename Aut>
   Aut accessible(const Aut& a)
   {

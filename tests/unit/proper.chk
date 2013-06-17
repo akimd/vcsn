@@ -6,6 +6,7 @@ type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -19,6 +20,7 @@ type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -32,6 +34,7 @@ type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -45,6 +48,7 @@ type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -58,6 +62,7 @@ type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -71,6 +76,7 @@ type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -84,6 +90,7 @@ type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 3
 number of final states: 1
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -97,6 +104,7 @@ type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -110,6 +118,7 @@ type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -123,6 +132,7 @@ type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -136,6 +146,7 @@ type: mutable_automaton<lal_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
@@ -150,6 +161,7 @@ type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -164,6 +176,7 @@ type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 5
 number of deterministic states: N/A
 number of eps transitions: 2
@@ -177,6 +190,7 @@ type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -190,6 +204,7 @@ type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 3
 number of final states: 1
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -203,6 +218,7 @@ type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -217,6 +233,7 @@ type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -231,6 +248,7 @@ type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 1
+number of accessible states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
@@ -244,6 +262,7 @@ type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -257,6 +276,7 @@ type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 3
 number of final states: 1
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
@@ -297,6 +317,7 @@ type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 1
 number of final states: 3
+number of accessible states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0

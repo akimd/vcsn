@@ -197,6 +197,7 @@ type: mutable_automaton<lal_char(ab)_b>
 number of states: 512
 number of initial states: 1
 number of final states: 256
+number of accessible states: 512
 number of transitions: 1024
 number of deterministic states: 512
 number of eps transitions: 0
@@ -298,6 +299,7 @@ type: mutable_automaton<lal_char(abc)_b>
 number of states: 256
 number of initial states: 1
 number of final states: 128
+number of accessible states: 256
 number of transitions: 768
 number of deterministic states: 256
 number of eps transitions: 0

@@ -1,4 +1,10 @@
 * 2013-06-17
+** accessible_states
+New algorithm, static only.
+
+** num_accessible_states
+New algorithm, static only.  Available in the "info" display.
+
 ** universal
 New algorithm (static, dynamic, and taf-kit).  Requires a LAL Boolean
 automaton.

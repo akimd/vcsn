@@ -4,6 +4,7 @@
 # include <iostream>
 # include <sstream>
 
+# include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/core/rat/info.hh>
@@ -118,6 +119,7 @@ namespace vcsn
     ECHO("number of states", aut.num_states());
     ECHO("number of initial states", aut.num_initials());
     ECHO("number of final states", aut.num_finals());
+    ECHO("number of accessible states", num_accessible_states(aut));
     ECHO("number of transitions", aut.num_transitions());
     ECHO("number of deterministic states",
          detail::num_deterministic_states(aut));
