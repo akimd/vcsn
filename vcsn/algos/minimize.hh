@@ -49,7 +49,6 @@ namespace vcsn
 
     std::map<state_t, int> equivalences;
 
-    const unsigned int cores = std::thread::hardware_concurrency();
 
     // Init. Eq[0] = finals, Eq[1] = others.
 
