@@ -23,14 +23,17 @@ namespace vcsn
   minimize(const Aut& a)
   {
     static_assert(Aut::context_t::is_lal,
-                  "requires labels_are_letters");
+        "requires labels_are_letters");
     static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                  "requires Boolean weights");
+        "requires Boolean weights");
 
     //using automaton_t = Aut;
     //using label_t = typename automaton_t::label_t;
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;
+
+    if (!is_deterministic(a))
+      throw std::domain_error("minimize: requires a deterministic automaton");
 
     const auto& letters = *a.labelset();
     automaton_t res{a.context()};
@@ -44,16 +47,13 @@ namespace vcsn
     ** Repeat this process until no partition is done.
     */
 
-    // Set of states.
-    using state_set = dynamic_bitset;
-
     std::map<state_t, int> equivalences;
 
 
     // Init. Eq[0] = finals, Eq[1] = others.
 
     for (auto st : a.states())
-        equivalences[st] = (a.is_final(st) ? 1 : 2);
+      equivalences[st] = (a.is_final(st) ? 1 : 2);
 
     std::map<std::pair<int, int>, std::vector<state_t>> labels;
 
@@ -61,31 +61,32 @@ namespace vcsn
     int nbr_eq_classes_last_loop = 2;
     do
     {
-        for (auto letter : letters)
+      for (auto letter : letters)
+      {
+        labels.clear();
+        for (auto st : a.states())
         {
-            labels.clear();
-            for (auto st : a.states())
-            {
-                // Here we test for each letter start and end equivalence
-                // class, then label the state
-                int b1 = equivalences[st];
+          // Here we test for each letter start and end equivalence
+          // class, then label the state
+          int b1 = equivalences[st];
 
-                int b2;
-                for (auto& tr : a.out(st))
-                    if (a.label_of(tr) == letter)
-                        b2 = equivalences[a.dst_of(tr)];
-                labels[std::make_pair(b1, b2)].push_back(st);
-            }
-
-            nbr_eq_classes_last_loop = eq_class;
-            eq_class = 2;
-            for (auto& label : labels) // foreach state having the same label
-            {
-                for (auto& st : label.second)
-                    equivalences[st] = eq_class;
-                ++eq_class;
-            }
+          int b2 = -1;
+          for (auto& tr : a.out(st))
+            if (a.label_of(tr) == letter)
+              b2 = equivalences[a.dst_of(tr)];
+          if (b2 != -1)
+            labels[std::make_pair(b1, b2)].push_back(st);
         }
+
+        nbr_eq_classes_last_loop = eq_class;
+        eq_class = 2;
+        for (auto& label : labels) // foreach state having the same label
+        {
+          for (auto& st : label.second)
+            equivalences[st] = eq_class;
+          ++eq_class;
+        }
+      }
     }
     while (nbr_eq_classes_last_loop != eq_class);
 
@@ -101,30 +102,30 @@ namespace vcsn
     //Work in progress
     while (!todo.empty())
     {
-        const state_t asrc = todo.front();
-        todo.pop();
+      const state_t asrc = todo.front();
+      todo.pop();
 
-        for (auto tr : a.all_out(asrc))
+      for (auto tr : a.all_out(asrc))
+      {
+        state_t dst = a.dst_of(tr);
+        auto p = eq_to_res.emplace(equivalences[dst], a.null_state());
+        if (p.second)
         {
-            state_t dst = a.dst_of(tr);
-            auto p = eq_to_res.emplace(equivalences[dst], a.null_state());
-            if (p.second)
-            {
-                todo.push(dst);
-                p.first->second = res.new_state();
-            }
-
-            res.add_transition(eq_to_res[equivalences[asrc]], p.first->second,
-                    a.label_of(tr), a.weight_of(tr));
+          todo.push(dst);
+          p.first->second = res.new_state();
         }
+
+        res.add_transition(eq_to_res[equivalences[asrc]], p.first->second,
+            a.label_of(tr), a.weight_of(tr));
+      }
     }
 
     return res;
   }
 
   /*----------------.
-  | dyn::minimize.  |
-  `----------------*/
+    | dyn::minimize.  |
+    `----------------*/
 
   namespace dyn
   {
