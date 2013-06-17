@@ -15,6 +15,7 @@ tafkit_TESTS =                                  \
   tafkit/accessible.chk                         \
   tafkit/aut_to_exp.chk                         \
   tafkit/cat.chk                                \
+  tafkit/complement.chk                         \
   tafkit/complete.chk                           \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \

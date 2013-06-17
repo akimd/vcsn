@@ -24,6 +24,7 @@ pkglib_LTLIBRARIES = lib/libvcsn.la
 lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/accessible.cc                  \
   lib/vcsn/algos/aut-to-exp.cc                  \
+  lib/vcsn/algos/complement.cc                  \
   lib/vcsn/algos/complete.cc                    \
   lib/vcsn/algos/copy.cc                        \
   lib/vcsn/algos/de_bruijn.cc                   \

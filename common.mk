@@ -53,6 +53,7 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 vcsn_accessible       = $(top_builddir)/bin/vcsn-accessible
 vcsn_aut_to_exp       = $(top_builddir)/bin/vcsn-aut-to-exp
 vcsn_cat              = $(top_builddir)/bin/vcsn-cat
+vcsn_complement       = $(top_builddir)/bin/vcsn-complement
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
@@ -73,6 +74,7 @@ all_vcsn =                                      \
   $(vcsn_accessible)                            \
   $(vcsn_aut_to_exp)                            \
   $(vcsn_cat)                                   \
+  $(vcsn_complement)                            \
   $(vcsn_complete)                              \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \

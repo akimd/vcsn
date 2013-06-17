@@ -18,6 +18,13 @@ namespace vcsn
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
+    /// The complement of \a aut.
+    /// \pre aut is lal
+    /// \pre aut is Boolean
+    /// \pre aut is deterministic
+    /// \pre aut is complete
+    automaton complement(const automaton& aut);
+
     automaton complete(const automaton& aut);
 
     automaton copy(const automaton& aut);

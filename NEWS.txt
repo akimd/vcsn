@@ -27,6 +27,16 @@ automaton.
     2 -> 2 [label = "a, b"]
   }
 
+** complement
+New algorithm (static, dynamic, and taf-kit).  Requires a complete
+deterministic LAL Boolean automaton.
+
+  $ vcsn-standard -e '(?@lal_char(ab)_b)a' \
+      | vcsn-determinize -f- \
+      | vcsn-complement -f-  \
+      | vcsn-aut-to-exp -f-
+  \e+((b+(a.(a+b))).((a+b)*))
+
 * 2013-06-13
 ** is-deterministic
 It is conformant with the specifications: _all_ the states must be
