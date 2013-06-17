@@ -32,5 +32,33 @@ namespace vcsn
       return detail::trim_registry().call(aut->vname(),
                                           aut);
     }
+
+    REGISTER_DEFINE(is_trim);
+
+    bool
+    is_trim(const automaton& aut)
+    {
+      return detail::is_trim_registry().call(aut->vname(),
+                                             aut);
+    }
+
+    REGISTER_DEFINE(is_useless);
+
+    bool
+    is_useless(const automaton& aut)
+    {
+      return detail::is_useless_registry().call(aut->vname(),
+                                                aut);
+    }
+
+    REGISTER_DEFINE(is_empty);
+
+    bool
+    is_empty(const automaton& aut)
+    {
+      return detail::is_empty_registry().call(aut->vname(),
+                                              aut);
+    }
+
   }
 }

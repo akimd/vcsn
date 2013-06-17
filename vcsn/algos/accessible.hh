@@ -138,7 +138,29 @@ namespace vcsn
     return vcsn::copy(a, useful_states(a));
   }
 
+  /*--------------------------------.
+  | is_trim, is_empty, is_useless.  |
+  `--------------------------------*/
 
+  template <typename Aut>
+  bool is_trim(const Aut& a)
+  {
+    return num_useful_states(a) == a.num_states();
+  }
+
+  template <typename Aut>
+  bool is_useless(const Aut& a)
+  {
+    return num_useful_states(a) == 0;
+  }
+
+  template <typename Aut>
+  bool is_empty(const Aut& a)
+  {
+    // FIXME: Beware of the case where there is a transition from
+    // pre() to post().
+    return a.num_states() == 0;
+  }
 
   namespace dyn
   {
@@ -149,7 +171,7 @@ namespace vcsn
       | dyn::accessible.  |
       `------------------*/
 
-      template <class Aut>
+      template <typename Aut>
       automaton
       accessible(const automaton& aut)
       {
@@ -164,7 +186,7 @@ namespace vcsn
       | dyn::coaccessible.  |
       `--------------------*/
 
-      template <class Aut>
+      template <typename Aut>
       automaton
       coaccessible(const automaton& aut)
       {
@@ -179,7 +201,7 @@ namespace vcsn
       | dyn::trim.  |
       `------------*/
 
-      template <class Aut>
+      template <typename Aut>
       automaton
       trim(const automaton& aut)
       {
@@ -189,6 +211,51 @@ namespace vcsn
 
       REGISTER_DECLARE(trim,
                        (const automaton&) -> automaton);
+
+      /*---------------.
+      | dyn::is_trim.  |
+      `---------------*/
+
+      template <typename Aut>
+      bool
+      is_trim(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return is_trim(a);
+      }
+
+      REGISTER_DECLARE(is_trim,
+                       (const automaton&) -> bool);
+
+      /*------------------.
+      | dyn::is_useless.  |
+      `------------------*/
+
+      template <typename Aut>
+      bool
+      is_useless(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return is_useless(a);
+      }
+
+      REGISTER_DECLARE(is_useless,
+                       (const automaton&) -> bool);
+
+      /*----------------.
+      | dyn::is_empty.  |
+      `----------------*/
+
+      template <typename Aut>
+      bool
+      is_empty(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return is_empty(a);
+      }
+
+      REGISTER_DECLARE(is_empty,
+                       (const automaton&) -> bool);
     }
   }
 }

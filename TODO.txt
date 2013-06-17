@@ -1,3 +1,8 @@
+* Tests
+** is-trim
+** is-empty
+** is-useless
+
 * Bugs
 ** Generators and alphabets
 ladybird "works" properly on "lal_char(ab)_b", although it needs abc.

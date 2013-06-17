@@ -53,9 +53,18 @@ namespace vcsn
 
     bool is_deterministic(const automaton& aut);
 
+    /// Whether has no state.
+    bool is_empty(const automaton& aut);
+
     bool is_eps_acyclic(const automaton& aut);
 
     bool is_proper(const automaton& aut);
+
+    /// Whether has no useless state.
+    bool is_trim(const automaton& aut);
+
+    /// Whether has no useful state.
+    bool is_useless(const automaton& aut);
 
     automaton ladybird(const context& ctx, unsigned n);
 

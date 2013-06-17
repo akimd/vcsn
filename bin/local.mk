@@ -24,8 +24,11 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-evaluate                             \
   bin/vcsn-is-complete                          \
   bin/vcsn-is-deterministic                     \
+  bin/vcsn-is-empty                             \
   bin/vcsn-is-eps-acyclic                       \
   bin/vcsn-is-proper                            \
+  bin/vcsn-is-trim                              \
+  bin/vcsn-is-useless                           \
   bin/vcsn-ladybird                             \
   bin/vcsn-lift                                 \
   bin/vcsn-product                              \
@@ -51,8 +54,11 @@ bin_vcsn_determinize_LDADD      = bin/libtafkit.la
 bin_vcsn_evaluate_LDADD         = bin/libtafkit.la
 bin_vcsn_is_complete_LDADD      = bin/libtafkit.la
 bin_vcsn_is_deterministic_LDADD = bin/libtafkit.la
+bin_vcsn_is_empty_LDADD         = bin/libtafkit.la
 bin_vcsn_is_eps_acyclic_LDADD   = bin/libtafkit.la
 bin_vcsn_is_proper_LDADD        = bin/libtafkit.la
+bin_vcsn_is_trim_LDADD          = bin/libtafkit.la
+bin_vcsn_is_useless_LDADD       = bin/libtafkit.la
 bin_vcsn_ladybird_LDADD         = bin/libtafkit.la
 bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la

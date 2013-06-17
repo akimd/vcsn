@@ -232,11 +232,16 @@ namespace vcsn
         info_register(taut_t::sname(), info<taut_t>);
         info_exp_register(Ctx::sname(), info_exp<Ctx>);
 
+        is_empty_register(aut_t::sname(), is_empty<aut_t>);
+
         // is-eps-acyclic.
         is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
 
         // is-proper.
         is_proper_register(aut_t::sname(), is_proper<aut_t>);
+
+        is_trim_register(aut_t::sname(), is_trim<aut_t>);
+        is_useless_register(aut_t::sname(), is_useless<aut_t>);
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
