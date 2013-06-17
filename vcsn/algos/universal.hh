@@ -2,9 +2,9 @@
 # define VCSN_ALGOS_UNIVERSAL_HH
 
 # include <map>
-# include <set>
 
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/set.hh>
 # include <vcsn/ctx/lal_char_b.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/algos/determinize.hh>
@@ -12,62 +12,6 @@
 
 namespace vcsn
 {
-  namespace detail
-  {
-    namespace universal
-    {
-      /// The intersection of two sets.
-      template <typename T>
-      std::set<T>
-      intersection(const std::set<T>& set1, const std::set<T>& set2)
-      {
-        std::set<T> res;
-        std::insert_iterator<std::set<T>> i{res, begin(res)};
-        std::set_intersection(begin(set1), end(set1),
-                              begin(set2), end(set2),
-                              i);
-        return res;
-      }
-
-      /// The set of all the intersections of the sets in \a pset.
-      template <typename T>
-      std::set<std::set<T>>
-      intersection_closure(std::set<std::set<T>> pset)
-      {
-        while (true)
-          {
-            bool done = true;
-            for (const auto& set1: pset)
-              for (const auto& set2: pset)
-                if (pset.emplace(intersection(set1, set2)).second)
-                  done = false;
-            if (done)
-              break;
-          }
-        return pset;
-      }
-
-      /// The set of values of a map.
-      template <typename Key, typename Value, typename Comp, typename Alloc>
-      std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
-      image(const std::map<Key, Value, Comp, Alloc>& m)
-      {
-        std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type> res;
-        for (const auto& p: m)
-          res.insert(p.second);
-        return res;
-      }
-
-      /// Whether set1 \subset set2.
-      template <typename Container1, typename Container2>
-      bool subset(const Container1& set1, const Container2& set2)
-      {
-        return std::includes(set2.begin(), set2.end(),
-                             set1.begin(), set1.end());
-      }
-    }
-  }
-
   template <typename Aut>
   Aut
   universal(const Aut& automaton)
@@ -113,10 +57,10 @@ namespace vcsn
     // the 'origin' is a map from co_det's state_t to
     // minimal's state_set_t.
     // let 'transp_states' be the image of 'origin'.
-    pstate_t transp_states = detail::universal::image(origin);
+    pstate_t transp_states = image(origin);
 
     // the universal automaton's state set is its intersection closure.
-    pstate_t univers_states(detail::universal::intersection_closure(transp_states));
+    pstate_t univers_states(intersection_closure(transp_states));
 
     // The universal automaton.
     automaton_t res{aut->context()};
@@ -139,7 +83,7 @@ namespace vcsn
           if (s.find(i) != s.end())
             res.set_initial(new_s);
           // RES = { X | X \subset T }
-          if (detail::universal::subset(s, automaton_finals))
+          if (subset(s, automaton_finals))
             res.set_final(new_s);
         }
 
@@ -168,7 +112,7 @@ namespace vcsn
             if (cont)
               continue;
             // case 2: X.a \subset Y?
-            if (detail::universal::subset(delta_ret, subset_label[y]))
+            if (subset(delta_ret, subset_label[y]))
               res.add_transition(x, y, a);
           }
     return res;
