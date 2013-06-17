@@ -1,3 +1,13 @@
+* 2013-06-18
+** are-equivalent
+New algorithm (static, dynamic, TAF-Kit).  Currently works only for LAL
+Boolean automata.
+
+  $ vcsn-standard -e 'a(ba)*' -o a1.gv
+  $ vcsn-standard -e '(ab)*a' -o a2.gv
+  $ vcsn-are-equivalent -f a1.gv a2.gv
+  true
+
 * 2013-06-17
 ** is_trim, is_useless, is_empty
 New algorithms (static, dynamic, TAF-Kit).

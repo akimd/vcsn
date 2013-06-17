@@ -14,6 +14,7 @@
 # Keep common.mk in sync.
 bin_PROGRAMS +=                                 \
   bin/vcsn-accessible                           \
+  bin/vcsn-are-equivalent                       \
   bin/vcsn-aut-to-exp                           \
   bin/vcsn-cat                                  \
   bin/vcsn-coaccessible                         \
@@ -44,6 +45,7 @@ bin_libtafkit_la_SOURCES = bin/parse-args.hh bin/parse-args.cc
 bin_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
 bin_vcsn_accessible_LDADD       = bin/libtafkit.la
+bin_vcsn_are_equivalent_LDADD   = bin/libtafkit.la
 bin_vcsn_aut_to_exp_LDADD       = bin/libtafkit.la
 bin_vcsn_cat_LDADD              = bin/libtafkit.la
 bin_vcsn_coaccessible_LDADD     = bin/libtafkit.la

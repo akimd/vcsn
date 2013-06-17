@@ -14,6 +14,7 @@ namespace vcsn
 }
 
 # include <vcsn/ctx/instantiate.hh>
+# include <vcsn/algos/are-equivalent.hh>
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/universal.hh>
@@ -39,6 +40,8 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
+        are_equivalent_register(aut_t::sname(), aut_t::sname(),
+                                are_equivalent<aut_t, aut_t>);
         complement_register(aut_t::sname(), complement<aut_t>);
         determinize_register(aut_t::sname(), determinize<aut_t>);
         universal_register(aut_t::sname(), universal<aut_t>);

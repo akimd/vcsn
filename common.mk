@@ -51,6 +51,7 @@ libvcsn = $(top_builddir)/lib/libvcsn.la
 ## ---------- ##
 
 vcsn_accessible       = $(top_builddir)/bin/vcsn-accessible
+vcsn_are_equivalent   = $(top_builddir)/bin/vcsn-are-equivalent
 vcsn_aut_to_exp       = $(top_builddir)/bin/vcsn-aut-to-exp
 vcsn_cat              = $(top_builddir)/bin/vcsn-cat
 vcsn_coaccessible     = $(top_builddir)/bin/vcsn-coaccessible
@@ -77,6 +78,7 @@ vcsn_universal        = $(top_builddir)/bin/vcsn-universal
 
 all_vcsn =                                      \
   $(vcsn_accessible)                            \
+  $(vcsn_are_equivalent)                        \
   $(vcsn_aut_to_exp)                            \
   $(vcsn_cat)                                   \
   $(vcsn_complement)                            \

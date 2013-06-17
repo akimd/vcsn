@@ -13,6 +13,7 @@
 
 tafkit_TESTS =                                  \
   tafkit/accessible.chk                         \
+  tafkit/are-equivalent.chk                     \
   tafkit/aut_to_exp.chk                         \
   tafkit/cat.chk                                \
   tafkit/complement.chk                         \

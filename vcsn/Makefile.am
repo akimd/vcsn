@@ -14,6 +14,7 @@
 vcsndir = $(includedir)/vcsn
 nobase_vcsn_HEADERS =                           \
   algos/accessible.hh                           \
+  algos/are-equivalent.hh                       \
   algos/aut_to_exp.hh                           \
   algos/complement.hh                           \
   algos/complete.hh                             \

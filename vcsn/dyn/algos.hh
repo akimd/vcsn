@@ -16,6 +16,9 @@ namespace vcsn
     /// The accessible subautomaton of \a aut.
     automaton accessible(const automaton& aut);
 
+    /// Whether define the same language.
+    bool are_equivalent(const automaton& lhs, const automaton& rhs);
+
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
