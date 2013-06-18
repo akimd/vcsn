@@ -3,13 +3,15 @@
 
 # include <iostream>
 # include <map>
+# include <mutex>
 # include <queue>
 # include <stack>
 # include <string>
 # include <type_traits>
-# include <thread>
 # include <unordered_map>
 # include <vector>
+
+# include <tbb/parallel_for_each.h>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
@@ -57,6 +59,8 @@ namespace vcsn
 
     std::map<std::pair<int, int>, std::vector<state_t>> labels;
 
+    std::mutex labels_defender;
+
     int eq_class = 2;
     int nbr_eq_classes_last_loop = 2;
     do
@@ -64,7 +68,8 @@ namespace vcsn
       for (auto letter : letters)
       {
         labels.clear();
-        for (auto st : a.states())
+        tbb::parallel_for_each(a.states().begin(), a.states().end(),
+                [&](state_t st) -> void
         {
           // Here we test for each letter start and end equivalence
           // class, then label the state
@@ -74,9 +79,14 @@ namespace vcsn
           for (auto& tr : a.out(st))
             if (a.label_of(tr) == letter)
               b2 = equivalences[a.dst_of(tr)];
+
           if (b2 != -1)
+          {
+            labels_defender.lock();
             labels[std::make_pair(b1, b2)].push_back(st);
-        }
+            labels_defender.unlock();
+          }
+        });
 
         nbr_eq_classes_last_loop = eq_class;
         eq_class = 2;

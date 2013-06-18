@@ -91,4 +91,4 @@ lib_libvcsn_la_SOURCES =                        \
 include %D%/dot/local.mk
 include %D%/rat/local.mk
 
-lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS)
+lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS) -ltbb
