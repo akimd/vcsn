@@ -250,6 +250,9 @@ attr_assign:
         assert(!driver_.edit_);
         driver_.context_ = $val;
       }
+    else
+      // Beware of the default "$$ = $1;" action.
+      $$ = "";
   }
 
 // A single attribute.  Keep only labels.
