@@ -25,6 +25,17 @@ namespace std
     }
   };
 
+  /// The set of values of a map.
+  template <typename Key, typename Value, typename Comp, typename Alloc>
+  std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
+  image(const std::map<Key, Value, Comp, Alloc>& m)
+  {
+    std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type> res;
+    for (const auto& p: m)
+      res.insert(p.second);
+    return res;
+  }
+
   /// The intersection of two sets.
   template <typename T>
   std::set<T>
@@ -54,17 +65,6 @@ namespace std
           break;
       }
     return pset;
-  }
-
-  /// The set of values of a map.
-  template <typename Key, typename Value, typename Comp, typename Alloc>
-  std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>
-  image(const std::map<Key, Value, Comp, Alloc>& m)
-  {
-    std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type> res;
-    for (const auto& p: m)
-      res.insert(p.second);
-    return res;
   }
 
   /// Whether set1 \subset set2.
