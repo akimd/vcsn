@@ -11,14 +11,18 @@ digraph
     I0
     F1
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2 [color = gray]
+  }
   I0 -> 0
   0 -> 0 [label = "<42>d"]
   0 -> 1 [label = "<42>c"]
-  0 -> 2 [label = "d"]
+  0 -> 2 [label = "d", color = gray]
   1 -> F1 [label = "<10>"]
   1 -> 0 [label = "b"]
-  1 -> 2 [label = "a"]
+  1 -> 2 [label = "a", color = gray]
 }
 Leaving s1 by d
 5 2
@@ -37,13 +41,17 @@ digraph
     I0
     F1
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2 [color = gray]
+  }
   I0 -> 0
   0 -> 1 [label = "<42>c"]
-  0 -> 2 [label = "d"]
+  0 -> 2 [label = "d", color = gray]
   1 -> F1 [label = "<10>"]
   1 -> 0 [label = "b"]
-  1 -> 2 [label = "a"]
+  1 -> 2 [label = "a", color = gray]
 }
 digraph
 {
@@ -54,9 +62,12 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     F0
   }
-  { 0 1 }
-  0 -> F0 [label = "<10>"]
-  0 -> 1 [label = "a"]
+  {
+    0 [color = gray]
+    1 [color = gray]
+  }
+  0 -> F0 [label = "<10>", color = gray]
+  0 -> 1 [label = "a", color = gray]
 }
 digraph
 {
@@ -67,8 +78,11 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     F0
   }
-  { 0 1 }
-  0 -> F0 [label = "<10>"]
+  {
+    0 [color = gray]
+    1 [color = gray]
+  }
+  0 -> F0 [label = "<10>", color = gray]
 }
 EOF
 run 0 out.exp unit/aut_lal_char_z

@@ -51,6 +51,8 @@ namespace vcsn
         names[s] = num++;
     }
 
+    auto useful = useful_states(aut);
+
     out <<
       "digraph\n"
       "{\n"
@@ -59,21 +61,41 @@ namespace vcsn
       "  node [shape = circle]\n";
 
     // Output the pre-initial and post-final states.
-    out <<
-      "  {\n"
-      "    node [style = invis, shape = none, label = \"\""
-      ", width = 0, height = 0]\n";
-    for (auto t : aut.initial_transitions())
-      out << "    I" << names[aut.dst_of(t)] << '\n';
-    for (auto t : aut.final_transitions())
-      out << "    F" << names[aut.src_of(t)] << '\n';
-    out << "  }\n";
+    if (!aut.initial_transitions().empty()
+        || !aut.final_transitions().empty())
+      {
+        out <<
+          "  {\n"
+          "    node [style = invis, shape = none, label = \"\""
+          ", width = 0, height = 0]\n";
+        for (auto t : aut.initial_transitions())
+          out << "    I" << names[aut.dst_of(t)] << std::endl;
+        for (auto t : aut.final_transitions())
+          out << "    F" << names[aut.src_of(t)] << std::endl;
+        out << "  }\n";
+      }
 
     // Output all the states to make "print | read" idempotent.
-    out << "  {";
-    for (auto s : aut.states())
-      out << ' ' << names[s];
-    out << " }\n";
+    //
+    // Put the useless ones in gray.  This does not work:
+    //
+    // { 0 1 2 }
+    // { node [color = gray] 2 }
+    //
+    // because 2 was already "declared", and dot does not associate
+    // "color = gray" to it.
+    if (!aut.states().empty())
+      {
+        out << "  {" << std::endl;
+        for (auto s : aut.states())
+          {
+            out << "    " << names[s];
+            if (!has(useful, s))
+              out << " [color = gray]";
+            out << std::endl;
+          }
+        out << "  }" << std::endl;
+      }
 
     for (auto src : aut.all_states())
       {
@@ -99,10 +121,20 @@ namespace vcsn
                 out << "  " << ns << " -> " << nd;
               }
             std::string s = format_entry(aut, src, dst);
-            if (!s.empty())
+            bool useless = !has(useful, src) || !has(useful, dst);
+            if (!s.empty() || useless)
               {
-                out << " [label = \"";
-                str_escape(out, s) << "\"]";
+                out << " [";
+                const char* sep = "";
+                if (!s.empty())
+                  {
+                    out << "label = \"";
+                    str_escape(out, s) << "\"";
+                    sep = ", ";
+                  }
+                if (useless)
+                  out << sep << "color = gray";
+                out << "]";
               }
             out << "\n";
           }

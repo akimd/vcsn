@@ -16,7 +16,7 @@ check ()
 ## ----------------------------- ##
 
 vcsn-standard -e '(?@lal_char(abcd)_b)ab+cd' >a.gv
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abcd)_b"
@@ -28,7 +28,13 @@ digraph
     F2
     F4
   }
-  { 0 1 2 3 4 }
+  {
+    0
+    1
+    2
+    3
+    4
+  }
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 3 [label = "c"]
@@ -44,7 +50,7 @@ check a.gv out.exp
 ## Cycle.  ##
 ## ------- ##
 
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -58,7 +64,7 @@ digraph {
 }
 EOF
 
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -69,7 +75,13 @@ digraph
     I0
     F3
   }
-  { 0 1 2 3 4 }
+  {
+    0
+    1
+    2
+    3
+    4
+  }
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> 2 [label = "a"]
@@ -86,7 +98,7 @@ check a.gv out.exp
 ## No final State.  ##
 ## ---------------- ##
 
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -97,7 +109,7 @@ digraph {
 }
 EOF
 
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -107,11 +119,16 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
   }
-  { 0 1 2 3 }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  1 -> 2 [label = "a"]
-  2 -> 3 [label = "a"]
+  {
+    0 [color = gray]
+    1 [color = gray]
+    2 [color = gray]
+    3 [color = gray]
+  }
+  I0 -> 0 [color = gray]
+  0 -> 1 [label = "a", color = gray]
+  1 -> 2 [label = "a", color = gray]
+  2 -> 3 [label = "a", color = gray]
 }
 EOF
 
@@ -121,7 +138,7 @@ check a.gv out.exp
 ## No initial state.  ##
 ## ------------------ ##
 
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     0 -> 1 [label="a"]
@@ -132,16 +149,12 @@ digraph {
 }
 EOF
 
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
   node [shape = circle]
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-  }
-  { }
 }
 EOF
 
@@ -151,7 +164,7 @@ check a.gv out.exp
 ## Simple input.  ##
 ## -------------- ##
 
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -163,7 +176,7 @@ digraph {
 }
 EOF
 
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -174,7 +187,12 @@ digraph
     I0
     F3
   }
-  { 0 1 2 3 }
+  {
+    0
+    1
+    2
+    3
+  }
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> 2 [label = "a"]

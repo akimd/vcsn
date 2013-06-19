@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cat >out.exp <<\EOF
+run 0 - unit/aut_law_char_z <<\EOF
 digraph
 {
   vcsn_context = "law_char(abcd)_z"
@@ -11,7 +11,11 @@ digraph
     I0
     F1
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2
+  }
   I0 -> 0
   0 -> 1 [label = "<42>ca"]
   1 -> F1 [label = "<10>"]
@@ -20,4 +24,3 @@ digraph
   2 -> 1 [label = "<2>\\e"]
 }
 EOF
-run 0 out.exp unit/aut_law_char_z

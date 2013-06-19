@@ -25,6 +25,14 @@ namespace std
     }
   };
 
+  /// Whether \a e is member of \a s.
+  template <typename T>
+  bool
+  has(const std::set<T>& s, const T& e)
+  {
+    return s.find(e) != std::end(s);
+  }
+
   /// The set of values of a map.
   template <typename Key, typename Value, typename Comp, typename Alloc>
   std::set<typename std::map<Key, Value, Comp, Alloc>::mapped_type>

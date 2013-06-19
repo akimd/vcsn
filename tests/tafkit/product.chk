@@ -18,7 +18,10 @@ digraph
     F0
     F1
   }
-  { 0 1 }
+  {
+    0
+    1
+  }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "b"]
@@ -43,8 +46,10 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
   }
-  { 0 }
-  I0 -> 0
+  {
+    0 [color = gray]
+  }
+  I0 -> 0 [color = gray]
 }
 EOF
 
@@ -67,7 +72,9 @@ digraph
     I0
     F0
   }
-  { 0 }
+  {
+    0
+  }
   I0 -> 0
   0 -> F0
 }
@@ -93,7 +100,11 @@ digraph
     F1
     F2
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2
+  }
   I0 -> 0 [label = "<2>"]
   0 -> F0
   0 -> 0 [label = "a"]
@@ -119,7 +130,10 @@ digraph
     I0
     F0
   }
-  { 0 1 }
+  {
+    0
+    1
+  }
   I0 -> 0 [label = "<3>"]
   0 -> F0
   0 -> 1 [label = "a"]
@@ -139,14 +153,19 @@ digraph
     F0
     F3
   }
-  { 0 1 2 3 }
+  {
+    0
+    1
+    2 [color = gray]
+    3
+  }
   I0 -> 0 [label = "<6>"]
   0 -> F0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "a"]
+  0 -> 2 [label = "a", color = gray]
   1 -> 3 [label = "<3>b"]
   3 -> F3
-  3 -> 2 [label = "a"]
+  3 -> 2 [label = "a", color = gray]
 }
 EOF
 

@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Precondition: lal.
-run 1 '' -vcsn-complement -f- <<EOF
+run 1 '' -vcsn-complement -f- <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -12,7 +12,7 @@ digraph
 EOF
 
 # Precondition: Boolean.
-run 1 '' -vcsn-complement -f- <<EOF
+run 1 '' -vcsn-complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -23,7 +23,7 @@ digraph
 EOF
 
 # Precondition: deterministic.
-run 1 '' -vcsn-complement -f- <<EOF
+run 1 '' -vcsn-complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -36,7 +36,7 @@ digraph
 EOF
 
 # Precondition: complete.
-run 1 '' -vcsn-complement -f- <<EOF
+run 1 '' -vcsn-complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -47,7 +47,7 @@ digraph
 EOF
 
 # Complement for real.
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -58,16 +58,20 @@ digraph
     I0
     F1
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2 [color = gray]
+  }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
+  0 -> 2 [label = "b", color = gray]
   1 -> F1
-  1 -> 2 [label = "a, b"]
-  2 -> 2 [label = "a, b"]
+  1 -> 2 [label = "a, b", color = gray]
+  2 -> 2 [label = "a, b", color = gray]
 }
 EOF
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -79,7 +83,11 @@ digraph
     F0
     F2
   }
-  { 0 1 2 }
+  {
+    0
+    1
+    2
+  }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
