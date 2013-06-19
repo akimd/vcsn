@@ -14,7 +14,7 @@ check_lal ()
   run $status "$1" -vcsn-is-deterministic -A -f lal.gv
 }
 
-check_lal "true" <<EOF
+check_lal "true" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -30,7 +30,7 @@ digraph
 EOF
 
 # A loop.
-check_lal "false" <<EOF
+check_lal "false" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -45,7 +45,7 @@ digraph
 }
 EOF
 
-check_lal "true" <<EOF
+check_lal "true" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -62,7 +62,7 @@ digraph
 EOF
 
 
-check_lal "true" <<EOF
+check_lal "true" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -76,7 +76,7 @@ digraph
 EOF
 
 # No states.
-check_lal "true" <<EOF
+check_lal "true" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -84,7 +84,7 @@ digraph
 EOF
 
 # No initial states.
-check_lal "true" <<EOF
+check_lal "true" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -93,7 +93,7 @@ digraph
 EOF
 
 # Two initial states.
-check_lal "false" <<EOF
+check_lal "false" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -107,7 +107,7 @@ digraph
 EOF
 
 # An unreachable not deterministic state.
-check_lal "false" <<EOF
+check_lal "false" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"

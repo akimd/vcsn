@@ -20,7 +20,7 @@ check_as ()
 ## is-proper.  ##
 ## ----------- ##
 
-cat > lal_b.gv <<EOF
+cat > lal_b.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

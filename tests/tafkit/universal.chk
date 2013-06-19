@@ -3,7 +3,7 @@
 ## ------------------------------------ ##
 ## Taken from TAFK, command universal.  ##
 ## ------------------------------------ ##
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -40,7 +40,7 @@ run 0 out.exp -vcsn-universal -f out.exp
 ## ----------------------------------------------------------- ##
 
 # With p, q, r -> 0, 1, 2
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -60,7 +60,7 @@ digraph
 EOF
 # This output was checked against Vaucanson 1's result using
 # are-equivalent.
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"

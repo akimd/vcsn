@@ -3,7 +3,7 @@
 ## ------------------------- ##
 ## Determinize Thompson(a).  ##
 ## ------------------------- ##
-cat >a.gv <<EOF
+cat >a.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -12,7 +12,7 @@ digraph
   I0 -> 0
 }
 EOF
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -44,7 +44,7 @@ run 0 out.exp -vcsn-determinize -f out.exp
 ## -------------------------- ##
 ## Determinize Thompson(\e).  ##
 ## -------------------------- ##
-cat >epsilon.gv <<EOF
+cat >epsilon.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -80,7 +80,7 @@ run 0 out.exp -vcsn-determinize -f out.exp
 ## -------------------------- ##
 ## Determinize Thompson(\z).  ##
 ## -------------------------- ##
-cat >empty.gv <<EOF
+cat >empty.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -134,7 +134,7 @@ check ()
 check de-bruijn 3
 # Check the output (2^4 is still ok).
 mv out.exp de-bruijn-3-det.gv
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -218,7 +218,7 @@ run 0 out.exp -cat de-bruijn-3-det.gv
 # Don't display, too big.
 check de-bruijn 8
 mv out.exp de-bruijn-8-det.gv
-run 0 - -vcsn-cat -O info -f de-bruijn-8-det.gv <<EOF
+run 0 - -vcsn-cat -O info -f de-bruijn-8-det.gv <<\EOF
 type: mutable_automaton<lal_char(ab)_b>
 number of states: 512
 number of initial states: 1
@@ -243,7 +243,7 @@ EOF
 
 check ladybird 4
 mv out.exp ladybird-4-det.gv
-cat >out.exp <<EOF
+cat >out.exp <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -339,7 +339,7 @@ run 0 out.exp -cat ladybird-4-det.gv
 # Don't display, too big.
 check ladybird 8
 mv out.exp ladybird-8-det.gv
-run 0 - -vcsn-cat -O info -f ladybird-8-det.gv <<EOF
+run 0 - -vcsn-cat -O info -f ladybird-8-det.gv <<\EOF
 type: mutable_automaton<lal_char(abc)_b>
 number of states: 256
 number of initial states: 1

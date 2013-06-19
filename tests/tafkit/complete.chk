@@ -53,7 +53,7 @@ digraph
 EOF
 check graph.gv
 
-cat > graph.gv <<EOF
+cat > graph.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"

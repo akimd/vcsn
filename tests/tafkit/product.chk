@@ -6,7 +6,7 @@
 
 run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
 run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
+run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(b)_b"
@@ -36,7 +36,7 @@ EOF
 
 run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e 'ab' -o ab.gv
 run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e 'cd' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
+run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -61,7 +61,7 @@ EOF
 
 run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
 run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<EOF
+run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char_b"

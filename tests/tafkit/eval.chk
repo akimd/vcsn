@@ -11,7 +11,7 @@ check ()
 ## lal_char_z.  ##
 ## ------------ ##
 
-cat > simple.gv <<EOF
+cat > simple.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -36,7 +36,7 @@ check simple.gv aaaa 8
 check simple.gv b 0
 check simple.gv a 2
 
-cat > initial-weight.gv <<EOF
+cat > initial-weight.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -59,7 +59,7 @@ run 0 4  -vcsn-evaluate -f initial-weight.gv a
 run 0 8  -vcsn-evaluate -f initial-weight.gv abab
 run 0 12 -vcsn-evaluate -f initial-weight.gv aabab
 
-cat > more-letters.gv <<EOF
+cat > more-letters.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -83,7 +83,7 @@ EOF
 
 run 0 6 -vcsn-evaluate -f more-letters.gv caa
 
-cat > prod.gv <<EOF
+cat > prod.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -107,7 +107,7 @@ EOF
 
 check prod.gv aabab 12
 
-cat > complex.gv <<EOF
+cat > complex.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"

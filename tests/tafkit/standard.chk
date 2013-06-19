@@ -353,7 +353,7 @@ EOF
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<EOF
+check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -593,7 +593,7 @@ check -W z -e '(<2>a+<3>b)*' <<\EOF
   2 -> 2 [label = "<3>b"]
 EOF
 
-check -W z -e '<2>(<3>a+<5>b)*<7>' <<EOF
+check -W z -e '<2>(<3>a+<5>b)*<7>' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -619,7 +619,7 @@ check -W z -e '<2>(<3>a+<5>b)*<7>' <<EOF
   2 -> 2 [label = "<5>b"]
 EOF
 
-check -W z -e '<2>(<3>(ab)<5>)*<7>' <<EOF
+check -W z -e '<2>(<3>(ab)<5>)*<7>' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -646,7 +646,7 @@ fail -W z -e 'a**'
 ## ZR: star.  ##
 ## ---------- ##
 
-check -W zr -e '(<e>\e+abc)*' <<EOF
+check -W zr -e '(<e>\e+abc)*' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -669,7 +669,7 @@ check -W zr -e '(<e>\e+abc)*' <<EOF
   3 -> 1 [label = "<e*>a"]
 EOF
 
-check -W zr -e '(<e>\e+ab<f>)*' <<EOF
+check -W zr -e '(<e>\e+ab<f>)*' <<\EOF
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0

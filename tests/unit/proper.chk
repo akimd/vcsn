@@ -1,6 +1,6 @@
 #! /bin/sh
 
-run 0 - unit/proper <<EOF
+run 0 - unit/proper <<\EOF
 ***LAL***
 type: mutable_automaton<lal_char(ab)_b>
 number of states: 3

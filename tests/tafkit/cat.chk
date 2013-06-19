@@ -33,7 +33,7 @@ check_info ()
   run 0 - -vcsn-cat "$@" -O info
 }
 
-check_info -Ee '(?@lal_char(abc)_b)abc' <<EOF
+check_info -Ee '(?@lal_char(abc)_b)abc' <<\EOF
 context: lal_char(abc)_b
 sum: 0
 prod: 1
@@ -43,7 +43,7 @@ one: 0
 atom: 3
 EOF
 
-check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<EOF
+check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<\EOF
 context: lal_char(abc)_b
 sum: 1
 prod: 1
@@ -87,7 +87,7 @@ fail_aut ()
 }
 
 # Invalid label: letter not in alphabet.
-fail_aut <<EOF
+fail_aut <<\EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -121,7 +121,7 @@ digraph
 EOF
 
 # No context defined (see the typo in vcsn_context).
-fail_aut <<EOF
+fail_aut <<\EOF
 digraph
 {
   vcsn_contxt = "lal_char(ab)_b"
@@ -132,7 +132,7 @@ digraph
 EOF
 
 # Invalid context.
-fail_aut <<EOF
+fail_aut <<\EOF
 digraph
 {
   vcsn_context = "unknown"
@@ -143,7 +143,7 @@ digraph
 EOF
 
 # Invalid initial label.
-fail_aut <<EOF
+fail_aut <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -154,7 +154,7 @@ digraph
 EOF
 
 # Invalid final label.
-fail_aut <<EOF
+fail_aut <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -181,7 +181,7 @@ check_aut ()
 }
 
 # lau_z.
-check_aut <<EOF
+check_aut <<\EOF
 digraph
 {
   vcsn_context = "lau_z"
@@ -212,7 +212,7 @@ digraph
 EOF
 
 # lal_char(a)_b.
-check_aut <<EOF
+check_aut <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -273,7 +273,7 @@ digraph
 EOF
 
 # lal_char(a)_b.
-check_aut <<EOF
+check_aut <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
