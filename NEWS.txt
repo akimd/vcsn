@@ -1,3 +1,7 @@
+* 2013-06-19
+** dot
+The output now shows useless states (and their transitions) in gray.
+
 * 2013-06-18
 ** are-equivalent
 New algorithm (static, dynamic, TAF-Kit).  Currently works only for LAL

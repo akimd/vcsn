@@ -57,8 +57,7 @@ namespace vcsn
       "digraph\n"
       "{\n"
       "  vcsn_context = \"" << aut.context().vname() << "\"\n"
-      "  rankdir = LR\n"
-      "  node [shape = circle]\n";
+      "  rankdir = LR\n";
 
     // Output the pre-initial and post-final states.
     if (!aut.initial_transitions().empty()
@@ -86,7 +85,8 @@ namespace vcsn
     // "color = gray" to it.
     if (!aut.states().empty())
       {
-        out << "  {" << std::endl;
+        out << "  {" << std::endl
+            << "    node [shape = circle]" << std::endl;
         for (auto s : aut.states())
           {
             out << "    " << names[s];

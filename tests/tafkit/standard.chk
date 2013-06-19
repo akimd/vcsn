@@ -32,7 +32,6 @@ digraph
 {
   vcsn_context = "$ctx"
   rankdir = LR
-  node [shape = circle]
 EOF
   cat >>out.exp
   cat >>out.exp <<\EOF
@@ -58,6 +57,7 @@ check -W b -e '\z' <<\EOF
     I0
   }
   {
+    node [shape = circle]
     0 [color = gray]
   }
   I0 -> 0 [color = gray]
@@ -71,6 +71,7 @@ check -W b -e '\e' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
   }
   I0 -> 0
@@ -85,6 +86,7 @@ check -W b -e 'a' <<\EOF
     F1
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -106,6 +108,7 @@ check -W b -e 'a+b' <<\EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -125,6 +128,7 @@ check -W b -e 'abc' <<\EOF
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -146,6 +150,7 @@ check -W b -e 'ab+cd' <<\EOF
     F4
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -169,6 +174,7 @@ check -W b -e 'a(b+c)d' <<\EOF
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -192,6 +198,7 @@ check -W b -e '(ab+cd+abcd)abc' <<\EOF
     F11
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -234,6 +241,7 @@ check -e '\z*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
   }
   I0 -> 0
@@ -247,6 +255,7 @@ check -e '\e*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
   }
   I0 -> 0
@@ -261,6 +270,7 @@ check -e 'a*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -280,6 +290,7 @@ check -e '(a+b)*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -304,6 +315,7 @@ check -e '(ab)*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -324,6 +336,7 @@ check -e 'a**' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -348,6 +361,7 @@ check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<EOF
     F1
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -373,6 +387,7 @@ check -W z -e '<12>\e' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
   }
   I0 -> 0
@@ -392,6 +407,7 @@ check -W z -e '\e+a+\e' <<\EOF
     F1
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -411,6 +427,7 @@ check -W z -e '<12>\e+<23>a+<34>b' <<\EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -433,6 +450,7 @@ check -W z -e '<12>(\e+a+<10>b+<10>\e)' <<\EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -455,6 +473,7 @@ check -W z -e '(\e+a+<2>b+<3>\e)<10>' <<\EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -479,6 +498,7 @@ check -W z -e '<12>(ab)<23>' <<\EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -500,6 +520,7 @@ check -W z -e '\z*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
   }
   I0 -> 0
@@ -516,6 +537,7 @@ check -W z -e '(<2>a)*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -534,6 +556,7 @@ check -W z -e '<2>a*<3>' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -553,6 +576,7 @@ check -W z -e '(<2>a+<3>b)*' <<\EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -578,6 +602,7 @@ check -W z -e '<2>(<3>a+<5>b)*<7>' <<EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -602,6 +627,7 @@ check -W z -e '<2>(<3>(ab)<5>)*<7>' <<EOF
     F0
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -628,6 +654,7 @@ check -W zr -e '(<e>\e+abc)*' <<EOF
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -650,6 +677,7 @@ check -W zr -e '(<e>\e+ab<f>)*' <<EOF
     F2
   }
   {
+    node [shape = circle]
     0
     1
     2

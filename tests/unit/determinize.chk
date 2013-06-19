@@ -7,13 +7,13 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -30,7 +30,6 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -40,6 +39,7 @@ digraph
     F7
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -84,7 +84,6 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -93,6 +92,7 @@ digraph
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -110,13 +110,13 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
   }
   {
+    node [shape = circle]
     0
     1
     2 [color = gray]

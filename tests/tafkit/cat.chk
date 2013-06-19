@@ -195,13 +195,13 @@ digraph
 {
   vcsn_context = "lau_z"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -225,13 +225,13 @@ digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -256,13 +256,13 @@ digraph
 {
   vcsn_context = "lan_char(a)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -305,7 +305,6 @@ digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -316,6 +315,7 @@ digraph
     F14
   }
   {
+    node [shape = circle]
     0
     1
     2

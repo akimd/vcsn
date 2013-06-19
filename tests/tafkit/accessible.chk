@@ -21,7 +21,6 @@ digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -29,6 +28,7 @@ digraph
     F4
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -69,13 +69,13 @@ digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2
@@ -114,12 +114,12 @@ digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
   }
   {
+    node [shape = circle]
     0 [color = gray]
     1 [color = gray]
     2 [color = gray]
@@ -154,7 +154,6 @@ digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
 }
 EOF
 
@@ -181,13 +180,13 @@ digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F3
   }
   {
+    node [shape = circle]
     0
     1
     2

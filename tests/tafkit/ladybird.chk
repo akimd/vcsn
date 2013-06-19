@@ -5,13 +5,13 @@ digraph
 {
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
@@ -32,13 +32,13 @@ digraph
 {
   vcsn_context = "lal_char(abc)_zmin"
   rankdir = LR
-  node [shape = circle]
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
   }
   {
+    node [shape = circle]
     0
     1
   }
