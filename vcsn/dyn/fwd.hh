@@ -12,8 +12,11 @@ namespace vcsn
   namespace dyn
   {
     // vcsn/dyn/automaton.hh.
-    class abstract_automaton;
-    using automaton = std::shared_ptr<abstract_automaton>;
+    namespace detail
+    {
+      class abstract_automaton;
+    }
+    using automaton = std::shared_ptr<detail::abstract_automaton>;
 
     // vcsn/dyn/context.hh.
     class abstract_context;

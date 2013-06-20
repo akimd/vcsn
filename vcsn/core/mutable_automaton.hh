@@ -18,7 +18,7 @@ namespace vcsn
 {
 
   template <typename Context>
-  class mutable_automaton: public dyn::abstract_automaton
+  class mutable_automaton: public dyn::detail::abstract_automaton
   {
   public:
     using context_t = Context;

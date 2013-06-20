@@ -47,7 +47,7 @@ namespace vcsn
     virtual void add_entry(const string_t& src, const string_t& dst,
                            const string_t& entry) = 0;
     /// The final result.
-    virtual dyn::abstract_automaton* result() = 0;
+    virtual dyn::detail::abstract_automaton* result() = 0;
     /// Forget about the current automaton, but do not free it.
     virtual void reset() = 0;
 
@@ -165,7 +165,7 @@ namespace vcsn
     }
 
     /// Return the built automaton.
-    virtual dyn::abstract_automaton*
+    virtual dyn::detail::abstract_automaton*
     result() override final
     {
       return res_;

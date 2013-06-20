@@ -10,20 +10,23 @@ namespace vcsn
 {
   namespace dyn
   {
-    /// Base class for automata.
-    ///
-    /// FIXME: Should not exist, we should model as we did for ratexp.
-    class abstract_automaton
+    namespace detail
     {
-    public:
-      virtual ~abstract_automaton() {}
-      /// A description of the automaton, sufficient to build it.
-      /// \param full  whether to include the genset.
-      ///              if false, same as sname.
-      virtual std::string vname(bool full = true) const = 0;
-    };
+      /// Base class for automata.
+      ///
+      /// FIXME: Should not exist, we should model as we did for ratexp.
+      class abstract_automaton
+      {
+      public:
+        virtual ~abstract_automaton() {}
+        /// A description of the automaton, sufficient to build it.
+        /// \param full  whether to include the genset.
+        ///              if false, same as sname.
+        virtual std::string vname(bool full = true) const = 0;
+      };
+    }
 
-    using automaton = std::shared_ptr<abstract_automaton>;
+    using automaton = std::shared_ptr<detail::abstract_automaton>;
 
 
     /// Build a dyn::automaton.
