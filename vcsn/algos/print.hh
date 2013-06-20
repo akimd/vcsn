@@ -44,13 +44,13 @@ namespace vcsn
   | print(weight, stream).  |
   `------------------------*/
 
-  template <typename Context>
+  template <typename WeightSet>
   inline
   std::ostream&
-  print(const Context& ctx, const typename Context::weight_t& w,
+  print(const WeightSet& ws, const typename WeightSet::value_t& w,
         std::ostream& o)
   {
-    return ctx.weightset()->print(o, w);
+    return ws.print(o, w);
   }
 
   namespace dyn
@@ -58,12 +58,13 @@ namespace vcsn
     namespace detail
     {
       /// Abstract but parameterized.
-      template <typename Context>
+      template <typename WeightSet>
       std::ostream& print(const weight& w, std::ostream& o)
       {
-        using weight_t = concrete_abstract_weight<Context>;
+        using weight_t = concrete_abstract_weight<WeightSet>;
         const auto& typed_w = dynamic_cast<const weight_t&>(*w);
-        return vcsn::print<Context>(typed_w.ctx(), typed_w.weight(), o);
+        return vcsn::print<WeightSet>(typed_w.get_weightset(),
+                                      typed_w.weight(), o);
       }
 
       REGISTER_DECLARE(print_weight,

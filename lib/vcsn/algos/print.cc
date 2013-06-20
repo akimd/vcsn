@@ -63,7 +63,8 @@ namespace vcsn
     print(const dyn::weight& w, std::ostream& out, const std::string& type)
     {
       if (type == "text")
-        detail::print_weight_registry().call(w->ctx().vname(), w, out);
+        detail::print_weight_registry().call(w->get_weightset().vname(),
+                                             w, out);
       else
         throw std::domain_error("invalid output format for weight: "
                                 + type);

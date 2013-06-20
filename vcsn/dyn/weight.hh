@@ -3,6 +3,7 @@
 
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
@@ -18,49 +19,41 @@ namespace vcsn
       class abstract_weight
       {
       public:
-        abstract_weight(const dyn::context& ctx)
-          : ctx_(ctx)
-        {}
-        virtual ~abstract_weight() {}
-
-        const dyn::abstract_context& ctx() const
-        {
-          return *ctx_;
-        }
-      protected:
-        /// A shared_ptr to the abstract_context.
-        const dyn::context ctx_;
+        virtual const abstract_weightset& get_weightset() const = 0;
       };
 
       /// Aggregate a weight and its context.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
-      template <typename Ctx>
+      template <typename WeightSet>
       class concrete_abstract_weight: public abstract_weight
       {
       public:
+        using weightset_t = WeightSet;
         using super_type = abstract_weight;
-        using context_t = Ctx;
-        using weight_t = typename context_t::weight_t;
-        concrete_abstract_weight(const dyn::context& ctx,
-                                 const weight_t& weight)
-          : super_type(ctx)
-          , weight_(weight)
+        using weight_t = typename weightset_t::value_t;
+        concrete_abstract_weight(const weight_t& weight,
+                                 const weightset_t& weightset)
+          : weight_(weight)
+          , weightset_(weightset)
         {}
         virtual ~concrete_abstract_weight() {}
 
-        const context_t& ctx() const
-        {
-          return dynamic_cast<const context_t&>(*ctx_);
-        }
-        const weight_t& weight() const
+        const weight_t weight() const
         {
           return weight_;
+        }
+
+        virtual const weightset_t& get_weightset() const override
+        {
+          return weightset_;
         }
       protected:
         /// The weight.
         const weight_t weight_;
+        /// The weight set.
+        const weightset_t weightset_;
       };
 
     } // namespace detail
@@ -73,9 +66,8 @@ namespace vcsn
     make_weight(const ctx::context<LabelSet, WeightSet>& ctx,
                 const typename WeightSet::value_t& weight)
     {
-      using ctx_t = ctx::context<LabelSet, WeightSet>;
-      return std::make_shared<detail::concrete_abstract_weight<ctx_t>>
-        (std::make_shared<const ctx_t>(ctx), weight);
+      return std::make_shared<detail::concrete_abstract_weight<WeightSet>>
+        (weight, *ctx.weightset());
     }
 
   } // namespace dyn

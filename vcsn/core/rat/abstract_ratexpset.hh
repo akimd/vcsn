@@ -12,6 +12,8 @@
 namespace vcsn
 {
 
+  /// FIXME: In fact, this is dyn::ratexpset.
+
   /// Abstract wrapper around a (typeful) ratexpset.
   ///
   /// Use it when you want to avoid depending on the ratexpset

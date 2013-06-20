@@ -91,8 +91,10 @@ namespace vcsn
   print<Ctx>(const Ctx& ctx, const rat::exp_t& e, std::ostream& o);     \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  print<Ctx>(const Ctx& ctx, const typename Ctx::weight_t& e,           \
-             std::ostream& o);                                          \
+  print<typename Ctx::weightset_t>                                      \
+  (const typename Ctx::weightset_t& ws,                                 \
+   const typename Ctx::weight_t& e,                                     \
+   std::ostream& o);                                                    \
                                                                         \
   /* standard. */                                                       \
   MAYBE_EXTERN template                                                 \
@@ -253,7 +255,8 @@ namespace vcsn
 
         // print
         print_exp_register(Ctx::sname(), print<Ctx>);
-        print_weight_register(Ctx::sname(), print<Ctx>);
+        print_weight_register(Ctx::weightset_t::sname(),
+                              print<typename Ctx::weightset_t>);
 
         // standard.
         standard_register(Ctx::sname(), standard<aut_t>);
