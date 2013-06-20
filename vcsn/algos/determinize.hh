@@ -46,24 +46,29 @@ namespace vcsn
       {
         clear();
 
+        // We use state numbers as indexes, so we need to know the
+        // last state number.  If states were removed, it is not the
+        // same as the number of states.
+        size_t state_size = a.all_states().back() + 1;
+
         const auto& letters = *a.labelset();
         automaton_t res{a.context()};
 
         // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
         using successors_t = std::vector<std::unordered_map<label_t, state_set> >;
-        successors_t successors{a.num_all_states()};
+        successors_t successors{state_size};
         for (auto st : a.all_states())
           for (auto l : letters)
             {
               state_set& ss = successors[st][l];
-              ss.resize(a.num_all_states());
+              ss.resize(state_size);
               for (auto tr : a.out(st, l))
                 ss.set(a.dst_of(tr));
             }
 
         // Set of final states.
         state_set finals;
-        finals.resize(a.num_all_states());
+        finals.resize(state_size);
         for (auto t : a.final_transitions())
           finals.set(a.src_of(t));
 
@@ -88,7 +93,7 @@ namespace vcsn
 
         // The input initial states.
         state_set next;
-        next.resize(a.num_all_states());
+        next.resize(state_size);
         for (auto t : a.initial_transitions())
           next.set(a.dst_of(t));
         res.set_initial(push_new_state(next));
