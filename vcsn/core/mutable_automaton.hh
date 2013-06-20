@@ -563,17 +563,20 @@ namespace vcsn
     }
 
   public:
-    // all states excluding pre()/post()
+    /// All states excluding pre()/post().
+    /// Guaranteed in increasing order.
     states_output_t
     states() const     { return state_range(post() + 1, states_.size()); }
 
-    // all states including pre()/post()
+    /// All states including pre()/post().
+    /// Guaranteed in increasing order.
     states_output_t
     all_states() const { return state_range(0U, states_.size()); }
 
     using transitions_output_t =
       container_filter_range<boost::integer_range<transition_t>>;
 
+    /// All the transition indexes between visible states.
     transitions_output_t
     transitions() const
     {
@@ -590,6 +593,7 @@ namespace vcsn
         };
     }
 
+    /// All the transition indexes between all states (including pre and post).
     transitions_output_t
     all_transitions() const
     {
@@ -603,19 +607,22 @@ namespace vcsn
         };
     }
 
+    /// Indexes of transitions to visible initial states.
     container_filter_range<const tr_cont_t&>
     initial_transitions() const
     {
       return out(pre());
     }
 
+    /// Indexes of transitions from visible final states.
     container_filter_range<const tr_cont_t&>
     final_transitions() const
     {
       return in(post());
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of visible transitions leaving state \a s.
+    /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     out(state_t s) const
     {
@@ -625,7 +632,8 @@ namespace vcsn
                 { return transitions_[i].dst != this->post(); }};
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of all transitions leaving state \a s.
+    /// Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
     all_out(state_t s) const
     {
@@ -633,7 +641,8 @@ namespace vcsn
       return states_[s].succ;
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of all transitions leaving state \a s on label \a l.
+    /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     out(state_t s, const label_t& l) const
     {
@@ -645,7 +654,8 @@ namespace vcsn
             }};
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of visible transitions arriving to state \a s.
+    /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     in(state_t s) const
     {
@@ -655,7 +665,8 @@ namespace vcsn
                 { return transitions_[i].src != this->pre(); }};
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of all transitions arriving to state \a s.
+    /// Invalidated by del_transition() and del_state().
     container_range<const tr_cont_t&>
     all_in(state_t s) const
     {
@@ -663,7 +674,8 @@ namespace vcsn
       return states_[s].pred;
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of visible transitions arriving to state \a s on label \a l.
+    /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     in(state_t s, const label_t& l) const
     {
@@ -675,7 +687,8 @@ namespace vcsn
         }};
     }
 
-    // Invalidated by del_transition() and del_state().
+    /// Indexes of visible transitions from state \a s to state \a d.
+    /// Invalidated by del_transition() and del_state().
     container_filter_range<const tr_cont_t&>
     outin(state_t s, state_t d) const
     {
