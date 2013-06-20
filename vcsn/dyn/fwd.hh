@@ -39,6 +39,13 @@ namespace vcsn
     }
     using weight = std::shared_ptr<const detail::abstract_weight>;
 
+    // weightset.hh.
+    namespace detail
+    {
+      class abstract_weightset;
+    }
+    using weightset = std::shared_ptr<const detail::abstract_weightset>;
+
   }
 } // namespace vcsn
 

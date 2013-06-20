@@ -6,11 +6,13 @@
 # include <stdexcept>
 # include <boost/lexical_cast.hpp>
 # include <sstream>
+
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
-  class r
+  class r: public dyn::detail::abstract_weightset
   {
   public:
     static std::string sname()

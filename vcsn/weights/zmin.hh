@@ -8,11 +8,13 @@
 # include <sstream>
 # include <limits>
 # include <utility>
+
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
-  class zmin
+  class zmin: public dyn::detail::abstract_weightset
   {
   public:
     static std::string sname()

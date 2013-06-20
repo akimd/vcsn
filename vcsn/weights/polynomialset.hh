@@ -6,6 +6,7 @@
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
+# include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -13,7 +14,7 @@
 namespace vcsn
 {
   template <class Context>
-  class polynomialset
+  class polynomialset: public dyn::detail::abstract_weightset
   {
   public:
     using context_t = Context;
