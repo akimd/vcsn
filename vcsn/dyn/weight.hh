@@ -60,16 +60,15 @@ namespace vcsn
 
     using weight = std::shared_ptr<const detail::abstract_weight>;
 
-    template <typename LabelSet, typename WeightSet>
+    template <typename WeightSet>
     inline
     weight
-    make_weight(const ctx::context<LabelSet, WeightSet>& ctx,
+    make_weight(const WeightSet& ws,
                 const typename WeightSet::value_t& weight)
     {
       return std::make_shared<detail::concrete_abstract_weight<WeightSet>>
-        (weight, *ctx.weightset());
+        (weight, ws);
     }
-
   } // namespace dyn
 } // namespace vcsn
 

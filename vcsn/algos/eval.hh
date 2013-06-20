@@ -101,7 +101,7 @@ namespace vcsn
         const auto& a = dynamic_cast<const Aut&>(*aut);
         const auto& ctx = a.context();
         auto res = ::vcsn::eval(a, s);
-        return make_weight(ctx, res);
+        return make_weight(*ctx.weightset(), res);
       }
 
       REGISTER_DECLARE(eval,
