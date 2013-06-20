@@ -33,8 +33,12 @@ namespace vcsn
 
     using ratexp = std::shared_ptr<detail::abstract_ratexp>;
 
-    // vcsn/rat/ratexpset.hh
-    using ratexpset = std::shared_ptr<const abstract_ratexpset>;
+    // vcsn/dyn/ratexpset.hh
+    namespace detail
+    {
+      class abstract_ratexpset;
+    }
+    using ratexpset = std::shared_ptr<const detail::abstract_ratexpset>;
 
     // vcsn/dyn/weight.hh.
     namespace detail

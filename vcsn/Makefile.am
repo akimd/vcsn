@@ -53,7 +53,7 @@ nobase_vcsn_HEADERS =                           \
   core/fwd.hh                                   \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  core/rat/abstract_ratexpset.hh                \
+  dyn/ratexpset.hh                \
   core/rat/fwd.hh                               \
   core/rat/info.hh                              \
   core/rat/info.hxx                             \

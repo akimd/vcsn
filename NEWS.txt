@@ -1,3 +1,12 @@
+* 2013-06-20
+** dyn: overhaul
+Consistency is enforced in dyn.  In particular the very first dynamic/static
+bridge (which was not identified as such), vcsn::rat::abstract_ratexpset, is
+now part of dyn::.
+
+dyn::weight now aggregates its WeightSet instead of a Context.  More similar
+conversions were performed, and other are to come.
+
 * 2013-06-19
 ** dot
 The output now shows useless states (and their transitions) in gray.

@@ -19,7 +19,7 @@
   #include <tuple>
   #include "location.hh"
   #include <vcsn/core/rat/ratexp.hh>
-  #include <vcsn/core/rat/abstract_ratexpset.hh>
+  #include <vcsn/dyn/ratexpset.hh>
   #include <lib/vcsn/rat/driver.hh>
 
   namespace vcsn

@@ -24,6 +24,10 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 ** eps-removal
 (1+a)^n
 
+* Refactoring
+** dyn::detail::concrete_abstract_kratexpset
+Maybe it should be parameterized by a ratexpset instead of a context.
+
 * aut-to-exp
 ** More heuristics
 See what V1 did.

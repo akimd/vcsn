@@ -2,7 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <vcsn/core/rat/abstract_ratexpset.hh>
+#include <vcsn/dyn/ratexpset.hh>
 #include <vcsn/core/rat/ratexp.hh>
 #include <lib/vcsn/rat/driver.hh>// FIXME: non-installed dependency.
 #include <vcsn/misc/cast.hh>

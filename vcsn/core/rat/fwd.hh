@@ -5,17 +5,6 @@
 
 namespace vcsn
 {
-
-  class abstract_ratexpset;
-
-  namespace dyn
-  {
-    using ratexpset = std::shared_ptr<const abstract_ratexpset>;
-  }
-
-  template <typename Context>
-  class concrete_abstract_ratexpset;
-
   namespace rat
   {
 

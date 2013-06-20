@@ -6,7 +6,7 @@
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/core/rat/abstract_ratexpset.hh>
+# include <vcsn/dyn/ratexpset.hh>
 
 namespace vcsn
 {

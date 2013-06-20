@@ -11,8 +11,10 @@
 
 namespace vcsn
 {
-
-  /// FIXME: In fact, this is dyn::ratexpset.
+namespace dyn
+{
+namespace detail
+{
 
   /// Abstract wrapper around a (typeful) ratexpset.
   ///
@@ -202,8 +204,10 @@ namespace vcsn
       return ks_.atom(v);
     }
 
-    ratexpset<context_t> ks_;
+    vcsn::ratexpset<context_t> ks_;
   };
+} // namespace detail
+} // namespace dyn
 } // namespace vcsn
 
 #endif // !VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
