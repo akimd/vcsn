@@ -24,6 +24,24 @@ struct are_equivalent: vcsn_function
     std::cout << (res ? "true" : "false") << std::endl;
     return res ? 0 : 2;
   }
+
+  int work_exp(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    ratexp lhs = read_ratexp(opts);
+    // FIXME: hack.
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    ratexp rhs = read_ratexp(opts2);
+
+    // Process.
+    auto res = vcsn::dyn::are_equivalent(lhs, rhs);
+
+    // Output.
+    std::cout << (res ? "true" : "false") << std::endl;
+    return res ? 0 : 2;
+  }
 };
 
 int main(int argc, char* const argv[])

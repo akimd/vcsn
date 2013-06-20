@@ -37,5 +37,11 @@ namespace vcsn
         (lhs->vname() + " x " + rhs->vname(),
          lhs, rhs);
     }
+
+    bool
+    are_equivalent(const ratexp& lhs, const ratexp& rhs)
+    {
+      return are_equivalent(standard(lhs), standard(rhs));
+    }
   }
 }

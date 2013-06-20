@@ -1,4 +1,14 @@
 * 2013-06-20
+** are-equivalent
+Now accepts (LAL Boolean) rational expressions.  It cannot compare a
+rational expression with an automaton (or vice-versa).  This is a temporary
+defect which shell be addressed once TAF-Kit is properly developped.
+
+  $ vcsn-are-equivalent -Ee '(a*b*)*' '(a+b)*'
+  true
+  $ vcsn-are-equivalent -Ee '(a*b)*' '(a+b)*'
+  false
+
 ** dyn: overhaul
 Consistency is enforced in dyn.  In particular the very first dynamic/static
 bridge (which was not identified as such), vcsn::rat::abstract_ratexpset, is
