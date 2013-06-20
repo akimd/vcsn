@@ -1,4 +1,7 @@
 * 2013-06-20
+** universal
+Now accepts (LAL Boolean) rational expressions.
+
 ** are-equivalent
 Now accepts (LAL Boolean) rational expressions.  It cannot compare a
 rational expression with an automaton (or vice-versa).  This is a temporary

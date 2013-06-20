@@ -20,6 +20,21 @@ struct universal: vcsn_function
     print(opts, res);
     return 0;
   }
+
+  int work_exp(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_ratexp(opts);
+
+    // Process.
+    auto aut = standard(exp);
+    auto res = vcsn::dyn::universal(aut);
+
+    // Output.
+    print(opts, res);
+    return 0;
+  }
 };
 
 int main(int argc, char* const argv[])

@@ -43,7 +43,7 @@ namespace vcsn
     using map_t = std::map<state_t, state_set_t>;
 
     // The initial state of automaton.
-    state_t i = automaton.dst_of(aut->initial_transitions().front());
+    state_t i = aut->dst_of(aut->initial_transitions().front());
 
     // compute the co-determinized of the minimal automaton
     // and retrieve the origin of each state.
@@ -80,14 +80,14 @@ namespace vcsn
           state_t new_s = res.new_state();
           subset_label[new_s] = s;
           // J = { X | i in X }
-          if (s.find(i) != s.end())
+          if (has(s, i))
             res.set_initial(new_s);
-          // RES = { X | X \subset T }
+          // U = { X | X \subset T }
           if (subset(s, automaton_finals))
             res.set_final(new_s);
         }
 
-    // finally, the transition set.
+    // Finally, the transition set.
     for (const auto x: res.states())
       for (const auto y: res.states())
         for (const auto a: *res.labelset())

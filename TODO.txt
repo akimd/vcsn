@@ -9,9 +9,12 @@ ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
 Or use what's in there instead of always abc?
 
-** dyn::weight
-Would that be useful?  For the return value of eval for instance.  How
-would the connection with dyn::ratexp (which are weights) be done?
+** transpose of const
+We have a problem when wrapping a const automaton.  See the const_cast
+in universal for instance.  See also
+http://stackoverflow.com/questions/17111406/.  The real answer is to
+use a const_transpose and an transpose automata, and dispatch by
+const.  Also, have one inherit from the other to factor.
 
 * Benchmarks
 ** determinization
@@ -108,5 +111,8 @@ Well, you know what I mean.
 The hierarchy and the namespaces do not match.
 
 Local Variables:
+coding: utf-8
+fill-column: 76
+ispell-dictionary: "american"
 mode: outline
 End:

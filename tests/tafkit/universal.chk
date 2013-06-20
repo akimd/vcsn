@@ -35,6 +35,10 @@ run 0 out.exp -vcsn-universal -f $top_srcdir/share/vcsn/a1.gv
 # Idempotence.
 run 0 out.exp -vcsn-universal -f out.exp
 
+# Start from a rat-exp.
+run 0 out.exp -vcsn-universal -Ee '(?@lal_char(ab)_b)(a+b)*ab(a+b)*'
+
+
 ## ----------------------------------------------------------- ##
 ## Taken from vaucanson-1.4.1/src/demos/algorithms/universal.  ##
 ## ----------------------------------------------------------- ##
