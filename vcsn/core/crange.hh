@@ -6,7 +6,7 @@
 
 namespace vcsn
 {
-  // Restrict the interface of a container to begin/end.
+  /// Restrict the interface of a container to begin/end.
   template <class C>
   struct container_range
   {
@@ -33,6 +33,9 @@ namespace vcsn
     /// The first element.
     /// \pre !empty().
     DEFINE(front);
+    /// The last element.
+    /// \pre !empty().
+    DEFINE(back);
     DEFINE(empty);
     DEFINE(size);
 #undef DEFINE
@@ -71,6 +74,16 @@ namespace vcsn
     {
       assert(!empty());
       return *begin();
+    }
+
+    /// The last element.
+    /// \pre !empty().
+    /// \note: we don't return by reference, as begin returns
+    /// a temporary.
+    value_type back() const
+    {
+      assert(!empty());
+      return cont_.back();
     }
 
     bool empty() const
