@@ -16,6 +16,8 @@ namespace vcsn
 
   namespace detail
   {
+  namespace info
+  {
     /*--------------.
     | is_complete.  |
     `--------------*/
@@ -102,7 +104,7 @@ namespace vcsn
         res += aut.labelset()->is_identity(aut.label_of(t));
       return res;
     }
-
+  }
   }
 
   /*--------------------------.
@@ -124,10 +126,10 @@ namespace vcsn
     ECHO("number of useful states", num_useful_states(aut));
     ECHO("number of transitions", aut.num_transitions());
     ECHO("number of deterministic states",
-         detail::num_deterministic_states(aut));
-    ECHO("number of eps transitions", detail::num_eps_transitions(aut));
-    ECHO("is complete", detail::is_complete(aut));
-    ECHO("is deterministic", detail::is_deterministic(aut));
+         detail::info::num_deterministic_states(aut));
+    ECHO("number of eps transitions", detail::info::num_eps_transitions(aut));
+    ECHO("is complete", detail::info::is_complete(aut));
+    ECHO("is deterministic", detail::info::is_deterministic(aut));
     ECHO("is eps-acyclic", is_eps_acyclic(aut));
     ECHO("is proper", is_proper(aut));
 #undef ECHO
