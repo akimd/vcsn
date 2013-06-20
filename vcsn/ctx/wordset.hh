@@ -6,6 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/genset-labelset.hh>
+# include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
 {
@@ -13,8 +14,9 @@ namespace vcsn
   {
     /// Implementation of labels are words.
     template <typename GenSet>
-    struct wordset: genset_labelset<GenSet>
+    class wordset: public genset_labelset<GenSet>
     {
+    public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
@@ -81,6 +83,21 @@ namespace vcsn
       is_identity(const label_t& l) const
       {
         return this->is_empty_word(l);
+      }
+
+      // FIXME: Why do I need to repeat this?
+      // It should be inherited from genset-labelset.
+      label_t
+      conv(std::istream& i) const
+      {
+        return this->genset()->conv(i);
+      }
+
+      // FIXME: remove, see todo.txt:scanners.
+      label_t
+      conv(const std::string& s) const
+      {
+        return ::vcsn::conv(*this, s);
       }
     };
 

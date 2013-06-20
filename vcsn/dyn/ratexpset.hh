@@ -111,7 +111,7 @@ namespace detail
 
     virtual value_t atom(const std::string& w) const override
     {
-      return atom_<context_t>(w);
+      return ks_.atom(ks_.labelset()->conv(w));
     }
 
     virtual value_t add(value_t l, value_t r) const override
@@ -160,48 +160,6 @@ namespace detail
     virtual const context_t& context() const override
     {
       return ks_.context();
-    }
-
-  private:
-    // FIXME: These guys should use labelset->conv.
-    template <typename Ctx>
-    auto
-    atom_(const std::string& v) const
-      -> if_lal<Ctx, value_t>
-    {
-      if (ks_.labelset()->is_letter(v))
-        return ks_.atom(v[0]);
-      throw std::domain_error("invalid atom: " + v + ": not a letter");
-    }
-
-    template <typename Ctx>
-    auto
-    atom_(const std::string& v) const
-      -> if_lan<Ctx, value_t>
-    {
-      if (v.empty())
-        ks_.atom({});
-      else if (ks_.labelset()->is_letter(v))
-        return ks_.atom(v[0]);
-      throw std::domain_error("invalid atom: " + v + ": neither empty nor a letter");
-    }
-
-    template <typename Ctx>
-    auto
-    atom_(const std::string& v) const
-      -> if_lau<Ctx, value_t>
-    {
-      if (v.empty())
-        return ks_.atom({});
-      throw std::domain_error("invalid atom: " + v + ": not empty");
-    }
-
-    template <typename Ctx>
-    auto
-    atom_(const std::string& v) const
-      -> if_law<Ctx, value_t>
-    {
-      return ks_.atom(v);
     }
 
     vcsn::ratexpset<context_t> ks_;

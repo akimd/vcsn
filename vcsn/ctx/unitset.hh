@@ -3,11 +3,12 @@
 
 # include <iostream>
 # include <set>
+# include <stdexcept>
 
 # include <vcsn/empty.hh>
 
 # include <vcsn/core/kind.hh>
-# include <stdexcept>
+# include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
 {
@@ -129,6 +130,13 @@ namespace vcsn
             i.ignore();
           }
         return {};
+      }
+
+      // FIXME: remove, see todo.txt:scanners.
+      label_t
+      conv(const std::string& s) const
+      {
+        return ::vcsn::conv(*this, s);
       }
 
       // KILLME:

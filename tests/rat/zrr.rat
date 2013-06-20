@@ -3,13 +3,10 @@
 
 # Check the alphabets.
 <<<2>x>e>a => <<<2>x>e>a
-# <<<l>x>e>a ! 1.4: invalid word: l: invalid letter: l
-#<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: invalid word: l: invalid letter: l
-#<<<4>x>l>a ! 1.1-10: 1.7: invalid word: l: invalid letter: l
-#<<<5>x>e>l ! 1.10: invalid word: l: invalid letter: l
-<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: invalid word: l
-<<<4>x>l>a ! 1.1-10: 1.7: invalid word: l
-<<<5>x>e>l ! 1.10: invalid word: l
+<<<l>x>e>a ! 1.1-10: 1.1-7: 1.1-4: invalid integer: l
+<<<3>l>e>a ! 1.1-10: 1.1-7: 1.4: invalid value: l, unexpected l
+<<<4>x>l>a ! 1.1-10: 1.7: invalid value: l, unexpected l
+<<<5>x>e>l ! 1.10: invalid value: l, unexpected l
 
 
 # Check weight products.

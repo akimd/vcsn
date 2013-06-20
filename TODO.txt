@@ -25,6 +25,15 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** scanners
+The scanners are C scanners, not C++ scanners.  Therefore they don't
+support streams, which is a nuisance, as our primary interface for
+"conv" routines should rely on istream.
+
+So move the scanners to Flex's C++ backend.  Then move all "conv" that
+still require std::string to using std::istream, and use
+misc/stream.hh:conv where we want to use strings as input.
+
 ** dyn::detail::concrete_abstract_kratexpset
 Maybe it should be parameterized by a ratexpset instead of a context.
 
