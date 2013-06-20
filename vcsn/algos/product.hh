@@ -23,7 +23,8 @@ namespace vcsn
                   "requires labels_are_letters");
     // FIXME: ensure that weightsets are compatible.
     using automaton_t = A;
-    auto gs = intersect(*laut.context().labelset(), *raut.context().labelset());
+    auto gs = intersection(*laut.context().labelset(),
+                           *raut.context().labelset());
     auto ls = std::make_shared<typename automaton_t::labelset_t>(gs);
     using context_t = typename automaton_t::context_t;
     auto ctx = context_t{ls, laut.context().weightset()};

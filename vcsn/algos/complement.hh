@@ -38,7 +38,7 @@ namespace vcsn
 
     // Complement.
     for (auto s: aut.states())
-      if (finals.find(s) == end(finals))
+      if (!has(finals, s))
         aut.set_final(s);
       else
         aut.unset_final(s);

@@ -2,8 +2,8 @@
 # define VCSN_ALGOS_COPY_HH
 
 # include <unordered_map>
-# include <set>
 
+# include <vcsn/misc/set.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/fwd.hh>
 
@@ -76,7 +76,7 @@ namespace vcsn
     using state_t = typename Aut::state_t;
     return ::vcsn::copy(input, [&keep](state_t s)
                         {
-                          return keep.find(s) != end(keep);
+                          return has(keep, s);
                         });
   }
 

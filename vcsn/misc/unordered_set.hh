@@ -24,6 +24,18 @@ namespace std
       return res;
     }
   };
+}
+
+namespace vcsn
+{
+
+  /// Whether \a e is member of \a s.
+  template <typename T>
+  bool
+  has(const std::unordered_set<T>& s, const T& e)
+  {
+    return s.find(e) != std::end(s);
+  }
 
 }
 

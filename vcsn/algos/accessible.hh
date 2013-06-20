@@ -84,7 +84,7 @@ namespace vcsn
     // Don't count pre().
     res -= 1;
     // Don't count post().
-    if (set.find(a.post()) != end(set))
+    if (has(set, a.post()))
       res -= 1;
     return res;
   }
@@ -106,10 +106,10 @@ namespace vcsn
     auto set = useful_states(a);
     size_t res = set.size();
     // Don't count pre().
-    if (set.find(a.pre()) != end(set))
+    if (has(set, a.pre()))
       res -= 1;
     // Don't count post().
-    if (set.find(a.post()) != end(set))
+    if (has(set, a.post()))
       res -= 1;
     return res;
   }

@@ -2,11 +2,11 @@
 # define VCSN_CTX_LETTERSET_HH
 
 # include <memory>
-# include <set>
 
-# include <vcsn/alphabets/setalpha.hh> // intersect
+# include <vcsn/alphabets/setalpha.hh> // intersection
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/set.hh> // intersection
 # include <vcsn/misc/stream.hh> // conv.
 # include <vcsn/ctx/genset-labelset.hh>
 
@@ -100,9 +100,9 @@ namespace vcsn
     /// Compute the intersection with another alphabet.
     template <typename GenSet>
     letterset<GenSet>
-    intersect(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
+    intersection(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
     {
-      return {intersect(*lhs.genset(), *rhs.genset())};
+      return {intersection(*lhs.genset(), *rhs.genset())};
     }
 
   }

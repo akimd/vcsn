@@ -1,10 +1,10 @@
 #ifndef VCSN_ALPHABETS_SETALPHA_HH
 # define VCSN_ALPHABETS_SETALPHA_HH
 
-# include <algorithm> // set_intersection
 # include <initializer_list>
-# include <set>
 # include <stdexcept>
+
+# include <vcsn/misc/set.hh>
 
 namespace vcsn
 {
@@ -56,7 +56,7 @@ namespace vcsn
     bool
     has(letter_t l) const
     {
-      return alphabet_.find(l) != alphabet_.end();
+      return ::vcsn::has(alphabet_, l);
     }
 
     word_t
@@ -91,21 +91,17 @@ namespace vcsn
       return alphabet_.end();
     }
 
+    /// Compute the intersection with another alphabet.
+    template <typename L2>
+    friend set_alphabet<L2>
+    intersection(const set_alphabet<L2>& lhs, const set_alphabet<L2>& rhs)
+    {
+      return {intersection(lhs.alphabet_, rhs.alphabet_)};
+    }
+
   private:
     letters_t alphabet_;
   };
-
-  /// Compute the intersection with another alphabet.
-  template <typename L>
-  set_alphabet<L>
-  intersect(const set_alphabet<L>& lhs, const set_alphabet<L>& rhs)
-  {
-    typename set_alphabet<L>::letters_t res;
-    std::set_intersection(std::begin(lhs), std::end(lhs),
-                          std::begin(rhs), std::end(rhs),
-                          std::inserter(res, std::begin(res)));
-    return {res};
-  }
 
 }
 

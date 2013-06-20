@@ -102,7 +102,7 @@ namespace vcsn
           weight_t w = e.right_weight();
           if (w != ws_.unit())
             for (auto t: res_.final_transitions())
-              if (other_finals.find(res_.src_of(t)) == other_finals.end())
+              if (!has(other_finals, res_.src_of(t)))
                 res_.rmul_weight(t, w);
         }
       }
@@ -154,7 +154,7 @@ namespace vcsn
             // Branch all the previously added final transitions to
             // the successors of the new initial state.
             for (auto t1: ftr)
-              if (other_finals.find(res_.src_of(t1)) == other_finals.end())
+              if (!has(other_finals, res_.src_of(t1)))
                 {
                   // Remove the previous final transition first, as we
                   // might add a final transition for the same state
@@ -197,7 +197,7 @@ namespace vcsn
             res_.lmul_weight(ti, w);
             for (auto tf: res_.final_transitions())
               if (res_.src_of(tf) != initial_
-                  && other_finals.find(res_.src_of(tf)) == other_finals.end())
+                  && !has(other_finals, res_.src_of(tf)))
                 // Note that the weight of ti has already been
                 // multiplied, on the left, by w.
                 res_.add_transition

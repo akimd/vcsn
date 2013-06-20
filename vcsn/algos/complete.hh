@@ -3,8 +3,8 @@
 
 # include <queue>
 # include <unordered_map>
-# include <unordered_set>
 
+# include <vcsn/misc/unordered_set.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
 
@@ -62,7 +62,7 @@ namespace vcsn
           labels_met.insert(new_aut.label_of(tr));
 
         for (auto letter : letters)
-          if (labels_met.find(letter) == labels_met.end())
+          if (!has(labels_met, letter))
             {
               new_aut.add_transition(st, sink_state, letter);
               is_accessible = true;

@@ -2,6 +2,7 @@
 # define VCSN_MISC_SET_HH
 
 # include <algorithm> // set_intersection
+# include <map>
 # include <set>
 
 # include <vcsn/misc/hash.hh>
@@ -24,7 +25,10 @@ namespace std
       return res;
     }
   };
+}
 
+namespace vcsn
+{
   /// Whether \a e is member of \a s.
   template <typename T>
   bool
