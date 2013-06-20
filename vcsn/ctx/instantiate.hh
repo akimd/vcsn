@@ -76,13 +76,13 @@ namespace vcsn
   (const mutable_automaton<Ctx>& aut, std::ostream& out);               \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  fsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>       \
+  fsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>        \
   (const vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>& aut, \
    std::ostream& out);                                                  \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
-  detail::lifted_automaton_t<mutable_automaton<Ctx>>                   \
+  detail::lifted_automaton_t<mutable_automaton<Ctx>>                    \
   lift<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut);      \
                                                                         \
   /* print. */                                                          \
