@@ -16,7 +16,7 @@ namespace vcsn
   namespace ctx
   {
     template <typename LabelSet, typename WeightSet>
-    class context: public dyn::abstract_context
+    class context: public dyn::detail::abstract_context
     {
     public:
       using labelset_t = LabelSet;

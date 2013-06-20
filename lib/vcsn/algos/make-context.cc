@@ -17,7 +17,7 @@ namespace vcsn
     make_context(const std::string& name)
     {
       return detail::make_context_registry()
-        .call(abstract_context::sname(name), name);
+        .call(detail::abstract_context::sname(name), name);
     }
 
 

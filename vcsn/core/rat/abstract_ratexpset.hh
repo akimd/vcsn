@@ -23,7 +23,7 @@ namespace vcsn
   class abstract_ratexpset
   {
   public:
-    using context_t = dyn::abstract_context;
+    using context_t = dyn::detail::abstract_context;
     using value_t = rat::exp_t;
 
     virtual value_t zero() const = 0;

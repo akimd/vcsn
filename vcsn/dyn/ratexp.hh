@@ -27,7 +27,7 @@ namespace vcsn
         {}
         ~abstract_ratexp() {}
 
-        const dyn::abstract_context& ctx()
+        const dyn::detail::abstract_context& ctx()
         {
           return *ctx_;
         }

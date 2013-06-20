@@ -78,7 +78,7 @@ namespace vcsn
             if (context_.empty())
               throw std::domain_error("no vcsn_context defined");
             auto ctx = vcsn::dyn::make_context(context_);
-            edit_ = make_automaton_editor(ctx);
+            edit_ = vcsn::dyn::make_automaton_editor(ctx);
             assert(edit_);
             edit_->set_separator(',');
           }

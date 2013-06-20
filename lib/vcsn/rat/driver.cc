@@ -71,7 +71,7 @@ namespace vcsn
         result_ = nullptr;
       scan_close_();
       --nesting;
-      dyn::ratexp res = make_ratexp(context_, result_);
+      dyn::ratexp res = vcsn::dyn::make_ratexp(context_, result_);
       result_ = nullptr;
       return res;
     }

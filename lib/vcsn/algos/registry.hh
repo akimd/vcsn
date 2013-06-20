@@ -23,7 +23,7 @@ namespace vcsn
 
     bool set(std::string ctx, Fun fn)
     {
-      ctx = vcsn::dyn::abstract_context::sname(ctx);
+      ctx = vcsn::dyn::detail::abstract_context::sname(ctx);
       if (getenv("YYDEBUG"))
         std::cerr << "Register(" << name_ << ").set(" << ctx << ")\n";
       map_[ctx] = fn;
@@ -32,7 +32,7 @@ namespace vcsn
 
     const Fun& get(std::string ctx)
     {
-      ctx = vcsn::dyn::abstract_context::sname(ctx);
+      ctx = vcsn::dyn::detail::abstract_context::sname(ctx);
       if (getenv("YYDEBUG"))
         std::cerr << "Register(" << name_ << ").get(" << ctx << ")\n";
       auto i = map_.find(ctx);
