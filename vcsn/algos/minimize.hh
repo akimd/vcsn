@@ -1,9 +1,9 @@
 #ifndef VCSN_ALGOS_MINIMIZE_HH
 # define VCSN_ALGOS_MINIMIZE_HH
 
+# include <atomic>
 # include <iostream>
 # include <map>
-# include <mutex>
 # include <queue>
 # include <stack>
 # include <string>
@@ -11,7 +11,9 @@
 # include <unordered_map>
 # include <vector>
 
-# include <tbb/parallel_for_each.h>
+# include <tbb/parallel_for.h>
+# include <tbb/blocked_range.h>
+# include <tbb/tick_count.h>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
@@ -25,9 +27,9 @@ namespace vcsn
   minimize(const Aut& a)
   {
     static_assert(Aut::context_t::is_lal,
-        "requires labels_are_letters");
+                  "requires labels_are_letters");
     static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-        "requires Boolean weights");
+                  "requires Boolean weights");
 
     //using automaton_t = Aut;
     //using label_t = typename automaton_t::label_t;
@@ -49,8 +51,7 @@ namespace vcsn
     ** Repeat this process until no partition is done.
     */
 
-    std::map<state_t, int> equivalences;
-
+    int equivalences[a.num_all_states()];
 
     // Init. Eq[0] = finals, Eq[1] = others.
 
@@ -59,46 +60,103 @@ namespace vcsn
 
     std::map<std::pair<int, int>, std::vector<state_t>> labels;
 
-    std::mutex labels_defender;
+    bool parallel = getenv("VCSN_PARALLEL");
 
     int eq_class = 2;
     int nbr_eq_classes_last_loop = 2;
+
+        tbb::tick_count before = tbb::tick_count::now();
+        std::vector<std::pair<int, int>> result(a.num_all_states());
+    if (!parallel)
+    {
+        //std::cerr << "NO PARALLEL\n";
     do
     {
       for (auto letter : letters)
       {
         labels.clear();
-        tbb::parallel_for_each(a.states().begin(), a.states().end(),
-                [&](state_t st) -> void
+        for (auto st : a.states())
         {
           // Here we test for each letter start and end equivalence
           // class, then label the state
           int b1 = equivalences[st];
 
           int b2 = -1;
-          for (auto& tr : a.out(st))
+          for (auto tr : a.out(st))
             if (a.label_of(tr) == letter)
+            {
               b2 = equivalences[a.dst_of(tr)];
+              break;
+            }
 
           if (b2 != -1)
           {
-            labels_defender.lock();
             labels[std::make_pair(b1, b2)].push_back(st);
-            labels_defender.unlock();
           }
-        });
+        }
 
         nbr_eq_classes_last_loop = eq_class;
         eq_class = 2;
         for (auto& label : labels) // foreach state having the same label
         {
-          for (auto& st : label.second)
+          for (auto st : label.second)
             equivalences[st] = eq_class;
           ++eq_class;
         }
       }
     }
     while (nbr_eq_classes_last_loop != eq_class);
+    }
+    else
+    {
+        std::cerr << "PARALLEL\n";
+          std::vector<state_t> tmp_states;
+        std::copy(a.states().begin(), a.states().end(), std::back_inserter(tmp_states));
+
+    do
+    {
+      for (auto letter : letters)
+      {
+        std::map<std::pair<int, int>, int> pair_to_eq;
+        tbb::parallel_for(size_t(0), size_t(tmp_states.size()),
+        [&equivalences, &a, &tmp_states, &result, letter] (size_t idx)
+        {
+          state_t st = tmp_states[idx];
+          // Here we test for each letter start and end equivalence
+          // class, then label the state
+          int start_c = equivalences[st];
+
+          int end_c = -1;
+          for (auto tr : a.out(st))
+            if (a.label_of(tr) == letter)
+            {
+              end_c = equivalences[a.dst_of(tr)];
+              break;
+            }
+
+          if (end_c != -1)
+            result[st] = std::make_pair(start_c, end_c);
+        });
+
+        nbr_eq_classes_last_loop = eq_class;
+        eq_class = 2;
+        for (int i = 2; i < result.size(); ++i)
+        {
+            auto src_dst = result[i];
+            auto exists = pair_to_eq.find(src_dst);
+            if (exists != pair_to_eq.end())
+                equivalences[i] = exists->second;
+            else
+            {
+                pair_to_eq[src_dst] = eq_class;
+                equivalences[i] = eq_class;
+                ++eq_class;
+            }
+        }
+      }
+    }
+    while (nbr_eq_classes_last_loop != eq_class);
+    }
 
     std::map<int, state_t> eq_to_res;
     equivalences[a.pre()] = 0;
@@ -129,6 +187,8 @@ namespace vcsn
             a.label_of(tr), a.weight_of(tr));
       }
     }
+    tbb::tick_count after = tbb::tick_count::now();
+    std::cerr << "time: " << (after - before).seconds() << std::endl;
 
     return res;
   }
