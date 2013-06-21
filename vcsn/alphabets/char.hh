@@ -163,11 +163,11 @@ namespace vcsn
 
     // Special character, used to label transitions
     // from pre() and post()
-    template<class T = letter_t>
+    template <typename T = letter_t>
     T special() const;
   };
 
-  template<>
+  template <>
   inline
   char_letters::letter_t
   char_letters::special<char_letters::letter_t>() const
@@ -175,7 +175,7 @@ namespace vcsn
     return special_letter();
   }
 
-  template<>
+  template <>
   inline
   char_letters::word_t
   char_letters::special<char_letters::word_t>() const
