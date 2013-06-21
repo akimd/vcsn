@@ -100,8 +100,6 @@ namespace vcsn
              has_transition(d, s, aut_->labelset()->transpose(l)));
       DEFINE(label_of(transition_t t),
              labelset()->transpose(aut_->label_of(t)));
-      DEFINE(word_label_of(transition_t t),
-             labelset()->transpose(aut_->word_label_of(t)));
 
       DEFINE(get_initial_weight(state_t s),
              weightset()->transpose(aut_->get_final_weight(s)));

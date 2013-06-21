@@ -232,14 +232,6 @@ namespace vcsn
       return transitions_[t].get_weight();
     }
 
-    // Convert the label to a word, in the case of a labels_are_letters.
-    // Same as label_of for labels_are_words.
-    typename labelset_t::word_t
-    word_label_of(transition_t t) const
-    {
-      return labelset()->to_word(label_of(t));
-    }
-
     // Edition of states
     ////////////////////
 
