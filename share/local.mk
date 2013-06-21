@@ -12,4 +12,5 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 dist_pkgdata_DATA =                             \
-  share/vcsn/a1.gv
+  share/vcsn/a1.gv                              \
+  share/vcsn/c1.gv
