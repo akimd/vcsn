@@ -1,6 +1,6 @@
 #include <cassert>
-#include <vcsn/ctx/lal_char_z.hh>
-#include <vcsn/ctx/lal_char_zmin.hh>
+#include <vcsn/ctx/law_char_z.hh>
+#include <vcsn/ctx/law_char_zmin.hh>
 #include <vcsn/weights/polynomialset.hh>
 #include <tests/unit/test.hh>
 
@@ -27,7 +27,7 @@ bool
 check_assoc()
 {
   size_t nerrs = 0;
-  using context_t = vcsn::ctx::lal_char_z;
+  using context_t = vcsn::ctx::law_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};
@@ -65,7 +65,7 @@ check_conv()
 {
   size_t nerrs = 0;
 
-  using context_t = vcsn::ctx::lal_char_z;
+  using context_t = vcsn::ctx::law_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};
@@ -130,7 +130,7 @@ check_star()
 {
   size_t nerrs = 0;
 
-  using context_t = vcsn::ctx::lal_char_zmin;
+  using context_t = vcsn::ctx::law_char_zmin;
   context_t ctx {{'a', 'b'}};
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};

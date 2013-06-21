@@ -18,6 +18,9 @@ namespace vcsn
   {
   public:
     using context_t = Context;
+    static_assert(context_t::is_law,
+                  "requires labels_are_words");
+
     using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
 
@@ -33,7 +36,7 @@ namespace vcsn
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
-      one_[labelset()->empty_word()] = weightset()->one();
+      one_[labelset()->one()] = weightset()->one();
     }
 
     std::string sname() const
@@ -129,7 +132,7 @@ namespace vcsn
         return one();
       if (s == 1)
         {
-          auto i = v.find(labelset()->empty_word());
+          auto i = v.find(labelset()->one());
           if (i != v.end())
             {
               value_t p;
@@ -152,7 +155,7 @@ namespace vcsn
     {
       if (v.size() != 1)
         return false;
-      auto i = v.find(labelset()->empty_word());
+      auto i = v.find(labelset()->one());
       if (i == v.end())
         return false;
       return weightset()->is_one(i->second);

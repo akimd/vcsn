@@ -76,13 +76,13 @@ namespace vcsn
       label_t
       one() const
       {
-        return this->empty_word();
+        return this->genset()->empty_word();
       }
 
       bool
       is_one(const label_t& l) const
       {
-        return this->is_empty_word(l);
+        return this->genset()->is_empty_word(l);
       }
 
       // FIXME: Why do I need to repeat this?

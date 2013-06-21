@@ -35,7 +35,7 @@ unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
 unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
 
-unit_polynomialset_LDADD = $(liblal_char_z) $(liblal_char_zmin) $(AM_LDADD)
+unit_polynomialset_LDADD = $(liblaw_char_z) $(liblaw_char_zmin) $(AM_LDADD)
 
 unit_proper_LDADD = $(all_libctx) $(AM_LDADD)
 

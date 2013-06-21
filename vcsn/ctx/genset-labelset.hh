@@ -62,8 +62,6 @@ namespace vcsn
       DEFINE(equals);
       DEFINE(format);
       DEFINE(has);
-      DEFINE(empty_word);
-      DEFINE(is_empty_word);
       DEFINE(is_letter);
       DEFINE(print);
       DEFINE(to_word);

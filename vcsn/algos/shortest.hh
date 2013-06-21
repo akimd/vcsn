@@ -37,6 +37,7 @@ namespace vcsn
       operator()(const automaton_t& aut, word_t& word)
       {
         const auto& ls = *aut.labelset();
+        const auto& gs = *ls.genset();
         // Shortest word read at this state.
         using theword_t = std::map<state_t, word_t>;
         theword_t theword;
@@ -47,7 +48,7 @@ namespace vcsn
         for (auto t: aut.initial_transitions())
           {
             state_t ini = aut.dst_of(t);
-            theword[ini] = ls.empty_word();
+            theword[ini] = gs.empty_word();
             if (aut.is_final(ini))
               {
                 word = theword[ini];
@@ -140,14 +141,15 @@ namespace vcsn
       using container_t = Container;
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
-      using word_t = typename automaton_t::labelset_t::word_t;
-
+      using genset_t = typename automaton_t::labelset_t::genset_t;
+      using word_t = typename genset_t::word_t;
 
       void operator()(const automaton_t& aut, size_t max_length,
                       Container& words)
       {
         // The LabelSet.
         const auto& ls = *aut.labelset();
+        const auto& gs = *ls.genset();
 
         // a list of words that leads to this state
         std::map<state_t, container_t> theword;
@@ -158,8 +160,8 @@ namespace vcsn
         for (auto t: aut.initial_transitions())
           {
             state_t ini = aut.dst_of(t);
-            theword[ini].push_back(ls.empty_word());
-            queue1.emplace_back(ini, ls.empty_word());
+            theword[ini].push_back(gs.empty_word());
+            queue1.emplace_back(ini, gs.empty_word());
           }
 
         for (size_t i = 0; i < max_length && not queue1.empty(); ++i)

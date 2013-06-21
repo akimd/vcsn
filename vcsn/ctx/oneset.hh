@@ -61,20 +61,6 @@ namespace vcsn
         return true;
       }
 
-      // FIXME: fishy, but that's what the previous version of the
-      // code used to do.
-      empty_t
-      empty_word() const
-      {
-        return {};
-      }
-
-      bool
-      is_empty_word(empty_t) const
-      {
-        return true;
-      }
-
       empty_t
       one() const
       {
