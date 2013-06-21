@@ -107,22 +107,6 @@ namespace vcsn
     value_t transpose(value_t e) const;
 
   private:
-    template <typename Ctx>
-    value_t
-    atom_(if_lal<Ctx, letter_t> v) const;
-
-    template <typename Ctx>
-    value_t
-    atom_(if_lan<Ctx, label_t> v) const;
-
-    template <typename Ctx>
-    value_t
-    atom_(if_lau<Ctx, label_t> v) const;
-
-    template <typename Ctx>
-    value_t
-    atom_(const if_law<Ctx, word_t>& w) const;
-
     /// Push \a v in \a res, applying associativity if possible.
     /// \param type  the kind of ratexps on which to apply associativity.
     ///              Must be SUM or PROD.

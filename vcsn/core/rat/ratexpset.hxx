@@ -66,63 +66,10 @@ namespace vcsn
   DEFINE::atom(const label_t& v) const
     -> value_t
   {
-    // Bouncing on atom_<context_t> seems useless ---after all we are
-    // already parameterized by Context--- but that's needed for
-    // enable_if to work.
-    return atom_<context_t>(v);
-  }
-
-  template <typename Context>
-  template <typename Ctx>
-  inline
-  auto
-  ratexpset<Context>::atom_(if_lal<Ctx, letter_t> v) const
-    -> value_t
-  {
-    if (!labelset()->is_valid(v))
-      throw std::domain_error("invalid letter: " + std::string{v});
-    return std::make_shared<atom_t>(weightset()->unit(), v);
-  }
-
-  template <typename Context>
-  template <typename Ctx>
-  inline
-  auto
-  ratexpset<Context>::atom_(if_lan<Ctx, label_t> v) const
-    -> value_t
-  {
-    if (!labelset()->is_valid(v))
-      throw std::domain_error("invalid nullable: " + std::string{v});
     if (labelset()->is_identity(v))
       return unit();
     return std::make_shared<atom_t>(weightset()->unit(), v);
   }
-
-  template <typename Context>
-  template <typename Ctx>
-  inline
-  auto
-  ratexpset<Context>::atom_(if_lau<Ctx, label_t> v) const
-    -> value_t
-  {
-    return std::make_shared<atom_t>(weightset()->unit(), v);
-  }
-
-  template <typename Context>
-  template <typename Ctx>
-  inline
-  auto
-  ratexpset<Context>::atom_(const if_law<Ctx, word_t>& w) const
-    -> value_t
-  {
-    if (!labelset()->is_valid(w))
-      throw std::domain_error("invalid word: " + w);
-
-    if (labelset()->is_empty_word(w))
-      return unit();
-    return std::make_shared<atom_t>(weightset()->unit(), w);
-  }
-
 
   DEFINE::concat(value_t l, value_t r) const
     -> value_t
