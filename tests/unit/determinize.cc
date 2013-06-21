@@ -7,10 +7,10 @@ using context_t = vcsn::ctx::lal_char_b;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
 template <typename Aut>
-static bool
+static size_t
 check_origins(const std::string& title, const Aut& nfa)
 {
-  bool res = true;
+  size_t nerrs = 0;
   std::cout << title << std::endl;
   vcsn::detail::determinizer<Aut> determinize;
   auto dfa = determinize(nfa);
@@ -28,14 +28,14 @@ check_origins(const std::string& title, const Aut& nfa)
         }
       std::cout << "\"]" << std::endl;
     }
-  return res;
+  return nerrs;
 }
 
 int main()
 {
   size_t nerrs = 0;
   context_t ctx {{'a', 'b'}};
-  nerrs += !check_origins("de bruijn 2", vcsn::de_bruijn(2, ctx));
+  nerrs += check_origins("de bruijn 2", vcsn::de_bruijn(2, ctx));
   {
     // Also check the introduction of the sink state.
     automaton_t aut{ctx};

@@ -6,10 +6,10 @@
 #include <tests/unit/test.hh>
 
 
-static bool
+static size_t
 check_mutable_automaton()
 {
-  bool res = true;
+  size_t nerrs = 0;
   // labels_are_letters (w, x, y, z) for weights.
   auto ctx_b = vcsn::ctx::lal_char_b{{'w', 'x', 'y', 'z'}};
   auto ks_b = ctx_b.make_ratexpset();
@@ -64,14 +64,14 @@ check_mutable_automaton()
   aut2.set_initial(s1);
 
   std::cout << vcsn::dot(aut1) << '\n';
-  return res;
+  return nerrs;
 }
 
 int main()
 {
   unsigned errs = 0;
 
-  errs += !check_mutable_automaton();
+  errs += check_mutable_automaton();
 
   return !!errs;
 }

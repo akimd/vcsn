@@ -5,16 +5,20 @@
 
 # include <vcsn/misc/echo.hh>
 
-# define ASSERT_EQ(Lhs, Rhs)                                    \
-  do {                                                          \
-    auto lhs = Lhs;                                             \
-    auto rhs = Rhs;                                             \
-    if (lhs != rhs)                                             \
-      {                                                         \
-        SHOWH("assertion failed: " #Lhs " == " #Rhs);           \
-        SHOWH("    " << lhs << " != " << rhs);                  \
-        res = false;                                            \
-      }                                                         \
+# define ASSERT_EQ(Lhs, Rhs)                            \
+  do {                                                  \
+    auto lhs = Lhs;                                     \
+    auto rhs = Rhs;                                     \
+    if (lhs != rhs)                                     \
+      {                                                 \
+        SHOWH("assertion failed: " #Lhs " == " #Rhs);   \
+        SHOWH("    " << lhs << " != " << rhs);          \
+        ++nerrs;                                        \
+      }                                                 \
+    else if (getenv("VERBOSE"))                         \
+      {                                                 \
+        SHOWH("PASS: " #Lhs " == " #Rhs);               \
+      }                                                 \
   } while (false)
 
 #endif // !VCSN_TESTS_UNIT_TEST_HH

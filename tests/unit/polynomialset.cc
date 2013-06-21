@@ -26,7 +26,7 @@ static
 bool
 check_assoc()
 {
-  bool res = true;
+  size_t nerrs = 0;
   using context_t = vcsn::ctx::lal_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using ps_t = vcsn::polynomialset<context_t>;
@@ -55,7 +55,7 @@ check_assoc()
   ps.set_weight(v, "abab", 576);
   assert(u == v);
 
-  return res;
+  return nerrs;
 }
 
 
@@ -63,7 +63,7 @@ static
 bool
 check_conv()
 {
-  bool res = true;
+  size_t nerrs = 0;
 
   using context_t = vcsn::ctx::lal_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
@@ -103,7 +103,7 @@ check_conv()
         "<1001>a");
 #undef CHECK_FAIL
 #undef CHECK
-  return res;
+  return nerrs;
 }
 
 
@@ -128,7 +128,7 @@ static
 bool
 check_star()
 {
-  bool res = true;
+  size_t nerrs = 0;
 
   using context_t = vcsn::ctx::lal_char_zmin;
   context_t ctx {{'a', 'b'}};
@@ -152,14 +152,14 @@ check_star()
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<12>a"), true);
   ASSERT_EQ(ps.format(ps.star(ps.conv("<12>\\e+<oo>a"))), "<0>\\e");
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<oo>a+<3>a"), true);
-  return res;
+  return nerrs;
 }
 
 int main()
 {
   size_t errs = 0;
-  errs += !check_assoc();
-  errs += !check_conv();
-  errs += !check_star();
+  errs += check_assoc();
+  errs += check_conv();
+  errs += check_star();
   return !!errs;
 }

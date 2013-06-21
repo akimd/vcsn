@@ -11,7 +11,7 @@
 template <typename WeightSet>
 bool check_bool(const WeightSet& ws, bool one_plus_one)
 {
-  bool res = true;
+  size_t nerrs = 0;
 
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
@@ -33,26 +33,26 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
   ASSERT_EQ(ws.mul(1, 0), 0);
   ASSERT_EQ(ws.mul(1, 1), 1);
 
-  return res;
+  return nerrs;
 }
 
-static bool check_b()
+static size_t check_b()
 {
   vcsn::b ws;
   // add: or.
   return check_bool(ws, 1);
 }
 
-static bool check_f2()
+static size_t check_f2()
 {
   vcsn::f2 ws;
   // add: xor.
   return check_bool(ws, 0);
 }
 
-static bool check_zmin()
+static size_t check_zmin()
 {
-  bool res = true;
+  size_t nerrs = 0;
   vcsn::zmin ws;
 
   // format.
@@ -79,14 +79,14 @@ static bool check_zmin()
   ASSERT_EQ(ws.mul(ws.unit(), 12), 12);
   ASSERT_EQ(ws.mul(-12, ws.unit()), -12);
 
-  return res;
+  return nerrs;
 }
 
 int main()
 {
   size_t nerrs = 0;
-  nerrs += !check_b();
-  nerrs += !check_f2();
-  nerrs += !check_zmin();
+  nerrs += check_b();
+  nerrs += check_f2();
+  nerrs += check_zmin();
   return !!nerrs;
 }
