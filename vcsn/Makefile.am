@@ -33,6 +33,7 @@ nobase_vcsn_HEADERS =                           \
   algos/print.hh                                \
   algos/product.hh                              \
   algos/proper.hh                               \
+  algos/shortest.hh                             \
   algos/standard.hh                             \
   algos/thompson.hh                             \
   algos/tikz.hh                                 \
@@ -114,6 +115,7 @@ nobase_vcsn_HEADERS =                           \
   misc/echo.hh                                  \
   misc/escape.hh                                \
   misc/hash.hh                                  \
+  misc/military_order.hh                        \
   misc/regex.hh                                 \
   misc/set.hh                                   \
   misc/star_status.hh                           \

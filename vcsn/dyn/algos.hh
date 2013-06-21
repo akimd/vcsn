@@ -3,6 +3,8 @@
 
 # include <iosfwd>
 # include <string>
+# include <vector>
+
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 
@@ -43,6 +45,10 @@ namespace vcsn
 
     std::ostream& dot(const automaton& aut, std::ostream& out);
     std::string dot(const automaton& aut);
+
+    /// One of the shortest accepted words.
+    /// \throw std::domain_error if the automaton is useless
+    std::vector<std::string> enumerate(const automaton& aut, size_t max);
 
     dyn::weight eval(const automaton& aut, const std::string& s);
 
@@ -109,6 +115,10 @@ namespace vcsn
 
     /// The useful subautomaton of \a aut.
     automaton trim(const automaton& aut);
+
+    /// One of the shortest accepted words.
+    /// \throw std::domain_error if the automaton is useless
+    std::string shortest(const automaton& aut);
 
     automaton universal(const automaton& aut);
 

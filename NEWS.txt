@@ -1,3 +1,7 @@
+* 2013-06-21
+** shortest, enumerate
+New algorithms (static, dynamic, TAF-Kit).
+
 * 2013-06-20
 ** universal
 Now accepts (LAL Boolean) rational expressions.

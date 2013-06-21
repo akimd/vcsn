@@ -1,0 +1,28 @@
+#! /bin/sh
+
+## ----------- ##
+## enumerate.  ##
+## ----------- ##
+
+## check EXP MAX WORD...
+## ---------------------
+## Check that EXP accepts WORD... has shortest words up to size MAX.
+check ()
+{
+  exp=$1
+  max=$2
+  shift 2
+  for i
+  do
+    echo "$i"
+  done >out.exp
+  run 0 out.exp -vcsn-enumerate -Ee "$exp" "$max"
+}
+
+check '\z' 3
+check '\e' 3 '\e'
+check '(a+b)' 2 '\e' 'a' 'b'
+check '(a+b)*' 2 '\e' 'a' 'b' aa ab ba bb
+
+check 'ababab' 2
+check 'ababab' 10 abababab

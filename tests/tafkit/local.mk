@@ -20,6 +20,7 @@ tafkit_TESTS =                                  \
   tafkit/complete.chk                           \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
+  tafkit/enumerate.chk                          \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
   tafkit/is-proper.chk                          \
@@ -28,6 +29,7 @@ tafkit_TESTS =                                  \
   tafkit/lift.chk                               \
   tafkit/product.chk                            \
   tafkit/proper.chk                             \
+  tafkit/shortest.chk                           \
   tafkit/standard.chk                           \
   tafkit/transpose.chk                          \
   tafkit/universal.chk

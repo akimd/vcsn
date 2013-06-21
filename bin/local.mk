@@ -22,6 +22,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-complete                             \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
+  bin/vcsn-enumerate                            \
   bin/vcsn-evaluate                             \
   bin/vcsn-is-complete                          \
   bin/vcsn-is-deterministic                     \
@@ -34,6 +35,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-lift                                 \
   bin/vcsn-product                              \
   bin/vcsn-proper                               \
+  bin/vcsn-shortest                             \
   bin/vcsn-standard                             \
   bin/vcsn-thompson                             \
   bin/vcsn-transpose                            \
@@ -53,6 +55,7 @@ bin_vcsn_complement_LDADD       = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la
+bin_vcsn_enumerate_LDADD        = bin/libtafkit.la
 bin_vcsn_evaluate_LDADD         = bin/libtafkit.la
 bin_vcsn_is_complete_LDADD      = bin/libtafkit.la
 bin_vcsn_is_deterministic_LDADD = bin/libtafkit.la
@@ -65,6 +68,7 @@ bin_vcsn_ladybird_LDADD         = bin/libtafkit.la
 bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la
 bin_vcsn_proper_LDADD           = bin/libtafkit.la
+bin_vcsn_shortest_LDADD         = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
 bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la

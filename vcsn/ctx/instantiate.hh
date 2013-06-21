@@ -18,6 +18,7 @@
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
+# include <vcsn/algos/shortest.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
@@ -136,6 +137,7 @@ namespace vcsn
 
         complete_register(aut_t::sname(), complete<aut_t>);
         de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
+        enumerate_register(aut_t::sname(), enumerate<aut_t>);
         eval_register(aut_t::sname(), eval<aut_t>);
 
         is_complete_register(aut_t::sname(), is_complete<aut_t>);
@@ -143,6 +145,7 @@ namespace vcsn
 
         ladybird_register(Ctx::sname(), ladybird<Ctx>);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
+        shortest_register(aut_t::sname(), shortest<aut_t>);
 
         return true;
       }

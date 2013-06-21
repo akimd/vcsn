@@ -70,6 +70,7 @@ vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
 vcsn_lift             = $(top_builddir)/bin/vcsn-lift
 vcsn_product          = $(top_builddir)/bin/vcsn-product
 vcsn_proper           = $(top_builddir)/bin/vcsn-proper
+vcsn_shortest         = $(top_builddir)/bin/vcsn-shortest
 vcsn_standard         = $(top_builddir)/bin/vcsn-standard
 vcsn_thompson         = $(top_builddir)/bin/vcsn-thompson
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
@@ -86,6 +87,7 @@ all_vcsn =                                      \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
   $(vcsn_proper)                                \
+  $(vcsn_enumerate)                             \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
   $(vcsn_is_deterministic)                      \
@@ -93,6 +95,7 @@ all_vcsn =                                      \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \
+  $(vcsn_shortest)                              \
   $(vcsn_standard)                              \
   $(vcsn_thompson)                              \
   $(vcsn_transpose)                             \
