@@ -66,7 +66,7 @@ namespace vcsn
     int nbr_eq_classes_last_loop = 2;
 
         tbb::tick_count before = tbb::tick_count::now();
-        std::vector<std::pair<int, int>> result(a.num_all_states());
+        std::pair<int, int> result[a.num_all_states()];
     if (!parallel)
     {
         //std::cerr << "NO PARALLEL\n";
@@ -110,15 +110,16 @@ namespace vcsn
     else
     {
         std::cerr << "PARALLEL\n";
-          std::vector<state_t> tmp_states;
-        std::copy(a.states().begin(), a.states().end(), std::back_inserter(tmp_states));
+        int nb_states = a.states().size();
+        state_t tmp_states[nb_states];
+        std::copy(a.states().begin(), a.states().end(), tmp_states);
 
     do
     {
       for (auto letter : letters)
       {
         std::map<std::pair<int, int>, int> pair_to_eq;
-        tbb::parallel_for(size_t(0), size_t(tmp_states.size()),
+        tbb::parallel_for(size_t(0), size_t(nb_states),
         [&equivalences, &a, &tmp_states, &result, letter] (size_t idx)
         {
           state_t st = tmp_states[idx];
@@ -140,19 +141,24 @@ namespace vcsn
 
         nbr_eq_classes_last_loop = eq_class;
         eq_class = 2;
-        for (int i = 2; i < result.size(); ++i)
+        int res_size = a.num_all_states();
+        for (int i = 2; i < res_size; ++i)
         {
             auto src_dst = result[i];
             auto exists = pair_to_eq.find(src_dst);
-            if (exists != pair_to_eq.end())
-                equivalences[i] = exists->second;
-            else
+            if (exists == pair_to_eq.end())
             {
                 pair_to_eq[src_dst] = eq_class;
-                equivalences[i] = eq_class;
                 ++eq_class;
             }
         }
+
+        tbb::parallel_for (2, res_size,
+        [&equivalences, &result, &pair_to_eq] (int i)
+        {
+            auto src_dst = result[i];
+            equivalences[i] = pair_to_eq[src_dst];
+        });
       }
     }
     while (nbr_eq_classes_last_loop != eq_class);
