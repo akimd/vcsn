@@ -21,8 +21,8 @@ check ()
 
 check '\z' 3
 check '\e' 3 '\e'
-check '(a+b)' 2 '\e' 'a' 'b'
+check '(a+b)' 2 'a' 'b'
 check '(a+b)*' 2 '\e' 'a' 'b' aa ab ba bb
 
 check 'ababab' 2
-check 'ababab' 10 abababab
+check 'ababab' 10 ababab
