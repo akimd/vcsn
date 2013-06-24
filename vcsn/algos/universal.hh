@@ -51,9 +51,7 @@ namespace vcsn
 
         // compute the co-determinized of the minimal automaton
         // and retrieve the origin of each state.
-        // FIXME: Get rid of the const_cast.
-        // FIXME: Make transposed const.
-        auto transposed = transpose(const_cast<automaton_t&>(aut));
+        const auto transposed = transpose(aut);
         detail::determinizer<decltype(transposed)> determinize;
         auto const co_det = determinize(transposed);
         map_t origin = determinize.origins();

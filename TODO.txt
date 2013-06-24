@@ -13,13 +13,6 @@ ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
 Or use what's in there instead of always abc?
 
-** transpose of const
-We have a problem when wrapping a const automaton.  See the const_cast
-in universal for instance.  See also
-http://stackoverflow.com/questions/17111406/.  The real answer is to
-use a const_transpose and an transpose automata, and dispatch by
-const.  Also, have one inherit from the other to factor.
-
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 

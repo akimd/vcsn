@@ -25,6 +25,7 @@ namespace vcsn
                     "requires Boolean weights");
 
       using automaton_t = Aut;
+      using automaton_nocv_t = typename automaton_t::self_nocv_t;
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
 
@@ -42,7 +43,7 @@ namespace vcsn
       }
 
       /// Determinize \a a, and return the result.
-      automaton_t operator()(const automaton_t& a)
+      automaton_nocv_t operator()(const automaton_t& a)
       {
         clear();
 
@@ -52,7 +53,7 @@ namespace vcsn
         size_t state_size = a.all_states().back() + 1;
 
         const auto& letters = *a.labelset();
-        automaton_t res{a.context()};
+        automaton_nocv_t res{a.context()};
 
         // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
         using successors_t = std::vector<std::unordered_map<label_t, state_set> >;

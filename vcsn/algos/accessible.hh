@@ -55,8 +55,7 @@ namespace vcsn
   std::set<typename Aut::state_t>
   coaccessible_states(const Aut& a)
   {
-    // FIXME: Get rid of const_cast once transpose fixed.
-    return accessible_states(transpose(const_cast<Aut&>(a)));
+    return accessible_states(transpose(a));
   }
 
   // The set of coaccessible states, including post(), and possibly pre().
@@ -94,8 +93,7 @@ namespace vcsn
   size_t
   num_coaccessible_states(const Aut& a)
   {
-    // FIXME: Get rid of const_cast once transpose fixed.
-    return num_accessible_states(transpose(const_cast<Aut&>(a)));
+    return num_accessible_states(transpose(a));
   }
 
   /// Number of accessible states, not counting pre() and post().

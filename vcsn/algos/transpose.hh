@@ -19,6 +19,14 @@ namespace vcsn
       /// The type of automaton to wrap.
       using super_t = dyn::detail::abstract_automaton;
       using automaton_t = Aut;
+
+      /// The type of the automata to produce from this kind o
+      /// automata.  For instance, determinizing a
+      /// transpose_automaton<const mutable_automaton<Ctx>> should
+      /// yield a transpose_automaton<mutable_automaton<Ctx>>, without
+      /// the "inner" const.
+      using self_nocv_t
+        = transpose_automaton<typename automaton_t::self_nocv_t>;
       using context_t = typename automaton_t::context_t;
       using state_t = typename automaton_t::state_t;
       using transition_t = typename automaton_t::transition_t;
@@ -31,9 +39,6 @@ namespace vcsn
 
       using labelset_ptr = typename automaton_t::labelset_ptr;
       using weightset_ptr = typename automaton_t::weightset_ptr;
-
-    private:
-      automaton_t* aut_;
 
     public:
       transpose_automaton(automaton_t& aut)
@@ -67,13 +72,23 @@ namespace vcsn
         return "transpose_automaton<" + aut_->vname(full) + ">";
       }
 
+    private:
+      /// Used to workaround issues with decltype, see the const_casts
+      /// above, and http://stackoverflow.com/questions/17111406.
+      using automaton_nocv_t = typename std::remove_cv<automaton_t>::type;
+
+      /// The wrapped automaton, possibly const.
+      // Must be defined early to please decltype.
+      automaton_t* aut_;
+
+    public:
       /*-------------------------------.
       | const methods that transpose.  |
       `-------------------------------*/
 # define DEFINE(Signature, Value)               \
       auto                                      \
       Signature const                           \
-        -> decltype(aut_->Value)                \
+      -> decltype(aut_->Value)                  \
       {                                         \
         return aut_->Value;                     \
       }
@@ -110,21 +125,18 @@ namespace vcsn
 
 # undef DEFINE
 
-      /*--------------------.
-      | non-const methods.  |
-      `--------------------*/
-
-# define DEFINE(Signature, Value)               \
-      auto                                      \
-      Signature                                 \
-        -> decltype(aut_->Value)                \
-      {                                         \
-        return aut_->Value;                     \
-      }
 
       /*-----------------------------------.
       | non-const methods that transpose.  |
       `-----------------------------------*/
+
+# define DEFINE(Signature, Value)                               \
+      auto                                                      \
+      Signature                                                 \
+        -> decltype(const_cast<automaton_nocv_t*>(aut_)->Value) \
+      {                                                         \
+        return aut_->Value;                                     \
+      }
 
       DEFINE(set_initial(state_t s),     set_final(s));
       DEFINE(set_final(state_t s),       set_initial(s));

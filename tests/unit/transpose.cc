@@ -48,14 +48,13 @@ check_mutable_automaton()
   assert(aut2.has_transition(s1, s0, "dc"));
   ASSERT_WEIGHT(aut2, s1, s0, "dc", "z.y.x.w");
 
-#if 0
   {
     // Wrap a const automaton, and make sure it works properly.
     const auto& caut1 = aut1;
     auto caut2 = vcsn::transpose(caut1);
     ASSERT_EQ(vcsn::dot(caut2), vcsn::dot(aut2));
   }
-#endif
+
   // Now change the transposed automaton, and check the modifications
   // on the original.
   aut2.set_transition(s1, s0, "dc", ks_b.conv("yyxx"));

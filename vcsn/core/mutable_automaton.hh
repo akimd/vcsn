@@ -22,6 +22,7 @@ namespace vcsn
   {
   public:
     using context_t = Context;
+    using self_nocv_t = mutable_automaton<context_t>;
     using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
     using kind_t = typename context_t::kind_t;
