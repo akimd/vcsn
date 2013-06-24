@@ -2,6 +2,10 @@
 ** is-trim
 ** is-empty
 ** is-useless
+Check them, and their "is-"less version (vcsn-trim etc.).
+
+** eval.chk
+Cover more cases for zmin.
 
 * Bugs
 ** Generators and alphabets
@@ -15,6 +19,9 @@ in universal for instance.  See also
 http://stackoverflow.com/questions/17111406/.  The real answer is to
 use a const_transpose and an transpose automata, and dispatch by
 const.  Also, have one inherit from the other to factor.
+
+** debug compilation mode
+crange should not feature size and empty if !VCSN_DEBUG.
 
 * Benchmarks
 ** determinization
@@ -61,9 +68,6 @@ See what V1 did.
 Transform the current implementation of the "naive" heuristics into
 some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
-* eval.chk
-Cover more cases for zmin.
-
 * dyn::
 ** Implement implicit conversions
 So that, for instance, we can run is-derministic on a proper lan.
@@ -87,18 +91,19 @@ that *both* should yield "{3}ab":
   1.4 but should anyway be reevaluated in connection with the definition
   of the function derived-term for the weighthed automata.
 
+** More algorithms
 * "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
 
+** Levenshtein automata
+http://en.wikipedia.org/wiki/Levenshtein_automata
+
 * edit-automaton
 Currently it converts the \e in initial/final labels to the
 special-letter.  Is this what we want?
 Shouldn't we replace assert() with if (...) throw ... ?
-
-* debug compilation mode
-crange should not feature size and empty if !VCSN_DEBUG.
 
 * vcsn/alphabets/char.cc
   char_letters::special_letter(...) is protected and
