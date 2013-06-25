@@ -33,7 +33,7 @@ namespace vcsn
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
-      unit_[labelset()->empty_word()] = weightset()->unit();
+      one_[labelset()->empty_word()] = weightset()->one();
     }
 
     std::string sname() const
@@ -126,7 +126,7 @@ namespace vcsn
       // starable too).
       auto s = v.size();
       if (s == 0)
-        return unit();
+        return one();
       if (s == 1)
         {
           auto i = v.find(labelset()->empty_word());
@@ -142,20 +142,20 @@ namespace vcsn
     }
 
     const value_t&
-    unit() const
+    one() const
     {
-      return unit_;
+      return one_;
     }
 
     bool
-    is_unit(const value_t& v) const ATTRIBUTE_PURE
+    is_one(const value_t& v) const ATTRIBUTE_PURE
     {
       if (v.size() != 1)
         return false;
       auto i = v.find(labelset()->empty_word());
       if (i == v.end())
         return false;
-      return weightset()->is_unit(i->second);
+      return weightset()->is_one(i->second);
     }
 
     const value_t&
@@ -170,7 +170,7 @@ namespace vcsn
       return v.empty();
     }
 
-    static constexpr bool show_unit() { return true; }
+    static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status()
     {
       return weightset_t::star_status();
@@ -205,7 +205,7 @@ namespace vcsn
         {
           // Possibly a weight in braces.
           SKIP_SPACES();
-          weight_t w = weightset()->unit();
+          weight_t w = weightset()->one();
           bool default_w = true;
           if (i.peek() == lbracket)
             {
@@ -289,7 +289,7 @@ namespace vcsn
           const std::string& sep = " + ") const
     {
       bool first = true;
-      bool show_unit = weightset()->show_unit();
+      bool show_one = weightset()->show_one();
 
       if (v.empty())
         out << "\\z";
@@ -300,7 +300,7 @@ namespace vcsn
               out << sep;
             first = false;
 
-            if (show_unit || !weightset()->is_unit(i.second))
+            if (show_one || !weightset()->is_one(i.second))
               {
                 out << lbracket;
                 weightset()->print(out, i.second) << rbracket;
@@ -322,7 +322,7 @@ namespace vcsn
   private:
     context_t ctx_;
     value_t zero_;
-    value_t unit_;
+    value_t one_;
 
     /// Left marker for weight in concrete syntax.
     constexpr static char lbracket = '<';

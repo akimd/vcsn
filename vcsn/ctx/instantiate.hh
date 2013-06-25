@@ -171,7 +171,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_unit)
+      register_kind_functions(labels_are_one)
       {
         return true;
       }

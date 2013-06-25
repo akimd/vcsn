@@ -1,3 +1,7 @@
+* 2013-06-25
+** unit => one
+WeightSets now define one() and is_one() instead of unit() and is_unit().
+
 * 2013-06-21
 ** shortest, enumerate
 New algorithms (static, dynamic, TAF-Kit).

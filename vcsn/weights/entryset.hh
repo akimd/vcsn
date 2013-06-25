@@ -147,7 +147,7 @@ namespace vcsn
         {
           // Possibly a weight in braces.
           SKIP_SPACES();
-          weight_t w = weightset()->unit();
+          weight_t w = weightset()->one();
           bool default_w = true;
           if (i.peek() == lbracket)
             {
@@ -237,7 +237,7 @@ namespace vcsn
       else
         {
           bool first = true;
-          bool show_unit = weightset()->show_unit();
+          bool show_one = weightset()->show_one();
 
           for (const auto& i: v)
             {
@@ -245,7 +245,7 @@ namespace vcsn
                 out << sep;
               first = false;
 
-              if (show_unit || !weightset()->is_unit(i.second))
+              if (show_one || !weightset()->is_one(i.second))
                 {
                   out << lbracket;
                   weightset()->print(out, i.second) << rbracket;

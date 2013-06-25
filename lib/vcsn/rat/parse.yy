@@ -90,7 +90,7 @@
             if (min == -1)
               min = 0;
             if (min == 0)
-              res = es->unit();
+              res = es->one();
             else
               {
                 res = e;
@@ -99,7 +99,7 @@
               }
             if (min < max)
               {
-                exp_t sum = es->unit();
+                exp_t sum = es->one();
                 for (int n = 1; n <= max - min; ++n)
                   sum = es->add(sum, power(es, e, n, n));
                 res = es->concat(res, sum);
@@ -209,13 +209,13 @@ exp:
   }
 | exp "*"          { $$ = power(driver_.ratexpset_, $1, $2); }
 | ZERO             { $$ = MAKE(zero); }
-| ONE              { $$ = MAKE(unit); }
+| ONE              { $$ = MAKE(one); }
 | LETTER           { TRY(@$, $$ = MAKE(atom, {$1})); }
 | "(" exp ")"      { assert($1 == $3); $$ = $2; $<parens>$ = true; }
 ;
 
 weights:
-  "weight"          { TRY(@$ + 1, $$ = MAKE(weight, MAKE(unit), $1)); }
+  "weight"          { TRY(@$ + 1, $$ = MAKE(weight, MAKE(one), $1)); }
 | "weight" weights  { TRY(@$ + 1, $$ = MAKE(weight, $1, $2)); }
 ;
 

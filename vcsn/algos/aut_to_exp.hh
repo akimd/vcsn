@@ -68,7 +68,7 @@ namespace vcsn
                   typename Aut::state_t s)
   {
     static_assert(Aut::context_t::is_lau,
-                  "requires labels_are_unit");
+                  "requires labels_are_one");
     if (!aut.has_state(s))
       throw std::runtime_error("not a valid state: " + std::to_string(s));
 
@@ -76,7 +76,7 @@ namespace vcsn
     auto loops = aut.outin(s, s);
     assert(loops.size() == 0 || loops.size() == 1);
     auto w =
-      loops.empty() ? aut.weightset()->unit()
+      loops.empty() ? aut.weightset()->one()
       : aut.weightset()->star(aut.weight_of(loops.front()));
 
     // Get all the predecessors, and successors.

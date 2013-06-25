@@ -32,7 +32,7 @@ check_assoc()
   using ps_t = vcsn::polynomialset<context_t>;
   ps_t ps{ctx};
 
-  ps_t::value_t u = ps.unit();
+  ps_t::value_t u = ps.one();
   ps.set_weight(u, "ab", 12);
   ASSERT_EQ(ps.format(u), "\\e + <12>ab");
 

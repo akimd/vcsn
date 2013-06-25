@@ -73,7 +73,7 @@ namespace vcsn
       virtual void
       visit(const one_t& e)
       {
-        res_ = ks_.unit();
+        res_ = ks_.one();
         apply_weights(e);
       }
 
@@ -101,7 +101,7 @@ namespace vcsn
       virtual void
       visit(const prod_t& e)
       {
-        ratexp_t res = ks_.unit();
+        ratexp_t res = ks_.one();
         for (auto v: e)
           {
             v->accept(*this);

@@ -70,9 +70,9 @@ namespace vcsn
 
     /// When used as WeightSet for automata.
     bool is_zero(value_t v) const;
-    bool is_unit(value_t v) const;
+    bool is_one(value_t v) const;
 
-    static constexpr bool show_unit()
+    static constexpr bool show_one()
     {
       return false;
     }
@@ -89,9 +89,9 @@ namespace vcsn
   public:
     // Concrete type implementation.
     value_t zero() const;
-    value_t unit() const;
+    value_t one() const;
     value_t zero(const weight_t& w) const;
-    value_t unit(const weight_t& w) const;
+    value_t one(const weight_t& w) const;
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
@@ -99,7 +99,7 @@ namespace vcsn
     // FIXME: Should be extrusive.
     value_t concat(value_t l, value_t r, labels_are_letters) const;
     value_t concat(value_t l, value_t r, labels_are_nullable) const;
-    value_t concat(value_t l, value_t r, labels_are_unit) const;
+    value_t concat(value_t l, value_t r, labels_are_one) const;
     value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;

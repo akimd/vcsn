@@ -7,7 +7,7 @@ namespace vcsn
 {
   struct labels_are_letters  {};
   struct labels_are_nullable {};
-  struct labels_are_unit     {};
+  struct labels_are_one     {};
   struct labels_are_words    {};
 }
 

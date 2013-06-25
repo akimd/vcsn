@@ -15,7 +15,7 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
 
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
-  ASSERT_EQ(ws.format(ws.unit()), "1");
+  ASSERT_EQ(ws.format(ws.one()), "1");
 
   // conv.
   ASSERT_EQ(ws.format(ws.conv("0")), "0");
@@ -57,7 +57,7 @@ static size_t check_zmin()
 
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "oo");
-  ASSERT_EQ(ws.format(ws.unit()), "0");
+  ASSERT_EQ(ws.format(ws.one()), "0");
   ASSERT_EQ(ws.format(42), "42");
 
   // conv.
@@ -76,8 +76,8 @@ static size_t check_zmin()
   ASSERT_EQ(ws.mul(42, 23), 42+23);
   ASSERT_EQ(ws.mul(ws.zero(), 12), ws.zero());
   ASSERT_EQ(ws.mul(-12, ws.zero()), ws.zero());
-  ASSERT_EQ(ws.mul(ws.unit(), 12), 12);
-  ASSERT_EQ(ws.mul(-12, ws.unit()), -12);
+  ASSERT_EQ(ws.mul(ws.one(), 12), 12);
+  ASSERT_EQ(ws.mul(-12, ws.one()), -12);
 
   return nerrs;
 }

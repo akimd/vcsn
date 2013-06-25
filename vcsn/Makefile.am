@@ -95,7 +95,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char_zrr.hh                           \
   ctx/letterset.hh                              \
   ctx/nullableset.hh                            \
-  ctx/unitset.hh                                \
+  ctx/oneset.hh                                \
   ctx/wordset.hh                                \
   dyn/algos.hh                                  \
   dyn/automaton.hh                              \

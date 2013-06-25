@@ -35,7 +35,7 @@ namespace vcsn
     }
 
     value_t
-    unit() const
+    one() const
     {
       return true;
     }
@@ -55,12 +55,12 @@ namespace vcsn
     value_t
     star(const value_t) const
     {
-      return unit();
+      return one();
     }
 
 
     bool
-    is_unit(const value_t v) const
+    is_one(const value_t v) const
     {
       return v;
     }
@@ -71,7 +71,7 @@ namespace vcsn
       return !v;
     }
 
-    static constexpr bool show_unit() { return false; }
+    static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARABLE;

@@ -106,7 +106,7 @@ namespace vcsn
           }
         initial_ = initial;
 
-        if (!ws_.is_unit(e.left_weight()))
+        if (!ws_.is_one(e.left_weight()))
           {
             state_t initial = res_.new_state();
             res_.add_transition(initial, initial_,
@@ -114,7 +114,7 @@ namespace vcsn
                                 e.left_weight());
             initial_ = initial;
           }
-        if (!ws_.is_unit(e.right_weight()))
+        if (!ws_.is_one(e.right_weight()))
           {
             state_t final = res_.new_state();
             res_.add_transition(final_, final,

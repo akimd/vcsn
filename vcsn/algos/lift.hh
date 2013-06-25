@@ -4,7 +4,7 @@
 # include <map>
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/unitset.hh>
+# include <vcsn/ctx/oneset.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
@@ -21,7 +21,7 @@ namespace vcsn
   {
     template <typename Context>
     using lifted_context_t =
-      ctx::context<ctx::unitset, ratexpset<Context>>;
+      ctx::context<ctx::oneset, ratexpset<Context>>;
 
     // lift(ctx) -> ctx
     template <typename Context>
@@ -30,7 +30,7 @@ namespace vcsn
     {
       auto rs_in = ctx.make_ratexpset();
       using ctx_out_t = detail::lifted_context_t<Context>;
-      return ctx_out_t(ctx::unitset{}, rs_in);
+      return ctx_out_t(ctx::oneset{}, rs_in);
     }
 
     template <typename Aut>
@@ -64,10 +64,10 @@ namespace vcsn
     for (auto t: a.all_transitions())
       if (a.src_of(t) == a.pre())
         res.add_initial
-          (map[a.dst_of(t)], rs_in.unit(a.weight_of(t)));
+          (map[a.dst_of(t)], rs_in.one(a.weight_of(t)));
       else if (a.dst_of(t) == a.post())
         res.add_final
-          (map[a.src_of(t)], rs_in.unit(a.weight_of(t)));
+          (map[a.src_of(t)], rs_in.one(a.weight_of(t)));
       else
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
@@ -113,7 +113,7 @@ namespace vcsn
   typename detail::lifted_context_t<Context>::ratexp_t
   lift(const Context& ctx, const typename Context::ratexp_t& e)
   {
-    return detail::lift(ctx).make_ratexpset().unit(e);
+    return detail::lift(ctx).make_ratexpset().one(e);
   }
 
 

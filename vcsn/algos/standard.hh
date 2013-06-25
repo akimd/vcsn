@@ -94,13 +94,13 @@ namespace vcsn
       {
         {
           weight_t w = e.left_weight();
-          if (w != ws_.unit())
+          if (w != ws_.one())
             for (auto t: res_.all_out(initial_))
               res_.lmul_weight(t, w);
         }
         {
           weight_t w = e.right_weight();
-          if (w != ws_.unit())
+          if (w != ws_.one())
             for (auto t: res_.final_transitions())
               if (!has(other_finals, res_.src_of(t)))
                 res_.rmul_weight(t, w);

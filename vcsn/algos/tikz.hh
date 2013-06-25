@@ -41,7 +41,7 @@ namespace vcsn
                   const std::string& opt = {})
       {
         os_ << "," << kind << opt;
-        if (ws_.show_unit() || !ws_.is_unit(w))
+        if (ws_.show_one() || !ws_.is_one(w))
           os_ << "," << kind << " text=$" << ws_.format(w) << "$";
       }
 

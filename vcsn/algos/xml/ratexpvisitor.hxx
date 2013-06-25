@@ -126,7 +126,7 @@ namespace vcsn
     bool
     xml_ratexp_visitor<Context>::shows_(const weight_t& w) const
     {
-      return ws_->show_unit() || !ws_->is_unit(w);
+      return ws_->show_one() || !ws_->is_one(w);
     }
 
 # undef VISIT

@@ -46,13 +46,13 @@ namespace vcsn
     star(const value_t v) const
     {
       if (0 <= v)
-        return unit();
+        return one();
       else
         throw std::domain_error("zmin: star: invalid value: " + format(v));
     }
 
     value_t
-    unit() const
+    one() const
     {
       return 0;
     }
@@ -64,9 +64,9 @@ namespace vcsn
     }
 
     bool
-    is_unit(const value_t v) const
+    is_one(const value_t v) const
     {
-      return v == unit();
+      return v == one();
     }
 
     bool
@@ -75,7 +75,7 @@ namespace vcsn
       return v == zero();
     }
 
-    static constexpr bool show_unit() { return true; }
+    static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status() { return star_status_t::TOPS; }
 
     value_t

@@ -66,7 +66,7 @@ namespace vcsn
       detail::set_attribute(value_set, "type", "free");
 
       print_gen_set(ctx, doc, value_set,
-                    typename std::is_same<typename Context::kind_t, labels_are_unit>::type());
+                    typename std::is_same<typename Context::kind_t, labels_are_one>::type());
       root.appendChild(value_set);
     }
 

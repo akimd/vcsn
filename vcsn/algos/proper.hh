@@ -86,7 +86,7 @@ namespace vcsn
         */
         for (auto s: input.states())
           {
-            weight_t star = weightset.unit();// if there is no eps-loop
+            weight_t star = weightset.one();// if there is no eps-loop
             closure.clear();
             const auto& tr = input.in(s, empty_word);
             // Work on a copy, as we remove these transitions in the

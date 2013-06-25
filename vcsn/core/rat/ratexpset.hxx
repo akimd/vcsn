@@ -67,8 +67,8 @@ namespace vcsn
     -> value_t
   {
     if (labelset()->is_identity(v))
-      return unit();
-    return std::make_shared<atom_t>(weightset()->unit(), v);
+      return one();
+    return std::make_shared<atom_t>(weightset()->one(), v);
   }
 
   DEFINE::concat(value_t l, value_t r) const
@@ -80,13 +80,13 @@ namespace vcsn
   DEFINE::zero() const
     -> value_t
   {
-    return zero(weightset()->unit());
+    return zero(weightset()->one());
   }
 
-  DEFINE::unit() const
+  DEFINE::one() const
     -> value_t
   {
-    return unit(weightset()->unit());
+    return one(weightset()->one());
   }
 
   DEFINE::zero(const weight_t& w) const
@@ -95,7 +95,7 @@ namespace vcsn
     return std::make_shared<zero_t>(w);
   }
 
-  DEFINE::unit(const weight_t& w) const
+  DEFINE::one(const weight_t& w) const
     -> value_t
   {
     return std::make_shared<one_t>(w);
@@ -109,8 +109,8 @@ namespace vcsn
     if (v->type() == type)
       {
         const auto& nary = *down_pointer_cast<const nary_t>(v);
-        if (weightset()->is_unit(nary.left_weight())
-            && weightset()->is_unit(nary.right_weight()))
+        if (weightset()->is_one(nary.left_weight())
+            && weightset()->is_one(nary.right_weight()))
           res.insert(std::end(res), std::begin(nary), std::end(nary));
         else
           res.push_back(v);
@@ -141,8 +141,8 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else
-      res = std::make_shared<sum_t>(weightset()->unit(),
-                                    weightset()->unit(),
+      res = std::make_shared<sum_t>(weightset()->one(),
+                                    weightset()->one(),
                                     gather(type_t::sum, l, r));
     return res;
   }
@@ -166,8 +166,8 @@ namespace vcsn
       res = weight(l->left_weight(), r);
     // END: Trivial Identity
     else
-      res = std::make_shared<prod_t>(weightset()->unit(),
-                                     weightset()->unit(),
+      res = std::make_shared<prod_t>(weightset()->one(),
+                                     weightset()->one(),
                                      gather(type_t::prod, l, r));
     return res;
   }
@@ -184,7 +184,7 @@ namespace vcsn
     return mul(l, r);
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_unit) const
+  DEFINE::concat(value_t l, value_t r, labels_are_one) const
     -> value_t
   {
     return mul(l, r);
@@ -197,24 +197,24 @@ namespace vcsn
     auto rt = r->type();
     auto lt = l->type();
     if (rt == type_t::atom
-        && weightset()->is_unit(r->left_weight()))
+        && weightset()->is_one(r->left_weight()))
       {
         if (lt == type_t::atom
-            && weightset()->is_unit(l->left_weight()))
+            && weightset()->is_one(l->left_weight()))
           return atom(labelset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
         else if (lt == type_t::prod)
           {
             const auto& prodl = *down_pointer_cast<const prod_t>(l);
-            if (weightset()->is_unit(prodl.left_weight())
-                && weightset()->is_unit(prodl.right_weight()))
+            if (weightset()->is_one(prodl.left_weight())
+                && weightset()->is_one(prodl.right_weight()))
               {
                 // Concat of "(ab).a" and "b" is "(ab).(ab)".
                 ratexps_t ratexps { prodl.begin(), prodl.end() };
                 ratexps.back() = concat(ratexps.back(), r);
-                return std::make_shared<prod_t>(weightset()->unit(),
-                                                weightset()->unit(),
+                return std::make_shared<prod_t>(weightset()->one(),
+                                                weightset()->one(),
                                                 ratexps);
               }
           }
@@ -223,32 +223,32 @@ namespace vcsn
     else if (rt == type_t::prod)
       {
         const auto& prodr = *down_pointer_cast<const prod_t>(r);
-        if (weightset()->is_unit(prodr.left_weight())
-            && weightset()->is_unit(prodr.right_weight()))
+        if (weightset()->is_one(prodr.left_weight())
+            && weightset()->is_one(prodr.right_weight()))
           {
             if (lt == type_t::atom
-                && weightset()->is_unit(l->left_weight()))
+                && weightset()->is_one(l->left_weight()))
               {
                 // Concat of "a" and "b.(ab)", is "(ab).(ab)".
                 ratexps_t ratexps { prodr.begin(), prodr.end() };
                 ratexps.front() = concat(l, ratexps.front());
-                return std::make_shared<prod_t>(weightset()->unit(),
-                                                weightset()->unit(),
+                return std::make_shared<prod_t>(weightset()->one(),
+                                                weightset()->one(),
                                                 ratexps);
               }
             else if (lt == type_t::prod)
               {
                 const auto& prodl = *down_pointer_cast<const prod_t>(l);
-                if (weightset()->is_unit(prodl.left_weight())
-                    && weightset()->is_unit(prodl.right_weight()))
+                if (weightset()->is_one(prodl.left_weight())
+                    && weightset()->is_one(prodl.right_weight()))
                   {
                     // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
                     ratexps_t ratexps { prodl.begin(), prodl.end() };
                     ratexps.back() = concat(ratexps.back(), *prodr.begin());
                     ratexps.insert(ratexps.end(),
                                     prodr.begin() + 1, prodr.end());
-                    return std::make_shared<prod_t>(weightset()->unit(),
-                                                    weightset()->unit(),
+                    return std::make_shared<prod_t>(weightset()->one(),
+                                                    weightset()->one(),
                                                     ratexps);
                   }
               }
@@ -264,10 +264,10 @@ namespace vcsn
     if (e->type() == type_t::zero)
       // Trivial identity
       // (0)* == 1
-      return unit();
+      return one();
     else
-      return std::make_shared<star_t>(weightset()->unit(),
-                                      weightset()->unit(),
+      return std::make_shared<star_t>(weightset()->one(),
+                                      weightset()->one(),
                                       e);
   }
 
@@ -324,11 +324,11 @@ namespace vcsn
     return v->type() == type_t::zero;
   }
 
-  DEFINE::is_unit(value_t v) const
+  DEFINE::is_one(value_t v) const
     -> bool
   {
     return (v->type() == type_t::one
-            && weightset()->is_unit(v->left_weight()));
+            && weightset()->is_one(v->left_weight()));
   }
 
   DEFINE::conv(const std::string& s) const

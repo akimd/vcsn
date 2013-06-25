@@ -29,7 +29,7 @@ namespace detail
     using value_t = rat::exp_t;
 
     virtual value_t zero() const = 0;
-    virtual value_t unit() const = 0;
+    virtual value_t one() const = 0;
     /// Throws std::domain_error if w is not a valid label_t.
     virtual value_t atom(const std::string& w) const = 0;
     virtual value_t add(value_t l, value_t r) const = 0;
@@ -104,9 +104,9 @@ namespace detail
       return ks_.zero();
     }
 
-    virtual value_t unit() const override
+    virtual value_t one() const override
     {
-      return ks_.unit();
+      return ks_.one();
     }
 
     virtual value_t atom(const std::string& w) const override

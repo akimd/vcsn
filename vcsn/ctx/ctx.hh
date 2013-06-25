@@ -27,7 +27,7 @@ namespace vcsn
       using kind_t = typename labelset_t::kind_t;
       enum
         {
-          is_lau = std::is_same<kind_t, labels_are_unit>::value,
+          is_lau = std::is_same<kind_t, labels_are_one>::value,
           is_lal = std::is_same<kind_t, labels_are_letters>::value,
           is_lan = std::is_same<kind_t, labels_are_nullable>::value,
           is_law = std::is_same<kind_t, labels_are_words>::value,

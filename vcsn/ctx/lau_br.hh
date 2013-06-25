@@ -4,7 +4,7 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/ctx/letterset.hh>
-# include <vcsn/ctx/unitset.hh>
+# include <vcsn/ctx/oneset.hh>
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/weights/b.hh>
 
@@ -14,7 +14,7 @@ namespace vcsn
   {
     using lal_char_b = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
-    using lau_br = context<unitset, vcsn::ratexpset<lal_char_b>>;
+    using lau_br = context<oneset, vcsn::ratexpset<lal_char_b>>;
   }
 }
 

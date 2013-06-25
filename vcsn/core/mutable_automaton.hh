@@ -318,7 +318,7 @@ namespace vcsn
     void
     set_initial(state_t s)
     {
-      set_initial(s, weightset()->unit());
+      set_initial(s, weightset()->one());
     }
 
     weight_t
@@ -342,7 +342,7 @@ namespace vcsn
     void
     set_final(state_t s)
     {
-      set_final(s, weightset()->unit());
+      set_final(s, weightset()->one());
     }
 
     weight_t
@@ -405,7 +405,7 @@ namespace vcsn
     set_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       // It's illegal to connect pre() to post().
-      // FIXME: reenable except for labels_are_unit.
+      // FIXME: reenable except for labels_are_one.
       // assert(src != pre() || dst != post());
       // It's illegal to leave post().
       assert(src != post());
@@ -451,11 +451,11 @@ namespace vcsn
       return t;
     }
 
-    /// Same as above, with unit weight.
+    /// Same as above, with one weight.
     transition_t
     set_transition(state_t src, state_t dst, label_t l)
     {
-      return set_transition(src, dst, l, weightset()->unit());
+      return set_transition(src, dst, l, weightset()->one());
     }
 
     /// Add a transition between two states.  Merge with an existing
@@ -484,11 +484,11 @@ namespace vcsn
       return k;
     }
 
-    /// Same as above, with unit weight.
+    /// Same as above, with one weight.
     weight_t
     add_transition(state_t src, state_t dst, label_t l)
     {
-      return add_transition(src, dst, l, weightset()->unit());
+      return add_transition(src, dst, l, weightset()->one());
     }
 
     std::string

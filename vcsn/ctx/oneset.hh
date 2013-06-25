@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_UNITSET_HH
-# define VCSN_CTX_UNITSET_HH
+#ifndef VCSN_CTX_ONESET_HH
+# define VCSN_CTX_ONESET_HH
 
 # include <iostream>
 # include <set>
@@ -14,9 +14,9 @@ namespace vcsn
 {
   namespace ctx
   {
-    /// Implementation of labels are units: there is a single instance
+    /// Implementation of labels are ones: there is a single instance
     /// of label.
-    struct unitset
+    struct oneset
     {
       using label_t = vcsn::empty_t;
       // FIXME: fishy, but that's what the previous version of the
@@ -25,11 +25,11 @@ namespace vcsn
       using word_t = vcsn::empty_t;
       using letters_t = std::set<letter_t>;
 
-      using kind_t = labels_are_unit;
+      using kind_t = labels_are_one;
 
-      unitset() = default;
+      oneset() = default;
       // FIXME: KILL
-      unitset(const letters_t&)
+      oneset(const letters_t&)
       {}
 
       static std::string sname()
@@ -155,4 +155,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_UNITSET_HH
+#endif // !VCSN_CTX_ONESET_HH
