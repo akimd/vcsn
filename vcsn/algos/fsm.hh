@@ -30,7 +30,7 @@ namespace vcsn
       {
         const auto& lbl = aut.label_of(t);
         size_t label
-          = (aut.labelset()->is_identity(lbl)
+          = (aut.labelset()->is_one(lbl)
              ? 0
              : names.emplace(lbl, names.size() + 1).first->second);
         out << aut.src_of(t) << '\t'

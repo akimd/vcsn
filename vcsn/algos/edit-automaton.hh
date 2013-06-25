@@ -143,7 +143,7 @@ namespace vcsn
                         << std::endl;
               if (e.size() == 1
                   && (res_->labelset()->is_special(begin(e)->first)
-                      || res_->labelset()->is_identity(begin(e)->first)))
+                      || res_->labelset()->is_one(begin(e)->first)))
                 {
                   auto w = begin(e)->second;
                   res_->add_transition(s, d, res_->prepost_label(), w);

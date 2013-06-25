@@ -66,7 +66,7 @@ namespace vcsn
   DEFINE::atom(const label_t& v) const
     -> value_t
   {
-    if (labelset()->is_identity(v))
+    if (labelset()->is_one(v))
       return one();
     return std::make_shared<atom_t>(weightset()->one(), v);
   }
@@ -262,7 +262,7 @@ namespace vcsn
     -> value_t
   {
     if (e->type() == type_t::zero)
-      // Trivial identity
+      // Trivial one
       // (0)* == 1
       return one();
     else
@@ -279,7 +279,7 @@ namespace vcsn
   DEFINE::weight(const weight_t& w, value_t e) const
     -> value_t
   {
-    // Trivial identity $T_K$: {k}0 => 0, {0}x => 0.
+    // Trivial one $T_K$: {k}0 => 0, {0}x => 0.
     if (e->type() == type_t::zero || weightset()->is_zero(w))
       return zero();
     else
@@ -293,7 +293,7 @@ namespace vcsn
   DEFINE::weight(value_t e, const weight_t& w) const
     -> value_t
   {
-    // Trivial identity $T_K$: 0{k} => 0, x{0} => 0.
+    // Trivial one $T_K$: 0{k} => 0, x{0} => 0.
     if (e->type() == type_t::zero || weightset()->is_zero(w))
       return zero();
     else if (e->is_inner())

@@ -74,13 +74,13 @@ namespace vcsn
       }
 
       label_t
-      identity() const
+      one() const
       {
         return this->empty_word();
       }
 
       bool
-      is_identity(const label_t& l) const
+      is_one(const label_t& l) const
       {
         return this->is_empty_word(l);
       }

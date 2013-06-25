@@ -1,5 +1,8 @@
 * 2013-06-25
-** unit => one
+** identity, unit => one
+Labels new define one() and is_one() instead of identity() and
+is_identity().
+
 WeightSets now define one() and is_one() instead of unit() and is_unit().
 
 * 2013-06-21

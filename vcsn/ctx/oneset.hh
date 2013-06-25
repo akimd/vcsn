@@ -76,13 +76,13 @@ namespace vcsn
       }
 
       empty_t
-      identity() const
+      one() const
       {
         return {};
       }
 
       bool
-      is_identity(empty_t) const
+      is_one(empty_t) const
       {
         return true;
       }

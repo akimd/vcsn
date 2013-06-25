@@ -101,7 +101,7 @@ namespace vcsn
     {
       size_t res = 0;
       for (auto t : aut.transitions())
-        res += aut.labelset()->is_identity(aut.label_of(t));
+        res += aut.labelset()->is_one(aut.label_of(t));
       return res;
     }
   }

@@ -66,7 +66,7 @@ namespace vcsn
       }
 
       static constexpr bool
-      is_identity(label_t)
+      is_one(label_t)
       {
         return false;
       }

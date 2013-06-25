@@ -68,21 +68,21 @@ namespace vcsn
       }
 
       constexpr label_t
-      identity() const
+      one() const
       {
-        return this->genset()->identity_letter();
+        return this->genset()->one_letter();
       }
 
       bool
-      is_identity(label_t l) const
+      is_one(label_t l) const
       {
-        return l == identity();
+        return l == one();
       }
 
       bool
       is_valid(label_t v) const
       {
-        return this->has(v) || is_identity(v);
+        return this->has(v) || is_one(v);
       }
 
       /// \throws std::domain_error if there is no label here.
@@ -99,7 +99,7 @@ namespace vcsn
               throw std::domain_error("invalid label: unexpected \\"
                                       + str_escape(c));
             i.ignore();
-            res = identity();
+            res = one();
           }
         else if (this->has(c))
           {
@@ -122,7 +122,7 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, label_t l) const
       {
-        if (is_identity(l))
+        if (is_one(l))
           o << "\\e";
         else if (!is_special(l))
           o << l;

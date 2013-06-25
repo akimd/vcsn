@@ -76,7 +76,7 @@ namespace vcsn
 
       epsilon_acyclic(const automaton_t& input)
         : input(input)
-        , empty_word(input.labelset()->identity())
+        , empty_word(input.labelset()->one())
       {
       }
 

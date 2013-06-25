@@ -109,7 +109,7 @@ namespace vcsn
       return w.size() == 1;
     }
 
-    static constexpr letter_t identity_letter() { return 0; }
+    static constexpr letter_t one_letter() { return 0; }
 
   private:
     /// Use special().
@@ -119,7 +119,7 @@ namespace vcsn
     std::ostream&
     print(std::ostream& o, const letter_t& l) const
     {
-      if (l != identity_letter() && l != special_letter())
+      if (l != one_letter() && l != special_letter())
         o << l;
       return o;
     }
@@ -133,7 +133,7 @@ namespace vcsn
     std::string
     format(const letter_t l) const
     {
-      if (l == identity_letter() || l == special_letter())
+      if (l == one_letter() || l == special_letter())
         return {};
       else
         return str_escape(l);
@@ -146,7 +146,7 @@ namespace vcsn
 
       std::string res;
       if (s == 0
-          || (s == 1 && w[0] == identity_letter()))
+          || (s == 1 && w[0] == one_letter()))
         res = "\\e";
 
       // If the string starts or ends with the special letter, skip
