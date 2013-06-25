@@ -27,7 +27,7 @@ namespace vcsn
       using kind_t = typename labelset_t::kind_t;
       enum
         {
-          is_lau = std::is_same<kind_t, labels_are_one>::value,
+          is_lao = std::is_same<kind_t, labels_are_one>::value,
           is_lal = std::is_same<kind_t, labels_are_letters>::value,
           is_lan = std::is_same<kind_t, labels_are_nullable>::value,
           is_law = std::is_same<kind_t, labels_are_words>::value,
@@ -142,7 +142,7 @@ namespace vcsn
   // ctx::context, but then, instead of "(if_lal<Ctx, letter_t> v)",
   // one must write "(typename Cxx::template if_lal<letter_t> v)".
   template <typename Ctx, typename R>
-  using if_lau = typename std::enable_if<Ctx::is_lau, R>::type;
+  using if_lao = typename std::enable_if<Ctx::is_lao, R>::type;
 
   template <typename Ctx, typename R>
   using if_lal = typename std::enable_if<Ctx::is_lal, R>::type;

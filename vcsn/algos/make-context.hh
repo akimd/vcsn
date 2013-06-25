@@ -62,7 +62,7 @@ namespace vcsn
     };
 
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lau, Ctx>::type
+    typename std::enable_if<Ctx::is_lao, Ctx>::type
     make_context(const std::string& name)
     {
       // name: lal_ratexpset<law_char(xyz)_b>
@@ -72,8 +72,8 @@ namespace vcsn
       // There is no "char(...)_".
       std::string kind = name.substr(0, 3);
 
-      if (kind != "lau")
-        throw std::runtime_error("make_context: Ctx::is_lau but read "
+      if (kind != "lao")
+        throw std::runtime_error("make_context: Ctx::is_lao but read "
                                  + kind + ": " + name);
 
       if (name[3] != '_')

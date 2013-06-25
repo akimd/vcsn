@@ -83,8 +83,8 @@ nobase_vcsn_HEADERS =                           \
   ctx/lan_char.hh                               \
   ctx/lan_char_b.hh                             \
   ctx/lan_char_z.hh                             \
-  ctx/lau_br.hh                                 \
-  ctx/lau_z.hh                                  \
+  ctx/lao_br.hh                                 \
+  ctx/lao_z.hh                                  \
   ctx/law_char.hh                               \
   ctx/law_char_b.hh                             \
   ctx/law_char_br.hh                            \

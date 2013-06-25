@@ -31,7 +31,7 @@ namespace vcsn
 
     template <typename Aut>
     typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_lao
                              || Aut::context_t::is_law),
                             std::string>::type
     is_complete(const Aut&)
@@ -52,7 +52,7 @@ namespace vcsn
 
     template <typename Aut>
     typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_lao
                              || Aut::context_t::is_law),
                             std::string>::type
     is_deterministic(const Aut&)
@@ -73,7 +73,7 @@ namespace vcsn
 
     template <typename Aut>
     typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_lao
                              || Aut::context_t::is_law),
                             std::string>::type
     num_deterministic_states(const Aut&)
@@ -94,7 +94,7 @@ namespace vcsn
 
     template <typename Aut>
     typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lau
+                             || Aut::context_t::is_lao
                              || Aut::context_t::is_law),
                             size_t>::type
     num_eps_transitions(const Aut& aut)

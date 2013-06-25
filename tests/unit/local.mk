@@ -13,7 +13,7 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  unit/aut_lau_z                                \
+  unit/aut_lao_z                                \
   unit/aut_lal_char_z                           \
   unit/aut_law_char_z                           \
   unit/concat                                   \
@@ -27,7 +27,7 @@ AM_LDADD = $(libvcsn)
 
 noinst_HEADERS = unit/test.hh
 
-unit_aut_lau_z_LDADD = $(liblau_z) $(AM_LDADD)
+unit_aut_lao_z_LDADD = $(liblao_z) $(AM_LDADD)
 unit_aut_lal_char_z_LDADD = $(liblal_char_z) $(AM_LDADD)
 unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
@@ -42,7 +42,7 @@ unit_proper_LDADD = $(all_libctx) $(AM_LDADD)
 unit_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(AM_LDADD)
 
 unit_TESTS =                                    \
-  unit/aut_lau_z.chk                            \
+  unit/aut_lao_z.chk                            \
   unit/aut_lal_char_z.chk                       \
   unit/aut_law_char_z.chk                       \
   unit/concat.chk                               \
@@ -58,7 +58,7 @@ dist_TESTS += $(unit_TESTS)
 # the dependencies, so that the test suite does not make useless
 # compilations.
 unit/aut_lal_char_z.log: unit/aut_lal_char_z
-unit/aut_lau_z.log: unit/aut_lau_z
+unit/aut_lao_z.log: unit/aut_lao_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/concat.log: unit/concat
 unit/determinize.log: unit/determinize

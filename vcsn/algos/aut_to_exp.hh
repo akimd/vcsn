@@ -67,7 +67,7 @@ namespace vcsn
   eliminate_state(Aut& aut,
                   typename Aut::state_t s)
   {
-    static_assert(Aut::context_t::is_lau,
+    static_assert(Aut::context_t::is_lao,
                   "requires labels_are_one");
     if (!aut.has_state(s))
       throw std::runtime_error("not a valid state: " + std::to_string(s));

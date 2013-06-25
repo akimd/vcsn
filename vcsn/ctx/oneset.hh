@@ -34,7 +34,7 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "lau";
+        return "lao";
       }
 
       std::string vname(bool = true) const

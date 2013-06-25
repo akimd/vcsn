@@ -27,9 +27,9 @@ lib_liblaw_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_b
 
 # char_br.
-pkglib_LTLIBRARIES += lib/liblau_br.la
-lib_liblau_br_la_SOURCES = lib/ctx/libctx.cc
-lib_liblau_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lau_br
+pkglib_LTLIBRARIES += lib/liblao_br.la
+lib_liblao_br_la_SOURCES = lib/ctx/libctx.cc
+lib_liblao_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lao_br
 
 pkglib_LTLIBRARIES += lib/liblal_char_br.la
 lib_liblal_char_br_la_SOURCES = lib/ctx/libctx.cc
@@ -49,9 +49,9 @@ lib_liblaw_char_r_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_r
 
 # char_z.
-pkglib_LTLIBRARIES += lib/liblau_z.la
-lib_liblau_z_la_SOURCES = lib/ctx/libctx.cc
-lib_liblau_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lau_z
+pkglib_LTLIBRARIES += lib/liblao_z.la
+lib_liblao_z_la_SOURCES = lib/ctx/libctx.cc
+lib_liblao_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lao_z
 
 pkglib_LTLIBRARIES += lib/liblal_char_z.la
 lib_liblal_char_z_la_SOURCES = lib/ctx/libctx.cc

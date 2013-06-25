@@ -3,7 +3,7 @@
 cat >out.exp <<\EOF
 digraph
 {
-  vcsn_context = "lau_z"
+  vcsn_context = "lao_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -36,7 +36,7 @@ Between s1 and s1
   2 -- <42>\e --> 2
 digraph
 {
-  vcsn_context = "lau_z"
+  vcsn_context = "lao_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -58,7 +58,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "lau_z"
+  vcsn_context = "lao_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -74,7 +74,7 @@ digraph
 }
 digraph
 {
-  vcsn_context = "lau_z"
+  vcsn_context = "lao_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -88,4 +88,4 @@ digraph
   0 -> F0 [label = "<10>", color = gray]
 }
 EOF
-run 0 out.exp unit/aut_lau_z
+run 0 out.exp unit/aut_lao_z

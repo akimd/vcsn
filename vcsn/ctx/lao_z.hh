@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_LAU_Z_HH
-# define VCSN_CTX_LAU_Z_HH
+#ifndef VCSN_CTX_LAO_Z_HH
+# define VCSN_CTX_LAO_Z_HH
 
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/ctx/oneset.hh>
@@ -9,7 +9,7 @@ namespace vcsn
 {
   namespace ctx
   {
-    using lau_z = context<oneset, vcsn::z>;
+    using lao_z = context<oneset, vcsn::z>;
   }
 }
 
@@ -17,7 +17,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lau_z);
+  VCSN_CTX_INSTANTIATE(lao_z);
 };
 
-#endif // !VCSN_CTX_LAU_Z_HH
+#endif // !VCSN_CTX_LAO_Z_HH

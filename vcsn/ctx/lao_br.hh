@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_LAU_BR_HH
-# define VCSN_CTX_LAU_BR_HH
+#ifndef VCSN_CTX_LAO_BR_HH
+# define VCSN_CTX_LAO_BR_HH
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
@@ -14,7 +14,7 @@ namespace vcsn
   {
     using lal_char_b = context<letterset<vcsn::set_alphabet<vcsn::char_letters>>,
                                vcsn::b>;
-    using lau_br = context<oneset, vcsn::ratexpset<lal_char_b>>;
+    using lao_br = context<oneset, vcsn::ratexpset<lal_char_b>>;
   }
 }
 
@@ -26,7 +26,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lau_br);
+  VCSN_CTX_INSTANTIATE(lao_br);
 }
 
-#endif // !VCSN_CTX_LAU_BR_HH
+#endif // !VCSN_CTX_LAO_BR_HH

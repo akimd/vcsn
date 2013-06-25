@@ -3,6 +3,8 @@
 Labels new define one() and is_one() instead of identity() and
 is_identity().
 
+We now use LAO, "labels are one", instead of LAU, "labels are unit".
+
 WeightSets now define one() and is_one() instead of unit() and is_unit().
 
 * 2013-06-21
@@ -421,8 +423,8 @@ parameterized.
 
 As a first visible consequence, the name of the LAU contexts has changed:
 
-  lau_char_br => lau_br
-  lau_char(xyz)_ratexpset<lal_char(abc)_b> => lau_ratexpset<lal_char(abc)_b>
+  lao_char_br => lao_br
+  lao_char(xyz)_ratexpset<lal_char(abc)_b> => lao_ratexpset<lal_char(abc)_b>
 
 * 2013-01-24
 ** options renamed
@@ -494,7 +496,7 @@ instead of <LabelSet>_<WeightSet>_<Kind>.  For instance:
   char_b_lal  => lal_char_b
   char_br_lal => lal_char_br
   char_zr_lal => lal_char_zr
-  char_br_lau => lau_char_br
+  char_br_lau => lao_char_br
   char_br_law => law_char_br
   char_zr_law => law_char_zr
 
