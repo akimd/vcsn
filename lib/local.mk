@@ -70,6 +70,10 @@ pkglib_LTLIBRARIES += lib/liblal_char_zr.la
 lib_liblal_char_zr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zr
 
+pkglib_LTLIBRARIES += lib/liblan_char_zr.la
+lib_liblan_char_zr_la_SOURCES = lib/ctx/libctx.cc
+lib_liblan_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_zr
+
 pkglib_LTLIBRARIES += lib/liblaw_char_zr.la
 lib_liblaw_char_zr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zr

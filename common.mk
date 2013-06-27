@@ -27,6 +27,7 @@ liblal_char_z    = $(top_builddir)/lib/liblal_char_z.la
 liblan_char_z    = $(top_builddir)/lib/liblan_char_z.la
 liblaw_char_z    = $(top_builddir)/lib/liblaw_char_z.la
 liblal_char_zr   = $(top_builddir)/lib/liblal_char_zr.la
+liblan_char_zr   = $(top_builddir)/lib/liblan_char_zr.la
 liblaw_char_zr   = $(top_builddir)/lib/liblaw_char_zr.la
 liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
 liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
@@ -40,7 +41,7 @@ all_libctx =                                                            \
   $(liblao_br) $(liblal_char_br) $(liblaw_char_br)                      \
   $(liblal_char_r) $(liblaw_char_r)                                     \
   $(liblao_z) $(liblal_char_z) $(liblan_char_z) $(liblaw_char_z)        \
-  $(liblal_char_zr) $(liblaw_char_zr)                                   \
+  $(liblal_char_zr) $(liblan_char_zr) $(liblaw_char_zr)                 \
   $(liblal_char_zrr) $(liblaw_char_zrr)                                 \
   $(liblal_char_zmin) $(liblaw_char_zmin)
 
