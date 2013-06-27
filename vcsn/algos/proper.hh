@@ -73,10 +73,16 @@ namespace vcsn
     public:
       static bool in_situ_remover(automaton_t& aut)
       {
+        // States to erase if (i) they had incoming spontaneous
+        // transitions, and (ii) after completion of the process, they
+        // have no incoming transition.
+        std::vector<state_t> dead_states;
+
         label_t empty_word = aut.labelset()->one();
         const auto& weightset = *aut.weightset();
         using state_weight_t = std::pair<state_t, weight_t>;
         std::vector<state_weight_t> closure;
+
         /* For each state (s), for each incoming epsilon-transitions
            (t), if (t) is a loop, the star of its weight is computed,
            otherwise, (t) is stored into the closure list.  Then (t)
@@ -109,6 +115,9 @@ namespace vcsn
                     // Delete incoming epsilon transitions.
                     aut.del_transition(t);
                   }
+                // Maybe schedule for removal.
+                if (aut.all_in(s).empty())
+                  dead_states.emplace_back(s);
               }
 
             /*
@@ -135,6 +144,9 @@ namespace vcsn
                                        weightset.mul(pair.second, s_weight));
               }
           }
+        for (auto s: dead_states)
+          if (aut.all_in(s).empty())
+            aut.del_state(s);
         return true;
       }
 

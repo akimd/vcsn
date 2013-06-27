@@ -1,4 +1,8 @@
 * 2013-06-26
+** proper
+Now removes states to which no transition arrive after spontaneous
+transitions removal.
+
 ** Thompson
 Only the concatenation yielded an automaton whose projection on Boolean
 weights was different from the Thompson of the projection of the rational
