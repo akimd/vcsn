@@ -106,22 +106,21 @@ namespace vcsn
           }
         initial_ = initial;
 
+        // Apply weights.
         if (!ws_.is_one(e.left_weight()))
-          {
-            state_t initial = res_.new_state();
-            res_.add_transition(initial, initial_,
-                                epsilon_,
-                                e.left_weight());
-            initial_ = initial;
-          }
+          for (auto t: res_.out(initial_))
+            res_.set_transition(res_.src_of(t),
+                                res_.dst_of(t),
+                                res_.label_of(t),
+                                ws_.mul(e.left_weight(),
+                                        res_.weight_of(t)));
         if (!ws_.is_one(e.right_weight()))
-          {
-            state_t final = res_.new_state();
-            res_.add_transition(final_, final,
-                                epsilon_,
-                                e.right_weight());
-            final_ = final;
-          }
+          for (auto t: res_.in(final_))
+            res_.set_transition(res_.src_of(t),
+                                res_.dst_of(t),
+                                res_.label_of(t),
+                                ws_.mul(res_.weight_of(t),
+                                        e.right_weight()));
       }
 
       virtual void

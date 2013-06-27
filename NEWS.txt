@@ -1,3 +1,12 @@
+* 2013-06-26
+** Thompson
+Only the concatenation yielded an automaton whose projection on Boolean
+weights was different from the Thompson of the projection of the rational
+expression on Boolean.  This is now fixed.
+
+** is-normalized
+New algorithm (static, dynamic, TAF-Kit).
+
 * 2013-06-25
 ** identity, unit => one
 Labels new define one() and is_one() instead of identity() and
