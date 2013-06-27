@@ -14,6 +14,7 @@
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
+# include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -244,6 +245,8 @@ namespace vcsn
 
         // is-eps-acyclic.
         REGISTER(aut_t, is_eps_acyclic);
+
+        REGISTER(aut_t, is_normalized);
 
         // is-proper.
         REGISTER(aut_t, is_proper);

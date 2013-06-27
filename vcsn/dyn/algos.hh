@@ -68,6 +68,9 @@ namespace vcsn
 
     bool is_eps_acyclic(const automaton& aut);
 
+    /// Whether is normalized (in the Thompson sense).
+    bool is_normalized(const automaton& aut);
+
     bool is_proper(const automaton& aut);
 
     /// Whether has no useless state.

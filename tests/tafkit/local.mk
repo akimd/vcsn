@@ -23,6 +23,7 @@ tafkit_TESTS =                                  \
   tafkit/enumerate.chk                          \
   tafkit/eval.chk                               \
   tafkit/is-deterministic.chk                   \
+  tafkit/is-normalized.chk                      \
   tafkit/is-proper.chk                          \
   tafkit/is_complete.chk                        \
   tafkit/ladybird.chk                           \
