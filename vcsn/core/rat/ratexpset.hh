@@ -79,7 +79,7 @@ namespace vcsn
 
     static constexpr star_status_t star_status()
     {
-      return weightset_t::star_status();
+      return star_status_t::STARABLE;
     }
 
     value_t conv(const std::string& s) const;

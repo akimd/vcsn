@@ -121,9 +121,9 @@ digraph
   3 -> 0 [label = "<2>a"]
 }
 EOF
-
 check a.gv out.exp
 
+# Invalid cycle on Z.
 cat >a.gv <<\EOF
 digraph
 {
@@ -141,3 +141,53 @@ EOF
 
 run 1 "" -vcsn-proper -A -I dot -f a.gv
 
+# A "long" cycle.
+cat >a.gv <<\EOF
+digraph
+{
+  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcd)_z>"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I
+    F
+  }
+  { 0 1 2 3 4 }
+  I -> 0
+  0 -> 1 [label = "<a>\\e"]
+  1 -> 2 [label = "<b>\\e"]
+  2 -> 3 [label = "<c>\\e"]
+  3 -> 0 [label = "<d>\\e"]
+  0 -> 4 [label = "z"]
+  4 -> F
+}
+EOF
+
+cat >out.exp <<\EOF
+digraph
+{
+  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcd)_z>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F4
+  }
+  {
+    node [shape = circle]
+    0
+    1 [color = gray]
+    2 [color = gray]
+    3 [color = gray]
+    4
+  }
+  I0 -> 0
+  0 -> 4 [label = "<\\e+(a.b.c.((d.a.b.c)*).d)>z"]
+  1 -> 4 [label = "<b.c.((d.a.b.c)*).d>z", color = gray]
+  2 -> 4 [label = "<c.((d.a.b.c)*).d>z", color = gray]
+  3 -> 4 [label = "<d>z", color = gray]
+  4 -> F4
+}
+EOF
+run 0 out.exp -vcsn-proper -A -I dot -f a.gv
