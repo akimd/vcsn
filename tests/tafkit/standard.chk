@@ -43,7 +43,7 @@ EOF
 
 fail ()
 {
-  run 1 '' -vcsn-standard -C "$@"
+  run 1 '' -vcsn-standard "$@"
 }
 
 ## --- ##
