@@ -64,52 +64,53 @@ namespace vcsn
          endfor
          return true
 
-         If the method returns false, the input is corrupted.
+         If the method returns false, \a aut is corrupted.
 
-         @param input The automaton in which epsilon-transitions will be removed
+         @param aut The automaton in which epsilon-transitions will be removed
          @return true if the proper succeeds, or false otherwise.
       */
 
     public:
-      static bool in_situ_remover(automaton_t& input)
+      static bool in_situ_remover(automaton_t& aut)
       {
-        label_t empty_word = input.labelset()->one();
-        const auto& weightset = *input.weightset();
+        label_t empty_word = aut.labelset()->one();
+        const auto& weightset = *aut.weightset();
         using state_weight_t = std::pair<state_t, weight_t>;
         std::vector<state_weight_t> closure;
-        /*
-          For each state (s), the incoming epsilon-transitions
-          are put into the to_erase list; in the same time,
-          for each of these transitions (t), if (t) is a loop,
-          the star of its weight is computed, otherwise,
-          (t) is stored into the closure list.
-        */
-        for (auto s: input.states())
+        /* For each state (s), for each incoming epsilon-transitions
+           (t), if (t) is a loop, the star of its weight is computed,
+           otherwise, (t) is stored into the closure list.  Then (t)
+           is removed.  */
+        for (auto s: aut.states())
           {
             weight_t star = weightset.one();// if there is no eps-loop
             closure.clear();
-            const auto& tr = input.in(s, empty_word);
-            // Work on a copy, as we remove these transitions in the
-            // loop.
-            std::vector<transition_t> transitions{tr.begin(), tr.end()};
-            for (auto t : transitions)
+            const auto& tr = aut.in(s, empty_word);
+            if (!tr.empty())
               {
-                weight_t t_weight = input.weight_of(t);
-                state_t src = input.src_of(t);
-                if (src == s)  //loop
-                  try
-                    {
-                      star = weightset.star(t_weight);
-                    }
-                  catch (const std::domain_error&)
-                    {
-                      return false;
-                    }
-                else
-                  closure.emplace_back(src, t_weight);
-                // Incoming epsilon transitions are deleted from input.
-                input.del_transition(t);
+                // Iterate on a copy, as we remove these transitions
+                // in the loop.
+                std::vector<transition_t> transitions{tr.begin(), tr.end()};
+                for (auto t : transitions)
+                  {
+                    weight_t t_weight = aut.weight_of(t);
+                    state_t src = aut.src_of(t);
+                    if (src == s)  //loop
+                      try
+                        {
+                          star = weightset.star(t_weight);
+                        }
+                      catch (const std::domain_error&)
+                        {
+                          return false;
+                        }
+                    else
+                      closure.emplace_back(src, t_weight);
+                    // Delete incoming epsilon transitions.
+                    aut.del_transition(t);
+                  }
               }
+
             /*
               For each transition (t : s -- label|weight --> dst),
               for each former
@@ -124,13 +125,13 @@ namespace vcsn
               pair-second * star * weight is added to the final weight
               of closure->first
             */
-            for (auto t: input.all_out(s))
+            for (auto t: aut.all_out(s))
               {
-                weight_t s_weight = weightset.mul(star, input.weight_of(t));
-                label_t label = input.label_of(t);
-                state_t dst = input.dst_of(t);
+                weight_t s_weight = weightset.mul(star, aut.weight_of(t));
+                label_t label = aut.label_of(t);
+                state_t dst = aut.dst_of(t);
                 for (auto pair: closure)
-                  input.add_transition(pair.first, dst, label,
+                  aut.add_transition(pair.first, dst, label,
                                        weightset.mul(pair.second, s_weight));
               }
           }
@@ -141,13 +142,13 @@ namespace vcsn
 
          An automaton is proper if and only if it contains no epsilon-transition.
 
-         @param input The tested automaton
+         @param aut The tested automaton
          @return true iff the automaton is proper
       */
-      static bool is_proper(const automaton_t& input)
+      static bool is_proper(const automaton_t& aut)
       {
-        for (auto t: input.transitions())
-          if (input.labelset()->is_one(input.label_of(t)))
+        for (auto t: aut.transitions())
+          if (aut.labelset()->is_one(aut.label_of(t)))
             return false;
         return true;
       }
@@ -162,10 +163,10 @@ namespace vcsn
          every simple circuit is zero;
          -- absval : build a copy of the input where each weight is replaced by its absolute value
          and eturn the result of proper on the copy.
-         @param input The tested automaton
+         @param aut The tested automaton
          @return true iff the automaton is valid
       */
-      static bool is_valid(const automaton_t& input);
+      static bool is_valid(const automaton_t& aut);
 
       /**@brief Remove the epsilon-transitions of the input
          The behaviour of this method depends on the star_status of the weight_set:
@@ -174,12 +175,12 @@ namespace vcsn
          if it returns false, an exception is launched
          -- non_starrable / absval:
          is_valid is called before launching the algorithm.
-         @param input The automaton in which epsilon-transitions will be removed
+         @param aut The automaton in which epsilon-transitions will be removed
          @throw domain_error if the input is not valid
       */
-      static void proper_here(automaton_t& input);
+      static void proper_here(automaton_t& aut);
 
-      static automaton_t proper(const automaton_t& input);
+      static automaton_t proper(const automaton_t& aut);
     };
 
     /*
@@ -192,9 +193,9 @@ namespace vcsn
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:
-      static automaton_t proper(const automaton_t& input)
+      static automaton_t proper(const automaton_t& aut)
       {
-        automaton_t res = copy(input);
+        automaton_t res = copy(aut);
         proper_here(res);
         return res;
       }
@@ -212,21 +213,21 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& input)
+      static bool is_valid(const automaton_t& aut)
       {
-        if (properer_t::is_proper(input)
-            || is_eps_acyclic(input))
+        if (properer_t::is_proper(aut)
+            || is_eps_acyclic(aut))
           return true;
         else
           {
-            automaton_t res = copy(input);
+            automaton_t res = copy(aut);
             return properer_t::in_situ_remover(res);
           }
       }
 
-      static void proper_here(automaton_t& input)
+      static void proper_here(automaton_t& aut)
       {
-        if (!properer_t::in_situ_remover(input))
+        if (!properer_t::in_situ_remover(aut))
           throw std::domain_error("invalid automaton");
       }
     };
@@ -243,16 +244,16 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& input)
+      static bool is_valid(const automaton_t& aut)
       {
-        if (properer_t::is_proper(input)
-            || is_eps_acyclic(input))
+        if (properer_t::is_proper(aut)
+            || is_eps_acyclic(aut))
           return true;
         else
           {
-            automaton_t tmp_aut = copy(input);
+            automaton_t tmp_aut = copy(aut);
             // Apply absolute value to the weight of each transition.
-            const auto& weightset = *input.weightset();
+            const auto& weightset = *aut.weightset();
             for (auto t: tmp_aut.transitions())
               tmp_aut.set_weight(t, weightset.abs(tmp_aut.weight_of(t)));
             // Apply proper.
@@ -260,11 +261,11 @@ namespace vcsn
           }
       }
 
-      static void proper_here(automaton_t& input)
+      static void proper_here(automaton_t& aut)
       {
-        if (!is_valid(input))
+        if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        properer_t::in_situ_remover(input);
+        properer_t::in_situ_remover(aut);
       }
     };
     /// !ABSVAL
@@ -281,9 +282,9 @@ namespace vcsn
         return true;
       }
 
-      static void proper_here(automaton_t& input)
+      static void proper_here(automaton_t& aut)
       {
-        properer_t::in_situ_remover(input);
+        properer_t::in_situ_remover(aut);
       }
     };
 
@@ -301,17 +302,17 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& input)
+      static bool is_valid(const automaton_t& aut)
       {
-        return (properer_t::is_proper(input)
-                || is_eps_acyclic(input));
+        return (properer_t::is_proper(aut)
+                || is_eps_acyclic(aut));
       }
 
-      static void proper_here(automaton_t& input)
+      static void proper_here(automaton_t& aut)
       {
-        if (!is_valid(input))
+        if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        properer_t::in_situ_remover(input);
+        properer_t::in_situ_remover(aut);
       }
     };
 
@@ -319,27 +320,27 @@ namespace vcsn
 
     template <typename Aut, typename Kind>
     inline
-    bool properer<Aut,Kind>::is_valid(const automaton_t& input)
+    bool properer<Aut,Kind>::is_valid(const automaton_t& aut)
     {
       return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-        ::is_valid(input);
+        ::is_valid(aut);
     }
 
     template <typename Aut, typename Kind>
     inline
-    void properer<Aut,Kind>::proper_here(automaton_t& input)
+    void properer<Aut,Kind>::proper_here(automaton_t& aut)
     {
-      if (!is_proper(input))
+      if (!is_proper(aut))
         EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-          ::proper_here(input);
+          ::proper_here(aut);
     }
 
     template <typename Aut, typename Kind>
     inline
-    auto properer<Aut,Kind>::proper(const automaton_t& input)
+    auto properer<Aut,Kind>::proper(const automaton_t& aut)
       -> automaton_t
     {
-      Aut res = copy(input);
+      Aut res = copy(aut);
       proper_here(res);
       return res;
     }
@@ -368,9 +369,9 @@ namespace vcsn
       void proper_here(automaton_t&)
       {}
 
-      static Aut proper(const automaton_t& input)
+      static Aut proper(const automaton_t& aut)
       {
-        return copy(input);
+        return copy(aut);
       }
     };
 
@@ -383,45 +384,45 @@ namespace vcsn
 
   template <class Aut>
   inline
-  bool is_proper(Aut& input)
+  bool is_proper(Aut& aut)
   {
-    return detail::properer<Aut>::is_proper(input);
+    return detail::properer<Aut>::is_proper(aut);
   }
 
   template <class Aut>
   inline
-  bool is_valid(Aut& input)
+  bool is_valid(Aut& aut)
   {
-    return detail::properer<Aut>::is_valid(input);
+    return detail::properer<Aut>::is_valid(aut);
   }
 
   template <class Aut>
   inline
-  void proper_here(Aut& input, direction_t dir = direction_t::FORWARD)
+  void proper_here(Aut& aut, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
       case direction_t::FORWARD:
-        detail::properer<Aut>::proper_here(input);
+        detail::properer<Aut>::proper_here(aut);
         return;
       case direction_t::BACKWARD:
-        auto tr_input = transpose(input);
-        using tr_aut_t = decltype(tr_input);
-        detail::properer<tr_aut_t>::proper_here(tr_input);
+        auto tr_aut = transpose(aut);
+        using tr_aut_t = decltype(tr_aut);
+        detail::properer<tr_aut_t>::proper_here(tr_aut);
         return;
       }
   }
 
   template <class Aut>
-  Aut proper(const Aut& input, direction_t dir = direction_t::FORWARD)
+  Aut proper(const Aut& aut, direction_t dir = direction_t::FORWARD)
   {
     switch (dir)
       {
       case direction_t::FORWARD:
-        return detail::properer<Aut>::proper(input);
+        return detail::properer<Aut>::proper(aut);
       case direction_t::BACKWARD:
         // FIXME: inconsistent implementation bw fwd and bwd.
-        Aut res = copy(input);
+        Aut res = copy(aut);
         proper_here(res, direction_t::BACKWARD);
         return res;
       }
