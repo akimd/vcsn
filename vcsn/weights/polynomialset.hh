@@ -125,8 +125,8 @@ namespace vcsn
     value_t
     star(const value_t& v) const
     {
-      // The only starable polynomialsets are scalars (if they are
-      // starable too).
+      // The only starrable polynomialsets are scalars (if they are
+      // starrable too).
       auto s = v.size();
       if (s == 0)
         return one();

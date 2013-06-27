@@ -3,7 +3,7 @@
 
 namespace vcsn
 {
-  enum star_status_t { STARABLE, NON_STARABLE, TOPS, ABSVAL };
+  enum star_status_t { STARRABLE, NON_STARRABLE, TOPS, ABSVAL };
 };
 
 #endif // !STAR_STATUS_HH

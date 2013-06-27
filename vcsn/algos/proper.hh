@@ -45,7 +45,7 @@ namespace vcsn
 
          For each state s
          if s has an epsilon-loop with weight w
-         if w is not starable, return false
+         if w is not starrable, return false
          else compute ws = star(w)
          endif
          remove the loop
@@ -155,9 +155,9 @@ namespace vcsn
       /**@brief Test whether an automaton is valid.
 
          The behavior of this method depends on the star_status of the weight_set:
-         -- starable : return true;
+         -- starrable : return true;
          -- tops : copy the input and return the result of proper on the copy;
-         -- non_starable : return true iff the automaton is epsilon-acyclic
+         -- non_starrable : return true iff the automaton is epsilon-acyclic
          WARNING: for weight_sets with zero divisor, should test whether the weight of
          every simple circuit is zero;
          -- absval : build a copy of the input where each weight is replaced by its absolute value
@@ -169,10 +169,10 @@ namespace vcsn
 
       /**@brief Remove the epsilon-transitions of the input
          The behaviour of this method depends on the star_status of the weight_set:
-         -- starable : always valid, does not throw any exception
+         -- starrable : always valid, does not throw any exception
          -- tops : the proper algo is directly launched on the input;
          if it returns false, an exception is launched
-         -- non_starable / absval:
+         -- non_starrable / absval:
          is_valid is called before launching the algorithm.
          @param input The automaton in which epsilon-transitions will be removed
          @throw domain_error if the input is not valid
@@ -269,9 +269,9 @@ namespace vcsn
     };
     /// !ABSVAL
 
-    // STARABLE : always valid
+    // STARRABLE : always valid
     template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::STARABLE>
+    class EpsilonDispatcher<Aut, star_status_t::STARRABLE>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
       using properer_t = properer<automaton_t>;
@@ -287,14 +287,14 @@ namespace vcsn
       }
     };
 
-    //!STARABLE
+    //!STARRABLE
 
-    // NON_STARABLE : valid iff there is no epsilon-circuit with weight zero
+    // NON_STARRABLE : valid iff there is no epsilon-circuit with weight zero
     // Warning: the property tested here is the acyclicity, which is equivalent
     // only in zero divisor free semirings
 
     template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::NON_STARABLE >
+    class EpsilonDispatcher<Aut, star_status_t::NON_STARRABLE >
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
@@ -315,7 +315,7 @@ namespace vcsn
       }
     };
 
-    // !NON_STARABLE
+    // !NON_STARRABLE
 
     template <typename Aut, typename Kind>
     inline
