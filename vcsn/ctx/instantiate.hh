@@ -124,6 +124,9 @@ namespace vcsn
   | Register the abstract functions.  |
   `----------------------------------*/
 
+#define REGISTER(Type, Algo)                    \
+  Algo ## _register(Type::sname(), Algo<Type>)
+
   namespace ctx
   {
     namespace detail
@@ -135,17 +138,17 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        complete_register(aut_t::sname(), complete<aut_t>);
-        de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
-        enumerate_register(aut_t::sname(), enumerate<aut_t>);
-        eval_register(aut_t::sname(), eval<aut_t>);
+        REGISTER(aut_t, complete);
+        REGISTER(Ctx, de_bruijn);
+        REGISTER(aut_t, enumerate);
+        REGISTER(aut_t, eval);
 
-        is_complete_register(aut_t::sname(), is_complete<aut_t>);
-        is_deterministic_register(aut_t::sname(), is_deterministic<aut_t>);
+        REGISTER(aut_t, is_complete);
+        REGISTER(aut_t, is_deterministic);
 
-        ladybird_register(Ctx::sname(), ladybird<Ctx>);
+        REGISTER(Ctx, ladybird);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
-        shortest_register(aut_t::sname(), shortest<aut_t>);
+        REGISTER(aut_t, shortest);
 
         return true;
       }
@@ -157,11 +160,11 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        de_bruijn_register(Ctx::sname(), de_bruijn<Ctx>);
+        REGISTER(Ctx, de_bruijn);
 
-        proper_register(aut_t::sname(), proper<aut_t>);
+        REGISTER(aut_t, proper);
 
-        ladybird_register(Ctx::sname(), ladybird<Ctx>);
+        REGISTER(Ctx, ladybird);
 
         // thompson.
         thompson_register(Ctx::sname(), thompson<aut_t>);
@@ -185,7 +188,7 @@ namespace vcsn
         using namespace dyn::detail;
 
         // proper.
-        proper_register(aut_t::sname(), proper<aut_t>);
+        REGISTER(aut_t, proper);
 
         // thompson.
         thompson_register(Ctx::sname(), thompson<aut_t>);
@@ -203,16 +206,16 @@ namespace vcsn
         using namespace dyn::detail;
 
         // accessible.
-        accessible_register(aut_t::sname(), accessible<aut_t>);
+        REGISTER(aut_t, accessible);
 
         // aut_to_exp.
-        aut_to_exp_register(aut_t::sname(), aut_to_exp<aut_t>);
+        REGISTER(aut_t, aut_to_exp);
 
         // coaccessible.
-        coaccessible_register(aut_t::sname(), coaccessible<aut_t>);
+        REGISTER(aut_t, coaccessible);
 
         // copy.
-        copy_register(aut_t::sname(), copy<aut_t>);
+        REGISTER(aut_t, copy);
 
         // dot.
         dot_stream_register(aut_t::sname(),
@@ -229,32 +232,32 @@ namespace vcsn
                                        make_automaton_editor<aut_t>);
 
         // fsm.
-        fsm_register(aut_t::sname(), fsm<aut_t>);
-        fsm_register(taut_t::sname(), fsm<taut_t>);
+        REGISTER(aut_t, fsm);
+        REGISTER(taut_t, fsm);
 
         // info.
-        info_register(aut_t::sname(), info<aut_t>);
-        info_register(taut_t::sname(), info<taut_t>);
-        info_exp_register(Ctx::sname(), info_exp<Ctx>);
+        REGISTER(aut_t, info);
+        REGISTER(taut_t, info);
+        REGISTER(Ctx, info_exp);
 
-        is_empty_register(aut_t::sname(), is_empty<aut_t>);
+        REGISTER(aut_t, is_empty);
 
         // is-eps-acyclic.
-        is_eps_acyclic_register(aut_t::sname(), is_eps_acyclic<aut_t>);
+        REGISTER(aut_t, is_eps_acyclic);
 
         // is-proper.
-        is_proper_register(aut_t::sname(), is_proper<aut_t>);
+        REGISTER(aut_t, is_proper);
 
-        is_trim_register(aut_t::sname(), is_trim<aut_t>);
-        is_useless_register(aut_t::sname(), is_useless<aut_t>);
+        REGISTER(aut_t, is_trim);
+        REGISTER(aut_t, is_useless);
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(Ctx::sname(), lift<Ctx>);
 
         // make-context.
-        make_context_register(Ctx::sname(), make_context<Ctx>);
-        make_ratexpset_register(Ctx::sname(), make_ratexpset<Ctx>);
+        REGISTER(Ctx, make_context);
+        REGISTER(Ctx, make_ratexpset);
 
         // print
         print_exp_register(Ctx::sname(), print<Ctx>);
@@ -265,24 +268,26 @@ namespace vcsn
         standard_register(Ctx::sname(), standard<aut_t>);
 
         // tikz.
-        tikz_register(aut_t::sname(), tikz<aut_t>);
-        tikz_register(taut_t::sname(), tikz<taut_t>);
+        REGISTER(aut_t, tikz);
+        REGISTER(taut_t, tikz);
 
         // transpose.
-        transpose_register(aut_t::sname(), transpose<aut_t>);
+        REGISTER(aut_t, transpose);
         transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
 
         // trim.
-        trim_register(aut_t::sname(), trim<aut_t>);
+        REGISTER(aut_t, trim);
 
         // xml.
-        xml_register(Ctx::sname(), xml<Ctx>);
+        REGISTER(Ctx, xml);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
       }
     }
   }
+
+# undef REGISTER
 
 # if VCSN_INSTANTIATION
 #  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
