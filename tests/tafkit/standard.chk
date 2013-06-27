@@ -1,49 +1,16 @@
 #! /bin/sh
 
-# context VCSN-STANDARD-OF-ARGUMENTS
-# ----------------------------------
-context ()
-{
-  while test $# != 0
-  do
-    case $1 in
-      (-W) case $2 in
-            (zr) echo 'lal_char(abcd)_ratexpset<lal_char(efgh)_z>';;
-            (*) echo "lal_char(abcd)_$2";;
-           esac
-           return 0;;
-      (-C) echo "$2"
-           return 0;;
-    esac
-    shift
-  done
-  echo 'lal_char(abcd)_b'
-  return 0
-}
-
 # check VCSN-STANDARD-OF-ARGUMENTS
 # --------------------------------
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
-  ctx=$(context "$@")
-  cat >out.exp <<EOF
-digraph
-{
-  vcsn_context = "$ctx"
-  rankdir = LR
-EOF
-  cat >>out.exp
-  cat >>out.exp <<\EOF
-}
-EOF
-
-  run 0 out.exp -vcsn-standard "$@" -O dot
+  run 0 - -vcsn-standard -e "$@" -O dot
 }
 
 fail ()
 {
-  run 1 '' -vcsn-standard "$@"
+  run 1 '' -vcsn-standard -e "$@"
 }
 
 ## --- ##
@@ -51,7 +18,11 @@ fail ()
 ## --- ##
 
 # B: "\z".
-check -W b -e '\z' <<\EOF
+check '(?@lal_char(ab)_b)\z' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -61,10 +32,15 @@ check -W b -e '\z' <<\EOF
     0 [color = gray]
   }
   I0 -> 0 [color = gray]
+}
 EOF
 
 # B: "\e".
-check -W b -e '\e' <<\EOF
+check '(?@lal_char(ab)_b)\e' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -76,10 +52,15 @@ check -W b -e '\e' <<\EOF
   }
   I0 -> 0
   0 -> F0
+}
 EOF
 
 # B: "a"
-check -W b -e 'a' <<\EOF
+check '(?@lal_char(ab)_b)a' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -93,6 +74,7 @@ check -W b -e 'a' <<\EOF
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
+}
 EOF
 
 ## -------- ##
@@ -100,7 +82,11 @@ EOF
 ## -------- ##
 
 # B: "a+b"
-check -W b -e 'a+b' <<\EOF
+check '(?@lal_char(ab)_b)a+b' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -118,10 +104,15 @@ check -W b -e 'a+b' <<\EOF
   0 -> 2 [label = "b"]
   1 -> F1
   2 -> F2
+}
 EOF
 
 # B: "abc".
-check -W b -e 'abc' <<\EOF
+check '(?@lal_char(abc)_b)abc' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abc)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -139,10 +130,15 @@ check -W b -e 'abc' <<\EOF
   1 -> 2 [label = "b"]
   2 -> 3 [label = "c"]
   3 -> F3
+}
 EOF
 
 # B: "ab+cd".
-check -W b -e 'ab+cd' <<\EOF
+check '(?@lal_char(abcd)_b)ab+cd' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -164,10 +160,15 @@ check -W b -e 'ab+cd' <<\EOF
   2 -> F2
   3 -> 4 [label = "d"]
   4 -> F4
+}
 EOF
 
 # B: "a(b+c)d".
-check -W b -e 'a(b+c)d' <<\EOF
+check '(?@lal_char(abcd)_b)a(b+c)d' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -188,10 +189,15 @@ check -W b -e 'a(b+c)d' <<\EOF
   2 -> 3 [label = "d"]
   3 -> F3
   4 -> 3 [label = "d"]
+}
 EOF
 
 # B: "(ab+cd+abcd)abc".
-check -W b -e '(ab+cd+abcd)abc' <<\EOF
+check '(?@lal_char(abcd)_b)(ab+cd+abcd)abc' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -227,6 +233,7 @@ check -W b -e '(ab+cd+abcd)abc' <<\EOF
   9 -> 6 [label = "a"]
   10 -> 11 [label = "c"]
   11 -> F11
+}
 EOF
 
 
@@ -234,7 +241,11 @@ EOF
 ## B: Star.  ##
 ## --------- ##
 
-check -e '\z*' <<\EOF
+check '(?@lal_char(abcd)_b)\z*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -246,9 +257,14 @@ check -e '\z*' <<\EOF
   }
   I0 -> 0
   0 -> F0
+}
 EOF
 
-check -e '\e*' <<\EOF
+check '(?@lal_char(abcd)_b)\e*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -260,9 +276,14 @@ check -e '\e*' <<\EOF
   }
   I0 -> 0
   0 -> F0
+}
 EOF
 
-check -e 'a*' <<\EOF
+check '(?@lal_char(abcd)_b)a*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -279,9 +300,14 @@ check -e 'a*' <<\EOF
   0 -> 1 [label = "a"]
   1 -> F1
   1 -> 1 [label = "a"]
+}
 EOF
 
-check -e '(a+b)*' <<\EOF
+check '(?@lal_char(abcd)_b)(a+b)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -305,9 +331,14 @@ check -e '(a+b)*' <<\EOF
   2 -> F2
   2 -> 1 [label = "a"]
   2 -> 2 [label = "b"]
+}
 EOF
 
-check -e '(ab)*' <<\EOF
+check '(?@lal_char(abcd)_b)(ab)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -326,9 +357,14 @@ check -e '(ab)*' <<\EOF
   1 -> 2 [label = "b"]
   2 -> F2
   2 -> 1 [label = "a"]
+}
 EOF
 
-check -e 'a**' <<\EOF
+check '(?@lal_char(abcd)_b)a**' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -345,6 +381,7 @@ check -e 'a**' <<\EOF
   0 -> 1 [label = "a"]
   1 -> F1
   1 -> 1 [label = "a"]
+}
 EOF
 
 ## ---- ##
@@ -353,7 +390,11 @@ EOF
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<\EOF
+check '(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -371,6 +412,7 @@ check -C 'lal_char(a)_ratexpset<lal_char(xyz)_b>' -e '<x>a(<y>\e+<z>a)' <<\EOF
   1 -> F1 [label = "<y>"]
   1 -> 2 [label = "<z>a"]
   2 -> F2
+}
 EOF
 
 
@@ -380,7 +422,11 @@ EOF
 
 
 # Z: "<12>\e".
-check -W z -e '<12>\e' <<\EOF
+check '(?@lal_char(ab)_z)<12>\e' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -392,6 +438,7 @@ check -W z -e '<12>\e' <<\EOF
   }
   I0 -> 0
   0 -> F0 [label = "<12>"]
+}
 EOF
 
 ## -------- ##
@@ -399,7 +446,11 @@ EOF
 ## -------- ##
 
 # Z: "\e+a+\e"
-check -W z -e '\e+a+\e' <<\EOF
+check '(?@lal_char(ab)_z)\e+a+\e' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -415,10 +466,15 @@ check -W z -e '\e+a+\e' <<\EOF
   0 -> F0 [label = "<2>"]
   0 -> 1 [label = "a"]
   1 -> F1
+}
 EOF
 
 # Z: "<12>\e+<23>a+<34>b".
-check -W z -e '<12>\e+<23>a+<34>b' <<\EOF
+check '(?@lal_char(ab)_z)<12>\e+<23>a+<34>b' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -438,10 +494,15 @@ check -W z -e '<12>\e+<23>a+<34>b' <<\EOF
   0 -> 2 [label = "<34>b"]
   1 -> F1
   2 -> F2
+}
 EOF
 
 # left weight.
-check -W z -e '<12>(\e+a+<10>b+<10>\e)' <<\EOF
+check '(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -461,10 +522,15 @@ check -W z -e '<12>(\e+a+<10>b+<10>\e)' <<\EOF
   0 -> 2 [label = "<120>b"]
   1 -> F1
   2 -> F2
+}
 EOF
 
 # right weight.
-check -W z -e '(\e+a+<2>b+<3>\e)<10>' <<\EOF
+check '(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -484,6 +550,7 @@ check -W z -e '(\e+a+<2>b+<3>\e)<10>' <<\EOF
   0 -> 2 [label = "<2>b"]
   1 -> F1 [label = "<10>"]
   2 -> F2 [label = "<10>"]
+}
 EOF
 
 ## ------------ ##
@@ -491,7 +558,11 @@ EOF
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check -W z -e '<12>(ab)<23>' <<\EOF
+check '(?@lal_char(ab)_z)<12>(ab)<23>' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -507,13 +578,18 @@ check -W z -e '<12>(ab)<23>' <<\EOF
   0 -> 1 [label = "<12>a"]
   1 -> 2 [label = "b"]
   2 -> F2 [label = "<23>"]
+}
 EOF
 
 ## --------- ##
 ## Z: star.  ##
 ## --------- ##
 
-check -W z -e '\z*' <<\EOF
+check '(?@lal_char(ab)_z)\z*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -525,11 +601,16 @@ check -W z -e '\z*' <<\EOF
   }
   I0 -> 0
   0 -> F0
+}
 EOF
 
-fail -W z -e '\e*'
+fail '(?@lal_char(ab)_z)\e*'
 
-check -W z -e '(<2>a)*' <<\EOF
+check '(?@lal_char(ab)_z)(<2>a)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -546,9 +627,14 @@ check -W z -e '(<2>a)*' <<\EOF
   0 -> 1 [label = "<2>a"]
   1 -> F1
   1 -> 1 [label = "<2>a"]
+}
 EOF
 
-check -W z -e '<2>a*<3>' <<\EOF
+check '(?@lal_char(ab)_z)<2>a*<3>' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -565,9 +651,14 @@ check -W z -e '<2>a*<3>' <<\EOF
   0 -> 1 [label = "<2>a"]
   1 -> F1 [label = "<3>"]
   1 -> 1 [label = "a"]
+}
 EOF
 
-check -W z -e '(<2>a+<3>b)*' <<\EOF
+check '(?@lal_char(ab)_z)(<2>a+<3>b)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -591,9 +682,14 @@ check -W z -e '(<2>a+<3>b)*' <<\EOF
   2 -> F2
   2 -> 1 [label = "<2>a"]
   2 -> 2 [label = "<3>b"]
+}
 EOF
 
-check -W z -e '<2>(<3>a+<5>b)*<7>' <<\EOF
+check '(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -617,9 +713,14 @@ check -W z -e '<2>(<3>a+<5>b)*<7>' <<\EOF
   2 -> F2 [label = "<7>"]
   2 -> 1 [label = "<3>a"]
   2 -> 2 [label = "<5>b"]
+}
 EOF
 
-check -W z -e '<2>(<3>(ab)<5>)*<7>' <<\EOF
+check '(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -638,15 +739,20 @@ check -W z -e '<2>(<3>(ab)<5>)*<7>' <<\EOF
   1 -> 2 [label = "b"]
   2 -> F2 [label = "<35>"]
   2 -> 1 [label = "<15>a"]
+}
 EOF
 
-fail -W z -e 'a**'
+fail '(?@lal_char(ab)_z)a**'
 
 ## ---------- ##
 ## ZR: star.  ##
 ## ---------- ##
 
-check -W zr -e '(<e>\e+abc)*' <<\EOF
+check '(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -667,9 +773,14 @@ check -W zr -e '(<e>\e+abc)*' <<\EOF
   2 -> 3 [label = "c"]
   3 -> F3 [label = "<e*>"]
   3 -> 1 [label = "<e*>a"]
+}
 EOF
 
-check -W zr -e '(<e>\e+ab<f>)*' <<\EOF
+check '(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
+  rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
@@ -688,4 +799,5 @@ check -W zr -e '(<e>\e+ab<f>)*' <<\EOF
   1 -> 2 [label = "b"]
   2 -> F2 [label = "<f.(e*)>"]
   2 -> 1 [label = "<f.(e*)>a"]
+}
 EOF
