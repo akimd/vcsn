@@ -1,0 +1,7 @@
+#! /bin/sh
+
+# This simple program gives an idea of what TAK-Kit v2 should look like.
+
+prog="vcsn-$1"
+shift
+exec $prog "$@"

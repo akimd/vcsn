@@ -1,3 +1,12 @@
+* 2013-06-28
+** new binary: vcsn
+To give a flavor of what TAF-Kit should be (a single tool instead of one per
+command), the new "vcsn" script bounces to the vcsn-* tools.  It does not
+support \| as TAK-Kit 1 did.
+
+  $ vcsn are-equivalent -Ee '(a*b*)*' '(a+b)*'
+  true
+
 * 2013-06-26
 ** proper
 Now removes states to which no transition arrive after spontaneous

@@ -37,6 +37,7 @@ TESTS_ENVIRONMENT =
 TFAIL_TESTS =
 XFAIL_TESTS =
 bin_PROGRAMS =
+bin_SCRIPTS =
 dist_TESTS =
 dist_bin_SCRIPTS =
 dist_noinst_DATA =
