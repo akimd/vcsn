@@ -138,9 +138,6 @@ namespace vcsn
               // a weight.  Entries see the special label as an empty
               // one.
               auto e = entryset_.conv(entry, sep_);
-              std::cerr << "conv: " << entry
-                        << " -> {" << entryset_.format(e, ";") << '}'
-                        << std::endl;
               if (e.size() == 1
                   && (res_->labelset()->is_special(begin(e)->first)
                       || res_->labelset()->is_one(begin(e)->first)))
