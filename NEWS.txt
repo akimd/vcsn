@@ -1,3 +1,40 @@
+* 2013-07-01
+** new format: efsm (and new tool: efstcompile)
+The former output format ("fsm") is dropped, replaced by an adhoc "extended
+FSM" format: "efsm".  The FSM format focuses only on the transitions, and
+lacks information about the labels (which are expected to be mapped to
+numbers), weights, whether it's an acceptor or transducer, etc.
+
+The efsm format is designed to be simple to use with OpenFST: just run
+"efstcompile" instead of "fstcompile".  As a matter fact, the new
+"efstcompile" tool is rather dumb, as it simply executes the "efsm" file.
+
+  $ vcsn-ladybird -O efsm 2
+  #! /bin/sh
+
+  cat >transitions.fsm <<\EOFSM
+  0	2	\e
+  2
+  2	3	a
+  3	3	b
+  3	3	c
+  3	2	c
+  3	2	a
+  EOFSM
+
+  cat >isymbols.txt <<\EOFSM
+  \e	0
+  a	1
+  b	2
+  c	3
+  EOFSM
+
+  fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
+
+  $ vcsn-ladybird -O efsm 8 | efstcompile | fstdeterminize | fstinfo \
+      | grep '# of states'
+  # of states                                       256
+
 * 2013-06-28
 ** new binary: vcsn
 To give a flavor of what TAF-Kit should be (a single tool instead of one per

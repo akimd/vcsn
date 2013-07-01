@@ -7,18 +7,18 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
-# include <vcsn/algos/proper.hh>
+# include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/eval.hh>
-# include <vcsn/algos/fsm.hh>
 # include <vcsn/algos/info.hh>
-# include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
+# include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
+# include <vcsn/algos/proper.hh>
 # include <vcsn/algos/shortest.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/thompson.hh>
@@ -70,16 +70,16 @@ namespace vcsn
   /* dot. */                                                            \
   VCSN_CTX_INSTANTIATE_PRINT(dot, mutable_automaton<Ctx>);              \
   VCSN_CTX_INSTANTIATE_PRINT                                            \
-  (dot, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);    \
+  (dot, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);     \
                                                                         \
-  /* fsm. */                                                            \
+  /* efsm. */                                                           \
   MAYBE_EXTERN template                                                 \
-  std::ostream& fsm<mutable_automaton<Ctx>>                             \
+  std::ostream& efsm<mutable_automaton<Ctx>>                            \
   (const mutable_automaton<Ctx>& aut, std::ostream& out);               \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
-  fsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>        \
-  (const vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>& aut, \
+  efsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>       \
+  (const vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>& aut,\
    std::ostream& out);                                                  \
                                                                         \
   /* lift. */                                                           \
@@ -232,9 +232,9 @@ namespace vcsn
         make_automaton_editor_register(Ctx::sname(),
                                        make_automaton_editor<aut_t>);
 
-        // fsm.
-        REGISTER(aut_t, fsm);
-        REGISTER(taut_t, fsm);
+        // efsm.
+        REGISTER(aut_t, efsm);
+        REGISTER(taut_t, efsm);
 
         // info.
         REGISTER(aut_t, info);

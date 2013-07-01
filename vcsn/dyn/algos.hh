@@ -46,6 +46,9 @@ namespace vcsn
     std::ostream& dot(const automaton& aut, std::ostream& out);
     std::string dot(const automaton& aut);
 
+    /// Output in Extended FSM format.
+    std::ostream& efsm(const automaton& aut, std::ostream& out);
+
     /// One of the shortest accepted words.
     /// \throw std::domain_error if the automaton is useless
     std::vector<std::string> enumerate(const automaton& aut, size_t max);
@@ -56,8 +59,6 @@ namespace vcsn
 
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);
-
-    std::ostream& fsm(const automaton& aut, std::ostream& out);
 
     bool is_complete(const automaton& aut);
 

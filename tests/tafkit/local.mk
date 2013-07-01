@@ -20,9 +20,9 @@ tafkit_TESTS =                                  \
   tafkit/complete.chk                           \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
+  tafkit/efsm.chk                               \
   tafkit/enumerate.chk                          \
   tafkit/eval.chk                               \
-  tafkit/fsm.chk                                \
   tafkit/is-deterministic.chk                   \
   tafkit/is-normalized.chk                      \
   tafkit/is-proper.chk                          \

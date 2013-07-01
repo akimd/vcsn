@@ -19,8 +19,8 @@ namespace vcsn
         dot(aut, out);
       else if (type == "info")
         info(aut, out);
-      else if (type == "fsm")
-        fsm(aut, out);
+      else if (type == "efsm")
+        efsm(aut, out);
       else if (type == "null")
         {}
       else if (type == "tikz")

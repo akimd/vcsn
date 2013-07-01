@@ -1,22 +1,22 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/fsm.hh>
+#include <vcsn/algos/efsm.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
 {
   namespace dyn
   {
-    /*------.
-    | fsm.  |
-    `------*/
+    /*-------.
+    | efsm.  |
+    `-------*/
 
-    REGISTER_DEFINE(fsm);
+    REGISTER_DEFINE(efsm);
 
     std::ostream&
-    fsm(const automaton& aut, std::ostream& out)
+    efsm(const automaton& aut, std::ostream& out)
     {
-      detail::fsm_registry().call(aut->vname(),
+      detail::efsm_registry().call(aut->vname(),
                                   aut, out);
       return out;
     }

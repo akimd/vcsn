@@ -32,8 +32,8 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/determinize.cc                 \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
+  lib/vcsn/algos/efsm.cc                        \
   lib/vcsn/algos/eval.cc                        \
-  lib/vcsn/algos/fsm.cc                         \
   lib/vcsn/algos/info.cc                        \
   lib/vcsn/algos/is-deterministic.cc            \
   lib/vcsn/algos/is-eps-acyclic.cc              \

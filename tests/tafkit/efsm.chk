@@ -7,7 +7,7 @@ check ()
 {
   cat >out.efsm
   cp out.efsm out.exp
-  run 0 out.exp -vcsn-cat -O fsm -Af "$1"
+  run 0 out.exp -vcsn-cat -O efsm -Af "$1"
   # Check that efstcompile is happy with it, as an acceptor.
   run 0 ignore -efstcompile out.efsm
 }

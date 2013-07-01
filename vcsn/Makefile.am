@@ -22,8 +22,8 @@ nobase_vcsn_HEADERS =                           \
   algos/determinize.hh                          \
   algos/dot.hh                                  \
   algos/edit-automaton.hh                       \
+  algos/efsm.hh                                 \
   algos/eval.hh                                 \
-  algos/fsm.hh                                  \
   algos/info.hh                                 \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \

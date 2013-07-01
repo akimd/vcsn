@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_FSM_HH
-# define VCSN_ALGOS_FSM_HH
+#ifndef VCSN_ALGOS_EFSM_HH
+# define VCSN_ALGOS_EFSM_HH
 
 # include <iostream>
 # include <map>
@@ -11,21 +11,21 @@
 namespace vcsn
 {
 
-  /*-------------------------.
-  | fsm(automaton, stream).  |
-  `-------------------------*/
+  /*--------------------------.
+  | efsm(automaton, stream).  |
+  `--------------------------*/
   namespace detail
   {
 
-    /// http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
+    /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
     template <class Aut>
-    struct fsmer
+    struct efsmer
     {
       using automaton_t = Aut;
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
 
-      fsmer(const automaton_t& aut, std::ostream& out)
+      efsmer(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
       {
@@ -126,13 +126,13 @@ namespace vcsn
 
 
 
-  // http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
+  // http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
   template <class Aut>
   std::ostream&
-  fsm(const Aut& aut, std::ostream& out)
+  efsm(const Aut& aut, std::ostream& out)
   {
-    detail::fsmer<Aut> fsm{aut, out};
-    fsm();
+    detail::efsmer<Aut> efsm{aut, out};
+    efsm();
     return out;
   }
 
@@ -141,15 +141,15 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
-      std::ostream& fsm(const automaton& aut, std::ostream& out)
+      std::ostream& efsm(const automaton& aut, std::ostream& out)
       {
-        return fsm(dynamic_cast<const Aut&>(*aut), out);
+        return efsm(dynamic_cast<const Aut&>(*aut), out);
       }
 
-      REGISTER_DECLARE(fsm,
+      REGISTER_DECLARE(efsm,
                        (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }
 
-#endif // !VCSN_ALGOS_FSM_HH
+#endif // !VCSN_ALGOS_EFSM_HH
