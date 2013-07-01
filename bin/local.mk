@@ -11,7 +11,7 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_bin_SCRIPTS += bin/vcsn
+dist_bin_SCRIPTS += bin/efstcompile bin/vcsn
 
 # Keep common.mk in sync.
 bin_PROGRAMS +=                                 \

@@ -2,9 +2,8 @@
 # define VCSN_ALGOS_FSM_HH
 
 # include <iostream>
-# include <unordered_map>
+# include <map>
 
-# include <vcsn/core/kind.hh>
 # include <vcsn/dyn/fwd.hh>
 
 # include <vcsn/misc/escape.hh>
@@ -18,75 +17,104 @@ namespace vcsn
   namespace detail
   {
 
-    // http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
+    /// http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
     template <class Aut>
     struct fsmer
     {
       using automaton_t = Aut;
       using label_t = typename automaton_t::label_t;
+      using transition_t = typename automaton_t::transition_t;
 
       fsmer(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
       {
-        // Map epsilon and the special symbol (that labels initial and
-        // final transitions) to '0'.  Requested by the FSM format.
-        names_[aut_.labelset()->special()] = 0;
-        map_one_to_zero_(*aut_.labelset());
+        // Special label.
+        names_[""] = 0;
+        // Empty label.
+        names_["\\e"] = 0;
       }
 
       /// Actually output \a aut_ on \a os_.
       void operator()()
       {
+        os_ << "#! /bin/sh" << std::endl
+            << std::endl;
+
+        os_ << "cat >transitions.fsm <<\\EOFSM" << std::endl;
         output_transitions_();
+        os_ << "EOFSM" << std::endl
+            << std::endl;
+
+        os_ << "cat >isymbols.txt <<\\EOFSM" << std::endl;
+        output_input_labels_();
+        os_ << "EOFSM" << std::endl
+            << std::endl;
+
+        os_ << "fstcompile --acceptor"
+            << " --keep_isymbols --isymbols=isymbols.txt"
+            << " transitions.fsm";
       }
 
     private:
-      // The FSM format uses integers for labels.  Reserve 0 for epsilon
-      // (and the special symbol, that flags initial and final
-      // transitions).
-      using label_names_t = std::unordered_map<label_t, unsigned>;
+      /// The FSM format uses integers for labels.  Reserve 0 for
+      /// epsilon (and the special symbol, that flags initial and
+      /// final transitions).
+      using label_names_t = std::map<std::string, unsigned>;
 
-      /// If the "one" label exists, map it to 0 in \a map_.
-      template <typename LabelSet>
-      typename std::enable_if<is_lal<LabelSet>::value>::type
-      map_one_to_zero_(const LabelSet&)
-      {}
-
-      template <typename LabelSet>
-      typename std::enable_if<!is_lal<LabelSet>::value>::type
-      map_one_to_zero_(const LabelSet& ls)
+      /// Return the label of transition \a t, record it for the input
+      /// symbol lists.
+      std::string
+      label_of_(transition_t t)
       {
-        names_[ls.one()] = 0;
+        /// FIXME: not very elegant, \\e should be treated elsewhere.
+        const auto l = aut_.label_of(t);
+        std::string res =
+          aut_.labelset()->is_special(l) ? "\\e" : aut_.labelset()->format(l);
+
+        auto insert = names_.emplace(res, name_);
+        // If the label is fresh, prepare the next name.
+        if (insert.second)
+          ++name_;
+        return res;
       }
 
+      /// Output all the transitions, and final states.
       void output_transitions_()
       {
-        // A counter used to name the labels.
-        // 0 is already used for epsilon and special.
-        unsigned name = 1;
-
         for (auto t : aut_.all_transitions())
           {
-            const auto& lbl = aut_.label_of(t);
-            auto insert = names_.emplace(lbl, name);
-            if (insert.second)
-              ++name;
-            os_ << aut_.src_of(t) << '\t'
-                << aut_.dst_of(t) << '\t'
-                << insert.first->second // << '\t'
-              //            << 0 // Output label: epsilon.
-              // FIXME: aut.weight_of(t)
-                << std::endl;
+            os_ << aut_.src_of(t);
+            if (aut_.dst_of(t) != aut_.post())
+              os_ << '\t' << aut_.dst_of(t)
+                  << '\t' << label_of_(t);
+            // << '\t'
+            //            << 0 // Output label: epsilon.
+            // FIXME: aut.weight_of(t)
+            os_ << std::endl;
           }
-        // post is the only final state.
-        os_ << aut_.post();
+      }
+
+      /// Output the mapping from label name, to label number.
+      void output_input_labels_()
+      {
+        // Sorted per label name, which is fine, and deterministic.
+        // Start with special/epsilon.  Show it as \e.
+        os_ << "\\e\t0" << std::endl;
+        for (const auto& p: names_)
+          // Don't define 0 again.
+          if (p.second)
+            os_ << p.first << '\t' << p.second << std::endl;
       }
 
       /// The automaton we have to output.
       const automaton_t& aut_;
       /// The FSM format uses integers for labels.
       label_names_t names_;
+      /// A counter used to name the labels.
+      /// 0 is already used for epsilon and special.
+      unsigned name_ = 1;
+
       std::ostream& os_;
     };
   }

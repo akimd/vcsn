@@ -87,7 +87,7 @@ AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Use the wrappers to run the non-installed executables.
 BUILDCHECK_ENVIRONMENT +=                                       \
-  PATH=$(abs_top_builddir)/bin:$$PATH; export PATH;
+  PATH=$(abs_top_builddir)/bin:$(abs_top_srcdir)/bin:$$PATH; export PATH;
 
 INSTALLCHECK_ENVIRONMENT +=                                     \
   PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;

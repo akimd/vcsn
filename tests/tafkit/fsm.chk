@@ -5,21 +5,36 @@
 # Check the conversion from Dot to FSM.
 check ()
 {
-  cat >out.fsm
-  cp out.fsm out.exp
+  cat >out.efsm
+  cp out.efsm out.exp
   run 0 out.exp -vcsn-cat -O fsm -Af "$1"
-  # Check that fstcompile is happy with it, as an acceptor.
-  run 0 ignore -fstcompile --acceptor out.fsm
+  # Check that efstcompile is happy with it, as an acceptor.
+  run 0 ignore -efstcompile out.efsm
 }
 
+## --------------------- ##
+## A Boolean automaton.  ##
+## --------------------- ##
+
 check $top_srcdir/share/vcsn/a1.gv <<EOF
-0	2	0
-2	2	1
-2	2	2
-2	3	1
-3	4	2
-4	4	1
-4	4	2
-4	1	0
-1
+#! /bin/sh
+
+cat >transitions.fsm <<\EOFSM
+0	2	\e
+2	2	a
+2	2	b
+2	3	a
+3	4	b
+4	4	a
+4	4	b
+4
+EOFSM
+
+cat >isymbols.txt <<\EOFSM
+\e	0
+a	1
+b	2
+EOFSM
+
+fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
 EOF
