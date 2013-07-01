@@ -82,15 +82,20 @@ namespace vcsn
       /// Output all the transitions, and final states.
       void output_transitions_()
       {
+        const auto& ws = *aut_.weightset();
+        bool show_one = ws.show_one();
         for (auto t : aut_.all_transitions())
           {
             os_ << aut_.src_of(t);
             if (aut_.dst_of(t) != aut_.post())
               os_ << '\t' << aut_.dst_of(t)
                   << '\t' << label_of_(t);
-            // << '\t'
-            //            << 0 // Output label: epsilon.
-            // FIXME: aut.weight_of(t)
+
+            if (show_one || !ws.is_one(aut_.weight_of(t)))
+              {
+                os_ << '\t';
+                ws.print(os_, aut_.weight_of(t));
+              }
             os_ << std::endl;
           }
       }

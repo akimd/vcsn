@@ -13,4 +13,5 @@
 
 dist_pkgdata_DATA =                             \
   share/vcsn/a1.gv                              \
+  share/vcsn/binary.gv                          \
   share/vcsn/c1.gv
