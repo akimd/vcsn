@@ -32,7 +32,6 @@ namespace vcsn
           is_lan = std::is_same<kind_t, labels_are_nullable>::value,
           is_law = std::is_same<kind_t, labels_are_words>::value,
         };
-
       /// Type of transition labels, and type of RatExp atoms.
       using label_t = typename labelset_t::label_t;
       using word_t = typename labelset_t::word_t;
@@ -132,26 +131,6 @@ namespace vcsn
     };
 
   }
-
-  // Provide "overloading" on parameter types, for instance to require
-  // letter_t when labels_are_letters, and word_t when
-  // labels_are_words.  See ratexpset::atom and ratexpset::atom_ for
-  // an example.
-  //
-  // It is very tempting to turns these guys into members of
-  // ctx::context, but then, instead of "(if_lal<Ctx, letter_t> v)",
-  // one must write "(typename Cxx::template if_lal<letter_t> v)".
-  template <typename Ctx, typename R>
-  using if_lao = typename std::enable_if<Ctx::is_lao, R>::type;
-
-  template <typename Ctx, typename R>
-  using if_lal = typename std::enable_if<Ctx::is_lal, R>::type;
-
-  template <typename Ctx, typename R>
-  using if_lan = typename std::enable_if<Ctx::is_lan, R>::type;
-
-  template <typename Ctx, typename R>
-  using if_law = typename std::enable_if<Ctx::is_law, R>::type;
 }
 
 #endif // !VCSN_CTX_CTX_HH
