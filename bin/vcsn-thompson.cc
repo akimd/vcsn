@@ -5,7 +5,7 @@
 
 #include "parse-args.hh"
 
-struct thomspson: vcsn_function
+struct thompson: vcsn_function
 {
   int work_exp(const options& opts) const
   {
@@ -14,7 +14,7 @@ struct thomspson: vcsn_function
     ratexp exp = read_ratexp(opts);
 
     // Process.
-    automaton aut = vcsn::dyn::thomspson(exp);
+    automaton aut = vcsn::dyn::thompson(exp);
 
     // Output.
     print(opts, aut);
@@ -24,5 +24,5 @@ struct thomspson: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, thomspson{}, false);
+  return vcsn_main(argc, argv, thompson{}, false);
 }

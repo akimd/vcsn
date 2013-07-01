@@ -10,7 +10,7 @@ namespace vcsn
     REGISTER_DEFINE(thompson);
 
     automaton
-    thomspson(const dyn::ratexp& e)
+    thompson(const dyn::ratexp& e)
     {
       return detail::thompson_registry().call(e->ctx().vname(), e);
     }
