@@ -25,32 +25,51 @@ namespace vcsn
       using automaton_t = Aut;
       using label_t = typename automaton_t::label_t;
 
+      fsmer(const automaton_t& aut, std::ostream& out)
+        : aut_(aut)
+        , os_(out)
+      {
+        // Map epsilon and the special symbol (that labels initial and
+        // final transitions) to '0'.  Requested by the FSM format.
+        names_[aut_.labelset()->special()] = 0;
+        map_one_to_zero_(*aut_.labelset());
+      }
+
+      /// Actually output \a aut_ on \a os_.
+      void operator()()
+      {
+        output_transitions_();
+      }
+
+    private:
       // The FSM format uses integers for labels.  Reserve 0 for epsilon
       // (and the special symbol, that flags initial and final
       // transitions).
       using label_names_t = std::unordered_map<label_t, unsigned>;
 
-      fsmer(const automaton_t& aut, std::ostream& out)
-        : aut_(aut)
-        , os_(out)
+      /// If the "one" label exists, map it to 0 in \a map_.
+      template <typename LabelSet>
+      typename std::enable_if<is_lal<LabelSet>::value>::type
+      map_one_to_zero_(const LabelSet&)
       {}
 
-      void operator()()
+      template <typename LabelSet>
+      typename std::enable_if<!is_lal<LabelSet>::value>::type
+      map_one_to_zero_(const LabelSet& ls)
       {
-        // The FSM format uses integers for labels.  Reserve 0 for epsilon
-        // (and the special symbol, that flags initial and final
-        // transitions).
-        label_names_t names;
-        names[aut_.labelset()->special()] = 0;
-        map_one_to_zero_(*aut_.labelset(), names);
+        names_[ls.one()] = 0;
+      }
 
+      void output_transitions_()
+      {
         // A counter used to name the labels.
+        // 0 is already used for epsilon and special.
         unsigned name = 1;
 
         for (auto t : aut_.all_transitions())
           {
             const auto& lbl = aut_.label_of(t);
-            auto insert = names.emplace(lbl, name);
+            auto insert = names_.emplace(lbl, name);
             if (insert.second)
               ++name;
             os_ << aut_.src_of(t) << '\t'
@@ -64,21 +83,10 @@ namespace vcsn
         os_ << aut_.post();
       }
 
-    private:
-      /// If the "one" label exists, map it to 0 in \a map.
-      template <typename LabelSet>
-      typename std::enable_if<is_lal<LabelSet>::value>::type
-      map_one_to_zero_(const LabelSet&, label_names_t&)
-      {}
-
-      template <typename LabelSet>
-      typename std::enable_if<!is_lal<LabelSet>::value>::type
-      map_one_to_zero_(const LabelSet& ls, label_names_t& map)
-      {
-        map[ls.one()] = 0;
-      }
-
+      /// The automaton we have to output.
       const automaton_t& aut_;
+      /// The FSM format uses integers for labels.
+      label_names_t names_;
       std::ostream& os_;
     };
   }
