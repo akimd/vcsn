@@ -60,10 +60,8 @@ namespace vcsn
       DEFINE(conv);
       DEFINE(end);
       DEFINE(equals);
-      DEFINE(format);
       DEFINE(has);
       DEFINE(is_letter);
-      DEFINE(print);
       DEFINE(to_word);
       DEFINE(transpose);
 

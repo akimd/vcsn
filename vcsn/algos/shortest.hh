@@ -115,7 +115,7 @@ namespace vcsn
       shortest(const automaton& aut)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return a.labelset()->format(shortest(a));
+        return a.labelset()->genset()->format(shortest(a));
       }
 
       REGISTER_DECLARE(shortest,
@@ -227,7 +227,7 @@ namespace vcsn
         const auto& a = dynamic_cast<const Aut&>(*aut);
         std::vector<std::string> res;
         for (const auto& r: enumerate(a, max))
-          res.emplace_back(a.labelset()->format(r));
+          res.emplace_back(a.labelset()->genset()->format(r));
         return res;
       }
 

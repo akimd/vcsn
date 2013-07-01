@@ -109,10 +109,15 @@ namespace vcsn
       return w.size() == 1;
     }
 
+    /// The reserved letter used to forge the "one" label (the unit,
+    /// the identity).
     static constexpr letter_t one_letter() { return 0; }
 
   private:
-    /// Use special().
+    /// The reserved letter used to forge the labels for initial and
+    /// final transitions.
+    ///
+    /// Use the public special() interface.
     static constexpr letter_t special_letter() { return 255; }
 
   public:
@@ -161,8 +166,8 @@ namespace vcsn
       return res;
     }
 
-    // Special character, used to label transitions
-    // from pre() and post()
+    /// Special character, used to label transitions from pre() and to
+    /// post().
     template <typename T = letter_t>
     T special() const;
   };

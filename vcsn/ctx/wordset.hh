@@ -99,6 +99,25 @@ namespace vcsn
       {
         return ::vcsn::conv(*this, s);
       }
+
+      std::ostream&
+      print(std::ostream& o, const label_t& l) const
+      {
+        if (is_one(l))
+          o << "\\e";
+        else if (!is_special(l))
+          o << str_escape(l);
+        return o;
+      }
+
+      std::string
+      format(const label_t& l) const
+      {
+        std::ostringstream o;
+        print(o, l);
+        return o.str();
+      }
+
     };
 
     /// Compute the intersection with another alphabet.
