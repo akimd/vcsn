@@ -12,6 +12,7 @@
 /aclocal.m4
 /autom4te.cache
 /build-aux/bin/bison++
+/build-aux/bin/compile
 /build-aux/bin/config.guess
 /build-aux/bin/config.sub
 /build-aux/bin/depcomp
