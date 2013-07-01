@@ -17,20 +17,72 @@ namespace vcsn
   `-------------------------*/
   namespace detail
   {
-    template <typename LabelSet>
-    typename std::enable_if<is_lal<LabelSet>::value, void>::type
-    map_one_to_zero(const LabelSet&,
-                    std::unordered_map<typename LabelSet::label_t, unsigned>&)
-    {}
 
-    template <typename LabelSet>
-    typename std::enable_if<!is_lal<LabelSet>::value, void>::type
-    map_one_to_zero(const LabelSet& ls,
-                    std::unordered_map<typename LabelSet::label_t, unsigned>& map)
+    // http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
+    template <class Aut>
+    struct fsmer
     {
-      map[ls.one()] = 0;
-    }
+      using automaton_t = Aut;
+      using label_t = typename automaton_t::label_t;
+
+      // The FSM format uses integers for labels.  Reserve 0 for epsilon
+      // (and the special symbol, that flags initial and final
+      // transitions).
+      using label_names_t = std::unordered_map<label_t, unsigned>;
+
+      fsmer(const automaton_t& aut, std::ostream& out)
+        : aut_(aut)
+        , os_(out)
+      {}
+
+      void operator()()
+      {
+        // The FSM format uses integers for labels.  Reserve 0 for epsilon
+        // (and the special symbol, that flags initial and final
+        // transitions).
+        label_names_t names;
+        names[aut_.labelset()->special()] = 0;
+        map_one_to_zero_(*aut_.labelset(), names);
+
+        // A counter used to name the labels.
+        unsigned name = 1;
+
+        for (auto t : aut_.all_transitions())
+          {
+            const auto& lbl = aut_.label_of(t);
+            auto insert = names.emplace(lbl, name);
+            if (insert.second)
+              ++name;
+            os_ << aut_.src_of(t) << '\t'
+                << aut_.dst_of(t) << '\t'
+                << insert.first->second // << '\t'
+              //            << 0 // Output label: epsilon.
+              // FIXME: aut.weight_of(t)
+                << std::endl;
+          }
+        // post is the only final state.
+        os_ << aut_.post();
+      }
+
+    private:
+      /// If the "one" label exists, map it to 0 in \a map.
+      template <typename LabelSet>
+      typename std::enable_if<is_lal<LabelSet>::value>::type
+      map_one_to_zero_(const LabelSet&, label_names_t&)
+      {}
+
+      template <typename LabelSet>
+      typename std::enable_if<!is_lal<LabelSet>::value>::type
+      map_one_to_zero_(const LabelSet& ls, label_names_t& map)
+      {
+        map[ls.one()] = 0;
+      }
+
+      const automaton_t& aut_;
+      std::ostream& os_;
+    };
   }
+
 
 
   // http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
@@ -38,33 +90,9 @@ namespace vcsn
   std::ostream&
   fsm(const Aut& aut, std::ostream& out)
   {
-    using label_t = typename Aut::label_t;
-
-    // The FSM format uses integers for labels.  Reserve 0 for epsilon
-    // (and the special symbol, that flags initial and final
-    // transitions).
-    std::unordered_map<label_t, unsigned> names;
-    names[aut.labelset()->special()] = 0;
-    detail::map_one_to_zero(*aut.labelset(), names);
-
-    // A counter used to name the labels.
-    unsigned name = 1;
-
-    for (auto t : aut.all_transitions())
-      {
-        const auto& lbl = aut.label_of(t);
-        auto insert = names.emplace(lbl, name);
-        if (insert.second)
-          ++name;
-        out << aut.src_of(t) << '\t'
-            << aut.dst_of(t) << '\t'
-            << insert.first->second // << '\t'
-          //            << 0 // Output label: epsilon.
-          // FIXME: aut.weight_of(t)
-            << std::endl;
-      }
-    // post is the only final state.
-    return out << aut.post();
+    detail::fsmer<Aut> fsm{aut, out};
+    fsm();
+    return out;
   }
 
   namespace dyn
