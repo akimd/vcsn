@@ -164,6 +164,8 @@ rst_expect ()
 # - 'stdout', then don't check the output, but leave it in the file
 #   named "stdout".
 #
+# - 'ignore', then don't check, nor report, the output.
+#
 # $builddir will prepended to PROG, unless PROG is '-PROG'.
 run ()
 {
@@ -223,15 +225,22 @@ EOF
 
     # Stdout.
     case $out_exp in
-      (stdout)
-      # Produce nice logs (with the following rst_expect).
-      cp out.eff out.exp
-      # Prepare stdout.
-      cp out.eff stdout
-      ;;
+      (ignore)
+        rst_pre "Standard error" err.eff || fail=true
+        ;;
+      (*)
+        case $out_exp in
+          (stdout)
+          # Produce nice logs (with the following rst_expect).
+          cp out.eff out.exp
+          # Prepare stdout.
+          cp out.eff stdout
+          ;;
+        esac
+        rst_pre "Standard error" err.eff || fail=true
+        rst_expect out || fail=true
+        ;;
     esac
-    rst_pre "Standard error" err.eff || fail=true
-    rst_expect out || fail=true
   } >stdout.tmp
   if $fail; then
     fail="FAIL: "

@@ -22,6 +22,7 @@ tafkit_TESTS =                                  \
   tafkit/determinize.chk                        \
   tafkit/enumerate.chk                          \
   tafkit/eval.chk                               \
+  tafkit/fsm.chk                                \
   tafkit/is-deterministic.chk                   \
   tafkit/is-normalized.chk                      \
   tafkit/is-proper.chk                          \
