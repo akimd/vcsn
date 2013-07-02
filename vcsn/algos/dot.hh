@@ -42,6 +42,9 @@ namespace vcsn
   dot(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
+    // Dot, by default, uses the X11 color naming scheme, whoe "gray"
+    // is really light (it almost looks blue in some cases).
+    const char* gray = "color = DimGray";
 
     // Name all the states.
     std::unordered_map<state_t, unsigned> names;
@@ -91,7 +94,7 @@ namespace vcsn
           {
             out << "    " << names[s];
             if (!has(useful, s))
-              out << " [color = gray]";
+              out << " [" << gray << "]";
             out << std::endl;
           }
         out << "  }" << std::endl;
@@ -133,7 +136,7 @@ namespace vcsn
                     sep = ", ";
                   }
                 if (useless)
-                  out << sep << "color = gray";
+                  out << sep << gray;
                 out << "]";
               }
             out << "\n";

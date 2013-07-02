@@ -26,14 +26,14 @@ digraph
     node [shape = circle]
     0
     1
-    2 [color = gray]
+    2 [color = DimGray]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "b", color = gray]
+  0 -> 2 [label = "b", color = DimGray]
   1 -> F1
-  1 -> 2 [label = "a, b", color = gray]
-  2 -> 2 [label = "a, b", color = gray]
+  1 -> 2 [label = "a, b", color = DimGray]
+  2 -> 2 [label = "a, b", color = DimGray]
 }
 EOF
 run 0 out.exp -vcsn-determinize -f a.gv
@@ -65,12 +65,12 @@ digraph
   {
     node [shape = circle]
     0
-    1 [color = gray]
+    1 [color = DimGray]
   }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "a, b", color = gray]
-  1 -> 1 [label = "a, b", color = gray]
+  0 -> 1 [label = "a, b", color = DimGray]
+  1 -> 1 [label = "a, b", color = DimGray]
 }
 EOF
 run 0 out.exp -vcsn-determinize -f epsilon.gv
@@ -97,10 +97,10 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
+    0 [color = DimGray]
   }
-  I0 -> 0 [color = gray]
-  0 -> 0 [label = "a, b", color = gray]
+  I0 -> 0 [color = DimGray]
+  0 -> 0 [label = "a, b", color = DimGray]
 }
 EOF
 run 0 out.exp -vcsn-determinize -f empty.gv
@@ -264,7 +264,7 @@ digraph
     node [shape = circle]
     0
     1
-    2 [color = gray]
+    2 [color = DimGray]
     3
     4
     5
@@ -282,11 +282,11 @@ digraph
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "b, c", color = gray]
+  0 -> 2 [label = "b, c", color = DimGray]
   1 -> 1 [label = "b"]
   1 -> 3 [label = "a"]
   1 -> 4 [label = "c"]
-  2 -> 2 [label = "a, b, c", color = gray]
+  2 -> 2 [label = "a, b, c", color = DimGray]
   3 -> 3 [label = "b"]
   3 -> 13 [label = "c"]
   3 -> 15 [label = "a"]

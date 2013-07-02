@@ -232,12 +232,12 @@ digraph
   {
     node [shape = circle]
     0
-    1 [color = gray]
-    2 [color = gray]
+    1 [color = DimGray]
+    2 [color = DimGray]
   }
   I0 -> 0
   0 -> F0 [label = "<b.e.g>"]
-  2 -> F2 [label = "<f.h>", color = gray]
+  2 -> F2 [label = "<f.h>", color = DimGray]
 }
 EOF
 run 0 out.exp -vcsn-proper -A -I dot -f a.gv

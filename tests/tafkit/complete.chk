@@ -38,17 +38,17 @@ digraph
     0
     1
     2
-    3 [color = gray]
+    3 [color = DimGray]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
-  0 -> 3 [label = "c", color = gray]
+  0 -> 3 [label = "c", color = DimGray]
   1 -> 2 [label = "c"]
-  1 -> 3 [label = "a, b", color = gray]
+  1 -> 3 [label = "a, b", color = DimGray]
   2 -> F2
-  2 -> 3 [label = "a, b, c", color = gray]
-  3 -> 3 [label = "a, b, c", color = gray]
+  2 -> 3 [label = "a, b, c", color = DimGray]
+  3 -> 3 [label = "a, b, c", color = DimGray]
 }
 EOF
 check graph.gv
@@ -111,13 +111,13 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
-    1 [color = gray]
+    0 [color = DimGray]
+    1 [color = DimGray]
   }
-  I1 -> 1 [color = gray]
-  0 -> F0 [color = gray]
-  0 -> 0 [label = "a", color = gray]
-  1 -> 1 [label = "a", color = gray]
+  I1 -> 1 [color = DimGray]
+  0 -> F0 [color = DimGray]
+  0 -> 0 [label = "a", color = DimGray]
+  1 -> 1 [label = "a", color = DimGray]
 }
 EOF
 check graph.gv

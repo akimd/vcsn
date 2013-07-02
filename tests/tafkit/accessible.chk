@@ -120,15 +120,15 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
-    1 [color = gray]
-    2 [color = gray]
-    3 [color = gray]
+    0 [color = DimGray]
+    1 [color = DimGray]
+    2 [color = DimGray]
+    3 [color = DimGray]
   }
-  I0 -> 0 [color = gray]
-  0 -> 1 [label = "a", color = gray]
-  1 -> 2 [label = "a", color = gray]
-  2 -> 3 [label = "a", color = gray]
+  I0 -> 0 [color = DimGray]
+  0 -> 1 [label = "a", color = DimGray]
+  1 -> 2 [label = "a", color = DimGray]
+  2 -> 3 [label = "a", color = DimGray]
 }
 EOF
 

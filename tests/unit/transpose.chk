@@ -16,15 +16,15 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
-    1 [color = gray]
-    2 [color = gray]
+    0 [color = DimGray]
+    1 [color = DimGray]
+    2 [color = DimGray]
   }
-  I0 -> 0 [label = "<w.x.y.z>", color = gray]
-  I2 -> 2 [label = "<w.x.y.z>", color = gray]
-  0 -> 0 [label = "<w.x>cd", color = gray]
-  0 -> 1 [label = "<w.x.y.z>cd", color = gray]
-  1 -> 2 [label = "cd", color = gray]
+  I0 -> 0 [label = "<w.x.y.z>", color = DimGray]
+  I2 -> 2 [label = "<w.x.y.z>", color = DimGray]
+  0 -> 0 [label = "<w.x>cd", color = DimGray]
+  0 -> 1 [label = "<w.x.y.z>cd", color = DimGray]
+  1 -> 2 [label = "cd", color = DimGray]
 }
 digraph
 {
@@ -37,15 +37,15 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
-    1 [color = gray]
-    2 [color = gray]
+    0 [color = DimGray]
+    1 [color = DimGray]
+    2 [color = DimGray]
   }
-  0 -> F0 [label = "<z.y.x.w>", color = gray]
-  0 -> 0 [label = "<x.w>dc", color = gray]
-  1 -> 0 [label = "<z.y.x.w>dc", color = gray]
-  2 -> F2 [label = "<z.y.x.w>", color = gray]
-  2 -> 1 [label = "dc", color = gray]
+  0 -> F0 [label = "<z.y.x.w>", color = DimGray]
+  0 -> 0 [label = "<x.w>dc", color = DimGray]
+  1 -> 0 [label = "<z.y.x.w>dc", color = DimGray]
+  2 -> F2 [label = "<z.y.x.w>", color = DimGray]
+  2 -> 1 [label = "dc", color = DimGray]
 }
 digraph
 {

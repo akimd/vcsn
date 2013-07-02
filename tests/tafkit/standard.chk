@@ -29,9 +29,9 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = gray]
+    0 [color = DimGray]
   }
-  I0 -> 0 [color = gray]
+  I0 -> 0 [color = DimGray]
 }
 EOF
 
