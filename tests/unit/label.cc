@@ -49,6 +49,7 @@ check_tupleset()
   label_t l{"abc", "xyz"};
 
   ASSERT_EQ(ts.format(l), "(abc, xyz)");
+  ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
 
   return nerrs;
 }

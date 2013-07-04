@@ -21,6 +21,7 @@ namespace vcsn
 
       template<std::size_t... Is>
       struct gen_seq<0, Is...> : seq<Is...>{};
+
     }
 
     template <typename... LabelSets>
@@ -34,6 +35,12 @@ namespace vcsn
       tupleset(LabelSets... ls)
         : sets_(ls...)
       {}
+
+      value_t
+      transpose(const value_t& l) const
+      {
+        return transpose_(l, detail::gen_seq<sizeof...(LabelSets)>());
+      }
 
       std::ostream&
       print(std::ostream& o, const value_t& l) const
@@ -93,6 +100,13 @@ namespace vcsn
               throw std::runtime_error("invalid format: " + format);
           }
         return o;
+      }
+
+      template <std::size_t... I>
+      value_t
+      transpose_(value_t const& l, detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).transpose(std::get<I>(l)))...);
       }
 
       labelsets_t sets_;
