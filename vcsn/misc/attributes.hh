@@ -4,7 +4,7 @@
 # if defined __clang__
 
 #  define ATTRIBUTE_NORETURN [[noreturn]]
-#  define ATTRIBUTE_PURE
+#  define ATTRIBUTE_PURE __attribute__((pure))
 
 # elif defined __GNUC__
 
