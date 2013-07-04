@@ -52,6 +52,12 @@ namespace vcsn
       return l && r;
     }
 
+    bool
+    is_equal(const value_t l, const value_t r)
+    {
+      return l == r;
+    }
+
     value_t
     star(const value_t) const
     {

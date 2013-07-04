@@ -72,6 +72,12 @@ namespace vcsn
       return v == 1;
     }
 
+    bool
+    is_equal(const value_t l, const value_t r) const
+    {
+      return l == r;
+    }
+
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::NON_STARRABLE; }
 
