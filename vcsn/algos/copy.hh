@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/fwd.hh>
@@ -36,6 +37,10 @@ namespace vcsn
                            in.label_of(t),
                            in.weight_of(t));
   }
+
+  template <typename State>
+  bool
+  keep_all_states(State) ATTRIBUTE_CONST;
 
   template <typename State>
   bool

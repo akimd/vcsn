@@ -7,6 +7,7 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
 
 namespace vcsn
@@ -150,6 +151,9 @@ namespace vcsn
   {
     return num_useful_states(a) == 0;
   }
+
+  template <typename Aut>
+  bool is_empty(const Aut& a) ATTRIBUTE_PURE;
 
   template <typename Aut>
   bool is_empty(const Aut& a)
