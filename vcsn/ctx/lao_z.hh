@@ -2,7 +2,7 @@
 # define VCSN_CTX_LAO_Z_HH
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/oneset.hh>
+# include <vcsn/labelset/oneset.hh>
 # include <vcsn/weights/z.hh>
 
 namespace vcsn

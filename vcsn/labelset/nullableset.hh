@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_NULLABLESET_HH
-# define VCSN_CTX_NULLABLESET_HH
+#ifndef VCSN_LABELSET_NULLABLESET_HH
+# define VCSN_LABELSET_NULLABLESET_HH
 
 # include <memory>
 # include <set>
@@ -9,7 +9,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/stream.hh> // conv.
-# include <vcsn/ctx/genset-labelset.hh>
+# include <vcsn/labelset/genset-labelset.hh>
 
 namespace vcsn
 {
@@ -149,4 +149,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_NULLABLESET_HH
+#endif // !VCSN_LABELSET_NULLABLESET_HH

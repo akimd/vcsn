@@ -3,7 +3,7 @@
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/ctx/nullableset.hh>
+# include <vcsn/labelset/nullableset.hh>
 
 namespace vcsn
 {

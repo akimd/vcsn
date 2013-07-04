@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_GENSET_LABELSET_HH
-# define VCSN_CTX_GENSET_LABELSET_HH
+#ifndef VCSN_LABELSET_GENSET_LABELSET_HH
+# define VCSN_LABELSET_GENSET_LABELSET_HH
 
 # include <memory>
 # include <set>
@@ -73,4 +73,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_GENSET_LABELSET_HH
+#endif // !VCSN_LABELSET_GENSET_LABELSET_HH

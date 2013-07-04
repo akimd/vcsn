@@ -4,7 +4,7 @@
 # include <map>
 
 # include <vcsn/ctx/ctx.hh>
-# include <vcsn/ctx/oneset.hh>
+# include <vcsn/labelset/oneset.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>

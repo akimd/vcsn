@@ -55,7 +55,6 @@ nobase_vcsn_HEADERS =                           \
   core/fwd.hh                                   \
   core/kind.hh                                  \
   core/mutable_automaton.hh                     \
-  dyn/ratexpset.hh                \
   core/rat/fwd.hh                               \
   core/rat/info.hh                              \
   core/rat/info.hxx                             \
@@ -71,7 +70,6 @@ nobase_vcsn_HEADERS =                           \
   core/transition.hh                            \
   ctx/ctx.hh                                    \
   ctx/fwd.hh                                    \
-  ctx/genset-labelset.hh                        \
   ctx/instantiate.hh                            \
   ctx/lal_char.hh                               \
   ctx/lal_char_b.hh                             \
@@ -95,20 +93,22 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char_zmin.hh                          \
   ctx/law_char_zr.hh                            \
   ctx/law_char_zrr.hh                           \
-  ctx/letterset.hh                              \
-  ctx/nullableset.hh                            \
-  ctx/oneset.hh                                \
-  ctx/wordset.hh                                \
   dyn/algos.hh                                  \
   dyn/automaton.hh                              \
   dyn/context.hh                                \
   dyn/fwd.hh                                    \
   dyn/ratexp.hh                                 \
+  dyn/ratexpset.hh                              \
   dyn/weight.hh                                 \
   dyn/weightset.hh                              \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
   factory/ladybird.hh                           \
+  labelset/genset-labelset.hh                   \
+  labelset/letterset.hh                         \
+  labelset/nullableset.hh                       \
+  labelset/oneset.hh                            \
+  labelset/wordset.hh                           \
   misc/attributes.hh                            \
   misc/cast.hh                                  \
   misc/const_traits.hh                          \

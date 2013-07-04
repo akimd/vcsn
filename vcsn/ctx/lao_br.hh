@@ -3,8 +3,8 @@
 
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
-# include <vcsn/ctx/letterset.hh>
-# include <vcsn/ctx/oneset.hh>
+# include <vcsn/labelset/letterset.hh>
+# include <vcsn/labelset/oneset.hh>
 # include <vcsn/ctx/ctx.hh>
 # include <vcsn/weights/b.hh>
 

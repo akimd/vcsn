@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_ONESET_HH
-# define VCSN_CTX_ONESET_HH
+#ifndef VCSN_LABELSET_ONESET_HH
+# define VCSN_LABELSET_ONESET_HH
 
 # include <iostream>
 # include <set>
@@ -141,4 +141,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_ONESET_HH
+#endif // !VCSN_LABELSET_ONESET_HH

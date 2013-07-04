@@ -1,6 +1,6 @@
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/rat/ratexpset.hh>
-#include <vcsn/ctx/wordset.hh>
+#include <vcsn/labelset/wordset.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/core/mutable_automaton.hh>
 #include <tests/unit/test.hh>

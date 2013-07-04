@@ -1,40 +1,39 @@
-#ifndef VCSN_CTX_LETTERSET_HH
-# define VCSN_CTX_LETTERSET_HH
+#ifndef VCSN_LABELSET_WORDSET_HH
+# define VCSN_LABELSET_WORDSET_HH
 
 # include <memory>
+# include <set>
 
-# include <vcsn/alphabets/setalpha.hh> // intersection
 # include <vcsn/core/kind.hh>
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/set.hh> // intersection
+# include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/stream.hh> // conv.
-# include <vcsn/ctx/genset-labelset.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    /// Implementation of labels are letters.
+    /// Implementation of labels are words.
     template <typename GenSet>
-    struct letterset: genset_labelset<GenSet>
+    class wordset: public genset_labelset<GenSet>
     {
+    public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
-      using label_t = typename genset_t::letter_t;
+      using label_t = typename genset_t::word_t;
       using letter_t = typename genset_t::letter_t;
       using word_t = typename genset_t::word_t;
       using letters_t = std::set<letter_t>;
 
-      using kind_t = labels_are_letters;
+      using kind_t = labels_are_words;
 
-      letterset(const genset_ptr& gs)
+      wordset(const genset_ptr& gs)
         : super_type{gs}
       {}
 
-      letterset(const genset_t& gs = {})
-        : letterset{std::make_shared<const genset_t>(gs)}
+      wordset(const genset_t& gs = {})
+        : wordset{std::make_shared<const genset_t>(gs)}
       {}
 
       const super_type&
@@ -45,12 +44,12 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "lal_" + super_type::sname();
+        return "law_" + super_type::sname();
       }
 
       std::string vname(bool full = true) const
       {
-        return "lal_" + super().vname(full);
+        return "law_" + super().vname(full);
       }
 
       label_t
@@ -60,33 +59,38 @@ namespace vcsn
       }
 
       bool
-      is_special(label_t v) const
+      is_special(const label_t& v) const
       {
         return v == special();
       }
 
-      static constexpr bool
-      is_one(label_t)
+      bool
+      is_valid(const label_t& v) const
       {
-        return false;
+        for (auto l: v)
+          if (!this->has(l))
+            return false;
+        return true;
+      }
+
+      label_t
+      one() const
+      {
+        return this->genset()->empty_word();
       }
 
       bool
-      is_valid(label_t v) const
+      is_one(const label_t& l) const
       {
-        return this->has(v);
+        return this->genset()->is_empty_word(l);
       }
 
-      /// Read one letter from i, return the corresponding label.
+      // FIXME: Why do I need to repeat this?
+      // It should be inherited from genset-labelset.
       label_t
       conv(std::istream& i) const
       {
-        int c = i.peek();
-        if (this->has(c))
-          return i.get();
-        else
-          throw std::domain_error("invalid label: unexpected "
-                                  + str_escape(c));
+        return this->genset()->conv(i);
       }
 
       // FIXME: remove, see todo.txt:scanners.
@@ -99,29 +103,33 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, const label_t& l) const
       {
-        if (!is_special(l))
+        if (is_one(l))
+          o << "\\e";
+        else if (!is_special(l))
           o << str_escape(l);
         return o;
       }
 
       std::string
-      format(const label_t l) const
+      format(const label_t& l) const
       {
         std::ostringstream o;
         print(o, l);
         return o.str();
       }
+
     };
 
     /// Compute the intersection with another alphabet.
+    // FIXME: Factor in genset_labelset?
     template <typename GenSet>
-    letterset<GenSet>
-    intersection(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
+    wordset<GenSet>
+    intersect(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
-      return {intersection(*lhs.genset(), *rhs.genset())};
+      return {intersect(lhs->genset(), rhs->genset())};
     }
 
   }
 }
 
-#endif // !VCSN_CTX_LETTERSET_HH
+#endif // !VCSN_LABELSET_WORDSET_HH
