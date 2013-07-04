@@ -1,3 +1,15 @@
+* 2013-07-04
+** WeightSet: added support for rational weights
+We can now use automata with rational numbers as their weights.
+
+  $ vcsn-standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*" \
+    | ./bin/vcsn-evaluate -f - aaabbbb
+  2
+
+  $ vcsn-standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*"\
+    | ./bin/vcsn-evaluate -f - aaab
+  1/4
+
 * 2013-07-01
 ** new format: efsm (and new tool: efstcompile)
 The former output format ("fsm") is dropped, replaced by an adhoc "extended

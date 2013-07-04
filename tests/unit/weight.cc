@@ -3,6 +3,7 @@
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/f2.hh>
 #include <vcsn/weights/r.hh>
+#include <vcsn/weights/q.hh>
 #include <vcsn/weights/zmin.hh>
 
 // FIXME: Check that invalid conv throws.
@@ -51,6 +52,41 @@ static size_t check_f2()
   return check_bool(ws, 0);
 }
 
+static size_t check_q()
+{
+  size_t nerrs = 0;
+  vcsn::q ws;
+
+  // format.
+  ASSERT_EQ(ws.format(ws.zero()), "0");
+  ASSERT_EQ(ws.format(ws.one()), "1");
+
+  ASSERT_EQ(ws.format(ws.conv("-1/1")), "-1");
+  ASSERT_EQ(ws.format(ws.conv("-3/2")), "-3/2");
+  ASSERT_EQ(ws.format(ws.conv("0/1")), "0");
+  ASSERT_EQ(ws.format(ws.conv("42/1")), "42");
+  ASSERT_EQ(ws.format(ws.conv("-42/2")), "-21");
+
+  // add.
+  ASSERT_EQ(ws.format(ws.add(ws.conv("3/2"), ws.conv("2/3"))), "13/6");
+  ASSERT_EQ(ws.format(ws.add(ws.conv("8/2"), ws.conv("2/2"))), "5");
+  ASSERT_EQ(ws.format(ws.add(ws.conv("168/9"), ws.conv("14/13"))), "770/39");
+  ASSERT_EQ(ws.format(ws.add(ws.zero(), ws.conv("8/2"))), "4");
+  ASSERT_EQ(ws.format(ws.add(ws.one(), ws.conv("8/2"))), "5");
+
+  // mul: add.
+  ASSERT_EQ(ws.format(ws.mul(ws.conv("-3/2"), ws.conv("2/3"))), "-1");
+  ASSERT_EQ(ws.format(ws.mul(ws.conv("8/2"), ws.conv("2/2"))), "4");
+  ASSERT_EQ(ws.format(ws.mul(ws.conv("8/2"), ws.conv("2/2"))), "4");
+  ASSERT_EQ(ws.format(ws.mul(ws.conv("800000/2"), ws.conv("0/2"))), "0");
+  ASSERT_EQ(ws.format(ws.mul(ws.conv("800000/2"), ws.conv("1/2"))), "200000");
+  ASSERT_EQ(ws.format(ws.mul(ws.zero(), ws.conv("8/2"))), "0");
+  ASSERT_EQ(ws.format(ws.mul(ws.zero(), ws.conv("8/3"))), "0");
+  ASSERT_EQ(ws.format(ws.mul(ws.one(), ws.conv("8/3"))), "8/3");
+
+  return nerrs;
+}
+  
 static size_t check_r()
 {
   size_t nerrs = 0;
@@ -70,7 +106,7 @@ static size_t check_r()
   ASSERT_EQ(ws.add(ws.zero(), 8.2), 8.2);
   ASSERT_EQ(ws.add(ws.one(), 8.2), 9.2);
 
- // // mul: add.
+  // mul: add.
   ASSERT_EQ(ws.mul(ws.zero(), 8.2), 0);
   ASSERT_EQ(ws.mul(ws.one(), 8.3), 8.3);
 
@@ -116,5 +152,6 @@ int main()
   nerrs += check_f2();
   nerrs += check_zmin();
   nerrs += check_r();
+  nerrs += check_q();
   return !!nerrs;
 }

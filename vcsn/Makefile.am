@@ -74,6 +74,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/lal_char.hh                               \
   ctx/lal_char_b.hh                             \
   ctx/lal_char_br.hh                            \
+  ctx/lal_char_q.hh                             \
   ctx/lal_char_r.hh                             \
   ctx/lal_char_z.hh                             \
   ctx/lal_char_zmin.hh                          \
@@ -88,6 +89,7 @@ nobase_vcsn_HEADERS =                           \
   ctx/law_char.hh                               \
   ctx/law_char_b.hh                             \
   ctx/law_char_br.hh                            \
+  ctx/law_char_q.hh                             \
   ctx/law_char_r.hh                             \
   ctx/law_char_z.hh                             \
   ctx/law_char_zmin.hh                          \
@@ -128,6 +130,7 @@ nobase_vcsn_HEADERS =                           \
   weights/f2.hh                                 \
   weights/fwd.hh                                \
   weights/polynomialset.hh                      \
+  weights/q.hh					\
   weights/r.hh                                  \
   weights/z.hh                                  \
   weights/zmin.hh
