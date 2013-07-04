@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/f2.hh>
+#include <vcsn/weights/r.hh>
 #include <vcsn/weights/zmin.hh>
 
 // FIXME: Check that invalid conv throws.
@@ -50,6 +51,32 @@ static size_t check_f2()
   return check_bool(ws, 0);
 }
 
+static size_t check_r()
+{
+  size_t nerrs = 0;
+  vcsn::r ws;
+
+  // format.
+  ASSERT_EQ(ws.format(ws.zero()), "0");
+  ASSERT_EQ(ws.format(ws.one()), "1");
+
+  // conv.
+  ASSERT_EQ(ws.format(ws.conv("-1")), "-1");
+  ASSERT_EQ(ws.format(ws.conv("-3.2")), "-3.2");
+  ASSERT_EQ(ws.format(ws.conv("0.1")), "0.1");
+
+  // add.
+  ASSERT_EQ(ws.add(3.2, 2.3), 5.5);
+  ASSERT_EQ(ws.add(ws.zero(), 8.2), 8.2);
+  ASSERT_EQ(ws.add(ws.one(), 8.2), 9.2);
+
+ // // mul: add.
+  ASSERT_EQ(ws.mul(ws.zero(), 8.2), 0);
+  ASSERT_EQ(ws.mul(ws.one(), 8.3), 8.3);
+
+  return nerrs;
+}
+
 static size_t check_zmin()
 {
   size_t nerrs = 0;
@@ -88,5 +115,6 @@ int main()
   nerrs += check_b();
   nerrs += check_f2();
   nerrs += check_zmin();
+  nerrs += check_r();
   return !!nerrs;
 }
