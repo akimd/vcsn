@@ -1,5 +1,5 @@
-#ifndef LIB_VCSN_LIB_ALGOS_REGISTRY_HH
-# define LIB_VCSN_LIB_ALGOS_REGISTRY_HH
+#ifndef LIB_VCSN_ALGOS_REGISTRY_HH
+# define LIB_VCSN_ALGOS_REGISTRY_HH
 
 # include <iostream>
 # include <map>
@@ -77,4 +77,4 @@ namespace vcsn
     }                                                   \
   }
 
-#endif
+#endif // !LIB_VCSN_ALGOS_REGISTRY_HH

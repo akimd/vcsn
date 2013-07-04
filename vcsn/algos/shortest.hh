@@ -238,4 +238,4 @@ namespace vcsn
   }
 }
 
-#endif // ! VCSN_ALGOS_ENUMERATE_HH
+#endif // !VCSN_ALGOS_SHORTEST_HH

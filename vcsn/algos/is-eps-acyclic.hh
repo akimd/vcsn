@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_IS_EPS_ACYCLIC
-# define VCSN_ALGOS_IS_EPS_ACYCLIC
+#ifndef VCSN_ALGOS_IS_EPS_ACYCLIC_HH
+# define VCSN_ALGOS_IS_EPS_ACYCLIC_HH
 
 # include <unordered_map>
 
@@ -133,4 +133,4 @@ namespace vcsn
   }
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_IS_EPS_ACYCLIC
+#endif // !VCSN_ALGOS_IS_EPS_ACYCLIC_HH

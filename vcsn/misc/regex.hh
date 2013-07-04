@@ -18,4 +18,3 @@ namespace std
 # endif // !VCSN_STD_REGEX_WORKS
 
 #endif // !VCSN_MISC_REGEX_HH
-

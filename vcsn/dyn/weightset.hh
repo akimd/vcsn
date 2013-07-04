@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSET_HH
-# define VCSN_WEIGHTSET_HH
+#ifndef VCSN_DYN_WEIGHTSET_HH
+# define VCSN_DYN_WEIGHTSET_HH
 
 # include <memory>
 # include <string>
@@ -30,4 +30,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_WEIGHTSET_HH
+#endif // !VCSN_DYN_WEIGHTSET_HH

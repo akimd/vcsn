@@ -23,4 +23,4 @@ namespace vcsn
   };
 }
 
-#endif // ! VCSN_MISC_MILITARY_ORDER_HH
+#endif // !VCSN_MISC_MILITARY_ORDER_HH

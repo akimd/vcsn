@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
-# define VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
+#ifndef VCSN_DYN_RATEXPSET_HH
+# define VCSN_DYN_RATEXPSET_HH
 
 # include <string>
 # include <list>
@@ -168,4 +168,4 @@ namespace detail
 } // namespace dyn
 } // namespace vcsn
 
-#endif // !VCSN_CORE_RAT_ABSTRACT_RATEXPSET_HH
+#endif // !VCSN_DYN_RATEXPSET_HH
