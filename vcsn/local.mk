@@ -130,6 +130,7 @@ nobase_include_HEADERS =                        \
   %D%/labelset/letterset.hh                     \
   %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \
+  %D%/labelset/tupleset.hh                      \
   %D%/labelset/wordset.hh                       \
   %D%/misc/attributes.hh                        \
   %D%/misc/cast.hh                              \
