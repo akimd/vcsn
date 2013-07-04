@@ -18,6 +18,7 @@ EXTRA_PROGRAMS +=                               \
   unit/aut_law_char_z                           \
   unit/concat                                   \
   unit/determinize                              \
+  unit/label                                    \
   unit/polynomialset                            \
   unit/proper                                   \
   unit/transpose                                \
@@ -35,6 +36,8 @@ unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
 
 unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
 
+unit_label_LDADD = $(liblal_char_b) $(AM_LDADD)
+
 unit_polynomialset_LDADD = $(liblaw_char_z) $(liblaw_char_zmin) $(AM_LDADD)
 
 unit_proper_LDADD = $(all_libctx) $(AM_LDADD)
@@ -47,6 +50,7 @@ unit_TESTS =                                    \
   unit/aut_law_char_z.chk                       \
   unit/concat.chk                               \
   unit/determinize.chk                          \
+  unit/label.chk                                \
   unit/polynomialset.chk                        \
   unit/proper.chk                               \
   unit/transpose.chk                            \
@@ -62,6 +66,7 @@ unit/aut_lao_z.log: unit/aut_lao_z
 unit/aut_law_char_z.log: unit/aut_law_char_z
 unit/concat.log: unit/concat
 unit/determinize.log: unit/determinize
+unit/label.log: unit/label
 unit/polynomialset.log: unit/polynomialset
 unit/proper.log: unit/proper
 unit/transpose.log: unit/transpose
