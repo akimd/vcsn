@@ -36,6 +36,11 @@ namespace vcsn
         : sets_(ls...)
       {}
 
+      std::string vname(bool full = true) const
+      {
+        return vname_(full, detail::gen_seq<sizeof...(LabelSets)>());
+      }
+
       value_t
       transpose(const value_t& l) const
       {
@@ -57,6 +62,21 @@ namespace vcsn
       }
 
     private:
+      template <std::size_t... I>
+      std::string vname_(bool full, detail::seq<I...>) const
+      {
+        std::string res = "lat<";
+        const char *sep = "";
+        for (auto n: {(std::get<I>(sets_).vname(full))...})
+          {
+            res += sep;
+            res += n;
+            sep = ", ";
+          }
+        res += ">";
+        return res;
+      }
+
       template <std::size_t... I>
       std::ostream&
       print_(std::ostream& o, value_t const& l, detail::seq<I...>) const
