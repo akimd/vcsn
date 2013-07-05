@@ -41,6 +41,12 @@ namespace vcsn
         return vname_(full, indices_t{});
       }
 
+      bool
+      equals(const value_t& l, const value_t& r) const
+      {
+        return equals_(l, r, indices_t{});
+      }
+
       value_t
       transpose(const value_t& l) const
       {
@@ -76,6 +82,19 @@ namespace vcsn
         res += ">";
         return res;
       }
+
+
+      template <std::size_t... I>
+      bool
+      equals_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      {
+        for (auto n: {(std::get<I>(sets_).equals(std::get<I>(l),
+                                                 std::get<I>(r)))...})
+          if (!n)
+            return false;
+        return true;
+      }
+
 
       template <std::size_t... I>
       std::ostream&

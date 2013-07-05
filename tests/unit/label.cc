@@ -50,6 +50,13 @@ check_tupleset()
 
   ASSERT_EQ(ts.vname(), "lat<law_char(abc), law_char(xyz)>");
 
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "x"}), true);
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"abc", "x"}), false);
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"", "x"}), false);
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "xx"}), false);
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "y"}), false);
+  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", ""}), false);
+
   ASSERT_EQ(ts.format(l), "(abc, xyz)");
   ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
 
