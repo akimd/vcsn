@@ -66,6 +66,12 @@ check_tupleset()
   ASSERT_EQ(ts.is_special(ts.special()), true);
   ASSERT_EQ(!ts.is_special(l), true);
 
+  // is_one.
+  ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.one()}), true);
+  ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.special()}), false);
+  ASSERT_EQ(ts.is_one(label_t{ls1.one(), "x"}), false);
+
+  // format, transpose.
   ASSERT_EQ(ts.format(l), "(abc, xyz)");
   ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
 

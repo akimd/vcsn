@@ -59,6 +59,12 @@ namespace vcsn
         return equals(l, special());
       }
 
+      bool
+      is_one(const value_t& l) const
+      {
+        return is_one_(l, indices_t{});
+      }
+
       value_t
       transpose(const value_t& l) const
       {
@@ -112,6 +118,16 @@ namespace vcsn
       special_(detail::seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).special())...);
+      }
+
+      template <std::size_t... I>
+      bool
+      is_one_(const value_t& l, detail::seq<I...>) const
+      {
+        for (auto n: {(std::get<I>(sets_).is_one(std::get<I>(l)))...})
+          if (!n)
+            return false;
+        return true;
       }
 
       template <std::size_t... I>
