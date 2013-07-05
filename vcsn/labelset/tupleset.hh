@@ -48,6 +48,18 @@ namespace vcsn
       }
 
       value_t
+      special() const
+      {
+        return special_(indices_t{});
+      }
+
+      bool
+      is_special(const value_t& l) const
+      {
+        return equals(l, special());
+      }
+
+      value_t
       transpose(const value_t& l) const
       {
         return transpose_(l, indices_t{});
@@ -95,19 +107,29 @@ namespace vcsn
         return true;
       }
 
+      template <std::size_t... I>
+      value_t
+      special_(detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).special())...);
+      }
 
       template <std::size_t... I>
       std::ostream&
       print_(std::ostream& o, value_t const& l, detail::seq<I...>) const
       {
-        using swallow = int[];
-        (void) swallow
+        if (!is_special(l))
           {
-            (o << (I == 0 ? "(" : ", "),
-             std::get<I>(sets_).print(o, std::get<I>(l)),
-             0)...
-          };
-        return o << ")";
+            using swallow = int[];
+            (void) swallow
+              {
+                (o << (I == 0 ? "(" : ", "),
+                 std::get<I>(sets_).print(o, std::get<I>(l)),
+                 0)...
+              };
+            o << ")";
+          }
+        return o;
       }
 
       friend

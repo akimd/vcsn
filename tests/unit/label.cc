@@ -48,14 +48,23 @@ check_tupleset()
 
   label_t l{"abc", "xyz"};
 
+  // vname.
   ASSERT_EQ(ts.vname(), "lat<law_char(abc), law_char(xyz)>");
 
+  // equals.
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "x"}), true);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"abc", "x"}), false);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"", "x"}), false);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "xx"}), false);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "y"}), false);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", ""}), false);
+
+  // special, is_special.
+  ASSERT_EQ(ts.equals(ts.special(), label_t{ls1.special(),ls2.special()}), true);
+  ASSERT_EQ(ts.format(label_t{ls1.special(),ls2.special()}), "");
+  ASSERT_EQ(ts.format(ts.special()), "");
+  ASSERT_EQ(ts.is_special(ts.special()), true);
+  ASSERT_EQ(!ts.is_special(l), true);
 
   ASSERT_EQ(ts.format(l), "(abc, xyz)");
   ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
