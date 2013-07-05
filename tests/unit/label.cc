@@ -79,6 +79,18 @@ check_tupleset()
   ASSERT_EQ(ts.format(l), "(abc, xyz)");
   ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
 
+  // conv.
+  // If you observe a runtime exception here (something like
+  //
+  // terminate called after throwing an instance of 'std::runtime_error'
+  //  what():  unexpected: (: expected ,
+  //
+  // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
+  ASSERT_EQ(ts.equals(conv(ts, "(abc,xyz)"), l), true);
+  ASSERT_EQ(ts.equals(conv(ts, "(abc,\\e)"), label_t{"abc", ""}), true);
+  ASSERT_EQ(ts.equals(conv(ts, "(\\e,x)"), label_t{"", "x"}), true);
+  ASSERT_EQ(ts.equals(conv(ts, "(\\e,\\e)"), label_t{"", ""}), true);
+
   return nerrs;
 }
 

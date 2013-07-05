@@ -5,6 +5,9 @@
 # include <istream>
 # include <tuple>
 
+# include <vcsn/misc/escape.hh>
+# include <vcsn/misc/stream.hh>
+
 namespace vcsn
 {
   namespace ctx
@@ -76,6 +79,31 @@ namespace vcsn
         return transpose_(l, indices_t{});
       }
 
+      /// Read one letter from i, return the corresponding label.
+      value_t
+      conv(std::istream& i) const
+      {
+        value_t res = conv_(i, indices_t{});
+        {
+          int c = i.get();
+          if (c != ')')
+            {
+              i.unget();
+              throw std::domain_error("invalid label: unexpected "
+                                      + str_escape(c)
+                                      + ": expected ')'");
+            }
+        }
+        return res;
+      }
+
+      // FIXME: remove, see todo.txt:scanners.
+      value_t
+      conv(const std::string& s) const
+      {
+        return ::vcsn::conv(*this, s);
+      }
+
       std::ostream&
       print(std::ostream& o, const value_t& l) const
       {
@@ -121,7 +149,6 @@ namespace vcsn
         return res;
       }
 
-
       template <std::size_t... I>
       bool
       equals_(const value_t& l, const value_t& r, detail::seq<I...>) const
@@ -149,6 +176,36 @@ namespace vcsn
             return false;
         return true;
       }
+
+      template <std::size_t... I>
+      value_t
+      conv_(std::istream& i, detail::seq<I...>) const
+      {
+        return std::make_tuple(((conv_separator_<I>(i),
+                                 std::get<I>(sets_).conv(i)))...);
+      }
+
+      /// Read the separator from the input stream \a i.
+      /// If \a I is 0, then the separator is '(',
+      /// otherwise it is ',' (possibly followed by spaces).
+      template <std::size_t I>
+      void
+      conv_separator_(std::istream& i) const
+      {
+        int c = i.get();
+        char sep = I == 0 ? '(' : ',';
+        if (c != sep)
+          {
+            i.unget();
+            throw std::domain_error("invalid label: unexpected "
+                                    + str_escape(c)
+                                    + ": expected "
+                                    + std::string{sep});
+          }
+        while (isspace(i.peek()))
+          i.ignore();
+      }
+
 
       template <std::size_t... I>
       std::ostream&
