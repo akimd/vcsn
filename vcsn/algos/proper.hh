@@ -120,16 +120,14 @@ namespace vcsn
                   dead_states.emplace_back(s);
               }
 
-			/*
-				"Blowing"
-				For each transition (or terminal arrow) outgoing from (s),
-				the weight is multiplied by (star).
-			*/
+            /*
+              "Blowing"
+              For each transition (or terminal arrow) outgoing from (s),
+              the weight is multiplied by (star).
+            */
             for (auto t: aut.all_out(s))
-              {
-                weight_t s_weight = weightset.mul(star, aut.weight_of(t));
-                aut.set_weight(t, s_weight);
-              }
+              aut.set_weight(t,
+                             weightset.mul(star, aut.weight_of(t)));
             /*
               For each transition (t : s -- label|weight --> dst),
               for each former
@@ -145,13 +143,13 @@ namespace vcsn
               of closure->first
             */
             for (auto t: aut.all_out(s))
-              {              
+              {
                 label_t label = aut.label_of(t);
                 state_t dst = aut.dst_of(t);
-                weight_t t_weight = aut.weight_of(t);
+                weight_t weight = aut.weight_of(t);
                 for (auto pair: closure)
                   aut.add_transition(pair.first, dst, label,
-                                       weightset.mul(pair.second, t_weight));
+                                     weightset.mul(pair.second, weight));
               }
           }
         for (auto s: dead_states)
