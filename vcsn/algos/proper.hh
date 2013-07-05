@@ -120,28 +120,38 @@ namespace vcsn
                   dead_states.emplace_back(s);
               }
 
+			/*
+				"Blowing"
+				For each transition (or terminal arrow) outgoing from (s),
+				the weight is multiplied by (star).
+			*/
+            for (auto t: aut.all_out(s))
+              {
+                weight_t s_weight = weightset.mul(star, aut.weight_of(t));
+                aut.set_weight(t, s_weight);
+              }
             /*
               For each transition (t : s -- label|weight --> dst),
               for each former
               epsilon transition closure->first -- e|closure->second --> s
               a transition
-              (closure->first -- label | closure->second*star*weight --> dst)
+              (closure->first -- label | closure->second*weight --> dst)
               is added to the automaton (add, not set !!)
 
               If (s) is final with weight (weight),
               for each former
               epsilon transition closure->first -- e|closure->second --> s
-              pair-second * star * weight is added to the final weight
+              pair-second * weight is added to the final weight
               of closure->first
             */
             for (auto t: aut.all_out(s))
-              {
-                weight_t s_weight = weightset.mul(star, aut.weight_of(t));
+              {              
                 label_t label = aut.label_of(t);
                 state_t dst = aut.dst_of(t);
+                weight_t t_weight = aut.weight_of(t);
                 for (auto pair: closure)
                   aut.add_transition(pair.first, dst, label,
-                                       weightset.mul(pair.second, s_weight));
+                                       weightset.mul(pair.second, t_weight));
               }
           }
         for (auto s: dead_states)
