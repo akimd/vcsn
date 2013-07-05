@@ -28,7 +28,7 @@ namespace vcsn
     class tupleset
     {
       using labelsets_t = std::tuple<LabelSets...>;
-
+      using indices_t = detail::gen_seq<sizeof...(LabelSets)>;
     public:
       using value_t = std::tuple<typename LabelSets::value_t...>;
 
@@ -38,19 +38,19 @@ namespace vcsn
 
       std::string vname(bool full = true) const
       {
-        return vname_(full, detail::gen_seq<sizeof...(LabelSets)>());
+        return vname_(full, indices_t{});
       }
 
       value_t
       transpose(const value_t& l) const
       {
-        return transpose_(l, detail::gen_seq<sizeof...(LabelSets)>());
+        return transpose_(l, indices_t{});
       }
 
       std::ostream&
       print(std::ostream& o, const value_t& l) const
       {
-        return print_(o, l, detail::gen_seq<sizeof...(LabelSets)>());
+        return print_(o, l, indices_t{});
       }
 
       std::string
@@ -96,8 +96,7 @@ namespace vcsn
       print_ls(const tupleset& ls,
                std::ostream& o, const std::string& format)
       {
-        return print_ls_(ls, o, format,
-                         detail::gen_seq<sizeof...(LabelSets)>{});
+        return print_ls_(ls, o, format, indices_t{});
       }
 
       template <std::size_t... I>
