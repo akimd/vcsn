@@ -176,7 +176,7 @@ check_aut ()
   cat >in.tmp
   sed -n '/^--*$/q;p'             in.tmp >in.gv
   sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  run 0 out.exp -vcsn-cat -Af in.gv
+  run 0 out.exp -vcsn-cat -Af in.gv "$@"
   $exit
 }
 

@@ -59,6 +59,9 @@ namespace vcsn
 
     dyn::weight eval(const automaton& aut, const std::string& s);
 
+    std::ostream& grail(const automaton& aut, std::ostream& out,
+	const std::string& type);
+
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);
 

@@ -36,6 +36,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/efsm.cc                        \
   lib/vcsn/algos/enumerate.cc                   \
   lib/vcsn/algos/eval.cc                        \
+  lib/vcsn/algos/grail.cc                       \
   lib/vcsn/algos/info.cc                        \
   lib/vcsn/algos/is-deterministic.cc            \
   lib/vcsn/algos/is-eps-acyclic.cc              \

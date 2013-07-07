@@ -1,3 +1,23 @@
+* 2013-07-17
+** new formats: grail and fado
+
+  $ vcsn standard -O fado -e 'a+b'
+  @DFA 1 2
+  0	a	1
+  0	b	2
+  $ vcsn standard -O fado -e 'a+ab'
+  @NFA 1 3 * 0
+  0	a	1
+  2	b	3
+  0	a	2
+  $ vcsn standard -O grail -e 'a+ab'
+  (START)	|-	0
+  0	a	1
+  2	b	3
+  0	a	2
+  1	-|	(FINAL)
+  3	-|	(FINAL)
+
 * 2013-07-14
 ** power
 New algorithm on automata (static, dynamic, TAF-Kit).
