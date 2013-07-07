@@ -5,6 +5,7 @@
 # include <map>
 # include <set>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 
 namespace std
@@ -80,6 +81,10 @@ namespace vcsn
   }
 
   /// Whether set1 \subset set2.
+  template <typename Container1, typename Container2>
+  bool subset(const Container1& set1, const Container2& set2)
+  ATTRIBUTE_PURE;
+
   template <typename Container1, typename Container2>
   bool subset(const Container1& set1, const Container2& set2)
   {
