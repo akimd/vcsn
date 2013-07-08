@@ -17,36 +17,49 @@
 ## ----------- ##
 
 liblal_char_b    = $(top_builddir)/lib/liblal_char_b.la
-liblan_char_b    = $(top_builddir)/lib/liblan_char_b.la
-liblaw_char_b    = $(top_builddir)/lib/liblaw_char_b.la
-liblao_br        = $(top_builddir)/lib/liblao_br.la
 liblal_char_br   = $(top_builddir)/lib/liblal_char_br.la
-liblaw_char_br   = $(top_builddir)/lib/liblaw_char_br.la
-liblao_z         = $(top_builddir)/lib/liblao_z.la
-liblal_char_z    = $(top_builddir)/lib/liblal_char_z.la
-liblan_char_z    = $(top_builddir)/lib/liblan_char_z.la
-liblaw_char_z    = $(top_builddir)/lib/liblaw_char_z.la
-liblal_char_zr   = $(top_builddir)/lib/liblal_char_zr.la
-liblan_char_zr   = $(top_builddir)/lib/liblan_char_zr.la
-liblaw_char_zr   = $(top_builddir)/lib/liblaw_char_zr.la
-liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
-liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
-liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
-liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
-liblal_char_r    = $(top_builddir)/lib/liblal_char_r.la
-liblaw_char_r    = $(top_builddir)/lib/liblaw_char_r.la
 liblal_char_q    = $(top_builddir)/lib/liblal_char_q.la
+liblal_char_r    = $(top_builddir)/lib/liblal_char_r.la
+liblal_char_z    = $(top_builddir)/lib/liblal_char_z.la
+liblal_char_zmin = $(top_builddir)/lib/liblal_char_zmin.la
+liblal_char_zr   = $(top_builddir)/lib/liblal_char_zr.la
+liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
+liblan_char_b    = $(top_builddir)/lib/liblan_char_b.la
+liblan_char_z    = $(top_builddir)/lib/liblan_char_z.la
+liblan_char_zr   = $(top_builddir)/lib/liblan_char_zr.la
+liblao_br        = $(top_builddir)/lib/liblao_br.la
+liblao_z         = $(top_builddir)/lib/liblao_z.la
+liblaw_char_b    = $(top_builddir)/lib/liblaw_char_b.la
+liblaw_char_br   = $(top_builddir)/lib/liblaw_char_br.la
 liblaw_char_q    = $(top_builddir)/lib/liblaw_char_q.la
+liblaw_char_r    = $(top_builddir)/lib/liblaw_char_r.la
+liblaw_char_z    = $(top_builddir)/lib/liblaw_char_z.la
+liblaw_char_zmin = $(top_builddir)/lib/liblaw_char_zmin.la
+liblaw_char_zr   = $(top_builddir)/lib/liblaw_char_zr.la
+liblaw_char_zrr  = $(top_builddir)/lib/liblaw_char_zrr.la
 
-all_libctx =                                                            \
-  $(liblal_char_b) $(liblan_char_b) $(liblaw_char_b)                    \
-  $(liblao_br) $(liblal_char_br) $(liblaw_char_br)                      \
-  $(liblal_char_r) $(liblaw_char_r)                                     \
-  $(liblal_char_q) $(liblaw_char_q)                                     \
-  $(liblao_z) $(liblal_char_z) $(liblan_char_z) $(liblaw_char_z)        \
-  $(liblal_char_zr) $(liblan_char_zr) $(liblaw_char_zr)                 \
-  $(liblal_char_zrr) $(liblaw_char_zrr)                                 \
-  $(liblal_char_zmin) $(liblaw_char_zmin)
+all_libctx =                                    \
+  $(liblal_char_b)                              \
+  $(liblal_char_br)                             \
+  $(liblal_char_q)                              \
+  $(liblal_char_r)                              \
+  $(liblal_char_z)                              \
+  $(liblal_char_zmin)                           \
+  $(liblal_char_zr)                             \
+  $(liblal_char_zrr)                            \
+  $(liblan_char_b)                              \
+  $(liblan_char_z)                              \
+  $(liblan_char_zr)                             \
+  $(liblao_br)                                  \
+  $(liblao_z)                                   \
+  $(liblaw_char_b)                              \
+  $(liblaw_char_br)                             \
+  $(liblaw_char_q)                              \
+  $(liblaw_char_r)                              \
+  $(liblaw_char_z)                              \
+  $(liblaw_char_zmin)                           \
+  $(liblaw_char_zr)                             \
+  $(liblaw_char_zrr)
 
 libvcsn = $(top_builddir)/lib/libvcsn.la
 
@@ -91,7 +104,6 @@ all_vcsn =                                      \
   $(vcsn_complete)                              \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
-  $(vcsn_proper)                                \
   $(vcsn_enumerate)                             \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
@@ -101,6 +113,7 @@ all_vcsn =                                      \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_product)                               \
+  $(vcsn_proper)                                \
   $(vcsn_shortest)                              \
   $(vcsn_standard)                              \
   $(vcsn_thompson)                              \
