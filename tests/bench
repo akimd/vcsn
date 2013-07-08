@@ -144,7 +144,7 @@ sub v1_command ($)
 
 =item C<complete($base)>
 
-Add more files to aid debugging.  E.g. for C<$base.fsm>, also
+Add more files to aid debugging.  E.g. for C<$base.efsm>, also
 generate C<$base.fst>, C<$base.fst.gv> etc.
 
 =cut
@@ -152,28 +152,32 @@ generate C<$base.fst>, C<$base.fst.gv> etc.
 sub complete ($)
 {
   my ($base) = @_;
-  run "fstcompile $base.fsm >$base.fst";
+  run "efstcompile $base.efsm >$base.fst";
   # For some reason, dot refuses to display this properly if we leave all
   # these directives.
   run "fstdraw $base.fst |"
-    . "sed -e '/^ *rankdir =/d;/^ *size =/d;/^ *center =/d;/^ *orientation =/d;'"
-    . "    -e '/^ *ranksep =/d;'"
-    . "    -e '/^ *nodesep =/d;'"
+    . "sed"
+    . " -e '/^ *rankdir =/d;'"
+#    . " -e '/^ *size =/d;'"
+#    . " -e '/^ *center =/d;'"
+#    . " -e '/^ *orientation =/d;'"
+    . " -e '/^ *ranksep =/d;'"
+    . " -e '/^ *nodesep =/d;'"
     . ">$base.fst.gv";
 }
 
 ######################################################################
 
-=item C<ladybird($base, $size, $alphabet)>
+=item C<ladybird($base, $size)>
 
-Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
 C<$base.gv> (for TAF-Kit 2) from $ratexp, via Ladybird.
 
 =cut
 
-sub ladybird ($$$)
+sub ladybird ($$)
 {
-  my ($base, $size, $alphabet) = @_;
+  my ($base, $size) = @_;
 
   verbose 1, "Ladybird $size\n";
   for my $d (@tool)
@@ -181,7 +185,7 @@ sub ladybird ($$$)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          run "vcsn-ladybird -O fsm $size >$base.fsm";
+          run "vcsn-ladybird -O efsm $size >$base.efsm";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -200,10 +204,10 @@ sub ladybird ($$$)
   $base;
 }
 
-=item C<standard($base, $ratexp, $alphabet)>
+=item C<standard($base, $ratexp, $ctx)>
 
-Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from $ratexp, via Ladybird.
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+C<$base.gv> (for TAF-Kit 2) from C<$ratexp>, via standard.
 
 =cut
 
@@ -216,8 +220,8 @@ sub standard ($$$)
     {
       if ($d eq 'OpnFST')
         {
-          run "vcsn-standard -e '(?\@$ctx)$exp' -Ofsm >$base.fsm";
-          run "fstcompile $base.fsm >$base.fst";
+          run "vcsn-standard -e '(?\@$ctx)$exp' -Oefsm >$base.efsm";
+          run "efstcompile $base.efsm >$base.fst";
           run "fstdraw $base.fst >$base.fst.gv";
         }
       elsif ($d eq 'Vcsn 1')
@@ -240,8 +244,8 @@ sub standard ($$$)
 
 =item C<thompson($base, $ratexp, $alphabet)>
 
-Prepare C<$base.fsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from $ratexp, via Thompson.
+Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
+C<$base.gv> (for TAF-Kit 2) from C<$ratexp>, via Thompson.
 
 =cut
 
@@ -253,7 +257,7 @@ sub thompson ($$$)
     {
       if ($d eq 'OpnFST')
         {
-          run "vcsn-thompson -e '(?\@$ctx)$ratexp' -Ofsm >$base.fsm";
+          run "vcsn-thompson -e '(?\@$ctx)$ratexp' -Oefsm >$base.efsm";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -290,14 +294,15 @@ sub setup_det_ladybird ($)
   verbose 1, "Ladybird $size\n";
   # Set up the benches as expected by timethese.
   my %bench;
-  my $base = labybird ($size);
+  my $base = "ladybird-$size";
+  ladybird($base, $size);
   for my $d (@tool)
     {
       my $prog;
       if ($d eq 'OpnFST')
         {
           $prog = 'fstdeterminize';
-          $bench{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+          $bench{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -340,7 +345,7 @@ sub setup_det_aopt ($)
       if ($d eq 'OpnFST')
         {
           $prog = 'fstdeterminize';
-          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+          $res{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -383,7 +388,7 @@ sub setup_eps_aopt ($)
       if ($d eq 'OpnFST')
         {
           $prog = 'fstepsnormalize';
-          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+          $res{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -430,9 +435,9 @@ sub setup_prefix ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' -Ofsm >$base.fsm";
+          run "vcsn-standard -e '(?\@lal_char(ab)_b)$exp' -Oefsm >$base.efsm";
           $prog = 'fstdeterminize';
-          $res{$d} = "fstcompile $base.fsm | $prog >/dev/null";
+          $res{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
         {
@@ -564,7 +569,7 @@ for my $bench (@bench)
   my %setup =
     (
      aopt => \&setup_det_aopt,
-     lady => \&setup_ladybird,
+     lady => \&setup_det_ladybird,
      pfix => \&setup_prefix,
      prpr => \&setup_eps_aopt,
     );
