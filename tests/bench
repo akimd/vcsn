@@ -171,7 +171,7 @@ sub complete ($)
 =item C<ladybird($base, $size)>
 
 Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from $ratexp, via Ladybird.
+C<$base.gv> (for TAF-Kit 2) from $exp, via Ladybird.
 
 =cut
 
@@ -204,10 +204,10 @@ sub ladybird ($$)
   $base;
 }
 
-=item C<standard($base, $ratexp, $ctx)>
+=item C<standard($base, $exp, $ctx)>
 
 Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from C<$ratexp>, via standard.
+C<$base.gv> (for TAF-Kit 2) from C<$exp>, via standard.
 
 =cut
 
@@ -226,7 +226,10 @@ sub standard ($$$)
         }
       elsif ($d eq 'Vcsn 1')
         {
-          run v1_command($ctx) . " standard '$exp' >$base.xml";
+          # Generate the RatExp with V2, but translate for V1.
+          run "vcsn-cat -Ee '$exp' | \
+                    sed -e 's/\\\\e/1/g' | "
+                    . v1_command ($ctx) . " standard - >$base.xml";
         }
       elsif ($d eq 'Vcsn 2')
         {
@@ -242,33 +245,33 @@ sub standard ($$$)
   $base;
 }
 
-=item C<thompson($base, $ratexp, $alphabet)>
+=item C<thompson($base, $exp, $alphabet)>
 
 Prepare C<$base.efsm> (for Open FST), C<$base.xml> (for TAF-Kit 1), and
-C<$base.gv> (for TAF-Kit 2) from C<$ratexp>, via Thompson.
+C<$base.gv> (for TAF-Kit 2) from C<$exp>, via Thompson.
 
 =cut
 
 sub thompson ($$$)
 {
-  my ($base, $ratexp, $ctx) = @_;
+  my ($base, $exp, $ctx) = @_;
 
   for my $d (@tool)
     {
       if ($d eq 'OpnFST')
         {
-          run "vcsn-thompson -e '(?\@$ctx)$ratexp' -Oefsm >$base.efsm";
+          run "vcsn-thompson -e '(?\@$ctx)$exp' -Oefsm >$base.efsm";
         }
       elsif ($d eq 'Vcsn 1')
         {
           # Generate the RatExp with V2, but translate for V1.
-          run "vcsn-cat -Ee '$ratexp' | \
+          run "vcsn-cat -Ee '$exp' | \
                     sed -e 's/\\\\e/1/g' | "
                     . v1_command ($ctx) . " thompson - >$base.xml";
         }
       elsif ($d eq 'Vcsn 2')
         {
-          run "vcsn-thompson -e '(?\@$ctx)$ratexp' >$base.gv";
+          run "vcsn-thompson -e '(?\@$ctx)$exp' >$base.gv";
         }
       else
         {
