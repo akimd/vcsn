@@ -125,13 +125,6 @@ namespace vcsn
         return ::vcsn::conv(*this, s);
       }
 
-      // KILLME:
-      word_t
-      to_word(empty_t) const
-      {
-        return {};
-      }
-
       std::string
       format(empty_t) const
       {

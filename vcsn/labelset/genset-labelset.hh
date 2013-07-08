@@ -62,7 +62,6 @@ namespace vcsn
       DEFINE(equals);
       DEFINE(has);
       DEFINE(is_letter);
-      DEFINE(to_word);
       DEFINE(transpose);
 
 # undef DEFINE
