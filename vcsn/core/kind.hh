@@ -72,6 +72,7 @@ namespace vcsn
   DEFINE(lal, letters);
   DEFINE(lan, nullable);
   DEFINE(lao, one);
+  DEFINE(lat, tuples);
   DEFINE(law, words);
 
 # undef DEFINE

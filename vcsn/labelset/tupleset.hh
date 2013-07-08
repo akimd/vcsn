@@ -34,6 +34,7 @@ namespace vcsn
       using indices_t = detail::gen_seq<sizeof...(LabelSets)>;
     public:
       using value_t = std::tuple<typename LabelSets::value_t...>;
+      using kind_t = labels_are_tuples;
 
       tupleset(LabelSets... ls)
         : sets_(ls...)
