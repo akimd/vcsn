@@ -22,7 +22,6 @@ namespace vcsn
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
       using letter_t = char;
-      using word_t = vcsn::empty_t;
       using letters_t = std::set<letter_t>;
 
       using kind_t = labels_are_one;
