@@ -41,7 +41,7 @@ namespace vcsn
       using kind_t = Kind;
 
       /**
-         @brief The core of the epsilon-removal
+         @brief The core of the (backward) epsilon-removal.
 
          For each state s
          if s has an epsilon-loop with weight w
@@ -415,14 +415,14 @@ namespace vcsn
 
   template <class Aut>
   inline
-  void proper_here(Aut& aut, direction_t dir = direction_t::FORWARD)
+  void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD)
   {
     switch (dir)
       {
-      case direction_t::FORWARD:
+      case direction_t::BACKWARD:
         detail::properer<Aut>::proper_here(aut);
         return;
-      case direction_t::BACKWARD:
+      case direction_t::FORWARD:
         auto tr_aut = transpose(aut);
         using tr_aut_t = decltype(tr_aut);
         detail::properer<tr_aut_t>::proper_here(tr_aut);
@@ -431,16 +431,16 @@ namespace vcsn
   }
 
   template <class Aut>
-  Aut proper(const Aut& aut, direction_t dir = direction_t::FORWARD)
+  Aut proper(const Aut& aut, direction_t dir = direction_t::BACKWARD)
   {
     switch (dir)
       {
-      case direction_t::FORWARD:
-        return detail::properer<Aut>::proper(aut);
       case direction_t::BACKWARD:
+        return detail::properer<Aut>::proper(aut);
+      case direction_t::FORWARD:
         // FIXME: inconsistent implementation bw fwd and bwd.
         Aut res = copy(aut);
-        proper_here(res, direction_t::BACKWARD);
+        proper_here(res, dir);
         return res;
       }
     abort();

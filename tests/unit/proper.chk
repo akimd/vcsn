@@ -33,7 +33,7 @@ is deterministic: 1
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
-backward_proper:
+forward_proper:
 type: mutable_automaton<lal_char(ab)_b>
 number of states: 3
 number of initial states: 1
@@ -97,7 +97,7 @@ is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
-backward_proper:
+forward_proper:
 type: mutable_automaton<law_char(ab)_b>
 number of states: 3
 number of initial states: 3
@@ -227,7 +227,7 @@ is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
-backward_proper:
+forward_proper:
 type: mutable_automaton<law_char(ab)_z>
 number of states: 3
 number of initial states: 3
@@ -309,7 +309,7 @@ is deterministic: N/A
 is eps-acyclic: 1
 is proper: 1
 is valid: 1
-backward_proper:
+forward_proper:
 type: mutable_automaton<law_char(ab)_zmin>
 number of states: 3
 number of initial states: 3
