@@ -37,6 +37,10 @@ namespace vcsn
         : letterset{std::make_shared<const genset_t>(gs)}
       {}
 
+      letterset(const std::initializer_list<letter_t>& letters)
+        : letterset{std::make_shared<const genset_t>(letters)}
+      {}
+
       const super_type&
       super() const
       {

@@ -22,14 +22,10 @@ namespace vcsn
       // FIXME: fishy, but that's what the previous version of the
       // code used to do.
       using letter_t = char;
-      using letters_t = std::set<letter_t>;
 
       using kind_t = labels_are_one;
 
       oneset() = default;
-      // FIXME: KILL
-      oneset(const letters_t&)
-      {}
 
       static std::string sname()
       {

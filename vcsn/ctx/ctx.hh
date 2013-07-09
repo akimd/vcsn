@@ -75,10 +75,13 @@ namespace vcsn
       // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56922
       // But clang rejects it.
       // http://llvm.org/bugs/show_bug.cgi?id=15724
-      context(const typename labelset_t::letters_t& gs =
-                typename labelset_t::letters_t{},
+      context(const std::initializer_list<typename labelset_t::letter_t>& gs,
               const weightset_t& ws = {})
         : context{labelset_t{gs}, ws}
+      {}
+
+      context()
+        : context{labelset_t{}, weightset_t{}}
       {}
 
       /// The name of this context, built from its parameters.
