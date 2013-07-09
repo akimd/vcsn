@@ -121,14 +121,6 @@ namespace vcsn
               }
 
             /*
-              "Blowing"
-              For each transition (or terminal arrow) outgoing from (s),
-              the weight is multiplied by (star).
-            */
-            for (auto t: aut.all_out(s))
-              aut.set_weight(t,
-                             weightset.mul(star, aut.weight_of(t)));
-            /*
               For each transition (t : s -- label|weight --> dst),
               for each former
               epsilon transition closure->first -- e|closure->second --> s
@@ -144,9 +136,14 @@ namespace vcsn
             */
             for (auto t: aut.all_out(s))
               {
+                // "Blowing": For each transition (or terminal arrow)
+                // outgoing from (s), the weight is multiplied by
+                // (star).
+                weight_t weight = weightset.mul(star, aut.weight_of(t));
+                aut.set_weight(t, weight);
+
                 label_t label = aut.label_of(t);
                 state_t dst = aut.dst_of(t);
-                weight_t weight = aut.weight_of(t);
                 for (auto pair: closure)
                   aut.add_transition(pair.first, dst, label,
                                      weightset.mul(pair.second, weight));
