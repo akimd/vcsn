@@ -538,8 +538,19 @@ sub getopt ()
   GetOptions (%option)
     or exit 1;
 
-  @tool = ('OpnFST', 'Vcsn 1', 'Vcsn 2')
-    unless @tool;
+  my @valid_tool = ('OpnFST', 'Vcsn 1', 'Vcsn 2');
+  if (@tool)
+    {
+      for my $t (@tool)
+        {
+          die "invalid tool: $t: expected @valid_tool"
+            unless grep { $_ eq $t } @valid_tool;
+        }
+    }
+  else
+    {
+      @tool = @valid_tool;
+    }
 }
 
 ######################################################################
