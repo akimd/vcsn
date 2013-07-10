@@ -27,10 +27,10 @@ namespace vcsn
       using kind_t = typename labelset_t::kind_t;
       enum
         {
-          is_lao = std::is_same<kind_t, labels_are_one>::value,
-          is_lal = std::is_same<kind_t, labels_are_letters>::value,
-          is_lan = std::is_same<kind_t, labels_are_nullable>::value,
-          is_law = std::is_same<kind_t, labels_are_words>::value,
+          is_lal = vcsn::is_lal<context>::value,
+          is_lan = vcsn::is_lan<context>::value,
+          is_lao = vcsn::is_lao<context>::value,
+          is_law = vcsn::is_law<context>::value
         };
       /// Type of transition labels, and type of RatExp atoms.
       using label_t = typename labelset_t::label_t;
