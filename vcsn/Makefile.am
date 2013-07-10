@@ -40,15 +40,6 @@ nobase_vcsn_HEADERS =                           \
   algos/tikz.hh                                 \
   algos/transpose.hh                            \
   algos/universal.hh                            \
-  algos/xml.hh                                  \
-  algos/xml/ios.hh                              \
-  algos/xml/ios.hxx                             \
-  algos/xml/ratexpvisitor.hh                    \
-  algos/xml/ratexpvisitor.hxx                   \
-  algos/xml/structure.hh                        \
-  algos/xml/tools.hh                            \
-  algos/xml/weight-visitor.hh                   \
-  algos/xml/weight-visitor.hxx                  \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \
   core/crange.hh                                \

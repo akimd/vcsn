@@ -24,7 +24,6 @@
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
-# include <vcsn/algos/xml.hh>
 
 # include <vcsn/factory/de_bruijn.hh>
 # include <vcsn/factory/ladybird.hh>
@@ -110,15 +109,9 @@ namespace vcsn
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
-  class detail::transpose_automaton<mutable_automaton<Ctx>>;           \
+  class detail::transpose_automaton<mutable_automaton<Ctx>>;            \
   MAYBE_EXTERN template                                                 \
-  class detail::transposer<Ctx>;                                       \
-                                                                        \
-  /* xml. */                                                            \
-  MAYBE_EXTERN template                                                 \
-  std::ostream&                                                         \
-  xml<Ctx>(const Ctx& ctx, const rat::exp_t exp, std::ostream& out);
-
+  class detail::transposer<Ctx>
 
 
   /*----------------------------------.
@@ -281,9 +274,6 @@ namespace vcsn
         // trim.
         REGISTER(aut_t, trim);
 
-        // xml.
-        REGISTER(Ctx, xml);
-
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
       }
@@ -296,7 +286,7 @@ namespace vcsn
 #  define VCSN_CTX_INSTANTIATE_2(Ctx)                           \
   namespace ctx                                                 \
   {                                                             \
-    namespace detail                                           \
+    namespace detail                                            \
     {                                                           \
       static bool registered = register_functions<Ctx>();       \
     }                                                           \
@@ -306,7 +296,7 @@ namespace vcsn
 # endif
 
 # define VCSN_CTX_INSTANTIATE(Ctx)              \
-  VCSN_CTX_INSTANTIATE_1(ctx::Ctx)              \
+  VCSN_CTX_INSTANTIATE_1(ctx::Ctx);             \
   VCSN_CTX_INSTANTIATE_2(Ctx)
 
 # ifndef MAYBE_EXTERN

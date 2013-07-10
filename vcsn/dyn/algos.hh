@@ -125,8 +125,6 @@ namespace vcsn
     std::string shortest(const automaton& aut);
 
     automaton universal(const automaton& aut);
-
-    std::ostream& xml(const ratexp& e, std::ostream& out);
   }
 }
 
