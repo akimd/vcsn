@@ -26,13 +26,11 @@ namespace vcsn
                             std::string>::type
     is_complete(const Aut& a)
     {
-      return vcsn::is_complete(a) ? "1" : "0";
+      return std::to_string(vcsn::is_complete(a));
     }
 
     template <typename Aut>
-    typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lao
-                             || Aut::context_t::is_law),
+    typename std::enable_if<!Aut::context_t::is_lal,
                             std::string>::type
     is_complete(const Aut&)
     {
@@ -51,9 +49,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lao
-                             || Aut::context_t::is_law),
+    typename std::enable_if<!Aut::context_t::is_lal,
                             std::string>::type
     is_deterministic(const Aut&)
     {
@@ -72,9 +68,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lao
-                             || Aut::context_t::is_law),
+    typename std::enable_if<!Aut::context_t::is_lal,
                             std::string>::type
     num_deterministic_states(const Aut&)
     {
@@ -93,9 +87,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<(Aut::context_t::is_lan
-                             || Aut::context_t::is_lao
-                             || Aut::context_t::is_law),
+    typename std::enable_if<!Aut::context_t::is_lal,
                             size_t>::type
     num_eps_transitions(const Aut& aut)
     {
