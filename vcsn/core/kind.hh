@@ -21,7 +21,17 @@ namespace vcsn
   /// one must write "(typename Cxx::template if_lal<letter_t> v)".
 
 # define DEFINE(Abbrev, Name)                                           \
-  struct labels_are_ ## Name  {};                                       \
+  struct labels_are_ ## Name                                            \
+  {                                                                     \
+    static std::string name()                                           \
+    {                                                                   \
+      return "labels_are_" #Name;                                       \
+    }                                                                   \
+    static std::string sname()                                          \
+    {                                                                   \
+      return #Abbrev;                                                   \
+    }                                                                   \
+  };                                                                    \
                                                                         \
   template <typename Kinded>                                            \
   struct is_ ## Abbrev                                                  \

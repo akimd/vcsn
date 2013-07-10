@@ -72,10 +72,9 @@ namespace vcsn
       // There is no "char(...)_".
       std::string kind = name.substr(0, 3);
 
-      if (kind != "lao")
-        throw std::runtime_error("make_context: Ctx::is_lao but read "
-                                 + kind + ": " + name);
-
+      if (Ctx::kind_t::sname() != kind)
+        throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
+                                 + " but read " + kind + ": " + name);
       if (name[3] != '_')
         throw std::runtime_error("make_context: expected a '_' after " + kind
                                  + ": " + name);
@@ -103,19 +102,9 @@ namespace vcsn
       // See vcsn/misc/regex.hh.
       std::string kind = name.substr(0, 3);
 
-      if ((Ctx::is_lal && kind != "lal")
-          || (Ctx::is_lan && kind != "lan")
-          || (Ctx::is_law && kind != "law"))
-        {
-          std::string ctxk =
-            Ctx::is_lal ? "lal"
-            : Ctx::is_lan ? "lan"
-            : Ctx::is_law ? "law"
-            : "invalid Context Kind";
-          throw std::runtime_error("make_context: Ctx::is_" + ctxk
-                                   + " but read " + kind + ": " + name);
-        }
-
+      if (Ctx::kind_t::sname() != kind)
+        throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
+                                 + " but read " + kind + ": " + name);
       if (name[3] != '_')
         throw std::runtime_error("make_context: expected a '_' after " + kind
                                  + ": " + name);
