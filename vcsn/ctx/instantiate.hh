@@ -169,6 +169,13 @@ namespace vcsn
 
       template <typename Ctx>
       bool
+      register_kind_functions(labels_are_tuples)
+      {
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
       register_kind_functions(labels_are_words)
       {
         using aut_t = mutable_automaton<Ctx>;
