@@ -65,7 +65,7 @@ namespace vcsn
     typename std::enable_if<Ctx::is_lao, Ctx>::type
     make_context(const std::string& name)
     {
-      // name: lal_ratexpset<law_char(xyz)_b>
+      // name: lao_ratexpset<law_char(xyz)_b>
       //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
       //       kind         weightset
       //
