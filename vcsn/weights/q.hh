@@ -32,6 +32,14 @@ namespace vcsn
     {
       int num;
       unsigned int den;
+
+      /// Put it in normal form.
+      void reduce()
+      {
+        int gc = gcd(abs(num), den);
+        num /= gc;
+        den /= gc;
+      }
     };
 
     static unsigned int abs(int a)
@@ -71,20 +79,16 @@ namespace vcsn
 
     static value_t add(const value_t l, const value_t r)
     {
-      value_t res;
       unsigned int cm = lcm(l.den, abs(r.den));
-      res.num = l.num * (cm / l.den);
-      res.num += r.num * (cm / r.den);
-      res.den = cm;
+      value_t res{l.num * int (cm / l.den) + r.num * int (cm / r.den), cm};
+      res.reduce();
       return res;
     }
 
     static value_t mul(const value_t l, const value_t r)
     {
-      value_t res = value_t{l.num * r.num, l.den * r.den};
-      unsigned int g = gcd(abs(res.num), res.den);
-      res.num /= int(g);
-      res.den /= g;
+      value_t res{l.num * r.num, l.den * r.den};
+      res.reduce();
       return res;
     }
 
@@ -92,11 +96,7 @@ namespace vcsn
     {
       // Bad casting when v.den is too big
       if (abs(v.num) < v.den)
-      {
-	unsigned int res_den = v.den - v.num;
-	int res_num = v.den;
-	return value_t{res_num, res_den};
-      }
+        return {int(v.den), v.den - v.num};
       else
         throw std::domain_error("r: star: invalid value: " + format(v));
     }

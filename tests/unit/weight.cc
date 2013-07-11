@@ -78,6 +78,7 @@ static size_t check_q()
 
   CHECK(ws.zero(), ws.conv("8/2"), "4");
   CHECK(ws.one(), ws.conv("8/2"), "5");
+  CHECK(ws.conv("1/3"), ws.conv("1/6"), "1/2");
   CHECK(ws.conv("3/2"), ws.conv("2/3"), "13/6");
   CHECK(ws.conv("8/2"), ws.conv("2/2"), "5");
   CHECK(ws.conv("168/9"), ws.conv("14/13"), "770/39");
