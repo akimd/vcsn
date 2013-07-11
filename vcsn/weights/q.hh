@@ -34,14 +34,14 @@ namespace vcsn
       unsigned int den;
     };
 
-    unsigned int abs(int a) const
+    static unsigned int abs(int a)
     {
       return a < 0 ? -a : a;
     }
 
     // Highest Common factor
     ATTRIBUTE_PURE
-    unsigned int gcd(unsigned int a, unsigned int b) const
+    static unsigned int gcd(unsigned int a, unsigned int b)
     {
       while (b)
       {
@@ -54,25 +54,22 @@ namespace vcsn
 
     // Lowest common multiple
     ATTRIBUTE_PURE
-    unsigned int lcm(unsigned int a, unsigned int b) const
+    static unsigned int lcm(unsigned int a, unsigned int b)
     {
       return a / gcd(a, b) * b;
     }
 
-    value_t
-    zero() const
+    static value_t zero()
     {
       return value_t{0, 1};
     }
 
-    value_t
-    one() const
+    static value_t one()
     {
       return value_t{1, 1};
     }
 
-    value_t
-    add(const value_t l, const value_t r) const
+    static value_t add(const value_t l, const value_t r)
     {
       value_t res;
       unsigned int cm = lcm(l.den, abs(r.den));
@@ -82,8 +79,7 @@ namespace vcsn
       return res;
     }
 
-    value_t
-    mul(const value_t l, const value_t r) const
+    static value_t mul(const value_t l, const value_t r)
     {
       value_t res = value_t{l.num * r.num, l.den * r.den};
       unsigned int g = gcd(abs(res.num), res.den);
@@ -92,8 +88,7 @@ namespace vcsn
       return res;
     }
 
-    value_t
-    star(const value_t v) const
+    static value_t star(const value_t v)
     {
       // Bad casting when v.den is too big 
       if (abs(v.num) < v.den)
@@ -106,19 +101,17 @@ namespace vcsn
         throw std::domain_error("r: star: invalid value: " + format(v));
     }
 
-    bool
-    is_zero(const value_t v) const
+    static bool is_zero(const value_t v)
     {
       return v.num == 0;
     }
 
-    bool
-    is_one(const value_t v) const
+    static bool is_one(const value_t v)
     {
       return v.num > 0 && static_cast<unsigned int>(v.num) == v.den;
     }
 
-    bool is_equal(const value_t l, const value_t r) 
+    static bool is_equal(const value_t l, const value_t r)
     {
       return l.num == r.num && l.den == l.den;
     }
@@ -126,20 +119,20 @@ namespace vcsn
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 
-    value_t
-    abs(const value_t v) const
+    static value_t
+    abs(const value_t v)
     {
       return v.num < 0 ? (value_t{-v.num, v.den}) : v;
     }
 
-    value_t
-    transpose(const value_t v) const
+    static value_t
+    transpose(const value_t v)
     {
       return v;
     }
 
-    value_t
-    conv(std::istream& i) const
+    static value_t
+    conv(std::istream& i)
     {
       value_t res;
       i >> res.num;
@@ -170,15 +163,15 @@ namespace vcsn
       return res;
     }
 
-    value_t
-    conv(const std::string& str) const
+    static value_t
+    conv(const std::string& str)
     {
       std::istringstream i{str};
       return conv(i);
     }
 
-    std::ostream&
-    print(std::ostream& o, const value_t v) const
+    static std::ostream&
+    print(std::ostream& o, const value_t v)
     {
       if (v.den == 0)
 	return o << 0;
@@ -187,8 +180,8 @@ namespace vcsn
       return o << v.num << "/" << v.den;
     }
 
-    std::string
-    format(const value_t v) const
+    static std::string
+    format(const value_t v)
     {
       std::ostringstream s;
       print(s, v);
