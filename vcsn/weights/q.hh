@@ -39,15 +39,15 @@ namespace vcsn
       return a < 0 ? -a : a;
     }
 
-    // Highest Common factor
+    // Greatest common divisor.
     ATTRIBUTE_PURE
     static unsigned int gcd(unsigned int a, unsigned int b)
     {
       while (b)
       {
-	unsigned int t = a;
-	a = b; 
-	b = t % b;
+        unsigned int t = a;
+        a = b;
+        b = t % b;
       }
       return a;
     }
@@ -90,7 +90,7 @@ namespace vcsn
 
     static value_t star(const value_t v)
     {
-      // Bad casting when v.den is too big 
+      // Bad casting when v.den is too big
       if (abs(v.num) < v.den)
       {
 	unsigned int res_den = v.den - v.num;
@@ -138,26 +138,26 @@ namespace vcsn
       i >> res.num;
       if (i.fail())
       {
-	char buf[256];
-	i.getline(buf, sizeof buf);
-	throw std::domain_error(std::string{"invalid rational: "} + buf);
+        char buf[256];
+        i.getline(buf, sizeof buf);
+        throw std::domain_error(std::string{"invalid rational: "} + buf);
       }
       if (i.peek() == std::char_traits<char>::eof())
-	return value_t{res.num, 1};
+        return value_t{res.num, 1};
       if (i.get() != '/' || i.fail())
       {
-	char buf[256];
-	i.getline(buf, sizeof buf);
-	throw std::domain_error(std::string{"invalid rational: "} + buf);
+        char buf[256];
+        i.getline(buf, sizeof buf);
+        throw std::domain_error(std::string{"invalid rational: "} + buf);
       }
       i >> res.den;
       if (i.fail())
       {
-	char buf[256];
-	i.getline(buf, sizeof buf);
-	throw std::domain_error(std::string{"invalid rational: "} + buf);
+        char buf[256];
+        i.getline(buf, sizeof buf);
+        throw std::domain_error(std::string{"invalid rational: "} + buf);
       }
-      unsigned int g = gcd(abs(res.num), res.den);		
+      unsigned int g = gcd(abs(res.num), res.den);
       res.num /= int(g);
       res.den /= g;
       return res;
@@ -174,9 +174,9 @@ namespace vcsn
     print(std::ostream& o, const value_t v)
     {
       if (v.den == 0)
-	return o << 0;
+        return o << 0;
       if (v.den == 1)
-	return o << v.num;
+        return o << v.num;
       return o << v.num << "/" << v.den;
     }
 
