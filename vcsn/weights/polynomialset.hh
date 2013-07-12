@@ -287,28 +287,33 @@ namespace vcsn
       return res;
     }
 
+    /// Print a monomial.
+    std::ostream&
+    print(std::ostream& out, const typename value_t::value_type& m) const
+    {
+      if (weightset()->show_one() || !weightset()->is_one(m.second))
+        {
+          out << lbracket;
+          weightset()->print(out, m.second) << rbracket;
+        }
+      labelset()->genset()->print(out, m.first);
+      return out;
+    }
+
     std::ostream&
     print(std::ostream& out, const value_t& v,
           const std::string& sep = " + ") const
     {
       bool first = true;
-      bool show_one = weightset()->show_one();
-
       if (v.empty())
         out << "\\z";
       else
-        for (const auto& i: v)
+        for (const auto& m: v)
           {
             if (!first)
               out << sep;
             first = false;
-
-            if (show_one || !weightset()->is_one(i.second))
-              {
-                out << lbracket;
-                weightset()->print(out, i.second) << rbracket;
-              }
-            labelset()->print(out, i.first);
+            print(out, m);
           }
 
       return out;
@@ -319,6 +324,15 @@ namespace vcsn
     {
       std::ostringstream o;
       print(o, v, sep);
+      return o.str();
+    }
+
+    /// Format a monomial.
+    std::string
+    format(const typename value_t::value_type& m) const
+    {
+      std::ostringstream o;
+      print(o, m);
       return o.str();
     }
 
