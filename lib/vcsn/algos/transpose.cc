@@ -15,7 +15,7 @@ namespace vcsn
     automaton
     transpose(automaton& aut)
     {
-      return detail::transpose_registry().call(aut->vname(),
+      return detail::transpose_registry().call(aut->vname(false),
                                                 aut);
     }
 
@@ -29,7 +29,7 @@ namespace vcsn
     ratexp
     transpose(const dyn::ratexp& e)
     {
-      return detail::transpose_exp_registry().call(e->ctx().vname(),
+      return detail::transpose_exp_registry().call(e->ctx().vname(false),
                                                     e);
     }
   }

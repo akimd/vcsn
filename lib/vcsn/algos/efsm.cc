@@ -16,7 +16,7 @@ namespace vcsn
     std::ostream&
     efsm(const automaton& aut, std::ostream& out)
     {
-      detail::efsm_registry().call(aut->vname(),
+      detail::efsm_registry().call(aut->vname(false),
                                   aut, out);
       return out;
     }

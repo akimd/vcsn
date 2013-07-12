@@ -17,7 +17,7 @@ namespace vcsn
     automaton
     proper(const automaton& aut)
     {
-      return detail::proper_registry().call(aut->vname(), aut);
+      return detail::proper_registry().call(aut->vname(false), aut);
     }
   }
 }

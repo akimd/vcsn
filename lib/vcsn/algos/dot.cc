@@ -16,7 +16,7 @@ namespace vcsn
     std::ostream&
     dot(const automaton& aut, std::ostream& out)
     {
-      detail::dot_stream_registry().call(aut->vname(),
+      detail::dot_stream_registry().call(aut->vname(false),
                                           aut, out);
       return out;
     }
@@ -30,7 +30,7 @@ namespace vcsn
     std::string
     dot(const automaton& aut)
     {
-      return detail::dot_string_registry().call(aut->vname(),
+      return detail::dot_string_registry().call(aut->vname(false),
                                                  aut);
     }
   }

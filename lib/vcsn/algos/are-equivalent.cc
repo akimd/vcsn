@@ -34,7 +34,7 @@ namespace vcsn
     {
       return
         detail::are_equivalent_registry().call
-        (lhs->vname() + " x " + rhs->vname(),
+        (lhs->vname(false) + " x " + rhs->vname(false),
          lhs, rhs);
     }
 

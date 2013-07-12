@@ -15,7 +15,7 @@ namespace vcsn
     bool
     is_deterministic(const automaton& aut)
     {
-      return detail::is_deterministic_registry().call(aut->vname(), aut);
+      return detail::is_deterministic_registry().call(aut->vname(false), aut);
     }
   }
 }

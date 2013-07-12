@@ -16,7 +16,7 @@ namespace vcsn
     std::ostream&
     info(const automaton& aut, std::ostream& out)
     {
-      detail::info_registry().call(aut->vname(),
+      detail::info_registry().call(aut->vname(false),
                                    aut, out);
       return out;
     }
@@ -30,7 +30,7 @@ namespace vcsn
     std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)
     {
-      detail::info_exp_registry().call(e->ctx().vname(),
+      detail::info_exp_registry().call(e->ctx().vname(false),
                                        e, out);
       return out;
     }

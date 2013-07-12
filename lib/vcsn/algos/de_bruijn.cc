@@ -12,7 +12,7 @@ namespace vcsn
     automaton
     de_bruijn(const context& ctx, unsigned n)
     {
-      return detail::de_bruijn_registry().call(ctx->vname(),
+      return detail::de_bruijn_registry().call(ctx->vname(false),
                                                 ctx, n);
     }
   }

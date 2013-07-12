@@ -11,7 +11,7 @@ namespace vcsn
     automaton
     accessible(const automaton& aut)
     {
-      return detail::accessible_registry().call(aut->vname(),
+      return detail::accessible_registry().call(aut->vname(false),
                                                   aut);
     }
 
@@ -20,7 +20,7 @@ namespace vcsn
     automaton
     coaccessible(const automaton& aut)
     {
-      return detail::coaccessible_registry().call(aut->vname(),
+      return detail::coaccessible_registry().call(aut->vname(false),
                                                   aut);
     }
 
@@ -29,7 +29,7 @@ namespace vcsn
     automaton
     trim(const automaton& aut)
     {
-      return detail::trim_registry().call(aut->vname(),
+      return detail::trim_registry().call(aut->vname(false),
                                           aut);
     }
 
@@ -38,7 +38,7 @@ namespace vcsn
     bool
     is_trim(const automaton& aut)
     {
-      return detail::is_trim_registry().call(aut->vname(),
+      return detail::is_trim_registry().call(aut->vname(false),
                                              aut);
     }
 
@@ -47,7 +47,7 @@ namespace vcsn
     bool
     is_useless(const automaton& aut)
     {
-      return detail::is_useless_registry().call(aut->vname(),
+      return detail::is_useless_registry().call(aut->vname(false),
                                                 aut);
     }
 
@@ -56,7 +56,7 @@ namespace vcsn
     bool
     is_empty(const automaton& aut)
     {
-      return detail::is_empty_registry().call(aut->vname(),
+      return detail::is_empty_registry().call(aut->vname(false),
                                               aut);
     }
 

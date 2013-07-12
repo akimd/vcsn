@@ -44,7 +44,7 @@ namespace vcsn
       if (type == "info")
         info(exp, out);
       else if (type == "text")
-        detail::print_exp_registry().call(exp->ctx().vname(), exp, out);
+        detail::print_exp_registry().call(exp->ctx().vname(false), exp, out);
       else
         throw std::domain_error("invalid output format for expression: "
                                 + type);
@@ -61,7 +61,7 @@ namespace vcsn
     print(const dyn::weight& w, std::ostream& out, const std::string& type)
     {
       if (type == "text")
-        detail::print_weight_registry().call(w->get_weightset().vname(),
+        detail::print_weight_registry().call(w->get_weightset().vname(false),
                                              w, out);
       else
         throw std::domain_error("invalid output format for weight: "

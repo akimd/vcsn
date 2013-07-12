@@ -11,7 +11,7 @@ namespace vcsn
     std::string
     shortest(const automaton& aut)
     {
-      return detail::shortest_registry().call(aut->vname(),
+      return detail::shortest_registry().call(aut->vname(false),
                                               aut);
     }
 
@@ -20,7 +20,7 @@ namespace vcsn
     std::vector<std::string>
     enumerate(const automaton& aut, size_t max)
     {
-      return detail::enumerate_registry().call(aut->vname(),
+      return detail::enumerate_registry().call(aut->vname(false),
                                                aut, max);
     }
   }

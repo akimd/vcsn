@@ -32,7 +32,7 @@ namespace vcsn
     product(const automaton& lhs, const automaton& rhs)
     {
       return
-        detail::product_registry().call(lhs->vname() + " x " + rhs->vname(),
+        detail::product_registry().call(lhs->vname(false) + " x " + rhs->vname(false),
                                          lhs, rhs);
     }
   }

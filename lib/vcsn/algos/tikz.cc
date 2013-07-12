@@ -16,7 +16,7 @@ namespace vcsn
     std::ostream&
     tikz(const automaton& aut, std::ostream& out)
     {
-      detail::tikz_registry().call(aut->vname(),
+      detail::tikz_registry().call(aut->vname(false),
                                    aut, out);
       return out;
     }
