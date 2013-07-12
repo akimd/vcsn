@@ -60,6 +60,12 @@ namespace vcsn
       return l + r;
     }
 
+    /// Add the special character first and last.
+    word_t delimit(const word_t& w) const
+    {
+      return concat(concat(special_letter(), w), special_letter());
+    }
+
     word_t
     empty_word() const
     {

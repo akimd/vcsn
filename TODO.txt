@@ -49,6 +49,11 @@ is factored a lot, using std::copy for instance.
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
 
+** eval
+Vectors of weights indexed by states are bad structures to iterate upon.  We
+don't need to work on states that are not part of the computation.  This
+shows in the "if (!ws_.is_zero(v1[s]))" in the code.
+
 ** shortest, enumerate
 Check that the data structures are really the best possible.  See if
 starting from pre(), instead of the initial states, cannot simplify.

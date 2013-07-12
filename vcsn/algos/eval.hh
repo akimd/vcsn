@@ -36,18 +36,20 @@ namespace vcsn
       {
         // Initialize
         const weight_t zero = ws_.zero();
-        // v1{a_.num_all_states(), zero} is tempting, but the type
-        // of zero might result in the compiler believing we are building
-        // a vector with two values: a_.num_all_states() and zero.
-        weights v1;
-        v1.assign(a_.num_all_states(), zero);
+        // Do not use braces (v1{a_.num_all_states(), zero}): the type
+        // of zero might result in the compiler believing we are
+        // building a vector with two values: a_.num_all_states() and
+        // zero.
+        //
+        // FIXME: a perfect job for a sparse array: most of the states
+        // will be not visited, nevertheless, because we iterate on
+        // all the states, they are costly at each iteration.
+        weights v1(a_.num_all_states(), zero);
+        v1[a_.pre()] = ws_.one();
         weights v2{v1};
 
-        for (auto init : a_.initial_transitions())
-          v1[a_.dst_of(init)] = a_.weight_of(init);
-
-        // Computation
-        for (auto l : word)
+        // Computation.
+        for (auto l : a_.labelset()->genset()->delimit(word))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
@@ -59,14 +61,9 @@ namespace vcsn
                   v2[a_.dst_of(tr)] =
                     ws_.add(v2[a_.dst_of(tr)],
                             ws_.mul(v1[s], a_.weight_of(tr)));
-              // (1) w = zero.
             std::swap(v1, v2);
           }
-        weight_t res = zero;
-        for (auto f : a_.final_transitions())
-          res = ws_.add(res,
-                        ws_.mul(v1[a_.src_of(f)], a_.weight_of(f)));
-        return res;
+        return v1[a_.post()];
       }
     private:
       const automaton_t& a_;
