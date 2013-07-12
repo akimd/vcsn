@@ -4,10 +4,10 @@
 ## enumerate.  ##
 ## ----------- ##
 
-## check EXP MAX WORD...
-## ---------------------
+## check_enumerate EXP MAX WORD...
+## -------------------------------
 ## Check that EXP accepts WORD... has shortest words up to size MAX.
-check ()
+check_enumerate ()
 {
   exp=$1
   max=$2
@@ -19,12 +19,41 @@ check ()
   run 0 out.exp -vcsn-enumerate -Ee "$exp" "$max"
 }
 
+
+## check_shortest EXP WORD
+## -----------------------
+## Check that EXP accepts WORD has shortest word, or throws if empty.
+check_shortest ()
+{
+  exp=$1
+  expout=$(sed 1q out.exp)
+  case $expout in
+    ('') run 1 "$expout" -vcsn-shortest -Ee "$exp";;
+    (*)  run 0 "$expout" -vcsn-shortest -Ee "$exp";;
+  esac
+}
+
+## check EXP MAX WORD...
+## ---------------------
+## Check that EXP accepts WORD... has shortest words up to size MAX,
+## and its shortest word is WORD.  Use only if MAX is long enough
+## for WORD.
+check ()
+{
+  exp=$1
+  shift
+  check_enumerate "$exp" "$@"
+  expout=$(sed 1q out.exp)
+  check_shortest "$exp"
+}
+
+
 check '\z' 3
 check '\e' 3 '\e'
 check '(a+b)' 2 'a' 'b'
 check '(a+b)*' 2 '\e' 'a' 'b' aa ab ba bb
 
-check 'ababab' 2
+check_enumerate 'ababab' 2
 check 'ababab' 10 ababab
 
 check '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' 3 \

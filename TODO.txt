@@ -48,6 +48,8 @@ Maybe it should be parameterized by a ratexpset instead of a context.
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 
+Why "weight" in add_weight?  In place operations would be useful.
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
@@ -63,8 +65,10 @@ don't need to work on states that are not part of the computation.  This
 shows in the "if (!ws_.is_zero(v1[s]))" in the code.
 
 ** shortest, enumerate
-Check that the data structures are really the best possible.  See if
-starting from pre(), instead of the initial states, cannot simplify.
+Check that the data structures are really the best possible.  map guarantees
+that if there are no deletions, references and iterator remain valid.  So we
+should store references or iterators in the working queue, instead of
+duplicating the monomials.
 
 * aut-to-exp
 ** More heuristics

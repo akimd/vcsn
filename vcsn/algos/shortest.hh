@@ -16,111 +16,6 @@
 namespace vcsn
 {
 
-  /*----------------------.
-  | shortest(automaton).  |
-  `----------------------*/
-
-  namespace detail
-  {
-    template <class Aut>
-    class shortester
-    {
-    public:
-      static_assert(Aut::context_t::is_lal,
-                    "requires labels_are_letters");
-
-      using automaton_t = Aut;
-      using label_t = typename automaton_t::label_t;
-      using state_t = typename automaton_t::state_t;
-      using word_t = typename automaton_t::labelset_t::word_t;
-
-      bool
-      operator()(const automaton_t& aut, word_t& word)
-      {
-        const auto& ls = *aut.labelset();
-        const auto& gs = *ls.genset();
-        // Shortest word read at this state.
-        using theword_t = std::map<state_t, word_t>;
-        theword_t theword;
-
-        // Breadth-first search.
-        std::queue<state_t> thequeue;
-
-        for (auto t: aut.initial_transitions())
-          {
-            state_t ini = aut.dst_of(t);
-            theword[ini] = gs.empty_word();
-            if (aut.is_final(ini))
-              {
-                word = theword[ini];
-                return true;
-              }
-            else
-              thequeue.push(ini);
-          }
-
-        while (!thequeue.empty())
-          {
-            state_t src = std::move(thequeue.front());
-            thequeue.pop();
-            for (const auto t: aut.out(src))
-              {
-                state_t dst = aut.dst_of(t);
-                if (theword.find(dst) == theword.end())
-                  {
-                    theword[dst] = ls.concat(theword[src], aut.label_of(t));
-                    if (aut.is_final(dst))
-                      {
-                        word = theword[dst];
-                        return true;
-                      }
-                    else
-                      thequeue.push(dst);
-                  }
-              }
-          }
-        return false;
-      }
-    };
-  }
-
-  template <typename Automaton>
-  inline
-  typename Automaton::labelset_t::word_t
-  shortest(const Automaton& aut)
-  {
-    typename Automaton::labelset_t::word_t res;
-    detail::shortester<Automaton> shortest;
-    if (shortest(aut, res))
-      return res;
-    else
-      throw std::domain_error("shortest: the automaton is useless");
-  }
-
-
-  /*----------------.
-  | dyn::shortest.  |
-  `----------------*/
-
-  namespace dyn
-  {
-    namespace detail
-    {
-
-      // FIXME: We need dyn::label.
-      template <typename Aut>
-      std::string
-      shortest(const automaton& aut)
-      {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
-        return a.labelset()->genset()->format(shortest(a));
-      }
-
-      REGISTER_DECLARE(shortest,
-                       (const automaton& aut) -> std::string);
-    }
-  }
-
 
   /*-----------------------.
   | enumerate(automaton).  |
@@ -184,6 +79,30 @@ namespace vcsn
         return res;
       }
 
+      /// The shortest accepted weighted word, or throw an exception.
+      // FIXME: code duplication.
+      monomial_t operator()()
+      {
+        queue_t queue;
+
+        // FIXME: check piecewise_construct.
+        queue.emplace_back(aut_.pre(),
+                           monomial_t{ls_.genset()->empty_word(),
+                               aut_.weightset()->one()});
+
+        while (past_[aut_.post()].empty() && !queue.empty())
+          propagate_(queue);
+
+        if (past_[aut_.post()].empty())
+          throw std::domain_error("shortest: the automaton is useless");
+        else
+          {
+            // There is no "front()" method.
+            const auto& res = *past_[aut_.post()].begin();
+            return {ls_.genset()->undelimit(res.first), res.second};
+          }
+      }
+
     private:
       /// Process once all the states of \a q1.
       /// Save into q1 the new states to visit.
@@ -226,15 +145,24 @@ namespace vcsn
     return enumerate(max);
   }
 
+  template <typename Automaton>
+  inline
+  typename polynomialset<typename Automaton::context_t>::value_t::value_type
+  shortest(const Automaton& aut)
+  {
+    detail::enumerater<Automaton> shortest(aut);
+    return shortest();
+  }
 
-  /*-----------------.
-  | dyn::enumerate.  |
-  `-----------------*/
 
   namespace dyn
   {
     namespace detail
     {
+
+      /*-----------------.
+      | dyn::enumerate.  |
+      `-----------------*/
 
       // FIXME: We need dyn::polynomial.
       template <typename Aut>
@@ -252,6 +180,24 @@ namespace vcsn
       REGISTER_DECLARE
       (enumerate,
        (const automaton& aut, size_t max) -> std::vector<std::string>);
+
+
+      /*----------------.
+      | dyn::shortest.  |
+      `----------------*/
+
+      // FIXME: We need dyn::label.
+      template <typename Aut>
+      std::string
+      shortest(const automaton& aut)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        polynomialset<typename Aut::context_t> ps(a.context());
+        return ps.format(shortest(a));
+      }
+
+      REGISTER_DECLARE(shortest,
+                       (const automaton& aut) -> std::string);
     }
   }
 }

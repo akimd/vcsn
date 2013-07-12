@@ -17,6 +17,12 @@ no longer reports words with nul weight (e.g., 'a' in 'a+<-1>a').
   <6>110
   <7>111
 
+shortest is fixed and modified similarly.
+
+  $ vcsn standard -e '(?@lal_char(ab)_z)(a+<5>bb+<-1>a)' \
+        | vcsn shortest -f -
+  <5>bb
+
 * 2013-07-04
 ** WeightSet: added support for rational weights
 We can now use automata with rational numbers as their weights.
