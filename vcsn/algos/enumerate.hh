@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_SHORTEST_HH
-# define VCSN_ALGOS_SHORTEST_HH
+#ifndef VCSN_ALGOS_ENUMERATE_HH
+# define VCSN_ALGOS_ENUMERATE_HH
 
 # include <algorithm>
 # include <iostream>
@@ -202,4 +202,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_ALGOS_SHORTEST_HH
+#endif // !VCSN_ALGOS_ENUMERATE_HH

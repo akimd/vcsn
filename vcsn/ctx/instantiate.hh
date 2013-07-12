@@ -8,6 +8,7 @@
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
+# include <vcsn/algos/enumerate.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-deterministic.hh>
@@ -19,7 +20,6 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
-# include <vcsn/algos/shortest.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>

@@ -1,4 +1,4 @@
-#include <vcsn/algos/shortest.hh>
+#include <vcsn/algos/enumerate.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

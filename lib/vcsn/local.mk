@@ -33,6 +33,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
   lib/vcsn/algos/efsm.cc                        \
+  lib/vcsn/algos/enumerate.cc                   \
   lib/vcsn/algos/eval.cc                        \
   lib/vcsn/algos/info.cc                        \
   lib/vcsn/algos/is-deterministic.cc            \
@@ -48,7 +49,6 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/proper.cc                      \
   lib/vcsn/algos/read.cc                        \
   lib/vcsn/algos/registry.hh                    \
-  lib/vcsn/algos/shortest.cc                    \
   lib/vcsn/algos/standard.cc                    \
   lib/vcsn/algos/thompson.cc                    \
   lib/vcsn/algos/tikz.cc                        \
