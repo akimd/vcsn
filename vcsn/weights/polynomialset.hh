@@ -29,7 +29,7 @@ namespace vcsn
     using word_t = typename labelset_t::word_t;
     using weight_t = typename context_t::weight_t;
 
-    using value_t = std::map<word_t, weight_t>;
+    using value_t = std::map<word_t, weight_t, MilitaryOrder<word_t>>;
 
     polynomialset() = delete;
     polynomialset(const polynomialset&) = default;

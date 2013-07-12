@@ -28,6 +28,11 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** We need to go from a labelset to its wordset
+Or something like that.  I'm not sure "wordset" is appropriate, however,
+polynomials for instance really need to go from label_t to word_t, and be
+able to deal with them.
+
 ** scanners
 The scanners are C scanners, not C++ scanners.  Therefore they don't
 support streams, which is a nuisance, as our primary interface for
@@ -39,6 +44,9 @@ misc/stream.hh:conv where we want to use strings as input.
 
 ** dyn::detail::concrete_abstract_kratexpset
 Maybe it should be parameterized by a ratexpset instead of a context.
+
+** polynomialset
+It seems that monomials would be a useful abstraction.
 
 * Optimizations
 ** accessible etc.

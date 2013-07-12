@@ -86,6 +86,9 @@ check_conv()
   CHECK("a+b", "a + b");
   CHECK("a+a+a", "<3>a");
   CHECK("a+b+a", "<2>a + b");
+  // Check military-order.
+  CHECK("aa+b+aa", "b + <2>aa");
+
   CHECK_FAIL("a++a");
   CHECK_FAIL("+a");
   CHECK_FAIL("a+");
