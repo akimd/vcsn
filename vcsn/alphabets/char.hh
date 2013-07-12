@@ -1,6 +1,7 @@
 #ifndef VCSN_ALPHABETS_CHAR_HH
 # define VCSN_ALPHABETS_CHAR_HH
 
+# include <cassert>
 # include <string>
 # include <iostream>
 
@@ -64,6 +65,16 @@ namespace vcsn
     word_t delimit(const word_t& w) const
     {
       return concat(concat(special_letter(), w), special_letter());
+    }
+
+    /// Remove first and last characters, that must be "special".
+    word_t undelimit(const word_t& w) const
+    {
+      size_t s = w.size();
+      assert(2 <= s);
+      assert(w[0] == special_letter());
+      assert(w[s-1] == special_letter());
+      return w.substr(1, s-2);
     }
 
     word_t
