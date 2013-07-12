@@ -137,6 +137,8 @@ namespace vcsn
       static_assert(context_t::is_lal,
                     "requires labels_are_letters");
 
+      using labelset_t = typename automaton_t::labelset_t;
+      using weightset_t = typename automaton_t::weightset_t;
       using polynomialset_t = polynomialset<context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using label_t = typename automaton_t::label_t;
@@ -145,23 +147,21 @@ namespace vcsn
       using genset_t = typename automaton_t::labelset_t::genset_t;
       using word_t = typename genset_t::word_t;
 
-      polynomial_t operator()(const automaton_t& aut, size_t max_length)
+      enumerater(const automaton_t& aut)
+        : aut_(aut)
+      {}
+
+      polynomial_t operator()(size_t max_length)
       {
-        const auto& ls = *aut.labelset();
-        const auto& ws = *aut.weightset();
-        polynomialset_t ps(aut.context());
-
-        // For each state, the first orders of its past.
-        std::map<state_t, polynomial_t> past;
-
         using queue_t = std::list<std::tuple<state_t, word_t, weight_t>>;
         queue_t queue1, queue2;
 
-        ps.set_weight(past[aut.pre()],
-                      ls.genset()->empty_word(),
-                      aut.weightset()->one());
-        queue1.emplace_back(aut.pre(),
-                            ls.genset()->empty_word(), aut.weightset()->one());
+        ps_.set_weight(past_[aut_.pre()],
+                      ls_.genset()->empty_word(),
+                      aut_.weightset()->one());
+        queue1.emplace_back(aut_.pre(),
+                            ls_.genset()->empty_word(),
+                            aut_.weightset()->one());
 
         // We match words that include the initial and final special
         // character.
@@ -175,12 +175,12 @@ namespace vcsn
                 state_t s = std::get<0>(thepair);
                 word_t oldword = std::get<1>(thepair);
                 weight_t oldweight = std::get<2>(thepair);
-                for (const auto t: aut.all_out(s))
+                for (const auto t: aut_.all_out(s))
                   {
-                    word_t newword = ls.concat(oldword, aut.label_of(t));
-                    weight_t newweight = ws.mul(oldweight, aut.weight_of(t));
-                    ps.add_weight(past[aut.dst_of(t)], newword, newweight);
-                    queue2.emplace_back(aut.dst_of(t), newword, newweight);
+                    word_t newword = ls_.concat(oldword, aut_.label_of(t));
+                    weight_t newweight = ws_.mul(oldweight, aut_.weight_of(t));
+                    ps_.add_weight(past_[aut_.dst_of(t)], newword, newweight);
+                    queue2.emplace_back(aut_.dst_of(t), newword, newweight);
                   }
               }
             queue1.swap(queue2);
@@ -189,11 +189,19 @@ namespace vcsn
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
         polynomial_t res;
-        for (const auto& m: past[aut.post()])
-          ps.add_weight(res,
-                        ls.genset()->undelimit(m.first), m.second);
+        for (const auto& m: past_[aut_.post()])
+          ps_.add_weight(res,
+                         ls_.genset()->undelimit(m.first), m.second);
         return res;
       }
+
+    private:
+      const automaton_t& aut_;
+      const labelset_t& ls_ = *aut_.labelset();
+      const weightset_t& ws_ = *aut_.weightset();
+      const polynomialset_t ps_ = {aut_.context()};
+      /// For each state, the first orders of its past.
+      std::map<state_t, polynomial_t> past_;
     };
   }
 
@@ -202,8 +210,8 @@ namespace vcsn
   typename polynomialset<typename Automaton::context_t>::value_t
   enumerate(const Automaton& aut, size_t max)
   {
-    detail::enumerater<Automaton> enumerate;
-    return enumerate(aut, max);
+    detail::enumerater<Automaton> enumerate(aut);
+    return enumerate(max);
   }
 
 
