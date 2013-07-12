@@ -147,44 +147,29 @@ namespace vcsn
       using genset_t = typename automaton_t::labelset_t::genset_t;
       using word_t = typename genset_t::word_t;
 
+      using queue_t = std::list<std::tuple<state_t, word_t, weight_t>>;
+
       enumerater(const automaton_t& aut)
         : aut_(aut)
-      {}
+      {
+        ps_.set_weight(past_[aut_.pre()],
+                       ls_.genset()->empty_word(),
+                       aut_.weightset()->one());
+      }
 
       polynomial_t operator()(size_t max_length)
       {
-        using queue_t = std::list<std::tuple<state_t, word_t, weight_t>>;
-        queue_t queue1, queue2;
+        queue_t queue;
 
-        ps_.set_weight(past_[aut_.pre()],
-                      ls_.genset()->empty_word(),
-                      aut_.weightset()->one());
-        queue1.emplace_back(aut_.pre(),
-                            ls_.genset()->empty_word(),
-                            aut_.weightset()->one());
+        queue.emplace_back(aut_.pre(),
+                           ls_.genset()->empty_word(),
+                           aut_.weightset()->one());
 
         // We match words that include the initial and final special
         // character.
         max_length += 2;
-        for (size_t i = 0; i < max_length && not queue1.empty(); ++i)
-          {
-            while (!queue1.empty())
-              {
-                auto thepair = std::move(queue1.front());
-                queue1.pop_front();
-                state_t s = std::get<0>(thepair);
-                word_t oldword = std::get<1>(thepair);
-                weight_t oldweight = std::get<2>(thepair);
-                for (const auto t: aut_.all_out(s))
-                  {
-                    word_t newword = ls_.concat(oldword, aut_.label_of(t));
-                    weight_t newweight = ws_.mul(oldweight, aut_.weight_of(t));
-                    ps_.add_weight(past_[aut_.dst_of(t)], newword, newweight);
-                    queue2.emplace_back(aut_.dst_of(t), newword, newweight);
-                  }
-              }
-            queue1.swap(queue2);
-          }
+        for (size_t i = 0; i < max_length && not queue.empty(); ++i)
+          propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
@@ -196,6 +181,29 @@ namespace vcsn
       }
 
     private:
+      /// Process once all the states of \a q1.
+      /// Save into q1 the new states to visit.
+      void propagate_(queue_t& q1)
+      {
+        queue_t q2;
+        while (!q1.empty())
+          {
+            auto thepair = std::move(q1.front());
+            q1.pop_front();
+            state_t s = std::get<0>(thepair);
+            word_t oldword = std::get<1>(thepair);
+            weight_t oldweight = std::get<2>(thepair);
+            for (const auto t: aut_.all_out(s))
+              {
+                word_t newword = ls_.concat(oldword, aut_.label_of(t));
+                weight_t newweight = ws_.mul(oldweight, aut_.weight_of(t));
+                ps_.add_weight(past_[aut_.dst_of(t)], newword, newweight);
+                q2.emplace_back(aut_.dst_of(t), newword, newweight);
+              }
+          }
+        q1.swap(q2);
+      }
+
       const automaton_t& aut_;
       const labelset_t& ls_ = *aut_.labelset();
       const weightset_t& ws_ = *aut_.weightset();
