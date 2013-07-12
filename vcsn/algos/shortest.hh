@@ -11,6 +11,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/military_order.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {
@@ -127,80 +128,82 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut, typename Container>
+    template <typename Aut>
     class enumerater
     {
     public:
-      static_assert(Aut::context_t::is_lal,
+      using automaton_t = Aut;
+      using context_t = typename Aut::context_t;
+      static_assert(context_t::is_lal,
                     "requires labels_are_letters");
 
-      using automaton_t = Aut;
-      using container_t = Container;
+      using polynomialset_t = polynomialset<context_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
       using label_t = typename automaton_t::label_t;
+      using weight_t = typename automaton_t::weight_t;
       using state_t = typename automaton_t::state_t;
       using genset_t = typename automaton_t::labelset_t::genset_t;
       using word_t = typename genset_t::word_t;
 
       void operator()(const automaton_t& aut, size_t max_length,
-                      Container& words)
+                      polynomial_t& res)
       {
-        // The LabelSet.
         const auto& ls = *aut.labelset();
-        const auto& gs = *ls.genset();
+        const auto& ws = *aut.weightset();
+        polynomialset_t ps(aut.context());
 
-        // a list of words that leads to this state
-        std::map<state_t, container_t> theword;
-        // std::list allows swap, contrary to std::queue.
-        using queue_t = std::list<std::pair<state_t, word_t>>;
+        // For each state, the first orders of its past.
+        std::map<state_t, polynomial_t> past;
+        using queue_t = std::list<std::tuple<state_t, word_t, weight_t>>;
         queue_t queue1, queue2;
 
         for (auto t: aut.initial_transitions())
           {
             state_t ini = aut.dst_of(t);
-            theword[ini].push_back(gs.empty_word());
-            queue1.emplace_back(ini, gs.empty_word());
+            ps.set_weight(past[ini],
+                          ls.genset()->empty_word(),
+                          aut.weight_of(t));
+            queue1.emplace_back(ini,
+                                ls.genset()->empty_word(), aut.weight_of(t));
           }
 
         for (size_t i = 0; i < max_length && not queue1.empty(); ++i)
           {
             while (!queue1.empty())
               {
-                std::pair<state_t, word_t> thepair = std::move(queue1.front());
+                auto thepair = std::move(queue1.front());
                 queue1.pop_front();
-                state_t s = thepair.first;
-                word_t oldword = thepair.second;
+                state_t s = std::get<0>(thepair);
+                word_t oldword = std::get<1>(thepair);
+                weight_t oldweight = std::get<2>(thepair);
                 for (const auto t: aut.out(s))
                   {
                     word_t newword = ls.concat(oldword, aut.label_of(t));
-                    theword[aut.dst_of(t)].push_back(newword);
-                    queue2.emplace_back(aut.dst_of(t), newword);
+                    weight_t newweight = ws.mul(oldweight, aut.weight_of(t));
+                    ps.add_weight(past[aut.dst_of(t)], newword, newweight);
+                    queue2.emplace_back(aut.dst_of(t), newword, newweight);
                   }
               }
             queue1.swap(queue2);
           }
 
-        std::vector<word_t> v;
         for (const auto t: aut.final_transitions())
-          {
-            state_t j = aut.src_of(t);
-            auto &l = theword[j];
-            v.insert(v.end(), l.begin(), l.end());
-          }
-        sort(v.begin(), v.end(), MilitaryOrder<word_t>());
-        auto v_last = std::unique(v.begin(), v.end());
-        words.insert(words.begin(), v.begin(), v_last);
+          for (const auto& p: past[aut.src_of(t)])
+            ps.add_weight(res,
+                          p.first, ws.mul(p.second, aut.weight_of(t)));
       }
     };
   }
 
   template <typename Automaton>
   inline
-  std::vector<typename Automaton::labelset_t::word_t>
+  typename polynomialset<typename Automaton::context_t>::value_t
   enumerate(const Automaton& aut, size_t max)
   {
-    using res_t = std::vector<typename Automaton::labelset_t::word_t>;
-    res_t res;
-    detail::enumerater<Automaton, res_t> enumerate;
+    using polynomial_t
+      = typename polynomialset<typename Automaton::context_t>::value_t;
+    polynomial_t res;
+    detail::enumerater<Automaton> enumerate;
     enumerate(aut, max, res);
     return std::move(res);
   }
@@ -215,15 +218,16 @@ namespace vcsn
     namespace detail
     {
 
-      // FIXME: We need dyn::label.
+      // FIXME: We need dyn::polynomial.
       template <typename Aut>
       std::vector<std::string>
       enumerate(const automaton& aut, size_t max)
       {
         const auto& a = dynamic_cast<const Aut&>(*aut);
+        polynomialset<typename Aut::context_t> ps(a.context());
         std::vector<std::string> res;
-        for (const auto& r: enumerate(a, max))
-          res.emplace_back(a.labelset()->genset()->format(r));
+        for (const auto& m: enumerate(a, max))
+          res.emplace_back(ps.format(m));
         return res;
       }
 

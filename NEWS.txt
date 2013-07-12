@@ -1,3 +1,22 @@
+* 2013-07-12
+** enumerate produces a list of weighted words
+enumerate now also provides the weight of the words.  It is also fixed: it
+no longer reports words with nul weight (e.g., 'a' in 'a+<-1>a').
+
+  $ vcsn standard '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' \
+      | vcsn enumerate -f - 3
+  1
+  01
+  <2>10
+  <3>11
+  001
+  <2>010
+  <3>011
+  <4>100
+  <5>101
+  <6>110
+  <7>111
+
 * 2013-07-04
 ** WeightSet: added support for rational weights
 We can now use automata with rational numbers as their weights.
