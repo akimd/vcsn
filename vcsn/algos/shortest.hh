@@ -60,26 +60,23 @@ namespace vcsn
 
         while (!thequeue.empty())
           {
-            state_t i = std::move(thequeue.front());
+            state_t src = std::move(thequeue.front());
             thequeue.pop();
-            for (const auto a: ls)
-              // Iterate over successors of i by a.
-              for (const auto t: aut.out(i, a))
-                {
-                  state_t j = aut.dst_of(t);
-                  std::cerr << "State: " << j << std::endl;
-                  if (theword.find(j) == theword.end())
-                    {
-                      theword[j] = ls.concat(theword[i], a);
-                      if (aut.is_final(j))
-                        {
-                          word = theword[j];
-                          return true;
-                        }
-                      else
-                        thequeue.push(j);
-                    }
-                }
+            for (const auto t: aut.out(src))
+              {
+                state_t dst = aut.dst_of(t);
+                if (theword.find(dst) == theword.end())
+                  {
+                    theword[dst] = ls.concat(theword[src], aut.label_of(t));
+                    if (aut.is_final(dst))
+                      {
+                        word = theword[dst];
+                        return true;
+                      }
+                    else
+                      thequeue.push(dst);
+                  }
+              }
           }
         return false;
       }
@@ -172,13 +169,12 @@ namespace vcsn
                 queue1.pop_front();
                 state_t s = thepair.first;
                 word_t oldword = thepair.second;
-                for (const auto a: ls)
-                  for (const auto t: aut.out(s, a))
-                    {
-                      word_t newword = ls.concat(oldword, a);
-                      theword[aut.dst_of(t)].push_back(newword);
-                      queue2.emplace_back(aut.dst_of(t), newword);
-                    }
+                for (const auto t: aut.out(s))
+                  {
+                    word_t newword = ls.concat(oldword, aut.label_of(t));
+                    theword[aut.dst_of(t)].push_back(newword);
+                    queue2.emplace_back(aut.dst_of(t), newword);
+                  }
               }
             queue1.swap(queue2);
           }
