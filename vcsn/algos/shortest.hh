@@ -147,7 +147,9 @@ namespace vcsn
       using genset_t = typename automaton_t::labelset_t::genset_t;
       using word_t = typename genset_t::word_t;
 
-      using queue_t = std::list<std::tuple<state_t, word_t, weight_t>>;
+      /// Same as polynomial_t::value_type.
+      using monomial_t = std::pair<word_t, weight_t>;
+      using queue_t = std::list<std::pair<state_t, monomial_t>>;
 
       enumerater(const automaton_t& aut)
         : aut_(aut)
@@ -157,18 +159,20 @@ namespace vcsn
                        aut_.weightset()->one());
       }
 
-      polynomial_t operator()(size_t max_length)
+      /// The weighted accepted word with length at most \a max.
+      polynomial_t operator()(size_t max)
       {
         queue_t queue;
 
+        // FIXME: check piecewise_construct.
         queue.emplace_back(aut_.pre(),
-                           ls_.genset()->empty_word(),
-                           aut_.weightset()->one());
+                           monomial_t{ls_.genset()->empty_word(),
+                               aut_.weightset()->one()});
 
         // We match words that include the initial and final special
         // character.
-        max_length += 2;
-        for (size_t i = 0; i < max_length && not queue.empty(); ++i)
+        max += 2;
+        for (size_t i = 0; i < max && not queue.empty(); ++i)
           propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
@@ -188,17 +192,17 @@ namespace vcsn
         queue_t q2;
         while (!q1.empty())
           {
-            auto thepair = std::move(q1.front());
+            state_t s;
+            monomial_t m;
+            tie(s, m) = std::move(q1.front());
             q1.pop_front();
-            state_t s = std::get<0>(thepair);
-            word_t oldword = std::get<1>(thepair);
-            weight_t oldweight = std::get<2>(thepair);
             for (const auto t: aut_.all_out(s))
               {
-                word_t newword = ls_.concat(oldword, aut_.label_of(t));
-                weight_t newweight = ws_.mul(oldweight, aut_.weight_of(t));
-                ps_.add_weight(past_[aut_.dst_of(t)], newword, newweight);
-                q2.emplace_back(aut_.dst_of(t), newword, newweight);
+                // FIXME: monomial mul.
+                monomial_t n(ls_.concat(m.first, aut_.label_of(t)),
+                             ws_.mul(m.second, aut_.weight_of(t)));
+                ps_.add_weight(past_[aut_.dst_of(t)], n);
+                q2.emplace_back(aut_.dst_of(t), n);
               }
           }
         q1.swap(q2);

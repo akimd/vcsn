@@ -68,6 +68,12 @@ namespace vcsn
     }
 
     value_t&
+    add_weight(value_t& v, const std::pair<word_t, weight_t>& p) const
+    {
+      return add_weight(v, p.first, p.second);
+    }
+
+    value_t&
     add_weight(value_t& v, const word_t& w, const weight_t k) const
     {
       auto i = v.find(w);
