@@ -96,6 +96,7 @@ nobase_vcsn_HEADERS =                           \
   dyn/weightset.hh                              \
   empty.hh                                      \
   factory/de_bruijn.hh                          \
+  factory/divkbaseb.hh                          \
   factory/ladybird.hh                           \
   labelset/genset-labelset.hh                   \
   labelset/letterset.hh                         \

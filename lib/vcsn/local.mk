@@ -30,6 +30,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/copy.cc                        \
   lib/vcsn/algos/de_bruijn.cc                   \
   lib/vcsn/algos/determinize.cc                 \
+  lib/vcsn/algos/divkbaseb.cc                   \
   lib/vcsn/algos/dot.cc                         \
   lib/vcsn/algos/edit-automaton.cc              \
   lib/vcsn/algos/efsm.cc                        \

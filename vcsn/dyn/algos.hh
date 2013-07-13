@@ -41,6 +41,10 @@ namespace vcsn
 
     automaton de_bruijn(const context& ctx, unsigned n);
 
+    // An automaton which accepts a word n representing a number in
+    // base b iff k|n.
+    automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
+
     automaton determinize(const automaton& aut);
 
     std::ostream& dot(const automaton& aut, std::ostream& out);

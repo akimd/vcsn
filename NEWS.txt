@@ -1,9 +1,39 @@
+* 2013-07-13
+** divkbaseb
+New algorithm (static, dynamic, TAF-Kit).
+
+  $ vcsn divkbaseb -C 'lal_char(01)_b' 3 2
+  digraph
+  {
+    vcsn_context = "lal_char(01)_b"
+    rankdir = LR
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I0
+      F0
+    }
+    {
+      node [shape = circle]
+      0
+      1
+      2
+    }
+    I0 -> 0
+    0 -> F0
+    0 -> 0 [label = "0"]
+    0 -> 1 [label = "1"]
+    1 -> 0 [label = "1"]
+    1 -> 2 [label = "0"]
+    2 -> 1 [label = "0"]
+    2 -> 2 [label = "1"]
+  }
+
 * 2013-07-12
 ** enumerate produces a list of weighted words
 enumerate now also provides the weight of the words.  It is also fixed: it
 no longer reports words with nul weight (e.g., 'a' in 'a+<-1>a').
 
-  $ vcsn standard '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' \
+  $ vcsn standard -e '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' \
       | vcsn enumerate -f - 3
   1
   01

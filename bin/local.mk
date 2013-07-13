@@ -27,6 +27,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-complete                             \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
+  bin/vcsn-divkbaseb                            \
   bin/vcsn-enumerate                            \
   bin/vcsn-evaluate                             \
   bin/vcsn-is-complete                          \
@@ -61,6 +62,7 @@ bin_vcsn_complement_LDADD       = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la
+bin_vcsn_divkbaseb_LDADD        = bin/libtafkit.la
 bin_vcsn_enumerate_LDADD        = bin/libtafkit.la
 bin_vcsn_evaluate_LDADD         = bin/libtafkit.la
 bin_vcsn_is_complete_LDADD      = bin/libtafkit.la

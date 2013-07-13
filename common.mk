@@ -76,6 +76,7 @@ vcsn_complement       = $(top_builddir)/bin/vcsn-complement
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
+vcsn_divkbaseb        = $(top_builddir)/bin/vcsn-divkbaseb
 vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
 vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
 vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
@@ -104,6 +105,7 @@ all_vcsn =                                      \
   $(vcsn_complete)                              \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
+  $(vcsn_divkbaseb)                             \
   $(vcsn_enumerate)                             \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \

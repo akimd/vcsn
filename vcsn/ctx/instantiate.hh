@@ -26,6 +26,7 @@
 # include <vcsn/algos/transpose.hh>
 
 # include <vcsn/factory/de_bruijn.hh>
+# include <vcsn/factory/divkbaseb.hh>
 # include <vcsn/factory/ladybird.hh>
 
 /* The purpose of this file is manyfold:
@@ -134,6 +135,7 @@ namespace vcsn
 
         REGISTER(aut_t, complete);
         REGISTER(Ctx, de_bruijn);
+        REGISTER(Ctx, divkbaseb);
         REGISTER(aut_t, enumerate);
         REGISTER(aut_t, eval);
 
@@ -155,6 +157,7 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(Ctx, de_bruijn);
+        REGISTER(Ctx, divkbaseb);
 
         REGISTER(aut_t, proper);
 
