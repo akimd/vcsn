@@ -14,23 +14,23 @@ namespace vcsn
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
     using context_t = Context;
-    mutable_automaton<context_t> aut{ctx};
+    mutable_automaton<context_t> res{ctx};
 
-    auto p = aut.new_state();
-    aut.set_initial(p);
-    aut.set_final(p);
+    auto p = res.new_state();
+    res.set_initial(p);
+    res.set_final(p);
     auto x = p;
     for (unsigned i = 1; i < n; ++i)
       {
-        auto y = aut.new_state();
-        aut.add_transition(x, y, 'a');
-        aut.add_transition(y, y, 'b');
-        aut.add_transition(y, y, 'c');
-        aut.add_transition(y, p, 'c');
+        auto y = res.new_state();
+        res.add_transition(x, y, 'a');
+        res.add_transition(y, y, 'b');
+        res.add_transition(y, y, 'c');
+        res.add_transition(y, p, 'c');
         x = y;
       }
-    aut.add_transition(x, p, 'a');
-    return aut;
+    res.add_transition(x, p, 'a');
+    return res;
   }
 
   /*----------------.

@@ -13,6 +13,7 @@ struct enumerate: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
+    assert(!opts.argv[0].empty());
     size_t n = boost::lexical_cast<size_t>(opts.argv[0]);
 
     // Process.

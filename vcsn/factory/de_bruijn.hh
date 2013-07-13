@@ -56,9 +56,8 @@ namespace vcsn
       automaton
       de_bruijn(const dyn::context& ctx, unsigned n)
       {
-        return
-          make_automaton(ctx,
-                         de_bruijn<Ctx>(n, dynamic_cast<const Ctx&>(*ctx)));
+        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        return make_automaton(ctx, de_bruijn<Ctx>(n, c));
       }
 
       REGISTER_DECLARE(de_bruijn,
