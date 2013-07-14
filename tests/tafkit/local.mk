@@ -29,6 +29,7 @@ tafkit_TESTS =                                  \
   tafkit/is_complete.chk                        \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
+  tafkit/power.chk                              \
   tafkit/product.chk                            \
   tafkit/proper.chk                             \
   tafkit/shortest.chk                           \

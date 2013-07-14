@@ -7,10 +7,15 @@
 # include <utility>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/algos/accessible.hh> // dyn::make_automaton
 
 
 namespace vcsn
 {
+
+  /*----------.
+  | product.  |
+  `----------*/
 
   // This builds only the accessible part of the product.
   template <class A, class B>
@@ -78,14 +83,49 @@ namespace vcsn
   }
 
 
-  /*---------------.
-  | dyn::product.  |
-  `---------------*/
+  /*--------.
+  | power.  |
+  `--------*/
+
+  template <typename Aut>
+  Aut
+  power(const Aut& aut, unsigned n)
+  {
+    switch (n)
+      {
+      case 0:
+        {
+          Aut res(aut.context());
+          auto s = res.new_state();
+          res.set_initial(s);
+          res.set_final(s);
+          for (auto l: *res.context().labelset())
+            res.set_transition(s, s, l);
+          return res;
+        }
+      case 1:
+        return accessible(aut);
+      default:
+        auto t = power(aut, n / 2);
+        auto t2 = product(t, t);
+        if (n % 2 == 0)
+          // n is even.
+          return t2;
+        else
+          // n is odd.
+          return product(t2, t);
+      }
+  }
+
 
   namespace dyn
   {
     namespace detail
     {
+
+      /*---------------.
+      | dyn::product.  |
+      `---------------*/
 
       template <typename Lhs, typename Rhs>
       automaton
@@ -100,6 +140,22 @@ namespace vcsn
         auto (const automaton& lhs, const automaton& rhs) -> automaton;
       bool product_register(const std::string& lctx, const std::string& rctx,
                             product_t fn);
+
+
+      /*-------------.
+      | dyn::power.  |
+      `-------------*/
+
+      template <typename Aut>
+      automaton
+      power(const automaton& aut, unsigned n)
+      {
+        const auto& a = dynamic_cast<const Aut&>(*aut);
+        return make_automaton(a.context(), power(a, n));
+      }
+
+      REGISTER_DECLARE(power,
+                       (const automaton&, unsigned) -> automaton);
     }
   }
 }

@@ -64,6 +64,12 @@ Vectors of weights indexed by states are bad structures to iterate upon.  We
 don't need to work on states that are not part of the computation.  This
 shows in the "if (!ws_.is_zero(v1[s]))" in the code.
 
+** power
+There are better means to compute the power in some cases, see
+http://en.wikipedia.org/wiki/Addition-chain_exponentiation
+Also, because the algo is written recursively, we are calling
+accessible too often (on products, which are accessible, of course).
+
 ** shortest, enumerate
 Check that the data structures are really the best possible.  map guarantees
 that if there are no deletions, references and iterator remain valid.  So we

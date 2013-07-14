@@ -1,3 +1,33 @@
+* 2013-07-14
+** power
+New algorithm on automata (static, dynamic, TAF-Kit).
+
+  $ vcsn standard -e '(?@lal_char(01)_z)1*1(<2>0+<2>1)*' >binary.gv
+  $ vcsn power -f binary.gv 0 | vcsn enumerate -f- 2
+  \e
+  0
+  1
+  00
+  01
+  10
+  11
+  $ vcsn power -f binary.gv 1 | vcsn enumerate -f- 2
+  1
+  <2>10
+  <3>11
+  $ vcsn power -f binary.gv 2 | vcsn enumerate -f- 2
+  1
+  <4>10
+  <9>11
+  $ vcsn power -f binary.gv 4 | vcsn enumerate -f- 2
+  1
+  <16>10
+  <81>11
+  $ vcsn power -f binary.gv 8 | vcsn enumerate -f- 2
+  1
+  <256>10
+  <6561>11
+
 * 2013-07-13
 ** divkbaseb
 New algorithm (static, dynamic, TAF-Kit).

@@ -93,6 +93,8 @@ namespace vcsn
 
     ratexpset make_ratexpset(const context& ctx);
 
+    automaton power(const automaton& aut, unsigned n);
+
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "dot");
     std::ostream& print(const ratexp& e, std::ostream& o,

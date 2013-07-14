@@ -1,0 +1,67 @@
+#! /bin/sh
+
+# FIXME: check that only the accessible part is kept.  Start from
+# binary.gv, modified with an inaccessible state.
+
+
+## --------- ##
+## power 0.  ##
+## --------- ##
+run 0 - -vcsn-power -f $top_srcdir/share/vcsn/binary.gv 0 <<EOF
+digraph
+{
+  vcsn_context = "lal_char(01)_z"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle]
+    0
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 0 [label = "0, 1"]
+}
+EOF
+
+## --------- ##
+## power 1.  ##
+## --------- ##
+
+run 0 - -vcsn-power -f $top_srcdir/share/vcsn/binary.gv 1 <<EOF
+digraph
+{
+  vcsn_context = "lal_char(01)_z"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> 0 [label = "0, 1"]
+  0 -> 1 [label = "1"]
+  1 -> F1
+  1 -> 1 [label = "<2>0, <2>1"]
+}
+EOF
+
+
+## ---------- ##
+## power 4.  ##
+## ---------- ##
+run 0 '' -vcsn-power -o binary-10.gv -f $top_srcdir/share/vcsn/binary.gv 4
+# 1^4 = 0.
+run 0 0   -vcsn-evaluate -f binary-10.gv 0
+# 1^4 = 1.
+run 0 1   -vcsn-evaluate -f binary-10.gv 1
+# 8^4 = 256.
+run 0 256 -vcsn-evaluate -f binary-10.gv 100

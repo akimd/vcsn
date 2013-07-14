@@ -5,14 +5,15 @@
 namespace vcsn
 {
 
-  /*----------.
-  | product.  |
-  `----------*/
-
   namespace dyn
   {
     namespace detail
     {
+
+      /*----------.
+      | product.  |
+      `----------*/
+
       static
       Registry<product_t>&
       product_registry()
@@ -34,6 +35,20 @@ namespace vcsn
       return
         detail::product_registry().call(lhs->vname(false) + " x " + rhs->vname(false),
                                          lhs, rhs);
+    }
+
+
+    /*--------.
+    | power.  |
+    `--------*/
+
+    REGISTER_DEFINE(power);
+
+    automaton
+    power(const automaton& aut, unsigned n)
+    {
+      return detail::power_registry().call(aut->vname(false),
+                                           aut, n);
     }
   }
 }

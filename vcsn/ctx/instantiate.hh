@@ -143,6 +143,7 @@ namespace vcsn
         REGISTER(aut_t, is_deterministic);
 
         REGISTER(Ctx, ladybird);
+        REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);
 
