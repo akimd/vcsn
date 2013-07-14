@@ -55,8 +55,6 @@ namespace vcsn
 
     dyn::weight eval(const automaton& aut, const std::string& s);
 
-    automaton proper(const automaton& aut);
-
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
@@ -99,6 +97,8 @@ namespace vcsn
                         const std::string& type = "text");
 
     automaton product(const automaton& lhs, const automaton& rhs);
+
+    automaton proper(const automaton& aut);
 
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
