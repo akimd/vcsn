@@ -28,7 +28,7 @@ namespace vcsn
     auto ls = std::make_shared<typename automaton_t::labelset_t>(gs);
     using context_t = typename automaton_t::context_t;
     auto ctx = context_t{ls, laut.context().weightset()};
-    automaton_t aut(ctx);
+    automaton_t res(ctx);
     using state_t = typename automaton_t::state_t;
 
     using pair_t = std::pair<typename A::state_t, typename B::state_t>;
@@ -36,8 +36,8 @@ namespace vcsn
 
     pair_t ppre(laut.pre(), raut.pre());
     pair_t ppost(laut.post(), raut.post());
-    pmap[ppre] = aut.pre();
-    pmap[ppost] = aut.post();
+    pmap[ppre] = res.pre();
+    pmap[ppost] = res.post();
 
     std::deque<pair_t> todo;
     todo.push_back(ppre);
@@ -55,14 +55,14 @@ namespace vcsn
 
             for (auto ri : raut.out(psrc.second, label))
               {
-                auto weight = aut.weightset()->mul(lweight, raut.weight_of(ri));
+                auto weight = res.weightset()->mul(lweight, raut.weight_of(ri));
                 pair_t pdst(ldst, raut.dst_of(ri));
 
                 auto iter = pmap.find(pdst);
                 state_t dst;
                 if (iter == pmap.end())
                   {
-                    dst = aut.new_state();
+                    dst = res.new_state();
                     pmap[pdst] = dst;
                     todo.push_back(pdst);
                   }
@@ -70,12 +70,13 @@ namespace vcsn
                   {
                     dst = iter->second;
                   }
-                aut.add_transition(src, dst, label, weight);
+                res.add_transition(src, dst, label, weight);
               }
           }
       }
-    return aut;
+    return res;
   }
+
 
   /*---------------.
   | dyn::product.  |
