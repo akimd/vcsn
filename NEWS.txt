@@ -2,7 +2,7 @@
 ** power
 New algorithm on automata (static, dynamic, TAF-Kit).
 
-  $ vcsn standard -e '(?@lal_char(01)_z)1*1(<2>0+<2>1)*' >binary.gv
+  $ vcsn standard -e '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' >binary.gv
   $ vcsn power -f binary.gv 0 | vcsn enumerate -f- 2
   \e
   0
