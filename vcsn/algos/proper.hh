@@ -74,11 +74,6 @@ namespace vcsn
     public:
       static bool in_situ_remover(automaton_t& aut)
       {
-        // States to erase if (i) they had incoming spontaneous
-        // transitions, and (ii) after completion of the process, they
-        // have no incoming transition.
-        std::vector<state_t> dead_states;
-
         label_t empty_word = aut.labelset()->one();
         const auto& weightset = *aut.weightset();
         using state_weight_t = std::pair<state_t, weight_t>;
@@ -90,69 +85,65 @@ namespace vcsn
            is removed.  */
         for (auto s: aut.states())
           {
-            weight_t star = weightset.one();// if there is no eps-loop
-            closure.clear();
             const auto& tr = aut.in(s, empty_word);
             if (!tr.empty())
               {
+                weight_t star = weightset.one();// if there is no eps-loop
+                closure.clear();
                 // Iterate on a copy, as we remove these transitions
                 // in the loop.
                 std::vector<transition_t> transitions{tr.begin(), tr.end()};
                 for (auto t : transitions)
                   {
-                    weight_t t_weight = aut.weight_of(t);
+                    weight_t weight = aut.weight_of(t);
                     state_t src = aut.src_of(t);
                     if (src == s)  //loop
                       try
                         {
-                          star = weightset.star(t_weight);
+                          star = weightset.star(weight);
                         }
                       catch (const std::domain_error&)
                         {
                           return false;
                         }
                     else
-                      closure.emplace_back(src, t_weight);
+                      closure.emplace_back(src, weight);
                     // Delete incoming epsilon transitions.
                     aut.del_transition(t);
                   }
-                // Maybe schedule for removal.
+
+                /*
+                  For each transition (t : s -- label|weight --> dst),
+                  for each former
+                  epsilon transition closure->first -- e|closure->second --> s
+                  a transition
+                  (closure->first -- label | closure->second*weight --> dst)
+                  is added to the automaton (add, not set !!)
+
+                  If (s) is final with weight (weight),
+                  for each former
+                  epsilon transition closure->first -- e|closure->second --> s
+                  pair-second * weight is added to the final weight
+                  of closure->first
+                */
+                for (auto t: aut.all_out(s))
+                  {
+                    // "Blowing": For each transition (or terminal arrow)
+                    // outgoing from (s), the weight is multiplied by
+                    // (star).
+                    weight_t weight = weightset.mul(star, aut.weight_of(t));
+                    aut.set_weight(t, weight);
+
+                    label_t label = aut.label_of(t);
+                    state_t dst = aut.dst_of(t);
+                    for (auto pair: closure)
+                      aut.add_transition(pair.first, dst, label,
+                                         weightset.mul(pair.second, weight));
+                  }
                 if (aut.all_in(s).empty())
-                  dead_states.emplace_back(s);
-              }
-
-            /*
-              For each transition (t : s -- label|weight --> dst),
-              for each former
-              epsilon transition closure->first -- e|closure->second --> s
-              a transition
-              (closure->first -- label | closure->second*weight --> dst)
-              is added to the automaton (add, not set !!)
-
-              If (s) is final with weight (weight),
-              for each former
-              epsilon transition closure->first -- e|closure->second --> s
-              pair-second * weight is added to the final weight
-              of closure->first
-            */
-            for (auto t: aut.all_out(s))
-              {
-                // "Blowing": For each transition (or terminal arrow)
-                // outgoing from (s), the weight is multiplied by
-                // (star).
-                weight_t weight = weightset.mul(star, aut.weight_of(t));
-                aut.set_weight(t, weight);
-
-                label_t label = aut.label_of(t);
-                state_t dst = aut.dst_of(t);
-                for (auto pair: closure)
-                  aut.add_transition(pair.first, dst, label,
-                                     weightset.mul(pair.second, weight));
+                  aut.del_state(s);
               }
           }
-        for (auto s: dead_states)
-          if (aut.all_in(s).empty())
-            aut.del_state(s);
         return true;
       }
 
