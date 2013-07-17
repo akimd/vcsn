@@ -287,8 +287,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F1
     F0
+    F1
   }
   {
     node [shape = circle]
@@ -311,9 +311,9 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
+    F0
     F1
     F2
-    F0
   }
   {
     node [shape = circle]
@@ -342,8 +342,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F2
     F0
+    F2
   }
   {
     node [shape = circle]
@@ -368,8 +368,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F1
     F0
+    F1
   }
   {
     node [shape = circle]
@@ -398,8 +398,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F2
     F1
+    F2
   }
   {
     node [shape = circle]
@@ -614,8 +614,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F1
     F0
+    F1
   }
   {
     node [shape = circle]
@@ -638,8 +638,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F1
     F0
+    F1
   }
   {
     node [shape = circle]
@@ -662,9 +662,9 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
+    F0
     F1
     F2
-    F0
   }
   {
     node [shape = circle]
@@ -693,9 +693,9 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
+    F0
     F1
     F2
-    F0
   }
   {
     node [shape = circle]
@@ -724,8 +724,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F2
     F0
+    F2
   }
   {
     node [shape = circle]

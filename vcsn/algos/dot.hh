@@ -70,10 +70,22 @@ namespace vcsn
           "  {\n"
           "    node [style = invis, shape = none, label = \"\""
           ", width = 0, height = 0]\n";
-        for (auto t : aut.initial_transitions())
-          out << "    I" << names[aut.dst_of(t)] << std::endl;
-        for (auto t : aut.final_transitions())
-          out << "    F" << names[aut.src_of(t)] << std::endl;
+        {
+          // Sort by initial states.
+          std::set<state_t> ss;
+          for (auto t: aut.initial_transitions())
+            ss.insert(aut.dst_of(t));
+          for (auto s : ss)
+            out << "    I" << names[s] << std::endl;
+        }
+        {
+          // Sort by final states.
+          std::set<state_t> ss;
+          for (auto t: aut.final_transitions())
+            ss.insert(aut.src_of(t));
+          for (auto s : ss)
+            out << "    F" << names[s] << std::endl;
+        }
         out << "  }\n";
       }
 
@@ -102,6 +114,7 @@ namespace vcsn
 
     for (auto src : aut.all_states())
       {
+        // Sort by destination state.
         std::set<state_t> ds;
         for (auto t: aut.all_out(src))
           ds.insert(aut.dst_of(t));

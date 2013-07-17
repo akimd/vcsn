@@ -332,8 +332,8 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    I2
     I1
+    I2
     F1
   }
   {
