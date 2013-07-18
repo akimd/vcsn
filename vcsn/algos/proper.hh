@@ -39,6 +39,7 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
+      using transitions_t = std::vector<transition_t>;
       using kind_t = Kind;
 
       /**
@@ -80,14 +81,75 @@ namespace vcsn
 
       static bool in_situ_remover(automaton_t& aut)
       {
-        properer p(aut);
-        return p.in_situ_remover_();
+        try
+          {
+            properer p(aut);
+            p.in_situ_remover_();
+            return true;
+          }
+        catch (const std::domain_error&)
+          {
+            return false;
+          }
       }
 
-      bool in_situ_remover_()
+      /* For each state (s), for each incoming epsilon-transitions
+         (t), if (t) is a loop, the star of its weight is computed,
+         otherwise, (t) is stored into the closure list.  Then (t) is
+         removed.  */
+      // Iterate on a copy, as we remove these transitions in the
+      // loop.
+      void in_situ_remover_(state_t s, transitions_t transitions)
       {
+        weight_t star = ws_.one();// if there is no eps-loop
         using state_weight_t = std::pair<state_t, weight_t>;
+        std::vector<state_weight_t> closure;
+        for (auto t : transitions)
+          {
+            weight_t weight = aut_.weight_of(t);
+            state_t src = aut_.src_of(t);
+            if (src == s)  //loop
+              star = ws_.star(weight);
+            else
+              closure.emplace_back(src, weight);
+            // Delete incoming epsilon transitions.
+            aut_.del_transition(t);
+          }
 
+        /*
+          For each transition (t : s -- label|weight --> dst),
+          for each former
+          epsilon transition closure->first -- e|closure->second --> s
+          a transition
+          (closure->first -- label | closure->second*weight --> dst)
+          is added to the automaton (add, not set !!)
+
+          If (s) is final with weight (weight),
+          for each former
+          epsilon transition closure->first -- e|closure->second --> s
+          pair-second * weight is added to the final weight
+          of closure->first
+        */
+        for (auto t: aut_.all_out(s))
+          {
+            // "Blowing": For each transition (or terminal arrow)
+            // outgoing from (s), the weight is multiplied by
+            // (star).
+            weight_t weight = ws_.mul(star, aut_.weight_of(t));
+            aut_.set_weight(t, weight);
+
+            label_t label = aut_.label_of(t);
+            state_t dst = aut_.dst_of(t);
+            for (auto pair: closure)
+              aut_.add_transition(pair.first, dst, label,
+                                  ws_.mul(pair.second, weight));
+          }
+        if (aut_.all_in(s).empty())
+          aut_.del_state(s);
+      }
+
+      void in_situ_remover_()
+      {
         /* For each state (s), for each incoming epsilon-transitions
            (t), if (t) is a loop, the star of its weight is computed,
            otherwise, (t) is stored into the closure list.  Then (t)
@@ -96,64 +158,8 @@ namespace vcsn
           {
             const auto& tr = aut_.in(s, empty_word_);
             if (!tr.empty())
-              {
-                weight_t star = ws_.one();// if there is no eps-loop
-                std::vector<state_weight_t> closure;
-                // Iterate on a copy, as we remove these transitions
-                // in the loop.
-                std::vector<transition_t> transitions{tr.begin(), tr.end()};
-                for (auto t : transitions)
-                  {
-                    weight_t weight = aut_.weight_of(t);
-                    state_t src = aut_.src_of(t);
-                    if (src == s)  //loop
-                      try
-                        {
-                          star = ws_.star(weight);
-                        }
-                      catch (const std::domain_error&)
-                        {
-                          return false;
-                        }
-                    else
-                      closure.emplace_back(src, weight);
-                    // Delete incoming epsilon transitions.
-                    aut_.del_transition(t);
-                  }
-
-                /*
-                  For each transition (t : s -- label|weight --> dst),
-                  for each former
-                  epsilon transition closure->first -- e|closure->second --> s
-                  a transition
-                  (closure->first -- label | closure->second*weight --> dst)
-                  is added to the automaton (add, not set !!)
-
-                  If (s) is final with weight (weight),
-                  for each former
-                  epsilon transition closure->first -- e|closure->second --> s
-                  pair-second * weight is added to the final weight
-                  of closure->first
-                */
-                for (auto t: aut_.all_out(s))
-                  {
-                    // "Blowing": For each transition (or terminal arrow)
-                    // outgoing from (s), the weight is multiplied by
-                    // (star).
-                    weight_t weight = ws_.mul(star, aut_.weight_of(t));
-                    aut_.set_weight(t, weight);
-
-                    label_t label = aut_.label_of(t);
-                    state_t dst = aut_.dst_of(t);
-                    for (auto pair: closure)
-                      aut_.add_transition(pair.first, dst, label,
-                                          ws_.mul(pair.second, weight));
-                  }
-                if (aut_.all_in(s).empty())
-                  aut_.del_state(s);
-              }
+              in_situ_remover_(s, {tr.begin(), tr.end()});
           }
-        return true;
       }
 
       /**@brief Remove the epsilon-transitions of the input
