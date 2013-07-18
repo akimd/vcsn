@@ -166,130 +166,70 @@ namespace vcsn
          @param aut The automaton in which epsilon-transitions will be removed
          @throw domain_error if the input is not valid
       */
-      static void proper_here(automaton_t& aut);
+      static void proper_here(automaton_t& aut)
+      {
+        if (!is_proper(aut))
+          proper_here_<weightset_t::star_status()>(aut);
+      }
 
-      static automaton_t proper(const automaton_t& aut);
-    };
-
-
-
-    /*
-      The implementation of is_valid depends on star_status;
-      the different versions are implemented in EpsilonDispatcher.
-    */
-
-    template <typename Aut, star_status_t Status>
-    class basic_EpsilonDispatcher
-    {
-      using automaton_t = typename std::remove_cv<Aut>::type;
-    public:
       static automaton_t proper(const automaton_t& aut)
       {
         automaton_t res = copy(aut);
         proper_here(res);
         return res;
       }
-    };
 
-    template <typename Aut, star_status_t Status>
-    class EpsilonDispatcher : public basic_EpsilonDispatcher<Aut, Status>
-    {};
-
-    /// TOPS : valid iff the proper succeeds
-
-    template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::TOPS>
-    {
-      using automaton_t = typename std::remove_cv<Aut>::type;
-      using properer_t = properer<automaton_t>;
-    public:
-
-      static void proper_here(automaton_t& aut)
+    private:
+      /// TOPS: valid iff proper succeeds.
+      template <star_status_t Status>
+      static
+      typename std::enable_if<Status == star_status_t::TOPS>::type
+      proper_here_(automaton_t& aut)
       {
-        if (!properer_t::in_situ_remover(aut))
+        if (!in_situ_remover(aut))
           throw std::domain_error("invalid automaton");
       }
-    };
 
-    /// !TOPS
-
-    /// ABSVAL : valid iff the proper succeeds on the "absolute value"
-    /// of the automaton
-    template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::ABSVAL>
-    {
-      using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = typename automaton_t::state_t;
-      using weightset_t = typename automaton_t::weightset_t;
-      using properer_t = properer<automaton_t>;
-    public:
-
-      static void proper_here(automaton_t& aut)
+      /// ABSVAL: valid iff proper succeeds on the "absolute value" of
+      /// the automaton.
+      template <star_status_t Status>
+      static
+      typename std::enable_if<Status == star_status_t::ABSVAL>::type
+      proper_here_(automaton_t& aut)
       {
         if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        properer_t::in_situ_remover(aut);
+        in_situ_remover(aut);
       }
-    };
-    /// !ABSVAL
 
-    // STARRABLE : always valid
-    template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::STARRABLE>
-    {
-      using automaton_t = typename std::remove_cv<Aut>::type;
-      using properer_t = properer<automaton_t>;
-    public:
-      static void proper_here(automaton_t& aut)
+      /// STARRABLE: always valid.
+      template <star_status_t Status>
+      static
+      typename std::enable_if<Status == star_status_t::STARRABLE>::type
+      proper_here_(automaton_t& aut)
       {
-        properer_t::in_situ_remover(aut);
+        in_situ_remover(aut);
       }
-    };
 
-    //!STARRABLE
-
-    // NON_STARRABLE : valid iff there is no epsilon-circuit with weight zero
-    // Warning: the property tested here is the acyclicity, which is equivalent
-    // only in zero divisor free semirings
-
-    template <typename Aut>
-    class EpsilonDispatcher<Aut, star_status_t::NON_STARRABLE >
-    {
-      using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = typename automaton_t::state_t;
-      using weightset_t = typename automaton_t::weightset_t;
-      using properer_t = properer<automaton_t>;
-    public:
-      static void proper_here(automaton_t& aut)
+      /// NON_STARRABLE: valid iff there is no epsilon-circuit with
+      /// weight zero.  Warning: the property tested here is the
+      /// acyclicity, which is equivalent only in zero divisor free
+      /// semirings.
+      template <star_status_t Status>
+      static
+      typename std::enable_if<Status == star_status_t::NON_STARRABLE>::type
+      proper_here_(automaton_t& aut)
       {
         if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        properer_t::in_situ_remover(aut);
+        in_situ_remover(aut);
       }
     };
 
-    // !NON_STARRABLE
 
-    template <typename Aut, typename Kind>
-    inline
-    void properer<Aut,Kind>::proper_here(automaton_t& aut)
-    {
-      if (!is_proper(aut))
-        EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-          ::proper_here(aut);
-    }
-
-    template <typename Aut, typename Kind>
-    inline
-    auto properer<Aut,Kind>::proper(const automaton_t& aut)
-      -> automaton_t
-    {
-      Aut res = copy(aut);
-      proper_here(res);
-      return res;
-    }
-
-    /* Special case of labels_are_letters */
+    /*---------------------.
+    | labels_are_letters.  |
+    `---------------------*/
 
     template <typename Aut>
     class properer<Aut, labels_are_letters>
@@ -312,9 +252,9 @@ namespace vcsn
   }
 
 
-  /*---------------.
-  | proper handler |
-  `---------------*/
+  /*---------.
+  | proper.  |
+  `---------*/
 
   template <typename Aut>
   inline
