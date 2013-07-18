@@ -72,35 +72,44 @@ namespace vcsn
       */
 
     public:
+      properer(automaton_t& aut)
+        : aut_(aut)
+        , ws_(*aut.weightset())
+        , empty_word_(aut.labelset()->one())
+      {}
+
       static bool in_situ_remover(automaton_t& aut)
       {
-        label_t empty_word = aut.labelset()->one();
-        const auto& weightset = *aut.weightset();
+        properer p(aut);
+        return p.in_situ_remover_();
+      }
+
+      bool in_situ_remover_()
+      {
         using state_weight_t = std::pair<state_t, weight_t>;
-        std::vector<state_weight_t> closure;
 
         /* For each state (s), for each incoming epsilon-transitions
            (t), if (t) is a loop, the star of its weight is computed,
            otherwise, (t) is stored into the closure list.  Then (t)
            is removed.  */
-        for (auto s: aut.states())
+        for (auto s: aut_.states())
           {
-            const auto& tr = aut.in(s, empty_word);
+            const auto& tr = aut_.in(s, empty_word_);
             if (!tr.empty())
               {
-                weight_t star = weightset.one();// if there is no eps-loop
-                closure.clear();
+                weight_t star = ws_.one();// if there is no eps-loop
+                std::vector<state_weight_t> closure;
                 // Iterate on a copy, as we remove these transitions
                 // in the loop.
                 std::vector<transition_t> transitions{tr.begin(), tr.end()};
                 for (auto t : transitions)
                   {
-                    weight_t weight = aut.weight_of(t);
-                    state_t src = aut.src_of(t);
+                    weight_t weight = aut_.weight_of(t);
+                    state_t src = aut_.src_of(t);
                     if (src == s)  //loop
                       try
                         {
-                          star = weightset.star(weight);
+                          star = ws_.star(weight);
                         }
                       catch (const std::domain_error&)
                         {
@@ -109,7 +118,7 @@ namespace vcsn
                     else
                       closure.emplace_back(src, weight);
                     // Delete incoming epsilon transitions.
-                    aut.del_transition(t);
+                    aut_.del_transition(t);
                   }
 
                 /*
@@ -126,22 +135,22 @@ namespace vcsn
                   pair-second * weight is added to the final weight
                   of closure->first
                 */
-                for (auto t: aut.all_out(s))
+                for (auto t: aut_.all_out(s))
                   {
                     // "Blowing": For each transition (or terminal arrow)
                     // outgoing from (s), the weight is multiplied by
                     // (star).
-                    weight_t weight = weightset.mul(star, aut.weight_of(t));
-                    aut.set_weight(t, weight);
+                    weight_t weight = ws_.mul(star, aut_.weight_of(t));
+                    aut_.set_weight(t, weight);
 
-                    label_t label = aut.label_of(t);
-                    state_t dst = aut.dst_of(t);
+                    label_t label = aut_.label_of(t);
+                    state_t dst = aut_.dst_of(t);
                     for (auto pair: closure)
-                      aut.add_transition(pair.first, dst, label,
-                                         weightset.mul(pair.second, weight));
+                      aut_.add_transition(pair.first, dst, label,
+                                          ws_.mul(pair.second, weight));
                   }
-                if (aut.all_in(s).empty())
-                  aut.del_state(s);
+                if (aut_.all_in(s).empty())
+                  aut_.del_state(s);
               }
           }
         return true;
@@ -171,6 +180,11 @@ namespace vcsn
       }
 
     private:
+      automaton_t& aut_;
+      const weightset_t& ws_;
+      label_t empty_word_;
+
+
       /// TOPS: valid iff proper succeeds.
       template <star_status_t Status>
       static
