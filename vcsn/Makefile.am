@@ -25,11 +25,13 @@ nobase_vcsn_HEADERS =                           \
   algos/efsm.hh                                 \
   algos/enumerate.hh                            \
   algos/eval.hh                                 \
+  algos/fwd.hh                                  \
   algos/grail.hh                                \
   algos/info.hh                                 \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
   algos/is-normalized.hh                        \
+  algos/is-valid.hh                             \
   algos/is_complete.hh                          \
   algos/lift.hh                                 \
   algos/make-context.hh                         \

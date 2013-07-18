@@ -7,8 +7,10 @@
 # include <utility>
 # include <vector>
 
+# include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
+# include <vcsn/algos/is-valid.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>
@@ -23,7 +25,7 @@ namespace vcsn
        @brief This class contains the core of the proper algorithm.
 
        It contains also statics methods that deal with close notions:
-       is_valid, is_proper.
+       is_proper.
        This class is specialized for labels_are_letter automata since all these
        methods become trivial.
 
@@ -170,21 +172,6 @@ namespace vcsn
         return true;
       }
 
-      /**@brief Test whether an automaton is valid.
-
-         The behavior of this method depends on the star_status of the weight_set:
-         -- starrable : return true;
-         -- tops : copy the input and return the result of proper on the copy;
-         -- non_starrable : return true iff the automaton is epsilon-acyclic
-         WARNING: for weight_sets with zero divisor, should test whether the weight of
-         every simple circuit is zero;
-         -- absval : build a copy of the input where each weight is replaced by its absolute value
-         and eturn the result of proper on the copy.
-         @param aut The tested automaton
-         @return true iff the automaton is valid
-      */
-      static bool is_valid(const automaton_t& aut);
-
       /**@brief Remove the epsilon-transitions of the input
          The behaviour of this method depends on the star_status of the weight_set:
          -- starrable : always valid, does not throw any exception
@@ -199,6 +186,8 @@ namespace vcsn
 
       static automaton_t proper(const automaton_t& aut);
     };
+
+
 
     /*
       The implementation of is_valid depends on star_status;
@@ -230,17 +219,6 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& aut)
-      {
-        if (properer_t::is_proper(aut)
-            || is_eps_acyclic(aut))
-          return true;
-        else
-          {
-            automaton_t res = copy(aut);
-            return properer_t::in_situ_remover(res);
-          }
-      }
 
       static void proper_here(automaton_t& aut)
       {
@@ -261,22 +239,6 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& aut)
-      {
-        if (properer_t::is_proper(aut)
-            || is_eps_acyclic(aut))
-          return true;
-        else
-          {
-            automaton_t tmp_aut = copy(aut);
-            // Apply absolute value to the weight of each transition.
-            const auto& weightset = *aut.weightset();
-            for (auto t: tmp_aut.transitions())
-              tmp_aut.set_weight(t, weightset.abs(tmp_aut.weight_of(t)));
-            // Apply proper.
-            return properer_t::in_situ_remover(tmp_aut);
-          }
-      }
 
       static void proper_here(automaton_t& aut)
       {
@@ -294,11 +256,6 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t&)
-      {
-        return true;
-      }
-
       static void proper_here(automaton_t& aut)
       {
         properer_t::in_situ_remover(aut);
@@ -319,12 +276,6 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       using properer_t = properer<automaton_t>;
     public:
-      static bool is_valid(const automaton_t& aut)
-      {
-        return (properer_t::is_proper(aut)
-                || is_eps_acyclic(aut));
-      }
-
       static void proper_here(automaton_t& aut)
       {
         if (!is_valid(aut))
@@ -334,14 +285,6 @@ namespace vcsn
     };
 
     // !NON_STARRABLE
-
-    template <typename Aut, typename Kind>
-    inline
-    bool properer<Aut,Kind>::is_valid(const automaton_t& aut)
-    {
-      return EpsilonDispatcher<Aut, Aut::weightset_t::star_status()>
-        ::is_valid(aut);
-    }
 
     template <typename Aut, typename Kind>
     inline
@@ -374,11 +317,6 @@ namespace vcsn
         return true;
       }
 
-      static constexpr bool is_valid(const automaton_t&)
-      {
-        return true;
-      }
-
       static
 #ifndef __clang__
       constexpr
@@ -406,11 +344,11 @@ namespace vcsn
     return detail::properer<Aut>::is_proper(aut);
   }
 
-  template <class Aut>
+  template <typename Aut>
   inline
-  bool is_valid(Aut& aut)
+  bool in_situ_remover(Aut& aut)
   {
-    return detail::properer<Aut>::is_valid(aut);
+    return detail::properer<Aut>::in_situ_remover(aut);
   }
 
   template <class Aut>
