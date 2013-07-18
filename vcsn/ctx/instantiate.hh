@@ -14,6 +14,7 @@
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
+# include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>

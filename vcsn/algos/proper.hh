@@ -10,6 +10,7 @@
 # include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
+# include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
@@ -24,8 +25,6 @@ namespace vcsn
        @class properer
        @brief This class contains the core of the proper algorithm.
 
-       It contains also statics methods that deal with close notions:
-       is_proper.
        This class is specialized for labels_are_letter automata since all these
        methods become trivial.
 
@@ -154,21 +153,6 @@ namespace vcsn
         for (auto s: dead_states)
           if (aut.all_in(s).empty())
             aut.del_state(s);
-        return true;
-      }
-
-      /**@brief Test whether an automaton is proper.
-
-         An automaton is proper if and only if it contains no epsilon-transition.
-
-         @param aut The tested automaton
-         @return true iff the automaton is proper
-      */
-      static bool is_proper(const automaton_t& aut)
-      {
-        for (auto t: aut.transitions())
-          if (aut.labelset()->is_one(aut.label_of(t)))
-            return false;
         return true;
       }
 
@@ -312,11 +296,6 @@ namespace vcsn
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:
-      static constexpr bool is_proper(const automaton_t&)
-      {
-        return true;
-      }
-
       static
 #ifndef __clang__
       constexpr
@@ -336,13 +315,6 @@ namespace vcsn
   /*---------------.
   | proper handler |
   `---------------*/
-
-  template <class Aut>
-  inline
-  bool is_proper(Aut& aut)
-  {
-    return detail::properer<Aut>::is_proper(aut);
-  }
 
   template <typename Aut>
   inline
@@ -401,23 +373,6 @@ namespace vcsn
       }
 
      REGISTER_DECLARE(proper, (const automaton& aut) -> automaton);
-    }
-
-    /*-----------------.
-    | dyn::is_proper.  |
-    `-----------------*/
-
-    namespace detail
-    {
-      template <typename Aut>
-      bool is_proper(const automaton& aut)
-      {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
-        return is_proper(a);
-      }
-
-     REGISTER_DECLARE(is_proper,
-                      (const automaton& aut) -> bool);
     }
 
   }

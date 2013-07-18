@@ -31,6 +31,7 @@ nobase_vcsn_HEADERS =                           \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
   algos/is-normalized.hh                        \
+  algos/is-proper.hh                            \
   algos/is-valid.hh                             \
   algos/is_complete.hh                          \
   algos/lift.hh                                 \

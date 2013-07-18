@@ -10,6 +10,7 @@
 # include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
+# include <vcsn/algos/is-proper.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>

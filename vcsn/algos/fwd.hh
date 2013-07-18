@@ -7,7 +7,7 @@ namespace vcsn
   bool in_situ_remover(Aut& aut);
 
   template <typename Aut>
-  bool is_proper(Aut& aut);
+  bool is_proper(const Aut& aut);
 
   template <typename Aut>
   bool is_valid(const Aut& aut);

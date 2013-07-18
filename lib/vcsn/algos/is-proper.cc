@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/proper.hh>
+#include <vcsn/algos/is-proper.hh>
 #include <vcsn/dyn/algos.hh>
 
 namespace vcsn
