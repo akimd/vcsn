@@ -29,6 +29,7 @@
 # include <vcsn/factory/de_bruijn.hh>
 # include <vcsn/factory/divkbaseb.hh>
 # include <vcsn/factory/ladybird.hh>
+# include <vcsn/factory/u.hh>
 
 /* The purpose of this file is manyfold:
 
@@ -147,6 +148,7 @@ namespace vcsn
         REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);
+        REGISTER(Ctx, u);
 
         return true;
       }
@@ -167,6 +169,7 @@ namespace vcsn
 
         // thompson.
         thompson_register(Ctx::sname(), thompson<aut_t>);
+        REGISTER(Ctx, u);
 
         return true;
       }

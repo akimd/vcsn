@@ -1,3 +1,8 @@
+* 2013-07-18
+** u
+New automata factory (static, dynamic, TAF-Kit): Brzozowski's universal
+witness.
+
 * 2013-07-17
 ** new formats: grail and fado
 

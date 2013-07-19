@@ -102,6 +102,7 @@ nobase_vcsn_HEADERS =                           \
   factory/de_bruijn.hh                          \
   factory/divkbaseb.hh                          \
   factory/ladybird.hh                           \
+  factory/u.hh                                  \
   labelset/genset-labelset.hh                   \
   labelset/letterset.hh                         \
   labelset/nullableset.hh                       \

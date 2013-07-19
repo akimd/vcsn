@@ -133,6 +133,9 @@ namespace vcsn
     /// \throw std::domain_error if the automaton is useless
     std::string shortest(const automaton& aut);
 
+    /// The Brzozowski universal witness.
+    automaton u(const context& ctx, unsigned n);
+
     automaton universal(const automaton& aut);
   }
 }
