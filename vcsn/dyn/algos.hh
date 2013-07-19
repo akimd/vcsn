@@ -39,10 +39,11 @@ namespace vcsn
 
     automaton copy(const automaton& aut);
 
+    /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
-    // An automaton which accepts a word n representing a number in
-    // base b iff k|n.
+    /// An automaton which accepts a word n representing a number in
+    /// base b iff k|n.
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
     automaton determinize(const automaton& aut);
@@ -57,6 +58,7 @@ namespace vcsn
     /// \throw std::domain_error if the automaton is useless
     std::vector<std::string> enumerate(const automaton& aut, size_t max);
 
+    /// Evaluate \a s on \a aut.
     dyn::weight eval(const automaton& aut, const std::string& s);
 
     std::ostream& grail(const automaton& aut, std::ostream& out,
@@ -136,6 +138,7 @@ namespace vcsn
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 
+    /// The universal automaton of aut.
     automaton universal(const automaton& aut);
   }
 }

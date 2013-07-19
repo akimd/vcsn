@@ -167,7 +167,6 @@ namespace vcsn
 
         REGISTER(Ctx, ladybird);
 
-        // thompson.
         thompson_register(Ctx::sname(), thompson<aut_t>);
         REGISTER(Ctx, u);
 
