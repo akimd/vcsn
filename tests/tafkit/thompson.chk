@@ -474,10 +474,10 @@ EOF
 ## ZR: star.  ##
 ## ---------- ##
 
-check '(?@lan_char(abcd)_ratexpset<lan_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
+check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(abcd)_ratexpset<lan_char(efgh)_z>"
+  vcsn_context = "lan_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -518,10 +518,10 @@ digraph
 }
 EOF
 
-check '(?@lan_char(abcd)_ratexpset<lan_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
+check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(abcd)_ratexpset<lan_char(efgh)_z>"
+  vcsn_context = "lan_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -560,10 +560,10 @@ EOF
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check '(?@lan_char(a)_ratexpset<lan_char(xyz)_z>)<x>a(<y>\e+<z>a)' <<\EOF
+check '(?@lan_char(a)_ratexpset<lal_char(xyz)_z>)<x>a(<y>\e+<z>a)' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(a)_ratexpset<lan_char(xyz)_z>"
+  vcsn_context = "lan_char(a)_ratexpset<lal_char(xyz)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]

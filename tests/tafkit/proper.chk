@@ -226,7 +226,7 @@ run 1 "" -vcsn-proper -A -I dot -f a.gv
 cat >a.gv <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcd)_z>"
+  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcd)_z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -248,7 +248,7 @@ EOF
 check a.gv - <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcd)_z>"
+  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcd)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -277,7 +277,7 @@ EOF
 cat >a.gv <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcdefgh)_z>"
+  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcdefgh)_z>"
   rankdir = LR
   node [shape = circle]
   {
@@ -306,7 +306,7 @@ EOF
 check a.gv - <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(z)_ratexpset<lan_char(abcdefgh)_z>"
+  vcsn_context = "lan_char(z)_ratexpset<lal_char(abcdefgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
