@@ -102,6 +102,7 @@ all_vcsn =                                      \
   $(vcsn_are_equivalent)                        \
   $(vcsn_aut_to_exp)                            \
   $(vcsn_cat)                                   \
+  $(vcsn_coaccessible)                          \
   $(vcsn_complement)                            \
   $(vcsn_complete)                              \
   $(vcsn_de_bruijn)                             \
@@ -111,8 +112,11 @@ all_vcsn =                                      \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \
   $(vcsn_is_deterministic)                      \
+  $(vcsn_is_empty)                              \
   $(vcsn_is_normalized)                         \
   $(vcsn_is_proper)                             \
+  $(vcsn_is_trim)                               \
+  $(vcsn_is_useless)                            \
   $(vcsn_ladybird)                              \
   $(vcsn_lift)                                  \
   $(vcsn_power)                                 \
@@ -122,4 +126,5 @@ all_vcsn =                                      \
   $(vcsn_standard)                              \
   $(vcsn_thompson)                              \
   $(vcsn_transpose)                             \
+  $(vcsn_trim)                                  \
   $(vcsn_universal)
