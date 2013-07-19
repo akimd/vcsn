@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_AUT_TO_EXP_HH
 # define VCSN_ALGOS_AUT_TO_EXP_HH
 
-#include <vcsn/misc/echo.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexp.hh>
@@ -51,7 +50,6 @@ namespace vcsn
             best = s;
             best_degree = degree;
             best_has_loop = has_loop;
-            SHOW(V(best) << V(best_degree) << V(best_has_loop));
           }
       }
     assert(best);
