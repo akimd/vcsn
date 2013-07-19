@@ -1,8 +1,84 @@
 #! /bin/sh
 
-# check VCSN-STANDARD-OF-ARGUMENTS
-# --------------------------------
-# Expected output is on stdin, except the constant bits (see below).
+## --------------- ##
+## standard(aut).  ##
+## --------------- ##
+
+# check VCSN-STANDARD-ARGUMENTS
+# -----------------------------
+check ()
+{
+  run 0 - -vcsn-standard -Af "$@" -O dot
+}
+
+# Try to be exhaustive: Several initials states, with weights, one of
+# which is final, the other has a loop.
+cat >in.gv <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_q"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    I2
+    F
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0 [label = "<1/2>"]
+  I2 -> 2 [label = "<1/4>"]
+  0 -> 0 [label = "a, <2>b"]
+  0 -> 1 [label = "<3>a"]
+  1 -> 2 [label = "b"]
+  2 -> 2 [label = "a, b"]
+  2 -> F
+}
+EOF
+
+check in.gv<<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_q"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I3
+    F2
+    F3
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+  }
+  I3 -> 3
+  0 -> 0 [label = "a, <2>b"]
+  0 -> 1 [label = "<3>a"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 2 [label = "a, b"]
+  3 -> F3 [label = "<1/4>"]
+  3 -> 0 [label = "<1/2>a, b"]
+  3 -> 1 [label = "<3/2>a"]
+  3 -> 2 [label = "<1/4>a, <1/4>b"]
+}
+EOF
+
+
+## --------------- ##
+## standard(exp).  ##
+## --------------- ##
+
+# check VCSN-STANDARD-ARGUMENTS
+# -----------------------------
+# Expected output is on stdin.
 check ()
 {
   run 0 - -vcsn-standard -e "$@" -O dot

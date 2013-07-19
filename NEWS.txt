@@ -1,4 +1,8 @@
 * 2013-07-18
+** standard
+New algorithm on automata (static, dynamic, TAF-Kit).  Corresponds to
+"standardize" in Vaucanson 1.
+
 ** is-standard
 New algorithm on automata (static, dynamic, TAF-Kit).  Also reported in
 "info" format.

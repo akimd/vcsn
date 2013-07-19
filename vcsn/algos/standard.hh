@@ -43,6 +43,33 @@ namespace vcsn
     }
   }
 
+  /*----------------------.
+  | standard(automaton).  |
+  `----------------------*/
+
+  template <typename Aut>
+  void
+  standard(Aut& aut)
+  {
+    if (is_standard(aut))
+      return;
+
+    auto ws = *aut.weightset();
+
+    const auto& inits = aut.initial_transitions();
+    std::vector<typename Aut::state_t> initials{begin(inits), end(inits)};
+
+    auto ini = aut.new_state();
+    for (auto ti: initials)
+      {
+        auto wi = aut.weight_of(ti);
+        for (auto t: aut.all_out(aut.dst_of(ti)))
+          aut.add_transition(ini, aut.dst_of(t), aut.label_of(t),
+                             ws.mul(wi, aut.weight_of(t)));
+        aut.del_transition(ti);
+      }
+    aut.set_initial(ini);
+  }
 
   namespace rat
   {
@@ -281,13 +308,28 @@ namespace vcsn
     return standard<Aut, Context>(ctx, ctx.downcast(e));
   }
 
-  /*--------------------.
-  | abstract standard.  |
-  `--------------------*/
   namespace dyn
   {
     namespace detail
     {
+      /*---------------------.
+      | dyn::standard(aut).  |
+      `---------------------*/
+      template <typename Aut>
+      automaton
+      standard(const automaton& aut)
+      {
+        auto res = copy(dynamic_cast<const Aut&>(*aut));
+        standard(res);
+        return make_automaton(res.context(), std::move(res));
+      }
+
+      REGISTER_DECLARE(standard,
+                       (const automaton& e) -> automaton);
+
+      /*---------------------.
+      | dyn::standard(exp).  |
+      `---------------------*/
       template <typename Aut>
       automaton
       standard(const ratexp& e)
@@ -297,7 +339,7 @@ namespace vcsn
         return make_automaton(ctx, standard<Aut>(ctx, e->ratexp()));
       }
 
-      REGISTER_DECLARE(standard,
+      REGISTER_DECLARE(standard_exp,
                        (const ratexp& e) -> automaton);
     }
   }

@@ -268,8 +268,10 @@ namespace vcsn
         print_weight_register(Ctx::weightset_t::sname(),
                               print<typename Ctx::weightset_t>);
 
-        // standard.
-        standard_register(Ctx::sname(), standard<aut_t>);
+        standard_register(aut_t::sname(),
+                          static_cast<standard_t&>(standard<aut_t>));
+        standard_exp_register(Ctx::sname(),
+                          static_cast<standard_exp_t&>(standard<aut_t>));
 
         // tikz.
         REGISTER(aut_t, tikz);

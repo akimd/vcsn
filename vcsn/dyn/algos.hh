@@ -124,6 +124,7 @@ namespace vcsn
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
+    automaton standard(const automaton& a);
     automaton standard(const ratexp& e);
 
     automaton thompson(const ratexp& e);

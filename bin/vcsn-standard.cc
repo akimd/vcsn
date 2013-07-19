@@ -7,6 +7,20 @@
 
 struct standard: vcsn_function
 {
+  int work_aut(const options& opts) const
+  {
+    // Input.
+    using namespace vcsn::dyn;
+    automaton aut = read_automaton(opts);
+
+    // Process.
+    automaton res = vcsn::dyn::standard(aut);
+
+    // Output.
+    print(opts, res);
+    return 0;
+  }
+
   int work_exp(const options& opts) const
   {
     // Input.
@@ -14,10 +28,10 @@ struct standard: vcsn_function
     ratexp exp = read_ratexp(opts);
 
     // Process.
-    automaton aut = vcsn::dyn::standard(exp);
+    automaton res = vcsn::dyn::standard(exp);
 
     // Output.
-    print(opts, aut);
+    print(opts, res);
     return 0;
   }
 };
