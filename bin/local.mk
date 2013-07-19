@@ -36,6 +36,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-is-eps-acyclic                       \
   bin/vcsn-is-normalized                        \
   bin/vcsn-is-proper                            \
+  bin/vcsn-is-standard                          \
   bin/vcsn-is-trim                              \
   bin/vcsn-is-useless                           \
   bin/vcsn-ladybird                             \
@@ -73,6 +74,7 @@ bin_vcsn_is_empty_LDADD         = bin/libtafkit.la
 bin_vcsn_is_eps_acyclic_LDADD   = bin/libtafkit.la
 bin_vcsn_is_normalized_LDADD    = bin/libtafkit.la
 bin_vcsn_is_proper_LDADD        = bin/libtafkit.la
+bin_vcsn_is_standard_LDADD      = bin/libtafkit.la
 bin_vcsn_is_trim_LDADD          = bin/libtafkit.la
 bin_vcsn_is_useless_LDADD       = bin/libtafkit.la
 bin_vcsn_ladybird_LDADD         = bin/libtafkit.la

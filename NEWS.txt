@@ -1,4 +1,8 @@
 * 2013-07-18
+** is-standard
+New algorithm on automata (static, dynamic, TAF-Kit).  Also reported in
+"info" format.
+
 ** u
 New automata factory (static, dynamic, TAF-Kit): Brzozowski's universal
 witness.

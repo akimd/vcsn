@@ -74,12 +74,17 @@ namespace vcsn
     /// Whether has no state.
     bool is_empty(const automaton& aut);
 
+    /// Whether has no cycle of spontaneous transitions.
     bool is_eps_acyclic(const automaton& aut);
 
     /// Whether is normalized (in the Thompson sense).
     bool is_normalized(const automaton& aut);
 
     bool is_proper(const automaton& aut);
+
+    /// Whether is standard (unique initial state, with weight one, no
+    /// incoming transition).
+    bool is_standard(const automaton& aut);
 
     /// Whether has no useless state.
     bool is_trim(const automaton& aut);

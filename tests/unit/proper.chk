@@ -14,8 +14,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<lal_char(ab)_b>
@@ -30,8 +35,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<lal_char(ab)_b>
@@ -46,8 +56,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<lal_char(ab)_b>
@@ -62,8 +77,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 ***LAW***
 type: mutable_automaton<law_char(ab)_b>
@@ -78,8 +98,13 @@ number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 0
+is normalized: 0
 is proper: 0
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_b>
@@ -94,8 +119,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_b>
@@ -110,8 +140,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<law_char(ab)_b>
@@ -126,8 +161,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 ***LAL Z***
 type: mutable_automaton<lal_char(ab)_z>
@@ -142,8 +182,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<lal_char(ab)_z>
@@ -158,8 +203,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<lal_char(ab)_z>
@@ -174,8 +224,13 @@ number of deterministic states: 3
 number of eps transitions: 0
 is complete: 0
 is deterministic: 1
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 ***LAW Z***
 * Circuit of eps-transition
@@ -191,8 +246,13 @@ number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 0
+is normalized: 0
 is proper: 0
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No circuit of eps-transition
@@ -208,8 +268,13 @@ number of deterministic states: N/A
 number of eps transitions: 2
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 0
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_z>
@@ -224,8 +289,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_z>
@@ -240,8 +310,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<law_char(ab)_z>
@@ -256,8 +331,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 ***LAW Z-min+***
 * Circuit of eps-transition
@@ -273,8 +353,13 @@ number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 0
+is normalized: 0
 is proper: 0
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No negative circuit
@@ -290,8 +375,13 @@ number of deterministic states: N/A
 number of eps transitions: 3
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 0
+is normalized: 0
 is proper: 0
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_zmin>
@@ -306,8 +396,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_zmin>
@@ -322,8 +417,13 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 digraph
 {
@@ -369,7 +469,12 @@ number of deterministic states: N/A
 number of eps transitions: 0
 is complete: N/A
 is deterministic: N/A
+is empty: 0
 is eps-acyclic: 1
+is normalized: 0
 is proper: 1
+is standard: 0
+is trim: 1
+is useless: 0
 is valid: 1
 EOF

@@ -251,6 +251,7 @@ namespace vcsn
         // is-proper.
         REGISTER(aut_t, is_proper);
 
+        REGISTER(aut_t, is_standard);
         REGISTER(aut_t, is_trim);
         REGISTER(aut_t, is_useless);
 

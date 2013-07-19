@@ -2,11 +2,12 @@
 # define VCSN_ALGOS_INFO_HH
 
 # include <iostream>
-# include <sstream>
 
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/algos/is-normalized.hh>
+# include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/standard.hh>
 # include <vcsn/core/rat/info.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
@@ -122,8 +123,13 @@ namespace vcsn
     ECHO("number of eps transitions", detail::info::num_eps_transitions(aut));
     ECHO("is complete", detail::info::is_complete(aut));
     ECHO("is deterministic", detail::info::is_deterministic(aut));
+    ECHO("is empty", is_empty(aut));
     ECHO("is eps-acyclic", is_eps_acyclic(aut));
+    ECHO("is normalized", is_normalized(aut));
     ECHO("is proper", is_proper(aut));
+    ECHO("is standard", is_standard(aut));
+    ECHO("is trim", is_trim(aut));
+    ECHO("is useless", is_useless(aut));
 #undef ECHO
     // No std::endl for the last one.
     out << "is valid: " << is_valid(aut);

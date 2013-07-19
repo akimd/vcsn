@@ -7,6 +7,14 @@ namespace vcsn
 {
   namespace dyn
   {
+    REGISTER_DEFINE(is_standard);
+
+    bool
+    is_standard(const dyn::automaton& a)
+    {
+      return detail::is_standard_registry().call(a->vname(false), a);
+    }
+
     REGISTER_DEFINE(standard);
 
     automaton

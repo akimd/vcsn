@@ -5,7 +5,7 @@
 
 namespace vcsn
 {
-  template <class Aut>
+  template <typename Aut>
   bool
   is_normalized(const Aut& a)
   {

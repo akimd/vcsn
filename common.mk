@@ -83,6 +83,7 @@ vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
 vcsn_is_empty         = $(top_builddir)/bin/vcsn-is-empty
 vcsn_is_normalized    = $(top_builddir)/bin/vcsn-is-normalized
 vcsn_is_proper        = $(top_builddir)/bin/vcsn-is-proper
+vcsn_is_standard      = $(top_builddir)/bin/vcsn-is-standard
 vcsn_is_trim          = $(top_builddir)/bin/vcsn-is-trim
 vcsn_is_useless       = $(top_builddir)/bin/vcsn-is-useless
 vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
@@ -116,6 +117,7 @@ all_vcsn =                                      \
   $(vcsn_is_empty)                              \
   $(vcsn_is_normalized)                         \
   $(vcsn_is_proper)                             \
+  $(vcsn_is_standard)                           \
   $(vcsn_is_trim)                               \
   $(vcsn_is_useless)                            \
   $(vcsn_ladybird)                              \
