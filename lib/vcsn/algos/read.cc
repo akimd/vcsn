@@ -3,6 +3,7 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/misc/fado.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/rat/driver.hh>
 
@@ -14,6 +15,14 @@ namespace vcsn
     /*-----------------.
     | read_automaton.  |
     `-----------------*/
+
+    automaton
+    read_fado_file(const std::string & f)
+    {
+      vcsn::detail::parse_fado d;
+      auto res = d.parse_file(f);
+      return res;
+    }
 
     automaton
     read_automaton_file(const std::string& f)

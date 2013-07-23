@@ -119,6 +119,8 @@ namespace vcsn
     automaton read_automaton_file(const std::string& f);
     automaton read_automaton_string(const std::string& s);
 
+    automaton read_fado_file(const std::string& f);
+
     ratexp read_ratexp_file(const std::string& f, const context& ctx,
                             const std::string& type);
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
