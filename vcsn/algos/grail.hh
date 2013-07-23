@@ -89,16 +89,16 @@ namespace vcsn
       {
         auto it = aut_.initial_transitions().begin();
         auto end = aut_.initial_transitions().end();
-        os_ << "(START)\t|-\t"  << states_[aut_.dst_of(*it)];
+        os_ << "(START) |- "  << states_[aut_.dst_of(*it)];
         std::advance (it, 1);
         while (it != end)
         {
-          os_ << std::endl << "(START)\t|-\t"  << states_[aut_.dst_of(*it)];
+          os_ << std::endl << "(START) |- "  << states_[aut_.dst_of(*it)];
           ++it;
         }
         output_transitions_();
         for (auto t: aut_.final_transitions())
-          os_  << std::endl << states_[aut_.src_of(t)] <<  "\t-|\t(FINAL)";
+          os_  << std::endl << states_[aut_.src_of(t)] <<  " -| (FINAL)";
       }
 
       void output_initials_()
@@ -110,8 +110,8 @@ namespace vcsn
 
       void output_finals_()
       {
-        for (auto t: aut_.final_transitions())
-          os_ << ' ' << states_[aut_.src_of(t)];
+	for (auto t: aut_.final_transitions())
+	  os_ << ' ' << states_[aut_.src_of(t)];
       }
 
       /// symbol lists.
@@ -122,7 +122,7 @@ namespace vcsn
         const auto l = aut_.label_of(t);
         std::string res =
           aut_.labelset()->is_one(l) ? "@epsilon" :
-          aut_.labelset()->format(l);
+	  aut_.labelset()->format(l);
 
         return res;
       }
@@ -133,8 +133,8 @@ namespace vcsn
         for (auto t : aut_.transitions())
           os_ << std::endl
               << states_[aut_.src_of(t)]
-              << '\t' << label_of_(t)
-              << '\t' << states_[aut_.dst_of(t)];
+              << ' ' << label_of_(t)
+              << ' ' << states_[aut_.dst_of(t)];
       }
 
       /// The automaton we have to output.

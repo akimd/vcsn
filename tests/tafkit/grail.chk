@@ -68,7 +68,7 @@ digraph
 }
 ---
 @DFA 1
-0	a	1
+0 a 1
 EOF
 
 check_aut -O grail <<\EOF
@@ -80,9 +80,9 @@ digraph
   I0 -> 0
 }
 ---
-(START)	|-	0
-0	a	1
-1	-|	(FINAL)
+(START) |- 0
+0 a 1
+1 -| (FINAL)
 EOF
 
 check_grail ()
