@@ -115,6 +115,7 @@ nobase_vcsn_HEADERS =                           \
   misc/dynamic_bitset.hh                        \
   misc/echo.hh                                  \
   misc/escape.hh                                \
+  misc/fado.hh                                  \
   misc/hash.hh                                  \
   misc/military_order.hh                        \
   misc/regex.hh                                 \
@@ -127,7 +128,7 @@ nobase_vcsn_HEADERS =                           \
   weights/f2.hh                                 \
   weights/fwd.hh                                \
   weights/polynomialset.hh                      \
-  weights/q.hh					\
+  weights/q.hh                                  \
   weights/r.hh                                  \
   weights/z.hh                                  \
   weights/zmin.hh
