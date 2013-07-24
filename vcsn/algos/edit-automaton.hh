@@ -1,12 +1,16 @@
 #ifndef VCSN_ALGOS_EDIT_AUTOMATON_HH
 # define VCSN_ALGOS_EDIT_AUTOMATON_HH
 
+# include <tuple>
 # include <unordered_map>
+# include <utility>
+# include <vector>
 
 # include <boost/flyweight.hpp>
 # include <boost/flyweight/no_tracking.hpp>
 
 # include <vcsn/ctx/ctx.hh>
+# include <vcsn/dyn/algos.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/weights/entryset.hh>
@@ -41,6 +45,8 @@ namespace vcsn
       boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
     virtual ~automaton_editor() {}
+    virtual void add_initial(const string_t& s, const string_t& es) = 0;
+    virtual void add_final(const string_t& s, const string_t& es) = 0;
     virtual void add_state(const string_t& s) = 0;
     virtual void add_pre(const string_t& s) = 0;
     virtual void add_post(const string_t& s) = 0;
@@ -114,6 +120,58 @@ namespace vcsn
     add_post(const string_t& s) override final
     {
       smap_.emplace(s, res_->post());
+    }
+
+    virtual void
+    add_initial(const string_t& d, const string_t& entry) override final
+    {
+      if (entry.get().empty())
+        res_->add_initial(state_(d),res_->weightset()->one());
+      else
+      {
+        // Adding a pre/post transition: be sure that it's only
+        // a weight.  Entries see the special label as an empty
+        // one.
+        auto e = entryset_.conv(entry, sep_);
+        if (e.size() == 1
+            && (res_->labelset()->is_special(begin(e)->first)
+              || res_->labelset()->is_one(begin(e)->first)))
+        {
+          auto w = begin(e)->second;
+          res_->add_initial(state_(d), w);
+        }
+        else
+          throw std::runtime_error
+            (std::string{"edit_automaton: invalid "}
+             + (state_(d) == res_->pre() ? "initial" : "final")
+             + " entry: " + entry.get());
+      }
+    }
+
+    virtual void
+    add_final(const string_t& s, const string_t& entry) override final
+    {
+      if (entry.get().empty())
+        res_->add_final(state_(s), res_->weightset()->one());
+      else
+      {
+        // Adding a pre/post transition: be sure that it's only
+        // a weight.  Entries see the special label as an empty
+        // one.
+        auto e = entryset_.conv(entry, sep_);
+        if (e.size() == 1
+            && (res_->labelset()->is_special(begin(e)->first)
+              || res_->labelset()->is_one(begin(e)->first)))
+        {
+          auto w = begin(e)->second;
+          res_->add_final(state_(s), w);
+        }
+        else
+          throw std::runtime_error
+            (std::string{"edit_automaton: invalid "}
+             + (state_(s) == res_->pre() ? "initial" : "final")
+             + " entry: " + entry.get());
+      }
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
@@ -202,6 +260,116 @@ namespace vcsn
     state_map smap_;
     /// Memoize conversion from entry as a string to entry_t.
     entry_map emap_;
+  };
+
+  class lazy_automaton_editor: public automaton_editor
+  {
+  public:
+    using super_type = automaton_editor;
+    using string_t = super_type::string_t;
+
+  public:
+    lazy_automaton_editor()
+      : edit_{nullptr}
+    {}
+
+    virtual void
+    add_state(const string_t& s) override final
+    {
+      states_.emplace_back(s);
+    }
+
+    virtual void
+    add_pre(const string_t&) override final
+    {
+      std::abort();
+    }
+
+    virtual void
+    add_post(const string_t&) override final
+    {
+      std::abort();
+    }
+
+    virtual void
+    add_initial(const string_t& s, const string_t& es) override final
+    {
+      init_states_.emplace_back(s, es);
+    }
+
+    virtual void
+    add_final(const string_t& s, const string_t& es) override final
+    {
+      final_states_.emplace_back(s, es);
+    }
+
+    /// Add transitions from \a src to \a dst, labeled by \a entry.
+    virtual void
+    add_entry(const string_t& src, const string_t& dst,
+              const string_t& entry) override final
+    {
+      transitions_.emplace_back(src, entry, dst);
+      if (entry == "\\e")
+      {
+        is_lan_ = true;
+        return;
+      }
+      // We can't iterate on string_t
+      std::string s = entry;
+      for (auto c: s)
+        letters_.emplace(c);
+      if (1 < entry.get().size())
+        is_law_ = true;
+    }
+
+    /// Create ctx and return the built automaton.
+    virtual dyn::detail::abstract_automaton*
+    result() override final
+    {
+      std::string ctx = is_law_ ? "law" : (is_lan_ ? "lan" : "lal");
+      ctx += "_char(";
+      for (auto l: letters_)
+        ctx += l;
+      ctx += ")_b";
+      auto c = vcsn::dyn::make_context(ctx);
+      edit_ = vcsn::dyn::make_automaton_editor(c);
+
+      for (auto s: states_)
+        edit_->add_state(s);
+
+      for (auto t: transitions_)
+        edit_->add_entry(std::get<0>(t), std::get<2>(t), std::get<1>(t));
+
+      for (auto p: init_states_)
+        edit_->add_initial(p.first, p.second);
+
+      for (auto p: final_states_)
+        edit_->add_final(p.first, p.second);
+
+
+
+      return edit_->result();
+    }
+
+    virtual void
+    reset() override final
+    {
+      letters_.clear();
+      transitions_.clear();
+      final_states_.clear();
+      init_states_.clear();
+      states_.clear();
+    }
+
+  private:
+    bool is_lan_ = false;
+    bool is_law_ = false;
+    vcsn::automaton_editor* edit_;
+    std::set<char> letters_;
+    std::vector<std::tuple<string_t, string_t, string_t>> transitions_;
+    std::vector<std::pair<string_t, string_t>> init_states_;
+    std::vector<std::pair<string_t, string_t>> final_states_;
+    std::vector<string_t> states_;
   };
 
   namespace dyn
