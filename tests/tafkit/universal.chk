@@ -31,7 +31,7 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-universal -f $top_srcdir/share/vcsn/a1.gv
+run 0 out.exp -vcsn-universal -f $top_srcdir/share/vcsn/lal_char_b/a1.gv
 # Idempotence.
 run 0 out.exp -vcsn-universal -f out.exp
 

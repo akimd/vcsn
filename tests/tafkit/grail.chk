@@ -21,7 +21,7 @@ check_f ()
   run 0 ignore -python -c "from FAdo import fa;fa.readFromFile('aut.fa')"
 }
 
-check_f $top_srcdir/share/vcsn/a1.gv
+check_f $top_srcdir/share/vcsn/lal_char_b/a1.gv
 
 check_f - <<\EOF
 digraph

@@ -3,11 +3,13 @@
 # FIXME: check that only the accessible part is kept.  Start from
 # binary.gv, modified with an inaccessible state.
 
+binary_gv=$top_srcdir/share/vcsn/lal_char_z/binary.gv
 
 ## --------- ##
 ## power 0.  ##
 ## --------- ##
-run 0 - -vcsn-power -f $top_srcdir/share/vcsn/binary.gv 0 <<EOF
+
+run 0 - -vcsn-power -f $binary_gv 0 <<EOF
 digraph
 {
   vcsn_context = "lal_char(01)_z"
@@ -31,7 +33,7 @@ EOF
 ## power 1.  ##
 ## --------- ##
 
-run 0 - -vcsn-power -f $top_srcdir/share/vcsn/binary.gv 1 <<EOF
+run 0 - -vcsn-power -f $binary_gv 1 <<EOF
 digraph
 {
   vcsn_context = "lal_char(01)_z"
@@ -58,7 +60,7 @@ EOF
 ## ---------- ##
 ## power 4.  ##
 ## ---------- ##
-run 0 '' -vcsn-power -o binary-10.gv -f $top_srcdir/share/vcsn/binary.gv 4
+run 0 '' -vcsn-power -o binary-10.gv -f $binary_gv 4
 # 1^4 = 0.
 run 0 0   -vcsn-evaluate -f binary-10.gv 0
 # 1^4 = 1.

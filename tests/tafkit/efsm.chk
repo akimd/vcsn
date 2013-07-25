@@ -16,7 +16,7 @@ check ()
 ## A Boolean automaton.  ##
 ## --------------------- ##
 
-check $top_srcdir/share/vcsn/a1.gv <<EOF
+check $top_srcdir/share/vcsn/lal_char_b/a1.gv <<EOF
 #! /bin/sh
 
 cat >transitions.fsm <<\EOFSM
@@ -43,7 +43,7 @@ EOF
 ## A Z automaton.  ##
 ## --------------- ##
 
-check $top_srcdir/share/vcsn/binary.gv <<EOF
+check $top_srcdir/share/vcsn/lal_char_z/binary.gv <<EOF
 #! /bin/sh
 
 cat >transitions.fsm <<\EOFSM
