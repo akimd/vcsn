@@ -24,7 +24,7 @@ include lib/local.mk
 include share/local.mk
 
 SUBDIRS = vcsn . tests
-EXTRA_DIST += NEWS.txt TODO.txt
+EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt
 
 check-html: all
 	cd tests && $(MAKE) $(AM_MAKEFLAGS) $@
