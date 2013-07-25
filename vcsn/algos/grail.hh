@@ -103,15 +103,25 @@ namespace vcsn
 
       void output_initials_()
       {
-        os_ << " *";
+        std::vector<unsigned> order;
         for (auto t: aut_.initial_transitions())
-          os_ << ' ' << states_[aut_.dst_of(t)];
+          order.push_back(states_[aut_.dst_of(t)]);
+        std::sort (order.begin(), order.end());
+
+        os_ << " *";
+        for (auto t: order)
+          os_ << ' ' << t;
       }
 
       void output_finals_()
       {
-	for (auto t: aut_.final_transitions())
-	  os_ << ' ' << states_[aut_.src_of(t)];
+        std::vector<unsigned> order;
+        for (auto t: aut_.final_transitions())
+          order.push_back(states_[aut_.src_of(t)]);
+        std::sort (order.begin(), order.end());
+
+	for (auto t: order)
+	  os_ << ' ' << t;
       }
 
       /// symbol lists.
@@ -127,53 +137,70 @@ namespace vcsn
         return res;
       }
 
-      /// Output all the transitions, and final states.
-      void output_transitions_()
-      {
-        for (auto t : aut_.transitions())
-          os_ << std::endl
-              << states_[aut_.src_of(t)]
-              << ' ' << label_of_(t)
-              << ' ' << states_[aut_.dst_of(t)];
-      }
-
-      /// The automaton we have to output.
-      const automaton_t& aut_;
-
-      std::ostream& os_;
-      Output type_;
-      std::map<state_t, unsigned> states_;
-      unsigned state_ = 0;
-    };
-  }
-
-
-  template <class Aut>
-  std::ostream&
-  grail(const Aut& aut, std::ostream& out, const std::string& type)
-  {
-    detail::grailer<Aut> grail{aut, out, type};
-    grail();
-    return out;
-  }
-
-  namespace dyn
-  {
-    namespace detail
+    void output_transitions_()
     {
-      template <typename Aut>
-      std::ostream& grail(const automaton& aut, std::ostream& out,
-                          const std::string& type)
-      {
-        return grail(dynamic_cast<const Aut&>(*aut), out, type);
-      }
+      std::vector<transition_t> order;
+      for ( auto t : aut_.transitions())
+        order.push_back(t);
+      std::sort (order.begin(), order.end(),
+          [this](transition_t l, transition_t r)
+          {
+            if (aut_.src_of(l) == aut_.src_of(r))
+            {
+              if (label_of_(l) == label_of_(r))
+                return aut_.dst_of(l) < aut_.dst_of(r);
+              else
+                return label_of_(l) < label_of_(r);
+            }
+            else
+            return aut_.src_of(l) < aut_.src_of(r);
+          });
 
-      REGISTER_DECLARE
-        (grail,
-         (const automaton& aut, std::ostream& out, const std::string& type)
-         -> std::ostream&);
+
+      for (auto t : order)
+        os_ << std::endl
+            << states_[aut_.src_of(t)]
+            << ' ' << label_of_(t)
+            << ' ' << states_[aut_.dst_of(t)];
     }
+
+    /// The automaton we have to output.
+    const automaton_t& aut_;
+
+    std::ostream& os_;
+    Output type_;
+    std::map<state_t, unsigned> states_;
+    unsigned state_ = 0;
+  };
+}
+
+
+template <class Aut>
+std::ostream&
+grail(const Aut& aut, std::ostream& out, const std::string& type)
+{
+  detail::grailer<Aut> grail{aut, out, type};
+  grail();
+  return out;
+}
+
+namespace dyn
+{
+  namespace detail
+  {
+    template <typename Aut>
+    std::ostream& grail(const automaton& aut, std::ostream& out,
+                        const std::string& type)
+    {
+      return grail(dynamic_cast<const Aut&>(*aut), out, type);
+    }
+
+    REGISTER_DECLARE
+      (grail,
+        (const automaton& aut, std::ostream& out, const std::string& type)
+        -> std::ostream&);
   }
+}
 }
 
 #endif // !VCSN_ALGOS_GRAIL_HH

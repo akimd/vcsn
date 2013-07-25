@@ -15,7 +15,6 @@ namespace vcsn
     public:
       using automaton_t = dyn::automaton;
 
-      parse_fado();
       automaton_t parse_file(const std::string& file);
 
     private:
