@@ -15,8 +15,7 @@ try
     // Input.
     using namespace vcsn::dyn;
     auto ctx = vcsn::dyn::make_context(opts.context);
-    assert(argv[0]);
-    assert(argv[1]);
+    assert(2 <= argc);
     auto k = boost::lexical_cast<unsigned>(argv[0]);
     auto b = boost::lexical_cast<unsigned>(argv[1]);
 
