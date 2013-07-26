@@ -57,7 +57,7 @@ namespace vcsn
           }
         scan_open_(yyin);
         auto res = parse_();
-        if (f != "-")
+        if (yyin != stdin)
           fclose(yyin);
         return res;
       }
