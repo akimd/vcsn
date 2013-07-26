@@ -91,6 +91,31 @@ check_tupleset()
   ASSERT_EQ(ts.equals(conv(ts, "(\\e,x)"), label_t{"", "x"}), true);
   ASSERT_EQ(ts.equals(conv(ts, "(\\e,\\e)"), label_t{"", ""}), true);
 
+  // concat.
+#define CHECK(L1, R1, L2, R2)                                           \
+  ASSERT_EQ(ts.equals(ts.concat(label_t{L1, R1}, label_t{L2, R2}),      \
+                      label_t{L1 L2, R1 R2}), true)
+  CHECK("a",  "x",    "b",   "y");
+  CHECK("aa", "xx",   "bb",  "yy");
+  CHECK("",   "xx",   "bb",  "yy");
+  CHECK("aa", "",     "bb",  "yy");
+  CHECK("aa", "xx",   "",    "yy");
+  CHECK("aa", "xx",   "bb",  "");
+
+  CHECK("",   "",     "bb",  "yy");
+  CHECK("",   "xx",   "",    "yy");
+  CHECK("",   "xx",   "bb",  "");
+  CHECK("aa", "",     "",    "yy");
+  CHECK("aa", "",     "bb",  "");
+  CHECK("aa", "xx",    "",   "");
+
+  CHECK("",   "",     "",    "yy");
+  CHECK("",   "",     "bb",  "");
+  CHECK("",   "xx",   "",    "");
+
+  CHECK("",   "",     "",    "");
+#undef CHECK
+
   return nerrs;
 }
 

@@ -75,6 +75,12 @@ namespace vcsn
       }
 
       value_t
+      concat(const value_t& l, const value_t& r) const
+      {
+        return concat_(l, r, indices_t{});
+      }
+
+      value_t
       transpose(const value_t& l) const
       {
         return transpose_(l, indices_t{});
@@ -176,6 +182,14 @@ namespace vcsn
           if (!n)
             return false;
         return true;
+      }
+
+      template <std::size_t... I>
+      value_t
+      concat_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).concat(std::get<I>(l),
+                                                          std::get<I>(r)))...);
       }
 
       template <std::size_t... I>
