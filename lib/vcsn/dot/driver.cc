@@ -49,7 +49,7 @@ namespace vcsn
       driver::parse_file(const std::string& f)
         -> automaton_t
       {
-        FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
+        FILE *yyin = (f.empty() || f == "-") ? stdin : fopen(f.c_str(), "r");
         if (!yyin)
           {
             std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;

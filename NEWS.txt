@@ -1,3 +1,11 @@
+* 2013-07-25
+** TAF-Kit: works on standard input by default
+The very frequent "-f -" sequence is no longer required: by default the
+input is stdin.
+
+  $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
+  \e+(a.((b+(a.a)+(c.((a+c)*).b))*).(a+(c.((a+c)*))))
+
 * 2013-07-18
 ** standard
 New algorithm on automata (static, dynamic, TAF-Kit).  Corresponds to
@@ -12,7 +20,7 @@ New automata factory (static, dynamic, TAF-Kit): Brzozowski's universal
 witness.
 
 * 2013-07-17
-** new formats: grail and fado
+** New formats: grail and fado
 
   $ vcsn standard -O fado -e 'a+b'
   @DFA 1 2
