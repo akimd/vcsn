@@ -53,7 +53,6 @@ namespace vcsn
           if (state.empty())
             continue;
           string_t s1{state};
-          //edit_.add_state(s1);
           if (init)
             edit_.add_initial(s1, string_t{});
           else
@@ -71,7 +70,6 @@ namespace vcsn
       if (!state.empty())
       {
         string_t s1{state};
-        //edit_.add_state(s1);
           if (init)
             edit_.add_initial(s1, string_t{});
           else
@@ -85,15 +83,10 @@ namespace vcsn
 
         // First state is our initial state if not declared before by "*".
         if (!init && !fin.get()->eof())
-          {
-            //edit_.add_state(s1);
-            edit_.add_initial(s1, string_t{});
-          }
+          edit_.add_initial(s1, string_t{});
 
         while (!fin.get()->eof())
           {
-            //edit_.add_state(s1);
-            //edit_.add_state(s2);
             if (l == "@epsilon")
               l == "\\e";
             edit_.add_entry(s1, s2, l);
