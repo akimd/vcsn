@@ -11,15 +11,22 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-dist_pkgdata_DATA =                             \
+lal_char_bdir = $(pkgdatadir)/lal_char_b
+dist_lal_char_b_DATA =                          \
   share/vcsn/lal_char_b/a1.gv                   \
   share/vcsn/lal_char_b/b1.gv                   \
   share/vcsn/lal_char_b/evena.gv                \
-  share/vcsn/lal_char_b/oddb.gv                 \
+  share/vcsn/lal_char_b/oddb.gv
+
+lal_char_zdir = $(pkgdatadir)/lal_char_z
+dist_lal_char_z_DATA =                          \
   share/vcsn/lal_char_z/b1.gv                   \
   share/vcsn/lal_char_z/binary.gv               \
   share/vcsn/lal_char_z/c1.gv                   \
-  share/vcsn/lal_char_z/d1.gv                   \
+  share/vcsn/lal_char_z/d1.gv
+
+lal_char_zmindir = $(pkgdatadir)/lal_char_zmin
+dist_lal_char_zmin_DATA =                       \
   share/vcsn/lal_char_zmin/minab.gv             \
   share/vcsn/lal_char_zmin/minblocka.gv         \
   share/vcsn/lal_char_zmin/slowgrow.gv
