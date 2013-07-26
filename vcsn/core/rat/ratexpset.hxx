@@ -71,12 +71,6 @@ namespace vcsn
     return std::make_shared<atom_t>(weightset()->one(), v);
   }
 
-  DEFINE::concat(value_t l, value_t r) const
-    -> value_t
-  {
-    return concat(l, r, kind_t());
-  }
-
   DEFINE::zero() const
     -> value_t
   {
@@ -172,25 +166,21 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_letters) const
+  DEFINE::concat(value_t l, value_t r) const
+    -> value_t
+  {
+    return concat_(l, r, typename is_law<Context>::type{});
+  }
+
+  // Concatenation when not LAW.
+  DEFINE::concat_(value_t l, value_t r, std::false_type) const
     -> value_t
   {
     return mul(l, r);
   }
 
-  DEFINE::concat(value_t l, value_t r, labels_are_nullable) const
-    -> value_t
-  {
-    return mul(l, r);
-  }
-
-  DEFINE::concat(value_t l, value_t r, labels_are_one) const
-    -> value_t
-  {
-    return mul(l, r);
-  }
-
-  DEFINE::concat(value_t l, value_t r, labels_are_words) const
+  // Concatenation when LAW.
+  DEFINE::concat_(value_t l, value_t r, std::true_type) const
     -> value_t
   {
     // Implicit concatenation between l and r.

@@ -93,12 +93,6 @@ namespace vcsn
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
-    /// Implementation detail for concat.
-    // FIXME: Should be extrusive.
-    value_t concat(value_t l, value_t r, labels_are_letters) const;
-    value_t concat(value_t l, value_t r, labels_are_nullable) const;
-    value_t concat(value_t l, value_t r, labels_are_one) const;
-    value_t concat(value_t l, value_t r, labels_are_words) const;
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;
     value_t weight(const weight_t& w, value_t e) const;
@@ -115,6 +109,11 @@ namespace vcsn
     /// \param type  the kind of ratexps on which to apply associativity.
     ///              Must be SUM or PROD.
     ratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
+
+    /// If Context is LAW.
+    value_t concat_(value_t l, value_t r, std::true_type) const;
+    /// If Context is not LAW.
+    value_t concat_(value_t l, value_t r, std::false_type) const;
 
   private:
     context_t ctx_;
