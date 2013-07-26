@@ -1,11 +1,11 @@
 * Tests
-** is-trim
-** is-empty
-** is-useless
+** is-trim (AL)
+** is-empty (AL)
+** is-useless (AL)
 Check them, and their "is-"less version (vcsn-trim etc.).
 
-** eval.chk
-Cover more cases for zmin.
+** eval.chk (AL)
+Cover more cases for zmin.  Use the automata from share/vcsn/lal_char_zmin.
 
 * Bugs
 ** Generators and alphabets
@@ -28,6 +28,9 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** More documentation (AL)
+The Doxygen style documentation is way too poor.  Aim at completion.
+
 ** We need to go from a labelset to its wordset
 Or something like that.  I'm not sure "wordset" is appropriate, however,
 polynomials for instance really need to go from label_t to word_t, and be
@@ -107,8 +110,18 @@ that *both* should yield "{3}ab":
   1.4 but should anyway be reevaluated in connection with the definition
   of the function derived-term for the weighthed automata.
 
-** More algorithms
-* "check" algorithm
+* More algorithms
+** Functions to assemble automata (AL)
+Read the documentation of TAF-Kit v1, and implement (and check) these
+functions:
+  - union
+  - sum
+  - concatenate
+  - star
+  - left-mult, right-mult
+  - chain
+
+** "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
