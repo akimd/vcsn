@@ -1,3 +1,19 @@
+* 2013-07-26
+** Automaton library
+The set of library automata for existing contexts is now complete with
+respect to what Vaucanson 1 provided.  Automata families are not, and will
+not, be part of this library ; for instance, instead of looking for
+ladybird-6.gv, use 'vcsn ladybird 6'.
+
+  lal_char_b: a1.gv b1.gv evena.gv oddb.gv
+  lal_char_z: b1.gv binary.gv c1.gv d1.gv
+  lal_char_zmin: minab.gv minblocka.gv slowgrow.gv
+
+Currently one must specify their path:
+
+  $ vcsn evaluate -f share/vcsn/lal_char_zmin/minab.gv aabbba
+  3
+
 * 2013-07-25
 ** TAF-Kit: works on standard input by default
 The very frequent "-f -" sequence is no longer required: by default the

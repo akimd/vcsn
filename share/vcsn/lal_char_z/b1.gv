@@ -1,0 +1,21 @@
+// Z-Automaton B_1.
+digraph
+{
+  vcsn_context = "lal_char(ab)_z"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I
+    F
+  }
+  {
+    node [shape = circle]
+    0
+    1
+  }
+  I -> 0
+  0 -> 0 [label = "a, b"]
+  0 -> 1 [label = "a"]
+  1 -> 1 [label = "a, b"]
+  1 -> F
+}

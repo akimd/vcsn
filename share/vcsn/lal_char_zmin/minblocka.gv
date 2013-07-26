@@ -1,0 +1,24 @@
+// Z-automaton minblocka.
+digraph
+{
+  vcsn_context = "lal_char(ab)_zmin"
+  rankdir = LR
+  node [shape = circle]
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F2
+  }
+  {
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 0 [label = "<0>a,<0>b"]
+  0 -> 1 [label = "<0>b"]
+  1 -> 1 [label = "<1>a"]
+  1 -> 2 [label = "<0>b"]
+  2 -> 2 [label = "<0>a,<0>b"]
+  2 -> F2
+}
