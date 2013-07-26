@@ -17,14 +17,14 @@ namespace vcsn
     {
       if (type == "dot")
         dot(aut, out);
-      else if (type == "info")
-        info(aut, out);
       else if (type == "efsm")
         efsm(aut, out);
       else if (type == "fado") // Grail also has fado output
         grail(aut, out, type);
       else if (type == "grail")
         grail(aut, out, type);
+      else if (type == "info")
+        info(aut, out);
       else if (type == "null")
         {}
       else if (type == "tikz")
