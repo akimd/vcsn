@@ -47,9 +47,13 @@ namespace vcsn
 
       void operator()()
       {
-        os_ << "\\begin{tikzpicture}"
-            << "[shorten >=1pt, node distance=2cm, pos=.4, >=stealth',"
-            << " initial text={}]" << std::endl;
+        os_ <<
+          "% \\usetikzlibrary{arrows, automata, positioning}\n"
+          "% \\tikzstyle{automaton}=[shorten >=1pt, node distance=2cm, pos=.4,\n"
+          "%                        >=stealth', initial text=]\n"
+          "% \\tikzstyle{accepting}=[accepting by arrow]\n";
+
+        os_ << "\\begin{tikzpicture}[automaton]" << std::endl;
         // Name all the states.
         std::unordered_map<state_t, unsigned> names;
         {
@@ -61,23 +65,23 @@ namespace vcsn
               if (aut_.is_initial(s))
                 format("initial", aut_.get_initial_weight(s));
               if (aut_.is_final(s))
-                format("accepting", aut_.get_final_weight(s), " by arrow");
+                format("accepting", aut_.get_final_weight(s));
               os_ << "]"
                   << " (" << names[s] << ")";
               if (names[s])
-                os_ << " [right of=" << names[s] - 1 << "]";
+                os_ << " [right=of " << names[s] - 1 << "]";
               os_ << " {$" << names[s] << "$};" << std::endl;
             }
         }
 
         for (auto src : aut_.states())
           {
+            unsigned ns = names[src];
             std::set<state_t> ds;
-            for (auto t: aut_.all_out(src))
+            for (auto t: aut_.out(src))
               ds.insert(aut_.dst_of(t));
             for (auto dst: ds)
               {
-                unsigned ns = names[src];
                 unsigned nd = names[dst];
                 os_ << "  \\path[->] (" << ns << ")"
                     << " edge"
