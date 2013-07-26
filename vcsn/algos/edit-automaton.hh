@@ -269,10 +269,6 @@ namespace vcsn
     using string_t = super_type::string_t;
 
   public:
-    lazy_automaton_editor()
-      : edit_{nullptr}
-    {}
-
     virtual void
     add_state(const string_t& s) override final
     {
@@ -306,65 +302,19 @@ namespace vcsn
     /// Add transitions from \a src to \a dst, labeled by \a entry.
     virtual void
     add_entry(const string_t& src, const string_t& dst,
-              const string_t& entry) override final
-    {
-      transitions_.emplace_back(src, entry, dst);
-      if (entry == "\\e")
-      {
-        is_lan_ = true;
-        return;
-      }
-      // We can't iterate on string_t
-      std::string s = entry;
-      for (auto c: s)
-        letters_.emplace(c);
-      if (1 < entry.get().size())
-        is_law_ = true;
-    }
+              const string_t& entry) override final;
 
-    /// Create ctx and return the built automaton.
+    /// Return the built automaton.
     virtual dyn::detail::abstract_automaton*
-    result() override final
-    {
-      std::string ctx = is_law_ ? "law" : (is_lan_ ? "lan" : "lal");
-      ctx += "_char(";
-      for (auto l: letters_)
-        ctx += l;
-      ctx += ")_b";
-      auto c = vcsn::dyn::make_context(ctx);
-      edit_ = vcsn::dyn::make_automaton_editor(c);
+    result() override final;
 
-      for (auto s: states_)
-        edit_->add_state(s);
-
-      for (auto t: transitions_)
-        edit_->add_entry(std::get<0>(t), std::get<2>(t), std::get<1>(t));
-
-      for (auto p: init_states_)
-        edit_->add_initial(p.first, p.second);
-
-      for (auto p: final_states_)
-        edit_->add_final(p.first, p.second);
-
-
-
-      return edit_->result();
-    }
-
+    /// Get ready to build another automaton.
     virtual void
-    reset() override final
-    {
-      letters_.clear();
-      transitions_.clear();
-      final_states_.clear();
-      init_states_.clear();
-      states_.clear();
-    }
+    reset() override final;
 
   private:
     bool is_lan_ = false;
     bool is_law_ = false;
-    vcsn::automaton_editor* edit_;
     std::set<char> letters_;
     std::vector<std::tuple<string_t, string_t, string_t>> transitions_;
     std::vector<std::pair<string_t, string_t>> init_states_;
