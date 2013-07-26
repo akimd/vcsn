@@ -36,6 +36,11 @@ namespace vcsn
         : sets_(ls...)
       {}
 
+      static std::string sname()
+      {
+        return sname_(indices_t{});
+      }
+
       std::string vname(bool full = true) const
       {
         return vname_(full, indices_t{});
@@ -86,6 +91,21 @@ namespace vcsn
       }
 
     private:
+      template <std::size_t... I>
+      static std::string sname_(detail::seq<I...>)
+      {
+        std::string res = "lat<";
+        const char *sep = "";
+        for (auto n: {(std::tuple_element<I, labelsets_t>::type::sname())...})
+          {
+            res += sep;
+            res += n;
+            sep = ", ";
+          }
+        res += ">";
+        return res;
+      }
+
       template <std::size_t... I>
       std::string vname_(bool full, detail::seq<I...>) const
       {
