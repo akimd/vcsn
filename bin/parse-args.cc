@@ -14,14 +14,10 @@
 vcsn::dyn::automaton
 read_automaton(const options& opts)
 {
-    if (opts.input_format ==  "fado")
-      return vcsn::dyn::read_fado_file(opts.input);
-    if (opts.input_format == "grail")
-      return vcsn::dyn::read_fado_file(opts.input);
-    return
-      opts.input_is_file
-      ? vcsn::dyn::read_automaton_file(opts.input)
-      : vcsn::dyn::read_automaton_string(opts.input);
+  return
+    opts.input_is_file
+    ? vcsn::dyn::read_automaton_file(opts.input, opts.input_format)
+    : vcsn::dyn::read_automaton_string(opts.input);
 }
 
 vcsn::dyn::ratexp

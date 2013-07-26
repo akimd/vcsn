@@ -12,26 +12,35 @@ namespace vcsn
 
   namespace dyn
   {
-    /*-----------------.
-    | read_automaton.  |
-    `-----------------*/
-
-    automaton
-    read_fado_file(const std::string & f)
+    namespace
     {
-      vcsn::detail::parse_fado d;
-      auto res = d.parse_file(f);
-      return res;
+      automaton read_dot_file(const std::string& f)
+      {
+        vcsn::detail::dot::driver d;
+        auto res = d.parse_file(f);
+        if (!d.errors.empty())
+          throw std::runtime_error(d.errors);
+        return res;
+      }
+
+      automaton read_fado_file(const std::string& f)
+      {
+        vcsn::detail::parse_fado d;
+        auto res = d.parse_file(f);
+        return res;
+      }
     }
 
     automaton
-    read_automaton_file(const std::string& f)
+    read_automaton_file(const std::string& f, const std::string& t)
     {
-      vcsn::detail::dot::driver d;
-      auto res = d.parse_file(f);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return res;
+      if (t == "dot")
+        return read_dot_file(f);
+      if (t == "fado")
+        return read_fado_file(f);
+      if (t == "grail")
+        return read_fado_file(f);
+      throw std::runtime_error(t + ": unknown format");
     }
 
     automaton

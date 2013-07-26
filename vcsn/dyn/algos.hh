@@ -62,7 +62,7 @@ namespace vcsn
     dyn::weight eval(const automaton& aut, const std::string& s);
 
     std::ostream& grail(const automaton& aut, std::ostream& out,
-	const std::string& type);
+        const std::string& type);
 
     std::ostream& info(const automaton& aut, std::ostream& out);
     std::ostream& info(const ratexp& exp, std::ostream& out);
@@ -116,10 +116,15 @@ namespace vcsn
 
     automaton proper(const automaton& aut);
 
-    automaton read_automaton_file(const std::string& f);
-    automaton read_automaton_string(const std::string& s);
+    /// Read an automaton in a file.
+    /// \param file  the file name.
+    /// \param type  its format.
+    automaton read_automaton_file(const std::string& file,
+                                  const std::string& type = "dot");
 
-    automaton read_fado_file(const std::string& f);
+    /// Read an automaton in a string.
+    /// \param str  the automaton.
+    automaton read_automaton_string(const std::string& str);
 
     ratexp read_ratexp_file(const std::string& f, const context& ctx,
                             const std::string& type);
