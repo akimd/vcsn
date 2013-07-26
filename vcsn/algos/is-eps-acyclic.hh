@@ -11,7 +11,8 @@ namespace vcsn
   namespace
   {
 
-    template <typename Aut, bool is_lal = Aut::context_t::is_lal>
+    template <typename Aut,
+              bool has_one = !Aut::context_t::is_lal && !Aut::context_t::is_lat>
     struct epsilon_acyclic;
 
     /**
@@ -22,7 +23,7 @@ namespace vcsn
 
     */
     template <typename Aut>
-    struct epsilon_acyclic<Aut, false>
+    struct epsilon_acyclic<Aut, true>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
@@ -90,7 +91,7 @@ namespace vcsn
     };
 
     template <typename Aut>
-    struct epsilon_acyclic<Aut, true>
+    struct epsilon_acyclic<Aut, false>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
 
