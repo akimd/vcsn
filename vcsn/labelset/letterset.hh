@@ -57,6 +57,21 @@ namespace vcsn
         return "lal_" + super().vname(full);
       }
 
+      /// Build from the description in \a is.
+      static letterset make(std::istream& is)
+      {
+        // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+        //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+        //        |   |    |        weightset
+        //        |   |    +-- gens
+        //        |   +-- letter_type
+        //        +-- kind
+        kind_t::make(is);
+        eat(is, '_');
+        auto gs = genset_t::make(is);
+        return {gs};
+      }
+
       label_t
       special() const
       {

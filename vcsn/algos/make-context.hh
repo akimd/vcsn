@@ -9,7 +9,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexpset.hh>
-# include <vcsn/misc/escape.hh>
+# include <vcsn/misc/stream.hh> // eat
 
 namespace vcsn
 {
@@ -20,83 +20,6 @@ namespace vcsn
     // Fwd decls.
     template <typename Ctx>
     Ctx make_context(std::istream& is);
-
-    // Tools.
-    namespace
-    {
-      inline
-      void eat(std::istream& is, char c)
-      {
-        if (is.peek() != c)
-          throw std::runtime_error("make_context: unexpected: "
-                                   + str_escape(is.peek())
-                                   + ": expected " + str_escape(c));
-        is.ignore();
-      }
-    }
-
-
-    /*----------------.
-    | make_labelset.  |
-    `----------------*/
-
-    template <typename LabelSet>
-    typename std::enable_if<is_lao<LabelSet>::value, LabelSet>::type
-    make_labelset(std::istream& is)
-    {
-      // name: lao_ratexpset<law_char(xyz)_b>
-      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
-      //       kind         weightset
-      //
-      // There is no "char(...)_".
-      LabelSet::kind_t::make(is);
-      return LabelSet{};
-    }
-
-    template <typename LabelSet>
-    typename std::enable_if<(is_lal<LabelSet>::value
-                             || is_lan<LabelSet>::value
-                             || is_law<LabelSet>::value),
-                            LabelSet>::type
-    make_labelset(std::istream& is)
-    {
-      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
-      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-      //        |   |    |        weightset
-      //        |   |    +-- gens
-      //        |   +-- letter_type
-      //        +-- kind
-      LabelSet::kind_t::make(is);
-      eat(is, '_');
-      std::string letter_type;
-      {
-        char c;
-        while (is >> c)
-          {
-            if (c == '(')
-              {
-                is.unget();
-                break;
-              }
-            letter_type.append(1, c);
-          }
-      }
-      // The list of generators (letters).
-      std::string gens;
-      {
-        eat(is, '(');
-        char l;
-        while (is >> l)
-          {
-            if (l == ')')
-              break;
-            gens.append(1, l);
-          }
-      }
-      typename LabelSet::letters_t ls(begin(gens), end(gens));
-      return {ls};
-    }
-
 
     /*-----------------.
     | make_weightset.  |
@@ -180,7 +103,7 @@ namespace vcsn
     Ctx
     make_context(std::istream& is)
     {
-      auto ls = make_labelset<typename Ctx::labelset_t>(is);
+      auto ls = Ctx::labelset_t::make(is);
       eat(is, '_');
       auto ws = make_weightset<typename Ctx::weightset_t>(is);
       return {ls, ws};

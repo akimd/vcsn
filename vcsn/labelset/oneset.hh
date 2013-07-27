@@ -37,6 +37,18 @@ namespace vcsn
         return sname();
       }
 
+      /// Build from the description in \a is.
+      static oneset make(std::istream& is)
+      {
+        // name: lao_ratexpset<law_char(xyz)_b>
+        //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+        //       kind         weightset
+        //
+        // There is no "char(...)_".
+        kind_t::make(is);
+        return {};
+      }
+
       bool
       equals(empty_t, empty_t) const
       {

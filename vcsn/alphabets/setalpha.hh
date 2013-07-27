@@ -5,6 +5,7 @@
 # include <stdexcept>
 
 # include <vcsn/misc/set.hh>
+# include <vcsn/misc/stream.hh> // eat.
 
 namespace vcsn
 {
@@ -34,6 +35,41 @@ namespace vcsn
       return res;
     }
 
+    static set_alphabet make(std::istream& is)
+    {
+      // name: char(abc)_ratexpset<law_char(xyz)_b>.
+      //       ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+      //        |    |        weightset
+      //        |    +-- gens
+      //        +-- letter_type
+      std::string letter_type;
+      {
+        char c;
+        while (is >> c)
+          {
+            if (c == '(')
+              {
+                is.unget();
+                break;
+              }
+            letter_type.append(1, c);
+          }
+      }
+      // The list of generators (letters).
+      letters_t gens;
+      {
+        eat(is, '(');
+        char l;
+        while (is >> l)
+          {
+            if (l == ')')
+              break;
+            gens.insert(l);
+          }
+      }
+      return {gens};
+    }
+
     set_alphabet() = default;
     set_alphabet(const set_alphabet&) = default;
     set_alphabet(const std::initializer_list<letter_t>& l)
@@ -44,6 +80,7 @@ namespace vcsn
       : alphabet_{l}
     {}
 
+    /// Modify \a this by adding \a l, and return *this.
     set_alphabet&
     add_letter(letter_t l)
     {
@@ -59,6 +96,7 @@ namespace vcsn
       return ::vcsn::has(alphabet_, l);
     }
 
+    /// Extract and return the next word from \a i.
     word_t
     conv(std::istream& i) const
     {

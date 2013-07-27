@@ -27,6 +27,12 @@ namespace vcsn
                               + str_escape(i.peek()));
     return res;
   }
+
+  /// Check lookahead character and advance.
+  /// \param is the stream to read.
+  /// \param c  the expected character.
+  /// \throws std::runtime_error if the next character is not \a c.
+  void eat(std::istream& is, char c);
 }
 
 #endif // !VCSN_MISC_STREAM_HH

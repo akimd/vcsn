@@ -27,4 +27,13 @@ namespace vcsn
       }
     return o.str();
   }
+
+  void eat(std::istream& is, char c)
+  {
+    if (is.peek() != c)
+      throw std::runtime_error("unexpected: "
+                               + str_escape(is.peek())
+                               + ": expected " + str_escape(c));
+    is.ignore();
+  }
 }
