@@ -2,11 +2,12 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <vcsn/dyn/ratexpset.hh>
-#include <vcsn/core/rat/ratexp.hh>
 #include <lib/vcsn/rat/driver.hh>// FIXME: non-installed dependency.
-#include <vcsn/misc/cast.hh>
+#include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
+#include <vcsn/dyn/ratexpset.hh>
+#include <vcsn/misc/cast.hh>
+#include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -28,6 +29,24 @@ namespace vcsn
   ratexpset<Context>::vname(bool full) const
   {
     return "ratexpset<" + context().vname(full) + '>';
+  }
+
+  namespace detail
+  {
+    // Fwd decls.
+    template <typename Ctx>
+    Ctx make_context(std::istream& is);
+  }
+
+  template <typename Context>
+  ratexpset<Context>
+  ratexpset<Context>::make(std::istream& is)
+  {
+    // name is, for instance, "ratexpset<lal_char(abcd)_z>".
+    eat(is, "ratexpset<");
+    auto ctx = detail::make_context<Context>(is);
+    eat(is, '>');
+    return {ctx};
   }
 
 #define DEFINE                                  \

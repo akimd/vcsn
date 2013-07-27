@@ -9,6 +9,7 @@
 
 # include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
@@ -24,6 +25,13 @@ namespace vcsn
     std::string vname(bool = true) const
     {
       return sname();
+    }
+
+    /// Build from the description in \a is.
+    static b make(std::istream& is)
+    {
+      eat(is, sname());
+      return {};
     }
 
     using value_t = bool;

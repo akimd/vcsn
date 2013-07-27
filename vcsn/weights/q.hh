@@ -10,7 +10,7 @@
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/attributes.hh>
-
+# include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -26,6 +26,13 @@ namespace vcsn
     std::string vname(bool = true) const
     {
       return sname();
+    }
+
+    /// Build from the description in \a is.
+    static q make(std::istream& is)
+    {
+      eat(is, sname());
+      return {};
     }
 
     struct value_t

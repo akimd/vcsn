@@ -33,6 +33,12 @@ namespace vcsn
   /// \param c  the expected character.
   /// \throws std::runtime_error if the next character is not \a c.
   void eat(std::istream& is, char c);
+
+  /// Check lookahead string and advance.
+  /// \param is the stream to read.
+  /// \param s  the expected string.
+  /// \throws std::runtime_error if the next character is not \a s.
+  void eat(std::istream& is, const std::string& s);
 }
 
 #endif // !VCSN_MISC_STREAM_HH

@@ -54,6 +54,8 @@ namespace vcsn
     static std::string sname();
     /// Dynamic description key.
     virtual std::string vname(bool full = true) const;
+    /// Build from the description in \a is.
+    static ratexpset make(std::istream& is);
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.

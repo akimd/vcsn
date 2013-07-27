@@ -25,6 +25,13 @@ namespace vcsn
       return sname();
     }
 
+    /// Build from the description in \a is.
+    static r make(std::istream& is)
+    {
+      eat(is, sname());
+      return {};
+    }
+
     using value_t = double;
 
     value_t

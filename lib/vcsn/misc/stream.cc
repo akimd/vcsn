@@ -36,4 +36,20 @@ namespace vcsn
                                + ": expected " + str_escape(c));
     is.ignore();
   }
+
+  void eat(std::istream& is, const std::string& expect)
+  {
+    std::string s;
+    char c;
+    size_t cnt = expect.size();
+    while (cnt && is >> c)
+      {
+        s.append(1, c);
+        --cnt;
+      }
+    if (s != expect)
+      throw std::runtime_error("unexpected: "
+                               + str_escape(s)
+                               + ": expected " + str_escape(expect));
+  }
 }
