@@ -1,12 +1,16 @@
 #ifndef VCSN_CORE_KIND_HH
 # define VCSN_CORE_KIND_HH
 
+# include <istream>
+# include <stdexcept>
 # include <type_traits>
+
+# include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
 
-  /// Define the kinds, and auxialary tools.
+  /// Define the kinds, and auxiliary tools.
   ///
   /// is_ABBREV<Kinded>: Whether Kinded has a specific kind_t
   ///
@@ -31,6 +35,29 @@ namespace vcsn
     {                                                                   \
       return #Abbrev;                                                   \
     }                                                                   \
+                                                                        \
+    static void make(std::istream& is)                                  \
+    {                                                                   \
+      /*                                                                \
+       * name: lal_char(abc)_ratexpset<law_char(xyz)_b>.                \
+       *       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^                  \
+       *        |   |    |        weightset                             \
+       *        |   |    +-- gens                                       \
+       *        |   +-- letter_type                                     \
+       *        +-- kind                                                \
+       *                                                                \
+       * name: lao_ratexpset<law_char(xyz)_b>                           \
+       *       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^                           \
+       *       kind         weightset                                   \
+       */                                                               \
+      char kind[4];                                                     \
+      is.get(kind, sizeof kind);                                        \
+      if (sname() != kind)                                              \
+        throw std::runtime_error("kind::make: unexpected: "             \
+                                 + str_escape(kind)                     \
+                                 + ", expected: " + sname());           \
+    }                                                                   \
+                                                                        \
   };                                                                    \
                                                                         \
   template <typename Kinded>                                            \

@@ -35,35 +35,6 @@ namespace vcsn
       }
     }
 
-    /*------------.
-    | make_kind.  |
-    `------------*/
-
-    // Do not build anything, just make sure that the kind name is
-    // correct.
-    template <typename Kind>
-    void
-    make_kind(std::istream& is)
-    {
-      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
-      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-      //        |   |    |        weightset
-      //        |   |    +-- gens
-      //        |   +-- letter_type
-      //        +-- kind
-      //
-      // name: lao_ratexpset<law_char(xyz)_b>
-      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
-      //       kind         weightset
-      //
-      char kind[4];
-      is.get(kind, sizeof kind);
-      if (Kind::sname() != kind)
-        throw std::runtime_error("make_kind: unexpected: "
-                                 + str_escape(kind)
-                                 + ", expected: " + Kind::sname());
-    }
-
 
     /*----------------.
     | make_labelset.  |
@@ -78,7 +49,7 @@ namespace vcsn
       //       kind         weightset
       //
       // There is no "char(...)_".
-      make_kind<typename LabelSet::kind_t>(is);
+      LabelSet::kind_t::make(is);
       return LabelSet{};
     }
 
@@ -95,7 +66,7 @@ namespace vcsn
       //        |   |    +-- gens
       //        |   +-- letter_type
       //        +-- kind
-      make_kind<typename LabelSet::kind_t>(is);
+      LabelSet::kind_t::make(is);
       eat(is, '_');
       std::string letter_type;
       {
