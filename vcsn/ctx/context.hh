@@ -67,6 +67,9 @@ namespace vcsn
       /// \param gs  the generators
       /// \param ws  the weightset
       //
+      // Use SFINAE to avoid requiring labelset_t to define letter_t.
+      // labels_are_tuples does not define it for instance.
+      //
       // It would be simpler to just use "= {}", but the C++ standard
       // does not support it (and this is properly considered a
       // defect: see http://cplusplus.github.io/LWG/lwg-active.html#2193).

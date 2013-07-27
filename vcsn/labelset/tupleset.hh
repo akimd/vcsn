@@ -50,6 +50,16 @@ namespace vcsn
         return vname_(full, indices_t{});
       }
 
+      /// Build from the description in \a is.
+      static tupleset make(std::istream& is)
+      {
+        // name: lat<law_char(abc), law_char(xyz)>
+        kind_t::make(is);
+        auto res = make_(is, indices_t{});
+        eat(is, '>');
+        return res;
+      }
+
       bool
       equals(const value_t& l, const value_t& r) const
       {
@@ -97,16 +107,7 @@ namespace vcsn
       conv(std::istream& i) const
       {
         value_t res = conv_(i, indices_t{});
-        {
-          int c = i.get();
-          if (c != ')')
-            {
-              i.unget();
-              throw std::domain_error("invalid label: unexpected "
-                                      + str_escape(c)
-                                      + ": expected ')'");
-            }
-        }
+        eat(i, ')');
         return res;
       }
 
@@ -163,6 +164,13 @@ namespace vcsn
       }
 
       template <std::size_t... I>
+      static tupleset make_(std::istream& i, detail::seq<I...>)
+      {
+        return {((eat_separator_<I>(i, '<', ','),
+                  std::tuple_element<I, labelsets_t>::type::make(i)))...};
+      }
+
+      template <std::size_t... I>
       bool
       equals_(const value_t& l, const value_t& r, detail::seq<I...>) const
       {
@@ -202,7 +210,7 @@ namespace vcsn
       value_t
       conv_(std::istream& i, detail::seq<I...>) const
       {
-        return std::make_tuple(((conv_separator_<I>(i),
+        return std::make_tuple(((eat_separator_<I>(i, '(', ','),
                                  std::get<I>(sets_).conv(i)))...);
       }
 
@@ -210,19 +218,10 @@ namespace vcsn
       /// If \a I is 0, then the separator is '(',
       /// otherwise it is ',' (possibly followed by spaces).
       template <std::size_t I>
-      void
-      conv_separator_(std::istream& i) const
+      static void
+      eat_separator_(std::istream& i, char first, char tail)
       {
-        int c = i.get();
-        char sep = I == 0 ? '(' : ',';
-        if (c != sep)
-          {
-            i.unget();
-            throw std::domain_error("invalid label: unexpected "
-                                    + str_escape(c)
-                                    + ": expected "
-                                    + std::string{sep});
-          }
+        eat(i, I == 0 ? first : tail);
         while (isspace(i.peek()))
           i.ignore();
       }
