@@ -100,6 +100,7 @@ nobase_include_HEADERS =                        \
   %D%/ctx/lan_char_zr.hh                        \
   %D%/ctx/lao_br.hh                             \
   %D%/ctx/lao_z.hh                              \
+  %D%/ctx/latww_char_b.hh                       \
   %D%/ctx/law_char.hh                           \
   %D%/ctx/law_char_b.hh                         \
   %D%/ctx/law_char_br.hh                        \

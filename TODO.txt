@@ -134,6 +134,11 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 ** eps-removal
 (1+a)^n
 
+* Transducers
+** tupleset::one/is_one
+Currently tupleset does not define a one, even if all the members
+do.  Adjust is-eps-acyclic.
+
 * Refactoring
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce
