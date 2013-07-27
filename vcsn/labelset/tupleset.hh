@@ -74,6 +74,12 @@ namespace vcsn
         return is_one_(l, indices_t{});
       }
 
+      bool
+      is_letter(const value_t&) const
+      {
+        return false;
+      }
+
       value_t
       concat(const value_t& l, const value_t& r) const
       {
