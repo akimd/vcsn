@@ -1,48 +1,79 @@
 #ifndef VCSN_ALGOS_MAKE_CONTEXT_HH
 # define VCSN_ALGOS_MAKE_CONTEXT_HH
 
+# include <istream>
 # include <map>
 # include <set>
+# include <sstream>
 
-# include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexpset.hh>
+# include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
 
-  /* Some contexts, such as "lal_char_br", use RatExps as weight set.
-     But RatExps need a context, and a labelset.  Other weight sets,
-     such as b or zmin, do not need a labelset to be buildable.
-
-     So we must define a means to instantiate a weightset with or
-     without an alphabet, depending on its need.
-
-     We rely on partial template specialization to do so, which
-     requires that we use a struct (named weightsetter).
-
-     For some reason, the prototype of make_context is really needed
-     to please the compiler, which needs it to compile weightsetter.
-     */
-
-  template <typename Ctx>
-  Ctx
-  make_context(const std::string& name);
-
   namespace detail
   {
+
+    // Fwd decls.
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lao, Ctx>::type
+    make_context(std::istream& is);
+
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lal || Ctx::is_lan || Ctx::is_law,
+                            Ctx>::type
+    make_context(std::istream& is);
+
+    // Tools.
+    namespace
+    {
+      inline
+      void eat(std::istream& is, char c)
+      {
+        if (is.peek() != c)
+          throw std::runtime_error("make_context: unexpected: "
+                                   + str_escape(is.peek())
+                                   + ": expected " + str_escape(c));
+        is.ignore();
+      }
+    }
 
     /*-----------------.
     | make_weightset.  |
     `-----------------*/
+
+    /* Some contexts, such as "lal_char_br", use RatExps as weight set.
+       But RatExps need a context, and a labelset.  Other weight sets,
+       such as b or zmin, do not need a labelset to be buildable.
+
+       So we must define a means to instantiate a weightset with or
+       without an alphabet, depending on its need.
+
+       We rely on partial template specialization to do so, which
+       requires that we use a struct (named weightsetter).
+     */
 
     template <typename WeightSet>
     struct weightsetter
     {
       static
       WeightSet
-      make(const std::string&)
+      make(std::istream& is)
       {
+        std::string ws;
+        char c;
+        while (is >> c)
+          {
+            if (c == '>')
+              {
+                is.unget();
+                break;
+              }
+            ws.append(1, c);
+          }
         return {};
       }
     };
@@ -52,21 +83,36 @@ namespace vcsn
     {
       static
       ratexpset<Ctx>
-      make(const std::string& name)
+      make(std::istream& is)
       {
         // name is, for instance, "ratexpset<lal_char(abcd)_z>".
-        assert(name.substr(0, 10) == "ratexpset<");
-        assert(name.substr(name.size() - 1, 1) == ">");
-        std::string ctx = name.substr(10, name.size() - 11);
-        return {make_context<Ctx>(ctx)};
+        std::string rs;
+        char c;
+        while (is >> c)
+          {
+            if (c == '<')
+              {
+                is.unget();
+                break;
+              }
+            rs.append(1, c);
+          }
+        if (rs != "ratexpset")
+          throw std::runtime_error("make_weightset: unexpected "
+                                   + rs
+                                   + " expected ratexpset");
+        eat(is, '<');
+        auto ctx = make_context<Ctx>(is);
+        eat(is, '>');
+        return {ctx};
       }
     };
 
     template <typename WeightSet>
     WeightSet
-    make_weightset(const std::string& name)
+    make_weightset(std::istream& is)
     {
-      return weightsetter<WeightSet>::make(name);
+      return weightsetter<WeightSet>::make(is);
     }
 
     /*---------------.
@@ -75,66 +121,74 @@ namespace vcsn
 
     template <typename Ctx>
     typename std::enable_if<Ctx::is_lao, Ctx>::type
-    make_context(const std::string& name)
+    make_context(std::istream& is)
     {
       // name: lao_ratexpset<law_char(xyz)_b>
       //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
       //       kind         weightset
       //
       // There is no "char(...)_".
-      std::string kind = name.substr(0, 3);
-
+      char kind[4];
+      is.get(kind, sizeof kind);
       if (Ctx::kind_t::sname() != kind)
         throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
-                                 + " but read " + kind + ": " + name);
-      if (name[3] != '_')
-        throw std::runtime_error("make_context: expected a '_' after " + kind
-                                 + ": " + name);
-
-      std::string weightset = name.substr(4);
-      auto ws = make_weightset<typename Ctx::weightset_t>(weightset);
+                                 + " but read " + kind);
+      eat(is, '_');
+      auto ws = make_weightset<typename Ctx::weightset_t>(is);
       Ctx res(typename Ctx::labelset_t{}, ws);
-      assert(res.vname(true) == name);
       return res;
     }
 
     template <typename Ctx>
     typename std::enable_if<Ctx::is_lal || Ctx::is_lan || Ctx::is_law,
                             Ctx>::type
-    make_context(const std::string& name)
+    make_context(std::istream& is)
     {
       // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
       //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
       //        |   |    |        weightset
       //        |   |    +-- gens
-      //        |   +-- labelset
+      //        |   +-- letter_type
       //        +-- kind
       //
       // If more complexe "parsing" is needed, consider regex.
       // See vcsn/misc/regex.hh.
-      std::string kind = name.substr(0, 3);
-
+      char kind[4];
+      is.get(kind, sizeof kind);
       if (Ctx::kind_t::sname() != kind)
         throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
-                                 + " but read " + kind + ": " + name);
-      if (name[3] != '_')
-        throw std::runtime_error("make_context: expected a '_' after " + kind
-                                 + ": " + name);
-
-      auto lparen = name.find('(');
-      auto rparen = name.find(')');
-      if (lparen == std::string::npos)
-        throw std::runtime_error("make_context: missing '(': "
-                                 + name);
-      std::string labelset = name.substr(4, lparen - 4);
-      std::string genset = name.substr(lparen + 1, rparen - lparen - 1);
-      std::string weightset = name.substr(rparen + 2);
-
-      typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
+                                 + " but read " + kind);
+      eat(is, '_');
+      std::string letter_type;
+      {
+        char c;
+        while (is >> c)
+          {
+            if (c == '(')
+              {
+                is.unget();
+                break;
+              }
+            letter_type.append(1, c);
+          }
+      }
+      // The list of generators (letters).
+      std::string gens;
+      {
+        eat(is, '(');
+        char l;
+        while (is >> l)
+          {
+            if (l == ')')
+              break;
+            gens.append(1, l);
+          }
+      }
+      typename Ctx::labelset_t::letters_t ls(begin(gens), end(gens));
       auto gs = typename Ctx::labelset_t(ls);
-      auto ws = make_weightset<typename Ctx::weightset_t>(weightset);
+      eat(is, '_');
+      auto ws = make_weightset<typename Ctx::weightset_t>(is);
       Ctx res(gs, ws);
-      assert(res.vname(true) == name);
       return res;
     }
 
@@ -145,7 +199,15 @@ namespace vcsn
   Ctx
   make_context(const std::string& name)
   {
-    return detail::make_context<Ctx>(name);
+    std::istringstream is{name};
+    auto res = detail::make_context<Ctx>(is);
+    std::string remainder;
+    is >> remainder;
+    if (res.vname(true) != name)
+      throw std::runtime_error("make_context: built "
+                               + res.vname(true)
+                               + " instead of " + name);
+    return res;
   }
 
   /*----------.
