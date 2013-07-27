@@ -19,13 +19,7 @@ namespace vcsn
 
     // Fwd decls.
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lao, Ctx>::type
-    make_context(std::istream& is);
-
-    template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal || Ctx::is_lan || Ctx::is_law,
-                            Ctx>::type
-    make_context(std::istream& is);
+    Ctx make_context(std::istream& is);
 
     // Tools.
     namespace
@@ -40,6 +34,98 @@ namespace vcsn
         is.ignore();
       }
     }
+
+    /*------------.
+    | make_kind.  |
+    `------------*/
+
+    // Do not build anything, just make sure that the kind name is
+    // correct.
+    template <typename Kind>
+    void
+    make_kind(std::istream& is)
+    {
+      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+      //        |   |    |        weightset
+      //        |   |    +-- gens
+      //        |   +-- letter_type
+      //        +-- kind
+      //
+      // name: lao_ratexpset<law_char(xyz)_b>
+      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+      //       kind         weightset
+      //
+      char kind[4];
+      is.get(kind, sizeof kind);
+      if (Kind::sname() != kind)
+        throw std::runtime_error("make_kind: unexpected: "
+                                 + str_escape(kind)
+                                 + ", expected: " + Kind::sname());
+    }
+
+
+    /*----------------.
+    | make_labelset.  |
+    `----------------*/
+
+    template <typename LabelSet>
+    typename std::enable_if<is_lao<LabelSet>::value, LabelSet>::type
+    make_labelset(std::istream& is)
+    {
+      // name: lao_ratexpset<law_char(xyz)_b>
+      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
+      //       kind         weightset
+      //
+      // There is no "char(...)_".
+      make_kind<typename LabelSet::kind_t>(is);
+      return LabelSet{};
+    }
+
+    template <typename LabelSet>
+    typename std::enable_if<(is_lal<LabelSet>::value
+                             || is_lan<LabelSet>::value
+                             || is_law<LabelSet>::value),
+                            LabelSet>::type
+    make_labelset(std::istream& is)
+    {
+      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+      //        |   |    |        weightset
+      //        |   |    +-- gens
+      //        |   +-- letter_type
+      //        +-- kind
+      make_kind<typename LabelSet::kind_t>(is);
+      eat(is, '_');
+      std::string letter_type;
+      {
+        char c;
+        while (is >> c)
+          {
+            if (c == '(')
+              {
+                is.unget();
+                break;
+              }
+            letter_type.append(1, c);
+          }
+      }
+      // The list of generators (letters).
+      std::string gens;
+      {
+        eat(is, '(');
+        char l;
+        while (is >> l)
+          {
+            if (l == ')')
+              break;
+            gens.append(1, l);
+          }
+      }
+      typename LabelSet::letters_t ls(begin(gens), end(gens));
+      return {ls};
+    }
+
 
     /*-----------------.
     | make_weightset.  |
@@ -120,78 +206,14 @@ namespace vcsn
     `---------------*/
 
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lao, Ctx>::type
+    Ctx
     make_context(std::istream& is)
     {
-      // name: lao_ratexpset<law_char(xyz)_b>
-      //       ^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^
-      //       kind         weightset
-      //
-      // There is no "char(...)_".
-      char kind[4];
-      is.get(kind, sizeof kind);
-      if (Ctx::kind_t::sname() != kind)
-        throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
-                                 + " but read " + kind);
+      auto ls = make_labelset<typename Ctx::labelset_t>(is);
       eat(is, '_');
       auto ws = make_weightset<typename Ctx::weightset_t>(is);
-      Ctx res(typename Ctx::labelset_t{}, ws);
-      return res;
+      return {ls, ws};
     }
-
-    template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal || Ctx::is_lan || Ctx::is_law,
-                            Ctx>::type
-    make_context(std::istream& is)
-    {
-      // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
-      //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-      //        |   |    |        weightset
-      //        |   |    +-- gens
-      //        |   +-- letter_type
-      //        +-- kind
-      //
-      // If more complexe "parsing" is needed, consider regex.
-      // See vcsn/misc/regex.hh.
-      char kind[4];
-      is.get(kind, sizeof kind);
-      if (Ctx::kind_t::sname() != kind)
-        throw std::runtime_error("make_context: Ctx::is_" + Ctx::kind_t::sname()
-                                 + " but read " + kind);
-      eat(is, '_');
-      std::string letter_type;
-      {
-        char c;
-        while (is >> c)
-          {
-            if (c == '(')
-              {
-                is.unget();
-                break;
-              }
-            letter_type.append(1, c);
-          }
-      }
-      // The list of generators (letters).
-      std::string gens;
-      {
-        eat(is, '(');
-        char l;
-        while (is >> l)
-          {
-            if (l == ')')
-              break;
-            gens.append(1, l);
-          }
-      }
-      typename Ctx::labelset_t::letters_t ls(begin(gens), end(gens));
-      auto gs = typename Ctx::labelset_t(ls);
-      eat(is, '_');
-      auto ws = make_weightset<typename Ctx::weightset_t>(is);
-      Ctx res(gs, ws);
-      return res;
-    }
-
   }
 
 
