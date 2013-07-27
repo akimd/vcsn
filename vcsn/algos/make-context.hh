@@ -14,35 +14,12 @@
 namespace vcsn
 {
 
-  namespace detail
-  {
-
-    // Fwd decls.
-    template <typename Ctx>
-    Ctx make_context(std::istream& is);
-
-    /*---------------.
-    | make_context.  |
-    `---------------*/
-
-    template <typename Ctx>
-    Ctx
-    make_context(std::istream& is)
-    {
-      auto ls = Ctx::labelset_t::make(is);
-      eat(is, '_');
-      auto ws = Ctx::weightset_t::make(is);
-      return {ls, ws};
-    }
-  }
-
-
   template <typename Ctx>
   Ctx
   make_context(const std::string& name)
   {
     std::istringstream is{name};
-    auto res = detail::make_context<Ctx>(is);
+    auto res = Ctx::make(is);
     std::string remainder;
     is >> remainder;
     if (res.vname(true) != name)

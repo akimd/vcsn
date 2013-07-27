@@ -31,20 +31,13 @@ namespace vcsn
     return "ratexpset<" + context().vname(full) + '>';
   }
 
-  namespace detail
-  {
-    // Fwd decls.
-    template <typename Ctx>
-    Ctx make_context(std::istream& is);
-  }
-
   template <typename Context>
   ratexpset<Context>
   ratexpset<Context>::make(std::istream& is)
   {
     // name is, for instance, "ratexpset<lal_char(abcd)_z>".
     eat(is, "ratexpset<");
-    auto ctx = detail::make_context<Context>(is);
+    auto ctx = Context::make(is);
     eat(is, '>');
     return {ctx};
   }

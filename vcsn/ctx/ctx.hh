@@ -9,6 +9,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -96,6 +97,15 @@ namespace vcsn
       {
         return (labelset()->vname(full)
                 + "_" + weightset()->vname(full));
+      }
+
+      /// Build from the description in \a is.
+      static context make(std::istream& is)
+      {
+        auto ls = labelset_t::make(is);
+        eat(is, '_');
+        auto ws = weightset_t::make(is);
+        return {ls, ws};
       }
 
       const labelset_ptr& labelset() const
