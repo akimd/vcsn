@@ -11,10 +11,6 @@
 namespace vcsn
 {
 
-  /*---------------.
-  | make_context.  |
-  `---------------*/
-
   /* Some contexts, such as "lal_char_br", use RatExps as weight set.
      But RatExps need a context, and a labelset.  Other weight sets,
      such as b or zmin, do not need a labelset to be buildable.
@@ -35,6 +31,11 @@ namespace vcsn
 
   namespace detail
   {
+
+    /*-----------------.
+    | make_weightset.  |
+    `-----------------*/
+
     template <typename WeightSet>
     struct weightsetter
     {
@@ -61,6 +62,17 @@ namespace vcsn
       }
     };
 
+    template <typename WeightSet>
+    WeightSet
+    make_weightset(const std::string& name)
+    {
+      return weightsetter<WeightSet>::make(name);
+    }
+
+    /*---------------.
+    | make_context.  |
+    `---------------*/
+
     template <typename Ctx>
     typename std::enable_if<Ctx::is_lao, Ctx>::type
     make_context(const std::string& name)
@@ -80,7 +92,7 @@ namespace vcsn
                                  + ": " + name);
 
       std::string weightset = name.substr(4);
-      auto ws = weightsetter<typename Ctx::weightset_t>::make(weightset);
+      auto ws = make_weightset<typename Ctx::weightset_t>(weightset);
       Ctx res(typename Ctx::labelset_t{}, ws);
       assert(res.vname(true) == name);
       return res;
@@ -120,7 +132,7 @@ namespace vcsn
 
       typename Ctx::labelset_t::letters_t ls(begin(genset), end(genset));
       auto gs = typename Ctx::labelset_t(ls);
-      auto ws = weightsetter<typename Ctx::weightset_t>::make(weightset);
+      auto ws = make_weightset<typename Ctx::weightset_t>(weightset);
       Ctx res(gs, ws);
       assert(res.vname(true) == name);
       return res;
