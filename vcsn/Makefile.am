@@ -25,6 +25,7 @@ nobase_vcsn_HEADERS =                           \
   algos/efsm.hh                                 \
   algos/enumerate.hh                            \
   algos/eval.hh                                 \
+  algos/constant-term.hh                               \
   algos/fwd.hh                                  \
   algos/grail.hh                                \
   algos/info.hh                                 \

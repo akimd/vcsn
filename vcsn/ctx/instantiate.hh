@@ -10,6 +10,7 @@
 # include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/enumerate.hh>
 # include <vcsn/algos/eval.hh>
+# include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
@@ -235,6 +236,8 @@ namespace vcsn
         // efsm.
         REGISTER(aut_t, efsm);
         REGISTER(taut_t, efsm);
+
+        REGISTER(Ctx, constant_term);
 
         // info.
         REGISTER(aut_t, info);
