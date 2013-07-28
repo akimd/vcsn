@@ -65,7 +65,7 @@ namespace vcsn
       /// Whether w is displayed.
       bool shows_(const weight_t& w)
       {
-        return ctx_.weightset()->show_one() || !ctx_.weightset()->is_one(w);
+        return !ctx_.weightset()->is_one(w);
       }
 
       /// Whether one of the weights shows.

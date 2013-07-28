@@ -71,13 +71,20 @@ namespace vcsn
       throw std::runtime_error("not a valid state: " + std::to_string(s));
 
     // The loop's weight.
-    auto loops = aut.outin(s, s);
-    assert(loops.size() == 0 || loops.size() == 1);
-    auto w =
-      loops.empty() ? aut.weightset()->one()
-      : aut.weightset()->star(aut.weight_of(loops.front()));
+    auto w = aut.weightset()->one();
+    {
+      auto loops = aut.outin(s, s);
+      assert(loops.size() <= 1);
+      if (!loops.empty())
+        {
+          auto t = loops.front();
+          w = aut.weightset()->star(aut.weight_of(t));
+          // Don't count s in its predecessors/successors.
+          aut.del_transition(t);
+        }
+    }
 
-    // Get all the predecessors, and successors.
+    // Get all the predecessors, and successors, except itself.
     auto outs = aut.all_out(s);
     for (auto in: aut.all_in(s))
       for (auto out: outs)

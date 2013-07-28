@@ -19,3 +19,27 @@ check '(?@law_char(ab)_z)<2>(ab)<3>' '<6>ab'
 
 check '(?@lal_char(abc)_z)<2>(<3>a+<5>b)<7>c<11>' \
       '((<6>a.<7>c)+(<10>b.<7>c))<11>'
+
+
+# check LIB-AUTOMATON EXP-OUT
+# ---------------------------
+# Check that aut-to-exp(AUTOMATON) = EXP-OUT.
+check ()
+{
+  run 0 "$2" -vcsn-aut-to-exp -Af "$top_srcdir/share/vcsn/$1"
+}
+
+check lal_char_b/a1.gv    '((a+b)*).a.b.((a+b)*)'
+check lal_char_b/b1.gv    '((a+b)*).a.((a+b)*)'
+check lal_char_b/evena.gv '(b*).a.((b+(a.(b*).a))*)'
+check lal_char_b/oddb.gv  '(a*).b.((a+(b.(a*).b))*)'
+
+check lal_char_z/b1.gv     '((a+b)*).a.((a+b)*)'
+check lal_char_z/binary.gv '((0+1)*).1.((<2>0+<2>1)*)'
+check lal_char_z/c1.gv     '((a+b)*).b.((<2>a+<2>b)*)'
+check lal_char_z/d1.gv     '((a+b)*).(a+<-1>b).((a+b)*)'
+
+check lal_char_zmin/minab.gv     '((<1>a+b)*)+((a+<1>b)*)'
+check lal_char_zmin/minblocka.gv '((a+b)*).b.((<1>a)*).b.((a+b)*)'
+check lal_char_zmin/slowgrow.gv \
+      '((a+b)*).b.((<1>a)*).b.((a+(<1>a.((<1>a)*).b))*)'
