@@ -13,7 +13,7 @@ namespace vcsn
     REGISTER_DEFINE(is_standard);
 
     bool
-    is_standard(const dyn::automaton& a)
+    is_standard(const automaton& a)
     {
       return detail::is_standard_registry().call(a->vname(false), a);
     }
@@ -24,7 +24,7 @@ namespace vcsn
     REGISTER_DEFINE(standard);
 
     automaton
-    standard(const dyn::automaton& a)
+    standard(const automaton& a)
     {
       return detail::standard_registry().call(a->vname(false), a);
     }
@@ -35,7 +35,7 @@ namespace vcsn
     REGISTER_DEFINE(standard_exp);
 
     automaton
-    standard(const dyn::ratexp& e)
+    standard(const ratexp& e)
     {
       return detail::standard_exp_registry().call(e->ctx().vname(false), e);
     }
