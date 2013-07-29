@@ -75,7 +75,26 @@ namespace vcsn
         fin.get()->ignore(1024, '\n');
       }
 
+#define SKIP_SPACES()                           \
+      while (isspace(fin.get()->peek()))        \
+        fin.get()->ignore()
       vcsn::lazy_automaton_editor edit;
+      // Get initial state + transition
+      {
+        // Eat empty lines
+        SKIP_SPACES();
+        std::string line;
+        string_t s1, s2, l;
+        std::getline(*fin.get(), line, '\n');
+        std::istringstream ss{line};
+        ss >> s1 >> s2 >> l;
+        edit.add_initial(s1, string_t{});
+        if (ss.fail())
+            edit.add_final(s1, string_t{});
+        else
+          edit.add_entry(s1, s2, l);
+      }
+
       {
         // Line: Source Destination Label.
         std::string line;
@@ -85,21 +104,18 @@ namespace vcsn
           std::getline(*fin.get(), line, '\n');
           std::istringstream ss{line};
           // Eat blank lines.
-          ss >> s1;
-          if (ss.fail())
-            continue;
-          ss >> s2 >> l;
-          if (ss.fail())
-            break;
-          if (l == is_one)
-            l = "\\e";
+          SKIP_SPACES();
+          ss >> s1 >> s2 >> l;
           if ( s1 == "EOFSM")
             break;
-          if (s1 == "0")
-            edit.add_initial(s2, l);
+          if (ss.fail())
+            edit.add_final(s1, string_t{});
           else
             edit.add_entry(s1, s2, l);
+          if (l == is_one)
+            l = "\\e";
         } while (fin.get()->good());
+#undef SKIP_SPACES
 
         // Add finals.
         while (s1 != "EOFSM")
@@ -115,4 +131,3 @@ namespace vcsn
     }
   }
 }
-
