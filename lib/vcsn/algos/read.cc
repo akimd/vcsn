@@ -25,8 +25,7 @@ namespace vcsn
 
       automaton read_fado_file(const std::string& f)
       {
-        vcsn::detail::parse_fado d;
-        auto res = d.parse_file(f);
+        auto res = vcsn::detail::fado::parse_file(f);
         return res;
       }
     }

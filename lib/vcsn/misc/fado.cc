@@ -14,8 +14,8 @@ namespace vcsn
 {
   namespace detail
   {
-    parse_fado::automaton_t
-    parse_fado::parse_file(const std::string& file)
+    dyn::automaton
+    fado::parse_file(const std::string& file)
     {
       std::shared_ptr<std::istream> fin;
       if (file == "-")
@@ -88,12 +88,12 @@ namespace vcsn
         while (!fin.get()->eof())
           {
             if (l == "@epsilon")
-              l == "\\e";
+              l = "\\e";
             edit_.add_entry(s1, s2, l);
             *fin.get() >> s1 >> l >> s2;
           }
       }
-      automaton_t res = nullptr;
+      dyn::automaton res = nullptr;
       res.reset(edit_.result());
       return res;
     }
