@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_EFSM_HH
 # define VCSN_ALGOS_EFSM_HH
 
+# include <algorithm>
 # include <iostream>
 # include <map>
 
@@ -41,13 +42,13 @@ namespace vcsn
         os_ << "#! /bin/sh" << std::endl
             << std::endl;
 
-        os_ << "cat >transitions.fsm <<\\EOFSM" << std::endl;
-        output_transitions_();
+        os_ << "cat >isymbols.txt <<\\EOFSM" << std::endl;
+        output_input_labels_();
         os_ << "EOFSM" << std::endl
             << std::endl;
 
-        os_ << "cat >isymbols.txt <<\\EOFSM" << std::endl;
-        output_input_labels_();
+        os_ << "cat >transitions.fsm <<\\EOFSM" << std::endl;
+        output_transitions_();
         os_ << "EOFSM" << std::endl
             << std::endl;
 
@@ -103,6 +104,18 @@ namespace vcsn
       /// Output the mapping from label name, to label number.
       void output_input_labels_()
       {
+        // Required to print all labels.
+        {
+          std::vector<transition_t> v(aut_.all_transitions().begin(),
+                                      aut_.all_transitions().end());
+          std::sort(v.begin(), v.end(),
+            [this](transition_t l, transition_t r)
+            {
+                return aut_.label_of(l) < aut_.label_of(r);
+            });
+          for (auto t : v)
+            label_of_(t);
+        }
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.
         os_ << "\\e\t0" << std::endl;

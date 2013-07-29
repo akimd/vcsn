@@ -19,6 +19,12 @@ check ()
 check $top_srcdir/share/vcsn/lal_char_b/a1.gv <<EOF
 #! /bin/sh
 
+cat >isymbols.txt <<\EOFSM
+\e	0
+a	1
+b	2
+EOFSM
+
 cat >transitions.fsm <<\EOFSM
 0	2	\e
 2	2	a
@@ -28,12 +34,6 @@ cat >transitions.fsm <<\EOFSM
 4	4	a
 4	4	b
 4
-EOFSM
-
-cat >isymbols.txt <<\EOFSM
-\e	0
-a	1
-b	2
 EOFSM
 
 fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
@@ -46,6 +46,12 @@ EOF
 check $top_srcdir/share/vcsn/lal_char_z/binary.gv <<EOF
 #! /bin/sh
 
+cat >isymbols.txt <<\EOFSM
+\e	0
+0	1
+1	2
+EOFSM
+
 cat >transitions.fsm <<\EOFSM
 0	2	\e
 2	2	0
@@ -54,12 +60,6 @@ cat >transitions.fsm <<\EOFSM
 3
 3	3	0	2
 3	3	1	2
-EOFSM
-
-cat >isymbols.txt <<\EOFSM
-\e	0
-0	1
-1	2
 EOFSM
 
 fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm

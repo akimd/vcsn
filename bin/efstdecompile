@@ -9,12 +9,12 @@ fstprint --acceptor --save_isymbols=$isyms "$@" > $trans
 cat <<EOF
 #! /bin/sh
 
-cat >transitions.fsm <<\EOFSM
-$(cat $trans)
-EOFSM
-
 cat >isymbols.txt <<\EOFSM
 $(cat $isyms)
+EOFSM
+
+cat >transitions.fsm <<\EOFSM
+$(cat $trans)
 EOFSM
 
 fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
