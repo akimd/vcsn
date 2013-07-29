@@ -188,7 +188,7 @@ namespace vcsn
                   if (default_w)
                     throw std::domain_error
                       (std::string{"entryset: conv: invalid value: "}
-                       + std::string(1, i.peek())
+                       + str_escape(i.peek())
                        + " contains an empty label (did you mean \\e or \\z?)");
                 }
               add_weight(res, label, w);
