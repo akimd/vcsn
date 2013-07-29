@@ -121,6 +121,15 @@ functions:
   - left-mult, right-mult
   - chain
 
+** constant-term(exp) (AL)
+Return the constant-exp of an expression (i.e., the weight of \e).
+sta, dyn, tafkit.
+
+** is-valid(exp) (AL)
+Check that a ratexp is valid: the constant-term under each star must be
+starrable.
+sta, dyn, tafkit.
+
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
