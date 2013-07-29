@@ -10,6 +10,11 @@ namespace vcsn
 {
   namespace detail
   {
+    namespace efsm
+    {
+      dyn::automaton parse_file(const std::string& file);
+    }
+
     namespace fado
     {
       dyn::automaton parse_file(const std::string& file);

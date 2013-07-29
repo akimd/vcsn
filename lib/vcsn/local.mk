@@ -58,6 +58,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/u.cc                           \
   lib/vcsn/algos/universal.cc                   \
   lib/vcsn/ctx/ctx.cc                           \
+  lib/vcsn/misc/efsm.cc                         \
   lib/vcsn/misc/escape.cc                       \
   lib/vcsn/misc/fado.cc                         \
   lib/vcsn/misc/stream.cc

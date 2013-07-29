@@ -14,6 +14,12 @@ namespace vcsn
   {
     namespace
     {
+      automaton read_efsm_file(const std::string& f)
+      {
+        auto res = vcsn::detail::efsm::parse_file(f);
+        return res;
+      }
+
       automaton read_dot_file(const std::string& f)
       {
         vcsn::detail::dot::driver d;
@@ -33,6 +39,8 @@ namespace vcsn
     automaton
     read_automaton_file(const std::string& f, const std::string& t)
     {
+      if (t == "efsm")
+        return read_efsm_file(f);
       if (t == "dot")
         return read_dot_file(f);
       if (t == "fado")
