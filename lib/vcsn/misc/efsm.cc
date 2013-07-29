@@ -32,6 +32,38 @@ namespace vcsn
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
+      // Search is_one symbol after cat is read.
+      {
+        std::string cat;
+        while (!fin.get()->eof() && cat != "cat")
+          *fin >> cat;
+        if (fin.get()->eof())
+          throw std::runtime_error(file
+                                   + ": no \"cat\" symbol");
+        fin.get()->ignore(1024, '\n');
+      }
+
+      // Search is_one.
+      std::string is_one;
+      {
+        std::string line;
+        std::string val;
+        while(fin.get()->good())
+        {
+          std::getline(*fin.get(), line, '\n');
+          std::istringstream ss{line};
+          // Eat blank lines.
+          ss >> is_one;
+          if (ss.fail())
+            continue;
+          ss >> val;
+          if (ss.fail())
+            throw std::runtime_error (file + ": bad input format");
+          if (val == "0" || is_one == "EOFSM")
+            break;
+        }
+      }
+
       // Parse after cat is read.
       {
         std::string cat;
@@ -52,9 +84,15 @@ namespace vcsn
         {
           std::getline(*fin.get(), line, '\n');
           std::istringstream ss{line};
-          ss >> s1 >> s2 >> l;
-          if ( ss.fail())
+          // Eat blank lines.
+          ss >> s1;
+          if (ss.fail())
+            continue;
+          ss >> s2 >> l;
+          if (ss.fail())
             break;
+          if (l == is_one)
+            l = "\\e";
           if ( s1 == "EOFSM")
             break;
           if (s1 == "0")
