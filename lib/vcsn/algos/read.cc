@@ -3,7 +3,7 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/misc/fado.hh>
+#include <vcsn/misc/parse.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/rat/driver.hh>
 

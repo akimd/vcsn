@@ -8,7 +8,7 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/misc/fado.hh>
+#include <vcsn/misc/parse.hh>
 
 namespace vcsn
 {

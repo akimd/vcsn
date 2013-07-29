@@ -115,7 +115,7 @@ nobase_vcsn_HEADERS =                           \
   misc/dynamic_bitset.hh                        \
   misc/echo.hh                                  \
   misc/escape.hh                                \
-  misc/fado.hh                                  \
+  misc/parse.hh                                 \
   misc/hash.hh                                  \
   misc/military_order.hh                        \
   misc/regex.hh                                 \
