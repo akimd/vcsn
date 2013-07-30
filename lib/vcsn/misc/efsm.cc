@@ -117,12 +117,8 @@ namespace vcsn
         } while (fin.get()->good());
 #undef SKIP_SPACES
 
-        // Add finals.
-        while (s1 != "EOFSM")
-        {
-          edit.add_final(s1, string_t{});
-          *fin.get() >> s1;
-        }
+        if (s1 != "EOFSM")
+          throw std::runtime_error(":bad input format, missing EOFSM");
 
       }
       dyn::automaton res = nullptr;
