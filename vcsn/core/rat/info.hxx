@@ -7,10 +7,10 @@ namespace vcsn
   {
 
 # define DEFINE(Type)                           \
-    template <typename Context>                 \
+    template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    info<Context>::visit(const Type ## _t& v)   \
+    info<RatExpSet>::visit(const Type ## _t& v) \
       -> void
 
     DEFINE(sum)

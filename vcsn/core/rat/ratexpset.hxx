@@ -346,7 +346,8 @@ namespace vcsn
   DEFINE::print(std::ostream& o, const value_t v) const
     -> std::ostream&
   {
-    printer_t print{o, context()};
+    using printer_t = rat::printer<ratexpset>;
+    printer_t print(o, *this);
     return print(v);
   }
 

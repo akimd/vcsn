@@ -10,14 +10,15 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename Context>
+    template <typename RatExpSet>
     class printer
-      : public Context::const_visitor
+      : public RatExpSet::const_visitor
     {
     public:
-      using context_t = Context;
+      using ratexpset_t = RatExpSet;
+      using context_t = typename ratexpset_t::context_t;
       using weight_t = typename context_t::weightset_t::value_t;
-      using super_type = typename context_t::const_visitor;
+      using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
@@ -30,7 +31,7 @@ namespace vcsn
       using atom_t = typename super_type::atom_t;
 
       printer(std::ostream& out,
-              const context_t& ctx,
+              const ratexpset_t& rs,
               const bool debug = !!getenv("VCSN_DEBUG"));
 
       /// Entry point: print \a v.

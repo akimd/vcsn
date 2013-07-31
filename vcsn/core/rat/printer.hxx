@@ -6,22 +6,22 @@ namespace vcsn
   namespace rat
   {
 
-    template <typename Context>
+    template <typename RatExpSet>
     inline
-    printer<Context>::printer(std::ostream& out,
-                              const context_t& ctx,
-                              const bool debug)
+    printer<RatExpSet>::printer(std::ostream& out,
+                                const ratexpset_t& rs,
+                                const bool debug)
       : out_(out)
-      , ctx_(ctx)
+      , ctx_(rs.context())
       , debug_(debug)
     {}
 
 
 # define DEFINE                                 \
-    template <typename Context>                 \
+    template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    printer<Context>
+    printer<RatExpSet>
 
 # define VISIT(Type)                          \
     DEFINE::visit(const Type ## _t& v)        \

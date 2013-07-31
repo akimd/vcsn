@@ -157,16 +157,16 @@ namespace vcsn
   | info(ratexp, stream).  |
   `-----------------------*/
 
-  template <class Ctx>
+  template <class RatExpSet>
   void
-  info(const Ctx& ctx, const rat::exp_t& e, std::ostream& o)
+  info(const RatExpSet& rs, const rat::exp_t& e, std::ostream& o)
   {
-    vcsn::rat::info<Ctx> nfo;
-    nfo(*ctx.downcast(e));
+    vcsn::rat::info<RatExpSet> nfo;
+    nfo(*std::dynamic_pointer_cast<const typename RatExpSet::node_t>(e));
 # define DEFINE(Type)                            \
     << std::endl << #Type ": " << nfo.Type
     o
-      << "context: " << ctx.vname(true)
+      << "type: " << rs.vname(true)
       DEFINE(sum)
       DEFINE(prod)
       DEFINE(star)
@@ -187,7 +187,8 @@ namespace vcsn
       std::ostream& info_exp(const ratexp& exp, std::ostream& o)
       {
         const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
-        vcsn::info<Context>(ctx, exp->ratexp(), o);
+        auto rs = vcsn::ratexpset<Context>(ctx);
+        vcsn::info(rs, exp->ratexp(), o);
         return o;
       }
 

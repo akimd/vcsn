@@ -14,13 +14,13 @@ namespace vcsn
   | print(ratexp, stream).  |
   `------------------------*/
 
-  template <typename Context>
+  template <typename RatExpSet>
   inline
   std::ostream&
-  print(const Context& ctx, const rat::exp_t& e, std::ostream& o)
+  print(const RatExpSet& rs, const rat::exp_t& e, std::ostream& o)
   {
-    auto ratexpset = ctx.make_ratexpset();
-    return ratexpset.print(o, ctx.downcast(e));
+    const auto& ctx = rs.context();
+    return rs.print(o, ctx.downcast(e));
   }
 
   namespace dyn
@@ -31,8 +31,10 @@ namespace vcsn
       template <typename Context>
       std::ostream& print(const ratexp& exp, std::ostream& o)
       {
+        using ratexpset_t = vcsn::ratexpset<Context>;
         const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
-        return vcsn::print<Context>(ctx, exp->ratexp(), o);
+        auto rs = ratexpset_t(ctx);
+        return vcsn::print<ratexpset_t>(rs, exp->ratexp(), o);
       }
 
       REGISTER_DECLARE(print_exp,

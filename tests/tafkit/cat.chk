@@ -34,7 +34,7 @@ check_info ()
 }
 
 check_info -Ee '(?@lal_char(abc)_b)abc' <<\EOF
-context: lal_char(abc)_b
+type: ratexpset<lal_char(abc)_b>
 sum: 0
 prod: 1
 star: 0
@@ -44,7 +44,7 @@ atom: 3
 EOF
 
 check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<\EOF
-context: lal_char(abc)_b
+type: ratexpset<lal_char(abc)_b>
 sum: 1
 prod: 1
 star: 1
