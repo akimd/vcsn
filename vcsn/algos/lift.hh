@@ -13,15 +13,23 @@
 namespace vcsn
 {
 
-  /*------------------.
-  | lift(automaton).  |
-  `------------------*/
-
   namespace detail
   {
+    /*--------------.
+    | lift(types).  |
+    `--------------*/
+
     template <typename Context>
     using lifted_context_t =
       ctx::context<ctx::oneset, ratexpset<Context>>;
+
+    template <typename Aut>
+    using lifted_automaton_t =
+      mutable_automaton<lifted_context_t<typename Aut::context_t>>;
+
+    template <typename RatExpSet>
+    using lifted_ratexpset_t =
+      ratexpset<lifted_context_t<typename RatExpSet::context_t>>;
 
     // lift(ctx) -> ctx
     template <typename Context>
@@ -29,14 +37,22 @@ namespace vcsn
     lift(const Context& ctx)
     {
       auto rs_in = ctx.make_ratexpset();
-      using ctx_out_t = detail::lifted_context_t<Context>;
-      return ctx_out_t(ctx::oneset{}, rs_in);
+      return {ctx::oneset{}, rs_in};
     }
 
-    template <typename Aut>
-    using lifted_automaton_t =
-      mutable_automaton<lifted_context_t<typename Aut::context_t>>;
+    // lift(ratexpset) -> ratexpset
+    template <typename Context>
+    lifted_ratexpset_t<ratexpset<Context>>
+    lift(const ratexpset<Context>& rs)
+    {
+      return {lift(rs.context())};
+    }
+
   }
+
+  /*------------------.
+  | lift(automaton).  |
+  `------------------*/
 
   template <typename Aut>
   inline
@@ -107,13 +123,12 @@ namespace vcsn
 
   }
 
-  /// \param Exp  Ctx::ratexp_t = vcsn::rat::node<Label, Weight>.
-  template <typename Context>
+  template <typename RatExpSet>
   inline
-  typename detail::lifted_context_t<Context>::ratexp_t
-  lift(const Context& ctx, const typename Context::ratexp_t& e)
+  typename detail::lifted_ratexpset_t<RatExpSet>::ratexp_t
+  lift(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
-    return detail::lift(ctx).make_ratexpset().one(e);
+    return detail::lift(rs).one(e);
   }
 
 
@@ -121,15 +136,25 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Context>
+      /*--------------------.
+      | dyn::lift(ratexp).  |
+      `--------------------*/
+
+      /// Bridge.
+      template <typename RatExpSet>
       ratexp
-      lift(const ratexp& e)
+      lift(const ratexp& exp)
       {
-        const auto& ctx =
-          dynamic_cast<const Context&>(e->ctx());
-        const auto& exp =
-          std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
-        return make_ratexp(::vcsn::detail::lift(ctx), ::vcsn::lift(ctx, exp));
+        using ratexpset_t = RatExpSet;
+        using context_t = typename ratexpset_t::context_t;
+        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
+        const auto& e = exp->as<ratexpset_t>();
+        auto rs = ratexpset_t(ctx);
+
+        const auto& node =
+          std::dynamic_pointer_cast<const typename context_t::node_t>(e);
+
+        return make_ratexp(::vcsn::detail::lift(rs), ::vcsn::lift(rs, node));
       }
 
       REGISTER_DECLARE(lift_exp,

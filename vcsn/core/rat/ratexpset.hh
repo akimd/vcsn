@@ -41,6 +41,7 @@ namespace vcsn
     DEFINE(prod);
     DEFINE(star);
 # undef DEFINE
+    using ratexp_t = std::shared_ptr<const node_t>;
 
     using type_t = typename node_t::type_t;
     using ratexps_t = typename node_t::ratexps_t;

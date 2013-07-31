@@ -30,7 +30,7 @@ namespace vcsn
     ratexp
     lift(const ratexp& e)
     {
-      return detail::lift_exp_registry().call(e->ctx().vname(false),
+      return detail::lift_exp_registry().call(e->vname(false),
                                                e);
     }
   }

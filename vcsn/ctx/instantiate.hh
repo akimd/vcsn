@@ -262,7 +262,7 @@ namespace vcsn
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
-        lift_exp_register(Ctx::sname(), lift<Ctx>);
+        lift_exp_register(rs_t::sname(), lift<rs_t>);
 
         // make-context.
         REGISTER(Ctx, make_context);
