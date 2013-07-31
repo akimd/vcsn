@@ -26,6 +26,7 @@ namespace vcsn
     using weightset_ptr = typename context_t::weightset_ptr;
     using label_t = typename context_t::label_t;
     using weight_t = typename weightset_t::value_t;
+    using const_visitor = rat::const_visitor<label_t, weight_t>;
     /// Type of printer visitor.
     using printer_t = rat::printer<context_t>;
     /// Type of ratexps.

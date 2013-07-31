@@ -115,7 +115,7 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   class detail::transpose_automaton<mutable_automaton<Ctx>>;            \
   MAYBE_EXTERN template                                                 \
-  class detail::transposer<Ctx>
+  class detail::transposer<ratexpset<Ctx>>
 
 
   /*----------------------------------.

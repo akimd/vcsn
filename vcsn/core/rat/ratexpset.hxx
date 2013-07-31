@@ -353,7 +353,7 @@ namespace vcsn
   DEFINE::transpose(const value_t v) const
     -> value_t
   {
-    detail::transposer<Context> tr{context()};
+    detail::transposer<ratexpset> tr{*this};
     return tr(v);
   }
 
