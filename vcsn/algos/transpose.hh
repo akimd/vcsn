@@ -237,15 +237,14 @@ namespace vcsn
   }
 
 
-  /*-----------------.
-  | dyn::transpose.  |
-  `-----------------*/
 
   namespace dyn
   {
     namespace detail
     {
-      /* automaton. */
+      /*----------------------------.
+      | dyn::transpose(automaton).  |
+      `----------------------------*/
       template <typename Aut>
       automaton
       transpose(automaton& aut)
@@ -260,7 +259,9 @@ namespace vcsn
                        (automaton& aut) -> automaton);
 
 
-      /* ratexp. */
+      /*-------------------------.
+      | dyn::transpose(ratexp).  |
+      `-------------------------*/
       template <typename Context>
       ratexp
       abstract_transpose_exp(const ratexp& e)

@@ -12,7 +12,7 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate a weight and its context.
+      /// Aggregate a weight and its weigthset.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
@@ -22,7 +22,7 @@ namespace vcsn
         virtual const abstract_weightset& get_weightset() const = 0;
       };
 
-      /// Aggregate a weight and its context.
+      /// Aggregate a weight and its weigthset.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
