@@ -18,7 +18,7 @@ namespace vcsn
     fado::parse_file(const std::string& file)
     {
       std::shared_ptr<std::istream> fin;
-      if (file == "-")
+      if (file.empty() || file == "-")
         {
           struct noop
           {
@@ -27,7 +27,13 @@ namespace vcsn
           fin.reset(&std::cin, noop());
         }
       else
-        fin.reset(new std::ifstream(file.c_str()));
+        {
+          fin.reset(new std::ifstream(file.c_str()));
+          if (!fin->good())
+            throw std::runtime_error("cannot open " + file
+                                     + " for reading: "
+                                     + strerror(errno));
+        }
 
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
