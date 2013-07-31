@@ -162,7 +162,7 @@ namespace vcsn
   info(const RatExpSet& rs, const rat::exp_t& e, std::ostream& o)
   {
     vcsn::rat::info<RatExpSet> nfo;
-    nfo(*std::dynamic_pointer_cast<const typename RatExpSet::node_t>(e));
+    nfo(dynamic_cast<const typename RatExpSet::node_t&>(*e));
 # define DEFINE(Type)                            \
     << std::endl << #Type ": " << nfo.Type
     o
@@ -182,13 +182,17 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Abstract but parameterized.
-      template <typename Context>
+      /// Bridge.
+      template <typename RatExpSet>
       std::ostream& info_exp(const ratexp& exp, std::ostream& o)
       {
-        const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
-        auto rs = vcsn::ratexpset<Context>(ctx);
-        vcsn::info(rs, exp->ratexp(), o);
+        using ratexpset_t = RatExpSet;
+        using context_t = typename ratexpset_t::context_t;
+        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
+        const auto& e = exp->as<ratexpset_t>();
+        auto rs = ratexpset_t(ctx);
+
+        vcsn::info<ratexpset_t>(rs, e, o);
         return o;
       }
 

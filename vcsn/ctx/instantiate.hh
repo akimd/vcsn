@@ -205,6 +205,7 @@ namespace vcsn
       {
         using aut_t = mutable_automaton<Ctx>;
         using taut_t = vcsn::detail::transpose_automaton<aut_t>;
+        using rs_t = ratexpset<Ctx>;
 
         using namespace dyn::detail;
 
@@ -243,7 +244,7 @@ namespace vcsn
         // info.
         REGISTER(aut_t, info);
         REGISTER(taut_t, info);
-        REGISTER(Ctx, info_exp);
+        REGISTER(rs_t, info_exp);
 
         REGISTER(aut_t, is_empty);
 

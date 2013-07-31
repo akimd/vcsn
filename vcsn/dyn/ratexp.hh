@@ -4,6 +4,7 @@
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/context.hh> // vname.
 # include <vcsn/core/rat/ratexp.hh>
 
 namespace vcsn
@@ -27,7 +28,7 @@ namespace vcsn
         {}
         ~abstract_ratexp() {}
 
-        const dyn::detail::abstract_context& ctx()
+        const dyn::detail::abstract_context& ctx() const
         {
           return *ctx_;
         }
@@ -35,6 +36,20 @@ namespace vcsn
         {
           return ratexp_;
         }
+
+        template <typename RatExpSet>
+        const exp_t&as() const
+        {
+          return ratexp_;
+        }
+
+        std::string vname(bool full = true) const
+        {
+          // FIXME: this is a fake, to be cleaned once we really
+          // have moved the implementation of dyn::ratexps.
+          return std::string("ratexpset<") + ctx().vname(full) + ">";
+        }
+
       protected:
         /// A shared_ptr to the abstract_context.
         const dyn::context ctx_;

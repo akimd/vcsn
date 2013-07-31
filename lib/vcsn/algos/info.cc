@@ -30,7 +30,7 @@ namespace vcsn
     std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)
     {
-      detail::info_exp_registry().call(e->ctx().vname(false),
+      detail::info_exp_registry().call(e->vname(false),
                                        e, out);
       return out;
     }
