@@ -48,7 +48,7 @@ namespace vcsn
       if (type == "info")
         info(exp, out);
       else if (type == "text")
-        detail::print_exp_registry().call(exp->ctx().vname(false), exp, out);
+        detail::print_exp_registry().call(exp->vname(false), exp, out);
       else
         throw std::domain_error("invalid output format for expression: "
                                 + type);

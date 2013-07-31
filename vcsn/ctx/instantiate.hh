@@ -269,7 +269,7 @@ namespace vcsn
         REGISTER(Ctx, make_ratexpset);
 
         // print
-        print_exp_register(Ctx::sname(), print<Ctx>);
+        print_exp_register(rs_t::sname(), print<rs_t>);
         print_weight_register(Ctx::weightset_t::sname(),
                               print<typename Ctx::weightset_t>);
 
@@ -284,7 +284,7 @@ namespace vcsn
 
         // transpose.
         REGISTER(aut_t, transpose);
-        transpose_exp_register(Ctx::sname(), abstract_transpose_exp<Ctx>);
+        transpose_exp_register(rs_t::sname(), abstract_transpose_exp<rs_t>);
 
         // trim.
         REGISTER(aut_t, trim);

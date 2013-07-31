@@ -29,7 +29,7 @@ namespace vcsn
     ratexp
     transpose(const dyn::ratexp& e)
     {
-      return detail::transpose_exp_registry().call(e->ctx().vname(false),
+      return detail::transpose_exp_registry().call(e->vname(false),
                                                     e);
     }
   }

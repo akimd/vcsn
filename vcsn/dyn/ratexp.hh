@@ -78,6 +78,15 @@ namespace vcsn
       return make_ratexp(std::make_shared<const ctx_t>(ctx), ratexp);
     }
 
+    template <typename Context>
+    inline
+    ratexp
+    make_ratexp(const vcsn::ratexpset<Context>& rs,
+                const rat::exp_t& ratexp)
+    {
+      return make_ratexp(rs.context(), ratexp);
+    }
+
   } // namespace dyn
 } // namespace vcsn
 

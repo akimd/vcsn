@@ -28,13 +28,15 @@ namespace vcsn
     namespace detail
     {
       /// Abstract but parameterized.
-      template <typename Context>
+      template <typename RatExpSet>
       std::ostream& print(const ratexp& exp, std::ostream& o)
       {
-        using ratexpset_t = vcsn::ratexpset<Context>;
-        const auto& ctx = dynamic_cast<const Context&>(exp->ctx());
+        using ratexpset_t = RatExpSet;
+        using context_t = typename ratexpset_t::context_t;
+        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
+        const auto& e = exp->as<ratexpset_t>();
         auto rs = ratexpset_t(ctx);
-        return vcsn::print<ratexpset_t>(rs, exp->ratexp(), o);
+        return vcsn::print(rs, e, o);
       }
 
       REGISTER_DECLARE(print_exp,

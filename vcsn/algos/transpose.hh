@@ -262,16 +262,21 @@ namespace vcsn
       /*-------------------------.
       | dyn::transpose(ratexp).  |
       `-------------------------*/
-      template <typename Context>
+      template <typename RatExpSet>
       ratexp
-      abstract_transpose_exp(const ratexp& e)
+      abstract_transpose_exp(const ratexp& exp)
       {
-        const auto& ctx = dynamic_cast<const Context&>(e->ctx());
-        const auto& exp =
-          std::dynamic_pointer_cast<const typename Context::node_t>(e->ratexp());
-        auto rs = vcsn::ratexpset<Context>(ctx);
-        auto res = transpose(rs, exp);
-        return make_ratexp(ctx, res);
+        using ratexpset_t = RatExpSet;
+        using context_t = typename ratexpset_t::context_t;
+        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
+        const auto& e = exp->as<ratexpset_t>();
+        auto rs = ratexpset_t(ctx);
+
+        const auto& node =
+          std::dynamic_pointer_cast<const typename context_t::node_t>(e);
+
+        auto res = transpose(rs, node);
+        return make_ratexp(rs, res);
       }
 
       REGISTER_DECLARE(transpose_exp,
