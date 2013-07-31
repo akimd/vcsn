@@ -8,6 +8,7 @@ namespace vcsn
   namespace rat
   {
 
+    /// Base class for the AST.
     class exp;
     using exp_t = std::shared_ptr<const exp>;
 

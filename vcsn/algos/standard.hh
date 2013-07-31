@@ -315,6 +315,7 @@ namespace vcsn
       /*---------------------.
       | dyn::standard(aut).  |
       `---------------------*/
+      /// Bridge.
       template <typename Aut>
       automaton
       standard(const automaton& aut)

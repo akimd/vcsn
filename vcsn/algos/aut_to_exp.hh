@@ -96,6 +96,8 @@ namespace vcsn
                                                      aut.weight_of(out))));
     aut.del_state(s);
   }
+
+
   /*-------------.
   | aut_to_exp.  |
   `-------------*/
@@ -131,6 +133,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       ratexp
       aut_to_exp(const automaton& aut)

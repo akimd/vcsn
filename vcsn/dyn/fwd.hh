@@ -29,6 +29,8 @@ namespace vcsn
     namespace detail
     {
       class abstract_ratexp;
+      template <typename RatExpSet>
+      class concrete_abstract_ratexp;
     }
 
     using ratexp = std::shared_ptr<detail::abstract_ratexp>;

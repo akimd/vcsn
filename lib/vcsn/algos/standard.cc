@@ -7,9 +7,9 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*--------------.
-    | is_standard.  |
-    `--------------*/
+    /*-------------------.
+    | is_standard(aut).  |
+    `-------------------*/
     REGISTER_DEFINE(is_standard);
 
     bool

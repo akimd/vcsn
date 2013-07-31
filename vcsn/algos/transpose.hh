@@ -262,6 +262,7 @@ namespace vcsn
       /*-------------------------.
       | dyn::transpose(ratexp).  |
       `-------------------------*/
+      /// Bridge.
       template <typename RatExpSet>
       ratexp
       abstract_transpose_exp(const ratexp& exp)
