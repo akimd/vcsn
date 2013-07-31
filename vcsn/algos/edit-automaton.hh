@@ -262,6 +262,11 @@ namespace vcsn
     entry_map emap_;
   };
 
+  /// Build an automaton with unknown context.
+  ///
+  /// Record the transitions, initial and final states as strings,
+  /// and once the automata completed, decide what is its
+  /// context, and build a genuine automaton.
   class lazy_automaton_editor: public automaton_editor
   {
   public:

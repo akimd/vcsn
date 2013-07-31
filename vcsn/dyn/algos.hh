@@ -19,7 +19,11 @@ namespace vcsn
     automaton accessible(const automaton& aut);
 
     /// Whether define the same language.
+    /// \pre lhs and rhs are lal
+    /// \pre lhs and rhs are Boolean
     bool are_equivalent(const automaton& lhs, const automaton& rhs);
+
+    /// Whether define the same language.
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
     ratexp aut_to_exp(const automaton& aut);
@@ -35,8 +39,11 @@ namespace vcsn
     /// \pre aut is complete
     automaton complement(const automaton& aut);
 
+    /// A completed copy of \a aut.
+    /// \pre aut is lal
     automaton complete(const automaton& aut);
 
+    /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
     /// A simple NFA for (a+b)*a(a+b)^n.
@@ -78,8 +85,12 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// Whether \a aut is complete.
+    /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
 
+    /// Whether \a aut is deterministic.
+    /// \pre \a aut is LAL.
     bool is_deterministic(const automaton& aut);
 
     /// Whether has no state.
@@ -91,6 +102,7 @@ namespace vcsn
     /// Whether is normalized (in the Thompson sense).
     bool is_normalized(const automaton& aut);
 
+    /// Whether has no spontaneous transition.
     bool is_proper(const automaton& aut);
 
     /// Whether is standard (unique initial state, with weight one, no
@@ -103,6 +115,7 @@ namespace vcsn
     /// Whether has no useful state.
     bool is_useless(const automaton& aut);
 
+    /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 
     automaton lift(const automaton& aut);
@@ -114,6 +127,7 @@ namespace vcsn
 
     ratexpset make_ratexpset(const context& ctx);
 
+    /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
 
     std::ostream& print(const automaton& a, std::ostream& o,
@@ -142,14 +156,22 @@ namespace vcsn
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
+    /// A standardized \a a.
     automaton standard(const automaton& a);
+
+    /// The standard automaton of \a e.
     automaton standard(const ratexp& e);
 
+    /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);
 
+    /// Output \a aut in LaTeX's TikZ format.
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
+    /// Transpose \a aut.
     automaton transpose(automaton& aut);
+
+    /// Transpose \a e.
     ratexp transpose(const ratexp& e);
 
     /// The useful subautomaton of \a aut.
@@ -162,7 +184,7 @@ namespace vcsn
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
 
-    /// The universal automaton of aut.
+    /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
   }
 }
