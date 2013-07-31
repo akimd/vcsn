@@ -19,20 +19,27 @@ namespace vcsn
     {
       std::shared_ptr<std::istream> fin;
       if (file == "-")
-      {
-        struct noop
         {
-          void operator()(...) const {}
-        };
-        fin.reset(&std::cin, noop());
-      }
+          struct noop
+          {
+            void operator()(...) const {}
+          };
+          fin.reset(&std::cin, noop());
+        }
       else
         fin.reset(new std::ifstream(file.c_str()));
 
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
-      // put @DFA or @NFA in kind
+      // The header (the first line) looks like:
+      //
+      // @DFA 3 4 5 * 0 1 2
+      //
+      // where 0 1 2 are initial states, and 3 4 5 are final states.
+      //
+      // The star is optional, in which case the initial state
+      // is the src state of the first transition.
       {
         std::string kind;
         *fin >> kind;
@@ -46,35 +53,36 @@ namespace vcsn
       std::string state;
       vcsn::lazy_automaton_editor edit_;
       while ((c = fin.get()->get()) != '\n' && !fin.get()->eof())
-      {
-        if (c == ' ' || c == '\t')
         {
-          // Eat blanks.
-          if (state.empty())
-            continue;
-          string_t s1{state};
-          if (init)
-            edit_.add_initial(s1, string_t{});
+          if (c == ' ' || c == '\t')
+            {
+              // Eat blanks.
+              if (state.empty())
+                continue;
+              string_t s1{state};
+              if (init)
+                edit_.add_initial(s1);
+              else
+                edit_.add_final(s1);
+              state = "";
+            }
+          else if (c == '*')
+            init = true;
           else
-            edit_.add_final(s1, string_t{});
-          state = "";
+            // Grow the name of the state.
+            state.append(1, c);
         }
-        else if (c == '*')
-          init = true;
-        else
-          state.append(1, c);
-      }
 
       // Make sure we don't skip last state, which happens
       // when there are no spaces before '\n'.
       if (!state.empty())
-      {
-        string_t s1{state};
+        {
+          string_t s1{state};
           if (init)
-            edit_.add_initial(s1, string_t{});
+            edit_.add_initial(s1);
           else
-            edit_.add_final(s1, string_t{});
-      }
+            edit_.add_final(s1);
+        }
 
       {
         // Line: Source Label Destination.

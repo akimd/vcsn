@@ -45,11 +45,18 @@ namespace vcsn
       boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
     virtual ~automaton_editor() {}
-    virtual void add_initial(const string_t& s, const string_t& es) = 0;
-    virtual void add_final(const string_t& s, const string_t& es) = 0;
+    virtual void add_initial(const string_t& s, const string_t& w) = 0;
+    virtual void add_final(const string_t& s, const string_t& w) = 0;
+
     virtual void add_state(const string_t& s) = 0;
+
+    /// Declare that \a s denotes the preinitial state in entries.
     virtual void add_pre(const string_t& s) = 0;
+
+    /// Declare that \a s denotes the postfinal state in entries.
     virtual void add_post(const string_t& s) = 0;
+
+    /// Add an entry from \a src to \a dst, with value \a entry.
     virtual void add_entry(const string_t& src, const string_t& dst,
                            const string_t& entry) = 0;
     /// The final result.
@@ -123,55 +130,19 @@ namespace vcsn
     }
 
     virtual void
-    add_initial(const string_t& d, const string_t& entry) override final
+    add_initial(const string_t& s, const string_t& weight = {}) override final
     {
-      if (entry.get().empty())
-        res_->add_initial(state_(d),res_->weightset()->one());
-      else
-      {
-        // Adding a pre/post transition: be sure that it's only
-        // a weight.  Entries see the special label as an empty
-        // one.
-        auto e = entryset_.conv(entry, sep_);
-        if (e.size() == 1
-            && (res_->labelset()->is_special(begin(e)->first)
-              || res_->labelset()->is_one(begin(e)->first)))
-        {
-          auto w = begin(e)->second;
-          res_->add_initial(state_(d), w);
-        }
-        else
-          throw std::runtime_error
-            (std::string{"edit_automaton: invalid "}
-             + (state_(d) == res_->pre() ? "initial" : "final")
-             + " entry: " + entry.get());
-      }
+      auto w = (weight.get().empty() ? res_->weightset()->one()
+                : res_->weightset()->conv(weight));
+      res_->add_initial(state_(s), w);
     }
 
     virtual void
-    add_final(const string_t& s, const string_t& entry) override final
+    add_final(const string_t& s, const string_t& weight = {}) override final
     {
-      if (entry.get().empty())
-        res_->add_final(state_(s), res_->weightset()->one());
-      else
-      {
-        // Adding a pre/post transition: be sure that it's only
-        // a weight.  Entries see the special label as an empty
-        // one.
-        auto e = entryset_.conv(entry, sep_);
-        if (e.size() == 1
-            && (res_->labelset()->is_special(begin(e)->first)
-              || res_->labelset()->is_one(begin(e)->first)))
-        {
-          auto w = begin(e)->second;
-          res_->add_final(state_(s), w);
-        }
-        else
-          throw std::runtime_error
-            (std::string{"edit_automaton: invalid "}
-             + (state_(s) == res_->pre() ? "initial" : "final")
-             + " entry: " + entry.get());
-      }
+      auto w = (weight.get().empty() ? res_->weightset()->one()
+                : res_->weightset()->conv(weight));
+      res_->add_final(state_(s), w);
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
@@ -293,15 +264,15 @@ namespace vcsn
     }
 
     virtual void
-    add_initial(const string_t& s, const string_t& es) override final
+    add_initial(const string_t& s, const string_t& w = {}) override final
     {
-      init_states_.emplace_back(s, es);
+      initial_states_.emplace_back(s, w);
     }
 
     virtual void
-    add_final(const string_t& s, const string_t& es) override final
+    add_final(const string_t& s, const string_t& w = {}) override final
     {
-      final_states_.emplace_back(s, es);
+      final_states_.emplace_back(s, w);
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
@@ -322,7 +293,7 @@ namespace vcsn
     bool is_law_ = false;
     std::set<char> letters_;
     std::vector<std::tuple<string_t, string_t, string_t>> transitions_;
-    std::vector<std::pair<string_t, string_t>> init_states_;
+    std::vector<std::pair<string_t, string_t>> initial_states_;
     std::vector<std::pair<string_t, string_t>> final_states_;
     std::vector<string_t> states_;
   };

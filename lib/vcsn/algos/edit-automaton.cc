@@ -48,7 +48,7 @@ namespace vcsn
     for (auto t: transitions_)
       edit->add_entry(std::get<0>(t), std::get<2>(t), std::get<1>(t));
 
-    for (auto p: init_states_)
+    for (auto p: initial_states_)
       edit->add_initial(p.first, p.second);
 
     for (auto p: final_states_)
@@ -63,7 +63,7 @@ namespace vcsn
     letters_.clear();
     transitions_.clear();
     final_states_.clear();
-    init_states_.clear();
+    initial_states_.clear();
     states_.clear();
   }
 
