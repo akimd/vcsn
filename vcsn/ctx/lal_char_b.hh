@@ -29,17 +29,27 @@ namespace vcsn
   determinize(const mutable_automaton<ctx::lal_char_b>& aut)
     -> mutable_automaton<ctx::lal_char_b>;
 
+  /* fado. */
+  MAYBE_EXTERN template
+  std::ostream& fado<mutable_automaton<ctx::lal_char_b>>
+  (const mutable_automaton<ctx::lal_char_b>& aut, std::ostream& out);
+
+  MAYBE_EXTERN template
+  std::ostream&
+  fado<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>>
+  (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>& aut,
+   std::ostream& out);
+
   /* grail. */
   MAYBE_EXTERN template
   std::ostream& grail<mutable_automaton<ctx::lal_char_b>>
-  (const mutable_automaton<ctx::lal_char_b>& aut, std::ostream& out,
-	const std::string& type);
+  (const mutable_automaton<ctx::lal_char_b>& aut, std::ostream& out);
 
   MAYBE_EXTERN template
   std::ostream&
   grail<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>>
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>& aut,
-   std::ostream& out, const std::string& type);
+   std::ostream& out);
 
 # if VCSN_INSTANTIATION
   namespace
@@ -57,6 +67,7 @@ namespace vcsn
                                 are_equivalent<aut_t, aut_t>);
         complement_register(aut_t::sname(), complement<aut_t>);
         determinize_register(aut_t::sname(), determinize<aut_t>);
+        fado_register(aut_t::sname(), fado<aut_t>);
         grail_register(aut_t::sname(), grail<aut_t>);
         universal_register(aut_t::sname(), universal<aut_t>);
         return true;

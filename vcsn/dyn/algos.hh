@@ -46,9 +46,14 @@ namespace vcsn
     /// base b iff k|n.
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
+    /// Determinize \a aut.
+    /// \pre  \a aut must be LAL.
     automaton determinize(const automaton& aut);
 
+    /// Output \a aut in GraphViz' Dot format.
     std::ostream& dot(const automaton& aut, std::ostream& out);
+
+    /// A string representing \a aut in GraphViz' Dot format.
     std::string dot(const automaton& aut);
 
     /// Output in Extended FSM format.
@@ -61,10 +66,16 @@ namespace vcsn
     /// Evaluate \a s on \a aut.
     dyn::weight eval(const automaton& aut, const std::string& s);
 
-    std::ostream& grail(const automaton& aut, std::ostream& out,
-        const std::string& type);
+    /// Output in FAdo format.
+    std::ostream& fado(const automaton& aut, std::ostream& out);
 
+    /// Output in Grail format.
+    std::ostream& grail(const automaton& aut, std::ostream& out);
+
+    /// Output various facts about \a aut.
     std::ostream& info(const automaton& aut, std::ostream& out);
+
+    /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
     bool is_complete(const automaton& aut);
