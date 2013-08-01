@@ -1,3 +1,11 @@
+* 2013-08-02
+** constant-term
+New algorithm on rational expressions (static, dynamic, TAF-Kit).
+
+  $ vcsn-constant-term -C 'law_char(ab)_ratexpset<law_char(wxyz)_b>' \
+                       -e '<w>(<x>a+<y>b*)*<z>'
+  w.(y*).z
+
 * 2013-07-26
 ** Automaton library
 The set of library automata for existing contexts is now complete with

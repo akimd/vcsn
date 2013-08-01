@@ -18,6 +18,7 @@ tafkit_TESTS =                                  \
   tafkit/cat.chk                                \
   tafkit/complement.chk                         \
   tafkit/complete.chk                           \
+  tafkit/constant-term.chk                      \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
   tafkit/efsm.chk                               \
