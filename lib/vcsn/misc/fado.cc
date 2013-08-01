@@ -1,3 +1,4 @@
+#include <cstring> // strerror
 #include <fstream>
 #include <set>
 #include <string>
