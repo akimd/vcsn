@@ -1,4 +1,35 @@
 * 2013-08-02
+** I/O FAdo format support
+We are now able to produce and read FAdo format.
+
+  $ vcsn ladybird -O fado 4 | \
+    python -c "from FAdo import fa
+  nfa = fa.readFromFile('/dev/stdin')[0]
+  dfa = nfa.toDFA()
+  fa.saveToFile('dl4.fado', dfa)"
+
+  $ vcsn cat -I fado -O info -f dl4.fado
+  type: mutable_automaton<lal_char(abc)_b>
+  number of states: 15
+  number of initial states: 1
+  number of final states: 8
+  number of accessible states: 15
+  number of coaccessible states: 15
+  number of useful states: 15
+  number of transitions: 43
+  number of deterministic states: 15
+  number of eps transitions: 0
+  is complete: 0
+  is deterministic: 1
+  is empty: 0
+  is eps-acyclic: 1
+  is normalized: 0
+  is proper: 1
+  is standard: 0
+  is trim: 1
+  is useless: 0
+  is valid: 1
+
 ** constant-term
 New algorithm on rational expressions (static, dynamic, TAF-Kit).
 
