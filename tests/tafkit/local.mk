@@ -26,10 +26,10 @@ tafkit_TESTS =                                  \
   tafkit/evaluate.chk                           \
   tafkit/fado.chk                               \
   tafkit/grail.chk                              \
+  tafkit/is-complete.chk                        \
   tafkit/is-deterministic.chk                   \
   tafkit/is-normalized.chk                      \
   tafkit/is-proper.chk                          \
-  tafkit/is_complete.chk                        \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
   tafkit/power.chk                              \
