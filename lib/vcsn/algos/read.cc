@@ -39,13 +39,13 @@ namespace vcsn
     automaton
     read_automaton_file(const std::string& f, const std::string& t)
     {
-      if (t == "efsm")
-        return read_efsm_file(f);
       if (t == "dot")
         return read_dot_file(f);
-      if (t == "fado")
+      else if (t == "efsm")
+        return read_efsm_file(f);
+      else if (t == "fado")
         return read_fado_file(f);
-      if (t == "grail")
+      else if (t == "grail")
         return read_fado_file(f);
       throw std::runtime_error(t + ": unknown format");
     }
