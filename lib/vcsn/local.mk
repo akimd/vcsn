@@ -61,7 +61,6 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/universal.cc                   \
   lib/vcsn/ctx/ctx.cc                           \
   lib/vcsn/misc/escape.cc                       \
-  lib/vcsn/misc/fado.cc                         \
   lib/vcsn/misc/stream.cc
 
 # ratexpset.hxx depends on rat/driver.hh which requires
