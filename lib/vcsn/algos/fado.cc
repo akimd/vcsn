@@ -1,4 +1,3 @@
-#include <cstring> // strerror
 #include <fstream>
 #include <set>
 #include <string>
@@ -7,6 +6,7 @@
 #include <boost/flyweight/no_tracking.hpp>
 
 #include <lib/vcsn/algos/registry.hh>
+#include <lib/vcsn/algos/fwd.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/algos/grail.hh>
 #include <vcsn/dyn/algos.hh>
@@ -24,24 +24,7 @@ namespace vcsn
     automaton
     read_fado_file(const std::string& file)
     {
-      std::shared_ptr<std::istream> fin;
-      if (file.empty() || file == "-")
-        {
-          struct noop
-          {
-            void operator()(...) const {}
-          };
-          fin.reset(&std::cin, noop());
-        }
-      else
-        {
-          fin.reset(new std::ifstream(file.c_str()));
-          if (!fin->good())
-            throw std::runtime_error("cannot open " + file
-                                     + " for reading: "
-                                     + strerror(errno));
-        }
-
+      auto fin = open_file(file);
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 

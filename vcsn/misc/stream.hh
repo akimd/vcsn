@@ -4,13 +4,14 @@
 # include <sstream>
 # include <stdexcept>
 # include <iostream> // cin
+# include <memory> // shared_ptr
 
 # include <vcsn/misc/escape.hh>
 
 namespace vcsn
 {
-  // Extract the string which is here betwen lbracket and rbracket.
-  // Support nested lbracket/rbracket.
+  /// Extract the string which is here betwen lbracket and rbracket.
+  /// Support nested lbracket/rbracket.
   std::string
   bracketed(std::istream& i, const char lbracket, const char rbracket);
 
@@ -39,6 +40,10 @@ namespace vcsn
   /// \param s  the expected string.
   /// \throws std::runtime_error if the next character is not \a s.
   void eat(std::istream& is, const std::string& s);
+
+  /// Open \a file and return its autoclosing stream.
+  /// \param file   the file name.  "-" and "" denote stdin.
+  std::shared_ptr<std::istream> open_file(const std::string& file);
 }
 
 #endif // !VCSN_MISC_STREAM_HH
