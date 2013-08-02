@@ -6,6 +6,7 @@
 # include <map>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/algos/grail.hh> // outputter
 
 # include <vcsn/misc/escape.hh>
 
@@ -20,15 +21,19 @@ namespace vcsn
 
     /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
     template <class Aut>
-    struct efsmer
+    struct efsmer: public outputter<Aut>
     {
       using automaton_t = Aut;
+      using super_type = outputter<Aut>;
+      using super_type::aut_;
+      using super_type::os_;
+      using super_type::states_;
+
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
 
       efsmer(const automaton_t& aut, std::ostream& out)
-        : aut_(aut)
-        , os_(out)
+        : super_type(aut, out)
       {
         // Special label.
         names_[""] = 0;
@@ -42,6 +47,8 @@ namespace vcsn
         os_ << "#! /bin/sh" << std::endl
             << std::endl;
 
+        // Provide the symbols first, as when reading EFSM, knowing
+        // how \e is represented will help reading the transitions.
         os_ << "cat >isymbols.txt <<\\EOFSM" << std::endl;
         output_input_labels_();
         os_ << "EOFSM" << std::endl
@@ -80,25 +87,61 @@ namespace vcsn
         return res;
       }
 
-      /// Output all the transitions, and final states.
-      void output_transitions_()
+      void output_transition_(const transition_t t)
       {
         const auto& ws = *aut_.weightset();
         bool show_one = ws.show_one();
-        for (auto t : aut_.all_transitions())
-          {
-            os_ << aut_.src_of(t);
-            if (aut_.dst_of(t) != aut_.post())
-              os_ << '\t' << aut_.dst_of(t)
+        os_ << states_[aut_.src_of(t)];
+        if (aut_.dst_of(t) != aut_.post())
+          os_ << '\t' << states_[aut_.dst_of(t)]
                   << '\t' << label_of_(t);
 
-            if (show_one || !ws.is_one(aut_.weight_of(t)))
-              {
-                os_ << '\t';
-                ws.print(os_, aut_.weight_of(t));
-              }
-            os_ << std::endl;
+        if (show_one || !ws.is_one(aut_.weight_of(t)))
+          {
+            os_ << '\t';
+            ws.print(os_, aut_.weight_of(t));
           }
+        os_ << std::endl;
+      }
+
+      /// Output all the transitions, and final states.
+      void output_transitions_()
+      {
+        // FSM format supports a single initial state, which requires,
+        // when we have several initial states, to "exhibit" pre() and
+        // spontaneous transitions.  Avoid this when possible.
+        if (aut_.initial_transitions().size() != 1)
+          for (auto t : aut_.initial_transitions())
+            output_transition_(t);
+        // We _must_ start by the initial state.
+        {
+          // FIXME: Factor with outputter in grail.hh.
+          std::vector<transition_t> order;
+          for (auto t : aut_.transitions())
+            order.push_back(t);
+          std::sort(order.begin(), order.end(),
+                    // l < r?
+                    [this](transition_t l, transition_t r)
+                    {
+                      if (aut_.src_of(l) == aut_.src_of(r))
+                        {
+                          if (label_of_(l) == label_of_(r))
+                            return aut_.dst_of(l) < aut_.dst_of(r);
+                          else
+                            return label_of_(l) < label_of_(r);
+                        }
+                      else if (aut_.is_initial(aut_.src_of(l)))
+                        return true;
+                      else if (aut_.is_initial(aut_.dst_of(l)))
+                        return false;
+                      else
+                        return aut_.src_of(l) < aut_.src_of(r);
+                    });
+          for (auto t : order)
+            output_transition_(t);
+        }
+        for (auto t : aut_.final_transitions())
+          output_transition_(t);
       }
 
       /// Output the mapping from label name, to label number.
@@ -125,15 +168,11 @@ namespace vcsn
             os_ << p.first << '\t' << p.second << std::endl;
       }
 
-      /// The automaton we have to output.
-      const automaton_t& aut_;
       /// The FSM format uses integers for labels.
       label_names_t names_;
       /// A counter used to name the labels.
       /// 0 is already used for epsilon and special.
       unsigned name_ = 1;
-
-      std::ostream& os_;
     };
   }
 
