@@ -3,9 +3,9 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/misc/parse.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/rat/driver.hh>
+#include <lib/vcsn/algos/fwd.hh>
 
 namespace vcsn
 {
@@ -14,24 +14,12 @@ namespace vcsn
   {
     namespace
     {
-      automaton read_efsm_file(const std::string& f)
-      {
-        auto res = vcsn::detail::efsm::parse_file(f);
-        return res;
-      }
-
       automaton read_dot_file(const std::string& f)
       {
         vcsn::detail::dot::driver d;
         auto res = d.parse_file(f);
         if (!d.errors.empty())
           throw std::runtime_error(d.errors);
-        return res;
-      }
-
-      automaton read_fado_file(const std::string& f)
-      {
-        auto res = vcsn::detail::fado::parse_file(f);
         return res;
       }
     }

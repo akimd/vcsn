@@ -6,17 +6,23 @@
 #include <boost/flyweight.hpp>
 #include <boost/flyweight/no_tracking.hpp>
 
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
+#include <vcsn/algos/grail.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/misc/parse.hh>
 
 namespace vcsn
 {
-  namespace detail
+  namespace dyn
   {
-    dyn::automaton
-    fado::parse_file(const std::string& file)
+
+    /*----------------------.
+    | read_fado_file(aut).  |
+    `----------------------*/
+
+    automaton
+    read_fado_file(const std::string& file)
     {
       std::shared_ptr<std::istream> fin;
       if (file.empty() || file == "-")
@@ -108,9 +114,24 @@ namespace vcsn
             *fin.get() >> s1 >> l >> s2;
           }
       }
-      dyn::automaton res = nullptr;
+      automaton res = nullptr;
       res.reset(edit_.result());
       return res;
     }
-  }
-}
+
+    /*------------.
+    | fado(aut).  |
+    `------------*/
+
+    REGISTER_DEFINE(fado);
+
+    std::ostream&
+    fado(const automaton& aut, std::ostream& out)
+    {
+      detail::fado_registry().call(aut->vname(false),
+                                   aut, out);
+      return out;
+    }
+
+  }// dyn::
+}// vcsn::
