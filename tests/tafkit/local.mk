@@ -23,7 +23,7 @@ tafkit_TESTS =                                  \
   tafkit/determinize.chk                        \
   tafkit/efsm.chk                               \
   tafkit/enumerate.chk                          \
-  tafkit/eval.chk                               \
+  tafkit/evaluate.chk                           \
   tafkit/fado.chk                               \
   tafkit/grail.chk                              \
   tafkit/is-deterministic.chk                   \

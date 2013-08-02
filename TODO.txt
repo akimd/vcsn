@@ -4,7 +4,7 @@
 ** is-useless (AL)
 Check them, and their "is-"less version (vcsn-trim etc.).
 
-** eval.chk (AL)
+** evaluate.chk (AL)
 Cover more cases for zmin.  Use the automata from share/vcsn/lal_char_zmin.
 
 ** efsm
@@ -75,7 +75,7 @@ is factored a lot, using std::copy for instance.
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
 
-** eval
+** evaluate
 Vectors of weights indexed by states are bad structures to iterate upon.  We
 don't need to work on states that are not part of the computation.  This
 shows in the "if (!ws_.is_zero(v1[s]))" in the code.
