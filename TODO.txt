@@ -7,6 +7,19 @@ Check them, and their "is-"less version (vcsn-trim etc.).
 ** eval.chk (AL)
 Cover more cases for zmin.  Use the automata from share/vcsn/lal_char_zmin.
 
+** efsm
+I/O with weights.
+
+** fado
+I/O with words.  See the way they also _name_ states, for instance, read the
+dl4.fado as generated below.
+
+  $ vcsn ladybird -O fado 4 | \
+    python -c "from FAdo import fa
+  nfa = fa.readFromFile('/dev/stdin')[0]
+  dfa = nfa.toDFA()
+  fa.saveToFile('dl4.fado', dfa)"
+
 * Bugs
 ** Generators and alphabets
 ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
@@ -111,6 +124,11 @@ that *both* should yield "{3}ab":
   of the function derived-term for the weighthed automata.
 
 * More algorithms
+** More automata factories (AL)
+Implement vcsn-double-ring (sta, dyn, tafkit).  See how the other factories
+(ladybird, de-bruijn etc.) were built.  See the documentation of TAF-Kit V1
+to understand what double-ring-is.  Compare with what Vaucanson 1 did.
+
 ** Functions to assemble automata (AL)
 Read the documentation of TAF-Kit v1, and implement (and check) these
 functions:
@@ -121,14 +139,21 @@ functions:
   - left-mult, right-mult
   - chain
 
-** constant-term(exp) (AL)
-Return the constant-exp of an expression (i.e., the weight of \e).
-sta, dyn, tafkit.
-
-** is-valid(exp) (AL)
+** is-valid(exp) (AL) (sta, dyn, tafkit)
 Check that a ratexp is valid: the constant-term under each star must be
 starrable.
-sta, dyn, tafkit.
+Note that it may be very easy to implement thanks for "constant-term":
+if constant-term raises an exception, it means that is-not-valid!
+
+  $ vcsn constant-term -e '(?@lal_char(a)_b)(\e)*'
+  1
+  $ vcsn constant-term -e '(?@lal_char(a)_z)(\e)*'
+  vcsn-constant-term: z: star: invalid value: 1
+
+so it can be a simple try/catch.
+
+** I/O with Grail (AL)
+We should also be able to read Grail+ files.
 
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A

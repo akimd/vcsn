@@ -1,4 +1,32 @@
 * 2013-08-02
+** I/O EFSM format support
+We are now able to produce and read EFSM format (designed as an interface to
+OpenFST).  This is not (yet) thoroughly tested for weighted automata.
+
+  $ vcsn ladybird -O efsm 4 |
+     efstcompile | fstdeterminize | efstdecompile |
+     vcsn cat -I efsm -O info
+  type: mutable_automaton<lal_char(abc)_b>
+  number of states: 15
+  number of initial states: 1
+  number of final states: 8
+  number of accessible states: 15
+  number of coaccessible states: 15
+  number of useful states: 15
+  number of transitions: 43
+  number of deterministic states: 15
+  number of eps transitions: 0
+  is complete: 0
+  is deterministic: 1
+  is empty: 0
+  is eps-acyclic: 1
+  is normalized: 0
+  is proper: 1
+  is standard: 0
+  is trim: 1
+  is useless: 0
+  is valid: 1
+
 ** Output in EFSM format is improved
 State numbers now start appropriately at 0 (instead of 2), and when there is
 a single initial state, no "pre-initial state" is output; this avoids the
@@ -85,9 +113,13 @@ We are now able to produce and read FAdo format.
 ** constant-term
 New algorithm on rational expressions (static, dynamic, TAF-Kit).
 
-  $ vcsn-constant-term -C 'law_char(ab)_ratexpset<law_char(wxyz)_b>' \
-                       -e '<w>(<x>a+<y>b*)*<z>'
-  w.(y*).z
+  $ vcsn constant-term -e '(?@lal_char(a)_b)(\e)*'
+  1
+  $ vcsn constant-term -e '(?@lal_char(a)_z)(\e)*'
+  vcsn-constant-term: z: star: invalid value: 1
+  $ vcsn constant-term -C 'law_char(ab)_ratexpset<law_char(wxyz)_b>' \
+                       -e '<w>(<x>a*+<y>b*)*<z>'
+  w.((x+y)*).z
 
 * 2013-07-26
 ** Automaton library
