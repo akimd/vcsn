@@ -30,6 +30,7 @@ tafkit_TESTS =                                  \
   tafkit/is-deterministic.chk                   \
   tafkit/is-normalized.chk                      \
   tafkit/is-proper.chk                          \
+  tafkit/is-valid.chk                           \
   tafkit/ladybird.chk                           \
   tafkit/lift.chk                               \
   tafkit/power.chk                              \

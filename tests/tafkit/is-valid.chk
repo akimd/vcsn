@@ -1,0 +1,18 @@
+#! /bin/sh
+
+# check WEIGHT RAT_EXP
+# --------------------
+# Check that the constant-term of RAT-EXP is WEIGHT.
+# Use a context with ratexp weights to check the order of products.
+check ()
+{
+  re="(?@lal_char(abc)_r)$2"
+  run 0 "$1" -vcsn-is-valid -e "$re"
+}
+
+check 'true' 'a*'
+check 'false' '(<42>b*)*'
+check 'true' '<64>a+<4>b+(<0.6>b*)*'
+check 'false' '(<0.6>a*+<0.4>b*)*'
+check 'true' '(<0.6>a*+<0.3>b*)*<42>'
+check 'true' '(<0.6>a*.<0.4>b*)*'
