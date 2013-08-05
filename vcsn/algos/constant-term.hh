@@ -19,18 +19,18 @@ namespace vcsn
     `------------------------*/
 
     /// \param Context  relative to the RatExp.
-    template <typename Context>
+    template <typename RatExpSet>
     class constant_term_visitor
-      : public Context::const_visitor
+      : public RatExpSet::const_visitor
     {
     public:
-      using context_t = Context;
-      using ratexp_t = typename context_t::ratexp_t;
-      using ratexpset_t = ratexpset<context_t>;
-      using weight_t = typename context_t::weight_t;
-      using weightset_t = typename context_t::weightset_t;
+      using ratexpset_t = RatExpSet;
+      using context_t = typename ratexpset_t::context_t;
+      using ratexp_t = typename ratexpset_t::ratexp_t;
+      using weight_t = typename ratexpset_t::weight_t;
+      using weightset_t = typename ratexpset_t::weightset_t;
 
-      using super_type = typename Context::const_visitor;
+      using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
@@ -42,12 +42,12 @@ namespace vcsn
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
 
-      constant_term_visitor(const context_t& ctx)
-        : ws_(*ctx.weightset())
+      constant_term_visitor(const ratexpset_t& rs)
+        : ws_(*rs.weightset())
       {}
 
       weight_t
-      operator()(const typename context_t::ratexp_t& v)
+      operator()(const ratexp_t& v)
       {
         v->accept(*this);
         return std::move(res_);
@@ -116,19 +116,12 @@ namespace vcsn
 
   } // rat::
 
-  template <typename Context>
-  typename Context::weight_t
-  constant_term(const Context& ctx, const typename Context::ratexp_t& e)
+  template <typename RatExpSet>
+  typename RatExpSet::weight_t
+  constant_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
-    rat::constant_term_visitor<Context> constant_term{ctx};
+    rat::constant_term_visitor<RatExpSet> constant_term{rs};
     return constant_term(e);
-  }
-
-  template <typename Context>
-  typename Context::weight_t
-  constant_term(const Context& ctx, const rat::exp_t e)
-  {
-    return constant_term<Context>(ctx, ctx.downcast(e));
   }
 
   namespace dyn
@@ -138,12 +131,14 @@ namespace vcsn
       /*--------------------------.
       | dyn::constant_term(exp).  |
       `--------------------------*/
-      template <typename Ctx>
+      template <typename RatExpSet>
       weight
-      constant_term(const ratexp& e)
+      constant_term(const ratexp& exp)
       {
-        const auto& ctx = dynamic_cast<const Ctx&>(e->ctx());
-        return make_weight(*ctx.weightset(), constant_term<Ctx>(ctx, e->ratexp()));
+        const auto& e = exp->as<RatExpSet>();
+        return make_weight(*e.get_ratexpset().weightset(),
+                           constant_term<RatExpSet>(e.get_ratexpset(),
+                                                    e.ratexp()));
       }
 
       REGISTER_DECLARE(constant_term, (const ratexp& e) -> weight);

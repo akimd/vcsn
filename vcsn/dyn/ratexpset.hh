@@ -8,11 +8,17 @@
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
 namespace dyn
 {
+    template <typename Context>
+    ratexp
+    make_ratexp(const vcsn::ratexpset<Context>& rs,
+                const typename vcsn::ratexpset<Context>::ratexp_t& ratexp);
+
 namespace detail
 {
 
@@ -41,6 +47,8 @@ namespace detail
     virtual value_t star(value_t e) const = 0;
     virtual value_t weight(std::string* w, value_t e) const = 0;
     virtual value_t weight(value_t e, std::string* w) const = 0;
+
+    virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
 
     /// Parsing.
     virtual value_t conv(const std::string& s) const = 0;
@@ -93,6 +101,12 @@ namespace detail
       return res;
     }
 
+    virtual
+    dyn::ratexp
+    make_ratexp(const value_t& v) const override
+    {
+      return dyn::make_ratexp(rs_, down(v));
+    }
 
     /*------------------------------------------.
     | Specializations from abstract_ratexpset.  |

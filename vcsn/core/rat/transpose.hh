@@ -127,8 +127,8 @@ namespace vcsn
   }
 
   template <class RatExpSet>
-  typename RatExpSet::context_t::ratexp_t
-  transpose(const RatExpSet& rs, const typename RatExpSet::context_t::ratexp_t& v)
+  typename RatExpSet::ratexp_t
+  transpose(const RatExpSet& rs, const typename RatExpSet::ratexp_t& v)
   {
     return rs.transpose(v);
   }

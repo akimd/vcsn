@@ -14,77 +14,82 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate an expression and its context.
+      /// Aggregate an expression and its ratexpset.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static ratexps.
       class abstract_ratexp
       {
       public:
-        using exp_t = vcsn::rat::exp_t;
-        abstract_ratexp(const dyn::context& ctx, const exp_t& ratexp)
-          : ctx_(ctx)
-          , ratexp_(ratexp)
-        {}
-        ~abstract_ratexp() {}
-
-        const dyn::detail::abstract_context& ctx() const
-        {
-          return *ctx_;
-        }
-        const exp_t& ratexp() const
-        {
-          return ratexp_;
-        }
+        virtual std::string vname(bool full = true) const = 0;
 
         template <typename RatExpSet>
-        const exp_t&as() const
+        concrete_abstract_ratexp<RatExpSet>& as()
+        {
+          return dynamic_cast<concrete_abstract_ratexp<RatExpSet>&>(*this);
+        };
+
+        template <typename RatExpSet>
+        const concrete_abstract_ratexp<RatExpSet>& as() const
+        {
+          return dynamic_cast<const concrete_abstract_ratexp<RatExpSet>&>(*this);
+        };
+      };
+
+
+      /// Aggregate a ratexp and its ratexpset.
+      ///
+      /// FIXME: Improperly named, it is not a base class for
+      /// static ratexps.
+      template <typename RatExpSet>
+      class concrete_abstract_ratexp: public abstract_ratexp
+      {
+      public:
+        using ratexpset_t = RatExpSet;
+        using super_type = abstract_ratexp;
+        using ratexp_t = typename ratexpset_t::ratexp_t;
+        concrete_abstract_ratexp(const ratexp_t& ratexp,
+                                 const ratexpset_t& ratexpset)
+          : ratexp_(ratexp)
+          , ratexpset_(ratexpset)
+        {}
+        virtual ~concrete_abstract_ratexp() {}
+
+        const ratexp_t ratexp() const
         {
           return ratexp_;
         }
 
-        std::string vname(bool full = true) const
+        const ratexpset_t& get_ratexpset() const
         {
-          // FIXME: this is a fake, to be cleaned once we really
-          // have moved the implementation of dyn::ratexps.
-          return std::string("ratexpset<") + ctx().vname(full) + ">";
+          return ratexpset_;
+        }
+
+        virtual std::string vname(bool full = true) const
+        {
+          return get_ratexpset().vname(full);
         }
 
       protected:
-        /// A shared_ptr to the abstract_context.
-        const dyn::context ctx_;
-        /// A shared_ptr to the abstract_ratexp.
-        const exp_t ratexp_;
+        /// The ratexp.
+        const ratexp_t ratexp_;
+        /// The ratexp set.
+        const ratexpset_t ratexpset_;
       };
 
     } // namespace detail
 
     using ratexp = std::shared_ptr<detail::abstract_ratexp>;
 
-    inline
-    ratexp
-    make_ratexp(const dyn::context& ctx, const rat::exp_t& ratexp)
-    {
-      return std::make_shared<ratexp::element_type>(ctx, ratexp);
-    }
-
-    template <typename LabelSet, typename WeightSet>
-    inline
-    ratexp
-    make_ratexp(const ctx::context<LabelSet, WeightSet>& ctx,
-                const rat::exp_t& ratexp)
-    {
-      using ctx_t = ctx::context<LabelSet, WeightSet>;
-      return make_ratexp(std::make_shared<const ctx_t>(ctx), ratexp);
-    }
-
     template <typename Context>
     inline
     ratexp
     make_ratexp(const vcsn::ratexpset<Context>& rs,
-                const rat::exp_t& ratexp)
+                const typename vcsn::ratexpset<Context>::ratexp_t& ratexp)
     {
-      return make_ratexp(rs.context(), ratexp);
+      using ratexpset_t = vcsn::ratexpset<Context>;
+      return std::make_shared<detail::concrete_abstract_ratexp<ratexpset_t>>
+        (ratexp, rs);
     }
 
   } // namespace dyn

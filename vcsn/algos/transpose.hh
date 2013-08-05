@@ -265,19 +265,13 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       ratexp
-      abstract_transpose_exp(const ratexp& exp)
+      transpose_exp(const ratexp& exp)
       {
-        using ratexpset_t = RatExpSet;
-        using context_t = typename ratexpset_t::context_t;
-        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
-        const auto& e = exp->as<ratexpset_t>();
-        auto rs = ratexpset_t(ctx);
+        const auto& e = exp->as<RatExpSet>();
 
-        const auto& node =
-          std::dynamic_pointer_cast<const typename context_t::node_t>(e);
-
-        auto res = transpose(rs, node);
-        return make_ratexp(rs, res);
+        return make_ratexp(e.get_ratexpset(),
+                           transpose(e.get_ratexpset(),
+                                     e.ratexp()));
       }
 
       REGISTER_DECLARE(transpose_exp,

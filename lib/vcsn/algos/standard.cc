@@ -37,7 +37,7 @@ namespace vcsn
     automaton
     standard(const ratexp& e)
     {
-      return detail::standard_exp_registry().call(e->ctx().vname(false), e);
+      return detail::standard_exp_registry().call(e->vname(false), e);
     }
   }
 }

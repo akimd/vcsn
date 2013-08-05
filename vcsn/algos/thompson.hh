@@ -171,20 +171,29 @@ namespace vcsn
     return thompson<Aut, Context>(ctx, ctx.downcast(e));
   }
 
-  /*--------------------.
-  | abstract thompson.  |
-  `--------------------*/
+
   namespace dyn
   {
     namespace detail
     {
-      template <typename Aut>
+      /*---------------------.
+      | dyn::thompson(exp).  |
+      `---------------------*/
+
+      /// Bridge.
+      template <typename RatExpSet>
       automaton
-      thompson(const ratexp& e)
+      thompson(const ratexp& exp)
       {
-        const auto& ctx =
-          dynamic_cast<const typename Aut::context_t&>(e->ctx());
-        return make_automaton(ctx, thompson<Aut>(ctx, e->ratexp()));
+        // FIXME: So far, there is a single implementation of ratexps,
+        // but we should actually be parameterized by its type too.
+        using context_t = typename RatExpSet::context_t;
+        using ratexpset_t = RatExpSet;
+        using automaton_t = mutable_automaton<context_t>;
+        const auto& e = exp->as<ratexpset_t>();
+        return make_automaton(e.get_ratexpset().context(),
+                              thompson<automaton_t>(e.get_ratexpset().context(),
+                                                    e.ratexp()));
       }
 
       REGISTER_DECLARE(thompson,

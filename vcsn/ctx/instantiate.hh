@@ -160,6 +160,7 @@ namespace vcsn
       register_kind_functions(labels_are_nullable)
       {
         using aut_t = mutable_automaton<Ctx>;
+        using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
         REGISTER(Ctx, de_bruijn);
@@ -169,7 +170,7 @@ namespace vcsn
 
         REGISTER(Ctx, ladybird);
 
-        thompson_register(Ctx::sname(), thompson<aut_t>);
+        thompson_register(rs_t::sname(), thompson<rs_t>);
         REGISTER(Ctx, u);
 
         return true;
@@ -187,6 +188,7 @@ namespace vcsn
       register_kind_functions(labels_are_words)
       {
         using aut_t = mutable_automaton<Ctx>;
+        using rs_t = ratexpset<Ctx>;
 
         using namespace dyn::detail;
 
@@ -194,7 +196,7 @@ namespace vcsn
         REGISTER(aut_t, proper);
 
         // thompson.
-        thompson_register(Ctx::sname(), thompson<aut_t>);
+        thompson_register(rs_t::sname(), thompson<rs_t>);
 
         return true;
       }
@@ -239,7 +241,7 @@ namespace vcsn
         REGISTER(aut_t, efsm);
         REGISTER(taut_t, efsm);
 
-        REGISTER(Ctx, constant_term);
+        REGISTER(rs_t, constant_term);
 
         // info.
         REGISTER(aut_t, info);
@@ -275,8 +277,8 @@ namespace vcsn
 
         standard_register(aut_t::sname(),
                           static_cast<standard_t&>(standard<aut_t>));
-        standard_exp_register(Ctx::sname(),
-                          static_cast<standard_exp_t&>(standard<aut_t>));
+        standard_exp_register(rs_t::sname(),
+                              static_cast<standard_exp_t&>(standard<rs_t>));
 
         // tikz.
         REGISTER(aut_t, tikz);
@@ -284,7 +286,7 @@ namespace vcsn
 
         // transpose.
         REGISTER(aut_t, transpose);
-        transpose_exp_register(rs_t::sname(), abstract_transpose_exp<rs_t>);
+        transpose_exp_register(rs_t::sname(), transpose_exp<rs_t>);
 
         // trim.
         REGISTER(aut_t, trim);

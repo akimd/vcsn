@@ -145,16 +145,9 @@ namespace vcsn
       ratexp
       lift(const ratexp& exp)
       {
-        using ratexpset_t = RatExpSet;
-        using context_t = typename ratexpset_t::context_t;
-        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
-        const auto& e = exp->as<ratexpset_t>();
-        auto rs = ratexpset_t(ctx);
-
-        const auto& node =
-          std::dynamic_pointer_cast<const typename context_t::node_t>(e);
-
-        return make_ratexp(::vcsn::detail::lift(rs), ::vcsn::lift(rs, node));
+        const auto& e = exp->as<RatExpSet>();
+        return make_ratexp(::vcsn::detail::lift(e.get_ratexpset()),
+                           ::vcsn::lift(e.get_ratexpset(), e.ratexp()));
       }
 
       REGISTER_DECLARE(lift_exp,

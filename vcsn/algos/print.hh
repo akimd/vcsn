@@ -31,12 +31,8 @@ namespace vcsn
       template <typename RatExpSet>
       std::ostream& print(const ratexp& exp, std::ostream& o)
       {
-        using ratexpset_t = RatExpSet;
-        using context_t = typename ratexpset_t::context_t;
-        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
-        const auto& e = exp->as<ratexpset_t>();
-        auto rs = ratexpset_t(ctx);
-        return vcsn::print(rs, e, o);
+        const auto& e = exp->as<RatExpSet>();
+        return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
       }
 
       REGISTER_DECLARE(print_exp,

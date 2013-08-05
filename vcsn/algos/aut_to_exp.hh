@@ -138,8 +138,13 @@ namespace vcsn
       ratexp
       aut_to_exp(const automaton& aut)
       {
+        // FIXME: So far, there is a single implementation of ratexps,
+        // but we should actually be parameterized by its type too.
+        using context_t = typename Aut::context_t;
+        using ratexpset_t = vcsn::ratexpset<context_t>;
         const auto& a = dynamic_cast<const Aut&>(*aut);
-        return make_ratexp(a.context(), aut_to_exp_naive(a));
+        return make_ratexp(ratexpset_t(a.context()),
+                           aut_to_exp_naive(a));
       }
 
       REGISTER_DECLARE(aut_to_exp,

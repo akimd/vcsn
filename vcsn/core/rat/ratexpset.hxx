@@ -6,6 +6,7 @@
 #include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/ratexpset.hh>
+#include <vcsn/dyn/ratexp.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/stream.hh>
 
@@ -336,11 +337,14 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
+    // FIXME: we should pass a ratexpset, not a context, to the driver.
     vcsn::rat::driver d{std::make_shared<const context_t>(context())};
-    auto res = d.parse_string(s);
+    auto dynres = d.parse_string(s);
     if (!d.errors.empty())
       throw std::domain_error(d.errors);
-    return down_pointer_cast<const node_t>(res->ratexp());
+    using ratexpset_t = typename context_t::ratexpset_t;
+    const auto& res = dynres->as<ratexpset_t>();
+    return res.ratexp();
   }
 
   DEFINE::print(std::ostream& o, const value_t v) const

@@ -15,7 +15,7 @@ namespace vcsn
     weight
     constant_term(const ratexp& e)
     {
-      return detail::constant_term_registry().call(e->ctx().vname(false),
+      return detail::constant_term_registry().call(e->vname(false),
                                                    e);
     }
   }

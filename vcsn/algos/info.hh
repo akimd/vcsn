@@ -186,13 +186,8 @@ namespace vcsn
       template <typename RatExpSet>
       std::ostream& info_exp(const ratexp& exp, std::ostream& o)
       {
-        using ratexpset_t = RatExpSet;
-        using context_t = typename ratexpset_t::context_t;
-        const auto& ctx = dynamic_cast<const context_t&>(exp->ctx());
-        const auto& e = exp->as<ratexpset_t>();
-        auto rs = ratexpset_t(ctx);
-
-        vcsn::info<ratexpset_t>(rs, e, o);
+        const auto& e = exp->as<RatExpSet>();
+        vcsn::info<RatExpSet>(e.get_ratexpset(), e.ratexp(), o);
         return o;
       }
 

@@ -71,9 +71,14 @@ namespace vcsn
         result_ = nullptr;
       scan_close_();
       --nesting;
-      dyn::ratexp res = vcsn::dyn::make_ratexp(context_, result_);
-      result_ = nullptr;
-      return res;
+      if (result_)
+        {
+          dyn::ratexp res = ratexpset_->make_ratexp(result_);
+          result_ = nullptr;
+          return res;
+        }
+      else
+        return nullptr;
     }
 
     auto
