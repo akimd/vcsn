@@ -118,6 +118,10 @@ namespace vcsn
     /// Whether has no useful state.
     bool is_useless(const automaton& aut);
 
+    /// Whether rational expression is valid.(all sub-expressions have a
+    /// constant-term in between -1 and 1.
+    bool is_valid_r(const ratexp& e);
+
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 

@@ -40,6 +40,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-is-standard                          \
   bin/vcsn-is-trim                              \
   bin/vcsn-is-useless                           \
+  bin/vcsn-is-valid                             \
   bin/vcsn-ladybird                             \
   bin/vcsn-lift                                 \
   bin/vcsn-power                                \
@@ -79,6 +80,7 @@ bin_vcsn_is_proper_LDADD        = bin/libtafkit.la
 bin_vcsn_is_standard_LDADD      = bin/libtafkit.la
 bin_vcsn_is_trim_LDADD          = bin/libtafkit.la
 bin_vcsn_is_useless_LDADD       = bin/libtafkit.la
+bin_vcsn_is_valid_LDADD         = bin/libtafkit.la
 bin_vcsn_ladybird_LDADD         = bin/libtafkit.la
 bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_power_LDADD            = bin/libtafkit.la

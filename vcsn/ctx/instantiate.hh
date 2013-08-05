@@ -17,6 +17,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/is-valid.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -261,6 +262,7 @@ namespace vcsn
         REGISTER(aut_t, is_standard);
         REGISTER(aut_t, is_trim);
         REGISTER(aut_t, is_useless);
+        REGISTER(rs_t, is_valid_r);
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);

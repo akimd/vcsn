@@ -8,6 +8,7 @@
 # include <vector>
 
 # include <vcsn/algos/fwd.hh>
+# include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -146,6 +147,40 @@ namespace vcsn
 
   }
 
+  template <typename RatExpSet>
+  bool
+  is_valid_r(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  {
+    rat::constant_term_visitor<RatExpSet> constant_term{rs};
+    try
+    {
+      constant_term(e);
+      return true;
+    }
+    catch (std::domain_error e)
+    {
+      return false;
+    }
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /*---------------------.
+      | dyn::is_valid_r(exp).  |
+      `---------------------*/
+      template <typename RatExpSet>
+      bool
+      is_valid_r(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>();
+        return is_valid_r<RatExpSet>(e.get_ratexpset(), e.ratexp());
+      }
+
+      REGISTER_DECLARE(is_valid_r, (const ratexp& e) -> bool);
+    }
+  }
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_VALID_HH

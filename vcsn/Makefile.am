@@ -25,7 +25,7 @@ nobase_vcsn_HEADERS =                           \
   algos/efsm.hh                                 \
   algos/enumerate.hh                            \
   algos/eval.hh                                 \
-  algos/constant-term.hh                               \
+  algos/constant-term.hh                        \
   algos/fwd.hh                                  \
   algos/grail.hh                                \
   algos/info.hh                                 \
@@ -33,8 +33,8 @@ nobase_vcsn_HEADERS =                           \
   algos/is-eps-acyclic.hh                       \
   algos/is-normalized.hh                        \
   algos/is-proper.hh                            \
-  algos/is-valid.hh                             \
   algos/is_complete.hh                          \
+  algos/is-valid.hh                             \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
   algos/print.hh                                \
