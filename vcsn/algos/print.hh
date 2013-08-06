@@ -29,12 +29,10 @@ namespace vcsn
     {
       /// Abstract but parameterized.
       template <typename WeightSet>
-      std::ostream& print(const weight& w, std::ostream& o)
+      std::ostream& print(const weight& weight, std::ostream& o)
       {
-        using weight_t = concrete_abstract_weight<WeightSet>;
-        const auto& typed_w = dynamic_cast<const weight_t&>(*w);
-        return vcsn::print<WeightSet>(typed_w.get_weightset(),
-                                      typed_w.weight(), o);
+        const auto& w = weight->as<WeightSet>();
+        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
       }
 
       REGISTER_DECLARE(print_weight,

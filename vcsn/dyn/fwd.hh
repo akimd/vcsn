@@ -47,7 +47,7 @@ namespace vcsn
     {
       class abstract_weight;
       template <typename T>
-      class concrete_weight;
+      class concrete_abstract_weight;
     }
     using weight = std::shared_ptr<const detail::abstract_weight>;
 
