@@ -137,6 +137,14 @@ namespace vcsn
       return {intersection(lhs.alphabet_, rhs.alphabet_)};
     }
 
+    /// Compute the union with another alphabet.
+    template <typename L2>
+    friend set_alphabet<L2>
+    get_union(const set_alphabet<L2>& lhs, const set_alphabet<L2>& rhs)
+    {
+      return {get_union(lhs.alphabet_, rhs.alphabet_)};
+    }
+
   private:
     letters_t alphabet_;
   };

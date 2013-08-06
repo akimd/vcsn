@@ -144,6 +144,14 @@ namespace vcsn
       return {intersect(lhs->genset(), rhs->genset())};
     }
 
+    /// Compute the union with another alphabet.
+    template <typename GenSet>
+    wordset<GenSet>
+    get_union(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
+    {
+      return {get_union(lhs->genset(), rhs->genset())};
+    }
+
   }
 }
 

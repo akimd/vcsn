@@ -161,6 +161,14 @@ namespace vcsn
       return {intersect(*lhs.genset(), *rhs.genset())};
     }
 
+    /// Compute the union with another alphabet.
+    template <typename GenSet>
+    nullableset<GenSet>
+    get_union(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
+    {
+      return {get_union(*lhs.genset(), *rhs.genset())};
+    }
+
   }
 }
 

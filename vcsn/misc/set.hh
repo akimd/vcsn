@@ -80,6 +80,19 @@ namespace vcsn
     return pset;
   }
 
+  /// The union of two sets.
+  template <typename T>
+  std::set<T>
+  get_union(const std::set<T>& set1, const std::set<T>& set2)
+  {
+    std::set<T> res;
+    std::insert_iterator<std::set<T>> i{res, begin(res)};
+    std::set_union(begin(set1), end(set1),
+                          begin(set2), end(set2),
+                          i);
+    return res;
+  }
+
   /// Whether set1 \subset set2.
   template <typename Container1, typename Container2>
   bool subset(const Container1& set1, const Container2& set2)
