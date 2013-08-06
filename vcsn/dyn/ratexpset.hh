@@ -4,21 +4,14 @@
 # include <string>
 # include <list>
 # include <memory>  // shared_ptr
-# include <sstream>
 
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
 namespace dyn
 {
-    template <typename Context>
-    ratexp
-    make_ratexp(const vcsn::ratexpset<Context>& rs,
-                const typename vcsn::ratexpset<Context>::ratexp_t& ratexp);
-
 namespace detail
 {
 
@@ -53,15 +46,8 @@ namespace detail
     /// Parsing.
     virtual value_t conv(const std::string& s) const = 0;
 
-    virtual const context_t& context() const = 0;
-
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
-    std::string format(const value_t v) const
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
-    }
+    std::string format(const value_t v) const;
   };
 
   /// Wrapper around a ratexpset.
@@ -70,6 +56,7 @@ namespace detail
   {
   public:
     using context_t = Context;
+    using ratexpset_t = vcsn::ratexpset<Context>;
     using super_type = abstract_ratexpset;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
@@ -79,106 +66,53 @@ namespace detail
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    concrete_abstract_ratexpset(const context_t& ctx)
-      : super_type()
-      , rs_(ctx)
-    {}
+    concrete_abstract_ratexpset(const context_t& ctx);
 
     /// From weak to strong typing.
     std::shared_ptr<const node_t>
-    down(const value_t& v) const
-    {
-      return down_pointer_cast<const node_t>(v);
-    }
+    down(const value_t& v) const;
 
     /// From string, to typed weight.
     /// \param w  is deleted
-    weight_t
-    down(std::string* w) const
-    {
-      auto res = rs_.weightset()->conv(*w);
-      delete w;
-      return res;
-    }
+    weight_t down(std::string* w) const;
 
-    virtual
-    dyn::ratexp
-    make_ratexp(const value_t& v) const override
-    {
-      return dyn::make_ratexp(rs_, down(v));
-    }
+    virtual dyn::ratexp make_ratexp(const value_t& v) const override;
 
     /*------------------------------------------.
     | Specializations from abstract_ratexpset.  |
     `------------------------------------------*/
 
-    virtual value_t zero() const override
-    {
-      return rs_.zero();
-    }
+    virtual value_t zero() const override;
+    virtual value_t one() const override;
 
-    virtual value_t one() const override
-    {
-      return rs_.one();
-    }
+    virtual value_t atom(const std::string& w) const override;
 
-    virtual value_t atom(const std::string& w) const override
-    {
-      return rs_.atom(rs_.labelset()->conv(w));
-    }
+    virtual value_t add(value_t l, value_t r) const override;
 
-    virtual value_t add(value_t l, value_t r) const override
-    {
-      return rs_.add(down(l), down(r));
-    }
-
-    virtual value_t mul(value_t l, value_t r) const override
-    {
-      return rs_.mul(down(l), down(r));
-    }
+    virtual value_t mul(value_t l, value_t r) const override;
 
     /// When concatenating two atoms, possibly make a single one,
     /// or make the product.
-    virtual value_t concat(value_t l, value_t r) const override
-    {
-      return rs_.concat(down(l), down(r));
-    }
+    virtual value_t concat(value_t l, value_t r) const override;
 
-    virtual value_t star(value_t v) const override
-    {
-      return rs_.star(down(v));
-    }
+    virtual value_t star(value_t v) const override;
 
-    virtual value_t weight(std::string* w, value_t v) const override
-    {
-      return rs_.weight(down(w), down(v));
-    }
+    virtual value_t weight(std::string* w, value_t v) const override;
 
-    virtual value_t weight(value_t v, std::string* w) const override
-    {
-      return rs_.weight(down(v), down(w));
-    }
+    virtual value_t weight(value_t v, std::string* w) const override;
 
     /// Parsing.
-    virtual value_t conv(const std::string& s) const override
-    {
-      return rs_.conv(s);
-    }
+    virtual value_t conv(const std::string& s) const override;
 
-    virtual std::ostream& print(std::ostream& o, value_t v) const override
-    {
-      return rs_.print(o, down(v));
-    }
+    virtual std::ostream& print(std::ostream& o, value_t v) const override;
 
-    virtual const context_t& context() const override
-    {
-      return rs_.context();
-    }
-
-    vcsn::ratexpset<context_t> rs_;
+  private:
+    ratexpset_t rs_;
   };
 } // namespace detail
 } // namespace dyn
 } // namespace vcsn
+
+# include <vcsn/dyn/ratexpset.hxx>
 
 #endif // !VCSN_DYN_RATEXPSET_HH

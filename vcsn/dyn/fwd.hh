@@ -2,13 +2,10 @@
 # define VCSN_DYN_FWD_HH
 
 # include <memory> // shared_ptr
+# include <vcsn/core/rat/fwd.hh>
 
 namespace vcsn
 {
-
-  // vcsn/rat/ratexpset.hh
-  class abstract_ratexpset;
-
   namespace dyn
   {
     // vcsn/dyn/automaton.hh.
@@ -41,6 +38,14 @@ namespace vcsn
       class abstract_ratexpset;
     }
     using ratexpset = std::shared_ptr<const detail::abstract_ratexpset>;
+
+    /// A dyn::ratexpset from its static ratexpset.
+    // Should remain part of vcsn/dyn/ratexpset.hh, but we have a
+    // circular dependency to break (dyn::ratexpset obviously needs
+    // vcsn/core/rat/ratexpset.hh, and rat::ratexpset::conv needs
+    // dyn::make_ratexpset).
+    template <typename Context>
+    ratexpset make_ratexpset(const vcsn::ratexpset<Context>& rs);
 
     // vcsn/dyn/weight.hh.
     namespace detail

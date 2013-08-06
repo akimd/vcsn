@@ -97,6 +97,7 @@ nobase_vcsn_HEADERS =                           \
   dyn/fwd.hh                                    \
   dyn/ratexp.hh                                 \
   dyn/ratexpset.hh                              \
+  dyn/ratexpset.hxx                             \
   dyn/weight.hh                                 \
   dyn/weightset.hh                              \
   empty.hh                                      \
