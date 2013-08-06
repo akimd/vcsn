@@ -11,36 +11,6 @@ namespace vcsn
 {
 
   /*------------------------.
-  | print(ratexp, stream).  |
-  `------------------------*/
-
-  template <typename RatExpSet>
-  inline
-  std::ostream&
-  print(const RatExpSet& rs, const rat::exp_t& e, std::ostream& o)
-  {
-    const auto& ctx = rs.context();
-    return rs.print(o, ctx.downcast(e));
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Abstract but parameterized.
-      template <typename RatExpSet>
-      std::ostream& print(const ratexp& exp, std::ostream& o)
-      {
-        const auto& e = exp->as<RatExpSet>();
-        return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
-      }
-
-      REGISTER_DECLARE(print_exp,
-                       (const ratexp& aut, std::ostream& o) -> std::ostream&);
-    }
-  }
-
-  /*------------------------.
   | print(weight, stream).  |
   `------------------------*/
 
@@ -71,6 +41,42 @@ namespace vcsn
                        (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }
+
+  /*------------------------.
+  | print(ratexp, stream).  |
+  `------------------------*/
+
+#if 0
+  // There is no need for this implementation, as the previous one,
+  // for weightset/weight, applies here.  Actually, it results in an
+  // ambiguous template specialization.
+  template <typename RatExpSet>
+  inline
+  std::ostream&
+  print(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+        std::ostream& o)
+  {
+    return rs.print(o, e);
+  }
+#endif
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Abstract but parameterized.
+      template <typename RatExpSet>
+      std::ostream& print(const ratexp& exp, std::ostream& o)
+      {
+        const auto& e = exp->as<RatExpSet>();
+        return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
+      }
+
+      REGISTER_DECLARE(print_exp,
+                       (const ratexp& aut, std::ostream& o) -> std::ostream&);
+    }
+  }
+
 }
 
 #endif // !VCSN_ALGOS_PRINT_HH

@@ -159,10 +159,11 @@ namespace vcsn
 
   template <class RatExpSet>
   void
-  info(const RatExpSet& rs, const rat::exp_t& e, std::ostream& o)
+  info(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+       std::ostream& o)
   {
     vcsn::rat::info<RatExpSet> nfo;
-    nfo(dynamic_cast<const typename RatExpSet::node_t&>(*e));
+    nfo(*e);
 # define DEFINE(Type)                            \
     << std::endl << #Type ": " << nfo.Type
     o

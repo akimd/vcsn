@@ -94,7 +94,7 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
   print<Ctx::ratexpset_t>(const Ctx::ratexpset_t& rs,                   \
-                          const rat::exp_t& e, std::ostream& o);        \
+                          const Ctx::ratexp_t& e, std::ostream& o);     \
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
   print<typename Ctx::weightset_t>                                      \

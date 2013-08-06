@@ -298,16 +298,6 @@ namespace vcsn
     return standard(e);
   }
 
-  /// \param Aut      relative to the generated automaton.
-  /// \param Context  relative to the RatExp.
-  template <class Aut,
-            class Context = typename Aut::context_t>
-  Aut
-  standard(const Context& ctx, const rat::exp_t e)
-  {
-    return standard<Aut, Context>(ctx, ctx.downcast(e));
-  }
-
   namespace dyn
   {
     namespace detail

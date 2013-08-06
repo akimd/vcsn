@@ -55,6 +55,7 @@ namespace vcsn
       return out;
     }
 
+
     /*------------------------.
     | print(weight, stream).  |
     `------------------------*/
