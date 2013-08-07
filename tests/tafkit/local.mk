@@ -40,6 +40,7 @@ tafkit_TESTS =                                  \
   tafkit/standard.chk                           \
   tafkit/thompson.chk                           \
   tafkit/transpose.chk                          \
+  tafkit/union.chk                              \
   tafkit/universal.chk
 
 dist_TESTS += $(tafkit_TESTS)
