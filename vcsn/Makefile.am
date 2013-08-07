@@ -44,6 +44,7 @@ nobase_vcsn_HEADERS =                           \
   algos/thompson.hh                             \
   algos/tikz.hh                                 \
   algos/transpose.hh                            \
+  algos/union.hh                                \
   algos/universal.hh                            \
   alphabets/char.hh                             \
   alphabets/setalpha.hh                         \

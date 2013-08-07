@@ -52,6 +52,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-transpose                            \
   bin/vcsn-trim                                 \
   bin/vcsn-u                                    \
+  bin/vcsn-union                                \
   bin/vcsn-universal
 
 noinst_LTLIBRARIES += bin/libtafkit.la
@@ -92,4 +93,5 @@ bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la
 bin_vcsn_trim_LDADD             = bin/libtafkit.la
 bin_vcsn_u_LDADD                = bin/libtafkit.la
+bin_vcsn_union_LDADD            = bin/libtafkit.la
 bin_vcsn_universal_LDADD        = bin/libtafkit.la

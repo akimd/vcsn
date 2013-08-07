@@ -3,6 +3,7 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
+# include <vcsn/algos/union.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
@@ -139,6 +140,10 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(aut_t, complete);
+        // union_a
+        union_a_register(aut_t::sname(), aut_t::sname(),
+                             union_a<aut_t, aut_t>);
+
         REGISTER(Ctx, de_bruijn);
         REGISTER(Ctx, divkbaseb);
         REGISTER(aut_t, enumerate);

@@ -101,6 +101,7 @@ vcsn_thompson         = $(top_builddir)/bin/vcsn-thompson
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
 vcsn_trim             = $(top_builddir)/bin/vcsn-trim
 vcsn_u                = $(top_builddir)/bin/vcsn-u
+vcsn_union            = $(top_builddir)/bin/vcsn-union
 vcsn_universal        = $(top_builddir)/bin/vcsn-universal
 
 all_vcsn =                                      \
@@ -137,4 +138,5 @@ all_vcsn =                                      \
   $(vcsn_transpose)                             \
   $(vcsn_trim)                                  \
   $(vcsn_u)                                     \
+  $(vcsn_union)                                 \
   $(vcsn_universal)
