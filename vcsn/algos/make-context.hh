@@ -59,8 +59,8 @@ namespace vcsn
       ratexpset
       make_ratexpset(const context& ctx)
       {
-        return std::make_shared<concrete_abstract_ratexpset<Ctx>>
-          (dynamic_cast<const Ctx&>(*ctx));
+        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        return std::make_shared<concrete_abstract_ratexpset<Ctx>>(c);
       }
 
       REGISTER_DECLARE(make_ratexpset,
