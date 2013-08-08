@@ -5,14 +5,13 @@
 #include <lib/vcsn/rat/read.hh>// FIXME: non-installed dependency.
 #include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
-#include <vcsn/dyn/ratexpset.hh>
+#include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/ratexp.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
-
   template <typename Context>
   ratexpset<Context>::ratexpset(const context_t& ctx)
     : ctx_(ctx)
@@ -337,7 +336,7 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    auto dynres = rat::read_string(s, std::make_shared<const context_t>(context()));
+    auto dynres = rat::read_string(s, dyn::make_ratexpset(*this));
     const auto& res = dynres->template as<ratexpset>();
     return res.ratexp();
   }

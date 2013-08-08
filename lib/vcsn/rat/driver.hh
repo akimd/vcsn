@@ -3,6 +3,7 @@
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/ratexpset.hh>
 # include <lib/vcsn/rat/location.hh>
 
 namespace vcsn
@@ -15,9 +16,9 @@ namespace vcsn
     {
     public:
       driver() = default;
-      driver(const dyn::context& ctx);
+      driver(const dyn::ratexpset& rs);
       /// Set the context to use.
-      void context(const dyn::context& c);
+      void ratexpset(const dyn::ratexpset& rs);
 
       dyn::ratexp parse_file(const std::string& f);
       dyn::ratexp parse_string(const std::string& e,

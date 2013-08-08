@@ -140,7 +140,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
     else
       {
         yy_pop_state();
-        driver_.context(dyn::make_context(context));
+        driver_.ratexpset(dyn::make_ratexpset(dyn::make_context(context)));
         context.clear();
       }
   }

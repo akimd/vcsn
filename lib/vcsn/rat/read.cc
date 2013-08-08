@@ -14,8 +14,18 @@ namespace vcsn
     dyn::ratexp
     read_file(const std::string& f, const dyn::context& ctx)
     {
-      vcsn::rat::driver d(ctx);
+      vcsn::rat::driver d(dyn::make_ratexpset(ctx));
       auto res = d.parse_file(f);
+      if (!d.errors.empty())
+        throw std::runtime_error(d.errors);
+      return res;
+    }
+
+    dyn::ratexp
+    read_string(const std::string& s, const dyn::ratexpset& rs)
+    {
+      vcsn::rat::driver d(rs);
+      auto res = d.parse_string(s);
       if (!d.errors.empty())
         throw std::runtime_error(d.errors);
       return res;
@@ -24,11 +34,7 @@ namespace vcsn
     dyn::ratexp
     read_string(const std::string& s, const dyn::context& ctx)
     {
-      vcsn::rat::driver d(ctx);
-      auto res = d.parse_string(s);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return res;
+      return read_string(s, dyn::make_ratexpset(ctx));
     }
   }
 }

@@ -10,6 +10,9 @@ namespace vcsn
     /// The ratexp in file \a f, with \a ctx as default context.
     dyn::ratexp read_file(const std::string& f, const dyn::context& ctx);
 
+    /// The ratexp in string \a s, with \a rs as default ratexpset.
+    dyn::ratexp read_string(const std::string& s, const dyn::ratexpset& rs);
+
     /// The ratexp in string \a s, with \a ctx as default context.
     dyn::ratexp read_string(const std::string& s, const dyn::context& ctx);
   }

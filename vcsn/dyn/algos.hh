@@ -154,6 +154,8 @@ namespace vcsn
     /// \param str  the automaton.
     automaton read_automaton_string(const std::string& str);
 
+    ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
+                            const std::string& type);
     ratexp read_ratexp_file(const std::string& f, const context& ctx,
                             const std::string& type);
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
