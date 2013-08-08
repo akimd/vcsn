@@ -2,7 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <lib/vcsn/rat/driver.hh>// FIXME: non-installed dependency.
+#include <lib/vcsn/rat/read.hh>// FIXME: non-installed dependency.
 #include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/ratexpset.hh>
@@ -337,13 +337,8 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    // FIXME: we should pass a ratexpset, not a context, to the driver.
-    vcsn::rat::driver d{std::make_shared<const context_t>(context())};
-    auto dynres = d.parse_string(s);
-    if (!d.errors.empty())
-      throw std::domain_error(d.errors);
-    using ratexpset_t = typename context_t::ratexpset_t;
-    const auto& res = dynres->as<ratexpset_t>();
+    auto dynres = rat::read_string(s, std::make_shared<const context_t>(context()));
+    const auto& res = dynres->template as<ratexpset>();
     return res.ratexp();
   }
 

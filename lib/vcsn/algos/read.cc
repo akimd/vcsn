@@ -3,8 +3,8 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
+#include <lib/vcsn/rat/read.hh>
 #include <lib/vcsn/dot/driver.hh>
-#include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/algos/fwd.hh>
 
 namespace vcsn
@@ -54,34 +54,22 @@ namespace vcsn
     `--------------*/
 
     ratexp
-    read_ratexp_file(const std::string& f, const dyn::context& ctx,
+    read_ratexp_file(const std::string& f, const context& ctx,
                      const std::string& type)
     {
       if (type == "text")
-        {
-          vcsn::rat::driver d(ctx);
-          auto res = d.parse_file(f);
-          if (!d.errors.empty())
-            throw std::runtime_error(d.errors);
-          return res;
-        }
+        return rat::read_file(f, ctx);
       else
         throw std::domain_error("invalid input format for expression: "
                                 + type);
     }
 
     ratexp
-    read_ratexp_string(const std::string& s, const dyn::context& ctx,
+    read_ratexp_string(const std::string& s, const context& ctx,
                        const std::string& type)
     {
       if (type == "text")
-        {
-          vcsn::rat::driver d(ctx);
-          auto res = d.parse_string(s);
-          if (!d.errors.empty())
-            throw std::runtime_error(d.errors);
-          return res;
-        }
+        return rat::read_string(s, ctx);
       else
         throw std::domain_error("invalid input format for expression: "
                                 + type);
