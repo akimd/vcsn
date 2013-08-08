@@ -18,7 +18,6 @@ namespace vcsn
     void
     driver::context(const dyn::context& ctx)
     {
-      context_ = ctx;
       ratexpset_ = dyn::make_ratexpset(ctx);
     }
 

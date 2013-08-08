@@ -43,7 +43,6 @@ namespace vcsn
 
       /// The inital location.
       location location_;
-      dyn::context context_;
       dyn::ratexpset ratexpset_;
       vcsn::rat::exp_t result_;
       friend class parser;
