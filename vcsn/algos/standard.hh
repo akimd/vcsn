@@ -34,7 +34,7 @@ namespace vcsn
       bool
       is_standard(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return is_standard(a);
       }
 
@@ -310,7 +310,7 @@ namespace vcsn
       automaton
       standard(const automaton& aut)
       {
-        auto res = copy(dynamic_cast<const Aut&>(*aut));
+        auto res = copy(aut->as<Aut>());
         standard(res);
         return make_automaton(res.context(), std::move(res));
       }

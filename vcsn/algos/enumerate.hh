@@ -169,7 +169,7 @@ namespace vcsn
       std::vector<std::string>
       enumerate(const automaton& aut, size_t max)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         polynomialset<typename Aut::context_t> ps(a.context());
         std::vector<std::string> res;
         for (const auto& m: enumerate(a, max))
@@ -191,7 +191,7 @@ namespace vcsn
       std::string
       shortest(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         polynomialset<typename Aut::context_t> ps(a.context());
         return ps.format(shortest(a));
       }

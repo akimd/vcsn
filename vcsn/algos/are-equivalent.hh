@@ -60,8 +60,8 @@ namespace vcsn
       bool
       are_equivalent(const automaton& aut1, const automaton& aut2)
       {
-        const auto& a1 = dynamic_cast<const Aut1&>(*aut1);
-        const auto& a2 = dynamic_cast<const Aut2&>(*aut2);
+        const auto& a1 = aut1->as<Aut1>();
+        const auto& a2 = aut2->as<Aut2>();
         return are_equivalent(a1, a2);
       }
 

@@ -249,7 +249,7 @@ namespace vcsn
       automaton
       transpose(automaton& aut)
       {
-        auto& a = dynamic_cast<Aut&>(*aut);
+        auto& a = aut->as<Aut>();
         return make_automaton<Aut,
                               vcsn::detail::transpose_automaton<Aut>>
           (a.context(), a);

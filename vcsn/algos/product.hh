@@ -131,8 +131,8 @@ namespace vcsn
       automaton
       product(const automaton& lhs, const automaton& rhs)
       {
-        const auto& l = dynamic_cast<const Lhs&>(*lhs);
-        const auto& r = dynamic_cast<const Lhs&>(*rhs);
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
         return make_automaton(l.context(), product(l, r));
       }
 
@@ -150,7 +150,7 @@ namespace vcsn
       automaton
       power(const automaton& aut, unsigned n)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_automaton(a.context(), power(a, n));
       }
 

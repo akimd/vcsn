@@ -144,7 +144,7 @@ namespace vcsn
       automaton
       universal(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_automaton(a.context(), universal(a));
       }
 

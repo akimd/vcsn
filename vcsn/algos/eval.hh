@@ -95,7 +95,7 @@ namespace vcsn
       eval(const automaton& aut, const std::string& s)
         -> weight
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         const auto& ctx = a.context();
         auto res = ::vcsn::eval(a, s);
         return make_weight(*ctx.weightset(), res);

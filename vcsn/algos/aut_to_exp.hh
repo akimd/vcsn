@@ -142,7 +142,7 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using context_t = typename Aut::context_t;
         using ratexpset_t = vcsn::ratexpset<context_t>;
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_ratexp(ratexpset_t(a.context()),
                            aut_to_exp_naive(a));
       }

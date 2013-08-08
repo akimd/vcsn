@@ -45,7 +45,7 @@ namespace vcsn
       template <class Aut>
       bool is_complete(const automaton& aut)
       {
-        return is_complete(dynamic_cast<const Aut&>(*aut));
+        return is_complete(aut->as<Aut>());
       }
 
       REGISTER_DECLARE(is_complete,

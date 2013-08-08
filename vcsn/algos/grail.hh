@@ -220,7 +220,7 @@ namespace vcsn
       template <typename Aut>
       std::ostream& fado(const automaton& aut, std::ostream& out)
       {
-        return fado(dynamic_cast<const Aut&>(*aut), out);
+        return fado(aut->as<Aut>(), out);
       }
 
       REGISTER_DECLARE(fado,
@@ -235,7 +235,7 @@ namespace vcsn
       template <typename Aut>
       std::ostream& grail(const automaton& aut, std::ostream& out)
       {
-        return grail(dynamic_cast<const Aut&>(*aut), out);
+        return grail(aut->as<Aut>(), out);
       }
 
       REGISTER_DECLARE(grail,

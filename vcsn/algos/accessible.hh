@@ -176,7 +176,7 @@ namespace vcsn
       automaton
       accessible(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_automaton(a.context(), accessible(a));
       }
 
@@ -191,7 +191,7 @@ namespace vcsn
       automaton
       coaccessible(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_automaton(a.context(), coaccessible(a));
       }
 
@@ -206,7 +206,7 @@ namespace vcsn
       automaton
       trim(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return make_automaton(a.context(), trim(a));
       }
 
@@ -221,7 +221,7 @@ namespace vcsn
       bool
       is_trim(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return is_trim(a);
       }
 
@@ -236,7 +236,7 @@ namespace vcsn
       bool
       is_useless(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return is_useless(a);
       }
 
@@ -251,7 +251,7 @@ namespace vcsn
       bool
       is_empty(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return is_empty(a);
       }
 

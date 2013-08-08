@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_IS_NORMALIZED_HH
 
 # include <vcsn/dyn/algos.hh>
+# include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -28,7 +29,7 @@ namespace vcsn
       bool
       is_normalized(const automaton& aut)
       {
-        return is_normalized(dynamic_cast<const Aut&>(*aut));
+        return is_normalized(aut->as<Aut>());
       }
 
       REGISTER_DECLARE(is_normalized,

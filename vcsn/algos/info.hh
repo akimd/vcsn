@@ -143,7 +143,7 @@ namespace vcsn
       template <typename Aut>
       std::ostream& info(const automaton& aut, std::ostream& out)
       {
-        info(dynamic_cast<const Aut&>(*aut), out);
+        info(aut->as<Aut>(), out);
         return out;
       }
 

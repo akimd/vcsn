@@ -195,7 +195,7 @@ namespace vcsn
       template <typename Aut>
       std::ostream& efsm(const automaton& aut, std::ostream& out)
       {
-        return efsm(dynamic_cast<const Aut&>(*aut), out);
+        return efsm(aut->as<Aut>(), out);
       }
 
       REGISTER_DECLARE(efsm,

@@ -23,6 +23,18 @@ namespace vcsn
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
         virtual std::string vname(bool full = true) const = 0;
+
+        template <typename Aut>
+        Aut& as()
+        {
+          return dynamic_cast<Aut&>(*this);
+        };
+
+        template <typename Aut>
+        const Aut& as() const
+        {
+          return dynamic_cast<const Aut&>(*this);
+        };
       };
     }
 

@@ -124,7 +124,7 @@ namespace vcsn
       template <typename Aut>
       bool is_eps_acyclic(const automaton& aut)
       {
-        return is_eps_acyclic(dynamic_cast<const Aut&>(*aut));
+        return is_eps_acyclic(aut->as<Aut>());
       }
 
       REGISTER_DECLARE(is_eps_acyclic,

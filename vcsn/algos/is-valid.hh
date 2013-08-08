@@ -136,7 +136,7 @@ namespace vcsn
       template <typename Aut>
       bool is_valid(const automaton& aut)
       {
-        const auto& a = dynamic_cast<const Aut&>(*aut);
+        const auto& a = aut->as<Aut>();
         return is_valid(a);
       }
 

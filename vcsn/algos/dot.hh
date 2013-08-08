@@ -11,6 +11,7 @@
 # include <vcsn/weights/entryset.hh>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/automaton.hh>
 
 # include <vcsn/misc/escape.hh>
 
@@ -42,8 +43,8 @@ namespace vcsn
   dot(const A& aut, std::ostream& out)
   {
     using state_t = typename A::state_t;
-    // Dot, by default, uses the X11 color naming scheme, whoe "gray"
-    // is really light (it almost looks blue in some cases).
+    // Dot, by default, uses the X11 color naming scheme, whose "gray"
+    // is really light (it looks almost blue in some cases).
     const char* gray = "color = DimGray";
 
     // Name all the states.
@@ -165,7 +166,7 @@ namespace vcsn
       template <typename Aut>
       std::ostream& dot(const automaton& aut, std::ostream& out)
       {
-        return dot(dynamic_cast<const Aut&>(*aut), out);
+        return dot(aut->as<Aut>(), out);
       }
 
       REGISTER_DECLARE(dot_stream,
@@ -197,7 +198,7 @@ namespace vcsn
       template <typename Aut>
       std::string dot(const automaton& aut)
       {
-        return dot(dynamic_cast<const Aut&>(*aut));
+        return dot(aut->as<Aut>());
       }
 
       REGISTER_DECLARE(dot_string,

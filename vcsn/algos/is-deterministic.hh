@@ -67,7 +67,7 @@ namespace vcsn
       bool
       is_deterministic(const automaton& aut)
       {
-        return is_deterministic(dynamic_cast<const Aut&>(*aut));
+        return is_deterministic(aut->as<Aut>());
       }
 
       REGISTER_DECLARE(is_deterministic,
