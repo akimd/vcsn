@@ -129,14 +129,6 @@ namespace vcsn
         return ks.format(e);
       }
 
-      ratexp_t
-      downcast(const rat::exp_t& e) const
-      {
-        ratexp_t res = std::dynamic_pointer_cast<const node_t>(e);
-        assert(res);
-        return res;
-      }
-
     private:
       labelset_ptr ls_;
       weightset_ptr ws_;
