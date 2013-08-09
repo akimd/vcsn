@@ -76,6 +76,7 @@ vcsn_cat              = $(top_builddir)/bin/vcsn-cat
 vcsn_coaccessible     = $(top_builddir)/bin/vcsn-coaccessible
 vcsn_complement       = $(top_builddir)/bin/vcsn-complement
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
+vcsn_concatenate      = $(top_builddir)/bin/vcsn-concatenate
 vcsn_constant_term    = $(top_builddir)/bin/vcsn-constant-term
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
@@ -113,6 +114,7 @@ all_vcsn =                                      \
   $(vcsn_coaccessible)                          \
   $(vcsn_complement)                            \
   $(vcsn_complete)                              \
+  $(vcsn_concatenate)                           \
   $(vcsn_constant_term)                         \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \

@@ -18,6 +18,7 @@ nobase_vcsn_HEADERS =                           \
   algos/aut_to_exp.hh                           \
   algos/complement.hh                           \
   algos/complete.hh                             \
+  algos/concatenate.hh                          \
   algos/copy.hh                                 \
   algos/determinize.hh                          \
   algos/dot.hh                                  \

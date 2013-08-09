@@ -25,6 +25,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-coaccessible                         \
   bin/vcsn-complement                           \
   bin/vcsn-complete                             \
+  bin/vcsn-concatenate                          \
   bin/vcsn-constant-term                        \
   bin/vcsn-de-bruijn                            \
   bin/vcsn-determinize                          \
@@ -67,6 +68,7 @@ bin_vcsn_cat_LDADD              = bin/libtafkit.la
 bin_vcsn_coaccessible_LDADD     = bin/libtafkit.la
 bin_vcsn_complement_LDADD       = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la
+bin_vcsn_concatenate_LDADD      = bin/libtafkit.la
 bin_vcsn_constant_term_LDADD    = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la

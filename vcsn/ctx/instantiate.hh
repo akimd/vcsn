@@ -4,6 +4,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
 # include <vcsn/algos/complete.hh>
+# include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
@@ -141,6 +142,10 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(aut_t, complete);
+
+        // concatenate
+        concatenate_register(aut_t::sname(), aut_t::sname(),
+                             concatenate<aut_t, aut_t>);
         // union_a
         union_a_register(aut_t::sname(), aut_t::sname(),
                              union_a<aut_t, aut_t>);

@@ -43,6 +43,9 @@ namespace vcsn
     /// \pre aut is lal
     automaton complete(const automaton& aut);
 
+    /// concatenation of two automatons;
+    automaton concatenate(const automaton& lhs, const automaton& rhs);
+
     /// The weight associated to the empty word in \a e.
     dyn::weight constant_term(const ratexp& e);
 
