@@ -1,7 +1,9 @@
-#include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/print.hh>
-#include <vcsn/dyn/algos.hh>
+
 #include <lib/vcsn/algos/registry.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/xalloc.hh>
 
 namespace vcsn
 {
@@ -15,7 +17,7 @@ namespace vcsn
     std::ostream&
     print(const dyn::automaton& aut, std::ostream& out, const std::string& type)
     {
-      if (type == "dot")
+      if (type == "dot" || type == "default" || type == "")
         dot(aut, out);
       else if (type == "efsm")
         efsm(aut, out);
@@ -35,6 +37,23 @@ namespace vcsn
       return out;
     }
 
+    xalloc<std::string*> format_flag;
+
+    void
+    set_format(std::ostream& o, const std::string& type)
+    {
+      if (!format_flag(o))
+        format_flag(o) = new std::string;
+      *format_flag(o) = type;
+    }
+
+    std::string
+    get_format(std::ostream& o)
+    {
+      if (!format_flag(o))
+        format_flag(o) = new std::string;
+      return *format_flag(o);
+    }
 
     /*------------------------.
     | print(ratexp, stream).  |
@@ -47,7 +66,7 @@ namespace vcsn
     {
       if (type == "info")
         info(exp, out);
-      else if (type == "text")
+      else if (type == "text" || type == "default" || type == "")
         detail::print_exp_registry().call(exp->vname(false), exp, out);
       else
         throw std::domain_error("invalid output format for expression: "
@@ -65,7 +84,7 @@ namespace vcsn
     std::ostream&
     print(const dyn::weight& w, std::ostream& out, const std::string& type)
     {
-      if (type == "text")
+      if (type == "text" || type == "default" || type == "")
         detail::print_weight_registry().call(w->get_weightset().vname(false),
                                              w, out);
       else
@@ -74,6 +93,27 @@ namespace vcsn
       return out;
     }
 
-
   }
+}
+
+namespace std
+{
+  std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::automaton& a)
+  {
+    return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::ratexp& a)
+  {
+    return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::weight& a)
+  {
+    return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
+  }
+
 }

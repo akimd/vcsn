@@ -123,6 +123,8 @@ nobase_vcsn_HEADERS =                           \
   misc/set.hh                                   \
   misc/star_status.hh                           \
   misc/stream.hh                                \
+  misc/xalloc.hh                                \
+  misc/xalloc.hxx                               \
   misc/unordered_set.hh                         \
   weights/b.hh                                  \
   weights/entryset.hh                           \

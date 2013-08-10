@@ -1,6 +1,8 @@
 #ifndef VCSN_BIN_PARSE_ARGS_HH_
 # define VCSN_BIN_PARSE_ARGS_HH_
 
+# include <fstream>
+# include <iostream>
 # include <stdexcept>
 # include <string>
 # include <vector>
@@ -48,8 +50,26 @@ vcsn::dyn::automaton read_automaton(const options& opts);
 vcsn::dyn::ratexp read_ratexp(const options& opts);
 
 /// Print automaton/ratexp according to \a opts.
-void print(const options& opts, const vcsn::dyn::automaton& exp);
-void print(const options& opts, const vcsn::dyn::ratexp& exp);
+template <typename T>
+void
+print(const options& opts, const T& e)
+{
+  if (opts.output_format != "null")
+    {
+      std::ostream* out = &std::cout;
+      std::ofstream os;
+      if (!opts.output.empty() && opts.output != "-")
+        {
+          os.open(opts.output.c_str());
+          out = &os;
+        }
+      if (!out->good())
+        throw std::runtime_error(opts.output + ": cannot open for writing");
+
+      vcsn::dyn::set_format(*out, opts.output_format);
+      *out << e << std::endl;
+    }
+}
 
 /// Function object to dispatch calls for automata or rational expressions.
 struct vcsn_function

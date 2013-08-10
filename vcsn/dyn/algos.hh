@@ -134,14 +134,22 @@ namespace vcsn
     automaton power(const automaton& aut, unsigned n);
 
     std::ostream& print(const automaton& a, std::ostream& o,
-                        const std::string& type = "dot");
+                        const std::string& type = "default");
     std::ostream& print(const ratexp& e, std::ostream& o,
-                        const std::string& type = "text");
+                        const std::string& type = "default");
     std::ostream& print(const weight& e, std::ostream& o,
-                        const std::string& type = "text");
+                        const std::string& type = "default");
 
+    /// Specify the output format for \a o.
+    void set_format(std::ostream& o, const std::string& type);
+
+    /// Get the output format for \a o.
+    std::string get_format(std::ostream& o);
+
+    /// The product of automata \a lhs and \a rhs.
     automaton product(const automaton& lhs, const automaton& rhs);
 
+    /// An automaton equivalent to \a aut, without spontaneous transitions.
     automaton proper(const automaton& aut);
 
     /// Read an automaton in a file.
@@ -192,6 +200,18 @@ namespace vcsn
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
   }
+}
+
+namespace std
+{
+  /// Output \a w on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
+
+  /// Output \a e on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::ratexp& e);
+
+  /// Output \a w on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
 }
 
 #endif // !VCSN_DYN_ALGOS_HH

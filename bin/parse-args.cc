@@ -36,48 +36,6 @@ read_ratexp(const options& opts)
 }
 
 void
-print(const options& opts, const vcsn::dyn::automaton& aut)
-{
-  if (opts.output_format != "null")
-    {
-      std::ostream* out = &std::cout;
-      std::ofstream os;
-      if (!opts.output.empty() && opts.output != "-")
-        {
-          os.open(opts.output.c_str());
-          out = &os;
-        }
-      if (!out->good())
-        throw std::runtime_error(opts.output + ": cannot open for writing");
-
-      std::string fmt =
-        (opts.output_format == "default" ? "dot" : opts.output_format);
-      vcsn::dyn::print(aut, *out, fmt) << std::endl;
-    }
-}
-
-void
-print(const options& opts, const vcsn::dyn::ratexp& exp)
-{
-  if (opts.output_format != "null")
-    {
-      std::ostream* out = &std::cout;
-      std::ofstream os;
-      if (!opts.output.empty() && opts.output != "-")
-        {
-          os.open(opts.output.c_str());
-          out = &os;
-        }
-      if (!out->good())
-        throw std::runtime_error(opts.output + ": cannot open for writing");
-
-      std::string fmt =
-        (opts.output_format == "default" ? "text" : opts.output_format);
-      vcsn::dyn::print(exp, *out, fmt) << std::endl;
-    }
-}
-
-void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
