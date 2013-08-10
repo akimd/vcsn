@@ -1,20 +1,19 @@
 /**
- ** \file misc/xalloc.hh
- ** \brief Declaration of misc::xalloc.
+ ** \file vcsn/misc/xalloc.hh
+ ** \brief Declaration of vcsn::xalloc.
  **/
 
-#ifndef MISC_XALLOC_HH
-# define MISC_XALLOC_HH
+#ifndef VCSN_MISC_XALLOC_HH
+# define VCSN_MISC_XALLOC_HH
 
 # include <iostream>
 # include <functional>
 
-namespace misc
+namespace vcsn
 {
   /// Defines the operator() for the classes get_type, set_type and swap_type.
   struct iomanipulator : public std::unary_function<void, std::ostream>
   {
-    virtual ~iomanipulator();
     virtual void operator()(std::ostream& o) const = 0;
   };
 
@@ -28,9 +27,7 @@ namespace misc
 
   /** \brief Allocate slots in std::ostreams.
    **
-   ** Used to store flags in streams so that calling print
-   ** with additional parameters is no longer required (for
-   ** example in ast/libast.hh).
+   ** Used to store flags in streams.
    **
    ** Set, get or swap data.
    ** The idea is to build the right inner class with set, get or
@@ -122,6 +119,6 @@ namespace misc
 
 }
 
-# include <misc/xalloc.hxx>
+# include <vcsn/misc/xalloc.hxx>
 
-#endif // !MISC_XALLOC_HH
+#endif // !VCSN_MISC_XALLOC_HH

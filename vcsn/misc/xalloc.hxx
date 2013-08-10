@@ -1,14 +1,9 @@
 /**
- ** \file misc/xalloc.hxx
- ** \brief Implementation for misc/xalloc.hh.
+ ** \file vcsn/misc/xalloc.hxx
+ ** \brief Implementation for vcsn/misc/xalloc.hh.
  */
 
-#ifndef MISC_XALLOC_HXX
-# define MISC_XALLOC_HXX
-
-# include <misc/xalloc.hh>
-
-namespace misc
+namespace vcsn
 {
 
   /*----------------.
@@ -30,8 +25,7 @@ namespace misc
   template <class StoredType>
   xalloc<StoredType>::xalloc()
     : index_(std::ios::xalloc())
-  {
-  }
+  {}
 
   template <class StoredType>
   long int
@@ -58,8 +52,7 @@ namespace misc
   template <class StoredType>
   xalloc<StoredType>::set_type::set_type(const xalloc& slot, StoredType& data)
     : slot_(slot), data_(data)
-  {
-  }
+  {}
 
   template <class StoredType>
   void
@@ -108,8 +101,7 @@ namespace misc
   template <class StoredType>
   xalloc<StoredType>::swap_type::swap_type(const xalloc& slot, StoredType& data)
     : slot_(slot), data_(data)
-  {
-  }
+  {}
 
   template <class StoredType>
   void
@@ -126,5 +118,3 @@ namespace misc
   }
 
 }
-
-#endif // !MISC_XALLOC_HXX
