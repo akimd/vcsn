@@ -19,7 +19,7 @@ namespace vcsn
     automaton
     read_efsm_file(const std::string& file)
     {
-      auto fin = open_file(file);
+      auto fin = open_input_file(file);
 
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;

@@ -17,7 +17,7 @@ struct lift: vcsn_function
     auto res = vcsn::dyn::lift(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 
@@ -31,7 +31,7 @@ struct lift: vcsn_function
     auto res = vcsn::dyn::lift(exp);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

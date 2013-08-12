@@ -17,7 +17,7 @@ struct trim: vcsn_function
     auto res = vcsn::dyn::trim(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

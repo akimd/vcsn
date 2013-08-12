@@ -41,9 +41,13 @@ namespace vcsn
   /// \throws std::runtime_error if the next character is not \a s.
   void eat(std::istream& is, const std::string& s);
 
-  /// Open \a file and return its autoclosing stream.
+  /// Open \a file for reading and return its autoclosing stream.
   /// \param file   the file name.  "-" and "" denote stdin.
-  std::shared_ptr<std::istream> open_file(const std::string& file);
+  std::shared_ptr<std::istream> open_input_file(const std::string& file);
+
+  /// Open \a file for writing and return its autoclosing stream.
+  /// \param file   the file name.  "-" and "" denote stdout.
+  std::shared_ptr<std::ostream> open_output_file(const std::string& file);
 }
 
 #endif // !VCSN_MISC_STREAM_HH

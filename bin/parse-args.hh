@@ -36,6 +36,9 @@ struct options
 
   /// The remainder of the arguments.
   std::vector<std::string> argv;
+
+  /// The output stream.
+  std::shared_ptr<std::ostream> out;
 };
 
 ATTRIBUTE_NORETURN
@@ -48,28 +51,6 @@ options parse_args(int& argc, char* const*& argv);
 /// Read automaton/ratexp according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
 vcsn::dyn::ratexp read_ratexp(const options& opts);
-
-/// Print automaton/ratexp according to \a opts.
-template <typename T>
-void
-print(const options& opts, const T& e)
-{
-  if (opts.output_format != "null")
-    {
-      std::ostream* out = &std::cout;
-      std::ofstream os;
-      if (!opts.output.empty() && opts.output != "-")
-        {
-          os.open(opts.output.c_str());
-          out = &os;
-        }
-      if (!out->good())
-        throw std::runtime_error(opts.output + ": cannot open for writing");
-
-      vcsn::dyn::set_format(*out, opts.output_format);
-      *out << e << std::endl;
-    }
-}
 
 /// Function object to dispatch calls for automata or rational expressions.
 struct vcsn_function

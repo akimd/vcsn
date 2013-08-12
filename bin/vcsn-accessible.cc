@@ -17,7 +17,7 @@ struct accessible: vcsn_function
     auto res = vcsn::dyn::accessible(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

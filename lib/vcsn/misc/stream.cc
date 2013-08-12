@@ -56,7 +56,7 @@ namespace vcsn
   }
 
   std::shared_ptr<std::istream>
-  open_file(const std::string& file)
+  open_input_file(const std::string& file)
   {
     std::shared_ptr<std::istream> res;
     if (file.empty() || file == "-")
@@ -73,6 +73,29 @@ namespace vcsn
         if (!res->good())
           throw std::runtime_error("cannot open " + file
                                    + " for reading: "
+                                   + strerror(errno));
+      }
+    return res;
+  }
+
+  std::shared_ptr<std::ostream>
+  open_output_file(const std::string& file)
+  {
+    std::shared_ptr<std::ostream> res;
+    if (file.empty() || file == "-")
+      {
+        struct noop
+        {
+          void operator()(...) const {}
+        };
+        res.reset(&std::cout, noop());
+      }
+    else
+      {
+        res.reset(new std::ofstream(file.c_str()));
+        if (!res->good())
+          throw std::runtime_error("cannot open " + file
+                                   + " for writing: "
                                    + strerror(errno));
       }
     return res;

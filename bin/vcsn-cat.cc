@@ -13,7 +13,7 @@ struct cat: vcsn_function
     // Input.
     auto aut = read_automaton(opts);
     // Output.
-    print(opts, aut);
+    *opts.out << aut << std::endl;
     return 0;
   }
 
@@ -23,7 +23,7 @@ struct cat: vcsn_function
     // Input.
     auto exp = read_ratexp(opts);
     // Output.
-    print(opts, exp);
+    *opts.out << exp << std::endl;
     return 0;
   }
 };

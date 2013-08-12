@@ -17,7 +17,7 @@ struct determinize: vcsn_function
     auto res = vcsn::dyn::determinize(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

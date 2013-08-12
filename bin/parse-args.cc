@@ -10,6 +10,7 @@
 
 #include "parse-args.hh"
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/misc/stream.hh>
 
 vcsn::dyn::automaton
 read_automaton(const options& opts)
@@ -183,6 +184,8 @@ parse_args(options& opts, int& argc, char* const*& argv)
   argc -= optind;
   argv += optind;
   opts.argv.insert(opts.argv.end(), argv, argv + argc);
+  opts.out = vcsn::open_output_file(opts.output);
+  vcsn::dyn::set_format(*opts.out, opts.output_format);
 }
 
 options

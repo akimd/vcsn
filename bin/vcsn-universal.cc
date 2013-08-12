@@ -17,7 +17,7 @@ struct universal: vcsn_function
     auto res = vcsn::dyn::universal(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 
@@ -32,7 +32,7 @@ struct universal: vcsn_function
     auto res = vcsn::dyn::universal(aut);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

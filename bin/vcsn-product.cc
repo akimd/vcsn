@@ -21,7 +21,7 @@ struct product: vcsn_function
     auto res = vcsn::dyn::product(lhs, rhs);
 
     // Output.
-    print(opts, res);
+    *opts.out << res << std::endl;
     return 0;
   }
 };

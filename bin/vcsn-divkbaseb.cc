@@ -23,7 +23,7 @@ try
     automaton aut = divkbaseb(ctx, k, b);
 
     // Output.
-    print(opts, aut);
+    *opts.out << aut << std::endl;
   }
 catch (const std::exception& e)
   {
