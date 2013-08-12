@@ -17,7 +17,7 @@ struct is_deterministic: vcsn_function
     bool res = vcsn::dyn::is_deterministic(aut);
 
     // Output.
-    std::cout << (res ? "true" : "false") << std::endl;
+    *opts.out << (res ? "true" : "false") << std::endl;
     return res ? 0 : 2;
   }
 };

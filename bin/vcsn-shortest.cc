@@ -17,7 +17,7 @@ struct shortest: vcsn_function
     auto res = vcsn::dyn::shortest(aut);
 
     // Output.
-    std::cout << res << std::endl;
+    *opts.out << res << std::endl;
     return 0;
   }
 
@@ -31,7 +31,7 @@ struct shortest: vcsn_function
     auto res = vcsn::dyn::shortest(standard(exp));
 
     // Output.
-    std::cout << res << std::endl;
+    *opts.out << res << std::endl;
     return 0;
   }
 };

@@ -17,7 +17,7 @@ struct constant_term: vcsn_function
     weight res = vcsn::dyn::constant_term(exp);
 
     // Output.
-    vcsn::dyn::print(res, std::cout, "text") << std::endl;
+    *opts.out << res << std::endl;
     return 0;
   }
 };

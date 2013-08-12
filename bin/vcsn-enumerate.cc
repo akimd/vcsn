@@ -21,7 +21,7 @@ struct enumerate: vcsn_function
 
     // Output.
     for (const auto&r: res)
-      std::cout << r << std::endl;
+      *opts.out << r << std::endl;
     return 0;
   }
 
@@ -37,7 +37,7 @@ struct enumerate: vcsn_function
 
     // Output.
     for (const auto&r: res)
-      std::cout << r << std::endl;
+      *opts.out << r << std::endl;
     return 0;
   }
 };

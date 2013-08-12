@@ -17,7 +17,7 @@ struct is_normalized: vcsn_function
     bool res = vcsn::dyn::is_normalized(aut);
 
     // Output.
-    std::cout << (res ? "true" : "false") << std::endl;
+    *opts.out << (res ? "true" : "false") << std::endl;
     return res ? 0 : 2;
   }
 };

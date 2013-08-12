@@ -21,7 +21,7 @@ struct are_equivalent: vcsn_function
     auto res = vcsn::dyn::are_equivalent(lhs, rhs);
 
     // Output.
-    std::cout << (res ? "true" : "false") << std::endl;
+    *opts.out << (res ? "true" : "false") << std::endl;
     return res ? 0 : 2;
   }
 
@@ -39,7 +39,7 @@ struct are_equivalent: vcsn_function
     auto res = vcsn::dyn::are_equivalent(lhs, rhs);
 
     // Output.
-    std::cout << (res ? "true" : "false") << std::endl;
+    *opts.out << (res ? "true" : "false") << std::endl;
     return res ? 0 : 2;
   }
 };
