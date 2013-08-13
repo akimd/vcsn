@@ -24,10 +24,10 @@ namespace vcsn
     `--------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
-                            std::string>::type
+                            bool>::type
     is_complete(const Aut& a)
     {
-      return std::to_string(vcsn::is_complete(a));
+      return vcsn::is_complete(a);
     }
 
     template <typename Aut>
@@ -43,10 +43,10 @@ namespace vcsn
     `-------------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
-                            std::string>::type
+                            bool>::type
     is_deterministic(const Aut& a)
     {
-      return std::to_string(vcsn::is_deterministic(a));
+      return vcsn::is_deterministic(a);
     }
 
     template <typename Aut>
@@ -62,10 +62,10 @@ namespace vcsn
     `---------------------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
-                            std::string>::type
+                            size_t>::type
     num_deterministic_states(const Aut& a)
     {
-      return std::to_string(vcsn::num_deterministic_states(a));
+      return vcsn::num_deterministic_states(a);
     }
 
     template <typename Aut>

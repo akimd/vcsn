@@ -186,6 +186,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
   opts.argv.insert(opts.argv.end(), argv, argv + argc);
   opts.out = vcsn::open_output_file(opts.output);
   vcsn::dyn::set_format(*opts.out, opts.output_format);
+  *opts.out << std::boolalpha;
 }
 
 options

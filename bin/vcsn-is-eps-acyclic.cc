@@ -17,7 +17,7 @@ struct is_eps_acyclic: vcsn_function
     bool res = vcsn::dyn::is_eps_acyclic(aut);
 
     // Output.
-    *opts.out << (res ? "true" : "false") << std::endl;
+    *opts.out << res << std::endl;
     return res ? 0 : 2;
   }
 };

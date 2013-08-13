@@ -17,7 +17,7 @@ struct is_empty: vcsn_function
     bool res = vcsn::dyn::is_empty(aut);
 
     // Output.
-    *opts.out << (res ? "true" : "false") << std::endl;
+    *opts.out << res << std::endl;
     return res ? 0 : 2;
   }
 };

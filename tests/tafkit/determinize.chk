@@ -229,16 +229,16 @@ number of useful states: 512
 number of transitions: 1024
 number of deterministic states: 512
 number of eps transitions: 0
-is complete: 1
-is deterministic: 1
-is empty: 0
-is eps-acyclic: 1
-is normalized: 0
-is proper: 1
-is standard: 0
-is trim: 1
-is useless: 0
-is valid: 1
+is complete: true
+is deterministic: true
+is empty: false
+is eps-acyclic: true
+is normalized: false
+is proper: true
+is standard: false
+is trim: true
+is useless: false
+is valid: true
 EOF
 
 
@@ -355,14 +355,14 @@ number of useful states: 255
 number of transitions: 768
 number of deterministic states: 256
 number of eps transitions: 0
-is complete: 1
-is deterministic: 1
-is empty: 0
-is eps-acyclic: 1
-is normalized: 0
-is proper: 1
-is standard: 0
-is trim: 0
-is useless: 0
-is valid: 1
+is complete: true
+is deterministic: true
+is empty: false
+is eps-acyclic: true
+is normalized: false
+is proper: true
+is standard: false
+is trim: false
+is useless: false
+is valid: true
 EOF
