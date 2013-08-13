@@ -47,27 +47,25 @@ namespace vcsn
       char c;
       bool init = false;
       std::string state;
-      vcsn::lazy_automaton_editor edit_;
+      vcsn::lazy_automaton_editor edit;
       while ((c = fin.get()->get()) != '\n' && !fin.get()->eof())
-        {
-          if (c == ' ' || c == '\t')
-            {
-              // Eat blanks.
-              if (state.empty())
-                continue;
-              string_t s1{state};
-              if (init)
-                edit_.add_initial(s1);
-              else
-                edit_.add_final(s1);
-              state = "";
-            }
-          else if (c == '*')
-            init = true;
-          else
-            // Grow the name of the state.
-            state.append(1, c);
-        }
+        if (c == ' ' || c == '\t')
+          {
+            // Eat blanks.
+            if (state.empty())
+              continue;
+            string_t s1{state};
+            if (init)
+              edit.add_initial(s1);
+            else
+              edit.add_final(s1);
+            state = "";
+          }
+        else if (c == '*')
+          init = true;
+        else
+          // Grow the name of the state.
+          state.append(1, c);
 
       // Make sure we don't skip last state, which happens
       // when there are no spaces before '\n'.
@@ -75,9 +73,9 @@ namespace vcsn
         {
           string_t s1{state};
           if (init)
-            edit_.add_initial(s1);
+            edit.add_initial(s1);
           else
-            edit_.add_final(s1);
+            edit.add_final(s1);
         }
 
       {
@@ -87,18 +85,18 @@ namespace vcsn
 
         // First state is our initial state if not declared before by "*".
         if (!init && !fin.get()->eof())
-          edit_.add_initial(s1, string_t{});
+          edit.add_initial(s1, string_t{});
 
         while (!fin.get()->eof())
           {
             if (l == "@epsilon")
               l = "\\e";
-            edit_.add_entry(s1, s2, l);
+            edit.add_entry(s1, s2, l);
             *fin.get() >> s1 >> l >> s2;
           }
       }
       automaton res = nullptr;
-      res.reset(edit_.result());
+      res.reset(edit.result());
       return res;
     }
 

@@ -24,7 +24,7 @@ namespace vcsn
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
-      // Search is_one symbol after cat is read.
+      // Look for the symbol table.
       {
         std::string cat;
         while (!fin.get()->eof() && cat != "cat")
@@ -35,8 +35,8 @@ namespace vcsn
         fin.get()->ignore(1024, '\n');
       }
 
-      // Search is_one.
-      std::string is_one;
+      // Look for the empty word in the symbol table.
+      std::string one;
       {
         std::string line;
         std::string val;
@@ -45,13 +45,13 @@ namespace vcsn
             std::getline(*fin.get(), line, '\n');
             std::istringstream ss{line};
             // Eat blank lines.
-            ss >> is_one;
+            ss >> one;
             if (ss.fail())
               continue;
             ss >> val;
             if (ss.fail())
               throw std::runtime_error (file + ": bad input format");
-            if (val == "0" || is_one == "EOFSM")
+            if (val == "0" || one == "EOFSM")
               break;
           }
       }
@@ -98,20 +98,19 @@ namespace vcsn
             // Eat blank lines.
             SKIP_SPACES();
             ss >> s1 >> s2 >> l;
-            if ( s1 == "EOFSM")
+            if (s1 == "EOFSM")
               break;
             if (ss.fail())
               edit.add_final(s1, string_t{});
             else
               edit.add_entry(s1, s2, l);
-            if (l == is_one)
+            if (l == one)
               l = "\\e";
           } while (fin.get()->good());
 #undef SKIP_SPACES
 
         if (s1 != "EOFSM")
           throw std::runtime_error(":bad input format, missing EOFSM");
-
       }
       automaton res = nullptr;
       res.reset(edit.result());
