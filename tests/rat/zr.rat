@@ -5,8 +5,14 @@
 <<0>e>a => \z
 <<1>\e>a => a
 
+# Check the ?, *, and + quantifiers.
+(<e>a)? => \e+<e>a
+(<e>a){?} => \e+<e>a
+(<e>a)* => (<e>a)*
+(<e>a){*} => (<e>a)*
+(<e>a){+} => <e>a.((<e>a)*)
 
-# Check the "{ min, max}" quantifier.
+# Check the "{min, max}" quantifier.
 (<e>a){0} => \e
 (<e>a){1} => <e>a
 (<e>a){2} => <e>a.<e>a

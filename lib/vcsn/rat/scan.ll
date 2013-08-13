@@ -82,8 +82,16 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "\\z"   return TOK(ZERO);
 
   /* Quantifiers.  */
-  "*"                    {
+  "*"|"{*}"              {
       yylval->irange = std::make_tuple(-1, -1);
+      return TOK(STAR);
+  }
+  "?"|"{?}"              {
+      yylval->irange = std::make_tuple(0, 1);
+      return TOK(STAR);
+  }
+  "{+}"                  {
+      yylval->irange = std::make_tuple(1, -1);
       return TOK(STAR);
   }
   "{"[0-9]*,?[0-9]*"}"    {

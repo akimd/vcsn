@@ -1,3 +1,15 @@
+* 2013-08-13
+** More RatExp quantifiers
+In addition to "*", there is "?"/"{?}" and "{+}".  Support for "{*}" is
+added for symmetry.
+
+  $ vcsn cat -Ee 'a?'
+  \e+a
+  $ vcsn cat -Ee 'a?{3}'
+  (\e+a).(\e+a).(\e+a)
+  $ vcsn cat -Ee '(a+b){+}'
+  (a+b).((a+b)*)
+
 * 2013-08-02
 ** I/O EFSM format support
 We are now able to produce and read EFSM format (designed as an interface to
