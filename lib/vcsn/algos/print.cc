@@ -66,6 +66,8 @@ namespace vcsn
     {
       if (type == "info")
         info(exp, out);
+      else if (type == "null")
+        {}
       else if (type == "text" || type == "default" || type == "")
         detail::print_exp_registry().call(exp->vname(false), exp, out);
       else
@@ -84,7 +86,9 @@ namespace vcsn
     std::ostream&
     print(const dyn::weight& w, std::ostream& out, const std::string& type)
     {
-      if (type == "text" || type == "default" || type == "")
+      if (type == "null")
+        {}
+      else if (type == "text" || type == "default" || type == "")
         detail::print_weight_registry().call(w->get_weightset().vname(false),
                                              w, out);
       else
