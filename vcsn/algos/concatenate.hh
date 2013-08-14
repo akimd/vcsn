@@ -48,7 +48,9 @@ namespace vcsn
       res.add_transition(states_l[laut.src_of(t)], states_l[laut.dst_of(t)],
                          laut.label_of(t), laut.weight_of(t));
     for (auto t: laut.initial_transitions())
+    {
       res.add_initial(states_l[laut.dst_of(t)], laut.weight_of(t));
+    }
 
     // Add raut.
     // Laut finals states fuse with raut initial states.
@@ -58,16 +60,27 @@ namespace vcsn
       if (raut.is_initial(raut.src_of(r)))
       {
         for (auto l: laut.final_transitions())
+        {
           res.add_transition(states_l[laut.src_of(l)], states_r[raut.dst_of(r)],
                          raut.label_of(r),
                          ws.mul(raut.weight_of(r), laut.weight_of(l)));
+        }
       }
       else
         res.add_transition(states_r[raut.src_of(r)], states_r[raut.dst_of(r)],
             raut.label_of(r), raut.weight_of(r));
     }
-    for (auto t: raut.final_transitions())
-      res.add_final(states_r[raut.src_of(t)], raut.weight_of(t));
+    for (auto r: raut.final_transitions())
+    {
+      if (raut.is_initial(raut.src_of(r)))
+      {
+        for (auto l: laut.final_transitions())
+          res.add_final(states_l[laut.src_of(l)],
+                         ws.mul(raut.weight_of(r), laut.weight_of(l)));
+      }
+      else
+      res.add_final(states_r[raut.src_of(r)], raut.weight_of(r));
+    }
     return res;
   }
 
