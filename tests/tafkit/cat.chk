@@ -120,6 +120,17 @@ digraph
 }
 EOF
 
+# Invalid label: missing '>'.
+fail_aut <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(a)_z"
+  0 -> 1 [label = "<2"]
+  1 -> F1
+  I0 -> 0
+}
+EOF
+
 # No context defined (see the typo in vcsn_context).
 fail_aut <<\EOF
 digraph

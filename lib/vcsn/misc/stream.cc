@@ -15,19 +15,19 @@ namespace vcsn
     i.ignore();
     size_t level = 1;
     std::ostringstream o;
-    while (true)
+    int c;
+    while ((c = i.get()) != -1)
       {
-        if (i.peek() == lbracket)
+        if (c == lbracket)
           ++level;
-        else if (i.peek() == rbracket
+        else if (c == rbracket
                  && !--level)
-          {
-            i.ignore();
-            break;
-          }
-        o << char(i.get());
+          return o.str();
+        o << char(c);
       }
-    return o.str();
+    throw std::runtime_error("missing  " + str_escape(rbracket)
+                             + " after " + str_escape(lbracket)
+                             + o.str());
   }
 
   void eat(std::istream& is, char c)
