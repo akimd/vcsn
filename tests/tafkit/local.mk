@@ -39,6 +39,7 @@ tafkit_TESTS =                                  \
   tafkit/proper.chk                             \
   tafkit/shortest.chk                           \
   tafkit/standard.chk                           \
+  tafkit/star.chk                               \
   tafkit/sum.chk                                \
   tafkit/thompson.chk                           \
   tafkit/transpose.chk                          \

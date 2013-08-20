@@ -1,0 +1,112 @@
+#! /bin/sh
+
+cat >ab.gv <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
+  1 -> F1
+  2 -> F2
+}
+EOF
+
+cat >out.exp <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F1
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
+  1 -> F1
+  1 -> 1 [label = "a"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 1 [label = "a"]
+  2 -> 2 [label = "b"]
+}
+EOF
+
+run 0 out.exp -vcsn-star -f ab.gv
+
+cat >ab.gv <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_ratexpset<lal_char(xyz)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I
+    F0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I -> 0
+  0 -> 1 [label = "<x>a"]
+  1 -> 2 [label = "<y>b"]
+  2 -> F0 [label = "<y>"]
+  0 -> F1 [label = "<z>"]
+}
+EOF
+
+cat >out.exp <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_ratexpset<lal_char(xyz)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> F0 [label = "<z*>"]
+  0 -> 1 [label = "<(z*).x>a"]
+  1 -> 2 [label = "<y>b"]
+  2 -> F2 [label = "<y.(z*)>"]
+  2 -> 1 [label = "<y.(z*).x>a"]
+}
+EOF
+
+run 0 out.exp -vcsn-star -f ab.gv
