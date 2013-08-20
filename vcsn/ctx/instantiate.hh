@@ -25,6 +25,7 @@
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/star.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
@@ -166,6 +167,7 @@ namespace vcsn
         REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);
+        REGISTER(aut_t, star);
         REGISTER(Ctx, u);
 
         return true;

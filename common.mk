@@ -98,6 +98,7 @@ vcsn_product          = $(top_builddir)/bin/vcsn-product
 vcsn_proper           = $(top_builddir)/bin/vcsn-proper
 vcsn_shortest         = $(top_builddir)/bin/vcsn-shortest
 vcsn_standard         = $(top_builddir)/bin/vcsn-standard
+vcsn_star             = $(top_builddir)/bin/vcsn-star
 vcsn_sum              = $(top_builddir)/bin/vcsn-sum
 vcsn_thompson         = $(top_builddir)/bin/vcsn-thompson
 vcsn_transpose        = $(top_builddir)/bin/vcsn-transpose
@@ -137,6 +138,7 @@ all_vcsn =                                      \
   $(vcsn_proper)                                \
   $(vcsn_shortest)                              \
   $(vcsn_standard)                              \
+  $(vcsn_star)                                  \
   $(vcsn_sum)                                   \
   $(vcsn_thompson)                              \
   $(vcsn_transpose)                             \

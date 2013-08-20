@@ -42,6 +42,7 @@ nobase_vcsn_HEADERS =                           \
   algos/product.hh                              \
   algos/proper.hh                               \
   algos/standard.hh                             \
+  algos/star.hh                                 \
   algos/sum.hh                                  \
   algos/thompson.hh                             \
   algos/tikz.hh                                 \
