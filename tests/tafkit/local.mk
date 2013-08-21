@@ -38,6 +38,7 @@ tafkit_TESTS =                                  \
   tafkit/power.chk                              \
   tafkit/product.chk                            \
   tafkit/proper.chk                             \
+  tafkit/right-mult.chk                         \
   tafkit/shortest.chk                           \
   tafkit/standard.chk                           \
   tafkit/star.chk                               \
