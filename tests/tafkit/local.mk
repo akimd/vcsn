@@ -33,6 +33,7 @@ tafkit_TESTS =                                  \
   tafkit/is-proper.chk                          \
   tafkit/is-valid.chk                           \
   tafkit/ladybird.chk                           \
+  tafkit/left-mult.chk                          \
   tafkit/lift.chk                               \
   tafkit/power.chk                              \
   tafkit/product.chk                            \
