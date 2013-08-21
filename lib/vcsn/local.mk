@@ -49,6 +49,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/is_complete.cc                 \
   lib/vcsn/algos/is-valid.cc                    \
   lib/vcsn/algos/ladybird.cc                    \
+  lib/vcsn/algos/left-mult.cc                   \
   lib/vcsn/algos/lift.cc                        \
   lib/vcsn/algos/make-context.cc                \
   lib/vcsn/algos/print.cc                       \

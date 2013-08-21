@@ -19,6 +19,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is-valid.hh>
+# include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
@@ -153,6 +154,7 @@ namespace vcsn
         REGISTER(aut_t, is_deterministic);
 
         REGISTER(Ctx, ladybird);
+        REGISTER(aut_t, left_mult);
         REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);

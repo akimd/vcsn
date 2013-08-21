@@ -43,6 +43,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-is-useless                           \
   bin/vcsn-is-valid                             \
   bin/vcsn-ladybird                             \
+  bin/vcsn-left-mult                            \
   bin/vcsn-lift                                 \
   bin/vcsn-power                                \
   bin/vcsn-product                              \
@@ -87,13 +88,14 @@ bin_vcsn_is_trim_LDADD          = bin/libtafkit.la
 bin_vcsn_is_useless_LDADD       = bin/libtafkit.la
 bin_vcsn_is_valid_LDADD         = bin/libtafkit.la
 bin_vcsn_ladybird_LDADD         = bin/libtafkit.la
+bin_vcsn_left_mult_LDADD        = bin/libtafkit.la
 bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_power_LDADD            = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la
 bin_vcsn_proper_LDADD           = bin/libtafkit.la
 bin_vcsn_shortest_LDADD         = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
-bin_vcsn_star_LDADD            = bin/libtafkit.la
+bin_vcsn_star_LDADD             = bin/libtafkit.la
 bin_vcsn_sum_LDADD              = bin/libtafkit.la
 bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la

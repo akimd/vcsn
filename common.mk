@@ -92,6 +92,7 @@ vcsn_is_trim          = $(top_builddir)/bin/vcsn-is-trim
 vcsn_is_useless       = $(top_builddir)/bin/vcsn-is-useless
 vcsn_is_valid         = $(top_builddir)/bin/vcsn-is-valid
 vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
+vcsn_left_mult        = $(top_builddir)/bin/vcsn-left-mult
 vcsn_lift             = $(top_builddir)/bin/vcsn-lift
 vcsn_power            = $(top_builddir)/bin/vcsn-power
 vcsn_product          = $(top_builddir)/bin/vcsn-product
@@ -132,6 +133,7 @@ all_vcsn =                                      \
   $(vcsn_is_useless)                            \
   $(vcsn_is_valid)                              \
   $(vcsn_ladybird)                              \
+  $(vcsn_left_mult)                             \
   $(vcsn_lift)                                  \
   $(vcsn_power)                                 \
   $(vcsn_product)                               \
