@@ -158,6 +158,9 @@ namespace vcsn
     std::ostream& print(const weight& w, std::ostream& o,
                         const std::string& type = "default");
 
+    /// The right-mult automaton with \a w as weight.
+    automaton right_mult(const automaton& aut, std::string w);
+
     /// Specify the output format for \a o.
     void set_format(std::ostream& o, const std::string& type);
 

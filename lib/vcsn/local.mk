@@ -57,6 +57,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/proper.cc                      \
   lib/vcsn/algos/read.cc                        \
   lib/vcsn/algos/registry.hh                    \
+  lib/vcsn/algos/right-mult.cc                  \
   lib/vcsn/algos/standard.cc                    \
   lib/vcsn/algos/star.cc                        \
   lib/vcsn/algos/sum.cc                         \

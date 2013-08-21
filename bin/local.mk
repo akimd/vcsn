@@ -48,6 +48,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-power                                \
   bin/vcsn-product                              \
   bin/vcsn-proper                               \
+  bin/vcsn-right-mult                           \
   bin/vcsn-shortest                             \
   bin/vcsn-sum                                  \
   bin/vcsn-standard                             \
@@ -93,6 +94,7 @@ bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_power_LDADD            = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la
 bin_vcsn_proper_LDADD           = bin/libtafkit.la
+bin_vcsn_right_mult_LDADD       = bin/libtafkit.la
 bin_vcsn_shortest_LDADD         = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
 bin_vcsn_star_LDADD             = bin/libtafkit.la

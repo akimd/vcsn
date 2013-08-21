@@ -97,6 +97,7 @@ vcsn_lift             = $(top_builddir)/bin/vcsn-lift
 vcsn_power            = $(top_builddir)/bin/vcsn-power
 vcsn_product          = $(top_builddir)/bin/vcsn-product
 vcsn_proper           = $(top_builddir)/bin/vcsn-proper
+vcsn_right_mult        = $(top_builddir)/bin/vcsn-right-mult
 vcsn_shortest         = $(top_builddir)/bin/vcsn-shortest
 vcsn_standard         = $(top_builddir)/bin/vcsn-standard
 vcsn_star             = $(top_builddir)/bin/vcsn-star
@@ -138,6 +139,7 @@ all_vcsn =                                      \
   $(vcsn_power)                                 \
   $(vcsn_product)                               \
   $(vcsn_proper)                                \
+  $(vcsn_right_mult)                            \
   $(vcsn_shortest)                              \
   $(vcsn_standard)                              \
   $(vcsn_star)                                  \
