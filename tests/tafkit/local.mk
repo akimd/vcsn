@@ -16,6 +16,7 @@ tafkit_TESTS =                                  \
   tafkit/are-equivalent.chk                     \
   tafkit/aut_to_exp.chk                         \
   tafkit/cat.chk                                \
+  tafkit/chain.chk                              \
   tafkit/complement.chk                         \
   tafkit/complete.chk                           \
   tafkit/concatenate.chk                        \
