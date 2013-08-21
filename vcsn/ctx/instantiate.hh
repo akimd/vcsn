@@ -3,6 +3,7 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
+# include <vcsn/algos/chain.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
@@ -163,6 +164,7 @@ namespace vcsn
         // FIXME: the following 3 should work for all kinds (so
         // instantiate them more generally), except we need to define
         // the union of contexts.
+        REGISTER(chain, aut_t);
         REGISTER2(concatenate, aut_t, aut_t);
         REGISTER2(union_a, aut_t, aut_t);
         REGISTER2(sum, aut_t, aut_t);

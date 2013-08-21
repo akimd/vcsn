@@ -22,6 +22,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-are-equivalent                       \
   bin/vcsn-aut-to-exp                           \
   bin/vcsn-cat                                  \
+  bin/vcsn-chain                                \
   bin/vcsn-coaccessible                         \
   bin/vcsn-complement                           \
   bin/vcsn-complete                             \
@@ -68,6 +69,7 @@ bin_vcsn_accessible_LDADD       = bin/libtafkit.la
 bin_vcsn_are_equivalent_LDADD   = bin/libtafkit.la
 bin_vcsn_aut_to_exp_LDADD       = bin/libtafkit.la
 bin_vcsn_cat_LDADD              = bin/libtafkit.la
+bin_vcsn_chain_LDADD            = bin/libtafkit.la
 bin_vcsn_coaccessible_LDADD     = bin/libtafkit.la
 bin_vcsn_complement_LDADD       = bin/libtafkit.la
 bin_vcsn_complete_LDADD         = bin/libtafkit.la

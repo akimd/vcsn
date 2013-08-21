@@ -25,6 +25,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/accessible.cc                  \
   lib/vcsn/algos/are-equivalent.cc              \
   lib/vcsn/algos/aut-to-exp.cc                  \
+  lib/vcsn/algos/chain.cc                       \
   lib/vcsn/algos/complement.cc                  \
   lib/vcsn/algos/complete.cc                    \
   lib/vcsn/algos/concatenate.cc                 \

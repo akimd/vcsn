@@ -73,6 +73,7 @@ vcsn_accessible       = $(top_builddir)/bin/vcsn-accessible
 vcsn_are_equivalent   = $(top_builddir)/bin/vcsn-are-equivalent
 vcsn_aut_to_exp       = $(top_builddir)/bin/vcsn-aut-to-exp
 vcsn_cat              = $(top_builddir)/bin/vcsn-cat
+vcsn_chain            = $(top_builddir)/bin/vcsn-chain
 vcsn_coaccessible     = $(top_builddir)/bin/vcsn-coaccessible
 vcsn_complement       = $(top_builddir)/bin/vcsn-complement
 vcsn_complete         = $(top_builddir)/bin/vcsn-complete
@@ -114,6 +115,7 @@ all_vcsn =                                      \
   $(vcsn_are_equivalent)                        \
   $(vcsn_aut_to_exp)                            \
   $(vcsn_cat)                                   \
+  $(vcsn_chain)                                 \
   $(vcsn_coaccessible)                          \
   $(vcsn_complement)                            \
   $(vcsn_complete)                              \

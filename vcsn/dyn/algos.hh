@@ -29,6 +29,9 @@ namespace vcsn
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
+    /// chain automatons \a aut\a n times.;
+    automaton chain(const automaton& aut, size_t n);
+
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
 
