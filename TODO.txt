@@ -136,17 +136,6 @@ that *both* should yield "{3}ab":
   of the function derived-term for the weighthed automata.
 
 * More algorithms
-** More automata factories (AL)
-Implement vcsn-double-ring (sta, dyn, tafkit).  See how the other factories
-(ladybird, de-bruijn etc.) were built.  See the documentation of TAF-Kit V1
-to understand what double-ring-is.  Compare with what Vaucanson 1 did.
-
-** Functions to assemble automata (AL)
-Read the documentation of TAF-Kit v1, and implement (and check) these
-functions:
-  - left-mult, right-mult
-  - chain
-
 ** Functions to assemble automata
 They stupidly work only on LAL, because the steps to compute the union of
 contexts is yet to be implemented in a more generic way.  Actually, there is

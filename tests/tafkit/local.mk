@@ -23,6 +23,7 @@ tafkit_TESTS =                                  \
   tafkit/constant-term.chk                      \
   tafkit/de-bruijn.chk                          \
   tafkit/determinize.chk                        \
+  tafkit/double-ring.chk                        \
   tafkit/efsm.chk                               \
   tafkit/enumerate.chk                          \
   tafkit/evaluate.chk                           \
