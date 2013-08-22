@@ -72,6 +72,10 @@ namespace vcsn
     /// A string representing \a aut in GraphViz' Dot format.
     std::string dot(const automaton& aut);
 
+    /// The double_ring automaton with \a n states and \a f the list of finals.
+    automaton double_ring(const context& ctx, unsigned n,
+                          std::vector<unsigned> f);
+
     /// Output in Extended FSM format.
     std::ostream& efsm(const automaton& aut, std::ostream& out);
 

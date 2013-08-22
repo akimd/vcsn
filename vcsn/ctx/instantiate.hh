@@ -36,6 +36,7 @@
 
 # include <vcsn/factory/de_bruijn.hh>
 # include <vcsn/factory/divkbaseb.hh>
+# include <vcsn/factory/double-ring.hh>
 # include <vcsn/factory/ladybird.hh>
 # include <vcsn/factory/u.hh>
 
@@ -150,6 +151,7 @@ namespace vcsn
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx);
         REGISTER(divkbaseb, Ctx);
+        REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);
         REGISTER(eval, aut_t);
         REGISTER(is_complete, aut_t);
@@ -181,6 +183,7 @@ namespace vcsn
 
         REGISTER(de_bruijn, Ctx);
         REGISTER(divkbaseb, Ctx);
+        REGISTER(double_ring, Ctx);
         REGISTER(proper, aut_t);
         REGISTER(ladybird, Ctx);
         REGISTER(thompson, rs_t);

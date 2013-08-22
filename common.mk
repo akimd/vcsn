@@ -82,6 +82,7 @@ vcsn_constant_term    = $(top_builddir)/bin/vcsn-constant-term
 vcsn_de_bruijn        = $(top_builddir)/bin/vcsn-de-bruijn
 vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
 vcsn_divkbaseb        = $(top_builddir)/bin/vcsn-divkbaseb
+vcsn_double_ring      = $(top_builddir)/bin/vcsn-double-ring
 vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
 vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
 vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
@@ -91,7 +92,7 @@ vcsn_is_proper        = $(top_builddir)/bin/vcsn-is-proper
 vcsn_is_standard      = $(top_builddir)/bin/vcsn-is-standard
 vcsn_is_trim          = $(top_builddir)/bin/vcsn-is-trim
 vcsn_is_useless       = $(top_builddir)/bin/vcsn-is-useless
-vcsn_is_valid         = $(top_builddir)/bin/vcsn-is-valid
+kcsn_is_valid         = $(top_builddir)/bin/vcsn-is-valid
 vcsn_ladybird         = $(top_builddir)/bin/vcsn-ladybird
 vcsn_left_mult        = $(top_builddir)/bin/vcsn-left-mult
 vcsn_lift             = $(top_builddir)/bin/vcsn-lift
@@ -124,6 +125,7 @@ all_vcsn =                                      \
   $(vcsn_de_bruijn)                             \
   $(vcsn_determinize)                           \
   $(vcsn_divkbaseb)                             \
+  $(vcsn_double_ring)                           \
   $(vcsn_enumerate)                             \
   $(vcsn_evaluate)                              \
   $(vcsn_is_complete)                           \

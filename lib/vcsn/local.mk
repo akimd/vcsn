@@ -34,6 +34,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/determinize.cc                 \
   lib/vcsn/algos/divkbaseb.cc                   \
   lib/vcsn/algos/dot.cc                         \
+  lib/vcsn/algos/double-ring.cc                 \
   lib/vcsn/algos/edit-automaton.cc              \
   lib/vcsn/algos/efsm.cc                        \
   lib/vcsn/algos/enumerate.cc                   \
