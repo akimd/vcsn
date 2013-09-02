@@ -88,7 +88,7 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
-    /// union of two automatons;
+    /// Union of two automata (plain graph union).
     automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// Whether \a aut is complete.

@@ -1,4 +1,8 @@
 * 2013-09-02
+** union
+New algorithm on automata (static as "union_a", dynamic as "union_a",
+TAF-Kit as "union").  Plain graph union.
+
 ** is-valid
 New algorithm on rational expressions (static, dynamic, TAF-Kit).
 

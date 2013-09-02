@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_UNION_HH
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/algos/accessible.hh> // dyn::make_automaton
 
 namespace vcsn
 {
@@ -10,15 +9,36 @@ namespace vcsn
   | union_a.  |
   `----------*/
 
+  /// Merge transitions of \a b into those of \a res.
+  ///
+  /// \precondition The context of \a res must include that of \a b.
+  template <typename A, typename B>
+  A&
+  union_here(A& res, const B& b)
+  {
+    // State num in B -> state num in Res.
+    std::map<typename B::state_t, typename A::state_t> m;
+    for (auto t: b.states())
+      m.emplace(t, res.new_state());
+
+    // FIXME: all_transitions?
+    for (auto t: b.transitions())
+      res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
+                         b.label_of(t), b.weight_of(t));
+    for (auto t: b.final_transitions())
+      res.add_final(m[b.src_of(t)], b.weight_of(t));
+    for (auto t: b.initial_transitions())
+      res.add_initial(m[b.dst_of(t)], b.weight_of(t));
+
+    return res;
+  }
+
   template <class A, class B>
   A
   union_a(const A& laut, const B& raut)
   {
     using automaton_t = A;
     using context_t = typename automaton_t::context_t;
-    using state_t = typename automaton_t::state_t;
-    std::map<state_t, state_t> states_r;
-    std::map<state_t, state_t> states_l;
 
     // Create new automata.
     auto gs = get_union(*laut.context().labelset(),
@@ -27,27 +47,9 @@ namespace vcsn
     auto ctx = context_t{ls, laut.context().weightset()};
     automaton_t res(ctx);
 
-    // Add laut.
-    for (auto t: laut.states())
-      states_l.emplace(t, res.new_state());
-    for (auto t: laut.transitions())
-      res.add_transition(states_l[laut.src_of(t)], states_l[laut.dst_of(t)],
-                         laut.label_of(t), laut.weight_of(t));
-    for (auto t: laut.initial_transitions())
-      res.add_initial(states_l[laut.dst_of(t)], laut.weight_of(t));
-    for (auto t: laut.final_transitions())
-      res.add_final(states_l[laut.src_of(t)], laut.weight_of(t));
+    union_here(res, laut);
+    union_here(res, raut);
 
-    // Add raut
-    for (auto t: raut.states())
-      states_r.emplace(t, res.new_state());
-    for (auto t: raut.transitions())
-      res.add_transition(states_r[raut.src_of(t)], states_r[raut.dst_of(t)],
-                         raut.label_of(t), raut.weight_of(t));
-    for (auto t: raut.final_transitions())
-      res.add_final(states_r[raut.src_of(t)], raut.weight_of(t));
-    for (auto t: raut.initial_transitions())
-      res.add_initial(states_r[raut.dst_of(t)], raut.weight_of(t));
     return res;
   }
 
@@ -63,8 +65,8 @@ namespace vcsn
       automaton
       union_a(const automaton& lhs, const automaton& rhs)
       {
-        const auto& l = dynamic_cast<const Lhs&>(*lhs);
-        const auto& r = dynamic_cast<const Lhs&>(*rhs);
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
         return make_automaton(l.context(), union_a(l, r));
       }
 
