@@ -171,7 +171,7 @@ namespace vcsn
 
         REGISTER(Ctx, ladybird);
 
-        thompson_register(rs_t::sname(), thompson<rs_t>);
+        REGISTER(rs_t, thompson);
         REGISTER(Ctx, u);
 
         return true;
@@ -193,11 +193,8 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        // proper.
         REGISTER(aut_t, proper);
-
-        // thompson.
-        thompson_register(rs_t::sname(), thompson<rs_t>);
+        REGISTER(rs_t, thompson);
 
         return true;
       }
