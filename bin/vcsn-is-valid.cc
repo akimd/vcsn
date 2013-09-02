@@ -5,7 +5,7 @@
 
 #include "parse-args.hh"
 
-struct is_valid_r: vcsn_function
+struct is_valid: vcsn_function
 {
   int work_exp(const options& opts) const
   {
@@ -14,15 +14,15 @@ struct is_valid_r: vcsn_function
     ratexp exp = read_ratexp(opts);
 
     // Process.
-    bool res = vcsn::dyn::is_valid_r(exp);
+    bool res = vcsn::dyn::is_valid(exp);
 
     // Output.
-    std::cout << (res ? "true" : "false") << std::endl;
-    return 0;
+    *opts.out << res << std::endl;
+    return res ? 0 : 2;
   }
 };
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, is_valid_r{}, false);
+  return vcsn_main(argc, argv, is_valid{}, false);
 }

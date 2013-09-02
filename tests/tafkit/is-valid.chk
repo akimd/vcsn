@@ -1,13 +1,17 @@
 #! /bin/sh
 
-# check WEIGHT RAT_EXP
+# check OUTPUT RAT_EXP
 # --------------------
-# Check that the constant-term of RAT-EXP is WEIGHT.
+# Check that RAT-EXP's validity is OUTPUT ("true" or "false").
 # Use a context with ratexp weights to check the order of products.
 check ()
 {
   re="(?@lal_char(abc)_r)$2"
-  run 0 "$1" -vcsn-is-valid -e "$re"
+  case $1 in
+    (true)  status=0;;
+    (false) status=2;;
+  esac
+  run $status "$1" -vcsn-is-valid -e "$re"
 }
 
 check 'true' 'a*'

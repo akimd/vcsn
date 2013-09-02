@@ -147,9 +147,14 @@ namespace vcsn
 
   }
 
+
+  /*-------------------.
+  | is_valid(ratexp).  |
+  `-------------------*/
+
   template <typename RatExpSet>
   bool
-  is_valid_r(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  is_valid(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
     rat::constant_term_visitor<RatExpSet> constant_term{rs};
     try
@@ -168,17 +173,18 @@ namespace vcsn
     namespace detail
     {
       /*---------------------.
-      | dyn::is_valid_r(exp).  |
+      | dyn::is_valid(exp).  |
       `---------------------*/
+
       template <typename RatExpSet>
       bool
-      is_valid_r(const ratexp& exp)
+      is_valid(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return is_valid_r<RatExpSet>(e.get_ratexpset(), e.ratexp());
+        return is_valid<RatExpSet>(e.get_ratexpset(), e.ratexp());
       }
 
-      REGISTER_DECLARE(is_valid_r, (const ratexp& e) -> bool);
+      REGISTER_DECLARE(is_valid_exp, (const ratexp& e) -> bool);
     }
   }
 } // namespace vcsn

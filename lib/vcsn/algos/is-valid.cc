@@ -8,15 +8,16 @@ namespace vcsn
   namespace dyn
   {
     /*----------------.
-    | is_valid_r(exp).  |
+    | is_valid(exp).  |
     `----------------*/
-    REGISTER_DEFINE(is_valid_r);
+
+    REGISTER_DEFINE(is_valid_exp);
 
     bool
-    is_valid_r(const ratexp& e)
+    is_valid(const ratexp& e)
     {
-      return detail::is_valid_r_registry().call(e->vname(false),
-                                                   e);
+      return detail::is_valid_exp_registry().call(e->vname(false),
+                                                  e);
     }
   }
 }

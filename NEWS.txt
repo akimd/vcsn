@@ -1,3 +1,12 @@
+* 2013-09-02
+** is-valid
+New algorithm on rational expressions (static, dynamic, TAF-Kit).
+
+  $ vcsn is-valid -E -e '(?@lal_char(a)_b)(\e)*'
+  true
+  $ vcsn is-valid -E -e '(?@lal_char(a)_z)(\e)*'
+  false
+
 * 2013-08-13
 ** More RatExp quantifiers
 In addition to "*", there is "?"/"{?}" and "{+}".  Support for "{*}" is

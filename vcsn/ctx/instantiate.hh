@@ -262,7 +262,9 @@ namespace vcsn
         REGISTER(aut_t, is_standard);
         REGISTER(aut_t, is_trim);
         REGISTER(aut_t, is_useless);
-        REGISTER(rs_t, is_valid_r);
+
+        is_valid_exp_register(rs_t::sname(),
+                              static_cast<is_valid_exp_t&>(is_valid<rs_t>));
 
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
