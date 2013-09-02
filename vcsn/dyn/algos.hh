@@ -89,6 +89,7 @@ namespace vcsn
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
     /// Union of two automata (plain graph union).
+    /// Performs the union of the alphabets.
     automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// Whether \a aut is complete.
@@ -143,11 +144,16 @@ namespace vcsn
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
 
+    /// Print automaton \a a on \a o using format \a type.
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "default");
+
+    /// Print ratexp \a e on \a o using format \a type.
     std::ostream& print(const ratexp& e, std::ostream& o,
                         const std::string& type = "default");
-    std::ostream& print(const weight& e, std::ostream& o,
+
+    /// Print weight \a w on \a o using format \a type.
+    std::ostream& print(const weight& w, std::ostream& o,
                         const std::string& type = "default");
 
     /// Specify the output format for \a o.
@@ -157,6 +163,7 @@ namespace vcsn
     std::string get_format(std::ostream& o);
 
     /// The product of automata \a lhs and \a rhs.
+    /// Performs the intersection of the alphabets.
     automaton product(const automaton& lhs, const automaton& rhs);
 
     /// An automaton equivalent to \a aut, without spontaneous transitions.
@@ -172,10 +179,24 @@ namespace vcsn
     /// \param str  the automaton.
     automaton read_automaton_string(const std::string& str);
 
+    /// Read a ratexp in a file.
+    /// \param f     the file name.
+    /// \param rs    its ratexpset.
+    /// \param type  its format.
     ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
                             const std::string& type);
+
+    /// Read a ratexp in a file.
+    /// \param f     the file name.
+    /// \param ctx   its context, from which is built its ratexpset.
+    /// \param type  its format.
     ratexp read_ratexp_file(const std::string& f, const context& ctx,
                             const std::string& type);
+
+    /// Read a ratexp in a string.
+    /// \param s     the string to parse.
+    /// \param ctx   its context, from which is built its ratexpset.
+    /// \param type  its format.
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
