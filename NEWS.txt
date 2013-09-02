@@ -2,9 +2,17 @@
 ** is-valid
 New algorithm on rational expressions (static, dynamic, TAF-Kit).
 
-  $ vcsn is-valid -E -e '(?@lal_char(a)_b)(\e)*'
+  $ vcsn is-valid -C 'lal_char(a)_r' -E -e '(<.5>\e)*'
   true
-  $ vcsn is-valid -E -e '(?@lal_char(a)_z)(\e)*'
+  $ vcsn is-valid -C 'lal_char(a)_r' -E -e '\e*'
+  false
+
+For consistency, is-valid is now also available for automata in dyn:: and
+TAF-Kit (it used to be static only, visible from "info" output).
+
+  $ vcsn thompson -C 'lan_char(a)_r' -e '(<.5>\e)*' | vcsn is-valid
+  true
+  $ vcsn thompson -C 'lan_char(a)_r' -e '\e*' | vcsn is-valid
   false
 
 * 2013-08-13

@@ -118,6 +118,9 @@ namespace vcsn
     /// Whether has no useful state.
     bool is_useless(const automaton& aut);
 
+    /// Whether automaton is valid (epsilon-cycles converge).
+    bool is_valid(const automaton& e);
+
     /// Whether rational expression is valid (all the starred
     /// sub-expressions are starrable).
     bool is_valid(const ratexp& e);

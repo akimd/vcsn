@@ -19,6 +19,10 @@
 namespace vcsn
 {
 
+  /*----------------.
+  | is_valid(aut).  |
+  `----------------*/
+
   namespace detail
   {
 
@@ -128,9 +132,9 @@ namespace vcsn
   namespace dyn
   {
 
-    /*----------------.
-    | dyn::is_valid.  |
-    `----------------*/
+    /*---------------------.
+    | dyn::is_valid(aut).  |
+    `---------------------*/
 
     namespace detail
     {

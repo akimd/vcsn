@@ -26,6 +26,7 @@ liblal_char_zr   = $(top_builddir)/lib/liblal_char_zr.la
 liblal_char_zrr  = $(top_builddir)/lib/liblal_char_zrr.la
 liblan_char_b    = $(top_builddir)/lib/liblan_char_b.la
 liblan_char_z    = $(top_builddir)/lib/liblan_char_z.la
+liblan_char_r    = $(top_builddir)/lib/liblan_char_r.la
 liblan_char_zr   = $(top_builddir)/lib/liblan_char_zr.la
 liblao_br        = $(top_builddir)/lib/liblao_br.la
 liblao_z         = $(top_builddir)/lib/liblao_z.la
@@ -48,6 +49,7 @@ all_libctx =                                    \
   $(liblal_char_zr)                             \
   $(liblal_char_zrr)                            \
   $(liblan_char_b)                              \
+  $(liblan_char_r)                              \
   $(liblan_char_z)                              \
   $(liblan_char_zr)                             \
   $(liblao_br)                                  \

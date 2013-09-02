@@ -263,6 +263,8 @@ namespace vcsn
         REGISTER(aut_t, is_trim);
         REGISTER(aut_t, is_useless);
 
+        is_valid_register(aut_t::sname(),
+                          static_cast<is_valid_t&>(is_valid<aut_t>));
         is_valid_exp_register(rs_t::sname(),
                               static_cast<is_valid_exp_t&>(is_valid<rs_t>));
 

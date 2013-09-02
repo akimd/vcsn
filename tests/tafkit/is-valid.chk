@@ -3,15 +3,22 @@
 # check OUTPUT RAT_EXP
 # --------------------
 # Check that RAT-EXP's validity is OUTPUT ("true" or "false").
+# Also check is-valid on its Thompson.
+#
 # Use a context with ratexp weights to check the order of products.
 check ()
 {
-  re="(?@lal_char(abc)_r)$2"
+  re=$2
   case $1 in
     (true)  status=0;;
     (false) status=2;;
   esac
-  run $status "$1" -vcsn-is-valid -e "$re"
+  run $status "$1" -vcsn-is-valid -Ee "(?@lal_char(abc)_r)$re"
+
+  # Check that we are consistent with the validity of the Thompson of
+  # RAT_EXP.
+  run 0 '' -vcsn-thompson -e "(?@lan_char(abc)_r)$re" -o th.gv
+  run $status "$1" -vcsn-is-valid -A -f th.gv
 }
 
 check 'true' 'a*'
