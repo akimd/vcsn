@@ -1,5 +1,5 @@
 * 2013-09-03
-** sum, concatenate
+** concatenate, star, sum
 New algorithms on standard automata (static, dynamic, TAF-Kit).
 
 * 2013-09-02

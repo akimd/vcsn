@@ -224,7 +224,7 @@ namespace vcsn
     /// \throw std::domain_error if the automaton is useless
     std::string shortest(const automaton& aut);
 
-    /// Star of an automaton.
+    /// Star of a standard automaton.
     automaton star(const automaton& aut);
 
     /// Sum of two standard automata.

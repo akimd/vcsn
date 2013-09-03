@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_STAR_HH
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/algos/accessible.hh> // dyn::make_automaton
 
 # include <vector>
 
@@ -12,6 +11,7 @@ namespace vcsn
   | star  |
   `------*/
 
+  /// Star of a standard automaton.
   template <class Aut>
   Aut
   star(const Aut& aut)
@@ -46,12 +46,10 @@ namespace vcsn
     // Add finals.
     weightset_t ws(*ctx.weightset());
     for (auto t: aut.final_transitions())
-    {
       if (!aut.is_initial(aut.src_of(t)))
         res.add_final(aut.src_of(t),
                       ws.mul(aut.weight_of(t),
                              ws.star(aut.get_final_weight(init))));
-    }
     res.add_final(init, ws.star(aut.get_final_weight(init)));
 
     // Memorize transitions from initial state.
@@ -59,7 +57,6 @@ namespace vcsn
     // Add transitions.
     // Add existing transitions with new weight.
     for (auto t: aut.transitions())
-    {
       if (aut.is_initial(aut.src_of(t)))
       {
         succ.emplace_back(t);
@@ -70,22 +67,15 @@ namespace vcsn
       else
         res.add_transition(aut.src_of(t), aut.dst_of(t),
                            aut.label_of(t), aut.weight_of(t));
-    }
 
     // Link finals to successor of initial state.
     for (auto t: aut.final_transitions())
-    {
       if (!aut.is_initial(aut.src_of(t)))
-      {
         for (auto s: succ)
-        {
           res.add_transition(aut.src_of(t), aut.dst_of(s), aut.label_of(s),
                              ws.mul(aut.weight_of(t),
                                     ws.mul(ws.star(aut.get_final_weight(init)),
                                            aut.weight_of(s))));
-        }
-      }
-    }
 
     return res;
   }
