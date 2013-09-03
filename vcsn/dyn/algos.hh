@@ -43,7 +43,7 @@ namespace vcsn
     /// \pre aut is lal
     automaton complete(const automaton& aut);
 
-    /// concatenation of two automatons;
+    /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
     /// The weight associated to the empty word in \a e.

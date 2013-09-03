@@ -1,6 +1,6 @@
 * 2013-09-03
-** sum
-New algorithm on standard automata (static, dynamic, TAF-Kit).
+** sum, concatenate
+New algorithms on standard automata (static, dynamic, TAF-Kit).
 
 * 2013-09-02
 ** union
