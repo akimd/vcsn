@@ -199,6 +199,17 @@ namespace vcsn
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
+    /// Read a weight in a file.
+    /// \param f     the file name.
+    /// \param ctx   its context, from which is built its weightset.
+    weight read_weight_file(const std::string& f, const context& ctx);
+
+    /// Read a weight in a string.
+    /// \param s     the string to parse.
+    /// \param ctx   its context, from which is built its weightset.
+    /// \param type  its format.
+    weight read_weight_string(const std::string& s, const context& ctx);
+
     /// A standardized \a a.
     automaton standard(const automaton& a);
 

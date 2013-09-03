@@ -24,6 +24,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
+# include <vcsn/algos/read-weight.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/star.hh>
 # include <vcsn/algos/sum.hh>
@@ -294,6 +295,8 @@ namespace vcsn
         print_exp_register(rs_t::sname(), print<rs_t>);
         print_weight_register(Ctx::weightset_t::sname(),
                               print<typename Ctx::weightset_t>);
+
+        REGISTER(Ctx, read_weight);
 
         standard_register(aut_t::sname(),
                           static_cast<standard_t&>(standard<aut_t>));

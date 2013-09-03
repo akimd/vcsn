@@ -3,9 +3,11 @@
 
 #include <vcsn/ctx/fwd.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/algos/read-weight.hh>
 #include <lib/vcsn/rat/read.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/algos/fwd.hh>
+#include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
 {
@@ -78,6 +80,32 @@ namespace vcsn
       else
         throw std::domain_error("invalid input format for expression: "
                                 + type);
+    }
+
+
+    /*--------------.
+    | read_weight.  |
+    `--------------*/
+
+    REGISTER_DEFINE(read_weight);
+
+    static weight
+    read_weight(const dyn::context& ctx, const std::string& s)
+    {
+      return detail::read_weight_registry().call(ctx->vname(false),
+                                                 ctx, s);
+    }
+
+    weight
+    read_weight_file(const std::string& f, const context& ctx)
+    {
+      return read_weight_string(get_file_contents(f), ctx);
+    }
+
+    weight
+    read_weight_string(const std::string& s, const context& ctx)
+    {
+      return read_weight(ctx, s);
     }
 
   }

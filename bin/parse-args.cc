@@ -36,6 +36,16 @@ read_ratexp(const options& opts)
     : vcsn::dyn::read_ratexp_string(opts.input, ctx, fmt);
 }
 
+vcsn::dyn::weight
+read_weight(const options& opts)
+{
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  return
+    opts.input_is_file
+    ? vcsn::dyn::read_weight_file(opts.input, ctx)
+    : vcsn::dyn::read_weight_string(opts.input, ctx);
+}
+
 void
 usage(const char* prog, int exit_status)
 {
