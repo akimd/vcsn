@@ -130,7 +130,7 @@ namespace vcsn
   | Register the abstract functions.  |
   `----------------------------------*/
 
-#define REGISTER(Type, Algo)                    \
+#define REGISTER(Algo, Type)                    \
   Algo ## _register(Type::sname(), Algo<Type>)
 
   namespace ctx
@@ -144,20 +144,18 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER(aut_t, complete);
-        REGISTER(Ctx, de_bruijn);
-        REGISTER(Ctx, divkbaseb);
-        REGISTER(aut_t, enumerate);
-        REGISTER(aut_t, eval);
-
-        REGISTER(aut_t, is_complete);
-        REGISTER(aut_t, is_deterministic);
-
-        REGISTER(Ctx, ladybird);
-        REGISTER(aut_t, power);
+        REGISTER(complete, aut_t);
+        REGISTER(de_bruijn, Ctx);
+        REGISTER(divkbaseb, Ctx);
+        REGISTER(enumerate, aut_t);
+        REGISTER(eval, aut_t);
+        REGISTER(is_complete, aut_t);
+        REGISTER(is_deterministic, aut_t);
+        REGISTER(ladybird, Ctx);
+        REGISTER(power, aut_t);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
-        REGISTER(aut_t, shortest);
-        REGISTER(Ctx, u);
+        REGISTER(shortest, aut_t);
+        REGISTER(u, Ctx);
 
         // FIXME: the following 3 should work for all kinds (so
         // instantiate them more generally), except we need to define
@@ -178,15 +176,12 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER(Ctx, de_bruijn);
-        REGISTER(Ctx, divkbaseb);
-
-        REGISTER(aut_t, proper);
-
-        REGISTER(Ctx, ladybird);
-
-        REGISTER(rs_t, thompson);
-        REGISTER(Ctx, u);
+        REGISTER(de_bruijn, Ctx);
+        REGISTER(divkbaseb, Ctx);
+        REGISTER(proper, aut_t);
+        REGISTER(ladybird, Ctx);
+        REGISTER(thompson, rs_t);
+        REGISTER(u, Ctx);
 
         return true;
       }
@@ -207,8 +202,8 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        REGISTER(aut_t, proper);
-        REGISTER(rs_t, thompson);
+        REGISTER(proper, aut_t);
+        REGISTER(thompson, rs_t);
 
         return true;
       }
@@ -224,16 +219,10 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        // accessible.
-        REGISTER(aut_t, accessible);
-
-        // aut_to_exp.
-        REGISTER(aut_t, aut_to_exp);
-
-        // coaccessible.
-        REGISTER(aut_t, coaccessible);
-
-        REGISTER(aut_t, copy);
+        REGISTER(accessible, aut_t);
+        REGISTER(aut_to_exp, aut_t);
+        REGISTER(coaccessible, aut_t);
+        REGISTER(copy, aut_t);
 
         // dot.
         dot_stream_register(aut_t::sname(),
@@ -249,28 +238,19 @@ namespace vcsn
         make_automaton_editor_register(Ctx::sname(),
                                        make_automaton_editor<aut_t>);
 
-        // efsm.
-        REGISTER(aut_t, efsm);
-        REGISTER(taut_t, efsm);
-
-        REGISTER(rs_t, constant_term);
-
-        // info.
-        REGISTER(aut_t, info);
-        REGISTER(taut_t, info);
-        REGISTER(rs_t, info_exp);
-
-        REGISTER(aut_t, is_empty);
-
-        // is-eps-acyclic.
-        REGISTER(aut_t, is_eps_acyclic);
-
-        REGISTER(aut_t, is_normalized);
-
-        REGISTER(aut_t, is_proper);
-        REGISTER(aut_t, is_standard);
-        REGISTER(aut_t, is_trim);
-        REGISTER(aut_t, is_useless);
+        REGISTER(efsm, aut_t);
+        REGISTER(efsm, taut_t);
+        REGISTER(constant_term, rs_t);
+        REGISTER(info, aut_t);
+        REGISTER(info, taut_t);
+        REGISTER(info_exp, rs_t);
+        REGISTER(is_empty, aut_t);
+        REGISTER(is_eps_acyclic, aut_t);
+        REGISTER(is_normalized, aut_t);
+        REGISTER(is_proper, aut_t);
+        REGISTER(is_standard, aut_t);
+        REGISTER(is_trim, aut_t);
+        REGISTER(is_useless, aut_t);
 
         is_valid_register(aut_t::sname(),
                           static_cast<is_valid_t&>(is_valid<aut_t>));
@@ -282,32 +262,29 @@ namespace vcsn
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);
 
-        REGISTER(Ctx, make_context);
-        REGISTER(Ctx, make_ratexpset);
+        REGISTER(make_context, Ctx);
+        REGISTER(make_ratexpset, Ctx);
 
         // print
         print_exp_register(rs_t::sname(), print<rs_t>);
         print_weight_register(ws_t::sname(), print<ws_t>);
 
-        REGISTER(Ctx, read_weight);
+        REGISTER(read_weight, Ctx);
 
         standard_register(aut_t::sname(),
                           static_cast<standard_t&>(standard<aut_t>));
         standard_exp_register(rs_t::sname(),
                               static_cast<standard_exp_t&>(standard<rs_t>));
 
-        REGISTER(aut_t, star);
+        REGISTER(star, aut_t);
 
-        // tikz.
-        REGISTER(aut_t, tikz);
-        REGISTER(taut_t, tikz);
-
-        // transpose.
-        REGISTER(aut_t, transpose);
+        REGISTER(tikz, aut_t);
+        REGISTER(tikz, taut_t);
+        REGISTER(transpose, aut_t);
         transpose_exp_register(rs_t::sname(), transpose_exp<rs_t>);
 
         // trim.
-        REGISTER(aut_t, trim);
+        REGISTER(trim, aut_t);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
