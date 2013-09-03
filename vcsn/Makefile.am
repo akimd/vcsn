@@ -36,7 +36,7 @@ nobase_vcsn_HEADERS =                           \
   algos/is-normalized.hh                        \
   algos/is-proper.hh                            \
   algos/is-valid.hh                             \
-  algos/left-mult.hh                             \
+  algos/left-mult.hh                            \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
   algos/print.hh                                \

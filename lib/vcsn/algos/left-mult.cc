@@ -12,9 +12,10 @@ namespace vcsn
     REGISTER_DEFINE(left_mult);
 
     automaton
-    left_mult(const automaton& aut, std::string w)
+    left_mult(const automaton& aut, const weight& w)
     {
-      return detail::left_mult_registry().call(aut->vname(false), aut, w);
+      return detail::left_mult_registry().call(aut->vname(false),
+                                               aut, w);
     }
   }
 }

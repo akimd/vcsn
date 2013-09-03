@@ -52,7 +52,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-left-mult -f in.gv 3/4
+run 0 out.exp -vcsn-left-mult -C 'lal_char(ab)_q' -f in.gv 3/4
 
 
 cat >in.gv <<\EOF
@@ -111,4 +111,4 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-left-mult -f in.gv 3.4
+run 0 out.exp -vcsn-left-mult -C 'lal_char(abc)_r' -f in.gv 3.4

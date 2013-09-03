@@ -132,7 +132,7 @@ namespace vcsn
     automaton ladybird(const context& ctx, unsigned n);
 
     /// The left-mult automaton with \a w as weight.
-    automaton left_mult(const automaton& aut, std::string w);
+    automaton left_mult(const automaton& aut, const weight& w);
 
     automaton lift(const automaton& aut);
     ratexp lift(const ratexp& aut);

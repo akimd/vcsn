@@ -12,10 +12,14 @@ struct left_mult: vcsn_function
   {
     using namespace vcsn::dyn;
     // Input.
-    auto aut = read_automaton(opts);
+    automaton aut = read_automaton(opts);
     assert(1 <= opts.argv.size());
-    // Weight will be converted later.
-    std::string w = opts.argv[0];
+
+    // FIXME: hack.
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    opts2.input_is_file = false;
+    weight w = read_weight(opts2);
 
     // Process.
     auto res = vcsn::dyn::left_mult(aut, w);
