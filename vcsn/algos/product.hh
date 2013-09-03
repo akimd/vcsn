@@ -7,8 +7,7 @@
 # include <utility>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/algos/accessible.hh> // dyn::make_automaton
-
+# include <vcsn/algos/accessible.hh>
 
 namespace vcsn
 {
@@ -17,7 +16,7 @@ namespace vcsn
   | product.  |
   `----------*/
 
-  // This builds only the accessible part of the product.
+  /// Build the (accessible part of the) product.
   template <class A, class B>
   A
   product(const A& laut, const B& raut)

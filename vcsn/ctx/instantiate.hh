@@ -144,18 +144,6 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(aut_t, complete);
-
-        // concatenate
-        concatenate_register(aut_t::sname(), aut_t::sname(),
-                             concatenate<aut_t, aut_t>);
-        // union_a
-        union_a_register(aut_t::sname(), aut_t::sname(),
-                             union_a<aut_t, aut_t>);
-
-        // sum
-        sum_register(aut_t::sname(), aut_t::sname(),
-                             sum<aut_t, aut_t>);
-
         REGISTER(Ctx, de_bruijn);
         REGISTER(Ctx, divkbaseb);
         REGISTER(aut_t, enumerate);
@@ -170,6 +158,14 @@ namespace vcsn
         REGISTER(aut_t, shortest);
         REGISTER(aut_t, star);
         REGISTER(Ctx, u);
+
+        // FIXME: the following 3 should work for all kinds (so
+        // instantiate them more generally), except we need to define
+        // the union of contexts.
+        concatenate_register(aut_t::sname(), aut_t::sname(),
+                             concatenate<aut_t, aut_t>);
+        union_a_register(aut_t::sname(), aut_t::sname(), union_a<aut_t, aut_t>);
+        sum_register(aut_t::sname(), aut_t::sname(), sum<aut_t, aut_t>);
 
         return true;
       }
@@ -224,6 +220,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using taut_t = vcsn::detail::transpose_automaton<aut_t>;
         using rs_t = ratexpset<Ctx>;
+        using ws_t = typename Ctx::weightset_t;
 
         using namespace dyn::detail;
 
@@ -236,7 +233,6 @@ namespace vcsn
         // coaccessible.
         REGISTER(aut_t, coaccessible);
 
-        // copy.
         REGISTER(aut_t, copy);
 
         // dot.
@@ -271,9 +267,7 @@ namespace vcsn
 
         REGISTER(aut_t, is_normalized);
 
-        // is-proper.
         REGISTER(aut_t, is_proper);
-
         REGISTER(aut_t, is_standard);
         REGISTER(aut_t, is_trim);
         REGISTER(aut_t, is_useless);
@@ -287,14 +281,12 @@ namespace vcsn
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);
 
-        // make-context.
         REGISTER(Ctx, make_context);
         REGISTER(Ctx, make_ratexpset);
 
         // print
         print_exp_register(rs_t::sname(), print<rs_t>);
-        print_weight_register(Ctx::weightset_t::sname(),
-                              print<typename Ctx::weightset_t>);
+        print_weight_register(ws_t::sname(), print<ws_t>);
 
         REGISTER(Ctx, read_weight);
 
