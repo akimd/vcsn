@@ -10,13 +10,20 @@
 # include <vcsn/dyn/algos.hh>
 # include <vcsn/misc/attributes.hh>
 
+enum class type
+  {
+    automaton,
+    ratexp,
+    weight,
+  };
+
 struct options
 {
   /// The name of this program (argv[0]).
   std::string program;
 
-  /// Whether the input is about an automaton.
-  bool is_automaton = true;
+  /// The type of input.
+  type input_type;
   /// Whether \a input is a file name, or a value.
   bool input_is_file = true;
   /// The input (name or value).
@@ -65,6 +72,11 @@ struct vcsn_function
   {
     throw std::runtime_error("not implemented for rational expressions");
   }
+
+  virtual int work_weight(const options&) const
+  {
+    throw std::runtime_error("not implemented for weights");
+  }
 };
 
 /// Read the command line argument, and based on them, run \a fun's \a
@@ -74,6 +86,6 @@ struct vcsn_function
 /// \param fun          the visitor to run
 /// \param is_automaton whether if not specified, input is an automaton.
 int vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
-              bool is_automaton = true);
+              type t = type::automaton);
 
 #endif // !VCSN_BIN_PARSE_ARGS_HH_

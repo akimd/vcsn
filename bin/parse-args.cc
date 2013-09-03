@@ -122,18 +122,18 @@ parse_args(options& opts, int& argc, char* const*& argv)
     ADD(zr,  "law_char(abcd)_ratexpset<law_char(efgh)_z>");
     ADD(zrr, "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>");
 #undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:W:?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:W:w?")) != -1)
     switch (opt)
       {
       case 'A':
-        opts.is_automaton = true;
+        opts.input_type = type::automaton;
         opts.input_format = "dot";
         break;
       case 'C':
         opts.context = optarg;
         break;
       case 'E':
-        opts.is_automaton = false;
+        opts.input_type = type::ratexp;
         opts.input_format = "text";
         break;
       case 'e':
@@ -171,6 +171,10 @@ parse_args(options& opts, int& argc, char* const*& argv)
           apply_label_kind(opts);
           break;
         }
+      case 'w':
+        opts.input_type = type::weight;
+        opts.input_format = "text";
+        break;
       case 'W':
         {
           map::iterator i = ksets.find(optarg);
@@ -210,15 +214,20 @@ parse_args(int& argc, char* const*& argv)
 
 int
 vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
-          bool is_automaton)
+          type t)
 {
   options opts;
-  opts.is_automaton = is_automaton;
-  opts.input_format = is_automaton ? "dot" : "text";
+  opts.input_type = t;
   try
     {
       parse_args(opts, argc, argv);
-      return opts.is_automaton ? fun.work_aut(opts) : fun.work_exp(opts);
+      switch (opts.input_type)
+        {
+        case type::automaton: return fun.work_aut(opts);
+        case type::ratexp:    return fun.work_exp(opts);
+        case type::weight:    return fun.work_weight(opts);
+        }
+      abort();
     }
   catch (const std::exception& e)
     {

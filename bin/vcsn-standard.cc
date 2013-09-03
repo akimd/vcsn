@@ -38,5 +38,5 @@ struct standard: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, standard{}, false);
+  return vcsn_main(argc, argv, standard{}, type::ratexp);
 }

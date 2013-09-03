@@ -8,7 +8,6 @@ int main(int argc, char * const argv[])
 try
   {
     options opts;
-    opts.is_automaton = false;
     opts.input_format = "text";
     parse_args(opts, argc, argv);
 

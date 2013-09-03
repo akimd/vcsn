@@ -1,6 +1,24 @@
 #! /bin/sh
 
 ## --------- ##
+## Weights.  ##
+## --------- ##
+
+# check_weight CONTEXT INPUT OUTPUT
+# ---------------------------------
+# Check -C and (?@...) support.
+check_weight ()
+{
+  run 0 $3 -vcsn-cat -w -C "$1" -e "$2"
+}
+
+check_weight 'lal_char(a)_b' 0 0
+check_weight 'lal_char(a)_b' 1 1
+check_weight 'lal_char(a)_z' 123 123
+check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' '(a*).<23>(b.c)'
+
+
+## --------- ##
 ## RatExps.  ##
 ## --------- ##
 

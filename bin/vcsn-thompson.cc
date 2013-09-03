@@ -24,5 +24,5 @@ struct thompson: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, thompson{}, false);
+  return vcsn_main(argc, argv, thompson{}, type::ratexp);
 }

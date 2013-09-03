@@ -26,6 +26,16 @@ struct cat: vcsn_function
     *opts.out << exp << std::endl;
     return 0;
   }
+
+  virtual int work_weight(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto w = read_weight(opts);
+    // Output.
+    *opts.out << w << std::endl;
+    return 0;
+  }
 };
 
 int main(int argc, char* const argv[])

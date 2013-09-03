@@ -1,4 +1,14 @@
 * 2013-09-03
+** taf-kit: option -w for weights as input
+Currently only vcsn-cat supports it.
+
+  $ vcsn cat -w -e 2
+  vcsn-cat: invalid Boolean: 2
+  $ vcsn cat -w -e 1
+  1
+  $ vcsn cat -C 'lal_char(a)_z' -w -e 2
+  2
+
 ** concatenate, star, sum
 New algorithms on standard automata (static, dynamic, TAF-Kit).
 

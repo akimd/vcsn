@@ -24,5 +24,5 @@ struct constant_term: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, constant_term{}, false);
+  return vcsn_main(argc, argv, constant_term{}, type::ratexp);
 }
