@@ -19,6 +19,14 @@ namespace vcsn
       class abstract_weight
       {
       public:
+        /// A description of the weight.
+        /// \param full  whether to include the genset.
+        ///              if false, same as sname.
+        std::string vname(bool full = true) const
+        {
+          return get_weightset().vname(full);
+        }
+
         virtual const abstract_weightset& get_weightset() const = 0;
 
         template <typename WeightSet>

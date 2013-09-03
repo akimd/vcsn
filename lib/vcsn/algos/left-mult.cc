@@ -30,7 +30,7 @@ namespace vcsn
     automaton
     left_mult(const automaton& aut, const weight& w)
     {
-      return detail::left_mult_registry().call(aut->vname(false) + " x " + w->get_weightset().vname(false),
+      return detail::left_mult_registry().call(aut->vname(false) + " x " + w->vname(false),
                                                aut, w);
     }
   }
