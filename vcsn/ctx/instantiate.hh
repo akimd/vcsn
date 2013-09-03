@@ -3,7 +3,6 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
-# include <vcsn/algos/union.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/dot.hh>
@@ -25,9 +24,11 @@
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/sum.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
+# include <vcsn/algos/union.hh>
 
 # include <vcsn/factory/de_bruijn.hh>
 # include <vcsn/factory/divkbaseb.hh>
@@ -143,6 +144,10 @@ namespace vcsn
         // union_a
         union_a_register(aut_t::sname(), aut_t::sname(),
                              union_a<aut_t, aut_t>);
+
+        // sum
+        sum_register(aut_t::sname(), aut_t::sname(),
+                             sum<aut_t, aut_t>);
 
         REGISTER(Ctx, de_bruijn);
         REGISTER(Ctx, divkbaseb);

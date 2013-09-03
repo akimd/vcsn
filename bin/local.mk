@@ -47,6 +47,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-product                              \
   bin/vcsn-proper                               \
   bin/vcsn-shortest                             \
+  bin/vcsn-sum                                  \
   bin/vcsn-standard                             \
   bin/vcsn-thompson                             \
   bin/vcsn-transpose                            \
@@ -89,6 +90,7 @@ bin_vcsn_product_LDADD          = bin/libtafkit.la
 bin_vcsn_proper_LDADD           = bin/libtafkit.la
 bin_vcsn_shortest_LDADD         = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la
+bin_vcsn_sum_LDADD              = bin/libtafkit.la
 bin_vcsn_thompson_LDADD         = bin/libtafkit.la
 bin_vcsn_transpose_LDADD        = bin/libtafkit.la
 bin_vcsn_trim_LDADD             = bin/libtafkit.la
