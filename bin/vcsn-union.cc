@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
 
@@ -13,6 +14,7 @@ struct union_a: vcsn_function
     // Input.
     automaton lhs = read_automaton(opts);
     // FIXME: hack.
+    assert(1 <= opts.argv.size());
     options opts2 = opts;
     opts2.input = opts.argv[0];
     automaton rhs = read_automaton(opts2);

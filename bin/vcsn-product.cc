@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
 
@@ -12,6 +13,7 @@ struct product: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     automaton lhs = read_automaton(opts);
+    assert(1 <= opts.argv.size());
     // FIXME: hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
