@@ -55,6 +55,25 @@ namespace vcsn
                                + ": expected " + str_escape(expect));
   }
 
+  // http://stackoverflow.com/questions/2602013.
+  std::string
+  get_file_contents(const std::string& file)
+  {
+    std::ifstream in(file.c_str(), std::ios::in | std::ios::binary);
+    if (!in)
+      throw std::runtime_error("cannot read file: "
+                               + file
+                               + ": " + strerror(errno));
+
+    std::string res;
+    in.seekg(0, std::ios::end);
+    res.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&res[0], res.size());
+    in.close();
+    return res;
+  }
+
   std::shared_ptr<std::istream>
   open_input_file(const std::string& file)
   {
