@@ -139,6 +139,11 @@ functions:
   - left-mult, right-mult
   - chain
 
+** Functions to assemble automata
+They stupidly work only on LAL, because the steps to compute the union of
+contexts is yet to be implemented in a more generic way.  Actually, there is
+already a lot of code duplication in this area.
+
 ** I/O with Grail (AL)
 We should also be able to read Grail+ files.
 

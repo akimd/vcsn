@@ -154,7 +154,6 @@ namespace vcsn
         REGISTER(aut_t, is_deterministic);
 
         REGISTER(Ctx, ladybird);
-        REGISTER(aut_t, left_mult);
         REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);
@@ -278,6 +277,7 @@ namespace vcsn
         is_valid_exp_register(rs_t::sname(),
                               static_cast<is_valid_exp_t&>(is_valid<rs_t>));
 
+        left_mult_register(aut_t::sname(), ws_t::sname(), left_mult<aut_t, ws_t>);
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);

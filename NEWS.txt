@@ -6,7 +6,7 @@ The TAF-Kit version is (currently) troublesome, as it does not infer the
 context to parse the weight from the automaton: be sure to specify -C:
 
   $ vcsn standard -C 'lal_char(a)_z' -e a | vcsn left-mult 12
-  vcsn-left-mult: std::bad_cast
+  vcsn-left-mult: left_mult: no implementation available for mutable_automaton<lal_char_z> x b
   $ vcsn standard -C 'lal_char(a)_z' -e a | vcsn left-mult -C 'lal_char(a)_z' 12
   digraph
   {

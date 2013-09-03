@@ -48,18 +48,19 @@ namespace vcsn
       | dyn::left_mult.  |
       `-----------------*/
 
-      template <typename Aut>
+      template <typename Aut, typename WeightSet>
       automaton
       left_mult(const automaton& aut, const weight& weight)
       {
-        using weightset_t = typename Aut::context_t::weightset_t;
         const auto& a = aut->as<Aut>();
-        const auto& w = weight->as<weightset_t>().weight();
+        const auto& w = weight->as<WeightSet>().weight();
         return make_automaton(a.context(), left_mult(a, w));
       }
 
-      REGISTER_DECLARE(left_mult,
-                       (const automaton& aut, const weight& w) -> automaton);
+      using left_mult_t =
+        auto (const automaton& aut, const weight& weight) -> automaton;
+      bool left_mult_register(const std::string& lctx, const std::string& rctx,
+                              left_mult_t fn);
     }
   }
 }
