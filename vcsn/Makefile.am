@@ -19,6 +19,7 @@ nobase_vcsn_HEADERS =                           \
   algos/complement.hh                           \
   algos/complete.hh                             \
   algos/concatenate.hh                          \
+  algos/constant-term.hh                        \
   algos/copy.hh                                 \
   algos/determinize.hh                          \
   algos/dot.hh                                  \
@@ -26,15 +27,14 @@ nobase_vcsn_HEADERS =                           \
   algos/efsm.hh                                 \
   algos/enumerate.hh                            \
   algos/eval.hh                                 \
-  algos/constant-term.hh                        \
   algos/fwd.hh                                  \
   algos/grail.hh                                \
   algos/info.hh                                 \
+  algos/is_complete.hh                          \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
   algos/is-normalized.hh                        \
   algos/is-proper.hh                            \
-  algos/is_complete.hh                          \
   algos/is-valid.hh                             \
   algos/lift.hh                                 \
   algos/make-context.hh                         \
@@ -128,9 +128,9 @@ nobase_vcsn_HEADERS =                           \
   misc/set.hh                                   \
   misc/star_status.hh                           \
   misc/stream.hh                                \
+  misc/unordered_set.hh                         \
   misc/xalloc.hh                                \
   misc/xalloc.hxx                               \
-  misc/unordered_set.hh                         \
   weights/b.hh                                  \
   weights/entryset.hh                           \
   weights/f2.hh                                 \

@@ -47,7 +47,7 @@ namespace vcsn
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
     /// The weight associated to the empty word in \a e.
-    dyn::weight constant_term(const ratexp& e);
+    weight constant_term(const ratexp& e);
 
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
@@ -77,7 +77,7 @@ namespace vcsn
     std::vector<std::string> enumerate(const automaton& aut, size_t max);
 
     /// Evaluate \a s on \a aut.
-    dyn::weight eval(const automaton& aut, const std::string& s);
+    weight eval(const automaton& aut, const std::string& s);
 
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);

@@ -12,6 +12,11 @@ namespace vcsn
 
   namespace dyn
   {
+
+    /*-----------------.
+    | read_automaton.  |
+    `-----------------*/
+
     namespace
     {
       automaton read_dot_file(const std::string& f)

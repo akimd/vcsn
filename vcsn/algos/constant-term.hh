@@ -7,6 +7,7 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/weight.hh>
 
 namespace vcsn
 {
