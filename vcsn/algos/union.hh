@@ -66,10 +66,8 @@ namespace vcsn
         return make_automaton(l.context(), union_a(l, r));
       }
 
-      using union_a_t =
-        auto (const automaton& lhs, const automaton& rhs) -> automaton;
-      bool union_a_register(const std::string& lctx, const std::string& rctx,
-                            union_a_t fn);
+      REGISTER_DECLARE2(union_a,
+                        (const automaton&, const automaton&) -> automaton);
     }
   }
 }

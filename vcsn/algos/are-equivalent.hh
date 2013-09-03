@@ -65,11 +65,8 @@ namespace vcsn
         return are_equivalent(a1, a2);
       }
 
-      using are_equivalent_t =
-        auto (const automaton& lhs, const automaton& rhs) -> bool;
-      bool are_equivalent_register(const std::string& lctx,
-                                   const std::string& rctx,
-                                   are_equivalent_t fn);
+      REGISTER_DECLARE2(are_equivalent,
+                        (const automaton&, const automaton&) -> bool);
     }
   }
 }

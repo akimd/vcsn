@@ -89,10 +89,8 @@ namespace vcsn
         return make_automaton(l.context(), concatenate(l, r));
       }
 
-      using concatenate_t =
-        auto (const automaton& lhs, const automaton& rhs) -> automaton;
-      bool concatenate_register(const std::string& lctx, const std::string& rctx,
-                                concatenate_t fn);
+      REGISTER_DECLARE2(concatenate,
+                        (const automaton&, const automaton&) -> automaton);
     }
   }
 }

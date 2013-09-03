@@ -135,10 +135,8 @@ namespace vcsn
         return make_automaton(l.context(), product(l, r));
       }
 
-      using product_t =
-        auto (const automaton& lhs, const automaton& rhs) -> automaton;
-      bool product_register(const std::string& lctx, const std::string& rctx,
-                            product_t fn);
+      REGISTER_DECLARE2(product,
+                        (const automaton&, const automaton&) -> automaton);
 
 
       /*-------------.

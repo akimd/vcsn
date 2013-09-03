@@ -77,10 +77,8 @@ namespace vcsn
         return make_automaton(l.context(), sum(l, r));
       }
 
-      using sum_t =
-        auto (const automaton& lhs, const automaton& rhs) -> automaton;
-      bool sum_register(const std::string& lctx, const std::string& rctx,
-                        sum_t fn);
+      REGISTER_DECLARE2(sum,
+                        (const automaton&, const automaton&) -> automaton);
     }
   }
 }

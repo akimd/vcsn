@@ -71,4 +71,9 @@ namespace vcsn
   using Name ## _t = auto Signature;                                    \
   bool Name ## _register(const std::string& ctx, Name ## _t fn);
 
+# define REGISTER_DECLARE2(Name, Signature)                             \
+  using Name ## _t = auto Signature;                                    \
+  bool Name ## _register(const std::string& ctx1, const std::string& ctx2, \
+                         Name ## _t fn);
+
 #endif // !VCSN_DYN_FWD_HH

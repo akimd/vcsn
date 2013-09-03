@@ -57,10 +57,8 @@ namespace vcsn
         return make_automaton(a.context(), left_mult(a, w));
       }
 
-      using left_mult_t =
-        auto (const automaton& aut, const weight& weight) -> automaton;
-      bool left_mult_register(const std::string& lctx, const std::string& rctx,
-                              left_mult_t fn);
+      REGISTER_DECLARE2(left_mult,
+                        (const automaton&, const weight&) -> automaton);
     }
   }
 }
