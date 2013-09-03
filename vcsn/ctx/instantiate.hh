@@ -156,7 +156,6 @@ namespace vcsn
         REGISTER(aut_t, power);
         product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
         REGISTER(aut_t, shortest);
-        REGISTER(aut_t, star);
         REGISTER(Ctx, u);
 
         // FIXME: the following 3 should work for all kinds (so
@@ -294,6 +293,8 @@ namespace vcsn
                           static_cast<standard_t&>(standard<aut_t>));
         standard_exp_register(rs_t::sname(),
                               static_cast<standard_exp_t&>(standard<rs_t>));
+
+        REGISTER(aut_t, star);
 
         // tikz.
         REGISTER(aut_t, tikz);
