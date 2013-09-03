@@ -11,71 +11,55 @@ namespace vcsn
   | star  |
   `------*/
 
+  /// In place star of a standard automaton.
+  ///
+  /// See standard_visitor::visit(star).
+  template <class Aut>
+  Aut&
+  star_here(Aut& res)
+  {
+    assert(is_standard(res));
+
+    using automaton_t = Aut;
+    using context_t = typename automaton_t::context_t;
+    using weightset_t = typename context_t::weightset_t;
+    using weight_t = typename context_t::weight_t;
+    using state_t = typename automaton_t::state_t;
+
+    weightset_t ws(*res.context().weightset());
+
+    state_t initial = res.dst_of(res.initial_transitions().front());
+    // The "final weight of the initial state", starred.
+    weight_t w = ws.star(res.get_final_weight(initial));
+    // Branch all the final states (but initial) to the successors
+    // of initial.
+    for (auto ti: res.out(initial))
+      {
+        res.lmul_weight(ti, w);
+        for (auto tf: res.final_transitions())
+          if (res.src_of(tf) != initial)
+            // The weight of ti has already been multiplied, on the
+            // left, by w.
+            res.add_transition
+              (res.src_of(tf),
+               res.dst_of(ti),
+               res.label_of(ti),
+               ws.mul(res.weight_of(tf), res.weight_of(ti)));
+      }
+    for (auto tf: res.final_transitions())
+      res.rmul_weight(tf, w);
+    res.set_final(initial, w);
+    return res;
+  }
+
+
   /// Star of a standard automaton.
   template <class Aut>
   Aut
   star(const Aut& aut)
   {
-    // star only works on standard automata.
-    assert(is_standard(aut));
-    using automaton_t = Aut;
-    using context_t = typename automaton_t::context_t;
-    using state_t = typename automaton_t::state_t;
-    using transition_t = typename automaton_t::transition_t;
-    using weightset_t = typename context_t::weightset_t;
-
-    auto ls = std::make_shared<typename automaton_t::labelset_t>
-                              (*aut.context().labelset());
-    auto ctx = context_t{ls, aut.context().weightset()};
-    automaton_t res(ctx);
-
-    // State in aut -> state in Res.
-    std::map<state_t, state_t> m;
-    for (auto t: aut.states())
-      m.emplace(t, res.new_state());
-    m.emplace(aut.pre(), res.pre());
-    m.emplace(aut.post(), res.post());
-
-    // Only one initial.
-    state_t initial = aut.dst_of(aut.initial_transitions().front());
-    res.add_initial(m[initial], aut.get_initial_weight(initial));
-
-    // Add finals.
-    weightset_t ws(*ctx.weightset());
-    for (auto t: aut.final_transitions())
-      if (!aut.is_initial(aut.src_of(t)))
-        res.add_final(m[aut.src_of(t)],
-                      ws.mul(aut.weight_of(t),
-                             ws.star(aut.get_final_weight(initial))));
-    res.add_final(initial, ws.star(aut.get_final_weight(initial)));
-
-    // Memorize transitions from initial state.
-    std::vector<transition_t> succ;
-    // Add transitions.
-    // Add existing transitions with new weight.
-    for (auto t: aut.transitions())
-      if (aut.is_initial(aut.src_of(t)))
-      {
-        succ.emplace_back(t);
-        res.add_transition(m[aut.src_of(t)], m[aut.dst_of(t)],
-                           aut.label_of(t),
-                           ws.mul(ws.star(aut.get_final_weight(initial)),
-                                  aut.weight_of(t)));
-      }
-      else
-        res.add_transition(m[aut.src_of(t)], m[aut.dst_of(t)],
-                           aut.label_of(t), aut.weight_of(t));
-
-    // Link finals to successor of initial state.
-    for (auto t: aut.final_transitions())
-      if (!aut.is_initial(aut.src_of(t)))
-        for (auto s: succ)
-          res.add_transition(m[aut.src_of(t)], m[aut.dst_of(s)],
-                             aut.label_of(s),
-                             ws.mul(aut.weight_of(t),
-                                    ws.mul(ws.star(aut.get_final_weight(initial)),
-                                           aut.weight_of(s))));
-
+    auto res = copy(aut);
+    star_here(res);
     return res;
   }
 

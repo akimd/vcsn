@@ -249,6 +249,7 @@ namespace vcsn
         apply_weights(e, other_finals);
       }
 
+      // See star_here().
       virtual void
       visit(const star_t& e)
       {

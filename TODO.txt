@@ -66,6 +66,10 @@ It seems that monomials would be a useful abstraction.
 
 Why "weight" in add_weight?  In place operations would be useful.
 
+** standard and operations on standard automata
+See if standard_visitor could be using operation such as star_here.
+Currently, this is duplicate code.
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
