@@ -20,16 +20,12 @@ namespace vcsn
     std::map<typename B::state_t, typename A::state_t> m;
     for (auto t: b.states())
       m.emplace(t, res.new_state());
+    m.emplace(b.pre(), res.pre());
+    m.emplace(b.post(), res.post());
 
-    // FIXME: all_transitions?
-    for (auto t: b.transitions())
+    for (auto t: b.all_transitions())
       res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
                          b.label_of(t), b.weight_of(t));
-    for (auto t: b.final_transitions())
-      res.add_final(m[b.src_of(t)], b.weight_of(t));
-    for (auto t: b.initial_transitions())
-      res.add_initial(m[b.dst_of(t)], b.weight_of(t));
-
     return res;
   }
 

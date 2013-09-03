@@ -88,10 +88,6 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
-    /// Union of two automata (plain graph union).
-    /// Performs the union of the alphabets.
-    automaton union_a(const automaton& lhs, const automaton& rhs);
-
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
@@ -227,6 +223,10 @@ namespace vcsn
 
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
+
+    /// Union of two automata (plain graph union).
+    /// Performs the union of the alphabets.
+    automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
