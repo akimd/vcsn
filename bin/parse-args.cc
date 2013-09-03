@@ -27,8 +27,8 @@ read_ratexp(const options& opts)
   auto ctx = vcsn::dyn::make_context(opts.context);
   // Be cool, we don't support many formats.
   std::string fmt
-    = (opts.output_format == "null" || opts.output_format == "text"
-       ? opts.output_format
+    = (opts.input_format == "null" || opts.input_format == "text"
+       ? opts.input_format
        : "text");
   return
     opts.input_is_file
