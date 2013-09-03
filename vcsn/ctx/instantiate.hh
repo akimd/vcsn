@@ -133,6 +133,9 @@ namespace vcsn
 #define REGISTER(Algo, Type)                    \
   Algo ## _register(Type::sname(), Algo<Type>)
 
+#define REGISTER2(Algo, Type1, Type2)           \
+  Algo ## _register(Type1::sname(), Type2::sname(), Algo<Type1, Type2>)
+
   namespace ctx
   {
     namespace detail
@@ -153,17 +156,16 @@ namespace vcsn
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);
         REGISTER(power, aut_t);
-        product_register(aut_t::sname(), aut_t::sname(), product<aut_t, aut_t>);
+        REGISTER2(product, aut_t, aut_t);
         REGISTER(shortest, aut_t);
         REGISTER(u, Ctx);
 
         // FIXME: the following 3 should work for all kinds (so
         // instantiate them more generally), except we need to define
         // the union of contexts.
-        concatenate_register(aut_t::sname(), aut_t::sname(),
-                             concatenate<aut_t, aut_t>);
-        union_a_register(aut_t::sname(), aut_t::sname(), union_a<aut_t, aut_t>);
-        sum_register(aut_t::sname(), aut_t::sname(), sum<aut_t, aut_t>);
+        REGISTER2(concatenate, aut_t, aut_t);
+        REGISTER2(union_a, aut_t, aut_t);
+        REGISTER2(sum, aut_t, aut_t);
 
         return true;
       }
@@ -257,7 +259,7 @@ namespace vcsn
         is_valid_exp_register(rs_t::sname(),
                               static_cast<is_valid_exp_t&>(is_valid<rs_t>));
 
-        left_mult_register(aut_t::sname(), ws_t::sname(), left_mult<aut_t, ws_t>);
+        REGISTER2(left_mult, aut_t, ws_t);
         // lift.
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);
@@ -277,13 +279,10 @@ namespace vcsn
                               static_cast<standard_exp_t&>(standard<rs_t>));
 
         REGISTER(star, aut_t);
-
         REGISTER(tikz, aut_t);
         REGISTER(tikz, taut_t);
         REGISTER(transpose, aut_t);
-        transpose_exp_register(rs_t::sname(), transpose_exp<rs_t>);
-
-        // trim.
+        REGISTER(transpose_exp, rs_t);
         REGISTER(trim, aut_t);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
@@ -292,6 +291,7 @@ namespace vcsn
     }
   }
 
+# undef REGISTER2
 # undef REGISTER
 
 # if VCSN_INSTANTIATION
