@@ -1,3 +1,7 @@
+* 2013-09-03
+** sum
+New algorithm on standard automata (static, dynamic, TAF-Kit).
+
 * 2013-09-02
 ** union
 New algorithm on automata (static as "union_a", dynamic as "union_a",

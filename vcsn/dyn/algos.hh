@@ -221,7 +221,7 @@ namespace vcsn
     /// \throw std::domain_error if the automaton is useless
     std::string shortest(const automaton& aut);
 
-    /// sum of two automatons;
+    /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 
     /// The Brzozowski universal witness.

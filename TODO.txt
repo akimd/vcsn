@@ -132,8 +132,6 @@ to understand what double-ring-is.  Compare with what Vaucanson 1 did.
 ** Functions to assemble automata (AL)
 Read the documentation of TAF-Kit v1, and implement (and check) these
 functions:
-  - union
-  - sum
   - concatenate
   - star
   - left-mult, right-mult

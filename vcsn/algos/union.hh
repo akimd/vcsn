@@ -16,7 +16,7 @@ namespace vcsn
   A&
   union_here(A& res, const B& b)
   {
-    // State num in B -> state num in Res.
+    // State in B -> state in Res.
     std::map<typename B::state_t, typename A::state_t> m;
     for (auto t: b.states())
       m.emplace(t, res.new_state());
