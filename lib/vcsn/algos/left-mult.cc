@@ -9,23 +9,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    namespace detail
-    {
-
-      static
-      Registry<left_mult_t>&
-      left_mult_registry()
-      {
-        static Registry<left_mult_t> instance{"left_mult"};
-        return instance;
-      }
-
-      bool left_mult_register(const std::string& lctx, const std::string& rctx,
-                              left_mult_t fn)
-      {
-        return left_mult_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(left_mult);
 
     automaton
     left_mult(const automaton& aut, const weight& w)

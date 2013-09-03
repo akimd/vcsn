@@ -7,27 +7,7 @@ namespace vcsn
 
   namespace dyn
   {
-    namespace detail
-    {
-
-      /*----------.
-      | product.  |
-      `----------*/
-
-      static
-      Registry<product_t>&
-      product_registry()
-      {
-        static Registry<product_t> instance{"product"};
-        return instance;
-      }
-
-      bool product_register(const std::string& lctx, const std::string& rctx,
-                            product_t fn)
-      {
-        return product_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(product);
 
     automaton
     product(const automaton& lhs, const automaton& rhs)

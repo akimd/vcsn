@@ -4,30 +4,9 @@
 
 namespace vcsn
 {
-
-  /*-----------------.
-  | are_equivalent.  |
-  `-----------------*/
-
   namespace dyn
   {
-    namespace detail
-    {
-      static
-      Registry<are_equivalent_t>&
-      are_equivalent_registry()
-      {
-        static Registry<are_equivalent_t> instance{"are_equivalent"};
-        return instance;
-      }
-
-      bool are_equivalent_register(const std::string& lctx,
-                                   const std::string& rctx,
-                                   are_equivalent_t fn)
-      {
-        return are_equivalent_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(are_equivalent);
 
     bool
     are_equivalent(const automaton& lhs, const automaton& rhs)

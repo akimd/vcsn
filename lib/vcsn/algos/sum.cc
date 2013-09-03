@@ -6,26 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-----.
-    | sum. |
-    `-----*/
-
-    namespace detail
-    {
-      static
-      Registry<sum_t>&
-      sum_registry()
-      {
-        static Registry<sum_t> instance{"sum"};
-        return instance;
-      }
-
-      bool sum_register(const std::string& lctx, const std::string& rctx,
-                            sum_t fn)
-      {
-        return sum_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(sum);
 
     automaton
     sum(const automaton& lhs, const automaton& rhs)

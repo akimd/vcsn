@@ -6,26 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*---------.
-    | union_a. |
-    `---------*/
-
-    namespace detail
-    {
-      static
-      Registry<union_a_t>&
-      union_a_registry()
-      {
-        static Registry<union_a_t> instance{"union_a"};
-        return instance;
-      }
-
-      bool union_a_register(const std::string& lctx, const std::string& rctx,
-                            union_a_t fn)
-      {
-        return union_a_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(union_a);
 
     automaton
     union_a(const automaton& lhs, const automaton& rhs)

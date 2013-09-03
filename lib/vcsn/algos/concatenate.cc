@@ -6,26 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-------------.
-    | concatenate. |
-    `-------------*/
-
-    namespace detail
-    {
-      static
-      Registry<concatenate_t>&
-      concatenate_registry()
-      {
-        static Registry<concatenate_t> instance{"concatenate"};
-        return instance;
-      }
-
-      bool concatenate_register(const std::string& lctx, const std::string& rctx,
-                            concatenate_t fn)
-      {
-        return concatenate_registry().set(lctx + " x " + rctx, fn);
-      }
-    }
+    REGISTER_DEFINE2(concatenate);
 
     automaton
     concatenate(const automaton& lhs, const automaton& rhs)

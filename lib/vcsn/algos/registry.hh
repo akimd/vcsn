@@ -56,16 +56,20 @@ namespace vcsn
   };
 }
 
+# define REGISTER_DEFINE_(Name)                         \
+  static                                                \
+  Registry<Name ## _t>&                                 \
+  Name ## _registry()                                   \
+  {                                                     \
+    static Registry<Name ## _t> instance{#Name};        \
+    return instance;                                    \
+  }                                                     \
+
+/// Implement a registry named Name, with unary dispatch.
 # define REGISTER_DEFINE(Name)                          \
   namespace detail                                      \
   {                                                     \
-    static                                              \
-    Registry<Name ## _t>&                               \
-    Name ## _registry()                                 \
-    {                                                   \
-      static Registry<Name ## _t> instance{#Name};      \
-      return instance;                                  \
-    }                                                   \
+    REGISTER_DEFINE_(Name)                              \
                                                         \
     bool                                                \
     Name ## _register(const std::string& ctx,           \
@@ -73,6 +77,21 @@ namespace vcsn
     {                                                   \
       return Name ## _registry().set(ctx, fn);          \
     }                                                   \
+  }
+
+/// Implement a registry named Name, with binary dispatch.
+# define REGISTER_DEFINE2(Name)                                 \
+  namespace detail                                              \
+  {                                                             \
+    REGISTER_DEFINE_(Name)                                      \
+                                                                \
+    bool                                                        \
+    Name ## _register(const std::string& ctx1,                  \
+                      const std::string& ctx2,                  \
+                      Name ## _t fn)                            \
+    {                                                           \
+      return Name ## _registry().set(ctx1  + " x " + ctx2, fn); \
+    }                                                           \
   }
 
 #endif // !LIB_VCSN_ALGOS_REGISTRY_HH
