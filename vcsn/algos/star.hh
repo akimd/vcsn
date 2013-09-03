@@ -29,28 +29,25 @@ namespace vcsn
     auto ctx = context_t{ls, aut.context().weightset()};
     automaton_t res(ctx);
 
-    // Get initial state.
-    state_t init = 0;
-    // Add aut states.
-    for (auto s: aut.states())
-    {
-      if (aut.is_initial(s))
-        init = s;
-      res.new_state();
-    }
+    // State in aut -> state in Res.
+    std::map<state_t, state_t> m;
+    for (auto t: aut.states())
+      m.emplace(t, res.new_state());
+    m.emplace(aut.pre(), res.pre());
+    m.emplace(aut.post(), res.post());
 
     // Only one initial.
-    for (auto t: aut.initial_transitions())
-      res.add_initial(aut.dst_of(t), aut.weight_of(t));
+    state_t initial = aut.dst_of(aut.initial_transitions().front());
+    res.add_initial(m[initial], aut.get_initial_weight(initial));
 
     // Add finals.
     weightset_t ws(*ctx.weightset());
     for (auto t: aut.final_transitions())
       if (!aut.is_initial(aut.src_of(t)))
-        res.add_final(aut.src_of(t),
+        res.add_final(m[aut.src_of(t)],
                       ws.mul(aut.weight_of(t),
-                             ws.star(aut.get_final_weight(init))));
-    res.add_final(init, ws.star(aut.get_final_weight(init)));
+                             ws.star(aut.get_final_weight(initial))));
+    res.add_final(initial, ws.star(aut.get_final_weight(initial)));
 
     // Memorize transitions from initial state.
     std::vector<transition_t> succ;
@@ -60,21 +57,23 @@ namespace vcsn
       if (aut.is_initial(aut.src_of(t)))
       {
         succ.emplace_back(t);
-        res.add_transition(aut.src_of(t), aut.dst_of(t), aut.label_of(t),
-                           ws.mul(ws.star(aut.get_final_weight(init)),
+        res.add_transition(m[aut.src_of(t)], m[aut.dst_of(t)],
+                           aut.label_of(t),
+                           ws.mul(ws.star(aut.get_final_weight(initial)),
                                   aut.weight_of(t)));
       }
       else
-        res.add_transition(aut.src_of(t), aut.dst_of(t),
+        res.add_transition(m[aut.src_of(t)], m[aut.dst_of(t)],
                            aut.label_of(t), aut.weight_of(t));
 
     // Link finals to successor of initial state.
     for (auto t: aut.final_transitions())
       if (!aut.is_initial(aut.src_of(t)))
         for (auto s: succ)
-          res.add_transition(aut.src_of(t), aut.dst_of(s), aut.label_of(s),
+          res.add_transition(m[aut.src_of(t)], m[aut.dst_of(s)],
+                             aut.label_of(s),
                              ws.mul(aut.weight_of(t),
-                                    ws.mul(ws.star(aut.get_final_weight(init)),
+                                    ws.mul(ws.star(aut.get_final_weight(initial)),
                                            aut.weight_of(s))));
 
     return res;
