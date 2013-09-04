@@ -23,8 +23,8 @@ namespace vcsn
     // State in B -> state in Res.
     std::map<typename B::state_t, typename A::state_t> m;
     typename A::state_t initial = res.dst_of(res.initial_transitions().front());
-    for (auto t: b.states())
-      m.emplace(t, b.is_initial(t) ? initial : res.new_state());
+    for (auto s: b.states())
+      m.emplace(s, b.is_initial(s) ? initial : res.new_state());
     m.emplace(b.pre(), res.pre());
     m.emplace(b.post(), res.post());
 
