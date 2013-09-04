@@ -11,6 +11,7 @@ namespace vcsn
   | concatenate  |
   `-------------*/
 
+  /// Concatenate two standard automata.
   template <class A, class B>
   A
   concatenate(const A& laut, const B& raut)
@@ -33,22 +34,21 @@ namespace vcsn
     auto ctx = context_t{ls, laut.context().weightset()};
     automaton_t res(ctx);
 
-    // Add laut states.
+    // Add laut.
     for (auto t: laut.states())
       states_l.emplace(t, res.new_state());
+    for (auto t: laut.initial_transitions())
+      res.add_initial(states_l[laut.dst_of(t)], laut.weight_of(t));
+    for (auto t: laut.transitions())
+      res.add_transition(states_l[laut.src_of(t)], states_l[laut.dst_of(t)],
+                         laut.label_of(t), laut.weight_of(t));
+
+    // Add raut.
     // Add raut states.
     for (auto t: raut.states())
       if (!raut.is_initial(t))
         states_r.emplace(t, res.new_state());
 
-    // Add laut.
-    for (auto t: laut.transitions())
-      res.add_transition(states_l[laut.src_of(t)], states_l[laut.dst_of(t)],
-                         laut.label_of(t), laut.weight_of(t));
-    for (auto t: laut.initial_transitions())
-      res.add_initial(states_l[laut.dst_of(t)], laut.weight_of(t));
-
-    // Add raut.
     // Laut finals states fuse with raut initial states.
     weightset_t ws(*ctx.weightset());
     for (auto r: raut.transitions())
