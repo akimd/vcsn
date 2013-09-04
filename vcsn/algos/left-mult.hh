@@ -7,28 +7,42 @@
 namespace vcsn
 {
 
+  namespace detail
+  {
+    template <typename Aut>
+    struct standard_operations
+    {
+      using automaton_t = Aut;
+      using context_t = typename automaton_t::context_t;
+      using weight_t = typename context_t::weight_t;
+      using weightset_t = typename context_t::weightset_t;
+      using state_t = typename automaton_t::state_t;
+
+      static automaton_t&
+      left_mult_here(automaton_t& res, const weight_t& w)
+      {
+        assert(is_standard(res));
+
+        weightset_t ws(*res.context().weightset());
+        state_t initial = res.dst_of(res.initial_transitions().front());
+
+        if (!ws.is_one(w))
+          for (auto t: res.all_out(initial))
+            res.lmul_weight(t, w);
+        return res;
+      }
+    };
+  }
+
   /*-----------.
   | left-mult  |
   `-----------*/
 
-  template <class Aut>
+  template <typename Aut>
   Aut&
   left_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
   {
-    assert(is_standard(res));
-
-    using automaton_t = Aut;
-    using context_t = typename automaton_t::context_t;
-    using weightset_t = typename context_t::weightset_t;
-    using state_t = typename automaton_t::state_t;
-
-    weightset_t ws(*res.context().weightset());
-    state_t initial = res.dst_of(res.initial_transitions().front());
-
-    if (!ws.is_one(w))
-      for (auto t: res.all_out(initial))
-        res.lmul_weight(t, w);
-    return res;
+    return detail::standard_operations<Aut>::left_mult_here(res, w);
   }
 
   template <class Aut>
