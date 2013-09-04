@@ -96,6 +96,21 @@ namespace vcsn
     return res;
   }
 
+  /// Concatenate n-times the standard automaton A.
+  template <class Aut>
+  Aut
+  chain(const Aut& aut, size_t n)
+  {
+    Aut res(aut.context());
+    auto s = res.new_state();
+    res.set_initial(s);
+    res.set_final(s);
+
+    for (auto i = 0; i < n; ++i)
+      concatenate_here(res, aut);
+    return res;
+  }
+
   namespace dyn
   {
 
@@ -116,6 +131,21 @@ namespace vcsn
 
       REGISTER_DECLARE2(concatenate,
                         (const automaton&, const automaton&) -> automaton);
+
+      /*-------------.
+      | dyn::chain.  |
+      `-------------*/
+
+      template <typename Aut>
+      automaton
+      chain(const automaton& a, size_t n)
+      {
+        const auto& aut = dynamic_cast<const Aut&>(*a);
+        return make_automaton(aut.context(), chain(aut, n));
+      }
+
+      REGISTER_DECLARE(chain,
+                       (const automaton& aut, size_t n) -> automaton);
     }
   }
 }

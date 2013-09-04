@@ -1,4 +1,7 @@
 * 2013-09-04
+** concatenation, chain
+New algorithm on standard automata (static, dynamic, TAF-Kit).
+
 ** right-mult
 New algorithm on standard automata (static, dynamic, TAF-Kit).  Same
 limitations as left-mult, see below.

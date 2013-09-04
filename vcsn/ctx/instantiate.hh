@@ -3,7 +3,6 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/aut_to_exp.hh>
-# include <vcsn/algos/chain.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
