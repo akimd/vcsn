@@ -26,7 +26,6 @@
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/read-weight.hh>
-# include <vcsn/algos/right-mult.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/star.hh>
 # include <vcsn/algos/sum.hh>
@@ -273,7 +272,7 @@ namespace vcsn
         print_weight_register(ws_t::sname(), print<ws_t>);
 
         REGISTER(read_weight, Ctx);
-        REGISTER(right_mult, aut_t);
+        REGISTER2(right_mult, aut_t, ws_t);
 
         standard_register(aut_t::sname(),
                           static_cast<standard_t&>(standard<aut_t>));

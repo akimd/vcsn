@@ -1,3 +1,8 @@
+* 2013-09-04
+** right-mult
+New algorithm on standard automata (static, dynamic, TAF-Kit).  Same
+limitations as left-mult, see below.
+
 * 2013-09-03
 ** left-mult
 New algorithm on standard automata (static, dynamic, TAF-Kit).

@@ -26,7 +26,7 @@ digraph
 }
 EOF
 
-cat >out.exp <<\EOF
+run 0 - -vcsn-left-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -52,7 +52,32 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-left-mult -C 'lal_char(ab)_q' -f in.gv 3/4
+run 0 out.exp -vcsn-right-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(ab)_q"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> F0 [label = "<3/4>"]
+  0 -> 1 [label = "a, b"]
+  1 -> 2 [label = "b"]
+  2 -> F2 [label = "<3/4>"]
+  2 -> 2 [label = "a, b"]
+}
+EOF
+
 
 
 cat >in.gv <<\EOF
@@ -83,7 +108,7 @@ digraph
 }
 EOF
 
-cat >out.exp <<\EOF
+run 0 - -vcsn-left-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_r"
@@ -111,4 +136,30 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-left-mult -C 'lal_char(abc)_r' -f in.gv 3.4
+run 0 out.exp -vcsn-right-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
+digraph
+{
+  vcsn_context = "lal_char(abc)_r"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+  }
+  I0 -> 0
+  0 -> F0 [label = "<3.4>"]
+  0 -> 1 [label = "a, b"]
+  0 -> 3 [label = "c"]
+  1 -> 2 [label = "b"]
+  2 -> F2 [label = "<3.4>"]
+  3 -> 2 [label = "c"]
+}
+EOF

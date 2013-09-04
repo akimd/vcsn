@@ -43,7 +43,6 @@ nobase_vcsn_HEADERS =                           \
   algos/product.hh                              \
   algos/proper.hh                               \
   algos/read-weight.hh                          \
-  algos/right-mult.hh                           \
   algos/standard.hh                             \
   algos/star.hh                                 \
   algos/sum.hh                                  \

@@ -132,6 +132,7 @@ namespace vcsn
     automaton ladybird(const context& ctx, unsigned n);
 
     /// The left-mult automaton with \a w as weight.
+    /// \precondition aut is standard.
     automaton left_mult(const automaton& aut, const weight& w);
 
     automaton lift(const automaton& aut);
@@ -159,7 +160,8 @@ namespace vcsn
                         const std::string& type = "default");
 
     /// The right-mult automaton with \a w as weight.
-    automaton right_mult(const automaton& aut, std::string w);
+    /// \precondition aut is standard.
+    automaton right_mult(const automaton& aut, const weight& w);
 
     /// Specify the output format for \a o.
     void set_format(std::ostream& o, const std::string& type);

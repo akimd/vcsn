@@ -31,12 +31,26 @@ namespace vcsn
             res.lmul_weight(t, w);
         return res;
       }
+
+      static automaton_t&
+      right_mult_here(automaton_t& res, const weight_t& w)
+      {
+        assert(is_standard(res));
+
+        weightset_t ws(*res.context().weightset());
+        state_t initial = res.dst_of(res.initial_transitions().front());
+
+        if (!ws.is_one(w))
+          for (auto t: res.all_out(initial))
+            res.rmul_weight(t, w);
+        return res;
+      }
     };
   }
 
-  /*-----------.
-  | left-mult  |
-  `-----------*/
+  /*-----------------------.
+  | left-mult(automaton).  |
+  `-----------------------*/
 
   template <typename Aut>
   Aut&
@@ -51,6 +65,26 @@ namespace vcsn
   {
     auto res = copy(aut);
     left_mult_here(res, w);
+    return res;
+  }
+
+  /*------------------------.
+  | right-mult(automaton).  |
+  `------------------------*/
+
+  template <typename Aut>
+  Aut&
+  right_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
+  {
+    return detail::standard_operations<Aut>::right_mult_here(res, w);
+  }
+
+  template <class Aut>
+  Aut
+  right_mult(const Aut& aut, const typename Aut::context_t::weight_t& w)
+  {
+    auto res = copy(aut);
+    right_mult_here(res, w);
     return res;
   }
 
@@ -72,6 +106,22 @@ namespace vcsn
       }
 
       REGISTER_DECLARE2(left_mult,
+                        (const automaton&, const weight&) -> automaton);
+
+      /*------------------.
+      | dyn::right_mult.  |
+      `------------------*/
+
+      template <typename Aut, typename WeightSet>
+      automaton
+      right_mult(const automaton& aut, const weight& weight)
+      {
+        const auto& a = aut->as<Aut>();
+        const auto& w = weight->as<WeightSet>().weight();
+        return make_automaton(a.context(), right_mult(a, w));
+      }
+
+      REGISTER_DECLARE2(right_mult,
                         (const automaton&, const weight&) -> automaton);
     }
   }
