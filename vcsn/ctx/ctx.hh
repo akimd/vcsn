@@ -143,8 +143,8 @@ namespace vcsn
     {
       auto gs = intersection(*a.labelset(), *b.labelset());
       auto ls = std::make_shared<LabelSet>(gs);
-      // FIXME: check compatibility of weightsets.
-      return {ls, a.weightset()};
+      auto ws = intersection(*a.weightset(), *b.weightset());
+      return {ls, std::make_shared<WeightSet>(ws)};
     }
 
     /// The union of two contexts.
@@ -155,8 +155,8 @@ namespace vcsn
     {
       auto gs = get_union(*a.labelset(), *b.labelset());
       auto ls = std::make_shared<LabelSet>(gs);
-      // FIXME: check compatibility of weightsets.
-      return {ls, a.weightset()};
+      auto ws = get_union(*a.weightset(), *b.weightset());
+      return {ls, std::make_shared<WeightSet>(ws)};
     }
 
   }
