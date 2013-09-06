@@ -33,6 +33,40 @@ Or use what's in there instead of always abc?
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
+** ratexps are not series
+In the following example, the I0 -> 0 [label = "<\\e+\\e+\\e>"] is a
+nuisance.
+
+  $ vcsn standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' > 1.gv
+  $ vcsn standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' > 2.gv
+  $ vcsn sum -f 1.gv 2.gv
+  digraph
+  {
+    vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
+    rankdir = LR
+    {
+      node [style = invis, shape = none, label = "", width = 0, height = 0]
+      I0
+      F0
+      F1
+      F2
+    }
+    {
+      node [shape = circle]
+      0
+      1
+      2
+    }
+    I0 -> 0 [label = "<\\e+\\e+\\e>"]
+    0 -> F0 [label = "<x+y>"]
+    0 -> 1 [label = "<x>a"]
+    0 -> 2 [label = "<y>b"]
+    1 -> F1
+    1 -> 1 [label = "a"]
+    2 -> F2
+    2 -> 2 [label = "b"]
+  }
+
 * Benchmarks
 ** determinization
 Experiment determinization on (a^p)*+(a^q)*+(a^r)*, with p, q, r primes.
@@ -69,14 +103,6 @@ Maybe it should be parameterized by a ratexpset instead of a context.
 It seems that monomials would be a useful abstraction.
 
 Why "weight" in add_weight?  In place operations would be useful.
-
-** standard and operations on standard automata
-See if standard_visitor could be using operation such as star_here,
-concatenate, left-mult, right-mult, union, sum.  Currently, this is
-duplicate code.
-
-Provide a means to compute the union and intersection of contexts.
-Generalize the instantiation of these guys to more than LAL.
 
 * Optimizations
 ** accessible etc.
@@ -136,11 +162,6 @@ that *both* should yield "{3}ab":
   of the function derived-term for the weighthed automata.
 
 * More algorithms
-** Functions to assemble automata
-They stupidly work only on LAL, because the steps to compute the union of
-contexts is yet to be implemented in a more generic way.  Actually, there is
-already a lot of code duplication in this area.
-
 ** I/O with Grail (AL)
 We should also be able to read Grail+ files.
 

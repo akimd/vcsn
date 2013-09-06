@@ -141,10 +141,9 @@ namespace vcsn
     intersection(const context<LabelSet, WeightSet>& a,
                  const context<LabelSet, WeightSet>& b)
     {
-      auto gs = intersection(*a.labelset(), *b.labelset());
-      auto ls = std::make_shared<LabelSet>(gs);
+      auto ls = intersection(*a.labelset(), *b.labelset());
       auto ws = intersection(*a.weightset(), *b.weightset());
-      return {ls, std::make_shared<WeightSet>(ws)};
+      return {ls, ws};
     }
 
     /// The union of two contexts.
@@ -153,10 +152,9 @@ namespace vcsn
     get_union(const context<LabelSet, WeightSet>& a,
               const context<LabelSet, WeightSet>& b)
     {
-      auto gs = get_union(*a.labelset(), *b.labelset());
-      auto ls = std::make_shared<LabelSet>(gs);
+      auto ls = get_union(*a.labelset(), *b.labelset());
       auto ws = get_union(*a.weightset(), *b.weightset());
-      return {ls, std::make_shared<WeightSet>(ws)};
+      return {ls, ws};
     }
 
   }
