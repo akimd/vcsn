@@ -162,14 +162,6 @@ namespace vcsn
         REGISTER(shortest, aut_t);
         REGISTER(u, Ctx);
 
-        // FIXME: the following 3 should work for all kinds (so
-        // instantiate them more generally), except we need to define
-        // the union of contexts.
-        REGISTER(chain, aut_t);
-        REGISTER2(concatenate, aut_t, aut_t);
-        REGISTER2(union_a, aut_t, aut_t);
-        REGISTER2(sum, aut_t, aut_t);
-
         return true;
       }
 
@@ -227,7 +219,9 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(aut_to_exp, aut_t);
+        REGISTER(chain, aut_t);
         REGISTER(coaccessible, aut_t);
+        REGISTER2(concatenate, aut_t, aut_t);
         REGISTER(copy, aut_t);
 
         // dot.
@@ -284,11 +278,13 @@ namespace vcsn
                               static_cast<standard_exp_t&>(standard<rs_t>));
 
         REGISTER(star, aut_t);
+        REGISTER2(sum, aut_t, aut_t);
         REGISTER(tikz, aut_t);
         REGISTER(tikz, taut_t);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_exp, rs_t);
         REGISTER(trim, aut_t);
+        REGISTER2(union_a, aut_t, aut_t);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;

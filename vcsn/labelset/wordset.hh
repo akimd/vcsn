@@ -141,7 +141,7 @@ namespace vcsn
     wordset<GenSet>
     intersect(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
-      return {intersect(lhs->genset(), rhs->genset())};
+      return {intersect(*lhs.genset(), *rhs.genset())};
     }
 
     /// Compute the union with another alphabet.
@@ -149,7 +149,7 @@ namespace vcsn
     wordset<GenSet>
     get_union(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
-      return {get_union(lhs->genset(), rhs->genset())};
+      return {get_union(*lhs.genset(), *rhs.genset())};
     }
 
   }

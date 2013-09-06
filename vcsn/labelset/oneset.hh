@@ -138,6 +138,22 @@ namespace vcsn
         return "\\e";
       }
     };
+
+    /// The intersection of two labelsets.
+    inline
+    oneset
+    intersection(const oneset&, const oneset&)
+    {
+      return {};
+    }
+
+    /// The union of two labelsets.
+    inline
+    oneset
+    get_union(const oneset&, const oneset&)
+    {
+      return {};
+    }
   }
 }
 
