@@ -34,13 +34,9 @@ namespace vcsn
   union_a(const A& laut, const B& raut)
   {
     using automaton_t = A;
-    using context_t = typename automaton_t::context_t;
 
     // Create new automata.
-    auto gs = get_union(*laut.context().labelset(),
-                        *raut.context().labelset());
-    auto ls = std::make_shared<typename automaton_t::labelset_t>(gs);
-    auto ctx = context_t{ls, laut.context().weightset()};
+    auto ctx = get_union(laut.context(), raut.context());
     automaton_t res(ctx);
 
     union_here(res, laut);

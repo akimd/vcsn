@@ -134,6 +134,31 @@ namespace vcsn
       weightset_ptr ws_;
     };
 
+
+    /// The intersection of two contexts.
+    template <typename LabelSet, typename WeightSet>
+    context<LabelSet, WeightSet>
+    intersection(const context<LabelSet, WeightSet>& a,
+                 const context<LabelSet, WeightSet>& b)
+    {
+      auto gs = intersection(*a.labelset(), *b.labelset());
+      auto ls = std::make_shared<LabelSet>(gs);
+      // FIXME: check compatibility of weightsets.
+      return {ls, a.weightset()};
+    }
+
+    /// The union of two contexts.
+    template <typename LabelSet, typename WeightSet>
+    context<LabelSet, WeightSet>
+    get_union(const context<LabelSet, WeightSet>& a,
+              const context<LabelSet, WeightSet>& b)
+    {
+      auto gs = get_union(*a.labelset(), *b.labelset());
+      auto ls = std::make_shared<LabelSet>(gs);
+      // FIXME: check compatibility of weightsets.
+      return {ls, a.weightset()};
+    }
+
   }
 }
 

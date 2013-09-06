@@ -43,14 +43,9 @@ namespace vcsn
     // Sum only works on standard automata.
     assert(is_standard(laut) && is_standard(raut));
     using automaton_t = A;
-    using context_t = typename automaton_t::context_t;
 
     // Create new automata.
-    auto gs = get_union(*laut.context().labelset(),
-                        *raut.context().labelset());
-    auto ls = std::make_shared<typename automaton_t::labelset_t>
-                              (*laut.context().labelset());
-    auto ctx = context_t{ls, laut.context().weightset()};
+    auto ctx = get_union(laut.context(), raut.context());
     automaton_t res(ctx);
     // A standard automaton has a single initial state.
     res.set_initial(res.new_state());

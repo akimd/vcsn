@@ -82,14 +82,9 @@ namespace vcsn
     assert(is_standard(laut));
     assert(is_standard(raut));
     using automaton_t = A;
-    using context_t = typename automaton_t::context_t;
 
     // Create new automata.
-    auto gs = get_union(*laut.context().labelset(),
-                        *raut.context().labelset());
-    auto ls = std::make_shared<typename automaton_t::labelset_t>
-                              (*laut.context().labelset());
-    auto ctx = context_t{ls, laut.context().weightset()};
+    auto ctx = get_union(laut.context(), raut.context());
     automaton_t res(ctx);
     ::vcsn::copy(laut, res, {keep_all_states<typename automaton_t::state_t>});
     concatenate_here(res, raut);
