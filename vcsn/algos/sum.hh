@@ -20,6 +20,8 @@ namespace vcsn
   A&
   sum_here(A& res, const B& b)
   {
+    assert(is_standard(res));
+    assert(is_standard(b));
     // State in B -> state in Res.
     std::map<typename B::state_t, typename A::state_t> m;
     typename A::state_t initial = res.dst_of(res.initial_transitions().front());
@@ -30,6 +32,9 @@ namespace vcsn
 
     // Add b.
     for (auto t: b.all_transitions())
+      // Do not add initial transitions, the unique initial state is
+      // already declared as such, and its weight must remain 1.
+      if (b.src_of(t) != b.pre())
       res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
                          b.label_of(t), b.weight_of(t));
     return res;
@@ -41,7 +46,6 @@ namespace vcsn
   sum(const A& laut, const B& raut)
   {
     // Sum only works on standard automata.
-    assert(is_standard(laut) && is_standard(raut));
     using automaton_t = A;
 
     // Create new automata.
