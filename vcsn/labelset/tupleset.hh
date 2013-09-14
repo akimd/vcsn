@@ -30,6 +30,7 @@ namespace vcsn
     template <typename... LabelSets>
     class tupleset
     {
+    public:
       using labelsets_t = std::tuple<LabelSets...>;
       using indices_t = detail::gen_seq<sizeof...(LabelSets)>;
     public:
@@ -282,8 +283,43 @@ namespace vcsn
         return std::make_tuple((std::get<I>(sets_).transpose(std::get<I>(l)))...);
       }
 
+      /// The intersection with another tupleset.
+      template <std::size_t... I>
+      tupleset
+      meet_(const tupleset& rhs, detail::seq<I...>) const
+      {
+        return {(meet(std::get<I>(sets_),
+                      std::get<I>(rhs.sets_)))...};
+      }
+
+      /// The join with another tupleset.
+      template <std::size_t... I>
+      tupleset
+      join_(const tupleset& rhs, detail::seq<I...>) const
+      {
+        return {(join(std::get<I>(sets_),
+                      std::get<I>(rhs.sets_)))...};
+      }
+
+      /// The meet with another tupleset.
+      friend
+      tupleset
+      meet(const tupleset& lhs, const tupleset& rhs)
+      {
+        return lhs.meet_(rhs, indices_t{});
+      }
+
+      /// The join with another tupleset.
+      friend
+      tupleset
+      join(const tupleset& lhs, const tupleset rhs)
+      {
+        return lhs.join_(rhs, indices_t{});
+      }
+
       labelsets_t sets_;
     };
+
   }
 }
 #endif // !VCSN_LABELSET_TUPLESET_HH
