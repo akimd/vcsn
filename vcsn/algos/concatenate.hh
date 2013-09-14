@@ -101,7 +101,7 @@ namespace vcsn
     res.set_initial(s);
     res.set_final(s);
 
-    for (auto i = 0; i < n; ++i)
+    for (size_t i = 0; i < n; ++i)
       concatenate_here(res, aut);
     return res;
   }

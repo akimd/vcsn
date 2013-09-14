@@ -9,6 +9,7 @@ namespace vcsn
 {
   namespace dyn
   {
+    static
     std::string
     vname(const automaton& aut, const weight& w)
     {
