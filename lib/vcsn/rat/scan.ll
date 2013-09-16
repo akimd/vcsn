@@ -112,6 +112,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "<"     yylval->sval = new std::string(); yy_push_state(SC_WEIGHT);
 
   {char}  yylval->sval = new std::string(yytext); return TOK(LETTER);
+  "'"[^']+"'" yylval->sval = new std::string(yytext+1, yyleng-2); return TOK(LETTER);
 
   "\n"    continue;
 
