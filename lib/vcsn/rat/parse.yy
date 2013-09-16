@@ -215,8 +215,10 @@ exp:
 ;
 
 weights:
-  "weight"          { TRY(@$ + 1, $$ = MAKE(weight, MAKE(one), $1)); }
-| "weight" weights  { TRY(@$ + 1, $$ = MAKE(weight, $1, $2)); }
+// "weight" might leak when there are exceptions, but we will move to
+// Bison 3.0, which will trivially avoid the issue.
+  "weight"         { TRY(@$ + 1, $$ = MAKE(weight, MAKE(one), *$1)); delete $1;}
+| "weight" weights { TRY(@$ + 1, $$ = MAKE(weight, *$1, $2)); delete $1; }
 ;
 
 %%

@@ -44,12 +44,9 @@ namespace dyn
     }
 
     /// From string, to typed weight.
-    /// \param w  is deleted
-    DEFINE::down(std::string* w) const -> weight_t
+    DEFINE::down(const std::string& w) const -> weight_t
     {
-      auto res = rs_.weightset()->conv(*w);
-      delete w;
-      return res;
+      return rs_.weightset()->conv(w);
     }
 
     DEFINE::make_ratexp(const value_t& v) const
@@ -93,12 +90,12 @@ namespace dyn
       return rs_.star(down(v));
     }
 
-    DEFINE::weight(std::string* w, value_t v) const -> value_t
+    DEFINE::weight(const std::string& w, value_t v) const -> value_t
     {
       return rs_.weight(down(w), down(v));
     }
 
-    DEFINE::weight(value_t v, std::string* w) const -> value_t
+    DEFINE::weight(value_t v, const std::string& w) const -> value_t
     {
       return rs_.weight(down(v), down(w));
     }
