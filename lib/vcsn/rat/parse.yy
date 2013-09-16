@@ -40,7 +40,6 @@
         {
           int ival;
           std::string* sval;
-          char cval;
         };
       };
     }
@@ -152,7 +151,7 @@
   @$ = driver_.location_;
 }
 
-%printer { debug_stream() << $$; } <ival> <cval>;
+%printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '{' << *$$ << '}'; } "weight";
 %printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
@@ -169,7 +168,7 @@
 ;
 
 %token <irange> STAR "*";
-%token <cval> LETTER  "letter";
+%token <sval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
 
 %type <node> exp exps weights;
@@ -210,7 +209,7 @@ exp:
 | exp "*"          { $$ = power(driver_.ratexpset_, $1, $2); }
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
-| LETTER           { TRY(@$, $$ = MAKE(atom, {$1})); }
+| LETTER           { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }
 | "(" exp ")"      { assert($1 == $3); $$ = $2; $<parens>$ = true; }
 ;
 

@@ -107,7 +107,8 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
   "<"     yylval->sval = new std::string(); yy_push_state(SC_WEIGHT);
 
-  {char}  yylval->cval = *yytext; return TOK(LETTER);
+  {char}  yylval->sval = new std::string(yytext); return TOK(LETTER);
+
   "\n"    continue;
 
   \\.|.   driver_.invalid(*yylloc, yytext);
