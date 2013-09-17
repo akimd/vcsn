@@ -5,7 +5,7 @@
 # include <set>
 
 # include <vcsn/algos/copy.hh>
-# include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/ctx/lal_char_b.hh>

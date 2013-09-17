@@ -1,13 +1,13 @@
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/is_complete.hh>
+#include <vcsn/algos/is-complete.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 namespace vcsn
 {
 
   /*--------------.
-  | is_complete.  |
+  | is-complete.  |
   `--------------*/
 
   namespace dyn

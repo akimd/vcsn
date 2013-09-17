@@ -44,7 +44,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/grail.cc                       \
   lib/vcsn/algos/info.cc                        \
   lib/vcsn/algos/is-ambiguous.cc                \
-  lib/vcsn/algos/is_complete.cc                 \
+  lib/vcsn/algos/is-complete.cc                 \
   lib/vcsn/algos/is-deterministic.cc            \
   lib/vcsn/algos/is-eps-acyclic.cc              \
   lib/vcsn/algos/is-normalized.cc               \

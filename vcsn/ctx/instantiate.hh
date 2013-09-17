@@ -14,7 +14,7 @@
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-ambiguous.hh>
-# include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>

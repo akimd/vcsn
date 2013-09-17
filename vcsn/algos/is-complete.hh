@@ -35,7 +35,7 @@ namespace vcsn
   }
 
   /*------------------.
-  | dyn::is_complete. |
+  | dyn::is-complete. |
   `------------------*/
 
   namespace dyn

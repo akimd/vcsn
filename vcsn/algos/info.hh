@@ -6,7 +6,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-normalized.hh>
-# include <vcsn/algos/is_complete.hh>
+# include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/core/rat/info.hh>
 # include <vcsn/dyn/fwd.hh>
@@ -20,7 +20,7 @@ namespace vcsn
   namespace info
   {
     /*--------------.
-    | is_complete.  |
+    | is-complete.  |
     `--------------*/
     template <typename Aut>
     typename std::enable_if<Aut::context_t::is_lal,
