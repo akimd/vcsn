@@ -1,0 +1,49 @@
+#! /bin/sh
+
+## -------------- ##
+## is-ambiguous.  ##
+## -------------- ##
+
+# not deterministic, yet not ambiguous.
+cat >a.gv <<\EOF
+digraph
+{
+  vcsn_context="lal_char(ab)_b"
+  I -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  1 -> F
+}
+EOF
+run 2 "false" -vcsn-is-ambiguous -A -f a.gv
+run 2 "false" -vcsn-is-deterministic -A -f a.gv
+
+# not deterministic, and ambiguous.
+cat >a.gv <<\EOF
+digraph
+{
+  vcsn_context="lal_char(ab)_b"
+  I -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  1 -> F
+  2 -> F
+}
+EOF
+run 0 "true" -vcsn-is-ambiguous -A -f a.gv
+run 2 "false" -vcsn-is-deterministic -A -f a.gv
+
+# deterministic, and unambiguous (obviously).
+cat >a.gv <<\EOF
+digraph
+{
+  vcsn_context="lal_char(ab)_b"
+  I -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
+  1 -> F
+  2 -> F
+}
+EOF
+run 2 "false" -vcsn-is-ambiguous -A -f a.gv
+run 0 "true" -vcsn-is-deterministic -A -f a.gv

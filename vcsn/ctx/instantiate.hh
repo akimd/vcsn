@@ -13,6 +13,7 @@
 # include <vcsn/algos/enumerate.hh>
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/info.hh>
+# include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/is_complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
@@ -154,6 +155,7 @@ namespace vcsn
         REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);
         REGISTER(eval, aut_t);
+        REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);

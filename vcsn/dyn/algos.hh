@@ -98,6 +98,10 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// Whether \a aut is ambiguous.
+    /// \pre \a aut is LAL.
+    bool is_ambiguous(const automaton& aut);
+
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
@@ -142,8 +146,11 @@ namespace vcsn
     /// \precondition aut is standard.
     automaton left_mult(const automaton& aut, const weight& w);
 
+    /// The lifted LAO automaton from \a aut.
     automaton lift(const automaton& aut);
-    ratexp lift(const ratexp& aut);
+
+    /// The lifted LAO rational expression from \a e.
+    ratexp lift(const ratexp& e);
 
     context make_context(const std::string& name);
 

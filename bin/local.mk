@@ -34,6 +34,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-double-ring                          \
   bin/vcsn-enumerate                            \
   bin/vcsn-evaluate                             \
+  bin/vcsn-is-ambiguous                         \
   bin/vcsn-is-complete                          \
   bin/vcsn-is-deterministic                     \
   bin/vcsn-is-empty                             \
@@ -62,6 +63,7 @@ bin_PROGRAMS +=                                 \
   bin/vcsn-union                                \
   bin/vcsn-universal
 
+
 noinst_LTLIBRARIES += bin/libtafkit.la
 bin_libtafkit_la_SOURCES = bin/parse-args.hh bin/parse-args.cc
 bin_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
@@ -82,6 +84,7 @@ bin_vcsn_divkbaseb_LDADD        = bin/libtafkit.la
 bin_vcsn_double_ring_LDADD      = bin/libtafkit.la
 bin_vcsn_enumerate_LDADD        = bin/libtafkit.la
 bin_vcsn_evaluate_LDADD         = bin/libtafkit.la
+bin_vcsn_is_ambiguous_LDADD     = bin/libtafkit.la
 bin_vcsn_is_complete_LDADD      = bin/libtafkit.la
 bin_vcsn_is_deterministic_LDADD = bin/libtafkit.la
 bin_vcsn_is_empty_LDADD         = bin/libtafkit.la

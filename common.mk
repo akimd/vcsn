@@ -84,6 +84,7 @@ vcsn_determinize      = $(top_builddir)/bin/vcsn-determinize
 vcsn_divkbaseb        = $(top_builddir)/bin/vcsn-divkbaseb
 vcsn_double_ring      = $(top_builddir)/bin/vcsn-double-ring
 vcsn_evaluate         = $(top_builddir)/bin/vcsn-evaluate
+vcsn_is_ambiguous     = $(top_builddir)/bin/vcsn-is-ambiguous
 vcsn_is_complete      = $(top_builddir)/bin/vcsn-is-complete
 vcsn_is_deterministic = $(top_builddir)/bin/vcsn-is-deterministic
 vcsn_is_empty         = $(top_builddir)/bin/vcsn-is-empty
@@ -128,6 +129,7 @@ all_vcsn =                                      \
   $(vcsn_double_ring)                           \
   $(vcsn_enumerate)                             \
   $(vcsn_evaluate)                              \
+  $(vcsn_is_ambiguous)                          \
   $(vcsn_is_complete)                           \
   $(vcsn_is_deterministic)                      \
   $(vcsn_is_empty)                              \

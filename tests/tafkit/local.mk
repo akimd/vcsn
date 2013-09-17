@@ -29,6 +29,7 @@ tafkit_TESTS =                                  \
   tafkit/evaluate.chk                           \
   tafkit/fado.chk                               \
   tafkit/grail.chk                              \
+  tafkit/is-ambiguous.chk                       \
   tafkit/is-complete.chk                        \
   tafkit/is-deterministic.chk                   \
   tafkit/is-normalized.chk                      \

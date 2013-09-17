@@ -30,6 +30,7 @@ nobase_vcsn_HEADERS =                           \
   algos/fwd.hh                                  \
   algos/grail.hh                                \
   algos/info.hh                                 \
+  algos/is-ambiguous.hh                         \
   algos/is_complete.hh                          \
   algos/is-deterministic.hh                     \
   algos/is-eps-acyclic.hh                       \
