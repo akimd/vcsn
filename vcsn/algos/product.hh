@@ -12,71 +12,99 @@
 namespace vcsn
 {
 
-  /*----------.
-  | product.  |
-  `----------*/
+  namespace detail
+  {
+
+    /*----------.
+    | product.  |
+    `----------*/
+
+    /// Build the (accessible part of the) product.
+    template <typename A, typename B>
+    class producter
+    {
+      // FIXME: ensure that weightsets are compatible.
+      static_assert(A::context_t::is_lal,
+                    "requires labels_are_letters");
+      static_assert(B::context_t::is_lal,
+                    "requires labels_are_letters");
+      using automaton_t = A;
+
+      using state_t = typename automaton_t::state_t;
+      using pair_t = std::pair<typename A::state_t, typename B::state_t>;
+
+      /// map (left-state, right-state) -> product-state.
+      using map = std::map<pair_t, typename automaton_t::state_t>;
+      map pmap_;
+
+    public:
+      /// Reset the attributes before a new product.
+      void clear()
+      {
+        pmap_.clear();
+      }
+
+      /// The (accessible part of the) product of \a laut and \a raut.
+      automaton_t operator()(const A& laut, const B& raut)
+      {
+        auto ctx = intersection(laut.context(), raut.context());
+        const auto& ws = *ctx.weightset();
+        automaton_t res(ctx);
+
+        pair_t ppre(laut.pre(), raut.pre());
+        pair_t ppost(laut.post(), raut.post());
+        pmap_[ppre] = res.pre();
+        pmap_[ppost] = res.post();
+
+        /// Worklist of (left-state, right-state).
+        std::deque<pair_t> todo;
+        todo.push_back(ppre);
+        while (!todo.empty())
+          {
+            pair_t psrc = todo.front();
+            todo.pop_front();
+            state_t src = pmap_[psrc];
+
+            for (auto li : laut.all_out(psrc.first))
+              {
+                auto label = laut.label_of(li);
+                auto lweight = laut.weight_of(li);
+                auto ldst = laut.dst_of(li);
+
+                for (auto ri : raut.out(psrc.second, label))
+                  {
+                    auto weight = ws.mul(lweight, raut.weight_of(ri));
+                    pair_t pdst(ldst, raut.dst_of(ri));
+
+                    auto iter = pmap_.find(pdst);
+                    state_t dst;
+                    if (iter == pmap_.end())
+                      {
+                        dst = res.new_state();
+                        pmap_[pdst] = dst;
+                        todo.push_back(pdst);
+                      }
+                    else
+                      {
+                        dst = iter->second;
+                      }
+                    res.add_transition(src, dst, label, weight);
+                  }
+              }
+          }
+        return res;
+      }
+    };
+  }
 
   /// Build the (accessible part of the) product.
-  template <class A, class B>
+  template <typename A, typename B>
   A
   product(const A& laut, const B& raut)
   {
-    static_assert(A::context_t::is_lal,
-                  "requires labels_are_letters");
-    static_assert(B::context_t::is_lal,
-                  "requires labels_are_letters");
-    // FIXME: ensure that weightsets are compatible.
-    using automaton_t = A;
-    auto ctx = intersection(laut.context(), raut.context());
-    automaton_t res(ctx);
-    using state_t = typename automaton_t::state_t;
-
-    using pair_t = std::pair<typename A::state_t, typename B::state_t>;
-    std::map<pair_t, typename automaton_t::state_t> pmap;
-
-    pair_t ppre(laut.pre(), raut.pre());
-    pair_t ppost(laut.post(), raut.post());
-    pmap[ppre] = res.pre();
-    pmap[ppost] = res.post();
-
-    std::deque<pair_t> todo;
-    todo.push_back(ppre);
-    while (!todo.empty())
-      {
-        pair_t psrc = todo.front();
-        todo.pop_front();
-        state_t src = pmap[psrc];
-
-        for (auto li : laut.all_out(psrc.first))
-          {
-            auto label = laut.label_of(li);
-            auto lweight = laut.weight_of(li);
-            auto ldst = laut.dst_of(li);
-
-            for (auto ri : raut.out(psrc.second, label))
-              {
-                auto weight = res.weightset()->mul(lweight, raut.weight_of(ri));
-                pair_t pdst(ldst, raut.dst_of(ri));
-
-                auto iter = pmap.find(pdst);
-                state_t dst;
-                if (iter == pmap.end())
-                  {
-                    dst = res.new_state();
-                    pmap[pdst] = dst;
-                    todo.push_back(pdst);
-                  }
-                else
-                  {
-                    dst = iter->second;
-                  }
-                res.add_transition(src, dst, label, weight);
-              }
-          }
-      }
-    return res;
+    detail::producter<A, B> product;
+    return product(laut, raut);
   }
-
 
   /*--------.
   | power.  |
