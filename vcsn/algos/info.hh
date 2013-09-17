@@ -4,9 +4,10 @@
 # include <iostream>
 
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/is-ambiguous.hh>
+# include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-normalized.hh>
-# include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/core/rat/info.hh>
 # include <vcsn/dyn/fwd.hh>
@@ -19,6 +20,25 @@ namespace vcsn
   {
   namespace info
   {
+    /*---------------.
+    | is-ambiguous.  |
+    `---------------*/
+    template <typename Aut>
+    typename std::enable_if<Aut::context_t::is_lal,
+                            bool>::type
+    is_ambiguous(const Aut& a)
+    {
+      return vcsn::is_ambiguous(a);
+    }
+
+    template <typename Aut>
+    typename std::enable_if<!Aut::context_t::is_lal,
+                            std::string>::type
+    is_ambiguous(const Aut&)
+    {
+      return "N/A";
+    }
+
     /*--------------.
     | is-complete.  |
     `--------------*/
@@ -121,6 +141,7 @@ namespace vcsn
     ECHO("number of deterministic states",
          detail::info::num_deterministic_states(aut));
     ECHO("number of eps transitions", detail::info::num_eps_transitions(aut));
+    ECHO("is ambiguous", detail::info::is_ambiguous(aut));
     ECHO("is complete", detail::info::is_complete(aut));
     ECHO("is deterministic", detail::info::is_deterministic(aut));
     ECHO("is empty", is_empty(aut));

@@ -1,3 +1,39 @@
+* 2013-09-17
+** is-ambiguous
+New algorithm (static, dynamic, TAF-Kit) on LAL automata: whether some word
+is the label of at least two successful computations.
+
+  $ vcsn is-ambiguous <<\EOF
+  digraph
+  {
+    vcsn_context="lal_char(ab)_b"
+    I -> 0
+    0 -> 1 [label = "a"]
+    0 -> 2 [label = "a"]
+    1 -> F
+  }
+  EOF
+  false
+
+  $ vcsn is-ambiguous <<\EOF
+  digraph
+  {
+    vcsn_context="lal_char(ab)_b"
+    I -> 0
+    0 -> 1 [label = "a"]
+    0 -> 2 [label = "a"]
+    1 -> F
+    2 -> F
+  }
+  EOF
+  true
+
+Also reported in the 'info' format for automata.
+
+** product: recover the original states
+Similarly to 'determinize', the (static version of) 'product' can now be
+queried to get a map from states of the result to pairs of original states.
+
 * 2013-09-08
 ** Sum of standard automata is fixed
 See the previous entry: the computation of the initial transition was wrong,

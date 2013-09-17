@@ -12,6 +12,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -33,6 +34,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -54,6 +56,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -75,6 +78,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -96,6 +100,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -117,6 +122,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -138,6 +144,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -159,6 +166,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -180,6 +188,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -201,6 +210,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -222,6 +232,7 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
+is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -244,6 +255,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -266,6 +278,7 @@ number of useful states: 3
 number of transitions: 5
 number of deterministic states: N/A
 number of eps transitions: 2
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -287,6 +300,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -308,6 +322,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -329,6 +344,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -351,6 +367,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -373,6 +390,7 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -394,6 +412,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -415,6 +434,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -467,6 +487,7 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
+is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
