@@ -1,8 +1,8 @@
 #! /bin/sh
 
-## ------------ ##
-## Is complete. ##
-## ------------ ##
+## ------------- ##
+## is-complete.  ##
+## ------------- ##
 
 cat >a.gv <<\EOF
 digraph {
@@ -11,7 +11,7 @@ digraph {
 }
 EOF
 
-run 2 "false" -vcsn-is-complete -A -I dot -f a.gv
+run 2 "false" -vcsn-is-complete -A -f a.gv
 
 cat >a.gv <<\EOF
 digraph {
@@ -20,7 +20,7 @@ digraph {
 }
 EOF
 
-run 2 "false" -vcsn-is-complete -A -I dot -f a.gv
+run 2 "false" -vcsn-is-complete -A -f a.gv
 
 cat >a.gv <<\EOF
 digraph {
@@ -30,7 +30,7 @@ digraph {
 }
 EOF
 
-run 2 "false" -vcsn-is-complete -A -I dot -f a.gv
+run 2 "false" -vcsn-is-complete -A -f a.gv
 
 cat >a.gv <<\EOF
 digraph {
@@ -40,4 +40,4 @@ digraph {
 }
 EOF
 
-run 0 "true" -vcsn-is-complete -A -I dot -f a.gv
+run 0 "true" -vcsn-is-complete -A -f a.gv
