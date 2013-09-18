@@ -590,7 +590,7 @@ Now accepts (LAL Boolean) rational expressions.
 ** are-equivalent
 Now accepts (LAL Boolean) rational expressions.  It cannot compare a
 rational expression with an automaton (or vice-versa).  This is a temporary
-defect which shell be addressed once TAF-Kit is properly developped.
+defect which shell be addressed once TAF-Kit is properly developed.
 
   $ vcsn-are-equivalent -Ee '(a*b*)*' '(a+b)*'
   true
@@ -679,7 +679,7 @@ deterministic LAL Boolean automaton.
 
 * 2013-06-13
 ** is-deterministic
-It is conformant with the specifications: _all_ the states must be
+It is conforming with the specifications: _all_ the states must be
 deterministic, not just the reachable ones.
 
 ** info output adjustments
@@ -995,8 +995,8 @@ parameterized.
 
 As a first visible consequence, the name of the LAU contexts has changed:
 
-  lao_char_br => lao_br
-  lao_char(xyz)_ratexpset<lal_char(abc)_b> => lao_ratexpset<lal_char(abc)_b>
+  lau_char_br => lau_br
+  lau_char(xyz)_ratexpset<lal_char(abc)_b> => lau_ratexpset<lal_char(abc)_b>
 
 * 2013-01-24
 ** options renamed
@@ -1068,7 +1068,7 @@ instead of <LabelSet>_<WeightSet>_<Kind>.  For instance:
   char_b_lal  => lal_char_b
   char_br_lal => lal_char_br
   char_zr_lal => lal_char_zr
-  char_br_lau => lao_char_br
+  char_br_lau => lau_char_br
   char_br_law => law_char_br
   char_zr_law => law_char_zr
 
@@ -1473,7 +1473,7 @@ specified Gen and Weight), used to derive from abstract_kratexp (which is
 "opaque": it does not know the precise type that is used underneath).
 
 Now, from abstract_kratexp we derive a concrete_abstract_kratexpset
-which *agreggates* a kratexpset.  This means that kratexpset no longer
+which *aggregates* a kratexpset.  This means that kratexpset no longer
 derives from a weakly-typed ancestor, and can provide simple and
 strongly-typed routines.
 
@@ -1542,7 +1542,7 @@ It is also simpler to really expose them as pointers, so every
 ** Contexts
 The Kind parameter is now part of the context.  The same type of Kind is now
 use for both RatExps and automata.  This results in many significant
-simplifictions.
+simplifications.
 
 For instance, again, the test case for product:
 
@@ -1645,7 +1645,7 @@ A star is now valid after a weight:
 
 * 2012-05-11
 ** dotty: define initial/final states first
-In order to improve readibility, instead of
+In order to improve readability, instead of
 
   digraph A {
     rankdir=LR
@@ -1955,3 +1955,22 @@ coding: utf-8
 ispell-dictionary: "american"
 fill-column: 76
 End:
+
+LocalWords:  TAF LAL automata vcsn EOF lal determinize ratexpset gv xy mult
+LocalWords:  rankdir invis labelset weightset circo taf dyn thompson lan Ee
+LocalWords:  RatExp EFSM OpenFST efsm efstcompile fstdeterminize abc eps dl
+LocalWords:  efstdecompile coaccessible acyclic pre fsm EOFSM isymbols txt
+LocalWords:  fstcompile acceptor FAdo fado nfa readFromFile dfa toDFA wxyz
+LocalWords:  Vaucanson evena oddb zmin minab minblocka slowgrow aabbba aut
+LocalWords:  stdin Brzozowski's divkbaseb nul bb WeightSet aaabbbb aaab TAK
+LocalWords:  adhoc fstinfo LAU WeightSets ba num typename const aa Graphviz
+LocalWords:  Refactoring initializations tikz LaTeX LabelSet nullableset Af
+LocalWords:  nullable Determinization de bruijn Onull sys API renamings xyz
+LocalWords:  LetterSet UnitSet WordSet letterset unitset wordset postfix Ef
+LocalWords:  FSM's wc parameterized lao br zr lau pprat Wz Lw ratexp xml cd
+LocalWords:  genset RatExps krat kratexp kratexpset lae vname precompiled
+LocalWords:  templated polynomialset del abcd Metadata sed weightsets laz
+LocalWords:  xyw determinizing ctx libchar conv kratexps zrr dcba bcd dcb
+LocalWords:  cba wz sl gensets mul GenSet typedef abab eval determinization
+LocalWords:  al Associativity ptr nb semiring ingoing pprat's src dst utf
+LocalWords:  entryset subdirectory ispell american
