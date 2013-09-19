@@ -1,12 +1,4 @@
 * Tests
-** is-trim (AL)
-** is-empty (AL)
-** is-useless (AL)
-Check them, and their "is-"less version (vcsn-trim etc.).
-
-** evaluate.chk (AL)
-Cover more cases for zmin.  Use the automata from share/vcsn/lal_char_zmin.
-
 ** efsm
 I/O with weights.
 
