@@ -1,12 +1,15 @@
 #ifndef VCSN_WEIGHTS_R_HH
 # define VCSN_WEIGHTS_R_HH
+
 # include <string>
 # include <ostream>
 # include <stdexcept>
 # include <boost/lexical_cast.hpp>
 # include <sstream>
+
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/dyn/weightset.hh>
+
 namespace vcsn
 {
   class r: public dyn::detail::abstract_weightset
@@ -16,37 +19,45 @@ namespace vcsn
     {
       return "r";
     }
+
     std::string vname(bool = true) const
     {
       return sname();
     }
+
     /// Build from the description in \a is.
     static r make(std::istream& is)
     {
       eat(is, sname());
       return {};
     }
+
     using value_t = double;
+
     value_t
     zero() const
     {
       return 0.;
     }
+
     value_t
     one() const
     {
       return 1.;
     }
+
     value_t
     add(const value_t l, const value_t r) const
     {
       return l + r;
     }
+
     value_t
     mul(const value_t l, const value_t r) const
     {
       return l * r;
     }
+
     value_t
     star(const value_t v) const
     {
@@ -55,33 +66,40 @@ namespace vcsn
       else
         throw std::domain_error("r: star: invalid value: " + format(v));
     }
+
     bool
     is_zero(const value_t v) const
     {
       return v == 0;
     }
+
     bool
     is_one(const value_t v) const
     {
       return v == 1;
     }
+
     bool
     is_equal(const value_t l, const value_t r)
     {
       return l == r;
     }
+
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
+
     value_t
     abs(const value_t v) const
     {
       return v < 0 ? -v : v;
     }
+
     value_t
     transpose(const value_t v) const
     {
       return v;
     }
+
     value_t
     conv(std::istream& i) const
     {
@@ -95,17 +113,20 @@ namespace vcsn
         }
       return res;
     }
+
     value_t
     conv(const std::string& str) const
     {
       std::istringstream i{str};
       return conv(i);
     }
+
     std::ostream&
     print(std::ostream& o, const value_t v) const
     {
       return o << v;
     }
+
     std::string
     format(const value_t v) const
     {
@@ -114,12 +135,14 @@ namespace vcsn
       return s.str();
     }
   };
+
   /// The intersection of two weightsets.
   inline
   r intersection(const r&, const r&)
   {
     return {};
   }
+
   /// The union of two weightsets.
   inline
   r get_union(const r&, const r&)
@@ -127,4 +150,5 @@ namespace vcsn
     return {};
   }
 }
+
 #endif // !VCSN_WEIGHTS_R_HH
