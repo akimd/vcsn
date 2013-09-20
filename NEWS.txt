@@ -1,3 +1,10 @@
+* 2013-09-20
+** proper: faster implementation
+The spontaneous transition elimination algorithm is now faster, going from
+102s to 15s on a MacBook Pro i7 2.9GHz 8GB RAM, on the following sequence.
+
+  $ vcsn thompson -C 'lan_char(a)_b' -Ee 'a?{2000}' | vcsn proper -O null
+
 * 2013-09-17
 ** is-ambiguous
 New algorithm (static, dynamic, TAF-Kit) on LAL automata: whether some word

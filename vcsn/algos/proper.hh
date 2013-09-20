@@ -4,10 +4,15 @@
 # include <stdexcept>
 # include <type_traits>
 # include <unordered_map>
+# include <unordered_set>
 # include <utility>
 # include <vector>
 
+# include <boost/lexical_cast.hpp>
+# include <boost/heap/fibonacci_heap.hpp>
+
 # include <vcsn/algos/fwd.hh>
+# include <vcsn/algos/dot.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -21,6 +26,16 @@ namespace vcsn
 
   namespace detail
   {
+    /// Debug level set in the user's environment.
+    static
+    int debug_level()
+    {
+      if (auto cp = getenv("DEBUG"))
+        return  *cp ? boost::lexical_cast<int>(cp) : 1;
+      else
+        return 0;
+    }
+
     /**
        @class properer
        @brief This class contains the core of the proper algorithm.
@@ -74,9 +89,11 @@ namespace vcsn
 
     public:
       properer(automaton_t& aut)
-        : aut_(aut)
+        : debug_(debug_level())
+        , aut_(aut)
         , ws_(*aut.weightset())
         , empty_word_(aut.labelset()->one())
+        , todo_()
       {}
 
       /**@brief Remove the epsilon-transitions of the input
@@ -116,15 +133,151 @@ namespace vcsn
           }
       }
 
-      /* For each state (s), for each incoming epsilon-transitions
-         (t), if (t) is a loop, the star of its weight is computed,
-         otherwise, (t) is stored into the closure list.  Then (t) is
-         removed.  */
-      // Iterate on a copy, as we remove these transitions in the
-      // loop.
-      void in_situ_remover_(state_t s, transitions_t transitions)
+    private:
+      /// Data needed to compare the elimination order between states.
+      ///
+      /// Code profiling shows that we spend too much time iterating
+      /// on outgoing and inconing transitions of states to compute
+      /// the order of elimination.  This structure caches what needs
+      /// to be compared, and provides the comparison operator.
+      struct state_profile
       {
-        weight_t star = ws_.one();// if there is no eps-loop
+        /// From the heap's top, recover state to eliminate.
+        state_t state;
+        /// Number of incoming spontaneous transitions.
+        size_t in_spontaneous;
+        /// Number of outgoing spontaneous transitions.
+        size_t out_spontaneous;
+        /// Number of outgoing transitions.
+        size_t out;
+
+        /// Whether l < r for the max-heap.
+        ///
+        /// Compare priorities: return true if \a r should be
+        /// treated before \a l.  Must be strict.
+        bool operator<(const state_profile& r) const
+        {
+          // First, work on those with fewer outgoing spontaneous
+          // transitions.
+          {
+            auto sl = out_spontaneous;
+            auto sr = r.out_spontaneous;
+            if (sr < sl)
+              return true;
+            else if (sl < sr)
+              return false;
+          }
+          // Prefer fewer outgoing transitions.
+          {
+            auto sl = out;
+            auto sr = r.out;
+            if (sr < sl)
+              return true;
+            else if (sl < sr)
+              return false;
+          }
+          // Prefer fewer incoming spontaneous transitions.
+          {
+            auto sl = in_spontaneous;
+            auto sr = r.in_spontaneous;
+            if (sr < sl)
+              return true;
+            else if (sl < sr)
+              return false;
+          }
+          // Then, ensure total order.
+          return state < r.state;
+        }
+      };
+
+      /// Update the profile of \a s.
+      void update_profile_(state_t s)
+      {
+        auto i = handles_.find(s);
+        if (i != handles_.end())
+          {
+            state_profile& p = *i->second;
+            p.in_spontaneous = aut_.in(s, empty_word_).size();
+            p.out_spontaneous = aut_.out(s, empty_word_).size();
+            p.out = aut_.out(s).size();
+          }
+      }
+
+      /// Build the profiles and the heap for states with incoming
+      /// spontaneous transitions.
+      void build_heap_()
+      {
+        for (auto s: aut_.states())
+          {
+            // We don't care about states without incoming spontaneous
+            // transitions.
+            auto in_spontaneous = aut_.in(s, empty_word_).size();
+            if (in_spontaneous)
+              {
+                auto out_spontaneous = aut_.out(s, empty_word_).size();
+                auto h =
+                  todo_.emplace(state_profile
+                                {s,
+                                    in_spontaneous,
+                                    out_spontaneous,
+                                    aut_.out(s).size()});
+                handles_.emplace(s, h);
+              }
+          }
+      }
+
+      /// Show the heap, for debugging.
+      void show_heap_()
+      {
+        const char* sep = "";
+        for (auto i = todo_.ordered_begin();
+             i != todo_.ordered_end();
+             ++i)
+          {
+            std::cerr << sep << i->state;
+            sep = " > ";
+          }
+      }
+
+      /// Update the heap for \a s.
+      /// \precondition  its profile is updated.
+      void update_heap_(state_t s)
+      {
+        if (2 < debug_)
+          {
+            std::cerr << "update heap (" << s << " : ";
+            show_heap_();
+          }
+        auto i = handles_.find(s);
+        if (i != handles_.end())
+          todo_.update(i->second);
+        if (2 < debug_)
+          {
+            std::cerr << ") => ";
+            show_heap_();
+            std::cerr << std::endl;
+          }
+      }
+
+      /// For each state (s), for each incoming epsilon-transitions
+      /// (t), if (t) is a loop, the star of its weight is computed,
+      /// otherwise, (t) is stored into the closure list.  Then (t) is
+      /// removed.
+      ///
+      /// Because it is sometimes useful to be able to invoke proper
+      /// on a single state, we kept this function free from any
+      /// relation with the profiles and the heap.
+      ///
+      /// For some reason, we get poorer performances if this function
+      /// is moved higher, before the state_profile definition.
+      void in_situ_remover_(state_t s)
+      {
+        const auto& tr = aut_.in(s, empty_word_);
+        // Iterate on a copy, as we remove these transitions in the
+        // loop.
+        transitions_t transitions{tr.begin(), tr.end()};
+        // The star of the weight of the loop on 's' (1 if no loop).
+        weight_t star = ws_.one();
         using state_weight_t = std::pair<state_t, weight_t>;
         std::vector<state_weight_t> closure;
         for (auto t : transitions)
@@ -171,17 +324,72 @@ namespace vcsn
           aut_.del_state(s);
       }
 
+      /// Remove all the states with incoming spontaneous transitions.
+      ///
+      /// Set-up and maintain a heap to process states in an order
+      /// that attempts to avoid useless introducing useless
+      /// spontaneous transitions.
+      ///
+      /// Think for instance of the applying proper to
+      /// thompson(a?{n}): it is much more efficient to work "from
+      /// final to initial states", than the converse (which is what
+      /// the "implementation order" actually does).  For n=2000, the
+      /// "implementation order" takes 102s on my machine, while this
+      /// order (and its implementation) takes 15.2s.
       void in_situ_remover_()
       {
+        build_heap_();
         /* For each state (s), for each incoming epsilon-transitions
            (t), if (t) is a loop, the star of its weight is computed,
            otherwise, (t) is stored into the closure list.  Then (t)
            is removed.  */
-        for (auto s: aut_.states())
+
+        // The neighbors of s: their profiles need to be updated after
+        // s was processed.
+        std::unordered_set<state_t> neighbors;
+        while (!todo_.empty())
           {
-            const auto& tr = aut_.in(s, empty_word_);
-            if (!tr.empty())
-              in_situ_remover_(s, {tr.begin(), tr.end()});
+            auto p = todo_.top();
+            auto s = p.state;
+            if (2 < debug_)
+              {
+                show_heap_();
+                std::cerr << " ";
+              }
+            if (1 < debug_)
+              std::cerr << "Remove: " << s << " (" << s-2 << ")";
+            todo_.pop();
+            if (2 < debug_)
+              {
+                std::cerr << " => ";
+                show_heap_();
+              }
+            if (1 < debug_)
+              std::cerr << std::endl;
+            neighbors.clear();
+            for (auto t: aut_.in(s))
+              {
+                state_t n = aut_.src_of(t);
+                if (n != s)
+                  neighbors.emplace(n);
+              }
+            for (auto t: aut_.out(s))
+              {
+                state_t n = aut_.dst_of(t);
+                if (n != s)
+                  neighbors.emplace(n);
+              }
+
+            in_situ_remover_(s);
+
+            // Update all affected nodes.
+            for (auto n: neighbors)
+              update_profile_(n);
+            for (auto n: neighbors)
+              update_heap_(n);
+            handles_.erase(s);
+            if (3 < debug_)
+              std::cerr << dot(aut_) << std::endl;
           }
       }
 
@@ -231,12 +439,20 @@ namespace vcsn
       }
 
     private:
+      /// Debug level.  The higher, the more details are reported.
+      int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
       /// Shorthand to the weightset.
       const weightset_t& ws_;
       /// Shorthand to the empty word.
       label_t empty_word_;
+
+      /// Max-heap to decide the order of state-elimination.
+      using heap_t = boost::heap::fibonacci_heap<state_profile>;
+      heap_t todo_;
+      /// Map: state -> heap-handle.
+      std::unordered_map<state_t, typename heap_t::handle_type> handles_;
     };
 
 
