@@ -106,6 +106,8 @@ namespace vcsn
         for (auto s : aut.states())
           {
             out << "    " << names[s];
+            if (getenv("DEBUG"))
+              out << " [label = \"" << names[s] << " (" << s << ")\"]";
             if (!has(useful, s))
               out << " [" << gray << "]";
             out << std::endl;
