@@ -79,6 +79,29 @@ namespace vcsn
         , empty_word_(aut.labelset()->one())
       {}
 
+      /**@brief Remove the epsilon-transitions of the input
+         The behaviour of this method depends on the star_status of the weight_set:
+         -- starrable : always valid, does not throw any exception
+         -- tops : the proper algo is directly launched on the input;
+         if it returns false, an exception is launched
+         -- non_starrable / absval:
+         is_valid is called before launching the algorithm.
+         @param aut The automaton in which epsilon-transitions will be removed
+         @throw domain_error if the input is not valid
+      */
+      static void proper_here(automaton_t& aut)
+      {
+        if (!is_proper(aut))
+          proper_here_<weightset_t::star_status()>(aut);
+      }
+
+      static automaton_t proper(const automaton_t& aut)
+      {
+        automaton_t res = copy(aut);
+        proper_here(res);
+        return res;
+      }
+
       static bool in_situ_remover(automaton_t& aut)
       {
         try
@@ -162,35 +185,6 @@ namespace vcsn
           }
       }
 
-      /**@brief Remove the epsilon-transitions of the input
-         The behaviour of this method depends on the star_status of the weight_set:
-         -- starrable : always valid, does not throw any exception
-         -- tops : the proper algo is directly launched on the input;
-         if it returns false, an exception is launched
-         -- non_starrable / absval:
-         is_valid is called before launching the algorithm.
-         @param aut The automaton in which epsilon-transitions will be removed
-         @throw domain_error if the input is not valid
-      */
-      static void proper_here(automaton_t& aut)
-      {
-        if (!is_proper(aut))
-          proper_here_<weightset_t::star_status()>(aut);
-      }
-
-      static automaton_t proper(const automaton_t& aut)
-      {
-        automaton_t res = copy(aut);
-        proper_here(res);
-        return res;
-      }
-
-    private:
-      automaton_t& aut_;
-      const weightset_t& ws_;
-      label_t empty_word_;
-
-
       /// TOPS: valid iff proper succeeds.
       template <star_status_t Status>
       static
@@ -235,6 +229,14 @@ namespace vcsn
           throw std::domain_error("invalid automaton");
         in_situ_remover(aut);
       }
+
+    private:
+      /// The automaton we work on.
+      automaton_t& aut_;
+      /// Shorthand to the weightset.
+      const weightset_t& ws_;
+      /// Shorthand to the empty word.
+      label_t empty_word_;
     };
 
 
