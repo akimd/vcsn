@@ -1,12 +1,21 @@
 #! /bin/sh
 
+# Don't run FAdo if we don't have it.
+if python -c 'from FAdo import fa'; then
+  fado=true
+else
+  fado=false
+fi
+
 # check SIZE
 # ----------
 # Check FAdo can be fed with ladybird SIZE.
 check ()
 {
   run 0 ignore -vcsn-ladybird -O fado -o lady.fa $1
-  run 0 ignore -python -c "from FAdo import fa;fa.readFromFile('lady.fa')"
+  if $fado; then
+    run 0 ignore -python -c "from FAdo import fa;fa.readFromFile('lady.fa')"
+  fi
 }
 
 check 20
@@ -18,7 +27,9 @@ check 20
 check_f ()
 {
   run 0 ignore -vcsn-cat -f $1 -O fado -o aut.fa
-  run 0 ignore -python -c "from FAdo import fa;fa.readFromFile('aut.fa')"
+  if $fado; then
+    run 0 ignore -python -c "from FAdo import fa;fa.readFromFile('aut.fa')"
+  fi
 }
 
 check_f $top_srcdir/share/vcsn/lal_char_b/a1.gv
