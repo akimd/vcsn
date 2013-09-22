@@ -19,7 +19,7 @@
 /build-aux/bin/install-sh
 /build-aux/bin/ltmain.sh
 /build-aux/bin/missing
-/build-aux/bin/test-driver
+/build-aux/bin/tap-driver.pl
 /build-aux/bin/ylwrap
 /build-aux/m4/libtool.m4
 /build-aux/m4/ltoptions.m4

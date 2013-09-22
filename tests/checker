@@ -7,7 +7,7 @@ me=${1#${srcdir}/}
 me=${me%.chk}
 
 # Number of the current test.
-number=1
+number=0
 
 # Exit status of this script.
 exit=true
@@ -18,6 +18,51 @@ srcdir=$(cd $srcdir && pwd)
 top_srcdir=$srcdir
 test=$(cd $(dirname $1) && pwd)/$(basename $1)
 
+
+## ------------- ##
+## TAP support.  ##
+## ------------- ##
+
+# tap STATUS COMMENT...
+# ---------------------
+tap ()
+{
+  local status
+  status=$1
+  shift
+  # Test number.
+  number=$(expr $number + 1)
+
+  case $# in
+   0) echo "$status $number";;
+   *) echo "$status $number # $*";;
+  esac
+}
+
+# tap_ok COMMENT...
+# -----------------
+tap_ok ()
+{
+  tap ok "$@"
+}
+
+# tap_not_ok COMMENT...
+# ---------------------
+tap_not_ok ()
+{
+  tap 'not ok' "$@"
+}
+
+# tap_skip COMMENT...
+tap_skip ()
+{
+  tap 'ok' "SKIP" "$@"
+}
+
+
+## ------------- ##
+## Log support.  ##
+## ------------- ##
 
 # stderr LINES
 # ------------
@@ -175,6 +220,7 @@ run ()
   # Expected output.
   local out_exp=$1
   shift
+
   case $out_exp in
     ('') : >out.exp;;
     (-) cat >out.exp;;
@@ -243,16 +289,16 @@ EOF
     esac
   } >stdout.tmp
   if $fail; then
-    fail="FAIL: "
+    prefix="FAIL: "
     test -n "$BASH_VERSION" \
-      && fail="${BASH_SOURCE[1]}:${BASH_LINENO[1]}:$fail"
+      && prefix="${BASH_SOURCE[1]}:${BASH_LINENO[1]}:$prefix"
+    tap_not_ok
   else
-    fail=
+    prefix=
+    tap_ok
   fi
-  rst_subsection "${fail}Test $number: $@"
+  rst_subsection "${prefix}Test $number: $@"
   cat stdout.tmp
-
-  number=$(expr $number + 1)
 }
 
 # cleanup
@@ -265,6 +311,8 @@ cleanup ()
      cd $builddir
      rm -rf $me.dir
   fi
+  # Issue the final test plan
+  echo "1..$number"
   exit $status
 }
 trap cleanup 0

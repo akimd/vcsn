@@ -19,8 +19,9 @@ check_PROGRAMS =
 
 dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk
-CHK_LOG_COMPILER = $(srcdir)/%D%/checker
-$(dist_TESTS:.chk=.log): $(CHK_LOG_COMPILER)
+CHK_LOG_DRIVER = \
+  $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl $(srcdir)/%D%/checker
+$(dist_TESTS:.chk=.log): %D%/checker
 
 TESTS = $(dist_TESTS)
 # Lazy test suite.
