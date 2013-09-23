@@ -71,8 +71,8 @@ Between ``make`` and ``make install``, you may also want to run::
 It run the test suite to check the whole platform.
 
 
-Requirements
-============
+Build Requirements
+------------------
 
 Vaucanson was tested with the `GNU Compiler Collection (GCC)`_ version
 4.8.x and Clang++ 3.3.
@@ -151,6 +151,18 @@ There are other sources of interest in the distribution.
 
 - Headline news about the project can be found in the file
   ``NEWS.txt`` at the root of the source tree.
+
+
+Starting from the repository
+============================
+
+To contribute to Vaucanson 2, or to build it from its Git repository,
+you need more tools:
+
+- Automake 1.14 or newer
+- Autoconf 2.61 or newer
+- Bison 2.5 or newer
+- Flex 2.5.4 or newer
 
 
 Licence

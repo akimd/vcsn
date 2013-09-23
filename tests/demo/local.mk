@@ -13,20 +13,20 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  demo/prod-eval
+  %D%/prod-eval
 
-demo_prod_eval_LDADD = $(all_libctx) $(AM_LDADD)
+%C%_prod_eval_LDADD = $(all_libctx) $(unit_ldadd)
 
-demo_TESTS =                                    \
-  demo/prod-eval.chk
+%C%_TESTS =                                    \
+  %D%/prod-eval.chk
 
-dist_TESTS += $(demo_TESTS)
+dist_TESTS += $(%C%_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-demo/prod-eval.log: demo/prod-eval
+%D%/prod-eval.log: %D%/prod-eval
 
-.PHONY: check-demo
-check-demo:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(demo_TESTS)'
+.PHONY: check-%D%
+check-%D%:
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

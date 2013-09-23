@@ -13,65 +13,60 @@
 
 # Not check_PROGRAMS, see below why.
 EXTRA_PROGRAMS +=                               \
-  unit/aut_lao_z                                \
-  unit/aut_lal_char_z                           \
-  unit/aut_law_char_z                           \
-  unit/concat                                   \
-  unit/determinize                              \
-  unit/label                                    \
-  unit/polynomialset                            \
-  unit/proper                                   \
-  unit/transpose                                \
-  unit/weight
+  %D%/aut_lao_z                                 \
+  %D%/aut_lal_char_z                            \
+  %D%/aut_law_char_z                            \
+  %D%/concat                                    \
+  %D%/determinize                               \
+  %D%/label                                     \
+  %D%/polynomialset                             \
+  %D%/proper                                    \
+  %D%/transpose                                 \
+  %D%/weight
 
-AM_LDADD = $(libvcsn)
+unit_ldadd = $(libvcsn)
 
-noinst_HEADERS = unit/test.hh
+noinst_HEADERS = %D%/test.hh
 
-unit_aut_lao_z_LDADD = $(liblao_z) $(AM_LDADD)
-unit_aut_lal_char_z_LDADD = $(liblal_char_z) $(AM_LDADD)
-unit_aut_law_char_z_LDADD = $(liblaw_char_z) $(AM_LDADD)
+%C%_aut_lao_z_LDADD = $(liblao_z) $(unit_ldadd)
+%C%_aut_lal_char_z_LDADD = $(liblal_char_z) $(unit_ldadd)
+%C%_aut_law_char_z_LDADD = $(liblaw_char_z) $(unit_ldadd)
+%C%_concat_LDADD = $(liblaw_char_z) $(unit_ldadd)
+%C%_determinize_LDADD = $(liblal_char_b) $(unit_ldadd)
+%C%_label_LDADD = $(liblal_char_b) $(unit_ldadd)
+%C%_polynomialset_LDADD = $(liblaw_char_z) $(liblaw_char_zmin) $(unit_ldadd)
+%C%_proper_LDADD = $(all_libctx) $(unit_ldadd)
+%C%_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(unit_ldadd)
+%C%_weight_LDADD = $(unit_ldadd)
 
-unit_concat_LDADD = $(liblaw_char_z) $(AM_LDADD)
+%C%_TESTS =                                    \
+  %D%/aut_lao_z.chk                            \
+  %D%/aut_lal_char_z.chk                       \
+  %D%/aut_law_char_z.chk                       \
+  %D%/concat.chk                               \
+  %D%/determinize.chk                          \
+  %D%/label.chk                                \
+  %D%/polynomialset.chk                        \
+  %D%/proper.chk                               \
+  %D%/transpose.chk                            \
+  %D%/weight.chk
 
-unit_determinize_LDADD = $(liblal_char_b) $(AM_LDADD)
-
-unit_label_LDADD = $(liblal_char_b) $(AM_LDADD)
-
-unit_polynomialset_LDADD = $(liblaw_char_z) $(liblaw_char_zmin) $(AM_LDADD)
-
-unit_proper_LDADD = $(all_libctx) $(AM_LDADD)
-
-unit_transpose_LDADD = $(liblal_char_b) $(liblal_char_z) $(AM_LDADD)
-
-unit_TESTS =                                    \
-  unit/aut_lao_z.chk                            \
-  unit/aut_lal_char_z.chk                       \
-  unit/aut_law_char_z.chk                       \
-  unit/concat.chk                               \
-  unit/determinize.chk                          \
-  unit/label.chk                                \
-  unit/polynomialset.chk                        \
-  unit/proper.chk                               \
-  unit/transpose.chk                            \
-  unit/weight.chk
-
-dist_TESTS += $(unit_TESTS)
+dist_TESTS += $(%C%_TESTS)
 
 # Instead of using check_PROGRAMS, use EXTRA_PROGRAMS, but spell out
 # the dependencies, so that the test suite does not make useless
 # compilations.
-unit/aut_lal_char_z.log: unit/aut_lal_char_z
-unit/aut_lao_z.log: unit/aut_lao_z
-unit/aut_law_char_z.log: unit/aut_law_char_z
-unit/concat.log: unit/concat
-unit/determinize.log: unit/determinize
-unit/label.log: unit/label
-unit/polynomialset.log: unit/polynomialset
-unit/proper.log: unit/proper
-unit/transpose.log: unit/transpose
-unit/weight.log: unit/weight
+%D%/aut_lal_char_z.log: %D%/aut_lal_char_z
+%D%/aut_lao_z.log: %D%/aut_lao_z
+%D%/aut_law_char_z.log: %D%/aut_law_char_z
+%D%/concat.log: %D%/concat
+%D%/determinize.log: %D%/determinize
+%D%/label.log: %D%/label
+%D%/polynomialset.log: %D%/polynomialset
+%D%/proper.log: %D%/proper
+%D%/transpose.log: %D%/transpose
+%D%/weight.log: %D%/weight
 
-.PHONY: check-unit
-check-unit:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(unit_TESTS)'
+.PHONY: check-%D%
+check-%D%:
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

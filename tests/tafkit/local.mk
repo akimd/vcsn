@@ -11,49 +11,49 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-tafkit_TESTS =                                  \
-  tafkit/accessible.chk                         \
-  tafkit/are-equivalent.chk                     \
-  tafkit/aut_to_exp.chk                         \
-  tafkit/cat.chk                                \
-  tafkit/chain.chk                              \
-  tafkit/complement.chk                         \
-  tafkit/complete.chk                           \
-  tafkit/concatenate.chk                        \
-  tafkit/constant-term.chk                      \
-  tafkit/de-bruijn.chk                          \
-  tafkit/determinize.chk                        \
-  tafkit/double-ring.chk                        \
-  tafkit/efsm.chk                               \
-  tafkit/enumerate.chk                          \
-  tafkit/evaluate.chk                           \
-  tafkit/fado.chk                               \
-  tafkit/grail.chk                              \
-  tafkit/is-ambiguous.chk                       \
-  tafkit/is-complete.chk                        \
-  tafkit/is-deterministic.chk                   \
-  tafkit/is-normalized.chk                      \
-  tafkit/is-proper.chk                          \
-  tafkit/is-valid.chk                           \
-  tafkit/ladybird.chk                           \
-  tafkit/left-mult.chk                          \
-  tafkit/lift.chk                               \
-  tafkit/power.chk                              \
-  tafkit/product.chk                            \
-  tafkit/proper.chk                             \
-  tafkit/shortest.chk                           \
-  tafkit/standard.chk                           \
-  tafkit/star.chk                               \
-  tafkit/sum.chk                                \
-  tafkit/thompson.chk                           \
-  tafkit/transpose.chk                          \
-  tafkit/union.chk                              \
-  tafkit/universal.chk
+%C%_TESTS =                                     \
+  %D%/accessible.chk                            \
+  %D%/are-equivalent.chk                        \
+  %D%/aut_to_exp.chk                            \
+  %D%/cat.chk                                   \
+  %D%/chain.chk                                 \
+  %D%/complement.chk                            \
+  %D%/complete.chk                              \
+  %D%/concatenate.chk                           \
+  %D%/constant-term.chk                         \
+  %D%/de-bruijn.chk                             \
+  %D%/determinize.chk                           \
+  %D%/double-ring.chk                           \
+  %D%/efsm.chk                                  \
+  %D%/enumerate.chk                             \
+  %D%/evaluate.chk                              \
+  %D%/fado.chk                                  \
+  %D%/grail.chk                                 \
+  %D%/is-ambiguous.chk                          \
+  %D%/is-complete.chk                           \
+  %D%/is-deterministic.chk                      \
+  %D%/is-normalized.chk                         \
+  %D%/is-proper.chk                             \
+  %D%/is-valid.chk                              \
+  %D%/ladybird.chk                              \
+  %D%/left-mult.chk                             \
+  %D%/lift.chk                                  \
+  %D%/power.chk                                 \
+  %D%/product.chk                               \
+  %D%/proper.chk                                \
+  %D%/shortest.chk                              \
+  %D%/standard.chk                              \
+  %D%/star.chk                                  \
+  %D%/sum.chk                                   \
+  %D%/thompson.chk                              \
+  %D%/transpose.chk                             \
+  %D%/union.chk                                 \
+  %D%/universal.chk
 
-dist_TESTS += $(tafkit_TESTS)
+dist_TESTS += $(%C%_TESTS)
 
-$(tafkit_TESTS:.chk=.log): $(all_vcsn)
+$(%C%_TESTS:.chk=.log): $(all_vcsn)
 
-.PHONY: check-tafkit
-check-tafkit:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(tafkit_TESTS)'
+.PHONY: check-%D%
+check-%D%:
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

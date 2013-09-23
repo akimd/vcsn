@@ -23,19 +23,20 @@ check_PROGRAMS =
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 
-dist_noinst_SCRIPTS += checker
+dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk
-CHK_LOG_COMPILER = $(srcdir)/checker
+CHK_LOG_COMPILER = $(srcdir)/%D%/checker
 $(dist_TESTS:.chk=.log): $(CHK_LOG_COMPILER)
 
 TESTS = $(dist_TESTS)
 # Lazy test suite.
 RECHECK_LOGS =
 
-include unit/local.mk
-include demo/local.mk
-include rat/local.mk
-include tafkit/local.mk
+# Logical order: start with elementary tests, then more complex ones.
+include %D%/unit/local.mk
+include %D%/demo/local.mk
+include %D%/rat/local.mk
+include %D%/tafkit/local.mk
 
 AM_RST2HTMLFLAGS = -d -t
 .log.html:

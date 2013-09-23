@@ -12,32 +12,32 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 TEST_EXTENSIONS += .rat
-RAT_LOG_COMPILER = $(srcdir)/rat/rat
+RAT_LOG_COMPILER = $(srcdir)/%D%/rat
 AM_RAT_LOG_DEPS =				\
   $(RAT_LOG_COMPILER)				\
   $(all_vcsn)					\
-  rat/common.rat rat/common-weights.rat
-$(rat_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
+  %D%/common.rat %D%/common-weights.rat
+$(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
-rat_TESTS =                                     \
-  $(rat_XFAIL_TESTS)                            \
-  rat/interface.rat                             \
-  rat/b.rat                                     \
-  rat/br.rat                                    \
-  rat/z.rat                                     \
-  rat/zr.rat                                    \
-  rat/zrr.rat
+%C%_TESTS =                                     \
+  $(%C%_XFAIL_TESTS)                            \
+  %D%/interface.rat                             \
+  %D%/b.rat                                     \
+  %D%/br.rat                                    \
+  %D%/z.rat                                     \
+  %D%/zr.rat                                    \
+  %D%/zrr.rat
 
-rat/vcsn-transpose.log: $(top_builddir)/bin/vcsn-transpose
+%D%/vcsn-transpose.log: $(top_builddir)/bin/vcsn-transpose
 
-dist_TESTS += $(rat_TESTS)
+dist_TESTS += $(%C%_TESTS)
 EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
-rat_XFAIL_TESTS =                               \
-  rat/wrong-weight-set.rat
+%C%_XFAIL_TESTS =                               \
+  %D%/wrong-weight-set.rat
 
-XFAIL_TESTS += $(rat_XFAIL_TESTS)
+XFAIL_TESTS += $(%C%_XFAIL_TESTS)
 
-.PHONY: check-rat
-check-rat:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(rat_TESTS)'
+.PHONY: check-%D%
+check-%D%:
+	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
