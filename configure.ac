@@ -172,10 +172,6 @@ AM_PROG_LEX
 TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 AC_CONFIG_HEADERS([vcsn/config.h:vcsn/config.in.h])
-AC_CONFIG_FILES([
-  Makefile
-  vcsn/Makefile
-  tests/Makefile
-])
+AC_CONFIG_FILES([Makefile tests/Makefile])
 
 AC_OUTPUT
