@@ -11,17 +11,11 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-include $(top_srcdir)/build-aux/make/init.mk
-include $(top_srcdir)/common.mk
-
 ## ------- ##
 ## Tests.  ##
 ## ------- ##
 
 check_PROGRAMS =
-
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
-AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 
 dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk

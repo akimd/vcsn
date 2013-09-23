@@ -21,10 +21,7 @@ AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 include bin/local.mk
 include lib/local.mk
 include share/local.mk
+include tests/local.mk
 include vcsn/local.mk
 
-SUBDIRS = . tests
 EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt
-
-check-html: all
-	cd tests && $(MAKE) $(AM_MAKEFLAGS) $@

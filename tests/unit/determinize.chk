@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Check that the table is right.
-run 0 - unit/determinize <<\EOF
+run 0 - tests/unit/determinize <<\EOF
 de bruijn 2
 digraph
 {

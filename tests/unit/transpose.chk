@@ -1,10 +1,6 @@
 #! /bin/sh
 
-## ---------------------- ##
-## Using unit/transpose.  ##
-## ---------------------- ##
-
-run 0 - unit/transpose <<\EOF
+run 0 - tests/unit/transpose <<\EOF
 digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"

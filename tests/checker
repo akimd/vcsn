@@ -15,7 +15,7 @@ exit=true
 # Make them absolute, as we chdir a lot.
 builddir=$(pwd)
 srcdir=$(cd $srcdir && pwd)
-top_srcdir=$(cd $srcdir/.. && pwd)
+top_srcdir=$srcdir
 test=$(cd $(dirname $1) && pwd)/$(basename $1)
 
 

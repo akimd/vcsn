@@ -1,3 +1,3 @@
 #! /bin/sh
 
-run 0 '' unit/concat
+run 0 '' tests/unit/concat

@@ -88,4 +88,4 @@ digraph
   0 -> F0 [label = "<10>", color = DimGray]
 }
 EOF
-run 0 out.exp unit/aut_lao_z
+run 0 out.exp tests/unit/aut_lao_z

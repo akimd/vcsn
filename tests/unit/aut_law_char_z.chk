@@ -1,6 +1,6 @@
 #! /bin/sh
 
-run 0 - unit/aut_law_char_z <<\EOF
+run 0 - tests/unit/aut_law_char_z <<\EOF
 digraph
 {
   vcsn_context = "law_char(abcd)_z"

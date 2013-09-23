@@ -28,8 +28,6 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
   %D%/zr.rat                                    \
   %D%/zrr.rat
 
-%D%/vcsn-transpose.log: $(top_builddir)/bin/vcsn-transpose
-
 dist_TESTS += $(%C%_TESTS)
 EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
