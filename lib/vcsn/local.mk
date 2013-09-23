@@ -20,7 +20,8 @@ BISONXXFLAGS =                                  \
 AM_BISONFLAGS =                                 \
   -Wall --report=all # -Werror
 
-pkglib_LTLIBRARIES = lib/libvcsn.la
+libvcsn = lib/libvcsn.la
+pkglib_LTLIBRARIES = $(libvcsn)
 lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/accessible.cc                  \
   lib/vcsn/algos/are-equivalent.cc              \

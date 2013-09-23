@@ -11,7 +11,6 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 include build-aux/make/init.mk
-include common.mk
 
 ACLOCAL_AMFLAGS = -I build-aux/m4
 
