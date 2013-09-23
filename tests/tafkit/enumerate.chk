@@ -25,11 +25,9 @@ check_enumerate ()
 ## Check that EXP accepts WORD has shortest word, or throws if empty.
 check_shortest ()
 {
-  exp=$1
-  expout=$(sed 1q out.exp)
-  case $expout in
-    ('') run 1 "$expout" -vcsn-shortest -Ee "$exp";;
-    (*)  run 0 "$expout" -vcsn-shortest -Ee "$exp";;
+  case $2 in
+    ('') run 1 "$2" -vcsn-shortest -Ee "$1";;
+    (*)  run 0 "$2" -vcsn-shortest -Ee "$1";;
   esac
 }
 
@@ -43,8 +41,8 @@ check ()
   exp=$1
   shift
   check_enumerate "$exp" "$@"
-  expout=$(sed 1q out.exp)
-  check_shortest "$exp"
+  outexp=$(sed 1q out.exp)
+  check_shortest "$exp" "$outexp"
 }
 
 
