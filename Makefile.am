@@ -17,7 +17,6 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
-AM_LDFLAGS += -lxerces-c
 
 include bin/local.mk
 include lib/local.mk
