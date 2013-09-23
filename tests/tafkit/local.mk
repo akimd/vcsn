@@ -52,8 +52,18 @@
 
 dist_TESTS += $(%C%_TESTS)
 
+EXTRA_DIST +=                                   \
+  %D%/fado.dir/dfa.fado                         \
+  %D%/fado.dir/dfa.gv                           \
+  %D%/fado.dir/enfa.fado                        \
+  %D%/fado.dir/enfa.gv                          \
+  %D%/fado.dir/nfa.fado                         \
+  %D%/fado.dir/nfa.gv
+
+%D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
+
 $(%C%_TESTS:.chk=.log): $(all_vcsn)
 
-.PHONY: check-%D%
-check-%D%:
+.PHONY: check-tafkit
+check-tafkit:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

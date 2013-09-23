@@ -1,13 +1,13 @@
 #! /bin/sh
 
 
-# fado COMMAND...
-# ---------------
-# Check that COMMAND works.  Skip if we don't have FAdo.
+# fado FILE
+# ---------
+# Check that FAdo accepts FILE.  Skip if we don't have FAdo.
 if python -c 'from FAdo import fa' >/dev/null; then
   fado ()
   {
-    run 0 ignore -python -c "from FAdo import fa; $*"
+    run 0 ignore -python -c "from FAdo import fa; fa.readFromFile('$1')"
   }
 else
   fado ()
@@ -23,121 +23,38 @@ fi
 check ()
 {
   run 0 ignore -vcsn-cat -f $1 -O fado -o aut.fa
-  fado "fa.readFromFile('aut.fa')"
+  fado 'aut.fa'
 }
 
 # Check FAdo can be fed with ladybird-10.
 run 0 ignore -vcsn-ladybird -O fado -o lady.fa 10
-fado "fa.readFromFile('lady.fa')"
+fado 'lady.fa'
 
 
 check $top_srcdir/share/vcsn/lal_char_b/a1.gv
 
-check - <<\EOF
-digraph
-{
-  vcsn_context = "lan_char(ab)_b"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I
-    F
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-  }
-  I -> 0
-  0 -> 0 [label = "a, b"]
-  0 -> 1 [label = "\\e"]
-  1 -> 2 [label = "b"]
-  2 -> 2 [label = "a, b"]
-  2 -> F
-}
-EOF
 
+# check_aut OUT ARGUMENTS...
+# --------------------------
+# Check that running 'vcsn-cat ARGUMENTS' produces OUT.
 check_aut ()
 {
-  cat >in.tmp
-  sed -n '/^--*$/q;p'             in.tmp >in.gv
-  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  run 0 out.exp -vcsn-cat -Af in.gv "$@"
-  $exit
+  cp "$1" out.exp
+  shift
+  run 0 out.exp -vcsn-cat "$@"
 }
 
-# lal_char(a)_b. FAdo.
-check_aut -O fado <<\EOF
-digraph
+# check_gv_fado BASE
+# ------------------
+# Check that BASE.gv and BASE.fado convert in one another,
+# and that FAdo read BASE.fado.
+check_gv_fado ()
 {
-  vcsn_context = "lal_char(a)_b"
-  0 -> 1 [label = a]
-  1 -> F1
-  I0 -> 0
+  fado $1.fado
+  check_aut $1.fado -O fado -f $1.gv
+  check_aut $1.gv   -I fado -f $1.fado
 }
----
-@DFA 1
-0 a 1
-EOF
 
-check_aut -I fado <<\EOF
-@DFA 1
-0 a 1
----
-digraph
-{
-  vcsn_context = "lal_char(a)_b"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F1
-  }
-  {
-    node [shape = circle]
-    0
-    1
-  }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  1 -> F1
-}
-EOF
-
-check_aut -I fado <<\EOF
-@NFA 1 4 * 2 3
-0 a 1
-1 b 2
-2 c 3
-3 d 4
----
-digraph
-{
-  vcsn_context = "lal_char(abcd)_b"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I2
-    I3
-    F1
-    F4
-  }
-  {
-    node [shape = circle]
-    0 [color = DimGray]
-    1 [color = DimGray]
-    2
-    3
-    4
-  }
-  I2 -> 2
-  I3 -> 3
-  0 -> 1 [label = "a", color = DimGray]
-  1 -> F1 [color = DimGray]
-  1 -> 2 [label = "b", color = DimGray]
-  2 -> 3 [label = "c"]
-  3 -> 4 [label = "d"]
-  4 -> F4
-}
-EOF
+check_gv_fado $medir/dfa
+check_gv_fado $medir/nfa
+check_gv_fado $medir/enfa

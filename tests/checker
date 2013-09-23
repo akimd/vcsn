@@ -6,17 +6,25 @@ set -e
 me=${1#${srcdir}/}
 me=${me%.chk}
 
-# Number of the current test.
-number=0
-
-# Exit status of this script.
-exit=true
-
 # Make them absolute, as we chdir a lot.
 builddir=$(pwd)
 srcdir=$(cd $srcdir && pwd)
 top_srcdir=$srcdir
 test=$(cd $(dirname $1) && pwd)/$(basename $1)
+
+# Source directory where auxiliary files are stored.
+# ../../tests/tafkit/transpose.chk => /.../tests/tafkit/transpose.dir
+medir=$srcdir/$me.dir
+
+# Work directory where temporary files are stored.
+# ../../tests/tafkit/transpose.chk => takfit/transpose.tmp
+metmp=$me.tmp
+
+# Number of the current test.
+number=0
+
+# Exit status of this script.
+exit=true
 
 
 ## ------------- ##
@@ -307,19 +315,19 @@ EOF
 cleanup ()
 {
   local status=$?
-  if test -z "$DEBUG"; then
-     cd $builddir
-     rm -rf $me.dir
-  fi
+  case $DEBUG:$status in
+    '':0) cd $builddir
+          rm -rf $metmp;;
+  esac
   # Issue the final test plan
   echo "1..$number"
   exit $status
 }
 trap cleanup 0
 trap 'exit 1' 1 2 13 15
-rm -rf $me.dir
-mkdir $me.dir
-cd $me.dir
+rm -rf $metmp
+mkdir $metmp
+cd $metmp
 
 . "$test"
 
