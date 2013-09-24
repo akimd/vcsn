@@ -29,7 +29,7 @@ namespace vcsn
     ratexp aut_to_exp(const automaton& aut);
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
-    /// chain automatons \a aut\a n times.;
+    /// Concatenate \a n copies of \a aut.
     automaton chain(const automaton& aut, size_t n);
 
     /// The coaccessible subautomaton of \a aut.
@@ -58,13 +58,13 @@ namespace vcsn
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
-    /// An automaton which accepts a word n representing a number in
-    /// base b iff k|n.
-    automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
-
     /// Determinize \a aut.
     /// \pre  \a aut must be LAL.
     automaton determinize(const automaton& aut);
+
+    /// An automaton which accepts a word n representing a number in
+    /// base b iff k|n.
+    automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
     /// Output \a aut in GraphViz' Dot format.
     std::ostream& dot(const automaton& aut, std::ostream& out);
