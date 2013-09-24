@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_PROPER_HH
 # define VCSN_ALGOS_PROPER_HH
 
+#define STATS
+
 # include <stdexcept>
 # include <type_traits>
 # include <unordered_map>
@@ -20,6 +22,8 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>
+
+# include <vcsn/algos/info.hh>
 
 namespace vcsn
 {
@@ -145,11 +149,22 @@ namespace vcsn
         /// From the heap's top, recover state to eliminate.
         state_t state;
         /// Number of incoming spontaneous transitions.
-        size_t in_spontaneous;
+        size_t in_sp;
+        /// Number of incoming non-spontaneous transitions.
+        size_t in_nsp;
         /// Number of outgoing spontaneous transitions.
-        size_t out_spontaneous;
+        size_t out_sp;
         /// Number of outgoing transitions.
-        size_t out;
+        size_t out_nsp;
+
+        state_profile(state_t s,
+                      size_t insp, size_t innsp,
+                      size_t outsp, size_t outnsp)
+          : state(s)
+          , in_sp(insp), in_nsp(innsp)
+          , out_sp(outsp), out_nsp(outnsp)
+        {
+        }
 
         /// Whether l < r for the max-heap.
         ///
@@ -160,8 +175,8 @@ namespace vcsn
           // First, work on those with fewer outgoing spontaneous
           // transitions.
           {
-            auto sl = out_spontaneous;
-            auto sr = r.out_spontaneous;
+            auto sl = out_sp;
+            auto sr = r.out_sp;
             if (sr < sl)
               return true;
             else if (sl < sr)
@@ -169,8 +184,8 @@ namespace vcsn
           }
           // Prefer fewer outgoing transitions.
           {
-            auto sl = out;
-            auto sr = r.out;
+            auto sl = out_nsp;
+            auto sr = r.out_nsp;
             if (sr < sl)
               return true;
             else if (sl < sr)
@@ -178,8 +193,8 @@ namespace vcsn
           }
           // Prefer fewer incoming spontaneous transitions.
           {
-            auto sl = in_spontaneous;
-            auto sr = r.in_spontaneous;
+            auto sl = in_sp;
+            auto sr = r.in_sp;
             if (sr < sl)
               return true;
             else if (sl < sr)
@@ -187,6 +202,14 @@ namespace vcsn
           }
           // Then, ensure total order.
           return state < r.state;
+        }
+        friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
+        {
+          return o << p.state
+                   << 'o' << p.out_sp
+                   << 'O' << p.out_nsp
+                   << 'i' << p.in_sp
+                   << 'I' << p.in_nsp;
         }
       };
 
@@ -197,9 +220,10 @@ namespace vcsn
         if (i != handles_.end())
           {
             state_profile& p = *i->second;
-            p.in_spontaneous = aut_.in(s, empty_word_).size();
-            p.out_spontaneous = aut_.out(s, empty_word_).size();
-            p.out = aut_.out(s).size();
+            p.in_sp = aut_.in(s, empty_word_).size();
+            p.in_nsp = aut_.in(s).size() - p.in_sp;
+            p.out_sp = aut_.out(s, empty_word_).size();
+            p.out_nsp = aut_.out(s).size() - p.out_sp;
           }
       }
 
@@ -208,33 +232,28 @@ namespace vcsn
       void build_heap_()
       {
         for (auto s: aut_.states())
-          {
-            // We don't care about states without incoming spontaneous
-            // transitions.
-            auto in_spontaneous = aut_.in(s, empty_word_).size();
-            if (in_spontaneous)
-              {
-                auto out_spontaneous = aut_.out(s, empty_word_).size();
-                auto h =
-                  todo_.emplace(state_profile
-                                {s,
-                                    in_spontaneous,
-                                    out_spontaneous,
-                                    aut_.out(s).size()});
-                handles_.emplace(s, h);
-              }
+          // We don't care about states without incoming spontaneous
+          // transitions.
+          if (auto in_sp = aut_.in(s, empty_word_).size())
+            {
+              auto in_nsp = aut_.in(s).size() - in_sp;
+              auto out_sp = aut_.out(s, empty_word_).size();
+              auto out_nsp = aut_.out(s).size() - out_sp;
+              auto h =
+                todo_.emplace(state_profile
+                              {s, in_sp, in_nsp, out_sp, out_nsp});
+              handles_.emplace(s, h);
           }
       }
 
       /// Show the heap, for debugging.
-      void show_heap_()
+      void show_heap_() const
       {
         const char* sep = "";
-        for (auto i = todo_.ordered_begin();
-             i != todo_.ordered_end();
-             ++i)
+        for (auto i = todo_.ordered_begin(), end = todo_.ordered_end();
+             i != end; ++i)
           {
-            std::cerr << sep << i->state;
+            std::cerr << sep << *i;
             sep = " > ";
           }
       }
@@ -243,7 +262,7 @@ namespace vcsn
       /// \precondition  its profile is updated.
       void update_heap_(state_t s)
       {
-        if (2 < debug_)
+        if (3 < debug_)
           {
             std::cerr << "update heap (" << s << " : ";
             show_heap_();
@@ -251,13 +270,18 @@ namespace vcsn
         auto i = handles_.find(s);
         if (i != handles_.end())
           todo_.update(i->second);
-        if (2 < debug_)
+        if (3 < debug_)
           {
             std::cerr << ") => ";
             show_heap_();
             std::cerr << std::endl;
           }
       }
+
+#ifdef STATS
+      unsigned added_ = 0;
+      unsigned removed_ = 0;
+#endif
 
       /// For each state (s), for each incoming epsilon-transitions
       /// (t), if (t) is a loop, the star of its weight is computed,
@@ -320,8 +344,24 @@ namespace vcsn
               aut_.add_transition(pair.first, dst, label,
                                   ws_.mul(pair.second, weight));
           }
+#ifdef STATS
+        unsigned added = aut_.all_out(s).size() * closure.size();
+        unsigned removed = transitions.size();
+#endif
         if (aut_.all_in(s).empty())
-          aut_.del_state(s);
+          {
+#ifdef STATS
+            removed += aut_.all_out(s).size();
+#endif
+            aut_.del_state(s);
+          }
+#ifdef STATS
+        added_ += added;
+        removed_ += removed;
+        if (1 < debug_)
+          std::cerr << " -" << removed << "+" << added
+                    << " (-" << removed_ << "+" << added_ << ")";
+#endif
       }
 
       /// Remove all the states with incoming spontaneous transitions.
@@ -349,23 +389,19 @@ namespace vcsn
         std::unordered_set<state_t> neighbors;
         while (!todo_.empty())
           {
+            if (2 < debug_)
+              {
+                std::cerr << "Before: ";
+                show_heap_();
+                std::cerr << std::endl;
+              }
             auto p = todo_.top();
-            auto s = p.state;
-            if (2 < debug_)
-              {
-                show_heap_();
-                std::cerr << " ";
-              }
-            if (1 < debug_)
-              std::cerr << "Remove: " << s << " (" << s-2 << ")";
             todo_.pop();
-            if (2 < debug_)
-              {
-                std::cerr << " => ";
-                show_heap_();
-              }
             if (1 < debug_)
-              std::cerr << std::endl;
+              std::cerr << "Remove: " << p;
+
+            auto s = p.state;
+            handles_.erase(s);
             neighbors.clear();
             for (auto t: aut_.in(s))
               {
@@ -382,15 +418,31 @@ namespace vcsn
 
             in_situ_remover_(s);
 
-            // Update all affected nodes.
+            // Update all neighbors and then the heap.
             for (auto n: neighbors)
               update_profile_(n);
             for (auto n: neighbors)
               update_heap_(n);
-            handles_.erase(s);
-            if (3 < debug_)
+            if (1 < debug_)
+              std::cerr << " #tr: "
+                        << detail::info::num_eps_transitions(aut_)
+                        << "/" << aut_.num_transitions() << std::endl;
+            if (2 < debug_)
+              {
+                std::cerr << "After:  ";
+                show_heap_();
+                std::cerr << std::endl;
+              }
+            if (4 < debug_)
               std::cerr << dot(aut_) << std::endl;
+            if (2 < debug_)
+              std::cerr << std::endl;
           }
+#ifdef STATS
+        if (0 < debug_)
+          std::cerr << "Total transitions -" << removed_
+                    << "+" << added_ << std::endl;
+#endif
       }
 
       /// TOPS: valid iff proper succeeds.
