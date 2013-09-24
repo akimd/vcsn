@@ -132,6 +132,12 @@ namespace vcsn
       return sub_ratexp_.size();
     }
 
+    DEFINE(nary)::operator[](size_t n) const
+      -> const value_t
+    {
+      return sub_ratexp_[n];
+    }
+
     DEFINE(nary)::head() const
       -> const value_t
     {

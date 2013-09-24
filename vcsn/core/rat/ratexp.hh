@@ -156,6 +156,10 @@ namespace vcsn
       const_reverse_iterator rend() const;
       size_t size() const;
 
+      /// Access the n-th element.
+      /// precondition 0 <= n < size.
+      const value_t operator[](size_t n) const;
+
       /// The first item of this nary.
       const value_t head() const;
 
