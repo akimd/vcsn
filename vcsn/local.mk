@@ -20,6 +20,7 @@ nobase_include_HEADERS =                        \
   vcsn/algos/concatenate.hh                     \
   vcsn/algos/constant-term.hh                   \
   vcsn/algos/copy.hh                            \
+  vcsn/algos/derive.hh                          \
   vcsn/algos/determinize.hh                     \
   vcsn/algos/dot.hh                             \
   vcsn/algos/edit-automaton.hh                  \

@@ -58,6 +58,10 @@ namespace vcsn
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
+    /// Derive \a ratexp with respect to \a s.
+    /// \pre  \a exp must be LAL.
+    ratexp derive(const ratexp& exp, const std::string& s);
+
     /// Determinize \a aut.
     /// \pre  \a aut must be LAL.
     automaton determinize(const automaton& aut);

@@ -7,6 +7,7 @@
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/derive.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
@@ -147,10 +148,12 @@ namespace vcsn
       register_kind_functions(labels_are_letters)
       {
         using aut_t = mutable_automaton<Ctx>;
+        using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx);
+        REGISTER(derive, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);
@@ -176,6 +179,7 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(de_bruijn, Ctx);
+        REGISTER(derive, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
         REGISTER(proper, aut_t);

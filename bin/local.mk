@@ -31,6 +31,7 @@ vcsn_complete         = bin/vcsn-complete
 vcsn_concatenate      = bin/vcsn-concatenate
 vcsn_constant_term    = bin/vcsn-constant-term
 vcsn_de_bruijn        = bin/vcsn-de-bruijn
+vcsn_derive           = bin/vcsn-derive
 vcsn_determinize      = bin/vcsn-determinize
 vcsn_divkbaseb        = bin/vcsn-divkbaseb
 vcsn_double_ring      = bin/vcsn-double-ring
@@ -77,6 +78,7 @@ all_vcsn =                                      \
   $(vcsn_concatenate)                           \
   $(vcsn_constant_term)                         \
   $(vcsn_de_bruijn)                             \
+  $(vcsn_derive)                                \
   $(vcsn_determinize)                           \
   $(vcsn_divkbaseb)                             \
   $(vcsn_double_ring)                           \
@@ -127,6 +129,7 @@ bin_vcsn_complete_LDADD         = bin/libtafkit.la
 bin_vcsn_concatenate_LDADD      = bin/libtafkit.la
 bin_vcsn_constant_term_LDADD    = bin/libtafkit.la
 bin_vcsn_de_bruijn_LDADD        = bin/libtafkit.la
+bin_vcsn_derive_LDADD           = bin/libtafkit.la
 bin_vcsn_determinize_LDADD      = bin/libtafkit.la
 bin_vcsn_divkbaseb_LDADD        = bin/libtafkit.la
 bin_vcsn_double_ring_LDADD      = bin/libtafkit.la

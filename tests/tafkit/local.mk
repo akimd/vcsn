@@ -22,6 +22,7 @@
   %D%/concatenate.chk                           \
   %D%/constant-term.chk                         \
   %D%/de-bruijn.chk                             \
+  %D%/derive.chk                                \
   %D%/determinize.chk                           \
   %D%/double-ring.chk                           \
   %D%/efsm.chk                                  \
@@ -79,6 +80,10 @@ EXTRA_DIST +=                                   \
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
 
+# Very coarse grain: we compile the whole TAF-Kit even if we just run
+# one test which requires only a single TAF-Kit command.  Fine grain
+# is dangerous if we forget some dependencies.  We need something
+# automated.
 $(%C%_TESTS:.chk=.log): $(all_vcsn) $(dist_bin_SCRIPTS)
 
 .PHONY: check-tafkit
