@@ -45,6 +45,10 @@ namespace vcsn
       return lw_;
     }
 
+    DEFINE(node)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
     /*--------.
     | inner.  |
@@ -67,6 +71,11 @@ namespace vcsn
       return rw_;
     }
 
+    DEFINE(inner)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
 
     /*-------.
     | leaf.  |
@@ -76,6 +85,10 @@ namespace vcsn
       : super_type(w)
     {}
 
+    DEFINE(leaf)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
     /*-------.
     | nary.  |
@@ -119,6 +132,23 @@ namespace vcsn
       return sub_ratexp_.size();
     }
 
+    DEFINE(nary)::head() const
+      -> const value_t
+    {
+      return *begin();
+    }
+
+    DEFINE(nary)::tail() const
+      -> decltype(boost::make_iterator_range(*this, 1, 0))
+    {
+      return boost::make_iterator_range(*this, 1, 0);
+    }
+
+    DEFINE(nary)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
 
 
     /*-------.
@@ -137,6 +167,11 @@ namespace vcsn
       v.visit(*this);
     }
 
+    DEFINE(prod)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
 
 
     /*------.
@@ -154,6 +189,10 @@ namespace vcsn
       v.visit(*this);
     }
 
+    DEFINE(sum)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
     /*-------.
     | star.  |
@@ -177,6 +216,11 @@ namespace vcsn
       v.visit(*this);
     }
 
+    DEFINE(star)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
 
     /*------.
     | one.  |
@@ -192,6 +236,12 @@ namespace vcsn
       v.visit(*this);
     }
 
+    DEFINE(one)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
+
     /*-------.
     | zero.  |
     `-------*/
@@ -205,6 +255,11 @@ namespace vcsn
     {
       v.visit(*this);
     }
+
+    DEFINE(zero)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
     /*-------.
     | atom.  |
@@ -226,6 +281,11 @@ namespace vcsn
     {
       return value_;
     }
+
+    DEFINE(atom)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
 # undef DEFINE_CTOR
 # undef DEFINE

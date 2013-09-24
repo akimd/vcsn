@@ -73,10 +73,7 @@ namespace vcsn
       {}
 
       using shared_t = std::shared_ptr<const node>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual void accept(const_visitor &v) const = 0;
 
@@ -110,10 +107,7 @@ namespace vcsn
       weight_t &right_weight();
 
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
     protected:
       inner(const weight_t& l, const weight_t& r);
@@ -163,13 +157,10 @@ namespace vcsn
       size_t size() const;
 
       /// The first item of this nary.
-      const value_t head() const { return *begin(); }
+      const value_t head() const;
 
       /// The non-first items.
-      auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0))
-      {
-        return boost::make_iterator_range(*this, 1, 0);
-      }
+      auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
     protected:
       nary(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
@@ -179,10 +170,7 @@ namespace vcsn
       {}
 
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
       virtual value_t clone_() const = 0;
 
     private:
@@ -215,10 +203,7 @@ namespace vcsn
       prod(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::prod; };
 
@@ -256,10 +241,7 @@ namespace vcsn
       sum(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
 
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::sum; };
 
@@ -289,10 +271,7 @@ namespace vcsn
 
       star(const weight_t& l, const weight_t& r, value_t exp);
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::star; };
 
@@ -329,10 +308,7 @@ namespace vcsn
     protected:
       leaf(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
       virtual value_t clone_() const = 0;
     };
 
@@ -351,10 +327,7 @@ namespace vcsn
 
       one(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::one; };
 
@@ -380,10 +353,7 @@ namespace vcsn
 
       zero(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::zero; };
 
@@ -410,10 +380,7 @@ namespace vcsn
 
       atom(const weight_t& l, const label_t& value);
       using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const
-      {
-        return std::static_pointer_cast<const self_t>(clone_());
-      };
+      shared_t clone() const;
 
       virtual type_t type() const { return type_t::atom; };
 
