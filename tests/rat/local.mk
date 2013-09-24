@@ -36,6 +36,6 @@ EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
 XFAIL_TESTS += $(%C%_XFAIL_TESTS)
 
-.PHONY: check-%D%
-check-%D%:
+.PHONY: check-rat
+check-rat:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

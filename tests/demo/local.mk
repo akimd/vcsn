@@ -27,6 +27,6 @@ dist_TESTS += $(%C%_TESTS)
 # compilations.
 %D%/prod-eval.log: %D%/prod-eval
 
-.PHONY: check-%D%
-check-%D%:
+.PHONY: check-demo
+check-demo:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'

@@ -1,3 +1,22 @@
+Tests
+=====
+
+To run the test suite, 4 processes in parallel (e.g., if you have 4
+threads like with an i7), run
+
+   $ make -j4 check
+
+To run some of the tests (e.g., tafkit/determinize.chk), run
+
+   $ make -j4 check tests/tafkit/determinize.log
+
+You may also run only the unit/rat/demo/tafkit tests:
+
+   $ make -j4 check-tafkit
+
+Misc
+====
+
 Mail:
 To access your email account go to the following site:
 https://webmail.lrde.epita.fr
@@ -233,3 +252,8 @@ _build
 Debugging:
 The following command allows you to debug your program.
 libtool exe gdb --args bin/vcsn-cat -f share/vcsn/lal_char_b/a1.gv
+
+
+.. Local Variables:
+.. mode: rst
+.. End:

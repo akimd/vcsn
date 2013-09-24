@@ -67,6 +67,6 @@ dist_TESTS += $(%C%_TESTS)
 %D%/transpose.log: %D%/transpose
 %D%/weight.log: %D%/weight
 
-.PHONY: check-%D%
-check-%D%:
+.PHONY: check-unit
+check-unit:
 	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
