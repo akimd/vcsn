@@ -214,6 +214,8 @@ rst_expect ()
 # - 'out.exp', then use the content of that file as expected output,
 #    otherwise EXPECTED-OUTPUT is the expected output.
 #
+# - '-f' 'FILE', then compare againt FILE as expected result.
+#
 # - 'stdout', then don't check the output, but leave it in the file
 #   named "stdout".
 #
@@ -229,11 +231,14 @@ run ()
   local out_exp=$1
   shift
 
+  # Remove the previous out.exp, in case it's readonly.
   case $out_exp in
-    ('') : >out.exp;;
-    (-) cat >out.exp;;
+    ('') rm -f out.exp; : >out.exp;;
+    (-) rm -f out.exp; cat >out.exp;;
     (out.exp|stdout);;
+    (-f) rm -f out.exp; cp "$1" out.exp; shift;;
     (*)
+    rm -f out.exp
     cat >out.exp <<EOF
 $out_exp
 EOF

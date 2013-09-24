@@ -53,6 +53,16 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
+  %D%/determinize.dir/a-det.gv                  \
+  %D%/determinize.dir/a.gv                      \
+  %D%/determinize.dir/de-bruijn-3-det.gv        \
+  %D%/determinize.dir/de-bruijn-8-det.gv        \
+  %D%/determinize.dir/empty-det.gv              \
+  %D%/determinize.dir/empty.gv                  \
+  %D%/determinize.dir/epsilon-det.gv            \
+  %D%/determinize.dir/epsilon.gv                \
+  %D%/determinize.dir/ladybird-4-det.gv         \
+  %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/fado.dir/dfa.fado                         \
   %D%/fado.dir/dfa.gv                           \
   %D%/fado.dir/enfa.fado                        \
@@ -60,6 +70,7 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.fado                         \
   %D%/fado.dir/nfa.gv
 
+%D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
 
 $(%C%_TESTS:.chk=.log): $(all_vcsn)
