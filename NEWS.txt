@@ -1,3 +1,9 @@
+* 2013-09-24
+** Overhaul of the package
+Thanks to Automake 1.14 features, there is now a single Makefile, which
+significantly speeds up the compilation of the package.  The test-suite now
+uses the Test Anything Protocol, which results in more verbose results.
+
 * 2013-09-20
 ** proper: faster implementation
 The spontaneous transition elimination algorithm is now faster, going from
