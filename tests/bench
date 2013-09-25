@@ -390,7 +390,8 @@ sub setup_eps_aopt ($)
       my $prog;
       if ($d eq 'OpnFST')
         {
-          $prog = 'fstepsnormalize';
+          # This is wrong: $prog = 'fstepsnormalize';
+          $prog = 'fstrmepsilon';
           $res{$d} = "efstcompile $base.efsm | $prog >/dev/null";
         }
       elsif ($d eq 'Vcsn 1')
