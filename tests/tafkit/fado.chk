@@ -34,16 +34,6 @@ fado 'lady.fa'
 check $top_srcdir/share/vcsn/lal_char_b/a1.gv
 
 
-# check_aut OUT ARGUMENTS...
-# --------------------------
-# Check that running 'vcsn-cat ARGUMENTS' produces OUT.
-check_aut ()
-{
-  cp "$1" out.exp
-  shift
-  run 0 out.exp -vcsn-cat "$@"
-}
-
 # check_gv_fado BASE
 # ------------------
 # Check that BASE.gv and BASE.fado convert in one another,
@@ -51,8 +41,8 @@ check_aut ()
 check_gv_fado ()
 {
   fado $1.fado
-  check_aut $1.fado -O fado -f $1.gv
-  check_aut $1.gv   -I fado -f $1.fado
+  run 0 -f $1.fado -vcsn-cat -O fado -f $1.gv
+  run 0 -f $1.gv   -vcsn-cat -I fado -f $1.fado
 }
 
 check_gv_fado $medir/dfa
