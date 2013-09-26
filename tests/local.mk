@@ -33,6 +33,7 @@ include %D%/demo/local.mk
 include %D%/rat/local.mk
 include %D%/tafkit/local.mk
 
+TEST_SUITE_LOG = %D%/test-suite.log
 AM_RST2HTMLFLAGS = -d -t
 .log.html:
 	@list='$(RST2HTML) rst2html rst2html.py';			\
