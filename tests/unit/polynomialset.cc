@@ -64,7 +64,6 @@ bool
 check_conv(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
-  using ps_t = PolynomialSet;
 
 #define CHECK(In, Out)                          \
   do {                                          \
