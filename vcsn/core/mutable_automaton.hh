@@ -187,20 +187,36 @@ namespace vcsn
     {
       assert(has_state(src));
       assert(has_state(dst));
-      // FIXME: We should search in dst->pred if it is smaller
-      // than src->succ.
       const tr_cont_t& succ = states_[src].succ;
-      auto i =
-        std::find_if(begin(succ), end(succ),
-                     [this,l,dst] (const transition_t& t) -> bool
-                     {
-                       const stored_transition_t& st = transitions_[t];
-                       return (st.dst == dst
-                               && this->labelset()->equals(st.get_label(), l));
-                     });
-      if (i == end(succ))
-        return null_transition();
-      return *i;
+      const tr_cont_t& pred = states_[dst].pred;
+      const auto& ls = *this->labelset();
+      if (succ.size() <= pred.size())
+        {
+          auto i =
+            std::find_if(begin(succ), end(succ),
+                         [this,l,ls,dst] (const transition_t& t) -> bool
+                         {
+                           const stored_transition_t& st = transitions_[t];
+                           return (st.dst == dst
+                                   && ls.equals(st.get_label(), l));
+                         });
+          if (i != end(succ))
+            return *i;
+        }
+      else
+        {
+          auto i =
+            std::find_if(begin(pred), end(pred),
+                         [this,l,ls,src] (const transition_t& t) -> bool
+                         {
+                           const stored_transition_t& st = transitions_[t];
+                           return (st.src == src
+                                   && ls.equals(st.get_label(), l));
+                         });
+          if (i != end(pred))
+            return *i;
+        }
+      return null_transition();
     }
 
     bool
