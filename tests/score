@@ -9,7 +9,7 @@ case $# in
   (0) ;;
   (1) if test -x $1/bin/vcsn-determinize; then
         echo "commit $(cd $1 && git show -s --oneline)"
-        export PATH=$i:$PATH
+        export PATH=$(cd $1/bin && pwd):$PATH
       else
         echo >&2 "$0: $1/bin does not contain TAF-Kit executables"
         exit 1
@@ -33,16 +33,16 @@ run ()
 }
 
 # Determinization of ladybird 20.
-run 'vcsn ladybird 21 | vcsn determinize -O null'
+run 'vcsn-ladybird 21 | vcsn-determinize -O null'
 
 # Evaluate of de-bruijn 20.
-run 'vcsn de-bruijn 20 | vcsn evaluate -O null -f - aaaaaaaaaaaaaaaaaaaaa'
+run 'vcsn-de-bruijn 20 | vcsn-evaluate -O null -f - aaaaaaaaaaaaaaaaaaaaa'
 
 # Proper(thompson(a?{2000}))
-run 'vcsn thompson -C "lan_char(a)_b" -Ee "a?{2000}" | vcsn proper -O null'
+run 'vcsn-thompson -C "lan_char(a)_b" -Ee "a?{2000}" | vcsn-proper -O null'
 
 # To-exp(standard((a+b+c+d)?{100})).
-run 'vcsn standard -Ee "(a+b+c+d)?{100}" | vcsn aut-to-exp -O null'
+run 'vcsn-standard -Ee "(a+b+c+d)?{100}" | vcsn-aut-to-exp -O null'
 
 # power(standard((a+b)*b(<2>a+<2>b)*), 10)
-run 'vcsn standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn power -O null -f- 10'
+run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -O null -f- 10'
