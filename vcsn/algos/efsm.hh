@@ -61,7 +61,8 @@ namespace vcsn
 
         os_ << "fstcompile --acceptor"
             << " --keep_isymbols --isymbols=isymbols.txt"
-            << " transitions.fsm";
+            << " transitions.fsm"
+            << " \"$@\"";
       }
 
     private:

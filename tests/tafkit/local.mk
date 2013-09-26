@@ -63,6 +63,8 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
+  %D%/efsm.dir/a1.efsm                          \
+  %D%/efsm.dir/binary.efsm                      \
   %D%/fado.dir/dfa.fado                         \
   %D%/fado.dir/dfa.gv                           \
   %D%/fado.dir/enfa.fado                        \
@@ -73,10 +75,11 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.grail
 
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
+%D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
 
-$(%C%_TESTS:.chk=.log): $(all_vcsn)
+$(%C%_TESTS:.chk=.log): $(all_vcsn) $(dist_bin_SCRIPTS)
 
 .PHONY: check-tafkit
 check-tafkit:

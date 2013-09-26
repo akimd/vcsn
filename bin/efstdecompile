@@ -17,5 +17,5 @@ cat >transitions.fsm <<\EOFSM
 $(cat $trans)
 EOFSM
 
-fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
+fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm "\$@"
 EOF
