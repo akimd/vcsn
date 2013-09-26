@@ -1,0 +1,48 @@
+#! /bin/zsh
+
+# Run some coarse grains benchs.
+
+# Use '.' as decimal separator.
+export LC_ALL=C
+
+case $# in
+  (0) ;;
+  (1) if test -x $1/bin/vcsn-determinize; then
+        echo "commit $(cd $1 && git show -s --oneline)"
+        export PATH=$i:$PATH
+      else
+        echo >&2 "$0: $1/bin does not contain TAF-Kit executables"
+        exit 1
+      fi
+  ;;
+esac
+
+TIMEFMT='%E'
+
+run ()
+{
+  { time=$( { eval "time $1 1>&3- 2>&4-"; } 2>&1 ); } 3>&1 4>&2
+
+  # Join lines with '+'.
+  time=$(echo $=time | sed -e 's/ /+/g;s/,/./g')
+  total=$(echo $time | sed -e 's/s//g' | tee /tmp/f | bc)
+
+  # The command, simplified (no "vcsn" explicit).
+  cmd=$(echo "$1" | sed -e 's/vcsn[- ]//g')
+  printf "%6.2fs (%s): %s\n" "$total" "$time" "$cmd"
+}
+
+# Determinization of ladybird 20.
+run 'vcsn ladybird 21 | vcsn determinize -O null'
+
+# Evaluate of de-bruijn 20.
+run 'vcsn de-bruijn 20 | vcsn evaluate -O null -f - aaaaaaaaaaaaaaaaaaaaa'
+
+# Proper(thompson(a?{2000}))
+run 'vcsn thompson -C "lan_char(a)_b" -Ee "a?{2000}" | vcsn proper -O null'
+
+# To-exp(standard((a+b+c+d)?{100})).
+run 'vcsn standard -Ee "(a+b+c+d)?{100}" | vcsn aut-to-exp -O null'
+
+# power(standard((a+b)*b(<2>a+<2>b)*), 10)
+run 'vcsn standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn power -O null -f- 10'
