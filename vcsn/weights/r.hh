@@ -79,7 +79,7 @@ namespace vcsn
       return v == 1;
     }
 
-    bool
+    static bool
     is_equal(const value_t l, const value_t r)
     {
       return l == r;

@@ -9,37 +9,61 @@
 // FIXME: Check that invalid conv throws.
 // FIXME: Use Google Tests, or Boost Tests.
 
+template <typename WeightSet>
+bool check_common(const WeightSet& ws)
+{
+  size_t nerrs = 0;
+  auto z = ws.zero();
+  auto o = ws.one();
+
+  // is_zero, is_one.
+  ASSERT_EQ(ws.is_zero(z), true);
+  ASSERT_EQ(ws.is_zero(o), false);
+  ASSERT_EQ(ws.is_one(z), false);
+  ASSERT_EQ(ws.is_one(o), true);
+
+  // is_equal.
+  ASSERT_EQ(ws.is_equal(z, z), true);
+  ASSERT_EQ(ws.is_equal(z, o), false);
+  ASSERT_EQ(ws.is_equal(o, z), false);
+  ASSERT_EQ(ws.is_equal(o, o), true);
+
+  // add, zero, one.
+  ASSERT_EQ(ws.is_equal(ws.add(z, z), z), true);
+  ASSERT_EQ(ws.is_equal(ws.add(z, o), o), true);
+  ASSERT_EQ(ws.is_equal(ws.add(o, z), o), true);
+
+  // mul, zero, one.
+  ASSERT_EQ(ws.is_equal(ws.mul(z, z), z), true);
+  ASSERT_EQ(ws.is_equal(ws.mul(z, o), z), true);
+  ASSERT_EQ(ws.is_equal(ws.mul(o, z), z), true);
+  ASSERT_EQ(ws.is_equal(ws.mul(o, o), o), true);
+
+  // conv, format.
+  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(z)), z), true);
+  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(o)), o), true);
+
+  return nerrs;
+}
+
 // Common behavior for b and f2.
 template <typename WeightSet>
 bool check_bool(const WeightSet& ws, bool one_plus_one)
 {
   size_t nerrs = 0;
 
+  check_common(ws);
+
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
   ASSERT_EQ(ws.format(ws.one()), "1");
 
   // conv.
-  ASSERT_EQ(ws.format(ws.conv("0")), "0");
-  ASSERT_EQ(ws.format(ws.conv("1")), "1");
-
-  // is_equal.
-  ASSERT_EQ(ws.is_equal(0, 0), true);
-  ASSERT_EQ(ws.is_equal(1, 0), false);
-  ASSERT_EQ(ws.is_equal(0, 1), false);
-  ASSERT_EQ(ws.is_equal(1, 1), true);
+  ASSERT_EQ(ws.conv("0"), 0);
+  ASSERT_EQ(ws.conv("1"), 1);
 
   // add: "or" or "xor".
-  ASSERT_EQ(ws.add(0, 0), 0);
-  ASSERT_EQ(ws.add(0, 1), 1);
-  ASSERT_EQ(ws.add(1, 0), 1);
   ASSERT_EQ(ws.add(1, 1), one_plus_one);
-
-  // mul: and.
-  ASSERT_EQ(ws.mul(0, 0), 0);
-  ASSERT_EQ(ws.mul(0, 1), 0);
-  ASSERT_EQ(ws.mul(1, 0), 0);
-  ASSERT_EQ(ws.mul(1, 1), 1);
 
   return nerrs;
 }
@@ -63,9 +87,7 @@ static size_t check_q()
   size_t nerrs = 0;
   vcsn::q ws;
 
-  // format.
-  ASSERT_EQ(ws.format(ws.zero()), "0");
-  ASSERT_EQ(ws.format(ws.one()), "1");
+  check_common(ws);
 
   // conv.
 #define CHECK(In, Out)                          \
@@ -130,6 +152,8 @@ static size_t check_r()
   size_t nerrs = 0;
   vcsn::r ws;
 
+  check_common(ws);
+
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
   ASSERT_EQ(ws.format(ws.one()), "1");
@@ -152,8 +176,8 @@ static size_t check_r()
   // is_equal
 #define CHECK(Lhs, Rhs, Out)                            \
   ASSERT_EQ(ws.is_equal(Lhs, Rhs), Out)
-  CHECK(1, 1, true);
-  CHECK(0, 1, false);
+  CHECK(.5, .5, true);
+  CHECK(0.1, 1.0, false);
 #undef CHECK
 
   return nerrs;
@@ -193,9 +217,6 @@ static size_t check_zmin()
   ASSERT_EQ(ws.is_equal(Lhs, Rhs), Out)
   CHECK(1, 1, true);
   CHECK(0, 1, false);
-  CHECK(ws.zero(), ws.zero(), true);
-  CHECK(ws.one(), ws.one(), true);
-  CHECK(ws.zero(), ws.one(), false);
 #undef CHECK
 
   return nerrs;
