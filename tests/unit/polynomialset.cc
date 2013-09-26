@@ -3,6 +3,7 @@
 #include <vcsn/ctx/law_char_zmin.hh>
 #include <vcsn/weights/polynomialset.hh>
 #include <tests/unit/test.hh>
+#include <tests/unit/weight.hh>
 
 template <class T>
 static
@@ -21,18 +22,15 @@ check_conv_fail(T& ps, const std::string& str)
   return false;
 }
 
-
+// Called with law_char_z.
+template <typename PolynomialSet>
 static
 bool
-check_assoc()
+check_assoc(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
-  using context_t = vcsn::ctx::law_char_z;
-  context_t ctx {{'a', 'b', 'c', 'd'}};
-  using ps_t = vcsn::polynomialset<context_t>;
-  ps_t ps{ctx};
-
-  ps_t::value_t u = ps.one();
+  using ps_t = PolynomialSet;
+  typename ps_t::value_t u = ps.one();
   ps.set_weight(u, "ab", 12);
   ASSERT_EQ(ps.format(u), "\\e + <12>ab");
 
@@ -42,7 +40,7 @@ check_assoc()
   assert(!ps.is_zero(u));
   assert(ps.is_zero(ps.zero()));
 
-  ps_t::value_t v;
+  typename ps_t::value_t v;
   ps.set_weight(v, "ab", 24);
   ps.set_weight(v, "", 2);
   assert(u == v);
@@ -59,16 +57,14 @@ check_assoc()
 }
 
 
+// Called with law_char_z.
+template <typename PolynomialSet>
 static
 bool
-check_conv()
+check_conv(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
-
-  using context_t = vcsn::ctx::law_char_z;
-  context_t ctx {{'a', 'b', 'c', 'd'}};
-  using ps_t = vcsn::polynomialset<context_t>;
-  ps_t ps{ctx};
+  using ps_t = PolynomialSet;
 
 #define CHECK(In, Out)                          \
   do {                                          \
@@ -110,10 +106,10 @@ check_conv()
 }
 
 
-template <class T>
+template <class PolynomialSet>
 static
 bool
-check_star_fail(T& ps, const std::string& str)
+check_star_fail(const PolynomialSet& ps, const std::string& str)
 {
   try
     {
@@ -127,16 +123,13 @@ check_star_fail(T& ps, const std::string& str)
 }
 
 
+// Called with law_char_zmin.
+template <typename PolynomialSet>
 static
 bool
-check_star()
+check_star(const PolynomialSet& ps)
 {
   size_t nerrs = 0;
-
-  using context_t = vcsn::ctx::law_char_zmin;
-  context_t ctx {{'a', 'b'}};
-  using ps_t = vcsn::polynomialset<context_t>;
-  ps_t ps{ctx};
 
 #define CHECK(In, Out)                                  \
   do {                                                  \
@@ -161,8 +154,25 @@ check_star()
 int main()
 {
   size_t errs = 0;
-  errs += check_assoc();
-  errs += check_conv();
-  errs += check_star();
+
+  {
+    using context_t = vcsn::ctx::law_char_z;
+    context_t ctx {{'a', 'b', 'c', 'd'}};
+    using ps_t = vcsn::polynomialset<context_t>;
+    ps_t ps{ctx};
+
+    errs += check_common(ps);
+    errs += check_assoc(ps);
+    errs += check_conv(ps);
+  }
+  {
+    using context_t = vcsn::ctx::law_char_zmin;
+    context_t ctx {{'a', 'b'}};
+    using ps_t = vcsn::polynomialset<context_t>;
+    ps_t ps{ctx};
+
+    errs += check_common(ps);
+    errs += check_star(ps);
+  }
   return !!errs;
 }

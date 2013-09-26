@@ -26,7 +26,7 @@ EXTRA_PROGRAMS +=                               \
 
 unit_ldadd = $(libvcsn)
 
-noinst_HEADERS = %D%/test.hh
+noinst_HEADERS = %D%/test.hh %D%/weight.hh
 
 %C%_aut_lao_z_LDADD = $(liblao_z) $(unit_ldadd)
 %C%_aut_lal_char_z_LDADD = $(liblal_char_z) $(unit_ldadd)

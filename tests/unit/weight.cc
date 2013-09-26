@@ -1,4 +1,3 @@
-#include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/f2.hh>
@@ -6,45 +5,11 @@
 #include <vcsn/weights/q.hh>
 #include <vcsn/weights/zmin.hh>
 
+#include <tests/unit/test.hh>
+#include <tests/unit/weight.hh>
+
 // FIXME: Check that invalid conv throws.
 // FIXME: Use Google Tests, or Boost Tests.
-
-template <typename WeightSet>
-bool check_common(const WeightSet& ws)
-{
-  size_t nerrs = 0;
-  auto z = ws.zero();
-  auto o = ws.one();
-
-  // is_zero, is_one.
-  ASSERT_EQ(ws.is_zero(z), true);
-  ASSERT_EQ(ws.is_zero(o), false);
-  ASSERT_EQ(ws.is_one(z), false);
-  ASSERT_EQ(ws.is_one(o), true);
-
-  // is_equal.
-  ASSERT_EQ(ws.is_equal(z, z), true);
-  ASSERT_EQ(ws.is_equal(z, o), false);
-  ASSERT_EQ(ws.is_equal(o, z), false);
-  ASSERT_EQ(ws.is_equal(o, o), true);
-
-  // add, zero, one.
-  ASSERT_EQ(ws.is_equal(ws.add(z, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.add(z, o), o), true);
-  ASSERT_EQ(ws.is_equal(ws.add(o, z), o), true);
-
-  // mul, zero, one.
-  ASSERT_EQ(ws.is_equal(ws.mul(z, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(z, o), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(o, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(o, o), o), true);
-
-  // conv, format.
-  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(z)), z), true);
-  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(o)), o), true);
-
-  return nerrs;
-}
 
 // Common behavior for b and f2.
 template <typename WeightSet>
@@ -52,7 +17,7 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
 {
   size_t nerrs = 0;
 
-  check_common(ws);
+  nerrs += check_common(ws);
 
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
@@ -87,7 +52,7 @@ static size_t check_q()
   size_t nerrs = 0;
   vcsn::q ws;
 
-  check_common(ws);
+  nerrs += check_common(ws);
 
   // conv.
 #define CHECK(In, Out)                          \
@@ -152,7 +117,7 @@ static size_t check_r()
   size_t nerrs = 0;
   vcsn::r ws;
 
-  check_common(ws);
+  nerrs += check_common(ws);
 
   // format.
   ASSERT_EQ(ws.format(ws.zero()), "0");
