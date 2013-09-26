@@ -68,10 +68,13 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/enfa.fado                        \
   %D%/fado.dir/enfa.gv                          \
   %D%/fado.dir/nfa.fado                         \
-  %D%/fado.dir/nfa.gv
+  %D%/fado.dir/nfa.gv                           \
+  %D%/grail.dir/a.gv                            \
+  %D%/grail.dir/a.grail
 
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
+%D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
 
 $(%C%_TESTS:.chk=.log): $(all_vcsn)
 

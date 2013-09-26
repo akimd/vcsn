@@ -1,32 +1,35 @@
 #! /bin/sh
 
-check_aut ()
+# grail FILE
+# ---------
+# Check that FAdo accepts FILE as a grail file.  Skip if we don't have
+# FAdo.
+if python -c 'from FAdo import grail' >/dev/null; then
+  grail ()
+  {
+    run 0 ignore -python -c "from FAdo import grail; grail.importFromGrailFile('$1')"
+  }
+else
+  grail ()
+  {
+    tap_skip 'FAdo not installed'
+  }
+fi
+
+# check_gv_grail BASE
+# -------------------
+# Check that BASE.gv and BASE.fado convert in one another,
+# and that FAdo read BASE.grail.
+#
+# FIXME: we cannot read Grail files, so far.
+check_gv_grail ()
 {
-  cat >in.tmp
-  sed -n '/^--*$/q;p'             in.tmp >in.gv
-  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  run 0 out.exp -vcsn-cat -Af in.gv "$@"
-  $exit
+  grail $1.grail
+  run 0 -f $1.grail -vcsn-cat -O grail -f $1.gv
+#  run 0 -f $1.gv    -vcsn-cat -I grail -f $1.grail
 }
 
-check_aut -O grail <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(a)_b"
-  0 -> 1 [label = a]
-  1 -> F1
-  I0 -> 0
-}
----
-(START) |- 0
-0 a 1
-1 -| (FINAL)
-EOF
+check_gv_grail $medir/a
 
-check_grail ()
-{
-  run 0 ignore -vcsn-ladybird -O grail -o grail.gr $1
-  run 0 ignore -python -c "from FAdo import grail;grail.importFromGrailFile('grail.gr')"
-}
-
-check_grail 10
+run 0 '' -vcsn-ladybird -O grail -o grail.gr 10
+grail 'grail.gr'
