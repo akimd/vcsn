@@ -155,7 +155,7 @@ namespace vcsn
     }
 
     bool
-    is_equal(const value_t l, const value_t r) const
+    is_equal(const value_t& l, const value_t& r) const
     {
       return l.size() == r.size()
         && std::equal(l.begin(), l.end(),
@@ -198,7 +198,7 @@ namespace vcsn
     }
 
     value_t
-    transpose(const value_t v) const
+    transpose(const value_t& v) const
     {
       value_t res;
       for (const auto& i: v)

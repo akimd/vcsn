@@ -119,7 +119,7 @@ namespace vcsn
     }
 
     value_t
-    transpose(const value_t v) const
+    transpose(const value_t& v) const
     {
       value_t res;
       for (const auto& i: v)
