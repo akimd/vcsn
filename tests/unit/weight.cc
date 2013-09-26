@@ -23,6 +23,12 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
   ASSERT_EQ(ws.format(ws.conv("0")), "0");
   ASSERT_EQ(ws.format(ws.conv("1")), "1");
 
+  // is_equal.
+  ASSERT_EQ(ws.is_equal(0, 0), true);
+  ASSERT_EQ(ws.is_equal(1, 0), false);
+  ASSERT_EQ(ws.is_equal(0, 1), false);
+  ASSERT_EQ(ws.is_equal(1, 1), true);
+
   // add: "or" or "xor".
   ASSERT_EQ(ws.add(0, 0), 0);
   ASSERT_EQ(ws.add(0, 1), 1);
@@ -106,6 +112,16 @@ static size_t check_q()
   CHECK("-1/2", "2/3");
 #undef CHECK
 
+  // is_equal.
+#define CHECK(Lhs, Rhs, Out)                            \
+  ASSERT_EQ(ws.is_equal(ws.conv(Lhs), ws.conv(Rhs)), Out)
+  CHECK("8/16", "1/2", true);
+  CHECK("0/16", "0", true);
+  CHECK("16/8", "2", true);
+  CHECK("2", "3", false);
+  CHECK("1/2", "1/3", false);
+#undef CHECK
+
   return nerrs;
 }
 
@@ -128,9 +144,17 @@ static size_t check_r()
   ASSERT_EQ(ws.add(ws.zero(), 8.2), 8.2);
   ASSERT_EQ(ws.add(ws.one(), 8.2), 9.2);
 
-  // mul: add.
+  // mul.
   ASSERT_EQ(ws.mul(ws.zero(), 8.2), 0);
   ASSERT_EQ(ws.mul(ws.one(), 8.3), 8.3);
+  ASSERT_EQ(ws.mul(.5, 4), 2);
+
+  // is_equal
+#define CHECK(Lhs, Rhs, Out)                            \
+  ASSERT_EQ(ws.is_equal(Lhs, Rhs), Out)
+  CHECK(1, 1, true);
+  CHECK(0, 1, false);
+#undef CHECK
 
   return nerrs;
 }
@@ -163,6 +187,16 @@ static size_t check_zmin()
   ASSERT_EQ(ws.mul(-12, ws.zero()), ws.zero());
   ASSERT_EQ(ws.mul(ws.one(), 12), 12);
   ASSERT_EQ(ws.mul(-12, ws.one()), -12);
+
+  // is_equal
+#define CHECK(Lhs, Rhs, Out)                            \
+  ASSERT_EQ(ws.is_equal(Lhs, Rhs), Out)
+  CHECK(1, 1, true);
+  CHECK(0, 1, false);
+  CHECK(ws.zero(), ws.zero(), true);
+  CHECK(ws.one(), ws.one(), true);
+  CHECK(ws.zero(), ws.one(), false);
+#undef CHECK
 
   return nerrs;
 }

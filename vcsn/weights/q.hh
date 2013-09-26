@@ -120,7 +120,7 @@ namespace vcsn
 
     static bool is_equal(const value_t l, const value_t r)
     {
-      return l.num == r.num && l.den == l.den;
+      return l.num == r.num && l.den == r.den;
     }
 
     static constexpr bool show_one() { return false; }

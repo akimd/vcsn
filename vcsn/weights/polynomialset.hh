@@ -36,11 +36,13 @@ namespace vcsn
       one_[labelset()->genset()->empty_word()] = weightset()->one();
     }
 
+    /// The static name.
     std::string sname() const
     {
       return "polynomialset<" + context_t::sname() + ">";
     }
 
+    /// The dynamic name.
     std::string vname(bool full = true) const
     {
       return "polynomialset<" + context().vname(full) + ">";
@@ -50,6 +52,7 @@ namespace vcsn
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
+    /// Remove the mononial of \a w in \a v.
     value_t&
     del_weight(value_t& v, const word_t& w) const
     {
@@ -57,6 +60,7 @@ namespace vcsn
       return v;
     }
 
+    /// Set the mononial of \a w in \a v to weight \a k.
     value_t&
     set_weight(value_t& v, const word_t& w, const weight_t k) const
     {
@@ -104,6 +108,7 @@ namespace vcsn
         return i->second;
     }
 
+    /// The sum of polynomials \a l and \a r.
     value_t
     add(const value_t& l, const value_t& r) const
     {
@@ -113,6 +118,7 @@ namespace vcsn
       return p;
     }
 
+    /// The product of polynomials \a l and \a r.
     value_t
     mul(const value_t& l, const value_t& r) const
     {
@@ -125,6 +131,7 @@ namespace vcsn
       return p;
     }
 
+    /// The star of polynomial \a v.
     value_t
     star(const value_t& v) const
     {
@@ -145,6 +152,14 @@ namespace vcsn
         }
       throw std::domain_error("polynomialset: star: invalid value: "
                               + format(v));
+    }
+
+    bool
+    is_equal(const value_t l, const value_t r) const
+    {
+      return l.size() == r.size()
+        && std::equal(l.begin(), l.end(),
+                      r.begin());
     }
 
     const value_t&
