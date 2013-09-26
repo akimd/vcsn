@@ -118,7 +118,7 @@ namespace vcsn
       return v.num > 0 && static_cast<unsigned int>(v.num) == v.den;
     }
 
-    static bool is_equal(const value_t l, const value_t r)
+    static bool equals(const value_t l, const value_t r)
     {
       return l.num == r.num && l.den == r.den;
     }

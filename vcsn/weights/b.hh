@@ -67,7 +67,7 @@ namespace vcsn
     }
 
     static bool
-    is_equal(const value_t l, const value_t r)
+    equals(const value_t l, const value_t r)
     {
       return l == r;
     }

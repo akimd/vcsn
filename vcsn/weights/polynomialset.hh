@@ -155,7 +155,7 @@ namespace vcsn
     }
 
     bool
-    is_equal(const value_t& l, const value_t& r) const ATTRIBUTE_PURE
+    equals(const value_t& l, const value_t& r) const ATTRIBUTE_PURE
     {
       return l.size() == r.size()
         && std::equal(l.begin(), l.end(),

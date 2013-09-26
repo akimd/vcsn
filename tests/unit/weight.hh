@@ -12,26 +12,26 @@ bool check_common(const WeightSet& ws)
   ASSERT_EQ(ws.is_one(z), false);
   ASSERT_EQ(ws.is_one(o), true);
 
-  // is_equal.
-  ASSERT_EQ(ws.is_equal(z, z), true);
-  ASSERT_EQ(ws.is_equal(z, o), false);
-  ASSERT_EQ(ws.is_equal(o, z), false);
-  ASSERT_EQ(ws.is_equal(o, o), true);
+  // equals.
+  ASSERT_EQ(ws.equals(z, z), true);
+  ASSERT_EQ(ws.equals(z, o), false);
+  ASSERT_EQ(ws.equals(o, z), false);
+  ASSERT_EQ(ws.equals(o, o), true);
 
   // add, zero, one.
-  ASSERT_EQ(ws.is_equal(ws.add(z, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.add(z, o), o), true);
-  ASSERT_EQ(ws.is_equal(ws.add(o, z), o), true);
+  ASSERT_EQ(ws.equals(ws.add(z, z), z), true);
+  ASSERT_EQ(ws.equals(ws.add(z, o), o), true);
+  ASSERT_EQ(ws.equals(ws.add(o, z), o), true);
 
   // mul, zero, one.
-  ASSERT_EQ(ws.is_equal(ws.mul(z, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(z, o), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(o, z), z), true);
-  ASSERT_EQ(ws.is_equal(ws.mul(o, o), o), true);
+  ASSERT_EQ(ws.equals(ws.mul(z, z), z), true);
+  ASSERT_EQ(ws.equals(ws.mul(z, o), z), true);
+  ASSERT_EQ(ws.equals(ws.mul(o, z), z), true);
+  ASSERT_EQ(ws.equals(ws.mul(o, o), o), true);
 
   // conv, format.
-  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(z)), z), true);
-  ASSERT_EQ(ws.is_equal(ws.conv(ws.format(o)), o), true);
+  ASSERT_EQ(ws.equals(ws.conv(ws.format(z)), z), true);
+  ASSERT_EQ(ws.equals(ws.conv(ws.format(o)), o), true);
 
   return nerrs;
 }
