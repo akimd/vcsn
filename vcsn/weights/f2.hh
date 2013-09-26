@@ -35,32 +35,32 @@ namespace vcsn
 
     using value_t = bool;
 
-    value_t
-    zero() const
+    static value_t
+    zero()
     {
       return false;
     }
 
-    value_t
-    one() const
+    static value_t
+    one()
     {
       return true;
     }
 
-    value_t
-    add(const value_t l, const value_t r) const
+    static value_t
+    add(const value_t l, const value_t r)
     {
       return l ^ r;
     }
 
-    value_t
-    mul(const value_t l, const value_t r) const
+    static value_t
+    mul(const value_t l, const value_t r)
     {
       return l && r;
     }
 
-    value_t
-    star(const value_t v) const
+    static value_t
+    star(const value_t v)
     {
       if (!v)
         return true;
@@ -68,14 +68,14 @@ namespace vcsn
         throw std::domain_error("f2: star: invalid value: 1");
     }
 
-    bool
-    is_one(const value_t v) const
+    static bool
+    is_one(const value_t v)
     {
       return v;
     }
 
-    bool
-    is_zero(const value_t v) const
+    static bool
+    is_zero(const value_t v)
     {
       return !v;
     }
@@ -85,14 +85,14 @@ namespace vcsn
     static constexpr
     star_status_t star_status() { return star_status_t::NON_STARRABLE; }
 
-    value_t
-    transpose(const value_t v) const
+    static value_t
+    transpose(const value_t v)
     {
       return v;
     }
 
-    value_t
-    conv(std::istream& i) const
+    static value_t
+    conv(std::istream& i)
     {
       switch (char c = i.get())
         {
@@ -103,21 +103,21 @@ namespace vcsn
         }
     }
 
-    value_t
-    conv(const std::string& str) const
+    static value_t
+    conv(const std::string& str)
     {
       std::istringstream i{str};
       return conv(i);
     }
 
-    std::ostream&
-    print(std::ostream& o, const value_t v) const
+    static std::ostream&
+    print(std::ostream& o, const value_t v)
     {
       return o << format(v);
     }
 
-    std::string
-    format(const value_t v) const
+    static std::string
+    format(const value_t v)
     {
       return v ? "1" : "0";
     }

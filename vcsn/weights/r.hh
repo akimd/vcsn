@@ -34,32 +34,32 @@ namespace vcsn
 
     using value_t = double;
 
-    value_t
-    zero() const
+    static value_t
+    zero()
     {
       return 0.;
     }
 
-    value_t
-    one() const
+    static value_t
+    one()
     {
       return 1.;
     }
 
-    value_t
-    add(const value_t l, const value_t r) const
+    static value_t
+    add(const value_t l, const value_t r)
     {
       return l + r;
     }
 
-    value_t
-    mul(const value_t l, const value_t r) const
+    static value_t
+    mul(const value_t l, const value_t r)
     {
       return l * r;
     }
 
-    value_t
-    star(const value_t v) const
+    static value_t
+    star(const value_t v)
     {
       if (-1 < v && v < 1)
         return 1/(1-v);
@@ -67,14 +67,14 @@ namespace vcsn
         throw std::domain_error("r: star: invalid value: " + format(v));
     }
 
-    bool
-    is_zero(const value_t v) const
+    static bool
+    is_zero(const value_t v)
     {
       return v == 0;
     }
 
-    bool
-    is_one(const value_t v) const
+    static bool
+    is_one(const value_t v)
     {
       return v == 1;
     }
@@ -88,20 +88,20 @@ namespace vcsn
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 
-    value_t
-    abs(const value_t v) const
+    static value_t
+    abs(const value_t v)
     {
       return v < 0 ? -v : v;
     }
 
-    value_t
-    transpose(const value_t v) const
+    static value_t
+    transpose(const value_t v)
     {
       return v;
     }
 
-    value_t
-    conv(std::istream& i) const
+    static value_t
+    conv(std::istream& i)
     {
       value_t res;
       i >> res;
@@ -114,21 +114,21 @@ namespace vcsn
       return res;
     }
 
-    value_t
-    conv(const std::string& str) const
+    static value_t
+    conv(const std::string& str)
     {
       std::istringstream i{str};
       return conv(i);
     }
 
-    std::ostream&
-    print(std::ostream& o, const value_t v) const
+    static std::ostream&
+    print(std::ostream& o, const value_t v)
     {
       return o << v;
     }
 
-    std::string
-    format(const value_t v) const
+    static std::string
+    format(const value_t v)
     {
       std::ostringstream s;
       print(s, v);

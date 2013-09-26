@@ -37,21 +37,21 @@ namespace vcsn
 
     using value_t = int;
 
-    value_t
-    add(const value_t l, const value_t r) const
+    static value_t
+    add(const value_t l, const value_t r)
     {
       return std::min(l, r);
     }
 
-    value_t
-    mul(const value_t l, const value_t r) const
+    static value_t
+    mul(const value_t l, const value_t r)
     {
       return (is_zero(l) || is_zero(r) ? zero()
               : l + r);
     }
 
-    value_t
-    star(const value_t v) const
+    static value_t
+    star(const value_t v)
     {
       if (0 <= v)
         return one();
@@ -59,26 +59,26 @@ namespace vcsn
         throw std::domain_error("zmin: star: invalid value: " + format(v));
     }
 
-    value_t
-    one() const
+    static value_t
+    one()
     {
       return 0;
     }
 
-    value_t
-    zero() const
+    static value_t
+    zero()
     {
       return std::numeric_limits<value_t>::max();
     }
 
-    bool
-    is_one(const value_t v) const
+    static bool
+    is_one(const value_t v)
     {
       return v == one();
     }
 
-    bool
-    is_zero(const value_t v) const
+    static bool
+    is_zero(const value_t v)
     {
       return v == zero();
     }
@@ -86,14 +86,14 @@ namespace vcsn
     static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status() { return star_status_t::TOPS; }
 
-    value_t
-    transpose(const value_t v) const
+    static value_t
+    transpose(const value_t v)
     {
       return v;
     }
 
-    value_t
-    conv(const std::string &str) const
+    static value_t
+    conv(const std::string &str)
     {
       if (str == "oo")
         return zero();
@@ -104,20 +104,20 @@ namespace vcsn
         }
       catch (std::bad_cast& e)
         {
-          throw std::domain_error("invalid integer: " + str);
+          throw std::domain_error("invalid zmin value: " + str);
         }
     }
 
-    std::ostream&
-    print(std::ostream& o, const value_t v) const
+    static std::ostream&
+    print(std::ostream& o, const value_t v)
     {
       if (is_zero(v))
         return o << "oo";
       return o << v;
     }
 
-    std::string
-    format(const value_t v) const
+    static std::string
+    format(const value_t v)
     {
       std::ostringstream s;
       print(s, v);
