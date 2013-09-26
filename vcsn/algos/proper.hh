@@ -223,7 +223,7 @@ namespace vcsn
             p.in_sp = aut_.in(s, empty_word_).size();
             p.in_nsp = aut_.in(s).size() - p.in_sp;
             p.out_sp = aut_.out(s, empty_word_).size();
-            p.out_nsp = aut_.out(s).size() - p.out_sp;
+            p.out_nsp = aut_.all_out(s).size() - p.out_sp;
           }
       }
 
@@ -238,7 +238,7 @@ namespace vcsn
             {
               auto in_nsp = aut_.in(s).size() - in_sp;
               auto out_sp = aut_.out(s, empty_word_).size();
-              auto out_nsp = aut_.out(s).size() - out_sp;
+              auto out_nsp = aut_.all_out(s).size() - out_sp;
               auto h =
                 todo_.emplace(state_profile
                               {s, in_sp, in_nsp, out_sp, out_nsp});
