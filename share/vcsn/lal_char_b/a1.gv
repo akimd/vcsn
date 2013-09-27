@@ -5,8 +5,8 @@ digraph
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I
-    F
+    I0
+    F2
   }
   {
     node [shape = circle]
@@ -14,10 +14,10 @@ digraph
     1
     2
   }
-  I -> 0
+  I0 -> 0
   0 -> 0 [label = "a, b"]
   0 -> 1 [label = "a"]
   1 -> 2 [label = "b"]
+  2 -> F2
   2 -> 2 [label = "a, b"]
-  2 -> F
 }
