@@ -10,6 +10,12 @@
 
 namespace vcsn
 {
+  /// An narrow-char stream that discards the output.
+  extern std::ostream cnull;
+
+  /// An wide-char stream that discards the output.
+  extern std::wostream wcnull;
+
   /// Extract the string which is here betwen lbracket and rbracket.
   /// Support nested lbracket/rbracket.
   std::string

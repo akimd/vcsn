@@ -8,6 +8,9 @@
 namespace vcsn
 {
 
+  std::ostream cnull{nullptr};
+  std::wostream wcnull{nullptr};
+
   std::string
   bracketed(std::istream& i, const char lbracket, const char rbracket)
   {
@@ -79,13 +82,7 @@ namespace vcsn
   {
     std::shared_ptr<std::istream> res;
     if (file.empty() || file == "-")
-      {
-        struct noop
-        {
-          void operator()(...) const {}
-        };
-        res.reset(&std::cin, noop());
-      }
+      res.reset(&std::cin, [](...){});
     else
       {
         res.reset(new std::ifstream(file.c_str()));
@@ -102,13 +99,7 @@ namespace vcsn
   {
     std::shared_ptr<std::ostream> res;
     if (file.empty() || file == "-")
-      {
-        struct noop
-        {
-          void operator()(...) const {}
-        };
-        res.reset(&std::cout, noop());
-      }
+      res.reset(&std::cout, [](...){});
     else
       {
         res.reset(new std::ofstream(file.c_str()));

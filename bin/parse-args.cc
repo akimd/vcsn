@@ -195,7 +195,11 @@ parse_args(options& opts, int& argc, char* const*& argv)
   argc -= optind;
   argv += optind;
   opts.argv.insert(opts.argv.end(), argv, argv + argc);
+  // Open the file anyway, as the user specified it.
   opts.out = vcsn::open_output_file(opts.output);
+  // With -O null, output nothing, not even the `\n' after the result.
+  if (opts.output_format == "null")
+    opts.out.reset(&vcsn::cnull, [](...){});
   vcsn::dyn::set_format(*opts.out, opts.output_format);
   *opts.out << std::boolalpha;
 }
