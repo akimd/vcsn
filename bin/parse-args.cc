@@ -127,14 +127,12 @@ parse_args(options& opts, int& argc, char* const*& argv)
       {
       case 'A':
         opts.input_type = type::automaton;
-        opts.input_format = "dot";
         break;
       case 'C':
         opts.context = optarg;
         break;
       case 'E':
         opts.input_type = type::ratexp;
-        opts.input_format = "text";
         break;
       case 'e':
         opts.input = optarg;
@@ -173,7 +171,6 @@ parse_args(options& opts, int& argc, char* const*& argv)
         }
       case 'w':
         opts.input_type = type::weight;
-        opts.input_format = "text";
         break;
       case 'W':
         {
