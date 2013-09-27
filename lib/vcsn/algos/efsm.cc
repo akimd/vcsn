@@ -35,12 +35,13 @@ namespace vcsn
         fin.get()->ignore(1024, '\n');
       }
 
-      // Look for the empty word in the symbol table.
+      // The single piece of information we need from the symbol
+      // table: the representation of the empty word.
       std::string one;
       {
         std::string line;
         std::string val;
-        while(fin.get()->good())
+        while (fin.get()->good())
           {
             std::getline(*fin.get(), line, '\n');
             std::istringstream ss{line};
