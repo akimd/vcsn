@@ -9,6 +9,8 @@
 # include <iostream>
 # include <functional>
 
+# include <vcsn/misc/attributes.hh>
+
 namespace vcsn
 {
   /// Defines the operator() for the classes get_type, set_type and swap_type.
@@ -100,7 +102,7 @@ namespace vcsn
     /// Allocates the slot.
     xalloc();
     /// The xalloc index.
-    long int index() const;
+    long int index() const ATTRIBUTE_PURE;
     /// The stored data as an lvalue.
     StoredType& operator()(std::ostream& ostr) const;
 

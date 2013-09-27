@@ -31,7 +31,7 @@ namespace vcsn
   namespace detail
   {
     /// Debug level set in the user's environment.
-    static
+    static inline
     int debug_level()
     {
       if (auto cp = getenv("DEBUG"))
