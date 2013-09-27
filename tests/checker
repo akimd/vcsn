@@ -204,8 +204,12 @@ rst_expect ()
 }
 
 
-# run EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
-# ------------------------------------------------------------
+# run [OPTION...] EXPECTED-EXIT-STATUS EXPECTED-OUTPUT PROG [PROG-OPTIONS]
+# ------------------------------------------------------------------------
+#
+# OPTION:
+#
+# - '-I' 'RE', ignore lines matching RE in the diffs.
 #
 # If EXPECTED-OUTPUT is
 #
@@ -224,6 +228,15 @@ rst_expect ()
 # $builddir will prepended to PROG, unless PROG is '-PROG'.
 run ()
 {
+  while true
+  do
+    case $1 in
+      (-I) diff_opts="$diff_opts $1 $2"
+           shift 2;;
+      (*)  break;;
+    esac
+  done
+
   # Expected exit status.
   local sta_exp=$1
   shift
@@ -297,7 +310,7 @@ EOF
           ;;
         esac
         rst_pre "Standard error" err.eff || fail=true
-        rst_expect out || fail=true
+        rst_expect out $diff_opts || fail=true
         ;;
     esac
   } >stdout.tmp
