@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_VALID_HH
-# define VCSN_ALGOS_VALID_HH
+#ifndef VCSN_ALGOS_IS_VALID_HH
+# define VCSN_ALGOS_IS_VALID_HH
 
 # include <stdexcept>
 # include <type_traits>
@@ -193,4 +193,4 @@ namespace vcsn
   }
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_VALID_HH
+#endif // !VCSN_ALGOS_IS_VALID_HH

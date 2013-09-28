@@ -21,4 +21,3 @@ namespace vcsn
 };
 
 #endif // !VCSN_CTX_LAL_CHAR_Q_HH
-

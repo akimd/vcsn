@@ -15,4 +15,3 @@ namespace vcsn
 }
 
 #endif // !VCSN_ALGOS_FWD_HH
-
