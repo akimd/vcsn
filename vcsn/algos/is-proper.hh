@@ -3,6 +3,7 @@
 
 # include <type_traits>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/dyn/automaton.hh> // make_automaton
 
@@ -39,6 +40,9 @@ namespace vcsn
      @param aut The tested automaton
      @return true iff the automaton is proper
   */
+  template <typename Aut>
+  bool is_proper(const Aut& aut) ATTRIBUTE_CONST;
+
   template <typename Aut>
   bool
   is_proper(const Aut& aut)

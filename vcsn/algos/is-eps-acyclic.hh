@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/fwd.hh>
 
@@ -105,7 +106,11 @@ namespace vcsn
     };
   }
 
-  template <class Aut>
+  template <typename Aut>
+  bool is_eps_acyclic(const Aut& input)
+    ATTRIBUTE_CONST;
+
+  template <typename Aut>
   bool is_eps_acyclic(const Aut& input)
   {
     epsilon_acyclic<Aut> t{input};

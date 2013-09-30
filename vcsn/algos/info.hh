@@ -103,6 +103,12 @@ namespace vcsn
     typename std::enable_if<Aut::context_t::is_lal,
                             size_t>::type
     num_eps_transitions(const Aut&)
+      ATTRIBUTE_CONST;
+
+    template <typename Aut>
+    typename std::enable_if<Aut::context_t::is_lal,
+                            size_t>::type
+    num_eps_transitions(const Aut&)
     {
       return 0;
     }

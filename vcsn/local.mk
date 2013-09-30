@@ -130,6 +130,7 @@ nobase_include_HEADERS =                        \
   vcsn/misc/military_order.hh                   \
   vcsn/misc/regex.hh                            \
   vcsn/misc/set.hh                              \
+  vcsn/misc/set.hxx                             \
   vcsn/misc/star_status.hh                      \
   vcsn/misc/stream.hh                           \
   vcsn/misc/unordered_set.hh                    \
