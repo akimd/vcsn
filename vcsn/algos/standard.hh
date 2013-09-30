@@ -47,6 +47,7 @@ namespace vcsn
   | standard(automaton).  |
   `----------------------*/
 
+  /// Turn \a aut into a standard automaton.
   template <typename Aut>
   void
   standard(Aut& aut)
@@ -80,8 +81,8 @@ namespace vcsn
 
     /// \param Aut      relative the generated automaton
     /// \param Context  relative to the RatExp.
-    template <class Aut,
-              class Context = typename Aut::context_t>
+    template <typename Aut,
+              typename Context = typename Aut::context_t>
     class standard_visitor
       : public Context::const_visitor
     {
@@ -290,8 +291,8 @@ namespace vcsn
 
   /// \param Aut      relative to the generated automaton.
   /// \param Context  relative to the RatExp.
-  template <class Aut,
-            class Context = typename Aut::context_t>
+  template <typename Aut,
+            typename Context = typename Aut::context_t>
   Aut
   standard(const Context& ctx, const typename Context::ratexp_t& e)
   {
