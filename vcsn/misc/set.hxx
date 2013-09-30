@@ -1,3 +1,5 @@
+#include <iostream>
+
 namespace vcsn
 {
   template <typename T>
@@ -67,6 +69,19 @@ namespace vcsn
     return res;
   }
 
+  template <typename T>
+  inline
+  std::ostream&
+  print(std::ostream& o, const std::set<T>& set)
+  {
+    const char* sep = "";
+    for (const auto& m: set)
+      {
+        o << sep << m;
+        sep = ", ";
+      }
+    return o;
+  }
 
   template <typename Container1, typename Container2>
   inline

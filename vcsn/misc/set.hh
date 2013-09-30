@@ -56,6 +56,11 @@ namespace vcsn
   std::set<T>
   get_union(const std::set<T>& set1, const std::set<T>& set2);
 
+  /// Print with a separator.  Meant to help debugging.
+  template <typename T>
+  std::ostream&
+  print(std::ostream& o, const std::set<T>& set);
+
   /// Whether set1 \subset set2.
   template <typename Container1, typename Container2>
   bool subset(const Container1& set1, const Container2& set2)
