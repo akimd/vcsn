@@ -154,16 +154,32 @@ namespace vcsn
         size_t in_nsp;
         /// Number of outgoing spontaneous transitions.
         size_t out_sp;
-        /// Number of outgoing transitions.
+        /// Number of outgoing non-spontaneous transitions.
         size_t out_nsp;
 
+        /// \brief Generate a state profile.
+        ///
+        /// \param s  state handle
+        /// \param insp  number of incoming spontaneous transitions to \a s
+        /// \param in    number of incoming transitions to \a a
+        /// \param outsp number of outgoing spontaneous transitions from \a s
+        /// \param out   number of outgoing transitions from \a s
         state_profile(state_t s,
-                      size_t insp, size_t innsp,
-                      size_t outsp, size_t outnsp)
+                      size_t insp, size_t in,
+                      size_t outsp, size_t out)
           : state(s)
-          , in_sp(insp), in_nsp(innsp)
-          , out_sp(outsp), out_nsp(outnsp)
+          , in_sp(insp), in_nsp(in - insp)
+          , out_sp(outsp), out_nsp(out - outsp)
         {
+        }
+
+        void update(size_t insp, size_t in,
+                    size_t outsp, size_t out)
+        {
+          in_sp = insp;
+          in_nsp = in - insp;
+          out_sp = outsp;
+          out_nsp = out - outsp;
         }
 
         /// Whether l < r for the max-heap.
@@ -217,12 +233,10 @@ namespace vcsn
       void update_profile_(state_t s)
       {
         if (auto p = profile(s))
-          {
-            p->in_sp = aut_.in(s, empty_word_).size();
-            p->in_nsp = aut_.in(s).size() - p->in_sp;
-            p->out_sp = aut_.out(s, empty_word_).size();
-            p->out_nsp = aut_.all_out(s).size() - p->out_sp;
-          }
+          p->update(aut_.in(s, empty_word_).size(),
+                    aut_.in(s).size(),
+                    aut_.out(s, empty_word_).size(),
+                    aut_.all_out(s).size());
       }
 
       /// Build the profiles and the heap for states with incoming
@@ -234,12 +248,11 @@ namespace vcsn
           // transitions.
           if (auto in_sp = aut_.in(s, empty_word_).size())
             {
-              auto in_nsp = aut_.in(s).size() - in_sp;
+              auto in = aut_.in(s).size();
               auto out_sp = aut_.out(s, empty_word_).size();
-              auto out_nsp = aut_.all_out(s).size() - out_sp;
-              auto h =
-                todo_.emplace(state_profile
-                              {s, in_sp, in_nsp, out_sp, out_nsp});
+              auto out = aut_.all_out(s).size();
+              auto h = todo_.emplace(state_profile
+                                     {s, in_sp, in, out_sp, out});
               handles_.emplace(s, h);
           }
       }
