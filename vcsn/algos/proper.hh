@@ -216,14 +216,12 @@ namespace vcsn
       /// Update the profile of \a s.
       void update_profile_(state_t s)
       {
-        auto i = handles_.find(s);
-        if (i != handles_.end())
+        if (auto p = profile(s))
           {
-            state_profile& p = *i->second;
-            p.in_sp = aut_.in(s, empty_word_).size();
-            p.in_nsp = aut_.in(s).size() - p.in_sp;
-            p.out_sp = aut_.out(s, empty_word_).size();
-            p.out_nsp = aut_.all_out(s).size() - p.out_sp;
+            p->in_sp = aut_.in(s, empty_word_).size();
+            p->in_nsp = aut_.in(s).size() - p->in_sp;
+            p->out_sp = aut_.out(s, empty_word_).size();
+            p->out_nsp = aut_.all_out(s).size() - p->out_sp;
           }
       }
 
@@ -283,6 +281,19 @@ namespace vcsn
       unsigned removed_ = 0;
 #endif
 
+      state_profile*
+      profile(state_t s)
+      {
+        auto i = handles_.find(s);
+        if (i == handles_.end())
+          return nullptr;
+        else
+          {
+            //            std::cerr << "Found: " << s << std::endl;
+            return &*i->second;
+          }
+      }
+
       /// For each state (s), for each incoming epsilon-transitions
       /// (t), if (t) is a loop, the star of its weight is computed,
       /// otherwise, (t) is stored into the closure list.  Then (t) is
@@ -335,14 +346,17 @@ namespace vcsn
             // "Blowing": For each transition (or terminal arrow)
             // outgoing from (s), the weight is multiplied by
             // (star).
-            weight_t weight = ws_.mul(star, aut_.weight_of(t));
-            aut_.set_weight(t, weight);
+            weight_t blow = ws_.mul(star, aut_.weight_of(t));
+            aut_.set_weight(t, blow);
 
             label_t label = aut_.label_of(t);
             state_t dst = aut_.dst_of(t);
             for (auto pair: closure)
-              aut_.add_transition(pair.first, dst, label,
-                                  ws_.mul(pair.second, weight));
+              {
+                state_t src = pair.first;
+                weight_t w = ws_.mul(pair.second, blow);
+                aut_.add_transition(src, dst, label, w);
+              }
           }
 #ifdef STATS
         unsigned added = aut_.all_out(s).size() * closure.size();
