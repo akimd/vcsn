@@ -58,6 +58,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/print.cc                       \
   lib/vcsn/algos/product.cc                     \
   lib/vcsn/algos/proper.cc                      \
+  lib/vcsn/algos/random.cc                      \
   lib/vcsn/algos/read.cc                        \
   lib/vcsn/algos/registry.hh                    \
   lib/vcsn/algos/standard.cc                    \

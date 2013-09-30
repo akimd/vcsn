@@ -113,6 +113,7 @@ nobase_include_HEADERS =                        \
   vcsn/factory/double-ring.hh                   \
   vcsn/factory/divkbaseb.hh                     \
   vcsn/factory/ladybird.hh                      \
+  vcsn/factory/random.hh                        \
   vcsn/factory/u.hh                             \
   vcsn/labelset/genset-labelset.hh              \
   vcsn/labelset/letterset.hh                    \

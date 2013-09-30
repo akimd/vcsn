@@ -54,6 +54,7 @@ vcsn_lift             = bin/vcsn-lift
 vcsn_power            = bin/vcsn-power
 vcsn_product          = bin/vcsn-product
 vcsn_proper           = bin/vcsn-proper
+vcsn_random           = bin/vcsn-random
 vcsn_right_mult       = bin/vcsn-right-mult
 vcsn_shortest         = bin/vcsn-shortest
 vcsn_standard         = bin/vcsn-standard
@@ -101,6 +102,7 @@ all_vcsn =                                      \
   $(vcsn_power)                                 \
   $(vcsn_product)                               \
   $(vcsn_proper)                                \
+  $(vcsn_random)                                \
   $(vcsn_right_mult)                            \
   $(vcsn_shortest)                              \
   $(vcsn_standard)                              \
@@ -152,6 +154,7 @@ bin_vcsn_lift_LDADD             = bin/libtafkit.la
 bin_vcsn_power_LDADD            = bin/libtafkit.la
 bin_vcsn_product_LDADD          = bin/libtafkit.la
 bin_vcsn_proper_LDADD           = bin/libtafkit.la
+bin_vcsn_random_LDADD           = bin/libtafkit.la
 bin_vcsn_right_mult_LDADD       = bin/libtafkit.la
 bin_vcsn_shortest_LDADD         = bin/libtafkit.la
 bin_vcsn_standard_LDADD         = bin/libtafkit.la

@@ -194,6 +194,10 @@ namespace vcsn
     /// An automaton equivalent to \a aut, without spontaneous transitions.
     automaton proper(const automaton& aut);
 
+    /// Produce a random automaton.
+    automaton random_automaton(const context& ctx,
+                               unsigned num_states);
+
     /// Read an automaton in a file.
     /// \param file  the file name.
     /// \param type  its format.

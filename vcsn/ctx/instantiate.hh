@@ -40,6 +40,7 @@
 # include <vcsn/factory/divkbaseb.hh>
 # include <vcsn/factory/double-ring.hh>
 # include <vcsn/factory/ladybird.hh>
+# include <vcsn/factory/random.hh>
 # include <vcsn/factory/u.hh>
 
 /* The purpose of this file is manyfold:
@@ -274,6 +275,8 @@ namespace vcsn
         // print
         print_exp_register(rs_t::sname(), print<rs_t>);
         print_weight_register(ws_t::sname(), print<ws_t>);
+
+        REGISTER(random, Ctx);
 
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);
