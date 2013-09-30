@@ -128,6 +128,7 @@ nobase_include_HEADERS =                        \
   vcsn/misc/escape.hh                           \
   vcsn/misc/hash.hh                             \
   vcsn/misc/military_order.hh                   \
+  vcsn/misc/random.hh                           \
   vcsn/misc/regex.hh                            \
   vcsn/misc/set.hh                              \
   vcsn/misc/set.hxx                             \
