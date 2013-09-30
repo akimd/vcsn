@@ -165,6 +165,7 @@ namespace vcsn
         REGISTER(ladybird, Ctx);
         REGISTER(power, aut_t);
         REGISTER2(product, aut_t, aut_t);
+        REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);
         REGISTER(u, Ctx);
 
@@ -183,8 +184,9 @@ namespace vcsn
         REGISTER(derive, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
-        REGISTER(proper, aut_t);
         REGISTER(ladybird, Ctx);
+        REGISTER(proper, aut_t);
+        REGISTER(random, Ctx);
         REGISTER(thompson, rs_t);
         REGISTER(u, Ctx);
 
@@ -275,8 +277,6 @@ namespace vcsn
         // print
         print_exp_register(rs_t::sname(), print<rs_t>);
         print_weight_register(ws_t::sname(), print<ws_t>);
-
-        REGISTER(random, Ctx);
 
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);

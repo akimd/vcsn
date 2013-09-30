@@ -195,8 +195,19 @@ namespace vcsn
     automaton proper(const automaton& aut);
 
     /// Produce a random automaton.
+    /// \param num_states
+    ///    The number of states wanted in the automata
+    ///    (>0).  All states will be connected, and there will be no dead
+    ///    state.
+    /// \param density
+    ///     The density of the automata.  This is the probability
+    ///     (between 0.0 and 1.0), to add a transition between two
+    ///     states.  All states have at least one outgoing transition,
+    ///     so \a d is considered only when adding the remaining transition.
+    ///     A density of 1 means all states will be connected to each other.
     automaton random_automaton(const context& ctx,
-                               unsigned num_states);
+                               unsigned num_states,
+                               float density);
 
     /// Read an automaton in a file.
     /// \param file  the file name.

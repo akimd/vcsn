@@ -14,11 +14,12 @@ try
     // Input.
     using namespace vcsn::dyn;
     auto ctx = vcsn::dyn::make_context(opts.context);
-    assert(1 <= argc);
-    size_t n = boost::lexical_cast<size_t>(argv[0]);
+    assert(2 <= argc);
+    unsigned num_states = boost::lexical_cast<unsigned>(argv[0]);
+    float density = boost::lexical_cast<float>(argv[1]);
 
     // Process.
-    automaton aut = random_automaton(ctx, n);
+    automaton aut = random_automaton(ctx, num_states, density);
 
     // Output.
     *opts.out << aut << std::endl;
