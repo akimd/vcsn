@@ -77,9 +77,9 @@ namespace vcsn
     // times slower (tested on a 50000 states example).  These are
     // indexes in states[].
     using state_set = std::set<int>;
-    state_set states_to_process;
+    state_set worklist;
     // Reachability from state[0] (_not_ from pre()).
-    state_set unreachable_states;
+    state_set unreachables;
 
     for (unsigned i = 0; i < num_states; ++i)
       {
@@ -87,11 +87,11 @@ namespace vcsn
         state_randomizer.push_back(i);
         // State 0 is "reachable" from 0.
         if (i)
-          unreachable_states.emplace(i);
-        if (i <= num_initial)
+          unreachables.emplace(i);
+        if (i < num_initial)
           res.set_initial(states[i]);
       }
-    states_to_process.insert(0);
+    worklist.insert(0);
 
     // Select the final states.
     for (unsigned i = 0; i < num_final; ++i)
@@ -112,17 +112,14 @@ namespace vcsn
     // Pick a member of a container following a uniform distribution.
     random_selector<std::mt19937> pick(gen);
 
-    while (!states_to_process.empty())
+    while (!worklist.empty())
       {
-        auto src = states[*states_to_process.begin()];
-        std::cerr << "src: " << src << std::endl;
-        states_to_process.erase(states_to_process.begin());
+        auto src = states[*worklist.begin()];
+        worklist.erase(worklist.begin());
 
         // Choose a random number of successors (at least one), using
         // a binomial distribution.
         unsigned nsucc = 1 + bin(gen);
-
-        std::cerr << "nsucc: " << nsucc << std::endl;
 
         // Connect to NSUCC randomly chosen successors.  We want at
         // least one unreachable successors among these if there are
@@ -130,61 +127,45 @@ namespace vcsn
         bool saw_unreachable = false;
         auto possibilities = num_states;
         while (nsucc--)
-          // No connection to unreachable successors so far.  This is
-          // our last chance, so force it now.
-          if (nsucc == 0
-              && !saw_unreachable
-              && !unreachable_states.empty())
-            {
-              // Pick a random unreachable state.
-              std::cerr << "Pick in: ";
-              print(std::cerr, unreachable_states);
-              auto dst = pick.pop(unreachable_states);
-              std::cerr << " => " << dst << " (unreachable: ";
-              print(std::cerr, unreachable_states);
-              std::cerr << ") " << std::endl;
+          {
+            // The index (in states[]) of the destination.
+            unsigned dst = -1;
+            // No connection to unreachable successors so far.  This is
+            // our last chance, so force it now.
+            if (nsucc == 0
+                && !saw_unreachable
+                && !unreachables.empty())
+              {
+                // Pick a random unreachable state.
+                dst = pick.pop(unreachables);
+                worklist.insert(dst);
+              }
+            else
+              {
+                // Pick the index of a random state.
+                std::uniform_int_distribution<> dis(0, possibilities - 1);
+                int index = dis(gen);
+                possibilities--;
 
-              // Link it from src.
-              std::cerr << "1: add (" << src << ", " << states[dst] << ", a)" << std::endl;
-              res.add_transition(src, states[dst], random_label(*ctx.labelset(), gen));
-              states_to_process.insert(dst);
-              break;
-            }
-          else
-            {
-              // Pick the index of a random state.
-              std::uniform_int_distribution<> dis(0, possibilities - 1);
-              int index = dis(gen);
-              std::cerr << "2: " << "0.." << possibilities - 1
-                        << " => " << index;
-              possibilities--;
+                dst = state_randomizer[index];
 
-              // Permute it with state_randomizer[possibilities], so
-              // we cannot pick it again.
-              int dst = state_randomizer[index];
-              std::cerr << " (state index: " << dst << ")";
-              std::swap(state_randomizer[index],
-                        state_randomizer[possibilities]);
+                // Permute it with state_randomizer[possibilities], so
+                // we cannot pick it again.
+                std::swap(state_randomizer[index],
+                          state_randomizer[possibilities]);
 
-              std::cerr << " (state: " << states[dst] << ")" << std::endl;
-
-              std::cerr << "2: add (" << src << ", " << states[dst] << ", b)" << std::endl;
-              res.add_transition(src, states[dst], random_label(*ctx.labelset(), gen));
-
-              state_set::iterator j = unreachable_states.find(dst);
-              if (j != unreachable_states.end())
-                {
-                  std::cerr << "To process: " << states[dst] << std::endl;
-                  states_to_process.insert(dst);
-                  unreachable_states.erase(j);
-                  saw_unreachable = true;
-                }
-            }
-
-        // The state must have at least one successor.
-        //	assert(!src->empty());
+                state_set::iterator j = unreachables.find(dst);
+                if (j != unreachables.end())
+                  {
+                    worklist.insert(dst);
+                    unreachables.erase(j);
+                    saw_unreachable = true;
+                  }
+              }
+            res.add_transition(src, states[dst],
+                               random_label(*ctx.labelset(), gen));
+          }
       }
-
     return std::move(res);
   }
 
