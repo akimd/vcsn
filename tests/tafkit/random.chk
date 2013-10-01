@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# Expect a clique.
+run 0 -f $medir/clique-a-4.gv -vcsn-random -C 'lal_char(a)_b' 4 1 4 4
+
+# Expect the right number of states.
+run 0 '' -vcsn-random -C 'lal_char(a)_b' -o 20-30.gv 100 .1 20 30
+run 0 '' -vcsn-cat -O info -o 20-30.info -f 20-30.gv
+run 0 - -sed -e '4q' 20-30.info <<EOF
+type: mutable_automaton<lal_char(a)_b>
+number of states: 100
+number of initial states: 20
+number of final states: 30
+EOF

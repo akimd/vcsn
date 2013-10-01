@@ -43,6 +43,7 @@
   %D%/product.chk                               \
   %D%/proper.chk                                \
   %D%/shortest.chk                              \
+  %D%/random.chk                                \
   %D%/standard.chk                              \
   %D%/star.chk                                  \
   %D%/sum.chk                                   \
@@ -79,6 +80,7 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
+%D%/random.log: $(wildcard $(srcdir)/%D%/random.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain
