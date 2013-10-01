@@ -74,7 +74,8 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.fado                         \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.gv                            \
-  %D%/grail.dir/a.grail
+  %D%/grail.dir/a.grail                         \
+  %D%/random.dir/clique-a-4.gv
 
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
