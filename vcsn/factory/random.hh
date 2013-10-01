@@ -1,12 +1,50 @@
 #ifndef VCSN_ALGOS_RANDOM_HH
 # define VCSN_ALGOS_RANDOM_HH
 
+# include <vcsn/labelset/nullableset.hh>
+# include <vcsn/labelset/letterset.hh>
 # include <vcsn/misc/random.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/core/mutable_automaton.hh>
 
 namespace vcsn
 {
+
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename ctx::genset_labelset<GenSet>::letter_t
+  random_label(const ctx::genset_labelset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    // Pick a member of a container following a uniform distribution.
+    auto pick = make_random_selector(gen);
+    return pick(*ls.genset());
+  };
+
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename ctx::letterset<GenSet>::label_t
+  random_label(const ctx::letterset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    using super = typename ctx::letterset<GenSet>::super_type;
+    return random_label(static_cast<const super&>(ls), gen);
+  };
+
+  template <typename GenSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename ctx::nullableset<GenSet>::label_t
+  random_label(const ctx::nullableset<GenSet>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    using super = typename ctx::nullableset<GenSet>::super_type;
+    std::uniform_int_distribution<> dis(0, 1);
+    if (dis(gen))
+      return ls.one();
+    else
+      return random_label(static_cast<const super&>(ls), gen);
+  };
+
 
   /*--------------------.
   | random(automaton).  |
@@ -25,6 +63,8 @@ namespace vcsn
     // A good source of random integers.
     std::random_device rd;
     auto seed = rd();
+    if (getenv("SEED"))
+      seed = std::mt19937::default_seed;
     std::mt19937 gen(seed);
 
     std::vector<state_t> states;
@@ -106,7 +146,7 @@ namespace vcsn
 
               // Link it from src.
               std::cerr << "1: add (" << src << ", " << states[dst] << ", a)" << std::endl;
-              res.add_transition(src, states[dst], 'a');
+              res.add_transition(src, states[dst], random_label(*ctx.labelset(), gen));
               states_to_process.insert(dst);
               break;
             }
@@ -129,7 +169,7 @@ namespace vcsn
               std::cerr << " (state: " << states[dst] << ")" << std::endl;
 
               std::cerr << "2: add (" << src << ", " << states[dst] << ", b)" << std::endl;
-              res.add_transition(src, states[dst], 'b');
+              res.add_transition(src, states[dst], random_label(*ctx.labelset(), gen));
 
               state_set::iterator j = unreachable_states.find(dst);
               if (j != unreachable_states.end())
