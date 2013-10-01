@@ -15,13 +15,17 @@ namespace vcsn
   template <typename Ctx>
   mutable_automaton<Ctx>
   random(const Ctx& ctx,
-         unsigned num_states, float density)
+         unsigned num_states, float density = 0.1,
+         unsigned num_initial = 1, unsigned num_final = 1)
   {
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = typename automaton_t::state_t;
     automaton_t res(ctx);
 
-    std::cerr << "density: " << density << std::endl;
+    // A good source of random integers.
+    std::random_device rd;
+    auto seed = rd();
+    std::mt19937 gen(seed);
 
     std::vector<state_t> states;
     states.reserve(num_states);
@@ -34,26 +38,35 @@ namespace vcsn
     // indexes in states[].
     using state_set = std::set<int>;
     state_set states_to_process;
+    // Reachability from state[0] (_not_ from pre()).
     state_set unreachable_states;
 
     for (unsigned i = 0; i < num_states; ++i)
       {
         states.push_back(res.new_state());
         state_randomizer.push_back(i);
-        unreachable_states.emplace(i);
+        // State 0 is "reachable" from 0.
+        if (i)
+          unreachable_states.emplace(i);
+        if (i <= num_initial)
+          res.set_initial(states[i]);
       }
-    std::cerr << "state_randomizer:";
-    for (auto i: state_randomizer)
-      std::cerr << ' ' << i;
-    std::cerr << std::endl;
-
     states_to_process.insert(0);
+
+    // Select the final states.
+    for (unsigned i = 0; i < num_final; ++i)
+      {
+        std::uniform_int_distribution<> dis(i, num_states - 1);
+        int index = dis(gen);
+        res.set_final(states[state_randomizer[index]]);
+        // Swap it at the beginning of state_randomizer, so we cannot
+        // pick it again.
+        std::swap(state_randomizer[index], state_randomizer[i]);
+      }
 
     // We want to connect each state to a number of successors between
     // 1 and n.  If the probability to connect to each successor is d,
     // the number of connected successors follows a binomial distribution.
-    std::random_device rd;
-    std::mt19937 gen(rd());
     std::binomial_distribution<> bin(num_states - 1, density);
 
     // Pick a member of a container following a uniform distribution.
@@ -121,6 +134,7 @@ namespace vcsn
               state_set::iterator j = unreachable_states.find(dst);
               if (j != unreachable_states.end())
                 {
+                  std::cerr << "To process: " << states[dst] << std::endl;
                   states_to_process.insert(dst);
                   unreachable_states.erase(j);
                   saw_unreachable = true;
@@ -144,15 +158,19 @@ namespace vcsn
       /// Bridge.
       template <typename Ctx>
       automaton
-      random(const context& ctx, unsigned num_states, float density)
+      random(const context& ctx,
+             unsigned num_states, float density,
+             unsigned num_initial = 1, unsigned num_final = 1)
       {
         const auto& c = dynamic_cast<const Ctx&>(*ctx);
-        return make_automaton(c, random<Ctx>(c, num_states, density));
+        return make_automaton(c, random<Ctx>(c, num_states, density,
+                                             num_initial, num_final));
       }
 
       REGISTER_DECLARE(random,
                        (const context& ctx,
-                        unsigned n, float density) -> automaton);
+                        unsigned n, float density,
+                        unsigned num_initial, unsigned num_final) -> automaton);
 
     }
   }

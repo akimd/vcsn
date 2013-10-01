@@ -11,10 +11,12 @@ namespace vcsn
 
     automaton
     random_automaton(const context& ctx,
-                     unsigned num_states, float density)
+                     unsigned num_states, float density,
+                     unsigned num_initial, unsigned num_final)
     {
       return detail::random_registry().call(ctx->vname(false),
-                                            ctx, num_states, density);
+                                            ctx, num_states, density,
+                                            num_initial, num_final);
     }
   }
 }

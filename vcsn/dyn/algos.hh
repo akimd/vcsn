@@ -205,9 +205,14 @@ namespace vcsn
     ///     states.  All states have at least one outgoing transition,
     ///     so \a d is considered only when adding the remaining transition.
     ///     A density of 1 means all states will be connected to each other.
+    /// \param num_initial
+    ///    The number of initial states wanted (0 <= num_initial <= num_states)
+    /// \param num_final
+    ///    The number of final states wanted (0 <= num_final <= num_states)
     automaton random_automaton(const context& ctx,
                                unsigned num_states,
-                               float density);
+                               float density = 0.1,
+                               unsigned num_initial = 1, unsigned num_final = 1);
 
     /// Read an automaton in a file.
     /// \param file  the file name.

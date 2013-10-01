@@ -8,18 +8,21 @@ int main(int argc, char * const argv[])
 try
   {
     options opts;
-    opts.input_format = "text";
     parse_args(opts, argc, argv);
 
     // Input.
     using namespace vcsn::dyn;
     auto ctx = vcsn::dyn::make_context(opts.context);
-    assert(2 <= argc);
-    unsigned num_states = boost::lexical_cast<unsigned>(argv[0]);
-    float density = boost::lexical_cast<float>(argv[1]);
+    assert(0 < argc);
+    assert(argc <= 4);
+    unsigned num_states  =          boost::lexical_cast<unsigned>(argv[0]);
+    float density        = 1 < argc ? boost::lexical_cast<float>(argv[1])    : .1;
+    unsigned num_initial = 2 < argc ? boost::lexical_cast<unsigned>(argv[2]) : 1;
+    unsigned num_final   = 3 < argc ? boost::lexical_cast<unsigned>(argv[3]) : 1;
 
     // Process.
-    automaton aut = random_automaton(ctx, num_states, density);
+    automaton aut = random_automaton(ctx, num_states, density,
+                                     num_initial, num_final);
 
     // Output.
     *opts.out << aut << std::endl;
