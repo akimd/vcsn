@@ -60,7 +60,7 @@ namespace vcsn
   make_random_selector(const RandomGenerator& g)
     ATTRIBUTE_PURE;
 
-  template <typename RandomGenerator = std::default_random_engine>
+  template <typename RandomGenerator>
   struct random_selector<RandomGenerator>
   make_random_selector(const RandomGenerator& g)
   {
