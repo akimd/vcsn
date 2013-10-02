@@ -407,6 +407,50 @@ namespace vcsn
         del_transition(t);
     }
 
+  private:
+    /// Create a transition between two states.  There must not exist
+    /// a previous transition with same (src, dst, l).
+    ///
+    /// \param src  source state
+    /// \param dst  destination state
+    /// \param l    label of the transition
+    /// \param k    weight of the transition
+    ///
+    /// \pre the label is _not checked_, for efficiency.
+    /// \pre ! has_transition(src, dst, l).
+    transition_t
+    new_transition_(state_t src, state_t dst, label_t l, weight_t k)
+    {
+      if (weightset()->is_zero(k))
+        {
+          return null_transition();
+        }
+      else
+        {
+          transition_t t;
+          if (transitions_fs_.empty())
+            {
+              t = transitions_.size();
+              transitions_.resize(t + 1);
+            }
+          else
+            {
+              t = transitions_fs_.back();
+              transitions_fs_.pop_back();
+            }
+          stored_transition_t& st = transitions_[t];
+          st.src = src;
+          st.dst = dst;
+          st.set_label(l); // FIXME: We src == pre() || dst == post(),
+          // label must be empty.
+          st.set_weight(k);
+          states_[src].succ.push_back(t);
+          states_[dst].pred.push_back(t);
+          return t;
+        }
+    }
+
+  public:
     /// Set a transition between two states.  Override any possible
     /// existing transition with same states and label.
     ///
@@ -443,26 +487,9 @@ namespace vcsn
               t = null_transition();
             }
         }
-      else if (!weightset()->is_zero(k))
+      else
         {
-          if (transitions_fs_.empty())
-            {
-              t = transitions_.size();
-              transitions_.resize(t + 1);
-            }
-          else
-            {
-              t = transitions_fs_.back();
-              transitions_fs_.pop_back();
-            }
-          stored_transition_t& st = transitions_[t];
-          st.src = src;
-          st.dst = dst;
-          st.set_label(l); // FIXME: We src == pre() || dst == post(),
-                           // label must be empty.
-          st.set_weight(k);
-          states_[src].succ.push_back(t);
-          states_[dst].pred.push_back(t);
+          t = new_transition_(src, dst, l, k);
         }
       return t;
     }
@@ -495,7 +522,7 @@ namespace vcsn
         }
       else
         {
-          set_transition(src, dst, l, k);
+          new_transition_(src, dst, l, k);
         }
       return k;
     }
