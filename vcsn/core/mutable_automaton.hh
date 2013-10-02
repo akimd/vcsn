@@ -441,8 +441,8 @@ namespace vcsn
           stored_transition_t& st = transitions_[t];
           st.src = src;
           st.dst = dst;
-          st.set_label(l); // FIXME: We src == pre() || dst == post(),
-          // label must be empty.
+          // FIXME: When src == pre() || dst == post(), label must be empty.
+          st.set_label(l);
           st.set_weight(k);
           states_[src].succ.push_back(t);
           states_[dst].pred.push_back(t);
@@ -473,28 +473,23 @@ namespace vcsn
       assert(dst != pre());
 
       transition_t t = get_transition(src, dst, l);
-      if (t != null_transition())
+      if (t == null_transition())
+        t = new_transition_(src, dst, l, k);
+      else if (weightset()->is_zero(k))
         {
-          if (!weightset()->is_zero(k))
-            {
-              stored_transition_t& st = transitions_[t];
-              st.set_label(l);
-              st.set_weight(k);
-            }
-          else
-            {
-              del_transition(t);
-              t = null_transition();
-            }
+          del_transition(t);
+          t = null_transition();
         }
       else
         {
-          t = new_transition_(src, dst, l, k);
+          stored_transition_t& st = transitions_[t];
+          st.set_label(l);
+          st.set_weight(k);
         }
       return t;
     }
 
-    /// Same as above, with one weight.
+    /// Same as above, with unit weight.
     transition_t
     set_transition(state_t src, state_t dst, label_t l)
     {
@@ -515,14 +510,12 @@ namespace vcsn
     add_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       transition_t t = get_transition(src, dst, l);
-      if (t != null_transition())
+      if (t == null_transition())
+        new_transition_(src, dst, l, k);
+      else
         {
           k = weightset()->add(weight_of(t), k);
           set_weight(t, k);
-        }
-      else
-        {
-          new_transition_(src, dst, l, k);
         }
       return k;
     }
