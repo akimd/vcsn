@@ -3,14 +3,12 @@
 
 # include <algorithm>
 # include <cassert>
-# include <list>
 # include <vector>
 
 # include <boost/range/irange.hpp>
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/crange.hh>
-# include <vcsn/core/kind.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/ctx.hh>
 
@@ -30,26 +28,34 @@ namespace vcsn
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
 
+    /// Lightweight state handle (or index).
     using state_t = unsigned;
+    /// Lightweight transition handle (or index).
     using transition_t = unsigned;
-
+    /// Transition label.
     using label_t = typename context_t::label_t;
+    /// Transition weight.
     using weight_t = typename weightset_t::value_t;
 
   protected:
     const context_t ctx_;
 
+    /// Data stored per transition.
     using stored_transition_t = transition_tuple<state_t, label_t, weight_t>;
 
+    /// All the automaton's transitions.
     using tr_store_t = std::vector<stored_transition_t>;
+    /// All the incoming/outgoing transition handles of a state.
     using tr_cont_t = std::vector<transition_t>;
 
+    /// Data stored for each state.
     struct stored_state_t
     {
       tr_cont_t succ;
       tr_cont_t pred;
     };
 
+    /// All the automaton's states.
     using st_store_t = std::vector<stored_state_t>;
 
     /// A list of unused indexes in the states/transitions tables.
@@ -194,7 +200,7 @@ namespace vcsn
         {
           auto i =
             std::find_if(begin(succ), end(succ),
-                         [this,l,ls,dst] (const transition_t& t) -> bool
+                         [this,l,ls,dst] (transition_t t) -> bool
                          {
                            const stored_transition_t& st = transitions_[t];
                            return (st.dst == dst
@@ -207,7 +213,7 @@ namespace vcsn
         {
           auto i =
             std::find_if(begin(pred), end(pred),
-                         [this,l,ls,src] (const transition_t& t) -> bool
+                         [this,l,ls,src] (transition_t t) -> bool
                          {
                            const stored_transition_t& st = transitions_[t];
                            return (st.src == src
@@ -253,7 +259,7 @@ namespace vcsn
     ////////////////////
 
   protected:
-    // Remove t from the outgoing transitions of the source state.
+    /// Remove t from the outgoing transitions of the source state.
     void
     del_transition_from_src(transition_t t)
     {
@@ -265,7 +271,7 @@ namespace vcsn
       succ.pop_back();
     }
 
-    // Remove t from the ingoing transition of the destination state.
+    /// Remove t from the ingoing transition of the destination state.
     void
     del_transition_from_dst(transition_t t)
     {
@@ -321,8 +327,8 @@ namespace vcsn
       stored_state_t& ss = states_[s];
       del_transition_container(ss.pred, false);
       del_transition_container(ss.succ, true);
-      ss.succ.push_back(null_transition()); // So has_state() can work.
-      states_fs_.push_back(s);
+      ss.succ.emplace_back(null_transition()); // So has_state() can work.
+      states_fs_.emplace_back(s);
     }
 
     void
@@ -385,7 +391,7 @@ namespace vcsn
       del_transition_from_dst(t);
       // Actually erase the transition.
       transitions_[t].src = null_state();
-      transitions_fs_.push_back(t);
+      transitions_fs_.emplace_back(t);
     }
 
     void
@@ -444,8 +450,8 @@ namespace vcsn
           // FIXME: When src == pre() || dst == post(), label must be empty.
           st.set_label(l);
           st.set_weight(k);
-          states_[src].succ.push_back(t);
-          states_[dst].pred.push_back(t);
+          states_[src].succ.emplace_back(t);
+          states_[dst].pred.emplace_back(t);
           return t;
         }
     }
