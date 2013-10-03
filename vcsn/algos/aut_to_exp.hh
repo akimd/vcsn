@@ -71,6 +71,7 @@ namespace vcsn
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = typename automaton_t::state_t;
+      using weightset_t = typename automaton_t::weightset_t;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
 
@@ -86,14 +87,14 @@ namespace vcsn
           throw std::runtime_error("not a valid state: " + std::to_string(s));
 
         // The loop's weight.
-        auto w = aut_.weightset()->one();
+        auto w = ws_.one();
         {
           auto loops = aut_.outin(s, s);
           assert(loops.size() <= 1);
           if (!loops.empty())
             {
               auto t = loops.front();
-              w = aut_.weightset()->star(aut_.weight_of(t));
+              w = ws_.star(aut_.weight_of(t));
               // Don't count s in its predecessors/successors.
               aut_.del_transition(t);
             }
@@ -106,9 +107,7 @@ namespace vcsn
             aut_.add_transition
               (aut_.src_of(in), aut_.dst_of(out),
                aut_.label_of(in),
-               aut_.weightset()->mul(aut_.weight_of(in),
-                                     aut_.weightset()->mul(w,
-                                                           aut_.weight_of(out))));
+               ws_.mul(aut_.weight_of(in), ws_.mul(w, aut_.weight_of(out))));
         aut_.del_state(s);
       }
 
@@ -124,6 +123,8 @@ namespace vcsn
       int debug_;
       /// The automaton we work on.
       automaton_t& aut_;
+      /// Shorthand to the weightset.
+      const weightset_t& ws_ = *aut_.weightset();
     };
   }
 
