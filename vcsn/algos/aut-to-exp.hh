@@ -107,7 +107,7 @@ namespace vcsn
             aut_.add_transition
               (aut_.src_of(in), aut_.dst_of(out),
                aut_.label_of(in),
-               ws_.mul(aut_.weight_of(in), ws_.mul(w, aut_.weight_of(out))));
+               ws_.mul(ws_.mul(aut_.weight_of(in), w), aut_.weight_of(out)));
         aut_.del_state(s);
       }
 

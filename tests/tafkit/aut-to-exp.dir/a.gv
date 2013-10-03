@@ -1,0 +1,22 @@
+// ab*c, but with weights to check the associativity of the product.
+digraph
+{
+  vcsn_context = "lal_char(abc)_ratexpset<lal_char(xyz)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "<x>a"]
+  1 -> 1 [label = "<y>b"]
+  1 -> 2 [label = "<z>c"]
+  2 -> F2
+}

@@ -20,6 +20,12 @@ check '(?@law_char(ab)_z)<2>(ab)<3>' '<6>ab'
 check '(?@lal_char(abc)_z)<2>(<3>a+<5>b)<7>c<11>' \
       '((<6>a.<7>c)+(<10>b.<7>c))<11>'
 
+# Likewise, but check the order of the products.
+check '(?@lal_char(abc)_ratexpset<lal_char(vwxyz)_b>)<v>(<w>a+<x>b)<y>c<z>' \
+      '((<v.w>a.<y>c)+(<v.x>b.<y>c))<z>'
+
+# Check the associativity of the product.
+run 0 '<x>a.((<y>b)*).<z>c' -vcsn-aut-to-exp -f $medir/a.gv
 
 # check LIB-AUTOMATON EXP-OUT
 # ---------------------------

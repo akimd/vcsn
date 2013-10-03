@@ -55,6 +55,7 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
+  %D%/aut-to-exp.dir/a.gv                       \
   %D%/determinize.dir/a-det.gv                  \
   %D%/determinize.dir/a.gv                      \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
@@ -77,6 +78,7 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.grail                         \
   %D%/random.dir/clique-a-4.gv
 
+%D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
