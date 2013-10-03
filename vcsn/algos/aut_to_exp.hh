@@ -60,41 +60,71 @@ namespace vcsn
   | eliminate_state.  |
   `------------------*/
 
-  template <typename Aut>
-  void
-  eliminate_state(Aut& aut,
-                  typename Aut::state_t s)
+  namespace detail
   {
-    static_assert(Aut::context_t::is_lao,
-                  "requires labels_are_one");
-    if (!aut.has_state(s))
-      throw std::runtime_error("not a valid state: " + std::to_string(s));
 
-    // The loop's weight.
-    auto w = aut.weightset()->one();
+    template <typename Aut>
+    struct state_eliminator
     {
-      auto loops = aut.outin(s, s);
-      assert(loops.size() <= 1);
-      if (!loops.empty())
-        {
-          auto t = loops.front();
-          w = aut.weightset()->star(aut.weight_of(t));
-          // Don't count s in its predecessors/successors.
-          aut.del_transition(t);
-        }
-    }
+      static_assert(Aut::context_t::is_lao,
+                    "requires labels_are_one");
 
-    // Get all the predecessors, and successors, except itself.
-    auto outs = aut.all_out(s);
-    for (auto in: aut.all_in(s))
-      for (auto out: outs)
-        aut.add_transition
-          (aut.src_of(in), aut.dst_of(out),
-           aut.label_of(in),
-           aut.weightset()->mul(aut.weight_of(in),
-                                aut.weightset()->mul(w,
-                                                     aut.weight_of(out))));
-    aut.del_state(s);
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using state_t = typename automaton_t::state_t;
+      /// State selector type.
+      using state_chooser_t = std::function<state_t(const automaton_t&)>;
+
+      state_eliminator(automaton_t& aut)
+        : debug_(0)
+        , aut_(aut)
+      {}
+
+      /// Eliminate state s.
+      void operator()(state_t s)
+      {
+        if (!aut_.has_state(s))
+          throw std::runtime_error("not a valid state: " + std::to_string(s));
+
+        // The loop's weight.
+        auto w = aut_.weightset()->one();
+        {
+          auto loops = aut_.outin(s, s);
+          assert(loops.size() <= 1);
+          if (!loops.empty())
+            {
+              auto t = loops.front();
+              w = aut_.weightset()->star(aut_.weight_of(t));
+              // Don't count s in its predecessors/successors.
+              aut_.del_transition(t);
+            }
+        }
+
+        // Get all the predecessors, and successors, except itself.
+        auto outs = aut_.all_out(s);
+        for (auto in: aut_.all_in(s))
+          for (auto out: outs)
+            aut_.add_transition
+              (aut_.src_of(in), aut_.dst_of(out),
+               aut_.label_of(in),
+               aut_.weightset()->mul(aut_.weight_of(in),
+                                     aut_.weightset()->mul(w,
+                                                           aut_.weight_of(out))));
+        aut_.del_state(s);
+      }
+
+      /// Eliminate all the states, in the order specified by \a next_state.
+      void operator()(const state_chooser_t& next_state)
+      {
+        while (aut_.num_states())
+          operator()(next_state(aut_));
+      }
+
+    private:
+      /// Debug level.  The higher, the more details are reported.
+      int debug_;
+      /// The automaton we work on.
+      automaton_t& aut_;
+    };
   }
 
 
@@ -110,8 +140,8 @@ namespace vcsn
   {
     // State elimination is performed on the lifted automaton.
     auto aut = lift(a);
-    while (aut.num_states())
-      eliminate_state(aut, next_state(aut));
+    detail::state_eliminator<decltype(aut)> eliminate_states(aut);
+    eliminate_states(next_state);
     return aut.get_initial_weight(aut.post());
   }
 
