@@ -57,7 +57,7 @@ namespace vcsn
       automaton
       divkbaseb(const dyn::context& ctx, unsigned divisor, unsigned base)
       {
-        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        const auto& c = ctx->as<Ctx>();
         return make_automaton(ctx, divkbaseb<Ctx>(c, divisor, base));
       }
 

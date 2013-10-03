@@ -66,7 +66,7 @@ namespace vcsn
       automaton
       u(const dyn::context& ctx, unsigned n)
       {
-        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        const auto& c = ctx->as<Ctx>();
         return make_automaton(ctx, u<Ctx>(c, n));
       }
 

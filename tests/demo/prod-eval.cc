@@ -25,7 +25,7 @@ namespace vcsn
     if (sname != Aut::sname())
       throw std::runtime_error(f + ": invalid context: " + sname
                                + ", expected: " + Aut::sname());
-    auto& r = dynamic_cast<Aut&>(*res);
+    auto& r = res->as<Aut&>();
     return std::move(r);
   }
 }

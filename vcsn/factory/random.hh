@@ -183,7 +183,7 @@ namespace vcsn
              unsigned num_states, float density,
              unsigned num_initial = 1, unsigned num_final = 1)
       {
-        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        const auto& c = ctx->as<Ctx>();
         return make_automaton(c, random<Ctx>(c, num_states, density,
                                              num_initial, num_final));
       }

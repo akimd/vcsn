@@ -24,6 +24,18 @@ namespace vcsn
         /// Convert a dynamic name into a static one.
         /// (from vname to sname, i.e., strip generators).
         static std::string sname(const std::string& vname);
+
+        template <typename Ctx>
+        Ctx& as()
+        {
+          return dynamic_cast<Ctx&>(*this);
+        };
+
+        template <typename Ctx>
+        const Ctx& as() const
+        {
+          return dynamic_cast<const Ctx&>(*this);
+        };
       };
     }
 

@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_READ_WEIGHT_HH
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/weight.hh>
 
 namespace vcsn
@@ -29,7 +30,7 @@ namespace vcsn
       read_weight(const context& ctx, const std::string& s)
         -> weight
       {
-        const auto& c = dynamic_cast<const Context&>(*ctx);
+        const auto& c = ctx->as<Context>();
         auto res = ::vcsn::read_weight(c, s);
         return make_weight(*c.weightset(), res);
       }

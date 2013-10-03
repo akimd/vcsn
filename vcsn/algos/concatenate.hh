@@ -135,7 +135,7 @@ namespace vcsn
       automaton
       chain(const automaton& a, size_t n)
       {
-        const auto& aut = dynamic_cast<const Aut&>(*a);
+        const auto& aut = a->as<Aut>();
         return make_automaton(aut.context(), chain(aut, n));
       }
 

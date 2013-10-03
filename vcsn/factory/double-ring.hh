@@ -64,7 +64,7 @@ namespace vcsn
       automaton
       double_ring(const dyn::context& ctx, unsigned n, std::vector<unsigned> f)
       {
-        const auto& c = dynamic_cast<const Ctx&>(*ctx);
+        const auto& c = ctx->as<Ctx>();
         return make_automaton(c, double_ring<Ctx>(n, c, f));
       }
 

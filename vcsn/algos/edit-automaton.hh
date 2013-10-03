@@ -306,7 +306,7 @@ namespace vcsn
       automaton_editor*
       make_automaton_editor(const context& ctx)
       {
-        const auto& c = dynamic_cast<const typename Aut::context_t&>(*ctx);
+        const auto& c = ctx->as<const typename Aut::context_t&>();
         return new edit_automaton<Aut>(c);
       }
 
