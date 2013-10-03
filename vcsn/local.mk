@@ -14,7 +14,7 @@
 nobase_include_HEADERS =                        \
   vcsn/algos/accessible.hh                      \
   vcsn/algos/are-equivalent.hh                  \
-  vcsn/algos/aut_to_exp.hh                      \
+  vcsn/algos/aut-to-exp.hh                      \
   vcsn/algos/complement.hh                      \
   vcsn/algos/complete.hh                        \
   vcsn/algos/concatenate.hh                     \

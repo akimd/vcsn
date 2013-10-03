@@ -14,7 +14,7 @@
 %C%_TESTS =                                     \
   %D%/accessible.chk                            \
   %D%/are-equivalent.chk                        \
-  %D%/aut_to_exp.chk                            \
+  %D%/aut-to-exp.chk                            \
   %D%/cat.chk                                   \
   %D%/chain.chk                                 \
   %D%/complement.chk                            \
