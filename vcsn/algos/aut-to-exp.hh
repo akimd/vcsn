@@ -33,7 +33,7 @@ namespace vcsn
     for (auto s: a.states())
       {
         size_t out = 0;
-        // Since we are in LAU, there can be at most one such loop.
+        // Since we are in LAO, there can be at most one such loop.
         bool has_loop = false;
         // Don't count the loops as out-degree.
         for (auto t: a.all_out(s))

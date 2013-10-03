@@ -5,7 +5,7 @@
 
 namespace vcsn
 {
-  /// Empty labels, for LAU.
+  /// Empty labels, for LAO.
   struct empty_t
   {};
 
