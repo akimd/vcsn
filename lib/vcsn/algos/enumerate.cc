@@ -17,7 +17,7 @@ namespace vcsn
 
     REGISTER_DEFINE(enumerate);
 
-    std::vector<std::string>
+    polynomial
     enumerate(const automaton& aut, size_t max)
     {
       return detail::enumerate_registry().call(aut->vname(false),

@@ -9,10 +9,11 @@
 # include <vector>
 
 # include <vcsn/dyn/automaton.hh>
+# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/wordset.hh>
-# include <vcsn/weights/entryset.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {
@@ -40,10 +41,10 @@ namespace vcsn
         return ctx;
       }
 
-      using polynomialset_t = entryset<type>;
+      using polynomialset_t = polynomialset<type>;
 
       polynomialset_t
-      polynomialset(const in_type& ctx)
+      word_polynomialset(const in_type& ctx)
       {
         return context(ctx);
       }
@@ -60,10 +61,10 @@ namespace vcsn
         return {*ctx.labelset()->genset(), *ctx.weightset()};
       }
 
-      using polynomialset_t = entryset<type>;
+      using polynomialset_t = polynomialset<type>;
 
       polynomialset_t
-      polynomialset(const in_type& ctx)
+      word_polynomialset(const in_type& ctx)
       {
         return context(ctx);
       }
@@ -90,7 +91,7 @@ namespace vcsn
       using labelset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
       using wordset_context_t = typename law_traits<context_t>::type;
-      using polynomialset_t = entryset<wordset_context_t>;
+      using polynomialset_t = polynomialset<wordset_context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using label_t = typename automaton_t::label_t;
       using weight_t = typename automaton_t::weight_t;
@@ -223,20 +224,17 @@ namespace vcsn
 
       // FIXME: We need dyn::polynomial.
       template <typename Aut>
-      std::vector<std::string>
+      polynomial
       enumerate(const automaton& aut, size_t max)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a.context());
-        std::vector<std::string> res;
-        for (const auto& m: enumerate(a, max))
-          res.emplace_back(ps.format(m));
-        return res;
+        return make_polynomial(ps, enumerate(a, max));
       }
 
       REGISTER_DECLARE
       (enumerate,
-       (const automaton& aut, size_t max) -> std::vector<std::string>);
+       (const automaton& aut, size_t max) -> polynomial);
 
 
       /*----------------.

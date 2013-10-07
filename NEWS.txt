@@ -1,3 +1,36 @@
+* 2013-10-08
+** enumerate returns a dyn::polynomial
+The 'enumerate' algorithm use to cheat, and returned a std::vector<string>
+(each string being a pretty-printing of the monomial, e.g., "<2>a").  It now
+returns a dyn::polynomial.
+
+vcsn-enumerate is biased to prefer the 'list' output format:
+
+  $ vcsn enumerate -Ee 'a*' 3
+  \e
+  a
+  aa
+  aaa
+
+however the proper syntax for polynomial can be asked for.
+
+  $ vcsn enumerate -O text -Ee 'a*' 3
+  \e + a + aa + aaa
+
+** New dyn:: type: polynomial
+A new member joins the dyn:: family of types (i.e., automaton, ratexp,
+ratexpset, weight, weightset).  Currently there are no means to read such a
+value from TAF-Kit, but there is output support with two different output
+format:
+
+- 'text' (aka 'default')
+  Prints the polynomial this usual way, e.g., "<2>a+<3>b".
+
+- 'list'
+  Prints one monomial per line, e.g.
+  '<2>a
+   <3>b'
+
 * 2013-09-24
 ** Overhaul of the package
 Thanks to Automake 1.14 features, there is now a single Makefile, which

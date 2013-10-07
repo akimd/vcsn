@@ -85,7 +85,7 @@ namespace vcsn
 
     /// One of the shortest accepted words.
     /// \throw std::domain_error if the automaton is useless
-    std::vector<std::string> enumerate(const automaton& aut, size_t max);
+    polynomial enumerate(const automaton& aut, size_t max);
 
     /// Evaluate \a s on \a aut.
     weight eval(const automaton& aut, const std::string& s);

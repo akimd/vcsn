@@ -35,6 +35,9 @@ namespace vcsn
         {
           return dynamic_cast<const concrete_abstract_polynomial<PolynomialSet>&>(*this);
         };
+
+        /// Whether is zero.
+        virtual bool empty() const = 0;
       };
 
       /// Aggregate a polynomial and its polynomialset.
@@ -69,6 +72,13 @@ namespace vcsn
         {
           return polynomialset_;
         }
+
+        /// Whether is zero.
+        virtual bool empty() const override
+        {
+          return polynomial_.empty();
+        }
+
       protected:
         /// The polynomial.
         const polynomial_t polynomial_;
