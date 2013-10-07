@@ -8,6 +8,7 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/military-order.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 

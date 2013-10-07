@@ -10,7 +10,6 @@
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/military_order.hh>
 # include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
