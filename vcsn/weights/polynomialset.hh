@@ -28,6 +28,8 @@ namespace vcsn
     using weight_t = typename context_t::weight_t;
 
     using value_t = std::map<word_t, weight_t, MilitaryOrder<word_t>>;
+    /// A pair <label, weight>.
+    using monomial_t = typename value_t::value_type;
 
     polynomialset() = delete;
     polynomialset(const polynomialset&) = default;
@@ -53,7 +55,7 @@ namespace vcsn
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
-    /// Remove the mononial of \a w in \a v.
+    /// Remove the monomial of \a w in \a v.
     value_t&
     del_weight(value_t& v, const word_t& w) const
     {
@@ -61,7 +63,7 @@ namespace vcsn
       return v;
     }
 
-    /// Set the mononial of \a w in \a v to weight \a k.
+    /// Set the monomial of \a w in \a v to weight \a k.
     value_t&
     set_weight(value_t& v, const word_t& w, const weight_t k) const
     {
@@ -73,7 +75,7 @@ namespace vcsn
     }
 
     value_t&
-    add_weight(value_t& v, const std::pair<word_t, weight_t>& p) const
+    add_weight(value_t& v, const monomial_t& p) const
     {
       return add_weight(v, p.first, p.second);
     }
@@ -308,7 +310,7 @@ namespace vcsn
 
     /// Print a monomial.
     std::ostream&
-    print(std::ostream& out, const typename value_t::value_type& m) const
+    print(std::ostream& out, const monomial_t& m) const
     {
       if (weightset()->show_one() || !weightset()->is_one(m.second))
         {
@@ -323,18 +325,19 @@ namespace vcsn
     print(std::ostream& out, const value_t& v,
           const std::string& sep = " + ") const
     {
-      bool first = true;
       if (v.empty())
         out << "\\z";
       else
-        for (const auto& m: v)
-          {
-            if (!first)
-              out << sep;
-            first = false;
-            print(out, m);
-          }
-
+        {
+          bool first = true;
+          for (const auto& m: v)
+            {
+              if (!first)
+                out << sep;
+              first = false;
+              print(out, m);
+            }
+        }
       return out;
     }
 
@@ -348,7 +351,7 @@ namespace vcsn
 
     /// Format a monomial.
     std::string
-    format(const typename value_t::value_type& m) const
+    format(const monomial_t& m) const
     {
       std::ostringstream o;
       print(o, m);
