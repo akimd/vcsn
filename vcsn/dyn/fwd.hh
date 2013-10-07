@@ -22,6 +22,23 @@ namespace vcsn
     }
     using context = std::shared_ptr<const detail::abstract_context>;
 
+    // vcsn/dyn/polynomial.hh.
+    namespace detail
+    {
+      class abstract_polynomial;
+      template <typename PolynomialSet>
+      class concrete_abstract_polynomial;
+    }
+
+    using polynomial = std::shared_ptr<const detail::abstract_polynomial>;
+
+    // vcsn/dyn/polynomialset.hh
+    namespace detail
+    {
+      class abstract_polynomialset;
+    }
+    using polynomialset = std::shared_ptr<const detail::abstract_polynomialset>;
+
     // vcsn/dyn/ratexp.hh.
     namespace detail
     {

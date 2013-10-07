@@ -103,6 +103,8 @@ nobase_include_HEADERS =                        \
   vcsn/dyn/automaton.hh                         \
   vcsn/dyn/context.hh                           \
   vcsn/dyn/fwd.hh                               \
+  vcsn/dyn/polynomial.hh                        \
+  vcsn/dyn/polynomialset.hh                     \
   vcsn/dyn/ratexp.hh                            \
   vcsn/dyn/ratexpset.hh                         \
   vcsn/dyn/ratexpset.hxx                        \
