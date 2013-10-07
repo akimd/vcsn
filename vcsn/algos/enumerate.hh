@@ -10,7 +10,9 @@
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/labelset/letterset.hh>
+# include <vcsn/labelset/wordset.hh>
+# include <vcsn/weights/entryset.hh>
 
 namespace vcsn
 {
@@ -22,6 +24,60 @@ namespace vcsn
 
   namespace detail
   {
+    /// The LAW from a LAL.
+    template <typename Context>
+    struct law_traits
+    {};
+
+    template <typename GenSet, typename WeightSet>
+    struct law_traits<ctx::context<ctx::wordset<GenSet>, WeightSet>>
+    {
+      using in_type = ctx::context<ctx::wordset<GenSet>, WeightSet>;
+      using type = ctx::context<ctx::wordset<GenSet>, WeightSet>;
+
+      static type context(const in_type& ctx)
+      {
+        return ctx;
+      }
+
+      using polynomialset_t = entryset<type>;
+
+      polynomialset_t
+      polynomialset(const in_type& ctx)
+      {
+        return context(ctx);
+      }
+    };
+
+    template <typename GenSet, typename WeightSet>
+    struct law_traits<ctx::context<ctx::letterset<GenSet>, WeightSet>>
+    {
+      using in_type = ctx::context<ctx::letterset<GenSet>, WeightSet>;
+      using type = ctx::context<ctx::wordset<GenSet>, WeightSet>;
+
+      static type context(const in_type& ctx)
+      {
+        return {*ctx.labelset()->genset(), *ctx.weightset()};
+      }
+
+      using polynomialset_t = entryset<type>;
+
+      polynomialset_t
+      polynomialset(const in_type& ctx)
+      {
+        return context(ctx);
+      }
+    };
+
+    template <typename Context>
+    auto
+    make_word_polynomialset(const Context& ctx)
+      -> typename law_traits<Context>::polynomialset_t
+    {
+      return law_traits<Context>::context(ctx);
+    }
+
+
     template <typename Aut>
     class enumerater
     {
@@ -33,7 +89,8 @@ namespace vcsn
 
       using labelset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using polynomialset_t = polynomialset<context_t>;
+      using wordset_context_t = typename law_traits<context_t>::type;
+      using polynomialset_t = entryset<wordset_context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using label_t = typename automaton_t::label_t;
       using weight_t = typename automaton_t::weight_t;
@@ -129,7 +186,8 @@ namespace vcsn
       const automaton_t& aut_;
       const labelset_t& ls_ = *aut_.labelset();
       const weightset_t& ws_ = *aut_.weightset();
-      const polynomialset_t ps_ = {aut_.context()};
+      const polynomialset_t ps_
+        = {law_traits<context_t>::context(aut_.context())};
       /// For each state, the first orders of its past.
       std::map<state_t, polynomial_t> past_;
     };
@@ -137,7 +195,7 @@ namespace vcsn
 
   template <typename Automaton>
   inline
-  typename polynomialset<typename Automaton::context_t>::value_t
+  typename detail::enumerater<Automaton>::polynomial_t
   enumerate(const Automaton& aut, size_t max)
   {
     detail::enumerater<Automaton> enumerate(aut);
@@ -146,7 +204,7 @@ namespace vcsn
 
   template <typename Automaton>
   inline
-  typename polynomialset<typename Automaton::context_t>::value_t::value_type
+  typename detail::enumerater<Automaton>::monomial_t
   shortest(const Automaton& aut)
   {
     detail::enumerater<Automaton> shortest(aut);
@@ -169,7 +227,7 @@ namespace vcsn
       enumerate(const automaton& aut, size_t max)
       {
         const auto& a = aut->as<Aut>();
-        vcsn::polynomialset<typename Aut::context_t> ps(a.context());
+        auto ps = vcsn::detail::make_word_polynomialset(a.context());
         std::vector<std::string> res;
         for (const auto& m: enumerate(a, max))
           res.emplace_back(ps.format(m));
@@ -191,7 +249,7 @@ namespace vcsn
       shortest(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        vcsn::polynomialset<typename Aut::context_t> ps(a.context());
+        auto ps = vcsn::detail::make_word_polynomialset(a.context());
         return ps.format(shortest(a));
       }
 
