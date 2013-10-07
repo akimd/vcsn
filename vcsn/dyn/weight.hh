@@ -12,7 +12,7 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate a weight and its weigthset.
+      /// Aggregate a weight and its weightset.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
@@ -42,7 +42,7 @@ namespace vcsn
         };
       };
 
-      /// Aggregate a weight and its weigthset.
+      /// Aggregate a weight and its weightset.
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
