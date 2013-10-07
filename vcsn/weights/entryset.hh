@@ -39,7 +39,7 @@ namespace vcsn
     {}
 
     /// The static name.
-    std::string sname() const
+    static std::string sname()
     {
       return "entryset<" + context_t::sname() + ">";
     }

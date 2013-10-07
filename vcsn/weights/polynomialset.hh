@@ -42,7 +42,7 @@ namespace vcsn
     }
 
     /// The static name.
-    std::string sname() const
+    static std::string sname()
     {
       return "polynomialset<" + context_t::sname() + ">";
     }
