@@ -31,7 +31,7 @@ do.
 Add it to the repo.
 
 ** bin/local.mk.
-Adjust.  Respect the order.
+Adjust all_vcsn and %C%_vcsn_foo_LDADD.  Respect the order.
 
 ** tests/tafkit/foo.chk
 See how other files are written.
