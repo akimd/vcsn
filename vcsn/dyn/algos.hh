@@ -301,13 +301,13 @@ namespace vcsn
 
 namespace std
 {
-  /// Output \a w on \a o.
+  /// Output automaton \a a on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
 
-  /// Output \a e on \a o.
+  /// Output ratexp \a e on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::ratexp& e);
 
-  /// Output \a w on \a o.
+  /// Output weight \a w on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
 }
 
