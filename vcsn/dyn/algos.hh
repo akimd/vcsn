@@ -169,6 +169,10 @@ namespace vcsn
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "default");
 
+    /// Print polynomial \a p on \a o using format \a type.
+    std::ostream& print(const polynomial& p, std::ostream& o,
+                        const std::string& type = "default");
+
     /// Print ratexp \a e on \a o using format \a type.
     std::ostream& print(const ratexp& e, std::ostream& o,
                         const std::string& type = "default");
@@ -303,6 +307,9 @@ namespace std
 {
   /// Output automaton \a a on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
+
+  /// Output polynomial \a p on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
 
   /// Output ratexp \a e on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::ratexp& e);

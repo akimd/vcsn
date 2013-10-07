@@ -2,6 +2,7 @@
 
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/algos/print.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/xalloc.hh>
 
@@ -55,6 +56,29 @@ namespace vcsn
       return *format_flag(o);
     }
 
+    /*----------------------------.
+    | print(polynomial, stream).  |
+    `----------------------------*/
+
+    REGISTER_DEFINE(list_polynomial);
+    REGISTER_DEFINE(print_polynomial);
+
+    std::ostream&
+    print(const polynomial& p, std::ostream& out, const std::string& type)
+    {
+      if (type == "list")
+        detail::list_polynomial_registry().call(p->vname(false), p, out);
+      else if (type == "null")
+        detail::print_polynomial_registry().call(p->vname(false), p, out);
+      else if (type == "text" || type == "default" || type == "")
+        detail::print_polynomial_registry().call(p->vname(false), p, out);
+      else
+        throw std::domain_error("invalid output format for polynonial: "
+                                + type);
+      return out;
+    }
+
+
     /*------------------------.
     | print(ratexp, stream).  |
     `------------------------*/
@@ -104,6 +128,12 @@ namespace std
 {
   std::ostream&
   operator<<(std::ostream& o, const vcsn::dyn::automaton& a)
+  {
+    return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::polynomial& a)
   {
     return vcsn::dyn::print(a, o, vcsn::dyn::get_format(o));
   }

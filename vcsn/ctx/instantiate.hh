@@ -43,6 +43,8 @@
 # include <vcsn/factory/random.hh>
 # include <vcsn/factory/u.hh>
 
+# include <vcsn/weights/polynomialset.hh>
+
 /* The purpose of this file is manyfold:
 
    - *prevent* the instantiation of the algorithms that we will
@@ -149,6 +151,8 @@ namespace vcsn
       register_kind_functions(labels_are_letters)
       {
         using aut_t = mutable_automaton<Ctx>;
+        // Word polynomialset.
+        using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
         using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
@@ -163,7 +167,9 @@ namespace vcsn
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);
+        list_polynomial_register(wps_t::sname(), list<wps_t>);
         REGISTER(power, aut_t);
+        print_polynomial_register(wps_t::sname(), print<wps_t>);
         REGISTER2(product, aut_t, aut_t);
         REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);

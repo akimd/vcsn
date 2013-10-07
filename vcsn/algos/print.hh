@@ -3,6 +3,7 @@
 
 # include <iosfwd>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/core/rat/ratexpset.hh>
@@ -10,35 +11,66 @@
 namespace vcsn
 {
 
-  /*------------------------.
-  | print(weight, stream).  |
-  `------------------------*/
+  /*---------------------------------.
+  | list/print(polynomial, stream).  |
+  `---------------------------------*/
 
-  template <typename WeightSet>
+  template <typename PolynomialSet>
   inline
   std::ostream&
-  print(const WeightSet& ws, const typename WeightSet::value_t& w,
+  list(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
+       std::ostream& o)
+  {
+    bool first = true;
+    for (const auto& m: p)
+      {
+        if (!first)
+          o << std::endl;
+        first = false;
+        ps.print(o, m);
+      }
+    return o;
+  }
+
+  template <typename PolynomialSet>
+  inline
+  std::ostream&
+  print(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
         std::ostream& o)
   {
-    return ws.print(o, w);
+    return ps.print(o, p);
   }
 
   namespace dyn
   {
     namespace detail
     {
-      /// Abstract but parameterized.
-      template <typename WeightSet>
-      std::ostream& print(const weight& weight, std::ostream& o)
+      /// Bridge.
+      template <typename PolynomialSet>
+      std::ostream& list(const polynomial& polynomial, std::ostream& o)
       {
-        const auto& w = weight->as<WeightSet>();
-        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
+        const auto& p = polynomial->as<PolynomialSet>();
+        return vcsn::list<PolynomialSet>(p.get_polynomialset(),
+                                          p.polynomial(), o);
       }
 
-      REGISTER_DECLARE(print_weight,
-                       (const weight& aut, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE(list_polynomial,
+                       (const polynomial& p, std::ostream& o) -> std::ostream&);
+
+      /// Bridge.
+      template <typename PolynomialSet>
+      std::ostream& print(const polynomial& polynomial, std::ostream& o)
+      {
+        const auto& p = polynomial->as<PolynomialSet>();
+        return vcsn::print<PolynomialSet>(p.get_polynomialset(),
+                                          p.polynomial(), o);
+      }
+
+      REGISTER_DECLARE(print_polynomial,
+                       (const polynomial& p, std::ostream& o) -> std::ostream&);
     }
   }
+
 
   /*------------------------.
   | print(ratexp, stream).  |
@@ -72,6 +104,38 @@ namespace vcsn
 
       REGISTER_DECLARE(print_exp,
                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
+    }
+  }
+
+  /*------------------------.
+  | print(weight, stream).  |
+  `------------------------*/
+
+#if 0
+  template <typename WeightSet>
+  inline
+  std::ostream&
+  print(const WeightSet& ws, const typename WeightSet::value_t& w,
+        std::ostream& o)
+  {
+    return ws.print(o, w);
+  }
+#endif
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Abstract but parameterized.
+      template <typename WeightSet>
+      std::ostream& print(const weight& weight, std::ostream& o)
+      {
+        const auto& w = weight->as<WeightSet>();
+        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
+      }
+
+      REGISTER_DECLARE(print_weight,
+                       (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }
 
