@@ -8,6 +8,7 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/military-order.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -27,7 +28,9 @@ namespace vcsn
     using label_t = typename labelset_t::label_t;
     using weight_t = typename context_t::weight_t;
 
-    using value_t = std::map<label_t, weight_t>;
+    using value_t = std::map<label_t, weight_t, MilitaryOrder<label_t>>;
+    /// A pair <label, weight>.
+    using monomial_t = typename value_t::value_type;
 
     entryset() = delete;
     entryset(const entryset&) = default;
@@ -35,11 +38,13 @@ namespace vcsn
       : ctx_{ctx}
     {}
 
+    /// The static name.
     std::string sname() const
     {
       return "entryset<" + context_t::sname() + ">";
     }
 
+    /// The dynamic name.
     std::string vname(bool full = true) const
     {
       return "entryset<" + context().vname(full) + ">";
@@ -49,6 +54,7 @@ namespace vcsn
     const labelset_ptr& labelset() const { return ctx_.labelset(); }
     const weightset_ptr& weightset() const { return ctx_.weightset(); }
 
+    /// Remove the monomial of \a w in \a v.
     value_t&
     del_weight(value_t& v, const label_t& w) const
     {
@@ -56,6 +62,7 @@ namespace vcsn
       return v;
     }
 
+    /// Set the monomial of \a w in \a v to weight \a k.
     value_t&
     set_weight(value_t& v, const label_t& w, const weight_t k) const
     {
@@ -64,6 +71,12 @@ namespace vcsn
       else
         v[w] = k;
       return v;
+    }
+
+    value_t&
+    add_weight(value_t& v, const monomial_t& p) const
+    {
+      return add_weight(v, p.first, p.second);
     }
 
     value_t&
@@ -88,7 +101,7 @@ namespace vcsn
     }
 
     const weight_t
-    get_weight(value_t& v, const label_t& w) const ATTRIBUTE_PURE
+    get_weight(const value_t& v, const label_t& w) const ATTRIBUTE_PURE
     {
       auto i = v.find(w);
       if (i == v.end())
@@ -97,6 +110,7 @@ namespace vcsn
         return i->second;
     }
 
+    /// The sum of polynomials \a l and \a r.
     value_t
     add(const value_t& l, const value_t& r) const
     {
@@ -106,6 +120,7 @@ namespace vcsn
       return p;
     }
 
+    /// The product of polynomials \a l and \a r.
     value_t
     mul(const value_t& l, const value_t& r) const
     {
@@ -116,6 +131,14 @@ namespace vcsn
                     labelset()->concat(i.first, j.first),
                     weightset()->mul(i.second, j.second));
       return p;
+    }
+
+    bool
+    equals(const value_t& l, const value_t& r) const ATTRIBUTE_PURE
+    {
+      return l.size() == r.size()
+        && std::equal(l.begin(), l.end(),
+                      r.begin());
     }
 
     value_t
@@ -228,6 +251,19 @@ namespace vcsn
       return res;
     }
 
+    /// Print a monomial.
+    std::ostream&
+    print(std::ostream& out, const monomial_t& m) const
+    {
+      if (weightset()->show_one() || !weightset()->is_one(m.second))
+        {
+          out << lbracket;
+          weightset()->print(out, m.second) << rbracket;
+        }
+      labelset()->print(out, m.first);
+      return out;
+    }
+
     std::ostream&
     print(std::ostream& out, const value_t& v,
           const std::string& sep = " + ") const
@@ -237,23 +273,14 @@ namespace vcsn
       else
         {
           bool first = true;
-          bool show_one = weightset()->show_one();
-
-          for (const auto& i: v)
+          for (const auto& m: v)
             {
               if (!first)
                 out << sep;
               first = false;
-
-              if (show_one || !weightset()->is_one(i.second))
-                {
-                  out << lbracket;
-                  weightset()->print(out, i.second) << rbracket;
-                }
-              labelset()->print(out, i.first);
+              print(out, m);
             }
         }
-
       return out;
     }
 
@@ -262,6 +289,15 @@ namespace vcsn
     {
       std::ostringstream o;
       print(o, v, sep);
+      return o.str();
+    }
+
+    /// Format a monomial.
+    std::string
+    format(const monomial_t& m) const
+    {
+      std::ostringstream o;
+      print(o, m);
       return o.str();
     }
 
