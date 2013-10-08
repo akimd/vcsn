@@ -106,20 +106,14 @@ namespace vcsn
       enumerater(const automaton_t& aut)
         : aut_(aut)
       {
-        ps_.set_weight(past_[aut_.pre()],
-                       ls_.genset()->empty_word(),
-                       aut_.weightset()->one());
+        past_[aut_.pre()] = ps_.one();
       }
 
       /// The weighted accepted word with length at most \a max.
       polynomial_t operator()(size_t max)
       {
         queue_t queue;
-
-        // FIXME: check piecewise_construct.
-        queue.emplace_back(aut_.pre(),
-                           monomial_t{ls_.genset()->empty_word(),
-                               aut_.weightset()->one()});
+        queue.emplace_back(aut_.pre(), ps_.monomial_one());
 
         // We match words that include the initial and final special
         // character.
@@ -141,11 +135,7 @@ namespace vcsn
       monomial_t operator()()
       {
         queue_t queue;
-
-        // FIXME: check piecewise_construct.
-        queue.emplace_back(aut_.pre(),
-                           monomial_t{ls_.genset()->empty_word(),
-                               aut_.weightset()->one()});
+        queue.emplace_back(aut_.pre(), ps_.monomial_one());
 
         while (past_[aut_.post()].empty() && !queue.empty())
           propagate_(queue);

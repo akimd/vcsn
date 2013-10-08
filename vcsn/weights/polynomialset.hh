@@ -221,6 +221,14 @@ namespace vcsn
       return one_;
     }
 
+    const monomial_t&
+    monomial_one() const
+    {
+      // Singleton.
+      static monomial_t res{labelset()->one(), weightset()->one()};
+      return res;
+    }
+
     bool
     is_one(const value_t& v) const ATTRIBUTE_PURE
     {
