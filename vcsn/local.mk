@@ -109,7 +109,7 @@ nobase_include_HEADERS =                        \
   vcsn/dyn/weight.hh                            \
   vcsn/dyn/weightset.hh                         \
   vcsn/empty.hh                                 \
-  vcsn/factory/de_bruijn.hh                     \
+  vcsn/factory/de-bruijn.hh                     \
   vcsn/factory/double-ring.hh                   \
   vcsn/factory/divkbaseb.hh                     \
   vcsn/factory/ladybird.hh                      \

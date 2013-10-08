@@ -36,7 +36,7 @@
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/union.hh>
 
-# include <vcsn/factory/de_bruijn.hh>
+# include <vcsn/factory/de-bruijn.hh>
 # include <vcsn/factory/divkbaseb.hh>
 # include <vcsn/factory/double-ring.hh>
 # include <vcsn/factory/ladybird.hh>
