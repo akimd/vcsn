@@ -230,6 +230,9 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using ws_t = typename Ctx::weightset_t;
 
+        // ratexp polynomialset.
+        using rps_t = typename vcsn::rat::ratexp_polynomialset_t<rs_t>;
+
         using namespace dyn::detail;
 
         REGISTER(accessible, aut_t);
@@ -277,11 +280,13 @@ namespace vcsn
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);
 
+        list_polynomial_register(rps_t::sname(), list<rps_t>);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
 
         // print
         print_exp_register(rs_t::sname(), print<rs_t>);
+        print_polynomial_register(rps_t::sname(), print<rps_t>);
         print_weight_register(ws_t::sname(), print<ws_t>);
 
         REGISTER(read_weight, Ctx);

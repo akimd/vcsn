@@ -16,7 +16,7 @@ struct derive: vcsn_function
     std::string s = opts.argv[0];
 
     // Process.
-    ratexp res = vcsn::dyn::derive(exp, s);
+    auto res = vcsn::dyn::derive(exp, s);
 
     // Output.
     *opts.out << res << std::endl;

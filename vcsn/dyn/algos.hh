@@ -60,7 +60,7 @@ namespace vcsn
 
     /// Derive \a ratexp with respect to \a s.
     /// \pre  \a exp must be LAL.
-    ratexp derive(const ratexp& exp, const std::string& s);
+    polynomial derive(const ratexp& exp, const std::string& s);
 
     /// Determinize \a aut.
     /// \pre  \a aut must be LAL.

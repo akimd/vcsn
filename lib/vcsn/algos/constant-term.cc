@@ -20,12 +20,12 @@ namespace vcsn
                                                    e);
     }
 
-    /*--------------.
-    | derive(exp).  |
-    `--------------*/
+    /*----------------------.
+    | derive(exp, string).  |
+    `----------------------*/
     REGISTER_DEFINE(derive);
 
-    ratexp
+    polynomial
     derive(const ratexp& e, const std::string& s)
     {
       return detail::derive_registry().call(e->vname(false),
