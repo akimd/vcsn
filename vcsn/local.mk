@@ -61,6 +61,7 @@ nobase_include_HEADERS =                        \
   vcsn/core/rat/fwd.hh                          \
   vcsn/core/rat/info.hh                         \
   vcsn/core/rat/info.hxx                        \
+  vcsn/core/rat/less-than.hh                    \
   vcsn/core/rat/printer.hh                      \
   vcsn/core/rat/printer.hxx                     \
   vcsn/core/rat/ratexp.hh                       \

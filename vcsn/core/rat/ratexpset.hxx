@@ -4,10 +4,12 @@
 
 #include <lib/vcsn/rat/read.hh>// FIXME: non-installed dependency.
 #include <vcsn/core/rat/ratexp.hh>
+#include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/ratexp.hh>
 #include <vcsn/misc/cast.hh>
+#include <vcsn/misc/military-order.hh>
 #include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -331,6 +333,14 @@ namespace vcsn
   {
     return (v->type() == type_t::one
             && weightset()->is_one(v->left_weight()));
+  }
+
+  DEFINE::less_than(value_t lhs, value_t rhs)
+    -> bool
+  {
+    using less_than_t = rat::less_than<ratexpset>;
+    less_than_t lt;
+    return lt(lhs, rhs);
   }
 
   DEFINE::conv(const std::string& s) const

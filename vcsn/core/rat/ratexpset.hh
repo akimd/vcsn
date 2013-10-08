@@ -87,6 +87,8 @@ namespace vcsn
     std::string format(const value_t v) const;
 
   public:
+    /// Whether \a l < \a r.
+    static bool less_than(value_t l, value_t r);
     // Concrete type implementation.
     value_t zero() const;
     value_t one() const;
