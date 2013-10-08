@@ -38,7 +38,7 @@ namespace vcsn
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
     {
-      one_[labelset()->genset()->empty_word()] = weightset()->one();
+      one_[labelset()->one()] = weightset()->one();
     }
 
     /// The static name.
@@ -319,7 +319,7 @@ namespace vcsn
           out << lbracket;
           weightset()->print(out, m.second) << rbracket;
         }
-      labelset()->genset()->print(out, m.first);
+      labelset()->print(out, m.first);
       return out;
     }
 
