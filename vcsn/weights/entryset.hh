@@ -14,7 +14,7 @@
 
 namespace vcsn
 {
-  /// Map labels to weights.
+  /// Linear combination of labels: map labels to weights.
   template <class Context>
   class entryset
   {

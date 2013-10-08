@@ -14,6 +14,7 @@
 
 namespace vcsn
 {
+  /// Linear combination of words: map words to weights.
   template <class Context>
   class polynomialset: public dyn::detail::abstract_weightset
   {
@@ -24,10 +25,11 @@ namespace vcsn
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using word_t = typename labelset_t::word_t;
+    /// Polynomials over words.
+    using label_t = typename labelset_t::word_t;
     using weight_t = typename context_t::weight_t;
 
-    using value_t = std::map<word_t, weight_t, MilitaryOrder<word_t>>;
+    using value_t = std::map<label_t, weight_t, MilitaryOrder<label_t>>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 
@@ -57,7 +59,7 @@ namespace vcsn
 
     /// Remove the monomial of \a w in \a v.
     value_t&
-    del_weight(value_t& v, const word_t& w) const
+    del_weight(value_t& v, const label_t& w) const
     {
       v.erase(w);
       return v;
@@ -65,7 +67,7 @@ namespace vcsn
 
     /// Set the monomial of \a w in \a v to weight \a k.
     value_t&
-    set_weight(value_t& v, const word_t& w, const weight_t k) const
+    set_weight(value_t& v, const label_t& w, const weight_t k) const
     {
       if (weightset()->is_zero(k))
         del_weight(v, w);
@@ -81,7 +83,7 @@ namespace vcsn
     }
 
     value_t&
-    add_weight(value_t& v, const word_t& w, const weight_t k) const
+    add_weight(value_t& v, const label_t& w, const weight_t k) const
     {
       auto i = v.find(w);
       if (i == v.end())
@@ -102,7 +104,7 @@ namespace vcsn
     }
 
     const weight_t
-    get_weight(const value_t& v, const word_t& w) const ATTRIBUTE_PURE
+    get_weight(const value_t& v, const label_t& w) const ATTRIBUTE_PURE
     {
       auto i = v.find(w);
       if (i == v.end())
@@ -264,7 +266,7 @@ namespace vcsn
               // Do not use labelset()->conv, as for instance in LAL,
               // it will refuse '\e'.  FIXME: we don't check that the
               // letters are valid.
-              word_t label = labelset()->genset()->conv(i);
+              label_t label = labelset()->genset()->conv(i);
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
                 throw std::domain_error
