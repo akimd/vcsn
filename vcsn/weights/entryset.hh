@@ -25,7 +25,7 @@ namespace vcsn
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using label_t = typename labelset_t::label_t;
+    using label_t = typename labelset_t::value_t;
     using weight_t = typename context_t::weight_t;
 
     using value_t = std::map<label_t, weight_t, MilitaryOrder<label_t>>;

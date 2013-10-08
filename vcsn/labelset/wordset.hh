@@ -21,10 +21,12 @@ namespace vcsn
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
-      using label_t = typename genset_t::word_t;
       using letter_t = typename genset_t::letter_t;
       using word_t = typename genset_t::word_t;
       using letters_t = std::set<letter_t>;
+
+      using value_t = word_t;
+      using label_t = value_t;
 
       using kind_t = labels_are_words;
 

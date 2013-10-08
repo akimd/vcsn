@@ -18,7 +18,8 @@ namespace vcsn
     /// of label.
     struct oneset
     {
-      using label_t = vcsn::empty_t;
+      using value_t = vcsn::empty_t;
+      using label_t = value_t;
 
       using kind_t = labels_are_one;
 
