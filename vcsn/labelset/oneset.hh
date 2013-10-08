@@ -19,9 +19,6 @@ namespace vcsn
     struct oneset
     {
       using label_t = vcsn::empty_t;
-      // FIXME: fishy, but that's what the previous version of the
-      // code used to do.
-      using letter_t = char;
 
       using kind_t = labels_are_one;
 
@@ -96,12 +93,6 @@ namespace vcsn
       concat(empty_t, empty_t) const
       {
         return {};
-      }
-
-      bool
-      has(letter_t) const
-      {
-        return false;
       }
 
       std::ostream&

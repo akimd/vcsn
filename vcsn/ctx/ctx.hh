@@ -76,7 +76,8 @@ namespace vcsn
       // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56922
       // But clang rejects it.
       // http://llvm.org/bugs/show_bug.cgi?id=15724
-      context(const std::initializer_list<typename labelset_t::letter_t>& gs,
+      template <typename LabelSet2 = labelset_t>
+      context(const std::initializer_list<typename LabelSet2::letter_t>& gs,
               const weightset_t& ws = {})
         : context{labelset_t{gs}, ws}
       {}
