@@ -18,7 +18,9 @@ namespace vcsn
       class abstract_automaton
       {
       public:
-        virtual ~abstract_automaton() {}
+        /// Base class for automata.
+        virtual ~abstract_automaton() = default;
+
         /// A description of the automaton, sufficient to build it.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.

@@ -21,6 +21,9 @@ namespace vcsn
       class abstract_ratexp
       {
       public:
+        /// A description of the ratexp type.
+        /// \param full  whether to include the genset.
+        ///              if false, same as sname.
         virtual std::string vname(bool full = true) const = 0;
 
         template <typename RatExpSet>
@@ -53,7 +56,11 @@ namespace vcsn
           : ratexp_(ratexp)
           , ratexpset_(ratexpset)
         {}
-        virtual ~concrete_abstract_ratexp() {}
+
+        virtual std::string vname(bool full = true) const override
+        {
+          return get_ratexpset().vname(full);
+        }
 
         const ratexp_t ratexp() const
         {
@@ -63,11 +70,6 @@ namespace vcsn
         const ratexpset_t& get_ratexpset() const
         {
           return ratexpset_;
-        }
-
-        virtual std::string vname(bool full = true) const
-        {
-          return get_ratexpset().vname(full);
         }
 
       protected:

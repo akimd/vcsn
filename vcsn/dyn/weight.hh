@@ -19,15 +19,10 @@ namespace vcsn
       class abstract_weight
       {
       public:
-        /// A description of the weight.
+        /// A description of the weight type.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
-        std::string vname(bool full = true) const
-        {
-          return get_weightset().vname(full);
-        }
-
-        virtual const abstract_weightset& get_weightset() const = 0;
+        virtual std::string vname(bool full = true) const = 0;
 
         template <typename WeightSet>
         concrete_abstract_weight<WeightSet>& as()
@@ -58,17 +53,22 @@ namespace vcsn
           : weight_(weight)
           , weightset_(weightset)
         {}
-        virtual ~concrete_abstract_weight() {}
+
+        virtual std::string vname(bool full = true) const override
+        {
+          return get_weightset().vname(full);
+        }
 
         const weight_t weight() const
         {
           return weight_;
         }
 
-        virtual const weightset_t& get_weightset() const override
+        const weightset_t& get_weightset() const
         {
           return weightset_;
         }
+
       protected:
         /// The weight.
         const weight_t weight_;

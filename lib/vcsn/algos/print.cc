@@ -89,7 +89,7 @@ namespace vcsn
       if (type == "null")
         {}
       else if (type == "text" || type == "default" || type == "")
-        detail::print_weight_registry().call(w->get_weightset().vname(false),
+        detail::print_weight_registry().call(w->vname(false),
                                              w, out);
       else
         throw std::domain_error("invalid output format for weight: "
