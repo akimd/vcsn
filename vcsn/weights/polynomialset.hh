@@ -159,10 +159,58 @@ namespace vcsn
                               + format(v));
     }
 
+    /// Left exterior product.
+    value_t
+    lmul(const weight_t& w, const value_t& v) const
+    {
+      value_t res;
+      if (!weightset()->is_zero(w))
+        // FIXME: What if there are divisors of 0?
+        for (const auto& m: v)
+          add_weight(res, m.first, weightset()->mul(w, m.second));
+      return res;
+    }
+
+    /// Left product by a label.
+    value_t
+    lmul(const label_t& lhs, const value_t& v) const
+    {
+      value_t res;
+      for (auto i: v)
+        add_weight(res,
+                   labelset()->concat(lhs, i.first),
+                   i.second);
+      return res;
+    }
+
+    /// Right exterior product.
+    value_t
+    rmul(const value_t& v, const weight_t& w) const
+    {
+      value_t res;
+      if (!weightset()->is_zero(w))
+        for (const auto& m: v)
+          add_weight(res, m.first, weightset()->mul(m.second, w));
+      return res;
+    }
+
+    /// Right product.
+    value_t
+    rmul(const value_t& v, const label_t& rhs) const
+    {
+      value_t res;
+      for (auto i: v)
+        add_weight(res,
+                   labelset()->concat(i.first, rhs),
+                   i.second);
+      return res;
+    }
+
     bool
     equals(const value_t& l, const value_t& r) const ATTRIBUTE_PURE
     {
       return l.size() == r.size()
+        // FIXME: this is wrong, it uses operator== instead of equals().
         && std::equal(l.begin(), l.end(),
                       r.begin());
     }
