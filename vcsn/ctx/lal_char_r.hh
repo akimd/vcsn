@@ -1,7 +1,7 @@
 #ifndef VCSN_CTX_LAL_CHAR_R_HH
 # define VCSN_CTX_LAL_CHAR_R_HH
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/lal_char.hh>
 # include <vcsn/weights/r.hh>
 

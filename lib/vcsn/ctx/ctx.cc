@@ -1,4 +1,4 @@
-#include <vcsn/ctx/ctx.hh>
+#include <vcsn/ctx/context.hh>
 
 namespace vcsn
 {

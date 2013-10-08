@@ -1,7 +1,7 @@
 #ifndef VCSN_ALGOS_TRANSPOSE_HH
 # define VCSN_ALGOS_TRANSPOSE_HH
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>

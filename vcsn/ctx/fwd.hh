@@ -5,7 +5,7 @@
 
 namespace vcsn
 {
-  // ctx.hh.
+  // context.hh.
   namespace ctx
   {
     template <typename LabelSet, typename WeightSet>

@@ -1,7 +1,7 @@
 #ifndef VCSN_CTX_LAW_CHAR_B_HH
 # define VCSN_CTX_LAW_CHAR_B_HH
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/law_char.hh>
 # include <vcsn/weights/b.hh>
 

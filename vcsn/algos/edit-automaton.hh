@@ -9,7 +9,7 @@
 # include <boost/flyweight.hpp>
 # include <boost/flyweight/no_tracking.hpp>
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/algos.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>

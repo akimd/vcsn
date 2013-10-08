@@ -1,5 +1,5 @@
-#ifndef VCSN_CTX_CTX_HH
-# define VCSN_CTX_CTX_HH
+#ifndef VCSN_CTX_CONTEXT_HH
+# define VCSN_CTX_CONTEXT_HH
 
 # include <cassert>
 # include <memory>
@@ -161,4 +161,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_CTX_CTX_HH
+#endif // !VCSN_CTX_CONTEXT_HH

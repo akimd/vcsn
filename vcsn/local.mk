@@ -71,7 +71,7 @@ nobase_include_HEADERS =                        \
   vcsn/core/rat/visitor.hh                      \
   vcsn/core/rat/visitor.hxx                     \
   vcsn/core/transition.hh                       \
-  vcsn/ctx/ctx.hh                               \
+  vcsn/ctx/context.hh                           \
   vcsn/ctx/fwd.hh                               \
   vcsn/ctx/instantiate.hh                       \
   vcsn/ctx/lal_char.hh                          \

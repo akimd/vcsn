@@ -1,7 +1,7 @@
 #ifndef VCSN_CTX_LAN_CHAR_Z_HH
 # define VCSN_CTX_LAN_CHAR_Z_HH
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/lan_char.hh>
 # include <vcsn/weights/z.hh>
 

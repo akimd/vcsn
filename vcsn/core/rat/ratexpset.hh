@@ -4,7 +4,7 @@
 # include <string>
 # include <list>
 
-# include <vcsn/ctx/ctx.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/misc/star_status.hh>
