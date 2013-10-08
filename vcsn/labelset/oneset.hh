@@ -29,7 +29,7 @@ namespace vcsn
         return "lao";
       }
 
-      std::string vname(bool = true) const
+      static std::string vname(bool = true)
       {
         return sname();
       }
@@ -46,14 +46,12 @@ namespace vcsn
         return {};
       }
 
-      bool
-      equals(empty_t, empty_t) const
+      static bool equals(empty_t, empty_t)
       {
         return true;
       }
 
-      label_t
-      special() const
+      static label_t special()
       {
         return {};
       }
@@ -65,44 +63,37 @@ namespace vcsn
         return true;
       }
 
-      empty_t
-      one() const
+      static empty_t one()
       {
         return {};
       }
 
-      bool
-      is_one(empty_t) const
+      static bool is_one(empty_t)
       {
         return true;
       }
 
-      empty_t
-      transpose(empty_t) const
+      static empty_t transpose(empty_t)
       {
         return {};
       }
 
-      bool
-      is_letter(empty_t) const
+      static bool is_letter(empty_t)
       {
         return false;
       }
 
-      empty_t
-      concat(empty_t, empty_t) const
+      static empty_t concat(empty_t, empty_t)
       {
         return {};
       }
 
-      std::ostream&
-      print(std::ostream& o, empty_t) const
+      static std::ostream& print(std::ostream& o, empty_t)
       {
         return o;
       }
 
-      label_t
-      conv(std::istream& i) const
+      static label_t conv(std::istream& i)
       {
         if (i.peek() == '\\')
           {
@@ -117,14 +108,12 @@ namespace vcsn
       }
 
       // FIXME: remove, see todo.txt:scanners.
-      label_t
-      conv(const std::string& s) const
+      static label_t conv(const std::string& s)
       {
-        return ::vcsn::conv(*this, s);
+        return ::vcsn::conv(oneset{}, s);
       }
 
-      std::string
-      format(empty_t) const
+      static std::string format(empty_t)
       {
         return "\\e";
       }
