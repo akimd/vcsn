@@ -114,23 +114,23 @@ namespace vcsn
     value_t
     add(const value_t& l, const value_t& r) const
     {
-      value_t p = l;
+      value_t res = l;
       for (auto& i : r)
-        add_weight(p, i.first, i.second);
-      return p;
+        add_weight(res, i.first, i.second);
+      return res;
     }
 
     /// The product of polynomials \a l and \a r.
     value_t
     mul(const value_t& l, const value_t& r) const
     {
-      value_t p;
+      value_t res;
       for (auto i: l)
         for (auto j: r)
-          add_weight(p,
-                    labelset()->concat(i.first, j.first),
-                    weightset()->mul(i.second, j.second));
-      return p;
+          add_weight(res,
+                     labelset()->concat(i.first, j.first),
+                     weightset()->mul(i.second, j.second));
+      return res;
     }
 
     bool
