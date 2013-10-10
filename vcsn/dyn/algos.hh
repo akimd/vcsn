@@ -188,7 +188,7 @@ namespace vcsn
     std::string get_format(std::ostream& o);
 
     /// The product of automata \a lhs and \a rhs.
-    /// Performs the intersection of the alphabets.
+    /// Performs the intersection of the contexts.
     automaton product(const automaton& lhs, const automaton& rhs);
 
     /// An automaton equivalent to \a aut, without spontaneous transitions.
@@ -295,7 +295,7 @@ namespace vcsn
     automaton u(const context& ctx, unsigned n);
 
     /// Union of two automata (plain graph union).
-    /// Performs the union of the alphabets.
+    /// Performs the union of the contexts.
     automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// The universal automaton of \a aut.
