@@ -9,6 +9,10 @@ namespace vcsn
   {
     REGISTER_DEFINE2(product);
 
+    /*---------.
+    | product. |
+    `---------*/
+
     automaton
     product(const automaton& lhs, const automaton& rhs)
     {

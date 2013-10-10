@@ -10,8 +10,8 @@ namespace vcsn
   template <typename Aut>
   bool is_ambiguous(const Aut& aut)
   {
-    detail::producter<Aut, Aut> product;
-    auto prod = product(aut, aut);
+    detail::producter<Aut, Aut> product(aut, aut);
+    auto prod = product.product();
     // Check if there useful states outside of the diagonal.  Since
     // the product is accessible, check only for coaccessibles states.
     auto coaccessible = coaccessible_states(prod);
