@@ -52,3 +52,6 @@ run 'vcsn-standard -Ee "(a+b+c+d)?{100}" | vcsn-aut-to-exp -O null'
 
 # power(standard((a+b)*b(<2>a+<2>b)*), 10)
 run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -O null -f- 10'
+
+run 'vcsn-standard -E -e "(a?){70}" -o a70.gv'
+run 'vcsn-product -O null -f a70.gv a70.gv'
