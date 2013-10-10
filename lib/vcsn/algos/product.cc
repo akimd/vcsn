@@ -21,6 +21,19 @@ namespace vcsn
                                          lhs, rhs);
     }
 
+    /*---------.
+    | shuffle. |
+    `---------*/
+
+    REGISTER_DEFINE2(shuffle);
+
+    automaton
+    shuffle(const automaton& lhs, const automaton& rhs)
+    {
+      return
+        detail::shuffle_registry().call(lhs->vname(false) + " x " + rhs->vname(false),
+                                        lhs, rhs);
+    }
 
     /*--------.
     | power.  |

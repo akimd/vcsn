@@ -173,6 +173,7 @@ namespace vcsn
         REGISTER2(product, aut_t, aut_t);
         REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);
+        REGISTER2(shuffle, aut_t, aut_t);
         REGISTER(u, Ctx);
 
         return true;

@@ -58,6 +58,7 @@ all_vcsn =                                      \
   %D%/vcsn-random                               \
   %D%/vcsn-right-mult                           \
   %D%/vcsn-shortest                             \
+  %D%/vcsn-shuffle                              \
   %D%/vcsn-standard                             \
   %D%/vcsn-star                                 \
   %D%/vcsn-sum                                  \
@@ -110,6 +111,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la
 %C%_vcsn_right_mult_LDADD       = %D%/libtafkit.la
 %C%_vcsn_shortest_LDADD         = %D%/libtafkit.la
+%C%_vcsn_shuffle_LDADD          = %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la
 %C%_vcsn_star_LDADD             = %D%/libtafkit.la
 %C%_vcsn_sum_LDADD              = %D%/libtafkit.la

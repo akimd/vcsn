@@ -260,6 +260,10 @@ namespace vcsn
     /// \precondition aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
+    /// The shuffle of automata \a lhs and \a rhs.
+    /// Performs the union of the alphabets.
+    automaton shuffle(const automaton& lhs, const automaton& rhs);
+
     /// A standardized \a a.
     automaton standard(const automaton& a);
 
