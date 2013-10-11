@@ -123,6 +123,12 @@ namespace vcsn
       return l.num == r.num && l.den == r.den;
     }
 
+    /// Whether \a lhs < \a rhs.
+    static bool less_than(value_t lhs, value_t rhs)
+    {
+      return lhs.num * rhs.den < rhs.num * lhs.den;
+    }
+
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 

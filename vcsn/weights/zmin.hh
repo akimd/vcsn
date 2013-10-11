@@ -77,6 +77,12 @@ namespace vcsn
       return l == r;
     }
 
+    /// Whether \a lhs < \a rhs.
+    static bool less_than(value_t lhs, value_t rhs)
+    {
+      return lhs < rhs;
+    }
+
     static bool
     is_one(const value_t v)
     {

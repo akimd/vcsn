@@ -85,6 +85,12 @@ namespace vcsn
       return l == r;
     }
 
+    /// Whether \a lhs < \a rhs.
+    static bool less_than(value_t lhs, value_t rhs)
+    {
+      return lhs < rhs;
+    }
+
     static constexpr bool show_one() { return false; }
     static constexpr star_status_t star_status() { return star_status_t::ABSVAL; }
 
