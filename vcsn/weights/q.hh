@@ -115,7 +115,8 @@ namespace vcsn
 
     static bool is_one(const value_t v)
     {
-      return v.num > 0 && static_cast<unsigned int>(v.num) == v.den;
+      // FIXME: all the values should be normalized.
+      return 0 < v.num && static_cast<unsigned int>(v.num) == v.den;
     }
 
     static bool equals(const value_t l, const value_t r)
