@@ -43,12 +43,6 @@ check '(<x>a)*' b '\z'
 check '<x>a*'   a '<x>a*'
 check '<x>(<y>a)*' a '<x.y>(<y>a)*'
 
-# Classical examples.
-check '(?@lal_char(ab)_q)(<1/6>a*+<1/3>b*)*' \
-  a '<1/3>(a*).(((<1/6>a*)+(<1/3>b*))*)'
-check '(?@lal_char(ab)_q)(<1/6>a*+<1/3>b*)*' \
-  b '<2/3>(b*).(((<1/6>a*)+(<1/3>b*))*)'
-
 
 ## ------------------------------- ##
 ## Derive wrt to several letters.  ##
@@ -60,3 +54,20 @@ check '(<x>a)*' aaab '\z'
 
 check '(<x>a)*(<y>b)*' aa   '<x.x>((<x>a)*).((<y>b)*)'
 check '(<x>a)*(<y>b)*' aabb '<x.x.y.y>(<y>b)*'
+
+
+## -------------------- ##
+## Classical examples.  ##
+## -------------------- ##
+
+# EAT, Example 4.3, over-parenthesized to match the pretty-printed
+# result.
+E1='((<1/6>a*)+(<1/3>b*))*'
+# E1 typed.
+E1t="(?@lal_char(ab)_q)$E1"
+check "$E1t"  a  "<1/3>(a*).($E1)"
+check "$E1t"  b  "<2/3>(b*).($E1)"
+check "$E1t" aa  "<4/9>(a*).($E1)"
+check "$E1t" ab  "<2/9>(b*).($E1)"
+check "$E1t" ba  "<2/9>(a*).($E1)"
+check "$E1t" bb "<10/9>(b*).($E1)"

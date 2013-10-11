@@ -1,3 +1,22 @@
+* 2013-10-11
+** derive: new algorithm (static, dynamic, TAF-Kit)
+New algorithm on LAL automata: computes the derivation of rational
+expressions with respect to a word.
+
+  $ vcsn derive -C 'lal_char(a)_z' -e '(<2>a)*' a
+  <2>(<2>a)*
+  $ vcsn derive -C 'lal_char(a)_z' -e '(<2>a)*' aa
+  <4>(<2>a)*
+  $ vcsn derive -C 'lal_char(a)_z' -e '(<2>a)*' aaaa
+  <16>(<2>a)*
+  $ vcsn derive -C 'lal_char(a)_z' -e '(<2>a)*' b
+  \z
+
+  $ vcsn derive -C 'lal_char(ab)_q' -e '(<1/6>a*+<1/3>b*)*' a
+  <1/3>(a*).(((<1/6>a*)+(<1/3>b*))*)
+  $ vcsn derive -C 'lal_char(ab)_q' -e '(<1/6>a*+<1/3>b*)*' aa
+  <4/9>(a*).(((<1/6>a*)+(<1/3>b*))*)
+
 * 2013-10-08
 ** enumerate returns a dyn::polynomial
 The 'enumerate' algorithm use to cheat, and returned a std::vector<string>

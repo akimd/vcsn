@@ -8,12 +8,21 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/dyn/polynomialset.hh>
 # include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/military-order.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
+  template <typename LabelSet>
+  struct labelset_less_than
+  {
+    using label_t = typename LabelSet::value_t;
+    bool operator()(const label_t& lhs, const label_t& rhs) const
+    {
+      return LabelSet::less_than(lhs, rhs);
+    }
+  };
+
   /// Linear combination of words: map words to weights.
   template <class Context>
   class polynomialset: public dyn::detail::abstract_polynomialset
@@ -29,7 +38,7 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     using weight_t = typename context_t::weight_t;
 
-    using value_t = std::map<label_t, weight_t, MilitaryOrder<label_t>>;
+    using value_t = std::map<label_t, weight_t, labelset_less_than<labelset_t>>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 
