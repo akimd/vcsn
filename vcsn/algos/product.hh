@@ -44,6 +44,47 @@ namespace vcsn
       /// Worklist of (left-state, right-state).
       std::deque<pair_t> todo_;
 
+      /// Add the pre and post states in the result automaton.  This
+      /// is needed for all three algorithms here.
+      void initialize(automaton_t& res)
+      {
+        pair_t ppre(laut_.pre(), raut_.pre());
+        pair_t ppost(laut_.post(), raut_.post());
+        pmap_[ppre] = res.pre();
+        pmap_[ppost] = res.post();
+      }
+
+      /// Fill the worklist with the initial source-state pairs, as
+      /// needed for the product algorithm.
+      void initialize_product(automaton_t& res)
+      {
+        initialize(res);
+        todo_.emplace_back(pair_t(laut_.pre(), raut_.pre()));
+      }
+
+      /// Fill the worklist with the initial source-state pairs, as
+      /// needed for the shuffle algorithm.
+      void initialize_shuffle(const typename A::weightset_t& ws,
+                              automaton_t& res)
+      {
+        initialize(res);
+
+        /// Make the result automaton initial states:
+        for (auto lt : laut_.initial_transitions())
+          for (auto rt : raut_.initial_transitions())
+            {
+              auto lsrc = laut_.dst_of(lt);
+              auto rsrc = raut_.dst_of(rt);
+              pair_t pair(lsrc, rsrc);
+              state_t init = res.new_state();
+              res.add_initial(init,
+                              ws.mul(laut_.weight_of(lt),
+                                     raut_.weight_of(rt)));
+              pmap_[pair] = init;
+              todo_.emplace_back(pair);
+            }
+      }
+
       /// Add the given two source-automaton states to the
       /// worklist for the given result automaton if they aren't
       /// already there, updating the map; in any case return.
@@ -63,6 +104,60 @@ namespace vcsn
         else
           dst = iter->second;
         return dst;
+      }
+
+      /// Add transitions to the given result automaton, starting from
+      /// the given result input state, which must correstpond to the
+      /// givenpair of input state automata.  Update the worklist with
+      /// the needed source-state pairs.
+      void add_product_transitions(const typename A::weightset_t& ws,
+                                   const state_t src,
+                                   const pair_t& psrc,
+                                   automaton_t& res)
+        ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
+      {
+        for (auto lt : laut_.all_out(psrc.first))
+          {
+            auto label = laut_.label_of(lt);
+            auto lweight = laut_.weight_of(lt);
+            auto ldst = laut_.dst_of(lt);
+
+            for (auto rt : raut_.out(psrc.second, label))
+              {
+                state_t dst = insert_if_needed(ldst, raut_.dst_of(rt), res);
+                res.add_transition(src, dst, label,
+                                   ws.mul(lweight, raut_.weight_of(rt)));
+              }
+          }
+      }
+
+      /// Add transitions to the given result automaton, starting from
+      /// the given result input state, which must correstpond to the
+      /// givenpair of input state automata.  Update the worklist with
+      /// the needed source-state pairs.
+      void add_shuffle_transitions(const typename A::weightset_t& ws,
+                                   const state_t src,
+                                   const pair_t& psrc,
+                                   automaton_t& res)
+        ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
+      {
+        state_t lsrc = psrc.first;
+        state_t rsrc = psrc.second;
+        if(laut_.is_final(lsrc) && raut_.is_final(rsrc))
+          res.set_final(src,
+                        ws.mul(laut_.get_final_weight(lsrc),
+                               raut_.get_final_weight(rsrc)));
+
+        for (auto li : laut_.out(lsrc))
+          {
+            state_t dst = insert_if_needed(laut_.dst_of(li), rsrc, res);
+            res.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
+          }
+        for (auto ri : raut_.out(rsrc))
+          {
+            state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri), res);
+            res.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
+          }
       }
 
     public:
@@ -85,11 +180,7 @@ namespace vcsn
         const auto& ws = *ctx.weightset();
         automaton_t res(ctx);
 
-        pair_t ppre(laut_.pre(), raut_.pre());
-        pair_t ppost(laut_.post(), raut_.post());
-        pmap_[ppre] = res.pre();
-        pmap_[ppost] = res.post();
-        todo_.emplace_back(ppre);
+        initialize_product(res);
 
         while (!todo_.empty())
           {
@@ -97,19 +188,7 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            for (auto li : laut_.all_out(psrc.first))
-              {
-                auto label = laut_.label_of(li);
-                auto lweight = laut_.weight_of(li);
-                auto ldst = laut_.dst_of(li);
-
-                for (auto ri : raut_.out(psrc.second, label))
-                  {
-                    state_t dst = insert_if_needed(ldst, raut_.dst_of(ri), res);
-                    res.add_transition(src, dst, label,
-                                       ws.mul(lweight, raut_.weight_of(ri)));
-                  }
-              }
+            add_product_transitions(ws, src, psrc, res);
           }
         return res;
       }
@@ -121,44 +200,15 @@ namespace vcsn
         const auto& ws = *ctx.weightset();
         automaton_t res(ctx);
 
-        /// Make the result automaton initial states:
-        for (auto lt : laut_.initial_transitions())
-          for (auto rt : raut_.initial_transitions())
-            {
-              auto lsrc = laut_.dst_of(lt);
-              auto rsrc = raut_.dst_of(rt);
-              pair_t pair(lsrc, rsrc);
-              state_t init = res.new_state();
-              res.add_initial(init,
-                              ws.mul(laut_.weight_of(lt),
-                                     raut_.weight_of(rt)));
-              pmap_[pair] = init;
-              todo_.emplace_back(pair);
-            }
+        initialize_shuffle(ws, res);
 
         while (!todo_.empty())
           {
             pair_t psrc = todo_.front();
             todo_.pop_front();
             state_t src = pmap_[psrc];
-            state_t lsrc = psrc.first;
-            state_t rsrc = psrc.second;
-            if(laut_.is_final(lsrc) && raut_.is_final(rsrc))
-              res.set_final(src,
-                            ws.mul(laut_.get_final_weight(lsrc),
-                                   raut_.get_final_weight(rsrc)));
 
-            for (auto li : laut_.out(lsrc))
-              {
-                state_t dst = insert_if_needed(laut_.dst_of(li), rsrc, res);
-                res.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
-              }
-
-            for (auto ri : raut_.out(rsrc))
-              {
-                state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri), res);
-                res.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
-              }
+            add_shuffle_transitions(ws, src, psrc, res);
           }
         return res;
       }
@@ -170,20 +220,10 @@ namespace vcsn
         const auto& ws = *ctx.weightset();
         automaton_t res(ctx);
 
-        // Initialize the "shuffle" part:
-        for (auto lt : laut_.initial_transitions())
-          for (auto rt : raut_.initial_transitions())
-            {
-              auto lsrc = laut_.dst_of(lt);
-              auto rsrc = raut_.dst_of(rt);
-              pair_t pair(lsrc, rsrc);
-              state_t init = res.new_state();
-              res.add_initial(init,
-                              ws.mul(laut_.weight_of(lt),
-                                     raut_.weight_of(rt)));
-              pmap_[pair] = init;
-              todo_.emplace_back(pair);
-            }
+        // Infiltrate is a mix of product and shuffle operations, and
+        // the initial states for shuffle are a superset of the
+        // initial states for product:
+        initialize_shuffle(ws, res);
 
         while (!todo_.empty())
           {
@@ -191,42 +231,12 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            // Add new "product" successor states:
-            for (auto li : laut_.out(psrc.first))
-              {
-                auto label = laut_.label_of(li);
-                auto lweight = laut_.weight_of(li);
-                auto ldst = laut_.dst_of(li);
+            // Infiltrate is a mix of product and shuffle operations.
+            add_product_transitions(ws, src, psrc, res);
+            add_shuffle_transitions(ws, src, psrc, res);
+          }
 
-                for (auto ri : raut_.out(psrc.second, label))
-                  {
-                    state_t dst = insert_if_needed(ldst, raut_.dst_of(ri), res);
-                    res.add_transition(src, dst, label,
-                                       ws.mul(lweight, raut_.weight_of(ri)));
-                  }
-              } // outer "product" for
-
-            // Add new "infiltration" successor states:
-            state_t lsrc = psrc.first;
-            state_t rsrc = psrc.second;
-            if(laut_.is_final(lsrc) && raut_.is_final(rsrc)){
-              res.set_final(src,
-                            ws.mul(laut_.get_final_weight(lsrc),
-                                   raut_.get_final_weight(rsrc)));
-            }
-            for (auto li : laut_.out(lsrc))
-              {
-                state_t dst = insert_if_needed(laut_.dst_of(li), rsrc, res);
-                res.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
-              }
-            for (auto ri : raut_.out(rsrc))
-              {
-                state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri), res);
-                res.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
-              }
-          } // while
-
-        return res; // FIXME: this is a stub, of course
+        return res;
       }
 
       /// A map from product states to pair of original states.
