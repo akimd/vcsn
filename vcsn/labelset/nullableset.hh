@@ -71,6 +71,19 @@ namespace vcsn
         return {gs};
       }
 
+      /// Whether \a l == \a r.
+      static bool
+      equals(const value_t l, const value_t r)
+      {
+        return l == r;
+      }
+
+      /// Whether \a l < \a r.
+      static bool less_than(const value_t l, const value_t r)
+      {
+        return l < r;
+      }
+
       constexpr label_t
       special() const
       {

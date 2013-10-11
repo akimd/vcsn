@@ -47,9 +47,17 @@ namespace vcsn
         return {};
       }
 
-      static bool equals(empty_t, empty_t)
+      /// Whether \a l == \a r.
+      static bool
+      equals(const value_t, const value_t)
       {
         return true;
+      }
+
+      /// Whether \a l < \a r.
+      static bool less_than(const value_t, const value_t)
+      {
+        return false;
       }
 
       static label_t special()

@@ -80,6 +80,19 @@ namespace vcsn
         return this->genset()->template special<label_t>();
       }
 
+      /// Whether \a l == \a r.
+      static bool
+      equals(const value_t l, const value_t r)
+      {
+        return l == r;
+      }
+
+      /// Whether \a l < \a r.
+      static bool less_than(const value_t l, const value_t r)
+      {
+        return l < r;
+      }
+
       bool
       is_special(label_t v) const
       {
