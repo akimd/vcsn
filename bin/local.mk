@@ -40,6 +40,7 @@ all_vcsn =                                      \
   %D%/vcsn-eliminate-state                      \
   %D%/vcsn-enumerate                            \
   %D%/vcsn-evaluate                             \
+  %D%/vcsn-infiltrate                           \
   %D%/vcsn-is-ambiguous                         \
   %D%/vcsn-is-complete                          \
   %D%/vcsn-is-deterministic                     \
@@ -95,6 +96,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_eliminate_state_LDADD  = %D%/libtafkit.la
 %C%_vcsn_enumerate_LDADD        = %D%/libtafkit.la
 %C%_vcsn_evaluate_LDADD         = %D%/libtafkit.la
+%C%_vcsn_infiltrate_LDADD       = %D%/libtafkit.la
 %C%_vcsn_is_ambiguous_LDADD     = %D%/libtafkit.la
 %C%_vcsn_is_complete_LDADD      = %D%/libtafkit.la
 %C%_vcsn_is_deterministic_LDADD = %D%/libtafkit.la

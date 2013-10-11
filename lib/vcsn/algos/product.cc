@@ -16,9 +16,7 @@ namespace vcsn
     automaton
     product(const automaton& lhs, const automaton& rhs)
     {
-      return
-        detail::product_registry().call(vname(lhs, rhs),
-                                         lhs, rhs);
+      return detail::product_registry().call(vname(lhs, rhs), lhs, rhs);
     }
 
     /*---------.
@@ -30,9 +28,19 @@ namespace vcsn
     automaton
     shuffle(const automaton& lhs, const automaton& rhs)
     {
-      return
-        detail::shuffle_registry().call(vname(lhs, rhs),
-                                        lhs, rhs);
+      return detail::shuffle_registry().call(vname(lhs, rhs), lhs, rhs);
+    }
+
+    /*------------.
+    | infiltrate. |
+    `------------*/
+
+    REGISTER_DEFINE2(infiltrate);
+
+    automaton
+    infiltrate(const automaton& lhs, const automaton& rhs)
+    {
+      return detail::infiltrate_registry().call(vname(lhs, rhs), lhs, rhs);
     }
 
     /*--------.
@@ -44,8 +52,7 @@ namespace vcsn
     automaton
     power(const automaton& aut, unsigned n)
     {
-      return detail::power_registry().call(aut->vname(false),
-                                           aut, n);
+      return detail::power_registry().call(aut->vname(false), aut, n);
     }
   }
 }

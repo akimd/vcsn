@@ -164,6 +164,7 @@ namespace vcsn
         REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);
         REGISTER(eval, aut_t);
+        REGISTER2(infiltrate, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);

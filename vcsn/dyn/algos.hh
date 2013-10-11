@@ -273,6 +273,10 @@ namespace vcsn
     /// Performs the union of the alphabets.
     automaton shuffle(const automaton& lhs, const automaton& rhs);
 
+    /// The infiltration of automata \a lhs and \a rhs.
+    /// Performs the union of the alphabets.
+    automaton infiltrate(const automaton& lhs, const automaton& rhs);
+
     /// A standardized \a a.
     automaton standard(const automaton& a);
 

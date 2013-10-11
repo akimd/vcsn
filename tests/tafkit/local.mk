@@ -30,6 +30,7 @@
   %D%/evaluate.chk                              \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
+  %D%/infiltrate.chk                            \
   %D%/is-ambiguous.chk                          \
   %D%/is-complete.chk                           \
   %D%/is-deterministic.chk                      \
@@ -83,8 +84,16 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/enfa.gv                          \
   %D%/fado.dir/nfa.fado                         \
   %D%/fado.dir/nfa.gv                           \
-  %D%/grail.dir/a.gv                            \
   %D%/grail.dir/a.grail                         \
+  %D%/grail.dir/a.gv                            \
+  %D%/product.dir/a.gv                          \
+  %D%/product.dir/ab.gv                         \
+  %D%/product.dir/abc.gv                        \
+  %D%/product.dir/ax.gv                         \
+  %D%/product.dir/x.gv                          \
+  %D%/product.dir/xa.gv                         \
+  %D%/product.dir/xy.gv                         \
+  %D%/product.dir/xyz.gv                        \
   %D%/random.dir/clique-a-4.gv
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
@@ -93,6 +102,7 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
+%D%/infiltrate.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/random.log: $(wildcard $(srcdir)/%D%/random.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run

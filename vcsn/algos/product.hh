@@ -163,6 +163,72 @@ namespace vcsn
         return res;
       }
 
+      /// The (accessible part of the) infiltration of \a laut_ and \a raut_.
+      automaton_t infiltrate()
+      {
+        auto ctx = get_union(laut_.context(), raut_.context());
+        const auto& ws = *ctx.weightset();
+        automaton_t res(ctx);
+
+        // Initialize the "shuffle" part:
+        for (auto lt : laut_.initial_transitions())
+          for (auto rt : raut_.initial_transitions())
+            {
+              auto lsrc = laut_.dst_of(lt);
+              auto rsrc = raut_.dst_of(rt);
+              pair_t pair(lsrc, rsrc);
+              state_t init = res.new_state();
+              res.add_initial(init,
+                              ws.mul(laut_.weight_of(lt),
+                                     raut_.weight_of(rt)));
+              pmap_[pair] = init;
+              todo_.emplace_back(pair);
+            }
+
+        while (!todo_.empty())
+          {
+            pair_t psrc = todo_.front();
+            todo_.pop_front();
+            state_t src = pmap_[psrc];
+
+            // Add new "product" successor states:
+            for (auto li : laut_.out(psrc.first))
+              {
+                auto label = laut_.label_of(li);
+                auto lweight = laut_.weight_of(li);
+                auto ldst = laut_.dst_of(li);
+
+                for (auto ri : raut_.out(psrc.second, label))
+                  {
+                    state_t dst = insert_if_needed(ldst, raut_.dst_of(ri), res);
+                    res.add_transition(src, dst, label,
+                                       ws.mul(lweight, raut_.weight_of(ri)));
+                  }
+              } // outer "product" for
+
+            // Add new "infiltration" successor states:
+            state_t lsrc = psrc.first;
+            state_t rsrc = psrc.second;
+            if(laut_.is_final(lsrc) && raut_.is_final(rsrc)){
+              res.set_final(src,
+                            ws.mul(laut_.get_final_weight(lsrc),
+                                   raut_.get_final_weight(rsrc)));
+            }
+            for (auto li : laut_.out(lsrc))
+              {
+                state_t dst = insert_if_needed(laut_.dst_of(li), rsrc, res);
+                res.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
+              }
+            for (auto ri : raut_.out(rsrc))
+              {
+                state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri), res);
+                res.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
+              }
+          } // while
+
+        return res; // FIXME: this is a stub, of course
+      }
+
       /// A map from product states to pair of original states.
       using origins_t = std::map<state_t, pair_t>;
       origins_t
@@ -228,6 +294,25 @@ namespace vcsn
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_SHUFFLE"))
+      product.print(std::cout, product.origins());
+    return res;
+  }
+
+
+  /*------------.
+  | infiltrate. |
+  `------------*/
+
+  /// Build the (accessible part of the) infiltration.
+  template <typename A, typename B>
+  A
+  infiltrate(const A& laut, const B& raut)
+  {
+    detail::producter<A, B> product(laut, raut);
+    auto res = product.infiltrate();
+    // FIXME: Not absolutely elegant.  But currently no means to
+    // associate meta-data to states.
+    if (getenv("VCSN_INFILTRATE"))
       product.print(std::cout, product.origins());
     return res;
   }
@@ -304,6 +389,23 @@ namespace vcsn
       }
 
       REGISTER_DECLARE2(shuffle,
+                        (const automaton&, const automaton&) -> automaton);
+
+
+      /*-----------------.
+      | dyn::infiltrate. |
+      `-----------------*/
+
+      template <typename Lhs, typename Rhs>
+      automaton
+      infiltrate(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(l.context(), infiltrate(l, r));
+      }
+
+      REGISTER_DECLARE2(infiltrate,
                         (const automaton&, const automaton&) -> automaton);
 
 
