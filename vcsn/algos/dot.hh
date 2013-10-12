@@ -8,7 +8,7 @@
 # include <vector>
 # include <set>
 
-# include <vcsn/weights/entryset.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -25,13 +25,13 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using context_t = typename automaton_t::context_t;
-    using entryset_t = entryset<context_t>;
+    auto ps = polynomialset<context_t>{aut.context()};
 
     // The main advantage of using entries instead of directly
     // iterating over aut.outin(s, d) is to get a result which is
     // sorted (hence more deterministic).
     auto entry = get_entry(aut, s, d);
-    return entryset_t{aut.context()}.format(entry, ", ");
+    return ps.format(entry, ", ");
   }
 
   /*-------------------------.
