@@ -18,7 +18,7 @@ namespace vcsn
     static_assert(automaton_t::context_t::is_lal,
                   "requires labels_are_letters");
 
-    using label_t = typename automaton_t::labelset_t::label_t;
+    using label_t = typename automaton_t::label_t;
 
     std::unordered_set<label_t> seen;
     for (auto t : aut.all_out(s))

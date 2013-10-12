@@ -27,7 +27,6 @@ namespace vcsn
       using letters_t = std::set<letter_t>;
 
       using value_t = letter_t;
-      using label_t = value_t;
 
       using kind_t = labels_are_letters;
 
@@ -74,10 +73,10 @@ namespace vcsn
         return {gs};
       }
 
-      label_t
+      value_t
       special() const
       {
-        return this->genset()->template special<label_t>();
+        return this->genset()->template special<value_t>();
       }
 
       /// Whether \a l == \a r.
@@ -94,25 +93,25 @@ namespace vcsn
       }
 
       bool
-      is_special(label_t v) const
+      is_special(value_t v) const
       {
         return v == special();
       }
 
       static constexpr bool
-      is_one(label_t)
+      is_one(value_t)
       {
         return false;
       }
 
       bool
-      is_valid(label_t v) const
+      is_valid(value_t v) const
       {
         return this->has(v);
       }
 
       /// Read one letter from i, return the corresponding label.
-      label_t
+      value_t
       conv(std::istream& i) const
       {
         int c = i.peek();
@@ -124,14 +123,14 @@ namespace vcsn
       }
 
       // FIXME: remove, see todo.txt:scanners.
-      label_t
+      value_t
       conv(const std::string& s) const
       {
         return ::vcsn::conv(*this, s);
       }
 
       std::ostream&
-      print(std::ostream& o, const label_t& l) const
+      print(std::ostream& o, const value_t& l) const
       {
         if (!is_special(l))
           o << str_escape(l);
@@ -139,7 +138,7 @@ namespace vcsn
       }
 
       std::string
-      format(const label_t l) const
+      format(const value_t l) const
       {
         std::ostringstream o;
         print(o, l);

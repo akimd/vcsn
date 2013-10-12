@@ -28,7 +28,6 @@ namespace vcsn
       using letters_t = std::set<letter_t>;
 
       using value_t = letter_t;
-      using label_t = value_t;
 
       using kind_t = labels_are_nullable;
 
@@ -84,42 +83,42 @@ namespace vcsn
         return l < r;
       }
 
-      constexpr label_t
+      constexpr value_t
       special() const
       {
-        return this->genset()->template special<label_t>();
+        return this->genset()->template special<value_t>();
       }
 
       /// Whether \a l is the special label (for pre/post transitions).
       bool
-      is_special(label_t l) const
+      is_special(value_t l) const
       {
         return l == special();
       }
 
-      constexpr label_t
+      constexpr value_t
       one() const
       {
         return this->genset()->one_letter();
       }
 
       bool
-      is_one(label_t l) const
+      is_one(value_t l) const
       {
         return l == one();
       }
 
       bool
-      is_valid(label_t v) const
+      is_valid(value_t v) const
       {
         return this->has(v) || is_one(v);
       }
 
       /// \throws std::domain_error if there is no label here.
-      label_t
+      value_t
       conv(std::istream& i) const
       {
-        label_t res;
+        value_t res;
         int c = i.peek();
         if (c == '\\')
           {
@@ -143,14 +142,14 @@ namespace vcsn
       }
 
       // FIXME: remove, see todo.txt:scanners.
-      label_t
+      value_t
       conv(const std::string& s) const
       {
         return ::vcsn::conv(*this, s);
       }
 
       std::ostream&
-      print(std::ostream& o, label_t l) const
+      print(std::ostream& o, value_t l) const
       {
         if (is_one(l))
           o << "\\e";
@@ -160,7 +159,7 @@ namespace vcsn
       }
 
       std::string
-      format(label_t v) const
+      format(value_t v) const
       {
         std::ostringstream o;
         print(o, v);

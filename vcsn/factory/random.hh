@@ -23,7 +23,7 @@ namespace vcsn
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename ctx::letterset<GenSet>::label_t
+  typename ctx::letterset<GenSet>::value_t
   random_label(const ctx::letterset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
@@ -33,7 +33,7 @@ namespace vcsn
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename ctx::nullableset<GenSet>::label_t
+  typename ctx::nullableset<GenSet>::value_t
   random_label(const ctx::nullableset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {

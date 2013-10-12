@@ -33,7 +33,7 @@ namespace vcsn
     /// Lightweight transition handle (or index).
     using transition_t = unsigned;
     /// Transition label.
-    using label_t = typename context_t::label_t;
+    using label_t = typename labelset_t::value_t;
     /// Transition weight.
     using weight_t = typename weightset_t::value_t;
 

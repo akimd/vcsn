@@ -19,7 +19,6 @@ namespace vcsn
     struct oneset
     {
       using value_t = vcsn::empty_t;
-      using label_t = value_t;
 
       using kind_t = labels_are_one;
 
@@ -60,14 +59,14 @@ namespace vcsn
         return false;
       }
 
-      static label_t special()
+      static value_t special()
       {
         return {};
       }
 
       /// The special label is indistinguishable for the others.
       constexpr static bool
-      is_special(label_t)
+      is_special(value_t)
       {
         return true;
       }
@@ -102,7 +101,7 @@ namespace vcsn
         return o;
       }
 
-      static label_t conv(std::istream& i)
+      static value_t conv(std::istream& i)
       {
         if (i.peek() == '\\')
           {
@@ -117,7 +116,7 @@ namespace vcsn
       }
 
       // FIXME: remove, see todo.txt:scanners.
-      static label_t conv(const std::string& s)
+      static value_t conv(const std::string& s)
       {
         return ::vcsn::conv(oneset{}, s);
       }

@@ -26,7 +26,6 @@ namespace vcsn
       using letters_t = std::set<letter_t>;
 
       using value_t = word_t;
-      using label_t = value_t;
 
       using kind_t = labels_are_words;
 
@@ -83,20 +82,20 @@ namespace vcsn
                 < std::forward_as_tuple(r.size(), r));
       }
 
-      label_t
+      value_t
       special() const
       {
-        return this->genset()->template special<label_t>();
+        return this->genset()->template special<value_t>();
       }
 
       bool
-      is_special(const label_t& v) const
+      is_special(const value_t& v) const
       {
         return v == special();
       }
 
       bool
-      is_valid(const label_t& v) const
+      is_valid(const value_t& v) const
       {
         for (auto l: v)
           if (!this->has(l))
@@ -104,35 +103,35 @@ namespace vcsn
         return true;
       }
 
-      label_t
+      value_t
       one() const
       {
         return this->genset()->empty_word();
       }
 
       bool
-      is_one(const label_t& l) const
+      is_one(const value_t& l) const
       {
         return this->genset()->is_empty_word(l);
       }
 
       // FIXME: Why do I need to repeat this?
       // It should be inherited from genset-labelset.
-      label_t
+      value_t
       conv(std::istream& i) const
       {
         return this->genset()->conv(i);
       }
 
       // FIXME: remove, see todo.txt:scanners.
-      label_t
+      value_t
       conv(const std::string& s) const
       {
         return ::vcsn::conv(*this, s);
       }
 
       std::ostream&
-      print(std::ostream& o, const label_t& l) const
+      print(std::ostream& o, const value_t& l) const
       {
         if (is_one(l))
           o << "\\e";
@@ -142,7 +141,7 @@ namespace vcsn
       }
 
       std::string
-      format(const label_t& l) const
+      format(const value_t& l) const
       {
         std::ostringstream o;
         print(o, l);

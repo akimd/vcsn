@@ -34,7 +34,7 @@ namespace vcsn
           is_law = vcsn::is_law<context>::value
         };
       /// Type of transition labels, and type of RatExp atoms.
-      using label_t = typename labelset_t::label_t;
+      using label_t = typename labelset_t::value_t;
       /// Type of weights.
       using weight_t = typename weightset_t::value_t;
       /// Type of RatExp ratexps objects.
