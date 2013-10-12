@@ -43,13 +43,8 @@ used external files.  See how similar cases are treated.
 
 * To add a new pre-built context "foo"
 ** create a new vcsn/ctx/foo.hh file
-** register it in vcsn/Makefile.am
+** register it in vcsn/local.mk
 alphabetical order
-** register it in common.mk
-libfoo    = $(top_builddir)/lib/libfoo.la
-...
-all_libctx = ...
-  ... $(libfoo)
 
 ** register it in lib/local.mk
 pkglib_LTLIBRARIES += lib/libfoo.la
