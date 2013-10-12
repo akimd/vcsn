@@ -100,7 +100,7 @@ namespace vcsn
         else if (rs < ls)
           return false;
         else
-          for (int i = 0; i < ls; ++i)
+          for (size_t i = 0; i < ls; ++i)
             if (ratexpset_t::less_than(lhs[i], rhs[i]))
               return true;
             else if (ratexpset_t::less_than(rhs[i], lhs[i]))
