@@ -1,3 +1,8 @@
+* 2013-10-12
+** polynomialset fully replaces entryset
+The 'entryset' type is removed, as polynomialset now provides a strict
+superset of its features.
+
 * 2013-10-11
 ** derive: new algorithm (static, dynamic, TAF-Kit)
 New algorithm on LAL automata: computes the derivation of rational

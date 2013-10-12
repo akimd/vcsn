@@ -142,7 +142,6 @@ nobase_include_HEADERS =                        \
   vcsn/misc/xalloc.hh                           \
   vcsn/misc/xalloc.hxx                          \
   vcsn/weights/b.hh                             \
-  vcsn/weights/entryset.hh                      \
   vcsn/weights/f2.hh                            \
   vcsn/weights/fwd.hh                           \
   vcsn/weights/polynomialset.hh                 \
