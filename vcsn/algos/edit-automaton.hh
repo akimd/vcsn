@@ -13,7 +13,7 @@
 # include <vcsn/dyn/algos.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/weights/entryset.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace std
 {
@@ -91,7 +91,7 @@ namespace vcsn
 
   private:
     using context_t = typename automaton_t::context_t;
-    using entry_t = typename entryset<context_t>::value_t;
+    using entry_t = typename polynomialset<context_t>::value_t;
     using state_t = typename automaton_t::state_t;
 
     using state_map = std::unordered_map<string_t, state_t>;
@@ -100,7 +100,7 @@ namespace vcsn
   public:
     edit_automaton(const context_t& ctx)
       : res_(new automaton_t(ctx))
-      , entryset_(ctx)
+      , ps_(ctx)
     {}
 
     ~edit_automaton()
@@ -166,7 +166,7 @@ namespace vcsn
               // Adding a pre/post transition: be sure that it's only
               // a weight.  Entries see the special label as an empty
               // one.
-              auto e = entryset_.conv(entry, sep_);
+              auto e = ps_.conv(entry, sep_);
               if (e.size() == 1
                   && (res_->labelset()->is_special(begin(e)->first)
                       || res_->labelset()->is_one(begin(e)->first)))
@@ -185,7 +185,7 @@ namespace vcsn
         {
           auto p = emap_.emplace(entry, entry_t{});
           if (p.second)
-            p.first->second = entryset_.conv(entry, sep_);
+            p.first->second = ps_.conv(entry, sep_);
           add_entry(s, d, p.first->second);
         }
     }
@@ -226,7 +226,7 @@ namespace vcsn
     /// The automaton under construction.
     automaton_t* res_;
     /// Entries handler.
-    entryset<context_t> entryset_;
+    polynomialset<context_t> ps_;
     /// Map state name to state handler.
     state_map smap_;
     /// Memoize conversion from entry as a string to entry_t.
