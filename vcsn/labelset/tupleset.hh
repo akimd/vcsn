@@ -67,6 +67,12 @@ namespace vcsn
         return equals_(l, r, indices_t{});
       }
 
+      /// Whether \a l < \a r.
+      static bool less_than(const value_t l, const value_t r)
+      {
+        return less_than_(l, r, indices_t{});
+      }
+
       value_t
       special() const
       {
@@ -180,6 +186,17 @@ namespace vcsn
           if (!n)
             return false;
         return true;
+      }
+
+      template <std::size_t... I>
+      static bool
+      less_than_(const value_t& l, const value_t& r, detail::seq<I...>)
+      {
+        for (auto n: {(std::tuple_element<I, labelsets_t>::type::less_than(std::get<I>(l),
+                                                                           std::get<I>(r)))...})
+          if (n)
+            return true;
+        return false;
       }
 
       template <std::size_t... I>

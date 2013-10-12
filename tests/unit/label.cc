@@ -63,6 +63,22 @@ check_tupleset()
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "y"}), false);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", ""}), false);
 
+  // less_than.
+#define CHECK(L, R, Res)                                        \
+  do {                                                          \
+    ASSERT_EQ(ts.less_than(label_t L, label_t R), Res);         \
+    ASSERT_EQ(ts.less_than(label_t R, label_t L), !Res);        \
+  } while (false)
+
+  CHECK(("", ""),   ("a", ""),    true);
+  CHECK(("", ""),   ("a", ""),    true);
+  CHECK(("", ""),   ("",  "x"),   true);
+  CHECK(("", ""),   ("a", "x"),   true);
+  CHECK(("a", "x"), ("aa", "x"),  true);
+  CHECK(("a", "x"), ("a", "xx"),  true);
+  CHECK(("a", "x"), ("aa", "xx"), true);
+#undef CHECK
+
   // special, is_special.
   ASSERT_EQ(ts.equals(ts.special(), label_t{ls1.special(),ls2.special()}), true);
   ASSERT_EQ(ts.format(label_t{ls1.special(),ls2.special()}), "");
