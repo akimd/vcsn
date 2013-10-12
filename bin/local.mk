@@ -36,8 +36,8 @@ all_vcsn =                                      \
   %D%/vcsn-determinize                          \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
-  %D%/vcsn-evaluate                             \
   %D%/vcsn-enumerate                            \
+  %D%/vcsn-evaluate                             \
   %D%/vcsn-is-ambiguous                         \
   %D%/vcsn-is-complete                          \
   %D%/vcsn-is-deterministic                     \
