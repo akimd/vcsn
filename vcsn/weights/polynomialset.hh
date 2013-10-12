@@ -46,9 +46,7 @@ namespace vcsn
     polynomialset(const polynomialset&) = default;
     polynomialset(const context_t& ctx)
       : ctx_{ctx}
-    {
-      one_[labelset()->one()] = weightset()->one();
-    }
+    {}
 
     /// The static name.
     static std::string sname()
@@ -227,6 +225,7 @@ namespace vcsn
     const value_t&
     one() const
     {
+      static value_t one_{{labelset()->one(), weightset()->one()}};
       return one_;
     }
 
@@ -252,6 +251,7 @@ namespace vcsn
     const value_t&
     zero() const
     {
+      static value_t zero_;
       return zero_;
     }
 
@@ -427,8 +427,6 @@ namespace vcsn
 
   private:
     context_t ctx_;
-    value_t zero_;
-    value_t one_;
 
     /// Left marker for weight in concrete syntax.
     constexpr static char lbracket = '<';
