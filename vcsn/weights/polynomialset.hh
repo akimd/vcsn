@@ -324,19 +324,27 @@ namespace vcsn
 
           if (!is_zero)
             {
-              // Register the current position in the stream.
-              std::streampos p = i.tellg();
               // The label is not \z.
-              //
-              // Do not use labelset()->conv, as for instance in LAL,
-              // it will refuse '\e'.  FIXME: we don't check that the
-              // letters are valid.
-              label_t label = labelset()->genset()->conv(i);
+
+              // Register the current position in the stream, so that
+              // we reject inputs such as "a++a" in LAW (where the
+              // labelset::conv would accept the empty string between
+              // the two "+").
+              std::streampos p = i.tellg();
+              label_t label = labelset()->special();
+              // Accept an implicit label (which can be an error,
+              // e.g., for LAL) if there is an explicit weight.
+              try
+                {
+                  label = labelset()->conv(i);
+                }
+              catch (const std::domain_error&)
+                {}
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
                 throw std::domain_error
                   (std::string{"polynomialset: conv: invalid value: "}
-                   + std::string(1, i.peek())
+                   + str_escape(i.peek())
                    + " contains an empty label (did you mean \\e or \\z?)");
               add_weight(res, label, w);
             }
