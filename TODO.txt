@@ -47,6 +47,10 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** Make nullableset a labelset wrapper
+One would say 'nullableset<letterset>'.  This would allow to introduce
+'nullableset<tupleset<lal, lal>>', which is not possible currently.
+
 ** More documentation (AL)
 The Doxygen style documentation is way too poor.  Aim at completion.
 
@@ -106,6 +110,10 @@ See what V1 did.
 Transform the current implementation of the "naive" heuristics into
 some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
+** Rename to a better name.
+Drop "aut", because we have more entries than that.  Drop "to", as it's
+clear enough from its name.
+
 * dyn::
 ** Implement implicit conversions
 So that, for instance, we can run is-derministic on a proper lan.
@@ -137,6 +145,10 @@ We should also be able to read Grail+ files.
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
+
+** subsequence, prefix, suffix, factor
+Generate, from an automaton, resp. a ratexp, an automaton, resp. a ratexp,
+that corresponds to the subsequences, prefixes, suffixes and factors.
 
 ** Levenshtein automata
 http://en.wikipedia.org/wiki/Levenshtein_automata
