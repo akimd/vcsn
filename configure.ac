@@ -75,21 +75,20 @@ AC_CACHE_CHECK([whether $CXX $CXXFLAGS supports C++11 features],
 test "x$ax_cv_cxx_compile_cxx11" = xyes ||
   AC_ERROR([unable to compile C++11 with this compiler])
 
+# Do not apply to C++: -Wbad-function-cast, -Wmissing-prototypes,
+# -Wstrict-prototypes.
 TC_CXX_WARNINGS(
   [[-Wall],
    [-Wextra],
-   [-Wbad-function-cast],
    [-Wcast-align],
    [-Wcast-qual],
    [-Wextra],
    [-Wformat],
    [-Wmissing-declarations],
-   [-Wmissing-prototypes],
    [-Wno-parentheses],
    [-Wnoexcept],
    [-Woverloaded-virtual],
    [-Wpointer-arith],
-   [-Wstrict-prototypes],
    [-Wsuggest-attribute=const -Wno-error=suggest-attribute=const],
    [-Wsuggest-attribute=noreturn -Wno-error=suggest-attribute=noreturn],
    [-Wsuggest-attribute=pure -Wno-error=suggest-attribute=pure],
