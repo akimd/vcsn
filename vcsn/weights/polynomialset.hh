@@ -23,7 +23,7 @@ namespace vcsn
     }
   };
 
-  /// Linear combination of words: map words to weights.
+  /// Linear combination of labels: map labels to weights.
   template <class Context>
   class polynomialset: public dyn::detail::abstract_polynomialset
   {
@@ -34,7 +34,7 @@ namespace vcsn
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    /// Polynomials over words.
+    /// Polynomials over labels.
     using label_t = typename labelset_t::value_t;
     using weight_t = typename context_t::weight_t;
 
