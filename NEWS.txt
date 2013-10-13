@@ -82,6 +82,31 @@ following sequence.
 
   $ vcsn thompson -C 'lan_char(a)_b' -Ee 'a?{2000}' | vcsn proper -O null
 
+* 2013-10-01
+** random: new algorithm (static, dynamic, TAF-Kit)
+Random generation of automata.  Subject to changes.  Accepts four
+arguments: number of states, density (of transitions, defaults to .1,
+1 generates a clique), number of initial states (defaults to 1), and
+number of final states (defaults to 1).
+
+So far LAL and LAE only, no support for random weights.
+
+  $ vcsn random -O fado 3
+  @DFA 0
+  0 d 1
+  1 c 2
+  2 d 2
+  $ vcsn random -O fado 3
+  @DFA 2
+  0 c 1
+  1 d 2
+  2 c 0
+  $ vcsn-random -C 'lan_char(ab)_b' -O fado 3
+  @NFA 1 * 0
+  0 @epsilon 1
+  1 b 2
+  2 b 1
+
 * 2013-09-24
 ** Overhaul of the package
 Thanks to Automake 1.14 features, there is now a single Makefile, which
