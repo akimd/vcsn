@@ -1,26 +1,9 @@
 * Tests
-** fado
-I/O with words.  See the way they also _name_ states, for instance, read the
-dl4.fado as generated below.
-
-  $ vcsn ladybird -O fado 4 | \
-    python -c "from FAdo import fa
-  nfa = fa.readFromFile('/dev/stdin')[0]
-  dfa = nfa.toDFA()
-  fa.saveToFile('dl4.fado', dfa)"
-
 ** operations on automata
 Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
-** efsm
-I/O with weights does not work.  Actually, output seems to work, but input
-does not read weights.  And therefore a Z-automaton in EFSM format will be
-read as a B-automaton.
-
-Then complete efsm.chk.
-
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
 
@@ -85,6 +68,18 @@ is factored a lot, using std::copy for instance.
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
 
+** ratexpset::print
+Improve the pretty-printer, there are too many parentheses.  Note that
+currently we use labelset::is_letter to know if something requires
+parentheses or not; this is not right.  First the name (is_letter) is
+misleading and of course makes no sense for tupleset for instance, and
+second, it is the wrong concept: it should really be about parentheses
+(e.g., requires_parens, or whatever).
+
+Note that the ratexp::type() are numbers that are related to precedence, so
+it should be usable to determine whether parens are needed (in "a+b*"
+vs. "(a+b)*" for instance).
+
 ** evaluate
 Vectors of weights indexed by states are bad structures to iterate upon.  We
 don't need to work on states that are not part of the computation.  This
@@ -137,9 +132,74 @@ that *both* should yield "{3}ab":
   1.4 but should anyway be reevaluated in connection with the definition
   of the function derived-term for the weighthed automata.
 
-* More algorithms
-** I/O with Grail (AL)
+* I/O
+** efsm
+I/O with weights does not work.  Actually, output seems to work, but input
+does not read weights.  And therefore a Z-automaton in EFSM format will be
+read as a B-automaton.
+
+Then complete efsm.chk.
+
+** fado
+I/O with words.  See the way they also _name_ states, for instance, read the
+dl4.fado as generated below.
+
+  $ vcsn ladybird -O fado 4 | \
+    python -c "from FAdo import fa
+  nfa = fa.readFromFile('/dev/stdin')[0]
+  dfa = nfa.toDFA()
+  fa.saveToFile('dl4.fado', dfa)"
+
+** Grail
 We should also be able to read Grail+ files.
+
+** Forlan
+See http://alleystoughton.us/forlan/.  In
+http://alleystoughton.us/forlan/book.pdf, page 121:
+
+  {states}
+  A, B, C
+  {start state}
+  A
+  {accepting states}
+  A, C
+  {transitions}
+  A, 1 -> A; B, 11 -> B; C, 111 -> C;
+  A, 0 -> B; A, 2 -> B;
+  A, 0 -> C; A, 2 -> C;
+  B, 0 -> C; B, 2 -> C
+
+  Transitions that only differ in their right-hand states can be merged into
+  single transition families. E.g., we can merge A, 0 -> B and A, 0 -> C into
+  the transition family A, 0 -> B | C.
+
+Note that "\e" is denoted "%".
+
+** Vaucanson 1
+We can easily read simple V1 automata thanks to its dot format.  However, we
+must pay attention to more complex cases (e.g., rich weightsets).
+
+However we cannot easily feed V1 with automata from V2.  This is troublesome
+for benches.  However, we can probably work out something simple by using
+the "edit-automaton" input of V1: we generate a script that builds the
+automaton.
+
+** XML
+At some point, someone should really work on the XML formalism.
+
+* More algorithms
+** are-isomorphic
+Implement it.  Sources of inspiration: Vaucanson 1 (I have been told there
+are two implementations there), Forlan.
+
+** determinization
+Relax the "complete" constraint on the result.  See also for other
+implementations (cf. "Five determinization algorithms").
+
+** minimization
+Import what Guillaume did for Moore minimization, but without the tbb part
+(for a start).  Implement more minimization algorithms (Hopcroft, Revuz,
+Brzozowski...).
 
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A
