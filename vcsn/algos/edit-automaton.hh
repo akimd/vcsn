@@ -9,10 +9,11 @@
 # include <boost/flyweight.hpp>
 # include <boost/flyweight/no_tracking.hpp>
 
+# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/algos.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/ctx/fwd.hh>
 # include <vcsn/weights/polynomialset.hh>
 
 namespace std
@@ -303,16 +304,16 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Ctx>
       automaton_editor*
       make_automaton_editor(const context& ctx)
       {
-        const auto& c = ctx->as<const typename Aut::context_t&>();
-        return new edit_automaton<Aut>(c);
+        const auto& c = ctx->as<Ctx>();
+        return new edit_automaton<mutable_automaton<Ctx>>(c);
       }
 
       REGISTER_DECLARE(make_automaton_editor,
-                       (const context& aut) -> automaton_editor*);
+                       (const context& ctx) -> automaton_editor*);
     }
   }
 

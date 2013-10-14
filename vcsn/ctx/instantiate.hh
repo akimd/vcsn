@@ -246,11 +246,6 @@ namespace vcsn
         REGISTER(dot_stream, taut_t);
         REGISTER(dot_string, aut_t);
         REGISTER(dot_string, taut_t);
-
-        // edit-automaton.
-        make_automaton_editor_register(Ctx::sname(),
-                                       make_automaton_editor<aut_t>);
-
         REGISTER(efsm, aut_t);
         REGISTER(efsm, taut_t);
         REGISTER(constant_term, rs_t);
@@ -270,6 +265,7 @@ namespace vcsn
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_exp, rs_t);
         REGISTER(list_polynomial, rps_t);
+        REGISTER(make_automaton_editor, Ctx);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
         REGISTER(print_exp, rs_t);
