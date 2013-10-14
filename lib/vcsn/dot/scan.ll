@@ -9,7 +9,7 @@
    // Check Clang first, as it does not support -Wzero... but it
    // defines __GNUC__.
 #if defined __clang__
-# pragma clang diagnostic ignored "-Wdeprecated-register"
+# pragma clang diagnostic ignored "-Wdeprecated"
 # pragma clang diagnostic ignored "-Wnull-conversion"
 #elif defined __GNUC__
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
