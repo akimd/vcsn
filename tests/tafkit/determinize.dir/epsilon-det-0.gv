@@ -1,3 +1,6 @@
+/* Origins.
+    0 [label = "0"]
+*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -10,10 +13,7 @@ digraph
   {
     node [shape = circle]
     0
-    1 [color = DimGray]
   }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "a, b", color = DimGray]
-  1 -> 1 [label = "a, b", color = DimGray]
 }

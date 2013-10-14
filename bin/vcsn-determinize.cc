@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <boost/lexical_cast.hpp>
+
 #include <vcsn/dyn/algos.hh>
 
 #include "parse-args.hh"
@@ -12,9 +14,12 @@ struct determinize: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
+    bool complete = (0 < opts.argv.size()
+                     ? boost::lexical_cast<bool>(opts.argv[0])
+                     : false);
 
     // Process.
-    auto res = vcsn::dyn::determinize(aut);
+    auto res = vcsn::dyn::determinize(aut, complete);
 
     // Output.
     *opts.out << res << std::endl;

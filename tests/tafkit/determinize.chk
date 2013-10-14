@@ -4,11 +4,22 @@
 ## Determinize simple automata.  ##
 ## ----------------------------- ##
 
+
 for aut in a epsilon empty
 do
-  run 0 -f $medir/$aut-det.gv -vcsn-determinize -f $medir/$aut.gv
-  # Idempotence.
-  run 0 out.exp -vcsn-determinize -f out.exp
+  for complete in 0 1
+  do
+    # Putting an envvar definition before the call to a shell
+    # function does not seem to behave as expected.
+    export VCSN_DETERMINIZE=1
+    run 0 -f $medir/$aut-det-$complete.gv \
+      -vcsn-determinize -f $medir/$aut.gv $complete
+    # For some reason, Bash did leave VCSN_DETERMINIZE in the env.
+    unset VCSN_DETERMINIZE
+    # Idempotence.  Remove the origins.
+    perl -pi -0777 -e 's{/\*.*?\*/\n}{}s' out.exp
+    run 0 out.exp -vcsn-determinize -f out.exp
+  done
 done
 
 
@@ -27,7 +38,7 @@ check ()
    (ladybird)  ctx='lal_char(abc)_b';;
   esac
   run 0 '' -vcsn-$1          -C "$ctx"   -o $1-$2.gv $2
-  run 0 -f $medir/$1-$2-det.gv -vcsn-determinize -f $1-$2.gv
+  run 0 -f $medir/$1-$2-det.gv -vcsn-determinize -f $1-$2.gv 1
   # Idempotence.
   run 0 -f $medir/$1-$2-det.gv -vcsn-determinize -f $medir/$1-$2-det.gv
 }

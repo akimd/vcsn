@@ -1,3 +1,8 @@
+/* Origins.
+    0 [label = "0"]
+    1 [label = "1"]
+    2 [label = ""]
+*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

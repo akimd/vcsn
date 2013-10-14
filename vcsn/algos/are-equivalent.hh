@@ -21,7 +21,7 @@ namespace vcsn
     std::unique_ptr<Aut1> a1cd;
     if (!is_deterministic(a1))
       {
-        a1cd.reset(new Aut1{determinize(a1)});
+        a1cd.reset(new Aut1{determinize(a1, true)});
         aut1 = a1cd.get();
       }
     else if (!is_complete(a1))
@@ -34,7 +34,7 @@ namespace vcsn
     std::unique_ptr<Aut2> a2cd;
     if (!is_deterministic(a2))
       {
-        a2cd.reset(new Aut2{determinize(a2)});
+        a2cd.reset(new Aut2{determinize(a2, true)});
         aut2 = a2cd.get();
       }
     else if (!is_complete(a2))

@@ -10,10 +10,10 @@ namespace vcsn
     REGISTER_DEFINE(determinize);
 
     automaton
-    determinize(const automaton& aut)
+    determinize(const automaton& aut, bool complete)
     {
       return detail::determinize_registry().call(aut->vname(false),
-                                                  aut);
+                                                 aut, complete);
     }
   }
 }

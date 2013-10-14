@@ -16,7 +16,7 @@ namespace vcsn
 {
   namespace detail
   {
-    template <class Aut>
+    template <typename Aut>
     class determinizer
     {
       static_assert(Aut::context_t::is_lal,
@@ -42,8 +42,10 @@ namespace vcsn
         map_.clear();
       }
 
-      /// Determinize \a a, and return the result.
-      automaton_nocv_t operator()(const automaton_t& a)
+      /// The determinized automaton.
+      /// \param a         the automaton to determinize
+      /// \param complete  whether to force the result to be complete
+      automaton_nocv_t operator()(const automaton_t& a, bool complete = false)
       {
         clear();
 
@@ -56,7 +58,8 @@ namespace vcsn
         automaton_nocv_t res{a.context()};
 
         // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-        using successors_t = std::vector<std::unordered_map<label_t, state_set> >;
+        using successors_t
+          = std::vector<std::unordered_map<label_t, state_set>>;
         successors_t successors{state_size};
         for (auto st : a.all_states())
           for (auto l : letters)
@@ -109,10 +112,15 @@ namespace vcsn
                 for (auto s = ss.find_first(); s != ss.npos;
                      s = ss.find_next(s))
                   next |= successors[s][l];
-                auto i = map_.find(next);
-                state_t n = (i == map_.end()) ? push_new_state(next) : i->second;
-
-                res.add_transition(map_[ss], n, l);
+                // Don't generate the sink.
+                if (complete || next.any())
+                  {
+                    auto i = map_.find(next);
+                    state_t n = ((i == map_.end())
+                                 ? push_new_state(next)
+                                 : i->second);
+                    res.add_transition(map_[ss], n, l);
+                  }
               }
           }
         return std::move(res);
@@ -137,13 +145,33 @@ namespace vcsn
     };
   }
 
-  template <class Aut>
+  template <typename Aut>
   inline
   Aut
-  determinize(const Aut& a)
+  determinize(const Aut& a, bool complete = false)
   {
     detail::determinizer<Aut> determinize;
-    return determinize(a);
+    auto res = determinize(a, complete);
+    // FIXME: Not absolutely elegant.  But currently no means to
+    // associate meta-data to states.
+    if (getenv("VCSN_DETERMINIZE"))
+      {
+        std::cout << "/* Origins." << std::endl;
+        for (auto p : determinize.origins())
+          {
+            std::cout << "    " << p.first - 2
+                      << " [label = \"";
+            const char* sep = "";
+            for (auto s: p.second)
+              {
+                std::cout << sep << s - 2;
+                sep = ",";
+              }
+            std::cout << "\"]" << std::endl;
+          }
+        std::cout << "*/" << std::endl;
+      }
+    return res;
   }
 
   /*-------------------.
@@ -157,14 +185,14 @@ namespace vcsn
 
       template <typename Aut>
       automaton
-      determinize(const automaton& aut)
+      determinize(const automaton& aut, bool complete)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), determinize(a));
+        return make_automaton(a.context(), determinize(a, complete));
       }
 
       REGISTER_DECLARE(determinize,
-                       (const automaton& aut) -> automaton);
+                       (const automaton& aut, bool complete) -> automaton);
     }
   }
 

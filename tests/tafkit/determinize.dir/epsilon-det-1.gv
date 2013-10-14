@@ -1,0 +1,23 @@
+/* Origins.
+    0 [label = "0"]
+    1 [label = ""]
+*/
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle]
+    0
+    1 [color = DimGray]
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "a, b", color = DimGray]
+  1 -> 1 [label = "a, b", color = DimGray]
+}

@@ -110,11 +110,11 @@ involution de-bruin-2.gv
 # check_minimization < OUT.EXP
 check_minimization ()
 {
-  run 0 '' -vcsn-standard "$@" -o a.out
-  run 0 '' -vcsn-transpose -I dot -O dot -A -f a.out -o at.out
-  run 0 '' -vcsn-determinize -I dot -O dot -A -f at.out -o atd.out
-  run 0 '' -vcsn-transpose -I dot -O dot -A -f atd.out -o atdt.out
-  run 0 -  -vcsn-determinize -I dot -O dot -A -f atdt.out
+  run 0 '' -vcsn-standard                     -o a.out    "$@"
+  run 0 '' -vcsn-transpose   -I dot -O dot -A -o at.out   -f a.out
+  run 0 '' -vcsn-determinize -I dot -O dot -A -o atd.out  -f at.out   1
+  run 0 '' -vcsn-transpose   -I dot -O dot -A -o atdt.out -f atd.out
+  run 0 -  -vcsn-determinize -I dot -O dot -A             -f atdt.out 1
 }
 
 check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<\EOF

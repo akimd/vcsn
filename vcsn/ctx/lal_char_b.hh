@@ -26,7 +26,7 @@ namespace vcsn
 
   MAYBE_EXTERN template
   auto
-  determinize(const mutable_automaton<ctx::lal_char_b>& aut)
+  determinize(const mutable_automaton<ctx::lal_char_b>& aut, bool complete)
     -> mutable_automaton<ctx::lal_char_b>;
 
   /* fado. */

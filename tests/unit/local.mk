@@ -17,7 +17,6 @@ EXTRA_PROGRAMS +=                               \
   %D%/aut_lal_char_z                            \
   %D%/aut_law_char_z                            \
   %D%/concat                                    \
-  %D%/determinize                               \
   %D%/label                                     \
   %D%/polynomialset                             \
   %D%/proper                                    \
@@ -32,7 +31,6 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
 %C%_aut_lal_char_z_LDADD = $(liblal_char_z) $(unit_ldadd)
 %C%_aut_law_char_z_LDADD = $(liblaw_char_z) $(unit_ldadd)
 %C%_concat_LDADD         = $(liblaw_char_z) $(unit_ldadd)
-%C%_determinize_LDADD    = $(liblal_char_b) $(unit_ldadd)
 %C%_label_LDADD          = $(liblal_char_b) $(unit_ldadd)
 %C%_polynomialset_LDADD  = $(liblaw_char_z) $(liblaw_char_zmin) $(unit_ldadd)
 %C%_proper_LDADD         = $(all_libctx) $(unit_ldadd)
@@ -44,7 +42,6 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/aut_lal_char_z.chk                       \
   %D%/aut_law_char_z.chk                       \
   %D%/concat.chk                               \
-  %D%/determinize.chk                          \
   %D%/label.chk                                \
   %D%/polynomialset.chk                        \
   %D%/proper.chk                               \

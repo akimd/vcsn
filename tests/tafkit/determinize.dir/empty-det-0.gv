@@ -1,3 +1,6 @@
+/* Origins.
+    0 [label = ""]
+*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -11,5 +14,4 @@ digraph
     0 [color = DimGray]
   }
   I0 -> 0 [color = DimGray]
-  0 -> 0 [label = "a, b", color = DimGray]
 }

@@ -62,9 +62,11 @@ namespace vcsn
     /// \pre  \a exp must be LAL.
     polynomial derive(const ratexp& exp, const std::string& s);
 
-    /// Determinize \a aut.
+    /// The determinized automaton.
+    /// \param aut       the automaton to determinize
+    /// \param complete  whether to force the result to be a complete automaton
     /// \pre  \a aut must be LAL.
-    automaton determinize(const automaton& aut);
+    automaton determinize(const automaton& aut, bool complete = false);
 
     /// An automaton which accepts a word n representing a number in
     /// base b iff k|n.

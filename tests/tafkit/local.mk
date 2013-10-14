@@ -57,13 +57,16 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
-  %D%/determinize.dir/a-det.gv                  \
+  %D%/determinize.dir/a-det-0.gv                \
+  %D%/determinize.dir/a-det-1.gv                \
   %D%/determinize.dir/a.gv                      \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
-  %D%/determinize.dir/empty-det.gv              \
+  %D%/determinize.dir/empty-det-0.gv            \
+  %D%/determinize.dir/empty-det-1.gv            \
   %D%/determinize.dir/empty.gv                  \
-  %D%/determinize.dir/epsilon-det.gv            \
+  %D%/determinize.dir/epsilon-det-0.gv          \
+  %D%/determinize.dir/epsilon-det-1.gv          \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
