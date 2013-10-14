@@ -12,9 +12,8 @@ namespace vcsn
     are_equivalent(const automaton& lhs, const automaton& rhs)
     {
       return
-        detail::are_equivalent_registry().call
-        (lhs->vname(false) + " x " + rhs->vname(false),
-         lhs, rhs);
+        detail::are_equivalent_registry().call(vname(lhs, rhs),
+                                               lhs, rhs);
     }
 
     bool

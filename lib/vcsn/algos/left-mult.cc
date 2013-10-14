@@ -9,13 +9,6 @@ namespace vcsn
 {
   namespace dyn
   {
-    static
-    std::string
-    vname(const automaton& aut, const weight& w)
-    {
-      return aut->vname(false) + " x " + w->vname(false);
-    }
-
     REGISTER_DEFINE2(left_mult);
 
     automaton

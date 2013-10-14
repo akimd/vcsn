@@ -54,6 +54,23 @@ namespace vcsn
     std::string name_;
     map_t map_;
   };
+
+  /// A key encoding type strings of \a a and \a b.
+  inline
+  std::string
+  vname(const std::string& a, const std::string& b)
+  {
+    return a + " x " + b;
+  }
+
+  /// A key encoding types of \a a and \a b.
+  template <typename A, typename B>
+  inline
+  std::string
+  vname(const A& a, const B& b)
+  {
+    return vname(a->vname(false), b->vname(false));
+  }
 }
 
 # define REGISTER_DEFINE_(Name)                         \
@@ -90,7 +107,7 @@ namespace vcsn
                       const std::string& ctx2,                  \
                       Name ## _t fn)                            \
     {                                                           \
-      return Name ## _registry().set(ctx1  + " x " + ctx2, fn); \
+      return Name ## _registry().set(vname(ctx1, ctx2), fn);    \
     }                                                           \
   }
 

@@ -17,7 +17,7 @@ namespace vcsn
     product(const automaton& lhs, const automaton& rhs)
     {
       return
-        detail::product_registry().call(lhs->vname(false) + " x " + rhs->vname(false),
+        detail::product_registry().call(vname(lhs, rhs),
                                          lhs, rhs);
     }
 
@@ -31,7 +31,7 @@ namespace vcsn
     shuffle(const automaton& lhs, const automaton& rhs)
     {
       return
-        detail::shuffle_registry().call(lhs->vname(false) + " x " + rhs->vname(false),
+        detail::shuffle_registry().call(vname(lhs, rhs),
                                         lhs, rhs);
     }
 

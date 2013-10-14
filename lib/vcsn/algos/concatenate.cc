@@ -11,8 +11,7 @@ namespace vcsn
     automaton
     concatenate(const automaton& lhs, const automaton& rhs)
     {
-      return detail::concatenate_registry().call(rhs->vname(false) + " x " +
-                                                 rhs->vname(false), lhs, rhs);
+      return detail::concatenate_registry().call(vname(lhs, rhs), lhs, rhs);
     }
 
     REGISTER_DEFINE(chain);

@@ -11,8 +11,7 @@ namespace vcsn
     automaton
     union_a(const automaton& lhs, const automaton& rhs)
     {
-      return detail::union_a_registry().call(rhs->vname(false) + " x " +
-                                                 rhs->vname(false), lhs, rhs);
+      return detail::union_a_registry().call(vname(lhs, rhs), lhs, rhs);
     }
   }
 }
