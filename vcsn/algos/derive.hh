@@ -16,11 +16,16 @@ namespace vcsn
   namespace rat
   {
 
-    /// Type of PolynomialSet of RatExps from the RatExp type.
+    /// Type of PolynomialSet of RatExps from the RatExpSet type.
     template <typename RatExpSet>
     using ratexp_polynomialset_t
       = polynomialset<ctx::context<RatExpSet,
                                    typename RatExpSet::weightset_t>>;
+
+    /// Type of polynomials of ratexps from the RatExpSet type.
+    template <typename RatExpSet>
+    using ratexp_polynomial_t
+      = typename ratexp_polynomialset_t<RatExpSet>::value_t;
 
     /// From a RatExpSet to its polynomialset.
     template <typename RatExpSet>
@@ -175,7 +180,7 @@ namespace vcsn
   /// Derive a ratexp wrt to a letter.
   template <typename RatExpSet>
   inline
-  typename rat::ratexp_polynomialset_t<RatExpSet>::value_t
+  rat::ratexp_polynomial_t<RatExpSet>
   derive(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
          char a)
   {
@@ -187,14 +192,13 @@ namespace vcsn
   /// Derive a polynonials of ratexp wrt to a letter.
   template <typename RatExpSet>
   inline
-  typename rat::ratexp_polynomialset_t<RatExpSet>::value_t
+  rat::ratexp_polynomial_t<RatExpSet>
   derive(const RatExpSet& rs,
-         const typename rat::ratexp_polynomialset_t<RatExpSet>::value_t& p,
+         const rat::ratexp_polynomial_t<RatExpSet>& p,
          char a)
   {
-    using polynomialset_t = typename rat::ratexp_polynomialset_t<RatExpSet>;
-    polynomialset_t ps = rat::make_ratexp_polynomialset(rs);
-    using polynomial_t = typename polynomialset_t::value_t;
+    auto ps = rat::make_ratexp_polynomialset(rs);
+    using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
     rat::derive_visitor<RatExpSet> derive{rs};
     polynomial_t res;
     for (const auto& m: p)
@@ -206,7 +210,7 @@ namespace vcsn
   /// Derive a ratexp wrt to a string.
   template <typename RatExpSet>
   inline
-  typename rat::ratexp_polynomialset_t<RatExpSet>::value_t
+  rat::ratexp_polynomial_t<RatExpSet>
   derive(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
          const std::string& s)
   {
