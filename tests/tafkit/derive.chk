@@ -1,5 +1,9 @@
 #! /bin/sh
 
+## ------------- ##
+## derive(exp).  ##
+## ------------- ##
+
 # check RAT-EXP STRING RESULT
 # ---------------------------
 # Check that the derived term of RAT-EXP by STRING is RESULT.
@@ -71,3 +75,12 @@ check "$E1t" aa  "<4/9>(a*).($E1)"
 check "$E1t" ab  "<2/9>(b*).($E1)"
 check "$E1t" ba  "<2/9>(a*).($E1)"
 check "$E1t" bb "<10/9>(b*).($E1)"
+
+
+## -------------------- ##
+## derived_terms(exp).  ##
+## -------------------- ##
+
+export VCSN_DERIVED_TERMS=1
+run 0 -f $medir/e1-dt.gv -vcsn-derived-terms -e "$E1t"
+unset VCSN_DERIVED_TERMS

@@ -61,6 +61,7 @@ EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/lao-elim-0.gv              \
   %D%/aut-to-exp.dir/lao-elim-1.gv              \
   %D%/aut-to-exp.dir/lao-elim-2.gv              \
+  %D%/derive.dir/e1-dt.gv                       \
   %D%/determinize.dir/a-det-0.gv                \
   %D%/determinize.dir/a-det-1.gv                \
   %D%/determinize.dir/a.gv                      \
@@ -87,6 +88,7 @@ EXTRA_DIST +=                                   \
   %D%/random.dir/clique-a-4.gv
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/derive.log: $(wildcard $(srcdir)/%D%/derive.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)

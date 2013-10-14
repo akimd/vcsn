@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_DERIVE_HH
 
 # include <set>
+# include <stack>
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/algos/constant-term.hh>
@@ -168,8 +169,10 @@ namespace vcsn
 
     private:
       ratexpset_t rs_;
+      /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
       polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// The result.
       polynomial_t res_;
       /// The derivation variable.
       letter_t variable_;
@@ -245,6 +248,160 @@ namespace vcsn
                        (const ratexp& e, const std::string& s) -> polynomial);
     }
   }
+
+  /*-----------------------.
+  | derived_term(ratexp).  |
+  `-----------------------*/
+
+  namespace detail
+  {
+    template <typename RatExpSet>
+    struct derived_termer
+    {
+      using ratexpset_t = RatExpSet;
+      using ratexp_t = typename ratexpset_t::value_t;
+
+      using context_t = typename ratexpset_t::context_t;
+      using labelset_t = typename context_t::labelset_t;
+      using label_t = typename labelset_t::value_t;
+      using weightset_t = typename context_t::weightset_t;
+      using weight_t = typename context_t::weight_t;
+
+      using automaton_t = mutable_automaton<context_t>;
+      using state_t = typename automaton_t::state_t;
+
+      /// Symbolic states: the derived terms are polynomials of ratexps.
+      using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
+      
+      struct ratexpset_less_than
+      {
+        bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
+        {
+          return ratexpset_t::less_than(lhs, rhs);
+        }
+      };
+
+      /// Symbolic states to state handlers.
+      using smap = std::map<ratexp_t, state_t, ratexpset_less_than>;
+
+      derived_termer(const ratexpset_t& rs)
+        : rs_(rs)
+      {}
+
+      automaton_t operator()(const ratexp_t& ratexp)
+      {
+        weightset_t ws = *rs_.weightset();
+        // This is the labelset, but when iterated, the list of generators.
+        const auto& ls = *rs_.labelset();
+
+        automaton_t res{rs_.context()};
+
+        /// List of states to visit.
+        std::stack<ratexp_t> todo;
+        /// Turn the ratexp into a polynomial.
+        {
+          todo.push(ratexp);
+          state_t s = res.new_state();
+          map_[ratexp] = s;
+          res.set_initial(s);
+          res.set_final(s, constant_term(rs_, ratexp));
+        }
+        while (!todo.empty())
+          {
+            ratexp_t r = todo.top();
+            todo.pop();
+            state_t src = map_[r];
+            for (auto l : ls)
+              {
+                polynomial_t next = derive(rs_, r, l);
+                for (const auto& p: next)
+                  {
+                    state_t dst;
+                    auto i = map_.find(p.first);
+                    if (i == end(map_))
+                      {
+                        dst = res.new_state();
+                        res.set_final(dst, constant_term(rs_, p.first));
+                        map_[p.first] = dst;
+                        todo.push(p.first);
+                      }
+                    else
+                      dst = i->second;
+                    res.add_transition(src, dst, l, p.second);
+                  }
+              }
+          }
+        return std::move(res);
+      }
+
+      /// Map a state to its derived term.
+      using origins_t = std::map<state_t, ratexp_t>;
+      origins_t
+      origins() const
+      {
+        origins_t res;
+        for (const auto& p: map_)
+          res[p.second] = p.first;
+        return res;
+      }
+
+      /// Print the origins.
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig) const
+      {
+        o << "/* Origins." << std::endl;
+        for (auto p : orig)
+          {
+            o << "    " << p.first - 2
+              << " [label = \"";
+            rs_.print(o, p.second);
+            o << "\"]" << std::endl;
+          }
+        o << "*/" << std::endl;
+        return o;
+      }
+
+    private:
+      ratexpset_t rs_;
+      smap map_;
+    };
+  }
+
+  /// Derive a ratexp wrt to a string.
+  template <typename RatExpSet>
+  inline
+  mutable_automaton<typename RatExpSet::context_t>
+  derived_terms(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
+  {
+    detail::derived_termer<RatExpSet> dt{rs};
+    auto res = dt(r);
+    if (getenv("VCSN_DERIVED_TERMS"))
+      dt.print(std::cout, dt.origins());
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet>
+      automaton
+      derived_terms(const ratexp& exp)
+      {
+        const auto& r = exp->as<RatExpSet>();
+        return make_automaton(r.get_ratexpset().context(),
+                              derived_terms(r.get_ratexpset(),
+                                            r.ratexp()));
+      }
+
+      REGISTER_DECLARE(derived_terms,
+                       (const ratexp& e) -> automaton);
+    }
+  }
+
+
 
 } // vcsn::
 

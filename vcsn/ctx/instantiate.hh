@@ -159,6 +159,7 @@ namespace vcsn
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx);
         REGISTER(derive, rs_t);
+        REGISTER(derived_terms, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);

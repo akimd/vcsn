@@ -17,5 +17,16 @@ namespace vcsn
     {
       return detail::derive_registry().call(e->vname(false), e, s);
     }
+
+    /*--------------------.
+    | derived_term(exp).  |
+    `--------------------*/
+    REGISTER_DEFINE(derived_terms);
+
+    automaton
+    derived_terms(const ratexp& e)
+    {
+      return detail::derived_terms_registry().call(e->vname(false), e);
+    }
   }
 }
