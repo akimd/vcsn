@@ -212,7 +212,6 @@ namespace vcsn
       | dyn::enumerate.  |
       `-----------------*/
 
-      // FIXME: We need dyn::polynomial.
       template <typename Aut>
       polynomial
       enumerate(const automaton& aut, size_t max)

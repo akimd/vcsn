@@ -16,7 +16,9 @@ namespace vcsn
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
     using context_t = Context;
-    mutable_automaton<context_t> res{ctx};
+    using automaton_t = mutable_automaton<context_t>;
+    using state_t = typename automaton_t::state_t;
+    automaton_t res{ctx};
     if (n == 0)
       return res;
 
@@ -24,15 +26,14 @@ namespace vcsn
     auto p = res.new_state();
     res.set_initial(p);
     // Have states start on base 0. No need for pre and post states here.
-    // FIXME we should use state_t for states.
-    std::map<unsigned, unsigned> states;
+    std::map<unsigned, state_t> states;
     // We want first state to be 0 and not 2.
     states.emplace(0, p);
     // Set transitions.
-    auto x = p;
+    state_t x = p;
     for (unsigned i = 1; i < n; ++i)
       {
-        auto y = res.new_state();
+        state_t y = res.new_state();
         res.add_transition(x, y, 'a');
         res.add_transition(y, x, 'b');
         x = y;
