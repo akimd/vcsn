@@ -41,6 +41,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Ctx>
       automaton
       ladybird(const dyn::context& ctx, unsigned n)

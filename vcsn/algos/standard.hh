@@ -30,6 +30,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       bool
       is_standard(const automaton& aut)
@@ -326,7 +327,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       automaton
-      standard(const ratexp& exp)
+      standard_exp(const ratexp& exp)
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.

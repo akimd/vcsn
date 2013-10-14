@@ -47,7 +47,8 @@ namespace vcsn
     {
       /// Bridge.
       template <typename PolynomialSet>
-      std::ostream& list(const polynomial& polynomial, std::ostream& o)
+      std::ostream& list_polynomial(const polynomial& polynomial,
+                                    std::ostream& o)
       {
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::list<PolynomialSet>(p.get_polynomialset(),
@@ -59,7 +60,8 @@ namespace vcsn
 
       /// Bridge.
       template <typename PolynomialSet>
-      std::ostream& print(const polynomial& polynomial, std::ostream& o)
+      std::ostream& print_polynomial(const polynomial& polynomial,
+                                     std::ostream& o)
       {
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::print<PolynomialSet>(p.get_polynomialset(),
@@ -94,9 +96,9 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Abstract but parameterized.
+      /// Bridge.
       template <typename RatExpSet>
-      std::ostream& print(const ratexp& exp, std::ostream& o)
+      std::ostream& print_exp(const ratexp& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
         return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
@@ -126,9 +128,9 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Abstract but parameterized.
+      /// Bridge.
       template <typename WeightSet>
-      std::ostream& print(const weight& weight, std::ostream& o)
+      std::ostream& print_weight(const weight& weight, std::ostream& o)
       {
         const auto& w = weight->as<WeightSet>();
         return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);

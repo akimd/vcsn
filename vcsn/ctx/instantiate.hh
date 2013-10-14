@@ -167,9 +167,9 @@ namespace vcsn
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);
-        list_polynomial_register(wps_t::sname(), list<wps_t>);
+        REGISTER(list_polynomial, wps_t);
         REGISTER(power, aut_t);
-        print_polynomial_register(wps_t::sname(), print<wps_t>);
+        REGISTER(print_polynomial, wps_t);
         REGISTER2(product, aut_t, aut_t);
         REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);
@@ -281,23 +281,20 @@ namespace vcsn
         lift_automaton_register(aut_t::sname(), lift<aut_t>);
         lift_exp_register(rs_t::sname(), lift<rs_t>);
 
-        list_polynomial_register(rps_t::sname(), list<rps_t>);
+        REGISTER(list_polynomial, rps_t);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
 
         // print
-        print_exp_register(rs_t::sname(), print<rs_t>);
-        print_polynomial_register(rps_t::sname(), print<rps_t>);
-        print_weight_register(ws_t::sname(), print<ws_t>);
+        REGISTER(print_exp, rs_t);
+        REGISTER(print_polynomial, rps_t);
+        REGISTER(print_weight, ws_t);
 
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);
 
-        standard_register(aut_t::sname(),
-                          static_cast<standard_t&>(standard<aut_t>));
-        standard_exp_register(rs_t::sname(),
-                              static_cast<standard_exp_t&>(standard<rs_t>));
-
+        REGISTER(standard, aut_t);
+        REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);
         REGISTER2(sum, aut_t, aut_t);
         REGISTER(tikz, aut_t);

@@ -54,8 +54,11 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        fado_register(aut_t::sname(), fado<aut_t>);
-        grail_register(aut_t::sname(), grail<aut_t>);
+#  define REGISTER(Algo, Type)                          \
+        Algo ## _register(Type::sname(), Algo<Type>)
+        REGISTER(fado, aut_t);
+        REGISTER(grail, aut_t);
+# undef REGISTER
         return true;
       }
 

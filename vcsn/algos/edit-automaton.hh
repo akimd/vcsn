@@ -302,6 +302,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       automaton_editor*
       make_automaton_editor(const context& ctx)
