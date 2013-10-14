@@ -14,6 +14,10 @@
 
 namespace vcsn
 {
+
+  /*----------------------.
+  | subset construction.  |
+  `----------------------*/
   namespace detail
   {
     template <typename Aut>
@@ -127,7 +131,8 @@ namespace vcsn
       }
 
       /// A map from determinized states to sets of original states.
-      std::map<state_t, std::set<state_t>>
+      using origins_t = std::map<state_t, std::set<state_t>>;
+      origins_t
       origins() const
       {
         std::map<state_t, std::set<state_t>> res;
@@ -142,6 +147,28 @@ namespace vcsn
           }
         return res;
       }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins." << std::endl;
+        for (auto p : orig)
+          {
+            o << "    " << p.first - 2
+              << " [label = \"";
+            const char* sep = "";
+            for (auto s: p.second)
+              {
+                o << sep << s - 2;
+                sep = ",";
+              }
+            o << "\"]" << std::endl;
+          }
+        o << "*/" << std::endl;
+        return o;
+      }
     };
   }
 
@@ -155,22 +182,7 @@ namespace vcsn
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_DETERMINIZE"))
-      {
-        std::cout << "/* Origins." << std::endl;
-        for (auto p : determinize.origins())
-          {
-            std::cout << "    " << p.first - 2
-                      << " [label = \"";
-            const char* sep = "";
-            for (auto s: p.second)
-              {
-                std::cout << sep << s - 2;
-                sep = ",";
-              }
-            std::cout << "\"]" << std::endl;
-          }
-        std::cout << "*/" << std::endl;
-      }
+      determinize.print(std::cout, determinize.origins());
     return res;
   }
 

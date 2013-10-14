@@ -164,13 +164,33 @@ namespace vcsn
       }
 
       /// A map from product states to pair of original states.
-      std::map<state_t, pair_t>
+      using origins_t = std::map<state_t, pair_t>;
+      origins_t
       origins() const
       {
         std::map<state_t, pair_t> res;
         for (const auto& p: pmap_)
           res.emplace(p.second, p.first);
         return res;
+      }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins." << std::endl;
+        for (auto p: orig)
+          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+            o << "    " << p.first - 2
+              << " [label = \""
+              << p.second.first - 2
+              << ","
+              << p.second.second - 2
+              << "\"]"
+              << std::endl;
+        o << "*/" << std::endl;
+        return o;
       }
     };
   }
@@ -189,15 +209,7 @@ namespace vcsn
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_PRODUCT"))
-      for (auto p: product.origins())
-        if (p.first != res.pre() && p.first != res.post())
-          std::cout << "  " << p.first - 2
-                    << " [label = \""
-                    << p.second.first - 2
-                    << ","
-                    << p.second.second - 2
-                    << "\"]"
-                    << std::endl;
+      product.print(std::cout, product.origins());
     return res;
   }
 
@@ -216,15 +228,7 @@ namespace vcsn
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_SHUFFLE"))
-      for (auto p: product.origins())
-        if (p.first != res.pre() && p.first != res.post())
-          std::cout << "  " << p.first - 2
-                    << " [label = \""
-                    << p.second.first - 2
-                    << ","
-                    << p.second.second - 2
-                    << "\"]"
-                    << std::endl;
+      product.print(std::cout, product.origins());
     return res;
   }
 
