@@ -99,7 +99,7 @@ namespace vcsn
     {
       template <typename Aut>
       automaton
-      lift(const automaton& aut)
+      lift_automaton(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
         return make_automaton(::vcsn::detail::lift(a.context()), lift(a));
@@ -143,7 +143,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       ratexp
-      lift(const ratexp& exp)
+      lift_exp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         return make_ratexp(::vcsn::detail::lift(e.get_ratexpset()),

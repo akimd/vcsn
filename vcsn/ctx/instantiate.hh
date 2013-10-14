@@ -242,16 +242,10 @@ namespace vcsn
         REGISTER(coaccessible, aut_t);
         REGISTER2(concatenate, aut_t, aut_t);
         REGISTER(copy, aut_t);
-
-        // dot.
-        dot_stream_register(aut_t::sname(),
-                            static_cast<dot_stream_t&>(dot<aut_t>));
-        dot_string_register(aut_t::sname(),
-                            static_cast<dot_string_t&>(dot<aut_t>));
-        dot_stream_register(taut_t::sname(),
-                            static_cast<dot_stream_t&>(dot<taut_t>));
-        dot_string_register(taut_t::sname(),
-                            static_cast<dot_string_t&>(dot<taut_t>));
+        REGISTER(dot_stream, aut_t);
+        REGISTER(dot_stream, taut_t);
+        REGISTER(dot_string, aut_t);
+        REGISTER(dot_string, taut_t);
 
         // edit-automaton.
         make_automaton_editor_register(Ctx::sname(),
@@ -270,29 +264,19 @@ namespace vcsn
         REGISTER(is_standard, aut_t);
         REGISTER(is_trim, aut_t);
         REGISTER(is_useless, aut_t);
-
-        is_valid_register(aut_t::sname(),
-                          static_cast<is_valid_t&>(is_valid<aut_t>));
-        is_valid_exp_register(rs_t::sname(),
-                              static_cast<is_valid_exp_t&>(is_valid<rs_t>));
-
+        REGISTER(is_valid, aut_t);
+        REGISTER(is_valid_exp, rs_t);
         REGISTER2(left_mult, aut_t, ws_t);
-        // lift.
-        lift_automaton_register(aut_t::sname(), lift<aut_t>);
-        lift_exp_register(rs_t::sname(), lift<rs_t>);
-
+        REGISTER(lift_automaton, aut_t);
+        REGISTER(lift_exp, rs_t);
         REGISTER(list_polynomial, rps_t);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
-
-        // print
         REGISTER(print_exp, rs_t);
         REGISTER(print_polynomial, rps_t);
         REGISTER(print_weight, ws_t);
-
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);
-
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);

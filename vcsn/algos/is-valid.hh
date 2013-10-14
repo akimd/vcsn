@@ -138,6 +138,7 @@ namespace vcsn
 
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       bool is_valid(const automaton& aut)
       {
@@ -180,9 +181,10 @@ namespace vcsn
       | dyn::is_valid(exp).  |
       `---------------------*/
 
+      /// Bridge.
       template <typename RatExpSet>
       bool
-      is_valid(const ratexp& exp)
+      is_valid_exp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         return is_valid<RatExpSet>(e.get_ratexpset(), e.ratexp());

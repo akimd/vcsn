@@ -165,8 +165,9 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
-      std::ostream& dot(const automaton& aut, std::ostream& out)
+      std::ostream& dot_stream(const automaton& aut, std::ostream& out)
       {
         return dot(aut->as<Aut>(), out);
       }
@@ -196,9 +197,9 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Abstract but parameterized.
+      /// Bridge.
       template <typename Aut>
-      std::string dot(const automaton& aut)
+      std::string dot_string(const automaton& aut)
       {
         return dot(aut->as<Aut>());
       }
