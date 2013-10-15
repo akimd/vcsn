@@ -1,3 +1,8 @@
+* 2013-10-15
+** Smaller libraries
+Some compiler magic was used to reduce the size of the libraries (about 20%
+on Mac OS X using GCC 4.8).  TAF-Kit might start faster.
+
 * 2013-10-14
 ** determinize: by default no longer forces the result to be complete
 The determinization (static, dynamic, TAF-Kit) now admits an optional second
