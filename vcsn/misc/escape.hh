@@ -4,7 +4,9 @@
 # include <iosfwd>
 # include <string>
 
-namespace vcsn
+# include <vcsn/misc/export.hh>
+
+namespace vcsn LIBVCSN_API
 {
   /// Output a string, escaping special characters.
   std::ostream& str_escape(std::ostream& os, const std::string& str);

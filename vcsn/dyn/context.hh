@@ -5,6 +5,7 @@
 # include <string>
 
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -13,7 +14,7 @@ namespace vcsn
     namespace detail
     {
       /// Template-less root for contexts.
-      class abstract_context
+      class LIBVCSN_API abstract_context
       {
       public:
         /// A description of the context, sufficient to build it.

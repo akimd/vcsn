@@ -7,8 +7,9 @@
 # include <memory> // shared_ptr
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/export.hh>
 
-namespace vcsn
+namespace vcsn LIBVCSN_API
 {
   /// An narrow-char stream that discards the output.
   extern std::ostream cnull;

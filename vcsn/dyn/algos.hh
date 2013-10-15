@@ -7,13 +7,14 @@
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
   // vcsn/algo/edit-automaton.hh.
   class automaton_editor;
 
-  namespace dyn
+  namespace dyn LIBVCSN_API
   {
     /// The accessible subautomaton of \a aut.
     automaton accessible(const automaton& aut);
@@ -309,7 +310,7 @@ namespace vcsn
   }
 }
 
-namespace std
+namespace std LIBVCSN_API
 {
   /// Output automaton \a a on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);

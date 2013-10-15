@@ -6,6 +6,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/context.hh> // vname.
 # include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -18,7 +19,7 @@ namespace vcsn
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static ratexps.
-      class abstract_ratexp
+      class LIBVCSN_API abstract_ratexp
       {
       public:
         /// A description of the ratexp type.

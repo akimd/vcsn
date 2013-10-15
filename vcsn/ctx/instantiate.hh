@@ -63,10 +63,10 @@ namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
   MAYBE_EXTERN template                                                 \
-  std::ostream& Format<Aut>(const Aut& aut, std::ostream& out);         \
+  LIBVCSN_API std::ostream& Format<Aut>(const Aut& aut, std::ostream& out); \
                                                                         \
   MAYBE_EXTERN template                                                 \
-  std::string Format<Aut>(const Aut& aut);
+  LIBVCSN_API std::string Format<Aut>(const Aut& aut);
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
@@ -74,7 +74,7 @@ namespace vcsn
 
 # define VCSN_CTX_INSTANTIATE_1(Ctx)                                    \
   MAYBE_EXTERN template                                                 \
-  class mutable_automaton<Ctx>;                                         \
+  class LIBVCSN_API mutable_automaton<Ctx>;                             \
                                                                         \
   /* aut_to_exp. */                                                     \
   MAYBE_EXTERN template                                                 \
@@ -127,9 +127,9 @@ namespace vcsn
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
-  class detail::transpose_automaton<mutable_automaton<Ctx>>;            \
+  class LIBVCSN_API detail::transpose_automaton<mutable_automaton<Ctx>>; \
   MAYBE_EXTERN template                                                 \
-  class detail::transposer<ratexpset<Ctx>>
+  class LIBVCSN_API detail::transposer<ratexpset<Ctx>>
 
 
   /*----------------------------------.

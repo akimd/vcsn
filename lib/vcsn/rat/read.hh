@@ -2,10 +2,11 @@
 # define LIB_VCSN_RAT_READ_HH
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
-  namespace rat
+  namespace rat LIBVCSN_API
   {
     /// The ratexp in file \a f, with \a ctx as default context.
     dyn::ratexp read_file(const std::string& f, const dyn::context& ctx);

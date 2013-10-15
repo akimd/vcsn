@@ -5,6 +5,7 @@
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/ratexpset.hh>
 # include <lib/vcsn/rat/location.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -12,7 +13,7 @@ namespace vcsn
   {
 
     /// State and public interface for rational expression parsing.
-    class driver
+    class LIBVCSN_API driver
     {
     public:
       driver() = default;

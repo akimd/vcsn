@@ -4,6 +4,7 @@
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/weightset.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -16,7 +17,7 @@ namespace vcsn
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
-      class abstract_weight
+      class LIBVCSN_API abstract_weight
       {
       public:
         /// A description of the weight type.

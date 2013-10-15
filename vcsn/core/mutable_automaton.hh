@@ -7,16 +7,17 @@
 
 # include <boost/range/irange.hpp>
 
-# include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/crange.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
 
   template <typename Context>
-  class mutable_automaton: public dyn::detail::abstract_automaton
+  class mutable_automaton
+    : public dyn::detail::abstract_automaton
   {
   public:
     using context_t = Context;

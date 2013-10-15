@@ -4,6 +4,8 @@
 # include <memory> // shared_ptr
 # include <vcsn/core/rat/fwd.hh>
 
+# include <vcsn/misc/export.hh> // LIBVCSN_API
+
 namespace vcsn
 {
   namespace dyn
@@ -86,10 +88,12 @@ namespace vcsn
 // FIXME: Not the best place for this.
 # define REGISTER_DECLARE(Name, Signature)                              \
   using Name ## _t = auto Signature;                                    \
+  LIBVCSN_API                                                           \
   bool Name ## _register(const std::string& ctx, Name ## _t fn);
 
 # define REGISTER_DECLARE2(Name, Signature)                             \
   using Name ## _t = auto Signature;                                    \
+  LIBVCSN_API                                                           \
   bool Name ## _register(const std::string& ctx1, const std::string& ctx2, \
                          Name ## _t fn);
 

@@ -130,6 +130,7 @@ nobase_include_HEADERS =                        \
   vcsn/misc/dynamic_bitset.hh                   \
   vcsn/misc/echo.hh                             \
   vcsn/misc/escape.hh                           \
+  vcsn/misc/export.hh                           \
   vcsn/misc/hash.hh                             \
   vcsn/misc/military-order.hh                   \
   vcsn/misc/random.hh                           \

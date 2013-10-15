@@ -4,6 +4,7 @@
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/algos/edit-automaton.hh>
+# include <vcsn/misc/export.hh>
 
 # include <lib/vcsn/rat/location.hh>
 
@@ -15,7 +16,7 @@ namespace vcsn
     {
 
       /// State and public interface for Dot parsing.
-      class driver
+      class LIBVCSN_API driver
       {
       public:
         using automaton_t = dyn::automaton;

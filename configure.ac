@@ -95,6 +95,18 @@ TC_CXX_WARNINGS(
    [-Wwrite-strings],
    [-Wzero-as-null-pointer-constant]])
 
+# Use -Werror since using -fvisibility under MinGW is only a warning.
+# (The option is ignored anyway since this does not make sense under windows).
+
+# When -fvisibility=hidden is on, std:: objects cannot be passed between
+# CXX_DEBUG and non CXX_DEBUG code.  As a consequence, _GLIBCXX_DEBUG is
+# unusable in our environment.
+AC_SUBST([VISIBILITY_CXXFLAGS])
+AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
+  [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
+  AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
+    [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
+
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 BOOST_REQUIRE([1.49])
 VCSN_REGEX

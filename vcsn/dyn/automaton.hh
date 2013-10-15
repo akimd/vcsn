@@ -5,6 +5,7 @@
 # include <string>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -15,7 +16,7 @@ namespace vcsn
       /// Base class for automata.
       ///
       /// FIXME: Should not exist, we should model as we did for ratexp.
-      class abstract_automaton
+      class LIBVCSN_API abstract_automaton
       {
       public:
         /// Base class for automata.
