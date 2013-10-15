@@ -193,20 +193,27 @@ Implement it.  Sources of inspiration: Vaucanson 1 (I have been told there
 are two implementations there), Forlan.
 
 ** determinization
-Relax the "complete" constraint on the result.  See also for other
-implementations (cf. "Five determinization algorithms").
+Look for other implementations (cf. "Five determinization algorithms").  And
+pay attention to the case of large alphabets.
+
+** derived-term
+Computation of the derived term automaton.
 
 ** minimization
 Import what Guillaume did for Moore minimization, but without the tbb part
 (for a start).  Implement more minimization algorithms (Hopcroft, Revuz,
-Brzozowski...).
+Brzozowski...).  See how the algorithm can be adjusted to work on
+non-complete automata.
 
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
 
-** subsequence, prefix, suffix, factor
+** quotient
+We need generalizations of minimization.  See TAF-Kit 1.
+
+** subsequence (or subword?), prefix, suffix, factor
 Generate, from an automaton, resp. a ratexp, an automaton, resp. a ratexp,
 that corresponds to the subsequences, prefixes, suffixes and factors.
 
