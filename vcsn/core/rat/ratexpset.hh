@@ -72,6 +72,11 @@ namespace vcsn
     bool is_zero(value_t v) const;
     bool is_one(value_t v) const;
 
+    static constexpr bool is_commutative_semiring()
+    {
+      return false;
+    }
+
     static constexpr bool show_one()
     {
       return false;

@@ -261,6 +261,8 @@ namespace vcsn
       return v.empty();
     }
 
+    static constexpr bool is_commutative_semiring() { return false; }
+
     static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status()
     {
