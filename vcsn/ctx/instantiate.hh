@@ -147,6 +147,28 @@ namespace vcsn
     namespace detail
     {
       template <typename Ctx>
+      typename std::enable_if<!Ctx::weightset_t::is_commutative_semiring(), void>::type
+      register_commutative_semiring_kind_functions(labels_are_letters)
+      {
+        // Do nothing.
+      }
+
+      // Register algorithms requiring commutative semiring weightsets.
+      template <typename Ctx>
+      typename std::enable_if<Ctx::weightset_t::is_commutative_semiring(), void>::type
+      register_commutative_semiring_kind_functions(labels_are_letters)
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::detail;
+
+        REGISTER2(infiltrate, aut_t, aut_t);
+        REGISTER(is_ambiguous, aut_t);
+        REGISTER(power, aut_t);
+        REGISTER2(product, aut_t, aut_t);
+        REGISTER2(shuffle, aut_t, aut_t);
+      }
+
+      template <typename Ctx>
       bool
       register_kind_functions(labels_are_letters)
       {
@@ -164,20 +186,16 @@ namespace vcsn
         REGISTER(double_ring, Ctx);
         REGISTER(enumerate, aut_t);
         REGISTER(eval, aut_t);
-        REGISTER2(infiltrate, aut_t, aut_t);
-        REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);
         REGISTER(list_polynomial, wps_t);
-        REGISTER(power, aut_t);
         REGISTER(print_polynomial, wps_t);
-        REGISTER2(product, aut_t, aut_t);
         REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);
-        REGISTER2(shuffle, aut_t, aut_t);
         REGISTER(u, Ctx);
 
+        register_commutative_semiring_kind_functions<Ctx>(labels_are_letters{});
         return true;
       }
 

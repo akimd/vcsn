@@ -23,11 +23,13 @@ namespace vcsn
     template <typename A, typename B>
     class producter
     {
-      // FIXME: ensure that weightsets are compatible.
       static_assert(A::context_t::is_lal,
                     "requires labels_are_letters");
       static_assert(B::context_t::is_lal,
                     "requires labels_are_letters");
+      static_assert(A::context_t::weightset_t::is_commutative_semiring(),
+                    "not a commutative semiring");
+
       using automaton_t = A;
 
       using state_t = typename automaton_t::state_t;

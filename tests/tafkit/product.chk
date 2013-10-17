@@ -170,3 +170,6 @@ digraph
 EOF
 
 run 0 out.exp -vcsn-product -f a.gv b.gv
+
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(ab)_b>' -e 'ab' -o ab.gv
+run 1 '' -vcsn-product -f ab.gv ab.gv
