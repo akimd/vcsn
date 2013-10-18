@@ -5,8 +5,8 @@
 
 #  define ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
 #  define ATTRIBUTE_CONST         __attribute__((const))
-#  define ATTRIBUTE_DLLEXPORT
-#  define ATTRIBUTE_DLLIMPORT
+#  define ATTRIBUTE_DLLEXPORT     __attribute__((visibility("default")))
+#  define ATTRIBUTE_DLLIMPORT     ATTRIBUTE_DLLEXPORT
 #  define ATTRIBUTE_HOT           __attribute__((hot))
 #  define ATTRIBUTE_NORETURN      [[noreturn]]
 #  define ATTRIBUTE_PURE          __attribute__((pure))

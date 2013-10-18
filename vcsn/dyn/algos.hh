@@ -14,26 +14,33 @@ namespace vcsn
   // vcsn/algo/edit-automaton.hh.
   class automaton_editor;
 
-  namespace dyn LIBVCSN_API
+  namespace dyn
   {
     /// The accessible subautomaton of \a aut.
+    LIBVCSN_API
     automaton accessible(const automaton& aut);
 
     /// Whether define the same language.
     /// \pre lhs and rhs are lal
     /// \pre lhs and rhs are Boolean
+    LIBVCSN_API
     bool are_equivalent(const automaton& lhs, const automaton& rhs);
 
     /// Whether define the same language.
+    LIBVCSN_API
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
+    LIBVCSN_API
     ratexp aut_to_exp(const automaton& aut);
+    LIBVCSN_API
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
     /// Concatenate \a n copies of \a aut.
+    LIBVCSN_API
     automaton chain(const automaton& aut, size_t n);
 
     /// The coaccessible subautomaton of \a aut.
+    LIBVCSN_API
     automaton coaccessible(const automaton& aut);
 
     /// The complement of \a aut.
@@ -41,166 +48,215 @@ namespace vcsn
     /// \pre aut is Boolean
     /// \pre aut is deterministic
     /// \pre aut is complete
+    LIBVCSN_API
     automaton complement(const automaton& aut);
 
     /// A completed copy of \a aut.
     /// \pre aut is lal
+    LIBVCSN_API
     automaton complete(const automaton& aut);
 
     /// Concatenate two standard automata.
+    LIBVCSN_API
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
     /// The weight associated to the empty word in \a e.
+    LIBVCSN_API
     weight constant_term(const ratexp& e);
 
     /// A copy of \a aut.
+    LIBVCSN_API
     automaton copy(const automaton& aut);
 
     /// A simple NFA for (a+b)*a(a+b)^n.
+    LIBVCSN_API
     automaton de_bruijn(const context& ctx, unsigned n);
 
     /// Derive \a ratexp with respect to \a s.
     /// \pre  \a exp must be LAL.
+    LIBVCSN_API
     polynomial derive(const ratexp& exp, const std::string& s);
 
     /// The derived-term automaton of \a e.
+    LIBVCSN_API
     automaton derived_terms(const ratexp& e);
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
     /// \param complete  whether to force the result to be a complete automaton
     /// \pre  \a aut must be LAL.
+    LIBVCSN_API
     automaton determinize(const automaton& aut, bool complete = false);
 
     /// An automaton which accepts a word n representing a number in
     /// base b iff k|n.
+    LIBVCSN_API
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
     /// Output \a aut in GraphViz' Dot format.
+    LIBVCSN_API
     std::ostream& dot(const automaton& aut, std::ostream& out);
 
     /// A string representing \a aut in GraphViz' Dot format.
+    LIBVCSN_API
     std::string dot(const automaton& aut);
 
     /// The double_ring automaton with \a n states and \a f the list of finals.
+    LIBVCSN_API
     automaton double_ring(const context& ctx, unsigned n,
                           std::vector<unsigned> f);
 
     /// The LAO automaton \a aut with state \a s removed.
+    LIBVCSN_API
     automaton eliminate_state(const automaton& aut, int s);
 
     /// Output in Extended FSM format.
+    LIBVCSN_API
     std::ostream& efsm(const automaton& aut, std::ostream& out);
 
     /// One of the shortest accepted words.
     /// \throw std::domain_error if the automaton is useless
+    LIBVCSN_API
     polynomial enumerate(const automaton& aut, size_t max);
 
     /// Evaluate \a s on \a aut.
+    LIBVCSN_API
     weight eval(const automaton& aut, const std::string& s);
 
     /// Output in FAdo format.
+    LIBVCSN_API
     std::ostream& fado(const automaton& aut, std::ostream& out);
 
     /// Output in Grail format.
+    LIBVCSN_API
     std::ostream& grail(const automaton& aut, std::ostream& out);
 
     /// Output various facts about \a aut.
+    LIBVCSN_API
     std::ostream& info(const automaton& aut, std::ostream& out);
 
     /// Output various facts about \a exp.
+    LIBVCSN_API
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
     /// Whether \a aut is ambiguous.
     /// \pre \a aut is LAL.
+    LIBVCSN_API
     bool is_ambiguous(const automaton& aut);
 
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.
+    LIBVCSN_API
     bool is_complete(const automaton& aut);
 
     /// Whether \a aut is deterministic.
     /// \pre \a aut is LAL.
+    LIBVCSN_API
     bool is_deterministic(const automaton& aut);
 
     /// Whether has no state.
+    LIBVCSN_API
     bool is_empty(const automaton& aut);
 
     /// Whether has no cycle of spontaneous transitions.
+    LIBVCSN_API
     bool is_eps_acyclic(const automaton& aut);
 
     /// Whether is normalized (in the Thompson sense).
+    LIBVCSN_API
     bool is_normalized(const automaton& aut);
 
     /// Whether has no spontaneous transition.
+    LIBVCSN_API
     bool is_proper(const automaton& aut);
 
     /// Whether is standard (unique initial state, with weight one, no
     /// incoming transition).
+    LIBVCSN_API
     bool is_standard(const automaton& aut);
 
     /// Whether has no useless state.
+    LIBVCSN_API
     bool is_trim(const automaton& aut);
 
     /// Whether has no useful state.
+    LIBVCSN_API
     bool is_useless(const automaton& aut);
 
     /// Whether automaton is valid (epsilon-cycles converge).
+    LIBVCSN_API
     bool is_valid(const automaton& e);
 
     /// Whether rational expression is valid (all the starred
     /// sub-expressions are starrable).
+    LIBVCSN_API
     bool is_valid(const ratexp& e);
 
     /// The ladybird automaton with \a n states.
+    LIBVCSN_API
     automaton ladybird(const context& ctx, unsigned n);
 
     /// The left-mult automaton with \a w as weight.
     /// \precondition aut is standard.
+    LIBVCSN_API
     automaton left_mult(const automaton& aut, const weight& w);
 
     /// The lifted LAO automaton from \a aut.
+    LIBVCSN_API
     automaton lift(const automaton& aut);
 
     /// The lifted LAO rational expression from \a e.
+    LIBVCSN_API
     ratexp lift(const ratexp& e);
 
+    LIBVCSN_API
     context make_context(const std::string& name);
 
+    LIBVCSN_API
     automaton_editor* make_automaton_editor(const context& ctx);
 
+    LIBVCSN_API
     ratexpset make_ratexpset(const context& ctx);
 
     /// Repeated product of \a aut with itself.
+    LIBVCSN_API
     automaton power(const automaton& aut, unsigned n);
 
     /// Print automaton \a a on \a o using format \a type.
+    LIBVCSN_API
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "default");
 
     /// Print polynomial \a p on \a o using format \a type.
+    LIBVCSN_API
     std::ostream& print(const polynomial& p, std::ostream& o,
                         const std::string& type = "default");
 
     /// Print ratexp \a e on \a o using format \a type.
+    LIBVCSN_API
     std::ostream& print(const ratexp& e, std::ostream& o,
                         const std::string& type = "default");
 
     /// Print weight \a w on \a o using format \a type.
+    LIBVCSN_API
     std::ostream& print(const weight& w, std::ostream& o,
                         const std::string& type = "default");
 
     /// Specify the output format for \a o.
+    LIBVCSN_API
     void set_format(std::ostream& o, const std::string& type);
 
     /// Get the output format for \a o.
+    LIBVCSN_API
     std::string get_format(std::ostream& o);
 
     /// The product of automata \a lhs and \a rhs.
     /// Performs the intersection of the contexts.
+    LIBVCSN_API
     automaton product(const automaton& lhs, const automaton& rhs);
 
     /// An automaton equivalent to \a aut, without spontaneous transitions.
+    LIBVCSN_API
     automaton proper(const automaton& aut);
 
     /// Produce a random automaton.
@@ -218,6 +274,7 @@ namespace vcsn
     ///    The number of initial states wanted (0 <= num_initial <= num_states)
     /// \param num_final
     ///    The number of final states wanted (0 <= num_final <= num_states)
+    LIBVCSN_API
     automaton random_automaton(const context& ctx,
                                unsigned num_states,
                                float density = 0.1,
@@ -226,17 +283,20 @@ namespace vcsn
     /// Read an automaton in a file.
     /// \param file  the file name.
     /// \param type  its format.
+    LIBVCSN_API
     automaton read_automaton_file(const std::string& file,
                                   const std::string& type = "dot");
 
     /// Read an automaton in a string.
     /// \param str  the automaton.
+    LIBVCSN_API
     automaton read_automaton_string(const std::string& str);
 
     /// Read a ratexp in a file.
     /// \param f     the file name.
     /// \param rs    its ratexpset.
     /// \param type  its format.
+    LIBVCSN_API
     ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
                             const std::string& type);
 
@@ -244,6 +304,7 @@ namespace vcsn
     /// \param f     the file name.
     /// \param ctx   its context, from which is built its ratexpset.
     /// \param type  its format.
+    LIBVCSN_API
     ratexp read_ratexp_file(const std::string& f, const context& ctx,
                             const std::string& type);
 
@@ -251,87 +312,110 @@ namespace vcsn
     /// \param s     the string to parse.
     /// \param ctx   its context, from which is built its ratexpset.
     /// \param type  its format.
+    LIBVCSN_API
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
     /// Read a weight in a file.
     /// \param f     the file name.
     /// \param ctx   its context, from which is built its weightset.
+    LIBVCSN_API
     weight read_weight_file(const std::string& f, const context& ctx);
 
     /// Read a weight in a string.
     /// \param s     the string to parse.
     /// \param ctx   its context, from which is built its weightset.
     /// \param type  its format.
+    LIBVCSN_API
     weight read_weight_string(const std::string& s, const context& ctx);
 
     /// The right-mult automaton with \a w as weight.
     /// \precondition aut is standard.
+    LIBVCSN_API
     automaton right_mult(const automaton& aut, const weight& w);
 
     /// The shuffle of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
+    LIBVCSN_API
     automaton shuffle(const automaton& lhs, const automaton& rhs);
 
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
+    LIBVCSN_API
     automaton infiltrate(const automaton& lhs, const automaton& rhs);
 
     /// A standardized \a a.
+    LIBVCSN_API
     automaton standard(const automaton& a);
 
     /// The standard automaton of \a e.
+    LIBVCSN_API
     automaton standard(const ratexp& e);
 
     /// The Thompson automaton of \a e.
+    LIBVCSN_API
     automaton thompson(const ratexp& e);
 
     /// Output \a aut in LaTeX's TikZ format.
+    LIBVCSN_API
     std::ostream& tikz(const automaton& aut, std::ostream& out);
 
     /// Transpose \a aut.
+    LIBVCSN_API
     automaton transpose(automaton& aut);
 
     /// Transpose \a e.
+    LIBVCSN_API
     ratexp transpose(const ratexp& e);
 
     /// The useful subautomaton of \a aut.
+    LIBVCSN_API
     automaton trim(const automaton& aut);
 
     /// One of the shortest accepted words.
     /// \throw std::domain_error if the automaton is useless
+    LIBVCSN_API
     std::string shortest(const automaton& aut);
 
     /// Star of a standard automaton.
+    LIBVCSN_API
     automaton star(const automaton& aut);
 
     /// Sum of two standard automata.
+    LIBVCSN_API
     automaton sum(const automaton& lhs, const automaton& rhs);
 
     /// The Brzozowski universal witness.
+    LIBVCSN_API
     automaton u(const context& ctx, unsigned n);
 
     /// Union of two automata (plain graph union).
     /// Performs the union of the contexts.
+    LIBVCSN_API
     automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// The universal automaton of \a aut.
+    LIBVCSN_API
     automaton universal(const automaton& aut);
   }
 }
 
-namespace std LIBVCSN_API
+namespace std
 {
   /// Output automaton \a a on \a o.
+  LIBVCSN_API
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
 
   /// Output polynomial \a p on \a o.
+  LIBVCSN_API
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
 
   /// Output ratexp \a e on \a o.
+  LIBVCSN_API
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::ratexp& e);
 
   /// Output weight \a w on \a o.
+  LIBVCSN_API
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::weight& w);
 }
 

@@ -6,19 +6,23 @@
 
 # include <vcsn/misc/export.hh>
 
-namespace vcsn LIBVCSN_API
+namespace vcsn
 {
   /// Output a string, escaping special characters.
+  LIBVCSN_API
   std::ostream& str_escape(std::ostream& os, const std::string& str);
 
   /// Likewise, but produces a string.
+  LIBVCSN_API
   std::string str_escape(const std::string& c);
 
   /// Output a character, escaping special characters.
   /// -1 denotes end-of-file.
+  LIBVCSN_API
   std::ostream& str_escape(std::ostream& os, int c);
 
   /// Likewise, but produces a string.
+  LIBVCSN_API
   std::string str_escape(int c);
 }
 
