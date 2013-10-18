@@ -39,7 +39,7 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
 
   protected:
-    const context_t ctx_;
+    context_t ctx_;
 
     /// Data stored per transition.
     using stored_transition_t = transition_tuple<state_t, label_t, weight_t>;
@@ -84,10 +84,21 @@ namespace vcsn
       : ctx_(that.ctx_)
       , prepost_label_(that.prepost_label_)
     {
-      std::swap(states_, that.states_);
-      std::swap(states_fs_, that.states_fs_);
-      std::swap(transitions_, that.transitions_);
-      std::swap(transitions_fs_, that.transitions_fs_);
+      *this = std::move(that);
+    }
+
+    mutable_automaton& operator=(mutable_automaton&& that)
+    {
+      if (this != &that)
+        {
+          ctx_ = std::move(that.ctx_);
+          prepost_label_ = std::move(that.prepost_label_);
+          std::swap(states_, that.states_);
+          std::swap(states_fs_, that.states_fs_);
+          std::swap(transitions_, that.transitions_);
+          std::swap(transitions_fs_, that.transitions_fs_);
+        }
+      return *this;
     }
 
     // Related sets

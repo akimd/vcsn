@@ -8,6 +8,7 @@
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/copy.hh>
 
 namespace vcsn
 {
@@ -338,30 +339,38 @@ namespace vcsn
   Aut
   power(const Aut& aut, unsigned n)
   {
-    switch (n)
+    Aut res(aut.context());
+    {
+      // automatonset::one().
+      auto s = res.new_state();
+      res.set_initial(s);
+      res.set_final(s);
+      for (auto l: *res.context().labelset())
+        res.set_transition(s, s, l);
+    }
+
+    if (n)
       {
-      case 0:
-        {
-          Aut res(aut.context());
-          auto s = res.new_state();
-          res.set_initial(s);
-          res.set_final(s);
-          for (auto l: *res.context().labelset())
-            res.set_transition(s, s, l);
-          return res;
-        }
-      case 1:
-        return accessible(aut);
-      default:
-        auto t = power(aut, n / 2);
-        auto t2 = product(t, t);
-        if (n % 2 == 0)
-          // n is even.
-          return t2;
+        static bool iterative = getenv("VCSN_ITERATIVE");
+        if (iterative)
+          for (int i = 0; i < n; ++i)
+            res = std::move(product(res, aut));
         else
-          // n is odd.
-          return product(t2, t);
+          {
+            Aut power = copy(aut);
+            while (true)
+              {
+                if (n % 2)
+                  res = std::move(product(res, power));
+                n /= 2;
+                if (!n)
+                  break;
+                power = std::move(product(power, power));
+              }
+          }
       }
+
+    return res;
   }
 
 

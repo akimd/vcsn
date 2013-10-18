@@ -86,6 +86,16 @@ namespace vcsn
         : context{labelset_t{}, weightset_t{}}
       {}
 
+      context& operator=(context&& that)
+      {
+        if (this != &that)
+          {
+            std::swap(ls_, that.ls_);
+            std::swap(ws_, that.ws_);
+          }
+        return *this;
+      }
+
       /// The name of this context, built from its parameters.
       /// E.g., "lal_char_b", "law_char_zmin".
       static std::string sname()

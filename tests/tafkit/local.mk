@@ -86,6 +86,8 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
+  %D%/power.dir/binary^0.gv                     \
+  %D%/power.dir/binary^1.gv                     \
   %D%/product.dir/a.gv                          \
   %D%/product.dir/ab.gv                         \
   %D%/product.dir/abc.gv                        \
@@ -96,14 +98,15 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xyz.gv                        \
   %D%/random.dir/clique-a-4.gv
 
-%D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
-%D%/derive.log: $(wildcard $(srcdir)/%D%/derive.dir/*)
+%D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/derive.log:      $(wildcard $(srcdir)/%D%/derive.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
-%D%/efsm.log: $(wildcard $(srcdir)/%D%/efsm.dir/*)
-%D%/fado.log: $(wildcard $(srcdir)/%D%/fado.dir/*)
-%D%/grail.log: $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/infiltrate.log: $(wildcard $(srcdir)/%D%/product.dir/*)
-%D%/random.log: $(wildcard $(srcdir)/%D%/random.dir/*)
+%D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
+%D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
+%D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
+%D%/infiltrate.log:  $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
+%D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain
