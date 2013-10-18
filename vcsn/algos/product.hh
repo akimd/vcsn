@@ -353,7 +353,7 @@ namespace vcsn
       {
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
-          for (int i = 0; i < n; ++i)
+          for (size_t i = 0; i < n; ++i)
             res = std::move(product(res, aut));
         else
           {

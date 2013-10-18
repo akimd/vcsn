@@ -140,14 +140,12 @@ namespace vcsn
       /// Bridge.
       template <typename Aut>
       automaton
-      eliminate_state(const automaton& aut, int s)
+      eliminate_state(const automaton& aut, int state)
       {
+        using state_t = typename Aut::state_t;
         const auto& a = aut->as<Aut>();
         auto res = vcsn::copy(a);
-        if (s == res.null_state())
-          s = next_naive(res);
-        else
-          s += 2;
+        state_t s = state == -1 ? next_naive(res) : state + 2;
         vcsn::detail::state_eliminator<decltype(res)> eliminate_state(res);
         eliminate_state(s);
         return make_automaton(a.context(), std::move(res));
