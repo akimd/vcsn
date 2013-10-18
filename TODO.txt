@@ -7,9 +7,6 @@ standard(exp).
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
 
-** product
-We need commutativity of the product of weights.  Why is that again?
-
 ** Generators and alphabets
 ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
 Of course, output then fails.  Should ladybird enrich the alphabet?
