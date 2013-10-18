@@ -82,6 +82,7 @@ TC_CXX_WARNINGS(
    [-Wextra],
    [-Wcast-align],
    [-Wcast-qual],
+   [-Wdocumentation],
    [-Wextra],
    [-Wformat],
    [-Wmissing-declarations],
