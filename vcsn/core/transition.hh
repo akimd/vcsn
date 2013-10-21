@@ -2,7 +2,6 @@
 # define VCSN_CORE_TRANSITION_HH
 
 # include <vcsn/empty.hh>
-# include <vcsn/weights/b.hh>
 
 # include <vcsn/misc/attributes.hh>
 
