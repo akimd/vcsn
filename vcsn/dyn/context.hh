@@ -30,13 +30,13 @@ namespace vcsn
         Ctx& as()
         {
           return dynamic_cast<Ctx&>(*this);
-        };
+        }
 
         template <typename Ctx>
         const Ctx& as() const
         {
           return dynamic_cast<const Ctx&>(*this);
-        };
+        }
       };
     }
 

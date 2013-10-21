@@ -31,13 +31,13 @@ namespace vcsn
         concrete_abstract_ratexp<RatExpSet>& as()
         {
           return dynamic_cast<concrete_abstract_ratexp<RatExpSet>&>(*this);
-        };
+        }
 
         template <typename RatExpSet>
         const concrete_abstract_ratexp<RatExpSet>& as() const
         {
           return dynamic_cast<const concrete_abstract_ratexp<RatExpSet>&>(*this);
-        };
+        }
       };
 
 

@@ -31,13 +31,13 @@ namespace vcsn
         Aut& as()
         {
           return dynamic_cast<Aut&>(*this);
-        };
+        }
 
         template <typename Aut>
         const Aut& as() const
         {
           return dynamic_cast<const Aut&>(*this);
-        };
+        }
       };
     }
 

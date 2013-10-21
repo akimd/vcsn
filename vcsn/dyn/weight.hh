@@ -29,13 +29,13 @@ namespace vcsn
         concrete_abstract_weight<WeightSet>& as()
         {
           return dynamic_cast<concrete_abstract_weight<WeightSet>&>(*this);
-        };
+        }
 
         template <typename WeightSet>
         const concrete_abstract_weight<WeightSet>& as() const
         {
           return dynamic_cast<const concrete_abstract_weight<WeightSet>&>(*this);
-        };
+        }
       };
 
       /// Aggregate a weight and its weightset.
