@@ -28,13 +28,13 @@ namespace vcsn
         concrete_abstract_polynomial<PolynomialSet>& as()
         {
           return dynamic_cast<concrete_abstract_polynomial<PolynomialSet>&>(*this);
-        };
+        }
 
         template <typename PolynomialSet>
         const concrete_abstract_polynomial<PolynomialSet>& as() const
         {
           return dynamic_cast<const concrete_abstract_polynomial<PolynomialSet>&>(*this);
-        };
+        }
 
         /// Whether is zero.
         virtual bool empty() const = 0;
