@@ -1,3 +1,6 @@
+* 2013-10-22
+Release of our first beta, vaucanson-2b.0.
+
 * 2013-10-17
 ** shuffle, infiltrate: new algorithms (static, dynamic, TAF-Kit)
 New algorithms on LAL automata: computes the shuffle-product and
