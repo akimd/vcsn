@@ -23,7 +23,6 @@ AM_BISONFLAGS =                                 \
 libvcsn = lib/libvcsn.la
 pkglib_LTLIBRARIES = $(libvcsn)
 lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN
-lib_libvcsn_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/accessible.cc                  \
   lib/vcsn/algos/are-equivalent.cc              \
