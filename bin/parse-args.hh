@@ -81,10 +81,10 @@ struct vcsn_function
 
 /// Read the command line argument, and based on them, run \a fun's \a
 /// work_aut, or \a work_exp.
-/// \param argc         argv size
-/// \param argv         command line arguments
-/// \param fun          the visitor to run
-/// \param is_automaton whether if not specified, input is an automaton.
+/// \param argc    argv size
+/// \param argv    command line arguments
+/// \param fun     the visitor to run
+/// \param t       the default input type
 int vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
               type t = type::automaton);
 

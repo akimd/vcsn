@@ -262,7 +262,6 @@ namespace vcsn
     /// Read a weight in a string.
     /// \param s     the string to parse.
     /// \param ctx   its context, from which is built its weightset.
-    /// \param type  its format.
     weight read_weight_string(const std::string& s, const context& ctx);
 
     /// The right-mult automaton with \a w as weight.

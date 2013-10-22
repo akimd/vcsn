@@ -61,36 +61,6 @@ namespace vcsn
       using transitions_t = std::vector<transition_t>;
       using kind_t = Kind;
 
-      /**
-         @brief The core of the (backward) epsilon-removal.
-
-         For each state s
-         if s has an epsilon-loop with weight w
-         if w is not starrable, return false
-         else compute ws = star(w)
-         endif
-         remove the loop
-         else
-         ws = 1
-         endif
-         for each incoming epsilon transition e:p-->s with weight h
-         for each outgoing transition s--a|k-->q
-         add (and not set) transition p-- a | h.ws.k --> q
-         endfor
-         if s is final with weight h
-         add final weight h.ws to p
-         endif
-         remove e
-         endfor
-         endfor
-         return true
-
-         If the method returns false, \a aut is corrupted.
-
-         @param aut The automaton in which epsilon-transitions will be removed
-         @return true if the proper succeeds, or false otherwise.
-      */
-
     public:
       properer(automaton_t& aut)
         : debug_(debug_level())
@@ -122,6 +92,36 @@ namespace vcsn
         proper_here(res);
         return res;
       }
+
+      /**
+         @brief The core of the (backward) epsilon-removal.
+
+         For each state s
+         if s has an epsilon-loop with weight w
+         if w is not starrable, return false
+         else compute ws = star(w)
+         endif
+         remove the loop
+         else
+         ws = 1
+         endif
+         for each incoming epsilon transition e:p-->s with weight h
+         for each outgoing transition s--a|k-->q
+         add (and not set) transition p-- a | h.ws.k --> q
+         endfor
+         if s is final with weight h
+         add final weight h.ws to p
+         endif
+         remove e
+         endfor
+         endfor
+         return true
+
+         If the method returns false, \a aut is corrupted.
+
+         @param aut The automaton in which epsilon-transitions will be removed
+         @return true if the proper succeeds, or false otherwise.
+      */
 
       static bool in_situ_remover(automaton_t& aut)
       {

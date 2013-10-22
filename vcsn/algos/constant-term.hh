@@ -19,7 +19,7 @@ namespace vcsn
     | constant_term(ratexp).  |
     `------------------------*/
 
-    /// \param Context  relative to the RatExp.
+    /// \tparam RatExpSet  the ratexp set type.
     template <typename RatExpSet>
     class constant_term_visitor
       : public RatExpSet::const_visitor

@@ -80,8 +80,8 @@ namespace vcsn
     | standard(ratexp).  |
     `-------------------*/
 
-    /// \param Aut      relative the generated automaton
-    /// \param Context  relative to the RatExp.
+    /// \tparam Aut      relative the generated automaton
+    /// \tparam Context  relative to the RatExp.
     template <typename Aut,
               typename Context = typename Aut::context_t>
     class standard_visitor
@@ -290,8 +290,8 @@ namespace vcsn
 
   } // rat::
 
-  /// \param Aut      relative to the generated automaton.
-  /// \param Context  relative to the RatExp.
+  /// \tparam Aut      relative to the generated automaton.
+  /// \tparam Context  relative to the RatExp.
   template <typename Aut,
             typename Context = typename Aut::context_t>
   Aut

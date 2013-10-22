@@ -26,27 +26,30 @@ namespace vcsn
   namespace detail
   {
 
-    /**@brief Test whether an automaton is valid.
-
-       The behavior of this method depends on the star_status of the weight_set:
-       -- starrable: return true;
-       -- tops: copy the input and return the result of proper on the copy;
-       -- non_starrable: return true iff the automaton is epsilon-acyclic
-       WARNING: for weight_sets with zero divisor, should test whether
-                the weight of every simple circuit is zero;
-       -- absval: build a copy of the input where each weight
-                  is replaced by its absolute value and return the result
-                  of proper on the copy.
-       @param aut The tested automaton
-       @return true iff the automaton is valid
-      */
-
     template <typename Aut, typename Kind = typename Aut::kind_t>
     class is_valider
     {
     public:
       using automaton_t = typename std::remove_cv<Aut>::type;
       using weightset_t = typename automaton_t::weightset_t;
+
+      /** @brief Test whether an automaton is valid.
+
+         The behavior of this method depends on the star_status of
+         the weight_set:
+
+         -- starrable: return true;
+         -- tops: copy the input and return the result of proper on the copy;
+         -- non_starrable: return true iff the automaton is epsilon-acyclic
+         WARNING: for weight_sets with zero divisor, should test whether
+         the weight of every simple circuit is zero;
+         -- absval: build a copy of the input where each weight
+         is replaced by its absolute value and return the result
+         of proper on the copy.
+
+         @param aut The tested automaton
+         @return true iff the automaton is valid
+      */
 
       static bool is_valid(const automaton_t& aut)
       {

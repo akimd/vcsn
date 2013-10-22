@@ -13,7 +13,7 @@ namespace vcsn
     | transposing ratexps.  |
     `----------------------*/
 
-    /// \param Context  relative to the RatExp.
+    /// \tparam RatExpSet  the ratexp set.
     template <class RatExpSet>
     class transposer
       : public RatExpSet::const_visitor
