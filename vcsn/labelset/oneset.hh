@@ -8,6 +8,7 @@
 # include <vcsn/empty.hh>
 
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
@@ -16,7 +17,7 @@ namespace vcsn
   {
     /// Implementation of labels are ones: there is a single instance
     /// of label.
-    struct oneset
+    struct LIBVCSN_API oneset
     {
       using value_t = vcsn::empty_t;
 

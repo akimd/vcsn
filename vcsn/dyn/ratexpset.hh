@@ -7,6 +7,7 @@
 
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -21,7 +22,7 @@ namespace detail
   /// parameters (e.g., from a parser).  To use it, actually create a
   /// derived class (concrete_abstract_ratexpset) with the given
   /// parameters, but handle as a reference to an abstract_ratexpset.
-  class abstract_ratexpset
+  class LIBVCSN_API abstract_ratexpset
   {
   public:
     using context_t = dyn::detail::abstract_context;
@@ -52,7 +53,7 @@ namespace detail
 
   /// Wrapper around a ratexpset.
   template <typename Context>
-  class concrete_abstract_ratexpset : public abstract_ratexpset
+  class LIBVCSN_API concrete_abstract_ratexpset : public abstract_ratexpset
   {
   public:
     using context_t = Context;

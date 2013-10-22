@@ -12,7 +12,7 @@ namespace vcsn
   {
 
     template <class RatExpSet>
-    class less_than
+    class LIBVCSN_API less_than
       : public RatExpSet::const_visitor
     {
     public:

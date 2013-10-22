@@ -11,7 +11,7 @@ namespace vcsn
   {
 
     template <typename RatExpSet>
-    class printer
+    class LIBVCSN_API printer
       : public RatExpSet::const_visitor
     {
     public:

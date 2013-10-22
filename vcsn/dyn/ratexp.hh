@@ -30,6 +30,10 @@ namespace vcsn
         template <typename RatExpSet>
         concrete_abstract_ratexp<RatExpSet>& as()
         {
+          std::cerr << "asre: typeinfo: " << &typeid(*this) << std::endl;
+          std::cerr << "asre: typeinfo: " << &typeid(concrete_abstract_ratexp<RatExpSet>&) << std::endl;
+          std::cerr << "asre: typeinfo: " << typeid(*this).name() << std::endl;
+          std::cerr << "asre: typeinfo: " << typeid(concrete_abstract_ratexp<RatExpSet>&).name() << std::endl;
           return dynamic_cast<concrete_abstract_ratexp<RatExpSet>&>(*this);
         }
 
@@ -46,7 +50,7 @@ namespace vcsn
       /// FIXME: Improperly named, it is not a base class for
       /// static ratexps.
       template <typename RatExpSet>
-      class concrete_abstract_ratexp: public abstract_ratexp
+      class LIBVCSN_API concrete_abstract_ratexp: public abstract_ratexp
       {
       public:
         using ratexpset_t = RatExpSet;
@@ -91,8 +95,11 @@ namespace vcsn
                 const typename vcsn::ratexpset<Context>::ratexp_t& ratexp)
     {
       using ratexpset_t = vcsn::ratexpset<Context>;
-      return std::make_shared<detail::concrete_abstract_ratexp<ratexpset_t>>
+      auto res = std::make_shared<detail::concrete_abstract_ratexp<ratexpset_t>>
         (ratexp, rs);
+      std::cerr << "makere: typeinfo: " << &typeid(*res) << std::endl;
+      std::cerr << "makere: typeinfo: " << &typeid(detail::concrete_abstract_ratexp<ratexpset_t>) << std::endl;
+      return res;
     }
 
   } // namespace dyn

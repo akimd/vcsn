@@ -6,10 +6,11 @@
 # include <iostream>
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
-  class char_letters
+  class LIBVCSN_API char_letters
   {
   public:
     using letter_t = char;

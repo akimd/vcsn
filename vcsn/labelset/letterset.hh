@@ -6,6 +6,7 @@
 # include <vcsn/alphabets/setalpha.hh> // intersection
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/set.hh> // intersection
 # include <vcsn/misc/stream.hh> // conv.
 # include <vcsn/labelset/genset-labelset.hh>
@@ -16,7 +17,8 @@ namespace vcsn
   {
     /// Implementation of labels are letters.
     template <typename GenSet>
-    struct letterset: genset_labelset<GenSet>
+    struct LIBVCSN_API letterset
+      : genset_labelset<GenSet>
     {
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;

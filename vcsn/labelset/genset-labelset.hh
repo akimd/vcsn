@@ -5,6 +5,7 @@
 # include <set>
 
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -13,7 +14,7 @@ namespace vcsn
     /// This class has no modeling purpose, it only serves to factor
     /// code common to letterset, nullableset and wordset.
     template <typename GenSet>
-    struct genset_labelset
+    struct LIBVCSN_API genset_labelset
     {
       using genset_t = GenSet;
       using genset_ptr = std::shared_ptr<const genset_t>;

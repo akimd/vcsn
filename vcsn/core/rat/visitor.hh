@@ -2,6 +2,7 @@
 # define VCSN_CORE_RAT_VISITOR_HH
 
 # include <vcsn/core/rat/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -9,7 +10,7 @@ namespace vcsn
   {
 
     template <typename Label, typename Weight>
-    class const_visitor
+    class LIBVCSN_API const_visitor
     {
     public:
       using label_t = Label;

@@ -1,7 +1,9 @@
 #ifndef VCSN_DYN_WEIGHT_HH
 # define VCSN_DYN_WEIGHT_HH
 
+# include <iostream>
 # include <memory>
+# include <typeinfo>
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/weightset.hh>
@@ -33,9 +35,10 @@ namespace vcsn
         }
 
         template <typename WeightSet>
-        LIBVCSN_API
         const concrete_abstract_weight<WeightSet>& as() const
         {
+          std::cerr << "as: typeinfo: " << &typeid(*this) << std::endl;
+          std::cerr << "as: typeinfo: " << &typeid(const concrete_abstract_weight<WeightSet>&) << std::endl;
           return dynamic_cast<const concrete_abstract_weight<WeightSet>&>(*this);
         }
       };
@@ -90,8 +93,11 @@ namespace vcsn
     make_weight(const WeightSet& ws,
                 const typename WeightSet::value_t& weight)
     {
-      return std::make_shared<detail::concrete_abstract_weight<WeightSet>>
+      auto res = std::make_shared<detail::concrete_abstract_weight<WeightSet>>
         (weight, ws);
+      std::cerr << "makere: typeinfo: " << &typeid(*res) << std::endl;
+      std::cerr << "makere: typeinfo: " << &typeid(detail::concrete_abstract_weight<WeightSet>) << std::endl;
+      return res;
     }
   } // namespace dyn
 } // namespace vcsn

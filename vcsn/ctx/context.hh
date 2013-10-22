@@ -5,10 +5,11 @@
 # include <memory>
 # include <string>
 
-# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
+# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -17,7 +18,8 @@ namespace vcsn
   namespace ctx
   {
     template <typename LabelSet, typename WeightSet>
-    class context: public dyn::detail::abstract_context
+    class LIBVCSN_API context
+      : public dyn::detail::abstract_context
     {
     public:
       using labelset_t = LabelSet;

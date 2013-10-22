@@ -15,7 +15,7 @@ namespace vcsn
 
     /// \param Context  relative to the RatExp.
     template <class RatExpSet>
-    class transposer
+    class LIBVCSN_API transposer
       : public RatExpSet::const_visitor
     {
     public:

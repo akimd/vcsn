@@ -11,7 +11,7 @@ namespace vcsn
   {
 
     template <typename RatExpSet>
-    class info
+    class LIBVCSN_API info
       : public RatExpSet::const_visitor
     {
     public:

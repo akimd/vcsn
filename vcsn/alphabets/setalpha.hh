@@ -6,11 +6,13 @@
 
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh> // eat.
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
   template <typename L>
-  class set_alphabet: public L
+  class LIBVCSN_API set_alphabet
+    : public L
   {
   public:
     using letter_t = typename L::letter_t;

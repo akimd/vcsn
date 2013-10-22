@@ -4,6 +4,7 @@
 # include <memory>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomialset.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -16,7 +17,7 @@ namespace vcsn
       ///
       /// FIXME: Improperly named, it is not a base class for
       /// static polynomials.
-      class abstract_polynomial
+      class LIBVCSN_API abstract_polynomial
       {
       public:
         /// A description of the polynomial.
@@ -45,7 +46,7 @@ namespace vcsn
       /// FIXME: Improperly named, it is not a base class for
       /// static polynomials.
       template <typename PolynomialSet>
-      class concrete_abstract_polynomial: public abstract_polynomial
+      class LIBVCSN_API concrete_abstract_polynomial: public abstract_polynomial
       {
       public:
         using polynomialset_t = PolynomialSet;

@@ -6,6 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
@@ -14,7 +15,7 @@ namespace vcsn
   {
     /// Implementation of labels are words.
     template <typename GenSet>
-    class wordset: public genset_labelset<GenSet>
+    class LIBVCSN_API wordset: public genset_labelset<GenSet>
     {
     public:
       using genset_t = GenSet;

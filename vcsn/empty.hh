@@ -3,10 +3,12 @@
 
 # include <functional> // std::hash
 
+# include <vcsn/misc/export.hh>
+
 namespace vcsn
 {
   /// Empty labels, for LAO.
-  struct empty_t
+  struct LIBVCSN_API empty_t
   {};
 
   // So that we can make a map with empty_t as key, for

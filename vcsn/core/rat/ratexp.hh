@@ -9,6 +9,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -17,7 +18,7 @@ namespace vcsn
 
     /// The abstract, non-parameterized, root for all rational
     /// expression node types.
-    class exp
+    class LIBVCSN_API exp
     {
     public:
       virtual ~exp() = 0;
@@ -54,7 +55,7 @@ namespace vcsn
     ///
     /// All the nodes have a left weight, implemented here.
     template <typename Label, typename Weight>
-    class node : public exp
+    class LIBVCSN_API node : public exp
     {
     public:
       using label_t = Label;
@@ -94,7 +95,7 @@ namespace vcsn
     ///
     /// Adds a right weight.
     template <typename Label, typename Weight>
-    class inner : public node<Label, Weight>
+    class LIBVCSN_API inner : public node<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -130,7 +131,7 @@ namespace vcsn
     ///
     /// Implements the Composite Design Pattern.
     template <typename Label, typename Weight>
-    class nary: public inner<Label, Weight>
+    class LIBVCSN_API nary: public inner<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -187,7 +188,7 @@ namespace vcsn
     `-------*/
 
     template <typename Label, typename Weight>
-    class prod : public nary<Label, Weight>
+    class LIBVCSN_API prod : public nary<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -225,7 +226,7 @@ namespace vcsn
     `------*/
 
     template <typename Label, typename Weight>
-    class sum : public nary<Label, Weight>
+    class LIBVCSN_API sum : public nary<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -262,7 +263,7 @@ namespace vcsn
     `-------*/
 
     template <typename Label, typename Weight>
-    class star : public inner<Label, Weight>
+    class LIBVCSN_API star : public inner<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -299,7 +300,7 @@ namespace vcsn
 
     /// The root from which derive the final node types.
     template <typename Label, typename Weight>
-    class leaf : public node<Label, Weight>
+    class LIBVCSN_API leaf : public node<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -318,7 +319,7 @@ namespace vcsn
 
 
     template <typename Label, typename Weight>
-    class one : public leaf<Label, Weight>
+    class LIBVCSN_API one : public leaf<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -344,7 +345,7 @@ namespace vcsn
     };
 
     template <typename Label, typename Weight>
-    class zero : public leaf<Label, Weight>
+    class LIBVCSN_API zero : public leaf<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -371,7 +372,7 @@ namespace vcsn
 
 
     template <typename Label, typename Weight>
-    class atom : public leaf<Label, Weight>
+    class LIBVCSN_API atom : public leaf<Label, Weight>
     {
     public:
       using label_t = Label;
