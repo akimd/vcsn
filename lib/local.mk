@@ -70,95 +70,73 @@ pkglib_LTLIBRARIES += $(all_libctx)
 # char_b.
 lib_liblal_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_b
-lib_liblal_char_b_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblan_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblan_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_b
-lib_liblan_char_b_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_b
-lib_liblaw_char_b_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_br.
 lib_liblao_br_la_SOURCES = lib/ctx/libctx.cc
 lib_liblao_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lao_br
-lib_liblao_br_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblal_char_br_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_br
-lib_liblal_char_br_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_br_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_br_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_br
-lib_liblaw_char_br_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_r.
 lib_liblal_char_r_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_r
-lib_liblal_char_r_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblan_char_r_la_SOURCES = lib/ctx/libctx.cc
 lib_liblan_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_r
-lib_liblan_char_r_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_r_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_r_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_r
-lib_liblaw_char_r_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_q.
 lib_liblal_char_q_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_q_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_q
-lib_liblal_char_q_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_q_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_q_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_q
-lib_liblaw_char_q_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_z.
 lib_liblao_z_la_SOURCES = lib/ctx/libctx.cc
 lib_liblao_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lao_z
-lib_liblao_z_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblal_char_z_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_z
-lib_liblal_char_z_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblan_char_z_la_SOURCES = lib/ctx/libctx.cc
 lib_liblan_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_z
-lib_liblan_char_z_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_z_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_z_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_z
-lib_liblaw_char_z_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_zr.
 lib_liblal_char_zr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zr
-lib_liblal_char_zr_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblan_char_zr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblan_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_zr
-lib_liblan_char_zr_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_zr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zr
-lib_liblaw_char_zr_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_zrr.
 lib_liblal_char_zrr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zrr
-lib_liblal_char_zrr_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_zrr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zrr
-lib_liblaw_char_zrr_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 # char_zmin.
 lib_liblal_char_zmin_la_SOURCES = lib/ctx/libctx.cc
 lib_liblal_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zmin
-lib_liblal_char_zmin_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 
 lib_liblaw_char_zmin_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zmin
-lib_liblaw_char_zmin_la_CXXFLAGS = $(AM_CXXFLAGS) $(VISIBILITY_CXXFLAGS)

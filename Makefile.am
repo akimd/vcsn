@@ -14,7 +14,7 @@ include build-aux/make/init.mk
 
 ACLOCAL_AMFLAGS = -I build-aux/m4
 
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
+AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 
 include bin/local.mk
