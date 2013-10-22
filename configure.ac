@@ -102,11 +102,19 @@ TC_CXX_WARNINGS(
 # When -fvisibility=hidden is on, std:: objects cannot be passed between
 # CXX_DEBUG and non CXX_DEBUG code.  As a consequence, _GLIBCXX_DEBUG is
 # unusable in our environment.
+#
+# I (Akim) spent a large amount of time trying to understand how to
+# get clang++ to behave properly with -fvisibility=hidden, and failed.
+# I'm tired of this.  Be my guest, and try to go further, see the
+# branch ad/clang-visibility.
+case $CXX in (g++* | *-g++*)
 AC_SUBST([VISIBILITY_CXXFLAGS])
 AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
   [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
   AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
     [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
+  ;;
+esac
 
 # Check for REGEX before _GLIBCXX_DEBUG, see below.
 BOOST_REQUIRE([1.49])
