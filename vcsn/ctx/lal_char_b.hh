@@ -75,8 +75,8 @@ namespace vcsn
         REGISTER(fado, aut_t);
         REGISTER(grail, aut_t);
         REGISTER(universal, aut_t);
-# undef REGISTER2
-# undef REGISTER
+#  undef REGISTER2
+#  undef REGISTER
 
         return true;
       }
@@ -84,7 +84,7 @@ namespace vcsn
       static bool register_lal_char_b = register_functions<ctx::lal_char_b>();
     }
   }
-#endif
+# endif // ! VCSN_INSTANTIATION
 }
 
 #endif // !VCSN_CTX_LAL_CHAR_B_HH
