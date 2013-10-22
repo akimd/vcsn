@@ -10,12 +10,14 @@
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
 
-  class q: public dyn::detail::abstract_weightset
+  class LIBVCSN_API q
+    : public dyn::detail::abstract_weightset
   {
   public:
     static std::string sname()

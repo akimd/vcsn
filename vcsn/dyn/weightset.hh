@@ -5,6 +5,7 @@
 # include <string>
 
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
@@ -12,7 +13,7 @@ namespace vcsn
   {
     namespace detail
     {
-      class abstract_weightset
+      class LIBVCSN_API abstract_weightset
       {
       public:
         /// A description of the weightset, sufficient to build it.

@@ -8,6 +8,7 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/dyn/polynomialset.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -25,7 +26,8 @@ namespace vcsn
 
   /// Linear combination of labels: map labels to weights.
   template <class Context>
-  class polynomialset: public dyn::detail::abstract_polynomialset
+  class LIBVCSN_API polynomialset
+    : public dyn::detail::abstract_polynomialset
   {
   public:
     using context_t = Context;

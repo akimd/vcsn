@@ -1,12 +1,13 @@
 #ifndef VCSN_CORE_RAT_RATEXPSET_HH
 # define VCSN_CORE_RAT_RATEXPSET_HH
 
-# include <string>
 # include <list>
+# include <string>
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/dyn/weightset.hh>
 
@@ -15,7 +16,8 @@ namespace vcsn
 
   /// An abstract factory for ratexp.
   template <typename Context>
-  class ratexpset: public dyn::detail::abstract_weightset
+  class LIBVCSN_API ratexpset
+    : public dyn::detail::abstract_weightset
   {
   public:
     using context_t = Context;

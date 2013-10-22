@@ -7,12 +7,14 @@
 # include <boost/lexical_cast.hpp>
 # include <sstream>
 
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
-  class r: public dyn::detail::abstract_weightset
+  class LIBVCSN_API r
+    : public dyn::detail::abstract_weightset
   {
   public:
     static std::string sname()

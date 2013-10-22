@@ -2,6 +2,7 @@
 # define VCSN_DYN_WEIGHT_HH
 
 # include <memory>
+
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/export.hh>
@@ -32,6 +33,7 @@ namespace vcsn
         }
 
         template <typename WeightSet>
+        LIBVCSN_API
         const concrete_abstract_weight<WeightSet>& as() const
         {
           return dynamic_cast<const concrete_abstract_weight<WeightSet>&>(*this);
@@ -43,7 +45,7 @@ namespace vcsn
       /// FIXME: Improperly named, it is not a base class for
       /// static weights.
       template <typename WeightSet>
-      class concrete_abstract_weight: public abstract_weight
+      class LIBVCSN_API concrete_abstract_weight: public abstract_weight
       {
       public:
         using weightset_t = WeightSet;
@@ -82,6 +84,7 @@ namespace vcsn
     using weight = std::shared_ptr<const detail::abstract_weight>;
 
     template <typename WeightSet>
+    LIBVCSN_API
     inline
     weight
     make_weight(const WeightSet& ws,

@@ -9,13 +9,15 @@
 # include <limits>
 # include <utility>
 
+# include <vcsn/misc/export.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
-  class zmin: public dyn::detail::abstract_weightset
+  class LIBVCSN_API zmin
+    : public dyn::detail::abstract_weightset
   {
   public:
     static std::string sname()
