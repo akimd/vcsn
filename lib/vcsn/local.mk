@@ -24,76 +24,76 @@ libvcsn = lib/libvcsn.la
 pkglib_LTLIBRARIES = $(libvcsn)
 lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN
 lib_libvcsn_la_SOURCES =                        \
-  lib/vcsn/algos/accessible.cc                  \
-  lib/vcsn/algos/are-equivalent.cc              \
-  lib/vcsn/algos/aut-to-exp.cc                  \
-  lib/vcsn/algos/complement.cc                  \
-  lib/vcsn/algos/complete.cc                    \
-  lib/vcsn/algos/concatenate.cc                 \
-  lib/vcsn/algos/constant-term.cc               \
-  lib/vcsn/algos/copy.cc                        \
-  lib/vcsn/algos/de-bruijn.cc                   \
-  lib/vcsn/algos/derive.cc                      \
-  lib/vcsn/algos/determinize.cc                 \
-  lib/vcsn/algos/divkbaseb.cc                   \
-  lib/vcsn/algos/dot.cc                         \
-  lib/vcsn/algos/double-ring.cc                 \
-  lib/vcsn/algos/edit-automaton.cc              \
-  lib/vcsn/algos/efsm.cc                        \
-  lib/vcsn/algos/enumerate.cc                   \
-  lib/vcsn/algos/eval.cc                        \
-  lib/vcsn/algos/expand.cc                      \
-  lib/vcsn/algos/fado.cc                        \
-  lib/vcsn/algos/fwd.hh                         \
-  lib/vcsn/algos/grail.cc                       \
-  lib/vcsn/algos/info.cc                        \
-  lib/vcsn/algos/is-ambiguous.cc                \
-  lib/vcsn/algos/is-complete.cc                 \
-  lib/vcsn/algos/is-deterministic.cc            \
-  lib/vcsn/algos/is-eps-acyclic.cc              \
-  lib/vcsn/algos/is-normalized.cc               \
-  lib/vcsn/algos/is-proper.cc                   \
-  lib/vcsn/algos/is-valid.cc                    \
-  lib/vcsn/algos/ladybird.cc                    \
-  lib/vcsn/algos/left-mult.cc                   \
-  lib/vcsn/algos/lift.cc                        \
-  lib/vcsn/algos/make-context.cc                \
-  lib/vcsn/algos/print.cc                       \
-  lib/vcsn/algos/product.cc                     \
-  lib/vcsn/algos/proper.cc                      \
-  lib/vcsn/algos/random.cc                      \
-  lib/vcsn/algos/read.cc                        \
-  lib/vcsn/algos/registry.hh                    \
-  lib/vcsn/algos/standard.cc                    \
-  lib/vcsn/algos/star.cc                        \
-  lib/vcsn/algos/sum.cc                         \
-  lib/vcsn/algos/thompson.cc                    \
-  lib/vcsn/algos/tikz.cc                        \
-  lib/vcsn/algos/transpose.cc                   \
-  lib/vcsn/algos/u.cc                           \
-  lib/vcsn/algos/union.cc                       \
-  lib/vcsn/algos/universal.cc                   \
-  lib/vcsn/ctx/ctx.cc                           \
-  lib/vcsn/misc/escape.cc                       \
-  lib/vcsn/misc/stream.cc
+  %D%/algos/accessible.cc                       \
+  %D%/algos/are-equivalent.cc                   \
+  %D%/algos/aut-to-exp.cc                       \
+  %D%/algos/complement.cc                       \
+  %D%/algos/complete.cc                         \
+  %D%/algos/concatenate.cc                      \
+  %D%/algos/constant-term.cc                    \
+  %D%/algos/copy.cc                             \
+  %D%/algos/de-bruijn.cc                        \
+  %D%/algos/derive.cc                           \
+  %D%/algos/determinize.cc                      \
+  %D%/algos/divkbaseb.cc                        \
+  %D%/algos/dot.cc                              \
+  %D%/algos/double-ring.cc                      \
+  %D%/algos/edit-automaton.cc                   \
+  %D%/algos/efsm.cc                             \
+  %D%/algos/enumerate.cc                        \
+  %D%/algos/eval.cc                             \
+  %D%/algos/expand.cc                           \
+  %D%/algos/fado.cc                             \
+  %D%/algos/fwd.hh                              \
+  %D%/algos/grail.cc                            \
+  %D%/algos/info.cc                             \
+  %D%/algos/is-ambiguous.cc                     \
+  %D%/algos/is-complete.cc                      \
+  %D%/algos/is-deterministic.cc                 \
+  %D%/algos/is-eps-acyclic.cc                   \
+  %D%/algos/is-normalized.cc                    \
+  %D%/algos/is-proper.cc                        \
+  %D%/algos/is-valid.cc                         \
+  %D%/algos/ladybird.cc                         \
+  %D%/algos/left-mult.cc                        \
+  %D%/algos/lift.cc                             \
+  %D%/algos/make-context.cc                     \
+  %D%/algos/print.cc                            \
+  %D%/algos/product.cc                          \
+  %D%/algos/proper.cc                           \
+  %D%/algos/random.cc                           \
+  %D%/algos/read.cc                             \
+  %D%/algos/registry.hh                         \
+  %D%/algos/standard.cc                         \
+  %D%/algos/star.cc                             \
+  %D%/algos/sum.cc                              \
+  %D%/algos/thompson.cc                         \
+  %D%/algos/tikz.cc                             \
+  %D%/algos/transpose.cc                        \
+  %D%/algos/u.cc                                \
+  %D%/algos/union.cc                            \
+  %D%/algos/universal.cc                        \
+  %D%/ctx/ctx.cc                                \
+  %D%/misc/escape.cc                            \
+  %D%/misc/stream.cc
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
 # compile the rat parser first.
-lib/vcsn/dot/parser.stamp: lib/vcsn/rat/parser.stamp
+%D%/dot/parser.stamp: %D%/rat/parser.stamp
 
-include lib/vcsn/dot/local.mk
+include %D%/dot/local.mk
 lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_DOT_PARSE_YY)                       \
-  lib/vcsn/dot/driver.hh lib/vcsn/dot/driver.cc \
-  lib/vcsn/dot/scan.ll
+  %D%/dot/driver.hh %D%/dot/driver.cc           \
+  %D%/dot/scan.ll
 
-include lib/vcsn/rat/local.mk
+include %D%/rat/local.mk
 lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_RAT_PARSE_YY)                       \
-  lib/vcsn/rat/driver.hh                        \
-  lib/vcsn/rat/driver.cc                        \
-  lib/vcsn/rat/read.hh                          \
-  lib/vcsn/rat/read.cc                          \
-  lib/vcsn/rat/scan.ll
+  %D%/rat/driver.hh                             \
+  %D%/rat/driver.cc                             \
+  %D%/rat/read.hh                               \
+  %D%/rat/read.cc                               \
+  %D%/rat/scan.ll
 lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS)
