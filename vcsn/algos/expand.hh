@@ -52,69 +52,67 @@ namespace vcsn
       operator()(const ratexp_t& v)
       {
         v->accept(*this);
-        return std::move(res_);
+        return ratexp(res_);
       }
+
+      ratexp_t
+      ratexp(const polynomial_t p)
+      {
+        ratexp_t res = rs_.zero();
+        for (const auto& m: p)
+          res = rs_.add(res, rs_.weight(m.second, m.first));
+         return res;
+       }
 
       virtual void
       visit(const zero_t&)
       {
-        res_ = rs_.zero();
+        res_ = ps_.zero();
       }
 
       virtual void
       visit(const one_t& v)
       {
-        res_ = rs_.one(v.left_weight());
+        res_ = polynomial_t{{rs_.one(), v.left_weight()}};
       }
 
       virtual void
       visit(const atom_t& v)
       {
-        res_ = rs_.weight(v.left_weight(), rs_.atom(v.value()));
+        res_ = polynomial_t{{rs_.atom(v.value()), v.left_weight()}};
       }
 
       virtual void
       visit(const sum_t& v)
       {
-        // Normalize as a polynomial.
-        polynomial_t p;
+        polynomial_t res = ps_.zero();
         for (auto c: v)
           {
             c->accept(*this);
-            p = ps_.add_weight(p, res_, ws_.one());
+            res = ps_.add(res, res_);
           }
-        // Turn into a ratexp sum.  Distribute the weight.
-        res_ = rs_.zero();
-        auto lw = v.left_weight();
-        auto rw = v.right_weight();
-        for (const auto& m: p)
-          {
-            auto w = ws_.mul(ws_.mul(lw, m.second), rw);
-            res_ = rs_.add(res_, rs_.weight(w, m.first));
-          }
+        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
       }
 
       virtual void
       visit(const prod_t& v)
       {
-        v.head()->accept(*this);
-        ratexp_t res = res_;
-        for (auto c: v.tail())
+        polynomial_t res = ps_.one();
+        for (auto c: v)
           {
             c->accept(*this);
-            res = rs_.mul(res, res_);
+            res = ps_.mul(res, res_);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(), std::move(res)),
-                          v.right_weight());
+        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
       }
 
       virtual void
       visit(const star_t& v)
       {
+        // Recurse, but make it a star.
         v.sub()->accept(*this);
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     rs_.star(std::move(res_))),
-                          v.right_weight());
+        res_ = polynomial_t{{rs_.star(ratexp(res_)), ws_.one()}};
+        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res_), v.right_weight());
       }
 
     private:
@@ -124,7 +122,7 @@ namespace vcsn
       /// Polynomialset of ratexps.
       polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
       /// The result.
-      ratexp_t res_;
+      polynomial_t res_;
     };
 
   } // rat::

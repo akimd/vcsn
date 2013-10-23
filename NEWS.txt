@@ -1,3 +1,11 @@
+* 2013-10-24
+** expand: new algorithm (static, dynamic, TAF-Kit)
+Given a rational expression, distribute product over addition (recursively
+under the starred subexpressions) group and sort the equal monomials.
+
+  $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
+  (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+
 * 2013-10-22
 Release of our first beta, vaucanson-2b.0.
 

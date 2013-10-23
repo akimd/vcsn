@@ -17,3 +17,17 @@ check_exp 'lal_char(abcd)_z'  'b+a+b+a'  '<2>a+<2>b'
 
 check_exp 'lal_char(abcd)_z' \
   '<3>(b+a+b+a)<5>'  '<30>a+<30>b'
+
+# Luca, your changes on the pretty-printer will be most welcome :)
+check_exp 'lal_char(abc)_z'  \
+  '(a+b)?{3}' \
+  '\e+<3>a+<3>b+<3>(a.a)+<3>(a.b)+<3>(b.a)+<3>(b.b)+(a.a.a)+(a.a.b)+(a.b.a)+(a.b.b)+(b.a.a)+(b.a.b)+(b.b.a)+(b.b.b)'
+
+# TAF-Kit doc.
+check_exp 'lal_char(abcd)_z' \
+  '(a+b+\e)((a+ba)(ca+cc))*' \
+  '(a.(((a.c.a)+(a.c.c)+(b.a.c.a)+(b.a.c.c))*))+(b.(((a.c.a)+(a.c.c)+(b.a.c.a)+(b.a.c.c))*))+(((a.c.a)+(a.c.c)+(b.a.c.a)+(b.a.c.c))*)'
+
+check_exp 'lal_char(abcd)_z' \
+  'a(b(c+a)*+c(b)*)+ac(\e+b)(b*)' \
+  '(a.b.((a+c)*))+<2>(a.c.(b*))+(a.c.b.(b*))'
