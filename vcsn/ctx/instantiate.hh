@@ -13,6 +13,7 @@
 # include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/enumerate.hh>
 # include <vcsn/algos/eval.hh>
+# include <vcsn/algos/expand.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/is-complete.hh>
@@ -274,6 +275,7 @@ namespace vcsn
         REGISTER(efsm, aut_t);
         REGISTER(efsm, taut_t);
         REGISTER(constant_term, rs_t);
+        REGISTER(expand, rs_t);
         REGISTER(info, aut_t);
         REGISTER(info, taut_t);
         REGISTER(info_exp, rs_t);

@@ -42,6 +42,7 @@ lib_libvcsn_la_SOURCES =                        \
   lib/vcsn/algos/efsm.cc                        \
   lib/vcsn/algos/enumerate.cc                   \
   lib/vcsn/algos/eval.cc                        \
+  lib/vcsn/algos/expand.cc                      \
   lib/vcsn/algos/fado.cc                        \
   lib/vcsn/algos/fwd.hh                         \
   lib/vcsn/algos/grail.cc                       \

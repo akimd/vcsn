@@ -27,6 +27,7 @@ nobase_include_HEADERS =                        \
   vcsn/algos/efsm.hh                            \
   vcsn/algos/enumerate.hh                       \
   vcsn/algos/eval.hh                            \
+  vcsn/algos/expand.hh                          \
   vcsn/algos/fwd.hh                             \
   vcsn/algos/grail.hh                           \
   vcsn/algos/info.hh                            \

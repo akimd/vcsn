@@ -99,6 +99,10 @@ namespace vcsn
     /// Evaluate \a s on \a aut.
     weight eval(const automaton& aut, const std::string& s);
 
+    /// Distribute product over addition recursively under the starred
+    /// subexpressions and group the equal monomials.
+    ratexp expand(const ratexp& e);
+
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);
 
