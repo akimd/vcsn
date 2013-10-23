@@ -1,12 +1,11 @@
 #ifndef VCSN_ALGOS_EXPAND_HH
 # define VCSN_ALGOS_EXPAND_HH
 
-# include <set>
-
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
+
+# include <vcsn/algos/derive.hh> // ratexp_polynomialset_t.
 
 namespace vcsn
 {
@@ -27,7 +26,11 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using ratexp_t = typename ratexpset_t::value_t;
       using context_t = typename ratexpset_t::context_t;
-      using weight_t = typename context_t::weight_t;
+      using weightset_t = typename ratexpset_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+
+      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
 
       using super_type = typename RatExpSet::const_visitor;
       using node_t = typename super_type::node_t;
@@ -73,16 +76,22 @@ namespace vcsn
       virtual void
       visit(const sum_t& v)
       {
-        v.head()->accept(*this);
-        ratexp_t res = res_;
-        for (auto c: v.tail())
+        // Normalize as a polynomial.
+        polynomial_t p;
+        for (auto c: v)
           {
             c->accept(*this);
-            res = rs_.add(res, res_);
+            p = ps_.add_weight(p, res_, ws_.one());
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     std::move(res)),
-                          v.right_weight());
+        // Turn into a ratexp sum.  Distribute the weight.
+        res_ = rs_.zero();
+        auto lw = v.left_weight();
+        auto rw = v.right_weight();
+        for (const auto& m: p)
+          {
+            auto w = ws_.mul(ws_.mul(lw, m.second), rw);
+            res_ = rs_.add(res_, rs_.weight(w, m.first));
+          }
       }
 
       virtual void
@@ -95,8 +104,7 @@ namespace vcsn
             c->accept(*this);
             res = rs_.mul(res, res_);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     std::move(res)),
+        res_ = rs_.weight(rs_.weight(v.left_weight(), std::move(res)),
                           v.right_weight());
       }
 
@@ -111,6 +119,11 @@ namespace vcsn
 
     private:
       ratexpset_t rs_;
+      /// Shorthand to the weightset.
+      weightset_t ws_ = *rs_.weightset();
+      /// Polynomialset of ratexps.
+      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// The result.
       ratexp_t res_;
     };
 

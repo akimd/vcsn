@@ -16,6 +16,8 @@ namespace vcsn
 
   namespace rat
   {
+    // FIXME: this is a general feature which is useful elsewhere.
+    // E.g., expand.
 
     /// Type of PolynomialSet of RatExps from the RatExpSet type.
     template <typename RatExpSet>
@@ -53,7 +55,7 @@ namespace vcsn
       using context_t = typename ratexpset_t::context_t;
       using ratexp_t = typename ratexpset_t::ratexp_t;
       using weightset_t = typename ratexpset_t::weightset_t;
-      using weight_t = typename ratexpset_t::weight_t;
+      using weight_t = typename weightset_t::value_t;
       /// FIXME: use a letter_t type.
       using letter_t = char;
 

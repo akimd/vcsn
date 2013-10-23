@@ -1,0 +1,19 @@
+#! /bin/sh
+
+# check_exp CONTEXT INPUT OUTPUT
+# ------------------------------
+check_exp ()
+{
+  run 0 $3 -vcsn-expand -E -C "$1" -e "$2"
+}
+
+check_exp 'lal_char(abcd)_z'  '\z' '\z'
+check_exp 'lal_char(abcd)_z'  '\e' '\e'
+check_exp 'lal_char(abcd)_z'  a    a
+check_exp 'lal_char(abcd)_z'  '<2>a'  '<2>a'
+check_exp 'lal_char(abcd)_z'  'a+a'  '<2>a'
+check_exp 'lal_char(abcd)_z'  'a+a'  '<2>a'
+check_exp 'lal_char(abcd)_z'  'b+a+b+a'  '<2>a+<2>b'
+
+check_exp 'lal_char(abcd)_z' \
+  '<3>(b+a+b+a)<5>'  '<30>a+<30>b'
