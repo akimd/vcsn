@@ -47,6 +47,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/read-weight.hh                      \
   %D%/algos/standard.hh                         \
   %D%/algos/star.hh                             \
+  %D%/algos/star-normal-form.hh                 \
   %D%/algos/sum.hh                              \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \

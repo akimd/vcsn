@@ -65,6 +65,7 @@ all_vcsn =                                      \
   %D%/vcsn-shuffle                              \
   %D%/vcsn-standard                             \
   %D%/vcsn-star                                 \
+  %D%/vcsn-star-normal-form                     \
   %D%/vcsn-sum                                  \
   %D%/vcsn-thompson                             \
   %D%/vcsn-transpose                            \
@@ -122,6 +123,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_shuffle_LDADD          = %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la
 %C%_vcsn_star_LDADD             = %D%/libtafkit.la
+%C%_vcsn_star_normal_form_LDADD = %D%/libtafkit.la
 %C%_vcsn_sum_LDADD              = %D%/libtafkit.la
 %C%_vcsn_thompson_LDADD         = %D%/libtafkit.la
 %C%_vcsn_transpose_LDADD        = %D%/libtafkit.la

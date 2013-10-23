@@ -31,6 +31,7 @@
 # include <vcsn/algos/read-weight.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/star.hh>
+# include <vcsn/algos/star-normal-form.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
@@ -303,6 +304,7 @@ namespace vcsn
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);
+        REGISTER(star_normal_form, rs_t);
         REGISTER2(sum, aut_t, aut_t);
         REGISTER(tikz, aut_t);
         REGISTER(tikz, taut_t);

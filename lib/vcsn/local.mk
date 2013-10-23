@@ -66,6 +66,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/registry.hh                         \
   %D%/algos/standard.cc                         \
   %D%/algos/star.cc                             \
+  %D%/algos/star-normal-form.cc                 \
   %D%/algos/sum.cc                              \
   %D%/algos/thompson.cc                         \
   %D%/algos/tikz.cc                             \

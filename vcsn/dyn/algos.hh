@@ -308,6 +308,10 @@ namespace vcsn
     /// Star of a standard automaton.
     automaton star(const automaton& aut);
 
+    /// A normalized form where star is applied only to expression
+    /// without null constant-term.
+    ratexp star_normal_form(const ratexp& e);
+
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 
