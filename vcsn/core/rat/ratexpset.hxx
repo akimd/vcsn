@@ -9,7 +9,6 @@
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/ratexp.hh>
 #include <vcsn/misc/cast.hh>
-#include <vcsn/misc/military-order.hh>
 #include <vcsn/misc/stream.hh>
 
 namespace vcsn
