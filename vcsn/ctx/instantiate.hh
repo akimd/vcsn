@@ -267,6 +267,7 @@ namespace vcsn
         REGISTER(chain, aut_t);
         REGISTER(coaccessible, aut_t);
         REGISTER2(concatenate, aut_t, aut_t);
+        REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
         REGISTER(dot_stream, aut_t);
         REGISTER(dot_stream, taut_t);
@@ -274,7 +275,6 @@ namespace vcsn
         REGISTER(dot_string, taut_t);
         REGISTER(efsm, aut_t);
         REGISTER(efsm, taut_t);
-        REGISTER(constant_term, rs_t);
         REGISTER(expand, rs_t);
         REGISTER(info, aut_t);
         REGISTER(info, taut_t);
