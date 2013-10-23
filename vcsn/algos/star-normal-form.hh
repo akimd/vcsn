@@ -1,10 +1,8 @@
 #ifndef VCSN_ALGOS_STAR_NORMAL_FORM_HH
 # define VCSN_ALGOS_STAR_NORMAL_FORM_HH
 
-# include <set>
-
+# include <vcsn/algos/constant-term.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
 
@@ -18,7 +16,12 @@ namespace vcsn
     | star_normal_form(ratexp).  |
     `---------------------------*/
 
-    /// \tparam RatExpSet  relative to the RatExp.
+    /// \tparam RatExpSet relative to the RatExp.
+    ///
+    /// Implementation based on the dot/box operators as defined in
+    /// "On the Number of Broken Derived Terms of a Rational
+    /// Expression", Pierre-Yves Angrand, Sylvain Lombardy, Jacques
+    /// Sakarovitch.
     template <typename RatExpSet>
     class star_normal_form_visitor
       : public RatExpSet::const_visitor
@@ -41,6 +44,9 @@ namespace vcsn
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
 
+      /// The type of the operator.
+      enum operation_t { dot, box };
+
       star_normal_form_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
@@ -48,6 +54,7 @@ namespace vcsn
       ratexp_t
       operator()(const ratexp_t& v)
       {
+        operation_ = dot;
         v->accept(*this);
         return std::move(res_);
       }
@@ -61,7 +68,7 @@ namespace vcsn
       virtual void
       visit(const one_t& v)
       {
-        res_ = rs_.one(v.left_weight());
+        res_ = operation_ == box ? rs_.zero() : rs_.one(v.left_weight());
       }
 
       virtual void
@@ -70,6 +77,7 @@ namespace vcsn
         res_ = rs_.weight(v.left_weight(), rs_.atom(v.value()));
       }
 
+      // Plain traversal for sums.
       virtual void
       visit(const sum_t& v)
       {
@@ -80,14 +88,41 @@ namespace vcsn
             c->accept(*this);
             res = rs_.add(res, res_);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     std::move(res)),
+        res_ = rs_.weight(rs_.weight(v.left_weight(), std::move(res)),
                           v.right_weight());
       }
 
-      virtual void
-      visit(const prod_t& v)
+      /// Handling of a product by the box operator.
+      void box_of(const prod_t& v)
       {
+        if (std::any_of(std::begin(v), std::end(v),
+                        [this](const ratexp_t& n)
+                        {
+                          return rs_.weightset()->is_zero(constant_term(rs_, n));
+                        }))
+          {
+            // Some factor has a null constant-term.
+            v.head()->accept(*this);
+            ratexp_t res = res_;
+            for (auto c: v.tail())
+              {
+                c->accept(*this);
+                res = rs_.add(res, res_);
+              }
+            res_ = std::move(res);
+          }
+        else
+          {
+            operation_ = dot;
+            dot_of(v);
+            operation_ = box;
+          }
+      }
+
+      /// Handling of a product by the dot operator.
+      void dot_of(const prod_t& v)
+      {
+        // All the factors have a non null constant-term.
         v.head()->accept(*this);
         ratexp_t res = res_;
         for (auto c: v.tail())
@@ -95,23 +130,42 @@ namespace vcsn
             c->accept(*this);
             res = rs_.mul(res, res_);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     std::move(res)),
+        res_ = std::move(res);
+      }
+
+      virtual void
+      visit(const prod_t& v)
+      {
+        if (operation_ == box)
+          box_of(v);
+        else
+          dot_of(v);
+        res_ = rs_.weight(rs_.weight(v.left_weight(), res_),
                           v.right_weight());
       }
 
       virtual void
       visit(const star_t& v)
       {
-        v.sub()->accept(*this);
-        res_ = rs_.weight(rs_.weight(v.left_weight(),
-                                     rs_.star(std::move(res_))),
+        if (operation_ == dot)
+          {
+            operation_ = box;
+            v.sub()->accept(*this);
+            res_ = rs_.star(std::move(res_));
+            operation_ = dot;
+          }
+        else
+          {
+            v.sub()->accept(*this);
+          }
+        res_ = rs_.weight(rs_.weight(v.left_weight(), res_),
                           v.right_weight());
       }
 
     private:
       ratexpset_t rs_;
       ratexp_t res_;
+      operation_t operation_ = dot;
     };
 
   } // rat::
