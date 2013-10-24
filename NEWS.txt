@@ -32,13 +32,13 @@ New algorithms on LAL automata: computes the shuffle-product and
 infiltration of two automata.  These (and now product as well) require
 weightsets to be commutative semirings.
 
-  $ vcsn standard -E -e 'ab' -o ab.gv
+  $ vcsn standard -C 'lal_char(ab)_z' -E -e 'ab' -o ab.gv
   $ vcsn product    -f ab.gv ab.gv | vcsn enumerate -O text -f - 4
   ab
   $ vcsn shuffle    -f ab.gv ab.gv | vcsn enumerate -O text -f - 4
-  aabb + abab
+  <4>aabb + <2>abab
   $ vcsn infiltrate -f ab.gv ab.gv | vcsn enumerate -O text -f - 4
-  ab + aab + abb + aabb + abab
+  ab + <2>aab + <2>abb + <4>aabb + <2>abab
 
 * 2013-10-15
 ** derived-terms: new algorithm (static, dynamic, TAF-Kit)
