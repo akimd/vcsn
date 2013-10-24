@@ -39,21 +39,21 @@ run ()
 }
 
 # Determinization of ladybird 20.
-run 'vcsn-ladybird 21 | vcsn-determinize -O null'
+run 'vcsn-ladybird 21 | vcsn-determinize -q'
 
 # Evaluate of de-bruijn 20.
-run 'vcsn-de-bruijn 20 | vcsn-evaluate -O null -f - aaaaaaaaaaaaaaaaaaaaa'
+run 'vcsn-de-bruijn 20 | vcsn-evaluate -q -f - aaaaaaaaaaaaaaaaaaaaa'
 
 # Proper(thompson(a?{2000}))
-run 'vcsn-thompson -C "lan_char(a)_b" -Ee "a?{2000}" | vcsn-proper -O null'
+run 'vcsn-thompson -C "lan_char(a)_b" -Ee "a?{2000}" | vcsn-proper -q'
 
 # To-exp(standard((a+b+c+d)?{100})).
-run 'vcsn-standard -Ee "(a+b+c+d)?{100}" | vcsn-aut-to-exp -O null'
+run 'vcsn-standard -Ee "(a+b+c+d)?{100}" | vcsn-aut-to-exp -q'
 
 # power(standard((a+b)*b(<2>a+<2>b)*), 10)
-run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -O null -f- 10'
+run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -q -f- 10'
 
 run 'vcsn-standard -E -e "(a?){70}" -o a70.gv'
-run 'vcsn-product -O null -f a70.gv a70.gv'
-run 'vcsn-shuffle -O null -f a70.gv a70.gv'
-run 'vcsn-infiltrate -O null -f a70.gv a70.gv'
+run 'vcsn-product -q -f a70.gv a70.gv'
+run 'vcsn-shuffle -q -f a70.gv a70.gv'
+run 'vcsn-infiltrate -q -f a70.gv a70.gv'

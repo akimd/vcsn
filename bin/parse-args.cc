@@ -59,8 +59,9 @@ usage(const char* prog, int exit_status)
       "  -e STRING     input is STRING\n"
       "  -f FILE       input is FILE\n"
       "  -I FORMAT     input format (dot, fado, text)\n"
-      "  -O FORMAT     output format (dot, efsm, grail, info, null, text, tikz)\n"
+      "  -O FORMAT     output format (dot, efsm, grail, info, list, null, text, tikz)\n"
       "  -o FILE       save output into FILE\n"
+      "  -q            discard any output\n"
       "\n"
       "Context:\n"
       "  -C CONTEXT         the context to use\n"
@@ -76,15 +77,16 @@ usage(const char* prog, int exit_status)
       "  zr    for RatExp<Z>\n"
       "  zrr   for Ratexp<RatExp<Z>>\n"
       "\n"
-      "Input/Output Formats (for Automata or Expressions):\n"
-      "  dot    A   GraphViz's Dot language\n"
-      "  efsm   A   Extended FSM format for OpenFST: use efstcompile\n"
-      "  fado   A   FAdo's format\n"
-      "  grail  A   Grail's format\n"
-      "  info   AE  facts about the result (size, etc.)\n"
-      "  null   AE  no output at all (e.g., for benchmarks)\n"
-      "  text    E  usual concrete syntax\n"
-      "  tikz   A   LaTeX source for TikZ\n"
+      "Input/Output Formats (for Automata, Expressions, Polynomials):\n"
+      "  dot    A    GraphViz's Dot language\n"
+      "  efsm   A    Extended FSM format for OpenFST: use efstcompile\n"
+      "  fado   A    FAdo's format\n"
+      "  grail  A    Grail's format\n"
+      "  info   AE   facts about the result (size, etc.)\n"
+      "  list     P  display one monomial per line\n"
+      "  null   AEP  no output at all (e.g., for benchmarks)\n"
+      "  text    EP  usual concrete syntax\n"
+      "  tikz   A    LaTeX source for TikZ\n"
       ;
   else
     std::cerr << "Try `" << prog << " -h' for more information."
@@ -122,7 +124,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
     ADD(zr,  "law_char(abcd)_ratexpset<law_char(efgh)_z>");
     ADD(zrr, "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>");
 #undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:W:w?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:qW:w?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -148,12 +150,6 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'I':
         opts.input_format = optarg;
         break;
-      case 'O':
-        opts.output_format = optarg;
-        break;
-      case 'o':
-        opts.output = optarg;
-        break;
       case 'L':
         {
           std::string s = optarg;
@@ -169,6 +165,15 @@ parse_args(options& opts, int& argc, char* const*& argv)
           apply_label_kind(opts);
           break;
         }
+      case 'O':
+        opts.output_format = optarg;
+        break;
+      case 'o':
+        opts.output = optarg;
+        break;
+      case 'q':
+        opts.output_format = "null";
+        break;
       case 'w':
         opts.input_type = type::weight;
         break;

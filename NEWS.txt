@@ -4,6 +4,9 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.
 
 * 2013-10-24
+** taf-kit: option -q for "quiet"
+Equivalent to "-O null": do not generate output.
+
 ** star-normal-form: new algorithm (static, dynamic, TAF-Kit)
 Compute an equivalent rational expression where starred subexpressions have
 a non null constant term.
