@@ -30,7 +30,8 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using ratexp_t = typename ratexpset_t::value_t;
       using context_t = typename ratexpset_t::context_t;
-      using weight_t = typename context_t::weight_t;
+      using weightset_t = typename context_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
 
       using super_type = typename RatExpSet::const_visitor;
       using node_t = typename super_type::node_t;
@@ -98,10 +99,17 @@ namespace vcsn
         if (std::any_of(std::begin(v), std::end(v),
                         [this](const ratexp_t& n)
                         {
-                          return rs_.weightset()->is_zero(constant_term(rs_, n));
+                          return ws_.is_zero(constant_term(rs_, n));
                         }))
           {
             // Some factor has a null constant-term.
+            operation_ = dot;
+            dot_of(v);
+            operation_ = box;
+          }
+        else
+          {
+            // All the factors have a non null constant-term.
             v.head()->accept(*this);
             ratexp_t res = res_;
             for (auto c: v.tail())
@@ -111,18 +119,11 @@ namespace vcsn
               }
             res_ = std::move(res);
           }
-        else
-          {
-            operation_ = dot;
-            dot_of(v);
-            operation_ = box;
-          }
       }
 
       /// Handling of a product by the dot operator.
       void dot_of(const prod_t& v)
       {
-        // All the factors have a non null constant-term.
         v.head()->accept(*this);
         ratexp_t res = res_;
         for (auto c: v.tail())
@@ -151,7 +152,8 @@ namespace vcsn
           {
             operation_ = box;
             v.sub()->accept(*this);
-            res_ = rs_.star(std::move(res_));
+            res_ = rs_.star(res_);
+            res_ = rs_.weight(ws_.star(constant_term(rs_, v.sub())), res_);
             operation_ = dot;
           }
         else
@@ -164,7 +166,11 @@ namespace vcsn
 
     private:
       ratexpset_t rs_;
+      /// Shorthand to the weightset.
+      weightset_t ws_ = *rs_.weightset();
+      /// The result.
       ratexp_t res_;
+      /// The current operation.
       operation_t operation_ = dot;
     };
 
