@@ -1,3 +1,8 @@
+Vaucanson 2 news
+
+This file describes user visible changes in the course of the development of
+Vaucanson 2, in reverse chronological order.
+
 * 2013-10-24
 ** star-normal-form: new algorithm (static, dynamic, TAF-Kit)
 Compute an equivalent rational expression where starred subexpressions have
@@ -17,14 +22,14 @@ Print rational expressions with the minimum required number of parentheses,
 making some large expressions considerably easier to read.  For example
 
 Before:
-  $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
-  (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+  $ vcsn expand -C 'law_char(abc)_z' -e '(a+b)?{2}*'
+  (\e+<2>a+<2>b+(aa)+(ab)+(ba)+(bb))*
   $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
   \e+(a.((b+(a.a)+(c.((a+c)*).b))*).(a+(c.((a+c)*))))
 
 After:
-  $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
-  (\e+<2>a+<2>b+a.a+a.b+b.a+b.b)*
+  $ vcsn expand -C 'law_char(abc)_z' -e '(a+b)?{2}*'
+  (\e+<2>a+<2>b+aa+ab+ba+bb)*
   $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
   \e+a.(b+a.a+c.(a+c)*.b)*.(a+c.(a+c)*)
 
