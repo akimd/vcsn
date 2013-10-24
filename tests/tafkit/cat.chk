@@ -15,7 +15,7 @@ check_weight ()
 check_weight 'lal_char(a)_b' 0 0
 check_weight 'lal_char(a)_b' 1 1
 check_weight 'lal_char(a)_z' 123 123
-check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' '(a*).<23>(b.c)'
+check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' 'a*.<23>(b.c)'
 
 
 ## --------- ##
@@ -37,7 +37,7 @@ check_exp ()
 check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
 check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
     "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*" \
-    "<<<42>x>d>a+<<<51>x>d>a+((<<<42>y>e>b)*)"
+    "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*"
 
 # Check that we do support digits as letters.
 check_exp 'lal_char(0123)_b' "0123" "0.1.2.3"

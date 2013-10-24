@@ -38,7 +38,6 @@ namespace vcsn
       std::ostream&
       operator()(const node_t& v)
       {
-        top_ = true;
         v.accept(*this);
         out_ << std::flush;
         return out_;
@@ -59,6 +58,47 @@ namespace vcsn
       virtual void visit(const zero_t& v);
       virtual void visit(const atom_t& v);
 
+      /// The possible node precedence levels.
+      enum class precedence_t
+        {
+          sum,
+          prod,
+          word, // There's no corresponding type in this case.
+          star,
+          zero,
+          one,
+          atom,
+        };
+
+      /// We use node precedence to decide when to print parens.
+      precedence_t precedence(const node_t& v)
+      {
+        const atom_t* atom = dynamic_cast<const atom_t*>(&v);
+        if (atom && ! ctx_.labelset()->is_letter(atom->value()))
+          return precedence_t::word;
+        else
+          switch (v.type())
+            {
+# define CASE(Type) \
+  case exp::type_t::Type: \
+    return precedence_t::Type;
+            CASE(sum);
+            CASE(prod);
+            CASE(star);
+            CASE(zero);
+            CASE(one);
+            CASE(atom);
+# undef CASE
+            }
+        abort(); // Unreachable.
+      }
+
+      /// Print the given child node, also knowing its parent.  If force_parens
+      /// is true then print parens around it, even if they are not needed to
+      /// disambiguate.
+      void print_child(const node_t& child, const node_t& parent,
+                       bool force_parens = false);
+
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
       void print(const nary_t& n, const char op);
@@ -69,28 +109,23 @@ namespace vcsn
         return !ctx_.weightset()->is_one(w);
       }
 
+      /// Whether the left weight shows.
+      bool shows_left_weight_(const node_t& n)
+      {
+        return shows_(n.left_weight());
+      }
+
+      /// Whether the right weight shows.
+      bool shows_right_weight_(const node_t& n)
+      {
+        return (n.is_inner()
+                && shows_(static_cast<const inner_t&>(n).right_weight()));
+      }
+
       /// Whether one of the weights shows.
       bool shows_weight_(const node_t& n)
       {
-        return
-          shows_(n.left_weight())
-          || (n.is_inner()
-              && shows_(static_cast<const inner_t&>(n).right_weight()));
-      }
-
-      /// Whether the visited node requires outer parens.  The top
-      /// level node does not need parens, unless debug mode, or is a
-      /// sum/prod/star node with weights.
-      bool parens_(const inner_t& n)
-      {
-        bool res = !top_ || shows_weight_(n);
-        top_ = false;
-        return res;
-      }
-
-      bool parens_(const atom_t& n)
-      {
-        return !top_ && !ctx_.labelset()->is_letter(n.value());
+        return shows_left_weight_(n) || shows_right_weight_(n);
       }
 
       /// Output stream.
@@ -98,9 +133,6 @@ namespace vcsn
       const context_t& ctx_;
       /// Whether to be overly verbose.
       const bool debug_;
-      /// Whether the visited node is the top-level node.  Used by
-      /// parens_.
-      bool top_ = true;
     };
 
   } // namespace rat

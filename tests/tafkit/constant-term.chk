@@ -37,4 +37,4 @@ check '\e' '(<x>a)*'
 check 'x*' '(<x>\e)*'
 
 # Test left and right weight.
-check 'x.(y*).z' '<x>(<y>\e)*<z>'
+check 'x.y*.z' '<x>(<y>\e)*<z>'

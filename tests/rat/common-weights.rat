@@ -30,9 +30,9 @@ axb ! 1.2: invalid value: x, unexpected x
 # Precedence and associativity.
 (ab)* => (ab)*
 abc => abc
-a(bc) => a.(bc)
-ab(ab) => (ab).(ab)
-(ab)ab => (ab).(ab)
-ab(ab)ab => (ab).(ab).(ab)
-ab(ab)abc*  => (ab).(ab).(ab).(c*)
-(abc).(cba) => (abc).(cba)
+a(bc) => a.bc
+ab(ab) => ab.ab
+(ab)ab => ab.ab
+ab(ab)ab => ab.ab.ab
+ab(ab)abc*  => ab.ab.ab.c*
+(abc).(cba) => abc.cba

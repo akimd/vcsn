@@ -873,7 +873,7 @@ digraph
   0 -> F0 [label = "<e*>"]
   0 -> 1 [label = "<e*>a"]
   1 -> 2 [label = "b"]
-  2 -> F2 [label = "<f.(e*)>"]
-  2 -> 1 [label = "<f.(e*)>a"]
+  2 -> F2 [label = "<f.e*>"]
+  2 -> 1 [label = "<f.e*>a"]
 }
 EOF

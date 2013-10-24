@@ -1,4 +1,22 @@
 * 2013-10-24
+** ratexp printing: minimize parentheses.
+
+Print rational expressions with the minimum required number of parentheses,
+making some large expressions considerably easier to read.  For example
+
+Before:
+  $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
+  (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+  $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
+  \e+(a.((b+(a.a)+(c.((a+c)*).b))*).(a+(c.((a+c)*))))
+
+After:
+  $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
+  (\e+<2>a+<2>b+a.a+a.b+b.a+b.b)*
+  $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
+  \e+a.(b+a.a+c.(a+c)*.b)*.(a+c.(a+c)*)
+
+* 2013-10-24
 ** expand: new algorithm (static, dynamic, TAF-Kit)
 Given a rational expression, distribute product over addition (recursively
 under the starred subexpressions) group and sort the equal monomials.

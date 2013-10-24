@@ -39,31 +39,14 @@ namespace vcsn
 
     VISIT(star)
     {
-      const auto& sub = v.sub();
-      assert(sub);
-
-      bool parens = parens_(v);
-      if (debug_)
-        out_ << '*';
-      if (parens)
-        out_ << '(';
+      // Force parens around the child if it needs a left weight.  This is
+      // not needed for right weights: compare e<w>* with (<w>e)*.
+      const node_t& child = *v.sub();
+      bool child_needs_left_weight = shows_left_weight_(child);
       print(v.left_weight());
-
-      {
-        // If our argument shows weight, then add inner parens, so
-        // that ({2}a)* => ({2}a)*, not => {2}a* (which is actually
-        // read as {2}(a*)).
-        bool innerp = shows_weight_(*sub);
-        if (innerp)
-          out_ << '(';
-        sub->accept(*this);
-        if (innerp)
-          out_ << ')';
-      }
+      print_child(child, v, child_needs_left_weight);
       out_ << "*";
       print(v.right_weight());
-      if (parens)
-        out_ << ')';
     }
 
     VISIT(zero)
@@ -81,12 +64,42 @@ namespace vcsn
     VISIT(atom)
     {
       print(v.left_weight());
-      bool p = parens_(v);
-      if (p)
-        out_ << '(';
       ctx_.labelset()->print(out_, v.value());
-      if (p)
+    }
+
+    DEFINE::print_child(const node_t& child, const node_t& parent,
+                        bool force_parens)
+      -> void
+    {
+      bool parent_has_precedence = precedence(child) < precedence(parent);
+      bool needs_parens = parent_has_precedence || force_parens;
+      if (needs_parens)
+        out_ << "(";
+      child.accept(*this);
+      if (needs_parens)
+        out_ << ")";
+    }
+
+    DEFINE::print(const nary_t& n, const char op)
+      -> void
+    {
+      bool need_weight_parens = shows_weight_(n);
+
+      print(n.left_weight());
+      if (need_weight_parens)
+        out_ << '(';
+      bool first = true;
+      for (auto i: n)
+        {
+          if (! first)
+            out_ << op;
+          print_child(*i, n);
+          first = false;
+        }
+
+      if (need_weight_parens)
         out_ << ')';
+      print(n.right_weight());
     }
 
     DEFINE::print(const weight_t& w)
@@ -100,32 +113,6 @@ namespace vcsn
           ctx_.weightset()->print(out_, w);
           out_ << rbracket;
         }
-    }
-
-    DEFINE::print(const nary_t& n, const char op)
-      -> void
-    {
-      assert(n.size());
-
-      print(n.left_weight());
-
-      bool parens = parens_(n);
-      if (debug_)
-        out_ << op;
-      if (parens)
-        out_ << '(';
-      bool first = true;
-      for (auto i: n)
-        {
-          if (!first)
-            out_ << op;
-          first = false;
-          i->accept(*this);
-        }
-      if (parens)
-        out_ << ')';
-
-      print(n.right_weight());
     }
 
 # undef VISIT
