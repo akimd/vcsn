@@ -16,7 +16,6 @@ After:
   $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
   \e+a.(b+a.a+c.(a+c)*.b)*.(a+c.(a+c)*)
 
-* 2013-10-24
 ** expand: new algorithm (static, dynamic, TAF-Kit)
 Given a rational expression, distribute product over addition (recursively
 under the starred subexpressions) group and sort the equal monomials.
