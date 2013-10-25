@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_DERIVE_HH
-# define VCSN_ALGOS_DERIVE_HH
+#ifndef VCSN_ALGOS_DERIVATION_HH
+# define VCSN_ALGOS_DERIVATION_HH
 
 # include <set>
 # include <stack>
@@ -42,12 +42,12 @@ namespace vcsn
     }
 
 
-    /*-----------------.
-    | derive(ratexp).  |
-    `-----------------*/
+    /*---------------------.
+    | derivation(ratexp).  |
+    `---------------------*/
 
     template <typename RatExpSet>
-    class derive_visitor
+    class derivation_visitor
       : public RatExpSet::const_visitor
     {
     public:
@@ -74,7 +74,7 @@ namespace vcsn
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
 
-      derive_visitor(const ratexpset_t& rs)
+      derivation_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
 
@@ -186,11 +186,11 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  derive(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
          char a)
   {
-    rat::derive_visitor<RatExpSet> derive{rs};
-    return derive(e, a);
+    rat::derivation_visitor<RatExpSet> derivation{rs};
+    return derivation(e, a);
   }
 
 
@@ -198,16 +198,16 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  derive(const RatExpSet& rs,
+  derivation(const RatExpSet& rs,
          const rat::ratexp_polynomial_t<RatExpSet>& p,
          char a)
   {
     auto ps = rat::make_ratexp_polynomialset(rs);
     using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
-    rat::derive_visitor<RatExpSet> derive{rs};
+    rat::derivation_visitor<RatExpSet> derivation{rs};
     polynomial_t res;
     for (const auto& m: p)
-      res = ps.add(res, ps.lmul(m.second, derive(m.first, a)));
+      res = ps.add(res, ps.lmul(m.second, derivation(m.first, a)));
     return res;
   }
 
@@ -216,14 +216,14 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  derive(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
          const std::string& s)
   {
     if (s.empty())
-      throw std::runtime_error("cannot derive wrt an empty string");
-    auto res = derive(rs, e, s[0]);
+      throw std::runtime_error("cannot derivation wrt an empty string");
+    auto res = derivation(rs, e, s[0]);
     for (size_t i = 1, len = s.size(); i < len; ++i)
-      res = derive(rs, res, s[i]);
+      res = derivation(rs, res, s[i]);
     return res;
   }
 
@@ -232,21 +232,21 @@ namespace vcsn
   {
     namespace detail
     {
-      /*---------------------------.
-      | dyn::derive(exp, string).  |
-      `---------------------------*/
+      /*-------------------------------.
+      | dyn::derivation(exp, string).  |
+      `-------------------------------*/
       template <typename RatExpSet>
       polynomial
-      derive(const ratexp& exp, const std::string& s)
+      derivation(const ratexp& exp, const std::string& s)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.get_ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
-                               derive<RatExpSet>(rs, e.ratexp(), s));
+                               derivation<RatExpSet>(rs, e.ratexp(), s));
       }
 
-      REGISTER_DECLARE(derive,
+      REGISTER_DECLARE(derivation,
                        (const ratexp& e, const std::string& s) -> polynomial);
     }
   }
@@ -275,7 +275,7 @@ namespace vcsn
       /// Symbolic states: the derived term are polynomials of ratexps.
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
-      
+
       struct ratexpset_less_than
       {
         bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
@@ -316,7 +316,7 @@ namespace vcsn
             state_t src = map_[r];
             for (auto l : ls)
               {
-                polynomial_t next = derive(rs_, r, l);
+                polynomial_t next = derivation(rs_, r, l);
                 for (const auto& p: next)
                   {
                     state_t dst;
@@ -407,4 +407,4 @@ namespace vcsn
 
 } // vcsn::
 
-#endif // !VCSN_ALGOS_DERIVE_HH
+#endif // !VCSN_ALGOS_DERIVATION_HH

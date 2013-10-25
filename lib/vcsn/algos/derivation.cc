@@ -1,5 +1,5 @@
 #include <vcsn/dyn/automaton.hh>
-#include <vcsn/algos/derive.hh>
+#include <vcsn/algos/derivation.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -7,15 +7,15 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*----------------------.
-    | derive(exp, string).  |
-    `----------------------*/
-    REGISTER_DEFINE(derive);
+    /*--------------------------.
+    | derivation(exp, string).  |
+    `--------------------------*/
+    REGISTER_DEFINE(derivation);
 
     polynomial
-    derive(const ratexp& e, const std::string& s)
+    derivation(const ratexp& e, const std::string& s)
     {
-      return detail::derive_registry().call(e->vname(false), e, s);
+      return detail::derivation_registry().call(e->vname(false), e, s);
     }
 
     /*--------------------.

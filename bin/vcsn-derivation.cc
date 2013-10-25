@@ -5,7 +5,7 @@
 
 #include "parse-args.hh"
 
-struct derive: vcsn_function
+struct derivation: vcsn_function
 {
   int work_exp(const options& opts) const
   {
@@ -16,7 +16,7 @@ struct derive: vcsn_function
     std::string s = opts.argv[0];
 
     // Process.
-    auto res = vcsn::dyn::derive(exp, s);
+    auto res = vcsn::dyn::derivation(exp, s);
 
     // Output.
     *opts.out << res << std::endl;
@@ -26,5 +26,5 @@ struct derive: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, derive{}, type::ratexp);
+  return vcsn_main(argc, argv, derivation{}, type::ratexp);
 }

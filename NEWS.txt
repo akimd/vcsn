@@ -5,6 +5,7 @@ Vaucanson 2, in reverse chronological order.
 
 * 2013-10-25
 ** renamings (static, dynamic, TAF-Kit)
+derive        -> derivation
 derived-terms -> derived-term
 infiltrate    -> infiltration
 
@@ -210,7 +211,7 @@ arguments: number of states, density (of transitions, defaults to .1,
 1 generates a clique), number of initial states (defaults to 1), and
 number of final states (defaults to 1).
 
-So far LAL and LAE only, no support for random weights.
+So far LAL and LAN only, no support for random weights.
 
   $ vcsn random -O fado 3
   @DFA 0

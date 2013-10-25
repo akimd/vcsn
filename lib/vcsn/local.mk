@@ -33,7 +33,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/constant-term.cc                    \
   %D%/algos/copy.cc                             \
   %D%/algos/de-bruijn.cc                        \
-  %D%/algos/derive.cc                           \
+  %D%/algos/derivation.cc                       \
   %D%/algos/determinize.cc                      \
   %D%/algos/divkbaseb.cc                        \
   %D%/algos/dot.cc                              \

@@ -61,7 +61,7 @@ namespace vcsn
 
     /// Derive \a ratexp with respect to \a s.
     /// \pre  \a exp must be LAL.
-    polynomial derive(const ratexp& exp, const std::string& s);
+    polynomial derivation(const ratexp& exp, const std::string& s);
 
     /// The derived-term automaton of \a e.
     automaton derived_term(const ratexp& e);

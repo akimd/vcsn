@@ -1,8 +1,8 @@
 #! /bin/sh
 
-## ------------- ##
-## derive(exp).  ##
-## ------------- ##
+## ----------------- ##
+## derivation(exp).  ##
+## ----------------- ##
 
 # check RAT-EXP STRING RESULT
 # ---------------------------
@@ -11,7 +11,7 @@ check ()
 {
   local re
   re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$1"
-  run 0 "$3" -vcsn-derive -e "$re" "$2"
+  run 0 "$3" -vcsn-derivation -e "$re" "$2"
 }
 
 ## ---------------------------- ##

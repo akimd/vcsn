@@ -32,7 +32,7 @@ all_vcsn =                                      \
   %D%/vcsn-concatenate                          \
   %D%/vcsn-constant-term                        \
   %D%/vcsn-de-bruijn                            \
-  %D%/vcsn-derive                               \
+  %D%/vcsn-derivation                           \
   %D%/vcsn-derived-term                         \
   %D%/vcsn-determinize                          \
   %D%/vcsn-divkbaseb                            \
@@ -90,7 +90,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_concatenate_LDADD      = %D%/libtafkit.la
 %C%_vcsn_constant_term_LDADD    = %D%/libtafkit.la
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
-%C%_vcsn_derive_LDADD           = %D%/libtafkit.la
+%C%_vcsn_derivation_LDADD       = %D%/libtafkit.la
 %C%_vcsn_derived_term_LDADD     = %D%/libtafkit.la
 %C%_vcsn_determinize_LDADD      = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la

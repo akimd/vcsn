@@ -5,7 +5,7 @@
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
 
-# include <vcsn/algos/derive.hh> // ratexp_polynomialset_t.
+# include <vcsn/algos/derivation.hh> // ratexp_polynomialset_t.
 
 namespace vcsn
 {

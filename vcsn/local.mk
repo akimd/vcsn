@@ -20,7 +20,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/concatenate.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/copy.hh                             \
-  %D%/algos/derive.hh                           \
+  %D%/algos/derivation.hh                       \
   %D%/algos/determinize.hh                      \
   %D%/algos/dot.hh                              \
   %D%/algos/edit-automaton.hh                   \
