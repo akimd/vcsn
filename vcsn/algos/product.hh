@@ -217,7 +217,7 @@ namespace vcsn
       }
 
       /// The (accessible part of the) infiltration of \a laut_ and \a raut_.
-      automaton_t infiltrate()
+      automaton_t infiltration()
       {
         auto ctx = get_union(laut_.context(), raut_.context());
         const auto& ws = *ctx.weightset();
@@ -312,17 +312,17 @@ namespace vcsn
   }
 
 
-  /*------------.
-  | infiltrate. |
-  `------------*/
+  /*---------------.
+  | infiltration.  |
+  `---------------*/
 
   /// Build the (accessible part of the) infiltration.
   template <typename A, typename B>
   A
-  infiltrate(const A& laut, const B& raut)
+  infiltration(const A& laut, const B& raut)
   {
     detail::producter<A, B> product(laut, raut);
-    auto res = product.infiltrate();
+    auto res = product.infiltration();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_INFILTRATE"))
@@ -413,20 +413,20 @@ namespace vcsn
                         (const automaton&, const automaton&) -> automaton);
 
 
-      /*-----------------.
-      | dyn::infiltrate. |
-      `-----------------*/
+      /*--------------------.
+      | dyn::infiltration.  |
+      `--------------------*/
 
       template <typename Lhs, typename Rhs>
       automaton
-      infiltrate(const automaton& lhs, const automaton& rhs)
+      infiltration(const automaton& lhs, const automaton& rhs)
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), infiltrate(l, r));
+        return make_automaton(l.context(), infiltration(l, r));
       }
 
-      REGISTER_DECLARE2(infiltrate,
+      REGISTER_DECLARE2(infiltration,
                         (const automaton&, const automaton&) -> automaton);
 
 

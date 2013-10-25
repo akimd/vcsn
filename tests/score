@@ -56,4 +56,4 @@ run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -q
 run 'vcsn-standard -E -e "(a?){70}" -o a70.gv'
 run 'vcsn-product -q -f a70.gv a70.gv'
 run 'vcsn-shuffle -q -f a70.gv a70.gv'
-run 'vcsn-infiltrate -q -f a70.gv a70.gv'
+run 'vcsn-infiltration -q -f a70.gv a70.gv'

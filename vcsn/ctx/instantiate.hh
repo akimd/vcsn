@@ -163,7 +163,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER2(infiltrate, aut_t, aut_t);
+        REGISTER2(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(power, aut_t);
         REGISTER2(product, aut_t, aut_t);

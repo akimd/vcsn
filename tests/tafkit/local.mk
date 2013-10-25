@@ -31,7 +31,7 @@
   %D%/expand.chk                                \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
-  %D%/infiltrate.chk                            \
+  %D%/infiltration.chk                          \
   %D%/is-ambiguous.chk                          \
   %D%/is-complete.chk                           \
   %D%/is-deterministic.chk                      \
@@ -106,7 +106,7 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/infiltrate.log:  $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 

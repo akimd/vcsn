@@ -3,6 +3,10 @@ Vaucanson 2 news
 This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.
 
+* 2013-10-25
+** renamings (static, dynamic, TAF-Kit)
+infiltrate -> infiltration.
+
 * 2013-10-24
 ** taf-kit: option -q for "quiet"
 Equivalent to "-O null": do not generate output.

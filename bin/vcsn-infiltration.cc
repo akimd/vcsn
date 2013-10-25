@@ -6,7 +6,7 @@
 
 #include "parse-args.hh"
 
-struct infiltrate: vcsn_function
+struct infiltration: vcsn_function
 {
   int work_aut(const options& opts) const
   {
@@ -20,7 +20,7 @@ struct infiltrate: vcsn_function
     automaton rhs = read_automaton(opts2);
 
     // Process.
-    auto res = vcsn::dyn::infiltrate(lhs, rhs);
+    auto res = vcsn::dyn::infiltration(lhs, rhs);
 
     // Output.
     *opts.out << res << std::endl;
@@ -30,5 +30,5 @@ struct infiltrate: vcsn_function
 
 int main(int argc, char* const argv[])
 {
-  return vcsn_main(argc, argv, infiltrate{});
+  return vcsn_main(argc, argv, infiltration{});
 }

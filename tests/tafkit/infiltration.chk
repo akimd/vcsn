@@ -1,7 +1,7 @@
 #! /bin/sh
 
-# a infiltrate a
-run 0 - -vcsn-infiltrate -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
+# a infiltration a
+run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -28,8 +28,8 @@ digraph
 }
 EOF
 
-# abc infiltrate abc
-run 0 - -vcsn-infiltrate -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/abc.gv" <<\EOF
+# abc infiltration abc
+run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/abc.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -90,8 +90,8 @@ digraph
 }
 EOF
 
-# abc infiltrate xy
-run 0 - -vcsn-infiltrate -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/xy.gv" <<\EOF
+# abc infiltration xy
+run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/xy.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abcxy)_z"
@@ -139,4 +139,4 @@ digraph
 EOF
 
 run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(ab)_b>' -e 'ab' -o ab.gv
-run 1 '' -vcsn-infiltrate -f ab.gv ab.gv
+run 1 '' -vcsn-infiltration -f ab.gv ab.gv

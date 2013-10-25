@@ -32,15 +32,15 @@ namespace vcsn
     }
 
     /*------------.
-    | infiltrate. |
+    | infiltration. |
     `------------*/
 
-    REGISTER_DEFINE2(infiltrate);
+    REGISTER_DEFINE2(infiltration);
 
     automaton
-    infiltrate(const automaton& lhs, const automaton& rhs)
+    infiltration(const automaton& lhs, const automaton& rhs)
     {
-      return detail::infiltrate_registry().call(vname(lhs, rhs), lhs, rhs);
+      return detail::infiltration_registry().call(vname(lhs, rhs), lhs, rhs);
     }
 
     /*--------.
