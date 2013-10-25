@@ -5,7 +5,8 @@ Vaucanson 2, in reverse chronological order.
 
 * 2013-10-25
 ** renamings (static, dynamic, TAF-Kit)
-infiltrate -> infiltration.
+derived-terms -> derived-term
+infiltrate    -> infiltration
 
 * 2013-10-24
 ** taf-kit: option -q for "quiet"

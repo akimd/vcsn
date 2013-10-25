@@ -272,7 +272,7 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
       using state_t = typename automaton_t::state_t;
 
-      /// Symbolic states: the derived terms are polynomials of ratexps.
+      /// Symbolic states: the derived term are polynomials of ratexps.
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       
@@ -374,7 +374,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   mutable_automaton<typename RatExpSet::context_t>
-  derived_terms(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
+  derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
   {
     detail::derived_termer<RatExpSet> dt{rs};
     auto res = dt(r);
@@ -390,15 +390,15 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       automaton
-      derived_terms(const ratexp& exp)
+      derived_term(const ratexp& exp)
       {
         const auto& r = exp->as<RatExpSet>();
         return make_automaton(r.get_ratexpset().context(),
-                              derived_terms(r.get_ratexpset(),
+                              derived_term(r.get_ratexpset(),
                                             r.ratexp()));
       }
 
-      REGISTER_DECLARE(derived_terms,
+      REGISTER_DECLARE(derived_term,
                        (const ratexp& e) -> automaton);
     }
   }

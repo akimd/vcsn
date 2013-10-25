@@ -76,10 +76,10 @@ check "$E1t" ba  "<2/9>a*.$E1"
 check "$E1t" bb "<10/9>b*.$E1"
 
 
-## -------------------- ##
-## derived_terms(exp).  ##
-## -------------------- ##
+## ------------------- ##
+## derived_term(exp).  ##
+## ------------------- ##
 
 export VCSN_DERIVED_TERMS=1
-run 0 -f $medir/e1-dt.gv -vcsn-derived-terms -e "$E1t"
+run 0 -f $medir/e1-dt.gv -vcsn-derived-term -e "$E1t"
 unset VCSN_DERIVED_TERMS

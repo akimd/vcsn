@@ -64,7 +64,7 @@ namespace vcsn
     polynomial derive(const ratexp& exp, const std::string& s);
 
     /// The derived-term automaton of \a e.
-    automaton derived_terms(const ratexp& e);
+    automaton derived_term(const ratexp& e);
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
