@@ -380,7 +380,7 @@ namespace vcsn
   {
     detail::derived_termer<RatExpSet> dt{rs};
     auto res = dt(r);
-    if (getenv("VCSN_DERIVED_TERMS"))
+    if (getenv("VCSN_ORIGINS"))
       dt.print(std::cout, dt.origins());
     return res;
   }

@@ -181,7 +181,7 @@ namespace vcsn
     auto res = determinize(a, complete);
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
-    if (getenv("VCSN_DETERMINIZE"))
+    if (getenv("VCSN_ORIGINS"))
       determinize.print(std::cout, determinize.origins());
     return res;
   }

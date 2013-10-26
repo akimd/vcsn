@@ -11,11 +11,10 @@ do
   do
     # Putting an envvar definition before the call to a shell
     # function does not seem to behave as expected.
-    export VCSN_DETERMINIZE=1
+    export VCSN_ORIGINS=1
     run 0 -f $medir/$aut-det-$complete.gv \
       -vcsn-determinize -f $medir/$aut.gv $complete
-    # For some reason, Bash did leave VCSN_DETERMINIZE in the env.
-    unset VCSN_DETERMINIZE
+    unset VCSN_ORIGINS
     # Idempotence.  Remove the origins.
     perl -pi -0777 -e 's{/\*.*?\*/\n}{}s' out.exp
     run 0 out.exp -vcsn-determinize -f out.exp

@@ -287,7 +287,7 @@ namespace vcsn
     auto res = product.product();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
-    if (getenv("VCSN_PRODUCT"))
+    if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
   }
@@ -306,7 +306,7 @@ namespace vcsn
     auto res = product.shuffle();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
-    if (getenv("VCSN_SHUFFLE"))
+    if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
   }
@@ -325,7 +325,7 @@ namespace vcsn
     auto res = product.infiltration();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
-    if (getenv("VCSN_INFILTRATE"))
+    if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
   }
