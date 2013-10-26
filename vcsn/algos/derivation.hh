@@ -128,7 +128,7 @@ namespace vcsn
       visit(const sum_t& e)
       {
         polynomial_t res = ps_.zero();
-        for (auto v: e)
+        for (const auto& v: e)
           {
             v->accept(*this);
             res = ps_.add(res, res_);
