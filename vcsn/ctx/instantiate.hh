@@ -300,6 +300,7 @@ namespace vcsn
         REGISTER(print_weight, ws_t);
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);
+        REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);

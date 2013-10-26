@@ -40,12 +40,207 @@ namespace vcsn
                                      typename RatExpSet::weightset_t>;
       return context_t{rs, *rs.weightset()};
     }
+  }
 
 
-    /*---------------------.
-    | derivation(ratexp).  |
-    `---------------------*/
+  /*----------------.
+  | split(ratexp).  |
+  `----------------*/
 
+  namespace rat
+  {
+    template <typename RatExpSet>
+    class split_visitor
+      : public RatExpSet::const_visitor
+    {
+    public:
+      using ratexpset_t = RatExpSet;
+      using context_t = typename ratexpset_t::context_t;
+      using labelset_t = typename context_t::labelset_t;
+      using label_t = typename context_t::label_t;
+      using ratexp_t = typename ratexpset_t::value_t;
+      using weightset_t = typename ratexpset_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+
+      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
+
+      using super_type = typename ratexpset_t::const_visitor;
+      using node_t = typename super_type::node_t;
+      using inner_t = typename super_type::inner_t;
+      using nary_t = typename super_type::nary_t;
+      using prod_t = typename super_type::prod_t;
+      using sum_t = typename super_type::sum_t;
+      using leaf_t = typename super_type::leaf_t;
+      using star_t = typename super_type::star_t;
+      using zero_t = typename super_type::zero_t;
+      using one_t = typename super_type::one_t;
+      using atom_t = typename super_type::atom_t;
+
+      split_visitor(const ratexpset_t& rs)
+        : rs_(rs)
+      {}
+
+      /// Break a ratexp into a polynomial.
+      polynomial_t operator()(const ratexp_t& v)
+      {
+        return split(v);
+      }
+
+      /// Easy recursion.
+      polynomial_t split(const ratexp_t& v)
+      {
+        v->accept(*this);
+        return std::move(res_);
+      }
+
+      void
+      apply_weights(const inner_t& e)
+      {
+        res_ = ps_.lmul(e.left_weight(), res_);
+        res_ = ps_.rmul(res_, e.right_weight());
+      }
+
+      void
+      apply_weights(const leaf_t& e)
+      {
+        res_ = ps_.lmul(e.left_weight(), res_);
+      }
+
+      virtual void
+      visit(const zero_t&)
+      {
+        res_ = ps_.zero();
+      }
+
+      virtual void
+      visit(const one_t& e)
+      {
+        res_ = polynomial_t{{rs_.one(), e.left_weight()}};
+      }
+
+      virtual void
+      visit(const atom_t& e)
+      {
+        res_ = polynomial_t{{rs_.atom(e.value()), e.left_weight()}};
+      }
+
+      virtual void
+      visit(const sum_t& e)
+      {
+        polynomial_t res = ps_.zero();
+        for (const auto& v: e)
+          {
+            v->accept(*this);
+            res = ps_.add(res, res_);
+          }
+        res_ = res;
+        apply_weights(e);
+      }
+
+      /// Split a binary product.
+      polynomial_t product(const ratexp_t& l, const ratexp_t& r)
+      {
+        polynomial_t l_split = split(l);
+        weight_t l_const = constant_term(rs_, l);
+        // proper(B(l)).
+        ps_.del_weight(l_split, rs_.one());
+
+        return ps_.add(ps_.rmul(l_split, r),
+                       ps_.lmul(l_const, split(r)));
+      }
+
+      /// Split a binary product.
+      polynomial_t product(const polynomial_t& l, const ratexp_t& r)
+      {
+        polynomial_t res;
+        for (const auto& m: l)
+          res = ps_.add(res, ps_.lmul(m.second, product(m.first, r)));
+        return res;
+      }
+
+      /// Handle an n-ary product.
+      virtual void
+      visit(const prod_t& e)
+      {
+        auto res = product(e[0], e[1]);
+        for (unsigned i = 2, n = e.size(); i < n; ++i)
+          res = product(res, e[i]);
+        res_ = std::move(res);
+        apply_weights(e);
+      }
+
+      virtual void
+      visit(const star_t& e)
+      {
+        // We need a copy of e, but without its weights.
+        auto e2 = rs_.star(e.sub()->clone());
+        res_ = polynomial_t{{e2, ws_.one()}};
+        apply_weights(e);
+      }
+
+    private:
+      ratexpset_t rs_;
+      /// Shorthand to the weightset.
+      weightset_t ws_ = *rs_.weightset();
+      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// The result.
+      polynomial_t res_;
+    };
+  }
+
+  /// Split a ratexp.
+  template <typename RatExpSet>
+  inline
+  rat::ratexp_polynomial_t<RatExpSet>
+  split(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
+  {
+    rat::split_visitor<RatExpSet> split{rs};
+    return split(e);
+  }
+
+  /// Split a polynomial of ratexps.
+  template <typename RatExpSet>
+  inline
+  rat::ratexp_polynomial_t<RatExpSet>
+  split(const RatExpSet& rs, const rat::ratexp_polynomial_t<RatExpSet>& p)
+  {
+    auto ps = rat::make_ratexp_polynomialset(rs);
+    using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
+    rat::split_visitor<RatExpSet> split{rs};
+    polynomial_t res;
+    for (const auto& m: p)
+      res = ps.add(res, ps.lmul(m.second, split(m.first)));
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet>
+      polynomial
+      split(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>();
+        const auto& rs = e.get_ratexpset();
+        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
+        return make_polynomial(ps,
+                               split<RatExpSet>(rs, e.ratexp()));
+      }
+
+      REGISTER_DECLARE(split,
+                       (const ratexp& e) -> polynomial);
+    }
+  }
+
+  /*---------------------.
+  | derivation(ratexp).  |
+  `---------------------*/
+
+  namespace rat
+  {
     template <typename RatExpSet>
     class derivation_visitor
       : public RatExpSet::const_visitor
@@ -234,9 +429,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-------------------------------.
-      | dyn::derivation(exp, string).  |
-      `-------------------------------*/
+      /// Bridge.
       template <typename RatExpSet>
       polynomial
       derivation(const ratexp& exp, const std::string& s)

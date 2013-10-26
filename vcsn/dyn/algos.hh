@@ -305,6 +305,9 @@ namespace vcsn
     /// \throw std::domain_error if the automaton is useless
     std::string shortest(const automaton& aut);
 
+    /// Break \a ratexp.
+    polynomial split(const ratexp& exp);
+
     /// Star of a standard automaton.
     automaton star(const automaton& aut);
 
