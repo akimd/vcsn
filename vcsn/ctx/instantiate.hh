@@ -210,7 +210,6 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(de_bruijn, Ctx);
-        REGISTER(derivation, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
         REGISTER(ladybird, Ctx);

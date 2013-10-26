@@ -53,11 +53,11 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using context_t = typename ratexpset_t::context_t;
-      using ratexp_t = typename ratexpset_t::ratexp_t;
+      using labelset_t = typename context_t::labelset_t;
+      using label_t = typename context_t::label_t;
+      using ratexp_t = typename ratexpset_t::value_t;
       using weightset_t = typename ratexpset_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
-      /// FIXME: use a letter_t type.
-      using letter_t = char;
 
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
@@ -79,7 +79,7 @@ namespace vcsn
       {}
 
       polynomial_t
-      operator()(const ratexp_t& v, letter_t var)
+      operator()(const ratexp_t& v, label_t var)
       {
         variable_ = var;
         v->accept(*this);
@@ -177,7 +177,7 @@ namespace vcsn
       /// The result.
       polynomial_t res_;
       /// The derivation variable.
-      letter_t variable_;
+      label_t variable_;
     };
 
   } // rat::
@@ -187,20 +187,22 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-         char a)
+             typename RatExpSet::label_t a)
   {
+    static_assert(RatExpSet::context_t::is_lal,
+                  "requires labels_are_letters");
     rat::derivation_visitor<RatExpSet> derivation{rs};
     return derivation(e, a);
   }
 
 
-  /// Derive a polynonials of ratexp wrt to a letter.
+  /// Derive a polynomial of ratexps wrt to a letter.
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
-         const rat::ratexp_polynomial_t<RatExpSet>& p,
-         char a)
+             const rat::ratexp_polynomial_t<RatExpSet>& p,
+             typename RatExpSet::label_t a)
   {
     auto ps = rat::make_ratexp_polynomialset(rs);
     using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
@@ -217,7 +219,7 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-         const std::string& s)
+             const std::string& s)
   {
     if (s.empty())
       throw std::runtime_error("cannot derivation wrt an empty string");
