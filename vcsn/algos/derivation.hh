@@ -142,12 +142,12 @@ namespace vcsn
       polynomial_t product(const ratexp_t& l, const ratexp_t& r)
       {
         polynomial_t l_split = split(l);
-        weight_t l_const = constant_term(rs_, l);
+        weight_t l_split_const = ps_.get_weight(l_split, rs_.one());
         // proper(B(l)).
         ps_.del_weight(l_split, rs_.one());
 
         return ps_.add(ps_.rmul(l_split, r),
-                       ps_.lmul(l_const, split(r)));
+                       ps_.lmul(l_split_const, split(r)));
       }
 
       /// Split a binary product.
@@ -387,7 +387,10 @@ namespace vcsn
     static_assert(RatExpSet::context_t::is_lal,
                   "requires labels_are_letters");
     rat::derivation_visitor<RatExpSet> derivation{rs};
-    return derivation(e, a);
+    auto res = derivation(e, a);
+    if (getenv("VCSN_BREAKING"))
+      res = split(rs, res);
+    return res;
   }
 
 
@@ -401,10 +404,9 @@ namespace vcsn
   {
     auto ps = rat::make_ratexp_polynomialset(rs);
     using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
-    rat::derivation_visitor<RatExpSet> derivation{rs};
     polynomial_t res;
     for (const auto& m: p)
-      res = ps.add(res, ps.lmul(m.second, derivation(m.first, a)));
+      res = ps.add(res, ps.lmul(m.second, derivation(rs, m.first, a)));
     return res;
   }
 
@@ -498,12 +500,21 @@ namespace vcsn
         std::stack<ratexp_t> todo;
         /// Turn the ratexp into a polynomial.
         {
-          todo.push(ratexp);
-          state_t s = res.new_state();
-          map_[ratexp] = s;
-          res.set_initial(s);
-          res.set_final(s, constant_term(rs_, ratexp));
+          polynomial_t initial;
+          if (getenv("VCSN_BREAKING"))
+            initial = split(rs_, ratexp);
+          else
+            initial = polynomial_t{{ratexp, ws.one()}};
+          for (const auto& p: initial)
+            {
+              todo.push(p.first);
+              state_t s = res.new_state();
+              map_[p.first] = s;
+              res.set_initial(s, p.second);
+              res.set_final(s, constant_term(rs_, p.first));
+            }
         }
+
         while (!todo.empty())
           {
             ratexp_t r = todo.top();

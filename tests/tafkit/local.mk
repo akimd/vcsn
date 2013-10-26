@@ -66,6 +66,10 @@ EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/lao-elim-2.gv              \
   %D%/derivation.dir/a?-dt.gv                   \
   %D%/derivation.dir/e1-dt.gv                   \
+  %D%/derivation.dir/e2-dt.gv                   \
+  %D%/derivation.dir/e2-dt-breaking.gv          \
+  %D%/derivation.dir/h3-dt.gv                   \
+  %D%/derivation.dir/h3-dt-breaking.gv          \
   %D%/determinize.dir/a-det-0.gv                \
   %D%/determinize.dir/a-det-1.gv                \
   %D%/determinize.dir/a.gv                      \

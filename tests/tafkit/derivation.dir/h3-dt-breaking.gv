@@ -1,0 +1,34 @@
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "a.(b+c+d)"]
+    1 [label = "b"]
+    2 [label = "c"]
+    3 [label = "d"]
+    4 [label = "\\e"]
+*/
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F4
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+    4
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  0 -> 3 [label = "a"]
+  1 -> 4 [label = "b"]
+  2 -> 4 [label = "c"]
+  3 -> 4 [label = "d"]
+  4 -> F4
+}
