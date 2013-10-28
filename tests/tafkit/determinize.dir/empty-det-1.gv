@@ -1,4 +1,5 @@
 /* Origins.
+    node [shape = box, style = rounded]
     0 [label = ""]
 */
 digraph

@@ -258,7 +258,8 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, const origins_t& orig)
       {
-        o << "/* Origins." << std::endl;
+        o << "/* Origins." << std::endl
+          << "    node [shape = box, style = rounded]" << std::endl;
         for (auto p: orig)
           if (p.first != automaton_t::pre() && p.first != automaton_t::post())
             o << "    " << p.first - 2
