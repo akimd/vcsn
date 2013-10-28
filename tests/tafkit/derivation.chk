@@ -83,3 +83,8 @@ check "$E1t" bb "<10/9>b*.$E1"
 export VCSN_ORIGINS=1
 run 0 -f $medir/e1-dt.gv -vcsn-derived-term -e "$E1t"
 unset VCSN_ORIGINS
+
+# Make sure that "\e" is properly escaped.
+export VCSN_ORIGINS=1
+run 0 -f $medir/'a?-dt'.gv -vcsn-derived-term -e "a?"
+unset VCSN_ORIGINS

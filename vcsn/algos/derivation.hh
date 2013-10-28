@@ -357,12 +357,10 @@ namespace vcsn
         o << "/* Origins." << std::endl
           << "    node [shape = box, style = rounded]" << std::endl;
         for (auto p : orig)
-          {
-            o << "    " << p.first - 2
-              << " [label = \"";
-            rs_.print(o, p.second);
-            o << "\"]" << std::endl;
-          }
+          o << "    " << p.first - 2
+            << " [label = \""
+            << str_escape(rs_.format(p.second))
+            << "\"]" << std::endl;
         o << "*/" << std::endl;
         return o;
       }

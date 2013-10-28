@@ -147,8 +147,7 @@ namespace vcsn
                 const char* sep = "";
                 if (!s.empty())
                   {
-                    out << "label = \"";
-                    str_escape(out, s) << "\"";
+                    out << "label = \"" << str_escape(s) << "\"";
                     sep = ", ";
                   }
                 if (useless)

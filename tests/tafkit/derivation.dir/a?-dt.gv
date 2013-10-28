@@ -1,0 +1,25 @@
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "\\e+a"]
+    1 [label = "\\e"]
+*/
+digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "a"]
+  1 -> F1
+}
