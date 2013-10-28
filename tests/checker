@@ -349,4 +349,4 @@ cd $metmp
 
 . "$test"
 
-$exit
+exit 0
