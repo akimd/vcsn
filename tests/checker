@@ -238,10 +238,10 @@ run ()
   done
 
   # Expected exit status.
-  local sta_exp=$1
+  local sta_exp="$1"
   shift
   # Expected output.
-  local out_exp=$1
+  local out_exp="$1"
   shift
 
   # Remove the previous out.exp, in case it's readonly.
@@ -258,7 +258,7 @@ EOF
     ;;
   esac
   # program to run
-  local prog=$1
+  local prog="$1"
   shift
 
   case $prog in
