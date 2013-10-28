@@ -49,7 +49,6 @@ namespace vcsn
       return (is_zero(l) || is_zero(r) ? zero()
               : l + r);
     }
-
     static value_t
     star(const value_t v)
     {
@@ -118,7 +117,7 @@ namespace vcsn
         }
       catch (std::bad_cast& e)
         {
-          throw std::domain_error("invalid zmin value: " + str);
+          throw std::domain_error("zmin: invalid value: " + str_escape(str));
         }
     }
 

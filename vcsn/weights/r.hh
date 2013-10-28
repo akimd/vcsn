@@ -117,7 +117,7 @@ namespace vcsn
         {
           char buf[256];
           i.getline (buf, sizeof buf);
-          throw std::domain_error(std::string{"invalid double: "} + buf);
+          throw std::domain_error("r: invalid value: " + str_escape(buf));
         }
       return res;
     }

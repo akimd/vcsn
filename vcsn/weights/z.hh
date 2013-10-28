@@ -112,7 +112,7 @@ namespace vcsn
         }
       catch (std::bad_cast& e)
         {
-          throw std::domain_error("invalid integer: " + str);
+          throw std::domain_error("z: invalid value: " + str_escape(str));
         }
     }
 

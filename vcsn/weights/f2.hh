@@ -113,7 +113,7 @@ namespace vcsn
         case '0': return false;
         case '1': return true;
         default:
-          throw std::domain_error("invalid F2: " + str_escape(c));
+          throw std::domain_error("f2: invalid value: " + str_escape(c));
         }
     }
 

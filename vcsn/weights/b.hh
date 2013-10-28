@@ -112,7 +112,7 @@ namespace vcsn
         case '0': return false;
         case '1': return true;
         default:
-          throw std::domain_error("invalid Boolean: " + str_escape(c));
+          throw std::domain_error("b: invalid value: " + str_escape(c));
         }
     }
 
