@@ -185,6 +185,7 @@ namespace vcsn
       value_t res;
       for (auto i: v)
         add_weight(res,
+                   // FIXME: This is wrong, it should be mul, not concat.
                    labelset()->concat(lhs, i.first),
                    i.second);
       return res;

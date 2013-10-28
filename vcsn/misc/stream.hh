@@ -17,7 +17,7 @@ namespace vcsn LIBVCSN_API
   /// An wide-char stream that discards the output.
   extern std::wostream wcnull;
 
-  /// Extract the string which is here betwen lbracket and rbracket.
+  /// Extract the string which is here between lbracket and rbracket.
   /// Support nested lbracket/rbracket.
   std::string
   bracketed(std::istream& i, const char lbracket, const char rbracket);

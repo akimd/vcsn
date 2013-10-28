@@ -104,7 +104,7 @@ namespace vcsn
     }
 
     static value_t
-    conv(const std::string &str)
+    conv(const std::string& str)
     {
       try
         {
