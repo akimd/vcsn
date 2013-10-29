@@ -1,7 +1,8 @@
 Vaucanson 2 news
 
 This file describes user visible changes in the course of the development of
-Vaucanson 2, in reverse chronological order.
+Vaucanson 2, in reverse chronological order.  On occasions, significant
+changes in the internal API may also be documented.
 
 * 2013-10-29
 ** internal renamings
@@ -27,6 +28,13 @@ concrete_abstract_polynomialset -> polynomialset_wrapper
 
              abstract_weightset -> weightset_base
     concrete_abstract_weightset -> weightset_wrapper
+
+Note that "_base" is slightly misleading, as it actually applies to the
+wrappers, and not to the static objects.  For instance, weightset_wrapper
+derives from weightset_base, but b, z, and the other (static) weightsets do
+not derive from weightset_base.  It would therefore be more precise to name
+"weightset_base" as "weightset_wrapper_base", but that might be uselessly
+long.  Names may change again in the future.
 
 * 2013-10-25
 ** renamings (static, dynamic, TAF-Kit)

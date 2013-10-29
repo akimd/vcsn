@@ -11,11 +11,10 @@
 
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
-# include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
-  class zmin: public dyn::detail::weightset_base
+  class zmin
   {
   public:
     static std::string sname()

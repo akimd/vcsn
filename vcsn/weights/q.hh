@@ -8,14 +8,13 @@
 # include <sstream>
 
 # include <vcsn/misc/star_status.hh>
-# include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
 
-  class q: public dyn::detail::weightset_base
+  class q
   {
   public:
     static std::string sname()

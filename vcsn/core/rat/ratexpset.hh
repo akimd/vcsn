@@ -8,14 +8,14 @@
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/misc/star_status.hh>
-# include <vcsn/dyn/weightset.hh>
 
 namespace vcsn
 {
 
-  /// An abstract factory for ratexp.
+  /// A typed ratexp set.
+  /// \tparam Context  the LabelSet and WeightSet types.
   template <typename Context>
-  class ratexpset: public dyn::detail::weightset_base
+  class ratexpset
   {
   public:
     using context_t = Context;

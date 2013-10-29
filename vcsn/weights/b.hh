@@ -7,14 +7,13 @@
 # include <stdexcept>
 # include <string>
 
-# include <vcsn/dyn/weightset.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
 
 namespace vcsn
 {
-  class b: public dyn::detail::weightset_base
+  class b
   {
   public:
     static std::string sname()
