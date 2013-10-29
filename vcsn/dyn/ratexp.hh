@@ -15,11 +15,8 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate an expression and its ratexpset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static ratexps.
-      class LIBVCSN_API abstract_ratexp
+      /// An abstract ratexp.
+      class LIBVCSN_API ratexp_base
       {
       public:
         /// A description of the ratexp type.
@@ -28,31 +25,28 @@ namespace vcsn
         virtual std::string vname(bool full = true) const = 0;
 
         template <typename RatExpSet>
-        concrete_abstract_ratexp<RatExpSet>& as()
+        ratexp_wrapper<RatExpSet>& as()
         {
-          return dynamic_cast<concrete_abstract_ratexp<RatExpSet>&>(*this);
+          return dynamic_cast<ratexp_wrapper<RatExpSet>&>(*this);
         }
 
         template <typename RatExpSet>
-        const concrete_abstract_ratexp<RatExpSet>& as() const
+        const ratexp_wrapper<RatExpSet>& as() const
         {
-          return dynamic_cast<const concrete_abstract_ratexp<RatExpSet>&>(*this);
+          return dynamic_cast<const ratexp_wrapper<RatExpSet>&>(*this);
         }
       };
 
 
       /// Aggregate a ratexp and its ratexpset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static ratexps.
       template <typename RatExpSet>
-      class concrete_abstract_ratexp: public abstract_ratexp
+      class ratexp_wrapper: public ratexp_base
       {
       public:
         using ratexpset_t = RatExpSet;
-        using super_type = abstract_ratexp;
+        using super_type = ratexp_base;
         using ratexp_t = typename ratexpset_t::ratexp_t;
-        concrete_abstract_ratexp(const ratexp_t& ratexp,
+        ratexp_wrapper(const ratexp_t& ratexp,
                                  const ratexpset_t& ratexpset)
           : ratexp_(ratexp)
           , ratexpset_(ratexpset)
@@ -82,7 +76,7 @@ namespace vcsn
 
     } // namespace detail
 
-    using ratexp = std::shared_ptr<detail::abstract_ratexp>;
+    using ratexp = std::shared_ptr<detail::ratexp_base>;
 
     template <typename Context>
     inline
@@ -91,7 +85,7 @@ namespace vcsn
                 const typename vcsn::ratexpset<Context>::ratexp_t& ratexp)
     {
       using ratexpset_t = vcsn::ratexpset<Context>;
-      return std::make_shared<detail::concrete_abstract_ratexp<ratexpset_t>>
+      return std::make_shared<detail::ratexp_wrapper<ratexpset_t>>
         (ratexp, rs);
     }
 

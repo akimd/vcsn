@@ -19,9 +19,9 @@ namespace detail
   ///
   /// Use it when you want to avoid depending on the ratexpset
   /// parameters (e.g., from a parser).  To use it, actually create a
-  /// derived class (concrete_abstract_ratexpset) with the given
-  /// parameters, but handle as a reference to an abstract_ratexpset.
-  class abstract_ratexpset
+  /// derived class (ratexpset_wrapper) with the given
+  /// parameters, but handle as a reference to an ratexpset_base.
+  class ratexpset_base
   {
   public:
     using context_t = dyn::detail::abstract_context;
@@ -52,12 +52,12 @@ namespace detail
 
   /// Wrapper around a ratexpset.
   template <typename RatExpSet>
-  class concrete_abstract_ratexpset : public abstract_ratexpset
+  class ratexpset_wrapper : public ratexpset_base
   {
   public:
     using ratexpset_t = RatExpSet;
     using context_t = typename ratexpset_t::context_t;
-    using super_type = abstract_ratexpset;
+    using super_type = ratexpset_base;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
     using value_t = typename super_type::value_t;
@@ -66,7 +66,7 @@ namespace detail
 
     /// Constructor.
     /// \param rs    the wrapped ratexpset.
-    concrete_abstract_ratexpset(const ratexpset_t& rs);
+    ratexpset_wrapper(const ratexpset_t& rs);
 
     /// From weak to strong typing.
     std::shared_ptr<const node_t>
@@ -77,9 +77,9 @@ namespace detail
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const override;
 
-    /*------------------------------------------.
-    | Specializations from abstract_ratexpset.  |
-    `------------------------------------------*/
+    /*--------------------------------------.
+    | Specializations from ratexpset_base.  |
+    `--------------------------------------*/
 
     virtual value_t zero() const override;
     virtual value_t one() const override;

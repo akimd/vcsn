@@ -12,7 +12,7 @@ namespace vcsn
   {
     namespace detail
     {
-      class abstract_weightset
+      class weightset_base
       {
       public:
         /// A description of the weightset, sufficient to build it.
@@ -25,7 +25,7 @@ namespace vcsn
         static std::string sname(const std::string& vname);
       };
     }
-    using weightset = std::shared_ptr<const detail::abstract_weightset>;
+    using weightset = std::shared_ptr<const detail::weightset_base>;
   }
 
 }

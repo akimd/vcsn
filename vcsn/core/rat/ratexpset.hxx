@@ -72,9 +72,9 @@ namespace vcsn
   }
 
 
-  /*------------------------------------------------------------.
-  | Implementation of abstract_ratexpset pure virtual methods.  |
-  `------------------------------------------------------------*/
+  /*--------------------------------------------------------.
+  | Implementation of ratexpset_base pure virtual methods.  |
+  `--------------------------------------------------------*/
 
   DEFINE::atom(const label_t& v) const
     -> value_t

@@ -14,7 +14,7 @@
 
 namespace vcsn
 {
-  class b: public dyn::detail::abstract_weightset
+  class b: public dyn::detail::weightset_base
   {
   public:
     static std::string sname()

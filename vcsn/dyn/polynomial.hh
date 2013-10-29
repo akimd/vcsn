@@ -12,11 +12,8 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate a polynomial and its polynomialset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static polynomials.
-      class abstract_polynomial
+      /// An abstract polynomial.
+      class polynomial_base
       {
       public:
         /// A description of the polynomial.
@@ -25,15 +22,15 @@ namespace vcsn
         virtual std::string vname(bool full = true) const = 0;
 
         template <typename PolynomialSet>
-        concrete_abstract_polynomial<PolynomialSet>& as()
+        polynomial_wrapper<PolynomialSet>& as()
         {
-          return dynamic_cast<concrete_abstract_polynomial<PolynomialSet>&>(*this);
+          return dynamic_cast<polynomial_wrapper<PolynomialSet>&>(*this);
         }
 
         template <typename PolynomialSet>
-        const concrete_abstract_polynomial<PolynomialSet>& as() const
+        const polynomial_wrapper<PolynomialSet>& as() const
         {
-          return dynamic_cast<const concrete_abstract_polynomial<PolynomialSet>&>(*this);
+          return dynamic_cast<const polynomial_wrapper<PolynomialSet>&>(*this);
         }
 
         /// Whether is zero.
@@ -41,22 +38,19 @@ namespace vcsn
       };
 
       /// Aggregate a polynomial and its polynomialset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static polynomials.
       template <typename PolynomialSet>
-      class concrete_abstract_polynomial: public abstract_polynomial
+      class polynomial_wrapper: public polynomial_base
       {
       public:
         using polynomialset_t = PolynomialSet;
-        using super_type = abstract_polynomial;
+        using super_type = polynomial_base;
         using polynomial_t = typename polynomialset_t::value_t;
-        concrete_abstract_polynomial(const polynomial_t& polynomial,
-                                     const polynomialset_t& polynomialset)
+        polynomial_wrapper(const polynomial_t& polynomial,
+                           const polynomialset_t& polynomialset)
           : polynomial_(polynomial)
           , polynomialset_(polynomialset)
         {}
-        virtual ~concrete_abstract_polynomial() {}
+        virtual ~polynomial_wrapper() {}
 
         virtual std::string vname(bool full = true) const override
         {
@@ -88,7 +82,7 @@ namespace vcsn
 
     } // namespace detail
 
-    using polynomial = std::shared_ptr<const detail::abstract_polynomial>;
+    using polynomial = std::shared_ptr<const detail::polynomial_base>;
 
     template <typename PolynomialSet>
     inline
@@ -96,7 +90,7 @@ namespace vcsn
     make_polynomial(const PolynomialSet& ps,
                     const typename PolynomialSet::value_t& polynomial)
     {
-      return std::make_shared<detail::concrete_abstract_polynomial<PolynomialSet>>
+      return std::make_shared<detail::polynomial_wrapper<PolynomialSet>>
         (polynomial, ps);
     }
   } // namespace dyn

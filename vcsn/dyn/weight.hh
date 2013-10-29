@@ -13,11 +13,8 @@ namespace vcsn
     namespace detail
     {
 
-      /// Aggregate a weight and its weightset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static weights.
-      class LIBVCSN_API abstract_weight
+      /// An abstract weight.
+      class LIBVCSN_API weight_base
       {
       public:
         /// A description of the weight type.
@@ -26,30 +23,27 @@ namespace vcsn
         virtual std::string vname(bool full = true) const = 0;
 
         template <typename WeightSet>
-        concrete_abstract_weight<WeightSet>& as()
+        weight_wrapper<WeightSet>& as()
         {
-          return dynamic_cast<concrete_abstract_weight<WeightSet>&>(*this);
+          return dynamic_cast<weight_wrapper<WeightSet>&>(*this);
         }
 
         template <typename WeightSet>
-        const concrete_abstract_weight<WeightSet>& as() const
+        const weight_wrapper<WeightSet>& as() const
         {
-          return dynamic_cast<const concrete_abstract_weight<WeightSet>&>(*this);
+          return dynamic_cast<const weight_wrapper<WeightSet>&>(*this);
         }
       };
 
       /// Aggregate a weight and its weightset.
-      ///
-      /// FIXME: Improperly named, it is not a base class for
-      /// static weights.
       template <typename WeightSet>
-      class concrete_abstract_weight: public abstract_weight
+      class weight_wrapper: public weight_base
       {
       public:
         using weightset_t = WeightSet;
-        using super_type = abstract_weight;
+        using super_type = weight_base;
         using weight_t = typename weightset_t::value_t;
-        concrete_abstract_weight(const weight_t& weight,
+        weight_wrapper(const weight_t& weight,
                                  const weightset_t& weightset)
           : weight_(weight)
           , weightset_(weightset)
@@ -79,7 +73,7 @@ namespace vcsn
 
     } // namespace detail
 
-    using weight = std::shared_ptr<const detail::abstract_weight>;
+    using weight = std::shared_ptr<const detail::weight_base>;
 
     template <typename WeightSet>
     inline
@@ -87,7 +81,7 @@ namespace vcsn
     make_weight(const WeightSet& ws,
                 const typename WeightSet::value_t& weight)
     {
-      return std::make_shared<detail::concrete_abstract_weight<WeightSet>>
+      return std::make_shared<detail::weight_wrapper<WeightSet>>
         (weight, ws);
     }
   } // namespace dyn

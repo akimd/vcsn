@@ -16,11 +16,11 @@ namespace vcsn
       /// Base class for automata.
       ///
       /// FIXME: Should not exist, we should model as we did for ratexp.
-      class LIBVCSN_API abstract_automaton
+      class LIBVCSN_API automaton_base
       {
       public:
         /// Base class for automata.
-        virtual ~abstract_automaton() = default;
+        virtual ~automaton_base() = default;
 
         /// A description of the automaton, sufficient to build it.
         /// \param full  whether to include the genset.
@@ -41,7 +41,7 @@ namespace vcsn
       };
     }
 
-    using automaton = std::shared_ptr<detail::abstract_automaton>;
+    using automaton = std::shared_ptr<detail::automaton_base>;
 
 
     /// Build a dyn::automaton.

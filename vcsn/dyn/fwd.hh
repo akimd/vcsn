@@ -13,9 +13,9 @@ namespace vcsn
     // vcsn/dyn/automaton.hh.
     namespace detail
     {
-      class abstract_automaton;
+      class automaton_base;
     }
-    using automaton = std::shared_ptr<detail::abstract_automaton>;
+    using automaton = std::shared_ptr<detail::automaton_base>;
 
     // vcsn/dyn/context.hh.
     namespace detail
@@ -27,36 +27,36 @@ namespace vcsn
     // vcsn/dyn/polynomial.hh.
     namespace detail
     {
-      class abstract_polynomial;
+      class polynomial_base;
       template <typename PolynomialSet>
-      class concrete_abstract_polynomial;
+      class polynomial_wrapper;
     }
 
-    using polynomial = std::shared_ptr<const detail::abstract_polynomial>;
+    using polynomial = std::shared_ptr<const detail::polynomial_base>;
 
     // vcsn/dyn/polynomialset.hh
     namespace detail
     {
-      class abstract_polynomialset;
+      class polynomialset_base;
     }
-    using polynomialset = std::shared_ptr<const detail::abstract_polynomialset>;
+    using polynomialset = std::shared_ptr<const detail::polynomialset_base>;
 
     // vcsn/dyn/ratexp.hh.
     namespace detail
     {
-      class abstract_ratexp;
+      class ratexp_base;
       template <typename RatExpSet>
-      class concrete_abstract_ratexp;
+      class ratexp_wrapper;
     }
 
-    using ratexp = std::shared_ptr<detail::abstract_ratexp>;
+    using ratexp = std::shared_ptr<detail::ratexp_base>;
 
     // vcsn/dyn/ratexpset.hh
     namespace detail
     {
-      class abstract_ratexpset;
+      class ratexpset_base;
     }
-    using ratexpset = std::shared_ptr<const detail::abstract_ratexpset>;
+    using ratexpset = std::shared_ptr<const detail::ratexpset_base>;
 
     /// A dyn::ratexpset from its static ratexpset.
     //
@@ -70,18 +70,18 @@ namespace vcsn
     // vcsn/dyn/weight.hh.
     namespace detail
     {
-      class abstract_weight;
+      class weight_base;
       template <typename T>
-      class concrete_abstract_weight;
+      class weight_wrapper;
     }
-    using weight = std::shared_ptr<const detail::abstract_weight>;
+    using weight = std::shared_ptr<const detail::weight_base>;
 
     // weightset.hh.
     namespace detail
     {
-      class abstract_weightset;
+      class weightset_base;
     }
-    using weightset = std::shared_ptr<const detail::abstract_weightset>;
+    using weightset = std::shared_ptr<const detail::weightset_base>;
 
   }
 } // namespace vcsn

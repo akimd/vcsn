@@ -3,6 +3,31 @@ Vaucanson 2 news
 This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.
 
+* 2013-10-29
+** internal renamings
+Better names were chosen for the various details of the dyn:: value support:
+
+             abstract_automaton -> automaton_base
+    concrete_abstract_automaton -> automaton_wrapper
+
+            abstract_polynomial -> polynomial_base
+   concrete_abstract_polynomial -> polynomial_wrapper
+
+         abstract_polynomialset -> polynomialset_base
+concrete_abstract_polynomialset -> polynomialset_wrapper
+
+                abstract_ratexp -> ratexp_base
+       concrete_abstract_ratexp -> ratexp_wrapper
+
+             abstract_ratexpset -> ratexpset_base
+    concrete_abstract_ratexpset -> ratexpset_wrapper
+
+                abstract_weight -> weight_base
+       concrete_abstract_weight -> weight_wrapper
+
+             abstract_weightset -> weightset_base
+    concrete_abstract_weightset -> weightset_wrapper
+
 * 2013-10-25
 ** renamings (static, dynamic, TAF-Kit)
 derive        -> derivation

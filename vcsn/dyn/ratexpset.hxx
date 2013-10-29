@@ -7,24 +7,24 @@ namespace dyn
 {
   namespace detail
   {
-    /*---------------------.
-    | abstract_ratexpset.  |
-    `---------------------*/
+    /*-----------------.
+    | ratexpset_base.  |
+    `-----------------*/
     inline
-    std::string abstract_ratexpset::format(const value_t v) const
+    std::string ratexpset_base::format(const value_t v) const
     {
       std::ostringstream s;
       print(s, v);
       return s.str();
     }
 
-    /*------------------------------.
-    | concrete_abstract_ratexpset.  |
-    `------------------------------*/
+    /*--------------------.
+    | ratexpset_wrapper.  |
+    `--------------------*/
 
     template <typename RatExpSet>
     inline
-    concrete_abstract_ratexpset<RatExpSet>::concrete_abstract_ratexpset
+    ratexpset_wrapper<RatExpSet>::ratexpset_wrapper
       (const ratexpset_t& rs)
       : super_type()
       , rs_(rs)
@@ -34,7 +34,7 @@ namespace dyn
     template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    concrete_abstract_ratexpset<RatExpSet>
+    ratexpset_wrapper<RatExpSet>
 
     /// From weak to strong typing.
     DEFINE::down(const value_t& v) const
@@ -119,7 +119,7 @@ namespace dyn
     ratexpset
     make_ratexpset(const RatExpSet& rs)
     {
-      using wrapper_t = detail::concrete_abstract_ratexpset<RatExpSet>;
+      using wrapper_t = detail::ratexpset_wrapper<RatExpSet>;
       return std::make_shared<wrapper_t>(rs);
     }
 

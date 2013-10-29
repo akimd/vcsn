@@ -15,7 +15,7 @@ namespace vcsn
 
   /// An abstract factory for ratexp.
   template <typename Context>
-  class ratexpset: public dyn::detail::abstract_weightset
+  class ratexpset: public dyn::detail::weightset_base
   {
   public:
     using context_t = Context;

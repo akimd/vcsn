@@ -12,7 +12,7 @@ namespace vcsn
   {
     namespace detail
     {
-      class abstract_polynomialset
+      class polynomialset_base
       {
       public:
         /// A description of the polynomialset, sufficient to build it.
@@ -25,7 +25,7 @@ namespace vcsn
         static std::string sname(const std::string& vname);
       };
     }
-    using polynomialset = std::shared_ptr<const detail::abstract_polynomialset>;
+    using polynomialset = std::shared_ptr<const detail::polynomialset_base>;
   }
 
 }

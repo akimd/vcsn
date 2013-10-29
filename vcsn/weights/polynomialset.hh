@@ -25,7 +25,7 @@ namespace vcsn
 
   /// Linear combination of labels: map labels to weights.
   template <class Context>
-  class polynomialset: public dyn::detail::abstract_polynomialset
+  class polynomialset: public dyn::detail::polynomialset_base
   {
   public:
     using context_t = Context;

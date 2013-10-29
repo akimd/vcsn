@@ -13,11 +13,11 @@ namespace vcsn
   {
     /// Read-write on an automaton, that transposes everything.
     template <typename Aut>
-    class transpose_automaton: public dyn::detail::abstract_automaton
+    class transpose_automaton: public dyn::detail::automaton_base
     {
     public:
       /// The type of automaton to wrap.
-      using super_t = dyn::detail::abstract_automaton;
+      using super_t = dyn::detail::automaton_base;
       using automaton_t = Aut;
 
       /// The type of the automata to produce from this kind o
