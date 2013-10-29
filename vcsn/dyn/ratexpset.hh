@@ -2,10 +2,10 @@
 # define VCSN_DYN_RATEXPSET_HH
 
 # include <string>
-# include <list>
 # include <memory>  // shared_ptr
 
-# include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/fwd.hh> // dyn::ratexp.
+# include <vcsn/core/rat/fwd.hh> // rat::exp_t.
 
 namespace vcsn
 {
@@ -23,7 +23,6 @@ namespace detail
   class ratexpset_base
   {
   public:
-    using context_t = dyn::detail::abstract_context;
     using value_t = rat::exp_t;
 
     virtual value_t zero() const = 0;

@@ -2,8 +2,7 @@
 # define VCSN_DYN_WEIGHT_HH
 
 # include <memory>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/weightset.hh>
+
 # include <vcsn/misc/export.hh>
 
 namespace vcsn

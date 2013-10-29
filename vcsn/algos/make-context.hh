@@ -7,9 +7,8 @@
 # include <sstream>
 
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/ratexpset.hh>
-# include <vcsn/misc/stream.hh> // eat
 
 namespace vcsn
 {

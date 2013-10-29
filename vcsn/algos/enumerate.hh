@@ -8,9 +8,10 @@
 # include <queue>
 # include <vector>
 
+# include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/wordset.hh>
 # include <vcsn/weights/polynomialset.hh>

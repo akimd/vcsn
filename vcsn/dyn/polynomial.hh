@@ -2,8 +2,6 @@
 # define VCSN_DYN_POLYNOMIAL_HH
 
 # include <memory>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/polynomialset.hh>
 
 namespace vcsn
 {

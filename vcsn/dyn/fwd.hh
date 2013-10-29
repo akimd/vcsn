@@ -2,7 +2,6 @@
 # define VCSN_DYN_FWD_HH
 
 # include <memory> // shared_ptr
-# include <vcsn/core/rat/fwd.hh>
 
 # include <vcsn/misc/export.hh> // LIBVCSN_API
 

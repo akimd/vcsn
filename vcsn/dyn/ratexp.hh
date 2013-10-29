@@ -2,9 +2,7 @@
 # define VCSN_DYN_RATEXP_HH
 
 # include <memory>
-# include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <vcsn/dyn/context.hh> // vname.
+
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -77,15 +75,14 @@ namespace vcsn
 
     using ratexp = std::shared_ptr<detail::ratexp_base>;
 
-    template <typename Context>
+    template <typename RatExpSet>
     inline
     ratexp
-    make_ratexp(const vcsn::ratexpset<Context>& rs,
-                const typename vcsn::ratexpset<Context>::ratexp_t& ratexp)
+    make_ratexp(const RatExpSet& rs,
+                const typename RatExpSet::ratexp_t& ratexp)
     {
-      using ratexpset_t = vcsn::ratexpset<Context>;
-      return std::make_shared<detail::ratexp_wrapper<ratexpset_t>>
-        (ratexp, rs);
+      using wrapper_t = detail::ratexp_wrapper<RatExpSet>;
+      return std::make_shared<wrapper_t>(ratexp, rs);
     }
 
   } // namespace dyn

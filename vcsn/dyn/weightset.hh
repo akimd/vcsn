@@ -4,8 +4,6 @@
 # include <memory>
 # include <string>
 
-# include <vcsn/ctx/fwd.hh>
-
 namespace vcsn
 {
   namespace dyn
