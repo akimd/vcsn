@@ -8,7 +8,6 @@
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/ctx/fwd.hh>
-# include <vcsn/dyn/context.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -17,7 +16,7 @@ namespace vcsn
   namespace ctx
   {
     template <typename LabelSet, typename WeightSet>
-    class context: public dyn::detail::abstract_context
+    class context
     {
     public:
       using labelset_t = LabelSet;
@@ -104,7 +103,7 @@ namespace vcsn
                 + "_" + weightset_t::sname());
       }
 
-      virtual std::string vname(bool full = true) const override final
+      std::string vname(bool full = true) const
       {
         return (labelset()->vname(full)
                 + "_" + weightset()->vname(full));

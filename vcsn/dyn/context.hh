@@ -4,7 +4,7 @@
 # include <memory>
 # include <string>
 
-# include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -14,7 +14,7 @@ namespace vcsn
     namespace detail
     {
       /// Template-less root for contexts.
-      class LIBVCSN_API abstract_context
+      class LIBVCSN_API context_base
       {
       public:
         /// A description of the context, sufficient to build it.
@@ -27,20 +27,57 @@ namespace vcsn
         static std::string sname(const std::string& vname);
 
         template <typename Ctx>
-        Ctx& as()
+        Ctx as()
         {
-          return dynamic_cast<Ctx&>(*this);
+          return dynamic_cast<context_wrapper<Ctx>&>(*this).context();
         }
 
         template <typename Ctx>
-        const Ctx& as() const
+        const Ctx as() const
         {
-          return dynamic_cast<const Ctx&>(*this);
+          return dynamic_cast<const context_wrapper<Ctx>&>(*this).context();
         }
       };
+
+      /// A wrapped typed context.
+      template <typename Context>
+      class context_wrapper: public context_base
+      {
+      public:
+        using context_t = Context;
+        using super_type = context_base;
+
+        context_wrapper(const context_t& context)
+          : context_(context)
+        {}
+
+        virtual std::string vname(bool full = true) const override
+        {
+          return context().vname(full);
+        }
+
+        const context_t context() const
+        {
+          return context_;
+        }
+
+      protected:
+        /// The context.
+        const context_t context_;
+      };
+
+    } // namespace detail
+
+    using context = std::shared_ptr<const detail::context_base>;
+
+    template <typename Context>
+    inline
+    context
+    make_context(const Context& ctx)
+    {
+      return std::make_shared<detail::context_wrapper<Context>>(ctx);
     }
 
-    using context = std::shared_ptr<const detail::abstract_context>;
   }
 
 }

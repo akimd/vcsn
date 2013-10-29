@@ -1,11 +1,12 @@
 #ifndef VCSN_ALGOS_RANDOM_HH
 # define VCSN_ALGOS_RANDOM_HH
 
-# include <vcsn/labelset/nullableset.hh>
+# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/labelset/letterset.hh>
+# include <vcsn/labelset/nullableset.hh>
 # include <vcsn/misc/random.hh>
 # include <vcsn/misc/set.hh>
-# include <vcsn/core/mutable_automaton.hh>
 
 namespace vcsn
 {

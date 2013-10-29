@@ -13,6 +13,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/algos.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/weights/polynomialset.hh>
 

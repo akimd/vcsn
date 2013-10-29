@@ -4,6 +4,7 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/dyn/context.hh>
 
 # include <map>
 

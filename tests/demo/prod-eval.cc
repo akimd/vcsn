@@ -21,7 +21,7 @@ namespace vcsn
     if (!d.errors.empty())
       throw std::runtime_error(d.errors);
     // Automaton typename.
-    auto sname = vcsn::dyn::detail::abstract_context::sname(res->vname());
+    auto sname = vcsn::dyn::detail::context_base::sname(res->vname());
     if (sname != Aut::sname())
       throw std::runtime_error(f + ": invalid context: " + sname
                                + ", expected: " + Aut::sname());

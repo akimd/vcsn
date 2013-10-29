@@ -19,9 +19,11 @@ namespace vcsn
     // vcsn/dyn/context.hh.
     namespace detail
     {
-      class abstract_context;
+      class context_base;
+      template <typename Context>
+      class context_wrapper;
     }
-    using context = std::shared_ptr<const detail::abstract_context>;
+    using context = std::shared_ptr<const detail::context_base>;
 
     // vcsn/dyn/polynomial.hh.
     namespace detail

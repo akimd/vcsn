@@ -44,7 +44,7 @@ namespace vcsn
       context
       make_context(const std::string& name)
       {
-        return std::make_shared<Ctx>(vcsn::make_context<Ctx>(name));
+        return dyn::make_context(vcsn::make_context<Ctx>(name));
       }
 
       REGISTER_DECLARE(make_context,

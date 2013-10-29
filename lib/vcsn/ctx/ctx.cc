@@ -1,10 +1,10 @@
-#include <vcsn/ctx/context.hh>
+#include <vcsn/dyn/context.hh>
 
 namespace vcsn
 {
   namespace dyn
   {
-    std::string detail::abstract_context::sname(const std::string& vname)
+    std::string detail::context_base::sname(const std::string& vname)
     {
       std::string res;
       int nesting = 0;
