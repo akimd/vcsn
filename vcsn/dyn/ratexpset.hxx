@@ -1,5 +1,6 @@
 #include <sstream>
 #include <vcsn/misc/cast.hh> // down_pointer_cast
+#include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 
 namespace vcsn
 {
@@ -114,14 +115,14 @@ namespace dyn
 
   } // namespace detail
 
-    template <typename RatExpSet>
-    inline
-    ratexpset
-    make_ratexpset(const RatExpSet& rs)
-    {
-      using wrapper_t = detail::ratexpset_wrapper<RatExpSet>;
-      return std::make_shared<wrapper_t>(rs);
-    }
+  template <typename RatExpSet>
+  inline
+  ratexpset
+  make_ratexpset(const RatExpSet& rs)
+  {
+    using wrapper_t = detail::ratexpset_wrapper<RatExpSet>;
+    return std::make_shared<wrapper_t>(rs);
+  }
 
 } // namespace dyn
 } // namespace vcsn

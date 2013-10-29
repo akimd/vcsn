@@ -7,7 +7,7 @@
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/fwd.hh>
-#include <vcsn/dyn/ratexp.hh>
+#include <vcsn/dyn/ratexpset.hh> // dyn::make_ratexpset
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/stream.hh>
 

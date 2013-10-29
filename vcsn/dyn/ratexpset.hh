@@ -5,8 +5,7 @@
 # include <list>
 # include <memory>  // shared_ptr
 
-# include <vcsn/core/rat/fwd.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
 {
@@ -109,6 +108,11 @@ namespace detail
     ratexpset_t rs_;
   };
 } // namespace detail
+
+  /// Build a dyn::ratexpset from its static ratexpset.
+  template <typename RatExpSet>
+  ratexpset make_ratexpset(const RatExpSet& rs);
+
 } // namespace dyn
 } // namespace vcsn
 

@@ -5,7 +5,6 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/context.hh> // vname.
-# include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -47,7 +46,7 @@ namespace vcsn
         using super_type = ratexp_base;
         using ratexp_t = typename ratexpset_t::ratexp_t;
         ratexp_wrapper(const ratexp_t& ratexp,
-                                 const ratexpset_t& ratexpset)
+                       const ratexpset_t& ratexpset)
           : ratexp_(ratexp)
           , ratexpset_(ratexpset)
         {}
