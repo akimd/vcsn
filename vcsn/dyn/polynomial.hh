@@ -2,6 +2,7 @@
 # define VCSN_DYN_POLYNOMIAL_HH
 
 # include <memory>
+# include <string>
 
 namespace vcsn
 {
