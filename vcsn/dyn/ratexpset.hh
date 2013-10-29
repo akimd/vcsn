@@ -51,12 +51,12 @@ namespace detail
   };
 
   /// Wrapper around a ratexpset.
-  template <typename Context>
+  template <typename RatExpSet>
   class concrete_abstract_ratexpset : public abstract_ratexpset
   {
   public:
-    using context_t = Context;
-    using ratexpset_t = vcsn::ratexpset<Context>;
+    using ratexpset_t = RatExpSet;
+    using context_t = typename ratexpset_t::context_t;
     using super_type = abstract_ratexpset;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;
@@ -65,8 +65,8 @@ namespace detail
     using node_t = typename context_t::node_t;
 
     /// Constructor.
-    /// \param ctx    the generator set for the labels, and the weight set.
-    concrete_abstract_ratexpset(const context_t& ctx);
+    /// \param rs    the wrapped ratexpset.
+    concrete_abstract_ratexpset(const ratexpset_t& rs);
 
     /// From weak to strong typing.
     std::shared_ptr<const node_t>

@@ -60,7 +60,7 @@ namespace vcsn
       make_ratexpset(const context& ctx)
       {
         const auto& c = ctx->as<Ctx>();
-        return std::make_shared<concrete_abstract_ratexpset<Ctx>>(c);
+        return ::vcsn::dyn::make_ratexpset(typename Ctx::ratexpset_t(c));
       }
 
       REGISTER_DECLARE(make_ratexpset,

@@ -59,12 +59,13 @@ namespace vcsn
     using ratexpset = std::shared_ptr<const detail::abstract_ratexpset>;
 
     /// A dyn::ratexpset from its static ratexpset.
+    //
     // Should remain part of vcsn/dyn/ratexpset.hh, but we have a
     // circular dependency to break (dyn::ratexpset obviously needs
     // vcsn/core/rat/ratexpset.hh, and rat::ratexpset::conv needs
     // dyn::make_ratexpset).
-    template <typename Context>
-    ratexpset make_ratexpset(const vcsn::ratexpset<Context>& rs);
+    template <typename RatExpSet>
+    ratexpset make_ratexpset(const RatExpSet& rs);
 
     // vcsn/dyn/weight.hh.
     namespace detail

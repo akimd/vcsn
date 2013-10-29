@@ -22,19 +22,19 @@ namespace dyn
     | concrete_abstract_ratexpset.  |
     `------------------------------*/
 
-    template <typename Context>
+    template <typename RatExpSet>
     inline
-    concrete_abstract_ratexpset<Context>::concrete_abstract_ratexpset
-      (const Context& ctx)
+    concrete_abstract_ratexpset<RatExpSet>::concrete_abstract_ratexpset
+      (const ratexpset_t& rs)
       : super_type()
-      , rs_(ratexpset_t(ctx))
+      , rs_(rs)
     {}
 
 #define DEFINE                                  \
-    template <typename Context>                 \
+    template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    concrete_abstract_ratexpset<Context>
+    concrete_abstract_ratexpset<RatExpSet>
 
     /// From weak to strong typing.
     DEFINE::down(const value_t& v) const
@@ -114,13 +114,14 @@ namespace dyn
 
   } // namespace detail
 
-    template <typename Context>
+    template <typename RatExpSet>
     inline
     ratexpset
-    make_ratexpset(const vcsn::ratexpset<Context>& rs)
+    make_ratexpset(const RatExpSet& rs)
     {
-      return std::make_shared<detail::concrete_abstract_ratexpset<Context>>
-      (rs.context());
+      using wrapper_t = detail::concrete_abstract_ratexpset<RatExpSet>;
+      return std::make_shared<wrapper_t>(rs);
     }
+
 } // namespace dyn
 } // namespace vcsn
