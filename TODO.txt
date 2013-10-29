@@ -104,7 +104,8 @@ some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
 ** Rename to a better name.
 Drop "aut", because we have more entries than that.  Drop "to", as it's
-clear enough from its name.
+clear enough from its name.  Move to "ratexp" for consistency with the name
+used everywhere else.
 
 * dyn::
 ** Implement implicit conversions
@@ -192,9 +193,6 @@ are two implementations there), Forlan.
 ** determinization
 Look for other implementations (cf. "Five determinization algorithms").  And
 pay attention to the case of large alphabets.
-
-** derived-term
-Computation of the derived term automaton.
 
 ** minimization
 Import what Guillaume did for Moore minimization, but without the tbb part
