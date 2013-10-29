@@ -162,7 +162,7 @@ namespace vcsn
               return res;
             }
         }
-      throw std::domain_error("polynomialset: star: invalid value: "
+      throw std::domain_error(sname() + ": star: invalid value: "
                               + format(v));
     }
 
@@ -346,7 +346,7 @@ namespace vcsn
               // We must have at least a weight or a label.
               if (default_w && p == i.tellg())
                 throw std::domain_error
-                  (std::string{"polynomialset: conv: invalid value: "}
+                  (sname() + ": conv: invalid value: "
                    + str_escape(i.peek())
                    + " contains an empty label (did you mean \\e or \\z?)");
               add_weight(res, label, w);
@@ -380,7 +380,7 @@ namespace vcsn
       value_t res = conv(i, sep);
 
       if (i.peek() != -1)
-        throw std::domain_error("polynomialset: conv: invalid value: " + s
+        throw std::domain_error(sname() + ": conv: invalid value: " + s
                                 + " unexpected "
                                 + std::string{char(i.peek())});
       return res;

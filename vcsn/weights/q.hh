@@ -104,7 +104,7 @@ namespace vcsn
       if (abs(v.num) < v.den)
         return {int(v.den), v.den - v.num};
       else
-        throw std::domain_error("q: star: invalid value: " + format(v));
+        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
     }
 
     static bool is_zero(const value_t v)
@@ -156,7 +156,7 @@ namespace vcsn
       {
         char buf[256];
         i.getline(buf, sizeof buf);
-        throw std::domain_error("q: invalid value: " + str_escape(buf));
+        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
       }
       if (i.peek() == std::char_traits<char>::eof())
         return value_t{res.num, 1};
@@ -164,14 +164,14 @@ namespace vcsn
       {
         char buf[256];
         i.getline(buf, sizeof buf);
-        throw std::domain_error("q: invalid value: " + str_escape(buf));
+        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
       }
       i >> res.den;
       if (i.fail())
       {
         char buf[256];
         i.getline(buf, sizeof buf);
-        throw std::domain_error("q: invalid value: " + str_escape(buf));
+        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
       }
       unsigned int g = gcd(abs(res.num), res.den);
       res.num /= int(g);

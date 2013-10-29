@@ -104,22 +104,22 @@ namespace vcsn
     }
 
     static value_t
-    conv(std::istream& i)
+    conv(std::istream& stream)
     {
-      switch (char c = i.get())
+      int i;
+      if ((stream >> i) && (i == 0 || i == 1))
+        return i;
+      else
         {
-        case '0': return false;
-        case '1': return true;
-        default:
-          throw std::domain_error("b: invalid value: " + str_escape(c));
+          stream.clear();
+          throw std::domain_error(sname() + ": invalid value: " + std::to_string(i));
         }
     }
 
     static value_t
     conv(const std::string& str)
     {
-      std::istringstream i{str};
-      return conv(i);
+      return ::vcsn::conv(b(), str);
     }
 
     static std::ostream&

@@ -30,7 +30,7 @@ namespace vcsn LIBVCSN_API
     std::istringstream i{str};
     auto res = vs.conv(i);
     if (i.peek() != -1)
-      throw std::domain_error("invalid value: " + str
+      throw std::domain_error(vs.sname() + ": invalid value: " + str
                               + ", unexpected "
                               + str_escape(i.peek()));
     return res;

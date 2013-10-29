@@ -103,16 +103,24 @@ namespace vcsn
     }
 
     static value_t
+    conv(std::istream& stream)
+    {
+      int res;
+      if (stream >> res)
+        return res;
+      else
+        {
+          stream.clear();
+          std::string buf;
+          stream >> buf;
+          throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
+        }
+     }
+
+    static value_t
     conv(const std::string& str)
     {
-      try
-        {
-          return boost::lexical_cast<value_t>(str);
-        }
-      catch (std::bad_cast& e)
-        {
-          throw std::domain_error("z: invalid value: " + str_escape(str));
-        }
+      return ::vcsn::conv(z(), str);
     }
 
     static std::ostream&

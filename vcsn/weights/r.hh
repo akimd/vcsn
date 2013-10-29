@@ -63,7 +63,7 @@ namespace vcsn
       if (-1 < v && v < 1)
         return 1/(1-v);
       else
-        throw std::domain_error("r: star: invalid value: " + format(v));
+        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
     }
 
     static bool
@@ -111,21 +111,20 @@ namespace vcsn
     conv(std::istream& i)
     {
       value_t res;
-      i >> res;
-      if (i.fail())
+      if (i >> res)
+        return res;
+      else
         {
           char buf[256];
           i.getline (buf, sizeof buf);
-          throw std::domain_error("r: invalid value: " + str_escape(buf));
+          throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
         }
-      return res;
     }
 
     static value_t
     conv(const std::string& str)
     {
-      std::istringstream i{str};
-      return conv(i);
+      return ::vcsn::conv(r(), str);
     }
 
     static std::ostream&

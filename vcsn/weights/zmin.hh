@@ -54,7 +54,7 @@ namespace vcsn
       if (0 <= v)
         return one();
       else
-        throw std::domain_error("zmin: star: invalid value: " + format(v));
+        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
     }
 
     static value_t
@@ -105,19 +105,34 @@ namespace vcsn
     }
 
     static value_t
-    conv(const std::string &str)
+    conv(std::istream& stream)
     {
-      if (str == "oo")
-        return zero();
+      switch (int i = stream.peek())
+        {
+        case 'o':
+          stream.ignore();
+          if ((i = stream.get()) == 'o')
+            return zero();
+          else
+            throw std::domain_error(sname() + ": invalid value: o" + str_escape(i));
+        default:
+          if (stream >> i)
+            return i;
+          else
+            {
+              stream.clear();
+              std::string buf;
+              stream >> buf;
+              assert(stream.good());
+              throw std::domain_error(sname() + ": invalid value: " + buf);
+            }
+        }
+    }
 
-      try
-        {
-          return boost::lexical_cast<value_t>(str);
-        }
-      catch (std::bad_cast& e)
-        {
-          throw std::domain_error("zmin: invalid value: " + str_escape(str));
-        }
+    static value_t
+    conv(const std::string& str)
+    {
+      return ::vcsn::conv(zmin(), str);
     }
 
     static std::ostream&

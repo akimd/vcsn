@@ -4,6 +4,12 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-11-04
+** boolean weight parsing bugix
+
+The weight parser used to ignore all characters after the first one, so that
+for example "1-q" was considered valid and equivalent to "1".
+
 * 2013-10-31
 ** product and infiltration-product are much faster
 On erebus (MacBook Pro i7 2.9GHz 8GB, GCC 4.8 -O3), with "vcsn standard -E
