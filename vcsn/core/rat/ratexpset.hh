@@ -128,7 +128,7 @@ namespace vcsn
     context_t ctx_;
   };
 
-  /// The intersection of two weightsets.
+  /// The intersection of two ratexpsets.
   template <typename Context>
   inline
   ratexpset<Context>
@@ -137,7 +137,7 @@ namespace vcsn
     return {intersection(a.context(), b.context())};
   }
 
-  /// The union of two weightsets.
+  /// The union of two ratexpsets.
   template <typename Context>
   inline
   ratexpset<Context>
