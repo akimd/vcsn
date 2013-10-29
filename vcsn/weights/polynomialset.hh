@@ -6,7 +6,6 @@
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
-# include <vcsn/dyn/polynomialset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -24,8 +23,9 @@ namespace vcsn
   };
 
   /// Linear combination of labels: map labels to weights.
+  /// \tparam Context  the LabelSet and WeightSet types.
   template <class Context>
-  class polynomialset: public dyn::detail::polynomialset_base
+  class polynomialset
   {
   public:
     using context_t = Context;
