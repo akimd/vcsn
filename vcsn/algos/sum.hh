@@ -73,7 +73,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), sum(l, r));
+        return make_automaton(sum(l, r));
       }
 
       REGISTER_DECLARE2(sum,

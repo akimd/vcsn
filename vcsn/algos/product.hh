@@ -390,7 +390,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), product(l, r));
+        return make_automaton(product(l, r));
       }
 
       REGISTER_DECLARE2(product,
@@ -407,7 +407,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), shuffle(l, r));
+        return make_automaton(shuffle(l, r));
       }
 
       REGISTER_DECLARE2(shuffle,
@@ -424,7 +424,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), infiltration(l, r));
+        return make_automaton(infiltration(l, r));
       }
 
       REGISTER_DECLARE2(infiltration,
@@ -440,7 +440,7 @@ namespace vcsn
       power(const automaton& aut, unsigned n)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), power(a, n));
+        return make_automaton(power(a, n));
       }
 
       REGISTER_DECLARE(power,

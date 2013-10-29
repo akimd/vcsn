@@ -59,7 +59,7 @@ namespace vcsn
       divkbaseb(const dyn::context& ctx, unsigned divisor, unsigned base)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(ctx, divkbaseb<Ctx>(c, divisor, base));
+        return make_automaton(divkbaseb<Ctx>(c, divisor, base));
       }
 
       REGISTER_DECLARE

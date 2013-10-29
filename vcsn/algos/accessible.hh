@@ -177,7 +177,7 @@ namespace vcsn
       accessible(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), accessible(a));
+        return make_automaton(accessible(a));
       }
 
       REGISTER_DECLARE(accessible,
@@ -192,7 +192,7 @@ namespace vcsn
       coaccessible(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), coaccessible(a));
+        return make_automaton(coaccessible(a));
       }
 
       REGISTER_DECLARE(coaccessible,
@@ -207,7 +207,7 @@ namespace vcsn
       trim(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), trim(a));
+        return make_automaton(trim(a));
       }
 
       REGISTER_DECLARE(trim,

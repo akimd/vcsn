@@ -68,7 +68,7 @@ namespace vcsn
       u(const dyn::context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(ctx, u<Ctx>(c, n));
+        return make_automaton(u<Ctx>(c, n));
       }
 
       REGISTER_DECLARE(u,

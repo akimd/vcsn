@@ -598,8 +598,7 @@ namespace vcsn
       derived_term(const ratexp& exp)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(r.get_ratexpset().context(),
-                              derived_term(r.get_ratexpset(),
+        return make_automaton(derived_term(r.get_ratexpset(),
                                             r.ratexp()));
       }
 

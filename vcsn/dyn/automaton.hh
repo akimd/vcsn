@@ -44,23 +44,18 @@ namespace vcsn
 
 
     /// Build a dyn::automaton.
-    ///
-    /// FIXME: Eventually, we will aggregate the context on the
-    /// side, as for ratexps.
-    template <typename AutIn, typename AutOut = AutIn,
-              typename Ctx = typename AutOut::context_t>
+    template <typename AutIn, typename AutOut = AutIn>
     inline
     automaton
-    make_automaton(const Ctx&, AutIn& aut)
+    make_automaton(AutIn& aut)
     {
       return std::make_shared<AutOut>(aut);
     }
 
-    template <typename AutIn, typename AutOut = AutIn,
-              typename Ctx = typename AutOut::context_t>
+    template <typename AutIn, typename AutOut = AutIn>
     inline
     automaton
-    make_automaton(const Ctx&, AutIn&& aut)
+    make_automaton(AutIn&& aut)
     {
       return std::make_shared<AutOut>(std::move(aut));
     }

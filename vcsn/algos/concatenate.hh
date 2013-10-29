@@ -121,7 +121,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), concatenate(l, r));
+        return make_automaton(concatenate(l, r));
       }
 
       REGISTER_DECLARE2(concatenate,
@@ -136,7 +136,7 @@ namespace vcsn
       chain(const automaton& a, size_t n)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(aut.context(), chain(aut, n));
+        return make_automaton(chain(aut, n));
       }
 
       REGISTER_DECLARE(chain,

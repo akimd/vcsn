@@ -617,7 +617,7 @@ namespace vcsn
       automaton proper(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), proper(a));
+        return make_automaton(proper(a));
       }
 
      REGISTER_DECLARE(proper, (const automaton& aut) -> automaton);

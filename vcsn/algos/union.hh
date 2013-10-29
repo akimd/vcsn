@@ -59,7 +59,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(l.context(), union_a(l, r));
+        return make_automaton(union_a(l, r));
       }
 
       REGISTER_DECLARE2(union_a,

@@ -102,7 +102,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(a.context(), left_mult(a, w));
+        return make_automaton(left_mult(a, w));
       }
 
       REGISTER_DECLARE2(left_mult,
@@ -118,7 +118,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(a.context(), right_mult(a, w));
+        return make_automaton(right_mult(a, w));
       }
 
       REGISTER_DECLARE2(right_mult,

@@ -251,8 +251,7 @@ namespace vcsn
       {
         auto& a = aut->as<Aut>();
         return make_automaton<Aut,
-                              vcsn::detail::transpose_automaton<Aut>>
-          (a.context(), a);
+                              vcsn::detail::transpose_automaton<Aut>>(a);
       }
 
       REGISTER_DECLARE(transpose,

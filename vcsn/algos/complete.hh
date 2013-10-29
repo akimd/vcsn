@@ -89,7 +89,7 @@ namespace vcsn
       complete(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), complete(a));
+        return make_automaton(complete(a));
       }
 
       REGISTER_DECLARE(complete,

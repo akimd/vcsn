@@ -67,7 +67,7 @@ namespace vcsn
       double_ring(const dyn::context& ctx, unsigned n, std::vector<unsigned> f)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(c, double_ring<Ctx>(n, c, f));
+        return make_automaton(double_ring<Ctx>(n, c, f));
       }
 
       REGISTER_DECLARE(double_ring,

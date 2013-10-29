@@ -145,7 +145,7 @@ namespace vcsn
       universal(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), universal(a));
+        return make_automaton(universal(a));
       }
 
       REGISTER_DECLARE(universal,

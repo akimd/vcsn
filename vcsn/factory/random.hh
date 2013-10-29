@@ -185,8 +185,8 @@ namespace vcsn
              unsigned num_initial = 1, unsigned num_final = 1)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(c, random<Ctx>(c, num_states, density,
-                                             num_initial, num_final));
+        return make_automaton(random<Ctx>(c, num_states, density,
+                                          num_initial, num_final));
       }
 
       REGISTER_DECLARE(random,

@@ -107,7 +107,7 @@ namespace vcsn
       copy(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(a.context(), ::vcsn::copy(a));
+        return make_automaton(::vcsn::copy(a));
       }
 
       REGISTER_DECLARE(copy,

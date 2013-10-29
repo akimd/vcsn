@@ -148,7 +148,7 @@ namespace vcsn
         state_t s = state == -1 ? next_naive(res) : state + 2;
         vcsn::detail::state_eliminator<decltype(res)> eliminate_state(res);
         eliminate_state(s);
-        return make_automaton(a.context(), std::move(res));
+        return make_automaton(std::move(res));
       }
 
       REGISTER_DECLARE(eliminate_state,
