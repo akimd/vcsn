@@ -131,6 +131,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/echo.hh                              \
   %D%/misc/escape.hh                            \
   %D%/misc/export.hh                            \
+  %D%/misc/flyweight.hh                         \
   %D%/misc/hash.hh                              \
   %D%/misc/military-order.hh                    \
   %D%/misc/random.hh                            \
