@@ -12,37 +12,37 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 # We do not use Automake features here.
-SOURCES_RAT_PARSE_YY =				\
-  lib/vcsn/rat/stack.hh				\
-  lib/vcsn/rat/position.hh			\
-  lib/vcsn/rat/location.hh			\
-  lib/vcsn/rat/parse.hh				\
-  lib/vcsn/rat/parse.cc
+SOURCES_RAT_PARSE_YY =                          \
+  %D%/stack.hh                                  \
+  %D%/position.hh                               \
+  %D%/location.hh                               \
+  %D%/parse.hh                                  \
+  %D%/parse.cc
 BUILT_SOURCES += $(SOURCES_RAT_PARSE_YY)
-MAINTAINERCLEANFILES +=					\
-  $(addprefix $(srcdir)/,$(SOURCES_RAT_PARSE_YY))	\
-  $(srcdir)/lib/vcsn/rat/parse.html			\
-  $(srcdir)/lib/vcsn/rat/parse.output			\
-  $(srcdir)/lib/vcsn/rat/parse.stamp			\
-  $(srcdir)/lib/vcsn/rat/parse.xml
+MAINTAINERCLEANFILES +=                                 \
+  $(addprefix $(srcdir)/,$(SOURCES_RAT_PARSE_YY))       \
+  $(srcdir)/%D%/parse.html                              \
+  $(srcdir)/%D%/parse.output                            \
+  $(srcdir)/%D%/parse.stamp                             \
+  $(srcdir)/%D%/parse.xml
 
 # Compile the parser and save cycles.
 # This code comes from "Handling Tools that Produce Many Outputs",
 # from the Automake documentation.
-EXTRA_DIST +=					\
-  lib/vcsn/rat/README.txt			\
-  lib/vcsn/rat/parse.stamp			\
-  lib/vcsn/rat/parse.yy
+EXTRA_DIST +=                                   \
+  %D%/README.txt                                \
+  %D%/parse.stamp                               \
+  %D%/parse.yy
 # The dependency is on bison++.in and not bison++, since bison++ is
 # regenerated at distribution time, and voids the time stamps (which
 # we don't want!).
-lib/vcsn/rat/parse.stamp: lib/vcsn/rat/parse.yy $(BISONXX_IN)
+%D%/parse.stamp: %D%/parse.yy $(BISONXX_IN)
 	$(AM_V_GEN)mkdir -p $(@D)
 	$(AM_V_at)rm -f $@ $@.tmp
 	$(AM_V_at)echo '$@ rebuilt because of: $?' >$@.tmp
 	$(AM_V_at)$(MAKE) $(BISONXX)
 	$(AM_V_at)$(BISONXX) $(BISONXXFLAGS) --	\
-	  $< $(srcdir)/lib/vcsn/rat/parse.cc	\
+	  $< $(srcdir)/%D%/parse.cc	\
 	  $(AM_BISONFLAGS) $(BISONFLAGS)
 	$(AM_V_at)mv -f $@.tmp $@
 
@@ -50,7 +50,7 @@ lib/vcsn/rat/parse.stamp: lib/vcsn/rat/parse.yy $(BISONXX_IN)
 ## trying to compile from *.cc to *.lo, it will not apply VPATH
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
-$(addprefix $(srcdir)/, $(SOURCES_RAT_PARSE_YY)): lib/vcsn/rat/parse.stamp
+$(addprefix $(srcdir)/, $(SOURCES_RAT_PARSE_YY)): %D%/parse.stamp
 	@if test ! -f $@; then			\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
