@@ -35,13 +35,16 @@ namespace vcsn
 
       using state_t = typename automaton_t::state_t;
       using pair_t = std::pair<typename A::state_t, typename B::state_t>;
+      using label_t = typename automaton_t::label_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
       const A& laut_;
       const B& raut_;
 
       /// Map (left-state, right-state) -> product-state.
-      using map = std::map<pair_t, typename automaton_t::state_t>;
+      using map = std::map<pair_t, state_t>;
       map pmap_;
 
       /// Worklist of (left-state, right-state).
@@ -67,7 +70,7 @@ namespace vcsn
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the shuffle algorithm.
-      void initialize_shuffle(const typename A::weightset_t& ws)
+      void initialize_shuffle(const weightset_t& ws)
       {
         initialize();
 
@@ -87,10 +90,13 @@ namespace vcsn
             }
       }
 
-      /// Add the given two source-automaton states to the
-      /// worklist for the given result automaton if they aren't
-      /// already there, updating the map; in any case return.
-      state_t insert_if_needed(typename A::state_t lst, typename B::state_t rst)
+      /// The state in the product corresponding to a pair of states
+      /// of operands.
+      /// 
+      /// Add the given two source-automaton states to the worklist
+      /// for the given result automaton if they aren't already there,
+      /// updating the map; in any case return.
+      state_t state(typename A::state_t lst, typename B::state_t rst)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         pair_t pdst(lst, rst);
@@ -107,11 +113,21 @@ namespace vcsn
         return dst;
       }
 
+      /// Add a transition in the result from destination states in operands.
+      void
+      add_transition(state_t src,
+                     typename A::state_t ldst, typename B::state_t rdst,
+                     const label_t& label, const weight_t& weight)
+      {
+        res_.add_transition(src, state(ldst, rdst), label, weight);
+      }
+
+
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correstpond to the
       /// givenpair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
-      void add_product_transitions(const typename A::weightset_t& ws,
+      void add_product_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
@@ -123,11 +139,8 @@ namespace vcsn
             auto ldst = laut_.dst_of(lt);
 
             for (auto rt : raut_.out(psrc.second, label))
-              {
-                state_t dst = insert_if_needed(ldst, raut_.dst_of(rt));
-                res_.add_transition(src, dst, label,
-                                    ws.mul(lweight, raut_.weight_of(rt)));
-              }
+              add_transition(src, ldst, raut_.dst_of(rt),
+                             label, ws.mul(lweight, raut_.weight_of(rt)));
           }
       }
 
@@ -135,35 +148,30 @@ namespace vcsn
       /// the given result input state, which must correstpond to the
       /// givenpair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
-      void add_shuffle_transitions(const typename A::weightset_t& ws,
+      void add_shuffle_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         state_t lsrc = psrc.first;
         state_t rsrc = psrc.second;
-        if(laut_.is_final(lsrc) && raut_.is_final(rsrc))
+        if (laut_.is_final(lsrc) && raut_.is_final(rsrc))
           res_.set_final(src,
                          ws.mul(laut_.get_final_weight(lsrc),
                                 raut_.get_final_weight(rsrc)));
 
-        for (auto li : laut_.out(lsrc))
-          {
-            state_t dst = insert_if_needed(laut_.dst_of(li), rsrc);
-            res_.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
-          }
-        for (auto ri : raut_.out(rsrc))
-          {
-            state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri));
-            res_.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
-          }
+        for (auto lt : laut_.out(lsrc))
+          add_transition(src, laut_.dst_of(lt), rsrc,
+                         laut_.label_of(lt), laut_.weight_of(lt));
+        for (auto rt : raut_.out(rsrc))
+          add_transition(src, lsrc, raut_.dst_of(rt),
+                         raut_.label_of(rt), raut_.weight_of(rt));
       }
 
     public:
       producter(const A& laut, const B& raut)
         : laut_(laut), raut_(raut), res_(laut.context())
-      {
-      }
+      {}
 
       /// Reset the attributes before a new product.
       void clear()
