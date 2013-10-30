@@ -44,7 +44,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \
-  %D%/algos/read-weight.hh                      \
+  %D%/algos/read.hh                             \
   %D%/algos/standard.hh                         \
   %D%/algos/star.hh                             \
   %D%/algos/star-normal-form.hh                 \

@@ -28,7 +28,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
-# include <vcsn/algos/read-weight.hh>
+# include <vcsn/algos/read.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/star.hh>
 # include <vcsn/algos/star-normal-form.hh>

@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_READ_WEIGHT_HH
-# define VCSN_ALGOS_READ_WEIGHT_HH
+#ifndef VCSN_ALGOS_READ_HH
+# define VCSN_ALGOS_READ_HH
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/context.hh>
@@ -81,4 +81,4 @@ namespace vcsn
 
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_READ_WEIGHT_HH
+#endif // !VCSN_ALGOS_READ_HH
