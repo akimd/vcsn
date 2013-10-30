@@ -34,15 +34,7 @@ namespace vcsn
       template <typename PolynomialSet>
       class polynomial_wrapper;
     }
-
     using polynomial = std::shared_ptr<const detail::polynomial_base>;
-
-    // vcsn/dyn/polynomialset.hh
-    namespace detail
-    {
-      class polynomialset_base;
-    }
-    using polynomialset = std::shared_ptr<const detail::polynomialset_base>;
 
     // vcsn/dyn/ratexp.hh.
     namespace detail
@@ -51,7 +43,6 @@ namespace vcsn
       template <typename RatExpSet>
       class ratexp_wrapper;
     }
-
     using ratexp = std::shared_ptr<detail::ratexp_base>;
 
     // vcsn/dyn/ratexpset.hh
@@ -69,14 +60,6 @@ namespace vcsn
       class weight_wrapper;
     }
     using weight = std::shared_ptr<const detail::weight_base>;
-
-    // weightset.hh.
-    namespace detail
-    {
-      class weightset_base;
-    }
-    using weightset = std::shared_ptr<const detail::weightset_base>;
-
   }
 } // namespace vcsn
 

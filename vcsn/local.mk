@@ -107,12 +107,10 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context.hh                            \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/polynomial.hh                         \
-  %D%/dyn/polynomialset.hh                      \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \
   %D%/dyn/weight.hh                             \
-  %D%/dyn/weightset.hh                          \
   %D%/empty.hh                                  \
   %D%/factory/de-bruijn.hh                      \
   %D%/factory/double-ring.hh                    \
