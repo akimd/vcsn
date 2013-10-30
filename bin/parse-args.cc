@@ -36,6 +36,16 @@ read_ratexp(const options& opts)
     : vcsn::dyn::read_ratexp_string(opts.input, ctx, fmt);
 }
 
+vcsn::dyn::polynomial
+read_polynomial(const options& opts)
+{
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  return
+    opts.input_is_file
+    ? vcsn::dyn::read_polynomial_file(opts.input, ctx)
+    : vcsn::dyn::read_polynomial_string(opts.input, ctx);
+}
+
 vcsn::dyn::weight
 read_weight(const options& opts)
 {
@@ -58,7 +68,8 @@ usage(const char* prog, int exit_status)
       "                la[lnow]_char_(b|q|r|z|zmin), etc.\n"
       "  -A            input is an automaton\n"
       "  -E            input is a rational expression\n"
-      "  -w            input is a weight\n"
+      "  -P            input is a polynomial\n"
+      "  -W            input is a weight\n"
       "  -e STRING     input is STRING\n"
       "  -f FILE       input is FILE\n"
       "  -I FORMAT     input format (dot, fado, text)\n"
@@ -90,7 +101,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
     opts.program = argv[0];
 
   int opt;
-  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:qw?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqW?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -122,10 +133,13 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'o':
         opts.output = optarg;
         break;
+      case 'P':
+        opts.input_type = type::polynomial;
+        break;
       case 'q':
         opts.output_format = "null";
         break;
-      case 'w':
+      case 'W':
         opts.input_type = type::weight;
         break;
       case '?':
@@ -164,9 +178,10 @@ vcsn_main(int argc, char* const argv[], const vcsn_function& fun,
       parse_args(opts, argc, argv);
       switch (opts.input_type)
         {
-        case type::automaton: return fun.work_aut(opts);
-        case type::ratexp:    return fun.work_exp(opts);
-        case type::weight:    return fun.work_weight(opts);
+        case type::automaton:  return fun.work_aut(opts);
+        case type::polynomial: return fun.work_polynomial(opts);
+        case type::ratexp:     return fun.work_exp(opts);
+        case type::weight:     return fun.work_weight(opts);
         }
       abort();
     }

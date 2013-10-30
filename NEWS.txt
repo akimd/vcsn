@@ -10,7 +10,13 @@ The former options -W and -L (to specify the weightset and labelset) are
 removed, definitively replaced by -C, to specify the context.
 
 In addition to -A and -E (input is an automaton/ratexp), option -W now
-replaces option -w: input is a weight.
+replaces option -w (input is a weight), and option -P denotes "polynomials".
+Note that "polynomials" are actually linear combinations of labels, weighted
+by weights, so for instance "LAL" contexts accept only single-letter labels,
+used LAW to accept words.
+
+  $ vcsn cat -C 'law_char(ab)_z' -P -e 'a+ab + <-1>a+ab+<10>bb'
+  <2>ab + <10>bb
 
 ** internal overhaul
 Better names were chosen for the various details of the dyn:: value support:

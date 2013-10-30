@@ -13,6 +13,7 @@
 enum class type
   {
     automaton,
+    polynomial,
     ratexp,
     weight,
   };
@@ -56,6 +57,7 @@ options parse_args(int& argc, char* const*& argv);
 /// Read automaton/ratexp according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
 vcsn::dyn::ratexp read_ratexp(const options& opts);
+vcsn::dyn::polynomial read_polynomial(const options& opts);
 vcsn::dyn::weight read_weight(const options& opts);
 
 /// Function object to dispatch calls for automata or rational expressions.
@@ -69,6 +71,11 @@ struct vcsn_function
   virtual int work_exp(const options&) const
   {
     throw std::runtime_error("not implemented for rational expressions");
+  }
+
+  virtual int work_polynomial(const options&) const
+  {
+    throw std::runtime_error("not implemented for polynomials");
   }
 
   virtual int work_weight(const options&) const

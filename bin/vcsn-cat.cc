@@ -27,6 +27,16 @@ struct cat: vcsn_function
     return 0;
   }
 
+  virtual int work_polynomial(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_polynomial(opts);
+    // Output.
+    *opts.out << exp << std::endl;
+    return 0;
+  }
+
   virtual int work_weight(const options& opts) const override
   {
     using namespace vcsn::dyn;
