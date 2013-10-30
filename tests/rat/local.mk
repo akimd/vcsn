@@ -21,7 +21,6 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 
 %C%_TESTS =                                     \
   $(%C%_XFAIL_TESTS)                            \
-  %D%/interface.rat                             \
   %D%/b.rat                                     \
   %D%/br.rat                                    \
   %D%/z.rat                                     \

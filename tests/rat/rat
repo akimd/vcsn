@@ -22,6 +22,27 @@ my $prog = 'vcsn-cat';
 my $labels = 'letters';
 # The current weightset (argument for -w).
 my $ws = 'b';
+# The current context.
+my $ctx = 'lal_char(abcd)_b';
+
+# Compute the name of the context.
+my %ctx =
+  (
+   b   => "law_char(abcd)_b",
+   br  => "law_char(abcd)_ratexpset<law_char(efgh)_b>",
+   z   => "law_char(abcd)_z",
+   zr  => "law_char(abcd)_ratexpset<law_char(efgh)_z>",
+   zrr => "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>"
+  );
+sub context_update()
+{
+  die "invalid weightset abbreviation: $ws\n"
+    unless exists $ctx{$ws};
+  $ctx = $ctx{$ws};
+  $ctx =~ s/law/lal/g
+    if $labels eq 'letters';
+  $ctx;
+}
 
 # Strip leading and trailing blanks, and quote for shell.
 sub quote($)
@@ -52,7 +73,7 @@ sub pp($)
 {
   my ($in) = @_;
   $in = join (' ', map { quote($_) } split (' ', $in));
-  my $cmd = "$prog -L $labels -W $ws -E -e $in";
+  my $cmd = "$prog -C '$ctx' -E -e $in";
   my $res = `$cmd 2>&1`;
   if ($?)
     {
@@ -94,7 +115,8 @@ sub check_rat_exp($)
           if ($labels ne $1)
             {
               $labels = $1;
-              rst_title "Labels: $labels";
+              context_update;
+              rst_title "Context: $ctx";
             }
           next;
         }
@@ -104,7 +126,8 @@ sub check_rat_exp($)
           if ($ws ne $1)
             {
               $ws = $1;
-              rst_title "WeightSet: $ws";
+              context_update;
+              rst_title "Context: $ctx";
             }
           next;
         }

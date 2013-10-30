@@ -1,8 +1,0 @@
-# Check that we detect invalid weight sets.
-
-%weight: watcher
-<12>a ! watcher: invalid weight set (-W)
-
-%weight: b
-%labels: mots
-<12>a ! mots: invalid label kind (-L)

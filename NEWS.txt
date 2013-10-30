@@ -5,6 +5,13 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-10-30
+** TAF-Kit: option name changes.
+The former options -W and -L (to specify the weightset and labelset) are
+removed, definitively replaced by -C, to specify the context.
+
+In addition to -A and -E (input is an automaton/ratexp), option -W now
+replaces option -w: input is a weight.
+
 ** internal overhaul
 Better names were chosen for the various details of the dyn:: value support:
 

@@ -54,8 +54,11 @@ usage(const char* prog, int exit_status)
       << "usage: " << prog << " [OPTIONS...] [ARGS...]\n"
       "\n"
       "Input/Output:\n"
+      "  -C CONTEXT    the context to use\n"
+      "                la[lnow]_char_(b|q|r|z|zmin), etc.\n"
       "  -A            input is an automaton\n"
       "  -E            input is a rational expression\n"
+      "  -w            input is a weight\n"
       "  -e STRING     input is STRING\n"
       "  -f FILE       input is FILE\n"
       "  -I FORMAT     input format (dot, fado, text)\n"
@@ -63,46 +66,21 @@ usage(const char* prog, int exit_status)
       "  -o FILE       save output into FILE\n"
       "  -q            discard any output\n"
       "\n"
-      "Context:\n"
-      "  -C CONTEXT         the context to use\n"
-      "                     la(l|u|w)_char_(b|z|zmin), etc.\n"
-      "  -L letters|words   kind of the labels\n"
-      "  -W WEIGHT-SET      define the kind of the weights\n"
-      "  -g STRING          generator set definition\n"
-      "\n"
-      "WeightSet abbreviations:\n"
-      "  b     for Boolean\n"
-      "  br    for RatExp<b>\n"
-      "  z     for Z\n"
-      "  zr    for RatExp<Z>\n"
-      "  zrr   for Ratexp<RatExp<Z>>\n"
-      "\n"
-      "Input/Output Formats (for Automata, Expressions, Polynomials):\n"
-      "  dot    A    GraphViz's Dot language\n"
-      "  efsm   A    Extended FSM format for OpenFST: use efstcompile\n"
-      "  fado   A    FAdo's format\n"
-      "  grail  A    Grail's format\n"
-      "  info   AE   facts about the result (size, etc.)\n"
-      "  list     P  display one monomial per line\n"
-      "  null   AEP  no output at all (e.g., for benchmarks)\n"
-      "  text    EP  usual concrete syntax\n"
-      "  tikz   A    LaTeX source for TikZ\n"
+      "Input/Output Formats (for Automata, Expressions, Polynomials, Weights):\n"
+      "  dot    A     GraphViz's Dot language\n"
+      "  efsm   A     Extended FSM format for OpenFST: use efstcompile\n"
+      "  fado   A     FAdo's format\n"
+      "  grail  A     Grail's format\n"
+      "  info   AE    facts about the result (size, etc.)\n"
+      "  list     P   display one monomial per line\n"
+      "  null   AEPW  no output at all (e.g., for benchmarks)\n"
+      "  text    EPW  usual concrete syntax\n"
+      "  tikz   A     LaTeX source for TikZ\n"
       ;
   else
     std::cerr << "Try `" << prog << " -h' for more information."
               << std::endl;
   exit(exit_status);
-}
-
-// Convert "w" to "l" for "brutal" assembled context names.
-static void
-apply_label_kind(options& opts)
-{
-  using boost::algorithm::replace_all;
-  if (opts.lal)
-    replace_all(opts.context, "law", "lal");
-  else
-    replace_all(opts.context, "lal", "law");
 }
 
 void
@@ -111,20 +89,8 @@ parse_args(options& opts, int& argc, char* const*& argv)
   if (opts.program.empty())
     opts.program = argv[0];
 
-  using map = std::map<std::string, std::string>;
-  using pair = std::pair<std::string, std::string>;
-
   int opt;
-  map ksets;
-#define ADD(Key, Name)                          \
-    ksets.insert(pair(#Key, Name))
-    ADD(b,   "law_char(abcd)_b");
-    ADD(br,  "law_char(abcd)_ratexpset<law_char(efgh)_b>");
-    ADD(z,   "law_char(abcd)_z");
-    ADD(zr,  "law_char(abcd)_ratexpset<law_char(efgh)_z>");
-    ADD(zrr, "law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>");
-#undef ADD
-  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:L:O:o:qW:w?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:qw?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -150,21 +116,6 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'I':
         opts.input_format = optarg;
         break;
-      case 'L':
-        {
-          std::string s = optarg;
-          if (s == "l" || s == "letter" || s == "letters")
-            opts.lal = true;
-          else if (s == "w" || s == "word" || s == "words")
-            opts.lal = false;
-          else
-            {
-              std::cerr << optarg << ": invalid label kind (-L)" << std::endl;
-              goto fail;
-            }
-          apply_label_kind(opts);
-          break;
-        }
       case 'O':
         opts.output_format = optarg;
         break;
@@ -177,23 +128,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
       case 'w':
         opts.input_type = type::weight;
         break;
-      case 'W':
-        {
-          map::iterator i = ksets.find(optarg);
-          if (i == end(ksets))
-            {
-              std::cerr << optarg << ": invalid weight set (-W)" << std::endl;
-              goto fail;
-            }
-          else
-            {
-              opts.context = i->second;
-              apply_label_kind(opts);
-            }
-          break;
-        }
       case '?':
-      fail:
         usage(argv[0], EXIT_FAILURE);
         break;
       }

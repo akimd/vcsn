@@ -31,8 +31,6 @@ struct options
   /// Input format.
   std::string input_format = "dot";
 
-  /// Whether input is LAL (obsolete, FIXME: remove).
-  bool lal = true;
   /// Context.
   std::string context = "lal_char(abcd)_b";
 

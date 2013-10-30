@@ -33,7 +33,7 @@ check 'ab' 'ba'
 check 'abc+aba' 'aba+cba'
 check '(ab)*' '(ba)*'
 
-ctx='-W zrr -Lw'
+ctx='-C law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>'
 check2 '<<<2>xy>ef>abcd' '<<<2>yx>fe>dcba'
 check2 '<ef>(abcd)*<gh>' '<hg>(dcba)*<fe>'
 
