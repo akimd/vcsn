@@ -16,22 +16,25 @@ namespace vcsn
     Registry(const std::string& n)
       : name_(n)
     {}
+
     Registry() = delete;
-    //    ~Registry() = delete;
 
-    using map_t = std::map<std::string, Fun*>;
+    /// Whether log messages should be issued.
+    bool debug = getenv("VCSN_DYN");
 
+    /// Register function \a fn for context \a ctx.
     bool set(const std::string& ctx, Fun fn)
     {
-      if (getenv("YYDEBUG"))
+      if (debug)
         std::cerr << "Register(" << name_ << ").set(" << ctx << ")\n";
       map_[ctx] = fn;
       return true;
     }
 
+    /// Get function for context \a ctx.
     const Fun& get(const std::string& ctx)
     {
-      if (getenv("YYDEBUG"))
+      if (debug)
         std::cerr << "Register(" << name_ << ").get(" << ctx << ")\n";
       auto i = map_.find(ctx);
       if (i == map_.end())
@@ -42,6 +45,7 @@ namespace vcsn
         return *i->second;
     }
 
+    /// Call function for context \a ctx.
     template <typename... Args>
     auto
     call(const std::string& ctx, Args&&... args)
@@ -51,7 +55,10 @@ namespace vcsn
     }
 
   private:
+    /// Function name (e.g., "determinize").
     std::string name_;
+    /// Context name -> pointer to implementation.
+    using map_t = std::map<std::string, Fun*>;
     map_t map_;
   };
 
