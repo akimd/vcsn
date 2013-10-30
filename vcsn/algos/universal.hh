@@ -53,7 +53,9 @@ namespace vcsn
         // and retrieve the origin of each state.
         const auto transposed = transpose(aut);
         detail::determinizer<decltype(transposed)> determinize;
-        auto const co_det = determinize(transposed);
+        // FIXME: we don't need the determinized automaton, just the
+        // "origins" map.
+        /* auto const co_det = */ determinize(transposed);
         map_t origin = determinize.origins();
 
         // the 'origin' is a map from co_det's state_t to
