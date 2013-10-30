@@ -19,14 +19,13 @@ namespace vcsn
       class LIBVCSN_API driver
       {
       public:
-        using automaton_t = dyn::automaton;
         using location_t = vcsn::rat::location;
 
         driver();
 
-        automaton_t parse_file(const std::string& f);
-        automaton_t parse_string(const std::string& e,
-                                 const location_t& l = location_t{});
+        dyn::automaton parse_file(const std::string& f);
+        dyn::automaton parse_string(const std::string& e,
+                                    const location_t& l = location_t{});
 
         /// Report an error \a m at \a l.
         void error(const location_t& l, const std::string& m);
@@ -45,7 +44,7 @@ namespace vcsn
         /// Prepare scanner to read string e.
         void scan_open_(const std::string& e);
         /// Parse this stream.
-        automaton_t parse_(const location_t& l = location_t{});
+        dyn::automaton parse_(const location_t& l = location_t{});
         /// Close the scanner.
         void scan_close_();
 
