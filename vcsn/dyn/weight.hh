@@ -2,6 +2,7 @@
 # define VCSN_DYN_WEIGHT_HH
 
 # include <memory>
+# include <string>
 
 # include <vcsn/misc/export.hh>
 

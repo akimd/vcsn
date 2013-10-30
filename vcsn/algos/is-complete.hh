@@ -4,6 +4,7 @@
 # include <queue>
 # include <set>
 
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 
 namespace vcsn

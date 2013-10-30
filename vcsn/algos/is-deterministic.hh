@@ -5,6 +5,7 @@
 # include <unordered_set>
 
 # include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
