@@ -241,53 +241,36 @@ namespace vcsn
   /// Record the transitions, initial and final states as strings,
   /// and once the automata completed, decide what is its
   /// context, and build a genuine automaton.
-  class lazy_automaton_editor: public automaton_editor
+  class lazy_automaton_editor
   {
   public:
-    using super_type = automaton_editor;
-    using string_t = super_type::string_t;
+    using string_t = automaton_editor::string_t;
 
   public:
-    virtual void
-    add_state(const string_t& s) override final
+    void add_state(const string_t& s)
     {
       states_.emplace_back(s);
     }
 
-    virtual void
-    add_pre(const string_t&) override final
-    {
-      std::abort();
-    }
-
-    virtual void
-    add_post(const string_t&) override final
-    {
-      std::abort();
-    }
-
-    virtual void
-    add_initial(const string_t& s, const string_t& w = {}) override final
+    void add_initial(const string_t& s, const string_t& w = {})
     {
       initial_states_.emplace_back(s, w);
     }
 
-    virtual void
-    add_final(const string_t& s, const string_t& w = {}) override final
+    void add_final(const string_t& s, const string_t& w = {})
     {
       final_states_.emplace_back(s, w);
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
-    virtual void
-    add_entry(const string_t& src, const string_t& dst,
-              const string_t& entry) override final;
+    void add_entry(const string_t& src, const string_t& dst,
+                   const string_t& entry);
 
     /// Return the built automaton.
-    virtual dyn::automaton result() override final;
+    dyn::automaton result();
 
     /// Get ready to build another automaton.
-    virtual void reset() override final;
+    void reset();
 
   private:
     bool is_lan_ = false;
