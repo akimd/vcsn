@@ -6,9 +6,8 @@
 
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/lal_char_z.hh>
-#include <lib/vcsn/dot/driver.hh>
-
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -16,12 +15,9 @@ namespace vcsn
   Aut
   read_automaton_file(const std::string& f)
   {
-    vcsn::detail::dot::driver d;
-    auto res = d.parse_file(f);
-    if (!d.errors.empty())
-      throw std::runtime_error(d.errors);
+    dyn::automaton res = dyn::read_automaton_file(f);
     // Automaton typename.
-    auto sname = vcsn::dyn::detail::context_base::sname(res->vname());
+    auto sname = res->vname(false);
     if (sname != Aut::sname())
       throw std::runtime_error(f + ": invalid context: " + sname
                                + ", expected: " + Aut::sname());
