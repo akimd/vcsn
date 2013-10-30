@@ -1,10 +1,11 @@
 #ifndef VCSN_ALGOS_TRANSPOSE_HH
 # define VCSN_ALGOS_TRANSPOSE_HH
 
-# include <vcsn/ctx/context.hh>
+# include <vcsn/algos/copy.hh>
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/ctx/context.hh>
 
 namespace vcsn
 {
@@ -13,11 +14,10 @@ namespace vcsn
   {
     /// Read-write on an automaton, that transposes everything.
     template <typename Aut>
-    class transpose_automaton: public dyn::detail::automaton_base
+    class transpose_automaton
     {
     public:
       /// The type of automaton to wrap.
-      using super_t = dyn::detail::automaton_base;
       using automaton_t = Aut;
 
       /// The type of the automata to produce from this kind o
@@ -67,7 +67,7 @@ namespace vcsn
         return "transpose_automaton<" + automaton_t::sname() + ">";
       }
 
-      virtual std::string vname(bool full = true) const override
+      std::string vname(bool full = true) const
       {
         return "transpose_automaton<" + aut_->vname(full) + ">";
       }
@@ -251,7 +251,7 @@ namespace vcsn
       {
         auto& a = aut->as<Aut>();
         return make_automaton<Aut,
-                              vcsn::detail::transpose_automaton<Aut>>(a);
+                              vcsn::detail::transpose_automaton<Aut>>(std::move(vcsn::copy(a)));
       }
 
       REGISTER_DECLARE(transpose,

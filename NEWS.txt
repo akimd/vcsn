@@ -4,12 +4,11 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
-* 2013-10-29
-** internal renamings
+* 2013-10-30
+** internal overhaul
 Better names were chosen for the various details of the dyn:: value support:
 
              abstract_automaton -> automaton_base
-    concrete_abstract_automaton -> automaton_wrapper
 
                abstract_context -> context_base
 
@@ -38,9 +37,10 @@ not derive from weightset_base.  It would therefore be more precise to name
 "weightset_base" as "weightset_wrapper_base", but that might be uselessly
 long.  Names may change again in the future.
 
-For consistency, context_wrapper was introduced.  Now, the whole static API
-is completely independent of the dyn API (well, except automata), and the
-dyn API consists only of wrappers (no longer inheritance).
+For consistency (and many other benefits), automaton_wrapper and
+context_wrapper were introduced.  Now, the whole static API is completely
+independent of the dyn API, and the dyn API consists only of wrappers of
+"static"-level values---instead of inheritance for automata and contexts.
 
 * 2013-10-25
 ** renamings (static, dynamic, TAF-Kit)

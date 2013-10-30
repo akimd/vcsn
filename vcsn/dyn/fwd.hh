@@ -13,6 +13,8 @@ namespace vcsn
     namespace detail
     {
       class automaton_base;
+      template <typename Aut>
+      class automaton_wrapper;
     }
     using automaton = std::shared_ptr<detail::automaton_base>;
 

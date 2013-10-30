@@ -10,14 +10,12 @@
 # include <vcsn/core/crange.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
-# include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
 
   template <typename Context>
   class mutable_automaton
-    : public dyn::detail::automaton_base
   {
   public:
     using context_t = Context;
@@ -109,7 +107,7 @@ namespace vcsn
       return "mutable_automaton<" + context_t::sname() + ">";
     }
 
-    virtual std::string vname(bool full = true) const override
+    std::string vname(bool full = true) const
     {
       return "mutable_automaton<" + context().vname(full) + ">";
     }
