@@ -56,6 +56,13 @@ namespace vcsn
         : aut_{new automaton_t{std::forward<Args>(args)...}}
       {}
 
+      transpose_automaton& operator=(transpose_automaton&& that)
+      {
+        if (this != &that)
+          *aut_ = std::move(*that.aut_);
+        return *this;
+      }
+
       automaton_t*
       original_automaton()
       {

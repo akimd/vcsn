@@ -49,28 +49,27 @@ namespace vcsn
 
       /// Add the pre and post states in the result automaton.  This
       /// is needed for all three algorithms here.
-      void initialize(automaton_t& res)
+      void initialize()
       {
         pair_t ppre(laut_.pre(), raut_.pre());
         pair_t ppost(laut_.post(), raut_.post());
-        pmap_[ppre] = res.pre();
-        pmap_[ppost] = res.post();
+        pmap_[ppre] = res_.pre();
+        pmap_[ppost] = res_.post();
       }
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
-      void initialize_product(automaton_t& res)
+      void initialize_product()
       {
-        initialize(res);
+        initialize();
         todo_.emplace_back(pair_t(laut_.pre(), raut_.pre()));
       }
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the shuffle algorithm.
-      void initialize_shuffle(const typename A::weightset_t& ws,
-                              automaton_t& res)
+      void initialize_shuffle(const typename A::weightset_t& ws)
       {
-        initialize(res);
+        initialize();
 
         /// Make the result automaton initial states:
         for (auto lt : laut_.initial_transitions())
@@ -79,10 +78,10 @@ namespace vcsn
               auto lsrc = laut_.dst_of(lt);
               auto rsrc = raut_.dst_of(rt);
               pair_t pair(lsrc, rsrc);
-              state_t init = res.new_state();
-              res.add_initial(init,
-                              ws.mul(laut_.weight_of(lt),
-                                     raut_.weight_of(rt)));
+              state_t init = res_.new_state();
+              res_.add_initial(init,
+                               ws.mul(laut_.weight_of(lt),
+                                      raut_.weight_of(rt)));
               pmap_[pair] = init;
               todo_.emplace_back(pair);
             }
@@ -91,8 +90,7 @@ namespace vcsn
       /// Add the given two source-automaton states to the
       /// worklist for the given result automaton if they aren't
       /// already there, updating the map; in any case return.
-      state_t insert_if_needed(typename A::state_t lst, typename B::state_t rst,
-                               automaton_t& res)
+      state_t insert_if_needed(typename A::state_t lst, typename B::state_t rst)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         pair_t pdst(lst, rst);
@@ -100,7 +98,7 @@ namespace vcsn
         state_t dst;
         if (iter == pmap_.end())
           {
-            dst = res.new_state();
+            dst = res_.new_state();
             pmap_[pdst] = dst;
             todo_.emplace_back(pdst);
           }
@@ -115,8 +113,7 @@ namespace vcsn
       /// the needed source-state pairs.
       void add_product_transitions(const typename A::weightset_t& ws,
                                    const state_t src,
-                                   const pair_t& psrc,
-                                   automaton_t& res)
+                                   const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         for (auto lt : laut_.all_out(psrc.first))
@@ -127,9 +124,9 @@ namespace vcsn
 
             for (auto rt : raut_.out(psrc.second, label))
               {
-                state_t dst = insert_if_needed(ldst, raut_.dst_of(rt), res);
-                res.add_transition(src, dst, label,
-                                   ws.mul(lweight, raut_.weight_of(rt)));
+                state_t dst = insert_if_needed(ldst, raut_.dst_of(rt));
+                res_.add_transition(src, dst, label,
+                                    ws.mul(lweight, raut_.weight_of(rt)));
               }
           }
       }
@@ -140,32 +137,31 @@ namespace vcsn
       /// the needed source-state pairs.
       void add_shuffle_transitions(const typename A::weightset_t& ws,
                                    const state_t src,
-                                   const pair_t& psrc,
-                                   automaton_t& res)
+                                   const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         state_t lsrc = psrc.first;
         state_t rsrc = psrc.second;
         if(laut_.is_final(lsrc) && raut_.is_final(rsrc))
-          res.set_final(src,
-                        ws.mul(laut_.get_final_weight(lsrc),
-                               raut_.get_final_weight(rsrc)));
+          res_.set_final(src,
+                         ws.mul(laut_.get_final_weight(lsrc),
+                                raut_.get_final_weight(rsrc)));
 
         for (auto li : laut_.out(lsrc))
           {
-            state_t dst = insert_if_needed(laut_.dst_of(li), rsrc, res);
-            res.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
+            state_t dst = insert_if_needed(laut_.dst_of(li), rsrc);
+            res_.add_transition(src, dst, laut_.label_of(li), laut_.weight_of(li));
           }
         for (auto ri : raut_.out(rsrc))
           {
-            state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri), res);
-            res.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
+            state_t dst = insert_if_needed(lsrc, raut_.dst_of(ri));
+            res_.add_transition(src, dst, raut_.label_of(ri), raut_.weight_of(ri));
           }
       }
 
     public:
       producter(const A& laut, const B& raut)
-        : laut_(laut), raut_(raut)
+        : laut_(laut), raut_(raut), res_(laut.context())
       {
       }
 
@@ -181,9 +177,9 @@ namespace vcsn
       {
         auto ctx = intersection(laut_.context(), raut_.context());
         const auto& ws = *ctx.weightset();
-        automaton_t res(ctx);
+        res_ = std::move(automaton_t(ctx));
 
-        initialize_product(res);
+        initialize_product();
 
         while (!todo_.empty())
           {
@@ -191,9 +187,9 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            add_product_transitions(ws, src, psrc, res);
+            add_product_transitions(ws, src, psrc);
           }
-        return res;
+        return std::move(res_);
       }
 
       /// The (accessible part of the) shuffle of \a laut_ and \a raut_.
@@ -201,9 +197,9 @@ namespace vcsn
       {
         auto ctx = get_union(laut_.context(), raut_.context());
         const auto& ws = *ctx.weightset();
-        automaton_t res(ctx);
+        res_ = automaton_t(ctx);
 
-        initialize_shuffle(ws, res);
+        initialize_shuffle(ws);
 
         while (!todo_.empty())
           {
@@ -211,9 +207,9 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            add_shuffle_transitions(ws, src, psrc, res);
+            add_shuffle_transitions(ws, src, psrc);
           }
-        return res;
+        return std::move(res_);
       }
 
       /// The (accessible part of the) infiltration of \a laut_ and \a raut_.
@@ -221,12 +217,12 @@ namespace vcsn
       {
         auto ctx = get_union(laut_.context(), raut_.context());
         const auto& ws = *ctx.weightset();
-        automaton_t res(ctx);
+        res_ = automaton_t(ctx);
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
         // initial states for product:
-        initialize_shuffle(ws, res);
+        initialize_shuffle(ws);
 
         while (!todo_.empty())
           {
@@ -235,11 +231,11 @@ namespace vcsn
             state_t src = pmap_[psrc];
 
             // Infiltrate is a mix of product and shuffle operations.
-            add_product_transitions(ws, src, psrc, res);
-            add_shuffle_transitions(ws, src, psrc, res);
+            add_product_transitions(ws, src, psrc);
+            add_shuffle_transitions(ws, src, psrc);
           }
 
-        return res;
+        return std::move(res_);
       }
 
       /// A map from product states to pair of original states.
@@ -272,6 +268,10 @@ namespace vcsn
         o << "*/" << std::endl;
         return o;
       }
+
+    private:
+      /// The computed product.
+      automaton_t res_;
     };
   }
 
