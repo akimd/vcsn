@@ -25,7 +25,7 @@ namespace vcsn LIBVCSN_API
   template <typename ValueSet>
   auto
   conv(const ValueSet& vs, const std::string& str)
-    -> decltype(vs.conv(std::cin)) // FIXME: Fix a means to avoid cin.
+    -> decltype(vs.conv(std::declval<std::istream&>()))
   {
     std::istringstream i{str};
     auto res = vs.conv(i);

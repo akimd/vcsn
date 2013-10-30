@@ -27,7 +27,11 @@ namespace vcsn
     /// Whether define the same language.
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
+    /// A ratexp denoting the language of \a aut.
+    /// Uses the "naive" heuristics.
     ratexp aut_to_exp(const automaton& aut);
+
+    /// A ratexp denoting the language of \a aut.
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
     /// Concatenate \a n copies of \a aut.
@@ -169,10 +173,13 @@ namespace vcsn
     /// The lifted LAO rational expression from \a e.
     ratexp lift(const ratexp& e);
 
+    /// Build a context from its name.
     context make_context(const std::string& name);
 
+    /// Build an automatonset from its context.
     automaton_editor* make_automaton_editor(const context& ctx);
 
+    /// Build an ratexpset from its context.
     ratexpset make_ratexpset(const context& ctx);
 
     /// Repeated product of \a aut with itself.
