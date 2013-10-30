@@ -257,6 +257,8 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using ws_t = typename Ctx::weightset_t;
 
+        // label polynomialset.
+        using lps_t = typename vcsn::polynomialset<Ctx>;
         // ratexp polynomialset.
         using rps_t = typename vcsn::rat::ratexp_polynomialset_t<rs_t>;
 
@@ -296,8 +298,10 @@ namespace vcsn
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
         REGISTER(print_exp, rs_t);
+        REGISTER(print_polynomial, lps_t);
         REGISTER(print_polynomial, rps_t);
         REGISTER(print_weight, ws_t);
+        REGISTER(read_polynomial, Ctx);
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);
         REGISTER(split, rs_t);

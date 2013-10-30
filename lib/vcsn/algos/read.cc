@@ -83,6 +83,32 @@ namespace vcsn
     }
 
 
+    /*------------------.
+    | read_polynomial.  |
+    `------------------*/
+
+    REGISTER_DEFINE(read_polynomial);
+
+    static polynomial
+    read_polynomial(const dyn::context& ctx, const std::string& s)
+    {
+      return detail::read_polynomial_registry().call(ctx->vname(false),
+                                                 ctx, s);
+    }
+
+    polynomial
+    read_polynomial_file(const std::string& f, const context& ctx)
+    {
+      return read_polynomial_string(get_file_contents(f), ctx);
+    }
+
+    polynomial
+    read_polynomial_string(const std::string& s, const context& ctx)
+    {
+      return read_polynomial(ctx, s);
+    }
+
+
     /*--------------.
     | read_weight.  |
     `--------------*/

@@ -258,6 +258,16 @@ namespace vcsn
     ratexp read_ratexp_string(const std::string& s, const context& ctx,
                               const std::string& type);
 
+    /// Read a polynomial in a file.
+    /// \param f     the file name.
+    /// \param ctx   its context, from which is built its polynomialset.
+    polynomial read_polynomial_file(const std::string& f, const context& ctx);
+
+    /// Read a polynomial in a string.
+    /// \param s     the string to parse.
+    /// \param ctx   its context, from which is built its polynomialset.
+    polynomial read_polynomial_string(const std::string& s, const context& ctx);
+
     /// Read a weight in a file.
     /// \param f     the file name.
     /// \param ctx   its context, from which is built its weightset.
