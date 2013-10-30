@@ -81,12 +81,13 @@ lib_libvcsn_la_SOURCES =                        \
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
 # compile the rat parser first.
-%D%/dot/parser.stamp: %D%/rat/parser.stamp
+%D%/dot/parse.stamp: %D%/rat/parse.stamp
 
 include %D%/dot/local.mk
 lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_DOT_PARSE_YY)                       \
-  %D%/dot/driver.hh %D%/dot/driver.cc           \
+  %D%/dot/driver.cc                             \
+  %D%/dot/driver.hh                             \
   %D%/dot/scan.ll
 
 include %D%/rat/local.mk
