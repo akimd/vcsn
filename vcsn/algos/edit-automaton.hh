@@ -13,6 +13,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/algos.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/weights/polynomialset.hh>
@@ -62,7 +63,7 @@ namespace vcsn
     virtual void add_entry(const string_t& src, const string_t& dst,
                            const string_t& entry) = 0;
     /// The final result.
-    virtual dyn::detail::automaton_base* result() = 0;
+    virtual dyn::automaton result() = 0;
     /// Forget about the current automaton, but do not free it.
     virtual void reset() = 0;
 
@@ -193,10 +194,10 @@ namespace vcsn
     }
 
     /// Return the built automaton.
-    virtual dyn::detail::automaton_base*
+    virtual dyn::automaton
     result() override final
     {
-      return res_;
+      return dyn::make_automaton(std::move(*res_));
     }
 
     /// Detach the built automaton.
@@ -283,12 +284,10 @@ namespace vcsn
               const string_t& entry) override final;
 
     /// Return the built automaton.
-    virtual dyn::detail::automaton_base*
-    result() override final;
+    virtual dyn::automaton result() override final;
 
     /// Get ready to build another automaton.
-    virtual void
-    reset() override final;
+    virtual void reset() override final;
 
   private:
     bool is_lan_ = false;

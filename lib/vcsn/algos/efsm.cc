@@ -113,9 +113,7 @@ namespace vcsn
         if (s1 != "EOFSM")
           throw std::runtime_error(":bad input format, missing EOFSM");
       }
-      automaton res = nullptr;
-      res.reset(edit.result());
-      return res;
+      return edit.result();
     }
 
 

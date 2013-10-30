@@ -95,9 +95,7 @@ namespace vcsn
             *fin.get() >> s1 >> l >> s2;
           }
       }
-      automaton res = nullptr;
-      res.reset(edit.result());
-      return res;
+      return edit.result();
     }
 
     /*------------.

@@ -31,8 +31,7 @@ namespace vcsn
   }
 
   /// Create ctx and return the built automaton.
-  dyn::detail::automaton_base*
-  lazy_automaton_editor::result()
+  dyn::automaton lazy_automaton_editor::result()
   {
     std::string ctx = is_law_ ? "law" : (is_lan_ ? "lan" : "lal");
     ctx += "_char(";

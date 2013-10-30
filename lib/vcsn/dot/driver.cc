@@ -36,7 +36,7 @@ namespace vcsn
             // which did not build an automaton.  Do it now.
             if (!edit_)
               setup_();
-            res.reset(edit_->result());
+            res = edit_->result();
             edit_->reset();
           }
         delete edit_;
