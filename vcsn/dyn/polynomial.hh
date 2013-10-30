@@ -89,8 +89,8 @@ namespace vcsn
     make_polynomial(const PolynomialSet& ps,
                     const typename PolynomialSet::value_t& polynomial)
     {
-      return std::make_shared<detail::polynomial_wrapper<PolynomialSet>>
-        (polynomial, ps);
+      using wrapper_t = detail::polynomial_wrapper<PolynomialSet>;
+      return std::make_shared<wrapper_t>(polynomial, ps);
     }
   } // namespace dyn
 } // namespace vcsn
