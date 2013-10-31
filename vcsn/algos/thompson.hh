@@ -109,18 +109,10 @@ namespace vcsn
         // Apply weights.
         if (!ws_.is_one(e.left_weight()))
           for (auto t: res_.out(initial_))
-            res_.set_transition(res_.src_of(t),
-                                res_.dst_of(t),
-                                res_.label_of(t),
-                                ws_.mul(e.left_weight(),
-                                        res_.weight_of(t)));
+            res_.set_weight(t, ws_.mul(e.left_weight(), res_.weight_of(t)));
         if (!ws_.is_one(e.right_weight()))
           for (auto t: res_.in(final_))
-            res_.set_transition(res_.src_of(t),
-                                res_.dst_of(t),
-                                res_.label_of(t),
-                                ws_.mul(res_.weight_of(t),
-                                        e.right_weight()));
+            res_.set_weight(t, ws_.mul(res_.weight_of(t), e.right_weight()));
       }
 
       virtual void
