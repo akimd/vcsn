@@ -103,7 +103,8 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
   %D%/product.dir/xyz.gv                        \
-  %D%/random.dir/clique-a-4.gv
+  %D%/random.dir/clique-a-4.gv                  \
+  %D%/union.dir/abc.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
@@ -114,6 +115,7 @@ EXTRA_DIST +=                                   \
 %D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
+%D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain

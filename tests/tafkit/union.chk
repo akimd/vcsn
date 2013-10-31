@@ -2,53 +2,7 @@
 
 run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
 run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn-union -f ab.gv bc.gv <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(abc)_b"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    I3
-    F0
-    F1
-    F2
-    F3
-    F4
-    F5
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-    3
-    4
-    5
-  }
-  I0 -> 0
-  I3 -> 3
-  0 -> F0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> F1
-  1 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  2 -> 1 [label = "a"]
-  2 -> 2 [label = "b"]
-  3 -> F3
-  3 -> 4 [label = "b"]
-  3 -> 5 [label = "c"]
-  4 -> F4
-  4 -> 4 [label = "b"]
-  4 -> 5 [label = "c"]
-  5 -> F5
-  5 -> 4 [label = "b"]
-  5 -> 5 [label = "c"]
-}
-EOF
+run 0 -f $medir/abc.gv -vcsn-union -f ab.gv bc.gv
 
 ## ------------ ##
 ## lal_char_z.  ##
@@ -109,6 +63,7 @@ digraph
 }
 EOF
 
+rm -f out.exp
 cat >out.exp <<\EOF
 digraph
 {
