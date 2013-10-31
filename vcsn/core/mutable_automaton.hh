@@ -404,6 +404,7 @@ namespace vcsn
       transitions_fs_.emplace_back(t);
     }
 
+    /// Remove the transition (src, l, dst).
     void
     del_transition(state_t src, state_t dst, label_t l)
     {
@@ -412,7 +413,7 @@ namespace vcsn
         del_transition(t);
     }
 
-    // Remove all the transitions between s and d.
+    /// Remove all the transitions between s and d.
     void
     del_transition(state_t s, state_t d)
     {
@@ -536,7 +537,7 @@ namespace vcsn
       return k;
     }
 
-    /// Same as above, with one weight.
+    /// Same as above, with weight one.
     weight_t
     add_transition(state_t src, state_t dst, label_t l)
     {

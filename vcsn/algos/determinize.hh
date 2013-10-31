@@ -135,7 +135,7 @@ namespace vcsn
       origins_t
       origins() const
       {
-        std::map<state_t, std::set<state_t>> res;
+        origins_t res;
         for (const auto& p: map_)
           {
             std::set<state_t> from;

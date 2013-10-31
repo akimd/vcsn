@@ -92,7 +92,7 @@ namespace vcsn
 
       /// The state in the product corresponding to a pair of states
       /// of operands.
-      /// 
+      ///
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
@@ -114,6 +114,7 @@ namespace vcsn
       }
 
       /// Add a transition in the result from destination states in operands.
+      /// If needed, push the destination state in the work list.
       void
       add_transition(state_t src,
                      typename A::state_t ldst, typename B::state_t rdst,
@@ -124,7 +125,7 @@ namespace vcsn
 
 
       /// Add transitions to the given result automaton, starting from
-      /// the given result input state, which must correstpond to the
+      /// the given result input state, which must correspond to the
       /// givenpair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
       void add_product_transitions(const weightset_t& ws,
@@ -145,7 +146,7 @@ namespace vcsn
       }
 
       /// Add transitions to the given result automaton, starting from
-      /// the given result input state, which must correstpond to the
+      /// the given result input state, which must correspond to the
       /// givenpair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
       void add_shuffle_transitions(const weightset_t& ws,
@@ -153,8 +154,8 @@ namespace vcsn
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
-        state_t lsrc = psrc.first;
-        state_t rsrc = psrc.second;
+        typename A::state_t lsrc = psrc.first;
+        typename B::state_t rsrc = psrc.second;
         if (laut_.is_final(lsrc) && raut_.is_final(rsrc))
           res_.set_final(src,
                          ws.mul(laut_.get_final_weight(lsrc),
@@ -200,7 +201,8 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// The (accessible part of the) shuffle of \a laut_ and \a raut_.
+      /// The (accessible part of the) shuffle product of \a laut_ and
+      /// \a raut_.
       automaton_t shuffle()
       {
         auto ctx = get_union(laut_.context(), raut_.context());
@@ -220,7 +222,8 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// The (accessible part of the) infiltration of \a laut_ and \a raut_.
+      /// The (accessible part of the) infiltration product of \a
+      /// laut_ and \a raut_.
       automaton_t infiltration()
       {
         auto ctx = get_union(laut_.context(), raut_.context());
@@ -251,7 +254,7 @@ namespace vcsn
       origins_t
       origins() const
       {
-        std::map<state_t, pair_t> res;
+        origins_t res;
         for (const auto& p: pmap_)
           res.emplace(p.second, p.first);
         return res;
