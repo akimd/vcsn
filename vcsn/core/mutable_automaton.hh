@@ -437,6 +437,7 @@ namespace vcsn
     transition_t
     new_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
+      assert(!has_transition(src, dst, l));
       if (weightset()->is_zero(k))
         return null_transition();
       else
