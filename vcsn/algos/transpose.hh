@@ -162,12 +162,22 @@ namespace vcsn
       DEFINE(del_transition(transition_t t), del_transition(t));
       DEFINE(del_transition(state_t s, state_t d, label_t l),
              del_transition(d, s, aut_->labelset()->transpose(l)));
+
       DEFINE(add_transition(state_t s, state_t d, label_t l, weight_t k),
              add_transition(d, s,
                             aut_->labelset()->transpose(l),
                             aut_->weightset()->transpose(k)));
       DEFINE(add_transition(state_t s, state_t d, label_t l),
              add_transition(d, s, aut_->labelset()->transpose(l)));
+
+      DEFINE(new_transition(state_t s, state_t d, label_t l, weight_t k),
+             new_transition(d, s,
+                            aut_->labelset()->transpose(l),
+                            aut_->weightset()->transpose(k)));
+      DEFINE(new_transition(state_t s, state_t d, label_t l),
+             new_transition(d, s,
+                            aut_->labelset()->transpose(l)));
+
       DEFINE(set_transition(state_t s, state_t d, label_t l, weight_t k),
              set_transition(d, s,
                             aut_->labelset()->transpose(l),

@@ -424,7 +424,6 @@ namespace vcsn
         del_transition(t);
     }
 
-  private:
     /// Create a transition between two states.  There must not exist
     /// a previous transition with same (src, dst, l).
     ///
@@ -436,12 +435,10 @@ namespace vcsn
     /// \pre the label is _not checked_, for efficiency.
     /// \pre ! has_transition(src, dst, l).
     transition_t
-    new_transition_(state_t src, state_t dst, label_t l, weight_t k)
+    new_transition(state_t src, state_t dst, label_t l, weight_t k)
     {
       if (weightset()->is_zero(k))
-        {
-          return null_transition();
-        }
+        return null_transition();
       else
         {
           transition_t t;
@@ -467,7 +464,13 @@ namespace vcsn
         }
     }
 
-  public:
+    /// Same as above, with weight one.
+    transition_t
+    new_transition(state_t src, state_t dst, label_t l)
+    {
+      return new_transition(src, dst, l, weightset()->one());
+    }
+
     /// Set a transition between two states.  Override any possible
     /// existing transition with same states and label.
     ///
@@ -491,7 +494,7 @@ namespace vcsn
 
       transition_t t = get_transition(src, dst, l);
       if (t == null_transition())
-        t = new_transition_(src, dst, l, k);
+        t = new_transition(src, dst, l, k);
       else if (weightset()->is_zero(k))
         {
           del_transition(t);
@@ -528,7 +531,7 @@ namespace vcsn
     {
       transition_t t = get_transition(src, dst, l);
       if (t == null_transition())
-        new_transition_(src, dst, l, k);
+        new_transition(src, dst, l, k);
       else
         {
           k = weightset()->add(weight_of(t), k);
