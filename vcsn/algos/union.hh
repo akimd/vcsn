@@ -24,7 +24,7 @@ namespace vcsn
     m.emplace(b.post(), res.post());
 
     for (auto t: b.all_transitions())
-      res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
+      res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
                          b.label_of(t), b.weight_of(t));
     return res;
   }

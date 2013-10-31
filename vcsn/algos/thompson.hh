@@ -57,7 +57,7 @@ namespace vcsn
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
-        res_.add_transition(initial_, final_,
+        res_.new_transition(initial_, final_,
                             epsilon_,
                             e.left_weight());
       }
@@ -67,7 +67,7 @@ namespace vcsn
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
-        res_.add_transition(initial_, final_,
+        res_.new_transition(initial_, final_,
                             e.value(),
                             e.left_weight());
       }
@@ -80,10 +80,10 @@ namespace vcsn
         for (auto c: e)
           {
             c->accept(*this);
-            res_.add_transition(initial, initial_,
+            res_.new_transition(initial, initial_,
                                 epsilon_,
                                 e.left_weight());
-            res_.add_transition(final_, final,
+            res_.new_transition(final_, final,
                                 epsilon_,
                                 e.right_weight());
           }
@@ -102,7 +102,7 @@ namespace vcsn
           {
             state_t final = final_;
             c->accept(*this);
-            res_.add_transition(final, initial_, epsilon_);
+            res_.new_transition(final, initial_, epsilon_);
           }
         initial_ = initial;
 
@@ -129,10 +129,10 @@ namespace vcsn
         e.sub()->accept(*this);
         state_t initial = res_.new_state();
         state_t final = res_.new_state();
-        res_.add_transition(initial, initial_, epsilon_, e.left_weight());
-        res_.add_transition(final_,  final,    epsilon_, e.right_weight());
-        res_.add_transition(final_,  initial_, epsilon_);
-        res_.add_transition(initial, final, epsilon_,
+        res_.new_transition(initial, initial_, epsilon_, e.left_weight());
+        res_.new_transition(final_,  final,    epsilon_, e.right_weight());
+        res_.new_transition(final_,  initial_, epsilon_);
+        res_.new_transition(initial, final, epsilon_,
                             ws_.mul(e.left_weight(), e.right_weight()));
         initial_ = initial;
         final_ = final;

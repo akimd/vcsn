@@ -123,7 +123,7 @@ namespace vcsn
                     state_t n = ((i == map_.end())
                                  ? push_new_state(next)
                                  : i->second);
-                    res.add_transition(map_[ss], n, l);
+                    res.new_transition(map_[ss], n, l);
                   }
               }
           }

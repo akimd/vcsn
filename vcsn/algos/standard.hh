@@ -66,7 +66,7 @@ namespace vcsn
       {
         auto wi = aut.weight_of(ti);
         for (auto t: aut.all_out(aut.dst_of(ti)))
-          aut.add_transition(ini, aut.dst_of(t), aut.label_of(t),
+          aut.new_transition(ini, aut.dst_of(t), aut.label_of(t),
                              ws.mul(wi, aut.weight_of(t)));
         aut.del_transition(ti);
       }
@@ -139,7 +139,7 @@ namespace vcsn
         auto i = res_.new_state();
         auto f = res_.new_state();
         initial_ = i;
-        res_.add_transition(i, f, e.value(), e.left_weight());
+        res_.new_transition(i, f, e.value(), e.left_weight());
         res_.set_final(f);
       }
 
@@ -185,6 +185,8 @@ namespace vcsn
           {
             c->accept(*this);
             for (auto t: res_.all_out(initial_))
+              // Not set_transition: for instance 'a*+a*' will make
+              // "initial" go twice to post().
               res_.add_transition(initial,
                                   res_.dst_of(t),
                                   res_.label_of(t),
@@ -269,6 +271,9 @@ namespace vcsn
                   && !has(other_finals, res_.src_of(tf)))
                 // Note that the weight of ti has already been
                 // multiplied, on the left, by w.
+                //
+                // Not set_transition, as for instance with "a**", the
+                // second star modifies many existing transitions.
                 res_.add_transition
                   (res_.src_of(tf),
                    res_.dst_of(ti),

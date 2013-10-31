@@ -4,6 +4,20 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-10-31
+** product and infiltration-product are much faster
+On erebus (MacBook Pro i7 2.9GHz 8GB, GCC 4.8 -O3), with "vcsn standard -E
+-e 'a?70' -o a70.gv":
+
+Before:
+     13.01s (13.01s): product -q -f a70.gv a70.gv
+      0.23s ( 0.23s): shuffle -q -f a70.gv a70.gv
+     16.64s (16.64s): infiltration -q -f a70.gv a70.gv
+After:
+      0.77s ( 0.77s): product -q -f a70.gv a70.gv
+      0.19s ( 0.19s): shuffle -q -f a70.gv a70.gv
+      0.87s ( 0.87s): infiltration -q -f a70.gv a70.gv
+
 * 2013-10-30
 ** TAF-Kit: option name changes.
 The former options -W and -L (to specify the weightset and labelset) are

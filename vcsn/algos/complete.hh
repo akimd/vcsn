@@ -38,11 +38,11 @@ namespace vcsn
 
     for (auto st : aut.states())
       for (auto tr : aut.out(st))
-        new_aut.add_transition(states_assoc[st], states_assoc[aut.dst_of(tr)],
+        new_aut.new_transition(states_assoc[st], states_assoc[aut.dst_of(tr)],
                                aut.label_of(tr), aut.weight_of(tr));
 
     state_t sink_state = new_aut.new_state();
-    bool is_accessible = false; // is new_state accessible ?
+    bool is_accessible = false; // is sink_state accessible ?
     std::unordered_set<label_t> labels_met;
 
     auto letters = *new_aut.labelset();
@@ -64,7 +64,7 @@ namespace vcsn
         for (auto letter : letters)
           if (!has(labels_met, letter))
             {
-              new_aut.add_transition(st, sink_state, letter);
+              new_aut.new_transition(st, sink_state, letter);
               is_accessible = true;
             }
 
@@ -73,7 +73,7 @@ namespace vcsn
 
     if (is_accessible)
       for (auto letter : letters)
-        new_aut.add_transition(sink_state, sink_state, letter);
+        new_aut.new_transition(sink_state, sink_state, letter);
     else
       new_aut.del_state(sink_state);
 

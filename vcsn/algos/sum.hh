@@ -35,8 +35,12 @@ namespace vcsn
       // Do not add initial transitions, the unique initial state is
       // already declared as such, and its weight must remain 1.
       if (b.src_of(t) != b.pre())
-      res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                         b.label_of(t), b.weight_of(t));
+        if (b.dst_of(t) == b.post())
+          res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
+                             b.label_of(t), b.weight_of(t));
+        else
+          res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
+                             b.label_of(t), b.weight_of(t));
     return res;
   }
 

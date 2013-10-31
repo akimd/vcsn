@@ -115,6 +115,17 @@ namespace vcsn
 
       /// Add a transition in the result from destination states in operands.
       /// If needed, push the destination state in the work list.
+      /// \pre !res.has_transition(src, dst, label).
+      void
+      new_transition(state_t src,
+                     typename A::state_t ldst, typename B::state_t rdst,
+                     const label_t& label, const weight_t& weight)
+      {
+        res_.new_transition(src, state(ldst, rdst), label, weight);
+      }
+
+      /// Add a transition in the result from destination states in operands.
+      /// If needed, push the destination state in the work list.
       void
       add_transition(state_t src,
                      typename A::state_t ldst, typename B::state_t rdst,
@@ -139,8 +150,12 @@ namespace vcsn
             auto lweight = laut_.weight_of(lt);
             auto ldst = laut_.dst_of(lt);
 
+            // These are always new transitions: first because the src
+            // state is visited for the first time, and second because
+            // the couple (ldst, label) is unique, and so is (rdst,
+            // label).
             for (auto rt : raut_.out(psrc.second, label))
-              add_transition(src, ldst, raut_.dst_of(rt),
+              new_transition(src, ldst, raut_.dst_of(rt),
                              label, ws.mul(lweight, raut_.weight_of(rt)));
           }
       }
@@ -161,12 +176,26 @@ namespace vcsn
                          ws.mul(laut_.get_final_weight(lsrc),
                                 raut_.get_final_weight(rsrc)));
 
+        // The src state is visited for the first time, so all these
+        // transitions are new.  *Except* in the case where we have a
+        // loop on both the lhs, and the rhs, in which case we have
+        // "two equal transitions" in the product, i.e., we must sum
+        // the weights of both loops before adding the resulting
+        // unique loop.
+        weight_t loop = ws.zero();
         for (auto lt : laut_.out(lsrc))
-          add_transition(src, laut_.dst_of(lt), rsrc,
+          new_transition(src, laut_.dst_of(lt), rsrc,
                          laut_.label_of(lt), laut_.weight_of(lt));
         for (auto rt : raut_.out(rsrc))
-          add_transition(src, lsrc, raut_.dst_of(rt),
-                         raut_.label_of(rt), raut_.weight_of(rt));
+          {
+            typename B::state_t rdst = raut_.dst_of(rt);
+            if (rsrc == rdst)
+              add_transition(src, lsrc, rdst,
+                             raut_.label_of(rt), raut_.weight_of(rt));
+            else
+              new_transition(src, lsrc, rdst,
+                             raut_.label_of(rt), raut_.weight_of(rt));
+          }
       }
 
     public:
@@ -358,7 +387,7 @@ namespace vcsn
       res.set_initial(s);
       res.set_final(s);
       for (auto l: *res.context().labelset())
-        res.set_transition(s, s, l);
+        res.new_transition(s, s, l);
     }
 
     if (n)

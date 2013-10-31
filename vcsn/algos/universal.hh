@@ -117,7 +117,7 @@ namespace vcsn
                   continue;
                 // case 2: X.a \subset Y?
                 if (subset(delta_ret, subset_label[y]))
-                  res.add_transition(x, y, a);
+                  res.new_transition(x, y, a);
               }
         return res;
       }

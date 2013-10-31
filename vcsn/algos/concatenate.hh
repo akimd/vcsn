@@ -45,7 +45,7 @@ namespace vcsn
     // states orig -> copy.
     for (auto t: b.all_transitions())
       if (b.src_of(t) != b.pre() && b.src_of(t) != b_initial)
-        res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
+        res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
                            b.label_of(t), b.weight_of(t));
 
     // Branch all the final transitions of res to the successors of
