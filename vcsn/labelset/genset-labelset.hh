@@ -46,8 +46,9 @@ namespace vcsn
       }
 
       /// Use the implementation from genset.
-# define DEFINE(Name)                                                   \
+# define DEFINE(Name, Attribute)                                        \
       template <typename... Args>                                       \
+      Attribute                                                         \
       auto                                                              \
       Name(Args&&... args) const                                        \
         -> decltype(this->genset()->Name(std::forward<Args>(args)...))  \
@@ -55,14 +56,14 @@ namespace vcsn
         return this->genset()->Name(std::forward<Args>(args)...);       \
       }
 
-      DEFINE(begin);
-      DEFINE(concat);
-      DEFINE(conv);
-      DEFINE(end);
-      DEFINE(equals);
-      DEFINE(has);
-      DEFINE(is_letter);
-      DEFINE(transpose);
+      DEFINE(begin,);
+      DEFINE(concat,);
+      DEFINE(conv,);
+      DEFINE(end,);
+      DEFINE(equals, ATTRIBUTE_PURE);
+      DEFINE(has, ATTRIBUTE_PURE);
+      DEFINE(is_letter, ATTRIBUTE_PURE);
+      DEFINE(transpose, ATTRIBUTE_PURE);
 
 # undef DEFINE
 

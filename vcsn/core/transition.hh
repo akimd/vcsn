@@ -64,7 +64,7 @@ namespace vcsn
   {
     using weight_t = bool;
     weight_t get_weight() const { return true; }
-    void set_weight(weight_t& k) ATTRIBUTE_PURE { assert(k == true); }
+    void set_weight(weight_t& k) ATTRIBUTE_PURE { (void) k; assert(k == true); }
   };
 
 }

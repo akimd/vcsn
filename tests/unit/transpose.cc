@@ -1,3 +1,4 @@
+#undef NDEBUG
 #include <vcsn/algos/transpose.hh>
 #include <vcsn/core/rat/ratexpset.hh>
 #include <vcsn/labelset/wordset.hh>

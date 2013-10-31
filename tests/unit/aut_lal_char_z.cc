@@ -1,3 +1,4 @@
+#undef NDEBUG
 #include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/algos/dot.hh>

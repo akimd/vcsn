@@ -6,6 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
@@ -110,7 +111,7 @@ namespace vcsn
       }
 
       bool
-      is_one(const value_t& l) const
+      is_one(const value_t& l) const ATTRIBUTE_PURE
       {
         return this->genset()->is_empty_word(l);
       }

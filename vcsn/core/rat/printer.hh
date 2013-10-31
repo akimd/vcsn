@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/cast.hh>
 
 namespace vcsn
@@ -104,18 +105,21 @@ namespace vcsn
       void print(const nary_t& n, const char op);
 
       /// Whether w is displayed.
+      ATTRIBUTE_PURE
       bool shows_(const weight_t& w)
       {
         return !ctx_.weightset()->is_one(w);
       }
 
       /// Whether the left weight shows.
+      ATTRIBUTE_PURE
       bool shows_left_weight_(const node_t& n)
       {
         return shows_(n.left_weight());
       }
 
       /// Whether the right weight shows.
+      ATTRIBUTE_PURE
       bool shows_right_weight_(const node_t& n)
       {
         return (n.is_inner()
@@ -123,6 +127,7 @@ namespace vcsn
       }
 
       /// Whether one of the weights shows.
+      ATTRIBUTE_PURE
       bool shows_weight_(const node_t& n)
       {
         return shows_left_weight_(n) || shows_right_weight_(n);

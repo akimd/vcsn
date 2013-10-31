@@ -1,3 +1,4 @@
+#undef NDEBUG
 #include <cassert>
 #include <vcsn/ctx/law_char_z.hh>
 #include <vcsn/ctx/law_char_zmin.hh>

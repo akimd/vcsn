@@ -5,6 +5,7 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersection
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/set.hh> // intersection
 # include <vcsn/misc/stream.hh> // conv.
@@ -74,7 +75,7 @@ namespace vcsn
       }
 
       value_t
-      special() const
+      special() const ATTRIBUTE_PURE
       {
         return this->genset()->template special<value_t>();
       }
@@ -93,7 +94,7 @@ namespace vcsn
       }
 
       bool
-      is_special(value_t v) const
+      is_special(value_t v) const ATTRIBUTE_PURE
       {
         return v == special();
       }

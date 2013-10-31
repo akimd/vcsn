@@ -1,3 +1,5 @@
+// This test relies on assert.
+#undef NDEBUG
 #include <iostream>
 #include <vcsn/algos/dot.hh>
 #include <vcsn/core/mutable_automaton.hh>

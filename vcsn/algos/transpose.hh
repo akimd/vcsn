@@ -2,10 +2,10 @@
 # define VCSN_ALGOS_TRANSPOSE_HH
 
 # include <vcsn/algos/copy.hh>
-# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {
@@ -123,10 +123,15 @@ namespace vcsn
       DEFINE(label_of(transition_t t),
              labelset()->transpose(aut_->label_of(t)));
 
+      ATTRIBUTE_PURE
       DEFINE(get_initial_weight(state_t s),
              weightset()->transpose(aut_->get_final_weight(s)));
+
+      ATTRIBUTE_PURE
       DEFINE(get_final_weight(state_t s),
              weightset()->transpose(aut_->get_initial_weight(s)));
+
+      ATTRIBUTE_PURE
       DEFINE(weight_of(transition_t t),
              weightset()->transpose(aut_->weight_of(t)));
 

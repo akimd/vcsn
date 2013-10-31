@@ -175,6 +175,7 @@ namespace vcsn
       return has_transition(s, post(), prepost_label_);
     }
 
+    ATTRIBUTE_PURE
     weight_t
     get_initial_weight(state_t s) const
     {
@@ -185,6 +186,7 @@ namespace vcsn
         return weight_of(t);
     }
 
+    ATTRIBUTE_PURE
     weight_t
     get_final_weight(state_t s) const
     {

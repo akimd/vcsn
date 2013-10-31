@@ -83,6 +83,7 @@ namespace vcsn
         return l < r;
       }
 
+      ATTRIBUTE_PURE
       constexpr value_t
       special() const
       {
@@ -90,18 +91,21 @@ namespace vcsn
       }
 
       /// Whether \a l is the special label (for pre/post transitions).
+      ATTRIBUTE_PURE
       bool
       is_special(value_t l) const
       {
         return l == special();
       }
 
+      ATTRIBUTE_PURE
       constexpr value_t
       one() const
       {
         return this->genset()->one_letter();
       }
 
+      ATTRIBUTE_PURE
       bool
       is_one(value_t l) const
       {

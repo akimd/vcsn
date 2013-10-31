@@ -69,8 +69,8 @@ namespace vcsn
       -> value_t;
 
     /// When used as WeightSet for automata.
-    bool is_zero(value_t v) const;
-    bool is_one(value_t v) const;
+    bool is_zero(value_t v) const ATTRIBUTE_PURE;
+    bool is_one(value_t v) const ATTRIBUTE_PURE;
 
     static constexpr bool is_commutative_semiring()
     {
