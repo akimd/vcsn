@@ -53,7 +53,10 @@ run 'vcsn-standard -Ee "(a+b+c+d)?{100}" | vcsn-aut-to-exp -q'
 # power(standard((a+b)*b(<2>a+<2>b)*), 13)
 run 'vcsn-standard -C "lal_char(ab)_z" -Ee "(a+b)*b(<2>a+<2>b)*" | vcsn-power -q -f- 13'
 
-run 'vcsn-standard -E -e "(a?){70}" -o a70.gv'
-run 'vcsn-product -q -f a70.gv a70.gv'
-run 'vcsn-shuffle -q -f a70.gv a70.gv'
-run 'vcsn-infiltration -q -f a70.gv a70.gv'
+# With a?{150}, the product has 22501 states, 124,903,125 transitions,
+# which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
+# transitions.
+run 'vcsn-standard -E -e "a?{100}" -o a100.gv'
+run 'vcsn-product -q -f a100.gv a100.gv'
+run 'vcsn-shuffle -q -f a100.gv a100.gv'
+run 'vcsn-infiltration -q -f a100.gv a100.gv'
