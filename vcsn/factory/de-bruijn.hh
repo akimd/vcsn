@@ -29,16 +29,16 @@ namespace vcsn
     auto init = res.new_state();
     res.set_initial(init);
     for (char l: *ctx.labelset())
-      res.set_transition(init, init, l);
+      res.new_transition(init, init, l);
 
     auto prev = res.new_state();
-    res.set_transition(init, prev, *std::begin(*ctx.labelset()));
+    res.new_transition(init, prev, *std::begin(*ctx.labelset()));
 
     while (n--)
       {
         auto next = res.new_state();
         for (char l: *ctx.labelset())
-          res.set_transition(prev, next, l);
+          res.new_transition(prev, next, l);
         prev = next;
       }
     res.set_final(prev);

@@ -39,18 +39,18 @@ namespace vcsn
 
     // The 'a' transitions.
     for (unsigned i = 0; i < n; ++i)
-      res.add_transition(states[i], states[(i+1) % n], letters[0]);
+      res.new_transition(states[i], states[(i+1) % n], letters[0]);
 
     // The 'b' transitions.
-    res.add_transition(states[0], states[1], letters[1]);
-    res.add_transition(states[1], states[0], letters[1]);
+    res.new_transition(states[0], states[1], letters[1]);
+    res.new_transition(states[1], states[0], letters[1]);
     for (unsigned i = 2; i < n; ++i)
-      res.add_transition(states[i], states[i], letters[1]);
+      res.new_transition(states[i], states[i], letters[1]);
 
     // The 'c' transitions.
     for (unsigned i = 0; i < n - 1; ++i)
-      res.add_transition(states[i], states[i], letters[2]);
-    res.add_transition(states[n - 1], states[0], letters[2]);
+      res.new_transition(states[i], states[i], letters[2]);
+    res.new_transition(states[n - 1], states[0], letters[2]);
 
     return res;
   }

@@ -40,7 +40,7 @@ namespace vcsn
         for (unsigned l = 0; l < base; ++l)
           {
             int d = (e + l) % divisor;
-            res.set_transition(states[i], states[d], letters[l]);
+            res.new_transition(states[i], states[d], letters[l]);
           }
       }
     return res;

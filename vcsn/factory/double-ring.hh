@@ -35,13 +35,13 @@ namespace vcsn
     for (unsigned i = 1; i < n; ++i)
       {
         state_t y = res.new_state();
-        res.add_transition(x, y, 'a');
-        res.add_transition(y, x, 'b');
+        res.new_transition(x, y, 'a');
+        res.new_transition(y, x, 'b');
         x = y;
         states.emplace(i, y);
       }
-    res.add_transition(x, p, 'a');
-    res.add_transition(p, x, 'b');
+    res.new_transition(x, p, 'a');
+    res.new_transition(p, x, 'b');
 
     // Add finals.
     for (auto f: finals)

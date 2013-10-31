@@ -24,13 +24,13 @@ namespace vcsn
     for (unsigned i = 1; i < n; ++i)
       {
         auto y = res.new_state();
-        res.add_transition(x, y, 'a');
-        res.add_transition(y, y, 'b');
-        res.add_transition(y, y, 'c');
-        res.add_transition(y, p, 'c');
+        res.new_transition(x, y, 'a');
+        res.new_transition(y, y, 'b');
+        res.new_transition(y, y, 'c');
+        res.new_transition(y, p, 'c');
         x = y;
       }
-    res.add_transition(x, p, 'a');
+    res.new_transition(x, p, 'a');
     return res;
   }
 
