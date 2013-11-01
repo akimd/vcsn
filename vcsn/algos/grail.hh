@@ -81,14 +81,31 @@ namespace vcsn
           output_state_(s);
       }
 
+      /// List states in \a states, preceded by ' '.
+      void list_states_(const std::vector<state_t>& states)
+      {
+        std::vector<unsigned> ss;
+        for (auto s: states)
+          ss.push_back(states_[s]);
+        std::sort(begin(ss), end(ss));
+        for (auto s: ss)
+          this->os_ << ' ' << s;
+      }
+
+      void output_initials_()
+      {
+        std::vector<state_t> ss;
+        for (auto t: this->aut_.initial_transitions())
+          ss.push_back(aut_.dst_of(t));
+        list_states_(ss);
+      }
+
       void output_finals_()
       {
-        std::vector<unsigned> order;
+        std::vector<unsigned> ss;
         for (auto t: this->aut_.final_transitions())
-          order.push_back(this->states_[this->aut_.src_of(t)]);
-        std::sort(begin(order), end(order));
-        for (auto t: order)
-          this->os_ << ' ' << t;
+          ss.push_back(aut_.src_of(t));
+        list_states_(ss);
       }
 
       /// The automaton we have to output.
@@ -129,7 +146,10 @@ namespace vcsn
         this->os_ << (is_deter ? "@DFA" : "@NFA");
         this->output_finals_();
         if (!is_deter)
-          output_initials_();
+          {
+            this->os_ << " *";
+            this->output_initials_();
+          }
         this->output_transitions_();
       }
 
@@ -148,17 +168,6 @@ namespace vcsn
       is_deterministic_(const A&)
       {
         return false;
-      }
-
-      void output_initials_()
-      {
-        std::vector<unsigned> inis;
-        for (auto t: this->aut_.initial_transitions())
-          inis.push_back(this->states_[this->aut_.dst_of(t)]);
-        std::sort(begin(inis), end(inis));
-        this->os_ << " *";
-        for (auto s: inis)
-          this->os_ << ' ' << s;
       }
     };
 
