@@ -95,7 +95,7 @@ namespace vcsn
         os_ << states_[aut_.src_of(t)];
         if (aut_.dst_of(t) != aut_.post())
           os_ << '\t' << states_[aut_.dst_of(t)]
-                  << '\t' << label_of_(t);
+              << '\t' << label_of_(t);
 
         if (show_one || !ws.is_one(aut_.weight_of(t)))
           {
@@ -150,12 +150,12 @@ namespace vcsn
       {
         // Required to print all labels.
         {
-          std::vector<transition_t> v(aut_.all_transitions().begin(),
-                                      aut_.all_transitions().end());
-          std::sort(v.begin(), v.end(),
+          std::vector<transition_t> v(std::begin(aut_.all_transitions()),
+                                      std::end(aut_.all_transitions()));
+          std::sort(begin(v), end(v),
             [this](transition_t l, transition_t r)
             {
-                return aut_.label_of(l) < aut_.label_of(r);
+              return aut_.label_of(l) < aut_.label_of(r);
             });
           for (auto t : v)
             label_of_(t);

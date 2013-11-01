@@ -77,7 +77,7 @@ namespace vcsn
         std::vector<unsigned> order;
         for (auto t: this->aut_.final_transitions())
           order.push_back(this->states_[this->aut_.src_of(t)]);
-        std::sort(order.begin(), order.end());
+        std::sort(begin(order), end(order));
         for (auto t: order)
           this->os_ << ' ' << t;
       }
@@ -176,14 +176,13 @@ namespace vcsn
 
       void output_initials_()
       {
-        std::vector<unsigned> order;
+        std::vector<unsigned> inis;
         for (auto t: this->aut_.initial_transitions())
-          order.push_back(this->states_[this->aut_.dst_of(t)]);
-        std::sort(order.begin(), order.end());
-
+          inis.push_back(this->states_[this->aut_.dst_of(t)]);
+        std::sort(begin(inis), end(inis));
         this->os_ << " *";
-        for (auto t: order)
-          this->os_ << ' ' << t;
+        for (auto s: inis)
+          this->os_ << ' ' << s;
       }
     };
 
