@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cat >isymbols.txt <<\EOFSM
+cat >symbols.txt <<\EOFSM
 \e	0
 a	1
 b	2
@@ -16,4 +16,7 @@ cat >transitions.fsm <<\EOFSM
 2
 EOFSM
 
-fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm "$@"
+fstcompile --acceptor \
+  --keep_isymbols --isymbols=symbols.txt \
+  --keep_osymbols --osymbols=symbols.txt \
+  transitions.fsm "$@"

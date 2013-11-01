@@ -49,7 +49,7 @@ namespace vcsn
 
         // Provide the symbols first, as when reading EFSM, knowing
         // how \e is represented will help reading the transitions.
-        os_ << "cat >isymbols.txt <<\\EOFSM" << std::endl;
+        os_ << "cat >symbols.txt <<\\EOFSM" << std::endl;
         output_input_labels_();
         os_ << "EOFSM" << std::endl
             << std::endl;
@@ -59,10 +59,17 @@ namespace vcsn
         os_ << "EOFSM" << std::endl
             << std::endl;
 
-        os_ << "fstcompile --acceptor"
-            << " --keep_isymbols --isymbols=isymbols.txt"
-            << " transitions.fsm"
-            << " \"$@\"";
+        // Some OpenFST tools seem to really require an output-symbol
+        // list, even for acceptors.  While fstrmepsilon perfectly
+        // works with just the isymbols, fstintersect (equivalent to
+        // our vcsn-product: the Hadamard product) for instance, seems
+        // to require the osymbols; this seems to be due to the fact
+        // that Open FST bases its implementation of intersect on its
+        // (transducer) composition.
+        os_ << "fstcompile --acceptor \\" << std::endl
+            << "  --keep_isymbols --isymbols=symbols.txt \\" << std::endl
+            << "  --keep_osymbols --osymbols=symbols.txt \\" << std::endl
+            << "  transitions.fsm \"$@\"";
       }
 
     private:

@@ -2,20 +2,23 @@
 
 # Convert a binary OpenFST file into an efsm textual file.
 
+syms=symbols.txt
 trans=transitions.fsm
-isyms=isymbols.txt
-fstprint --acceptor --save_isymbols=$isyms "$@" > $trans
+fstprint --acceptor --save_isymbols=$syms "$@" > $trans
 
 cat <<EOF
 #! /bin/sh
 
-cat >isymbols.txt <<\EOFSM
-$(cat $isyms)
+cat >symbols.txt <<\EOFSM
+$(cat $syms)
 EOFSM
 
 cat >transitions.fsm <<\EOFSM
 $(cat $trans)
 EOFSM
 
-fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm "\$@"
+fstcompile --acceptor \\
+  --keep_isymbols --isymbols=symbols.txt \\
+  --keep_osymbols --osymbols=symbols.txt \\
+  transitions.fsm "\$@"
 EOF
