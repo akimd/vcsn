@@ -55,7 +55,7 @@ int
 main(int argc, const char* argv[])
 try
   {
-    assert(argc == 4);
+    assert(argc == 4); (void) argc;
     dyn_prod_eval(argv[1], argv[2], argv[3]);
     std::cout << ",";
     sta_prod_eval<vcsn::ctx::lal_char_z>(argv[1], argv[2], argv[3]);
