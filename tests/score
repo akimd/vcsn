@@ -26,7 +26,7 @@ run ()
 {
   # Save and restore the command's stdout/stdin.
   exec 3>&1 4>&2
-  { time=$( { eval "time $1 1>&3 2>&4"; } 2>&1 ); }
+  { time=$( { eval "time $1 2>&4"; } 2>&1 ); }
   exec 3>&- 4>&-
 
   # Join lines with '+'.
@@ -37,6 +37,11 @@ run ()
   cmd=$(echo "$1" | sed -e 's/vcsn[- ]//g')
   printf "%6.2fs (%s): %s\n" "$total" "$time" "$cmd"
 }
+
+# Output should be fast.
+run "vcsn-standard -Ee 'a?{500}' -O dot  >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O efsm >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O fado >/dev/null"
 
 # Determinization of ladybird 20.
 run 'vcsn-ladybird 21 | vcsn-determinize -q'
