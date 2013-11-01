@@ -44,6 +44,13 @@ namespace vcsn
           aut_.labelset()->is_one(l) ? "@epsilon" : aut_.labelset()->format(l);
       }
 
+      virtual void output_transition_(transition_t t)
+      {
+        os_ << states_[aut_.src_of(t)]
+            << ' ' << label_of_(t)
+            << ' ' << states_[aut_.dst_of(t)];
+      }
+
       /// Output transitions, sorted lexicographically.
       /// "Src Label Dst\n".
       void output_transitions_()
@@ -66,10 +73,10 @@ namespace vcsn
                    });
 
         for (auto t : order)
-          os_ << std::endl
-              << states_[aut_.src_of(t)]
-              << ' ' << label_of_(t)
-              << ' ' << states_[aut_.dst_of(t)];
+          {
+            os_ << std::endl;
+            output_transition_(t);
+          }
       }
 
       void output_finals_()
@@ -89,55 +96,22 @@ namespace vcsn
       std::map<state_t, unsigned> states_;
     };
 
-
-    /*----------.
-    | grailer.  |
-    `----------*/
-
-    // https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf
-    template <typename Aut>
-    struct grailer: public outputter<Aut>
-    {
-      static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
-                    "requires labels_are_(letters|nullable)");
-      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                    "requires Boolean weights");
-
-      using super_type = outputter<Aut>;
-
-      using automaton_t = typename super_type::automaton_t;
-      using state_t = typename super_type::state_t;
-      using transition_t = typename super_type::transition_t;
-
-      using super_type::super_type;
-
-      /// Actually output \a aut_ on \a os_.
-      void operator()()
-      {
-        // Don't end with a \n.
-        const char* sep = "";
-        for (auto t: this->aut_.initial_transitions())
-          {
-            this->os_ << sep << "(START) |- "  << this->states_[this->aut_.dst_of(t)];
-            sep = "\n";
-          }
-        this->output_transitions_();
-        for (auto t: this->aut_.final_transitions())
-          this->os_  << std::endl << this->states_[this->aut_.src_of(t)] <<  " -| (FINAL)";
-      }
-    };
+  }
 
 
-    /*---------.
-    | fadoer.  |
-    `---------*/
+  /*---------.
+  | fadoer.  |
+  `---------*/
 
-    // https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf
+  namespace detail
+  {
+
     template <typename Aut>
     struct fadoer: public outputter<Aut>
     {
       static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
                     "requires labels_are_(letters|nullable)");
+      // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<typename Aut::weight_t, bool>::value,
                     "requires Boolean weights");
 
@@ -190,15 +164,6 @@ namespace vcsn
 
   template <typename Aut>
   std::ostream&
-  grail(const Aut& aut, std::ostream& out)
-  {
-    detail::grailer<Aut> grail{aut, out};
-    grail();
-    return out;
-  }
-
-  template <typename Aut>
-  std::ostream&
   fado(const Aut& aut, std::ostream& out)
   {
     detail::fadoer<Aut> fado{aut, out};
@@ -226,10 +191,68 @@ namespace vcsn
                        (const automaton& aut, std::ostream& out)
                        -> std::ostream&);
 
+    }
+  }
 
-      /*-------------.
-      | dyn::grail.  |
-      `-------------*/
+
+  /*----------.
+  | grailer.  |
+  `----------*/
+
+  namespace detail
+  {
+    // https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf
+    template <typename Aut>
+    struct grailer: public outputter<Aut>
+    {
+      static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
+                    "requires labels_are_(letters|nullable)");
+      // FIXME: Not right: F2 is also using bool, but it is not bool.
+      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+                    "requires Boolean weights");
+
+      using super_type = outputter<Aut>;
+
+      using automaton_t = typename super_type::automaton_t;
+      using state_t = typename super_type::state_t;
+      using transition_t = typename super_type::transition_t;
+
+      using super_type::super_type;
+
+      /// Actually output \a aut_ on \a os_.
+      void operator()()
+      {
+        // Don't end with a \n.
+        const char* sep = "";
+        for (auto t: this->aut_.initial_transitions())
+          {
+            this->os_
+              << sep
+              << "(START) |- "  << this->states_[this->aut_.dst_of(t)];
+            sep = "\n";
+          }
+        this->output_transitions_();
+        for (auto t: this->aut_.final_transitions())
+          this->os_
+            << std::endl
+            << this->states_[this->aut_.src_of(t)] <<  " -| (FINAL)";
+      }
+    };
+  }
+
+  template <typename Aut>
+  std::ostream&
+  grail(const Aut& aut, std::ostream& out)
+  {
+    detail::grailer<Aut> grail{aut, out};
+    grail();
+    return out;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
       /// Bridge.
       template <typename Aut>
       std::ostream& grail(const automaton& aut, std::ostream& out)
