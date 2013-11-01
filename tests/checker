@@ -23,8 +23,8 @@ metmp=$me.tmp
 # Number of the current test.
 number=0
 
-# Exit status of this script.
-exit=true
+# Number of failures.
+nfailures=0
 
 
 ## ------------- ##
@@ -169,7 +169,7 @@ rst_pre ()
 # rst_expect BASE [DIFF-FLAGS]
 # ----------------------------
 # Compare expected output with effective, actual, output.
-# Set $exit to false if there is a failure.
+# Increment $nfailures if there is a failure.
 rst_expect ()
 {
   local base=$1
@@ -195,10 +195,6 @@ rst_expect ()
     rst_pre "Effective $base for $me"   $base.eff
     rst_pre "Diffs on $base for $me"    $base.diff
     res=1
-    # If exit is already set, e.g. to "exit SKIP", don't alter it.
-    case $exit in
-      ('' | true) exit=false;;
-    esac
   fi
   return $res
 }
@@ -291,7 +287,6 @@ status (FAIL)
   effective: $sta_eff
 
 EOF
-      exit=false
       fail=true
     fi
 
@@ -319,6 +314,7 @@ EOF
     test -n "$BASH_VERSION" \
       && prefix="${BASH_SOURCE[1]}:${BASH_LINENO[1]}:$prefix"
     tap_not_ok
+    : $((nfailures += 1))
   else
     prefix=
     tap_ok
@@ -333,7 +329,7 @@ EOF
 cleanup ()
 {
   local status=$?
-  case $DEBUG:$status in
+  case $DEBUG:$nfailures in
     '':0) cd $builddir
           rm -rf $metmp;;
   esac
