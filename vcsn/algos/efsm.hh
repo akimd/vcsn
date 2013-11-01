@@ -31,6 +31,7 @@ namespace vcsn
 
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
+      using state_t = typename automaton_t::state_t;
 
       efsmer(const automaton_t& aut, std::ostream& out)
         : super_type(aut, out)
@@ -54,9 +55,10 @@ namespace vcsn
         os_ << "EOFSM" << std::endl
             << std::endl;
 
-        os_ << "cat >transitions.fsm <<\\EOFSM" << std::endl;
+        os_ << "cat >transitions.fsm <<\\EOFSM";
         output_transitions_();
-        os_ << "EOFSM" << std::endl
+        os_ << std::endl
+            << "EOFSM" << std::endl
             << std::endl;
 
         // Some OpenFST tools seem to really require an output-symbol
@@ -80,7 +82,7 @@ namespace vcsn
 
       /// Return the label of transition \a t, record it for the input
       /// symbol lists.
-      std::string
+      virtual std::string
       label_of_(transition_t t)
       {
         /// FIXME: not very elegant, \\e should be treated elsewhere.
@@ -109,7 +111,6 @@ namespace vcsn
             os_ << '\t';
             ws.print(os_, aut_.weight_of(t));
           }
-        os_ << std::endl;
       }
 
       /// Output all the transitions, and final states.
@@ -120,42 +121,37 @@ namespace vcsn
         // spontaneous transitions.  Avoid this when possible.
         if (aut_.initial_transitions().size() != 1)
           for (auto t : aut_.initial_transitions())
-            output_transition_(t);
+            {
+              os_ << std::endl;
+              output_transition_(t);
+            }
+
         // We _must_ start by the initial state.
         {
-          // FIXME: Factor with outputter in grail.hh.
-          std::vector<transition_t> order;
-          for (auto t : aut_.transitions())
-            order.push_back(t);
-          std::sort(order.begin(), order.end(),
-                    // l < r?
-                    [this](transition_t l, transition_t r)
+          std::vector<state_t> states(std::begin(aut_.states()),
+                                      std::end(aut_.states()));
+          std::sort(begin(states), end(states),
+                    [this](state_t l, state_t r)
                     {
-                      if (aut_.src_of(l) == aut_.src_of(r))
-                        {
-                          if (label_of_(l) == label_of_(r))
-                            return aut_.dst_of(l) < aut_.dst_of(r);
-                          else
-                            return label_of_(l) < label_of_(r);
-                        }
-                      else if (aut_.is_initial(aut_.src_of(l)))
-                        return true;
-                      else if (aut_.is_initial(aut_.dst_of(l)))
-                        return false;
-                      else
-                        return aut_.src_of(l) < aut_.src_of(r);
+                      return (std::forward_as_tuple(!aut_.is_initial(l), l)
+                              < std::forward_as_tuple(!aut_.is_initial(r), r));
                     });
-          for (auto t : order)
-            output_transition_(t);
+          for (auto s: states)
+            this->output_state_(s);
         }
         for (auto t : aut_.final_transitions())
-          output_transition_(t);
+          {
+            os_ << std::endl;
+            output_transition_(t);
+          }
       }
 
       /// Output the mapping from label name, to label number.
       void output_input_labels_()
       {
         // Required to print all labels.
+        // FIXME: sorting the whole set of transitions.
+        // Instead, loop first one states, then on transitions.
         {
           std::vector<transition_t> v(std::begin(aut_.all_transitions()),
                                       std::end(aut_.all_transitions()));

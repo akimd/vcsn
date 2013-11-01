@@ -36,7 +36,7 @@ namespace vcsn
 
     protected:
       /// symbol lists.
-      std::string
+      virtual std::string
       label_of_(transition_t t)
       {
         const auto l = aut_.label_of(t);
@@ -44,6 +44,8 @@ namespace vcsn
           aut_.labelset()->is_one(l) ? "@epsilon" : aut_.labelset()->format(l);
       }
 
+      /// Output the transition \a t.  Do not insert eol.
+      /// "Src Label Dst".
       virtual void output_transition_(transition_t t)
       {
         os_ << states_[aut_.src_of(t)]
@@ -51,32 +53,32 @@ namespace vcsn
             << ' ' << states_[aut_.dst_of(t)];
       }
 
-      /// Output transitions, sorted lexicographically.
-      /// "Src Label Dst\n".
-      void output_transitions_()
+      /// Output transitions, sorted lexicographically on (Label, Dest).
+      void output_state_(const state_t s)
       {
-        std::vector<transition_t> order;
-        for (auto t : aut_.transitions())
-          order.push_back(t);
-        std::sort (order.begin(), order.end(),
-                   [this](transition_t l, transition_t r)
-                   {
-                     if (aut_.src_of(l) == aut_.src_of(r))
-                       {
-                         if (label_of_(l) == label_of_(r))
-                           return aut_.dst_of(l) < aut_.dst_of(r);
-                         else
-                           return label_of_(l) < label_of_(r);
-                       }
-                     else
-                       return aut_.src_of(l) < aut_.src_of(r);
-                   });
-
-        for (auto t : order)
+        std::vector<transition_t> ts;
+        for (auto t : aut_.out(s))
+          ts.push_back(t);
+        std::sort
+          (begin(ts), end(ts),
+           [this](transition_t l, transition_t r)
+           {
+             return (std::forward_as_tuple(label_of_(l), aut_.dst_of(l))
+                     < std::forward_as_tuple(label_of_(r), aut_.dst_of(r)));
+           });
+        for (auto t : ts)
           {
             os_ << std::endl;
             output_transition_(t);
           }
+      }
+
+      /// Output transitions, sorted lexicographically.
+      /// "Src Label Dst\n".
+      void output_transitions_()
+      {
+        for (auto s: aut_.states())
+          output_state_(s);
       }
 
       void output_finals_()
