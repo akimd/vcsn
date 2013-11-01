@@ -80,16 +80,13 @@ namespace vcsn
       /// final transitions).
       using label_names_t = std::map<std::string, unsigned>;
 
-      /// Return the label of transition \a t, record it for the input
-      /// symbol lists.
+      /// Return the label \a l, record it for the input symbol lists.
       virtual std::string
-      label_of_(transition_t t)
+      label_(const label_t& l)
       {
         /// FIXME: not very elegant, \\e should be treated elsewhere.
-        const auto l = aut_.label_of(t);
-        std::string res =
-          aut_.labelset()->is_special(l) ? "\\e" : aut_.labelset()->format(l);
-
+        std::string res = (aut_.labelset()->is_special(l) ? "\\e"
+                           : aut_.labelset()->format(l));
         auto insert = names_.emplace(res, name_);
         // If the label is fresh, prepare the next name.
         if (insert.second)
@@ -104,7 +101,7 @@ namespace vcsn
         os_ << states_[aut_.src_of(t)];
         if (aut_.dst_of(t) != aut_.post())
           os_ << '\t' << states_[aut_.dst_of(t)]
-              << '\t' << label_of_(t);
+              << '\t' << label_(aut_.label_of(t));
 
         if (show_one || !ws.is_one(aut_.weight_of(t)))
           {
@@ -149,19 +146,13 @@ namespace vcsn
       /// Output the mapping from label name, to label number.
       void output_input_labels_()
       {
-        // Required to print all labels.
-        // FIXME: sorting the whole set of transitions.
-        // Instead, loop first one states, then on transitions.
+        // Find all the labels, to number them.
         {
-          std::vector<transition_t> v(std::begin(aut_.all_transitions()),
-                                      std::end(aut_.all_transitions()));
-          std::sort(begin(v), end(v),
-            [this](transition_t l, transition_t r)
-            {
-              return aut_.label_of(l) < aut_.label_of(r);
-            });
-          for (auto t : v)
-            label_of_(t);
+          std::set<label_t> labels;
+          for (auto t : aut_.transitions())
+            labels.insert(aut_.label_of(t));
+          for (auto l: labels)
+            label_(l);
         }
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.

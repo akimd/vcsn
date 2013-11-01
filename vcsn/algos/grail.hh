@@ -22,6 +22,7 @@ namespace vcsn
     struct outputter
     {
       using automaton_t = Aut;
+      using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
       using transition_t = typename automaton_t::transition_t;
 
@@ -35,13 +36,12 @@ namespace vcsn
       }
 
     protected:
-      /// symbol lists.
+      /// Convert a label to its representation.
       virtual std::string
-      label_of_(transition_t t)
+      label_(const label_t& l)
       {
-        const auto l = aut_.label_of(t);
-        return
-          aut_.labelset()->is_one(l) ? "@epsilon" : aut_.labelset()->format(l);
+        return (aut_.labelset()->is_one(l) ? "@epsilon"
+                : aut_.labelset()->format(l));
       }
 
       /// Output the transition \a t.  Do not insert eol.
@@ -49,7 +49,7 @@ namespace vcsn
       virtual void output_transition_(transition_t t)
       {
         os_ << states_[aut_.src_of(t)]
-            << ' ' << label_of_(t)
+            << ' ' << label_(aut_.label_of(t))
             << ' ' << states_[aut_.dst_of(t)];
       }
 
