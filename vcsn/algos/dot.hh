@@ -4,15 +4,13 @@
 # include <algorithm>
 # include <iostream>
 # include <sstream>
-# include <unordered_map>
-# include <vector>
 # include <set>
 
 # include <vcsn/weights/polynomialset.hh>
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
-
+# include <vcsn/algos/grail.hh>
 # include <vcsn/misc/escape.hh>
 
 namespace vcsn
@@ -29,7 +27,7 @@ namespace vcsn
       using context_t = typename automaton_t::context_t;
       auto ps = polynomialset<context_t>{aut.context()};
 
-      // The main advantage of using entries instead of directly
+      // The main advantage of using polynomials instead of directly
       // iterating over aut.outin(s, d) is to get a result which is
       // sorted (hence more deterministic).
       auto entry = get_entry(aut, s, d);
@@ -41,57 +39,63 @@ namespace vcsn
     `-------------------------*/
 
     template <typename Aut>
-    struct dotter
+    class dotter: public outputter<Aut>
     {
-      using state_t = typename Aut::state_t;
+    private:
+      using super_type = outputter<Aut>;
+      using typename super_type::automaton_t;
+      using typename super_type::state_t;
+      using typename super_type::transition_t;
+      using typename super_type::weightset_t;
+      using typename super_type::weight_t;
+
+      using super_type::os_;
+      using super_type::aut_;
+      using super_type::states_;
+      using super_type::ws_;
+
+      using super_type::super_type;
+
       // Dot, by default, uses the X11 color naming scheme, whose "gray"
       // is really light (it looks almost blue in some cases).
       const char* gray = "color = DimGray";
 
-      std::ostream&
-      operator()(const Aut& aut, std::ostream& out)
+    public:
+      std::ostream& operator()()
       {
-        // Name all the states.
-        std::unordered_map<state_t, unsigned> names;
-        {
-          size_t num = 0;
-          for (auto s : aut.states())
-            names[s] = num++;
-        }
+        auto useful = useful_states(aut_);
 
-        auto useful = useful_states(aut);
-
-        out <<
+        os_ <<
           "digraph\n"
           "{\n"
-          "  vcsn_context = \"" << aut.context().vname() << "\"\n"
+          "  vcsn_context = \"" << aut_.context().vname() << "\"\n"
           "  rankdir = LR\n";
 
         // Output the pre-initial and post-final states.
-        if (!aut.initial_transitions().empty()
-            || !aut.final_transitions().empty())
+        if (!aut_.initial_transitions().empty()
+            || !aut_.final_transitions().empty())
           {
-            out <<
+            os_ <<
               "  {\n"
               "    node [style = invis, shape = none, label = \"\""
               ", width = 0, height = 0]\n";
             {
               // Sort by initial states.
               std::set<state_t> ss;
-              for (auto t: aut.initial_transitions())
-                ss.insert(aut.dst_of(t));
+              for (auto t: aut_.initial_transitions())
+                ss.insert(aut_.dst_of(t));
               for (auto s : ss)
-                out << "    I" << names[s] << std::endl;
+                os_ << "    I" << states_[s] << std::endl;
             }
             {
               // Sort by final states.
               std::set<state_t> ss;
-              for (auto t: aut.final_transitions())
-                ss.insert(aut.src_of(t));
+              for (auto t: aut_.final_transitions())
+                ss.insert(aut_.src_of(t));
               for (auto s : ss)
-                out << "    F" << names[s] << std::endl;
+                os_ << "    F" << states_[s] << std::endl;
             }
-            out << "  }\n";
+            os_ << "  }\n";
           }
 
         // Output all the states to make "print | read" idempotent.
@@ -103,65 +107,65 @@ namespace vcsn
         //
         // because 2 was already "declared", and dot does not associate
         // "color = gray" to it.
-        if (!aut.states().empty())
+        if (!aut_.states().empty())
           {
-            out << "  {" << std::endl
+            os_ << "  {" << std::endl
                 << "    node [shape = circle]" << std::endl;
-            for (auto s : aut.states())
+            for (auto s : aut_.states())
               {
-                out << "    " << names[s];
+                os_ << "    " << states_[s];
                 if (getenv("DEBUG"))
-                  out << " [label = \"" << names[s] << " (" << s << ")\"]";
+                  os_ << " [label = \"" << states_[s] << " (" << s << ")\"]";
                 if (!has(useful, s))
-                  out << " [" << gray << "]";
-                out << std::endl;
+                  os_ << " [" << gray << "]";
+                os_ << std::endl;
               }
-            out << "  }" << std::endl;
+            os_ << "  }" << std::endl;
           }
 
-        for (auto src : aut.all_states())
+        for (auto src : aut_.all_states())
           {
             // Sort by destination state.
             std::set<state_t> ds;
-            for (auto t: aut.all_out(src))
-              ds.insert(aut.dst_of(t));
+            for (auto t: aut_.all_out(src))
+              ds.insert(aut_.dst_of(t));
             for (auto dst: ds)
               {
-                if (src == aut.pre())
+                if (src == aut_.pre())
                   {
-                    unsigned n = names[dst];
-                    out << "  I" << n << " -> " << n;
+                    unsigned n = states_[dst];
+                    os_ << "  I" << n << " -> " << n;
                   }
-                else if (dst == aut.post())
+                else if (dst == aut_.post())
                   {
-                    unsigned n = names[src];
-                    out << "  " << n << " -> F" << n;
+                    unsigned n = states_[src];
+                    os_ << "  " << n << " -> F" << n;
                   }
                 else
                   {
-                    unsigned ns = names[src];
-                    unsigned nd = names[dst];
-                    out << "  " << ns << " -> " << nd;
+                    unsigned ns = states_[src];
+                    unsigned nd = states_[dst];
+                    os_ << "  " << ns << " -> " << nd;
                   }
-                std::string s = format_entry(aut, src, dst);
+                std::string s = format_entry(aut_, src, dst);
                 bool useless = !has(useful, src) || !has(useful, dst);
                 if (!s.empty() || useless)
                   {
-                    out << " [";
+                    os_ << " [";
                     const char* sep = "";
                     if (!s.empty())
                       {
-                        out << "label = \"" << str_escape(s) << "\"";
+                        os_ << "label = \"" << str_escape(s) << "\"";
                         sep = ", ";
                       }
                     if (useless)
-                      out << sep << gray;
-                    out << "]";
+                      os_ << sep << gray;
+                    os_ << "]";
                   }
-                out << "\n";
+                os_ << "\n";
               }
           }
-        return out << "}";
+        return os_ << "}";
       }
     };
   }
@@ -170,8 +174,8 @@ namespace vcsn
   std::ostream&
   dot(const Aut& aut, std::ostream& out)
   {
-    detail::dotter<Aut> dot;
-    return dot(aut, out);
+    detail::dotter<Aut> dot(aut, out);
+    return dot();
   }
 
   namespace dyn
