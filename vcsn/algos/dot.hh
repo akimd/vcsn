@@ -18,146 +18,160 @@
 namespace vcsn
 {
 
-  template <typename Aut>
-  std::string
-  format_entry(const Aut& aut,
-               typename Aut::state_t s, typename Aut::state_t d)
+  namespace detail
   {
-    using automaton_t = Aut;
-    using context_t = typename automaton_t::context_t;
-    auto ps = polynomialset<context_t>{aut.context()};
-
-    // The main advantage of using entries instead of directly
-    // iterating over aut.outin(s, d) is to get a result which is
-    // sorted (hence more deterministic).
-    auto entry = get_entry(aut, s, d);
-    return ps.format(entry, ", ");
-  }
-
-  /*-------------------------.
-  | dot(automaton, stream).  |
-  `-------------------------*/
-
-  template <class A>
-  std::ostream&
-  dot(const A& aut, std::ostream& out)
-  {
-    using state_t = typename A::state_t;
-    // Dot, by default, uses the X11 color naming scheme, whose "gray"
-    // is really light (it looks almost blue in some cases).
-    const char* gray = "color = DimGray";
-
-    // Name all the states.
-    std::unordered_map<state_t, unsigned> names;
+    template <typename Aut>
+    std::string
+    format_entry(const Aut& aut,
+                 typename Aut::state_t s, typename Aut::state_t d)
     {
-      size_t num = 0;
-      for (auto s : aut.states())
-        names[s] = num++;
+      using automaton_t = Aut;
+      using context_t = typename automaton_t::context_t;
+      auto ps = polynomialset<context_t>{aut.context()};
+
+      // The main advantage of using entries instead of directly
+      // iterating over aut.outin(s, d) is to get a result which is
+      // sorted (hence more deterministic).
+      auto entry = get_entry(aut, s, d);
+      return ps.format(entry, ", ");
     }
 
-    auto useful = useful_states(aut);
+    /*-------------------------.
+    | dot(automaton, stream).  |
+    `-------------------------*/
 
-    out <<
-      "digraph\n"
-      "{\n"
-      "  vcsn_context = \"" << aut.context().vname() << "\"\n"
-      "  rankdir = LR\n";
+    template <typename Aut>
+    struct dotter
+    {
+      using state_t = typename Aut::state_t;
+      // Dot, by default, uses the X11 color naming scheme, whose "gray"
+      // is really light (it looks almost blue in some cases).
+      const char* gray = "color = DimGray";
 
-    // Output the pre-initial and post-final states.
-    if (!aut.initial_transitions().empty()
-        || !aut.final_transitions().empty())
+      std::ostream&
+      operator()(const Aut& aut, std::ostream& out)
       {
+        // Name all the states.
+        std::unordered_map<state_t, unsigned> names;
+        {
+          size_t num = 0;
+          for (auto s : aut.states())
+            names[s] = num++;
+        }
+
+        auto useful = useful_states(aut);
+
         out <<
-          "  {\n"
-          "    node [style = invis, shape = none, label = \"\""
-          ", width = 0, height = 0]\n";
-        {
-          // Sort by initial states.
-          std::set<state_t> ss;
-          for (auto t: aut.initial_transitions())
-            ss.insert(aut.dst_of(t));
-          for (auto s : ss)
-            out << "    I" << names[s] << std::endl;
-        }
-        {
-          // Sort by final states.
-          std::set<state_t> ss;
-          for (auto t: aut.final_transitions())
-            ss.insert(aut.src_of(t));
-          for (auto s : ss)
-            out << "    F" << names[s] << std::endl;
-        }
-        out << "  }\n";
-      }
+          "digraph\n"
+          "{\n"
+          "  vcsn_context = \"" << aut.context().vname() << "\"\n"
+          "  rankdir = LR\n";
 
-    // Output all the states to make "print | read" idempotent.
-    //
-    // Put the useless ones in gray.  This does not work:
-    //
-    // { 0 1 2 }
-    // { node [color = gray] 2 }
-    //
-    // because 2 was already "declared", and dot does not associate
-    // "color = gray" to it.
-    if (!aut.states().empty())
-      {
-        out << "  {" << std::endl
-            << "    node [shape = circle]" << std::endl;
-        for (auto s : aut.states())
+        // Output the pre-initial and post-final states.
+        if (!aut.initial_transitions().empty()
+            || !aut.final_transitions().empty())
           {
-            out << "    " << names[s];
-            if (getenv("DEBUG"))
-              out << " [label = \"" << names[s] << " (" << s << ")\"]";
-            if (!has(useful, s))
-              out << " [" << gray << "]";
-            out << std::endl;
+            out <<
+              "  {\n"
+              "    node [style = invis, shape = none, label = \"\""
+              ", width = 0, height = 0]\n";
+            {
+              // Sort by initial states.
+              std::set<state_t> ss;
+              for (auto t: aut.initial_transitions())
+                ss.insert(aut.dst_of(t));
+              for (auto s : ss)
+                out << "    I" << names[s] << std::endl;
+            }
+            {
+              // Sort by final states.
+              std::set<state_t> ss;
+              for (auto t: aut.final_transitions())
+                ss.insert(aut.src_of(t));
+              for (auto s : ss)
+                out << "    F" << names[s] << std::endl;
+            }
+            out << "  }\n";
           }
-        out << "  }" << std::endl;
-      }
 
-    for (auto src : aut.all_states())
-      {
-        // Sort by destination state.
-        std::set<state_t> ds;
-        for (auto t: aut.all_out(src))
-          ds.insert(aut.dst_of(t));
-        for (auto dst: ds)
+        // Output all the states to make "print | read" idempotent.
+        //
+        // Put the useless ones in gray.  This does not work:
+        //
+        // { 0 1 2 }
+        // { node [color = gray] 2 }
+        //
+        // because 2 was already "declared", and dot does not associate
+        // "color = gray" to it.
+        if (!aut.states().empty())
           {
-            if (src == aut.pre())
+            out << "  {" << std::endl
+                << "    node [shape = circle]" << std::endl;
+            for (auto s : aut.states())
               {
-                unsigned n = names[dst];
-                out << "  I" << n << " -> " << n;
+                out << "    " << names[s];
+                if (getenv("DEBUG"))
+                  out << " [label = \"" << names[s] << " (" << s << ")\"]";
+                if (!has(useful, s))
+                  out << " [" << gray << "]";
+                out << std::endl;
               }
-            else if (dst == aut.post())
+            out << "  }" << std::endl;
+          }
+
+        for (auto src : aut.all_states())
+          {
+            // Sort by destination state.
+            std::set<state_t> ds;
+            for (auto t: aut.all_out(src))
+              ds.insert(aut.dst_of(t));
+            for (auto dst: ds)
               {
-                unsigned n = names[src];
-                out << "  " << n << " -> F" << n;
-              }
-            else
-              {
-                unsigned ns = names[src];
-                unsigned nd = names[dst];
-                out << "  " << ns << " -> " << nd;
-              }
-            std::string s = format_entry(aut, src, dst);
-            bool useless = !has(useful, src) || !has(useful, dst);
-            if (!s.empty() || useless)
-              {
-                out << " [";
-                const char* sep = "";
-                if (!s.empty())
+                if (src == aut.pre())
                   {
-                    out << "label = \"" << str_escape(s) << "\"";
-                    sep = ", ";
+                    unsigned n = names[dst];
+                    out << "  I" << n << " -> " << n;
                   }
-                if (useless)
-                  out << sep << gray;
-                out << "]";
+                else if (dst == aut.post())
+                  {
+                    unsigned n = names[src];
+                    out << "  " << n << " -> F" << n;
+                  }
+                else
+                  {
+                    unsigned ns = names[src];
+                    unsigned nd = names[dst];
+                    out << "  " << ns << " -> " << nd;
+                  }
+                std::string s = format_entry(aut, src, dst);
+                bool useless = !has(useful, src) || !has(useful, dst);
+                if (!s.empty() || useless)
+                  {
+                    out << " [";
+                    const char* sep = "";
+                    if (!s.empty())
+                      {
+                        out << "label = \"" << str_escape(s) << "\"";
+                        sep = ", ";
+                      }
+                    if (useless)
+                      out << sep << gray;
+                    out << "]";
+                  }
+                out << "\n";
               }
-            out << "\n";
           }
+        return out << "}";
       }
-    return out << "}";
+    };
+  }
+
+  template <typename Aut>
+  std::ostream&
+  dot(const Aut& aut, std::ostream& out)
+  {
+    detail::dotter<Aut> dot;
+    return dot(aut, out);
   }
 
   namespace dyn

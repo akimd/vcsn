@@ -87,7 +87,7 @@ namespace vcsn
                     << " edge"
                     << (ns == nd ? "[loop above]" : "")
                     << " node[above]"
-                    << " {$" << format_entry(aut_, src, dst) << "$}"
+                    << " {$" << detail::format_entry(aut_, src, dst) << "$}"
                     << " (" << nd << ");" << std::endl;
               }
           }
