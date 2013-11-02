@@ -40,8 +40,6 @@ namespace vcsn
         return read_efsm_file(f);
       else if (t == "fado")
         return read_fado_file(f);
-      else if (t == "grail")
-        return read_fado_file(f);
       throw std::runtime_error(t + ": unknown format");
     }
 

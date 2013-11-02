@@ -72,7 +72,7 @@ usage(const char* prog, int exit_status)
       "  -W            input is a weight\n"
       "  -e STRING     input is STRING\n"
       "  -f FILE       input is FILE\n"
-      "  -I FORMAT     input format (dot, fado, text)\n"
+      "  -I FORMAT     input format (dot, efsm, fado, text)\n"
       "  -O FORMAT     output format (dot, efsm, grail, info, list, null, text, tikz)\n"
       "  -o FILE       save output into FILE\n"
       "  -q            discard any output\n"
