@@ -35,14 +35,18 @@ namespace vcsn
 
       using super_type::os_;
       using super_type::aut_;
+      using super_type::states_;
       using super_type::ws_;
 
       using super_type::super_type;
 
-      void format(const std::string& kind, const weight_t& w,
-                  const std::string& opt = {})
+      /// Format a TikZ attribute.
+      /// \param kind  the attribute name (e.g., "initial").
+      /// \param w     the associated weight (e.g., initial weight).
+      /// \param opt   the associated weight (e.g., initial weight).
+      void format(const std::string& kind, const weight_t& w)
       {
-        os_ << "," << kind << opt;
+        os_ << "," << kind;
         if (ws_.show_one() || !ws_.is_one(w))
           os_ << "," << kind << " text=$" << ws_.format(w) << "$";
       }
@@ -56,35 +60,30 @@ namespace vcsn
           "% \\tikzstyle{accepting}=[accepting by arrow]\n";
 
         os_ << "\\begin{tikzpicture}[automaton]" << std::endl;
-        // Name all the states.
-        std::unordered_map<state_t, unsigned> names;
-        {
-          size_t num = 0;
-          for (auto s : aut_.states())
-            {
-              names[s] = num++;
-              os_ << "  \\node[state";
-              if (aut_.is_initial(s))
-                format("initial", aut_.get_initial_weight(s));
-              if (aut_.is_final(s))
-                format("accepting", aut_.get_final_weight(s));
-              os_ << "]"
-                  << " (" << names[s] << ")";
-              if (names[s])
-                os_ << " [right=of " << names[s] - 1 << "]";
-              os_ << " {$" << names[s] << "$};" << std::endl;
-            }
+
+        for (auto s : aut_.states())
+          {
+            os_ << "  \\node[state";
+            if (aut_.is_initial(s))
+              format("initial", aut_.get_initial_weight(s));
+            if (aut_.is_final(s))
+              format("accepting", aut_.get_final_weight(s));
+            os_ << "]"
+                << " (" << states_[s] << ")";
+            if (states_[s])
+              os_ << " [right=of " << states_[s] - 1 << "]";
+            os_ << " {$" << states_[s] << "$};" << std::endl;
         }
 
         for (auto src : aut_.states())
           {
-            unsigned ns = names[src];
+            unsigned ns = states_[src];
             std::set<state_t> ds;
             for (auto t: aut_.out(src))
               ds.insert(aut_.dst_of(t));
             for (auto dst: ds)
               {
-                unsigned nd = names[dst];
+                unsigned nd = states_[dst];
                 os_ << "  \\path[->] (" << ns << ")"
                     << " edge"
                     << (ns == nd ? "[loop above]" : "")

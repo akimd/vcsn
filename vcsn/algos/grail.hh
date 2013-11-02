@@ -93,13 +93,13 @@ namespace vcsn
           ss.push_back(states_[s]);
         std::sort(begin(ss), end(ss));
         for (auto s: ss)
-          this->os_ << ' ' << s;
+          os_ << ' ' << s;
       }
 
       void output_initials_()
       {
         std::vector<state_t> ss;
-        for (auto t: this->aut_.initial_transitions())
+        for (auto t: aut_.initial_transitions())
           ss.push_back(aut_.dst_of(t));
         list_states_(ss);
       }
@@ -107,7 +107,7 @@ namespace vcsn
       void output_finals_()
       {
         std::vector<unsigned> ss;
-        for (auto t: this->aut_.final_transitions())
+        for (auto t: aut_.final_transitions())
           ss.push_back(aut_.src_of(t));
         list_states_(ss);
       }
@@ -133,7 +133,7 @@ namespace vcsn
   {
 
     template <typename Aut>
-    struct fadoer: public outputter<Aut>
+    class fadoer: public outputter<Aut>
     {
       static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
                     "requires labels_are_(letters|nullable)");
@@ -143,21 +143,29 @@ namespace vcsn
 
       using super_type = outputter<Aut>;
 
+      using super_type::os_;
+      using super_type::aut_;
+      using super_type::ws_;
+      using super_type::output_initials_;
+      using super_type::output_finals_;
+      using super_type::output_transitions_;
+
       using super_type::super_type;
 
+    public:
       /// Actually output \a aut_ on \a os_.
       // http://www.dcc.fc.up.pt/~rvr/FAdoDoc/_modules/fa.html#saveToFile
       void operator()()
       {
-        bool is_deter = is_deterministic_(this->aut_);
-        this->os_ << (is_deter ? "@DFA" : "@NFA");
-        this->output_finals_();
+        bool is_deter = is_deterministic_(aut_);
+        os_ << (is_deter ? "@DFA" : "@NFA");
+        output_finals_();
         if (!is_deter)
           {
-            this->os_ << " *";
-            this->output_initials_();
+            os_ << " *";
+            output_initials_();
           }
-        this->output_transitions_();
+        output_transitions_();
       }
 
     private:
@@ -221,7 +229,7 @@ namespace vcsn
   {
     // https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf
     template <typename Aut>
-    struct grailer: public outputter<Aut>
+    class grailer: public outputter<Aut>
     {
       static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
                     "requires labels_are_(letters|nullable)");
@@ -231,29 +239,36 @@ namespace vcsn
 
       using super_type = outputter<Aut>;
 
-      using automaton_t = typename super_type::automaton_t;
-      using state_t = typename super_type::state_t;
-      using transition_t = typename super_type::transition_t;
+      using typename super_type::automaton_t;
+      using typename super_type::state_t;
+      using typename super_type::transition_t;
+
+      using super_type::os_;
+      using super_type::aut_;
+      using super_type::ws_;
+      using super_type::states_;
+      using super_type::output_transitions_;
 
       using super_type::super_type;
 
+    public:
       /// Actually output \a aut_ on \a os_.
       void operator()()
       {
         // Don't end with a \n.
         const char* sep = "";
-        for (auto t: this->aut_.initial_transitions())
+        for (auto t: aut_.initial_transitions())
           {
-            this->os_
+            os_
               << sep
-              << "(START) |- "  << this->states_[this->aut_.dst_of(t)];
+              << "(START) |- "  << states_[aut_.dst_of(t)];
             sep = "\n";
           }
-        this->output_transitions_();
-        for (auto t: this->aut_.final_transitions())
-          this->os_
+        output_transitions_();
+        for (auto t: aut_.final_transitions())
+          os_
             << std::endl
-            << this->states_[this->aut_.src_of(t)] <<  " -| (FINAL)";
+            << states_[aut_.src_of(t)] <<  " -| (FINAL)";
       }
     };
   }

@@ -21,18 +21,22 @@ namespace vcsn
 
     /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
     template <class Aut>
-    struct efsmer: public outputter<Aut>
+    class efsmer: public outputter<Aut>
     {
+    private:
       using automaton_t = Aut;
       using super_type = outputter<Aut>;
-      using super_type::aut_;
+
+      using typename super_type::label_t;
+      using typename super_type::transition_t;
+      using typename super_type::state_t;
+
       using super_type::os_;
+      using super_type::aut_;
+      using super_type::ws_;
       using super_type::states_;
 
-      using label_t = typename automaton_t::label_t;
-      using transition_t = typename automaton_t::transition_t;
-      using state_t = typename automaton_t::state_t;
-
+    public:
       efsmer(const automaton_t& aut, std::ostream& out)
         : super_type(aut, out)
       {
@@ -96,17 +100,16 @@ namespace vcsn
 
       void output_transition_(const transition_t t)
       {
-        const auto& ws = *aut_.weightset();
-        bool show_one = ws.show_one();
         os_ << states_[aut_.src_of(t)];
         if (aut_.dst_of(t) != aut_.post())
           os_ << '\t' << states_[aut_.dst_of(t)]
               << '\t' << label_(aut_.label_of(t));
 
-        if (show_one || !ws.is_one(aut_.weight_of(t)))
+        static bool show_one = ws_.show_one();
+        if (show_one || !ws_.is_one(aut_.weight_of(t)))
           {
             os_ << '\t';
-            ws.print(os_, aut_.weight_of(t));
+            ws_.print(os_, aut_.weight_of(t));
           }
       }
 
