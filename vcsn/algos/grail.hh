@@ -6,8 +6,8 @@
 
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/dyn/fwd.hh>
-
 # include <vcsn/misc/escape.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {
@@ -34,6 +34,7 @@ namespace vcsn
         , ws_(*aut_.weightset())
         , os_(out)
       {
+        // Name the states.
         unsigned s = 0;
         for (auto t: aut_.states())
           states_.emplace(t, s++);
@@ -55,6 +56,20 @@ namespace vcsn
         os_ << states_[aut_.src_of(t)]
             << ' ' << label_(aut_.label_of(t))
             << ' ' << states_[aut_.dst_of(t)];
+      }
+
+      /// The labels and weights of transitions from \a src to \a dst.
+      ///
+      /// The main advantage of using polynomials instead of directly
+      /// iterating over aut_.outin(src, dst) is to get a result which
+      /// is sorted (hence more deterministic).
+      std::string format_entry_(state_t src, state_t dst)
+      {
+        using context_t = typename automaton_t::context_t;
+        static auto ps = polynomialset<context_t>{aut_.context()};
+
+        auto entry = get_entry(aut_, src, dst);
+        return ps.format(entry, ", ");
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).

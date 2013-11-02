@@ -33,8 +33,9 @@ namespace vcsn
       using typename super_type::weightset_t;
       using typename super_type::weight_t;
 
-      using super_type::os_;
       using super_type::aut_;
+      using super_type::format_entry_;
+      using super_type::os_;
       using super_type::states_;
       using super_type::ws_;
 
@@ -88,7 +89,7 @@ namespace vcsn
                     << " edge"
                     << (ns == nd ? "[loop above]" : "")
                     << " node[above]"
-                    << " {$" << detail::format_entry(aut_, src, dst) << "$}"
+                    << " {$" << format_entry_(src, dst) << "$}"
                     << " (" << nd << ");" << std::endl;
               }
           }

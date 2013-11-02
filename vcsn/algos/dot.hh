@@ -6,8 +6,6 @@
 # include <sstream>
 # include <set>
 
-# include <vcsn/weights/polynomialset.hh>
-
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/grail.hh>
@@ -18,22 +16,6 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut>
-    std::string
-    format_entry(const Aut& aut,
-                 typename Aut::state_t s, typename Aut::state_t d)
-    {
-      using automaton_t = Aut;
-      using context_t = typename automaton_t::context_t;
-      auto ps = polynomialset<context_t>{aut.context()};
-
-      // The main advantage of using polynomials instead of directly
-      // iterating over aut.outin(s, d) is to get a result which is
-      // sorted (hence more deterministic).
-      auto entry = get_entry(aut, s, d);
-      return ps.format(entry, ", ");
-    }
-
     /*-------------------------.
     | dot(automaton, stream).  |
     `-------------------------*/
@@ -49,8 +31,9 @@ namespace vcsn
       using typename super_type::weightset_t;
       using typename super_type::weight_t;
 
-      using super_type::os_;
       using super_type::aut_;
+      using super_type::format_entry_;
+      using super_type::os_;
       using super_type::states_;
       using super_type::ws_;
 
@@ -147,7 +130,7 @@ namespace vcsn
                     unsigned nd = states_[dst];
                     os_ << "  " << ns << " -> " << nd;
                   }
-                std::string s = format_entry(aut_, src, dst);
+                std::string s = format_entry_(src, dst);
                 bool useless = !has(useful, src) || !has(useful, dst);
                 if (!s.empty() || useless)
                   {
