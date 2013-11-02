@@ -7,31 +7,18 @@ namespace vcsn
 {
   namespace dyn
   {
-    /*-------------.
-    | dot_stream.  |
-    `-------------*/
+    /*------.
+    | dot.  |
+    `------*/
 
-    REGISTER_DEFINE(dot_stream);
+    REGISTER_DEFINE(dot);
 
     std::ostream&
     dot(const automaton& aut, std::ostream& out)
     {
-      detail::dot_stream_registry().call(aut->vname(false),
-                                          aut, out);
+      detail::dot_registry().call(aut->vname(false),
+                                  aut, out);
       return out;
-    }
-
-    /*-------------.
-    | dot_string.  |
-    `-------------*/
-
-    REGISTER_DEFINE(dot_string);
-
-    std::string
-    dot(const automaton& aut)
-    {
-      return detail::dot_string_registry().call(aut->vname(false),
-                                                 aut);
     }
   }
 }

@@ -32,10 +32,10 @@ check_mutable_automaton()
   aut1.add_transition(s0, s1, "cd", ks_b.conv("wxyz"));
   aut1.add_transition(s1, s2, "cd");
   aut1.set_initial(s2, ks_b.conv("wxyz"));
-  std::cout << vcsn::dot(aut1) << '\n';
+  vcsn::dot(aut1, std::cout) << '\n';
 
   auto aut2 = vcsn::transpose(aut1);
-  std::cout << vcsn::dot(aut2) << '\n';
+  vcsn::dot(aut2, std::cout) << '\n';
 
 # define ASSERT_WEIGHT(Aut, Src, Dst, Lbl, Wgt)                         \
   ASSERT_EQ(Aut.weightset()                                             \
@@ -53,7 +53,13 @@ check_mutable_automaton()
     // Wrap a const automaton, and make sure it works properly.
     const auto& caut1 = aut1;
     auto caut2 = vcsn::transpose(caut1);
-    ASSERT_EQ(vcsn::dot(caut2), vcsn::dot(aut2));
+    std::ostringstream os;
+    vcsn::dot(caut2, os) << std::endl;
+    std::string s1 = os.str();
+    os.str("");
+    vcsn::dot(aut2, os) << std::endl;
+    std::string s2 = os.str();
+    ASSERT_EQ(s1, s2);
   }
 
   // Now change the transposed automaton, and check the modifications
@@ -63,7 +69,7 @@ check_mutable_automaton()
   aut2.del_state(s2);
   aut2.set_initial(s1);
 
-  std::cout << vcsn::dot(aut1) << '\n';
+  vcsn::dot(aut1, std::cout) << '\n';
   return nerrs;
 }
 

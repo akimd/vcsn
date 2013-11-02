@@ -461,7 +461,7 @@ namespace vcsn
                 std::cerr << std::endl;
               }
             if (4 < debug_)
-              std::cerr << dot(aut_) << std::endl;
+              dot(aut_, std::cerr) << std::endl;
             if (2 < debug_)
               std::cerr << std::endl;
           }

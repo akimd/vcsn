@@ -157,45 +157,13 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
-      std::ostream& dot_stream(const automaton& aut, std::ostream& out)
+      std::ostream& dot(const automaton& aut, std::ostream& out)
       {
         return dot(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(dot_stream,
+      REGISTER_DECLARE(dot,
                        (const automaton& aut, std::ostream& out) -> std::ostream&);
-    }
-  }
-
-
-  /*-----------------.
-  | dot(automaton).  |
-  `-----------------*/
-
-  /// The automaton in Dot as a string.  Exact type.
-  template <class A>
-  inline
-  std::string
-  dot(const A& aut)
-  {
-    std::ostringstream o;
-    dot(aut, o);
-    return o.str();
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut>
-      std::string dot_string(const automaton& aut)
-      {
-        return dot(aut->as<Aut>());
-      }
-
-      REGISTER_DECLARE(dot_string,
-                       (const automaton& aut) -> std::string);
     }
   }
 }

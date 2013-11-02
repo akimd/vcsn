@@ -50,7 +50,7 @@ check_various(const context_t& ctx)
   int v = aut.add_weight(aut.set_transition(s1, s1, 'd', 2), 40);
   ASSERT_EQ(v, 42);
   aut.set_transition(s1, s3, 'd', 1);
-  std::cout << vcsn::dot(aut) << '\n';
+  vcsn::dot(aut, std::cout) << '\n';
   ASSERT_EQ(aut.num_states(), 3u);
   ASSERT_EQ(aut.num_transitions(), 5u);
 
@@ -74,14 +74,14 @@ check_various(const context_t& ctx)
     }
 
   aut.add_transition(s1, s1, 'd', -42);
-  std::cout << vcsn::dot(aut) << '\n';
+  vcsn::dot(aut, std::cout) << '\n';
   auto tj = aut.outin(s1, s1);
   assert(tj.begin() == tj.end());
   ASSERT_EQ(aut.num_states(), 3u);
   ASSERT_EQ(aut.num_transitions(), 4u);
 
   aut.del_state(s1);
-  std::cout << vcsn::dot(aut) << '\n';
+  vcsn::dot(aut, std::cout) << '\n';
   assert(!aut.has_state(s1));
   assert(aut.has_state(s2));
   assert(aut.has_state(s3));
@@ -91,7 +91,7 @@ check_various(const context_t& ctx)
 
   aut.set_transition(s2, s3, 'a', 0);
 
-  std::cout << vcsn::dot(aut) << '\n';
+  vcsn::dot(aut, std::cout) << '\n';
   ASSERT_EQ(aut.num_states(), 2u);
   ASSERT_EQ(aut.num_transitions(), 0u);
   return nerrs;

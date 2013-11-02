@@ -65,10 +65,7 @@ namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
   MAYBE_EXTERN template                                                 \
-  LIBVCSN_API std::ostream& Format<Aut>(const Aut& aut, std::ostream& out); \
-                                                                        \
-  MAYBE_EXTERN template                                                 \
-  LIBVCSN_API std::string Format<Aut>(const Aut& aut);
+  LIBVCSN_API std::ostream& Format<Aut>(const Aut& aut, std::ostream& out)
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
@@ -91,14 +88,9 @@ namespace vcsn
   (dot, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);     \
                                                                         \
   /* efsm. */                                                           \
-  MAYBE_EXTERN template                                                 \
-  std::ostream& efsm<mutable_automaton<Ctx>>                            \
-  (const mutable_automaton<Ctx>& aut, std::ostream& out);               \
-  MAYBE_EXTERN template                                                 \
-  std::ostream&                                                         \
-  efsm<vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>>       \
-  (const vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>& aut,\
-   std::ostream& out);                                                  \
+  VCSN_CTX_INSTANTIATE_PRINT(efsm, mutable_automaton<Ctx>);             \
+  VCSN_CTX_INSTANTIATE_PRINT                                            \
+  (efsm, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);    \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -122,10 +114,7 @@ namespace vcsn
   class rat::standard_visitor<mutable_automaton<Ctx>, Ctx>;             \
                                                                         \
   /* tikz. */                                                           \
-  MAYBE_EXTERN template                                                 \
-  std::ostream&                                                         \
-  tikz<mutable_automaton<Ctx>>(const mutable_automaton<Ctx>& aut,       \
-                               std::ostream& out);                      \
+  VCSN_CTX_INSTANTIATE_PRINT(tikz, mutable_automaton<Ctx>);             \
                                                                         \
   /* transpose. */                                                      \
   MAYBE_EXTERN template                                                 \
@@ -271,10 +260,8 @@ namespace vcsn
         REGISTER2(concatenate, aut_t, aut_t);
         REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
-        REGISTER(dot_stream, aut_t);
-        REGISTER(dot_stream, taut_t);
-        REGISTER(dot_string, aut_t);
-        REGISTER(dot_string, taut_t);
+        REGISTER(dot, aut_t);
+        REGISTER(dot, taut_t);
         REGISTER(efsm, aut_t);
         REGISTER(efsm, taut_t);
         REGISTER(expand, rs_t);
