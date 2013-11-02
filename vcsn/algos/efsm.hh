@@ -23,13 +23,12 @@ namespace vcsn
     template <class Aut>
     class efsmer: public outputter<Aut>
     {
-    private:
+    protected:
       using automaton_t = Aut;
       using super_type = outputter<Aut>;
 
       using typename super_type::label_t;
       using typename super_type::transition_t;
-      using typename super_type::state_t;
 
       using super_type::os_;
       using super_type::aut_;
@@ -37,6 +36,8 @@ namespace vcsn
       using super_type::states_;
 
     public:
+      using typename super_type::state_t;
+
       efsmer(const automaton_t& aut, std::ostream& out)
         : super_type(aut, out)
       {

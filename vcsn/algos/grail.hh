@@ -21,14 +21,10 @@ namespace vcsn
     template <typename Aut>
     class outputter
     {
-    public:
+    protected:
       using automaton_t = Aut;
-      using label_t = typename automaton_t::label_t;
-      using state_t = typename automaton_t::state_t;
-      using transition_t = typename automaton_t::transition_t;
-      using weightset_t = typename automaton_t::weightset_t;
-      using weight_t = typename automaton_t::weight_t;
 
+    public:
       outputter(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
         , ws_(*aut_.weightset())
@@ -40,7 +36,18 @@ namespace vcsn
           states_.emplace(t, s++);
       }
 
+      // Should not be public, but needed by GCC 4.8.1.
+      // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58972
+      using state_t = typename automaton_t::state_t;
+
     protected:
+      using label_t = typename automaton_t::label_t;
+      using transition_t = typename automaton_t::transition_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename automaton_t::weight_t;
+
+      using states_t = std::vector<state_t>;
+
       /// Convert a label to its representation.
       virtual std::string
       label_(const label_t& l)
@@ -100,31 +107,31 @@ namespace vcsn
           output_state_(s);
       }
 
-      /// List states in \a states, preceded by ' '.
-      void list_states_(const std::vector<state_t>& states)
+      /// List names of states in \a ss, preceded by ' '.
+      void list_states_(const states_t& ss)
       {
-        std::vector<unsigned> ss;
-        for (auto s: states)
-          ss.push_back(states_[s]);
-        std::sort(begin(ss), end(ss));
         for (auto s: ss)
-          os_ << ' ' << s;
+          os_ << ' ' << states_[s];
       }
 
-      void output_initials_()
+      /// The list of initial states, sorted.
+      states_t initials_()
       {
-        std::vector<state_t> ss;
+        states_t res;
         for (auto t: aut_.initial_transitions())
-          ss.push_back(aut_.dst_of(t));
-        list_states_(ss);
+          res.emplace_back(aut_.dst_of(t));
+        std::sort(begin(res), end(res));
+        return res;
       }
 
-      void output_finals_()
+      /// The list of final states, sorted.
+      states_t finals_()
       {
-        std::vector<unsigned> ss;
+        states_t res;
         for (auto t: aut_.final_transitions())
-          ss.push_back(aut_.src_of(t));
-        list_states_(ss);
+          res.emplace_back(aut_.src_of(t));
+        std::sort(begin(res), end(res));
+        return res;
       }
 
       /// The automaton we have to output.
@@ -158,12 +165,13 @@ namespace vcsn
 
       using super_type = outputter<Aut>;
 
-      using super_type::os_;
       using super_type::aut_;
-      using super_type::ws_;
-      using super_type::output_initials_;
-      using super_type::output_finals_;
+      using super_type::finals_;
+      using super_type::initials_;
+      using super_type::list_states_;
+      using super_type::os_;
       using super_type::output_transitions_;
+      using super_type::ws_;
 
       using super_type::super_type;
 
@@ -174,11 +182,11 @@ namespace vcsn
       {
         bool is_deter = is_deterministic_(aut_);
         os_ << (is_deter ? "@DFA" : "@NFA");
-        output_finals_();
+        list_states_(finals_());
         if (!is_deter)
           {
             os_ << " *";
-            output_initials_();
+            list_states_(initials_());
           }
         output_transitions_();
       }
@@ -258,11 +266,13 @@ namespace vcsn
       using typename super_type::state_t;
       using typename super_type::transition_t;
 
-      using super_type::os_;
       using super_type::aut_;
-      using super_type::ws_;
-      using super_type::states_;
+      using super_type::finals_;
+      using super_type::initials_;
+      using super_type::os_;
       using super_type::output_transitions_;
+      using super_type::states_;
+      using super_type::ws_;
 
       using super_type::super_type;
 
@@ -272,18 +282,16 @@ namespace vcsn
       {
         // Don't end with a \n.
         const char* sep = "";
-        for (auto t: aut_.initial_transitions())
+        for (auto s: initials_())
           {
-            os_
-              << sep
-              << "(START) |- "  << states_[aut_.dst_of(t)];
+            os_ << sep
+                << "(START) |- "  << states_[s];
             sep = "\n";
           }
         output_transitions_();
-        for (auto t: aut_.final_transitions())
-          os_
-            << std::endl
-            << states_[aut_.src_of(t)] <<  " -| (FINAL)";
+        for (auto s: finals_())
+          os_ << std::endl
+              << states_[s] <<  " -| (FINAL)";
       }
     };
   }

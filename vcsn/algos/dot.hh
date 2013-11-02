@@ -32,7 +32,9 @@ namespace vcsn
       using typename super_type::weight_t;
 
       using super_type::aut_;
+      using super_type::finals_;
       using super_type::format_entry_;
+      using super_type::initials_;
       using super_type::os_;
       using super_type::states_;
       using super_type::ws_;
@@ -62,22 +64,10 @@ namespace vcsn
               "  {\n"
               "    node [style = invis, shape = none, label = \"\""
               ", width = 0, height = 0]\n";
-            {
-              // Sort by initial states.
-              std::set<state_t> ss;
-              for (auto t: aut_.initial_transitions())
-                ss.insert(aut_.dst_of(t));
-              for (auto s : ss)
-                os_ << "    I" << states_[s] << std::endl;
-            }
-            {
-              // Sort by final states.
-              std::set<state_t> ss;
-              for (auto t: aut_.final_transitions())
-                ss.insert(aut_.src_of(t));
-              for (auto s : ss)
-                os_ << "    F" << states_[s] << std::endl;
-            }
+            for (auto s : initials_())
+              os_ << "    I" << states_[s] << std::endl;
+            for (auto s : finals_())
+              os_ << "    F" << states_[s] << std::endl;
             os_ << "  }\n";
           }
 
