@@ -8,6 +8,7 @@
 # include <vector>
 
 // FIXME: factor dot and tikz.
+# include <vcsn/algos/grail.hh> // outputter
 # include <vcsn/algos/dot.hh> // format_entry
 
 # include <vcsn/dyn/fwd.hh>
@@ -22,20 +23,21 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    class tikzer
+    class tikzer: public outputter<Aut>
     {
     public:
-      using automaton_t = Aut;
-      using state_t = typename automaton_t::state_t;
-      using transition_t = typename automaton_t::transition_t;
-      using weightset_t = typename automaton_t::weightset_t;
-      using weight_t = typename automaton_t::weight_t;
+      using super_type = outputter<Aut>;
+      using typename super_type::automaton_t;
+      using typename super_type::state_t;
+      using typename super_type::transition_t;
+      using typename super_type::weightset_t;
+      using typename super_type::weight_t;
 
-      tikzer(const automaton_t& aut, std::ostream& out)
-        : aut_(aut)
-        , ws_(*aut_.weightset())
-        , os_(out)
-      {}
+      using super_type::os_;
+      using super_type::aut_;
+      using super_type::ws_;
+
+      using super_type::super_type;
 
       void format(const std::string& kind, const weight_t& w,
                   const std::string& opt = {})
@@ -93,11 +95,6 @@ namespace vcsn
           }
         os_ << "\\end{tikzpicture}";
       }
-
-    private:
-      const automaton_t& aut_;
-      const weightset_t& ws_;
-      std::ostream& os_;
     };
   }
 

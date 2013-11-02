@@ -19,15 +19,19 @@ namespace vcsn
     | outputter.  |
     `------------*/
     template <typename Aut>
-    struct outputter
+    class outputter
     {
+    public:
       using automaton_t = Aut;
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
       using transition_t = typename automaton_t::transition_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename automaton_t::weight_t;
 
       outputter(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
+        , ws_(*aut_.weightset())
         , os_(out)
       {
         unsigned s = 0;
@@ -110,8 +114,11 @@ namespace vcsn
 
       /// The automaton we have to output.
       const automaton_t& aut_;
-
+      /// Short-hand to the weightset.
+      const weightset_t& ws_;
+      /// Output stream.
       std::ostream& os_;
+      /// Names (natural numbers) to use for the states.
       std::map<state_t, unsigned> states_;
     };
 

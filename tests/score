@@ -42,6 +42,8 @@ run ()
 run "vcsn-standard -Ee 'a?{500}' -O dot  >/dev/null"
 run "vcsn-standard -Ee 'a?{500}' -O efsm >/dev/null"
 run "vcsn-standard -Ee 'a?{500}' -O fado >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O grail>/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O tikz >/dev/null"
 
 # Determinization of ladybird 20.
 run 'vcsn-ladybird 21 | vcsn-determinize -q'
