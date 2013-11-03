@@ -33,5 +33,4 @@ check ()
 
 # A Boolean automaton.
 check $top_srcdir/share/vcsn/lal_char_b/a1.gv $medir/a1.efsm
-# FIXME: A Z automaton: does not work yet, we cannot read back.
-# check $top_srcdir/share/vcsn/lal_char_z/binary.gv $medir/binary.efsm
+check $top_srcdir/share/vcsn/lal_char_z/binary.gv $medir/binary.efsm

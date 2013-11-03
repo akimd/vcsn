@@ -77,41 +77,47 @@ namespace vcsn
         // Eat empty lines
         SKIP_SPACES();
         std::string line;
-        string_t s1, s2, l;
+        string_t s, d, l, w;
         std::getline(*fin.get(), line, '\n');
         std::istringstream ss{line};
-        ss >> s1 >> s2 >> l;
-        edit.add_initial(s1, string_t{});
-        if (ss.fail())
-          edit.add_final(s1, string_t{});
+        ss >> s >> d >> l >> w;
+        edit.add_initial(s);
+        if (l == one)
+          l = "\\e";
+        if (l.get().empty())
+          // FinalState [Weight]
+          edit.add_final(s, d);
         else
-          edit.add_entry(s1, s2, l);
+          // Src Dst Lbl Wgt
+          edit.add_transition(s, d, l, w);
       }
 
       {
-        // Line: Source Destination Label.
+        // Line: Source Destination Label [Weight].
         std::string line;
-        string_t s1, s2, l;
         do
           {
             std::getline(*fin.get(), line, '\n');
+            if (line == "EOFSM")
+              break;
             std::istringstream ss{line};
             // Eat blank lines.
             SKIP_SPACES();
-            ss >> s1 >> s2 >> l;
-            if (s1 == "EOFSM")
-              break;
-            if (ss.fail())
-              edit.add_final(s1, string_t{});
-            else
-              edit.add_entry(s1, s2, l);
+            string_t s, d, l, w;
+            ss >> s >> d >> l >> w;
             if (l == one)
               l = "\\e";
+            if (l.get().empty())
+              // FinalState [Weight]
+              edit.add_final(s, d);
+            else
+              // Src Dst Lbl Wgt
+              edit.add_transition(s, d, l, w);
           } while (fin.get()->good());
 #undef SKIP_SPACES
 
-        if (s1 != "EOFSM")
-          throw std::runtime_error(":bad input format, missing EOFSM");
+        if (line != "EOFSM")
+          throw std::runtime_error(file + ":bad input format, missing EOFSM");
       }
       return edit.result();
     }

@@ -10,34 +10,66 @@ namespace vcsn
   | lazy_automaton_editor.  |
   `------------------------*/
 
+  void
+  lazy_automaton_editor::add_state(string_t s)
+  {
+    states_.emplace(s);
+  }
+
+  void
+  lazy_automaton_editor::add_initial(string_t s, string_t w)
+  {
+    add_state(s);
+    initial_states_.emplace_back(s, w);
+  }
+
+  void
+  lazy_automaton_editor::add_final(string_t s, string_t w)
+  {
+    add_state(s);
+    final_states_.emplace_back(s, w);
+  }
+
   /// Add transitions from \a src to \a dst, labeled by \a entry.
   void
-  lazy_automaton_editor::add_entry(const string_t& src,
-                                   const string_t& dst,
-                                   const string_t& entry)
+  lazy_automaton_editor::add_transition(string_t src,
+                                        string_t dst,
+                                        string_t lbl,
+                                        string_t weight)
   {
-    transitions_.emplace_back(src, entry, dst);
-    if (entry == "\\e")
+    add_state(src);
+    add_state(dst);
+    transitions_.emplace_back(src, dst, lbl, weight);
+    if (lbl == "\\e")
+      is_lan_ = true;
+    else
       {
-        is_lan_ = true;
-        return;
+        for (auto c: lbl.get())
+          letters_.emplace(c);
+        if (1 < lbl.get().size())
+          is_law_ = true;
       }
-    // We can't iterate on string_t
-    std::string s = entry;
-    for (auto c: s)
-      letters_.emplace(c);
-    if (1 < entry.get().size())
-      is_law_ = true;
+    if (!weight.get().empty())
+      {
+        weighted_ = true;
+        if (!real_
+            && weight.get().find('.') != std::string::npos)
+          real_ = true;
+      }
   }
 
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
-    std::string ctx = is_law_ ? "law" : (is_lan_ ? "lan" : "lal");
+    std::string ctx = (is_law_ ? "law" :
+                       is_lan_ ? "lan" : "lal");
     ctx += "_char(";
     for (auto l: letters_)
       ctx += l;
-    ctx += ")_b";
+    ctx += ")_";
+    ctx += (real_ ? "r"
+            : weighted_ ? "z"
+            : "b");
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
 
@@ -45,7 +77,8 @@ namespace vcsn
       edit->add_state(s);
 
     for (auto t: transitions_)
-      edit->add_entry(std::get<0>(t), std::get<2>(t), std::get<1>(t));
+      edit->add_transition(std::get<0>(t), std::get<1>(t),
+                           std::get<2>(t), std::get<3>(t));
 
     for (auto p: initial_states_)
       edit->add_initial(p.first, p.second);

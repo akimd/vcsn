@@ -6,11 +6,12 @@ syms=symbols.txt
 trans=transitions.fsm
 fstprint --acceptor --save_isymbols=$syms "$@" > $trans
 
+# Sort symbols per number, not per value.
 cat <<EOF
 #! /bin/sh
 
 cat >symbols.txt <<\EOFSM
-$(cat $syms)
+$(sort -n -k2 $syms)
 EOFSM
 
 cat >transitions.fsm <<\EOFSM

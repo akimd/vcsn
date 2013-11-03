@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_EDIT_AUTOMATON_HH
 # define VCSN_ALGOS_EDIT_AUTOMATON_HH
 
+# include <set>
 # include <tuple>
 # include <unordered_map>
 # include <utility>
@@ -31,20 +32,26 @@ namespace vcsn
       boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
     virtual ~automaton_editor() {}
-    virtual void add_initial(const string_t& s, const string_t& w) = 0;
-    virtual void add_final(const string_t& s, const string_t& w) = 0;
+    virtual void add_initial(string_t s, string_t w) = 0;
+    virtual void add_final(string_t s, string_t w) = 0;
 
-    virtual void add_state(const string_t& s) = 0;
+    virtual void add_state(string_t s) = 0;
 
     /// Declare that \a s denotes the preinitial state in entries.
-    virtual void add_pre(const string_t& s) = 0;
+    virtual void add_pre(string_t s) = 0;
 
     /// Declare that \a s denotes the postfinal state in entries.
-    virtual void add_post(const string_t& s) = 0;
+    virtual void add_post(string_t s) = 0;
 
     /// Add an entry from \a src to \a dst, with value \a entry.
-    virtual void add_entry(const string_t& src, const string_t& dst,
-                           const string_t& entry) = 0;
+    virtual void add_entry(string_t src, string_t dst,
+                           string_t entry) = 0;
+
+    /// Add a transition from \a src to \a dst.
+    virtual void add_transition(string_t src, string_t dst,
+                                string_t label,
+                                string_t weight = {}) = 0;
+
     /// The final result.
     virtual dyn::automaton result() = 0;
     /// Forget about the current automaton, but do not free it.
@@ -79,7 +86,10 @@ namespace vcsn
     using context_t = typename automaton_t::context_t;
     using entry_t = typename polynomialset<context_t>::value_t;
     using state_t = typename automaton_t::state_t;
+    using label_t = typename automaton_t::label_t;
+    using weight_t = typename automaton_t::weight_t;
 
+    /// State name -> state handle.
     using state_map = std::unordered_map<string_t, state_t>;
     using entry_map = std::unordered_map<string_t, entry_t>;
 
@@ -96,45 +106,50 @@ namespace vcsn
 
     /// Register the existence of state named \a s.
     virtual void
-    add_state(const string_t& s) override final
+    add_state(string_t s) override final
     {
       state_(s);
     }
 
     /// Register that state named \a s is preinitial.
     virtual void
-    add_pre(const string_t& s) override final
+    add_pre(string_t s) override final
     {
       smap_.emplace(s, res_->pre());
     }
 
     /// Register that state named \a s is postfinal.
     virtual void
-    add_post(const string_t& s) override final
+    add_post(string_t s) override final
     {
       smap_.emplace(s, res_->post());
     }
 
     virtual void
-    add_initial(const string_t& s, const string_t& weight = {}) override final
+    add_initial(string_t s, string_t weight = {}) override final
     {
-      auto w = (weight.get().empty() ? res_->weightset()->one()
-                : res_->weightset()->conv(weight));
-      res_->add_initial(state_(s), w);
+      res_->add_initial(state_(s), weight_(weight));
     }
 
     virtual void
-    add_final(const string_t& s, const string_t& weight = {}) override final
+    add_final(string_t s, string_t weight = {}) override final
     {
-      auto w = (weight.get().empty() ? res_->weightset()->one()
-                : res_->weightset()->conv(weight));
-      res_->add_final(state_(s), w);
+      res_->add_final(state_(s), weight_(weight));
+    }
+
+    virtual void
+    add_transition(string_t s, string_t d,
+                   string_t label,
+                   string_t weight = {}) override final
+    {
+      res_->add_transition(state_(s), state_(d),
+                           label_(label), weight_(weight));
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
     virtual void
-    add_entry(const string_t& src, const string_t& dst,
-              const string_t& entry) override final
+    add_entry(string_t src, string_t dst,
+              string_t entry) override final
     {
       auto s = state_(src);
       auto d = state_(dst);
@@ -191,9 +206,25 @@ namespace vcsn
     }
 
   private:
+    /// Convert a label string to its value.
+    label_t
+    label_(string_t l)
+    {
+      static const auto& ls = *res_->labelset();
+      return ls.conv(l);
+    }
+
+    /// Convert a weight string to its value.
+    weight_t
+    weight_(string_t w)
+    {
+      static const auto& ws = *res_->weightset();
+      return w.get().empty() ? ws.one() : ws.conv(w);
+    }
+
     /// Convert a state name to a state handler.
     state_t
-    state_(const string_t& k)
+    state_(string_t k)
     {
       auto p = smap_.emplace(k, Aut::null_state());
       if (p.second)
@@ -230,24 +261,15 @@ namespace vcsn
     using string_t = automaton_editor::string_t;
 
   public:
-    void add_state(const string_t& s)
-    {
-      states_.emplace_back(s);
-    }
+    void add_state(string_t s);
 
-    void add_initial(const string_t& s, const string_t& w = {})
-    {
-      initial_states_.emplace_back(s, w);
-    }
+    void add_initial(string_t s, string_t w = {});
 
-    void add_final(const string_t& s, const string_t& w = {})
-    {
-      final_states_.emplace_back(s, w);
-    }
+    void add_final(string_t s, string_t w = {});
 
-    /// Add transitions from \a src to \a dst, labeled by \a entry.
-    void add_entry(const string_t& src, const string_t& dst,
-                   const string_t& entry);
+    /// Add transitions from \a src to \a dst, labeled by \a lbl.
+    void add_transition(string_t src, string_t dst,
+                        string_t lbl, string_t w = {});
 
     /// Return the built automaton.
     dyn::automaton result();
@@ -256,13 +278,26 @@ namespace vcsn
     void reset();
 
   private:
+    /// Whether we saw a "\e" as label.
     bool is_lan_ = false;
+    /// Whether we saw a multi-chars label.
     bool is_law_ = false;
+    /// The collected letters from the labels.
     std::set<char> letters_;
-    std::vector<std::tuple<string_t, string_t, string_t>> transitions_;
+    /// Whether we saw a non-empty weight.
+    bool weighted_ = false;
+    /// Whether we saw a period in a the weight.
+    bool real_ = false;
+    /// The collected transitions: (Source, Destination, Label, Weight).
+    std::vector<std::tuple<string_t, string_t, string_t, string_t>> transitions_;
+    /// The collected initial states: (State, Weight).
     std::vector<std::pair<string_t, string_t>> initial_states_;
+    /// The collected final states: (State, Weight).
     std::vector<std::pair<string_t, string_t>> final_states_;
-    std::vector<string_t> states_;
+    /// The collected state names.  Keep sorted as an attempt to
+    /// keep their order ("0" -> 0, etc.).
+    // FIXME: we'd need to have "11" > "2", which is not the case here.
+    std::set<string_t> states_;
   };
 
   namespace dyn

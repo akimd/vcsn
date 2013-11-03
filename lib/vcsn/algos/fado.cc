@@ -44,10 +44,12 @@ namespace vcsn
                                    + ": bad automaton kind: " + kind);
       }
 
+      vcsn::lazy_automaton_editor edit;
+
       char c;
+      // Whether we process initial states.
       bool init = false;
       std::string state;
-      vcsn::lazy_automaton_editor edit;
       while ((c = fin.get()->get()) != '\n' && !fin.get()->eof())
         if (c == ' ' || c == '\t')
           {
@@ -85,13 +87,13 @@ namespace vcsn
 
         // First state is our initial state if not declared before by "*".
         if (!init && !fin.get()->eof())
-          edit.add_initial(s1, string_t{});
+          edit.add_initial(s1);
 
         while (!fin.get()->eof())
           {
             if (l == "@epsilon")
               l = "\\e";
-            edit.add_entry(s1, s2, l);
+            edit.add_transition(s1, s2, l);
             *fin.get() >> s1 >> l >> s2;
           }
       }
