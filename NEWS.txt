@@ -5,6 +5,20 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-11-25
+** minimize: new algorithm (static, dynamic, TAF-Kit)
+Given a deterministic Boolean lal automaton, compute its minimal equivalent
+automaton using Moore's algorithm.
+
+Example:
+  $ vcsn standard -e '(a+b+c+d){100}' -o 100.gv
+  $ vcsn cat -f 100.gv -O info | grep 'number of states'
+  number of states: 401
+  $ vcsn minimize -f 100.gv -o 100min.gv
+  $ vcsn cat -f 100min.gv -O info | grep 'number of states'
+  number of states: 101
+  $ vcsn are-equivalent -f 100.gv 100min.gv
+  true
+
 ** fraction parsing bug fixes
 Negative denominators used to be silently mangled, and zero denominators were
 accepted without failing.
@@ -108,7 +122,7 @@ After:
   0.68s: standard -Ee 'a?{500}' -O tikz >a500.tikz
 
 * 2013-11-04
-** Weight parsing bug fix
+** boolean weight parsing bugix
 The weight parser used to ignore all characters after the first one, so that
 for example "1-q" was considered valid and equivalent to "1".
 

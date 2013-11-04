@@ -166,6 +166,12 @@ namespace vcsn
     /// sub-expressions are starrable).
     bool is_valid(const ratexp& e);
 
+    /// The minimized automaton.
+    /// \param aut       the automaton to minimize
+    /// \pre  \a aut must be LAL.
+    /// \pre  \a aut must be deterministic.
+    automaton minimize(const automaton& aut);
+
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 

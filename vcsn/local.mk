@@ -41,6 +41,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/left-mult.hh                        \
   %D%/algos/lift.hh                             \
   %D%/algos/make-context.hh                     \
+  %D%/algos/minimize.hh                         \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \

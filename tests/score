@@ -78,3 +78,7 @@ run 'vcsn-standard -E -e "a?{100}" -o a100.gv'
 run 'vcsn-product -q -f a100.gv a100.gv'
 run 'vcsn-shuffle -q -f a100.gv a100.gv'
 run 'vcsn-infiltration -q -f a100.gv a100.gv'
+
+# Minimize a big deterministic automaton over booleans.
+run 'vcsn-standard -C "lal_char(abcdefghijk)_b" -e "(a+b+c+d+e+f+g+h+i+j+k){1200}" -O fado -o intricate1200.fado'
+run 'vcsn-minimize -C "lal_char(abcdefghijk)_b" -q -I fado -f intricate1200.fado'

@@ -42,6 +42,7 @@
   %D%/ladybird.chk                              \
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
+  %D%/minimize.chk                              \
   %D%/power.chk                                 \
   %D%/product.chk                               \
   %D%/proper.chk                                \
@@ -106,6 +107,15 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
+  %D%/minimize.dir/incomplete.gv                \
+  %D%/minimize.dir/incomplete.exp               \
+  %D%/minimize.dir/intricate.exp                \
+  %D%/minimize.dir/no-final-states.gv           \
+  %D%/minimize.dir/no-final-states.exp          \
+  %D%/minimize.dir/no-initial-states.gv         \
+  %D%/minimize.dir/no-initial-states.exp        \
+  %D%/minimize.dir/redundant.gv                 \
+  %D%/minimize.dir/redundant.exp                \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
   %D%/product.dir/a.gv                          \

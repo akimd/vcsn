@@ -57,6 +57,7 @@ all_vcsn =                                      \
   %D%/vcsn-ladybird                             \
   %D%/vcsn-left-mult                            \
   %D%/vcsn-lift                                 \
+  %D%/vcsn-minimize                             \
   %D%/vcsn-power                                \
   %D%/vcsn-product                              \
   %D%/vcsn-proper                               \
@@ -117,6 +118,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
 %C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la
 %C%_vcsn_lift_LDADD             = %D%/libtafkit.la
+%C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
 %C%_vcsn_power_LDADD            = %D%/libtafkit.la
 %C%_vcsn_product_LDADD          = %D%/libtafkit.la
 %C%_vcsn_proper_LDADD           = %D%/libtafkit.la

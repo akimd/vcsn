@@ -1,0 +1,29 @@
+#! /bin/sh
+
+## Simple minimization test.  The example comes from the "Théorie des
+## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
+## as of revision a0761d6.
+run 0 -f "$medir/redundant.exp" -vcsn-minimize -C 'lal_char(ab)_b' \
+  -f "$medir/redundant.gv"
+
+
+## An automaton equal to redundant.exp, with one transition removed.
+run 0 -f "$medir/incomplete.exp" -vcsn-minimize -C 'lal_char(ab)_b' \
+  -f "$medir/incomplete.gv"
+
+
+## An automaton equal to redundant.exp, with no initial states.  It
+## must be minimized into an empty automaton.
+run 0 -f "$medir/no-initial-states.exp" -vcsn-minimize -C 'lal_char(ab)_b' \
+  -f "$medir/no-initial-states.gv"
+
+## An automaton equal to redundant.exp, with no final states.  It must
+## be minimized into an empty automaton.
+run 0 -f "$medir/no-final-states.exp" -vcsn-minimize -C 'lal_char(ab)_b' \
+  -f "$medir/no-final-states.gv"
+
+
+## Minimize an intricate automaton into a liner one.
+run 0 '' -vcsn-standard -C 'lal_char(abcdefghijk)_b' \
+  -e '(a+b+c+d+e+f+g+h+i+j+k){10}' -o intricate.gv
+run 0 -f "$medir/intricate.exp" -vcsn-minimize -f intricate.gv
