@@ -27,7 +27,6 @@
 
 
 #include <lib/vcsn/rat/parse.hh>
-#include <vcsn/dyn/algos.hh>
 
 #define LINE(Line)                              \
   do{                                           \
@@ -150,7 +149,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
     else
       {
         yy_pop_state();
-        driver_.ratexpset(dyn::make_ratexpset(dyn::make_context(context)));
+        driver_.context(context);
         context.clear();
       }
   }

@@ -15,10 +15,17 @@ namespace vcsn
       ratexpset(rs);
     }
 
-    void
-    driver::ratexpset(const dyn::ratexpset& rs)
+    driver::~driver()
+    {}
+
+    void driver::ratexpset(const dyn::ratexpset& rs)
     {
       ratexpset_ = rs;
+    }
+
+    void driver::context(const std::string& ctx)
+    {
+      ratexpset(dyn::make_ratexpset(dyn::make_context(ctx)));
     }
 
     void

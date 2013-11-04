@@ -16,10 +16,12 @@ namespace vcsn
     class LIBVCSN_API driver
     {
     public:
-      driver() = default;
       driver(const dyn::ratexpset& rs);
-      /// Set the context to use.
+      ~driver();
+      /// Set the ratexpset to use.
       void ratexpset(const dyn::ratexpset& rs);
+      /// Set the ratexpset to use from its context name.
+      void context(const std::string& ctx);
 
       dyn::ratexp parse_file(const std::string& f);
       dyn::ratexp parse_string(const std::string& e,
