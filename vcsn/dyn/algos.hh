@@ -244,12 +244,12 @@ namespace vcsn
     /// \param str  the automaton.
     automaton read_automaton_string(const std::string& str);
 
-    /// Read a ratexp in a file.
-    /// \param f     the file name.
-    /// \param rs    its ratexpset.
-    /// \param type  its format.
-    ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
-                            const std::string& type = "default");
+    /// Read a ratexp from a stream.
+    /// \param is    the input stream.
+    /// \param rs    the ratexp's ratexpset.
+    /// \param type  the ratexp's format.
+    ratexp read_ratexp(std::istream& is, const ratexpset& rs,
+                       const std::string& type = "default");
 
     /// Read a ratexp in a string.
     /// \param s     the string to parse.

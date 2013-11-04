@@ -26,9 +26,8 @@ namespace vcsn
       /// Set the ratexpset to use from its context name.
       void context(const std::string& ctx);
 
-      dyn::ratexp parse_file(const std::string& f);
-      dyn::ratexp parse_string(const std::string& e,
-                               const location& l = location());
+      /// Parse this stream.
+      dyn::ratexp parse(std::istream& is, const location& l = location{});
 
       /// Report an error \a m at \a l.
       void error(const location& l, const std::string& m);
@@ -42,8 +41,6 @@ namespace vcsn
       std::unique_ptr<ratFlexLexer> scanner_;
 
     private:
-      /// Parse this stream.
-      dyn::ratexp parse_(std::istream& is, const location& l = location{});
       /// The inital location.
       location location_;
       dyn::ratexpset ratexpset_;

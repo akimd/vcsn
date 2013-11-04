@@ -1,6 +1,7 @@
 #include <getopt.h>
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <map>
 #include <stdexcept>
@@ -11,6 +12,16 @@
 #include "parse-args.hh"
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh>
+
+static
+std::shared_ptr<std::istream>
+input(const options& opts)
+{
+  if (opts.input_is_file)
+    return vcsn::open_input_file(opts.input);
+  else
+    return std::make_shared<std::istringstream>(opts.input);
+}
 
 vcsn::dyn::automaton
 read_automaton(const options& opts)
@@ -26,10 +37,8 @@ read_ratexp(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto rs = vcsn::dyn::make_ratexpset(ctx);
-  return
-    opts.input_is_file
-    ? vcsn::dyn::read_ratexp_file(opts.input, rs, opts.input_format)
-    : vcsn::dyn::read_ratexp_string(opts.input, rs, opts.input_format);
+  auto is = input(opts);
+  return vcsn::dyn::read_ratexp(*is, rs, opts.input_format);
 }
 
 vcsn::dyn::polynomial

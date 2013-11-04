@@ -9,21 +9,11 @@ namespace vcsn
 {
   namespace rat
   {
-    dyn::ratexp
-    read_file(const std::string& f, const dyn::ratexpset& rs)
+    dyn::ratexp read(std::istream& is, const dyn::ratexpset& rs,
+                     const location& l)
     {
       vcsn::rat::driver d(rs);
-      auto res = d.parse_file(f);
-      if (!d.errors.empty())
-        throw std::runtime_error(d.errors);
-      return res;
-    }
-
-    dyn::ratexp
-    read_string(const std::string& s, const dyn::ratexpset& rs)
-    {
-      vcsn::rat::driver d(rs);
-      auto res = d.parse_string(s);
+      auto res = d.parse(is, l);
       if (!d.errors.empty())
         throw std::runtime_error(d.errors);
       return res;
