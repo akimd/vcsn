@@ -2,10 +2,10 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <lib/vcsn/rat/read.hh>// FIXME: non-installed dependency.
-#include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/less-than.hh>
+#include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
+#include <vcsn/dyn/algos.hh> // dyn::read_ratexp_string
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/ratexpset.hh> // dyn::make_ratexpset
 #include <vcsn/misc/attributes.hh>
@@ -346,7 +346,7 @@ namespace vcsn
   DEFINE::conv(const std::string& s) const
     -> value_t
   {
-    auto dynres = rat::read_string(s, dyn::make_ratexpset(*this));
+    auto dynres = dyn::read_ratexp_string(s, dyn::make_ratexpset(*this));
     const auto& res = dynres->template as<ratexpset>();
     return res.ratexp();
   }

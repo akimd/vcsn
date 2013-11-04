@@ -249,14 +249,14 @@ namespace vcsn
     /// \param rs    its ratexpset.
     /// \param type  its format.
     ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
-                            const std::string& type);
+                            const std::string& type = "text");
 
     /// Read a ratexp in a string.
     /// \param s     the string to parse.
     /// \param ctx   its ratexpset.
     /// \param type  its format.
     ratexp read_ratexp_string(const std::string& s, const ratexpset& rs,
-                              const std::string& type);
+                              const std::string& type = "text");
 
     /// Read a polynomial in a file.
     /// \param f     the file name.
