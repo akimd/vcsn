@@ -18,7 +18,6 @@
   #include <tuple>
   #include "location.hh"
   #include <vcsn/core/rat/ratexp.hh>
-  #include <vcsn/dyn/ratexpset.hh>
   #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn
@@ -57,6 +56,7 @@
 
 %code
 {
+  #include <vcsn/dyn/ratexpset.hh>
   #include <lib/vcsn/rat/driver.hh>
   #define yyFlexLexer ratFlexLexer
   #include <FlexLexer.h>
@@ -66,45 +66,10 @@
     namespace rat
     {
       static
-      exp_t
-      power(const dyn::ratexpset& es, exp_t e, int min, int max)
-      {
-        exp_t res;
-        if (max == -1)
-          {
-            res = es->star(e);
-            if (min != -1)
-              res = es->concat(power(es, e, min, min), res);
-          }
-        else
-          {
-            if (min == -1)
-              min = 0;
-            if (min == 0)
-              res = es->one();
-            else
-              {
-                res = e;
-                for (int n = 1; n < min; ++n)
-                  res = es->concat(res, e);
-              }
-            if (min < max)
-              {
-                exp_t sum = es->one();
-                for (int n = 1; n <= max - min; ++n)
-                  sum = es->add(sum, power(es, e, n, n));
-                res = es->concat(res, sum);
-              }
-          }
-        return res;
-      }
+      exp_t power(const dyn::ratexpset& rs, exp_t e, int min, int max);
 
       static
-      exp_t
-      power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
-      {
-        return power(es, e, std::get<0>(range), std::get<1>(range));
-      }
+      exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
 
       /// Use our local scanner object.
       static
@@ -224,6 +189,47 @@ namespace vcsn
 {
   namespace rat
   {
+    static
+    exp_t
+    power(const dyn::ratexpset& es, exp_t e, int min, int max)
+    {
+      exp_t res;
+      if (max == -1)
+        {
+          res = es->star(e);
+          if (min != -1)
+            res = es->concat(power(es, e, min, min), res);
+        }
+      else
+        {
+          if (min == -1)
+            min = 0;
+          if (min == 0)
+            res = es->one();
+          else
+            {
+              res = e;
+              for (int n = 1; n < min; ++n)
+                res = es->concat(res, e);
+            }
+          if (min < max)
+            {
+              exp_t sum = es->one();
+              for (int n = 1; n <= max - min; ++n)
+                sum = es->add(sum, power(es, e, n, n));
+              res = es->concat(res, sum);
+            }
+        }
+      return res;
+    }
+
+    static
+    exp_t
+    power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
+    {
+      return power(es, e, std::get<0>(range), std::get<1>(range));
+    }
+
     void
     vcsn::rat::parser::error(const location_type& l, const std::string& m)
     {
