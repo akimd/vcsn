@@ -129,26 +129,47 @@ VCSN_REGEX
 # https://svn.boost.org/trac/boost/ticket/5911
 AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
                [ac_cv_GLIBCXX_DEBUG],
-[vcsn_save_LIBS=$LIBS
-LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
-AC_RUN_IFELSE(
-[AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
-#define _GLIBCXX_DEBUG_PEDANTIC
-#include <cassert>
-#include <sstream>
-],[
-  {
-    std::stringstream o;
-    assert (o.str() == "");
-  }
-  {
-    std::stringstream o;
-    o << 42;
-    assert (o.str() == "42");
-  }
-])], [ac_cv_GLIBCXX_DEBUG=yes],
-     [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
-     [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
+[# Set to "yes" and let each test so to "no" on failure.
+ac_cv_GLIBCXX_DEBUG=yes
+
+# I, Akim, on Erebus (Mac OS X, G++ 4.8) have errors like:
+#
+#   $ vcsn-cat -f share/vcsn/lal_char_z/c1.gv
+#   vcsn-cat(78451) malloc: *** error for object 0x10ae577c0:
+#                           pointer being freed was not allocated
+#   *** set a breakpoint in malloc_error_break to debug
+#
+# when I use NDEBUG with _GLIBCXX_DEBUG.  AFAICT, this is not our
+# fault, and I am tired to trying to fight such issues.  Since after
+# all, it does not make a lot of sense to use _GLIBCXX_DEBUG with
+# NDEBUG, let's use the easy way.
+case $CPPFLAGS in
+  *' -DNDEBUG '*|'-DNDEBUG '*|*' -NDEBUG'|'-NDEBUG')
+    ac_cv_GLIBCXX_DEBUG='no (NDEBUG is set, which will leads to aborts)';;
+esac
+
+if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+  vcsn_save_LIBS=$LIBS
+  LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
+  AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
+  #define _GLIBCXX_DEBUG_PEDANTIC
+  #include <cassert>
+  #include <sstream>
+  ],[
+    {
+      std::stringstream o;
+      assert (o.str() == "");
+    }
+    {
+      std::stringstream o;
+      o << 42;
+      assert (o.str() == "42");
+    }
+  ])], [],
+       [ac_cv_GLIBCXX_DEBUG='no (breaks stringstreams)'],
+       [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
+fi
 
 if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
   vcsn_save_LIBS=$LIBS
