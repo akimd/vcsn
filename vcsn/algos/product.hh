@@ -176,18 +176,14 @@ namespace vcsn
                          ws.mul(laut_.get_final_weight(lsrc),
                                 raut_.get_final_weight(rsrc)));
 
-        // The src state is visited for the first time, so all these
-        // transitions are new.  *Except* in the case where we have a
-        // loop on both the lhs, and the rhs, in which case we have
-        // "two equal transitions" in the product, i.e., we must sum
-        // the weights of both loops before adding the resulting
-        // unique loop.
-        weight_t loop = ws.zero();
         for (auto lt : laut_.out(lsrc))
           new_transition(src, laut_.dst_of(lt), rsrc,
                          laut_.label_of(lt), laut_.weight_of(lt));
         for (auto rt : raut_.out(rsrc))
           {
+            // The src state is visited for the first time, so all
+            // these transitions are new.  *Except* in the case where
+            // we have a loop on both the lhs, and the rhs.
             typename B::state_t rdst = raut_.dst_of(rt);
             if (rsrc == rdst)
               add_transition(src, lsrc, rdst,
