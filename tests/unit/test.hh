@@ -7,12 +7,12 @@
 
 # define ASSERT_EQ(Lhs, Rhs)                            \
   do {                                                  \
-    auto lhs = Lhs;                                     \
-    auto rhs = Rhs;                                     \
-    if (lhs != rhs)                                     \
+    auto lhs_ = Lhs;                                    \
+    auto rhs_ = Rhs;                                    \
+    if (lhs_ != rhs_)                                   \
       {                                                 \
         SHOWH("assertion failed: " #Lhs " == " #Rhs);   \
-        SHOWH("    " << lhs << " != " << rhs);          \
+        SHOWH("    " << lhs_ << " != " << rhs_);        \
         ++nerrs;                                        \
       }                                                 \
     else if (getenv("VERBOSE"))                         \

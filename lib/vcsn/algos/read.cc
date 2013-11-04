@@ -110,23 +110,11 @@ namespace vcsn
 
     REGISTER_DEFINE(read_weight);
 
-    static weight
-    read_weight(const dyn::context& ctx, const std::string& s)
+    weight
+    read_weight(std::istream& is, const dyn::context& ctx)
     {
       return detail::read_weight_registry().call(ctx->vname(false),
-                                                 ctx, s);
-    }
-
-    weight
-    read_weight_file(const std::string& f, const context& ctx)
-    {
-      return read_weight_string(get_file_contents(f), ctx);
-    }
-
-    weight
-    read_weight_string(const std::string& s, const context& ctx)
-    {
-      return read_weight(ctx, s);
+                                                 ctx, is);
     }
 
   }

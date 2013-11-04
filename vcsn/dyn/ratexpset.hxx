@@ -1,5 +1,6 @@
 #include <sstream>
 #include <vcsn/misc/cast.hh> // down_pointer_cast
+#include <vcsn/misc/stream.hh> // conv
 #include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 
 namespace vcsn
@@ -37,17 +38,15 @@ namespace dyn
     auto                                        \
     ratexpset_wrapper<RatExpSet>
 
-    /// From weak to strong typing.
     DEFINE::down(const value_t& v) const
       -> std::shared_ptr<const node_t>
     {
       return down_pointer_cast<const node_t>(v);
     }
 
-    /// From string, to typed weight.
     DEFINE::down(const std::string& w) const -> weight_t
     {
-      return rs_.weightset()->conv(w);
+      return ::vcsn::conv(*rs_.weightset(), w);
     }
 
     DEFINE::make_ratexp(const value_t& v) const
@@ -101,9 +100,9 @@ namespace dyn
       return rs_.weight(down(v), down(w));
     }
 
-    DEFINE::conv(const std::string& s) const -> value_t
+    DEFINE::conv(std::istream& is) const -> value_t
     {
-      return rs_.conv(s);
+      return rs_.conv(is);
     }
 
     DEFINE::print(std::ostream& o, value_t v) const -> std::ostream&

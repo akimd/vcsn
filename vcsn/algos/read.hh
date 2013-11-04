@@ -52,10 +52,10 @@ namespace vcsn
   template <typename Context>
   inline
   auto
-  read_weight(const Context& ctx, const std::string& w)
+  read_weight(const Context& ctx, std::istream& is)
     -> typename Context::weight_t
   {
-    return ctx.weightset()->conv(w);
+    return ctx.weightset()->conv(is);
   }
 
   namespace dyn
@@ -65,16 +65,16 @@ namespace vcsn
       /// Bridge.
       template <typename Context>
       auto
-      read_weight(const context& ctx, const std::string& s)
+      read_weight(const context& ctx, std::istream& is)
         -> weight
       {
         const auto& c = ctx->as<Context>();
-        auto res = ::vcsn::read_weight(c, s);
+        auto res = ::vcsn::read_weight(c, is);
         return make_weight(*c.weightset(), res);
       }
 
       REGISTER_DECLARE(read_weight,
-                       (const context& ctx, const std::string& s) -> weight);
+                       (const context& ctx, std::istream& is) -> weight);
     }
   }
 

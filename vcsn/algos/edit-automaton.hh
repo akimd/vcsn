@@ -219,7 +219,7 @@ namespace vcsn
     weight_(string_t w)
     {
       static const auto& ws = *res_->weightset();
-      return w.get().empty() ? ws.one() : ws.conv(w);
+      return w.get().empty() ? ws.one() : conv(ws, w);
     }
 
     /// Convert a state name to a state handler.

@@ -42,7 +42,7 @@ namespace detail
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
 
     /// Parsing.
-    virtual value_t conv(const std::string& s) const = 0;
+    virtual value_t conv(std::istream& s) const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
     std::string format(const value_t v) const;
@@ -99,7 +99,7 @@ namespace detail
     virtual value_t weight(value_t v, const std::string& w) const override;
 
     /// Parsing.
-    virtual value_t conv(const std::string& s) const override;
+    virtual value_t conv(std::istream& is) const override;
 
     virtual std::ostream& print(std::ostream& o, value_t v) const override;
 

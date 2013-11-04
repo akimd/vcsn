@@ -87,7 +87,7 @@ namespace vcsn
       return star_status_t::STARRABLE;
     }
 
-    value_t conv(const std::string& s) const;
+    value_t conv(std::istream& is) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
     std::string format(const value_t v) const;
 

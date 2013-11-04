@@ -303,9 +303,8 @@ namespace vcsn
           bool default_w = true;
           if (i.peek() == lbracket)
             {
-              // FIXME: should be converted to use conv(std::istream),
-              // but it is not yet available for ratexp.
-              w = weightset()->conv(bracketed(i, lbracket, rbracket));
+              // FIXME: convert to use conv(std::istream).
+              w = ::vcsn::conv(*weightset(), bracketed(i, lbracket, rbracket));
               default_w = false;
             }
 

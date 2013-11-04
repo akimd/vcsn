@@ -343,10 +343,10 @@ namespace vcsn
     return lt(lhs, rhs);
   }
 
-  DEFINE::conv(const std::string& s) const
+  DEFINE::conv(std::istream& is) const
     -> value_t
   {
-    auto dynres = dyn::read_ratexp_string(s, dyn::make_ratexpset(*this));
+    auto dynres = dyn::read_ratexp(is, dyn::make_ratexpset(*this));
     const auto& res = dynres->template as<ratexpset>();
     return res.ratexp();
   }

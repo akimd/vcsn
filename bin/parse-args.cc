@@ -55,10 +55,8 @@ vcsn::dyn::weight
 read_weight(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
-  return
-    opts.input_is_file
-    ? vcsn::dyn::read_weight_file(opts.input, ctx)
-    : vcsn::dyn::read_weight_string(opts.input, ctx);
+  auto is = input(opts);
+  return vcsn::dyn::read_weight(*is, ctx);
 }
 
 void

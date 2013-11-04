@@ -269,14 +269,9 @@ namespace vcsn
     polynomial read_polynomial_string(const std::string& s, const context& ctx);
 
     /// Read a weight in a file.
-    /// \param f     the file name.
-    /// \param ctx   its context, from which is built its weightset.
-    weight read_weight_file(const std::string& f, const context& ctx);
-
-    /// Read a weight in a string.
-    /// \param s     the string to parse.
-    /// \param ctx   its context, from which is built its weightset.
-    weight read_weight_string(const std::string& s, const context& ctx);
+    /// \param is    the input stream.
+    /// \param ctx   the context, from which is built its weightset.
+    weight read_weight(std::istream& is, const context& ctx);
 
     /// The right-mult automaton with \a w as weight.
     /// \precondition aut is standard.

@@ -10,7 +10,7 @@ check_concat(const Ctx& ctx)
   auto ks = ctx.make_ratexpset();
 
 #define CHECK(Lhs, Rhs, Res)                                    \
-  ASSERT_EQ(ks.format(ks.concat(ks.conv(Lhs), ks.conv(Rhs))),   \
+  ASSERT_EQ(ks.format(ks.concat(conv(ks, Lhs), conv(ks, Rhs))), \
             Res)
 
   CHECK("ab.a", "b", "ab.ab");

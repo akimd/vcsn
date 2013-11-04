@@ -27,11 +27,11 @@ check_mutable_automaton()
   auto s1 = aut1.new_state();
   auto s2 = aut1.new_state();
 
-  aut1.set_initial(s0, ks_b.conv("wxyz"));
-  aut1.add_transition(s0, s0, "cd", ks_b.conv("wx"));
-  aut1.add_transition(s0, s1, "cd", ks_b.conv("wxyz"));
+  aut1.set_initial(s0, conv(ks_b, "wxyz"));
+  aut1.add_transition(s0, s0, "cd", conv(ks_b, "wx"));
+  aut1.add_transition(s0, s1, "cd", conv(ks_b, "wxyz"));
   aut1.add_transition(s1, s2, "cd");
-  aut1.set_initial(s2, ks_b.conv("wxyz"));
+  aut1.set_initial(s2, conv(ks_b, "wxyz"));
   vcsn::dot(aut1, std::cout) << '\n';
 
   auto aut2 = vcsn::transpose(aut1);
@@ -64,7 +64,7 @@ check_mutable_automaton()
 
   // Now change the transposed automaton, and check the modifications
   // on the original.
-  aut2.set_transition(s1, s0, "dc", ks_b.conv("yyxx"));
+  aut2.set_transition(s1, s0, "dc", conv(ks_b, "yyxx"));
   ASSERT_WEIGHT(aut1, s0, s1, "cd", "x.x.y.y");
   aut2.del_state(s2);
   aut2.set_initial(s1);
