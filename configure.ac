@@ -196,15 +196,6 @@ case $ac_cv_GLIBCXX_DEBUG in yes)
 esac
 
 
-## --------------------##
-## Define XML headers. ##
-## --------------------##
-
-AC_DEFINE_UNQUOTED([VCSN_XMLNS], ["http://vaucanson.lrde.epita.fr"],
-       [Root of the XML namespace.])
-AC_DEFINE_UNQUOTED([FSMXML_VERSION], ["1.1"],
-       [FSMXML version.])
-
 ## -------------------- ##
 ## Auxiliary programs.  ##
 ## -------------------- ##
