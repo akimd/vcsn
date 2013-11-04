@@ -65,9 +65,10 @@ namespace vcsn
     }
 
     auto
-    driver::parse_(const location& l)
+    driver::parse_(std::istream& is, const location& l)
       -> dyn::ratexp
     {
+      scanner_->scan_open_(is);
       location_ = l;
       // Parser.
       parser p(*this);
@@ -80,25 +81,23 @@ namespace vcsn
       ++nesting;
       if (p.parse())
         result_ = nullptr;
-      scan_close_();
+      scanner_->scan_close_();
       --nesting;
+
+      dyn::ratexp res = nullptr;
       if (result_)
         {
-          dyn::ratexp res = ratexpset_->make_ratexp(result_);
+          res = ratexpset_->make_ratexp(result_);
           result_ = nullptr;
-          return res;
         }
-      else
-        return nullptr;
+      return res;
     }
 
     auto
     driver::parse_file(const std::string& f)
       -> dyn::ratexp
     {
-      auto is = open_input_file(f);
-      scan_open_(*is);
-      return parse_();
+      return parse_(*open_input_file(f));
     }
 
     auto
@@ -106,8 +105,7 @@ namespace vcsn
       -> dyn::ratexp
     {
       std::istringstream is{e};
-      scan_open_(is);
-      return parse_(l);
+      return parse_(is);
     }
   }
 }

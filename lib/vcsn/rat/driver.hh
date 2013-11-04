@@ -42,13 +42,8 @@ namespace vcsn
       std::unique_ptr<ratFlexLexer> scanner_;
 
     private:
-      /// Prepare scanner to load file f.
-      void scan_open_(std::istream& f);
       /// Parse this stream.
-      dyn::ratexp parse_(const location& l = location{});
-      /// Close the scanner.
-      void scan_close_();
-
+      dyn::ratexp parse_(std::istream& is, const location& l = location{});
       /// The inital location.
       location location_;
       dyn::ratexpset ratexpset_;

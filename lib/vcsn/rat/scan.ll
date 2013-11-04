@@ -255,16 +255,6 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
     {
       yypop_buffer_state();
     }
-
-    void driver::scan_open_(std::istream& f)
-    {
-      scanner_->scan_open_(f);
-    }
-
-    void driver::scan_close_()
-    {
-      scanner_->scan_close_();
-    }
   }
 }
 
