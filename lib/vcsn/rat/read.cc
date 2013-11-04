@@ -9,12 +9,10 @@ namespace vcsn
 {
   namespace rat
   {
-    // FIXME: we should pass a ratexpset, not a context, to the driver.
-
     dyn::ratexp
-    read_file(const std::string& f, const dyn::context& ctx)
+    read_file(const std::string& f, const dyn::ratexpset& rs)
     {
-      vcsn::rat::driver d(dyn::make_ratexpset(ctx));
+      vcsn::rat::driver d(rs);
       auto res = d.parse_file(f);
       if (!d.errors.empty())
         throw std::runtime_error(d.errors);
@@ -29,12 +27,6 @@ namespace vcsn
       if (!d.errors.empty())
         throw std::runtime_error(d.errors);
       return res;
-    }
-
-    dyn::ratexp
-    read_string(const std::string& s, const dyn::context& ctx)
-    {
-      return read_string(s, dyn::make_ratexpset(ctx));
     }
   }
 }

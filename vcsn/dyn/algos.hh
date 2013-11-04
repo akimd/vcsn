@@ -251,18 +251,11 @@ namespace vcsn
     ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
                             const std::string& type);
 
-    /// Read a ratexp in a file.
-    /// \param f     the file name.
-    /// \param ctx   its context, from which is built its ratexpset.
-    /// \param type  its format.
-    ratexp read_ratexp_file(const std::string& f, const context& ctx,
-                            const std::string& type);
-
     /// Read a ratexp in a string.
     /// \param s     the string to parse.
-    /// \param ctx   its context, from which is built its ratexpset.
+    /// \param ctx   its ratexpset.
     /// \param type  its format.
-    ratexp read_ratexp_string(const std::string& s, const context& ctx,
+    ratexp read_ratexp_string(const std::string& s, const ratexpset& rs,
                               const std::string& type);
 
     /// Read a polynomial in a file.

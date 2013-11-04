@@ -59,24 +59,24 @@ namespace vcsn
     `--------------*/
 
     ratexp
-    read_ratexp_file(const std::string& f, const context& ctx,
+    read_ratexp_file(const std::string& f, const ratexpset& rs,
                      const std::string& type)
     {
       if (type == "text")
-        return rat::read_file(f, ctx);
+        return rat::read_file(f, rs);
       else
-        throw std::domain_error("invalid input format for expression: "
+        throw std::domain_error("invalid input format for ratexp: "
                                 + type);
     }
 
     ratexp
-    read_ratexp_string(const std::string& s, const context& ctx,
+    read_ratexp_string(const std::string& s, const ratexpset& rs,
                        const std::string& type)
     {
       if (type == "text")
-        return rat::read_string(s, ctx);
+        return rat::read_string(s, rs);
       else
-        throw std::domain_error("invalid input format for expression: "
+        throw std::domain_error("invalid input format for ratexp: "
                                 + type);
     }
 
