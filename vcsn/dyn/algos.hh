@@ -238,7 +238,7 @@ namespace vcsn
     /// \param file  the file name.
     /// \param type  its format.
     automaton read_automaton_file(const std::string& file,
-                                  const std::string& type = "dot");
+                                  const std::string& type = "default");
 
     /// Read an automaton in a string.
     /// \param str  the automaton.
@@ -249,14 +249,14 @@ namespace vcsn
     /// \param rs    its ratexpset.
     /// \param type  its format.
     ratexp read_ratexp_file(const std::string& f, const ratexpset& rs,
-                            const std::string& type = "text");
+                            const std::string& type = "default");
 
     /// Read a ratexp in a string.
     /// \param s     the string to parse.
     /// \param ctx   its ratexpset.
     /// \param type  its format.
     ratexp read_ratexp_string(const std::string& s, const ratexpset& rs,
-                              const std::string& type = "text");
+                              const std::string& type = "default");
 
     /// Read a polynomial in a file.
     /// \param f     the file name.

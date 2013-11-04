@@ -34,7 +34,7 @@ namespace vcsn
     automaton
     read_automaton_file(const std::string& f, const std::string& t)
     {
-      if (t == "dot")
+      if (t == "dot" || t == "default" || t == "")
         return read_dot_file(f);
       else if (t == "efsm")
         return read_efsm_file(f);
@@ -60,24 +60,22 @@ namespace vcsn
 
     ratexp
     read_ratexp_file(const std::string& f, const ratexpset& rs,
-                     const std::string& type)
+                     const std::string& t)
     {
-      if (type == "text")
+      if (t == "text" || t == "default" || t == "")
         return rat::read_file(f, rs);
       else
-        throw std::domain_error("invalid input format for ratexp: "
-                                + type);
+        throw std::domain_error("invalid input format for ratexp: " + t);
     }
 
     ratexp
     read_ratexp_string(const std::string& s, const ratexpset& rs,
-                       const std::string& type)
+                       const std::string& t)
     {
-      if (type == "text")
+      if (t == "text" || t == "default" || t == "")
         return rat::read_string(s, rs);
       else
-        throw std::domain_error("invalid input format for ratexp: "
-                                + type);
+        throw std::domain_error("invalid input format for ratexp: " + t);
     }
 
 

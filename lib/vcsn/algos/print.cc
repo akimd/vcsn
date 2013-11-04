@@ -95,7 +95,7 @@ namespace vcsn
       else if (type == "text" || type == "default" || type == "")
         detail::print_exp_registry().call(exp->vname(false), exp, out);
       else
-        throw std::domain_error("invalid output format for expression: "
+        throw std::domain_error("invalid output format for ratexp: "
                                 + type);
       return out;
     }

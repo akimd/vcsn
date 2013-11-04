@@ -30,7 +30,7 @@ struct options
   /// The input (name or value).
   std::string input;
   /// Input format.
-  std::string input_format = "dot";
+  std::string input_format = "default";
 
   /// Context.
   std::string context = "lal_char(abcd)_b";

@@ -26,15 +26,10 @@ read_ratexp(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto rs = vcsn::dyn::make_ratexpset(ctx);
-  // Be cool, we don't support many formats.
-  std::string fmt
-    = (opts.input_format == "null" || opts.input_format == "text"
-       ? opts.input_format
-       : "text");
   return
     opts.input_is_file
-    ? vcsn::dyn::read_ratexp_file(opts.input, rs, fmt)
-    : vcsn::dyn::read_ratexp_string(opts.input, rs, fmt);
+    ? vcsn::dyn::read_ratexp_file(opts.input, rs, opts.input_format)
+    : vcsn::dyn::read_ratexp_string(opts.input, rs, opts.input_format);
 }
 
 vcsn::dyn::polynomial
