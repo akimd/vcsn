@@ -1,6 +1,6 @@
 %option noinput nounput noyywrap
-%option debug
 %option prefix="rat" outfile="lex.yy.c"
+%option debug
 %option stack noyy_top_state
 
 %top{
@@ -23,9 +23,9 @@
 #include <string>
 
 #include <boost/lexical_cast.hpp>
+
 #include <vcsn/misc/regex.hh>
-
-
+#include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
 #define LINE(Line)                              \

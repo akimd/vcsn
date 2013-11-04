@@ -4,6 +4,7 @@
 # include <memory>
 # include <string>
 
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn

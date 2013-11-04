@@ -20,7 +20,7 @@
   #include "location.hh"
   #include <vcsn/core/rat/ratexp.hh>
   #include <vcsn/dyn/ratexpset.hh>
-  #include <lib/vcsn/rat/driver.hh>
+  #include <lib/vcsn/rat/fwd.hh>
 
   namespace vcsn
   {
@@ -44,7 +44,7 @@
       };
     }
   }
-#define YYSTYPE vcsn::rat::sem_type
+  #define YYSTYPE vcsn::rat::sem_type
 }
 
 %code provides
@@ -69,6 +69,7 @@
 
 %code
 {
+  #include <lib/vcsn/rat/driver.hh>
   namespace vcsn
   {
     namespace rat

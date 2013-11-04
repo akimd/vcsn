@@ -95,6 +95,7 @@ lib_libvcsn_la_SOURCES +=                       \
   $(SOURCES_RAT_PARSE_YY)                       \
   %D%/rat/driver.hh                             \
   %D%/rat/driver.cc                             \
+  %D%/rat/fwd.hh                                \
   %D%/rat/read.hh                               \
   %D%/rat/read.cc                               \
   %D%/rat/scan.ll
