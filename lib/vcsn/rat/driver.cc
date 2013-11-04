@@ -2,8 +2,12 @@
 #include <sstream>
 
 #include <vcsn/dyn/algos.hh> // make_ratexpset.
+#include <vcsn/misc/stream.hh>
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
+
+#define yyFlexLexer ratFlexLexer
+#include <FlexLexer.h>
 
 namespace vcsn
 {
@@ -11,6 +15,7 @@ namespace vcsn
   {
 
     driver::driver(const dyn::ratexpset& rs)
+      : scanner_(new ratFlexLexer)
     {
       ratexpset(rs);
     }
@@ -91,24 +96,17 @@ namespace vcsn
     driver::parse_file(const std::string& f)
       -> dyn::ratexp
     {
-      FILE *yyin = f == "-" ? stdin : fopen(f.c_str(), "r");
-      if (!yyin)
-        {
-          std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
-          exit(1);
-        }
-      scan_open_(yyin);
-      auto res = parse_();
-      if (f != "-")
-        fclose(yyin);
-      return res;
+      auto is = open_input_file(f);
+      scan_open_(*is);
+      return parse_();
     }
 
     auto
     driver::parse_string(const std::string& e, const location& l)
       -> dyn::ratexp
     {
-      scan_open_(e);
+      std::istringstream is{e};
+      scan_open_(is);
       return parse_(l);
     }
   }

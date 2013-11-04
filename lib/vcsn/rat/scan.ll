@@ -1,6 +1,7 @@
-%option noinput nounput noyywrap
+%option c++
 %option prefix="rat" outfile="lex.yy.c"
 %option debug
+%option noinput nounput
 %option stack noyy_top_state
 
 %top{
@@ -50,8 +51,22 @@
         irange_type
         quantifier(driver& d, const location& loc, const std::string& s);
       }
-    }
-  }
+
+      // Do not use %option noyywrap, because then flex generates the
+      // same definition of yywrap, but outside the namespaces, so it
+      // defines it for ::yyFlexLexer instead of
+      // ::vcsn::rat::yyFlexLexer.
+      int yyFlexLexer::yywrap() { return 1; }
+
+#define ratalloc myratalloc
+void *myratalloc (yy_size_t  );
+#define ratrealloc myratrealloc
+void *myratrealloc (void *,yy_size_t  );
+#define ratfree myratfree
+void myratfree (void *  );
+
+      //    }
+      //  }
 %}
 
 %x SC_CONTEXT SC_WEIGHT
@@ -157,10 +172,10 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 }
 %%
 
-namespace vcsn
-{
-  namespace rat
-  {
+   //namespace vcsn
+   //{
+   //  namespace rat
+   //  {
 
     namespace
     {
@@ -229,27 +244,26 @@ namespace vcsn
     // in the documentation: save the old context, switch to the new
     // one.
 
-    void
-    driver::scan_open_(FILE *f)
+    void ratFlexLexer::scan_open_(std::istream& f)
     {
-      yy_flex_debug = !!getenv("YYSCAN");
+      set_debug(!!getenv("YYSCAN"));
       yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_switch_to_buffer(yy_create_buffer(f, YY_BUF_SIZE));
+      yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
     }
 
-    void
-    driver::scan_open_(const std::string& e)
-    {
-      yy_flex_debug = !!getenv("YYSCAN");
-      yyin = 0;
-      yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_scan_bytes(e.c_str(), e.size());
-    }
-
-    void
-    driver::scan_close_()
+    void ratFlexLexer::scan_close_()
     {
       yypop_buffer_state();
+    }
+
+    void driver::scan_open_(std::istream& f)
+    {
+      scanner_->scan_open_(f);
+    }
+
+    void driver::scan_close_()
+    {
+      scanner_->scan_close_();
     }
   }
 }

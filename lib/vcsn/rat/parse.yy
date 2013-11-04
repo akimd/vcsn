@@ -9,7 +9,6 @@
 %expect 0
 %locations
 %define namespace "vcsn::rat"
-%name-prefix "vcsn::rat::"
 
 %code requires
 {
@@ -51,25 +50,17 @@
 {
   #define YY_DECL                                               \
     int                                                         \
-    vcsn::rat::lex(vcsn::rat::parser::semantic_type* yylval,    \
+    vcsn::rat::yyFlexLexer::lex(vcsn::rat::parser::semantic_type* yylval, \
                    vcsn::rat::parser::location_type* yylloc,    \
                    vcsn::rat::driver& driver_)
-
-  namespace vcsn
-  {
-    namespace rat
-    {
-      int
-      lex(parser::semantic_type* yylval,
-          parser::location_type* yylloc,
-          vcsn::rat::driver& driver_);
-    }
-  }
 }
 
 %code
 {
   #include <lib/vcsn/rat/driver.hh>
+  #define yyFlexLexer ratFlexLexer
+  #include <FlexLexer.h>
+
   namespace vcsn
   {
     namespace rat
@@ -113,6 +104,17 @@
       power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
       {
         return power(es, e, std::get<0>(range), std::get<1>(range));
+      }
+
+      /// Use our local scanner object.
+      static
+      inline
+      int
+      yylex(parser::semantic_type* yylval,
+            parser::location_type* yylloc,
+            driver& driver_)
+      {
+        return driver_.scanner_->lex(yylval, yylloc, driver_);
       }
     }
   }

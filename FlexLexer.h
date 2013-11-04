@@ -48,7 +48,7 @@
 // Never included before - need to define base class.
 #define __FLEX_LEXER_H
 
-#include <iostream>
+# include <lib/vcsn/rat/parse.hh>
 
 struct yy_buffer_state;
 typedef int yy_state_type;
@@ -84,6 +84,7 @@ protected:
   int yy_flex_debug;	// only has effect with -d or "%option debug"
 };
 
+namespace vcsn { namespace rat {
 
 class yyFlexLexer : public FlexLexer
 {
@@ -102,9 +103,15 @@ public:
   void yypush_buffer_state( struct yy_buffer_state* new_buffer );
   void yypop_buffer_state();
 
-  int yylex();
+  int lex(parser::semantic_type* yylval, parser::location_type* yylloc,
+          driver& driver_);
+
+  void scan_open_(std::istream& f);
+
+  void scan_close_();
+
   virtual void switch_streams(std::istream* new_in,
-                              std::ostream* new_out = nullptr);
+                              std::ostream* new_out = nullptr );
   virtual int yywrap();
 
 protected:
@@ -178,4 +185,6 @@ protected:
   int yy_prev_more_offset;
 };
 
+}
+}
 #endif // FLEXLEXER_H

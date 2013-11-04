@@ -7,6 +7,9 @@
 # include <lib/vcsn/rat/location.hh>
 # include <vcsn/misc/export.hh>
 
+# include <lib/vcsn/rat/fwd.hh>
+# include <lib/vcsn/rat/parse.hh>
+
 namespace vcsn
 {
   namespace rat
@@ -35,11 +38,12 @@ namespace vcsn
       /// The error messages.
       std::string errors;
 
+      /// The scanner.
+      std::unique_ptr<ratFlexLexer> scanner_;
+
     private:
       /// Prepare scanner to load file f.
-      void scan_open_(FILE *f);
-      /// Prepare scanner to read string e.
-      void scan_open_(const std::string& e);
+      void scan_open_(std::istream& f);
       /// Parse this stream.
       dyn::ratexp parse_(const location& l = location{});
       /// Close the scanner.
