@@ -137,7 +137,7 @@ namespace vcsn
   info(const A& aut, std::ostream& out)
   {
 #define ECHO(Name, Value)                               \
-    out << Name ": " << Value << std::endl
+    out << Name ": " << Value << '\n'
     ECHO("type", aut.vname(true));
     ECHO("number of states", aut.num_states());
     ECHO("number of initial states", aut.num_initials());
@@ -160,7 +160,7 @@ namespace vcsn
     ECHO("is trim", is_trim(aut));
     ECHO("is useless", is_useless(aut));
 #undef ECHO
-    // No std::endl for the last one.
+    // No eol for the last one.
     out << "is valid: " << is_valid(aut);
     return out;
   }
@@ -194,7 +194,7 @@ namespace vcsn
     vcsn::rat::info<RatExpSet> nfo;
     nfo(*e);
 # define DEFINE(Type)                            \
-    << std::endl << #Type ": " << nfo.Type
+    << '\n' << #Type ": " << nfo.Type
     o
       << "type: " << rs.vname(true)
       DEFINE(sum)

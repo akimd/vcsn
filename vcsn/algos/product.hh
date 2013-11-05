@@ -290,8 +290,8 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, const origins_t& orig)
       {
-        o << "/* Origins." << std::endl
-          << "    node [shape = box, style = rounded]" << std::endl;
+        o << "/* Origins.\n"
+             "    node [shape = box, style = rounded]\n";
         for (auto p: orig)
           if (p.first != automaton_t::pre() && p.first != automaton_t::post())
             o << "    " << p.first - 2
@@ -299,9 +299,8 @@ namespace vcsn
               << p.second.first - 2
               << ","
               << p.second.second - 2
-              << "\"]"
-              << std::endl;
-        o << "*/" << std::endl;
+              << "\"]\n";
+        o << "*/\n";
         return o;
       }
 

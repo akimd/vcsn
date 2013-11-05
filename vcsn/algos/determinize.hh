@@ -153,8 +153,8 @@ namespace vcsn
       std::ostream&
       print(std::ostream& o, const origins_t& orig)
       {
-        o << "/* Origins." << std::endl
-          << "    node [shape = box, style = rounded]" << std::endl;
+        o << "/* Origins.\n"
+             "    node [shape = box, style = rounded]\n";
         for (auto p : orig)
           {
             o << "    " << p.first - 2
@@ -165,9 +165,9 @@ namespace vcsn
                 o << sep << s - 2;
                 sep = ",";
               }
-            o << "\"]" << std::endl;
+            o << "\"]\n";
           }
-        o << "*/" << std::endl;
+        o << "*/\n";
         return o;
       }
     };

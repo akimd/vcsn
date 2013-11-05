@@ -50,21 +50,21 @@ namespace vcsn
       /// Actually output \a aut_ on \a os_.
       void operator()()
       {
-        os_ << "#! /bin/sh" << std::endl
-            << std::endl;
+        os_ << "#! /bin/sh\n"
+               "\n";
 
         // Provide the symbols first, as when reading EFSM, knowing
         // how \e is represented will help reading the transitions.
-        os_ << "cat >symbols.txt <<\\EOFSM" << std::endl;
+        os_ << "cat >symbols.txt <<\\EOFSM\n";
         output_input_labels_();
-        os_ << "EOFSM" << std::endl
-            << std::endl;
+        os_ << "EOFSM\n"
+               "\n";
 
         os_ << "cat >transitions.fsm <<\\EOFSM";
         output_transitions_();
-        os_ << std::endl
-            << "EOFSM" << std::endl
-            << std::endl;
+        os_ << "\n"
+               "EOFSM\n"
+               "\n";
 
         // Some OpenFST tools seem to really require an output-symbol
         // list, even for acceptors.  While fstrmepsilon perfectly
@@ -73,9 +73,9 @@ namespace vcsn
         // to require the osymbols; this seems to be due to the fact
         // that Open FST bases its implementation of intersect on its
         // (transducer) composition.
-        os_ << "fstcompile --acceptor \\" << std::endl
-            << "  --keep_isymbols --isymbols=symbols.txt \\" << std::endl
-            << "  --keep_osymbols --osymbols=symbols.txt \\" << std::endl
+        os_ << "fstcompile --acceptor \\\n"
+            << "  --keep_isymbols --isymbols=symbols.txt \\\n"
+            << "  --keep_osymbols --osymbols=symbols.txt \\\n"
             << "  transitions.fsm \"$@\"";
       }
 
@@ -123,7 +123,7 @@ namespace vcsn
         if (aut_.initial_transitions().size() != 1)
           for (auto t : aut_.initial_transitions())
             {
-              os_ << std::endl;
+              os_ << '\n';
               output_transition_(t);
             }
 
@@ -142,7 +142,7 @@ namespace vcsn
         }
         for (auto t : aut_.final_transitions())
           {
-            os_ << std::endl;
+            os_ << '\n';
             output_transition_(t);
           }
       }
@@ -160,11 +160,11 @@ namespace vcsn
         }
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.
-        os_ << "\\e\t0" << std::endl;
+        os_ << "\\e\t0\n";
         for (const auto& p: names_)
           // Don't define 0 again.
           if (p.second)
-            os_ << p.first << '\t' << p.second << std::endl;
+            os_ << p.first << '\t' << p.second << '\n';
       }
 
       /// The FSM format uses integers for labels.

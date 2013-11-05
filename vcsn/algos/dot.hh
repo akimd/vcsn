@@ -65,9 +65,9 @@ namespace vcsn
               "    node [style = invis, shape = none, label = \"\""
               ", width = 0, height = 0]\n";
             for (auto s : initials_())
-              os_ << "    I" << states_[s] << std::endl;
+              os_ << "    I" << states_[s] << '\n';
             for (auto s : finals_())
-              os_ << "    F" << states_[s] << std::endl;
+              os_ << "    F" << states_[s] << '\n';
             os_ << "  }\n";
           }
 
@@ -82,8 +82,8 @@ namespace vcsn
         // "color = gray" to it.
         if (!aut_.states().empty())
           {
-            os_ << "  {" << std::endl
-                << "    node [shape = circle]" << std::endl;
+            os_ << "  {\n"
+                << "    node [shape = circle]\n";
             for (auto s : aut_.states())
               {
                 os_ << "    " << states_[s];
@@ -91,9 +91,9 @@ namespace vcsn
                   os_ << " [label = \"" << states_[s] << " (" << s << ")\"]";
                 if (!has(useful, s))
                   os_ << " [" << gray << "]";
-                os_ << std::endl;
+                os_ << '\n';
               }
-            os_ << "  }" << std::endl;
+            os_ << "  }\n";
           }
 
         for (auto src : aut_.all_states())

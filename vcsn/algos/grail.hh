@@ -94,7 +94,7 @@ namespace vcsn
            });
         for (auto t : ts)
           {
-            os_ << std::endl;
+            os_ << '\n';
             output_transition_(t);
           }
       }
@@ -290,7 +290,7 @@ namespace vcsn
           }
         output_transitions_();
         for (auto s: finals_())
-          os_ << std::endl
+          os_ << '\n'
               << states_[s] <<  " -| (FINAL)";
       }
     };

@@ -58,9 +58,8 @@ namespace vcsn
           "% \\usetikzlibrary{arrows, automata, positioning}\n"
           "% \\tikzstyle{automaton}=[shorten >=1pt, node distance=2cm, pos=.4,\n"
           "%                        >=stealth', initial text=]\n"
-          "% \\tikzstyle{accepting}=[accepting by arrow]\n";
-
-        os_ << "\\begin{tikzpicture}[automaton]" << std::endl;
+          "% \\tikzstyle{accepting}=[accepting by arrow]\n"
+          "\\begin{tikzpicture}[automaton]\n";
 
         for (auto s : aut_.states())
           {
@@ -73,7 +72,7 @@ namespace vcsn
                 << " (" << states_[s] << ")";
             if (states_[s])
               os_ << " [right=of " << states_[s] - 1 << "]";
-            os_ << " {$" << states_[s] << "$};" << std::endl;
+            os_ << " {$" << states_[s] << "$};\n";
         }
 
         for (auto src : aut_.states())
@@ -90,7 +89,7 @@ namespace vcsn
                     << (ns == nd ? "[loop above]" : "")
                     << " node[above]"
                     << " {$" << format_entry_(src, dst) << "$}"
-                    << " (" << nd << ");" << std::endl;
+                    << " (" << nd << ");\n";
               }
           }
         os_ << "\\end{tikzpicture}";
