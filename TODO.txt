@@ -21,6 +21,10 @@ Or use what's in there instead of always abc?
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
 
+** q (LS)
+We accept '1/0'.  Make sure that 0 is always 0/1.  Make sure we are
+always reduced, and not overflowing.
+
 * Benchmarks
 ** determinization
 Experiment determinization on (a^p)*+(a^q)*+(a^r)*, with p, q, r primes.
@@ -37,7 +41,7 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.
 
-** More documentation (AL)
+** More documentation
 The Doxygen style documentation is way too poor.  Aim at completion.
 
 ** We need to go from a labelset to its wordset
@@ -64,17 +68,16 @@ is factored a lot, using std::copy for instance.
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
 
-** ratexpset::print
-Improve the pretty-printer, there are too many parentheses.  Note that
-currently we use labelset::is_letter to know if something requires
-parentheses or not; this is not right.  First the name (is_letter) is
-misleading and of course makes no sense for tupleset for instance, and
-second, it is the wrong concept: it should really be about parentheses
-(e.g., requires_parens, or whatever).
+** ratexpset::print (LS)
+Convert to use <= in:
 
-Note that the ratexp::type() are numbers that are related to precedence, so
-it should be usable to determine whether parens are needed (in "a+b*"
-vs. "(a+b)*" for instance).
+      bool parent_has_precedence = precedence(child) < precedence(parent);
+
+because we may have to deal with binary expressions (instead of variadic):
+e.g. (a+b)+(c+d).  Currently we can't, agreed, but there are already
+experiment where it can happen, in which case we _need_ <=, not <.
+
+Pay attention that we want a**, not (a*)*.
 
 ** evaluate
 Vectors of weights indexed by states are bad structures to iterate upon.  We
@@ -130,13 +133,6 @@ that *both* should yield "{3}ab":
   of the function derived-term for the weighthed automata.
 
 * I/O
-** efsm
-I/O with weights does not work.  Actually, output seems to work, but input
-does not read weights.  And therefore a Z-automaton in EFSM format will be
-read as a B-automaton.
-
-Then complete efsm.chk.
-
 ** fado
 I/O with words.  See the way they also _name_ states, for instance, read the
 dl4.fado as generated below.
@@ -193,7 +189,7 @@ are two implementations there), Forlan.
 Look for other implementations (cf. "Five determinization algorithms").  And
 pay attention to the case of large alphabets.
 
-** minimization
+** minimization (LS)
 Import what Guillaume did for Moore minimization, but without the tbb part
 (for a start).  Implement more minimization algorithms (Hopcroft, Revuz,
 Brzozowski...).  See how the algorithm can be adjusted to work on
@@ -204,7 +200,7 @@ There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
 
-** quotient
+** quotient (LS)
 We need generalizations of minimization.  See TAF-Kit 1.
 
 ** subsequence (or subword?), prefix, suffix, factor

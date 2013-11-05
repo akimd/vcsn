@@ -182,11 +182,11 @@ namespace vcsn
     static std::ostream&
     print(std::ostream& o, const value_t v)
     {
-      if (v.den == 0)
-        return o << 0;
-      if (v.den == 1)
-        return o << v.num;
-      return o << v.num << "/" << v.den;
+      // FIXME: Used to check "den == 0"!!!  Curently we accept "1/0".
+      o << v.num;
+      if (v.den != 1)
+        o << '/' << v.den;
+      return o;
     }
 
     static std::string
