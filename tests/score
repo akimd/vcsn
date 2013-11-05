@@ -39,18 +39,31 @@ run ()
 }
 
 # Output should be fast.
-run "vcsn-standard -Ee 'a?{500}' -O dot  >a500.gv"
-run "vcsn-standard -Ee 'a?{500}' -O efsm >a500.efsm"
-run "vcsn-standard -Ee 'a?{500}' -O fado >a500.fado"
-run "vcsn-standard -Ee 'a?{500}' -O grail>a500.grail"
-run "vcsn-standard -Ee 'a?{500}' -O tikz >a500.tikz"
+#
+# For some reason, outputting to /dev/null or to a file is the same
+# for dot output, but not for fado/efsm! (/dev/null is faster, and
+# uses less sys time.  Although the files are typically 1/3 shorter).
+run "vcsn-standard -Ee 'a?{500}' -O dot  >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O efsm >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O fado >/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O grail>/dev/null"
+run "vcsn-standard -Ee 'a?{500}' -O tikz >/dev/null"
 
 # Input should be too.
+#
+# But don't polute the bench of output with file system issues, so
+# repeat the previous comments, unfortunately.
+vcsn-standard -Ee 'a?{500}' -O dot  >a500.gv
+vcsn-standard -Ee 'a?{500}' -O efsm >a500.efsm
+vcsn-standard -Ee 'a?{500}' -O fado >a500.fado
+vcsn-standard -Ee 'a?{500}' -O grail>a500.grail
+vcsn-standard -Ee 'a?{500}' -O tikz >a500.tikz
+
 run "vcsn-cat -I dot  -q -f a500.gv"
 run "vcsn-cat -I efsm -q -f a500.efsm"
 run "vcsn-cat -I fado -q -f a500.fado"
 
-# Determinization of ladybird 20.
+# Determinization of ladybird 21.
 run 'vcsn-ladybird 21 | vcsn-determinize -q'
 
 # Evaluate of de-bruijn 20.
