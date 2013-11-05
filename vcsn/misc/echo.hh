@@ -7,11 +7,11 @@
 
 /// Display S and its value.
 # define V(S)                                   \
-  #S ": " << S << " "
+  #S ": " << S << ' '
 
 /// Display S and its value in pseudo XML tags, in case of nesting.
 # define VV(S)                                                          \
-  "<" #S ":" __HERE__ << ">" << S << "</" << #S << ">"
+  "<" #S ":" __HERE__ << '>' << S << "</" << #S << '>'
 
 # define SHOW(S) std::cerr << S << std::endl
 

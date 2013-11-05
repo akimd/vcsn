@@ -45,7 +45,7 @@ namespace vcsn
       bool child_needs_left_weight = shows_left_weight_(child);
       print(v.left_weight());
       print_child(child, v, child_needs_left_weight);
-      out_ << "*";
+      out_ << '*';
       print(v.right_weight());
     }
 
@@ -74,10 +74,10 @@ namespace vcsn
       bool parent_has_precedence = precedence(child) < precedence(parent);
       bool needs_parens = parent_has_precedence || force_parens;
       if (needs_parens)
-        out_ << "(";
+        out_ << '(';
       child.accept(*this);
       if (needs_parens)
-        out_ << ")";
+        out_ << ')';
     }
 
     DEFINE::print(const nary_t& n, const char op)

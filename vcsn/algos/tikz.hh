@@ -30,7 +30,6 @@ namespace vcsn
       using typename super_type::automaton_t;
       using typename super_type::state_t;
       using typename super_type::transition_t;
-      using typename super_type::weightset_t;
       using typename super_type::weight_t;
 
       using super_type::aut_;
@@ -44,12 +43,14 @@ namespace vcsn
       /// Format a TikZ attribute.
       /// \param kind  the attribute name (e.g., "initial").
       /// \param w     the associated weight (e.g., initial weight).
-      /// \param opt   the associated weight (e.g., initial weight).
       void format(const std::string& kind, const weight_t& w)
       {
-        os_ << "," << kind;
-        if (ws_.show_one() || !ws_.is_one(w))
-          os_ << "," << kind << " text=$" << ws_.format(w) << "$";
+        if (!ws_.is_zero(w))
+          {
+            os_ << ',' << kind;
+            if (ws_.show_one() || !ws_.is_one(w))
+              os_ << ',' << kind << " text=$" << ws_.format(w) << '$';
+          }
       }
 
       void operator()()
@@ -64,14 +65,12 @@ namespace vcsn
         for (auto s : aut_.states())
           {
             os_ << "  \\node[state";
-            if (aut_.is_initial(s))
-              format("initial", aut_.get_initial_weight(s));
-            if (aut_.is_final(s))
-              format("accepting", aut_.get_final_weight(s));
-            os_ << "]"
-                << " (" << states_[s] << ")";
+            format("initial", aut_.get_initial_weight(s));
+            format("accepting", aut_.get_final_weight(s));
+            os_ << ']'
+                << " (" << states_[s] << ')';
             if (states_[s])
-              os_ << " [right=of " << states_[s] - 1 << "]";
+              os_ << " [right=of " << states_[s] - 1 << ']';
             os_ << " {$" << states_[s] << "$};\n";
         }
 
@@ -84,7 +83,7 @@ namespace vcsn
             for (auto dst: ds)
               {
                 unsigned nd = states_[dst];
-                os_ << "  \\path[->] (" << ns << ")"
+                os_ << "  \\path[->] (" << ns << ')'
                     << " edge"
                     << (ns == nd ? "[loop above]" : "")
                     << " node[above]"

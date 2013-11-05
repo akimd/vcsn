@@ -90,7 +90,7 @@ namespace vcsn
                 if (getenv("DEBUG"))
                   os_ << " [label = \"" << states_[s] << " (" << s << ")\"]";
                 if (!has(useful, s))
-                  os_ << " [" << gray << "]";
+                  os_ << " [" << gray << ']';
                 os_ << '\n';
               }
             os_ << "  }\n";
@@ -133,12 +133,12 @@ namespace vcsn
                       }
                     if (useless)
                       os_ << sep << gray;
-                    os_ << "]";
+                    os_ << ']';
                   }
                 os_ << "\n";
               }
           }
-        return os_ << "}";
+        return os_ << '}';
       }
     };
   }

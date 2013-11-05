@@ -297,7 +297,7 @@ namespace vcsn
             o << "    " << p.first - 2
               << " [label = \""
               << p.second.first - 2
-              << ","
+              << ','
               << p.second.second - 2
               << "\"]\n";
         o << "*/\n";

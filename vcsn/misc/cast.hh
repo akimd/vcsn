@@ -34,7 +34,7 @@ namespace vcsn
       error(const char* msg)
       {
         std::cerr
-          << file << ":" << line << ": " << msg
+          << file << ':' << line << ": " << msg
           << " from " << typeid(U).name() << " to " << typeid(T).name()
           << std::endl;
         abort();
