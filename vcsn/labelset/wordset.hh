@@ -7,7 +7,6 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
 {
@@ -122,13 +121,6 @@ namespace vcsn
       conv(std::istream& i) const
       {
         return this->genset()->conv(i);
-      }
-
-      // FIXME: remove, see todo.txt:scanners.
-      value_t
-      conv(const std::string& s) const
-      {
-        return ::vcsn::conv(*this, s);
       }
 
       std::ostream&

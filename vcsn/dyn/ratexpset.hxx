@@ -67,7 +67,7 @@ namespace dyn
 
     DEFINE::atom(const std::string& w) const -> value_t
     {
-      return rs_.atom(rs_.labelset()->conv(w));
+      return rs_.atom(::vcsn::conv(*rs_.labelset(), w));
     }
 
     DEFINE::add(value_t l, value_t r) const -> value_t

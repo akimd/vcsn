@@ -8,7 +8,6 @@
 # include <vcsn/empty.hh>
 
 # include <vcsn/core/kind.hh>
-# include <vcsn/misc/stream.hh> // conv.
 
 namespace vcsn
 {
@@ -113,12 +112,6 @@ namespace vcsn
             i.ignore();
           }
         return {};
-      }
-
-      // FIXME: remove, see todo.txt:scanners.
-      static value_t conv(const std::string& s)
-      {
-        return ::vcsn::conv(oneset{}, s);
       }
 
       static std::string format(empty_t)

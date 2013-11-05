@@ -8,7 +8,6 @@
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/set.hh> // intersection
-# include <vcsn/misc/stream.hh> // conv.
 # include <vcsn/labelset/genset-labelset.hh>
 
 namespace vcsn
@@ -121,13 +120,6 @@ namespace vcsn
         else
           throw std::domain_error("invalid label: unexpected "
                                   + str_escape(c));
-      }
-
-      // FIXME: remove, see todo.txt:scanners.
-      value_t
-      conv(const std::string& s) const
-      {
-        return ::vcsn::conv(*this, s);
       }
 
       std::ostream&

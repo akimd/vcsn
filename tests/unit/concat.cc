@@ -29,7 +29,7 @@ check_conv(const Ctx& ctx)
   auto ls = *ctx.labelset();
 
   // Check that the empty word is really recognized as \e.
-  ASSERT_EQ(int(ks.atom(ls.conv(""))->type()),
+  ASSERT_EQ(int(ks.atom(conv(ls, ""))->type()),
             int(vcsn::rat::exp::type_t::one));
 
   return nerrs;

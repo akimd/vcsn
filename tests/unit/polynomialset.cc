@@ -13,7 +13,7 @@ check_conv_fail(T& ps, const std::string& str)
 {
   try
     {
-      auto p = ps.conv(str);
+      auto p = conv(ps, str);
       std::cerr << "ERROR: " << str << " -> " << ps.format(p) << std::endl;
     }
   catch (std::domain_error&)
@@ -70,7 +70,7 @@ check_conv(const PolynomialSet& ps)
   do {                                          \
     if (getenv("VERBOSE"))                      \
       std::cerr << "check_conv: In: " << In;    \
-    ASSERT_EQ(ps.format(ps.conv(In)), Out);     \
+    ASSERT_EQ(ps.format(conv(ps, In)), Out);     \
   } while (false)
 #define CHECK_FAIL(In)                          \
   ASSERT_EQ(check_conv_fail(ps, In), true);
@@ -113,7 +113,7 @@ check_star_fail(const PolynomialSet& ps, const std::string& str)
 {
   try
     {
-      ps.star(ps.conv(str));
+      ps.star(conv(ps, str));
     }
   catch (std::domain_error&)
     {
@@ -135,7 +135,7 @@ check_star(const PolynomialSet& ps)
   do {                                                  \
     if (getenv("VERBOSE"))                              \
       std::cerr << "check_star: In: " << In;            \
-    ASSERT_EQ(ps.format(ps.star(ps.conv(In))), Out);    \
+    ASSERT_EQ(ps.format(ps.star(conv(ps, In))), Out);    \
   } while (false)
 
   CHECK("<123>\\e",         "<0>\\e");
@@ -146,7 +146,7 @@ check_star(const PolynomialSet& ps)
   ASSERT_EQ(check_star_fail(ps, "<-1>\\e"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>a"), true);
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<12>a"), true);
-  ASSERT_EQ(ps.format(ps.star(ps.conv("<12>\\e+<oo>a"))), "<0>\\e");
+  ASSERT_EQ(ps.format(ps.star(conv(ps, "<12>\\e+<oo>a"))), "<0>\\e");
   ASSERT_EQ(check_star_fail(ps, "<123>\\e+<oo>a+<3>a"), true);
   return nerrs;
 }

@@ -22,13 +22,14 @@ namespace vcsn LIBVCSN_API
   std::string
   bracketed(std::istream& i, const char lbracket, const char rbracket);
 
-  template <typename ValueSet>
+  template <typename ValueSet, typename... Args>
   auto
-  conv(const ValueSet& vs, const std::string& str)
-    -> decltype(vs.conv(std::declval<std::istream&>()))
+  conv(const ValueSet& vs, const std::string& str, Args&&... args)
+    -> decltype(vs.conv(std::declval<std::istream&>(),
+                        std::forward<Args>(args)...))
   {
     std::istringstream i{str};
-    auto res = vs.conv(i);
+    auto res = vs.conv(i, std::forward<Args>(args)...);
     if (i.peek() != -1)
       throw std::domain_error(vs.sname() + ": invalid value: " + str
                               + ", unexpected "

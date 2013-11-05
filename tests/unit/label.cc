@@ -14,14 +14,14 @@ check_letterset()
   genset_t gs{'a', 'b', 'c'};
   labelset_t ls{gs};
 
-  ASSERT_EQ(ls.is_valid(ls.conv("a")), true);
-  ASSERT_EQ(ls.is_one(ls.conv("a")), false);
-  ASSERT_EQ(ls.is_special(ls.conv("a")), false);
+  ASSERT_EQ(ls.is_valid(conv(ls, "a")), true);
+  ASSERT_EQ(ls.is_one(conv(ls, "a")), false);
+  ASSERT_EQ(ls.is_special(conv(ls, "a")), false);
 
   ASSERT_EQ(ls.is_valid('x'), false);
 
-  ASSERT_EQ(ls.format(ls.conv("a")), "a");
-  ASSERT_EQ(ls.format(ls.transpose(ls.conv("a"))), "a");
+  ASSERT_EQ(ls.format(conv(ls, "a")), "a");
+  ASSERT_EQ(ls.format(ls.transpose(conv(ls, "a"))), "a");
 
   return nerrs;
 }

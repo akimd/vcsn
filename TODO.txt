@@ -46,13 +46,9 @@ polynomials for instance really need to go from label_t to word_t, and be
 able to deal with them.
 
 ** scanners
-The scanners are C scanners, not C++ scanners.  Therefore they don't
-support streams, which is a nuisance, as our primary interface for
-"conv" routines should rely on istream.
+The rat scanner's FlexLexer.h must be renamed and moved elsewhere.
 
-So move the scanners to Flex's C++ backend.  Then move all "conv" that
-still require std::string to using std::istream, and use
-misc/stream.hh:conv where we want to use strings as input.
+The dot scanner is a C scanner, not a C++ scanner.
 
 ** polynomialset
 It seems that monomials would be a useful abstraction.

@@ -85,22 +85,24 @@ namespace vcsn
     REGISTER_DEFINE(read_polynomial);
 
     static polynomial
-    read_polynomial(const dyn::context& ctx, const std::string& s)
+    read_polynomial(const dyn::context& ctx, std::istream& is)
     {
       return detail::read_polynomial_registry().call(ctx->vname(false),
-                                                 ctx, s);
+                                                     ctx, is);
     }
 
     polynomial
     read_polynomial_file(const std::string& f, const context& ctx)
     {
-      return read_polynomial_string(get_file_contents(f), ctx);
+      auto is = open_input_file(f);
+      return read_polynomial(ctx, *is);
     }
 
     polynomial
     read_polynomial_string(const std::string& s, const context& ctx)
     {
-      return read_polynomial(ctx, s);
+      std::istringstream is{s};
+      return read_polynomial(ctx, is);
     }
 
 

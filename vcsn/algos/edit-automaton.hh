@@ -15,6 +15,7 @@
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/flyweight.hh>
+# include <vcsn/misc/stream.hh>
 # include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
@@ -148,8 +149,7 @@ namespace vcsn
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
     virtual void
-    add_entry(string_t src, string_t dst,
-              string_t entry) override final
+    add_entry(string_t src, string_t dst, string_t entry) override final
     {
       auto s = state_(src);
       auto d = state_(dst);
@@ -167,7 +167,7 @@ namespace vcsn
               // Adding a pre/post transition: be sure that it's only
               // a weight.  Entries see the special label as an empty
               // one.
-              auto e = ps_.conv(entry, sep_);
+              auto e = conv(ps_, entry, sep_);
               if (e.size() == 1
                   && (res_->labelset()->is_special(begin(e)->first)
                       || res_->labelset()->is_one(begin(e)->first)))
@@ -186,7 +186,7 @@ namespace vcsn
         {
           auto p = emap_.emplace(entry, entry_t{});
           if (p.second)
-            p.first->second = ps_.conv(entry, sep_);
+            p.first->second = conv(ps_, entry, sep_);
           add_entry(s, d, p.first->second);
         }
     }
@@ -211,7 +211,7 @@ namespace vcsn
     label_(string_t l)
     {
       static const auto& ls = *res_->labelset();
-      return ls.conv(l);
+      return conv(ls, l);
     }
 
     /// Convert a weight string to its value.

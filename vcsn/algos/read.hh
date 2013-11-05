@@ -17,10 +17,10 @@ namespace vcsn
   template <typename Context>
   inline
   auto
-  read_polynomial(const Context& ctx, const std::string& w)
+  read_polynomial(const Context& ctx, std::istream& is)
     -> typename polynomialset<Context>::value_t
   {
-    return polynomialset<Context>(ctx).conv(w);
+    return polynomialset<Context>(ctx).conv(is);
   }
 
   namespace dyn
@@ -30,17 +30,17 @@ namespace vcsn
       /// Bridge.
       template <typename Context>
       auto
-      read_polynomial(const context& ctx, const std::string& s)
+      read_polynomial(const context& ctx, std::istream& is)
         -> polynomial
       {
         const auto& c = ctx->as<Context>();
         auto ps = polynomialset<Context>(c);
-        auto res = ::vcsn::read_polynomial(c, s);
+        auto res = ::vcsn::read_polynomial(c, is);
         return make_polynomial(ps, res);
       }
 
       REGISTER_DECLARE(read_polynomial,
-                       (const context& ctx, const std::string& s) -> polynomial);
+                       (const context& ctx, std::istream& is) -> polynomial);
     }
   }
 

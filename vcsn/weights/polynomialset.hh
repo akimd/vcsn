@@ -364,27 +364,6 @@ namespace vcsn
       return res;
     }
 
-    /// Construct from a string.
-    ///
-    /// Somewhat more general than a mere reversal of "format",
-    /// in particular "a+a" is properly understood as "<2>a" in
-    /// char_z.
-    ///
-    /// \param s    the string to parse
-    /// \param sep  the separator between monomials.
-    value_t
-    conv(const std::string& s, const char sep = '+') const
-    {
-      std::istringstream i{s};
-      value_t res = conv(i, sep);
-
-      if (i.peek() != -1)
-        throw std::domain_error(sname() + ": conv: invalid value: " + s
-                                + " unexpected "
-                                + std::string{char(i.peek())});
-      return res;
-    }
-
     /// Print a monomial.
     std::ostream&
     print(std::ostream& out, const monomial_t& m) const
