@@ -1,3 +1,4 @@
+/// Check axiomatic laws of a weightset (semiring).
 template <typename WeightSet>
 inline
 bool check_common(const WeightSet& ws)
@@ -30,8 +31,8 @@ bool check_common(const WeightSet& ws)
   ASSERT_EQ(ws.equals(ws.mul(o, o), o), true);
 
   // conv, format.
-  ASSERT_EQ(ws.equals(ws.conv(ws.format(z)), z), true);
-  ASSERT_EQ(ws.equals(ws.conv(ws.format(o)), o), true);
+  ASSERT_EQ(ws.equals(conv(ws, ws.format(z)), z), true);
+  ASSERT_EQ(ws.equals(conv(ws, ws.format(o)), o), true);
 
   return nerrs;
 }

@@ -10,7 +10,7 @@
 # include <utility>
 
 # include <vcsn/misc/star_status.hh>
-# include <vcsn/misc/stream.hh>
+# include <vcsn/misc/stream.hh> // eat
 
 namespace vcsn
 {
@@ -127,12 +127,6 @@ namespace vcsn
               throw std::domain_error(sname() + ": invalid value: " + buf);
             }
         }
-    }
-
-    static value_t
-    conv(const std::string& str)
-    {
-      return ::vcsn::conv(zmin(), str);
     }
 
     static std::ostream&

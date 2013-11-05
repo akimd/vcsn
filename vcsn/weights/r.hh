@@ -8,6 +8,7 @@
 # include <sstream>
 
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/stream.hh>
 
 namespace vcsn
 {
@@ -119,12 +120,6 @@ namespace vcsn
           i.getline (buf, sizeof buf);
           throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
         }
-    }
-
-    static value_t
-    conv(const std::string& str)
-    {
-      return ::vcsn::conv(r(), str);
     }
 
     static std::ostream&

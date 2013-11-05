@@ -7,9 +7,9 @@
 # include <boost/lexical_cast.hpp>
 # include <sstream>
 
-# include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/attributes.hh>
-# include <vcsn/misc/stream.hh>
+# include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/stream.hh> // eat
 
 namespace vcsn
 {
@@ -177,13 +177,6 @@ namespace vcsn
       res.num /= int(g);
       res.den /= g;
       return res;
-    }
-
-    static value_t
-    conv(const std::string& str)
-    {
-      std::istringstream i{str};
-      return conv(i);
     }
 
     static std::ostream&

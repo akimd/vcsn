@@ -117,12 +117,6 @@ namespace vcsn
         }
     }
 
-    static value_t
-    conv(const std::string& str)
-    {
-      return ::vcsn::conv(f2(), str);
-    }
-
     static std::ostream&
     print(std::ostream& o, const value_t v)
     {

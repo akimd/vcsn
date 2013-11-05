@@ -24,8 +24,8 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
   ASSERT_EQ(ws.format(ws.one()), "1");
 
   // conv.
-  ASSERT_EQ(ws.conv("0"), 0);
-  ASSERT_EQ(ws.conv("1"), 1);
+  ASSERT_EQ(conv(ws, "0"), 0);
+  ASSERT_EQ(conv(ws, "1"), 1);
 
   // add: "or" or "xor".
   ASSERT_EQ(ws.add(1, 1), one_plus_one);
@@ -56,7 +56,7 @@ static size_t check_q()
 
   // conv.
 #define CHECK(In, Out)                          \
-  ASSERT_EQ(ws.format(ws.conv(In)), Out)
+  ASSERT_EQ(ws.format(conv(ws, In)), Out)
 
   CHECK("-1/1", "-1");
   CHECK("-3/2", "-3/2");
@@ -69,31 +69,31 @@ static size_t check_q()
 #define CHECK(Lhs, Rhs, Out)                      \
   ASSERT_EQ(ws.format(ws.add(Lhs, Rhs)), Out)
 
-  CHECK(ws.zero(), ws.conv("8/2"), "4");
-  CHECK(ws.one(), ws.conv("8/2"), "5");
-  CHECK(ws.conv("1/3"), ws.conv("1/6"), "1/2");
-  CHECK(ws.conv("3/2"), ws.conv("2/3"), "13/6");
-  CHECK(ws.conv("8/2"), ws.conv("2/2"), "5");
-  CHECK(ws.conv("168/9"), ws.conv("14/13"), "770/39");
+  CHECK(ws.zero(), conv(ws, "8/2"), "4");
+  CHECK(ws.one(), conv(ws, "8/2"), "5");
+  CHECK(conv(ws, "1/3"), conv(ws, "1/6"), "1/2");
+  CHECK(conv(ws, "3/2"), conv(ws, "2/3"), "13/6");
+  CHECK(conv(ws, "8/2"), conv(ws, "2/2"), "5");
+  CHECK(conv(ws, "168/9"), conv(ws, "14/13"), "770/39");
 #undef CHECK
 
   // mul.
 #define CHECK(Lhs, Rhs, Out)                      \
   ASSERT_EQ(ws.format(ws.mul(Lhs, Rhs)), Out)
 
-  CHECK(ws.zero(), ws.conv("8/3"), "0");
-  CHECK(ws.one(), ws.conv("8/3"), "8/3");
-  CHECK(ws.one(), ws.conv("8/4"), "2");
+  CHECK(ws.zero(), conv(ws, "8/3"), "0");
+  CHECK(ws.one(), conv(ws, "8/3"), "8/3");
+  CHECK(ws.one(), conv(ws, "8/4"), "2");
 
-  CHECK(ws.conv("-3/2"), ws.conv("2/3"), "-1");
-  CHECK(ws.conv("8/2"), ws.conv("2/2"), "4");
-  CHECK(ws.conv("800000/2"), ws.conv("0/2"), "0");
-  CHECK(ws.conv("800000/2"), ws.conv("1/2"), "200000");
+  CHECK(conv(ws, "-3/2"), conv(ws, "2/3"), "-1");
+  CHECK(conv(ws, "8/2"), conv(ws, "2/2"), "4");
+  CHECK(conv(ws, "800000/2"), conv(ws, "0/2"), "0");
+  CHECK(conv(ws, "800000/2"), conv(ws, "1/2"), "200000");
 #undef CHECK
 
   // star.
 #define CHECK(In, Out)                          \
-  ASSERT_EQ(ws.format(ws.star(ws.conv(In))), Out)
+  ASSERT_EQ(ws.format(ws.star(conv(ws, In))), Out)
 
   CHECK("1/2", "2");
   CHECK("-1/2", "2/3");
@@ -101,7 +101,7 @@ static size_t check_q()
 
   // equals.
 #define CHECK(Lhs, Rhs, Out)                            \
-  ASSERT_EQ(ws.equals(ws.conv(Lhs), ws.conv(Rhs)), Out)
+  ASSERT_EQ(ws.equals(conv(ws, Lhs), conv(ws, Rhs)), Out)
   CHECK("8/16", "1/2", true);
   CHECK("0/16", "0", true);
   CHECK("16/8", "2", true);
@@ -124,9 +124,9 @@ static size_t check_r()
   ASSERT_EQ(ws.format(ws.one()), "1");
 
   // conv.
-  ASSERT_EQ(ws.format(ws.conv("-1")), "-1");
-  ASSERT_EQ(ws.format(ws.conv("-3.2")), "-3.2");
-  ASSERT_EQ(ws.format(ws.conv("0.1")), "0.1");
+  ASSERT_EQ(ws.format(conv(ws, "-1")), "-1");
+  ASSERT_EQ(ws.format(conv(ws, "-3.2")), "-3.2");
+  ASSERT_EQ(ws.format(conv(ws, "0.1")), "0.1");
 
   // add.
   ASSERT_EQ(ws.add(3.2, 2.3), 5.5);
@@ -159,9 +159,9 @@ static size_t check_zmin()
   ASSERT_EQ(ws.format(42), "42");
 
   // conv.
-  ASSERT_EQ(ws.format(ws.conv("oo")), "oo");
-  ASSERT_EQ(ws.format(ws.conv("0")), "0");
-  ASSERT_EQ(ws.format(ws.conv("42")), "42");
+  ASSERT_EQ(ws.format(conv(ws, "oo")), "oo");
+  ASSERT_EQ(ws.format(conv(ws, "0")), "0");
+  ASSERT_EQ(ws.format(conv(ws, "42")), "42");
 
   // add: min.
   ASSERT_EQ(ws.add(23, 42), 23);
