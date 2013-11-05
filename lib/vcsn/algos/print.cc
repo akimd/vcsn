@@ -69,7 +69,7 @@ namespace vcsn
       if (type == "list")
         detail::list_polynomial_registry().call(p->vname(false), p, out);
       else if (type == "null")
-        detail::print_polynomial_registry().call(p->vname(false), p, out);
+        {}
       else if (type == "text" || type == "default" || type == "")
         detail::print_polynomial_registry().call(p->vname(false), p, out);
       else
