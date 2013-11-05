@@ -45,10 +45,8 @@ vcsn::dyn::polynomial
 read_polynomial(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
-  return
-    opts.input_is_file
-    ? vcsn::dyn::read_polynomial_file(opts.input, ctx)
-    : vcsn::dyn::read_polynomial_string(opts.input, ctx);
+  auto is = input(opts);
+  return vcsn::dyn::read_polynomial(*is, ctx);
 }
 
 vcsn::dyn::weight

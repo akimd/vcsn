@@ -69,42 +69,18 @@ namespace vcsn
     }
 
 
-    ratexp
-    read_ratexp_string(const std::string& s, const ratexpset& rs,
-                       const std::string& t)
-    {
-      std::istringstream is{s};
-      return read_ratexp(is, rs, t);
-    }
-
-
     /*------------------.
     | read_polynomial.  |
     `------------------*/
 
     REGISTER_DEFINE(read_polynomial);
 
-    static polynomial
-    read_polynomial(const dyn::context& ctx, std::istream& is)
+    polynomial
+    read_polynomial(std::istream& is, const dyn::context& ctx)
     {
       return detail::read_polynomial_registry().call(ctx->vname(false),
                                                      ctx, is);
     }
-
-    polynomial
-    read_polynomial_file(const std::string& f, const context& ctx)
-    {
-      auto is = open_input_file(f);
-      return read_polynomial(ctx, *is);
-    }
-
-    polynomial
-    read_polynomial_string(const std::string& s, const context& ctx)
-    {
-      std::istringstream is{s};
-      return read_polynomial(ctx, is);
-    }
-
 
     /*--------------.
     | read_weight.  |
