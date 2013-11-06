@@ -23,13 +23,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
-      using prod_t = typename super_type::prod_t;
-      using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
 
       printer(std::ostream& out,
               const ratexpset_t& rs,
@@ -52,12 +46,18 @@ namespace vcsn
       }
 
     private:
-      virtual void visit(const prod_t& v);
-      virtual void visit(const sum_t& v);
-      virtual void visit(const star_t& v);
-      virtual void visit(const one_t& v);
-      virtual void visit(const zero_t& v);
-      virtual void visit(const atom_t& v);
+# define DEFINE(Type)						\
+      using Type ## _t = typename super_type::Type ## _t;	\
+      virtual void visit(const Type ## _t& v)
+
+      DEFINE(prod);
+      DEFINE(sum);
+      DEFINE(star);
+      DEFINE(one);
+      DEFINE(zero);
+      DEFINE(atom);
+
+# undef DEFINE
 
       /// The possible node precedence levels.
       enum class precedence_t
