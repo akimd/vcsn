@@ -15,6 +15,8 @@ check_exp 'lal_char(abcd)_z'  'a+a'  '<2>a'
 check_exp 'lal_char(abcd)_z'  'a+a'  '<2>a'
 check_exp 'lal_char(abcd)_z'  'b+a+b+a'  '<2>a+<2>b'
 
+check_exp 'lal_char(abcd)_z'  '(a*)&(b+a+b+a)'  '<2>(a*&a)+<2>(a*&b)'
+
 check_exp 'lal_char(abcd)_z' \
   '<3>(b+a+b+a)<5>'  '<30>a+<30>b'
 

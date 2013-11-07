@@ -37,6 +37,7 @@ namespace vcsn
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
@@ -62,7 +63,14 @@ namespace vcsn
         for (const auto& m: p)
           res = rs_.add(res, rs_.weight(m.second, m.first));
          return res;
-       }
+      }
+
+      /// Syntactic sugar: recursive call to this visitor.
+      polynomial_t expand(const ratexp_t& e)
+      {
+        e->accept(*this);
+        return res_;
+      }
 
       virtual void
       visit(const zero_t&)
@@ -87,9 +95,23 @@ namespace vcsn
       {
         polynomial_t res = ps_.zero();
         for (auto c: v)
+          res = ps_.add(res, expand(c));
+        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
+      }
+
+      virtual void
+      visit(const intersection_t& v)
+      {
+        auto res = expand(v.head());
+        for (auto c: v.tail())
           {
-            c->accept(*this);
-            res = ps_.add(res, res_);
+            polynomial_t sum = ps_.zero();
+            for (const auto& l: res)
+              for (const auto& r: expand(c))
+                ps_.add_weight(sum,
+                               rs_.intersection(l.first, r.first),
+                               ws_.mul(l.second, r.second));
+            res = sum;
           }
         res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
       }
@@ -99,10 +121,7 @@ namespace vcsn
       {
         polynomial_t res = ps_.one();
         for (auto c: v)
-          {
-            c->accept(*this);
-            res = ps_.mul(res, res_);
-          }
+          res = ps_.mul(res, expand(c));
         res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
       }
 
