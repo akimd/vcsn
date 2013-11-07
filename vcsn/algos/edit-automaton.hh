@@ -90,10 +90,6 @@ namespace vcsn
     using label_t = typename automaton_t::label_t;
     using weight_t = typename automaton_t::weight_t;
 
-    /// State name -> state handle.
-    using state_map = std::unordered_map<string_t, state_t>;
-    using entry_map = std::unordered_map<string_t, entry_t>;
-
   public:
     edit_automaton(const context_t& ctx)
       : res_(new automaton_t(ctx))
@@ -216,7 +212,10 @@ namespace vcsn
     label_(string_t l)
     {
       static const auto& ls = *res_->labelset();
-      return conv(ls, l);
+      auto p = lmap_.emplace(l, label_t{});
+      if (p.second)
+        p.first->second = conv(ls, l);
+      return p.first->second;
     }
 
     /// Convert a weight string to its value.
@@ -224,7 +223,10 @@ namespace vcsn
     weight_(string_t w)
     {
       static const auto& ws = *res_->weightset();
-      return w.get().empty() ? ws.one() : conv(ws, w);
+      auto p = wmap_.emplace(w, weight_t{});
+      if (p.second)
+        p.first->second = w.get().empty() ? ws.one() : conv(ws, w);
+      return p.first->second;
     }
 
     /// Convert a state name to a state handler.
@@ -249,10 +251,19 @@ namespace vcsn
     automaton_t* res_;
     /// Entries handler.
     polynomialset<context_t> ps_;
-    /// Map state name to state handler.
+
+    /// State name -> state handle.
+    using state_map = std::unordered_map<string_t, state_t>;
     state_map smap_;
-    /// Memoize conversion from entry as a string to entry_t.
+    /// Memoize entry conversion.
+    using entry_map = std::unordered_map<string_t, entry_t>;
     entry_map emap_;
+    /// Memoize label conversion.
+    using label_map = std::unordered_map<string_t, label_t>;
+    label_map lmap_;
+    /// Memoize weight conversion.
+    using weight_map = std::unordered_map<string_t, weight_t>;
+    weight_map wmap_;
   };
 
   /// Build an automaton with unknown context.
