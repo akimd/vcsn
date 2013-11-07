@@ -59,6 +59,47 @@ It seems that monomials would be a useful abstraction.
 
 Why "weight" in add_weight?  In place operations would be useful.
 
+We need to hide the map, and expose a polynomial_t type:
+
+    /// Construction from a list of monomials.
+    ///
+    /// Even without this constructor we can write:
+    ///
+    /// polynomialset{{l1, w1}, {l2, w2}}
+    ///
+    /// However, it is the laws of a map that apply, not those of a
+    /// polynomial.  In particular (i) if a label is zero, then the
+    /// polynomial will contains such a monomial (which is forbidden),
+    /// and (ii) if l1 and l2 are equal, the resulting weight will be
+    /// w2 instead of w1+w2.
+    polynomial(std::initializer_list<monomial_t> init)
+    {
+      polynomial res;
+      for (const auto& m: init)
+        res.add_weight(m);
+      return res;
+    }
+
+likewise with assignements.  The problem came from derivation with
+intersection:
+
+      virtual void
+      visit(const hadam_t& e)
+      {
+	e.head()->accept(*this);
+	auto res = ratexp(res_);
+	for (auto v: e.tail())
+	  {
+	    v->accept(*this);
+	    res = rs_.hadam(res, ratexp(res_));
+	  }
+        res_ = {{res, ws_.one()}};
+        apply_weights(e);
+      }
+
+here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
+is forbidden (this should be the empty polynomial).
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
