@@ -25,6 +25,12 @@ crange should not feature size and empty if !VCSN_DEBUG.
 We accept '1/0'.  Make sure that 0 is always 0/1.  Make sure we are
 always reduced, and not overflowing.
 
+** star-normal-form
+It does not work for weighted ratexps.
+
+** intersection
+Check star-normal-form, standard, thompson.
+
 * Benchmarks
 ** determinization
 Experiment determinization on (a^p)*+(a^q)*+(a^r)*, with p, q, r primes.
