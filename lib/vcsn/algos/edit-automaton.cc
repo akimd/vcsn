@@ -11,22 +11,14 @@ namespace vcsn
   `------------------------*/
 
   void
-  lazy_automaton_editor::add_state(string_t s)
-  {
-    states_.emplace(s);
-  }
-
-  void
   lazy_automaton_editor::add_initial(string_t s, string_t w)
   {
-    add_state(s);
     initial_states_.emplace_back(s, w);
   }
 
   void
   lazy_automaton_editor::add_final(string_t s, string_t w)
   {
-    add_state(s);
     final_states_.emplace_back(s, w);
   }
 
@@ -37,8 +29,6 @@ namespace vcsn
                                         string_t lbl,
                                         string_t weight)
   {
-    add_state(src);
-    add_state(dst);
     transitions_.emplace_back(src, dst, lbl, weight);
     if (lbl == "\\e")
       is_lan_ = true;
@@ -73,9 +63,6 @@ namespace vcsn
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
 
-    for (auto s: states_)
-      edit->add_state(s);
-
     for (auto t: transitions_)
       edit->add_transition(std::get<0>(t), std::get<1>(t),
                            std::get<2>(t), std::get<3>(t));
@@ -96,7 +83,6 @@ namespace vcsn
     transitions_.clear();
     final_states_.clear();
     initial_states_.clear();
-    states_.clear();
   }
 
 

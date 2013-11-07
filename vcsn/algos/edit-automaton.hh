@@ -139,12 +139,17 @@ namespace vcsn
     }
 
     virtual void
-    add_transition(string_t s, string_t d,
+    add_transition(string_t src, string_t dst,
                    string_t label,
                    string_t weight = {}) override final
     {
-      res_->add_transition(state_(s), state_(d),
-                           label_(label), weight_(weight));
+      // In case of states we don't know, we'd like to register s
+      // first, then d, in an attempt to keep the order in which we
+      // discover states.  Which is not guaranteed by plain argument
+      // evaluation.
+      auto s = state_(src);
+      auto d = state_(dst);
+      res_->add_transition(s, d, label_(label), weight_(weight));
     }
 
     /// Add transitions from \a src to \a dst, labeled by \a entry.
@@ -261,8 +266,6 @@ namespace vcsn
     using string_t = automaton_editor::string_t;
 
   public:
-    void add_state(string_t s);
-
     void add_initial(string_t s, string_t w = {});
 
     void add_final(string_t s, string_t w = {});
@@ -294,10 +297,6 @@ namespace vcsn
     std::vector<std::pair<string_t, string_t>> initial_states_;
     /// The collected final states: (State, Weight).
     std::vector<std::pair<string_t, string_t>> final_states_;
-    /// The collected state names.  Keep sorted as an attempt to
-    /// keep their order ("0" -> 0, etc.).
-    // FIXME: we'd need to have "11" > "2", which is not the case here.
-    std::set<string_t> states_;
   };
 
   namespace dyn
