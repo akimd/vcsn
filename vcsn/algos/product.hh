@@ -21,27 +21,27 @@ namespace vcsn
     `----------*/
 
     /// Build the (accessible part of the) product.
-    template <typename A, typename B>
+    template <typename Lhs, typename Rhs>
     class producter
     {
-      static_assert(A::context_t::is_lal,
+      static_assert(Lhs::context_t::is_lal,
                     "requires labels_are_letters");
-      static_assert(B::context_t::is_lal,
+      static_assert(Rhs::context_t::is_lal,
                     "requires labels_are_letters");
-      static_assert(A::context_t::weightset_t::is_commutative_semiring(),
+      static_assert(Rhs::context_t::weightset_t::is_commutative_semiring(),
                     "not a commutative semiring");
 
-      using automaton_t = A;
+      using automaton_t = Lhs;
 
       using state_t = typename automaton_t::state_t;
-      using pair_t = std::pair<typename A::state_t, typename B::state_t>;
+      using pair_t = std::pair<typename Lhs::state_t, typename Rhs::state_t>;
       using label_t = typename automaton_t::label_t;
       using weightset_t = typename automaton_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
-      const A& laut_;
-      const B& raut_;
+      const Lhs& lhs_;
+      const Rhs& rhs_;
 
       /// Map (left-state, right-state) -> product-state.
       using map = std::map<pair_t, state_t>;
@@ -54,8 +54,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pair_t ppre(laut_.pre(), raut_.pre());
-        pair_t ppost(laut_.post(), raut_.post());
+        pair_t ppre(lhs_.pre(), rhs_.pre());
+        pair_t ppost(lhs_.post(), rhs_.post());
         pmap_[ppre] = res_.pre();
         pmap_[ppost] = res_.post();
       }
@@ -65,7 +65,7 @@ namespace vcsn
       void initialize_product()
       {
         initialize();
-        todo_.emplace_back(pair_t(laut_.pre(), raut_.pre()));
+        todo_.emplace_back(pair_t(lhs_.pre(), rhs_.pre()));
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -75,16 +75,16 @@ namespace vcsn
         initialize();
 
         /// Make the result automaton initial states:
-        for (auto lt : laut_.initial_transitions())
-          for (auto rt : raut_.initial_transitions())
+        for (auto lt : lhs_.initial_transitions())
+          for (auto rt : rhs_.initial_transitions())
             {
-              auto lsrc = laut_.dst_of(lt);
-              auto rsrc = raut_.dst_of(rt);
+              auto lsrc = lhs_.dst_of(lt);
+              auto rsrc = rhs_.dst_of(rt);
               pair_t pair(lsrc, rsrc);
               state_t init = res_.new_state();
               res_.add_initial(init,
-                               ws.mul(laut_.weight_of(lt),
-                                      raut_.weight_of(rt)));
+                               ws.mul(lhs_.weight_of(lt),
+                                      rhs_.weight_of(rt)));
               pmap_[pair] = init;
               todo_.emplace_back(pair);
             }
@@ -96,7 +96,7 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(typename A::state_t lst, typename B::state_t rst)
+      state_t state(typename Lhs::state_t lst, typename Rhs::state_t rst)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         pair_t pdst(lst, rst);
@@ -118,7 +118,7 @@ namespace vcsn
       /// \pre !res.has_transition(src, dst, label).
       void
       new_transition(state_t src,
-                     typename A::state_t ldst, typename B::state_t rdst,
+                     typename Lhs::state_t ldst, typename Rhs::state_t rdst,
                      const label_t& label, const weight_t& weight)
       {
         res_.new_transition(src, state(ldst, rdst), label, weight);
@@ -128,7 +128,7 @@ namespace vcsn
       /// If needed, push the destination state in the work list.
       void
       add_transition(state_t src,
-                     typename A::state_t ldst, typename B::state_t rdst,
+                     typename Lhs::state_t ldst, typename Rhs::state_t rdst,
                      const label_t& label, const weight_t& weight)
       {
         res_.add_transition(src, state(ldst, rdst), label, weight);
@@ -144,19 +144,19 @@ namespace vcsn
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
-        for (auto lt : laut_.all_out(psrc.first))
+        for (auto lt : lhs_.all_out(psrc.first))
           {
-            auto label = laut_.label_of(lt);
-            auto lweight = laut_.weight_of(lt);
-            auto ldst = laut_.dst_of(lt);
+            auto label = lhs_.label_of(lt);
+            auto lweight = lhs_.weight_of(lt);
+            auto ldst = lhs_.dst_of(lt);
 
             // These are always new transitions: first because the src
             // state is visited for the first time, and second because
             // the couple (ldst, label) is unique, and so is (rdst,
             // label).
-            for (auto rt : raut_.out(psrc.second, label))
-              new_transition(src, ldst, raut_.dst_of(rt),
-                             label, ws.mul(lweight, raut_.weight_of(rt)));
+            for (auto rt : rhs_.out(psrc.second, label))
+              new_transition(src, ldst, rhs_.dst_of(rt),
+                             label, ws.mul(lweight, rhs_.weight_of(rt)));
           }
       }
 
@@ -169,34 +169,34 @@ namespace vcsn
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
-        typename A::state_t lsrc = psrc.first;
-        typename B::state_t rsrc = psrc.second;
-        if (laut_.is_final(lsrc) && raut_.is_final(rsrc))
+        typename Lhs::state_t lsrc = psrc.first;
+        typename Rhs::state_t rsrc = psrc.second;
+        if (lhs_.is_final(lsrc) && rhs_.is_final(rsrc))
           res_.set_final(src,
-                         ws.mul(laut_.get_final_weight(lsrc),
-                                raut_.get_final_weight(rsrc)));
+                         ws.mul(lhs_.get_final_weight(lsrc),
+                                rhs_.get_final_weight(rsrc)));
 
-        for (auto lt : laut_.out(lsrc))
-          new_transition(src, laut_.dst_of(lt), rsrc,
-                         laut_.label_of(lt), laut_.weight_of(lt));
-        for (auto rt : raut_.out(rsrc))
+        for (auto lt : lhs_.out(lsrc))
+          new_transition(src, lhs_.dst_of(lt), rsrc,
+                         lhs_.label_of(lt), lhs_.weight_of(lt));
+        for (auto rt : rhs_.out(rsrc))
           {
             // The src state is visited for the first time, so all
             // these transitions are new.  *Except* in the case where
             // we have a loop on both the lhs, and the rhs.
-            typename B::state_t rdst = raut_.dst_of(rt);
+            typename Rhs::state_t rdst = rhs_.dst_of(rt);
             if (rsrc == rdst)
               add_transition(src, lsrc, rdst,
-                             raut_.label_of(rt), raut_.weight_of(rt));
+                             rhs_.label_of(rt), rhs_.weight_of(rt));
             else
               new_transition(src, lsrc, rdst,
-                             raut_.label_of(rt), raut_.weight_of(rt));
+                             rhs_.label_of(rt), rhs_.weight_of(rt));
           }
       }
 
     public:
-      producter(const A& laut, const B& raut)
-        : laut_(laut), raut_(raut), res_(laut.context())
+      producter(const Lhs& lhs, const Rhs& rhs)
+        : lhs_(lhs), rhs_(rhs), res_(lhs.context())
       {}
 
       /// Reset the attributes before a new product.
@@ -206,10 +206,10 @@ namespace vcsn
         todo_.clear();
       }
 
-      /// The (accessible part of the) product of \a laut_ and \a raut_.
+      /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t product()
       {
-        auto ctx = intersection(laut_.context(), raut_.context());
+        auto ctx = intersection(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = std::move(automaton_t(ctx));
 
@@ -226,11 +226,11 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// The (accessible part of the) shuffle product of \a laut_ and
-      /// \a raut_.
+      /// The (accessible part of the) shuffle product of \a lhs_ and
+      /// \a rhs_.
       automaton_t shuffle()
       {
-        auto ctx = get_union(laut_.context(), raut_.context());
+        auto ctx = get_union(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -248,10 +248,10 @@ namespace vcsn
       }
 
       /// The (accessible part of the) infiltration product of \a
-      /// laut_ and \a raut_.
+      /// lhs_ and \a rhs_.
       automaton_t infiltration()
       {
-        auto ctx = get_union(laut_.context(), raut_.context());
+        auto ctx = get_union(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -274,7 +274,7 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// A map from product states to pair of original states.
+      /// Lhs map from product states to pair of original states.
       using origins_t = std::map<state_t, pair_t>;
       origins_t
       origins() const
@@ -315,11 +315,11 @@ namespace vcsn
   `---------*/
 
   /// Build the (accessible part of the) product.
-  template <typename A, typename B>
-  A
-  product(const A& laut, const B& raut)
+  template <typename Lhs, typename Rhs>
+  Lhs
+  product(const Lhs& lhs, const Rhs& rhs)
   {
-    detail::producter<A, B> product(laut, raut);
+    detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.product();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
@@ -334,11 +334,11 @@ namespace vcsn
   `----------*/
 
   /// Build the (accessible part of the) shuffle.
-  template <typename A, typename B>
-  A
-  shuffle(const A& laut, const B& raut)
+  template <typename Lhs, typename Rhs>
+  Lhs
+  shuffle(const Lhs& lhs, const Rhs& rhs)
   {
-    detail::producter<A, B> product(laut, raut);
+    detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.shuffle();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
@@ -353,11 +353,11 @@ namespace vcsn
   `---------------*/
 
   /// Build the (accessible part of the) infiltration.
-  template <typename A, typename B>
-  A
-  infiltration(const A& laut, const B& raut)
+  template <typename Lhs, typename Rhs>
+  Lhs
+  infiltration(const Lhs& lhs, const Rhs& rhs)
   {
-    detail::producter<A, B> product(laut, raut);
+    detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.infiltration();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
