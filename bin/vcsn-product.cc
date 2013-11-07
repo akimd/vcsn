@@ -11,16 +11,19 @@ struct product: vcsn_function
   int work_aut(const options& opts) const
   {
     using namespace vcsn::dyn;
+
     // Input.
-    automaton lhs = read_automaton(opts);
-    assert(1 <= opts.argv.size());
-    // FIXME: hack.
-    options opts2 = opts;
-    opts2.input = opts.argv[0];
-    automaton rhs = read_automaton(opts2);
+    automaton res = read_automaton(opts);
 
     // Process.
-    auto res = vcsn::dyn::product(lhs, rhs);
+    for (unsigned i = 0; i < opts.argv.size(); ++i)
+      {
+        // FIXME: hack.
+        options opts2 = opts;
+        opts2.input = opts.argv[i];
+        automaton rhs = read_automaton(opts2);
+        res = vcsn::dyn::product(res, rhs);
+      }
 
     // Output.
     *opts.out << res << std::endl;
