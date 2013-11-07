@@ -29,6 +29,7 @@ namespace vcsn
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
@@ -92,8 +93,21 @@ namespace vcsn
         for (auto v: e)
           {
             v->accept(*this);
-            // There is no point in reversing.
             res = rs_.add(res, res_);
+          }
+        res_ = res;
+        apply_weights(e);
+      }
+
+      virtual void
+      visit(const intersection_t& e)
+      {
+        e.head()->accept(*this);
+        auto res = res_;
+        for (auto v: e.tail())
+          {
+            v->accept(*this);
+            res = rs_.intersection(res, res_);
           }
         res_ = res;
         apply_weights(e);
