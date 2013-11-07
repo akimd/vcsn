@@ -39,6 +39,7 @@ namespace vcsn
     DEFINE(nary);
     DEFINE(sum);
     DEFINE(prod);
+    DEFINE(intersection);
     DEFINE(star);
 # undef DEFINE
     using ratexp_t = std::shared_ptr<const node_t>;
@@ -102,6 +103,7 @@ namespace vcsn
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
+    value_t intersection(value_t l, value_t r) const;
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;
     value_t weight(const weight_t& w, value_t e) const;

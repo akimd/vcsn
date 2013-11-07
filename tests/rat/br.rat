@@ -40,5 +40,27 @@ ab(<f>\e) => (a.b)<f>
 \e<f> => <f>\e
 a<f> => <f>a
 
+# "Trivial identities" on intersection.
+\z&<f>\e => \z
+<f>\e&\z => \z
+
+\z&<f>a => \z
+<f>a&\z => \z
+
+<e>\e&<f>\e => <e.f>\e
+<e>\e&<f>a => \z
+<e>a&<f>\e => \z
+<e>a&<f>a => <e.f>a
+
+%labels: words
+\z&<f>ac => \z
+<f>ab&\z => \z
+
+<e>\e&<f>ac => \z
+<e>ab&<f>\e => \z
+<e>ab&<f>ab => <e.f>ab
+<e>ab&<f>ac => \z
+%labels: letters
+
 # More complex computations.
 <f><e>a<\z>+<e>a<\e> => <e>a

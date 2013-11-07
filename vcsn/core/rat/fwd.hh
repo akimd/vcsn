@@ -33,6 +33,7 @@ namespace vcsn
     DEFINE(nary);
     DEFINE(sum);
     DEFINE(prod);
+    DEFINE(intersection);
     DEFINE(star);
 
     DEFINE(const_visitor);

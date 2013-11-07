@@ -27,6 +27,7 @@ namespace vcsn
       DEFINE(atom);
       DEFINE(sum);
       DEFINE(prod);
+      DEFINE(intersection);
       DEFINE(star);
 # undef DEFINE
     };

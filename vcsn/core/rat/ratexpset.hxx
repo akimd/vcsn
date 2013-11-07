@@ -113,7 +113,9 @@ namespace vcsn
   DEFINE::gather(ratexps_t& res, rat::exp::type_t type, value_t v) const
     -> void
   {
-    assert(type == type_t::sum || type == type_t::prod);
+    assert(type == type_t::sum
+	   || type == type_t::prod
+	   || type == type_t::intersection);
     if (v->type() == type)
       {
         const auto& nary = *down_pointer_cast<const nary_t>(v);
@@ -130,7 +132,9 @@ namespace vcsn
   DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
     -> ratexps_t
   {
-    assert(type == type_t::sum || type == type_t::prod);
+    assert(type == type_t::sum
+	   || type == type_t::prod
+	   || type == type_t::intersection);
     ratexps_t res;
     gather(res, type, l);
     gather(res, type, r);
@@ -177,6 +181,41 @@ namespace vcsn
       res = std::make_shared<prod_t>(weightset()->one(),
                                      weightset()->one(),
                                      gather(type_t::prod, l, r));
+    return res;
+  }
+
+  DEFINE::intersection(value_t l, value_t r) const
+    -> value_t
+  {
+    value_t res = nullptr;
+    // Trivial Identity.
+    // E&0 = 0&E = 0.
+    if (l->type() == type_t::zero)
+      res = l;
+    else if (r->type() == type_t::zero)
+      res = r;
+    // 1&1 = 1.
+    else if (l->type() == type_t::one && r->type() == type_t::one)
+      res = one(weightset()->mul(l->left_weight(), r->left_weight()));
+    // a&a = a.
+    else if (l->type() == type_t::atom && r->type() == type_t::atom)
+      {
+	auto lhs = down_pointer_cast<const atom_t>(l)->value();
+	auto rhs = down_pointer_cast<const atom_t>(r)->value();
+	if (labelset()->equals(lhs, rhs))
+	  res = weight(l, r->left_weight());
+	else
+	  res = zero();
+      }
+    // 1&a = 0, a&1 = 0.
+    else if (l->type() == type_t::one && r->type() == type_t::atom
+             || l->type() == type_t::atom && r->type() == type_t::one)
+      res = zero();
+    // END: Trivial Identity
+    else
+      res = std::make_shared<intersection_t>(weightset()->one(),
+                                             weightset()->one(),
+                                             gather(type_t::intersection, l, r));
     return res;
   }
 

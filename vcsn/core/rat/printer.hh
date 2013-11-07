@@ -50,6 +50,7 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;	\
       virtual void visit(const Type ## _t& v)
 
+      DEFINE(intersection);
       DEFINE(prod);
       DEFINE(sum);
       DEFINE(star);
@@ -63,6 +64,7 @@ namespace vcsn
       enum class precedence_t
         {
           sum,
+          intersection,
           prod,
           word, // There's no corresponding type in this case.
           star,
@@ -83,6 +85,7 @@ namespace vcsn
 # define CASE(Type) \
   case exp::type_t::Type: \
     return precedence_t::Type;
+            CASE(intersection);
             CASE(sum);
             CASE(prod);
             CASE(star);

@@ -32,6 +32,7 @@ namespace detail
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.
     virtual value_t mul(value_t l, value_t r) const = 0;
+    virtual value_t intersection(value_t l, value_t r) const = 0;
     /// Implicit product.  If both \a l and \a r are weightless words,
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
@@ -87,6 +88,8 @@ namespace detail
     virtual value_t add(value_t l, value_t r) const override;
 
     virtual value_t mul(value_t l, value_t r) const override;
+
+    virtual value_t intersection(value_t l, value_t r) const override;
 
     /// When concatenating two atoms, possibly make a single one,
     /// or make the product.

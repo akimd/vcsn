@@ -27,6 +27,11 @@ namespace vcsn
     DEFINE::visit(const Type ## _t& v)        \
       -> void
 
+    VISIT(intersection)
+    {
+      print(v, '&');
+    }
+
     VISIT(sum)
     {
       print(v, '+');

@@ -123,7 +123,8 @@
 %token <ival>   LPAREN  "("
                 RPAREN  ")"
 
-%token  SUM  "+"
+%token  SUM   "+"
+        AMPERSAND "&"
         DOT   "."
         ONE   "\\e"
         ZERO  "\\z"
@@ -138,6 +139,7 @@
 
 %left RWEIGHT
 %left "+"
+%left "&"
 %left "."
 %right "weight" // Match longest series of "weight".
 %left LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
@@ -155,6 +157,7 @@ exps:
 
 exp:
   exp "." exp                 { $$ = MAKE(mul, $1, $3); }
+| exp "&" exp                 { $$ = MAKE(intersection, $1, $3); }
 | exp "+" exp                 { $$ = MAKE(add, $1, $3); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }

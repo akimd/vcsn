@@ -26,6 +26,7 @@ namespace vcsn
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
@@ -144,6 +145,12 @@ namespace vcsn
       visit(const sum_t& lhs)
       {
         res_ = visit(lhs, *down_pointer_cast<const nary_t>(rhs_));
+      }
+
+      virtual void
+      visit(const intersection_t& lhs)
+      {
+        res_ = visit(lhs, *down_pointer_cast<const intersection_t>(rhs_));
       }
 
       // sum and prod are handled equally, as naries.

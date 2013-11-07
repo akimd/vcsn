@@ -90,6 +90,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
   "["     yylval->ival = 1; return TOK(LPAREN);
   "]"     yylval->ival = 1; return TOK(RPAREN);
+  "&"     return TOK(AMPERSAND);
   "+"     return TOK(SUM);
   "."     return TOK(DOT);
   ","     return TOK(COMMA);

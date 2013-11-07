@@ -200,6 +200,27 @@ namespace vcsn
       return std::static_pointer_cast<const self_t>(clone_());
     };
 
+    /*---------------.
+    | intersection.  |
+    `---------------*/
+
+    DEFINE_CTOR(intersection)(const weight_t& l, const weight_t& r,
+                              const ratexps_t& ns)
+      : super_type(l, r, ns)
+    {}
+
+    DEFINE(intersection)::accept(typename node_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
+    DEFINE(intersection)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
+
     /*-------.
     | star.  |
     `-------*/

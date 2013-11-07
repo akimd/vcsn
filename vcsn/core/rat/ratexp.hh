@@ -30,7 +30,8 @@ namespace vcsn
           atom = 2,
           sum  = 3,
           prod = 4,
-          star = 5,
+          intersection = 5,
+          star = 6,
         };
 
       /// The type of this node.
@@ -40,7 +41,10 @@ namespace vcsn
       bool is_inner() const
       {
         type_t t = type();
-        return t == type_t::sum || t == type_t::prod || t == type_t::star;
+        return (t == type_t::sum
+		|| t == type_t::prod
+		|| t == type_t::intersection
+		|| t == type_t::star);
       }
     };
 
@@ -256,6 +260,45 @@ namespace vcsn
         return std::make_shared<self_t>(*this);
       }
     };
+
+
+    /*---------------.
+    | intersection.  |
+    `---------------*/
+
+    template <typename Label, typename Weight>
+    class intersection : public nary<Label, Weight>
+    {
+    public:
+      using label_t = Label;
+      using weight_t = Weight;
+      using super_type = nary<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
+      using type_t = typename node_t::type_t;
+      using value_t = typename node_t::value_t;
+      using ratexps_t = typename node_t::ratexps_t;
+      using self_t = intersection;
+
+      using const_iterator = typename super_type::const_iterator;
+      using iterator = typename super_type::const_iterator;
+      using const_reverse_iterator = typename super_type::const_reverse_iterator;
+      using reverse_iterator = typename super_type::const_reverse_iterator;
+
+      intersection(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
+
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const;
+
+      virtual type_t type() const { return type_t::intersection; };
+
+      virtual void accept(typename node_t::const_visitor& v) const;
+    protected:
+      virtual value_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
+    };
+
 
     /*-------.
     | star.  |
