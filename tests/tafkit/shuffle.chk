@@ -221,5 +221,14 @@ aAbBC
 abABC
 EOF
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(ab)_b>' -e 'ab' -o ab.gv
-run 1 '' -vcsn-shuffle -f ab.gv ab.gv
+## ----------------- ##
+## Non-commutative.  ##
+## ----------------- ##
+
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+         -e '<x>a<y>b' -o ab.gv
+run 0 '' -vcsn-shuffle -o ab-ab.gv -f ab.gv ab.gv
+run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
+<x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
+<x.y.x.y+x.y.x.y>abab
+EOF

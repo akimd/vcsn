@@ -4,7 +4,7 @@
 ## is-ambiguous.  ##
 ## -------------- ##
 
-# not deterministic, yet not ambiguous.
+# Not deterministic, yet not ambiguous.
 cat >a.gv <<\EOF
 digraph
 {
@@ -26,6 +26,21 @@ digraph
   I -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "a"]
+  1 -> F
+  2 -> F
+}
+EOF
+run 0 "true" -vcsn-is-ambiguous -A -f a.gv
+run 2 "false" -vcsn-is-deterministic -A -f a.gv
+
+# Likewise, but with a non-commutative product.
+cat >a.gv <<\EOF
+digraph
+{
+  vcsn_context="lal_char(ab)_ratexpset<lal_char(xy)_b>"
+  I -> 0
+  0 -> 1 [label = "<x>a"]
+  0 -> 2 [label = "<y>a"]
   1 -> F
   2 -> F
 }

@@ -24,8 +24,7 @@ namespace vcsn
     | is-ambiguous.  |
     `---------------*/
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::is_lal
-                            && Aut::context_t::weightset_t::is_commutative_semiring(),
+    typename std::enable_if<Aut::context_t::is_lal,
                             bool>::type
     is_ambiguous(const Aut& a)
     {
@@ -33,8 +32,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<!(Aut::context_t::is_lal
-                              && Aut::context_t::weightset_t::is_commutative_semiring()),
+    typename std::enable_if<!Aut::context_t::is_lal,
                             std::string>::type
     is_ambiguous(const Aut&)
     {

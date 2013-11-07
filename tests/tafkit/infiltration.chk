@@ -138,5 +138,17 @@ digraph
 }
 EOF
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(ab)_b>' -e 'ab' -o ab.gv
-run 1 '' -vcsn-infiltration -f ab.gv ab.gv
+## ----------------- ##
+## Non-commutative.  ##
+## ----------------- ##
+
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+         -e '<x>a<y>b' -o ab.gv
+run 0 '' -vcsn-infiltration -o ab-ab.gv -f ab.gv ab.gv
+run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
+<x.x.y.y>ab
+<x.x.y.y+x.x.y.y>aab
+<x.x.y.y+x.x.y.y>abb
+<x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
+<x.y.x.y+x.y.x.y>abab
+EOF

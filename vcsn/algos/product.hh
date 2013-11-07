@@ -28,8 +28,6 @@ namespace vcsn
                     "requires labels_are_letters");
       static_assert(Rhs::context_t::is_lal,
                     "requires labels_are_letters");
-      static_assert(Rhs::context_t::weightset_t::is_commutative_semiring(),
-                    "not a commutative semiring");
 
       using automaton_t = Lhs;
 

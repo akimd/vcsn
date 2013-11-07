@@ -5,6 +5,24 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-11-07
+** infiltration, product, shuffle: accept non commutative semirings
+Beware that the (well defined) behavior of the resulting automata is no
+longer what one might expect.
+
+  $ vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+                  -e '<x>a<y>b' -o ab.gv
+  $ vcsn product -f ab.gv ab.gv | vcsn-enumerate -f - 4
+  <x.x.y.y>ab
+  $ vcsn shuffle -f ab.gv ab.gv | vcsn-enumerate -f - 4
+  <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
+  <x.y.x.y+x.y.x.y>abab
+  $ vcsn infiltration -f ab.gv ab.gv | vcsn-enumerate -f - 4
+  <x.x.y.y>ab
+  <x.x.y.y+x.x.y.y>aab
+  <x.x.y.y+x.x.y.y>abb
+  <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
+  <x.y.x.y+x.y.x.y>abab
+
 ** Input/Output fixes
 Support for EFSM in input/output is improved to support weights.  Output was
 significantly sped up.
