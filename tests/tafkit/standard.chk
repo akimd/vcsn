@@ -153,10 +153,6 @@ digraph
 }
 EOF
 
-## -------- ##
-## B: Sum.  ##
-## -------- ##
-
 # B: "a+b"
 check '(?@lal_char(ab)_b)a+b' <<\EOF
 digraph
@@ -182,6 +178,9 @@ digraph
   2 -> F2
 }
 EOF
+
+# B: intersection.
+fail '(?@lal_char(abc)_b)a*&b*'
 
 # B: "abc".
 check '(?@lal_char(abc)_b)abc' <<\EOF

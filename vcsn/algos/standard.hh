@@ -100,6 +100,7 @@ namespace vcsn
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
       using sum_t = typename super_type::sum_t;
+      using intersection_t = typename super_type::intersection_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
       using zero_t = typename super_type::zero_t;
@@ -117,6 +118,12 @@ namespace vcsn
         v->accept(*this);
         res_.set_initial(initial_);
         return std::move(res_);
+      }
+
+      virtual void
+      visit(const intersection_t&)
+      {
+        throw std::domain_error("standard: intersection is not supported");
       }
 
       virtual void
