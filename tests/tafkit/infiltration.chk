@@ -152,3 +152,19 @@ run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
 <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
 <x.y.x.y+x.y.x.y>abab
 EOF
+
+## ------- ##
+## n-ary.  ##
+## ------- ##
+
+for l in a b c d
+do
+  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+done
+run 0 '' -vcsn-infiltration -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+<a.b.c.d>x
+<a.c.d.b+b.c.d.a+a.b.d.c+a.d.b.c+b.d.a.c+c.d.a.b+a.b.c.d+a.c.b.d+b.c.a.d+a.b.c.d+a.b.c.d+b.a.c.d+c.a.b.d+d.a.b.c>xx
+<a.d.c.b+a.d.b.c+b.d.c.a+b.d.a.c+c.d.a.b+c.d.b.a+a.c.d.b+a.c.b.d+b.c.d.a+b.c.a.d+a.b.d.c+a.b.c.d+a.c.d.b+a.b.d.c+a.d.b.c+a.b.c.d+a.c.b.d+a.b.c.d+b.c.d.a+b.a.d.c+b.d.a.c+b.a.c.d+b.c.a.d+b.a.c.d+c.a.d.b+c.b.d.a+c.d.a.b+c.a.b.d+c.a.b.d+c.b.a.d+d.a.c.b+d.b.c.a+d.a.b.c+d.a.b.c+d.b.a.c+d.c.a.b>xxx
+<a.d.c.b+a.d.b.c+a.c.d.b+a.c.b.d+a.b.d.c+a.b.c.d+b.d.c.a+b.d.a.c+b.c.d.a+b.c.a.d+b.a.d.c+b.a.c.d+c.d.a.b+c.d.b.a+c.a.d.b+c.a.b.d+c.b.d.a+c.b.a.d+d.a.c.b+d.a.b.c+d.b.c.a+d.b.a.c+d.c.a.b+d.c.b.a>xxxx
+EOF

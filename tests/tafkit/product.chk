@@ -181,3 +181,16 @@ run 0 '' -vcsn-product -o ab-ab.gv -f ab.gv ab.gv
 run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
 <x.x.y.y>ab
 EOF
+
+## ------- ##
+## n-ary.  ##
+## ------- ##
+
+for l in a b c d
+do
+  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+done
+run 0 '' -vcsn-product -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+<a.b.c.d>x
+EOF

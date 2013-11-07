@@ -232,3 +232,16 @@ run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
 <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
 <x.y.x.y+x.y.x.y>abab
 EOF
+
+## ------- ##
+## n-ary.  ##
+## ------- ##
+
+for l in a b c d
+do
+  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+done
+run 0 '' -vcsn-shuffle -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+<a.b.c.d+a.b.d.c+a.c.b.d+a.c.d.b+a.d.b.c+a.d.c.b+b.a.c.d+b.a.d.c+b.c.a.d+b.c.d.a+b.d.a.c+b.d.c.a+c.a.b.d+c.a.d.b+c.b.a.d+c.b.d.a+c.d.a.b+c.d.b.a+d.a.b.c+d.a.c.b+d.b.a.c+d.b.c.a+d.c.a.b+d.c.b.a>xxxx
+EOF

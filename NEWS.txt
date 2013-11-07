@@ -5,6 +5,10 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-11-07
+** TAF-Kit: infiltration, product, shuffle: accept multiple arguments
+You may pass several (one or more) arguments to vcsn product, infiltration
+and shuffle.
+
 ** infiltration, product, shuffle: accept non commutative semirings
 Beware that the (well defined) behavior of the resulting automata is no
 longer what one might expect.
