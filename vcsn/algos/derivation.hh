@@ -70,6 +70,7 @@ namespace vcsn
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
@@ -170,6 +171,18 @@ namespace vcsn
         apply_weights(e);
       }
 
+      /// Handle an n-ary intersection.
+      virtual void
+      visit(const intersection_t& e)
+      {
+        // FIXME: duplication with prod_t.
+        auto res = product(e[0], e[1]);
+        for (unsigned i = 2, n = e.size(); i < n; ++i)
+          res = product(res, e[i]);
+        res_ = std::move(res);
+        apply_weights(e);
+      }
+
       virtual void
       visit(const star_t& e)
       {
@@ -261,6 +274,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
+      using intersection_t = typename super_type::intersection_t;
       using prod_t = typename super_type::prod_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -281,6 +295,15 @@ namespace vcsn
         return std::move(res_);
       }
 
+      // FIXME: duplicate with expand.
+      ratexp_t
+      ratexp(const polynomial_t p)
+      {
+        ratexp_t res = rs_.zero();
+        for (const auto& m: p)
+          res = rs_.add(res, rs_.weight(m.second, m.first));
+         return res;
+      }
 
       void
       apply_weights(const inner_t& e)
@@ -347,6 +370,32 @@ namespace vcsn
             for (unsigned j = i + 1; j < n; ++j)
               res_ = ps_.rmul(res_, e[j]);
             res = ps_.add(res, ps_.lmul(constant, res_));
+            constant = ws_.mul(constant, constant_term(rs_, v));
+          }
+        res_ = res;
+        apply_weights(e);
+      }
+
+      virtual void
+      visit(const intersection_t& e)
+      {
+        // Accumulate the product of the constant terms of the
+        // previous factors.
+        weight_t constant = constant_term(rs_, e.head());
+        // The first polynomial.
+	e.head()->accept(*this);
+        auto res = res_;
+        for (unsigned i = 1, n = e.size(); i < n; ++i)
+          {
+            const auto& v = e[i];
+            v->accept(*this);
+            polynomial_t sum = ps_.zero();
+            for (const auto& l: res)
+              for (const auto& r: res_)
+                ps_.add_weight(sum,
+                               rs_.intersection(l.first, r.first),
+                               ws_.mul(l.second, r.second));
+            res = sum;
             constant = ws_.mul(constant, constant_term(rs_, v));
           }
         res_ = res;

@@ -36,6 +36,7 @@ namespace vcsn
       using inner_t = typename super_type::inner_t;
       using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
@@ -89,6 +90,21 @@ namespace vcsn
       virtual void
       visit(const prod_t& v)
       {
+        v.head()->accept(*this);
+        weight_t res = res_;
+        for (auto c: v.tail())
+          {
+            c->accept(*this);
+            res = ws_.mul(res, res_);
+          }
+        res = ws_.mul(v.left_weight(),res);
+        res_ = ws_.mul(res, v.right_weight());
+      }
+
+      virtual void
+      visit(const intersection_t& v)
+      {
+        // FIXME: Code duplication with prod_t.
         v.head()->accept(*this);
         weight_t res = res_;
         for (auto c: v.tail())

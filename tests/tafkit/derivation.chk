@@ -46,6 +46,15 @@ check 'ab' 'a' 'b'
 check 'ab' 'b' '\z'
 check '(<x>a).(<y>a).(<z>a)' 'a' '<x><y>a.<z>a'
 
+# Intersection.
+check '<x>a&<y>a&<z>a' a '<x.y.z>\e'
+check '<x>a&<y>a&<z>a' b '\z'
+
+check '(<x>a+<y>b)*&(<z>b+<x>c)*' a '\z'
+check '(<x>a+<y>b)*&(<z>b+<x>c)*' b '<y.z>(<x>a+<y>b)*&(<z>b+<x>c)*'
+check '(<x>a+<y>b)*&(<z>b+<x>c)*' c '\z'
+
+
 # Star.
 check 'a*' a 'a*'
 check 'a*' b '\z'
