@@ -122,7 +122,7 @@ check_intersection ()
   for i
   do
     run 0 '' -vcsn-derived-term -C "$ctx" -e "$i" -o $num.gv
-    auts+=" $num.gv"
+    auts="$auts $num.gv"
     num=$((num + 1))
   done
 
@@ -134,7 +134,7 @@ check_intersection ()
   local re
   for i
   do
-    re+="&($i)"
+    re="$re&($i)"
   done
   re=${re#&}
   run 0 '' -vcsn-derived-term -C "$ctx" -e "$re" -o intersection.gv
