@@ -4,9 +4,27 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
-* 2013-11-04
-** boolean weight parsing bugix
+* 2013-11-07
+** Input/Output fixes
+Support for EFSM in input/output is improved to support weights.  Output was
+significantly sped up.
 
+Before:
+  0.64s (0.64s): standard -Ee 'a?{500}' -O dot  >a500.gv
+  4.47s (4.47s): standard -Ee 'a?{500}' -O efsm >a500.efsm
+  4.04s (4.04s): standard -Ee 'a?{500}' -O fado >a500.fado
+  4.83s (4.83s): standard -Ee 'a?{500}' -O grail>a500.grail
+  1.03s (1.03s): standard -Ee 'a?{500}' -O tikz >a500.tikz
+
+After:
+  0.76s (0.76s): standard -Ee 'a?{500}' -O dot  >a500.gv
+  0.37s (0.37s): standard -Ee 'a?{500}' -O efsm >a500.efsm
+  0.35s (0.35s): standard -Ee 'a?{500}' -O fado >a500.fado
+  0.35s (0.35s): standard -Ee 'a?{500}' -O grail>a500.grail
+  0.68s (0.68s): standard -Ee 'a?{500}' -O tikz >a500.tikz
+
+* 2013-11-04
+** Weight parsing bug fix
 The weight parser used to ignore all characters after the first one, so that
 for example "1-q" was considered valid and equivalent to "1".
 
