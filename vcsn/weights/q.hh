@@ -36,8 +36,10 @@ namespace vcsn
 
     struct value_t
     {
-      int num;
-      unsigned int den;
+      value_t(int n = 0, unsigned d = 1)
+        : num(n)
+        , den(d)
+      {}
 
       /// Put it in normal form.
       void reduce()
@@ -46,6 +48,9 @@ namespace vcsn
         num /= gc;
         den /= gc;
       }
+
+      int num;
+      unsigned int den;
     };
 
     static unsigned int abs(int a)
