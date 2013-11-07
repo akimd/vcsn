@@ -92,8 +92,8 @@ namespace vcsn
         for (auto v: e)
           {
             v->accept(*this);
-            // There is no point in reversing, but neither not to.
-            res = rs_.add(res_, res);
+            // There is no point in reversing.
+            res = rs_.add(res, res_);
           }
         res_ = res;
         apply_weights(e);
