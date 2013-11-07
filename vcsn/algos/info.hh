@@ -196,6 +196,7 @@ namespace vcsn
     o
       << "type: " << rs.vname(true)
       DEFINE(sum)
+      DEFINE(intersection)
       DEFINE(prod)
       DEFINE(star)
       DEFINE(zero)

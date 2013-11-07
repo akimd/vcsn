@@ -27,6 +27,13 @@ namespace vcsn
         c->accept(*this);
     }
 
+    DEFINE(intersection)
+    {
+      ++intersection;
+      for (const auto& c: v)
+        c->accept(*this);
+    }
+
     DEFINE(star)
     {
       ++star;
