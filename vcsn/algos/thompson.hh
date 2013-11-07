@@ -12,8 +12,8 @@ namespace vcsn
   {
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
-    template <class Aut,
-              class Context = typename Aut::context_t>
+    template <typename Aut,
+              typename Context = typename Aut::context_t>
     class thompson_visitor
       : public Context::const_visitor
     {
@@ -26,6 +26,7 @@ namespace vcsn
 
       using super_type = typename Context::const_visitor;
       using prod_t = typename super_type::prod_t;
+      using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using star_t = typename super_type::star_t;
       using zero_t = typename super_type::zero_t;
@@ -92,6 +93,12 @@ namespace vcsn
       }
 
       virtual void
+      visit(const intersection_t&)
+      {
+        throw std::domain_error("standard: intersection is not supported");
+      }
+
+      virtual void
       visit(const prod_t& e)
       {
         e.head()->accept(*this);
@@ -144,13 +151,13 @@ namespace vcsn
 
   /// \tparam Aut      relative to the generated automaton.
   /// \tparam Context  relative to the RatExp.
-  template <class Aut,
-            class Context = typename Aut::context_t>
+  template <typename Aut,
+            typename Context = typename Aut::context_t>
   Aut
   thompson(const Context& ctx, const typename Context::ratexp_t& e)
   {
-    rat::thompson_visitor<Aut, Context> standard{ctx};
-    return standard(e);
+    rat::thompson_visitor<Aut, Context> thompson{ctx};
+    return thompson(e);
   }
 
   namespace dyn

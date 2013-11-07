@@ -6,12 +6,18 @@
 check ()
 {
   cat >thompson.gv
-  # Check the expected output.
-  cp thompson.gv out.exp
-  run 0 out.exp -vcsn-thompson -e "$@" -O dot
+  run 0 -f thompson.gv -vcsn-thompson -e "$@" -O dot
   # Check that it is normalized.
   run 0 'true' -vcsn-is-normalized -f thompson.gv
 }
+
+fail ()
+{
+  run 1 '' -vcsn-thompson -e "$@"
+}
+
+# We don't support intersection.
+fail 'a*&b*'
 
 ## --- ##
 ## Z.  ##
