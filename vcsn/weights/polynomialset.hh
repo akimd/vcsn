@@ -368,12 +368,17 @@ namespace vcsn
     std::ostream&
     print(std::ostream& out, const monomial_t& m) const
     {
-      if (weightset()->show_one() || !weightset()->is_one(m.second))
+      static bool parens = getenv("VCSN_PARENS");
+      if (parens || weightset()->show_one() || !weightset()->is_one(m.second))
         {
           out << lbracket;
           weightset()->print(out, m.second) << rbracket;
         }
+      if (parens)
+        out << '(';
       labelset()->print(out, m.first);
+      if (parens)
+        out << ')';
       return out;
     }
 
