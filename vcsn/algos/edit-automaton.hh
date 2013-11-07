@@ -188,7 +188,8 @@ namespace vcsn
           auto p = emap_.emplace(entry, entry_t{});
           if (p.second)
             p.first->second = conv(ps_, entry, sep_);
-          add_entry(s, d, p.first->second);
+          for (auto e: p.first->second)
+            res_->add_transition(s, d, e.first, e.second);
         }
     }
 
@@ -239,14 +240,6 @@ namespace vcsn
       return p.first->second;
     }
 
-    /// Add transitions between \a src and \a dst, for entry \a es.
-    void
-    add_entry(state_t src, state_t dst, const entry_t& es)
-    {
-      for (auto e: es)
-        res_->add_transition(src, dst, e.first, e.second);
-    }
-
     /// The automaton under construction.
     automaton_t* res_;
     /// Entries handler.
@@ -277,11 +270,13 @@ namespace vcsn
     using string_t = automaton_editor::string_t;
 
   public:
+    /// Add \a s as an initial state.
     void add_initial(string_t s, string_t w = {});
 
+    /// Add \a s as a final state.
     void add_final(string_t s, string_t w = {});
 
-    /// Add transitions from \a src to \a dst, labeled by \a lbl.
+    /// Add a transition from \a src to \a dst, labeled by \a lbl.
     void add_transition(string_t src, string_t dst,
                         string_t lbl, string_t w = {});
 
