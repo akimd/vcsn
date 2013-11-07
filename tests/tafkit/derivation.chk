@@ -54,7 +54,6 @@ check '(<x>a+<y>b)*&(<z>b+<x>c)*' a '\z'
 check '(<x>a+<y>b)*&(<z>b+<x>c)*' b '<y.z>(<x>a+<y>b)*&(<z>b+<x>c)*'
 check '(<x>a+<y>b)*&(<z>b+<x>c)*' c '\z'
 
-
 # Star.
 check 'a*' a 'a*'
 check 'a*' b '\z'
@@ -104,6 +103,55 @@ unset VCSN_ORIGINS
 export VCSN_ORIGINS=1
 run 0 -f $medir/'a?-dt'.gv -vcsn-derived-term -e "a?"
 unset VCSN_ORIGINS
+
+# check_intersection RE1 RE2...
+# -----------------------------
+# Check derived-term(intersection) = intersection(derived-term).
+#
+# Of course we'd like to use a "are-isomorphic", but we don't have one
+# currently.  Meanwhile, check equality on the first accepted words,
+# and one the info of both automata.
+check_intersection ()
+{
+  # First, the derived-terms of each ratexp.
+  local num=1
+  # Number of letters to check in the output language.
+  local length=4
+
+  local auts
+  for i
+  do
+    run 0 '' -vcsn-derived-term -C "$ctx" -e "$i" -o $num.gv
+    auts+=" $num.gv"
+    num=$((num + 1))
+  done
+
+  run 0 '' -vcsn-product -o prod.gv -f $auts
+  run 0 '' -vcsn-cat -O info -o prod.info -f prod.gv
+  run 0 '' -vcsn-enumerate -o prod.list -f prod.gv $length
+
+  # Check the derived-term of the intersection.
+  local re
+  for i
+  do
+    re+="&($i)"
+  done
+  re=${re#&}
+  run 0 '' -vcsn-derived-term -C "$ctx" -e "$re" -o intersection.gv
+  # Should be the same.
+  run 0 -f prod.info -vcsn-cat -O info -f intersection.gv
+  run 0 -f prod.list -vcsn-enumerate -f intersection.gv $length
+}
+
+ctx='lal_char(abc)_q'
+check_intersection '(<1/6>a*+<1/3>b*)*' 'a*'
+check_intersection '(<1/6>a*+<1/3>b*)*' 'b*'
+check_intersection '(a+b+c)*a(a+b+c)*' '(a+b+c)*b(a+b+c)*' '(a+b+c)*c(a+b+c)*'
+
+ctx='lal_char(abc)_ratexpset<lal_char(xyz)_b>'
+check_intersection '(a+b+c)*<x>a(a+b+c)*' \
+                   '(a+b+c)*<y>b(a+b+c)*' \
+                   '(a+b+c)*<z>c(a+b+c)*'
 
 
 ###########################
