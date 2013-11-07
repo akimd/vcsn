@@ -175,11 +175,13 @@ run 0 out.exp -vcsn-product -f a.gv b.gv
 ## Non-commutative.  ##
 ## ----------------- ##
 
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+         -e '<u>a<v>b' -o uavb.gv
 run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-         -e '<x>a<y>b' -o ab.gv
-run 0 '' -vcsn-product -o ab-ab.gv -f ab.gv ab.gv
-run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
-<x.x.y.y>ab
+         -e '<x>a<y>b' -o xayb.gv
+run 0 '' -vcsn-product -o uavb-xayb.gv -f uavb.gv xayb.gv
+run 0 - -vcsn-enumerate -f uavb-xayb.gv 4 <<\EOF
+<u.x.v.y>ab
 EOF
 
 ## ------- ##

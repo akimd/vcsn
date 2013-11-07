@@ -13,19 +13,21 @@ and shuffle.
 Beware that the (well defined) behavior of the resulting automata is no
 longer what one might expect.
 
+  $ vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+                  -e '<u>a<v>b' -o uv.gv
   $ vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-                  -e '<x>a<y>b' -o ab.gv
-  $ vcsn product -f ab.gv ab.gv | vcsn-enumerate -f - 4
-  <x.x.y.y>ab
-  $ vcsn shuffle -f ab.gv ab.gv | vcsn-enumerate -f - 4
-  <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
-  <x.y.x.y+x.y.x.y>abab
-  $ vcsn infiltration -f ab.gv ab.gv | vcsn-enumerate -f - 4
-  <x.x.y.y>ab
-  <x.x.y.y+x.x.y.y>aab
-  <x.x.y.y+x.x.y.y>abb
-  <x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
-  <x.y.x.y+x.y.x.y>abab
+                  -e '<x>a<y>b' -o xy.gv
+  $ vcsn product -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  <u.x.v.y>ab
+  $ vcsn shuffle -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  <u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
+  <u.v.x.y+x.y.u.v>abab
+  $ vcsn infiltration -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  <u.x.v.y>ab
+  <u.x.v.y+x.u.v.y>aab
+  <u.x.v.y+u.x.y.v>abb
+  <u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
+  <u.v.x.y+x.y.u.v>abab
 
 ** Input/Output fixes
 Support for EFSM in input/output is improved to support weights.  Output was

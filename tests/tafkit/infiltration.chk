@@ -142,15 +142,17 @@ EOF
 ## Non-commutative.  ##
 ## ----------------- ##
 
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+         -e '<u>a<v>b' -o uavb.gv
 run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-         -e '<x>a<y>b' -o ab.gv
-run 0 '' -vcsn-infiltration -o ab-ab.gv -f ab.gv ab.gv
-run 0 - -vcsn-enumerate -f ab-ab.gv 4 <<\EOF
-<x.x.y.y>ab
-<x.x.y.y+x.x.y.y>aab
-<x.x.y.y+x.x.y.y>abb
-<x.x.y.y+x.x.y.y+x.x.y.y+x.x.y.y>aabb
-<x.y.x.y+x.y.x.y>abab
+         -e '<x>a<y>b' -o xayb.gv
+run 0 '' -vcsn-infiltration -o uavb-xayb.gv -f uavb.gv xayb.gv
+run 0 - -vcsn-enumerate -f uavb-xayb.gv 4 <<\EOF
+<u.x.v.y>ab
+<u.x.v.y+x.u.v.y>aab
+<u.x.v.y+u.x.y.v>abb
+<u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
+<u.v.x.y+x.y.u.v>abab
 EOF
 
 ## ------- ##

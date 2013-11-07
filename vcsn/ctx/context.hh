@@ -152,7 +152,7 @@ namespace vcsn
                  const context<LabelSet, WeightSet>& b)
     {
       auto ls = intersection(*a.labelset(), *b.labelset());
-      auto ws = intersection(*a.weightset(), *b.weightset());
+      auto ws = get_union(*a.weightset(), *b.weightset());
       return {ls, ws};
     }
 
