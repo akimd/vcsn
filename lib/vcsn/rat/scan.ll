@@ -43,22 +43,19 @@
 #define TOK(Token)                              \
   vcsn::rat::parser::token::Token
 
-  namespace vcsn
-  {
-    namespace rat
-    {
-      namespace
-      {
-        using irange_type = sem_type::irange_type;
-        irange_type
-        quantifier(driver& d, const location& loc, const std::string& s);
-      }
+YY_FLEX_NAMESPACE_BEGIN
+namespace
+{
+  using irange_type = sem_type::irange_type;
+  irange_type
+  quantifier(driver& d, const location& loc, const std::string& s);
+}
 
-      // Do not use %option noyywrap, because then flex generates the
-      // same definition of yywrap, but outside the namespaces, so it
-      // defines it for ::yyFlexLexer instead of
-      // ::vcsn::rat::yyFlexLexer.
-      int yyFlexLexer::yywrap() { return 1; }
+// Do not use %option noyywrap, because then flex generates the
+// same definition of yywrap, but outside the namespaces, so it
+// defines it for ::yyFlexLexer instead of
+// ::vcsn::rat::yyFlexLexer.
+int yyFlexLexer::yywrap() { return 1; }
 
 #define ratalloc myratalloc
 void *myratalloc (yy_size_t  );
@@ -67,8 +64,6 @@ void *myratrealloc (void *,yy_size_t  );
 #define ratfree myratfree
 void myratfree (void *  );
 
-      //    }
-      //  }
 %}
 
 %x SC_CONTEXT SC_WEIGHT
@@ -174,92 +169,86 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   [^()]+   context += yytext;
 }
 %%
-
-   //namespace vcsn
-   //{
-   //  namespace rat
-   //  {
-
-    namespace
-    {
-      // Safe conversion to a numeric value.
-      // The name parser_impl_ is chosen so that SCAN_ERROR can be used
-      // from out of the scanner.
-      template <typename Out>
-      Out
-      lexical_cast(driver& d, const location& loc, const std::string& s)
+namespace
+{
+  // Safe conversion to a numeric value.
+  // The name parser_impl_ is chosen so that SCAN_ERROR can be used
+  // from out of the scanner.
+  template <typename Out>
+  Out
+  lexical_cast(driver& d, const location& loc, const std::string& s)
+  {
+    try
       {
-        try
-          {
-            return boost::lexical_cast<Out>(s);
-          }
-        catch (const boost::bad_lexical_cast&)
-          {
-            d.error(loc, "invalid numerical literal: " + s);
-            return 0;
-          }
+        return boost::lexical_cast<Out>(s);
       }
-
-      // The value of s, a decimal number, or -1 if empty.
-      int arity(driver& d, const location& loc, const std::string& s)
+    catch (const boost::bad_lexical_cast&)
       {
-        if (s.empty())
-          return -1;
-        else
-          return lexical_cast<int>(d, loc, s);
+        d.error(loc, "invalid numerical literal: " + s);
+        return 0;
       }
+  }
 
-      // Decode a quantifier's value: "1,2" etc.
-      //
-      // We used to include the braces in \a, but a libc++ bug in
-      // regex made the following regex unportable.
-      // http://llvm.org/bugs/show_bug.cgi?id=16135
-      irange_type
-      quantifier(driver& d, const location& loc, const std::string& s)
-      {
-        std::regex arity_re{"([0-9]*)(,?)([0-9]*)",
-                            std::regex::extended};
-        std::smatch minmax;
-        if (!std::regex_match(s, minmax, arity_re))
-          throw std::runtime_error("cannot match arity: " + s);
-        irange_type res{arity(d, loc, minmax[1].str()),
-                        arity(d, loc, minmax[3].str())};
-        if (minmax[2].str().empty())
-          // No comma: single argument.
-          std::get<1>(res) = std::get<0>(res);
-        return res;
-      }
-    }
+  // The value of s, a decimal number, or -1 if empty.
+  int arity(driver& d, const location& loc, const std::string& s)
+  {
+    if (s.empty())
+      return -1;
+    else
+      return lexical_cast<int>(d, loc, s);
+  }
 
-    // Beware of the dummy Flex interface.  One would like to use:
-    //
-    // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
-    //
-    // and
-    //
-    // yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
-    //
-    // but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
-    // effect calling yypush_buffer_state saves the new state instead
-    // of the old one.
-    //
-    // So do it in two steps, quite different from what is suggested
-    // in the documentation: save the old context, switch to the new
-    // one.
-
-    void ratFlexLexer::scan_open_(std::istream& f)
-    {
-      set_debug(!!getenv("YYSCAN"));
-      yypush_buffer_state(YY_CURRENT_BUFFER);
-      yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
-    }
-
-    void ratFlexLexer::scan_close_()
-    {
-      yypop_buffer_state();
-    }
+  // Decode a quantifier's value: "1,2" etc.
+  //
+  // We used to include the braces in \a, but a libc++ bug in
+  // regex made the following regex unportable.
+  // http://llvm.org/bugs/show_bug.cgi?id=16135
+  irange_type
+  quantifier(driver& d, const location& loc, const std::string& s)
+  {
+    std::regex arity_re{"([0-9]*)(,?)([0-9]*)",
+        std::regex::extended};
+    std::smatch minmax;
+    if (!std::regex_match(s, minmax, arity_re))
+      throw std::runtime_error("cannot match arity: " + s);
+    irange_type res{arity(d, loc, minmax[1].str()),
+        arity(d, loc, minmax[3].str())};
+    if (minmax[2].str().empty())
+      // No comma: single argument.
+      std::get<1>(res) = std::get<0>(res);
+    return res;
   }
 }
+
+// Beware of the dummy Flex interface.  One would like to use:
+//
+// yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
+//
+// and
+//
+// yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
+//
+// but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
+// effect calling yypush_buffer_state saves the new state instead
+// of the old one.
+//
+// So do it in two steps, quite different from what is suggested
+// in the documentation: save the old context, switch to the new
+// one.
+
+void ratFlexLexer::scan_open_(std::istream& f)
+{
+  set_debug(!!getenv("YYSCAN"));
+  yypush_buffer_state(YY_CURRENT_BUFFER);
+  yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
+}
+
+void ratFlexLexer::scan_close_()
+{
+  yypop_buffer_state();
+}
+
+YY_FLEX_NAMESPACE_END
 
 // Local Variables:
 // mode: C++
