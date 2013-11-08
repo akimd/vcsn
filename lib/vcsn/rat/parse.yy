@@ -47,11 +47,13 @@
 
 %code provides
 {
-  #define YY_DECL                                               \
-    int                                                         \
-    vcsn::rat::yyFlexLexer::lex(vcsn::rat::parser::semantic_type* yylval, \
-                   vcsn::rat::parser::location_type* yylloc,    \
-                   vcsn::rat::driver& driver_)
+  #define YY_FLEX_NAMESPACE_BEGIN namespace vcsn { namespace rat {
+  #define YY_FLEX_NAMESPACE_END   }}
+  #define YY_DECL_(Class)                               \
+    int Class lex(parser::semantic_type* yylval,        \
+                  parser::location_type* yylloc,        \
+                  driver& driver_)
+  #define YY_DECL YY_DECL_(yyFlexLexer::)
 }
 
 %code

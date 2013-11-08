@@ -15,6 +15,8 @@
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
+
+#include <lib/vcsn/rat/parse.hh>
 }
 
 %{
