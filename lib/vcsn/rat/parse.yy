@@ -47,8 +47,6 @@
 
 %code provides
 {
-  #define YY_FLEX_NAMESPACE_BEGIN namespace vcsn { namespace rat {
-  #define YY_FLEX_NAMESPACE_END   }}
   #define YY_DECL_(Class)                               \
     int Class lex(parser::semantic_type* yylval,        \
                   parser::location_type* yylloc,        \
@@ -60,8 +58,7 @@
 {
   #include <vcsn/dyn/ratexpset.hh>
   #include <lib/vcsn/rat/driver.hh>
-  #define yyFlexLexer ratFlexLexer
-  #include <FlexLexer.h>
+  #include <lib/vcsn/rat/scan.hh>
 
   namespace vcsn
   {

@@ -11,6 +11,25 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
+## ------------- ##
+## The Scanner.  ##
+## ------------- ##
+
+BUILT_SOURCES += %D%/scan.cc
+MAINTAINERCLEANFILES += %D%/scan.cc
+
+EXTRA_DIST += %D%/scan.ll
+# The dependency is on flex++.in and not flex++, since flex++ is
+# regenerated at distribution time, and voids the time stamps (which
+# we don't want!).
+%D%/scan.cc: %D%/scan.ll $(FLEXXX_IN)
+	$(AM_V_GEN)mkdir -p $(@D)
+	$(AM_V_at)rm -f $@
+	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) $(FLEXXX)
+# Guarantees atomic generation of the output.
+	$(AM_V_at)$(FLEXXX) $< $@ $(FLEXXXFLAGS)
+
+
 ## ------------ ##
 ## The parser.  ##
 ## ------------ ##
@@ -65,11 +84,9 @@ $(addprefix $(srcdir)/, $(SOURCES_%C%_PARSE_YY)): %D%/parse.stamp
 ## The library.  ##
 ## ------------- ##
 
-lib_libvcsn_la_SOURCES +=                       \
-  $(SOURCES_%C%_PARSE_YY)                       \
-  %D%/driver.hh                                 \
-  %D%/driver.cc                                 \
-  %D%/fwd.hh                                    \
-  %D%/read.hh                                   \
-  %D%/read.cc                                   \
-  %D%/scan.ll
+lib_libvcsn_la_SOURCES +=			\
+  $(SOURCES_%C%_PARSE_YY)			\
+  %D%/driver.hh %D%/driver.cc			\
+  %D%/fwd.hh					\
+  %D%/read.hh %D%/read.cc			\
+  %D%/scan.hh %D%/scan.cc

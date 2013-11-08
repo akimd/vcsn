@@ -6,8 +6,7 @@
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
-#define yyFlexLexer ratFlexLexer
-#include <FlexLexer.h>
+#include <lib/vcsn/rat/scan.hh>
 
 namespace vcsn
 {

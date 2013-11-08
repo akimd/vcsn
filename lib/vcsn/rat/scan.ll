@@ -1,5 +1,5 @@
 %option c++
-%option prefix="rat" outfile="lex.yy.c"
+%option prefix="rat"
 %option debug
 %option noinput nounput
 %option stack noyy_top_state

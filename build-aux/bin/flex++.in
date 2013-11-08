@@ -1,0 +1,70 @@
+#! /bin/sh
+##
+## flex++.in: This file is part of build-aux.
+## Copyright (C) 2008-2010, 2012, Gostai S.A.S.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+##
+
+
+# Exit status.
+status=0
+
+# Any tool failure is a failure of the script.
+set -e
+set -x
+: ${FLEX='@FLEX@'}
+
+# flex++ INPUT OUTPUT OPTIONS
+# ---------------------------
+
+me=$(basename $0)
+move_if_change='@abs_srcdir@/move-if-change'
+
+input=$1
+input_base=$(basename "$input")
+shift
+output=$1
+output_base=$(basename "$output")
+output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
+output_dir=$(dirname "$output")
+output_log=$output_dir/$output_base_noext.log
+output_header=$output_dir/$output_base_noext.hh
+shift
+
+options="$@"
+
+set +e
+$FLEX -+ -o"$output".tmp $options "$input" 2>$output_log
+status=$?
+set -e
+
+# Normalize locations of Flex diagnostics:
+# "../../../src/parser/utoken.l", line 605: warning, rule cannot be matched
+# Warnings are errors.
+perl >&2 -p                                     \
+    -e 's/^"(.*)", line (\d+):/$1:$2:/;'        \
+    -e 's/warning, //;'				\
+     $output_log
+
+if test -s $output_log; then
+  rm -f $output_log
+  exit 1
+else
+  rm -f $output_log
+fi
+
+perl -pi                                                \
+     -e "s{<FlexLexer\\.h>}{<$output_header>}g;"        \
+     -e "s{\\Q$output.tmp\\E}{$output}g;"               \
+     "$output.tmp"
+## For some reason, on Windows perl does not remove the back up file.
+rm -f "$output.bak"
+
+mv $output.tmp $output
+
+exit $status

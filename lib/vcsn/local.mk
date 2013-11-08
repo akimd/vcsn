@@ -20,6 +20,10 @@ BISONXXFLAGS =                                  \
 AM_BISONFLAGS =                                 \
   -Wall --report=all # -Werror
 
+# A Flex wrapper for C++.
+FLEXXX = $(top_builddir)/build-aux/bin/flex++
+FLEXXX_IN = $(top_srcdir)/build-aux/bin/flex++.in
+
 libvcsn = lib/libvcsn.la
 pkglib_LTLIBRARIES = $(libvcsn)
 lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN

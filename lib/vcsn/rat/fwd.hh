@@ -1,7 +1,6 @@
 #ifndef LIB_VCSN_RAT_FWD_HH
 # define LIB_VCSN_RAT_FWD_HH
 
-
 namespace vcsn
 {
   namespace rat

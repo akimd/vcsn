@@ -200,8 +200,11 @@ esac
 ## Auxiliary programs.  ##
 ## -------------------- ##
 
-TC_PROG([flex], [>= 2.5.4], [FLEX], [Flex scanner generator])
+# Flex 2.3.33 has a problem with REJECT and produces a scanner that
+# does not compile.
+TC_PROG([flex], [>= 2.5.35], [FLEX], [Flex scanner generator])
 AM_PROG_LEX
+AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
 TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 AC_CONFIG_HEADERS([vcsn/config.h:vcsn/config.in.h])
