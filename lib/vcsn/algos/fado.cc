@@ -2,8 +2,7 @@
 #include <set>
 #include <string>
 
-#include <boost/flyweight.hpp>
-#include <boost/flyweight/no_tracking.hpp>
+#include <vcsn/misc/flyweight.hh>
 
 #include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/algos/fwd.hh>
@@ -17,14 +16,14 @@ namespace vcsn
   namespace dyn
   {
 
-    /*----------------------.
-    | read_fado_file(aut).  |
-    `----------------------*/
+    /*-----------------.
+    | read_fado(aut).  |
+    `-----------------*/
 
     automaton
-    read_fado_file(const std::string& file)
+    read_fado(std::istream& is)
     {
-      auto fin = open_input_file(file);
+      std::string file = "file.fado";
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
@@ -38,7 +37,7 @@ namespace vcsn
       // is the src state of the first transition.
       {
         std::string kind;
-        *fin >> kind;
+        is >> kind;
         if (kind != "@DFA" && kind != "@NFA")
           throw std::runtime_error(file
                                    + ": bad automaton kind: " + kind);
@@ -50,7 +49,7 @@ namespace vcsn
       // Whether we process initial states.
       bool init = false;
       std::string state;
-      while ((c = fin.get()->get()) != '\n' && !fin.get()->eof())
+      while ((c = is.get()) != '\n' && !is.eof())
         if (c == ' ' || c == '\t')
           {
             // Eat blanks.
@@ -83,18 +82,18 @@ namespace vcsn
       {
         // Line: Source Label Destination.
         string_t s1, l, s2;
-        *fin.get() >> s1 >> l >> s2;
+        is >> s1 >> l >> s2;
 
         // First state is our initial state if not declared before by "*".
-        if (!init && !fin.get()->eof())
+        if (!init && !is.eof())
           edit.add_initial(s1);
 
-        while (!fin.get()->eof())
+        while (!is.eof())
           {
             if (l == "@epsilon")
               l = "\\e";
             edit.add_transition(s1, s2, l);
-            *fin.get() >> s1 >> l >> s2;
+            is >> s1 >> l >> s2;
           }
       }
       return edit.result();

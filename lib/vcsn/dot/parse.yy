@@ -10,7 +10,6 @@
 %locations
 %define namespace "vcsn::detail::dot"
 %define location_type "vcsn::rat::location"
-%name-prefix "vcsn::detail::dot::"
 
 %code requires
 {
@@ -59,31 +58,19 @@
 
 %code provides
 {
-  #define YY_DECL                                                       \
-    int                                                                 \
-    vcsn::detail::dot::lex(vcsn::detail::dot::parser::semantic_type* yylval, \
-                           vcsn::detail::dot::parser::location_type* yylloc, \
-                           vcsn::detail::dot::driver& driver_)
-
-  namespace vcsn
-  {
-    namespace detail
-    {
-      namespace dot
-      {
-        int
-        lex(parser::semantic_type* yylval, parser::location_type* yylloc,
-            driver& driver_);
-      }
-    }
-  }
+  #define YY_DECL_(Class)                               \
+    int Class lex(parser::semantic_type* yylval,        \
+                  parser::location_type* yylloc,        \
+                  driver& driver_)
+  #define YY_DECL YY_DECL_(yyFlexLexer::)
 }
+
 
 %code
 {
-#include <cassert>
-#include <vcsn/algos/edit-automaton.hh>
-#include <vcsn/misc/echo.hh>
+  #include <cassert>
+  #include <vcsn/algos/edit-automaton.hh>
+  #include <lib/vcsn/dot/scan.hh>
 
   namespace vcsn
   {
@@ -119,6 +106,17 @@
               first = false;
             }
           return o << '}';
+        }
+
+        /// Use our local scanner object.
+        static
+        inline
+        int
+        yylex(parser::semantic_type* yylval,
+              parser::location_type* yylloc,
+              driver& driver_)
+        {
+          return driver_.scanner_->lex(yylval, yylloc, driver_);
         }
       }
     }

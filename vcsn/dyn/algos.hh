@@ -234,15 +234,12 @@ namespace vcsn
                                float density = 0.1,
                                unsigned num_initial = 1, unsigned num_final = 1);
 
-    /// Read an automaton in a file.
-    /// \param file  the file name.
+    /// Read an automaton from a stream.
+    /// \param is    the input stream.
     /// \param type  its format.
-    automaton read_automaton_file(const std::string& file,
-                                  const std::string& type = "default");
+    automaton read_automaton(std::istream& is,
+                             const std::string& type = "default");
 
-    /// Read an automaton in a string.
-    /// \param str  the automaton.
-    automaton read_automaton_string(const std::string& str);
 
     /// Read a ratexp from a stream.
     /// \param is    the input stream.

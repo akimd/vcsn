@@ -11,11 +11,20 @@
 
 namespace vcsn
 {
+  namespace dyn
+  {
+    automaton read_automaton(const std::string& f)
+    {
+      auto is = open_input_file(f);
+      return read_automaton(*is);
+    }
+  }
+
   template <typename Aut>
   Aut
-  read_automaton_file(const std::string& f)
+  read_automaton(const std::string& f)
   {
-    dyn::automaton res = dyn::read_automaton_file(f);
+    dyn::automaton res = dyn::read_automaton(f);
     // Automaton typename.
     auto sname = res->vname(false);
     if (sname != Aut::sname())
@@ -32,8 +41,8 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
   using automaton_t = vcsn::mutable_automaton<Ctx>;
-  automaton_t l = vcsn::read_automaton_file<automaton_t>(lhs);
-  automaton_t r = vcsn::read_automaton_file<automaton_t>(rhs);
+  automaton_t l = vcsn::read_automaton<automaton_t>(lhs);
+  automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
   automaton_t prod = vcsn::product<automaton_t, automaton_t>(l, r);
   typename Ctx::weight_t w = vcsn::eval<automaton_t>(prod, word);
   prod.context().weightset()->print(std::cout, w);
@@ -44,8 +53,8 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
               const std::string& word)
 {
   using namespace vcsn::dyn;
-  automaton l = read_automaton_file(lhs);
-  automaton r = read_automaton_file(rhs);
+  automaton l = read_automaton(lhs);
+  automaton r = read_automaton(rhs);
   automaton prod = product(l, r);
   weight w = eval(prod, word);
   print(w, std::cout, "text");

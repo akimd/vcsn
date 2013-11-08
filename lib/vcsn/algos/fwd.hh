@@ -10,9 +10,10 @@ namespace vcsn
 {
   namespace dyn
   {
-    automaton read_efsm_file(const std::string& file);
-
-    automaton read_fado_file(const std::string& file);
+    // efsm.cc.
+    automaton read_efsm(std::istream& is);
+    // fado.cc.
+    automaton read_fado(std::istream& is);
   }
 }
 #endif // VCSN_MISC_FADO_HH

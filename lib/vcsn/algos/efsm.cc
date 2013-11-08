@@ -2,8 +2,7 @@
 #include <set>
 #include <string>
 
-#include <boost/flyweight.hpp>
-#include <boost/flyweight/no_tracking.hpp>
+#include <vcsn/misc/flyweight.hh>
 
 #include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/algos/fwd.hh>
@@ -17,22 +16,21 @@ namespace vcsn
   namespace dyn
   {
     automaton
-    read_efsm_file(const std::string& file)
+    read_efsm(std::istream& is)
     {
-      auto fin = open_input_file(file);
-
+      std::string file = "file.efsm";
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
       // Look for the symbol table.
       {
         std::string cat;
-        while (!fin.get()->eof() && cat != "cat")
-          *fin >> cat;
-        if (fin.get()->eof())
+        while (!is.eof() && cat != "cat")
+          is >> cat;
+        if (is.eof())
           throw std::runtime_error(file
                                    + ": no \"cat\" symbol");
-        fin.get()->ignore(1024, '\n');
+        is.ignore(1024, '\n');
       }
 
       // The single piece of information we need from the symbol
@@ -41,9 +39,9 @@ namespace vcsn
       {
         std::string line;
         std::string val;
-        while (fin.get()->good())
+        while (is.good())
           {
-            std::getline(*fin.get(), line, '\n');
+            std::getline(is, line, '\n');
             std::istringstream ss{line};
             // Eat blank lines.
             ss >> one;
@@ -60,17 +58,17 @@ namespace vcsn
       // Parse after cat is read.
       {
         std::string cat;
-        while (!fin.get()->eof() && cat != "cat")
-          *fin >> cat;
-        if (fin.get()->eof())
+        while (!is.eof() && cat != "cat")
+          is >> cat;
+        if (is.eof())
           throw std::runtime_error(file
                                    + ": no \"cat\" symbol");
-        fin.get()->ignore(1024, '\n');
+        is.ignore(1024, '\n');
       }
 
 #define SKIP_SPACES()                           \
-      while (isspace(fin.get()->peek()))        \
-        fin.get()->ignore()
+      while (isspace(is.peek()))        \
+        is.ignore()
       vcsn::lazy_automaton_editor edit;
       // Get initial state + transition
       {
@@ -78,7 +76,7 @@ namespace vcsn
         SKIP_SPACES();
         std::string line;
         string_t s, d, l, w;
-        std::getline(*fin.get(), line, '\n');
+        std::getline(is, line, '\n');
         std::istringstream ss{line};
         ss >> s >> d >> l >> w;
         edit.add_initial(s);
@@ -97,7 +95,7 @@ namespace vcsn
         std::string line;
         do
           {
-            std::getline(*fin.get(), line, '\n');
+            std::getline(is, line, '\n');
             if (line == "EOFSM")
               break;
             std::istringstream ss{line};
@@ -113,7 +111,7 @@ namespace vcsn
             else
               // Src Dst Lbl Wgt
               edit.add_transition(s, d, l, w);
-          } while (fin.get()->good());
+          } while (is.good());
 #undef SKIP_SPACES
 
         if (line != "EOFSM")

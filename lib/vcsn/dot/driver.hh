@@ -6,6 +6,7 @@
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/misc/export.hh>
 
+# include <lib/vcsn/dot/fwd.hh>
 # include <lib/vcsn/rat/location.hh>
 
 namespace vcsn
@@ -22,10 +23,11 @@ namespace vcsn
         using location_t = vcsn::rat::location;
 
         driver();
+        ~driver();
 
-        dyn::automaton parse_file(const std::string& f);
-        dyn::automaton parse_string(const std::string& e,
-                                    const location_t& l = location_t{});
+        /// Parse this stream.
+        dyn::automaton parse(std::istream& is,
+                             const location_t& l = location_t{});
 
         /// Report an error \a m at \a l.
         void error(const location_t& l, const std::string& m);
@@ -34,19 +36,13 @@ namespace vcsn
 
         /// The error messages.
         std::string errors;
+        /// The scanner.
+        std::unique_ptr<detail_dotFlexLexer> scanner_;
 
       private:
         /// From context_, build edit_.
         /// \throw std::exception on invalid contexts.
         void setup_();
-        /// Prepare scanner to load file f.
-        void scan_open_(FILE *f);
-        /// Prepare scanner to read string e.
-        void scan_open_(const std::string& e);
-        /// Parse this stream.
-        dyn::automaton parse_(const location_t& l = location_t{});
-        /// Close the scanner.
-        void scan_close_();
 
         /// The inital location.
         location_t location_;

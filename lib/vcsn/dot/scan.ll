@@ -1,8 +1,8 @@
 /* See <http://www.graphviz.org/content/dot-language>. */
-
-%option noinput nounput noyywrap
+%option c++
+%option prefix="detail_dot"
 %option debug
-%option prefix="detail_dot" outfile="lex.yy.c"
+%option noinput nounput
 
 %top{
 #pragma GCC diagnostic ignored "-Wsign-compare"
@@ -15,12 +15,14 @@
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
+
+// Define YY_DECL.
+#include <lib/vcsn/dot/parse.hh>
 }
 
 %{
 #include <string>
 #include <iostream>
-#include <lib/vcsn/dot/parse.hh>
 
 #define LINE(Line)                              \
   do{                                           \
@@ -32,7 +34,21 @@
   yylloc->columns(yyleng);
 
 #define TOK(Token)                              \
-  vcsn::detail::dot::parser::token::Token
+  parser::token::Token
+
+YY_FLEX_NAMESPACE_BEGIN
+
+// Do not use %option noyywrap, because then flex generates the
+// same definition of yywrap, but outside the namespaces.
+int yyFlexLexer::yywrap() { return 1; }
+
+#define detail_dotalloc mydetail_dotalloc
+void *mydetail_dotalloc (yy_size_t);
+#define detail_dotrealloc mydetail_dotrealloc
+void *mydetail_dotrealloc (void *, yy_size_t);
+#define detail_dotfree mydetail_dotfree
+void mydetail_dotfree (void *);
+
 %}
 
 %x SC_COMMENT SC_STRING
@@ -101,54 +117,36 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 }
 
 %%
-namespace vcsn
+// Beware of the dummy Flex interface.  One would like to use:
+//
+// yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
+//
+// and
+//
+// yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
+//
+// but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
+// effect calling yypush_buffer_state saves the new state instead
+// of the old one.
+//
+// So do it in two steps, quite different from what is suggested
+// in the documentation: save the old context, switch to the new
+// one.
+
+void detail_dotFlexLexer::scan_open_(std::istream& f)
 {
-  namespace detail
-  {
-    namespace dot
-    {
-      // Beware of the dummy Flex interface.  One would like to use:
-      //
-      // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
-      //
-      // and
-      //
-      // yypush_buffer_state(yy_scan_bytes(e.c_str(), e.size()));
-      //
-      // but the latter (yy_scan_bytes) calls yy_switch_to_buffer, so in
-      // effect calling yypush_buffer_state saves the new state instead
-      // of the old one.
-      //
-      // So do it in two steps, quite different from what is suggested
-      // in the document: save the old context, switch to the new one.
-
-      void
-      driver::scan_open_(FILE *f)
-      {
-        yy_flex_debug = !!getenv("YYSCAN");
-        yypush_buffer_state(YY_CURRENT_BUFFER);
-        yy_switch_to_buffer(yy_create_buffer(f, YY_BUF_SIZE));
-      }
-
-      void
-      driver::scan_open_(const std::string& e)
-      {
-        yy_flex_debug = !!getenv("YYSCAN");
-        yyin = 0;
-        yypush_buffer_state(YY_CURRENT_BUFFER);
-        yy_scan_bytes(e.c_str(), e.size());
-      }
-
-      void
-      driver::scan_close_()
-      {
-        yypop_buffer_state();
-        //if (yyin)
-        //fclose(yyin);
-      }
-    }
-  }
+  set_debug(!!getenv("YYSCAN"));
+  yypush_buffer_state(YY_CURRENT_BUFFER);
+  yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
 }
+
+void detail_dotFlexLexer::scan_close_()
+{
+  yypop_buffer_state();
+}
+
+YY_FLEX_NAMESPACE_END
+
 
 // Local Variables:
 // mode: C++

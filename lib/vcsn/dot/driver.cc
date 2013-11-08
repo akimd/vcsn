@@ -1,13 +1,13 @@
 #include <cassert>
 #include <cstring> // strerror
 #include <sstream>
-#include <stdexcept>
 
-#include <vcsn/dyn/automaton.hh>
 #include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
-#include <vcsn/dyn/algos.hh>
+#include <lib/vcsn/dot/scan.hh>
 #include <vcsn/algos/edit-automaton.hh>
+#include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -17,13 +17,18 @@ namespace vcsn
     {
 
       driver::driver()
-        : edit_{nullptr}
+        : scanner_(new detail_dotFlexLexer)
+        , edit_{nullptr}
+      {}
+
+      driver::~driver()
       {}
 
       auto
-      driver::parse_(const location_t& l)
+      driver::parse(std::istream& is, const location_t& l)
         -> dyn::automaton
       {
+        scanner_->scan_open_(is);
         location_ = l;
         // Parser.
         parser p(*this);
@@ -39,35 +44,10 @@ namespace vcsn
             res = edit_->result();
             edit_->reset();
           }
+        scanner_->scan_close_();
         delete edit_;
         edit_ = nullptr;
-        scan_close_();
         return res;
-      }
-
-      auto
-      driver::parse_file(const std::string& f)
-        -> dyn::automaton
-      {
-        FILE *yyin = (f.empty() || f == "-") ? stdin : fopen(f.c_str(), "r");
-        if (!yyin)
-          {
-            std::cerr << f << ": cannot open: " << strerror(errno) << std::endl;
-            exit(1);
-          }
-        scan_open_(yyin);
-        auto res = parse_();
-        if (yyin != stdin)
-          fclose(yyin);
-        return res;
-      }
-
-      auto
-      driver::parse_string(const std::string& e, const location_t& l)
-        -> dyn::automaton
-      {
-        scan_open_(e);
-        return parse_(l);
       }
 
       void

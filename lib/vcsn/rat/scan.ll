@@ -59,11 +59,11 @@ namespace
 int yyFlexLexer::yywrap() { return 1; }
 
 #define ratalloc myratalloc
-void *myratalloc (yy_size_t  );
+void *myratalloc (yy_size_t);
 #define ratrealloc myratrealloc
-void *myratrealloc (void *,yy_size_t  );
+void *myratrealloc (void *, yy_size_t);
 #define ratfree myratfree
-void myratfree (void *  );
+void myratfree (void *);
 
 %}
 
