@@ -16,6 +16,7 @@
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 
+// Define YY_DECL.
 #include <lib/vcsn/rat/parse.hh>
 }
 
@@ -41,7 +42,7 @@
   yylloc->columns(yyleng);
 
 #define TOK(Token)                              \
-  vcsn::rat::parser::token::Token
+  parser::token::Token
 
 YY_FLEX_NAMESPACE_BEGIN
 namespace

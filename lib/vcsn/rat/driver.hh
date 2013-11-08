@@ -36,7 +36,6 @@ namespace vcsn
 
       /// The error messages.
       std::string errors;
-
       /// The scanner.
       std::unique_ptr<ratFlexLexer> scanner_;
 

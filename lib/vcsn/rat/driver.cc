@@ -2,7 +2,6 @@
 #include <sstream>
 
 #include <vcsn/dyn/algos.hh> // make_ratexpset.
-#include <vcsn/misc/stream.hh>
 #include <lib/vcsn/rat/driver.hh>
 #include <lib/vcsn/rat/parse.hh>
 
