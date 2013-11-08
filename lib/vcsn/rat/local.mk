@@ -11,16 +11,20 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
+## ------------ ##
+## The parser.  ##
+## ------------ ##
+
 # We do not use Automake features here.
-SOURCES_RAT_PARSE_YY =                          \
+SOURCES_%C%_PARSE_YY =                          \
   %D%/stack.hh                                  \
   %D%/position.hh                               \
   %D%/location.hh                               \
   %D%/parse.hh                                  \
   %D%/parse.cc
-BUILT_SOURCES += $(SOURCES_RAT_PARSE_YY)
+BUILT_SOURCES += $(SOURCES_%C%_PARSE_YY)
 MAINTAINERCLEANFILES +=                                 \
-  $(addprefix $(srcdir)/,$(SOURCES_RAT_PARSE_YY))       \
+  $(addprefix $(srcdir)/,$(SOURCES_%C%_PARSE_YY))       \
   $(srcdir)/%D%/parse.html                              \
   $(srcdir)/%D%/parse.output                            \
   $(srcdir)/%D%/parse.stamp                             \
@@ -50,8 +54,22 @@ EXTRA_DIST +=                                   \
 ## trying to compile from *.cc to *.lo, it will not apply VPATH
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
-$(addprefix $(srcdir)/, $(SOURCES_RAT_PARSE_YY)): %D%/parse.stamp
+$(addprefix $(srcdir)/, $(SOURCES_%C%_PARSE_YY)): %D%/parse.stamp
 	@if test ! -f $@; then			\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
+
+
+## ------------- ##
+## The library.  ##
+## ------------- ##
+
+lib_libvcsn_la_SOURCES +=                       \
+  $(SOURCES_%C%_PARSE_YY)                       \
+  %D%/driver.hh                                 \
+  %D%/driver.cc                                 \
+  %D%/fwd.hh                                    \
+  %D%/read.hh                                   \
+  %D%/read.cc                                   \
+  %D%/scan.ll

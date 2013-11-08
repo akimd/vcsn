@@ -84,19 +84,6 @@ lib_libvcsn_la_SOURCES =                        \
 %D%/dot/parse.stamp: %D%/rat/parse.stamp
 
 include %D%/dot/local.mk
-lib_libvcsn_la_SOURCES +=                       \
-  $(SOURCES_DOT_PARSE_YY)                       \
-  %D%/dot/driver.cc                             \
-  %D%/dot/driver.hh                             \
-  %D%/dot/scan.ll
-
 include %D%/rat/local.mk
-lib_libvcsn_la_SOURCES +=                       \
-  $(SOURCES_RAT_PARSE_YY)                       \
-  %D%/rat/driver.hh                             \
-  %D%/rat/driver.cc                             \
-  %D%/rat/fwd.hh                                \
-  %D%/rat/read.hh                               \
-  %D%/rat/read.cc                               \
-  %D%/rat/scan.ll
+
 lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS)

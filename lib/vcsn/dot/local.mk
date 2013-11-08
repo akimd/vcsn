@@ -11,13 +11,17 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-SOURCES_DOT_PARSE_YY =				\
+## ------------ ##
+## The parser.  ##
+## ------------ ##
+
+SOURCES_%C%_PARSE_YY =				\
   %D%/stack.hh				        \
   %D%/parse.hh				        \
   %D%/parse.cc
-BUILT_SOURCES += $(SOURCES_DOT_PARSE_YY)
+BUILT_SOURCES += $(SOURCES_%C%_PARSE_YY)
 MAINTAINERCLEANFILES +=                                 \
-  $(addprefix $(srcdir)/,$(SOURCES_DOT_PARSE_YY))       \
+  $(addprefix $(srcdir)/,$(SOURCES_%C%_PARSE_YY))       \
   $(srcdir)/%D%/parse.html                              \
   $(srcdir)/%D%/parse.output                            \
   $(srcdir)/%D%/parse.stamp                             \
@@ -30,7 +34,7 @@ EXTRA_DIST +=                                   \
   %D%/parse.stamp                               \
   %D%/parse.yy
 # The dependency is on bison++.in and not bison++, since bison++ is
-# regenedoted at distribution time, and voids the time stamps (which
+# regenerated at distribution time, and voids the time stamps (which
 # we don't want!).
 %D%/parse.stamp: %D%/parse.yy $(BISONXX_IN)
 	$(AM_V_GEN)mkdir -p $(@D)
@@ -42,12 +46,22 @@ EXTRA_DIST +=                                   \
 	  $(AM_BISONFLAGS) $(BISONFLAGS)
 	$(AM_V_at)mv -f $@.tmp $@
 
-## If Make does not know it will genedote in the srcdir, then when
+## If Make does not know it will generate in the srcdir, then when
 ## trying to compile from *.cc to *.lo, it will not apply VPATH
 ## lookup, since it expects the file to be in builddir.  So *here*,
 ## make srcdir explicit.
-$(addprefix $(srcdir)/, $(SOURCES_DOT_PARSE_YY)): %D%/parse.stamp
+$(addprefix $(srcdir)/, $(SOURCES_%C%_PARSE_YY)): %D%/parse.stamp
 	@if test ! -f $@; then			\
 	  rm -f $<;				\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;		\
 	fi
+
+## ------------- ##
+## The library.  ##
+## ------------- ##
+
+lib_libvcsn_la_SOURCES +=                       \
+  $(SOURCES_%C%_PARSE_YY)                       \
+  %D%/driver.cc                                 \
+  %D%/driver.hh                                 \
+  %D%/scan.ll
