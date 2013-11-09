@@ -36,7 +36,6 @@ namespace vcsn
       using super_type = typename RatExpSet::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
-      using nary_t = typename super_type::nary_t;
       using prod_t = typename super_type::prod_t;
       using sum_t = typename super_type::sum_t;
       using intersection_t = typename super_type::intersection_t;
