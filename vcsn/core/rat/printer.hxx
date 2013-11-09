@@ -85,7 +85,11 @@ namespace vcsn
         out_ << ')';
     }
 
-    DEFINE::print(const nary_t& n, const char op)
+    template <typename RatExpSet>
+    template <type_t Type>
+    inline
+    auto
+    printer<RatExpSet>::print(const nary_t<Type>& n, const char op)
       -> void
     {
       bool need_weight_parens = shows_weight_(n);

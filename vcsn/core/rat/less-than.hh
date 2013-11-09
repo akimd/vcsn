@@ -24,7 +24,8 @@ namespace vcsn
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
-      using nary_t = typename super_type::nary_t;
+      template <rat::exp::type_t Type>
+      using nary_t = typename super_type::template nary_t<Type>;
       using prod_t = typename super_type::prod_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
@@ -92,7 +93,8 @@ namespace vcsn
       }
 
       // sum and prod are handled equally, as naries.
-      bool visit(const nary_t& lhs, const nary_t& rhs)
+      template <rat::exp::type_t Type>
+      bool visit(const nary_t<Type>& lhs, const nary_t<Type>& rhs)
       {
         auto ls = lhs.size();
         auto rs = rhs.size();
@@ -142,22 +144,21 @@ namespace vcsn
 
       // sum and prod are handled equally, as naries.
       virtual void
+      visit(const prod_t& lhs)
+      {
+        res_ = visit(lhs, *down_pointer_cast<const prod_t>(rhs_));
+      }
+
+      virtual void
       visit(const sum_t& lhs)
       {
-        res_ = visit(lhs, *down_pointer_cast<const nary_t>(rhs_));
+        res_ = visit(lhs, *down_pointer_cast<const sum_t>(rhs_));
       }
 
       virtual void
       visit(const intersection_t& lhs)
       {
         res_ = visit(lhs, *down_pointer_cast<const intersection_t>(rhs_));
-      }
-
-      // sum and prod are handled equally, as naries.
-      virtual void
-      visit(const prod_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const nary_t>(rhs_));
       }
 
       virtual void

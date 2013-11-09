@@ -36,12 +36,13 @@ namespace vcsn
     DEFINE(one);
     DEFINE(atom);
     DEFINE(inner);
-    DEFINE(nary);
     DEFINE(sum);
     DEFINE(prod);
     DEFINE(intersection);
     DEFINE(star);
 # undef DEFINE
+    template <rat::exp::type_t Type>
+    using nary_t = rat::nary<Type, label_t, weight_t>;
     using ratexp_t = std::shared_ptr<const node_t>;
 
     using type_t = typename node_t::type_t;
@@ -111,15 +112,17 @@ namespace vcsn
 
   private:
     /// Push \a v in \a res, applying associativity if possible.
-    /// \param type  the kind of ratexps on which to apply associativity.
-    ///              Must be SUM or PROD.
-    void gather(ratexps_t& res, rat::exp::type_t type, value_t v) const;
+    /// \tparam Type  the kind of ratexps on which to apply associativity.
+    ///               Must be sum, intersection, or prod.
+    template <rat::exp::type_t Type>
+    void gather(ratexps_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \param type  the kind of ratexps on which to apply associativity.
     ///              Must be SUM or PROD.
-    ratexps_t gather(rat::exp::type_t type, value_t l, value_t r) const;
+    template <rat::exp::type_t Type>
+    ratexps_t gather(value_t l, value_t r) const;
 
     /// If Context is LAW.
     value_t concat_(value_t l, value_t r, std::true_type) const;

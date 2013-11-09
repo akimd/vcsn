@@ -16,8 +16,9 @@ namespace vcsn
       using weight_t = Weight;
       using node_t = node<label_t, weight_t>;
       using inner_t = inner<label_t, weight_t>;
-      using nary_t = nary<label_t, weight_t>;
       using leaf_t = leaf<label_t, weight_t>;
+      template <type_t Type>
+      using nary_t = rat::nary<Type, label_t, weight_t>;
 # define DEFINE(Type)                                   \
       using Type ## _t = Type<label_t, weight_t>;       \
       virtual void visit(const Type ## _t& v)

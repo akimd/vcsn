@@ -20,6 +20,18 @@ namespace vcsn
     template <typename Context>
     class printer;
 
+    /// The possible types of ratexps.
+    enum class type_t
+    {
+      zero = 0,
+      one  = 1,
+      atom = 2,
+      sum  = 3,
+      prod = 4,
+      intersection = 5,
+      star = 6,
+    };
+
 # define DEFINE(Node)                           \
     template <typename Label, typename Weight>  \
     class Node
@@ -30,15 +42,23 @@ namespace vcsn
     DEFINE(one);
     DEFINE(atom);
     DEFINE(inner);
-    DEFINE(nary);
-    DEFINE(sum);
-    DEFINE(prod);
-    DEFINE(intersection);
     DEFINE(star);
 
     DEFINE(const_visitor);
 
 # undef DEFINE
+
+    template <type_t Type, typename Label, typename Weight>
+    class nary;
+
+    template <typename Label, typename Weight>
+    using prod = nary<type_t::prod, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using intersection = nary<type_t::intersection, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using sum = nary<type_t::sum, Label, Weight>;
 
     template <typename Label, typename Weight>
     using ratexp = std::shared_ptr<const node<Label, Weight>>;

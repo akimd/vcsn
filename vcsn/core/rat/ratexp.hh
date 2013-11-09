@@ -23,16 +23,7 @@ namespace vcsn
       virtual ~exp() = 0;
 
       /// The possible types of ratexps.
-      enum class type_t
-        {
-          zero = 0,
-          one  = 1,
-          atom = 2,
-          sum  = 3,
-          prod = 4,
-          intersection = 5,
-          star = 6,
-        };
+      using type_t = rat::type_t;
 
       /// The type of this node.
       virtual type_t type() const = 0;
@@ -133,7 +124,7 @@ namespace vcsn
     /// An inner node with multiple children.
     ///
     /// Implements the Composite Design Pattern.
-    template <typename Label, typename Weight>
+    template <exp::type_t Type, typename Label, typename Weight>
     class nary: public inner<Label, Weight>
     {
     public:
@@ -154,6 +145,8 @@ namespace vcsn
       using const_reverse_iterator = typename ratexps_t::const_reverse_iterator;
       using reverse_iterator = const_reverse_iterator;
 
+      virtual type_t type() const { return Type; };
+
       const_iterator begin() const;
       const_iterator end() const;
       const_reverse_iterator rbegin() const;
@@ -170,7 +163,6 @@ namespace vcsn
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
-    protected:
       nary(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
       nary(const nary& that)
         : super_type(that)
@@ -179,125 +171,26 @@ namespace vcsn
 
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
-      virtual value_t clone_() const = 0;
+
+      virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
+      virtual value_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
+
       ratexps_t sub_ratexp_;
     };
 
-
-    /*-------.
-    | prod.  |
-    `-------*/
+    template <typename Label, typename Weight>
+    using prod = nary<type_t::prod, Label, Weight>;
 
     template <typename Label, typename Weight>
-    class prod : public nary<Label, Weight>
-    {
-    public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_type = nary<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
-      using ratexps_t = typename node_t::ratexps_t;
-      using self_t = prod;
-
-      using const_iterator = typename super_type::const_iterator;
-      using iterator = typename super_type::const_iterator;
-      using const_reverse_iterator = typename super_type::const_reverse_iterator;
-      using reverse_iterator = typename super_type::const_reverse_iterator;
-
-      prod(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
-
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
-      virtual type_t type() const { return type_t::prod; };
-
-      virtual void accept(typename node_t::const_visitor& v) const;
-    protected:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
-    };
-
-
-    /*------.
-    | sum.  |
-    `------*/
+    using intersection = nary<type_t::intersection, Label, Weight>;
 
     template <typename Label, typename Weight>
-    class sum : public nary<Label, Weight>
-    {
-    public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_type = nary<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
-      using ratexps_t = typename node_t::ratexps_t;
-      using self_t = sum;
-
-      using const_iterator = typename super_type::const_iterator;
-      using iterator = typename super_type::const_iterator;
-      using const_reverse_iterator = typename super_type::const_reverse_iterator;
-      using reverse_iterator = typename super_type::const_reverse_iterator;
-
-      sum(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
-
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
-      virtual type_t type() const { return type_t::sum; };
-
-      virtual void accept(typename node_t::const_visitor& v) const;
-    protected:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
-    };
-
-
-    /*---------------.
-    | intersection.  |
-    `---------------*/
-
-    template <typename Label, typename Weight>
-    class intersection : public nary<Label, Weight>
-    {
-    public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_type = nary<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
-      using ratexps_t = typename node_t::ratexps_t;
-      using self_t = intersection;
-
-      using const_iterator = typename super_type::const_iterator;
-      using iterator = typename super_type::const_iterator;
-      using const_reverse_iterator = typename super_type::const_reverse_iterator;
-      using reverse_iterator = typename super_type::const_reverse_iterator;
-
-      intersection(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
-
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
-      virtual type_t type() const { return type_t::intersection; };
-
-      virtual void accept(typename node_t::const_visitor& v) const;
-    protected:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
-    };
+    using sum = nary<type_t::sum, Label, Weight>;
 
 
     /*-------.

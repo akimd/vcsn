@@ -90,136 +90,6 @@ namespace vcsn
       return std::static_pointer_cast<const self_t>(clone_());
     };
 
-    /*-------.
-    | nary.  |
-    `-------*/
-
-    DEFINE_CTOR(nary)(const weight_t& l, const weight_t& r,
-                       const ratexps_t& ns)
-      : super_type(l, r)
-      , sub_ratexp_(ns)
-    {
-    }
-
-
-    DEFINE(nary)::begin() const
-      -> const_iterator
-    {
-      return sub_ratexp_.begin();
-    }
-
-    DEFINE(nary)::end() const
-      -> const_iterator
-    {
-      return sub_ratexp_.end();
-    }
-
-    DEFINE(nary)::rbegin() const
-      -> const_reverse_iterator
-    {
-      return sub_ratexp_.begin();
-    }
-
-    DEFINE(nary)::rend() const
-      -> const_reverse_iterator
-    {
-      return sub_ratexp_.end();
-    }
-
-    DEFINE(nary)::size() const
-      -> size_t
-    {
-      return sub_ratexp_.size();
-    }
-
-    DEFINE(nary)::operator[](size_t n) const
-      -> const value_t
-    {
-      return sub_ratexp_[n];
-    }
-
-    DEFINE(nary)::head() const
-      -> const value_t
-    {
-      return *begin();
-    }
-
-    DEFINE(nary)::tail() const
-      -> decltype(boost::make_iterator_range(*this, 1, 0))
-    {
-      return boost::make_iterator_range(*this, 1, 0);
-    }
-
-    DEFINE(nary)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-
-    /*-------.
-    | prod.  |
-    `-------*/
-
-    DEFINE_CTOR(prod)(const weight_t& l, const weight_t& r,
-                       const ratexps_t& ns)
-      : super_type(l, r, ns)
-    {}
-
-
-    DEFINE(prod)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(prod)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-
-    /*------.
-    | sum.  |
-    `------*/
-
-    DEFINE_CTOR(sum)(const weight_t& l, const weight_t& r,
-                     const ratexps_t& ns)
-      : super_type(l, r, ns)
-    {}
-
-    DEFINE(sum)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(sum)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-    /*---------------.
-    | intersection.  |
-    `---------------*/
-
-    DEFINE_CTOR(intersection)(const weight_t& l, const weight_t& r,
-                              const ratexps_t& ns)
-      : super_type(l, r, ns)
-    {}
-
-    DEFINE(intersection)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(intersection)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
 
     /*-------.
     | star.  |
@@ -313,6 +183,94 @@ namespace vcsn
     {
       return std::static_pointer_cast<const self_t>(clone_());
     };
+
+# undef DEFINE_CTOR
+# undef DEFINE
+
+
+#define DEFINE_CTOR(Node)                                       \
+    template <type_t Type, typename Label, typename Weight>     \
+    inline                                                      \
+    Node<Type, Label, Weight>::Node
+
+#define DEFINE(Node)                                         \
+    template <type_t Type, typename Label, typename Weight>  \
+    inline                                                   \
+    auto                                                     \
+    Node<Type, Label, Weight>
+
+
+    /*-------.
+    | nary.  |
+    `-------*/
+
+    DEFINE_CTOR(nary)(const weight_t& l, const weight_t& r,
+                      const ratexps_t& ns)
+      : super_type(l, r)
+      , sub_ratexp_(ns)
+    {
+    }
+
+
+    DEFINE(nary)::begin() const
+      -> const_iterator
+    {
+      return sub_ratexp_.begin();
+    }
+
+    DEFINE(nary)::end() const
+      -> const_iterator
+    {
+      return sub_ratexp_.end();
+    }
+
+    DEFINE(nary)::rbegin() const
+      -> const_reverse_iterator
+    {
+      return sub_ratexp_.begin();
+    }
+
+    DEFINE(nary)::rend() const
+      -> const_reverse_iterator
+    {
+      return sub_ratexp_.end();
+    }
+
+    DEFINE(nary)::size() const
+      -> size_t
+    {
+      return sub_ratexp_.size();
+    }
+
+    DEFINE(nary)::operator[](size_t n) const
+      -> const value_t
+    {
+      return sub_ratexp_[n];
+    }
+
+    DEFINE(nary)::head() const
+      -> const value_t
+    {
+      return *begin();
+    }
+
+    DEFINE(nary)::tail() const
+      -> decltype(boost::make_iterator_range(*this, 1, 0))
+    {
+      return boost::make_iterator_range(*this, 1, 0);
+    }
+
+    DEFINE(nary)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    }
+
+    DEFINE(nary)::accept(typename node_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
 
 # undef DEFINE_CTOR
 # undef DEFINE

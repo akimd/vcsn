@@ -110,15 +110,20 @@ namespace vcsn
   }
 
 
-  DEFINE::gather(ratexps_t& res, rat::exp::type_t type, value_t v) const
+  template <typename Context>
+  template <rat::exp::type_t Type>
+  inline
+  auto
+  ratexpset<Context>::gather(ratexps_t& res, value_t v) const
     -> void
   {
-    assert(type == type_t::sum
-	   || type == type_t::prod
-	   || type == type_t::intersection);
-    if (v->type() == type)
+    static_assert(Type == type_t::sum
+                  || Type == type_t::prod
+                  || Type == type_t::intersection,
+                  "invalid type");
+    if (v->type() == Type)
       {
-        const auto& nary = *down_pointer_cast<const nary_t>(v);
+        const auto& nary = *down_pointer_cast<const nary_t<Type>>(v);
         if (weightset()->is_one(nary.left_weight())
             && weightset()->is_one(nary.right_weight()))
           res.insert(std::end(res), std::begin(nary), std::end(nary));
@@ -129,15 +134,20 @@ namespace vcsn
       res.push_back(v);
   }
 
-  DEFINE::gather(rat::exp::type_t type, value_t l, value_t r) const
+  template <typename Context>
+  template <rat::exp::type_t Type>
+  inline
+  auto
+  ratexpset<Context>::gather(value_t l, value_t r) const
     -> ratexps_t
   {
-    assert(type == type_t::sum
-	   || type == type_t::prod
-	   || type == type_t::intersection);
+    static_assert(Type == type_t::sum
+                  || Type == type_t::prod
+                  || Type == type_t::intersection,
+                  "invalid type");
     ratexps_t res;
-    gather(res, type, l);
-    gather(res, type, r);
+    gather<Type>(res, l);
+    gather<Type>(res, r);
     return res;
   }
 
@@ -155,7 +165,7 @@ namespace vcsn
     else
       res = std::make_shared<sum_t>(weightset()->one(),
                                     weightset()->one(),
-                                    gather(type_t::sum, l, r));
+                                    gather<type_t::sum>(l, r));
     return res;
   }
 
@@ -180,7 +190,7 @@ namespace vcsn
     else
       res = std::make_shared<prod_t>(weightset()->one(),
                                      weightset()->one(),
-                                     gather(type_t::prod, l, r));
+                                     gather<type_t::prod>(l, r));
     return res;
   }
 
@@ -215,7 +225,7 @@ namespace vcsn
     else
       res = std::make_shared<intersection_t>(weightset()->one(),
                                              weightset()->one(),
-                                             gather(type_t::intersection, l, r));
+                                             gather<type_t::intersection>(l, r));
     return res;
   }
 

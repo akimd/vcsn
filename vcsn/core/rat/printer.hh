@@ -22,7 +22,8 @@ namespace vcsn
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
-      using nary_t = typename super_type::nary_t;
+      template <type_t Type>
+      using nary_t = typename super_type::template nary_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
       printer(std::ostream& out,
@@ -46,6 +47,7 @@ namespace vcsn
       }
 
     private:
+
 # define DEFINE(Type)						\
       using Type ## _t = typename super_type::Type ## _t;	\
       virtual void visit(const Type ## _t& v)
@@ -105,7 +107,8 @@ namespace vcsn
 
       void print(const weight_t& w);
       /// Traverse n-ary node (+ and .).
-      void print(const nary_t& n, const char op);
+      template <rat::exp::type_t Type>
+      void print(const nary_t<Type>& n, const char op);
 
       /// Whether w is displayed.
       ATTRIBUTE_PURE
