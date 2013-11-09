@@ -13,7 +13,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    automaton read_automaton(const std::string& f)
+    static automaton read_automaton(const std::string& f)
     {
       auto is = open_input_file(f);
       return read_automaton(*is);
