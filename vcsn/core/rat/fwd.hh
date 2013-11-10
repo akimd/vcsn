@@ -38,8 +38,6 @@ namespace vcsn
 
     DEFINE(node);
     DEFINE(leaf);
-    DEFINE(zero);
-    DEFINE(one);
     DEFINE(atom);
     DEFINE(inner);
     DEFINE(star);
@@ -59,6 +57,15 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using sum = nary<type_t::sum, Label, Weight>;
+
+    template <type_t Type, typename Label, typename Weight>
+    class constant;
+
+    template <typename Label, typename Weight>
+    using zero = constant<type_t::zero, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using one = constant<type_t::one, Label, Weight>;
 
     template <typename Label, typename Weight>
     using ratexp = std::shared_ptr<const node<Label, Weight>>;

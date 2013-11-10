@@ -257,23 +257,25 @@ namespace vcsn
     };
 
 
-    template <typename Label, typename Weight>
-    class one : public leaf<Label, Weight>
+    template <exp::type_t Type, typename Label, typename Weight>
+    class constant : public leaf<Label, Weight>
     {
     public:
+      static_assert(Type == type_t::zero
+                    || Type == type_t::one,
+                    "invalid type");
       using label_t = Label;
       using weight_t = Weight;
       using super_type = leaf<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
-      using self_t = one;
+      using self_t = constant;
 
-      one(const weight_t& l);
+      constant(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 
-      virtual type_t type() const { return type_t::one; };
+      virtual type_t type() const { return Type; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
     protected:
@@ -284,31 +286,10 @@ namespace vcsn
     };
 
     template <typename Label, typename Weight>
-    class zero : public leaf<Label, Weight>
-    {
-    public:
-      using label_t = Label;
-      using weight_t = Weight;
-      using super_type = leaf<label_t, weight_t>;
-      using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
-      using value_t = typename node_t::value_t;
-      using self_t = zero;
+    using zero = constant<type_t::zero, Label, Weight>;
 
-      zero(const weight_t& l);
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
-      virtual type_t type() const { return type_t::zero; };
-
-      virtual void accept(typename node_t::const_visitor &v) const;
-    protected:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
-    };
-
+    template <typename Label, typename Weight>
+    using one = constant<type_t::one, Label, Weight>;
 
     template <typename Label, typename Weight>
     class atom : public leaf<Label, Weight>

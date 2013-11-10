@@ -119,45 +119,6 @@ namespace vcsn
     };
 
 
-    /*------.
-    | one.  |
-    `------*/
-
-    DEFINE_CTOR(one)(const weight_t& w)
-      : super_type(w)
-    {}
-
-    DEFINE(one)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(one)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-    /*-------.
-    | zero.  |
-    `-------*/
-
-    DEFINE_CTOR(zero)(const weight_t& w)
-      : super_type(w)
-    {}
-
-    DEFINE(zero)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(zero)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
     /*-------.
     | atom.  |
     `-------*/
@@ -270,6 +231,25 @@ namespace vcsn
     {
       v.visit(*this);
     }
+
+    /*-----------.
+    | constant.  |
+    `-----------*/
+
+    DEFINE_CTOR(constant)(const weight_t& w)
+      : super_type(w)
+    {}
+
+    DEFINE(constant)::accept(typename node_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
+    DEFINE(constant)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
 
 
 # undef DEFINE_CTOR
