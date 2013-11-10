@@ -11,7 +11,7 @@ namespace vcsn
       class driver;
 
       // lib/vcsn/dot/scan.hh.
-      class detail_dotFlexLexer;
+      class yyFlexLexer;
 
       // lib/vcsn/dot/location.hh.
       class location;

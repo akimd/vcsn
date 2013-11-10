@@ -10,7 +10,7 @@ namespace vcsn
     class driver;
 
     // lib/vcsn/rat/scan.hh.
-    class ratFlexLexer;
+    class yyFlexLexer;
 
     // lib/vcsn/rat/location.hh.
     class location;

@@ -58,9 +58,20 @@ else
   rm -f $output_log
 fi
 
+# Tweak Flex's output.
+#
+# 1. Use "output.hh" as header.
+#
+# 2. Use "output" in synclines, not output.tmp.
+#
+# 3. Disable the declarations of yyalloc, yyrealloc and yyfree
+#    declarations, which are not in YY_FLEX_NAMESPACE, while the
+#    implementations are.
 perl -pi                                                \
      -e "s{<FlexLexer\\.h>}{<$output_header>}g;"        \
      -e "s{\\Q$output.tmp\\E}{$output}g;"               \
+     -e 's{(^void \*yy(re)?alloc.*;)}{// $1}g;'         \
+     -e 's{(^void yyfree.*;)}{// $1}g;'                 \
      "$output.tmp"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"

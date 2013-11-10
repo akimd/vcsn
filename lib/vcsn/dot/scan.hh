@@ -12,8 +12,6 @@
     }                                           \
   }
 
-# define yyFlexLexer detail_dotFlexLexer
-
 # include <vcsn/misc/flex-lexer.hh>
 
 #endif // !LIB_VCSN_DOT_SCAN_HH

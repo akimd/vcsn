@@ -37,7 +37,7 @@ namespace vcsn
         /// The error messages.
         std::string errors;
         /// The scanner.
-        std::unique_ptr<detail_dotFlexLexer> scanner_;
+        std::unique_ptr<yyFlexLexer> scanner_;
 
       private:
         /// From context_, build edit_.

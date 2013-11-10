@@ -17,7 +17,7 @@ namespace vcsn
     {
 
       driver::driver()
-        : scanner_(new detail_dotFlexLexer)
+        : scanner_(new yyFlexLexer)
         , edit_{nullptr}
       {}
 

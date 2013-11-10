@@ -37,7 +37,7 @@ namespace vcsn
       /// The error messages.
       std::string errors;
       /// The scanner.
-      std::unique_ptr<ratFlexLexer> scanner_;
+      std::unique_ptr<yyFlexLexer> scanner_;
 
     private:
       /// The inital location.

@@ -55,9 +55,6 @@ Or something like that.  I'm not sure "wordset" is appropriate, however,
 polynomials for instance really need to go from label_t to word_t, and be
 able to deal with them.
 
-** scanners
-The dot scanner is a C scanner, not a C++ scanner.
-
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 

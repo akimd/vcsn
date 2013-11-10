@@ -1,6 +1,5 @@
 /* See <http://www.graphviz.org/content/dot-language>. */
 %option c++
-%option prefix="detail_dot"
 %option debug
 %option noinput nounput
 
@@ -37,17 +36,6 @@
   parser::token::Token
 
 YY_FLEX_NAMESPACE_BEGIN
-
-// Do not use %option noyywrap, because then flex generates the
-// same definition of yywrap, but outside the namespaces.
-int yyFlexLexer::yywrap() { return 1; }
-
-#define detail_dotalloc mydetail_dotalloc
-void *mydetail_dotalloc (yy_size_t);
-#define detail_dotrealloc mydetail_dotrealloc
-void *mydetail_dotrealloc (void *, yy_size_t);
-#define detail_dotfree mydetail_dotfree
-void mydetail_dotfree (void *);
 
 %}
 
@@ -117,6 +105,10 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 }
 
 %%
+// Do not use %option noyywrap, because then flex generates the
+// same definition of yywrap, but outside the namespaces.
+int yyFlexLexer::yywrap() { return 1; }
+
 // Beware of the dummy Flex interface.  One would like to use:
 //
 // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
@@ -133,14 +125,14 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 // in the documentation: save the old context, switch to the new
 // one.
 
-void detail_dotFlexLexer::scan_open_(std::istream& f)
+void yyFlexLexer::scan_open_(std::istream& f)
 {
   set_debug(!!getenv("YYSCAN"));
   yypush_buffer_state(YY_CURRENT_BUFFER);
   yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
 }
 
-void detail_dotFlexLexer::scan_close_()
+void yyFlexLexer::scan_close_()
 {
   yypop_buffer_state();
 }

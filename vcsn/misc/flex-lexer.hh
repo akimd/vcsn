@@ -84,6 +84,10 @@ protected:
 
 YY_FLEX_NAMESPACE_BEGIN
 
+void *yyalloc (size_t);
+void *yyrealloc (void *, size_t);
+void yyfree (void *);
+
 class yyFlexLexer : public FlexLexer
 {
 public:

@@ -1,5 +1,4 @@
 %option c++
-%option prefix="rat"
 %option debug
 %option noinput nounput
 %option stack noyy_top_state
@@ -51,20 +50,6 @@ namespace
   irange_type
   quantifier(driver& d, const location& loc, const std::string& s);
 }
-
-// Do not use %option noyywrap, because then flex generates the
-// same definition of yywrap, but outside the namespaces, so it
-// defines it for ::yyFlexLexer instead of
-// ::vcsn::rat::yyFlexLexer.
-int yyFlexLexer::yywrap() { return 1; }
-
-#define ratalloc myratalloc
-void *myratalloc (yy_size_t);
-#define ratrealloc myratrealloc
-void *myratrealloc (void *, yy_size_t);
-#define ratfree myratfree
-void myratfree (void *);
-
 %}
 
 %x SC_CONTEXT SC_WEIGHT
@@ -221,6 +206,12 @@ namespace
   }
 }
 
+// Do not use %option noyywrap, because then flex generates the
+// same definition of yywrap, but outside the namespaces, so it
+// defines it for ::yyFlexLexer instead of
+// ::vcsn::rat::yyFlexLexer.
+int yyFlexLexer::yywrap() { return 1; }
+
 // Beware of the dummy Flex interface.  One would like to use:
 //
 // yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
@@ -237,14 +228,14 @@ namespace
 // in the documentation: save the old context, switch to the new
 // one.
 
-void ratFlexLexer::scan_open_(std::istream& f)
+void yyFlexLexer::scan_open_(std::istream& f)
 {
   set_debug(!!getenv("YYSCAN"));
   yypush_buffer_state(YY_CURRENT_BUFFER);
   yy_switch_to_buffer(yy_create_buffer(&f, YY_BUF_SIZE));
 }
 
-void ratFlexLexer::scan_close_()
+void yyFlexLexer::scan_close_()
 {
   yypop_buffer_state();
 }

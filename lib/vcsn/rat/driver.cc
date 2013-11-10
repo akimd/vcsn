@@ -13,7 +13,7 @@ namespace vcsn
   {
 
     driver::driver(const dyn::ratexpset& rs)
-      : scanner_(new ratFlexLexer)
+      : scanner_(new yyFlexLexer)
     {
       ratexpset(rs);
     }
