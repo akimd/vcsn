@@ -117,10 +117,6 @@ namespace vcsn
   ratexpset<Context>::gather(ratexps_t& res, value_t v) const
     -> void
   {
-    static_assert(Type == type_t::sum
-                  || Type == type_t::prod
-                  || Type == type_t::intersection,
-                  "invalid type");
     if (v->type() == Type)
       {
         const auto& nary = *down_pointer_cast<const nary_t<Type>>(v);
@@ -141,10 +137,6 @@ namespace vcsn
   ratexpset<Context>::gather(value_t l, value_t r) const
     -> ratexps_t
   {
-    static_assert(Type == type_t::sum
-                  || Type == type_t::prod
-                  || Type == type_t::intersection,
-                  "invalid type");
     ratexps_t res;
     gather<Type>(res, l);
     gather<Type>(res, r);

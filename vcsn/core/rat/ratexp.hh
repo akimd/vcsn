@@ -128,11 +128,15 @@ namespace vcsn
     class nary: public inner<Label, Weight>
     {
     public:
+      static_assert(Type == type_t::sum
+                    || Type == type_t::prod
+                    || Type == type_t::intersection,
+                    "invalid type");
+
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
       using value_t = typename super_type::value_t;
       using ratexps_t = typename super_type::ratexps_t;
       using self_t = nary;
