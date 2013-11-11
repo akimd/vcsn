@@ -64,35 +64,8 @@ namespace vcsn
   bool
   are_equivalent(const Aut1& a1, const Aut2& a2)
   {
-    // Meet complement()'s requirements.
-    const Aut1* aut1 = &a1;
-    std::unique_ptr<Aut1> a1cd;
-    if (!is_deterministic(a1))
-      {
-        a1cd.reset(new Aut1{determinize(a1, true)});
-        aut1 = a1cd.get();
-      }
-    else if (!is_complete(a1))
-      {
-        a1cd.reset(new Aut1{complete(a1)});
-        aut1 = a1cd.get();
-      }
-
-    const Aut2* aut2 = &a2;
-    std::unique_ptr<Aut2> a2cd;
-    if (!is_deterministic(a2))
-      {
-        a2cd.reset(new Aut2{determinize(a2, true)});
-        aut2 = a2cd.get();
-      }
-    else if (!is_complete(a2))
-      {
-        a2cd.reset(new Aut2{complete(a2)});
-        aut2 = a2cd.get();
-      }
-
-    return (is_useless(product(*aut1, complement(*aut2)))
-            && is_useless(product(*aut2, complement(*aut1))));
+    return (is_useless(difference(a1, a2))
+            && is_useless(difference(a2, a1)));
   }
 
   namespace dyn
