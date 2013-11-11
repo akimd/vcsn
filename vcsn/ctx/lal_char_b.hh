@@ -72,6 +72,8 @@ namespace vcsn
         REGISTER2(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
         REGISTER(determinize, aut_t);
+        // FIXME: support more product types.
+        REGISTER2(difference, aut_t, aut_t);
         REGISTER(fado, aut_t);
         REGISTER(grail, aut_t);
         REGISTER(universal, aut_t);

@@ -12,6 +12,54 @@
 namespace vcsn
 {
 
+  /*-------------.
+  | difference.  |
+  `-------------*/
+
+  /// An automaton that computes weights of \a lhs, but not by \a rhs.
+  template <typename Rhs, typename Lhs>
+  Rhs
+  difference(const Lhs& lhs, const Rhs& rhs)
+  {
+    // Meet complement()'s requirements.
+    const Rhs* r = &rhs;
+    std::unique_ptr<Rhs> rhscd;
+    if (!is_deterministic(rhs))
+      {
+        rhscd.reset(new Rhs{determinize(rhs, true)});
+        r = rhscd.get();
+      }
+    else if (!is_complete(rhs))
+      {
+        rhscd.reset(new Rhs{complete(rhs)});
+        r = rhscd.get();
+      }
+    return product(lhs, complement(*r));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+
+      template <typename Lhs, typename Rhs>
+      automaton
+      difference(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(difference(l, r));
+      }
+
+      REGISTER_DECLARE2(difference,
+                        (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*-----------------.
+  | are_equivalent.  |
+  `-----------------*/
+
   template <typename Aut1, typename Aut2>
   bool
   are_equivalent(const Aut1& a1, const Aut2& a2)
@@ -52,10 +100,7 @@ namespace vcsn
     namespace detail
     {
 
-      /*----------------------.
-      | dyn::are_equivalent.  |
-      `----------------------*/
-
+      /// Bridge.
       template <typename Aut1, typename Aut2>
       bool
       are_equivalent(const automaton& aut1, const automaton& aut2)

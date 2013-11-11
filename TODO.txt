@@ -10,6 +10,16 @@ Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
+** products, difference: relax the constraints on weightset
+get_union and intersection on weights must be smarter, e.g., B x Z -> Z,
+etc.
+
+** difference
+Once we support different weightsets, document in NEWS.
+
+** products: lazyness
+We need a lazy implementation of product.  nary product would be nice.
+
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
 

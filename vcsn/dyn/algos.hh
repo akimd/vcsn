@@ -76,6 +76,13 @@ namespace vcsn
     /// \pre  \a aut must be LAL.
     automaton determinize(const automaton& aut, bool complete = false);
 
+    /// An automaton whose behavior is that of \a lhs on words not
+    /// accepted by \a rhs,
+    /// \param lhs   a LAL automaton
+    /// \param rhs   a LAL Boolean automaton
+    /// \pre \a rhs is Boolean.
+    automaton difference(const automaton& lhs, const automaton& rhs);
+
     /// An automaton which accepts a word n representing a number in
     /// base b iff k|n.
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);

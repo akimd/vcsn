@@ -145,6 +145,11 @@ namespace vcsn
         // Word polynomialset.
         using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
         using rs_t = ratexpset<Ctx>;
+
+        // Same labelset, but over Booleans.
+        // using bool_ctx_t = context<typename Ctx::labelset_t, b>;
+        // using bool_aut_t = mutable_automaton<Ctx>;
+
         using namespace dyn::detail;
 
         REGISTER(complete, aut_t);

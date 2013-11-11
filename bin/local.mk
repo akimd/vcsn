@@ -35,6 +35,7 @@ all_vcsn =                                      \
   %D%/vcsn-derivation                           \
   %D%/vcsn-derived-term                         \
   %D%/vcsn-determinize                          \
+  %D%/vcsn-difference                           \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-eliminate-state                      \
@@ -94,6 +95,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_derivation_LDADD       = %D%/libtafkit.la
 %C%_vcsn_derived_term_LDADD     = %D%/libtafkit.la
 %C%_vcsn_determinize_LDADD      = %D%/libtafkit.la
+%C%_vcsn_difference_LDADD       = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
 %C%_vcsn_eliminate_state_LDADD  = %D%/libtafkit.la

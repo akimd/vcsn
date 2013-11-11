@@ -6,6 +6,17 @@ namespace vcsn
 {
   namespace dyn
   {
+    REGISTER_DEFINE2(difference);
+
+    automaton
+    difference(const automaton& lhs, const automaton& rhs)
+    {
+      return
+        detail::difference_registry().call(vname(lhs, rhs),
+                                           lhs, rhs);
+    }
+
+
     REGISTER_DEFINE2(are_equivalent);
 
     bool
