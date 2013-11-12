@@ -10,12 +10,15 @@
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weights/fwd.hh>
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
   class r
   {
   public:
+    using self_type = r;
+
     static std::string sname()
     {
       return "r";
@@ -109,6 +112,26 @@ namespace vcsn
       return v;
     }
 
+    template <typename From>
+    static value_t
+    conv(typename From::value_t v)
+    {
+      return conv(std::declval<From>(), v);
+    }
+
+    static value_t
+    conv(self_type, value_t v)
+    {
+      return v;
+    }
+
+    static value_t
+    conv(b, b::value_t v)
+    {
+      // Conversion from bool to double.
+      return v;
+    }
+
     static value_t
     conv(std::istream& i)
     {
@@ -139,6 +162,8 @@ namespace vcsn
   };
 
   VCSN_WEIGHTS_BINARY(r, r, r);
+  VCSN_WEIGHTS_BINARY(b, r, r);
+  VCSN_WEIGHTS_BINARY(r, b, r);
 }
 
 #endif // !VCSN_WEIGHTS_R_HH

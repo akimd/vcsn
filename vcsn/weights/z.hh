@@ -8,6 +8,7 @@
 # include <sstream>
 
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/weights/b.hh>
 # include <vcsn/weights/fwd.hh>
 
 namespace vcsn
@@ -15,6 +16,8 @@ namespace vcsn
   class z
   {
   public:
+    using self_type = z;
+
     static std::string sname()
     {
       return "z";
@@ -103,6 +106,19 @@ namespace vcsn
     }
 
     static value_t
+    conv(self_type, value_t v)
+    {
+      return v;
+    }
+
+    static value_t
+    conv(b, b::value_t v)
+    {
+      // Conversion from bool to int.
+      return v;
+    }
+
+    static value_t
     conv(std::istream& stream)
     {
       int res;
@@ -115,7 +131,7 @@ namespace vcsn
           stream >> buf;
           throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
         }
-     }
+    }
 
     static std::ostream&
     print(std::ostream& o, const value_t v)
@@ -134,6 +150,8 @@ namespace vcsn
 
   VCSN_WEIGHTS_BINARY(z, z, z);
 
+  VCSN_WEIGHTS_BINARY(b, z, z);
+  VCSN_WEIGHTS_BINARY(z, b, z);
 }
 
 #endif // !VCSN_WEIGHTS_Z_HH

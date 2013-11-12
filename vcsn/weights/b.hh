@@ -17,6 +17,8 @@ namespace vcsn
   class b
   {
   public:
+    using self_type = b;
+
     static std::string sname()
     {
       return "b";
@@ -100,6 +102,12 @@ namespace vcsn
 
     static value_t
     transpose(const value_t v)
+    {
+      return v;
+    }
+
+    static value_t
+    conv(self_type, value_t v)
     {
       return v;
     }

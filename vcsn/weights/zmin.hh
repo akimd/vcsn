@@ -11,12 +11,15 @@
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
 # include <vcsn/weights/fwd.hh>
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
   class zmin
   {
   public:
+    using self_type = zmin;
+
     static std::string sname()
     {
       return "zmin";
@@ -105,6 +108,18 @@ namespace vcsn
     }
 
     static value_t
+    conv(self_type, value_t v)
+    {
+      return v;
+    }
+
+    static value_t
+    conv(b, b::value_t v)
+    {
+      return v ? one() : zero();
+    }
+
+    static value_t
     conv(std::istream& stream)
     {
       switch (int i = stream.peek())
@@ -134,7 +149,8 @@ namespace vcsn
     {
       if (is_zero(v))
         return o << "oo";
-      return o << v;
+      else
+        return o << v;
     }
 
     static std::string
@@ -148,6 +164,8 @@ namespace vcsn
 
   VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
 
+  VCSN_WEIGHTS_BINARY(b, zmin, zmin);
+  VCSN_WEIGHTS_BINARY(zmin, b, zmin);
 }
 
 #endif // !VCSN_WEIGHTS_ZMIN_HH

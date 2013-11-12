@@ -8,6 +8,7 @@
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
@@ -18,6 +19,7 @@ namespace vcsn
   class ratexpset
   {
   public:
+    using self_type = ratexpset;
     using context_t = Context;
     using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
@@ -90,6 +92,8 @@ namespace vcsn
     }
 
     value_t conv(std::istream& is) const;
+    value_t conv(b, typename b::value_t v) const;
+    value_t conv(self_type, value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v) const;
     std::string format(const value_t v) const;
 
@@ -149,6 +153,22 @@ namespace vcsn
   get_union(const ratexpset<Context>& a, const ratexpset<Context>& b)
   {
     return {get_union(a.context(), b.context())};
+  }
+
+  template <typename Context>
+  inline
+  ratexpset<Context>
+  get_union(const ratexpset<Context>& a, const b&)
+  {
+    return a;
+  }
+
+  template <typename Context>
+  inline
+  ratexpset<Context>
+  get_union(const b&, const ratexpset<Context>& b)
+  {
+    return b;
   }
 
 } // namespace vcsn

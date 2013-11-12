@@ -384,6 +384,18 @@ namespace vcsn
     return lt(lhs, rhs);
   }
 
+  DEFINE::conv(self_type, value_t v) const
+    -> value_t
+  {
+    return v;
+  }
+
+  DEFINE::conv(b, typename b::value_t v) const
+    -> value_t
+  {
+    return v ? one() : zero();
+  }
+
   DEFINE::conv(std::istream& is) const
     -> value_t
   {

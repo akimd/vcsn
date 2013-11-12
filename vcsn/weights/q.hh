@@ -11,6 +11,7 @@
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
 # include <vcsn/weights/fwd.hh>
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
@@ -18,6 +19,8 @@ namespace vcsn
   class q
   {
   public:
+    using self_type = q;
+
     static std::string sname()
     {
       return "q";
@@ -153,6 +156,19 @@ namespace vcsn
     }
 
     static value_t
+    conv(self_type, value_t in)
+    {
+      return in;
+    }
+
+    static value_t
+    conv(b, b::value_t in)
+    {
+      // Conversion from bool to q.
+      return {in, 1};
+    }
+
+    static value_t
     conv(std::istream& i)
     {
       // FIXME: this routine could use some improvements...
@@ -206,6 +222,9 @@ namespace vcsn
 
   VCSN_WEIGHTS_BINARY(q, q, q);
 
+
+  VCSN_WEIGHTS_BINARY(b, q, q);
+  VCSN_WEIGHTS_BINARY(q, b, q);
 }
 
 #endif // !VCSN_WEIGHTS_Q_HH
