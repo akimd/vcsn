@@ -34,18 +34,18 @@ Support for EFSM in input/output is improved to support weights.  Output was
 significantly sped up.
 
 Before:
-  0.64s (0.64s): standard -Ee 'a?{500}' -O dot  >a500.gv
-  4.47s (4.47s): standard -Ee 'a?{500}' -O efsm >a500.efsm
-  4.04s (4.04s): standard -Ee 'a?{500}' -O fado >a500.fado
-  4.83s (4.83s): standard -Ee 'a?{500}' -O grail>a500.grail
-  1.03s (1.03s): standard -Ee 'a?{500}' -O tikz >a500.tikz
+  0.64s: standard -Ee 'a?{500}' -O dot  >a500.gv
+  4.47s: standard -Ee 'a?{500}' -O efsm >a500.efsm
+  4.04s: standard -Ee 'a?{500}' -O fado >a500.fado
+  4.83s: standard -Ee 'a?{500}' -O grail>a500.grail
+  1.03s: standard -Ee 'a?{500}' -O tikz >a500.tikz
 
 After:
-  0.76s (0.76s): standard -Ee 'a?{500}' -O dot  >a500.gv
-  0.37s (0.37s): standard -Ee 'a?{500}' -O efsm >a500.efsm
-  0.35s (0.35s): standard -Ee 'a?{500}' -O fado >a500.fado
-  0.35s (0.35s): standard -Ee 'a?{500}' -O grail>a500.grail
-  0.68s (0.68s): standard -Ee 'a?{500}' -O tikz >a500.tikz
+  0.76s: standard -Ee 'a?{500}' -O dot  >a500.gv
+  0.37s: standard -Ee 'a?{500}' -O efsm >a500.efsm
+  0.35s: standard -Ee 'a?{500}' -O fado >a500.fado
+  0.35s: standard -Ee 'a?{500}' -O grail>a500.grail
+  0.68s: standard -Ee 'a?{500}' -O tikz >a500.tikz
 
 * 2013-11-04
 ** Weight parsing bug fix
@@ -58,13 +58,13 @@ On erebus (MacBook Pro i7 2.9GHz 8GB, GCC 4.8 -O3), with "vcsn standard -E
 -e 'a?70' -o a70.gv":
 
 Before:
-     13.01s (13.01s): product -q -f a70.gv a70.gv
-      0.23s ( 0.23s): shuffle -q -f a70.gv a70.gv
-     16.64s (16.64s): infiltration -q -f a70.gv a70.gv
+     13.01s: product -q -f a70.gv a70.gv
+      0.23s: shuffle -q -f a70.gv a70.gv
+     16.64s: infiltration -q -f a70.gv a70.gv
 After:
-      0.77s ( 0.77s): product -q -f a70.gv a70.gv
-      0.19s ( 0.19s): shuffle -q -f a70.gv a70.gv
-      0.87s ( 0.87s): infiltration -q -f a70.gv a70.gv
+      0.77s: product -q -f a70.gv a70.gv
+      0.19s: shuffle -q -f a70.gv a70.gv
+      0.87s: infiltration -q -f a70.gv a70.gv
 
 * 2013-10-30
 ** TAF-Kit: option name changes.
@@ -128,16 +128,13 @@ Equivalent to "-O null": do not generate output.
 
 ** star-normal-form: new algorithm (static, dynamic, TAF-Kit)
 Compute an equivalent rational expression where starred subexpressions have
-a non null constant term.
+a non null constant term.  Yields the same standard automaton, but built
+faster.
 
   $ vcsn star-normal-form -e '(a*b*)*'
   (a+b)*
-  $ vcsn star-normal-form -C 'lal_char(ab)_z' -e '(a*b*)*'
-  vcsn-star-normal-form: z: star: invalid value: 1
-  $ vcsn star-normal-form -C 'lal_char(ab)_q' -e '(<1/2>\e+a)*'
-  <2>a*
-  $ vcsn star-normal-form -C 'lal_char(ab)_q' -e '(<1/6>a*+<1/3>b*)*'
-  <2>(<1/6>a+<1/3>b)*
+
+Valid only for Boolean automata.
 
 ** ratexp printing: minimize parentheses
 Print rational expressions with the minimum required number of parentheses,

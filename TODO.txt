@@ -39,7 +39,7 @@ always reduced, and not overflowing.
 It does not work for weighted ratexps.
 
 ** intersection
-Check star-normal-form, standard, thompson.
+Check star-normal-form, standard, thompson.  Check the trivial identities.
 
 * Benchmarks
 ** determinization
