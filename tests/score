@@ -31,11 +31,17 @@ run ()
 
   # Join lines with '+'.
   time=$(echo $=time | sed -e 's/ /+/g;s/,/./g')
-  total=$(echo $time | sed -e 's/s//g' | tee /tmp/f | bc)
+  total=$(echo $time | sed -e 's/s//g' | bc)
+  case $time in
+    (*'+'*) # Not a smiley, we match the presence of a plus.
+            time=" ($time)";;
+    (*)     # $time brings no additional information, don't stutter.
+            time=;;
+  esac
 
   # The command, simplified (no "vcsn" explicit).
   cmd=$(echo "$1" | sed -e 's/vcsn[- ]//g')
-  printf "%6.2fs (%s): %s\n" "$total" "$time" "$cmd"
+  printf "%6.2fs%s: %s\n" "$total" "$time" "$cmd"
 }
 
 # Output should be fast.
