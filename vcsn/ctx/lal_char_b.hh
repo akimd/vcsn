@@ -13,6 +13,7 @@ namespace vcsn
   }
 }
 
+# include <vcsn/misc/name.hh>
 # include <vcsn/ctx/instantiate.hh>
 # include <vcsn/algos/are-equivalent.hh>
 # include <vcsn/algos/complement.hh>
@@ -66,12 +67,12 @@ namespace vcsn
 #  define REGISTER(Algo, Type)                          \
         Algo ## _register(Type::sname(), Algo<Type>)
 #  define REGISTER2(Algo, Type1, Type2)                         \
-        Algo ## _register(Type1::sname(), Type2::sname(),       \
+        Algo ## _register(sname<Type1>(), sname<Type2>(),       \
                           Algo<Type1, Type2>)
 
         REGISTER2(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
-        REGISTER(determinize, aut_t);
+        REGISTER2(determinize, aut_t, bool);
         // FIXME: support more product types.
         REGISTER2(difference, aut_t, aut_t);
         REGISTER(fado, aut_t);

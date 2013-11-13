@@ -7,12 +7,12 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE(determinize);
+    REGISTER_DEFINE2(determinize);
 
     automaton
     determinize(const automaton& aut, bool complete)
     {
-      return detail::determinize_registry().call(aut->vname(false),
+      return detail::determinize_registry().call(vname(aut, complete),
                                                  aut, complete);
     }
   }

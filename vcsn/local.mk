@@ -135,6 +135,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/flyweight.hh                         \
   %D%/misc/hash.hh                              \
   %D%/misc/military-order.hh                    \
+  %D%/misc/name.hh                              \
   %D%/misc/random.hh                            \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \

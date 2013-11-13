@@ -194,7 +194,7 @@ namespace vcsn
     namespace detail
     {
 
-      template <typename Aut>
+      template <typename Aut, typename Bool>
       automaton
       determinize(const automaton& aut, bool complete)
       {
@@ -202,7 +202,7 @@ namespace vcsn
         return make_automaton(determinize(a, complete));
       }
 
-      REGISTER_DECLARE(determinize,
+      REGISTER_DECLARE2(determinize,
                        (const automaton& aut, bool complete) -> automaton);
     }
   }

@@ -6,6 +6,7 @@
 # include <stdexcept>
 
 # include <vcsn/dyn/context.hh> // sname
+# include <vcsn/misc/name.hh>
 
 namespace vcsn
 {
@@ -62,22 +63,6 @@ namespace vcsn
     map_t map_;
   };
 
-  /// A key encoding type strings of \a a and \a b.
-  inline
-  std::string
-  vname(const std::string& a, const std::string& b)
-  {
-    return a + " x " + b;
-  }
-
-  /// A key encoding types of \a a and \a b.
-  template <typename A, typename B>
-  inline
-  std::string
-  vname(const A& a, const B& b)
-  {
-    return vname(a->vname(false), b->vname(false));
-  }
 }
 
 # define REGISTER_DEFINE_(Name)                         \
