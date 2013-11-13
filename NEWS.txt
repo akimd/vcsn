@@ -4,6 +4,9 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-11-13
+Release of our second beta, vaucanson-2b.1.
+
 * 2013-11-07
 ** TAF-Kit: infiltration, product, shuffle: accept multiple arguments
 You may pass several (one or more) arguments to vcsn product, infiltration

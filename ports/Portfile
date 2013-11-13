@@ -5,7 +5,7 @@ PortSystem          1.0
 PortGroup           compiler_blacklist_versions 1.0
 
 name                vaucanson
-version             2b.0
+version             2b.1
 categories          devel
 platforms           darwin
 maintainers         lrde.epita.fr:akim

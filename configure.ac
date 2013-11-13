@@ -13,11 +13,9 @@
 
 m4_pattern_forbid([^(BOOST|TC|URBI|VCSN)_])
 
-# VCSN_HEADER
-
 AC_PREREQ([2.61])
 
-AC_INIT([Vaucanson], [2b.0], [vaucanson-bugs@lrde.epita.fr])
+AC_INIT([Vaucanson], [2b.1], [vaucanson-bugs@lrde.epita.fr])
 AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 
