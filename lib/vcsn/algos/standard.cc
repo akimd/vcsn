@@ -15,7 +15,7 @@ namespace vcsn
     bool
     is_standard(const automaton& a)
     {
-      return detail::is_standard_registry().call(a->vname(false), a);
+      return detail::is_standard_registry().call(a);
     }
 
     /*----------------.
@@ -26,7 +26,7 @@ namespace vcsn
     automaton
     standard(const automaton& a)
     {
-      return detail::standard_registry().call(a->vname(false), a);
+      return detail::standard_registry().call(a);
     }
 
     /*----------------.
@@ -37,7 +37,7 @@ namespace vcsn
     automaton
     standard(const ratexp& e)
     {
-      return detail::standard_exp_registry().call(e->vname(false), e);
+      return detail::standard_exp_registry().call(e);
     }
   }
 }

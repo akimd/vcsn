@@ -16,8 +16,7 @@ namespace vcsn
     bool
     is_valid(const automaton& a)
     {
-      return detail::is_valid_registry().call(a->vname(false),
-                                              a);
+      return detail::is_valid_registry().call(a);
     }
 
     /*----------------.
@@ -29,8 +28,7 @@ namespace vcsn
     bool
     is_valid(const ratexp& e)
     {
-      return detail::is_valid_exp_registry().call(e->vname(false),
-                                                  e);
+      return detail::is_valid_exp_registry().call(e);
     }
   }
 }

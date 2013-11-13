@@ -15,7 +15,7 @@ namespace vcsn
     bool
     is_proper(const automaton& aut)
     {
-      return detail::is_proper_registry().call(aut->vname(false), aut);
+      return detail::is_proper_registry().call(aut);
     }
   }
 }

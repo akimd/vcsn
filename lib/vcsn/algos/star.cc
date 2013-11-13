@@ -12,8 +12,7 @@ namespace vcsn
     automaton
     star(const automaton& aut)
     {
-      return detail::star_registry().call(aut->vname(false),
-                                                  aut);
+      return detail::star_registry().call(aut);
     }
   }
 }

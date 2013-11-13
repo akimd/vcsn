@@ -15,7 +15,7 @@ namespace vcsn
     ratexp
     expand(const ratexp& e)
     {
-      return detail::expand_registry().call(e->vname(false), e);
+      return detail::expand_registry().call(e);
     }
   }
 }

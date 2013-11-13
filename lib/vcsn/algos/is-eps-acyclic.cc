@@ -16,7 +16,7 @@ namespace vcsn
 
     bool is_eps_acyclic(const automaton& aut)
     {
-      return detail::is_eps_acyclic_registry().call(aut->vname(false), aut);
+      return detail::is_eps_acyclic_registry().call(aut);
     }
   }
 }

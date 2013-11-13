@@ -26,7 +26,7 @@ namespace vcsn
     automaton
     derived_term(const ratexp& e)
     {
-      return detail::derived_term_registry().call(e->vname(false), e);
+      return detail::derived_term_registry().call(e);
     }
 
     /*-------------.
@@ -37,7 +37,7 @@ namespace vcsn
     polynomial
     split(const ratexp& e)
     {
-      return detail::split_registry().call(e->vname(false), e);
+      return detail::split_registry().call(e);
     }
 
   }

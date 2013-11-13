@@ -30,7 +30,7 @@ namespace vcsn
     ratexpset
     make_ratexpset(const context& ctx)
     {
-      return detail::make_ratexpset_registry().call(ctx->vname(false), ctx);
+      return detail::make_ratexpset_registry().call(ctx);
     }
   }
 }

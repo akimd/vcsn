@@ -12,8 +12,7 @@ namespace vcsn
     automaton
     universal(const automaton& aut)
     {
-      return detail::universal_registry().call(aut->vname(false),
-                                               aut);
+      return detail::universal_registry().call(aut);
     }
   }
 }

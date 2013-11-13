@@ -11,8 +11,7 @@ namespace vcsn
     std::string
     shortest(const automaton& aut)
     {
-      return detail::shortest_registry().call(aut->vname(false),
-                                              aut);
+      return detail::shortest_registry().call(aut);
     }
 
     REGISTER_DEFINE(enumerate);

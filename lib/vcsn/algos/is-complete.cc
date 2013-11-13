@@ -16,8 +16,7 @@ namespace vcsn
 
     bool is_complete(const automaton& aut)
     {
-      return detail::is_complete_registry().call(aut->vname(false),
-          aut);
+      return detail::is_complete_registry().call(aut);
     }
   }
 }

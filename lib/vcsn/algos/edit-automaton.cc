@@ -93,8 +93,7 @@ namespace vcsn
     automaton_editor*
     make_automaton_editor(const dyn::context& ctx)
     {
-      return detail::make_automaton_editor_registry().call(ctx->vname(false),
-                                                           ctx);
+      return detail::make_automaton_editor_registry().call(ctx);
     }
   }
 }

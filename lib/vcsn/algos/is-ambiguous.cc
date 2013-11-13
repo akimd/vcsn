@@ -15,7 +15,7 @@ namespace vcsn
     bool
     is_ambiguous(const automaton& aut)
     {
-      return detail::is_ambiguous_registry().call(aut->vname(false), aut);
+      return detail::is_ambiguous_registry().call(aut);
     }
   }
 }

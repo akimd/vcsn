@@ -16,7 +16,7 @@ namespace vcsn
     bool
     is_normalized(const automaton& aut)
     {
-      return detail::is_normalized_registry().call(aut->vname(false), aut);
+      return detail::is_normalized_registry().call(aut);
     }
   }
 }

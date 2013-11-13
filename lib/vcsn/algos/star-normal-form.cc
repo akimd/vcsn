@@ -15,7 +15,7 @@ namespace vcsn
     ratexp
     star_normal_form(const ratexp& e)
     {
-      return detail::star_normal_form_registry().call(e->vname(false), e);
+      return detail::star_normal_form_registry().call(e);
     }
   }
 }

@@ -12,8 +12,7 @@ namespace vcsn
     automaton
     complement(const automaton& aut)
     {
-      return detail::complement_registry().call(aut->vname(false),
-                                                aut);
+      return detail::complement_registry().call(aut);
     }
   }
 }
