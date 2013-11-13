@@ -35,16 +35,18 @@ check ()
 check $top_srcdir/share/vcsn/lal_char_b/a1.gv $medir/a1.efsm
 check $top_srcdir/share/vcsn/lal_char_z/binary.gv $medir/binary.efsm
 
+
+
 # Check that Open FST and V2 understand the weights the same way.
 #
 # c1^2 by v2.
 run 0 '' -vcsn-power -O efsm -o c12.v2.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv 2
-run 0 '' -efstcompile c12.v2.efsm c12.v2.ofst
+fst 0 '' -efstcompile c12.v2.efsm c12.v2.ofst
 
 # c1^2 by OpenFST.
 run 0 '' -vcsn-cat -O efsm -o c1.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv
-run 0 '' -efstcompile c1.efsm c1.ofst
-run 0 '' -fstintersect c1.ofst c1.ofst c12.ofst.ofst
+fst 0 '' -efstcompile c1.efsm c1.ofst
+fst 0 '' -fstintersect c1.ofst c1.ofst c12.ofst.ofst
 
 # Let OpenFST compare them.
-run 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
+fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
