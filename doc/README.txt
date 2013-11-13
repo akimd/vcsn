@@ -66,6 +66,61 @@ label: l
 state: s
 transition: t
 
+* Environment variables
+** VCSN_BREAKING
+Whether to perform breaking derivation (for derivation and derived-term).
+
+** VCSN_DEBUG
+Improve the display with debugging information.
+*** dot
+display in parens the real state numbers.
+*** is_ambigious
+display the couple of states which is outside the diagonal.
+*** proper
+Read VCSN_DEBUG as an integer specifying the level of details to dump.
+
+** VCSN_DYN
+Display information about registration and query about dyn algorithms.
+
+** VCSN_ITERATIVE
+Specify that "power" should perform the naive iterative multiplicative
+approach, instead of the squaring one.
+
+** VCSN_ORIGINS
+Dump on stdout the "origins" of states for algorithms that build
+automata from sets of states of input automata or other types of
+information (e.g., derived-term, product, determinize, minimize,
+shuffle, infiltration...).
+
+Use this Perl snippet to put turn this information in something that
+Graphviz displays.
+
+  # Honor origins if there are some.
+  # Remove "orientation = landscape" from OpenFST, it breaks OS X's
+  # Graphviz rendering.
+  perl -pi -0777 -e '
+      s{/\* Origins\.\n(.*?\n)\*/\n}{ $orig = $1; ""; }gmse;
+      s{^    node \[shape = circle\]\n( {4}.*?\n)*}{$orig}gms
+        if $orig;
+      s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
+    ' $file
+
+** VCSN_PARENS
+Force the display of useless parentheses.
+
+** VCSN_SEED
+Disable the generation of a random seed, stick to the compile-time
+default seed.
+
+** VERBOSE
+Make the test suite more verbose.
+
+** YYDEBUG, YYSCAN
+Set to enable Bison parser/ Flex scanner tracing.  Can be an integer
+to denote nesting (which is useful for instance for dot parsing which
+can fire ratexp parsing: specify how many layers you want to make
+verbose).
+
 Local Variables:
 mode: outline
 End:

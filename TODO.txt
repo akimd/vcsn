@@ -115,6 +115,10 @@ intersection:
 here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
 is forbidden (this should be the empty polynomial).
 
+** Metadata
+We need to keep metadata about automata, especially state names.  Then
+update all the "VCSN_ORIGINS" uses.
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several

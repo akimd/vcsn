@@ -64,7 +64,7 @@ namespace vcsn
     // A good source of random integers.
     std::random_device rd;
     auto seed = rd();
-    if (getenv("SEED"))
+    if (getenv("VCSN_SEED"))
       seed = std::mt19937::default_seed;
     std::mt19937 gen(seed);
 

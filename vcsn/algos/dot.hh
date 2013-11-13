@@ -87,7 +87,8 @@ namespace vcsn
             for (auto s : aut_.states())
               {
                 os_ << "    " << states_[s];
-                if (getenv("DEBUG"))
+                static bool debug = getenv("VCSN_DEBUG");
+                if (debug)
                   os_ << " [label = \"" << states_[s] << " (" << s << ")\"]";
                 if (!has(useful, s))
                   os_ << " [" << gray << ']';

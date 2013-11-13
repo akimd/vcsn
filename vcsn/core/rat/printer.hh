@@ -28,7 +28,7 @@ namespace vcsn
 
       printer(std::ostream& out,
               const ratexpset_t& rs,
-              const bool debug = !!getenv("VCSN_DEBUG"));
+              const bool debug = !!getenv("VCSN_PARENS"));
 
       /// Entry point: print \a v.
       std::ostream&

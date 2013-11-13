@@ -34,7 +34,7 @@ namespace vcsn
     static inline
     int debug_level()
     {
-      if (auto cp = getenv("DEBUG"))
+      if (auto cp = getenv("VCSN_DEBUG"))
         return  *cp ? boost::lexical_cast<int>(cp) : 1;
       else
         return 0;

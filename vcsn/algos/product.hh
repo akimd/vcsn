@@ -319,8 +319,6 @@ namespace vcsn
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.product();
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
     if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
@@ -338,8 +336,6 @@ namespace vcsn
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.shuffle();
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
     if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
@@ -357,8 +353,6 @@ namespace vcsn
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.infiltration();
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
     if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
