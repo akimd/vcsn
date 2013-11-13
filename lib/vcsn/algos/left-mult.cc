@@ -14,8 +14,7 @@ namespace vcsn
     automaton
     left_mult(const automaton& aut, const weight& w)
     {
-      return detail::left_mult_registry().call(vname(aut, w),
-                                               aut, w);
+      return detail::left_mult_registry().call(aut, w);
     }
 
     REGISTER_DEFINE2(right_mult);
@@ -23,8 +22,7 @@ namespace vcsn
     automaton
     right_mult(const automaton& aut, const weight& w)
     {
-      return detail::right_mult_registry().call(vname(aut, w),
-                                                aut, w);
+      return detail::right_mult_registry().call(aut, w);
     }
   }
 }

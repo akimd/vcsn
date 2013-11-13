@@ -11,7 +11,7 @@ namespace vcsn
     automaton
     sum(const automaton& lhs, const automaton& rhs)
     {
-      return detail::sum_registry().call(vname(lhs, rhs), lhs, rhs);
+      return detail::sum_registry().call(lhs, rhs);
     }
   }
 }
