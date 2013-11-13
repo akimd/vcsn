@@ -31,8 +31,7 @@ namespace vcsn
     ratexp
     aut_to_exp(const automaton& aut)
     {
-      return detail::aut_to_exp_registry().call(aut->vname(false),
-                                                aut);
+      return detail::aut_to_exp_registry().call(aut);
     }
   }
 }

@@ -55,6 +55,16 @@ namespace vcsn
       return (get(ctx))(std::forward<Args>(args)...);
     }
 
+    /// Call function for context \a ctx.
+    template <typename... Args>
+    auto
+    call(Args&&... args)
+      -> decltype (std::declval<Fun>()(args...))
+    {
+      const auto& sig = vname(std::forward<Args>(args)...);
+      return (get(sig))(std::forward<Args>(args)...);
+    }
+
   private:
     /// Function name (e.g., "determinize").
     std::string name_;

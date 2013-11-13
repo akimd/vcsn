@@ -12,8 +12,7 @@ namespace vcsn
     automaton
     determinize(const automaton& aut, bool complete)
     {
-      return detail::determinize_registry().call(vname(aut, complete),
-                                                 aut, complete);
+      return detail::determinize_registry().call(aut, complete);
     }
   }
 }
