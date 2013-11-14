@@ -47,6 +47,8 @@
 
 # include <vcsn/weights/polynomialset.hh>
 
+# include <vcsn/misc/name.hh>
+
 /* The purpose of this file is manyfold:
 
    - *prevent* the instantiation of the algorithms that we will
@@ -128,10 +130,10 @@ namespace vcsn
   `----------------------------------*/
 
 #define REGISTER(Algo, Type)                    \
-  Algo ## _register(Type::sname(), Algo<Type>)
+  Algo ## _register(sname<Type>(), Algo<Type>)
 
 #define REGISTER2(Algo, Type1, Type2)           \
-  Algo ## _register(Type1::sname(), Type2::sname(), Algo<Type1, Type2>)
+  Algo ## _register(sname<Type1>(), sname<Type2>(), Algo<Type1, Type2>)
 
   namespace ctx
   {
@@ -158,7 +160,7 @@ namespace vcsn
         REGISTER(derived_term, rs_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
-        REGISTER(enumerate, aut_t);
+        REGISTER2(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t);
         REGISTER2(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
@@ -242,7 +244,7 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(aut_to_exp, aut_t);
-        REGISTER(chain, aut_t);
+        REGISTER2(chain, aut_t, unsigned);
         REGISTER(coaccessible, aut_t);
         REGISTER2(concatenate, aut_t, aut_t);
         REGISTER(constant_term, rs_t);

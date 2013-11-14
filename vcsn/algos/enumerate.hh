@@ -213,7 +213,7 @@ namespace vcsn
       | dyn::enumerate.  |
       `-----------------*/
 
-      template <typename Aut>
+      template <typename Aut, typename Unsigned>
       polynomial
       enumerate(const automaton& aut, unsigned max)
       {
@@ -222,7 +222,7 @@ namespace vcsn
         return make_polynomial(ps, enumerate(a, max));
       }
 
-      REGISTER_DECLARE
+      REGISTER_DECLARE2
       (enumerate,
        (const automaton& aut, unsigned max) -> polynomial);
 

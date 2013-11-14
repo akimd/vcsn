@@ -65,7 +65,7 @@ namespace vcsn
         using namespace dyn::detail;
 
 #  define REGISTER(Algo, Type)                          \
-        Algo ## _register(Type::sname(), Algo<Type>)
+        Algo ## _register(sname<Type>(), Algo<Type>)
 #  define REGISTER2(Algo, Type1, Type2)                         \
         Algo ## _register(sname<Type1>(), sname<Type2>(),       \
                           Algo<Type1, Type2>)

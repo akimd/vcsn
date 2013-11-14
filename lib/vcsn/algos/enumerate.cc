@@ -14,13 +14,12 @@ namespace vcsn
       return detail::shortest_registry().call(aut);
     }
 
-    REGISTER_DEFINE(enumerate);
+    REGISTER_DEFINE2(enumerate);
 
     polynomial
     enumerate(const automaton& aut, unsigned max)
     {
-      return detail::enumerate_registry().call(aut->vname(false),
-                                               aut, max);
+      return detail::enumerate_registry().call(aut, max);
     }
   }
 }

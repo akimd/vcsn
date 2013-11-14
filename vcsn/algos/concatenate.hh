@@ -131,7 +131,7 @@ namespace vcsn
       | dyn::chain.  |
       `-------------*/
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename Unsigned>
       automaton
       chain(const automaton& a, unsigned n)
       {
@@ -139,8 +139,8 @@ namespace vcsn
         return make_automaton(chain(aut, n));
       }
 
-      REGISTER_DECLARE(chain,
-                       (const automaton& aut, unsigned n) -> automaton);
+      REGISTER_DECLARE2(chain,
+                        (const automaton& aut, unsigned n) -> automaton);
     }
   }
 }

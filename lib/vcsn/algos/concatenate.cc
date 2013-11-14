@@ -14,12 +14,12 @@ namespace vcsn
       return detail::concatenate_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(chain);
+    REGISTER_DEFINE2(chain);
 
     automaton
     chain(const automaton& aut, unsigned n)
     {
-      return detail::chain_registry().call(aut->vname(false), aut, n);
+      return detail::chain_registry().call(aut, n);
     }
   }
 }

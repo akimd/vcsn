@@ -17,15 +17,6 @@ namespace vcsn
     }
   };
 
-  template <>
-  struct snamer<bool>
-  {
-    std::string operator()()
-    {
-      return "bool";
-    }
-  };
-
   template <typename T>
   std::string sname()
   {
@@ -51,20 +42,40 @@ namespace vcsn
     }
   };
 
-  template <>
-  struct vnamer<bool>
-  {
-    std::string operator()(bool)
-    {
-      return "bool";
-    }
-  };
-
   template <typename T>
   std::string vname(const T& t)
   {
     return vnamer<T>()(t);
   }
+
+  /*------------------.
+  | Specializations.  |
+  `------------------*/
+
+
+#define DEFINE(Type)                            \
+  template <>                                   \
+  struct snamer<Type>                           \
+  {                                             \
+    std::string operator()()                    \
+    {                                           \
+      return #Type;                             \
+    }                                           \
+  };                                            \
+                                                \
+  template <>                                   \
+  struct vnamer<Type>                           \
+  {                                             \
+    std::string operator()(Type)                \
+    {                                           \
+      return #Type;                             \
+    }                                           \
+  };
+
+
+  DEFINE(bool);
+  DEFINE(unsigned);
+#undef DEFINE
 
   /// A key encoding type strings of \a a and \a b.
   inline
