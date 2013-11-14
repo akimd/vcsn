@@ -215,7 +215,7 @@ namespace vcsn
 
       template <typename Aut>
       polynomial
-      enumerate(const automaton& aut, size_t max)
+      enumerate(const automaton& aut, unsigned max)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a.context());
@@ -224,7 +224,7 @@ namespace vcsn
 
       REGISTER_DECLARE
       (enumerate,
-       (const automaton& aut, size_t max) -> polynomial);
+       (const automaton& aut, unsigned max) -> polynomial);
 
 
       /*----------------.

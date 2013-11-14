@@ -17,7 +17,7 @@ namespace vcsn
     REGISTER_DEFINE(enumerate);
 
     polynomial
-    enumerate(const automaton& aut, size_t max)
+    enumerate(const automaton& aut, unsigned max)
     {
       return detail::enumerate_registry().call(aut->vname(false),
                                                aut, max);

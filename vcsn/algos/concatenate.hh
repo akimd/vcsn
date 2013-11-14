@@ -133,14 +133,14 @@ namespace vcsn
       /// Bridge.
       template <typename Aut>
       automaton
-      chain(const automaton& a, size_t n)
+      chain(const automaton& a, unsigned n)
       {
         const auto& aut = a->as<Aut>();
         return make_automaton(chain(aut, n));
       }
 
       REGISTER_DECLARE(chain,
-                       (const automaton& aut, size_t n) -> automaton);
+                       (const automaton& aut, unsigned n) -> automaton);
     }
   }
 }

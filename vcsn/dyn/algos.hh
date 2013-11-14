@@ -35,7 +35,7 @@ namespace vcsn
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
     /// Concatenate \a n copies of \a aut.
-    automaton chain(const automaton& aut, size_t n);
+    automaton chain(const automaton& aut, unsigned n);
 
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
@@ -105,7 +105,7 @@ namespace vcsn
 
     /// One of the shortest accepted words.
     /// \throw std::domain_error if the automaton is useless
-    polynomial enumerate(const automaton& aut, size_t max);
+    polynomial enumerate(const automaton& aut, unsigned max);
 
     /// Evaluate \a s on \a aut.
     weight eval(const automaton& aut, const std::string& s);

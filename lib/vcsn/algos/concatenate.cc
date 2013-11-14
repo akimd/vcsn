@@ -17,7 +17,7 @@ namespace vcsn
     REGISTER_DEFINE(chain);
 
     automaton
-    chain(const automaton& aut, size_t n)
+    chain(const automaton& aut, unsigned n)
     {
       return detail::chain_registry().call(aut->vname(false), aut, n);
     }
