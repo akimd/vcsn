@@ -5,10 +5,9 @@
 # include <iostream>
 # include <map>
 # include <queue>
-# include <stack>
+# include <set>
 # include <string>
 # include <type_traits>
-# include <unordered_map>
 # include <vector>
 
 # include <tbb/parallel_for.h>
@@ -43,6 +42,8 @@ namespace vcsn
           throw std::domain_error("minimize: requires a deterministic automaton");
       }
 
+      std::map<int, state_t> eq_to_res;
+
       Aut operator()()
       {
         /*
@@ -71,7 +72,6 @@ namespace vcsn
             compute_classes_serial_();
           }
 
-        std::map<int, state_t> eq_to_res;
         equivalences[aut_.pre()] = 0;
         equivalences[aut_.post()] = 1;
         automaton_t res{aut_.context()};
@@ -107,8 +107,42 @@ namespace vcsn
         return res;
       }
 
+      /// A map from determinized states to sets of original states.
+      using origins_t = std::map<state_t, std::set<state_t>>;
+      origins_t
+      origins()
+      {
+        origins_t res;
+        for (auto s: aut_.states())
+          res[eq_to_res[equivalences[s]]].insert(s);
+        return res;
+      }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins.\n"
+             "    node [shape = box, style = rounded]\n";
+        for (auto p : orig)
+          {
+            o << "    " << p.first - 2
+              << " [label = \"";
+            const char* sep = "";
+            for (auto s: p.second)
+              {
+                o << sep << s - 2;
+                sep = ",";
+              }
+            o << "\"]\n";
+          }
+        o << "*/\n";
+        return o;
+      }
+
     private:
-      void compute_classes_serial_()
+      void compute_classes_serial_orig_()
       {
         const auto& letters = *aut_.labelset();
         do
@@ -209,6 +243,62 @@ namespace vcsn
         while (nbr_eq_classes_last_loop != eq_class);
       }
 
+      void compute_classes_serial_()
+      {
+        const auto& letters = *aut_.labelset();
+        int nb_states = aut_.states().size();
+        state_t tmp_states[nb_states];
+        std::copy(aut_.states().begin(), aut_.states().end(), tmp_states);
+        std::pair<int, int> result[aut_.num_all_states()];
+
+        do
+          {
+            for (auto letter : letters)
+              {
+                std::map<std::pair<int, int>, int> pair_to_eq;
+                for (size_t idx = 0; idx < nb_states; ++idx)
+                  {
+                    state_t st = tmp_states[idx];
+                    // Here we test for each letter start and end equivalence
+                    // class, then label the state
+                    int start_c = equivalences[st];
+
+                    int end_c = -1;
+                    for (auto tr : aut_.out(st))
+                      if (aut_.label_of(tr) == letter)
+                        {
+                          end_c = equivalences[aut_.dst_of(tr)];
+                          break;
+                        }
+
+                    if (end_c != -1)
+                      result[st] = std::make_pair(start_c, end_c);
+                  }
+
+                nbr_eq_classes_last_loop = eq_class;
+                eq_class = 2;
+                int res_size = aut_.num_all_states();
+                for (int i = 2; i < res_size; ++i)
+                  {
+                    auto src_dst = result[i];
+                    auto exists = pair_to_eq.find(src_dst);
+                    if (exists == pair_to_eq.end())
+                      {
+                        pair_to_eq[src_dst] = eq_class;
+                        ++eq_class;
+                      }
+                  }
+
+                for (int i = 2; i < res_size; ++i)
+                  {
+                    auto src_dst = result[i];
+                    equivalences[i] = pair_to_eq[src_dst];
+                  }
+              }
+          }
+        while (nbr_eq_classes_last_loop != eq_class);
+      }
+
       std::vector<int> equivalences;
       std::map<std::pair<int, int>, std::vector<state_t>> labels;
       const Aut& aut_;
@@ -223,7 +313,10 @@ namespace vcsn
   minimize(const Aut& a)
   {
     detail::minimizer<Aut> minimize(a);
-    return minimize();
+    auto res = minimize();
+    if (getenv("VCSN_ORIGINS"))
+      minimize.print(std::cout, minimize.origins());
+    return res;
   }
 
   /*----------------.
