@@ -246,19 +246,14 @@ namespace vcsn
       void compute_classes_serial_()
       {
         const auto& letters = *aut_.labelset();
-        int nb_states = aut_.states().size();
-        state_t tmp_states[nb_states];
-        std::copy(aut_.states().begin(), aut_.states().end(), tmp_states);
         std::pair<int, int> result[aut_.num_all_states()];
 
         do
           {
             for (auto letter : letters)
               {
-                std::map<std::pair<int, int>, int> pair_to_eq;
-                for (size_t idx = 0; idx < nb_states; ++idx)
+                for (auto st: aut_.states())
                   {
-                    state_t st = tmp_states[idx];
                     // Here we test for each letter start and end equivalence
                     // class, then label the state
                     int start_c = equivalences[st];
@@ -277,8 +272,8 @@ namespace vcsn
 
                 nbr_eq_classes_last_loop = eq_class;
                 eq_class = 2;
-                int res_size = aut_.num_all_states();
-                for (int i = 2; i < res_size; ++i)
+                std::map<std::pair<int, int>, int> pair_to_eq;
+                for (auto i : aut_.states())
                   {
                     auto src_dst = result[i];
                     auto exists = pair_to_eq.find(src_dst);
@@ -289,7 +284,7 @@ namespace vcsn
                       }
                   }
 
-                for (int i = 2; i < res_size; ++i)
+                for (auto i : aut_.states())
                   {
                     auto src_dst = result[i];
                     equivalences[i] = pair_to_eq[src_dst];
