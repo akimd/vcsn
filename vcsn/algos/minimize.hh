@@ -42,8 +42,6 @@ namespace vcsn
           throw std::domain_error("minimize: requires a deterministic automaton");
 
         const auto& letters = *a.labelset();
-        automaton_t res{a.context()};
-
         /*
         ** We use the Moore's algorithm.
         ** We try to partition our automaton into equivalency classes.
@@ -53,22 +51,12 @@ namespace vcsn
         ** Repeat this process until no partition is done.
         */
 
-        int equivalences[a.num_all_states()];
-
         // Init. Eq[0] = finals, Eq[1] = others.
-
+        equivalences.reserve(a.num_all_states());
         for (auto st : a.states())
           equivalences[st] = (a.is_final(st) ? 1 : 2);
 
-        std::map<std::pair<int, int>, std::vector<state_t>> labels;
-
-        bool parallel = getenv("VCSN_PARALLEL");
-
-        int eq_class = 2;
-        int nbr_eq_classes_last_loop = 2;
-
         tbb::tick_count before = tbb::tick_count::now();
-        std::pair<int, int> result[a.num_all_states()];
         if (!parallel)
           {
             //std::cerr << "NO PARALLEL\n";
@@ -115,6 +103,7 @@ namespace vcsn
             int nb_states = a.states().size();
             state_t tmp_states[nb_states];
             std::copy(a.states().begin(), a.states().end(), tmp_states);
+            std::pair<int, int> result[a.num_all_states()];
 
             do
               {
@@ -122,7 +111,7 @@ namespace vcsn
                   {
                     std::map<std::pair<int, int>, int> pair_to_eq;
                     tbb::parallel_for(size_t(0), size_t(nb_states),
-                                      [&equivalences, &a, &tmp_states, &result, letter] (size_t idx)
+                                      [this, &a, &tmp_states, &result, letter] (size_t idx)
                                       {
                                         state_t st = tmp_states[idx];
                                         // Here we test for each letter start and end equivalence
@@ -156,7 +145,7 @@ namespace vcsn
                       }
 
                     tbb::parallel_for (2, res_size,
-                                       [&equivalences, &result, &pair_to_eq] (int i)
+                                       [this, &result, &pair_to_eq] (int i)
                                        {
                                          auto src_dst = result[i];
                                          equivalences[i] = pair_to_eq[src_dst];
@@ -169,6 +158,7 @@ namespace vcsn
         std::map<int, state_t> eq_to_res;
         equivalences[a.pre()] = 0;
         equivalences[a.post()] = 1;
+        automaton_t res{a.context()};
         eq_to_res[0] = res.pre();
         eq_to_res[1] = res.post();
 
@@ -200,6 +190,14 @@ namespace vcsn
 
         return res;
       }
+
+      std::vector<int> equivalences;
+      std::map<std::pair<int, int>, std::vector<state_t>> labels;
+
+      bool parallel = getenv("VCSN_PARALLEL");
+      
+      int eq_class = 2;
+      int nbr_eq_classes_last_loop = 2;
     };
   }
 
