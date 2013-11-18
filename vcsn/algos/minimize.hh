@@ -276,8 +276,7 @@ namespace vcsn
                 for (auto i : aut_.states())
                   {
                     auto src_dst = result[i];
-                    auto exists = pair_to_eq.find(src_dst);
-                    if (exists == pair_to_eq.end())
+                    if (pair_to_eq.find(src_dst) == pair_to_eq.end())
                       {
                         pair_to_eq[src_dst] = eq_class;
                         ++eq_class;
