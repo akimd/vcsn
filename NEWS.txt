@@ -5,7 +5,8 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-11-13
-Release of our second beta, vaucanson-2b.1.
+Release of our second beta, vaucanson-2b.1.  Available on MacPorts as
+"vaucanson".
 
 * 2013-11-07
 ** TAF-Kit: infiltration, product, shuffle: accept multiple arguments
