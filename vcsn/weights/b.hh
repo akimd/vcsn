@@ -119,10 +119,7 @@ namespace vcsn
       if ((stream >> i) && (i == 0 || i == 1))
         return i;
       else
-        {
-          stream.clear();
-          throw std::domain_error(sname() + ": invalid value: " + std::to_string(i));
-        }
+        vcsn::fail_reading(stream, sname() + ": invalid value");
     }
 
     static std::ostream&

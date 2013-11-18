@@ -110,4 +110,16 @@ namespace vcsn
       }
     return res;
   }
+
+  void fail_reading(std::istream& is, const std::string& explanation)
+  {
+    is.clear();
+    std::string buf;
+    is >> buf;
+    if (!is.good())
+      // This shouldn't really happen; however it's best to fail cleanly.
+      is.clear();
+
+    throw std::domain_error(explanation + ": " + str_escape(buf));
+  }
 }

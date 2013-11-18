@@ -139,11 +139,7 @@ namespace vcsn
       if (i >> res)
         return res;
       else
-        {
-          char buf[256];
-          i.getline (buf, sizeof buf);
-          throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
-        }
+        vcsn::fail_reading(i, sname() + ": invalid value");
     }
 
     static std::ostream&

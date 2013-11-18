@@ -49,6 +49,15 @@ namespace vcsn LIBVCSN_API
   /// \throws std::runtime_error if the next character is not \a s.
   void eat(std::istream& is, const std::string& s);
 
+  /// Throw an exception after failing to read from \a is.
+  /// Reset the stream to a "good" state, and read the presumably
+  /// ill-formed input into a buffer string; then throw
+  /// std::domain_error with the given \a explanation followed by
+  /// the buffer string.  \a explanation should not contain
+  /// trailing punctuation or spaces.
+  ATTRIBUTE_NORETURN
+  void fail_reading(std::istream& is, const std::string& explanation);
+
   /// Return the contents of \a file.
   std::string get_file_contents(const std::string& file);
 

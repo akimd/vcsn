@@ -125,13 +125,8 @@ namespace vcsn
       if (stream >> res)
         return res;
       else
-        {
-          stream.clear();
-          std::string buf;
-          stream >> buf;
-          throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
-        }
-    }
+        vcsn::fail_reading(stream, sname() + ": invalid value");
+     }
 
     static std::ostream&
     print(std::ostream& o, const value_t v)

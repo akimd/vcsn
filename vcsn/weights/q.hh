@@ -171,13 +171,7 @@ namespace vcsn
     {
       int num;
       if (! (i >> num))
-        {
-          i.clear();
-          std::string buf;
-          i >> buf;
-          throw std::domain_error(sname() + ": invalid value: "
-                                  + str_escape(buf));
-        }
+        vcsn::fail_reading(i, sname() + ": invalid numerator");
 
       // If we have a slash after the numerator then we have a
       // denominator as well.
@@ -206,14 +200,7 @@ namespace vcsn
           return value_t{num, den}.reduce();
         }
       else
-        {
-          i.clear();
-          std::string buf;
-          i >> buf;
-          throw std::domain_error(sname()
-                                  + ": invalid negative denominator: "
-                                  + str_escape(buf));
-        }
+        vcsn::fail_reading(i, sname() + ": invalid denominator");
     }
 
     static std::ostream&
