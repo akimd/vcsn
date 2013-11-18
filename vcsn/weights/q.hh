@@ -46,11 +46,12 @@ namespace vcsn
       {}
 
       /// Put it in normal form.
-      void reduce()
+      value_t& reduce()
       {
         int gc = gcd(abs(num), den);
         num /= gc;
         den /= gc;
+        return *this;
       }
 
       int num;
@@ -95,22 +96,19 @@ namespace vcsn
     static value_t add(const value_t l, const value_t r)
     {
       unsigned int cm = lcm(l.den, abs(r.den));
-      value_t res{l.num * int (cm / l.den) + r.num * int (cm / r.den), cm};
-      res.reduce();
-      return res;
+      return value_t{l.num * int (cm / l.den) + r.num * int (cm / r.den), cm}.reduce();
     }
 
     static value_t mul(const value_t l, const value_t r)
     {
-      value_t res{l.num * r.num, l.den * r.den};
-      res.reduce();
-      return res;
+      return value_t{l.num * r.num, l.den * r.den}.reduce();
     }
 
     static value_t star(const value_t v)
     {
       // Bad casting when v.den is too big
       if (abs(v.num) < v.den)
+        // No need to reduce: numerator and denominators are primes.
         return {int(v.den), v.den - v.num};
       else
         throw std::domain_error(sname() + ": star: invalid value: " + format(v));
@@ -123,8 +121,8 @@ namespace vcsn
 
     static bool is_one(const value_t v)
     {
-      // FIXME: all the values should be normalized.
-      return 0 < v.num && static_cast<unsigned int>(v.num) == v.den;
+      // All values are normalized.
+      return v.num == 1 && v.den == 1;
     }
 
     static bool equals(const value_t l, const value_t r)
@@ -171,40 +169,56 @@ namespace vcsn
     static value_t
     conv(std::istream& i)
     {
-      // FIXME: this routine could use some improvements...
-      value_t res;
-      i >> res.num;
-      if (i.fail())
-      {
-        char buf[256];
-        i.getline(buf, sizeof buf);
-        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
-      }
-      if (i.peek() == std::char_traits<char>::eof())
-        return value_t{res.num, 1};
-      if (i.get() != '/' || i.fail())
-      {
-        char buf[256];
-        i.getline(buf, sizeof buf);
-        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
-      }
-      i >> res.den;
-      if (i.fail())
-      {
-        char buf[256];
-        i.getline(buf, sizeof buf);
-        throw std::domain_error(sname() + ": invalid value: " + str_escape(buf));
-      }
-      unsigned int g = gcd(abs(res.num), res.den);
-      res.num /= int(g);
-      res.den /= g;
-      return res;
+      int num;
+      if (! (i >> num))
+        {
+          i.clear();
+          std::string buf;
+          i >> buf;
+          throw std::domain_error(sname() + ": invalid value: "
+                                  + str_escape(buf));
+        }
+
+      // If we have a slash after the numerator then we have a
+      // denominator as well.
+      char maybe_slash;
+      if ((maybe_slash = i.peek()) != '/')
+        return value_t{num, 1};
+      vcsn::eat(i, '/');
+      assert(i.good()); // peek worked and returned '/'.
+
+      // operator>> with an istream and an unsigned int silently
+      // mangles a negative number into its two's complement
+      // representation as a positive number.
+      if (i.peek() == '-')
+        {
+          num = - num;
+          vcsn::eat(i, '-');
+          assert(i.good()); // Again, peek worked.
+        }
+
+      unsigned int den;
+      if (i >> den)
+        {
+          // Make sure our rational respects our constraints.
+          if (den == 0)
+            throw std::domain_error(sname() + ": zero denominator");
+          return value_t{num, den}.reduce();
+        }
+      else
+        {
+          i.clear();
+          std::string buf;
+          i >> buf;
+          throw std::domain_error(sname()
+                                  + ": invalid negative denominator: "
+                                  + str_escape(buf));
+        }
     }
 
     static std::ostream&
     print(std::ostream& o, const value_t v)
     {
-      // FIXME: Used to check "den == 0"!!!  Curently we accept "1/0".
       o << v.num;
       if (v.den != 1)
         o << '/' << v.den;

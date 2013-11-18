@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <vcsn/weights/b.hh>
 #include <vcsn/weights/f2.hh>
 #include <vcsn/weights/r.hh>
@@ -58,10 +59,11 @@ static size_t check_q()
 #define CHECK(In, Out)                          \
   ASSERT_EQ(ws.format(conv(ws, In)), Out)
 
-  CHECK("-1/1", "-1");
-  CHECK("-3/2", "-3/2");
-  CHECK("0/1", "0");
-  CHECK("42/1", "42");
+  CHECK("-1/1",  "-1");
+  CHECK("-3/2",  "-3/2");
+  CHECK("0/1",   "0");
+  CHECK("0",     "0");
+  CHECK("42/1",  "42");
   CHECK("-42/2", "-21");
 #undef CHECK
 
@@ -102,11 +104,63 @@ static size_t check_q()
   // equals.
 #define CHECK(Lhs, Rhs, Out)                            \
   ASSERT_EQ(ws.equals(conv(ws, Lhs), conv(ws, Rhs)), Out)
-  CHECK("8/16", "1/2", true);
-  CHECK("0/16", "0", true);
-  CHECK("16/8", "2", true);
-  CHECK("2", "3", false);
-  CHECK("1/2", "1/3", false);
+  CHECK("8/16",  "1/2",  true);
+  CHECK("0/16",  "0",    true);
+  CHECK("16/8",  "2",    true);
+  CHECK("2",     "3",    false);
+  CHECK("1/2",   "1/3",  false);
+  CHECK("-1/2",  "-1/2", true);
+  CHECK("1/-2",  "-1/2", true);
+  CHECK("-1/-2", "1/2",  true);
+  CHECK("3/6",   "1/2",  true);
+  CHECK("-3/6",  "-1/2", true);
+  CHECK("3/-6",  "-1/2", true);
+  CHECK("-3/-6", "1/2",  true);
+#undef CHECK
+
+  // limits.
+#define CHECK(Lhs, Rhs, Out)                      \
+  ASSERT_EQ(ws.format(ws.mul(conv(ws, Lhs), conv(ws, Rhs))), Out)
+
+  std::string max_signed =
+    std::to_string(std::numeric_limits<int>::max());
+  std::string max_unsigned =
+    std::to_string(std::numeric_limits<unsigned int>::max());
+
+  CHECK("1/" + max_signed,
+        max_signed + "/1",
+        "1");
+  CHECK("-1/" + max_unsigned,
+        "-1",
+        "1/" + max_unsigned);
+  CHECK("1/-" + max_unsigned,
+            "1",
+        "-1/" + max_unsigned);
+  CHECK("1/" + max_unsigned,
+        max_signed,
+        max_signed + "/" + max_unsigned);
+#undef CHECK
+
+#define CHECK(Str, Fails)                       \
+  try                                           \
+    {                                           \
+      fails = false;                            \
+      conv(ws, Str);                            \
+    }                                           \
+  catch (std::exception q)                      \
+    {                                           \
+      fails = true;                             \
+    }                                           \
+  ASSERT_EQ(fails, Fails)
+
+  bool fails;
+  CHECK("1/0",   true);
+  CHECK("1/-0",  true);
+  CHECK("abc",   true);
+  CHECK("1/abc", true);
+  CHECK("-1/2",  false);
+  CHECK("1/-2",  false);
+  CHECK("-1/-2", false);
 #undef CHECK
 
   return nerrs;
