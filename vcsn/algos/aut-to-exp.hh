@@ -138,7 +138,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename Int>
       automaton
       eliminate_state(const automaton& aut, int state)
       {
@@ -151,8 +151,8 @@ namespace vcsn
         return make_automaton(std::move(res));
       }
 
-      REGISTER_DECLARE(eliminate_state,
-                       (const automaton& aut, int) -> automaton);
+      REGISTER_DECLARE2(eliminate_state,
+                        (const automaton& aut, int) -> automaton);
     }
   }
 

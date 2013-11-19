@@ -211,7 +211,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER(eliminate_state, aut_t);
+        REGISTER2(eliminate_state, aut_t, int);
 
         return true;
       }

@@ -74,6 +74,7 @@ namespace vcsn
 
 
   DEFINE(bool);
+  DEFINE(int);
   DEFINE(unsigned);
 #undef DEFINE
 
