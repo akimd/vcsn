@@ -14,6 +14,9 @@ namespace vcsn
   template <class Context>
   class polynomialset;
 
+  // q.hh.
+  class q;
+
   // r.hh.
   class r;
 
