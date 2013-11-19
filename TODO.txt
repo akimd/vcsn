@@ -125,6 +125,10 @@ is factored a lot, using std::copy for instance.
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
 
+** constant-term
+To compute the constant-term of a ratexp, we compute that of its subratexp,
+which will be recomputed uselessly by derived-term.
+
 ** ratexpset::print (LS)
 Convert to use <= in:
 

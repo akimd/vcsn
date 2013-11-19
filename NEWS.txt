@@ -7,6 +7,11 @@ changes in the internal API may also be documented.
 * 2013-11-19
 ** shortest: accepts the number of words as argument (defaults to 1)
 
+  $ vcsn shortest -O text -Ee '(a+b)*' 2
+  \e + a
+  $ vcsn enumerate -O text -Ee '(a+b)*' 2
+  \e + a + b + aa + ab + ba + bb
+
 ** difference: new algorithm (static, dynamic, TAF-Kit)
 Computes the difference between an automaton and a B-automaton (on LAL
 only):
