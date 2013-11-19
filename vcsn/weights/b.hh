@@ -10,6 +10,7 @@
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/weights/fwd.hh>
 
 namespace vcsn
 {
@@ -129,19 +130,7 @@ namespace vcsn
     }
   };
 
-  /// The intersection of two weightsets.
-  inline
-  b intersection(const b&, const b&)
-  {
-    return {};
-  }
-
-  /// The union of two weightsets.
-  inline
-  b get_union(const b&, const b&)
-  {
-    return {};
-  }
+  VCSN_WEIGHTS_BINARY(b, b, b);
 }
 
 #endif // !VCSN_WEIGHTS_B_HH

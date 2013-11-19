@@ -28,4 +28,19 @@ namespace vcsn
 
 } // namespace vcsn
 
+#define VCSN_WEIGHTS_BINARY(Lhs, Rhs, Res)      \
+  /** The intersection of two weightsets. */    \
+  inline                                        \
+  Res intersection(const Lhs&, const Rhs&)      \
+  {                                             \
+    return {};                                  \
+  }                                             \
+                                                \
+  /** The union of two weightsets. */           \
+  inline                                        \
+  Res get_union(const Lhs&, const Rhs&)         \
+  {                                             \
+    return {};                                  \
+  }
+
 #endif // !VCSN_WEIGHTS_FWD_HH

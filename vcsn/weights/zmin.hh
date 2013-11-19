@@ -10,6 +10,7 @@
 
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
+# include <vcsn/weights/fwd.hh>
 
 namespace vcsn
 {
@@ -145,19 +146,8 @@ namespace vcsn
     }
   };
 
-  /// The intersection of two weightsets.
-  inline
-  zmin intersection(const zmin&, const zmin&)
-  {
-    return {};
-  }
+  VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
 
-  /// The union of two weightsets.
-  inline
-  zmin get_union(const zmin&, const zmin&)
-  {
-    return {};
-  }
 }
 
 #endif // !VCSN_WEIGHTS_ZMIN_HH
