@@ -6,12 +6,12 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE(shortest);
+    REGISTER_DEFINE2(shortest);
 
-    std::string
-    shortest(const automaton& aut)
+    polynomial
+    shortest(const automaton& aut, unsigned num)
     {
-      return detail::shortest_registry().call(aut);
+      return detail::shortest_registry().call(aut, num);
     }
 
     REGISTER_DEFINE2(enumerate);

@@ -177,7 +177,7 @@ namespace vcsn
         REGISTER2(product, aut_t, bool_aut_t);
         REGISTER2(product, bool_aut_t, aut_t);
         REGISTER(random, Ctx);
-        REGISTER(shortest, aut_t);
+        REGISTER2(shortest, aut_t, unsigned);
         REGISTER2(shuffle, aut_t, aut_t);
         REGISTER(u, Ctx);
 

@@ -103,8 +103,7 @@ namespace vcsn
     /// Output in Extended FSM format.
     std::ostream& efsm(const automaton& aut, std::ostream& out);
 
-    /// One of the shortest accepted words.
-    /// \throw std::domain_error if the automaton is useless
+    /// All the accepted words of at most \a max letters.
     polynomial enumerate(const automaton& aut, unsigned max);
 
     /// Evaluate \a s on \a aut.
@@ -298,9 +297,8 @@ namespace vcsn
     /// The useful subautomaton of \a aut.
     automaton trim(const automaton& aut);
 
-    /// One of the shortest accepted words.
-    /// \throw std::domain_error if the automaton is useless
-    std::string shortest(const automaton& aut);
+    /// The at-most \a max first accepted words.
+    polynomial shortest(const automaton& aut, unsigned max = 1);
 
     /// Break \a ratexp.
     polynomial split(const ratexp& exp);

@@ -111,15 +111,15 @@ namespace vcsn
       }
 
       /// The weighted accepted word with length at most \a max.
-      polynomial_t operator()(size_t max)
+      polynomial_t enumerate(unsigned max)
       {
         queue_t queue;
         queue.emplace_back(aut_.pre(), ps_.monomial_one());
 
         // We match words that include the initial and final special
-        // character.
+        // characters.
         max += 2;
-        for (size_t i = 0; i < max && not queue.empty(); ++i)
+        for (size_t i = 0; i < max && !queue.empty(); ++i)
           propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
@@ -131,24 +131,27 @@ namespace vcsn
         return res;
       }
 
-      /// The shortest accepted weighted word, or throw an exception.
+      /// The shortest accepted weighted words, or throw an exception.
       // FIXME: code duplication.
-      monomial_t operator()()
+      polynomial_t shortest(unsigned num)
       {
         queue_t queue;
         queue.emplace_back(aut_.pre(), ps_.monomial_one());
 
-        while (past_[aut_.post()].empty() && !queue.empty())
+        while (past_[aut_.post()].size() < num && !queue.empty())
           propagate_(queue);
 
-        if (past_[aut_.post()].empty())
-          throw std::domain_error("shortest: the automaton is useless");
-        else
+        // Return the past of post(), but remove the initial and final
+        // special characters for the words.
+        polynomial_t res;
+        for (const auto& m: past_[aut_.post()])
           {
-            // There is no "front()" method.
-            const auto& res = *past_[aut_.post()].begin();
-            return {ls_.genset()->undelimit(res.first), res.second};
+            ps_.add_weight(res,
+                           ls_.genset()->undelimit(m.first), m.second);
+            if (--num == 0)
+              break;
           }
+        return res;
       }
 
     private:
@@ -188,19 +191,19 @@ namespace vcsn
   template <typename Automaton>
   inline
   typename detail::enumerater<Automaton>::polynomial_t
-  enumerate(const Automaton& aut, size_t max)
+  enumerate(const Automaton& aut, unsigned max)
   {
-    detail::enumerater<Automaton> enumerate(aut);
-    return enumerate(max);
+    detail::enumerater<Automaton> enumerater(aut);
+    return enumerater.enumerate(max);
   }
 
   template <typename Automaton>
   inline
-  typename detail::enumerater<Automaton>::monomial_t
-  shortest(const Automaton& aut)
+  typename detail::enumerater<Automaton>::polynomial_t
+  shortest(const Automaton& aut, unsigned num)
   {
-    detail::enumerater<Automaton> shortest(aut);
-    return shortest();
+    detail::enumerater<Automaton> enumerater(aut);
+    return enumerater.shortest(num);
   }
 
 
@@ -231,18 +234,17 @@ namespace vcsn
       | dyn::shortest.  |
       `----------------*/
 
-      // FIXME: We need dyn::label.
-      template <typename Aut>
-      std::string
-      shortest(const automaton& aut)
+      template <typename Aut, typename Unsigned>
+      polynomial
+      shortest(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
         auto ps = vcsn::detail::make_word_polynomialset(a.context());
-        return ps.format(shortest(a));
+        return make_polynomial(ps, shortest(a, num));
       }
 
-      REGISTER_DECLARE(shortest,
-                       (const automaton& aut) -> std::string);
+      REGISTER_DECLARE2(shortest,
+                        (const automaton& aut, unsigned num) -> polynomial);
     }
   }
 }

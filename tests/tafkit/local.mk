@@ -45,7 +45,6 @@
   %D%/power.chk                                 \
   %D%/product.chk                               \
   %D%/proper.chk                                \
-  %D%/shortest.chk                              \
   %D%/random.chk                                \
   %D%/shuffle.chk                               \
   %D%/standard.chk                              \
