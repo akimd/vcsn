@@ -9,6 +9,7 @@
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/copy.hh>
+# include <vcsn/ctx/context.hh>
 
 namespace vcsn
 {
@@ -29,12 +30,26 @@ namespace vcsn
       static_assert(Rhs::context_t::is_lal,
                     "requires labels_are_letters");
 
-      using automaton_t = Lhs;
+      // The _type_ of the context is the "union" of the contexts,
+      // independently of the algorithm.  However, its _value_
+      // differs: in the case of the product, the labelset is the
+      // intersection of the labelsets, it is its union for shuffle
+      // and infiltration.
+      using labelset_t
+        = decltype(get_union(std::declval<typename Lhs::labelset_t>(),
+                             std::declval<typename Rhs::labelset_t>()));
+      using weightset_t
+        = decltype(get_union(std::declval<typename Lhs::weightset_t>(),
+                             std::declval<typename Rhs::weightset_t>()));
+      using context_t = ctx::context<labelset_t, weightset_t>;
 
+    public:
+      using automaton_t = mutable_automaton<context_t>;
+
+    private:
       using state_t = typename automaton_t::state_t;
       using pair_t = std::pair<typename Lhs::state_t, typename Rhs::state_t>;
-      using label_t = typename automaton_t::label_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
@@ -66,6 +81,16 @@ namespace vcsn
         todo_.emplace_back(pair_t(lhs_.pre(), rhs_.pre()));
       }
 
+      /// The product between two weights, possibly from different
+      /// weightsets.
+      weight_t mul_(const weightset_t& ws,
+                    const typename Lhs::weight_t l,
+                    const typename Rhs::weight_t r) const
+      {
+        return ws.mul(ws.conv(*lhs_.weightset(), l),
+                      ws.conv(*rhs_.weightset(), r));
+      }
+
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the shuffle algorithm.
       void initialize_shuffle(const weightset_t& ws)
@@ -81,8 +106,9 @@ namespace vcsn
               pair_t pair(lsrc, rsrc);
               state_t init = res_.new_state();
               res_.add_initial(init,
-                               ws.mul(lhs_.weight_of(lt),
-                                      rhs_.weight_of(rt)));
+                               mul_(ws,
+                                    lhs_.weight_of(lt),
+                                    rhs_.weight_of(rt)));
               pmap_[pair] = init;
               todo_.emplace_back(pair);
             }
@@ -154,7 +180,7 @@ namespace vcsn
             // label).
             for (auto rt : rhs_.out(psrc.second, label))
               new_transition(src, ldst, rhs_.dst_of(rt),
-                             label, ws.mul(lweight, rhs_.weight_of(rt)));
+                             label, mul_(ws, lweight, rhs_.weight_of(rt)));
           }
       }
 
@@ -171,8 +197,9 @@ namespace vcsn
         typename Rhs::state_t rsrc = psrc.second;
         if (lhs_.is_final(lsrc) && rhs_.is_final(rsrc))
           res_.set_final(src,
-                         ws.mul(lhs_.get_final_weight(lsrc),
-                                rhs_.get_final_weight(rsrc)));
+                         mul_(ws,
+                              lhs_.get_final_weight(lsrc),
+                              rhs_.get_final_weight(rsrc)));
 
         for (auto lt : lhs_.out(lsrc))
           new_transition(src, lhs_.dst_of(lt), rsrc,
@@ -194,7 +221,7 @@ namespace vcsn
 
     public:
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs), rhs_(rhs), res_(lhs.context())
+        : lhs_(lhs), rhs_(rhs), res_(get_union(lhs_.context(), rhs_.context()))
       {}
 
       /// Reset the attributes before a new product.
@@ -314,8 +341,9 @@ namespace vcsn
 
   /// Build the (accessible part of the) product.
   template <typename Lhs, typename Rhs>
-  Lhs
+  auto
   product(const Lhs& lhs, const Rhs& rhs)
+    -> typename detail::producter<Lhs, Rhs>::automaton_t
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.product();
@@ -331,8 +359,9 @@ namespace vcsn
 
   /// Build the (accessible part of the) shuffle.
   template <typename Lhs, typename Rhs>
-  Lhs
+  auto
   shuffle(const Lhs& lhs, const Rhs& rhs)
+    -> typename detail::producter<Lhs, Rhs>::automaton_t
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.shuffle();
@@ -348,8 +377,9 @@ namespace vcsn
 
   /// Build the (accessible part of the) infiltration.
   template <typename Lhs, typename Rhs>
-  Lhs
+  auto
   infiltration(const Lhs& lhs, const Rhs& rhs)
+    -> typename detail::producter<Lhs, Rhs>::automaton_t
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs);
     auto res = product.infiltration();

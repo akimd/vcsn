@@ -146,10 +146,13 @@ namespace vcsn
 
 
     /// The intersection of two contexts.
-    template <typename LabelSet, typename WeightSet>
-    context<LabelSet, WeightSet>
-    intersection(const context<LabelSet, WeightSet>& a,
-                 const context<LabelSet, WeightSet>& b)
+    template <typename LhsLabelSet, typename LhsWeightSet,
+              typename RhsLabelSet, typename RhsWeightSet>
+    auto
+    intersection(const context<LhsLabelSet, LhsWeightSet>& a,
+                 const context<RhsLabelSet, RhsWeightSet>& b)
+      -> context<decltype(intersection(std::declval<LhsLabelSet>(), std::declval<RhsLabelSet>())),
+                 decltype(get_union(std::declval<LhsWeightSet>(), std::declval<RhsWeightSet>()))>
     {
       auto ls = intersection(*a.labelset(), *b.labelset());
       auto ws = get_union(*a.weightset(), *b.weightset());
@@ -157,10 +160,13 @@ namespace vcsn
     }
 
     /// The union of two contexts.
-    template <typename LabelSet, typename WeightSet>
-    context<LabelSet, WeightSet>
-    get_union(const context<LabelSet, WeightSet>& a,
-              const context<LabelSet, WeightSet>& b)
+    template <typename LhsLabelSet, typename LhsWeightSet,
+              typename RhsLabelSet, typename RhsWeightSet>
+    auto
+    get_union(const context<LhsLabelSet, LhsWeightSet>& a,
+              const context<RhsLabelSet, RhsWeightSet>& b)
+      -> context<decltype(get_union(std::declval<LhsLabelSet>(), std::declval<RhsLabelSet>())),
+                 decltype(get_union(std::declval<LhsWeightSet>(), std::declval<RhsWeightSet>()))>
     {
       auto ls = get_union(*a.labelset(), *b.labelset());
       auto ws = get_union(*a.weightset(), *b.weightset());

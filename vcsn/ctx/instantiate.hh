@@ -45,6 +45,7 @@
 # include <vcsn/factory/random.hh>
 # include <vcsn/factory/u.hh>
 
+# include <vcsn/weights/b.hh>
 # include <vcsn/weights/polynomialset.hh>
 
 # include <vcsn/misc/name.hh>
@@ -149,8 +150,8 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
 
         // Same labelset, but over Booleans.
-        // using bool_ctx_t = context<typename Ctx::labelset_t, b>;
-        // using bool_aut_t = mutable_automaton<Ctx>;
+        using bool_ctx_t = context<typename Ctx::labelset_t, b>;
+        using bool_aut_t = mutable_automaton<bool_ctx_t>;
 
         using namespace dyn::detail;
 
@@ -171,6 +172,8 @@ namespace vcsn
         REGISTER(print_polynomial, wps_t);
         REGISTER(power, aut_t);
         REGISTER2(product, aut_t, aut_t);
+        REGISTER2(product, aut_t, bool_aut_t);
+        REGISTER2(product, bool_aut_t, aut_t);
         REGISTER(random, Ctx);
         REGISTER(shortest, aut_t);
         REGISTER2(shuffle, aut_t, aut_t);

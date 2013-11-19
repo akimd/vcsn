@@ -171,6 +171,20 @@ EOF
 
 run 0 out.exp -vcsn-product -f a.gv b.gv
 
+## --------------------- ##
+## Heterogeneous input.  ##
+## --------------------- ##
+
+# RatE and B, in both directions.
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+         -e '(<u>a+<v>b)*' -o ua+vb.gv
+run 0 '' -vcsn-standard -C 'lal_char(ab)_b' \
+         -e 'a{+}' -o a+.gv
+run 0 '' -vcsn-product         -o 1.gv -f ua+vb.gv a+.gv
+run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn-aut-to-exp -f 1.gv
+run 0 '' -vcsn-product         -o 1.gv -f a+.gv ua+vb.gv
+run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn-aut-to-exp -f 1.gv
+
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
