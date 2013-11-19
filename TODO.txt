@@ -18,9 +18,6 @@ standard(exp).
 get_union and intersection on weights must be smarter, e.g., B x Z -> Z,
 etc.
 
-** difference
-Once we support different weightsets, document in NEWS.
-
 ** products: lazyness
 We need a lazy implementation of product.  nary product would be nice.
 

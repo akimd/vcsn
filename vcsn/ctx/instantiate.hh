@@ -2,6 +2,7 @@
 # define VCSN_CTX_INSTANTIATE_HH
 
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/are-equivalent.hh> // difference
 # include <vcsn/algos/aut-to-exp.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
@@ -159,6 +160,7 @@ namespace vcsn
         REGISTER(de_bruijn, Ctx);
         REGISTER(derivation, rs_t);
         REGISTER(derived_term, rs_t);
+        REGISTER2(difference, aut_t, bool_aut_t);
         REGISTER(divkbaseb, Ctx);
         REGISTER(double_ring, Ctx);
         REGISTER2(enumerate, aut_t, unsigned);

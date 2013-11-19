@@ -15,8 +15,9 @@ namespace vcsn
   `-------------*/
 
   /// An automaton that computes weights of \a lhs, but not by \a rhs.
-  template <typename Rhs, typename Lhs>
-  Rhs
+  /// The return type is really the Lhs one.
+  template <typename Lhs, typename Rhs>
+  Lhs
   difference(const Lhs& lhs, const Rhs& rhs)
   {
     // Meet complement()'s requirements.

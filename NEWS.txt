@@ -5,7 +5,18 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2013-11-19
-** Products accept heterogenous arguments
+** difference: new algorithm (static, dynamic, TAF-Kit)
+Computes the difference between an automaton and a B-automaton (on LAL
+only):
+
+  $ vcsn derived-term -e '(?@lal_char(ab)_z)(<2>a+<3>b)*' -o lhs.gv
+  $ vcsn derived-term -e '(a+b)*b(a+b)*' -o rhs.gv
+  $ vcsn difference -f lhs.gv rhs.gv | vcsn aut-to-exp
+  (<2>a)*
+  $ vcsn difference -f rhs.gv rhs.gv | vcsn aut-to-exp
+  \z
+
+** product accept heterogenous arguments
 It is now possible to compute the product of (for instance) a Z-automaton
 with a B-automaton.
 
