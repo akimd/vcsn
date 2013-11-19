@@ -437,10 +437,11 @@ namespace vcsn
     namespace detail
     {
 
-      /*---------------.
-      | dyn::product.  |
-      `---------------*/
+      /*----------.
+      | product.  |
+      `----------*/
 
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       product(const automaton& lhs, const automaton& rhs)
@@ -454,10 +455,11 @@ namespace vcsn
                         (const automaton&, const automaton&) -> automaton);
 
 
-      /*--------------.
-      | dyn::shuffle. |
-      `--------------*/
+      /*----------.
+      | shuffle.  |
+      `----------*/
 
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       shuffle(const automaton& lhs, const automaton& rhs)
@@ -471,10 +473,11 @@ namespace vcsn
                         (const automaton&, const automaton&) -> automaton);
 
 
-      /*--------------------.
-      | dyn::infiltration.  |
-      `--------------------*/
+      /*---------------.
+      | infiltration.  |
+      `---------------*/
 
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       infiltration(const automaton& lhs, const automaton& rhs)
@@ -488,11 +491,12 @@ namespace vcsn
                         (const automaton&, const automaton&) -> automaton);
 
 
-      /*-------------.
-      | dyn::power.  |
-      `-------------*/
+      /*--------.
+      | power.  |
+      `--------*/
 
-      template <typename Aut>
+      /// Bridge.
+      template <typename Aut, typename Unsigned>
       automaton
       power(const automaton& aut, unsigned n)
       {
@@ -500,8 +504,8 @@ namespace vcsn
         return make_automaton(power(a, n));
       }
 
-      REGISTER_DECLARE(power,
-                       (const automaton&, unsigned) -> automaton);
+      REGISTER_DECLARE2(power,
+                        (const automaton&, unsigned) -> automaton);
     }
   }
 }

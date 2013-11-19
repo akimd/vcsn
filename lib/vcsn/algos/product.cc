@@ -31,9 +31,9 @@ namespace vcsn
       return detail::shuffle_registry().call(lhs, rhs);
     }
 
-    /*------------.
-    | infiltration. |
-    `------------*/
+    /*---------------.
+    | infiltration.  |
+    `---------------*/
 
     REGISTER_DEFINE2(infiltration);
 
@@ -47,12 +47,12 @@ namespace vcsn
     | power.  |
     `--------*/
 
-    REGISTER_DEFINE(power);
+    REGISTER_DEFINE2(power);
 
     automaton
     power(const automaton& aut, unsigned n)
     {
-      return detail::power_registry().call(aut->vname(false), aut, n);
+      return detail::power_registry().call(aut, n);
     }
   }
 }

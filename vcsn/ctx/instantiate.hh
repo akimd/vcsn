@@ -173,7 +173,7 @@ namespace vcsn
         REGISTER(ladybird, Ctx);
         REGISTER2(list_polynomial, wps_t, std::ostream);
         REGISTER2(print_polynomial, wps_t, std::ostream);
-        REGISTER(power, aut_t);
+        REGISTER2(power, aut_t, unsigned);
         REGISTER2(product, aut_t, aut_t);
         REGISTER2(product, aut_t, bool_aut_t);
         REGISTER2(product, bool_aut_t, aut_t);
