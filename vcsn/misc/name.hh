@@ -1,7 +1,9 @@
 #ifndef VCSN_MISC_NAME_HH
 # define VCSN_MISC_NAME_HH
 
+# include <initializer_list>
 # include <iostream> // std::ostream
+# include <string>
 
 namespace vcsn
 {
@@ -85,18 +87,27 @@ namespace vcsn
   /// A key encoding type strings of \a a and \a b.
   inline
   std::string
-  vname(const std::string& a, const std::string& b)
+  vname(std::initializer_list<std::string> l)
   {
-    return a + " x " + b;
+    std::string res;
+    bool first = true;
+    for (auto s: l)
+      {
+        if (!first)
+          res += " x ";
+        first = false;
+        res += s;
+      }
+    return res;
   }
 
   /// A key encoding types of \a a and \a b.
-  template <typename A, typename B>
+  template <typename ... Args>
   inline
   std::string
-  vname(A& a, B& b)
+  vname(Args&&... args)
   {
-    return vname(vname(a), vname(b));
+    return vname({vname(std::forward<Args>(args))...});
   }
 
 } // namespace vcsn

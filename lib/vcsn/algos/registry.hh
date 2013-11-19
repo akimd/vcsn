@@ -109,7 +109,7 @@ namespace vcsn
                       const std::string& ctx2,                  \
                       Name ## _t fn)                            \
     {                                                           \
-      return Name ## _registry().set(vname(ctx1, ctx2), fn);    \
+      return Name ## _registry().set(vname({ctx1, ctx2}), fn);  \
     }                                                           \
   }
 
