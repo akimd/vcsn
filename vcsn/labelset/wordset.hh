@@ -143,19 +143,19 @@ namespace vcsn
 
     };
 
-    /// Compute the intersection with another alphabet.
+    /// Compute the meet with another alphabet.
     // FIXME: Factor in genset_labelset?
     template <typename GenSet>
     wordset<GenSet>
-    intersect(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
+    meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
-      return {intersect(*lhs.genset(), *rhs.genset())};
+      return {intersection(*lhs.genset(), *rhs.genset())};
     }
 
     /// Compute the union with another alphabet.
     template <typename GenSet>
     wordset<GenSet>
-    get_union(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
+    join(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }

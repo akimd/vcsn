@@ -84,7 +84,7 @@ namespace vcsn
     using automaton_t = A;
 
     // Create new automata.
-    auto ctx = get_union(laut.context(), raut.context());
+    auto ctx = join(laut.context(), raut.context());
     automaton_t res(ctx);
     ::vcsn::copy(laut, res, {keep_all_states<typename automaton_t::state_t>});
     concatenate_here(res, raut);

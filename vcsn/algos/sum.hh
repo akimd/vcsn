@@ -53,7 +53,7 @@ namespace vcsn
     using automaton_t = A;
 
     // Create new automata.
-    auto ctx = get_union(laut.context(), raut.context());
+    auto ctx = join(laut.context(), raut.context());
     automaton_t res(ctx);
     // A standard automaton has a single initial state.
     res.set_initial(res.new_state());

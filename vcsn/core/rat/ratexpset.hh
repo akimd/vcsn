@@ -137,28 +137,28 @@ namespace vcsn
     context_t ctx_;
   };
 
-  /// The intersection of two ratexpsets.
+  /// The meet of two ratexpsets.
   template <typename Context>
   inline
   ratexpset<Context>
-  intersection(const ratexpset<Context>& a, const ratexpset<Context>& b)
+  meet(const ratexpset<Context>& a, const ratexpset<Context>& b)
   {
-    return {intersection(a.context(), b.context())};
+    return {meet(a.context(), b.context())};
   }
 
   /// The union of two ratexpsets.
   template <typename Context>
   inline
   ratexpset<Context>
-  get_union(const ratexpset<Context>& a, const ratexpset<Context>& b)
+  join(const ratexpset<Context>& a, const ratexpset<Context>& b)
   {
-    return {get_union(a.context(), b.context())};
+    return {join(a.context(), b.context())};
   }
 
   template <typename Context>
   inline
   ratexpset<Context>
-  get_union(const ratexpset<Context>& a, const b&)
+  join(const ratexpset<Context>& a, const b&)
   {
     return a;
   }
@@ -166,7 +166,7 @@ namespace vcsn
   template <typename Context>
   inline
   ratexpset<Context>
-  get_union(const b&, const ratexpset<Context>& b)
+  join(const b&, const ratexpset<Context>& b)
   {
     return b;
   }

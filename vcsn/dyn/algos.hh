@@ -215,7 +215,7 @@ namespace vcsn
     std::string get_format(std::ostream& o);
 
     /// The product of automata \a lhs and \a rhs.
-    /// Performs the intersection of the contexts.
+    /// Performs the meet of the contexts.
     automaton product(const automaton& lhs, const automaton& rhs);
 
     /// An automaton equivalent to \a aut, without spontaneous transitions.

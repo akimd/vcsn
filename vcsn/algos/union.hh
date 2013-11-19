@@ -36,7 +36,7 @@ namespace vcsn
     using automaton_t = A;
 
     // Create new automata.
-    auto ctx = get_union(laut.context(), raut.context());
+    auto ctx = join(laut.context(), raut.context());
     automaton_t res(ctx);
 
     union_here(res, laut);

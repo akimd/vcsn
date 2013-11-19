@@ -139,10 +139,10 @@ namespace vcsn
       }
     };
 
-    /// Compute the intersection with another alphabet.
+    /// Compute the meet with another alphabet.
     template <typename GenSet>
     letterset<GenSet>
-    intersection(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
+    meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
     {
       return {intersection(*lhs.genset(), *rhs.genset())};
     }
@@ -150,7 +150,7 @@ namespace vcsn
     /// Compute the union with another alphabet.
     template <typename GenSet>
     letterset<GenSet>
-    get_union(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
+    join(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }

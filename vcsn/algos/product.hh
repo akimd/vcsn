@@ -32,15 +32,15 @@ namespace vcsn
 
       // The _type_ of the context is the "union" of the contexts,
       // independently of the algorithm.  However, its _value_
-      // differs: in the case of the product, the labelset is the
-      // intersection of the labelsets, it is its union for shuffle
-      // and infiltration.
+      // differs: in the case of the product, the labelset is the meet
+      // of the labelsets, it is its join for shuffle and
+      // infiltration.
       using labelset_t
-        = decltype(get_union(std::declval<typename Lhs::labelset_t>(),
-                             std::declval<typename Rhs::labelset_t>()));
+        = decltype(join(std::declval<typename Lhs::labelset_t>(),
+                        std::declval<typename Rhs::labelset_t>()));
       using weightset_t
-        = decltype(get_union(std::declval<typename Lhs::weightset_t>(),
-                             std::declval<typename Rhs::weightset_t>()));
+        = decltype(join(std::declval<typename Lhs::weightset_t>(),
+                        std::declval<typename Rhs::weightset_t>()));
       using context_t = ctx::context<labelset_t, weightset_t>;
 
     public:
@@ -221,7 +221,7 @@ namespace vcsn
 
     public:
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs), rhs_(rhs), res_(get_union(lhs_.context(), rhs_.context()))
+        : lhs_(lhs), rhs_(rhs), res_(join(lhs_.context(), rhs_.context()))
       {}
 
       /// Reset the attributes before a new product.
@@ -234,7 +234,7 @@ namespace vcsn
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t product()
       {
-        auto ctx = intersection(lhs_.context(), rhs_.context());
+        auto ctx = meet(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = std::move(automaton_t(ctx));
 
@@ -255,7 +255,7 @@ namespace vcsn
       /// \a rhs_.
       automaton_t shuffle()
       {
-        auto ctx = get_union(lhs_.context(), rhs_.context());
+        auto ctx = join(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -276,7 +276,7 @@ namespace vcsn
       /// lhs_ and \a rhs_.
       automaton_t infiltration()
       {
-        auto ctx = get_union(lhs_.context(), rhs_.context());
+        auto ctx = join(lhs_.context(), rhs_.context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 

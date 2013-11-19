@@ -130,16 +130,16 @@ namespace vcsn
     }
   };
 
-  /// The intersection of two weightsets.
+  /// The meet of two weightsets.
   inline
-  f2 intersection(const f2&, const f2&)
+  f2 meet(const f2&, const f2&)
   {
     return {};
   }
 
   /// The union of two weightsets.
   inline
-  f2 get_union(const f2&, const f2&)
+  f2 join(const f2&, const f2&)
   {
     return {};
   }

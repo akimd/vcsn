@@ -163,18 +163,18 @@ namespace vcsn
       }
     };
 
-    /// Compute the intersection with another alphabet.
+    /// Compute the meet with another alphabet.
     template <typename GenSet>
     nullableset<GenSet>
-    intersect(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
+    meet(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
     {
-      return {intersect(*lhs.genset(), *rhs.genset())};
+      return {intersection(*lhs.genset(), *rhs.genset())};
     }
 
     /// Compute the union with another alphabet.
     template <typename GenSet>
     nullableset<GenSet>
-    get_union(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
+    join(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }

@@ -120,10 +120,10 @@ namespace vcsn
       }
     };
 
-    /// The intersection of two labelsets.
+    /// The meet of two labelsets.
     inline
     oneset
-    intersection(const oneset&, const oneset&)
+    meet(const oneset&, const oneset&)
     {
       return {};
     }
@@ -131,7 +131,7 @@ namespace vcsn
     /// The union of two labelsets.
     inline
     oneset
-    get_union(const oneset&, const oneset&)
+    join(const oneset&, const oneset&)
     {
       return {};
     }
