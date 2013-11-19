@@ -11,13 +11,12 @@ namespace vcsn
     | grail.  |
     `--------*/
 
-    REGISTER_DEFINE(grail);
+    REGISTER_DEFINE2(grail);
 
     std::ostream&
     grail(const automaton& aut, std::ostream& out)
     {
-      detail::grail_registry().call(aut->vname(false),
-                                    aut, out);
+      detail::grail_registry().call(aut, out);
       return out;
     }
   }

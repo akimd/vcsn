@@ -46,7 +46,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename PolynomialSet>
+      template <typename PolynomialSet, typename Ostream>
       std::ostream& list_polynomial(const polynomial& polynomial,
                                     std::ostream& o)
       {
@@ -55,11 +55,11 @@ namespace vcsn
                                           p.polynomial(), o);
       }
 
-      REGISTER_DECLARE(list_polynomial,
-                       (const polynomial& p, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE2(list_polynomial,
+                        (const polynomial& p, std::ostream& o) -> std::ostream&);
 
       /// Bridge.
-      template <typename PolynomialSet>
+      template <typename PolynomialSet, typename Ostream>
       std::ostream& print_polynomial(const polynomial& polynomial,
                                      std::ostream& o)
       {
@@ -68,8 +68,8 @@ namespace vcsn
                                           p.polynomial(), o);
       }
 
-      REGISTER_DECLARE(print_polynomial,
-                       (const polynomial& p, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE2(print_polynomial,
+                        (const polynomial& p, std::ostream& o) -> std::ostream&);
     }
   }
 
@@ -97,14 +97,14 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename RatExpSet, typename Ostream>
       std::ostream& print_exp(const ratexp& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
         return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
       }
 
-      REGISTER_DECLARE(print_exp,
+      REGISTER_DECLARE2(print_exp,
                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }
@@ -129,15 +129,15 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename WeightSet>
+      template <typename WeightSet, typename Ostream>
       std::ostream& print_weight(const weight& weight, std::ostream& o)
       {
         const auto& w = weight->as<WeightSet>();
         return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
       }
 
-      REGISTER_DECLARE(print_weight,
-                       (const weight& aut, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE2(print_weight,
+                        (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }
 

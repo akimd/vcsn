@@ -157,14 +157,14 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename Ostream>
       std::ostream& dot(const automaton& aut, std::ostream& out)
       {
         return dot(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(dot,
-                       (const automaton& aut, std::ostream& out) -> std::ostream&);
+      REGISTER_DECLARE2(dot,
+                        (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

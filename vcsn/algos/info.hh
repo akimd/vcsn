@@ -167,15 +167,16 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      /// Bridge.
+      template <typename Aut, typename Ostream>
       std::ostream& info(const automaton& aut, std::ostream& out)
       {
         info(aut->as<Aut>(), out);
         return out;
       }
 
-      REGISTER_DECLARE(info,
-                       (const automaton& aut, std::ostream& out) -> std::ostream&);
+      REGISTER_DECLARE2(info,
+                        (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 
@@ -212,7 +213,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename RatExpSet, typename Ostream>
       std::ostream& info_exp(const ratexp& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
@@ -220,8 +221,8 @@ namespace vcsn
         return o;
       }
 
-      REGISTER_DECLARE(info_exp,
-                       (const ratexp& aut, std::ostream& o) -> std::ostream&);
+      REGISTER_DECLARE2(info_exp,
+                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }
 }

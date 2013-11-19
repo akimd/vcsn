@@ -1,6 +1,8 @@
 #ifndef VCSN_MISC_NAME_HH
 # define VCSN_MISC_NAME_HH
 
+# include <iostream> // std::ostream
+
 namespace vcsn
 {
 
@@ -24,7 +26,7 @@ namespace vcsn
   }
 
   template <typename T>
-  std::string sname(const T&)
+  std::string sname(T&)
   {
     return sname<T>();
   }
@@ -36,14 +38,14 @@ namespace vcsn
   template <typename T>
   struct vnamer
   {
-    std::string operator()(const T& t)
+    std::string operator()(T& t)
     {
       return t->vname(false);
     }
   };
 
   template <typename T>
-  std::string vname(const T& t)
+  std::string vname(T& t)
   {
     return vnamer<T>()(t);
   }
@@ -66,7 +68,7 @@ namespace vcsn
   template <>                                   \
   struct vnamer<Type>                           \
   {                                             \
-    std::string operator()(Type)                \
+    std::string operator()(Type&)               \
     {                                           \
       return #Type;                             \
     }                                           \
@@ -76,6 +78,8 @@ namespace vcsn
   DEFINE(bool);
   DEFINE(int);
   DEFINE(unsigned);
+
+  DEFINE(std::ostream);
 #undef DEFINE
 
   /// A key encoding type strings of \a a and \a b.
@@ -90,7 +94,7 @@ namespace vcsn
   template <typename A, typename B>
   inline
   std::string
-  vname(const A& a, const B& b)
+  vname(A& a, B& b)
   {
     return vname(vname(a), vname(b));
   }

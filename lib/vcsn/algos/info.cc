@@ -11,13 +11,12 @@ namespace vcsn
     | info(automaton).  |
     `------------------*/
 
-    REGISTER_DEFINE(info);
+    REGISTER_DEFINE2(info);
 
     std::ostream&
     info(const automaton& aut, std::ostream& out)
     {
-      detail::info_registry().call(aut->vname(false),
-                                   aut, out);
+      detail::info_registry().call(aut, out);
       return out;
     }
 
@@ -25,13 +24,12 @@ namespace vcsn
     | info(ratexp).  |
     `---------------*/
 
-    REGISTER_DEFINE(info_exp);
+    REGISTER_DEFINE2(info_exp);
 
     std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)
     {
-      detail::info_exp_registry().call(e->vname(false),
-                                       e, out);
+      detail::info_exp_registry().call(e, out);
       return out;
     }
   }

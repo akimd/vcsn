@@ -230,15 +230,15 @@ namespace vcsn
       `------------*/
 
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename Ostream>
       std::ostream& fado(const automaton& aut, std::ostream& out)
       {
         return fado(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(fado,
-                       (const automaton& aut, std::ostream& out)
-                       -> std::ostream&);
+      REGISTER_DECLARE2(fado,
+                        (const automaton& aut, std::ostream& out)
+                        -> std::ostream&);
 
     }
   }
@@ -310,15 +310,15 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut>
+      template <typename Aut, typename Ostream>
       std::ostream& grail(const automaton& aut, std::ostream& out)
       {
         return grail(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(grail,
-                       (const automaton& aut, std::ostream& out)
-                       -> std::ostream&);
+      REGISTER_DECLARE2(grail,
+                        (const automaton& aut, std::ostream& out)
+                        -> std::ostream&);
     }
   }
 }

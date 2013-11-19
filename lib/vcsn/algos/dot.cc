@@ -11,13 +11,12 @@ namespace vcsn
     | dot.  |
     `------*/
 
-    REGISTER_DEFINE(dot);
+    REGISTER_DEFINE2(dot);
 
     std::ostream&
     dot(const automaton& aut, std::ostream& out)
     {
-      detail::dot_registry().call(aut->vname(false),
-                                  aut, out);
+      detail::dot_registry().call(aut, out);
       return out;
     }
   }

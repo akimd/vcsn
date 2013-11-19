@@ -60,18 +60,18 @@ namespace vcsn
     | print(polynomial, stream).  |
     `----------------------------*/
 
-    REGISTER_DEFINE(list_polynomial);
-    REGISTER_DEFINE(print_polynomial);
+    REGISTER_DEFINE2(list_polynomial);
+    REGISTER_DEFINE2(print_polynomial);
 
     std::ostream&
     print(const polynomial& p, std::ostream& out, const std::string& type)
     {
       if (type == "list")
-        detail::list_polynomial_registry().call(p->vname(false), p, out);
+        detail::list_polynomial_registry().call(p, out);
       else if (type == "null")
         {}
       else if (type == "text" || type == "default" || type == "")
-        detail::print_polynomial_registry().call(p->vname(false), p, out);
+        detail::print_polynomial_registry().call(p, out);
       else
         throw std::domain_error("invalid output format for polynonial: "
                                 + type);
@@ -83,7 +83,7 @@ namespace vcsn
     | print(ratexp, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE(print_exp);
+    REGISTER_DEFINE2(print_exp);
 
     std::ostream&
     print(const ratexp& exp, std::ostream& out, const std::string& type)
@@ -93,7 +93,7 @@ namespace vcsn
       else if (type == "null")
         {}
       else if (type == "text" || type == "default" || type == "")
-        detail::print_exp_registry().call(exp->vname(false), exp, out);
+        detail::print_exp_registry().call(exp, out);
       else
         throw std::domain_error("invalid output format for ratexp: "
                                 + type);
@@ -105,7 +105,7 @@ namespace vcsn
     | print(weight, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE(print_weight);
+    REGISTER_DEFINE2(print_weight);
 
     std::ostream&
     print(const dyn::weight& w, std::ostream& out, const std::string& type)
@@ -113,8 +113,7 @@ namespace vcsn
       if (type == "null")
         {}
       else if (type == "text" || type == "default" || type == "")
-        detail::print_weight_registry().call(w->vname(false),
-                                             w, out);
+        detail::print_weight_registry().call(w, out);
       else
         throw std::domain_error("invalid output format for weight: "
                                 + type);

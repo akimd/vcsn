@@ -69,7 +69,8 @@ namespace vcsn
 {
 # define VCSN_CTX_INSTANTIATE_PRINT(Format, Aut)                        \
   MAYBE_EXTERN template                                                 \
-  LIBVCSN_API std::ostream& Format<Aut>(const Aut& aut, std::ostream& out)
+  LIBVCSN_API                                                           \
+  std::ostream& Format<Aut>(const Aut& aut, std::ostream& out)
 
   /*-------------------------------------------------------.
   | Instantiate the function that work for every context.  |
@@ -170,8 +171,8 @@ namespace vcsn
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx);
-        REGISTER(list_polynomial, wps_t);
-        REGISTER(print_polynomial, wps_t);
+        REGISTER2(list_polynomial, wps_t, std::ostream);
+        REGISTER2(print_polynomial, wps_t, std::ostream);
         REGISTER(power, aut_t);
         REGISTER2(product, aut_t, aut_t);
         REGISTER2(product, aut_t, bool_aut_t);
@@ -254,14 +255,14 @@ namespace vcsn
         REGISTER2(concatenate, aut_t, aut_t);
         REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
-        REGISTER(dot, aut_t);
-        REGISTER(dot, taut_t);
-        REGISTER(efsm, aut_t);
-        REGISTER(efsm, taut_t);
+        REGISTER2(dot, aut_t, std::ostream);
+        REGISTER2(dot, taut_t, std::ostream);
+        REGISTER2(efsm, aut_t, std::ostream);
+        REGISTER2(efsm, taut_t, std::ostream);
         REGISTER(expand, rs_t);
-        REGISTER(info, aut_t);
-        REGISTER(info, taut_t);
-        REGISTER(info_exp, rs_t);
+        REGISTER2(info, aut_t, std::ostream);
+        REGISTER2(info, taut_t, std::ostream);
+        REGISTER2(info_exp, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
@@ -274,14 +275,14 @@ namespace vcsn
         REGISTER2(left_mult, aut_t, ws_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_exp, rs_t);
-        REGISTER(list_polynomial, rps_t);
+        REGISTER2(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, Ctx);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
-        REGISTER(print_exp, rs_t);
-        REGISTER(print_polynomial, lps_t);
-        REGISTER(print_polynomial, rps_t);
-        REGISTER(print_weight, ws_t);
+        REGISTER2(print_exp, rs_t, std::ostream);
+        REGISTER2(print_polynomial, lps_t, std::ostream);
+        REGISTER2(print_polynomial, rps_t, std::ostream);
+        REGISTER2(print_weight, ws_t, std::ostream);
         REGISTER(read_polynomial, Ctx);
         REGISTER(read_weight, Ctx);
         REGISTER2(right_mult, aut_t, ws_t);

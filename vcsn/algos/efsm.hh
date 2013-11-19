@@ -20,7 +20,7 @@ namespace vcsn
   {
 
     /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
-    template <class Aut>
+    template <typename Aut>
     class efsmer: public outputter<Aut>
     {
     protected:
@@ -177,8 +177,7 @@ namespace vcsn
 
 
 
-  // http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
-  template <class Aut>
+  template <typename Aut>
   std::ostream&
   efsm(const Aut& aut, std::ostream& out)
   {
@@ -191,14 +190,15 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      /// Bridge.
+      template <typename Aut, typename Ostream>
       std::ostream& efsm(const automaton& aut, std::ostream& out)
       {
         return efsm(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(efsm,
-                       (const automaton& aut, std::ostream& out) -> std::ostream&);
+      REGISTER_DECLARE2(efsm,
+                        (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

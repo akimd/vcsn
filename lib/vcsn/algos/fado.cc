@@ -103,13 +103,12 @@ namespace vcsn
     | fado(aut).  |
     `------------*/
 
-    REGISTER_DEFINE(fado);
+    REGISTER_DEFINE2(fado);
 
     std::ostream&
     fado(const automaton& aut, std::ostream& out)
     {
-      detail::fado_registry().call(aut->vname(false),
-                                   aut, out);
+      detail::fado_registry().call(aut, out);
       return out;
     }
 
