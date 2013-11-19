@@ -21,12 +21,12 @@ longer what one might expect.
                   -e '<u>a<v>b' -o uv.gv
   $ vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
                   -e '<x>a<y>b' -o xy.gv
-  $ vcsn product -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  $ vcsn product -f uv.gv xy.gv | vcsn enumerate -f - 4
   <u.x.v.y>ab
-  $ vcsn shuffle -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  $ vcsn shuffle -f uv.gv xy.gv | vcsn enumerate -f - 4
   <u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
   <u.v.x.y+x.y.u.v>abab
-  $ vcsn infiltration -f uv.gv xy.gv | vcsn-enumerate -f - 4
+  $ vcsn infiltration -f uv.gv xy.gv | vcsn enumerate -f - 4
   <u.x.v.y>ab
   <u.x.v.y+x.u.v.y>aab
   <u.x.v.y+u.x.y.v>abb
@@ -337,7 +337,7 @@ So far LAL and LAN only, no support for random weights.
   0 c 1
   1 d 2
   2 c 0
-  $ vcsn-random -C 'lan_char(ab)_b' -O fado 3
+  $ vcsn random -C 'lan_char(ab)_b' -O fado 3
   @NFA 1 * 0
   0 @epsilon 1
   1 b 2
@@ -632,7 +632,7 @@ introduction of spontaneous transitions in deterministic automata.
 
 Before (see news of 2013-07-01):
 
-  $ vcsn-ladybird -O efsm 2
+  $ vcsn ladybird -O efsm 2
   #! /bin/sh
 
   cat >transitions.fsm <<\EOFSM
@@ -865,12 +865,12 @@ shortest is fixed and modified similarly.
 ** WeightSet: added support for rational weights
 We can now use automata with rational numbers as their weights.
 
-  $ vcsn-standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*" \
-    | ./bin/vcsn-evaluate -f - aaabbbb
+  $ vcsn standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*" \
+    | vcsn evaluate -f - aaabbbb
   2
 
-  $ vcsn-standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*"\
-    | ./bin/vcsn-evaluate -f - aaab
+  $ vcsn standard -e "(?@lal_char(ab)_q)(<1/2>a+<2>b)*"\
+    | vcsn evaluate -f - aaab
   1/4
 
 * 2013-07-01
@@ -884,7 +884,7 @@ The efsm format is designed to be simple to use with OpenFST: just run
 "efstcompile" instead of "fstcompile".  As a matter fact, the new
 "efstcompile" tool is rather dumb, as it simply executes the "efsm" file.
 
-  $ vcsn-ladybird -O efsm 2
+  $ vcsn ladybird -O efsm 2
   #! /bin/sh
 
   cat >transitions.fsm <<\EOFSM
@@ -906,7 +906,7 @@ The efsm format is designed to be simple to use with OpenFST: just run
 
   fstcompile --acceptor --keep_isymbols --isymbols=isymbols.txt transitions.fsm
 
-  $ vcsn-ladybird -O efsm 8 | efstcompile | fstdeterminize | fstinfo \
+  $ vcsn ladybird -O efsm 8 | efstcompile | fstdeterminize | fstinfo \
       | grep '# of states'
   # of states                                       256
 
