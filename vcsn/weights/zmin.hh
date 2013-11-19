@@ -1,12 +1,11 @@
 #ifndef VCSN_WEIGHTS_ZMIN_HH
 # define VCSN_WEIGHTS_ZMIN_HH
 
-# include <string>
-# include <ostream>
-# include <stdexcept>
-# include <boost/lexical_cast.hpp>
-# include <sstream>
 # include <limits>
+# include <ostream>
+# include <sstream>
+# include <stdexcept>
+# include <string>
 # include <utility>
 
 # include <vcsn/misc/star_status.hh>

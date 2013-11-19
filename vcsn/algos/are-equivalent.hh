@@ -1,11 +1,9 @@
 #ifndef VCSN_ALGOS_ARE_EQUIVALENT_HH
 # define VCSN_ALGOS_ARE_EQUIVALENT_HH
 
-# include <deque>
-# include <queue>
-# include <map>
-
-# include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/complement.hh>
+# include <vcsn/algos/complete.hh>
+# include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/dyn/fwd.hh>
 

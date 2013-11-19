@@ -1,14 +1,12 @@
 #ifndef VCSN_ALGOS_COMPLEMENT_HH
 # define VCSN_ALGOS_COMPLEMENT_HH
 
-# include <map>
 # include <set>
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/core/mutable_automaton.hh>
-# include <vcsn/ctx/lal_char_b.hh>
 
 namespace vcsn
 {
