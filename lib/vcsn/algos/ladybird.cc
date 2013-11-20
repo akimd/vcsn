@@ -7,13 +7,12 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE(ladybird);
+    REGISTER_DEFINE2(ladybird);
 
     automaton
     ladybird(const context& ctx, unsigned n)
     {
-      return detail::ladybird_registry().call(ctx->vname(false),
-                                               ctx, n);
+      return detail::ladybird_registry().call(ctx, n);
     }
   }
 }

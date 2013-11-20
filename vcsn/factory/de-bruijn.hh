@@ -53,7 +53,8 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Ctx>
+      /// Bridge.
+      template <typename Ctx, typename Unsigned>
       automaton
       de_bruijn(const dyn::context& ctx, unsigned n)
       {
@@ -61,8 +62,8 @@ namespace vcsn
         return make_automaton(de_bruijn<Ctx>(c, n));
       }
 
-      REGISTER_DECLARE(de_bruijn,
-                       (const dyn::context& ctx, unsigned n) -> automaton);
+      REGISTER_DECLARE2(de_bruijn,
+                        (const context& ctx, unsigned n) -> automaton);
     }
   }
 

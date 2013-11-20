@@ -7,13 +7,12 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE(divkbaseb);
+    REGISTER_DEFINE3(divkbaseb);
 
     automaton
     divkbaseb(const context& ctx, unsigned k, unsigned b)
     {
-      return detail::divkbaseb_registry().call(ctx->vname(false),
-                                               ctx, k, b);
+      return detail::divkbaseb_registry().call(ctx, k, b);
     }
   }
 }

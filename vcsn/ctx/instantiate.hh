@@ -135,8 +135,13 @@ namespace vcsn
 #define REGISTER(Algo, Type)                    \
   Algo ## _register(sname<Type>(), Algo<Type>)
 
-#define REGISTER2(Algo, Type1, Type2)           \
-  Algo ## _register(sname<Type1>(), sname<Type2>(), Algo<Type1, Type2>)
+#define REGISTER2(Algo, Type1, Type2)                   \
+  Algo ## _register(sname<Type1>(), sname<Type2>(),     \
+                    Algo<Type1, Type2>)
+
+#define REGISTER3(Algo, Type1, Type2, Type3)                            \
+  Algo ## _register(sname<Type1>(), sname<Type2>(), sname<Type3>(),     \
+                    Algo<Type1, Type2, Type3>)
 
   namespace ctx
   {
@@ -158,11 +163,11 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(complete, aut_t);
-        REGISTER(de_bruijn, Ctx);
+        REGISTER2(de_bruijn, Ctx, unsigned);
         REGISTER(derivation, rs_t);
         REGISTER(derived_term, rs_t);
         REGISTER2(difference, aut_t, bool_aut_t);
-        REGISTER(divkbaseb, Ctx);
+        REGISTER3(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx);
         REGISTER2(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t);
@@ -170,7 +175,7 @@ namespace vcsn
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
-        REGISTER(ladybird, Ctx);
+        REGISTER2(ladybird, Ctx, unsigned);
         REGISTER2(list_polynomial, wps_t, std::ostream);
         REGISTER2(print_polynomial, wps_t, std::ostream);
         REGISTER2(power, aut_t, unsigned);
@@ -180,7 +185,7 @@ namespace vcsn
         REGISTER(random, Ctx);
         REGISTER2(shortest, aut_t, unsigned);
         REGISTER2(shuffle, aut_t, aut_t);
-        REGISTER(u, Ctx);
+        REGISTER2(u, Ctx, unsigned);
 
         return true;
       }
@@ -193,14 +198,14 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER(de_bruijn, Ctx);
-        REGISTER(divkbaseb, Ctx);
+        REGISTER2(de_bruijn, Ctx, unsigned);
+        REGISTER3(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx);
-        REGISTER(ladybird, Ctx);
+        REGISTER2(ladybird, Ctx, unsigned);
         REGISTER(proper, aut_t);
         REGISTER(random, Ctx);
         REGISTER(thompson, rs_t);
-        REGISTER(u, Ctx);
+        REGISTER2(u, Ctx, unsigned);
 
         return true;
       }
@@ -305,6 +310,7 @@ namespace vcsn
     }
   }
 
+# undef REGISTER3
 # undef REGISTER2
 # undef REGISTER
 

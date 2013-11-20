@@ -7,13 +7,12 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE(u);
+    REGISTER_DEFINE2(u);
 
     automaton
     u(const context& ctx, unsigned n)
     {
-      return detail::u_registry().call(ctx->vname(false),
-                                       ctx, n);
+      return detail::u_registry().call(ctx, n);
     }
   }
 }

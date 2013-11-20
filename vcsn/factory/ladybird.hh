@@ -43,7 +43,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Ctx>
+      template <typename Ctx, typename Unsigned>
       automaton
       ladybird(const dyn::context& ctx, unsigned n)
       {
@@ -51,7 +51,7 @@ namespace vcsn
         return make_automaton(ladybird<Ctx>(c, n));
       }
 
-      REGISTER_DECLARE(ladybird,
+      REGISTER_DECLARE2(ladybird,
                        (const dyn::context& ctx, unsigned n) -> automaton);
     }
   }

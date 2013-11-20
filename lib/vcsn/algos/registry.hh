@@ -85,32 +85,49 @@ namespace vcsn
   }                                                     \
 
 /// Implement a registry named Name, with unary dispatch.
-# define REGISTER_DEFINE(Name)                          \
-  namespace detail                                      \
-  {                                                     \
-    REGISTER_DEFINE_(Name)                              \
-                                                        \
-    bool                                                \
-    Name ## _register(const std::string& ctx,           \
-                      Name ## _t fn)                    \
-    {                                                   \
-      return Name ## _registry().set(ctx, fn);          \
-    }                                                   \
+# define REGISTER_DEFINE(Name)                  \
+  namespace detail                              \
+  {                                             \
+    REGISTER_DEFINE_(Name)                      \
+                                                \
+    bool                                        \
+    Name ## _register(const std::string& type,  \
+                      Name ## _t fn)            \
+    {                                           \
+      return Name ## _registry().set(type, fn); \
+    }                                           \
   }
 
 /// Implement a registry named Name, with binary dispatch.
-# define REGISTER_DEFINE2(Name)                                 \
-  namespace detail                                              \
-  {                                                             \
-    REGISTER_DEFINE_(Name)                                      \
-                                                                \
-    bool                                                        \
-    Name ## _register(const std::string& ctx1,                  \
-                      const std::string& ctx2,                  \
-                      Name ## _t fn)                            \
-    {                                                           \
-      return Name ## _registry().set(vname({ctx1, ctx2}), fn);  \
-    }                                                           \
+# define REGISTER_DEFINE2(Name)                                         \
+  namespace detail                                                      \
+  {                                                                     \
+    REGISTER_DEFINE_(Name)                                              \
+                                                                        \
+    bool                                                                \
+    Name ## _register(const std::string& type1,                         \
+                      const std::string& type2,                         \
+                      Name ## _t fn)                                    \
+    {                                                                   \
+      return Name ## _registry().set(vname({type1, type2}), fn);        \
+    }                                                                   \
+  }
+
+/// Implement a registry named Name, with ternary dispatch.
+# define REGISTER_DEFINE3(Name)                                         \
+  namespace detail                                                      \
+  {                                                                     \
+    REGISTER_DEFINE_(Name)                                              \
+                                                                        \
+    bool                                                                \
+    Name ## _register(const std::string& type1,                         \
+                      const std::string& type2,                         \
+                      const std::string& type3,                         \
+                      Name ## _t fn)                                    \
+    {                                                                   \
+      return Name ## _registry().set(vname({type1, type2, type3}),      \
+                                     fn);                               \
+    }                                                                   \
   }
 
 #endif // !LIB_VCSN_ALGOS_REGISTRY_HH

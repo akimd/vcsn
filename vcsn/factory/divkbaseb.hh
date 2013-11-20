@@ -11,7 +11,7 @@ namespace vcsn
 
   // Build the Boolean automaton which accepts a word n representing a
   // number in base "base" if and only if divisor|n.
-  template <class Context>
+  template <typename Context>
   mutable_automaton<Context>
   divkbaseb(const Context& ctx, unsigned divisor, unsigned base)
   {
@@ -54,17 +54,18 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Ctx>
+      /// Bridge.
+      template <typename Ctx, typename Unsigned1, typename Unsigned2>
       automaton
-      divkbaseb(const dyn::context& ctx, unsigned divisor, unsigned base)
+      divkbaseb(const context& ctx, unsigned divisor, unsigned base)
       {
         const auto& c = ctx->as<Ctx>();
         return make_automaton(divkbaseb<Ctx>(c, divisor, base));
       }
 
-      REGISTER_DECLARE
+      REGISTER_DECLARE3
       (divkbaseb,
-       (const dyn::context& ctx, unsigned k, unsigned b) -> automaton);
+       (const context& ctx, unsigned k, unsigned b) -> automaton);
     }
   }
 
