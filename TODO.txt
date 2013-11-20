@@ -157,6 +157,11 @@ that if there are no deletions, references and iterator remain valid.  So we
 should store references or iterators in the working queue, instead of
 duplicating the monomials.
 
+* Improvements
+** tikz: use standalone
+See whether using standalone we can't make these document both
+self-contained and usable as includes.
+
 * aut-to-exp
 ** More heuristics
 See what V1 did.

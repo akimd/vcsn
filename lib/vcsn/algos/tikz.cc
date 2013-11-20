@@ -11,13 +11,12 @@ namespace vcsn
     | tikz.  |
     `-------*/
 
-    REGISTER_DEFINE(tikz);
+    REGISTER_DEFINE2(tikz);
 
     std::ostream&
     tikz(const automaton& aut, std::ostream& out)
     {
-      detail::tikz_registry().call(aut->vname(false),
-                                   aut, out);
+      detail::tikz_registry().call(aut, out);
       return out;
     }
   }

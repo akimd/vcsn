@@ -66,12 +66,16 @@ EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/lao-elim-2.gv              \
   %D%/cat.dir/lal_char_b.in.gv                  \
   %D%/cat.dir/lal_char_b.out.gv                 \
+  %D%/cat.dir/lal_char_b.tex                    \
   %D%/cat.dir/lan_char_b.in.gv                  \
   %D%/cat.dir/lan_char_b.out.gv                 \
+  %D%/cat.dir/lan_char_b.tex                    \
   %D%/cat.dir/lao_z.in.gv                       \
   %D%/cat.dir/lao_z.out.gv                      \
+  %D%/cat.dir/lao_z.tex                         \
   %D%/cat.dir/pyramid.in.gv                     \
   %D%/cat.dir/pyramid.out.gv                    \
+  %D%/cat.dir/pyramid.tex                       \
   %D%/derivation.dir/a?-dt.gv                   \
   %D%/derivation.dir/e1-dt.gv                   \
   %D%/derivation.dir/e2-dt.gv                   \

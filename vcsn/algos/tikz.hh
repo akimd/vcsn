@@ -96,7 +96,7 @@ namespace vcsn
     };
   }
 
-  template <class Aut>
+  template <typename Aut>
   std::ostream&
   tikz(const Aut& aut, std::ostream& out)
   {
@@ -109,14 +109,15 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      /// Bridge.
+      template <typename Aut, typename Ostream>
       std::ostream& tikz(const automaton& aut, std::ostream& out)
       {
         return tikz(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE(tikz,
-                       (const automaton& aut, std::ostream& out) -> std::ostream&);
+      REGISTER_DECLARE2(tikz,
+                        (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

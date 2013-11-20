@@ -292,8 +292,8 @@ namespace vcsn
         REGISTER(star, aut_t);
         REGISTER(star_normal_form, rs_t);
         REGISTER2(sum, aut_t, aut_t);
-        REGISTER(tikz, aut_t);
-        REGISTER(tikz, taut_t);
+        REGISTER2(tikz, aut_t, std::ostream);
+        REGISTER2(tikz, taut_t, std::ostream);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_exp, rs_t);
         REGISTER(trim, aut_t);
