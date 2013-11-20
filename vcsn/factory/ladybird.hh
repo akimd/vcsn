@@ -10,7 +10,7 @@ namespace vcsn
 {
   template <class Context>
   mutable_automaton<Context>
-  ladybird(unsigned n, const Context& ctx)
+  ladybird(const Context& ctx, unsigned n)
   {
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
@@ -48,7 +48,7 @@ namespace vcsn
       ladybird(const dyn::context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(ladybird<Ctx>(n, c));
+        return make_automaton(ladybird<Ctx>(c, n));
       }
 
       REGISTER_DECLARE(ladybird,

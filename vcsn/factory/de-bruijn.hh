@@ -14,7 +14,7 @@ namespace vcsn
   // (a+b)*a(a+b)^n.
   template <class Context>
   mutable_automaton<Context>
-  de_bruijn(unsigned n, const Context& ctx)
+  de_bruijn(const Context& ctx, unsigned n)
   {
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
@@ -58,7 +58,7 @@ namespace vcsn
       de_bruijn(const dyn::context& ctx, unsigned n)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(de_bruijn<Ctx>(n, c));
+        return make_automaton(de_bruijn<Ctx>(c, n));
       }
 
       REGISTER_DECLARE(de_bruijn,

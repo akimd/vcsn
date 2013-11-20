@@ -12,7 +12,7 @@ namespace vcsn
 {
   template <class Context>
   mutable_automaton<Context>
-  double_ring(unsigned n, const Context& ctx, std::vector<unsigned> finals)
+  double_ring(const Context& ctx, unsigned n, std::vector<unsigned> finals)
   {
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
@@ -62,16 +62,17 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Ctx>
       automaton
       double_ring(const dyn::context& ctx, unsigned n, std::vector<unsigned> f)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(double_ring<Ctx>(n, c, f));
+        return make_automaton(double_ring<Ctx>(c, n, f));
       }
 
       REGISTER_DECLARE(double_ring,
-                       (const dyn::context& ctx, unsigned n,
+                       (const context& ctx, unsigned n,
                         std::vector<unsigned> f) -> automaton);
     }
   }
