@@ -23,7 +23,7 @@ only):
   $ vcsn difference -f rhs.gv rhs.gv | vcsn aut-to-exp
   \z
 
-** product accept heterogenous arguments
+** product accepts heterogenous arguments
 It is now possible to compute the product of (for instance) a Z-automaton
 with a B-automaton.
 
