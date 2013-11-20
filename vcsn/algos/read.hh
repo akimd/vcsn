@@ -28,7 +28,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Context>
+      template <typename Context, typename Istream>
       auto
       read_polynomial(const context& ctx, std::istream& is)
         -> polynomial
@@ -39,8 +39,8 @@ namespace vcsn
         return make_polynomial(ps, res);
       }
 
-      REGISTER_DECLARE(read_polynomial,
-                       (const context& ctx, std::istream& is) -> polynomial);
+      REGISTER_DECLARE2(read_polynomial,
+                        (const context& ctx, std::istream& is) -> polynomial);
     }
   }
 
@@ -63,7 +63,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Context>
+      template <typename Context, typename Istream>
       auto
       read_weight(const context& ctx, std::istream& is)
         -> weight
@@ -73,7 +73,7 @@ namespace vcsn
         return make_weight(*c.weightset(), res);
       }
 
-      REGISTER_DECLARE(read_weight,
+      REGISTER_DECLARE2(read_weight,
                        (const context& ctx, std::istream& is) -> weight);
     }
   }

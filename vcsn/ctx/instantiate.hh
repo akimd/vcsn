@@ -288,8 +288,8 @@ namespace vcsn
         REGISTER2(print_polynomial, lps_t, std::ostream);
         REGISTER2(print_polynomial, rps_t, std::ostream);
         REGISTER2(print_weight, ws_t, std::ostream);
-        REGISTER(read_polynomial, Ctx);
-        REGISTER(read_weight, Ctx);
+        REGISTER2(read_polynomial, Ctx, std::istream);
+        REGISTER2(read_weight, Ctx, std::istream);
         REGISTER2(right_mult, aut_t, ws_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);

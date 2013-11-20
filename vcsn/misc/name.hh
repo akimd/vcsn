@@ -81,6 +81,7 @@ namespace vcsn
   DEFINE(int);
   DEFINE(unsigned);
 
+  DEFINE(std::istream);
   DEFINE(const std::string);
   DEFINE(std::ostream);
 #undef DEFINE
