@@ -23,25 +23,29 @@ namespace vcsn
     /// Whether log messages should be issued.
     bool debug = getenv("VCSN_DYN");
 
-    /// Register function \a fn for context \a ctx.
-    bool set(const std::string& ctx, Fun fn)
+    /// Register function \a fn for signature \a sig.
+    bool set(const std::string& sig, Fun fn)
     {
       if (debug)
-        std::cerr << "Register(" << name_ << ").set(" << ctx << ")\n";
-      map_[ctx] = fn;
+        std::cerr << "Register(" << name_ << ").set(" << sig << ")\n";
+      map_[sig] = fn;
       return true;
     }
 
-    /// Get function for context \a ctx.
-    const Fun& get(const std::string& ctx)
+    /// Get function for signature \a sig.
+    const Fun& get(const std::string& sig)
     {
       if (debug)
-        std::cerr << "Register(" << name_ << ").get(" << ctx << ")\n";
-      auto i = map_.find(ctx);
+        std::cerr << "Register(" << name_ << ").get(" << sig << ")\n";
+      auto i = map_.find(sig);
       if (i == map_.end())
-        throw std::runtime_error(name_
-                                 + ": no implementation available for "
-                                 + ctx);
+        {
+          std::string err = name_ + ": no implementation available for " + sig;
+          err += "\n  available versions:";
+          for (auto p: map_)
+            err += "\n    " + p.first;
+          throw std::runtime_error(err);
+        }
       else
         return *i->second;
     }
