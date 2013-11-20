@@ -1,5 +1,19 @@
 #! /bin/sh
 
+## ---------------------- ##
+## Existing transitions.  ##
+## ---------------------- ##
+
+# See the actual code of product to understand the point of this test
+# (which is new_transition vs. add_transition).
+run 0 '' -vcsn-derived-term -e 'a*a' -o 'a*a.gv'
+# FIXME: abort: run 0 '' -vcsn-infiltration -o prod.gv -f 'a*a.gv' 'a*a.gv'
+# FIXME: abort: run 0 'a*a' -vcsn-aut-to-exp -f prod.gv
+
+## -------------------- ##
+## Hand crafted tests.  ##
+## -------------------- ##
+
 # a infiltration a
 run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
 digraph
@@ -137,6 +151,7 @@ digraph
   11 -> F11
 }
 EOF
+
 
 ## --------------------- ##
 ## Heterogeneous input.  ##

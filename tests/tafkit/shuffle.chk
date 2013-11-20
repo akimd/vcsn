@@ -1,5 +1,16 @@
 #! /bin/sh
 
+## ---------------------- ##
+## Existing transitions.  ##
+## ---------------------- ##
+
+# See the actual code of product to understand the point of this test
+# (which is new_transition vs. add_transition).
+run 0 '' -vcsn-derived-term -e 'a*a' -o 'a*a.gv'
+run 0 '' -vcsn-shuffle -o prod.gv -f 'a*a.gv' 'a*a.gv'
+run 0 'a*.(a.a*.a+a.a*.a)' -vcsn-aut-to-exp -f prod.gv
+
+
 ## ------------------------ ##
 ## (ab)* )( (<-1>ab)* = \e. ##
 ## ------------------------ ##

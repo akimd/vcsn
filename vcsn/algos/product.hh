@@ -118,6 +118,10 @@ namespace vcsn
             state_t src = pmap_[psrc];
 
             // Infiltrate is a mix of product and shuffle operations.
+            //
+            // Product transitions must be added before shuffle ones:
+            // this way "product" can use "new_transition" only, which
+            // is faster than "add_transition".
             add_product_transitions(ws, src, psrc);
             add_shuffle_transitions(ws, src, psrc);
           }
@@ -310,15 +314,26 @@ namespace vcsn
                               lhs_.get_final_weight(lsrc),
                               rhs_.get_final_weight(rsrc)));
 
+        // The src state is visited for the first time, so all these
+        // transitions are new.  *Except* in the case where we have a
+        // loop on both the lhs, and the rhs.
+        //
+        // If add_product_transitions was called before, there may
+        // even exist such a transition in the first loop.
         for (auto lt : lhs_.out(lsrc))
-          new_transition(src, lhs_.dst_of(lt), rsrc,
-                         lhs_.label_of(lt),
-                         ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
+          {
+            typename Lhs::state_t ldst = lhs_.dst_of(lt);
+            if (lsrc == ldst)
+              add_transition(src, lhs_.dst_of(lt), rsrc,
+                             lhs_.label_of(lt),
+                             ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
+            else
+              new_transition(src, lhs_.dst_of(lt), rsrc,
+                             lhs_.label_of(lt),
+                             ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
+          }
         for (auto rt : rhs_.out(rsrc))
           {
-            // The src state is visited for the first time, so all
-            // these transitions are new.  *Except* in the case where
-            // we have a loop on both the lhs, and the rhs.
             typename Rhs::state_t rdst = rhs_.dst_of(rt);
             if (rsrc == rdst)
               add_transition(src, lsrc, rdst,
