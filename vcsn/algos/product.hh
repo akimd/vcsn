@@ -46,9 +46,118 @@ namespace vcsn
     public:
       using automaton_t = mutable_automaton<context_t>;
 
-    private:
+      producter(const Lhs& lhs, const Rhs& rhs)
+        : lhs_(lhs), rhs_(rhs), res_(join(lhs_.context(), rhs_.context()))
+      {}
+
+      /// Reset the attributes before a new product.
+      void clear()
+      {
+        pmap_.clear();
+        todo_.clear();
+      }
+
+      /// The (accessible part of the) product of \a lhs_ and \a rhs_.
+      automaton_t product()
+      {
+        auto ctx = meet(lhs_.context(), rhs_.context());
+        const auto& ws = *ctx.weightset();
+        res_ = std::move(automaton_t(ctx));
+
+        initialize_product();
+
+        while (!todo_.empty())
+          {
+            pair_t psrc = todo_.front();
+            todo_.pop_front();
+            state_t src = pmap_[psrc];
+
+            add_product_transitions(ws, src, psrc);
+          }
+        return std::move(res_);
+      }
+
+      /// The (accessible part of the) shuffle product of \a lhs_ and
+      /// \a rhs_.
+      automaton_t shuffle()
+      {
+        auto ctx = join(lhs_.context(), rhs_.context());
+        const auto& ws = *ctx.weightset();
+        res_ = automaton_t(ctx);
+
+        initialize_shuffle(ws);
+
+        while (!todo_.empty())
+          {
+            pair_t psrc = todo_.front();
+            todo_.pop_front();
+            state_t src = pmap_[psrc];
+
+            add_shuffle_transitions(ws, src, psrc);
+          }
+        return std::move(res_);
+      }
+
+      /// The (accessible part of the) infiltration product of \a
+      /// lhs_ and \a rhs_.
+      automaton_t infiltration()
+      {
+        auto ctx = join(lhs_.context(), rhs_.context());
+        const auto& ws = *ctx.weightset();
+        res_ = automaton_t(ctx);
+
+        // Infiltrate is a mix of product and shuffle operations, and
+        // the initial states for shuffle are a superset of the
+        // initial states for product:
+        initialize_shuffle(ws);
+
+        while (!todo_.empty())
+          {
+            pair_t psrc = todo_.front();
+            todo_.pop_front();
+            state_t src = pmap_[psrc];
+
+            // Infiltrate is a mix of product and shuffle operations.
+            add_product_transitions(ws, src, psrc);
+            add_shuffle_transitions(ws, src, psrc);
+          }
+
+        return std::move(res_);
+      }
+
+      /// A map from product states to pair of original states.
       using state_t = typename automaton_t::state_t;
       using pair_t = std::pair<typename Lhs::state_t, typename Rhs::state_t>;
+      using origins_t = std::map<state_t, pair_t>;
+      origins_t
+      origins() const
+      {
+        origins_t res;
+        for (const auto& p: pmap_)
+          res.emplace(p.second, p.first);
+        return res;
+      }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins.\n"
+             "    node [shape = box, style = rounded]\n";
+        for (auto p: orig)
+          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+            o << "    " << p.first - 2
+              << " [label = \""
+              << p.second.first - 2
+              << ','
+              << p.second.second - 2
+              << "\"]\n";
+        o << "*/\n";
+        return o;
+      }
+
+    private:
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
@@ -220,116 +329,6 @@ namespace vcsn
                              rhs_.label_of(rt),
                              ws.conv(*rhs_.weightset(), rhs_.weight_of(rt)));
           }
-      }
-
-    public:
-      producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs), rhs_(rhs), res_(join(lhs_.context(), rhs_.context()))
-      {}
-
-      /// Reset the attributes before a new product.
-      void clear()
-      {
-        pmap_.clear();
-        todo_.clear();
-      }
-
-      /// The (accessible part of the) product of \a lhs_ and \a rhs_.
-      automaton_t product()
-      {
-        auto ctx = meet(lhs_.context(), rhs_.context());
-        const auto& ws = *ctx.weightset();
-        res_ = std::move(automaton_t(ctx));
-
-        initialize_product();
-
-        while (!todo_.empty())
-          {
-            pair_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
-
-            add_product_transitions(ws, src, psrc);
-          }
-        return std::move(res_);
-      }
-
-      /// The (accessible part of the) shuffle product of \a lhs_ and
-      /// \a rhs_.
-      automaton_t shuffle()
-      {
-        auto ctx = join(lhs_.context(), rhs_.context());
-        const auto& ws = *ctx.weightset();
-        res_ = automaton_t(ctx);
-
-        initialize_shuffle(ws);
-
-        while (!todo_.empty())
-          {
-            pair_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
-
-            add_shuffle_transitions(ws, src, psrc);
-          }
-        return std::move(res_);
-      }
-
-      /// The (accessible part of the) infiltration product of \a
-      /// lhs_ and \a rhs_.
-      automaton_t infiltration()
-      {
-        auto ctx = join(lhs_.context(), rhs_.context());
-        const auto& ws = *ctx.weightset();
-        res_ = automaton_t(ctx);
-
-        // Infiltrate is a mix of product and shuffle operations, and
-        // the initial states for shuffle are a superset of the
-        // initial states for product:
-        initialize_shuffle(ws);
-
-        while (!todo_.empty())
-          {
-            pair_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
-
-            // Infiltrate is a mix of product and shuffle operations.
-            add_product_transitions(ws, src, psrc);
-            add_shuffle_transitions(ws, src, psrc);
-          }
-
-        return std::move(res_);
-      }
-
-      /// Lhs map from product states to pair of original states.
-      using origins_t = std::map<state_t, pair_t>;
-      origins_t
-      origins() const
-      {
-        origins_t res;
-        for (const auto& p: pmap_)
-          res.emplace(p.second, p.first);
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig)
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p: orig)
-          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
-            o << "    " << p.first - 2
-              << " [label = \""
-              << p.second.first - 2
-              << ','
-              << p.second.second - 2
-              << "\"]\n";
-        o << "*/\n";
-        return o;
       }
 
     private:
