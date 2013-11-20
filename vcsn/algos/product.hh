@@ -203,7 +203,8 @@ namespace vcsn
 
         for (auto lt : lhs_.out(lsrc))
           new_transition(src, lhs_.dst_of(lt), rsrc,
-                         lhs_.label_of(lt), lhs_.weight_of(lt));
+                         lhs_.label_of(lt),
+                         ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
         for (auto rt : rhs_.out(rsrc))
           {
             // The src state is visited for the first time, so all
@@ -212,10 +213,12 @@ namespace vcsn
             typename Rhs::state_t rdst = rhs_.dst_of(rt);
             if (rsrc == rdst)
               add_transition(src, lsrc, rdst,
-                             rhs_.label_of(rt), rhs_.weight_of(rt));
+                             rhs_.label_of(rt),
+                             ws.conv(*rhs_.weightset(), rhs_.weight_of(rt)));
             else
               new_transition(src, lsrc, rdst,
-                             rhs_.label_of(rt), rhs_.weight_of(rt));
+                             rhs_.label_of(rt),
+                             ws.conv(*rhs_.weightset(), rhs_.weight_of(rt)));
           }
       }
 

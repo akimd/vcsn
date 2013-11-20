@@ -4,6 +4,21 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-11-20
+** products accept heterogenous arguments
+It is now possible to compute the (regular, infiltration and shuffle)
+products of a B-automaton with any other kind of automaton.
+
+  $ vcsn standard -C 'lal_char(ab)_b' -e 'a' -o a.gv
+  $ vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+                  -e '(<u>a+<v>b)*' -o ab.gv
+  $ vcsn product -f ab.gv a.gv | vcsn shortest -f - 4
+  <u>a
+  $ vcsn shuffle -f ab.gv a.gv | vcsn shortest -f - 4
+  a + <u+u>aa + <v>ab + <v>ba
+  $ vcsn infiltration -f ab.gv a.gv | vcsn shortest -f - 4
+  <u+\e>a + <u.u+u+u>aa + <u.v+v>ab + <v.u+v>ba
+
 * 2013-11-19
 ** shortest: accepts the number of words as argument (defaults to 1)
 

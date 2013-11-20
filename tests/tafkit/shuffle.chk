@@ -221,6 +221,23 @@ aAbBC
 abABC
 EOF
 
+
+## --------------------- ##
+## Heterogeneous input.  ##
+## --------------------- ##
+
+# RatE and B, in both directions.
+run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+         -e '(<u>a+<v>b)*' -o ab.gv
+run 0 '' -vcsn-standard -C 'lal_char(ab)_b' \
+         -e 'a' -o a.gv
+run 0 '' -vcsn-shuffle -o 1.gv -f ab.gv a.gv
+run 0 'a + <u+u>aa + <v>ab + <v>ba' \
+      -vcsn-shortest -f 1.gv 4
+run 0 '' -vcsn-shuffle -o 2.gv -f a.gv ab.gv
+run 0 'a + <u+u>aa + <v>ab + <v>ba' \
+      -vcsn-shortest -f 2.gv 4
+
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##

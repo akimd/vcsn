@@ -149,8 +149,8 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
 
         // Same labelset, but over Booleans.
-        using bool_ctx_t = context<typename Ctx::labelset_t, b>;
-        using bool_aut_t = mutable_automaton<bool_ctx_t>;
+        using b_ctx_t = context<typename Ctx::labelset_t, b>;
+        using b_aut_t = mutable_automaton<b_ctx_t>;
 
         using namespace dyn::detail;
 
@@ -158,12 +158,14 @@ namespace vcsn
         REGISTER(de_bruijn, Ctx, unsigned);
         REGISTER(derivation, rs_t, const std::string);
         REGISTER(derived_term, rs_t);
-        REGISTER(difference, aut_t, bool_aut_t);
+        REGISTER(difference, aut_t, b_aut_t);
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t, const std::string);
         REGISTER(infiltration, aut_t, aut_t);
+        REGISTER(infiltration, aut_t, b_aut_t);
+        REGISTER(infiltration, b_aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
@@ -172,11 +174,13 @@ namespace vcsn
         REGISTER(print_polynomial, wps_t, std::ostream);
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
-        REGISTER(product, aut_t, bool_aut_t);
-        REGISTER(product, bool_aut_t, aut_t);
+        REGISTER(product, aut_t, b_aut_t);
+        REGISTER(product, b_aut_t, aut_t);
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
+        REGISTER(shuffle, aut_t, b_aut_t);
+        REGISTER(shuffle, b_aut_t, aut_t);
         REGISTER(u, Ctx, unsigned);
 
         return true;
