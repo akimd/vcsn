@@ -7,7 +7,7 @@ namespace vcsn
 
   namespace dyn
   {
-    REGISTER_DEFINE2(product);
+    REGISTER_DEFINE(product);
 
     /*---------.
     | product. |
@@ -23,7 +23,7 @@ namespace vcsn
     | shuffle. |
     `---------*/
 
-    REGISTER_DEFINE2(shuffle);
+    REGISTER_DEFINE(shuffle);
 
     automaton
     shuffle(const automaton& lhs, const automaton& rhs)
@@ -35,7 +35,7 @@ namespace vcsn
     | infiltration.  |
     `---------------*/
 
-    REGISTER_DEFINE2(infiltration);
+    REGISTER_DEFINE(infiltration);
 
     automaton
     infiltration(const automaton& lhs, const automaton& rhs)
@@ -47,7 +47,7 @@ namespace vcsn
     | power.  |
     `--------*/
 
-    REGISTER_DEFINE2(power);
+    REGISTER_DEFINE(power);
 
     automaton
     power(const automaton& aut, unsigned n)

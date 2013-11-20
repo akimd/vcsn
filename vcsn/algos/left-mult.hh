@@ -105,7 +105,7 @@ namespace vcsn
         return make_automaton(left_mult(a, w));
       }
 
-      REGISTER_DECLARE2(left_mult,
+      REGISTER_DECLARE(left_mult,
                         (const automaton&, const weight&) -> automaton);
 
       /*------------------.
@@ -121,7 +121,7 @@ namespace vcsn
         return make_automaton(right_mult(a, w));
       }
 
-      REGISTER_DECLARE2(right_mult,
+      REGISTER_DECLARE(right_mult,
                         (const automaton&, const weight&) -> automaton);
     }
   }

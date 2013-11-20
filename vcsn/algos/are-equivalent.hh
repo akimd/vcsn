@@ -50,7 +50,7 @@ namespace vcsn
         return make_automaton(difference(l, r));
       }
 
-      REGISTER_DECLARE2(difference,
+      REGISTER_DECLARE(difference,
                         (const automaton&, const automaton&) -> automaton);
     }
   }
@@ -82,7 +82,7 @@ namespace vcsn
         return are_equivalent(a1, a2);
       }
 
-      REGISTER_DECLARE2(are_equivalent,
+      REGISTER_DECLARE(are_equivalent,
                         (const automaton&, const automaton&) -> bool);
     }
   }

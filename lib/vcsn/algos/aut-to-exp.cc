@@ -13,7 +13,7 @@ namespace vcsn
     | eliminate_state.  |
     `------------------*/
 
-    REGISTER_DEFINE2(eliminate_state);
+    REGISTER_DEFINE(eliminate_state);
 
     automaton
     eliminate_state(const automaton& aut, int i)

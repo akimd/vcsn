@@ -197,7 +197,7 @@ namespace vcsn
         return efsm(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE2(efsm,
+      REGISTER_DECLARE(efsm,
                         (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }

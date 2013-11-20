@@ -80,7 +80,7 @@ namespace vcsn
         return make_automaton(sum(l, r));
       }
 
-      REGISTER_DECLARE2(sum,
+      REGISTER_DECLARE(sum,
                         (const automaton&, const automaton&) -> automaton);
     }
   }

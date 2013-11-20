@@ -10,7 +10,7 @@ namespace vcsn
     /*--------------------------.
     | derivation(exp, string).  |
     `--------------------------*/
-    REGISTER_DEFINE2(derivation);
+    REGISTER_DEFINE(derivation);
 
     polynomial
     derivation(const ratexp& e, const std::string& s)

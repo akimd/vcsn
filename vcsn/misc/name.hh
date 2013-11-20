@@ -50,6 +50,14 @@ namespace vcsn
     return sname<T>();
   }
 
+  template <typename T1, typename T2, typename ... Args>
+  inline
+  std::string
+  sname()
+  {
+    return vname({sname<T1>(), sname<T2>(), sname<Args>()...});
+  }
+
   /*----------------.
   | Dynamic names.  |
   `----------------*/

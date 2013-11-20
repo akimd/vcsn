@@ -124,7 +124,7 @@ namespace vcsn
         return make_automaton(concatenate(l, r));
       }
 
-      REGISTER_DECLARE2(concatenate,
+      REGISTER_DECLARE(concatenate,
                         (const automaton&, const automaton&) -> automaton);
 
       /*-------------.
@@ -139,7 +139,7 @@ namespace vcsn
         return make_automaton(chain(aut, n));
       }
 
-      REGISTER_DECLARE2(chain,
+      REGISTER_DECLARE(chain,
                         (const automaton& aut, unsigned n) -> automaton);
     }
   }

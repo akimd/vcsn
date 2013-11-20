@@ -7,7 +7,7 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE2(u);
+    REGISTER_DEFINE(u);
 
     automaton
     u(const context& ctx, unsigned n)

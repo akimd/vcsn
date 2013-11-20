@@ -175,7 +175,7 @@ namespace vcsn
         return out;
       }
 
-      REGISTER_DECLARE2(info,
+      REGISTER_DECLARE(info,
                         (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
@@ -221,7 +221,7 @@ namespace vcsn
         return o;
       }
 
-      REGISTER_DECLARE2(info_exp,
+      REGISTER_DECLARE(info_exp,
                         (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }

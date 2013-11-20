@@ -75,7 +75,7 @@ namespace vcsn
         return make_automaton(u<Ctx>(c, n));
       }
 
-      REGISTER_DECLARE2(u,
+      REGISTER_DECLARE(u,
                         (const context& ctx, unsigned n) -> automaton);
     }
   }

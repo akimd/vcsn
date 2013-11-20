@@ -103,7 +103,7 @@ namespace vcsn
     | fado(aut).  |
     `------------*/
 
-    REGISTER_DEFINE2(fado);
+    REGISTER_DEFINE(fado);
 
     std::ostream&
     fado(const automaton& aut, std::ostream& out)

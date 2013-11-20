@@ -11,7 +11,7 @@ namespace vcsn
     | dot.  |
     `------*/
 
-    REGISTER_DEFINE2(dot);
+    REGISTER_DEFINE(dot);
 
     std::ostream&
     dot(const automaton& aut, std::ostream& out)

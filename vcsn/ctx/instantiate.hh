@@ -132,16 +132,8 @@ namespace vcsn
   | Register the abstract functions.  |
   `----------------------------------*/
 
-#define REGISTER(Algo, Type)                    \
-  Algo ## _register(sname<Type>(), Algo<Type>)
-
-#define REGISTER2(Algo, Type1, Type2)                   \
-  Algo ## _register(sname<Type1>(), sname<Type2>(),     \
-                    Algo<Type1, Type2>)
-
-#define REGISTER3(Algo, Type1, Type2, Type3)                            \
-  Algo ## _register(sname<Type1>(), sname<Type2>(), sname<Type3>(),     \
-                    Algo<Type1, Type2, Type3>)
+#define REGISTER(Algo, ...)                                     \
+  Algo ## _register(sname<__VA_ARGS__>(), Algo<__VA_ARGS__>)
 
   namespace ctx
   {
@@ -163,29 +155,29 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(complete, aut_t);
-        REGISTER2(de_bruijn, Ctx, unsigned);
-        REGISTER2(derivation, rs_t, const std::string);
+        REGISTER(de_bruijn, Ctx, unsigned);
+        REGISTER(derivation, rs_t, const std::string);
         REGISTER(derived_term, rs_t);
-        REGISTER2(difference, aut_t, bool_aut_t);
-        REGISTER3(divkbaseb, Ctx, unsigned, unsigned);
+        REGISTER(difference, aut_t, bool_aut_t);
+        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx);
-        REGISTER2(enumerate, aut_t, unsigned);
-        REGISTER2(eval, aut_t, const std::string);
-        REGISTER2(infiltration, aut_t, aut_t);
+        REGISTER(enumerate, aut_t, unsigned);
+        REGISTER(eval, aut_t, const std::string);
+        REGISTER(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
-        REGISTER2(ladybird, Ctx, unsigned);
-        REGISTER2(list_polynomial, wps_t, std::ostream);
-        REGISTER2(print_polynomial, wps_t, std::ostream);
-        REGISTER2(power, aut_t, unsigned);
-        REGISTER2(product, aut_t, aut_t);
-        REGISTER2(product, aut_t, bool_aut_t);
-        REGISTER2(product, bool_aut_t, aut_t);
+        REGISTER(ladybird, Ctx, unsigned);
+        REGISTER(list_polynomial, wps_t, std::ostream);
+        REGISTER(print_polynomial, wps_t, std::ostream);
+        REGISTER(power, aut_t, unsigned);
+        REGISTER(product, aut_t, aut_t);
+        REGISTER(product, aut_t, bool_aut_t);
+        REGISTER(product, bool_aut_t, aut_t);
         REGISTER(random, Ctx);
-        REGISTER2(shortest, aut_t, unsigned);
-        REGISTER2(shuffle, aut_t, aut_t);
-        REGISTER2(u, Ctx, unsigned);
+        REGISTER(shortest, aut_t, unsigned);
+        REGISTER(shuffle, aut_t, aut_t);
+        REGISTER(u, Ctx, unsigned);
 
         return true;
       }
@@ -198,14 +190,14 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER2(de_bruijn, Ctx, unsigned);
-        REGISTER3(divkbaseb, Ctx, unsigned, unsigned);
+        REGISTER(de_bruijn, Ctx, unsigned);
+        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx);
-        REGISTER2(ladybird, Ctx, unsigned);
+        REGISTER(ladybird, Ctx, unsigned);
         REGISTER(proper, aut_t);
         REGISTER(random, Ctx);
         REGISTER(thompson, rs_t);
-        REGISTER2(u, Ctx, unsigned);
+        REGISTER(u, Ctx, unsigned);
 
         return true;
       }
@@ -217,7 +209,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-        REGISTER2(eliminate_state, aut_t, int);
+        REGISTER(eliminate_state, aut_t, int);
 
         return true;
       }
@@ -255,19 +247,19 @@ namespace vcsn
 
         REGISTER(accessible, aut_t);
         REGISTER(aut_to_exp, aut_t);
-        REGISTER2(chain, aut_t, unsigned);
+        REGISTER(chain, aut_t, unsigned);
         REGISTER(coaccessible, aut_t);
-        REGISTER2(concatenate, aut_t, aut_t);
+        REGISTER(concatenate, aut_t, aut_t);
         REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
-        REGISTER2(dot, aut_t, std::ostream);
-        REGISTER2(dot, taut_t, std::ostream);
-        REGISTER2(efsm, aut_t, std::ostream);
-        REGISTER2(efsm, taut_t, std::ostream);
+        REGISTER(dot, aut_t, std::ostream);
+        REGISTER(dot, taut_t, std::ostream);
+        REGISTER(efsm, aut_t, std::ostream);
+        REGISTER(efsm, taut_t, std::ostream);
         REGISTER(expand, rs_t);
-        REGISTER2(info, aut_t, std::ostream);
-        REGISTER2(info, taut_t, std::ostream);
-        REGISTER2(info_exp, rs_t, std::ostream);
+        REGISTER(info, aut_t, std::ostream);
+        REGISTER(info, taut_t, std::ostream);
+        REGISTER(info_exp, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
@@ -277,32 +269,32 @@ namespace vcsn
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_exp, rs_t);
-        REGISTER2(left_mult, aut_t, ws_t);
+        REGISTER(left_mult, aut_t, ws_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_exp, rs_t);
-        REGISTER2(list_polynomial, rps_t, std::ostream);
+        REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, Ctx);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
-        REGISTER2(print_exp, rs_t, std::ostream);
-        REGISTER2(print_polynomial, lps_t, std::ostream);
-        REGISTER2(print_polynomial, rps_t, std::ostream);
-        REGISTER2(print_weight, ws_t, std::ostream);
-        REGISTER2(read_polynomial, Ctx, std::istream);
-        REGISTER2(read_weight, Ctx, std::istream);
-        REGISTER2(right_mult, aut_t, ws_t);
+        REGISTER(print_exp, rs_t, std::ostream);
+        REGISTER(print_polynomial, lps_t, std::ostream);
+        REGISTER(print_polynomial, rps_t, std::ostream);
+        REGISTER(print_weight, ws_t, std::ostream);
+        REGISTER(read_polynomial, Ctx, std::istream);
+        REGISTER(read_weight, Ctx, std::istream);
+        REGISTER(right_mult, aut_t, ws_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);
         REGISTER(star_normal_form, rs_t);
-        REGISTER2(sum, aut_t, aut_t);
-        REGISTER2(tikz, aut_t, std::ostream);
-        REGISTER2(tikz, taut_t, std::ostream);
+        REGISTER(sum, aut_t, aut_t);
+        REGISTER(tikz, aut_t, std::ostream);
+        REGISTER(tikz, taut_t, std::ostream);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_exp, rs_t);
         REGISTER(trim, aut_t);
-        REGISTER2(union_a, aut_t, aut_t);
+        REGISTER(union_a, aut_t, aut_t);
 
         register_kind_functions<Ctx>(typename Ctx::kind_t());
         return true;
@@ -310,8 +302,6 @@ namespace vcsn
     }
   }
 
-# undef REGISTER3
-# undef REGISTER2
 # undef REGISTER
 
 # if VCSN_INSTANTIATION

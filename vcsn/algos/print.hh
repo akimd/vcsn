@@ -55,7 +55,7 @@ namespace vcsn
                                           p.polynomial(), o);
       }
 
-      REGISTER_DECLARE2(list_polynomial,
+      REGISTER_DECLARE(list_polynomial,
                         (const polynomial& p, std::ostream& o) -> std::ostream&);
 
       /// Bridge.
@@ -68,7 +68,7 @@ namespace vcsn
                                           p.polynomial(), o);
       }
 
-      REGISTER_DECLARE2(print_polynomial,
+      REGISTER_DECLARE(print_polynomial,
                         (const polynomial& p, std::ostream& o) -> std::ostream&);
     }
   }
@@ -104,7 +104,7 @@ namespace vcsn
         return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
       }
 
-      REGISTER_DECLARE2(print_exp,
+      REGISTER_DECLARE(print_exp,
                        (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }
@@ -136,7 +136,7 @@ namespace vcsn
         return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
       }
 
-      REGISTER_DECLARE2(print_weight,
+      REGISTER_DECLARE(print_weight,
                         (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }

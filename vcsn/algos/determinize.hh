@@ -202,7 +202,7 @@ namespace vcsn
         return make_automaton(determinize(a, complete));
       }
 
-      REGISTER_DECLARE2(determinize,
+      REGISTER_DECLARE(determinize,
                        (const automaton& aut, bool complete) -> automaton);
     }
   }

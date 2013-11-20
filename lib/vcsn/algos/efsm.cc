@@ -125,7 +125,7 @@ namespace vcsn
     | efsm(aut).  |
     `------------*/
 
-    REGISTER_DEFINE2(efsm);
+    REGISTER_DEFINE(efsm);
 
     std::ostream&
     efsm(const automaton& aut, std::ostream& out)

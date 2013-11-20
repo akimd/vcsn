@@ -490,7 +490,7 @@ namespace vcsn
                                derivation<RatExpSet>(rs, e.ratexp(), s));
       }
 
-      REGISTER_DECLARE2(derivation,
+      REGISTER_DECLARE(derivation,
                         (const ratexp& e, const std::string& s) -> polynomial);
     }
   }

@@ -6,7 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE2(concatenate);
+    REGISTER_DEFINE(concatenate);
 
     automaton
     concatenate(const automaton& lhs, const automaton& rhs)
@@ -14,7 +14,7 @@ namespace vcsn
       return detail::concatenate_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE2(chain);
+    REGISTER_DEFINE(chain);
 
     automaton
     chain(const automaton& aut, unsigned n)

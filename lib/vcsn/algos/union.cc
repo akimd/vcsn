@@ -6,7 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE2(union_a);
+    REGISTER_DEFINE(union_a);
 
     automaton
     union_a(const automaton& lhs, const automaton& rhs)

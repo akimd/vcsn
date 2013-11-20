@@ -63,7 +63,7 @@ namespace vcsn
         return make_automaton(divkbaseb<Ctx>(c, divisor, base));
       }
 
-      REGISTER_DECLARE3
+      REGISTER_DECLARE
       (divkbaseb,
        (const context& ctx, unsigned k, unsigned b) -> automaton);
     }

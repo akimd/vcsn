@@ -11,7 +11,7 @@ namespace vcsn
     | grail.  |
     `--------*/
 
-    REGISTER_DEFINE2(grail);
+    REGISTER_DEFINE(grail);
 
     std::ostream&
     grail(const automaton& aut, std::ostream& out)

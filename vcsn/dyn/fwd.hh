@@ -70,19 +70,4 @@ namespace vcsn
   bool Name ## _register(const std::string& type1,                      \
                          Name ## _t fn);
 
-# define REGISTER_DECLARE2(Name, Signature)                             \
-  using Name ## _t = auto Signature;                                    \
-  LIBVCSN_API                                                           \
-  bool Name ## _register(const std::string& type1,                      \
-                         const std::string& type2,                      \
-                         Name ## _t fn);
-
-# define REGISTER_DECLARE3(Name, Signature)                             \
-  using Name ## _t = auto Signature;                                    \
-  LIBVCSN_API                                                           \
-  bool Name ## _register(const std::string& type1,                      \
-                         const std::string& type2,                      \
-                         const std::string& type3,                      \
-                         Name ## _t fn);
-
 #endif // !VCSN_DYN_FWD_HH

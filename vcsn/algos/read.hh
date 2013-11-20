@@ -39,7 +39,7 @@ namespace vcsn
         return make_polynomial(ps, res);
       }
 
-      REGISTER_DECLARE2(read_polynomial,
+      REGISTER_DECLARE(read_polynomial,
                         (const context& ctx, std::istream& is) -> polynomial);
     }
   }
@@ -73,7 +73,7 @@ namespace vcsn
         return make_weight(*c.weightset(), res);
       }
 
-      REGISTER_DECLARE2(read_weight,
+      REGISTER_DECLARE(read_weight,
                        (const context& ctx, std::istream& is) -> weight);
     }
   }

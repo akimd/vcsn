@@ -7,7 +7,7 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE2(de_bruijn);
+    REGISTER_DEFINE(de_bruijn);
 
     automaton
     de_bruijn(const context& ctx, unsigned n)

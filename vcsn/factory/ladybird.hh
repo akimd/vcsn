@@ -51,7 +51,7 @@ namespace vcsn
         return make_automaton(ladybird<Ctx>(c, n));
       }
 
-      REGISTER_DECLARE2(ladybird,
+      REGISTER_DECLARE(ladybird,
                        (const dyn::context& ctx, unsigned n) -> automaton);
     }
   }

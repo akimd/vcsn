@@ -451,7 +451,7 @@ namespace vcsn
         return make_automaton(product(l, r));
       }
 
-      REGISTER_DECLARE2(product,
+      REGISTER_DECLARE(product,
                         (const automaton&, const automaton&) -> automaton);
 
 
@@ -469,7 +469,7 @@ namespace vcsn
         return make_automaton(shuffle(l, r));
       }
 
-      REGISTER_DECLARE2(shuffle,
+      REGISTER_DECLARE(shuffle,
                         (const automaton&, const automaton&) -> automaton);
 
 
@@ -487,7 +487,7 @@ namespace vcsn
         return make_automaton(infiltration(l, r));
       }
 
-      REGISTER_DECLARE2(infiltration,
+      REGISTER_DECLARE(infiltration,
                         (const automaton&, const automaton&) -> automaton);
 
 
@@ -504,7 +504,7 @@ namespace vcsn
         return make_automaton(power(a, n));
       }
 
-      REGISTER_DECLARE2(power,
+      REGISTER_DECLARE(power,
                         (const automaton&, unsigned) -> automaton);
     }
   }

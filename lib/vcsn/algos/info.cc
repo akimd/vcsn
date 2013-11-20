@@ -11,7 +11,7 @@ namespace vcsn
     | info(automaton).  |
     `------------------*/
 
-    REGISTER_DEFINE2(info);
+    REGISTER_DEFINE(info);
 
     std::ostream&
     info(const automaton& aut, std::ostream& out)
@@ -24,7 +24,7 @@ namespace vcsn
     | info(ratexp).  |
     `---------------*/
 
-    REGISTER_DEFINE2(info_exp);
+    REGISTER_DEFINE(info_exp);
 
     std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)

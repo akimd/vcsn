@@ -163,7 +163,7 @@ namespace vcsn
         return dot(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE2(dot,
+      REGISTER_DECLARE(dot,
                         (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }

@@ -13,7 +13,7 @@ namespace vcsn
     | eval.  |
     `-------*/
 
-    REGISTER_DEFINE2(eval);
+    REGISTER_DEFINE(eval);
 
     dyn::weight
     eval(const automaton& aut, const std::string& s)

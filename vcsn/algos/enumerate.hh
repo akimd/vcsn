@@ -225,7 +225,7 @@ namespace vcsn
         return make_polynomial(ps, enumerate(a, max));
       }
 
-      REGISTER_DECLARE2
+      REGISTER_DECLARE
       (enumerate,
        (const automaton& aut, unsigned max) -> polynomial);
 
@@ -243,7 +243,7 @@ namespace vcsn
         return make_polynomial(ps, shortest(a, num));
       }
 
-      REGISTER_DECLARE2(shortest,
+      REGISTER_DECLARE(shortest,
                         (const automaton& aut, unsigned num) -> polynomial);
     }
   }

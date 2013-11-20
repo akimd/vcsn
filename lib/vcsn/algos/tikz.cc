@@ -11,7 +11,7 @@ namespace vcsn
     | tikz.  |
     `-------*/
 
-    REGISTER_DEFINE2(tikz);
+    REGISTER_DEFINE(tikz);
 
     std::ostream&
     tikz(const automaton& aut, std::ostream& out)

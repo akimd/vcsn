@@ -60,8 +60,8 @@ namespace vcsn
     | print(polynomial, stream).  |
     `----------------------------*/
 
-    REGISTER_DEFINE2(list_polynomial);
-    REGISTER_DEFINE2(print_polynomial);
+    REGISTER_DEFINE(list_polynomial);
+    REGISTER_DEFINE(print_polynomial);
 
     std::ostream&
     print(const polynomial& p, std::ostream& out, const std::string& type)
@@ -83,7 +83,7 @@ namespace vcsn
     | print(ratexp, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE2(print_exp);
+    REGISTER_DEFINE(print_exp);
 
     std::ostream&
     print(const ratexp& exp, std::ostream& out, const std::string& type)
@@ -105,7 +105,7 @@ namespace vcsn
     | print(weight, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE2(print_weight);
+    REGISTER_DEFINE(print_weight);
 
     std::ostream&
     print(const dyn::weight& w, std::ostream& out, const std::string& type)

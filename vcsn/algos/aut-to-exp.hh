@@ -151,7 +151,7 @@ namespace vcsn
         return make_automaton(std::move(res));
       }
 
-      REGISTER_DECLARE2(eliminate_state,
+      REGISTER_DECLARE(eliminate_state,
                         (const automaton& aut, int) -> automaton);
     }
   }

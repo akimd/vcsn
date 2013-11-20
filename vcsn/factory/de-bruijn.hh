@@ -62,8 +62,8 @@ namespace vcsn
         return make_automaton(de_bruijn<Ctx>(c, n));
       }
 
-      REGISTER_DECLARE2(de_bruijn,
-                        (const context& ctx, unsigned n) -> automaton);
+      REGISTER_DECLARE(de_bruijn,
+                       (const context& ctx, unsigned n) -> automaton);
     }
   }
 

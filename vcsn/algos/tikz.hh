@@ -116,7 +116,7 @@ namespace vcsn
         return tikz(aut->as<Aut>(), out);
       }
 
-      REGISTER_DECLARE2(tikz,
+      REGISTER_DECLARE(tikz,
                         (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }

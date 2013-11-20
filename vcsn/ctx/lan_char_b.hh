@@ -54,12 +54,12 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
 
-#  define REGISTER2(Algo, Type1, Type2)                         \
-        Algo ## _register(sname<Type1>(), sname<Type2>(),       \
-                          Algo<Type1, Type2>)
-        REGISTER2(fado, aut_t, std::ostream);
-        REGISTER2(grail, aut_t, std::ostream);
-# undef REGISTER2
+#define REGISTER(Algo, ...)                                             \
+        Algo ## _register(sname<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+
+        REGISTER(fado, aut_t, std::ostream);
+        REGISTER(grail, aut_t, std::ostream);
+# undef REGISTER
         return true;
       }
 

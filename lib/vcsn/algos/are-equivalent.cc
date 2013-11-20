@@ -6,7 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE2(difference);
+    REGISTER_DEFINE(difference);
 
     automaton
     difference(const automaton& lhs, const automaton& rhs)
@@ -15,7 +15,7 @@ namespace vcsn
     }
 
 
-    REGISTER_DEFINE2(are_equivalent);
+    REGISTER_DEFINE(are_equivalent);
 
     bool
     are_equivalent(const automaton& lhs, const automaton& rhs)

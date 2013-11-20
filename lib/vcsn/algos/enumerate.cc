@@ -6,7 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE2(shortest);
+    REGISTER_DEFINE(shortest);
 
     polynomial
     shortest(const automaton& aut, unsigned num)
@@ -14,7 +14,7 @@ namespace vcsn
       return detail::shortest_registry().call(aut, num);
     }
 
-    REGISTER_DEFINE2(enumerate);
+    REGISTER_DEFINE(enumerate);
 
     polynomial
     enumerate(const automaton& aut, unsigned max)

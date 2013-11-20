@@ -102,7 +102,7 @@ namespace vcsn
         return make_weight(*ctx.weightset(), res);
       }
 
-      REGISTER_DECLARE2(eval,
+      REGISTER_DECLARE(eval,
                        (const automaton& aut, const std::string& s) -> weight);
     }
   }
