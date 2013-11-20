@@ -38,19 +38,22 @@ namespace vcsn
     res.set_final(states[n-1]);
 
     // The 'a' transitions.
+    auto a = letters[0];
     for (unsigned i = 0; i < n; ++i)
-      res.new_transition(states[i], states[(i+1) % n], letters[0]);
+      res.new_transition(states[i], states[(i+1) % n], a);
 
     // The 'b' transitions.
-    res.new_transition(states[0], states[1], letters[1]);
-    res.new_transition(states[1], states[0], letters[1]);
+    auto b = letters[1];
+    res.new_transition(states[0], states[1], b);
+    res.new_transition(states[1], states[0], b);
     for (unsigned i = 2; i < n; ++i)
-      res.new_transition(states[i], states[i], letters[1]);
+      res.new_transition(states[i], states[i], b);
 
     // The 'c' transitions.
+    auto c = letters[2];
     for (unsigned i = 0; i < n - 1; ++i)
-      res.new_transition(states[i], states[i], letters[2]);
-    res.new_transition(states[n - 1], states[0], letters[2]);
+      res.new_transition(states[i], states[i], c);
+    res.new_transition(states[n - 1], states[0], c);
 
     return res;
   }
