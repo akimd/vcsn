@@ -14,8 +14,7 @@ namespace vcsn
                      unsigned num_states, float density,
                      unsigned num_initial, unsigned num_final)
     {
-      return detail::random_registry().call(ctx->vname(false),
-                                            ctx, num_states, density,
+      return detail::random_registry().call(ctx, num_states, density,
                                             num_initial, num_final);
     }
   }

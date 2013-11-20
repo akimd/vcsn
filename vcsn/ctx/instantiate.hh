@@ -160,7 +160,7 @@ namespace vcsn
         REGISTER(derived_term, rs_t);
         REGISTER(difference, aut_t, bool_aut_t);
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
-        REGISTER(double_ring, Ctx);
+        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t, const std::string);
         REGISTER(infiltration, aut_t, aut_t);
@@ -174,7 +174,7 @@ namespace vcsn
         REGISTER(product, aut_t, aut_t);
         REGISTER(product, aut_t, bool_aut_t);
         REGISTER(product, bool_aut_t, aut_t);
-        REGISTER(random, Ctx);
+        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(u, Ctx, unsigned);
@@ -192,10 +192,10 @@ namespace vcsn
 
         REGISTER(de_bruijn, Ctx, unsigned);
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
-        REGISTER(double_ring, Ctx);
+        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(ladybird, Ctx, unsigned);
         REGISTER(proper, aut_t);
-        REGISTER(random, Ctx);
+        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(thompson, rs_t);
         REGISTER(u, Ctx, unsigned);
 

@@ -2,7 +2,8 @@
 # define VCSN_MISC_NAME_HH
 
 # include <initializer_list>
-# include <iostream> // std::ostream
+# include <iostream>
+# include <vector>
 # include <string>
 
 namespace vcsn
@@ -103,11 +104,13 @@ namespace vcsn
 
 
   DEFINE(bool);
+  DEFINE(float);
   DEFINE(int);
   DEFINE(unsigned);
 
   DEFINE(std::istream);
   DEFINE(const std::string);
+  DEFINE(const std::vector<unsigned>);
   DEFINE(std::ostream);
 #undef DEFINE
 

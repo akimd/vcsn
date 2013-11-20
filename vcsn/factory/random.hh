@@ -174,11 +174,8 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-------------------.
-      | dyn::random(aut).  |
-      `-------------------*/
       /// Bridge.
-      template <typename Ctx>
+      template <typename Ctx, typename, typename, typename, typename>
       automaton
       random(const context& ctx,
              unsigned num_states, float density,

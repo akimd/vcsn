@@ -12,10 +12,9 @@ namespace vcsn
     REGISTER_DEFINE(double_ring);
 
     automaton
-    double_ring(const context& ctx, unsigned n, std::vector<unsigned> f)
+    double_ring(const context& ctx, unsigned n, const std::vector<unsigned>& f)
     {
-      return detail::double_ring_registry().call(ctx->vname(false),
-                                               ctx, n, f);
+      return detail::double_ring_registry().call(ctx, n, f);
     }
   }
 }
