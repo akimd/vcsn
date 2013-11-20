@@ -8,6 +8,23 @@
 namespace vcsn
 {
 
+  /// A key encoding type strings of \a a and \a b.
+  inline
+  std::string
+  vname(std::initializer_list<std::string> l)
+  {
+    std::string res;
+    bool first = true;
+    for (auto s: l)
+      {
+        if (!first)
+          res += " x ";
+        first = false;
+        res += s;
+      }
+    return res;
+  }
+
   /*---------------.
   | Static names.  |
   `---------------*/
@@ -85,23 +102,6 @@ namespace vcsn
   DEFINE(const std::string);
   DEFINE(std::ostream);
 #undef DEFINE
-
-  /// A key encoding type strings of \a a and \a b.
-  inline
-  std::string
-  vname(std::initializer_list<std::string> l)
-  {
-    std::string res;
-    bool first = true;
-    for (auto s: l)
-      {
-        if (!first)
-          res += " x ";
-        first = false;
-        res += s;
-      }
-    return res;
-  }
 
   /// A key encoding types of \a a and \a b.
   template <typename ... Args>
