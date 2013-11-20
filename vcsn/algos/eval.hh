@@ -90,7 +90,8 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      /// Bridge.
+      template <typename Aut, typename String>
       auto
       eval(const automaton& aut, const std::string& s)
         -> weight
@@ -101,7 +102,7 @@ namespace vcsn
         return make_weight(*ctx.weightset(), res);
       }
 
-      REGISTER_DECLARE(eval,
+      REGISTER_DECLARE2(eval,
                        (const automaton& aut, const std::string& s) -> weight);
     }
   }

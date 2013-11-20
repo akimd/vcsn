@@ -10,12 +10,12 @@ namespace vcsn
     /*--------------------------.
     | derivation(exp, string).  |
     `--------------------------*/
-    REGISTER_DEFINE(derivation);
+    REGISTER_DEFINE2(derivation);
 
     polynomial
     derivation(const ratexp& e, const std::string& s)
     {
-      return detail::derivation_registry().call(e->vname(false), e, s);
+      return detail::derivation_registry().call(e, s);
     }
 
     /*--------------------.

@@ -164,13 +164,13 @@ namespace vcsn
 
         REGISTER(complete, aut_t);
         REGISTER2(de_bruijn, Ctx, unsigned);
-        REGISTER(derivation, rs_t);
+        REGISTER2(derivation, rs_t, const std::string);
         REGISTER(derived_term, rs_t);
         REGISTER2(difference, aut_t, bool_aut_t);
         REGISTER3(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx);
         REGISTER2(enumerate, aut_t, unsigned);
-        REGISTER(eval, aut_t);
+        REGISTER2(eval, aut_t, const std::string);
         REGISTER2(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);

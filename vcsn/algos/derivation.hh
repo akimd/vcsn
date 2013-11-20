@@ -479,7 +479,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename RatExpSet, typename String>
       polynomial
       derivation(const ratexp& exp, const std::string& s)
       {
@@ -490,8 +490,8 @@ namespace vcsn
                                derivation<RatExpSet>(rs, e.ratexp(), s));
       }
 
-      REGISTER_DECLARE(derivation,
-                       (const ratexp& e, const std::string& s) -> polynomial);
+      REGISTER_DECLARE2(derivation,
+                        (const ratexp& e, const std::string& s) -> polynomial);
     }
   }
 
@@ -646,7 +646,7 @@ namespace vcsn
       {
         const auto& r = exp->as<RatExpSet>();
         return make_automaton(derived_term(r.get_ratexpset(),
-                                            r.ratexp()));
+                                           r.ratexp()));
       }
 
       REGISTER_DECLARE(derived_term,
