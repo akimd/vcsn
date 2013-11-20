@@ -1,0 +1,7 @@
+digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  0 -> 1 [label = a]
+  1 -> F1
+  I0 -> 0
+}

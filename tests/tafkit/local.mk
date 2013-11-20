@@ -64,6 +64,14 @@ EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/lao-elim-0.gv              \
   %D%/aut-to-exp.dir/lao-elim-1.gv              \
   %D%/aut-to-exp.dir/lao-elim-2.gv              \
+  %D%/cat.dir/lal_char_b.in.gv                  \
+  %D%/cat.dir/lal_char_b.out.gv                 \
+  %D%/cat.dir/lan_char_b.in.gv                  \
+  %D%/cat.dir/lan_char_b.out.gv                 \
+  %D%/cat.dir/lao_z.in.gv                       \
+  %D%/cat.dir/lao_z.out.gv                      \
+  %D%/cat.dir/pyramid.in.gv                     \
+  %D%/cat.dir/pyramid.out.gv                    \
   %D%/derivation.dir/a?-dt.gv                   \
   %D%/derivation.dir/e1-dt.gv                   \
   %D%/derivation.dir/e2-dt.gv                   \
@@ -107,6 +115,7 @@ EXTRA_DIST +=                                   \
   %D%/union.dir/abc.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/cat.log:         $(wildcard $(srcdir)/%D%/cat.dir/*)
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
