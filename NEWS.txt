@@ -116,7 +116,7 @@ After:
       0.87s: infiltration -q -f a70.gv a70.gv
 
 * 2013-10-30
-** TAF-Kit: option name changes.
+** TAF-Kit: option name changes
 The former options -W and -L (to specify the weightset and labelset) are
 removed, definitively replaced by -C, to specify the context.
 
