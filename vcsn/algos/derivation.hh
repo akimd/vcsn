@@ -132,13 +132,15 @@ namespace vcsn
         for (const auto& v: e)
           {
             v->accept(*this);
-            res = ps_.add(res, res_);
+            ps_.add_weight(res, res_);
           }
         res_ = res;
         apply_weights(e);
       }
 
-      /// Split a binary product.
+      /// The split-product of \a l with \a r.
+      ///
+      /// Returns split(l) x split(r).
       polynomial_t product(const ratexp_t& l, const ratexp_t& r)
       {
         polynomial_t l_split = split(l);
@@ -150,12 +152,14 @@ namespace vcsn
                        ps_.lmul(l_split_const, split(r)));
       }
 
-      /// Split a binary product.
+      /// The split-product of \a l with \a r.
+      ///
+      /// Returns l x split(r).
       polynomial_t product(const polynomial_t& l, const ratexp_t& r)
       {
         polynomial_t res;
         for (const auto& m: l)
-          res = ps_.add(res, ps_.lmul(m.second, product(m.first, r)));
+          ps_.add_weight(res, ps_.lmul(m.second, product(m.first, r)));
         return res;
       }
 
@@ -347,7 +351,7 @@ namespace vcsn
         for (const auto& v: e)
           {
             v->accept(*this);
-            res = ps_.add(res, res_);
+            ps_.add_weight(res, res_);
           }
         res_ = res;
         apply_weights(e);
@@ -367,7 +371,7 @@ namespace vcsn
             v->accept(*this);
             for (unsigned j = i + 1; j < n; ++j)
               res_ = ps_.rmul(res_, e[j]);
-            res = ps_.add(res, ps_.lmul(constant, res_));
+            ps_.add_weight(res, ps_.lmul(constant, res_));
             constant = ws_.mul(constant, constant_term(rs_, v));
           }
         res_ = res;

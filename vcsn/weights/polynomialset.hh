@@ -83,19 +83,30 @@ namespace vcsn
       return v;
     }
 
+    /// v += p.
+    value_t&
+    add_weight(value_t& v, const value_t& p) const
+    {
+      for (const auto& m: p)
+        add_weight(v, m);
+      return v;
+    }
+
+    /// v += m.
     value_t&
     add_weight(value_t& v, const monomial_t& p) const
     {
       return add_weight(v, p.first, p.second);
     }
 
+    /// v += (l, k).
     value_t&
-    add_weight(value_t& v, const label_t& w, const weight_t k) const
+    add_weight(value_t& v, const label_t& l, const weight_t k) const
     {
-      auto i = v.find(w);
+      auto i = v.find(l);
       if (i == v.end())
         {
-          set_weight(v, w, k);
+          set_weight(v, l, k);
         }
       else
         {
