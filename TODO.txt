@@ -14,6 +14,9 @@ Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
+** broken derived-term is... broken
+$ VCSN_ORIGINS=1 ./_build/48s/bin/vcsn-derived-term -C 'lal_char(ab)_q' -e '(<1/2>a+<1/2>b)*&(<1/3>aaa)' |teedot | ./_build/48s/bin/vcsn-shortest -f - 4 
+
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
@@ -56,6 +59,10 @@ It does not work for weighted ratexps.
 
 ** intersection
 Check star-normal-form, standard, thompson.  Check the trivial identities.
+What should be the definition of the B (breaking/splitting) operator?  I
+have taken a definition which is modeled after the one of concatenation (on
+order "not to break too much") rather that something like expand.  What are
+the expected features of the right definition?
 
 * Benchmarks
 ** determinization

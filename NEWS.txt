@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-11-22
+** split: new algorithm (static, dynamic, TAF-Kit)
+Implements the breaking of a ratexp into a polynomial of ratexps, as
+required by breaking derivation, and broken derived terms.  Not named
+"break", as this is a C++ keyword.
+
+
+
 * 2013-11-20
 ** products accept heterogenous arguments
 It is now possible to compute the (regular, infiltration and shuffle)

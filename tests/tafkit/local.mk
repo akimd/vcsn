@@ -47,6 +47,7 @@
   %D%/proper.chk                                \
   %D%/random.chk                                \
   %D%/shuffle.chk                               \
+  %D%/split.chk                                 \
   %D%/standard.chk                              \
   %D%/star.chk                                  \
   %D%/star-normal-form.chk                      \

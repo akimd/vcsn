@@ -141,13 +141,17 @@ namespace vcsn
       /// The split-product of \a l with \a r.
       ///
       /// Returns split(l) x split(r).
+      /// FIXME: This is inefficient, we split the lhs way too often.
       polynomial_t product(const ratexp_t& l, const ratexp_t& r)
       {
+        // B(l).
         polynomial_t l_split = split(l);
+        // constant-term(B(l)).
         weight_t l_split_const = ps_.get_weight(l_split, rs_.one());
         // proper(B(l)).
         ps_.del_weight(l_split, rs_.one());
 
+        // res = proper(B(l)).r + constant-term(B(l))B(r).
         return ps_.add(ps_.rmul(l_split, r),
                        ps_.lmul(l_split_const, split(r)));
       }
@@ -174,14 +178,47 @@ namespace vcsn
         apply_weights(e);
       }
 
+      /// The split-product of \a l with \a r.
+      ///
+      /// Returns split(l) x split(r).
+      /// FIXME: This is inefficient, we split the lhs way too often.
+      polynomial_t intersection(const ratexp_t& l, const ratexp_t& r)
+      {
+        // B(l).
+        polynomial_t l_split = split(l);
+        // constant-term(B(l)).
+        weight_t l_split_const = ps_.get_weight(l_split, rs_.one());
+        // proper(B(l)).
+        ps_.del_weight(l_split, rs_.one());
+
+        // res = proper(B(l))&r.
+        polynomial_t res;
+        for (const auto& e: l_split)
+          ps_.add_weight(res, rs_.intersection(e.first, r), e.second);
+        // res += constant-term(B(l))B(r)
+        ps_.add_weight(res,
+                       ps_.lmul(l_split_const, split(r)));
+        return res;
+      }
+
+      /// The split-product of \a l with \a r.
+      ///
+      /// Returns l x split(r).
+      polynomial_t intersection(const polynomial_t& l, const ratexp_t& r)
+      {
+        polynomial_t res;
+        for (const auto& m: l)
+          ps_.add_weight(res, ps_.lmul(m.second, intersection(m.first, r)));
+        return res;
+      }
+
       /// Handle an n-ary intersection.
       virtual void
       visit(const intersection_t& e)
       {
-        // FIXME: duplication with prod_t.
-        auto res = product(e[0], e[1]);
+        auto res = intersection(e[0], e[1]);
         for (unsigned i = 2, n = e.size(); i < n; ++i)
-          res = product(res, e[i]);
+          res = intersection(res, e[i]);
         res_ = std::move(res);
         apply_weights(e);
       }
