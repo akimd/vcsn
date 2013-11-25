@@ -9,6 +9,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/ratexpset.hh>
+# include <vcsn/core/rat/ratexpset.hh>
 
 namespace vcsn
 {
@@ -59,7 +60,7 @@ namespace vcsn
       make_ratexpset(const context& ctx)
       {
         const auto& c = ctx->as<Ctx>();
-        return ::vcsn::dyn::make_ratexpset(typename Ctx::ratexpset_t(c));
+        return ::vcsn::dyn::make_ratexpset(::vcsn::ratexpset<Ctx>(c));
       }
 
       REGISTER_DECLARE(make_ratexpset,

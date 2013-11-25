@@ -7,7 +7,6 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/fwd.hh>
-# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -40,7 +39,6 @@ namespace vcsn
       /// Type of RatExp ratexps objects.
       using node_t = rat::node<label_t, weight_t>;
       using ratexp_t = std::shared_ptr<const node_t>;
-      using ratexpset_t = typename vcsn::ratexpset<context>;
       /// Type of RatExp visitor.
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
@@ -126,12 +124,6 @@ namespace vcsn
       const weightset_ptr& weightset() const
       {
         return ws_;
-      }
-
-      std::string format(const ratexp_t& e) const
-      {
-        ratexpset_t ks{*this};
-        return ks.format(e);
       }
 
     private:
