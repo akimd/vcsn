@@ -210,8 +210,8 @@ namespace vcsn
 	  res = zero();
       }
     // 1&a = 0, a&1 = 0.
-    else if (l->type() == type_t::one && r->type() == type_t::atom
-             || l->type() == type_t::atom && r->type() == type_t::one)
+    else if ((l->type() == type_t::one && r->type() == type_t::atom)
+             || (l->type() == type_t::atom && r->type() == type_t::one))
       res = zero();
     // END: Trivial Identity
     else
