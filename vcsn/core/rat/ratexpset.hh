@@ -57,7 +57,7 @@ namespace vcsn
     /// Static description key.
     static std::string sname();
     /// Dynamic description key.
-    virtual std::string vname(bool full = true) const;
+    std::string vname(bool full = true) const;
     /// Build from the description in \a is.
     static ratexpset make(std::istream& is);
 
