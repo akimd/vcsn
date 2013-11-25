@@ -3,7 +3,6 @@
 
 # include <iostream>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/cast.hh>
 
 namespace vcsn
 {

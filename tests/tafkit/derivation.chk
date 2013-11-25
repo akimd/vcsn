@@ -223,7 +223,7 @@ check "$E2t" a "$F2 + a*.a.($F2)"
 check "$E2t" b "b*.a.($F2)"
 
 # Example 2.
-check "$E2t" aa "a*+b* + a*.a.($F2) + a*"
+check "$E2t" aa "a* + a*+b* + a*.a.($F2)"
 check "$E2t" ab 'b*'
 check "$E2t" ba "$F2"
 check "$E2t" bb "b*.a.($F2)"
@@ -238,9 +238,9 @@ run 0 "a*.a.($F2) + b*.a.($F2)" -vcsn split -e "$E2"
 run 0 "a* + b*" -vcsn split -e "$F2"
 
 # Example 5.
-check_br "$E2t"  a "a*.a.($F2) + a* + b*"
+check_br "$E2t"  a "a* + b* + a*.a.($F2)"
 check_br "$E2t"  b "b*.a.($F2)"
-check_br "$E2t" aa "a*.a.($F2) + a* + b*"
+check_br "$E2t" aa "a* + b* + a*.a.($F2)"
 check_br "$E2t" ab 'b*'
 check_br "$E2t" ba "a* + b*"
 check_br "$E2t" bb "b*.a.($F2)"

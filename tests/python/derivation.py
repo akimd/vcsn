@@ -63,7 +63,7 @@ check('<x>a:<y>b:<z>c', 'b', '<y><x>a:\e:<z>c')
 check('<x>a:<y>b:<z>c', 'c', '<z><x>a:<y>b:\e')
 
 check('(<x>a<y>b)*:(<x>a<x>c)*',
-      'a', '<x><y>b.(<x>a.<y>b)*:(<x>a.<x>c)* + <x>(<x>a.<y>b)*:<x>c.(<x>a.<x>c)*')
+      'a', '<x>(<x>a.<y>b)*:<x>c.(<x>a.<x>c)* + <x><y>b.(<x>a.<y>b)*:(<x>a.<x>c)*')
 check('(<x>a<y>b)*:(<x>a<x>c)*', 'b', '\z')
 check('(<x>a<y>b)*:(<x>a<x>c)*', 'c', '\z')
 

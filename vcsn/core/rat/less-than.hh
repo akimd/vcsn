@@ -4,6 +4,7 @@
 # include <vcsn/misc/cast.hh>
 
 # include <vcsn/core/rat/fwd.hh>
+# include <vcsn/core/rat/size.hh>
 
 namespace vcsn
 {
@@ -48,7 +49,15 @@ namespace vcsn
       bool
       operator()(ratexp_t lhs, ratexp_t rhs)
       {
-        if (lhs->type() < rhs->type())
+        rat::size<RatExpSet> sizer;
+        size_t lhss = sizer(lhs);
+        size_t rhss = sizer(rhs);
+
+        if (lhss < rhss)
+          return true;
+        else if (lhss > rhss)
+          return false;
+        else if (lhs->type() < rhs->type())
           return true;
         else if (lhs->type() > rhs->type())
           return false;

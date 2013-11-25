@@ -106,6 +106,7 @@ check_info ()
 
 check_info -Ee '(?@lal_char(abc)_b)abc' <<\EOF
 type: ratexpset<lal_char(abc)_b>
+size: 5
 sum: 0
 shuffle: 0
 intersection: 0
@@ -121,6 +122,7 @@ EOF
 
 check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<\EOF
 type: ratexpset<lal_char(abc)_b>
+size: 6
 sum: 1
 shuffle: 0
 intersection: 0
@@ -136,6 +138,7 @@ EOF
 
 check_info -Ee '(?@lal_char(abc)_z)<2>a<3>' <<\EOF
 type: ratexpset<lal_char(abc)_z>
+size: 2
 sum: 0
 shuffle: 0
 intersection: 0
@@ -151,6 +154,7 @@ EOF
 
 check_info -Ee '(?@lal_char(abc)_z)<2>(a+b)<3>' <<\EOF
 type: ratexpset<lal_char(abc)_z>
+size: 5
 sum: 1
 shuffle: 0
 intersection: 0

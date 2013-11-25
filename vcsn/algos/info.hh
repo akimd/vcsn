@@ -192,10 +192,13 @@ namespace vcsn
   {
     vcsn::rat::info<RatExpSet> nfo;
     nfo(*e);
+
+    vcsn::rat::size<RatExpSet> sizer;
 # define DEFINE(Type)                            \
     << '\n' << #Type ": " << nfo.Type
     o
       << "type: " << rs.vname(true)
+      << "\nsize: " << sizer(e)
       DEFINE(sum)
       DEFINE(shuffle)
       DEFINE(intersection)
