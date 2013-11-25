@@ -23,12 +23,14 @@ namespace vcsn
         ///              if false, same as sname.
         virtual std::string vname(bool full = true) const = 0;
 
+        /// Extract wrapped typed ratexp.
         template <typename RatExpSet>
         ratexp_wrapper<RatExpSet>& as()
         {
           return dynamic_cast<ratexp_wrapper<RatExpSet>&>(*this);
         }
 
+        /// Extract wrapped typed ratexp.
         template <typename RatExpSet>
         const ratexp_wrapper<RatExpSet>& as() const
         {

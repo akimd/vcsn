@@ -49,7 +49,7 @@ namespace vcsn
       {}
 
       /// \param ls  the labelset
-      /// \param ws  the weight set
+      /// \param ws  the weightset
       context(const labelset_ptr& ls, const weightset_ptr& ws)
         : ls_{ls}
         , ws_{ws}
@@ -57,7 +57,7 @@ namespace vcsn
 
       /// Build a context.
       /// \param ls  the labelset
-      /// \param ws  the weight set
+      /// \param ws  the weightset
       context(const labelset_t& ls, const weightset_t& ws = {})
         : context{std::make_shared<const labelset_t>(ls),
                   std::make_shared<const weightset_t>(ws)}
@@ -65,7 +65,7 @@ namespace vcsn
 
       /// Build a context.
       /// \param gs  the generators
-      /// \param ws  the weight set
+      /// \param ws  the weightset
       //
       // It would be simpler to just use "= {}", but the C++ standard
       // does not support it (and this is properly considered a

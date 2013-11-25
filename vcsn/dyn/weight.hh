@@ -22,12 +22,14 @@ namespace vcsn
         ///              if false, same as sname.
         virtual std::string vname(bool full = true) const = 0;
 
+        /// Extract wrapped typed weight.
         template <typename WeightSet>
         weight_wrapper<WeightSet>& as()
         {
           return dynamic_cast<weight_wrapper<WeightSet>&>(*this);
         }
 
+        /// Extract wrapped typed weight.
         template <typename WeightSet>
         const weight_wrapper<WeightSet>& as() const
         {
@@ -43,10 +45,9 @@ namespace vcsn
         using weightset_t = WeightSet;
         using super_type = weight_base;
         using weight_t = typename weightset_t::value_t;
-        weight_wrapper(const weight_t& weight,
-                                 const weightset_t& weightset)
-          : weight_(weight)
-          , weightset_(weightset)
+        weight_wrapper(const weight_t& w, const weightset_t& ws)
+          : weight_(w)
+          , weightset_(ws)
         {}
 
         virtual std::string vname(bool full = true) const override
@@ -79,10 +80,9 @@ namespace vcsn
     inline
     weight
     make_weight(const WeightSet& ws,
-                const typename WeightSet::value_t& weight)
+                const typename WeightSet::value_t& w)
     {
-      return std::make_shared<detail::weight_wrapper<WeightSet>>
-        (weight, ws);
+      return std::make_shared<detail::weight_wrapper<WeightSet>>(w, ws);
     }
   } // namespace dyn
 } // namespace vcsn
