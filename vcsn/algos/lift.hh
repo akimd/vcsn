@@ -36,7 +36,7 @@ namespace vcsn
     lifted_context_t<Context>
     lift(const Context& ctx)
     {
-      auto rs_in = ctx.make_ratexpset();
+      auto rs_in = ratexpset<Context>(ctx);
       return {ctx::oneset{}, rs_in};
     }
 

@@ -80,6 +80,10 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.
 
+** Remove references to ratexp/ratexpset from context
+On second thought, while it is definitely handy, it is not normal that
+contexts depend on ratexpset.
+
 ** More documentation
 The Doxygen style documentation is way too poor.  Aim at completion.
 

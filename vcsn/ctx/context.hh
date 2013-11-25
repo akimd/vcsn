@@ -5,8 +5,9 @@
 # include <memory>
 # include <string>
 
-# include <vcsn/core/rat/fwd.hh>
 # include <vcsn/core/kind.hh>
+# include <vcsn/core/rat/fwd.hh>
+# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -125,12 +126,6 @@ namespace vcsn
       const weightset_ptr& weightset() const
       {
         return ws_;
-      }
-
-      ratexpset_t
-      make_ratexpset() const
-      {
-        return *this;
       }
 
       std::string format(const ratexp_t& e) const

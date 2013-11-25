@@ -1,10 +1,10 @@
 #undef NDEBUG
-#include <vcsn/algos/transpose.hh>
-#include <vcsn/core/rat/ratexpset.hh>
-#include <vcsn/labelset/wordset.hh>
-#include <vcsn/ctx/lal_char_b.hh>
-#include <vcsn/core/mutable_automaton.hh>
 #include <tests/unit/test.hh>
+#include <vcsn/algos/transpose.hh>
+#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/rat/ratexpset.hh>
+#include <vcsn/ctx/lal_char_b.hh>
+#include <vcsn/labelset/wordset.hh>
 
 
 static size_t
@@ -13,7 +13,7 @@ check_mutable_automaton()
   size_t nerrs = 0;
   // labels_are_letters (w, x, y, z) for weights.
   auto ctx_b = vcsn::ctx::lal_char_b{{'w', 'x', 'y', 'z'}};
-  auto ks_b = ctx_b.make_ratexpset();
+  auto ks_b = vcsn::ratexpset<vcsn::ctx::lal_char_b>(ctx_b);
   // labels_are_words (a, b, c, d) for labels.
   auto ctx_br =
     vcsn::ctx::context<vcsn::ctx::wordset<vcsn::set_alphabet<vcsn::char_letters>>,
