@@ -22,7 +22,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lal_char_br);
+  VCSN_CTX_INSTANTIATE(ctx::lal_char_br);
 };
 
 #endif // !VCSN_CTX_LAL_CHAR_BR_HH

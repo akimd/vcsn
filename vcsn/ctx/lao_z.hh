@@ -17,7 +17,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lao_z);
+  VCSN_CTX_INSTANTIATE(ctx::lao_z);
 };
 
 #endif // !VCSN_CTX_LAO_Z_HH

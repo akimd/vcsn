@@ -18,7 +18,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(law_char_zr);
+  VCSN_CTX_INSTANTIATE(ctx::law_char_zr);
 };
 
 #endif // !VCSN_CTX_LAW_CHAR_ZR_HH

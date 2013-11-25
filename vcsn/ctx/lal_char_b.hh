@@ -24,7 +24,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lal_char_b);
+  VCSN_CTX_INSTANTIATE(ctx::lal_char_b);
 
   MAYBE_EXTERN template
   auto

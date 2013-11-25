@@ -17,7 +17,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lan_char_z);
+  VCSN_CTX_INSTANTIATE(ctx::lan_char_z);
 };
 
 #endif // !VCSN_CTX_LAN_CHAR_Z_HH

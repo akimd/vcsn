@@ -18,7 +18,7 @@ namespace vcsn
 
 namespace vcsn
 {
-  VCSN_CTX_INSTANTIATE(lan_char_b);
+  VCSN_CTX_INSTANTIATE(ctx::lan_char_b);
 
   /* fado. */
   MAYBE_EXTERN template

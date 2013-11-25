@@ -322,7 +322,7 @@ namespace vcsn
 # endif
 
 # define VCSN_CTX_INSTANTIATE(Ctx)              \
-  VCSN_CTX_INSTANTIATE_1(ctx::Ctx);             \
+  VCSN_CTX_INSTANTIATE_1(Ctx);                  \
   VCSN_CTX_INSTANTIATE_2(Ctx)
 
 # ifndef MAYBE_EXTERN
