@@ -125,6 +125,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/polynomial.hh                         \
+  %D%/dyn/label.hh                              \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \

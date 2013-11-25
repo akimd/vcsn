@@ -28,6 +28,15 @@ namespace vcsn
     }
     using context = std::shared_ptr<const detail::context_base>;
 
+    // vcsn/dyn/label.hh.
+    namespace detail
+    {
+      class label_base;
+      template <typename T>
+      class label_wrapper;
+    }
+    using label = std::shared_ptr<const detail::label_base>;
+
     // vcsn/dyn/polynomial.hh.
     namespace detail
     {
