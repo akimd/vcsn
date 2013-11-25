@@ -80,8 +80,10 @@ namespace vcsn
         : context{labelset_t{gs}, ws}
       {}
 
+      template <typename LabelSet2 = labelset_t>
       context()
-        : context{labelset_t{}, weightset_t{}}
+        : context{typename std::enable_if<is_lao, labelset_t>::type{},
+                  weightset_t{}}
       {}
 
       context& operator=(context&& that)
