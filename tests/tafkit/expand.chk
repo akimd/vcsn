@@ -27,8 +27,8 @@ check_exp 'lal_char(abc)_z'  \
 # TAF-Kit doc.
 check_exp 'lal_char(abcd)_z' \
   '(a+b+\e)((a+ba)(ca+cc))*' \
-  'a.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+b.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*'
+  '(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+a.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+b.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*'
 
 check_exp 'lal_char(abcd)_z' \
   'a(b(c+a)*+c(b)*)+ac(\e+b)(b*)' \
-  'a.b.(a+c)*+<2>(a.c.b*)+a.c.b.b*'
+  '<2>(a.c.b*)+a.b.(a+c)*+a.c.b.b*'

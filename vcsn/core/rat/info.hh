@@ -3,7 +3,7 @@
 
 # include <iostream>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/misc/cast.hh>
+# include "size.hh"
 
 namespace vcsn
 {
@@ -23,6 +23,8 @@ namespace vcsn
       void
       operator()(const node_t& v)
       {
+        rat::size<RatExpSet> sizer;
+        size = sizer(v);
         shuffle = sum = intersection = prod = star = zero = one = atom =
           lweight = rweight = 0;
         v.accept(*this);
@@ -35,6 +37,8 @@ namespace vcsn
                                                                 \
     private:                                                    \
       void visit(const Type ## _t& v);
+
+      size_t size;
 
       DEFINE(sum);
       DEFINE(intersection);

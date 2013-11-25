@@ -196,6 +196,7 @@ namespace vcsn
     << '\n' << #Type ": " << nfo.Type
     o
       << "type: " << rs.vname(true)
+      DEFINE(size)
       DEFINE(sum)
       DEFINE(shuffle)
       DEFINE(intersection)
