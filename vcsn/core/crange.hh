@@ -1,8 +1,9 @@
 #ifndef VCSN_CORE_CRANGE_HH
 # define VCSN_CORE_CRANGE_HH
 
-# include <boost/iterator/filter_iterator.hpp>
+# include <functional> // std::function
 # include <type_traits>
+# include <boost/iterator/filter_iterator.hpp>
 
 namespace vcsn
 {
