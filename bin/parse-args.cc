@@ -107,6 +107,7 @@ version(const char* prog)
     DEFINE(CXX)
     DEFINE(CPPFLAGS)
     DEFINE(CXXFLAGS)
+    DEFINE(DATADIR)
 #undef DEFINE
     ;
   exit(EXIT_SUCCESS);

@@ -203,6 +203,11 @@ AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS"],
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
 
+# We look for our data files at runtime.
+dir=`URBI_RESOLVE_DIR([$datadir/vcsn])`
+AC_DEFINE_UNQUOTED([DATADIR], ["$dir"],
+                   [Define to the location of data files.])
+
 ## -------------------- ##
 ## Auxiliary programs.  ##
 ## -------------------- ##
