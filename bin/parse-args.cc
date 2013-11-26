@@ -6,10 +6,8 @@
 #include <map>
 #include <stdexcept>
 
-// Temporary.
-#include <boost/algorithm/string/replace.hpp>
-
 #include "parse-args.hh"
+#include <vcsn/config.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh>
 
@@ -55,12 +53,16 @@ read_weight(const options& opts)
   return vcsn::dyn::read_weight(*is, ctx);
 }
 
-void
+static void
 usage(const char* prog, int exit_status)
 {
   if (exit_status == EXIT_SUCCESS)
     std::cout
       << "usage: " << prog << " [OPTIONS...] [ARGS...]\n"
+      "General Options\n"
+      "\n"
+      "  -h          display this help message and exit successfully\n"
+      "  -v          display version information and exit successfully\n"
       "\n"
       "Input/Output:\n"
       "  -C CONTEXT    the context to use\n"
@@ -93,6 +95,14 @@ usage(const char* prog, int exit_status)
   exit(exit_status);
 }
 
+static void
+version(const char* prog)
+{
+  std::cout << prog << " (" VCSN_PACKAGE_STRING ")\n";
+  std::cout << "<" VCSN_PACKAGE_URL ">\n";
+  exit(EXIT_SUCCESS);
+}
+
 void
 parse_args(options& opts, int& argc, char* const*& argv)
 {
@@ -100,7 +110,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
     opts.program = argv[0];
 
   int opt;
-  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqW?")) != -1)
+  while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqvW?")) != -1)
     switch (opt)
       {
       case 'A':
@@ -137,6 +147,9 @@ parse_args(options& opts, int& argc, char* const*& argv)
         break;
       case 'q':
         opts.output_format = "null";
+        break;
+      case 'v':
+        version(argv[0]);
         break;
       case 'W':
         opts.input_type = type::weight;

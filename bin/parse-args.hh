@@ -1,14 +1,13 @@
 #ifndef VCSN_BIN_PARSE_ARGS_HH_
 # define VCSN_BIN_PARSE_ARGS_HH_
 
-# include <fstream>
 # include <iostream>
+# include <memory>
 # include <stdexcept>
 # include <string>
 # include <vector>
 
-# include <vcsn/dyn/algos.hh>
-# include <vcsn/misc/attributes.hh>
+# include <vcsn/dyn/fwd.hh>
 
 enum class type
   {
@@ -46,9 +45,6 @@ struct options
   /// The output stream.
   std::shared_ptr<std::ostream> out;
 };
-
-ATTRIBUTE_NORETURN
-void usage(const char* prog, int exit_status);
 
 /// Read the command line arguments.
 void parse_args(options& opts, int& argc, char* const*& argv);
