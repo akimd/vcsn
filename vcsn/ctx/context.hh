@@ -80,6 +80,7 @@ namespace vcsn
         : context{labelset_t{gs}, ws}
       {}
 
+      /// Build a context whose labelset constructor takes no argument.
       template <typename LabelSet2 = labelset_t>
       context()
         : context{typename std::enable_if<is_lao, labelset_t>::type{},
