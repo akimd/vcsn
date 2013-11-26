@@ -195,6 +195,13 @@ case $ac_cv_GLIBCXX_DEBUG in yes)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
+# We compile C++ at runtime.
+AC_DEFINE_UNQUOTED([CXX], ["$CXX"],
+                   [Define to the C++ compiler.])
+AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS"],
+                   [Define to the preprocessor flags.])
+AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
+                   [Define to the C++ compiler flags.])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##

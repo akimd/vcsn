@@ -98,8 +98,17 @@ usage(const char* prog, int exit_status)
 static void
 version(const char* prog)
 {
-  std::cout << prog << " (" VCSN_PACKAGE_STRING ")\n";
-  std::cout << "<" VCSN_PACKAGE_URL ">\n";
+  std::cout
+    << prog << " (" VCSN_PACKAGE_STRING ")\n"
+    << "<" VCSN_PACKAGE_URL ">\n"
+    << "\n"
+#define DEFINE(Var)                             \
+    << #Var ": " VCSN_ ## Var "\n"
+    DEFINE(CXX)
+    DEFINE(CPPFLAGS)
+    DEFINE(CXXFLAGS)
+#undef DEFINE
+    ;
   exit(EXIT_SUCCESS);
 }
 
