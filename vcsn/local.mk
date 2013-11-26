@@ -154,3 +154,6 @@ nobase_include_HEADERS =                        \
   %D%/weights/r.hh                              \
   %D%/weights/z.hh                              \
   %D%/weights/zmin.hh
+
+nobase_nodist_include_HEADERS =                 \
+  %D%/config.hh

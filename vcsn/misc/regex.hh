@@ -1,7 +1,7 @@
 #ifndef VCSN_MISC_REGEX_HH
 # define VCSN_MISC_REGEX_HH
 
-# include <vcsn/config.h>
+# include <vcsn/config.hh>
 
 # if VCSN_STD_REGEX_WORKS
 

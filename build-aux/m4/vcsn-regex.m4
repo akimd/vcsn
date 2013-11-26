@@ -38,7 +38,7 @@ AC_DEFUN([VCSN_REGEX],
 
 case $vcsn_cv_std_regex_works in
   (yes)
-    AC_DEFINE([VCSN_STD_REGEX_WORKS], 1, [Define if <regex> works.])
+    AC_DEFINE([STD_REGEX_WORKS], 1, [Define if <regex> works.])
     ;;
   (*)
     BOOST_REGEX

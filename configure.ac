@@ -11,7 +11,7 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-m4_pattern_forbid([^(BOOST|TC|URBI|VCSN)_])
+m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.61])
 
@@ -205,7 +205,10 @@ AM_PROG_LEX
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
 TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
-AC_CONFIG_HEADERS([vcsn/config.h:vcsn/config.in.h])
+# lib/config.h is unprefixed, and not installed, vcsn/config.hh is
+# prefixed and installed.
+AC_CONFIG_HEADERS([lib/config.h:vcsn/config.in.h])
+AX_PREFIX_CONFIG_H([vcsn/config.hh], [vcsn], [lib/config.h])
 AC_CONFIG_FILES([Makefile])
 
 AC_OUTPUT
