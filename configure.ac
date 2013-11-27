@@ -116,8 +116,10 @@ AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
   ;;
 esac
 
-# Check for REGEX before _GLIBCXX_DEBUG, see below.
 BOOST_REQUIRE([1.49])
+BOOST_PYTHON
+
+# Check for REGEX before _GLIBCXX_DEBUG, see below.
 VCSN_REGEX
 
 # For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
