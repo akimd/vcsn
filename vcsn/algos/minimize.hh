@@ -2,7 +2,6 @@
 # define VCSN_ALGOS_MINIMIZE_HH
 
 # include <unordered_map>
-# include <forward_list>
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
@@ -37,9 +36,9 @@ namespace vcsn
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
       using class_t = unsigned;
-      using classes_t = std::forward_list<class_t>;
-      using set_t = std::forward_list<state_t>;
-      using sets_t = std::forward_list<set_t>;
+      using classes_t = std::vector<class_t>;
+      using set_t = std::vector<state_t>;
+      using sets_t = std::vector<set_t>;
       using state_to_class_t = std::map<state_t, class_t>;
       using target_class_to_states_t =
         std::unordered_multimap<class_t, state_t>;
@@ -139,9 +138,9 @@ namespace vcsn
               {
                 std::pair<class_t, state_t> target_class_and_source_state =
                   *(range.first);
-                new_set.emplace_front(target_class_and_source_state.second);
+                new_set.emplace_back(target_class_and_source_state.second);
               }
-            res.emplace_front(new_set);
+            res.emplace_back(new_set);
             target_class_to_states.erase(target_class);
           }
         return res;
@@ -167,9 +166,9 @@ namespace vcsn
           set_t nonfinals, finals;
           for (auto s : a_.states())
             if (a_.is_final(s))
-              finals.emplace_front(s);
+              finals.emplace_back(s);
             else
-              nonfinals.emplace_front(s);
+              nonfinals.emplace_back(s);
           make_class(nonfinals);
           make_class(finals);
         }
@@ -208,11 +207,12 @@ namespace vcsn
 
                     if (break_c)
                       {
-                        classes_to_remove.emplace_front(c);
+                        classes_to_remove.emplace_back(c);
                         sets_t pieces_of_c =
                           split_class(target_class_to_c_states);
-                        sets_to_add.splice_after(sets_to_add.before_begin(),
-                                                 pieces_of_c);
+                        sets_to_add.insert(begin(sets_to_add),
+                                           begin(pieces_of_c),
+                                           end(pieces_of_c));
                         // Ignore other labels for this partition.
                         break;
                       }
