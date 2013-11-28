@@ -109,14 +109,14 @@ namespace vcsn
       /// can't be more than one.
       state_t out_state(state_t s, label_t l)
       {
-        return out_.at(s).at(l);
+        return out_[s][l];
       }
 
       /// Return the destination class of \a s with \a l in \a a.
       class_t out_class(state_t s, label_t l)
       {
         if (out_some_state(s, l))
-          return state_to_class_.at(out_state(s, l));
+          return state_to_class_[out_state(s, l)];
         else
           return empty_class;
       }
@@ -235,7 +235,7 @@ namespace vcsn
         state_to_res_state_[a_.post()] = res_.post();
         for (auto s : a_.states())
           {
-            class_t s_class = state_to_class_.at(s);
+            class_t s_class = state_to_class_[s];
             auto iterator = class_to_res_state_.find(s_class);
             state_t res_state;
             if (iterator == class_to_res_state_.end())
@@ -250,8 +250,8 @@ namespace vcsn
            the special ones defining which states are initial or
            final.  Here we rely on weights being Boolean. */
         for (auto t : a_.all_transitions())
-          res_.add_transition(state_to_res_state_.at(a_.src_of(t)),
-                              state_to_res_state_.at(a_.dst_of(t)),
+          res_.add_transition(state_to_res_state_[a_.src_of(t)],
+                              state_to_res_state_[a_.dst_of(t)],
                               a_.label_of(t));
 
         /* Moore's construction maps each set of indistinguishable
@@ -269,7 +269,7 @@ namespace vcsn
         origins_t res;
 
         for (auto s : a_.states())
-          res[state_to_res_state_.at(s)].emplace(s);
+          res[state_to_res_state_[s]].emplace(s);
 
         return res;
       }
