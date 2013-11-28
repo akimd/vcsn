@@ -25,6 +25,7 @@ dist_bin_SCRIPTS +=                             \
 all_vcsn =                                      \
   %D%/vcsn-accessible                           \
   %D%/vcsn-are-equivalent                       \
+  %D%/vcsn-are-isomorphic                       \
   %D%/vcsn-aut-to-exp                           \
   %D%/vcsn-cat                                  \
   %D%/vcsn-chain                                \
@@ -86,6 +87,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 
 %C%_vcsn_accessible_LDADD       = %D%/libtafkit.la
 %C%_vcsn_are_equivalent_LDADD   = %D%/libtafkit.la
+%C%_vcsn_are_isomorphic_LDADD   = %D%/libtafkit.la
 %C%_vcsn_aut_to_exp_LDADD       = %D%/libtafkit.la
 %C%_vcsn_cat_LDADD              = %D%/libtafkit.la
 %C%_vcsn_chain_LDADD            = %D%/libtafkit.la
