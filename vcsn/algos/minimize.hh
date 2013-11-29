@@ -44,8 +44,7 @@ namespace vcsn
       using set_t = std::vector<state_t>;
       using sets_t = std::vector<set_t>;
       using state_to_class_t = std::map<state_t, class_t>;
-      using target_class_to_states_t =
-        std::unordered_multimap<class_t, state_t>;
+      using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::unordered_map<class_t, set_t>;
       using class_to_state_t = std::unordered_map<class_t, state_t>;
       using state_to_state_t = std::unordered_map<state_t, state_t>;
@@ -110,31 +109,6 @@ namespace vcsn
         return state_to_class_[j->second];
       }
 
-      /// Split a class into sets given a target_class_to_states
-      /// structure, to be emptied in the process.
-      sets_t
-      split_class(target_class_to_states_t& target_class_to_states)
-      {
-        sets_t res;
-
-        while (! target_class_to_states.empty())
-          {
-            class_t target_class = target_class_to_states.begin()->first;
-            set_t new_set;
-            for (auto range = target_class_to_states.equal_range(target_class);
-                 range.first != range.second;
-                 range.first = std::next(range.first))
-              {
-                std::pair<class_t, state_t> target_class_and_source_state =
-                  *(range.first);
-                new_set.emplace_back(target_class_and_source_state.second);
-              }
-            res.emplace_back(new_set);
-            target_class_to_states.erase(target_class);
-          }
-        return res;
-      }
-
     public:
       minimizer(const Aut& a)
         : a_(a)
@@ -184,7 +158,7 @@ namespace vcsn
                     for (auto s : c_states)
                     {
                       class_t delta_s_l_class = out_class(s, l);
-                      target_class_to_c_states.insert({delta_s_l_class, s});
+                      target_class_to_c_states[delta_s_l_class].emplace_back(s);
 
                       // Are states in this class distinguishable with l?
                       if (checked_at_least_one_transition
@@ -197,11 +171,8 @@ namespace vcsn
                     if (break_c)
                       {
                         classes_to_remove.emplace_back(c);
-                        sets_t pieces_of_c =
-                          split_class(target_class_to_c_states);
-                        sets_to_add.insert(begin(sets_to_add),
-                                           begin(pieces_of_c),
-                                           end(pieces_of_c));
+                        for (const auto& p : target_class_to_c_states)
+                          sets_to_add.emplace_back(std::move(p.second));
                         // Ignore other labels for this partition.
                         break;
                       }
