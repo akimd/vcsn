@@ -141,6 +141,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/hash.hh                              \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
+  %D%/misc/pair.hh                              \
   %D%/misc/random.hh                            \
   %D%/misc/path.hh                              \
   %D%/misc/path.hxx                             \
