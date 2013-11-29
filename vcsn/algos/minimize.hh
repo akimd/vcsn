@@ -97,32 +97,17 @@ namespace vcsn
         return res;
       }
 
-      /// Return true iff \a s has an out-transition with \a l in
-      /// \a a.
-      bool out_some_state(state_t s, label_t l)
+      /// The destination class of \a s with \a l in \a a.
+      /// Return \a empty_class if \a s has no successor with \a l.
+      class_t out_class(state_t s, label_t l)
       {
         auto i = out_.find(s);
         if (i == out_.end())
-          return false;
-        else
-          return i->second.find(l) != i->second.end();
-      }
-
-      /// Return the destination state of \a s with \a l in \a a,
-      /// assuming it exists.  Since \a a is deterministic, there
-      /// can't be more than one.
-      state_t out_state(state_t s, label_t l)
-      {
-        return out_[s][l];
-      }
-
-      /// Return the destination class of \a s with \a l in \a a.
-      class_t out_class(state_t s, label_t l)
-      {
-        if (out_some_state(s, l))
-          return state_to_class_[out_state(s, l)];
-        else
           return empty_class;
+        auto j = i->second.find(l);
+        if (j == i->second.end())
+          return empty_class;
+        return state_to_class_[j->second];
       }
 
       /// Split a class into sets given a target_class_to_states
