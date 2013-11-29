@@ -44,6 +44,17 @@
         // (Unlabeled) transitions.
         using transitions_t = std::vector<std::pair<string_t, string_t>>;
 
+        // A set of paths.
+        struct paths_t
+        {
+          transitions_t transitions;
+          // The current ends of paths.  Not the same as the
+          // destinations of all the transitions, e.g., in the case of
+          // "0 -> 1 -> 2", transitions = { 0 -> 1, 1 -> 2 }, ends = {
+          // 2 }.
+          states_t ends;
+        };
+
         // (Complex) objects such as shared_ptr cannot be put in a
         // union, even in C++11.  So cheat, and store a struct instead
         // of an union.  See lib/vcsn/rat/README.txt.
@@ -51,7 +62,7 @@
         {
           string_t string;
           states_t states;
-          transitions_t transitions;
+          paths_t paths;
         };
       }
     }
@@ -97,11 +108,11 @@
         }
 
         static std::ostream&
-        operator<<(std::ostream& o, const transitions_t ts)
+        operator<<(std::ostream& o, const paths_t ps)
         {
           bool first = true;
           o << '{';
-          for (auto t: ts)
+          for (auto t: ps.transitions)
             {
               if (!first)
                 o << ", ";
@@ -283,7 +294,7 @@ a_list.0:
 
 nodes:
   node_id   { $$.emplace_back(std::move($node_id)); }
-| subgraph  { $$ = $<states>subgraph; }
+| subgraph  { $$ = $subgraph; }
 ;
 
 // Transform the right-recursion from the original grammar into a left
@@ -298,31 +309,30 @@ nodes:
 // states), and the set of ending states (using the <states> field
 // selector), as they will be used as set of starting states if there
 // is another "->" afterward.
-%type <transitions> path;
-%printer { debug_stream() << $$ /* << " (states: " << $<states>$ << ')' */; }
-  <transitions>;
+%type <paths> path;
+%printer { debug_stream() << $$; } <paths>;
 path:
   nodes[from] "->" nodes[to]
   {
     for (auto s1: $from)
       for (auto s2: $to)
-        $$.emplace_back(s1, s2);
-    $<states>$ = $to;
+        $$.transitions.emplace_back(s1, s2);
+    $$.ends = $to;
   }
 | path[from]  "->" nodes[to]
   {
-    std::swap($$, $from);
-    for (auto s1: $<states>from)
+    std::swap($$.transitions, $from.transitions);
+    for (auto s1: $from.ends)
       for (auto s2: $to)
-        $<transitions>$.emplace_back(s1, s2);
-    $<states>$ = $to;
+        $$.transitions.emplace_back(s1, s2);
+    $$.ends = $to;
   }
 ;
 
 edge_stmt:
   path attr_list.opt[label]
   {
-    for (auto t: $path)
+    for (auto t: $path.transitions)
       driver_.edit_->add_entry(t.first, t.second, $label);
   }
 ;
