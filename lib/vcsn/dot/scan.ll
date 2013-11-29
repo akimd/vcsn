@@ -17,6 +17,8 @@
 
 // Define YY_DECL.
 #include <lib/vcsn/dot/parse.hh>
+
+#define yyterminate() return parser::make_END(loc)
 }
 
 %{
@@ -33,7 +35,7 @@
   loc.columns(yyleng);
 
 #define TOK(Token)                              \
-  parser::token::Token
+  parser::make_ ## Token (loc)
 
 YY_FLEX_NAMESPACE_BEGIN
 
@@ -48,6 +50,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
 %%
 %{
+  parser::location_type loc;
   std::string s;
   loc.step();
 %}
@@ -70,13 +73,10 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   "//".*     continue;
   "/*"       BEGIN SC_COMMENT;
   "\""       BEGIN SC_STRING;
-  {ID}|{NUM} {
-               yylval->string = std::string{yytext, size_t(yyleng)};
-               return TOK(ID);
-             }
+  {ID}|{NUM} return parser::make_ID(string_t{std::string{yytext, size_t(yyleng)}}, loc);
   [ \t]+     continue;
   \n+        LINE(yyleng);
-  .          driver_.error(*yylloc, std::string{"invalid character: "}+yytext);
+  .          driver_.error(loc, std::string{"invalid character: "}+yytext);
 }
 
 <SC_COMMENT>{
@@ -89,8 +89,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 <SC_STRING>{ /* Handling of the strings.  Initial " is eaten. */
   \" {
     BEGIN INITIAL;
-    yylval->string = s;
-    return TOK(ID);
+    return parser::make_ID(string_t{s}, loc);
   }
 
   \\\"      s += '"';
@@ -98,9 +97,9 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   [^\\""]+  s.append(yytext, yyleng);
 
   <<EOF>> {
-    driver_.error(*yylloc, "unexpected end of file in a string");
+    driver_.error(loc, "unexpected end of file in a string");
     BEGIN INITIAL;
-    return TOK(ID);
+    return parser::make_ID(string_t{s}, loc);
   }
 }
 

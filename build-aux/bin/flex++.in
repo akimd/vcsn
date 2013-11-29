@@ -16,7 +16,7 @@ status=0
 
 # Any tool failure is a failure of the script.
 set -e
-set -x
+
 : ${FLEX='@FLEX@'}
 
 # flex++ INPUT OUTPUT OPTIONS

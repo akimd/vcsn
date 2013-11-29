@@ -9,7 +9,9 @@
 %expect 0
 %locations
 %define api.namespace {vcsn::detail::dot}
+%define api.value.type variant
 %define api.location.type {vcsn::rat::location}
+%define api.token.constructor
 
 %code requires
 {
@@ -54,28 +56,15 @@
           // 2 }.
           states_t ends;
         };
-
-        // (Complex) objects such as shared_ptr cannot be put in a
-        // union, even in C++11.  So cheat, and store a struct instead
-        // of an union.  See lib/vcsn/rat/README.txt.
-        struct sem_type
-        {
-          string_t string;
-          states_t states;
-          paths_t paths;
-        };
       }
     }
   }
-#define YYSTYPE vcsn::detail::dot::sem_type
 }
 
 %code provides
 {
-  #define YY_DECL_(Class)                               \
-    int Class lex(parser::semantic_type* yylval,        \
-                  parser::location_type* yylloc,        \
-                  driver& driver_)
+  #define YY_DECL_(Class) \
+    parser::symbol_type Class lex(driver& driver_)
   #define YY_DECL YY_DECL_(yyFlexLexer::)
 }
 
@@ -125,12 +114,10 @@
         /// Use our local scanner object.
         static
         inline
-        int
-        yylex(parser::semantic_type* yylval,
-              parser::location_type* yylloc,
-              driver& driver_)
+        parser::symbol_type
+        yylex(driver& driver_)
         {
-          return driver_.scanner_->lex(yylval, yylloc, driver_);
+          return driver_.scanner_->lex(driver_);
         }
       }
     }
@@ -149,8 +136,7 @@
   }
 }
 
-%parse-param { driver& driver_ }
-%lex-param   { driver& driver_ }
+%param { driver& driver_ }
 
 %initial-action
 {
@@ -170,31 +156,30 @@
   ARROW    "->"
   COMMA    ","
   SEMI     ";"
+  END      0
 ;
 
-%token <string> ID;
-%type <string> id.opt;
+%token <string_t> ID;
+%type <string_t> id.opt;
 
 // A single state.
-%type <string> node_id node_stmt;
-%printer { debug_stream() << $$; } <string>;
+%type <string_t> node_id node_stmt;
+%printer { debug_stream() << $$; } <string_t>;
 
 // Set of nodes, including for subgraphs.
-%type <states> nodes stmt stmt_list edge_stmt subgraph;
-%printer { debug_stream() << $$; } <states>;
+%type <states_t> nodes stmt stmt_list edge_stmt subgraph;
+%printer { debug_stream() << $$; } <states_t>;
 
 // Rational expressions labeling the edges.
-%type <string> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
+%type <string_t> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
 %%
 
 graph:
-  "digraph" id.opt "{" stmt_list "}"
-  {
-  }
+  "digraph" id.opt "{" stmt_list "}"    {}
 ;
 
 stmt_list:
-  %empty        { $$.clear(); }
+  %empty        {}
 | stmt_list stmt semi.opt
   {
     // Preserve the set of states.
@@ -309,8 +294,8 @@ nodes:
 // states), and the set of ending states (using the <states> field
 // selector), as they will be used as set of starting states if there
 // is another "->" afterward.
-%type <paths> path;
-%printer { debug_stream() << $$; } <paths>;
+%type <paths_t> path;
+%printer { debug_stream() << $$; } <paths_t>;
 path:
   nodes[from] "->" nodes[to]
   {
