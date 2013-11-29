@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 // See <http://www.graphviz.org/content/dot-language>.
-%require "2.5"
+%require "3.0"
 %language "C++"
 
 %debug
@@ -180,7 +180,7 @@ graph:
 ;
 
 stmt_list:
-  /* empty. */  { $$.clear(); }
+  %empty        { $$.clear(); }
 | stmt_list stmt semi.opt
   {
     // Preserve the set of states.
@@ -227,7 +227,7 @@ attr_list:
 attr_list.opt:
   // This action seems useless, but because Bison initializes $$ with $0
   // there are very surprising results...
-  /* empty. */ { $$ = ""; }
+  %empty       { $$ = ""; }
 | attr_list    { std::swap($$, $1); }
 ;
 
@@ -263,18 +263,18 @@ a_list.1:
 ;
 
 comma.opt:
-  /* empty. */
+  %empty
 | ","
 ;
 
 semi.opt:
-  /* empty. */
+  %empty
 | ";"
 ;
 
 // Zero or more attributes.
 a_list.0:
-  /* empty. */ {}
+  %empty       {}
 | a_list.1     { std::swap($$, $1); }
 ;
 
@@ -354,7 +354,7 @@ subgraph:
 ;
 
 id.opt:
-  /* empty. */ {}
+  %empty       {}
 | ID           { std::swap($$, $1); }
 ;
 %%

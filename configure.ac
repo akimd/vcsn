@@ -217,7 +217,7 @@ AC_DEFINE_UNQUOTED([DATADIR], ["$dir"],
 TC_PROG([flex], [>= 2.5.35], [FLEX], [Flex scanner generator])
 AM_PROG_LEX
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
-TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
+TC_PROG([bison], [>= 3.0], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 
 # lib/config.h is unprefixed, and not installed, vcsn/config.hh is

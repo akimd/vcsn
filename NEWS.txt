@@ -18,6 +18,11 @@ directories).
   $ vcsn aut-to-exp -f lal_char_z/c1.gv
   (a+b)*.b.(<2>a+<2>b)*
 
+** dot format parsing is much faster
+We now require Bison 3.0 to build Vaucanson.  In exchange, we get is very
+significant speed-up.  On erebus (Mac OS X i7 2.9GHz 8GB, GCC 4.8 -O3)
+reading standard('a?{500}') goes from 30s to 1.2s.
+
 * 2013-11-25
 ** minimize: new algorithm (static, dynamic, TAF-Kit)
 Given a deterministic Boolean lal automaton, compute its minimal equivalent
