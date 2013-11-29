@@ -6,6 +6,7 @@
 # include <map>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/transpose.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
@@ -26,8 +27,7 @@ namespace vcsn
     using state_t = typename automaton_t::state_t;
 
     // Reachable states.
-    std::set<state_t> res;
-    res.emplace(a.pre());
+    std::set<state_t> res{a.pre()};
 
     // States work list.
     using worklist_t = std::queue<state_t>;

@@ -6,6 +6,10 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
 
+# ifndef NDEBUG
+#  include <vcsn/algos/is-deterministic.hh>
+# endif
+
 namespace vcsn
 {
 
