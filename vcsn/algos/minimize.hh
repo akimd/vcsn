@@ -109,6 +109,14 @@ namespace vcsn
         return state_to_class_[j->second];
       }
 
+      /// Whether there are at least two classes.
+      bool more_than_one_class(const target_class_to_states_t& c) const
+      {
+        auto i = std::begin(c);
+        auto end = std::end(c);
+        return i != end && ++i != end;
+      }
+
     public:
       minimizer(const Aut& a)
         : a_(a)
@@ -150,25 +158,12 @@ namespace vcsn
 
                 for (auto l : letters_)
                   {
-                    bool break_c = false;
                     target_class_to_states_t target_class_to_c_states;
-                    class_t last_target_class = invalid_class;
-
-                    bool checked_at_least_one_transition = false;
                     for (auto s : c_states)
-                    {
-                      class_t delta_s_l_class = out_class(s, l);
-                      target_class_to_c_states[delta_s_l_class].emplace_back(s);
+                      target_class_to_c_states[out_class(s, l)].emplace_back(s);
 
-                      // Are states in this class distinguishable with l?
-                      if (checked_at_least_one_transition
-                          && last_target_class != delta_s_l_class)
-                        break_c = true; // Yes, they are.
-                      last_target_class = delta_s_l_class;
-                      checked_at_least_one_transition = true;
-                    }
-
-                    if (break_c)
+                    // Are there more than two keys?
+                    if (more_than_one_class(target_class_to_c_states))
                       {
                         classes_to_remove.emplace_back(c);
                         for (const auto& p : target_class_to_c_states)
