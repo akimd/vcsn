@@ -17,6 +17,7 @@ ACLOCAL_AMFLAGS = -I build-aux/m4
 # Unfortunately Automake 1.14 does not generate this for us.
 vcsn/config.hh: $(top_builddir)/lib/config.h
 	cd $(top_builddir) && $(SHELL) ./config.status $@
+BUILT_SOURCES += lib/config.h vcsn/config.hh
 DISTCLEANFILES += vcsn/config.hh
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
