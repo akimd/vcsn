@@ -8,8 +8,8 @@
 %error-verbose
 %expect 0
 %locations
-%define namespace "vcsn::detail::dot"
-%define location_type "vcsn::rat::location"
+%define api.namespace {vcsn::detail::dot}
+%define api.location.type {vcsn::rat::location}
 
 %code requires
 {
@@ -27,27 +27,30 @@
     {
       namespace dot
       {
+        // Identifiers (attributes and node names).
+        //
+        // With ref_counting I have a 20% penalty compared to using
+        // std::string.  With no_tracking, I get a 10x speed up (e.g.,
+        // vcsn-cat of a determinized ladybird).  But then we leak.
+        // We should try to have an arena in which the flyweight
+        // performs its allocation, and flush the whole arena once
+        // we're done parsing.
+        using string_t =
+          boost::flyweight<std::string, boost::flyweights::no_tracking>;
+
+        // A set of states.
+        using states_t = std::vector<string_t>;
+
+        // (Unlabeled) transitions.
+        using transitions_t = std::vector<std::pair<string_t, string_t>>;
+
         // (Complex) objects such as shared_ptr cannot be put in a
         // union, even in C++11.  So cheat, and store a struct instead
         // of an union.  See lib/vcsn/rat/README.txt.
         struct sem_type
         {
-          // Identifiers (attributes and node names).
-          //
-          // With ref_counting I have a 20% penalty compared to using
-          // std::string.  With no_tracking, I get a 10x speed up (e.g.,
-          // vcsn-cat of a determinized ladybird).  But then we leak.
-          // We should try to have an arena in which the flyweight
-          // performs its allocation, and flush the whole arena once
-          // we're done parsing.
-          using string_t =
-            boost::flyweight<std::string, boost::flyweights::no_tracking>;
           string_t string;
-          // A set of states.
-          using states_t = std::vector<string_t>;
           states_t states;
-          // (Unlabeled) transitions.
-          using transitions_t = std::vector<std::pair<string_t, string_t>>;
           transitions_t transitions;
         };
       }
@@ -79,7 +82,7 @@
       namespace dot
       {
         static std::ostream&
-        operator<<(std::ostream& o, const sem_type::states_t ss)
+        operator<<(std::ostream& o, const states_t ss)
         {
           bool first = true;
           o << '{';
@@ -94,7 +97,7 @@
         }
 
         static std::ostream&
-        operator<<(std::ostream& o, const sem_type::transitions_t ts)
+        operator<<(std::ostream& o, const transitions_t ts)
         {
           bool first = true;
           o << '{';
@@ -234,8 +237,8 @@ attr_list.opt:
 attr_assign:
   ID[var] "=" ID[val]
   {
-    static const sem_type::string_t label{"label"};
-    static const sem_type::string_t vcsn_context{"vcsn_context"};
+    static const string_t label{"label"};
+    static const string_t vcsn_context{"vcsn_context"};
     if ($var == label)
       std::swap($$, $val);
     else if ($var == vcsn_context)
