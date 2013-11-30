@@ -49,8 +49,8 @@ namespace vcsn
 
     private:
 
-# define DEFINE(Type)						\
-      using Type ## _t = typename super_type::Type ## _t;	\
+# define DEFINE(Type)                                           \
+      using Type ## _t = typename super_type::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
       DEFINE(intersection);
@@ -76,29 +76,8 @@ namespace vcsn
           atom,
         };
 
-      /// We use node precedence to decide when to print parens.
-      precedence_t precedence(const node_t& v)
-      {
-        const atom_t* atom = dynamic_cast<const atom_t*>(&v);
-        if (atom && ! ctx_.labelset()->is_letter(atom->value()))
-          return precedence_t::word;
-        else
-          switch (v.type())
-            {
-# define CASE(Type) \
-  case exp::type_t::Type: \
-    return precedence_t::Type;
-            CASE(intersection);
-            CASE(sum);
-            CASE(prod);
-            CASE(star);
-            CASE(zero);
-            CASE(one);
-            CASE(atom);
-# undef CASE
-            }
-        abort(); // Unreachable.
-      }
+      /// The precedence of \a v (to decide when to print parens).
+      precedence_t precedence(const node_t& v) const;
 
       /// Print the given child node, also knowing its parent.  If force_parens
       /// is true then print parens around it, even if they are not needed to

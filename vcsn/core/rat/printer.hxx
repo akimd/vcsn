@@ -23,6 +23,30 @@ namespace vcsn
     auto                                        \
     printer<RatExpSet>
 
+    DEFINE::precedence(const node_t& v) const
+      -> precedence_t
+    {
+      const atom_t* atom = dynamic_cast<const atom_t*>(&v);
+      if (atom && ! ctx_.labelset()->is_letter(atom->value()))
+        return precedence_t::word;
+      else
+        switch (v.type())
+          {
+# define CASE(Type)                             \
+            case exp::type_t::Type:             \
+              return precedence_t::Type;
+            CASE(intersection);
+            CASE(sum);
+            CASE(prod);
+            CASE(star);
+            CASE(zero);
+            CASE(one);
+            CASE(atom);
+# undef CASE
+          }
+      abort(); // Unreachable.
+    }
+
 # define VISIT(Type)                          \
     DEFINE::visit(const Type ## _t& v)        \
       -> void
