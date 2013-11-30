@@ -4,6 +4,7 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/algos/print.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/xalloc.hh>
 
 namespace vcsn
@@ -104,7 +105,7 @@ namespace vcsn
         }
       else
         throw std::domain_error("invalid output format for ratexp: "
-                                + type);
+                                + str_escape(type));
       return out;
     }
 

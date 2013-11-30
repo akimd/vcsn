@@ -1,6 +1,8 @@
 #ifndef VCSN_CORE_RAT_PRINTER_HXX
 # define VCSN_CORE_RAT_PRINTER_HXX
 
+# include <vcsn/misc/escape.hh>
+
 namespace vcsn
 {
   namespace rat
@@ -62,7 +64,7 @@ namespace vcsn
         }
       else
         throw std::domain_error("invalid output format for ratexp: "
-                                + format);
+                                + str_escape(format));
     }
 
     DEFINE::precedence(const node_t& v) const
