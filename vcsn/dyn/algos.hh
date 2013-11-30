@@ -119,6 +119,10 @@ namespace vcsn
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
 
+    /// The infiltration of automata \a lhs and \a rhs.
+    /// Performs the union of the alphabets.
+    automaton infiltration(const automaton& lhs, const automaton& rhs);
+
     /// Output various facts about \a aut.
     std::ostream& info(const automaton& aut, std::ostream& out);
 
@@ -277,10 +281,6 @@ namespace vcsn
     /// The shuffle of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
     automaton shuffle(const automaton& lhs, const automaton& rhs);
-
-    /// The infiltration of automata \a lhs and \a rhs.
-    /// Performs the union of the alphabets.
-    automaton infiltration(const automaton& lhs, const automaton& rhs);
 
     /// A standardized \a a.
     automaton standard(const automaton& a);
