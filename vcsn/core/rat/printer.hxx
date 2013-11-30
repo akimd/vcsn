@@ -29,17 +29,17 @@ namespace vcsn
 
     VISIT(intersection)
     {
-      print(v, '&');
+      print(v, intersection_);
     }
 
     VISIT(sum)
     {
-      print(v, '+');
+      print(v, sum_);
     }
 
     VISIT(prod)
     {
-      print(v, '.');
+      print(v, product_);
     }
 
     VISIT(star)
@@ -50,20 +50,20 @@ namespace vcsn
       bool child_needs_left_weight = shows_left_weight_(child);
       print(v.left_weight());
       print_child(child, v, child_needs_left_weight);
-      out_ << '*';
+      out_ << star_;
       print(v.right_weight());
     }
 
     VISIT(zero)
     {
       print(v.left_weight());
-      out_ << "\\z";
+      out_ << zero_;
     }
 
     VISIT(one)
     {
       print(v.left_weight());
-      out_ << "\\e";
+      out_ << one_;
     }
 
     VISIT(atom)
@@ -79,24 +79,24 @@ namespace vcsn
       bool parent_has_precedence = precedence(child) < precedence(parent);
       bool needs_parens = parent_has_precedence || force_parens;
       if (needs_parens)
-        out_ << '(';
+        out_ << lparen_;
       child.accept(*this);
       if (needs_parens)
-        out_ << ')';
+        out_ << rparen_;
     }
 
     template <typename RatExpSet>
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print(const nary_t<Type>& n, const char op)
+    printer<RatExpSet>::print(const nary_t<Type>& n, const char* op)
       -> void
     {
       bool need_weight_parens = shows_weight_(n);
 
       print(n.left_weight());
       if (need_weight_parens)
-        out_ << '(';
+        out_ << lparen_;
       bool first = true;
       for (auto i: n)
         {
@@ -107,7 +107,7 @@ namespace vcsn
         }
 
       if (need_weight_parens)
-        out_ << ')';
+        out_ << rparen_;
       print(n.right_weight());
     }
 
@@ -116,11 +116,9 @@ namespace vcsn
     {
       if (shows_(w))
         {
-          const char lbracket = '<';
-          const char rbracket = '>';
-          out_ << lbracket;
+          out_ << lbracket_;
           ctx_.weightset()->print(out_, w);
-          out_ << rbracket;
+          out_ << rbracket_;
         }
     }
 

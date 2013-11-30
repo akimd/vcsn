@@ -34,8 +34,9 @@ namespace vcsn
       std::ostream&
       operator()(const node_t& v)
       {
+        out_ << ldelim_;
         v.accept(*this);
-        out_ << std::flush;
+        out_ << rdelim_;
         return out_;
       }
 
@@ -105,10 +106,12 @@ namespace vcsn
       void print_child(const node_t& child, const node_t& parent,
                        bool force_parens = false);
 
+      /// Print \a w if needed.
       void print(const weight_t& w);
-      /// Traverse n-ary node (+ and .).
+
+      /// Print an n-ary node.
       template <rat::exp::type_t Type>
-      void print(const nary_t<Type>& n, const char op);
+      void print(const nary_t<Type>& n, const char* op);
 
       /// Whether w is displayed.
       ATTRIBUTE_PURE
@@ -144,6 +147,24 @@ namespace vcsn
       const context_t& ctx_;
       /// Whether to be overly verbose.
       const bool debug_;
+
+      /// Left and right output delimiters for the whole ratexp.
+      const char* ldelim_ = "";
+      const char* rdelim_ = "";
+      /// Left and right brackets for weights.
+      const char* lbracket_ = "<";
+      const char* rbracket_ = ">";
+      /// Left and right parentheses.
+      const char* lparen_ = "(";
+      const char* rparen_ = ")";
+      /// The ratexp operators.
+      const char* star_ = "*";
+      const char* intersection_ = "&";
+      const char* product_ = ".";
+      const char* sum_ = "+";
+      /// The constants.
+      const char* zero_ = "\\z";
+      const char* one_ = "\\e";
     };
 
   } // namespace rat
