@@ -23,6 +23,48 @@ namespace vcsn
     auto                                        \
     printer<RatExpSet>
 
+    DEFINE::format(const std::string& format)
+      -> void
+    {
+      if (format == "latex")
+        {
+          ldelim_       = "$";
+          rdelim_       = "$";
+          lbracket_     = "";
+          rbracket_     = "";
+          lparen_       = "\\left(";
+          rparen_       = "\\right)";
+          star_         = "^*";
+          intersection_ = " \\cap ";
+          product_      = " \\cdot ";
+          sum_          = " + ";
+          zero_         = "\\emptyset";
+          one_          = "\\varepsilon";
+          lmul_         = "\\,";
+          rmul_         = "\\,";
+        }
+      else if (format == "text")
+        {
+          ldelim_       = "";
+          rdelim_       = "";
+          lbracket_     = "<";
+          rbracket_     = ">";
+          lparen_       = "(";
+          rparen_       = ")";
+          star_         = "*";
+          intersection_ = "&";
+          product_      = ".";
+          sum_          = "+";
+          zero_         = "\\z";
+          one_          = "\\e";
+          lmul_         = "";
+          rmul_         = "";
+        }
+      else
+        throw std::domain_error("invalid output format for ratexp: "
+                                + format);
+    }
+
     DEFINE::precedence(const node_t& v) const
       -> precedence_t
     {
@@ -72,27 +114,27 @@ namespace vcsn
       // not needed for right weights: compare e<w>* with (<w>e)*.
       const node_t& child = *v.sub();
       bool child_needs_left_weight = shows_left_weight_(child);
-      print(v.left_weight());
+      print_left_weight(v);
       print_child(child, v, child_needs_left_weight);
       out_ << star_;
-      print(v.right_weight());
+      print_right_weight(v);
     }
 
     VISIT(zero)
     {
-      print(v.left_weight());
+      print_left_weight(v);
       out_ << zero_;
     }
 
     VISIT(one)
     {
-      print(v.left_weight());
+      print_left_weight(v);
       out_ << one_;
     }
 
     VISIT(atom)
     {
-      print(v.left_weight());
+      print_left_weight(v);
       ctx_.labelset()->print(out_, v.value());
     }
 
@@ -118,7 +160,7 @@ namespace vcsn
     {
       bool need_weight_parens = shows_weight_(n);
 
-      print(n.left_weight());
+      print_left_weight(n);
       if (need_weight_parens)
         out_ << lparen_;
       bool first = true;
@@ -132,16 +174,27 @@ namespace vcsn
 
       if (need_weight_parens)
         out_ << rparen_;
-      print(n.right_weight());
+      print_right_weight(n);
     }
 
-    DEFINE::print(const weight_t& w)
+    DEFINE::print_left_weight(const node_t& e)
       -> void
     {
-      if (shows_(w))
+      if (shows_(e.left_weight()))
         {
           out_ << lbracket_;
-          ctx_.weightset()->print(out_, w);
+          ctx_.weightset()->print(out_, e.left_weight());
+          out_ << rbracket_ << lmul_;
+        }
+    }
+
+    DEFINE::print_right_weight(const inner_t& e)
+      -> void
+    {
+      if (shows_(e.right_weight()))
+        {
+          out_ << rmul_ << lbracket_;
+          ctx_.weightset()->print(out_, e.right_weight());
           out_ << rbracket_;
         }
     }

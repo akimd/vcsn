@@ -78,34 +78,31 @@ namespace vcsn
   | print(ratexp, stream).  |
   `------------------------*/
 
-#if 0
-  // There is no need for this implementation, as the previous one,
-  // for weightset/weight, applies here.  Actually, it results in an
-  // ambiguous template specialization.
   template <typename RatExpSet>
   inline
   std::ostream&
   print(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-        std::ostream& o)
+        std::ostream& o, const std::string& format)
   {
-    return rs.print(o, e);
+    return rs.print(o, e, format);
   }
-#endif
 
   namespace dyn
   {
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Ostream>
-      std::ostream& print_exp(const ratexp& exp, std::ostream& o)
+      template <typename RatExpSet, typename Ostream, typename String>
+      std::ostream& print_exp(const ratexp& exp, std::ostream& o,
+			      const std::string& format)
       {
         const auto& e = exp->as<RatExpSet>();
-        return vcsn::print(e.get_ratexpset(), e.ratexp(), o);
+        return vcsn::print(e.get_ratexpset(), e.ratexp(), o, format);
       }
 
       REGISTER_DECLARE(print_exp,
-                       (const ratexp& aut, std::ostream& o) -> std::ostream&);
+                       (const ratexp& aut, std::ostream& o,
+			const std::string& format) -> std::ostream&);
     }
   }
 

@@ -94,7 +94,8 @@ namespace vcsn
     value_t conv(std::istream& is) const;
     value_t conv(b, typename b::value_t v) const;
     value_t conv(self_type, value_t v) const;
-    std::ostream& print(std::ostream& o, const value_t v) const;
+    std::ostream& print(std::ostream& o, const value_t v,
+			const std::string& format = "text") const;
     std::string format(const value_t v) const;
 
   public:

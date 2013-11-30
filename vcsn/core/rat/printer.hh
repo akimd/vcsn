@@ -30,6 +30,9 @@ namespace vcsn
               const ratexpset_t& rs,
               const bool debug = !!getenv("VCSN_PARENS"));
 
+      /// Set output format.
+      void format(const std::string& format);
+
       /// Entry point: print \a v.
       std::ostream&
       operator()(const node_t& v)
@@ -86,7 +89,10 @@ namespace vcsn
                        bool force_parens = false);
 
       /// Print \a w if needed.
-      void print(const weight_t& w);
+      void print_left_weight(const node_t& w);
+
+      /// Print \a w if needed.
+      void print_right_weight(const inner_t& w);
 
       /// Print an n-ary node.
       template <rat::exp::type_t Type>
@@ -136,6 +142,9 @@ namespace vcsn
       /// Left and right parentheses.
       const char* lparen_ = "(";
       const char* rparen_ = ")";
+      /// External product.
+      const char* lmul_ = "";
+      const char* rmul_ = "";
       /// The ratexp operators.
       const char* star_ = "*";
       const char* intersection_ = "&";

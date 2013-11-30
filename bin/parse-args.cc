@@ -84,6 +84,7 @@ usage(const char* prog, int exit_status)
       "  fado   A     FAdo's format\n"
       "  grail  A     Grail's format\n"
       "  info   AE    facts about the result (size, etc.)\n"
+      "  latex   E    display as a LaTeX formula\n"
       "  list     P   display one monomial per line\n"
       "  null   AEPW  no output at all (e.g., for benchmarks)\n"
       "  text    EPW  usual concrete syntax\n"

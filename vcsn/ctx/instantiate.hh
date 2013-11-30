@@ -280,7 +280,7 @@ namespace vcsn
         REGISTER(make_automaton_editor, Ctx);
         REGISTER(make_context, Ctx);
         REGISTER(make_ratexpset, Ctx);
-        REGISTER(print_exp, rs_t, std::ostream);
+        REGISTER(print_exp, rs_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream);
         REGISTER(print_polynomial, rps_t, std::ostream);
         REGISTER(print_weight, ws_t, std::ostream);

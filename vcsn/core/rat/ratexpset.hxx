@@ -404,11 +404,13 @@ namespace vcsn
     return res.ratexp();
   }
 
-  DEFINE::print(std::ostream& o, const value_t v) const
+  DEFINE::print(std::ostream& o, const value_t v,
+		const std::string& format) const
     -> std::ostream&
   {
     using printer_t = rat::printer<ratexpset>;
     printer_t print(o, *this);
+    print.format(format);
     return print(v);
   }
 

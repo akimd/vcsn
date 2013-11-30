@@ -92,8 +92,16 @@ namespace vcsn
         info(exp, out);
       else if (type == "null")
         {}
+      else if (type == "latex")
+        detail::print_exp_registry().call(exp, out, type);
       else if (type == "text" || type == "default" || type == "")
-        detail::print_exp_registry().call(exp, out);
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_exp_registry().call(exp, out, format);
+        }
       else
         throw std::domain_error("invalid output format for ratexp: "
                                 + type);
