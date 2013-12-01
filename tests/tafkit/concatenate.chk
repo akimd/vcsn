@@ -1,8 +1,8 @@
 #! /bin/sh
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn-concatenate -f ab.gv bc.gv <<\EOF
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
+run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
+run 0 - -vcsn concatenate -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -73,7 +73,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-concatenate -f a.gv a.gv <<\EOF
+run 0 - -vcsn concatenate -f a.gv a.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -104,9 +104,9 @@ EOF
 
 
 # Check union of contexts.
-run 0 '' -vcsn-standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' -o 1.gv
-run 0 '' -vcsn-standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' -o 2.gv
-run 0 - -vcsn-concatenate -f 1.gv 2.gv <<\EOF
+run 0 '' -vcsn standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' -o 1.gv
+run 0 '' -vcsn standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' -o 2.gv
+run 0 - -vcsn concatenate -f 1.gv 2.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"

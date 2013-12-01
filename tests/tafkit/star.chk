@@ -56,7 +56,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-star -f ab.gv
+run 0 out.exp -vcsn star -f ab.gv
 
 cat >ab.gv <<\EOF
 digraph
@@ -109,4 +109,4 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-star -f ab.gv
+run 0 out.exp -vcsn star -f ab.gv

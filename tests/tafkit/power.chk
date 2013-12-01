@@ -6,24 +6,24 @@ binary_gv=$top_srcdir/share/vcsn/lal_char_z/binary.gv
 
 
 # power 0.
-run 0 -f $medir/binary^0.gv -vcsn-power -f $binary_gv 0
+run 0 -f $medir/binary^0.gv -vcsn power -f $binary_gv 0
 
 # power 1.
-run 0 -f $medir/binary^1.gv -vcsn-power -f $binary_gv 1
+run 0 -f $medir/binary^1.gv -vcsn power -f $binary_gv 1
 
 # power 4.
-run 0 '' -vcsn-power -o binary^4.gv -f $binary_gv 4
+run 0 '' -vcsn power -o binary^4.gv -f $binary_gv 4
 # 1^4 = 0.
-run 0 0   -vcsn-evaluate -f binary^4.gv 0
+run 0 0   -vcsn evaluate -f binary^4.gv 0
 # 1^4 = 1.
-run 0 1   -vcsn-evaluate -f binary^4.gv 1
+run 0 1   -vcsn evaluate -f binary^4.gv 1
 # 8^4 = 256.
-run 0 256 -vcsn-evaluate -f binary^4.gv 100
+run 0 256 -vcsn evaluate -f binary^4.gv 100
 
 # Power 5.
-run 0 '' -vcsn-power -o binary^5.gv -f $binary_gv 5
-run 0 32 -vcsn-evaluate -f binary^5.gv 10
+run 0 '' -vcsn power -o binary^5.gv -f $binary_gv 5
+run 0 32 -vcsn evaluate -f binary^5.gv 10
 
 # Power 7.
-run 0 '' -vcsn-power -o binary^7.gv -f $binary_gv 7
-run 0 128 -vcsn-evaluate -f binary^7.gv 10
+run 0 '' -vcsn power -o binary^7.gv -f $binary_gv 7
+run 0 128 -vcsn evaluate -f binary^7.gv 10

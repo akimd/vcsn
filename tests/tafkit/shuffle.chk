@@ -6,9 +6,9 @@
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn-derived-term -e 'a*a' -o 'a*a.gv'
-run 0 '' -vcsn-shuffle -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*.(a.a*.a+a.a*.a)' -vcsn-aut-to-exp -f prod.gv
+run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
+run 0 '' -vcsn shuffle -o prod.gv -f 'a*a.gv' 'a*a.gv'
+run 0 'a*.(a.a*.a+a.a*.a)' -vcsn aut-to-exp -f prod.gv
 
 
 ## ------------------------ ##
@@ -62,7 +62,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-shuffle -f abs.gv mabs.gv <<\EOF
+run 0 - -vcsn shuffle -f abs.gv mabs.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -98,7 +98,7 @@ EOF
 ## ---------------------- ##
 # TAFKIT manual, Figure 3.13, right [as of 2013-10-10]
 
-#run 0 '' -vcsn-standard -C 'lal_char(a)_z' -e '(a)*' -o as.gv
+#run 0 '' -vcsn standard -C 'lal_char(a)_z' -e '(a)*' -o as.gv
 cat > as.gv <<\EOF
 digraph
 {
@@ -120,7 +120,7 @@ digraph
 }
 EOF
 
-#run 0 '' -vcsn-standard -C 'lal_char(a)_z' -e '(<-1>a)*' -o mas.gv
+#run 0 '' -vcsn standard -C 'lal_char(a)_z' -e '(<-1>a)*' -o mas.gv
 cat > mas.gv <<\EOF
 digraph
 {
@@ -142,7 +142,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-shuffle -f as.gv mas.gv <<\EOF
+run 0 - -vcsn shuffle -f as.gv mas.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -166,8 +166,8 @@ EOF
 ## ABC )( ab. ##
 ## ---------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_z' -e 'ab' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(ABC)_z' -e 'ABC' -o ABC.gv
+run 0 '' -vcsn standard -C 'lal_char(ab)_z' -e 'ab' -o ab.gv
+run 0 '' -vcsn standard -C 'lal_char(ABC)_z' -e 'ABC' -o ABC.gv
 
 cat > ab_shuffle_ABC.gv <<\EOF
 digraph
@@ -216,10 +216,10 @@ digraph
 }
 EOF
 
-run 0 -f ab_shuffle_ABC.gv -vcsn-shuffle -f ABC.gv ab.gv
+run 0 -f ab_shuffle_ABC.gv -vcsn shuffle -f ABC.gv ab.gv
 
 # Of course we'll have 5 letters.
-run 0 - -vcsn-enumerate -f ab_shuffle_ABC.gv 10 <<\EOF
+run 0 - -vcsn enumerate -f ab_shuffle_ABC.gv 10 <<\EOF
 ABCab
 ABaCb
 ABabC
@@ -238,27 +238,27 @@ EOF
 ## --------------------- ##
 
 # RatE and B, in both directions.
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '(<u>a+<v>b)*' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
          -e 'a' -o a.gv
-run 0 '' -vcsn-shuffle -o 1.gv -f ab.gv a.gv
+run 0 '' -vcsn shuffle -o 1.gv -f ab.gv a.gv
 run 0 'a + <u+u>aa + <v>ab + <v>ba' \
-      -vcsn-shortest -f 1.gv 4
-run 0 '' -vcsn-shuffle -o 2.gv -f a.gv ab.gv
+      -vcsn shortest -f 1.gv 4
+run 0 '' -vcsn shuffle -o 2.gv -f a.gv ab.gv
 run 0 'a + <u+u>aa + <v>ab + <v>ba' \
-      -vcsn-shortest -f 2.gv 4
+      -vcsn shortest -f 2.gv 4
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn-shuffle -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn-enumerate -f uavb-xayb.gv 4 <<\EOF
+run 0 '' -vcsn shuffle -o uavb-xayb.gv -f uavb.gv xayb.gv
+run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
 <u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
 <u.v.x.y+x.y.u.v>abab
 EOF
@@ -269,9 +269,9 @@ EOF
 
 for l in a b c d
 do
-  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
 done
-run 0 '' -vcsn-shuffle -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+run 0 '' -vcsn shuffle -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
 <a.b.c.d+a.b.d.c+a.c.b.d+a.c.d.b+a.d.b.c+a.d.c.b+b.a.c.d+b.a.d.c+b.c.a.d+b.c.d.a+b.d.a.c+b.d.c.a+c.a.b.d+c.a.d.b+c.b.a.d+c.b.d.a+c.d.a.b+c.d.b.a+d.a.b.c+d.a.c.b+d.b.a.c+d.b.c.a+d.c.a.b+d.c.b.a>xxxx
 EOF

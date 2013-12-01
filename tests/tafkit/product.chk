@@ -6,18 +6,18 @@
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn-derived-term -e 'a*a' -o 'a*a.gv'
-run 0 '' -vcsn-product -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*.a' -vcsn-aut-to-exp -f prod.gv
+run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
+run 0 '' -vcsn product -o prod.gv -f 'a*a.gv' 'a*a.gv'
+run 0 'a*.a' -vcsn aut-to-exp -f prod.gv
 
 
 ## ---------------------- ##
 ## (a+b)* x (b+c)* = b*.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
+run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
+run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char(b)_b"
@@ -45,9 +45,9 @@ EOF
 ## ab x cd = 0.  ##
 ## ------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e 'ab' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e 'cd' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e 'ab' -o ab.gv
+run 0 '' -vcsn standard -C 'lal_char(cd)_b' -e 'cd' -o bc.gv
+run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -70,9 +70,9 @@ EOF
 ## (a+b)* x (c+d)* = \e.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.gv
-run 0 - -vcsn-product -f ab.gv bc.gv <<\EOF
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
+run 0 '' -vcsn standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.gv
+run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
 digraph
 {
   vcsn_context = "lal_char_b"
@@ -180,32 +180,32 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-product -f a.gv b.gv
+run 0 out.exp -vcsn product -f a.gv b.gv
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
 ## --------------------- ##
 
 # RatE and B, in both directions.
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '(<u>a+<v>b)*' -o ua+vb.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
          -e 'a{+}' -o a+.gv
-run 0 '' -vcsn-product -o 1.gv -f ua+vb.gv a+.gv
-run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn-aut-to-exp -f 1.gv
-run 0 '' -vcsn-product -o 1.gv -f a+.gv ua+vb.gv
-run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn-aut-to-exp -f 1.gv
+run 0 '' -vcsn product -o 1.gv -f ua+vb.gv a+.gv
+run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn aut-to-exp -f 1.gv
+run 0 '' -vcsn product -o 1.gv -f a+.gv ua+vb.gv
+run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn aut-to-exp -f 1.gv
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn-product -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn-enumerate -f uavb-xayb.gv 4 <<\EOF
+run 0 '' -vcsn product -o uavb-xayb.gv -f uavb.gv xayb.gv
+run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
 <u.x.v.y>ab
 EOF
 
@@ -215,9 +215,9 @@ EOF
 
 for l in a b c d
 do
-  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
 done
-run 0 '' -vcsn-product -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+run 0 '' -vcsn product -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
 <a.b.c.d>x
 EOF

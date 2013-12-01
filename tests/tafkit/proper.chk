@@ -4,7 +4,7 @@
 ## ------------------
 check ()
 {
-  run 0 "$2" -vcsn-proper -A -I dot -f "$1"
+  run 0 "$2" -vcsn proper -A -I dot -f "$1"
 }
 
 ## ------------------------------------------- ##
@@ -145,7 +145,7 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-proper -A -I dot -f a.gv
+run 1 "" -vcsn proper -A -I dot -f a.gv
 
 ## ------------ ##
 ## law_char_z.  ##
@@ -217,7 +217,7 @@ digraph
 }
 EOF
 
-run 1 "" -vcsn-proper -A -I dot -f a.gv
+run 1 "" -vcsn proper -A -I dot -f a.gv
 
 ## --------------------------- ##
 ## lan_char_zr: a long cycle.  ##

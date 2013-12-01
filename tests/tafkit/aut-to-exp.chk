@@ -9,8 +9,8 @@
 # Check that aut-to-exp(standard(EXP-IN)) = EXP-OUT.
 check ()
 {
-  run 0 stdout -vcsn-standard -e "$1" -o std.gv
-  run 0 "$2" -vcsn-aut-to-exp -Af std.gv
+  run 0 stdout -vcsn standard -e "$1" -o std.gv
+  run 0 "$2" -vcsn aut-to-exp -Af std.gv
 }
 
 check 'a'                            'a'
@@ -29,14 +29,14 @@ check '(?@lal_char(abc)_ratexpset<lal_char(vwxyz)_b>)<v>(<w>a+<x>b)<y>c<z>' \
       '(<v.w>a.<y>c+<v.x>b.<y>c)<z>'
 
 # Check the associativity of the product.
-run 0 '<x>a.(<y>b)*.<z>c' -vcsn-aut-to-exp -f $medir/a.gv
+run 0 '<x>a.(<y>b)*.<z>c' -vcsn aut-to-exp -f $medir/a.gv
 
 # check LIB-AUTOMATON EXP-OUT
 # ---------------------------
 # Check that aut-to-exp(AUTOMATON) = EXP-OUT.
 check ()
 {
-  run 0 "$2" -vcsn-aut-to-exp -Af "$top_srcdir/share/vcsn/$1"
+  run 0 "$2" -vcsn aut-to-exp -Af "$top_srcdir/share/vcsn/$1"
 }
 
 check lal_char_b/a1.gv    '(a+b)*.a.b.(a+b)*'
@@ -62,5 +62,5 @@ check lal_char_zmin/slowgrow.gv \
 # Eliminate state 0, or 1, or 2.
 for i in 0 1 2
 do
-  run 0 -f $medir/lao-elim-$i.gv -vcsn-eliminate-state -f $medir/lao.gv $i
+  run 0 -f $medir/lao-elim-$i.gv -vcsn eliminate-state -f $medir/lao.gv $i
 done

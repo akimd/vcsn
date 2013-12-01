@@ -6,16 +6,16 @@
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn-derived-term -e 'a*a' -o 'a*a.gv'
-# FIXME: abort: run 0 '' -vcsn-infiltration -o prod.gv -f 'a*a.gv' 'a*a.gv'
-# FIXME: abort: run 0 'a*a' -vcsn-aut-to-exp -f prod.gv
+run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
+# FIXME: abort: run 0 '' -vcsn infiltration -o prod.gv -f 'a*a.gv' 'a*a.gv'
+# FIXME: abort: run 0 'a*a' -vcsn aut-to-exp -f prod.gv
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
 ## -------------------- ##
 
 # a infiltration a
-run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -43,7 +43,7 @@ digraph
 EOF
 
 # abc infiltration abc
-run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/abc.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/abc.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -105,7 +105,7 @@ digraph
 EOF
 
 # abc infiltration xy
-run 0 - -vcsn-infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/xy.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/xy.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abcxy)_z"
@@ -158,28 +158,28 @@ EOF
 ## --------------------- ##
 
 # RatE and B, in both directions.
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '(<u>a+<v>b)*' -o ab.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_b' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
          -e 'a' -o a.gv
 # FIXME: ABORT
-### run 0 '' -vcsn-infiltration -o 1.gv -f ab.gv a.gv
+### run 0 '' -vcsn infiltration -o 1.gv -f ab.gv a.gv
 ### run 0 '<u+\e>a + <u.u+u+u>aa + <u.v+v>ab + <v.u+v>ba' \
-###       -vcsn-shortest -f 1.gv 4
-### run 0 '' -vcsn-infiltration -o 2.gv -f a.gv ab.gv
+###       -vcsn shortest -f 1.gv 4
+### run 0 '' -vcsn infiltration -o 2.gv -f a.gv ab.gv
 ### run 0 '<u+\e>a + <u.u+u+u>aa + <u.v+v>ab + <v.u+v>ba' \
-###       -vcsn-shortest -f 2.gv 4
+###       -vcsn shortest -f 2.gv 4
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn-standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
+run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn-infiltration -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn-enumerate -f uavb-xayb.gv 4 <<\EOF
+run 0 '' -vcsn infiltration -o uavb-xayb.gv -f uavb.gv xayb.gv
+run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
 <u.x.v.y>ab
 <u.x.v.y+x.u.v.y>aab
 <u.x.v.y+u.x.y.v>abb
@@ -193,10 +193,10 @@ EOF
 
 for l in a b c d
 do
-  run 0 '' -vcsn-standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
+  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
 done
-run 0 '' -vcsn-infiltration -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn-enumerate -f abcd.gv 10 <<\EOF
+run 0 '' -vcsn infiltration -o abcd.gv -f a.gv b.gv c.gv d.gv
+run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
 <a.b.c.d>x
 <a.c.d.b+b.c.d.a+a.b.d.c+a.d.b.c+b.d.a.c+c.d.a.b+a.b.c.d+a.c.b.d+b.c.a.d+a.b.c.d+a.b.c.d+b.a.c.d+c.a.b.d+d.a.b.c>xx
 <a.d.c.b+a.d.b.c+b.d.c.a+b.d.a.c+c.d.a.b+c.d.b.a+a.c.d.b+a.c.b.d+b.c.d.a+b.c.a.d+a.b.d.c+a.b.c.d+a.c.d.b+a.b.d.c+a.d.b.c+a.b.c.d+a.c.b.d+a.b.c.d+b.c.d.a+b.a.d.c+b.d.a.c+b.a.c.d+b.c.a.d+b.a.c.d+c.a.d.b+c.b.d.a+c.d.a.b+c.a.b.d+c.a.b.d+c.b.a.d+d.a.c.b+d.b.c.a+d.a.b.c+d.a.b.c+d.b.a.c+d.c.a.b>xxx

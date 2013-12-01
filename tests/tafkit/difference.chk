@@ -5,10 +5,10 @@
 # Check that aut-to-exp(difference(dterm(LHS), dterm(RHS))) == EXPECTED.
 check ()
 {
-  run 0 '' -vcsn-derived-term -o lhs.gv -e "$1"
-  run 0 '' -vcsn-derived-term -o rhs.gv -e "$2"
-  run 0 '' -vcsn-difference   -o diff.gv -f lhs.gv rhs.gv
-  run 0 "$3" -vcsn-aut-to-exp -f diff.gv
+  run 0 '' -vcsn derived-term -o lhs.gv -e "$1"
+  run 0 '' -vcsn derived-term -o rhs.gv -e "$2"
+  run 0 '' -vcsn difference   -o diff.gv -f lhs.gv rhs.gv
+  run 0 "$3" -vcsn aut-to-exp -f diff.gv
 }
 
 

@@ -11,7 +11,7 @@ check_lal ()
     (false) status=2;;
   esac
   cat >lal.gv
-  run $status "$1" -vcsn-is-deterministic -A -f lal.gv
+  run $status "$1" -vcsn is-deterministic -A -f lal.gv
 }
 
 check_lal "true" <<\EOF

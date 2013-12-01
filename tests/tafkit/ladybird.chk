@@ -23,9 +23,9 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-ladybird -C 'lal_char(abc)_b' 2
+run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_b' 2
 perl -pi -e 's/_b/_z/g' out.exp
-run 0 out.exp -vcsn-ladybird -C 'lal_char(abc)_z' 2
+run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_z' 2
 
 cat >out.exp <<\EOF
 digraph
@@ -50,4 +50,4 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-ladybird -C 'lal_char(abc)_zmin' 2
+run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_zmin' 2

@@ -4,7 +4,7 @@
 # ----------------------------
 check ()
 {
-  run 0 "$3" -vcsn-evaluate -f "$1" "$2"
+  run 0 "$3" -vcsn evaluate -f "$1" "$2"
 }
 
 ## ------------ ##
@@ -55,9 +55,9 @@ digraph
 }
 EOF
 
-run 0 4  -vcsn-evaluate -f initial-weight.gv a
-run 0 8  -vcsn-evaluate -f initial-weight.gv abab
-run 0 12 -vcsn-evaluate -f initial-weight.gv aabab
+run 0 4  -vcsn evaluate -f initial-weight.gv a
+run 0 8  -vcsn evaluate -f initial-weight.gv abab
+run 0 12 -vcsn evaluate -f initial-weight.gv aabab
 
 cat > more-letters.gv <<\EOF
 digraph
@@ -81,7 +81,7 @@ digraph
 }
 EOF
 
-run 0 6 -vcsn-evaluate -f more-letters.gv caa
+run 0 6 -vcsn evaluate -f more-letters.gv caa
 
 cat > prod.gv <<\EOF
 digraph
@@ -138,7 +138,7 @@ check complex.gv aabab 36
 ## lal_char_zmin.  ##
 ## --------------- ##
 
-run 0 '' -vcsn-standard -e '(?@lal_char(abc)_zmin)a' -o a.gv
+run 0 '' -vcsn standard -e '(?@lal_char(abc)_zmin)a' -o a.gv
 
 check a.gv '' oo
 check a.gv 'a' 0

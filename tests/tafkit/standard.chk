@@ -8,7 +8,7 @@
 # -----------------------------
 check ()
 {
-  run 0 - -vcsn-standard -Af "$@" -O dot
+  run 0 - -vcsn standard -Af "$@" -O dot
 }
 
 # Try to be exhaustive: Several initials states, with weights, one of
@@ -81,12 +81,12 @@ EOF
 # Expected output is on stdin.
 check ()
 {
-  run 0 - -vcsn-standard -e "$@" -O dot
+  run 0 - -vcsn standard -e "$@" -O dot
 }
 
 fail ()
 {
-  run 1 '' -vcsn-standard -e "$@"
+  run 1 '' -vcsn standard -e "$@"
 }
 
 ## --- ##

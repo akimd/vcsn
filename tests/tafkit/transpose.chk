@@ -1,14 +1,14 @@
 #! /bin/sh
 
 ## ------------------------ ##
-## vcsn-transpose(ratexp).  ##
+## vcsn transpose(ratexp).  ##
 ## ------------------------ ##
 
 # check INPUT OUTPUT
 # ------------------
 check ()
 {
-  run 0 "$2" -vcsn-transpose $ctx -E -e "$1"
+  run 0 "$2" -vcsn transpose $ctx -E -e "$1"
 }
 
 check2 ()
@@ -41,7 +41,7 @@ check2 '<ef>(abcd)*<gh>' '<hg>(dcba)*<fe>'
 
 
 ## --------------------------- ##
-## vcsn-transpose(automaton).  ##
+## vcsn transpose(automaton).  ##
 ## --------------------------- ##
 
 # check CONTEXT RATEXP < DIFF
@@ -49,8 +49,8 @@ check2 '<ef>(abcd)*<gh>' '<hg>(dcba)*<fe>'
 # Compare the standard RATEXP to its transposed, expect DIFF.
 check ()
 {
-  run 0 '' -vcsn-standard -E -C "$1" -O dot -e "$2" -o forward.out
-  run 0 '' -vcsn-transpose -I dot -O dot -A -f forward.out -o transposed.out
+  run 0 '' -vcsn standard -E -C "$1" -O dot -e "$2" -o forward.out
+  run 0 '' -vcsn transpose -I dot -O dot -A -f forward.out -o transposed.out
 
   run 1 - -diff -t -W80 --suppress-common-lines -y forward.out transposed.out
 }
@@ -97,12 +97,12 @@ EOF
 # Check that transposition is an involution on AUTOMATON.
 involution ()
 {
-  run 0 '' -vcsn-transpose -A -f $1 -o transpose.out
+  run 0 '' -vcsn transpose -A -f $1 -o transpose.out
   cp $1 out.exp
-  run 0 out.exp -vcsn-transpose -A -f transpose.out
+  run 0 out.exp -vcsn transpose -A -f transpose.out
 }
 
-run 0 '' -vcsn-de-bruijn -C 'lal_char(abcd)_z' -o de-bruin-2.gv 2
+run 0 '' -vcsn de-bruijn -C 'lal_char(abcd)_z' -o de-bruin-2.gv 2
 involution de-bruin-2.gv
 
 ## -------------- ##
@@ -112,11 +112,11 @@ involution de-bruin-2.gv
 # check_minimization < OUT.EXP
 check_minimization ()
 {
-  run 0 '' -vcsn-standard                     -o a.out    "$@"
-  run 0 '' -vcsn-transpose   -I dot -O dot -A -o at.out   -f a.out
-  run 0 '' -vcsn-determinize -I dot -O dot -A -o atd.out  -f at.out   1
-  run 0 '' -vcsn-transpose   -I dot -O dot -A -o atdt.out -f atd.out
-  run 0 -  -vcsn-determinize -I dot -O dot -A             -f atdt.out 1
+  run 0 '' -vcsn standard                     -o a.out    "$@"
+  run 0 '' -vcsn transpose   -I dot -O dot -A -o at.out   -f a.out
+  run 0 '' -vcsn determinize -I dot -O dot -A -o atd.out  -f at.out   1
+  run 0 '' -vcsn transpose   -I dot -O dot -A -o atdt.out -f atd.out
+  run 0 -  -vcsn determinize -I dot -O dot -A             -f atdt.out 1
 }
 
 check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<\EOF

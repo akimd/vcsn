@@ -5,9 +5,9 @@
 
 check ()
 {
-  run 0 out.exp -vcsn-complete -A -f "$1"
+  run 0 out.exp -vcsn complete -A -f "$1"
   # Idempotence.
-  run 0 out.exp -vcsn-complete -A -f out.exp
+  run 0 out.exp -vcsn complete -A -f out.exp
 }
 
 cat > graph.gv <<\EOF

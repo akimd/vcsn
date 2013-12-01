@@ -6,14 +6,14 @@
 check ()
 {
   cat >thompson.gv
-  run 0 -f thompson.gv -vcsn-thompson -e "$@" -O dot
+  run 0 -f thompson.gv -vcsn thompson -e "$@" -O dot
   # Check that it is normalized.
-  run 0 'true' -vcsn-is-normalized -f thompson.gv
+  run 0 'true' -vcsn is-normalized -f thompson.gv
 }
 
 fail ()
 {
-  run 1 '' -vcsn-thompson -e "$@"
+  run 1 '' -vcsn thompson -e "$@"
 }
 
 # We don't support intersection.

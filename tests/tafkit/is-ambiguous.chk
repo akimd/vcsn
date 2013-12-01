@@ -15,8 +15,8 @@ digraph
   1 -> F
 }
 EOF
-run 2 "false" -vcsn-is-ambiguous -A -f a.gv
-run 2 "false" -vcsn-is-deterministic -A -f a.gv
+run 2 "false" -vcsn is-ambiguous -A -f a.gv
+run 2 "false" -vcsn is-deterministic -A -f a.gv
 
 # not deterministic, and ambiguous.
 cat >a.gv <<\EOF
@@ -30,8 +30,8 @@ digraph
   2 -> F
 }
 EOF
-run 0 "true" -vcsn-is-ambiguous -A -f a.gv
-run 2 "false" -vcsn-is-deterministic -A -f a.gv
+run 0 "true" -vcsn is-ambiguous -A -f a.gv
+run 2 "false" -vcsn is-deterministic -A -f a.gv
 
 # Likewise, but with a non-commutative product.
 cat >a.gv <<\EOF
@@ -45,8 +45,8 @@ digraph
   2 -> F
 }
 EOF
-run 0 "true" -vcsn-is-ambiguous -A -f a.gv
-run 2 "false" -vcsn-is-deterministic -A -f a.gv
+run 0 "true" -vcsn is-ambiguous -A -f a.gv
+run 2 "false" -vcsn is-deterministic -A -f a.gv
 
 # deterministic, and unambiguous (obviously).
 cat >a.gv <<\EOF
@@ -60,5 +60,5 @@ digraph
   2 -> F
 }
 EOF
-run 2 "false" -vcsn-is-ambiguous -A -f a.gv
-run 0 "true" -vcsn-is-deterministic -A -f a.gv
+run 2 "false" -vcsn is-ambiguous -A -f a.gv
+run 0 "true" -vcsn is-deterministic -A -f a.gv

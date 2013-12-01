@@ -8,7 +8,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-double-ring 0
+run 0 out.exp -vcsn double-ring 0
 
 cat >out.exp <<\EOF
 digraph
@@ -30,7 +30,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-double-ring 1 0
+run 0 out.exp -vcsn double-ring 1 0
 
 cat >out.exp <<\EOF
 digraph
@@ -64,4 +64,4 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-double-ring 4 2 3
+run 0 out.exp -vcsn double-ring 4 2 3

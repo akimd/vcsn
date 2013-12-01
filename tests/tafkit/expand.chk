@@ -4,7 +4,7 @@
 # ------------------------------
 check_exp ()
 {
-  run 0 $3 -vcsn-expand -E -C "$1" -e "$2"
+  run 0 $3 -vcsn expand -E -C "$1" -e "$2"
 }
 
 check_exp 'lal_char(abcd)_z'  '\z' '\z'

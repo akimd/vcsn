@@ -21,9 +21,9 @@ fi
 check ()
 {
   # Check TAF-Kit's support for EFSM I/O.
-  run 0 -f "$2" -vcsn-cat -O efsm -Af "$1"
+  run 0 -f "$2" -vcsn cat -O efsm -Af "$1"
   # Of course, we lose the comments.
-  run -I '^//' 0 -f "$1" -vcsn-cat -I efsm -Af "$2"
+  run -I '^//' 0 -f "$1" -vcsn cat -I efsm -Af "$2"
 
   # Check OpenFST's support for EFSM I/O.
   fst=$(basename $2 .efsm).fst
@@ -40,11 +40,11 @@ check $top_srcdir/share/vcsn/lal_char_z/binary.gv $medir/binary.efsm
 # Check that Open FST and V2 understand the weights the same way.
 #
 # c1^2 by v2.
-run 0 '' -vcsn-power -O efsm -o c12.v2.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv 2
+run 0 '' -vcsn power -O efsm -o c12.v2.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv 2
 fst 0 '' -efstcompile c12.v2.efsm c12.v2.ofst
 
 # c1^2 by OpenFST.
-run 0 '' -vcsn-cat -O efsm -o c1.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv
+run 0 '' -vcsn cat -O efsm -o c1.efsm -f $top_srcdir/share/vcsn/lal_char_z/c1.gv
 fst 0 '' -efstcompile c1.efsm c1.ofst
 fst 0 '' -fstintersect c1.ofst c1.ofst c12.ofst.ofst
 

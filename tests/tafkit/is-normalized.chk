@@ -11,7 +11,7 @@ check ()
     (false) status=2;;
   esac
   cat >lal.gv
-  run $status "$1" -vcsn-is-normalized -A -f lal.gv
+  run $status "$1" -vcsn is-normalized -A -f lal.gv
 }
 
 # A simple, normalized, non-Thompson, automaton.

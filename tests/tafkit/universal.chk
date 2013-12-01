@@ -31,12 +31,12 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-universal -f $top_srcdir/share/vcsn/lal_char_b/a1.gv
+run 0 out.exp -vcsn universal -f $top_srcdir/share/vcsn/lal_char_b/a1.gv
 # Idempotence.
-run 0 out.exp -vcsn-universal -f out.exp
+run 0 out.exp -vcsn universal -f out.exp
 
 # Start from a rat-exp.
-run 0 out.exp -vcsn-universal -Ee '(?@lal_char(ab)_b)(a+b)*ab(a+b)*'
+run 0 out.exp -vcsn universal -Ee '(?@lal_char(ab)_b)(a+b)*ab(a+b)*'
 
 
 ## ----------------------------------------------------------- ##
@@ -128,6 +128,6 @@ digraph
   6 -> 6 [label = "b"]
 }
 EOF
-run 0 out.exp -vcsn-universal -f a.gv
+run 0 out.exp -vcsn universal -f a.gv
 # Idempotence.
-run 0 out.exp -vcsn-universal -f out.exp
+run 0 out.exp -vcsn universal -f out.exp

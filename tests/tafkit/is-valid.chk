@@ -13,12 +13,12 @@ check ()
     (true)  status=0;;
     (false) status=2;;
   esac
-  run $status "$1" -vcsn-is-valid -Ee "(?@lal_char(abc)_r)$re"
+  run $status "$1" -vcsn is-valid -Ee "(?@lal_char(abc)_r)$re"
 
   # Check that we are consistent with the validity of the Thompson of
   # RAT_EXP.
-  run 0 '' -vcsn-thompson -e "(?@lan_char(abc)_r)$re" -o th.gv
-  run $status "$1" -vcsn-is-valid -A -f th.gv
+  run 0 '' -vcsn thompson -e "(?@lan_char(abc)_r)$re" -o th.gv
+  run $status "$1" -vcsn is-valid -A -f th.gv
 }
 
 check 'true' 'a*'

@@ -26,12 +26,12 @@ weighset()
 # Expected output is on stdin, except the constant bits (see below).
 check ()
 {
-  run 0 - -vcsn-de-bruijn "$@" -O dot
+  run 0 - -vcsn de-bruijn "$@" -O dot
 }
 
 fail ()
 {
-  run 1 '' -vcsn-standard -C "$@"
+  run 1 '' -vcsn standard -C "$@"
 }
 
 check -C 'lal_char(ab)_b' 2 <<\EOF

@@ -25,11 +25,11 @@ fi
 check_gv_grail ()
 {
   grail $1.grail
-  run 0 -f $1.grail -vcsn-cat -O grail -f $1.gv
-#  run 0 -f $1.gv    -vcsn-cat -I grail -f $1.grail
+  run 0 -f $1.grail -vcsn cat -O grail -f $1.gv
+#  run 0 -f $1.gv    -vcsn cat -I grail -f $1.grail
 }
 
 check_gv_grail $medir/a
 
-run 0 '' -vcsn-ladybird -O grail -o grail.gr 10
+run 0 '' -vcsn ladybird -O grail -o grail.gr 10
 grail 'grail.gr'

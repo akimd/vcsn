@@ -16,7 +16,7 @@ check_enumerate ()
   do
     echo "$i"
   done >out.exp
-  run 0 out.exp -vcsn-enumerate -Ee "$exp" "$max"
+  run 0 out.exp -vcsn enumerate -Ee "$exp" "$max"
 }
 
 
@@ -32,7 +32,7 @@ check_shortest ()
   do
     echo "$i"
   done >out.exp
-  run 0 out.exp -vcsn-shortest -O list -Ee "$exp" "$num"
+  run 0 out.exp -vcsn shortest -O list -Ee "$exp" "$num"
 }
 
 ## check EXP MAX WORD...

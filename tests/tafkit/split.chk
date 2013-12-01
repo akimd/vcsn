@@ -5,7 +5,7 @@
 # Check that the splitting of RAT-EXP is RESULT.
 check ()
 {
-  run 0 "$2" -vcsn-split -C "$ctx" -e "$1"
+  run 0 "$2" -vcsn split -C "$ctx" -e "$1"
 }
 
 ctx='lal_char(abc)_ratexpset<lal_char(wxyz)_z>'

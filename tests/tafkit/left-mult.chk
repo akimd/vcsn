@@ -26,7 +26,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-left-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
+run 0 - -vcsn left-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -52,7 +52,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-right-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
+run 0 out.exp -vcsn right-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -108,7 +108,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-left-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
+run 0 - -vcsn left-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_r"
@@ -136,7 +136,7 @@ digraph
 }
 EOF
 
-run 0 out.exp -vcsn-right-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
+run 0 out.exp -vcsn right-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_r"

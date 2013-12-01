@@ -21,7 +21,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-chain -f in.gv 0 <<\EOF
+run 0 - -vcsn chain -f in.gv 0 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -40,7 +40,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-chain -f in.gv 5 <<\EOF
+run 0 - -vcsn chain -f in.gv 5 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -95,7 +95,7 @@ digraph
 }
 EOF
 
-run 0 - -vcsn-chain -f in.gv 3 <<\EOF
+run 0 - -vcsn chain -f in.gv 3 <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

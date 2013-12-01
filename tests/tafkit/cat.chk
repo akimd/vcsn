@@ -9,7 +9,7 @@
 # Check -C and (?@...) support.
 check_weight ()
 {
-  run 0 "$3" -vcsn-cat -C "$1" -We "$2"
+  run 0 "$3" -vcsn cat -C "$1" -We "$2"
 }
 
 check_weight 'lal_char(a)_b' 0 0
@@ -27,7 +27,7 @@ check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' 'a*.<23>(b.c)'
 # Check -C and (?@...) support.
 check_poly ()
 {
-  run 0 "$3" -vcsn-cat -C "$1" -Pe "$2"
+  run 0 "$3" -vcsn cat -C "$1" -Pe "$2"
 }
 
 check_poly 'lal_char(a)_b' '\z' '\z'
@@ -60,7 +60,7 @@ check_poly 'lal_char(abc)_ratexpset<lal_char(xyz)_z>' \
 # Check -C and (?@...) support.
 check_exp ()
 {
-  run 0 "$3" -vcsn-cat -E -C "$1" -e "$2"
+  run 0 "$3" -vcsn cat -E -C "$1" -e "$2"
 }
 
 check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
@@ -78,7 +78,7 @@ check_exp 'lal_char(0123)_z' "<0123>0123" "<123>(0.1.2.3)"
 # Check -C and (?@...) support.
 check_latex ()
 {
-  run 0 "\$$3\$" -vcsn-cat -O latex -E -C "$1" -e "$2"
+  run 0 "\$$3\$" -vcsn cat -O latex -E -C "$1" -e "$2"
 }
 
 check_latex 'lal_char(abcd)_b' "abcd" "a \\cdot b \\cdot c \\cdot d"
@@ -96,7 +96,7 @@ check_latex 'lal_char(0123)_z' "<0123>0123"  \
 # -----------------------------------
 check_info ()
 {
-  run 0 - -vcsn-cat "$@" -O info
+  run 0 - -vcsn cat "$@" -O info
 }
 
 check_info -Ee '(?@lal_char(abc)_b)abc' <<\EOF
@@ -130,12 +130,12 @@ EOF
 
 # check_stdof CONTEXT RATEXP
 # --------------------------
-# Check that vcsn-cat is idempotent on the standard RATEXP.
+# Check that vcsn cat is idempotent on the standard RATEXP.
 check_stdof ()
 {
-  run 0 '' -vcsn-standard -E -C "$1" -e "$2" -o std.gv
+  run 0 '' -vcsn standard -E -C "$1" -e "$2" -o std.gv
   cp std.gv out.exp
-  run 0 out.exp -vcsn-cat -Af out.exp
+  run 0 out.exp -vcsn cat -Af out.exp
 }
 
 check_stdof 'lal_char(abcd)_b' "abcd"
@@ -151,7 +151,7 @@ check_stdof 'lal_char(abcd)_zmin' "<3>(\\e+a)"
 fail_aut ()
 {
   cat >in.gv
-  run 1 '' -vcsn-cat -Af in.gv
+  run 1 '' -vcsn cat -Af in.gv
 }
 
 # Invalid label: letter not in alphabet.
@@ -249,6 +249,6 @@ EOF
 
 for a in $medir/*.in.gv
 do
-  run 0 -f ${a%.in.gv}.out.gv -vcsn-cat -Af $a
-  run 0 -f ${a%.in.gv}.tex -vcsn-cat -O tikz -Af $a
+  run 0 -f ${a%.in.gv}.out.gv -vcsn cat -Af $a
+  run 0 -f ${a%.in.gv}.tex -vcsn cat -O tikz -Af $a
 done

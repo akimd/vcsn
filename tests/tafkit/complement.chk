@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Precondition: lal.
-run 1 '' -vcsn-complement -f- <<\EOF
+run 1 '' -vcsn complement -f- <<\EOF
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -12,7 +12,7 @@ digraph
 EOF
 
 # Precondition: Boolean.
-run 1 '' -vcsn-complement -f- <<\EOF
+run 1 '' -vcsn complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -23,7 +23,7 @@ digraph
 EOF
 
 # Precondition: deterministic.
-run 1 '' -vcsn-complement -f- <<\EOF
+run 1 '' -vcsn complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -36,7 +36,7 @@ digraph
 EOF
 
 # Precondition: complete.
-run 1 '' -vcsn-complement -f- <<\EOF
+run 1 '' -vcsn complement -f- <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -97,8 +97,8 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 EOF
-run 0 out.exp -vcsn-complement -f a.gv
+run 0 out.exp -vcsn complement -f a.gv
 # Involution.
 mv out.exp in.gv
 mv a.gv out.exp
-run 0 out.exp -vcsn-complement -f in.gv
+run 0 out.exp -vcsn complement -f in.gv

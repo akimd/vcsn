@@ -17,7 +17,7 @@ my $PASS = "${green}PASS$std";
 my $fail = 0;
 
 # The tested program.
-my $prog = 'vcsn-cat';
+my $prog = 'vcsn cat';
 # The current atom kind (argument for -a).
 my $labels = 'letters';
 # The current weightset (argument for -w).
@@ -79,8 +79,8 @@ sub pp($)
     {
       # Remove invitation to run -h.
       $res =~ s/\nTry .* -h' for more.*//;
-      # Remove "vcsn-cat: " and its path in error message.
-      $res =~ s{^(.*/)?(lt-)?$prog:\s*}{}gm;
+      # Remove "vcsn cat: " and its path in error message.
+      $res =~ s{^(.*/)?(lt-)?vcsn.cat:\s*}{}gm;
       # Stderr is prefixed by ! in test cases.
       $res =~ s{^}{! }gm;
     }

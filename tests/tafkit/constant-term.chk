@@ -10,9 +10,9 @@ check ()
 {
   local re
   re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$2"
-  run 0 "$1" -vcsn-constant-term -e "$re"
-  run 0 "" -vcsn-derived-term -e "$re" -o a.gv
-  run 0 "$1" -vcsn-evaluate -f a.gv ''
+  run 0 "$1" -vcsn constant-term -e "$re"
+  run 0 "" -vcsn derived-term -e "$re" -o a.gv
+  run 0 "$1" -vcsn evaluate -f a.gv ''
 }
 
 check '\z' 'a'
