@@ -17,6 +17,7 @@
 
 check_PROGRAMS =
 
+check_SCRIPTS = %D%/bin/vcsn
 dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_DRIVER = \

@@ -219,10 +219,14 @@ AM_PROG_LEX
 AC_CONFIG_FILES([build-aux/bin/flex++], [chmod +x build-aux/bin/flex++])
 TC_PROG([bison], [>= 2.5], [BISON], [Bison parser generator])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
+
 # lib/config.h is unprefixed, and not installed, vcsn/config.hh is
 # prefixed and installed.
 AC_CONFIG_HEADERS([lib/config.h:vcsn/config.in.h])
 AX_PREFIX_CONFIG_H([vcsn/config.hh], [vcsn], [lib/config.h])
+
 AC_CONFIG_FILES([Makefile])
+
+AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
 AC_OUTPUT
