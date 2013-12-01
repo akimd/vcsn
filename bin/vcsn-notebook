@@ -1,0 +1,3 @@
+#! /bin/sh
+
+exec ipython-2.7 notebook --pylab=inline

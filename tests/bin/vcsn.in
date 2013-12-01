@@ -13,6 +13,14 @@ export VCSN_DATA_PATH
 PATH=$builddir/bin:$srcdir/bin:$PATH
 export PATH
 
+# Use the non-installed Python modules, and its libraries.
+PYTHONPATH=$srcdir/python:$builddir/python/.libs:$PYTHONPATH
+export PYTHONPATH
+LD_LIBRARY_PATH=$builddir/lib/.libs:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+DYLD_LIBRARY_PATH=$builddir/lib/.libs:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH
+
 prog="vcsn-$1"
 shift
 
