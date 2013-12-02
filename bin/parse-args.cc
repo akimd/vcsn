@@ -11,12 +11,30 @@
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/stream.hh>
 
+// FIXME: Factor in misc (see dyn/translate.hh).
+static
+std::string xgetenv(const char* var, const char* val)
+{
+  const char* cp = getenv(var);
+  return cp ? cp : val;
+}
+
+options::options()
+  : data_library(xgetenv("VCSN_DATADIR", VCSN_DATADIR), ":")
+{}
+
+/// An istream for the input argv[0].
 static
 std::shared_ptr<std::istream>
 input(const options& opts)
 {
   if (opts.input_is_file)
-    return vcsn::open_input_file(opts.input);
+    {
+      auto p = opts.input == "-"
+        ? vcsn::path("-")
+        : opts.data_library.find_file(opts.input);
+      return vcsn::open_input_file(p.string());
+    }
   else
     return std::make_shared<std::istringstream>(opts.input);
 }
@@ -97,10 +115,10 @@ usage(const char* prog, int exit_status)
 }
 
 static void
-version(const char* prog)
+version(const options& opts)
 {
   std::cout
-    << prog << " (" VCSN_PACKAGE_STRING ")\n"
+    << opts.program << " (" VCSN_PACKAGE_STRING ")\n"
     << "<" VCSN_PACKAGE_URL ">\n"
     << "\n"
 #define DEFINE(Var)                             \
@@ -110,6 +128,7 @@ version(const char* prog)
     DEFINE(CXXFLAGS)
     DEFINE(DATADIR)
 #undef DEFINE
+    << "Data library: " << opts.data_library << '\n'
     ;
   exit(EXIT_SUCCESS);
 }
@@ -118,7 +137,7 @@ void
 parse_args(options& opts, int& argc, char* const*& argv)
 {
   if (opts.program.empty())
-    opts.program = argv[0];
+    opts.program = vcsn::path(argv[0]).filename().string();
 
   int opt;
   while ((opt = getopt(argc, argv, "AC:Ee:f:hI:O:o:PqvW?")) != -1)
@@ -160,7 +179,7 @@ parse_args(options& opts, int& argc, char* const*& argv)
         opts.output_format = "null";
         break;
       case 'v':
-        version(argv[0]);
+        version(opts);
         break;
       case 'W':
         opts.input_type = type::weight;

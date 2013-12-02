@@ -8,6 +8,7 @@
 # include <vector>
 
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/file-library.hh>
 
 enum class type
   {
@@ -19,8 +20,13 @@ enum class type
 
 struct options
 {
+  options();
+
   /// The name of this program (argv[0]).
   std::string program;
+
+  /// The search path for data files.
+  vcsn::file_library data_library;
 
   /// The type of input.
   type input_type;
