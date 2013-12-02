@@ -56,11 +56,16 @@ namespace vcsn
       void operator()()
       {
         os_ <<
-          "% \\usetikzlibrary{arrows, automata, positioning}\n"
-          "% \\tikzstyle{automaton}=[shorten >=1pt, node distance=2cm, pos=.4,\n"
-          "%                        >=stealth', initial text=]\n"
-          "% \\tikzstyle{accepting}=[accepting by arrow]\n"
-          "\\begin{tikzpicture}[automaton]\n";
+          "\\documentclass{standalone}\n"
+          "  \\usepackage{tikz}\n"
+          "  \\usetikzlibrary{arrows, automata, positioning}\n"
+          "  \\tikzstyle{automaton}=[shorten >=1pt, node distance=2cm, pos=.4,\n"
+          "                         >=stealth', initial text=]\n"
+          "  \\tikzstyle{accepting}=[accepting by arrow]\n"
+          "\n"
+          "\\begin{document}\n"
+          "\\begin{tikzpicture}[automaton]\n"
+          ;
 
         for (auto s : aut_.states())
           {
@@ -91,7 +96,9 @@ namespace vcsn
                     << " (" << nd << ");\n";
               }
           }
-        os_ << "\\end{tikzpicture}";
+        os_ <<
+          "\\end{tikzpicture}\n"
+          "\\end{document}";
       }
     };
   }
