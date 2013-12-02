@@ -2,7 +2,7 @@
 
 # FIXME: check that only the accessible part is kept.  Start from
 # binary.gv, modified with an inaccessible state.
-binary_gv=$top_srcdir/share/vcsn/lal_char_z/binary.gv
+binary_gv=lal_char_z/binary.gv
 
 
 # power 0.

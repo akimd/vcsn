@@ -4,6 +4,15 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-12-02
+** Data library path
+TAF-Kit is now able to find installed files.  Control the search path via
+the environment variable VCSN_DATA_PATH (a ":"-separated list of
+directories).
+
+  $ vcsn aut-to-exp -f lal_char_z/c1.gv
+  (a+b)*.b.(<2>a+<2>b)*
+
 * 2013-11-25
 ** minimize: new algorithm (static, dynamic, TAF-Kit)
 Given a deterministic Boolean lal automaton, compute its minimal equivalent

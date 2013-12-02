@@ -31,7 +31,7 @@ run 0 ignore -vcsn ladybird -O fado -o lady.fa 10
 fado 'lady.fa'
 
 
-check $top_srcdir/share/vcsn/lal_char_b/a1.gv
+check lal_char_b/a1.gv
 
 
 # check_gv_fado BASE

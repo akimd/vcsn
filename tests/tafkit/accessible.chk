@@ -210,9 +210,9 @@ check ()
 {
   run 0 "true" -vcsn is-trim -Af "$1"
 }
-check $top_srcdir/share/vcsn/lal_char_b/a1.gv
-check $top_srcdir/share/vcsn/lal_char_z/b1.gv
-check $top_srcdir/share/vcsn/lal_char_zmin/minab.gv
+check lal_char_b/a1.gv
+check lal_char_z/b1.gv
+check lal_char_zmin/minab.gv
 
 check ()
 {
@@ -266,9 +266,9 @@ check ()
 {
   run 2 "false" -vcsn is-empty -Af "$1"
 }
-check $top_srcdir/share/vcsn/lal_char_b/a1.gv
-check $top_srcdir/share/vcsn/lal_char_z/b1.gv
-check $top_srcdir/share/vcsn/lal_char_zmin/minab.gv
+check lal_char_b/a1.gv
+check lal_char_z/b1.gv
+check lal_char_zmin/minab.gv
 
 check ()
 {
@@ -317,9 +317,9 @@ check ()
 {
   run 2 "false" -vcsn is-useless -Af "$1"
 }
-check $top_srcdir/share/vcsn/lal_char_b/a1.gv
-check $top_srcdir/share/vcsn/lal_char_z/b1.gv
-check $top_srcdir/share/vcsn/lal_char_zmin/minab.gv
+check lal_char_b/a1.gv
+check lal_char_z/b1.gv
+check lal_char_zmin/minab.gv
 
 check ()
 {
@@ -380,9 +380,9 @@ check ()
   run 0 'ignore' -vcsn cat -Af "$1" -o out.exp
   run 0 out.exp -vcsn trim -Af "$1"
 }
-check $top_srcdir/share/vcsn/lal_char_b/a1.gv
-check $top_srcdir/share/vcsn/lal_char_z/b1.gv
-check $top_srcdir/share/vcsn/lal_char_zmin/minab.gv
+check lal_char_b/a1.gv
+check lal_char_z/b1.gv
+check lal_char_zmin/minab.gv
 
 check ()
 {

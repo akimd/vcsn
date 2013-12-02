@@ -36,7 +36,7 @@ run 0 '<x>a.(<y>b)*.<z>c' -vcsn aut-to-exp -f $medir/a.gv
 # Check that aut-to-exp(AUTOMATON) = EXP-OUT.
 check ()
 {
-  run 0 "$2" -vcsn aut-to-exp -Af "$top_srcdir/share/vcsn/$1"
+  run 0 "$2" -vcsn aut-to-exp -Af "$1"
 }
 
 check lal_char_b/a1.gv    '(a+b)*.a.b.(a+b)*'

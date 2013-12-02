@@ -20,7 +20,7 @@ std::string xgetenv(const char* var, const char* val)
 }
 
 options::options()
-  : data_library(xgetenv("VCSN_DATADIR", VCSN_DATADIR), ":")
+  : data_library(xgetenv("VCSN_DATA_PATH", VCSN_DATADIR), ":")
 {}
 
 /// An istream for the input argv[0].
@@ -33,6 +33,8 @@ input(const options& opts)
       auto p = opts.input == "-"
         ? vcsn::path("-")
         : opts.data_library.find_file(opts.input);
+      if (getenv("VCSN_DEBUG"))
+        std::cerr << "reading: " << p << std::endl;
       return vcsn::open_input_file(p.string());
     }
   else
