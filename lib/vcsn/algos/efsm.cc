@@ -117,6 +117,11 @@ namespace vcsn
         if (line != "EOFSM")
           throw std::runtime_error(file + ":bad input format, missing EOFSM");
       }
+
+      // Flush till EOF.
+      while (is.get() != EOF)
+        continue;
+
       return edit.result();
     }
 
