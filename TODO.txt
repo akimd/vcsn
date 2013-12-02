@@ -14,9 +14,6 @@ Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
-** broken derived-term is... broken
-$ VCSN_ORIGINS=1 ./_build/48s/bin/vcsn-derived-term -C 'lal_char(ab)_q' -e '(<1/2>a+<1/2>b)*&(<1/3>aaa)' |teedot | ./_build/48s/bin/vcsn-shortest -f - 4 
-
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
@@ -49,10 +46,6 @@ Or use what's in there instead of always abc?
 
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
-
-** q (LS)
-We accept '1/0'.  Make sure that 0 is always 0/1.  Make sure we are
-always reduced, and not overflowing.
 
 ** star-normal-form
 It does not work for weighted ratexps.
