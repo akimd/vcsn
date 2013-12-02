@@ -9,6 +9,7 @@
 #include "parse-args.hh"
 #include <vcsn/config.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
 
 // FIXME: Factor in misc (see dyn/translate.hh).
@@ -41,11 +42,25 @@ input(const options& opts)
     return std::make_shared<std::istringstream>(opts.input);
 }
 
+static
+void check_eof(std::istream& is)
+{
+  if (is.peek() != -1)
+    {
+      std::string buf;
+      is >> buf;
+      throw std::domain_error("unexpected '" + vcsn::str_escape(buf)
+                              + "', expected end of file");
+    }
+}
+
 vcsn::dyn::automaton
 read_automaton(const options& opts)
 {
   auto is = input(opts);
-  return vcsn::dyn::read_automaton(*is, opts.input_format);
+  auto res = vcsn::dyn::read_automaton(*is, opts.input_format);
+  check_eof(*is);
+  return res;
 }
 
 vcsn::dyn::ratexp
@@ -54,7 +69,9 @@ read_ratexp(const options& opts)
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto rs = vcsn::dyn::make_ratexpset(ctx);
   auto is = input(opts);
-  return vcsn::dyn::read_ratexp(*is, rs, opts.input_format);
+  auto res = vcsn::dyn::read_ratexp(*is, rs, opts.input_format);
+  check_eof(*is);
+  return res;
 }
 
 vcsn::dyn::polynomial
@@ -62,7 +79,9 @@ read_polynomial(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
-  return vcsn::dyn::read_polynomial(*is, ctx);
+  auto res = vcsn::dyn::read_polynomial(*is, ctx);
+  check_eof(*is);
+  return res;
 }
 
 vcsn::dyn::weight
@@ -70,7 +89,9 @@ read_weight(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
-  return vcsn::dyn::read_weight(*is, ctx);
+  auto res = vcsn::dyn::read_weight(*is, ctx);
+  check_eof(*is);
+  return res;
 }
 
 static void
