@@ -1,44 +1,27 @@
-/*
- * Copyright (C) 2008-2010, Gostai S.A.S.
- *
- * This software is provided "as is" without warranty of any kind,
- * either expressed or implied, including but not limited to the
- * implied warranties of fitness for a particular purpose.
- *
- * See the LICENSE file for more information.
- */
-
 /**
- ** \file libport/file-library.cc
- ** \brief Implements libport::file_library.
+ ** \file lib/vcsn/misc/file-library.cc
+ ** \brief Implements vcsn::file_library.
  */
 
-#include <libport/cassert>
-#include <libport/cstdlib>
-#include <stdexcept>
+#include <vcsn/misc/file-library.hh>
+
+#include <cassert>
+#include <cstdlib>
 #include <iostream>
-#include <libport/cerrno>
+#include <stdexcept>
+#include <unistd.h>
 
-#include <libport/detect-win32.h>
-#include <libport/config.h>
+#include <boost/tokenizer.hpp>
 
-#ifdef LIBPORT_HAVE_DIRECT_H
-# include <direct.h>
-#endif
+#include <vcsn/misc/escape.hh>
 
-#include <libport/file-library.hh>
-#include <libport/file-system.hh>
-#include <libport/foreach.hh>
-#include <libport/tokenizer.hh>
-#include <libport/unistd.h>
-
-namespace libport
+namespace vcsn
 {
 
   void
   file_library::push_cwd()
   {
-    push_current_directory(get_current_directory());
+    push_current_directory(path::cwd());
   }
 
 
@@ -61,50 +44,30 @@ namespace libport
     push_back(lib, sep);
   }
 
-  path
-  file_library::ensure_absolute_path(const path& p) const
-  {
-    if (p.absolute_get())
-      return p;
-    else
-      return current_directory_get() / p;
-  }
-
-
-  file_library::strings_type
+  auto
   file_library::split(const std::string& lib, const char* sep)
+    -> strings_type
   {
-    WIN32_IF(bool split_on_colon = strchr(sep, ':'), /* Nothing */);
+    using tokenizer = boost::tokenizer<boost::char_separator<char>>;
+    boost::char_separator<char> seps(sep, "", boost::keep_empty_tokens);
+    tokenizer dirs(lib, seps);
     strings_type res;
-    foreach (const std::string& s, make_tokenizer(lib, sep, "",
-                                                  boost::keep_empty_tokens))
-    {
-#ifdef WIN32
-      // In case we split "c:\foo" into "c" and "\foo", glue them
-      // together again.
-      if (split_on_colon
-          && s[0] == '\\'
-          && !res.empty()
-          && res.back().length() == 1)
-        res.back() += ':' + s;
-      else
-#endif
-        res.push_back(s);
-    }
+    for (const std::string& s: dirs)
+      res.emplace_back(s);
     return res;
   }
 
   file_library&
   file_library::push_back(const path& p)
   {
-    search_path_.push_back(ensure_absolute_path(p));
+    search_path_.emplace_back(absolute(p));
     return *this;
   }
 
   file_library&
   file_library::push_back(const std::string& lib, const char* sep)
   {
-    foreach (const std::string& s, split(lib, sep))
+    for (const std::string& s: split(lib, sep))
       if (!s.empty())
         push_back(s);
     return *this;
@@ -113,14 +76,14 @@ namespace libport
   file_library&
   file_library::push_front(const path& p)
   {
-    search_path_.push_front(ensure_absolute_path(p));
+    search_path_.emplace_front(absolute(p));
     return *this;
   }
 
   file_library&
   file_library::push_front(const std::string& lib, const char* sep)
   {
-    foreach (const std::string& s, split(lib, sep))
+    for (const std::string& s: split(lib, sep))
       if (!s.empty())
         push_front(s);
     return *this;
@@ -129,72 +92,57 @@ namespace libport
   void
   file_library::push_current_directory(const path& p)
   {
-    // Ensure that path is absolute.
-    current_directory_.push_front(p.absolute_get()
-				   ? p
-				   : current_directory_get() / p);
+    current_directory_.push_front(absolute(p));
   }
 
   void
   file_library::pop_current_directory()
   {
-    aver(!current_directory_.empty());
+    assert(!current_directory_.empty());
     current_directory_.pop_front();
   }
 
-  path
+  auto
   file_library::current_directory_get() const
+    -> path
   {
-    aver(!current_directory_.empty());
+    assert(!current_directory_.empty());
     return *current_directory_.begin();
   }
 
-
-  path
+  auto
   file_library::find_file(const path& file) const
+    -> path
   {
-    path directory = file.dirname();
-
-    if (directory.absolute_get())
+    if (file.is_absolute())
     {
       // If file is absolute, just check that it exists.
-      if (!file.exists())
+      if (!exists(file))
       {
         errno = ENOENT;
         throw Not_found();
       }
       else
-        return directory;
+        return file;
     }
+    // In the current directory?
+    else if (exists(current_directory_get() / file))
+      return current_directory_get() / file;
     else
-    {
-      // Does the file can be found in current directory?
-      if (find_in_directory(current_directory_get(), file))
-        return (current_directory_get() / file).dirname();
-      else
-        return find_in_search_path(directory, file.basename());
-    }
+      return find_in_search_path(file);
   }
 
-  bool
-  file_library::find_in_directory(const path& dir,
-                                  const std::string& file) const
-  {
-    return (dir / file).exists();
-  }
-
-  path
-  file_library::find_in_search_path(const path& relative_path,
-                                    const std::string& filename) const
+  auto
+  file_library::find_in_search_path(const path& filename) const
+    -> path
   {
     // Otherwise start scanning the search path.
-    foreach (const path& p, search_path_)
-    {
-      path checked_dir = p.absolute_get() ? p : current_directory_get() / p;
-      checked_dir /= relative_path;
-      if (find_in_directory(checked_dir, filename))
-        return checked_dir;
-    }
+    for (path dir: search_path_)
+      {
+        path p = dir / filename;
+        if (exists(p))
+          return p;
+      }
 
     // File not found in search path.
     errno = ENOENT;
@@ -205,7 +153,7 @@ namespace libport
   file_library::dump(std::ostream& ostr) const
   {
     ostr << ".";
-    foreach (const path& p,  search_path_)
+    for (const path& p: search_path_)
       ostr << ":" << p;
     return ostr;
   }

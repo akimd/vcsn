@@ -1,48 +1,34 @@
-/*
- * Copyright (C) 2008-2010, Gostai S.A.S.
- *
- * This software is provided "as is" without warranty of any kind,
- * either expressed or implied, including but not limited to the
- * implied warranties of fitness for a particular purpose.
- *
- * See the LICENSE file for more information.
- */
-
 /**
- ** \file libport/file-library.hxx
- ** \brief implements inline function of libport/file-library.hh
+ ** \file vcsn/misc/file-library.hxx
+ ** \brief implements inline function of vcsn/file-library.hh
  */
 
 #ifndef LIBPORT_FILE_LIBRARY_HXX
 # define LIBPORT_FILE_LIBRARY_HXX
 
-# include <libport/foreach.hh>
-# include <libport/range.hh>
-
-namespace libport
+namespace vcsn
 {
 
-  template <class ForwardRange>
+  template <typename ForwardRange>
   file_library::file_library(const ForwardRange& r, const char* sep)
   {
     push_cwd();
     push_back(r, sep);
   }
 
-  template <class ForwardRange>
+  template <typename ForwardRange>
   file_library&
   file_library::push_back(const ForwardRange& r, const char* sep)
   {
     bool inserted = false;
-    typename boost::range_iterator<const ForwardRange>::type
-      first = boost::const_begin(r);
-    if (first != boost::const_end(r))
+    auto first = std::begin(r);
+    if (first != std::end(r))
     {
       if (first->empty())
         // Insert the following search path component.
         push_back(skip_first(r), sep);
       else
-        foreach (const std::string& s, split(*first, sep))
+        for (const std::string& s: split(*first, sep))
         {
           if (!s.empty())
             push_back(s);
@@ -67,19 +53,19 @@ namespace libport
     if (user_path.empty())
     {
       // Insert the following search path component.
-      foreach (const std::string& s, default_path)
+      for (const std::string& s: default_path)
         if (!s.empty())
           push_back(s);
     }
     else
     {
-      foreach (const std::string& s1, split(user_path, sep))
+      for (const std::string& s1: split(user_path, sep))
       {
         if (!s1.empty())
           push_back(s1);
         else if (!inserted)
         {
-          foreach (const std::string& s2, default_path)
+          for (const std::string& s2: default_path)
             if (!s2.empty())
               push_back(s2);
           inserted = true;

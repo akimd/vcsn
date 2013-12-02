@@ -81,8 +81,13 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/universal.cc                        \
   %D%/ctx/ctx.cc                                \
   %D%/misc/escape.cc                            \
+  %D%/misc/file-library.cc                      \
   %D%/misc/path.cc                              \
   %D%/misc/stream.cc
+lib_libvcsn_la_LDFLAGS =			\
+  $(BOOST_REGEX_LDFLAGS)
+lib_libvcsn_la_LIBADD =				\
+  $(BOOST_REGEX_LIBS)
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
@@ -92,4 +97,3 @@ lib_libvcsn_la_SOURCES =                        \
 include %D%/dot/local.mk
 include %D%/rat/local.mk
 
-lib_libvcsn_la_LIBADD = $(BOOST_REGEX_LDFLAGS) $(BOOST_REGEX_LIBS)
