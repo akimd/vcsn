@@ -24,13 +24,13 @@
 #include <iostream>
 
 #define LINE(Line)                              \
-  do{                                           \
-    yylloc->end.column = 1;                     \
-    yylloc->lines(Line);                        \
+  do {                                          \
+    loc.end.column = 1;                         \
+    loc.lines(Line);                            \
  } while (false)
 
 #define YY_USER_ACTION                          \
-  yylloc->columns(yyleng);
+  loc.columns(yyleng);
 
 #define TOK(Token)                              \
   parser::token::Token
@@ -49,7 +49,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 %%
 %{
   std::string s;
-  yylloc->step();
+  loc.step();
 %}
 
 <INITIAL>{ /* Vcsn Syntax */

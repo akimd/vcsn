@@ -12,9 +12,6 @@ namespace vcsn
 
       // lib/vcsn/dot/scan.hh.
       class yyFlexLexer;
-
-      // lib/vcsn/dot/location.hh.
-      class location;
     }
   }
 }

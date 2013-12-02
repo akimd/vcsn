@@ -112,6 +112,8 @@ public:
 
   void scan_close_();
 
+  location loc;
+
   virtual void switch_streams(std::istream* new_in,
                               std::ostream* new_out = nullptr );
   virtual int yywrap();

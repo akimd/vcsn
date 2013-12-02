@@ -29,6 +29,7 @@ namespace vcsn
         -> dyn::automaton
       {
         scanner_->scan_open_(is);
+        scanner_->loc = l;
         location_ = l;
         // Parser.
         parser p(*this);

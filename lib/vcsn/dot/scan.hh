@@ -12,6 +12,12 @@
     }                                           \
   }
 
+# include <lib/vcsn/rat/location.hh>
+
+YY_FLEX_NAMESPACE_BEGIN
+  using location = vcsn::rat::location;
+YY_FLEX_NAMESPACE_END
+
 # include <vcsn/misc/flex-lexer.hh>
 
 #endif // !LIB_VCSN_DOT_SCAN_HH

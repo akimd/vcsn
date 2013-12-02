@@ -15,13 +15,12 @@ namespace vcsn
   {
     namespace dot
     {
+      using location_t = vcsn::rat::location;
 
       /// State and public interface for Dot parsing.
       class LIBVCSN_API driver
       {
       public:
-        using location_t = vcsn::rat::location;
-
         driver();
         ~driver();
 
