@@ -1,16 +1,6 @@
-/*
- * Copyright (C) 2008-2011, Gostai S.A.S.
- *
- * This software is provided "as is" without warranty of any kind,
- * either expressed or implied, including but not limited to the
- * implied warranties of fitness for a particular purpose.
- *
- * See the LICENSE file for more information.
- */
-
 /**
- ** \file libport/path.hh
- ** \brief Declaration of libport::path.
+ ** \file vcsn/misc/path.hh
+ ** \brief Declaration of vcsn::path.
  */
 
 #ifndef LIBPORT_PATH_HH
@@ -18,21 +8,20 @@
 
 # include <string>
 # include <list>
-# include <libport/export.hh>
-# include <libport/detect-win32.h>
+# include <vcsn/misc/export.hh>
 
-# define BOOST_FILESYSTEM_VERSION 2
-# include <boost/filesystem.hpp>
-
-namespace libport
+namespace vcsn
 {
   /** \brief Paths in filesystems, i.e., file names.
+   **
+   ** We should rather use boost::filesystem::path, but as of today
+   ** it does not work on Mac OS X: https://trac.macports.org/ticket/41588.
    **/
-  class LIBPORT_API path
+  class LIBVCSN_API path
   {
   public:
     /// Exception thrown on invalid path
-    class LIBPORT_API invalid_path : public std::exception
+    class LIBVCSN_API invalid_path : public std::exception
     {
     public:
       invalid_path(const std::string& msg);
@@ -43,7 +32,7 @@ namespace libport
     };
 
     /// The "native" type we wrap.
-    typedef boost::filesystem::path value_type;
+    using value_type = std::string;
 
     /// \name Constructors.
     /// \{
@@ -56,18 +45,10 @@ namespace libport
     /** @throw invalid_path if \a p isn't a valid path
      */
     path(const char* p);
-
-    /** @throw invalid_path if \a p isn't a valid path
-     */
-    path(const value_type& p);
     /// \}
 
     /// \name Operations on path.
     /// \{
-#ifdef SWIG
-    %rename (assign) operator=(const path& rhs);
-#endif
-    path& operator=(const path& rhs);
     /** @throw invalid_path if \a rhs is absolute.
      */
     path& operator/=(const path& rhs);
@@ -79,80 +60,54 @@ namespace libport
     std::string basename() const;
     /// The extension of the file, or "" if not applicable.
     std::string extension() const;
-    /// Return the volume.  Empty, unless on windows, in which
-    /// case it looks like "c:".
-    std::string volume_get() const;
-    path dirname() const;
-    bool exists() const;
-    bool is_dir() const;
-    bool is_reg() const;
-    /// Remove the file.
-    /// \return true iff no error.
-    void remove() const;
-    bool create() const;
-    void rename(const std::string& dst);
     /// \}
 
     /// Return the current working directory.
     static path cwd();
 
-    /// Whether the path is the root of a drive.
-    bool is_root() const;
+    /// Whether starts with /.
+    bool is_absolute() const;
 
     /// Return a path which is the parent directory.
     /// If path is relative, current directory is
     /// returned when asking for parent of 1-depth entity.
-    path parent() const;
+    path parent_path() const;
 
-    /// Return last write time WITHOUT local time offset.
-    std::time_t last_write_time() const;
-
-    static path temporary_file();
+    /// Also known as basename.
+    path filename() const;
 
     /// \name Printing and converting.
     /// \{
-#ifdef SWIG
-    %rename (__str__) operator std::string() const;
-#endif
     /// path is represented with a list of directories.
-    typedef std::list<std::string> path_type;
-    std::string to_string() const;
-    operator std::string() const;
+    using path_type = std::list<std::string>;
+    const std::string& string() const;
+    const char* c_str() const;
     path_type components() const;
     std::ostream& dump(std::ostream& ostr) const;
     /// \}
 
-    /// Whether is absolute.
-    bool absolute_get() const;
-
-    /// Get boost::filesystem::path object.
     const value_type& value_get() const;
-
-    /// Get boost::filesystem::path object.
     value_type& value_get();
 
   private:
-
-    /// Clean a clean path string from value_.
-    std::string clean() const;
-
-    /// Init object with path \a p.
-    void init(const std::string& p);
-
-    /// Boost Object.
+    /// Wrapped value.
     value_type value_;
 
     /// Path separator.
-    static const char separator_ = WIN32_IF('\\', '/');
+    static const char separator_ = '/';
   };
 
-  LIBPORT_API
-  std::string format_error(const boost::filesystem::filesystem_error& e);
+  LIBVCSN_API
+  path absolute(const path& p);
+
+  LIBVCSN_API
+  bool exists(const path& p);
+
 
   /// Dump \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const path& p);
 }
 
-# include <libport/path.hxx>
+# include <vcsn/misc/path.hxx>
 
 #endif // !LIBPORT_PATH_HH

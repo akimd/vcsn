@@ -138,6 +138,8 @@ nobase_include_HEADERS =                        \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
   %D%/misc/random.hh                            \
+  %D%/misc/path.hh                              \
+  %D%/misc/path.hxx                             \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \
   %D%/misc/set.hxx                              \

@@ -1,24 +1,15 @@
-/*
- * Copyright (C) 2008-2010, Gostai S.A.S.
- *
- * This software is provided "as is" without warranty of any kind,
- * either expressed or implied, including but not limited to the
- * implied warranties of fitness for a particular purpose.
- *
- * See the LICENSE file for more information.
- */
-
 /**
- ** \file libport/path.hxx
- ** \brief Inline implementation of libport::path.
+ ** \file vcsn/misc/path.hxx
+ ** \brief Inline implementation of vcsn::path.
  */
 
 #ifndef LIBPORT_PATH_HXX
 # define LIBPORT_PATH_HXX
 
-# include <libport/path.hh>
+# include <sys/stat.h>
+# include <vcsn/misc/path.hh>
 
-namespace libport
+namespace vcsn
 {
 
   /*---------------------.
@@ -54,30 +45,23 @@ namespace libport
   }
 
   inline
-  bool
-  path::absolute_get() const
+  bool path::is_absolute() const
   {
-    return value_.is_complete();
+    return value_[0] == '/';
   }
 
   inline
-  std::string
-  path::basename() const
+  const char*
+  path::c_str() const
   {
-    return value_.filename();
+    return value_.c_str();
   }
 
   inline
-  std::string
-  path::extension() const
+  const std::string&
+  path::string() const
   {
-    return value_.extension();
-  }
-
-  inline
-  path::operator std::string() const
-  {
-    return to_string();
+    return value_;
   }
 
   inline
