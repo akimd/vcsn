@@ -31,7 +31,7 @@ input(const options& opts)
 {
   if (opts.input_is_file)
     {
-      auto p = opts.input == "-"
+      auto p = opts.input == "-" || opts.input.empty()
         ? vcsn::path("-")
         : opts.data_library.find_file(opts.input);
       if (getenv("VCSN_DEBUG"))
