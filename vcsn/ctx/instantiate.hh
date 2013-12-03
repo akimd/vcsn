@@ -2,23 +2,15 @@
 # define VCSN_CTX_INSTANTIATE_HH
 
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/are-equivalent.hh> // difference
 # include <vcsn/algos/aut-to-exp.hh>
-# include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
-# include <vcsn/algos/derivation.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
-# include <vcsn/algos/enumerate.hh>
-# include <vcsn/algos/eval.hh>
 # include <vcsn/algos/expand.hh>
 # include <vcsn/algos/info.hh>
-# include <vcsn/algos/is-ambiguous.hh>
-# include <vcsn/algos/is-complete.hh>
-# include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -27,7 +19,6 @@
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
 # include <vcsn/algos/print.hh>
-# include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/read.hh>
 # include <vcsn/algos/standard.hh>
@@ -141,50 +132,7 @@ namespace vcsn
     {
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_letters)
-      {
-        using aut_t = mutable_automaton<Ctx>;
-        // Word polynomialset.
-        using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
-        using rs_t = ratexpset<Ctx>;
-
-        // Same labelset, but over Booleans.
-        using b_ctx_t = context<typename Ctx::labelset_t, b>;
-        using b_aut_t = mutable_automaton<b_ctx_t>;
-
-        using namespace dyn::detail;
-
-        REGISTER(complete, aut_t);
-        REGISTER(de_bruijn, Ctx, unsigned);
-        REGISTER(derivation, rs_t, const std::string);
-        REGISTER(derived_term, rs_t);
-        REGISTER(difference, aut_t, b_aut_t);
-        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
-        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
-        REGISTER(enumerate, aut_t, unsigned);
-        REGISTER(eval, aut_t, const std::string);
-        REGISTER(infiltration, aut_t, aut_t);
-        REGISTER(infiltration, aut_t, b_aut_t);
-        REGISTER(infiltration, b_aut_t, aut_t);
-        REGISTER(is_ambiguous, aut_t);
-        REGISTER(is_complete, aut_t);
-        REGISTER(is_deterministic, aut_t);
-        REGISTER(ladybird, Ctx, unsigned);
-        REGISTER(list_polynomial, wps_t, std::ostream);
-        REGISTER(print_polynomial, wps_t, std::ostream);
-        REGISTER(power, aut_t, unsigned);
-        REGISTER(product, aut_t, aut_t);
-        REGISTER(product, aut_t, b_aut_t);
-        REGISTER(product, b_aut_t, aut_t);
-        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
-        REGISTER(shortest, aut_t, unsigned);
-        REGISTER(shuffle, aut_t, aut_t);
-        REGISTER(shuffle, aut_t, b_aut_t);
-        REGISTER(shuffle, b_aut_t, aut_t);
-        REGISTER(u, Ctx, unsigned);
-
-        return true;
-      }
+      register_kind_functions(labels_are_letters);
 
       template <typename Ctx>
       bool
