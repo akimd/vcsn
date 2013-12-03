@@ -6,7 +6,7 @@
 #ifndef LIBPORT_FILE_LIBRARY_HH
 # define LIBPORT_FILE_LIBRARY_HH
 
-# include <exception>
+# include <stdexcept>
 # include <list>
 # include <string>
 
@@ -30,8 +30,11 @@ namespace vcsn
     using path_list_type = std::list<path>;
 
     /// Exception thrown when a file cannot be located.
-    class LIBVCSN_API Not_found : public std::exception
-    {};
+    class LIBVCSN_API not_found : public std::runtime_error
+    {
+    public:
+      not_found(const path& file);
+    };
 
     /// \name Constructor.
     /// \{
@@ -108,7 +111,7 @@ namespace vcsn
      * necessary.
      *
      * \return Path for \a file.
-     * \throw  Not_found    file cannot be found,
+     * \throw  not_found    file cannot be found,
      *                      in which case errno is set to ENOENT. */
     path find_file(const path& file) const;
     /// \}
@@ -130,7 +133,7 @@ namespace vcsn
 
     /** \brief Find file \a filename using include path.
 	\return Absolute    path where the file lies.
-        \throw  Not_found   file not found. */
+        \throw  not_found   file not found. */
     path find_in_search_path(const path& filename) const;
 
     /// Inclusion path list.

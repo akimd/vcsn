@@ -18,6 +18,10 @@
 namespace vcsn
 {
 
+  file_library::not_found::not_found(const path& p)
+    : std::runtime_error("file not found: " + p.string())
+  {}
+
   void
   file_library::push_cwd()
   {
@@ -120,7 +124,7 @@ namespace vcsn
       if (!exists(file))
       {
         errno = ENOENT;
-        throw Not_found();
+        throw not_found(file);
       }
       else
         return file;
@@ -146,7 +150,7 @@ namespace vcsn
 
     // File not found in search path.
     errno = ENOENT;
-    throw Not_found();
+    throw not_found(filename);
   }
 
   std::ostream&
