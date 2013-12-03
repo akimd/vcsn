@@ -2,18 +2,21 @@
 # @configure_input@
 # Wrapper around a non installed vcsn to make it work as an installed one.
 
-abs_top_srcdir='@abs_top_srcdir@'
-abs_top_builddir='@abs_top_builddir@'
+srcdir='@abs_top_srcdir@'
+builddir='@abs_top_builddir@'
 
 # Use the shipped files, not those installed.
-VCSN_DATA_PATH=$abs_top_srcdir/share/vcsn
+VCSN_DATA_PATH=$srcdir/share/vcsn
 export VCSN_DATA_PATH
 
 # Use the non-installed binaries.
-PATH=$abs_top_builddir/bin:$abs_top_srcdir/bin:$PATH
+PATH=$builddir/bin:$srcdir/bin:$PATH
 export PATH
 
-vcsn "$@"
+prog="vcsn-$1"
+shift
+
+exec $prog "$@"
 
 # Local Variables:
 # mode: shell-script
