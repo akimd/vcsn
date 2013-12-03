@@ -152,7 +152,7 @@ ac_cv_GLIBCXX_DEBUG=yes
 # all, it does not make a lot of sense to use _GLIBCXX_DEBUG with
 # NDEBUG, let's use the easy way.
 case $CPPFLAGS in
-  *' -DNDEBUG '*|'-DNDEBUG '*|*' -NDEBUG'|'-NDEBUG')
+  *' -DNDEBUG '*|'-DNDEBUG '*|*' -DNDEBUG'|'-DNDEBUG')
     ac_cv_GLIBCXX_DEBUG='no (NDEBUG is set, which will leads to aborts)';;
 esac
 
