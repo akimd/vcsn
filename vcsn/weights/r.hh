@@ -11,6 +11,8 @@
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/weights/b.hh>
+# include <vcsn/weights/q.hh>
+# include <vcsn/weights/z.hh>
 
 namespace vcsn
 {
@@ -126,9 +128,20 @@ namespace vcsn
     }
 
     static value_t
+    conv(q, q::value_t v)
+    {
+      return value_t(v.num) / value_t(v.den);
+    }
+
+    static value_t
+    conv(z, z::value_t v)
+    {
+      return v;
+    }
+
+    static value_t
     conv(b, b::value_t v)
     {
-      // Conversion from bool to double.
       return v;
     }
 
@@ -158,6 +171,13 @@ namespace vcsn
   };
 
   VCSN_WEIGHTS_BINARY(r, r, r);
+
+  VCSN_WEIGHTS_BINARY(q, r, r);
+  VCSN_WEIGHTS_BINARY(r, q, r);
+
+  VCSN_WEIGHTS_BINARY(z, r, r);
+  VCSN_WEIGHTS_BINARY(r, z, r);
+
   VCSN_WEIGHTS_BINARY(b, r, r);
   VCSN_WEIGHTS_BINARY(r, b, r);
 }

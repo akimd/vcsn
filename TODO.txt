@@ -29,9 +29,9 @@ The "NEWS.txt" entry is false.
 Fix this bug, but check that we don't ruin performances of infiltration.
 Uncomment the tests in infiltration.chk (there are two places).
 
-** products, difference: relax the constraints on weightset
-get_union and intersection on weights must be smarter, e.g., B x Z -> Z,
-etc.
+** sum, union: relax the constraints on weightset
+Now that our products support heterogeneous, but compatible, types, we
+should propagate this to other n-ary algorithms.
 
 ** products: lazyness
 We need a lazy implementation of product.  nary product would be nice.
