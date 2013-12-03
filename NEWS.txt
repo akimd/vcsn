@@ -4,6 +4,23 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-12-03
+** products accept heterogenous arguments
+It is now possible to compute the (regular, infiltration and shuffle)
+products of a (B, Z, Q, R) automaton with a (B, Z, Q, R) automaton.
+
+  $ vcsn derived-term -C 'lal_char(ab)_q' -e '(<1/2>a+<1/3>b)*' > q.gv
+  $ vcsn derived-term -C 'lal_char(ab)_z' -e '(<2>a+<3>b)*' > z.gv
+
+  $ vcsn product -f z.gv q.gv | vcsn aut-to-exp
+  (a+b)*
+  $ vcsn product -f q.gv z.gv | vcsn aut-to-exp
+  (a+b)*
+  $ vcsn product -f q.gv z.gv q.gv | vcsn aut-to-exp
+  (<1/2>a+<1/3>b)*
+  $ vcsn product -f q.gv z.gv z.gv | vcsn aut-to-exp
+  (<2>a+<3>b)*
+
 * 2013-12-02
 ** TikZ output now uses standalone
 The TikZ output can now both be compiled as a standalone document, and be

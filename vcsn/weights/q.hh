@@ -12,6 +12,7 @@
 # include <vcsn/misc/stream.hh> // eat
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/weights/b.hh>
+# include <vcsn/weights/z.hh>
 
 namespace vcsn
 {
@@ -154,16 +155,21 @@ namespace vcsn
     }
 
     static value_t
-    conv(self_type, value_t in)
+    conv(self_type, value_t v)
     {
-      return in;
+      return v;
     }
 
     static value_t
-    conv(b, b::value_t in)
+    conv(z, z::value_t v)
     {
-      // Conversion from bool to q.
-      return {in, 1};
+      return {v, 1};
+    }
+
+    static value_t
+    conv(b, b::value_t v)
+    {
+      return {v, 1};
     }
 
     static value_t
@@ -223,6 +229,8 @@ namespace vcsn
 
   VCSN_WEIGHTS_BINARY(q, q, q);
 
+  VCSN_WEIGHTS_BINARY(z, q, q);
+  VCSN_WEIGHTS_BINARY(q, z, q);
 
   VCSN_WEIGHTS_BINARY(b, q, q);
   VCSN_WEIGHTS_BINARY(q, b, q);

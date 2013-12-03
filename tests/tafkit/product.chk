@@ -186,15 +186,33 @@ run 0 out.exp -vcsn product -f a.gv b.gv
 ## Heterogeneous input.  ##
 ## --------------------- ##
 
+# check OPERATION RES AUT...
+# --------------------------
+check()
+{
+  local op=$1; shift
+  local expected=$1; shift
+  local res="product($*)"
+  run 0 ''          -vcsn "$op" -o "$res" -f "$@"
+  run 0 "$expected" -vcsn aut-to-exp -f "$res"
+}
+
 # RatE and B, in both directions.
 run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '(<u>a+<v>b)*' -o ua+vb.gv
 run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
          -e 'a{+}' -o a+.gv
-run 0 '' -vcsn product -o 1.gv -f ua+vb.gv a+.gv
-run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn aut-to-exp -f 1.gv
-run 0 '' -vcsn product -o 1.gv -f a+.gv ua+vb.gv
-run 0 '<u>a+<u>a.<u>a.(<u>a)*' -vcsn aut-to-exp -f 1.gv
+check product '<u>a+<u>a.<u>a.(<u>a)*' ua+vb.gv a+.gv
+check product '<u>a+<u>a.<u>a.(<u>a)*' a+.gv ua+vb.gv
+
+# Q and Z.
+run 0 '' -vcsn derived-term -C 'lal_char(ab)_z' -o z.gv -e '(<2>a+<3>b)*'
+run 0 '' -vcsn derived-term -C 'lal_char(ab)_q' -o q.gv -e '(<1/2>a+<1/3>b)*'
+check product '(a+b)*' z.gv q.gv
+check product '(a+b)*' q.gv z.gv
+check product '(<2>a+<3>b)*' z.gv q.gv z.gv
+check product '(<1/2>a+<1/3>b)*' z.gv q.gv q.gv
+
 
 ## ----------------- ##
 ## Non-commutative.  ##
