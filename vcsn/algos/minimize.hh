@@ -108,7 +108,9 @@ namespace vcsn
               state_t state = t.second.second;//item.state;
               std::hash_combine(res, label);
               std::hash_combine(res, weight);
+              //std::cerr << "ok 2a\n";
               std::hash_combine(res, /*NEW_*/state_to_class_.at(state));
+              //std::cerr << "ok 2b\n";
             }
           return res;
         }
@@ -144,10 +146,20 @@ namespace vcsn
               weight_t b_weight = b_i->second.first;
               state_t b_state = b_i->second.second;
 
-              if ((  ! ls_.equals(a_label, b_label))
+              //std::cerr << "ok 4a\n";
+              // bool q=((  ! ls_.equals(a_label, b_label))
+              //     || ! ws_.equals(a_weight, b_weight)
+              //     || state_to_class_.at(a_state) != state_to_class_.at(b_state))
+              //   ;
+              //std::cerr << "ok 4b\n";
+              if (   ! ls_.equals(a_label, b_label)
                   || ! ws_.equals(a_weight, b_weight)
                   || state_to_class_.at(a_state) != state_to_class_.at(b_state))
                 return false;
+              // if ((  ! ls_.equals(a_label, b_label))
+              //     || ! ws_.equals(a_weight, b_weight)
+              //     || state_to_class_.at(a_state) != state_to_class_.at(b_state))
+              //   return false;
 
               ++ b_i;
             }
@@ -200,7 +212,9 @@ namespace vcsn
                 {
                   label_t l = to.first;
                   state_t s = to.second.second;
+                  //std::cerr << "ok 3a\n";
                   o << "<" << l << " s" << s << "(c" << mm.state_to_class_.at(s) << ")>";
+                  //std::cerr << "ok 3b\n";
                 }
 
               o << "]: s" << o_s.second << "  ";
@@ -243,7 +257,6 @@ namespace vcsn
 
       void make_class_named(const set_t& set, class_t class_identifier)
       {
-
         class_to_set_[class_identifier] = set;
         for (auto s : set)
           state_to_class_[s] = class_identifier;
@@ -320,23 +333,29 @@ namespace vcsn
           all_states.emplace_back(s);
         classes.insert(make_class(all_states));
 
-        classes_t classes_to_remove;
-        sets_t sets_to_add;
+        classes_t classes_to_insert;
+        classes_t classes_to_erase;
         int iteration_no = 0;
+        bool go_on;
         do
           {
-            sets_to_add.clear();
-            classes_to_remove.clear();
+            go_on = false;
+            classes_to_erase.clear();
 
             //std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes.size() << " classes.\n";
+            //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
+
             for (auto c : classes)
               {
                 //std::cerr << "splitting " << c << "\n";
+                //std::cerr << "ok 1a "<< c << "\n";
                 const set_t c_states = class_to_set_.at(c);
+                //std::cerr << "ok 1b\n";
 
                 if (c_states.size() < 2)
                   {
-                    //std::cerr << "Skipping trivial class " << c << "\n";
+                    //std::cerr << "Ignoring trivial class " << c << " from now on\n";
+                    classes_to_erase.emplace_back(c);
                     continue;
                   }
 
@@ -352,8 +371,8 @@ namespace vcsn
                 std::vector<set_t> new_sets;
                 while (! signature_to_state.empty())
                   {
-                    auto first_signature = signature_to_state.cbegin()->first;
-                    auto range = signature_to_state.equal_range(first_signature);
+                    const auto& first_signature = signature_to_state.cbegin()->first;
+                    const auto& range = signature_to_state.equal_range(first_signature);
                     set_t new_set;
                     for (auto i = range.first; i != range.second; ++ i)
                       new_set.emplace_back(i->second);
@@ -366,25 +385,35 @@ namespace vcsn
                 //std::cerr << "\n";
                 if (new_sets.size() > 1)
                   {
-                    classes_to_remove.emplace_back(c);
-                    for (auto s : new_sets)
-                      sets_to_add.emplace_back(s);
+                    go_on = true;
 
+                    //std::cerr << "Breaking class " << c << "\n";
+                    class_to_set_.erase(c);
+                    classes_to_erase.emplace_back(c);
+
+                    for (auto new_set : new_sets)
+                      {
+                        class_t c = make_class(new_set);
+                        //std::cerr << "* making class " << c << "\n";
+
+                        classes_to_insert.emplace_back(c);
+                      }
                   }
               } // for on classes
 
             // Destroy the classes we've split and make the new ones.
-            for (auto c : classes_to_remove)
-              {
-                class_to_set_.erase(c);
-                classes.erase(c);
-                //std::cerr << "Removed class " << c << "\n";
-              }
-            for (auto set : sets_to_add)
-              classes.insert(make_class(set));
-            //std::cerr << "Continuing? " << (! sets_to_add.empty()) << "\n";
+            for (auto c : classes_to_erase)
+              classes.erase(c);
+            for (auto c : classes_to_insert)
+              classes.insert(c);
+            classes_to_erase.clear();
+            classes_to_insert.clear();
+
+            //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
+            //std::cerr << "END of iteration "<< iteration_no<<".\n";
           }
-        while (! sets_to_add.empty());
+        while (go_on);
+        //std::cerr << "Iterated "<< iteration_no<<" times.\n";
 
         // //// BEGIN
         // signature_t t1 = {{'a', {2, 3}}};
