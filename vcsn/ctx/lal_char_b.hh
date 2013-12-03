@@ -59,13 +59,13 @@ namespace vcsn
    std::ostream& out);
 
 # if VCSN_INSTANTIATION
-  namespace
+  namespace ctx
   {
     namespace detail
     {
       template <typename Ctx>
       bool
-      register_functions()
+      register_b_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
         using namespace dyn::detail;
@@ -85,7 +85,7 @@ namespace vcsn
         return true;
       }
 
-      static bool register_lal_char_b = register_functions<ctx::lal_char_b>();
+      static bool register_lal_char_b = register_b_functions<ctx::lal_char_b>();
     }
   }
 # endif // ! VCSN_INSTANTIATION
