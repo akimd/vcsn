@@ -95,7 +95,7 @@ namespace vcsn
       virtual void
       visit(const intersection_t&)
       {
-        throw std::domain_error("standard: intersection is not supported");
+        throw std::domain_error("thompson: intersection is not supported");
       }
 
       virtual void

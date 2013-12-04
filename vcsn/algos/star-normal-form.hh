@@ -96,7 +96,7 @@ namespace vcsn
       virtual void
       visit(const intersection_t&)
       {
-        throw std::domain_error("standard: intersection is not supported");
+        throw std::domain_error("star_normal_form: intersection is not supported");
       }
 
       /// Handling of a product by the box operator.
