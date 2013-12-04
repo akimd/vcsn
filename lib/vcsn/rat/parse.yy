@@ -1,6 +1,6 @@
 // -*- mode: c++ -*-
 
-%require "2.5"
+%require "3.0"
 %language "C++"
 
 %debug
@@ -8,7 +8,7 @@
 %error-verbose
 %expect 0
 %locations
-%define namespace "vcsn::rat"
+%define api.namespace {vcsn::rat}
 
 %code requires
 {
@@ -136,15 +136,15 @@
 
 %type <node> exp exps weights;
 
-%left RWEIGHT
+%precedence RWEIGHT
 %left "+"
 %left "&"
 %left "."
 %right "weight" // Match longest series of "weight".
-%left LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
-%left "(" "\\z" "\\e" "letter"
-%left CONCAT
-%right "*"
+%precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
+%precedence "(" "\\z" "\\e" "letter"
+%precedence CONCAT
+%precedence "*"
 
 %start exps
 %%
