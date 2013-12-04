@@ -134,7 +134,7 @@ namespace vcsn
             v->accept(*this);
             ps_.add_weight(res, res_);
           }
-        res_ = res;
+        res_ = std::move(res);
         apply_weights(e);
       }
 
@@ -390,7 +390,7 @@ namespace vcsn
             v->accept(*this);
             ps_.add_weight(res, res_);
           }
-        res_ = res;
+        res_ = std::move(res);
         apply_weights(e);
       }
 
@@ -411,7 +411,7 @@ namespace vcsn
             ps_.add_weight(res, ps_.lmul(constant, res_));
             constant = ws_.mul(constant, constant_term(rs_, v));
           }
-        res_ = res;
+        res_ = std::move(res);
         apply_weights(e);
       }
 
@@ -435,7 +435,7 @@ namespace vcsn
                                ws_.mul(l.second, r.second));
             res = sum;
           }
-        res_ = res;
+        res_ = std::move(res);
         apply_weights(e);
       }
 
