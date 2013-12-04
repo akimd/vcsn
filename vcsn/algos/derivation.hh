@@ -418,9 +418,6 @@ namespace vcsn
       virtual void
       visit(const intersection_t& e)
       {
-        // Accumulate the product of the constant terms of the
-        // previous factors.
-        weight_t constant = constant_term(rs_, e.head());
         // The first polynomial.
 	e.head()->accept(*this);
         auto res = res_;
@@ -429,13 +426,14 @@ namespace vcsn
             const auto& v = e[i];
             v->accept(*this);
             polynomial_t sum = ps_.zero();
+            // Compute (l & r) where l and r are two polynomials:
+            // distribute.
             for (const auto& l: res)
               for (const auto& r: res_)
                 ps_.add_weight(sum,
                                rs_.intersection(l.first, r.first),
                                ws_.mul(l.second, r.second));
             res = sum;
-            constant = ws_.mul(constant, constant_term(rs_, v));
           }
         res_ = res;
         apply_weights(e);
