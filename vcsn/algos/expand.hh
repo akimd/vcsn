@@ -36,6 +36,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using prod_t = typename super_type::prod_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -113,6 +114,12 @@ namespace vcsn
             res = sum;
           }
         res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
+      }
+
+      virtual void
+      visit(const shuffle_t&)
+      {
+        throw std::domain_error("expand: shuffle is not supported");
       }
 
       virtual void

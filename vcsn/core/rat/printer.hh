@@ -59,6 +59,7 @@ namespace vcsn
       DEFINE(intersection);
       DEFINE(prod);
       DEFINE(sum);
+      DEFINE(shuffle);
       DEFINE(star);
       DEFINE(one);
       DEFINE(zero);
@@ -66,10 +67,11 @@ namespace vcsn
 
 # undef DEFINE
 
-      /// The possible node precedence levels.
+      /// The possible node precedence levels, increasing.
       enum class precedence_t
         {
           sum,
+          shuffle,
           intersection,
           prod,
           word, // There's no corresponding type in this case.
@@ -148,6 +150,7 @@ namespace vcsn
       /// The ratexp operators.
       const char* star_ = "*";
       const char* intersection_ = "&";
+      const char* shuffle_ = "{:}";
       const char* product_ = ".";
       const char* sum_ = "+";
       /// The constants.

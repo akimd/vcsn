@@ -27,6 +27,7 @@ namespace vcsn
       template <rat::exp::type_t Type>
       using nary_t = typename super_type::template nary_t<Type>;
       using prod_t = typename super_type::prod_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -153,6 +154,12 @@ namespace vcsn
       visit(const sum_t& lhs)
       {
         res_ = visit(lhs, *down_pointer_cast<const sum_t>(rhs_));
+      }
+
+      virtual void
+      visit(const shuffle_t& lhs)
+      {
+        res_ = visit(lhs, *down_pointer_cast<const shuffle_t>(rhs_));
       }
 
       virtual void

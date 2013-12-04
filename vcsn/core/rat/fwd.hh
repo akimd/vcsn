@@ -29,7 +29,8 @@ namespace vcsn
       sum  = 3,
       prod = 4,
       intersection = 5,
-      star = 6,
+      shuffle = 6,
+      star = 7,
     };
 
 # define DEFINE(Node)                           \
@@ -54,6 +55,9 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using intersection = nary<type_t::intersection, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using shuffle = nary<type_t::shuffle, Label, Weight>;
 
     template <typename Label, typename Weight>
     using sum = nary<type_t::sum, Label, Weight>;

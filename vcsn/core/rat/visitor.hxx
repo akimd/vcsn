@@ -24,6 +24,12 @@ namespace vcsn
         t->accept(*this);
     }
 
+    VISIT(shuffle, v)
+    {
+      for (auto t : v)
+        t->accept(*this);
+    }
+
     VISIT(sum, v)
     {
       for (auto t : v)

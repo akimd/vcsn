@@ -34,6 +34,13 @@ namespace vcsn
         c->accept(*this);
     }
 
+    DEFINE(shuffle)
+    {
+      ++shuffle;
+      for (const auto& c: v)
+        c->accept(*this);
+    }
+
     DEFINE(star)
     {
       ++star;

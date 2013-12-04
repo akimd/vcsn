@@ -41,6 +41,7 @@ namespace vcsn
     DEFINE(sum);
     DEFINE(prod);
     DEFINE(intersection);
+    DEFINE(shuffle);
     DEFINE(star);
 # undef DEFINE
     template <rat::exp::type_t Type>
@@ -110,6 +111,7 @@ namespace vcsn
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
     value_t intersection(value_t l, value_t r) const;
+    value_t shuffle(value_t l, value_t r) const;
     value_t star(value_t e) const;
     value_t weight(value_t e, const weight_t& w) const;
     value_t weight(const weight_t& w, value_t e) const;
@@ -118,7 +120,7 @@ namespace vcsn
   private:
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
-    ///               Must be sum, intersection, or prod.
+    ///               Must be sum, intersection, shuffle, or prod.
     template <rat::exp::type_t Type>
     void gather(ratexps_t& res, value_t v) const;
 

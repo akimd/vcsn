@@ -28,6 +28,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using prod_t = typename super_type::prod_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -107,6 +108,21 @@ namespace vcsn
           {
             v->accept(*this);
             res = rs_.intersection(res, res_);
+          }
+        res_ = res;
+        apply_weights(e);
+      }
+
+      virtual void
+      visit(const shuffle_t& e)
+      {
+        // FIXME: that should be easy to factor.
+        e.head()->accept(*this);
+        auto res = res_;
+        for (auto v: e.tail())
+          {
+            v->accept(*this);
+            res = rs_.shuffle(res, res_);
           }
         res_ = res;
         apply_weights(e);

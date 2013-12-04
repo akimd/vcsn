@@ -35,6 +35,7 @@ namespace vcsn
         return (t == type_t::sum
 		|| t == type_t::prod
 		|| t == type_t::intersection
+		|| t == type_t::shuffle
 		|| t == type_t::star);
       }
     };
@@ -130,6 +131,7 @@ namespace vcsn
     public:
       static_assert(Type == type_t::sum
                     || Type == type_t::prod
+                    || Type == type_t::shuffle
                     || Type == type_t::intersection,
                     "invalid type");
 
@@ -192,6 +194,9 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using intersection = nary<type_t::intersection, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using shuffle = nary<type_t::shuffle, Label, Weight>;
 
     template <typename Label, typename Weight>
     using sum = nary<type_t::sum, Label, Weight>;

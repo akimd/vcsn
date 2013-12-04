@@ -35,6 +35,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using prod_t = typename super_type::prod_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -108,6 +109,17 @@ namespace vcsn
 
       virtual void
       visit(const intersection_t& v)
+      {
+        // FIXME: Code duplication with prod_t.
+        weight_t res = ws_.one();
+        for (auto c: v)
+          res = ws_.mul(res, constant_term(c));
+        res_ = std::move(res);
+        apply_weights(v);
+      }
+
+      virtual void
+      visit(const shuffle_t& v)
       {
         // FIXME: Code duplication with prod_t.
         weight_t res = ws_.one();

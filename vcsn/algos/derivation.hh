@@ -69,6 +69,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       using prod_t = typename super_type::prod_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
@@ -224,6 +225,12 @@ namespace vcsn
       }
 
       virtual void
+      visit(const shuffle_t&)
+      {
+        throw std::domain_error("split: shuffle is not supported");
+      }
+
+      virtual void
       visit(const star_t& e)
       {
         // We need a copy of e, but without its weights.
@@ -313,6 +320,7 @@ namespace vcsn
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using prod_t = typename super_type::prod_t;
       using sum_t = typename super_type::sum_t;
@@ -434,6 +442,33 @@ namespace vcsn
                                rs_.intersection(l.first, r.first),
                                ws_.mul(l.second, r.second));
             res = sum;
+          }
+        res_ = std::move(res);
+        apply_weights(e);
+      }
+
+      /// Handle an n-ary shuffle.
+      virtual void
+      visit(const shuffle_t& e)
+      {
+        polynomial_t res = ps_.zero();
+        for (unsigned i = 0; i < e.size(); ++i)
+          {
+            e[i]->accept(*this);
+            for (const auto& m: res_)
+              {
+                typename node_t::ratexps_t ratexps;
+                for (unsigned j = 0; j < e.size(); ++j)
+                  if (i == j)
+                    ratexps.emplace_back(m.first);
+                  else
+                    ratexps.emplace_back(e[j]);
+                // FIXME: we need better n-ary constructors.
+                ps_.add_weight(res,
+                               std::make_shared<shuffle_t>(ws_.one(), ws_.one(),
+                                                           ratexps),
+                               m.second);
+              }
           }
         res_ = std::move(res);
         apply_weights(e);

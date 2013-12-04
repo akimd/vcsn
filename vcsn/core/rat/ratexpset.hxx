@@ -221,6 +221,24 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::shuffle(value_t l, value_t r) const
+    -> value_t
+  {
+    value_t res = nullptr;
+    // Trivial Identity.
+    // E{:}0 = 0{:}E = E.
+    if (l->type() == type_t::zero)
+      res = r;
+    else if (r->type() == type_t::zero)
+      res = l;
+    // END: Trivial Identity
+    else
+      res = std::make_shared<shuffle_t>(weightset()->one(),
+                                        weightset()->one(),
+                                        gather<type_t::shuffle>(l, r));
+    return res;
+  }
+
   DEFINE::concat(value_t l, value_t r) const
     -> value_t
   {

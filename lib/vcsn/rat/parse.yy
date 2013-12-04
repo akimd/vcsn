@@ -124,6 +124,7 @@
 
 %token  SUM   "+"
         AMPERSAND "&"
+        COLON "{:}"
         DOT   "."
         ONE   "\\e"
         ZERO  "\\z"
@@ -138,6 +139,7 @@
 
 %precedence RWEIGHT
 %left "+"
+%left "{:}"
 %left "&"
 %left "."
 %right "weight" // Match longest series of "weight".
@@ -157,6 +159,7 @@ exps:
 exp:
   exp "." exp                 { $$ = MAKE(mul, $1, $3); }
 | exp "&" exp                 { $$ = MAKE(intersection, $1, $3); }
+| exp "{:}" exp               { $$ = MAKE(shuffle, $1, $3); }
 | exp "+" exp                 { $$ = MAKE(add, $1, $3); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }

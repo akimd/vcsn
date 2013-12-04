@@ -38,6 +38,7 @@ namespace vcsn
           rparen_       = "\\right)";
           star_         = "^*";
           intersection_ = " \\cap ";
+          shuffle_      = " \\between ";
           product_      = " \\cdot ";
           sum_          = " + ";
           zero_         = "\\emptyset";
@@ -55,6 +56,7 @@ namespace vcsn
           rparen_       = ")";
           star_         = "*";
           intersection_ = "&";
+          shuffle_      = "{:}";
           product_      = ".";
           sum_          = "+";
           zero_         = "\\z";
@@ -81,6 +83,7 @@ namespace vcsn
               return precedence_t::Type;
             CASE(intersection);
             CASE(sum);
+            CASE(shuffle);
             CASE(prod);
             CASE(star);
             CASE(zero);
@@ -98,6 +101,11 @@ namespace vcsn
     VISIT(intersection)
     {
       print(v, intersection_);
+    }
+
+    VISIT(shuffle)
+    {
+      print(v, shuffle_);
     }
 
     VISIT(sum)

@@ -39,6 +39,7 @@ namespace vcsn
       using prod_t = typename super_type::prod_t;
       using sum_t = typename super_type::sum_t;
       using intersection_t = typename super_type::intersection_t;
+      using shuffle_t = typename super_type::shuffle_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
       using zero_t = typename super_type::zero_t;
@@ -97,6 +98,12 @@ namespace vcsn
       visit(const intersection_t&)
       {
         throw std::domain_error("star_normal_form: intersection is not supported");
+      }
+
+      virtual void
+      visit(const shuffle_t&)
+      {
+        throw std::domain_error("star_normal_form: shuffle is not supported");
       }
 
       /// Handling of a product by the box operator.
