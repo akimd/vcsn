@@ -3,25 +3,6 @@
 sudo port install py27-ipython py27-zmq py27-jinja2 py27-tornado
 ipython-2.7 notebook --pylab=inline
 
-import vcsn
-c = vcsn.context("lal_char(abc)_b")
-c
-
-a = vcsn.automaton.ladybird(c, 3)
-a
-r = vcsn.ratexp(c, "a+b*")
-r
-
-lan = vcsn.context("lan_char(ab)_z")
-r2 = vcsn.ratexp(lan, "(<2>a+<3>b)*")
-a = vcsn.automaton.thompson(r2)
-a
-
-a = a.proper()
-a
-
-vcsn.ratexp(a)
-
 #endif
 
 #if defined __GNUC__ && ! defined __clang__
@@ -35,6 +16,7 @@ vcsn.ratexp(a)
 struct automaton;
 struct context;
 struct ratexp;
+struct weight;
 
 struct context
 {
@@ -82,14 +64,14 @@ struct automaton
     return {vcsn::dyn::complement(aut_)};
   }
 
-  automaton concatenate(const automaton& rhs) const
-  {
-    return {vcsn::dyn::concatenate(aut_, rhs.aut_)};
-  }
-
   automaton complete() const
   {
     return {vcsn::dyn::complete(aut_)};
+  }
+
+  automaton concatenate(const automaton& rhs) const
+  {
+    return {vcsn::dyn::concatenate(aut_, rhs.aut_)};
   }
 
   automaton determinize() const
@@ -101,6 +83,8 @@ struct automaton
   {
     return {vcsn::dyn::difference(aut_, rhs.aut_)};
   }
+
+  weight eval(const std::string& s) const;
 
   automaton infiltration(const automaton& rhs) const
   {
@@ -256,6 +240,8 @@ struct ratexp
     return print("latex");
   }
 
+  weight constant_term() const;
+
   automaton derived_term() const
   {
     return {vcsn::dyn::derived_term(r_)};
@@ -296,6 +282,36 @@ struct ratexp
   vcsn::dyn::ratexp r_;
 };
 
+
+struct weight
+{
+  weight(const vcsn::dyn::weight& val)
+    : val_(val)
+  {}
+
+  weight(const context& ctx, const std::string& s)
+  {
+    std::istringstream is(s);
+    val_ = vcsn::dyn::read_weight(is, ctx.ctx_);
+  }
+
+  std::string __repr__() const
+  {
+    return print();
+  }
+
+  std::string print(const std::string& format = "text") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(val_, os, format);
+    return os.str();
+  }
+
+  vcsn::dyn::weight val_;
+};
+
+
+
 automaton::automaton(const ratexp& r)
 {
   *this = r.derived_term();
@@ -304,6 +320,16 @@ automaton::automaton(const ratexp& r)
 automaton automaton::ladybird(const context& ctx, unsigned n)
 {
   return {vcsn::dyn::ladybird(ctx.ctx_, n)};
+}
+
+weight automaton::eval(const std::string& s) const
+{
+  return {vcsn::dyn::eval(aut_, s)};
+}
+
+weight ratexp::constant_term() const
+{
+  return {vcsn::dyn::constant_term(r_)};
 }
 
 
@@ -328,6 +354,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("concatenate", &automaton::concatenate)
     .def("determinize", &automaton::determinize)
     .def("difference", &automaton::difference)
+    .def("eval", &automaton::eval)
     .def("infiltration", &automaton::infiltration)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_complete", &automaton::is_complete)
@@ -360,6 +387,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def(bp::init<const automaton&>())
     .def("__repr__", &ratexp::__repr__)
     .def("_repr_latex_", &ratexp::_repr_latex_)
+    .def("constant_term", &ratexp::constant_term)
     .def("derived_term", &ratexp::derived_term)
     .def("expand", &ratexp::expand)
     .def("is_equivalent", &ratexp::is_equivalent)
@@ -368,4 +396,10 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("standard", &ratexp::standard)
     .def("thompson", &ratexp::thompson)
     ;
+
+  bp::class_<weight>("weight", bp::init<const context&, const std::string&>())
+    .def("__repr__", &weight::__repr__)
+    .def("print", &weight::print)
+   ;
+
 }
