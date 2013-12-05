@@ -278,15 +278,31 @@ namespace vcsn
     /// \precondition aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
+    /// The at-most \a max first accepted words.
+    polynomial shortest(const automaton& aut, unsigned max = 1);
+
     /// The shuffle of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
     automaton shuffle(const automaton& lhs, const automaton& rhs);
+
+    /// Break \a ratexp.
+    polynomial split(const ratexp& exp);
 
     /// A standardized \a a.
     automaton standard(const automaton& a);
 
     /// The standard automaton of \a e.
     automaton standard(const ratexp& e);
+
+    /// Star of a standard automaton.
+    automaton star(const automaton& aut);
+
+    /// A normalized form where star is applied only to expression
+    /// without null constant-term.
+    ratexp star_normal_form(const ratexp& e);
+
+    /// Sum of two standard automata.
+    automaton sum(const automaton& lhs, const automaton& rhs);
 
     /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);
@@ -302,22 +318,6 @@ namespace vcsn
 
     /// The useful subautomaton of \a aut.
     automaton trim(const automaton& aut);
-
-    /// The at-most \a max first accepted words.
-    polynomial shortest(const automaton& aut, unsigned max = 1);
-
-    /// Break \a ratexp.
-    polynomial split(const ratexp& exp);
-
-    /// Star of a standard automaton.
-    automaton star(const automaton& aut);
-
-    /// A normalized form where star is applied only to expression
-    /// without null constant-term.
-    ratexp star_normal_form(const ratexp& e);
-
-    /// Sum of two standard automata.
-    automaton sum(const automaton& lhs, const automaton& rhs);
 
     /// The Brzozowski universal witness.
     automaton u(const context& ctx, unsigned n);
