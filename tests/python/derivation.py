@@ -50,6 +50,17 @@ check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'a', '\z')
 check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'b', '<y.z>(<x>a+<y>b)*&(<z>b+<x>c)*')
 check('(<x>a+<y>b)*&(<z>b+<x>c)*', 'c', '\z')
 
+# Shuffle.
+check('<x>a{:}<y>a{:}<z>a', 'a', '<x>\e{:}<y>a{:}<z>a + <y><x>a{:}\e{:}<z>a + <z><x>a{:}<y>a{:}\e')
+check('<x>a{:}<y>b{:}<z>c', 'a', '<x>\e{:}<y>b{:}<z>c')
+check('<x>a{:}<y>b{:}<z>c', 'b', '<y><x>a{:}\e{:}<z>c')
+check('<x>a{:}<y>b{:}<z>c', 'c', '<z><x>a{:}<y>b{:}\e')
+
+check('(<x>a<y>b)*{:}(<x>a<x>c)*',
+      'a', '<x><y>b.(<x>a.<y>b)*{:}(<x>a.<x>c)* + <x>(<x>a.<y>b)*{:}<x>c.(<x>a.<x>c)*')
+check('(<x>a<y>b)*{:}(<x>a<x>c)*', 'b', '\z')
+check('(<x>a<y>b)*{:}(<x>a<x>c)*', 'c', '\z')
+
 # Star.
 check('a*', 'a', 'a*')
 check('a*', 'b', '\z')
