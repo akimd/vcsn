@@ -52,11 +52,11 @@ namespace vcsn
       {
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::list<PolynomialSet>(p.get_polynomialset(),
-                                          p.polynomial(), o);
+                                         p.polynomial(), o);
       }
 
       REGISTER_DECLARE(list_polynomial,
-                        (const polynomial& p, std::ostream& o) -> std::ostream&);
+                       (const polynomial& p, std::ostream& o) -> std::ostream&);
 
       /// Bridge.
       template <typename PolynomialSet, typename Ostream>
@@ -69,7 +69,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(print_polynomial,
-                        (const polynomial& p, std::ostream& o) -> std::ostream&);
+                       (const polynomial& p, std::ostream& o) -> std::ostream&);
     }
   }
 
@@ -134,7 +134,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(print_weight,
-                        (const weight& aut, std::ostream& o) -> std::ostream&);
+                       (const weight& aut, std::ostream& o) -> std::ostream&);
     }
   }
 
