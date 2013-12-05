@@ -54,6 +54,20 @@ namespace vcsn
         return std::move(res_);
       }
 
+      void
+      apply_weights(const inner_t& v)
+      {
+        res_ = ws_.mul(v.left_weight(), res_);
+        res_ = ws_.mul(res_, v.right_weight());
+      }
+
+      /// Easy recursion.
+      weight_t constant_term(const ratexp_t& v)
+      {
+        v->accept(*this);
+        return std::move(res_);
+      }
+
       virtual void
       visit(const zero_t&)
       {
@@ -75,53 +89,39 @@ namespace vcsn
       virtual void
       visit(const sum_t& v)
       {
-        v.head()->accept(*this);
-        weight_t res = res_;
-        for (auto c: v.tail())
-          {
-            c->accept(*this);
-            res = ws_.add(res, res_);
-          }
-        res = ws_.mul(v.left_weight(),res);
-        res_ = ws_.mul(res, v.right_weight());
+        weight_t res = ws_.zero();
+        for (auto c: v)
+          res = ws_.add(res, constant_term(c));
+        res_ = std::move(res);
+        apply_weights(v);
       }
 
       virtual void
       visit(const prod_t& v)
       {
-        v.head()->accept(*this);
-        weight_t res = res_;
-        for (auto c: v.tail())
-          {
-            c->accept(*this);
-            res = ws_.mul(res, res_);
-          }
-        res = ws_.mul(v.left_weight(),res);
-        res_ = ws_.mul(res, v.right_weight());
+        weight_t res = ws_.one();
+        for (auto c: v)
+          res = ws_.mul(res, constant_term(c));
+        res_ = std::move(res);
+        apply_weights(v);
       }
 
       virtual void
       visit(const intersection_t& v)
       {
         // FIXME: Code duplication with prod_t.
-        v.head()->accept(*this);
-        weight_t res = res_;
-        for (auto c: v.tail())
-          {
-            c->accept(*this);
-            res = ws_.mul(res, res_);
-          }
-        res = ws_.mul(v.left_weight(),res);
-        res_ = ws_.mul(res, v.right_weight());
+        weight_t res = ws_.one();
+        for (auto c: v)
+          res = ws_.mul(res, constant_term(c));
+        res_ = std::move(res);
+        apply_weights(v);
       }
 
       virtual void
       visit(const star_t& v)
       {
-        v.sub()->accept(*this);
-        res_ = ws_.star(res_);
-        res_ = ws_.mul(v.left_weight(), res_);
-        res_ = ws_.mul(res_, v.right_weight());
+        res_ = ws_.star(constant_term(v.sub()));
+        apply_weights(v);
       }
 
     private:
