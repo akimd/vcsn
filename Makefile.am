@@ -10,6 +10,7 @@
 # `COPYING' file in the root directory.
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
+
 include build-aux/make/init.mk
 
 ACLOCAL_AMFLAGS = -I build-aux/m4

@@ -116,6 +116,9 @@ AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
   ;;
 esac
 
+# vcsn.py.
+AM_PATH_PYTHON
+
 BOOST_REQUIRE([1.49])
 BOOST_PYTHON
 

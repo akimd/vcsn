@@ -19,6 +19,7 @@
 /build-aux/bin/install-sh
 /build-aux/bin/ltmain.sh
 /build-aux/bin/missing
+/build-aux/bin/py-compile
 /build-aux/bin/tap-driver.pl
 /build-aux/bin/test-driver
 /build-aux/bin/ylwrap
