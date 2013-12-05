@@ -15,8 +15,14 @@ ipython-2.7 notebook --pylab=inline
 
 struct automaton;
 struct context;
+struct polynomial;
 struct ratexp;
 struct weight;
+
+
+/*----------.
+| context.  |
+`----------*/
 
 struct context
 {
@@ -33,6 +39,10 @@ struct context
   vcsn::dyn::context ctx_;
 };
 
+
+/*------------.
+| automaton.  |
+`------------*/
 
 struct automaton
 {
@@ -83,6 +93,8 @@ struct automaton
   {
     return {vcsn::dyn::difference(aut_, rhs.aut_)};
   }
+
+  polynomial enumerate(unsigned max) const;
 
   weight eval(const std::string& s) const;
 
@@ -173,6 +185,8 @@ struct automaton
     return {vcsn::dyn::proper(aut_)};
   }
 
+  polynomial shortest(unsigned max) const;
+
   automaton shuffle(const automaton& rhs) const
   {
     return {vcsn::dyn::shuffle(aut_, rhs.aut_)};
@@ -212,6 +226,42 @@ struct automaton
 };
 
 
+/*-------------.
+| polynomial.  |
+`-------------*/
+
+struct polynomial
+{
+  polynomial(const vcsn::dyn::polynomial& val)
+    : val_(val)
+  {}
+
+  polynomial(const context& ctx, const std::string& s)
+  {
+    std::istringstream is(s);
+    val_ = vcsn::dyn::read_polynomial(is, ctx.ctx_);
+  }
+
+  std::string __repr__() const
+  {
+    return print();
+  }
+
+  std::string print(const std::string& format = "text") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(val_, os, format);
+    return os.str();
+  }
+
+  vcsn::dyn::polynomial val_;
+};
+
+
+/*---------.
+| ratexp.  |
+`---------*/
+
 struct ratexp
 {
   ratexp(const vcsn::dyn::ratexp& r)
@@ -242,6 +292,11 @@ struct ratexp
 
   weight constant_term() const;
 
+  polynomial derivation(const std::string& s) const
+  {
+    return {vcsn::dyn::derivation(r_, s)};
+  }
+
   automaton derived_term() const
   {
     return {vcsn::dyn::derived_term(r_)};
@@ -269,6 +324,11 @@ struct ratexp
     return os.str();
   }
 
+  polynomial split() const
+  {
+    return {vcsn::dyn::split(r_)};
+  }
+
   automaton standard() const
   {
     return {vcsn::dyn::standard(r_)};
@@ -282,6 +342,10 @@ struct ratexp
   vcsn::dyn::ratexp r_;
 };
 
+
+/*---------.
+| weight.  |
+`---------*/
 
 struct weight
 {
@@ -311,6 +375,9 @@ struct weight
 };
 
 
+/*---------------------------.
+| automaton implementation.  |
+`---------------------------*/
 
 automaton::automaton(const ratexp& r)
 {
@@ -322,10 +389,25 @@ automaton automaton::ladybird(const context& ctx, unsigned n)
   return {vcsn::dyn::ladybird(ctx.ctx_, n)};
 }
 
+polynomial automaton::enumerate(unsigned max) const
+{
+  return {vcsn::dyn::enumerate(aut_, max)};
+}
+
 weight automaton::eval(const std::string& s) const
 {
   return {vcsn::dyn::eval(aut_, s)};
 }
+
+polynomial automaton::shortest(unsigned max) const
+{
+  return {vcsn::dyn::shortest(aut_, max)};
+}
+
+
+/*------------------------.
+| ratexp implementation.  |
+`------------------------*/
 
 weight ratexp::constant_term() const
 {
@@ -333,12 +415,13 @@ weight ratexp::constant_term() const
 }
 
 
-
+/*--------------.
+| vcsn_python.  |
+`--------------*/
 
 BOOST_PYTHON_MODULE(vcsn_python)
 {
   namespace bp = boost::python;
-  //  def("ladybird", ladybird);
 
   bp::class_<automaton>("automaton", bp::init<const ratexp&>())
     .def("ladybird", &automaton::ladybird).staticmethod("ladybird")
@@ -354,6 +437,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("concatenate", &automaton::concatenate)
     .def("determinize", &automaton::determinize)
     .def("difference", &automaton::difference)
+    .def("enumerate", &automaton::enumerate)
     .def("eval", &automaton::eval)
     .def("infiltration", &automaton::infiltration)
     .def("is_ambiguous", &automaton::is_ambiguous)
@@ -370,6 +454,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("print", &automaton::print)
     .def("product", &automaton::product)
     .def("proper", &automaton::proper)
+    .def("shortest", &automaton::shortest)
     .def("shuffle", &automaton::shuffle)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)
@@ -388,14 +473,22 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("__repr__", &ratexp::__repr__)
     .def("_repr_latex_", &ratexp::_repr_latex_)
     .def("constant_term", &ratexp::constant_term)
+    .def("derivation", &ratexp::derivation)
     .def("derived_term", &ratexp::derived_term)
     .def("expand", &ratexp::expand)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
     .def("print", &ratexp::print)
+    .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
     .def("thompson", &ratexp::thompson)
     ;
+
+  bp::class_<polynomial>("polynomial",
+                         bp::init<const context&, const std::string&>())
+    .def("__repr__", &polynomial::__repr__)
+    .def("print", &polynomial::print)
+   ;
 
   bp::class_<weight>("weight", bp::init<const context&, const std::string&>())
     .def("__repr__", &weight::__repr__)
