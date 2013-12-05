@@ -16,12 +16,12 @@
 ## ------- ##
 
 check_PROGRAMS =
+TAP_DRIVER = $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl
 
 check_SCRIPTS = %D%/bin/vcsn
 dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk
-CHK_LOG_DRIVER = \
-  $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl $(srcdir)/%D%/checker
+CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/checker
 $(dist_TESTS:.chk=.log): %D%/checker
 
 TESTS = $(dist_TESTS)
@@ -31,6 +31,7 @@ RECHECK_LOGS =
 # Logical order: start with elementary tests, then more complex ones.
 include %D%/unit/local.mk
 include %D%/demo/local.mk
+include %D%/python/local.mk
 include %D%/rat/local.mk
 include %D%/tafkit/local.mk
 
@@ -83,8 +84,19 @@ check-html recheck-html:
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Use the wrappers to run the non-installed executables.
-BUILDCHECK_ENVIRONMENT +=                                       \
-  PATH=$(abs_top_builddir)/tests/bin:$(abs_top_srcdir)/bin:$$PATH; export PATH;
+BUILDCHECK_ENVIRONMENT +=						\
+  PATH=$(abs_top_builddir)/tests/bin:$(abs_top_srcdir)/bin:$$PATH;	\
+  export PATH;								\
+  VCSN_DATA_PATH=$(abs_top_srcdir)/share/vcsn;				\
+  export VCSN_DATA_PATH;						\
+  PYTHONPATH=$(abs_top_builddir)/python/.libs:$$PYTHONPATH;		\
+  PYTHONPATH=$(abs_top_srcdir)/python:$$PYTHONPATH;			\
+  export PYTHONPATH;							\
+  LD_LIBRARY_PATH=$(abs_top_builddir)/lib/.libs:$$LD_LIBRARY_PATH;	\
+  export LD_LIBRARY_PATH;						\
+  DYLD_LIBRARY_PATH=$(abs_top_builddir)/lib/.libs:$$DYLD_LIBRARY_PATH;	\
+  export DYLD_LIBRARY_PATH;
+
 
 INSTALLCHECK_ENVIRONMENT +=                                     \
   PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;
