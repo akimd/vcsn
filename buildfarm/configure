@@ -15,6 +15,18 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
       || fatal "cannot mkdir $DIR_BUILD"
   fi
   cd "$DIR_BUILD"
+
+  # If we are using ccache with clang, then we have spurious warnings:
+  #
+  # clang: warning: argument unused during compilation: '-I .'
+  #
+  # This can be addressed by -Qunused-arguments.
+  case $CXX in
+    (ccache*clang*)
+      CXXFLAGS="$CXXFLAGS -Qunused-arguments"
+      export CXXFLAGS
+      ;;
+  esac
   run "$DIR_SOURCE/configure"                   \
     --config-cache                              \
     --enable-dependency-tracking                \
