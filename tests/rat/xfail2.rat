@@ -1,0 +1,2 @@
+# Check that we detect invalid errors.
+ab ! not an error

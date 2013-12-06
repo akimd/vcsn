@@ -1,0 +1,2 @@
+# Check that we detect incorrect outputs.
+ab => a

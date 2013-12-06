@@ -30,8 +30,11 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 dist_TESTS += $(%C%_TESTS)
 EXTRA_DIST += $(AM_RAT_LOG_DEPS)
 
+# These tests check that the test suite does catch errors.
 %C%_XFAIL_TESTS =                               \
-  %D%/wrong-weight-set.rat
+  %D%/xfail1.rat                                \
+  %D%/xfail2.rat                                \
+  %D%/xfail3.rat
 
 XFAIL_TESTS += $(%C%_XFAIL_TESTS)
 
