@@ -21,6 +21,12 @@ export LD_LIBRARY_PATH
 DYLD_LIBRARY_PATH=$builddir/lib/.libs:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
+# If we need to compile, use the non-installed headers and libs.
+VCSN_CPPFLAGS="-I $builddir -I $srcdir"
+export VCSN_CPPFLAGS
+VCSN_LDFLAGS="-L $builddir/lib/.libs"
+export VCSN_LDFLAGS
+
 prog="vcsn-$1"
 shift
 

@@ -210,11 +210,19 @@ AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS"],
                    [Define to the preprocessor flags.])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
+AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS"],
+                   [Define to the linker flags.])
 
 # We look for our data files at runtime.
 dir=`URBI_RESOLVE_DIR([$datadir/vcsn])`
 AC_DEFINE_UNQUOTED([DATADIR], ["$dir"],
                    [Define to the location of data files.])
+dir=`URBI_RESOLVE_DIR([$includeir])`
+AC_DEFINE_UNQUOTED([INCLUDEDIR], ["$dir"],
+                   [Define to the location of header files.])
+dir=`URBI_RESOLVE_DIR([$libdir])`
+AC_DEFINE_UNQUOTED([LIBDIR], ["$dir"],
+                   [Define to the location of libs files.])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##

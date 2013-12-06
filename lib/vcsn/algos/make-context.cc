@@ -1,4 +1,5 @@
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/translate.hh>
 #include <vcsn/algos/make-context.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -16,8 +17,15 @@ namespace vcsn
     context
     make_context(const std::string& name)
     {
-      return detail::make_context_registry()
-        .call(detail::context_base::sname(name), name);
+      // If the context is not known, try to compile and load it
+      // first.
+      auto sname = detail::context_base::sname(name);
+      if (!detail::make_context_registry().get0(sname))
+        {
+          vcsn::dyn::detail::translation translate;
+          translate.compile(sname);
+        }
+      return detail::make_context_registry().call(sname, name);
     }
 
 

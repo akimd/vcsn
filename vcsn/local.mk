@@ -111,6 +111,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \
+  %D%/dyn/translate.hh                          \
   %D%/dyn/weight.hh                             \
   %D%/empty.hh                                  \
   %D%/factory/de-bruijn.hh                      \

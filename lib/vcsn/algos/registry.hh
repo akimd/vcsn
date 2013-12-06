@@ -33,12 +33,23 @@ namespace vcsn
     }
 
     /// Get function for signature \a sig.
-    const Fun& get(const std::string& sig)
+    const Fun* get0(const std::string& sig)
     {
       if (debug)
         std::cerr << "Register(" << name_ << ").get(" << sig << ")\n";
       auto i = map_.find(sig);
       if (i == map_.end())
+        return nullptr;
+      else
+        return i->second;
+    }
+
+    /// Get function for signature \a sig.
+    const Fun& get(const std::string& sig)
+    {
+      if (auto fun = get0(sig))
+        return *fun;
+      else
         {
           std::string err = name_ + ": no implementation available for " + sig;
           err += "\n  available versions:";
@@ -46,8 +57,6 @@ namespace vcsn
             err += "\n    " + p.first;
           throw std::runtime_error(err);
         }
-      else
-        return *i->second;
     }
 
     /// Call function for context \a ctx.
