@@ -1,5 +1,0 @@
-digraph
-{
-  vcsn_context = "lal_char(abcde)_b"
-  rankdir = LR
-}

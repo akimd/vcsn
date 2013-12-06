@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 # include <unordered_set> // FIXME: remove unless neeeded
+# include <algorithm> // FIXME: remove unless neeeded
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
@@ -22,22 +23,19 @@ namespace vcsn
   `--------------------------------------*/
   namespace detail
   {
-    // std::ostream& operator<<(std::ostream& o, const signature_multimap &q){
-    //   return o;
-    // }
-
     template <typename Aut>
     class minimizer
     {
       static_assert(Aut::context_t::is_lal,
                     "requires labels_are_letters");
       static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                    "requires Boolean weights");
+                    "requires Boolean weights"); // FIXME: relax this
 
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
       const automaton_t &a_;
+      const bool is_deterministic_;
 
       /// Non-special letters.
       const typename Aut::context_t::labelset_t& letters_;
@@ -64,121 +62,119 @@ namespace vcsn
 
       // These are to be used as class_t values.
       enum : class_t {
-        invalid_class =         0, // A non-existing class.
-        empty_class =           1, // A class containing no states.
-        // final_class =           3, // FIXME: this is tentative
-        // nonfinals_class =       4, // FIXME: this is tentative 
-        first_available_index = 2  //5  // For ordinary classes.
+        empty_class =           0, // A class containing no states.
+        first_available_index = 1  // For ordinary classes.
       };
       class_t next_class_index_ = first_available_index;
 
       class_to_set_t class_to_set_;
-      /* mutable */ state_to_class_t state_to_class_;
+      state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
       state_to_state_t state_to_res_state_;
 
       using weight_t = typename Aut::weight_t; // FIXME: for the future
-      //using transition_output_t = std::pair<label_t, std::pair<weight_t, state_t>>; // FIXME: make this not suck.
-      //struct transition_output_t{ label_t label; weight_t weight; state_t state; };
-      //using state_output_t = std::set<transition_output_t>;
       struct state_output_for_label_t
       {
         // For some unstored state.
         label_t label;
-        std::vector<state_t> to_states; // Any order will do.  FIXME: include weights, when needed.
+        std::vector<state_t> to_states; // Ordered.
       };
 
-      using state_output_t = std::vector<state_output_for_label_t>; // Sorted by label.
+      // This is sorted by label.
+      using state_output_t = std::vector<state_output_for_label_t>;
 
-      // // We commit a slight abuse of language and call "signature" the
-      // // state output, without explicitly referring the
-      // // state_to_class_t map needed to map the output states into
-      // // classes.
-
-      // class state_output_for_label_less // FIXME: remove if useless (as it's likely)
-      // {
-      //   const labelset_t& labelset_;
-      // public:
-      //   state_output_for_label_less(const labelset_t& labelset)
-      //     : labelset_(labelset)
-      //   {}
-      //   bool operator()(const state_output_for_label_t& a,
-      //                   const state_output_for_label_t& b) const noexcept
-      //   {
-      //     return labelset_.less_than(a.label, b.label);
-      //   }
-      // }; // class state_output_for_label_less
-
-      class label_less // FIXME: remove if useless (as it's likely)
+      friend class label_less;
+      class label_less
       {
-        const labelset_t& labelset_;
+        minimizer& minimizer_;
+        const labelset_t& ls_;
       public:
-        label_less(const labelset_t& labelset)
-          : labelset_(labelset)
+        label_less(minimizer& the_minimizer)
+          : minimizer_(the_minimizer)
+          , ls_(the_minimizer.ls_)
         {}
         bool operator()(const label_t& a,
                         const label_t& b) const noexcept
         {
-          return labelset_.less_than(a, b);
+          return ls_.less_than(a, b);
         }
       }; // class label_less
 
-      // [FIXME: write a better comment] We use this to sort state
-      // output items into a vector.
+      // This structure is only useful at initialization time, when
+      // sorting transitions from a given state in a canonical order.
       class label_to_states_t : public std::map<label_t,
                                                 std::vector<state_t>,
                                                 label_less>
       {
       public:
-        label_to_states_t(const labelset_t& labelset)
-          : std::map<label_t, std::vector<state_t>, label_less>(labelset)
+        label_to_states_t(minimizer& the_minimizer)
+          : std::map<label_t, std::vector<state_t>, label_less>(the_minimizer)
         {}
       }; // class label_to_states_t
 
+
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
+      friend class signature_hasher;
       class signature_hasher : public std::hash<state_output_t*>
       {
         const state_to_class_t& state_to_class_;
       public:
-        signature_hasher(const state_to_class_t& state_to_class)
-          : state_to_class_(state_to_class)
+        signature_hasher(minimizer& the_minimizer)
+          : state_to_class_(the_minimizer.state_to_class_)
         {}
 
         size_t operator()(const state_output_t* state_output_) const noexcept
         {
-          //std::cerr << "hashing " << state_output_ << "\n";
-          //std::cerr << "Dereferencing...\n";
           const state_output_t& state_output = *state_output_;
-          //std::cerr << "...dereferenced.\n";
           size_t res = 0;
           for (auto& t : state_output)
             {
               const label_t& label = t.label;
-              //weight_t weight = t.weight; // FIXME: enable when needed
+              std::hash_combine(res, label);
+
               const std::vector<state_t>& to_states = t.to_states;
 
-              std::hash_combine(res, label);
-              //std::hash_combine(res, weight);
-              for (const auto& s : to_states)
-                std::hash_combine(res, state_to_class_.at(s));
+              // Hash the set of classes reached with label.  Of
+              // course the hash must not depend on class ordering.
+
+              // FIXME: what follows is overkill in the deterministic
+              // case.  Since we made sure at initialization time that
+              // the states in to_states are in a fixed order, by
+              // hashing the class associated to each state in order
+              // yields a canonical order over classes as well, so
+              // that we don't need to sort here.
+
+              // Here I use a set to fix a canonical order among
+              // classes (FIXME: use a bitset)
+              std::set<class_t> classes;
+              for (auto s : to_states)
+                classes.emplace(state_to_class_.at(s));
+
+              for (const auto c : classes)
+                std::hash_combine(res, c);
             }
           return res;
         }
       }; // class signature_hasher
 
+      friend class signature_equal_to;
       class signature_equal_to : public std::equal_to<state_output_t*>
       {
+        minimizer& minimizer_;
         const labelset_t& ls_;
         const weightset_t& ws_;
         const state_to_class_t& state_to_class_;
         const size_t class_bound_;
       public:
-        signature_equal_to(const labelset_t& ls,
+        signature_equal_to(minimizer& the_minimizer,
+                           // FIXME: remove these unless really needed
+                           const labelset_t& ls,
                            const weightset_t& ws,
                            const state_to_class_t& state_to_class,
                            size_t class_bound)
-          : ls_(ls)
+          : minimizer_(the_minimizer)
+          , ls_(ls)
           , ws_(ws)
           , state_to_class_(state_to_class)
           , class_bound_(class_bound)
@@ -186,21 +182,17 @@ namespace vcsn
 
         bool operator()(const state_output_t *as_, const state_output_t *bs_) const noexcept
         {
-          //std::cerr << "comparing " << as_ << " with " << bs_ << "\n";
-          //std::cerr << "Dereferencing as_...\n";
           const state_output_t& as = *as_;
-          //std::cerr << "Done.  Dreferencing bs_...\n";
           const state_output_t& bs = *bs_;
-          //std::cerr << "...dereferenced.\n";
-          if (as.size() != bs.size())
+
+          // In the deterministic case the number of *labels* leading to
+          // output states must be the same, for two signatures to match.
+          if (minimizer_.is_deterministic_
+              && as.size() != bs.size())
             return false;
 
           auto b_i = bs.cbegin();
-          // FIXME: support weights, when needed.
           dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
-          //static dynamic_bitset a_bits(3000); // FIXME: !!!
-          //static dynamic_bitset b_bits(3000); // FIXME: !!!
-          // FIXME: an alternative: scan for min and max class (return false if they don't match on a and b); then strore indices relative to min; only compare the relevant part
           for (const auto& a : as)
             {
               const label_t& a_label = a.label;
@@ -220,10 +212,8 @@ namespace vcsn
               a_bits.reset(); b_bits.reset();
               for (auto s : a_states)
                 a_bits.set(state_to_class_.at(s));
-              //std::cerr << "The first loop is over\n";
               for (auto s : b_states)
                 b_bits.set(state_to_class_.at(s));
-              //std::cerr << "The second loop is over\n";
               if (a_bits != b_bits)
                 return false;
 
@@ -234,15 +224,19 @@ namespace vcsn
         }
       }; // class signature_equal_to
 
+      friend class signature_multimap;
       class signature_multimap
         : public std::unordered_multimap<state_output_t*,
                                          state_t,
                                          signature_hasher,
                                          signature_equal_to>
       {
+        minimizer& minimizer_;
         const state_to_class_t& state_to_class_;
       public:
-        signature_multimap(const labelset_t& ls,
+        signature_multimap(minimizer& the_minimizer,
+                           // FIXME: remove these unless really needed.
+                           const labelset_t& ls,
                            const weightset_t& ws,
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
@@ -251,8 +245,10 @@ namespace vcsn
                                     signature_hasher,
                                     signature_equal_to>
             (1,
-             signature_hasher(state_to_class),
-             signature_equal_to(ls, ws, state_to_class, class_bound))
+             signature_hasher(the_minimizer),
+             signature_equal_to(the_minimizer,
+                                ls, ws, state_to_class, class_bound))
+          , minimizer_(the_minimizer)
           , state_to_class_(state_to_class)
         {}
 
@@ -260,13 +256,6 @@ namespace vcsn
                                         const state_output_t& so)
         {
           o << "[";
-          // for (auto to : so)
-          //   {
-          //     label_t l = to.first;
-          //     state_t s = to.second.second;
-          //     o << "<" << l << "," << s << ">";
-          //   }
-          // o << "]";
           return o;
         }
         friend std::ostream& operator<<(std::ostream& o,
@@ -279,25 +268,15 @@ namespace vcsn
                 {
                   label_t l = to.first;
                   state_t s = to.second.second;
-                  //std::cerr << "ok 3a\n";
                   o << "<" << l << " s" << s << "(c" << mm.state_to_class_.at(s) << ")>";
-                  //std::cerr << "ok 3b\n";
                 }
 
               o << "]: s" << o_s.second << "  ";
             }
-          //for (auto o_s : mm)
-          //  o << (o_s.first) << ": " << o_s.second << ",  ";
           o << "\n";
           return o;
         }
       }; // class signature_multimap
-
-      // inline bool are_state_outputs_distinguishable(const state_output_t& state_output1, size_t hash1,
-      //                                               const state_output_t& state_output2, size_t hash2)
-      // {
-      //   return hash1 != hash2 || state_output1 != state_output2;
-      // }
 
       /// An auxiliary data structure enabling fast access to
       /// transitions from a given state and label, in random order.
@@ -366,14 +345,17 @@ namespace vcsn
         , res_{a.context()}
         , ls_(letters_) // FIXME: redundant
         , ws_(*a.weightset())
+        , is_deterministic_(is_deterministic(a_))
       {}
 
       /// The minimized automaton.
       automaton_t operator()()
       {
         std::cerr << "Starting...\n";
-        //assert(is_deterministic(a_));
+        if (!(is_trim(a_) || is_complete(a_)))
+          abort();
         clear();
+
         // FIXME: is this still needed?
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
@@ -383,29 +365,22 @@ namespace vcsn
         for (auto s : a_.all_states())
           {
             // Get the out-states from s, by label:
-            label_to_states_t label_to_states(ls_);
-            for (auto t : a_.all_out(s)) // FIXME: also support weights when needed
+            label_to_states_t label_to_states(*this);
+            for (auto t : a_.all_out(s))
               label_to_states[a_.label_of(t)].emplace_back(a_.dst_of(t));
 
             // Associate this information to s, as a vector sorted by label:
             state_output_t& state_output = state_to_state_output_[s];
             for (auto& l_ss : label_to_states)
-              state_output.emplace_back(state_output_for_label_t{l_ss.first,
-                                                                 std::move(l_ss.second)});
-            // FIXME: is this faster than having non-const data in the structure, to be directly used for emplace_back'ing thru a reference?
+              {
+                std::sort(l_ss.second.begin(), l_ss.second.end());
+                state_output.emplace_back(state_output_for_label_t{l_ss.first,
+                                                                   std::move(l_ss.second)});
+              }
           }
         std::cerr << "...Done\n";
-        // // Initialization: two classes, partitioning final and non-final states.
-        // std::unordered_set<class_t> classes;
-        // set_t nonfinals, finals;
-        // for (auto s : a_.states())
-        //   nonfinals.emplace_back(s);
-        // nonfinals.emplace_back(a_.pre());
-        // finals.emplace_back(a_.post());
-        // classes.insert({make_class(nonfinals),
-        //                 make_class(finals)});
 
-        // Alexandre-style initialization: one class only:
+        // Alexandre-style initialization: one class only.
         std::unordered_set<class_t> classes;
         set_t all_states;
         for (auto s : a_.all_states())
@@ -440,8 +415,9 @@ namespace vcsn
                   }
 
                 // Try to find distinguishable states in c_states:
-                signature_multimap signature_to_state(ls_, ws_, state_to_class_,
-                                                      next_class_index_);
+                signature_multimap signature_to_state(*this,
+                                                      ls_, ws_, state_to_class_,
+                                                      next_class_index_ * a_.num_all_states()); // FIXME: make this not suck
                 for (auto s : c_states)
                   signature_to_state.emplace(& state_to_state_output_[s], s);
                 //std::cerr << "The multimap has size " << signature_to_state.size() << "\n";
@@ -492,62 +468,8 @@ namespace vcsn
               classes.insert(c);
             classes_to_erase.clear();
             classes_to_insert.clear();
-
-            //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
-            //std::cerr << "END of iteration "<< iteration_no<<".\n";
           }
         while (go_on);
-        //std::cerr << "Iterated "<< iteration_no<<" times.\n";
-
-        // //// BEGIN
-        // signature_t t1 = {{'a', {2, 3}}};
-        // signature_t t2 = {{'a', {2, 3}}};
-        // signature_t t3 = {{'b', {2, 4}}};
-        // size_t h1 = hash_signature(t1);
-        // size_t h2 = hash_signature(t2);
-        // size_t h3 = hash_signature(t3);
-
-        // std::cerr << "Are t1 and t2 distinguishable? " << are_signatures_distinguishable(t1, h1, t2, h2) << "\n";
-        // std::cerr << "Are t1 and t3 distinguishable? " << are_signatures_distinguishable(t1, h1, t3, h3) << "\n";
-        // //// END
-
-        // classes_t classes_to_remove;
-        // sets_t sets_to_add;
-        // do
-        //   {
-        //     sets_to_add.clear();
-        //     // We empty classes_to_remove at the end of each iteration.
-
-        //     for (auto c_s : class_to_set_)
-        //       {
-        //         class_t c = c_s.first;
-        //         const set_t c_states = c_s.second;
-
-        //         for (auto l : letters_)
-        //           {
-        //             target_class_to_states_t target_class_to_c_states;
-        //             for (auto s : c_states)
-        //               target_class_to_c_states[out_class(s, l)].emplace_back(s);
-
-        //             // Are there more than two keys?
-        //             if (more_than_one_class(target_class_to_c_states))
-        //               {
-        //                 classes_to_remove.emplace_back(c);
-        //                 for (const auto& p : target_class_to_c_states)
-        //                   sets_to_add.emplace_back(std::move(p.second));
-        //                 // Ignore other labels for this partition.
-        //                 break;
-        //               }
-        //           } // for on labels
-        //       } // for on classes
-
-        //     for (auto c : classes_to_remove)
-        //       class_to_set_.erase(c);
-        //     classes_to_remove.clear();
-        //     for (auto set : sets_to_add)
-        //       make_class(set);
-        //   }
-        // while (! sets_to_add.empty());
 
         /* For each input state compute the corresponding class and
            its corresponding output state.  Starting by making result
@@ -576,11 +498,12 @@ namespace vcsn
                               state_to_res_state_[a_.dst_of(t)],
                               a_.label_of(t));
 
-        /* Moore's construction maps each set of indistinguishable
-           states into a classe; however the fact of being
-           distinguishable from one another doesn't make all classes
-           useful. */
-        return trim(res_);
+        return std::move(res_);
+        // /* Moore's construction maps each set of indistinguishable
+        //    states into a classe; however the fact of being
+        //    distinguishable from one another doesn't make all classes
+        //    useful. */
+        // return trim(res_);
       }
 
       /// A map from minimized states to sets of original states.

@@ -107,15 +107,13 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
-  %D%/minimize.dir/incomplete.gv                \
-  %D%/minimize.dir/incomplete.exp               \
-  %D%/minimize.dir/intricate.exp                \
+  %D%/minimize.dir/incomplete-non-trim.gv       \
+  %D%/minimize.dir/intricate.exp.gv             \
   %D%/minimize.dir/no-final-states.gv           \
-  %D%/minimize.dir/no-final-states.exp          \
   %D%/minimize.dir/no-initial-states.gv         \
-  %D%/minimize.dir/no-initial-states.exp        \
   %D%/minimize.dir/redundant.gv                 \
   %D%/minimize.dir/redundant.exp                \
+  %D%/minimize.dir/small-nfa.exp.gv             \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
   %D%/product.dir/a.gv                          \
