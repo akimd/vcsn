@@ -56,8 +56,7 @@ namespace vcsn
       using class_t = unsigned;
       using classes_t = std::vector<class_t>;
       using set_t = std::vector<state_t>;
-      using sets_t = std::vector<set_t>;
-      using state_to_class_t = std::map<state_t, class_t>;
+      using state_to_class_t = std::unordered_map<state_t, class_t>;
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::unordered_map<class_t, set_t>;
       using class_to_state_t = std::unordered_map<class_t, state_t>;
@@ -86,8 +85,7 @@ namespace vcsn
       {
         // For some unstored state.
         label_t label;
-        //weight_t weight; // FIXME: enable when needed
-        std::vector<state_t> to_states; // Any order will do.
+        std::vector<state_t> to_states; // Any order will do.  FIXME: include weights, when needed.
       };
 
       using state_output_t = std::vector<state_output_for_label_t>; // Sorted by label.
@@ -125,6 +123,8 @@ namespace vcsn
         }
       }; // class label_less
 
+      // [FIXME: write a better comment] We use this to sort state
+      // output items into a vector.
       class label_to_states_t : public std::map<label_t,
                                                 std::vector<state_t>,
                                                 label_less>
@@ -137,7 +137,6 @@ namespace vcsn
 
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
-      //friend class signature_hasher; // FIXME: decrappify
       class signature_hasher : public std::hash<state_output_t*>
       {
         const state_to_class_t& state_to_class_;
@@ -153,7 +152,7 @@ namespace vcsn
           const state_output_t& state_output = *state_output_;
           //std::cerr << "...dereferenced.\n";
           size_t res = 0;
-          for (auto t : state_output)
+          for (auto& t : state_output)
             {
               const label_t& label = t.label;
               //weight_t weight = t.weight; // FIXME: enable when needed
@@ -198,6 +197,10 @@ namespace vcsn
 
           auto b_i = bs.cbegin();
           // FIXME: support weights, when needed.
+          dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
+          //static dynamic_bitset a_bits(3000); // FIXME: !!!
+          //static dynamic_bitset b_bits(3000); // FIXME: !!!
+          // FIXME: an alternative: scan for min and max class (return false if they don't match on a and b); then strore indices relative to min; only compare the relevant part
           for (const auto& a : as)
             {
               const label_t& a_label = a.label;
@@ -205,7 +208,7 @@ namespace vcsn
               const std::vector<state_t>& a_states = a.to_states;
               const std::vector<state_t>& b_states = b_i->to_states;
 
-              if (a_label != b_label)
+              if (! ls_.equals(a_label, b_label))
                 return false;
 
               // a_states and b_states may have different sizes, but
@@ -213,14 +216,13 @@ namespace vcsn
               // assignment.
 
               // FIXME: this can and should be optimized a lot.
-              dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
-              //a_bits.resize(class_bound_); // FIXME: very tentative
-              //b_bits.resize(class_bound_); // FIXME: very tentative
+              //dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
+              a_bits.reset(); b_bits.reset();
               for (auto s : a_states)
-                a_bits[state_to_class_.at(s)] = true;
+                a_bits.set(state_to_class_.at(s));
               //std::cerr << "The first loop is over\n";
               for (auto s : b_states)
-                b_bits[state_to_class_.at(s)] = true;
+                b_bits.set(state_to_class_.at(s));
               //std::cerr << "The second loop is over\n";
               if (a_bits != b_bits)
                 return false;
@@ -346,7 +348,7 @@ namespace vcsn
         auto j = i->second.find(l);
         if (j == i->second.end())
           return empty_class;
-        return state_to_class_[j->second];
+        return state_to_class_.at(j->second);
       }
 
       /// Whether there are at least two classes.
@@ -369,12 +371,14 @@ namespace vcsn
       /// The minimized automaton.
       automaton_t operator()()
       {
-        assert(is_deterministic(a_));
+        std::cerr << "Starting...\n";
+        //assert(is_deterministic(a_));
         clear();
         // FIXME: is this still needed?
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
 
+        std::cerr << "Filling state_to_state_output...\n";
         // FIll state_to_state_output.
         for (auto s : a_.all_states())
           {
@@ -388,7 +392,9 @@ namespace vcsn
             for (auto& l_ss : label_to_states)
               state_output.emplace_back(state_output_for_label_t{l_ss.first,
                                                                  std::move(l_ss.second)});
+            // FIXME: is this faster than having non-const data in the structure, to be directly used for emplace_back'ing thru a reference?
           }
+        std::cerr << "...Done\n";
         // // Initialization: two classes, partitioning final and non-final states.
         // std::unordered_set<class_t> classes;
         // set_t nonfinals, finals;
@@ -406,6 +412,7 @@ namespace vcsn
           all_states.emplace_back(s);
         classes.insert(make_class(all_states));
 
+        std::cerr << "Entering the main loop...\n";
         classes_t classes_to_insert;
         classes_t classes_to_erase;
         int iteration_no = 0;
@@ -415,14 +422,14 @@ namespace vcsn
             go_on = false;
             classes_to_erase.clear();
 
-            //std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes.size() << " classes.\n";
+            std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes.size() << " classes.\n";
             //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
 
             for (auto c : classes)
               {
                 //std::cerr << "splitting " << c << "\n";
                 //std::cerr << "ok 1a "<< c << "\n";
-                const set_t c_states = class_to_set_.at(c);
+                const set_t& c_states = class_to_set_.at(c);
                 //std::cerr << "ok 1b\n";
 
                 if (c_states.size() < 2)
@@ -437,6 +444,7 @@ namespace vcsn
                                                       next_class_index_);
                 for (auto s : c_states)
                   signature_to_state.emplace(& state_to_state_output_[s], s);
+                //std::cerr << "The multimap has size " << signature_to_state.size() << "\n";
 
                 //signature_to_state.print(); // ???
                 //std::cerr << signature_to_state << "\n"; // ???
@@ -451,8 +459,8 @@ namespace vcsn
                     const auto& range = signature_to_state.equal_range(first_signature);
                     set_t new_set;
                     for (auto i = range.first; i != range.second; ++ i)
-                      new_set.emplace_back(i->second);
-                    new_sets.emplace_back(new_set);
+                      new_set.emplace_back(std::move(i->second));
+                    new_sets.emplace_back(std::move(new_set));
 
                     //std::cerr << "* new_set: "; for (auto s : new_set) std::cerr << s << " "; std::cerr << "\n";
 
@@ -467,7 +475,7 @@ namespace vcsn
                     class_to_set_.erase(c);
                     classes_to_erase.emplace_back(c);
 
-                    for (auto new_set : new_sets)
+                    for (const auto& new_set : new_sets)
                       {
                         class_t c = make_class(new_set);
                         //std::cerr << "* making class " << c << "\n";
@@ -549,7 +557,7 @@ namespace vcsn
         state_to_res_state_[a_.post()] = res_.post();
         for (auto s : a_.states())
           {
-            class_t s_class = state_to_class_[s];
+            class_t s_class = state_to_class_.at(s);
             auto iterator = class_to_res_state_.find(s_class);
             state_t res_state;
             if (iterator == class_to_res_state_.end())
