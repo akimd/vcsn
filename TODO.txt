@@ -33,6 +33,10 @@ Uncomment the tests in infiltration.chk (there are two places).
 Now that our products support heterogeneous, but compatible, types, we
 should propagate this to other n-ary algorithms.
 
+** sum, star, etc. (LS)
+We should also provide them for ratexp (at the dyn:: level).  Then bind them
+to Python.
+
 ** products: lazyness
 We need a lazy implementation of product.  nary product would be nice.
 

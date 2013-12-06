@@ -32,8 +32,15 @@ struct context
 
   std::string __repr__() const
   {
-    // FIXME: we should have vcsn::dyn::print(context).
+    // FIXME: we should have vcsn::dyn::format(context).
     return ctx_->vname();
+  }
+
+  std::string format(const std::string& format = "latex") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(ctx_, os, format);
+    return os.str();
   }
 
   vcsn::dyn::context ctx_;
@@ -56,7 +63,7 @@ struct automaton
 
   std::string __repr__() const
   {
-    return print();
+    return format();
   }
 
   automaton accessible() const
@@ -168,7 +175,7 @@ struct automaton
     return {vcsn::dyn::power(aut_, n)};
   }
 
-  std::string print(const std::string& format = "dot") const
+  std::string format(const std::string& format = "dot") const
   {
     std::ostringstream os;
     vcsn::dyn::print(aut_, os, format);
@@ -244,10 +251,10 @@ struct polynomial
 
   std::string __repr__() const
   {
-    return print();
+    return format();
   }
 
-  std::string print(const std::string& format = "text") const
+  std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
     vcsn::dyn::print(val_, os, format);
@@ -282,12 +289,12 @@ struct ratexp
 
   std::string __repr__() const
   {
-    return print();
+    return format();
   }
 
   std::string _repr_latex_() const
   {
-    return print("latex");
+    return format("latex");
   }
 
   weight constant_term() const;
@@ -317,7 +324,7 @@ struct ratexp
     return vcsn::dyn::is_valid(r_);
   }
 
-  std::string print(const std::string& format = "text") const
+  std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
     vcsn::dyn::print(r_, os, format);
@@ -361,10 +368,10 @@ struct weight
 
   std::string __repr__() const
   {
-    return print();
+    return format();
   }
 
-  std::string print(const std::string& format = "text") const
+  std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
     vcsn::dyn::print(val_, os, format);
@@ -439,6 +446,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("difference", &automaton::difference)
     .def("enumerate", &automaton::enumerate)
     .def("eval", &automaton::eval)
+    .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_complete", &automaton::is_complete)
@@ -451,7 +459,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
     .def("minimize", &automaton::minimize)
-    .def("print", &automaton::print)
     .def("product", &automaton::product)
     .def("proper", &automaton::proper)
     .def("shortest", &automaton::shortest)
@@ -466,6 +473,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<context>("context", bp::init<const std::string&>())
     .def("__repr__", &context::__repr__)
+    .def("format", &context::format)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
@@ -476,9 +484,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("derivation", &ratexp::derivation)
     .def("derived_term", &ratexp::derived_term)
     .def("expand", &ratexp::expand)
+    .def("format", &ratexp::format)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
-    .def("print", &ratexp::print)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
     .def("thompson", &ratexp::thompson)
@@ -487,12 +495,12 @@ BOOST_PYTHON_MODULE(vcsn_python)
   bp::class_<polynomial>("polynomial",
                          bp::init<const context&, const std::string&>())
     .def("__repr__", &polynomial::__repr__)
-    .def("print", &polynomial::print)
+    .def("format", &polynomial::format)
    ;
 
   bp::class_<weight>("weight", bp::init<const context&, const std::string&>())
     .def("__repr__", &weight::__repr__)
-    .def("print", &weight::print)
+    .def("format", &weight::format)
    ;
 
 }

@@ -39,22 +39,15 @@ namespace vcsn
       return out;
     }
 
-    xalloc<std::string*> format_flag;
+    /*-------------------------.
+    | print(context, stream).  |
+    `-------------------------*/
 
-    void
-    set_format(std::ostream& o, const std::string& type)
+    REGISTER_DEFINE(print_ctx);
+    std::ostream&
+    print(const dyn::context& ctx, std::ostream& out, const std::string& format)
     {
-      if (!format_flag(o))
-        format_flag(o) = new std::string;
-      *format_flag(o) = type;
-    }
-
-    std::string
-    get_format(std::ostream& o)
-    {
-      if (!format_flag(o))
-        format_flag(o) = new std::string;
-      return *format_flag(o);
+      return detail::print_ctx_registry().call(ctx, out, format);
     }
 
     /*----------------------------.
@@ -127,6 +120,29 @@ namespace vcsn
         throw std::domain_error("invalid output format for weight: "
                                 + type);
       return out;
+    }
+
+
+    /*-----------------.
+    | ostream format.  |
+    `-----------------*/
+
+    xalloc<std::string*> format_flag;
+
+    void
+    set_format(std::ostream& o, const std::string& type)
+    {
+      if (!format_flag(o))
+        format_flag(o) = new std::string;
+      *format_flag(o) = type;
+    }
+
+    std::string
+    get_format(std::ostream& o)
+    {
+      if (!format_flag(o))
+        format_flag(o) = new std::string;
+      return *format_flag(o);
     }
 
   }

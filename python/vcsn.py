@@ -13,17 +13,13 @@ def dot_to_svg(dot):
 def make_ratexp(ctx, re):
     return ratexp(ctx, re)
 context.ratexp = make_ratexp
-
+context._repr_latex_ = lambda c: '$' + c.format('latex') + '$'
 
 ## ----------- ##
 ## automaton.  ##
 ## ----------- ##
 
-def automaton_to_svg(aut):
-    return dot_to_svg(str(aut))
-
-automaton._repr_svg_ = automaton_to_svg
-
+automaton._repr_svg_ = lambda a: dot_to_svg(str(a))
 automaton.__mul__ = lambda lhs, rhs: lhs.product(rhs).trim()
 
 

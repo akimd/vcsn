@@ -205,6 +205,10 @@ namespace vcsn
     std::ostream& print(const automaton& a, std::ostream& o,
                         const std::string& type = "default");
 
+    /// Print context \a c on \a o using format \a type.
+    std::ostream& print(const context& c, std::ostream& o,
+                        const std::string& type = "default");
+
     /// Print polynomial \a p on \a o using format \a type.
     std::ostream& print(const polynomial& p, std::ostream& o,
                         const std::string& type = "default");
