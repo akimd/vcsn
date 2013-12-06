@@ -15,6 +15,8 @@ namespace vcsn
   class f2
   {
   public:
+    using self_type = f2;
+
     static std::string sname()
     {
       return "f2";
@@ -105,6 +107,18 @@ namespace vcsn
     }
 
     static value_t
+    conv(self_type, value_t v)
+    {
+      return v;
+    }
+
+    static value_t
+    conv(b, b::value_t v)
+    {
+      return v ? one() : zero();
+    }
+
+    static value_t
     conv(std::istream& stream)
     {
       int i;
@@ -127,19 +141,10 @@ namespace vcsn
     }
   };
 
-  /// The meet of two weightsets.
-  inline
-  f2 meet(const f2&, const f2&)
-  {
-    return {};
-  }
+  VCSN_WEIGHTS_BINARY(f2, f2, f2);
 
-  /// The union of two weightsets.
-  inline
-  f2 join(const f2&, const f2&)
-  {
-    return {};
-  }
+  VCSN_WEIGHTS_BINARY(b, f2, f2);
+  VCSN_WEIGHTS_BINARY(f2, b, f2);
 }
 
 #endif // !VCSN_WEIGHTS_F2_HH
