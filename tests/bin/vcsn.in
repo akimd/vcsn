@@ -2,35 +2,36 @@
 # @configure_input@
 # Wrapper around a non installed vcsn to make it work as an installed one.
 
-srcdir='@abs_top_srcdir@'
-builddir='@abs_top_builddir@'
+abs_srcdir='@abs_top_srcdir@'
+abs_builddir='@abs_top_builddir@'
 
 # Use the shipped files, not those installed.
-VCSN_DATA_PATH=$srcdir/share/vcsn
+VCSN_DATA_PATH=$abs_srcdir/share/vcsn
 export VCSN_DATA_PATH
 
 # Use the non-installed binaries.
-PATH=$builddir/bin:$srcdir/bin:$PATH
+PATH=$abs_builddir/bin:$abs_srcdir/bin:$PATH
 export PATH
 
 # Use the non-installed Python modules, and its libraries.
-PYTHONPATH=$srcdir/python:$builddir/python/.libs:$PYTHONPATH
+PYTHONPATH=$abs_srcdir/python:$abs_builddir/python/.libs:$PYTHONPATH
 export PYTHONPATH
-LD_LIBRARY_PATH=$builddir/lib/.libs:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$abs_builddir/lib/.libs:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
-DYLD_LIBRARY_PATH=$builddir/lib/.libs:$DYLD_LIBRARY_PATH
+DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
 # If we need to compile, use the non-installed headers and libs.
-VCSN_CPPFLAGS="-I $builddir -I $srcdir"
+VCSN_CPPFLAGS="-I $abs_builddir -I $abs_srcdir"
 export VCSN_CPPFLAGS
-VCSN_LDFLAGS="-L $builddir/lib/.libs"
+VCSN_LDFLAGS="-L $abs_builddir/lib/.libs"
 export VCSN_LDFLAGS
 
-prog="vcsn-$1"
-shift
-
-exec $prog "$@"
+case $1 in
+  ('') ;; # We are sourced to set up the environment.
+  (-e) shift 1; exec "$@";;
+  (*)  prog="vcsn-$1"; shift; exec "$prog" "$@";;
+esac
 
 # Local Variables:
 # mode: shell-script

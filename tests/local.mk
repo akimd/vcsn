@@ -18,7 +18,6 @@
 check_PROGRAMS =
 TAP_DRIVER = $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl
 
-check_SCRIPTS = %D%/bin/vcsn
 dist_noinst_SCRIPTS += %D%/checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/checker
@@ -80,23 +79,17 @@ check-html recheck-html:
 ## Tests environment.  ##
 ## ------------------- ##
 
+# The build-check environment is set up via this shell script, be sure
+# to have it up to date before running tests.
+check_SCRIPTS = %D%/bin/vcsn
+$(TEST_LOGS): %D%/bin/vcsn
+
 # By default, tests are buildcheck.
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Use the wrappers to run the non-installed executables.
-BUILDCHECK_ENVIRONMENT +=						\
-  PATH=$(abs_top_builddir)/tests/bin:$(abs_top_srcdir)/bin:$$PATH;	\
-  export PATH;								\
-  VCSN_DATA_PATH=$(abs_top_srcdir)/share/vcsn;				\
-  export VCSN_DATA_PATH;						\
-  PYTHONPATH=$(abs_top_builddir)/python/.libs:$$PYTHONPATH;		\
-  PYTHONPATH=$(abs_top_srcdir)/python:$$PYTHONPATH;			\
-  export PYTHONPATH;							\
-  LD_LIBRARY_PATH=$(abs_top_builddir)/lib/.libs:$$LD_LIBRARY_PATH;	\
-  export LD_LIBRARY_PATH;						\
-  DYLD_LIBRARY_PATH=$(abs_top_builddir)/lib/.libs:$$DYLD_LIBRARY_PATH;	\
-  export DYLD_LIBRARY_PATH;
-
+BUILDCHECK_ENVIRONMENT +=                       \
+  . $(abs_top_builddir)/tests/bin/vcsn;
 
 INSTALLCHECK_ENVIRONMENT +=                                     \
   PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;
