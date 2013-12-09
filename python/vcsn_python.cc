@@ -192,6 +192,8 @@ struct automaton
     return vcsn::dyn::proper(aut_);
   }
 
+  ratexp to_ratexp() const;
+
   polynomial shortest(unsigned max) const;
 
   automaton shuffle(const automaton& rhs) const
@@ -212,6 +214,11 @@ struct automaton
   automaton sum(const automaton& rhs) const
   {
     return vcsn::dyn::sum(aut_, rhs.aut_);
+  }
+
+  automaton transpose()
+  {
+    return vcsn::dyn::transpose(aut_);
   }
 
   automaton trim() const
@@ -282,11 +289,6 @@ struct ratexp
     r_ = vcsn::dyn::read_ratexp(is, rs);
   }
 
-  ratexp(const automaton& a)
-  {
-    r_ = vcsn::dyn::aut_to_exp(a.aut_);
-  }
-
   std::string __repr__() const
   {
     return format();
@@ -341,9 +343,19 @@ struct ratexp
     return vcsn::dyn::standard(r_);
   }
 
+  ratexp star_normal_form() const
+  {
+    return vcsn::dyn::star_normal_form(r_);
+  }
+
   automaton thompson() const
   {
     return vcsn::dyn::thompson(r_);
+  }
+
+  ratexp transpose()
+  {
+    return vcsn::dyn::transpose(r_);
   }
 
   vcsn::dyn::ratexp r_;
@@ -411,6 +423,11 @@ polynomial automaton::shortest(unsigned max) const
   return vcsn::dyn::shortest(aut_, max);
 }
 
+ratexp automaton::to_ratexp() const
+{
+  return vcsn::dyn::aut_to_exp(aut_);
+}
+
 
 /*------------------------.
 | ratexp implementation.  |
@@ -461,11 +478,13 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("minimize", &automaton::minimize)
     .def("product", &automaton::product)
     .def("proper", &automaton::proper)
+    .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("shortest", &automaton::shortest)
     .def("shuffle", &automaton::shuffle)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)
     .def("sum", &automaton::sum)
+    .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
     .def("union", &automaton::union_a)
     .def("universal", &automaton::universal)
@@ -477,7 +496,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
-    .def(bp::init<const automaton&>())
     .def("__repr__", &ratexp::__repr__)
     .def("_repr_latex_", &ratexp::_repr_latex_)
     .def("constant_term", &ratexp::constant_term)
@@ -489,7 +507,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_valid", &ratexp::is_valid)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
+    .def("star_normal_form", &ratexp::star_normal_form)
     .def("thompson", &ratexp::thompson)
+    .def("transpose", &ratexp::transpose)
     ;
 
   bp::class_<polynomial>("polynomial",
