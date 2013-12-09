@@ -6,6 +6,7 @@ ipython-2.7 notebook --pylab=inline
 #endif
 
 #if defined __GNUC__ && ! defined __clang__
+# pragma GCC diagnostic ignored "-Wmissing-declarations"
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
@@ -58,6 +59,12 @@ struct automaton
   {}
 
   automaton(const ratexp& r);
+
+  automaton(const std::string& s, const std::string& format = "default")
+  {
+    std::istringstream is(s);
+    aut_ = vcsn::dyn::read_automaton(is, format);
+  }
 
   static automaton ladybird(const context& ctx, unsigned n);
 
@@ -448,6 +455,8 @@ BOOST_PYTHON_MODULE(vcsn_python)
   namespace bp = boost::python;
 
   bp::class_<automaton>("automaton", bp::init<const ratexp&>())
+    .def(bp::init<const std::string&, const std::string&>())
+
     .def("ladybird", &automaton::ladybird).staticmethod("ladybird")
 
     .def("__pow__", &automaton::power)
