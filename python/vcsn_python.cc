@@ -68,37 +68,37 @@ struct automaton
 
   automaton accessible() const
   {
-    return {vcsn::dyn::accessible(aut_)};
+    return vcsn::dyn::accessible(aut_);
   }
 
   automaton coaccessible() const
   {
-    return {vcsn::dyn::coaccessible(aut_)};
+    return vcsn::dyn::coaccessible(aut_);
   }
 
   automaton complement() const
   {
-    return {vcsn::dyn::complement(aut_)};
+    return vcsn::dyn::complement(aut_);
   }
 
   automaton complete() const
   {
-    return {vcsn::dyn::complete(aut_)};
+    return vcsn::dyn::complete(aut_);
   }
 
   automaton concatenate(const automaton& rhs) const
   {
-    return {vcsn::dyn::concatenate(aut_, rhs.aut_)};
+    return vcsn::dyn::concatenate(aut_, rhs.aut_);
   }
 
   automaton determinize() const
   {
-    return {vcsn::dyn::determinize(aut_)};
+    return vcsn::dyn::determinize(aut_);
   }
 
   automaton difference(const automaton& rhs) const
   {
-    return {vcsn::dyn::difference(aut_, rhs.aut_)};
+    return vcsn::dyn::difference(aut_, rhs.aut_);
   }
 
   polynomial enumerate(unsigned max) const;
@@ -107,7 +107,7 @@ struct automaton
 
   automaton infiltration(const automaton& rhs) const
   {
-    return {vcsn::dyn::infiltration(aut_, rhs.aut_)};
+    return vcsn::dyn::infiltration(aut_, rhs.aut_);
   }
 
   bool is_ambiguous() const
@@ -167,12 +167,12 @@ struct automaton
 
   automaton minimize() const
   {
-    return {vcsn::dyn::minimize(aut_)};
+    return vcsn::dyn::minimize(aut_);
   }
 
   automaton power(unsigned n) const
   {
-    return {vcsn::dyn::power(aut_, n)};
+    return vcsn::dyn::power(aut_, n);
   }
 
   std::string format(const std::string& format = "dot") const
@@ -184,49 +184,49 @@ struct automaton
 
   automaton product(const automaton& rhs) const
   {
-    return {vcsn::dyn::product(aut_, rhs.aut_)};
+    return vcsn::dyn::product(aut_, rhs.aut_);
   }
 
   automaton proper() const
   {
-    return {vcsn::dyn::proper(aut_)};
+    return vcsn::dyn::proper(aut_);
   }
 
   polynomial shortest(unsigned max) const;
 
   automaton shuffle(const automaton& rhs) const
   {
-    return {vcsn::dyn::shuffle(aut_, rhs.aut_)};
+    return vcsn::dyn::shuffle(aut_, rhs.aut_);
   }
 
   automaton standard() const
   {
-    return {vcsn::dyn::standard(aut_)};
+    return vcsn::dyn::standard(aut_);
   }
 
   automaton star() const
   {
-    return {vcsn::dyn::star(aut_)};
+    return vcsn::dyn::star(aut_);
   }
 
   automaton sum(const automaton& rhs) const
   {
-    return {vcsn::dyn::sum(aut_, rhs.aut_)};
+    return vcsn::dyn::sum(aut_, rhs.aut_);
   }
 
   automaton trim() const
   {
-    return {vcsn::dyn::trim(aut_)};
+    return vcsn::dyn::trim(aut_);
   }
 
   automaton union_a(const automaton& rhs) const
   {
-    return {vcsn::dyn::union_a(aut_, rhs.aut_)};
+    return vcsn::dyn::union_a(aut_, rhs.aut_);
   }
 
   automaton universal() const
   {
-    return {vcsn::dyn::universal(aut_)};
+    return vcsn::dyn::universal(aut_);
   }
 
   vcsn::dyn::automaton aut_;
@@ -301,12 +301,12 @@ struct ratexp
 
   polynomial derivation(const std::string& s) const
   {
-    return {vcsn::dyn::derivation(r_, s)};
+    return vcsn::dyn::derivation(r_, s);
   }
 
   automaton derived_term() const
   {
-    return {vcsn::dyn::derived_term(r_)};
+    return vcsn::dyn::derived_term(r_);
   }
 
   ratexp expand() const
@@ -333,17 +333,17 @@ struct ratexp
 
   polynomial split() const
   {
-    return {vcsn::dyn::split(r_)};
+    return vcsn::dyn::split(r_);
   }
 
   automaton standard() const
   {
-    return {vcsn::dyn::standard(r_)};
+    return vcsn::dyn::standard(r_);
   }
 
   automaton thompson() const
   {
-    return {vcsn::dyn::thompson(r_)};
+    return vcsn::dyn::thompson(r_);
   }
 
   vcsn::dyn::ratexp r_;
@@ -391,24 +391,24 @@ automaton::automaton(const ratexp& r)
   *this = r.derived_term();
 }
 
-automaton automaton::ladybird(const context& ctx, unsigned n)
-{
-  return {vcsn::dyn::ladybird(ctx.ctx_, n)};
-}
-
 polynomial automaton::enumerate(unsigned max) const
 {
-  return {vcsn::dyn::enumerate(aut_, max)};
+  return vcsn::dyn::enumerate(aut_, max);
 }
 
 weight automaton::eval(const std::string& s) const
 {
-  return {vcsn::dyn::eval(aut_, s)};
+  return vcsn::dyn::eval(aut_, s);
+}
+
+automaton automaton::ladybird(const context& ctx, unsigned n)
+{
+  return vcsn::dyn::ladybird(ctx.ctx_, n);
 }
 
 polynomial automaton::shortest(unsigned max) const
 {
-  return {vcsn::dyn::shortest(aut_, max)};
+  return vcsn::dyn::shortest(aut_, max);
 }
 
 
@@ -418,7 +418,7 @@ polynomial automaton::shortest(unsigned max) const
 
 weight ratexp::constant_term() const
 {
-  return {vcsn::dyn::constant_term(r_)};
+  return vcsn::dyn::constant_term(r_);
 }
 
 
