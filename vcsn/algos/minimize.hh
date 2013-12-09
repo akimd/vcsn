@@ -367,20 +367,20 @@ namespace vcsn
         classes.insert(make_class(all_states));
 
         std::cerr << "Entering the main loop...\n";
-        classes_t classes_to_insert;
-        classes_t classes_to_erase;
         int iteration_no = 0;
         bool go_on;
         do
           {
             go_on = false;
-            classes_to_erase.clear();
 
             std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes.size() << " classes.\n";
             //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
 
-            for (auto c : classes)
+            for (auto i = std::begin(classes), end = std::end(classes);
+                 i != end;
+                 /* nothing. */)
               {
+                auto c = *i;
                 //std::cerr << "splitting " << c << "\n";
                 //std::cerr << "ok 1a "<< c << "\n";
                 const set_t& c_states = class_to_set_.at(c);
@@ -389,7 +389,7 @@ namespace vcsn
                 if (c_states.size() < 2)
                   {
                     //std::cerr << "Ignoring trivial class " << c << " from now on\n";
-                    classes_to_erase.emplace_back(c);
+                    i = classes.erase(i);
                     continue;
                   }
 
@@ -428,25 +428,19 @@ namespace vcsn
 
                     //std::cerr << "Breaking class " << c << "\n";
                     class_to_set_.erase(c);
-                    classes_to_erase.emplace_back(c);
+                    i = classes.erase(i);
 
                     for (const auto& new_set : new_sets)
                       {
                         class_t c = make_class(new_set);
                         //std::cerr << "* making class " << c << "\n";
 
-                        classes_to_insert.emplace_back(c);
+                        classes.insert(c);
                       }
                   }
+                else
+                  ++i;
               } // for on classes
-
-            // Destroy the classes we've split and make the new ones.
-            for (auto c : classes_to_erase)
-              classes.erase(c);
-            for (auto c : classes_to_insert)
-              classes.insert(c);
-            classes_to_erase.clear();
-            classes_to_insert.clear();
           }
         while (go_on);
 
