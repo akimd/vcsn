@@ -320,11 +320,11 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
+        , is_deterministic_(is_deterministic(a_))
         , letters_(*a_.labelset())
         , res_{a.context()}
         , ls_(letters_) // FIXME: redundant
         , ws_(*a.weightset())
-        , is_deterministic_(is_deterministic(a_))
       {}
 
       /// The minimized automaton.
