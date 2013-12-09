@@ -317,27 +317,6 @@ namespace vcsn
         return res;
       }
 
-      /// The destination class of \a s with \a l in \a a.
-      /// Return \a empty_class if \a s has no successor with \a l.
-      class_t out_class(state_t s, label_t l)
-      {
-        auto i = out_.find(s);
-        if (i == out_.end())
-          return empty_class;
-        auto j = i->second.find(l);
-        if (j == i->second.end())
-          return empty_class;
-        return state_to_class_.at(j->second);
-      }
-
-      /// Whether there are at least two classes.
-      bool more_than_one_class(const target_class_to_states_t& c) const
-      {
-        auto i = std::begin(c);
-        auto end = std::end(c);
-        return i != end && ++i != end;
-      }
-
     public:
       minimizer(const Aut& a)
         : a_(a)
