@@ -414,28 +414,39 @@ namespace vcsn
            its corresponding output state.  Starting by making result
            states in a separate loop on c_s would be slightly simpler,
            but would yield an unspecified state numbering. */
-        state_to_res_state_[a_.pre()] = res_.pre();
-        state_to_res_state_[a_.post()] = res_.post();
-        for (auto s : a_.states())
+        for (auto c: classes)
           {
-            class_t s_class = state_to_class_.at(s);
-            auto iterator = class_to_res_state_.find(s_class);
-            state_t res_state;
-            if (iterator == class_to_res_state_.end())
-              class_to_res_state_[s_class] = res_state = res_.new_state();
-            else
-              res_state = iterator->second;
-
-            state_to_res_state_[s] = res_state;
+            state_t s = class_to_set_[c][0];
+            class_to_res_state_[c]
+              = s == a_.pre()  ? res_.pre()
+              : s == a_.post() ? res_.post()
+              : res_.new_state();
+#if DEBUG
+            std::cerr << c << " -> " << class_to_res_state_[c] << " (";
+            for (auto s: class_to_set_[c])
+              std::cerr << ' ' << s;
+            std::cerr << ")\n";
+#endif
           }
-
-        /* Add input transitions to the result automaton, including
-           the special ones defining which states are initial or
-           final.  Here we rely on weights being Boolean. */
-        for (auto t : a_.all_transitions())
-          res_.add_transition(state_to_res_state_[a_.src_of(t)],
-                              state_to_res_state_[a_.dst_of(t)],
-                              a_.label_of(t));
+        for (auto c : classes)
+          {
+            // Copy the transitions of the first state of the class in
+            // the result.
+            state_t s = class_to_set_[c][0];
+            state_t src = class_to_res_state_[c];
+            for (auto t : a_.all_out(s))
+              {
+                state_t d = a_.dst_of(t);
+                state_t dst = class_to_res_state_[state_to_class_[d]];
+#if DEBUG
+                std::cerr
+                  << s << ' ' << a_.label_of(t) << ' ' << d
+                  << " => "
+                  << src << ' ' << a_.label_of(t) << ' ' << dst<< '\n';
+#endif
+                res_.add_transition(src, dst, a_.label_of(t));
+              }
+          }
 
         return std::move(res_);
         // /* Moore's construction maps each set of indistinguishable
