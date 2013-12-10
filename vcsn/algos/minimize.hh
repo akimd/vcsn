@@ -278,16 +278,6 @@ namespace vcsn
         }
       }; // class signature_multimap
 
-      /// An auxiliary data structure enabling fast access to
-      /// transitions from a given state and label, in random order.
-      /// This is a clear win for automata with many transitions
-      /// between a couple of states.
-      /// FIXME: this uglyish hash-of-hashes is slightly faster than
-      /// an unordered_map of pairs, as of GCC 4.8.2 on Luca's amd64
-      /// laptop, compiled with -O3.
-      std::unordered_map<state_t, std::unordered_map<label_t, state_t>>
-        out_;
-
       void clear()
       {
         class_to_set_.clear();
@@ -298,7 +288,6 @@ namespace vcsn
         state_to_res_state_.clear();
         for (auto s : res_.states())
           res_.del_state(s);
-        out_.clear();
       }
 
       void make_class_named(const set_t& set, class_t class_identifier)
@@ -334,10 +323,6 @@ namespace vcsn
         if (!(is_trim(a_) || is_complete(a_)))
           abort();
         clear();
-
-        // FIXME: is this still needed?
-        for (auto t : a_.all_transitions())
-          out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
 
         std::cerr << "Filling state_to_state_output...\n";
         // FIll state_to_state_output.
