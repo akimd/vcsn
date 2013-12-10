@@ -70,7 +70,6 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
-      state_to_state_t state_to_res_state_;
 
       using weight_t = typename Aut::weight_t; // FIXME: for the future
       struct state_output_for_label_t
@@ -283,7 +282,6 @@ namespace vcsn
         next_class_index_ = 2;
         class_to_set_[empty_class].clear();
         class_to_res_state_.clear();
-        state_to_res_state_.clear();
         for (auto s : res_.states())
           res_.del_state(s);
       }
@@ -343,11 +341,10 @@ namespace vcsn
         std::cerr << "...Done\n";
 
         // Alexandre-style initialization: one class only.
-        std::unordered_set<class_t> classes;
         set_t all_states;
         for (auto s : a_.all_states())
           all_states.emplace_back(s);
-        classes.insert(make_class(all_states));
+        classes_.insert(make_class(all_states));
 
         std::cerr << "Entering the main loop...\n";
         int iteration_no = 0;
@@ -356,10 +353,10 @@ namespace vcsn
           {
             go_on = false;
 
-            std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes.size() << " classes.\n";
+            std::cerr << "Iteration "<< ++iteration_no<<": there are " << classes_.size() << " classes.\n";
             //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
 
-            for (auto i = std::begin(classes), end = std::end(classes);
+            for (auto i = std::begin(classes_), end = std::end(classes_);
                  i != end;
                  /* nothing. */)
               {
@@ -395,13 +392,13 @@ namespace vcsn
 
                     //std::cerr << "Breaking class " << c << "\n";
                     class_to_set_.erase(c);
-                    i = classes.erase(i);
+                    i = classes_.erase(i);
 
                     for (auto p: signature_to_state)
                       {
                         class_t c = make_class(p.second);
                         //std::cerr << "* making class " << c << "\n";
-                        classes.insert(c);
+                        classes_.insert(c);
                       }
                   }
                 else
@@ -414,7 +411,7 @@ namespace vcsn
            its corresponding output state.  Starting by making result
            states in a separate loop on c_s would be slightly simpler,
            but would yield an unspecified state numbering. */
-        for (auto c: classes)
+        for (auto c: classes_)
           {
             state_t s = class_to_set_[c][0];
             class_to_res_state_[c]
@@ -428,7 +425,7 @@ namespace vcsn
             std::cerr << ")\n";
 #endif
           }
-        for (auto c : classes)
+        for (auto c : classes_)
           {
             // Copy the transitions of the first state of the class in
             // the result.
@@ -462,10 +459,9 @@ namespace vcsn
       origins()
       {
         origins_t res;
-
-        for (auto s : a_.states())
-          res[state_to_res_state_[s]].emplace(s);
-
+        for (auto c : classes_)
+          res[class_to_res_state_[c]]
+              .insert(begin(class_to_set_[c]), end(class_to_set_[c]));
         return res;
       }
 
@@ -477,20 +473,24 @@ namespace vcsn
         o << "/* Origins." << std::endl
           << "    node [shape = box, style = rounded]" << std::endl;
         for (auto p : orig)
-          {
-            o << "    " << p.first - 2
-              << " [label = \"";
-            const char* sep = "";
-            for (auto s: p.second)
-              {
-                o << sep << s - 2;
-                sep = ",";
-              }
-            o << "\"]" << std::endl;
-          }
+          if (2 <= p.first)
+            {
+              o << "    " << p.first - 2
+                << " [label = \"";
+              const char* sep = "";
+              for (auto s: p.second)
+                {
+                  o << sep << s - 2;
+                  sep = ",";
+                }
+              o << "\"]" << std::endl;
+            }
         o << "*/" << std::endl;
         return o;
       }
+
+    private:
+      std::unordered_set<class_t> classes_;
     };
   }
 
