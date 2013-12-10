@@ -372,7 +372,7 @@ namespace vcsn
                 if (c_states.size() < 2)
                   {
                     //std::cerr << "Ignoring trivial class " << c << " from now on\n";
-                    i = classes.erase(i);
+                    ++i;
                     continue;
                   }
 
