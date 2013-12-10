@@ -388,12 +388,8 @@ namespace vcsn
                 //std::cerr << signature_to_state << "\n"; // ???
                 //std::cerr << "splitting this class: ";
                 //for (auto s : c_states) std::cerr << s << " "; std::cerr << "\n";
-                std::vector<set_t> new_sets;
-                for (auto p: signature_to_state)
-                  new_sets.emplace_back(std::move(p.second));
-                signature_to_state.clear();
                 //std::cerr << "\n";
-                if (new_sets.size() > 1)
+                if (1 < signature_to_state.size())
                   {
                     go_on = true;
 
@@ -401,11 +397,10 @@ namespace vcsn
                     class_to_set_.erase(c);
                     i = classes.erase(i);
 
-                    for (const auto& new_set : new_sets)
+                    for (auto p: signature_to_state)
                       {
-                        class_t c = make_class(new_set);
+                        class_t c = make_class(p.second);
                         //std::cerr << "* making class " << c << "\n";
-
                         classes.insert(c);
                       }
                   }
