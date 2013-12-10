@@ -233,6 +233,10 @@ namespace vcsn
       {
         minimizer& minimizer_;
         const state_to_class_t& state_to_class_;
+        using super_type = std::unordered_multimap<state_output_t*,
+                                                   state_t,
+                                                   signature_hasher,
+                                                   signature_equal_to>;
       public:
         signature_multimap(minimizer& the_minimizer,
                            // FIXME: remove these unless really needed.
@@ -240,14 +244,10 @@ namespace vcsn
                            const weightset_t& ws,
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
-          : std::unordered_multimap<state_output_t*,
-                                    state_t,
-                                    signature_hasher,
-                                    signature_equal_to>
-            (1,
-             signature_hasher(the_minimizer),
-             signature_equal_to(the_minimizer,
-                                ls, ws, state_to_class, class_bound))
+          : super_type(1,
+                       signature_hasher(the_minimizer),
+                       signature_equal_to(the_minimizer,
+                                          ls, ws, state_to_class, class_bound))
           , minimizer_(the_minimizer)
           , state_to_class_(state_to_class)
         {}
