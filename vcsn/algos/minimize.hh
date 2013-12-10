@@ -226,17 +226,14 @@ namespace vcsn
 
       friend class signature_multimap;
       class signature_multimap
-        : public std::unordered_multimap<state_output_t*,
-                                         state_t,
-                                         signature_hasher,
-                                         signature_equal_to>
+        : public std::unordered_map<state_output_t*, set_t,
+                                    signature_hasher, signature_equal_to>
       {
         minimizer& minimizer_;
         const state_to_class_t& state_to_class_;
-        using super_type = std::unordered_multimap<state_output_t*,
-                                                   state_t,
-                                                   signature_hasher,
-                                                   signature_equal_to>;
+        using super_type
+          = std::unordered_map<state_output_t*, set_t,
+                               signature_hasher, signature_equal_to>;
       public:
         signature_multimap(minimizer& the_minimizer,
                            // FIXME: remove these unless really needed.
@@ -253,25 +250,26 @@ namespace vcsn
         {}
 
         friend std::ostream& operator<<(std::ostream& o,
-                                        const state_output_t& so)
-        {
-          o << "[";
-          return o;
-        }
-        friend std::ostream& operator<<(std::ostream& o,
                                         const signature_multimap& mm)
         {
           for (auto o_s : mm)
             {
-              o << "[";
+              const char* sep = "{";
               for (auto to : o_s.first)
                 {
                   label_t l = to.first;
                   state_t s = to.second.second;
-                  o << "<" << l << " s" << s << "(c" << mm.state_to_class_.at(s) << ")>";
+                  o << sep << s << '@' << mm.state_to_class_.at(s) << ' ' << l;
+                  sep = ", ";
                 }
-
-              o << "]: s" << o_s.second << "  ";
+              o << "} -> ";
+              sep = "{";
+              for (auto s: o_s.second)
+                {
+                  o << sep << s << '@' << mm.state_to_class_.at(s);
+                  sep = ", ";
+                }
+              o << "} ";
             }
           o << "\n";
           return o;
@@ -383,7 +381,7 @@ namespace vcsn
                                                       ls_, ws_, state_to_class_,
                                                       next_class_index_ * a_.num_all_states()); // FIXME: make this not suck
                 for (auto s : c_states)
-                  signature_to_state.emplace(& state_to_state_output_[s], s);
+                  signature_to_state[& state_to_state_output_[s]].emplace_back(s);
                 //std::cerr << "The multimap has size " << signature_to_state.size() << "\n";
 
                 //signature_to_state.print(); // ???
@@ -391,21 +389,9 @@ namespace vcsn
                 //std::cerr << "splitting this class: ";
                 //for (auto s : c_states) std::cerr << s << " "; std::cerr << "\n";
                 std::vector<set_t> new_sets;
-                while (! signature_to_state.empty())
-                  {
-                    //??????
-                    //const auto& first_signature = signature_to_state.cbegin()->first;
-                    state_output_t* first_signature = signature_to_state.cbegin()->first;
-                    const auto& range = signature_to_state.equal_range(first_signature);
-                    set_t new_set;
-                    for (auto i = range.first; i != range.second; ++ i)
-                      new_set.emplace_back(std::move(i->second));
-                    new_sets.emplace_back(std::move(new_set));
-
-                    //std::cerr << "* new_set: "; for (auto s : new_set) std::cerr << s << " "; std::cerr << "\n";
-
-                    signature_to_state.erase(first_signature);
-                  } // while
+                for (auto p: signature_to_state)
+                  new_sets.emplace_back(std::move(p.second));
+                signature_to_state.clear();
                 //std::cerr << "\n";
                 if (new_sets.size() > 1)
                   {
