@@ -55,17 +55,11 @@ namespace vcsn
       using classes_t = std::vector<class_t>;
       using set_t = std::vector<state_t>;
       using state_to_class_t = std::unordered_map<state_t, class_t>;
-      using target_class_to_states_t = std::unordered_map<class_t, set_t>;
-      using class_to_set_t = std::unordered_map<class_t, set_t>;
-      using class_to_state_t = std::unordered_map<class_t, state_t>;
+      using class_to_set_t = std::vector<set_t>;
+      using class_to_state_t = std::vector<state_t>;
       using state_to_state_t = std::unordered_map<state_t, state_t>;
 
-      // These are to be used as class_t values.
-      enum : class_t {
-        empty_class =           0, // A class containing no states.
-        first_available_index = 1  // For ordinary classes.
-      };
-      class_t next_class_index_ = first_available_index;
+      class_t next_class_index_ = 0;
 
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
@@ -279,16 +273,22 @@ namespace vcsn
       {
         class_to_set_.clear();
         state_to_class_.clear();
-        next_class_index_ = 2;
-        class_to_set_[empty_class].clear();
+        next_class_index_ = 0;
         class_to_res_state_.clear();
+        // FIXME: mutable_automaton.clear().
         for (auto s : res_.states())
           res_.del_state(s);
       }
 
       void make_class_named(const set_t& set, class_t class_identifier)
       {
-        class_to_set_[class_identifier] = set;
+        if (class_identifier < class_to_set_.size())
+          class_to_set_[class_identifier] = set;
+        else
+          {
+            assert(class_identifier == class_to_set_.size());
+            class_to_set_.push_back(set);
+          }
         for (auto s : set)
           state_to_class_[s] = class_identifier;
       }
@@ -392,7 +392,6 @@ namespace vcsn
                     go_on = true;
 
                     //std::cerr << "Breaking class " << c << "\n";
-                    class_to_set_.erase(c);
                     i = classes_.erase(i);
 
                     for (auto p: signature_to_state)
@@ -413,6 +412,7 @@ namespace vcsn
            its corresponding output state.  Starting by making result
            states in a separate loop on c_s would be slightly simpler,
            but would yield an unspecified state numbering. */
+        class_to_res_state_.resize(classes_.size());
         for (auto c: classes_)
           {
             state_t s = class_to_set_[c][0];
