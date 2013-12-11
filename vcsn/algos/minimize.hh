@@ -302,21 +302,22 @@ namespace vcsn
           res_.del_state(s);
       }
 
-      void make_class_named(const set_t& set, class_t class_identifier)
+      void make_class_named(set_t& set, class_t class_identifier)
       {
+        for (auto s : set)
+          state_to_class_[s] = class_identifier;
+
         if (class_identifier < class_to_set_.size())
-          class_to_set_[class_identifier] = set;
+          class_to_set_[class_identifier] = std::move(set);
         else
           {
             assert(class_identifier == class_to_set_.size());
-            class_to_set_.push_back(set);
+            class_to_set_.emplace_back(std::move(set));
           }
-        for (auto s : set)
-          state_to_class_[s] = class_identifier;
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(const set_t& set, class_t number = -1)
+      class_t make_class(set_t& set, class_t number = -1)
       {
         if (number == class_t(-1))
           number = num_classes_ ++;
