@@ -134,40 +134,29 @@ namespace vcsn
       class signature_hasher : public std::hash<state_output_t*>
       {
         const state_to_class_t& state_to_class_;
+        unsigned num_classes_;
       public:
-        signature_hasher(minimizer& the_minimizer)
+        signature_hasher(minimizer& the_minimizer,
+                         size_t num_classes)
           : state_to_class_(the_minimizer.state_to_class_)
+          , num_classes_(num_classes)
         {}
 
         size_t operator()(const state_output_t* state_output_) const noexcept
         {
           const state_output_t& state_output = *state_output_;
           size_t res = 0;
+          dynamic_bitset bits(num_classes_);
           for (auto& t : state_output)
             {
               const label_t& label = t.label;
               std::hash_combine(res, label);
-
-              const std::vector<state_t>& to_states = t.to_states;
-
               // Hash the set of classes reached with label.  Of
               // course the hash must not depend on class ordering.
-
-              // FIXME: what follows is overkill in the deterministic
-              // case.  Since we made sure at initialization time that
-              // the states in to_states are in a fixed order, by
-              // hashing the class associated to each state in order
-              // yields a canonical order over classes as well, so
-              // that we don't need to sort here.
-
-              // Here I use a set to fix a canonical order among
-              // classes (FIXME: use a bitset)
-              std::set<class_t> classes;
-              for (auto s : to_states)
-                classes.emplace(state_to_class_.at(s));
-
-              for (const auto c : classes)
-                std::hash_combine(res, c);
+              bits.reset();
+              for (auto s : t.to_states)
+                bits.set(state_to_class_.at(s));
+              std::hash_combine(res, bits);
             }
           return res;
         }
@@ -257,7 +246,7 @@ namespace vcsn
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
           : super_type(1,
-                       signature_hasher(the_minimizer),
+                       signature_hasher(the_minimizer, class_bound),
                        signature_equal_to(the_minimizer,
                                           ls, ws, state_to_class, class_bound))
           , minimizer_(the_minimizer)
