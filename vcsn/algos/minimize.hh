@@ -294,12 +294,13 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(const set_t& set)
+      class_t make_class(const set_t& set, class_t number = -1)
       {
-        class_t res = next_class_index_ ++;
+        if (number == class_t(-1))
+          number = next_class_index_ ++;
         //std::cerr << "Making class " << res << "\n";
-        make_class_named(set, res);
-        return res;
+        make_class_named(set, number);
+        return number;
       }
 
     public:
@@ -396,9 +397,10 @@ namespace vcsn
 
                     for (auto p: signature_to_state)
                       {
-                        class_t c = make_class(p.second);
+                        class_t c2 = make_class(p.second, c);
                         //std::cerr << "* making class " << c << "\n";
-                        classes_.insert(c);
+                        classes_.insert(c2);
+                        c = -1;
                       }
                   }
                 else
