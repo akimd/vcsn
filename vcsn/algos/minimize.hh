@@ -404,7 +404,7 @@ namespace vcsn
                 // Try to find distinguishable states in c_states:
                 signature_multimap signature_to_state(*this,
                                                       ls_, ws_, state_to_class_,
-                                                      num_classes_ * a_.num_all_states()); // FIXME: make this not suck
+                                                      num_classes_); // FIXME: make this not suck
                 for (auto s : c_states)
                   signature_to_state[& state_to_state_output_[s]].emplace_back(s);
                 //std::cerr << "The multimap has size " << signature_to_state.size() << "\n";
