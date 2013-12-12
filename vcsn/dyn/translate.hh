@@ -43,12 +43,17 @@ namespace vcsn
             is.get(k, sizeof k);
             kind = k;
           }
-          if (kind == "lal" || kind == "law")
+          if (kind == "lal" || kind == "lan" || kind == "law")
             {
               if (kind == "lal")
                 {
                   headers.insert("vcsn/labelset/letterset.hh");
                   os << "vcsn::ctx::letterset";
+                }
+              else if (kind == "lan")
+                {
+                  headers.insert("vcsn/labelset/nullableset.hh");
+                  os << "vcsn::ctx::nullableset";
                 }
               else if (kind == "law")
                 {
