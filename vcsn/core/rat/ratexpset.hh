@@ -113,8 +113,8 @@ namespace vcsn
     value_t intersection(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     value_t star(value_t e) const;
-    value_t weight(value_t e, const weight_t& w) const;
-    value_t weight(const weight_t& w, value_t e) const;
+    value_t rmul(value_t e, const weight_t& w) const;
+    value_t lmul(const weight_t& w, value_t e) const;
     value_t transpose(value_t e) const;
 
   private:

@@ -38,8 +38,8 @@ namespace detail
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
     virtual value_t star(value_t e) const = 0;
-    virtual value_t weight(const std::string& w, value_t e) const = 0;
-    virtual value_t weight(value_t e, const std::string& w) const = 0;
+    virtual value_t lmul(const std::string& w, value_t e) const = 0;
+    virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
 
@@ -100,9 +100,9 @@ namespace detail
 
     virtual value_t star(value_t v) const override;
 
-    virtual value_t weight(const std::string& w, value_t v) const override;
+    virtual value_t lmul(const std::string& w, value_t v) const override;
 
-    virtual value_t weight(value_t v, const std::string& w) const override;
+    virtual value_t rmul(value_t v, const std::string& w) const override;
 
     /// Parsing.
     virtual value_t conv(std::istream& is) const override;

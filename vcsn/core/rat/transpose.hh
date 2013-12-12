@@ -53,17 +53,17 @@ namespace vcsn
       apply_weights(const inner_t& e)
       {
         // Apply left on right, and vice-versa.  Transposed.
-        res_ = rs_.weight(rs_.weightset()->transpose(e.right_weight()),
-                          res_);
-        res_ = rs_.weight(res_,
-                          rs_.weightset()->transpose(e.left_weight()));
+        res_ = rs_.lmul(rs_.weightset()->transpose(e.right_weight()),
+                        res_);
+        res_ = rs_.rmul(res_,
+                        rs_.weightset()->transpose(e.left_weight()));
       }
 
       void
       apply_weights(const leaf_t& e)
       {
-        res_ = rs_.weight(rs_.weightset()->transpose(e.left_weight()),
-                          res_);
+        res_ = rs_.lmul(rs_.weightset()->transpose(e.left_weight()),
+                        res_);
       }
 
       virtual void

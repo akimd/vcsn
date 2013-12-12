@@ -348,7 +348,7 @@ namespace vcsn
       {
         ratexp_t res = rs_.zero();
         for (const auto& m: p)
-          res = rs_.add(res, rs_.weight(m.second, m.first));
+          res = rs_.add(res, rs_.lmul(m.second, m.first));
          return res;
       }
 

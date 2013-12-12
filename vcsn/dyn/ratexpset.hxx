@@ -100,14 +100,14 @@ namespace dyn
       return rs_.star(down(v));
     }
 
-    DEFINE::weight(const std::string& w, value_t v) const -> value_t
+    DEFINE::lmul(const std::string& w, value_t v) const -> value_t
     {
-      return rs_.weight(down(w), down(v));
+      return rs_.lmul(down(w), down(v));
     }
 
-    DEFINE::weight(value_t v, const std::string& w) const -> value_t
+    DEFINE::rmul(value_t v, const std::string& w) const -> value_t
     {
-      return rs_.weight(down(v), down(w));
+      return rs_.rmul(down(v), down(w));
     }
 
     DEFINE::conv(std::istream& is) const -> value_t

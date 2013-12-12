@@ -76,7 +76,7 @@ namespace vcsn
       virtual void
       visit(const atom_t& v)
       {
-        res_ = rs_.weight(v.left_weight(), rs_.atom(v.value()));
+        res_ = rs_.lmul(v.left_weight(), rs_.atom(v.value()));
       }
 
       // Plain traversal for sums.
@@ -90,8 +90,8 @@ namespace vcsn
             c->accept(*this);
             res = rs_.add(res, res_);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(), std::move(res)),
-                          v.right_weight());
+        res_ = rs_.rmul(rs_.lmul(v.left_weight(), std::move(res)),
+                        v.right_weight());
       }
 
       virtual void
@@ -154,8 +154,8 @@ namespace vcsn
           box_of(v);
         else
           dot_of(v);
-        res_ = rs_.weight(rs_.weight(v.left_weight(), res_),
-                          v.right_weight());
+        res_ = rs_.rmul(rs_.lmul(v.left_weight(), res_),
+                        v.right_weight());
       }
 
       virtual void
@@ -166,15 +166,15 @@ namespace vcsn
             operation_ = box;
             v.sub()->accept(*this);
             res_ = rs_.star(res_);
-            res_ = rs_.weight(ws_.star(constant_term(rs_, v.sub())), res_);
+            res_ = rs_.lmul(ws_.star(constant_term(rs_, v.sub())), res_);
             operation_ = dot;
           }
         else
           {
             v.sub()->accept(*this);
           }
-        res_ = rs_.weight(rs_.weight(v.left_weight(), res_),
-                          v.right_weight());
+        res_ = rs_.rmul(rs_.lmul(v.left_weight(), res_),
+                        v.right_weight());
       }
 
     private:

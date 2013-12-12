@@ -175,9 +175,9 @@ namespace vcsn
     // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
     // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
     else if (r->type() == type_t::one)
-      res = weight(l, r->left_weight());
+      res = rmul(l, r->left_weight());
     else if (l->type() == type_t::one)
-      res = weight(l->left_weight(), r);
+      res = lmul(l->left_weight(), r);
     // END: Trivial Identity
     else
       res = std::make_shared<prod_t>(weightset()->one(),
@@ -205,7 +205,7 @@ namespace vcsn
 	auto lhs = down_pointer_cast<const atom_t>(l)->value();
 	auto rhs = down_pointer_cast<const atom_t>(r)->value();
 	if (labelset()->equals(lhs, rhs))
-	  res = weight(l, r->left_weight());
+	  res = rmul(l, r->left_weight());
 	else
 	  res = zero();
       }
@@ -339,7 +339,7 @@ namespace vcsn
   | weights.  |
   `----------*/
 
-  DEFINE::weight(const weight_t& w, value_t e) const
+  DEFINE::lmul(const weight_t& w, value_t e) const
     -> value_t
   {
     // Trivial one $T_K$: {k}0 => 0, {0}x => 0.
@@ -353,7 +353,7 @@ namespace vcsn
       }
   }
 
-  DEFINE::weight(value_t e, const weight_t& w) const
+  DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
     // Trivial one $T_K$: 0{k} => 0, x{0} => 0.
@@ -368,7 +368,7 @@ namespace vcsn
       }
     else
       {
-        // Not the same as calling weight(w, e), as the product might
+        // Not the same as calling lmul(w, e), as the product might
         // not be commutative.
         using wvalue_t = typename node_t::wvalue_t;
         wvalue_t res = std::const_pointer_cast<node_t>(e->clone());

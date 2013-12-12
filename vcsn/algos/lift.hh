@@ -88,7 +88,7 @@ namespace vcsn
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
            {},
-           rs_in.weight(a.weight_of(t), rs_in.atom(a.label_of(t))));
+           rs_in.lmul(a.weight_of(t), rs_in.atom(a.label_of(t))));
     return res;
   }
 
