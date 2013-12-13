@@ -49,6 +49,8 @@ namespace vcsn
     namespace detail
     {
       class ratexpset_base;
+      template <typename RatExpSet>
+      class ratexpset_wrapper;
     }
     using ratexpset = std::shared_ptr<const detail::ratexpset_base>;
 

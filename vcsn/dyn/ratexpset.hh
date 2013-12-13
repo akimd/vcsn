@@ -25,6 +25,25 @@ namespace detail
   public:
     using value_t = rat::exp_t;
 
+    /// A description of the ratexp type.
+    /// \param full  whether to include the genset.
+    ///              if false, same as sname.
+    virtual std::string vname(bool full = true) const = 0;
+
+    /// Extract wrapped typed ratexpset.
+    template <typename RatExpSet>
+    ratexpset_wrapper<RatExpSet>& as()
+    {
+      return dynamic_cast<ratexpset_wrapper<RatExpSet>&>(*this);
+    }
+
+    /// Extract wrapped typed ratexp.
+    template <typename RatExpSet>
+    const ratexpset_wrapper<RatExpSet>& as() const
+    {
+      return dynamic_cast<const ratexpset_wrapper<RatExpSet>&>(*this);
+    }
+
     virtual value_t zero() const = 0;
     virtual value_t one() const = 0;
     /// Throws std::domain_error if w is not a valid label_t.
@@ -67,6 +86,17 @@ namespace detail
     /// Constructor.
     /// \param rs    the wrapped ratexpset.
     ratexpset_wrapper(const ratexpset_t& rs);
+
+    virtual std::string vname(bool full = true) const override
+    {
+      return get_ratexpset().vname(full);
+    }
+
+    /// The ratexpset which this wraps.
+    const ratexpset_t& get_ratexpset() const
+    {
+      return rs_;
+    }
 
     /// From weak to strong typing.
     std::shared_ptr<const node_t>
