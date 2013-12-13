@@ -8,6 +8,7 @@
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/weights/q.hh>
 # include <vcsn/weights/b.hh>
 
 namespace vcsn
@@ -94,6 +95,11 @@ namespace vcsn
 
     value_t conv(std::istream& is) const;
     value_t conv(b, typename b::value_t v) const;
+    value_t conv(const q& ws, typename q::value_t v) const;
+    template <typename Ctx2>
+    value_t conv(const ratexpset<Ctx2>& ws,
+                 typename ratexpset<Ctx2>::value_t v) const;
+
     value_t conv(self_type, value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v,
 			const std::string& format = "text") const;
@@ -141,19 +147,21 @@ namespace vcsn
   };
 
   /// The meet of two ratexpsets.
-  template <typename Context>
+  template <typename Ctx1, typename Ctx2>
   inline
-  ratexpset<Context>
-  meet(const ratexpset<Context>& a, const ratexpset<Context>& b)
+  auto
+  meet(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
+    -> ratexpset<decltype(meet(a.context(), b.context()))>
   {
     return {meet(a.context(), b.context())};
   }
 
   /// The union of two ratexpsets.
-  template <typename Context>
+  template <typename Ctx1, typename Ctx2>
   inline
-  ratexpset<Context>
-  join(const ratexpset<Context>& a, const ratexpset<Context>& b)
+  auto
+  join(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
+    -> ratexpset<decltype(join(a.context(), b.context()))>
   {
     return {join(a.context(), b.context())};
   }
@@ -172,6 +180,27 @@ namespace vcsn
   join(const b&, const ratexpset<Context>& b)
   {
     return b;
+  }
+
+  template <typename Context>
+  inline
+  auto
+  join(const ratexpset<Context>& rs, const q& ws)
+      -> ratexpset<ctx::context<typename Context::labelset_t,
+                                decltype(join(*rs.weightset(), ws))>>
+  {
+    using ctx_t = ctx::context<typename Context::labelset_t,
+                               decltype(join(*rs.weightset(), ws))>;
+    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+  }
+
+  template <typename Context>
+  inline
+  auto
+  join(const q& ws, const ratexpset<Context>& rs)
+    -> decltype(join(rs, ws))
+  {
+    return join(rs, ws);
   }
 
 } // namespace vcsn

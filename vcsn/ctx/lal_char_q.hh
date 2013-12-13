@@ -58,6 +58,13 @@ namespace vcsn
         REGISTER(shuffle, aut_t, z_aut_t);
         REGISTER(shuffle, z_aut_t, aut_t);
 
+        REGISTER(infiltration, aut_t, br_aut_t);
+        REGISTER(infiltration, br_aut_t, aut_t);
+        REGISTER(product, aut_t, br_aut_t);
+        REGISTER(product, br_aut_t, aut_t);
+        REGISTER(shuffle, aut_t, br_aut_t);
+        REGISTER(shuffle, br_aut_t, aut_t);
+
         //        REGISTER(copy_exp, rs_t, b_rs_t);
         REGISTER(copy_exp, b_rs_t, rs_t);
         //        REGISTER(copy_exp, rs_t, z_rs_t);

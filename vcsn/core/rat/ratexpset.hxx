@@ -2,6 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
+#include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/transpose.hh>
@@ -412,6 +413,25 @@ namespace vcsn
     -> value_t
   {
     return v ? one() : zero();
+  }
+
+  DEFINE::conv(const q& ws, typename q::value_t v) const
+    -> value_t
+  {
+    return one(weightset()->conv(ws, v));
+  }
+
+  // Convert from another ratexpset \a ws to ourself.  Requires a full
+  // rewrite of the ratexp \a v.
+  template <typename Context>
+  template <typename Ctx2>
+  inline
+  auto
+  ratexpset<Context>::conv(const ratexpset<Ctx2>& ws,
+                           typename ratexpset<Ctx2>::value_t v) const
+    -> value_t
+  {
+    return copy(ws, *this, v);
   }
 
   DEFINE::conv(std::istream& is) const
