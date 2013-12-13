@@ -153,7 +153,7 @@ namespace vcsn
   meet(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
     -> ratexpset<decltype(meet(a.context(), b.context()))>
   {
-    return {meet(a.context(), b.context())};
+    return meet(a.context(), b.context());
   }
 
   /// The union of two ratexpsets.
@@ -163,7 +163,7 @@ namespace vcsn
   join(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
     -> ratexpset<decltype(join(a.context(), b.context()))>
   {
-    return {join(a.context(), b.context())};
+    return join(a.context(), b.context());
   }
 
   template <typename Context>
@@ -177,9 +177,9 @@ namespace vcsn
   template <typename Context>
   inline
   ratexpset<Context>
-  join(const b&, const ratexpset<Context>& b)
+  join(const b& a, const ratexpset<Context>& b)
   {
-    return b;
+    return join(b, a);
   }
 
   template <typename Context>
