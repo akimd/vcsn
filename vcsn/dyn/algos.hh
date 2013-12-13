@@ -60,6 +60,9 @@ namespace vcsn
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
+    /// Copy of \a exp, but built with \a rs.
+    ratexp copy(const ratexp& exp, const ratexpset& rs);
+
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
@@ -259,7 +262,6 @@ namespace vcsn
     /// \param type  its format.
     automaton read_automaton(std::istream& is,
                              const std::string& type = "default");
-
 
     /// Read a ratexp from a stream.
     /// \param is    the input stream.

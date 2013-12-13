@@ -14,6 +14,14 @@ Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
+** expand
+Beware of the missing parens when displaying weights in iPython
+br = vcsn.context('lal_char(abc)_ratexpset<lal_char(xy)_b>')
+br.ratexp("(a+b+b)*").expand()
+=> (a+\e+\eb)∗
+which is actually
+=> (a+(\e+\e)b)∗
+
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 

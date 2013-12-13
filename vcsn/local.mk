@@ -61,6 +61,7 @@ nobase_include_HEADERS =                        \
   %D%/core/fwd.hh                               \
   %D%/core/kind.hh                              \
   %D%/core/mutable_automaton.hh                 \
+  %D%/core/rat/copy.hh                          \
   %D%/core/rat/fwd.hh                           \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/info.hxx                         \

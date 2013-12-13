@@ -313,6 +313,12 @@ struct ratexp
     return vcsn::dyn::derivation(r_, s);
   }
 
+  ratexp copy(const context& ctx)
+  {
+    auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
+    return vcsn::dyn::copy(r_, rs);
+  }
+
   automaton derived_term() const
   {
     return vcsn::dyn::derived_term(r_);
@@ -508,6 +514,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("__repr__", &ratexp::__repr__)
     .def("_repr_latex_", &ratexp::_repr_latex_)
     .def("constant_term", &ratexp::constant_term)
+    .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation)
     .def("derived_term", &ratexp::derived_term)
     .def("expand", &ratexp::expand)

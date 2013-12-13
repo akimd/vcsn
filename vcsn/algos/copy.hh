@@ -119,6 +119,35 @@ namespace vcsn
                        (const automaton&) -> automaton);
     }
   }
+
+  /*---------------.
+  | copy(ratexp).  |
+  `---------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
+      ratexp
+      copy_exp(const ratexp& exp, const ratexpset& out_rs)
+      {
+        const auto& r = exp->as<InRatExpSet>();
+        const auto& ors = out_rs->as<OutRatExpSet>().get_ratexpset();
+
+        return make_ratexp(ors,
+                           ::vcsn::rat::copy(r.get_ratexpset(), ors,
+                                             r.ratexp()));
+      }
+
+      REGISTER_DECLARE(copy_exp,
+                       (const ratexp& exp, const ratexpset& out_rs) -> ratexp);
+    }
+  }
+
+
+
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_COPY_HH

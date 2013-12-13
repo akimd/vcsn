@@ -39,6 +39,13 @@ namespace vcsn
         using br_ctx_t = context<lal_char, vcsn::ratexpset<b_ctx_t>>;
         using br_aut_t = mutable_automaton<br_ctx_t>;
 
+        // ratexpset on Q.
+        using rs_t = ratexpset<Ctx>;
+        // ratexpset on Z.
+        using z_rs_t = ratexpset<z_ctx_t>;
+        // ratexpset on B.
+        using b_rs_t = ratexpset<b_ctx_t>;
+
         using namespace dyn::detail;
 
 #define REGISTER(Algo, ...)                                             \
@@ -50,6 +57,11 @@ namespace vcsn
         REGISTER(product, z_aut_t, aut_t);
         REGISTER(shuffle, aut_t, z_aut_t);
         REGISTER(shuffle, z_aut_t, aut_t);
+
+        //        REGISTER(copy_exp, rs_t, b_rs_t);
+        REGISTER(copy_exp, b_rs_t, rs_t);
+        //        REGISTER(copy_exp, rs_t, z_rs_t);
+        REGISTER(copy_exp, z_rs_t, rs_t);
 #  undef REGISTER
 
         return true;

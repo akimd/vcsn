@@ -18,5 +18,17 @@ namespace vcsn
     {
       return detail::copy_registry().call(aut);
     }
+
+    /*------------------------------.
+    | copy(ratexp, out_ratexpset).  |
+    `------------------------------*/
+
+    REGISTER_DEFINE(copy_exp);
+
+    ratexp
+    copy(const ratexp& e, const ratexpset& rs)
+    {
+      return detail::copy_exp_registry().call(e, rs);
+    }
   }
 }
