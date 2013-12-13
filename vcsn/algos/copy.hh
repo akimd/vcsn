@@ -3,13 +3,21 @@
 
 # include <unordered_map>
 
+# include <vcsn/core/fwd.hh>
+# include <vcsn/core/rat/copy.hh>
+# include <vcsn/dyn/automaton.hh>
+# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/dyn/ratexpset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/set.hh>
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/core/fwd.hh>
 
 namespace vcsn
 {
+
+  /*------------------.
+  | copy(automaton).  |
+  `------------------*/
+
   /// Copy an automaton.
   template <typename AutIn, typename AutOut>
   void
@@ -94,14 +102,11 @@ namespace vcsn
     return ::vcsn::copy(input, {keep_all_states<typename Aut::state_t>});
   }
 
-  /*-----------.
-  | dyn::copy. |
-  `-----------*/
-
   namespace dyn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       automaton
       copy(const automaton& aut)

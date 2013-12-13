@@ -5,13 +5,12 @@
 
 namespace vcsn
 {
-
-  /*------.
-  | copy. |
-  `------*/
-
   namespace dyn
   {
+    /*------------------.
+    | copy(automaton).  |
+    `------------------*/
+
     REGISTER_DEFINE(copy);
 
     automaton

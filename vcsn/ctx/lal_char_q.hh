@@ -34,6 +34,11 @@ namespace vcsn
         using z_ctx_t = context<typename Ctx::labelset_t, z>;
         using z_aut_t = mutable_automaton<z_ctx_t>;
 
+        // Same labelset, but of B RatE.
+        using b_ctx_t  = context<typename Ctx::labelset_t, vcsn::b>;
+        using br_ctx_t = context<lal_char, vcsn::ratexpset<b_ctx_t>>;
+        using br_aut_t = mutable_automaton<br_ctx_t>;
+
         using namespace dyn::detail;
 
 #define REGISTER(Algo, ...)                                             \

@@ -165,9 +165,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-------------------.
-      | dyn::expand(exp).  |
-      `-------------------*/
+      /// Bridge.
       template <typename RatExpSet>
       ratexp
       expand(const ratexp& exp)
