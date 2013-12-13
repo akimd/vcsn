@@ -48,6 +48,8 @@ namespace vcsn
               if (kind == "lal")
                 {
                   headers.insert("vcsn/labelset/letterset.hh");
+                  // Some instantiation happen here:
+                  headers.insert("vcsn/ctx/lal_char.hh");
                   os << "vcsn::ctx::letterset";
                 }
               else if (kind == "lan")
@@ -68,7 +70,6 @@ namespace vcsn
                   while ((c = is.get()) != EOF && c != ')')
                     continue;
                 }
-              headers.insert("vcsn/ctx/lal_char.hh");
               os << "<vcsn::set_alphabet<vcsn::char_letters>>";
             }
           else if (kind == "lao")
