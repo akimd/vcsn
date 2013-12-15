@@ -3,8 +3,8 @@
 ## Simple minimization test.  The example comes from the "Théorie des
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
-#run 0 -f "$medir/redundant.exp.gv" -vcsn minimize -C 'lal_char(ab)_b' \
-#  -f "$medir/redundant.gv"
+run 0 -f "$medir/redundant.exp.gv" -vcsn minimize -C 'lal_char(ab)_b' \
+  -f "$medir/redundant.gv"
 
 
 ## An automaton equal to redundant.exp, with one transition removed.
@@ -22,13 +22,13 @@ run 134 '' -vcsn minimize -C 'lal_char(ab)_b' \
   -f "$medir/no-final-states.gv"
 
 ## Minimize an intricate automaton into a linear one.
-#run 0 '' -vcsn standard -C 'lal_char(abcdefghijk)_b' \
-#  -e '(a+b+c+d+e+f+g+h+i+j+k){10}' -o intricate.gv
-#run 0 -f "$medir/intricate.exp.gv" -vcsn minimize -f intricate.gv
+run 0 '' -vcsn standard -C 'lal_char(abcdefghijk)_b' \
+  -e '(a+b+c+d+e+f+g+h+i+j+k){10}' -o intricate.gv
+run 0 -f "$medir/intricate.exp.gv" -vcsn minimize -f intricate.gv
 
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
-#run 0 '' -vcsn standard -C 'lal_char(a)_b' \
-#  -E -e 'a{2}*+a{2}*' -o small-nfa.gv
-#run 0 -f "$medir/small-nfa.exp.gv" -vcsn minimize -f small-nfa.gv
+run 0 '' -vcsn standard -C 'lal_char(a)_b' \
+  -E -e 'a{2}*+a{2}*' -o small-nfa.gv
+run 0 -f "$medir/small-nfa.exp.gv" -vcsn minimize -f small-nfa.gv

@@ -1,9 +1,9 @@
 #ifndef VCSN_ALGOS_MINIMIZE_HH
 # define VCSN_ALGOS_MINIMIZE_HH
 
+# include <algorithm> // min_element.
 # include <unordered_map>
 # include <unordered_set> // FIXME: remove unless neeeded
-# include <algorithm> // FIXME: remove unless neeeded
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
@@ -64,6 +64,28 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
+
+      std::ostream& print_(std::ostream& o, const set_t& ss)
+      {
+        const char* sep = "{";
+        for (auto s : ss)
+          {
+            o << sep << s;
+            sep = ", ";
+          }
+        return o << "}";
+      }
+      std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss)
+      {
+        const char* sep = "";
+        for (unsigned i = 0; i < c2ss.size(); ++i)
+          {
+            o << sep << '[' << i << "] = ";
+            print_(o, c2ss[i]);
+            sep = "\n";
+          }
+        return o;
+      }
 
       using weight_t = typename Aut::weight_t; // FIXME: for the future
       struct state_output_for_label_t
@@ -412,10 +434,44 @@ namespace vcsn
           }
         while (go_on);
 
-        /* For each input state compute the corresponding class and
-           its corresponding output state.  Starting by making result
-           states in a separate loop on c_s would be slightly simpler,
-           but would yield an unspecified state numbering. */
+        /*-------------------.
+        | Sort the classes.  |
+        `-------------------*/
+
+        // This step, which is "useless" in that the result would be
+        // correct anyway, just ensures that the classes are numbered
+        // after their states: classes are sorted by the smallest of
+        // their state ids.
+        {
+          std::cerr << "Before:\n";
+          print_(std::cerr, class_to_set_) << std::endl;
+          /* For each class, put its smallest numbered state first.  We
+             don't need to fully sort.  */
+          for (unsigned c = 0; c < num_classes_; ++c)
+            std::swap(class_to_set_[c][0],
+                      *std::min_element(begin(class_to_set_[c]),
+                                        end(class_to_set_[c])));
+
+          /* Sort class numbers by smallest state number.  */
+          std::sort(begin(class_to_set_), end(class_to_set_),
+                    [](const set_t& lhs, const set_t& rhs) -> bool
+                    {
+                      return lhs[0] < rhs[0];
+                    });
+
+          /* Update state_to_class_.  */
+          for (unsigned c = 0; c < num_classes_; ++c)
+            for (auto s: class_to_set_[c])
+              state_to_class_[s] = c;
+
+          std::cerr << "After:\n";
+          print_(std::cerr, class_to_set_) << std::endl;
+        }
+
+        /*-------------------.
+        | Build the result.  |
+        `-------------------*/
+
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
