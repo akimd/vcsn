@@ -3,7 +3,7 @@
 ## Simple minimization test.  The example comes from the "Théorie des
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
-run 0 -f "$medir/redundant.exp" -vcsn minimize -C 'lal_char(ab)_b' \
+run 0 -f "$medir/redundant.exp.gv" -vcsn minimize -C 'lal_char(ab)_b' \
   -f "$medir/redundant.gv"
 
 
