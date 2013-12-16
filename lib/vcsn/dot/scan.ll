@@ -11,8 +11,10 @@
 # pragma clang diagnostic ignored "-Wdeprecated"
 # pragma clang diagnostic ignored "-Wnull-conversion"
 #elif defined __GNUC__
-# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
 # pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
 // Define YY_DECL.

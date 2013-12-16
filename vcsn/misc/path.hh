@@ -8,6 +8,8 @@
 
 # include <string>
 # include <list>
+
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
@@ -55,7 +57,7 @@ namespace vcsn
     /** @throw invalid_path if \a rhs is absolute.
      */
     path operator/(const path& rhs) const;
-    bool operator==(const path& rhs) const;
+    bool operator==(const path& rhs) const ATTRIBUTE_PURE;
 
     std::string basename() const;
     /// The extension of the file, or "" if not applicable.
