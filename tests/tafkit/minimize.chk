@@ -1,29 +1,42 @@
 #! /bin/sh
 
+# check ALGO IN OUT
+# -----------------
+check()
+{
+  run 0 -f "$3" -vcsn minimize -f "$2"
+}
+
+# xfail ALGO IN
+# -------------
+xfail()
+{
+  run 134 '' -vcsn minimize -f "$2"
+}
+
 ## Simple minimization test.  The example comes from the "Théorie des
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
-run 0 -f "$medir/redundant.exp.gv" -vcsn minimize \
-  -f "$medir/redundant.gv"
+check signature "$medir/redundant.gv" "$medir/redundant.exp.gv"
 
 ## An automaton equal to redundant.exp, with one transition removed.
-run 134 '' -vcsn minimize -f "$medir/incomplete-non-trim.gv"
+xfail signature "$medir/incomplete-non-trim.gv"
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
-run 134 '' -vcsn minimize -f "$medir/no-initial-states.gv"
+xfail signature "$medir/no-initial-states.gv"
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
-run 134 '' -vcsn minimize -f "$medir/no-final-states.gv"
+xfail signature "$medir/no-final-states.gv"
 
 ## Minimize an intricate automaton into a linear one.
 run 0 '' -vcsn standard -C 'lal_char(abcdefghijk)_b' \
   -e '(a+b+c+d+e+f+g+h+i+j+k){10}' -o intricate.gv
-run 0 -f "$medir/intricate.exp.gv" -vcsn minimize -f intricate.gv
+check signature intricate.gv "$medir/intricate.exp.gv"
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
 run 0 '' -vcsn standard -C 'lal_char(a)_b' \
-  -E -e 'a{2}*+a{2}*' -o small-nfa.gv
-run 0 -f "$medir/small-nfa.exp.gv" -vcsn minimize -f small-nfa.gv
+  -e 'a{2}*+a{2}*' -o small-nfa.gv
+check signature small-nfa.gv "$medir/small-nfa.exp.gv"
