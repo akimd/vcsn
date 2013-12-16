@@ -108,9 +108,12 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
   %D%/minimize.dir/incomplete-non-trim.gv       \
+  %D%/minimize.dir/incomplete-non-trim.moore.gv \
   %D%/minimize.dir/intricate.exp.gv             \
   %D%/minimize.dir/no-final-states.gv           \
+  %D%/minimize.dir/no-final-states.moore.gv     \
   %D%/minimize.dir/no-initial-states.gv         \
+  %D%/minimize.dir/no-initial-states.moore.gv   \
   %D%/minimize.dir/redundant.exp.gv             \
   %D%/minimize.dir/redundant.gv                 \
   %D%/minimize.dir/small-nfa.exp.gv             \

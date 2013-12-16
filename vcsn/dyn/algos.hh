@@ -177,7 +177,8 @@ namespace vcsn
     /// \param aut       the automaton to minimize
     /// \pre  \a aut must be LAL.
     /// \pre  \a aut must be deterministic.
-    automaton minimize(const automaton& aut);
+    automaton minimize(const automaton& aut,
+                       const std::string& algo = "signature");
 
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);

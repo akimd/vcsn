@@ -14,9 +14,10 @@ struct minimize: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
+    std::string algo = 1 <= opts.argv.size() ? opts.argv[0] : "signature";
 
     // Process.
-    auto res = vcsn::dyn::minimize(aut);
+    auto res = vcsn::dyn::minimize(aut, algo);
 
     // Output.
     *opts.out << res << std::endl;

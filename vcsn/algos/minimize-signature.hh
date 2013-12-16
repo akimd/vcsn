@@ -21,8 +21,6 @@ namespace vcsn
   /*--------------------------------------.
   | minimization with Moore's algorithm.  |
   `--------------------------------------*/
-  namespace detail
-  {
   namespace signature
   {
     template <typename Aut>
@@ -543,45 +541,22 @@ namespace vcsn
         return o;
       }
     };
-  }
-  }
 
-  template <typename Aut>
-  inline
-  Aut
-  minimize(const Aut& a)
-  {
-    detail::signature::minimizer<Aut> minimize(a);
-    auto res = minimize();
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
-    if (getenv("VCSN_ORIGINS"))
-      minimize.print(std::cout, minimize.origins());
-    return res;
-  }
-
-  /*----------------.
-  | dyn::minimize.  |
-  `----------------*/
-
-  namespace dyn
-  {
-    namespace detail
+    template <typename Aut>
+    inline
+    Aut
+    minimize(const Aut& a)
     {
-
-      template <typename Aut>
-      automaton
-      minimize(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(minimize(a));
-      }
-
-      REGISTER_DECLARE(minimize,
-                       (const automaton& aut) -> automaton);
+      minimizer<Aut> minimize(a);
+      auto res = minimize();
+      // FIXME: Not absolutely elegant.  But currently no means to
+      // associate meta-data to states.
+      if (getenv("VCSN_ORIGINS"))
+        minimize.print(std::cout, minimize.origins());
+      return res;
     }
-  }
 
+  } // signature::
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_MINIMIZE_SIGNATURE_HH

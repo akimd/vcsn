@@ -18,7 +18,7 @@ namespace vcsn
 # include <vcsn/algos/are-equivalent.hh>
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/minimize-signature.hh>
+# include <vcsn/algos/minimize.hh>
 # include <vcsn/algos/grail.hh>
 # include <vcsn/algos/universal.hh>
 
@@ -68,17 +68,16 @@ namespace vcsn
       register_b_functions()
       {
         using aut_t = mutable_automaton<Ctx>;
-        using namespace dyn::detail;
 
 #define REGISTER(Algo, ...)                                             \
-        Algo ## _register(sname<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+        Algo ## _register(sname<__VA_ARGS__>(), dyn::detail::Algo<__VA_ARGS__>)
 
         REGISTER(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
         REGISTER(determinize, aut_t, bool);
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);
-        REGISTER(minimize, aut_t);
+        REGISTER(minimize, aut_t, const std::string);
         REGISTER(universal, aut_t);
 #  undef REGISTER
 
