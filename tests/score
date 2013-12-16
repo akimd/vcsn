@@ -44,6 +44,11 @@ run ()
   printf "%6.2fs%s: %s\n" "$total" "$time" "$cmd"
 }
 
+tmp=/tmp/score.tmp
+rm -rf $tmp || exit 1
+mkdir $tmp  || exit 1
+cd $tmp     || exit 1
+
 # Output should be fast.
 run "vcsn-standard -Ee 'a?{500}' -O dot  >a500.gv"
 run "vcsn-standard -Ee 'a?{500}' -O efsm >a500.efsm"
