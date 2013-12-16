@@ -1,5 +1,5 @@
 #include <lib/vcsn/algos/registry.hh>
-#include <vcsn/algos/minimize.hh>
+#include <vcsn/algos/minimize-signature.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
 

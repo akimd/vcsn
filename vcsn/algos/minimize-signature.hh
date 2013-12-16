@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_MINIMIZE_HH
-# define VCSN_ALGOS_MINIMIZE_HH
+#ifndef VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
+# define VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
 
 # include <algorithm> // min_element.
 # include <unordered_map>
@@ -22,6 +22,8 @@ namespace vcsn
   | minimization with Moore's algorithm.  |
   `--------------------------------------*/
   namespace detail
+  {
+  namespace signature
   {
     template <typename Aut>
     class minimizer
@@ -542,13 +544,14 @@ namespace vcsn
       }
     };
   }
+  }
 
   template <typename Aut>
   inline
   Aut
   minimize(const Aut& a)
   {
-    detail::minimizer<Aut> minimize(a);
+    detail::signature::minimizer<Aut> minimize(a);
     auto res = minimize();
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
@@ -581,4 +584,4 @@ namespace vcsn
 
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_MINIMIZE_HH
+#endif // !VCSN_ALGOS_MINIMIZE_SIGNATURE_HH

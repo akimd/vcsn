@@ -18,7 +18,7 @@ namespace vcsn
 # include <vcsn/algos/are-equivalent.hh>
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/determinize.hh>
-# include <vcsn/algos/minimize.hh>
+# include <vcsn/algos/minimize-signature.hh>
 # include <vcsn/algos/grail.hh>
 # include <vcsn/algos/universal.hh>
 
