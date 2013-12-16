@@ -12,9 +12,9 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 TEST_EXTENSIONS += .rat
-RAT_LOG_COMPILER = $(srcdir)/%D%/rat
+RAT_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/tests/bin/rat.py
 AM_RAT_LOG_DEPS =				\
-  $(RAT_LOG_COMPILER)				\
+  $(RAT_LOG_DRIVER)				\
   $(all_vcsn)					\
   %D%/common.rat %D%/common-weights.rat
 $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
