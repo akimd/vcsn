@@ -291,7 +291,7 @@ namespace vcsn
           res_.del_state(s);
       }
 
-      void make_class_named(set_t& set, class_t class_identifier)
+      void make_class_named(set_t&& set, class_t class_identifier)
       {
         for (auto s : set)
           state_to_class_[s] = class_identifier;
@@ -306,12 +306,11 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(set_t& set, class_t number = -1)
+      class_t make_class(set_t&& set, class_t number = -1)
       {
         if (number == class_t(-1))
           number = num_classes_ ++;
-        //std::cerr << "Making class " << res << "\n";
-        make_class_named(set, number);
+        make_class_named(std::move(set), number);
         return number;
       }
 
@@ -323,18 +322,17 @@ namespace vcsn
         , res_{a.context()}
         , ls_(letters_) // FIXME: redundant
         , ws_(*a.weightset())
-      {}
+      {
+        if (!(is_trim(a_) || is_complete(a_)))
+          abort();
+      }
 
       /// The minimized automaton.
       automaton_t operator()()
       {
-        std::cerr << "Starting...\n";
-        if (!(is_trim(a_) || is_complete(a_)))
-          abort();
         clear();
 
-        std::cerr << "Filling state_to_state_output...\n";
-        // FIll state_to_state_output.
+        // Fill state_to_state_output.
         for (auto s : a_.all_states())
           {
             // Get the out-states from s, by label:
@@ -351,69 +349,46 @@ namespace vcsn
                                                                    std::move(l_ss.second)});
               }
           }
-        std::cerr << "...Done\n";
 
-        // Alexandre-style initialization: one class only.
+        // Don't even bother to split between final and non-final
+        // states, this initialization is useless.
         std::unordered_set<class_t> classes;
         {
-          set_t all_states;
-          for (auto s : a_.all_states())
-            all_states.emplace_back(s);
-          classes.insert(make_class(all_states));
+          const auto& all = a_.all_states();
+          classes.insert(make_class(set_t{std::begin(all), std::end(all)}));
         }
 
-        std::cerr << "Entering the main loop...\n";
-        int iteration_no = 0;
         bool go_on;
         do
           {
             go_on = false;
-
-            std::cerr << "Iteration " << ++ iteration_no
-                      << ": there are " << num_classes_ << " classes.\n";
-            //std::cerr << "Classes are: "; for (auto c : classes) std::cerr << c << " "; std::cerr << "\n";
-
             for (auto i = std::begin(classes), end = std::end(classes);
                  i != end;
                  /* nothing. */)
               {
                 auto c = *i;
-                //std::cerr << "splitting " << c << "\n";
-                //std::cerr << "ok 1a "<< c << "\n";
                 const set_t& c_states = class_to_set_.at(c);
-                //std::cerr << "ok 1b\n";
 
                 if (c_states.size() < 2)
                   {
-                    //std::cerr << "Ignoring trivial class " << c << " from now on\n";
                     i = classes.erase(i);
                     continue;
                   }
 
                 // Try to find distinguishable states in c_states:
-                signature_multimap signature_to_state(*this,
-                                                      ls_, ws_, state_to_class_,
-                                                      num_classes_); // FIXME: make this not suck
+                signature_multimap
+                  signature_to_state(*this,
+                                     ls_, ws_, state_to_class_,
+                                     num_classes_);
                 for (auto s : c_states)
                   signature_to_state[& state_to_state_output_[s]].emplace_back(s);
-                //std::cerr << "The multimap has size " << signature_to_state.size() << "\n";
-
-                //signature_to_state.print(); // ???
-                //std::cerr << signature_to_state << "\n"; // ???
-                //std::cerr << "splitting this class: ";
-                //for (auto s : c_states) std::cerr << s << " "; std::cerr << "\n";
-                //std::cerr << "\n";
                 if (1 < signature_to_state.size())
                   {
                     go_on = true;
-
-                    //std::cerr << "Breaking class " << c << "\n";
                     i = classes.erase(i);
-
                     for (auto p: signature_to_state)
                       {
-                        class_t c2 = make_class(p.second, c);
-                        //std::cerr << "* making class " << c << "\n";
+                        class_t c2 = make_class(std::move(p.second), c);
                         classes.insert(c2);
                         c = -1;
                       }
@@ -433,8 +408,6 @@ namespace vcsn
         // after their states: classes are sorted by the smallest of
         // their state ids.
         {
-          std::cerr << "Before:\n";
-          print_(std::cerr, class_to_set_) << std::endl;
           /* For each class, put its smallest numbered state first.  We
              don't need to fully sort.  */
           for (unsigned c = 0; c < num_classes_; ++c)
@@ -453,9 +426,6 @@ namespace vcsn
           for (unsigned c = 0; c < num_classes_; ++c)
             for (auto s: class_to_set_[c])
               state_to_class_[s] = c;
-
-          std::cerr << "After:\n";
-          print_(std::cerr, class_to_set_) << std::endl;
         }
 
         /*-------------------.
@@ -470,12 +440,6 @@ namespace vcsn
               = s == a_.pre()  ? res_.pre()
               : s == a_.post() ? res_.post()
               : res_.new_state();
-#if DEBUG
-            std::cerr << c << " -> " << class_to_res_state_[c] << " (";
-            for (auto s: class_to_set_[c])
-              std::cerr << ' ' << s;
-            std::cerr << ")\n";
-#endif
           }
         for (auto c = 0; c < num_classes_; ++c)
           {
@@ -487,22 +451,11 @@ namespace vcsn
               {
                 state_t d = a_.dst_of(t);
                 state_t dst = class_to_res_state_[state_to_class_[d]];
-#if DEBUG
-                std::cerr
-                  << s << ' ' << a_.label_of(t) << ' ' << d
-                  << " => "
-                  << src << ' ' << a_.label_of(t) << ' ' << dst<< '\n';
-#endif
                 res_.add_transition(src, dst, a_.label_of(t));
               }
           }
 
         return std::move(res_);
-        // /* Moore's construction maps each set of indistinguishable
-        //    states into a classe; however the fact of being
-        //    distinguishable from one another doesn't make all classes
-        //    useful. */
-        // return trim(res_);
       }
 
       /// A map from minimized states to sets of original states.
