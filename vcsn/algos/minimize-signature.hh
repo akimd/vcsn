@@ -40,9 +40,6 @@ namespace vcsn
       /// Non-special letters.
       const typename Aut::context_t::labelset_t& letters_;
 
-      /// The computed result.
-      automaton_t res_;
-
       using labelset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
 
@@ -184,7 +181,8 @@ namespace vcsn
           , class_bound_(class_bound)
         {}
 
-        bool operator()(const state_output_t *as_, const state_output_t *bs_) const noexcept
+        bool operator()(const state_output_t *as_,
+                        const state_output_t *bs_) const noexcept
         {
           const state_output_t& as = *as_;
           const state_output_t& bs = *bs_;
@@ -286,9 +284,6 @@ namespace vcsn
         state_to_class_.clear();
         num_classes_ = 0;
         class_to_res_state_.clear();
-        // FIXME: mutable_automaton.clear().
-        for (auto s : res_.states())
-          res_.del_state(s);
       }
 
       void make_class_named(set_t&& set, class_t class_identifier)
@@ -319,7 +314,6 @@ namespace vcsn
         : a_(a)
         , is_deterministic_(is_deterministic(a_))
         , letters_(*a_.labelset())
-        , res_{a.context()}
         , ls_(letters_) // FIXME: redundant
         , ws_(*a.weightset())
       {
@@ -429,16 +423,17 @@ namespace vcsn
       }
 
       /// Build the resulting automaton.
-      void build_result_()
+      automaton_t build_result_()
       {
+        automaton_t res{a_.context()};
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
             state_t s = class_to_set_[c][0];
             class_to_res_state_[c]
-              = s == a_.pre()  ? res_.pre()
-              : s == a_.post() ? res_.post()
-              : res_.new_state();
+              = s == a_.pre()  ? res.pre()
+              : s == a_.post() ? res.post()
+              : res.new_state();
           }
         for (auto c = 0; c < num_classes_; ++c)
           {
@@ -450,9 +445,10 @@ namespace vcsn
               {
                 state_t d = a_.dst_of(t);
                 state_t dst = class_to_res_state_[state_to_class_[d]];
-                res_.add_transition(src, dst, a_.label_of(t));
+                res.add_transition(src, dst, a_.label_of(t));
               }
           }
+        return std::move(res);
       }
 
       /// The minimized automaton.
@@ -460,8 +456,7 @@ namespace vcsn
       {
         build_classes_();
         sort_classes_();
-        build_result_();
-        return std::move(res_);
+        return build_result_();
       }
 
       /// A map from minimized states to sets of original states.
