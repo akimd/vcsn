@@ -123,19 +123,18 @@ namespace vcsn
         : a_(a)
         , letters_(*a_.labelset())
         , res_{a.context()}
-      {}
-
-      /// The minimized automaton.
-      automaton_t operator()()
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
         if (!is_deterministic(a_))
           abort();
-        clear();
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
+      }
 
+      /// The minimized automaton.
+      void build_classes_()
+      {
         // Initialization: two classes, partitioning final and non-final states.
         {
           set_t nonfinals, finals;
@@ -185,7 +184,10 @@ namespace vcsn
               make_class(set);
           }
         while (! sets_to_add.empty());
+      }
 
+      void build_result_()
+      {
         /* For each input state compute the corresponding class and
            its corresponding output state.  Starting by making result
            states in a separate loop on c_s would be slightly simpler,
@@ -214,10 +216,18 @@ namespace vcsn
                               a_.label_of(t));
 
         /* Moore's construction maps each set of indistinguishable
-           states into a classe; however the fact of being
+           states into a class; however the fact of being
            distinguishable from one another doesn't make all classes
-           useful. */
-        return trim(res_);
+           useful.  */
+        res_ = trim(res_);
+      }
+
+      /// Return the quotient.
+      automaton_t operator()()
+      {
+        build_classes_();
+        build_result_();
+        return std::move(res_);
       }
 
       /// A map from minimized states to sets of original states.
