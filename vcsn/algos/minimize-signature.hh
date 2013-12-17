@@ -319,7 +319,6 @@ namespace vcsn
       {
         if (!(is_trim(a_) || is_complete(a_)))
           abort();
-        clear();
 
         // Fill state_to_state_output.
         for (auto s : a_.all_states())
