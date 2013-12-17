@@ -35,9 +35,6 @@ namespace vcsn
       /// Non-special letters.
       const typename Aut::context_t::labelset_t& letters_;
 
-      /// The computed result.
-      automaton_t res_;
-
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
       using class_t = unsigned;
@@ -81,8 +78,6 @@ namespace vcsn
         class_to_set_[empty_class].clear();
         class_to_res_state_.clear();
         state_to_res_state_.clear();
-        for (auto s : res_.states())
-          res_.del_state(s);
         out_.clear();
       }
 
@@ -122,7 +117,6 @@ namespace vcsn
       minimizer(const Aut& a)
         : a_(a)
         , letters_(*a_.labelset())
-        , res_{a.context()}
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
@@ -186,21 +180,22 @@ namespace vcsn
         while (! sets_to_add.empty());
       }
 
-      void build_result_()
+      automaton_t build_result_()
       {
+        automaton_t res{a_.context()};
         /* For each input state compute the corresponding class and
            its corresponding output state.  Starting by making result
            states in a separate loop on c_s would be slightly simpler,
            but would yield an unspecified state numbering. */
-        state_to_res_state_[a_.pre()] = res_.pre();
-        state_to_res_state_[a_.post()] = res_.post();
+        state_to_res_state_[a_.pre()] = res.pre();
+        state_to_res_state_[a_.post()] = res.post();
         for (auto s : a_.states())
           {
             class_t s_class = state_to_class_[s];
             auto iterator = class_to_res_state_.find(s_class);
             state_t res_state;
             if (iterator == class_to_res_state_.end())
-              class_to_res_state_[s_class] = res_state = res_.new_state();
+              class_to_res_state_[s_class] = res_state = res.new_state();
             else
               res_state = iterator->second;
 
@@ -211,7 +206,7 @@ namespace vcsn
            the special ones defining which states are initial or
            final.  Here we rely on weights being Boolean. */
         for (auto t : a_.all_transitions())
-          res_.add_transition(state_to_res_state_[a_.src_of(t)],
+          res.add_transition(state_to_res_state_[a_.src_of(t)],
                               state_to_res_state_[a_.dst_of(t)],
                               a_.label_of(t));
 
@@ -219,15 +214,14 @@ namespace vcsn
            states into a class; however the fact of being
            distinguishable from one another doesn't make all classes
            useful.  */
-        res_ = trim(res_);
+        return trim(res);
       }
 
       /// Return the quotient.
       automaton_t operator()()
       {
         build_classes_();
-        build_result_();
-        return std::move(res_);
+        return build_result_();
       }
 
       /// A map from minimized states to sets of original states.
