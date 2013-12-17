@@ -283,26 +283,23 @@ namespace vcsn
         class_to_res_state_.clear();
       }
 
-      void make_class_named(set_t&& set, class_t class_identifier)
-      {
-        for (auto s : set)
-          state_to_class_[s] = class_identifier;
-
-        if (class_identifier < class_to_set_.size())
-          class_to_set_[class_identifier] = std::move(set);
-        else
-          {
-            assert(class_identifier == class_to_set_.size());
-            class_to_set_.emplace_back(std::move(set));
-          }
-      }
-
       /// Make a new class with the given set of states.
       class_t make_class(set_t&& set, class_t number = -1)
       {
         if (number == class_t(-1))
           number = num_classes_ ++;
-        make_class_named(std::move(set), number);
+
+        for (auto s : set)
+          state_to_class_[s] = number;
+
+        if (number < class_to_set_.size())
+          class_to_set_[number] = std::move(set);
+        else
+          {
+            assert(number == class_to_set_.size());
+            class_to_set_.emplace_back(std::move(set));
+          }
+
         return number;
       }
 
@@ -370,7 +367,7 @@ namespace vcsn
                                      num_classes_);
                 for (auto s : c_states)
                   signature_to_state[& state_to_state_output_[s]].emplace_back(s);
-                if (1 < signature_to_state.size())
+                if (2 <= signature_to_state.size())
                   {
                     go_on = true;
                     i = classes.erase(i);
