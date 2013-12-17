@@ -133,17 +133,18 @@ namespace vcsn
           make_class(finals);
         }
 
-        classes_t classes_to_remove;
         sets_t sets_to_add;
         do
           {
             sets_to_add.clear();
-            // We empty classes_to_remove at the end of each iteration.
-
-            for (auto c_s : class_to_set_)
+            for (auto i = std::begin(class_to_set_),
+                   end = std::end(class_to_set_);
+                 i != end;
+                 /* nothing. */)
               {
+                const auto& c_s = *i;
                 class_t c = c_s.first;
-                const set_t c_states = c_s.second;
+                const set_t& c_states = c_s.second;
 
                 for (auto l : letters_)
                   {
@@ -156,18 +157,19 @@ namespace vcsn
                     // std::unordered_map::size is said to be O(1).
                     if (2 <= target_class_to_c_states.size())
                       {
-                        classes_to_remove.emplace_back(c);
                         for (const auto& p : target_class_to_c_states)
                           sets_to_add.emplace_back(std::move(p.second));
-                        // Ignore other labels for this partition.
-                        break;
+                        i = class_to_set_.erase(i);
+                        // Ignore other labels for this partition, and
+                        // skip the ++i.
+                        goto next_class;
                       }
                   } // for on labels
+                ++i;
+              next_class:
+                ;
               } // for on classes
 
-            for (auto c : classes_to_remove)
-              class_to_set_.erase(c);
-            classes_to_remove.clear();
             for (auto set : sets_to_add)
               make_class(set);
           }
