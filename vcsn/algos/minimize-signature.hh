@@ -325,11 +325,6 @@ namespace vcsn
       {
         if (!(is_trim(a_) || is_complete(a_)))
           abort();
-      }
-
-      /// The minimized automaton.
-      automaton_t operator()()
-      {
         clear();
 
         // Fill state_to_state_output.
@@ -346,10 +341,14 @@ namespace vcsn
               {
                 std::sort(l_ss.second.begin(), l_ss.second.end());
                 state_output.emplace_back(state_output_for_label_t{l_ss.first,
-                                                                   std::move(l_ss.second)});
+                      std::move(l_ss.second)});
               }
           }
+      }
 
+      /// Build the initial classes, and split until fix point.
+      void build_classes_()
+      {
         // Don't even bother to split between final and non-final
         // states, this initialization is useless.
         std::unordered_set<class_t> classes;
@@ -398,40 +397,40 @@ namespace vcsn
               } // for on classes
           }
         while (go_on);
+      }
 
-        /*-------------------.
-        | Sort the classes.  |
-        `-------------------*/
 
-        // This step, which is "useless" in that the result would be
-        // correct anyway, just ensures that the classes are numbered
-        // after their states: classes are sorted by the smallest of
-        // their state ids.
-        {
-          /* For each class, put its smallest numbered state first.  We
-             don't need to fully sort.  */
-          for (unsigned c = 0; c < num_classes_; ++c)
+      /// Sort the classes.
+      ///
+      /// This step, which is "useless" in that the result would be
+      /// correct anyway, just ensures that the classes are numbered
+      /// after their states: classes are sorted by the smallest of
+      /// their state ids.
+      void sort_classes_()
+      {
+        /* For each class, put its smallest numbered state first.  We
+           don't need to fully sort.  */
+        for (unsigned c = 0; c < num_classes_; ++c)
             std::swap(class_to_set_[c][0],
                       *std::min_element(begin(class_to_set_[c]),
                                         end(class_to_set_[c])));
 
-          /* Sort class numbers by smallest state number.  */
-          std::sort(begin(class_to_set_), end(class_to_set_),
-                    [](const set_t& lhs, const set_t& rhs) -> bool
-                    {
-                      return lhs[0] < rhs[0];
-                    });
+        /* Sort class numbers by smallest state number.  */
+        std::sort(begin(class_to_set_), end(class_to_set_),
+                  [](const set_t& lhs, const set_t& rhs) -> bool
+                  {
+                    return lhs[0] < rhs[0];
+                  });
 
-          /* Update state_to_class_.  */
-          for (unsigned c = 0; c < num_classes_; ++c)
-            for (auto s: class_to_set_[c])
-              state_to_class_[s] = c;
-        }
+        /* Update state_to_class_.  */
+        for (unsigned c = 0; c < num_classes_; ++c)
+          for (auto s: class_to_set_[c])
+            state_to_class_[s] = c;
+      }
 
-        /*-------------------.
-        | Build the result.  |
-        `-------------------*/
-
+      /// Build the resulting automaton.
+      void build_result_()
+      {
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
@@ -454,7 +453,14 @@ namespace vcsn
                 res_.add_transition(src, dst, a_.label_of(t));
               }
           }
+      }
 
+      /// The minimized automaton.
+      automaton_t operator()()
+      {
+        build_classes_();
+        sort_classes_();
+        build_result_();
         return std::move(res_);
       }
 
