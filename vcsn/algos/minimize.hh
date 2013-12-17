@@ -105,14 +105,6 @@ namespace vcsn
         return state_to_class_[j->second];
       }
 
-      /// Whether there are at least two classes.
-      bool more_than_one_class(const target_class_to_states_t& c) const
-      {
-        auto i = std::begin(c);
-        auto end = std::end(c);
-        return i != end && ++i != end;
-      }
-
     public:
       minimizer(const Aut& a)
         : a_(a)
@@ -160,7 +152,9 @@ namespace vcsn
                       target_class_to_c_states[out_class(s, l)].emplace_back(s);
 
                     // Are there more than two keys?
-                    if (more_than_one_class(target_class_to_c_states))
+                    //
+                    // std::unordered_map::size is said to be O(1).
+                    if (2 <= target_class_to_c_states.size())
                       {
                         classes_to_remove.emplace_back(c);
                         for (const auto& p : target_class_to_c_states)
