@@ -37,9 +37,6 @@ namespace vcsn
       const automaton_t &a_;
       const bool is_deterministic_;
 
-      /// Non-special letters.
-      const typename Aut::context_t::labelset_t& letters_;
-
       using labelset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
 
@@ -313,8 +310,7 @@ namespace vcsn
       minimizer(const Aut& a)
         : a_(a)
         , is_deterministic_(is_deterministic(a_))
-        , letters_(*a_.labelset())
-        , ls_(letters_) // FIXME: redundant
+        , ls_(*a_.labelset())
         , ws_(*a.weightset())
       {
         if (!(is_trim(a_) || is_complete(a_)))
