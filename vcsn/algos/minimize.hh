@@ -40,7 +40,6 @@ namespace vcsn
       using class_t = unsigned;
       using classes_t = std::vector<class_t>;
       using set_t = std::vector<state_t>;
-      using sets_t = std::vector<set_t>;
       using state_to_class_t = std::map<state_t, class_t>;
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::unordered_map<class_t, set_t>;
@@ -82,14 +81,15 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(const set_t& set)
+      class_t make_class(const set_t& set, class_t number = -1)
       {
-        class_t res = next_class_index_ ++;
+        if (number == class_t(-1))
+          number = next_class_index_++;
 
-        class_to_set_[res] = set;
+        class_to_set_[number] = set;
         for (auto s : set)
-          state_to_class_[s] = res;
-        return res;
+          state_to_class_[s] = number;
+        return number;
       }
 
       /// The destination class of \a s with \a l in \a a.
@@ -133,10 +133,10 @@ namespace vcsn
           make_class(finals);
         }
 
-        sets_t sets_to_add;
+        bool go_on;
         do
           {
-            sets_to_add.clear();
+            go_on = false;
             for (auto i = std::begin(class_to_set_),
                    end = std::end(class_to_set_);
                  i != end;
@@ -157,9 +157,13 @@ namespace vcsn
                     // std::unordered_map::size is said to be O(1).
                     if (2 <= target_class_to_c_states.size())
                       {
-                        for (const auto& p : target_class_to_c_states)
-                          sets_to_add.emplace_back(std::move(p.second));
+                        go_on = true;
                         i = class_to_set_.erase(i);
+                        for (const auto& p : target_class_to_c_states)
+                          {
+                            make_class(std::move(p.second), c);
+                            c = -1;
+                          }
                         // Ignore other labels for this partition, and
                         // skip the ++i.
                         goto next_class;
@@ -169,11 +173,8 @@ namespace vcsn
               next_class:
                 ;
               } // for on classes
-
-            for (auto set : sets_to_add)
-              make_class(set);
           }
-        while (! sets_to_add.empty());
+        while (go_on);
       }
 
       automaton_t build_result_()
