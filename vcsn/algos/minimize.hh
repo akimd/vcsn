@@ -2,14 +2,12 @@
 # define VCSN_ALGOS_MINIMIZE_HH
 
 # include <unordered_map>
+# include <vector>
 
-# include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/minimize-signature.hh>
-
-# ifndef NDEBUG
-#  include <vcsn/algos/is-deterministic.hh>
-# endif
+# include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
 {
@@ -82,7 +80,7 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(const set_t& set, class_t number = -1)
+      class_t make_class(set_t&& set, class_t number = -1)
       {
         if (number == class_t(-1))
           number = num_classes_++;
@@ -91,11 +89,11 @@ namespace vcsn
           state_to_class_[s] = number;
 
         if (number < class_to_set_.size())
-          class_to_set_[number] = set;
+          class_to_set_[number] = std::move(set);
         else
           {
             assert(number == class_to_set_.size());
-            class_to_set_.emplace_back(set);
+            class_to_set_.emplace_back(std::move(set));
           }
 
         return number;
@@ -138,8 +136,8 @@ namespace vcsn
               finals.emplace_back(s);
             else
               nonfinals.emplace_back(s);
-          make_class(nonfinals);
-          make_class(finals);
+          make_class(std::move(nonfinals));
+          make_class(std::move(finals));
         }
 
         bool go_on;
@@ -163,7 +161,7 @@ namespace vcsn
                       {
                         go_on = true;
                         class_t num = c;
-                        for (const auto& p : target_class_to_c_states)
+                        for (auto& p : target_class_to_c_states)
                           {
                             make_class(std::move(p.second), num);
                             num = -1;
