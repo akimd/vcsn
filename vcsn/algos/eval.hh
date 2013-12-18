@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_EVAL_HH
 # define VCSN_ALGOS_EVAL_HH
 
+# include <algorithm>
 # include <vector>
 
 # include <vcsn/core/kind.hh>
@@ -36,15 +37,18 @@ namespace vcsn
       {
         // Initialize
         const weight_t zero = ws_.zero();
-        // Do not use braces (v1{a_.num_all_states(), zero}): the type
-        // of zero might result in the compiler believing we are
-        // building a vector with two values: a_.num_all_states() and
-        // zero.
-        //
         // FIXME: a perfect job for a sparse array: most of the states
         // will be not visited, nevertheless, because we iterate on
         // all the states, they are costly at each iteration.
-        weights v1(a_.num_all_states(), zero);
+
+        /// An array indexed by state numbers.
+        const auto& states = a_.states();
+        size_t last_state = *std::max_element(std::begin(states),
+                                              std::end(states));
+        // Do not use braces (v1{size, zero}): the type of zero might
+        // result in the compiler believing we are building a vector
+        // with two values: a_.num_all_states() and zero.
+        weights_t v1(last_state + 1, zero);
         v1[a_.pre()] = ws_.one();
         weights v2{v1};
 
