@@ -42,7 +42,7 @@ namespace vcsn
       using set_t = std::vector<state_t>;
       using state_to_class_t = std::map<state_t, class_t>;
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
-      using class_to_set_t = std::unordered_map<class_t, set_t>;
+      using class_to_set_t = std::vector<set_t>;
       using class_to_state_t = std::unordered_map<class_t, state_t>;
       using state_to_state_t = std::unordered_map<state_t, state_t>;
 
@@ -52,9 +52,10 @@ namespace vcsn
         empty_class =           1, // A class containing no states.
         first_available_index = 2  // For ordinary classes.
       };
-      class_t next_class_index_ = first_available_index;
+      class_t num_classes_ = first_available_index;
 
-      class_to_set_t class_to_set_;
+      // First two classes are reserved, and are empty.
+      class_to_set_t class_to_set_{first_available_index};
       state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
       state_to_state_t state_to_res_state_;
@@ -73,7 +74,7 @@ namespace vcsn
       {
         class_to_set_.clear();
         state_to_class_.clear();
-        next_class_index_ = 2;
+        num_classes_ = first_available_index;
         class_to_set_[empty_class].clear();
         class_to_res_state_.clear();
         state_to_res_state_.clear();
@@ -84,11 +85,19 @@ namespace vcsn
       class_t make_class(const set_t& set, class_t number = -1)
       {
         if (number == class_t(-1))
-          number = next_class_index_++;
+          number = num_classes_++;
 
-        class_to_set_[number] = set;
         for (auto s : set)
           state_to_class_[s] = number;
+
+        if (number < class_to_set_.size())
+          class_to_set_[number] = set;
+        else
+          {
+            assert(number == class_to_set_.size());
+            class_to_set_.emplace_back(set);
+          }
+
         return number;
       }
 
@@ -137,14 +146,9 @@ namespace vcsn
         do
           {
             go_on = false;
-            for (auto i = std::begin(class_to_set_),
-                   end = std::end(class_to_set_);
-                 i != end;
-                 /* nothing. */)
+            for (class_t c = 0; c < num_classes_; ++c)
               {
-                const auto& c_s = *i;
-                class_t c = c_s.first;
-                const set_t& c_states = c_s.second;
+                const set_t& c_states = class_to_set_[c];
 
                 for (auto l : letters_)
                   {
@@ -158,20 +162,16 @@ namespace vcsn
                     if (2 <= target_class_to_c_states.size())
                       {
                         go_on = true;
-                        i = class_to_set_.erase(i);
+                        class_t num = c;
                         for (const auto& p : target_class_to_c_states)
                           {
-                            make_class(std::move(p.second), c);
-                            c = -1;
+                            make_class(std::move(p.second), num);
+                            num = -1;
                           }
-                        // Ignore other labels for this partition, and
-                        // skip the ++i.
-                        goto next_class;
+                        // Ignore other labels for this partition
+                        break;
                       }
                   } // for on labels
-                ++i;
-              next_class:
-                ;
               } // for on classes
           }
         while (go_on);
