@@ -45,15 +45,11 @@ namespace vcsn
       using state_to_state_t = std::unordered_map<state_t, state_t>;
 
       // These are to be used as class_t values.
-      enum : class_t {
-        invalid_class =         0, // A non-existing class.
-        empty_class =           1, // A class containing no states.
-        first_available_index = 2  // For ordinary classes.
-      };
-      class_t num_classes_ = first_available_index;
+      constexpr static class_t class_invalid = -1;
+      class_t num_classes_ = 0;
 
       // First two classes are reserved, and are empty.
-      class_to_set_t class_to_set_{first_available_index};
+      class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
       class_to_state_t class_to_res_state_;
       state_to_state_t state_to_res_state_;
@@ -72,17 +68,16 @@ namespace vcsn
       {
         class_to_set_.clear();
         state_to_class_.clear();
-        num_classes_ = first_available_index;
-        class_to_set_[empty_class].clear();
+        num_classes_ = 0;
         class_to_res_state_.clear();
         state_to_res_state_.clear();
         out_.clear();
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(set_t&& set, class_t number = -1)
+      class_t make_class(set_t&& set, class_t number = class_invalid)
       {
-        if (number == class_t(-1))
+        if (number == class_invalid)
           number = num_classes_++;
 
         for (auto s : set)
@@ -100,15 +95,15 @@ namespace vcsn
       }
 
       /// The destination class of \a s with \a l in \a a.
-      /// Return \a empty_class if \a s has no successor with \a l.
+      /// Return \a class_invalid if \a s has no successor with \a l.
       class_t out_class(state_t s, label_t l)
       {
         auto i = out_.find(s);
         if (i == out_.end())
-          return empty_class;
+          return class_invalid;
         auto j = i->second.find(l);
         if (j == i->second.end())
-          return empty_class;
+          return class_invalid;
         return state_to_class_[j->second];
       }
 
@@ -147,24 +142,31 @@ namespace vcsn
             for (class_t c = 0; c < num_classes_; ++c)
               {
                 const set_t& c_states = class_to_set_[c];
-
                 for (auto l : letters_)
                   {
                     target_class_to_states_t target_class_to_c_states;
+                    bool with_class_invalid = false;
                     for (auto s : c_states)
-                      target_class_to_c_states[out_class(s, l)].emplace_back(s);
+                      {
+                        auto c2 = out_class(s, l);
+                        if (c2 == class_invalid)
+                          with_class_invalid = true;
+                        else
+                          target_class_to_c_states[c2].emplace_back(s);
+                      }
 
                     // Are there more than two keys?
                     //
                     // std::unordered_map::size is said to be O(1).
-                    if (2 <= target_class_to_c_states.size())
+                    if (2 <= (target_class_to_c_states.size()
+                              + with_class_invalid))
                       {
                         go_on = true;
                         class_t num = c;
                         for (auto& p : target_class_to_c_states)
                           {
                             make_class(std::move(p.second), num);
-                            num = -1;
+                            num = class_invalid;
                           }
                         // Ignore other labels for this partition
                         break;
@@ -199,11 +201,11 @@ namespace vcsn
 
         /* Add input transitions to the result automaton, including
            the special ones defining which states are initial or
-           final.  Here we rely on weights being Boolean. */
+           final.  Here we rely on weights being Boolean.  */
         for (auto t : a_.all_transitions())
           res.add_transition(state_to_res_state_[a_.src_of(t)],
-                              state_to_res_state_[a_.dst_of(t)],
-                              a_.label_of(t));
+                             state_to_res_state_[a_.dst_of(t)],
+                             a_.label_of(t));
 
         /* Moore's construction maps each set of indistinguishable
            states into a class; however the fact of being
