@@ -25,7 +25,7 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       // state -> weight.
-      using weights = std::vector<weight_t>;
+      using weights_t = std::vector<weight_t>;
 
     public:
       evaluator(const automaton_t& a)
@@ -35,7 +35,7 @@ namespace vcsn
 
       weight_t operator()(const word_t& word) const
       {
-        // Initialize
+        // Initialization.
         const weight_t zero = ws_.zero();
         // FIXME: a perfect job for a sparse array: most of the states
         // will be not visited, nevertheless, because we iterate on
@@ -50,7 +50,7 @@ namespace vcsn
         // with two values: a_.num_all_states() and zero.
         weights_t v1(last_state + 1, zero);
         v1[a_.pre()] = ws_.one();
-        weights v2{v1};
+        weights_t v2{v1};
 
         // Computation.
         for (auto l : a_.labelset()->genset()->delimit(word))
@@ -58,13 +58,13 @@ namespace vcsn
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                for (auto tr : a_.out(s, l))
+                for (auto t : a_.out(s, l))
                   // Introducing a reference to v2[a_.dst_of(tr)] is
                   // tempting, but won't work for std::vector<bool>.
                   // FIXME: Specialize for Boolean?
-                  v2[a_.dst_of(tr)] =
-                    ws_.add(v2[a_.dst_of(tr)],
-                            ws_.mul(v1[s], a_.weight_of(tr)));
+                  v2[a_.dst_of(t)] =
+                    ws_.add(v2[a_.dst_of(t)],
+                            ws_.mul(v1[s], a_.weight_of(t)));
             std::swap(v1, v2);
           }
         return v1[a_.post()];
@@ -101,8 +101,8 @@ namespace vcsn
         -> weight
       {
         const auto& a = aut->as<Aut>();
-        const auto& ctx = a.context();
         auto res = ::vcsn::eval(a, s);
+        const auto& ctx = a.context();
         return make_weight(*ctx.weightset(), res);
       }
 
