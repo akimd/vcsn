@@ -69,15 +69,6 @@ if ! "${stdpass-false}"; then
   AC_ERROR([unable to turn on C++11 mode with this compiler])
 fi
 
-AC_CACHE_CHECK([whether $CXX $CXXFLAGS supports C++11 features],
-               [ax_cv_cxx_compile_cxx11],
-[AC_COMPILE_IFELSE([_AX_CXX_COMPILE_STDCXX_11_testbody],
-  [ax_cv_cxx_compile_cxx11=yes],
-  [ax_cv_cxx_compile_cxx11=no])])
-
-test "x$ax_cv_cxx_compile_cxx11" = xyes ||
-  AC_ERROR([unable to compile C++11 with this compiler])
-
 # Do not apply to C++: -Wbad-function-cast, -Wmissing-prototypes,
 # -Wstrict-prototypes.
 TC_CXX_WARNINGS(
