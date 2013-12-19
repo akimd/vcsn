@@ -49,14 +49,19 @@ The compiled context is currently left in /tmp for forthcoming runs.
   $ ls /tmp/lao*
   /tmp/lao_r.cc   /tmp/lao_r.o   /tmp/lao_r.so
 
-** python binding
+** Python binding
 It is now possible to use Vaucanson from Python.  The Python binding is on
-top of the dyn:: API, and inherits all its features.
+top of the dyn API, and inherits all its features.
 
-Contrary to dyn, which is a list of types (context_t, ratexp_t, automaton_t,
-etc.)  and functions (derived_term, determinize, etc.), the Python binding
-is object-oriented: "dyn::determinize(automaton_t) -> automaton_t" is
-actually a method of the automaton class: "automaton.derive() -> automaton".
+This Python API is object-oriented contrary to dyn, which is a list of types
+(context, ratexp, automaton, etc.)  and functions (derived_term,
+determinize, etc.):
+
+   dyn:: functions                    |  Python methods
+  ------------------------------------+--------------------------------------
+  derived_term(ratexp) -> automaton   | ratexp.derived_term() -> automaton
+  determinize(automaton) -> automaton | automaton.determinize() -> automaton
+  etc.                                | etc.
 
 Documentation is forthcoming, but for instance:
 

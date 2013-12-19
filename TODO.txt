@@ -1,3 +1,42 @@
+* Exercises (AP, VT)
+** sum, star, etc.
+We have
+
+  sum(automaton, automaton) -> automaton
+  concatenate(automaton, automaton) -> automaton
+  star(automaton) -> automaton
+  left_mult(weight, automaton) -> automaton
+  right_mult(automaton, weight) -> automaton
+
+that exist at in the various API.  Do the same for ratexps:
+
+  sum(ratexp, ratexp) -> ratexp
+  concatenate(ratexp, ratexp) -> ratexp
+  star(ratexp) -> ratexp
+  left_mult(weight, ratexp) -> ratexp
+  right_mult(ratexp, weight) -> ratexp
+
+in dyn::, and in Python.  *Do not implement in the static layer*!  Use the
+fact that dyn::ratexpset already provides all these routines, so (i) declare
+in dyn/algos.hh, and (ii) implement in some (unique) lib/vcsn/algos/*.cc.
+
+Write the corresponding tests in Python only: take inspiration from
+tests/python/derivation.py to write a single *.chk file for this task.
+
+** Convert more tests to Python
+Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
+inspiration from tests/python/derivation.py.  Try to be "dumb" in the
+conversion: it should be easy to see that the original *.chk and the
+final *.py are really alike.  Don't over-engineer something that hides the
+tests.
+
+** subsequence (or subword?), prefix, suffix, factor
+Generate, from an automaton/, resp. a ratexp, an automaton, resp. a ratexp,
+that corresponds to the subsequences, prefixes, suffixes and factors.
+
+Do that in the static API (templated), then the dyn:: API, then the Python
+API, then tests/.  Don't do TAF-Kit.
+
 * Build
 ** --enable-compilation-mode
 Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both
@@ -40,10 +79,6 @@ Uncomment the tests in infiltration.chk (there are two places).
 ** sum, union: relax the constraints on weightset
 Now that our products support heterogeneous, but compatible, types, we
 should propagate this to other n-ary algorithms.
-
-** sum, star, etc. (LS)
-We should also provide them for ratexp (at the dyn:: level).  Then bind them
-to Python.
 
 ** products: lazyness
 We need a lazy implementation of product.  nary product would be nice.
@@ -288,22 +323,16 @@ Look for other implementations (cf. "Five determinization algorithms").  And
 pay attention to the case of large alphabets.
 
 ** minimization (LS)
-Import what Guillaume did for Moore minimization, but without the tbb part
-(for a start).  Implement more minimization algorithms (Hopcroft, Revuz,
-Brzozowski...).  See how the algorithm can be adjusted to work on
-non-complete automata.
+Implement more minimization algorithms (Hopcroft, Revuz, Brzozowski...).
+Work for trim automata.
+
+We need generalizations of minimization for weighted automata.  See TAF-Kit
+1 and quotient.
 
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
 the special letter labels the initial and final transitions etc.
-
-** quotient (LS)
-We need generalizations of minimization.  See TAF-Kit 1.
-
-** subsequence (or subword?), prefix, suffix, factor
-Generate, from an automaton, resp. a ratexp, an automaton, resp. a ratexp,
-that corresponds to the subsequences, prefixes, suffixes and factors.
 
 ** Levenshtein automata
 http://en.wikipedia.org/wiki/Levenshtein_automata
