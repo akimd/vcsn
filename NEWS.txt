@@ -53,9 +53,9 @@ The compiled context is currently left in /tmp for forthcoming runs.
 It is now possible to use Vaucanson from Python.  The Python binding is on
 top of the dyn API, and inherits all its features.
 
-This Python API is object-oriented contrary to dyn, which is a list of types
-(context, ratexp, automaton, etc.)  and functions (derived_term,
-determinize, etc.):
+This Python API is object-oriented, contrary to dyn which is a list of types
+(context, ratexp, automaton, etc.) and functions (derived_term, determinize,
+etc.):
 
    dyn:: functions                    |  Python methods
   ------------------------------------+--------------------------------------
