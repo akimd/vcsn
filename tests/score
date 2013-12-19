@@ -86,4 +86,4 @@ run 'vcsn-infiltration -q -f a100.gv a100.gv'
 
 # Minimize a big deterministic automaton over booleans.
 run 'vcsn-standard -C "lal_char(abcdefghijk)_b" -e "(a+b+c+d+e+f+g){1200}" -O fado | vcsn-minimize -q -I fado -f - signature'
-run 'vcsn-standard -C "lal_char(abcdefghijk)_b" -e "(a+b+c+d+e+f+g+h+i+j+k){1200}" -O fado | vcsn-minimize -q -I fado -f - moore'
+run 'vcsn-standard -C "lal_char(abcdefghijk)_b" -e "(a+b+c+d+e+f+g+h+i+j+k){2000}" -O fado | vcsn-minimize -q -I fado -f - moore'
