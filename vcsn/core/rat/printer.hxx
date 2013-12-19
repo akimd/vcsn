@@ -56,7 +56,7 @@ namespace vcsn
           rparen_       = ")";
           star_         = "*";
           intersection_ = "&";
-          shuffle_      = "{:}";
+          shuffle_      = ":";
           product_      = ".";
           sum_          = "+";
           zero_         = "\\z";

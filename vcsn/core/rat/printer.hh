@@ -150,7 +150,7 @@ namespace vcsn
       /// The ratexp operators.
       const char* star_ = "*";
       const char* intersection_ = "&";
-      const char* shuffle_ = "{:}";
+      const char* shuffle_ = ":";
       const char* product_ = ".";
       const char* sum_ = "+";
       /// The constants.

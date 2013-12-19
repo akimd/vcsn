@@ -24,7 +24,7 @@ automaton from it, in which case:
   derived_term(E & F) = product(derived_term(E), derived_term(F))
 
 The operator ':' denotes the shuffle product, aka interleave.  For instance
-'a:b:c' denotes the language of the permutation of "abc".  Only
+'a:b:c' denotes the language of the permutations of "abc".  Only
 "derived_term" can compute an automaton from it, in which case:
 
   derived_term(E : F) = shuffle(derived_term(E), derived_term(F))
