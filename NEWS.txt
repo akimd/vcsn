@@ -4,6 +4,79 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2013-12-19
+Many of these listed features were actually developped over the last month.
+
+** products accept more heterogenous arguments
+It is already possible to compute the (regular, infiltration and shuffle)
+products of automata with different types of "basic" weightsets (e.g. B, Z,
+Q, R).
+
+It is now also possible when weights are ratexps.  For instance the product
+of automaton with weights in Q and an automaton with weights in RatE yields
+an automaton with weights in Q-RatE.
+
+** New ratexp operators: '&' (intersection) and ':' (shuffle)
+The operator '&' denotes the intersection in the case of Boolean weights, or
+more generally, the Hadamard product.  Only "derived_term" can compute an
+automaton from it, in which case:
+
+  derived_term(E & F) = product(derived_term(E), derived_term(F))
+
+The operator ':' denotes the shuffle product, aka interleave.  For instance
+'a:b:c' denotes the language of the permutation of "abc".  Only
+"derived_term" can compute an automaton from it, in which case:
+
+  derived_term(E : F) = shuffle(derived_term(E), derived_term(F))
+
+** minimization is much faster
+There are now two different implementations of the minimization, namely
+"moore" and "signature".  Both require a trim automaton as input, and
+"signature" accepts non-deterministic automata.
+
+The "moore" minimization is currently the fastest.
+
+** context run-time compilation
+When dyn::make_context is presented with an unknown but valid context, it is
+compiled and loaded dynamically.  For instance:
+
+  $ vcsn cat -C 'lao_r' -W -e 3.14
+  # Wait for the context to be compiled...
+  3.14
+
+The compiled context is currently left in /tmp for forthcoming runs.
+
+  $ ls /tmp/lao*
+  /tmp/lao_r.cc   /tmp/lao_r.o   /tmp/lao_r.so
+
+** python binding
+It is now possible to use Vaucanson from Python.  The Python binding is on
+top of the dyn:: API, and inherits all its features.
+
+Contrary to dyn, which is a list of types (context_t, ratexp_t, automaton_t,
+etc.)  and functions (derived_term, determinize, etc.), the Python binding
+is object-oriented: "dyn::determinize(automaton_t) -> automaton_t" is
+actually a method of the automaton class: "automaton.derive() -> automaton".
+
+Documentation is forthcoming, but for instance:
+
+  $ python
+  Python 2.7.6 (default, Nov 12 2013, 13:26:39)
+  [GCC 4.2.1 Compatible Apple Clang 4.1 ((tags/Apple/clang-421.11.66))] on darwin
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> import vcsn
+  >>> b = vcsn.context('lal_char(abc)_b')
+  >>> b
+  lal_char(abc)_b
+  >>> r1 = b.ratexp('(a+b)*')
+  >>> r1
+  (a+b)*
+  >>> a1 = r1.derived_term()
+  >>> a2 = b.ratexp('(b+c)*').standard()
+  >>> a1.product(a2).ratexp()
+  \e+b.b*
+  >>>
+
 * 2013-12-03
 ** products accept heterogenous arguments
 It is now possible to compute the (regular, infiltration and shuffle)
