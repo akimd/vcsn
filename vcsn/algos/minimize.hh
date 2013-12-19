@@ -41,7 +41,7 @@ namespace vcsn
       using state_to_class_t = std::map<state_t, class_t>;
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::vector<set_t>;
-      using class_to_state_t = std::unordered_map<class_t, state_t>;
+      using class_to_state_t = std::vector<state_t>;
       using state_to_state_t = std::unordered_map<state_t, state_t>;
 
       // These are to be used as class_t values.
@@ -114,7 +114,7 @@ namespace vcsn
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
-        if (!is_deterministic(a_))
+        if (!is_deterministic(a_) || !is_trim(a_))
           abort();
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
@@ -124,6 +124,8 @@ namespace vcsn
       void build_classes_()
       {
         // Initialization: two classes, partitioning final and non-final states.
+        make_class({a_.pre()});
+        make_class({a_.post()});
         {
           set_t nonfinals, finals;
           for (auto s : a_.states())
@@ -177,40 +179,60 @@ namespace vcsn
         while (go_on);
       }
 
+      /// Sort the classes.
+      ///
+      /// This step, which is "useless" in that the result would be
+      /// correct anyway, just ensures that the classes are numbered
+      /// after their states: classes are sorted by the smallest of
+      /// their state ids.
+      void sort_classes_()
+      {
+        /* For each class, put its smallest numbered state first.  We
+           don't need to fully sort.  */
+        for (unsigned c = 0; c < num_classes_; ++c)
+            std::swap(class_to_set_[c][0],
+                      *std::min_element(begin(class_to_set_[c]),
+                                        end(class_to_set_[c])));
+
+        /* Sort class numbers by smallest state number.  */
+        std::sort(begin(class_to_set_), end(class_to_set_),
+                  [](const set_t& lhs, const set_t& rhs) -> bool
+                  {
+                    return lhs[0] < rhs[0];
+                  });
+
+        /* Update state_to_class_.  */
+        for (unsigned c = 0; c < num_classes_; ++c)
+          for (auto s: class_to_set_[c])
+            state_to_class_[s] = c;
+      }
+
+      /// Build the resulting automaton.
       automaton_t build_result_()
       {
         automaton_t res{a_.context()};
-        /* For each input state compute the corresponding class and
-           its corresponding output state.  Starting by making result
-           states in a separate loop on c_s would be slightly simpler,
-           but would yield an unspecified state numbering. */
-        state_to_res_state_[a_.pre()] = res.pre();
-        state_to_res_state_[a_.post()] = res.post();
-        for (auto s : a_.states())
+        class_to_res_state_.resize(num_classes_);
+        for (unsigned c = 0; c < num_classes_; ++c)
           {
-            class_t s_class = state_to_class_[s];
-            auto iterator = class_to_res_state_.find(s_class);
-            state_t res_state;
-            if (iterator == class_to_res_state_.end())
-              class_to_res_state_[s_class] = res_state = res.new_state();
-            else
-              res_state = iterator->second;
-
-            state_to_res_state_[s] = res_state;
+            state_t s = class_to_set_[c][0];
+            class_to_res_state_[c]
+              = s == a_.pre()  ? res.pre()
+              : s == a_.post() ? res.post()
+              : res.new_state();
           }
-
-        /* Add input transitions to the result automaton, including
-           the special ones defining which states are initial or
-           final.  Here we rely on weights being Boolean.  */
-        for (auto t : a_.all_transitions())
-          res.add_transition(state_to_res_state_[a_.src_of(t)],
-                             state_to_res_state_[a_.dst_of(t)],
-                             a_.label_of(t));
-
-        /* Moore's construction maps each set of indistinguishable
-           states into a class; however the fact of being
-           distinguishable from one another doesn't make all classes
-           useful.  */
+        for (auto c = 0; c < num_classes_; ++c)
+          {
+            // Copy the transitions of the first state of the class in
+            // the result.
+            state_t s = class_to_set_[c][0];
+            state_t src = class_to_res_state_[c];
+            for (auto t : a_.all_out(s))
+              {
+                state_t d = a_.dst_of(t);
+                state_t dst = class_to_res_state_[state_to_class_[d]];
+                res.add_transition(src, dst, a_.label_of(t));
+              }
+          }
         return trim(res);
       }
 
@@ -218,6 +240,7 @@ namespace vcsn
       automaton_t operator()()
       {
         build_classes_();
+        sort_classes_();
         return build_result_();
       }
 
@@ -227,10 +250,9 @@ namespace vcsn
       origins()
       {
         origins_t res;
-
-        for (auto s : a_.states())
-          res[state_to_res_state_[s]].emplace(s);
-
+        for (unsigned c = 0; c < num_classes_; ++c)
+          res[class_to_res_state_[c]]
+              .insert(begin(class_to_set_[c]), end(class_to_set_[c]));
         return res;
       }
 
@@ -242,17 +264,18 @@ namespace vcsn
         o << "/* Origins." << std::endl
           << "    node [shape = box, style = rounded]" << std::endl;
         for (auto p : orig)
-          {
-            o << "    " << p.first - 2
-              << " [label = \"";
-            const char* sep = "";
-            for (auto s: p.second)
-              {
-                o << sep << s - 2;
-                sep = ",";
-              }
-            o << "\"]" << std::endl;
-          }
+          if (2 <= p.first)
+            {
+              o << "    " << p.first - 2
+                << " [label = \"";
+              const char* sep = "";
+              for (auto s: p.second)
+                {
+                  o << sep << s - 2;
+                  sep = ",";
+                }
+              o << "\"]" << std::endl;
+            }
         o << "*/" << std::endl;
         return o;
       }

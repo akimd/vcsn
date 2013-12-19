@@ -385,7 +385,6 @@ namespace vcsn
         while (go_on);
       }
 
-
       /// Sort the classes.
       ///
       /// This step, which is "useless" in that the result would be

@@ -21,17 +21,17 @@ check moore     "$medir/redundant.gv" "$medir/redundant.exp.gv"
 check signature "$medir/redundant.gv" "$medir/redundant.exp.gv"
 
 ## An automaton equal to redundant.exp, with one transition removed.
-#check moore     "$medir/incomplete-non-trim.gv" "$medir/incomplete-non-trim.moore.gv"
+xfail moore     "$medir/incomplete-non-trim.gv" "$medir/incomplete-non-trim.moore.gv"
 xfail signature "$medir/incomplete-non-trim.gv"
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
-#check moore     "$medir/no-initial-states.gv" "$medir/no-initial-states.moore.gv"
+xfail moore     "$medir/no-initial-states.gv" "$medir/no-initial-states.moore.gv"
 xfail signature "$medir/no-initial-states.gv"
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
-#check moore     "$medir/no-final-states.gv" "$medir/no-final-states.moore.gv"
+xfail moore     "$medir/no-final-states.gv" "$medir/no-final-states.moore.gv"
 xfail signature "$medir/no-final-states.gv"
 
 ## Minimize an intricate automaton into a linear one.
