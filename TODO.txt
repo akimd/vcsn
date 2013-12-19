@@ -1,5 +1,12 @@
 * Exercises (AP, VT)
-** sum, star, etc.
+** Convert more tests to Python (easy)
+Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
+inspiration from tests/python/derivation.py.  Try to be "dumb" in the
+conversion: it should be easy to see that the original *.chk and the
+final *.py are really alike.  Don't over-engineer something that hides the
+tests.
+
+** sum, star, etc. (harder)
 We have
 
   sum(automaton, automaton) -> automaton
@@ -23,19 +30,15 @@ in dyn/algos.hh, and (ii) implement in some (unique) lib/vcsn/algos/*.cc.
 Write the corresponding tests in Python only: take inspiration from
 tests/python/derivation.py to write a single *.chk file for this task.
 
-** Convert more tests to Python
-Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
-inspiration from tests/python/derivation.py.  Try to be "dumb" in the
-conversion: it should be easy to see that the original *.chk and the
-final *.py are really alike.  Don't over-engineer something that hides the
-tests.
-
-** subsequence (or subword?), prefix, suffix, factor
-Generate, from an automaton/, resp. a ratexp, an automaton, resp. a ratexp,
-that corresponds to the subsequences, prefixes, suffixes and factors.
+** subsequence (or subword?), prefix, suffix, factor (hard)
+From an automaton generate another that corresponds to the subsequences,
+prefixes, suffixes and factors.
 
 Do that in the static API (templated), then the dyn:: API, then the Python
 API, then tests/.  Don't do TAF-Kit.
+
+Eventually (when the ratexp ASTs have been upgraded, do not do that before,
+that would be a loss of time), provide the same routines for ratexps.
 
 * Build
 ** --enable-compilation-mode
