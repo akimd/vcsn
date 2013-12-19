@@ -7,6 +7,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/minimize-signature.hh>
+# include <vcsn/algos/quotient.hh>
 # include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
@@ -176,105 +177,11 @@ namespace vcsn
         while (go_on);
       }
 
-      /// Sort the classes.
-      ///
-      /// This step, which is "useless" in that the result would be
-      /// correct anyway, just ensures that the classes are numbered
-      /// after their states: classes are sorted by the smallest of
-      /// their state ids.
-      void sort_classes_()
-      {
-        /* For each class, put its smallest numbered state first.  We
-           don't need to fully sort.  */
-        for (unsigned c = 0; c < num_classes_; ++c)
-            std::swap(class_to_set_[c][0],
-                      *std::min_element(begin(class_to_set_[c]),
-                                        end(class_to_set_[c])));
-
-        /* Sort class numbers by smallest state number.  */
-        std::sort(begin(class_to_set_), end(class_to_set_),
-                  [](const set_t& lhs, const set_t& rhs) -> bool
-                  {
-                    return lhs[0] < rhs[0];
-                  });
-
-        /* Update state_to_class_.  */
-        for (unsigned c = 0; c < num_classes_; ++c)
-          for (auto s: class_to_set_[c])
-            state_to_class_[s] = c;
-      }
-
-      /// Build the resulting automaton.
-      automaton_t build_result_()
-      {
-        automaton_t res{a_.context()};
-        class_to_res_state_.resize(num_classes_);
-        for (unsigned c = 0; c < num_classes_; ++c)
-          {
-            state_t s = class_to_set_[c][0];
-            class_to_res_state_[c]
-              = s == a_.pre()  ? res.pre()
-              : s == a_.post() ? res.post()
-              : res.new_state();
-          }
-        for (auto c = 0; c < num_classes_; ++c)
-          {
-            // Copy the transitions of the first state of the class in
-            // the result.
-            state_t s = class_to_set_[c][0];
-            state_t src = class_to_res_state_[c];
-            for (auto t : a_.all_out(s))
-              {
-                state_t d = a_.dst_of(t);
-                state_t dst = class_to_res_state_[state_to_class_[d]];
-                res.add_transition(src, dst, a_.label_of(t));
-              }
-          }
-        return res;
-      }
-
       /// Return the quotient.
       automaton_t operator()()
       {
         build_classes_();
-        sort_classes_();
-        return build_result_();
-      }
-
-      /// A map from minimized states to sets of original states.
-      using origins_t = std::map<state_t, std::set<state_t>>;
-      origins_t
-      origins()
-      {
-        origins_t res;
-        for (unsigned c = 0; c < num_classes_; ++c)
-          res[class_to_res_state_[c]]
-              .insert(begin(class_to_set_[c]), end(class_to_set_[c]));
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig)
-      {
-        o << "/* Origins." << std::endl
-          << "    node [shape = box, style = rounded]" << std::endl;
-        for (auto p : orig)
-          if (2 <= p.first)
-            {
-              o << "    " << p.first - 2
-                << " [label = \"";
-              const char* sep = "";
-              for (auto s: p.second)
-                {
-                  o << sep << s - 2;
-                  sep = ",";
-                }
-              o << "\"]" << std::endl;
-            }
-        o << "*/" << std::endl;
-        return o;
+        return quotient(a_, class_to_set_);
       }
     };
   }
@@ -285,12 +192,7 @@ namespace vcsn
   minimize(const Aut& a)
   {
     detail::minimizer<Aut> minimize(a);
-    auto res = minimize();
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
-    if (getenv("VCSN_ORIGINS"))
-      minimize.print(std::cout, minimize.origins());
-    return res;
+    return minimize();
   }
 
   /*----------------.
