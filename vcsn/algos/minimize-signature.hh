@@ -53,6 +53,8 @@ namespace vcsn
       using class_to_state_t = std::vector<state_t>;
       using state_to_state_t = std::unordered_map<state_t, state_t>;
 
+      /// An invalid class.
+      constexpr static class_t class_invalid = -1;
       unsigned num_classes_ = 0;
 
       class_to_set_t class_to_set_;
@@ -216,7 +218,7 @@ namespace vcsn
               if (a_bits != b_bits)
                 return false;
 
-              ++ b_i;
+              ++b_i;
             }
 
           return true;
@@ -284,10 +286,10 @@ namespace vcsn
       }
 
       /// Make a new class with the given set of states.
-      class_t make_class(set_t&& set, class_t number = -1)
+      class_t make_class(set_t&& set, class_t number = class_invalid)
       {
-        if (number == class_t(-1))
-          number = num_classes_ ++;
+        if (number == class_invalid)
+          number = num_classes_++;
 
         for (auto s : set)
           state_to_class_[s] = number;
@@ -310,7 +312,7 @@ namespace vcsn
         , ls_(*a_.labelset())
         , ws_(*a.weightset())
       {
-        if (!(is_trim(a_) || is_complete(a_)))
+        if (!is_trim(a_))
           abort();
 
         // Fill state_to_state_output.
@@ -375,7 +377,7 @@ namespace vcsn
                       {
                         class_t c2 = make_class(std::move(p.second), c);
                         classes.insert(c2);
-                        c = -1;
+                        c = class_invalid;
                       }
                   }
                 else

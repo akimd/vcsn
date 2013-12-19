@@ -30,8 +30,8 @@ namespace vcsn
       /// Input automaton, supplied at construction time.
       const automaton_t &a_;
 
-      /// Non-special letters.
-      const typename Aut::context_t::labelset_t& letters_;
+      /// The labelset, and alphabet.
+      const typename Aut::context_t::labelset_t& ls_;
 
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
@@ -110,7 +110,7 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , letters_(*a_.labelset())
+        , ls_(*a_.labelset())
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
@@ -120,7 +120,7 @@ namespace vcsn
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
       }
 
-      /// The minimized automaton.
+      /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
         // Initialization: two classes, partitioning final and non-final states.
@@ -144,7 +144,7 @@ namespace vcsn
             for (class_t c = 0; c < num_classes_; ++c)
               {
                 const set_t& c_states = class_to_set_[c];
-                for (auto l : letters_)
+                for (auto l : ls_)
                   {
                     target_class_to_states_t target_class_to_c_states;
                     bool with_class_invalid = false;
@@ -233,7 +233,7 @@ namespace vcsn
                 res.add_transition(src, dst, a_.label_of(t));
               }
           }
-        return trim(res);
+        return res;
       }
 
       /// Return the quotient.
