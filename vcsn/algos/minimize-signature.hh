@@ -3,17 +3,12 @@
 
 # include <algorithm> // min_element.
 # include <unordered_map>
-# include <unordered_set> // FIXME: remove unless neeeded
+# include <unordered_set>
 
-# include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/misc/pair.hh> // FIXME: remove unless neeeded
-# include <vcsn/misc/hash.hh> // FIXME: remove unless neeeded
+# include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
-
-# ifndef NDEBUG
-#  include <vcsn/algos/is-deterministic.hh>
-# endif
 
 namespace vcsn
 {
@@ -29,7 +24,7 @@ namespace vcsn
       static_assert(Aut::context_t::is_lal,
                     "requires labels_are_letters");
       static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                    "requires Boolean weights"); // FIXME: relax this
+                    "requires Boolean weights");
 
       using automaton_t = Aut;
 
@@ -38,10 +33,8 @@ namespace vcsn
       const bool is_deterministic_;
 
       using labelset_t = typename automaton_t::labelset_t;
-      using weightset_t = typename automaton_t::weightset_t;
 
       const labelset_t& ls_;
-      const weightset_t& ws_;
 
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
@@ -51,7 +44,6 @@ namespace vcsn
       using state_to_class_t = std::unordered_map<state_t, class_t>;
       using class_to_set_t = std::vector<set_t>;
       using class_to_state_t = std::vector<state_t>;
-      using state_to_state_t = std::unordered_map<state_t, state_t>;
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
@@ -83,7 +75,6 @@ namespace vcsn
         return o;
       }
 
-      using weight_t = typename Aut::weight_t; // FIXME: for the future
       struct state_output_for_label_t
       {
         // For some unstored state.
@@ -163,19 +154,16 @@ namespace vcsn
       {
         minimizer& minimizer_;
         const labelset_t& ls_;
-        const weightset_t& ws_;
         const state_to_class_t& state_to_class_;
         const size_t class_bound_;
       public:
         signature_equal_to(minimizer& the_minimizer,
                            // FIXME: remove these unless really needed
                            const labelset_t& ls,
-                           const weightset_t& ws,
                            const state_to_class_t& state_to_class,
                            size_t class_bound)
           : minimizer_(the_minimizer)
           , ls_(ls)
-          , ws_(ws)
           , state_to_class_(state_to_class)
           , class_bound_(class_bound)
         {}
@@ -239,13 +227,12 @@ namespace vcsn
         signature_multimap(minimizer& the_minimizer,
                            // FIXME: remove these unless really needed.
                            const labelset_t& ls,
-                           const weightset_t& ws,
                            state_to_class_t& state_to_class,
                            const size_t class_bound)
           : super_type(1,
                        signature_hasher(the_minimizer, class_bound),
                        signature_equal_to(the_minimizer,
-                                          ls, ws, state_to_class, class_bound))
+                                          ls, state_to_class, class_bound))
           , minimizer_(the_minimizer)
           , state_to_class_(state_to_class)
         {}
@@ -310,7 +297,6 @@ namespace vcsn
         : a_(a)
         , is_deterministic_(is_deterministic(a_))
         , ls_(*a_.labelset())
-        , ws_(*a.weightset())
       {
         if (!is_trim(a_))
           abort();
@@ -365,7 +351,7 @@ namespace vcsn
                 // Try to find distinguishable states in c_states:
                 signature_multimap
                   signature_to_state(*this,
-                                     ls_, ws_, state_to_class_,
+                                     ls_, state_to_class_,
                                      num_classes_);
                 for (auto s : c_states)
                   signature_to_state[& state_to_state_output_[s]].emplace_back(s);
