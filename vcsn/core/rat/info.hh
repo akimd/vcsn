@@ -19,14 +19,8 @@ namespace vcsn
       using node_t = typename ratexpset_t::node_t;
       using super_type = typename ratexpset_t::const_visitor;
 
-      /// Entry point.
-      void
-      operator()(const node_t& v)
-      {
-        shuffle = sum = intersection = prod = star = zero = one = atom =
-          lweight = rweight = 0;
-        v.accept(*this);
-      }
+      /// For each node type, count its number of occurrences.
+      void operator()(const node_t& v);
 
 # define DEFINE(Type)                                           \
     public:                                                     \

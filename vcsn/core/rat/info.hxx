@@ -6,77 +6,97 @@ namespace vcsn
   namespace rat
   {
 
-# define DEFINE(Type)                           \
+# define DEFINE                                 \
     template <typename RatExpSet>               \
     inline                                      \
     auto                                        \
-    info<RatExpSet>::visit(const Type ## _t& v) \
-      -> void
+    info<RatExpSet>
 
-    DEFINE(sum)
+    DEFINE::operator()(const node_t& v)
+      -> void
+    {
+      atom = 0;
+      intersection = 0;
+      lweight = 0;
+      one = 0;
+      prod = 0;
+      rweight = 0;
+      shuffle = 0;
+      star = 0;
+      sum = 0;
+      zero = 0;
+      v.accept(*this);
+    }
+
+# define VISIT(Type)                           \
+    DEFINE::visit(const Type ## _t& v)         \
+    -> void
+
+    VISIT(sum)
     {
       ++sum;
       for (const auto& c: v)
         c->accept(*this);
     }
 
-    DEFINE(prod)
+    VISIT(prod)
     {
       ++prod;
       for (const auto& c: v)
         c->accept(*this);
     }
 
-    DEFINE(intersection)
+    VISIT(intersection)
     {
       ++intersection;
       for (const auto& c: v)
         c->accept(*this);
     }
 
-    DEFINE(shuffle)
+    VISIT(shuffle)
     {
       ++shuffle;
       for (const auto& c: v)
         c->accept(*this);
     }
 
-    DEFINE(star)
+    VISIT(star)
     {
       ++star;
       v.sub()->accept(*this);
     }
 
-    DEFINE(zero)
+    VISIT(zero)
     {
       (void) v;
       ++zero;
     }
 
-    DEFINE(one)
+    VISIT(one)
     {
       (void) v;
       ++one;
     }
 
-    DEFINE(atom)
+    VISIT(atom)
     {
       (void) v;
       ++atom;
     }
 
-    DEFINE(lweight)
+    VISIT(lweight)
     {
       ++lweight;
       v.sub()->accept(*this);
     }
 
-    DEFINE(rweight)
+    VISIT(rweight)
     {
       ++rweight;
       v.sub()->accept(*this);
     }
 
+# undef VISIT
 # undef DEFINE
 
   } // namespace rat
