@@ -32,25 +32,3 @@ def automaton_fst(aut, cmd):
 
 automaton.fstdeterminize = lambda aut: automaton_fst(aut, "fstdeterminize")
 automaton.fstminimize = lambda aut: automaton_fst(aut, "fstminimize")
-
-## -------- ##
-## ratexp.  ##
-## -------- ##
-
-def vcsn_ratexp__eq__(lhs, rhs):
-    print isinstance(rhs, lhs.__class__)
-    print str(lhs) == str(rhs)
-    return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
-
-ratexp.__eq__ = vcsn_ratexp__eq__
-
-
-## ------------ ##
-## polynomial.  ##
-## ------------ ##
-def vcsn_polynomial__eq__(lhs, rhs):
-    print isinstance(rhs, lhs.__class__)
-    print str(lhs) == str(rhs)
-    return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
-
-polynomial.__eq__ = vcsn_polynomial__eq__
