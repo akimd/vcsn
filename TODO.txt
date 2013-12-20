@@ -1,4 +1,7 @@
 * Exercises (AP, VT)
+** Star-height
+Implement the computation of star-height for ratexps.
+
 ** Convert more tests to Python (easy)
 Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
 inspiration from tests/python/derivation.py.  Try to be "dumb" in the
