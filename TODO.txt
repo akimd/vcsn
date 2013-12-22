@@ -63,6 +63,15 @@ standard(exp).
 We must use genuine temporary files for efstcompile/efstdecompile, and for
 vcsn.py conversions.  When possible, avoid files and use streams.
 
+** shortest
+Loops forever:
+
+  $ VCSN_ORIGINS=1 vcsn standard -C 'lal_char(a)_z' -Ee 'a*+<-1>a*)' \
+     | vcsn shortest -f-  1
+
+We can check that we reach the same state, but can we have periodic
+behaviors?
+
 ** expand
 Beware of the missing parens when displaying weights in iPython
 br = vcsn.context('lal_char(abc)_ratexpset<lal_char(xy)_b>')
