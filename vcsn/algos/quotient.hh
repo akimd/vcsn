@@ -80,7 +80,7 @@ namespace vcsn
               : s == aut.post() ? res.post()
               : res.new_state();
           }
-        for (auto c = 0; c < num_classes_; ++c)
+        for (unsigned c = 0; c < num_classes_; ++c)
           {
             // Copy the transitions of the first state of the class in
             // the result.
