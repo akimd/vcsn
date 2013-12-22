@@ -2,9 +2,8 @@ from vcsn_python import *
 
 def dot_to_svg(dot):
     open("/tmp/a.gv", "w").write(dot)
-    from subprocess import check_call
-    check_call(['dot','-Tsvg','/tmp/a.gv','-o','/tmp/a.svg'])
-    return open("/tmp/a.svg", "r").read()
+    from subprocess import check_output
+    return check_output(['dot','-Tsvg','/tmp/a.gv'])
 
 ## --------- ##
 ## context.  ##

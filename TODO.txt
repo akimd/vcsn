@@ -56,6 +56,10 @@ Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
 * Bugs
+** Open coded file names
+We must use genuine temporary files for efstcompile/efstdecompile, and for
+vcsn.py conversions.  When possible, avoid files and use streams.
+
 ** expand
 Beware of the missing parens when displaying weights in iPython
 br = vcsn.context('lal_char(abc)_ratexpset<lal_char(xy)_b>')
