@@ -86,6 +86,26 @@ namespace vcsn
               headers.insert("vcsn/labelset/oneset.hh");
               os << "vcsn::ctx::oneset";
             }
+          else if (kind == "lat")
+            {
+              eat(is, '<');
+              headers.insert("vcsn/labelset/tupleset.hh");
+              os << "vcsn::ctx::tupleset<";
+              while (true)
+                {
+                  labelset();
+                  int c = is.peek();
+                  if (c == ',')
+                    {
+                      is.get();
+                      os << ",\n";
+                    }
+                  else
+                    break;
+                }
+              eat(is, '>');
+              os << ">\n";
+            }
           else
             throw std::domain_error("invalid kind name: "
                                     + str_escape(kind));
