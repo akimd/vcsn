@@ -22,9 +22,9 @@ DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
 # If we need to compile, use the non-installed headers and libs.
-VCSN_CPPFLAGS="-I $abs_builddir -I $abs_srcdir"
+VCSN_CPPFLAGS="-I $abs_builddir -I $abs_srcdir @CPPFLAGS@"
 export VCSN_CPPFLAGS
-VCSN_LDFLAGS="-L $abs_builddir/lib/.libs"
+VCSN_LDFLAGS="-L $abs_builddir/lib/.libs @LDFLAGS@"
 export VCSN_LDFLAGS
 
 case $1 in
