@@ -10,7 +10,7 @@
 #include <fstream>
 
 # include <vcsn/misc/escape.hh>
-# include <vcsn/misc/escape.hh>
+# include <vcsn/misc/indent.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/config.hh>
 # include <vcsn/dyn/context.hh>
@@ -23,16 +23,25 @@ namespace vcsn
     {
       struct translation
       {
+        translation()
+        {
+          // We use os.str() with one level of indentation.
+          // Alternatively, it would be useful to be able that
+          // misc::indent provides a means to output an std::string
+          // and intercept its \n.
+          os << incindent;
+        }
+
         void context()
         {
           headers.insert("vcsn/ctx/context.hh");
-          os << "vcsn::ctx::context<\n  ";
+          os << "vcsn::ctx::context<" << incendl;
           // LabelSet, WeightSet.
           labelset();
           eat(is, '_');
-          os << ",\n  ";
+          os << ',' << iendl;
           weightset();
-          os << "\n>";
+          os << decendl << '>';
         }
 
         void labelset()
@@ -88,11 +97,11 @@ namespace vcsn
           if (with_ratexpset)
             eat(is, "ratexpset");
           eat(is, '<');
-          os << "vcsn::ratexpset<\n  ";
+          os << "vcsn::ratexpset<" << incendl;
           // LabelSet, WeightSet.
           context();
           eat(is, '>');
-          os << "\n>";
+          os << decendl << '>';
           headers.insert("vcsn/core/rat/ratexpset.hh");
         }
 
@@ -124,7 +133,7 @@ namespace vcsn
         std::ostream& print(std::ostream& o)
         {
           o << "// " << is.str() << "\n";
-          o << "# define MAYBE_EXTERN\n"
+          o <<
             "#define BUILD_LIBVCSN 1\n"
             "#define VCSN_INSTANTIATION 1\n"
             "#define MAYBE_EXTERN\n"
@@ -132,10 +141,11 @@ namespace vcsn
           for (const auto& h: headers)
             o << "#include <" << h << ">\n";
           o << "\n";
-          o << "using ctx_t =\n";
-          o << os.str() << ";\n";
+          o << "using ctx_t =" << incendl;
+          o << os.str() << ';' << decendl;
           o <<
-            "# include <vcsn/ctx/instantiate.hh>\n"
+            "\n"
+            "#include <vcsn/ctx/instantiate.hh>\n"
             "\n"
             "namespace vcsn\n"
             "{\n"
