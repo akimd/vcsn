@@ -141,6 +141,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/flex-lexer.hh                        \
   %D%/misc/flyweight.hh                         \
   %D%/misc/hash.hh                              \
+  %D%/misc/indent.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
   %D%/misc/pair.hh                              \
