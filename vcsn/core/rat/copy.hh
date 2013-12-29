@@ -40,25 +40,6 @@ namespace vcsn
       }
 
     private:
-      void
-      apply_weights(const inner_t& e)
-      {
-        res_ = out_rs_.lmul(out_rs_.weightset()->conv(*in_rs_.weightset(),
-                                                      e.left_weight()),
-                            res_);
-        res_ = out_rs_.rmul(res_,
-                            out_rs_.weightset()->conv(*in_rs_.weightset(),
-                                                      e.right_weight()));
-      }
-
-      void
-      apply_weights(const leaf_t& e)
-      {
-        res_ = out_rs_.lmul(out_rs_.weightset()->conv(*in_rs_.weightset(),
-                                                      e.left_weight()),
-                            res_);
-      }
-
       /// Factor the copy of n-ary operations.
       template <exp::type_t Type>
       void
@@ -68,9 +49,7 @@ namespace vcsn
         for (auto s: v)
           sub.emplace_back(copy(s));
         res_ = std::make_shared<typename out_ratexpset_t::template nary_t<Type>>
-          (out_rs_.weightset()->one(), out_rs_.weightset()->one(),
-           sub);
-        apply_weights(v);
+          (sub);
       }
 
       out_value_t
@@ -107,25 +86,33 @@ namespace vcsn
       DEFINE(star)
       {
         res_ = out_rs_.star(copy(v.sub()));
-        apply_weights(v);
       }
 
       DEFINE(one)
       {
+        (void) v;
         res_ = out_rs_.one();
-        apply_weights(v);
       }
 
       DEFINE(zero)
       {
+        (void) v;
         res_ = out_rs_.zero();
-        apply_weights(v);
       }
 
       DEFINE(atom)
       {
         res_ = out_rs_.atom(v.value());
-        apply_weights(v);
+      }
+
+      DEFINE(lweight)
+      {
+        res_ = out_rs_.lmul(v.weight(), copy(v.sub()));
+      }
+
+      DEFINE(rweight)
+      {
+        res_ = out_rs_.rmul(copy(v.sub()), v.weight());
       }
 
 

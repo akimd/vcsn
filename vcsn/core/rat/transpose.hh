@@ -36,6 +36,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       transposer(const ratexpset_t& rs)
         : rs_{rs}
@@ -49,23 +51,6 @@ namespace vcsn
         return std::move(res_);
       }
 
-      void
-      apply_weights(const inner_t& e)
-      {
-        // Apply left on right, and vice-versa.  Transposed.
-        res_ = rs_.lmul(rs_.weightset()->transpose(e.right_weight()),
-                        res_);
-        res_ = rs_.rmul(res_,
-                        rs_.weightset()->transpose(e.left_weight()));
-      }
-
-      void
-      apply_weights(const leaf_t& e)
-      {
-        res_ = rs_.lmul(rs_.weightset()->transpose(e.left_weight()),
-                        res_);
-      }
-
       virtual void
       visit(const zero_t&)
       {
@@ -73,17 +58,15 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& e)
+      visit(const one_t&)
       {
         res_ = rs_.one();
-        apply_weights(e);
       }
 
       virtual void
       visit(const atom_t& e)
       {
         res_ = rs_.atom(rs_.labelset()->transpose(e.value()));
-        apply_weights(e);
       }
 
       virtual void
@@ -96,7 +79,6 @@ namespace vcsn
             res = rs_.add(res, res_);
           }
         res_ = res;
-        apply_weights(e);
       }
 
       virtual void
@@ -110,7 +92,6 @@ namespace vcsn
             res = rs_.intersection(res, res_);
           }
         res_ = res;
-        apply_weights(e);
       }
 
       virtual void
@@ -125,7 +106,6 @@ namespace vcsn
             res = rs_.shuffle(res, res_);
           }
         res_ = res;
-        apply_weights(e);
       }
 
       virtual void
@@ -138,7 +118,6 @@ namespace vcsn
             res = rs_.mul(res_, res);
           }
         res_ = res;
-        apply_weights(e);
       }
 
       virtual void
@@ -146,7 +125,22 @@ namespace vcsn
       {
         e.sub()->accept(*this);
         res_ = rs_.star(res_);
-        apply_weights(e);
+      }
+
+      virtual void
+      visit(const lweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = rs_.rmul(res_,
+                        rs_.weightset()->transpose(e.weight()));
+      }
+
+      virtual void
+      visit(const rweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = rs_.lmul(rs_.weightset()->transpose(e.weight()),
+                        res_);
       }
 
     private:

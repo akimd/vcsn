@@ -77,6 +77,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       split_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -95,19 +97,6 @@ namespace vcsn
         return std::move(res_);
       }
 
-      void
-      apply_weights(const inner_t& e)
-      {
-        res_ = ps_.lmul(e.left_weight(), res_);
-        res_ = ps_.rmul(res_, e.right_weight());
-      }
-
-      void
-      apply_weights(const leaf_t& e)
-      {
-        res_ = ps_.lmul(e.left_weight(), res_);
-      }
-
       virtual void
       visit(const zero_t&)
       {
@@ -115,15 +104,15 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& e)
+      visit(const one_t&)
       {
-        res_ = polynomial_t{{rs_.one(), e.left_weight()}};
+        res_ = polynomial_t{{rs_.one(), ws_.one()}};
       }
 
       virtual void
       visit(const atom_t& e)
       {
-        res_ = polynomial_t{{rs_.atom(e.value()), e.left_weight()}};
+        res_ = polynomial_t{{rs_.atom(e.value()), ws_.one()}};
       }
 
       virtual void
@@ -136,7 +125,6 @@ namespace vcsn
             ps_.add_weight(res, res_);
           }
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       /// The split-product of \a l with \a r.
@@ -176,7 +164,6 @@ namespace vcsn
         for (unsigned i = 2, n = e.size(); i < n; ++i)
           res = product(res, e[i]);
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       /// The split-product of \a l with \a r.
@@ -221,7 +208,6 @@ namespace vcsn
         for (unsigned i = 2, n = e.size(); i < n; ++i)
           res = intersection(res, e[i]);
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       virtual void
@@ -236,7 +222,20 @@ namespace vcsn
         // We need a copy of e, but without its weights.
         auto e2 = rs_.star(e.sub()->clone());
         res_ = polynomial_t{{e2, ws_.one()}};
-        apply_weights(e);
+      }
+
+      virtual void
+      visit(const lweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = ps_.lmul(e.weight(), res_);
+      }
+
+      virtual void
+      visit(const rweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = ps_.rmul(res_, e.weight());
       }
 
     private:
@@ -329,6 +328,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       derivation_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -352,19 +353,6 @@ namespace vcsn
          return res;
       }
 
-      void
-      apply_weights(const inner_t& e)
-      {
-        res_ = ps_.lmul(e.left_weight(), res_);
-        res_ = ps_.rmul(res_, e.right_weight());
-      }
-
-      void
-      apply_weights(const leaf_t& e)
-      {
-        res_ = ps_.lmul(e.left_weight(), res_);
-      }
-
       virtual void
       visit(const zero_t&)
       {
@@ -381,10 +369,7 @@ namespace vcsn
       visit(const atom_t& e)
       {
         if (e.value() == variable_)
-          {
-            res_ = ps_.one();
-            apply_weights(e);
-          }
+          res_ = ps_.one();
         else
           res_ = ps_.zero();
       }
@@ -399,7 +384,6 @@ namespace vcsn
             ps_.add_weight(res, res_);
           }
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       virtual void
@@ -420,7 +404,6 @@ namespace vcsn
             constant = ws_.mul(constant, constant_term(rs_, v));
           }
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       virtual void
@@ -444,7 +427,6 @@ namespace vcsn
             res = sum;
           }
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       /// Handle an n-ary shuffle.
@@ -465,13 +447,11 @@ namespace vcsn
                     ratexps.emplace_back(e[j]);
                 // FIXME: we need better n-ary constructors.
                 ps_.add_weight(res,
-                               std::make_shared<shuffle_t>(ws_.one(), ws_.one(),
-                                                           ratexps),
+                               std::make_shared<shuffle_t>(ratexps),
                                m.second);
               }
           }
         res_ = std::move(res);
-        apply_weights(e);
       }
 
       virtual void
@@ -482,7 +462,20 @@ namespace vcsn
         auto e2 = rs_.star(e.sub()->clone());
         res_ = ps_.lmul(ws_.star(constant_term(rs_, e.sub())),
                         ps_.rmul(res_, e2));
-        apply_weights(e);
+      }
+
+      virtual void
+      visit(const lweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = ps_.lmul(e.weight(), res_);
+      }
+
+      virtual void
+      visit(const rweight_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = ps_.rmul(res_, e.weight());
       }
 
     private:
@@ -590,15 +583,19 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
       using state_t = typename automaton_t::state_t;
 
-      /// Symbolic states: the derived term are polynomials of ratexps.
+      /// Symbolic states: the derived terms are polynomials of ratexps.
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
       struct ratexpset_less_than
       {
+        const ratexpset_t& rs_;
         bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
         {
-          return ratexpset_t::less_than(lhs, rhs);
+          auto res = ratexpset_t::less_than(lhs, rhs);
+          rs_.print(std::cerr, lhs) << " < ";
+          rs_.print(std::cerr, rhs) << " = " << res << std::endl;
+          return res;
         }
       };
 
@@ -607,6 +604,7 @@ namespace vcsn
 
       derived_termer(const ratexpset_t& rs)
         : rs_(rs)
+        , map_(ratexpset_less_than{rs})
       {}
 
       automaton_t operator()(const ratexp_t& ratexp)
@@ -651,8 +649,14 @@ namespace vcsn
                     if (i == end(map_))
                       {
                         dst = res.new_state();
+                        std::cerr << "New state: d/d" << l << "(";
+                        rs_.print(std::cerr, r) << ") = ";
+                        rs_.print(std::cerr, p.first) << std::endl;
                         res.set_final(dst, constant_term(rs_, p.first));
                         map_[p.first] = dst;
+                        for (const auto& p2: map_)
+                          rs_.print(std::cerr, p2.first) << ' ' << p2.second << std::endl;
+                        std::cerr << std::endl;
                         todo.push(p.first);
                       }
                     else

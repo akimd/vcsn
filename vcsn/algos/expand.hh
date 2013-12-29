@@ -44,6 +44,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       expand_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -79,15 +81,15 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& v)
+      visit(const one_t&)
       {
-        res_ = polynomial_t{{rs_.one(), v.left_weight()}};
+        res_ = polynomial_t{{rs_.one(), ws_.one()}};
       }
 
       virtual void
       visit(const atom_t& v)
       {
-        res_ = polynomial_t{{rs_.atom(v.value()), v.left_weight()}};
+        res_ = polynomial_t{{rs_.atom(v.value()), ws_.one()}};
       }
 
       virtual void
@@ -96,7 +98,7 @@ namespace vcsn
         polynomial_t res = ps_.zero();
         for (auto c: v)
           res = ps_.add(res, expand(c));
-        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
+        res_ = std::move(res);
       }
 
       virtual void
@@ -113,7 +115,7 @@ namespace vcsn
                                ws_.mul(l.second, r.second));
             res = sum;
           }
-        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
+        res_ = std::move(res);
       }
 
       virtual void
@@ -128,7 +130,7 @@ namespace vcsn
         polynomial_t res = ps_.one();
         for (auto c: v)
           res = ps_.mul(res, expand(c));
-        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res), v.right_weight());
+        res_ = std::move(res);
       }
 
       virtual void
@@ -137,7 +139,20 @@ namespace vcsn
         // Recurse, but make it a star.
         v.sub()->accept(*this);
         res_ = polynomial_t{{rs_.star(ratexp(res_)), ws_.one()}};
-        res_ = ps_.rmul(ps_.lmul(v.left_weight(), res_), v.right_weight());
+      }
+
+      virtual void
+      visit(const lweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = ps_.lmul(v.weight(), std::move(res_));
+      }
+
+      virtual void
+      visit(const rweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = ps_.rmul(std::move(res_), v.weight());
       }
 
     private:

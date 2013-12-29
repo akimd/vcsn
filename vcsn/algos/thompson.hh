@@ -33,6 +33,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       thompson_visitor(const context_t& ctx)
         : res_(ctx)
@@ -55,13 +57,11 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& e)
+      visit(const one_t&)
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
-        res_.new_transition(initial_, final_,
-                            epsilon_,
-                            e.left_weight());
+        res_.new_transition(initial_, final_, epsilon_);
       }
 
       virtual void
@@ -69,9 +69,7 @@ namespace vcsn
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
-        res_.new_transition(initial_, final_,
-                            e.value(),
-                            e.left_weight());
+        res_.new_transition(initial_, final_, e.value());
       }
 
       virtual void
@@ -82,12 +80,8 @@ namespace vcsn
         for (auto c: e)
           {
             c->accept(*this);
-            res_.new_transition(initial, initial_,
-                                epsilon_,
-                                e.left_weight());
-            res_.new_transition(final_, final,
-                                epsilon_,
-                                e.right_weight());
+            res_.new_transition(initial, initial_, epsilon_);
+            res_.new_transition(final_, final, epsilon_);
           }
         initial_ = initial;
         final_ = final;
@@ -102,7 +96,7 @@ namespace vcsn
       virtual void
       visit(const shuffle_t&)
       {
-        throw std::domain_error("shuffle: intersection is not supported");
+        throw std::domain_error("thompson: shuffle is not supported");
       }
 
       virtual void
@@ -119,14 +113,6 @@ namespace vcsn
             res_.new_transition(final, initial_, epsilon_);
           }
         initial_ = initial;
-
-        // Apply weights.
-        if (!ws_.is_one(e.left_weight()))
-          for (auto t: res_.out(initial_))
-            res_.set_weight(t, ws_.mul(e.left_weight(), res_.weight_of(t)));
-        if (!ws_.is_one(e.right_weight()))
-          for (auto t: res_.in(final_))
-            res_.set_weight(t, ws_.mul(res_.weight_of(t), e.right_weight()));
       }
 
       virtual void
@@ -135,15 +121,33 @@ namespace vcsn
         e.sub()->accept(*this);
         state_t initial = res_.new_state();
         state_t final = res_.new_state();
-        res_.new_transition(initial, initial_, epsilon_, e.left_weight());
-        res_.new_transition(final_,  final,    epsilon_, e.right_weight());
+        res_.new_transition(initial, initial_, epsilon_);
+        res_.new_transition(final_,  final,    epsilon_);
         res_.new_transition(final_,  initial_, epsilon_);
-        res_.new_transition(initial, final, epsilon_,
-                            ws_.mul(e.left_weight(), e.right_weight()));
+        res_.new_transition(initial, final,    epsilon_);
         initial_ = initial;
         final_ = final;
       }
 
+      virtual void
+      visit(const lweight_t& e)
+      {
+        e.sub()->accept(*this);
+
+        const weight_t& w = e.weight();
+        for (auto t: res_.out(initial_))
+          res_.set_weight(t, ws_.mul(w, res_.weight_of(t)));
+      }
+
+      virtual void
+      visit(const rweight_t& e)
+      {
+        e.sub()->accept(*this);
+
+        const weight_t& w = e.weight();
+        for (auto t: res_.in(final_))
+          res_.set_weight(t, ws_.mul(res_.weight_of(t), w));
+      }
 
     private:
       automaton_t res_;

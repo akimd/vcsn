@@ -18,6 +18,7 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using context_t = typename ratexpset_t::context_t;
+      using labelset_t = typename context_t::labelset_t;
       using weightset_t = typename context_t::weightset_t;
       using weight_t = typename context_t::weight_t;
       using ratexp_t = typename context_t::ratexp_t;
@@ -30,11 +31,15 @@ namespace vcsn
       using shuffle_t = typename super_type::shuffle_t;
       using intersection_t = typename super_type::intersection_t;
       using sum_t = typename super_type::sum_t;
+      template <rat::exp::type_t Type>
+      using weight_node_t = typename super_type::template weight_node_t<Type>;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       bool
       operator()(ratexp_t lhs, ratexp_t rhs)
@@ -48,52 +53,26 @@ namespace vcsn
         return res_;
       }
 
-      bool
-      less_than_weights(const inner_t& lhs, const inner_t& rhs)
-      {
-        if (weightset_t::less_than(lhs.left_weight(), rhs.left_weight()))
-          return true;
-        else if (weightset_t::less_than(rhs.left_weight(), lhs.left_weight()))
-          return false;
-        else if (weightset_t::less_than(lhs.right_weight(), rhs.right_weight()))
-          return true;
-        else if (weightset_t::less_than(rhs.right_weight(), lhs.right_weight()))
-          return false;
-        return false;
-      }
-
-      bool
-      less_than_weights(const leaf_t& lhs, const leaf_t& rhs)
-      {
-        return weightset_t::less_than(lhs.left_weight(), rhs.left_weight());
-      }
-
 
       /*-------------------------------------------------------.
       | Binary functions that compare two nodes of same type.  |
       `-------------------------------------------------------*/
 
-      bool visit(const zero_t& lhs, const zero_t& rhs)
+      bool visit(const zero_t&, const zero_t&)
       {
-        return less_than_weights(lhs, rhs);
+        return false;
       }
 
-      bool visit(const one_t& lhs, const one_t& rhs)
+      bool visit(const one_t&, const one_t&)
       {
-        return less_than_weights(lhs, rhs);
+        return false;
       }
 
       bool visit(const atom_t& lhs, const atom_t& rhs)
       {
-        if (lhs.value() < rhs.value())
-          return true;
-        else if (rhs.value() < lhs.value())
-          return false;
-        else
-          return less_than_weights(lhs, rhs);
+        return labelset_t::less_than(lhs.value(), rhs.value());
       }
 
-      // sum and prod are handled equally, as naries.
       template <rat::exp::type_t Type>
       bool visit(const nary_t<Type>& lhs, const nary_t<Type>& rhs)
       {
@@ -109,16 +88,24 @@ namespace vcsn
               return true;
             else if (ratexpset_t::less_than(rhs[i], lhs[i]))
               return false;
-        return less_than_weights(lhs, rhs);
+        return false;
       }
 
       bool visit(const star_t& lhs, const star_t& rhs)
       {
+        return ratexpset_t::less_than(lhs.sub(), rhs.sub());
+      }
+
+      template <rat::exp::type_t Type>
+      bool visit(const weight_node_t<Type>& lhs, const weight_node_t<Type>& rhs)
+      {
+        // Lexicographic comparison on sub-expression, and then weight.
         if (ratexpset_t::less_than(lhs.sub(), rhs.sub()))
           return true;
         else if (ratexpset_t::less_than(rhs.sub(), lhs.sub()))
           return false;
-        return less_than_weights(lhs, rhs);
+        else
+          return weightset_t::less_than(lhs.weight(), rhs.weight());
       }
 
       /*-----------------------------------------------------------.
@@ -172,6 +159,18 @@ namespace vcsn
       visit(const star_t& lhs)
       {
         res_ = visit(lhs, *down_pointer_cast<const star_t>(rhs_));
+      }
+
+      virtual void
+      visit(const lweight_t& lhs)
+      {
+        res_ = visit(lhs, *down_pointer_cast<const lweight_t>(rhs_));
+      }
+
+      virtual void
+      visit(const rweight_t& lhs)
+      {
+        res_ = visit(lhs, *down_pointer_cast<const rweight_t>(rhs_));
       }
 
     private:

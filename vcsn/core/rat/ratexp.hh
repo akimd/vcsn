@@ -28,7 +28,7 @@ namespace vcsn
       /// The type of this node.
       virtual type_t type() const = 0;
 
-      /// Whether sum, prod, or star.
+      /// Whether sum, prod, intersection, shuffle, star.
       bool is_inner() const
       {
         type_t t = type();
@@ -36,7 +36,9 @@ namespace vcsn
 		|| t == type_t::prod
 		|| t == type_t::intersection
 		|| t == type_t::shuffle
-		|| t == type_t::star);
+		|| t == type_t::star
+		|| t == type_t::lweight
+		|| t == type_t::rweight);
       }
     };
 
@@ -47,8 +49,6 @@ namespace vcsn
 
     /// The abstract parameterized, root for all rational expression
     /// types.
-    ///
-    /// All the nodes have a left weight, implemented here.
     template <typename Label, typename Weight>
     class node : public exp
     {
@@ -63,32 +63,20 @@ namespace vcsn
       using ratexps_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
-      node(const weight_t& l);
-      node(const node& that)
-        : lw_(that.lw_)
-      {}
-
       using shared_t = std::shared_ptr<const node>;
       shared_t clone() const;
 
       virtual void accept(const_visitor &v) const = 0;
 
-      const weight_t &left_weight() const;
-      weight_t &left_weight();
-
     protected:
       virtual value_t clone_() const = 0;
-      weight_t lw_;
     };
-
 
     /*--------.
     | inner.  |
     `--------*/
 
     /// An inner node.
-    ///
-    /// Adds a right weight.
     template <typename Label, typename Weight>
     class inner : public node<Label, Weight>
     {
@@ -99,22 +87,11 @@ namespace vcsn
       using value_t = typename super_type::value_t;
       using self_t = inner;
 
-      const weight_t &right_weight() const;
-      weight_t &right_weight();
-
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 
     protected:
-      inner(const weight_t& l, const weight_t& r);
-      inner(const inner& that)
-        : super_type(that)
-        , rw_(that.rw_)
-      {}
-
       virtual value_t clone_() const = 0;
-
-      weight_t rw_;
     };
 
 
@@ -169,7 +146,7 @@ namespace vcsn
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
-      nary(const weight_t& l, const weight_t& r, const ratexps_t& ns = ratexps_t());
+      nary(const ratexps_t& ns = ratexps_t());
       nary(const nary& that)
         : super_type(that)
         , sub_ratexp_(that.sub_ratexp_)
@@ -218,7 +195,7 @@ namespace vcsn
       using value_t = typename node_t::value_t;
       using self_t = star;
 
-      star(const weight_t& l, const weight_t& r, value_t exp);
+      star(value_t exp);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 
@@ -238,11 +215,67 @@ namespace vcsn
     };
 
 
+    /*--------.
+    | weight. |
+    `--------*/
+
+    /// An inner node implementing a weight.
+    ///
+    /// Implements the Composite Design Pattern.
+    template <exp::type_t Type, typename Label, typename Weight>
+    class weight_node: public inner<Label, Weight>
+    {
+    public:
+      static_assert(Type == type_t::lweight
+                    || Type == type_t::rweight,
+                    "invalid type");
+
+      using label_t = Label;
+      using weight_t = Weight;
+      using super_type = inner<label_t, weight_t>;
+      using node_t = node<label_t, weight_t>;
+      using value_t = typename super_type::value_t;
+      using self_t = weight_node;
+
+      virtual type_t type() const { return Type; };
+
+      const value_t sub() const;
+      const weight_t& weight() const;
+      void set_weight(const weight_t& w);
+
+      weight_node(const weight_t& w, value_t exp);
+      weight_node(const weight_node& that)
+        : sub_exp_(that.sub_exp_)
+        , weight_(that.weight_)
+      {}
+
+      using shared_t = std::shared_ptr<const self_t>;
+      shared_t clone() const;
+
+      virtual void accept(typename node_t::const_visitor &v) const;
+
+    private:
+      value_t sub_exp_;
+      weight_t weight_;
+
+      virtual value_t clone_() const
+      {
+        return std::make_shared<self_t>(*this);
+      }
+    };
+
+    template <typename Label, typename Weight>
+    using lweight = weight_node<type_t::lweight, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using rweight = weight_node<type_t::rweight, Label, Weight>;
+
+
     /*-------.
     | leaf.  |
     `-------*/
 
-    /// The root from which derive the final node types.
+    /// The root from which to derive the final node types.
     template <typename Label, typename Weight>
     class leaf : public node<Label, Weight>
     {
@@ -255,7 +288,6 @@ namespace vcsn
       using super_type = node_t;
       using self_t = leaf;
     protected:
-      leaf(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
       virtual value_t clone_() const = 0;
@@ -276,7 +308,6 @@ namespace vcsn
       using value_t = typename node_t::value_t;
       using self_t = constant;
 
-      constant(const weight_t& l);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 
@@ -308,7 +339,7 @@ namespace vcsn
       using value_t = typename node_t::value_t;
       using self_t = atom;
 
-      atom(const weight_t& l, const label_t& value);
+      atom(const label_t& value);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 

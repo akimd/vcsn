@@ -29,22 +29,6 @@ namespace vcsn
     | node.  |
     `-------*/
 
-    DEFINE_CTOR(node)(const weight_t& l)
-      : lw_(l)
-    {}
-
-    DEFINE(node)::left_weight() const
-      -> const weight_t&
-    {
-      return lw_;
-    }
-
-    DEFINE(node)::left_weight()
-      -> weight_t&
-    {
-      return lw_;
-    }
-
     DEFINE(node)::clone() const -> shared_t
     {
       return std::static_pointer_cast<const self_t>(clone_());
@@ -53,23 +37,6 @@ namespace vcsn
     /*--------.
     | inner.  |
     `--------*/
-
-    DEFINE_CTOR(inner)(const weight_t& l, const weight_t& r)
-      : super_type(l)
-      , rw_(r)
-    {}
-
-    DEFINE(inner)::right_weight() const
-      -> const weight_t&
-    {
-      return rw_;
-    }
-
-    DEFINE(inner)::right_weight()
-      -> weight_t&
-    {
-      return rw_;
-    }
 
     DEFINE(inner)::clone() const -> shared_t
     {
@@ -81,10 +48,6 @@ namespace vcsn
     | leaf.  |
     `-------*/
 
-    DEFINE_CTOR(leaf)(const weight_t& w)
-      : super_type(w)
-    {}
-
     DEFINE(leaf)::clone() const -> shared_t
     {
       return std::static_pointer_cast<const self_t>(clone_());
@@ -95,9 +58,8 @@ namespace vcsn
     | star.  |
     `-------*/
 
-    DEFINE_CTOR(star)(const weight_t& l, const weight_t& r, value_t sub_exp)
-      : super_type(l, r)
-      , sub_exp_(sub_exp)
+    DEFINE_CTOR(star)(value_t sub_exp)
+      : sub_exp_(sub_exp)
     {}
 
     DEFINE(star)::sub() const
@@ -123,9 +85,8 @@ namespace vcsn
     | atom.  |
     `-------*/
 
-    DEFINE_CTOR(atom)(const weight_t& w, const label_t& value)
-      : super_type(w)
-      , value_(value)
+    DEFINE_CTOR(atom)(const label_t& value)
+      : value_(value)
     {}
 
     DEFINE(atom)::accept(typename node_t::const_visitor& v) const
@@ -165,10 +126,8 @@ namespace vcsn
     | nary.  |
     `-------*/
 
-    DEFINE_CTOR(nary)(const weight_t& l, const weight_t& r,
-                      const ratexps_t& ns)
-      : super_type(l, r)
-      , sub_ratexp_(ns)
+    DEFINE_CTOR(nary)(const ratexps_t& ns)
+      : sub_ratexp_(ns)
     {
     }
 
@@ -232,13 +191,47 @@ namespace vcsn
       v.visit(*this);
     }
 
+    /*---------.
+    | weight.  |
+    `---------*/
+
+    DEFINE_CTOR(weight_node)(const weight_t& weight, value_t sub_exp)
+      : sub_exp_(sub_exp)
+      , weight_(weight)
+    {}
+
+    DEFINE(weight_node)::sub() const
+      -> const value_t
+    {
+      return sub_exp_;
+    }
+
+    DEFINE(weight_node)::weight() const
+      -> const weight_t&
+    {
+      return weight_;
+    }
+
+    DEFINE(weight_node)::set_weight(const weight_t& w)
+      -> void
+    {
+      weight_ = w;
+    }
+
+    DEFINE(weight_node)::accept(typename node_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
+    DEFINE(weight_node)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    };
+
     /*-----------.
     | constant.  |
     `-----------*/
-
-    DEFINE_CTOR(constant)(const weight_t& w)
-      : super_type(w)
-    {}
 
     DEFINE(constant)::accept(typename node_t::const_visitor& v) const
       -> void

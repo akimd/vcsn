@@ -31,6 +31,8 @@ namespace vcsn
       intersection = 5,
       shuffle = 6,
       star = 7,
+      lweight = 8,
+      rweight = 9,
     };
 
 # define DEFINE(Node)                           \
@@ -61,6 +63,14 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using sum = nary<type_t::sum, Label, Weight>;
+
+    template <type_t Type, typename Label, typename Weight>
+    class weight_node;
+
+    template <typename Label, typename Weight>
+    using lweight = weight_node<type_t::lweight, Label, Weight>;
+    template <typename Label, typename Weight>
+    using rweight = weight_node<type_t::rweight, Label, Weight>;
 
     template <type_t Type, typename Label, typename Weight>
     class constant;

@@ -44,6 +44,8 @@ namespace vcsn
     DEFINE(intersection);
     DEFINE(shuffle);
     DEFINE(star);
+    DEFINE(lweight);
+    DEFINE(rweight);
 # undef DEFINE
     template <rat::exp::type_t Type>
     using nary_t = rat::nary<Type, label_t, weight_t>;
@@ -111,8 +113,6 @@ namespace vcsn
     // Concrete type implementation.
     value_t zero() const;
     value_t one() const;
-    value_t zero(const weight_t& w) const;
-    value_t one(const weight_t& w) const;
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
@@ -144,6 +144,10 @@ namespace vcsn
 
   private:
     context_t ctx_;
+
+    rat::exp::type_t type_ignoring_lweight_(value_t e) const;
+    weight_t possibly_implicit_lweight_(value_t e) const;
+    value_t unwrap_possible_lweight_(value_t e) const;
   };
 
   /// The meet of two ratexpsets.

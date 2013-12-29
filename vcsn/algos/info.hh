@@ -204,6 +204,8 @@ namespace vcsn
       DEFINE(zero)
       DEFINE(one)
       DEFINE(atom)
+      DEFINE(lweight)
+      DEFINE(rweight)
       ;
 # undef DEFINE
   }

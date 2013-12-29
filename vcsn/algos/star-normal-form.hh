@@ -45,6 +45,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       /// The type of the operator.
       enum operation_t { dot, box };
@@ -68,15 +70,15 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& v)
+      visit(const one_t&)
       {
-        res_ = operation_ == box ? rs_.zero() : rs_.one(v.left_weight());
+        res_ = operation_ == box ? rs_.zero() : rs_.one();
       }
 
       virtual void
       visit(const atom_t& v)
       {
-        res_ = rs_.lmul(v.left_weight(), rs_.atom(v.value()));
+        res_ = rs_.atom(v.value());
       }
 
       // Plain traversal for sums.
@@ -90,8 +92,7 @@ namespace vcsn
             c->accept(*this);
             res = rs_.add(res, res_);
           }
-        res_ = rs_.rmul(rs_.lmul(v.left_weight(), std::move(res)),
-                        v.right_weight());
+        res_ = std::move(res);
       }
 
       virtual void
@@ -154,8 +155,6 @@ namespace vcsn
           box_of(v);
         else
           dot_of(v);
-        res_ = rs_.rmul(rs_.lmul(v.left_weight(), res_),
-                        v.right_weight());
       }
 
       virtual void
@@ -173,8 +172,20 @@ namespace vcsn
           {
             v.sub()->accept(*this);
           }
-        res_ = rs_.rmul(rs_.lmul(v.left_weight(), res_),
-                        v.right_weight());
+      }
+
+      virtual void
+      visit(const lweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = rs_.lmul(v.weight(), std::move(res_));
+      }
+
+      virtual void
+      visit(const rweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = rs_.rmul(std::move(res_), v.weight());
       }
 
     private:

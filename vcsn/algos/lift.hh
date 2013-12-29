@@ -79,11 +79,11 @@ namespace vcsn
 
     for (auto t: a.all_transitions())
       if (a.src_of(t) == a.pre())
-        res.add_initial
-          (map[a.dst_of(t)], rs_in.one(a.weight_of(t)));
+        res.add_initial(map[a.dst_of(t)],
+                        rs_in.lmul(a.weight_of(t), rs_in.one()));
       else if (a.dst_of(t) == a.post())
-        res.add_final
-          (map[a.src_of(t)], rs_in.one(a.weight_of(t)));
+        res.add_final(map[a.src_of(t)],
+                      rs_in.lmul(a.weight_of(t), rs_in.one()));
       else
         res.add_transition
           (map[a.src_of(t)], map[a.dst_of(t)],
@@ -128,7 +128,8 @@ namespace vcsn
   typename detail::lifted_ratexpset_t<RatExpSet>::ratexp_t
   lift(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
-    return detail::lift(rs).one(e);
+    auto lrs = detail::lift(rs);
+    return lrs.lmul(e, lrs.one());
   }
 
 

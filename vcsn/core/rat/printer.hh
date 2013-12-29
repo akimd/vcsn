@@ -64,6 +64,8 @@ namespace vcsn
       DEFINE(one);
       DEFINE(zero);
       DEFINE(atom);
+      DEFINE(lweight);
+      DEFINE(rweight);
 
 # undef DEFINE
 
@@ -74,6 +76,8 @@ namespace vcsn
           shuffle,
           intersection,
           prod,
+          lweight,
+          rweight,
           word, // There's no corresponding type in this case.
           star,
           zero,
@@ -90,12 +94,6 @@ namespace vcsn
       void print_child(const node_t& child, const node_t& parent,
                        bool force_parens = false);
 
-      /// Print \a w if needed.
-      void print_left_weight(const node_t& w);
-
-      /// Print \a w if needed.
-      void print_right_weight(const inner_t& w);
-
       /// Print an n-ary node.
       template <rat::exp::type_t Type>
       void print(const nary_t<Type>& n, const char* op);
@@ -111,15 +109,14 @@ namespace vcsn
       ATTRIBUTE_PURE
       bool shows_left_weight_(const node_t& n)
       {
-        return shows_(n.left_weight());
+        return n.type() == rat::type_t::lweight;
       }
 
       /// Whether the right weight shows.
       ATTRIBUTE_PURE
       bool shows_right_weight_(const node_t& n)
       {
-        return (n.is_inner()
-                && shows_(static_cast<const inner_t&>(n).right_weight()));
+        return n.type() == rat::type_t::rweight;
       }
 
       /// Whether one of the weights shows.

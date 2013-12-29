@@ -114,6 +114,8 @@ star: 0
 zero: 0
 one: 0
 atom: 3
+lweight: 0
+rweight: 0
 EOF
 
 check_info -Ee '(?@lal_char(abc)_b)\e+bc*' <<\EOF
@@ -126,9 +128,37 @@ star: 1
 zero: 0
 one: 1
 atom: 2
+lweight: 0
+rweight: 0
 EOF
 
+check_info -Ee '(?@lal_char(abc)_z)<2>a<3>' <<\EOF
+type: ratexpset<lal_char(abc)_z>
+sum: 0
+shuffle: 0
+intersection: 0
+prod: 0
+star: 0
+zero: 0
+one: 0
+atom: 1
+lweight: 1
+rweight: 0
+EOF
 
+check_info -Ee '(?@lal_char(abc)_z)<2>(a+b)<3>' <<\EOF
+type: ratexpset<lal_char(abc)_z>
+sum: 1
+shuffle: 0
+intersection: 0
+prod: 0
+star: 0
+zero: 0
+one: 0
+atom: 2
+lweight: 1
+rweight: 1
+EOF
 
 ## ------------------- ##
 ## Standard Automata.  ##

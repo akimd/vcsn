@@ -65,6 +65,18 @@ namespace vcsn
       ++atom;
     }
 
+    DEFINE(lweight)
+    {
+      ++lweight;
+      v.sub()->accept(*this);
+    }
+
+    DEFINE(rweight)
+    {
+      ++rweight;
+      v.sub()->accept(*this);
+    }
+
 # undef DEFINE
 
   } // namespace rat

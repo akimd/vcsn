@@ -43,6 +43,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       constant_term_visitor(const ratexpset_t& rs)
         : ws_(*rs.weightset())
@@ -53,13 +55,6 @@ namespace vcsn
       {
         v->accept(*this);
         return std::move(res_);
-      }
-
-      void
-      apply_weights(const inner_t& v)
-      {
-        res_ = ws_.mul(v.left_weight(), res_);
-        res_ = ws_.mul(res_, v.right_weight());
       }
 
       /// Easy recursion.
@@ -76,9 +71,9 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& v)
+      visit(const one_t&)
       {
-        res_ = v.left_weight();
+        res_ = ws_.one();
       }
 
       virtual void
@@ -94,7 +89,6 @@ namespace vcsn
         for (auto c: v)
           res = ws_.add(res, constant_term(c));
         res_ = std::move(res);
-        apply_weights(v);
       }
 
       virtual void
@@ -104,7 +98,6 @@ namespace vcsn
         for (auto c: v)
           res = ws_.mul(res, constant_term(c));
         res_ = std::move(res);
-        apply_weights(v);
       }
 
       virtual void
@@ -115,7 +108,6 @@ namespace vcsn
         for (auto c: v)
           res = ws_.mul(res, constant_term(c));
         res_ = std::move(res);
-        apply_weights(v);
       }
 
       virtual void
@@ -126,14 +118,26 @@ namespace vcsn
         for (auto c: v)
           res = ws_.mul(res, constant_term(c));
         res_ = std::move(res);
-        apply_weights(v);
       }
 
       virtual void
       visit(const star_t& v)
       {
         res_ = ws_.star(constant_term(v.sub()));
-        apply_weights(v);
+      }
+
+      virtual void
+      visit(const lweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = ws_.mul(v.weight(), constant_term(v.sub()));
+      }
+
+      virtual void
+      visit(const rweight_t& v)
+      {
+        v.sub()->accept(*this);
+        res_ = ws_.mul(constant_term(v.sub()), v.weight());
       }
 
     private:

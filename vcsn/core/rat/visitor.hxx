@@ -38,8 +38,17 @@ namespace vcsn
 
     VISIT(star, v)
     {
-      if (auto sub = v.sub())
-        sub->accept(*this);
+      v.sub()->accept(*this);
+    }
+
+    VISIT(lweight, v)
+    {
+      v.sub()->accept(*this);
+    }
+
+    VISIT(rweight, v)
+    {
+      v.sub()->accept(*this);
     }
 
     VISIT(one, )

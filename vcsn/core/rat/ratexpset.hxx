@@ -83,33 +83,20 @@ namespace vcsn
   {
     if (labelset()->is_one(v))
       return one();
-    return std::make_shared<atom_t>(weightset()->one(), v);
+    return std::make_shared<atom_t>(v);
   }
 
   DEFINE::zero() const
     -> value_t
   {
-    return zero(weightset()->one());
+    return std::make_shared<zero_t>();
   }
 
   DEFINE::one() const
     -> value_t
   {
-    return one(weightset()->one());
+    return std::make_shared<one_t>();
   }
-
-  DEFINE::zero(const weight_t& w) const
-    -> value_t
-  {
-    return std::make_shared<zero_t>(w);
-  }
-
-  DEFINE::one(const weight_t& w) const
-    -> value_t
-  {
-    return std::make_shared<one_t>(w);
-  }
-
 
   template <typename Context>
   template <rat::exp::type_t Type>
@@ -121,11 +108,7 @@ namespace vcsn
     if (v->type() == Type)
       {
         const auto& nary = *down_pointer_cast<const nary_t<Type>>(v);
-        if (weightset()->is_one(nary.left_weight())
-            && weightset()->is_one(nary.right_weight()))
-          res.insert(std::end(res), std::begin(nary), std::end(nary));
-        else
-          res.push_back(v);
+        res.insert(std::end(res), std::begin(nary), std::end(nary));
       }
     else
       res.push_back(v);
@@ -156,12 +139,36 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else
-      res = std::make_shared<sum_t>(weightset()->one(),
-                                    weightset()->one(),
-                                    gather<type_t::sum>(l, r));
+      res = std::make_shared<sum_t>(gather<type_t::sum>(l, r));
     return res;
   }
 
+  DEFINE::type_ignoring_lweight_(value_t e) const
+    -> rat::exp::type_t
+  {
+    if (e->type() == type_t::lweight)
+      return down_pointer_cast<const lweight_t>(e)->sub()->type();
+    else
+      return e->type();
+  }
+
+  DEFINE::possibly_implicit_lweight_(value_t e) const
+    -> weight_t
+  {
+    if (e->type() == type_t::lweight)
+      return down_pointer_cast<const lweight_t>(e)->weight();
+    else
+      return weightset()->one();
+  }
+
+  DEFINE::unwrap_possible_lweight_(value_t e) const
+    -> value_t
+  {
+    if (e->type() == type_t::lweight)
+      return down_pointer_cast<const lweight_t>(e)->sub();
+    else
+      return e;
+  }
 
   DEFINE::mul(value_t l, value_t r) const
     -> value_t
@@ -173,17 +180,15 @@ namespace vcsn
       res = l;
     else if (r->type() == type_t::zero)
       res = r;
-    // T: E.1 = 1.E = E.  Do not apply it, rather apply U_K:
-    // E.({k}1) ⇒ E{k}, ({k}1).E ⇒ {k}E
-    else if (r->type() == type_t::one)
-      res = rmul(l, r->left_weight());
-    else if (l->type() == type_t::one)
-      res = lmul(l->left_weight(), r);
+    // U_K: E.({k}1) ⇒ E{k}, subsuming T: E.1 = E.
+    else if (type_ignoring_lweight_(r) == type_t::one)
+      res = rmul(l, possibly_implicit_lweight_(r));
+    // U_K: ({k}1).E ⇒ {k}E, subsuming T: 1.E = E.
+    else if (type_ignoring_lweight_(l) == type_t::one)
+      res = lmul(possibly_implicit_lweight_(l), r);
     // END: Trivial Identity
     else
-      res = std::make_shared<prod_t>(weightset()->one(),
-                                     weightset()->one(),
-                                     gather<type_t::prod>(l, r));
+      res = std::make_shared<prod_t>(gather<type_t::prod>(l, r));
     return res;
   }
 
@@ -197,28 +202,32 @@ namespace vcsn
       res = l;
     else if (r->type() == type_t::zero)
       res = r;
-    // 1&1 = 1.
-    else if (l->type() == type_t::one && r->type() == type_t::one)
-      res = one(weightset()->mul(l->left_weight(), r->left_weight()));
-    // a&a = a.
-    else if (l->type() == type_t::atom && r->type() == type_t::atom)
+    // <k>1&<h>1 = <k.h>1.
+    else if (type_ignoring_lweight_(l) == type_t::one
+             && type_ignoring_lweight_(r) == type_t::one)
+      res = lmul(weightset()->mul(possibly_implicit_lweight_(l),
+                                  possibly_implicit_lweight_(r)),
+                 one());
+    // <k>a&<h>a = <k.h>a.  <k>a&<h>b = 0.
+    else if (type_ignoring_lweight_(l) == type_t::atom
+             && type_ignoring_lweight_(r) == type_t::atom)
       {
-	auto lhs = down_pointer_cast<const atom_t>(l)->value();
-	auto rhs = down_pointer_cast<const atom_t>(r)->value();
-	if (labelset()->equals(lhs, rhs))
-	  res = rmul(l, r->left_weight());
-	else
-	  res = zero();
+        auto lhs = down_pointer_cast<const atom_t>(unwrap_possible_lweight_(l))->value();
+        auto rhs = down_pointer_cast<const atom_t>(unwrap_possible_lweight_(r))->value();
+        if (labelset()->equals(lhs, rhs))
+          res = rmul(l, possibly_implicit_lweight_(r));
+        else
+          res = zero();
       }
-    // 1&a = 0, a&1 = 0.
-    else if ((l->type() == type_t::one && r->type() == type_t::atom)
-             || (l->type() == type_t::atom && r->type() == type_t::one))
+    // <k>1&<h>a = 0, <k>a&<h>1 = 0.
+    else if (   (type_ignoring_lweight_(l) == type_t::one
+                 && type_ignoring_lweight_(r) == type_t::atom)
+             || (type_ignoring_lweight_(l) == type_t::atom
+                 && type_ignoring_lweight_(r) == type_t::one))
       res = zero();
     // END: Trivial Identity
     else
-      res = std::make_shared<intersection_t>(weightset()->one(),
-                                             weightset()->one(),
-                                             gather<type_t::intersection>(l, r));
+      res = std::make_shared<intersection_t>(gather<type_t::intersection>(l, r));
     return res;
   }
 
@@ -234,9 +243,7 @@ namespace vcsn
       res = l;
     // END: Trivial Identity
     else
-      res = std::make_shared<shuffle_t>(weightset()->one(),
-                                        weightset()->one(),
-                                        gather<type_t::shuffle>(l, r));
+      res = std::make_shared<shuffle_t>(gather<type_t::shuffle>(l, r));
     return res;
   }
 
@@ -260,62 +267,41 @@ namespace vcsn
     // Implicit concatenation between l and r.
     auto rt = r->type();
     auto lt = l->type();
-    if (rt == type_t::atom
-        && weightset()->is_one(r->left_weight()))
+    if (rt == type_t::atom)
       {
-        if (lt == type_t::atom
-            && weightset()->is_one(l->left_weight()))
+        if (lt == type_t::atom)
           return atom(labelset()->concat
                       (down_pointer_cast<const atom_t>(l)->value(),
                        down_pointer_cast<const atom_t>(r)->value()));
         else if (lt == type_t::prod)
           {
             const auto& prodl = *down_pointer_cast<const prod_t>(l);
-            if (weightset()->is_one(prodl.left_weight())
-                && weightset()->is_one(prodl.right_weight()))
-              {
-                // Concat of "(ab).a" and "b" is "(ab).(ab)".
-                ratexps_t ratexps { prodl.begin(), prodl.end() };
-                ratexps.back() = concat(ratexps.back(), r);
-                return std::make_shared<prod_t>(weightset()->one(),
-                                                weightset()->one(),
-                                                ratexps);
-              }
+            // Concat of "(ab).a" and "b" is "(ab).(ab)".
+            ratexps_t ratexps { prodl.begin(), prodl.end() };
+            ratexps.back() = concat(ratexps.back(), r);
+            return std::make_shared<prod_t>(ratexps);
           }
-        }
-    // The following cases do not when parsing an expression.
+      }
+    // The following cases do not occur when parsing an expression.
     else if (rt == type_t::prod)
       {
         const auto& prodr = *down_pointer_cast<const prod_t>(r);
-        if (weightset()->is_one(prodr.left_weight())
-            && weightset()->is_one(prodr.right_weight()))
+        if (lt == type_t::atom)
           {
-            if (lt == type_t::atom
-                && weightset()->is_one(l->left_weight()))
-              {
-                // Concat of "a" and "b.(ab)", is "(ab).(ab)".
-                ratexps_t ratexps { prodr.begin(), prodr.end() };
-                ratexps.front() = concat(l, ratexps.front());
-                return std::make_shared<prod_t>(weightset()->one(),
-                                                weightset()->one(),
-                                                ratexps);
-              }
-            else if (lt == type_t::prod)
-              {
-                const auto& prodl = *down_pointer_cast<const prod_t>(l);
-                if (weightset()->is_one(prodl.left_weight())
-                    && weightset()->is_one(prodl.right_weight()))
-                  {
-                    // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
-                    ratexps_t ratexps { prodl.begin(), prodl.end() };
-                    ratexps.back() = concat(ratexps.back(), *prodr.begin());
-                    ratexps.insert(ratexps.end(),
-                                    prodr.begin() + 1, prodr.end());
-                    return std::make_shared<prod_t>(weightset()->one(),
-                                                    weightset()->one(),
-                                                    ratexps);
-                  }
-              }
+            // Concat of "a" and "b.(ab)", is "(ab).(ab)".
+            ratexps_t ratexps { prodr.begin(), prodr.end() };
+            ratexps.front() = concat(l, ratexps.front());
+            return std::make_shared<prod_t>(ratexps);
+          }
+        else if (lt == type_t::prod)
+          {
+            const auto& prodl = *down_pointer_cast<const prod_t>(l);
+            // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
+            ratexps_t ratexps { prodl.begin(), prodl.end() };
+            ratexps.back() = concat(ratexps.back(), *prodr.begin());
+            ratexps.insert(ratexps.end(),
+                           prodr.begin() + 1, prodr.end());
+            return std::make_shared<prod_t>(ratexps);
           }
       }
     // Fall back to explicit concatenation.
@@ -330,9 +316,7 @@ namespace vcsn
       // (0)* == 1
       return one();
     else
-      return std::make_shared<star_t>(weightset()->one(),
-                                      weightset()->one(),
-                                      e);
+      return std::make_shared<star_t>(e);
   }
 
 
@@ -343,39 +327,50 @@ namespace vcsn
   DEFINE::lmul(const weight_t& w, value_t e) const
     -> value_t
   {
-    // Trivial one $T_K$: {k}0 => 0, {0}x => 0.
+    // Trivial identities $T_K$: <k>0 => 0, <0>E => 0.
     if (e->type() == type_t::zero || weightset()->is_zero(w))
       return zero();
-    else
+    // Trivial identity: <1>E => E.
+    else if (weightset()->is_one(w))
+      return e;
+    // Trivial identity: <k>(<h>E) => <kh>E.
+    else if (e->type() == type_t::lweight)
       {
-        auto res = std::const_pointer_cast<node_t>(e->clone());
-        res->left_weight() = weightset()->mul(w, e->left_weight());
-        return res;
+        const auto &lw = *down_pointer_cast<const lweight_t>(e);
+        return lmul(weightset()->mul(w, lw.weight()), lw.sub());
       }
+    else
+    // General case: <k>E.
+      return std::make_shared<lweight_t>(w, e);
   }
 
   DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
-    // Trivial one $T_K$: 0{k} => 0, x{0} => 0.
-    if (e->type() == type_t::zero || weightset()->is_zero(w))
+    if (! e->is_inner())
+    // Leafs only have left weights and lmul takes care of normalization.
+      return lmul(w, e);
+    // Trivial identities $T_K$: E<0> => 0.
+    else if (weightset()->is_zero(w))
       return zero();
-    else if (e->is_inner())
+    // Trivial identity: E<1> => E.
+    else if (weightset()->is_one(w))
+      return e;
+    // Trivial identity: (E<k>)<h> => E<kh>.
+    else if (e->type() == type_t::rweight)
       {
-        auto inner = down_pointer_cast<const inner_t>(e);
-        auto res = std::const_pointer_cast<inner_t>(inner->clone());
-        res->right_weight() = weightset()->mul(inner->right_weight(), w);
-        return res;
+        const auto &rw = *down_pointer_cast<const rweight_t>(e);
+        return rmul(rw.sub(), weightset()->mul(rw.weight(), w));
       }
+    // Trivial identity: (<k>E)<h> => <k>(E<h>).
+    else if (e->type() == type_t::lweight)
+      {
+        const lweight_t& lw = *down_pointer_cast<const lweight_t>(e);
+        return lmul(lw.weight(), rmul(lw.sub(), w));
+      }
+    // General case: E<k>.
     else
-      {
-        // Not the same as calling lmul(w, e), as the product might
-        // not be commutative.
-        using wvalue_t = typename node_t::wvalue_t;
-        wvalue_t res = std::const_pointer_cast<node_t>(e->clone());
-        res->left_weight() = weightset()->mul(e->left_weight(), w);
-        return res;
-      }
+      return std::make_shared<rweight_t>(w, e);
   }
 
   /*----------------------------------.
@@ -391,8 +386,7 @@ namespace vcsn
   DEFINE::is_one(value_t v) const
     -> bool
   {
-    return (v->type() == type_t::one
-            && weightset()->is_one(v->left_weight()));
+    return (v->type() == type_t::one);
   }
 
   DEFINE::less_than(value_t lhs, value_t rhs)
@@ -418,7 +412,7 @@ namespace vcsn
   DEFINE::conv(const q& ws, typename q::value_t v) const
     -> value_t
   {
-    return one(weightset()->conv(ws, v));
+    return lmul(weightset()->conv(ws, v), one());
   }
 
   // Convert from another ratexpset \a ws to ourself.  Requires a full

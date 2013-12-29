@@ -106,6 +106,8 @@ namespace vcsn
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
+      using lweight_t = typename super_type::lweight_t;
+      using rweight_t = typename super_type::rweight_t;
 
       standard_visitor(const context_t& ctx)
         : ws_(*ctx.weightset())
@@ -139,11 +141,11 @@ namespace vcsn
       }
 
       virtual void
-      visit(const one_t& v)
+      visit(const one_t&)
       {
         auto i = res_.new_state();
         initial_ = i;
-        res_.set_final(i, v.left_weight());
+        res_.set_final(i);
       }
 
       virtual void
@@ -152,7 +154,7 @@ namespace vcsn
         auto i = res_.new_state();
         auto f = res_.new_state();
         initial_ = i;
-        res_.new_transition(i, f, e.value(), e.left_weight());
+        res_.new_transition(i, f, e.value());
         res_.set_final(f);
       }
 
@@ -165,27 +167,6 @@ namespace vcsn
         for (auto t: res_.final_transitions())
           res.insert(res_.src_of(t));
         return res;
-      }
-
-      /// Apply the left weight to initial state, and the right weight
-      /// to all the "fresh" final states, i.e., those that are not
-      /// part of "other_finals".
-      void
-      apply_weights(const inner_t& e, const states_t& other_finals)
-      {
-        {
-          weight_t w = e.left_weight();
-          if (!ws_.is_one(w))
-            for (auto t: res_.all_out(initial_))
-              res_.lmul_weight(t, w);
-        }
-        {
-          weight_t w = e.right_weight();
-          if (!ws_.is_one(w))
-            for (auto t: res_.final_transitions())
-              if (!has(other_finals, res_.src_of(t)))
-                res_.rmul_weight(t, w);
-        }
       }
 
       virtual void
@@ -207,7 +188,6 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
-        apply_weights(e, other_finals);
       }
 
       virtual void
@@ -263,7 +243,6 @@ namespace vcsn
             res_.del_state(initial_);
           }
         initial_ = initial;
-        apply_weights(e, other_finals);
       }
 
       // See star_here().
@@ -296,9 +275,25 @@ namespace vcsn
         for (auto tf: res_.final_transitions())
           res_.rmul_weight(tf, w);
         res_.set_final(initial_, w);
-        apply_weights(e, other_finals);
       }
 
+      virtual void
+      visit(const lweight_t& e)
+      {
+        e.sub()->accept(*this);
+        for (auto t: res_.all_out(initial_))
+          res_.lmul_weight(t, e.weight());
+      }
+
+      virtual void
+      visit(const rweight_t& e)
+      {
+        states_t other_finals = finals();
+        e.sub()->accept(*this);
+        for (auto t: res_.final_transitions())
+          if (! has(other_finals, res_.src_of(t)))
+            res_.rmul_weight(t, e.weight());
+      }
 
     private:
       const weightset_t& ws_;

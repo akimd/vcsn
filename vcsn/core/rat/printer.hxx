@@ -89,6 +89,8 @@ namespace vcsn
             CASE(zero);
             CASE(one);
             CASE(atom);
+            CASE(lweight);
+            CASE(rweight);
 # undef CASE
           }
       abort(); // Unreachable.
@@ -124,27 +126,41 @@ namespace vcsn
       // not needed for right weights: compare e<w>* with (<w>e)*.
       const node_t& child = *v.sub();
       bool child_needs_left_weight = shows_left_weight_(child);
-      print_left_weight(v);
-      print_child(child, v, child_needs_left_weight);
+      print_child(child, v,
+                  child_needs_left_weight);
       out_ << star_;
-      print_right_weight(v);
+    }
+
+    VISIT(lweight)
+    {
+      out_ << lbracket_;
+      ctx_.weightset()->print(out_, v.weight());
+      out_ << rbracket_ << lmul_;
+      print_child(*v.sub(), v);
+    }
+
+    VISIT(rweight)
+    {
+      print_child(*v.sub(), v);
+      out_ << rmul_ << lbracket_;
+      ctx_.weightset()->print(out_, v.weight());
+      out_ << rbracket_;
     }
 
     VISIT(zero)
     {
-      print_left_weight(v);
+      (void) v;
       out_ << zero_;
     }
 
     VISIT(one)
     {
-      print_left_weight(v);
+      (void) v;
       out_ << one_;
     }
 
     VISIT(atom)
     {
-      print_left_weight(v);
       ctx_.labelset()->print(out_, v.value());
     }
 
@@ -168,11 +184,6 @@ namespace vcsn
     printer<RatExpSet>::print(const nary_t<Type>& n, const char* op)
       -> void
     {
-      bool need_weight_parens = shows_weight_(n);
-
-      print_left_weight(n);
-      if (need_weight_parens)
-        out_ << lparen_;
       bool first = true;
       for (auto i: n)
         {
@@ -180,32 +191,6 @@ namespace vcsn
             out_ << op;
           print_child(*i, n);
           first = false;
-        }
-
-      if (need_weight_parens)
-        out_ << rparen_;
-      print_right_weight(n);
-    }
-
-    DEFINE::print_left_weight(const node_t& e)
-      -> void
-    {
-      if (shows_(e.left_weight()))
-        {
-          out_ << lbracket_;
-          ctx_.weightset()->print(out_, e.left_weight());
-          out_ << rbracket_ << lmul_;
-        }
-    }
-
-    DEFINE::print_right_weight(const inner_t& e)
-      -> void
-    {
-      if (shows_(e.right_weight()))
-        {
-          out_ << rmul_ << lbracket_;
-          ctx_.weightset()->print(out_, e.right_weight());
-          out_ << rbracket_;
         }
     }
 
