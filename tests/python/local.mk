@@ -14,8 +14,8 @@
 TEST_EXTENSIONS += .py
 PY_LOG_DRIVER = $(TAP_DRIVER)
 
-%C%_TESTS =                                    \
+%C%_TESTS =                                     \
   %D%/derivation.py
-$(%C%_TESTS): python/vcsn.py python/vcsn_python.la
+$(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS)
 
 dist_TESTS += $(%C%_TESTS)
