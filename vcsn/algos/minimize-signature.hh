@@ -6,9 +6,9 @@
 # include <unordered_set>
 
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
+# include <vcsn/misc/indent.hh>
 
 namespace vcsn
 {
@@ -30,7 +30,6 @@ namespace vcsn
 
       /// Input automaton, supplied at construction time.
       const automaton_t &a_;
-      const bool is_deterministic_;
 
       using labelset_t = typename automaton_t::labelset_t;
       const labelset_t& ls_;
@@ -49,7 +48,8 @@ namespace vcsn
       class_to_set_t class_to_set_;
       state_to_class_t state_to_class_;
 
-      std::ostream& print_(std::ostream& o, const set_t& ss)
+    public:
+      static std::ostream& print_(std::ostream& o, const set_t& ss)
       {
         const char* sep = "{";
         for (auto s : ss)
@@ -59,7 +59,9 @@ namespace vcsn
           }
         return o << "}";
       }
-      std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss)
+
+    public:
+      static std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss)
       {
         const char* sep = "";
         for (unsigned i = 0; i < c2ss.size(); ++i)
@@ -71,15 +73,45 @@ namespace vcsn
         return o;
       }
 
+      // For a given state, destination states for a specific label.
       struct state_output_for_label_t
       {
         // For some unstored state.
         label_t label;
         std::vector<state_t> to_states; // Ordered.
+
+        friend
+        std::ostream&
+        operator<<(std::ostream& o, const state_output_for_label_t& out)
+        {
+          o << "out{" << out.label;
+          const char* sep = " => ";
+          for (auto s: out.to_states)
+            {
+              o << sep << s;
+              sep = ", ";
+            }
+          return o << "}";
+        }
       };
 
       // This is sorted by label.
       using state_output_t = std::vector<state_output_for_label_t>;
+
+    public:
+      static std::ostream& print_(std::ostream& o, const state_output_t& outs)
+      {
+        bool first = true;
+        o << '{';
+        for (const auto& out: outs)
+          {
+            if (!first)
+              o << ", ";
+            o << out;
+            first = false;
+          }
+        return o << '}';
+      }
 
       friend class label_less;
       class label_less
@@ -141,6 +173,9 @@ namespace vcsn
                 bits.set(state_to_class_.at(s));
               std::hash_combine(res, bits);
             }
+#if DEBUG
+          print_(std::cerr, state_output) << " = " << res << std::endl;
+#endif
           return res;
         }
       }; // class signature_hasher
@@ -169,12 +204,17 @@ namespace vcsn
         {
           const state_output_t& as = *as_;
           const state_output_t& bs = *bs_;
-
-          // In the deterministic case the number of *labels* leading to
-          // output states must be the same, for two signatures to match.
-          if (minimizer_.is_deterministic_
-              && as.size() != bs.size())
-            return false;
+#if DEBUG
+          print_(std::cerr, as) << " =? ";
+          print_(std::cerr, bs) << " = ";
+#endif
+          if (as.size() != bs.size())
+            {
+#if DEBUG
+              std::cerr << "false 1" << std::endl;
+#endif
+              return false;
+            }
 
           auto b_i = bs.cbegin();
           dynamic_bitset a_bits(class_bound_), b_bits(class_bound_);
@@ -186,7 +226,12 @@ namespace vcsn
               const std::vector<state_t>& b_states = b_i->to_states;
 
               if (! ls_.equals(a_label, b_label))
-                return false;
+                {
+#if DEBUG
+                  std::cerr << "false 2" << std::endl;
+#endif
+                  return false;
+                }
 
               // a_states and b_states may have different sizes, but
               // still be considered "equal", up to the state-to-class
@@ -200,12 +245,22 @@ namespace vcsn
               for (auto s : b_states)
                 b_bits.set(state_to_class_.at(s));
               if (a_bits != b_bits)
-                return false;
+                {
+#if DEBUG
+                  std::cerr << "false 3" << std::endl;
+#endif
+                  return false;
+                }
 
               ++b_i;
             }
 
-          return true;
+          {
+#if DEBUG
+            std::cerr << "true" << std::endl;
+#endif
+            return true;
+          }
         }
       }; // class signature_equal_to
 
@@ -236,26 +291,19 @@ namespace vcsn
         friend std::ostream& operator<<(std::ostream& o,
                                         const signature_multimap& mm)
         {
-          for (auto o_s : mm)
+          o << '{' << incendl;
+          for (const auto& o_s : mm)
             {
-              const char* sep = "{";
-              for (auto to : o_s.first)
-                {
-                  label_t l = to.first;
-                  state_t s = to.second.second;
-                  o << sep << s << '@' << mm.state_to_class_.at(s) << ' ' << l;
-                  sep = ", ";
-                }
-              o << "} -> ";
-              sep = "{";
+              print_(o, *o_s.first);
+              const char* sep = " : {";
               for (auto s: o_s.second)
                 {
-                  o << sep << s << '@' << mm.state_to_class_.at(s);
+                  o << sep << s << '%' << mm.state_to_class_.at(s);
                   sep = ", ";
                 }
-              o << "} ";
+              o << "}" << iendl;
             }
-          o << "\n";
+          o << '}' << decendl;
           return o;
         }
       }; // class signature_multimap
@@ -290,7 +338,6 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , is_deterministic_(is_deterministic(a_))
         , ls_(*a_.labelset())
       {
         if (!is_trim(a_))
@@ -330,6 +377,9 @@ namespace vcsn
         do
           {
             go_on = false;
+#if DEBUG
+            print_(std::cerr, class_to_set_) << std::endl;
+#endif
             for (auto i = std::begin(classes), end = std::end(classes);
                  i != end;
                  /* nothing. */)
@@ -349,7 +399,17 @@ namespace vcsn
                                      ls_, state_to_class_,
                                      num_classes_);
                 for (auto s : c_states)
-                  signature_to_state[& state_to_state_output_[s]].emplace_back(s);
+                  {
+#if DEBUG
+                    std::cerr << "class %" << c << " state: " << s << ' ';
+                    print_(std::cerr, state_to_state_output_[s]) << std::endl;
+#endif
+                    signature_to_state[&state_to_state_output_[s]].emplace_back(s);
+                  }
+#if DEBUG
+                std::cerr << "signature_to_state: " << signature_to_state
+                          << std::endl;
+#endif
                 if (2 <= signature_to_state.size())
                   {
                     go_on = true;
