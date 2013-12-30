@@ -116,68 +116,26 @@ namespace vcsn
       | Unary visit functions than bounces to their binary peers.  |
       `-----------------------------------------------------------*/
 
-      virtual void
-      visit(const zero_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const zero_t>(rhs_));
+#define VISIT(Type)                                                     \
+      virtual void                                                      \
+      visit(const Type ## _t& lhs)                                      \
+      {                                                                 \
+        res_ = visit(lhs, *down_pointer_cast<const Type ## _t>(rhs_));  \
       }
 
-      virtual void
-      visit(const one_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const one_t>(rhs_));
-      }
+      VISIT(zero);
+      VISIT(one);
+      VISIT(atom);
+      VISIT(prod);
+      VISIT(sum);
+      VISIT(shuffle);
+      VISIT(intersection);
+      VISIT(star);
+      VISIT(lweight);
+      VISIT(rweight);
+#undef VISIT
 
-      virtual void
-      visit(const atom_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const atom_t>(rhs_));
-      }
-
-      // sum and prod are handled equally, as naries.
-      virtual void
-      visit(const prod_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const prod_t>(rhs_));
-      }
-
-      virtual void
-      visit(const sum_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const sum_t>(rhs_));
-      }
-
-      virtual void
-      visit(const shuffle_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const shuffle_t>(rhs_));
-      }
-
-      virtual void
-      visit(const intersection_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const intersection_t>(rhs_));
-      }
-
-      virtual void
-      visit(const star_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const star_t>(rhs_));
-      }
-
-      virtual void
-      visit(const lweight_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const lweight_t>(rhs_));
-      }
-
-      virtual void
-      visit(const rweight_t& lhs)
-      {
-        res_ = visit(lhs, *down_pointer_cast<const rweight_t>(rhs_));
-      }
-
-    private:
+   private:
       ratexp_t rhs_;
       bool res_;
     };
