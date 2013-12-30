@@ -77,6 +77,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "]"     yylval->ival = 1; return TOK(RPAREN);
   "&"     return TOK(AMPERSAND);
   ":"     return TOK(COLON);
+  "%"     return TOK(PERCENT);
   "+"     return TOK(SUM);
   "."     return TOK(DOT);
   ","     return TOK(COMMA);

@@ -126,6 +126,7 @@
         AMPERSAND "&"
         COMPLEMENT "{c}"
         COLON ":"
+        PERCENT "%"
         DOT   "."
         ONE   "\\e"
         ZERO  "\\z"
@@ -140,7 +141,7 @@
 
 %precedence RWEIGHT
 %left "+"
-%left ":"
+%left ":" "%"
 %left "&"
 %left "."
 %right "weight" // Match longest series of "weight".
@@ -162,6 +163,8 @@ exp:
 | exp "&" exp                 { $$ = MAKE(intersection, $1, $3); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1, $3); }
 | exp "+" exp                 { $$ = MAKE(add, $1, $3); }
+| exp "%" exp                 { $$ = MAKE(intersection,
+                                          $1, MAKE(complement, $3)); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }
 | exp exp %prec CONCAT
