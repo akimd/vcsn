@@ -15,7 +15,7 @@ TEST_EXTENSIONS += .rat
 RAT_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/tests/bin/rat.py
 AM_RAT_LOG_DEPS =				\
   $(RAT_LOG_DRIVER)				\
-  $(all_vcsn)					\
+  $(VCSN_PYTHON_DEPS)				\
   %D%/common.rat %D%/common-weights.rat
 $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 

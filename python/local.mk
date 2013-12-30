@@ -10,3 +10,6 @@ pyexec_LTLIBRARIES = %D%/vcsn_python.la
 # complain that this Python library has dependencies that are not
 # installed.
 install-pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
+
+# Provide a simple means to express dependencies for Python tests.
+VCSN_PYTHON_DEPS = $(python_PYTHON) $(pyexec_LTLIBRARIES)
