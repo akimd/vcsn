@@ -324,9 +324,9 @@ namespace vcsn
   {
     // Trivial identity: (k.E){c} => E{c}, (E.k){c} => E{c}.
     // Without it, derived-term (<2>a)*{c} fails to terminate.
-    if (auto w = down_pointer_cast<const lweight_t>(e))
+    if (auto w = std::dynamic_pointer_cast<const lweight_t>(e))
       return complement(w->sub());
-    else if (auto w = down_pointer_cast<const rweight_t>(e))
+    else if (auto w = std::dynamic_pointer_cast<const rweight_t>(e))
       return complement(w->sub());
     else
       return std::make_shared<complement_t>(e);
@@ -351,8 +351,8 @@ namespace vcsn
         const auto &lw = *down_pointer_cast<const lweight_t>(e);
         return lmul(weightset()->mul(w, lw.weight()), lw.sub());
       }
-    else
     // General case: <k>E.
+    else
       return std::make_shared<lweight_t>(w, e);
   }
 
