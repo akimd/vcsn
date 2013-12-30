@@ -1,4 +1,4 @@
-# Test cases independant of the weightsets.
+# Test cases independant of the weightsets.        -*- shell-script -*-
 
 %labels: letters
 %include: common.rat

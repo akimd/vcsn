@@ -1,3 +1,4 @@
+#                                                -*- shell-script -*-
 # Test cases independant of both the weightset and the atom kind.
 
 # Base cases.

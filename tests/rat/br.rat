@@ -1,3 +1,5 @@
+# -*- shell-script -*-
+
 %weight: br
 %include: common-weights.rat
 
@@ -40,7 +42,7 @@ ab(<f>\e) => (a.b)<f>
 \e<f> => <f>\e
 a<f> => <f>a
 
-# "Trivial identities" on intersection.
+# "Trivial identities": intersection.
 \z&<f>\e => \z
 <f>\e&\z => \z
 
