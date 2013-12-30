@@ -40,4 +40,7 @@ XFAIL_TESTS += $(%C%_XFAIL_TESTS)
 
 .PHONY: check-rat
 check-rat:
-	$(MAKE) $(AM_MAKEFLAGS) check TESTS='$(%C%_TESTS)'
+# Depend on check-TESTS, not 'check', because the latter depends on
+# "all", which compiles TAF-Kit etc.  Leave "check" for simple users.
+# Here, we know that our dependencies are right, so use check-TESTS.
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS TESTS='$(%C%_TESTS)'
