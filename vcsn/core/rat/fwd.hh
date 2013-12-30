@@ -21,6 +21,10 @@ namespace vcsn
     class printer;
 
     /// The possible types of ratexps.
+    ///
+    /// They also code the order in which they are sorted by
+    /// less_than, so that, for instance, polynomials always display
+    /// '\e + a', and never 'a + \e'.
     enum class type_t
     {
       zero = 0,

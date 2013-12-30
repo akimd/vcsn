@@ -227,7 +227,7 @@ namespace vcsn
     DEFINE(weight_node)::clone() const -> shared_t
     {
       return std::static_pointer_cast<const self_t>(clone_());
-    };
+    }
 
     /*-----------.
     | constant.  |

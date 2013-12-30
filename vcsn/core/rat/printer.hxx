@@ -126,8 +126,7 @@ namespace vcsn
       // not needed for right weights: compare e<w>* with (<w>e)*.
       const node_t& child = *v.sub();
       bool child_needs_left_weight = shows_left_weight_(child);
-      print_child(child, v,
-                  child_needs_left_weight);
+      print_child(child, v, child_needs_left_weight);
       out_ << star_;
     }
 
