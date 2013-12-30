@@ -23,7 +23,8 @@ namespace vcsn
       void
       operator()(const node_t& v)
       {
-        shuffle = sum = intersection = prod = star = zero = one = atom = 0;
+        shuffle = sum = intersection = prod = star = zero = one = atom =
+          lweight = rweight = 0;
         v.accept(*this);
       }
 
