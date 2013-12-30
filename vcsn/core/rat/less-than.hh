@@ -41,16 +41,20 @@ namespace vcsn
       using lweight_t = typename super_type::lweight_t;
       using rweight_t = typename super_type::rweight_t;
 
+      /// Whether \a lhs < \a rhs.
       bool
       operator()(ratexp_t lhs, ratexp_t rhs)
       {
         if (lhs->type() < rhs->type())
           return true;
-        if (lhs->type() > rhs->type())
+        else if (lhs->type() > rhs->type())
           return false;
-        rhs_ = rhs;
-        lhs->accept(*this);
-        return res_;
+        else
+          {
+            rhs_ = rhs;
+            lhs->accept(*this);
+            return res_;
+          }
       }
 
 
