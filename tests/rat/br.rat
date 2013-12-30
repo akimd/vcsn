@@ -54,6 +54,21 @@ a<f> => <f>a
 <e>a&<f>\e => \z
 <e>a&<f>a => <e.f>a
 
+# Complement: same precedence/behavior as *.
+<e>a{c} => <e>a{c}
+<e>(a+b){c} => <e>(a+b){c}
+
+<e>a+<f>b{c} => <e>a+<f>b{c}
+(<e>a+<f>b){c} => (<e>a+<f>b){c}
+
+<e>(a*).<f>(b*){c} => <e>a*.<f>(b*){c}
+(<e>(a*).<f>(b*)){c} => (<e>a*.<f>b*){c}
+
+
+# "Trivial identities": complement.
+(<e>a){c} => a{c}
+(<e>(a+b)){c} => (a+b){c}
+
 %labels: words
 \z&<f>ac => \z
 <f>ab&\z => \z
