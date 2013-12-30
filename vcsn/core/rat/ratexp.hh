@@ -179,27 +179,26 @@ namespace vcsn
     using sum = nary<type_t::sum, Label, Weight>;
 
 
-    /*-------.
-    | star.  |
-    `-------*/
+    /*--------.
+    | unary.  |
+    `--------*/
 
-    template <typename Label, typename Weight>
-    class star : public inner<Label, Weight>
+    template <exp::type_t Type, typename Label, typename Weight>
+    class unary : public inner<Label, Weight>
     {
     public:
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
-      using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
-      using self_t = star;
+      using self_t = unary;
 
-      star(value_t exp);
+      unary(value_t exp);
       using shared_t = std::shared_ptr<const self_t>;
       shared_t clone() const;
 
-      virtual type_t type() const { return type_t::star; };
+      virtual type_t type() const { return Type; };
 
       const value_t sub() const;
 

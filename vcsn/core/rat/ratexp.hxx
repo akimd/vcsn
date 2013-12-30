@@ -55,33 +55,6 @@ namespace vcsn
 
 
     /*-------.
-    | star.  |
-    `-------*/
-
-    DEFINE_CTOR(star)(value_t sub_exp)
-      : sub_exp_(sub_exp)
-    {}
-
-    DEFINE(star)::sub() const
-      -> const value_t
-    {
-      return sub_exp_;
-    }
-
-
-    DEFINE(star)::accept(typename node_t::const_visitor& v) const
-      -> void
-    {
-      v.visit(*this);
-    }
-
-    DEFINE(star)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-    /*-------.
     | atom.  |
     `-------*/
 
@@ -225,6 +198,31 @@ namespace vcsn
     }
 
     DEFINE(weight_node)::clone() const -> shared_t
+    {
+      return std::static_pointer_cast<const self_t>(clone_());
+    }
+
+    /*--------.
+    | unary.  |
+    `--------*/
+
+    DEFINE_CTOR(unary)(value_t sub_exp)
+      : sub_exp_(sub_exp)
+    {}
+
+    DEFINE(unary)::sub() const
+      -> const value_t
+    {
+      return sub_exp_;
+    }
+
+    DEFINE(unary)::accept(typename node_t::const_visitor& v) const
+      -> void
+    {
+      v.visit(*this);
+    }
+
+    DEFINE(unary)::clone() const -> shared_t
     {
       return std::static_pointer_cast<const self_t>(clone_());
     }

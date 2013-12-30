@@ -47,11 +47,16 @@ namespace vcsn
     DEFINE(leaf);
     DEFINE(atom);
     DEFINE(inner);
-    DEFINE(star);
 
     DEFINE(const_visitor);
 
 # undef DEFINE
+
+    template <type_t Type, typename Label, typename Weight>
+    class unary;
+    template <typename Label, typename Weight>
+    using star = unary<type_t::star, Label, Weight>;
+
 
     template <type_t Type, typename Label, typename Weight>
     class nary;

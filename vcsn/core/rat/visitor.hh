@@ -18,6 +18,8 @@ namespace vcsn
       using inner_t = inner<label_t, weight_t>;
       using leaf_t = leaf<label_t, weight_t>;
       template <type_t Type>
+      using unary_t = rat::unary<Type, label_t, weight_t>;
+      template <type_t Type>
       using nary_t = rat::nary<Type, label_t, weight_t>;
       template <type_t Type>
       using weight_node_t = rat::weight_node<Type, label_t, weight_t>;

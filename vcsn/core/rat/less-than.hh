@@ -26,6 +26,8 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       template <rat::exp::type_t Type>
+      using unary_t = typename super_type::template unary_t<Type>;
+      template <rat::exp::type_t Type>
       using nary_t = typename super_type::template nary_t<Type>;
       using prod_t = typename super_type::prod_t;
       using shuffle_t = typename super_type::shuffle_t;
@@ -95,7 +97,8 @@ namespace vcsn
         return false;
       }
 
-      bool visit(const star_t& lhs, const star_t& rhs)
+      template <rat::exp::type_t Type>
+      bool visit(const unary_t<Type>& lhs, const unary_t<Type>& rhs)
       {
         return ratexpset_t::less_than(lhs.sub(), rhs.sub());
       }
