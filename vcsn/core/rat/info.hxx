@@ -16,6 +16,7 @@ namespace vcsn
       -> void
     {
       atom = 0;
+      complement = 0;
       intersection = 0;
       lweight = 0;
       one = 0;
@@ -63,6 +64,12 @@ namespace vcsn
     VISIT(star)
     {
       ++star;
+      v.sub()->accept(*this);
+    }
+
+    VISIT(complement)
+    {
+      ++complement;
       v.sub()->accept(*this);
     }
 

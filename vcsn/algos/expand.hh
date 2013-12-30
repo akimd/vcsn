@@ -124,6 +124,13 @@ namespace vcsn
         throw std::domain_error("expand: shuffle is not supported");
       }
 
+      using complement_t = typename super_type::complement_t;
+      virtual void
+      visit(const complement_t&)
+      {
+        throw std::domain_error("expand: complement is not supported");
+      }
+
       virtual void
       visit(const prod_t& v)
       {

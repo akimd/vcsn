@@ -88,6 +88,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       yylval->irange = std::make_tuple(-1, -1);
       return TOK(STAR);
   }
+  "{c}"   return TOK(COMPLEMENT);
   "?"|"{?}"              {
       yylval->irange = std::make_tuple(0, 1);
       return TOK(STAR);

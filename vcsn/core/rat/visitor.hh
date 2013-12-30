@@ -38,6 +38,7 @@ namespace vcsn
       DEFINE(star);
       DEFINE(lweight);
       DEFINE(rweight);
+      DEFINE(complement);
 # undef DEFINE
     };
 

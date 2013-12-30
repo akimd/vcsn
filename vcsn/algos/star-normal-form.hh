@@ -101,6 +101,13 @@ namespace vcsn
         throw std::domain_error("star_normal_form: intersection is not supported");
       }
 
+      using complement_t = typename super_type::complement_t;
+      virtual void
+      visit(const complement_t&)
+      {
+        throw std::domain_error("star_normal_form: complement is not supported");
+      }
+
       virtual void
       visit(const shuffle_t&)
       {

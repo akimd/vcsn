@@ -201,6 +201,7 @@ namespace vcsn
       DEFINE(intersection)
       DEFINE(prod)
       DEFINE(star)
+      DEFINE(complement)
       DEFINE(zero)
       DEFINE(one)
       DEFINE(atom)

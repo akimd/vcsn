@@ -187,6 +187,10 @@ namespace vcsn
     class unary : public inner<Label, Weight>
     {
     public:
+      static_assert(Type == type_t::star
+                    || Type == type_t::complement,
+                    "invalid type");
+
       using label_t = Label;
       using weight_t = Weight;
       using super_type = inner<label_t, weight_t>;

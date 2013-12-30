@@ -37,6 +37,7 @@ namespace vcsn
           lparen_       = "\\left(";
           rparen_       = "\\right)";
           star_         = "^*";
+          complement_   = "^c";
           intersection_ = " \\cap ";
           shuffle_      = " \\between ";
           product_      = " \\cdot ";
@@ -55,6 +56,7 @@ namespace vcsn
           lparen_       = "(";
           rparen_       = ")";
           star_         = "*";
+          complement_   = "{c}";
           intersection_ = "&";
           shuffle_      = ":";
           product_      = ".";
@@ -86,6 +88,7 @@ namespace vcsn
             CASE(shuffle);
             CASE(prod);
             CASE(star);
+            CASE(complement);
             CASE(zero);
             CASE(one);
             CASE(atom);
@@ -144,6 +147,16 @@ namespace vcsn
       out_ << rmul_ << lbracket_;
       ctx_.weightset()->print(out_, v.weight());
       out_ << rbracket_;
+    }
+
+    VISIT(complement)
+    {
+      // Force parens around the child if it needs a left weight.  This is
+      // not needed for right weights: compare e<w>* with (<w>e)*.
+      const node_t& child = *v.sub();
+      bool child_needs_left_weight = shows_left_weight_(child);
+      print_child(child, v, child_needs_left_weight);
+      out_ << complement_;
     }
 
     VISIT(zero)

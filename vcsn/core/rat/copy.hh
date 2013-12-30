@@ -88,6 +88,11 @@ namespace vcsn
         res_ = out_rs_.star(copy(v.sub()));
       }
 
+      DEFINE(complement)
+      {
+        res_ = out_rs_.complement(copy(v.sub()));
+      }
+
       DEFINE(one)
       {
         (void) v;

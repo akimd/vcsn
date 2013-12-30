@@ -100,6 +100,11 @@ namespace dyn
       return rs_.star(down(v));
     }
 
+    DEFINE::complement(value_t v) const -> value_t
+    {
+      return rs_.complement(down(v));
+    }
+
     DEFINE::lmul(const std::string& w, value_t v) const -> value_t
     {
       return rs_.lmul(down(w), down(v));

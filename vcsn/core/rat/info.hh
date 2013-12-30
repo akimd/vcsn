@@ -35,6 +35,7 @@ namespace vcsn
       DEFINE(shuffle);
       DEFINE(prod);
       DEFINE(star);
+      DEFINE(complement);
       DEFINE(zero);
       DEFINE(one);
       DEFINE(atom);

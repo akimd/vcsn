@@ -124,6 +124,7 @@
 
 %token  SUM   "+"
         AMPERSAND "&"
+        COMPLEMENT "{c}"
         COLON ":"
         DOT   "."
         ONE   "\\e"
@@ -146,7 +147,7 @@
 %precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence "(" "\\z" "\\e" "letter"
 %precedence CONCAT
-%precedence "*"
+%precedence "*" "{c}"
 
 %start exps
 %%
@@ -175,6 +176,7 @@ exp:
       }
   }
 | exp "*"          { $$ = power(driver_.ratexpset_, $1, $2); }
+| exp "{c}"        { $$ = MAKE(complement, $1); }
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
 | LETTER           { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }

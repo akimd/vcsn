@@ -216,6 +216,12 @@ namespace vcsn
         throw std::domain_error("split: shuffle is not supported");
       }
 
+      using complement_t = typename super_type::complement_t;
+      virtual void visit(const complement_t&)
+      {
+        throw std::domain_error("split: complement is not supported");
+      }
+
       virtual void
       visit(const star_t& e)
       {
@@ -452,6 +458,15 @@ namespace vcsn
               }
           }
         res_ = std::move(res);
+      }
+
+      using complement_t = typename super_type::complement_t;
+      virtual void
+      visit(const complement_t& e)
+      {
+        e.sub()->accept(*this);
+        // Turn the polynomial into a ratexp, and complement it.
+        res_ = polynomial_t{{rs_.complement(ratexp(res_)), ws_.one()}};
       }
 
       virtual void

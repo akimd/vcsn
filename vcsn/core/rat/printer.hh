@@ -61,6 +61,7 @@ namespace vcsn
       DEFINE(sum);
       DEFINE(shuffle);
       DEFINE(star);
+      DEFINE(complement);
       DEFINE(one);
       DEFINE(zero);
       DEFINE(atom);
@@ -80,6 +81,7 @@ namespace vcsn
           rweight,
           word, // There's no corresponding type in this case.
           star,
+          complement,
           zero,
           one,
           atom,
@@ -146,6 +148,7 @@ namespace vcsn
       const char* rmul_ = "";
       /// The ratexp operators.
       const char* star_ = "*";
+      const char* complement_ = "{c}";
       const char* intersection_ = "&";
       const char* shuffle_ = ":";
       const char* product_ = ".";

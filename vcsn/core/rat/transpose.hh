@@ -33,6 +33,7 @@ namespace vcsn
       using sum_t = typename super_type::sum_t;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
+      using complement_t = typename super_type::complement_t;
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
@@ -141,6 +142,13 @@ namespace vcsn
         e.sub()->accept(*this);
         res_ = rs_.lmul(rs_.weightset()->transpose(e.weight()),
                         res_);
+      }
+
+      virtual void
+      visit(const complement_t& e)
+      {
+        e.sub()->accept(*this);
+        res_ = rs_.complement(res_);
       }
 
     private:

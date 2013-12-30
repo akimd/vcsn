@@ -37,6 +37,7 @@ namespace vcsn
       star = 7,
       lweight = 8,
       rweight = 9,
+      complement = 10,
     };
 
 # define DEFINE(Node)                           \
@@ -54,6 +55,10 @@ namespace vcsn
 
     template <type_t Type, typename Label, typename Weight>
     class unary;
+
+    template <typename Label, typename Weight>
+    using complement = unary<type_t::complement, Label, Weight>;
+
     template <typename Label, typename Weight>
     using star = unary<type_t::star, Label, Weight>;
 

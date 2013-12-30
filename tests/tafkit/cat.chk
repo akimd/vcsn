@@ -111,6 +111,7 @@ shuffle: 0
 intersection: 0
 prod: 1
 star: 0
+complement: 0
 zero: 0
 one: 0
 atom: 3
@@ -125,6 +126,7 @@ shuffle: 0
 intersection: 0
 prod: 1
 star: 1
+complement: 0
 zero: 0
 one: 1
 atom: 2

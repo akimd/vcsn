@@ -51,6 +51,11 @@ namespace vcsn
       v.sub()->accept(*this);
     }
 
+    VISIT(complement, v)
+    {
+      v.sub()->accept(*this);
+    }
+
     VISIT(one, )
     {}
 

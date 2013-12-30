@@ -46,6 +46,7 @@ namespace vcsn
     DEFINE(star);
     DEFINE(lweight);
     DEFINE(rweight);
+    DEFINE(complement);
 # undef DEFINE
     template <rat::exp::type_t Type>
     using nary_t = rat::nary<Type, label_t, weight_t>;
@@ -119,6 +120,7 @@ namespace vcsn
     value_t intersection(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     value_t star(value_t e) const;
+    value_t complement(value_t e) const;
     value_t rmul(value_t e, const weight_t& w) const;
     value_t lmul(const weight_t& w, value_t e) const;
     value_t transpose(value_t e) const;

@@ -37,6 +37,7 @@ namespace vcsn
       using weight_node_t = typename super_type::template weight_node_t<Type>;
       using leaf_t = typename super_type::leaf_t;
       using star_t = typename super_type::star_t;
+      using complement_t = typename super_type::complement_t;
       using zero_t = typename super_type::zero_t;
       using one_t = typename super_type::one_t;
       using atom_t = typename super_type::atom_t;
@@ -136,6 +137,7 @@ namespace vcsn
       VISIT(star);
       VISIT(lweight);
       VISIT(rweight);
+      VISIT(complement);
 #undef VISIT
 
    private:
