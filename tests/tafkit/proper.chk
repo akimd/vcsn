@@ -261,7 +261,7 @@ digraph
     1
   }
   I0 -> 0
-  0 -> 1 [label = "<(a.b.c.d)*>z"]
+  0 -> 1 [label = "<(abcd)*>z"]
   1 -> F1
 }
 EOF
@@ -321,7 +321,7 @@ digraph
     2 [color = DimGray]
   }
   I0 -> 0
-  0 -> F0 [label = "<b.e.g>"]
-  2 -> F2 [label = "<f.h>", color = DimGray]
+  0 -> F0 [label = "<beg>"]
+  2 -> F2 [label = "<fh>", color = DimGray]
 }
 EOF

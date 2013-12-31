@@ -11,10 +11,10 @@ a<x> ! 1.2-5: 1.1: law_char: invalid value: x, unexpected x
 
 # Check associativities.
 %labels: letters
-<e>b<f>d<e> => (<e>b.<f>d)<e>
-<e>bb<f>dd<e> => (<e>(b.b).<f>(d.d))<e>
-<e>b.b<f>d.d<e> => <e>b.b.<f>d.<e>d
-<e>ab*<f>ab*<g> => (<e>(a.b*).<f>(a.b*))<g>
+<e>b<f>d<e> => (<e>b<f>d)<e>
+<e>bb<f>dd<e> => (<e>(bb)<f>(dd))<e>
+<e>b.b<f>d.d<e> => <e>bb<f>d<e>d
+<e>ab*<f>ab*<g> => (<e>(ab*)<f>(ab*))<g>
 %labels: words
 <e>bb<f>dd<e> => (<e>bb.<f>dd)<e>
 %labels: letters
@@ -28,15 +28,15 @@ a<\z> => \z
 a<\e> => a
 
 # Trivial identities: A_K in TAF-Kit's documentation.
-<f><g>a => <f.g>a
-<f>a<g> => <f.g>a
-a<f><g> => <f.g>a
-(<f>(a.b))<g> => <f>(a.b)<g>
+<f><g>a => <fg>a
+<f>a<g> => <fg>a
+a<f><g> => <fg>a
+(<f>(a.b))<g> => <f>(ab)<g>
 
 # Trivial identities: U_K in TAF-Kit's documentation.
 \e<f> => <f>\e
-ab(<f>\e) => (a.b)<f>
-(<f>\e)(ab) => <f>(a.b)
+ab(<f>\e) => (ab)<f>
+(<f>\e)(ab) => <f>(ab)
 
 # Trivial identities: C_<at> in TAF-Kit's documentation.
 \e<f> => <f>\e
@@ -49,10 +49,10 @@ a<f> => <f>a
 \z&<f>a => \z
 <f>a&\z => \z
 
-<e>\e&<f>\e => <e.f>\e
+<e>\e&<f>\e => <ef>\e
 <e>\e&<f>a => \z
 <e>a&<f>\e => \z
-<e>a&<f>a => <e.f>a
+<e>a&<f>a => <ef>a
 
 # Complement: same precedence/behavior as *.
 <e>a{c} => <e>a{c}
@@ -61,8 +61,8 @@ a<f> => <f>a
 <e>a+<f>b{c} => <e>a+<f>b{c}
 (<e>a+<f>b){c} => (<e>a+<f>b){c}
 
-<e>(a*).<f>(b*){c} => <e>a*.<f>(b*){c}
-(<e>(a*).<f>(b*)){c} => (<e>a*.<f>b*){c}
+<e>(a*).<f>(b*){c} => <e>a*<f>(b*){c}
+(<e>(a*).<f>(b*)){c} => (<e>a*<f>b*){c}
 
 # "Trivial identities": complement.
 (<e>a){c} => a{c}

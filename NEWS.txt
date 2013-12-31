@@ -4,6 +4,48 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-02
+** The '.' operator is no longer printed
+The pretty-printing of (non-LAW) ratexps is simplified.
+
+Before:
+  $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
+  \e+a.(b+a.a+c.(a+c)*.b)*.(a+c.(a+c)*)
+  $ vcsn derived-term -Ee 'a:b:c' | vcsn aut-to-exp
+  (a.b+b.a).c+(a.c+c.a).b+(b.c+c.b).a
+
+After:
+  $ vcsn ladybird 2 | vcsn determinize | vcsn aut-to-exp
+  \e+a(b+aa+c(a+c)*b)*(a+c(a+c)*)
+  $ vcsn derived-term -Ee 'a:b:c' | vcsn aut-to-exp
+  (ab+ba)c+(ac+ca)b+(bc+cb)a
+
+** Shortlex order is now used for ratexps
+This changes the pretty-printing of polynomials of ratexps, for instance the
+result of derivations.
+
+Before:
+  $ vcsn derivation -e '(a*+b*)a(a*+b*)' aa
+  a*+b* + a*.a.(a*+b*) + a*
+
+After:
+  $ vcsn derivation -e '(a*+b*)a(a*+b*)' aa
+  a* + a*+b* + a*a(a*+b*)
+
+** ratexp implementation overhaul
+Although internal, this change is documented as it deeply changes the way
+ratexps are handled in C++ code.
+
+The abstract-syntax tree of the rational expressions now matches the usual
+(abstract) grammar:
+
+  E ::= \z | \e | a | E+F | E.F | E* | kE | Ek       k is a weight
+
+In other words, there are now 'left-weight' and 'right-weight' nodes that
+exist, whereas before, the six first cases carried left and right weights.
+Trivial identities are enforced, and, for instance, no tree for 'a k' exist:
+it is converted to 'k a'.
+
 * 2013-12-19
 Many of these listed features were actually developped over the last month.
 

@@ -8,7 +8,7 @@
 # (which is new_transition vs. add_transition).
 run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
 run 0 '' -vcsn shuffle -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*.(a.a*.a+a.a*.a)' -vcsn aut-to-exp -f prod.gv
+run 0 'a*(aa*a+aa*a)' -vcsn aut-to-exp -f prod.gv
 
 
 ## ------------------------ ##
@@ -259,8 +259,8 @@ run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
 run 0 '' -vcsn shuffle -o uavb-xayb.gv -f uavb.gv xayb.gv
 run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
-<u.v.x.y+x.y.u.v>abab
+<uxvy+uxyv+xuvy+xuyv>aabb
+<uvxy+xyuv>abab
 EOF
 
 ## ------- ##
@@ -273,5 +273,5 @@ do
 done
 run 0 '' -vcsn shuffle -o abcd.gv -f a.gv b.gv c.gv d.gv
 run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<a.b.c.d+a.b.d.c+a.c.b.d+a.c.d.b+a.d.b.c+a.d.c.b+b.a.c.d+b.a.d.c+b.c.a.d+b.c.d.a+b.d.a.c+b.d.c.a+c.a.b.d+c.a.d.b+c.b.a.d+c.b.d.a+c.d.a.b+c.d.b.a+d.a.b.c+d.a.c.b+d.b.a.c+d.b.c.a+d.c.a.b+d.c.b.a>xxxx
+<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx
 EOF

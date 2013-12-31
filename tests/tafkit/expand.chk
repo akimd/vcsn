@@ -22,13 +22,13 @@ check_exp 'lal_char(abcd)_z' \
 
 check_exp 'lal_char(abc)_z'  \
   '(a+b)?{3}' \
-  '\e+<3>a+<3>b+<3>(a.a)+<3>(a.b)+<3>(b.a)+<3>(b.b)+a.a.a+a.a.b+a.b.a+a.b.b+b.a.a+b.a.b+b.b.a+b.b.b'
+  '\e+<3>a+<3>b+<3>(aa)+<3>(ab)+<3>(ba)+<3>(bb)+aaa+aab+aba+abb+baa+bab+bba+bbb'
 
-# TAF-Kit doc.
+# TAF-Kit doc
 check_exp 'lal_char(abcd)_z' \
   '(a+b+\e)((a+ba)(ca+cc))*' \
-  '(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+a.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*+b.(a.c.a+a.c.c+b.a.c.a+b.a.c.c)*'
+  '(aca+acc+baca+bacc)*+a(aca+acc+baca+bacc)*+b(aca+acc+baca+bacc)*'
 
 check_exp 'lal_char(abcd)_z' \
   'a(b(c+a)*+c(b)*)+ac(\e+b)(b*)' \
-  '<2>(a.c.b*)+a.b.(a+c)*+a.c.b.b*'
+  '<2>(acb*)+ab(a+c)*+acbb*'

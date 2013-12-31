@@ -45,9 +45,9 @@ check_mutable_automaton()
   // Check has_transition and get_transition.
   assert(aut1.has_transition(s0, s1, "cd"));
   // FIXME: we would really like to have equality here on ratexp.
-  ASSERT_WEIGHT(aut1, s0, s1, "cd", "w.x.y.z");
+  ASSERT_WEIGHT(aut1, s0, s1, "cd", "wxyz");
   assert(aut2.has_transition(s1, s0, "dc"));
-  ASSERT_WEIGHT(aut2, s1, s0, "dc", "z.y.x.w");
+  ASSERT_WEIGHT(aut2, s1, s0, "dc", "zyxw");
 
   {
     // Wrap a const automaton, and make sure it works properly.
@@ -65,7 +65,7 @@ check_mutable_automaton()
   // Now change the transposed automaton, and check the modifications
   // on the original.
   aut2.set_transition(s1, s0, "dc", conv(ks_b, "yyxx"));
-  ASSERT_WEIGHT(aut1, s0, s1, "cd", "x.x.y.y");
+  ASSERT_WEIGHT(aut1, s0, s1, "cd", "xxyy");
   aut2.del_state(s2);
   aut2.set_initial(s1);
 

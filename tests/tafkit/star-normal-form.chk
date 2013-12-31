@@ -40,5 +40,5 @@ check '(<1/6>a*<1/3>b*)*' '<18/17>(<1/6>a+<1/3>b)*'
 check '(<1/6>a*+<1/3>b*)*' '<2>(<1/6>a+<1/3>b)*'
 
 ctx='lal_char(ab)_ratexpset<lal_char(wxyz)_z>'
-check '<w>(<x>\e+<y>a)*<z>' '<w.x*>(<y>a)*<z>'
-check '<w>(<x>\e+<y>a)*<z>*' '<(w.x*.z)*>(<w.y.z>a)*'
+check '<w>(<x>\e+<y>a)*<z>' '<wx*>(<y>a)*<z>'
+check '<w>(<x>\e+<y>a)*<z>*' '<(wx*z)*>(<wyz>a)*'

@@ -1,6 +1,6 @@
 /* Origins.
     node [shape = box, style = rounded]
-    0 [label = "a.(b+c+d)"]
+    0 [label = "a(b+c+d)"]
     1 [label = "b+c+d"]
     2 [label = "\\e"]
 */

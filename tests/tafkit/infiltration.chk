@@ -180,11 +180,11 @@ run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
 run 0 '' -vcsn infiltration -o uavb-xayb.gv -f uavb.gv xayb.gv
 run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<u.x.v.y>ab
-<u.x.v.y+x.u.v.y>aab
-<u.x.v.y+u.x.y.v>abb
-<u.x.v.y+u.x.y.v+x.u.v.y+x.u.y.v>aabb
-<u.v.x.y+x.y.u.v>abab
+<uxvy>ab
+<uxvy+xuvy>aab
+<uxvy+uxyv>abb
+<uxvy+uxyv+xuvy+xuyv>aabb
+<uvxy+xyuv>abab
 EOF
 
 ## ------- ##
@@ -197,8 +197,8 @@ do
 done
 run 0 '' -vcsn infiltration -o abcd.gv -f a.gv b.gv c.gv d.gv
 run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<a.b.c.d>x
-<a.c.d.b+b.c.d.a+a.b.d.c+a.d.b.c+b.d.a.c+c.d.a.b+a.b.c.d+a.c.b.d+b.c.a.d+a.b.c.d+a.b.c.d+b.a.c.d+c.a.b.d+d.a.b.c>xx
-<a.d.c.b+a.d.b.c+b.d.c.a+b.d.a.c+c.d.a.b+c.d.b.a+a.c.d.b+a.c.b.d+b.c.d.a+b.c.a.d+a.b.d.c+a.b.c.d+a.c.d.b+a.b.d.c+a.d.b.c+a.b.c.d+a.c.b.d+a.b.c.d+b.c.d.a+b.a.d.c+b.d.a.c+b.a.c.d+b.c.a.d+b.a.c.d+c.a.d.b+c.b.d.a+c.d.a.b+c.a.b.d+c.a.b.d+c.b.a.d+d.a.c.b+d.b.c.a+d.a.b.c+d.a.b.c+d.b.a.c+d.c.a.b>xxx
-<a.d.c.b+a.d.b.c+a.c.d.b+a.c.b.d+a.b.d.c+a.b.c.d+b.d.c.a+b.d.a.c+b.c.d.a+b.c.a.d+b.a.d.c+b.a.c.d+c.d.a.b+c.d.b.a+c.a.d.b+c.a.b.d+c.b.d.a+c.b.a.d+d.a.c.b+d.a.b.c+d.b.c.a+d.b.a.c+d.c.a.b+d.c.b.a>xxxx
+<abcd>x
+<acdb+bcda+abdc+adbc+bdac+cdab+abcd+acbd+bcad+abcd+abcd+bacd+cabd+dabc>xx
+<adcb+adbc+bdca+bdac+cdab+cdba+acdb+acbd+bcda+bcad+abdc+abcd+acdb+abdc+adbc+abcd+acbd+abcd+bcda+badc+bdac+bacd+bcad+bacd+cadb+cbda+cdab+cabd+cabd+cbad+dacb+dbca+dabc+dabc+dbac+dcab>xxx
+<adcb+adbc+acdb+acbd+abdc+abcd+bdca+bdac+bcda+bcad+badc+bacd+cdab+cdba+cadb+cabd+cbda+cbad+dacb+dabc+dbca+dbac+dcab+dcba>xxxx
 EOF

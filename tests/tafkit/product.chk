@@ -8,7 +8,7 @@
 # (which is new_transition vs. add_transition).
 run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
 run 0 '' -vcsn product -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*.a' -vcsn aut-to-exp -f prod.gv
+run 0 'a*a' -vcsn aut-to-exp -f prod.gv
 
 
 ## ---------------------- ##
@@ -202,8 +202,8 @@ run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
          -e '(<u>a+<v>b)*' -o ua+vb.gv
 run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
          -e 'a{+}' -o a+.gv
-check product '<u>a+<u>a.<u>a.(<u>a)*' ua+vb.gv a+.gv
-check product '<u>a+<u>a.<u>a.(<u>a)*' a+.gv ua+vb.gv
+check product '<u>a+<u>a<u>a(<u>a)*' ua+vb.gv a+.gv
+check product '<u>a+<u>a<u>a(<u>a)*' a+.gv ua+vb.gv
 
 # Z, Q, R.
 run 0 '' -vcsn derived-term -C 'lal_char(ab)_z' -o z.gv -e '(<2>a+<3>b)*'
@@ -232,7 +232,7 @@ run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
          -e '<x>a<y>b' -o xayb.gv
 run 0 '' -vcsn product -o uavb-xayb.gv -f uavb.gv xayb.gv
 run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<u.x.v.y>ab
+<uxvy>ab
 EOF
 
 ## ------- ##
@@ -245,5 +245,5 @@ do
 done
 run 0 '' -vcsn product -o abcd.gv -f a.gv b.gv c.gv d.gv
 run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<a.b.c.d>x
+<abcd>x
 EOF

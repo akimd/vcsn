@@ -1,7 +1,7 @@
 /* Origins.
     node [shape = box, style = rounded]
-    0 [label = "a*.a.(a*+b*)"]
-    1 [label = "b*.a.(a*+b*)"]
+    0 [label = "a*a(a*+b*)"]
+    1 [label = "b*a(a*+b*)"]
     2 [label = "a*"]
     3 [label = "b*"]
 */

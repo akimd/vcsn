@@ -15,7 +15,7 @@ check_weight ()
 check_weight 'lal_char(a)_b' 0 0
 check_weight 'lal_char(a)_b' 1 1
 check_weight 'lal_char(a)_z' 123 123
-check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' 'a*.<23>(b.c)'
+check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' 'a*<23>(bc)'
 
 # Check that we don't ignore trailing characters.
 run 1 '' -vcsn cat -C 'lal_char(ab)_z' -We '123+'
@@ -68,14 +68,14 @@ check_exp ()
   run 0 "$3" -vcsn cat -E -C "$1" -e "$2"
 }
 
-check_exp 'lal_char(abcd)_b' "abcd" "a.b.c.d"
+check_exp 'lal_char(abcd)_b' "abcd" "abcd"
 check_exp 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
     "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*" \
     "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*"
 
 # Check that we do support digits as letters.
-check_exp 'lal_char(0123)_b' "0123" "0.1.2.3"
-check_exp 'lal_char(0123)_z' "<0123>0123" "<123>(0.1.2.3)"
+check_exp 'lal_char(0123)_b' "0123" "0123"
+check_exp 'lal_char(0123)_z' "<0123>0123" "<123>(0123)"
 
 
 # check_latex CONTEXT INPUT OUTPUT
@@ -86,15 +86,15 @@ check_latex ()
   run 0 "\$$3\$" -vcsn cat -O latex -E -C "$1" -e "$2"
 }
 
-check_latex 'lal_char(abcd)_b' "abcd" "a \\cdot b \\cdot c \\cdot d"
+check_latex 'lal_char(abcd)_b' "abcd" "a \\, b \\, c \\, d"
 check_latex 'lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>' \
     "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*" \
     "<<42>x>d\\,a + <<51>x>d\\,a + \\left(<<42>y>e\\,b\\right)^*"
 
 # Check that we do support digits as letters.
-check_latex 'lal_char(0123)_b' "0123" "0 \\cdot 1 \\cdot 2 \\cdot 3"
+check_latex 'lal_char(0123)_b' "0123" "0 \\, 1 \\, 2 \\, 3"
 check_latex 'lal_char(0123)_z' "<0123>0123"  \
-            '123\,\left(0 \cdot 1 \cdot 2 \cdot 3\right)'
+            '123\,\left(0 \, 1 \, 2 \, 3\right)'
 
 
 # check_info EXP-OUT VCSN-CAT-ARGS...

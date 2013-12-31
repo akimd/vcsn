@@ -102,10 +102,10 @@ digraph
   }
   I0 -> 0
   0 -> F0 [label = "<z*>"]
-  0 -> 1 [label = "<z*.x>a"]
+  0 -> 1 [label = "<z*x>a"]
   1 -> 2 [label = "<y>b"]
-  2 -> F2 [label = "<y.z*>"]
-  2 -> 1 [label = "<y.z*.x>a"]
+  2 -> F2 [label = "<yz*>"]
+  2 -> 1 [label = "<yz*x>a"]
 }
 EOF
 

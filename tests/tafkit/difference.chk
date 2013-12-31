@@ -12,7 +12,7 @@ check ()
 }
 
 
-check '(a+b)*' 'b*'            'b*.a.(a+b)*'
+check '(a+b)*' 'b*'            'b*a(a+b)*'
 check '(a+b)*' '(a+b)*b(a+b)*' 'a*'
 check '(a+b)*' '(a+b)*'        '\z'
 

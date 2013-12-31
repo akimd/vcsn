@@ -40,7 +40,7 @@ namespace vcsn
           complement_   = "^c";
           intersection_ = " \\cap ";
           shuffle_      = " \\between ";
-          product_      = " \\cdot ";
+          product_      = ctx_.is_law ? " \\cdot " : " \\, ";
           sum_          = " + ";
           zero_         = "\\emptyset";
           one_          = "\\varepsilon";
@@ -59,7 +59,7 @@ namespace vcsn
           complement_   = "{c}";
           intersection_ = "&";
           shuffle_      = ":";
-          product_      = ".";
+          product_      = ctx_.is_law ? "." : "";
           sum_          = "+";
           zero_         = "\\z";
           one_          = "\\e";

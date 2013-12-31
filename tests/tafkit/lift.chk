@@ -19,7 +19,7 @@ run 0 out.exp -vcsn lift -Af lady4.gv
 ## Expressions.  ##
 ## ------------- ##
 
-run 0 '<a.b.c>\e' -vcsn lift -C 'lal_char(abc)_b' -Ee "abc"
+run 0 '<abc>\e' -vcsn lift -C 'lal_char(abc)_b' -Ee "abc"
 
 # FIXME: no support yet for the printer.
-# run 0 '{<2>a.b.c}\e' -vcsn lift -C 'lal_char(abc)_z' -Ee "<2>abc"
+# run 0 '{<2>abc}\e' -vcsn lift -C 'lal_char(abc)_z' -Ee "<2>abc"
