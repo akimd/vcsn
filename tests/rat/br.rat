@@ -61,7 +61,7 @@ a<f> => <f>a
 <e>a+<f>b{c} => <e>a+<f>b{c}
 (<e>a+<f>b){c} => (<e>a+<f>b){c}
 
-<e>(a*).<f>(b*){c} => <e>a*<f>(b*){c}
+<e>(a*).<f>(b*){c} => <e>a*<f>b*{c}
 (<e>(a*).<f>(b*)){c} => (<e>a*<f>b*){c}
 
 # "Trivial identities": complement.

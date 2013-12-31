@@ -23,6 +23,8 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       template <type_t Type>
+      using unary_t = typename super_type::template unary_t<Type>;
+      template <type_t Type>
       using nary_t = typename super_type::template nary_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 

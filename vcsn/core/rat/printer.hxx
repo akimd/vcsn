@@ -178,8 +178,9 @@ namespace vcsn
                         bool force_parens)
       -> void
     {
-      bool parent_has_precedence = precedence(child) < precedence(parent);
-      bool needs_parens = parent_has_precedence || force_parens;
+      bool parent_has_precedence = precedence(child) <= precedence(parent);
+      bool needs_parens = force_parens
+        || (parent_has_precedence && ! (parent.is_unary() && child.is_unary()));
       if (needs_parens)
         out_ << lparen_;
       child.accept(*this);

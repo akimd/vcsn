@@ -95,7 +95,7 @@ check('(a:b){c}', 'c', '\z{c}')
 check('(a*&a*){c}', 'a', '(a*&a*){c}')
 check('(a*&a*){c}', 'b', '\z{c}')
 
-check('(<x>(<y>a)*<z>){c}', 'a', '((<y>a)*){c}')
+check('(<x>(<y>a)*<z>){c}', 'a', '(<y>a)*{c}')
 check('(<x>(<y>a)*<z>){c}', 'b', '\z{c}')
 
 check('a{c}{c}', 'a', '\e{c}{c}')
