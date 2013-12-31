@@ -105,7 +105,9 @@ namespace vcsn
   ratexpset<Context>::gather(ratexps_t& res, value_t v) const
     -> void
   {
-    if (auto nary = std::dynamic_pointer_cast<const nary_t<Type>>(v))
+    static bool binary = !! getenv("VCSN_BINARY");
+    auto nary = std::dynamic_pointer_cast<const nary_t<Type>>(v);
+    if (nary && ! binary)
       res.insert(std::end(res), std::begin(*nary), std::end(*nary));
     else
       res.push_back(v);

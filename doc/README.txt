@@ -105,6 +105,9 @@ Graphviz displays.
       s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
     ' $file
 
+** VCSN_BINARY
+Force ratexpset to build AST variadic nodes with only two children.
+
 ** VCSN_PARENS
 Force the display of useless parentheses.
 
