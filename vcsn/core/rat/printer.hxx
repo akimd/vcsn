@@ -125,11 +125,10 @@ namespace vcsn
 
     VISIT(star)
     {
-      // Force parens around the child if it needs a left weight.  This is
-      // not needed for right weights: compare e<w>* with (<w>e)*.
+      // Force parens around the child if it is a left weight.  This
+      // is not needed for right weights: compare e<w>* with (<w>e)*.
       const node_t& child = *v.sub();
-      bool child_needs_left_weight = shows_left_weight_(child);
-      print_child(child, v, child_needs_left_weight);
+      print_child(child, v, child.type() == rat::type_t::lweight);
       out_ << star_;
     }
 
@@ -151,11 +150,10 @@ namespace vcsn
 
     VISIT(complement)
     {
-      // Force parens around the child if it needs a left weight.  This is
-      // not needed for right weights: compare e<w>* with (<w>e)*.
+      // Force parens around the child if it is a left weight.  This
+      // is not needed for right weights: compare e<w>* with (<w>e)*.
       const node_t& child = *v.sub();
-      bool child_needs_left_weight = shows_left_weight_(child);
-      print_child(child, v, child_needs_left_weight);
+      print_child(child, v, child.type() == rat::type_t::lweight);
       out_ << complement_;
     }
 
