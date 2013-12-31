@@ -135,27 +135,27 @@ namespace vcsn
       const bool debug_;
 
       /// Left and right output delimiters for the whole ratexp.
-      const char* ldelim_ = "";
-      const char* rdelim_ = "";
+      const char* ldelim_ = nullptr;
+      const char* rdelim_ = nullptr;
       /// Left and right brackets for weights.
-      const char* lbracket_ = "<";
-      const char* rbracket_ = ">";
+      const char* lbracket_ = nullptr;
+      const char* rbracket_ = nullptr;
       /// Left and right parentheses.
-      const char* lparen_ = "(";
-      const char* rparen_ = ")";
+      const char* lparen_ = nullptr;
+      const char* rparen_ = nullptr;
       /// External product.
-      const char* lmul_ = "";
-      const char* rmul_ = "";
+      const char* lmul_ = nullptr;
+      const char* rmul_ = nullptr;
       /// The ratexp operators.
-      const char* star_ = "*";
-      const char* complement_ = "{c}";
-      const char* intersection_ = "&";
-      const char* shuffle_ = ":";
-      const char* product_ = ".";
-      const char* sum_ = "+";
+      const char* star_ = nullptr;
+      const char* complement_ = nullptr;
+      const char* intersection_ = nullptr;
+      const char* shuffle_ = nullptr;
+      const char* product_ = nullptr;
+      const char* sum_ = nullptr;
       /// The constants.
-      const char* zero_ = "\\z";
-      const char* one_ = "\\e";
+      const char* zero_ = nullptr;
+      const char* one_ = nullptr;
     };
 
   } // namespace rat
