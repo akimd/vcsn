@@ -71,21 +71,27 @@ namespace vcsn
 # undef DEFINE
 
       /// The possible node precedence levels, increasing.
+      ///
+      /// When printing a word (i.e., a label with several letters),
+      /// beware that it may require parens.  Think of
+      /// star(atom(ab)): if we print it as 'ab*', it actually means
+      /// 'a(b*)'.  Then give words a precedence lower than that of
+      /// star.  This is the role of 'word' below.
       enum class precedence_t
-        {
-          sum,
-          shuffle,
-          intersection,
-          prod,
-          lweight,
-          rweight,
-          word, // There's no corresponding type in this case.
-          star,
-          complement,
-          zero,
-          one,
-          atom,
-        };
+      {
+        sum,
+        shuffle,
+        intersection,
+        prod,
+        lweight,
+        rweight,
+        word, // Multi-letter atoms.
+        star,
+        complement,
+        zero,
+        one,
+        atom,
+      };
 
       /// The precedence of \a v (to decide when to print parens).
       precedence_t precedence(const node_t& v) const;
