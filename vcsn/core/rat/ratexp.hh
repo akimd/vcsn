@@ -40,6 +40,14 @@ namespace vcsn
 		|| t == type_t::lweight
 		|| t == type_t::rweight);
       }
+
+      /// Whether star, complement.
+      bool is_unary() const
+      {
+        type_t t = type();
+        return (t == type_t::star
+                || t == type_t::complement);
+      }
     };
 
 
