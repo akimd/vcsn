@@ -101,6 +101,9 @@ def check_rat_exp(fname):
       check_rat_exp(os.path.dirname(fname) + '/' + m.group(1))
       continue
 
+    # Location prefix for error messages.
+    loc = fname + ':' + str(lineno) + ':'
+
     # == tests that boths are equivalent.
     # => check the actual result.
     m = re.match('(.*\S)\s*(=>|==)\s*(.*)$', line)
@@ -116,10 +119,10 @@ def check_rat_exp(fname):
       global count
       count += 1
       if L == R:
-        print 'ok', count, L, '==', R
+        print 'ok', count #, L, '==', R
       else:
         fail += 1
-        print 'not ok', count, L, '!=', R
+        print 'not ok', count, loc, L, '!=', R
       continue
 
     # !: Look for syntax errors.
@@ -130,13 +133,13 @@ def check_rat_exp(fname):
       L = pp(l)
       count += 1
       if L == err:
-        print 'ok', count, l, '=>', L
+        print 'ok', count #, l, '=>', L
       else:
         fail += 1
-        print 'not ok', count, fname + ':' + str(lineno) + ':', l, '=>', L, "<>", err
+        print 'not ok', count, loc, l, '=>', L, "<>", err
       continue
 
-    print fname + ':' + str(lineno) + ':' + 'invalid input:', line
+    print loc, 'invalid input:', line
 
 check_rat_exp(sys.argv[1])
 print '1..'+str(count)
