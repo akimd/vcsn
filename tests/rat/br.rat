@@ -64,7 +64,6 @@ a<f> => <f>a
 <e>(a*).<f>(b*){c} => <e>a*.<f>(b*){c}
 (<e>(a*).<f>(b*)){c} => (<e>a*.<f>b*){c}
 
-
 # "Trivial identities": complement.
 (<e>a){c} => a{c}
 (<e>(a+b)){c} => (a+b){c}
@@ -78,6 +77,9 @@ a<f> => <f>a
 <e>ab&<f>ab => <e.f>ab
 <e>ab&<f>ac => \z
 %labels: letters
+
+# Difference: same precedence as shuffle (but why???).
+<e>a%(<f>b)* == (<e>a)%((<f>b)*)
 
 # More complex computations.
 <f><e>a<\z>+<e>a<\e> => <e>a
