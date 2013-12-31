@@ -13,8 +13,6 @@
 
 include build-aux/make/init.mk
 
-ACLOCAL_AMFLAGS = -I build-aux/m4
-
 # Unfortunately Automake 1.14 does not generate this for us.
 vcsn/config.hh: $(top_builddir)/lib/config.h
 	cd $(top_builddir) && $(SHELL) ./config.status $@
