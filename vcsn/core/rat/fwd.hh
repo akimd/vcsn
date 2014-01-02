@@ -53,6 +53,23 @@ namespace vcsn
 
 # undef DEFINE
 
+    /*-----------.
+    | constant.  |
+    `-----------*/
+
+    template <type_t Type, typename Label, typename Weight>
+    class constant;
+
+    template <typename Label, typename Weight>
+    using zero = constant<type_t::zero, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using one = constant<type_t::one, Label, Weight>;
+
+    /*--------.
+    | unary.  |
+    `--------*/
+
     template <type_t Type, typename Label, typename Weight>
     class unary;
 
@@ -62,6 +79,9 @@ namespace vcsn
     template <typename Label, typename Weight>
     using star = unary<type_t::star, Label, Weight>;
 
+    /*-------.
+    | nary.  |
+    `-------*/
 
     template <type_t Type, typename Label, typename Weight>
     class nary;
@@ -78,22 +98,20 @@ namespace vcsn
     template <typename Label, typename Weight>
     using sum = nary<type_t::sum, Label, Weight>;
 
+    /*--------------.
+    | weight_node.  |
+    `--------------*/
+
     template <type_t Type, typename Label, typename Weight>
     class weight_node;
 
     template <typename Label, typename Weight>
     using lweight = weight_node<type_t::lweight, Label, Weight>;
+
     template <typename Label, typename Weight>
     using rweight = weight_node<type_t::rweight, Label, Weight>;
 
-    template <type_t Type, typename Label, typename Weight>
-    class constant;
 
-    template <typename Label, typename Weight>
-    using zero = constant<type_t::zero, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using one = constant<type_t::one, Label, Weight>;
 
     template <typename Label, typename Weight>
     using ratexp = std::shared_ptr<const node<Label, Weight>>;

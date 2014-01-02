@@ -33,20 +33,20 @@ namespace vcsn
     /// Type of ratexps.
 # define DEFINE(Type)                                           \
     using Type ## _t = rat::Type<label_t, weight_t>
-    DEFINE(node);
-    DEFINE(leaf);
-    DEFINE(zero);
-    DEFINE(one);
     DEFINE(atom);
+    DEFINE(complement);
     DEFINE(inner);
-    DEFINE(sum);
-    DEFINE(prod);
     DEFINE(intersection);
+    DEFINE(leaf);
+    DEFINE(lweight);
+    DEFINE(node);
+    DEFINE(one);
+    DEFINE(prod);
+    DEFINE(rweight);
     DEFINE(shuffle);
     DEFINE(star);
-    DEFINE(lweight);
-    DEFINE(rweight);
-    DEFINE(complement);
+    DEFINE(sum);
+    DEFINE(zero);
 # undef DEFINE
     template <rat::exp::type_t Type>
     using nary_t = rat::nary<Type, label_t, weight_t>;

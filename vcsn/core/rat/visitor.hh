@@ -28,17 +28,17 @@ namespace vcsn
       using Type ## _t = Type<label_t, weight_t>;       \
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(zero);
-      DEFINE(one);
       DEFINE(atom);
-      DEFINE(sum);
-      DEFINE(shuffle);
-      DEFINE(prod);
-      DEFINE(intersection);
-      DEFINE(star);
-      DEFINE(lweight);
-      DEFINE(rweight);
       DEFINE(complement);
+      DEFINE(intersection);
+      DEFINE(lweight);
+      DEFINE(one);
+      DEFINE(prod);
+      DEFINE(rweight);
+      DEFINE(shuffle);
+      DEFINE(star);
+      DEFINE(sum);
+      DEFINE(zero);
 # undef DEFINE
     };
 

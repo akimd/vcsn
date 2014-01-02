@@ -83,17 +83,17 @@ namespace vcsn
 # define CASE(Type)                             \
             case exp::type_t::Type:             \
               return precedence_t::Type;
-            CASE(intersection);
-            CASE(sum);
-            CASE(shuffle);
-            CASE(prod);
-            CASE(star);
-            CASE(complement);
-            CASE(zero);
-            CASE(one);
             CASE(atom);
+            CASE(complement);
+            CASE(intersection);
             CASE(lweight);
+            CASE(one);
+            CASE(prod);
             CASE(rweight);
+            CASE(shuffle);
+            CASE(star);
+            CASE(sum);
+            CASE(zero);
 # undef CASE
           }
       abort(); // Unreachable.
