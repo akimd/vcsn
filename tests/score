@@ -11,7 +11,7 @@ export LC_ALL=C
 case $# in
   (0) ;;
   (1) if test -x $1/bin/vcsn-determinize; then
-        echo "commit $(cd $1 && git show -s --oneline)"
+        echo "commit $(git show -s --oneline)"
         export PATH=$(cd $1/bin && pwd):$PATH
       else
         echo >&2 "$0: $1/bin does not contain TAF-Kit executables"
