@@ -34,19 +34,6 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       using super_type = typename RatExpSet::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-      using prod_t = typename super_type::prod_t;
-      using sum_t = typename super_type::sum_t;
-      using intersection_t = typename super_type::intersection_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       /// The type of the operator.
       enum operation_t { dot, box };
@@ -63,27 +50,23 @@ namespace vcsn
         return std::move(res_);
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = rs_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = operation_ == box ? rs_.zero() : rs_.one();
       }
 
-      virtual void
-      visit(const atom_t& v)
+      VCSN_RAT_VISIT(atom, v)
       {
         res_ = rs_.atom(v.value());
       }
 
       // Plain traversal for sums.
-      virtual void
-      visit(const sum_t& v)
+      VCSN_RAT_VISIT(sum, v)
       {
         v.head()->accept(*this);
         ratexp_t res = res_;
@@ -95,23 +78,27 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const intersection_t&)
+      VCSN_RAT_VISIT(intersection,)
       {
         throw std::domain_error("star_normal_form: intersection is not supported");
       }
 
-      using complement_t = typename super_type::complement_t;
-      virtual void
-      visit(const complement_t&)
+      VCSN_RAT_VISIT(complement,)
       {
         throw std::domain_error("star_normal_form: complement is not supported");
       }
 
-      virtual void
-      visit(const shuffle_t&)
+      VCSN_RAT_VISIT(shuffle,)
       {
         throw std::domain_error("star_normal_form: shuffle is not supported");
+      }
+
+      VCSN_RAT_VISIT(prod, v)
+      {
+        if (operation_ == box)
+          box_of(v);
+        else
+          dot_of(v);
       }
 
       /// Handling of a product by the box operator.
@@ -155,17 +142,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const prod_t& v)
-      {
-        if (operation_ == box)
-          box_of(v);
-        else
-          dot_of(v);
-      }
-
-      virtual void
-      visit(const star_t& v)
+      VCSN_RAT_VISIT(star, v)
       {
         if (operation_ == dot)
           {
@@ -181,15 +158,13 @@ namespace vcsn
           }
       }
 
-      virtual void
-      visit(const lweight_t& v)
+      VCSN_RAT_VISIT(lweight, v)
       {
         v.sub()->accept(*this);
         res_ = rs_.lmul(v.weight(), std::move(res_));
       }
 
-      virtual void
-      visit(const rweight_t& v)
+      VCSN_RAT_VISIT(rweight, v)
       {
         v.sub()->accept(*this);
         res_ = rs_.rmul(std::move(res_), v.weight());

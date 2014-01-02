@@ -33,19 +33,6 @@ namespace vcsn
       using polynomial_t = typename polynomialset_t::value_t;
 
       using super_type = typename RatExpSet::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-      using prod_t = typename super_type::prod_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using sum_t = typename super_type::sum_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       expand_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -74,26 +61,22 @@ namespace vcsn
         return res_;
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = ps_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = polynomial_t{{rs_.one(), ws_.one()}};
       }
 
-      virtual void
-      visit(const atom_t& v)
+      VCSN_RAT_VISIT(atom, v)
       {
         res_ = polynomial_t{{rs_.atom(v.value()), ws_.one()}};
       }
 
-      virtual void
-      visit(const sum_t& v)
+      VCSN_RAT_VISIT(sum, v)
       {
         polynomial_t res = ps_.zero();
         for (auto c: v)
@@ -101,8 +84,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const intersection_t& v)
+      VCSN_RAT_VISIT(intersection, v)
       {
         auto res = expand(v.head());
         for (auto c: v.tail())
@@ -118,21 +100,17 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const shuffle_t&)
+      VCSN_RAT_VISIT(shuffle,)
       {
         throw std::domain_error("expand: shuffle is not supported");
       }
 
-      using complement_t = typename super_type::complement_t;
-      virtual void
-      visit(const complement_t&)
+      VCSN_RAT_VISIT(complement,)
       {
         throw std::domain_error("expand: complement is not supported");
       }
 
-      virtual void
-      visit(const prod_t& v)
+      VCSN_RAT_VISIT(prod, v)
       {
         polynomial_t res = ps_.one();
         for (auto c: v)
@@ -140,23 +118,20 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const star_t& v)
+      VCSN_RAT_VISIT(star, v)
       {
         // Recurse, but make it a star.
         v.sub()->accept(*this);
         res_ = polynomial_t{{rs_.star(ratexp(res_)), ws_.one()}};
       }
 
-      virtual void
-      visit(const lweight_t& v)
+      VCSN_RAT_VISIT(lweight, v)
       {
         v.sub()->accept(*this);
         res_ = ps_.lmul(v.weight(), std::move(res_));
       }
 
-      virtual void
-      visit(const rweight_t& v)
+      VCSN_RAT_VISIT(rweight, v)
       {
         v.sub()->accept(*this);
         res_ = ps_.rmul(std::move(res_), v.weight());

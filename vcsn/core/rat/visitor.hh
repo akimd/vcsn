@@ -45,6 +45,10 @@ namespace vcsn
   } // namespace rat
 } // namespace vcsn
 
+# define VCSN_RAT_VISIT(Type, Val)                      \
+  using Type ## _t = typename super_type::Type ## _t;   \
+  virtual void visit(const Type ## _t& Val)
+
 # include <vcsn/core/rat/visitor.hxx>
 
 #endif // !VCSN_CORE_RAT_VISITOR_HH

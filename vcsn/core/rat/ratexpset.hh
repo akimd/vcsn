@@ -134,8 +134,8 @@ namespace vcsn
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
-    /// \param type  the kind of ratexps on which to apply associativity.
-    ///              Must be SUM or PROD.
+    /// \tparam Type  the kind of ratexps on which to apply associativity.
+    ///               Must be SUM or PROD.
     template <rat::exp::type_t Type>
     ratexps_t gather(value_t l, value_t r) const;
 

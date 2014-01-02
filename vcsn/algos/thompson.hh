@@ -25,16 +25,6 @@ namespace vcsn
       using state_t = typename automaton_t::state_t;
 
       using super_type = typename Context::const_visitor;
-      using prod_t = typename super_type::prod_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using sum_t = typename super_type::sum_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       thompson_visitor(const context_t& ctx)
         : res_(ctx)
@@ -49,31 +39,27 @@ namespace vcsn
         return std::move(res_);
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
         res_.new_transition(initial_, final_, epsilon_);
       }
 
-      virtual void
-      visit(const atom_t& e)
+      VCSN_RAT_VISIT(atom, e)
       {
         initial_ = res_.new_state();
         final_ = res_.new_state();
         res_.new_transition(initial_, final_, e.value());
       }
 
-      virtual void
-      visit(const sum_t& e)
+      VCSN_RAT_VISIT(sum, e)
       {
         state_t initial = res_.new_state();
         state_t final = res_.new_state();
@@ -87,27 +73,22 @@ namespace vcsn
         final_ = final;
       }
 
-      virtual void
-      visit(const intersection_t&)
+      VCSN_RAT_VISIT(intersection,)
       {
         throw std::domain_error("thompson: intersection is not supported");
       }
 
-      using complement_t = typename super_type::complement_t;
-      virtual void
-      visit(const complement_t&)
+      VCSN_RAT_VISIT(complement,)
       {
         throw std::domain_error("thompson: complement is not supported");
       }
 
-      virtual void
-      visit(const shuffle_t&)
+      VCSN_RAT_VISIT(shuffle,)
       {
         throw std::domain_error("thompson: shuffle is not supported");
       }
 
-      virtual void
-      visit(const prod_t& e)
+      VCSN_RAT_VISIT(prod, e)
       {
         e.head()->accept(*this);
         state_t initial = initial_;
@@ -122,8 +103,7 @@ namespace vcsn
         initial_ = initial;
       }
 
-      virtual void
-      visit(const star_t& e)
+      VCSN_RAT_VISIT(star, e)
       {
         e.sub()->accept(*this);
         state_t initial = res_.new_state();
@@ -136,8 +116,7 @@ namespace vcsn
         final_ = final;
       }
 
-      virtual void
-      visit(const lweight_t& e)
+      VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
 
@@ -146,8 +125,7 @@ namespace vcsn
           res_.set_weight(t, ws_.mul(w, res_.weight_of(t)));
       }
 
-      virtual void
-      visit(const rweight_t& e)
+      VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
 

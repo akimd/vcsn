@@ -25,20 +25,6 @@ namespace vcsn
       using weight_t = typename context_t::weight_t;
       using ratexp_t = typename context_t::ratexp_t;
       using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-      using prod_t = typename super_type::prod_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using sum_t = typename super_type::sum_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using complement_t = typename super_type::complement_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       transposer(const ratexpset_t& rs)
         : rs_{rs}
@@ -52,26 +38,22 @@ namespace vcsn
         return std::move(res_);
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = rs_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = rs_.one();
       }
 
-      virtual void
-      visit(const atom_t& e)
+      VCSN_RAT_VISIT(atom, e)
       {
         res_ = rs_.atom(rs_.labelset()->transpose(e.value()));
       }
 
-      virtual void
-      visit(const sum_t& e)
+      VCSN_RAT_VISIT(sum, e)
       {
         ratexp_t res = rs_.zero();
         for (auto v: e)
@@ -82,8 +64,7 @@ namespace vcsn
         res_ = res;
       }
 
-      virtual void
-      visit(const intersection_t& e)
+      VCSN_RAT_VISIT(intersection, e)
       {
         e.head()->accept(*this);
         auto res = res_;
@@ -95,8 +76,7 @@ namespace vcsn
         res_ = res;
       }
 
-      virtual void
-      visit(const shuffle_t& e)
+      VCSN_RAT_VISIT(shuffle, e)
       {
         // FIXME: that should be easy to factor.
         e.head()->accept(*this);
@@ -109,8 +89,7 @@ namespace vcsn
         res_ = res;
       }
 
-      virtual void
-      visit(const prod_t& e)
+      VCSN_RAT_VISIT(prod, e)
       {
         ratexp_t res = rs_.one();
         for (auto v: e)
@@ -121,31 +100,27 @@ namespace vcsn
         res_ = res;
       }
 
-      virtual void
-      visit(const star_t& e)
+      VCSN_RAT_VISIT(star, e)
       {
         e.sub()->accept(*this);
         res_ = rs_.star(res_);
       }
 
-      virtual void
-      visit(const lweight_t& e)
+      VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
         res_ = rs_.rmul(res_,
                         rs_.weightset()->transpose(e.weight()));
       }
 
-      virtual void
-      visit(const rweight_t& e)
+      VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
         res_ = rs_.lmul(rs_.weightset()->transpose(e.weight()),
                         res_);
       }
 
-      virtual void
-      visit(const complement_t& e)
+      VCSN_RAT_VISIT(complement, e)
       {
         e.sub()->accept(*this);
         res_ = rs_.complement(res_);

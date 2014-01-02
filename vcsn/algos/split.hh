@@ -62,19 +62,6 @@ namespace vcsn
       using polynomial_t = typename polynomialset_t::value_t;
 
       using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-      using prod_t = typename super_type::prod_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using sum_t = typename super_type::sum_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       split_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -93,26 +80,22 @@ namespace vcsn
         return std::move(res_);
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = ps_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = polynomial_t{{rs_.one(), ws_.one()}};
       }
 
-      virtual void
-      visit(const atom_t& e)
+      VCSN_RAT_VISIT(atom, e)
       {
         res_ = polynomial_t{{rs_.atom(e.value()), ws_.one()}};
       }
 
-      virtual void
-      visit(const sum_t& e)
+      VCSN_RAT_VISIT(sum, e)
       {
         polynomial_t res = ps_.zero();
         for (const auto& v: e)
@@ -153,8 +136,7 @@ namespace vcsn
       }
 
       /// Handle an n-ary product.
-      virtual void
-      visit(const prod_t& e)
+      VCSN_RAT_VISIT(prod, e)
       {
         auto res = product(e[0], e[1]);
         for (unsigned i = 2, n = e.size(); i < n; ++i)
@@ -197,8 +179,7 @@ namespace vcsn
       }
 
       /// Handle an n-ary intersection.
-      virtual void
-      visit(const intersection_t& e)
+      VCSN_RAT_VISIT(intersection, e)
       {
         auto res = intersection(e[0], e[1]);
         for (unsigned i = 2, n = e.size(); i < n; ++i)
@@ -206,8 +187,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const shuffle_t&)
+      VCSN_RAT_VISIT(shuffle,)
       {
         throw std::domain_error("split: shuffle is not supported");
       }
@@ -218,23 +198,20 @@ namespace vcsn
         throw std::domain_error("split: complement is not supported");
       }
 
-      virtual void
-      visit(const star_t& e)
+      VCSN_RAT_VISIT(star, e)
       {
         // We need a copy of e, but without its weights.
         auto e2 = rs_.star(e.sub()->clone());
         res_ = polynomial_t{{e2, ws_.one()}};
       }
 
-      virtual void
-      visit(const lweight_t& e)
+      VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
         res_ = ps_.lmul(e.weight(), res_);
       }
 
-      virtual void
-      visit(const rweight_t& e)
+      VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
         res_ = ps_.rmul(res_, e.weight());

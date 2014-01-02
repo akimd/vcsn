@@ -39,17 +39,6 @@ namespace vcsn
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using prod_t = typename super_type::prod_t;
-      using sum_t = typename super_type::sum_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       derivation_visitor(const ratexpset_t& rs)
         : rs_(rs)
@@ -73,20 +62,17 @@ namespace vcsn
          return res;
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = ps_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = ps_.zero();
       }
 
-      virtual void
-      visit(const atom_t& e)
+      VCSN_RAT_VISIT(atom, e)
       {
         if (e.value() == variable_)
           res_ = ps_.one();
@@ -94,8 +80,7 @@ namespace vcsn
           res_ = ps_.zero();
       }
 
-      virtual void
-      visit(const sum_t& e)
+      VCSN_RAT_VISIT(sum, e)
       {
         polynomial_t res = ps_.zero();
         for (const auto& v: e)
@@ -106,8 +91,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const prod_t& e)
+      VCSN_RAT_VISIT(prod, e)
       {
         // We generate a sum.
         auto res = ps_.zero();
@@ -126,8 +110,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const intersection_t& e)
+      VCSN_RAT_VISIT(intersection, e)
       {
         // The first polynomial.
 	e.head()->accept(*this);
@@ -150,8 +133,7 @@ namespace vcsn
       }
 
       /// Handle an n-ary shuffle.
-      virtual void
-      visit(const shuffle_t& e)
+      VCSN_RAT_VISIT(shuffle, e)
       {
         polynomial_t res = ps_.zero();
         for (unsigned i = 0; i < e.size(); ++i)
@@ -174,17 +156,14 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      using complement_t = typename super_type::complement_t;
-      virtual void
-      visit(const complement_t& e)
+      VCSN_RAT_VISIT(complement, e)
       {
         e.sub()->accept(*this);
         // Turn the polynomial into a ratexp, and complement it.
         res_ = polynomial_t{{rs_.complement(ratexp(res_)), ws_.one()}};
       }
 
-      virtual void
-      visit(const star_t& e)
+      VCSN_RAT_VISIT(star, e)
       {
         e.sub()->accept(*this);
         // We need a copy of e, but without its weights.
@@ -193,15 +172,13 @@ namespace vcsn
                         ps_.rmul(res_, e2));
       }
 
-      virtual void
-      visit(const lweight_t& e)
+      VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
         res_ = ps_.lmul(e.weight(), res_);
       }
 
-      virtual void
-      visit(const rweight_t& e)
+      VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
         res_ = ps_.rmul(res_, e.weight());

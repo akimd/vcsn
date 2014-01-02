@@ -32,20 +32,6 @@ namespace vcsn
       using weightset_t = typename ratexpset_t::weightset_t;
 
       using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-      using prod_t = typename super_type::prod_t;
-      using shuffle_t = typename super_type::shuffle_t;
-      using intersection_t = typename super_type::intersection_t;
-      using sum_t = typename super_type::sum_t;
-      using leaf_t = typename super_type::leaf_t;
-      using star_t = typename super_type::star_t;
-      using complement_t = typename super_type::complement_t;
-      using zero_t = typename super_type::zero_t;
-      using one_t = typename super_type::one_t;
-      using atom_t = typename super_type::atom_t;
-      using lweight_t = typename super_type::lweight_t;
-      using rweight_t = typename super_type::rweight_t;
 
       constant_term_visitor(const ratexpset_t& rs)
         : ws_(*rs.weightset())
@@ -65,26 +51,22 @@ namespace vcsn
         return std::move(res_);
       }
 
-      virtual void
-      visit(const zero_t&)
+      VCSN_RAT_VISIT(zero,)
       {
         res_ = ws_.zero();
       }
 
-      virtual void
-      visit(const one_t&)
+      VCSN_RAT_VISIT(one,)
       {
         res_ = ws_.one();
       }
 
-      virtual void
-      visit(const atom_t&)
+      VCSN_RAT_VISIT(atom,)
       {
         res_ = ws_.zero();
       }
 
-      virtual void
-      visit(const sum_t& v)
+      VCSN_RAT_VISIT(sum, v)
       {
         weight_t res = ws_.zero();
         for (auto c: v)
@@ -92,8 +74,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const prod_t& v)
+      VCSN_RAT_VISIT(prod, v)
       {
         weight_t res = ws_.one();
         for (auto c: v)
@@ -101,8 +82,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const intersection_t& v)
+      VCSN_RAT_VISIT(intersection, v)
       {
         // FIXME: Code duplication with prod_t.
         weight_t res = ws_.one();
@@ -111,8 +91,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const shuffle_t& v)
+      VCSN_RAT_VISIT(shuffle, v)
       {
         // FIXME: Code duplication with prod_t.
         weight_t res = ws_.one();
@@ -121,28 +100,24 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      virtual void
-      visit(const star_t& v)
+      VCSN_RAT_VISIT(star, v)
       {
         res_ = ws_.star(constant_term(v.sub()));
       }
 
-      virtual void
-      visit(const lweight_t& v)
+      VCSN_RAT_VISIT(lweight, v)
       {
         v.sub()->accept(*this);
         res_ = ws_.mul(v.weight(), constant_term(v.sub()));
       }
 
-      virtual void
-      visit(const rweight_t& v)
+      VCSN_RAT_VISIT(rweight, v)
       {
         v.sub()->accept(*this);
         res_ = ws_.mul(constant_term(v.sub()), v.weight());
       }
 
-      virtual void
-      visit(const complement_t& v)
+      VCSN_RAT_VISIT(complement, v)
       {
         res_
           = ws_.is_zero(constant_term(v.sub()))
