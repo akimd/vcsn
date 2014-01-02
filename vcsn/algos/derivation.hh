@@ -604,13 +604,9 @@ namespace vcsn
 
       struct ratexpset_less_than
       {
-        const ratexpset_t& rs_;
         bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
         {
-          auto res = ratexpset_t::less_than(lhs, rhs);
-          rs_.print(std::cerr, lhs) << " < ";
-          rs_.print(std::cerr, rhs) << " = " << res << std::endl;
-          return res;
+          return ratexpset_t::less_than(lhs, rhs);
         }
       };
 
@@ -619,7 +615,6 @@ namespace vcsn
 
       derived_termer(const ratexpset_t& rs)
         : rs_(rs)
-        , map_(ratexpset_less_than{rs})
       {}
 
       automaton_t operator()(const ratexp_t& ratexp)
@@ -664,14 +659,8 @@ namespace vcsn
                     if (i == end(map_))
                       {
                         dst = res.new_state();
-                        std::cerr << "New state: d/d" << l << "(";
-                        rs_.print(std::cerr, r) << ") = ";
-                        rs_.print(std::cerr, p.first) << std::endl;
                         res.set_final(dst, constant_term(rs_, p.first));
                         map_[p.first] = dst;
-                        for (const auto& p2: map_)
-                          rs_.print(std::cerr, p2.first) << ' ' << p2.second << std::endl;
-                        std::cerr << std::endl;
                         todo.push(p.first);
                       }
                     else
