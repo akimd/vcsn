@@ -166,19 +166,6 @@ namespace vcsn
       ratexps_t sub_ratexp_;
     };
 
-    template <typename Label, typename Weight>
-    using prod = nary<type_t::prod, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using intersection = nary<type_t::intersection, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using shuffle = nary<type_t::shuffle, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using sum = nary<type_t::sum, Label, Weight>;
-
-
     /*--------.
     | unary.  |
     `--------*/
@@ -267,12 +254,6 @@ namespace vcsn
       }
     };
 
-    template <typename Label, typename Weight>
-    using lweight = weight_node<type_t::lweight, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using rweight = weight_node<type_t::rweight, Label, Weight>;
-
 
     /*-------.
     | leaf.  |
@@ -324,11 +305,6 @@ namespace vcsn
       }
     };
 
-    template <typename Label, typename Weight>
-    using zero = constant<type_t::zero, Label, Weight>;
-
-    template <typename Label, typename Weight>
-    using one = constant<type_t::one, Label, Weight>;
 
     template <typename Label, typename Weight>
     class atom : public leaf<Label, Weight>
