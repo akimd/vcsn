@@ -67,9 +67,6 @@ state: s
 transition: t
 
 * Environment variables
-** VCSN_BREAKING
-Whether to perform breaking derivation (for derivation and derived-term).
-
 ** VCSN_DEBUG
 Improve the display with debugging information.
 *** dot

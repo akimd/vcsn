@@ -51,8 +51,8 @@ namespace vcsn
 
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx, unsigned);
-        REGISTER(derivation, rs_t, const std::string);
-        REGISTER(derived_term, rs_t);
+        REGISTER(derivation, rs_t, const std::string, bool);
+        REGISTER(derived_term, rs_t, bool);
         REGISTER(difference, aut_t, b_aut_t);
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);

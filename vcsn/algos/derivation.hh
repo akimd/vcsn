@@ -202,13 +202,13 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-             typename RatExpSet::label_t a)
+             typename RatExpSet::label_t a, bool breaking = false)
   {
     static_assert(RatExpSet::context_t::is_lal,
                   "requires labels_are_letters");
     rat::derivation_visitor<RatExpSet> derivation{rs};
     auto res = derivation(e, a);
-    if (getenv("VCSN_BREAKING"))
+    if (breaking)
       res = split(rs, res);
     return res;
   }
@@ -220,13 +220,14 @@ namespace vcsn
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const rat::ratexp_polynomial_t<RatExpSet>& p,
-             typename RatExpSet::label_t a)
+             typename RatExpSet::label_t a, bool breaking = false)
   {
     auto ps = rat::make_ratexp_polynomialset(rs);
     using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
     polynomial_t res;
     for (const auto& m: p)
-      res = ps.add(res, ps.lmul(m.second, derivation(rs, m.first, a)));
+      res = ps.add(res,
+                   ps.lmul(m.second, derivation(rs, m.first, a, breaking)));
     return res;
   }
 
@@ -236,13 +237,13 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-             const std::string& s)
+             const std::string& s, bool breaking = false)
   {
     if (s.empty())
       throw std::runtime_error("cannot derivation wrt an empty string");
-    auto res = derivation(rs, e, s[0]);
+    auto res = derivation(rs, e, s[0], breaking);
     for (size_t i = 1, len = s.size(); i < len; ++i)
-      res = derivation(rs, res, s[i]);
+      res = derivation(rs, res, s[i], breaking);
     return res;
   }
 
@@ -252,19 +253,21 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename String>
+      template <typename RatExpSet, typename String, typename Bool>
       polynomial
-      derivation(const ratexp& exp, const std::string& s)
+      derivation(const ratexp& exp, const std::string& s, bool breaking = false)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.get_ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
-                               derivation<RatExpSet>(rs, e.ratexp(), s));
+                               derivation<RatExpSet>(rs, e.ratexp(), s,
+                                                     breaking));
       }
 
       REGISTER_DECLARE(derivation,
-                        (const ratexp& e, const std::string& s) -> polynomial);
+                       (const ratexp& e, const std::string& s,
+                        bool breaking) -> polynomial);
     }
   }
 
@@ -304,8 +307,9 @@ namespace vcsn
       /// Symbolic states to state handlers.
       using smap = std::map<ratexp_t, state_t, ratexpset_less_than>;
 
-      derived_termer(const ratexpset_t& rs)
+      derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
+        , breaking_(breaking)
       {}
 
       automaton_t operator()(const ratexp_t& ratexp)
@@ -316,12 +320,12 @@ namespace vcsn
 
         automaton_t res{rs_.context()};
 
-        /// List of states to visit.
+        // List of states to visit.
         std::stack<ratexp_t> todo;
-        /// Turn the ratexp into a polynomial.
+        // Turn the ratexp into a polynomial.
         {
           polynomial_t initial;
-          if (getenv("VCSN_BREAKING"))
+          if (breaking_)
             initial = split(rs_, ratexp);
           else
             initial = polynomial_t{{ratexp, ws.one()}};
@@ -342,7 +346,7 @@ namespace vcsn
             state_t src = map_[r];
             for (auto l : ls)
               {
-                polynomial_t next = derivation(rs_, r, l);
+                polynomial_t next = derivation(rs_, r, l, breaking_);
                 for (const auto& p: next)
                   {
                     state_t dst;
@@ -392,6 +396,7 @@ namespace vcsn
     private:
       ratexpset_t rs_;
       smap map_;
+      bool breaking_ = false;
     };
   }
 
@@ -399,9 +404,10 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   mutable_automaton<typename RatExpSet::context_t>
-  derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
+  derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
+               bool breaking = false)
   {
-    detail::derived_termer<RatExpSet> dt{rs};
+    detail::derived_termer<RatExpSet> dt{rs, breaking};
     auto res = dt(r);
     if (getenv("VCSN_ORIGINS"))
       dt.print(std::cout, dt.origins());
@@ -413,17 +419,17 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet>
+      template <typename RatExpSet, typename Book>
       automaton
-      derived_term(const ratexp& exp)
+      derived_term(const ratexp& exp, bool breaking = false)
       {
         const auto& r = exp->as<RatExpSet>();
         return make_automaton(derived_term(r.get_ratexpset(),
-                                           r.ratexp()));
+                                           r.ratexp(), breaking));
       }
 
       REGISTER_DECLARE(derived_term,
-                       (const ratexp& e) -> automaton);
+                       (const ratexp& e, bool breaking) -> automaton);
     }
   }
 

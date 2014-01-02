@@ -13,9 +13,9 @@ namespace vcsn
     REGISTER_DEFINE(derivation);
 
     polynomial
-    derivation(const ratexp& e, const std::string& s)
+    derivation(const ratexp& e, const std::string& s, bool breaking)
     {
-      return detail::derivation_registry().call(e, s);
+      return detail::derivation_registry().call(e, s, breaking);
     }
 
     /*--------------------.
@@ -24,9 +24,9 @@ namespace vcsn
     REGISTER_DEFINE(derived_term);
 
     automaton
-    derived_term(const ratexp& e)
+    derived_term(const ratexp& e, bool breaking)
     {
-      return detail::derived_term_registry().call(e);
+      return detail::derived_term_registry().call(e, breaking);
     }
 
     /*-------------.

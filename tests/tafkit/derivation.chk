@@ -108,9 +108,7 @@ check_br ()
     ('(?@'*) re=$1;;
     (*)      re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$1";;
   esac
-  export VCSN_BREAKING=1
-  run 0 "$3" -vcsn derivation -e "$re" "$2"
-  unset VCSN_BREAKING
+  run 0 "$3" -vcsn derivation -e "$re" "$2" 1
 }
 
 ## ---------------------------- ##
@@ -179,14 +177,12 @@ check_br "$E2t" aa "a* + b* + a*a($F2)"
 check_br "$E2t" ab 'b*'
 check_br "$E2t" ba "a* + b*"
 check_br "$E2t" bb "b*a($F2)"
-export VCSN_BREAKING=1 VCSN_ORIGINS=1
-run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -e "$E2t"
-unset VCSN_BREAKING VCSN_ORIGINS
+export VCSN_ORIGINS=1
+run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -e "$E2t" 1
+unset VCSN_ORIGINS
 
 # Figure 3.
 export VCSN_ORIGINS=1
 run 0 -f $medir/h3-dt.gv -vcsn derived-term -e 'a(b+c+d)'
-export VCSN_BREAKING=1
-run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -e 'a(b+c+d)'
-unset VCSN_BREAKING
+run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -e 'a(b+c+d)' 1
 unset VCSN_ORIGINS

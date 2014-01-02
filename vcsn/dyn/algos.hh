@@ -66,12 +66,18 @@ namespace vcsn
     /// A simple NFA for (a+b)*a(a+b)^n.
     automaton de_bruijn(const context& ctx, unsigned n);
 
-    /// Derive \a ratexp with respect to \a s.
+    /// Derive \a exp with respect to \a s.
+    /// \param exp       the input ratexp
+    /// \param s         the string of labels used for derivation
+    /// \param breaking  whether to split the result
     /// \pre  \a exp must be LAL.
-    polynomial derivation(const ratexp& exp, const std::string& s);
+    polynomial derivation(const ratexp& exp, const std::string& s,
+                          bool breaking = false);
 
     /// The derived-term automaton of \a e.
-    automaton derived_term(const ratexp& e);
+    /// \param e         the input ratexp
+    /// \param breaking  whether to split the result
+    automaton derived_term(const ratexp& e, bool breaking = false);
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
