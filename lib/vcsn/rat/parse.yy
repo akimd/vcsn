@@ -115,18 +115,19 @@
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer { driver_.ratexpset_->print(yyo, $$.exp); } <braced_ratexp>;
 
-%token LPAREN   "("
-       RPAREN   ")"
-       PLUS     "+"
-       AMPERSAND "&"
-       COMPLEMENT "{c}"
-       COLON    ":"
-       PERCENT  "%"
-       DOT      "."
-       ONE      "\\e"
-       ZERO     "\\z"
-       COMMA    ","
-       END      0
+%token
+  AMPERSAND  "&"
+  COLON      ":"
+  COMMA      ","
+  COMPLEMENT "{c}"
+  DOT        "."
+  END 0      "end"
+  LPAREN     "("
+  ONE        "\\e"
+  PERCENT    "%"
+  PLUS       "+"
+  RPAREN     ")"
+  ZERO       "\\z"
 ;
 
 %token <irange_type> STAR "*";
