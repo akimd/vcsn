@@ -161,7 +161,7 @@ struct automaton
 
   bool is_trim() const
   {
-    return vcsn::dyn::is_standard(aut_);
+    return vcsn::dyn::is_trim(aut_);
   }
 
   bool is_useless() const
