@@ -30,6 +30,22 @@ namespace vcsn
       return detail::trim_registry().call(aut);
     }
 
+    REGISTER_DEFINE(is_accessible);
+
+    bool
+    is_accessible(const automaton& aut)
+    {
+      return detail::is_accessible_registry().call(aut);
+    }
+
+    REGISTER_DEFINE(is_coaccessible);
+
+    bool
+    is_coaccessible(const automaton& aut)
+    {
+      return detail::is_coaccessible_registry().call(aut);
+    }
+
     REGISTER_DEFINE(is_trim);
 
     bool

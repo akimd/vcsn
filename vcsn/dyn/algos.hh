@@ -138,9 +138,15 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// Whether \a aut is accessible.
+    bool is_accessible(const automaton& aut);
+
     /// Whether \a aut is ambiguous.
     /// \pre \a aut is LAL.
     bool is_ambiguous(const automaton& aut);
+
+    /// Whether \a aut is coaccessible.
+    bool is_coaccessible(const automaton& aut);
 
     /// Whether \a aut is complete.
     /// \pre \a aut is LAL.

@@ -136,9 +136,9 @@ namespace vcsn
     return vcsn::copy(a, useful_states(a));
   }
 
-  /*--------------------------------.
-  | is_trim, is_empty, is_useless.  |
-  `--------------------------------*/
+  /*----------------------------------------------------------------.
+  | is_trim, is_accessible, is_coaccessible, is_empty, is_useless.  |
+  `----------------------------------------------------------------*/
 
   template <typename Aut>
   bool is_trim(const Aut& a)
@@ -150,6 +150,18 @@ namespace vcsn
   bool is_useless(const Aut& a)
   {
     return num_useful_states(a) == 0;
+  }
+
+  template <typename Aut>
+  bool is_accessible(const Aut& a)
+  {
+    return num_accessible_states(a) == a.num_states();
+  }
+
+  template <typename Aut>
+  bool is_coaccessible(const Aut& a)
+  {
+    return num_coaccessible_states(a) == a.num_states();
   }
 
   template <typename Aut>
@@ -212,6 +224,36 @@ namespace vcsn
 
       REGISTER_DECLARE(trim,
                        (const automaton&) -> automaton);
+
+      /*---------------------.
+      | dyn::is_accessible.  |
+      `---------------------*/
+
+      template <typename Aut>
+      bool
+      is_accessible(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return is_accessible(a);
+      }
+
+      REGISTER_DECLARE(is_accessible,
+                       (const automaton&) -> bool);
+
+      /*-----------------------.
+      | dyn::is_coaccessible.  |
+      `-----------------------*/
+
+      template <typename Aut>
+      bool
+      is_coaccessible(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return is_coaccessible(a);
+      }
+
+      REGISTER_DECLARE(is_coaccessible,
+                       (const automaton&) -> bool);
 
       /*---------------.
       | dyn::is_trim.  |

@@ -119,9 +119,19 @@ struct automaton
     return vcsn::dyn::infiltration(aut_, rhs.aut_);
   }
 
+  bool is_accessible() const
+  {
+    return vcsn::dyn::is_accessible(aut_);
+  }
+
   bool is_ambiguous() const
   {
     return vcsn::dyn::is_ambiguous(aut_);
+  }
+
+  bool is_coaccessible() const
+  {
+    return vcsn::dyn::is_coaccessible(aut_);
   }
 
   bool is_complete() const
@@ -489,7 +499,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("eval", &automaton::eval)
     .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
+    .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
+    .def("is_coaccessible", &automaton::is_coaccessible)
     .def("is_complete", &automaton::is_complete)
     .def("is_deterministic", &automaton::is_deterministic)
     .def("is_eps_acyclic", &automaton::is_eps_acyclic)
