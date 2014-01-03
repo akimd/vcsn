@@ -6,7 +6,7 @@ import vcsn
 count = 0
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
-def check(re, letter, exp):
+def check(re, letter, exp, breaking = False):
     global count
     count += 1
     finfo = inspect.getframeinfo(inspect.currentframe().f_back)
@@ -14,7 +14,7 @@ def check(re, letter, exp):
     if re[:3] <> "(?@":
         re = "(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)" + re
     r = c.ratexp(re)
-    eff = str(r.derivation(letter))
+    eff = str(r.derivation(letter, breaking))
     print r, "/d",letter, " = ", eff
     if eff == exp:
         print 'ok ', count
@@ -22,6 +22,12 @@ def check(re, letter, exp):
         msg = exp + " != " + eff
         print here + ":", msg
         print 'not ok ', count, msg
+
+##########################
+## Regular derivation.  ##
+##########################
+
+
 
 ## ---------------------------- ##
 ## Derive wrt a single letter.  ##
@@ -128,5 +134,46 @@ check(E1t, 'aa',  "<4/9>a*"+E1)
 check(E1t, 'ab',  "<2/9>b*"+E1)
 check(E1t, 'ba',  "<2/9>a*"+E1)
 check(E1t, 'bb', "<10/9>b*"+E1)
+
+
+###########################
+## Breaking derivation.  ##
+###########################
+
+def check_br(re, letter, exp):
+    check(re, letter, exp, True)
+
+## ---------------------------- ##
+## Derive wrt a single letter.  ##
+## ---------------------------- ##
+
+# Zero, one.
+check_br(   '\z', 'a', '\z')
+check_br(   '\e', 'a', '\z')
+check_br('<x>\e', 'a', '\z')
+
+# Letters.
+check_br(   'a', 'a', '\e')
+check_br(   'a', 'b', '\z')
+check_br('<x>a', 'a', '<x>\e')
+check_br('<x>a', 'b', '\z')
+
+# Sum.
+check_br('<x>a+<y>b', 'a', '<x>\e')
+check_br('<x>a+<y>b', 'b', '<y>\e')
+check_br('<x>a+<y>a', 'a', '<x+y>\e')
+
+# Prod.
+check_br('ab', 'a', 'b')
+check_br('ab', 'b', '\z')
+check_br('(<x>a)(<y>a)(<z>a)', 'a', '<xy>a<z>a')
+
+# Star.
+check_br('a*', 'a', 'a*')
+check_br('a*', 'b', '\z')
+check_br('(<x>a)*', 'a', '<x>(<x>a)*')
+check_br('(<x>a)*', 'b', '\z')
+check_br('<x>a*',   'a', '<x>a*')
+check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 
 print '1..'+str(count)

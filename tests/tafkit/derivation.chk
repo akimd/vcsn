@@ -111,38 +111,6 @@ check_br ()
   run 0 "$3" -vcsn derivation -e "$re" "$2" 1
 }
 
-## ---------------------------- ##
-## Derive wrt a single letter.  ##
-## ---------------------------- ##
-
-# Zero, one.
-check_br    '\z' a '\z'
-check_br    '\e' a '\z'
-check_br '<x>\e' a '\z'
-
-# Letters.
-check_br    'a' a '\e'
-check_br    'a' b '\z'
-check_br '<x>a' a '<x>\e'
-check_br '<x>a' b '\z'
-
-# Sum.
-check_br '<x>a+<y>b' a '<x>\e'
-check_br '<x>a+<y>b' b '<y>\e'
-check_br '<x>a+<y>a' a '<x+y>\e'
-
-# Prod.
-check_br 'ab' 'a' 'b'
-check_br 'ab' 'b' '\z'
-check_br '(<x>a)(<y>a)(<z>a)' 'a' '<xy>a<z>a'
-
-# Star.
-check_br 'a*' a 'a*'
-check_br 'a*' b '\z'
-check_br '(<x>a)*' a '<x>(<x>a)*'
-check_br '(<x>a)*' b '\z'
-check_br '<x>a*'   a '<x>a*'
-check_br '<x>(<y>a)*' a '<xy>(<y>a)*'
 
 ## --------------------- ##
 ## Documented examples.  ##

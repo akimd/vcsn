@@ -308,9 +308,9 @@ struct ratexp
 
   weight constant_term() const;
 
-  polynomial derivation(const std::string& s) const
+  polynomial derivation(const std::string& s, bool breaking = true) const
   {
-    return vcsn::dyn::derivation(r_, s);
+    return vcsn::dyn::derivation(r_, s, breaking);
   }
 
   ratexp copy(const context& ctx)
@@ -319,9 +319,9 @@ struct ratexp
     return vcsn::dyn::copy(r_, rs);
   }
 
-  automaton derived_term() const
+  automaton derived_term(bool breaking = false) const
   {
-    return vcsn::dyn::derived_term(r_);
+    return vcsn::dyn::derived_term(r_, breaking);
   }
 
   ratexp expand() const
@@ -456,6 +456,9 @@ weight ratexp::constant_term() const
 | vcsn_python.  |
 `--------------*/
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
+
 BOOST_PYTHON_MODULE(vcsn_python)
 {
   namespace bp = boost::python;
@@ -515,8 +518,8 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("_repr_latex_", &ratexp::_repr_latex_)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
-    .def("derivation", &ratexp::derivation)
-    .def("derived_term", &ratexp::derived_term)
+    .def("derivation", &ratexp::derivation, derivation())
+    .def("derived_term", &ratexp::derived_term, derived_term())
     .def("expand", &ratexp::expand)
     .def("format", &ratexp::format)
     .def("is_equivalent", &ratexp::is_equivalent)
