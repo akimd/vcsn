@@ -6,6 +6,7 @@
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/ratexp.hh>
 #include <vcsn/core/rat/size.hh>
+#include <vcsn/core/rat/hash.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_ratexp_string
 #include <vcsn/dyn/fwd.hh>
@@ -404,6 +405,13 @@ namespace vcsn
     -> bool
   {
     return ! less_than(lhs, rhs) && ! less_than(rhs, lhs);
+  }
+
+  DEFINE::hash(const value_t& v)
+    -> size_t
+  {
+    rat::hash<ratexpset<Context>> hasher;
+    return hasher(v);
   }
 
   DEFINE::conv(self_type, value_t v) const

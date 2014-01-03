@@ -7,6 +7,7 @@
 
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/hash.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -287,6 +288,17 @@ namespace vcsn
       value_t res;
       for (const auto& i: v)
         res[labelset()->transpose(i.first)] = weightset()->transpose(i.second);
+      return res;
+    }
+
+    static size_t hash(value_t v)
+    {
+      size_t res = 0;
+      for (const auto& lw : v)
+        {
+          std::hash_combine(res, labelset_t::hash(lw.first));
+          std::hash_combine(res, weightset_t::hash(lw.second));
+        }
       return res;
     }
 

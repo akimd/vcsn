@@ -123,6 +123,12 @@ namespace vcsn
         return 1;
       }
 
+      static size_t hash(value_t v)
+      {
+        std::hash<value_t> hasher;
+        return hasher(v);
+      }
+
       /// \throws std::domain_error if there is no label here.
       value_t
       conv(std::istream& i) const

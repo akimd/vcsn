@@ -66,6 +66,8 @@ nobase_include_HEADERS =                        \
   %D%/core/mutable_automaton.hh                 \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/fwd.hh                           \
+  %D%/core/rat/hash.hh                          \
+  %D%/core/rat/hash.hxx                         \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/info.hxx                         \
   %D%/core/rat/less-than.hh                     \
@@ -127,8 +129,10 @@ nobase_include_HEADERS =                        \
   %D%/factory/ladybird.hh                       \
   %D%/factory/random.hh                         \
   %D%/factory/u.hh                              \
+  %D%/labelset/equalto-labelset.hh              \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
+  %D%/labelset/hasher-labelset.hh               \
   %D%/labelset/letterset.hh                     \
   %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \

@@ -115,7 +115,12 @@ namespace vcsn
     /// Whether \a l == \a r.
     static bool equals(value_t l, value_t r);
 
+    /// Hash \a l.
+    static size_t hash(const value_t& l);
+
     // Concrete type implementation.
+    // FIXME: why aren't these all static?  I think they should be.
+    //        The only state in ratexpset is ctx_.
     value_t zero() const;
     value_t one() const;
     value_t add(value_t l, value_t r) const;

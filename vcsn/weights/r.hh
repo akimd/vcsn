@@ -119,6 +119,12 @@ namespace vcsn
       return v;
     }
 
+    static size_t hash(value_t v)
+    {
+      std::hash<value_t> hasher;
+      return hasher(v);
+    }
+
     template <typename From>
     static value_t
     conv(typename From::value_t v)

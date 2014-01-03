@@ -115,6 +115,12 @@ namespace vcsn
         return 1;
       }
 
+      static size_t hash(value_t v)
+      {
+        std::hash<value_t> hasher;
+        return hasher(v);
+      }
+
       /// Read one letter from i, return the corresponding label.
       value_t
       conv(std::istream& i) const

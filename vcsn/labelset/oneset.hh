@@ -105,6 +105,12 @@ namespace vcsn
         return 0;
       }
 
+      static size_t hash(value_t v)
+      {
+        std::hash<value_t> hasher;
+        return hasher(v);
+      }
+
       static value_t conv(std::istream& i)
       {
         if (i.peek() == '\\')

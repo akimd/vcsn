@@ -8,6 +8,7 @@
 # include <sstream>
 
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/hash.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
 # include <vcsn/weights/fwd.hh>
@@ -157,6 +158,16 @@ namespace vcsn
     transpose(const value_t v)
     {
       return v;
+    }
+
+    static size_t hash(value_t v)
+    {
+      size_t res = 0;
+      std::hash<int> num_hasher;
+      std::hash<unsigned> den_hasher;
+      std::hash_combine(res, num_hasher(v.num));
+      std::hash_combine(res, den_hasher(v.den));
+      return res;
     }
 
     static value_t

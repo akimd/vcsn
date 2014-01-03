@@ -115,9 +115,15 @@ namespace vcsn
         return this->genset()->is_empty_word(l);
       }
 
-      static size_t size(value_t v)
+      static size_t size(const value_t& v)
       {
         return v.length();
+      }
+
+      static size_t hash(const value_t& v)
+      {
+        std::hash<value_t> hasher;
+        return hasher(v);
       }
 
       // FIXME: Why do I need to repeat this?
