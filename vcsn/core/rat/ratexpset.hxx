@@ -400,6 +400,12 @@ namespace vcsn
       }
   }
 
+  DEFINE::equals(value_t lhs, value_t rhs)
+    -> bool
+  {
+    return ! less_than(lhs, rhs) && ! less_than(rhs, lhs);
+  }
+
   DEFINE::conv(self_type, value_t v) const
     -> value_t
   {

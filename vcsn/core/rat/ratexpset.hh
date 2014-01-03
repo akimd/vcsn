@@ -111,6 +111,10 @@ namespace vcsn
   public:
     /// Whether \a l < \a r.
     static bool less_than(value_t l, value_t r);
+
+    /// Whether \a l == \a r.
+    static bool equals(value_t l, value_t r);
+
     // Concrete type implementation.
     value_t zero() const;
     value_t one() const;
