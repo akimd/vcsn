@@ -15,6 +15,15 @@ namespace vcsn
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
     using context_t = Context;
+    std::vector<typename context_t::labelset_t::letter_t> letters
+      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+    if (letters.size() < 3)
+      throw std::invalid_argument("ladybird: the alphabet needs"
+                                  " at least 3 letters");
+    auto a = letters[0];
+    auto b = letters[1];
+    auto c = letters[2];
+
     mutable_automaton<context_t> res{ctx};
 
     auto p = res.new_state();
@@ -24,13 +33,13 @@ namespace vcsn
     for (unsigned i = 1; i < n; ++i)
       {
         auto y = res.new_state();
-        res.new_transition(x, y, 'a');
-        res.new_transition(y, y, 'b');
-        res.new_transition(y, y, 'c');
-        res.new_transition(y, p, 'c');
+        res.new_transition(x, y, a);
+        res.new_transition(y, y, b);
+        res.new_transition(y, y, c);
+        res.new_transition(y, p, c);
         x = y;
       }
-    res.new_transition(x, p, 'a');
+    res.new_transition(x, p, a);
     return res;
   }
 

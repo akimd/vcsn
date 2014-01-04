@@ -18,6 +18,14 @@ namespace vcsn
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
     using context_t = Context;
+    std::vector<typename context_t::labelset_t::letter_t> letters
+      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+    if (letters.size() < 2)
+      throw std::invalid_argument("double_ring: the alphabet needs"
+                                  " at least 2 letters");
+    auto a = letters[0];
+    auto b = letters[1];
+
     using automaton_t = mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
     automaton_t res{ctx};
@@ -36,13 +44,13 @@ namespace vcsn
     for (unsigned i = 1; i < n; ++i)
       {
         state_t y = res.new_state();
-        res.new_transition(x, y, 'a');
-        res.new_transition(y, x, 'b');
+        res.new_transition(x, y, a);
+        res.new_transition(y, x, b);
         x = y;
         states.emplace(i, y);
       }
-    res.new_transition(x, p, 'a');
-    res.new_transition(p, x, 'b');
+    res.new_transition(x, p, a);
+    res.new_transition(p, x, b);
 
     // Add finals.
     for (auto f: finals)
