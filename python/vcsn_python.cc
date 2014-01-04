@@ -37,12 +37,16 @@ struct context
     return ctx_->vname();
   }
 
+  automaton de_bruijn(unsigned n) const;
+
   std::string format(const std::string& format = "latex") const
   {
     std::ostringstream os;
     vcsn::dyn::print(ctx_, os, format);
     return os.str();
   }
+
+  automaton ladybird(unsigned n) const;
 
   vcsn::dyn::context ctx_;
 };
@@ -65,8 +69,6 @@ struct automaton
     std::istringstream is(s);
     aut_ = vcsn::dyn::read_automaton(is, format);
   }
-
-  static automaton ladybird(const context& ctx, unsigned n);
 
   std::string __repr__() const
   {
@@ -426,11 +428,6 @@ weight automaton::eval(const std::string& s) const
   return vcsn::dyn::eval(aut_, s);
 }
 
-automaton automaton::ladybird(const context& ctx, unsigned n)
-{
-  return vcsn::dyn::ladybird(ctx.ctx_, n);
-}
-
 polynomial automaton::shortest(unsigned max) const
 {
   return vcsn::dyn::shortest(aut_, max);
@@ -439,6 +436,21 @@ polynomial automaton::shortest(unsigned max) const
 ratexp automaton::to_ratexp() const
 {
   return vcsn::dyn::aut_to_exp(aut_);
+}
+
+
+/*-------------------------.
+| context implementation.  |
+`-------------------------*/
+
+automaton context::de_bruijn(unsigned n) const
+{
+  return vcsn::dyn::de_bruijn(ctx_, n);
+}
+
+automaton context::ladybird(unsigned n) const
+{
+  return vcsn::dyn::ladybird(ctx_, n);
 }
 
 
@@ -466,8 +478,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<automaton>("automaton", bp::init<const ratexp&>())
     .def(bp::init<const std::string&, const std::string&>())
-
-    .def("ladybird", &automaton::ladybird).staticmethod("ladybird")
 
     .def("__pow__", &automaton::power)
     .def("__repr__", &automaton::__repr__)
@@ -511,7 +521,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<context>("context", bp::init<const std::string&>())
     .def("__repr__", &context::__repr__)
+    .def("de_bruijn", &context::de_bruijn)
     .def("format", &context::format)
+    .def("ladybird", &context::ladybird)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
