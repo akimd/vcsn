@@ -1,0 +1,61 @@
+#! /usr/bin/env python
+
+import vcsn
+import timeit
+
+def bench(title, cmd, number=1):
+    t = round(min(timeit.repeat(cmd, number=number)), 2)
+    print("%5.2fs: %s" % (t, title))
+
+b = vcsn.context('lal_char(abc)_b')
+
+# Output should be fast.
+a = b.ratexp('a?{500}').standard()
+auts = dict()
+for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
+    bench(fmt + '(std(a?{500}))', lambda: a.format(fmt))
+    auts[fmt] = a.format(fmt)
+
+# Input should be too.
+for fmt in ['dot', 'efsm', 'fado']:
+    bench('read('+ fmt + '(std(a?{500})))', \
+        lambda: vcsn.automaton(auts[fmt], fmt))
+del auts
+
+# Determinization of ladybird 21.
+a = b.ladybird(21)
+bench('determinize(ladybird(21))', lambda: a.determinize())
+
+# Evaluate of de-bruijn 150.
+n = 150
+# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
+a = b.de_bruijn(n)
+bench('de_bruijn('+str(n)+').eval("a"*'+str(n+1)+')', lambda: a.eval('a'*(n+1)), number=1000)
+
+# Proper(thompson(a?{2000}))
+a = vcsn.context("lan_char(a)_b").ratexp("a?{2000}").thompson()
+bench('thompson(a?{2000}).proper())', lambda: a.proper())
+
+# To-exp(standard((a+b+c+d)?{100})).
+r = vcsn.context('lal_char(abcd)_b').ratexp('(a+b+c+d)?{100}')
+bench('std((a+b+c+d)?{100})', lambda: r.standard())
+a = r.standard()
+bench('abcd.ratexp()', lambda: a.ratexp())
+
+# power(standard((a+b)*b(<2>a+<2>b)*), 13)
+a = vcsn.context("lal_char(ab)_z").ratexp("(a+b)*b(<2>a+<2>b)*").standard()
+bench('a**13', lambda: a ** 13)
+
+# With a?{150}, the product has 22501 states, 124,903,125 transitions,
+# which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
+# transitions.
+a = b.ratexp("a?{100}").standard()
+bench('product', lambda: a.product(a))
+bench('shuffle', lambda: a.shuffle(a))
+bench('infiltration', lambda: a.infiltration(a))
+
+# Minimize a big deterministic automaton over booleans.
+a = vcsn.context("lal_char(abcdefghijk)_b").ratexp("(a+b+c+d+e+f+g){1200}").standard()
+bench('signature', lambda: a.minimize('signature'))
+a = vcsn.context("lal_char(abcdefghijk)_b").ratexp("(a+b+c+d+e+f+g+h+i+j+k){2000}").standard()
+bench('moore', lambda: a.minimize('moore'))

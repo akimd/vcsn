@@ -15,7 +15,8 @@ dist_bin_SCRIPTS +=                             \
   %D%/efstcompile                               \
   %D%/efstdecompile                             \
   %D%/vcsn                                      \
-  %D%/vcsn-notebook
+  %D%/vcsn-notebook                             \
+  %D%/vcsn-score
 
 ## ---------- ##
 ## Programs.  ##
