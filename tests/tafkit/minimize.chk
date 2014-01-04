@@ -11,7 +11,7 @@ check()
 # -------------
 xfail()
 {
-  run 134 '' -vcsn minimize -f "$2" "$1"
+  run 1 '' -vcsn minimize -f "$2" "$1"
 }
 
 ## Simple minimization test.  The example comes from the "Théorie des

@@ -8,6 +8,7 @@
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/minimize-signature.hh>
 # include <vcsn/algos/quotient.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
@@ -135,7 +136,7 @@ namespace vcsn
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
         if (!is_deterministic(a_) || !is_trim(a_))
-          abort();
+          raise("minimize: moore: input is neither deterministic nor trim");
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
       }

@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
 # define VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
 
-# include <algorithm> // min_element.
 # include <unordered_map>
 # include <unordered_set>
 
@@ -9,6 +8,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/indent.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -341,7 +341,7 @@ namespace vcsn
         , ls_(*a_.labelset())
       {
         if (!is_trim(a_))
-          abort();
+          raise("minimize: signature: input is not trim");
 
         // Fill state_to_state_output.
         for (auto s : a_.all_states())

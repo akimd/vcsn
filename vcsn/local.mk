@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -151,6 +151,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/random.hh                            \
   %D%/misc/path.hh                              \
   %D%/misc/path.hxx                             \
+  %D%/misc/raise.hh                             \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \
   %D%/misc/set.hxx                              \
