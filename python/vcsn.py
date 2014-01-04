@@ -32,6 +32,10 @@ automaton.__eq__ = is_equal
 automaton.__mul__ = lambda lhs, rhs: lhs.product(rhs).trim()
 automaton._repr_svg_ = lambda a: dot_to_svg(str(a))
 
+def automaton_load(file):
+    return automaton(open(file, "r").read(), "dot")
+automaton.load = staticmethod(automaton_load)
+
 def automaton_fst(aut, cmd):
     open("/tmp/in.efsm", "w").write(aut.format("efsm"))
     from subprocess import check_call, check_output

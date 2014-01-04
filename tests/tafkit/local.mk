@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -42,7 +42,6 @@
   %D%/ladybird.chk                              \
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
-  %D%/minimize.chk                              \
   %D%/power.chk                                 \
   %D%/product.chk                               \
   %D%/proper.chk                                \
@@ -107,16 +106,6 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
-  %D%/minimize.dir/incomplete-non-trim.gv       \
-  %D%/minimize.dir/incomplete-non-trim.moore.gv \
-  %D%/minimize.dir/intricate.exp.gv             \
-  %D%/minimize.dir/no-final-states.gv           \
-  %D%/minimize.dir/no-final-states.moore.gv     \
-  %D%/minimize.dir/no-initial-states.gv         \
-  %D%/minimize.dir/no-initial-states.moore.gv   \
-  %D%/minimize.dir/redundant.exp.gv             \
-  %D%/minimize.dir/redundant.gv                 \
-  %D%/minimize.dir/small-nfa.exp.gv             \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
   %D%/product.dir/a.gv                          \

@@ -172,9 +172,9 @@ struct automaton
     return vcsn::dyn::is_valid(aut_);
   }
 
-  automaton minimize() const
+  automaton minimize(const std::string& algo = "signature") const
   {
-    return vcsn::dyn::minimize(aut_);
+    return vcsn::dyn::minimize(aut_, algo);
   }
 
   automaton power(unsigned n) const
@@ -458,6 +458,7 @@ weight ratexp::constant_term() const
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_python)
 {
@@ -493,7 +494,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
-    .def("minimize", &automaton::minimize)
+    .def("minimize", &automaton::minimize, minimize())
     .def("product", &automaton::product)
     .def("proper", &automaton::proper)
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
