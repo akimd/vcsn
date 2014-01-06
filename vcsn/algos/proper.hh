@@ -40,15 +40,10 @@ namespace vcsn
         return 0;
     }
 
-    /**
-       @class properer
-       @brief This class contains the core of the proper algorithm.
-
-       This class is specialized for labels_are_letter automata since all these
-       methods become trivial.
-
-    */
-
+    /// This class contains the core of the proper algorithm.
+    ///
+    /// This class is specialized for labels_are_letter automata since
+    /// all these methods become trivial.
     template <typename Aut, typename Kind = typename Aut::kind_t>
     class properer
     {
