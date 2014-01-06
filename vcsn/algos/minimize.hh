@@ -135,8 +135,10 @@ namespace vcsn
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
-        if (!is_deterministic(a_) || !is_trim(a_))
-          raise("minimize: moore: input is neither deterministic nor trim");
+        require(is_deterministic(a_),
+                "minimize: moore: input must be deterministic");
+        require(is_trim(a_),
+                "minimize: moore: input must be trim");
         for (auto t : a_.all_transitions())
           out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
       }

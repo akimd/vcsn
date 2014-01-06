@@ -340,8 +340,7 @@ namespace vcsn
         : a_(a)
         , ls_(*a_.labelset())
       {
-        if (!is_trim(a_))
-          raise("minimize: signature: input is not trim");
+        require(is_trim(a_), "minimize: signature: input must be trim");
 
         // Fill state_to_state_output.
         for (auto s : a_.all_states())
