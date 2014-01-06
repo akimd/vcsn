@@ -3,6 +3,7 @@
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/weight.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -21,7 +22,7 @@ namespace vcsn
       static automaton_t&
       left_mult_here(automaton_t& res, const weight_t& w)
       {
-        assert(is_standard(res));
+        require(is_standard(res), __func__, ": input must be standard");
 
         weightset_t ws(*res.context().weightset());
         state_t initial = res.dst_of(res.initial_transitions().front());
@@ -35,7 +36,7 @@ namespace vcsn
       static automaton_t&
       right_mult_here(automaton_t& res, const weight_t& w)
       {
-        assert(is_standard(res));
+        require(is_standard(res), __func__, ": input must be standard");
 
         weightset_t ws(*res.context().weightset());
         state_t initial = res.dst_of(res.initial_transitions().front());

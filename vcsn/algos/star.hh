@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_STAR_HH
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/misc/raise.hh> // require
 
 # include <vector>
 
@@ -18,7 +19,7 @@ namespace vcsn
   Aut&
   star_here(Aut& res)
   {
-    assert(is_standard(res));
+    require(is_standard(res), __func__, ": input must be standard");
 
     using automaton_t = Aut;
     using context_t = typename automaton_t::context_t;

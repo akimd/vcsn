@@ -1,9 +1,10 @@
 #ifndef VCSN_ALGOS_SUM_HH
 # define VCSN_ALGOS_SUM_HH
 
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-
 # include <map>
+
+# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
@@ -20,8 +21,9 @@ namespace vcsn
   A&
   sum_here(A& res, const B& b)
   {
-    assert(is_standard(res));
-    assert(is_standard(b));
+    require(is_standard(res), __func__, ": lhs must be standard");
+    require(is_standard(b), __func__, ": rhs must be standard");
+
     // State in B -> state in Res.
     std::map<typename B::state_t, typename A::state_t> m;
     typename A::state_t initial = res.dst_of(res.initial_transitions().front());

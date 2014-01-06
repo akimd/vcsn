@@ -6,6 +6,7 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
 {
@@ -17,8 +18,8 @@ namespace vcsn
   A&
   concatenate_here(A& res, const B& b)
   {
-    assert(is_standard(res));
-    assert(is_standard(b));
+    require(is_standard(res), __func__, ": lhs must be standard");
+    require(is_standard(b), __func__, ": rhs must be standard");
 
     using automaton_t = A;
     auto ws = *res.context().weightset();
@@ -77,22 +78,46 @@ namespace vcsn
   /// Concatenate two standard automata.
   template <class A, class B>
   A
-  concatenate(const A& laut, const B& raut)
+  concatenate(const A& lhs, const B& rhs)
   {
-    assert(is_standard(laut));
-    assert(is_standard(raut));
+    require(is_standard(lhs), __func__, ": lhs must be standard");
+    require(is_standard(rhs), __func__, ": rhs must be standard");
+
     using automaton_t = A;
 
     // Create new automata.
-    auto ctx = join(laut.context(), raut.context());
+    auto ctx = join(lhs.context(), rhs.context());
     automaton_t res(ctx);
-    ::vcsn::copy(laut, res, {keep_all_states<typename automaton_t::state_t>});
-    concatenate_here(res, raut);
+    ::vcsn::copy(lhs, res, {keep_all_states<typename automaton_t::state_t>});
+    concatenate_here(res, rhs);
     return res;
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      concatenate(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(concatenate(l, r));
+      }
+
+      REGISTER_DECLARE(concatenate,
+                        (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*--------.
+  | chain.  |
+  `--------*/
+
   /// Concatenate n-times the standard automaton A.
-  template <class Aut>
+  template <typename Aut>
   Aut
   chain(const Aut& aut, size_t n)
   {
@@ -106,30 +131,11 @@ namespace vcsn
     return res;
   }
 
+
   namespace dyn
   {
-
     namespace detail
     {
-      /*-------------------.
-      | dyn::concatenate.  |
-      `-------------------*/
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      concatenate(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(concatenate(l, r));
-      }
-
-      REGISTER_DECLARE(concatenate,
-                        (const automaton&, const automaton&) -> automaton);
-
-      /*-------------.
-      | dyn::chain.  |
-      `-------------*/
       /// Bridge.
       template <typename Aut, typename Unsigned>
       automaton
@@ -140,7 +146,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(chain,
-                        (const automaton& aut, unsigned n) -> automaton);
+                       (const automaton& aut, unsigned n) -> automaton);
     }
   }
 }
