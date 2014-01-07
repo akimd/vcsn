@@ -44,6 +44,21 @@ def automaton_fst(aut, cmd):
     res = check_output(['efstdecompile', '/tmp/out.fst'])
     return automaton(res, "efsm")
 
+def automaton_info(aut):
+    '''A dictionary of automaton properties.'''
+    res = dict()
+    for l in aut.format('info').splitlines():
+        (k, v) = l.split(':')
+        v = v.strip()
+        if k.startswith('is '):
+            res[k] = bool(v)
+        elif k.startswith('number '):
+            res[k] = int(v)
+        else:
+            res[k] = v
+    return res
+automaton.info = automaton_info
+
 automaton.fstdeterminize = lambda aut: automaton_fst(aut, "fstdeterminize")
 automaton.fstminimize = lambda aut: automaton_fst(aut, "fstminimize")
 
