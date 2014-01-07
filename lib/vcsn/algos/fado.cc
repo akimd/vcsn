@@ -39,8 +39,7 @@ namespace vcsn
         std::string kind;
         is >> kind;
         if (kind != "@DFA" && kind != "@NFA")
-          throw std::runtime_error(file
-                                   + ": bad automaton kind: " + kind);
+          raise(file, ": bad automaton kind: ", kind);
       }
 
       vcsn::lazy_automaton_editor edit;

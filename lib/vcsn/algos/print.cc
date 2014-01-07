@@ -5,6 +5,7 @@
 #include <vcsn/algos/print.hh>
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/misc/escape.hh>
+#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/xalloc.hh>
 
 namespace vcsn
@@ -34,8 +35,7 @@ namespace vcsn
       else if (type == "tikz")
         tikz(aut, out);
       else
-        throw std::domain_error("invalid output format for automaton: "
-                                + type);
+        raise("invalid output format for automaton: ", str_escape(type));
       return out;
     }
 
@@ -67,8 +67,7 @@ namespace vcsn
       else if (type == "text" || type == "default" || type == "")
         detail::print_polynomial_registry().call(p, out);
       else
-        throw std::domain_error("invalid output format for polynonial: "
-                                + type);
+        raise("invalid output format for polynomial: ", str_escape(type));
       return out;
     }
 
@@ -97,8 +96,7 @@ namespace vcsn
           detail::print_exp_registry().call(exp, out, format);
         }
       else
-        throw std::domain_error("invalid output format for ratexp: "
-                                + str_escape(type));
+        raise("invalid output format for ratexp: ", str_escape(type));
       return out;
     }
 
@@ -117,8 +115,7 @@ namespace vcsn
       else if (type == "text" || type == "default" || type == "")
         detail::print_weight_registry().call(w, out);
       else
-        throw std::domain_error("invalid output format for weight: "
-                                + type);
+        raise("invalid output format for weight: ", str_escape(type));
       return out;
     }
 

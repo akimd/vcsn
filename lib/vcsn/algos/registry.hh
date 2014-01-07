@@ -7,6 +7,7 @@
 
 # include <vcsn/dyn/context.hh> // sname
 # include <vcsn/misc/name.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -55,7 +56,7 @@ namespace vcsn
           err += "\n  available versions:";
           for (auto p: map_)
             err += "\n    " + p.first;
-          throw std::runtime_error(err);
+          raise(err);
         }
     }
 

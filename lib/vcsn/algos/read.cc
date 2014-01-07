@@ -1,4 +1,3 @@
-#include <cassert>
 #include <stdexcept>
 
 #include <vcsn/ctx/fwd.hh>
@@ -26,7 +25,7 @@ namespace vcsn
         vcsn::detail::dot::driver d;
         auto res = d.parse(is);
         if (!d.errors.empty())
-          throw std::runtime_error(d.errors);
+          raise(d.errors);
         return res;
       }
     }
@@ -40,7 +39,8 @@ namespace vcsn
         return read_efsm(is);
       else if (t == "fado")
         return read_fado(is);
-      throw std::runtime_error(t + ": unknown format");
+      else
+        raise(t + ": unknown format");
     }
 
     /*--------------.
@@ -54,7 +54,7 @@ namespace vcsn
       if (t == "text" || t == "default" || t == "")
         return rat::read(is, rs);
       else
-        throw std::domain_error("invalid input format for ratexp: " + t);
+        raise("invalid input format for ratexp: ", t);
     }
 
 

@@ -28,8 +28,7 @@ namespace vcsn
         while (!is.eof() && cat != "cat")
           is >> cat;
         if (is.eof())
-          throw std::runtime_error(file
-                                   + ": no \"cat\" symbol");
+          raise(file, ": no \"cat\" symbol");
         is.ignore(1024, '\n');
       }
 
@@ -49,7 +48,7 @@ namespace vcsn
               continue;
             ss >> val;
             if (ss.fail())
-              throw std::runtime_error (file + ": bad input format");
+              raise(file, ": bad input format");
             if (val == "0" || one == "EOFSM")
               break;
           }
@@ -61,8 +60,7 @@ namespace vcsn
         while (!is.eof() && cat != "cat")
           is >> cat;
         if (is.eof())
-          throw std::runtime_error(file
-                                   + ": no \"cat\" symbol");
+          raise(file, ": no \"cat\" symbol");
         is.ignore(1024, '\n');
       }
 
@@ -115,7 +113,7 @@ namespace vcsn
 #undef SKIP_SPACES
 
         if (line != "EOFSM")
-          throw std::runtime_error(file + ":bad input format, missing EOFSM");
+          raise(file, ": bad input format, missing EOFSM");
       }
 
       // Flush till EOF.
