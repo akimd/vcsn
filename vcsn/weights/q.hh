@@ -185,7 +185,6 @@ namespace vcsn
       if ((maybe_slash = i.peek()) != '/')
         return value_t{num, 1};
       vcsn::eat(i, '/');
-      assert(i.good()); // peek worked and returned '/'.
 
       // operator>> with an istream and an unsigned int silently
       // mangles a negative number into its two's complement
@@ -194,7 +193,6 @@ namespace vcsn
         {
           num = - num;
           vcsn::eat(i, '-');
-          assert(i.good()); // Again, peek worked.
         }
 
       unsigned int den;
