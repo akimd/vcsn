@@ -73,6 +73,11 @@ namespace vcsn
         throw std::domain_error(sname() + ": star: invalid value: " + format(v));
     }
 
+    constexpr static bool is_special(value_t)
+    {
+      return false;
+    }
+
     static bool
     is_zero(const value_t v)
     {

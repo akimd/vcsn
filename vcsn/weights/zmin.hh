@@ -84,16 +84,21 @@ namespace vcsn
       return lhs < rhs;
     }
 
-    static bool
-    is_one(const value_t v)
+    constexpr static bool is_special(value_t)
     {
-      return v == one();
+      return false;
     }
 
     static bool
     is_zero(const value_t v)
     {
       return v == zero();
+    }
+
+    static bool
+    is_one(const value_t v)
+    {
+      return v == one();
     }
 
     static constexpr bool is_commutative_semiring() { return true; }
