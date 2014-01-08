@@ -27,10 +27,27 @@ namespace vcsn
         translation()
         {
           // We use os.str() with one level of indentation.
-          // Alternatively, it would be useful to be able that
-          // misc::indent provides a means to output an std::string
-          // and intercept its \n.
+          // Alternatively, it would be useful that misc::indent
+          // provided a means to output a std::string and intercept
+          // its \n to indent them properly.
           os << incindent;
+        }
+
+        /// Return the next word from \a is.
+        /// Stop at any of "<,_>".
+        std::string word()
+        {
+          std::string res;
+          char c;
+          while (is >> c)
+            if (c == '<' || c == ',' || c == '_' || c == '>')
+              {
+                is.unget();
+                break;
+              }
+            else
+              res.append(1, c);
+          return res;
         }
 
         void context()
@@ -38,21 +55,21 @@ namespace vcsn
           headers.insert("vcsn/ctx/context.hh");
           os << "vcsn::ctx::context<" << incendl;
           // LabelSet, WeightSet.
-          labelset();
+          valueset();
           eat(is, '_');
           os << ',' << iendl;
-          weightset();
+          valueset();
           os << decendl << '>';
         }
 
+        /// Read a labelset in \a is.
         void labelset()
         {
-          std::string kind;
-          {
-            char k[4];
-            is.get(k, sizeof k);
-            kind = k;
-          }
+          labelset(word());
+        }
+
+        void labelset(const std::string& kind)
+        {
           if (kind == "lal" || kind == "lan" || kind == "law")
             {
               if (kind == "lal")
@@ -94,7 +111,7 @@ namespace vcsn
               os << "vcsn::ctx::tupleset<";
               while (true)
                 {
-                  labelset();
+                  valueset();
                   int c = is.peek();
                   if (c == ',')
                     {
@@ -128,16 +145,11 @@ namespace vcsn
         /// Read a weightset in \a is.
         void weightset()
         {
-          std::string ws;
-          char c;
-          while (is >> c)
-            if (c == '<' || c == ',' || c == '>')
-              {
-                is.unget();
-                break;
-              }
-            else
-              ws.append(1, c);
+          weightset(word());
+        }
+
+        void weightset(const std::string& ws)
+        {
           if (ws == "b" || ws == "f2"  || ws == "q"
               || ws == "r" || ws == "z" || ws == "zmin")
             {
@@ -148,6 +160,20 @@ namespace vcsn
             ratexpset(false);
           else
             raise("invalid weightset name: ", str_escape(ws));
+        }
+
+        /// Read in \a is a valueset (labelset or weightset).
+        void valueset()
+        {
+          auto kind = word();
+          if (kind == "lal"
+              || kind == "lan"
+              || kind == "lao"
+              || kind == "lat"
+              || kind == "law")
+            labelset(kind);
+          else
+            weightset(kind);
         }
 
         std::ostream& print(std::ostream& o)
