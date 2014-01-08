@@ -3,24 +3,25 @@
 
 # include <iosfwd>
 
-#include <boost/algorithm/string.hpp>
+# include <boost/algorithm/string.hpp>
 
-# include <vcsn/dyn/fwd.hh>
+# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/weight.hh>
-# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/nullableset.hh>
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/labelset/wordset.hh>
-# include <vcsn/ctx/context.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/weights/b.hh>
-# include <vcsn/weights/z.hh>
+# include <vcsn/weights/f2.hh>
 # include <vcsn/weights/q.hh>
 # include <vcsn/weights/r.hh>
-# include <vcsn/weights/f2.hh>
+# include <vcsn/weights/z.hh>
 # include <vcsn/weights/zmin.hh>
 
 namespace vcsn
@@ -54,7 +55,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -68,7 +69,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -82,7 +83,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -96,7 +97,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -110,7 +111,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -124,7 +125,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -143,7 +144,7 @@ namespace vcsn
     else if (format == "text")
       o << ws.vname();
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -166,7 +167,7 @@ namespace vcsn
     else if (format == "text")
       o << alphabet.vname(true);
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -181,7 +182,7 @@ namespace vcsn
     else if (format == "text")
       o << ls.vname(true);
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -199,7 +200,7 @@ namespace vcsn
     else if (format == "text")
       o << ls.vname(true);
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -213,7 +214,7 @@ namespace vcsn
     else if (format == "text")
       o << ls.vname(true);
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
@@ -231,7 +232,7 @@ namespace vcsn
     else if (format == "text")
       o << ls.vname(true);
     else
-      throw std::runtime_error("invalid format: " + format);
+      raise("invalid format: ", format);
     return o;
   }
 
