@@ -85,10 +85,22 @@ namespace vcsn
         return equals(l, special());
       }
 
+      value_t
+      one() const
+      {
+        return one_(indices_t{});
+      }
+
       bool
       is_one(const value_t& l) const
       {
         return is_one_(l, indices_t{});
+      }
+
+      bool
+      show_one() const
+      {
+        return show_one_(indices_t{});
       }
 
       bool
@@ -225,6 +237,13 @@ namespace vcsn
       }
 
       template <std::size_t... I>
+      value_t
+      one_(detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).one())...);
+      }
+
+      template <std::size_t... I>
       bool
       is_one_(const value_t& l, detail::seq<I...>) const
       {
@@ -232,6 +251,16 @@ namespace vcsn
           if (!n)
             return false;
         return true;
+      }
+
+      template <std::size_t... I>
+      bool
+      show_one_(detail::seq<I...>) const
+      {
+        for (auto n: {(std::tuple_element<I, labelsets_t>::type::show_one())...})
+          if (n)
+            return true;
+        return false;
       }
 
       template <std::size_t... I>
