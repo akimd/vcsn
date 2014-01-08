@@ -98,6 +98,24 @@ namespace vcsn
       }
 
       value_t
+      add(const value_t& l, const value_t& r) const
+      {
+        return add_(l, r, indices_t{});
+      }
+
+      value_t
+      mul(const value_t& l, const value_t& r) const
+      {
+        return mul_(l, r, indices_t{});
+      }
+
+      value_t
+      star(const value_t& l) const
+      {
+        return star_(l, indices_t{});
+      }
+
+      value_t
       concat(const value_t& l, const value_t& r) const
       {
         return concat_(l, r, indices_t{});
@@ -214,6 +232,29 @@ namespace vcsn
           if (!n)
             return false;
         return true;
+      }
+
+      template <std::size_t... I>
+      value_t
+      add_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).add(std::get<I>(l),
+                                                       std::get<I>(r)))...);
+      }
+
+      template <std::size_t... I>
+      value_t
+      mul_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).mul(std::get<I>(l),
+                                                       std::get<I>(r)))...);
+      }
+
+      template <std::size_t... I>
+      value_t
+      star_(value_t const& l, detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).star(std::get<I>(l)))...);
       }
 
       template <std::size_t... I>
