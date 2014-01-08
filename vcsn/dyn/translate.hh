@@ -11,6 +11,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/indent.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/config.hh>
 # include <vcsn/dyn/context.hh>
@@ -107,8 +108,7 @@ namespace vcsn
               os << ">\n";
             }
           else
-            throw std::domain_error("invalid kind name: "
-                                    + str_escape(kind));
+            raise("invalid kind name: ", str_escape(kind));
         }
 
         void ratexpset(bool with_ratexpset = true)
@@ -125,6 +125,7 @@ namespace vcsn
           headers.insert("vcsn/core/rat/ratexpset.hh");
         }
 
+        /// Read a weightset in \a is.
         void weightset()
         {
           std::string ws;
@@ -146,8 +147,7 @@ namespace vcsn
           else if (ws == "ratexpset")
             ratexpset(false);
           else
-            throw std::domain_error("invalid weightset name: "
-                                    + str_escape(ws));
+            raise("invalid weightset name: ", str_escape(ws));
         }
 
         std::ostream& print(std::ostream& o)
@@ -193,7 +193,7 @@ namespace vcsn
           if (getenv("VCSN_DEBUG"))
             std::cerr << "run: " << s << std::endl;
           if (system(s.c_str()))
-            throw std::runtime_error("cannot run: " + s);
+            raise("cannot run: ", s);
         }
 
         void compile(const std::string& ctx)
@@ -213,12 +213,14 @@ namespace vcsn
           cxx("-fPIC " + ldflags + " -lvcsn '" + base + ".o' -shared"
               " -o '" + base + ".so'");
           void* lib = dlopen((base + ".so").c_str(), RTLD_LAZY);
-          if (!lib)
-            throw std::domain_error("cannot load lib: " + base + ".so");
+          require (lib, "cannot load lib: ", base, ".so");
         }
 
+        /// The input stream: the specification to translate.
         std::istringstream is;
+        /// The output stream: the corresponding C++ snippet to compile.
         std::ostringstream os;
+        /// Headers to include.
         std::set<std::string> headers;
       };
     } // namespace detail
