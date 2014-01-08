@@ -69,6 +69,35 @@ if ! "${stdpass-false}"; then
   AC_ERROR([unable to turn on C++11 mode with this compiler])
 fi
 
+# Check for a long-term GCC bug that prevents proper behavior of
+# tuplesets.  http://gcc.gnu.org/bugzilla/show_bug.cgi?id=51253
+AC_CACHE_CHECK([whether evaluation order in braced-init-list is correct],
+               [ac_cv_cxx_have_correct_list_initializer_order],
+[AC_RUN_IFELSE([AC_LANG_PROGRAM(
+[[struct swallow{
+  template<typename... Types>
+  swallow(Types &&...){}
+};
+
+template<int... IS>
+int f()
+{
+  int i = 2;
+  swallow{ i = i * IS + IS... };
+  return i;
+}]],
+[[
+  return f<2, 3>() == 21 ? 0 : 1;
+]])],
+    [ac_cv_cxx_have_correct_list_initializer_order=yes],
+    [ac_cv_cxx_have_correct_list_initializer_order=no])])
+AM_CONDITIONAL([HAVE_CORRECT_LIST_INITIALIZER_ORDER],
+               [test "$ac_cv_cxx_bug_51253" = yes])
+case $ac_cv_cxx_have_correct_list_initializer_order in (yes)
+  AC_DEFINE([HAVE_CORRECT_LIST_INITIALIZER_ORDER], 1,
+            [Define to 1 if evaluation order in braced-init-list is correct])
+esac
+
 # Do not apply to C++: -Wbad-function-cast, -Wmissing-prototypes,
 # -Wstrict-prototypes.
 TC_CXX_WARNINGS(
@@ -143,7 +172,7 @@ ac_cv_GLIBCXX_DEBUG=yes
 # all, it does not make a lot of sense to use _GLIBCXX_DEBUG with
 # NDEBUG, let's use the easy way.
 case $CPPFLAGS in
-  *' -DNDEBUG '*|'-DNDEBUG '*|*' -DNDEBUG'|'-DNDEBUG')
+  (*' -DNDEBUG '*|'-DNDEBUG '*|*' -DNDEBUG'|'-DNDEBUG')
     ac_cv_GLIBCXX_DEBUG='no (NDEBUG is set, which will leads to aborts)';;
 esac
 
@@ -190,7 +219,7 @@ if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
 fi
 ])
 
-case $ac_cv_GLIBCXX_DEBUG in yes)
+case $ac_cv_GLIBCXX_DEBUG in (yes)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
