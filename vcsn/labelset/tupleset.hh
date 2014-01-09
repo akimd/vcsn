@@ -5,7 +5,9 @@
 # include <istream>
 # include <tuple>
 
+# include <vcsn/algos/print.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weights/b.hh>
 
@@ -395,17 +397,18 @@ namespace vcsn
                  detail::seq<I...>)
       {
         const char *sep = "";
-        for (auto n: {(std::get<I>(ls.sets_))...})
+        if (format == "latex")
+          sep = " \\times ";
+        else if (format == "text")
+          sep = " x ";
+        else
+          raise("invalid format: ", format);
+        vcsn::detail::pass
           {
-            o << sep;
-            print_set(n, o, format);
-            if (format == "latex")
-              sep = " \\times ";
-            else if (format == "text")
-              sep = " x ";
-            else
-              throw std::runtime_error("invalid format: " + format);
-          }
+            (o << (I == 0 ? "" : sep),
+             vcsn::print_set(std::get<I>(ls.sets_), o, format),
+             0)...
+          };
         return o;
       }
 

@@ -12,6 +12,7 @@
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/weight.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/nullableset.hh>
 # include <vcsn/labelset/oneset.hh>
@@ -146,6 +147,15 @@ namespace vcsn
     else
       raise("invalid format: ", format);
     return o;
+  }
+
+  template <typename... LabelSets>
+  inline
+  std::ostream&
+  print_ws(const ctx::tupleset<LabelSets...>& ws,
+           std::ostream& o, const std::string& format)
+  {
+    return print_ls(ws, o, format);
   }
 
   template <typename L>

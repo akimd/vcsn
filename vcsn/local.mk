@@ -127,6 +127,7 @@ nobase_include_HEADERS =                        \
   %D%/factory/ladybird.hh                       \
   %D%/factory/random.hh                         \
   %D%/factory/u.hh                              \
+  %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
   %D%/labelset/letterset.hh                     \
   %D%/labelset/nullableset.hh                   \
