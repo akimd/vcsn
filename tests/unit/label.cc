@@ -1,3 +1,5 @@
+#include <vcsn/config.hh>
+
 #include <iostream>
 
 #include <tests/unit/test.hh>
@@ -139,7 +141,7 @@ int main()
 {
   size_t nerrs = 0;
   nerrs += check_letterset();
-# if HAVE_CORRECT_LIST_INITIALIZER_ORDER
+# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
   nerrs += check_tupleset();
 # endif
   return !!nerrs;
