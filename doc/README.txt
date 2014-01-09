@@ -66,6 +66,9 @@ label: l
 state: s
 transition: t
 
+ostream: os, o
+istream: is
+
 * Environment variables
 ** VCSN_DEBUG
 Improve the display with debugging information.
