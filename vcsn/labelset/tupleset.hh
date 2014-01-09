@@ -143,6 +143,12 @@ namespace vcsn
         return star_(l, indices_t{});
       }
 
+      // FIXME: this needs to be computed.
+      static constexpr star_status_t star_status()
+      {
+        return star_status_t::STARRABLE;
+      }
+
       value_t
       concat(const value_t& l, const value_t& r) const
       {
