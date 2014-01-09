@@ -82,7 +82,19 @@ namespace vcsn
       bool
       is_special(const value_t& l) const
       {
-        return equals(l, special());
+        return is_special_(l, indices_t{});
+      }
+
+      value_t
+      zero() const
+      {
+        return zero_(indices_t{});
+      }
+
+      bool
+      is_zero(const value_t& l) const
+      {
+        return is_zero_(l, indices_t{});
       }
 
       value_t
@@ -234,6 +246,33 @@ namespace vcsn
       special_(detail::seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).special())...);
+      }
+
+      template <std::size_t... I>
+      bool
+      is_special_(const value_t& l, detail::seq<I...>) const
+      {
+        for (auto n: {(std::get<I>(sets_).is_special(std::get<I>(l)))...})
+          if (!n)
+            return false;
+        return true;
+      }
+
+      template <std::size_t... I>
+      value_t
+      zero_(detail::seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).zero())...);
+      }
+
+      template <std::size_t... I>
+      bool
+      is_zero_(const value_t& l, detail::seq<I...>) const
+      {
+        for (auto n: {(std::get<I>(sets_).is_zero(std::get<I>(l)))...})
+          if (!n)
+            return false;
+        return true;
       }
 
       template <std::size_t... I>
