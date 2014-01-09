@@ -50,10 +50,13 @@ namespace
 {
   using irange_type = sem_type::irange_type;
   irange_type quantifier(driver& d, const location& loc, const std::string& s);
+
+  /// Append all the characters between first and last.
+  void insert_interval(std::set<char>& res, char first, char last);
 }
 %}
 
-%x SC_CONTEXT SC_WEIGHT
+%x SC_CLASS SC_CONTEXT SC_WEIGHT
 
 char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
@@ -113,8 +116,30 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   {char}  yylval->sval = new std::string(yytext); return TOK(LETTER);
   "'"[^\']+"'" yylval->sval = new std::string(yytext+1, yyleng-2); return TOK(LETTER);
 
+  /* Character classes.  */
+  "["     yylval->chars = new std::set<char>(); yy_push_state(SC_CLASS);
 
   \\.|.|\n   driver_.invalid(*yylloc, yytext);
+}
+
+<SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
+  "]" {
+    BEGIN INITIAL;
+    return TOK(CLASS);
+  }
+
+  .       yylval->chars->insert(yytext[0]);
+  \\.     yylval->chars->insert(yytext[1]);
+  .-.     insert_interval(*yylval->chars, yytext[0], yytext[2]);
+  .-\\.   insert_interval(*yylval->chars, yytext[0], yytext[3]);
+  \\.-.   insert_interval(*yylval->chars, yytext[1], yytext[3]);
+  \\.-\\. insert_interval(*yylval->chars, yytext[1], yytext[4]);
+
+  <<EOF>> {
+    driver_.error(loc, "unexpected end of file in a character-class");
+    BEGIN INITIAL;
+    return TOK(CLASS);
+  }
 }
 
 <SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */
@@ -206,6 +231,12 @@ namespace
       // No comma: single argument.
       std::get<1>(res) = std::get<0>(res);
     return res;
+  }
+
+  void insert_interval(std::set<char>& res, char first, char last)
+  {
+    while (first <= last)
+      res.insert(first++);
   }
 }
 

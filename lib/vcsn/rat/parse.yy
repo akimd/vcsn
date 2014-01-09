@@ -14,6 +14,7 @@
 {
   #include <iostream>
   #include <list>
+  #include <set>
   #include <string>
   #include <tuple>
   #include "location.hh"
@@ -37,6 +38,7 @@
         union
         {
           std::string* sval;
+          std::set<char>* chars;
         };
       };
     }
@@ -68,6 +70,9 @@
 
       static
       exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
+      /// Generate a ratexp matching one characters amongst \a chars.
+      static
+      exp_t char_class(const dyn::ratexpset& rs, const std::set<char>& chars);
 
       /// Use our local scanner object.
       static
@@ -113,6 +118,10 @@
 }
 
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
+%printer { debug_stream() << '[';
+           for (auto c: *$$)
+             debug_stream() << c;
+           debug_stream() << ']'; } "character-class";
 %printer { debug_stream() << '<' << *$$ << '>'; } "weight";
 %printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
@@ -133,6 +142,7 @@
 %token <irange> STAR "*";
 %token <sval> LETTER  "letter";
 %token <sval> WEIGHT  "weight";
+%token <chars> CLASS "character-class";
 
 %type <node> exp exps weights;
 
@@ -143,7 +153,7 @@
 %left "."
 %right "weight" // Match longest series of "weight".
 %precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
-%precedence "(" "\\z" "\\e" "letter"
+%precedence "(" "\\z" "\\e" "letter" "character-class"
 %precedence CONCAT
 %precedence "*" "{c}"
 
@@ -179,7 +189,8 @@ exp:
 | exp "{c}"        { $$ = MAKE(complement, $1); }
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
-| LETTER           { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }
+| "letter"         { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }
+| "character-class" { $$ = char_class(driver_.ratexpset_, *$1); delete $1; }
 | "(" exp ")"      { $$ = $2; $<parens>$ = true; }
 ;
 
@@ -233,6 +244,16 @@ namespace vcsn
     power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
     {
       return power(es, e, std::get<0>(range), std::get<1>(range));
+    }
+
+    static
+    exp_t
+    char_class(const dyn::ratexpset& rs, const std::set<char>& chars)
+    {
+      exp_t res = rs->zero();
+      for (auto c: chars)
+        res = rs->add(res, rs->atom(std::string(1, c)));
+      return res;
     }
 
     void
