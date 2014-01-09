@@ -119,6 +119,9 @@ namespace vcsn
       /// Whether to be overly verbose.
       const bool debug_;
 
+      /// Left and right boundaries (typically braces for LaTeX).
+      const char* lgroup_ = nullptr;
+      const char* rgroup_ = nullptr;
       /// Left and right brackets for weights.
       const char* lbracket_ = nullptr;
       const char* rbracket_ = nullptr;

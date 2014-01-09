@@ -30,6 +30,8 @@ namespace vcsn
     {
       if (format == "latex")
         {
+          lgroup_       = "{";
+          rgroup_       = "}";
           lbracket_     = "";
           rbracket_     = "";
           lparen_       = "\\left(";
@@ -47,6 +49,8 @@ namespace vcsn
         }
       else if (format == "text")
         {
+          lgroup_       = "";
+          rgroup_       = "";
           lbracket_     = "<";
           rbracket_     = ">";
           lparen_       = "(";
@@ -181,9 +185,13 @@ namespace vcsn
         && ! (child.type() == type_t::atom && context_t::is_lal);
       if (needs_parens)
         out_ << lparen_;
+      else if (parent.is_unary())
+        out_ << lgroup_;
       child.accept(*this);
       if (needs_parens)
         out_ << rparen_;
+      else if (parent.is_unary())
+        out_ << rgroup_;
     }
 
     template <typename RatExpSet>
