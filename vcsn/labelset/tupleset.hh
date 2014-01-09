@@ -162,13 +162,6 @@ namespace vcsn
         return res;
       }
 
-      // FIXME: remove, see todo.txt:scanners.
-      value_t
-      conv(const std::string& s) const
-      {
-        return ::vcsn::conv(*this, s);
-      }
-
       static value_t
       conv(self_type, value_t v)
       {
