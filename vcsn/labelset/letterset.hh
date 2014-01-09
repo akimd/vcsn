@@ -110,6 +110,11 @@ namespace vcsn
         return this->has(v);
       }
 
+      static size_t size(value_t)
+      {
+        return 1;
+      }
+
       /// Read one letter from i, return the corresponding label.
       value_t
       conv(std::istream& i) const

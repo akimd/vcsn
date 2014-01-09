@@ -100,6 +100,11 @@ namespace vcsn
         return o;
       }
 
+      static size_t size(value_t)
+      {
+        return 0;
+      }
+
       static value_t conv(std::istream& i)
       {
         if (i.peek() == '\\')

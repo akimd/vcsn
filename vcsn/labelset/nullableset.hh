@@ -117,6 +117,12 @@ namespace vcsn
         return this->has(v) || is_one(v);
       }
 
+      static size_t size(value_t)
+      {
+        // FIXME: it should be return is_one(v) ? 0 : 1;
+        return 1;
+      }
+
       /// \throws std::domain_error if there is no label here.
       value_t
       conv(std::istream& i) const

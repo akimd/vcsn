@@ -115,6 +115,11 @@ namespace vcsn
         return this->genset()->is_empty_word(l);
       }
 
+      static size_t size(value_t v)
+      {
+        return v.length();
+      }
+
       // FIXME: Why do I need to repeat this?
       // It should be inherited from genset-labelset.
       value_t
