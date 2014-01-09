@@ -10,6 +10,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/core/rat/info.hh>
+# include <vcsn/core/rat/size.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
 
@@ -190,12 +191,12 @@ namespace vcsn
   info(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
        std::ostream& o)
   {
+    rat::size<RatExpSet> sizer;
     vcsn::rat::info<RatExpSet> nfo;
     nfo(*e);
 
-    vcsn::rat::size<RatExpSet> sizer;
 # define DEFINE(Type)                            \
-    << '\n' << #Type ": " << nfo.Type
+    << "\n" #Type ": " << nfo.Type
     o
       << "type: " << rs.vname(true)
       << "\nsize: " << sizer(e)
