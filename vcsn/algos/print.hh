@@ -28,7 +28,7 @@ namespace vcsn
 {
 
   std::ostream&
-  print_ls(const ctx::oneset& ls,
+  print_set(const ctx::oneset& ls,
            std::ostream& o, const std::string& format);
 
   template <typename LabelSet, typename WeightSet>
@@ -37,17 +37,17 @@ namespace vcsn
   print_ctx(const ctx::context<LabelSet, WeightSet>& ctx,
             std::ostream& o, const std::string& format)
   {
-    print_ls(*ctx.labelset(), o, format);
+    print_set(*ctx.labelset(), o, format);
     if (format == "latex")
       o << "\\rightarrow";
     else
       o << '_';
-    return print_ws(*ctx.weightset(), o, format);
+    return print_set(*ctx.weightset(), o, format);
   }
 
   inline
   std::ostream&
-  print_ws(const b& ws,
+  print_set(const b& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -61,7 +61,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ws(const z& ws,
+  print_set(const z& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -75,7 +75,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ws(const q& ws,
+  print_set(const q& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -89,7 +89,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ws(const r& ws,
+  print_set(const r& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -103,7 +103,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ws(const f2& ws,
+  print_set(const f2& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -117,7 +117,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ws(const zmin& ws,
+  print_set(const zmin& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -132,14 +132,14 @@ namespace vcsn
   template <typename Context>
   inline
   std::ostream&
-  print_ws(const ratexpset<Context>& ws,
+  print_set(const ratexpset<Context>& ws,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
-	print_ws(*ws.weightset(), o, format);
+	print_set(*ws.weightset(), o, format);
 	o << "\\,\\mathsf{RatE}\\,";
-	print_ls(*ws.labelset(), o, format);
+	print_set(*ws.labelset(), o, format);
       }
     else if (format == "text")
       o << ws.vname();
@@ -151,7 +151,7 @@ namespace vcsn
   template <typename L>
   inline
   std::ostream&
-  print_ls(const set_alphabet<L>& alphabet,
+  print_set(const set_alphabet<L>& alphabet,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -174,11 +174,11 @@ namespace vcsn
   template <typename GenSet>
   inline
   std::ostream&
-  print_ls(const ctx::letterset<GenSet>& ls,
+  print_set(const ctx::letterset<GenSet>& ls,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
-      print_ls(*ls.genset(), o, format);
+      print_set(*ls.genset(), o, format);
     else if (format == "text")
       o << ls.vname(true);
     else
@@ -189,12 +189,12 @@ namespace vcsn
   template <typename GenSet>
   inline
   std::ostream&
-  print_ls(const ctx::nullableset<GenSet>& ls,
+  print_set(const ctx::nullableset<GenSet>& ls,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
-	print_ls(*ls.genset(), o, format);
+	print_set(*ls.genset(), o, format);
 	o << "^?";
       }
     else if (format == "text")
@@ -206,7 +206,7 @@ namespace vcsn
 
   inline
   std::ostream&
-  print_ls(const ctx::oneset& ls,
+  print_set(const ctx::oneset& ls,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
@@ -221,12 +221,12 @@ namespace vcsn
   template <typename GenSet>
   inline
   std::ostream&
-  print_ls(const ctx::wordset<GenSet>& ls,
+  print_set(const ctx::wordset<GenSet>& ls,
            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
-	print_ls(*ls.genset(), o, format);
+	print_set(*ls.genset(), o, format);
 	o << "^*";
       }
     else if (format == "text")

@@ -381,24 +381,24 @@ namespace vcsn
 
       friend
       std::ostream&
-      print_ls(const tupleset& ls,
-               std::ostream& o, const std::string& format)
+      print_set(const tupleset& ls,
+                std::ostream& o, const std::string& format)
       {
-        return print_ls_(ls, o, format, indices_t{});
+        return print_set_(ls, o, format, indices_t{});
       }
 
       template <std::size_t... I>
       friend
       std::ostream&
-      print_ls_(const tupleset& ls,
-                std::ostream& o, const std::string& format,
-                detail::seq<I...>)
+      print_set_(const tupleset& ls,
+                 std::ostream& o, const std::string& format,
+                 detail::seq<I...>)
       {
         const char *sep = "";
         for (auto n: {(std::get<I>(ls.sets_))...})
           {
             o << sep;
-            print_ls(n, o, format);
+            print_set(n, o, format);
             if (format == "latex")
               sep = " \\times ";
             else if (format == "text")
