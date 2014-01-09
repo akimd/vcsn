@@ -152,6 +152,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/flyweight.hh                         \
   %D%/misc/hash.hh                              \
   %D%/misc/indent.hh                            \
+  %D%/misc/map.hh                               \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
   %D%/misc/pair.hh                              \

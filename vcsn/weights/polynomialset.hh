@@ -8,6 +8,7 @@
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/map.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -291,15 +292,18 @@ namespace vcsn
       return res;
     }
 
-    static size_t hash(value_t v)
+    static size_t hash(const monomial_t& m)
     {
       size_t res = 0;
-      for (const auto& lw : v)
-        {
-          std::hash_combine(res, labelset_t::hash(lw.first));
-          std::hash_combine(res, weightset_t::hash(lw.second));
-        }
+      std::hash_combine(res, labelset_t::hash(m.first));
+      std::hash_combine(res, weightset_t::hash(m.second));
       return res;
+    }
+
+    static size_t hash(const value_t& v)
+    {
+      std::hash<value_t> hasher;
+      return hasher(v);
     }
 
     /// Construct from a string.
