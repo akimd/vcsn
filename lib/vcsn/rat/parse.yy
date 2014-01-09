@@ -115,7 +115,7 @@
 
 %printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
-%printer { debug_stream() << '{' << *$$ << '}'; } "weight";
+%printer { debug_stream() << '<' << *$$ << '>'; } "weight";
 %printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
