@@ -108,7 +108,7 @@ namespace vcsn
             {
               eat(is, '<');
               headers.insert("vcsn/labelset/tupleset.hh");
-              os << "vcsn::ctx::tupleset<";
+              os << "vcsn::ctx::tupleset<" << incendl;
               while (true)
                 {
                   valueset();
@@ -116,13 +116,13 @@ namespace vcsn
                   if (c == ',')
                     {
                       is.get();
-                      os << ",\n";
+                      os << ',' << iendl;
                     }
                   else
                     break;
                 }
               eat(is, '>');
-              os << ">\n";
+              os << decendl << '>';
             }
           else
             raise("invalid kind name: ", str_escape(kind));
