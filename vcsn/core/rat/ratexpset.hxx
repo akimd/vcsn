@@ -5,6 +5,7 @@
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/ratexp.hh>
+#include <vcsn/core/rat/size.hh>
 #include <vcsn/core/rat/transpose.hh>
 #include <vcsn/dyn/algos.hh> // dyn::read_ratexp_string
 #include <vcsn/dyn/fwd.hh>
@@ -384,9 +385,19 @@ namespace vcsn
   DEFINE::less_than(value_t lhs, value_t rhs)
     -> bool
   {
-    using less_than_t = rat::less_than<ratexpset>;
-    less_than_t lt;
-    return lt(lhs, rhs);
+    rat::size<ratexpset> sizer;
+    size_t l = sizer(lhs), r = sizer(rhs);
+
+    if (l < r)
+      return true;
+    else if (l > r)
+      return false;
+    else
+      {
+        using less_than_t = rat::less_than<ratexpset>;
+        less_than_t lt;
+        return lt(lhs, rhs);
+      }
   }
 
   DEFINE::conv(self_type, value_t v) const
