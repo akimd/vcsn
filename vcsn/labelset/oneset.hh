@@ -6,8 +6,8 @@
 # include <stdexcept>
 
 # include <vcsn/empty.hh>
-
 # include <vcsn/core/kind.hh>
+# include <vcsn/misc/hash.hh>
 
 namespace vcsn
 {
@@ -107,8 +107,7 @@ namespace vcsn
 
       static size_t hash(value_t v)
       {
-        std::hash<value_t> hasher;
-        return hasher(v);
+        return std::hash_value(v);
       }
 
       static value_t conv(std::istream& i)

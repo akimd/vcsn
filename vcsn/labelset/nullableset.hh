@@ -8,6 +8,7 @@
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/hash.hh>
 # include <vcsn/labelset/genset-labelset.hh>
 
 namespace vcsn
@@ -125,8 +126,7 @@ namespace vcsn
 
       static size_t hash(value_t v)
       {
-        std::hash<value_t> hasher;
-        return hasher(v);
+        return std::hash_value(v);
       }
 
       /// \throws std::domain_error if there is no label here.

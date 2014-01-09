@@ -8,6 +8,7 @@
 # include <string>
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/hash.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/weights/fwd.hh>
@@ -113,8 +114,7 @@ namespace vcsn
 
     static size_t hash(value_t v)
     {
-      std::hash<value_t> hasher;
-      return hasher(v);
+      return std::hash_value(v);
     }
 
     static value_t

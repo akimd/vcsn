@@ -163,10 +163,8 @@ namespace vcsn
     static size_t hash(value_t v)
     {
       size_t res = 0;
-      std::hash<int> num_hasher;
-      std::hash<unsigned> den_hasher;
-      std::hash_combine(res, num_hasher(v.num));
-      std::hash_combine(res, den_hasher(v.den));
+      std::hash_combine(res, std::hash_value(v.num));
+      std::hash_combine(res, std::hash_value(v.den));
       return res;
     }
 
