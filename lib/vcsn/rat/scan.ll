@@ -49,8 +49,7 @@ YY_FLEX_NAMESPACE_BEGIN
 namespace
 {
   using irange_type = sem_type::irange_type;
-  irange_type
-  quantifier(driver& d, const location& loc, const std::string& s);
+  irange_type quantifier(driver& d, const location& loc, const std::string& s);
 }
 %}
 
@@ -105,39 +104,19 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       return TOK(STAR);
   }
 
-
+  /* Special constructs.  */
   "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
   "(?#"[^)]*")"  continue;
 
+  /* Weights. */
   "<"     yylval->sval = new std::string(); yy_push_state(SC_WEIGHT);
 
+  /* Labels.  */
   {char}  yylval->sval = new std::string(yytext); return TOK(LETTER);
-  "'"[^']+"'" yylval->sval = new std::string(yytext+1, yyleng-2); return TOK(LETTER);
+  "'"[^\']+"'" yylval->sval = new std::string(yytext+1, yyleng-2); return TOK(LETTER);
 
-  "\n"    continue;
 
-  \\.|.   driver_.invalid(*yylloc, yytext);
-}
-
-<SC_WEIGHT>{ /* Weight with Vcsn Syntax*/
-  "<"                           {
-    ++nesting;
-    *yylval->sval += yytext;
-  }
-
-  ">"                           {
-    if (nesting)
-      {
-        --nesting;
-        *yylval->sval += yytext;
-      }
-    else
-      {
-        yy_pop_state();
-        return TOK(WEIGHT);
-      }
-  }
-  [^<>]+       *yylval->sval += yytext;
+  \\.|.|\n   driver_.invalid(*yylloc, yytext);
 }
 
 <SC_CONTEXT>{ /* Context embedded in a $(?@...) directive.  */
@@ -160,12 +139,32 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   }
   [^()]+   context += yytext;
 }
+
+<SC_WEIGHT>{ /* Weight.  */
+  "<"                           {
+    ++nesting;
+    *yylval->sval += yytext;
+  }
+
+  ">"                           {
+    if (nesting)
+      {
+        --nesting;
+        *yylval->sval += yytext;
+      }
+    else
+      {
+        yy_pop_state();
+        return TOK(WEIGHT);
+      }
+  }
+  [^<>]+       *yylval->sval += yytext;
+}
+
 %%
 namespace
 {
-  // Safe conversion to a numeric value.
-  // The name parser_impl_ is chosen so that SCAN_ERROR can be used
-  // from out of the scanner.
+  /// Safe conversion to a numeric value.
   template <typename Out>
   Out
   lexical_cast(driver& d, const location& loc, const std::string& s)
@@ -181,7 +180,7 @@ namespace
       }
   }
 
-  // The value of s, a decimal number, or -1 if empty.
+  /// The value of s, a decimal number, or -1 if empty.
   int arity(driver& d, const location& loc, const std::string& s)
   {
     if (s.empty())
@@ -190,11 +189,11 @@ namespace
       return lexical_cast<int>(d, loc, s);
   }
 
-  // Decode a quantifier's value: "1,2" etc.
-  //
-  // We used to include the braces in \a, but a libc++ bug in
-  // regex made the following regex unportable.
-  // http://llvm.org/bugs/show_bug.cgi?id=16135
+  /// Decode a quantifier's value: "1,2" etc.
+  ///
+  /// We used to include the braces in \a, but a libc++ bug in
+  /// regex made the following regex unportable.
+  /// http://llvm.org/bugs/show_bug.cgi?id=16135
   irange_type
   quantifier(driver& d, const location& loc, const std::string& s)
   {
