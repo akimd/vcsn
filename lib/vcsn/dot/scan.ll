@@ -52,7 +52,6 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
 
 %%
 %{
-  parser::location_type loc;
   std::string s;
   loc.step();
 %}
@@ -94,8 +93,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
     return parser::make_ID(string_t{s}, loc);
   }
 
-  \\\"      s += '"';
-  \\.       s.append(yytext+1, yyleng-1);
+  \\.       s.push_back(yytext[1]);
   [^\\""]+  s.append(yytext, yyleng);
 
   <<EOF>> {
