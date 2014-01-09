@@ -7,6 +7,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/stream.hh>
+# include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
@@ -34,6 +35,7 @@ namespace vcsn
       using labelsets_t = std::tuple<LabelSets...>;
       using indices_t = detail::gen_seq<sizeof...(LabelSets)>;
     public:
+      using self_type = tupleset;
       using value_t = std::tuple<typename LabelSets::value_t...>;
       using kind_t = labels_are_tuples;
 
@@ -165,6 +167,18 @@ namespace vcsn
       conv(const std::string& s) const
       {
         return ::vcsn::conv(*this, s);
+      }
+
+      static value_t
+      conv(self_type, value_t v)
+      {
+        return v;
+      }
+
+      value_t
+      conv(b, b::value_t v) const
+      {
+        return v ? one() : zero();
       }
 
       std::ostream&
@@ -435,12 +449,44 @@ namespace vcsn
         return lhs.meet_(rhs, indices_t{});
       }
 
+      /// The meet with the B weightset.
+      friend
+      tupleset
+      meet(const tupleset& lhs, const b&)
+      {
+        return lhs;
+      }
+
+      /// The meet with the B weightset.
+      friend
+      tupleset
+      meet(const b&, const tupleset& rhs)
+      {
+        return rhs;
+      }
+
       /// The join with another tupleset.
       friend
       tupleset
-      join(const tupleset& lhs, const tupleset rhs)
+      join(const tupleset& lhs, const tupleset& rhs)
       {
         return lhs.join_(rhs, indices_t{});
+      }
+
+      /// The join with the B weightset.
+      friend
+      tupleset
+      join(const tupleset& lhs, const b&)
+      {
+        return lhs;
+      }
+
+      /// The join with the B weightset.
+      friend
+      tupleset
+      join(const b&, const tupleset& rhs)
+      {
+        return rhs;
       }
 
       labelsets_t sets_;
