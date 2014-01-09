@@ -73,3 +73,4 @@ polynomial.__eq__ = is_equal
 ## -------- ##
 
 ratexp.__eq__ = is_equal
+ratexp._repr_latex_ = lambda r: '$' + r.format('latex') + '$'

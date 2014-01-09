@@ -303,11 +303,6 @@ struct ratexp
     return format();
   }
 
-  std::string _repr_latex_() const
-  {
-    return format("latex");
-  }
-
   weight constant_term() const;
 
   polynomial derivation(const std::string& s, bool breaking = true) const
@@ -528,7 +523,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
     .def("__repr__", &ratexp::__repr__)
-    .def("_repr_latex_", &ratexp::_repr_latex_)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())

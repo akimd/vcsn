@@ -30,8 +30,6 @@ namespace vcsn
     {
       if (format == "latex")
         {
-          ldelim_       = "$";
-          rdelim_       = "$";
           lbracket_     = "";
           rbracket_     = "";
           lparen_       = "\\left(";
@@ -49,8 +47,6 @@ namespace vcsn
         }
       else if (format == "text")
         {
-          ldelim_       = "";
-          rdelim_       = "";
           lbracket_     = "<";
           rbracket_     = ">";
           lparen_       = "(";

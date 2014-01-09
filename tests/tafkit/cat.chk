@@ -83,7 +83,7 @@ check_exp 'lal_char(0123)_z' "<0123>0123" "<123>(0123)"
 # Check -C and (?@...) support.
 check_latex ()
 {
-  run 0 "\$$3\$" -vcsn cat -O latex -E -C "$1" -e "$2"
+  run 0 "$3" -vcsn cat -O latex -E -C "$1" -e "$2"
 }
 
 check_latex 'lal_char(abcd)_b' "abcd" "a \\, b \\, c \\, d"

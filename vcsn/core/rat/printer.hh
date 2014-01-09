@@ -39,9 +39,7 @@ namespace vcsn
       std::ostream&
       operator()(const node_t& v)
       {
-        out_ << ldelim_;
         v.accept(*this);
-        out_ << rdelim_;
         return out_;
       }
 
@@ -121,9 +119,6 @@ namespace vcsn
       /// Whether to be overly verbose.
       const bool debug_;
 
-      /// Left and right output delimiters for the whole ratexp.
-      const char* ldelim_ = nullptr;
-      const char* rdelim_ = nullptr;
       /// Left and right brackets for weights.
       const char* lbracket_ = nullptr;
       const char* rbracket_ = nullptr;
