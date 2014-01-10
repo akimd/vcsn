@@ -21,7 +21,7 @@ namespace std
     size_t operator()(const set<T>& ss) const
     {
       size_t res = 0;
-      for (auto s: ss)
+      for (const auto& s: ss)
         hash_combine(res, s);
       return res;
     }
