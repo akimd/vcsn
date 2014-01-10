@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-10
+Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
+"vaucanson".
+
+** Character classes
+Character classes are available in ratexps: '[a-d0-9_]' is expanded into
+(a+b+c+d+0+1+2+3+4+5+6+7+8+9+_).  The negation ([^...]) is not supported.
+
 * 2014-01-02
 ** The '.' operator is no longer printed
 The pretty-printing of (non-LAW) ratexps is simplified.

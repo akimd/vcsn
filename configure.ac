@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.61])
 
-AC_INIT([Vaucanson], [2b.1],
+AC_INIT([Vaucanson], [2b.2],
         [vaucanson-bugs@lrde.epita.fr], [],
         [http://vaucanson.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
