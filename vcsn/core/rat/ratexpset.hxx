@@ -234,11 +234,11 @@ namespace vcsn
   {
     value_t res = nullptr;
     // Trivial Identity.
-    // E:0 = 0:E = E.
+    // E:0 = 0:E = 0.
     if (l->type() == type_t::zero)
-      res = r;
-    else if (r->type() == type_t::zero)
       res = l;
+    else if (r->type() == type_t::zero)
+      res = r;
     // END: Trivial Identity
     else
       res = std::make_shared<shuffle_t>(gather<type_t::shuffle>(l, r));

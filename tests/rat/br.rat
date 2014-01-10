@@ -38,7 +38,7 @@ a<f><g> => <fg>a
 ab(<f>\e) => (ab)<f>
 (<f>\e)(ab) => <f>(ab)
 
-# Trivial identities: C_<at> in TAF-Kit's documentation.
+# Trivial identities: C_{at} in TAF-Kit's documentation.
 \e<f> => <f>\e
 a<f> => <f>a
 
@@ -53,6 +53,18 @@ a<f> => <f>a
 <e>\e&<f>a => \z
 <e>a&<f>\e => \z
 <e>a&<f>a => <ef>a
+
+# Trivial identities: shuffle.
+\z:<f>\e => \z
+<f>\e:\z => \z
+
+\z:<f>a => \z
+<f>a:\z => \z
+
+<e>\e:<f>\e => <e>\e:<f>\e
+<e>\e:<f>a => <e>\e:<f>a
+<e>a:<f>\e => <e>a:<f>\e
+<e>a:<f>a => <e>a:<f>a
 
 # Complement: same precedence/behavior as *.
 <e>a{c} => <e>a{c}
