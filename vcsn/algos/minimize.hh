@@ -24,8 +24,8 @@ namespace vcsn
     {
       static_assert(Aut::context_t::is_lal,
                     "requires labels_are_letters");
-      //static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-      //              "requires Boolean weights");
+      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+                    "requires Boolean weights");
 
       using automaton_t = Aut;
 
@@ -235,13 +235,7 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "moore")
-          if (std::is_same<typename Aut::weight_t, bool>::value)
-            return make_automaton(minimize(a));
-          else
-            {
-              std::cerr << "Can't minimize without signature non a non-Boolean weightset\n";
-              abort();
-            }
+          return make_automaton(minimize(a));
         else if(algo == "signature")
           return make_automaton(signature::minimize(a));
         else

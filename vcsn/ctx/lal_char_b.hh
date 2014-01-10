@@ -18,6 +18,7 @@ namespace vcsn
 # include <vcsn/algos/are-equivalent.hh>
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/determinize.hh>
+# include <vcsn/algos/minimize.hh>
 # include <vcsn/algos/grail.hh>
 # include <vcsn/algos/universal.hh>
 
@@ -28,6 +29,11 @@ namespace vcsn
   MAYBE_EXTERN template
   auto
   determinize(const mutable_automaton<ctx::lal_char_b>& aut, bool complete)
+    -> mutable_automaton<ctx::lal_char_b>;
+
+  MAYBE_EXTERN template
+  auto
+  minimize(const mutable_automaton<ctx::lal_char_b>& aut)
     -> mutable_automaton<ctx::lal_char_b>;
 
   /* fado. */
@@ -71,6 +77,7 @@ namespace vcsn
         REGISTER(determinize, aut_t, bool);
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);
+        REGISTER(minimize, aut_t, const std::string);
         REGISTER(universal, aut_t);
 #  undef REGISTER
 
