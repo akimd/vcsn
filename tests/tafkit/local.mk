@@ -20,7 +20,6 @@
   %D%/complement.chk                            \
   %D%/complete.chk                              \
   %D%/concatenate.chk                           \
-  %D%/constant-term.chk                         \
   %D%/de-bruijn.chk                             \
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
