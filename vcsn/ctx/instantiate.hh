@@ -2,8 +2,6 @@
 # define VCSN_CTX_INSTANTIATE_HH
 
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/are-equivalent.hh> // difference
-# include <vcsn/algos/are-isomorphic.hh>
 # include <vcsn/algos/aut-to-exp.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
@@ -208,7 +206,6 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(accessible, aut_t);
-        REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(aut_to_exp, aut_t);
         REGISTER(chain, aut_t, unsigned);
         REGISTER(coaccessible, aut_t);
