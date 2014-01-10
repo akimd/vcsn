@@ -11,7 +11,7 @@ But we reached a dead-end, and I (Akim Demaille) failed to see how to
 address the remaining issues without the assistance of precedence directives
 to simplify the grammar.
 
-I could not see a clean solution to add support for "a{2}*", i.e.,
+I could not see a clean solution to add support for "a<2>*", i.e.,
 supporting stars after a weight.  And, I was afraid of the endless
 complications that we would face when introducing more operators (say "+"
 for one-or-more, "?" etc.).  So in commit
@@ -22,19 +22,19 @@ directives.
 The original motivation for not using precedence directives was to parse
 correctly:
 
-        {b}{b}aa{c}{d}aa{b}{b}
+        <b><b>aa<c><d>aa<b><b>
 
 as
 
-        ({bb}(aa).{cc}(aa)){bb}
+        (<bb>(aa).<cc>(aa))<bb>
 
 The problem is when reaching this point:
 
-        {b}{b}aa{c} . {d}aa{b}{b}
+        <b><b>aa<c> . <d>aa<b><b>
 
-where it is unknown whether the '{c}' should be attached to the previous
+where it is unknown whether the '<c>' should be attached to the previous
 'aa' (which would be the case if there were no "aa" afterward:
-"{b}{b}aa{c}{d}"); or if {c} and {d} should be kept for the forthcoming "aa"
+"<b><b>aa<c><d>"); or if <c> and <d> should be kept for the forthcoming "aa"
 (which is the case in the above examples).
 
 The real insight here was to understand that weights should be parsed
@@ -57,7 +57,7 @@ Yet weights cannot be stored abstractly (they can be bool, int, whatever,
 with no common root).  Bison does not allow to parametrize the parser, and
 anyway, let's avoid more compile-time and code-bloat.
 
-The trick is simple: store the weights W as a rational-expression: "{W}\e",
+The trick is simple: store the weights W as a rational-expression: "<W>\e",
 and simply use the product to apply a weight.
 
 * Dealing with "labels are words"
@@ -73,25 +73,10 @@ One idea is to have a new non-terminal, say "label", that would collect all
 the letters together, so "exp: exp exp" would always use mul(), never
 concat().  Wrong again: "ab*" will be parsed as "(ab)*".
 
-I don't see how to avoid remembering whether the labels were put in
-parentheses or not.  Yet this is not something that we want to "see" in our
-AST, so ideally we should store this in the parser only.  A decoration of
-the semantic value for the expressions would do the trick, yet it means that
-every single $$ or $1 would now be the decoration, and would also need to be
-dereferenced to provide the expression part.  So one instead of:
-
-  exp: exp "." exp   { $$ = MAKE(mul, $1, $3); }
-
-one would read
+So we need to remember whether the ratexp was in parens, which is done in
+braced_ratexp.  So to handle the "exp" part, we write:
 
   exp: exp "." exp   { $$.exp = MAKE(mul, $1.exp, $3.exp); }
-
-which I'd like to avoid.
-
-Since we already cheat by using a struct for semantic values, instead of a
-union, let's add another field, "parens", a Boolean stating whether the
-tracked value is parenthesized.  Then, just use "$<parens>$" to read the
-"parens" field of $$.
 
 Victory!
 

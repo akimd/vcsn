@@ -9,6 +9,8 @@
 %expect 0
 %locations
 %define api.namespace {vcsn::rat}
+%define api.value.type variant
+%define api.token.constructor
 
 %code requires
 {
@@ -25,33 +27,26 @@
   {
     namespace rat
     {
-      // (Complex) objects such as shared_ptr cannot be put in a
-      // union, even in C++11.  So cheat, and store a struct instead
-      // of an union.  See README.txt.
-      struct sem_type
+      struct braced_ratexp
       {
-        exp_t node;
-        using irange_type = std::tuple<int, int>;
-        irange_type irange;
+        exp_t exp;
         bool parens = false;
-        // These guys _can_ be put into a union.
-        union
+        braced_ratexp& operator=(exp_t e)
         {
-          std::string* sval;
-          std::set<char>* chars;
-        };
+          exp = e;
+          return *this;
+        }
       };
+
+      using irange_type = std::tuple<int, int>;
     }
   }
-  #define YYSTYPE vcsn::rat::sem_type
 }
 
 %code provides
 {
-  #define YY_DECL_(Class)                               \
-    int Class lex(parser::semantic_type* yylval,        \
-                  parser::location_type* yylloc,        \
-                  driver& driver_)
+  #define YY_DECL_(Class) \
+    parser::symbol_type Class lex(driver& driver_)
   #define YY_DECL YY_DECL_(yyFlexLexer::)
 }
 
@@ -77,19 +72,16 @@
       /// Use our local scanner object.
       static
       inline
-      int
-      yylex(parser::semantic_type* yylval,
-            parser::location_type* yylloc,
-            driver& driver_)
+      parser::symbol_type
+      yylex(driver& driver_)
       {
-        return driver_.scanner_->lex(yylval, yylloc, driver_);
+        return driver_.scanner_->lex(driver_);
       }
     }
   }
 }
 
-%parse-param { driver& driver_ }
-%lex-param   { driver& driver_ }
+%param { driver& driver_ }
 
 %code top
 {
@@ -117,34 +109,32 @@
   @$ = driver_.location_;
 }
 
-%printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
-%printer { debug_stream() << '[';
-           for (auto c: *$$)
-             debug_stream() << c;
-           debug_stream() << ']'; } "character-class";
-%printer { debug_stream() << '<' << *$$ << '>'; } "weight";
-%printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
-%destructor { delete $$; } <sval>;
+%printer { yyo << '"' << $$ << '"'; } <std::string>;
+%printer { yyo << '['; for (auto c: $$) yyo << c; yyo << ']'; }
+         <std::set<char>>;
+%printer { yyo << '<' << $$ << '>'; } "weight";
+%printer { driver_.ratexpset_->print(yyo, $$.exp); } <braced_ratexp>;
 
-%token LPAREN  "(" RPAREN  ")"
-
-%token  SUM   "+"
-        AMPERSAND "&"
-        COMPLEMENT "{c}"
-        COLON ":"
-        PERCENT "%"
-        DOT   "."
-        ONE   "\\e"
-        ZERO  "\\z"
-        COMMA  ","
+%token LPAREN   "("
+       RPAREN   ")"
+       PLUS     "+"
+       AMPERSAND "&"
+       COMPLEMENT "{c}"
+       COLON    ":"
+       PERCENT  "%"
+       DOT      "."
+       ONE      "\\e"
+       ZERO     "\\z"
+       COMMA    ","
+       END      0
 ;
 
-%token <irange> STAR "*";
-%token <sval> LETTER  "letter";
-%token <sval> WEIGHT  "weight";
-%token <chars> CLASS "character-class";
+%token <irange_type> STAR "*";
+%token <std::string> LETTER  "letter";
+%token <std::string> WEIGHT  "weight";
+%token <std::set<char>> CLASS "character-class";
 
-%type <node> exp exps weights;
+%type <braced_ratexp> exp exps weights;
 
 %precedence RWEIGHT
 %left "+"
@@ -162,41 +152,41 @@
 
 exps:
   // Provide a value for $$ only for sake of traces: shows the result.
-  exp  { $$ = driver_.result_ = $1; }
+  exp  { driver_.result_ = ($$ = $1).exp; }
 ;
 
 exp:
-  exp "." exp                 { $$ = MAKE(mul, $1, $3); }
-| exp "&" exp                 { $$ = MAKE(intersection, $1, $3); }
-| exp ":" exp                 { $$ = MAKE(shuffle, $1, $3); }
-| exp "+" exp                 { $$ = MAKE(add, $1, $3); }
+  exp "." exp                 { $$ = MAKE(mul, $1.exp, $3.exp); }
+| exp "&" exp                 { $$ = MAKE(intersection, $1.exp, $3.exp); }
+| exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
+| exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(intersection,
-                                          $1, MAKE(complement, $3)); }
-| weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1, $2); }
-| exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1, $2); }
+                                          $1.exp, MAKE(complement, $3.exp)); }
+| weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
+| exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
 | exp exp %prec CONCAT
   {
     // See README.txt.
-    if (!$<parens>1 && !$<parens>2)
-      $$ = MAKE(concat, $1, $2);
+    if (!$1.parens && !$2.parens)
+      $$ = MAKE(concat, $1.exp, $2.exp);
     else
       {
-        $$ = MAKE(mul, $1, $2);
-        $<parens>$ = $<parens>2;
+        $$.exp = MAKE(mul, $1.exp, $2.exp);
+        $$.parens = $2.parens;
       }
   }
-| exp "*"          { $$ = power(driver_.ratexpset_, $1, $2); }
-| exp "{c}"        { $$ = MAKE(complement, $1); }
+| exp "*"          { $$ = power(driver_.ratexpset_, $1.exp, $2); }
+| exp "{c}"        { $$ = MAKE(complement, $1.exp); }
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
-| "letter"         { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }
-| "character-class" { $$ = char_class(driver_.ratexpset_, *$1); delete $1; }
-| "(" exp ")"      { $$ = $2; $<parens>$ = true; }
+| "letter"         { TRY(@$, $$ = MAKE(atom, $1)); }
+| "character-class" { $$ = char_class(driver_.ratexpset_, $1); }
+| "(" exp ")"      { $$.exp = $2.exp; $$.parens = true; }
 ;
 
 weights:
-  "weight"         { TRY(@$ + 1, $$ = MAKE(rmul, MAKE(one), *$1)); delete $1;}
-| "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, *$1, $2)); delete $1; }
+  "weight"         { TRY(@$ + 1, $$ = MAKE(rmul, MAKE(one), $1)); }
+| "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, $1, $2.exp)); }
 ;
 
 %%

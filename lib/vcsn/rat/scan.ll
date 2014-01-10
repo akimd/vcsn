@@ -19,6 +19,8 @@
 
 // Define YY_DECL.
 #include <lib/vcsn/rat/parse.hh>
+
+#define yyterminate() return parser::make_END(loc)
 }
 
 %{
@@ -35,20 +37,19 @@
 
 #define LINE(Line)                              \
   do{                                           \
-    yylloc->end.column = 1;                     \
-    yylloc->lines(Line);                        \
+    loc.end.column = 1;                         \
+    loc.lines(Line);                            \
  } while (false)
 
 #define YY_USER_ACTION                          \
-  yylloc->columns(yyleng);
+  loc.columns(yyleng);
 
 #define TOK(Token)                              \
-  parser::token::Token
+  parser::make_ ## Token (loc)
 
 YY_FLEX_NAMESPACE_BEGIN
 namespace
 {
-  using irange_type = sem_type::irange_type;
   irange_type quantifier(driver& d, const location& loc, const std::string& s);
 
   /// Append all the characters between first and last.
@@ -66,8 +67,9 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   unsigned int nesting = 0;
   // Build a context string.  "static" only to save build/dtor.
   static std::string context;
-
-  yylloc->step();
+  std::string s;
+  std::set<char> chars;
+  loc.step();
 %}
 
 <INITIAL>{ /* Vcsn Syntax */
@@ -78,67 +80,58 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "&"     return TOK(AMPERSAND);
   ":"     return TOK(COLON);
   "%"     return TOK(PERCENT);
-  "+"     return TOK(SUM);
+  "+"     return TOK(PLUS);
   "."     return TOK(DOT);
   ","     return TOK(COMMA);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);
 
   /* Quantifiers.  */
-  "*"|"{*}"              {
-      yylval->irange = std::make_tuple(-1, -1);
-      return TOK(STAR);
+  "?"|"{?}"            return parser::make_STAR(std::make_tuple(0, 1), loc);
+  "*"|"{*}"            return parser::make_STAR(std::make_tuple(-1, -1), loc);
+  "{+}"                return parser::make_STAR(std::make_tuple(1, -1), loc);
+  "{"[0-9]*,?[0-9]*"}" {
+    return parser::make_STAR(quantifier(driver_, loc,
+                                        {yytext+1, static_cast<size_t>(yyleng)-2}),
+                             loc);
   }
+
   "{c}"   return TOK(COMPLEMENT);
-  "?"|"{?}"              {
-      yylval->irange = std::make_tuple(0, 1);
-      return TOK(STAR);
-  }
-  "{+}"                  {
-      yylval->irange = std::make_tuple(1, -1);
-      return TOK(STAR);
-  }
-  "{"[0-9]*,?[0-9]*"}"    {
-      yylval->irange
-        = quantifier(driver_, *yylloc,
-                     {yytext+1, static_cast<size_t>(yyleng)-2});
-      return TOK(STAR);
-  }
 
   /* Special constructs.  */
   "(?@"   context.clear(); yy_push_state(SC_CONTEXT);
   "(?#"[^)]*")"  continue;
 
   /* Weights. */
-  "<"     yylval->sval = new std::string(); yy_push_state(SC_WEIGHT);
+  "<"     yy_push_state(SC_WEIGHT);
 
   /* Labels.  */
-  {char}  yylval->sval = new std::string(yytext); return TOK(LETTER);
-  "'"[^\']+"'" yylval->sval = new std::string(yytext+1, yyleng-2); return TOK(LETTER);
+  {char}        return parser::make_LETTER(yytext, loc);
+  "'"[^\']+"'"  return parser::make_LETTER(std::string(yytext+1, yyleng-2), loc);
 
   /* Character classes.  */
-  "["     yylval->chars = new std::set<char>(); yy_push_state(SC_CLASS);
+  "["     yy_push_state(SC_CLASS);
 
-  \\.|.|\n   driver_.invalid(*yylloc, yytext);
+  \\.|.|\n   driver_.invalid(loc, yytext);
 }
 
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
   "]" {
     BEGIN INITIAL;
-    return TOK(CLASS);
+    return parser::make_CLASS(chars, loc);
   }
 
-  .       yylval->chars->insert(yytext[0]);
-  \\.     yylval->chars->insert(yytext[1]);
-  .-.     insert_interval(*yylval->chars, yytext[0], yytext[2]);
-  .-\\.   insert_interval(*yylval->chars, yytext[0], yytext[3]);
-  \\.-.   insert_interval(*yylval->chars, yytext[1], yytext[3]);
-  \\.-\\. insert_interval(*yylval->chars, yytext[1], yytext[4]);
+  .       chars.insert(yytext[0]);
+  \\.     chars.insert(yytext[1]);
+  .-.     insert_interval(chars, yytext[0], yytext[2]);
+  .-\\.   insert_interval(chars, yytext[0], yytext[3]);
+  \\.-.   insert_interval(chars, yytext[1], yytext[3]);
+  \\.-\\. insert_interval(chars, yytext[1], yytext[4]);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a character-class");
     BEGIN INITIAL;
-    return TOK(CLASS);
+    return parser::make_CLASS(chars, loc);
   }
 }
 
@@ -166,22 +159,22 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 <SC_WEIGHT>{ /* Weight.  */
   "<"                           {
     ++nesting;
-    *yylval->sval += yytext;
+    s += yytext;
   }
 
   ">"                           {
     if (nesting)
       {
         --nesting;
-        *yylval->sval += yytext;
+        s += yytext;
       }
     else
       {
         yy_pop_state();
-        return TOK(WEIGHT);
+        return parser::make_WEIGHT(s, loc);
       }
   }
-  [^<>]+       *yylval->sval += yytext;
+  [^<>]+       s += yytext;
 }
 
 %%
