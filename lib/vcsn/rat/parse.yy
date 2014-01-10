@@ -36,7 +36,6 @@
         // These guys _can_ be put into a union.
         union
         {
-          int ival;
           std::string* sval;
         };
       };
@@ -113,14 +112,12 @@
   @$ = driver_.location_;
 }
 
-%printer { debug_stream() << $$; } <ival>;
 %printer { debug_stream() << '"' << *$$ << '"'; } <sval>;
 %printer { debug_stream() << '<' << *$$ << '>'; } "weight";
 %printer { driver_.ratexpset_->print(debug_stream(), $$); } <node>;
 %destructor { delete $$; } <sval>;
 
-%token <ival>   LPAREN  "("
-                RPAREN  ")"
+%token LPAREN  "(" RPAREN  ")"
 
 %token  SUM   "+"
         AMPERSAND "&"
@@ -183,7 +180,7 @@ exp:
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
 | LETTER           { TRY(@$, $$ = MAKE(atom, *$1)); delete $1; }
-| "(" exp ")"      { assert($1 == $3); $$ = $2; $<parens>$ = true; }
+| "(" exp ")"      { $$ = $2; $<parens>$ = true; }
 ;
 
 weights:

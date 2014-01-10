@@ -69,11 +69,9 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
 <INITIAL>{ /* Vcsn Syntax */
 
-  "("     yylval->ival = 0; return TOK(LPAREN);
-  ")"     yylval->ival = 0; return TOK(RPAREN);
+  "("     return TOK(LPAREN);
+  ")"     return TOK(RPAREN);
 
-  "["     yylval->ival = 1; return TOK(LPAREN);
-  "]"     yylval->ival = 1; return TOK(RPAREN);
   "&"     return TOK(AMPERSAND);
   ":"     return TOK(COLON);
   "%"     return TOK(PERCENT);
