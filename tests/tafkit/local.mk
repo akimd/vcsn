@@ -59,7 +59,6 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/aut-to-exp.dir/a.gv                       \
   %D%/aut-to-exp.dir/lao.gv                     \
   %D%/aut-to-exp.dir/lao-elim-0.gv              \
   %D%/aut-to-exp.dir/lao-elim-1.gv              \

@@ -1,4 +1,3 @@
-// ab*c, but with weights to check the associativity of the product.
 digraph
 {
   vcsn_context = "lal_char(abc)_ratexpset<lal_char(xyz)_b>"
