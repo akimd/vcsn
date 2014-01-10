@@ -30,6 +30,7 @@ lib_libvcsn_la_CPPFLAGS = $(AM_CPPFLAGS) -DBUILD_LIBVCSN
 lib_libvcsn_la_SOURCES =                        \
   %D%/algos/accessible.cc                       \
   %D%/algos/are-equivalent.cc                   \
+  %D%/algos/are-isomorphic.cc                   \
   %D%/algos/aut-to-exp.cc                       \
   %D%/algos/complement.cc                       \
   %D%/algos/complete.cc                         \

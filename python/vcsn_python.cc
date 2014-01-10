@@ -73,6 +73,11 @@ struct automaton
     return vcsn::dyn::accessible(aut_);
   }
 
+  bool is_isomorphic(const automaton& rhs) const
+  {
+    return vcsn::dyn::are_isomorphic(aut_, rhs.aut_);
+  }
+
   automaton coaccessible() const
   {
     return vcsn::dyn::coaccessible(aut_);
@@ -515,6 +520,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
      bp::init<const ratexp&>())
     .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
+    .def("is_isomorphic", &automaton::is_isomorphic)
     .def("accessible", &automaton::accessible)
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)

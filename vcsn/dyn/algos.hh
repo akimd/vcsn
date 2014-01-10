@@ -27,6 +27,10 @@ namespace vcsn
     /// Whether define the same language.
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
+    /// Whether there exists an isomorphism between \a lhs's states
+    /// states and \a rhs's states.
+    bool are_isomorphic(const automaton& lhs, const automaton& rhs);
+
     /// A ratexp denoting the language of \a aut.
     /// Uses the "naive" heuristics.
     ratexp aut_to_exp(const automaton& aut);

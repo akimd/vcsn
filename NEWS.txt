@@ -5,7 +5,15 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-02-07
-** weighted minimization (static, dynamic, tafkit, Python)
+** are-isomorphic/is-isomorphic: new algorithm (static, dyn, tafkit, Python)
+Given two automata, check whether they are isomorphic to one another.
+Currently implemented in the deterministic case only, for lal contexts.
+
+  >>> ctx = vcsn.context('lal_char(ab)_z')
+  >>> ctx.ratexp('a+b*').standard().is_isomorphic(ctx.ratexp('b*+a').standard())
+  True
+
+** weighted minimization (static, dyn, tafkit, Python)
 A third implementation of the minimization algorithm named "weighted" is now
 available, supporting any lal context.
 
