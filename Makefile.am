@@ -17,7 +17,7 @@ include build-aux/make/init.mk
 vcsn/config.hh: $(top_builddir)/lib/config.h
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 BUILT_SOURCES += lib/config.h vcsn/config.hh
-DISTCLEANFILES += vcsn/config.hh
+DISTCLEANFILES += vcsn/config.hh python/vcsn.pyc
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)

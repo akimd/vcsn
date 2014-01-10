@@ -1,5 +1,7 @@
 from vcsn_python import *
 
+vcsn_datadir = '@VCSN_DATADIR@'
+
 def dot_to_svg(dot):
     open("/tmp/a.gv", "w").write(dot)
     from subprocess import check_output
