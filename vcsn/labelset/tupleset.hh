@@ -9,27 +9,13 @@
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
+# include <vcsn/misc/tuple.hh>
 # include <vcsn/weights/b.hh>
 
 namespace vcsn
 {
   namespace ctx
   {
-    namespace detail
-    {
-
-      // See "Pretty-print std::tuple"
-      // <http://stackoverflow.com/questions/6245735>.
-      template<std::size_t...> struct seq{};
-
-      template<std::size_t N, std::size_t... Is>
-      struct gen_seq : gen_seq<N-1, N-1, Is...>{};
-
-      template<std::size_t... Is>
-      struct gen_seq<0, Is...> : seq<Is...>{};
-
-    }
-
     template <typename... LabelSets>
     class tupleset
     {
@@ -65,8 +51,9 @@ namespace vcsn
         return res;
       }
 
+      static
       bool
-      equals(const value_t& l, const value_t& r) const
+      equals(const value_t& l, const value_t& r)
       {
         return equals_(l, r, indices_t{});
       }
@@ -161,6 +148,13 @@ namespace vcsn
         return transpose_(l, indices_t{});
       }
 
+      static
+      size_t
+      hash(const value_t& v)
+      {
+        return hash_(v, indices_t{});
+      }
+
       /// Read one letter from i, return the corresponding label.
       value_t
       conv(std::istream& i) const
@@ -235,11 +229,11 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      bool
-      equals_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      static bool
+      equals_(const value_t& l, const value_t& r, detail::seq<I...>)
       {
-        for (auto n: {(std::get<I>(sets_).equals(std::get<I>(l),
-                                                 std::get<I>(r)))...})
+        for (auto n: {(std::tuple_element<I, labelsets_t>::type::equals(std::get<I>(l),
+                                                                        std::get<I>(r)))...})
           if (!n)
             return false;
         return true;
@@ -254,6 +248,16 @@ namespace vcsn
           if (n)
             return true;
         return false;
+      }
+
+      template <std::size_t... I>
+      static std::size_t
+      hash_(const value_t& v, detail::seq<I...>)
+      {
+        std::size_t res = 0;
+        for (auto h: {(std::tuple_element<I, labelsets_t>::type::hash(std::get<I>(v)))...})
+          std::hash_combine(res, h);
+        return res;
       }
 
       template <std::size_t... I>

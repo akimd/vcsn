@@ -163,6 +163,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/set.hxx                              \
   %D%/misc/star_status.hh                       \
   %D%/misc/stream.hh                            \
+  %D%/misc/tuple.hh                             \
   %D%/misc/unordered_set.hh                     \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
