@@ -1,25 +1,36 @@
 #! /bin/sh
 
 # Convert a binary OpenFST file into an efsm textual file.
+me=$(basename "$0")
+medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
-syms=symbols.txt
-trans=transitions.fsm
+syms=$medir/symbols.txt
+trans=$medir/transitions.fsm
 fstprint --acceptor --save_isymbols=$syms "$@" > $trans
 
 # Sort symbols per number, not per value.
 cat <<EOF
 #! /bin/sh
 
-cat >symbols.txt <<\EOFSM
+me=\$(basename "\$0")
+medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
+
+cat >\$medir/symbols.txt <<\EOFSM
 $(sort -n -k2 $syms)
 EOFSM
 
-cat >transitions.fsm <<\EOFSM
+cat >\$medir/transitions.fsm <<\EOFSM
 $(cat $trans)
 EOFSM
 
 fstcompile --acceptor \\
-  --keep_isymbols --isymbols=symbols.txt \\
-  --keep_osymbols --osymbols=symbols.txt \\
-  transitions.fsm "\$@"
+  --keep_isymbols --isymbols=\$medir/symbols.txt \\
+  --keep_osymbols --osymbols=\$medir/symbols.txt \\
+  \$medir/transitions.fsm "\$@"
+sta=\$?
+
+rm -rf \$medir
+exit \$sta
 EOF
+
+rm -rf $medir

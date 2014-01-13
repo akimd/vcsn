@@ -60,8 +60,8 @@ standard(exp).
 
 * Bugs
 ** Open coded file names
-We must use genuine temporary files for efstcompile/efstdecompile, and for
-vcsn.py conversions.  When possible, avoid files and use streams.
+We must use genuine temporary files for vcsn.py conversions.  When possible,
+avoid files and use streams.
 
 ** shortest
 Loops forever:

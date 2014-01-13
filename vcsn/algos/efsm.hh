@@ -50,33 +50,46 @@ namespace vcsn
       /// Actually output \a aut_ on \a os_.
       void operator()()
       {
-        os_ << "#! /bin/sh\n"
-               "\n";
+        os_ <<
+          "#! /bin/sh\n"
+          "\n"
+          "me=$(basename \"$0\")\n"
+          "medir=$(mktemp -d \"/tmp/$me.XXXXXX\") || exit 1\n"
+          "\n"
 
-        // Provide the symbols first, as when reading EFSM, knowing
-        // how \e is represented will help reading the transitions.
-        os_ << "cat >symbols.txt <<\\EOFSM\n";
+          // Provide the symbols first, as when reading EFSM, knowing
+          // how \e is represented will help reading the transitions.
+          "cat >$medir/symbols.txt <<\\EOFSM\n"
+          ;
         output_input_labels_();
-        os_ << "EOFSM\n"
-               "\n";
+        os_ <<
+          "EOFSM\n"
+          "\n"
 
-        os_ << "cat >transitions.fsm <<\\EOFSM";
+          "cat >$medir/transitions.fsm <<\\EOFSM";
         output_transitions_();
-        os_ << "\n"
-               "EOFSM\n"
-               "\n";
+        os_ <<
+          "\n"
+          "EOFSM\n"
+          "\n"
 
-        // Some OpenFST tools seem to really require an output-symbol
-        // list, even for acceptors.  While fstrmepsilon perfectly
-        // works with just the isymbols, fstintersect (equivalent to
-        // our vcsn-product: the Hadamard product) for instance, seems
-        // to require the osymbols; this seems to be due to the fact
-        // that Open FST bases its implementation of intersect on its
-        // (transducer) composition.
-        os_ << "fstcompile --acceptor \\\n"
-            << "  --keep_isymbols --isymbols=symbols.txt \\\n"
-            << "  --keep_osymbols --osymbols=symbols.txt \\\n"
-            << "  transitions.fsm \"$@\"";
+          // Some OpenFST tools seem to really require an
+          // output-symbol list, even for acceptors.  While
+          // fstrmepsilon perfectly works with just the isymbols,
+          // fstintersect (equivalent to our vcsn-product: the
+          // Hadamard product) for instance, seems to require the
+          // osymbols; this seems to be due to the fact that Open FST
+          // bases its implementation of intersect on its (transducer)
+          // composition.
+          "fstcompile --acceptor \\\n"
+          "  --keep_isymbols --isymbols=$medir/symbols.txt \\\n"
+          "  --keep_osymbols --osymbols=$medir/symbols.txt \\\n"
+          "  $medir/transitions.fsm \"$@\"\n"
+          "sta=$?\n"
+          "\n"
+          "rm -rf $medir\n"
+          "exit $sta" // No final \n.
+          ;
       }
 
     private:
@@ -176,7 +189,6 @@ namespace vcsn
   }
 
 
-
   template <typename Aut>
   std::ostream&
   efsm(const Aut& aut, std::ostream& out)
@@ -198,7 +210,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(efsm,
-                        (const automaton& aut, std::ostream& out) -> std::ostream&);
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

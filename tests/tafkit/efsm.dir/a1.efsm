@@ -1,12 +1,15 @@
 #! /bin/sh
 
-cat >symbols.txt <<\EOFSM
+me=$(basename "$0")
+medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
+
+cat >$medir/symbols.txt <<\EOFSM
 \e	0
 a	1
 b	2
 EOFSM
 
-cat >transitions.fsm <<\EOFSM
+cat >$medir/transitions.fsm <<\EOFSM
 0	0	a
 0	1	a
 0	0	b
@@ -17,6 +20,10 @@ cat >transitions.fsm <<\EOFSM
 EOFSM
 
 fstcompile --acceptor \
-  --keep_isymbols --isymbols=symbols.txt \
-  --keep_osymbols --osymbols=symbols.txt \
-  transitions.fsm "$@"
+  --keep_isymbols --isymbols=$medir/symbols.txt \
+  --keep_osymbols --osymbols=$medir/symbols.txt \
+  $medir/transitions.fsm "$@"
+sta=$?
+
+rm -rf $medir
+exit $sta
