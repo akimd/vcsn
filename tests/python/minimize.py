@@ -3,7 +3,7 @@
 import inspect, os, sys
 import vcsn
 
-count = 0
+from test import *
 
 srcdir = os.environ["srcdir"]
 medir = sys.argv[0][:-3] + ".dir"
@@ -12,30 +12,20 @@ def aut(file):
     return vcsn.automaton.load(medir + "/" + file)
 
 def check(algo, aut, exp):
-    global count
-    count += 1
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
     eff = aut.minimize(algo)
     if eff == exp:
-        print 'ok ', count
+        PASS()
     else:
-        msg = str(exp) + " != " + str(eff)
-        print here + ":", msg
-        print 'not ok ', count, msg
+        FAIL(str(exp) + " != " + str(eff))
 
 def xfail(algo, aut):
-    global count
-    count += 1
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
     res = ''
     try:
         res = aut.minimize(algo)
     except RuntimeError:
-        print 'ok ', count
+        PASS()
     else:
-        print 'not ok ', count, 'did not raise an exception', res
+        FAIL('did not raise an exception', res)
 
 
 ## Simple minimization test.  The example comes from the "Theorie des
@@ -80,4 +70,4 @@ smallnfa_exp = aut("small-nfa.exp.gv")
 xfail('moore', smallnfa)
 check('signature', smallnfa, smallnfa_exp)
 
-print '1..'+str(count)
+PLAN()

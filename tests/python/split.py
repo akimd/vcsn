@@ -1,29 +1,21 @@
 #! /usr/bin/env python
 
+import inspect, os, sys
+import vcsn
+from test import *
+
+ctx=vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
+
 # check RAT-EXP RESULT
 # --------------------
 # Check that the splitting of RAT-EXP is RESULT.
-
-import inspect, os, sys
-import vcsn
-
-ctx=vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
-count = 0
-
-def check(re, res):
-    global count
-    count += 1
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
+def check(re, exp):
     r = ctx.ratexp(re)
     s = r.split()
-    if str(s) == res:
-        print "ok", count
+    if str(s) == exp:
+        PASS()
     else:
-        msg = r + " != " + res
-        print here + ":", msg
-        print 'not ok ', count, msg
-
+        FAIL(exp + " != " + r)
 
 check('<x>\z', '\z')
 check('<x>\e', '<x>\e')
@@ -46,5 +38,4 @@ E2="(" + F2 + ")(a(" + F2 + "))"
 check(E2, "a*a(" + F2 + ") + b*a(" + F2 + ")")
 check(F2, "a* + b*")
 
-
-print '1..'+str(count)
+PLAN()

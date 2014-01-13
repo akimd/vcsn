@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 
-import inspect
 import vcsn
+from test import *
 
-count = 0
 ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
 # check_equal WEIGHT WEIGHT
@@ -11,13 +10,9 @@ ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 # Helper function to check that two weights are equal.
 def check_equal(ref, test):
     if ref.format('text') == test.format('text'):
-        return True
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
-    msg = ref.format('text') + " != " + test.format('text')
-    print here + ":", msg
-    print 'not ok ', count, msg
-    return False
+        PASS(ref)
+    else:
+        FAIL(ref.format('text') + " != " + test.format('text'))
 
 # check WEIGHT RAT-EXP
 # --------------------
@@ -26,15 +21,9 @@ def check_equal(ref, test):
 #
 # Use a context with ratexp weights to check the order of products.
 def check(weight, exp):
-    global count
-    count += 1
     re = ctx.ratexp(exp)
-    if (check_equal(weight, re.constant_term())
-        and check_equal(weight, re.derived_term().eval(''))):
-        print 'ok ', count
-
-
-
+    check_equal(weight, re.constant_term())
+    check_equal(weight, re.derived_term().eval(''))
 
 check('\z', 'a')
 check('\e', 'a*')
@@ -64,4 +53,4 @@ check('x*', '(<x>\e)*')
 # Test left and right weight.
 check('xy*z', '<x>(<y>\e)*<z>')
 
-print '1..'+str(count)
+PLAN()

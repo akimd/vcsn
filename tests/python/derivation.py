@@ -1,27 +1,21 @@
 #! /usr/bin/env python
 
-import inspect
 import vcsn
+from test import *
 
-count = 0
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
 def check(re, letter, exp, breaking = False):
-    global count
-    count += 1
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
     if re[:3] <> "(?@":
         re = "(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)" + re
     r = c.ratexp(re)
     eff = str(r.derivation(letter, breaking))
     print r, "/d",letter, " = ", eff
     if eff == exp:
-        print 'ok ', count
+        PASS()
     else:
-        msg = exp + " != " + eff
-        print here + ":", msg
-        print 'not ok ', count, msg
+        FAIL(exp + " != " + eff)
+
 
 ##########################
 ## Regular derivation.  ##
@@ -176,4 +170,4 @@ check_br('(<x>a)*', 'b', '\z')
 check_br('<x>a*',   'a', '<x>a*')
 check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
 
-print '1..'+str(count)
+PLAN()

@@ -20,7 +20,9 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/derivation.py                             \
   %D%/minimize.py				\
   %D%/split.py
-$(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS)
+
+EXTRA_DIST += %D%/test.py
+$(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) %D%/test.py
 
 dist_TESTS += $(%C%_TESTS)
 

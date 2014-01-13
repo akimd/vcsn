@@ -1,12 +1,8 @@
 #! /usr/bin/env python
 
-## ------------ ##
-## aut-to-exp.  ##
-## ------------ ##
-
 import vcsn, sys, inspect, os
+from test import *
 
-count = 0
 ctx = vcsn.context("lal_char(abc)_b")
 
 medir = sys.argv[0].replace(".py", ".dir")
@@ -16,16 +12,10 @@ medir = sys.argv[0].replace(".py", ".dir")
 # Helper function to format output for the testsuite
 # Check that text == ref
 def check(text, ref):
-    global count
-    count += 1
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back)
-    here = finfo.filename + ":" + str(finfo.lineno)
     if str(text) == ref:
-        print "ok", count
+        PASS()
     else:
-        msg = text + " != " + ref
-        print here + ":", msg
-        print 'not ok ', count, msg
+        FAIL(text + " != " + ref)
 
 # check EXP-IN EXP-OUT
 # --------------------
@@ -78,5 +68,4 @@ check_aut("a.gv", '<x>a(<y>b)*<z>c')
 #check_aut("lal_char_zmin/slowgrow.gv",
 #      '(a+b)*b(<1>a)*b(a+<1>a(<1>a)*b)*')
 
-
-print '1..'+str(count)
+PLAN()
