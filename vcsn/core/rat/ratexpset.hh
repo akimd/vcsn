@@ -78,6 +78,11 @@ namespace vcsn
       -> value_t;
 
     /// When used as WeightSet for automata.
+    constexpr static bool is_special(value_t)
+    {
+      return false;
+    }
+
     bool is_zero(value_t v) const ATTRIBUTE_PURE;
     bool is_one(value_t v) const ATTRIBUTE_PURE;
 

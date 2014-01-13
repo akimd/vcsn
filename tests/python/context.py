@@ -25,4 +25,7 @@ check('lat<lal_char(a),lal_char(a)>_b')
 check('lat<lal_char(a), lal_char(a)>_b', 'lat<lal_char(a),lal_char(a)>_b')
 check('lal_char(ab)_lat<b, z>', 'lal_char(ab)_lat<b,z>')
 
+# End of level boss.
+check('lat<lal_char(ab),lan_char(uv), law_char(xyz)>_lat<ratexpset<lat<lal_char(ef), lal_char(gh)>_q>, r, q>')
+
 PLAN()
