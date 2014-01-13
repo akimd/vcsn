@@ -4,6 +4,7 @@
 # include <initializer_list>
 # include <stdexcept>
 
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh>
 # include <vcsn/misc/stream.hh> // eat.
 
@@ -57,17 +58,50 @@ namespace vcsn
       }
       // The list of generators (letters).
       letters_t gens;
+      // Previously read character.
+      int prev = -1;
       {
         eat(is, '(');
         char l;
-        while (is >> l)
-          {
-            if (l == ')')
-              break;
-            gens.insert(l);
+        while (is >> l && l != ')')
+          switch (l)
+            {
+            case '-':
+              if (prev == -1)
+                goto insert;
+              else
+                {
+                  int l2 = is.get();
+                  require(l2 != EOF,
+                          "unexpected end in character class");
+                  if (l2 == '\\')
+                    {
+                      l2 = is.get();
+                      require(l2 != EOF,
+                              "unexpected end after escape in character class");
+                    }
+                  for (l = prev; l <= l2; ++l)
+                    gens.insert(l);
+                  prev = -1;
+                  continue;
+                }
+
+            case '\\':
+              {
+                int l2 = is.get();
+                require(l2 != EOF,
+                        "unexpected end after escape");
+                l = l2;
+                goto insert;
+              }
+
+            default:
+            insert:
+              gens.insert(l);
+              prev = l;
           }
       }
-      return {gens};
+      return gens;
     }
 
     set_alphabet() = default;

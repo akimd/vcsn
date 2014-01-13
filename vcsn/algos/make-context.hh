@@ -18,9 +18,6 @@ namespace vcsn
   {
     std::istringstream is{name};
     auto res = Ctx::make(is);
-    if (res.vname(true) != name)
-      std::cerr << __func__ << ": warning: built " << res.vname(true)
-                << " instead of " + name << std::endl;
     std::string remainder;
     is >> remainder;
     require(remainder.empty(),

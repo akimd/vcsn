@@ -4,6 +4,15 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-13
+** Character classes in context specifications
+It is now possible to use ranges to define alphabets.  For instance in
+Python,
+
+  vcsn.context('lal_char(a-zA-Z0-9_)_b')
+
+builds a context whose alphabet covers letters, digits, and underscore.
+
 * 2014-01-10
 Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
 "vaucanson".

@@ -70,7 +70,7 @@ namespace vcsn
         kind_t::make(is);
         eat(is, '_');
         auto gs = genset_t::make(is);
-        return {gs};
+        return gs;
       }
 
       value_t

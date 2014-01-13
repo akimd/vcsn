@@ -92,7 +92,7 @@ int f()
     [ac_cv_cxx_have_correct_list_initializer_order=yes],
     [ac_cv_cxx_have_correct_list_initializer_order=no])])
 AM_CONDITIONAL([HAVE_CORRECT_LIST_INITIALIZER_ORDER],
-               [test "$ac_cv_cxx_bug_51253" = yes])
+               [test "$ac_cv_cxx_have_correct_list_initializer_order" = yes])
 case $ac_cv_cxx_have_correct_list_initializer_order in (yes)
   AC_DEFINE([HAVE_CORRECT_LIST_INITIALIZER_ORDER], 1,
             [Define to 1 if evaluation order in braced-init-list is correct])
