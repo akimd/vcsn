@@ -1,10 +1,3 @@
-#if 0
-
-sudo port install py27-ipython py27-zmq py27-jinja2 py27-tornado
-ipython-2.7 notebook --pylab=inline
-
-#endif
-
 #if defined __GNUC__ && ! defined __clang__
 # pragma GCC diagnostic ignored "-Wmissing-declarations"
 
@@ -39,13 +32,12 @@ struct context
 
   std::string __repr__() const
   {
-    // FIXME: we should have vcsn::dyn::format(context).
-    return ctx_->vname();
+    return format();
   }
 
   automaton de_bruijn(unsigned n) const;
 
-  std::string format(const std::string& format = "latex") const
+  std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
     vcsn::dyn::print(ctx_, os, format);
