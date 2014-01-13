@@ -21,7 +21,10 @@ namespace vcsn
     {
     public:
       using labelsets_t = std::tuple<LabelSets...>;
-      using indices_t = detail::gen_seq<sizeof...(LabelSets)>;
+      using indices_t = vcsn::detail::gen_seq<sizeof...(LabelSets)>;
+      template <std::size_t... I>
+      using seq = vcsn::detail::seq<I...>;
+
     public:
       using self_type = tupleset;
       using value_t = std::tuple<typename LabelSets::value_t...>;
@@ -192,7 +195,7 @@ namespace vcsn
 
     private:
       template <std::size_t... I>
-      static std::string sname_(detail::seq<I...>)
+      static std::string sname_(seq<I...>)
       {
         std::string res = "lat<";
         const char *sep = "";
@@ -207,7 +210,7 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      std::string vname_(bool full, detail::seq<I...>) const
+      std::string vname_(bool full, seq<I...>) const
       {
         std::string res = "lat<";
         const char *sep = "";
@@ -222,7 +225,7 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      static tupleset make_(std::istream& i, detail::seq<I...>)
+      static tupleset make_(std::istream& i, seq<I...>)
       {
         return {((eat_separator_<I>(i, '<', ','),
                   std::tuple_element<I, labelsets_t>::type::make(i)))...};
@@ -230,7 +233,7 @@ namespace vcsn
 
       template <std::size_t... I>
       static bool
-      equals_(const value_t& l, const value_t& r, detail::seq<I...>)
+      equals_(const value_t& l, const value_t& r, seq<I...>)
       {
         for (auto n: {(std::tuple_element<I, labelsets_t>::type::equals(std::get<I>(l),
                                                                         std::get<I>(r)))...})
@@ -241,7 +244,7 @@ namespace vcsn
 
       template <std::size_t... I>
       static bool
-      less_than_(const value_t& l, const value_t& r, detail::seq<I...>)
+      less_than_(const value_t& l, const value_t& r, seq<I...>)
       {
         for (auto n: {(std::tuple_element<I, labelsets_t>::type::less_than(std::get<I>(l),
                                                                            std::get<I>(r)))...})
@@ -252,7 +255,7 @@ namespace vcsn
 
       template <std::size_t... I>
       static std::size_t
-      hash_(const value_t& v, detail::seq<I...>)
+      hash_(const value_t& v, seq<I...>)
       {
         std::size_t res = 0;
         for (auto h: {(std::tuple_element<I, labelsets_t>::type::hash(std::get<I>(v)))...})
@@ -262,14 +265,14 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      special_(detail::seq<I...>) const
+      special_(seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).special())...);
       }
 
       template <std::size_t... I>
       bool
-      is_special_(const value_t& l, detail::seq<I...>) const
+      is_special_(const value_t& l, seq<I...>) const
       {
         for (auto n: {(std::get<I>(sets_).is_special(std::get<I>(l)))...})
           if (!n)
@@ -279,14 +282,14 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      zero_(detail::seq<I...>) const
+      zero_(seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).zero())...);
       }
 
       template <std::size_t... I>
       bool
-      is_zero_(const value_t& l, detail::seq<I...>) const
+      is_zero_(const value_t& l, seq<I...>) const
       {
         for (auto n: {(std::get<I>(sets_).is_zero(std::get<I>(l)))...})
           if (!n)
@@ -296,14 +299,14 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      one_(detail::seq<I...>) const
+      one_(seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).one())...);
       }
 
       template <std::size_t... I>
       bool
-      is_one_(const value_t& l, detail::seq<I...>) const
+      is_one_(const value_t& l, seq<I...>) const
       {
         for (auto n: {(std::get<I>(sets_).is_one(std::get<I>(l)))...})
           if (!n)
@@ -313,7 +316,7 @@ namespace vcsn
 
       template <std::size_t... I>
       bool
-      show_one_(detail::seq<I...>) const
+      show_one_(seq<I...>) const
       {
         for (auto n: {(std::tuple_element<I, labelsets_t>::type::show_one())...})
           if (n)
@@ -323,7 +326,7 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      add_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      add_(const value_t& l, const value_t& r, seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).add(std::get<I>(l),
                                                        std::get<I>(r)))...);
@@ -331,7 +334,7 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      mul_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      mul_(const value_t& l, const value_t& r, seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).mul(std::get<I>(l),
                                                        std::get<I>(r)))...);
@@ -339,14 +342,14 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      star_(value_t const& l, detail::seq<I...>) const
+      star_(value_t const& l, seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).star(std::get<I>(l)))...);
       }
 
       template <std::size_t... I>
       value_t
-      concat_(const value_t& l, const value_t& r, detail::seq<I...>) const
+      concat_(const value_t& l, const value_t& r, seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).concat(std::get<I>(l),
                                                           std::get<I>(r)))...);
@@ -354,7 +357,7 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      conv_(std::istream& i, detail::seq<I...>) const
+      conv_(std::istream& i, seq<I...>) const
       {
         return std::make_tuple(((eat_separator_<I>(i, '(', ','),
                                  std::get<I>(sets_).conv(i)))...);
@@ -375,7 +378,7 @@ namespace vcsn
 
       template <std::size_t... I>
       std::ostream&
-      print_(std::ostream& o, value_t const& l, detail::seq<I...>) const
+      print_(std::ostream& o, value_t const& l, seq<I...>) const
       {
         if (!is_special(l))
           {
@@ -404,7 +407,7 @@ namespace vcsn
       std::ostream&
       print_set_(const tupleset& ls,
                  std::ostream& o, const std::string& format,
-                 detail::seq<I...>)
+                 seq<I...>)
       {
         const char *sep = "";
         if (format == "latex")
@@ -424,7 +427,7 @@ namespace vcsn
 
       template <std::size_t... I>
       value_t
-      transpose_(value_t const& l, detail::seq<I...>) const
+      transpose_(value_t const& l, seq<I...>) const
       {
         return std::make_tuple((std::get<I>(sets_).transpose(std::get<I>(l)))...);
       }
@@ -432,7 +435,7 @@ namespace vcsn
       /// The intersection with another tupleset.
       template <std::size_t... I>
       tupleset
-      meet_(const tupleset& rhs, detail::seq<I...>) const
+      meet_(const tupleset& rhs, seq<I...>) const
       {
         return {(meet(std::get<I>(sets_),
                       std::get<I>(rhs.sets_)))...};
@@ -441,7 +444,7 @@ namespace vcsn
       /// The join with another tupleset.
       template <std::size_t... I>
       tupleset
-      join_(const tupleset& rhs, detail::seq<I...>) const
+      join_(const tupleset& rhs, seq<I...>) const
       {
         return {(join(std::get<I>(sets_),
                       std::get<I>(rhs.sets_)))...};
