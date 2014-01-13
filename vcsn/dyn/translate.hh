@@ -68,6 +68,7 @@ namespace vcsn
           labelset(word());
         }
 
+        /// Read in \a is a labelset of \a kind.
         void labelset(const std::string& kind)
         {
           if (kind == "lal" || kind == "lan" || kind == "law")
@@ -148,6 +149,7 @@ namespace vcsn
           weightset(word());
         }
 
+        /// Parse a weightset of type \a ws.
         void weightset(const std::string& ws)
         {
           if (ws == "b" || ws == "f2"  || ws == "q"
@@ -176,6 +178,7 @@ namespace vcsn
             weightset(kind);
         }
 
+        /// Generate the code to compile on \a o.
         std::ostream& print(std::ostream& o)
         {
           o << "// " << is.str() << "\n";
@@ -201,14 +204,15 @@ namespace vcsn
           return o;
         }
 
+        /// \a getenv(var) if defined, otherwise \a val.
         std::string xgetenv(const char* var, const char* val)
         {
           const char* cp = getenv(var);
           return cp ? cp : val;
         }
 
-        void
-        cxx(std::string s)
+        /// Run C++ compiler with arguments \a s.
+        void cxx(std::string s)
         {
           // Break the compilation/linking in two steps, in case we
           // are using ccache, which does not handle
@@ -222,6 +226,7 @@ namespace vcsn
             raise("cannot run: ", s);
         }
 
+        /// Compile, and load, a DSO with instantiations for \a ctx.
         void compile(const std::string& ctx)
         {
           headers.insert("vcsn/ctx/instantiate.hh");

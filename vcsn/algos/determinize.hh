@@ -185,15 +185,11 @@ namespace vcsn
     return res;
   }
 
-  /*-------------------.
-  | dyn::determinize.  |
-  `-------------------*/
-
   namespace dyn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Aut, typename Bool>
       automaton
       determinize(const automaton& aut, bool complete)
