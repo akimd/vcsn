@@ -7,6 +7,12 @@ ipython-2.7 notebook --pylab=inline
 
 #if defined __GNUC__ && ! defined __clang__
 # pragma GCC diagnostic ignored "-Wmissing-declarations"
+
+// python/vcsn_python.cc: In constructor 'minimize::minimize(const boost::python::detail::keywords<nkeywords>&, const char*)':
+// python/vcsn_python.cc:445:1531: warning: typedef 'assertion' locally defined but not used [-Wunused-local-typedefs]
+// BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
+# pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+
 # pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
