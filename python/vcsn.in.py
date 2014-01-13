@@ -15,7 +15,8 @@ def is_equal(lhs, rhs):
 ## --------- ##
 
 context.__eq__ = is_equal
-context._repr_latex_ = lambda c: '$' + c.format('latex') + '$'
+context.__repr__ = lambda self: self.format('text')
+context._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 def make_polynomial(ctx, p):
     return polynomial(ctx, p)
@@ -32,7 +33,8 @@ context.ratexp = make_ratexp
 
 automaton.__eq__ = is_equal
 automaton.__mul__ = lambda lhs, rhs: lhs.product(rhs).trim()
-automaton._repr_svg_ = lambda a: dot_to_svg(str(a))
+automaton.__repr__ = lambda self: self.format('dot')
+automaton._repr_svg_ = lambda self: dot_to_svg(self.format('dot'))
 
 def automaton_load(file):
     return automaton(open(file, "r").read(), "dot")
@@ -61,18 +63,38 @@ def automaton_info(aut):
     return res
 automaton.info = automaton_info
 
-automaton.fstdeterminize = lambda aut: automaton_fst(aut, "fstdeterminize")
-automaton.fstminimize = lambda aut: automaton_fst(aut, "fstminimize")
+automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
+automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 
 ## ------------ ##
 ## polynomial.  ##
 ## ------------ ##
 
 polynomial.__eq__ = is_equal
+polynomial.__repr__ = lambda self: self.format('text')
+polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 ## -------- ##
 ## ratexp.  ##
 ## -------- ##
 
 ratexp.__eq__ = is_equal
-ratexp._repr_latex_ = lambda r: '$' + r.format('latex') + '$'
+ratexp.__repr__ = lambda self: self.format('text')
+ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+## ------------ ##
+## polynomial.  ##
+## ------------ ##
+
+polynomial.__eq__ = is_equal
+polynomial.__repr__ = lambda self: self.format('text')
+polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+
+## -------- ##
+## weight.  ##
+## -------- ##
+
+weight.__eq__ = is_equal
+weight.__repr__ = lambda self: self.format('text')
+weight._repr_latex_ = lambda self: '$' + self.format('latex') + '$'

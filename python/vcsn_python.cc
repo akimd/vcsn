@@ -30,11 +30,6 @@ struct context
     : ctx_(vcsn::dyn::make_context(ctx))
   {}
 
-  std::string __repr__() const
-  {
-    return format();
-  }
-
   automaton de_bruijn(unsigned n) const;
 
   std::string format(const std::string& format = "text") const
@@ -66,11 +61,6 @@ struct automaton
   {
     std::istringstream is(s);
     aut_ = vcsn::dyn::read_automaton(is, format);
-  }
-
-  std::string __repr__() const
-  {
-    return format();
   }
 
   automaton accessible() const
@@ -273,11 +263,6 @@ struct polynomial
     val_ = vcsn::dyn::read_polynomial(is, ctx.ctx_);
   }
 
-  std::string __repr__() const
-  {
-    return format();
-  }
-
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -304,11 +289,6 @@ struct ratexp
     std::istringstream is(r);
     auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
     r_ = vcsn::dyn::read_ratexp(is, rs);
-  }
-
-  std::string __repr__() const
-  {
-    return format();
   }
 
   weight constant_term() const;
@@ -396,11 +376,6 @@ struct weight
     val_ = vcsn::dyn::read_weight(is, ctx.ctx_);
   }
 
-  std::string __repr__() const
-  {
-    return format();
-  }
-
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -483,7 +458,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def(bp::init<const std::string&, const std::string&>())
 
     .def("__pow__", &automaton::power)
-    .def("__repr__", &automaton::__repr__)
     .def("__sub__", &automaton::difference)
 
     .def("accessible", &automaton::accessible)
@@ -525,14 +499,12 @@ BOOST_PYTHON_MODULE(vcsn_python)
     ;
 
   bp::class_<context>("context", bp::init<const std::string&>())
-    .def("__repr__", &context::__repr__)
     .def("de_bruijn", &context::de_bruijn)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
-    .def("__repr__", &ratexp::__repr__)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())
@@ -550,12 +522,10 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<polynomial>("polynomial",
                          bp::init<const context&, const std::string&>())
-    .def("__repr__", &polynomial::__repr__)
     .def("format", &polynomial::format)
    ;
 
   bp::class_<weight>("weight", bp::init<const context&, const std::string&>())
-    .def("__repr__", &weight::__repr__)
     .def("format", &weight::format)
    ;
 
