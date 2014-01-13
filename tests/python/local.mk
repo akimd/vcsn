@@ -21,6 +21,11 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/minimize.py				\
   %D%/split.py
 
+if HAVE_CORRECT_LIST_INITIALIZER_ORDER
+%C%_TESTS +=                                    \
+  %D%/context.py
+endif
+
 EXTRA_DIST += %D%/test.py
 $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) %D%/test.py
 

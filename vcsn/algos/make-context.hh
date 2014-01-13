@@ -2,14 +2,12 @@
 # define VCSN_ALGOS_MAKE_CONTEXT_HH
 
 # include <istream>
-# include <map>
-# include <set>
-# include <sstream>
 
+# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/ratexpset.hh>
-# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -20,12 +18,14 @@ namespace vcsn
   {
     std::istringstream is{name};
     auto res = Ctx::make(is);
+    if (res.vname(true) != name)
+      std::cerr << __func__ << ": warning: built " << res.vname(true)
+                << " instead of " + name << std::endl;
     std::string remainder;
     is >> remainder;
-    if (res.vname(true) != name)
-      throw std::runtime_error("make_context: built "
-                               + res.vname(true)
-                               + " instead of " + name);
+    require(remainder.empty(),
+            __func__, ": unexpected characters after context: ",
+            str_escape(remainder));
     return res;
   }
 
@@ -37,10 +37,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*---------------.
-      | make_context.  |
-      `---------------*/
-
+      /// Bridge.
       template <typename Ctx>
       context
       make_context(const std::string& name)
