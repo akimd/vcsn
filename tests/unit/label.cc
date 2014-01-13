@@ -51,11 +51,11 @@ check_tupleset()
   label_t l{"abc", "xyz"};
 
   // sname.
-  ASSERT_EQ(tupleset_t::sname(), "lat<law_char, law_char>");
+  ASSERT_EQ(tupleset_t::sname(), "lat<law_char,law_char>");
 
   // vname.
-  ASSERT_EQ(ts.vname(false), "lat<law_char, law_char>");
-  ASSERT_EQ(ts.vname(), "lat<law_char(abc), law_char(xyz)>");
+  ASSERT_EQ(ts.vname(false), "lat<law_char,law_char>");
+  ASSERT_EQ(ts.vname(), "lat<law_char(abc),law_char(xyz)>");
 
   // equals.
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "x"}), true);

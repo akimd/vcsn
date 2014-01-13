@@ -203,9 +203,9 @@ namespace vcsn
           {
             res += sep;
             res += n;
-            sep = ", ";
+            sep = ",";
           }
-        res += ">";
+        res.push_back('>');
         return res;
       }
 
@@ -218,9 +218,9 @@ namespace vcsn
           {
             res += sep;
             res += n;
-            sep = ", ";
+            sep = ",";
           }
-        res += ">";
+        res.push_back('>');
         return res;
       }
 
@@ -413,7 +413,10 @@ namespace vcsn
         if (format == "latex")
           sep = " \\times ";
         else if (format == "text")
-          sep = " x ";
+          {
+            o << "lat<";
+            sep = ",";
+          }
         else
           raise("invalid format: ", format);
         vcsn::detail::pass
@@ -422,6 +425,8 @@ namespace vcsn
              vcsn::print_set(std::get<I>(ls.sets_), o, format),
              0)...
           };
+        if (format == "text")
+          o << '>';
         return o;
       }
 
