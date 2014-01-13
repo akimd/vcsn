@@ -458,7 +458,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def(bp::init<const std::string&, const std::string&>())
 
     .def("__pow__", &automaton::power)
-    .def("__sub__", &automaton::difference)
 
     .def("accessible", &automaton::accessible)
     .def("coaccessible", &automaton::coaccessible)

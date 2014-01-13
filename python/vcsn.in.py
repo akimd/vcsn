@@ -34,6 +34,7 @@ context.ratexp = make_ratexp
 automaton.__eq__ = is_equal
 automaton.__mul__ = lambda lhs, rhs: lhs.product(rhs).trim()
 automaton.__repr__ = lambda self: self.format('dot')
+automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: dot_to_svg(self.format('dot'))
 
 def automaton_load(file):
@@ -66,6 +67,7 @@ automaton.info = automaton_info
 automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
 automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 
+
 ## ------------ ##
 ## polynomial.  ##
 ## ------------ ##
@@ -74,6 +76,7 @@ polynomial.__eq__ = is_equal
 polynomial.__repr__ = lambda self: self.format('text')
 polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
+
 ## -------- ##
 ## ratexp.  ##
 ## -------- ##
@@ -81,6 +84,7 @@ polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 ratexp.__eq__ = is_equal
 ratexp.__repr__ = lambda self: self.format('text')
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
 
 ## ------------ ##
 ## polynomial.  ##
