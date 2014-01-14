@@ -289,20 +289,29 @@ It would be nice to think about n-ary static too (variadic).
 As a goal, we want every rational expression to yield the same result
 in lal and law.  This is a failure:
 
-  $ vcsn-cat -C 'lal_char_z' -e 'ab{3}' -E
-  (a.b){3}
-  $ vcsn-cat -C 'law_char_z' -e 'ab{3}' -E
-  {3}ab
+  $ vcsn-cat -C 'lal_char_z' -e 'ab<3>' -E
+  (a.b)<3>
+  $ vcsn-cat -C 'law_char_z' -e 'ab<3>' -E
+  <3>ab
 
-Note that TAF-Kit's documentation (Section 2.2.1) precisely reports
-that *both* should yield "{3}ab":
+Well, this will not change (and the note is kept only as a reminder that it
+must be put in the doc at some point).  The trivial identities are really
+_trivial_: they deal with constants (\z and \e), and weights.  They don't
+deal with products for instance, which is the case here: it would require
+c<k> -> <k>c where c is a concatenation of labels.
 
-  Caveat: The definition of the identity Cat corresponds to what is
-  actually implemented in Vaucanson 1.4 and is somehow a mistake. A more
-  natural definition would be m{k} ⇒ {k}m with m any element of the
-  monoid. This may be corrected in forthcoming revisions of Vaucanson
-  1.4 but should anyway be reevaluated in connection with the definition
-  of the function derived-term for the weighthed automata.
+Note that TAF-Kit's documentation (Section 2.2.1) reports:
+
+  Caveat: The definition of the identity Cat corresponds to what is actually
+  implemented in Vaucanson 1.4 and is somehow a mistake. A more natural
+  definition would be m<k> ⇒ <k>m with m any element of the monoid. This may
+  be corrected in forthcoming revisions of Vaucanson 1.4 but should anyway
+  be reevaluated in connection with the definition of the function
+  derived-term for the weighthed automata.
+
+but here 'm' just denotes 'monoid element', i.e., a label in V2 parlance.
+In other words, for V2, x<k> ⇒ <k>x and m<k> ⇒ <k>m are exactly the same
+thing: x is a label of LAL, and m is a label of LAW.
 
 * I/O
 ** fado
