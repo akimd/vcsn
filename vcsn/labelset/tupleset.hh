@@ -14,6 +14,15 @@
 
 namespace vcsn
 {
+
+  /// Too many different namespaces: print_set is actually defined in
+  /// vcsn::, not vcsn::ctx::.
+  template <typename... LabelSets>
+  inline
+  std::ostream&
+  print_set(const ctx::tupleset<LabelSets...>& ws,
+            std::ostream& o, const std::string& format);
+
   namespace ctx
   {
     template <typename... LabelSets>
@@ -103,8 +112,8 @@ namespace vcsn
         return is_one_(l, indices_t{});
       }
 
-      bool
-      show_one() const
+      static bool
+      show_one()
       {
         return show_one_(indices_t{});
       }
@@ -177,6 +186,12 @@ namespace vcsn
       conv(b, b::value_t v) const
       {
         return v ? one() : zero();
+      }
+
+      std::ostream&
+      print_set(std::ostream& o, const std::string& format) const
+      {
+        return print_set_(o, format, indices_t{});
       }
 
       std::ostream&
@@ -315,8 +330,8 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      bool
-      show_one_(seq<I...>) const
+      static bool
+      show_one_(seq<I...>)
       {
         for (auto n: {(std::tuple_element<I, labelsets_t>::type::show_one())...})
           if (n)
@@ -394,20 +409,10 @@ namespace vcsn
         return o;
       }
 
-      friend
-      std::ostream&
-      print_set(const tupleset& ls,
-                std::ostream& o, const std::string& format)
-      {
-        return print_set_(ls, o, format, indices_t{});
-      }
-
       template <std::size_t... I>
-      friend
       std::ostream&
-      print_set_(const tupleset& ls,
-                 std::ostream& o, const std::string& format,
-                 seq<I...>)
+      print_set_(std::ostream& o, const std::string& format,
+                 seq<I...>) const
       {
         const char *sep = "";
         if (format == "latex")
@@ -422,7 +427,7 @@ namespace vcsn
         vcsn::detail::pass
           {
             (o << (I == 0 ? "" : sep),
-             vcsn::print_set(std::get<I>(ls.sets_), o, format),
+             vcsn::print_set(std::get<I>(sets_), o, format),
              0)...
           };
         if (format == "text")
@@ -507,5 +512,17 @@ namespace vcsn
     };
 
   }
+
+  /// Too many different namespaces: print_set is actually defined in
+  /// vcsn::, not vcsn::ctx::.
+  template <typename... LabelSets>
+  inline
+  std::ostream&
+  print_set(const ctx::tupleset<LabelSets...>& ws,
+            std::ostream& o, const std::string& format)
+  {
+    return ws.print_set(o, format);
+  }
+
 }
 #endif // !VCSN_LABELSET_TUPLESET_HH
