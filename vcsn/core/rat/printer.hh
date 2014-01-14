@@ -115,6 +115,9 @@ namespace vcsn
 
       /// Output stream.
       std::ostream& out_;
+      /// Output format.
+      std::string format_;
+      /// Context to decode labels and weights.
       const context_t& ctx_;
       /// Whether to be overly verbose.
       const bool debug_;

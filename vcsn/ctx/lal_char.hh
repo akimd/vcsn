@@ -66,7 +66,7 @@ namespace vcsn
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
-        REGISTER(print_polynomial, wps_t, std::ostream);
+        REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
         REGISTER(product, aut_t, b_aut_t);

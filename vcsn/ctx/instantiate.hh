@@ -98,13 +98,8 @@ namespace vcsn
   MAYBE_EXTERN template                                                 \
   std::ostream&                                                         \
   print<ratexpset<Ctx>>(const ratexpset<Ctx>& rs,                       \
-                        const Ctx::ratexp_t& e, std::ostream& o);       \
-  MAYBE_EXTERN template                                                 \
-  std::ostream&                                                         \
-  print<typename Ctx::weightset_t>                                      \
-  (const typename Ctx::weightset_t& ws,                                 \
-   const typename Ctx::weight_t& e,                                     \
-   std::ostream& o);                                                    \
+                        const Ctx::ratexp_t& e, std::ostream& o,        \
+                        const std::string& format);                     \
                                                                         \
   /* standard. */                                                       \
   MAYBE_EXTERN template                                                 \
@@ -238,9 +233,9 @@ namespace vcsn
         REGISTER(make_ratexpset, Ctx);
         REGISTER(print_ctx, Ctx, std::ostream, const std::string);
         REGISTER(print_exp, rs_t, std::ostream, const std::string);
-        REGISTER(print_polynomial, lps_t, std::ostream);
-        REGISTER(print_polynomial, rps_t, std::ostream);
-        REGISTER(print_weight, ws_t, std::ostream);
+        REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
+        REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
+        REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(read_polynomial, Ctx, std::istream);
         REGISTER(read_weight, Ctx, std::istream);
         REGISTER(right_mult, aut_t, ws_t);

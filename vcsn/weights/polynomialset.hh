@@ -398,9 +398,9 @@ namespace vcsn
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(m.second))
         {
-          out << (format == "latex" ? "\\langle" : std::string{lbracket});
+          out << (format == "latex" ? "\\langle " : std::string{lbracket});
           weightset()->print(out, m.second, format);
-          out << (format == "latex" ? "\\rangle" : std::string{rbracket});
+          out << (format == "latex" ? "\\rangle " : std::string{rbracket});
         }
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");

@@ -2,6 +2,7 @@
 # define VCSN_CORE_RAT_PRINTER_HXX
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -28,7 +29,8 @@ namespace vcsn
     DEFINE::format(const std::string& format)
       -> void
     {
-      if (format == "latex")
+      format_ = format;
+      if (format_ == "latex")
         {
           lgroup_       = "{";
           rgroup_       = "}";
@@ -47,7 +49,7 @@ namespace vcsn
           lmul_         = "\\,";
           rmul_         = "\\,";
         }
-      else if (format == "text")
+      else if (format_ == "text")
         {
           lgroup_       = "";
           rgroup_       = "";
@@ -67,8 +69,7 @@ namespace vcsn
           rmul_         = "";
         }
       else
-        throw std::domain_error("invalid output format for ratexp: "
-                                + str_escape(format));
+        raise("invalid output format for ratexp: ", str_escape(format));
     }
 
     DEFINE::precedence(const node_t& v) const
@@ -135,7 +136,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << lbracket_;
-      ctx_.weightset()->print(out_, v.weight());
+      ctx_.weightset()->print(out_, v.weight(), format_);
       out_ << rbracket_ << lmul_;
       print_child(*v.sub(), v);
     }
@@ -144,7 +145,7 @@ namespace vcsn
     {
       print_child(*v.sub(), v);
       out_ << rmul_ << lbracket_;
-      ctx_.weightset()->print(out_, v.weight());
+      ctx_.weightset()->print(out_, v.weight(), format_);
       out_ << rbracket_;
     }
 
@@ -171,7 +172,7 @@ namespace vcsn
 
     VISIT(atom)
     {
-      ctx_.labelset()->print(out_, v.value());
+      ctx_.labelset()->print(out_, v.value(), format_);
     }
 
     DEFINE::print_child(const node_t& child, const node_t& parent,

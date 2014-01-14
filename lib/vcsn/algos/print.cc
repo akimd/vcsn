@@ -65,8 +65,16 @@ namespace vcsn
         detail::list_polynomial_registry().call(p, out);
       else if (format == "null")
         {}
+      else if (format == "latex")
+        detail::print_polynomial_registry().call(p, out, format);
       else if (format == "text" || format == "default" || format == "")
-        detail::print_polynomial_registry().call(p, out);
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_polynomial_registry().call(p, out, format);
+        }
       else
         raise("invalid output format for polynomial: ", str_escape(format));
       return out;
@@ -113,8 +121,16 @@ namespace vcsn
     {
       if (format == "null")
         {}
+      else if (format == "latex")
+        detail::print_weight_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
-        detail::print_weight_registry().call(w, out);
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_weight_registry().call(w, out, format);
+        }
       else
         raise("invalid output format for weight: ", str_escape(format));
       return out;

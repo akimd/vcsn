@@ -150,6 +150,11 @@ and use these formats strings.  Instead of passing a format name, we would
 actually pass a "format" object whose members are Boost.Formats.  It would
 then be much easier to customize the pretty-printers.
 
+Alternatively, we could also use a collection of functions/lambdas.  More
+generic, and "more portable".  Note, however, that Boost.Format is
+header-only.  A mixture of both might be the best: where they suffice,
+format _are_ superior.
+
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.

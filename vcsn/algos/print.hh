@@ -278,13 +278,15 @@ namespace vcsn
     return o;
   }
 
+  /// Actually applies to (ValueSet, Value, ostream, string): for
+  /// polynomialset, ratexpset, and weightset.
   template <typename PolynomialSet>
   inline
   std::ostream&
   print(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
-        std::ostream& o)
+        std::ostream& o, const std::string& format)
   {
-    return ps.print(o, p);
+    return ps.print(o, p, format);
   }
 
   namespace dyn
@@ -305,17 +307,18 @@ namespace vcsn
                        (const polynomial& p, std::ostream& o) -> std::ostream&);
 
       /// Bridge.
-      template <typename PolynomialSet, typename Ostream>
+      template <typename PolynomialSet, typename Ostream, typename String>
       std::ostream& print_polynomial(const polynomial& polynomial,
-                                     std::ostream& o)
+                                     std::ostream& o, const std::string& format)
       {
         const auto& p = polynomial->as<PolynomialSet>();
         return vcsn::print<PolynomialSet>(p.get_polynomialset(),
-                                          p.polynomial(), o);
+                                          p.polynomial(), o, format);
       }
 
       REGISTER_DECLARE(print_polynomial,
-                       (const polynomial& p, std::ostream& o) -> std::ostream&);
+                       (const polynomial& p, std::ostream& o,
+                        const std::string& format) -> std::ostream&);
     }
   }
 
@@ -324,6 +327,8 @@ namespace vcsn
   | print(ratexp, stream).  |
   `------------------------*/
 
+#if 0
+  /// See PolynomialSet.
   template <typename RatExpSet>
   inline
   std::ostream&
@@ -332,6 +337,7 @@ namespace vcsn
   {
     return rs.print(o, e, format);
   }
+#endif
 
   namespace dyn
   {
@@ -357,6 +363,7 @@ namespace vcsn
   `------------------------*/
 
 #if 0
+  /// See PolynomialSet.
   template <typename WeightSet>
   inline
   std::ostream&
@@ -372,15 +379,17 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename WeightSet, typename Ostream>
-      std::ostream& print_weight(const weight& weight, std::ostream& o)
+      template <typename WeightSet, typename Ostream, typename String>
+      std::ostream& print_weight(const weight& weight, std::ostream& o,
+                                 const std::string& format)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o);
+        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o, format);
       }
 
       REGISTER_DECLARE(print_weight,
-                       (const weight& aut, std::ostream& o) -> std::ostream&);
+                       (const weight& aut, std::ostream& o,
+                        const std::string& format) -> std::ostream&);
     }
   }
 
