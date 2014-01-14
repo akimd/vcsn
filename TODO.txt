@@ -140,6 +140,16 @@ Currently tupleset does not define a one, even if all the members
 do.  Adjust is-eps-acyclic.
 
 * Refactoring
+** Use Boost.Format to support multiple formats
+We have loads of code that open-code the output format.  This is
+wrong.  We should rather have format strings such as
+
+        "%s/%s" vs. "\\frac{%s}{%s}"
+
+and use these formats strings.  Instead of passing a format name, we would
+actually pass a "format" object whose members are Boost.Formats.  It would
+then be much easier to customize the pretty-printers.
+
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.

@@ -222,11 +222,22 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(std::ostream& o, const value_t v)
+    print(std::ostream& o, const value_t v,
+          const std::string& format = "text")
     {
-      o << v.num;
-      if (v.den != 1)
-        o << '/' << v.den;
+      if (format == "latex")
+        {
+          if (v.den == 1)
+            o << v.num;
+          else
+            o << "\\frac{" << v.num << "}{" << v.den << '}';
+        }
+      else
+        {
+          o << v.num;
+          if (v.den != 1)
+            o << '/' << v.den;
+        }
       return o;
     }
 

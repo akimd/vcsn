@@ -149,10 +149,11 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(std::ostream& o, const value_t v)
+    print(std::ostream& o, const value_t v,
+          const std::string& format = "text")
     {
       if (is_zero(v))
-        return o << "oo";
+        return o << (format == "latex" ? "\\infty" : "oo");
       else
         return o << v;
     }

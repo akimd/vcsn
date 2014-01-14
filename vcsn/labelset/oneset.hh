@@ -95,7 +95,8 @@ namespace vcsn
         return {};
       }
 
-      static std::ostream& print(std::ostream& o, empty_t)
+      static std::ostream& print(std::ostream& o, empty_t,
+                                 const std::string& = "text")
       {
         return o;
       }

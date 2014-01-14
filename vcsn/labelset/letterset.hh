@@ -133,7 +133,8 @@ namespace vcsn
       }
 
       std::ostream&
-      print(std::ostream& o, const value_t& l) const
+      print(std::ostream& o, const value_t& l,
+          const std::string& = "text") const
       {
         if (!is_special(l))
           o << str_escape(l);

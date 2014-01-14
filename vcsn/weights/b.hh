@@ -140,9 +140,14 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(std::ostream& o, const value_t v)
+    print(std::ostream& o, const value_t v,
+          const std::string& format = "text")
     {
-      return o << format(v);
+      if (format == "latex")
+        o << (v ? "\\top" : "\\bot");
+      else
+        o << (v ? '1' : '0');
+      return o;
     }
 
     static std::string

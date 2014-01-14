@@ -134,10 +134,11 @@ namespace vcsn
       }
 
       std::ostream&
-      print(std::ostream& o, const value_t& l) const
+      print(std::ostream& o, const value_t& l,
+          const std::string& format = "text") const
       {
         if (is_one(l))
-          o << "\\e";
+          o << (format == "latex" ? "\\varepsilon" : "\\e");
         else if (!is_special(l))
           o << str_escape(l);
         return o;

@@ -392,28 +392,31 @@ namespace vcsn
 
     /// Print a monomial.
     std::ostream&
-    print(std::ostream& out, const monomial_t& m) const
+    print(std::ostream& out, const monomial_t& m,
+          const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(m.second))
         {
-          out << lbracket;
-          weightset()->print(out, m.second) << rbracket;
+          out << (format == "latex" ? "\\langle" : std::string{lbracket});
+          weightset()->print(out, m.second, format);
+          out << (format == "latex" ? "\\rangle" : std::string{rbracket});
         }
       if (parens)
-        out << '(';
-      labelset()->print(out, m.first);
+        out << (format == "latex" ? "\\left(" : "(");
+      labelset()->print(out, m.first, format);
       if (parens)
-        out << ')';
+        out << (format == "latex" ? "\\right)" : ")");
       return out;
     }
 
     std::ostream&
     print(std::ostream& out, const value_t& v,
+          const std::string& format = "text",
           const std::string& sep = " + ") const
     {
       if (v.empty())
-        out << "\\z";
+        out << (format == "latex" ? "\\emptyset" : "\\z");
       else
         {
           bool first = true;
@@ -422,7 +425,7 @@ namespace vcsn
               if (!first)
                 out << sep;
               first = false;
-              print(out, m);
+              print(out, m, format);
             }
         }
       return out;
@@ -432,7 +435,7 @@ namespace vcsn
     format(const value_t& v, const std::string& sep = " + ") const
     {
       std::ostringstream o;
-      print(o, v, sep);
+      print(o, v, "text", sep);
       return o.str();
     }
 
@@ -441,7 +444,7 @@ namespace vcsn
     format(const monomial_t& m) const
     {
       std::ostringstream o;
-      print(o, m);
+      print(o, m, "text");
       return o.str();
     }
 
