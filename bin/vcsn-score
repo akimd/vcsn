@@ -37,10 +37,10 @@ a = vcsn.context("lan_char(a)_b").ratexp("a?{2000}").thompson()
 bench('thompson(a?{2000}).proper())', lambda: a.proper())
 
 # To-exp(standard((a+b+c+d)?{100})).
-r = vcsn.context('lal_char(abcd)_b').ratexp('(a+b+c+d)?{100}')
-bench('std((a+b+c+d)?{100})', lambda: r.standard())
+r = vcsn.context('lal_char(a-d)_b').ratexp('[a-d]?{100}')
+bench('a = std([a-d]?{100})', lambda: r.standard())
 a = r.standard()
-bench('abcd.ratexp()', lambda: a.ratexp())
+bench('a.ratexp()', lambda: a.ratexp())
 
 # power(standard((a+b)*b(<2>a+<2>b)*), 13)
 a = vcsn.context("lal_char(ab)_z").ratexp("(a+b)*b(<2>a+<2>b)*").standard()
@@ -55,7 +55,7 @@ bench('shuffle', lambda: a.shuffle(a))
 bench('infiltration', lambda: a.infiltration(a))
 
 # Minimize a big deterministic automaton over booleans.
-a = vcsn.context("lal_char(abcdefghijk)_b").ratexp("(a+b+c+d+e+f+g){1200}").standard()
+a = vcsn.context("lal_char(a-k)_b").ratexp("[a-g]{1200}").standard()
 bench('signature', lambda: a.minimize('signature'))
-a = vcsn.context("lal_char(abcdefghijk)_b").ratexp("(a+b+c+d+e+f+g+h+i+j+k){2000}").standard()
+a = vcsn.context("lal_char(a-k)_b").ratexp("[a-k]{2000}").standard()
 bench('moore', lambda: a.minimize('moore'))
