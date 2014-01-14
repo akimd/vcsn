@@ -217,28 +217,28 @@ namespace vcsn
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
 
-    /// Print automaton \a a on \a o using format \a type.
+    /// Print automaton \a a on \a o using format \a format.
     std::ostream& print(const automaton& a, std::ostream& o,
-                        const std::string& type = "default");
+                        const std::string& format = "default");
 
-    /// Print context \a c on \a o using format \a type.
+    /// Print context \a c on \a o using format \a format.
     std::ostream& print(const context& c, std::ostream& o,
-                        const std::string& type = "default");
+                        const std::string& format = "default");
 
-    /// Print polynomial \a p on \a o using format \a type.
+    /// Print polynomial \a p on \a o using format \a format.
     std::ostream& print(const polynomial& p, std::ostream& o,
-                        const std::string& type = "default");
+                        const std::string& format = "default");
 
-    /// Print ratexp \a e on \a o using format \a type.
+    /// Print ratexp \a e on \a o using format \a format.
     std::ostream& print(const ratexp& e, std::ostream& o,
-                        const std::string& type = "default");
+                        const std::string& format = "default");
 
-    /// Print weight \a w on \a o using format \a type.
+    /// Print weight \a w on \a o using format \a format.
     std::ostream& print(const weight& w, std::ostream& o,
-                        const std::string& type = "default");
+                        const std::string& format = "default");
 
     /// Specify the output format for \a o.
-    void set_format(std::ostream& o, const std::string& type);
+    void set_format(std::ostream& o, const std::string& format);
 
     /// Get the output format for \a o.
     std::string get_format(std::ostream& o);
@@ -268,20 +268,21 @@ namespace vcsn
     automaton random_automaton(const context& ctx,
                                unsigned num_states,
                                float density = 0.1,
-                               unsigned num_initial = 1, unsigned num_final = 1);
+                               unsigned num_initial = 1,
+                               unsigned num_final = 1);
 
     /// Read an automaton from a stream.
     /// \param is    the input stream.
-    /// \param type  its format.
+    /// \param format  its format.
     automaton read_automaton(std::istream& is,
-                             const std::string& type = "default");
+                             const std::string& format = "default");
 
     /// Read a ratexp from a stream.
-    /// \param is    the input stream.
-    /// \param rs    the ratexp's ratexpset.
-    /// \param type  the ratexp's format.
+    /// \param is      the input stream.
+    /// \param rs      the ratexp's ratexpset.
+    /// \param format  the ratexp's format.
     ratexp read_ratexp(std::istream& is, const ratexpset& rs,
-                       const std::string& type = "default");
+                       const std::string& format = "default");
 
     /// Read a polynomial in a stream
     /// \param is    the stream to parse.

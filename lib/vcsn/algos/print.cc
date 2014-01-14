@@ -18,24 +18,25 @@ namespace vcsn
     `---------------------------*/
 
     std::ostream&
-    print(const dyn::automaton& aut, std::ostream& out, const std::string& type)
+    print(const dyn::automaton& aut, std::ostream& out,
+          const std::string& format)
     {
-      if (type == "dot" || type == "default" || type == "")
+      if (format == "dot" || format == "default" || format == "")
         dot(aut, out);
-      else if (type == "efsm")
+      else if (format == "efsm")
         efsm(aut, out);
-      else if (type == "fado")
+      else if (format == "fado")
         fado(aut, out);
-      else if (type == "grail")
+      else if (format == "grail")
         grail(aut, out);
-      else if (type == "info")
+      else if (format == "info")
         info(aut, out);
-      else if (type == "null")
+      else if (format == "null")
         {}
-      else if (type == "tikz")
+      else if (format == "tikz")
         tikz(aut, out);
       else
-        raise("invalid output format for automaton: ", str_escape(type));
+        raise("invalid output format for automaton: ", str_escape(format));
       return out;
     }
 
@@ -58,16 +59,16 @@ namespace vcsn
     REGISTER_DEFINE(print_polynomial);
 
     std::ostream&
-    print(const polynomial& p, std::ostream& out, const std::string& type)
+    print(const polynomial& p, std::ostream& out, const std::string& format)
     {
-      if (type == "list")
+      if (format == "list")
         detail::list_polynomial_registry().call(p, out);
-      else if (type == "null")
+      else if (format == "null")
         {}
-      else if (type == "text" || type == "default" || type == "")
+      else if (format == "text" || format == "default" || format == "")
         detail::print_polynomial_registry().call(p, out);
       else
-        raise("invalid output format for polynomial: ", str_escape(type));
+        raise("invalid output format for polynomial: ", str_escape(format));
       return out;
     }
 
@@ -79,15 +80,15 @@ namespace vcsn
     REGISTER_DEFINE(print_exp);
 
     std::ostream&
-    print(const ratexp& exp, std::ostream& out, const std::string& type)
+    print(const ratexp& exp, std::ostream& out, const std::string& format)
     {
-      if (type == "info")
+      if (format == "info")
         info(exp, out);
-      else if (type == "null")
+      else if (format == "null")
         {}
-      else if (type == "latex")
-        detail::print_exp_registry().call(exp, out, type);
-      else if (type == "text" || type == "default" || type == "")
+      else if (format == "latex")
+        detail::print_exp_registry().call(exp, out, format);
+      else if (format == "text" || format == "default" || format == "")
         {
           // FIXME: problem with rvalue if we pass
           // 'std::string("text")'.
@@ -96,7 +97,7 @@ namespace vcsn
           detail::print_exp_registry().call(exp, out, format);
         }
       else
-        raise("invalid output format for ratexp: ", str_escape(type));
+        raise("invalid output format for ratexp: ", str_escape(format));
       return out;
     }
 
@@ -108,14 +109,14 @@ namespace vcsn
     REGISTER_DEFINE(print_weight);
 
     std::ostream&
-    print(const dyn::weight& w, std::ostream& out, const std::string& type)
+    print(const dyn::weight& w, std::ostream& out, const std::string& format)
     {
-      if (type == "null")
+      if (format == "null")
         {}
-      else if (type == "text" || type == "default" || type == "")
+      else if (format == "text" || format == "default" || format == "")
         detail::print_weight_registry().call(w, out);
       else
-        raise("invalid output format for weight: ", str_escape(type));
+        raise("invalid output format for weight: ", str_escape(format));
       return out;
     }
 
@@ -127,11 +128,11 @@ namespace vcsn
     xalloc<std::string*> format_flag;
 
     void
-    set_format(std::ostream& o, const std::string& type)
+    set_format(std::ostream& o, const std::string& format)
     {
       if (!format_flag(o))
         format_flag(o) = new std::string;
-      *format_flag(o) = type;
+      *format_flag(o) = format;
     }
 
     std::string
