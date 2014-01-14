@@ -105,7 +105,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const f2& ws,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       o << "\\mathbb{F}_2";
@@ -119,7 +119,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const zmin& ws,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       o << "\\mathbb{Z}_{min}";
@@ -134,7 +134,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ratexpset<Context>& ws,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
@@ -149,20 +149,11 @@ namespace vcsn
     return o;
   }
 
-  template <typename... LabelSets>
-  inline
-  std::ostream&
-  print_ws(const ctx::tupleset<LabelSets...>& ws,
-           std::ostream& o, const std::string& format)
-  {
-    return print_ls(ws, o, format);
-  }
-
   template <typename L>
   inline
   std::ostream&
   print_set(const set_alphabet<L>& alphabet,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
@@ -185,7 +176,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ctx::letterset<GenSet>& ls,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       print_set(*ls.genset(), o, format);
@@ -200,7 +191,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ctx::nullableset<GenSet>& ls,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
@@ -217,7 +208,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ctx::oneset& ls,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       o << "1";
@@ -232,7 +223,7 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ctx::wordset<GenSet>& ls,
-           std::ostream& o, const std::string& format)
+            std::ostream& o, const std::string& format)
   {
     if (format == "latex")
       {
