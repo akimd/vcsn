@@ -69,7 +69,6 @@ namespace vcsn
       return (get(ctx))(std::forward<Args>(args)...);
     }
 
-    /// Call function for context \a ctx.
     template <typename... Args>
     auto
     call(Args&&... args)
