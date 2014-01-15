@@ -21,7 +21,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/expand.py                                 \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
-  %D%/split.py
+  %D%/split.py                                  \
+  %D%/star-height.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \
@@ -34,11 +35,11 @@ $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) %D%/test.py
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/aut-to-exp.dir/a.gv			\
-  %D%/aut-to-exp.dir/lao-elim-0.gv		\
-  %D%/aut-to-exp.dir/lao-elim-1.gv		\
-  %D%/aut-to-exp.dir/lao-elim-2.gv		\
-  %D%/aut-to-exp.dir/lao.gv			\
+  %D%/aut-to-exp.dir/a.gv                       \
+  %D%/aut-to-exp.dir/lao-elim-0.gv              \
+  %D%/aut-to-exp.dir/lao-elim-1.gv              \
+  %D%/aut-to-exp.dir/lao-elim-2.gv              \
+  %D%/aut-to-exp.dir/lao.gv                     \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \
   %D%/minimize.dir/intricate.exp.gv             \

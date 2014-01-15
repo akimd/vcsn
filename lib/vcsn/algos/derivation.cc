@@ -40,5 +40,16 @@ namespace vcsn
       return detail::split_registry().call(e);
     }
 
+    /*-------------------.
+    | star-height(exp).  |
+    `-------------------*/
+    REGISTER_DEFINE(star_height);
+
+    size_t
+    star_height(const ratexp& e)
+    {
+      return detail::star_height_registry().call(e);
+    }
+
   }
 }

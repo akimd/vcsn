@@ -24,6 +24,7 @@
 # include <vcsn/algos/split.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/star.hh>
+# include <vcsn/algos/star-height.hh>
 # include <vcsn/algos/star-normal-form.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/algos/thompson.hh>
@@ -243,6 +244,7 @@ namespace vcsn
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
         REGISTER(star, aut_t);
+        REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
         REGISTER(tikz, aut_t, std::ostream);

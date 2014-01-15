@@ -341,6 +341,11 @@ struct ratexp
     return vcsn::dyn::standard(r_);
   }
 
+  size_t star_height() const
+  {
+    return vcsn::dyn::star_height(r_);
+  }
+
   ratexp star_normal_form() const
   {
     return vcsn::dyn::star_normal_form(r_);
@@ -514,6 +519,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_valid", &ratexp::is_valid)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
+    .def("star_height", &ratexp::star_height)
     .def("star_normal_form", &ratexp::star_normal_form)
     .def("thompson", &ratexp::thompson)
     .def("transpose", &ratexp::transpose)

@@ -6,6 +6,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/split.hh>
+# include <vcsn/algos/star-height.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/weights/polynomialset.hh>
 # include <vcsn/dyn/ratexp.hh>
