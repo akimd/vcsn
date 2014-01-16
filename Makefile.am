@@ -23,7 +23,7 @@ BUILT_SOURCES += lib/config.h vcsn/config.hh
 DISTCLEANFILES += vcsn/config.hh python/vcsn_version.pyc
 
 AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
-AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
+AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir) $(BOOST_CPPFLAGS)
 
 include bin/local.mk
 include doc/local.mk
