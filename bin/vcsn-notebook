@@ -1,5 +1,5 @@
 #! /bin/sh
 
-# sudo port install py27-ipython py27-zmq py27-jinja2 py27-tornado
+# sudo port install py-ipython py-zmq py-jinja2 py-tornado py-matplotlib
 
 exec ipython-2.7 notebook --pylab=inline
