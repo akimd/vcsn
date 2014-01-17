@@ -341,7 +341,7 @@ struct ratexp
     return vcsn::dyn::standard(r_);
   }
 
-  size_t star_height() const
+  unsigned star_height() const
   {
     return vcsn::dyn::star_height(r_);
   }

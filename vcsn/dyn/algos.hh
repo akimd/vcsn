@@ -318,7 +318,7 @@ namespace vcsn
     automaton star(const automaton& aut);
 
     /// Star height of a ratexp.
-    size_t star_height(const ratexp& rs);
+    unsigned star_height(const ratexp& rs);
 
     /// A normalized form where star is applied only to expression
     /// without null constant-term.

@@ -19,7 +19,7 @@ namespace vcsn
       using nary_t = typename super_type::template nary_t<Type>;
 
       /// Entry point: return the size of \a v.
-      size_t
+      unsigned
       operator()(const node_t& v)
       {
         height_ = 0;
@@ -28,7 +28,7 @@ namespace vcsn
       }
 
       /// Entry point: return the size of \a v.
-      size_t
+      unsigned
       operator()(const std::shared_ptr<const node_t>& v)
       {
         return operator()(*v);
@@ -54,20 +54,19 @@ namespace vcsn
 
 # undef DEFINE
 
-      /// Traverse n-ary node (+ and .).
+      /// Traverse variadic node.
       template <rat::exp::type_t Type>
       void visit_nary(const nary_t<Type>& n);
 
-      size_t height_;
+      unsigned height_;
     };
   } // namespace detail
-
 
 
   /// Star height of a ratexp.
   template <typename RatExpSet>
   inline
-  size_t
+  unsigned
   star_height(const typename RatExpSet::ratexp_t& e)
   {
     detail::star_heighter<RatExpSet> s;
@@ -80,7 +79,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet>
-      size_t
+      unsigned
       star_height(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
@@ -88,7 +87,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(star_height,
-                       (const ratexp& e) -> size_t);
+                       (const ratexp& e) -> unsigned);
     }
   }
 

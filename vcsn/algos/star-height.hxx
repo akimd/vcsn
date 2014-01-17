@@ -79,8 +79,8 @@ namespace vcsn
     star_heighter<RatExpSet>::visit_nary(const nary_t<Type>& n)
     {
       /* The height of an n-ary is the max of the n heights. */
-      size_t max = height_;
-      size_t initial = height_;
+      auto max = height_;
+      auto initial = height_;
       for (auto child : n)
         {
           height_ = initial;
