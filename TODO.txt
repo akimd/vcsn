@@ -230,16 +230,13 @@ the accessible parts.
 To compute the constant-term of a ratexp, we compute that of its subratexp,
 which will be recomputed uselessly by derived-term.
 
-** ratexpset::print (LS)
-Convert to use <= in:
+** difference
+We don't need the rhs to be complete, it suffices to adjust product to
+generate a pseudo sink state each time we exit the RHS.  And of course to
+change the accepting states to be the non-accepting states of the rhs.
 
-      bool parent_has_precedence = precedence(child) < precedence(parent);
-
-because we may have to deal with binary expressions (instead of variadic):
-e.g. (a+b)+(c+d).  Currently we can't, agreed, but there are already
-experiment where it can happen, in which case we _need_ <=, not <.
-
-Pay attention that we want a**, not (a*)*.
+This would avoid the completion of the rhs, which might add many many
+transitions.
 
 ** evaluate
 Vectors of weights indexed by states are bad structures to iterate upon.  We
