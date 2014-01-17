@@ -27,7 +27,6 @@
   %D%/efsm.chk                                  \
   %D%/enumerate.chk                             \
   %D%/evaluate.chk                              \
-  %D%/expand.chk                                \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/infiltration.chk                          \
