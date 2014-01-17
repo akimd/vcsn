@@ -24,8 +24,6 @@ use_xz              yes
 checksums           rmd160 643f69527cf799e5edde4b6a98b3b818dff8576f \
                     sha256 c8e5134535fbe8588c503f33f78ea551cbb3fadcddb2832d9a72170a7b5daf2c
 
-depends_build       port:bison
-
 depends_lib         port:boost
 
 configure.optflags  -O3

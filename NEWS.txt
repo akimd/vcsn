@@ -4,6 +4,11 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-17
+** Bison is no longer needed
+To install Vaucanson from a tarball, Bison is no longer needed.  Of course,
+modifying one of grammar files will fail, unless Bison 3.0 is installed.
+
 * 2014-01-13
 ** Character classes in context specifications
 It is now possible to use ranges to define alphabets.  For instance in
