@@ -1,4 +1,4 @@
-#include <vcsn/dyn/automaton.hh>
+#include <vcsn/dyn/ratexp.hh>
 #include <vcsn/algos/star-normal-form.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
