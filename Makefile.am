@@ -29,4 +29,5 @@ include share/local.mk
 include tests/local.mk
 include vcsn/local.mk
 
-EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt
+EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt \
+  build-aux/bin/fuse-switch
