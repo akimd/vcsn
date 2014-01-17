@@ -18,7 +18,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/aut-to-exp.py                             \
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
-  %D%/minimize.py				\
+  %D%/is-equivalent.py                          \
+  %D%/minimize.py                               \
   %D%/split.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
