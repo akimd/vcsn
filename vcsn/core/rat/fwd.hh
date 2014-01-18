@@ -27,17 +27,17 @@ namespace vcsn
     /// '\e + a', and never 'a + \e'.
     enum class type_t
     {
-      zero = 0,
-      one  = 1,
-      atom = 2,
-      sum  = 3,
-      prod = 4,
-      intersection = 5,
-      shuffle = 6,
-      star = 7,
-      lweight = 8,
-      rweight = 9,
-      complement = 10,
+      zero,
+      one,
+      atom,
+      sum,
+      prod,
+      intersection,
+      shuffle,
+      star,
+      lweight,
+      rweight,
+      complement,
     };
 
 # define DEFINE(Node)                           \
