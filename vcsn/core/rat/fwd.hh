@@ -40,6 +40,23 @@ namespace vcsn
       complement,
     };
 
+    /// Whether star, complement.
+    constexpr bool is_unary(type_t t)
+    {
+      return (t == type_t::star
+              || t == type_t::complement);
+    }
+
+    /// Whether one of the variadic types.
+    constexpr bool is_nary(type_t t)
+    {
+      return (t == type_t::intersection
+              || t == type_t::prod
+              || t == type_t::shuffle
+              || t == type_t::sum);
+    }
+
+
 # define DEFINE(Node)                           \
     template <typename Label, typename Weight>  \
     class Node

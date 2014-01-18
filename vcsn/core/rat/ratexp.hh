@@ -28,25 +28,26 @@ namespace vcsn
       /// The type of this node.
       virtual type_t type() const = 0;
 
+      /// Whether star, complement.
+      bool is_unary() const
+      {
+        return vcsn::rat::is_unary(type());
+      }
+
+      /// Whether one of the variadic types.
+      bool is_nary() const
+      {
+        return vcsn::rat::is_nary(type());
+      }
+
       /// Whether sum, prod, intersection, shuffle, star.
       bool is_inner() const
       {
         type_t t = type();
-        return (t == type_t::sum
-		|| t == type_t::prod
-		|| t == type_t::intersection
-		|| t == type_t::shuffle
-		|| t == type_t::star
+        return (vcsn::rat::is_unary(t)
+		|| vcsn::rat::is_nary(t)
 		|| t == type_t::lweight
 		|| t == type_t::rweight);
-      }
-
-      /// Whether star, complement.
-      bool is_unary() const
-      {
-        type_t t = type();
-        return (t == type_t::star
-                || t == type_t::complement);
       }
     };
 
@@ -114,11 +115,7 @@ namespace vcsn
     class nary: public inner<Label, Weight>
     {
     public:
-      static_assert(Type == type_t::sum
-                    || Type == type_t::prod
-                    || Type == type_t::shuffle
-                    || Type == type_t::intersection,
-                    "invalid type");
+      static_assert(vcsn::rat::is_nary(Type), "invalid type");
 
       using label_t = Label;
       using weight_t = Weight;
