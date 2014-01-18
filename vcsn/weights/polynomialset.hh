@@ -156,6 +156,20 @@ namespace vcsn
       return res;
     }
 
+    /// The intersection of polynomials \a l and \a r.
+    /// Not valid for all the labelsets.
+    value_t
+    intersection(const value_t& l, const value_t& r) const
+    {
+      value_t res;
+      for (auto i: l)
+        for (auto j: r)
+          add_weight(res,
+                     labelset()->intersection(i.first, j.first),
+                     weightset()->mul(i.second, j.second));
+      return res;
+    }
+
     /// The star of polynomial \a v.
     value_t
     star(const value_t& v) const

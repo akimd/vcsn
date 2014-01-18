@@ -119,15 +119,7 @@ namespace vcsn
           {
             const auto& v = e[i];
             v->accept(*this);
-            polynomial_t sum = ps_.zero();
-            // Compute (l & r) where l and r are two polynomials:
-            // distribute.
-            for (const auto& l: res)
-              for (const auto& r: res_)
-                ps_.add_weight(sum,
-                               rs_.intersection(l.first, r.first),
-                               ws_.mul(l.second, r.second));
-            res = sum;
+            res = ps_.intersection(res, res_);
           }
         res_ = std::move(res);
       }
