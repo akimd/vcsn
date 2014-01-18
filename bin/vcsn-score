@@ -23,8 +23,9 @@ for fmt in ['dot', 'efsm', 'fado']:
 del auts
 
 # Determinization of ladybird 21.
-a = b.ladybird(21)
-bench('determinize(ladybird(21))', lambda: a.determinize())
+r = 21
+a = b.ladybird(r)
+bench('determinize(ladybird('+str(r)+'))', lambda: a.determinize())
 
 # Evaluate of de-bruijn 150.
 n = 150
@@ -42,20 +43,22 @@ bench('a = std([a-d]?{100})', lambda: r.standard())
 a = r.standard()
 bench('a.ratexp()', lambda: a.ratexp())
 
+# With a?{150}, the product has 22501 states, 124,903,125 transitions,
+# which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
+# transitions.
+r = "a?{100}"
+a = b.ratexp(r).standard()
+bench('product(std('+r+'))', lambda: a.product(a))
+bench('shuffle(std('+r+'))', lambda: a.shuffle(a))
+bench('infiltration(std('+r+'))', lambda: a.infiltration(a))
+
 # power(standard((a+b)*b(<2>a+<2>b)*), 13)
 a = vcsn.context("lal_char(ab)_z").ratexp("(a+b)*b(<2>a+<2>b)*").standard()
 bench('a**13', lambda: a ** 13)
 
-# With a?{150}, the product has 22501 states, 124,903,125 transitions,
-# which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
-# transitions.
-a = b.ratexp("a?{100}").standard()
-bench('product', lambda: a.product(a))
-bench('shuffle', lambda: a.shuffle(a))
-bench('infiltration', lambda: a.infiltration(a))
-
 # Minimize a big deterministic automaton over booleans.
+r = "[a-k]{2000}"
 a = vcsn.context("lal_char(a-k)_b").ratexp("[a-g]{1200}").standard()
-bench('signature', lambda: a.minimize('signature'))
+bench('signature(std('+r+'))', lambda: a.minimize('signature'))
 a = vcsn.context("lal_char(a-k)_b").ratexp("[a-k]{2000}").standard()
-bench('moore', lambda: a.minimize('moore'))
+bench('moore(std('+r+'))', lambda: a.minimize('moore'))
