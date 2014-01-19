@@ -40,7 +40,7 @@ namespace vcsn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       difference(const automaton& lhs, const automaton& rhs)
