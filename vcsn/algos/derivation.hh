@@ -310,7 +310,26 @@ namespace vcsn
       derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
+        , res_{rs_.context()}
       {}
+
+      /// The state for ratexp \a r.
+      /// If this is a new state, schedule it for visit.
+      state_t state(const ratexp_t& r)
+      {
+        state_t dst;
+        auto i = map_.find(r);
+        if (i == end(map_))
+          {
+            dst = res_.new_state();
+            res_.set_final(dst, constant_term(rs_, r));
+            map_[r] = dst;
+            todo_.push(r);
+          }
+        else
+          dst = i->second;
+        return dst;
+      }
 
       automaton_t operator()(const ratexp_t& ratexp)
       {
@@ -318,53 +337,26 @@ namespace vcsn
         // This is the labelset, but when iterated, the list of generators.
         const auto& ls = *rs_.labelset();
 
-        automaton_t res{rs_.context()};
-
-        // List of states to visit.
-        std::stack<ratexp_t> todo;
         // Turn the ratexp into a polynomial.
         {
-          polynomial_t initial;
-          if (breaking_)
-            initial = split(rs_, ratexp);
-          else
-            initial = polynomial_t{{ratexp, ws.one()}};
+          polynomial_t initial
+            = breaking_ ? split(rs_, ratexp)
+            : polynomial_t{{ratexp, ws.one()}};
           for (const auto& p: initial)
-            {
-              todo.push(p.first);
-              state_t s = res.new_state();
-              map_[p.first] = s;
-              res.set_initial(s, p.second);
-              res.set_final(s, constant_term(rs_, p.first));
-            }
+            // Also loads todo_ via state().
+            res_.set_initial(state(p.first), p.second);
         }
 
-        while (!todo.empty())
+        while (!todo_.empty())
           {
-            ratexp_t r = todo.top();
-            todo.pop();
+            ratexp_t r = todo_.top();
+            todo_.pop();
             state_t src = map_[r];
             for (auto l : ls)
-              {
-                polynomial_t next = derivation(rs_, r, l, breaking_);
-                for (const auto& p: next)
-                  {
-                    state_t dst;
-                    auto i = map_.find(p.first);
-                    if (i == end(map_))
-                      {
-                        dst = res.new_state();
-                        res.set_final(dst, constant_term(rs_, p.first));
-                        map_[p.first] = dst;
-                        todo.push(p.first);
-                      }
-                    else
-                      dst = i->second;
-                    res.add_transition(src, dst, l, p.second);
-                  }
-              }
+              for (const auto& m: derivation(rs_, r, l, breaking_))
+                res_.add_transition(src, state(m.first), l, m.second);
           }
-        return std::move(res);
+        return std::move(res_);
       }
 
       /// Map a state to its derived term.
@@ -394,9 +386,14 @@ namespace vcsn
       }
 
     private:
+      // List of states to visit.
+      std::stack<ratexp_t> todo_;
+
       ratexpset_t rs_;
       smap map_;
       bool breaking_ = false;
+      /// The resulting automaton.
+      automaton_t res_;
     };
   }
 
