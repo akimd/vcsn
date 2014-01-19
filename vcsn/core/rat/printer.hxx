@@ -181,8 +181,10 @@ namespace vcsn
     {
       static bool force = !! getenv("VCSN_PARENS");
       bool parent_has_precedence = precedence(child) <= precedence(parent);
-      bool needs_parens = (force || force_parens
-        || (parent_has_precedence && ! (parent.is_unary() && child.is_unary())))
+      bool needs_parens =
+        (force
+         || force_parens
+         || (parent_has_precedence && ! (parent.is_unary() && child.is_unary())))
         && ! (child.type() == type_t::atom && context_t::is_lal);
       if (needs_parens)
         out_ << lparen_;
