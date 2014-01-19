@@ -151,6 +151,15 @@ generic, and "more portable".  Note, however, that Boost.Format is
 header-only.  A mixture of both might be the best: where they suffice,
 format _are_ superior.
 
+** Eliminate rat::exp (Antoine)
+It does seem to be useful, except for one thing: dyn::ratexpset uses a
+shared_ptr to exp (which is rat::exp_t is) as a means to handle ratexps.  It
+would make much more sense for dyn::ratexpset to use dyn::ratexp as an
+abstraction to typed ratexp, but this should be thoroughly benched to make
+sure this is not (much) costlier.
+
+Getting rid of this will allow rat::node to use single inheritance.
+
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.
