@@ -159,9 +159,8 @@ namespace vcsn
       {
         e.sub()->accept(*this);
         // We need a copy of e, but without its weights.
-        auto e2 = rs_.star(e.sub()->clone());
         res_ = ps_.lmul(ws_.star(constant_term(rs_, e.sub())),
-                        ps_.rmul(res_, e2));
+                        ps_.rmul(res_, e.shared_from_this()));
       }
 
       VCSN_RAT_VISIT(lweight, e)

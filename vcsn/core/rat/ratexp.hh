@@ -59,7 +59,8 @@ namespace vcsn
     /// The abstract parameterized, root for all rational expression
     /// types.
     template <typename Label, typename Weight>
-    class node : public exp
+    class node : public std::enable_shared_from_this<node<Label, Weight>>
+               , public exp
     {
     public:
       using label_t = Label;
