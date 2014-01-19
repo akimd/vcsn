@@ -75,7 +75,7 @@ bench('a.shuffle(a)      # a = std('+r+')', lambda: a.shuffle(a))
 bench('a.infiltration(a) # a = std('+r+')', lambda: a.infiltration(a))
 
 # power.
-r = "(a+b)*b(<2>a+<2>b)*"
+r = "[ab]*b(<2>[ab])*"
 n = 12
 a = vcsn.context("lal_char(ab)_z").ratexp(r).standard()
 bench('a**{0} # a = std({1})'.format(n, r), lambda: a ** n)
