@@ -2,7 +2,6 @@
 # define VCSN_WEIGHTS_POLYNOMIALSET_HH
 
 # include <iostream>
-# include <map>
 # include <sstream>
 
 # include <vcsn/weights/fwd.hh>
@@ -14,16 +13,6 @@
 
 namespace vcsn
 {
-  template <typename LabelSet>
-  struct labelset_less_than
-  {
-    using label_t = typename LabelSet::value_t;
-    bool operator()(const label_t& lhs, const label_t& rhs) const
-    {
-      return LabelSet::less_than(lhs, rhs);
-    }
-  };
-
   // http://llvm.org/bugs/show_bug.cgi?id=18571
 # if defined __clang__
 # pragma clang diagnostic push
@@ -66,7 +55,7 @@ namespace vcsn
     using label_t = typename labelset_t::value_t;
     using weight_t = typename context_t::weight_t;
 
-    using value_t = std::map<label_t, weight_t, labelset_less_than<labelset_t>>;
+    using value_t = std::map<label_t, weight_t, vcsn::less<labelset_t>>;
     /// A pair <label, weight>.
     using monomial_t = typename value_t::value_type;
 

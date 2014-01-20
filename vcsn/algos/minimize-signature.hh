@@ -8,6 +8,7 @@
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/indent.hh>
+# include <vcsn/misc/map.hh> // vcsn::less
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -113,35 +114,10 @@ namespace vcsn
         return o << '}';
       }
 
-      friend class label_less;
-      class label_less
-      {
-        minimizer& minimizer_;
-        const labelset_t& ls_;
-      public:
-        label_less(minimizer& the_minimizer)
-          : minimizer_(the_minimizer)
-          , ls_(the_minimizer.ls_)
-        {}
-        bool operator()(const label_t& a,
-                        const label_t& b) const noexcept
-        {
-          return ls_.less_than(a, b);
-        }
-      }; // class label_less
-
       // This structure is only useful at initialization time, when
       // sorting transitions from a given state in a canonical order.
-      class label_to_states_t : public std::map<label_t,
-                                                std::vector<state_t>,
-                                                label_less>
-      {
-      public:
-        label_to_states_t(minimizer& the_minimizer)
-          : std::map<label_t, std::vector<state_t>, label_less>(the_minimizer)
-        {}
-      }; // class label_to_states_t
-
+      using label_to_states_t
+        = std::map<label_t, std::vector<state_t>, vcsn::less<labelset_t>>;
 
       std::unordered_map<state_t, state_output_t> state_to_state_output_;
 
@@ -346,7 +322,7 @@ namespace vcsn
         for (auto s : a_.all_states())
           {
             // Get the out-states from s, by label:
-            label_to_states_t label_to_states(*this);
+            label_to_states_t label_to_states;
             for (auto t : a_.all_out(s))
               label_to_states[a_.label_of(t)].emplace_back(a_.dst_of(t));
 

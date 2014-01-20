@@ -27,4 +27,21 @@ namespace std
   };
 }
 
+namespace vcsn
+{
+  template <typename ValueSet>
+  class less : public std::less<typename ValueSet::value_t>
+  {
+  public:
+    using valueset_t = ValueSet;
+    using value_t = typename valueset_t::value_t;
+
+    bool operator()(const value_t& lhs, const value_t& rhs) const
+    {
+      return valueset_t::less_than(lhs, rhs);
+    }
+  };
+
+}
+
 #endif // !VCSN_MISC_MAP_HH
