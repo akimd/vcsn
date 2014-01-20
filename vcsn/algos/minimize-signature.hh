@@ -24,8 +24,10 @@ namespace vcsn
     {
       static_assert(Aut::context_t::is_lal,
                     "requires labels_are_letters");
-      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                    "requires Boolean weights");
+      // FIXME: I'm nearly sure I can remove this, as now I check for
+      // the weightset when looking at the algorithm string parameter.
+      // static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+      //               "requires Boolean weights");
 
       using automaton_t = Aut;
 

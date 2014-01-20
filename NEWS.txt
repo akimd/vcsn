@@ -4,6 +4,18 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-07
+** weighted minimization (static, dynamic, tafkit, Python)
+A third implementation of the minimization algorithm named "weighted" is now
+available, supporting any lal context.
+
+The new variant is a more widely applicable generalization of the
+"signature" implementation.  The new variant is the default for
+non-boolean weightsets; it requires a trim automaton but does not rely
+on determinism or other properties.  Preliminary measures show
+performance to be close to "signature", or even clearly superior in
+the case of sparse automata such as dictionaries.
+
 * 2014-02-03
 Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
 "vaucanson".

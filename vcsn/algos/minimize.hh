@@ -7,6 +7,7 @@
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/minimize-signature.hh>
+# include <vcsn/algos/minimize-weighted.hh>
 # include <vcsn/algos/quotient.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -24,8 +25,6 @@ namespace vcsn
     {
       static_assert(Aut::context_t::is_lal,
                     "requires labels_are_letters");
-      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
-                    "requires Boolean weights");
 
       using automaton_t = Aut;
 
@@ -232,10 +231,19 @@ namespace vcsn
 
       template <typename Aut, typename String>
       automaton
-      minimize(const automaton& aut, const std::string& algo = "signature")
+      minimize(const automaton& aut,
+               const std::string& algo
+               = std::is_same<typename Aut::weight_t, bool>::value ? "signature"
+                                                                   : "weighted")
       {
         const auto& a = aut->as<Aut>();
-        if (algo == "moore")
+        if (algo == "weighted")
+          return make_automaton(weighted::minimize(a)); // FIXME: fix
+        else if (! std::is_same<typename Aut::weight_t, bool>::value)
+          throw std::runtime_error("Can't minimize on a non-Boolean weightset"
+                                   " with " + str_escape(algo)
+                                   + ", which is different from weighted\n");
+        else if(algo == "moore")
           return make_automaton(minimize(a));
         else if(algo == "signature")
           return make_automaton(signature::minimize(a));

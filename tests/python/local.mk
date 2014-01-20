@@ -60,6 +60,8 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/redundant.exp.gv             \
   %D%/minimize.dir/redundant.gv                 \
   %D%/minimize.dir/small-nfa.exp.gv             \
+  %D%/minimize.dir/small-weighted.exp.gv        \
+  %D%/minimize.dir/small-weighted.gv            \
   %D%/product.dir/a.gv                          \
   %D%/product.dir/ab.gv                         \
   %D%/product.dir/abc.gv                        \

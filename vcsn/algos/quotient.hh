@@ -90,7 +90,7 @@ namespace vcsn
               {
                 state_t d = aut.dst_of(t);
                 state_t dst = class_to_res_state_[state_to_class[d]];
-                res.add_transition(src, dst, aut.label_of(t));
+                res.add_transition(src, dst, aut.label_of(t), aut.weight_of(t));
               }
           }
         return std::move(res);

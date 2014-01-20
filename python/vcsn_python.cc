@@ -187,7 +187,7 @@ struct automaton
     return vcsn::dyn::is_valid(aut_);
   }
 
-  automaton minimize(const std::string& algo = "signature") const
+  automaton minimize(const std::string& algo = "weighted") const
   {
     return vcsn::dyn::minimize(aut_, algo);
   }

@@ -27,23 +27,27 @@ redundant = aut("redundant.gv")
 redundant_exp = aut("redundant.exp.gv")
 check('moore', redundant, redundant_exp)
 check('signature', redundant, redundant_exp)
+check('weighted', redundant, redundant_exp)
 
 ## An automaton equal to redundant.exp, with one transition removed.
 a = aut('incomplete-non-trim.gv')
 xfail('moore', a)
 xfail('signature', a)
+xfail('weighted', a)
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
 a = aut('no-initial-states.gv')
 xfail('moore', a)
 xfail('signature', a)
+xfail('weighted', a)
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
 a = aut("no-final-states.gv")
 xfail('moore', a)
 xfail('signature', a)
+xfail('weighted', a)
 
 ## Non-regression testcase: ensure that moore works and produces a
 ## correct result even with no non-final states.
@@ -57,6 +61,7 @@ intricate = vcsn.context('lal_char(abcdefghijk)_b') \
 intricate_exp = aut("intricate.exp.gv")
 check('moore', intricate, intricate_exp)
 check('signature', intricate, intricate_exp)
+check('weighted', intricate, intricate_exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
@@ -66,6 +71,14 @@ smallnfa = vcsn.context('lal_char(a)_b') \
 smallnfa_exp = aut("small-nfa.exp.gv")
 xfail('moore', smallnfa)
 check('signature', smallnfa, smallnfa_exp)
+check('weighted', smallnfa, smallnfa_exp)
+
+## A small weighted automaton.
+smallweighted = aut("small-weighted.gv")
+smallweighted_exp = aut("small-weighted.exp.gv")
+xfail('moore', smallweighted)
+xfail('signature', smallweighted)
+check('weighted', smallweighted, smallweighted_exp)
 
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in

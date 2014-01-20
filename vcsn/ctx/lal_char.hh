@@ -22,6 +22,7 @@ namespace vcsn
 # include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/algos/minimize.hh>
 # include <vcsn/algos/product.hh>
 
 namespace vcsn
@@ -68,6 +69,7 @@ namespace vcsn
         REGISTER(is_deterministic, aut_t);
         REGISTER(ladybird, Ctx, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
+        REGISTER(minimize, aut_t, const std::string);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
