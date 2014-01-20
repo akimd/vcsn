@@ -12,13 +12,30 @@ namespace vcsn
   {
     // See "Pretty-print std::tuple"
     // <http://stackoverflow.com/questions/6245735>.
-    template<std::size_t...> struct seq{};
 
-    template<std::size_t N, std::size_t... Is>
-    struct gen_seq : gen_seq<N-1, N-1, Is...>{};
+    // See O(log N) implementation of integer sequence
+    // <http://stackoverflow.com/questions/17424477>
 
-    template<std::size_t... Is>
-    struct gen_seq<0, Is...> : seq<Is...>{};
+    template<std::size_t...> struct seq
+    { using type = seq; };
+
+    template<class S1, class S2> struct concat;
+
+    template<std::size_t... I1, std::size_t... I2>
+    struct concat<seq<I1...>, seq<I2...>>
+      : seq<I1..., (sizeof...(I1)+I2)...>{};
+
+    template<class S1, class S2>
+    using Concat = typename concat<S1, S2>::type;
+
+    template<std::size_t N> struct gen_seq;
+    template<std::size_t N> using GenSeq = typename gen_seq<N>::type;
+
+    template<std::size_t N>
+    struct gen_seq : Concat<GenSeq<N/2>, GenSeq<N - N/2>>{};
+
+    template<> struct gen_seq<0> : seq<>{};
+    template<> struct gen_seq<1> : seq<0>{};
   }
 
 }
