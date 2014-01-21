@@ -8,7 +8,6 @@
 <<<4>x>l>a ! 1.1-10: 1.7: law_char: invalid value: l, unexpected l
 <<<5>x>e>l ! 1.10: law_char: invalid value: l, unexpected l
 
-
 # Check weight products.
 <<<1>\e>e>a => <e>a
 <<<0>x>e>a  => \z
