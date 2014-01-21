@@ -5,13 +5,13 @@
 # include <map>
 # include <unordered_map>
 
-# include <vcsn/ctx/fwd.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/weights/polynomialset.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
+# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {
