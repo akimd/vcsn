@@ -25,41 +25,37 @@ namespace std
 namespace vcsn
 {
 
-  namespace ctx
+  /// This is useful to make hashes with labels or weights as keys
+  /// without using non-default constructors; to be used along with
+  /// vcsn::ctx::hash.
+  template <typename ValueSet>
+  class equal_to : public std::equal_to<typename ValueSet::value_t>
   {
-    /// This is useful to make hashes with labels or weights as keys
-    /// without using non-default constructors; to be used along with
-    /// vcsn::ctx::hash.
-    template <typename ValueSet>
-    class equal_to : public std::equal_to<typename ValueSet::value_t>
+  public:
+    using valueset_t = ValueSet;
+    using value_t = typename valueset_t::value_t;
+
+    bool operator()(const value_t& v1, const value_t& v2) const
     {
-    public:
-      using valueset_t = ValueSet;
-      using value_t = typename valueset_t::value_t;
+      return valueset_t::equals(v1, v2);
+    }
+  };
 
-      bool operator()(const value_t& v1, const value_t& v2) const
-      {
-        return valueset_t::equals(v1, v2);
-      }
-    };
+  /// This is useful to make hashes with labels or weights as keys
+  /// without using non-default constructors; to be used along with
+  /// vcsn::ctx::equal_to.
+  template <typename ValueSet>
+  class hash : public std::hash<typename ValueSet::value_t>
+  {
+  public:
+    using valueset_t = ValueSet;
+    using value_t = typename valueset_t::value_t;
 
-    /// This is useful to make hashes with labels or weights as keys
-    /// without using non-default constructors; to be used along with
-    /// vcsn::ctx::equal_to.
-    template <typename ValueSet>
-    class hash : public std::hash<typename ValueSet::value_t>
+    size_t operator()(const value_t& v) const
     {
-    public:
-      using valueset_t = ValueSet;
-      using value_t = typename valueset_t::value_t;
-
-      size_t operator()(const value_t& v) const
-      {
-        return valueset_t::hash(v);
-      }
-    };
-
-  } // namespace ctx
+      return valueset_t::hash(v);
+    }
+  };
 
 } // namespace vcsn
 
