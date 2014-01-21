@@ -70,6 +70,9 @@ ostream: os, o
 istream: is
 
 * Environment variables
+** VCSN_BINARY
+Force ratexpset to build AST variadic nodes with only two children.
+
 ** VCSN_DEBUG
 Improve the display with debugging information.
 *** dot
@@ -104,9 +107,6 @@ Graphviz displays.
         if $orig;
       s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
     ' $file
-
-** VCSN_BINARY
-Force ratexpset to build AST variadic nodes with only two children.
 
 ** VCSN_PARENS
 Force the display of useless parentheses.
