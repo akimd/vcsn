@@ -232,9 +232,9 @@ namespace vcsn
           headers.insert("vcsn/ctx/instantiate.hh");
           std::string base = "/tmp/" + context_base::sname(ctx);
           is.str(ctx);
+          context();
           {
             std::ofstream o{base + ".cc"};
-            context();
             print(o);
           }
           auto cppflags = xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS);
