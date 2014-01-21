@@ -24,6 +24,28 @@ namespace vcsn
     }
   };
 
+  // http://llvm.org/bugs/show_bug.cgi?id=18571
+# if defined __clang__
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Wunused-value"
+# endif
+  template <typename LabelSet>
+  auto label_is_zero(const LabelSet& ls, const typename LabelSet::value_t* l)
+    -> decltype(ls.is_zero(l), bool())
+  {
+    return ls.is_zero(*l);
+  }
+
+# if defined __clang__
+# pragma clang diagnostic pop
+# endif
+
+  template <typename LabelSet>
+  bool label_is_zero(const LabelSet&, ...)
+  {
+    return false;
+  }
+
   /// Linear combination of labels: map labels to weights.
   /// \tparam Context  the LabelSet and WeightSet types.
   template <class Context>
@@ -105,20 +127,23 @@ namespace vcsn
     value_t&
     add_weight(value_t& v, const label_t& l, const weight_t k) const
     {
-      auto i = v.find(l);
-      if (i == v.end())
+      if (!label_is_zero(*labelset(), &l))
         {
-          set_weight(v, l, k);
-        }
-      else
-        {
-          // Do not use set_weight() because it would lookup w
-          // again and we already have the right iterator.
-          auto w2 = weightset()->add(i->second, k);
-          if (weightset()->is_zero(w2))
-            v.erase(i);
+          auto i = v.find(l);
+          if (i == v.end())
+            {
+              set_weight(v, l, k);
+            }
           else
-            i->second = w2;
+            {
+              // Do not use set_weight() because it would lookup w
+              // again and we already have the right iterator.
+              auto w2 = weightset()->add(i->second, k);
+              if (weightset()->is_zero(w2))
+                v.erase(i);
+              else
+                i->second = w2;
+            }
         }
       return v;
     }
