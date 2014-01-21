@@ -169,22 +169,19 @@ namespace vcsn
                 const set_t& c_states = class_to_set_[c];
                 for (auto l : ls_)
                   {
+                    // See the "alreadyminimal" test comment in
+                    // tests/python/minimize.py.
                     target_class_to_states_t target_class_to_c_states;
-                    bool with_class_invalid = false;
                     for (auto s : c_states)
                       {
                         auto c2 = out_class(s, l);
-                        if (c2 == class_invalid)
-                          with_class_invalid = true;
-                        else
-                          target_class_to_c_states[c2].emplace_back(s);
+                        target_class_to_c_states[c2].emplace_back(s);
                       }
 
-                    // Are there more than two keys?
+                    // Are there at least two keys?
                     //
                     // std::unordered_map::size is said to be O(1).
-                    if (2 <= (target_class_to_c_states.size()
-                              + with_class_invalid))
+                    if (2 <= target_class_to_c_states.size())
                       {
                         go_on = true;
                         class_t num = c;

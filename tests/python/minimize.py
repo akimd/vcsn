@@ -70,4 +70,26 @@ smallnfa_exp = aut("small-nfa.exp.gv")
 xfail('moore', smallnfa)
 check('signature', smallnfa, smallnfa_exp)
 
+## An already-minimal automaton.  This used to fail with Moore,
+## because of a subtly wrong optimization attempt in
+## vcsn/algos/minimize.hh.  The idea was to never store invalid_class
+## as a key in target_class_to_c_states, so as to avoid some hash
+## accesses in the (common) case of some state having no
+## out-transition with some label, as it happens in incomplete
+## automata.  The optimization attempt consisted in setting a Boolean
+## flag if the state being considered had no out-transition with the
+## label being considered; when deciding whether to split a class,
+## instead of the current test (2 <= target_class_to_c_states.size()),
+## we used to test (2 <= (target_class_to_c_states.size() + flag)); at
+## that point, however, it was possible to lose track of the state
+## with no out-transitions, which was not in target_class_to_c_states.
+## It remained associated to its old class identifier in
+## state_to_class, which in the mean time would come to identify some
+## subset of its old value.
+alreadyminimal = vcsn.context('lal_char(ab)_b') \
+                     .ratexp("a+ba") \
+                     .derived_term()
+check('moore', alreadyminimal, alreadyminimal)
+check('signature', alreadyminimal, alreadyminimal)
+
 PLAN()
