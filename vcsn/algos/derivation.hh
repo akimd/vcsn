@@ -2,6 +2,8 @@
 # define VCSN_ALGOS_DERIVATION_HH
 
 # include <stack>
+# include <map>
+# include <unordered_map>
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/algos/constant-term.hh>
@@ -124,7 +126,6 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      /// Handle an n-ary shuffle.
       VCSN_RAT_VISIT(shuffle, e)
       {
         polynomial_t res = ps_.zero();
@@ -287,16 +288,25 @@ namespace vcsn
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      struct ratexpset_less_than
+      struct ratexp_hash
+      {
+        size_t operator()(const ratexp_t& r) const
+        {
+          return ratexpset_t::hash(r);
+        }
+      };
+
+      struct ratexp_equals
       {
         bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
         {
-          return ratexpset_t::less_than(lhs, rhs);
+          return ratexpset_t::equals(lhs, rhs);
         }
       };
 
       /// Symbolic states to state handlers.
-      using smap = std::map<ratexp_t, state_t, ratexpset_less_than>;
+      using smap = std::unordered_map<ratexp_t, state_t,
+                                      ratexp_hash, ratexp_equals>;
 
       derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
@@ -350,7 +360,7 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// Map a state to its derived term.
+      /// Ordered map: state -> its derived term.
       using origins_t = std::map<state_t, ratexp_t>;
       origins_t
       origins() const
@@ -377,11 +387,13 @@ namespace vcsn
       }
 
     private:
-      // List of states to visit.
+      /// List of states to visit.
       std::stack<ratexp_t> todo_;
-
+      /// The ratexp's set.
       ratexpset_t rs_;
+      /// ratexp -> state.
       smap map_;
+      /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.
       automaton_t res_;
