@@ -205,7 +205,7 @@ namespace vcsn
         {
           res = es->star(e);
           if (min != -1)
-            res = es->concat(power(es, e, min, min), res);
+            res = es->mul(power(es, e, min, min), res);
         }
       else
         {
@@ -217,14 +217,14 @@ namespace vcsn
             {
               res = e;
               for (int n = 1; n < min; ++n)
-                res = es->concat(res, e);
+                res = es->mul(res, e);
             }
           if (min < max)
             {
               exp_t sum = es->one();
               for (int n = 1; n <= max - min; ++n)
                 sum = es->add(sum, power(es, e, n, n));
-              res = es->concat(res, sum);
+              res = es->mul(res, sum);
             }
         }
       return res;

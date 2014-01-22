@@ -36,3 +36,10 @@ ab(ab) => ab.ab
 ab(ab)ab => ab.ab.ab
 ab(ab)abc*  => ab.ab.ab.c*
 (abc).(cba) => abc.cba
+
+# Power is about mul, not concat.
+(ab){2} => ab.ab
+(ab){3} => ab.ab.ab
+(ab){,2} => \e+ab+ab.ab
+(ab){1,2} => ab.(\e+ab)
+(ab){2,} => ab.ab.(ab)*
