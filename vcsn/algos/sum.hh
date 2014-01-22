@@ -71,10 +71,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-----------.
-      | dyn::sum.  |
-      `-----------*/
-
+      /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
       sum(const automaton& lhs, const automaton& rhs)
@@ -85,7 +82,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(sum,
-                        (const automaton&, const automaton&) -> automaton);
+                       (const automaton&, const automaton&) -> automaton);
     }
   }
 }
