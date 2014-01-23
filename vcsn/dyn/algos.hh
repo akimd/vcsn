@@ -327,6 +327,9 @@ namespace vcsn
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 
+    /// Sum of two ratexps.
+    ratexp sum(const ratexp& lhs, const ratexp& rhs);
+
     /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);
 

@@ -247,6 +247,7 @@ namespace vcsn
         REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
+        REGISTER(sum_ratexp, rs_t, rs_t);
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(tikz, taut_t, std::ostream);
         REGISTER(transpose, aut_t);

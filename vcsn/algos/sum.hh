@@ -9,9 +9,9 @@
 namespace vcsn
 {
 
-  /*-----.
-  | sum  |
-  `-----*/
+  /*---------------------------.
+  | sum(automaton, automaton)  |
+  `---------------------------*/
 
   /// Merge transitions of \a b into those of \a res.
   ///
@@ -83,6 +83,43 @@ namespace vcsn
 
       REGISTER_DECLARE(sum,
                        (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*---------------------.
+  | sum(ratexp, ratexp)  |
+  `---------------------*/
+
+  /// Star height of a ratexp.
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  sum(const RatExpSet& rs,
+      const typename RatExpSet::ratexp_t& lhs,
+      const typename RatExpSet::ratexp_t& rhs)
+  {
+    return rs.add(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      ratexp
+      sum_ratexp(const ratexp& lhs, const ratexp& rhs)
+      {
+        const auto& left_set = lhs->as<RatExpSetLhs>();
+        const auto& right_set = rhs->as<RatExpSetLhs>();
+        return make_ratexp(left_set.get_ratexpset(),
+                           sum<RatExpSetLhs>(left_set.get_ratexpset(),
+                                             left_set.ratexp(),
+                                             right_set.ratexp()));
+      }
+
+      REGISTER_DECLARE(sum_ratexp,
+                       (const ratexp&, const ratexp&) -> ratexp);
     }
   }
 }

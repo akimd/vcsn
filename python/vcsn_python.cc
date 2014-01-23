@@ -351,6 +351,11 @@ struct ratexp
     return vcsn::dyn::star_normal_form(r_);
   }
 
+  ratexp sum(const ratexp& rhs) const
+  {
+    return vcsn::dyn::sum(r_, rhs.r_);
+  }
+
   automaton thompson() const
   {
     return vcsn::dyn::thompson(r_);
@@ -509,6 +514,8 @@ BOOST_PYTHON_MODULE(vcsn_python)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
+    .def("__add__", &ratexp::sum)
+
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())
@@ -521,6 +528,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("standard", &ratexp::standard)
     .def("star_height", &ratexp::star_height)
     .def("star_normal_form", &ratexp::star_normal_form)
+    .def("sum", &ratexp::sum)
     .def("thompson", &ratexp::thompson)
     .def("transpose", &ratexp::transpose)
     ;

@@ -21,6 +21,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/expand.py                                 \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
+  %D%/ratexp.py                                 \
   %D%/split.py                                  \
   %D%/star-height.py
 
