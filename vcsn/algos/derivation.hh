@@ -173,7 +173,10 @@ namespace vcsn
       VCSN_RAT_VISIT(rweight, e)
       {
         e.sub()->accept(*this);
-        res_ = ps_.rmul(res_, e.weight());
+        polynomial_t res;
+        for (const auto& m: res_)
+          ps_.add_weight(res, rs_.rmul(m.first, e.weight()), m.second);
+        res_ = res;
       }
 
     private:

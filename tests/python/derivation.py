@@ -74,6 +74,9 @@ check('(<x>a)*', 'a', '<x>(<x>a)*')
 check('(<x>a)*', 'b', '\z')
 check('<x>a*',   'a', '<x>a*')
 check('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
+check('(<x>a)*<y>', 'a', '<x>(<x>a)*<y>')
+check('(<x>a)*<y>', 'aa', '<xx>(<x>a)*<y>')
+
 
 # Complement.
 check('\z{c}', 'a', '\z{c}')
