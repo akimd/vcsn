@@ -37,8 +37,8 @@ automaton.__repr__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: dot_to_svg(self.format('dot'))
 
-def automaton_load(file):
-    return automaton(open(file, "r").read(), "dot")
+def automaton_load(file, format = "dot"):
+    return automaton(open(file, "r").read(), format)
 automaton.load = staticmethod(automaton_load)
 
 def automaton_fst(aut, cmd):
@@ -48,6 +48,9 @@ def automaton_fst(aut, cmd):
     check_call([cmd,             '/tmp/in.fst',  '/tmp/out.fst'])
     res = check_output(['efstdecompile', '/tmp/out.fst'])
     return automaton(res, "efsm")
+
+automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
+automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 
 def automaton_info(aut):
     '''A dictionary of automaton properties.'''
@@ -64,8 +67,9 @@ def automaton_info(aut):
     return res
 automaton.info = automaton_info
 
-automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
-automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
+automaton.lan_to_lal = \
+  lambda self: automaton(self.format('dot').replace('lan_', 'lal_'), "dot")
+automaton.proper = lambda self: self.proper_real().lan_to_lal()
 
 
 ## ------------ ##
