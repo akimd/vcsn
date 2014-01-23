@@ -13,7 +13,8 @@ AUTOMAKE_OPTIONS = 1.11.3
 # Use bzip2 only.
 AUTOMAKE_OPTIONS += no-dist-gzip dist-bzip2
 BUILDCHECK_ENVIRONMENT = $(CHECK_ENVIRONMENT)
-BUILT_SOURCES =
+# Automake 1.14 bug: no dependency from all to python_PYTHON.
+BUILT_SOURCES = $(python_PYTHON) $(nodist_python_PYTHON)
 CHECK_CLEANFILES =
 CHECK_ENVIRONMENT =
 CLEANDIRS =

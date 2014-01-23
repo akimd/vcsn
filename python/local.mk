@@ -1,4 +1,4 @@
-python_PYTHON = %D%/vcsn.py
+nodist_python_PYTHON = %D%/vcsn.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_python.la
 %C%_vcsn_python_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
@@ -12,4 +12,4 @@ pyexec_LTLIBRARIES = %D%/vcsn_python.la
 install-pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # Provide a simple means to express dependencies for Python tests.
-VCSN_PYTHON_DEPS = $(python_PYTHON) $(pyexec_LTLIBRARIES)
+VCSN_PYTHON_DEPS = $(nodist_python_PYTHON) $(pyexec_LTLIBRARIES)
