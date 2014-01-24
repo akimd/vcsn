@@ -49,6 +49,8 @@ namespace vcsn
     DEFINE(zero);
 # undef DEFINE
     template <rat::exp::type_t Type>
+    using unary_t = rat::unary<Type, label_t, weight_t>;
+    template <rat::exp::type_t Type>
     using nary_t = rat::nary<Type, label_t, weight_t>;
     using ratexp_t = std::shared_ptr<const node_t>;
 
