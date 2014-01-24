@@ -16,38 +16,6 @@ namespace vcsn
     DEFINE::visit(const Type ## _t& v)        \
       -> void
 
-    VISIT(sum)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(prod)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(shuffle)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(intersection)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(star)
-    {
-      ++ size_;
-      v.sub()->accept(*this);
-    }
-
-    VISIT(complement)
-    {
-      ++ size_;
-      v.sub()->accept(*this);
-    }
-
     VISIT(zero)
     {
       (void) v;
@@ -83,6 +51,16 @@ namespace vcsn
     template <type_t Type>
     inline
     void
+    size<RatExpSet>::visit_unary(const unary_t<Type>& v)
+    {
+      ++ size_;
+      v.sub()->accept(*this);
+    }
+
+    template <typename RatExpSet>
+    template <type_t Type>
+    inline
+    void
     size<RatExpSet>::visit_nary(const nary_t<Type>& n)
     {
       /* An n-ary node contributes n-1 unit (plus the sum of its
@@ -94,6 +72,7 @@ namespace vcsn
           child->accept(*this);
         }
     }
+
 
 # undef VISIT
 # undef DEFINE

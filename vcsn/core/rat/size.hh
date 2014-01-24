@@ -21,6 +21,8 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       template <type_t Type>
+      using unary_t = typename super_type::template unary_t<Type>;
+      template <type_t Type>
       using nary_t = typename super_type::template nary_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
@@ -46,21 +48,25 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;	\
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(sum);
-      DEFINE(prod);
-      DEFINE(shuffle);
-      DEFINE(intersection);
-      DEFINE(star);
-      DEFINE(complement);
-      DEFINE(one);
-      DEFINE(zero);
       DEFINE(atom);
+      DEFINE(complement)   { visit_unary(v); }
+      DEFINE(intersection) { visit_nary(v); }
       DEFINE(lweight);
+      DEFINE(one);
+      DEFINE(prod)         { visit_nary(v); };
       DEFINE(rweight);
+      DEFINE(shuffle)      { visit_nary(v); };
+      DEFINE(star)         { visit_unary(v); }
+      DEFINE(sum)          { visit_nary(v); };
+      DEFINE(zero);
 
 # undef DEFINE
 
-      /// Traverse n-ary node (+ and .).
+      /// Traverse unary node.
+      template <rat::exp::type_t Type>
+      void visit_unary(const unary_t<Type>& n);
+
+      /// Traverse variadic node.
       template <rat::exp::type_t Type>
       void visit_nary(const nary_t<Type>& n);
 
