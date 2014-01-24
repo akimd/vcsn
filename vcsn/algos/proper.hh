@@ -186,37 +186,17 @@ namespace vcsn
         /// treated before \a l.  Must be strict.
         bool operator<(const state_profile& r) const
         {
-          // First, work on those with fewer outgoing spontaneous
+          // (i) First, work on those with fewer outgoing spontaneous
           // transitions.
-          {
-            auto sl = out_sp;
-            auto sr = r.out_sp;
-            if (sr < sl)
-              return true;
-            else if (sl < sr)
-              return false;
-          }
-          // Prefer fewer outgoing transitions.
-          {
-            auto sl = out_nsp;
-            auto sr = r.out_nsp;
-            if (sr < sl)
-              return true;
-            else if (sl < sr)
-              return false;
-          }
-          // Prefer fewer incoming spontaneous transitions.
-          {
-            auto sl = in_sp;
-            auto sr = r.in_sp;
-            if (sr < sl)
-              return true;
-            else if (sl < sr)
-              return false;
-          }
-          // Then, ensure total order.
-          return state < r.state;
+          // (ii) Prefer fewer outgoing transitions.
+          // (iii) Prefer fewer incoming spontaneous transitions.
+          // (iv) Then, ensure total order using state handle.
+          //
+          // Note the inversions between lhs and rhs.
+          return (std::tie  (r.out_sp, r.out_nsp, r.in_sp, state)
+                  < std::tie(out_sp,   out_nsp,   in_sp,   r.state));
         }
+
         friend std::ostream& operator<<(std::ostream& o, const state_profile& p)
         {
           return o << p.state
