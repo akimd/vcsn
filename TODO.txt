@@ -250,6 +250,10 @@ is forbidden (this should be the empty polynomial).
 We need to keep metadata about automata, especially state names.  Then
 update all the "VCSN_ORIGINS" uses.
 
+** Dyn weights
+Now that we have dynamic weights, they could be used when parsing, instead
+of a simple string that is converted by the weightset.
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
