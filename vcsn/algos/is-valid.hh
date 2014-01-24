@@ -82,13 +82,13 @@ namespace vcsn
           return true;
         else
           {
-            automaton_t tmp_aut = copy(aut);
+            automaton_t a = copy(aut);
             // Apply absolute value to the weight of each transition.
             const auto& weightset = *aut.weightset();
-            for (auto t: tmp_aut.transitions())
-              tmp_aut.set_weight(t, weightset.abs(tmp_aut.weight_of(t)));
+            for (auto t: a.transitions())
+              a.set_weight(t, weightset.abs(a.weight_of(t)));
             // Apply proper.
-            return in_situ_remover(tmp_aut);
+            return in_situ_remover(a);
           }
       }
 
