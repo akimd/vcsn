@@ -102,12 +102,12 @@ namespace vcsn
 
       VCSN_RAT_VISIT(shuffle,)
       {
-        throw std::domain_error("expand: shuffle is not supported");
+        raise("expand: shuffle is not supported");
       }
 
       VCSN_RAT_VISIT(complement,)
       {
-        throw std::domain_error("expand: complement is not supported");
+        raise("expand: complement is not supported");
       }
 
       VCSN_RAT_VISIT(prod, v)

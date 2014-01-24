@@ -62,7 +62,7 @@ namespace vcsn
             o << sep << s;
             sep = ", ";
           }
-        return o << "}";
+        return o << '}';
       }
       std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss) const
       {
@@ -236,8 +236,7 @@ namespace vcsn
         else if(algo == "signature")
           return make_automaton(signature::minimize(a));
         else
-          throw std::runtime_error("minimize: invalid algorithm: "
-                                   + str_escape(algo));
+          raise("minimize: invalid algorithm: ", str_escape(algo));
       }
 
       REGISTER_DECLARE

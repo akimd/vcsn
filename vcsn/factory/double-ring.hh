@@ -1,12 +1,13 @@
 #ifndef VCSN_FACTORY_DOUBLE_RING_HH
 # define VCSN_FACTORY_DOUBLE_RING_HH
 
+# include <map>
+
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/context.hh>
-
-# include <map>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -20,9 +21,8 @@ namespace vcsn
     using context_t = Context;
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
-    if (letters.size() < 2)
-      throw std::invalid_argument("double_ring: the alphabet needs"
-                                  " at least 2 letters");
+    require(2 <= letters.size(),
+            "double_ring: the alphabet needs at least 2 letters");
     auto a = letters[0];
     auto b = letters[1];
 
@@ -55,8 +55,7 @@ namespace vcsn
     // Add finals.
     for (auto f: finals)
     {
-      if (f >= n)
-        throw std::runtime_error("error: invalid list of finals");
+      require(f < n, "double_ring: invalid list of finals");
       res.set_final(states[f]);
     }
 

@@ -7,6 +7,7 @@
 # include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -22,10 +23,10 @@ namespace vcsn
 
     using automaton_t = Aut;
 
-    if (!is_deterministic(aut))
-      throw std::domain_error("complement: requires a deterministic automaton");
-    if (!is_complete(aut))
-      throw std::domain_error("complement: requires a complete automaton");
+    require(is_deterministic(aut),
+            "complement: requires a deterministic automaton");
+    require(is_complete(aut),
+            "complement: requires a complete automaton");
 
     using state_t = typename automaton_t::state_t;
 

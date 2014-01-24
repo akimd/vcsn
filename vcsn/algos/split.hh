@@ -1,11 +1,12 @@
 #ifndef VCSN_ALGOS_SPLIT_HH
 # define VCSN_ALGOS_SPLIT_HH
 
-# include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
-# include <vcsn/weights/polynomialset.hh>
-# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
+# include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/raise.hh>
+# include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
 {
@@ -189,13 +190,13 @@ namespace vcsn
 
       VCSN_RAT_VISIT(shuffle,)
       {
-        throw std::domain_error("split: shuffle is not supported");
+        raise("split: shuffle is not supported");
       }
 
       using complement_t = typename super_type::complement_t;
       virtual void visit(const complement_t&)
       {
-        throw std::domain_error("split: complement is not supported");
+        raise("split: complement is not supported");
       }
 
       VCSN_RAT_VISIT(star, e)

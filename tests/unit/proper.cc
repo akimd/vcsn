@@ -133,7 +133,7 @@ static void check_law_char_z()
     automaton_t pro = proper(res);
     print(pro);
   }
-  catch(std::domain_error& e) {
+  catch(std::runtime_error& e) {
     std::cout << "Exception: " << e.what() << std::endl;
   }
   res.del_transition(s[1],s[0], "");
@@ -177,7 +177,7 @@ static void check_law_char_zmin()
     automaton_t pro = proper(res);
     print(pro);
   }
-  catch(std::domain_error& e) {
+  catch(std::runtime_error& e) {
     std::cout << "Exception: " << e.what() << std::endl;
   }
   res.set_transition(s[1],s[0], "",3);

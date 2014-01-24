@@ -15,6 +15,7 @@
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/flyweight.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weights/polynomialset.hh>
 
@@ -155,10 +156,9 @@ namespace vcsn
       auto s = state_(src);
       auto d = state_(dst);
       if (s == res_->pre() && d == res_->post())
-        throw std::runtime_error("edit_automaton: invalid transition "
-                                 "from pre to post: "
-                                 + src.get() + " -> " + dst.get()
-                                 + " (" + entry.get() + ")");
+        raise("edit_automaton: invalid transition from pre to post: "
+              + src.get() + " -> " + dst.get()
+              + " (" + entry.get() + ")");
       if (s == res_->pre() || d == res_->post())
         {
           if (entry.get().empty())
@@ -177,10 +177,9 @@ namespace vcsn
                   res_->add_transition(s, d, res_->prepost_label(), w);
                 }
               else
-                throw std::runtime_error
-                  (std::string{"edit_automaton: invalid "}
-                   + (s == res_->pre() ? "initial" : "final")
-                   + " entry: " + entry.get());
+                raise(std::string{"edit_automaton: invalid "}
+                      + (s == res_->pre() ? "initial" : "final")
+                      + " entry: " + entry.get());
             }
         }
       else

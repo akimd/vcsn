@@ -1,10 +1,13 @@
 #ifndef VCSN_FACTORY_LADYBIRD_HH
 # define VCSN_FACTORY_LADYBIRD_HH
 
+# include <vector>
+
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -17,9 +20,8 @@ namespace vcsn
     using context_t = Context;
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
-    if (letters.size() < 3)
-      throw std::invalid_argument("ladybird: the alphabet needs"
-                                  " at least 3 letters");
+    require(3 <= letters.size(),
+            "ladybird: the alphabet needs at least 3 letters");
     auto a = letters[0];
     auto b = letters[1];
     auto c = letters[2];

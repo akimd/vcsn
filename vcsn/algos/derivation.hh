@@ -11,6 +11,7 @@
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/weights/polynomialset.hh>
 
 namespace vcsn
@@ -234,8 +235,7 @@ namespace vcsn
   derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
              const std::string& s, bool breaking = false)
   {
-    if (s.empty())
-      throw std::runtime_error("cannot derivation wrt an empty string");
+    require(!s.empty(), "cannot derivation wrt an empty string");
     auto res = derivation(rs, e, s[0], breaking);
     for (size_t i = 1, len = s.size(); i < len; ++i)
       res = derivation(rs, res, s[i], breaking);

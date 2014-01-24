@@ -1,12 +1,11 @@
 #ifndef VCSN_FACTORY_U_HH
 # define VCSN_FACTORY_U_HH
 
-# include <stdexcept>
-
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -21,13 +20,10 @@ namespace vcsn
     using state_t = typename automaton_t::state_t;
     static_assert(Context::is_lal || Context::is_lan,
                   "requires labels_are_letters or nullable");
-    if (n < 2)
-      throw std::invalid_argument("u: n must be at least 3");
+    require(2 <= n, "u: n must be at least 3");
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
-    if (letters.size() < 3)
-      throw std::invalid_argument("u: the alphabet needs"
-                                  " at least 3 letters");
+    require(3 <= letters.size(), "u: the alphabet needs at least 3 letters");
     automaton_t res{ctx};
 
     // The states.

@@ -84,8 +84,7 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
-        if (!aut_.has_state(s))
-          throw std::runtime_error("not a valid state: " + std::to_string(s));
+        require(aut_.has_state(s), "not a valid state: " + std::to_string(s));
 
         // The loop's weight.
         auto w = ws_.one();

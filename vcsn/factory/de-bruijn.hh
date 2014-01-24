@@ -8,6 +8,7 @@
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -20,9 +21,7 @@ namespace vcsn
                   "requires labels_are_letters or nullable");
     size_t sz =
       std::distance(std::begin(*ctx.labelset()), std::end(*ctx.labelset()));
-    if (sz < 2)
-      throw std::invalid_argument("de_bruijn: the alphabet needs"
-                                  " at least 2 letters");
+    require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;
     mutable_automaton<context_t> res{ctx};
 

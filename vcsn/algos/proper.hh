@@ -457,7 +457,7 @@ namespace vcsn
       proper_here_(automaton_t& aut, bool = true)
       {
         if (!in_situ_remover(aut))
-          throw std::domain_error("invalid automaton");
+          raise("invalid automaton");
       }
 
       /// ABSVAL: valid iff proper succeeds on the "absolute value" of
@@ -467,8 +467,7 @@ namespace vcsn
       typename std::enable_if<Status == star_status_t::ABSVAL>::type
       proper_here_(automaton_t& aut, bool prune = true)
       {
-        if (!is_valid(aut))
-          throw std::domain_error("invalid automaton");
+        require(is_valid(aut), "invalid automaton");
         in_situ_remover(aut, prune);
       }
 
@@ -490,8 +489,7 @@ namespace vcsn
       typename std::enable_if<Status == star_status_t::NON_STARRABLE>::type
       proper_here_(automaton_t& aut, bool prune = true)
       {
-        if (!is_valid(aut))
-          throw std::domain_error("invalid automaton");
+        require(is_valid(aut), "invalid automaton");
         in_situ_remover(aut, prune);
       }
 

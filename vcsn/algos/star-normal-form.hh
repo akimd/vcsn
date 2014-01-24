@@ -2,9 +2,10 @@
 # define VCSN_ALGOS_STAR_NORMAL_FORM_HH
 
 # include <vcsn/algos/constant-term.hh>
-# include <vcsn/ctx/fwd.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -80,17 +81,17 @@ namespace vcsn
 
       VCSN_RAT_VISIT(intersection,)
       {
-        throw std::domain_error("star_normal_form: intersection is not supported");
+        raise("star_normal_form: intersection is not supported");
       }
 
       VCSN_RAT_VISIT(complement,)
       {
-        throw std::domain_error("star_normal_form: complement is not supported");
+        raise("star_normal_form: complement is not supported");
       }
 
       VCSN_RAT_VISIT(shuffle,)
       {
-        throw std::domain_error("star_normal_form: shuffle is not supported");
+        raise("star_normal_form: shuffle is not supported");
       }
 
       VCSN_RAT_VISIT(prod, v)

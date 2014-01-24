@@ -5,6 +5,7 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -75,17 +76,17 @@ namespace vcsn
 
       VCSN_RAT_VISIT(intersection,)
       {
-        throw std::domain_error("thompson: intersection is not supported");
+        raise("thompson: intersection is not supported");
       }
 
       VCSN_RAT_VISIT(complement,)
       {
-        throw std::domain_error("thompson: complement is not supported");
+        raise("thompson: complement is not supported");
       }
 
       VCSN_RAT_VISIT(shuffle,)
       {
-        throw std::domain_error("thompson: shuffle is not supported");
+        raise("thompson: shuffle is not supported");
       }
 
       VCSN_RAT_VISIT(prod, e)
