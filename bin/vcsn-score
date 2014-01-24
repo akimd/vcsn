@@ -58,7 +58,7 @@ bench('a.eval("a"*{0}) # a = de_bruijn({1})'.format(n+1, n),
 # proper.
 r = "a?{2000}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
-bench('a.proper() # a = thompson('+r+')', lambda: a.proper())
+bench('a.proper() # a = thompson('+r+')', lambda: a.proper_real())
 
 # to-ratexp.
 r = '[a-d]?{100}'
