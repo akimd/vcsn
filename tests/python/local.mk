@@ -31,7 +31,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \
-  %D%/context.py
+  %D%/context.py                                \
+  %D%/tuples.py
 endif
 
 EXTRA_DIST += %D%/test.py

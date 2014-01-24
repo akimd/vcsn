@@ -118,6 +118,8 @@ public:
                               std::ostream* new_out = nullptr );
   virtual int yywrap();
 
+  std::istream* yyin;	// input source for default LexerInput
+
 protected:
   virtual int LexerInput( char* buf, int max_size );
   virtual void LexerOutput( const char* buf, int size );
@@ -142,7 +144,6 @@ protected:
   yy_state_type yy_try_NUL_trans( yy_state_type current_state );
   int yy_get_next_buffer();
 
-  std::istream* yyin;	// input source for default LexerInput
   std::ostream* yyout;	// output sink for default LexerOutput
 
   // yy_hold_char holds the character lost when yytext is formed.

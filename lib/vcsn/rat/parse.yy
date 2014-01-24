@@ -133,7 +133,7 @@
 %token <std::string> WEIGHT  "weight";
 %token <std::set<char>> CLASS "character-class";
 
-%type <braced_ratexp> exp exps weights;
+%type <braced_ratexp> exp input weights;
 
 %precedence RWEIGHT
 %left "+"
@@ -146,12 +146,25 @@
 %precedence CONCAT
 %precedence "*" "{c}"
 
-%start exps
+%start input
 %%
 
-exps:
+input:
   // Provide a value for $$ only for sake of traces: shows the result.
-  exp  { driver_.result_ = ($$ = $1).exp; }
+  exp               {
+                      driver_.result_ = $1.exp;
+                      $$.exp = $1.exp;
+                    }
+| exp terminator    {
+                      driver_.result_ = $1.exp;
+                      $$.exp = $1.exp;
+                      YYACCEPT;
+                    }
+;
+
+terminator:
+  ","               { driver_.scanner_->yyin->putback(','); }
+| ")"               { driver_.scanner_->yyin->putback(')'); }
 ;
 
 exp:
@@ -187,6 +200,7 @@ weights:
   "weight"         { TRY(@$ + 1, $$ = MAKE(lmul, $1, MAKE(one))); }
 | "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, $1, $2.exp)); }
 ;
+
 
 %%
 
