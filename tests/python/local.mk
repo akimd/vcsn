@@ -20,6 +20,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/derivation.py                             \
   %D%/expand.py                                 \
   %D%/factory.py                                \
+  %D%/info.py                                   \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
   %D%/ratexp.py                                 \

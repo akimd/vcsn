@@ -59,7 +59,7 @@ def automaton_info(aut):
         (k, v) = l.split(':')
         v = v.strip()
         if k.startswith('is '):
-            res[k] = bool(v)
+            res[k] = v in ['true', '1']
         elif k.startswith('number '):
             res[k] = int(v)
         else:
