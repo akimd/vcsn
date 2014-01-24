@@ -29,17 +29,17 @@ namespace vcsn
     private:                                                    \
       void visit(const Type ## _t& v);
 
-      DEFINE(sum);
-      DEFINE(intersection);
-      DEFINE(shuffle);
-      DEFINE(prod);
-      DEFINE(star);
-      DEFINE(complement);
-      DEFINE(zero);
-      DEFINE(one);
       DEFINE(atom);
+      DEFINE(complement);
+      DEFINE(intersection);
       DEFINE(lweight);
+      DEFINE(one);
+      DEFINE(prod);
       DEFINE(rweight);
+      DEFINE(shuffle);
+      DEFINE(star);
+      DEFINE(sum);
+      DEFINE(zero);
 
 # undef DEFINE
     };
