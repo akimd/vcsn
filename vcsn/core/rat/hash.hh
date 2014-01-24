@@ -50,17 +50,17 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;	\
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(sum);
-      DEFINE(prod);
-      DEFINE(shuffle);
-      DEFINE(intersection);
-      DEFINE(star);
-      DEFINE(complement);
-      DEFINE(one);
-      DEFINE(zero);
       DEFINE(atom);
+      DEFINE(complement)   { visit_unary(v); }
+      DEFINE(intersection) { visit_nary(v); }
       DEFINE(lweight);
+      DEFINE(one)          { visit_nullary(v); }
+      DEFINE(prod)         { visit_nary(v); }
       DEFINE(rweight);
+      DEFINE(shuffle)      { visit_nary(v); }
+      DEFINE(star)         { visit_unary(v); }
+      DEFINE(sum)          { visit_nary(v); }
+      DEFINE(zero)         { visit_nullary(v); }
 
 # undef DEFINE
 

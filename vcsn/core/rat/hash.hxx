@@ -18,45 +18,6 @@ namespace vcsn
     DEFINE::visit(const Type ## _t& v)        \
       -> void
 
-    VISIT(sum)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(prod)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(shuffle)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(intersection)
-    {
-      visit_nary(v);
-    }
-
-    VISIT(star)
-    {
-      visit_unary(v);
-    }
-
-    VISIT(complement)
-    {
-      visit_unary(v);
-    }
-
-    VISIT(zero)
-    {
-      visit_nullary(v);
-    }
-
-    VISIT(one)
-    {
-      visit_nullary(v);
-    }
 
     VISIT(atom)
     {
