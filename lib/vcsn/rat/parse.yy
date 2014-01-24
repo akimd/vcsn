@@ -184,7 +184,7 @@ exp:
 ;
 
 weights:
-  "weight"         { TRY(@$ + 1, $$ = MAKE(rmul, MAKE(one), $1)); }
+  "weight"         { TRY(@$ + 1, $$ = MAKE(lmul, $1, MAKE(one))); }
 | "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, $1, $2.exp)); }
 ;
 
