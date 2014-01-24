@@ -57,15 +57,15 @@ namespace vcsn
       virtual void visit(const Type ## _t& v)
 
       DEFINE(atom);
-      DEFINE(complement);
-      DEFINE(intersection);
+      DEFINE(complement)    { print(v, complement_); }
+      DEFINE(intersection)  { print(v, intersection_); }
       DEFINE(lweight);
       DEFINE(one);
-      DEFINE(prod);
+      DEFINE(prod)         { print(v, product_); }
       DEFINE(rweight);
-      DEFINE(shuffle);
-      DEFINE(star);
-      DEFINE(sum);
+      DEFINE(shuffle)      { print(v, shuffle_); }
+      DEFINE(star)         { print(v, star_); }
+      DEFINE(sum)          { print(v, sum_); }
       DEFINE(zero);
 
 # undef DEFINE
@@ -101,6 +101,10 @@ namespace vcsn
       /// disambiguate.
       void print_child(const node_t& child, const node_t& parent,
                        bool force_parens = false);
+
+      /// Print a unary node.
+      template <rat::exp::type_t Type>
+      void print(const unary_t<Type>& n, const char* op);
 
       /// Print an n-ary node.
       template <rat::exp::type_t Type>

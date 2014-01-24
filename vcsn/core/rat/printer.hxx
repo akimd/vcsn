@@ -38,8 +38,8 @@ namespace vcsn
           rbracket_     = "";
           lparen_       = "\\left(";
           rparen_       = "\\right)";
-          star_         = "^*";
-          complement_   = "^c";
+          star_         = "^{*}";
+          complement_   = "^{c}";
           intersection_ = " \\cap ";
           shuffle_      = " \\between ";
           product_      = ctx_.is_law ? " \\cdot " : " \\, ";
@@ -104,35 +104,6 @@ namespace vcsn
     DEFINE::visit(const Type ## _t& v)        \
       -> void
 
-    VISIT(intersection)
-    {
-      print(v, intersection_);
-    }
-
-    VISIT(shuffle)
-    {
-      print(v, shuffle_);
-    }
-
-    VISIT(sum)
-    {
-      print(v, sum_);
-    }
-
-    VISIT(prod)
-    {
-      print(v, product_);
-    }
-
-    VISIT(star)
-    {
-      // Force parens around the child if it is a left weight.  This
-      // is not needed for right weights: compare e<w>* with (<w>e)*.
-      const node_t& child = *v.sub();
-      print_child(child, v, child.type() == rat::type_t::lweight);
-      out_ << star_;
-    }
-
     VISIT(lweight)
     {
       out_ << lbracket_;
@@ -147,15 +118,6 @@ namespace vcsn
       out_ << rmul_ << lbracket_;
       ctx_.weightset()->print(out_, v.weight(), format_);
       out_ << rbracket_;
-    }
-
-    VISIT(complement)
-    {
-      // Force parens around the child if it is a left weight.  This
-      // is not needed for right weights: compare e<w>* with (<w>e)*.
-      const node_t& child = *v.sub();
-      print_child(child, v, child.type() == rat::type_t::lweight);
-      out_ << complement_;
     }
 
     VISIT(zero)
@@ -195,6 +157,20 @@ namespace vcsn
         out_ << rparen_;
       else if (parent.is_unary())
         out_ << rgroup_;
+    }
+
+    template <typename RatExpSet>
+    template <type_t Type>
+    inline
+    auto
+    printer<RatExpSet>::print(const unary_t<Type>& v, const char* op)
+      -> void
+    {
+      // Force parens around the child if it is a left weight.  This
+      // is not needed for right weights: compare e<w>* with (<w>e)*.
+      const node_t& child = *v.sub();
+      print_child(child, v, child.type() == rat::type_t::lweight);
+      out_ << op;
     }
 
     template <typename RatExpSet>
