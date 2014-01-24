@@ -95,6 +95,10 @@ automata from sets of states of input automata or other types of
 information (e.g., derived-term, product, determinize, minimize,
 shuffle, infiltration...).
 
+** VCSN_TMPDIR
+Path to the folder in which compiled contexts should be stored.
+Defaults to /tmp if not specified.
+
 Use this Perl snippet to put turn this information in something that
 Graphviz displays.
 

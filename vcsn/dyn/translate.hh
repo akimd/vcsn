@@ -230,7 +230,8 @@ namespace vcsn
         void compile(const std::string& ctx)
         {
           headers.insert("vcsn/ctx/instantiate.hh");
-          std::string base = "/tmp/" + context_base::sname(ctx);
+          std::string base = xgetenv("VCSN_TMPDIR", "/tmp") + "/" +
+            context_base::sname(ctx);
           is.str(ctx);
           context();
           {
