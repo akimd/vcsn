@@ -15,9 +15,9 @@ namespace vcsn
     REGISTER_DEFINE(proper);
 
     automaton
-    proper(const automaton& aut)
+    proper(const automaton& aut, bool prune)
     {
-      return detail::proper_registry().call(aut);
+      return detail::proper_registry().call(aut, prune);
     }
   }
 }

@@ -4,7 +4,7 @@
 namespace vcsn
 {
   template <typename Aut>
-  bool in_situ_remover(Aut& aut);
+  bool in_situ_remover(Aut& aut, bool prune = true);
 
   template <typename Aut>
   bool is_proper(const Aut& aut);

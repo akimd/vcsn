@@ -54,6 +54,10 @@ a bug report...
 Use ratexps as weights to check multiplication order.  As in checks for
 standard(exp).
 
+** proper
+Check the case where we do not want to eliminate states.  Actually check
+that "a.proper(False).accessible() == a.proper()".
+
 * Bugs
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,

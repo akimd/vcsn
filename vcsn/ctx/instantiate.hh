@@ -143,7 +143,7 @@ namespace vcsn
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(ladybird, Ctx, unsigned);
-        REGISTER(proper, aut_t);
+        REGISTER(proper, aut_t, bool);
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(thompson, rs_t);
         REGISTER(u, Ctx, unsigned);
@@ -179,7 +179,7 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        REGISTER(proper, aut_t);
+        REGISTER(proper, aut_t, bool);
         REGISTER(thompson, rs_t);
 
         return true;

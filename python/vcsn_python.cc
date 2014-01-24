@@ -194,9 +194,9 @@ struct automaton
     return vcsn::dyn::product(aut_, rhs.aut_);
   }
 
-  automaton proper() const
+  automaton proper(bool prune = true) const
   {
-    return vcsn::dyn::proper(aut_);
+    return vcsn::dyn::proper(aut_, prune);
   }
 
   ratexp to_ratexp() const;
@@ -459,6 +459,7 @@ weight ratexp::constant_term() const
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_python)
 {
@@ -494,7 +495,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_valid", &automaton::is_valid)
     .def("minimize", &automaton::minimize, minimize())
     .def("product", &automaton::product)
-    .def("proper_real", &automaton::proper)
+    .def("proper_real", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("shortest", &automaton::shortest)
     .def("shuffle", &automaton::shuffle)

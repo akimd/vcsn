@@ -247,8 +247,10 @@ namespace vcsn
     /// Performs the meet of the contexts.
     automaton product(const automaton& lhs, const automaton& rhs);
 
-    /// An automaton equivalent to \a aut, without spontaneous transitions.
-    automaton proper(const automaton& aut);
+    /// An equivalent automaton without spontaneous transitions.
+    /// \param aut    the automaton in which to remove them
+    /// \param prune  whether to delete states that become inaccessible
+    automaton proper(const automaton& aut, bool prune = true);
 
     /// Produce a random automaton.
     /// \param num_states

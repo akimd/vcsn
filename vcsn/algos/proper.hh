@@ -57,12 +57,15 @@ namespace vcsn
       using kind_t = Kind;
 
     public:
-      properer(automaton_t& aut)
+      /// Get ready to eliminate spontaneous transitions.
+      /// \param aut    the automaton in which to remove them
+      /// \param prune  whether to delete states that become inaccessible
+      properer(automaton_t& aut, bool prune = true)
         : debug_(debug_level())
         , aut_(aut)
         , ws_(*aut.weightset())
         , empty_word_(aut.labelset()->one())
-        , todo_()
+        , prune_(prune)
       {}
 
       /**@brief Remove the epsilon-transitions of the input
@@ -75,16 +78,16 @@ namespace vcsn
          @param aut The automaton in which epsilon-transitions will be removed
          @throw domain_error if the input is not valid
       */
-      static void proper_here(automaton_t& aut)
+      static void proper_here(automaton_t& aut, bool prune = true)
       {
         if (!is_proper(aut))
-          proper_here_<weightset_t::star_status()>(aut);
+          proper_here_<weightset_t::star_status()>(aut, prune);
       }
 
-      static automaton_t proper(const automaton_t& aut)
+      static automaton_t proper(const automaton_t& aut, bool prune = true)
       {
         automaton_t res = copy(aut);
-        proper_here(res);
+        proper_here(res, prune);
         return res;
       }
 
@@ -118,11 +121,11 @@ namespace vcsn
          @return true if the proper succeeds, or false otherwise.
       */
 
-      static bool in_situ_remover(automaton_t& aut)
+      static bool in_situ_remover(automaton_t& aut, bool prune = true)
       {
         try
           {
-            properer p(aut);
+            properer p(aut, prune);
             p.in_situ_remover_();
             return true;
           }
@@ -370,7 +373,7 @@ namespace vcsn
         unsigned added = aut_.all_out(s).size() * closure.size();
         unsigned removed = transitions.size();
 #endif
-        if (aut_.all_in(s).empty())
+        if (prune_ && aut_.all_in(s).empty())
           {
 #ifdef STATS
             removed += aut_.all_out(s).size();
@@ -471,7 +474,7 @@ namespace vcsn
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::TOPS>::type
-      proper_here_(automaton_t& aut)
+      proper_here_(automaton_t& aut, bool = true)
       {
         if (!in_situ_remover(aut))
           throw std::domain_error("invalid automaton");
@@ -482,20 +485,20 @@ namespace vcsn
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::ABSVAL>::type
-      proper_here_(automaton_t& aut)
+      proper_here_(automaton_t& aut, bool prune = true)
       {
         if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        in_situ_remover(aut);
+        in_situ_remover(aut, prune);
       }
 
       /// STARRABLE: always valid.
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::STARRABLE>::type
-      proper_here_(automaton_t& aut)
+      proper_here_(automaton_t& aut, bool prune = true)
       {
-        in_situ_remover(aut);
+        in_situ_remover(aut, prune);
       }
 
       /// NON_STARRABLE: valid iff there is no epsilon-circuit with
@@ -505,11 +508,11 @@ namespace vcsn
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::NON_STARRABLE>::type
-      proper_here_(automaton_t& aut)
+      proper_here_(automaton_t& aut, bool prune = true)
       {
         if (!is_valid(aut))
           throw std::domain_error("invalid automaton");
-        in_situ_remover(aut);
+        in_situ_remover(aut, prune);
       }
 
     private:
@@ -527,6 +530,9 @@ namespace vcsn
       heap_t todo_;
       /// Map: state -> heap-handle.
       std::unordered_map<state_t, typename heap_t::handle_type> handles_;
+
+      /// Whether to prune states that become inaccessible.
+      bool prune_;
     };
 
 
@@ -543,10 +549,10 @@ namespace vcsn
 #ifndef __clang__
       constexpr
 #endif
-      void proper_here(automaton_t&)
+      void proper_here(automaton_t&, bool = true)
       {}
 
-      static Aut proper(const automaton_t& aut)
+      static Aut proper(const automaton_t& aut, bool = true)
       {
         return copy(aut);
       }
@@ -561,39 +567,41 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  bool in_situ_remover(Aut& aut)
+  bool in_situ_remover(Aut& aut, bool prune)
   {
-    return detail::properer<Aut>::in_situ_remover(aut);
+    return detail::properer<Aut>::in_situ_remover(aut, prune);
   }
 
   template <class Aut>
   inline
-  void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD)
+  void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD,
+                   bool prune = true)
   {
     switch (dir)
       {
       case direction_t::BACKWARD:
-        detail::properer<Aut>::proper_here(aut);
+        detail::properer<Aut>::proper_here(aut, prune);
         return;
       case direction_t::FORWARD:
         auto tr_aut = transpose(aut);
         using tr_aut_t = decltype(tr_aut);
-        detail::properer<tr_aut_t>::proper_here(tr_aut);
+        detail::properer<tr_aut_t>::proper_here(tr_aut, prune);
         return;
       }
   }
 
   template <class Aut>
-  Aut proper(const Aut& aut, direction_t dir = direction_t::BACKWARD)
+  Aut proper(const Aut& aut, direction_t dir = direction_t::BACKWARD,
+             bool prune = true)
   {
     switch (dir)
       {
       case direction_t::BACKWARD:
-        return detail::properer<Aut>::proper(aut);
+        return detail::properer<Aut>::proper(aut, prune);
       case direction_t::FORWARD:
         // FIXME: inconsistent implementation bw fwd and bwd.
         Aut res = copy(aut);
-        proper_here(res, dir);
+        proper_here(res, dir, prune);
         return res;
       }
     abort();
@@ -601,21 +609,17 @@ namespace vcsn
 
   namespace dyn
   {
-
-    /*--------------.
-    | dyn::proper.  |
-    `--------------*/
-
     namespace detail
     {
-      template <typename Aut>
-      automaton proper(const automaton& aut)
+      /// Bridge.
+      template <typename Aut, typename Bool>
+      automaton proper(const automaton& aut, bool prune)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(proper(a));
+        return make_automaton(proper(a, direction_t::BACKWARD, prune));
       }
 
-     REGISTER_DECLARE(proper, (const automaton& aut) -> automaton);
+      REGISTER_DECLARE(proper, (const automaton& aut, bool prune) -> automaton);
     }
 
   }

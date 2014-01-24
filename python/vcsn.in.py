@@ -69,7 +69,7 @@ automaton.info = automaton_info
 
 automaton.lan_to_lal = \
   lambda self: automaton(self.format('dot').replace('lan_', 'lal_'), "dot")
-automaton.proper = lambda self: self.proper_real().lan_to_lal()
+automaton.proper = lambda self, prune = True: self.proper_real(prune).lan_to_lal()
 
 
 ## ------------ ##
