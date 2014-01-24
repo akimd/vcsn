@@ -13,3 +13,7 @@ install-pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # Provide a simple means to express dependencies for Python tests.
 VCSN_PYTHON_DEPS = $(nodist_python_PYTHON) $(pyexec_LTLIBRARIES)
+
+# A short-hand to update all the python dependencies.
+.PHONY: python
+python: $(VCSN_PYTHON_DEPS)
