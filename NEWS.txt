@@ -4,6 +4,15 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-24
+** ratexp sum: new algorithm (static, dyn, Python)
+Compute the sum of two rational expressions.
+
+  >>> ctx = vcsn.context('lal_char(abc)_b')
+  >>> r1 = ctx.ratexp('(a+b+c)*')
+  >>> r1 + r1
+  (a+b+c)*+(a+b+c)*
+
 * 2014-01-17
 ** star_height: new algorithm (static, dynamic, Python)
 Computes the star-height of an expression.
