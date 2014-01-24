@@ -5,6 +5,8 @@
 # include <stack>
 # include <unordered_map>
 
+# include <boost/range/adaptor/reversed.hpp>
+
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
@@ -80,6 +82,7 @@ namespace vcsn
 
       value_t first_order(const ratexp_t& e)
       {
+#if CACHE
         auto insert = cache_.emplace(e, value_t{ws_.zero(), polys_t{}});
         auto& res = insert.first->second;
         if (insert.second)
@@ -103,6 +106,17 @@ namespace vcsn
 #endif
           }
         return res;
+#else
+        auto res = value_t{ws_.zero(), polys_t{}};
+        std::swap(res, res_);
+        e->accept(*this);
+        std::swap(res, res_);
+#if DEBUG
+        rs_.print(std::cerr, e) << " -> ";
+        print_(std::cerr, res) << iendl;
+#endif
+        return res;
+#endif
       }
 
       polynomial_t first_order_as_polynomial(const ratexp_t& e)
@@ -150,6 +164,8 @@ namespace vcsn
             rs_.labelset()->print(o, p.first) << ".[";
             ps_.print(o, p.second) << ']';
           }
+        if (transposed_)
+          o << " (transposed)";
         return o;
       }
 
@@ -161,6 +177,7 @@ namespace vcsn
           ps_.add_weight(lhs.polynomials[p.first], p.second);
       }
 
+      /// Inplace left-multiplication by \a w of \a res.
       value_t& lmul_(const weight_t& w, value_t& res) const
       {
         res.constant = ws_.mul(w, res.constant);
@@ -169,6 +186,18 @@ namespace vcsn
         return res;
       }
 
+      /// Right-multiplication of \a lhs by \a w.
+      value_t rmul_(const value_t& lhs, const weight_t& w) const
+      {
+        value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
+        for (auto& p: lhs.polynomials)
+          for (const auto& m: p.second)
+            ps_.add_weight(res.polynomials[p.first],
+                           rs_.rmul(m.first, w), m.second);
+        return res;
+      }
+
+      /// Inplace left-division by \a w of \a res.
       value_t& ldiv_(const weight_t& w, value_t& res) const
       {
         res.constant = ws_.ldiv(w, res.constant);
@@ -203,8 +232,9 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = {ws_.one(), polys_t{}};
-        for (const auto& r: e)
+        for (size_t i = 0; i < e.size(); ++i)
           {
+            const auto& r = e[transposed_ ? e.size() - i - 1 : i];
             // fo(l) = c(l) + a.A(l) + ...
             // fo(r) = c(r) + a.A(r) + ...
             // fo(l.r) = (c(l) + a.A(l) + ...) (c(r) + a.A(r) + ...)
@@ -237,7 +267,7 @@ namespace vcsn
 
       label_t one_(std::false_type)
       {
-        raise("first_order: quotient requires LAN");
+        raise(me(), ": quotient requires LAN");
       }
 
       VCSN_RAT_VISIT(ldiv, e)
@@ -262,8 +292,11 @@ namespace vcsn
           }
         else
           {
+            bool transposed = transposed_;
+            transposed_ = false;
             value_t lhs = first_order(e[0]);
             value_t rhs = first_order(e[1]);
+            transposed_ = transposed;
 #if DEBUG
             std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
             std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
@@ -271,7 +304,15 @@ namespace vcsn
             res_ = {ws_.zero(), polys_t{}};
             // lp: (label, left_polynomial)
             if (!ws_.is_zero(lhs.constant))
-              add_(res_, ldiv_(lhs.constant, rhs));
+              {
+                if (transposed_)
+                  {
+                    auto rhs_transposed = first_order(e[1]);
+                    add_(res_, ldiv_(lhs.constant, rhs_transposed));
+                  }
+                else
+                  add_(res_, ldiv_(lhs.constant, rhs));
+              }
             /// FIXME: We really want some means to iterate on two
             /// maps simultaneously, which matching keys.  Explore
             /// this: <http://stackoverflow.com/questions/13840998>.
@@ -398,6 +439,13 @@ namespace vcsn
                            ws_.one()}});
       }
 
+      VCSN_RAT_VISIT(transposition, e)
+      {
+        transposed_ = !transposed_;
+        e.sub()->accept(*this);
+        transposed_ = !transposed_;
+      }
+
       VCSN_RAT_VISIT(star, e)
       {
         value_t res = first_order(e.sub());
@@ -410,26 +458,30 @@ namespace vcsn
 
       VCSN_RAT_VISIT(lweight, e)
       {
-        value_t res = first_order(e.sub());
-        res_.constant = ws_.mul(e.weight(), res.constant);
-        for (const auto& p: res.polynomials)
-          res_.polynomials[p.first] = ps_.lmul(e.weight(), p.second);
+        auto l = e.weight();
+        auto r = first_order(e.sub());
+        res_
+          = transposed_
+          ? rmul_(r, ws_.transpose(l))
+          : lmul_(l, r);
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
-        value_t res = first_order(e.sub());
-        res_ = {ws_.mul(res.constant, e.weight()), polys_t{}};
-        for (auto& p: res.polynomials)
-          for (const auto& m: p.second)
-            ps_.add_weight(res_.polynomials[p.first],
-                           rs_.rmul(m.first, e.weight()), m.second);
+        auto l = first_order(e.sub());
+        auto r = e.weight();
+        res_
+          = transposed_
+          ? lmul_(ws_.transpose(r), l)
+          : rmul_(l, r);
       }
 
       // private:
       ratexpset_t rs_;
       /// Whether to use spontaneous transitions.
       bool use_spontaneous_;
+      /// Whether to work transposed.
+      bool transposed_ = false;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
       polynomialset_t ps_ = make_ratexp_polynomialset(rs_);

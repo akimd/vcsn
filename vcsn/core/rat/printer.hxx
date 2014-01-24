@@ -40,6 +40,7 @@ namespace vcsn
           rparen_       = "\\right)";
           star_         = "^{*}";
           complement_   = "^{c}";
+          transposition_ = "^{T}";
           intersection_ = " \\cap ";
           shuffle_      = " \\between ";
           product_      = ctx_.is_law ? " \\cdot " : " \\, ";
@@ -60,6 +61,7 @@ namespace vcsn
           rparen_       = ")";
           star_         = "*";
           complement_   = "{c}";
+          transposition_ = "{T}";
           intersection_ = "&";
           shuffle_      = ":";
           product_      = ctx_.is_law ? "." : "";
@@ -97,6 +99,7 @@ namespace vcsn
             CASE(shuffle);
             CASE(star);
             CASE(sum);
+            CASE(transposition);
             CASE(zero);
 # undef CASE
           }

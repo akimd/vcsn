@@ -26,6 +26,7 @@ namespace vcsn
       shuffle = 0;
       star = 0;
       sum = 0;
+      transposition = 0;
       zero = 0;
       v.accept(*this);
     }
@@ -79,6 +80,12 @@ namespace vcsn
     VISIT(complement)
     {
       ++complement;
+      v.sub()->accept(*this);
+    }
+
+    VISIT(transposition)
+    {
+      ++transposition;
       v.sub()->accept(*this);
     }
 

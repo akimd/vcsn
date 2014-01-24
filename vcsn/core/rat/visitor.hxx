@@ -62,6 +62,11 @@ namespace vcsn
       v.sub()->accept(*this);
     }
 
+    VISIT(transposition, v)
+    {
+      v.sub()->accept(*this);
+    }
+
     VISIT(one, )
     {}
 

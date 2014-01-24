@@ -98,6 +98,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   }
 
   "{c}"   return TOK(COMPLEMENT);
+  "{T}"   return TOK(TRANSPOSITION);
 
   /* Special constructs.  */
   "(?@"   context.clear(); yy_push_state(SC_CONTEXT);

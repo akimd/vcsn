@@ -126,6 +126,7 @@
   PERCENT    "%"
   PLUS       "+"
   RPAREN     ")"
+  TRANSPOSITION "{T}"
   ZERO       "\\z"
 ;
 
@@ -146,7 +147,7 @@
 %precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence "(" "\\z" "\\e" "letter" "character-class"
 %precedence CONCAT
-%precedence "*" "{c}"
+%precedence "*" "{c}" "{T}"
 
 %start input
 %%
@@ -192,6 +193,7 @@ exp:
   }
 | exp "*"          { $$ = power(driver_.ratexpset_, $1.exp, $2); }
 | exp "{c}"        { $$ = MAKE(complement, $1.exp); }
+| exp "{T}"        { $$ = MAKE(transposition, $1.exp); }
 | ZERO             { $$ = MAKE(zero); }
 | ONE              { $$ = MAKE(one); }
 | "letter"         { TRY(@$, $$ = MAKE(atom, $1)); }

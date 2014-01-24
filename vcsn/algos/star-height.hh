@@ -51,6 +51,7 @@ namespace vcsn
       DEFINE(shuffle)      { visit_nary(v); }
       DEFINE(star)         { ++height_; v.sub()->accept(*this); }
       DEFINE(sum)          { visit_nary(v); }
+      DEFINE(transposition){ v.sub()->accept(*this); }
       DEFINE(zero)         { (void) v; }
 
 # undef DEFINE

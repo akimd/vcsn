@@ -80,6 +80,7 @@ namespace vcsn
       VISIT(shuffle);
       VISIT(star);
       VISIT(sum);
+      VISIT(transposition);
       VISIT(zero);
 #undef VISIT
 

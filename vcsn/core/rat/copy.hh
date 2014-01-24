@@ -82,6 +82,7 @@ namespace vcsn
 
       DEFINE(complement)   { copy_unary(v); }
       DEFINE(star)         { copy_unary(v); }
+      DEFINE(transposition){ copy_unary(v); }
 
       DEFINE(one)
       {

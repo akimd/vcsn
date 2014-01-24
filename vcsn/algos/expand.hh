@@ -105,6 +105,7 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(complement)
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(shuffle)
+      VCSN_RAT_UNSUPPORTED(transposition)
 
       VCSN_RAT_VISIT(prod, v)
       {

@@ -68,6 +68,7 @@ namespace vcsn
       }
 
       VCSN_RAT_UNSUPPORTED(ldiv)
+      VCSN_RAT_UNSUPPORTED(transposition)
 
       VCSN_RAT_VISIT(zero,)
       {

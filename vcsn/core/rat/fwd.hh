@@ -36,6 +36,7 @@ namespace vcsn
       intersection,
       shuffle,
       star,
+      transposition,
       lweight,
       rweight,
       complement,
@@ -51,8 +52,9 @@ namespace vcsn
     /// Whether star, complement.
     constexpr bool is_unary(type_t t)
     {
-      return (t == type_t::star
-              || t == type_t::complement);
+      return (t == type_t::complement
+              || t == type_t::star
+              || t == type_t::transposition);
     }
 
     /// Whether one of the variadic types.
@@ -104,6 +106,9 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using star = unary<type_t::star, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using transposition = unary<type_t::transposition, Label, Weight>;
 
     /*-------.
     | nary.  |

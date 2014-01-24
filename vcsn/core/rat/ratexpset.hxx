@@ -339,6 +339,26 @@ namespace vcsn
       return std::make_shared<complement_t>(e);
   }
 
+  DEFINE::transposition(value_t e) const
+    -> value_t
+  {
+    value_t res = nullptr;
+    // Trivial Identity.
+    // 0{T} = 0.
+    if (e->type() == type_t::zero)
+      res = e;
+    // 1{T} = 1.
+    else if (e->type() == type_t::one)
+      res = e;
+    // a{T} = a.
+    else if (e->type() == type_t::atom)
+      res = e;
+    // END: Trivial Identity
+    else
+      res = std::make_shared<transposition_t>(e);
+    return res;
+  }
+
   /*----------.
   | weights.  |
   `----------*/

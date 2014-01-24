@@ -102,6 +102,11 @@ namespace vcsn
         res_ = rs_.complement(transpose(e.sub()));
       }
 
+      VCSN_RAT_VISIT(transposition, e)
+      {
+        res_ = rs_.transposition(transpose(e.sub()));
+      }
+
       VCSN_RAT_VISIT(lweight, e)
       {
         res_ = rs_.rmul(transpose(e.sub()),

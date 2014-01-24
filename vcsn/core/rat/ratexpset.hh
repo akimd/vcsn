@@ -48,6 +48,7 @@ namespace vcsn
     DEFINE(shuffle);
     DEFINE(star);
     DEFINE(sum);
+    DEFINE(transposition);
     DEFINE(zero);
 # undef DEFINE
     template <rat::exp::type_t Type>
@@ -151,6 +152,7 @@ namespace vcsn
     value_t ldiv(value_t l, value_t r) const;
     value_t star(value_t e) const;
     value_t complement(value_t e) const;
+    value_t transposition(value_t e) const;
     value_t rmul(value_t e, const weight_t& w) const;
     value_t lmul(const weight_t& w, value_t e) const;
     value_t transpose(value_t e) const;

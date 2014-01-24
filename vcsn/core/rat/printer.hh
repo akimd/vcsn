@@ -59,14 +59,15 @@ namespace vcsn
       DEFINE(atom);
       DEFINE(complement)    { print(v, complement_); }
       DEFINE(intersection)  { print(v, intersection_); }
-      DEFINE(ldiv)     { print(v, ldiv_); }
+      DEFINE(ldiv)          { print(v, ldiv_); }
       DEFINE(lweight);
       DEFINE(one);
-      DEFINE(prod)         { print(v, product_); }
+      DEFINE(prod)          { print(v, product_); }
       DEFINE(rweight);
-      DEFINE(shuffle)      { print(v, shuffle_); }
-      DEFINE(star)         { print(v, star_); }
-      DEFINE(sum)          { print(v, sum_); }
+      DEFINE(shuffle)       { print(v, shuffle_); }
+      DEFINE(star)          { print(v, star_); }
+      DEFINE(sum)           { print(v, sum_); }
+      DEFINE(transposition) { print(v, transposition_); }
       DEFINE(zero);
 
 # undef DEFINE
@@ -90,6 +91,7 @@ namespace vcsn
         word, // Multi-letter atoms.
         star,
         complement,
+        transposition,
         zero,
         one,
         atom,
@@ -145,6 +147,7 @@ namespace vcsn
       /// The ratexp operators.
       const char* star_ = nullptr;
       const char* complement_ = nullptr;
+      const char* transposition_ = nullptr;
       const char* intersection_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;

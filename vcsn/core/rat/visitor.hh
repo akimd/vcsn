@@ -40,6 +40,7 @@ namespace vcsn
       DEFINE(shuffle);
       DEFINE(star);
       DEFINE(sum);
+      DEFINE(transposition);
       DEFINE(zero);
 # undef DEFINE
     };

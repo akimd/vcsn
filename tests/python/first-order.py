@@ -60,6 +60,14 @@ check('(a*&a*){c}', 'b\z{c} + c\z{c} + a(a*&a*){c}')
 check('(<x>(<y>a)*<z>){c}', 'b\z{c} + c\z{c} + a(<y>a)*{c}')
 check('a{c}{c}', 'a\e{c}{c} + b\z{c}{c} + c\z{c}{c}')
 
+# Transposition
+check('\z{T}', '\z')
+check('\e{T}', '\e')
+check('a{T}', 'a')
+check('(abc){T}', 'cba')
+check('(abc+aabbcc){T}', 'c(ba+cbbaa)')
+check('(<xy>abc<yz>){T}', 'c<zy>(ba)<yx>')
+
 # Lquotient
 check('\e{\}\z', '\z')
 check('\e{\}\e', '\e')

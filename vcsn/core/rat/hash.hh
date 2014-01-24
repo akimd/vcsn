@@ -61,6 +61,7 @@ namespace vcsn
       DEFINE(shuffle)      { visit_nary(v); }
       DEFINE(star)         { visit_unary(v); }
       DEFINE(sum)          { visit_nary(v); }
+      DEFINE(transposition)    { visit_unary(v); }
       DEFINE(zero)         { visit_nullary(v); }
 
 # undef DEFINE
