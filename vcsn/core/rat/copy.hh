@@ -24,6 +24,8 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       template <type_t Type>
+      using unary_t = typename super_type::template unary_t<Type>;
+      template <type_t Type>
       using nary_t = typename super_type::template nary_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
@@ -43,13 +45,22 @@ namespace vcsn
       /// Factor the copy of n-ary operations.
       template <exp::type_t Type>
       void
+      copy_unary(const unary_t<Type>& v)
+      {
+        using out_unary_t = typename out_ratexpset_t::template unary_t<Type>;
+        res_ = std::make_shared<out_unary_t>(copy(v.sub()));
+      }
+
+      /// Factor the copy of n-ary operations.
+      template <exp::type_t Type>
+      void
       copy_nary(const nary_t<Type>& v)
       {
+        using out_nary_t = typename out_ratexpset_t::template nary_t<Type>;
         typename out_ratexpset_t::ratexps_t sub;
         for (auto s: v)
           sub.emplace_back(copy(s));
-        res_ = std::make_shared<typename out_ratexpset_t::template nary_t<Type>>
-          (sub);
+        res_ = std::make_shared<out_nary_t>(sub);
       }
 
       out_value_t
@@ -63,35 +74,13 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(intersection)
-      {
-        copy_nary(v);
-      }
+      DEFINE(intersection) { copy_nary(v); }
+      DEFINE(prod)         { copy_nary(v); }
+      DEFINE(shuffle)      { copy_nary(v); }
+      DEFINE(sum)          { copy_nary(v); }
 
-      DEFINE(prod)
-      {
-        copy_nary(v);
-      }
-
-      DEFINE(sum)
-      {
-        copy_nary(v);
-      }
-
-      DEFINE(shuffle)
-      {
-        copy_nary(v);
-      }
-
-      DEFINE(star)
-      {
-        res_ = out_rs_.star(copy(v.sub()));
-      }
-
-      DEFINE(complement)
-      {
-        res_ = out_rs_.complement(copy(v.sub()));
-      }
+      DEFINE(complement)   { copy_unary(v); }
+      DEFINE(star)         { copy_unary(v); }
 
       DEFINE(one)
       {
