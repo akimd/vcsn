@@ -19,6 +19,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
   %D%/expand.py                                 \
+  %D%/factory.py                                \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
   %D%/ratexp.py                                 \
@@ -41,6 +42,7 @@ EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/lao-elim-1.gv              \
   %D%/aut-to-exp.dir/lao-elim-2.gv              \
   %D%/aut-to-exp.dir/lao.gv                     \
+  %D%/factory.dir/clique-a-4.gv                 \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \
   %D%/minimize.dir/intricate.exp.gv             \
@@ -52,6 +54,8 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/redundant.gv                 \
   %D%/minimize.dir/small-nfa.exp.gv
 
+%D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
 
 .PHONY: check-python

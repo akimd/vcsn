@@ -5,8 +5,6 @@ from test import *
 
 ctx = vcsn.context("lal_char(abc)_b")
 
-medir = sys.argv[0].replace(".py", ".dir")
-
 # check INPUT OUTPUT
 # ------------------
 # Helper function to format output for the testsuite

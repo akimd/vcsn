@@ -42,7 +42,6 @@
   %D%/power.chk                                 \
   %D%/product.chk                               \
   %D%/proper.chk                                \
-  %D%/random.chk                                \
   %D%/shuffle.chk                               \
   %D%/standard.chk                              \
   %D%/star.chk                                  \
@@ -111,7 +110,6 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
   %D%/product.dir/xyz.gv                        \
-  %D%/random.dir/clique-a-4.gv                  \
   %D%/union.dir/abc.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)

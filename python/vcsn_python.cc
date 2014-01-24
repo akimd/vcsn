@@ -32,6 +32,8 @@ struct context
 
   automaton de_bruijn(unsigned n) const;
 
+  automaton divkbaseb(unsigned divisor, unsigned base) const;
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -40,6 +42,9 @@ struct context
   }
 
   automaton ladybird(unsigned n) const;
+
+  automaton random(unsigned num_states, float density = 0.1,
+                   unsigned num_initial = 1, unsigned num_final = 1) const;
 
   vcsn::dyn::context ctx_;
 };
@@ -436,11 +441,24 @@ automaton context::de_bruijn(unsigned n) const
   return vcsn::dyn::de_bruijn(ctx_, n);
 }
 
+automaton context::divkbaseb(unsigned divisor, unsigned base) const
+{
+  return vcsn::dyn::divkbaseb(ctx_, divisor, base);
+}
+
 automaton context::ladybird(unsigned n) const
 {
   return vcsn::dyn::ladybird(ctx_, n);
 }
 
+automaton context::random(unsigned num_states, float density,
+                          unsigned num_initial, unsigned num_final) const
+{
+  return vcsn::dyn::random_automaton(ctx_,
+                                     num_states, density,
+                                     num_initial, num_final);
+
+}
 
 /*------------------------.
 | ratexp implementation.  |
@@ -460,6 +478,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 
 BOOST_PYTHON_MODULE(vcsn_python)
 {
@@ -510,8 +529,10 @@ BOOST_PYTHON_MODULE(vcsn_python)
 
   bp::class_<context>("context", bp::init<const std::string&>())
     .def("de_bruijn", &context::de_bruijn)
+    .def("divkbaseb", &context::divkbaseb)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
+    .def("random", &context::random, random_overloads())
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())

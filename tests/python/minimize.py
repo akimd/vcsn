@@ -1,22 +1,14 @@
 #! /usr/bin/env python
 
-import inspect, os, sys
 import vcsn
 
 from test import *
-
-srcdir = os.environ["srcdir"]
-medir = sys.argv[0][:-3] + ".dir"
 
 def aut(file):
     return vcsn.automaton.load(medir + "/" + file)
 
 def check(algo, aut, exp):
-    eff = aut.minimize(algo)
-    if eff == exp:
-        PASS()
-    else:
-        FAIL(str(exp) + " != " + str(eff))
+    CHECK_EQ(exp, aut.minimize(algo))
 
 def xfail(algo, aut):
     res = ''
