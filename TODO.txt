@@ -192,6 +192,13 @@ sure this is not (much) costlier.
 
 Getting rid of this will allow rat::node to use single inheritance.
 
+** concat/mul
+polynomialset uses the "concat" operator on its "labelset".  However, when
+we use polynomials of ratexps, it is just "by chance" that there is a
+function "concat" which is *mostly* like mul.
+
+We should really name "concat" as "mul" in our labelsets.
+
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce
 'nullableset<tupleset<lal, lal>>', which is not possible currently.
