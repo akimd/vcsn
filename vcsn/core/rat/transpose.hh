@@ -38,6 +38,16 @@ namespace vcsn
         return std::move(res_);
       }
 
+      ratexp_t
+      transpose(const ratexp_t& e)
+      {
+        ratexp_t res;
+        std::swap(res_, res);
+        e->accept(*this);
+        std::swap(res_, res);
+        return res;
+      }
+
       VCSN_RAT_VISIT(zero,)
       {
         res_ = rs_.zero();
@@ -55,76 +65,55 @@ namespace vcsn
 
       VCSN_RAT_VISIT(sum, e)
       {
-        ratexp_t res = rs_.zero();
+        res_ = rs_.zero();
         for (auto v: e)
-          {
-            v->accept(*this);
-            res = rs_.add(res, res_);
-          }
-        res_ = res;
+          res_ = rs_.add(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(intersection, e)
       {
-        e.head()->accept(*this);
-        auto res = res_;
+        res_ = transpose(e.head());
         for (auto v: e.tail())
-          {
-            v->accept(*this);
-            res = rs_.intersection(res, res_);
-          }
-        res_ = res;
+          res_ = rs_.intersection(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(shuffle, e)
       {
         // FIXME: that should be easy to factor.
-        e.head()->accept(*this);
-        auto res = res_;
+        res_= transpose(e.head());
         for (auto v: e.tail())
-          {
-            v->accept(*this);
-            res = rs_.shuffle(res, res_);
-          }
-        res_ = res;
+          res_ = rs_.shuffle(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(prod, e)
       {
-        ratexp_t res = rs_.one();
+        res_ = rs_.one();
         for (auto v: e)
-          {
-            v->accept(*this);
-            res = rs_.mul(res_, res);
-          }
-        res_ = res;
+          res_ = rs_.mul(transpose(v), res_);
       }
 
       VCSN_RAT_VISIT(star, e)
       {
-        e.sub()->accept(*this);
-        res_ = rs_.star(res_);
+        res_ = rs_.star(transpose(e.sub()));
+      }
+
+      VCSN_RAT_VISIT(complement, e)
+      {
+        res_ = rs_.complement(transpose(e.sub()));
       }
 
       VCSN_RAT_VISIT(lweight, e)
       {
-        e.sub()->accept(*this);
-        res_ = rs_.rmul(res_,
+        res_ = rs_.rmul(transpose(e.sub()),
                         rs_.weightset()->transpose(e.weight()));
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
-        e.sub()->accept(*this);
         res_ = rs_.lmul(rs_.weightset()->transpose(e.weight()),
-                        res_);
+                        transpose(e.sub()));
       }
 
-      VCSN_RAT_VISIT(complement, e)
-      {
-        e.sub()->accept(*this);
-        res_ = rs_.complement(res_);
-      }
 
     private:
       ratexpset_t rs_;
