@@ -9,7 +9,11 @@ pyexec_LTLIBRARIES = %D%/vcsn_python.la
 # be installed.  Then we can install this one.  Otherwise libtool will
 # complain that this Python library has dependencies that are not
 # installed.
-install-pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
+#
+# However do not write "install-pyexecLTLIBRARIES: ...", because then Automake
+# does not generate the rule!  We must obfuscate.
+DASH = -
+install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # Provide a simple means to express dependencies for Python tests.
 VCSN_PYTHON_DEPS = $(nodist_python_PYTHON) $(pyexec_LTLIBRARIES)
