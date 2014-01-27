@@ -536,8 +536,6 @@ BOOST_PYTHON_MODULE(vcsn_python)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
-    .def("__add__", &ratexp::sum)
-
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())

@@ -9,9 +9,9 @@
 namespace vcsn
 {
 
-  /*---------------------------.
-  | sum(automaton, automaton)  |
-  `---------------------------*/
+  /*----------------------------.
+  | sum(automaton, automaton).  |
+  `----------------------------*/
 
   /// Merge transitions of \a b into those of \a res.
   ///
@@ -86,11 +86,11 @@ namespace vcsn
     }
   }
 
-  /*---------------------.
-  | sum(ratexp, ratexp)  |
-  `---------------------*/
+  /*----------------------.
+  | sum(ratexp, ratexp).  |
+  `----------------------*/
 
-  /// Star height of a ratexp.
+  /// Sum of ratexps.
   template <typename RatExpSet>
   inline
   typename RatExpSet::ratexp_t
@@ -110,12 +110,12 @@ namespace vcsn
       ratexp
       sum_ratexp(const ratexp& lhs, const ratexp& rhs)
       {
-        const auto& left_set = lhs->as<RatExpSetLhs>();
-        const auto& right_set = rhs->as<RatExpSetLhs>();
-        return make_ratexp(left_set.get_ratexpset(),
-                           sum<RatExpSetLhs>(left_set.get_ratexpset(),
-                                             left_set.ratexp(),
-                                             right_set.ratexp()));
+        const auto& l = lhs->as<RatExpSetLhs>();
+        const auto& r = rhs->as<RatExpSetLhs>();
+        return make_ratexp(l.get_ratexpset(),
+                           sum<RatExpSetLhs>(l.get_ratexpset(),
+                                             l.ratexp(),
+                                             r.ratexp()));
       }
 
       REGISTER_DECLARE(sum_ratexp,

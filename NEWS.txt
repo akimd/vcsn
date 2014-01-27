@@ -9,8 +9,10 @@ changes in the internal API may also be documented.
 Compute the sum of two rational expressions.
 
   >>> ctx = vcsn.context('lal_char(abc)_b')
-  >>> r1 = ctx.ratexp('(a+b+c)*')
-  >>> r1 + r1
+  >>> r = ctx.ratexp('[abc]*')
+  >>> r.sum(r)
+  (a+b+c)*+(a+b+c)*
+  >>> r + r
   (a+b+c)*+(a+b+c)*
 
 ** proper: an optional argument to avoid state deletion
