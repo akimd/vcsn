@@ -42,6 +42,10 @@ namespace vcsn
 
   template <typename LabelSet>
   bool label_is_zero(const LabelSet&, ...)
+  ATTRIBUTE_CONST;
+
+  template <typename LabelSet>
+  bool label_is_zero(const LabelSet&, ...)
   {
     return false;
   }
