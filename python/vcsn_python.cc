@@ -93,9 +93,9 @@ struct automaton
     return vcsn::dyn::concatenate(aut_, rhs.aut_);
   }
 
-  automaton determinize() const
+  automaton determinize(bool complete = false) const
   {
-    return vcsn::dyn::determinize(aut_);
+    return vcsn::dyn::determinize(aut_, complete);
   }
 
   automaton difference(const automaton& rhs) const
@@ -486,6 +486,7 @@ weight ratexp::constant_term() const
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
@@ -497,14 +498,12 @@ BOOST_PYTHON_MODULE(vcsn_python)
   bp::class_<automaton>("automaton", bp::init<const ratexp&>())
     .def(bp::init<const std::string&, const std::string&>())
 
-    .def("__pow__", &automaton::power)
-
     .def("accessible", &automaton::accessible)
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
     .def("concatenate", &automaton::concatenate)
-    .def("determinize", &automaton::determinize)
+    .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
     .def("enumerate", &automaton::enumerate)
     .def("eval", &automaton::eval)
@@ -523,6 +522,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
     .def("minimize", &automaton::minimize, minimize())
+    .def("power", &automaton::power)
     .def("product", &automaton::product)
     .def("proper_real", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")

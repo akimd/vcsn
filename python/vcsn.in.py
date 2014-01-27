@@ -36,7 +36,12 @@ context.ratexp = make_ratexp
 ## ----------- ##
 
 automaton.__eq__ = is_equal
-automaton.__mul__ = lambda lhs, rhs: lhs.product(rhs).trim()
+automaton.__add__ = automaton.sum
+automaton.__and__ = automaton.product
+automaton.__invert__ = automaton.complement
+automaton.__mul__ = automaton.concatenate
+automaton.__or__ = automaton.union
+automaton.__pow__ = automaton.power
 automaton.__repr__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: dot_to_svg(self.format('dot'))
@@ -95,14 +100,6 @@ ratexp.__eq__ = is_equal
 ratexp.__mul__ = ratexp.concatenate
 ratexp.__repr__ = lambda self: self.format('text')
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
-
-## ------------ ##
-## polynomial.  ##
-## ------------ ##
-
-polynomial.__eq__ = is_equal
-polynomial.__repr__ = lambda self: self.format('text')
-polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
 
 ## -------- ##

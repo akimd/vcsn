@@ -25,6 +25,16 @@ Compute the concatenation of two rational expressions.
   >>> r * r
   (a+b+c)*(a+b+c)*
 
+** Python API: Operators overloading on automata
+The Python API now overloads the following operators for automata:
+
+- "+" (sum of two automata)
+- "&" (product of two automata)
+- "~" (complement of an automaton)
+- "*" (concatenation of two automata)
+- "|" (union of two automata)
+- "**" (power of an automaton)
+
 * 2014-01-24
 ** ratexp sum: new algorithm (static, dyn, Python)
 Compute the sum of two rational expressions.
