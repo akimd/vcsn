@@ -1,5 +1,36 @@
 #! /bin/sh
 
-# sudo port install py-ipython py-zmq py-jinja2 py-tornado py-matplotlib
+: ${IPYTHON=ipython}
 
-exec ipython-2.7 notebook --pylab=inline
+if ($IPYTHON --version) >/dev/null 2>&1; then
+  exec $IPYTHON notebook --pylab=inline
+else
+  cat >&2 <<EOF
+$0: error: cannot find $IPYTHON
+
+  On Mac OS X, install these packages:
+
+  \$ sudo port install py-ipython py-zmq py-jinja2 py-tornado \\
+                       py-matplotlib ipython-select
+
+  Make sure that you can run "ipython" instead of "ipython-2.7" or
+  whatever is installed on your machine.  To this end, first ask what
+  versions of ipython are installed:
+
+  \$ port select --list ipython
+  Available versions for ipython:
+          ipython27
+          none (active)
+
+  in this case there is only ipython27, so run:
+
+  \$ sudo port select --set ipython ipython27
+  Selecting 'ipython27' for 'ipython' succeeded. 'ipython27' is now active.
+
+  Now it should work:
+
+  \$ ipython --version
+  1.1.0
+EOF
+  exit 1
+fi
