@@ -4,6 +4,17 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-27
+** ratexp concatenation: new algorithm (static, dyn, Python)
+Compute the concatenation of two rational expressions.
+
+  >>> ctx = vcsn.context('lal_char(abc)_b')
+  >>> r = ctx.ratexp('[abc]*')
+  >>> r.concatenate(r)
+  (a+b+c)*(a+b+c)*
+  >>> r * r
+  (a+b+c)*(a+b+c)*
+
 * 2014-01-24
 ** ratexp sum: new algorithm (static, dyn, Python)
 Compute the sum of two rational expressions.

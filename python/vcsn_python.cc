@@ -296,6 +296,11 @@ struct ratexp
     r_ = vcsn::dyn::read_ratexp(is, rs);
   }
 
+  ratexp concatenate(const ratexp& rhs) const
+  {
+    return vcsn::dyn::concatenate(r_, rhs.r_);
+  }
+
   weight constant_term() const;
 
   polynomial derivation(const std::string& s, bool breaking = true) const
@@ -536,6 +541,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
    ;
 
   bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
+    .def("concatenate", &ratexp::concatenate)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())

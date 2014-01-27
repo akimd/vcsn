@@ -54,6 +54,9 @@ namespace vcsn
     /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
+    /// Concatenate two ratexps.
+    ratexp concatenate(const ratexp& lhs, const ratexp& rhs);
+
     /// The weight associated to the empty word in \a e.
     weight constant_term(const ratexp& e);
 

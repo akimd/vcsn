@@ -21,5 +21,12 @@ namespace vcsn
     {
       return detail::chain_registry().call(aut, n);
     }
+
+    REGISTER_DEFINE(concatenate_ratexp);
+    ratexp
+    concatenate(const ratexp& lhs, const ratexp& rhs)
+    {
+      return detail::concatenate_ratexp_registry().call(lhs, rhs);
+    }
   }
 }

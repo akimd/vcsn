@@ -206,6 +206,7 @@ namespace vcsn
         REGISTER(chain, aut_t, unsigned);
         REGISTER(coaccessible, aut_t);
         REGISTER(concatenate, aut_t, aut_t);
+        REGISTER(concatenate_ratexp, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
         REGISTER(dot, aut_t, std::ostream);

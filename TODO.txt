@@ -12,16 +12,12 @@ tests.
 ** sum, star, etc. (harder)
 We have
 
-  sum(automaton, automaton) -> automaton
-  concatenate(automaton, automaton) -> automaton
   star(automaton) -> automaton
   left_mult(weight, automaton) -> automaton
   right_mult(automaton, weight) -> automaton
 
 that exist at in the various API.  Do the same for ratexps:
 
-  sum(ratexp, ratexp) -> ratexp
-  concatenate(ratexp, ratexp) -> ratexp
   star(ratexp) -> ratexp
   left_mult(weight, ratexp) -> ratexp
   right_mult(ratexp, weight) -> ratexp

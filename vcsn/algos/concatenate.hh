@@ -10,9 +10,9 @@
 
 namespace vcsn
 {
-  /*-------------.
-  | concatenate  |
-  `-------------*/
+  /*------------------------------------.
+  | concatenate(automaton, automaton).  |
+  `------------------------------------*/
 
   template <typename A, typename B>
   A&
@@ -147,6 +147,44 @@ namespace vcsn
 
       REGISTER_DECLARE(chain,
                        (const automaton& aut, unsigned n) -> automaton);
+    }
+  }
+
+
+  /*------------------------------.
+  | concatenate(ratexp, ratexp).  |
+  `------------------------------*/
+
+  /// Concatenation/product of ratexps.
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  concatenate(const RatExpSet& rs,
+              const typename RatExpSet::ratexp_t& lhs,
+              const typename RatExpSet::ratexp_t& rhs)
+  {
+    return rs.mul(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      ratexp
+      concatenate_ratexp(const ratexp& lhs, const ratexp& rhs)
+      {
+        const auto& l = lhs->as<RatExpSetLhs>();
+        const auto& r = rhs->as<RatExpSetLhs>();
+        return make_ratexp(l.get_ratexpset(),
+                           concatenate<RatExpSetLhs>(l.get_ratexpset(),
+                                                     l.ratexp(),
+                                                     r.ratexp()));
+      }
+
+      REGISTER_DECLARE(concatenate_ratexp,
+                       (const ratexp&, const ratexp&) -> ratexp);
     }
   }
 }

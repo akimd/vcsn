@@ -86,10 +86,10 @@ polynomial._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 ## -------- ##
 
 ratexp.__eq__ = is_equal
+ratexp.__mul__ = ratexp.concatenate
 ratexp.__repr__ = lambda self: self.format('text')
 ratexp.__add__ = ratexp.sum
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
-
 
 ## ------------ ##
 ## polynomial.  ##
