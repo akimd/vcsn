@@ -20,6 +20,7 @@ AC_INIT([Vaucanson], [2b.2],
         [http://vaucanson.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
+AC_CONFIG_MACRO_DIRS([build-aux/m4])
 
 AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules

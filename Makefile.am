@@ -11,6 +11,9 @@
 #
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
+# Should soon be obsolete with Autoconf 2.70.
+ACLOCAL_AMFLAGS = -I build-aux/m4
+
 include build-aux/make/init.mk
 
 # Unfortunately Automake 1.14 does not generate this for us.
