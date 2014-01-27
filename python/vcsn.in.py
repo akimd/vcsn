@@ -1,13 +1,17 @@
 from vcsn_python import *
 
-vcsn_datadir = '@VCSN_DATADIR@'
+# Where the automaton library is stored.
+vcsn_datadir = '@DATADIR@'
 
 def dot_to_svg(dot):
+    "Return the conversion of a Dot source into SVG."
     open("/tmp/a.gv", "w").write(dot)
     from subprocess import check_output
     return check_output(['dot','-Tsvg','/tmp/a.gv'])
 
+# FIXME: Get rid of this.
 def is_equal(lhs, rhs):
+    "A stupid string-based comparison.  Must be eliminated one we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 ## --------- ##
