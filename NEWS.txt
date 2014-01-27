@@ -5,6 +5,16 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-01-27
+** ratexp intersection: new algorithm (static, dyn, Python)
+Compute the Hadamard product of two rational expressions.
+
+  >>> ctx = vcsn.context('lal_char(abc)_b')
+  >>> r = ctx.ratexp('[abc]*')
+  >>> r.intersection(r)
+  (a+b+c)*&(a+b+c)*
+  >>> r & r
+  (a+b+c)*&(a+b+c)*
+
 ** ratexp concatenation: new algorithm (static, dyn, Python)
 Compute the concatenation of two rational expressions.
 

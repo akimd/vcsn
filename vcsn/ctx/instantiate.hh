@@ -217,6 +217,7 @@ namespace vcsn
         REGISTER(info, aut_t, std::ostream);
         REGISTER(info, taut_t, std::ostream);
         REGISTER(info_exp, rs_t, std::ostream);
+        REGISTER(intersection_ratexp, rs_t, rs_t);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);

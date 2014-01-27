@@ -7,6 +7,7 @@
 # include <utility>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/ctx/context.hh>
@@ -521,6 +522,44 @@ namespace vcsn
 
       REGISTER_DECLARE(power,
                        (const automaton&, unsigned) -> automaton);
+    }
+  }
+
+
+  /*-------------------------------.
+  | intersection(ratexp, ratexp).  |
+  `-------------------------------*/
+
+  /// Intersection/Hadamard product of ratexps.
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  intersection(const RatExpSet& rs,
+               const typename RatExpSet::ratexp_t& lhs,
+               const typename RatExpSet::ratexp_t& rhs)
+  {
+    return rs.intersection(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      ratexp
+      intersection_ratexp(const ratexp& lhs, const ratexp& rhs)
+      {
+        const auto& l = lhs->as<RatExpSetLhs>();
+        const auto& r = rhs->as<RatExpSetLhs>();
+        return make_ratexp(l.get_ratexpset(),
+                           ::vcsn::intersection<RatExpSetLhs>(l.get_ratexpset(),
+                                                              l.ratexp(),
+                                                              r.ratexp()));
+      }
+
+      REGISTER_DECLARE(intersection_ratexp,
+                       (const ratexp&, const ratexp&) -> ratexp);
     }
   }
 }

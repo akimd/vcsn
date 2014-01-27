@@ -141,6 +141,9 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// The Hadamard product of ratexps \a lhs and \a rhs.
+    ratexp intersection(const ratexp& lhs, const ratexp& rhs);
+
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);
 

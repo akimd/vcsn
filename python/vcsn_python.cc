@@ -324,6 +324,11 @@ struct ratexp
     return vcsn::dyn::expand(r_);
   }
 
+  ratexp intersection(const ratexp& rhs) const
+  {
+    return vcsn::dyn::intersection(r_, rhs.r_);
+  }
+
   bool is_equivalent(const ratexp& rhs) const
   {
     return vcsn::dyn::are_equivalent(r_, rhs.r_);
@@ -548,6 +553,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("expand", &ratexp::expand)
     .def("format", &ratexp::format)
+    .def("intersection", &ratexp::intersection)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
     .def("split", &ratexp::split)
