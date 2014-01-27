@@ -17,9 +17,9 @@ namespace vcsn
   namespace detail
   {
 
-    /*----------.
-    | product.  |
-    `----------*/
+    /*----------------------------------.
+    | producter<automaton, automaton>.  |
+    `----------------------------------*/
 
     /// Build the (accessible part of the) product.
     template <typename Lhs, typename Rhs>
@@ -352,9 +352,9 @@ namespace vcsn
     };
   }
 
-  /*---------.
-  | product. |
-  `---------*/
+  /*--------------------------------.
+  | product(automaton, automaton).  |
+  `--------------------------------*/
 
   /// Build the (accessible part of the) product.
   template <typename Lhs, typename Rhs>
@@ -369,10 +369,29 @@ namespace vcsn
     return res;
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
 
-  /*----------.
-  | shuffle.  |
-  `----------*/
+      /// Bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      product(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(product(l, r));
+      }
+
+      REGISTER_DECLARE(product,
+                       (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*--------------------------------.
+  | shuffle(automaton, automaton).  |
+  `--------------------------------*/
 
   /// Build the (accessible part of the) shuffle.
   template <typename Lhs, typename Rhs>
@@ -387,10 +406,29 @@ namespace vcsn
     return res;
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
 
-  /*---------------.
-  | infiltration.  |
-  `---------------*/
+      /// Bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      shuffle(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(shuffle(l, r));
+      }
+
+      REGISTER_DECLARE(shuffle,
+                       (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*-------------------------------------.
+  | infiltration(automaton, automaton).  |
+  `-------------------------------------*/
 
   /// Build the (accessible part of the) infiltration.
   template <typename Lhs, typename Rhs>
@@ -405,10 +443,29 @@ namespace vcsn
     return res;
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
 
-  /*--------.
-  | power.  |
-  `--------*/
+      /// Bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      infiltration(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(infiltration(l, r));
+      }
+
+      REGISTER_DECLARE(infiltration,
+                       (const automaton&, const automaton&) -> automaton);
+    }
+  }
+
+  /*----------------------.
+  | power(automaton, n).  |
+  `----------------------*/
 
   template <typename Aut>
   Aut
@@ -453,65 +510,6 @@ namespace vcsn
   {
     namespace detail
     {
-
-      /*----------.
-      | product.  |
-      `----------*/
-
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      product(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(product(l, r));
-      }
-
-      REGISTER_DECLARE(product,
-                        (const automaton&, const automaton&) -> automaton);
-
-
-      /*----------.
-      | shuffle.  |
-      `----------*/
-
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      shuffle(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(shuffle(l, r));
-      }
-
-      REGISTER_DECLARE(shuffle,
-                        (const automaton&, const automaton&) -> automaton);
-
-
-      /*---------------.
-      | infiltration.  |
-      `---------------*/
-
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      infiltration(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(infiltration(l, r));
-      }
-
-      REGISTER_DECLARE(infiltration,
-                        (const automaton&, const automaton&) -> automaton);
-
-
-      /*--------.
-      | power.  |
-      `--------*/
-
       /// Bridge.
       template <typename Aut, typename Unsigned>
       automaton
@@ -522,7 +520,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(power,
-                        (const automaton&, unsigned) -> automaton);
+                       (const automaton&, unsigned) -> automaton);
     }
   }
 }
