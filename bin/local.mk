@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -14,9 +14,11 @@
 dist_bin_SCRIPTS +=                             \
   %D%/efstcompile                               \
   %D%/efstdecompile                             \
-  %D%/vcsn                                      \
   %D%/vcsn-notebook                             \
   %D%/vcsn-score
+
+nodist_bin_SCRIPTS +=                           \
+  %D%/vcsn
 
 ## ---------- ##
 ## Programs.  ##

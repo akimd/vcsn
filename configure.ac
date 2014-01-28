@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -165,8 +165,8 @@ AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS"],
                    [Define to the linker flags.])
 
 # We look for our data files at runtime.
-dir=`URBI_RESOLVE_DIR([$datadir/vcsn])`
-AC_DEFINE_UNQUOTED([DATADIR], ["$dir"],
+AC_SUBST([DATADIR], [`URBI_RESOLVE_DIR([$datadir/vcsn])`])
+AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
                    [Define to the location of data files.])
 dir=`URBI_RESOLVE_DIR([$includeir])`
 AC_DEFINE_UNQUOTED([INCLUDEDIR], ["$dir"],
@@ -174,6 +174,7 @@ AC_DEFINE_UNQUOTED([INCLUDEDIR], ["$dir"],
 dir=`URBI_RESOLVE_DIR([$libdir])`
 AC_DEFINE_UNQUOTED([LIBDIR], ["$dir"],
                    [Define to the location of libs files.])
+AC_SUBST([PYEXECDIR], [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
@@ -195,6 +196,7 @@ AX_PREFIX_CONFIG_H([vcsn/config.hh], [vcsn], [lib/config.h])
 
 AC_CONFIG_FILES([Makefile])
 
+AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
 AC_CONFIG_FILES([python/vcsn.py:python/vcsn.in.py])

@@ -1,0 +1,11 @@
+#! /bin/sh
+
+pyexecdir='@PYEXECDIR@'
+
+PYTHONPATH=$pyexecdir:$PYTHONPATH
+export PYTHONPATH
+
+prog="vcsn-$1"
+shift
+
+exec $prog "$@"
