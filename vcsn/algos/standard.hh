@@ -74,12 +74,32 @@ namespace vcsn
     aut.set_initial(ini);
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      automaton
+      standard(const automaton& aut)
+      {
+        auto res = copy(aut->as<Aut>());
+        standard(res);
+        return make_automaton(std::move(res));
+      }
+
+      REGISTER_DECLARE(standard,
+                       (const automaton& e) -> automaton);
+    }
+  }
+
+
+  /*-------------------.
+  | standard(ratexp).  |
+  `-------------------*/
+
   namespace rat
   {
-
-    /*-------------------.
-    | standard(ratexp).  |
-    `-------------------*/
 
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
@@ -301,25 +321,6 @@ namespace vcsn
   {
     namespace detail
     {
-      /*---------------------.
-      | dyn::standard(aut).  |
-      `---------------------*/
-      /// Bridge.
-      template <typename Aut>
-      automaton
-      standard(const automaton& aut)
-      {
-        auto res = copy(aut->as<Aut>());
-        standard(res);
-        return make_automaton(std::move(res));
-      }
-
-      REGISTER_DECLARE(standard,
-                       (const automaton& e) -> automaton);
-
-      /*---------------------.
-      | dyn::standard(exp).  |
-      `---------------------*/
       /// Bridge.
       template <typename RatExpSet>
       automaton
