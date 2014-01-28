@@ -539,7 +539,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("universal", &automaton::universal)
     ;
 
-  bp::class_<context>("context", bp::init<const std::string&>())
+  bp::class_<context>
+    ("context",
+     bp::init<const std::string&>())
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
     .def("format", &context::format)
@@ -547,7 +549,9 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("random", &context::random, random_overloads())
    ;
 
-  bp::class_<ratexp>("ratexp", bp::init<const context&, const std::string&>())
+  bp::class_<ratexp>
+    ("ratexp",
+     bp::init<const context&, const std::string&>())
     .def("concatenate", &ratexp::concatenate)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
@@ -567,12 +571,15 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("transpose", &ratexp::transpose)
     ;
 
-  bp::class_<polynomial>("polynomial",
-                         bp::init<const context&, const std::string&>())
+  bp::class_<polynomial>
+    ("polynomial",
+     bp::init<const context&, const std::string&>())
     .def("format", &polynomial::format)
    ;
 
-  bp::class_<weight>("weight", bp::init<const context&, const std::string&>())
+  bp::class_<weight>
+    ("weight",
+     bp::init<const context&, const std::string&>())
     .def("format", &weight::format)
    ;
 
