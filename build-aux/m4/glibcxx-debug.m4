@@ -53,23 +53,23 @@ if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
        [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
 fi
 
-# if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
-#   vcsn_save_LIBS=$LIBS
-#   LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
-#   AC_RUN_IFELSE(
-#   [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
-#   #define _GLIBCXX_DEBUG_PEDANTIC
-#   #include <cassert>
-#   #include <sstream>
-#   #include <boost/regex.hpp>
-#   ],[
-#     {
-#       const boost::regex re("[a-zA-Z]*");
-#       assert(boost::regex_match("asdf", re));
-#     }
-#   ])], [],
-#        [ac_cv_GLIBCXX_DEBUG='no (Boost.Regexp)'])
-#   LIBS=$vcsn_save_LIBS
-# fi
-# ])
+if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
+  vcsn_save_LIBS=$LIBS
+  LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
+  AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
+  #define _GLIBCXX_DEBUG_PEDANTIC
+  #include <cassert>
+  #include <sstream>
+  #include <boost/regex.hpp>
+  ],[
+    {
+      const boost::regex re("[a-zA-Z]*");
+      assert(boost::regex_match("asdf", re));
+    }
+  ])], [],
+       [ac_cv_GLIBCXX_DEBUG='no (Boost.Regexp)'])
+  LIBS=$vcsn_save_LIBS
+fi
+])
 ])
