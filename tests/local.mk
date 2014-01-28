@@ -91,10 +91,16 @@ AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 BUILDCHECK_ENVIRONMENT +=                       \
   . $(abs_top_builddir)/tests/bin/vcsn;
 
-INSTALLCHECK_ENVIRONMENT +=                                     \
-  PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;
+INSTALLCHECK_ENVIRONMENT +=                                             \
+  PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;                         \
+  PYTHONPATH=$(DESTDIR)$(pyexecdir):$$PYTHONPATH; export PYTHONPATH;
 
 # Run the tests with the install-environment.
+#
+# Disable testsuite laziness, otherwise, installcheck is just not run
+# because of the results of check.
 installcheck-local:
-	$(MAKE) $(AM_MAKEFLAGS)                                 \
-	  AM_TESTS_ENVIRONMENT='$$(INSTALLCHECK_ENVIRONMENT)' check
+	$(MAKE) $(AM_MAKEFLAGS)					\
+	  AM_TESTS_ENVIRONMENT='$$(INSTALLCHECK_ENVIRONMENT)'	\
+	  RECHECK_LOGS='$$(TEST_LOGS)'				\
+	  check
