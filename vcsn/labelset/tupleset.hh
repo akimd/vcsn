@@ -29,9 +29,9 @@ namespace vcsn
   {
   public:
     using labelsets_t = std::tuple<LabelSets...>;
-    using indices_t = vcsn::detail::gen_seq<sizeof...(LabelSets)>;
+    using indices_t = vcsn::detail::make_index_sequence<sizeof...(LabelSets)>;
     template <std::size_t... I>
-    using seq = vcsn::detail::seq<I...>;
+    using seq = vcsn::detail::index_sequence<I...>;
 
     /// The Ith labelset type.
     template <std::size_t I>
