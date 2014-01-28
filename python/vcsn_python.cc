@@ -495,8 +495,10 @@ BOOST_PYTHON_MODULE(vcsn_python)
 {
   namespace bp = boost::python;
 
-  bp::class_<automaton>("automaton", bp::init<const ratexp&>())
-    .def(bp::init<const std::string&, const std::string&>())
+  bp::class_<automaton>
+    ("automaton",
+     bp::init<const ratexp&>())
+    .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
     .def("accessible", &automaton::accessible)
     .def("coaccessible", &automaton::coaccessible)
