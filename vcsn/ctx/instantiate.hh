@@ -262,8 +262,7 @@ namespace vcsn
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
-        register_kind_functions<Ctx>(typename Ctx::kind_t());
-        return true;
+        return register_kind_functions<Ctx>(typename Ctx::kind_t());
       }
     }
   }
