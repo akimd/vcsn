@@ -5,7 +5,52 @@ pyexecdir='@PYEXECDIR@'
 PYTHONPATH=$pyexecdir:$PYTHONPATH
 export PYTHONPATH
 
-prog="vcsn-$1"
-shift
+help ()
+{
+  cat <<EOF
+usage: vcsn COMMAND ARGS...
 
-exec $prog "$@"
+COMMAND can be:
+
+  accessible equivalent exp cat chain coaccessible complement complete
+  concatenate term bruijn derivation term determinize difference
+  divkbaseb ring state enumerate evaluate expand infiltration
+  ambiguous complete deterministic empty acyclic normalized proper
+  standard trim useless valid ladybird mult lift minimize power
+  product proper random mult shortest shuffle split standard form star
+  sum thompson transpose trim u union universal
+
+For more information, run:
+
+  $ vcsn COMMAND -h
+
+For instance:
+
+  $ vcsn derived-term -C 'lal_char(abc)_b' -e '(a+b+a)*' |
+     vcsn determinize |
+     vcsn minimize |
+     vcsn aut-to-exp
+EOF
+  exit 0
+}
+
+version ()
+{
+cat <<EOF
+vcsn (@PACKAGE_STRING@)
+<@PACKAGE_URL@>
+EOF
+  exit 0
+}
+
+case $1 in
+  ('') ;; # We are sourced to set up the environment.
+  (-e) shift 1; exec "$@";;
+  (-h|--help) help;;
+  (-v|--version) version;;
+  (*)  prog="vcsn-$1"; shift; exec "$prog" "$@";;
+esac
+
+# Local Variables:
+# mode: shell-script
+# End:
