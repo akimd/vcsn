@@ -25,5 +25,12 @@ namespace vcsn
     {
       return detail::difference_registry().call(lhs, rhs);
     }
+
+    REGISTER_DEFINE(difference_ratexp);
+    ratexp
+    difference(const ratexp& lhs, const ratexp& rhs)
+    {
+      return detail::difference_ratexp_registry().call(lhs, rhs);
+    }
   }
 }

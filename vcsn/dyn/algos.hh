@@ -95,6 +95,9 @@ namespace vcsn
     /// \pre \a rhs is Boolean.
     automaton difference(const automaton& lhs, const automaton& rhs);
 
+    /// Words accepted by \a lhs, but not by \a rhs.
+    ratexp difference(const ratexp& lhs, const ratexp& rhs);
+
     /// An automaton which accepts a word n representing a number in
     /// base b iff k|n.
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);

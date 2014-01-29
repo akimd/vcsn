@@ -319,6 +319,11 @@ struct ratexp
     return vcsn::dyn::derived_term(r_, breaking);
   }
 
+  ratexp difference(const ratexp& rhs) const
+  {
+    return vcsn::dyn::difference(r_, rhs.r_);
+  }
+
   ratexp expand() const
   {
     return vcsn::dyn::expand(r_);
@@ -557,6 +562,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())
     .def("derived_term", &ratexp::derived_term, derived_term())
+    .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)
     .def("format", &ratexp::format)
     .def("intersection", &ratexp::intersection)

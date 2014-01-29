@@ -4,6 +4,20 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-01-29
+** ratexp difference: new algorithm (static, dyn, Python)
+The "difference" algorithms generates a ratexp that accepts words of the
+left-hand side that are not accepted by the right-hand side ratexp.  Also
+bound as the "%" operator in Python.
+
+  >>> ctx = vcsn.context('lal_char(abc)_b')
+  >>> l = ctx.ratexp('[abc]*')
+  >>> r = ctx.ratexp('[ab]*')
+  >>> l.difference(r)
+  (a+b+c)*&(a+b+c)*
+  >>> l % r
+  (a+b+c)*&(a+b+c)*
+
 * 2014-01-27
 ** ratexp intersection: new algorithm (static, dyn, Python)
 The "intersection" algorithm computes a ratexp that denotes the Hadamard
@@ -31,12 +45,13 @@ of two rational expressions.  Also bound as the "*" operator in Python.
 ** Python API: Operators overloading on automata
 The Python API now overloads the following operators for automata:
 
-- "+" (sum of two automata)
-- "&" (product of two automata)
-- "~" (complement of an automaton)
-- "*" (concatenation of two automata)
-- "|" (union of two automata)
-- "**" (power of an automaton)
+- "+", sum of two automata
+- "&", product of two automata
+- "~", complement of an automaton
+- "*", concatenation of two automata
+- "%", difference between two automata
+- "|", union of two automata
+- "**", power of an automaton
 
 * 2014-01-24
 ** ratexp sum: new algorithm (static, dyn, Python)

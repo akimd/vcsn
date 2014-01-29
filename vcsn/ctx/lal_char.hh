@@ -46,6 +46,7 @@ namespace vcsn
         // Same labelset, but over Booleans.
         using b_ctx_t = context<typename Ctx::labelset_t, b>;
         using b_aut_t = mutable_automaton<b_ctx_t>;
+        using b_rs_t = ratexpset<b_ctx_t>;
 
         using namespace dyn::detail;
 
@@ -54,6 +55,7 @@ namespace vcsn
         REGISTER(derivation, rs_t, const std::string, bool);
         REGISTER(derived_term, rs_t, bool);
         REGISTER(difference, aut_t, b_aut_t);
+        REGISTER(difference_ratexp, rs_t, b_rs_t);
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);

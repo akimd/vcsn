@@ -22,6 +22,23 @@ check_concat('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
 check_concat('a', '\e')
 check_concat('a', '\z')
 
+## ------------ ##
+## Difference.  ##
+## ------------ ##
+def check_difference(r1, r2):
+    eff = ctx.ratexp(r1) % ctx.ratexp(r2)
+    exp = ctx.ratexp('({})%({})'.format(r1, r2))
+    CHECK_EQ(exp, eff)
+
+check_difference('ab', 'cd')
+check_difference('a', 'bcd')
+check_difference('abab', 'bbbb')
+check_difference('a*', 'a*b*')
+check_difference('a*+b*+c+c*', '(a*+b*+c+c*)*')
+check_difference('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
+check_difference('a', '\e')
+check_difference('a', '\z')
+
 ## -------------- ##
 ## Intersection.  ##
 ## -------------- ##

@@ -87,6 +87,43 @@ namespace vcsn
                         (const automaton&, const automaton&) -> automaton);
     }
   }
+
+  /*-----------------------------.
+  | difference(ratexp, ratexp).  |
+  `-----------------------------*/
+
+  /// Difference of ratexps.
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  difference(const RatExpSet& rs,
+             const typename RatExpSet::ratexp_t& lhs,
+             const typename RatExpSet::ratexp_t& rhs)
+  {
+    return rs.intersection(lhs, rs.complement(rhs));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      ratexp
+      difference_ratexp(const ratexp& lhs, const ratexp& rhs)
+      {
+        const auto& l = lhs->as<RatExpSetLhs>();
+        const auto& r = rhs->as<RatExpSetLhs>();
+        return make_ratexp(l.get_ratexpset(),
+                           ::vcsn::difference<RatExpSetLhs>(l.get_ratexpset(),
+                                                            l.ratexp(),
+                                                            r.ratexp()));
+      }
+
+      REGISTER_DECLARE(difference_ratexp,
+                       (const ratexp&, const ratexp&) -> ratexp);
+    }
+  }
 }
 
 #endif // !VCSN_ALGOS_ARE_EQUIVALENT_HH
