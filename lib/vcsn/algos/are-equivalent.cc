@@ -6,17 +6,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    REGISTER_DEFINE(difference);
-
-    automaton
-    difference(const automaton& lhs, const automaton& rhs)
-    {
-      return detail::difference_registry().call(lhs, rhs);
-    }
-
-
     REGISTER_DEFINE(are_equivalent);
-
     bool
     are_equivalent(const automaton& lhs, const automaton& rhs)
     {
@@ -27,6 +17,13 @@ namespace vcsn
     are_equivalent(const ratexp& lhs, const ratexp& rhs)
     {
       return are_equivalent(standard(lhs), standard(rhs));
+    }
+
+    REGISTER_DEFINE(difference);
+    automaton
+    difference(const automaton& lhs, const automaton& rhs)
+    {
+      return detail::difference_registry().call(lhs, rhs);
     }
   }
 }

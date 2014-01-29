@@ -10,9 +10,42 @@
 namespace vcsn
 {
 
-  /*-------------.
-  | difference.  |
-  `-------------*/
+  /*---------------------------------------.
+  | are_equivalent(automaton, automaton).  |
+  `---------------------------------------*/
+
+  template <typename Aut1, typename Aut2>
+  bool
+  are_equivalent(const Aut1& a1, const Aut2& a2)
+  {
+    return (is_useless(difference(a1, a2))
+            && is_useless(difference(a2, a1)));
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+
+      /// Bridge.
+      template <typename Aut1, typename Aut2>
+      bool
+      are_equivalent(const automaton& aut1, const automaton& aut2)
+      {
+        const auto& a1 = aut1->as<Aut1>();
+        const auto& a2 = aut2->as<Aut2>();
+        return are_equivalent(a1, a2);
+      }
+
+      REGISTER_DECLARE(are_equivalent,
+                        (const automaton&, const automaton&) -> bool);
+    }
+  }
+
+
+  /*-----------------------------------.
+  | difference(automaton, automaton).  |
+  `-----------------------------------*/
 
   /// An automaton that computes weights of \a lhs, but not by \a rhs.
   /// The return type is really the Lhs one.
@@ -52,38 +85,6 @@ namespace vcsn
 
       REGISTER_DECLARE(difference,
                         (const automaton&, const automaton&) -> automaton);
-    }
-  }
-
-  /*-----------------.
-  | are_equivalent.  |
-  `-----------------*/
-
-  template <typename Aut1, typename Aut2>
-  bool
-  are_equivalent(const Aut1& a1, const Aut2& a2)
-  {
-    return (is_useless(difference(a1, a2))
-            && is_useless(difference(a2, a1)));
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-
-      /// Bridge.
-      template <typename Aut1, typename Aut2>
-      bool
-      are_equivalent(const automaton& aut1, const automaton& aut2)
-      {
-        const auto& a1 = aut1->as<Aut1>();
-        const auto& a2 = aut2->as<Aut2>();
-        return are_equivalent(a1, a2);
-      }
-
-      REGISTER_DECLARE(are_equivalent,
-                        (const automaton&, const automaton&) -> bool);
     }
   }
 }
