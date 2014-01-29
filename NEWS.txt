@@ -6,7 +6,9 @@ changes in the internal API may also be documented.
 
 * 2014-01-27
 ** ratexp intersection: new algorithm (static, dyn, Python)
-Compute the Hadamard product of two rational expressions.
+The "intersection" algorithm computes a ratexp that denotes the Hadamard
+product of two rational expressions.  Also bound as the "&" operator in
+Python.
 
   >>> ctx = vcsn.context('lal_char(abc)_b')
   >>> r = ctx.ratexp('[abc]*')
@@ -16,7 +18,8 @@ Compute the Hadamard product of two rational expressions.
   (a+b+c)*&(a+b+c)*
 
 ** ratexp concatenation: new algorithm (static, dyn, Python)
-Compute the concatenation of two rational expressions.
+The "concatenate" algorithm computes a ratexp that denotes the concatenation
+of two rational expressions.  Also bound as the "*" operator in Python.
 
   >>> ctx = vcsn.context('lal_char(abc)_b')
   >>> r = ctx.ratexp('[abc]*')
@@ -37,7 +40,8 @@ The Python API now overloads the following operators for automata:
 
 * 2014-01-24
 ** ratexp sum: new algorithm (static, dyn, Python)
-Compute the sum of two rational expressions.
+Compute the sum of two rational expressions.  Also bound as the "+" operator
+in Python.
 
   >>> ctx = vcsn.context('lal_char(abc)_b')
   >>> r = ctx.ratexp('[abc]*')
