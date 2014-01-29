@@ -5,6 +5,7 @@
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -21,6 +22,16 @@ namespace vcsn
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
 
+    require(divisor,
+            "divkbaseb: divisor cannot be 0");
+    require(2 <= base,
+            "divkbaseb: base (" + std::to_string(base)
+            + ") must be at least 2");
+    require(base <= letters.size(),
+            "divkbaseb: base (" + std::to_string(base)
+            + ") must be less than or equal to the alphabet size ("
+            + std::to_string(letters.size()) + ")");
+
     automaton_t res{ctx};
 
     // Add one state for each possible remainder. The last state encountered
@@ -29,7 +40,7 @@ namespace vcsn
     // number is a multiple of k.
     std::vector<state_t> states;
     for (unsigned i = 0; i < divisor; ++i)
-      states.push_back(res.new_state());
+      states.emplace_back(res.new_state());
 
     res.set_initial(states[0]);
     res.set_final(states[0]);
