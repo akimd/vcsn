@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.61])
 
-AC_INIT([Vaucanson], [2b.2],
+AC_INIT([Vaucanson], [2b.3],
         [vaucanson-bugs@lrde.epita.fr], [],
         [http://vaucanson.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
@@ -154,27 +154,30 @@ case $ac_cv_GLIBCXX_DEBUG in (yes)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
+# Use "vcsn", not "vaucanson".
+AC_SUBST([pkglibdir], ['${libdir}/vcsn'])
+
+# We look for our data files at runtime, including to compile.
+AC_SUBST([DATADIR],    [`URBI_RESOLVE_DIR([$datadir/vcsn])`])
+AC_SUBST([INCLUDEDIR], [`URBI_RESOLVE_DIR([$includedir])`])
+AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
+AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
+
 # We compile C++ at runtime.
+AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR"],
+                   [Define to the preprocessor flags.])
 AC_DEFINE_UNQUOTED([CXX], ["$CXX"],
                    [Define to the C++ compiler.])
-AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS"],
-                   [Define to the preprocessor flags.])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
-AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS"],
-                   [Define to the linker flags.])
-
-# We look for our data files at runtime.
-AC_SUBST([DATADIR], [`URBI_RESOLVE_DIR([$datadir/vcsn])`])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
                    [Define to the location of data files.])
-dir=`URBI_RESOLVE_DIR([$includeir])`
-AC_DEFINE_UNQUOTED([INCLUDEDIR], ["$dir"],
+AC_DEFINE_UNQUOTED([INCLUDEDIR], ["INCLUDEDIR"],
                    [Define to the location of header files.])
-dir=`URBI_RESOLVE_DIR([$libdir])`
-AC_DEFINE_UNQUOTED([LIBDIR], ["$dir"],
+AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS -L$LIBDIR"],
+                   [Define to the linker flags.])
+AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
                    [Define to the location of libs files.])
-AC_SUBST([PYEXECDIR], [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
