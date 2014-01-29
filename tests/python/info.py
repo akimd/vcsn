@@ -69,4 +69,28 @@ check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
        'number of useful states': 3,
        'type': 'mutable_automaton<lal_char(abcdefghijklmnopqrstuvwxyz)_z>'})
 
+# Test what happens with "N/A".
+check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
+      {'is ambiguous': 'N/A',
+       'is complete': 'N/A',
+       'is deterministic': 'N/A',
+       'is empty': False,
+       'is eps-acyclic': True,
+       'is normalized': False,
+       'is proper': True,
+       'is standard': True,
+       'is trim': True,
+       'is useless': False,
+       'is valid': True,
+       'number of accessible states': 4,
+       'number of coaccessible states': 4,
+       'number of deterministic states': 'N/A',
+       'number of eps transitions': 0,
+       'number of final states': 3,
+       'number of initial states': 1,
+       'number of states': 4,
+       'number of transitions': 7,
+       'number of useful states': 4,
+       'type': 'mutable_automaton<law_char(ab)_b>'})
+
 PLAN()

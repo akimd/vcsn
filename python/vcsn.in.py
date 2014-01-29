@@ -68,12 +68,20 @@ def automaton_info(aut):
     for l in aut.format('info').splitlines():
         (k, v) = l.split(':')
         v = v.strip()
-        if k.startswith('is '):
-            res[k] = v in ['true', '1']
-        elif k.startswith('number '):
-            res[k] = int(v)
-        else:
-            res[k] = v
+        # Beware that we may display "N/A" for Boolean (e.g., "is
+        # ambiguous" for non LAL), and for integers (e.g., "number of
+        # deterministic states" for non LAL).
+        try:
+            if k.startswith('is '):
+                if v in ['false', '0']:
+                    v = False
+                elif v in ['true', '1']:
+                    v = True
+            elif k.startswith('number '):
+                v = int(v)
+        except:
+            pass
+        res[k] = v
     return res
 automaton.info = automaton_info
 
