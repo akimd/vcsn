@@ -137,6 +137,11 @@ struct automaton
     return vcsn::dyn::is_deterministic(aut_);
   }
 
+  bool is_empty() const
+  {
+    return vcsn::dyn::is_empty(aut_);
+  }
+
   bool is_eps_acyclic() const
   {
     return vcsn::dyn::is_eps_acyclic(aut_);
@@ -521,6 +526,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("is_coaccessible", &automaton::is_coaccessible)
     .def("is_complete", &automaton::is_complete)
     .def("is_deterministic", &automaton::is_deterministic)
+    .def("is_empty", &automaton::is_empty)
     .def("is_eps_acyclic", &automaton::is_eps_acyclic)
     .def("is_equivalent", &automaton::is_equivalent)
     .def("is_proper", &automaton::is_proper)

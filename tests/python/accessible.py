@@ -1,56 +1,35 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
 
 ## ----------- ##
 ## Accessible. ##
 ## ----------- ##
 
-## check INPUT OUTPUT
-## ------------------
-check ()
-{
-  run 0 "$2" -vcsn accessible -A -I dot -f "$1"
-}
+
+
+## check_accessible INPUT OUTPUT
+## -----------------------------
+def check_accessible(input, output):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  if isinstance(output, str):
+    output = vcsn.automaton(output)
+  CHECK_EQ(input.accessible(), output)
 
 ## ----------------------------- ##
 ## Regression: standard(ab+cd).  ##
 ## ----------------------------- ##
 
-vcsn standard -e '(?@lal_char(abcd)_b)ab+cd' >a.gv
-cat >out.exp <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(abcd)_b"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F2
-    F4
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-    3
-    4
-  }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 3 [label = "c"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  3 -> 4 [label = "d"]
-  4 -> F4
-}
-EOF
-check a.gv out.exp
+a = vcsn.context('lal_char(abcd)_b').ratexp('ab+cd').standard()
+check_accessible(a, a)
 
 ## ------- ##
 ## Cycle.  ##
 ## ------- ##
 
-cat >a.gv <<\EOF
+check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -61,10 +40,8 @@ digraph {
     5 -> 2[label="a"]
     3 -> F5
     4 -> 1[label="a"]
-}
-EOF
-
-cat >out.exp <<\EOF
+}''',
+'''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -90,15 +67,14 @@ digraph
   3 -> 4 [label = "a"]
   4 -> 2 [label = "a"]
 }
-EOF
+''')
 
-check a.gv out.exp
 
 ## ---------------- ##
 ## No final State.  ##
 ## ---------------- ##
 
-cat >a.gv <<\EOF
+check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -107,9 +83,8 @@ digraph {
     2 -> 3[label="a"]
     4 -> 1[label="a"]
 }
-EOF
-
-cat >out.exp <<\EOF
+''',
+'''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -130,15 +105,13 @@ digraph
   1 -> 2 [label = "a", color = DimGray]
   2 -> 3 [label = "a", color = DimGray]
 }
-EOF
-
-check a.gv out.exp
+''')
 
 ## ------------------ ##
 ## No initial state.  ##
 ## ------------------ ##
 
-cat >a.gv <<\EOF
+check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     0 -> 1 [label="a"]
@@ -147,23 +120,21 @@ digraph {
     3 -> F5
     4 -> 1[label="a"]
 }
-EOF
-
-cat >out.exp <<\EOF
+''',
+'''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
 }
-EOF
+''')
 
-check a.gv out.exp
 
 ## -------------- ##
 ## Simple input.  ##
 ## -------------- ##
 
-cat >a.gv <<\EOF
+check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
@@ -173,9 +144,8 @@ digraph {
     3 -> F5
     4 -> 1[label="a"]
 }
-EOF
-
-cat >out.exp <<\EOF
+''',
+'''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -198,28 +168,23 @@ digraph
   2 -> 3 [label = "a"]
   3 -> F3
 }
-EOF
+''')
 
-check a.gv out.exp
 
 ## ------- ##
 ## is-trim ##
 ## ------- ##
 
-check ()
-{
-  run 0 "true" -vcsn is-trim -Af "$1"
-}
-check lal_char_b/a1.gv
-check lal_char_z/b1.gv
-check lal_char_zmin/minab.gv
+def check_is_trim (input, output):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  CHECK_EQ(input.is_trim(), output)
 
-check ()
-{
-  cat >in.gv
-  run 2 "false" -vcsn is-trim -Af in.gv
-}
-check <<\EOF
+# FIXME: check_is_trim('lal_char_b/a1.gv', True)
+# FIXME: check_is_trim('lal_char_z/b1.gv', True)
+# FIXME: check_is_trim('lal_char_zmin/minab.gv', True)
+
+check_is_trim('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -228,12 +193,12 @@ digraph
   1 -> 2 [label = a]
   I0 -> 0
 }
-EOF
+''', False)
 
 ## ---------- ##
 ## no initial ##
 ## ---------- ##
-check <<\EOF
+check_is_trim('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -242,12 +207,12 @@ digraph
   1 -> 2 [label = a]
   2 -> 1 [label = a]
 }
-EOF
+''', False)
 
 ## -------- ##
-## no final ##
+## no final. ##
 ## -------- ##
-check <<\EOF
+check_is_trim('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -256,97 +221,83 @@ digraph
   2 -> 1 [label = a]
   I0 -> 0
 }
-EOF
+''', False)
 
 
 ## -------- ##
 ## is-empty ##
 ## -------- ##
-check ()
-{
-  run 2 "false" -vcsn is-empty -Af "$1"
-}
-check lal_char_b/a1.gv
-check lal_char_z/b1.gv
-check lal_char_zmin/minab.gv
+def check_is_empty (input, output):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  CHECK_EQ(input.is_empty(), output)
+# FIXME: check_is_empty('lal_char_b/a1.gv', True)
+# FIXME: check_is_empty('lal_char_z/b1.gv', True)
+# FIXME: check_is_empty('lal_char_zmin/minab.gv', True)
 
-check ()
-{
-  cat >in.gv
-  run 2 "false" -vcsn is-empty -Af in.gv
-}
-check <<\EOF
+check_is_empty('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   I0 -> 0
 }
-EOF
-check <<\EOF
+''', False)
+
+check_is_empty('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   0 -> F0
 }
-EOF
+''', False)
 
-check ()
-{
-  cat >in.gv
-  run 0 "true" -vcsn is-empty -Af in.gv
-}
-check <<\EOF
+check_is_empty('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   I0
   F0
 }
-EOF
-check <<\EOF
+''', True)
+check_is_empty('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
 }
-EOF
+''', True)
 
 ## ---------- ##
 ## is-useless ##
 ## ---------- ##
-check ()
-{
-  run 2 "false" -vcsn is-useless -Af "$1"
-}
-check lal_char_b/a1.gv
-check lal_char_z/b1.gv
-check lal_char_zmin/minab.gv
+def check_is_useless (input, output):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  CHECK_EQ(input.is_useless(), output)
 
-check ()
-{
-  cat >in.gv
-  run 0 "true" -vcsn is-useless -Af in.gv
-}
+# FIXME: check_is_useless('lal_char_b/a1.gv', True)
+# FIXME: check_is_useless('lal_char_z/b1.gv', True)
+# FIXME: check_is_useless('lal_char_zmin/minab.gv', True)
 
-check <<\EOF
+check_is_useless('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   I0 -> 0
 }
-EOF
+''', True)
 
-check <<\EOF
+check_is_useless('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   0 -> F0
 }
-EOF
+''', True)
 
 ## ---------- ##
 ## no initial ##
 ## ---------- ##
-check <<\EOF
+check_is_useless('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -355,12 +306,12 @@ digraph
   1 -> 2 [label = a]
   2 -> 1 [label = a]
 }
-EOF
+''', True)
 
 ## -------- ##
 ## no final ##
 ## -------- ##
-check <<\EOF
+check_is_useless('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -369,29 +320,24 @@ digraph
   2 -> 1 [label = a]
   I0 -> 0
 }
-EOF
+''', True)
 
 
 ## ---- ##
 ## trim ##
 ## ---- ##
-check ()
-{
-  run 0 'ignore' -vcsn cat -Af "$1" -o out.exp
-  run 0 out.exp -vcsn trim -Af "$1"
-}
-check lal_char_b/a1.gv
-check lal_char_z/b1.gv
-check lal_char_zmin/minab.gv
+def check_trim(input, output):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  if isinstance(output, str):
+    output = vcsn.automaton(output)
+  CHECK_EQ(input.trim(), output)
 
-check ()
-{
-  cat >in.tmp
-  sed -n '/^--*$/q;p'             in.tmp >in.gv
-  sed -n '/^--*$/,${/^--*$/d;p;}' in.tmp >out.exp
-  run 0 out.exp -vcsn trim -Af in.gv
-}
-check <<\EOF
+# FIXME: check_trim('lal_char_b/a1.gv', ...)
+# FIXME: check_trim('lal_char_z/b1.gv', ...)
+# FIXME: check_trim('lal_char_zmin/minab.gv', ...)
+
+check_trim('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -400,7 +346,7 @@ digraph
   1 -> 2 [label = a]
   I0 -> 0
 }
----
+''', '''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -419,9 +365,9 @@ digraph
   0 -> 1 [label = "a"]
   1 -> F1
 }
-EOF
+''')
 
-check <<\EOF
+check_trim('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -434,7 +380,7 @@ digraph
   4 -> 0 [label = a]
   4 -> 5 [label = a]
 }
----
+''', '''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -456,4 +402,6 @@ digraph
   1 -> F1
   2 -> 0 [label = "a"]
 }
-EOF
+''')
+
+PLAN()

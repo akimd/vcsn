@@ -12,7 +12,6 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 %C%_TESTS =                                     \
-  %D%/accessible.chk                            \
   %D%/aut-to-exp.chk                            \
   %D%/cat.chk                                   \
   %D%/chain.chk                                 \
