@@ -1,7 +1,4 @@
 * Exercises (AP, VT)
-** Star-height
-Implement the computation of star-height for ratexps.
-
 ** Convert more tests to Python (easy)
 Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
 inspiration from tests/python/derivation.py.  Try to be "dumb" in the
@@ -22,14 +19,11 @@ that exist at in the various API.  Do the same for ratexps:
   left_mult(weight, ratexp) -> ratexp
   right_mult(ratexp, weight) -> ratexp
 
-in dyn::, and in Python.  *Do not implement in the static layer*!  Use the
-fact that dyn::ratexpset already provides all these routines, so (i) declare
-in dyn/algos.hh, and (ii) implement in some (unique) lib/vcsn/algos/*.cc.
+in dyn::, and in Python.  Write the corresponding tests in Python only: take
+inspiration from tests/python/derivation.py to write a single *.chk file for
+this task.
 
-Write the corresponding tests in Python only: take inspiration from
-tests/python/derivation.py to write a single *.chk file for this task.
-
-** subsequence (or subword?), prefix, suffix, factor (hard)
+** subsequence (or subword?), prefix, suffix, factor
 From an automaton generate another that corresponds to the subsequences,
 prefixes, suffixes and factors.
 
@@ -388,9 +382,8 @@ the special letter labels the initial and final transitions etc.
 http://en.wikipedia.org/wiki/Levenshtein_automata
 
 * edit-automaton
-Currently it converts the \e in initial/final labels to the
-special-letter.  Is this what we want?
-Shouldn't we replace assert() with if (...) throw ... ?
+Currently it converts the \e in initial/final labels to the special-letter.
+Is this what we want?
 
 * vcsn/alphabets/char.cc
   char_letters::special_letter(...) is protected and
