@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import vcsn, sys, inspect, os
+import vcsn
 from test import *
 
 ctx = vcsn.context("lal_char(abc)_b")
@@ -10,10 +10,7 @@ ctx = vcsn.context("lal_char(abc)_b")
 # Helper function to format output for the testsuite
 # Check that text == ref
 def check(text, ref):
-    if str(text) == ref:
-        PASS()
-    else:
-        FAIL(text + " != " + ref)
+    CHECK_EQ(ref, str(text))
 
 # check EXP-IN EXP-OUT
 # --------------------

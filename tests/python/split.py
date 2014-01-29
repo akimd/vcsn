@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-import inspect, os, sys
 import vcsn
 from test import *
 
@@ -12,10 +11,7 @@ ctx=vcsn.context('lal_char(abc)_ratexpset<lal_char(wxyz)_z>')
 def check(re, exp):
     r = ctx.ratexp(re)
     s = r.split()
-    if str(s) == exp:
-        PASS()
-    else:
-        FAIL(exp + " != " + r)
+    CHECK_EQ(exp, str(s))
 
 check('<x>\z', '\z')
 check('<x>\e', '<x>\e')

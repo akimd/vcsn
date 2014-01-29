@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-import inspect, os, sys
 import vcsn
 
 from test import *
