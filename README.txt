@@ -75,7 +75,10 @@ Build Requirements
 ------------------
 
 Vaucanson was tested with the `GNU Compiler Collection (GCC)`_ version
-4.8.x and Clang++ 3.3.
+4.8, 4.9 and Clang++ 3.3, 3.4, and 3.5. GCC 4.8 and 4.9 are known to
+be unable to compile properly some parts of Vaucanson (improper
+behavior at runtime), but that's in rare situations most users should
+not face.
 
 .. _GNU Compiler Collection (GCC): http://gcc.gnu.org/
 
@@ -89,7 +92,18 @@ these ``.gv`` files or run the test suite.
 including hash tables. Currently, Boost is used in algorithms only,
 but its use shall be extended to automata structures and other
 portions of code. You must install this library on your system.
-Vaucanson should support any version after 1.38.
+Vaucanson should support any version after 1.49.  The following Boost
+components are used:
+
+- Boost.Algorithm
+- Boost.DynamicBitset
+- Boost.Flyweight
+- Boost.Heap
+- Boost.Iterator
+- Boost.Python
+- Boost.Range
+- Boost.Regex
+- Boost.Tokenizer
 
 .. _Boost: http://www.boost.org/
 
