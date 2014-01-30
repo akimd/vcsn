@@ -60,12 +60,10 @@
   {
     namespace rat
     {
-      static
-      exp_t power(const dyn::ratexpset& rs, exp_t e, int min, int max);
-
+      /// Generate a ratexp for "e{range.first, range.second}".
       static
       exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
-      /// Generate a ratexp matching one characters amongst \a chars.
+      /// Generate a ratexp matching one character amongst \a chars.
       static
       exp_t char_class(const dyn::ratexpset& rs, const std::set<char>& chars);
 
