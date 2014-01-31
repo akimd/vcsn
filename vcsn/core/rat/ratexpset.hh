@@ -1,15 +1,15 @@
 #ifndef VCSN_CORE_RAT_RATEXPSET_HH
 # define VCSN_CORE_RAT_RATEXPSET_HH
 
-# include <string>
 # include <list>
+# include <string>
 
-# include <vcsn/ctx/context.hh>
-# include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/printer.hh>
+# include <vcsn/core/rat/ratexp.hh>
+# include <vcsn/ctx/context.hh>
 # include <vcsn/misc/star_status.hh>
-# include <vcsn/weights/q.hh>
 # include <vcsn/weights/b.hh>
+# include <vcsn/weights/q.hh>
 
 namespace vcsn
 {
