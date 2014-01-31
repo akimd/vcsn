@@ -1,7 +1,8 @@
 from vcsn_python import *
 
 # Where the automaton library is stored.
-vcsn_datadir = '@DATADIR@'
+datadir = '@DATADIR@'
+version = '@PACKAGE_VERSION@'
 
 def dot_to_svg(dot):
     "Return the conversion of a Dot source into SVG."
