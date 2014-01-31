@@ -12,7 +12,7 @@ def dot_to_svg(dot):
 
 # FIXME: Get rid of this.
 def is_equal(lhs, rhs):
-    "A stupid string-based comparison.  Must be eliminated one we DRT."
+    "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
 ## --------- ##
@@ -89,6 +89,8 @@ automaton.info = automaton_info
 
 automaton.lan_to_lal = \
   lambda self: automaton(self.format('dot').replace('lan_', 'lal_'), "dot")
+# Somewhat cheating: in Python, proper returns a LAL, not a LAN.
+# proper_real is the genuine binding to dyn::proper.
 automaton.proper = lambda self, prune = True: self.proper_real(prune).lan_to_lal()
 
 
