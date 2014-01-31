@@ -127,6 +127,69 @@ namespace vcsn
       /// Shorthand to the weightset.
       const weightset_t& ws_ = *aut_.weightset();
     };
+
+    template <typename Aut>
+    struct state_eliminator<Aut, labels_are_ratexps>
+    {
+      static_assert(Aut::context_t::is_lar,
+                    "requires labels_are_ratexps");
+
+      using automaton_t = typename std::remove_cv<Aut>::type;
+      using state_t = typename automaton_t::state_t;
+      using ratexpset_t = typename automaton_t::labelset_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      /// State selector type.
+      using state_chooser_t = std::function<state_t(const automaton_t&)>;
+
+      state_eliminator(automaton_t& aut)
+        : debug_(0)
+        , aut_(aut)
+      {}
+
+      /// Eliminate state s.
+      void operator()(state_t s)
+      {
+        require(aut_.has_state(s), "not a valid state: " + std::to_string(s));
+
+        // The loops' ratexp.
+        auto loop = rs_.zero();
+        for (auto t: aut_.outin(s, s))
+          {
+            loop = rs_.add(loop,
+                           rs_.lmul(aut_.weight_of(t), aut_.label_of(t)));
+            aut_.del_transition(t);
+          }
+        loop = rs_.star(loop);
+
+        // Get all the predecessors, and successors, except itself.
+        auto outs = aut_.all_out(s);
+        for (auto in: aut_.all_in(s))
+          for (auto out: outs)
+            aut_.add_transition
+              (aut_.src_of(in), aut_.dst_of(out),
+               rs_.mul(rs_.mul(rs_.lmul(aut_.weight_of(in), aut_.label_of(in)),
+                               loop),
+                       rs_.lmul(aut_.weight_of(out), aut_.label_of(out))));
+        aut_.del_state(s);
+      }
+
+      /// Eliminate all the states, in the order specified by \a next_state.
+      void operator()(const state_chooser_t& next_state)
+      {
+        while (aut_.num_states())
+          operator()(next_state(aut_));
+      }
+
+    private:
+      /// Debug level.  The higher, the more details are reported.
+      int debug_;
+      /// The automaton we work on.
+      automaton_t& aut_;
+      /// Shorthand to the labelset, which is a ratexpset.
+      const ratexpset_t& rs_ = *aut_.labelset();
+      /// Shorthand to the weightset.
+      const weightset_t& ws_ = *aut_.weightset();
+    };
   }
 
   /*-----------------------.

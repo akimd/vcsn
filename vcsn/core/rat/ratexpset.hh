@@ -24,7 +24,7 @@ namespace vcsn
     using context_t = Context;
     using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
-    using kind_t = typename context_t::kind_t;
+    using kind_t = labels_are_ratexps;
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
     using label_t = typename context_t::label_t;
@@ -79,8 +79,20 @@ namespace vcsn
     auto atom(const label_t& v) const
       -> value_t;
 
+    /// When used as a LabelSet for automata.
+    value_t special() const
+    {
+      return atom(labelset()->special());
+    }
+
+    /// When used as a LabelSet for automata.
     /// When used as WeightSet for automata.
-    constexpr static bool is_special(value_t)
+    bool is_special(value_t v) const
+    {
+      return equals(special(), v);
+    }
+
+    bool is_letter(value_t) const
     {
       return false;
     }

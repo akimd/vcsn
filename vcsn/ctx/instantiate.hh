@@ -165,6 +165,18 @@ namespace vcsn
 
       template <typename Ctx>
       bool
+      register_kind_functions(labels_are_ratexps)
+      {
+        using aut_t = mutable_automaton<Ctx>;
+        using namespace dyn::detail;
+
+        REGISTER(eliminate_state, aut_t, int);
+
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
       register_kind_functions(labels_are_tuples)
       ATTRIBUTE_CONST;
 

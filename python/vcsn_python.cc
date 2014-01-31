@@ -103,6 +103,11 @@ struct automaton
     return vcsn::dyn::difference(aut_, rhs.aut_);
   }
 
+  automaton eliminate_state(int s) const
+  {
+    return vcsn::dyn::eliminate_state(aut_, s);
+  }
+
   polynomial enumerate(unsigned max) const;
 
   weight eval(const std::string& s) const;
@@ -517,6 +522,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("concatenate", &automaton::concatenate)
     .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
+    .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)
     .def("eval", &automaton::eval)
     .def("format", &automaton::format)
