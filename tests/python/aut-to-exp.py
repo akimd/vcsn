@@ -5,18 +5,11 @@ from test import *
 
 ctx = vcsn.context("lal_char(abc)_b")
 
-# check INPUT OUTPUT
-# ------------------
-# Helper function to format output for the testsuite
-# Check that text == ref
-def check(text, ref):
-    CHECK_EQ(ref, str(text))
-
-# check EXP-IN EXP-OUT
-# --------------------
+# check_exp EXP-IN EXP-OUT
+# ------------------------
 # Check that aut-to-exp(standard(EXP-IN)) = EXP-OUT.
-def check_exp(exp_in, exp_out):
-    check(ctx.ratexp(exp_in).standard().ratexp(), exp_out)
+def check_exp(input, exp):
+    CHECK_EQ(exp, str(ctx.ratexp(input).standard().ratexp()))
 
 check_exp('a',                            'a')
 check_exp('ab',                           'ab')
@@ -34,10 +27,10 @@ check_exp('(?@lal_char(abc)_ratexpset<lal_char(vwxyz)_b>)<v>(<w>a+<x>b)<y>c<z>',
       '(<vw>a<y>c+<vx>b<y>c)<z>')
 
 # check_aut LIB-AUTOMATON EXP-OUT
-# ---------------------------
+# -------------------------------
 # Check that aut-to-exp(AUTOMATON) = EXP-OUT.
-def check_aut(file, ref):
-    check(vcsn.automaton.load(medir + "/" + file).ratexp(), ref)
+def check_aut(file, exp):
+    CHECK_EQ(exp, str(vcsn.automaton.load(medir + "/" + file).ratexp()))
 
 # Check the associativity of the product.
 check_aut("a.gv", '<x>a(<y>b)*<z>c')
