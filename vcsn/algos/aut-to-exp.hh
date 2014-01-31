@@ -63,9 +63,11 @@ namespace vcsn
 
   namespace detail
   {
+    template <typename Aut, typename Kind = typename Aut::context_t::kind_t>
+    struct state_eliminator;
 
     template <typename Aut>
-    struct state_eliminator
+    struct state_eliminator<Aut, labels_are_one>
     {
       static_assert(Aut::context_t::is_lao,
                     "requires labels_are_one");
@@ -87,18 +89,16 @@ namespace vcsn
         require(aut_.has_state(s), "not a valid state: " + std::to_string(s));
 
         // The loop's weight.
-        auto w = ws_.one();
-        {
-          auto loops = aut_.outin(s, s);
-          assert(loops.size() <= 1);
-          if (!loops.empty())
-            {
-              auto t = loops.front();
-              w = ws_.star(aut_.weight_of(t));
-              // Don't count s in its predecessors/successors.
-              aut_.del_transition(t);
-            }
-        }
+        auto loop = ws_.zero();
+        assert(aut_.outin(s, s).size() <= 1);
+        // There is a single possible loop labeled by \e, but it's
+        // easier and symmetrical with LAR to use a for-loop.
+        for (auto t: aut_.outin(s, s))
+          {
+            loop = ws_.add(loop, aut_.weight_of(t));
+            aut_.del_transition(t);
+          }
+        loop = ws_.star(loop);
 
         // Get all the predecessors, and successors, except itself.
         auto outs = aut_.all_out(s);
@@ -107,7 +107,8 @@ namespace vcsn
             aut_.add_transition
               (aut_.src_of(in), aut_.dst_of(out),
                aut_.label_of(in),
-               ws_.mul(ws_.mul(aut_.weight_of(in), w), aut_.weight_of(out)));
+               ws_.mul(ws_.mul(aut_.weight_of(in), loop),
+                       aut_.weight_of(out)));
         aut_.del_state(s);
       }
 
