@@ -39,6 +39,16 @@ Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both
 NDEBUG and GLIBCXX_DEBUG are used.  It would be nice to find where and send
 a bug report...
 
+** Coverage
+We need to add coverage tests on the BF.
+
+** -fsanitize=address
+Try that on the BF.  For some reason, Libtool strips this flag at link time.
+Use -Wc,-fsanitize=address.
+
+AD can't get this to work on OS X (with Python).  Any help would be
+appreciated.
+
 * Tests
 ** operations on automata
 Use ratexps as weights to check multiplication order.  As in checks for
@@ -407,6 +417,12 @@ Well, you know what I mean.
 
 * move files around
 The hierarchy and the namespaces do not match.
+
+* Readings
+About dyn/static bridge:
+
+http://www.lrde.epita.fr/dload/papers/gcse00-yrw/olena.html
+ls ~theo/pub/*ouil*
 
 Local Variables:
 coding: utf-8
