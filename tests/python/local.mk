@@ -26,6 +26,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/minimize.py                               \
   %D%/ratexp.py                                 \
   %D%/split.py                                  \
+  %D%/star.py                                   \
   %D%/star-height.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER

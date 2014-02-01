@@ -43,7 +43,6 @@
   %D%/proper.chk                                \
   %D%/shuffle.chk                               \
   %D%/standard.chk                              \
-  %D%/star.chk                                  \
   %D%/star-normal-form.chk                      \
   %D%/sum.chk                                   \
   %D%/thompson.chk                              \

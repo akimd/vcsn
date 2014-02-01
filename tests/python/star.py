@@ -1,6 +1,17 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-cat >ab.gv <<\EOF
+import vcsn
+from test import *
+
+def check(input, exp):
+  if isinstance(input, str):
+    input = vcsn.automaton(input)
+  if isinstance(exp, str):
+    exp = vcsn.automaton(exp)
+  CHECK_EQ(exp, input.star())
+
+
+check('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -23,9 +34,8 @@ digraph
   1 -> F1
   2 -> F2
 }
-EOF
-
-cat >out.exp <<\EOF
+''',
+'''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -54,11 +64,10 @@ digraph
   2 -> 1 [label = "a"]
   2 -> 2 [label = "b"]
 }
-EOF
+''')
 
-run 0 out.exp -vcsn star -f ab.gv
 
-cat >ab.gv <<\EOF
+check('''
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xyz)_b>"
@@ -81,9 +90,8 @@ digraph
   2 -> F0 [label = "<y>"]
   0 -> F1 [label = "<z>"]
 }
-EOF
-
-cat >out.exp <<\EOF
+''',
+'''
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xyz)_b>"
@@ -107,6 +115,7 @@ digraph
   2 -> F2 [label = "<yz*>"]
   2 -> 1 [label = "<yz*x>a"]
 }
-EOF
+''')
 
-run 0 out.exp -vcsn star -f ab.gv
+PLAN()
+
