@@ -130,15 +130,22 @@ TC_CXX_WARNINGS(
 # I (Akim) spent a large amount of time trying to understand how to
 # get clang++ to behave properly with -fvisibility=hidden, and failed.
 # I'm tired of this.  Be my guest, and try to go further, see the
-# branch ad/clang-visibility.
-case $CXX in (g++* | *-g++*)
-AC_SUBST([VISIBILITY_CXXFLAGS])
-AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
-  [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
-  AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
-    [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
-  ;;
-esac
+# branch ad/clang-visibility.  See also
+# <http://stackoverflow.com/questions/19496643>.
+AC_CACHE_CHECK([whether $CXX is clang], [vcsn_cv_cxx_is_clang],
+[AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#ifndef __clang__
+       choke me
+#endif
+]])], [vcsn_cv_cxx_is_clang=yes],
+      [vcsn_cv_cxx_is_clang=no])])
+if test "$vcsn_cv_cxx_is_clang" = no; then
+  AC_SUBST([VISIBILITY_CXXFLAGS])
+  AX_CHECK_COMPILE_FLAG([-Werror -fvisibility=hidden],
+    [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility=hidden"
+    AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
+      [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
+fi
 
 # vcsn.py.
 AM_PATH_PYTHON
