@@ -10,6 +10,32 @@ def check(input, exp):
     exp = vcsn.automaton(exp)
   CHECK_EQ(exp, input.star())
 
+# This used to trigger an assert.
+l_br = vcsn.context('lal_char(a)_ratexpset<lal_char(xy)_b>')
+check(l_br.ratexp('<y>a(<x>a)*').derived_term(),
+'''
+digraph
+{
+  vcsn_context = "lal_char(a)_ratexpset<lal_char(xy)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "<y>a"]
+  1 -> F1
+  1 -> 1 [label = "<x+y>a"]
+}
+''')
 
 check('''
 digraph

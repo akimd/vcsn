@@ -41,7 +41,7 @@ namespace vcsn
           if (res.src_of(tf) != initial)
             // The weight of ti has already been multiplied, on the
             // left, by w.
-            res.new_transition
+            res.add_transition
               (res.src_of(tf),
                res.dst_of(ti),
                res.label_of(ti),
