@@ -24,6 +24,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/info.py                                   \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
+  %D%/product.py                                \
   %D%/ratexp.py                                 \
   %D%/split.py                                  \
   %D%/star.py                                   \
@@ -56,11 +57,20 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/no-initial-states.moore.gv   \
   %D%/minimize.dir/redundant.exp.gv             \
   %D%/minimize.dir/redundant.gv                 \
-  %D%/minimize.dir/small-nfa.exp.gv
+  %D%/minimize.dir/small-nfa.exp.gv             \
+  %D%/product.dir/a.gv                          \
+  %D%/product.dir/ab.gv                         \
+  %D%/product.dir/abc.gv                        \
+  %D%/product.dir/ax.gv                         \
+  %D%/product.dir/x.gv                          \
+  %D%/product.dir/xa.gv                         \
+  %D%/product.dir/xy.gv                         \
+  %D%/product.dir/xyz.gv
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
+%D%/product.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 
 .PHONY: check-python
 check-python:

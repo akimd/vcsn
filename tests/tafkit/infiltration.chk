@@ -1,5 +1,7 @@
 #! /bin/sh
 
+medir=$srcdir/tests/python/product.dir
+
 ## ---------------------- ##
 ## Existing transitions.  ##
 ## ---------------------- ##
@@ -15,7 +17,7 @@ run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
 ## -------------------- ##
 
 # a infiltration a
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/a.gv" "$srcdir/tests/tafkit/product.dir/a.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/a.gv" "$medir/a.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -43,7 +45,7 @@ digraph
 EOF
 
 # abc infiltration abc
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/abc.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/abc.gv" "$medir/abc.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -105,7 +107,7 @@ digraph
 EOF
 
 # abc infiltration xy
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$srcdir/tests/tafkit/product.dir/abc.gv" "$srcdir/tests/tafkit/product.dir/xy.gv" <<\EOF
+run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/abc.gv" "$medir/xy.gv" <<\EOF
 digraph
 {
   vcsn_context = "lal_char(abcxy)_z"

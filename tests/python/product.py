@@ -1,4 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
+
+b = vcsn.context('lal_char(abcd)_b')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -6,18 +11,17 @@
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
-run 0 '' -vcsn product -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*a' -vcsn aut-to-exp -f prod.gv
-
+a1 = b.ratexp('a*a').derived_term()
+a2 = a1 & a1
+CHECK_EQ('a*a', str(a2.ratexp()))
 
 ## ---------------------- ##
-## (a+b)* x (b+c)* = b*.  ##
+## (a+b)* & (b+c)* = b*.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
+lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
+rhs = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(b)_b"
@@ -39,18 +43,19 @@ digraph
   1 -> F1
   1 -> 1 [label = "b"]
 }
-EOF
+'''),
+         lhs & rhs)
 
 ## ------------- ##
 ## ab x cd = 0.  ##
 ## ------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e 'ab' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(cd)_b' -e 'cd' -o bc.gv
-run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
+lhs = vcsn.context('lal_char(ab)_b').ratexp('ab').standard()
+rhs = vcsn.context('lal_char(cd)_b').ratexp('cd').standard()
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char()_b"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -62,7 +67,7 @@ digraph
   }
   I0 -> 0 [color = DimGray]
 }
-EOF
+'''), lhs & rhs)
 
 
 
@@ -70,12 +75,12 @@ EOF
 ## (a+b)* x (c+d)* = \e.  ##
 ## ---------------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(cd)_b' -e '(c+d)*' -o bc.gv
-run 0 - -vcsn product -f ab.gv bc.gv <<\EOF
+lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
+rhs = vcsn.context('lal_char(cd)_b').ratexp('(c+d)*').standard()
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
-  vcsn_context = "lal_char_b"
+  vcsn_context = "lal_char()_b"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -89,7 +94,8 @@ digraph
   I0 -> 0
   0 -> F0
 }
-EOF
+'''), 
+         lhs & rhs)
 
 
 
@@ -98,7 +104,7 @@ EOF
 ## ------------ ##
 
 # <2>(a*b*a*)
-cat >a.gv <<\EOF
+lhs = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -127,10 +133,10 @@ digraph
   2 -> F2
   2 -> 2 [label = "a"]
 }
-EOF
+''')
 
 # (<3>(ab))*
-cat >b.gv <<\EOF
+rhs = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -150,9 +156,9 @@ digraph
   0 -> 1 [label = "a"]
   1 -> 0 [label = "<3>b"]
 }
-EOF
+''')
 
-cat >out.exp <<\EOF
+exp = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -178,9 +184,9 @@ digraph
   3 -> F3
   3 -> 2 [label = "a", color = DimGray]
 }
-EOF
+''')
 
-run 0 out.exp -vcsn product -f a.gv b.gv
+CHECK_EQ(exp, lhs&rhs)
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -188,62 +194,52 @@ run 0 out.exp -vcsn product -f a.gv b.gv
 
 # check OPERATION RES AUT...
 # --------------------------
-check()
-{
-  local op=$1; shift
-  local expected=$1; shift
-  local res="product($*)"
-  run 0 ''          -vcsn "$op" -o "$res" -f "$@"
-  run 0 "$expected" -vcsn aut-to-exp -f "$res"
-}
+def check(operation, exp, *args):
+    CHECK_EQ(exp, str(reduce(lambda l, r: l & r, args).ratexp()))
 
 # RatE and B, in both directions.
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '(<u>a+<v>b)*' -o ua+vb.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
-         -e 'a{+}' -o a+.gv
-check product '<u>a+<u>a<u>a(<u>a)*' ua+vb.gv a+.gv
-check product '<u>a+<u>a<u>a(<u>a)*' a+.gv ua+vb.gv
+a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('(<u>a+<v>b)*').standard()
+a2 = vcsn.context('lal_char(ab)_b').ratexp('a{+}').standard()
+check('product', '<u>a+<u>a<u>a(<u>a)*', a1, a2)
+check('product', '<u>a+<u>a<u>a(<u>a)*', a2, a1)
 
 # Z, Q, R.
-run 0 '' -vcsn derived-term -C 'lal_char(ab)_z' -o z.gv -e '(<2>a+<3>b)*'
-run 0 '' -vcsn derived-term -C 'lal_char(ab)_q' -o q.gv -e '(<1/2>a+<1/3>b)*'
-run 0 '' -vcsn derived-term -C 'lal_char(ab)_r' -o r.gv -e '(<.2>a+<.3>b)*'
+z = vcsn.context('lal_char(ab)_z').ratexp('(<2>a+<3>b)*')    .derived_term()
+q = vcsn.context('lal_char(ab)_q').ratexp('(<1/2>a+<1/3>b)*').derived_term()
+r = vcsn.context('lal_char(ab)_r').ratexp('(<.2>a+<.3>b)*')  .derived_term()
 
-check product '(a+b)*' z.gv q.gv
-check product '(a+b)*' q.gv z.gv
-check product '(<2>a+<3>b)*' z.gv q.gv z.gv
-check product '(<1/2>a+<1/3>b)*' z.gv q.gv q.gv
+check('product', '(a+b)*', z, q)
+check('product', '(a+b)*', q, z)
+check('product', '(<2>a+<3>b)*', z, q, z)
+check('product', '(<1/2>a+<1/3>b)*', z, q, q)
 
-check product '(<0.4>a+<0.9>b)*' z.gv r.gv
-check product '(<0.4>a+<0.9>b)*' r.gv z.gv
+check('product', '(<0.4>a+<0.9>b)*', z, r)
+check('product', '(<0.4>a+<0.9>b)*', r, z)
 
-check product '(<0.1>a+<0.1>b)*' q.gv r.gv
-check product '(<0.1>a+<0.1>b)*' r.gv q.gv
+check('product', '(<0.1>a+<0.1>b)*', q, r)
+check('product', '(<0.1>a+<0.1>b)*', r, q)
 
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-         -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn product -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<uxvy>ab
-EOF
+a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('<u>a<v>b').standard()
+a2 = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
+         .ratexp('<x>a<y>b').standard()
+CHECK_EQ('<uxvy>ab', str((a1&a2).enumerate(4)))
+
 
 ## ------- ##
 ## n-ary.  ##
 ## ------- ##
 
-for l in a b c d
-do
-  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
-done
-run 0 '' -vcsn product -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<abcd>x
-EOF
+ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
+a = dict()
+for l in ['a', 'b', 'c', 'd']:
+    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+CHECK_EQ('<abcd>x', str((a['a'] & a['b'] & a['c'] & a['d']).enumerate(10)))
+
+PLAN()

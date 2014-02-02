@@ -39,7 +39,6 @@
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
-  %D%/product.chk                               \
   %D%/proper.chk                                \
   %D%/shuffle.chk                               \
   %D%/standard.chk                              \
@@ -100,14 +99,6 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.gv                            \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
-  %D%/product.dir/a.gv                          \
-  %D%/product.dir/ab.gv                         \
-  %D%/product.dir/abc.gv                        \
-  %D%/product.dir/ax.gv                         \
-  %D%/product.dir/x.gv                          \
-  %D%/product.dir/xa.gv                         \
-  %D%/product.dir/xy.gv                         \
-  %D%/product.dir/xyz.gv                        \
   %D%/union.dir/abc.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
@@ -117,7 +108,7 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/infiltration.log: $(wildcard $(srcdir)/%D%/../python/product.dir/*)
 %D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 %D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)
