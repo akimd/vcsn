@@ -339,6 +339,13 @@ struct ratexp
     return vcsn::dyn::expand(r_);
   }
 
+  std::string format(const std::string& format = "text") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(r_, os, format);
+    return os.str();
+  }
+
   ratexp intersection(const ratexp& rhs) const
   {
     return vcsn::dyn::intersection(r_, rhs.r_);
@@ -352,13 +359,6 @@ struct ratexp
   bool is_valid() const
   {
     return vcsn::dyn::is_valid(r_);
-  }
-
-  std::string format(const std::string& format = "text") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(r_, os, format);
-    return os.str();
   }
 
   polynomial split() const
