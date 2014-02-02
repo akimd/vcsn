@@ -40,7 +40,27 @@ NDEBUG and GLIBCXX_DEBUG are used.  It would be nice to find where and send
 a bug report...
 
 ** Coverage
-We need to add coverage tests on the BF.
+We need to add coverage tests on the BF.  From ADL:
+
+  First, compile (and link) Spot with coverage enabled.
+
+   % ./configure CXX='g++ --coverage'
+   % make
+
+  Then run the test suite (or any program you want to study).
+
+   % make check
+
+  Executing programs using Spot will generate a lot of *.gc* files
+  everywhere.  Collect these using lcov:
+
+   % lcov --capture --directory src --output spot.info
+
+  Finally generate a coverage report in HTML:
+
+   % genhtml --legend --demangle-cpp --output-directory html spot.info
+
+  This should create the directory html/.
 
 ** -fsanitize=address
 Try that on the BF.  For some reason, Libtool strips this flag at link time.
