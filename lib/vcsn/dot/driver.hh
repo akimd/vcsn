@@ -48,7 +48,7 @@ namespace vcsn
         /// The name of the context.
         std::string context_;
         /// An automaton editor that stores the one being built.
-        vcsn::automaton_editor* edit_;
+        std::shared_ptr<vcsn::automaton_editor> edit_;
         friend class parser;
       };
 
