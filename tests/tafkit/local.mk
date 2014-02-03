@@ -39,7 +39,6 @@
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
   %D%/proper.chk                                \
-  %D%/shuffle.chk                               \
   %D%/standard.chk                              \
   %D%/star-normal-form.chk                      \
   %D%/sum.chk                                   \

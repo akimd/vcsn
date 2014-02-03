@@ -1,4 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
+
+b = vcsn.context('lal_char(abcd)_b')
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -6,9 +11,8 @@
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
-run 0 '' -vcsn shuffle -o prod.gv -f 'a*a.gv' 'a*a.gv'
-run 0 'a*(aa*a+aa*a)' -vcsn aut-to-exp -f prod.gv
+a1 = b.ratexp('a*a').derived_term()
+CHECK_EQ('a*(aa*a+aa*a)', str(a1.shuffle(a1).ratexp()))
 
 
 ## ------------------------ ##
@@ -16,7 +20,7 @@ run 0 'a*(aa*a+aa*a)' -vcsn aut-to-exp -f prod.gv
 ## ------------------------ ##
 # TAFKIT manual, Figure 3.13, left [as of 2013-10-10]
 
-cat > abs.gv <<\EOF
+abs = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -36,10 +40,9 @@ digraph
   0 -> F0
   0 -> 1 [label = "a"]
   1 -> 0 [label = "b"]
-}
-EOF
+}''')
 
-cat > mabs.gv <<\EOF
+mabs = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -60,9 +63,9 @@ digraph
   0 -> 1 [label = "<-1>a"]
   1 -> 0 [label = "<1>b"]
 }
-EOF
+''')
 
-run 0 - -vcsn shuffle -f abs.gv mabs.gv <<\EOF
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -90,7 +93,7 @@ digraph
   3 -> 1 [label = "b"]
   3 -> 2 [label = "b"]
 }
-EOF
+'''), abs.shuffle(mabs))
 
 
 ## ---------------------- ##
@@ -98,51 +101,9 @@ EOF
 ## ---------------------- ##
 # TAFKIT manual, Figure 3.13, right [as of 2013-10-10]
 
-#run 0 '' -vcsn standard -C 'lal_char(a)_z' -e '(a)*' -o as.gv
-cat > as.gv <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(a)_z"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-    F1
-  }
-  {
-    node [shape = circle]
-    0
-  }
-  I0 -> 0
-  0 -> F0
-  0 -> 0 [label = "a"]
-}
-EOF
-
-#run 0 '' -vcsn standard -C 'lal_char(a)_z' -e '(<-1>a)*' -o mas.gv
-cat > mas.gv <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(a)_z"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-    F1
-  }
-  {
-    node [shape = circle]
-    0
-  }
-  I0 -> 0
-  0 -> F0
-  0 -> 0 [label = "<-1>a"]
-}
-EOF
-
-run 0 - -vcsn shuffle -f as.gv mas.gv <<\EOF
+pas = vcsn.context("lal_char(a)_z").ratexp('a*').derived_term()
+mas = vcsn.context("lal_char(a)_z").ratexp('(<-1>a)*').derived_term()
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -159,17 +120,17 @@ digraph
   I0 -> 0
   0 -> F0
 }
-EOF
+'''), pas.shuffle(mas))
 
 
 ## ---------- ##
 ## ABC )( ab. ##
 ## ---------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_z' -e 'ab' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(ABC)_z' -e 'ABC' -o ABC.gv
-
-cat > ab_shuffle_ABC.gv <<\EOF
+ab = vcsn.context('lal_char(ab)_z').ratexp('ab').standard()
+ABC = vcsn.context('lal_char(ABC)_z').ratexp('ABC').standard()
+ABCab = ABC.shuffle(ab)
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ABCab)_z"
@@ -214,13 +175,10 @@ digraph
   10 -> 11 [label = "C"]
   11 -> F11
 }
-EOF
-
-run 0 -f ab_shuffle_ABC.gv -vcsn shuffle -f ABC.gv ab.gv
+'''),  ABCab)
 
 # Of course we'll have 5 letters.
-run 0 - -vcsn enumerate -f ab_shuffle_ABC.gv 10 <<\EOF
-ABCab
+CHECK_EQ('''ABCab
 ABaCb
 ABabC
 AaBCb
@@ -229,8 +187,7 @@ AabBC
 aABCb
 aABbC
 aAbBC
-abABC
-EOF
+abABC''', ABCab.enumerate(10).format('list'))
 
 
 ## --------------------- ##
@@ -238,40 +195,41 @@ EOF
 ## --------------------- ##
 
 # RatE and B, in both directions.
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '(<u>a+<v>b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
-         -e 'a' -o a.gv
-run 0 '' -vcsn shuffle -o 1.gv -f ab.gv a.gv
-run 0 'a + <u+u>aa + <v>ab + <v>ba' \
-      -vcsn shortest -f 1.gv 4
-run 0 '' -vcsn shuffle -o 2.gv -f a.gv ab.gv
-run 0 'a + <u+u>aa + <v>ab + <v>ba' \
-      -vcsn shortest -f 2.gv 4
+a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('(<u>a+<v>b)*').standard()
+a2 = vcsn.context('lal_char(ab)_b').ratexp('a').standard()
+CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
+         a1.shuffle(a2).shortest(4).format('text'))
+CHECK_EQ('a + <u+u>aa + <v>ab + <v>ba',
+         a2.shuffle(a1).shortest(4).format('text'))
+
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-         -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn shuffle -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<uxvy+uxyv+xuvy+xuyv>aabb
-<uvxy+xyuv>abab
-EOF
+a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('<u>a<v>b').standard()
+a2 = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
+         .ratexp('<x>a<y>b').standard()
+CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
+<uvxy+xyuv>abab''', a1.shuffle(a2).enumerate(4).format('list'))
+
 
 ## ------- ##
 ## n-ary.  ##
 ## ------- ##
 
-for l in a b c d
-do
-  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
-done
-run 0 '' -vcsn shuffle -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx
-EOF
+ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
+a = dict()
+for l in ['a', 'b', 'c', 'd']:
+    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx',
+    a['a']
+    .shuffle(a['b'])
+    .shuffle(a['c'])
+    .shuffle(a['d'])
+    .enumerate(10)
+    .format('list'))
+
+PLAN()
