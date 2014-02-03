@@ -33,6 +33,7 @@ def CHECK_EQ(expected, effective):
         sys.stdout.writelines(diff(str(expected).splitlines(1),
                                    str(effective).splitlines(1),
                                    fromfile='expected', tofile='effective'))
+        print()
 
 def PLAN():
     print('1..'+str(count))

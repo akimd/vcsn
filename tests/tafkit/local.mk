@@ -28,7 +28,6 @@
   %D%/evaluate.chk                              \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
-  %D%/infiltration.chk                          \
   %D%/is-ambiguous.chk                          \
   %D%/is-complete.chk                           \
   %D%/is-deterministic.chk                      \
@@ -108,7 +107,6 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/infiltration.log: $(wildcard $(srcdir)/%D%/../python/product.dir/*)
 %D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 %D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)

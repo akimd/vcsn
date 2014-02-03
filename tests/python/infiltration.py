@@ -1,6 +1,11 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-medir=$srcdir/tests/python/product.dir
+import vcsn
+from test import *
+
+b = vcsn.context('lal_char(abcd)_b')
+
+medir = srcdir + '/tests/python/product.dir'
 
 ## ---------------------- ##
 ## Existing transitions.  ##
@@ -8,16 +13,17 @@ medir=$srcdir/tests/python/product.dir
 
 # See the actual code of product to understand the point of this test
 # (which is new_transition vs. add_transition).
-run 0 '' -vcsn derived-term -e 'a*a' -o 'a*a.gv'
-# FIXME: abort: run 0 '' -vcsn infiltration -o prod.gv -f 'a*a.gv' 'a*a.gv'
-# FIXME: abort: run 0 'a*a' -vcsn aut-to-exp -f prod.gv
+a1 = b.ratexp('a*a').derived_term()
+# FIXME: ABORT
+### CHECK_EQ('a*(a+(a+a)a*a+(a+a)a*a)', str(a1.infiltration(a1).ratexp()))
 
 ## -------------------- ##
 ## Hand crafted tests.  ##
 ## -------------------- ##
 
 # a infiltration a
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/a.gv" "$medir/a.gv" <<\EOF
+a = vcsn.automaton.load(medir + "/a.gv")
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_z"
@@ -42,10 +48,11 @@ digraph
   2 -> 1 [label = "a"]
   3 -> 1 [label = "a"]
 }
-EOF
+'''),  a.infiltration(a))
 
 # abc infiltration abc
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/abc.gv" "$medir/abc.gv" <<\EOF
+abc = vcsn.automaton.load(medir + "/abc.gv")
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -104,10 +111,11 @@ digraph
   14 -> 12 [label = "a"]
   15 -> 13 [label = "a"]
 }
-EOF
+'''), abc.infiltration(abc))
 
 # abc infiltration xy
-run 0 - -vcsn infiltration -C 'lal_char(a)_b' -f "$medir/abc.gv" "$medir/xy.gv" <<\EOF
+xy = vcsn.automaton.load(medir + "/xy.gv")
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abcxy)_z"
@@ -152,7 +160,7 @@ digraph
   10 -> 11 [label = "c"]
   11 -> F11
 }
-EOF
+'''), abc.infiltration(xy))
 
 
 ## --------------------- ##
@@ -160,47 +168,45 @@ EOF
 ## --------------------- ##
 
 # RatE and B, in both directions.
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '(<u>a+<v>b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' \
-         -e 'a' -o a.gv
+ab = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+    .ratexp('(<u>a+<v>b)*').standard()
+a = vcsn.context('lal_char(ab)_b').ratexp('a').standard()
 # FIXME: ABORT
-### run 0 '' -vcsn infiltration -o 1.gv -f ab.gv a.gv
-### run 0 '<u+\e>a + <u.u+u+u>aa + <u.v+v>ab + <v.u+v>ba' \
-###       -vcsn shortest -f 1.gv 4
-### run 0 '' -vcsn infiltration -o 2.gv -f a.gv ab.gv
-### run 0 '<u+\e>a + <u.u+u+u>aa + <u.v+v>ab + <v.u+v>ba' \
-###       -vcsn shortest -f 2.gv 4
+### CHECK_EQ('<u+\e>a + <uu+uu+u+u>aa + <uv+v>ab + <vu+v>ba',
+###     str(ab.infiltration(a).shortest(4)))
+### CHECK_EQ('<u+\e>a + <uu+u+uu+u>aa + <uv+v>ab + <vu+v>ba',
+###     str(a.infiltration(ab).shortest(4)))
+
 
 ## ----------------- ##
 ## Non-commutative.  ##
 ## ----------------- ##
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
-         -e '<u>a<v>b' -o uavb.gv
-run 0 '' -vcsn standard -C 'lal_char(ab)_ratexpset<lal_char(xy)_b>' \
-         -e '<x>a<y>b' -o xayb.gv
-run 0 '' -vcsn infiltration -o uavb-xayb.gv -f uavb.gv xayb.gv
-run 0 - -vcsn enumerate -f uavb-xayb.gv 4 <<\EOF
-<uxvy>ab
-<uxvy+xuvy>aab
-<uxvy+uxyv>abb
-<uxvy+uxyv+xuvy+xuyv>aabb
-<uvxy+xyuv>abab
-EOF
+uavb = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
+    .ratexp('<u>a<v>b').standard()
+xayb = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
+    .ratexp('<x>a<y>b').standard()
+CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb + <uvxy+xyuv>abab',
+    str(uavb.infiltration(xayb).enumerate(4)))
+
 
 ## ------- ##
 ## n-ary.  ##
 ## ------- ##
 
-for l in a b c d
-do
-  run 0 '' -vcsn standard -C 'lal_char(x)_ratexpset<lal_char(abcd)_b>' -e "<$l>x" -o $l.gv
-done
-run 0 '' -vcsn infiltration -o abcd.gv -f a.gv b.gv c.gv d.gv
-run 0 - -vcsn enumerate -f abcd.gv 10 <<\EOF
-<abcd>x
+ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
+a = dict()
+for l in ['a', 'b', 'c', 'd']:
+    a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+CHECK_EQ('''<abcd>x
 <acdb+bcda+abdc+adbc+bdac+cdab+abcd+acbd+bcad+abcd+abcd+bacd+cabd+dabc>xx
-<adcb+adbc+bdca+bdac+cdab+cdba+acdb+acbd+bcda+bcad+abdc+abcd+acdb+abdc+adbc+abcd+acbd+abcd+bcda+badc+bdac+bacd+bcad+bacd+cadb+cbda+cdab+cabd+cabd+cbad+dacb+dbca+dabc+dabc+dbac+dcab>xxx
-<adcb+adbc+acdb+acbd+abdc+abcd+bdca+bdac+bcda+bcad+badc+bacd+cdab+cdba+cadb+cabd+cbda+cbad+dacb+dabc+dbca+dbac+dcab+dcba>xxxx
-EOF
+<adbc+adcb+bdac+bdca+cdab+cdba+acbd+acdb+bcad+bcda+abcd+abdc+abdc+acdb+abcd+abcd+acbd+adbc+badc+bcda+bacd+bacd+bcad+bdac+cadb+cbda+cabd+cabd+cbad+cdab+dacb+dbca+dabc+dabc+dbac+dcab>xxx
+<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
+    a['a']
+    .infiltration(a['b'])
+    .infiltration(a['c'])
+    .infiltration(a['d'])
+    .enumerate(10)
+    .format('list'))
+
+PLAN()

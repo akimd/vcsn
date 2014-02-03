@@ -120,7 +120,7 @@ Now that our products support heterogeneous, but compatible, types, we
 should propagate this to other n-ary algorithms.
 
 ** products: lazyness
-We need a lazy implementation of product.  nary product would be nice.
+We need a lazy implementation of product.
 
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
@@ -406,6 +406,13 @@ Work for trim automata.
 
 We need generalizations of minimization for weighted automata.  See TAF-Kit
 1 and quotient.
+
+** variadic products
+Our products (product, infiltration, shuffle) should provide variadic
+versions.  dyn:: for a start, but a variadic template for products would be
+very nice too.
+
+And then convert "n-ary" tests in tests/python/product and infiltration.
 
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A

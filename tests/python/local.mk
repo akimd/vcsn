@@ -21,6 +21,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/derivation.py                             \
   %D%/expand.py                                 \
   %D%/factory.py                                \
+  %D%/infiltration.py                           \
   %D%/info.py                                   \
   %D%/is-equivalent.py                          \
   %D%/minimize.py                               \
@@ -69,6 +70,7 @@ EXTRA_DIST +=                                   \
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
+%D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/product.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 
