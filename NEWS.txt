@@ -4,6 +4,48 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-03
+Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
+"vaucanson".
+
+** A Virtual Machine for easy experiments
+Installing Vaucanson 2 on some platforms can be tedious.  Clément Démoulins
+contibuted a Virtual Machine that makes it easy to experiment with Vaucanson
+2 without having to compile it.  He also contributed a Vagrantfile to make
+it even easier to deploy.
+
+To install a Vaucanson virtual machine, please follow this procedure:
+
+  1. Install VirtualBox
+     From your distro, or from https://www.virtualbox.org/wiki/Downloads.
+
+  2. Install Vagrant
+     From your distro, or from http://www.vagrantup.com/downloads.html
+
+  3. Download this Vagrantfile and save it somewhere.
+     https://www.lrde.epita.fr/dload/vaucanson/2.0/Vagrantfile
+
+     For instance
+     $ mkdir ~/src/vcsn2
+     $ cd ~/src/vcsn2
+     $ wget https://www.lrde.epita.fr/dload/vaucanson/2.0/Vagrantfile
+
+  4. Run Vagrant (first time will be slow: let it download the VM)
+
+     $ cd ~/src/vcsn2
+     $ vagrant up
+
+     Vaucanson is runnning!
+
+  5. Open http://localhost:8888 in your favorite browser.
+
+  6. Experiment!  (Hit Shift-Enter to evaluate):
+     import vcsn
+     vcsn.context('lal_char(abc)_z').ratexp('(<2>a+<3>b)*').derived_term()
+
+  7. Turn your VM off when you are done
+     $ vagrant halt
+
 * 2014-01-29
 ** ratexp difference: new algorithm (static, dyn, Python)
 The "difference" algorithms generates a ratexp that accepts words of the
