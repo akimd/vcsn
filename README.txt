@@ -175,8 +175,8 @@ you need more tools:
 
 - Automake 1.14 or newer
 - Autoconf 2.61 or newer
-- Bison 2.5 or newer
-- Flex 2.5.4 or newer
+- Bison 3.0 or newer
+- Flex 2.5.35 or newer
 
 
 Licence

@@ -8,6 +8,8 @@ changes in the internal API may also be documented.
 Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
 "vaucanson".
 
+See <https://www.lrde.epita.fr/wiki/Vaucanson/Vaucanson2b3>.
+
 ** A Virtual Machine for easy experiments
 Installing Vaucanson 2 on some platforms can be tedious.  Clément Démoulins
 contibuted a Virtual Machine that makes it easy to experiment with Vaucanson
