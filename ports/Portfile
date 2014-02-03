@@ -5,7 +5,7 @@ PortSystem          1.0
 PortGroup           compiler_blacklist_versions 1.0
 
 name                vaucanson
-version             2b.2
+version             2b.3
 categories          devel
 platforms           darwin
 maintainers         lrde.epita.fr:akim
@@ -21,8 +21,8 @@ homepage            http://vaucanson.lrde.epita.fr
 master_sites        http://www.lrde.epita.fr/dload/vaucanson/2.0
 use_xz              yes
 
-checksums           rmd160 643f69527cf799e5edde4b6a98b3b818dff8576f \
-                    sha256 c8e5134535fbe8588c503f33f78ea551cbb3fadcddb2832d9a72170a7b5daf2c
+checksums           rmd160 02fcd29daf1413dbdc1b91d643e04361090642ec \
+                    sha256 51533d369ccc398e07c3c15ecbe2d0f818f221ad78e91d5f7a0f3f06ffbc8ca0
 
 depends_lib         port:boost
 
