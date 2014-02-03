@@ -79,6 +79,14 @@ Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
 * Bugs
+** Parse error
+We need to provide more acurate locations in error messages.  For instance,
+create a dot file with an incorrect context definition, and see the failure.
+
+Note that when printing an automaton with an empty alphabet, we write
+'lal_char_b' which fails to parse correctly for lack of () (should be
+'lal_char()_b').
+
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,
 avoid files and use streams.
