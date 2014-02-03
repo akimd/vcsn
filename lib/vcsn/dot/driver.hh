@@ -41,17 +41,14 @@ namespace vcsn
       private:
         /// From context_, build edit_.
         /// \throw std::exception on invalid contexts.
-        void setup_();
+        void setup_(const location_t& l, const std::string& ctx);
 
         /// The inital location.
         location_t location_;
-        /// The name of the context.
-        std::string context_;
         /// An automaton editor that stores the one being built.
         std::shared_ptr<vcsn::automaton_editor> edit_;
         friend class parser;
       };
-
     }
   }
 }

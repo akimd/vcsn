@@ -1,13 +1,15 @@
+#include <lib/vcsn/dot/driver.hh>
+
 #include <cassert>
 #include <cstring> // strerror
 #include <sstream>
 
-#include <lib/vcsn/dot/driver.hh>
 #include <lib/vcsn/dot/parse.hh>
 #include <lib/vcsn/dot/scan.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -38,10 +40,8 @@ namespace vcsn
         // If success.
         if (p.parse() == 0)
           {
-            // If the graph is empty, we have not set up the editor,
-            // which did not build an automaton.  Do it now.
-            if (!edit_)
-              setup_();
+            require(bool(edit_),
+                    "missing vcsn_context definition");
             res = edit_->result();
             edit_->reset();
           }
@@ -51,16 +51,18 @@ namespace vcsn
       }
 
       void
-      driver::setup_()
+      driver::setup_(const location_t& l, const std::string& ctx)
       {
-        if (!edit_)
+        try
           {
-            if (context_.empty())
-              throw std::domain_error("no vcsn_context defined");
-            auto ctx = vcsn::dyn::make_context(context_);
-            edit_.reset(vcsn::dyn::make_automaton_editor(ctx));
-            edit_->set_separator(',');
+            auto c = vcsn::dyn::make_context(ctx);
+            edit_.reset(vcsn::dyn::make_automaton_editor(c));
           }
+        catch (std::runtime_error& e)
+          {
+            raise(l, ": ", e.what());
+          }
+        edit_->set_separator(',');
       }
 
       void

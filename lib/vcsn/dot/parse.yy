@@ -121,18 +121,6 @@
         }
       }
     }
-
-    /// Run Stm, and bounces exceptions into parse errors at Loc.
-#define TRY(Loc, Stm)                           \
-    try                                         \
-      {                                         \
-        Stm;                                    \
-      }                                         \
-    catch (std::exception& e)                   \
-      {                                         \
-        error(Loc, e.what());                   \
-        YYERROR;                                \
-      }
   }
 }
 
@@ -238,10 +226,7 @@ attr_assign:
     if ($var == label)
       std::swap($$, $val);
     else if ($var == vcsn_context)
-      {
-        assert(!driver_.edit_);
-        driver_.context_ = $val;
-      }
+      driver_.setup_(@val, $val);
     else
       // Beware of the default "$$ = $1;" action.
       $$ = "";
@@ -333,7 +318,7 @@ node_id:
   ID
   {
     // We need the editor to exist.
-    TRY(@$, driver_.setup_());
+    require(bool(driver_.edit_), @$, ": no vcsn_context");
     std::swap($$, $1);
     if ($$.get()[0] == 'I')
       driver_.edit_->add_pre($$);
