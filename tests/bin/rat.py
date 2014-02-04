@@ -34,8 +34,8 @@ contexts = {
 }
 
 def context_update():
-  if not contexts.has_key(ws):
-    print "invalid weightset abbreviation:",  ws
+  if ws not in contexts:
+    print("invalid weightset abbreviation:",  ws)
   global name
   name = contexts[ws]
   if labels == 'letters':
