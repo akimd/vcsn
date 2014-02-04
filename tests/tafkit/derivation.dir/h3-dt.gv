@@ -27,6 +27,6 @@ digraph
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  1 -> 2 [label = "b, c, d"]
+  1 -> 2 [label = "[b-d]"]
   2 -> F2
 }

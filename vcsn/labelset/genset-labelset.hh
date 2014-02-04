@@ -45,6 +45,52 @@ namespace vcsn
         return this->genset()->vname(full);
       }
 
+      std::set<letter_t>
+      convs_(std::istream& i) const
+      {
+        int c = i.get();
+        require(c == '[',
+                "expected '[', found ", str_escape(c));
+        int previous = -1;
+        std::set<letter_t> res;
+        while (!i.eof() && i.peek() != ']')
+          {
+            c = i.get();
+            if (c == '-')
+              {
+                require(previous != -1, "bracket cannot begin with '-'.");
+                // Handle ranges
+                int endrange = i.peek();
+                if (endrange == ']')
+                  res.insert('-');
+                else
+                  {
+                    auto it = this->genset()->find(previous);
+                    for (; *it != endrange && it != this->genset()->end();
+                         it++)
+                      res.insert(*it);
+                    require(it != this->genset()->end(),
+                            "unexpected ", str_escape(endrange));
+                  }
+              }
+            else
+              {
+                if (c == '\\')
+                  c = i.get();
+                if (this->has(c))
+                  res.insert(c);
+                else
+                  throw std::domain_error("invalid label: unexpected "
+                                          + str_escape(c));
+                previous = c;
+              }
+          }
+        require(!i.eof(), "EOF, expected ']'");
+        i.ignore(); // Eat ]
+
+        return res;
+      }
+
       /// Use the implementation from genset.
 # define DEFINE(Name, Attribute)                                        \
       template <typename... Args>                                       \

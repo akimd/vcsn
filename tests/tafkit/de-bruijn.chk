@@ -79,11 +79,11 @@ digraph
     4
   }
   I0 -> 0
-  0 -> 0 [label = "x, y, z"]
+  0 -> 0 [label = "[x-z]"]
   0 -> 1 [label = "x"]
-  1 -> 2 [label = "x, y, z"]
-  2 -> 3 [label = "x, y, z"]
-  3 -> 4 [label = "x, y, z"]
+  1 -> 2 [label = "[x-z]"]
+  2 -> 3 [label = "[x-z]"]
+  3 -> 4 [label = "[x-z]"]
   4 -> F4
 }
 EOF

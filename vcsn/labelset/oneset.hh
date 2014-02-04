@@ -138,6 +138,11 @@ namespace vcsn
           }
         return {};
       }
+
+      static std::set<value_t> convs(std::istream&)
+      {
+        raise("oneset: ranges not implemented");
+      }
     };
 
     /// The meet of two labelsets.

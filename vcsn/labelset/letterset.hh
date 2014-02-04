@@ -143,13 +143,21 @@ namespace vcsn
         if (this->has(c))
           return i.get();
         else
-          throw std::domain_error("invalid label: unexpected "
-                                  + str_escape(c));
+          throw std::domain_error("invalid label: unexpected " + str_escape(c));
+      }
+
+      std::set<value_t>
+      convs(std::istream& i) const
+      {
+        std::set<value_t> res;
+        for (auto r : this->convs_(i))
+          res.insert(value_t{r});
+        return res;
       }
 
       std::ostream&
       print(std::ostream& o, const value_t& l,
-          const std::string& = "text") const
+            const std::string& = "text") const
       {
         if (!is_special(l))
           o << str_escape(l);

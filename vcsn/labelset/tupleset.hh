@@ -209,6 +209,11 @@ namespace vcsn
       return res;
     }
 
+    std::set<value_t> convs(std::istream&) const
+    {
+      raise("tupleset: ranges not implemented");
+    }
+
     std::ostream&
     print_set(std::ostream& o, const std::string& format) const
     {

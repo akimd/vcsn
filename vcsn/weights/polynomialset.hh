@@ -3,11 +3,14 @@
 
 # include <iostream>
 # include <sstream>
+# include <type_traits>
+# include <vector>
 
 # include <vcsn/weights/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 
@@ -358,10 +361,10 @@ namespace vcsn
           SKIP_SPACES();
           weight_t w = weightset()->one();
           bool default_w = true;
-          if (i.peek() == lbracket)
+          if (i.peek() == langle)
             {
               // FIXME: convert to use conv(std::istream).
-              w = ::vcsn::conv(*weightset(), bracketed(i, lbracket, rbracket));
+              w = ::vcsn::conv(*weightset(), bracketed(i, langle, rangle));
               default_w = false;
             }
 
@@ -385,27 +388,35 @@ namespace vcsn
             {
               // The label is not \z.
 
-              // Register the current position in the stream, so that
-              // we reject inputs such as "a++a" in LAW (where the
-              // labelset::conv would accept the empty string between
-              // the two "+").
-              std::streampos p = i.tellg();
-              label_t label = labelset()->special();
-              // Accept an implicit label (which can be an error,
-              // e.g., for LAL) if there is an explicit weight.
-              try
+              // Handle ranges
+              if (i.peek() == '[')
+                for (auto c : labelset()->convs(i))
+                  add_weight(res, c, w);
+              else
                 {
-                  label = labelset()->conv(i);
+
+                  // Register the current position in the stream, so that
+                  // we reject inputs such as "a++a" in LAW (where the
+                  // labelset::conv would accept the empty string between
+                  // the two "+").
+                  std::streampos p = i.tellg();
+                  label_t label = labelset()->special();
+                  // Accept an implicit label (which can be an error,
+                  // e.g., for LAL) if there is an explicit weight.
+                  try
+                    {
+                      label = labelset()->conv(i);
+                    }
+                  catch (const std::domain_error&)
+                    {}
+                  // We must have at least a weight or a label.
+                  if (default_w && p == i.tellg())
+                    raise(sname(), ": conv: invalid value: ",
+                          str_escape(i.peek()),
+                          " contains an empty label"
+                          " (did you mean \\e or \\z?)");
+                  add_weight(res, label, w);
                 }
-              catch (const std::domain_error&)
-                {}
-              // We must have at least a weight or a label.
-              if (default_w && p == i.tellg())
-                throw std::domain_error
-                  (sname() + ": conv: invalid value: "
-                   + str_escape(i.peek())
-                   + " contains an empty label (did you mean \\e or \\z?)");
-              add_weight(res, label, w);
             }
 
           // sep (e.g., '+'), or stop parsing.
@@ -429,9 +440,9 @@ namespace vcsn
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(m.second))
         {
-          out << (format == "latex" ? "\\langle " : std::string{lbracket});
+          out << (format == "latex" ? "\\langle " : std::string{langle});
           weightset()->print(out, m.second, format);
-          out << (format == "latex" ? "\\rangle " : std::string{rbracket});
+          out << (format == "latex" ? "\\rangle " : std::string{rangle});
         }
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");
@@ -441,24 +452,164 @@ namespace vcsn
       return out;
     }
 
-    std::ostream&
-    print(std::ostream& out, const value_t& v,
+    /// Print a full polynomial value, without trying to make ranges
+    std::ostream& print_all(std::ostream& out, const value_t& v,
+                            const std::string& format = "text",
+                            const std::string& sep = " + ") const
+    {
+      bool first = true;
+      for (const auto& m: v)
+        {
+          if (!first)
+            out << sep;
+          first = false;
+          print(out, m, format);
+        }
+      return out;
+    }
+
+    /// Print a polynomial value without ranges (neither a lan nor a lal case)
+    template <typename context>
+    typename std::enable_if<!(context::is_lal || context::is_lan),
+                            std::ostream&>::type
+    print_ctx(std::ostream& out, const value_t& v,
+              const std::string& format = "text",
+              const std::string& sep = " + ") const
+    {
+      // We just print everything if it's not nullables or letters
+      return print_all(out, v, format, sep);
+    }
+
+    /// Print a polynomial value with ranges (lan or lal case)
+    template <typename context>
+    typename std::enable_if<context::is_lal || context::is_lan,
+                            std::ostream&>::type
+    print_ctx_corpse(std::ostream& out, const value_t& v,
+                     const std::string& format = "text",
+                     const std::string& sep = " + ") const
+    {
+      if (sep == " + " || v.size() <= 2)
+        return print_all(out, v, format, sep);
+
+      // We put all the labels in a vector and check if their weight is
+      // always the same
+
+      // This is actually facter than a set, because insertion is O(1)
+      // amortized, and sort is in N log(N), whereas insertion in a set is
+      // N log(size + N).
+
+      std::vector<label_t> vs;
+      weight_t first_w = v.begin()->second;
+      for (const auto& m: v)
+        {
+          // If the weights aren't all the same, we fallback in the
+          // print_all method.
+          if (!weightset()->equals(m.second, first_w))
+            return print_all(out, v, format, sep);
+          vs.push_back(m.first);
+        }
+
+      // Then we sort the vector to find efficient ranges.
+      sort(vs.begin(), vs.end());
+
+      if (weightset()->show_one() || !weightset()->is_one(first_w))
+        {
+          out << (format == "latex" ? "\\langle " : std::string{langle});
+          weightset()->print(out, first_w, format);
+          out << (format == "latex" ? "\\rangle " : std::string{rangle});
+        }
+
+      out << '[';
+
+      const auto& alphabet = *labelset()->genset();
+      auto alphabet_end = alphabet.end();
+
+      for (auto it = vs.begin(); it != vs.end(); it++)
+        {
+          // Delta from current index to end of range
+          unsigned end_range = 0;
+
+          // Alphabet iterator.
+          auto it_lset = alphabet.find(*it);
+
+          // Find the end of the range.
+          while (it + end_range != vs.end() &&
+                 it_lset != alphabet_end)
+            {
+              it_lset++;
+              if (it + end_range + 1 == vs.end() ||
+                  *(it + end_range + 1) != *it_lset)
+                break;
+              end_range++;
+            }
+
+          // If end_range >= 2, printing letters as a range is efficient.
+          if (end_range >= 2)
+            {
+              labelset()->print(out, *it, format);
+              out << "-";
+              labelset()->print(out, *(it + end_range), format);
+
+              // Skip the range
+              it += end_range;
+            }
+          else
+            labelset()->print(out, *it, format);
+        }
+      out << ']';
+
+      return out;
+    }
+
+    template <typename context>
+    typename std::enable_if<context::is_lal,
+                            std::ostream&>::type
+    print_ctx(std::ostream& out, const value_t& v,
+              const std::string& format = "text",
+              const std::string& sep = " + ") const
+    {
+      return print_ctx_corpse<context>(out, v, format, sep);
+    }
+
+    template <typename context>
+    typename std::enable_if<context::is_lan,
+                            std::ostream&>::type
+    print_ctx(std::ostream& out, const value_t& v,
+              const std::string& format = "text",
+              const std::string& sep = " + ") const
+    {
+      unsigned n = 0;
+      value_t vn;
+      for (const auto& m: v)
+        if (labelset()->is_one(m.first))
+          {
+            if (n)
+              out << sep;
+            if (weightset()->show_one() || !weightset()->is_one(m.second))
+              {
+                out << (format == "latex" ? "\\langle " : std::string{langle});
+                weightset()->print(out, m.second, format);
+                out << (format == "latex" ? "\\rangle " : std::string{rangle});
+              }
+            labelset()->print(out, m.first, format);
+            n++;
+          }
+        else
+          vn[m.first] = m.second;
+      if (n && n < v.size())
+        out << sep;
+      return print_ctx_corpse<context>(out, vn, format, sep);
+    }
+
+    /// Call print_ctx templated with the current context
+    std::ostream& print(std::ostream& out, const value_t& v,
           const std::string& format = "text",
           const std::string& sep = " + ") const
     {
       if (v.empty())
         out << (format == "latex" ? "\\emptyset" : "\\z");
       else
-        {
-          bool first = true;
-          for (const auto& m: v)
-            {
-              if (!first)
-                out << sep;
-              first = false;
-              print(out, m, format);
-            }
-        }
+        return print_ctx<context_t>(out, v, format, sep);
       return out;
     }
 
@@ -483,9 +634,9 @@ namespace vcsn
     context_t ctx_;
 
     /// Left marker for weight in concrete syntax.
-    constexpr static char lbracket = '<';
+    constexpr static char langle = '<';
     /// Right marker for weight in concrete syntax.
-    constexpr static char rbracket = '>';
+    constexpr static char rangle = '>';
   };
 
   /// The entry between two states of an automaton.

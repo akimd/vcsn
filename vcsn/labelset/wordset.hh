@@ -148,6 +148,15 @@ namespace vcsn
         return this->genset()->conv(i);
       }
 
+      std::set<value_t>
+      convs(std::istream& i) const
+      {
+        std::set<value_t> res;
+        for (auto r : this->convs_(i))
+          res.insert(value_t{r});
+        return res;
+      }
+
       std::ostream&
       print(std::ostream& o, const value_t& l,
             const std::string& format = "text") const

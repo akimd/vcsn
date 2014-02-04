@@ -161,9 +161,7 @@ namespace vcsn
           {
             i.ignore();
             c = i.peek();
-            if (c != 'e')
-              throw std::domain_error("invalid label: unexpected \\"
-                                      + str_escape(c));
+            require(c == 'e', "invalid label: unexpected \\", str_escape(c));
             i.ignore();
             res = one();
           }
@@ -173,14 +171,22 @@ namespace vcsn
             i.ignore();
           }
         else
-          throw std::domain_error("invalid label: unexpected "
-                                  + str_escape(c));
+          throw std::domain_error("invalid label: unexpected " + str_escape(c));
+        return res;
+      }
+
+      std::set<value_t>
+      convs(std::istream& i) const
+      {
+        std::set<value_t> res;
+        for (auto r : this->convs_(i))
+          res.insert(value_t{r});
         return res;
       }
 
       std::ostream&
       print(std::ostream& o, value_t l,
-          const std::string& format = "text") const
+            const std::string& format = "text") const
       {
         if (is_one(l))
           o << (format == "latex" ? "\\varepsilon" : "\\e");

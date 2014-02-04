@@ -163,6 +163,11 @@ namespace vcsn
       return alphabet_.end();
     }
 
+    iterator_t find(const letter_t& l) const
+    {
+      return alphabet_.find(l);
+    }
+
     /// Compute the intersection with another alphabet.
     template <typename L2>
     friend set_alphabet<L2>
