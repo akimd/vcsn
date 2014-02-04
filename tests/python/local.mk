@@ -19,6 +19,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/aut-to-exp.py                             \
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
+  %D%/difference.py                             \
   %D%/expand.py                                 \
   %D%/factory.py                                \
   %D%/infiltration.py                           \
@@ -30,8 +31,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/ratexp.py                                 \
   %D%/shuffle.py                                \
   %D%/split.py                                  \
-  %D%/star.py                                   \
-  %D%/star-height.py
+  %D%/star-height.py                            \
+  %D%/star.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \

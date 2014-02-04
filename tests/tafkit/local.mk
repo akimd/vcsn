@@ -21,7 +21,6 @@
   %D%/de-bruijn.chk                             \
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
-  %D%/difference.chk                            \
   %D%/double-ring.chk                           \
   %D%/efsm.chk                                  \
   %D%/enumerate.chk                             \
