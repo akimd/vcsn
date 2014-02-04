@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
+
 import os, re, subprocess, sys, vcsn
 
 black = '' # `tput setaf 0`;
@@ -35,22 +37,14 @@ contexts = {
 
 def context_update():
   if ws not in contexts:
-    print("invalid weightset abbreviation:",  ws)
+    print("invalid weightset abbreviation:", ws)
   global name
   name = contexts[ws]
   if labels == 'letters':
     name = name.replace('law', 'lal')
   global ctx
   ctx = vcsn.context(name)
-  print "#", ctx, "(", labels, ",", ws, "->", name, ")"
-
-# sub rst_title($)
-# {
-#   my ($s) = @_;
-#   print "\n$s\n";
-#   $s =~ s/./-/g;
-#   print "$s\n";
-# }
+  print("#", ctx, "(", labels, ",", ws, "->", name, ")")
 
 #=item C<pp($in)>
 #
@@ -85,14 +79,14 @@ def check_rat_exp(fname):
     m = re.match('%labels: (.*)$', line)
     if m is not None:
       labels = m.group(1)
-      print "# label: ", labels
+      print("# label: ", labels)
       context_update()
       continue
 
     m = re.match('%weight: (.*)$', line)
     if m is not None:
       ws = m.group(1)
-      print "# ws: ", ws
+      print("# ws: ", ws)
       context_update()
       continue
 
@@ -119,10 +113,10 @@ def check_rat_exp(fname):
       global count
       count += 1
       if L == R:
-        print 'ok', count #, L, '==', R
+        print('ok', count)      #, L, '==', R
       else:
         fail += 1
-        print 'not ok', count, loc, L, '!=', R
+        print('not ok', count, loc, L, '!=', R)
       continue
 
     # !: Look for syntax errors.
@@ -133,13 +127,13 @@ def check_rat_exp(fname):
       L = pp(l)
       count += 1
       if L == err:
-        print 'ok', count #, l, '=>', L
+        print('ok', count)      #, l, '=>', L
       else:
         fail += 1
-        print 'not ok', count, loc, l, '=>', L, "<>", err
+        print('not ok', count, loc, l, '=>', L, "!=", err)
       continue
 
-    print loc, 'invalid input:', line
+    print(loc, 'invalid input:', line)
 
 check_rat_exp(sys.argv[1])
-print '1..'+str(count)
+print('1..'+str(count))
