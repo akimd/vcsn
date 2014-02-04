@@ -45,6 +45,11 @@ a = aut("no-final-states.gv")
 xfail('moore', a)
 xfail('signature', a)
 
+## Non-regression testcase: ensure that moore works and produces a
+## correct result even with no non-final states.
+all_states_final = vcsn.context('lal_char(a)_b').ratexp('a*').standard()
+check('moore', all_states_final, all_states_final.minimize('signature'))
+
 ## Minimize an intricate automaton into a linear one.
 intricate = vcsn.context('lal_char(abcdefghijk)_b') \
                 .ratexp('(a+b+c+d+e+f+g+h+i+j+k){10}') \

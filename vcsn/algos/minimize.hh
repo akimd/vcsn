@@ -98,6 +98,8 @@ namespace vcsn
       /// Make a new class with the given set of states.
       class_t make_class(set_t&& set, class_t number = class_invalid)
       {
+        assert(! set.empty());
+
         if (number == class_invalid)
           number = num_classes_++;
 
@@ -156,8 +158,10 @@ namespace vcsn
               finals.emplace_back(s);
             else
               nonfinals.emplace_back(s);
-          make_class(std::move(nonfinals));
-          make_class(std::move(finals));
+          if (! nonfinals.empty())
+            make_class(std::move(nonfinals));
+          if (! finals.empty())
+            make_class(std::move(finals));
         }
 
         bool go_on;
