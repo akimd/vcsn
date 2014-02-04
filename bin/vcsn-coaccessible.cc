@@ -17,7 +17,7 @@ struct coaccessible: vcsn_function
     auto res = vcsn::dyn::coaccessible(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 };

@@ -17,7 +17,7 @@ struct transpose: vcsn_function
     auto res = vcsn::dyn::transpose(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 

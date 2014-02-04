@@ -7,6 +7,15 @@
     4 [label = "a*"]
     5 [label = "b*"]
 */
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "2"]
+    1 [label = "3"]
+    2 [label = "4"]
+    3 [label = "5"]
+    4 [label = "6"]
+    5 [label = "7"]
+*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

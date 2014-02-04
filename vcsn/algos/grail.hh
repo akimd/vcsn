@@ -30,10 +30,9 @@ namespace vcsn
         , ws_(*aut_.weightset())
         , os_(out)
       {
-        // Name the states.
-        unsigned s = 0;
+        // Build a (now trivial) map from state to printed number.
         for (auto t: aut_.states())
-          states_.emplace(t, s++);
+          states_.emplace(t, t - 2);
       }
 
       // Should not be public, but needed by GCC 4.8.1.

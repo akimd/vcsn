@@ -22,7 +22,7 @@ struct derived_term: vcsn_function
     automaton res = vcsn::dyn::derived_term(exp, breaking);
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 };

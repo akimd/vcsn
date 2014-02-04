@@ -17,7 +17,7 @@ struct thompson: vcsn_function
     automaton aut = vcsn::dyn::thompson(exp);
 
     // Output.
-    *opts.out << aut << std::endl;
+    *opts.out << sort(aut) << std::endl;
     return 0;
   }
 };

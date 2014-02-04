@@ -2,6 +2,10 @@
     node [shape = box, style = rounded]
     0 [label = "0"]
 */
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "2"]
+*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

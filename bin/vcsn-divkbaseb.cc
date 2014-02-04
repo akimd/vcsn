@@ -22,7 +22,7 @@ try
     automaton aut = divkbaseb(ctx, k, b);
 
     // Output.
-    *opts.out << aut << std::endl;
+    *opts.out << sort(aut) << std::endl;
   }
 catch (const std::exception& e)
   {

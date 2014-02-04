@@ -24,6 +24,7 @@
 # include <vcsn/algos/read.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/sort.hh>
 # include <vcsn/algos/star.hh>
 # include <vcsn/algos/star-height.hh>
 # include <vcsn/algos/star-normal-form.hh>
@@ -266,6 +267,8 @@ namespace vcsn
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
+        REGISTER(sort, aut_t);
+        REGISTER(sort, taut_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);

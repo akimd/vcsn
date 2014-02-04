@@ -17,7 +17,7 @@ struct complete: vcsn_function
     auto res = vcsn::dyn::complete(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 };

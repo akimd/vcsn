@@ -117,7 +117,7 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F2
+    F3
   }
   {
     node [shape = circle]
@@ -129,10 +129,10 @@ digraph
   I0 -> 0
   0 -> F0 [label = "<3.4>"]
   0 -> 1 [label = "<3.4>a, <3.4>b"]
-  0 -> 3 [label = "<3.4>c"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  3 -> 2 [label = "c"]
+  0 -> 2 [label = "<3.4>c"]
+  1 -> 3 [label = "b"]
+  2 -> 3 [label = "c"]
+  3 -> F3
 }
 EOF
 
@@ -145,7 +145,7 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F2
+    F3
   }
   {
     node [shape = circle]
@@ -156,10 +156,10 @@ digraph
   }
   I0 -> 0
   0 -> F0 [label = "<3.4>"]
-  0 -> 1 [label = "a, b"]
-  0 -> 3 [label = "c"]
-  1 -> 2 [label = "b"]
-  2 -> F2 [label = "<3.4>"]
-  3 -> 2 [label = "c"]
+  0 -> 1 [label = "<3.4>a, <3.4>b"]
+  0 -> 2 [label = "<3.4>c"]
+  1 -> 3 [label = "b"]
+  2 -> 3 [label = "c"]
+  3 -> F3
 }
 EOF

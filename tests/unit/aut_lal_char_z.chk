@@ -59,15 +59,15 @@ digraph
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    F0
+    F1
   }
   {
     node [shape = circle]
-    0 [color = DimGray]
     1 [color = DimGray]
+    2 [color = DimGray]
   }
-  0 -> F0 [label = "<10>", color = DimGray]
-  0 -> 1 [label = "a", color = DimGray]
+  1 -> F1 [label = "<10>", color = DimGray]
+  1 -> 2 [label = "a", color = DimGray]
 }
 digraph
 {
@@ -75,14 +75,14 @@ digraph
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    F0
+    F1
   }
   {
     node [shape = circle]
-    0 [color = DimGray]
     1 [color = DimGray]
+    2 [color = DimGray]
   }
-  0 -> F0 [label = "<10>", color = DimGray]
+  1 -> F1 [label = "<10>", color = DimGray]
 }
 EOF
 run 0 out.exp tests/unit/aut_lal_char_z

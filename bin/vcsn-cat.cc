@@ -13,7 +13,7 @@ struct cat: vcsn_function
     // Input.
     auto aut = read_automaton(opts);
     // Output.
-    *opts.out << aut << std::endl;
+    *opts.out << sort(aut) << std::endl;
     return 0;
   }
 

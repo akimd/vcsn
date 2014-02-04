@@ -26,7 +26,7 @@ struct infiltration: vcsn_function
       }
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 };

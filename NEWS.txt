@@ -4,6 +4,19 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-18
+** state renumbering is not automatic any longer.
+In view of several forthcoming in-place algorithms on automata including
+edit, we changed the automaton output code not to automatically renumber
+states at the static, dyn and Python levels.  A new "sort" algorithm is
+available to renumber states (breadth-first and then by outgoing transition
+label) and reorder transitions (by label) in a predictable way, when
+explicitly requested.  Tafkit output is automatically sorted.
+
+Having a predictable numbering will enable future optimizations on automaton
+product and other algorithms accessing all the transition from a given state
+by label.
+
 * 2014-02-14
 ** double_ring: New Python binding.
 Returns a double ring automaton.

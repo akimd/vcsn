@@ -26,7 +26,7 @@ try
     automaton aut = double_ring(ctx, n, f);
 
     // Output.
-    *opts.out << aut << std::endl;
+    *opts.out << sort(aut) << std::endl;
   }
 catch (const std::exception& e)
   {

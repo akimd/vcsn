@@ -235,6 +235,11 @@ struct automaton
     return vcsn::dyn::shuffle(aut_, rhs.aut_);
   }
 
+  automaton sort() const
+  {
+    return vcsn::dyn::sort(aut_);
+  }
+
   automaton standard() const
   {
     return vcsn::dyn::standard(aut_);
@@ -587,6 +592,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("shortest", &automaton::shortest)
     .def("shuffle", &automaton::shuffle)
+    .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)
     .def("sum", &automaton::sum)

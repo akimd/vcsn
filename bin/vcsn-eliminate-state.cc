@@ -22,7 +22,7 @@ struct eliminate_state: vcsn_function
     auto res = vcsn::dyn::eliminate_state(aut, n);
 
     // Output.
-    *opts.out << res << std::endl;
+    *opts.out << sort(res) << std::endl;
     return 0;
   }
 };

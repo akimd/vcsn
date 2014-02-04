@@ -3,6 +3,11 @@
     0 [label = "\\e+a"]
     1 [label = "\\e"]
 */
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "2"]
+    1 [label = "3"]
+*/
 digraph
 {
   vcsn_context = "lal_char(abcd)_b"

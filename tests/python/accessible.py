@@ -18,7 +18,7 @@ def check_accessible(input, output):
     input = vcsn.automaton(input)
   if isinstance(output, str):
     output = vcsn.automaton(output)
-  CHECK_EQ(input.accessible(), output)
+  CHECK_EQ(input.accessible().sort(), output.sort())
 
 ## ----------------------------- ##
 ## Regression: standard(ab+cd).  ##
