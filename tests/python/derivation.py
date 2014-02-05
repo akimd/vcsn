@@ -1,20 +1,18 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
+
 import vcsn
 from test import *
 
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
-def check(re, letter, exp, breaking = False):
-    if re[:3] <> "(?@":
-        re = "(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)" + re
+def check(re, s, exp, breaking = False):
+    "Check that d/ds(re) = exp."
     r = c.ratexp(re)
-    eff = str(r.derivation(letter, breaking))
-    print r, "/d",letter, " = ", eff
-    if eff == exp:
-        PASS()
-    else:
-        FAIL(exp + " != " + eff)
+    eff = r.derivation(s, breaking)
+    print("d/d{}({}) = {}".format(s, r, eff));
+    CHECK_EQ(exp, str(eff))
 
 
 ##########################
