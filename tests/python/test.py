@@ -4,7 +4,11 @@ from difflib import unified_diff as diff
 import inspect, os, sys
 
 def here():
-    finfo = inspect.getframeinfo(inspect.currentframe().f_back.f_back)
+    # Find the top-level call.
+    frame = inspect.currentframe();
+    while frame.f_back:
+        frame = frame.f_back
+    finfo = inspect.getframeinfo(frame)
     return finfo.filename + ":" + str(finfo.lineno)
 
 count = 0
@@ -17,7 +21,8 @@ medir = sys.argv[0].replace(".py", ".dir")
 def FAIL(*msg):
     global count
     count += 1
-    print('not ok ', count, here() + ":", *msg)
+    print('not ok ', count, *msg)
+    print(here() + ": fail:", *msg)
 
 def PASS(*msg):
     global count
@@ -30,10 +35,13 @@ def CHECK_EQ(expected, effective):
         PASS()
     else:
         FAIL(str(expected) + " != " + str(effective))
+        if expected[:-1] != '\n':
+            expected += '\n'
+        if effective[:-1] != '\n':
+            effective += '\n'
         sys.stdout.writelines(diff(str(expected).splitlines(1),
                                    str(effective).splitlines(1),
                                    fromfile='expected', tofile='effective'))
-        print()
 
 def PLAN():
     print('1..'+str(count))
