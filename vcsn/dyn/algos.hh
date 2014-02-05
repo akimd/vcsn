@@ -138,6 +138,12 @@ namespace vcsn
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);
 
+    /// First order development of a \a exp.
+    /// \param exp              the input ratexp
+    /// \param use_spontaenous  whether to generate "spontaneous" terms
+    ///                         instead of recursive development
+    polynomial first_order(const ratexp& exp, bool use_spontaenous = false);
+
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
 

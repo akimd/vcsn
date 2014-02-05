@@ -354,6 +354,11 @@ struct ratexp
     return vcsn::dyn::expand(r_);
   }
 
+  polynomial first_order(bool breaking = false) const
+  {
+    return vcsn::dyn::first_order(r_, breaking);
+  }
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -517,6 +522,7 @@ weight ratexp::constant_term() const
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
@@ -594,6 +600,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)
+    .def("first_order", &ratexp::first_order, first_order())
     .def("format", &ratexp::format)
     .def("intersection", &ratexp::intersection)
     .def("is_equivalent", &ratexp::is_equivalent)

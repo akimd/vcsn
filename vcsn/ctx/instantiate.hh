@@ -10,6 +10,7 @@
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/expand.hh>
+# include <vcsn/algos/first-order.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
@@ -232,6 +233,7 @@ namespace vcsn
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(efsm, taut_t, std::ostream);
         REGISTER(expand, rs_t);
+        REGISTER(first_order, rs_t, bool);
         REGISTER(info, aut_t, std::ostream);
         REGISTER(info, taut_t, std::ostream);
         REGISTER(info_exp, rs_t, std::ostream);

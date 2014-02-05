@@ -25,6 +25,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/eliminate-state.py                        \
   %D%/expand.py                                 \
   %D%/factory.py                                \
+  %D%/first-order.py                            \
   %D%/infiltration.py                           \
   %D%/info.py                                   \
   %D%/is-equivalent.py                          \

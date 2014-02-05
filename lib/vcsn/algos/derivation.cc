@@ -1,5 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/derivation.hh>
+#include <vcsn/algos/first-order.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
@@ -27,6 +28,17 @@ namespace vcsn
     derived_term(const ratexp& e, bool breaking)
     {
       return detail::derived_term_registry().call(e, breaking);
+    }
+
+    /*---------------------------.
+    | first_order(exp, string).  |
+    `---------------------------*/
+    REGISTER_DEFINE(first_order);
+
+    polynomial
+    first_order(const ratexp& e, bool breaking)
+    {
+      return detail::first_order_registry().call(e, breaking);
     }
 
     /*-------------.

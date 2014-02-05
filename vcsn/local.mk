@@ -29,6 +29,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/enumerate.hh                        \
   %D%/algos/eval.hh                             \
   %D%/algos/expand.hh                           \
+  %D%/algos/first-order.hh                      \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/info.hh                             \
