@@ -381,6 +381,11 @@ struct ratexp
     return vcsn::dyn::is_valid(r_);
   }
 
+  automaton linear(bool breaking = false) const
+  {
+    return vcsn::dyn::linear(r_, breaking);
+  }
+
   polynomial split() const
   {
     return vcsn::dyn::split(r_);
@@ -523,6 +528,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(linear, linear, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
@@ -605,6 +611,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def("intersection", &ratexp::intersection)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
+    .def("linear", &ratexp::linear, linear())
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
     .def("star_height", &ratexp::star_height)

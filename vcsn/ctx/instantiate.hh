@@ -250,6 +250,7 @@ namespace vcsn
         REGISTER(left_mult, aut_t, ws_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_exp, rs_t);
+        REGISTER(linear, rs_t, bool);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, Ctx);
         REGISTER(make_context, Ctx);

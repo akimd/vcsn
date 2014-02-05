@@ -27,7 +27,20 @@ namespace vcsn
     automaton
     derived_term(const ratexp& e, bool breaking)
     {
-      return detail::derived_term_registry().call(e, breaking);
+      return getenv("VCSN_LINEAR")
+        ? linear(e, breaking)
+        : detail::derived_term_registry().call(e, breaking);
+    }
+
+    /*--------------.
+    | linear(exp).  |
+    `--------------*/
+
+    REGISTER_DEFINE(linear);
+    automaton
+    linear(const ratexp& e, bool breaking)
+    {
+      return detail::linear_registry().call(e, breaking);
     }
 
     /*---------------------------.

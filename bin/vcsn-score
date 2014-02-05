@@ -32,9 +32,18 @@ del auts
 
 # derived_term
 e = "(a+b)*b(<2>a+<2>b){150}"
+r = vcsn.context('lal_char(ab)_z').ratexp(e)
+bench('r.derived_term()', 'r = {}   on [ab]   -> Z'.format(e),
+      lambda: r.derived_term())
+
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
 bench('r.derived_term()', 'r = {}   on [a-z]  -> Z'.format(e),
       lambda: r.derived_term())
+
+# linear
+r = vcsn.context('lal_char(a-z)_z').ratexp(e)
+bench('r.linear()', 'r = {}   on [a-z]  -> Z'.format(e),
+      lambda: r.linear())
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"

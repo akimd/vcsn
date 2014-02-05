@@ -227,6 +227,11 @@ namespace vcsn
     /// The lifted LAO rational expression from \a e.
     ratexp lift(const ratexp& e);
 
+    /// FIXME: The derived-term automaton of \a e.
+    /// \param e         the input ratexp
+    /// \param breaking  whether to split the result
+    automaton linear(const ratexp& e, bool breaking = false);
+
     /// Build a context from its name.
     context make_context(const std::string& name);
 
