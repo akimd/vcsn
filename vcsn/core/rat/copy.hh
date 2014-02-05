@@ -75,6 +75,7 @@ namespace vcsn
       virtual void visit(const Type ## _t& v)
 
       DEFINE(intersection) { copy_nary(v); }
+      DEFINE(ldiv)    { copy_nary(v); }
       DEFINE(prod)         { copy_nary(v); }
       DEFINE(shuffle)      { copy_nary(v); }
       DEFINE(sum)          { copy_nary(v); }

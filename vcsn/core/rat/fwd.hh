@@ -32,6 +32,7 @@ namespace vcsn
       atom,
       sum,
       prod,
+      ldiv,
       intersection,
       shuffle,
       star,
@@ -58,6 +59,7 @@ namespace vcsn
     constexpr bool is_nary(type_t t)
     {
       return (t == type_t::intersection
+              || t == type_t::ldiv
               || t == type_t::prod
               || t == type_t::shuffle
               || t == type_t::sum);
@@ -115,6 +117,9 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using intersection = nary<type_t::intersection, Label, Weight>;
+
+    template <typename Label, typename Weight>
+    using ldiv = nary<type_t::ldiv, Label, Weight>;
 
     template <typename Label, typename Weight>
     using shuffle = nary<type_t::shuffle, Label, Weight>;

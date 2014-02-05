@@ -48,6 +48,7 @@ namespace vcsn
           one_          = "\\varepsilon";
           lmul_         = "\\,";
           rmul_         = "\\,";
+          ldiv_    = " \\backslash ";
         }
       else if (format_ == "text")
         {
@@ -67,6 +68,7 @@ namespace vcsn
           one_          = "\\e";
           lmul_         = "";
           rmul_         = "";
+          ldiv_    = "{\\}";
         }
       else
         raise("invalid output format for ratexp: ", str_escape(format));
@@ -87,6 +89,7 @@ namespace vcsn
             CASE(atom);
             CASE(complement);
             CASE(intersection);
+            CASE(ldiv);
             CASE(lweight);
             CASE(one);
             CASE(prod);

@@ -59,6 +59,7 @@ namespace vcsn
       DEFINE(atom);
       DEFINE(complement)    { print(v, complement_); }
       DEFINE(intersection)  { print(v, intersection_); }
+      DEFINE(ldiv)     { print(v, ldiv_); }
       DEFINE(lweight);
       DEFINE(one);
       DEFINE(prod)         { print(v, product_); }
@@ -82,6 +83,7 @@ namespace vcsn
         sum,
         shuffle,
         intersection,
+        ldiv,
         prod,
         lweight,
         rweight,
@@ -138,6 +140,8 @@ namespace vcsn
       /// External product.
       const char* lmul_ = nullptr;
       const char* rmul_ = nullptr;
+      /// Quotient.
+      const char* ldiv_ = nullptr;
       /// The ratexp operators.
       const char* star_ = nullptr;
       const char* complement_ = nullptr;

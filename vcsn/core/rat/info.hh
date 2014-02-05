@@ -32,6 +32,7 @@ namespace vcsn
       DEFINE(atom);
       DEFINE(complement);
       DEFINE(intersection);
+      DEFINE(ldiv);
       DEFINE(lweight);
       DEFINE(one);
       DEFINE(prod);

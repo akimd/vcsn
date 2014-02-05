@@ -79,6 +79,11 @@ namespace dyn
       return rs_.shuffle(down(l), down(r));
     }
 
+    DEFINE::ldiv(value_t l, value_t r) const -> value_t
+    {
+      return rs_.ldiv(down(l), down(r));
+    }
+
     DEFINE::concat(value_t l, value_t r) const -> value_t
     {
       return rs_.concat(down(l), down(r));

@@ -222,6 +222,24 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::ldiv(value_t l, value_t r) const
+    -> value_t
+  {
+    value_t res = nullptr;
+    // 0\E = 0{c}.
+    if (l->type() == type_t::zero)
+      res = complement(zero());
+    // 1\E = E.
+    else if (l->type() == type_t::one)
+      res = r;
+    // E\0 = 0.
+    else if (r->type() == type_t::zero)
+      res = r;
+    else
+      res = std::make_shared<ldiv_t>(ratexps_t{l, r});
+    return res;
+  }
+
   DEFINE::shuffle(value_t l, value_t r) const
     -> value_t
   {

@@ -33,6 +33,8 @@ namespace vcsn
 
       using super_type = typename ratexpset_t::const_visitor;
 
+      constexpr static const char* me() { return "constant_term"; }
+
       constant_term_visitor(const ratexpset_t& rs)
         : ws_(*rs.weightset())
       {}
@@ -81,6 +83,8 @@ namespace vcsn
           res = ws_.mul(res, constant_term(c));
         res_ = std::move(res);
       }
+
+      VCSN_RAT_UNSUPPORTED(ldiv)
 
       VCSN_RAT_VISIT(intersection, v)
       {

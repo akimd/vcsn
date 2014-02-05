@@ -40,17 +40,18 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;	\
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(sum)          { visit_nary(v); }
-      DEFINE(prod)         { visit_nary(v); }
-      DEFINE(shuffle)      { visit_nary(v); }
-      DEFINE(intersection) { visit_nary(v); }
-      DEFINE(star)         { ++height_; v.sub()->accept(*this); }
-      DEFINE(complement)   { v.sub()->accept(*this); }
-      DEFINE(one)          { (void) v; }
-      DEFINE(zero)         { (void) v; }
       DEFINE(atom)         { (void) v; }
+      DEFINE(complement)   { v.sub()->accept(*this); }
+      DEFINE(intersection) { visit_nary(v); }
+      DEFINE(ldiv)         { visit_nary(v); }
       DEFINE(lweight)      { v.sub()->accept(*this); }
+      DEFINE(one)          { (void) v; }
+      DEFINE(prod)         { visit_nary(v); }
       DEFINE(rweight)      { v.sub()->accept(*this); }
+      DEFINE(shuffle)      { visit_nary(v); }
+      DEFINE(star)         { ++height_; v.sub()->accept(*this); }
+      DEFINE(sum)          { visit_nary(v); }
+      DEFINE(zero)         { (void) v; }
 
 # undef DEFINE
 

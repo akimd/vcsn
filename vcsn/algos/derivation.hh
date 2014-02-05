@@ -43,6 +43,8 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
 
+      constexpr static const char* me() { return "derivation"; }
+
       derivation_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
@@ -64,6 +66,8 @@ namespace vcsn
           res = rs_.add(res, rs_.lmul(m.second, m.first));
          return res;
       }
+
+      VCSN_RAT_UNSUPPORTED(ldiv)
 
       VCSN_RAT_VISIT(zero,)
       {

@@ -60,6 +60,20 @@ check('(a*&a*){c}', 'b\z{c} + c\z{c} + a(a*&a*){c}')
 check('(<x>(<y>a)*<z>){c}', 'b\z{c} + c\z{c} + a(<y>a)*{c}')
 check('a{c}{c}', 'a\e{c}{c} + b\z{c}{c} + c\z{c}{c}')
 
+# Lquotient
+check('\e{\}\z', '\z')
+check('\e{\}\e', '\e')
+check('\e{\}abc', 'abc')
+check('a{\}a', '\e')
+check('a{\}b', '\z')
+
+check('a{\}<x>a', '<x>\e')
+check('<x>a{\}<y>a', '<x{\}y>\e')
+check('a{\}(<x>a)*', '<x>\e + a<xx>(<x>a)*')
+check('a*{\}a', '\e + a')
+check('a*{\}a*', '<\e*>\e + a<\e*>a*')
+check('(<x>a)*{\}(<y>a)*', '<(x{\}y)*>\e + a<(x{\}y)*y>(<y>a)*')
+
 
 ## -------------------- ##
 ## Classical examples.  ##

@@ -132,8 +132,9 @@ namespace vcsn
         return std::move(res_);
       }
 
-      VCSN_RAT_UNSUPPORTED(intersection)
       VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(intersection)
+      VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(shuffle)
 
       VCSN_RAT_VISIT(zero,)

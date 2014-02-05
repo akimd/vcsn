@@ -1,8 +1,8 @@
 #ifndef VCSN_ALGOS_FIRST_ORDER_HH
 # define VCSN_ALGOS_FIRST_ORDER_HH
 
-# include <stack>
 # include <map>
+# include <stack>
 # include <unordered_map>
 
 # include <vcsn/core/rat/visitor.hh>
@@ -61,9 +61,9 @@ namespace vcsn
         polys_t polynomials;
       };
 
-      first_order_visitor(const ratexpset_t& rs, bool use_spontaenous = false)
+      first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = false)
         : rs_(rs)
-        , use_spontaenous_(use_spontaenous)
+        , use_spontaneous_(use_spontaneous)
       {}
 
       void operator()(const ratexp_t& v)
@@ -161,6 +161,23 @@ namespace vcsn
           ps_.add_weight(lhs.polynomials[p.first], p.second);
       }
 
+      value_t& lmul_(const weight_t& w, value_t& res) const
+      {
+        res.constant = ws_.mul(w, res.constant);
+        for (auto& p: res.polynomials)
+          p.second = ps_.lmul(w, p.second);
+        return res;
+      }
+
+      value_t& ldiv_(const weight_t& w, value_t& res) const
+      {
+        res.constant = ws_.ldiv(w, res.constant);
+        for (auto& p: res.polynomials)
+          for (auto& m: p.second)
+            m.second = ws_.ldiv(w, m.second);
+        return res;
+      }
+
       VCSN_RAT_VISIT(zero,)
       {
         res_ = {ws_.zero(), polys_t{}};
@@ -209,6 +226,92 @@ namespace vcsn
 
                 // (iii) c(fo(lr)) = c(l).c(r)
                 res_.constant = ws_.mul(res_.constant, rhs.constant);
+              }
+          }
+      }
+
+      label_t one_(std::true_type)
+      {
+        return rs_.labelset()->one();
+      }
+
+      label_t one_(std::false_type)
+      {
+        raise("first_order: quotient requires LAN");
+      }
+
+      VCSN_RAT_VISIT(ldiv, e)
+      {
+        assert(e.size() == 2);
+#if DEBUG
+        std::cerr << "Start: ";
+        rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
+#endif
+        // Special case the quotient of stars.
+        if (!use_spontaneous_
+            && e[0]->type() == type_t::star
+            && e[1]->type() == type_t::star)
+          {
+            auto l = std::dynamic_pointer_cast<const star_t>(e[0]);
+            auto r = std::dynamic_pointer_cast<const star_t>(e[1]);
+            auto e = l->sub();
+            auto f = r->sub();
+            // (e*) \ (f*) = (e\f)* . f*
+            auto q = rs_.mul(rs_.star(rs_.ldiv(e, f)), r);
+            res_ = first_order(q);
+          }
+        else
+          {
+            value_t lhs = first_order(e[0]);
+            value_t rhs = first_order(e[1]);
+#if DEBUG
+            std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
+            std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+#endif
+            res_ = {ws_.zero(), polys_t{}};
+            // lp: (label, left_polynomial)
+            if (!ws_.is_zero(lhs.constant))
+              add_(res_, ldiv_(lhs.constant, rhs));
+            /// FIXME: We really want some means to iterate on two
+            /// maps simultaneously, which matching keys.  Explore
+            /// this: <http://stackoverflow.com/questions/13840998>.
+            for (const auto& lp: lhs.polynomials)
+              {
+                auto i = rhs.polynomials.find(lp.first);
+                if (i != std::end(rhs.polynomials))
+                  {
+                    // rp: (label, right_polynomial).
+                    const auto& rp = *i;
+                    for (const auto& lm: lp.second)
+                      for (const auto& rm: rp.second)
+                        {
+                          // Now, recursively develop the quotient of
+                          // monomials, directly in res_.
+                          auto q = rs_.ldiv(lm.first, rm.first);
+                          if (use_spontaneous_)
+                            {
+                              static auto one =
+                                one_(std::integral_constant<bool,
+                                     context_t::is_lan>());
+                              auto w = ws_.ldiv(lm.second, rm.second);
+                              ps_.add_weight(res_.polynomials[one],
+                                             q, w);
+                            }
+                          else
+                            {
+#if DEBUG
+                              std::cerr << "Rec: (";
+#endif
+                              auto p = first_order(q);
+#if DEBUG
+                              print_(std::cerr, p) << '\n';
+#endif
+
+                              // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
+                              add_(res_, ldiv_(lm.second, lmul_(rm.second, p)));
+                            }
+                        }
+                  }
               }
           }
       }
@@ -326,7 +429,7 @@ namespace vcsn
       // private:
       ratexpset_t rs_;
       /// Whether to use spontaneous transitions.
-      bool use_spontaenous_;
+      bool use_spontaneous_;
       /// Shorthand to the weightset.
       weightset_t ws_ = *rs_.weightset();
       polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
@@ -341,9 +444,9 @@ namespace vcsn
   inline
   rat::ratexp_polynomial_t<RatExpSet>
   first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-              bool use_spontaenous = false)
+              bool use_spontaneous = false)
   {
-    rat::first_order_visitor<RatExpSet> first_order{rs, use_spontaenous};
+    rat::first_order_visitor<RatExpSet> first_order{rs, use_spontaneous};
     return first_order.first_order_as_polynomial(e);
   }
 
@@ -354,18 +457,18 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Bool>
       polynomial
-      first_order(const ratexp& exp, bool use_spontaenous = false)
+      first_order(const ratexp& exp, bool use_spontaneous = false)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.get_ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
                                first_order<RatExpSet>(rs, e.ratexp(),
-                                                      use_spontaenous));
+                                                      use_spontaneous));
       }
 
       REGISTER_DECLARE(first_order,
-                       (const ratexp& e, bool use_spontaenous) -> polynomial);
+                       (const ratexp& e, bool use_spontaneous) -> polynomial);
     }
   }
 
@@ -399,9 +502,9 @@ namespace vcsn
                                       vcsn::hash<ratexpset_t>,
                                       vcsn::equal_to<ratexpset_t>>;
 
-      linearer(const ratexpset_t& rs, bool use_spontaenous = false)
+      linearer(const ratexpset_t& rs, bool use_spontaneous = false)
         : rs_(rs)
-        , use_spontaenous_(use_spontaenous)
+        , use_spontaneous_(use_spontaneous)
         , res_{rs_.context()}
       {}
 
@@ -438,7 +541,7 @@ namespace vcsn
             // Also loads todo_ via state().
             res_.set_initial(state(p.first), p.second);
         }
-        rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaenous_};
+        rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
 
         while (!todo_.empty())
           {
@@ -487,7 +590,7 @@ namespace vcsn
       ratexpset_t rs_;
       /// ratexp -> state.
       smap map_;
-      bool use_spontaenous_ = false;
+      bool use_spontaneous_ = false;
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.
@@ -500,9 +603,9 @@ namespace vcsn
   inline
   mutable_automaton<typename RatExpSet::context_t>
   linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
-         bool use_spontaenous = false)
+         bool use_spontaneous = false)
   {
-    detail::linearer<RatExpSet> dt{rs, use_spontaenous};
+    detail::linearer<RatExpSet> dt{rs, use_spontaneous};
     auto res = dt(r);
     if (getenv("VCSN_ORIGINS"))
       dt.print(std::cout, dt.origins());
@@ -516,15 +619,15 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Book>
       automaton
-      linear(const ratexp& exp, bool use_spontaenous = false)
+      linear(const ratexp& exp, bool use_spontaneous = false)
       {
         const auto& r = exp->as<RatExpSet>();
         return make_automaton(linear(r.get_ratexpset(),
-                                     r.ratexp(), use_spontaenous));
+                                     r.ratexp(), use_spontaneous));
       }
 
       REGISTER_DECLARE(linear,
-                       (const ratexp& e, bool use_spontaenous) -> automaton);
+                       (const ratexp& e, bool use_spontaneous) -> automaton);
     }
   }
 } // vcsn::

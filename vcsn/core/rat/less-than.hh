@@ -72,6 +72,7 @@ namespace vcsn
       VISIT(atom);
       VISIT(complement);
       VISIT(intersection);
+      VISIT(ldiv);
       VISIT(lweight);
       VISIT(one);
       VISIT(prod);

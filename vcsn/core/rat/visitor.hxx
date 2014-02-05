@@ -30,6 +30,12 @@ namespace vcsn
         t->accept(*this);
     }
 
+    VISIT(ldiv, v)
+    {
+      for (auto t : v)
+        t->accept(*this);
+    }
+
     VISIT(sum, v)
     {
       for (auto t : v)

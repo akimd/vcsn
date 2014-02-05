@@ -190,8 +190,9 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_UNSUPPORTED(shuffle)
       VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(ldiv)
+      VCSN_RAT_UNSUPPORTED(shuffle)
 
       VCSN_RAT_VISIT(star, e)
       {

@@ -76,8 +76,9 @@ namespace vcsn
         final_ = final;
       }
 
-      VCSN_RAT_UNSUPPORTED(intersection)
       VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(intersection)
+      VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(shuffle)
 
       VCSN_RAT_VISIT(prod, e)

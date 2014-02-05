@@ -19,6 +19,7 @@ namespace vcsn
       complement = 0;
       intersection = 0;
       lweight = 0;
+      ldiv = 0;
       one = 0;
       prod = 0;
       rweight = 0;
@@ -57,6 +58,14 @@ namespace vcsn
     VISIT(shuffle)
     {
       ++shuffle;
+      for (const auto& c: v)
+        c->accept(*this);
+    }
+
+
+    VISIT(ldiv)
+    {
+      ++ldiv;
       for (const auto& c: v)
         c->accept(*this);
     }

@@ -82,6 +82,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "%"     return TOK(PERCENT);
   "+"     return TOK(PLUS);
   "."     return TOK(DOT);
+  "{\\}"  return TOK(BACKSLASH);
   ","     return TOK(COMMA);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);

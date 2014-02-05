@@ -115,6 +115,7 @@
 
 %token
   AMPERSAND  "&"
+  BACKSLASH  "{\\}"
   COLON      ":"
   COMMA      ","
   COMPLEMENT "{c}"
@@ -139,6 +140,7 @@
 %left "+"
 %left ":" "%"
 %left "&"
+%right "{\\}"
 %left "."
 %right "weight" // Match longest series of "weight".
 %precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
@@ -172,6 +174,7 @@ exp:
 | exp "&" exp                 { $$ = MAKE(intersection, $1.exp, $3.exp); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
+| exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(intersection,
                                           $1.exp, MAKE(complement, $3.exp)); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
