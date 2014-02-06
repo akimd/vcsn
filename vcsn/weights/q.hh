@@ -3,9 +3,6 @@
 
 # include <string>
 # include <ostream>
-# include <stdexcept>
-# include <boost/lexical_cast.hpp>
-# include <sstream>
 
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
@@ -98,7 +95,8 @@ namespace vcsn
     static value_t add(const value_t l, const value_t r)
     {
       unsigned int cm = lcm(l.den, abs(r.den));
-      return value_t{l.num * int (cm / l.den) + r.num * int (cm / r.den), cm}.reduce();
+      return value_t{l.num * int (cm / l.den) + r.num * int (cm / r.den),
+                     cm}.reduce();
     }
 
     static value_t mul(const value_t l, const value_t r)
@@ -106,14 +104,14 @@ namespace vcsn
       return value_t{l.num * r.num, l.den * r.den}.reduce();
     }
 
-    static value_t star(const value_t v)
+    value_t star(const value_t v) const
     {
       // Bad casting when v.den is too big
       if (abs(v.num) < v.den)
         // No need to reduce: numerator and denominators are primes.
         return {int(v.den), v.den - v.num};
       else
-        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
+        raise(sname(), ": star: invalid value: ", format(*this, v));
     }
 
     static bool is_special(const value_t) // C++11: cannot be constexpr.
@@ -239,14 +237,6 @@ namespace vcsn
             o << '/' << v.den;
         }
       return o;
-    }
-
-    static std::string
-    format(const value_t v)
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
     }
   };
 

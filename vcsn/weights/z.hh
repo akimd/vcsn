@@ -1,13 +1,12 @@
 #ifndef VCSN_WEIGHTS_Z_HH
 # define VCSN_WEIGHTS_Z_HH
 
-# include <string>
 # include <ostream>
-# include <stdexcept>
-# include <boost/lexical_cast.hpp>
-# include <sstream>
+# include <string>
 
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/misc/stream.hh>
 # include <vcsn/weights/b.hh>
 # include <vcsn/weights/fwd.hh>
 
@@ -61,13 +60,13 @@ namespace vcsn
       return l * r;
     }
 
-    static value_t
-    star(const value_t v)
+    value_t
+    star(const value_t v) const
     {
       if (is_zero(v))
         return one();
       else
-        throw std::domain_error("z: star: invalid value: " + format(v));
+        raise("z: star: invalid value: ", format(*this, v));
     }
 
     constexpr static bool is_special(value_t)
@@ -143,14 +142,6 @@ namespace vcsn
           const std::string& = "text")
     {
       return o << v;
-    }
-
-    static std::string
-    format(const value_t v)
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
     }
   };
 

@@ -22,6 +22,7 @@ namespace vcsn LIBVCSN_API
   std::string
   bracketed(std::istream& i, const char lbracket, const char rbracket);
 
+  /// Parse str via vs.conv.
   template <typename ValueSet, typename... Args>
   auto
   conv(const ValueSet& vs, const std::string& str, Args&&... args)
@@ -57,6 +58,18 @@ namespace vcsn LIBVCSN_API
   /// trailing punctuation or spaces.
   ATTRIBUTE_NORETURN
   void fail_reading(std::istream& is, const std::string& explanation);
+
+  /// Format v via vs.print.
+  template <typename ValueSet, typename... Args>
+  auto
+  format(const ValueSet& vs,
+         const typename ValueSet::value_t& v, Args&&... args)
+    -> std::string
+  {
+    std::ostringstream o;
+    vs.print(o, v, std::forward<Args>(args)...);
+    return o.str();
+  }
 
   /// Return the contents of \a file.
   std::string get_file_contents(const std::string& file);

@@ -559,7 +559,9 @@ namespace vcsn
       std::ostringstream o;
       o << src_of(t)
         << " -- "
-        << lbracket << weightset()->format(weight_of(t)) << rbracket
+        << lbracket;
+      weightset()->print(o, weight_of(t))
+        << rbracket
         << labelset()->format(label_of(t))
         << " --> "
         << dst_of(t);

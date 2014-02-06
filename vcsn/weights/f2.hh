@@ -3,8 +3,6 @@
 
 # include <cassert>
 # include <ostream>
-# include <stdexcept>
-# include <string>
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
@@ -143,13 +141,7 @@ namespace vcsn
     print(std::ostream& o, const value_t v,
           const std::string& = "text")
     {
-      return o << format(v);
-    }
-
-    static std::string
-    format(const value_t v)
-    {
-      return v ? "1" : "0";
+      return o << (v ? '1' : '0');
     }
   };
 

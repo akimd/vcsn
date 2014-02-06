@@ -38,8 +38,8 @@ check_mutable_automaton()
   vcsn::dot(aut2, std::cout) << '\n';
 
 # define ASSERT_WEIGHT(Aut, Src, Dst, Lbl, Wgt)                         \
-  ASSERT_EQ(Aut.weightset()                                             \
-            ->format(Aut.weight_of(Aut.get_transition(Src, Dst, Lbl))), \
+  ASSERT_EQ(format(*Aut.weightset(),                                    \
+                   Aut.weight_of(Aut.get_transition(Src, Dst, Lbl))),   \
             Wgt);
 
   // Check has_transition and get_transition.

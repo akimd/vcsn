@@ -67,7 +67,6 @@ namespace detail
     virtual value_t conv(std::istream& s) const = 0;
 
     virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
-    std::string format(const value_t v) const;
   };
 
   /// Wrapper around a ratexpset.

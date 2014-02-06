@@ -170,7 +170,7 @@ namespace vcsn
       constant_term(e);
       return true;
     }
-    catch (std::domain_error e)
+    catch (const std::runtime_error&)
     {
       return false;
     }

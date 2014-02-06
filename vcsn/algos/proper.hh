@@ -76,7 +76,7 @@ namespace vcsn
          -- non_starrable / absval:
          is_valid is called before launching the algorithm.
          @param aut The automaton in which epsilon-transitions will be removed
-         @throw domain_error if the input is not valid
+         @throw runtime_error if the input is not valid
       */
       static void proper_here(automaton_t& aut, bool prune = true)
       {
@@ -129,7 +129,7 @@ namespace vcsn
             p.in_situ_remover_();
             return true;
           }
-        catch (const std::domain_error&)
+        catch (const std::runtime_error&)
           {
             return false;
           }

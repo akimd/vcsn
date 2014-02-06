@@ -9,17 +9,6 @@ namespace dyn
 {
   namespace detail
   {
-    /*-----------------.
-    | ratexpset_base.  |
-    `-----------------*/
-    inline
-    std::string ratexpset_base::format(const value_t v) const
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
-    }
-
     /*--------------------.
     | ratexpset_wrapper.  |
     `--------------------*/

@@ -21,8 +21,8 @@ bool check_bool(const WeightSet& ws, bool one_plus_one)
   nerrs += check_common(ws);
 
   // format.
-  ASSERT_EQ(ws.format(ws.zero()), "0");
-  ASSERT_EQ(ws.format(ws.one()), "1");
+  ASSERT_EQ(format(ws, ws.zero()), "0");
+  ASSERT_EQ(format(ws, ws.one()), "1");
 
   // conv.
   ASSERT_EQ(conv(ws, "0"), 0);
@@ -57,7 +57,7 @@ static size_t check_q()
 
   // conv.
 #define CHECK(In, Out)                          \
-  ASSERT_EQ(ws.format(conv(ws, In)), Out)
+  ASSERT_EQ(format(ws, conv(ws, In)), Out)
 
   CHECK("-1/1",  "-1");
   CHECK("-3/2",  "-3/2");
@@ -69,7 +69,7 @@ static size_t check_q()
 
   // add.
 #define CHECK(Lhs, Rhs, Out)                      \
-  ASSERT_EQ(ws.format(ws.add(Lhs, Rhs)), Out)
+  ASSERT_EQ(format(ws, ws.add(Lhs, Rhs)), Out)
 
   CHECK(ws.zero(), conv(ws, "8/2"), "4");
   CHECK(ws.one(), conv(ws, "8/2"), "5");
@@ -81,7 +81,7 @@ static size_t check_q()
 
   // mul.
 #define CHECK(Lhs, Rhs, Out)                      \
-  ASSERT_EQ(ws.format(ws.mul(Lhs, Rhs)), Out)
+  ASSERT_EQ(format(ws, ws.mul(Lhs, Rhs)), Out)
 
   CHECK(ws.zero(), conv(ws, "8/3"), "0");
   CHECK(ws.one(), conv(ws, "8/3"), "8/3");
@@ -95,7 +95,7 @@ static size_t check_q()
 
   // star.
 #define CHECK(In, Out)                          \
-  ASSERT_EQ(ws.format(ws.star(conv(ws, In))), Out)
+  ASSERT_EQ(format(ws, ws.star(conv(ws, In))), Out)
 
   CHECK("1/2", "2");
   CHECK("-1/2", "2/3");
@@ -120,7 +120,7 @@ static size_t check_q()
 
   // limits.
 #define CHECK(Lhs, Rhs, Out)                      \
-  ASSERT_EQ(ws.format(ws.mul(conv(ws, Lhs), conv(ws, Rhs))), Out)
+  ASSERT_EQ(format(ws, ws.mul(conv(ws, Lhs), conv(ws, Rhs))), Out)
 
   std::string max_signed =
     std::to_string(std::numeric_limits<int>::max());
@@ -174,13 +174,13 @@ static size_t check_r()
   nerrs += check_common(ws);
 
   // format.
-  ASSERT_EQ(ws.format(ws.zero()), "0");
-  ASSERT_EQ(ws.format(ws.one()), "1");
+  ASSERT_EQ(format(ws, ws.zero()), "0");
+  ASSERT_EQ(format(ws, ws.one()), "1");
 
   // conv.
-  ASSERT_EQ(ws.format(conv(ws, "-1")), "-1");
-  ASSERT_EQ(ws.format(conv(ws, "-3.2")), "-3.2");
-  ASSERT_EQ(ws.format(conv(ws, "0.1")), "0.1");
+  ASSERT_EQ(format(ws, conv(ws, "-1")), "-1");
+  ASSERT_EQ(format(ws, conv(ws, "-3.2")), "-3.2");
+  ASSERT_EQ(format(ws, conv(ws, "0.1")), "0.1");
 
   // add.
   ASSERT_EQ(ws.add(3.2, 2.3), 5.5);
@@ -208,14 +208,14 @@ static size_t check_zmin()
   vcsn::zmin ws;
 
   // format.
-  ASSERT_EQ(ws.format(ws.zero()), "oo");
-  ASSERT_EQ(ws.format(ws.one()), "0");
-  ASSERT_EQ(ws.format(42), "42");
+  ASSERT_EQ(format(ws, ws.zero()), "oo");
+  ASSERT_EQ(format(ws, ws.one()), "0");
+  ASSERT_EQ(format(ws, 42), "42");
 
   // conv.
-  ASSERT_EQ(ws.format(conv(ws, "oo")), "oo");
-  ASSERT_EQ(ws.format(conv(ws, "0")), "0");
-  ASSERT_EQ(ws.format(conv(ws, "42")), "42");
+  ASSERT_EQ(format(ws, conv(ws, "oo")), "oo");
+  ASSERT_EQ(format(ws, conv(ws, "0")), "0");
+  ASSERT_EQ(format(ws, conv(ws, "42")), "42");
 
   // add: min.
   ASSERT_EQ(ws.add(23, 42), 23);

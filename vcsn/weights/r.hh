@@ -3,9 +3,6 @@
 
 # include <string>
 # include <ostream>
-# include <stdexcept>
-# include <boost/lexical_cast.hpp>
-# include <sstream>
 
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -64,13 +61,13 @@ namespace vcsn
       return l * r;
     }
 
-    static value_t
-    star(const value_t v)
+    value_t
+    star(const value_t v) const
     {
       if (-1 < v && v < 1)
         return 1/(1-v);
       else
-        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
+        raise(sname(), ": star: invalid value: ", format(*this, v));
     }
 
     constexpr static bool is_special(value_t)
@@ -170,14 +167,6 @@ namespace vcsn
           const std::string& = "text")
     {
       return o << v;
-    }
-
-    static std::string
-    format(const value_t v)
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
     }
   };
 

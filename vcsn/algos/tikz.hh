@@ -49,7 +49,10 @@ namespace vcsn
           {
             os_ << ',' << kind;
             if (ws_.show_one() || !ws_.is_one(w))
-              os_ << ',' << kind << " text=$" << ws_.format(w) << '$';
+              {
+                os_ << ',' << kind << " text=$";
+                ws_.print(os_, w) << '$';
+              }
           }
       }
 

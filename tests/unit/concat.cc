@@ -10,8 +10,8 @@ check_concat(const Ctx& ctx)
   size_t nerrs = 0;
   auto ks = vcsn::ratexpset<Ctx>(ctx);
 
-#define CHECK(Lhs, Rhs, Res)                                    \
-  ASSERT_EQ(ks.format(ks.concat(conv(ks, Lhs), conv(ks, Rhs))), \
+#define CHECK(Lhs, Rhs, Res)                                            \
+  ASSERT_EQ(format(ks, ks.concat(conv(ks, Lhs), conv(ks, Rhs))),        \
             Res)
 
   CHECK("ab.a", "b", "ab.ab");

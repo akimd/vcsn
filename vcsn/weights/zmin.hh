@@ -3,8 +3,6 @@
 
 # include <limits>
 # include <ostream>
-# include <sstream>
-# include <stdexcept>
 # include <string>
 # include <utility>
 
@@ -51,13 +49,14 @@ namespace vcsn
       return (is_zero(l) || is_zero(r) ? zero()
               : l + r);
     }
-    static value_t
-    star(const value_t v)
+
+    value_t
+    star(const value_t v) const
     {
       if (0 <= v)
         return one();
       else
-        throw std::domain_error(sname() + ": star: invalid value: " + format(v));
+        raise(sname(), ": star: invalid value: ", format(*this, v));
     }
 
     static value_t
@@ -156,14 +155,6 @@ namespace vcsn
         return o << (format == "latex" ? "\\infty" : "oo");
       else
         return o << v;
-    }
-
-    static std::string
-    format(const value_t v)
-    {
-      std::ostringstream s;
-      print(s, v);
-      return s.str();
     }
   };
 

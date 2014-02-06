@@ -197,7 +197,7 @@ namespace vcsn
       auto s = v.size();
       if (s == 0)
         return one();
-      if (s == 1)
+      else if (s == 1)
         {
           auto i = v.find(labelset()->one());
           if (i != v.end())
@@ -207,8 +207,7 @@ namespace vcsn
               return res;
             }
         }
-      throw std::domain_error(sname() + ": star: invalid value: "
-                              + format(v));
+      raise(sname(), ": star: invalid value: ", vcsn::format(*this, v));
     }
 
     /// Left exterior product.
