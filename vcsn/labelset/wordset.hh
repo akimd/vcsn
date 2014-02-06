@@ -143,15 +143,6 @@ namespace vcsn
           o << str_escape(l);
         return o;
       }
-
-      std::string
-      format(const value_t& l) const
-      {
-        std::ostringstream o;
-        print(o, l);
-        return o.str();
-      }
-
     };
 
     /// Compute the meet with another alphabet.

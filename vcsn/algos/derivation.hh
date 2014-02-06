@@ -383,7 +383,7 @@ namespace vcsn
         for (auto p : orig)
           o << "    " << p.first - 2
             << " [label = \""
-            << str_escape(rs_.format(p.second))
+            << str_escape(format(rs_, p.second))
             << "\"]\n";
         o << "*/\n";
         return o;

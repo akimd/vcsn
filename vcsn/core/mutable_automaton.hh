@@ -561,8 +561,8 @@ namespace vcsn
         << " -- "
         << lbracket;
       weightset()->print(o, weight_of(t))
-        << rbracket
-        << labelset()->format(label_of(t))
+        << rbracket;
+      labelset()->print(o, label_of(t))
         << " --> "
         << dst_of(t);
       return o.str();

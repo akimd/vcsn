@@ -53,7 +53,7 @@ namespace vcsn
       label_(const label_t& l)
       {
         return (aut_.labelset()->is_one(l) ? "@epsilon"
-                : aut_.labelset()->format(l));
+                : format(*aut_.labelset(), l));
       }
 
       /// Output the transition \a t.  Do not insert eol.

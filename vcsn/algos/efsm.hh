@@ -104,7 +104,7 @@ namespace vcsn
       {
         /// FIXME: not very elegant, \\e should be treated elsewhere.
         std::string res = (aut_.labelset()->is_special(l) ? "\\e"
-                           : aut_.labelset()->format(l));
+                           : format(*aut_.labelset(), l));
         auto insert = names_.emplace(res, name_);
         // If the label is fresh, prepare the next name.
         if (insert.second)

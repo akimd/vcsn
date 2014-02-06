@@ -68,13 +68,6 @@ namespace vcsn
     return ctx_.weightset();
   }
 
-  DEFINE::format(const value_t v) const -> std::string
-  {
-    std::ostringstream s;
-    print(s, v);
-    return s.str();
-  }
-
 
   /*--------------------------------------------------------.
   | Implementation of ratexpset_base pure virtual methods.  |

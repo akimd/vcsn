@@ -26,8 +26,8 @@ check_letterset()
 
   ASSERT_EQ(ls.is_valid('x'), false);
 
-  ASSERT_EQ(ls.format(conv(ls, "a")), "a");
-  ASSERT_EQ(ls.format(ls.transpose(conv(ls, "a"))), "a");
+  ASSERT_EQ(format(ls, conv(ls, "a")), "a");
+  ASSERT_EQ(format(ls, ls.transpose(conv(ls, "a"))), "a");
 
   return nerrs;
 }
@@ -83,8 +83,8 @@ check_tupleset()
 
   // special, is_special.
   ASSERT_EQ(ts.equals(ts.special(), label_t{ls1.special(),ls2.special()}), true);
-  ASSERT_EQ(ts.format(label_t{ls1.special(),ls2.special()}), "");
-  ASSERT_EQ(ts.format(ts.special()), "");
+  ASSERT_EQ(format(ts, label_t{ls1.special(),ls2.special()}), "");
+  ASSERT_EQ(format(ts, ts.special()), "");
   ASSERT_EQ(ts.is_special(ts.special()), true);
   ASSERT_EQ(!ts.is_special(l), true);
 
@@ -94,8 +94,8 @@ check_tupleset()
   ASSERT_EQ(ts.is_one(label_t{ls1.one(), "x"}), false);
 
   // format, transpose.
-  ASSERT_EQ(ts.format(l), "(abc, xyz)");
-  ASSERT_EQ(ts.format(ts.transpose(l)), "(cba, zyx)");
+  ASSERT_EQ(format(ts, l), "(abc, xyz)");
+  ASSERT_EQ(format(ts, ts.transpose(l)), "(cba, zyx)");
 
   // conv.
   // If you observe a runtime exception here (something like

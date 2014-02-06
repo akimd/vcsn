@@ -201,14 +201,6 @@ namespace vcsn
         return print_(o, l, format, indices_t{});
       }
 
-      std::string
-      format(const value_t& l) const
-      {
-        std::ostringstream o;
-        print(o, l);
-        return o.str();
-      }
-
     private:
       template <std::size_t... I>
       static std::string sname_(seq<I...>)

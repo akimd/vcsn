@@ -166,14 +166,6 @@ namespace vcsn
           o << l;
         return o;
       }
-
-      std::string
-      format(value_t v) const
-      {
-        std::ostringstream o;
-        print(o, v);
-        return o.str();
-      }
     };
 
     /// Compute the meet with another alphabet.

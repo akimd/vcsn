@@ -125,7 +125,6 @@ namespace vcsn
     value_t conv(self_type, value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v,
 			const std::string& format = "text") const;
-    std::string format(const value_t v) const;
 
   public:
     /// Whether \a l < \a r.

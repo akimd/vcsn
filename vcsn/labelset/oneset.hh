@@ -8,6 +8,7 @@
 # include <vcsn/empty.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -117,17 +118,11 @@ namespace vcsn
           {
             i.ignore();
             char c = i.peek();
-            if (c != 'e')
-              throw std::domain_error("invalid label: unexpected \\"
-                                      + std::string{c});
+            require(c == 'e',
+                    "invalid label: unexpected \\", c);
             i.ignore();
           }
         return {};
-      }
-
-      static std::string format(empty_t)
-      {
-        return "\\e";
       }
     };
 
