@@ -73,9 +73,9 @@ struct automaton
     return vcsn::dyn::accessible(aut_);
   }
 
-  bool is_isomorphic(const automaton& rhs) const
+  automaton chain(unsigned n) const
   {
-    return vcsn::dyn::are_isomorphic(aut_, rhs.aut_);
+    return vcsn::dyn::chain(aut_, n);
   }
 
   automaton coaccessible() const
@@ -160,6 +160,11 @@ struct automaton
   bool is_equivalent(const automaton& rhs) const
   {
     return vcsn::dyn::are_equivalent(aut_, rhs.aut_);
+  }
+
+  bool is_isomorphic(const automaton& rhs) const
+  {
+    return vcsn::dyn::are_isomorphic(aut_, rhs.aut_);
   }
 
   bool is_normalized() const
@@ -309,6 +314,11 @@ struct ratexp
     std::istringstream is(r);
     auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
     r_ = vcsn::dyn::read_ratexp(is, rs);
+  }
+
+  ratexp chain(int min, int max) const
+  {
+    return vcsn::dyn::chain(r_, min, max);
   }
 
   ratexp concatenate(const ratexp& rhs) const
@@ -521,6 +531,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
     .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
     .def("accessible", &automaton::accessible)
+    .def("chain", &automaton::chain)
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
@@ -575,6 +586,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
   bp::class_<ratexp>
     ("ratexp",
      bp::init<const context&, const std::string&>())
+    .def("chain", &ratexp::chain)
     .def("concatenate", &ratexp::concatenate)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)

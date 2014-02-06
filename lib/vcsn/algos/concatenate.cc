@@ -15,7 +15,6 @@ namespace vcsn
     }
 
     REGISTER_DEFINE(chain);
-
     automaton
     chain(const automaton& aut, unsigned n)
     {
@@ -28,5 +27,13 @@ namespace vcsn
     {
       return detail::concatenate_ratexp_registry().call(lhs, rhs);
     }
+
+    REGISTER_DEFINE(chain_exp);
+    ratexp
+    chain(const ratexp& r, int min, int max)
+    {
+      return detail::chain_exp_registry().call(r, min, max);
+    }
+
   }
 }

@@ -221,6 +221,7 @@ namespace vcsn
         REGISTER(accessible, aut_t);
         REGISTER(aut_to_exp, aut_t);
         REGISTER(chain, aut_t, unsigned);
+        REGISTER(chain_exp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
         REGISTER(concatenate, aut_t, aut_t);
         REGISTER(concatenate_ratexp, rs_t, rs_t);

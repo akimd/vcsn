@@ -33,6 +33,17 @@ API, then tests/.  Don't do TAF-Kit.
 Eventually (when the ratexp ASTs have been upgraded, do not do that before,
 that would be a loss of time), provide the same routines for ratexps.
 
+* Naming issues
+** Wrong names
+power for ratexp denotes {n,m} which is related to concat, not to mul.
+
+** concat/mul
+polynomialset uses the "concat" operator on its "labelset".  However, when
+we use polynomials of ratexps, it is just "by chance" that there is a
+function "concat" which is *mostly* like mul.
+
+We should really name "concat" as "mul" in our labelsets.
+
 * Build
 ** --enable-compilation-mode
 Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both
@@ -201,13 +212,6 @@ abstraction to typed ratexp, but this should be thoroughly benched to make
 sure this is not (much) costlier.
 
 Getting rid of this will allow rat::node to use single inheritance.
-
-** concat/mul
-polynomialset uses the "concat" operator on its "labelset".  However, when
-we use polynomials of ratexps, it is just "by chance" that there is a
-function "concat" which is *mostly* like mul.
-
-We should really name "concat" as "mul" in our labelsets.
 
 ** Make nullableset a labelset wrapper
 One would say 'nullableset<letterset>'.  This would allow to introduce

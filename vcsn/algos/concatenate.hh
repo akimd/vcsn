@@ -187,6 +187,65 @@ namespace vcsn
                        (const ratexp&, const ratexp&) -> ratexp);
     }
   }
+
+
+  /*--------------------------.
+  | chain(ratexp, min, max).  |
+  `--------------------------*/
+
+  template <typename RatExpSet>
+  typename RatExpSet::ratexp_t
+  chain(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
+        int min, int max)
+  {
+    typename RatExpSet::ratexp_t res;
+    if (max == -1)
+      {
+        res = rs.star(r);
+        if (min != -1)
+          res = rs.mul(chain(rs, r, min, min), res);
+      }
+    else
+      {
+        if (min == -1)
+          min = 0;
+        if (min == 0)
+          res = rs.one();
+        else
+          {
+            res = r;
+            for (int n = 1; n < min; ++n)
+              res = rs.mul(res, r);
+          }
+        if (min < max)
+          {
+            typename RatExpSet::ratexp_t sum = rs.one();
+            for (int n = 1; n <= max - min; ++n)
+              sum = rs.add(sum, chain(rs, r, n, n));
+            res = rs.mul(res, sum);
+          }
+      }
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet, typename Int1, typename Int2>
+      ratexp
+      chain_exp(const ratexp& re, int min, int max)
+      {
+        const auto& r = re->as<RatExpSet>();
+        return make_ratexp(r.get_ratexpset(),
+                           chain(r.get_ratexpset(), r.ratexp(), min, max));
+      }
+
+      REGISTER_DECLARE(chain_exp,
+                       (const ratexp&, int, int) -> ratexp);
+    }
+  }
 }
 
 #endif // !VCSN_ALGOS_CONCATENATE_HH

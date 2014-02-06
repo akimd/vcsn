@@ -41,6 +41,9 @@ namespace vcsn
     /// Concatenate \a n copies of \a aut.
     automaton chain(const automaton& aut, unsigned n);
 
+    /// Repeated product of \a e with itself.
+    ratexp chain(const ratexp& e, int min, int max);
+
     /// The coaccessible subautomaton of \a aut.
     automaton coaccessible(const automaton& aut);
 
