@@ -3,96 +3,96 @@
 import vcsn
 import timeit
 
-def bench(title, cmd, number=1):
+def bench(title, comment, cmd, number=1):
     "Report the best timing of three batches of number runs of cmd."
     t = round(min(timeit.repeat(cmd, number=number)), 2)
-    print("%5.2fs: %s" % (t, title))
+    print("%5.2fs: %-20s # %s" % (t, title, comment))
 
 b = vcsn.context('lal_char(abc)_b')
 
 # I/O on ratexps.
 e = '(\e+a)' * 500
-bench('b.ratexp(e) # e = "(\e+a)" * 500', lambda: b.ratexp(e), number=100)
+bench('b.ratexp(e)', 'e = "(\e+a)" * 500', lambda: b.ratexp(e), number=100)
 r = b.ratexp(e)
-bench('r.format("text") # r = b.ratexp("(\e+a)" * 500)', lambda: r.format('text'), number=1000)
+bench('r.format("text")', 'r = b.ratexp("(\e+a)" * 500)', lambda: r.format('text'), number=1000)
 
 # Output should be fast.
 r = 'a?{500}'
 a = b.ratexp(r).standard()
 auts = dict()
 for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
-    bench('a.format("'+ fmt + '") # a = std('+r+')', lambda: a.format(fmt))
+    bench('a.format("'+ fmt + '")', 'a = std('+r+')', lambda: a.format(fmt))
     auts[fmt] = a.format(fmt)
 
 # Input should be too.
 for fmt in ['dot', 'efsm', 'fado']:
-    bench('read(a) # a = ' + fmt + '(std('+r+'))',
+    bench('read(a)', 'a = ' + fmt + '(std('+r+'))',
           lambda: vcsn.automaton(auts[fmt], fmt))
 del auts
 
 # derived_term
 e = "(a+b)*b(<2>a+<2>b){150}"
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.derived_term() # r = {}   on [a-z]  -> Z'.format(e),
+bench('r.derived_term()', 'r = {}   on [a-z]  -> Z'.format(e),
       lambda: r.derived_term())
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.standard()     # r = {} on [a-z]  -> Z'.format(e),
+bench('r.standard()', 'r = {} on [a-z]  -> Z'.format(e),
       lambda: r.standard())
 
 # thompson
 e = "(a+b)*b(<2>a+<2>b){20000}"
 r = vcsn.context('lan_char(a-z)_z').ratexp(e)
-bench('r.thompson()     # r = {} on [a-z]? -> Z'.format(e),
+bench('r.thompson()', 'r = {} on [a-z]? -> Z'.format(e),
       lambda: r.thompson())
 
 # determinize.
 n = 21
 a = b.ladybird(n)
-bench('a.determinize() # a = ladybird('+str(n)+'))',
+bench('a.determinize()', 'a = ladybird('+str(n)+'))',
       lambda: a.determinize())
 
 # eval.
 n = 150
 # too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
 a = b.de_bruijn(n)
-bench('a.eval("a"*{0}) # a = de_bruijn({1})'.format(n+1, n),
+bench('a.eval("a"*{0})', 'a = de_bruijn({1})'.format(n+1, n),
       lambda: a.eval('a'*(n+1)), number=1000)
 
 # proper.
 r = "a?{2000}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
-bench('a.proper() # a = thompson('+r+')', lambda: a.proper_real())
+bench('a.proper()', 'a = thompson('+r+')', lambda: a.proper_real())
 
 # to-ratexp.
 r = '[a-d]?{100}'
 a = vcsn.context('lal_char(a-d)_b').ratexp(r).standard()
-bench('a.ratexp() # a = std('+r+')', lambda: a.ratexp())
+bench('a.ratexp()', 'a = std('+r+')', lambda: a.ratexp())
 
 # With a?{150}, the product has 22501 states, 124,903,125 transitions,
 # which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
 # transitions.
 r = "a?{100}"
 a = b.ratexp(r).standard()
-bench('a.product(a)      # a = std('+r+')', lambda: a.product(a))
-bench('a.shuffle(a)      # a = std('+r+')', lambda: a.shuffle(a))
-bench('a.infiltration(a) # a = std('+r+')', lambda: a.infiltration(a))
+bench('a.product(a)     ', 'a = std('+r+')', lambda: a.product(a))
+bench('a.shuffle(a)     ', 'a = std('+r+')', lambda: a.shuffle(a))
+bench('a.infiltration(a)', 'a = std('+r+')', lambda: a.infiltration(a))
 
 # power.
 r = "[ab]*b(<2>[ab])*"
 n = 12
 a = vcsn.context("lal_char(ab)_z").ratexp(r).standard()
-bench('a**{0} # a = std({1})'.format(n, r), lambda: a ** n)
+bench('a**{0}', 'a = std({1})'.format(n, r), lambda: a ** n)
 
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
 a = vcsn.context("lal_char(a-k)_b").ratexp(r).standard()
-bench('a.minimize("signature") # a = std({0})'.format(r),
+bench('a.minimize("signature")', 'a = std({0})'.format(r),
       lambda: a.minimize('signature'))
 
 r = "[a-k]{2000}"
 a = vcsn.context("lal_char(a-k)_b").ratexp(r).standard()
-bench('a.minimize("moore") # a = std({0})'.format(r),
+bench('a.minimize("moore")', 'a = std({0})'.format(r),
       lambda: a.minimize('moore'))
