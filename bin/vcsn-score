@@ -10,6 +10,12 @@ def bench(title, cmd, number=1):
 
 b = vcsn.context('lal_char(abc)_b')
 
+# I/O on ratexps.
+e = '(\e+a)' * 500
+bench('b.ratexp(e) # e = "(\e+a)" * 500', lambda: b.ratexp(e), number=100)
+r = b.ratexp(e)
+bench('r.format("text") # r = b.ratexp("(\e+a)" * 500)', lambda: r.format('text'), number=1000)
+
 # Output should be fast.
 r = 'a?{500}'
 a = b.ratexp(r).standard()
