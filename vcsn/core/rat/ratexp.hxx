@@ -26,35 +26,6 @@ namespace vcsn
     Node<Label, Weight>
 
     /*-------.
-    | node.  |
-    `-------*/
-
-    DEFINE(node)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-    /*--------.
-    | inner.  |
-    `--------*/
-
-    DEFINE(inner)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-    /*-------.
-    | leaf.  |
-    `-------*/
-
-    DEFINE(leaf)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
-
-    /*-------.
     | atom.  |
     `-------*/
 
@@ -73,11 +44,6 @@ namespace vcsn
     {
       return value_;
     }
-
-    DEFINE(atom)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
 
 # undef DEFINE_CTOR
 # undef DEFINE
@@ -153,11 +119,6 @@ namespace vcsn
       return boost::make_iterator_range(*this, 1, 0);
     }
 
-    DEFINE(nary)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    }
-
     DEFINE(nary)::accept(typename node_t::const_visitor& v) const
       -> void
     {
@@ -197,11 +158,6 @@ namespace vcsn
       v.visit(*this);
     }
 
-    DEFINE(weight_node)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    }
-
     /*--------.
     | unary.  |
     `--------*/
@@ -222,11 +178,6 @@ namespace vcsn
       v.visit(*this);
     }
 
-    DEFINE(unary)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    }
-
     /*-----------.
     | constant.  |
     `-----------*/
@@ -236,12 +187,6 @@ namespace vcsn
     {
       v.visit(*this);
     }
-
-    DEFINE(constant)::clone() const -> shared_t
-    {
-      return std::static_pointer_cast<const self_t>(clone_());
-    };
-
 
 # undef DEFINE_CTOR
 # undef DEFINE

@@ -65,20 +65,13 @@ namespace vcsn
       using label_t = Label;
       using weight_t = Weight;
       using node_t = rat::node<label_t, weight_t>;
-      using self_t = node;
       using value_t = std::shared_ptr<const node_t>;
       /// Same as value_t, but writable.  Use with care.
       using wvalue_t = std::shared_ptr<node_t>;
       using ratexps_t = std::vector<value_t>;
       using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
-      using shared_t = std::shared_ptr<const node>;
-      shared_t clone() const;
-
       virtual void accept(const_visitor &v) const = 0;
-
-    protected:
-      virtual value_t clone_() const = 0;
     };
 
     /*--------.
@@ -94,13 +87,6 @@ namespace vcsn
       using weight_t = Weight;
       using super_type = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
-      using self_t = inner;
-
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
-    protected:
-      virtual value_t clone_() const = 0;
     };
 
 
@@ -123,7 +109,6 @@ namespace vcsn
       using node_t = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
       using ratexps_t = typename super_type::ratexps_t;
-      using self_t = nary;
 
       using const_iterator = typename ratexps_t::const_iterator;
       // Needed by boost::make_iterator_range, but since we iterate
@@ -157,17 +142,9 @@ namespace vcsn
         , sub_ratexp_(that.sub_ratexp_)
       {}
 
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
-
       ratexps_t sub_ratexp_;
     };
 
@@ -186,12 +163,8 @@ namespace vcsn
       using super_type = inner<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
       using value_t = typename node_t::value_t;
-      using self_t = unary;
 
       unary(value_t exp);
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
       virtual type_t type() const { return Type; };
 
       const value_t sub() const;
@@ -200,11 +173,6 @@ namespace vcsn
 
     private:
       value_t sub_exp_;
-
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
     };
 
 
@@ -228,7 +196,6 @@ namespace vcsn
       using super_type = inner<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
       using value_t = typename super_type::value_t;
-      using self_t = weight_node;
 
       virtual type_t type() const { return Type; };
 
@@ -242,19 +209,11 @@ namespace vcsn
         , weight_(that.weight_)
       {}
 
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
       value_t sub_exp_;
       weight_t weight_;
-
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
     };
 
 
@@ -273,11 +232,6 @@ namespace vcsn
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
       using super_type = node_t;
-      using self_t = leaf;
-    protected:
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
-      virtual value_t clone_() const = 0;
     };
 
 
@@ -293,19 +247,10 @@ namespace vcsn
       using super_type = leaf<label_t, weight_t>;
       using node_t = node<label_t, weight_t>;
       using value_t = typename node_t::value_t;
-      using self_t = constant;
-
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
 
       virtual type_t type() const { return Type; };
 
       virtual void accept(typename node_t::const_visitor &v) const;
-    protected:
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
     };
 
 
@@ -319,11 +264,8 @@ namespace vcsn
       using node_t = node<label_t, weight_t>;
       using type_t = typename node_t::type_t;
       using value_t = typename node_t::value_t;
-      using self_t = atom;
 
       atom(const label_t& value);
-      using shared_t = std::shared_ptr<const self_t>;
-      shared_t clone() const;
 
       virtual type_t type() const { return type_t::atom; };
 
@@ -332,11 +274,6 @@ namespace vcsn
 
     private:
       label_t value_;
-
-      virtual value_t clone_() const
-      {
-        return std::make_shared<self_t>(*this);
-      }
     };
 
   } // namespace rat

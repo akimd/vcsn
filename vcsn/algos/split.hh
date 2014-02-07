@@ -201,9 +201,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(star, e)
       {
-        // We need a copy of e, but without its weights.
-        auto e2 = rs_.star(e.sub()->clone());
-        res_ = polynomial_t{{e2, ws_.one()}};
+        res_ = polynomial_t{{e.shared_from_this(), ws_.one()}};
       }
 
       VCSN_RAT_VISIT(lweight, e)
