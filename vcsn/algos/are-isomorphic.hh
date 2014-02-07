@@ -161,10 +161,11 @@ namespace vcsn
           // by using the <s1, s2> pair as a counterexample.
           counterexample_ = {s1, s2};
 
-          // If out-star size is different, don't even bother looking
-          // at transitions.  On the other hand, if it's equal, we can
+          // If the number of transitions going out from the two
+          // states is different, don't even bother looking at them.
+          // On the other hand if the number is equal we can afford to
           // reason in just one direction: look at transitions from s1
-          // and ensure, all of them have a matching one from s2.
+          // and ensure that all of them have a matching one from s2.
           if (out1_[s1].size() != out2_[s2].size())
             return false;
 
