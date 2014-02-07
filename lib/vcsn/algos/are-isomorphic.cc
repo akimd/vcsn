@@ -13,8 +13,5 @@ namespace vcsn
     {
       return detail::are_isomorphic_registry().call(lhs, rhs);
     }
-
-    /* FIXME: I could add an overloaded version working on ratexps,
-       but it seems really pointless in this case. */
   }
 }
