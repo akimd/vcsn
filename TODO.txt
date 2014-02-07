@@ -62,6 +62,16 @@ We need to add coverage tests on the BF.  From ADL:
 
   This should create the directory html/.
 
+For Vcsn, I use:
+
+  $ lcov --capture \
+      --directory _build/34c \
+      --base-directory . \
+      --base-directory _build/34c \
+      -k lib -k vcsn \
+      --no-external \
+      --output vcsn2.info
+
 ** -fsanitize=address
 Try that on the BF.  For some reason, Libtool strips this flag at link time.
 Use -Wc,-fsanitize=address.
