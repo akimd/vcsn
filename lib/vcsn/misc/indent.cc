@@ -48,7 +48,7 @@ namespace vcsn
 
   std::ostream& iendl(std::ostream& o)
   {
-    return o << std::endl << indent;
+    return o << '\n' << indent;
   }
 
   std::ostream& incendl(std::ostream& o)
