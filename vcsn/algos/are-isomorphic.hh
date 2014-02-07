@@ -78,7 +78,7 @@ namespace vcsn
     /// A worklist of state pairs which are candidate to be
     /// isomorphic.  Or "A candidate-isomorphic state pair worklist",
     /// written in Reverse-Polish English.
-    std::stack<std::pair<state_t, state_t>> worklist_;
+    std::stack<std::pair<state1_t, state2_t>> worklist_;
 
     /// Only valid in case of non-isomorphism, when operator() returns false.
     non_isomorphism_reason non_isomorphism_reason_;
