@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+. $(dirname "$0")/common
+
+cd "$DIR_BUILD"
+lcov --capture                                  \
+     --base-directory $DIR_SOURCE               \
+     -k lib                                     \
+     -k vcsn                                    \
+     --no-external                              \
+     --output vcsn2.info
+
+genhtml --legend --demangle-cpp                 \
+     --output-directory vcsn2.cov.html          \
+     vcsn2.info
+
+
