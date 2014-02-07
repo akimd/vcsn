@@ -61,6 +61,13 @@ a = b.de_bruijn(n)
 bench('a.eval("a"*{})'.format(n+1), 'a = de_bruijn({})'.format(n),
       lambda: a.eval('a'*(n+1)), number=1000)
 
+# shortest.
+n = 9
+# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
+a = b.de_bruijn(n)
+bench('a.shortest(5)', 'a = de_bruijn({})'.format(n),
+      lambda: a.shortest(5))
+
 # proper.
 r = "a?{2000}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
