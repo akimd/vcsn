@@ -66,45 +66,44 @@ namespace vcsn
     `-------*/
 
     DEFINE_CTOR(nary)(const ratexps_t& ns)
-      : sub_ratexp_(ns)
-    {
-    }
+      : sub_(ns)
+    {}
 
 
     DEFINE(nary)::begin() const
       -> const_iterator
     {
-      return sub_ratexp_.begin();
+      return sub_.begin();
     }
 
     DEFINE(nary)::end() const
       -> const_iterator
     {
-      return sub_ratexp_.end();
+      return sub_.end();
     }
 
     DEFINE(nary)::rbegin() const
       -> const_reverse_iterator
     {
-      return sub_ratexp_.begin();
+      return sub_.begin();
     }
 
     DEFINE(nary)::rend() const
       -> const_reverse_iterator
     {
-      return sub_ratexp_.end();
+      return sub_.end();
     }
 
     DEFINE(nary)::size() const
       -> size_t
     {
-      return sub_ratexp_.size();
+      return sub_.size();
     }
 
     DEFINE(nary)::operator[](size_t n) const
       -> const value_t
     {
-      return sub_ratexp_[n];
+      return sub_[n];
     }
 
     DEFINE(nary)::head() const
@@ -129,15 +128,15 @@ namespace vcsn
     | weight.  |
     `---------*/
 
-    DEFINE_CTOR(weight_node)(const weight_t& weight, value_t sub_exp)
-      : sub_exp_(sub_exp)
+    DEFINE_CTOR(weight_node)(const weight_t& weight, value_t sub)
+      : sub_(sub)
       , weight_(weight)
     {}
 
     DEFINE(weight_node)::sub() const
       -> const value_t
     {
-      return sub_exp_;
+      return sub_;
     }
 
     DEFINE(weight_node)::weight() const
@@ -162,14 +161,14 @@ namespace vcsn
     | unary.  |
     `--------*/
 
-    DEFINE_CTOR(unary)(value_t sub_exp)
-      : sub_exp_(sub_exp)
+    DEFINE_CTOR(unary)(value_t sub)
+      : sub_(sub)
     {}
 
     DEFINE(unary)::sub() const
       -> const value_t
     {
-      return sub_exp_;
+      return sub_;
     }
 
     DEFINE(unary)::accept(typename node_t::const_visitor& v) const

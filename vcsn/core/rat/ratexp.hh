@@ -139,13 +139,13 @@ namespace vcsn
       nary(const ratexps_t& ns = ratexps_t());
       nary(const nary& that)
         : super_type(that)
-        , sub_ratexp_(that.sub_ratexp_)
+        , sub_(that.sub_)
       {}
 
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      ratexps_t sub_ratexp_;
+      ratexps_t sub_;
     };
 
     /*--------.
@@ -172,7 +172,7 @@ namespace vcsn
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      value_t sub_exp_;
+      value_t sub_;
     };
 
 
@@ -205,14 +205,14 @@ namespace vcsn
 
       weight_node(const weight_t& w, value_t exp);
       weight_node(const weight_node& that)
-        : sub_exp_(that.sub_exp_)
+        : sub_(that.sub_)
         , weight_(that.weight_)
       {}
 
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:
-      value_t sub_exp_;
+      value_t sub_;
       weight_t weight_;
     };
 
