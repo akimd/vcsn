@@ -30,11 +30,11 @@ namespace vcsn
 {
 
   /// Whether \a e is member of \a s.
-  template <typename T>
+  template <typename Key, typename Hash, typename Pred, typename Alloc>
   bool
-  has(const std::unordered_set<T>& s, const T& e)
+  has(const std::unordered_set<Key, Hash, Pred, Alloc>& s, const Key& k)
   {
-    return s.find(e) != std::end(s);
+    return s.find(k) != std::end(s);
   }
 
 }

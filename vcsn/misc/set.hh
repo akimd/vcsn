@@ -31,9 +31,9 @@ namespace std
 namespace vcsn
 {
   /// Whether \a e is member of \a s.
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   bool
-  has(const std::set<T>& s, const T& e)
+  has(const std::set<T, Compare, Alloc>& s, const T& e)
     ATTRIBUTE_PURE;
 
   /// The set of values of a map.
@@ -42,30 +42,31 @@ namespace vcsn
   image(const std::map<Key, Value, Comp, Alloc>& m);
 
   /// The intersection of two sets.
-  template <typename T>
-  std::set<T>
-  intersection(const std::set<T>& set1, const std::set<T>& set2);
+  template <typename T, typename Compare, typename Alloc>
+  std::set<T, Compare, Alloc>
+  intersection(const std::set<T, Compare, Alloc>& set1,
+               const std::set<T, Compare, Alloc>& set2);
 
   /// The set of all the intersections of the sets in \a pset.
-  template <typename T>
-  std::set<std::set<T>>
-  intersection_closure(std::set<std::set<T>> pset);
+  template <typename T, typename Compare, typename Alloc>
+  std::set<std::set<T, Compare, Alloc>>
+  intersection_closure(std::set<std::set<T, Compare, Alloc>> pset);
 
   /// The union of two sets.
-  template <typename T>
-  std::set<T>
-  get_union(const std::set<T>& set1, const std::set<T>& set2);
+  template <typename T, typename Compare, typename Alloc>
+  std::set<T, Compare, Alloc>
+  get_union(const std::set<T, Compare, Alloc>& set1,
+            const std::set<T, Compare, Alloc>& set2);
 
   /// Print with a separator.  Meant to help debugging.
-  template <typename T>
+  template <typename T, typename Compare, typename Alloc>
   std::ostream&
-  print(std::ostream& o, const std::set<T>& set);
+  print(std::ostream& o, const std::set<T, Compare, Alloc>& set);
 
   /// Whether set1 \subset set2.
   template <typename Container1, typename Container2>
   bool subset(const Container1& set1, const Container2& set2)
   ATTRIBUTE_PURE;
-
 }
 
 # include <vcsn/misc/set.hxx>
