@@ -5,6 +5,10 @@
 abs_srcdir='@abs_top_srcdir@'
 abs_builddir='@abs_top_builddir@'
 
+# Where the instantiated contexts are generated and compiled.
+VCSN_CTXLIBDIR=$abs_builddir/lib/ctx
+export VCSN_CTXLIBDIR
+
 # Use the shipped files, not those installed.
 VCSN_DATA_PATH=$abs_srcdir/share/vcsn
 export VCSN_DATA_PATH

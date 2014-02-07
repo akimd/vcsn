@@ -73,6 +73,9 @@ istream: is
 ** VCSN_BINARY
 Force ratexpset to build AST variadic nodes with only two children.
 
+** VCSN_CTXLIBDIR [$VCSN_TMPDIR]
+Where the runtime context instantiation are generated and compiled.
+
 ** VCSN_DEBUG
 Improve the display with debugging information.
 *** dot
@@ -95,10 +98,6 @@ automata from sets of states of input automata or other types of
 information (e.g., derived-term, product, determinize, minimize,
 shuffle, infiltration...).
 
-** VCSN_TMPDIR
-Path to the folder in which compiled contexts should be stored.
-Defaults to /tmp if not specified.
-
 Use this Perl snippet to put turn this information in something that
 Graphviz displays.
 
@@ -111,6 +110,9 @@ Graphviz displays.
         if $orig;
       s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
     ' $file
+
+** VCSN_TMPDIR [/tmp]
+Path to the folder in which compiled contexts should be stored.
 
 ** VCSN_PARENS
 Force the display of useless parentheses.
