@@ -201,15 +201,10 @@ namespace vcsn
                   else
                     return false;
                 }
-              else
-                {
-                  if (isomorphics_to_dst1 == s1tos2_.cend())
-                    return false;
-                  else // Neither is empty.
-                    if ((isomorphics_to_dst1->second != dst2)
-                        || (isomorphics_to_dst2->second != dst1))
-                      return false;
-                }
+              else if (isomorphics_to_dst1 == s1tos2_.cend()
+                       || isomorphics_to_dst1->second != dst2
+                       || isomorphics_to_dst2->second != dst1)
+                  return false;
             } // outer for
         } // while
       return true;
