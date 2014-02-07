@@ -117,6 +117,13 @@ struct automaton
 
   weight eval(const std::string& s) const;
 
+  std::string format(const std::string& format = "dot") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(aut_, os, format);
+    return os.str();
+  }
+
   automaton infiltration(const automaton& rhs) const
   {
     return vcsn::dyn::infiltration(aut_, rhs.aut_);
@@ -205,13 +212,6 @@ struct automaton
   automaton power(unsigned n) const
   {
     return vcsn::dyn::power(aut_, n);
-  }
-
-  std::string format(const std::string& format = "dot") const
-  {
-    std::ostringstream os;
-    vcsn::dyn::print(aut_, os, format);
-    return os.str();
   }
 
   automaton product(const automaton& rhs) const
