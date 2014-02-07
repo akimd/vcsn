@@ -122,7 +122,7 @@ namespace vcsn
     bool are_isomorphic()
     {
       require(is_accessible(a1_) && is_accessible(a2_),
-              "input automata must both be accessible");
+              "are-isomorphic: input automata must both be accessible");
 
       // FIXME: this only works on lal, and the algorithm is
       // instantiated only on lal contexts anyway.  It would be nice
@@ -130,7 +130,8 @@ namespace vcsn
       // current implementation only is limited to deterministic lal
       // automata anyway.
       require(is_deterministic(a1_) && is_deterministic(a2_),
-              "input automata must both be deterministic (at this time)");
+              "are-isomorphic: input automata must both be deterministic"
+              " (at this time)");
 
       // If we prove non-isomorphism at this point, it will be because
       // of sizes.
