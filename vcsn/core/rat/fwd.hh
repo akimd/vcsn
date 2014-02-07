@@ -40,6 +40,13 @@ namespace vcsn
       complement,
     };
 
+    /// Whether is a constant (\z or \e).
+    constexpr bool is_constant(type_t t)
+    {
+      return (t == type_t::one
+              || t == type_t::zero);
+    }
+
     /// Whether star, complement.
     constexpr bool is_unary(type_t t)
     {

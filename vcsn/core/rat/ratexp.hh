@@ -239,9 +239,7 @@ namespace vcsn
     class constant : public leaf<Label, Weight>
     {
     public:
-      static_assert(Type == type_t::zero
-                    || Type == type_t::one,
-                    "invalid type");
+      static_assert(is_constant(Type), "invalid type");
       using label_t = Label;
       using weight_t = Weight;
       using super_type = leaf<label_t, weight_t>;
