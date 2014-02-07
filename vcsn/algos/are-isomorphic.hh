@@ -1,14 +1,15 @@
 #ifndef VCSN_ALGOS_ARE_ISOMORPHIC_HH
 # define VCSN_ALGOS_ARE_ISOMORPHIC_HH
 
-# include <vcsn/dyn/automaton.hh>
-# include <vcsn/dyn/fwd.hh>
-# include <unordered_set>
-# include <unordered_map>
 # include <map>
 # include <stack>
-# include <vcsn/algos/is-deterministic.hh>
+# include <unordered_map>
+# include <unordered_set>
+
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/dyn/automaton.hh>
+# include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/hash.hh>
 
 namespace vcsn
