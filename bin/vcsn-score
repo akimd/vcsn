@@ -58,7 +58,7 @@ bench('a.determinize()', 'a = ladybird('+str(n)+'))',
 n = 150
 # too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
 a = b.de_bruijn(n)
-bench('a.eval("a"*{0})', 'a = de_bruijn({1})'.format(n+1, n),
+bench('a.eval("a"*{})'.format(n+1), 'a = de_bruijn({})'.format(n),
       lambda: a.eval('a'*(n+1)), number=1000)
 
 # proper.
