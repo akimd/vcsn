@@ -391,14 +391,13 @@ namespace vcsn
       {
         if (!is_special(l))
           {
-            using swallow = int[];
-            (void) swallow
+            vcsn::detail::pass
               {
                 (o << (I == 0 ? "(" : ", "),
                  std::get<I>(sets_).print(o, std::get<I>(l), format),
                  0)...
               };
-            o << ")";
+            o << ')';
           }
         return o;
       }
