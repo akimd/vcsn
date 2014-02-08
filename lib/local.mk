@@ -31,7 +31,6 @@ liblan_char_z    = lib/liblan_char_z.la
 liblan_char_zr   = lib/liblan_char_zr.la
 liblao_br        = lib/liblao_br.la
 liblao_z         = lib/liblao_z.la
-liblatww_char_b  = lib/liblatww_char_b.la
 liblaw_char_b    = lib/liblaw_char_b.la
 liblaw_char_br   = lib/liblaw_char_br.la
 liblaw_char_q    = lib/liblaw_char_q.la
@@ -56,7 +55,6 @@ all_libctx =                                    \
   $(liblan_char_zr)                             \
   $(liblao_br)                                  \
   $(liblao_z)                                   \
-  $(liblatww_char_b)                            \
   $(liblaw_char_b)                              \
   $(liblaw_char_br)                             \
   $(liblaw_char_q)                              \
@@ -78,9 +76,6 @@ lib_liblan_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lan_char_b
 
 lib_liblaw_char_b_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_b
-
-lib_liblatww_char_b_la_SOURCES = lib/ctx/libctx.cc
-lib_liblatww_char_b_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=latww_char_b
 
 # char_br.
 lib_liblao_br_la_SOURCES = lib/ctx/libctx.cc
