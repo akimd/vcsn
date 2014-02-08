@@ -4,12 +4,12 @@
 namespace vcsn
 {
 
+  // tupleset.hh.
+  template <typename... LabelSets>
+  class tupleset;
+
   namespace ctx
   {
-    // tupleset.hh.
-    template <typename... LabelSets>
-    class tupleset;
-
     // wordset.hh.
     template <typename GenSet>
     class wordset;

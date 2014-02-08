@@ -44,7 +44,7 @@ check_tupleset()
   genset_t gs2{'x', 'y', 'z'};
   labelset_t ls2{gs2};
 
-  using tupleset_t = vcsn::ctx::tupleset<labelset_t, labelset_t>;
+  using tupleset_t = vcsn::tupleset<labelset_t, labelset_t>;
   tupleset_t ts{ls1, ls2};
   using label_t = tupleset_t::value_t;
 

@@ -112,7 +112,7 @@ namespace vcsn
               // loaded the headers that define the one it aggregates.
               // See the comments about the 'headers' member.
               headers_late.insert("vcsn/labelset/tupleset.hh");
-              os << "vcsn::ctx::tupleset<" << incendl;
+              os << "vcsn::tupleset<" << incendl;
               eat(is, '<');
               while (true)
                 {
