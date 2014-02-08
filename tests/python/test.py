@@ -13,7 +13,11 @@ def here():
 
 count = 0
 
-srcdir = os.environ["srcdir"]
+# For build-checks, use our abs_srcdir from tests/bin/vcsn. For
+# install checks, since the latter is not run (it runs
+# /usr/local/bin/vcsn), use Automake's srcdir.
+srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
+         else os.environ['srcdir']
 
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")

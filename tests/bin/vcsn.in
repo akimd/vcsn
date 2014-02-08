@@ -3,7 +3,9 @@
 # Wrapper around a non installed vcsn to make it work as an installed one.
 
 abs_srcdir='@abs_top_srcdir@'
+export abs_srcdir
 abs_builddir='@abs_top_builddir@'
+export abs_builddir
 
 # Where the instantiated contexts are generated and compiled.
 VCSN_CTXLIBDIR=$abs_builddir/lib/ctx
