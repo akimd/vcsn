@@ -1,20 +1,19 @@
 #ifndef VCSN_DYN_TRANSLATE_HH
 # define VCSN_DYN_TRANSLATE_HH
 
+# include <dlfcn.h>
+# include <fstream>
 # include <memory>
 # include <set>
 # include <sstream>
 # include <string>
 
-#include <dlfcn.h>
-#include <fstream>
-
+# include <vcsn/config.hh>
+# include <vcsn/dyn/context.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/indent.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
-# include <vcsn/config.hh>
-# include <vcsn/dyn/context.hh>
 
 namespace vcsn
 {
@@ -52,7 +51,7 @@ namespace vcsn
 
         void context()
         {
-          headers.insert("vcsn/ctx/context.hh");
+          header("vcsn/ctx/context.hh");
           os << "vcsn::ctx::context<" << incendl;
           // LabelSet, WeightSet.
           valueset();
@@ -75,19 +74,21 @@ namespace vcsn
             {
               if (kind == "lal")
                 {
-                  headers.insert("vcsn/labelset/letterset.hh");
+                  header("vcsn/labelset/letterset.hh");
                   // Some instantiation happen here:
-                  headers.insert("vcsn/ctx/lal_char.hh");
+                  header("vcsn/ctx/lal_char.hh");
                   os << "vcsn::ctx::letterset";
                 }
               else if (kind == "lan")
                 {
-                  headers.insert("vcsn/labelset/nullableset.hh");
+                  // Some instantiation happen here:
+                  header("vcsn/ctx/lan_char.hh");
                   os << "vcsn::ctx::nullableset";
                 }
               else if (kind == "law")
                 {
-                  headers.insert("vcsn/labelset/wordset.hh");
+                  // Some instantiation happen here:
+                  header("vcsn/ctx/law_char.hh");
                   os << "vcsn::ctx::wordset";
                 }
               eat(is, "_char");
@@ -102,14 +103,17 @@ namespace vcsn
             }
           else if (kind == "lao")
             {
-              headers.insert("vcsn/labelset/oneset.hh");
+              header("vcsn/labelset/oneset.hh");
               os << "vcsn::ctx::oneset";
             }
-          else if (kind == "lat")
+          else if (kind == "lat" || kind == "tupleset")
             {
-              eat(is, '<');
-              headers.insert("vcsn/labelset/tupleset.hh");
+              // It is very important to load this guy after having
+              // loaded the headers that define the one it aggregates.
+              // See the comments about the 'headers' member.
+              headers_late.insert("vcsn/labelset/tupleset.hh");
               os << "vcsn::ctx::tupleset<" << incendl;
+              eat(is, '<');
               while (true)
                 {
                   valueset();
@@ -140,7 +144,7 @@ namespace vcsn
           context();
           eat(is, '>');
           os << decendl << '>';
-          headers.insert("vcsn/core/rat/ratexpset.hh");
+          header("vcsn/core/rat/ratexpset.hh");
         }
 
         /// Read a weightset in \a is.
@@ -155,7 +159,7 @@ namespace vcsn
           if (ws == "b" || ws == "f2"  || ws == "q"
               || ws == "r" || ws == "z" || ws == "zmin")
             {
-              headers.insert("vcsn/weights/" + ws + ".hh");
+              header("vcsn/weights/" + ws + ".hh");
               os << "vcsn::" << ws;
             }
           else if (ws == "ratexpset")
@@ -189,17 +193,19 @@ namespace vcsn
             "\n";
           for (const auto& h: headers)
             o << "#include <" << h << ">\n";
-          o << "\n";
-          o << "using ctx_t =" << incendl;
-          o << os.str() << ';' << decendl;
+          o << '\n';
+          for (const auto& h: headers_late)
+            o << "#include <" << h << ">\n";
           o <<
             "\n"
-            "#include <vcsn/ctx/instantiate.hh>\n"
+            "using ctx_t =" << incendl;
+          o << os.str() << ';' << decendl;
+          o <<
             "\n"
             "namespace vcsn\n"
             "{\n"
             "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
-            "};\n"
+            "}\n"
             "\n";
           return o;
         }
@@ -229,7 +235,7 @@ namespace vcsn
         /// Compile, and load, a DSO with instantiations for \a ctx.
         void compile(const std::string& ctx)
         {
-          headers.insert("vcsn/ctx/instantiate.hh");
+          header("vcsn/ctx/instantiate.hh");
           auto tmp = xgetenv("VCSN_TMPDIR", "/tmp");
           auto ctxlibdir = xgetenv("VCSN_CTXLIBDIR", "/tmp");
           std::string base = ctxlibdir + "/" + context_base::sname(ctx);
@@ -249,12 +255,47 @@ namespace vcsn
           require (lib, "cannot load lib: ", base, ".so");
         }
 
+        /// Record that we need an include for this header.
+        void header(const std::string& h)
+        {
+          headers.insert(h);
+        }
+
         /// The input stream: the specification to translate.
         std::istringstream is;
         /// The output stream: the corresponding C++ snippet to compile.
         std::ostringstream os;
         /// Headers to include.
+        ///
+        /// Sadly enough functions about tupleset must be defined
+        /// after the functions that define the behavior of the
+        /// components.  The genuine case is that of "print_set",
+        /// which fails for the same reasons as the following does not
+        /// compile:
+        ///
+        /// template <typename T>
+        /// struct wrapper
+        /// {
+        ///   T t;
+        /// };
+        ///
+        /// template <typename T>
+        /// void print(const wrapper<T>& w)
+        /// {
+        ///   print(w.t);
+        /// }
+        ///
+        /// void print(int){}
+        ///
+        /// int main()
+        /// {
+        ///   wrapper<int> w;
+        ///   print(w);
+        /// }
+        ///
+        /// So we use a second set for "late" headers.
         std::set<std::string> headers;
+        std::set<std::string> headers_late;
       };
     } // namespace detail
   } // namespace dyn
