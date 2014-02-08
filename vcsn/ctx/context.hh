@@ -146,8 +146,8 @@ namespace vcsn
     auto
     meet(const context<LhsLabelSet, LhsWeightSet>& a,
                  const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<decltype(meet(std::declval<LhsLabelSet>(), std::declval<RhsLabelSet>())),
-                 decltype(join(std::declval<LhsWeightSet>(), std::declval<RhsWeightSet>()))>
+      -> context<decltype(meet(*a.labelset(), *b.labelset())),
+                 decltype(join(*a.weightset(), *b.weightset()))>
     {
       auto ls = meet(*a.labelset(), *b.labelset());
       auto ws = join(*a.weightset(), *b.weightset());
@@ -160,8 +160,8 @@ namespace vcsn
     auto
     join(const context<LhsLabelSet, LhsWeightSet>& a,
               const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<decltype(join(std::declval<LhsLabelSet>(), std::declval<RhsLabelSet>())),
-                 decltype(join(std::declval<LhsWeightSet>(), std::declval<RhsWeightSet>()))>
+      -> context<decltype(join(*a.labelset(), *b.labelset())),
+                 decltype(join(*a.weightset(), *b.weightset()))>
     {
       auto ls = join(*a.labelset(), *b.labelset());
       auto ws = join(*a.weightset(), *b.weightset());
