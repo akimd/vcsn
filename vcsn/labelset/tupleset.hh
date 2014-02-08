@@ -140,6 +140,18 @@ namespace vcsn
       }
 
       value_t
+      rdiv(const value_t& l, const value_t& r) const
+      {
+        return rdiv_(l, r, indices_t{});
+      }
+
+      value_t
+      ldiv(const value_t& l, const value_t& r) const
+      {
+        return ldiv_(l, r, indices_t{});
+      }
+
+      value_t
       star(const value_t& l) const
       {
         return star_(l, indices_t{});
@@ -349,6 +361,22 @@ namespace vcsn
       {
         return std::make_tuple((std::get<I>(sets_).mul(std::get<I>(l),
                                                        std::get<I>(r)))...);
+      }
+
+      template <std::size_t... I>
+      value_t
+      rdiv_(const value_t& l, const value_t& r, seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).rdiv(std::get<I>(l),
+                                                        std::get<I>(r)))...);
+      }
+
+      template <std::size_t... I>
+      value_t
+      ldiv_(const value_t& l, const value_t& r, seq<I...>) const
+      {
+        return std::make_tuple((std::get<I>(sets_).ldiv(std::get<I>(l),
+                                                        std::get<I>(r)))...);
       }
 
       template <std::size_t... I>

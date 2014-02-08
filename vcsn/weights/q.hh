@@ -105,6 +105,19 @@ namespace vcsn
       return value_t{l.num * r.num, l.den * r.den}.reduce();
     }
 
+    static value_t
+    rdiv(const value_t l, const value_t r)
+    {
+      require(!is_zero(r), "div: division by zero");
+      return value_t{l.num * int(r.den), l.den * r.num}.reduce();
+    }
+
+    static value_t
+    ldiv(const value_t l, const value_t r)
+    {
+      return rdiv(r, l);
+    }
+
     value_t star(const value_t v) const
     {
       // Bad casting when v.den is too big

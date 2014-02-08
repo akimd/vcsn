@@ -62,6 +62,19 @@ namespace vcsn
       return l * r;
     }
 
+    static value_t
+    rdiv(const value_t l, const value_t r)
+    {
+      require(!is_zero(r), "div: division by zero");
+      return l / r;
+    }
+
+    static value_t
+    ldiv(const value_t l, const value_t r)
+    {
+      return rdiv(r, l);
+    }
+
     value_t
     star(const value_t v) const
     {
