@@ -145,6 +145,20 @@ namespace vcsn
     }
   };
 
+  inline
+  std::ostream&
+  print_set(const z& ws,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      o << "\\mathbb{Z}";
+    else if (format == "text")
+      o << ws.vname();
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
   VCSN_WEIGHTS_BINARY(z, z, z);
 
   VCSN_WEIGHTS_BINARY(b, z, z);

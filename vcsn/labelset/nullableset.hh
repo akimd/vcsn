@@ -7,9 +7,10 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
+# include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
-# include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -183,8 +184,26 @@ namespace vcsn
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }
-
   }
+
+  template <typename GenSet>
+  inline
+  std::ostream&
+  print_set(const ctx::nullableset<GenSet>& ls,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      {
+	print_set(*ls.genset(), o, format);
+	o << "^?";
+      }
+    else if (format == "text")
+      o << ls.vname(true);
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
 }
 
 #endif // !VCSN_LABELSET_NULLABLESET_HH

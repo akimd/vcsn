@@ -7,6 +7,7 @@
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/weights/b.hh>
 # include <vcsn/weights/q.hh>
@@ -178,6 +179,25 @@ namespace vcsn
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
   };
+
+  template <typename Context>
+  inline
+  std::ostream&
+  print_set(const ratexpset<Context>& ws,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      {
+	print_set(*ws.weightset(), o, format);
+	o << "\\,\\mathsf{RatE}\\,";
+	print_set(*ws.labelset(), o, format);
+      }
+    else if (format == "text")
+      o << ws.vname();
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
 
   /// The meet of two ratexpsets.
   template <typename Ctx1, typename Ctx2>

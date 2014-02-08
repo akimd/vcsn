@@ -8,6 +8,7 @@
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -164,6 +165,25 @@ namespace vcsn
     }
 
   }
+
+  template <typename GenSet>
+  inline
+  std::ostream&
+  print_set(const ctx::wordset<GenSet>& ls,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      {
+	print_set(*ls.genset(), o, format);
+	o << "^*";
+      }
+    else if (format == "text")
+      o << ls.vname(true);
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
 }
 
 #endif // !VCSN_LABELSET_WORDSET_HH

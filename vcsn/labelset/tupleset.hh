@@ -5,7 +5,7 @@
 # include <istream>
 # include <tuple>
 
-# include <vcsn/algos/print.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
@@ -21,7 +21,10 @@ namespace vcsn
   inline
   std::ostream&
   print_set(const ctx::tupleset<LabelSets...>& ws,
-            std::ostream& o, const std::string& format);
+            std::ostream& o, const std::string& format)
+  {
+    return ws.print_set(o, format);
+  }
 
   namespace ctx
   {
@@ -505,17 +508,5 @@ namespace vcsn
     };
 
   }
-
-  /// Too many different namespaces: print_set is actually defined in
-  /// vcsn::, not vcsn::ctx::.
-  template <typename... LabelSets>
-  inline
-  std::ostream&
-  print_set(const ctx::tupleset<LabelSets...>& ws,
-            std::ostream& o, const std::string& format)
-  {
-    return ws.print_set(o, format);
-  }
-
 }
 #endif // !VCSN_LABELSET_TUPLESET_HH

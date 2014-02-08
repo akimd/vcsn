@@ -142,6 +142,21 @@ namespace vcsn
       return {};
     }
   }
+
+  inline
+  std::ostream&
+  print_set(const ctx::oneset& ls,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      o << "1";
+    else if (format == "text")
+      o << ls.vname(true);
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
 }
 
 #endif // !VCSN_LABELSET_ONESET_HH

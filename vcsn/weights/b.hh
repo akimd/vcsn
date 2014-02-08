@@ -7,6 +7,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/weights/fwd.hh>
@@ -148,6 +149,20 @@ namespace vcsn
       return o;
     }
   };
+
+  inline
+  std::ostream&
+  print_set(const b& ws,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      o << "\\mathbb{B}";
+    else if (format == "text")
+      o << ws.vname();
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
 
   VCSN_WEIGHTS_BINARY(b, b, b);
 }

@@ -7,6 +7,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh> // intersection
 # include <vcsn/labelset/genset-labelset.hh>
 
@@ -158,6 +159,22 @@ namespace vcsn
       return {get_union(*lhs.genset(), *rhs.genset())};
     }
   }
+
+  template <typename GenSet>
+  inline
+  std::ostream&
+  print_set(const ctx::letterset<GenSet>& ls,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      print_set(*ls.genset(), o, format);
+    else if (format == "text")
+      o << ls.vname(true);
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
 }
 
 #endif // !VCSN_LABELSET_LETTERSET_HH

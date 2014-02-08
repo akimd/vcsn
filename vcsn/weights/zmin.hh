@@ -6,6 +6,7 @@
 # include <string>
 # include <utility>
 
+# include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
 # include <vcsn/weights/fwd.hh>
@@ -157,6 +158,20 @@ namespace vcsn
         return o << v;
     }
   };
+
+  inline
+  std::ostream&
+  print_set(const zmin& ws,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      o << "\\mathbb{Z}_{min}";
+    else if (format == "text")
+      o << ws.vname();
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
 
   VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
 

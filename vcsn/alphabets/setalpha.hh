@@ -183,6 +183,29 @@ namespace vcsn
     letters_t alphabet_;
   };
 
+  template <typename L>
+  inline
+  std::ostream&
+  print_set(const set_alphabet<L>& alphabet,
+            std::ostream& o, const std::string& format)
+  {
+    if (format == "latex")
+      {
+	const char *sep = "\\{";
+	for (auto c: alphabet)
+	  {
+	    o << sep << c;
+	    sep = ", ";
+	  }
+	o << "\\}";
+      }
+    else if (format == "text")
+      o << alphabet.vname(true);
+    else
+      raise("invalid format: ", format);
+    return o;
+  }
+
 }
 
 #endif // !VCSN_ALPHABETS_SETALPHA_HH
