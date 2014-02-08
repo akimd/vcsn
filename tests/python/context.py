@@ -7,11 +7,7 @@ def check(ctx, exp = None):
     c = vcsn.context(ctx)
     if exp is None:
         exp = ctx
-    eff = str(c)
-    if eff == exp:
-        PASS()
-    else:
-        FAIL(exp + " != " + eff)
+    CHECK_EQ(exp, str(c))
 
 check('lal_char(ab)_b')
 check('lal_char(a-kv-z)_b', 'lal_char(abcdefghijkvwxyz)_b')
