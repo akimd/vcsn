@@ -126,7 +126,7 @@ namespace vcsn
 
       static size_t hash(value_t v)
       {
-        return std::hash_value(v);
+        return hash_value(v);
       }
 
       /// \throws std::domain_error if there is no label here.

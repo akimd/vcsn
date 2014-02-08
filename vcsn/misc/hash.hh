@@ -12,14 +12,6 @@ namespace std
     seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
   }
 
-  // Following the naming convention of Boost.
-  template <class T>
-  inline std::size_t hash_value(const T& v)
-  {
-    std::hash<T> hasher;
-    return hasher(v);
-  }
-
 }
 
 namespace vcsn
@@ -56,6 +48,14 @@ namespace vcsn
       return valueset_t::hash(v);
     }
   };
+
+  // Following the naming convention of Boost.
+  template <class T>
+  inline std::size_t hash_value(const T& v)
+  {
+    std::hash<T> hasher;
+    return hasher(v);
+  }
 
 } // namespace vcsn
 

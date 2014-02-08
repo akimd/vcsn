@@ -113,7 +113,7 @@ namespace vcsn
 
     static size_t hash(value_t v)
     {
-      return std::hash_value(v);
+      return hash_value(v);
     }
 
     static value_t

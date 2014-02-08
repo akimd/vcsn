@@ -7,6 +7,7 @@
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/hash.hh>
 
 namespace vcsn
 {
@@ -122,7 +123,7 @@ namespace vcsn
 
       static size_t hash(const value_t& v)
       {
-        return std::hash_value(v);
+        return hash_value(v);
       }
 
       // FIXME: Why do I need to repeat this?

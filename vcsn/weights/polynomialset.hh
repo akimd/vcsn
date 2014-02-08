@@ -333,7 +333,7 @@ namespace vcsn
 
     static size_t hash(const value_t& v)
     {
-      return std::hash_value(v);
+      return hash_value(v);
     }
 
     /// Construct from a string.
