@@ -232,6 +232,11 @@ namespace vcsn
       res = l;
     else if (r->type() == type_t::zero)
       res = r;
+    // E:1 = 1:E = E.
+    else if (l->type() == type_t::one)
+      res = r;
+    else if (r->type() == type_t::one)
+      res = l;
     // END: Trivial Identity
     else
       res = std::make_shared<shuffle_t>(gather<type_t::shuffle>(l, r));

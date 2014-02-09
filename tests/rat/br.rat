@@ -99,6 +99,8 @@ a<f> => <f>a
 \z:<f>a => \z
 <f>a:\z => \z
 
+\e:<f>a => <f>a
+<f>a:\e => <f>a
 <e>\e:<f>\e => <e>\e:<f>\e
 <e>\e:<f>a => <e>\e:<f>a
 <e>a:<f>\e => <e>a:<f>\e
