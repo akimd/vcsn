@@ -64,6 +64,8 @@ namespace vcsn
 
       using super_type = typename ratexpset_t::const_visitor;
 
+      constexpr static const char* me() { return "split"; }
+
       split_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
@@ -188,16 +190,8 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(shuffle,)
-      {
-        raise("split: shuffle is not supported");
-      }
-
-      using complement_t = typename super_type::complement_t;
-      virtual void visit(const complement_t&)
-      {
-        raise("split: complement is not supported");
-      }
+      VCSN_RAT_UNSUPPORTED(shuffle)
+      VCSN_RAT_UNSUPPORTED(complement)
 
       VCSN_RAT_VISIT(star, e)
       {

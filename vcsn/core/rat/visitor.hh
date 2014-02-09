@@ -2,6 +2,7 @@
 # define VCSN_CORE_RAT_VISITOR_HH
 
 # include <vcsn/core/rat/fwd.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
@@ -48,6 +49,12 @@ namespace vcsn
 # define VCSN_RAT_VISIT(Type, Val)                      \
   using Type ## _t = typename super_type::Type ## _t;   \
   virtual void visit(const Type ## _t& Val)
+
+# define VCSN_RAT_UNSUPPORTED(Type)                     \
+  VCSN_RAT_VISIT(Type,)                                 \
+  {                                                     \
+    raise(me(), ": " #Type " is not supported");        \
+  }
 
 # include <vcsn/core/rat/visitor.hxx>
 

@@ -34,6 +34,8 @@ namespace vcsn
 
       using super_type = typename RatExpSet::const_visitor;
 
+      constexpr static const char* me() { return "expand"; }
+
       expand_visitor(const ratexpset_t& rs)
         : rs_(rs)
       {}
@@ -100,15 +102,8 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(shuffle,)
-      {
-        raise("expand: shuffle is not supported");
-      }
-
-      VCSN_RAT_VISIT(complement,)
-      {
-        raise("expand: complement is not supported");
-      }
+      VCSN_RAT_UNSUPPORTED(shuffle)
+      VCSN_RAT_UNSUPPORTED(complement)
 
       VCSN_RAT_VISIT(prod, v)
       {

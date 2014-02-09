@@ -117,6 +117,8 @@ namespace vcsn
 
       using super_type = typename Context::const_visitor;
 
+      constexpr static const char* me() { return "standard"; }
+
       standard_visitor(const context_t& ctx)
         : ws_(*ctx.weightset())
         , res_(ctx)
@@ -130,20 +132,9 @@ namespace vcsn
         return std::move(res_);
       }
 
-      VCSN_RAT_VISIT(intersection,)
-      {
-        raise("standard: intersection is not supported");
-      }
-
-      VCSN_RAT_VISIT(complement,)
-      {
-        raise("standard: complement is not supported");
-      }
-
-      VCSN_RAT_VISIT(shuffle,)
-      {
-        raise("standard: shuffle is not supported");
-      }
+      VCSN_RAT_UNSUPPORTED(intersection)
+      VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(shuffle)
 
       VCSN_RAT_VISIT(zero,)
       {

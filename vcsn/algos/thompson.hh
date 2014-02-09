@@ -27,6 +27,8 @@ namespace vcsn
 
       using super_type = typename Context::const_visitor;
 
+      constexpr static const char* me() { return "thompson"; }
+
       thompson_visitor(const context_t& ctx)
         : res_(ctx)
       {}
@@ -74,20 +76,9 @@ namespace vcsn
         final_ = final;
       }
 
-      VCSN_RAT_VISIT(intersection,)
-      {
-        raise("thompson: intersection is not supported");
-      }
-
-      VCSN_RAT_VISIT(complement,)
-      {
-        raise("thompson: complement is not supported");
-      }
-
-      VCSN_RAT_VISIT(shuffle,)
-      {
-        raise("thompson: shuffle is not supported");
-      }
+      VCSN_RAT_UNSUPPORTED(intersection)
+      VCSN_RAT_UNSUPPORTED(complement)
+      VCSN_RAT_UNSUPPORTED(shuffle)
 
       VCSN_RAT_VISIT(prod, e)
       {
