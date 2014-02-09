@@ -240,6 +240,13 @@ namespace vcsn
     return res;
   }
 
+  DEFINE::rdiv(value_t l, value_t r) const
+    -> value_t
+  {
+    // l/r = (r{T} {\} l{T}){T}.
+    return transposition(ldiv(transposition(r), transposition(l)));
+  }
+
   DEFINE::shuffle(value_t l, value_t r) const
     -> value_t
   {

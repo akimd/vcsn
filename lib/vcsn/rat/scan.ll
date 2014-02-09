@@ -83,6 +83,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "+"     return TOK(PLUS);
   "."     return TOK(DOT);
   "{\\}"  return TOK(BACKSLASH);
+  "{/}"   return TOK(SLASH);
   ","     return TOK(COMMA);
   "\\e"   return TOK(ONE);
   "\\z"   return TOK(ZERO);

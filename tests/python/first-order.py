@@ -82,6 +82,25 @@ check('a*{\}a', '\e + a')
 check('a*{\}a*', '<\e*>\e + a<\e*>a*')
 check('(<x>a)*{\}(<y>a)*', '<(x{\}y)*>\e + a<(x{\}y)*y>(<y>a)*')
 
+# Right quotient.
+check('\z{/}\e', '\z')
+check('\e{/}\e', '\e')
+check('abc{/}\e', 'abc')
+check('a{/}a', '\e')
+check('a{/}b', '\z')
+
+check('(<x>a){/}a', '<x>\e')
+check('<x>a{/}<y>a', '<y{\}x>\e')
+check('a{/}(<x>a)*', '<x{\}\e>\e + a')
+# I don't know for sure this is right :(
+check('(<x>a)*{/}(a)*',
+'<\e+x+xxx*>\e + a(<x>(<x>a)*+<x>(<x>a)*<x>+<xx>(<x>(<x>a)*(a{\}<x>a)*))')
+check('a*{/}a', '\e + aa*')
+check('a*{/}a*', '<\e+\e*>\e + a(a*+a*(a{\}a)*)')
+# I don't know for sure this is right :(
+check('(<x>a)*{/}(<y>a)*',
+'<\e+y{\}x+yy{\}xx(y{\}x)*>\e + a(<x>(<x>a)*+<(y{\}\e)x>(<x>a)*<x>+<yy{\}xx>(<x>(<x>a)*(<y>a{\}<x>a)*))')
+
 
 ## -------------------- ##
 ## Classical examples.  ##

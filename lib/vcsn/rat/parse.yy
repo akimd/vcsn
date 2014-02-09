@@ -127,6 +127,7 @@
   PLUS       "+"
   RPAREN     ")"
   TRANSPOSITION "{T}"
+  SLASH      "{/}"
   ZERO       "\\z"
 ;
 
@@ -141,6 +142,7 @@
 %left "+"
 %left ":" "%"
 %left "&"
+%left "{/}"
 %right "{\\}"
 %left "."
 %right "weight" // Match longest series of "weight".
@@ -176,6 +178,7 @@ exp:
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
+| exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(intersection,
                                           $1.exp, MAKE(complement, $3.exp)); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }

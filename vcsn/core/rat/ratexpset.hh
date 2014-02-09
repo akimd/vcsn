@@ -150,6 +150,7 @@ namespace vcsn
     value_t intersection(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     value_t ldiv(value_t l, value_t r) const;
+    value_t rdiv(value_t l, value_t r) const;
     value_t star(value_t e) const;
     value_t complement(value_t e) const;
     value_t transposition(value_t e) const;
