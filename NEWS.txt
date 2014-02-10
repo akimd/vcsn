@@ -4,6 +4,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-10
+** ratexp.info: New Python binding
+Like automaton.info, returns a dictionary of properties of the ratexp.
+
 * 2014-02-07
 ** are-isomorphic/is-isomorphic: new algorithm (static, dyn, tafkit, Python)
 Given two automata, check whether they are isomorphic to one another.

@@ -4,12 +4,7 @@ import vcsn
 
 from test import *
 
-
-# check EXPECTED AUT
-# ------------------
-# Check that AUTO.info() == EXPECTED.
-def check(aut, exp):
-    eff = aut.info()
+def check_eq_dict(exp, eff):
     if eff == exp:
         PASS()
     else:
@@ -19,8 +14,18 @@ def check(aut, exp):
             if exp[k] != eff[k]:
                 FAIL("different " + k + ": " + exp[k] + " != " + eff[k])
 
+# check OBJ EXPECTED
+# ------------------
+# Check that OBJ.info() == EXPECTED.
+def check(obj, exp):
+    check_eq_dict(exp, obj.info())
 
 ctx = vcsn.context('lal_char(a-z)_z')
+
+
+## ---------------- ##
+## automaton.info.  ##
+## ---------------- ##
 
 check(ctx.ratexp("a+ab").standard(),
       {'is ambiguous': False,
@@ -91,5 +96,70 @@ check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
        'number of transitions': 7,
        'number of useful states': 4,
        'type': 'mutable_automaton<law_char(ab)_b>'})
+
+
+## ------------- ##
+## ratexp.info.  ##
+## ------------- ##
+
+check(vcsn.context('lal_char(abc)_b').ratexp('abc'),
+      {'type': 'ratexpset<lal_char(abc)_b>',
+       'size': 5,
+       'sum': 0,
+       'shuffle': 0,
+       'intersection': 0,
+       'prod': 1,
+       'star': 0,
+       'complement': 0,
+       'zero': 0,
+       'one': 0,
+       'atom': 3,
+       'lweight': 0,
+       'rweight': 0})
+
+check(vcsn.context('lal_char(abc)_b').ratexp('\e+bc*'),
+      {'type': 'ratexpset<lal_char(abc)_b>',
+       'size': 6,
+       'sum': 1,
+       'shuffle': 0,
+       'intersection': 0,
+       'prod': 1,
+       'star': 1,
+       'complement': 0,
+       'zero': 0,
+       'one': 1,
+       'atom': 2,
+       'lweight': 0,
+       'rweight': 0})
+
+check(vcsn.context('lal_char(abc)_z').ratexp('<2>a<3>'),
+      {'type': 'ratexpset<lal_char(abc)_z>',
+       'size': 2,
+       'sum': 0,
+       'shuffle': 0,
+       'intersection': 0,
+       'prod': 0,
+       'star': 0,
+       'complement': 0,
+       'zero': 0,
+       'one': 0,
+       'atom': 1,
+       'lweight': 1,
+       'rweight': 0})
+
+check(vcsn.context('lal_char(abc)_z').ratexp('<2>(a+b)<3>'),
+      {'type': 'ratexpset<lal_char(abc)_z>',
+       'size': 5,
+       'sum': 1,
+       'shuffle': 0,
+       'intersection': 0,
+       'prod': 0,
+       'star': 0,
+       'complement': 0,
+       'zero': 0,
+       'one': 0,
+       'atom': 2,
+       'lweight': 1,
+       'rweight': 1})
 
 PLAN()

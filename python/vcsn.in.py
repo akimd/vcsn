@@ -12,6 +12,34 @@ def dot_to_svg(dot):
     from subprocess import check_output
     return check_output(['dot','-Tsvg','/tmp/a.gv'])
 
+def info_to_dict(info):
+    """Convert a "key: value" list of lines into a dictionary.
+    Convert Booleans into bool, and likewise for integers."""
+    res = dict()
+    for l in info.splitlines():
+        (k, v) = l.split(':')
+        v = v.strip()
+        # Beware that we may display "N/A" for Boolean (e.g., "is
+        # ambiguous" for non LAL), and for integers (e.g., "number of
+        # deterministic states" for non LAL).
+        try:
+            # Don't convert "0" and "1", which are used for false and
+            # true, as integer: special case categories that start
+            # with "is ".
+            if k.startswith('is '):
+                if v in ['false', '0']:
+                    v = False
+                elif v in ['true', '1']:
+                    v = True
+            # Otherwise, if it passes the conversion into a number,
+            # make it a number.
+            else:
+                v = int(v)
+        except:
+            pass
+        res[k] = v
+    return res
+
 # FIXME: Get rid of this.
 def is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
@@ -66,28 +94,7 @@ def automaton_fst(aut, cmd):
 automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
 automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 
-def automaton_info(aut):
-    '''A dictionary of automaton properties.'''
-    res = dict()
-    for l in aut.format('info').splitlines():
-        (k, v) = l.split(':')
-        v = v.strip()
-        # Beware that we may display "N/A" for Boolean (e.g., "is
-        # ambiguous" for non LAL), and for integers (e.g., "number of
-        # deterministic states" for non LAL).
-        try:
-            if k.startswith('is '):
-                if v in ['false', '0']:
-                    v = False
-                elif v in ['true', '1']:
-                    v = True
-            elif k.startswith('number '):
-                v = int(v)
-        except:
-            pass
-        res[k] = v
-    return res
-automaton.info = automaton_info
+automaton.info = lambda self: info_to_dict(self.format('info'))
 
 automaton.lan_to_lal = \
   lambda self: automaton(self.format('dot').replace('lan_', 'lal_'), "dot")
@@ -117,6 +124,8 @@ ratexp.__mul__ = ratexp.concatenate
 ratexp.__repr__ = lambda self: self.format('text')
 ratexp.__str__ = lambda self: self.format('text')
 ratexp._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
+
+ratexp.info = lambda self: info_to_dict(self.format('info'))
 
 
 ## -------- ##
