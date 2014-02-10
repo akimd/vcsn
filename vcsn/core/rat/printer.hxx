@@ -34,8 +34,8 @@ namespace vcsn
         {
           lgroup_       = "{";
           rgroup_       = "}";
-          lbracket_     = "";
-          rbracket_     = "";
+          lbracket_     = " \\langle ";
+          rbracket_     = " \\rangle ";
           lparen_       = "\\left(";
           rparen_       = "\\right)";
           star_         = "^{*}";
