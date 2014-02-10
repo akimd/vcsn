@@ -232,9 +232,12 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = {ws_.one(), polys_t{}};
-        for (size_t i = 0; i < e.size(); ++i)
+        auto last = e.size() - 1;
+        for (size_t i = 0; i <= last; ++i)
           {
-            const auto& r = e[transposed_ ? e.size() - i - 1 : i];
+            auto r = e[transposed_ ? last - i : i];
+            if (transposed_)
+              r = rs_.transposition(r);
             // fo(l) = c(l) + a.A(l) + ...
             // fo(r) = c(r) + a.A(r) + ...
             // fo(l.r) = (c(l) + a.A(l) + ...) (c(r) + a.A(r) + ...)
@@ -246,7 +249,24 @@ namespace vcsn
               p.second = ps_.rmul(p.second, r);
 
             // Don't leave \z polynomials.
-            if (!ws_.is_zero(res_.constant))
+            if (ws_.is_zero(res_.constant))
+              {
+                // Finish the product with all the remaining rhs and
+                // break.  This optimization (as opposed to performing
+                // all the remaining iterations and repeatedly calling
+                // ps.mul) improves the score for
+                // linear([ab]*a[ab]{150}) from 0.32s to 0.23s on
+                // erebus, clang++ 3.4.
+                ratexp_t rhss
+                  = transposed_
+                  ? rs_.transposition(prod_(e.begin(),
+                                            std::next(e.begin(), last-i)))
+                  : prod_(std::next(e.begin(), i+1), std::end(e));
+                for (auto& p: res_.polynomials)
+                  p.second = ps_.rmul(p.second, rhss);
+                break;
+              }
+            else
               {
                 value_t rhs = first_order(r);
                 // (ii) A(fo(lr)) += c(l).A(r)
@@ -258,6 +278,21 @@ namespace vcsn
                 res_.constant = ws_.mul(res_.constant, rhs.constant);
               }
           }
+      }
+
+      /// Build a product for these expressions.  Pay attention to not
+      /// building products with 0 or 1 expression.
+      ratexp_t
+      prod_(typename prod_t::iterator begin,
+            typename prod_t::iterator end) const
+      {
+        using ratexps_t = typename prod_t::ratexps_t;
+        if (begin == end)
+          return rs_.one();
+        else if (std::next(begin, 1) == end)
+          return *begin;
+        else
+          return std::make_shared<prod_t>(ratexps_t{begin, end});
       }
 
       label_t one_(std::true_type)
