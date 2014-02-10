@@ -3,14 +3,6 @@ from __future__ import print_function
 from difflib import unified_diff as diff
 import inspect, os, sys
 
-def here():
-    # Find the top-level call.
-    frame = inspect.currentframe();
-    while frame.f_back:
-        frame = frame.f_back
-    finfo = inspect.getframeinfo(frame)
-    return finfo.filename + ":" + str(finfo.lineno)
-
 count = 0
 
 # For build-checks, use our abs_srcdir from tests/bin/vcsn. For
@@ -21,6 +13,19 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")
+
+def load(fname):
+    "Load the library automaton file fname."
+    import vcsn
+    return vcsn.automaton.load(vcsn.datadir + "/" + fname)
+
+def here():
+    # Find the top-level call.
+    frame = inspect.currentframe();
+    while frame.f_back:
+        frame = frame.f_back
+    finfo = inspect.getframeinfo(frame)
+    return finfo.filename + ":" + str(finfo.lineno)
 
 def FAIL(*msg):
     global count

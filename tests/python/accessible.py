@@ -3,11 +3,13 @@
 import vcsn
 from test import *
 
+a1 = load('lal_char_b/a1.gv')
+b1 = load('lal_char_z/b1.gv')
+minab = load('lal_char_zmin/minab.gv')
+
 ## ----------- ##
 ## Accessible. ##
 ## ----------- ##
-
-
 
 ## check_accessible INPUT OUTPUT
 ## -----------------------------
@@ -180,9 +182,9 @@ def check_is_trim (input, output):
     input = vcsn.automaton(input)
   CHECK_EQ(input.is_trim(), output)
 
-# FIXME: check_is_trim('lal_char_b/a1.gv', True)
-# FIXME: check_is_trim('lal_char_z/b1.gv', True)
-# FIXME: check_is_trim('lal_char_zmin/minab.gv', True)
+check_is_trim(a1, True)
+check_is_trim(b1, True)
+check_is_trim(minab, True)
 
 check_is_trim('''
 digraph
@@ -231,9 +233,9 @@ def check_is_empty (input, output):
   if isinstance(input, str):
     input = vcsn.automaton(input)
   CHECK_EQ(input.is_empty(), output)
-# FIXME: check_is_empty('lal_char_b/a1.gv', True)
-# FIXME: check_is_empty('lal_char_z/b1.gv', True)
-# FIXME: check_is_empty('lal_char_zmin/minab.gv', True)
+check_is_empty(a1, False)
+check_is_empty(b1, False)
+check_is_empty(minab, False)
 
 check_is_empty('''
 digraph
@@ -274,9 +276,9 @@ def check_is_useless (input, output):
     input = vcsn.automaton(input)
   CHECK_EQ(input.is_useless(), output)
 
-# FIXME: check_is_useless('lal_char_b/a1.gv', True)
-# FIXME: check_is_useless('lal_char_z/b1.gv', True)
-# FIXME: check_is_useless('lal_char_zmin/minab.gv', True)
+check_is_useless(a1, False)
+check_is_useless(b1, False)
+check_is_useless(minab, False)
 
 check_is_useless('''
 digraph
@@ -333,9 +335,9 @@ def check_trim(input, output):
     output = vcsn.automaton(output)
   CHECK_EQ(input.trim(), output)
 
-# FIXME: check_trim('lal_char_b/a1.gv', ...)
-# FIXME: check_trim('lal_char_z/b1.gv', ...)
-# FIXME: check_trim('lal_char_zmin/minab.gv', ...)
+check_trim(a1, a1)
+check_trim(b1, b1)
+check_trim(minab, minab)
 
 check_trim('''
 digraph
