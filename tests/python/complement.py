@@ -1,7 +1,10 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
 
 # Precondition: lal.
-run 1 '' -vcsn complement -f- <<\EOF
+XFAIL(lambda: vcsn.automaton('''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -9,10 +12,10 @@ digraph
   0 -> 0 [label="a, b"]
   0 -> F
 }
-EOF
+''').complement())
 
 # Precondition: Boolean.
-run 1 '' -vcsn complement -f- <<\EOF
+XFAIL(lambda: vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -20,10 +23,10 @@ digraph
   0 -> 0 [label="a, b"]
   0 -> F
 }
-EOF
+''').complement())
 
 # Precondition: deterministic.
-run 1 '' -vcsn complement -f- <<\EOF
+XFAIL(lambda: vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -33,10 +36,10 @@ digraph
   2 -> 2 [label="a,b"]
   2 -> F
 }
-EOF
+''').complement())
 
 # Precondition: complete.
-run 1 '' -vcsn complement -f- <<\EOF
+XFAIL(lambda: vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -44,10 +47,10 @@ digraph
   0 -> 0 [label="a"]
   0 -> F
 }
-EOF
+''').complement())
 
 # Complement for real.
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -70,8 +73,9 @@ digraph
   1 -> 2 [label = "a, b", color = DimGray]
   2 -> 2 [label = "a, b", color = DimGray]
 }
-EOF
-cat >out.exp <<\EOF
+''')
+
+o = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -96,9 +100,10 @@ digraph
   2 -> F2
   2 -> 2 [label = "a, b"]
 }
-EOF
-run 0 out.exp -vcsn complement -f a.gv
+''')
+CHECK_EQ(True, a.complement().is_equivalent(o))
+
 # Involution.
-mv out.exp in.gv
-mv a.gv out.exp
-run 0 out.exp -vcsn complement -f in.gv
+CHECK_EQ(True, a.complement().complement().is_equivalent(a))
+
+PLAN()
