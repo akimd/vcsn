@@ -309,6 +309,7 @@ namespace vcsn
         using namespace dyn::detail;
 
         REGISTER(accessible, aut_t);
+        REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(aut_to_exp, aut_t);
         REGISTER(chain, aut_t, int, int);
         REGISTER(chain_ratexp, rs_t, int, int);

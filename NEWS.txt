@@ -4,6 +4,25 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-28
+** is-isomorphic: extend to any context and any automata
+Lift the previous limitation of is-isomorphic to deterministic lal automata.
+The sequential case keeps its linear complexity, but the new generic code
+has a worst-case complexity of O((n+1)!); however the common case is much
+faster, as we heuristically classify states according to in- and
+out-transitions, restricting brute-force search to states which are possible
+candidates for isomorphism.
+
+  >>> ctx = vcsn.context('lal_char(a-z)_b')
+  >>> a = ctx.ratexp('ab+<3>ab+ab+ac').standard()
+  >>> b = ctx.ratexp('ab+ac+<3>ab+ab').standard()
+  >>> a.is_isomorphic(b)
+  True
+  >>> at = ctx.ratexp('abc').standard().transpose()
+  >>> c = ctx.ratexp('cba').standard()
+  >>> at.is_isomorphic(c)
+  True
+
 * 2014-05-22
 ** Automata are now handled via shared pointers
 Types such as vcsn::mutable_automaton<Ctx> used to support the so called
