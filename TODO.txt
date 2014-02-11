@@ -15,7 +15,9 @@ We have
 
 that exist at in the various API.  Do the same for ratexps:
 
-  star(ratexp) -> ratexp
+  star(ratexp) -> ratexp # This one exists, and is currently named "chain".
+                         # Actually, it is more general, of which star
+                         # is just a special case.
   left_mult(weight, ratexp) -> ratexp
   right_mult(ratexp, weight) -> ratexp
 
