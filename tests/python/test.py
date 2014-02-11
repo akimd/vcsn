@@ -32,11 +32,13 @@ def FAIL(*msg):
     count += 1
     print('not ok ', count, *msg)
     print(here() + ": fail:", *msg)
+    print()
 
 def PASS(*msg):
     global count
     count += 1
     print('ok ', count, *msg)
+    print()
 
 def CHECK_EQ(expected, effective):
     "Check that effective value is equal to expected."
