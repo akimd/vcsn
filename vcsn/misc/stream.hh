@@ -57,7 +57,7 @@ namespace vcsn LIBVCSN_API
   /// the buffer string.  \a explanation should not contain
   /// trailing punctuation or spaces.
   ATTRIBUTE_NORETURN
-  void fail_reading(std::istream& is, const std::string& explanation);
+  void fail_reading(std::istream& is, std::string explanation);
 
   /// Format v via vs.print.
   template <typename ValueSet, typename... Args>

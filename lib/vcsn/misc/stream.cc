@@ -5,6 +5,8 @@
 #include <istream>
 #include <fstream>
 
+#include <vcsn/misc/raise.hh>
+
 namespace vcsn
 {
 
@@ -111,7 +113,7 @@ namespace vcsn
     return res;
   }
 
-  void fail_reading(std::istream& is, const std::string& explanation)
+  void fail_reading(std::istream& is, std::string explanation)
   {
     is.clear();
     std::string buf;
@@ -119,7 +121,8 @@ namespace vcsn
     if (!is.good())
       // This shouldn't really happen; however it's best to fail cleanly.
       is.clear();
-
-    throw std::domain_error(explanation + ": " + str_escape(buf));
+    if (!buf.empty())
+      explanation += ": " + str_escape(buf);
+    raise(explanation);
   }
 }
