@@ -1,16 +1,18 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
 
 # check complete algorithm
 # ------------------------
-
-check ()
-{
-  run 0 out.exp -vcsn complete -A -f "$1"
+def check(i, o):
+  i = vcsn.automaton(i)
+  o = vcsn.automaton(o)
+  CHECK_EQ(o, i.complete())
   # Idempotence.
-  run 0 out.exp -vcsn complete -A -f out.exp
-}
+  CHECK_EQ(o, o.complete())
 
-cat > graph.gv <<\EOF
+check('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -21,9 +23,7 @@ digraph
   1 -> 2 [label = "c"]
   2 -> F2
 }
-EOF
-
-cat > out.exp <<\EOF
+''', '''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -50,10 +50,9 @@ digraph
   2 -> 3 [label = "a, b, c", color = DimGray]
   3 -> 3 [label = "a, b, c", color = DimGray]
 }
-EOF
-check graph.gv
+''')
 
-cat > graph.gv <<\EOF
+check('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -63,9 +62,7 @@ digraph
   1 -> 1 [label = "a"]
   1 -> F1
 }
-EOF
-
-cat > out.exp <<\EOF
+''', '''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -85,11 +82,10 @@ digraph
   1 -> F1
   1 -> 1 [label = "a"]
 }
-EOF
-check graph.gv
+''')
 
 
-cat > graph.gv <<\EOF
+check('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -97,9 +93,7 @@ digraph
   0 -> 0 [label = "a"]
   0 -> F0
 }
-EOF
-
-cat > out.exp <<\EOF
+''', '''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -119,5 +113,6 @@ digraph
   0 -> 0 [label = "a", color = DimGray]
   1 -> 1 [label = "a", color = DimGray]
 }
-EOF
-check graph.gv
+''')
+
+PLAN()

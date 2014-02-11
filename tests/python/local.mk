@@ -17,6 +17,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
 %C%_TESTS =                                     \
   %D%/accessible.py                             \
   %D%/aut-to-exp.py                             \
+  %D%/complete.py                               \
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
   %D%/difference.py                             \
