@@ -65,8 +65,7 @@ namespace vcsn
     {
       require(!is_zero(r), "div: division by zero");
       require(!(l % r),
-              "z: div: invalid division: ",
-              std::to_string(l), "/", std::to_string(r));
+              "z: div: invalid division: ", l, '/', r);
       return l / r;
     }
 
