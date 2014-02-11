@@ -4,6 +4,11 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-11
+** ratexpset can be used for LabelSet
+Contexts such as 'ratexpset<lal_char(ab)_b>_b' are now valid.  The
+eliminate_state algorithm works properly on automata of such type.
+
 * 2014-02-10
 ** ratexp.info: New Python binding
 Like automaton.info, returns a dictionary of properties of the ratexp.
