@@ -40,6 +40,14 @@ def PASS(*msg):
     print('ok ', count, *msg)
     print()
 
+def XFAIL(fun):
+    try:
+        fun()
+    except RuntimeError:
+        PASS()
+    else:
+        FAIL('did not raise an exception', fun)
+
 def CHECK_EQ(expected, effective):
     "Check that effective value is equal to expected."
     if expected == effective:
