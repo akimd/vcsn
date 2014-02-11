@@ -68,6 +68,9 @@ check('(abc){T}', 'cba')
 check('(abc+aabbcc){T}', 'c(ba+c(aabb){T})')
 check('(<xy>abc<yz>){T}', 'c<zy>(ba)<yx>')
 
+check('(ab)*{T}', '\e + ba(ab)*{T}')
+check('(<xy>abc<yz>)*{T}', '\e + c<zy>((ba)<yx>(<xy>(abc)<yz>)*{T})')
+
 # Lquotient
 check('\e{\}\z', '\z')
 check('\e{\}\e', '\e')
@@ -94,12 +97,12 @@ check('<x>a{/}<y>a', '<y{\}x>\e')
 check('a{/}(<x>a)*', '<x{\}\e>\e + a')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(a)*',
-'<\e+x+xxx*>\e + a(<x>(<x>a)*+<x>(<x>a)*<x>+<xxx>((<x>a)*(a{\}<x>a)*{T}))')
+'<x*>\e + a<x>((<x>a){T}*{T}(a{\}(<x>a){T})*{T})')
 check('a*{/}a', '\e + aa*')
-check('a*{/}a*', '<\e+\e*>\e + a(a*+a*(a{\}a)*{T})')
+check('a*{/}a*', '<\e*>\e + aa*{T}(a{\}a)*{T}')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-'<\e+y{\}x+yy{\}xx(y{\}x)*>\e + a(<x>(<x>a)*+<(y{\}\e)x>(<x>a)*<x>+<yy{\}xxx>((<x>a)*(<y>a{\}<x>a)*{T}))')
+'<x*>\e + a<x>((<x>a){T}*{T}((<y>a){T}{\}(<x>a){T})*{T})')
 
 
 ## -------------------- ##

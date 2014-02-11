@@ -229,6 +229,11 @@ namespace vcsn
           add_(res_, first_order(v));
       }
 
+      // fo(l) = c(l) + a.A(l) + ...
+      // fo(r) = c(r) + a.A(r) + ...
+      // fo(l.r) = (c(l) + a.A(l) + ...) (c(r) + a.A(r) + ...)
+      // c(fo(lr)) = c(l).c(r)
+      // A(fo(lr)) = A(l).r + c(l).A(r)
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = {ws_.one(), polys_t{}};
@@ -236,13 +241,9 @@ namespace vcsn
         for (size_t i = 0; i <= last; ++i)
           {
             auto r = e[transposed_ ? last - i : i];
+            value_t rhs = first_order(r);
             if (transposed_)
               r = rs_.transposition(r);
-            // fo(l) = c(l) + a.A(l) + ...
-            // fo(r) = c(r) + a.A(r) + ...
-            // fo(l.r) = (c(l) + a.A(l) + ...) (c(r) + a.A(r) + ...)
-            // c(fo(lr)) = c(l).c(r)
-            // A(fo(lr)) = A(l).r + c(l).A(r)
 
             // (i): A(fo(lr)) = A(l).r
             for (auto& p: res_.polynomials)
@@ -268,7 +269,6 @@ namespace vcsn
               }
             else
               {
-                value_t rhs = first_order(r);
                 // (ii) A(fo(lr)) += c(l).A(r)
                 for (const auto& p: rhs.polynomials)
                   ps_.add_weight(res_.polynomials[p.first],
@@ -305,6 +305,23 @@ namespace vcsn
         raise(me(), ": quotient requires LAN");
       }
 
+      /// If r is e*, return e.
+      /// If r is e*{T}, return e{T}.
+      /// Otherwise return nullptr.
+      ///
+      /// FIXME: What about complement?
+      ratexp_t star_child(const ratexp_t r)
+      {
+        if (auto c = std::dynamic_pointer_cast<const transposition_t>(r))
+          {
+            if (auto s = std::dynamic_pointer_cast<const star_t>(c->sub()))
+              return rs_.transposition(s->sub());
+          }
+        else if (auto s = std::dynamic_pointer_cast<const star_t>(r))
+          return s->sub();
+        return nullptr;
+      }
+
       VCSN_RAT_VISIT(ldiv, e)
       {
         assert(e.size() == 2);
@@ -313,16 +330,13 @@ namespace vcsn
         rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
 #endif
         // Special case the quotient of stars.
-        if (!use_spontaneous_
-            && e[0]->type() == type_t::star
-            && e[1]->type() == type_t::star)
+        ratexp_t lchild = star_child(e[0]);
+        ratexp_t rchild = star_child(e[1]);
+        if (!use_spontaneous_ && lchild && rchild)
           {
-            auto l = std::dynamic_pointer_cast<const star_t>(e[0]);
-            auto r = std::dynamic_pointer_cast<const star_t>(e[1]);
-            auto e = l->sub();
-            auto f = r->sub();
             // (e*) \ (f*) = (e\f)* . f*
-            auto q = rs_.mul(rs_.star(rs_.ldiv(e, f)), r);
+            auto q = rs_.mul(rs_.star(rs_.ldiv(lchild, rchild)),
+                             rs_.star(rchild));
             res_ = first_order(q);
           }
         else
@@ -485,10 +499,17 @@ namespace vcsn
       {
         value_t res = first_order(e.sub());
         res_.constant = ws_.star(res.constant);
+        auto f = e.shared_from_this();
+        if (transposed_)
+          {
+            res_.constant = ws_.transpose(res_.constant);
+            f = rs_.transposition(f);
+          }
+
         for (const auto& p: res.polynomials)
           res_.polynomials[p.first]
             = ps_.lmul(res_.constant,
-                       ps_.rmul(p.second, e.shared_from_this()));
+                       ps_.rmul(p.second, f));
       }
 
       VCSN_RAT_VISIT(lweight, e)
