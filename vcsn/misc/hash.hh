@@ -1,6 +1,8 @@
 #ifndef VCSN_MISC_HASH_HH
 # define VCSN_MISC_HASH_HH
 
+# include <functional> // std::equal_to
+
 namespace std
 {
 
