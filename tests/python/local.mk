@@ -20,6 +20,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
   %D%/difference.py                             \
+  %D%/eliminate-state.py                        \
   %D%/expand.py                                 \
   %D%/factory.py                                \
   %D%/infiltration.py                           \
@@ -47,10 +48,10 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
-  %D%/aut-to-exp.dir/lao-elim-0.gv              \
-  %D%/aut-to-exp.dir/lao-elim-1.gv              \
-  %D%/aut-to-exp.dir/lao-elim-2.gv              \
-  %D%/aut-to-exp.dir/lao.gv                     \
+  %D%/eliminate-state.dir/lao-elim-0.gv         \
+  %D%/eliminate-state.dir/lao-elim-1.gv         \
+  %D%/eliminate-state.dir/lao-elim-2.gv         \
+  %D%/eliminate-state.dir/lao.gv                \
   %D%/factory.dir/clique-a-4.gv                 \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \
@@ -75,6 +76,7 @@ EXTRA_DIST +=                                   \
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
+%D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/product.log: $(wildcard $(srcdir)/%D%/product.dir/*)

@@ -12,7 +12,6 @@
 # The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 %C%_TESTS =                                     \
-  %D%/aut-to-exp.chk                            \
   %D%/cat.chk                                   \
   %D%/chain.chk                                 \
   %D%/complement.chk                            \
@@ -49,10 +48,6 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/aut-to-exp.dir/lao.gv                     \
-  %D%/aut-to-exp.dir/lao-elim-0.gv              \
-  %D%/aut-to-exp.dir/lao-elim-1.gv              \
-  %D%/aut-to-exp.dir/lao-elim-2.gv              \
   %D%/cat.dir/lal_char_b.in.gv                  \
   %D%/cat.dir/lal_char_b.out.gv                 \
   %D%/cat.dir/lal_char_b.tex                    \
