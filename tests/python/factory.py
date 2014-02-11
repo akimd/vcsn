@@ -30,7 +30,7 @@ XFAIL(lambda: b.divkbaseb(2, 10))
 
 # Expect a clique.
 c1 = vcsn.context('lal_char(a)_b').random(4, 1, 4, 4)
-c2 = vcsn.automaton.load(medir + "/" + 'clique-a-4.gv')
+c2 = vcsn.automaton.load(medir + '/clique-a-4.gv')
 CHECK_EQ(c1, c2)
 
 # Expect the right number of states.
