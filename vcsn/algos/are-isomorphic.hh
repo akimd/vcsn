@@ -19,17 +19,10 @@ namespace vcsn
   | are_isomorphic.  |
   `-----------------*/
 
-  /// Why two given automata are not isomorphic.
-  enum class non_isomorphism_reason
-  {
-    none,  // a1_ and a2_ are in fact isomorphic.
-    pair,  // We found a counterexample of two states [Only possible for DFAs].
-    sizes, // Different number of states or transitions.
-  };
-
   template <typename Aut1, typename Aut2>
   class are_isomorphicer // FIXME: this naming convention is really getting too silly
   {
+  private:
     using automaton1_t = Aut1;
     using context1_t = typename automaton1_t::context_t;
     using weightset1_t = typename automaton1_t::weightset_t;
@@ -80,9 +73,30 @@ namespace vcsn
     /// written in Reverse-Polish English.
     std::stack<std::pair<state1_t, state2_t>> worklist_;
 
-    /// Only valid in case of non-isomorphism, when operator() returns false.
-    non_isomorphism_reason non_isomorphism_reason_;
-    std::pair<state_t, state_t> counterexample_;
+    /// A datum specifying if two given automata are isomorphic, and
+    /// why if they are not.  This should be a variant record, but
+    /// BOOST variants are not really suitable (this is not just a
+    /// disjoint union: we also need a case tag), we don't like
+    /// unions, and visitors are overkill.  The thing might even get
+    /// simpler when we generalize to non-deterministic automata.
+    struct full_response
+    {
+      enum class tag
+      {
+        never_computed = -1,      // We didn't run the algorithm yet.
+        isomorphic = 0,           // a1_ and a2_ are in fact isomorphic.
+        counterexample = 1,       // We found a counterexample of two states
+                                  // [which is only possible for DFAs].
+        trivially_different  = 2, // Different number of states or transitions.
+      } response;
+
+      /// Only meaningful if the tag is tag::counterexample.
+      std::pair<state_t, state_t> counterexample;
+
+      full_response()
+        : response(tag::never_computed)
+      {}
+    } full_response_;
 
     void fill_outs_()
     {
@@ -119,7 +133,14 @@ namespace vcsn
       return false;
     }
 
-    bool are_isomorphic()
+  public:
+    are_isomorphicer(const Aut1 &a1, const Aut2 &a2)
+      : a1_(a1)
+      , a2_(a2)
+    {}
+
+    const full_response
+    get_full_response()
     {
       require(is_accessible(a1_) && is_accessible(a2_),
               "are-isomorphic: input automata must both be accessible");
@@ -135,20 +156,20 @@ namespace vcsn
 
       // If we prove non-isomorphism at this point, it will be because
       // of sizes.
-      non_isomorphism_reason_ = non_isomorphism_reason::sizes;
+      full_response_.response = full_response::tag::trivially_different;
 
       // Before even initializing our data structures, which is
       // potentially expensive, try to simply compare the number of
       // elements such as states and transitions.
       if (trivially_different())
-        return false;
+        return full_response_;
 
       clear();
       fill_outs_();
 
       // If we prove non-isomorphism from now on, it will be by
       // presenting some specific pair of states.
-      non_isomorphism_reason_ = non_isomorphism_reason::pair;
+      full_response_.response = full_response::tag::counterexample;
 
       worklist_.push({a1_.pre(), a2_.pre()});
 
@@ -159,7 +180,7 @@ namespace vcsn
 
           // If we prove non-isomorphism in this iteration, it will be
           // by using the <s1, s2> pair as a counterexample.
-          counterexample_ = {s1, s2};
+          full_response_.counterexample = {s1, s2};
 
           // If the number of transitions going out from the two
           // states is different, don't even bother looking at them.
@@ -167,7 +188,7 @@ namespace vcsn
           // reason in just one direction: look at transitions from s1
           // and ensure that all of them have a matching one from s2.
           if (out1_[s1].size() != out2_[s2].size())
-            return false;
+            return full_response_;
 
           for (const auto& l1_w1dst1 : out1_[s1]) // out1_.at(s1) may fail.
             {
@@ -177,15 +198,15 @@ namespace vcsn
 
               const auto& s2out = out2_.find(s2);
               if (s2out == out2_.cend())
-                return false;
+                return full_response_;
               const auto& s2outl = s2out->second.find(l1);
               if (s2outl == s2out->second.cend())
-                return false;
+                return full_response_;
               weight_t w2 = s2outl->second.first;
               state_t dst2 = s2outl->second.second;
 
               if (! weightset_t::equals(w1, w2))
-                return false;
+                return full_response_;
 
               const auto& isomorphics_to_dst1 = s1tos2_.find(dst1);
               const auto& isomorphics_to_dst2 = s2tos1_.find(dst2);
@@ -199,35 +220,22 @@ namespace vcsn
                       worklist_.push({dst1, dst2});
                     }
                   else
-                    return false;
+                    return full_response_;
                 }
               else if (isomorphics_to_dst1 == s1tos2_.cend()
                        || isomorphics_to_dst1->second != dst2
                        || isomorphics_to_dst2->second != dst1)
-                  return false;
+                  return full_response_;
             } // outer for
         } // while
-      return true;
+      full_response_.response = full_response::tag::isomorphic;
+      return full_response_;
     }
-
-  public:
-    are_isomorphicer(const Aut1 &a1, const Aut2 &a2)
-      : a1_(a1)
-      , a2_(a2)
-    {}
 
     bool operator()()
     {
-      bool res = are_isomorphic();
-      // FIXME: print non_isomorphism_reason_ in debugging mode?
-      if (res)
-        non_isomorphism_reason_ = non_isomorphism_reason::none;
-      return res;
-    }
-
-    non_isomorphism_reason get_non_isomorphism_reason()
-    {
-      return non_isomorphism_reason_;
+      const full_response& r = get_full_response();
+      return full_response_.response == full_response::tag::isomorphic;
     }
 
     /// A map from each a2_ state to the corresponding a1_ state.
@@ -237,6 +245,8 @@ namespace vcsn
     origins_t
     origins()
     {
+      require(full_response_.reponse == full_response::tag::isomorphic,
+              __func__, ": isomorphism-check not successfully performed");
       origins_t res;
       for (const auto& s2s1: s2tos1_)
         res[s2s1.first] = s2s1.second;
