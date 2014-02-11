@@ -177,6 +177,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/unordered_set.hh                     \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
+  %D%/misc/zip-maps.hh                          \
   %D%/weightset/b.hh                            \
   %D%/weightset/f2.hh                           \
   %D%/weightset/fwd.hh                          \

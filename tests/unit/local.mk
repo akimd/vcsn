@@ -21,7 +21,8 @@ EXTRA_PROGRAMS +=                               \
   %D%/polynomialset                             \
   %D%/proper                                    \
   %D%/transpose                                 \
-  %D%/weight
+  %D%/weight                                    \
+  %D%/zip-maps
 
 unit_ldadd = $(libvcsn)
 
@@ -46,7 +47,8 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/polynomialset.chk                        \
   %D%/proper.chk                               \
   %D%/transpose.chk                            \
-  %D%/weight.chk
+  %D%/weight.chk                               \
+  %D%/zip-maps.chk
 
 dist_TESTS += $(%C%_TESTS)
 
@@ -63,6 +65,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/proper.log: %D%/proper
 %D%/transpose.log: %D%/transpose
 %D%/weight.log: %D%/weight
+%D%/zip-maps.log: %D%/zip-maps
 
 .PHONY: check-unit
 check-unit:
