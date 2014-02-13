@@ -4,6 +4,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-14
+** double_ring: New Python binding.
+Returns a double ring automaton.
+
 * 2014-02-11
 ** ratexpset can be used for LabelSet
 Contexts such as 'ratexpset<lal_char(ab)_b>_b' are now valid.  The

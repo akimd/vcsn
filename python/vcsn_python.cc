@@ -34,6 +34,8 @@ struct context
 
   automaton divkbaseb(unsigned divisor, unsigned base) const;
 
+  automaton double_ring(unsigned n, const boost::python::list& finals) const;
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -496,6 +498,14 @@ automaton context::divkbaseb(unsigned divisor, unsigned base) const
   return vcsn::dyn::divkbaseb(ctx_, divisor, base);
 }
 
+automaton context::double_ring(unsigned n, const boost::python::list& finals) const
+{
+  std::vector<unsigned> f;
+  for (int i = 0; i < boost::python::len(finals); ++i)
+    f.emplace_back(boost::python::extract<unsigned>(finals[i]));
+  return vcsn::dyn::double_ring(ctx_, n, f);
+}
+
 automaton context::ladybird(unsigned n) const
 {
   return vcsn::dyn::ladybird(ctx_, n);
@@ -590,6 +600,7 @@ BOOST_PYTHON_MODULE(vcsn_python)
      bp::init<const std::string&>())
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
+    .def("double_ring", &context::double_ring)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random, random_overloads())
