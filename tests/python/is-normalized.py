@@ -1,127 +1,115 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-# check EXPECT < LAL.DOT
+import vcsn
+from test import *
+
+# check EXPECT INPUT
 # ----------------------
 # Check that is-normalized(INPUT) = EXPECT.
-check ()
-{
-  local status
-  case $1 in
-    (true)  status=0;;
-    (false) status=2;;
-  esac
-  cat >lal.gv
-  run $status "$1" -vcsn is-normalized -A -f lal.gv
-}
+def check(expect, i):
+    CHECK_EQ(expect, i.is_normalized())
 
 # A simple, normalized, non-Thompson, automaton.
-check "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I0 -> 0
   0 -> 1 [label = "a,b"]
   1 -> F1
 }
-EOF
+'''))
 
 # No initials
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   0 -> 1 [label = "a,b"]
   1 -> F
 }
-EOF
+'''))
 
 # Two initials.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I -> 0
   0 -> 1 [label = "a,b"]
   I -> 1
   1 -> F
 }
-EOF
+'''))
 
 # No finals
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I -> 0
   0 -> 1 [label = "a,b"]
 }
-EOF
+'''))
 
 # Two finals.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I -> 0
   0 -> F
   0 -> 1 [label = "a,b"]
   1 -> F
 }
-EOF
+'''))
 
 # Non-one initial weight.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I0 -> 0 [label = "<2>"]
   0 -> 1 [label = "a,b"]
   1 -> F1
 }
-EOF
+'''))
 
 # Non-one final weight.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I0 -> 0
   0 -> 1 [label = "a,b"]
   1 -> F1 [label = "<2>"]
 }
-EOF
+'''))
 
 # Arriving to initial state.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I -> 0
   0 -> 1 [label = "a,b"]
   1 -> 2 [label = "a"]
   1 -> 0 [label = "b"]
   2 -> F
 }
-EOF
+'''))
 
 # Leaving a final state.
-check "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
-
   I -> 0
   0 -> 1 [label = "a,b"]
   1 -> 2 [label = "a"]
   2 -> 1 [label = "b"]
   2 -> F
 }
-EOF
+'''))
+
+PLAN()
