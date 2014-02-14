@@ -9,9 +9,9 @@ namespace vcsn
   namespace detail
   {
 
-    /*----------------------.
-    | transposing ratexps.  |
-    `----------------------*/
+    /*--------------------.
+    | transpose(ratexp).  |
+    `--------------------*/
 
     /// \tparam RatExpSet  the ratexp set.
     template <class RatExpSet>
@@ -105,6 +105,13 @@ namespace vcsn
       VCSN_RAT_VISIT(transposition, e)
       {
         res_ = rs_.transposition(transpose(e.sub()));
+      }
+
+      VCSN_RAT_VISIT(ldiv, e)
+      {
+        // There is nothing we can do here but leaving an explicit
+        // transposition.
+        res_ = rs_.transposition(e.shared_from_this());
       }
 
       VCSN_RAT_VISIT(lweight, e)

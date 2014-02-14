@@ -102,7 +102,7 @@ check('a*{/}a', '\e + aa*')
 check('a*{/}a*', '<\e*>\e + aa*{T}(a{\}a)*{T}')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-'<x*>\e + a<x>((<x>a){T}*{T}((<y>a){T}{\}(<x>a){T})*{T})')
+'<(y{\}x){T}*>\e + a<x>((<x>a){T}*{T}((<y>a){T}{\}(<x>a){T})*{T})')
 
 
 ## -------------------- ##
