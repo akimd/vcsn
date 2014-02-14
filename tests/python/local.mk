@@ -30,6 +30,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/infiltration.py                           \
   %D%/info.py                                   \
   %D%/is-ambiguous.py                           \
+  %D%/is-complete.py                            \
   %D%/is-equivalent.py                          \
   %D%/is-isomorphic.py                          \
   %D%/minimize.py                               \

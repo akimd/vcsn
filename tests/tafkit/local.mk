@@ -23,7 +23,6 @@
   %D%/evaluate.chk                              \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
-  %D%/is-complete.chk                           \
   %D%/is-deterministic.chk                      \
   %D%/is-normalized.chk                         \
   %D%/is-proper.chk                             \
