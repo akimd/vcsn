@@ -150,6 +150,15 @@ Uncomment the tests in infiltration.chk (there are two places).
 Now that our products support heterogeneous, but compatible, types, we
 should propagate this to other n-ary algorithms.
 
+** eliminate-states
+This won't work:
+
+  vcsn.context('ratexpset<lal_char(abc)_b>_ratexpset<lal_char(uv)_b>')
+
+that's because we need to multiply weights of different natures, which is
+something already solved in product (using conv).  See also the previous
+item.
+
 ** products: lazyness
 We need a lazy implementation of product.
 
