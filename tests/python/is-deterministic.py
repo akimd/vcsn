@@ -1,24 +1,18 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-# check_lal EXPECT < LAL.DOT
+import vcsn
+from test import *
+
+# check_lal EXPECT, INPUT
 # --------------------------
 # Check that is-deterministic(INPUT) = EXPECT in lal.
-check_lal ()
-{
-  local status
-  case $1 in
-    (true)  status=0;;
-    (false) status=2;;
-  esac
-  cat >lal.gv
-  run $status "$1" -vcsn is-deterministic -A -f lal.gv
-}
+def check(expect, i):
+    CHECK_EQ(expect, i.is_deterministic())
 
-check_lal "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -27,14 +21,13 @@ digraph
   2 -> 2 [label = "b"]
   1 -> F1
 }
-EOF
+'''))
 
 # A loop.
-check_lal "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
-
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 0 [label = "a"]
@@ -43,13 +36,12 @@ digraph
   2 -> 2 [label = "c"]
   2 -> F2
 }
-EOF
+'''))
 
-check_lal "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -59,62 +51,60 @@ digraph
   3 -> 3 [label = "b"]
   3 -> F3
 }
-EOF
+'''))
 
-
-check_lal "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
-
   I0 -> 0
   0 -> 1 [label = "b"]
   0 -> 2 [label = "a"]
   1 -> 2 [label = "a"]
   2 -> F2
 }
-EOF
+'''))
 
 # No states.
-check_lal "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
 }
-EOF
+'''))
 
 # No initial states.
-check_lal "true" <<\EOF
+check(True, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
   0 -> 1 [label = "a"]
 }
-EOF
+'''))
 
 # Two initial states.
-check_lal "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-
   I0 -> 0
   I1 -> 1
   0 -> 2 [label = "a"]
   1 -> 2 [label = "a"]
   2 -> F2
 }
-EOF
+'''))
 
 # An unreachable not deterministic state.
-check_lal "false" <<\EOF
+check(False, vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
-
   I0 -> 0
   1 -> 2 [label = "a"]
   1 -> 3 [label = "a"]
   2 -> F2
 }
-EOF
+'''))
+
+PLAN()
