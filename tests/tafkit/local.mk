@@ -18,7 +18,6 @@
   %D%/de-bruijn.chk                             \
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
-  %D%/double-ring.chk                           \
   %D%/efsm.chk                                  \
   %D%/enumerate.chk                             \
   %D%/evaluate.chk                              \
