@@ -1,11 +1,10 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-## -------------- ##
-## is-ambiguous.  ##
-## -------------- ##
+import vcsn
+from test import *
 
 # Not deterministic, yet not ambiguous.
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context="lal_char(ab)_b"
@@ -14,12 +13,12 @@ digraph
   0 -> 2 [label = "a"]
   1 -> F
 }
-EOF
-run 2 "false" -vcsn is-ambiguous -A -f a.gv
-run 2 "false" -vcsn is-deterministic -A -f a.gv
+''')
+CHECK_EQ(False, a.is_ambiguous())
+CHECK_EQ(False, a.is_deterministic())
 
-# not deterministic, and ambiguous.
-cat >a.gv <<\EOF
+# Not deterministic, and ambiguous.
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context="lal_char(ab)_b"
@@ -29,12 +28,12 @@ digraph
   1 -> F
   2 -> F
 }
-EOF
-run 0 "true" -vcsn is-ambiguous -A -f a.gv
-run 2 "false" -vcsn is-deterministic -A -f a.gv
+''')
+CHECK_EQ(True, a.is_ambiguous())
+CHECK_EQ(False, a.is_deterministic())
 
 # Likewise, but with a non-commutative product.
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context="lal_char(ab)_ratexpset<lal_char(xy)_b>"
@@ -44,12 +43,12 @@ digraph
   1 -> F
   2 -> F
 }
-EOF
-run 0 "true" -vcsn is-ambiguous -A -f a.gv
-run 2 "false" -vcsn is-deterministic -A -f a.gv
+''')
+CHECK_EQ(True, a.is_ambiguous())
+CHECK_EQ(False, a.is_deterministic())
 
 # deterministic, and unambiguous (obviously).
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context="lal_char(ab)_b"
@@ -59,6 +58,8 @@ digraph
   1 -> F
   2 -> F
 }
-EOF
-run 2 "false" -vcsn is-ambiguous -A -f a.gv
-run 0 "true" -vcsn is-deterministic -A -f a.gv
+''')
+CHECK_EQ(False, a.is_ambiguous())
+CHECK_EQ(True, a.is_deterministic())
+
+PLAN()
