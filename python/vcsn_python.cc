@@ -148,7 +148,7 @@ struct automaton
 
   bool is_complete() const
   {
-    return vcsn::dyn::is_deterministic(aut_);
+    return vcsn::dyn::is_complete(aut_);
   }
 
   bool is_deterministic() const
