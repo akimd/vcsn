@@ -1,7 +1,6 @@
 #ifndef VCSN_CORE_RAT_RATEXPSET_HH
 # define VCSN_CORE_RAT_RATEXPSET_HH
 
-# include <list>
 # include <string>
 
 # include <vcsn/core/rat/printer.hh>

@@ -22,23 +22,26 @@ namespace vcsn
     : ctx_(ctx)
   {}
 
-  template <typename Context>
-  std::string
-  ratexpset<Context>::sname()
+#define DEFINE                                  \
+  template <typename Context>                   \
+  inline                                        \
+  auto                                          \
+  ratexpset<Context>
+
+  DEFINE::sname()
+    -> std::string
   {
     return "ratexpset<" + context_t::sname() + '>';
   }
 
-  template <typename Context>
-  std::string
-  ratexpset<Context>::vname(bool full) const
+  DEFINE::vname(bool full) const
+    -> std::string
   {
     return "ratexpset<" + context().vname(full) + '>';
   }
 
-  template <typename Context>
-  ratexpset<Context>
-  ratexpset<Context>::make(std::istream& is)
+  DEFINE::make(std::istream& is)
+    -> ratexpset<Context>
   {
     // name is, for instance, "ratexpset<lal_char(abcd)_z>".
     eat(is, "ratexpset<");
@@ -46,12 +49,6 @@ namespace vcsn
     eat(is, '>');
     return {ctx};
   }
-
-#define DEFINE                                  \
-  template <typename Context>                   \
-  inline                                        \
-  auto                                          \
-  ratexpset<Context>
 
   DEFINE::context() const -> const context_t&
   {
