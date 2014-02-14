@@ -40,6 +40,8 @@ namespace vcsn
 
     // There is a bug in clang making this one useless...
     // The index sequence generated is always <0>
+    // Bug report:
+    // http://llvm.org/bugs/show_bug.cgi?id=14858
     //template<class... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
   }
