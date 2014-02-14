@@ -145,7 +145,7 @@ namespace vcsn
               typename RhsLabelSet, typename RhsWeightSet>
     auto
     meet(const context<LhsLabelSet, LhsWeightSet>& a,
-                 const context<RhsLabelSet, RhsWeightSet>& b)
+         const context<RhsLabelSet, RhsWeightSet>& b)
       -> context<decltype(meet(*a.labelset(), *b.labelset())),
                  decltype(join(*a.weightset(), *b.weightset()))>
     {
@@ -154,12 +154,12 @@ namespace vcsn
       return {ls, ws};
     }
 
-    /// The union of two contexts.
+    /// The join of two contexts.
     template <typename LhsLabelSet, typename LhsWeightSet,
               typename RhsLabelSet, typename RhsWeightSet>
     auto
     join(const context<LhsLabelSet, LhsWeightSet>& a,
-              const context<RhsLabelSet, RhsWeightSet>& b)
+         const context<RhsLabelSet, RhsWeightSet>& b)
       -> context<decltype(join(*a.labelset(), *b.labelset())),
                  decltype(join(*a.weightset(), *b.weightset()))>
     {
