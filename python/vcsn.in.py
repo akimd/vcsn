@@ -6,11 +6,16 @@ datadir = os.environ['VCSN_DATA_PATH'] if 'VCSN_DATA_PATH' in os.environ \
           else '@DATADIR@'
 version = '@PACKAGE_VERSION@'
 
-def dot_to_svg(dot):
+def dot_to_svg(dot, engine="dot"):
     "Return the conversion of a Dot source into SVG."
-    open("/tmp/a.gv", "w").write(dot)
-    from subprocess import check_output
-    return check_output(['dot','-Tsvg','/tmp/a.gv'])
+    import subprocess
+    proc = subprocess.Popen([engine, '-Tsvg'],
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    proc.stdin.write(dot)
+    res = proc.communicate()
+    return res[0]
 
 def info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.
