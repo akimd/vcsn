@@ -44,7 +44,7 @@ namespace vcsn
     ///
     /// This class is specialized for labels_are_letter automata since
     /// all these methods become trivial.
-    template <typename Aut, typename Kind = typename Aut::kind_t>
+    template <typename Aut, bool has_one = Aut::context_t::labelset_t::has_one()>
     class properer
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
@@ -54,7 +54,6 @@ namespace vcsn
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
       using transitions_t = std::vector<transition_t>;
-      using kind_t = Kind;
 
     public:
       /// Get ready to eliminate spontaneous transitions.
@@ -519,7 +518,7 @@ namespace vcsn
     `---------------------*/
 
     template <typename Aut>
-    class properer<Aut, labels_are_letters>
+    class properer<Aut, false>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:

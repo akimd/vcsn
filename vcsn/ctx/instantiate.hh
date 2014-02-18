@@ -145,7 +145,6 @@ namespace vcsn
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(ladybird, Ctx, unsigned);
-        REGISTER(proper, aut_t, bool);
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(thompson, rs_t);
         REGISTER(u, Ctx, unsigned);
@@ -198,7 +197,6 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        REGISTER(proper, aut_t, bool);
         REGISTER(thompson, rs_t);
 
         return true;
@@ -261,6 +259,7 @@ namespace vcsn
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
+        REGISTER(proper, aut_t, bool);
         REGISTER(read_polynomial, Ctx, std::istream);
         REGISTER(read_weight, Ctx, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
