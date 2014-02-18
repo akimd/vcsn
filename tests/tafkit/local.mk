@@ -28,7 +28,6 @@
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
-  %D%/proper.chk                                \
   %D%/standard.chk                              \
   %D%/star-normal-form.chk                      \
   %D%/sum.chk                                   \

@@ -38,6 +38,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-proper.py                              \
   %D%/minimize.py                               \
   %D%/product.py                                \
+  %D%/proper.py	                                \
   %D%/ratexp.py                                 \
   %D%/shuffle.py                                \
   %D%/split.py                                  \
