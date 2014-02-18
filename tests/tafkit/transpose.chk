@@ -1,45 +1,5 @@
 #! /bin/sh
 
-## ------------------------ ##
-## vcsn transpose(ratexp).  ##
-## ------------------------ ##
-
-# check INPUT OUTPUT
-# ------------------
-check ()
-{
-  run 0 "$2" -vcsn transpose $ctx -E -e "$1"
-}
-
-check2 ()
-{
-  check "$1" "$2"
-  check "$2" "$1"
-}
-
-ctx='-C lal_char(abcd)_b'
-check '\e' '\e'
-check '\z' '\z'
-check 'a' 'a'
-check 'ab' 'ba'
-check 'abc+aba' 'cba+aba'
-check 'abc&aba' 'cba&aba'
-check '(ab)*' '(ba)*'
-
-ctx='-C law_char(abcd)_b'
-check '\e' '\e'
-check '\z' '\z'
-check 'a' 'a'
-check 'ab' 'ba'
-check 'abc+aba' 'cba+aba'
-check '(ab)*&(ab)*' '(ba)*&(ba)*'
-check '(ab)*' '(ba)*'
-
-ctx='-C law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>'
-check2 '<<<2>xy>ef>abcd' '<<<2>yx>fe>dcba'
-check2 '<ef>(abcd)*<gh>' '<hg>(dcba)*<fe>'
-
-
 ## --------------------------- ##
 ## vcsn transpose(automaton).  ##
 ## --------------------------- ##
