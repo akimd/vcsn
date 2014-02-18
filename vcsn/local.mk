@@ -26,6 +26,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/determinize.hh                      \
   %D%/algos/distance.hh                         \
   %D%/algos/dot.hh                              \
+  %D%/algos/edit.hh                             \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
   %D%/algos/enumerate.hh                        \

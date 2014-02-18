@@ -1,4 +1,4 @@
-nodist_python_PYTHON = %D%/vcsn_version.py
+nodist_python_PYTHON = %D%/vcsn_version.py %D%/jacques.py
 
 vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \

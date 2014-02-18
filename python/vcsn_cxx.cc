@@ -144,6 +144,12 @@ struct automaton
     return vcsn::dyn::eliminate_state(val_, s);
   }
 
+  int edit(int opcode, int int1, int int2, const std::string& label,
+           const std::string& weight)
+  {
+    return vcsn::dyn::edit(aut_, opcode, int1, int2, label, weight);
+  }
+
   polynomial enumerate(unsigned max) const;
 
   weight eval(const label& l) const;
@@ -768,6 +774,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("context", &automaton::context)
     .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
+    .def("trivial_lowlevel_edit", &automaton::edit)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)
     .def("_eval", &automaton::eval)
