@@ -23,7 +23,6 @@
   %D%/evaluate.chk                              \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
-  %D%/is-proper.chk                             \
   %D%/is-valid.chk                              \
   %D%/ladybird.chk                              \
   %D%/left-mult.chk                             \

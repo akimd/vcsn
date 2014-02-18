@@ -35,6 +35,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-equivalent.py                          \
   %D%/is-isomorphic.py                          \
   %D%/is-normalized.py                          \
+  %D%/is-proper.py                              \
   %D%/minimize.py                               \
   %D%/product.py                                \
   %D%/ratexp.py                                 \
