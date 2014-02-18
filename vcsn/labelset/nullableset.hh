@@ -99,6 +99,12 @@ namespace vcsn
         return l == special();
       }
 
+      static constexpr bool
+      has_one()
+      {
+        return true;
+      }
+
       ATTRIBUTE_PURE
       constexpr value_t
       one() const

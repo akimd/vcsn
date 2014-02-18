@@ -50,6 +50,10 @@ check_tupleset()
 
   label_t l{"abc", "xyz"};
 
+  using lal_labelset_t =
+    vcsn::ctx::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using lal_tupleset_t = vcsn::tupleset<labelset_t, lal_labelset_t>;
+
   // sname.
   ASSERT_EQ(tupleset_t::sname(), "lat<law_char,law_char>");
 
@@ -92,6 +96,10 @@ check_tupleset()
   ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.one()}), true);
   ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.special()}), false);
   ASSERT_EQ(ts.is_one(label_t{ls1.one(), "x"}), false);
+
+  // has_one.
+  ASSERT_EQ(tupleset_t::has_one(), true);
+  ASSERT_EQ(lal_tupleset_t::has_one(), false);
 
   // format, transpose.
   ASSERT_EQ(format(ts, l), "(abc, xyz)");

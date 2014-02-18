@@ -93,6 +93,12 @@ namespace vcsn
         return l < r;
       }
 
+      static constexpr bool
+      has_one()
+      {
+        return false;
+      }
+
       bool
       is_special(value_t v) const ATTRIBUTE_PURE
       {

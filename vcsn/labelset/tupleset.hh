@@ -103,6 +103,12 @@ namespace vcsn
       return is_zero_(l, indices_t{});
     }
 
+    static constexpr bool
+    has_one()
+    {
+      return has_one_(indices_t{});
+    }
+
     value_t
     one() const
     {
@@ -315,6 +321,16 @@ namespace vcsn
     is_zero_(const value_t& l, seq<I...>) const
     {
       for (auto n: {(std::get<I>(sets_).is_zero(std::get<I>(l)))...})
+        if (!n)
+          return false;
+      return true;
+    }
+
+    template <std::size_t... I>
+    static bool
+    has_one_(seq<I...>)
+    {
+      for (auto n: {(std::get<I>(labelsets_t{}).has_one())...})
         if (!n)
           return false;
       return true;

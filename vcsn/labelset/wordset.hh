@@ -105,6 +105,12 @@ namespace vcsn
         return true;
       }
 
+      static constexpr bool
+      has_one()
+      {
+        return true;
+      }
+
       value_t
       one() const
       {
