@@ -327,13 +327,10 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    static bool
+    static constexpr bool
     has_one_(seq<I...>)
     {
-      for (auto n: {(std::get<I>(labelsets_t{}).has_one())...})
-        if (!n)
-          return false;
-      return true;
+      return all_<labelset_t<I>::has_one()...>();
     }
 
     template <std::size_t... I>

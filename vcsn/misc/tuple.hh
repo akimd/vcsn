@@ -44,7 +44,66 @@ namespace vcsn
     // http://llvm.org/bugs/show_bug.cgi?id=14858
     //template<class... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
+
+
+    // Compile-time logic
+    // See:
+    // http://stillmoreperfect.blogspot.fr/2010/03/template-metaprogramming-compile-time.html
+
+
+    // Test if (c) then T1 else T2
+    template<bool c, class T1, class T2>
+    struct if_c { typedef T1 type; };
+
+    template<class T1, class T2>
+    struct if_c<false, T1, T2> { typedef T2 type; };
+
+    template<class C, class T1, class T2>
+    struct if_ : if_c<C::value, T1, T2> {};
+
+    // Test if (c) then F1 else F2 and get the value
+    template<bool c, class F1, class F2>
+    struct eval_if_c : if_c<c, F1, F2>::type {};
+
+    template<class C, class F1, class F2>
+    struct eval_if : if_<C, F1, F2>::type {};
+
+    // And condition on several classes
+    template<class... F>
+    struct and_;
+
+    template<class F1, class... F>
+    struct and_<F1, F...> : eval_if<F1, and_<F...>,std::false_type>::type {};
+
+    template<class F1>
+    struct and_<F1> : eval_if<F1, std::true_type, std::false_type>::type {};
+
+    template<>
+    struct and_<> : std::true_type::type {};
+
+    // Or condition on several classes
+    template<class... F>
+    struct or_;
+
+    template<class F1, class... F>
+    struct or_<F1, F...> : eval_if<F1 ,std::true_type, or_<F...>>::type { };
+
+    template<class F1>
+    struct or_<F1> : eval_if<F1, std::true_type, std::false_type>::type { };
+
+    template<>
+    struct or_<> : std::true_type::type {};
+
   }
+
+  // Static evaluation of the 'or' of the template parameters
+  template<bool... B>
+  constexpr bool any_ () { return detail::or_<std::integral_constant<bool, B>...>::value;}
+
+  // Static evaluation of the 'and' of the template parameters
+  template<bool... B>
+  constexpr bool all_ () { return detail::and_<std::integral_constant<bool, B>...>::value;}
+
 
 }
 
