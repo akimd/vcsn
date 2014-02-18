@@ -13,7 +13,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::is_lal,
+    typename std::enable_if<Aut::context_t::labelset_t::has_one(),
                             bool>::type
     is_proper_(const Aut& aut)
     {
@@ -25,7 +25,7 @@ namespace vcsn
 
     template <typename Aut>
     constexpr
-    typename std::enable_if<Aut::context_t::is_lal,
+    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
                             bool>::type
     is_proper_(const Aut&)
     {
