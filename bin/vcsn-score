@@ -100,7 +100,7 @@ bench('a.infiltration(a)', 'a = std('+r+')', lambda: a.infiltration(a))
 r = "[ab]*b(<2>[ab])*"
 n = 12
 a = vcsn.context("lal_char(ab)_z").ratexp(r).standard()
-bench('a**{0}', 'a = std({1})'.format(n, r), lambda: a ** n)
+bench('a**{}'.format(n), 'a = std({})'.format(r), lambda: a ** n)
 
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
