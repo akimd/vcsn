@@ -48,7 +48,8 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
 
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs), rhs_(rhs), res_(join(lhs_.context(), rhs_.context()))
+        : lhs_(std::move(sort(lhs))), rhs_(std::move(sort(rhs))),
+          res_(join(lhs_.context(), rhs_.context()))
       {}
 
       /// Reset the attributes before a new product.
@@ -167,8 +168,8 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
-      const Lhs& lhs_;
-      const Rhs& rhs_;
+      const Lhs lhs_;
+      const Rhs rhs_;
 
       /// Map (left-state, right-state) -> product-state.
       using map = std::map<pair_t, state_t>;
@@ -272,29 +273,60 @@ namespace vcsn
         res_.add_transition(src, state(ldst, rdst), label, weight);
       }
 
-
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
-      /// givenpair of input state automata.  Update the worklist with
+      /// given pair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
       void add_product_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
         ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
-        for (auto lt : lhs_.all_out(psrc.first))
+        // This relies on outgoing transitions being sorted by label
+        // by the sort algorithm: thanks to that property we can scan
+        // the two successor lists in lockstep.
+        auto ls = lhs_.all_out(psrc.first);
+        auto rs = rhs_.all_out(psrc.second);
+        auto li = ls.begin();
+        auto ri = rs.begin();
+        for (/* Nothing. */;
+             li != ls.end() && ri != rs.end();
+             ++ li)
           {
-            auto label = lhs_.label_of(lt);
-            auto lweight = lhs_.weight_of(lt);
-            auto ldst = lhs_.dst_of(lt);
+            auto lt = *li;
+            label_t label = lhs_.label_of(lt);
+            // Skip right-hand transitions with labels we don't have
+            // on the left hand.
+            while (labelset_t::less_than(rhs_.label_of(*ri), label))
+              if (++ ri == rs.end())
+                return;
 
-            // These are always new transitions: first because the src
-            // state is visited for the first time, and second because
-            // the couple (ldst, label) is unique, and so is (rdst,
-            // label).
-            for (auto rt : rhs_.out(psrc.second, label))
-              new_transition(src, ldst, rhs_.dst_of(rt),
-                             label, mul_(ws, lweight, rhs_.weight_of(rt)));
+            // If the smallest label on the right-hand side is bigger
+            // than the left-hand one, we have no hope of ever adding
+            // transitions with this label.
+            if (labelset_t::less_than(label, rhs_.label_of(*ri)))
+              continue;
+
+            assert(labelset_t::equals(label, rhs_.label_of(*ri)));
+            auto rstart = ri;
+            while (labelset_t::equals(rhs_.label_of(*ri), label))
+              {
+                // These are always new transitions: first because the
+                // source state is visited for the first time, and
+                // second because the couple (left destination, label)
+                // is unique, and so is (right destination, label).
+                new_transition(src, lhs_.dst_of(lt), rhs_.dst_of(*ri), label,
+                               mul_(ws,
+                                    lhs_.weight_of(lt), rhs_.weight_of(*ri)));
+
+                if (++ ri == rs.end())
+                  break;
+              }
+
+            // Move the right-hand iterator back to the beginning of
+            // the matching part.  This will be needed if the next
+            // left-hand transition has the same label.
+            ri = rstart;
           }
       }
 

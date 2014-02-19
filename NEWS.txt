@@ -4,6 +4,22 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-20
+** automaton product optimization.
+An optimization enabled by state renumbering.
+
+Score changes on Luca's workstation
+previous master (02fce8c6) before the optimization:
+ 4.60s: a.product(a)         # a = std([a-e]?{50})
+ 2.34s: a.shuffle(a)         # a = std([a-e]?{50})
+ 4.01s: a.infiltration(a)    # a = std([a-e]?{30})
+ 4.17s: a**12                # a = std([a-e]*b(<2>[a-e])*)
+after the optimization:
+ 2.87s: a.product(a)         # a = std([a-e]?{50})
+ 2.37s: a.shuffle(a)         # a = std([a-e]?{50})
+ 2.58s: a.infiltration(sa)   # a = std([a-e]?{30})
+ 2.96s: a**12                # a = std([a-e]*b(<2>[a-e])*)
+
 * 2014-02-18
 ** state renumbering is not automatic any longer.
 In view of several forthcoming in-place algorithms on automata including

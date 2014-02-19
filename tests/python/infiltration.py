@@ -199,8 +199,8 @@ a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
 CHECK_EQ('''<abcd>x
-<acdb+bcda+abdc+adbc+bdac+cdab+abcd+acbd+bcad+abcd+abcd+bacd+cabd+dabc>xx
-<adbc+adcb+bdac+bdca+cdab+cdba+acbd+acdb+bcad+bcda+abcd+abdc+abdc+acdb+abcd+abcd+acbd+adbc+badc+bcda+bacd+bacd+bcad+bdac+cadb+cbda+cabd+cabd+cbad+cdab+dacb+dbca+dabc+dabc+dbac+dcab>xxx
+<adbc+bdac+cdab+abdc+acdb+bcda+abcd+bacd+cabd+abcd+acbd+bcad+abcd+dabc>xx
+<adbc+adcb+bdac+bdca+cdab+cdba+abdc+acdb+abcd+acbd+abcd+adbc+badc+bcda+bacd+bcad+bacd+bdac+cadb+cbda+cabd+cbad+cabd+cdab+abcd+abdc+acbd+acdb+bcad+bcda+dabc+dbac+dcab+dabc+dacb+dbca>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
     a['a']
     .infiltration(a['b'])
