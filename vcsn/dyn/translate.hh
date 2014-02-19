@@ -205,8 +205,7 @@ namespace vcsn
             "namespace vcsn\n"
             "{\n"
             "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
-            "}\n"
-            "\n";
+            "}\n";
           return o;
         }
 
