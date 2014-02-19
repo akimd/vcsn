@@ -53,13 +53,15 @@ def CHECK_EQ(expected, effective):
     if expected == effective:
         PASS()
     else:
-        FAIL(str(expected) + " != " + str(effective))
-        if expected[:-1] != '\n':
-            expected += '\n'
-        if effective[:-1] != '\n':
-            effective += '\n'
-        sys.stdout.writelines(diff(str(expected).splitlines(1),
-                                   str(effective).splitlines(1),
+        exp = str(expected)
+        eff = str(effective)
+        FAIL(exp + " != " + eff)
+        if exp[:-1] != '\n':
+            exp += '\n'
+        if eff[:-1] != '\n':
+            eff += '\n'
+        sys.stdout.writelines(diff(exp.splitlines(1),
+                                   eff.splitlines(1),
                                    fromfile='expected', tofile='effective'))
 
 def PLAN():
