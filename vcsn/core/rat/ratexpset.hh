@@ -212,7 +212,7 @@ namespace vcsn
   inline
   auto
   meet(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
-    -> ratexpset<decltype(meet(a.context(), b.context()))>
+    -> ratexpset<meet_t<Ctx1, Ctx2>>
   {
     return meet(a.context(), b.context());
   }
@@ -222,7 +222,7 @@ namespace vcsn
   inline
   auto
   join(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
-    -> ratexpset<decltype(join(a.context(), b.context()))>
+    -> ratexpset<join_t<Ctx1, Ctx2>>
   {
     return join(a.context(), b.context());
   }
@@ -251,10 +251,10 @@ namespace vcsn
   auto
   join(const ratexpset<Context>& rs, const z& ws)
       -> ratexpset<ctx::context<typename Context::labelset_t,
-                                decltype(join(*rs.weightset(), ws))>>
+                                join_t<typename Context::weightset_t, z>>>
   {
     using ctx_t = ctx::context<typename Context::labelset_t,
-                               decltype(join(*rs.weightset(), ws))>;
+                               join_t<typename Context::weightset_t, z>>;
     return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
   }
 
@@ -262,7 +262,7 @@ namespace vcsn
   inline
   auto
   join(const z& ws, const ratexpset<Context>& rs)
-    -> decltype(join(rs, ws))
+    -> join_t<ratexpset<Context>, z>
   {
     return join(rs, ws);
   }
@@ -273,10 +273,10 @@ namespace vcsn
   auto
   join(const ratexpset<Context>& rs, const q& ws)
       -> ratexpset<ctx::context<typename Context::labelset_t,
-                                decltype(join(*rs.weightset(), ws))>>
+                                join_t<typename Context::weightset_t, q>>>
   {
     using ctx_t = ctx::context<typename Context::labelset_t,
-                               decltype(join(*rs.weightset(), ws))>;
+                               join_t<typename Context::weightset_t, q>>;
     return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
   }
 
@@ -284,7 +284,7 @@ namespace vcsn
   inline
   auto
   join(const q& ws, const ratexpset<Context>& rs)
-    -> decltype(join(rs, ws))
+    -> join_t<ratexpset<Context>, q>
   {
     return join(rs, ws);
   }
@@ -295,10 +295,10 @@ namespace vcsn
   auto
   join(const ratexpset<Context>& rs, const r& ws)
       -> ratexpset<ctx::context<typename Context::labelset_t,
-                                decltype(join(*rs.weightset(), ws))>>
+                                join_t<typename Context::weightset_t, r>>>
   {
     using ctx_t = ctx::context<typename Context::labelset_t,
-                               decltype(join(*rs.weightset(), ws))>;
+                               join_t<typename Context::weightset_t, r>>;
     return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
   }
 
@@ -306,12 +306,11 @@ namespace vcsn
   inline
   auto
   join(const r& ws, const ratexpset<Context>& rs)
-    -> decltype(join(rs, ws))
+  // FIXME: loops if wrong order.
+    -> join_t<ratexpset<Context>, r>
   {
     return join(rs, ws);
   }
-
-
 
 } // namespace vcsn
 

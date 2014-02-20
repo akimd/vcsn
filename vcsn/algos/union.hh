@@ -36,11 +36,11 @@ namespace vcsn
   }
 
   template <typename A, typename B>
-  mutable_automaton<ctx::join_t<typename A::context_t, typename B::context_t>>
+  mutable_automaton<join_t<typename A::context_t, typename B::context_t>>
   union_a(const A& laut, const B& raut)
   {
     using automaton_t
-      = mutable_automaton<ctx::join_t<typename A::context_t, typename B::context_t>>;
+      = mutable_automaton<join_t<typename A::context_t, typename B::context_t>>;
 
     // Create new automata.
     auto ctx = join(laut.context(), raut.context());

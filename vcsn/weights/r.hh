@@ -135,13 +135,6 @@ namespace vcsn
       return hash_value(v);
     }
 
-    template <typename From>
-    static value_t
-    conv(typename From::value_t v)
-    {
-      return conv(std::declval<From>(), v);
-    }
-
     static value_t
     conv(self_type, value_t v)
     {

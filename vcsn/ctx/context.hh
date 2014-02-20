@@ -138,41 +138,40 @@ namespace vcsn
       labelset_ptr ls_;
       weightset_ptr ws_;
     };
+  }
 
+  template <typename A, typename B>
+  using join_t = decltype(join(std::declval<A>(), std::declval<B>()));
 
-    template <typename A, typename B>
-    using join_t = decltype(join(std::declval<A>(), std::declval<B>()));
+  template <typename A, typename B>
+  using meet_t = decltype(meet(std::declval<A>(), std::declval<B>()));
 
-    template <typename A, typename B>
-    using meet_t = decltype(meet(std::declval<A>(), std::declval<B>()));
+  /// The meet of two contexts.
+  template <typename LhsLabelSet, typename LhsWeightSet,
+            typename RhsLabelSet, typename RhsWeightSet>
+  auto
+  meet(const ctx::context<LhsLabelSet, LhsWeightSet>& a,
+       const ctx::context<RhsLabelSet, RhsWeightSet>& b)
+    -> ctx::context<meet_t<LhsLabelSet, RhsLabelSet>,
+                   join_t<LhsWeightSet, RhsWeightSet>>
+  {
+    auto ls = meet(*a.labelset(), *b.labelset());
+    auto ws = join(*a.weightset(), *b.weightset());
+    return {ls, ws};
+  }
 
-    /// The meet of two contexts.
-    template <typename LhsLabelSet, typename LhsWeightSet,
-              typename RhsLabelSet, typename RhsWeightSet>
-    auto
-    meet(const context<LhsLabelSet, LhsWeightSet>& a,
-         const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<meet_t<LhsLabelSet, RhsLabelSet>,
-                 join_t<LhsWeightSet, RhsWeightSet>>
-    {
-      auto ls = meet(*a.labelset(), *b.labelset());
-      auto ws = join(*a.weightset(), *b.weightset());
-      return {ls, ws};
-    }
-
-    /// The join of two contexts.
-    template <typename LhsLabelSet, typename LhsWeightSet,
-              typename RhsLabelSet, typename RhsWeightSet>
-    auto
-    join(const context<LhsLabelSet, LhsWeightSet>& a,
-         const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<join_t<LhsLabelSet, RhsLabelSet>,
-                 join_t<LhsWeightSet, RhsWeightSet>>
-    {
-      auto ls = join(*a.labelset(), *b.labelset());
-      auto ws = join(*a.weightset(), *b.weightset());
-      return {ls, ws};
-    }
+  /// The join of two contexts.
+  template <typename LhsLabelSet, typename LhsWeightSet,
+            typename RhsLabelSet, typename RhsWeightSet>
+  auto
+  join(const ctx::context<LhsLabelSet, LhsWeightSet>& a,
+       const ctx::context<RhsLabelSet, RhsWeightSet>& b)
+    -> ctx::context<join_t<LhsLabelSet, RhsLabelSet>,
+                    join_t<LhsWeightSet, RhsWeightSet>>
+  {
+    auto ls = join(*a.labelset(), *b.labelset());
+    auto ws = join(*a.weightset(), *b.weightset());
+    return {ls, ws};
   }
 }
 
