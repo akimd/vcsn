@@ -143,7 +143,7 @@ namespace vcsn
 
       std::ostream&
       print(std::ostream& o, const value_t& l,
-          const std::string& format = "text") const
+            const std::string& format = "text") const
       {
         if (is_one(l))
           o << (format == "latex" ? "\\varepsilon" : "\\e");

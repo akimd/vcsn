@@ -8,6 +8,7 @@
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -18,8 +19,9 @@ namespace vcsn
   {
     /// Implementation of labels are nullables (letter or empty).
     template <typename GenSet>
-    struct nullableset: genset_labelset<GenSet>
+    class nullableset: public genset_labelset<GenSet>
     {
+    public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;

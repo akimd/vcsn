@@ -10,6 +10,17 @@ namespace vcsn
 
   namespace ctx
   {
+    // letterset.hh.
+    template <typename GenSet>
+    class letterset;
+
+    // nullableset.hh.
+    template <typename GenSet>
+    class nullableset;
+
+    // oneset.hh.
+    class oneset;
+
     // wordset.hh.
     template <typename GenSet>
     class wordset;

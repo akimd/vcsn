@@ -17,8 +17,9 @@ namespace vcsn
   {
     /// Implementation of labels are letters.
     template <typename GenSet>
-    struct letterset: genset_labelset<GenSet>
+    class letterset: public genset_labelset<GenSet>
     {
+    public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
       using genset_ptr = std::shared_ptr<const genset_t>;
@@ -149,7 +150,7 @@ namespace vcsn
       }
     };
 
-    /// Compute the meet with another alphabet.
+    /// Compute the meet with another labelset.
     template <typename GenSet>
     letterset<GenSet>
     meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
@@ -157,7 +158,7 @@ namespace vcsn
       return {intersection(*lhs.genset(), *rhs.genset())};
     }
 
-    /// Compute the union with another alphabet.
+    /// Compute the join with another labelset.
     template <typename GenSet>
     letterset<GenSet>
     join(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)

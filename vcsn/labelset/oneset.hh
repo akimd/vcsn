@@ -16,8 +16,10 @@ namespace vcsn
   {
     /// Implementation of labels are ones: there is a single instance
     /// of label.
-    struct oneset
+    class oneset
     {
+    public:
+      using self_type = oneset;
       using value_t = vcsn::empty_t;
 
       using kind_t = labels_are_one;

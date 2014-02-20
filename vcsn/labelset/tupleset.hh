@@ -188,15 +188,6 @@ namespace vcsn
       return hash_(v, indices_t{});
     }
 
-    /// Read one letter from i, return the corresponding label.
-    value_t
-    conv(std::istream& i) const
-    {
-      value_t res = conv_(i, indices_t{});
-      eat(i, ')');
-      return res;
-    }
-
     static value_t
     conv(self_type, value_t v)
     {
@@ -207,6 +198,15 @@ namespace vcsn
     conv(b, b::value_t v) const
     {
       return v ? one() : zero();
+    }
+
+    /// Read one letter from i, return the corresponding label.
+    value_t
+    conv(std::istream& i) const
+    {
+      value_t res = conv_(i, indices_t{});
+      eat(i, ')');
+      return res;
     }
 
     std::ostream&
