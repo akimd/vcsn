@@ -1,0 +1,39 @@
+#! /bin/sh
+
+# Modifies the files given in argument by converting the "dot" graphs
+# that are in them using "vcsn cat".
+#
+# Run for instance via "./tests/bin/vcsn -e migrate-dot **/*.chk" to
+# use a non-installed vcsn.
+#
+# Requires colordiff.
+
+perl -pi -w -0777 -e '
+$re = qr{
+         \{
+           (?:
+              (?> [^{}]+ )    # Non-braces without backtracking
+            |
+              (??{ $re })     # Group with matching braces
+           )*
+         \}
+        }xs;
+s{(digraph\s*$re)}
+{
+  my $aut = $1;
+  # Change only generated graphs.  As an approximation, consider
+  # generated == contains "node [shape = circle]".
+  if ($aut =~ m{node \[shape = circle\]})
+  {
+    open(BEFORE, ">/tmp/before.gv");
+    print BEFORE "$aut\n";
+    system("vcsn cat -f /tmp/before.gv -o /tmp/after.gv");
+    system("colordiff -u /tmp/before.gv /tmp/after.gv");
+    open(AFTER, "</tmp/after.gv");
+    local $/ = undef;
+    $aut = <AFTER>;
+    chop $aut;
+  }
+  $aut
+}gemsx;
+' "$@"
