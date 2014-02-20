@@ -137,17 +137,19 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_nullable)
       {
-        using aut_t = mutable_automaton<Ctx>;
-        using rs_t = ratexpset<Ctx>;
+        using ctx_t = Ctx;
+        using rs_t = ratexpset<ctx_t>;
+        using aut_t = mutable_automaton<ctx_t>;
+
         using namespace dyn::detail;
 
-        REGISTER(de_bruijn, Ctx, unsigned);
-        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
-        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
-        REGISTER(ladybird, Ctx, unsigned);
-        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
+        REGISTER(de_bruijn, ctx_t, unsigned);
+        REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
+        REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
+        REGISTER(ladybird, ctx_t, unsigned);
+        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(thompson, rs_t);
-        REGISTER(u, Ctx, unsigned);
+        REGISTER(u, ctx_t, unsigned);
 
         return true;
       }
@@ -156,7 +158,9 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_one)
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+
         using namespace dyn::detail;
 
         REGISTER(eliminate_state, aut_t, int);
@@ -168,7 +172,9 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_ratexps)
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+
         using namespace dyn::detail;
 
         REGISTER(eliminate_state, aut_t, int);
@@ -192,8 +198,9 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_words)
       {
-        using aut_t = mutable_automaton<Ctx>;
-        using rs_t = ratexpset<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+        using rs_t = ratexpset<ctx_t>;
 
         using namespace dyn::detail;
 
@@ -206,20 +213,21 @@ namespace vcsn
       bool
       register_functions()
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
         using taut_t = vcsn::detail::transpose_automaton<aut_t>;
-        using rs_t = ratexpset<Ctx>;
-        using ws_t = typename Ctx::weightset_t;
+        using rs_t = ratexpset<ctx_t>;
+        using ws_t = typename ctx_t::weightset_t;
 
         // Same labelset, but over Booleans.
-        using b_ctx_t = context<typename Ctx::labelset_t, b>;
+        using b_ctx_t = context<typename ctx_t::labelset_t, b>;
         using b_aut_t = mutable_automaton<b_ctx_t>;
         using b_rs_t = ratexpset<b_ctx_t>;
 
         // label polynomialset.
-        using lps_t = typename vcsn::polynomialset<Ctx>;
+        using lps_t = polynomialset<ctx_t>;
         // ratexp polynomialset.
-        using rps_t = typename vcsn::rat::ratexp_polynomialset_t<rs_t>;
+        using rps_t = typename rat::ratexp_polynomialset_t<rs_t>;
 
         using namespace dyn::detail;
 
@@ -256,17 +264,17 @@ namespace vcsn
         REGISTER(lift_exp, rs_t);
         REGISTER(linear, rs_t, bool);
         REGISTER(list_polynomial, rps_t, std::ostream);
-        REGISTER(make_automaton_editor, Ctx);
-        REGISTER(make_context, Ctx);
-        REGISTER(make_ratexpset, Ctx);
-        REGISTER(print_ctx, Ctx, std::ostream, const std::string);
+        REGISTER(make_automaton_editor, ctx_t);
+        REGISTER(make_context, ctx_t);
+        REGISTER(make_ratexpset, ctx_t);
+        REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
         REGISTER(print_exp, rs_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, bool);
-        REGISTER(read_polynomial, Ctx, std::istream);
-        REGISTER(read_weight, Ctx, std::istream);
+        REGISTER(read_polynomial, ctx_t, std::istream);
+        REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
@@ -287,7 +295,7 @@ namespace vcsn
         REGISTER(union_a, aut_t, b_aut_t);
         REGISTER(union_a, b_aut_t, aut_t);
 
-        return register_kind_functions<Ctx>(typename Ctx::kind_t());
+        return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
       }
     }
   }

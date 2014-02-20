@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+
 import vcsn
 from test import *
 
@@ -323,9 +324,9 @@ digraph
 }''')
 
 
-## ------------------------------------ ##
-## lan_char_zr: Check conversion to lal ##
-## ------------------------------------ ##
+## -------------------------------------- ##
+## lan_char_zr: Check conversion to lal.  ##
+## -------------------------------------- ##
 
 check_to_lal('''
 digraph

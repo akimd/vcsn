@@ -28,19 +28,20 @@ namespace vcsn
       bool
       register_q_functions()
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
 
         // Same labelset, but over Z.
-        using z_ctx_t = context<typename Ctx::labelset_t, z>;
+        using z_ctx_t = context<typename ctx_t::labelset_t, z>;
         using z_aut_t = mutable_automaton<z_ctx_t>;
 
         // Same labelset, but of B RatE.
-        using b_ctx_t  = context<typename Ctx::labelset_t, vcsn::b>;
-        using br_ctx_t = context<lal_char, vcsn::ratexpset<b_ctx_t>>;
+        using b_ctx_t  = context<typename ctx_t::labelset_t, b>;
+        using br_ctx_t = context<lal_char, ratexpset<b_ctx_t>>;
         using br_aut_t = mutable_automaton<br_ctx_t>;
 
         // ratexpset on Q.
-        using rs_t = ratexpset<Ctx>;
+        using rs_t = ratexpset<ctx_t>;
         // ratexpset on Z.
         using z_rs_t = ratexpset<z_ctx_t>;
         // ratexpset on B.

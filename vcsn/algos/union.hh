@@ -68,7 +68,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(union_a,
-                        (const automaton&, const automaton&) -> automaton);
+                       (const automaton&, const automaton&) -> automaton);
     }
   }
 }
