@@ -40,6 +40,12 @@ namespace vcsn
         using br_ctx_t = context<lal_char, ratexpset<b_ctx_t>>;
         using br_aut_t = mutable_automaton<br_ctx_t>;
 
+        // Letterset and B RatE.
+        using letterset_t = letterset<typename ctx_t::labelset_t::genset_t>;
+        using lb_ctx_t  = context<letterset_t, b>;
+        using lbr_ctx_t = context<lal_char, ratexpset<lb_ctx_t>>;
+        using lbr_aut_t = mutable_automaton<lbr_ctx_t>;
+
         // ratexpset on Q.
         using rs_t = ratexpset<ctx_t>;
         // ratexpset on Z.
@@ -69,6 +75,9 @@ namespace vcsn
         REGISTER(shuffle, br_aut_t, aut_t);
         REGISTER(union_a, aut_t, br_aut_t);
         REGISTER(union_a, br_aut_t, aut_t);
+
+        REGISTER(union_a, aut_t, lbr_aut_t);
+        REGISTER(union_a, lbr_aut_t, aut_t);
 
         //        REGISTER(copy_exp, rs_t, b_rs_t);
         REGISTER(copy_exp, b_rs_t, rs_t);

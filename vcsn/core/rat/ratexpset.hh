@@ -9,7 +9,9 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/weights/b.hh>
+# include <vcsn/weights/z.hh>
 # include <vcsn/weights/q.hh>
+# include <vcsn/weights/r.hh>
 
 namespace vcsn
 {
@@ -119,7 +121,9 @@ namespace vcsn
 
     value_t conv(std::istream& is) const;
     value_t conv(b, typename b::value_t v) const;
+    value_t conv(const z& ws, typename z::value_t v) const;
     value_t conv(const q& ws, typename q::value_t v) const;
+    value_t conv(const r& ws, typename r::value_t v) const;
     template <typename Ctx2>
     value_t conv(const ratexpset<Ctx2>& ws,
                  typename ratexpset<Ctx2>::value_t v) const;
@@ -223,6 +227,8 @@ namespace vcsn
     return join(a.context(), b.context());
   }
 
+  // B.  FIXME: screams for refactoring!
+
   template <typename Context>
   inline
   ratexpset<Context>
@@ -239,6 +245,29 @@ namespace vcsn
     return join(b, a);
   }
 
+  // Z.
+  template <typename Context>
+  inline
+  auto
+  join(const ratexpset<Context>& rs, const z& ws)
+      -> ratexpset<ctx::context<typename Context::labelset_t,
+                                decltype(join(*rs.weightset(), ws))>>
+  {
+    using ctx_t = ctx::context<typename Context::labelset_t,
+                               decltype(join(*rs.weightset(), ws))>;
+    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+  }
+
+  template <typename Context>
+  inline
+  auto
+  join(const z& ws, const ratexpset<Context>& rs)
+    -> decltype(join(rs, ws))
+  {
+    return join(rs, ws);
+  }
+
+  // Q.
   template <typename Context>
   inline
   auto
@@ -259,6 +288,30 @@ namespace vcsn
   {
     return join(rs, ws);
   }
+
+  // R.
+  template <typename Context>
+  inline
+  auto
+  join(const ratexpset<Context>& rs, const r& ws)
+      -> ratexpset<ctx::context<typename Context::labelset_t,
+                                decltype(join(*rs.weightset(), ws))>>
+  {
+    using ctx_t = ctx::context<typename Context::labelset_t,
+                               decltype(join(*rs.weightset(), ws))>;
+    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+  }
+
+  template <typename Context>
+  inline
+  auto
+  join(const r& ws, const ratexpset<Context>& rs)
+    -> decltype(join(rs, ws))
+  {
+    return join(rs, ws);
+  }
+
+
 
 } // namespace vcsn
 

@@ -17,6 +17,8 @@ namespace vcsn
   A&
   union_here(A& res, const B& b)
   {
+    const auto& ls = *res.labelset();
+    const auto& bls = *b.labelset();
     const auto& ws = *res.weightset();
     const auto& bws = *b.weightset();
     // State in B -> state in Res.
@@ -28,7 +30,7 @@ namespace vcsn
 
     for (auto t: b.all_transitions())
       res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                         b.label_of(t),
+                         ls.conv(bls, b.label_of(t)),
                          ws.conv(bws, b.weight_of(t)));
     return res;
   }

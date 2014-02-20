@@ -21,6 +21,7 @@ namespace vcsn
     public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
+      using self_type = wordset;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
       using letter_t = typename genset_t::letter_t;
@@ -131,6 +132,12 @@ namespace vcsn
       static size_t hash(const value_t& v)
       {
         return hash_value(v);
+      }
+
+      static value_t
+      conv(self_type, value_t v)
+      {
+        return v;
       }
 
       // FIXME: Why do I need to repeat this?

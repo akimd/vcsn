@@ -466,7 +466,19 @@ namespace vcsn
     return v ? one() : zero();
   }
 
+  DEFINE::conv(const z& ws, typename z::value_t v) const
+    -> value_t
+  {
+    return lmul(weightset()->conv(ws, v), one());
+  }
+
   DEFINE::conv(const q& ws, typename q::value_t v) const
+    -> value_t
+  {
+    return lmul(weightset()->conv(ws, v), one());
+  }
+
+  DEFINE::conv(const r& ws, typename r::value_t v) const
     -> value_t
   {
     return lmul(weightset()->conv(ws, v), one());

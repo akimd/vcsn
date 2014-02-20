@@ -24,6 +24,7 @@ namespace vcsn
     public:
       using genset_t = GenSet;
       using super_type = genset_labelset<genset_t>;
+      using self_type = nullableset;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
       using letter_t = typename genset_t::letter_t;
@@ -138,6 +139,18 @@ namespace vcsn
         return hash_value(v);
       }
 
+      static value_t
+      conv(self_type, value_t v)
+      {
+        return v;
+      }
+
+      static value_t
+      conv(letterset<genset_t>, typename letterset<genset_t>::value_t v)
+      {
+        return v;
+      }
+
       /// \throws std::domain_error if there is no label here.
       value_t
       conv(std::istream& i) const
@@ -177,21 +190,24 @@ namespace vcsn
       }
     };
 
-    /// Compute the meet with another alphabet.
-    template <typename GenSet>
-    nullableset<GenSet>
-    meet(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
-    {
-      return {intersection(*lhs.genset(), *rhs.genset())};
+#define DEFINE(Func, Operation, Lhs, Rhs, Res)                  \
+    template <typename GenSet>                                  \
+    Res<GenSet>                                                 \
+    Func(const Lhs<GenSet>& lhs, const Rhs<GenSet>& rhs)        \
+    {                                                           \
+      return {Operation(*lhs.genset(), *rhs.genset())};         \
     }
 
-    /// Compute the union with another alphabet.
-    template <typename GenSet>
-    nullableset<GenSet>
-    join(const nullableset<GenSet>& lhs, const nullableset<GenSet>& rhs)
-    {
-      return {get_union(*lhs.genset(), *rhs.genset())};
-    }
+    /// Compute the meet with another labelset.
+    DEFINE(meet, intersection, nullableset, nullableset, nullableset);
+    DEFINE(meet, intersection, nullableset, letterset,   letterset);
+    DEFINE(meet, intersection, letterset,   nullableset, letterset);
+
+    /// compute the join with another labelset.
+    DEFINE(join, get_union, nullableset, nullableset, nullableset);
+    DEFINE(join, get_union, nullableset, letterset,   nullableset);
+    DEFINE(join, get_union, letterset,   nullableset, nullableset);
+#undef DEFINE
   }
 
   template <typename GenSet>
