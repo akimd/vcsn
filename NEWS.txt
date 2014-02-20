@@ -5,6 +5,16 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-02-20
+** union accepts more heterogenous arguments
+As for products (Hadamard, shuffle, infiltration), it is now possible to
+compute the union of automata with different types:
+
+  >>> z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
+  >>> q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
+  >>> r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+  >>> (z|q|r).ratexp()
+  <2>a+<0.333333>b+<0.4>c
+
 ** automaton product optimization.
 An optimization enabled by state renumbering.
 

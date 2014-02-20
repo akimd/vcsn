@@ -211,6 +211,11 @@ namespace vcsn
         using rs_t = ratexpset<Ctx>;
         using ws_t = typename Ctx::weightset_t;
 
+        // Same labelset, but over Booleans.
+        using b_ctx_t = context<typename Ctx::labelset_t, b>;
+        using b_aut_t = mutable_automaton<b_ctx_t>;
+        using b_rs_t = ratexpset<b_ctx_t>;
+
         // label polynomialset.
         using lps_t = typename vcsn::polynomialset<Ctx>;
         // ratexp polynomialset.
@@ -279,6 +284,8 @@ namespace vcsn
         REGISTER(transpose_exp, rs_t);
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
+        REGISTER(union_a, aut_t, b_aut_t);
+        REGISTER(union_a, b_aut_t, aut_t);
 
         return register_kind_functions<Ctx>(typename Ctx::kind_t());
       }

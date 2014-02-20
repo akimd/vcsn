@@ -57,6 +57,8 @@ namespace vcsn
         REGISTER(product, z_aut_t, aut_t);
         REGISTER(shuffle, aut_t, z_aut_t);
         REGISTER(shuffle, z_aut_t, aut_t);
+        REGISTER(union_a, aut_t, z_aut_t);
+        REGISTER(union_a, z_aut_t, aut_t);
 
         REGISTER(infiltration, aut_t, br_aut_t);
         REGISTER(infiltration, br_aut_t, aut_t);
@@ -64,6 +66,8 @@ namespace vcsn
         REGISTER(product, br_aut_t, aut_t);
         REGISTER(shuffle, aut_t, br_aut_t);
         REGISTER(shuffle, br_aut_t, aut_t);
+        REGISTER(union_a, aut_t, br_aut_t);
+        REGISTER(union_a, br_aut_t, aut_t);
 
         //        REGISTER(copy_exp, rs_t, b_rs_t);
         REGISTER(copy_exp, b_rs_t, rs_t);

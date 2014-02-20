@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_UNION_HH
 # define VCSN_ALGOS_UNION_HH
 
+# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
 namespace vcsn
@@ -16,6 +17,8 @@ namespace vcsn
   A&
   union_here(A& res, const B& b)
   {
+    const auto& ws = *res.weightset();
+    const auto& bws = *b.weightset();
     // State in B -> state in Res.
     std::map<typename B::state_t, typename A::state_t> m;
     for (auto s: b.states())
@@ -25,15 +28,17 @@ namespace vcsn
 
     for (auto t: b.all_transitions())
       res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                         b.label_of(t), b.weight_of(t));
+                         b.label_of(t),
+                         ws.conv(bws, b.weight_of(t)));
     return res;
   }
 
-  template <class A, class B>
-  A
+  template <typename A, typename B>
+  mutable_automaton<ctx::join_t<typename A::context_t, typename B::context_t>>
   union_a(const A& laut, const B& raut)
   {
-    using automaton_t = A;
+    using automaton_t
+      = mutable_automaton<ctx::join_t<typename A::context_t, typename B::context_t>>;
 
     // Create new automata.
     auto ctx = join(laut.context(), raut.context());

@@ -50,6 +50,8 @@ namespace vcsn
         REGISTER(product, q_aut_t, aut_t);
         REGISTER(shuffle, aut_t, q_aut_t);
         REGISTER(shuffle, q_aut_t, aut_t);
+        REGISTER(union_a, aut_t, q_aut_t);
+        REGISTER(union_a, q_aut_t, aut_t);
 
         // With Z.
         REGISTER(infiltration, aut_t, z_aut_t);
@@ -58,6 +60,8 @@ namespace vcsn
         REGISTER(product, z_aut_t, aut_t);
         REGISTER(shuffle, aut_t, z_aut_t);
         REGISTER(shuffle, z_aut_t, aut_t);
+        REGISTER(union_a, aut_t, z_aut_t);
+        REGISTER(union_a, z_aut_t, aut_t);
 #  undef REGISTER
 
         return true;

@@ -145,4 +145,36 @@ digraph
 
 CHECK_EQ(exp, a1 | a2)
 
+## --------------------- ##
+## Heterogeneous input.  ##
+## --------------------- ##
+
+# check RES AUT
+# -------------
+def check(exp, eff):
+    CHECK_EQ(exp, str(eff.ratexp()))
+
+# RatE and B, in both directions.
+a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('<u>a').derived_term()
+a2 = vcsn.context('lal_char(b)_b').ratexp('b*').derived_term()
+check('<u>a+b*', a1|a2)
+check('<u>a+b*', a2|a1)
+
+# Z, Q, R.
+z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
+q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
+r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+
+check('<2>a+<1/3>b', z|q)
+check('<1/3>b+<2>a', q|z)
+check('<2>a+<1/3>b+<2>a', z|q|z)
+check('<2>a+<1/3>b+<1/3>b', z|q|q)
+
+check('<2>a+<0.4>c', z|r)
+check('<0.4>c+<2>a', r|z)
+
+check('<0.333333>b+<0.4>c', q|r)
+check('<0.4>c+<0.333333>b', r|q)
+
 PLAN()
