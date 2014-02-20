@@ -270,7 +270,7 @@ namespace vcsn
     const value_t&
     one() const
     {
-      static value_t one_{{labelset()->one(), weightset()->one()}};
+      static value_t one_{monomial_one()};
       return one_;
     }
 
