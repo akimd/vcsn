@@ -36,13 +36,10 @@ namespace vcsn
       // differs: in the case of the product, the labelset is the meet
       // of the labelsets, it is its join for shuffle and
       // infiltration.
-      using labelset_t
-        = decltype(join(std::declval<typename Lhs::labelset_t>(),
-                        std::declval<typename Rhs::labelset_t>()));
-      using weightset_t
-        = decltype(join(std::declval<typename Lhs::weightset_t>(),
-                        std::declval<typename Rhs::weightset_t>()));
-      using context_t = ctx::context<labelset_t, weightset_t>;
+      using context_t = ctx::join_t<typename Lhs::context_t,
+                                    typename Rhs::context_t>;
+      using labelset_t = typename context_t::labelset_t;
+      using weightset_t = typename context_t::weightset_t;
 
     public:
       using automaton_t = mutable_automaton<context_t>;

@@ -140,14 +140,20 @@ namespace vcsn
     };
 
 
+    template <typename A, typename B>
+    using join_t = decltype(join(std::declval<A>(), std::declval<B>()));
+
+    template <typename A, typename B>
+    using meet_t = decltype(meet(std::declval<A>(), std::declval<B>()));
+
     /// The meet of two contexts.
     template <typename LhsLabelSet, typename LhsWeightSet,
               typename RhsLabelSet, typename RhsWeightSet>
     auto
     meet(const context<LhsLabelSet, LhsWeightSet>& a,
          const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<decltype(meet(*a.labelset(), *b.labelset())),
-                 decltype(join(*a.weightset(), *b.weightset()))>
+      -> context<meet_t<LhsLabelSet, RhsLabelSet>,
+                 join_t<LhsWeightSet, RhsWeightSet>>
     {
       auto ls = meet(*a.labelset(), *b.labelset());
       auto ws = join(*a.weightset(), *b.weightset());
@@ -160,14 +166,13 @@ namespace vcsn
     auto
     join(const context<LhsLabelSet, LhsWeightSet>& a,
          const context<RhsLabelSet, RhsWeightSet>& b)
-      -> context<decltype(join(*a.labelset(), *b.labelset())),
-                 decltype(join(*a.weightset(), *b.weightset()))>
+      -> context<join_t<LhsLabelSet, RhsLabelSet>,
+                 join_t<LhsWeightSet, RhsWeightSet>>
     {
       auto ls = join(*a.labelset(), *b.labelset());
       auto ws = join(*a.weightset(), *b.weightset());
       return {ls, ws};
     }
-
   }
 }
 
