@@ -89,19 +89,18 @@ r = '[a-d]?{100}'
 a = vcsn.context('lal_char(a-d)_b').ratexp(r).standard()
 bench('a.ratexp()', 'a = std('+r+')', lambda: a.ratexp())
 
-# With a?{150}, the product has 22501 states, 124,903,125 transitions,
-# which consumes a lot of RAM.  With a?{100}, 10001 states, 24,512,500
-# transitions.
-r = "a?{100}"
-a = b.ratexp(r).standard()
+# Other product and power testcases, with more outgoing transitions
+# per state.  This stresses much better the new product algorithm.
+r = "[a-e]?{50}"
+smallr = "[a-e]?{30}"
+a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
+sa = vcsn.context("lal_char(a-e)_z").ratexp(smallr).standard()
 bench('a.product(a)     ', 'a = std('+r+')', lambda: a.product(a))
 bench('a.shuffle(a)     ', 'a = std('+r+')', lambda: a.shuffle(a))
-bench('a.infiltration(a)', 'a = std('+r+')', lambda: a.infiltration(a))
-
-# power.
-r = "[ab]*b(<2>[ab])*"
+bench('sa.infiltration(sa)', 'sa = std('+smallr+')', lambda: sa.infiltration(sa))
+r = "[a-e]*b(<2>[a-e])*"
 n = 12
-a = vcsn.context("lal_char(ab)_z").ratexp(r).standard()
+a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
 bench('a**{}'.format(n), 'a = std({})'.format(r), lambda: a ** n)
 
 # Minimize a big deterministic automaton over booleans.
