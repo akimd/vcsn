@@ -33,7 +33,6 @@
   %D%/sum.chk                                   \
   %D%/thompson.chk                              \
   %D%/transpose.chk                             \
-  %D%/union.chk                                 \
   %D%/universal.chk
 
 dist_TESTS += $(%C%_TESTS)
@@ -81,8 +80,7 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv                            \
   %D%/power.dir/binary^0.gv                     \
-  %D%/power.dir/binary^1.gv                     \
-  %D%/union.dir/abc.gv
+  %D%/power.dir/binary^1.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/cat.log:         $(wildcard $(srcdir)/%D%/cat.dir/*)
@@ -93,7 +91,6 @@ EXTRA_DIST +=                                   \
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
 %D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
-%D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain

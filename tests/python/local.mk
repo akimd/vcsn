@@ -44,7 +44,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/split.py                                  \
   %D%/star-height.py                            \
   %D%/star.py                                   \
-  %D%/transpose.py
+  %D%/transpose.py                              \
+  %D%/union.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \
@@ -83,7 +84,8 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/x.gv                          \
   %D%/product.dir/xa.gv                         \
   %D%/product.dir/xy.gv                         \
-  %D%/product.dir/xyz.gv
+  %D%/product.dir/xyz.gv                        \
+  %D%/union.dir/abc.gv
 
 %D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
@@ -91,6 +93,7 @@ EXTRA_DIST +=                                   \
 %D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/product.log: $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)
 
 .PHONY: check-python
 check-python:

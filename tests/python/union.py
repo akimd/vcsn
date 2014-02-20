@@ -1,15 +1,18 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 -f $medir/abc.gv -vcsn union -f ab.gv bc.gv
+import vcsn
+from test import *
+
+ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+CHECK_EQ(vcsn.automaton.load(medir + '/abc.gv'), ab | bc)
 
 ## ------------ ##
 ## lal_char_z.  ##
 ## ------------ ##
 
 # <2>(a*b*a*)
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -30,18 +33,18 @@ digraph
   I0 -> 0 [label = "<2>"]
   0 -> F0
   0 -> 0 [label = "a"]
-  0 -> 1 [label = "b"]
-  0 -> 2 [label = "a"]
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
   1 -> F1
-  1 -> 1 [label = "b"]
-  1 -> 2 [label = "a"]
+  1 -> 1 [label = "a"]
   2 -> F2
-  2 -> 2 [label = "a"]
+  2 -> 1 [label = "a"]
+  2 -> 2 [label = "b"]
 }
-EOF
+''')
 
 # (<3>(ab))*
-cat >b.gv <<\EOF
+b = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -61,10 +64,9 @@ digraph
   0 -> 1 [label = "a"]
   1 -> 0 [label = "<3>b"]
 }
-EOF
+''')
 
-rm -f out.exp
-cat >out.exp <<\EOF
+exp = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_z"
@@ -72,7 +74,7 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    I1
+    I3
     F0
     F1
     F2
@@ -87,28 +89,27 @@ digraph
     4
   }
   I0 -> 0 [label = "<2>"]
-  I1 -> 1 [label = "<3>"]
+  I3 -> 3 [label = "<3>"]
   0 -> F0
   0 -> 0 [label = "a"]
-  0 -> 2 [label = "a"]
-  0 -> 3 [label = "b"]
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
   1 -> F1
-  1 -> 4 [label = "a"]
+  1 -> 1 [label = "a"]
   2 -> F2
-  2 -> 2 [label = "a"]
+  2 -> 1 [label = "a"]
+  2 -> 2 [label = "b"]
   3 -> F3
-  3 -> 2 [label = "a"]
-  3 -> 3 [label = "b"]
-  4 -> 1 [label = "<3>b"]
+  3 -> 4 [label = "a"]
+  4 -> 3 [label = "<3>b"]
 }
-EOF
-
-run 0 out.exp -vcsn union -f a.gv b.gv
+''')
+CHECK_EQ(exp, a | b)
 
 # Check union of contexts.
-run 0 '' -vcsn standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' -o 1.gv
-run 0 '' -vcsn standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' -o 2.gv
-run 0 - -vcsn union -f 1.gv 2.gv <<\EOF
+a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
+a2 = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
+exp = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
@@ -116,7 +117,7 @@ digraph
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    I1
+    I2
     F0
     F1
     F2
@@ -130,14 +131,18 @@ digraph
     3
   }
   I0 -> 0
-  I1 -> 1
+  I2 -> 2
   0 -> F0 [label = "<x>"]
-  0 -> 2 [label = "<x>a"]
-  1 -> F1 [label = "<y>"]
-  1 -> 3 [label = "<y>b"]
-  2 -> F2
-  2 -> 2 [label = "a"]
+  0 -> 1 [label = "<x>a"]
+  1 -> F1
+  1 -> 1 [label = "a"]
+  2 -> F2 [label = "<y>"]
+  2 -> 3 [label = "<y>b"]
   3 -> F3
   3 -> 3 [label = "b"]
 }
-EOF
+''')
+
+CHECK_EQ(exp, a1 | a2)
+
+PLAN()
