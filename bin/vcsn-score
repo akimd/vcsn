@@ -92,12 +92,16 @@ bench('a.ratexp()', 'a = std('+r+')', lambda: a.ratexp())
 # Other product and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new product algorithm.
 r = "[a-e]?{50}"
-smallr = "[a-e]?{30}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-sa = vcsn.context("lal_char(a-e)_z").ratexp(smallr).standard()
 bench('a.product(a)     ', 'a = std('+r+')', lambda: a.product(a))
 bench('a.shuffle(a)     ', 'a = std('+r+')', lambda: a.shuffle(a))
-bench('sa.infiltration(sa)', 'sa = std('+smallr+')', lambda: sa.infiltration(sa))
+
+# infiltration.
+r = "[a-e]?{30}"
+a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
+bench('a.infiltration(sa)', 'a = std('+r+')', lambda: a.infiltration(a))
+
+# power.
 r = "[a-e]*b(<2>[a-e])*"
 n = 12
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
