@@ -160,6 +160,12 @@ namespace vcsn
     /// The Hadamard product of ratexps \a lhs and \a rhs.
     ratexp intersection(const ratexp& lhs, const ratexp& rhs);
 
+    /// Split automaton on the incoming transition.
+    /// Every state either has only epsilon incoming transitions
+    /// or non-epsilon ones.
+    /// \pre aut is lal or lan
+    automaton insplit(const automaton& aut);
+
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);
 
@@ -246,6 +252,12 @@ namespace vcsn
 
     /// Build an ratexpset from its context.
     ratexpset make_ratexpset(const context& ctx);
+
+    /// Split automaton on the outgoing transition.
+    /// Every state either has only epsilon out-going transitions
+    /// or non-epsilon ones.
+    /// \pre aut is lal or lan
+    automaton outsplit(const automaton& aut);
 
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);

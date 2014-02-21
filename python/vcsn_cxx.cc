@@ -132,6 +132,11 @@ struct automaton
     return vcsn::dyn::infiltration(aut_, rhs.aut_);
   }
 
+  automaton insplit() const
+  {
+    return vcsn::dyn::insplit(aut_);
+  }
+
   bool is_accessible() const
   {
     return vcsn::dyn::is_accessible(aut_);
@@ -217,6 +222,11 @@ struct automaton
   automaton minimize(const std::string& algo = "weighted") const
   {
     return vcsn::dyn::minimize(aut_, algo);
+  }
+
+  automaton outsplit() const
+  {
+    return vcsn::dyn::outsplit(aut_);
   }
 
   automaton power(unsigned n) const
@@ -605,6 +615,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("eval", &automaton::eval)
     .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
+    .def("insplit", &automaton::insplit)
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)
@@ -623,6 +634,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("minimize", &automaton::minimize, minimize())
+    .def("outsplit", &automaton::outsplit)
     .def("power", &automaton::power)
     .def("product", &automaton::product)
     .def("proper_real", &automaton::proper, proper())

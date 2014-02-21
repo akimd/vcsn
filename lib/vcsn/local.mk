@@ -52,6 +52,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
   %D%/algos/info.cc                             \
+  %D%/algos/insplit.cc                          \
   %D%/algos/is-ambiguous.cc                     \
   %D%/algos/is-complete.cc                      \
   %D%/algos/is-deterministic.cc                 \
@@ -64,6 +65,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/lift.cc                             \
   %D%/algos/make-context.cc                     \
   %D%/algos/minimize.cc                         \
+  %D%/algos/outsplit.cc                         \
   %D%/algos/print.cc                            \
   %D%/algos/product.cc                          \
   %D%/algos/proper.cc                           \

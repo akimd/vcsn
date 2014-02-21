@@ -33,6 +33,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/info.hh                             \
+  %D%/algos/insplitting.hh                      \
   %D%/algos/is-ambiguous.hh                     \
   %D%/algos/is-complete.hh                      \
   %D%/algos/is-deterministic.hh                 \
@@ -46,6 +47,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/minimize.hh                         \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \
+  %D%/algos/outsplitting.hh                     \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \

@@ -73,6 +73,18 @@ y".
 When printed, entries also are displayed in the minimized form:
 'g, a, b, d, c, f' becomes [a-dfg] but 'a, b' stays in this form.
 
+** outsplitting: new algorithm
+It is now possible to do the out-splitting of an automaton, i.e. to get the
+equivalent automaton such that each state have either only outgoing
+epsilon-transitions or no outgoing epsilon-transitions.
+This is the first step in a product algorithm that supports
+epsilon-transitions.
+
+** insplitting: new algorithm
+The symmetric of outsplitting, this one creates an equivalent automaton
+in which each state has eithen only incoming epsilon-transitions or
+no incoming epsilon-transitions.
+
 * 2014-02-20
 ** union accepts more heterogenous arguments
 As for products (Hadamard, shuffle, infiltration), it is now possible to

@@ -12,6 +12,7 @@
 # include <vcsn/algos/expand.hh>
 # include <vcsn/algos/first-order.hh>
 # include <vcsn/algos/info.hh>
+# include <vcsn/algos/insplitting.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -19,6 +20,7 @@
 # include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
+# include <vcsn/algos/outsplitting.hh>
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/read.hh>
@@ -174,13 +176,16 @@ namespace vcsn
       register_kind_functions(labels_are_nullable)
       {
         using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
 
         using namespace dyn::detail;
 
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
+        REGISTER(insplit, aut_t);
         REGISTER(ladybird, ctx_t, unsigned);
+        REGISTER(outsplit, aut_t);
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(u, ctx_t, unsigned);
 
