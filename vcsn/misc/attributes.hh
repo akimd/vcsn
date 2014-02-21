@@ -10,6 +10,7 @@
 #  define ATTRIBUTE_HOT           __attribute__((hot))
 #  define ATTRIBUTE_NORETURN      [[noreturn]]
 #  define ATTRIBUTE_PURE          __attribute__((pure))
+#  define ATTRIBUTE_UNUSED        __attribute__((unused))
 
 # elif defined __GNUC__
 
@@ -20,6 +21,7 @@
 #  define ATTRIBUTE_HOT           __attribute__((hot))
 #  define ATTRIBUTE_NORETURN      __attribute__((noreturn))
 #  define ATTRIBUTE_PURE          __attribute__((pure))
+#  define ATTRIBUTE_UNUSED        __attribute__((unused))
 
 # elif defined _MSC_VER
 
@@ -30,6 +32,7 @@
 #  define ATTRIBUTE_HOT
 #  define ATTRIBUTE_NORETURN      [[noreturn]]
 #  define ATTRIBUTE_PURE
+#  define ATTRIBUTE_UNUSED
 
 # endif
 
