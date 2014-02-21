@@ -56,6 +56,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
   %D%/algos/info.cc                             \
+  %D%/algos/insplit.cc                          \
   %D%/algos/is-ambiguous.cc                     \
   %D%/algos/is-complete.cc                      \
   %D%/algos/is-deterministic.cc                 \

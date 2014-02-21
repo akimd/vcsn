@@ -153,6 +153,11 @@ struct automaton
     return vcsn::dyn::infiltration(aut_, rhs.aut_);
   }
 
+  automaton insplit() const
+  {
+    return vcsn::dyn::insplit(aut_);
+  }
+
   bool is_accessible() const
   {
     return vcsn::dyn::is_accessible(aut_);
@@ -704,6 +709,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("eval_", &automaton::eval)
     .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
+    .def("insplit", &automaton::insplit)
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)

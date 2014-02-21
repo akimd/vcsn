@@ -36,6 +36,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/first-order.py                            \
   %D%/infiltration.py                           \
   %D%/info.py                                   \
+  %D%/insplit.py                                \
   %D%/is-ambiguous.py                           \
   %D%/is-complete.py                            \
   %D%/is-deterministic.py                       \

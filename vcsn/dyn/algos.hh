@@ -166,6 +166,12 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// Split automaton on the incoming transition.
+    /// Every state either has only epsilon incoming transitions
+    /// or non-epsilon ones.
+    /// \pre aut is lal or lan
+    automaton insplit(const automaton& aut);
+
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);
 
