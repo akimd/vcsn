@@ -17,9 +17,7 @@
 namespace vcsn
 {
 
-  namespace detail
-  {
-  namespace info
+  namespace detail_info
   {
     /*---------------.
     | is-ambiguous.  |
@@ -125,7 +123,6 @@ namespace vcsn
       return res;
     }
   }
-  }
 
   /*--------------------------.
   | info(automaton, stream).  |
@@ -146,11 +143,11 @@ namespace vcsn
     ECHO("number of useful states", num_useful_states(aut));
     ECHO("number of transitions", aut.num_transitions());
     ECHO("number of deterministic states",
-         detail::info::num_deterministic_states(aut));
-    ECHO("number of eps transitions", detail::info::num_eps_transitions(aut));
-    ECHO("is ambiguous", detail::info::is_ambiguous(aut));
-    ECHO("is complete", detail::info::is_complete(aut));
-    ECHO("is deterministic", detail::info::is_deterministic(aut));
+         detail_info::num_deterministic_states(aut));
+    ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
+    ECHO("is ambiguous", detail_info::is_ambiguous(aut));
+    ECHO("is complete", detail_info::is_complete(aut));
+    ECHO("is deterministic", detail_info::is_deterministic(aut));
     ECHO("is empty", is_empty(aut));
     ECHO("is eps-acyclic", is_eps_acyclic(aut));
     ECHO("is normalized", is_normalized(aut));

@@ -429,7 +429,7 @@ namespace vcsn
               update_heap_(n);
             if (1 < debug_)
               std::cerr << " #tr: "
-                        << detail::info::num_eps_transitions(aut_)
+                        << detail_info::num_eps_transitions(aut_)
                         << "/" << aut_.num_transitions() << std::endl;
             if (2 < debug_)
               {
