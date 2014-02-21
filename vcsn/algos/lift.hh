@@ -32,11 +32,11 @@ namespace vcsn
       ratexpset<lifted_context_t<typename RatExpSet::context_t>>;
 
     // lift(ctx) -> ctx
-    template <typename Context>
-    lifted_context_t<Context>
-    lift(const Context& ctx)
+    template <typename LabelSet, typename WeightSet>
+    lifted_context_t<ctx::context<LabelSet, WeightSet>>
+    lift(const ctx::context<LabelSet, WeightSet>& ctx)
     {
-      auto rs_in = ratexpset<Context>(ctx);
+      auto rs_in = ratexpset<ctx::context<LabelSet, WeightSet>>(ctx);
       return {ctx::oneset{}, rs_in};
     }
 
