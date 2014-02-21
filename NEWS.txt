@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-02-21
+** parse and display brackets in transitions
+It is now possible to directly write entries in bracket notation, for
+instance [a-ky] which means "every letter between a and k in the alphabet, or
+y".
+When printed, entries also are displayed in the minimized form:
+'g, a, b, d, c, f' becomes [a-dfg] but 'a, b' stays in this form.
+
 * 2014-02-20
 ** union accepts more heterogenous arguments
 As for products (Hadamard, shuffle, infiltration), it is now possible to
