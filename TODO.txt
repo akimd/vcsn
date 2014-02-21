@@ -110,6 +110,33 @@ Note that when printing an automaton with an empty alphabet, we write
 'lal_char_b' which fails to parse correctly for lack of () (should be
 'lal_char()_b').
 
+** Parsing errors in ratexps
+
+$ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'
+
+This has three states instead of two:
+
+/* Origins.
+    node [shape = box, style = rounded]
+    0 [label = "(<x>b)*<y>(a(<x>b+<y>(a(<x>b)*)<y>a)*)"]
+    1 [label = "(<x>b+<y>(a(<x>b)*)<y>a)*"]
+    2 [label = "(<x>b)*<y>a(<x>b+<y>(a(<x>b)*)<y>a)*"]
+
+as can be seen the problem is where the first <y> weight is attached.  In
+state 2, it is bound to the "a", which is not shown, but should:
+"...(<y>a)...".  We have the dual problem in the other expression.
+
+So we have two problems here:
+
+- the pretty-printing and the reader do not agree, as when entering the
+  ratexp of state 2 we get the expression of state 1.
+
+- when entering expression 2, we would prefer attaching the weight to the
+  "a" instead of all the rest, as it results in a smaller derived-term
+  automaton.
+
+In other words, both the parser and the pretty-printer must be revised.
+
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,
 avoid files and use streams.
