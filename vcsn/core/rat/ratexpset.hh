@@ -196,9 +196,11 @@ namespace vcsn
   {
     if (format == "latex")
       {
-	print_set(*ws.weightset(), o, format);
-	o << "\\,\\mathsf{RatE}\\,";
+	o << "\\mathsf{RatE}[";
 	print_set(*ws.labelset(), o, format);
+        o << " \\rightarrow ";
+	print_set(*ws.weightset(), o, format);
+        o << ']';
       }
     else if (format == "text")
       o << ws.vname();
