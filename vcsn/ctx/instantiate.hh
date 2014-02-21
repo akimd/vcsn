@@ -145,14 +145,12 @@ namespace vcsn
         using letterset_t = letterset<typename ctx_t::labelset_t::genset_t>;
         using l_ctx_t = context<letterset_t, typename ctx_t::weightset_t>;
         using l_aut_t = mutable_automaton<l_ctx_t>;
-        using l_rs_t = ratexpset<l_ctx_t>;
 
         // Letterset -> B RatE.
         using letterset_t = letterset<typename ctx_t::labelset_t::genset_t>;
         using lb_ctx_t = context<letterset_t, b>;
         using lbr_ctx_t = context<letterset_t, ratexpset<lb_ctx_t>>;
         using lbr_aut_t = mutable_automaton<lbr_ctx_t>;
-        using lbr_rs_t = ratexpset<lbr_ctx_t>;
 
         using namespace dyn::detail;
 
@@ -222,7 +220,6 @@ namespace vcsn
       register_kind_functions(labels_are_words)
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
 
         using namespace dyn::detail;
@@ -245,7 +242,6 @@ namespace vcsn
         // Same labelset, but over Booleans.
         using b_ctx_t = context<typename ctx_t::labelset_t, b>;
         using b_aut_t = mutable_automaton<b_ctx_t>;
-        using b_rs_t = ratexpset<b_ctx_t>;
 
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;
