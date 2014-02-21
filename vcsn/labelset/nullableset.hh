@@ -15,15 +15,13 @@
 
 namespace vcsn
 {
-  namespace ctx
-  {
     /// Implementation of labels are nullables (letter or empty).
     template <typename GenSet>
-    class nullableset: public genset_labelset<GenSet>
+  class nullableset: public detail::genset_labelset<GenSet>
     {
     public:
       using genset_t = GenSet;
-      using super_type = genset_labelset<genset_t>;
+    using super_type = detail::genset_labelset<genset_t>;
       using self_type = nullableset;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
@@ -214,12 +212,11 @@ namespace vcsn
     DEFINE(join, get_union, nullableset, letterset,   nullableset);
     DEFINE(join, get_union, letterset,   nullableset, nullableset);
 #undef DEFINE
-  }
 
   template <typename GenSet>
   inline
   std::ostream&
-  print_set(const ctx::nullableset<GenSet>& ls,
+  print_set(const nullableset<GenSet>& ls,
             std::ostream& o, const std::string& format)
   {
     if (format == "latex")

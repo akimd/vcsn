@@ -15,7 +15,7 @@ check_letterset()
 {
   unsigned nerrs = 0;
   using labelset_t =
-    vcsn::ctx::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
+    vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = labelset_t::genset_t;
   genset_t gs{'a', 'b', 'c'};
   labelset_t ls{gs};
@@ -37,7 +37,7 @@ check_tupleset()
 {
   unsigned nerrs = 0;
   using labelset_t =
-    vcsn::ctx::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
+    vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = labelset_t::genset_t;
   genset_t gs1{'a', 'b', 'c'};
   labelset_t ls1{gs1};
@@ -51,7 +51,7 @@ check_tupleset()
   label_t l{"abc", "xyz"};
 
   using lal_labelset_t =
-    vcsn::ctx::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
+    vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
   using lal_tupleset_t = vcsn::tupleset<labelset_t, lal_labelset_t>;
 
   // sname.

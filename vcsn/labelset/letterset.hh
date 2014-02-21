@@ -13,15 +13,13 @@
 
 namespace vcsn
 {
-  namespace ctx
-  {
     /// Implementation of labels are letters.
     template <typename GenSet>
-    class letterset: public genset_labelset<GenSet>
+  class letterset: public detail::genset_labelset<GenSet>
     {
     public:
       using genset_t = GenSet;
-      using super_type = genset_labelset<genset_t>;
+    using super_type = detail::genset_labelset<genset_t>;
       using self_type = letterset;
       using genset_ptr = std::shared_ptr<const genset_t>;
 
@@ -180,12 +178,11 @@ namespace vcsn
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }
-  }
 
   template <typename GenSet>
   inline
   std::ostream&
-  print_set(const ctx::letterset<GenSet>& ls,
+  print_set(const letterset<GenSet>& ls,
             std::ostream& o, const std::string& format)
   {
     if (format == "latex")

@@ -8,7 +8,7 @@
 
 namespace vcsn
 {
-  namespace ctx
+  namespace detail
   {
     /// This class has no modeling purpose, it only serves to factor
     /// code common to letterset, nullableset and wordset.

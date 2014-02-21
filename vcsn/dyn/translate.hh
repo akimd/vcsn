@@ -77,19 +77,19 @@ namespace vcsn
                   header("vcsn/labelset/letterset.hh");
                   // Some instantiation happen here:
                   header("vcsn/ctx/lal_char.hh");
-                  os << "vcsn::ctx::letterset";
+                  os << "vcsn::letterset";
                 }
               else if (kind == "lan")
                 {
                   // Some instantiation happen here:
                   header("vcsn/ctx/lan_char.hh");
-                  os << "vcsn::ctx::nullableset";
+                  os << "vcsn::nullableset";
                 }
               else if (kind == "law")
                 {
                   // Some instantiation happen here:
                   header("vcsn/ctx/law_char.hh");
-                  os << "vcsn::ctx::wordset";
+                  os << "vcsn::wordset";
                 }
               eat(is, "_char");
               if (is.peek() == '(')

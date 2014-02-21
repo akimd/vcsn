@@ -13,8 +13,8 @@ namespace vcsn
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename ctx::genset_labelset<GenSet>::letter_t
-  random_label(const ctx::genset_labelset<GenSet>& ls,
+  typename detail::genset_labelset<GenSet>::letter_t
+  random_label(const detail::genset_labelset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
     // Pick a member of a container following a uniform distribution.
@@ -24,21 +24,21 @@ namespace vcsn
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename ctx::letterset<GenSet>::value_t
-  random_label(const ctx::letterset<GenSet>& ls,
+  typename letterset<GenSet>::value_t
+  random_label(const letterset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    using super = typename ctx::letterset<GenSet>::super_type;
+    using super = typename letterset<GenSet>::super_type;
     return random_label(static_cast<const super&>(ls), gen);
   };
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename ctx::nullableset<GenSet>::value_t
-  random_label(const ctx::nullableset<GenSet>& ls,
+  typename nullableset<GenSet>::value_t
+  random_label(const nullableset<GenSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    using super = typename ctx::nullableset<GenSet>::super_type;
+    using super = typename nullableset<GenSet>::super_type;
     std::uniform_int_distribution<> dis(0, 1);
     if (dis(gen))
       return ls.one();
