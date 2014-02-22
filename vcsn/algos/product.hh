@@ -6,11 +6,10 @@
 # include <map>
 # include <utility>
 
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
-# include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 
 namespace vcsn
 {
@@ -513,6 +512,7 @@ namespace vcsn
 
     if (n)
       {
+        // FIXME: for 1, we should return the accessible part only.
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
