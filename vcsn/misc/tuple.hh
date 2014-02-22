@@ -1,7 +1,9 @@
 #ifndef VCSN_MISC_TUPLE_HH
 # define VCSN_MISC_TUPLE_HH
 
+# include <iostream>
 # include <tuple>
+
 # include <vcsn/misc/hash.hh>
 
 namespace vcsn
@@ -10,6 +12,11 @@ namespace vcsn
   /// These definitions come in handy every time we define variadic tuples.
   namespace detail
   {
+
+    /*-----------------.
+    | index_sequence.  |
+    `-----------------*/
+
     // See "Pretty-print std::tuple"
     // <http://stackoverflow.com/questions/6245735>.
 
@@ -46,10 +53,41 @@ namespace vcsn
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
 
+    /*------------------------.
+    | print(ostream, tuple).  |
+    `------------------------*/
+
+    template<class Tuple, std::size_t N>
+    struct tuple_printer
+    {
+      static void print(std::ostream& o, const Tuple& t)
+      {
+        tuple_printer<Tuple, N-1>::print(o, t);
+        o << ", " << std::get<N-1>(t);
+      }
+    };
+
+    template<class Tuple>
+    struct tuple_printer<Tuple, 1>
+    {
+      static void print(std::ostream& o, const Tuple& t)
+      {
+        o << std::get<0>(t);
+      }
+    };
+
+    template <typename... Args>
+    std::ostream& print(std::ostream& o, std::tuple<Args...>& args)
+    {
+      o << '(';
+      tuple_printer<decltype(args), sizeof...(Args)>::print(o, args);
+      return o << ')';
+    }
+
+
     // Compile-time logic
     // See:
     // http://stillmoreperfect.blogspot.fr/2010/03/template-metaprogramming-compile-time.html
-
 
     // Test if (c) then T1 else T2
     template<bool c, class T1, class T2>
@@ -73,7 +111,7 @@ namespace vcsn
     struct and_;
 
     template<class F1, class... F>
-    struct and_<F1, F...> : eval_if<F1, and_<F...>,std::false_type>::type {};
+    struct and_<F1, F...> : eval_if<F1, and_<F...>, std::false_type>::type {};
 
     template<class F1>
     struct and_<F1> : eval_if<F1, std::true_type, std::false_type>::type {};
@@ -86,23 +124,28 @@ namespace vcsn
     struct or_;
 
     template<class F1, class... F>
-    struct or_<F1, F...> : eval_if<F1 ,std::true_type, or_<F...>>::type { };
+    struct or_<F1, F...> : eval_if<F1, std::true_type, or_<F...>>::type { };
 
     template<class F1>
     struct or_<F1> : eval_if<F1, std::true_type, std::false_type>::type { };
 
     template<>
     struct or_<> : std::true_type::type {};
-
   }
 
-  // Static evaluation of the 'or' of the template parameters
+  /// Static evaluation of the 'or' of the template parameters
   template<bool... B>
-  constexpr bool any_ () { return detail::or_<std::integral_constant<bool, B>...>::value;}
+  constexpr bool any_()
+  {
+    return detail::or_<std::integral_constant<bool, B>...>::value;
+  }
 
   // Static evaluation of the 'and' of the template parameters
   template<bool... B>
-  constexpr bool all_ () { return detail::and_<std::integral_constant<bool, B>...>::value;}
+  constexpr bool all_()
+  {
+    return detail::and_<std::integral_constant<bool, B>...>::value;
+  }
 
 
 }
@@ -110,9 +153,9 @@ namespace vcsn
 namespace std
 {
 
-  /*--------------------.
-  | hash(tuple<T...>).  |
-  `--------------------*/
+  /*-------------------------.
+  | std::hash(tuple<T...>).  |
+  `--------------------------*/
 
   template <typename... Elements>
   struct hash<std::tuple<Elements...>>
