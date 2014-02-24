@@ -53,6 +53,15 @@ digraph
 ''')
 CHECK_EQ(ab.standard().concatenate(bc.standard()), result)
 
+# Using AB, BC on concatenate in this form,
+#
+#  ab.concatenate(bc).standard().sort()
+#
+# gives a context of "lal_char(ab)_b", though the correct result
+# should be "lal_char(abc)_b".  For now, we expect this to fail until
+# we fix this issue.  This is a fragile test.
+CHECK_NEQ(ab.concatenate(bc).standard().sort(), result)
+
 a = vcsn.automaton('''
 digraph
 {
