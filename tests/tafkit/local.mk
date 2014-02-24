@@ -18,7 +18,6 @@
   %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
   %D%/enumerate.chk                             \
-  %D%/evaluate.chk                              \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/is-valid.chk                              \

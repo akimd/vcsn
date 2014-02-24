@@ -26,6 +26,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/difference.py                             \
   %D%/double-ring.py                            \
   %D%/eliminate-state.py                        \
+  %D%/evaluate.py                               \
   %D%/expand.py                                 \
   %D%/factory.py                                \
   %D%/first-order.py                            \
