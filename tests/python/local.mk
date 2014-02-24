@@ -20,6 +20,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/chain.py                                  \
   %D%/complement.py                             \
   %D%/complete.py                               \
+  %D%/concatenate.py                            \
   %D%/constant-term.py                          \
   %D%/derivation.py                             \
   %D%/difference.py                             \

@@ -1,8 +1,11 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn concatenate -f ab.gv bc.gv <<\EOF
+import vcsn
+from test import *
+
+ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+CHECK_EQ(ab.concatenate(bc), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -47,9 +50,9 @@ digraph
   4 -> 3 [label = "b"]
   4 -> 4 [label = "c"]
 }
-EOF
+'''))
 
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -71,9 +74,9 @@ digraph
   2 -> 2 [label = "a, b"]
   2 -> F [label = "<2>"]
 }
-EOF
+''').standard()
 
-run 0 - -vcsn concatenate -f a.gv a.gv <<\EOF
+CHECK_EQ(a.concatenate(a), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -100,13 +103,13 @@ digraph
   4 -> F4 [label = "<2>"]
   4 -> 4 [label = "a, b"]
 }
-EOF
+'''))
 
 
 # Check union of contexts.
-run 0 '' -vcsn standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' -o 1.gv
-run 0 '' -vcsn standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' -o 2.gv
-run 0 - -vcsn concatenate -f 1.gv 2.gv <<\EOF
+a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
+b = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
+CHECK_EQ(a.concatenate(b).standard(), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
@@ -134,4 +137,5 @@ digraph
   2 -> F2
   2 -> 2 [label = "b"]
 }
-EOF
+'''))
+
