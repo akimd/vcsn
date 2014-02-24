@@ -3,9 +3,9 @@
 import vcsn
 from test import *
 
-ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
-bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
-CHECK_EQ(ab.concatenate(bc), vcsn.automaton('''
+ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*')
+bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*')
+result = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -50,7 +50,8 @@ digraph
   4 -> 3 [label = "b"]
   4 -> 4 [label = "c"]
 }
-'''))
+''')
+CHECK_EQ(ab.standard().concatenate(bc.standard()), result)
 
 a = vcsn.automaton('''
 digraph
