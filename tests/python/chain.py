@@ -1,6 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-cat >in.gv <<\EOF
+import vcsn
+from test import *
+
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -19,9 +22,9 @@ digraph
   0 -> 1 [label = "a"]
   1 -> F1
 }
-EOF
+''')
 
-run 0 - -vcsn chain -f in.gv 0 <<\EOF
+CHECK_EQ(a.chain(0), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -38,9 +41,9 @@ digraph
   I0 -> 0
   0 -> F0
 }
-EOF
+'''))
 
-run 0 - -vcsn chain -f in.gv 5 <<\EOF
+CHECK_EQ(a.chain(5), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(a)_b"
@@ -67,10 +70,10 @@ digraph
   4 -> 5 [label = "a"]
   5 -> F5
 }
-EOF
+'''))
 
 
-cat >in.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -93,9 +96,9 @@ digraph
   2 -> F2
   1 -> F1
 }
-EOF
-
-run 0 - -vcsn chain -f in.gv 3 <<\EOF
+''')
+    
+CHECK_EQ(a.chain(3), vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -129,5 +132,4 @@ digraph
   4 -> 6 [label = "b"]
   5 -> F5
   6 -> F6
-}
-EOF
+}'''))

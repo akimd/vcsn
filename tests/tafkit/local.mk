@@ -13,7 +13,6 @@
 
 %C%_TESTS =                                     \
   %D%/cat.chk                                   \
-  %D%/chain.chk                                 \
   %D%/concatenate.chk                           \
   %D%/de-bruijn.chk                             \
   %D%/derivation.chk                            \
