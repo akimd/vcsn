@@ -123,6 +123,9 @@ def star(a):
 def to_ratexp(a):
     return a.ratexp()
 
+def are_isomorphic(a, b):
+    return a.is_isomorphic(b)
+
 
 ## ------- ##
 ## Aliases ##
