@@ -3,6 +3,14 @@
 import vcsn
 from test import *
 
+## check_accessible AUTOMATON STRING RESULT
+## ----------------------------------------
+def check(aut, i, result):
+    o = aut.eval(i).format("text")
+    if result != 'oo':
+        o = int(o)
+    CHECK_EQ(o, result)
+
 ## ------------ ##
 ## lal_char_z.  ##
 ## ------------ ##
@@ -25,12 +33,12 @@ digraph
   I0 -> 0
 }
 ''')
-
-CHECK_EQ(int(simple.eval("aabab").format("text")), 6)
-CHECK_EQ(int(simple.eval("abab").format("text")), 4)
-CHECK_EQ(int(simple.eval("aaaa").format("text")), 8)
-CHECK_EQ(int(simple.eval("b").format("text")), 0)
-CHECK_EQ(int(simple.eval("a").format("text")), 2)
+check(simple, "aabab", 6)
+check(simple, "aabab", 6)
+check(simple, "abab",  4)
+check(simple, "aaaa",  8)
+check(simple, "b",     0)
+check(simple, "a",     2)
 
 initial_weight = vcsn.automaton('''
 digraph
@@ -50,10 +58,9 @@ digraph
   I0 -> 0 [label = "<2>"]
 }
 ''')
-
-CHECK_EQ(int(initial_weight.eval("a").format("text")), 4)
-CHECK_EQ(int(initial_weight.eval("abab").format("text")), 8)
-CHECK_EQ(int(initial_weight.eval("aabab").format("text")), 12)
+check(initial_weight, "a",      4)
+check(initial_weight, "abab",   8)
+check(initial_weight, "aabab", 12)
 
 more_letters = vcsn.automaton('''
 digraph
@@ -76,8 +83,7 @@ digraph
   I0 -> 0 [label = "<2>"]
 }
 ''')
-
-CHECK_EQ(int(more_letters.eval("caa").format("text")), 6)
+check(more_letters, "caa", 6)
 
 prod = vcsn.automaton('''
 digraph
@@ -100,8 +106,7 @@ digraph
   I0 -> 0 [label = "<2>"]
 }
 ''')
-
-CHECK_EQ(int(prod.eval("aabab").format("text")), 12)
+check(prod, "aabab", 12)
 
 cmplex = vcsn.automaton('''
 digraph
@@ -124,10 +129,9 @@ digraph
   I0 -> 0 [label = "<2>"]
 }
 ''')
-
-CHECK_EQ(int(cmplex.eval("a").format("text")), 12)
-CHECK_EQ(int(cmplex.eval("abab").format("text")), 24)
-CHECK_EQ(int(cmplex.eval("aabab").format("text")), 36)
+check(cmplex, "a",     12)
+check(cmplex, "abab",  24)
+check(cmplex, "aabab", 36)
 
 
 ## --------------- ##
@@ -136,31 +140,33 @@ CHECK_EQ(int(cmplex.eval("aabab").format("text")), 36)
 
 ctx = vcsn.context('lal_char(abcd)_b')
 a = ctx.ratexp('(?@lal_char(abc)_zmin)a').standard()
+check(a, '',   'oo')
+check(a, "a",  0)
+check(a, 'aa', 'oo')
+check(a, 'b',  'oo')
 
-CHECK_EQ(a.eval('').format("text"), 'oo')
-CHECK_EQ(int(a.eval('a').format("text")), 0)
-CHECK_EQ(a.eval('aa').format("text"), 'oo')
-CHECK_EQ(a.eval('b').format("text"), 'oo')
+minab = load('lal_char_zmin/minab.gv')
+check(minab, '',          0)
+check(minab, 'b',         0)
+check(minab, 'a',         0)
+check(minab, 'ab',        1)
+check(minab, 'abababbbb', 3)
 
-CHECK_EQ(int(load('lal_char_zmin/minab.gv').eval('').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/minab.gv').eval('b').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/minab.gv').eval('a').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/minab.gv').eval('ab').format("text")), 1)
-CHECK_EQ(int(load('lal_char_zmin/minab.gv').eval('abababbbb').format("text")), 3)
+minblocka = load('lal_char_zmin/minblocka.gv')
+check(minblocka, '',          'oo')
+check(minblocka, 'b',         'oo')
+check(minblocka, 'a',         'oo')
+check(minblocka, 'ab',        'oo')
+check(minblocka, 'abababbbb', 0)
+check(minblocka, 'aabaaba',   2)
 
-CHECK_EQ(load('lal_char_zmin/minblocka.gv').eval('').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/minblocka.gv').eval('b').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/minblocka.gv').eval('a').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/minblocka.gv').eval('ab').format("text"), 'oo')
-CHECK_EQ(int(load('lal_char_zmin/minblocka.gv').eval('abababbbb').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/minblocka.gv').eval('aabaaba').format("text")), 2)
-
-CHECK_EQ(load('lal_char_zmin/slowgrow.gv').eval('').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/slowgrow.gv').eval('b').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/slowgrow.gv').eval('a').format("text"), 'oo')
-CHECK_EQ(load('lal_char_zmin/slowgrow.gv').eval('ab').format("text"), 'oo')
-CHECK_EQ(int(load('lal_char_zmin/slowgrow.gv').eval('abababb').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/slowgrow.gv').eval('abbaaa').format("text")), 0)
-CHECK_EQ(int(load('lal_char_zmin/slowgrow.gv').eval('abbababa').format("text")), 1)
-CHECK_EQ(int(load('lal_char_zmin/slowgrow.gv').eval('baaaab').format("text")), 4)
+slowgrow = load('lal_char_zmin/slowgrow.gv')
+check(slowgrow, '',         'oo')
+check(slowgrow, 'b',        'oo')
+check(slowgrow, 'a',        'oo')
+check(slowgrow, 'ab',       'oo')
+check(slowgrow, 'abababb',  0)
+check(slowgrow, 'abbaaa',   0)
+check(slowgrow, 'abbababa', 1)
+check(slowgrow, 'baaaab',   4)
 
