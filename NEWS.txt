@@ -65,6 +65,13 @@ that became non-accessible.
 ** Bug: right-mult on automata
 Its behavior was completely wrong.
 
+* 2014-02-25
+** product between lan
+The product algorithm has been extended to the lan contexts, so it is no
+longer necessary to apply proper() to compute the product. However, due to
+some typing constraints, it is (for now) only available for lal x lal or
+lan x lan, not lal x lan.
+
 * 2014-02-21
 ** parse and display brackets in transitions
 It is now possible to directly write entries in bracket notation, for

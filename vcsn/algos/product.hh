@@ -25,10 +25,10 @@ namespace vcsn
     template <typename Lhs, typename Rhs>
     class producter
     {
-      static_assert(Lhs::context_t::is_lal,
-                    "requires labels_are_letters");
-      static_assert(Rhs::context_t::is_lal,
-                    "requires labels_are_letters");
+      static_assert(Lhs::context_t::is_lal || Lhs::context_t::is_lan,
+                    "requires labels_are_letters or labels_are_nullable");
+      static_assert(Rhs::context_t::is_lal || Rhs::context_t::is_lan,
+                    "requires labels_are_letters or labels_are_nullable");
 
       // The _type_ of the context is the "union" of the contexts,
       // independently of the algorithm.  However, its _value_
@@ -40,13 +40,15 @@ namespace vcsn
       using labelset_t = typename context_t::labelset_t;
       using weightset_t = typename context_t::weightset_t;
 
+      using transition_t = typename Lhs::transition_t;
+
     public:
       using automaton_t = mutable_automaton<context_t>;
 
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(std::move(sort(lhs)))
-        , rhs_(std::move(sort(rhs)))
-        , res_(join(lhs_.context(), rhs_.context()))
+        : lhs_(std::move(sort(std::move(outsplit(lhs))))),
+          rhs_(std::move(sort(std::move(insplit(rhs))))),
+          res_(join(lhs_.context(), rhs_.context()))
       {}
 
       /// Reset the attributes before a new product.
@@ -243,7 +245,8 @@ namespace vcsn
                      typename Lhs::state_t ldst, typename Rhs::state_t rdst,
                      const label_t& label, const weight_t& weight)
       {
-        res_.new_transition(src, state(ldst, rdst), label, weight);
+        if (!is_black_black(lhs_, ldst, rhs_, rdst))
+          res_.new_transition(src, state(ldst, rdst), label, weight);
       }
 
       /// Add a transition in the result from destination states in operands.
@@ -266,11 +269,27 @@ namespace vcsn
       {
         // This relies on outgoing transitions being sorted by label
         // by the sort algorithm: thanks to that property we can scan
-        // the two successor lists in lockstep.
+        // the two successor lists in lockstep. Thus if there is a one
+        // transition, it is at the beginning.
         auto ls = lhs_.all_out(psrc.first);
         auto rs = rhs_.all_out(psrc.second);
         auto li = ls.begin();
         auto ri = rs.begin();
+
+
+        for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
+          new_transition(src, lhs_.dst_of(*li),
+                         psrc.second, lhs_.label_of(*li),
+                         mul_(ws, lhs_.weight_of(*li),
+                              rhs_.context().weightset()->one()));
+
+        for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
+          new_transition(src, psrc.first, rhs_.dst_of(*ri),
+                         rhs_.label_of(*ri),
+                         mul_(ws, lhs_.context().weightset()->one(),
+                              rhs_.weight_of(*ri)));
+
+
         for (/* Nothing. */;
              li != ls.end() && ri != rs.end();
              ++ li)
@@ -361,6 +380,50 @@ namespace vcsn
       }
 
     private:
+      template <typename A>
+      typename std::enable_if<A::context_t::labelset_t::has_one(),
+                              bool>::type
+      is_one(const A& aut, transition_t tr) const
+      {
+        return aut.labelset()->is_one(aut.label_of(tr));
+      }
+
+      template <typename A>
+      constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
+                              bool>::type
+      is_one(const A& aut ATTRIBUTE_UNUSED, transition_t tr ATTRIBUTE_UNUSED)
+      const
+      {
+        return false;
+      }
+
+      template <typename ALhs, typename ARhs>
+        constexpr typename std::enable_if<!(ALhs::context_t::labelset_t::has_one()
+                                            && ARhs::context_t::labelset_t::has_one()),
+                  bool>::type
+      is_black_black(const ALhs& lhs ATTRIBUTE_UNUSED,
+                     typename Lhs::state_t lst ATTRIBUTE_UNUSED,
+                     const ARhs& rhs ATTRIBUTE_UNUSED,
+                     typename Rhs::state_t rst ATTRIBUTE_UNUSED) const
+      {
+        return false;
+      }
+
+      template <typename ALhs, typename ARhs>
+      typename std::enable_if<ALhs::context_t::labelset_t::has_one()
+                              && ARhs::context_t::labelset_t::has_one(),
+                              bool>::type
+      is_black_black(const ALhs& lhs, typename Lhs::state_t lst,
+                     const ARhs& rhs, typename Rhs::state_t rst) const
+      {
+        auto rin = rhs.all_in(rst);
+        auto rtr = rin.begin();
+        auto lin = lhs.all_out(lst);
+        auto ltr = lin.begin();
+        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs.is_initial(rst)
+          && ltr != lin.end() && is_one(lhs, *ltr) && !lhs.is_final(lst);
+      }
+
       /// The computed product.
       automaton_t res_;
     };

@@ -94,7 +94,7 @@ digraph
   I0 -> 0
   0 -> F0
 }
-'''), 
+'''),
          lhs & rhs)
 
 
@@ -262,3 +262,77 @@ z = vcsn.context('lal_char(b)_z').ratexp('<2>b*')
 q = vcsn.context('lal_char(c)_q').ratexp('<1/3>c*')
 r = vcsn.context('lal_char(d)_r').ratexp('<.4>d*')
 CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', str(br & z & q & r))
+
+## --------------------- ##
+## Epsilon-transitions.  ##
+## --------------------- ##
+
+def check(a1, a2):
+    CHECK_EQ((a1 & a2).standard().proper().trim().sort(), (a1.proper() &
+        a2.proper()).standard().trim().sort())
+
+a = vcsn.automaton("""
+digraph
+{
+  vcsn_context = "lan_char(abcd)_z"
+  rankdir = LR
+  I0 -> 0
+  0 -> 1 [label = "<2>\\\\e"]
+  1 -> F1
+}""")
+
+b = vcsn.automaton("""
+digraph
+{
+  vcsn_context = "lan_char(abcd)_z"
+  rankdir = LR
+  I0 -> 0
+  0 -> 1 [label = "<3>\\\\e"]
+  1 -> F1
+}""")
+
+check(a, b)
+check(b, a)
+
+a = vcsn.automaton("""
+digraph
+{
+  vcsn_context = "lan_char(abcd)_z"
+  rankdir = LR
+  I0 -> 0
+  0 -> 1 [label = "<2>a"]
+  1 -> F1
+}""")
+
+check(a, b)
+check(b, a)
+
+a = vcsn.automaton("""
+digraph
+{
+  vcsn_context = "lan_char(abcd)_b"
+  rankdir = LR
+  I0 -> 0
+  0 -> 1 [label = "b"]
+  0 -> 2 [label = "c"]
+  1 -> 3 [label = "c"]
+  2 -> 3 [label = "b"]
+  3 -> F3
+}""")
+
+b = vcsn.automaton("""
+digraph
+{
+  vcsn_context = "lan_char(abcd)_b"
+  rankdir = LR
+  I0 -> 0
+  0 -> 1 [label = "\\\\e"]
+  0 -> 3 [label = "c"]
+  1 -> 2 [label = "b"]
+  3 -> 2 [label = "\\\\e"]
+  2 -> 0 [label = "\\\\e"]
+  2 -> F2
+}""")
+
+check(a, b)
+check(b, a)

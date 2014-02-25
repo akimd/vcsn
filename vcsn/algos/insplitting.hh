@@ -16,7 +16,7 @@ namespace vcsn
     class insplitter
     {
       static_assert(Aut::context_t::is_lal || Aut::context_t::is_lan,
-                    "requires labels_are_letters");
+                    "requires labels_are_letters or labels_are_nullable");
 
       using automaton_t = Aut;
       using state_t = typename automaton_t::state_t;
