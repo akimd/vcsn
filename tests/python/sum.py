@@ -1,8 +1,11 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-run 0 '' -vcsn standard -C 'lal_char(ab)_b' -e '(a+b)*' -o ab.gv
-run 0 '' -vcsn standard -C 'lal_char(bc)_b' -e '(b+c)*' -o bc.gv
-run 0 - -vcsn sum -f ab.gv bc.gv <<\EOF
+import vcsn
+from test import *
+
+ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
+bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
+result = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -43,9 +46,10 @@ digraph
   4 -> 3 [label = "b"]
   4 -> 4 [label = "c"]
 }
-EOF
+''')
+CHECK_EQ(ab.sum(bc), result)
 
-cat >a.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -68,9 +72,9 @@ digraph
   2 -> 2 [label = "a, b"]
   2 -> F
 }
-EOF
+''')
 
-cat >b.gv <<\EOF
+b = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -91,9 +95,9 @@ digraph
   1 -> 1 [label = "a, b"]
   1 -> F
 }
-EOF
+''')
 
-run 0 - -vcsn sum -f a.gv b.gv <<\EOF
+result = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -120,13 +124,14 @@ digraph
   3 -> F3
   3 -> 3 [label = "a, b"]
 }
-EOF
+''')
+CHECK_EQ(a.sum(b).sort(), result)
 
 # Check union of contexts.
-ctx='lal_char(a)_ratexpset<lal_char(x)_b>'
-run 0 '' -vcsn standard -C 'lal_char(a)_ratexpset<lal_char(x)_b>' -e '<x>a*' -o 1.gv
-run 0 '' -vcsn standard -C 'lal_char(b)_ratexpset<lal_char(y)_b>' -e '<y>b*' -o 2.gv
-run 0 - -vcsn sum -f 1.gv 2.gv <<\EOF
+a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
+b = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
+
+result = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
@@ -153,4 +158,6 @@ digraph
   2 -> F2
   2 -> 2 [label = "b"]
 }
-EOF
+''')
+CHECK_EQ(a.sum(b), result)
+

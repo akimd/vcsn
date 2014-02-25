@@ -26,7 +26,6 @@
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
   %D%/star-normal-form.chk                      \
-  %D%/sum.chk                                   \
   %D%/thompson.chk                              \
   %D%/transpose.chk                             \
   %D%/universal.chk
