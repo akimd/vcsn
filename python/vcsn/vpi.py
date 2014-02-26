@@ -247,13 +247,15 @@ def in_edit_mode():
 
 def edit(a):
   if in_edit_mode():
-    raise Exception('already in edit mode')
+    #raise Exception('already in edit mode')
+    print('Warning: you were already in edit mode.\n')
   global the_edited_automaton
   the_edited_automaton = a
 
 def exit_edit():
   if not in_edit_mode():
-    raise Exception('already out of edit mode')
+    #raise Exception('already out of edit mode')
+    print('Warning: you were already out of edit mode.\n')
   global the_edited_automaton
   the_edited_automaton = the_invalid_edited_automaton
 
