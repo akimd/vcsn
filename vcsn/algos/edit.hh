@@ -77,6 +77,13 @@ namespace vcsn
       {
         if (s.length() == 0)
           return ws_.one();
+        else if(s == "\\Kz")
+          return ws_.zero();
+        else if(s == "\\Ke")
+          return ws_.one();
+        else if(ws_.sname() == "zmin" // Yes, I know.
+                && (s == "oo" || s == "inf"))
+          return ws_.zero();
         else
           return conv(ws_, s);
       }

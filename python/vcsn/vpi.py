@@ -1,3 +1,8 @@
+## =========================== ##
+## Vaucanson Python Interface  ##
+## =========================== ##
+
+
 ## --------------------------------------- ##
 ## Automaton loading/saving functionality  ##
 ## --------------------------------------- ##
@@ -107,7 +112,7 @@ def alias_method_as_variadic_function(method_name):
 # Don't do this on transpose: we explicitly define it below, to work around a problem elsewhere
 # Don't do this for minimize: we want to hide algorithm choice
 # Yes, I did redefine eval.  Python doesn't seem to mind.
-for name in ["accessible", "coaccessible", "complement", "complete", "concatenate", "determinize", "difference", "enumerate", "eval", "format", "is_accessible", "is_ambiguous", "is_coaccessible", "is_complete", "is_deterministic", "is_eps_acyclic", "is_equivalent", "is_proper", "is_standard", "is_trim", "is_useless", "is_valid", "proper", "shortest", "standard", "star", "trim", "union", "universal", "constant_term", "copy", "derivation", "derived_term", "expand", "is_equivalent", "is_valid", "split", "sort", "star_normal_form", "thompson", "transpose", "de_bruijn", "ladybird"]:
+for name in ["accessible", "coaccessible", "complement", "complete", "concatenate", "determinize", "difference", "enumerate", "eval", "format", "is_accessible", "is_ambiguous", "is_coaccessible", "is_complete", "is_deterministic", "is_eps_acyclic", "is_equivalent", "is_proper", "is_standard", "is_trim", "is_useless", "is_valid", "proper", "shortest", "standard", "star", "trim", "union", "universal", "constant_term", "copy", "derivation", "derived_term", "expand", "is_equivalent", "is_valid", "split", "sort", "star_normal_form", "thompson", "transpose", "de_bruijn", "ladybird", "lan_to_lal"]:
     alias_method_as_function(name)
 
 for name in ["infiltration", "product", "shuffle", "sum", "union"]:
@@ -120,12 +125,19 @@ def power(x, n):
 def star(a):
     return clone(a).star()
 
-def to_ratexp(a):
+def aut_to_exp(a):
     return a.ratexp()
 
 def are_isomorphic(a, b):
     return a.is_isomorphic(b)
 
+def lal_to_lan(a):
+    return automaton(a.format('dot').replace('\"lal_', '\"lan_'), "dot")
+
+def make_automaton(ctx):
+    a = ctx.ratexp('\z').standard()
+    a.remove_state(0)
+    return clone(a)
 
 ## ------- ##
 ## Aliases ##
@@ -179,6 +191,44 @@ def display_automaton(a):
     svg_data = dot_to_svg(a.format('dot'))
     from IPython.display import display, SVG
     display(SVG(data = svg_data))
+
+
+## ------------------------------ ##
+## Alternative context definition ##
+## ------------------------------ ##
+
+# A few functions to define contexts without exposing beginners to
+# kinds.
+def context_name_2_or_3(alphabet, weightset, kind='lal'):
+    kind = normalize_kind(kind)
+    return kind + '_char(' + alphabet + ')_' + weightset
+def normalize_kind(kind):
+    if kind == 'letter':
+        return 'lal'
+    # what did Jacques ask?  It was on the whiteboard...
+    # FIXME: ask him again, and fix this on the spot.
+    elif kind == 'alphs':
+        return 'lan'
+    else:
+        return kind
+def context_name(*arguments):
+    argno = len(arguments)
+    if argno < 1:
+        raise Exception("too few parameters")
+    elif argno > 3:
+        raise Exception("too many parameters")
+    elif argno == 1:
+        return arguments[0]
+    else:
+        return context_name_2_or_3(*arguments)
+
+original_context = context
+def context(*args):
+    if len(args) == 1:
+        name = args[0]
+    else:
+        name = context_name(*args)
+    return original_context(name)
 
 
 ## ----------------------- ##
@@ -269,3 +319,12 @@ def unset_final(s, weight=''):
 def show():
   ensure_edit_mode()
   display_automaton(the_edited_automaton)
+
+
+## ----- ##
+## Help  ##
+## ----- ##
+
+def list_functions():
+  import vcsn
+  help(vcsn)

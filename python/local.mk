@@ -1,4 +1,4 @@
-nodist_python_PYTHON = %D%/vcsn_version.py %D%/jacques.py
+nodist_python_PYTHON = %D%/vcsn_version.py
 
 vcsn_pythondir = $(pythondir)/vcsn
 vcsn_python_PYTHON =                            \
@@ -9,6 +9,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
   %D%/vcsn/ratexp.py                            \
+  %D%/vcsn/vpi.py
   %D%/vcsn/weight.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
