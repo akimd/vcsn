@@ -288,7 +288,7 @@ def add_transition(s1, s2, label, weight=''):
   # Here a return statement would be useful in programs, but absolute
   # beginners might find it confusing in interactive mode.  It's also
   # not terribly useful from Python.
-  the_edited_automaton.add_transition(s1, s2, label, weight)
+  the_edited_automaton.set_transition(s1, s2, label, weight)
   print_automaton_if_verbose()
 
 def get_transition(s1, s2, label):
