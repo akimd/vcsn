@@ -110,10 +110,10 @@ namespace vcsn
         return true;
       }
 
-      value_t
-      one() const
+      static value_t
+      one()
       {
-        return this->genset()->empty_word();
+        return genset_t::empty_word();
       }
 
       bool

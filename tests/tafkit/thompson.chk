@@ -28,7 +28,7 @@ fail 'a*&b*'
 check '(?@lan_char(a)_z)<12>\e' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(a)_z"
+  vcsn_context = "lan<lal_char(a)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -54,7 +54,7 @@ EOF
 check '(?@lan_char(ab)_z)\e+a+\e' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -90,7 +90,7 @@ EOF
 check '(?@lan_char(ab)_z)<12>\e+<23>a+<34>b' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -126,7 +126,7 @@ EOF
 check '(?@lan_char(ab)_z)<12>(\e+a+<10>b+<10>\e)' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -167,7 +167,7 @@ EOF
 check '(?@lan_char(ab)_z)(\e+a+<2>b+<3>\e)<10>' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -212,7 +212,7 @@ EOF
 check '(?@lan_char(ab)_z)<12>(ab)<23>' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -241,7 +241,7 @@ EOF
 check '(?@lan_char(ab)_z)\z*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -262,7 +262,7 @@ EOF
 check '(?@lan_char(ab)_b)\e*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_b"
+  vcsn_context = "lan<lal_char(ab)>_b"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -289,7 +289,7 @@ EOF
 check '(?@lan_char(ab)_z)(<2>a)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -316,7 +316,7 @@ EOF
 check '(?@lan_char(ab)_z)<2>a*<3>' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -343,7 +343,7 @@ EOF
 check '(?@lan_char(ab)_z)(<2>a+<3>b)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -379,7 +379,7 @@ EOF
 check '(?@lan_char(ab)_z)<2>(<3>a+<5>b)*<7>' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -415,7 +415,7 @@ EOF
 check '(?@lan_char(ab)_z)<2>(<3>(ab)<5>)*<7>' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -446,7 +446,7 @@ EOF
 check '(?@lan_char(ab)_z)a**' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(ab)_z"
+  vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -483,7 +483,7 @@ EOF
 check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(abcd)_ratexpset<lal_char(efgh)_z>"
+  vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -527,7 +527,7 @@ EOF
 check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(abcd)_ratexpset<lal_char(efgh)_z>"
+  vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -569,7 +569,7 @@ EOF
 check '(?@lan_char(a)_ratexpset<lal_char(xyz)_z>)<x>a(<y>\e+<z>a)' <<\EOF
 digraph
 {
-  vcsn_context = "lan_char(a)_ratexpset<lal_char(xyz)_z>"
+  vcsn_context = "lan<lal_char(a)>_ratexpset<lal_char(xyz)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]

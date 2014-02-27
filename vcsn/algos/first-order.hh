@@ -480,7 +480,7 @@ namespace vcsn
         // required to complement).
         auto letters
           = letters_(std::integral_constant<bool,
-                     context_t::is_lal || context_t::is_lan>());
+                     context_t::is_lal>());
         for (auto l: letters)
           ps_.add_weight
             (res_.polynomials[l],

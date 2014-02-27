@@ -84,7 +84,7 @@ namespace vcsn
     return std::make_shared<zero_t>();
   }
 
-  DEFINE::one() const
+  DEFINE::one()
     -> value_t
   {
     return std::make_shared<one_t>();

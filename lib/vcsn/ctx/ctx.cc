@@ -1,3 +1,5 @@
+#include <boost/algorithm/string.hpp>
+
 #include <vcsn/dyn/context.hh>
 
 namespace vcsn
@@ -27,6 +29,7 @@ namespace vcsn
               res += c;
             break;
           }
+      boost::replace_all(res, "lan_char", "lan<lal_char>");
       return res;
     }
   }

@@ -146,7 +146,7 @@ namespace vcsn
     // FIXME: why aren't these all static?  I think they should be.
     //        The only state in ratexpset is ctx_.
     value_t zero() const;
-    value_t one() const;
+    static value_t one();
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;

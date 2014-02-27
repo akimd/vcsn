@@ -34,11 +34,11 @@ namespace vcsn
 
   template <typename GenSet,
             typename RandomGenerator = std::default_random_engine>
-  typename nullableset<GenSet>::value_t
-  random_label(const nullableset<GenSet>& ls,
+  typename nullableset<letterset<GenSet>>::value_t
+  random_label(const nullableset<letterset<GenSet>>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    using super = typename nullableset<GenSet>::super_type;
+    using super = typename nullableset<letterset<GenSet>>::super_type;
     std::uniform_int_distribution<> dis(0, 1);
     if (dis(gen))
       return ls.one();

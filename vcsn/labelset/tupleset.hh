@@ -109,8 +109,8 @@ namespace vcsn
       return has_one_(indices_t{});
     }
 
-    value_t
-    one() const
+    static value_t
+    one()
     {
       return one_(indices_t{});
     }
@@ -339,10 +339,10 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    value_t
-    one_(seq<I...>) const
+    static value_t
+    one_(seq<I...>)
     {
-      return std::make_tuple((std::get<I>(sets_).one())...);
+      return std::make_tuple(labelset_t<I>::one()...);
     }
 
     template <std::size_t... I>

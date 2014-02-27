@@ -15,50 +15,14 @@
 
 namespace vcsn
 {
-    /// Implementation of labels are nullables (letter or empty).
-    template <typename GenSet>
-  class nullableset: public detail::genset_labelset<GenSet>
+
+  namespace detail {
+    template <typename LabelSet>
+    struct nullable_helper
     {
-    public:
-      using genset_t = GenSet;
-    using super_type = detail::genset_labelset<genset_t>;
-      using self_type = nullableset;
-      using genset_ptr = std::shared_ptr<const genset_t>;
+      using null = nullableset<LabelSet>;
 
-      using letter_t = typename genset_t::letter_t;
-      using word_t = typename genset_t::word_t;
-      using letters_t = std::set<letter_t>;
-
-      using value_t = letter_t;
-
-      using kind_t = labels_are_nullable;
-
-      nullableset(const genset_ptr& gs)
-        : super_type{gs}
-      {}
-
-      nullableset(const genset_t& gs = {})
-        : nullableset{std::make_shared<const genset_t>(gs)}
-      {}
-
-      const super_type&
-      super() const
-      {
-        return static_cast<const super_type&>(*this);
-      }
-
-      static std::string sname()
-      {
-        return "lan_" + super_type::sname();
-      }
-
-      std::string vname(bool full = true) const
-      {
-        return "lan_" + super().vname(full);
-      }
-
-      /// Build from the description in \a is.
-      static nullableset make(std::istream& is)
+      static null make(std::istream& is)
       {
         // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
         //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -66,38 +30,93 @@ namespace vcsn
         //        |   |    +-- gens
         //        |   +-- letter_type
         //        +-- kind
-        kind_t::make(is);
-        eat(is, '_');
-        auto gs = genset_t::make(is);
-        return {gs};
-      }
-
-      /// Whether \a l == \a r.
-      static bool
-      equals(const value_t l, const value_t r)
-      {
-        return l == r;
-      }
-
-      /// Whether \a l < \a r.
-      static bool less_than(const value_t l, const value_t r)
-      {
-        return l < r;
+        null::kind_t::make(is);
+        eat(is, '<');
+        auto ls = null::labelset_t::make(is);
+        eat(is, '>');
+        return null{ls};
       }
 
       ATTRIBUTE_PURE
-      constexpr value_t
-      special() const
+      static constexpr typename null::value_t
+      one()
       {
-        return this->genset()->template special<value_t>();
+        return null::labelset_t::one();
+      }
+    };
+
+    template<typename GenSet>
+    struct nullable_helper<letterset<GenSet>>
+    {
+      using null = nullableset<letterset<GenSet>>;
+
+      static null
+      make(std::istream& is)
+      {
+        using genset_t = typename null::labelset_t::genset_t;
+        // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
+        //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+        //        |   |    |        weightset
+        //        |   |    +-- gens
+        //        |   +-- letter_type
+        //        +-- kind
+        null::kind_t::make(is);
+        if (is.peek() == '_')
+        {
+          eat(is, '_');
+          auto gs = genset_t::make(is);
+          auto ls = typename null::labelset_t{gs};
+          return null{ls};
+        }
+        eat(is, '<');
+        auto ls = null::labelset_t::make(is);
+        eat(is, '>');
+        return null{ls};
       }
 
-      /// Whether \a l is the special label (for pre/post transitions).
       ATTRIBUTE_PURE
-      bool
-      is_special(value_t l) const
+      static constexpr typename null::value_t
+      one()
       {
-        return l == special();
+        return GenSet::one_letter();
+      }
+    };
+  }
+
+    /// Implementation of labels are nullables (letter or empty).
+    template <typename LabelSet>
+  class nullableset : public LabelSet
+    {
+    public:
+      using labelset_t = LabelSet;
+      using labelset_ptr = std::shared_ptr<const labelset_t>;
+      using self_type = nullableset;
+      using kind_t = labels_are_nullable;
+
+      using value_t = typename LabelSet::value_t;
+
+      nullableset(const labelset_t& ls)
+        : labelset_t{ls}, ls_{std::make_shared<const labelset_t>(ls)}
+      {}
+
+      nullableset(const std::shared_ptr<const labelset_t>& ls)
+        : labelset_t{*ls}, ls_{ls}
+      {}
+
+      static std::string sname()
+      {
+        return "lan<" + labelset_t::sname() + ">";
+      }
+
+      std::string vname(bool full = true) const
+      {
+        return "lan<" + ls_->vname(full) + ">";
+      }
+
+      /// Build from the description in \a is.
+      static nullableset make(std::istream& i)
+      {
+        return detail::nullable_helper<labelset_t>::make(i);
       }
 
       static constexpr bool
@@ -107,10 +126,10 @@ namespace vcsn
       }
 
       ATTRIBUTE_PURE
-      constexpr value_t
-      one() const
+      static constexpr value_t
+      one()
       {
-        return this->genset()->one_letter();
+        return detail::nullable_helper<labelset_t>::one();
       }
 
       ATTRIBUTE_PURE
@@ -123,18 +142,7 @@ namespace vcsn
       bool
       is_valid(value_t v) const
       {
-        return this->has(v) || is_one(v);
-      }
-
-      static size_t size(value_t)
-      {
-        // FIXME: it should be return is_one(v) ? 0 : 1;
-        return 1;
-      }
-
-      static size_t hash(value_t v)
-      {
-        return hash_value(v);
+        return ls_->is_valid(v) || is_one(v);
       }
 
       static value_t
@@ -143,10 +151,9 @@ namespace vcsn
         return v;
       }
 
-      static value_t
-      conv(letterset<genset_t>, typename letterset<genset_t>::value_t v)
+      const labelset_ptr labelset() const
       {
-        return v;
+        return ls_;
       }
 
       /// \throws std::domain_error if there is no label here.
@@ -163,23 +170,15 @@ namespace vcsn
             i.ignore();
             res = one();
           }
-        else if (this->has(c))
-          {
-            res = c;
-            i.ignore();
-          }
         else
-          throw std::domain_error("invalid label: unexpected " + str_escape(c));
+          res = ls_->conv(i);
         return res;
       }
 
       std::set<value_t>
       convs(std::istream& i) const
       {
-        std::set<value_t> res;
-        for (auto r : this->convs_(i))
-          res.insert(value_t{r});
-        return res;
+        return ls_->convs(i);
       }
 
       std::ostream&
@@ -188,29 +187,59 @@ namespace vcsn
       {
         if (is_one(l))
           o << (format == "latex" ? "\\varepsilon" : "\\e");
-        else if (!is_special(l))
-          o << l;
+        else
+          ls_->print(o, l, format);
         return o;
       }
+    private:
+
+      labelset_ptr ls_;
     };
+
 
 #define DEFINE(Func, Operation, Lhs, Rhs, Res)                  \
     template <typename GenSet>                                  \
-    Res<GenSet>                                                 \
-    Func(const Lhs<GenSet>& lhs, const Rhs<GenSet>& rhs)        \
+    Res                                                         \
+    Func(const Lhs& lhs, const Rhs& rhs)                        \
     {                                                           \
-      return {Operation(*lhs.genset(), *rhs.genset())};         \
+      return {Operation(*lhs.genset(), *rhs.genset())};     \
     }
 
     /// Compute the meet with another labelset.
-    DEFINE(meet, intersection, nullableset, nullableset, nullableset);
-    DEFINE(meet, intersection, nullableset, letterset,   letterset);
-    DEFINE(meet, intersection, letterset,   nullableset, letterset);
+    DEFINE(meet, intersection, nullableset<letterset<GenSet>>,
+           nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
+
+    DEFINE(meet, intersection, letterset<GenSet>,
+           nullableset<letterset<GenSet>>, letterset<GenSet>);
+
+    DEFINE(meet, intersection, nullableset<letterset<GenSet>>,
+           letterset<GenSet>, letterset<GenSet>);
+
+    template <typename Lls, typename Rls>
+    nullableset<meet_t<Lls, Rls>>
+    meet(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
+    {
+      return nullableset<meet_t<Lls, Rls>>{meet(*lhs.labelset(), *rhs.labelset())};
+    }
 
     /// compute the join with another labelset.
-    DEFINE(join, get_union, nullableset, nullableset, nullableset);
-    DEFINE(join, get_union, nullableset, letterset,   nullableset);
-    DEFINE(join, get_union, letterset,   nullableset, nullableset);
+    DEFINE(join, get_union, nullableset<letterset<GenSet>>,
+           nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
+
+    DEFINE(join, get_union, letterset<GenSet>,
+           nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
+
+    DEFINE(join, get_union, nullableset<letterset<GenSet>>,
+           letterset<GenSet>, nullableset<letterset<GenSet>>);
+
+    template <typename Lls, typename Rls>
+    nullableset<join_t<Lls, Rls>>
+    join(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
+    {
+      return nullableset<join_t<Lls, Rls>>{join(*lhs.labelset(), *rhs.labelset())};
+    }
+
+
 #undef DEFINE
 
   template <typename GenSet>
@@ -221,8 +250,9 @@ namespace vcsn
   {
     if (format == "latex")
       {
-	print_set(*ls.genset(), o, format);
-	o << "^?";
+        o << "(";
+	print_set(*ls.labelset(), o, format);
+	o << ")^?";
       }
     else if (format == "text")
       o << ls.vname(true);

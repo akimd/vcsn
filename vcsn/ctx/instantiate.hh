@@ -135,7 +135,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_nullable)
+      register_nullable_functions(labels_are_letters)
       {
         using ctx_t = Ctx;
         using rs_t = ratexpset<ctx_t>;
@@ -159,7 +159,6 @@ namespace vcsn
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
-        REGISTER(thompson, rs_t);
         REGISTER(u, ctx_t, unsigned);
 
         REGISTER(union_a, aut_t, l_aut_t);
@@ -173,6 +172,38 @@ namespace vcsn
         REGISTER(dot, lbr_aut_t, std::ostream);
 
         return true;
+      }
+
+#define DEFINE(Kind)                                    \
+      template <typename Ctx>                           \
+      bool                                              \
+      register_nullable_functions(labels_are_ ## Kind)  \
+      {                                                 \
+        return true;                                    \
+      }
+
+      DEFINE(nullable)
+      DEFINE(one)
+      DEFINE(ratexps)
+      DEFINE(tuples)
+      DEFINE(words)
+#undef DEFINE
+
+      template <typename Ctx>
+      bool
+      register_kind_functions(labels_are_nullable)
+      {
+        using ctx_t = Ctx;
+        using rs_t = ratexpset<ctx_t>;
+        using aut_t = mutable_automaton<ctx_t>;
+
+        using namespace dyn::detail;
+
+        REGISTER(thompson, rs_t);
+
+
+        return register_nullable_functions<ctx_t>(typename
+                                                  ctx_t::labelset_t::kind_t());
       }
 
       template <typename Ctx>

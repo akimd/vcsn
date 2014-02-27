@@ -77,8 +77,8 @@ namespace vcsn
       return w.substr(1, s-2);
     }
 
-    word_t
-    empty_word() const
+    static word_t
+    empty_word()
     {
       return {};
     }

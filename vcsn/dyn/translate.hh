@@ -70,7 +70,7 @@ namespace vcsn
         /// Read in \a is a labelset of \a kind.
         void labelset(const std::string& kind)
         {
-          if (kind == "lal" || kind == "lan" || kind == "law")
+          if (kind == "lal" || kind == "law")
             {
               if (kind == "lal")
                 {
@@ -79,12 +79,6 @@ namespace vcsn
                   header("vcsn/ctx/lal_char.hh");
                   os << "vcsn::letterset";
                 }
-              else if (kind == "lan")
-                {
-                  // Some instantiation happen here:
-                  header("vcsn/ctx/lan_char.hh");
-                  os << "vcsn::nullableset";
-                }
               else if (kind == "law")
                 {
                   // Some instantiation happen here:
@@ -92,19 +86,22 @@ namespace vcsn
                   os << "vcsn::wordset";
                 }
               eat(is, "_char");
-              if (is.peek() == '(')
-                {
-                  // Skip until we have the closing paren.
-                  int c;
-                  while ((c = is.get()) != EOF && c != ')')
-                    continue;
-                }
               os << "<vcsn::set_alphabet<vcsn::char_letters>>";
             }
           else if (kind == "lao")
             {
               header("vcsn/labelset/oneset.hh");
               os << "vcsn::ctx::oneset";
+            }
+          else if (kind == "lan")
+            {
+              // Some instantiation happen here:
+              header("vcsn/ctx/lan_char.hh");
+              os << "vcsn::nullableset<" << incendl;
+              eat(is, '<');
+              valueset();
+              eat(is, '>');
+              os << decendl << '>';
             }
           else if (kind == "lat" || kind == "tupleset")
             {

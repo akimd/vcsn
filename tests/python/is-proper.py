@@ -38,7 +38,7 @@ for ls in ["lal", "lan", "law"]:
 a = """
 digraph
 {
-  vcsn_context = "lan_char(ab)_b"
+  vcsn_context = "ctx"
   I0 -> 0
   0 -> 1 [label = "\\\\e, a"]
   1 -> F1
