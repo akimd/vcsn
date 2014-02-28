@@ -203,12 +203,12 @@ def context_name_2_or_3(alphabet, weightset, kind='lal'):
     kind = normalize_kind(kind)
     return kind + '_char(' + alphabet + ')_' + weightset
 def normalize_kind(kind):
-    if kind == 'letter':
+    if kind == 'letter' or kind == 'letters' or kind == 'l':
         return 'lal'
-    # what did Jacques ask?  It was on the whiteboard...
-    # FIXME: ask him again, and fix this on the spot.
-    elif kind == 'alphs':
+    elif kind == 'lsp' or kind == 'lalsp':
         return 'lan'
+    elif kind == 'word' or kind == 'words' or kind == 'w':
+        return 'law'
     else:
         return kind
 def context_name(*arguments):
