@@ -39,11 +39,9 @@ namespace vcsn
         require(is_standard(res), __func__, ": input must be standard");
 
         weightset_t ws(*res.context().weightset());
-        state_t initial = res.dst_of(res.initial_transitions().front());
 
-        if (!ws.is_one(w))
-          for (auto t: res.all_out(initial))
-            res.rmul_weight(t, w);
+        for (auto t: res.final_transitions())
+          res.rmul_weight(t, w);
         return res;
       }
     };
