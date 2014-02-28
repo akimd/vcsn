@@ -139,12 +139,22 @@ def make_automaton(ctx):
     a.remove_state(0)
     return clone(a)
 
-# Horrible wrapper to horrible methods.  The context shouldn't be a
-# parameter at all.
-def left_mult(ctx, a, w):
-    return a.left_mult(ctx, w);
-def right_mult(ctx, a, w):
-    return a.right_mult(ctx, w);
+def automaton_to_context(a):
+    import re
+    s = a.format('dot')
+    r = re.search('vcsn_context = \"[^\"]*\"', s).span()
+    line = s[r[0]:r[1]]
+    r = re.search('\"[^\"]*\"', line).span()
+    name = line[r[0]:r[1]][1:-1]
+    return context(name)
+
+
+# Wrapper to horrible methods.  The context shouldn't be a parameter
+# at all.
+def left_mult(a, w):
+    return a.left_mult(automaton_to_context(a), w);
+def right_mult(a, w):
+    return a.right_mult(automaton_to_context(a), w);
 
 
 ## ------- ##
