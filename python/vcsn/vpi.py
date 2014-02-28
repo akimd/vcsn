@@ -139,6 +139,14 @@ def make_automaton(ctx):
     a.remove_state(0)
     return clone(a)
 
+# Horrible wrapper to horrible methods.  The context shouldn't be a
+# parameter at all.
+def left_mult(ctx, a, w):
+    return a.left_mult(ctx, w);
+def right_mult(ctx, a, w):
+    return a.right_mult(ctx, w);
+
+
 ## ------- ##
 ## Aliases ##
 ## ------- ##
