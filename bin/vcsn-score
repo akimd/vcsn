@@ -116,6 +116,8 @@ r = "[a-e]?{50}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
 bench('a.product(a)     ', 'a = std({})'.format(r), lambda: a.product(a))
 bench('a.shuffle(a)     ', 'a = std({})'.format(r), lambda: a.shuffle(a))
+a = vcsn.automaton(open("random.dot", "r").read())
+bench('a.product(a)     ', 'a = random.dot', lambda: a.product(a))
 
 # infiltration.
 r = "[a-e]?{30}"
