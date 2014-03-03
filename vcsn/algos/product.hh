@@ -45,8 +45,9 @@ namespace vcsn
     public:
       using automaton_t = mutable_automaton<context_t>;
 
-      producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(std::move(sort(std::move(outsplit(lhs))))),
+      producter(const Lhs& lhs, const Rhs& rhs, const std::string& which = "in_filter")
+        : lhs_(std::move(which == "outsplitting" ?
+                              sort(std::move(outsplit(lhs))) : sort(lhs))),
           rhs_(std::move(sort(std::move(insplit(rhs))))),
           res_(join(lhs_.context(), rhs_.context()))
       {}
@@ -56,6 +57,26 @@ namespace vcsn
       {
         pmap_.clear();
         todo_.clear();
+      }
+
+      /// The (accessible part of the) product of \a lhs_ and \a rhs_.
+      automaton_t outsplit_product()
+      {
+        auto ctx = meet(lhs_.context(), rhs_.context());
+        const auto& ws = *ctx.weightset();
+        res_ = std::move(automaton_t(ctx));
+
+        initialize_product();
+
+        while (!todo_.empty())
+          {
+            pair_t psrc = todo_.front();
+            todo_.pop_front();
+            state_t src = pmap_[psrc];
+
+            add_outsplit_product_transitions(ws, src, psrc);
+          }
+        return std::move(res_);
       }
 
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
@@ -241,12 +262,23 @@ namespace vcsn
       /// If needed, push the destination state in the work list.
       /// \pre !res.has_transition(src, dst, label).
       void
-      new_transition(state_t src,
+      new_outsplit_transition(state_t src,
                      typename Lhs::state_t ldst, typename Rhs::state_t rdst,
                      const label_t& label, const weight_t& weight)
       {
         if (!is_black_black(lhs_, ldst, rhs_, rdst))
           res_.new_transition(src, state(ldst, rdst), label, weight);
+      }
+
+      /// Add a transition in the result from destination states in operands.
+      /// If needed, push the destination state in the work list.
+      /// \pre !res.has_transition(src, dst, label).
+      void
+      new_transition(state_t src,
+                     typename Lhs::state_t ldst, typename Rhs::state_t rdst,
+                     const label_t& label, const weight_t& weight)
+      {
+        res_.new_transition(src, state(ldst, rdst), label, weight);
       }
 
       /// Add a transition in the result from destination states in operands.
@@ -263,7 +295,7 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
-      void add_product_transitions(const weightset_t& ws,
+      void add_outsplit_product_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
       {
@@ -278,16 +310,16 @@ namespace vcsn
 
 
         for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
-          new_transition(src, lhs_.dst_of(*li),
-                         psrc.second, lhs_.label_of(*li),
-                         mul_(ws, lhs_.weight_of(*li),
-                              rhs_.context().weightset()->one()));
+          new_outsplit_transition(src, lhs_.dst_of(*li),
+                                  psrc.second, lhs_.label_of(*li),
+                                  mul_(ws, lhs_.weight_of(*li),
+                                       rhs_.context().weightset()->one()));
 
         for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
-          new_transition(src, psrc.first, rhs_.dst_of(*ri),
-                         rhs_.label_of(*ri),
-                         mul_(ws, lhs_.context().weightset()->one(),
-                              rhs_.weight_of(*ri)));
+          new_outsplit_transition(src, psrc.first, rhs_.dst_of(*ri),
+                                  rhs_.label_of(*ri),
+                                  mul_(ws, lhs_.context().weightset()->one(),
+                                       rhs_.weight_of(*ri)));
 
 
         for (/* Nothing. */;
@@ -311,24 +343,95 @@ namespace vcsn
             assert(labelset_t::equals(label, rhs_.label_of(*ri)));
             auto rstart = ri;
             while (labelset_t::equals(rhs_.label_of(*ri), label))
-              {
-                // These are always new transitions: first because the
-                // source state is visited for the first time, and
-                // second because the couple (left destination, label)
-                // is unique, and so is (right destination, label).
-                new_transition(src, lhs_.dst_of(lt), rhs_.dst_of(*ri), label,
-                               mul_(ws,
-                                    lhs_.weight_of(lt), rhs_.weight_of(*ri)));
+            {
+              // These are always new transitions: first because the
+              // source state is visited for the first time, and
+              // second because the couple (left destination, label)
+              // is unique, and so is (right destination, label).
+              new_outsplit_transition(src, lhs_.dst_of(lt), rhs_.dst_of(*ri),
+                                      label, mul_(ws, lhs_.weight_of(lt),
+                                                  rhs_.weight_of(*ri)));
 
-                if (++ ri == rs.end())
-                  break;
-              }
+              if (++ ri == rs.end())
+                break;
+            }
 
             // Move the right-hand iterator back to the beginning of
             // the matching part.  This will be needed if the next
             // left-hand transition has the same label.
             ri = rstart;
           }
+        }
+
+      void add_product_transitions(const weightset_t& ws,
+                                            const state_t src,
+                                            const pair_t& psrc)
+      ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
+      {
+        // This relies on outgoing transitions being sorted by label
+        // by the sort algorithm: thanks to that property we can scan
+        // the two successor lists in lockstep. Thus if there is a one
+        // transition, it is at the beginning.
+        auto ls = lhs_.all_out(psrc.first);
+        auto rs = rhs_.all_out(psrc.second);
+        auto li = ls.begin();
+        auto ri = rs.begin();
+
+
+        for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
+          if (!has_only_ones_in(rhs_, psrc.second))
+            new_transition(src, lhs_.dst_of(*li),
+                           psrc.second, lhs_.label_of(*li),
+                           mul_(ws, lhs_.weight_of(*li),
+                                rhs_.context().weightset()->one()));
+
+        for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
+          new_transition(src, psrc.first, rhs_.dst_of(*ri),
+                         rhs_.label_of(*ri),
+                         mul_(ws, lhs_.context().weightset()->one(),
+                              rhs_.weight_of(*ri)));
+
+
+        for (/* Nothing. */;
+             li != ls.end() && ri != rs.end();
+             ++ li)
+        {
+          auto lt = *li;
+          label_t label = lhs_.label_of(lt);
+          // Skip right-hand transitions with labels we don't have
+          // on the left hand.
+          while (labelset_t::less_than(rhs_.label_of(*ri), label))
+            if (++ ri == rs.end())
+              return;
+
+          // If the smallest label on the right-hand side is bigger
+          // than the left-hand one, we have no hope of ever adding
+          // transitions with this label.
+          if (labelset_t::less_than(label, rhs_.label_of(*ri)))
+            continue;
+
+          assert(labelset_t::equals(label, rhs_.label_of(*ri)));
+          auto rstart = ri;
+          while (labelset_t::equals(rhs_.label_of(*ri), label))
+          {
+            // These are always new transitions: first because the
+            // source state is visited for the first time, and
+            // second because the couple (left destination, label)
+            // is unique, and so is (right destination, label).
+            new_transition(src, lhs_.dst_of(lt), rhs_.dst_of(*ri),
+                           label, mul_(ws, lhs_.weight_of(lt),
+                                       rhs_.weight_of(*ri)));
+
+            if (++ ri == rs.end())
+              break;
+          }
+
+          // Move the right-hand iterator back to the beginning of
+          // the matching part.  This will be needed if the next
+          // left-hand transition has the same label.
+          ri = rstart;
+        }
+
       }
 
       /// Add transitions to the given result automaton, starting from
@@ -424,6 +527,25 @@ namespace vcsn
           && ltr != lin.end() && is_one(lhs, *ltr) && !lhs.is_final(lst);
       }
 
+      template <typename ARhs>
+      constexpr typename std::enable_if<!ARhs::context_t::labelset_t::has_one(),
+                  bool>::type
+      has_only_ones_in(const ARhs& rhs ATTRIBUTE_UNUSED,
+                       typename Rhs::state_t rst ATTRIBUTE_UNUSED) const
+      {
+        return false;
+      }
+
+      template <typename ARhs>
+      typename std::enable_if<ARhs::context_t::labelset_t::has_one(),
+               bool>::type
+      has_only_ones_in(const ARhs& rhs, typename Rhs::state_t rst) const
+      {
+        auto rin = rhs.all_in(rst);
+        auto rtr = rin.begin();
+        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs.is_initial(rst);
+      }
+
       /// The computed product.
       automaton_t res_;
     };
@@ -436,11 +558,14 @@ namespace vcsn
   /// Build the (accessible part of the) product.
   template <typename Lhs, typename Rhs>
   auto
-  product(const Lhs& lhs, const Rhs& rhs)
+  product(const Lhs& lhs, const Rhs& rhs, std::string which = "in_filter")
     -> typename detail::producter<Lhs, Rhs>::automaton_t
   {
-    detail::producter<Lhs, Rhs> product(lhs, rhs);
-    auto res = product.product();
+    detail::producter<Lhs, Rhs> product(lhs, rhs, which);
+    assert(which == "outsplitting" || which == "in_filter");
+    auto res = which == "outsplitting" ? product.outsplit_product() :
+       product.product();
+
     if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
     return res;
@@ -452,17 +577,19 @@ namespace vcsn
     {
 
       /// Bridge.
-      template <typename Lhs, typename Rhs>
+      template <typename Lhs, typename Rhs, typename String>
       automaton
-      product(const automaton& lhs, const automaton& rhs)
+      product(const automaton& lhs, const automaton& rhs,
+              const std::string& which = "in_filter")
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(product(l, r));
+        return make_automaton(product(l, r, which));
       }
 
       REGISTER_DECLARE(product,
-                       (const automaton&, const automaton&) -> automaton);
+                       (const automaton&, const automaton&, const std::string&)
+                       -> automaton);
     }
   }
 

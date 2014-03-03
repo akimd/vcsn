@@ -9,9 +9,9 @@ namespace vcsn
   {
     REGISTER_DEFINE(product);
     automaton
-    product(const automaton& lhs, const automaton& rhs)
+    product(const automaton& lhs, const automaton& rhs, const std::string& which)
     {
-      return detail::product_registry().call(lhs, rhs);
+      return detail::product_registry().call(lhs, rhs, which);
     }
 
     REGISTER_DEFINE(shuffle);

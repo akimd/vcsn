@@ -290,7 +290,8 @@ namespace vcsn
 
     /// The product of automata \a lhs and \a rhs.
     /// Performs the meet of the contexts.
-    automaton product(const automaton& lhs, const automaton& rhs);
+    automaton product(const automaton& lhs, const automaton& rhs,
+                      const std::string& which = "in_filter");
 
     /// An equivalent automaton without spontaneous transitions.
     /// \param aut    the automaton in which to remove them

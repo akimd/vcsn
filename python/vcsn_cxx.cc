@@ -234,9 +234,9 @@ struct automaton
     return vcsn::dyn::power(aut_, n);
   }
 
-  automaton product(const automaton& rhs) const
+  automaton product(const automaton& rhs, const std::string& which = "in_filter") const
   {
-    return vcsn::dyn::product(aut_, rhs.aut_);
+    return vcsn::dyn::product(aut_, rhs.aut_, which);
   }
 
   automaton proper(bool prune = true) const
@@ -590,6 +590,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(linear, linear, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(product, product, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 
@@ -636,7 +637,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("minimize", &automaton::minimize, minimize())
     .def("outsplit", &automaton::outsplit)
     .def("power", &automaton::power)
-    .def("product", &automaton::product)
+    .def("product", &automaton::product, product())
     .def("proper_real", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("right_mult", &automaton::right_mult)
