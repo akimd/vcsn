@@ -1,10 +1,10 @@
 dist_python_PYTHON = %D%/vcsn.py
 nodist_python_PYTHON = %D%/vcsn_version.py
 
-pyexec_LTLIBRARIES = %D%/vcsn_python.la
-%C%_vcsn_python_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
-%C%_vcsn_python_la_LDFLAGS = -avoid-version -module $(BOOST_PYTHON_LDFLAGS)
-%C%_vcsn_python_la_LIBADD = $(BOOST_PYTHON_LIBS) $(all_libctx) lib/libvcsn.la
+pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
+%C%_vcsn_cxx_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
+%C%_vcsn_cxx_la_LDFLAGS = -avoid-version -module $(BOOST_PYTHON_LDFLAGS)
+%C%_vcsn_cxx_la_LIBADD = $(BOOST_PYTHON_LIBS) $(all_libctx) lib/libvcsn.la
 
 # Before installing this library, wait for the libraries against which
 # it is linked to be installed.  Otherwise libtool will complain that

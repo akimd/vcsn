@@ -1,6 +1,6 @@
 import os, re
 from vcsn_version import *
-from vcsn_python import *
+from vcsn_cxx import *
 
 def dot_to_svg(dot, engine="dot"):
     "Return the conversion of a Dot source into SVG."

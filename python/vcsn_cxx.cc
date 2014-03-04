@@ -1,8 +1,8 @@
 #if defined __GNUC__ && ! defined __clang__
 # pragma GCC diagnostic ignored "-Wmissing-declarations"
 
-// python/vcsn_python.cc: In constructor 'minimize::minimize(const boost::python::detail::keywords<nkeywords>&, const char*)':
-// python/vcsn_python.cc:445:1531: warning: typedef 'assertion' locally defined but not used [-Wunused-local-typedefs]
+// python/vcsn_cxx.cc: In constructor 'minimize::minimize(const boost::python::detail::keywords<nkeywords>&, const char*)':
+// python/vcsn_cxx.cc:445:1531: warning: typedef 'assertion' locally defined but not used [-Wunused-local-typedefs]
 // BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 # pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 
@@ -18,8 +18,7 @@ struct context;
 struct polynomial;
 struct ratexp;
 struct weight;
-
-
+
 /*----------.
 | context.  |
 `----------*/
@@ -50,8 +49,7 @@ struct context
 
   vcsn::dyn::context ctx_;
 };
-
-
+
 /*------------.
 | automaton.  |
 `------------*/
@@ -277,8 +275,7 @@ struct automaton
 
   vcsn::dyn::automaton aut_;
 };
-
-
+
 /*-------------.
 | polynomial.  |
 `-------------*/
@@ -304,8 +301,7 @@ struct polynomial
 
   vcsn::dyn::polynomial val_;
 };
-
-
+
 /*---------.
 | ratexp.  |
 `---------*/
@@ -430,8 +426,7 @@ struct ratexp
 
   vcsn::dyn::ratexp r_;
 };
-
-
+
 /*---------.
 | weight.  |
 `---------*/
@@ -457,8 +452,7 @@ struct weight
 
   vcsn::dyn::weight val_;
 };
-
-
+
 /*---------------------------.
 | automaton implementation.  |
 `---------------------------*/
@@ -487,8 +481,7 @@ ratexp automaton::to_ratexp() const
 {
   return vcsn::dyn::aut_to_exp(aut_);
 }
-
-
+
 /*-------------------------.
 | context implementation.  |
 `-------------------------*/
@@ -524,7 +517,7 @@ automaton context::random(unsigned num_states, float density,
                                      num_initial, num_final);
 
 }
-
+
 /*------------------------.
 | ratexp implementation.  |
 `------------------------*/
@@ -533,11 +526,10 @@ weight ratexp::constant_term() const
 {
   return vcsn::dyn::constant_term(r_);
 }
-
-
-/*--------------.
-| vcsn_python.  |
-`--------------*/
+
+/*-----------.
+| vcsn_cxx.  |
+`-----------*/
 
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
@@ -548,7 +540,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 
-BOOST_PYTHON_MODULE(vcsn_python)
+BOOST_PYTHON_MODULE(vcsn_cxx)
 {
   namespace bp = boost::python;
 
