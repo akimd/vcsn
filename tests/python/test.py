@@ -70,6 +70,22 @@ def CHECK_EQ(expected, effective):
                                    eff.splitlines(1),
                                    fromfile='expected', tofile='effective'))
 
+def CHECK_NEQ(expected, effective):
+    "Check that effective value is not equal to expected."
+    if expected == effective:
+        exp = str(expected)
+        eff = str(effective)
+        FAIL(exp + " != " + eff)
+        if exp[:-1] != '\n':
+            exp += '\n'
+        if eff[:-1] != '\n':
+            eff += '\n'
+        sys.stdout.writelines(diff(exp.splitlines(1),
+                                   eff.splitlines(1),
+                                   fromfile='expected', tofile='effective'))
+    else:
+        PASS()
+
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
     print('1..'+str(count))
