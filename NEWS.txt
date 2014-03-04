@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-03-05
+** Bug: standardization of automata
+The standardization of an automaton no longer leaves former initial states
+that became non-accessible.
+
+** Bug: right-mult on automata
+Its behavior was completely wrong.
+
 * 2014-02-21
 ** parse and display brackets in transitions
 It is now possible to directly write entries in bracket notation, for

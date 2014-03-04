@@ -68,6 +68,44 @@ digraph
 }''')
 CHECK_EQ(exp, a.standard())
 
+# Make sure we deleted former initial states that become inaccessible.
+a = vcsn.automaton('''digraph
+{
+ vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
+ rankdir = LR
+ {
+   node [style = invis, shape = none, label = "", width = 0, height = 0]
+   I0
+   F0
+   F1
+ }
+ {
+   node [shape = circle]
+   0
+ }
+ I0 -> 0 [label = "<x>"]
+ 0 -> F0 [label = "<y>"]
+}
+''')
+
+exp = '''digraph
+{
+  vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I1
+    F1
+  }
+  {
+    node [shape = circle]
+    1
+  }
+  I1 -> 1
+  1 -> F1 [label = "<xy>"]
+}'''
+CHECK_EQ(exp, str(a.standard()))
+
 
 ## --------------- ##
 ## standard(exp).  ##

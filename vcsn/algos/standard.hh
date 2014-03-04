@@ -52,25 +52,36 @@ namespace vcsn
   /// Turn \a aut into a standard automaton.
   template <typename Aut>
   void
-  standard(Aut& aut)
+  standard_here(Aut& aut)
   {
     if (is_standard(aut))
       return;
 
-    auto ws = *aut.weightset();
-
+    const auto& ws = *aut.weightset();
     const auto& inits = aut.initial_transitions();
-    std::vector<typename Aut::state_t> initials{begin(inits), end(inits)};
+    std::vector<typename Aut::transition_t> initials{begin(inits), end(inits)};
 
+    // See TAF-Kit documentation for the implementation details.
+    //
+    // (i.a) Add a new state s...
     auto ini = aut.new_state();
     for (auto ti: initials)
       {
+        // The initial state.
+        auto i = aut.dst_of(ti);
         auto wi = aut.weight_of(ti);
-        for (auto t: aut.all_out(aut.dst_of(ti)))
+        for (auto t: aut.all_out(i))
           aut.new_transition(ini, aut.dst_of(t), aut.label_of(t),
                              ws.mul(wi, aut.weight_of(t)));
         aut.del_transition(ti);
+
+        // (iv) Remove the former initial states of A that are the
+        // destination of no incoming transition.
+        if (aut.all_in(i).empty())
+          aut.del_state(i);
       }
+    // (i.b) Make [state s] initial, with initial multiplicity equal
+    // to the unit of the multiplicity semiring.
     aut.set_initial(ini);
   }
 
@@ -84,12 +95,11 @@ namespace vcsn
       standard(const automaton& aut)
       {
         auto res = copy(aut->as<Aut>());
-        standard(res);
+        standard_here(res);
         return make_automaton(std::move(res));
       }
 
-      REGISTER_DECLARE(standard,
-                       (const automaton& e) -> automaton);
+      REGISTER_DECLARE(standard, (const automaton& e) -> automaton);
     }
   }
 
