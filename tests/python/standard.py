@@ -1,19 +1,17 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
+
+ctx = vcsn.context('lal_char(ab)_b')
 
 ## --------------- ##
 ## standard(aut).  ##
 ## --------------- ##
 
-# check VCSN-STANDARD-ARGUMENTS
-# -----------------------------
-check ()
-{
-  run 0 - -vcsn standard -Af "$@" -O dot
-}
-
 # Try to be exhaustive: Several initials states, with weights, one of
 # which is final, the other has a loop.
-cat >in.gv <<\EOF
+a = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -37,19 +35,18 @@ digraph
   1 -> 2 [label = "b"]
   2 -> 2 [label = "a, b"]
   2 -> F
-}
-EOF
+}''')
 
-check in.gv<<\EOF
+exp = vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-    F1
+    I3
+    F2
+    F3
   }
   {
     node [shape = circle]
@@ -58,18 +55,18 @@ digraph
     2
     3
   }
-  I0 -> 0
-  0 -> F0 [label = "<1/4>"]
-  0 -> 1 [label = "<1/4>a, <1/4>b"]
-  0 -> 2 [label = "<1/2>a, b"]
-  0 -> 3 [label = "<3/2>a"]
-  1 -> F1
-  1 -> 1 [label = "a, b"]
-  2 -> 2 [label = "a, <2>b"]
-  2 -> 3 [label = "<3>a"]
-  3 -> 1 [label = "b"]
-}
-EOF
+  I3 -> 3
+  0 -> 0 [label = "a, <2>b"]
+  0 -> 1 [label = "<3>a"]
+  1 -> 2 [label = "b"]
+  2 -> F2
+  2 -> 2 [label = "a, b"]
+  3 -> F3 [label = "<1/4>"]
+  3 -> 0 [label = "<1/2>a, b"]
+  3 -> 1 [label = "<3/2>a"]
+  3 -> 2 [label = "<1/4>a, <1/4>b"]
+}''')
+CHECK_EQ(exp, a.standard())
 
 
 ## --------------- ##
@@ -79,23 +76,23 @@ EOF
 # check VCSN-STANDARD-ARGUMENTS
 # -----------------------------
 # Expected output is on stdin.
-check ()
-{
-  run 0 - -vcsn standard -e "$@" -O dot
-}
+def check (re, exp):
+    # We compare automata as strings, since when parsing the expected
+    # automaton we drop the hole in the state numbers created by
+    # standard.
+    CHECK_EQ(exp, str(ctx.ratexp(re).standard()))
 
-fail ()
-{
-  run 1 '' -vcsn standard -e "$@"
-}
+def xfail(re):
+    r = ctx.ratexp(re)
+    XFAIL(lambda: r.standard())
 
 ## --- ##
 ## B.  ##
 ## --- ##
 
 # B: "\z".
-check '(?@lal_char(ab)_b)\z' <<\EOF
-digraph
+check('(?@lal_char(ab)_b)\z',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
@@ -108,12 +105,11 @@ digraph
     0 [color = DimGray]
   }
   I0 -> 0 [color = DimGray]
-}
-EOF
+}''')
 
 # B: "\e".
-check '(?@lal_char(ab)_b)\e' <<\EOF
-digraph
+check('(?@lal_char(ab)_b)\e',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
@@ -128,12 +124,11 @@ digraph
   }
   I0 -> 0
   0 -> F0
-}
-EOF
+}''')
 
 # B: "a"
-check '(?@lal_char(ab)_b)a' <<\EOF
-digraph
+check('(?@lal_char(ab)_b)a',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
@@ -150,12 +145,11 @@ digraph
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
-}
-EOF
+}''')
 
 # B: "a+b"
-check '(?@lal_char(ab)_b)a+b' <<\EOF
-digraph
+check('(?@lal_char(ab)_b)a+b',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
@@ -163,54 +157,52 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
+  0 -> 3 [label = "b"]
   1 -> F1
-  2 -> F2
-}
-EOF
+  3 -> F3
+}''')
 
 # B: intersection.
-fail '(?@lal_char(abc)_b)a*&b*'
+xfail('(?@lal_char(abc)_b)a*&b*')
 
 # B: "abc".
-check '(?@lal_char(abc)_b)abc' <<\EOF
-digraph
+check('(?@lal_char(abc)_b)abc',
+'''digraph
 {
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F3
+    F4
   }
   {
     node [shape = circle]
     0
     1
-    2
     3
+    4
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  2 -> 3 [label = "c"]
-  3 -> F3
-}
-EOF
+  1 -> 3 [label = "b"]
+  3 -> 4 [label = "c"]
+  4 -> F4
+}''')
 
 # B: "ab+cd".
-check '(?@lal_char(abcd)_b)ab+cd' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)ab+cd',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -218,29 +210,28 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F3
-    F4
+    F6
   }
   {
     node [shape = circle]
     0
     1
-    2
     3
     4
+    6
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "c"]
+  0 -> 4 [label = "c"]
   1 -> 3 [label = "b"]
-  2 -> 4 [label = "d"]
   3 -> F3
-  4 -> F4
-}
-EOF
+  4 -> 6 [label = "d"]
+  6 -> F6
+}''')
 
 # B: "a(b+c)d".
-check '(?@lal_char(abcd)_b)a(b+c)d' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)a(b+c)d',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -253,36 +244,34 @@ digraph
     node [shape = circle]
     0
     1
-    2
     3
     4
+    5
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  1 -> 3 [label = "c"]
-  2 -> 4 [label = "d"]
+  1 -> 3 [label = "b"]
+  1 -> 5 [label = "c"]
   3 -> 4 [label = "d"]
   4 -> F4
-}
-EOF
+  5 -> 4 [label = "d"]
+}''')
 
 # B: "(ab+cd+abcd)abc".
-check '(?@lal_char(abcd)_b)(ab+cd+abcd)abc' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)(ab+cd+abcd)abc',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F11
+    F12
   }
   {
     node [shape = circle]
     0
     1
-    2
     3
     4
     5
@@ -292,32 +281,32 @@ digraph
     9
     10
     11
+    12
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "a"]
-  0 -> 3 [label = "c"]
-  1 -> 4 [label = "b"]
-  2 -> 5 [label = "b"]
-  3 -> 6 [label = "d"]
-  4 -> 7 [label = "a"]
-  5 -> 8 [label = "c"]
+  0 -> 4 [label = "c"]
+  0 -> 5 [label = "a"]
+  1 -> 3 [label = "b"]
+  3 -> 7 [label = "a"]
+  4 -> 6 [label = "d"]
+  5 -> 8 [label = "b"]
   6 -> 7 [label = "a"]
-  7 -> 9 [label = "b"]
-  8 -> 10 [label = "d"]
-  9 -> 11 [label = "c"]
+  7 -> 11 [label = "b"]
+  8 -> 9 [label = "c"]
+  9 -> 10 [label = "d"]
   10 -> 7 [label = "a"]
-  11 -> F11
-}
-EOF
+  11 -> 12 [label = "c"]
+  12 -> F12
+}''')
 
 
 ## --------- ##
 ## B: Star.  ##
 ## --------- ##
 
-check '(?@lal_char(abcd)_b)\z*' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)\z*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -332,11 +321,10 @@ digraph
   }
   I0 -> 0
   0 -> F0
-}
-EOF
+}''')
 
-check '(?@lal_char(abcd)_b)\e*' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)\e*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -351,11 +339,10 @@ digraph
   }
   I0 -> 0
   0 -> F0
-}
-EOF
+}''')
 
-check '(?@lal_char(abcd)_b)a*' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)a*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -375,11 +362,10 @@ digraph
   0 -> 1 [label = "a"]
   1 -> F1
   1 -> 1 [label = "a"]
-}
-EOF
+}''')
 
-check '(?@lal_char(abcd)_b)(a+b)*' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)(a+b)*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -388,29 +374,28 @@ digraph
     I0
     F0
     F1
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
+  0 -> 3 [label = "b"]
   1 -> F1
   1 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  2 -> 1 [label = "a"]
-  2 -> 2 [label = "b"]
-}
-EOF
+  1 -> 3 [label = "b"]
+  3 -> F3
+  3 -> 1 [label = "a"]
+  3 -> 3 [label = "b"]
+}''')
 
-check '(?@lal_char(abcd)_b)(ab)*' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)(ab)*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -418,25 +403,24 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  2 -> F2
-  2 -> 1 [label = "a"]
-}
-EOF
+  1 -> 3 [label = "b"]
+  3 -> F3
+  3 -> 1 [label = "a"]
+}''')
 
-check '(?@lal_char(abcd)_b)a**' <<\EOF
-digraph
+check('(?@lal_char(abcd)_b)a**',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
@@ -456,8 +440,7 @@ digraph
   0 -> 1 [label = "a"]
   1 -> F1
   1 -> 1 [label = "a"]
-}
-EOF
+}''')
 
 ## ---- ##
 ## BR.  ##
@@ -465,8 +448,8 @@ EOF
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check '(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)' <<\EOF
-digraph
+check('(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)',
+'''digraph
 {
   vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
   rankdir = LR
@@ -474,21 +457,20 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F1
-    F2
+    F4
   }
   {
     node [shape = circle]
     0
     1
-    2
+    4
   }
   I0 -> 0
   0 -> 1 [label = "<x>a"]
   1 -> F1 [label = "<y>"]
-  1 -> 2 [label = "<z>a"]
-  2 -> F2
-}
-EOF
+  1 -> 4 [label = "<z>a"]
+  4 -> F4
+}''')
 
 
 ## --- ##
@@ -497,8 +479,8 @@ EOF
 
 
 # Z: "<12>\e".
-check '(?@lal_char(ab)_z)<12>\e' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<12>\e',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -513,16 +495,15 @@ digraph
   }
   I0 -> 0
   0 -> F0 [label = "<12>"]
-}
-EOF
+}''')
 
 ## -------- ##
 ## Z: sum.  ##
 ## -------- ##
 
 # Z: "\e+a+\e"
-check '(?@lal_char(ab)_z)\e+a+\e' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)\e+a+\e',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -530,23 +511,22 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F1
+    F2
   }
   {
     node [shape = circle]
     0
-    1
+    2
   }
   I0 -> 0
   0 -> F0 [label = "<2>"]
-  0 -> 1 [label = "a"]
-  1 -> F1
-}
-EOF
+  0 -> 2 [label = "a"]
+  2 -> F2
+}''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check '(?@lal_char(ab)_z)<12>\e+<23>a+<34>b' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<12>\e+<23>a+<34>b',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -554,27 +534,26 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F1
     F2
+    F3
   }
   {
     node [shape = circle]
     0
-    1
     2
+    3
   }
   I0 -> 0
   0 -> F0 [label = "<12>"]
-  0 -> 1 [label = "<23>a"]
-  0 -> 2 [label = "<34>b"]
-  1 -> F1
+  0 -> 2 [label = "<23>a"]
+  0 -> 3 [label = "<34>b"]
   2 -> F2
-}
-EOF
+  3 -> F3
+}''')
 
 # left weight.
-check '(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -582,27 +561,26 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F1
     F2
+    F3
   }
   {
     node [shape = circle]
     0
-    1
     2
+    3
   }
   I0 -> 0
   0 -> F0 [label = "<132>"]
-  0 -> 1 [label = "<12>a"]
-  0 -> 2 [label = "<120>b"]
-  1 -> F1
+  0 -> 2 [label = "<12>a"]
+  0 -> 3 [label = "<120>b"]
   2 -> F2
-}
-EOF
+  3 -> F3
+}''')
 
 # right weight.
-check '(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -610,58 +588,56 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F1
     F2
+    F3
   }
   {
     node [shape = circle]
     0
-    1
     2
+    3
   }
   I0 -> 0
   0 -> F0 [label = "<40>"]
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "<2>b"]
-  1 -> F1 [label = "<10>"]
+  0 -> 2 [label = "a"]
+  0 -> 3 [label = "<2>b"]
   2 -> F2 [label = "<10>"]
-}
-EOF
+  3 -> F3 [label = "<10>"]
+}''')
 
 ## ------------ ##
 ## Z: product.  ##
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check '(?@lal_char(ab)_z)<12>(ab)<23>' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<12>(ab)<23>',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> 1 [label = "<12>a"]
-  1 -> 2 [label = "b"]
-  2 -> F2 [label = "<23>"]
-}
-EOF
+  1 -> 3 [label = "b"]
+  3 -> F3 [label = "<23>"]
+}''')
 
 ## --------- ##
 ## Z: star.  ##
 ## --------- ##
 
-check '(?@lal_char(ab)_z)\z*' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)\z*',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -676,13 +652,12 @@ digraph
   }
   I0 -> 0
   0 -> F0
-}
-EOF
+}''')
 
-fail '(?@lal_char(ab)_z)\e*'
+xfail('(?@lal_char(ab)_z)\e*')
 
-check '(?@lal_char(ab)_z)(<2>a)*' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)(<2>a)*',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -702,11 +677,10 @@ digraph
   0 -> 1 [label = "<2>a"]
   1 -> F1
   1 -> 1 [label = "<2>a"]
-}
-EOF
+}''')
 
-check '(?@lal_char(ab)_z)<2>a*<3>' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<2>a*<3>',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -726,11 +700,10 @@ digraph
   0 -> 1 [label = "<2>a"]
   1 -> F1 [label = "<3>"]
   1 -> 1 [label = "a"]
-}
-EOF
+}''')
 
-check '(?@lal_char(ab)_z)(<2>a+<3>b)*' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)(<2>a+<3>b)*',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -739,29 +712,28 @@ digraph
     I0
     F0
     F1
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "<2>a"]
-  0 -> 2 [label = "<3>b"]
+  0 -> 3 [label = "<3>b"]
   1 -> F1
   1 -> 1 [label = "<2>a"]
-  1 -> 2 [label = "<3>b"]
-  2 -> F2
-  2 -> 1 [label = "<2>a"]
-  2 -> 2 [label = "<3>b"]
-}
-EOF
+  1 -> 3 [label = "<3>b"]
+  3 -> F3
+  3 -> 1 [label = "<2>a"]
+  3 -> 3 [label = "<3>b"]
+}''')
 
-check '(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -770,63 +742,30 @@ digraph
     I0
     F0
     F1
-    F2
+    F3
   }
   {
     node [shape = circle]
     0
     1
-    2
+    3
   }
   I0 -> 0
   0 -> F0 [label = "<14>"]
   0 -> 1 [label = "<6>a"]
-  0 -> 2 [label = "<10>b"]
+  0 -> 3 [label = "<10>b"]
   1 -> F1 [label = "<7>"]
   1 -> 1 [label = "<3>a"]
-  1 -> 2 [label = "<5>b"]
-  2 -> F2 [label = "<7>"]
-  2 -> 1 [label = "<3>a"]
-  2 -> 2 [label = "<5>b"]
-}
-EOF
+  1 -> 3 [label = "<5>b"]
+  3 -> F3 [label = "<7>"]
+  3 -> 1 [label = "<3>a"]
+  3 -> 3 [label = "<5>b"]
+}''')
 
-check '(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>' <<\EOF
-digraph
+check('(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
+'''digraph
 {
   vcsn_context = "lal_char(ab)_z"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-    F2
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-  }
-  I0 -> 0
-  0 -> F0 [label = "<14>"]
-  0 -> 1 [label = "<6>a"]
-  1 -> 2 [label = "b"]
-  2 -> F2 [label = "<35>"]
-  2 -> 1 [label = "<15>a"]
-}
-EOF
-
-fail '(?@lal_char(ab)_z)a**'
-
-## ---------- ##
-## ZR: star.  ##
-## ---------- ##
-
-check '(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
-digraph
-{
-  vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
@@ -838,21 +777,24 @@ digraph
     node [shape = circle]
     0
     1
-    2
     3
   }
   I0 -> 0
-  0 -> F0 [label = "<e*>"]
-  0 -> 1 [label = "<e*>a"]
-  1 -> 2 [label = "b"]
-  2 -> 3 [label = "c"]
-  3 -> F3 [label = "<e*>"]
-  3 -> 1 [label = "<e*>a"]
-}
-EOF
+  0 -> F0 [label = "<14>"]
+  0 -> 1 [label = "<6>a"]
+  1 -> 3 [label = "b"]
+  3 -> F3 [label = "<35>"]
+  3 -> 1 [label = "<15>a"]
+}''')
 
-check '(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
-digraph
+xfail('(?@lal_char(ab)_z)a**')
+
+## ---------- ##
+## ZR: star.  ##
+## ---------- ##
+
+check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
+'''digraph
 {
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
@@ -860,19 +802,45 @@ digraph
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
     F0
-    F2
+    F5
   }
   {
     node [shape = circle]
     0
-    1
     2
+    4
+    5
   }
   I0 -> 0
   0 -> F0 [label = "<e*>"]
-  0 -> 1 [label = "<e*>a"]
-  1 -> 2 [label = "b"]
-  2 -> F2 [label = "<fe*>"]
-  2 -> 1 [label = "<fe*>a"]
-}
-EOF
+  0 -> 2 [label = "<e*>a"]
+  2 -> 4 [label = "b"]
+  4 -> 5 [label = "c"]
+  5 -> F5 [label = "<e*>"]
+  5 -> 2 [label = "<e*>a"]
+}''')
+
+check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
+'''digraph
+{
+  vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F4
+  }
+  {
+    node [shape = circle]
+    0
+    2
+    4
+  }
+  I0 -> 0
+  0 -> F0 [label = "<e*>"]
+  0 -> 2 [label = "<e*>a"]
+  2 -> 4 [label = "b"]
+  4 -> F4 [label = "<fe*>"]
+  4 -> 2 [label = "<fe*>a"]
+}''')
