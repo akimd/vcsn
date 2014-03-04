@@ -16,9 +16,7 @@ check()
     do
       if test -d "$distdir"; then
         # Taken from Automake's am__remove_distdir.
-        find "$distdir" -type d ! -perm -200 -exec chmod u+w {} ';' \
-            && rm -rf "$distdir" \
-            || { sleep 5 && rm -rf "$distdir"; };
+        find "$distdir" -type d ! -perm -200 -exec chmod u+w {} ';'
       fi
     done
     exit $sta
