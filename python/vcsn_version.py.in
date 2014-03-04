@@ -1,0 +1,6 @@
+import os
+
+# Where the automaton library is stored.
+datadir = os.environ['VCSN_DATA_PATH'] if 'VCSN_DATA_PATH' in os.environ \
+          else '@DATADIR@'
+version = '@PACKAGE_VERSION@'

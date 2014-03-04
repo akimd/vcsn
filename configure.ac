@@ -147,7 +147,7 @@ if test "$vcsn_cv_cxx_is_clang" = no; then
       [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
 fi
 
-# vcsn.py.
+# Check for Python, for the VCSN Python interface.
 AM_PATH_PYTHON
 
 BOOST_REQUIRE([1.49])
@@ -209,6 +209,6 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([bin/vcsn], [chmod +x bin/vcsn])
 AC_CONFIG_FILES([tests/bin/vcsn], [chmod +x tests/bin/vcsn])
 
-AC_CONFIG_FILES([python/vcsn.py:python/vcsn.in.py])
+AC_CONFIG_FILES([python/vcsn_version.py:python/vcsn_version.py.in])
 
 AC_OUTPUT

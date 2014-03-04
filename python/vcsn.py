@@ -1,10 +1,6 @@
-from vcsn_python import *
 import os, re
-
-# Where the automaton library is stored.
-datadir = os.environ['VCSN_DATA_PATH'] if 'VCSN_DATA_PATH' in os.environ \
-          else '@DATADIR@'
-version = '@PACKAGE_VERSION@'
+from vcsn_version import *
+from vcsn_python import *
 
 def dot_to_svg(dot, engine="dot"):
     "Return the conversion of a Dot source into SVG."

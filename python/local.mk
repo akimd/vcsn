@@ -1,4 +1,5 @@
-nodist_python_PYTHON = %D%/vcsn.py
+dist_python_PYTHON = %D%/vcsn.py
+nodist_python_PYTHON = %D%/vcsn_version.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_python.la
 %C%_vcsn_python_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
@@ -14,8 +15,10 @@ pyexec_LTLIBRARIES = %D%/vcsn_python.la
 DASH = -
 install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
-# Provide a simple means to express dependencies for Python tests.
-VCSN_PYTHON_DEPS = $(nodist_python_PYTHON) $(pyexec_LTLIBRARIES)
+# A simple means to express dependencies for Python tests.
+VCSN_PYTHON_DEPS =				\
+  $(dist_python_PYTHON) $(nodist_python_PYTHON)	\
+  $(pyexec_LTLIBRARIES)
 
 # A short-hand to update all the python dependencies.
 .PHONY: python

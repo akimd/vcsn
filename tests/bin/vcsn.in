@@ -21,7 +21,7 @@ PATH=$abs_builddir/bin:$abs_srcdir/bin:$PATH
 export PATH
 
 # Use the non-installed Python modules, and its libraries.
-PYTHONPATH=$abs_builddir/python:$abs_builddir/python/.libs:$PYTHONPATH
+PYTHONPATH=$abs_srcdir/python:$abs_builddir/python:$abs_builddir/python/.libs:$PYTHONPATH
 export PYTHONPATH
 LD_LIBRARY_PATH=$abs_builddir/lib/.libs:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
