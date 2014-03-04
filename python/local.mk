@@ -1,5 +1,13 @@
-dist_python_PYTHON = %D%/vcsn.py
 nodist_python_PYTHON = %D%/vcsn_version.py
+
+vcsn_pythondir = $(pythondir)/vcsn
+vcsn_python_PYTHON =                            \
+  %D%/vcsn/__init__.py                          \
+  %D%/vcsn/automaton.py                         \
+  %D%/vcsn/context.py                           \
+  %D%/vcsn/polynomial.py                        \
+  %D%/vcsn/ratexp.py                            \
+  %D%/vcsn/weight.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
 %C%_vcsn_cxx_la_CPPFLAGS = $(AM_CPPFLAGS) $(BOOST_PYTHON_CPPFLAGS)
@@ -16,9 +24,10 @@ DASH = -
 install$(DASH)pyexecLTLIBRARIES: install-pkglibLTLIBRARIES install-libLTLIBRARIES
 
 # A simple means to express dependencies for Python tests.
-VCSN_PYTHON_DEPS =				\
-  $(dist_python_PYTHON) $(nodist_python_PYTHON)	\
-  $(pyexec_LTLIBRARIES)
+VCSN_PYTHON_DEPS =                              \
+  $(nodist_python_PYTHON)                       \
+  $(pyexec_LTLIBRARIES)                         \
+  $(vcsn_python_PYTHON)
 
 # A short-hand to update all the python dependencies.
 .PHONY: python
