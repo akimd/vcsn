@@ -114,5 +114,3 @@ digraph
   1 -> 1 [label = "a", color = DimGray]
 }
 ''')
-
-PLAN()

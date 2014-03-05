@@ -61,5 +61,3 @@ digraph
 ''')
 CHECK_EQ(False, a.is_ambiguous())
 CHECK_EQ(True, a.is_deterministic())
-
-PLAN()

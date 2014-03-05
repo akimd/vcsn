@@ -33,5 +33,3 @@ check(True, b, b)
 check(False, a, b)
 check(True, a+'+'+b, a+'+'+b)
 check(True, a+'+'+b, b+'+'+a)
-
-PLAN()

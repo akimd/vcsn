@@ -161,5 +161,3 @@ check(vcsn.context('lal_char(abc)_z').ratexp('<2>(a+b)<3>'),
        'atom': 2,
        'lweight': 1,
        'rweight': 1})
-
-PLAN()

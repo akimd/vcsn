@@ -39,5 +39,3 @@ check('(ab)*', '(ba)*')
 ctx = vcsn.context('law_char(abcd)_ratexpset<law_char(efgh)_ratexpset<law_char(xyz)_z>>')
 check('<<<2>xy>ef>abcd', '<<<2>yx>fe>dcba')
 check('<ef>(abcd)*<gh>', '<hg>(dcba)*<fe>')
-
-PLAN()

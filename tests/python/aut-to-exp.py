@@ -58,5 +58,3 @@ check_exp('(?@lal_char(abc)_z)<2>(<3>a+<5>b)<7>c<11>', \
 # Likewise, but check the order of the products.
 check_exp('(?@lal_char(abc)_ratexpset<lal_char(vwxyz)_b>)<v>(<w>a+<x>b)<y>c<z>', \
       '(<vw>a<y>c+<vx>b<y>c)<z>')
-
-PLAN()

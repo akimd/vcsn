@@ -170,5 +170,3 @@ check_br('(<x>a)*', 'a', '<x>(<x>a)*')
 check_br('(<x>a)*', 'b', '\z')
 check_br('<x>a*',   'a', '<x>a*')
 check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
-
-PLAN()

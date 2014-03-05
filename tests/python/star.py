@@ -142,6 +142,3 @@ digraph
   2 -> 1 [label = "<yz*x>a"]
 }
 ''')
-
-PLAN()
-

@@ -67,5 +67,3 @@ digraph
   3 -> 2 [label = "b"]
 }
 '''))
-
-PLAN()

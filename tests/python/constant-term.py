@@ -52,5 +52,3 @@ check('x*', '(<x>\e)*')
 
 # Test left and right weight.
 check('xy*z', '<x>(<y>\e)*<z>')
-
-PLAN()

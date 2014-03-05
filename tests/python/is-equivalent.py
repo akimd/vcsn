@@ -28,5 +28,3 @@ check(False, '\z', '\e')
 check(False, 'a', 'b')
 check(False, 'ab', 'ba')
 check(False, 'aa*', 'a*')
-
-PLAN()

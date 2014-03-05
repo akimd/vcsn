@@ -71,4 +71,8 @@ def CHECK_EQ(expected, effective):
                                    fromfile='expected', tofile='effective'))
 
 def PLAN():
+    "TAP requires that we announce the plan: the number of tests."
     print('1..'+str(count))
+
+import atexit
+atexit.register(PLAN)

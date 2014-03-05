@@ -231,5 +231,3 @@ CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb
     .shuffle(a['d'])
     .enumerate(10)
     .format('list'))
-
-PLAN()

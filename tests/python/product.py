@@ -241,5 +241,3 @@ a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
 CHECK_EQ('<abcd>x', str((a['a'] & a['b'] & a['c'] & a['d']).enumerate(10)))
-
-PLAN()

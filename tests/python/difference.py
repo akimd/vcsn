@@ -20,5 +20,3 @@ check('(a+b)*', '(a+b)*',        '\z')
 check('a(ba)*', '(ab)*a', '\z')
 
 check('(?@lal_char(ab)_z)(<2>a+<3>b)*', '(a+b)*a(a+b)*', '(<3>b)*')
-
-PLAN()

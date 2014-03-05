@@ -101,5 +101,3 @@ alreadyminimal = vcsn.context('lal_char(ab)_b') \
                      .derived_term()
 check('moore', alreadyminimal, alreadyminimal)
 check('signature', alreadyminimal, alreadyminimal)
-
-PLAN()

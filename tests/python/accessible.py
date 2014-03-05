@@ -405,5 +405,3 @@ digraph
   2 -> 0 [label = "a"]
 }
 ''')
-
-PLAN()

@@ -72,5 +72,3 @@ check_sum('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_sum('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
 check_sum('a', '\e')
 check_sum('a', '\z')
-
-PLAN()

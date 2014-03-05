@@ -21,5 +21,3 @@ check('<x>a*', 1)
 check('a*+b*+c+c*', 1)
 check('(a*+b*+c+c*)*', 2)
 check('(<x>a*+<y*>b*+c+c*)*', 2)
-
-PLAN()

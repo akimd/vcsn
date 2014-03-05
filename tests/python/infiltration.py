@@ -208,5 +208,3 @@ CHECK_EQ('''<abcd>x
     .infiltration(a['d'])
     .enumerate(10)
     .format('list'))
-
-PLAN()

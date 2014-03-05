@@ -8,5 +8,3 @@ a = vcsn.automaton.load(medir + '/lao.gv')
 for i in [0, 1, 2]:
     CHECK_EQ(vcsn.automaton.load(medir + '/lao-elim-{}.gv'.format(i)).sort(),
              a.eliminate_state(i).sort())
-
-PLAN()

@@ -36,5 +36,3 @@ digraph {
 }
 ''')
 CHECK_EQ(True, a.is_complete())
-
-PLAN()

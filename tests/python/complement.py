@@ -105,5 +105,3 @@ CHECK_EQ(True, a.complement().is_equivalent(o))
 
 # Involution.
 CHECK_EQ(True, a.complement().complement().is_equivalent(a))
-
-PLAN()

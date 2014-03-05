@@ -94,5 +94,3 @@ if os.environ.get('VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER') != None:
     }"""
 
     check(True, a)
-
-PLAN()

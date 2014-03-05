@@ -481,5 +481,3 @@ if os.environ.get('VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER') != None:
       1 -> 2 [label = "(\\\\e, y)"]
       2 -> F2
     }''')
-
-PLAN()

@@ -36,5 +36,3 @@ check('(a+b+\e)((a+ba)(ca+cc))*',\
       '(aca+acc+baca+bacc)*+a(aca+acc+baca+bacc)*+b(aca+acc+baca+bacc)*')
 
 check('a(b(c+a)*+c(b)*)+ac(\e+b)(b*)', '<2>(acb*)+ab(a+c)*+acbb*')
-
-PLAN()

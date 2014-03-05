@@ -27,5 +27,3 @@ check('lat<lal_char(ba),lan_char(vu), law_char(x-z)>_lat<ratexpset<lat<lal_char(
 
 check('lat<lal_char(ba), lat<lan_char(vu),law_char(x-z)>>_lat<ratexpset<lat<lal_char(fe), lal_char(hg)>_lat<r, q>>, lat<b, z>>',
       'lat<lal_char(ab),lat<lan_char(uv),law_char(xyz)>>_lat<ratexpset<lat<lal_char(ef),lal_char(gh)>_lat<r,q>>,lat<b,z>>')
-
-PLAN()
