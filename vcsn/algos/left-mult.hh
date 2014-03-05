@@ -37,9 +37,6 @@ namespace vcsn
       right_mult_here(automaton_t& res, const weight_t& w)
       {
         require(is_standard(res), __func__, ": input must be standard");
-
-        weightset_t ws(*res.context().weightset());
-
         for (auto t: res.final_transitions())
           res.rmul_weight(t, w);
         return res;
