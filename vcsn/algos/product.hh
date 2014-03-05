@@ -10,6 +10,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -44,8 +45,8 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
 
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(std::move(sort(lhs)))
-        , rhs_(std::move(sort(rhs)))
+        : lhs_(lhs)
+        , rhs_(rhs)
         , res_(join(lhs_.context(), rhs_.context()))
       {}
 
@@ -165,8 +166,8 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
-      const Lhs lhs_;
-      const Rhs rhs_;
+      const Lhs& lhs_;
+      const Rhs& rhs_;
 
       /// Map (left-state, right-state) -> product-state.
       using map = std::map<pair_t, state_t>;
@@ -256,6 +257,13 @@ namespace vcsn
         res_.add_transition(src, state(ldst, rdst), label, weight);
       }
 
+      template <typename Aut>
+      struct transition
+      {
+        typename Aut::weight_t wgt;
+        typename Aut::state_t dst;
+      };
+
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
@@ -264,52 +272,27 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        // This relies on outgoing transitions being sorted by label
-        // by the sort algorithm: thanks to that property we can scan
-        // the two successor lists in lockstep.
-        auto ls = lhs_.all_out(psrc.first);
-        auto rs = rhs_.all_out(psrc.second);
-        auto li = ls.begin();
-        auto ri = rs.begin();
-        for (/* Nothing. */;
-             li != ls.end() && ri != rs.end();
-             ++ li)
-          {
-            auto lt = *li;
-            label_t label = lhs_.label_of(lt);
-            // Skip right-hand transitions with labels we don't have
-            // on the left hand.
-            while (labelset_t::less_than(rhs_.label_of(*ri), label))
-              if (++ ri == rs.end())
-                return;
+        std::multimap<typename Lhs::label_t, transition<Lhs>> lhs;
+        for (auto t: lhs_.all_out(psrc.first))
+          lhs.emplace(lhs_.label_of(t),
+                      transition<Lhs>{lhs_.weight_of(t), lhs_.dst_of(t)});
 
-            // If the smallest label on the right-hand side is bigger
-            // than the left-hand one, we have no hope of ever adding
-            // transitions with this label.
-            if (labelset_t::less_than(label, rhs_.label_of(*ri)))
-              continue;
+        std::multimap<typename Rhs::label_t, transition<Rhs>> rhs;
+        for (auto t: rhs_.all_out(psrc.second))
+          rhs.emplace(rhs_.label_of(t),
+                      transition<Rhs>{rhs_.weight_of(t), rhs_.dst_of(t)});
 
-            assert(labelset_t::equals(label, rhs_.label_of(*ri)));
-            auto rstart = ri;
-            while (labelset_t::equals(rhs_.label_of(*ri), label))
-              {
-                // These are always new transitions: first because the
-                // source state is visited for the first time, and
-                // second because the couple (left destination, label)
-                // is unique, and so is (right destination, label).
-                new_transition(src, lhs_.dst_of(lt), rhs_.dst_of(*ri), label,
-                               mul_(ws,
-                                    lhs_.weight_of(lt), rhs_.weight_of(*ri)));
-
-                if (++ ri == rs.end())
-                  break;
-              }
-
-            // Move the right-hand iterator back to the beginning of
-            // the matching part.  This will be needed if the next
-            // left-hand transition has the same label.
-            ri = rstart;
-          }
+        for (auto t: zip_maps(lhs, rhs))
+          // These are always new transitions: first because the
+          // source state is visited for the first time, and second
+          // because the couple (left destination, label) is unique,
+          // and so is (right destination, label).
+          new_transition
+            (src,
+             std::get<0>(t.second).dst, std::get<1>(t.second).dst,
+             t.first,
+             mul_(ws,
+                  std::get<0>(t.second).wgt, std::get<1>(t.second).wgt));
       }
 
       /// Add transitions to the given result automaton, starting from
