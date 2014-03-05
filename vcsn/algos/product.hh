@@ -12,6 +12,8 @@
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/misc/zip-maps.hh>
 
+//# include <vcsn/misc/echo.hh>
+
 namespace vcsn
 {
 
@@ -263,6 +265,39 @@ namespace vcsn
         typename Aut::weight_t wgt;
         typename Aut::state_t dst;
       };
+      
+      using lhs_map_t = std::multimap<typename Lhs::label_t, transition<Lhs>>;
+      std::unordered_map<typename Lhs::state_t, lhs_map_t> lhs_maps_;
+
+      lhs_map_t&
+      lhs_map_for(typename Lhs::state_t s)
+      {
+        auto p = lhs_maps_.emplace(s, lhs_map_t{});
+        auto& res = p.first->second;
+        if (p.second)
+          // First insertion.
+          for (auto t: lhs_.all_out(s))
+            res.emplace(lhs_.label_of(t),
+                        transition<Lhs>{lhs_.weight_of(t), lhs_.dst_of(t)});
+        return res;
+      }
+
+      using rhs_map_t = std::multimap<typename Rhs::label_t, transition<Rhs>>;
+      std::unordered_map<typename Rhs::state_t, rhs_map_t> rhs_maps_;
+
+      rhs_map_t&
+      rhs_map_for(typename Rhs::state_t s)
+      {
+        auto p = rhs_maps_.emplace(s, rhs_map_t{});
+        auto& res = p.first->second;
+        if (p.second)
+          // First insertion.
+          for (auto t: rhs_.all_out(s))
+            res.emplace(rhs_.label_of(t),
+                        transition<Rhs>{rhs_.weight_of(t), rhs_.dst_of(t)});
+        return res;
+      }
+
 
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
@@ -272,27 +307,27 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        std::multimap<typename Lhs::label_t, transition<Lhs>> lhs;
-        for (auto t: lhs_.all_out(psrc.first))
-          lhs.emplace(lhs_.label_of(t),
-                      transition<Lhs>{lhs_.weight_of(t), lhs_.dst_of(t)});
-
-        std::multimap<typename Rhs::label_t, transition<Rhs>> rhs;
-        for (auto t: rhs_.all_out(psrc.second))
-          rhs.emplace(rhs_.label_of(t),
-                      transition<Rhs>{rhs_.weight_of(t), rhs_.dst_of(t)});
-
+        auto& lhs = lhs_map_for(psrc.first);
+        auto& rhs = rhs_map_for(psrc.second);
         for (auto t: zip_maps(lhs, rhs))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
           // and so is (right destination, label).
-          new_transition
-            (src,
-             std::get<0>(t.second).dst, std::get<1>(t.second).dst,
-             t.first,
-             mul_(ws,
-                  std::get<0>(t.second).wgt, std::get<1>(t.second).wgt));
+          {
+//            SHOWH(V(src)
+//                 << V(std::get<0>(t.second).dst)
+//                 << V(std::get<1>(t.second).dst)
+//                 << V(t.first)
+//                 << V(std::get<0>(t.second).wgt)
+//                 << V(std::get<1>(t.second).wgt));
+            new_transition
+              (src,
+               std::get<0>(t.second).dst, std::get<1>(t.second).dst,
+               t.first,
+               mul_(ws,
+                    std::get<0>(t.second).wgt, std::get<1>(t.second).wgt));
+          }
       }
 
       /// Add transitions to the given result automaton, starting from
