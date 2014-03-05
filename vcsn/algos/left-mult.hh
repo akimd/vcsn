@@ -64,6 +64,26 @@ namespace vcsn
     return res;
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut, typename WeightSet>
+      automaton
+      left_mult(const automaton& aut, const weight& weight)
+      {
+        const auto& a = aut->as<Aut>();
+        const auto& w = weight->as<WeightSet>().weight();
+        return make_automaton(left_mult(a, w));
+      }
+
+      REGISTER_DECLARE(left_mult,
+                       (const automaton&, const weight&) -> automaton);
+
+    }
+  }
+
   /*------------------------.
   | right-mult(automaton).  |
   `------------------------*/
@@ -88,26 +108,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-----------------.
-      | dyn::left_mult.  |
-      `-----------------*/
-
-      template <typename Aut, typename WeightSet>
-      automaton
-      left_mult(const automaton& aut, const weight& weight)
-      {
-        const auto& a = aut->as<Aut>();
-        const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(left_mult(a, w));
-      }
-
-      REGISTER_DECLARE(left_mult,
-                        (const automaton&, const weight&) -> automaton);
-
-      /*------------------.
-      | dyn::right_mult.  |
-      `------------------*/
-
+      /// Bridge.
       template <typename Aut, typename WeightSet>
       automaton
       right_mult(const automaton& aut, const weight& weight)
@@ -118,7 +119,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(right_mult,
-                        (const automaton&, const weight&) -> automaton);
+                       (const automaton&, const weight&) -> automaton);
     }
   }
 }
