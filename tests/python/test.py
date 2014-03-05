@@ -32,7 +32,7 @@ def FAIL(*msg):
     count += 1
     # Don't display multi-line failure messages, only the first line
     # will be reported anyway by the TAP driver.
-    m = ' '.join(*msg)
+    m = ' '.join(msg)
     if m.count("\n") == 0:
         print('not ok ', count, m)
     else:
