@@ -27,7 +27,9 @@ $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
   %D%/zrr.rat
 
 dist_TESTS += $(%C%_TESTS)
-EXTRA_DIST += $(AM_RAT_LOG_DEPS)
+EXTRA_DIST +=					\
+  $(RAT_LOG_DRIVER)				\
+  %D%/common.rat %D%/common-weights.rat
 
 # These tests check that the test suite does catch errors.
 %C%_XFAIL_TESTS =                               \
