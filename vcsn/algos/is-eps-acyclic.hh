@@ -13,7 +13,7 @@ namespace vcsn
   {
 
     template <typename Aut,
-              bool has_one = !Aut::context_t::is_lal && !Aut::context_t::is_lat>
+              bool has_one = Aut::context_t::has_one()>
     struct epsilon_acyclic;
 
     /**

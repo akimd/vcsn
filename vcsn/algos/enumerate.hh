@@ -13,6 +13,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/labelset/letterset.hh>
+# include <vcsn/labelset/nullableset.hh>
 # include <vcsn/labelset/wordset.hh>
 # include <vcsn/weights/polynomialset.hh>
 
@@ -60,6 +61,46 @@ namespace vcsn
       static type context(const in_type& ctx)
       {
         return {*ctx.labelset()->genset(), *ctx.weightset()};
+      }
+
+      using polynomialset_t = polynomialset<type>;
+
+      polynomialset_t
+      word_polynomialset(const in_type& ctx)
+      {
+        return context(ctx);
+      }
+    };
+
+    template <typename GenSet, typename WeightSet>
+    struct law_traits<ctx::context<nullableset<wordset<GenSet>>, WeightSet>>
+    {
+      using in_type = ctx::context<nullableset<wordset<GenSet>>, WeightSet>;
+      using type = ctx::context<wordset<GenSet>, WeightSet>;
+
+      static type context(const in_type& ctx)
+      {
+        return ctx;
+      }
+
+      using polynomialset_t = polynomialset<type>;
+
+      polynomialset_t
+      word_polynomialset(const in_type& ctx)
+      {
+        return context(ctx);
+      }
+    };
+
+    template <typename GenSet, typename WeightSet>
+    struct law_traits<ctx::context<nullableset<letterset<GenSet>>, WeightSet>>
+    {
+      using in_type = ctx::context<nullableset<letterset<GenSet>>, WeightSet>;
+      using type = ctx::context<wordset<GenSet>, WeightSet>;
+
+      static type context(const in_type& ctx)
+      {
+        return {*ctx.labelset()->labelset()->genset(), *ctx.weightset()};
       }
 
       using polynomialset_t = polynomialset<type>;

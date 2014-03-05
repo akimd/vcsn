@@ -114,6 +114,11 @@ namespace vcsn
       return false;
     }
 
+    static constexpr bool has_one()
+    {
+      return true;
+    }
+
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARRABLE;

@@ -28,7 +28,6 @@ namespace vcsn
       enum
         {
           is_lal = vcsn::is_lal<context>::value,
-          is_lan = vcsn::is_lan<context>::value,
           is_lao = vcsn::is_lao<context>::value,
           is_lar = vcsn::is_lar<context>::value,
           is_lat = vcsn::is_lat<context>::value,
@@ -132,6 +131,12 @@ namespace vcsn
       const weightset_ptr& weightset() const
       {
         return ws_;
+      }
+
+      static constexpr bool
+      has_one()
+      {
+        return labelset_t::has_one();
       }
 
     private:

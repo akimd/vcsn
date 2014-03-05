@@ -27,6 +27,8 @@ namespace vcsn
 
       using super_type = typename Context::const_visitor;
 
+      static_assert(context_t::has_one(), "requires nullable labels");
+
       constexpr static const char* me() { return "thompson"; }
 
       thompson_visitor(const context_t& ctx)

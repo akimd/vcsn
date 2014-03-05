@@ -156,7 +156,7 @@ namespace vcsn
     template <typename Aut>
     class fadoer: public outputter<Aut>
     {
-      static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
+      static_assert(Aut::context_t::is_lal,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<typename Aut::weight_t, bool>::value,
@@ -192,7 +192,7 @@ namespace vcsn
 
     private:
       template <typename A>
-      typename std::enable_if<A::context_t::is_lal,
+      typename std::enable_if<!A::context_t::has_one(),
                               bool>::type
       is_deterministic_(const A& a)
       {
@@ -200,7 +200,7 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<A::context_t::is_lan,
+      typename std::enable_if<A::context_t::has_one(),
                               bool>::type
       is_deterministic_(const A&)
       {
@@ -253,7 +253,7 @@ namespace vcsn
     template <typename Aut>
     class grailer: public outputter<Aut>
     {
-      static_assert(Aut::context_t::is_lal | Aut::context_t::is_lan,
+      static_assert(Aut::context_t::is_lal,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<typename Aut::weight_t, bool>::value,

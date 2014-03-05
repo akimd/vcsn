@@ -562,7 +562,7 @@ namespace vcsn
     }
 
     template <typename context>
-    typename std::enable_if<context::is_lal && !context::is_lan,
+    typename std::enable_if<context::is_lal && !context::has_one(),
                             std::ostream&>::type
     print_ctx(std::ostream& out, const value_t& v,
               const std::string& format = "text",
@@ -572,7 +572,7 @@ namespace vcsn
     }
 
     template <typename context>
-    typename std::enable_if<context::is_lal && context::is_lan,
+    typename std::enable_if<context::is_lal && context::has_one(),
                             std::ostream&>::type
     print_ctx(std::ostream& out, const value_t& v,
               const std::string& format = "text",

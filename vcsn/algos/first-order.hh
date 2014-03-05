@@ -382,7 +382,7 @@ namespace vcsn
                             {
                               static auto one =
                                 one_(std::integral_constant<bool,
-                                     context_t::is_lan>());
+                                     context_t::has_one()>());
                               auto w = ws_.ldiv(lm.second, rm.second);
                               ps_.add_weight(res_.polynomials[one],
                                              q, w);

@@ -1,6 +1,7 @@
 #ifndef VCSN_LABELSET_NULLABLESET_HH
 # define VCSN_LABELSET_NULLABLESET_HH
 
+# include <cstring> //strncmp
 # include <memory>
 # include <set>
 # include <sstream>
@@ -17,6 +18,7 @@ namespace vcsn
 {
 
   namespace detail {
+
     template <typename LabelSet>
     struct nullable_helper
     {
@@ -30,7 +32,7 @@ namespace vcsn
         //        |   |    +-- gens
         //        |   +-- letter_type
         //        +-- kind
-        null::kind_t::make(is);
+        null::make_nullableset_kind(is);
         eat(is, '<');
         auto ls = null::labelset_t::make(is);
         eat(is, '>');
@@ -60,7 +62,7 @@ namespace vcsn
         //        |   |    +-- gens
         //        |   +-- letter_type
         //        +-- kind
-        null::kind_t::make(is);
+        null::make_nullableset_kind(is);
         if (is.peek() == '_')
         {
           eat(is, '_');
@@ -91,7 +93,7 @@ namespace vcsn
       using labelset_t = LabelSet;
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using self_type = nullableset;
-      using kind_t = labels_are_nullable;
+      using kind_t = typename labelset_t::kind_t;
 
       using value_t = typename LabelSet::value_t;
 
@@ -191,8 +193,19 @@ namespace vcsn
           ls_->print(o, l, format);
         return o;
       }
-    private:
 
+      static void
+      make_nullableset_kind(std::istream& is)
+      {
+        char kind[4];
+        is.get(kind, sizeof kind);
+        if (strncmp("lan", kind, 4))
+          throw std::runtime_error("kind::make: unexpected: "
+                                   + str_escape(kind)
+                                   + ", expected: " + "lan");
+      }
+
+    private:
       labelset_ptr ls_;
     };
 

@@ -36,11 +36,61 @@ namespace vcsn
   {
     namespace detail
     {
+
+      template <typename Ctx>
+      bool
+      register_letter_functions(std::true_type)
+      {
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+        // Word polynomialset.
+        using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
+        using rs_t = ratexpset<Ctx>;
+
+        // Same weightset, but letterset.
+        using letterset_t = letterset<typename ctx_t::labelset_t::genset_t>;
+        using l_ctx_t = context<letterset_t, typename ctx_t::weightset_t>;
+        using l_aut_t = mutable_automaton<l_ctx_t>;
+
+        // Letterset -> B RatE.
+        using lb_ctx_t = context<letterset_t, b>;
+        using lbr_ctx_t = context<letterset_t, ratexpset<lb_ctx_t>>;
+        using lbr_aut_t = mutable_automaton<lbr_ctx_t>;
+
+        using namespace dyn::detail;
+
+        REGISTER(de_bruijn, ctx_t, unsigned);
+        REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
+        REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
+        REGISTER(ladybird, ctx_t, unsigned);
+        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
+        REGISTER(u, ctx_t, unsigned);
+
+        REGISTER(union_a, aut_t, l_aut_t);
+        REGISTER(union_a, l_aut_t, aut_t);
+        REGISTER(union_a, aut_t, lbr_aut_t);
+        REGISTER(union_a, lbr_aut_t, aut_t);
+
+        // Ensure that we can at least print the resulting
+        // automata.
+        // FIXME: we really need something fine grained.
+        REGISTER(dot, lbr_aut_t, std::ostream);
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_letter_functions(std::false_type)
+      {
+        return true;
+      }
+
       template <typename Ctx>
       bool
       register_kind_functions(labels_are_letters)
       {
-        using aut_t = mutable_automaton<Ctx>;
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
         // Word polynomialset.
         using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
         using rs_t = ratexpset<Ctx>;
@@ -83,6 +133,10 @@ namespace vcsn
         REGISTER(shuffle, aut_t, b_aut_t);
         REGISTER(shuffle, b_aut_t, aut_t);
         REGISTER(u, Ctx, unsigned);
+
+        register_letter_functions<ctx_t>
+          (std::integral_constant<bool, ctx_t::has_one()>());
+
 
         return true;
       }

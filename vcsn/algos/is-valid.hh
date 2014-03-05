@@ -26,7 +26,7 @@ namespace vcsn
   namespace detail
   {
 
-    template <typename Aut, typename Kind = typename Aut::kind_t>
+    template <typename Aut, bool has_one = Aut::context_t::has_one()>
     class is_valider
     {
     public:
@@ -112,7 +112,7 @@ namespace vcsn
     };
 
     template <typename Aut>
-    class is_valider<Aut, labels_are_letters>
+    class is_valider<Aut, false>
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
     public:

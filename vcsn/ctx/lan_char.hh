@@ -4,6 +4,7 @@
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/labelset/nullableset.hh>
+# include <vcsn/ctx/lal_char.hh>
 
 namespace vcsn
 {
