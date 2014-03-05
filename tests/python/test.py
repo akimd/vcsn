@@ -30,7 +30,13 @@ def here():
 def FAIL(*msg):
     global count
     count += 1
-    print('not ok ', count, *msg)
+    # Don't display multi-line failure messages, only the first line
+    # will be reported anyway by the TAP driver.
+    m = ' '.join(*msg)
+    if m.count("\n") == 0:
+        print('not ok ', count, m)
+    else:
+        print('not ok ', count)
     print(here() + ": fail:", *msg)
     print()
 
