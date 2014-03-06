@@ -210,9 +210,9 @@ namespace vcsn
         }
 
         /// \a getenv(var) if defined, otherwise \a val.
-        std::string xgetenv(const char* var, const char* val)
+        std::string xgetenv(const std::string& var, const std::string& val)
         {
-          const char* cp = getenv(var);
+          const char* cp = getenv(var.c_str());
           return cp ? cp : val;
         }
 
@@ -236,7 +236,7 @@ namespace vcsn
         {
           header("vcsn/ctx/instantiate.hh");
           auto tmp = xgetenv("VCSN_TMPDIR", "/tmp");
-          auto ctxlibdir = xgetenv("VCSN_CTXLIBDIR", "/tmp");
+          auto ctxlibdir = xgetenv("VCSN_CTXLIBDIR", tmp);
           std::string base = ctxlibdir + "/" + context_base::sname(ctx);
           is.str(ctx);
           context();
