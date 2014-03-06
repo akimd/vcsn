@@ -7,6 +7,7 @@
 
 # include <vcsn/dyn/context.hh> // sname
 # include <vcsn/misc/name.hh>
+# include <vcsn/misc/signature.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -25,37 +26,20 @@ namespace vcsn
     /// Whether log messages should be issued.
     bool debug = getenv("VCSN_DYN");
 
-    /// A signature: the name of the input types.
-    using signature_t = std::vector<std::string>;
-
-    std::string
-    to_string(const signature_t& ss) const
-    {
-      std::string res;
-      const char* sep = "";
-      for (auto s: ss)
-        {
-          res += sep;
-          res += s;
-          sep = ", ";
-        }
-      return res;
-    }
-
     /// Register function \a fn for signature \a sig.
-    bool set(const signature_t& sig, Fun fn)
+    bool set(const signature& sig, Fun fn)
     {
       if (debug)
-        std::cerr << "Register(" << name_ << ").set(" << to_string(sig) << ")\n";
+        std::cerr << "Register(" << name_ << ").set(" << sig << ")\n";
       map_[sig] = fn;
       return true;
     }
 
     /// Get function for signature \a sig.
-    const Fun* get0(const signature_t& sig)
+    const Fun* get0(const signature& sig)
     {
       if (debug)
-        std::cerr << "Register(" << name_ << ").get(" << to_string(sig) << ")\n";
+        std::cerr << "Register(" << name_ << ").get(" << sig << ")\n";
       auto i = map_.find(sig);
       if (i == map_.end())
         return nullptr;
@@ -64,17 +48,17 @@ namespace vcsn
     }
 
     /// Get function for signature \a sig.
-    const Fun& get(const signature_t& sig)
+    const Fun& get(const signature& sig)
     {
       if (auto fun = get0(sig))
         return *fun;
       else
         {
           std::string err = (name_ + ": no implementation available for "
-                             + to_string(sig));
+                             + sig.to_string());
           err += "\n  available versions:";
           for (auto p: map_)
-            err += "\n    " + to_string(p.first);
+            err += "\n    " + p.first.to_string();
           raise(err);
         }
     }
@@ -82,7 +66,7 @@ namespace vcsn
     /// Call function for signature \a sig.
     template <typename... Args>
     auto
-    call(const signature_t& sig, Args&&... args)
+    call(const signature& sig, Args&&... args)
       -> decltype(std::declval<Fun>()(args...))
     {
       return (get(sig))(std::forward<Args>(args)...);
@@ -101,7 +85,7 @@ namespace vcsn
     /// Function name (e.g., "determinize").
     std::string name_;
     /// Context name -> pointer to implementation.
-    using map_t = std::map<signature_t, Fun*>;
+    using map_t = std::map<signature, Fun*>;
     map_t map_;
   };
 
@@ -120,8 +104,7 @@ namespace vcsn
     }                                                           \
                                                                 \
     bool                                                        \
-    Name ## _register(const std::vector<std::string>& sig,      \
-                      Name ## _t fn)                            \
+    Name ## _register(const signature& sig, Name ## _t fn)      \
     {                                                           \
       return Name ## _registry().set(sig, fn);                  \
     }                                                           \

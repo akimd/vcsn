@@ -2,10 +2,9 @@
 # define VCSN_DYN_FWD_HH
 
 # include <memory> // shared_ptr
-# include <string> // FIXME: for signatures
-# include <vector> // FIXME: for signatures
 
 # include <vcsn/misc/export.hh> // LIBVCSN_API
+# include <vcsn/misc/fwd.hh>
 
 namespace vcsn
 {
@@ -71,7 +70,6 @@ namespace vcsn
 # define REGISTER_DECLARE(Name, Signature)                      \
   using Name ## _t = auto Signature;                            \
   LIBVCSN_API                                                   \
-  bool Name ## _register(const std::vector<std::string>& sig,   \
-                         Name ## _t fn);
+  bool Name ## _register(const signature& sig, Name ## _t fn);
 
 #endif // !VCSN_DYN_FWD_HH

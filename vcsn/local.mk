@@ -152,6 +152,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/file-library.hxx                     \
   %D%/misc/flex-lexer.hh                        \
   %D%/misc/flyweight.hh                         \
+  %D%/misc/fwd.hh                               \
   %D%/misc/hash.hh                              \
   %D%/misc/indent.hh                            \
   %D%/misc/map.hh                               \
@@ -164,6 +165,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/raise.hh                             \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \
+  %D%/misc/signature.hh                         \
   %D%/misc/set.hxx                              \
   %D%/misc/star_status.hh                       \
   %D%/misc/stream.hh                            \

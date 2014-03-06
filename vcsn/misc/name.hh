@@ -6,6 +6,8 @@
 # include <vector>
 # include <string>
 
+# include <vcsn/misc/signature.hh>
+
 namespace vcsn
 {
 
@@ -36,7 +38,7 @@ namespace vcsn
 
   template <typename ... Args>
   inline
-  std::vector<std::string>
+  signature
   ssignature()
   {
     return {sname<Args>()...};
@@ -100,7 +102,7 @@ namespace vcsn
   /// The signature of (Args...).
   template <typename ... Args>
   inline
-  std::vector<std::string>
+  signature
   vsignature(Args&&... args)
   {
     return {vname(std::forward<Args>(args))...};

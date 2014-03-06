@@ -1,0 +1,4 @@
+namespace vcsn
+{
+  struct signature;
+};
