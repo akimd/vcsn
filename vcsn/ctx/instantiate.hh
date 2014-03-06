@@ -123,7 +123,7 @@ namespace vcsn
   `----------------------------------*/
 
 #define REGISTER(Algo, ...)                                     \
-  Algo ## _register(sname<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+  Algo ## _register(ssignature<__VA_ARGS__>(), Algo<__VA_ARGS__>)
 
   namespace ctx
   {

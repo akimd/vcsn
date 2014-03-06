@@ -9,23 +9,6 @@
 namespace vcsn
 {
 
-  /// A key encoding type strings of \a a and \a b.
-  inline
-  std::string
-  vname(std::initializer_list<std::string> l)
-  {
-    std::string res;
-    bool first = true;
-    for (auto s: l)
-      {
-        if (!first)
-          res += " x ";
-        first = false;
-        res += s;
-      }
-    return res;
-  }
-
   /*---------------.
   | Static names.  |
   `---------------*/
@@ -51,12 +34,12 @@ namespace vcsn
     return sname<T>();
   }
 
-  template <typename T1, typename T2, typename ... Args>
+  template <typename ... Args>
   inline
-  std::string
-  sname()
+  std::vector<std::string>
+  ssignature()
   {
-    return vname({sname<T1>(), sname<T2>(), sname<Args>()...});
+    return {sname<Args>()...};
   }
 
   /*----------------.
@@ -114,13 +97,13 @@ namespace vcsn
   DEFINE(std::ostream);
 #undef DEFINE
 
-  /// A key encoding types of \a a and \a b.
+  /// The signature of (Args...).
   template <typename ... Args>
   inline
-  std::string
-  vname(Args&&... args)
+  std::vector<std::string>
+  vsignature(Args&&... args)
   {
-    return vname({vname(std::forward<Args>(args))...});
+    return {vname(std::forward<Args>(args))...};
   }
 
 } // namespace vcsn

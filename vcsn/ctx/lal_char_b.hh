@@ -64,7 +64,7 @@ namespace vcsn
         using aut_t = mutable_automaton<Ctx>;
 
 #define REGISTER(Algo, ...)                                             \
-        Algo ## _register(sname<__VA_ARGS__>(), dyn::detail::Algo<__VA_ARGS__>)
+        Algo ## _register(ssignature<__VA_ARGS__>(), dyn::detail::Algo<__VA_ARGS__>)
 
         REGISTER(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);

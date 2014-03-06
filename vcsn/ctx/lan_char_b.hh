@@ -55,7 +55,7 @@ namespace vcsn
         using namespace dyn::detail;
 
 #define REGISTER(Algo, ...)                                             \
-        Algo ## _register(sname<__VA_ARGS__>(), Algo<__VA_ARGS__>)
+        Algo ## _register(ssignature<__VA_ARGS__>(), Algo<__VA_ARGS__>)
 
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);

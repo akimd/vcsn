@@ -20,12 +20,13 @@ namespace vcsn
       // If the context is not known, try to compile and load it
       // first.
       auto sname = detail::context_base::sname(name);
-      if (!detail::make_context_registry().get0(sname))
+      // Turn the context name into a signature: {sname}.
+      if (!detail::make_context_registry().get0({sname}))
         {
           vcsn::dyn::detail::translation translate;
           translate.compile(sname);
         }
-      return detail::make_context_registry().call(sname, name);
+      return detail::make_context_registry().call({sname}, name);
     }
 
 
