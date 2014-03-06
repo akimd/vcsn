@@ -99,7 +99,7 @@ bench('a.shuffle(a)     ', 'a = std('+r+')', lambda: a.shuffle(a))
 # infiltration.
 r = "[a-e]?{30}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a.infiltration(sa)', 'a = std('+r+')', lambda: a.infiltration(a))
+bench('a.infiltration(a)', 'a = std('+r+')', lambda: a.infiltration(a))
 
 # power.
 r = "[a-e]*b(<2>[a-e])*"
