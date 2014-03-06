@@ -246,7 +246,7 @@ namespace vcsn
         else if(algo == "moore")
           return make_automaton(minimize(a));
         else if(algo == "signature")
-          return make_automaton(signature::minimize(a));
+          return make_automaton(detail_signature::minimize(a));
         else
           raise("minimize: invalid algorithm: ", str_escape(algo));
       }

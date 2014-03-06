@@ -17,7 +17,7 @@ namespace vcsn
   /*--------------------------------------.
   | minimization with Moore's algorithm.  |
   `--------------------------------------*/
-  namespace signature
+  namespace detail_signature
   {
     template <typename Aut>
     class minimizer
@@ -422,7 +422,7 @@ namespace vcsn
       return minimize();
     }
 
-  } // signature::
+  } // detail_signature::
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_MINIMIZE_SIGNATURE_HH
