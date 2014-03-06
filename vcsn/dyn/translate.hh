@@ -33,7 +33,7 @@ namespace vcsn
         }
 
         /// Return the next word from \a is.
-        /// Stop at any of "<,_>".
+        /// Stop at any of "<,_>", and leave this separator in the stream.
         std::string word()
         {
           std::string res;
@@ -168,7 +168,11 @@ namespace vcsn
         /// Read in \a is a valueset (labelset or weightset).
         void valueset()
         {
-          auto kind = word();
+          valueset(word());
+        }
+
+        void valueset(const std::string& kind)
+        {
           if (kind == "lal"
               || kind == "lan"
               || kind == "lao"
@@ -207,7 +211,8 @@ namespace vcsn
         }
 
         /// \a getenv(var) if defined, otherwise \a val.
-        std::string xgetenv(const std::string& var, const std::string& val)
+        std::string
+        xgetenv(const std::string& var, const std::string& val) const
         {
           const char* cp = getenv(var.c_str());
           return cp ? cp : val;
