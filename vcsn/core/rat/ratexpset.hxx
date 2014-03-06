@@ -70,10 +70,10 @@ namespace vcsn
   | Implementation of ratexpset_base pure virtual methods.  |
   `--------------------------------------------------------*/
 
-  DEFINE::atom(const label_t& v) const
+  DEFINE::atom(const label_t& v)
     -> value_t
   {
-    if (labelset()->is_one(v))
+    if (labelset_t::is_one(v))
       return one();
     return std::make_shared<atom_t>(v);
   }
@@ -417,7 +417,7 @@ namespace vcsn
     return v->type() == type_t::zero;
   }
 
-  DEFINE::is_one(value_t v) const
+  DEFINE::is_one(value_t v)
     -> bool
   {
     return (v->type() == type_t::one);

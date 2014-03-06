@@ -33,5 +33,5 @@ check('lal_char(ab)_lat<b, z>', 'lal_char(ab)_lat<b,z>')
 check('lat<lal_char(ba),lan<lal_char(vu)>, law_char(x-z)>_lat<ratexpset<lat<lal_char(fe), lal_char(hg)>_q>, r, q>',
       'lat<lal_char(ab),lan<lal_char(uv)>,law_char(xyz)>_lat<ratexpset<lat<lal_char(ef),lal_char(gh)>_q>,r,q>')
 
-check('lat<lal_char(ba), lat<lan<lal_char(vu)>,law_char(x-z)>>_lat<ratexpset<lat<lal_char(fe), lal_char(hg)>_lat<r, q>>, lat<b, z>>',
-      'lat<lal_char(ab),lat<lan<lal_char(uv)>,law_char(xyz)>>_lat<ratexpset<lat<lal_char(ef),lal_char(gh)>_lat<r,q>>,lat<b,z>>')
+check('lan<lat<lal_char(ba),lat<lan<lal_char(vu)>,law_char(x-z)>>>_lat<ratexpset<lan<lat<lan_char(fe),lan_char(hg)>>_lat<r, q>>, lat<b, z>>',
+      'lan<lat<lal_char(ab),lat<lan<lal_char(uv)>,law_char(xyz)>>>_lat<ratexpset<lan<lat<lan<lal_char(ef)>,lan<lal_char(gh)>>>_lat<r,q>>,lat<b,z>>')

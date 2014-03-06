@@ -70,14 +70,14 @@ namespace vcsn
       return less_than_(l, r, indices_t{});
     }
 
-    value_t
-    special() const
+    static value_t
+    special()
     {
       return special_(indices_t{});
     }
 
-    bool
-    is_special(const value_t& l) const
+    static bool
+    is_special(const value_t& l)
     {
       return is_special_(l, indices_t{});
     }
@@ -106,8 +106,8 @@ namespace vcsn
       return one_(indices_t{});
     }
 
-    bool
-    is_one(const value_t& l) const
+    static bool
+    is_one(const value_t& l)
     {
       return is_one_(l, indices_t{});
     }
@@ -289,17 +289,17 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    value_t
-    special_(seq<I...>) const
+    static value_t
+    special_(seq<I...>)
     {
-      return std::make_tuple((std::get<I>(sets_).special())...);
+      return std::make_tuple((labelset_t<I>::special())...);
     }
 
     template <std::size_t... I>
-    bool
-    is_special_(const value_t& l, seq<I...>) const
+    static bool
+    is_special_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(std::get<I>(sets_).is_special(std::get<I>(l)))...})
+      for (auto n: {(labelset_t<I>::is_special(std::get<I>(l)))...})
         if (!n)
           return false;
       return true;
@@ -337,10 +337,10 @@ namespace vcsn
     }
 
     template <std::size_t... I>
-    bool
-    is_one_(const value_t& l, seq<I...>) const
+    static bool
+    is_one_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(std::get<I>(sets_).is_one(std::get<I>(l)))...})
+      for (auto n: {(labelset_t<I>::is_one(std::get<I>(l)))...})
         if (!n)
           return false;
       return true;

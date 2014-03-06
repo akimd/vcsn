@@ -83,8 +83,8 @@ namespace vcsn
       return {};
     }
 
-    bool
-    is_empty_word(const word_t& w) const
+    static bool
+    is_empty_word(const word_t& w)
     {
       return w.empty();
     }
@@ -186,13 +186,13 @@ namespace vcsn
     /// Special character, used to label transitions from pre() and to
     /// post().
     template <typename T = letter_t>
-    T special() const;
+    static T special();
   };
 
   template <>
   inline
   char_letters::letter_t
-  char_letters::special<char_letters::letter_t>() const
+  char_letters::special<char_letters::letter_t>()
   {
     return special_letter();
   }
@@ -200,7 +200,7 @@ namespace vcsn
   template <>
   inline
   char_letters::word_t
-  char_letters::special<char_letters::word_t>() const
+  char_letters::special<char_letters::word_t>()
   {
     return {special_letter()};
   }

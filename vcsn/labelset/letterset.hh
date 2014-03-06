@@ -74,10 +74,10 @@ namespace vcsn
       return gs;
     }
 
-    value_t
-    special() const ATTRIBUTE_PURE
+    static value_t
+    special() ATTRIBUTE_PURE
     {
-      return this->genset()->template special<value_t>();
+      return genset_t::template special<value_t>();
     }
 
     /// Whether \a l == \a r.
@@ -99,8 +99,8 @@ namespace vcsn
       return false;
     }
 
-    bool
-    is_special(value_t v) const ATTRIBUTE_PURE
+    static bool
+    is_special(value_t v) ATTRIBUTE_PURE
     {
       return v == special();
     }

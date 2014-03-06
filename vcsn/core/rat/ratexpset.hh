@@ -82,18 +82,18 @@ namespace vcsn
     const labelset_ptr& labelset() const;
     const weightset_ptr& weightset() const;
 
-    auto atom(const label_t& v) const
+    static auto atom(const label_t& v)
       -> value_t;
 
     /// When used as a LabelSet for automata.
-    value_t special() const
+    static value_t special()
     {
-      return atom(labelset()->special());
+      return atom(labelset_t::special());
     }
 
     /// When used as a LabelSet for automata.
     /// When used as WeightSet for automata.
-    bool is_special(value_t v) const
+    static bool is_special(value_t v)
     {
       return equals(special(), v);
     }
@@ -104,7 +104,7 @@ namespace vcsn
     }
 
     bool is_zero(value_t v) const ATTRIBUTE_PURE;
-    bool is_one(value_t v) const ATTRIBUTE_PURE;
+    static bool is_one(value_t v) ATTRIBUTE_PURE;
 
     static constexpr bool is_commutative_semiring()
     {

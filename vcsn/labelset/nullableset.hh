@@ -21,7 +21,9 @@ namespace vcsn
     template <typename LabelSet>
     struct nullable_helper
     {
-      using null = nullableset<LabelSet>;
+      using labelset_t = LabelSet;
+      using null = nullableset<labelset_t>;
+      using value_t = std::pair<typename labelset_t::value_t, bool>;
       using kind_t = typename LabelSet::kind_t;
 
       static null make(std::istream& is)
@@ -40,23 +42,63 @@ namespace vcsn
       }
 
       ATTRIBUTE_PURE
-      static constexpr typename null::value_t
+      static constexpr value_t
       one()
       {
-        return null::labelset_t::one();
+        return value_t{null::labelset_t::special(), true};
+      }
+
+      template<typename Ls>
+      ATTRIBUTE_PURE
+      static typename std::enable_if<Ls::has_one(), bool>::type
+      is_one_(value_t l)
+      {
+        return std::get<1>(l) || Ls::is_one(get_value(l));
+      }
+
+      template<typename Ls>
+      ATTRIBUTE_PURE
+      static typename std::enable_if<!Ls::has_one(), bool>::type
+      is_one_(value_t l)
+      {
+        return std::get<1>(l);
+      }
+
+      ATTRIBUTE_PURE
+      static bool
+      is_one(value_t l)
+      {
+        return is_one_<labelset_t>(l);
+      }
+
+      ATTRIBUTE_PURE
+      static value_t
+      make_value(const typename labelset_t::value_t &v)
+      {
+        return {v, false};
+      }
+
+      ATTRIBUTE_PURE
+      static typename labelset_t::value_t
+      get_value(const value_t& v)
+      {
+        return std::get<0>(v);
       }
     };
 
     template<typename GenSet>
     struct nullable_helper<letterset<GenSet>>
     {
-      using null = nullableset<letterset<GenSet>>;
+      using labelset_t = letterset<GenSet>;
+      using genset_t = GenSet;
+      using null = nullableset<labelset_t>;
+      using value_t = typename labelset_t::value_t;
       using kind_t = labels_are_nullable;
 
       static null
-        make(std::istream& is)
+      make(std::istream& is)
       {
-        using genset_t = typename null::labelset_t::genset_t;
+        using genset_t = typename labelset_t::genset_t;
         // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
         //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
         //        |   |    |        weightset
@@ -65,23 +107,44 @@ namespace vcsn
         //        +-- kind
         null::make_nullableset_kind(is);
         if (is.peek() == '_')
-          {
-            eat(is, '_');
-            auto gs = genset_t::make(is);
-            auto ls = typename null::labelset_t{gs};
-            return null{ls};
-          }
+        {
+          eat(is, '_');
+          auto gs = genset_t::make(is);
+          auto ls = labelset_t{gs};
+          return null{ls};
+        }
         eat(is, '<');
-        auto ls = null::labelset_t::make(is);
+        auto ls = labelset_t::make(is);
         eat(is, '>');
         return null{ls};
       }
 
       ATTRIBUTE_PURE
-        static constexpr typename null::value_t
-        one()
+      static constexpr typename null::value_t
+      one()
       {
-        return GenSet::one_letter();
+        return genset_t::one_letter();
+      }
+
+      ATTRIBUTE_PURE
+      static bool
+      is_one(value_t l)
+      {
+        return l == one();
+      }
+
+      ATTRIBUTE_PURE
+      static value_t
+      make_value(const typename labelset_t::value_t& v)
+      {
+        return v;
+      }
+
+      ATTRIBUTE_PURE
+      static typename labelset_t::value_t
+      get_value(const value_t& v)
+      {
+        return v;
       }
     };
   }
@@ -94,9 +157,10 @@ namespace vcsn
     using labelset_t = LabelSet;
     using labelset_ptr = std::shared_ptr<const labelset_t>;
     using self_type = nullableset;
-    using kind_t = typename detail::nullable_helper<labelset_t>::kind_t;
+    using helper_t = detail::nullable_helper<labelset_t>;
+    using kind_t = typename helper_t::kind_t;
 
-    using value_t = typename LabelSet::value_t;
+    using value_t = typename helper_t::value_t;
 
     nullableset(const labelset_t& ls)
       : labelset_t{ls}, ls_{std::make_shared<const labelset_t>(ls)}
@@ -113,13 +177,13 @@ namespace vcsn
 
     std::string vname(bool full = true) const
     {
-      return "lan<" + ls_->vname(full) + ">";
+      return "lan<" + labelset()->vname(full) + ">";
     }
 
     /// Build from the description in \a is.
     static nullableset make(std::istream& i)
     {
-      return detail::nullable_helper<labelset_t>::make(i);
+      return helper_t::make(i);
     }
 
     static constexpr bool
@@ -132,24 +196,24 @@ namespace vcsn
     static constexpr value_t
     one()
     {
-      return detail::nullable_helper<labelset_t>::one();
+      return helper_t::one();
     }
 
     ATTRIBUTE_PURE
-    bool
-    is_one(value_t l) const
+    static bool
+    is_one(value_t l)
     {
-      return l == one();
+      return helper_t::is_one(l);
     }
 
     bool
     is_valid(value_t v) const
     {
-      return ls_->is_valid(v) || is_one(v);
+      return labelset()->is_valid(get_value(v)) || is_one(v);
     }
 
-    static value_t
-    conv(self_type, value_t v)
+    value_t
+    conv(self_type, value_t v) const
     {
       return v;
     }
@@ -157,6 +221,48 @@ namespace vcsn
     const labelset_ptr labelset() const
     {
       return ls_;
+    }
+
+    static bool equals(const value_t& l, const value_t& r)
+    {
+      if (is_one(l))
+        return is_one(r);
+      return !is_one(r) && labelset_t::equals(get_value(l), get_value(r));
+    }
+
+    static bool less_than(const value_t& l, const value_t& r)
+    {
+      if (is_one(r))
+        return false;
+      else if (is_one(l))
+        return true;
+      return labelset_t::less_than(get_value(l),
+                                   get_value(r));
+    }
+
+    static value_t
+    special()
+    {
+      return helper_t::make_value(labelset_t::special());
+    }
+
+    static bool
+    is_special(const value_t& l)
+    {
+      return !is_one(l) && labelset_t::is_special(get_value(l));
+    }
+
+    size_t size(const value_t& v) const
+    {
+      return is_one(v) ? 0 : labelset_t::size(get_value(v));
+    }
+
+    static size_t hash(const value_t& v)
+    {
+      std::size_t res = 0;
+      std::hash_combine(res, labelset_t::hash(get_value(v)));
+      std::hash_combine(res, helper_t::is_one(v));
+      return res;
     }
 
     /// \throws std::domain_error if there is no label here.
@@ -174,14 +280,18 @@ namespace vcsn
           res = one();
         }
       else
-        res = ls_->conv(i);
+        res = make_value(ls_->conv(i));
       return res;
     }
 
     std::set<value_t>
     convs(std::istream& i) const
     {
-      return ls_->convs(i);
+      auto l = ls_->convs(i);
+      std::set<value_t> res;
+      for (auto v : l)
+        res.emplace(make_value(v));
+      return res;
     }
 
     std::ostream&
@@ -191,8 +301,45 @@ namespace vcsn
       if (is_one(l))
         o << (format == "latex" ? "\\varepsilon" : "\\e");
       else
-        ls_->print(o, l, format);
+        labelset()->print(o, get_value(l), format);
       return o;
+    }
+
+    static void
+    make_nullableset_kind(std::istream& is)
+    {
+      char kind[4];
+      is.get(kind, sizeof kind);
+      if (strncmp("lan", kind, 4))
+        throw std::runtime_error("kind::make: unexpected: "
+                                 + str_escape(kind)
+                                 + ", expected: " + "lan");
+    }
+
+    value_t
+    zero() const
+    {
+      return make_value(labelset()->zero());
+    }
+
+    bool
+    is_zero(const value_t& v) const
+    {
+      return labelset()->is_zero(get_value(v));
+    }
+
+    bool
+    is_letter(const value_t& v) const
+    {
+      return labelset()->is_letter(get_value(v));
+    }
+
+    value_t
+    transpose(const value_t& l) const
+    {
+      if (is_one(l))
+        return l;
+      return make_value(ls_->transpose(get_value(l)));
     }
 
     std::ostream&
@@ -211,27 +358,30 @@ namespace vcsn
       return o;
     }
 
-    static void
-    make_nullableset_kind(std::istream& is)
+  private:
+
+    static typename labelset_t::value_t
+    get_value(const value_t& v)
     {
-      char kind[4];
-      is.get(kind, sizeof kind);
-      require(!strncmp("lan", kind, 4),
-              "kind::make: unexpected: ", str_escape(kind),
-              ", expected: lan");
+      return helper_t::get_value(v);
     }
 
-  private:
+    static value_t
+    make_value(const typename labelset_t::value_t& v)
+    {
+      return helper_t::make_value(v);
+    }
+
     labelset_ptr ls_;
   };
 
 
-#define DEFINE(Func, Operation, Lhs, Rhs, Res)          \
-  template <typename GenSet>                            \
-  Res                                                   \
-  Func(const Lhs& lhs, const Rhs& rhs)                  \
-  {                                                     \
-    return {Operation(*lhs.genset(), *rhs.genset())};   \
+#define DEFINE(Func, Operation, Lhs, Rhs, Res)                \
+  template <typename GenSet>                                  \
+  Res                                                         \
+  Func(const Lhs& lhs, const Rhs& rhs)                        \
+  {                                                           \
+    return {Operation(*lhs.genset(), *rhs.genset())};         \
   }
 
   /// Compute the meet with another labelset.
@@ -248,7 +398,7 @@ namespace vcsn
   nullableset<meet_t<Lls, Rls>>
   meet(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
   {
-    return {meet(*lhs.labelset(), *rhs.labelset())};
+    return nullableset<meet_t<Lls, Rls>>{meet(*lhs.labelset(), *rhs.labelset())};
   }
 
   /// compute the join with another labelset.
@@ -265,11 +415,12 @@ namespace vcsn
   nullableset<join_t<Lls, Rls>>
   join(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
   {
-    return {join(*lhs.labelset(), *rhs.labelset())};
+    return nullableset<join_t<Lls, Rls>>{join(*lhs.labelset(), *rhs.labelset())};
   }
 
 
 #undef DEFINE
+
 }
 
 #endif // !VCSN_LABELSET_NULLABLESET_HH

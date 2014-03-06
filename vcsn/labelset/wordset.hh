@@ -83,14 +83,14 @@ namespace vcsn
               < std::forward_as_tuple(r.size(), r));
     }
 
-    value_t
-    special() const
+    static value_t
+    special()
     {
-      return this->genset()->template special<value_t>();
+      return genset_t::template special<value_t>();
     }
 
-    bool
-    is_special(const value_t& v) const
+    static bool
+    is_special(const value_t& v)
     {
       return v == special();
     }
@@ -116,10 +116,10 @@ namespace vcsn
       return genset_t::empty_word();
     }
 
-    bool
-    is_one(const value_t& l) const ATTRIBUTE_PURE
+    static bool
+    is_one(const value_t& l) ATTRIBUTE_PURE
     {
-      return this->genset()->is_empty_word(l);
+      return genset_t::is_empty_word(l);
     }
 
     static size_t size(const value_t& v)
