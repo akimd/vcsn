@@ -6,6 +6,7 @@
 # include <stdexcept>
 
 # include <vcsn/dyn/context.hh> // sname
+# include <vcsn/dyn/translate.hh> // compile
 # include <vcsn/misc/name.hh>
 # include <vcsn/misc/signature.hh>
 # include <vcsn/misc/raise.hh>
@@ -50,16 +51,25 @@ namespace vcsn
     /// Get function for signature \a sig.
     const Fun& get(const signature& sig)
     {
+      // Maybe already loaded.
       if (auto fun = get0(sig))
         return *fun;
       else
         {
-          std::string err = (name_ + ": no implementation available for "
-                             + sig.to_string());
-          err += "\n  available versions:";
-          for (auto p: map_)
-            err += "\n    " + p.first.to_string();
-          raise(err);
+          // No, try to compile it.
+          vcsn::dyn::detail::translation translate;
+          translate.compile(name_, sig);
+          if (auto fun = get0(sig))
+            return *fun;
+          else
+            {
+              std::string err = (name_ + ": no implementation available for "
+                                 + sig.to_string());
+              err += "\n  available versions:";
+              for (auto p: map_)
+                err += "\n    " + p.first.to_string();
+              raise(err);
+            }
         }
     }
 

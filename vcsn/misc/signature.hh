@@ -24,6 +24,16 @@ namespace vcsn LIBVCSN_API
       return sig < that.sig;
     }
 
+    sig_t::const_iterator begin() const
+    {
+      return std::begin(sig);
+    }
+
+    sig_t::const_iterator end() const
+    {
+      return std::end(sig);
+    }
+
     sig_t sig;
   };
 

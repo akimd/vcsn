@@ -175,6 +175,32 @@ namespace vcsn
             weightset(kind);
         }
 
+        /// Read a thing.
+        void type()
+        {
+          type(word());
+        }
+
+        void type(const std::string& w)
+        {
+          if (w == "int"
+              || w == "std::ostream")
+            {
+              os << w;
+            }
+          else if (w == "mutable")
+            {
+              eat(is, "_automaton<");
+              os << "vcsn::mutable_automaton<" << incendl;
+              context();
+              eat(is, '>');
+              os << decendl << '>';
+              header("vcsn/core/mutable_automaton.hh");
+            }
+          else
+            valueset(w);
+        }
+
         /// Generate the code to compile on \a o.
         std::ostream& print(std::ostream& o)
         {
@@ -260,6 +286,44 @@ namespace vcsn
           }
           jit(base);
         }
+
+        /// Compile, and load, a DSO which instantiates \a algo for \a sig.
+        void compile(const std::string& name, const signature& sig)
+        {
+          header("vcsn/algos/" + name + ".hh");
+          std::string base = ctxlibdir() + name + "(" + sig.to_string() + ")";
+          int count = 0;
+          std::string types;
+          for (const auto& s: sig)
+            {
+              is.str(s);
+              std::string t = "t" + std::to_string(count) + "_t";
+              os << "using " << t << " =" << incendl;
+              type();
+              os << ';' << decendl;
+              types += (count ? ", " : "") + t;
+              ++count;
+            }
+          os <<
+            "\n"
+            "namespace vcsn\n"
+            "{\n"
+            "  namespace dyn\n"
+            "  {\n"
+            "    namespace detail\n"
+            "    {\n"
+            "      static bool f = " << name << "_register(ssignature<" << types << ">(), "
+             << name << "<" << types << ">);\n"
+            "    }\n"
+            "  }\n"
+            "}\n";
+          {
+            std::ofstream o{base + ".cc"};
+            print(o);
+          }
+          jit(base);
+        }
+
         /// Record that we need an include for this header.
         void header(const std::string& h)
         {
