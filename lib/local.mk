@@ -13,6 +13,9 @@
 
 include lib/vcsn/local.mk
 
+# Where the plugins are compiled.
+CLEANDIRS += %D%/plugins
+
 ## ----------- ##
 ## Libraries.  ##
 ## ----------- ##
