@@ -4,6 +4,7 @@
 # include <map>
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
