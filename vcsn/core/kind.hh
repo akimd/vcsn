@@ -70,6 +70,7 @@ namespace vcsn
     = typename std::enable_if<is_ ## Abbrev<Kinded>::value, R>::type
 
   DEFINE(lal, letters);
+  DEFINE(lan, nullable);
   DEFINE(lao, one);
   DEFINE(lar, ratexps);
   DEFINE(lat, tuples);

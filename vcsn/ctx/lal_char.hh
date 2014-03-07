@@ -39,32 +39,6 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_letter_functions(std::true_type)
-      {
-        using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
-
-        using namespace dyn::detail;
-
-        REGISTER(de_bruijn, ctx_t, unsigned);
-        REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
-        REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
-        REGISTER(ladybird, ctx_t, unsigned);
-        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
-        REGISTER(u, ctx_t, unsigned);
-
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
-      register_letter_functions(std::false_type)
-      {
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
       register_kind_functions(labels_are_letters)
       {
         using ctx_t = Ctx;
@@ -105,9 +79,6 @@ namespace vcsn
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(u, Ctx, unsigned);
-
-        register_letter_functions<ctx_t>
-          (std::integral_constant<bool, ctx_t::has_one()>());
 
         return true;
       }

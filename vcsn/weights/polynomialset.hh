@@ -470,7 +470,7 @@ namespace vcsn
 
     /// Print a polynomial value without ranges (neither a lan nor a lal case)
     template <typename context>
-    typename std::enable_if<!context::is_lal,
+    typename std::enable_if<!(context::is_lal || context::is_lan),
                             std::ostream&>::type
     print_ctx(std::ostream& out, const value_t& v,
               const std::string& format = "text",
@@ -482,7 +482,7 @@ namespace vcsn
 
     /// Print a polynomial value with ranges (lan or lal case)
     template <typename context>
-    typename std::enable_if<context::is_lal,
+    typename std::enable_if<context::is_lal || context::is_lan,
                             std::ostream&>::type
     print_ctx_corpse(std::ostream& out, const value_t& v,
                      const std::string& format = "text",
@@ -562,7 +562,7 @@ namespace vcsn
     }
 
     template <typename context>
-    typename std::enable_if<context::is_lal && !context::has_one(),
+    typename std::enable_if<context::is_lal,
                             std::ostream&>::type
     print_ctx(std::ostream& out, const value_t& v,
               const std::string& format = "text",
@@ -572,7 +572,7 @@ namespace vcsn
     }
 
     template <typename context>
-    typename std::enable_if<context::is_lal && context::has_one(),
+    typename std::enable_if<context::is_lan,
                             std::ostream&>::type
     print_ctx(std::ostream& out, const value_t& v,
               const std::string& format = "text",

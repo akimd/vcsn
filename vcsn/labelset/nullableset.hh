@@ -23,6 +23,7 @@ namespace vcsn
     struct nullable_helper
     {
       using null = nullableset<LabelSet>;
+      using kind_t = typename LabelSet::kind_t;
 
       static null make(std::istream& is)
       {
@@ -51,6 +52,7 @@ namespace vcsn
     struct nullable_helper<letterset<GenSet>>
     {
       using null = nullableset<letterset<GenSet>>;
+      using kind_t = labels_are_nullable;
 
       static null
       make(std::istream& is)
@@ -93,7 +95,7 @@ namespace vcsn
       using labelset_t = LabelSet;
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using self_type = nullableset;
-      using kind_t = typename labelset_t::kind_t;
+      using kind_t = typename detail::nullable_helper<labelset_t>::kind_t;
 
       using value_t = typename LabelSet::value_t;
 
@@ -264,8 +266,8 @@ namespace vcsn
     if (format == "latex")
       {
         o << "(";
-	print_set(*ls.labelset(), o, format);
-	o << ")^?";
+        print_set(*ls.labelset(), o, format);
+        o << ")^?";
       }
     else if (format == "text")
       o << ls.vname(true);
