@@ -13,6 +13,7 @@
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/indent.hh>
 # include <vcsn/misc/raise.hh>
+# include <vcsn/misc/signature.hh>
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -23,15 +24,6 @@ namespace vcsn
     {
       struct translation
       {
-        translation()
-        {
-          // We use os.str() with one level of indentation.
-          // Alternatively, it would be useful that misc::indent
-          // provided a means to output a std::string and intercept
-          // its \n to indent them properly.
-          os << incindent;
-        }
-
         /// Return the next word from \a is.
         /// Stop at any of "<,_>", and leave this separator in the stream.
         std::string word()
@@ -197,16 +189,8 @@ namespace vcsn
           o << '\n';
           for (const auto& h: headers_late)
             o << "#include <" << h << ">\n";
-          o <<
-            "\n"
-            "using ctx_t =" << incendl;
-          o << os.str() << ';' << decendl;
-          o <<
-            "\n"
-            "namespace vcsn\n"
-            "{\n"
-            "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
-            "}\n";
+          o << "\n"
+            << os.str();
           return o;
         }
 
@@ -233,19 +217,17 @@ namespace vcsn
             raise("cannot run: ", s);
         }
 
-        /// Compile, and load, a DSO with instantiations for \a ctx.
-        void compile(const std::string& ctx)
+        /// Where the runtime compilation files must be put.
+        std::string ctxlibdir() const
         {
-          header("vcsn/ctx/instantiate.hh");
           auto tmp = xgetenv("VCSN_TMPDIR", "/tmp");
           auto ctxlibdir = xgetenv("VCSN_CTXLIBDIR", tmp);
-          std::string base = ctxlibdir + "/" + context_base::sname(ctx);
-          is.str(ctx);
-          context();
-          {
-            std::ofstream o{base + ".cc"};
-            print(o);
-          }
+          return ctxlibdir + "/";
+        }
+
+        /// Compile and load a C++ file.
+        void jit(const std::string& base)
+        {
           auto cppflags = xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS);
           cxx("-fPIC " + cppflags + " '" + base + ".cc' -c"
               " -o '" + base + ".o'");
@@ -256,6 +238,28 @@ namespace vcsn
           require (lib, "cannot load lib: ", base, ".so");
         }
 
+        /// Compile, and load, a DSO with instantiations for \a ctx.
+        void compile(const std::string& ctx)
+        {
+          header("vcsn/ctx/instantiate.hh");
+          std::string base = ctxlibdir() + context_base::sname(ctx);
+          is.str(ctx);
+          os << "using ctx_t =" << incendl;
+          context();
+          os << ';' << decendl
+             <<
+            "\n"
+            "namespace vcsn\n"
+            "{\n"
+            "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
+            "}\n";
+          ;
+          {
+            std::ofstream o{base + ".cc"};
+            print(o);
+          }
+          jit(base);
+        }
         /// Record that we need an include for this header.
         void header(const std::string& h)
         {
