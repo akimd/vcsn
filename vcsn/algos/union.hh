@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_UNION_HH
 # define VCSN_ALGOS_UNION_HH
 
+# include <unordered_map>
+
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
@@ -22,7 +24,7 @@ namespace vcsn
     const auto& ws = *res.weightset();
     const auto& bws = *b.weightset();
     // State in B -> state in Res.
-    std::map<typename B::state_t, typename A::state_t> m;
+    std::unordered_map<typename B::state_t, typename A::state_t> m;
     for (auto s: b.states())
       m.emplace(s, res.new_state());
     m.emplace(b.pre(), res.pre());
