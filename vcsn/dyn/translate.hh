@@ -325,8 +325,16 @@ namespace vcsn
         }
 
         /// Record that we need an include for this header.
-        void header(const std::string& h)
+        void header(std::string h)
         {
+          // Open code some mismatches between algo name, and header
+          // name.  FIXME: algorithms should register this temselves.
+          if (h == "vcsn/algos/infiltration.hh")
+            h = "vcsn/algos/product.hh";
+          else if (h == "vcsn/algos/shuffle.hh")
+            h = "vcsn/algos/product.hh";
+          if (h == "vcsn/algos/union_a.hh")
+            h = "vcsn/algos/union.hh";
           headers.insert(h);
         }
 

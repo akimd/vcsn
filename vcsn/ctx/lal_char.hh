@@ -43,19 +43,6 @@ namespace vcsn
       {
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
-        // Word polynomialset.
-        using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
-        using rs_t = ratexpset<Ctx>;
-
-        // Same weightset, but letterset.
-        using letterset_t = letterset<typename ctx_t::labelset_t::genset_t>;
-        using l_ctx_t = context<letterset_t, typename ctx_t::weightset_t>;
-        using l_aut_t = mutable_automaton<l_ctx_t>;
-
-        // Letterset -> B RatE.
-        using lb_ctx_t = context<letterset_t, b>;
-        using lbr_ctx_t = context<letterset_t, ratexpset<lb_ctx_t>>;
-        using lbr_aut_t = mutable_automaton<lbr_ctx_t>;
 
         using namespace dyn::detail;
 
@@ -66,15 +53,6 @@ namespace vcsn
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(u, ctx_t, unsigned);
 
-        REGISTER(union_a, aut_t, l_aut_t);
-        REGISTER(union_a, l_aut_t, aut_t);
-        REGISTER(union_a, aut_t, lbr_aut_t);
-        REGISTER(union_a, lbr_aut_t, aut_t);
-
-        // Ensure that we can at least print the resulting
-        // automata.
-        // FIXME: we really need something fine grained.
-        REGISTER(dot, lbr_aut_t, std::ostream);
         return true;
       }
 
@@ -114,8 +92,6 @@ namespace vcsn
         REGISTER(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t, const std::string);
         REGISTER(infiltration, aut_t, aut_t);
-        REGISTER(infiltration, aut_t, b_aut_t);
-        REGISTER(infiltration, b_aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
@@ -125,18 +101,13 @@ namespace vcsn
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
-        REGISTER(product, aut_t, b_aut_t);
-        REGISTER(product, b_aut_t, aut_t);
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
-        REGISTER(shuffle, aut_t, b_aut_t);
-        REGISTER(shuffle, b_aut_t, aut_t);
         REGISTER(u, Ctx, unsigned);
 
         register_letter_functions<ctx_t>
           (std::integral_constant<bool, ctx_t::has_one()>());
-
 
         return true;
       }
