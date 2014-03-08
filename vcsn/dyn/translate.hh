@@ -80,11 +80,6 @@ namespace vcsn
               eat(is, "_char");
               os << "<vcsn::set_alphabet<vcsn::char_letters>>";
             }
-          else if (kind == "lao")
-            {
-              header("vcsn/labelset/oneset.hh");
-              os << "vcsn::ctx::oneset";
-            }
           else if (kind == "lan")
             {
               // Some instantiation happen here:
@@ -94,6 +89,11 @@ namespace vcsn
               valueset();
               eat(is, '>');
               os << decendl << '>';
+            }
+          else if (kind == "lao")
+            {
+              header("vcsn/labelset/oneset.hh");
+              os << "vcsn::ctx::oneset";
             }
           else if (kind == "lat" || kind == "tupleset")
             {
