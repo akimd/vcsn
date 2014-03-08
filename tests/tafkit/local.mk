@@ -21,7 +21,6 @@
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/is-valid.chk                              \
-  %D%/ladybird.chk                              \
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \

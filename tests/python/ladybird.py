@@ -1,6 +1,12 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-cat >out.exp <<\EOF
+import vcsn
+from test import *
+
+b = vcsn.context('lal_char(abc)_b')
+z = vcsn.context('lal_char(abc)_z')
+
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -20,14 +26,12 @@ digraph
   0 -> 1 [label = "a"]
   1 -> 0 [label = "a, c"]
   1 -> 1 [label = "b, c"]
-}
-EOF
+}''')
 
-run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_b' 2
-perl -pi -e 's/_b/_z/g' out.exp
-run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_z' 2
+CHECK_EQ(exp, b.ladybird(2))
+CHECK_EQ(vcsn.automaton(str(exp).replace('_b', '_z')), z.ladybird(2))
 
-cat >out.exp <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_zmin"
@@ -48,6 +52,6 @@ digraph
   1 -> 0 [label = "<0>a, <0>c"]
   1 -> 1 [label = "<0>b, <0>c"]
 }
-EOF
-
-run 0 out.exp -vcsn ladybird -C 'lal_char(abc)_zmin' 2
+''')
+CHECK_EQ(exp,
+         vcsn.context('lal_char(abc)_zmin').ladybird(2))
