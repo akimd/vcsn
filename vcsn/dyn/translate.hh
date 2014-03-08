@@ -118,8 +118,10 @@ namespace vcsn
               eat(is, '>');
               os << decendl << '>';
             }
+          else if (kind == "ratexpset")
+            ratexpset(false);
           else
-            raise("invalid kind name: ", str_escape(kind));
+            raise("invalid labelset name: ", str_escape(kind));
         }
 
         void ratexpset(bool with_ratexpset = true)
@@ -183,7 +185,8 @@ namespace vcsn
 
         void type(const std::string& w)
         {
-          if (w == "int"
+          if (w == "const std::string"
+              || w == "int"
               || w == "std::ostream")
             {
               os << w;
