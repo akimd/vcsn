@@ -23,7 +23,6 @@
   %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
-  %D%/star-normal-form.chk                      \
   %D%/transpose.chk                             \
   %D%/universal.chk
 
