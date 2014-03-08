@@ -1,10 +1,11 @@
 #ifndef VCSN_ALGOS_CONCATENATE_HH
 # define VCSN_ALGOS_CONCATENATE_HH
 
-# include <map>
+# include <unordered_map>
 # include <vector>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/misc/raise.hh> // require
 
@@ -14,6 +15,10 @@ namespace vcsn
   | concatenate(automaton, automaton).  |
   `------------------------------------*/
 
+  /// Append automaton \a b to \a res.
+  ///
+  /// \precondition The context of \a res must include that of \a b.
+  /// \precondition both are standard.
   template <typename A, typename B>
   A&
   concatenate_here(A& res, const B& b)
@@ -22,7 +27,10 @@ namespace vcsn
     require(is_standard(b), __func__, ": rhs must be standard");
 
     using automaton_t = A;
-    auto ws = *res.context().weightset();
+    const auto& ls = *res.labelset();
+    const auto& bls = *b.labelset();
+    const auto& ws = *res.weightset();
+    const auto& bws = *b.weightset();
 
     // The set of the current (left-hand side) final transitions.
     auto ftr_ = res.final_transitions();
@@ -33,7 +41,7 @@ namespace vcsn
     typename B::state_t b_initial = b.dst_of(b.initial_transitions().front());
     // State in B -> state in Res.
     // The initial state of b is not copied.
-    std::map<typename B::state_t, typename A::state_t> m;
+    std::unordered_map<typename B::state_t, typename A::state_t> m;
     m.emplace(b.post(), res.post());
     for (auto s: b.states())
       if (!b.is_initial(s))
@@ -47,7 +55,8 @@ namespace vcsn
     for (auto t: b.all_transitions())
       if (b.src_of(t) != b.pre() && b.src_of(t) != b_initial)
         res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                           b.label_of(t), b.weight_of(t));
+                           ls.conv(bls, b.label_of(t)),
+                           ws.conv(bws, b.weight_of(t)));
 
     // Branch all the final transitions of res to the successors of
     // b's initial state.
@@ -69,23 +78,25 @@ namespace vcsn
         for (auto t2: b.all_out(b_initial))
           res.set_transition(s1,
                              m[b.dst_of(t2)],
-                             b.label_of(t2),
-                             ws.mul(w1, b.weight_of(t2)));
+                             ls.conv(bls, b.label_of(t2)),
+                             ws.mul(w1,
+                                    ws.conv(bws, b.weight_of(t2))));
       }
     return res;
   }
 
   /// Concatenate two standard automata.
-  template <class A, class B>
-  A
+  template <typename A, typename B>
+  mutable_automaton<join_t<typename A::context_t, typename B::context_t>>
   concatenate(const A& lhs, const B& rhs)
   {
     require(is_standard(lhs), __func__, ": lhs must be standard");
     require(is_standard(rhs), __func__, ": rhs must be standard");
 
-    using automaton_t = A;
+    using automaton_t
+      = mutable_automaton<join_t<typename A::context_t, typename B::context_t>>;
 
-    // Create new automata.
+    // Create new automaton.
     auto ctx = join(lhs.context(), rhs.context());
     automaton_t res(ctx);
     ::vcsn::copy(lhs, res, {keep_all_states<typename automaton_t::state_t>});

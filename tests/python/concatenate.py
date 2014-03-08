@@ -115,37 +115,34 @@ digraph
 }
 '''))
 
+## --------------------- ##
+## Heterogeneous input.  ##
+## --------------------- ##
 
-# Check union of contexts.
-a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
-b = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
-CHECK_EQ(a.concatenate(b).standard(), vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-    F1
-    F2
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-  }
-  I0 -> 0
-  0 -> F0 [label = "<xy>"]
-  0 -> 1 [label = "<x>a"]
-  0 -> 2 [label = "<xy>b"]
-  1 -> F1 [label = "<y>"]
-  1 -> 1 [label = "a"]
-  1 -> 2 [label = "<y>b"]
-  2 -> F2
-  2 -> 2 [label = "b"]
-}
-'''))
+# check RES AUT
+# -------------
+def check(exp, eff):
+    CHECK_EQ(exp, str(eff.ratexp()))
 
+# RatE and B, in both directions.
+a1 = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('<u>a').derived_term()
+a2 = vcsn.context('lal_char(b)_b').ratexp('b*').standard()
+check('<u>a+<u>abb*', a1*a2)
+check('<u>a+bb*<u>a', a2*a1)
+
+# Z, Q, R.
+z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
+q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
+r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+
+check('<2>a<1/3>b', z*q)
+check('<1/3>b<2>a', q*z)
+check('<2>a<1/3>b<2>a', z*q*z)
+check('<2>a<1/3>b<1/3>b', z*q*q)
+
+check('<2>a<0.4>c', z*r)
+check('<0.4>c<2>a', r*z)
+
+check('<0.333333>b<0.4>c', q*r)
+check('<0.4>c<0.333333>b', r*q)

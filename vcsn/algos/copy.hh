@@ -19,6 +19,7 @@ namespace vcsn
   `------------------*/
 
   /// Copy an automaton.
+  /// \precondition AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
   void
   copy(const AutIn& in, AutOut& out,
@@ -27,6 +28,11 @@ namespace vcsn
     using in_state_t = typename AutIn::state_t;
     using out_state_t = typename AutOut::state_t;
 
+    const auto& out_ls = *out.labelset();
+    const auto& in_ls = *in.labelset();
+    const auto& out_ws = *out.weightset();
+    const auto& in_ws = *in.weightset();
+
     std::unordered_map<in_state_t, out_state_t> out_state;
 
     for (auto s : in.states())
@@ -34,16 +40,16 @@ namespace vcsn
         {
           out_state_t ns =  out.new_state();
           out_state[s] = ns;
-          out.set_initial(ns, in.get_initial_weight(s));
-          out.set_final(ns, in.get_final_weight(s));
+          out.set_initial(ns, out_ws.conv(in_ws, in.get_initial_weight(s)));
+          out.set_final(ns, out_ws.conv(in_ws, in.get_final_weight(s)));
         }
     for (auto t : in.transitions())
       if (keep_state(in.src_of(t))
           && keep_state(in.dst_of(t)))
         out.set_transition(out_state[in.src_of(t)],
                            out_state[in.dst_of(t)],
-                           in.label_of(t),
-                           in.weight_of(t));
+                           out_ls.conv(in_ls, in.label_of(t)),
+                           out_ws.conv(in_ws, in.weight_of(t)));
   }
 
   template <typename State>

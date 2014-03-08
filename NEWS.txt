@@ -4,6 +4,17 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-03-08
+** concatenation accepts more heterogenous arguments
+As for products and union, it is now possible to compute the concatentation
+of automata with different types:
+
+  >>> z = vcsn.context('lal_char(a)_z').ratexp('<2>a')  .derived_term()
+  >>> q = vcsn.context('lal_char(b)_q').ratexp('<1/3>b').derived_term()
+  >>> r = vcsn.context('lal_char(c)_r').ratexp('<.4>c') .derived_term()
+  >>> (z*q*r).ratexp()
+  <2>a<0.333333>b<0.4>c
+
 * 2014-03-05
 ** Bug: standardization of automata
 The standardization of an automaton no longer leaves former initial states

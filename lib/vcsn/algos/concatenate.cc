@@ -7,7 +7,6 @@ namespace vcsn
   namespace dyn
   {
     REGISTER_DEFINE(concatenate);
-
     automaton
     concatenate(const automaton& lhs, const automaton& rhs)
     {

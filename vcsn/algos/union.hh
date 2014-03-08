@@ -15,6 +15,7 @@ namespace vcsn
   /// Merge transitions of \a b into those of \a res.
   ///
   /// \precondition The context of \a res must include that of \a b.
+  // FIXME: shouldn't union_here be something like copy_here?
   template <typename A, typename B>
   A&
   union_here(A& res, const B& b)
@@ -37,6 +38,7 @@ namespace vcsn
     return res;
   }
 
+  /// Union of two automata.
   template <typename A, typename B>
   mutable_automaton<join_t<typename A::context_t, typename B::context_t>>
   union_a(const A& laut, const B& raut)
@@ -44,7 +46,7 @@ namespace vcsn
     using automaton_t
       = mutable_automaton<join_t<typename A::context_t, typename B::context_t>>;
 
-    // Create new automata.
+    // Create new automaton.
     auto ctx = join(laut.context(), raut.context());
     automaton_t res(ctx);
 
