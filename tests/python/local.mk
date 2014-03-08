@@ -49,6 +49,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/star-height.py                            \
   %D%/star.py                                   \
   %D%/sum.py                                    \
+  %D%/thompson.py                               \
   %D%/transpose.py                              \
   %D%/union.py
 

@@ -1,32 +1,32 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-# check VCSN-THOMPSON-ARGUMENTS
-# -----------------------------
-# Expected output is on stdin, except the constant bits (see below).
-check ()
-{
-  cat >thompson.gv
-  run 0 -f thompson.gv -vcsn thompson -e "$@" -O dot
-  # Check that it is normalized.
-  run 0 'true' -vcsn is-normalized -f thompson.gv
-}
+import vcsn
+from test import *
 
-fail ()
-{
-  run 1 '' -vcsn thompson -e "$@"
-}
+ctx = vcsn.context('lal_char(ab)_b')
+
+def check(re, exp):
+    # We compare automata as strings, since when parsing the expected
+    # automaton we drop the hole in the state numbers created by
+    # standard.
+    a = ctx.ratexp(re).thompson()
+    CHECK_EQ(exp, str(a.sort()))
+    CHECK_EQ(True, a.is_normalized())
+
+def xfail(re):
+    r = ctx.ratexp(re)
+    XFAIL(lambda: r.thompson())
 
 # We don't support intersection.
-fail 'a*&b*'
+xfail('a*&b*')
 
 ## --- ##
 ## Z.  ##
 ## --- ##
 
-
 # Z: "<12>\e".
-check '(?@lan_char(a)_z)<12>\e' <<\EOF
-digraph
+check('(?@lan_char(a)_z)<12>\e',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(a)>_z"
   rankdir = LR
@@ -43,16 +43,15 @@ digraph
   I0 -> 0
   0 -> 1 [label = "<12>\\e"]
   1 -> F1
-}
-EOF
+}''')
 
 ## -------- ##
 ## Z: sum.  ##
 ## -------- ##
 
 # Z: "\e+a+\e"
-check '(?@lan_char(ab)_z)\e+a+\e' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)\e+a+\e',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -83,12 +82,11 @@ digraph
   5 -> 7 [label = "\\e"]
   6 -> 7 [label = "\\e"]
   7 -> F7
-}
-EOF
+}''')
 
 # Z: "<12>\e+<23>a+<34>b".
-check '(?@lan_char(ab)_z)<12>\e+<23>a+<34>b' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<12>\e+<23>a+<34>b',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -119,12 +117,11 @@ digraph
   5 -> 7 [label = "\\e"]
   6 -> 7 [label = "\\e"]
   7 -> F7
-}
-EOF
+}''')
 
 # left weight.
-check '(?@lan_char(ab)_z)<12>(\e+a+<10>b+<10>\e)' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -160,12 +157,11 @@ digraph
   7 -> 9 [label = "\\e"]
   8 -> 9 [label = "\\e"]
   9 -> F9
-}
-EOF
+}''')
 
 # right weight.
-check '(?@lan_char(ab)_z)(\e+a+<2>b+<3>\e)<10>' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -201,16 +197,15 @@ digraph
   7 -> 9 [label = "<10>\\e"]
   8 -> 9 [label = "<10>\\e"]
   9 -> F9
-}
-EOF
+}''')
 
 ## ------------ ##
 ## Z: product.  ##
 ## ------------ ##
 
 # Z: "<12>(ab)<23>".
-check '(?@lan_char(ab)_z)<12>(ab)<23>' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<12>(ab)<23>',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -231,15 +226,14 @@ digraph
   1 -> 2 [label = "\\e"]
   2 -> 3 [label = "<23>b"]
   3 -> F3
-}
-EOF
+}''')
 
 ## --------- ##
 ## Z: star.  ##
 ## --------- ##
 
-check '(?@lan_char(ab)_z)\z*' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)\z*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -256,11 +250,10 @@ digraph
   I0 -> 0
   0 -> 1 [label = "\\e"]
   1 -> F1
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_b)\e*' <<\EOF
-digraph
+check('(?@lan_char(ab)_b)\e*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_b"
   rankdir = LR
@@ -283,11 +276,10 @@ digraph
   2 -> F2
   3 -> 1 [label = "\\e"]
   3 -> 2 [label = "\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)(<2>a)*' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)(<2>a)*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -310,11 +302,10 @@ digraph
   2 -> F2
   3 -> 1 [label = "\\e"]
   3 -> 2 [label = "\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)<2>a*<3>' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<2>a*<3>',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -337,11 +328,10 @@ digraph
   2 -> F2
   3 -> 1 [label = "\\e"]
   3 -> 2 [label = "<3>\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)(<2>a+<3>b)*' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)(<2>a+<3>b)*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -373,11 +363,10 @@ digraph
   6 -> 7 [label = "\\e"]
   7 -> 1 [label = "\\e"]
   7 -> 2 [label = "\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)<2>(<3>a+<5>b)*<7>' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<2>(<3>a+<5>b)*<7>',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -409,11 +398,10 @@ digraph
   6 -> 7 [label = "\\e"]
   7 -> 1 [label = "\\e"]
   7 -> 2 [label = "<7>\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)<2>(<3>(ab)<5>)*<7>' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -440,11 +428,10 @@ digraph
   4 -> 5 [label = "<5>b"]
   5 -> 1 [label = "\\e"]
   5 -> 2 [label = "<7>\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(ab)_z)a**' <<\EOF
-digraph
+check('(?@lan_char(ab)_z)a**',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
@@ -473,15 +460,14 @@ digraph
   4 -> 2 [label = "\\e"]
   5 -> 3 [label = "\\e"]
   5 -> 4 [label = "\\e"]
-}
-EOF
+}''')
 
 ## ---------- ##
 ## ZR: star.  ##
 ## ---------- ##
 
-check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*' <<\EOF
-digraph
+check('(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
@@ -521,11 +507,10 @@ digraph
   9 -> 10 [label = "\\e"]
   10 -> 11 [label = "c"]
   11 -> 7 [label = "\\e"]
-}
-EOF
+}''')
 
-check '(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*' <<\EOF
-digraph
+check('(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
@@ -561,13 +546,12 @@ digraph
   7 -> 2 [label = "\\e"]
   8 -> 9 [label = "<f>b"]
   9 -> 7 [label = "\\e"]
-}
-EOF
+}''')
 
 # Make sure that the initial weight of the rhs of the concatenation is
 # properly handled.
-check '(?@lan_char(a)_ratexpset<lal_char(xyz)_z>)<x>a(<y>\e+<z>a)' <<\EOF
-digraph
+check('(?@lan_char(a)_ratexpset<lal_char(xyz)_z>)<x>a(<y>\e+<z>a)',
+r'''digraph
 {
   vcsn_context = "lan<lal_char(a)>_ratexpset<lal_char(xyz)_z>"
   rankdir = LR
@@ -597,5 +581,4 @@ digraph
   5 -> 7 [label = "\\e"]
   6 -> 7 [label = "\\e"]
   7 -> F7
-}
-EOF
+}''')

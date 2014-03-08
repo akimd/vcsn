@@ -111,14 +111,13 @@ CHECK_EQ(exp, str(a.standard()))
 ## standard(exp).  ##
 ## --------------- ##
 
-# check VCSN-STANDARD-ARGUMENTS
-# -----------------------------
-# Expected output is on stdin.
-def check (re, exp):
+def check(re, exp):
     # We compare automata as strings, since when parsing the expected
     # automaton we drop the hole in the state numbers created by
     # standard.
-    CHECK_EQ(exp, str(ctx.ratexp(re).standard()))
+    a = ctx.ratexp(re).standard()
+    CHECK_EQ(exp, str(a))
+    CHECK_EQ(True, a.is_standard())
 
 def xfail(re):
     r = ctx.ratexp(re)
