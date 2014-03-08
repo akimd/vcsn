@@ -75,7 +75,7 @@ namespace vcsn
       virtual void visit(const Type ## _t& v)
 
       DEFINE(intersection) { copy_nary(v); }
-      DEFINE(ldiv)    { copy_nary(v); }
+      DEFINE(ldiv)         { copy_nary(v); }
       DEFINE(prod)         { copy_nary(v); }
       DEFINE(shuffle)      { copy_nary(v); }
       DEFINE(sum)          { copy_nary(v); }
@@ -98,17 +98,22 @@ namespace vcsn
 
       DEFINE(atom)
       {
-        res_ = out_rs_.atom(v.value());
+        res_ = out_rs_.atom(out_rs_.labelset()->conv(*in_rs_.labelset(),
+                                                     v.value()));
       }
 
       DEFINE(lweight)
       {
-        res_ = out_rs_.lmul(v.weight(), copy(v.sub()));
+        res_ = out_rs_.lmul(out_rs_.weightset()->conv(*in_rs_.weightset(),
+                                                      v.weight()),
+                            copy(v.sub()));
       }
 
       DEFINE(rweight)
       {
-        res_ = out_rs_.rmul(copy(v.sub()), v.weight());
+        res_ = out_rs_.rmul(copy(v.sub()),
+                            out_rs_.weightset()->conv(*in_rs_.weightset(),
+                                                      v.weight()));
       }
 
 
