@@ -269,6 +269,7 @@ namespace vcsn
         {
           header("vcsn/ctx/instantiate.hh");
           std::string base = ctxlibdir() + context_base::sname(ctx);
+          is.clear();
           is.str(ctx);
           os << "using ctx_t =" << incendl;
           context();
@@ -296,6 +297,7 @@ namespace vcsn
           std::string types;
           for (const auto& s: sig)
             {
+              is.clear();
               is.str(s);
               std::string t = "t" + std::to_string(count) + "_t";
               os << "using " << t << " =" << incendl;
