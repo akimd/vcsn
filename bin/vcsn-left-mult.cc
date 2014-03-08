@@ -22,7 +22,7 @@ struct left_mult: vcsn_function
     weight w = read_weight(opts2);
 
     // Process.
-    auto res = vcsn::dyn::left_mult(aut, w);
+    auto res = vcsn::dyn::left_mult(w, aut);
 
     // Output.
     *opts.out << sort(res) << std::endl;

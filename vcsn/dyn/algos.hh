@@ -217,9 +217,12 @@ namespace vcsn
     /// The ladybird automaton with \a n states.
     automaton ladybird(const context& ctx, unsigned n);
 
-    /// The left-mult automaton with \a w as weight.
+    /// The left-multiplication of an automaton with \a w as weight.
     /// \precondition aut is standard.
-    automaton left_mult(const automaton& aut, const weight& w);
+    automaton left_mult(const weight& w, const automaton& aut);
+
+    /// The left-multiplication of a ratexp with \a w as weight.
+    ratexp left_mult(const weight& w, const ratexp& aut);
 
     /// The lifted LAO automaton from \a aut.
     automaton lift(const automaton& aut);
@@ -326,6 +329,9 @@ namespace vcsn
     /// The right-mult automaton with \a w as weight.
     /// \precondition aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
+
+    /// The right-multiplication of a ratexp with \a w as weight.
+    ratexp right_mult(const weight& w, const ratexp& aut);
 
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);

@@ -287,7 +287,8 @@ namespace vcsn
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
         REGISTER(is_valid_exp, rs_t);
-        REGISTER(left_mult, aut_t, ws_t);
+        REGISTER(left_mult, ws_t, aut_t);
+        REGISTER(left_mult_ratexp, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_exp, rs_t);
         REGISTER(linear, rs_t, bool);

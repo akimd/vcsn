@@ -1,5 +1,3 @@
-#include <string>
-
 #include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/left-mult.hh>
 #include <vcsn/dyn/algos.hh>
@@ -10,15 +8,20 @@ namespace vcsn
   namespace dyn
   {
     REGISTER_DEFINE(left_mult);
-
     automaton
-    left_mult(const automaton& aut, const weight& w)
+    left_mult(const weight& w, const automaton& aut)
     {
-      return detail::left_mult_registry().call(aut, w);
+      return detail::left_mult_registry().call(w, aut);
+    }
+
+    REGISTER_DEFINE(left_mult_ratexp);
+    ratexp
+    left_mult(const weight& w, const ratexp& r)
+    {
+      return detail::left_mult_ratexp_registry().call(w, r);
     }
 
     REGISTER_DEFINE(right_mult);
-
     automaton
     right_mult(const automaton& aut, const weight& w)
     {

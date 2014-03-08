@@ -363,20 +363,23 @@ namespace vcsn
         {
           // Open code some mismatches between algo name, and header
           // name.  FIXME: algorithms should register this temselves.
-#define ALGO(In, Out)                           \
-          if (h == "vcsn/algos/" In ".hh")      \
-            h = "vcsn/algos/" Out ".hh"
           if (false) {}
-          else ALGO("concatenation_ratexp", "concatenation");
-          else ALGO("infiltration", "product");
-          else ALGO("info_ratexp", "info");
-          else ALGO("intersection_ratexp", "product");
-          else ALGO("print_ratexp", "print");
-          else ALGO("print_weight", "print");
-          else ALGO("shuffle", "product");
-          else ALGO("sum_ratexp", "sum");
-          else ALGO("union_a", "union");
-          else ALGO("union_ratexp", "union");
+#define ALGO(In, Out)                           \
+          else if (h == "vcsn/algos/" In ".hh") \
+            h = "vcsn/algos/" Out ".hh"
+          ALGO("concatenation_ratexp", "concatenation");
+          ALGO("infiltration", "product");
+          ALGO("info_ratexp", "info");
+          ALGO("intersection_ratexp", "product");
+          ALGO("left_mult_ratexp", "left_mult");
+          ALGO("print_ratexp", "print");
+          ALGO("print_weight", "print");
+          ALGO("right_mult", "left_mult");
+          ALGO("right_mult_ratexp", "left_mult");
+          ALGO("shuffle", "product");
+          ALGO("sum_ratexp", "sum");
+          ALGO("union_a", "union");
+          ALGO("union_ratexp", "union");
 #undef ALGO
           headers.insert(h);
         }

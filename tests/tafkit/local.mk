@@ -20,7 +20,6 @@
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/is-valid.chk                              \
-  %D%/left-mult.chk                             \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
   %D%/transpose.chk                             \

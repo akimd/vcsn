@@ -137,7 +137,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Ostream, typename String>
       std::ostream& print_ratexp(const ratexp& exp, std::ostream& o,
-			      const std::string& format)
+                                 const std::string& format)
       {
         const auto& e = exp->as<RatExpSet>();
         return vcsn::print(e.get_ratexpset(), e.ratexp(), o, format);

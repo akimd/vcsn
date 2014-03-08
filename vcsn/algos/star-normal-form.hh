@@ -189,9 +189,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*-----------------------------.
-      | dyn::star_normal_form(exp).  |
-      `-----------------------------*/
+      /// Bridge.
       template <typename RatExpSet>
       ratexp
       star_normal_form(const ratexp& exp)

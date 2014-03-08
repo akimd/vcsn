@@ -40,6 +40,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-isomorphic.py                          \
   %D%/is-normalized.py                          \
   %D%/is-proper.py                              \
+  %D%/kmul.py                                   \
   %D%/ladybird.py                               \
   %D%/minimize.py                               \
   %D%/product.py                                \

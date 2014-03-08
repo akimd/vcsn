@@ -204,6 +204,8 @@ struct automaton
     return vcsn::dyn::is_valid(aut_);
   }
 
+  automaton left_mult(const weight& w) const;
+
   automaton minimize(const std::string& algo = "weighted") const
   {
     return vcsn::dyn::minimize(aut_, algo);
@@ -224,7 +226,7 @@ struct automaton
     return vcsn::dyn::proper(aut_, prune);
   }
 
-  ratexp to_ratexp() const;
+  automaton right_mult(const weight& w) const;
 
   polynomial shortest(unsigned max) const;
 
@@ -252,6 +254,8 @@ struct automaton
   {
     return vcsn::dyn::sum(aut_, rhs.aut_);
   }
+
+  ratexp to_ratexp() const;
 
   automaton transpose()
   {
@@ -472,6 +476,16 @@ weight automaton::eval(const std::string& s) const
   return vcsn::dyn::eval(aut_, s);
 }
 
+automaton automaton::left_mult(const weight& w) const
+{
+  return vcsn::dyn::left_mult(w.val_, aut_);
+}
+
+automaton automaton::right_mult(const weight& w) const
+{
+  return vcsn::dyn::right_mult(aut_, w.val_);
+}
+
 polynomial automaton::shortest(unsigned max) const
 {
   return vcsn::dyn::shortest(aut_, max);
@@ -577,11 +591,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
+    .def("left_mult", &automaton::left_mult)
     .def("minimize", &automaton::minimize, minimize())
     .def("power", &automaton::power)
     .def("product", &automaton::product)
     .def("proper_real", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
+    .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)
     .def("shuffle", &automaton::shuffle)
     .def("sort", &automaton::sort)

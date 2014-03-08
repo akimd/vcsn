@@ -1,6 +1,10 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-cat >in.gv <<\EOF
+import vcsn
+from test import *
+
+q = vcsn.context('lal_char(ab)_q')
+a = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -24,9 +28,9 @@ digraph
   2 -> 2 [label = "a, b"]
   2 -> F1
 }
-EOF
+''')
 
-run 0 - -vcsn left-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -50,9 +54,10 @@ digraph
   2 -> F2
   2 -> 2 [label = "a, b"]
 }
-EOF
+''')
+CHECK_EQ(exp, a.left_mult(q.weight('3/4')))
 
-run 0 - -vcsn right-mult -C 'lal_char(ab)_q' -f in.gv 3/4 <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(ab)_q"
@@ -76,11 +81,11 @@ digraph
   2 -> F2 [label = "<3/4>"]
   2 -> 2 [label = "a, b"]
 }
-EOF
+''')
+CHECK_EQ(exp, a.right_mult(q.weight('3/4')))
 
 
-
-cat >in.gv <<\EOF
+a = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_r"
@@ -106,9 +111,11 @@ digraph
   1 -> 2 [label = "b"]
   2 -> F1
 }
-EOF
+''')
 
-run 0 - -vcsn left-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
+
+r = vcsn.context('lal_char(ab)_r')
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_r"
@@ -134,9 +141,10 @@ digraph
   2 -> 3 [label = "c"]
   3 -> F3
 }
-EOF
+''')
+CHECK_EQ(exp, a.left_mult(r.weight('3.4')).sort())
 
-run 0 - -vcsn right-mult -C 'lal_char(abc)_r' -f in.gv 3.4 <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_r"
@@ -162,4 +170,5 @@ digraph
   2 -> 3 [label = "c"]
   3 -> F3 [label = "<3.4>"]
 }
-EOF
+''')
+CHECK_EQ(exp, a.right_mult(r.weight('3.4')).sort())

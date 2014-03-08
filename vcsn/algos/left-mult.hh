@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_LEFT_MULT_HH
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/ratexp.hh> // dyn::make_automaton
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -49,15 +50,17 @@ namespace vcsn
   `-----------------------*/
 
   template <typename Aut>
+  inline
   Aut&
   left_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
   {
     return detail::standard_operations<Aut>::left_mult_here(res, w);
   }
 
-  template <class Aut>
+  template <typename Aut>
+  inline
   Aut
-  left_mult(const Aut& aut, const typename Aut::context_t::weight_t& w)
+  left_mult(const typename Aut::context_t::weight_t& w, const Aut& aut)
   {
     auto res = copy(aut);
     left_mult_here(res, w);
@@ -69,17 +72,53 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename WeightSet>
+      template <typename WeightSet, typename Aut>
       automaton
-      left_mult(const automaton& aut, const weight& weight)
+      left_mult(const weight& weight, const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
         const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(left_mult(a, w));
+        return make_automaton(left_mult(w, a));
       }
 
       REGISTER_DECLARE(left_mult,
-                       (const automaton&, const weight&) -> automaton);
+                       (const weight&, const automaton&) -> automaton);
+
+    }
+  }
+
+
+  /*--------------------.
+  | left-mult(ratexp).  |
+  `--------------------*/
+
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  left_mult(const RatExpSet& rs, 
+            const typename RatExpSet::weight_t& w,
+            const typename RatExpSet::value_t& r)
+  {
+    return rs.lmul(w, r);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename WeightSet, typename RatExpSet>
+      ratexp
+      left_mult_ratexp(const weight& weight, const ratexp& exp)
+      {
+        const auto& w = weight->as<WeightSet>().weight();
+        const auto& e = exp->as<RatExpSet>();
+        return make_ratexp(e.get_ratexpset(),
+                           left_mult(e.get_ratexpset(), w, e.ratexp()));
+      }
+
+      REGISTER_DECLARE(left_mult_ratexp,
+                       (const weight&, const ratexp&) -> ratexp);
 
     }
   }
@@ -89,13 +128,15 @@ namespace vcsn
   `------------------------*/
 
   template <typename Aut>
+  inline
   Aut&
   right_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
   {
     return detail::standard_operations<Aut>::right_mult_here(res, w);
   }
 
-  template <class Aut>
+  template <typename Aut>
+  inline
   Aut
   right_mult(const Aut& aut, const typename Aut::context_t::weight_t& w)
   {
