@@ -22,10 +22,7 @@ namespace vcsn
       auto sname = detail::context_base::sname(name);
       // Turn the context name into a signature: {sname}.
       if (!detail::make_context_registry().get0({sname}))
-        {
-          vcsn::dyn::detail::translation translate;
-          translate.compile(sname);
-        }
+        vcsn::dyn::compile(sname);
       return detail::make_context_registry().call({sname}, name);
     }
 

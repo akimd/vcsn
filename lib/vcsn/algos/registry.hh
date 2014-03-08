@@ -57,8 +57,7 @@ namespace vcsn
       else
         {
           // No, try to compile it.
-          vcsn::dyn::detail::translation translate;
-          translate.compile(name_, sig);
+          vcsn::dyn::compile(name_, sig);
           if (auto fun = get0(sig))
             return *fun;
           else
