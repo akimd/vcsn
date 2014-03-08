@@ -29,15 +29,15 @@ namespace vcsn
         std::string word()
         {
           std::string res;
-          char c;
-          while (is >> c)
+          int c;
+          while ((c = is.get()) != EOF)
             if (c == '<' || c == ',' || c == '_' || c == '>')
               {
                 is.unget();
                 break;
               }
             else
-              res.append(1, c);
+              res += c;
           return res;
         }
 
