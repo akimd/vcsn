@@ -237,7 +237,7 @@ namespace vcsn
         REGISTER(first_order, rs_t, bool);
         REGISTER(info, aut_t, std::ostream);
         REGISTER(info, taut_t, std::ostream);
-        REGISTER(info_exp, rs_t, std::ostream);
+        REGISTER(info_ratexp, rs_t, std::ostream);
         REGISTER(intersection_ratexp, rs_t, rs_t);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
@@ -257,7 +257,7 @@ namespace vcsn
         REGISTER(make_context, ctx_t);
         REGISTER(make_ratexpset, ctx_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
-        REGISTER(print_exp, rs_t, std::ostream, const std::string);
+        REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);

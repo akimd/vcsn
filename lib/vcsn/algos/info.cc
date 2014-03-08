@@ -24,12 +24,12 @@ namespace vcsn
     | info(ratexp).  |
     `---------------*/
 
-    REGISTER_DEFINE(info_exp);
+    REGISTER_DEFINE(info_ratexp);
 
     std::ostream&
     info(const dyn::ratexp& e, std::ostream& out)
     {
-      detail::info_exp_registry().call(e, out);
+      detail::info_ratexp_registry().call(e, out);
       return out;
     }
   }

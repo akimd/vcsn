@@ -219,14 +219,14 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Ostream>
-      std::ostream& info_exp(const ratexp& exp, std::ostream& o)
+      std::ostream& info_ratexp(const ratexp& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
         vcsn::info<RatExpSet>(e.get_ratexpset(), e.ratexp(), o);
         return o;
       }
 
-      REGISTER_DECLARE(info_exp,
+      REGISTER_DECLARE(info_ratexp,
                         (const ratexp& aut, std::ostream& o) -> std::ostream&);
     }
   }

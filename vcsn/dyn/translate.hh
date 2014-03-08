@@ -335,9 +335,9 @@ namespace vcsn
           if (false) {}
           else ALGO("concatenation_ratexp", "concatenation");
           else ALGO("infiltration", "product");
-          else ALGO("info_exp", "info");
+          else ALGO("info_ratexp", "info");
           else ALGO("intersection_ratexp", "product");
-          else ALGO("print_exp", "print");
+          else ALGO("print_ratexp", "print");
           else ALGO("print_weight", "print");
           else ALGO("shuffle", "product");
           else ALGO("sum_ratexp", "sum");

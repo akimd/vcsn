@@ -85,7 +85,7 @@ namespace vcsn
     | print(ratexp, stream).  |
     `------------------------*/
 
-    REGISTER_DEFINE(print_exp);
+    REGISTER_DEFINE(print_ratexp);
 
     std::ostream&
     print(const ratexp& exp, std::ostream& out, const std::string& format)
@@ -95,14 +95,14 @@ namespace vcsn
       else if (format == "null")
         {}
       else if (format == "latex")
-        detail::print_exp_registry().call(exp, out, format);
+        detail::print_ratexp_registry().call(exp, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
           // FIXME: problem with rvalue if we pass
           // 'std::string("text")'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
-          detail::print_exp_registry().call(exp, out, format);
+          detail::print_ratexp_registry().call(exp, out, format);
         }
       else
         raise("invalid output format for ratexp: ", str_escape(format));
