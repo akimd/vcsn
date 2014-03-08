@@ -1,40 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env python
 
-# weighset VCSN-STANDARD-OF-ARGUMENTS
-# -----------------------------------
-weighset()
-{
-  while test $# != 0
-  do
-    case $1 in
-      (-W) case $2 in
-            (zr) echo 'ratexpset<lal_char(abcd)_z>';;
-            (*) echo "$2";;
-           esac
-           return 0;;
-      (-C) echo "$2"
-           return 0;;
-    esac
-    shift
-  done
-  echo 'b'
-  return 0
-}
+import vcsn
+from test import *
 
-# check VCSN-STANDARD-OF-ARGUMENTS
-# --------------------------------
-# Expected output is on stdin, except the constant bits (see below).
-check ()
-{
-  run 0 - -vcsn de-bruijn "$@" -O dot
-}
-
-fail ()
-{
-  run 1 '' -vcsn standard -C "$@"
-}
-
-check -C 'lal_char(ab)_b' 2 <<\EOF
+CHECK_EQ(vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -58,9 +27,9 @@ digraph
   2 -> 3 [label = "a, b"]
   3 -> F3
 }
-EOF
+'''), vcsn.context('lal_char(ab)_b').de_bruijn(2))
 
-check -C 'lal_char(xyz)_b' 3 <<\EOF
+CHECK_EQ(vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(xyz)_b"
@@ -86,4 +55,4 @@ digraph
   3 -> 4 [label = "[x-z]"]
   4 -> F4
 }
-EOF
+'''), vcsn.context('lal_char(xyz)_b').de_bruijn(3))

@@ -22,6 +22,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/complete.py                               \
   %D%/concatenate.py                            \
   %D%/constant-term.py                          \
+  %D%/de-bruijn.py                              \
   %D%/derivation.py                             \
   %D%/difference.py                             \
   %D%/double-ring.py                            \
