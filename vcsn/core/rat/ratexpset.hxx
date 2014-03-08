@@ -460,6 +460,17 @@ namespace vcsn
     return v;
   }
 
+  template <typename Context>
+  template <typename GenSet>
+  inline
+  auto
+  ratexpset<Context>::conv(const letterset<GenSet>& ls,
+                           typename letterset<GenSet>::value_t v) const
+    -> value_t
+  {
+    return atom(labelset()->conv(ls, v));
+  }
+
   DEFINE::conv(b, typename b::value_t v) const
     -> value_t
   {

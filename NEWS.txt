@@ -5,6 +5,14 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-03-08
+** operations on rational expressions accept more heterogenous arguments
+Conversions of both labels and weights are performed if needed.
+
+  >>> a = vcsn.context('ratexpset<lal_char(xy)_b>_z').ratexp("<2>'x*'")
+  >>> b = vcsn.context('lal_char(b)_q')              .ratexp('<1/3>b')
+  >>> a + b
+  <2>x*+<1/3>b
+
 ** concatenation accepts more heterogenous arguments
 As for products and union, it is now possible to compute the concatentation
 of automata with different types:

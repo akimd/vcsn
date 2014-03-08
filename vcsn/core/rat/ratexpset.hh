@@ -1,6 +1,7 @@
 #ifndef VCSN_CORE_RAT_RATEXPSET_HH
 # define VCSN_CORE_RAT_RATEXPSET_HH
 
+# include <set>
 # include <string>
 
 # include <vcsn/core/rat/printer.hh>
@@ -8,6 +9,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/labelset/letterset.hh>
 # include <vcsn/weights/b.hh>
 # include <vcsn/weights/z.hh>
 # include <vcsn/weights/q.hh>
@@ -125,6 +127,9 @@ namespace vcsn
     }
 
     value_t conv(std::istream& is) const;
+    template <typename GenSet>
+    value_t conv(const letterset<GenSet>& ls,
+                 typename letterset<GenSet>::value_t v) const;
     value_t conv(b, typename b::value_t v) const;
     value_t conv(const z& ws, typename z::value_t v) const;
     value_t conv(const q& ws, typename q::value_t v) const;
@@ -136,6 +141,11 @@ namespace vcsn
     value_t conv(self_type, value_t v) const;
     std::ostream& print(std::ostream& o, const value_t v,
 			const std::string& format = "text") const;
+
+    std::set<value_t> convs(std::istream&) const
+    {
+      raise(vname(), ": ranges not implemented");
+    }
 
   public:
     /// Whether \a l < \a r.
@@ -232,6 +242,28 @@ namespace vcsn
     -> ratexpset<join_t<Ctx1, Ctx2>>
   {
     return join(a.context(), b.context());
+  }
+
+  // Used as a labelset.
+  template <typename GenSet1,  typename Ctx2>
+  inline
+  auto
+  join(const letterset<GenSet1>& a, const ratexpset<Ctx2>& b)
+    -> ratexpset<ctx::context<join_t<letterset<GenSet1>, typename Ctx2::labelset_t>,
+                              typename Ctx2::weightset_t>>
+  {
+    using ctx_t = ctx::context<join_t<letterset<GenSet1>, typename Ctx2::labelset_t>,
+                               typename Ctx2::weightset_t>;
+    return ctx_t{join(a, *b.labelset()), *b.weightset()};
+  }
+
+  template <typename Ctx1,  typename GenSet2>
+  inline
+  auto
+  join(const ratexpset<Ctx1>& a, const letterset<GenSet2>& b)
+    -> decltype(join(b, a))
+  {
+    return join(b, a);
   }
 
   // B.  FIXME: screams for refactoring!
