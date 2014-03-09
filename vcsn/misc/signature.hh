@@ -5,6 +5,7 @@
 # include <string>
 # include <vector>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn LIBVCSN_API
@@ -19,6 +20,7 @@ namespace vcsn LIBVCSN_API
 
     std::string to_string() const;
 
+    ATTRIBUTE_PURE
     bool operator<(const signature& that) const
     {
       return sig < that.sig;
