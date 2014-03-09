@@ -91,9 +91,9 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc
 lib_libvcsn_la_LDFLAGS =			\
-  $(BOOST_REGEX_LDFLAGS)
+  $(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
 lib_libvcsn_la_LIBADD =				\
-  $(BOOST_REGEX_LIBS)
+  $(BOOST_FILESYSTEM_LIBS) $(BOOST_REGEX_LIBS)
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_

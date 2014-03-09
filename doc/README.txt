@@ -73,9 +73,6 @@ istream: is
 ** VCSN_BINARY
 Force ratexpset to build AST variadic nodes with only two children.
 
-** VCSN_CTXLIBDIR [$VCSN_TMPDIR]
-Where the runtime context instantiation are generated and compiled.
-
 ** VCSN_DEBUG
 Improve the display with debugging information.
 *** dot
@@ -111,15 +108,18 @@ Graphviz displays.
       s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
     ' $file
 
-** VCSN_TMPDIR [/tmp]
-Path to the folder in which compiled contexts should be stored.
-
 ** VCSN_PARENS
 Force the display of useless parentheses.
+
+** VCSN_PLUGINDIR [~/.vcsn/plugins]
+Where the runtime context instantiation are generated and compiled.
 
 ** VCSN_SEED
 Disable the generation of a random seed, stick to the compile-time
 default seed.
+
+** VCSN_TMPDIR [/tmp]
+Path to the folder in which compiled contexts should be stored.
 
 ** VERBOSE
 Make the test suite more verbose.

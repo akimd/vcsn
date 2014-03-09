@@ -7,6 +7,8 @@
 #include <sstream>
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 #include <vcsn/config.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
@@ -21,6 +23,40 @@ namespace vcsn
   {
     namespace detail
     {
+      /// \a getenv(var) if defined, otherwise \a val.
+      std::string
+      xgetenv(const std::string& var, const std::string& val = "")
+      {
+        const char* cp = getenv(var.c_str());
+        return cp ? cp : val;
+      }
+
+      /// Expand initial "~" in res.
+      // http://stackoverflow.com/questions/4891006.
+      std::string expand_tilda(std::string res)
+      {
+        if (!res.empty() && res[0] == '~')
+          {
+            assert(res.size() == 1 || res[1] == '/');
+            auto home = xgetenv("HOME", xgetenv("USERPROFILE"));
+            char const *hdrive = getenv("HOMEDRIVE");
+            char const *hres = getenv("HOMERES");
+            if (!home.empty())
+              res.replace(0, 1, home);
+            else if (hdrive && hres)
+              res.replace(0, 1, std::string(hdrive) + hres);
+            else
+              res.replace(0, 1, xgetenv("VCSN_TMPDIR", "/tmp"));
+          }
+        return res;
+      }
+
+      /// Ensure a directory exists.
+      void ensure_directory(const std::string& dir)
+      {
+        boost::filesystem::create_directories(dir);
+      }
+
       struct translation
       {
         /// Return the next word from \a is.
@@ -222,14 +258,6 @@ namespace vcsn
           return o;
         }
 
-        /// \a getenv(var) if defined, otherwise \a val.
-        std::string
-        xgetenv(const std::string& var, const std::string& val) const
-        {
-          const char* cp = getenv(var.c_str());
-          return cp ? cp : val;
-        }
-
         /// Run C++ compiler with arguments \a s.
         void cxx(std::string s)
         {
@@ -246,11 +274,13 @@ namespace vcsn
         }
 
         /// Where the runtime compilation files must be put.
-        std::string ctxlibdir() const
+        std::string plugindir() const
         {
-          auto tmp = xgetenv("VCSN_TMPDIR", "/tmp");
-          auto ctxlibdir = xgetenv("VCSN_CTXLIBDIR", tmp);
-          return ctxlibdir + "/";
+          auto res = xgetenv("VCSN_PLUGINDIR",
+                             xgetenv("VCSN_HOME", "~/.vcsn/plugins"));
+          res = expand_tilda(res);
+          ensure_directory(res);
+          return res + "/";
         }
 
         /// Compile and load a C++ file.
@@ -270,7 +300,7 @@ namespace vcsn
         void compile(const std::string& ctx)
         {
           header("vcsn/ctx/instantiate.hh");
-          std::string base = ctxlibdir() + context_base::sname(ctx);
+          std::string base = plugindir() + context_base::sname(ctx);
           is.clear();
           is.str(ctx);
           os << "using ctx_t =" << incendl;
@@ -294,7 +324,7 @@ namespace vcsn
         void compile(const std::string& name, const signature& sig)
         {
           header("vcsn/algos/" + name + ".hh");
-          std::string base = ctxlibdir() + name + "(" + sig.to_string() + ")";
+          std::string base = plugindir() + name + "(" + sig.to_string() + ")";
           int count = 0;
           std::string types;
           for (const auto& s: sig)
