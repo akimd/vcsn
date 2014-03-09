@@ -3,14 +3,20 @@
 ## ----------- ##
 
 import re
-from vcsn_cxx import automaton
+from vcsn_cxx import automaton, weight
 from vcsn import is_equal, info_to_dict, dot_to_svg
+
+def automaton_mul(self, rhs):
+    if isinstance(rhs, weight):
+        return self.right_mult(rhs)
+    else:
+        return self.concatenate(rhs)
 
 automaton.__eq__ = is_equal
 automaton.__add__ = automaton.sum
 automaton.__and__ = automaton.product
 automaton.__invert__ = automaton.complement
-automaton.__mul__ = automaton.concatenate
+automaton.__mul__ = automaton_mul
 automaton.__mod__ = automaton.difference
 automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.power

@@ -8,9 +8,17 @@ changes in the internal API may also be documented.
 ** left-mult and right-mult are binded in Python
 Both work on automata and ratexps.  Left multiplication now has its
 arguments in a more natural order in the C++ API: (weight, automaton),
-instead of the converse previously.  TAF-Kit still has it the old way.
+instead of the converse previously.  TAF-Kit still has it the old way.  The
+Python operator * (left-associative) is overloaded to provide syntactic
+sugar.
 
-t
+  >>> z = vcsn.context('lal_char(abc)_z')
+  >>> a = z.weight("12") * z.ratexp('ab').standard() * z.weight("23")
+  >>> a.ratexp()
+  (<12>ab)<23>
+
+  >>> z.weight("12") * z.ratexp('ab') * z.weight("23")
+  <12>(ab)<23>
 
 * 2014-03-08
 ** sum of rational expressions accepts more heterogenous arguments
