@@ -27,5 +27,12 @@ namespace vcsn
     {
       return detail::right_mult_registry().call(aut, w);
     }
+
+    REGISTER_DEFINE(right_mult_ratexp);
+    ratexp
+    right_mult(const ratexp& r, const weight& w)
+    {
+      return detail::right_mult_ratexp_registry().call(r, w);
+    }
   }
 }

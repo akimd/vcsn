@@ -388,10 +388,14 @@ struct ratexp
     return vcsn::dyn::is_valid(r_);
   }
 
+  ratexp left_mult(const weight& w) const;
+
   automaton linear(bool breaking = false) const
   {
     return vcsn::dyn::linear(r_, breaking);
   }
+
+  ratexp right_mult(const weight& w) const;
 
   polynomial split() const
   {
@@ -540,6 +544,17 @@ weight ratexp::constant_term() const
 {
   return vcsn::dyn::constant_term(r_);
 }
+
+ratexp ratexp::left_mult(const weight& w) const
+{
+  return vcsn::dyn::left_mult(w.val_, r_);
+}
+
+ratexp ratexp::right_mult(const weight& w) const
+{
+  return vcsn::dyn::right_mult(r_, w.val_);
+}
+
 
 /*-----------.
 | vcsn_cxx.  |
@@ -637,7 +652,9 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("intersection", &ratexp::intersection)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
+    .def("left_mult", &ratexp::left_mult)
     .def("linear", &ratexp::linear, linear())
+    .def("right_mult", &ratexp::right_mult)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
     .def("star_height", &ratexp::star_height)

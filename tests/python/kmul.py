@@ -3,6 +3,12 @@
 import vcsn
 from test import *
 
+ctx = vcsn.context('lal_char(ab)_ratexpset<lal_char(xyz)_b>')
+
+## ---------- ##
+## automata.  ##
+## ---------- ##
+
 q = vcsn.context('lal_char(ab)_q')
 a = vcsn.automaton(r'''
 digraph
@@ -172,3 +178,11 @@ digraph
 }
 ''')
 CHECK_EQ(exp, a.right_mult(r.weight('3.4')).sort())
+
+## -------- ##
+## ratexp.  ##
+## -------- ##
+
+r = ctx.ratexp('<x>(<y>a)*<z>')
+CHECK_EQ(ctx.ratexp('<xx>(<y>a)*<z>'), r.left_mult(ctx.weight('x')))
+CHECK_EQ(ctx.ratexp('<x>(<y>a)*<zz>'), r.right_mult(ctx.weight('z')))

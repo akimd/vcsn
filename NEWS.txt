@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-03-09
+** left-mult and right-mult are binded in Python
+Both work on automata and ratexps.  Left multiplication now has its
+arguments in a more natural order in the C++ API: (weight, automaton),
+instead of the converse previously.  TAF-Kit still has it the old way.
+
+t
+
 * 2014-03-08
 ** sum of rational expressions accepts more heterogenous arguments
 Conversions of both labels and weights are performed if needed.

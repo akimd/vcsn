@@ -95,7 +95,7 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   typename RatExpSet::ratexp_t
-  left_mult(const RatExpSet& rs, 
+  left_mult(const RatExpSet& rs,
             const typename RatExpSet::weight_t& w,
             const typename RatExpSet::value_t& r)
   {
@@ -161,6 +161,41 @@ namespace vcsn
 
       REGISTER_DECLARE(right_mult,
                        (const automaton&, const weight&) -> automaton);
+    }
+  }
+
+  /*---------------------.
+  | right-mult(ratexp).  |
+  `---------------------*/
+
+  template <typename RatExpSet>
+  inline
+  typename RatExpSet::ratexp_t
+  right_mult(const RatExpSet& rs,
+             const typename RatExpSet::value_t& r,
+             const typename RatExpSet::weight_t& w)
+  {
+    return rs.rmul(r, w);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet, typename WeightSet>
+      ratexp
+      right_mult_ratexp(const ratexp& exp, const weight& weight)
+      {
+        const auto& w = weight->as<WeightSet>().weight();
+        const auto& e = exp->as<RatExpSet>();
+        return make_ratexp(e.get_ratexpset(),
+                           right_mult(e.get_ratexpset(), e.ratexp(), w));
+      }
+
+      REGISTER_DECLARE(right_mult_ratexp,
+                       (const ratexp&, const weight&) -> ratexp);
+
     }
   }
 }

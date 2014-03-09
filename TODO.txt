@@ -6,25 +6,6 @@ conversion: it should be easy to see that the original *.chk and the
 final *.py are really alike.  Don't over-engineer something that hides the
 tests.
 
-** sum, star, etc. (harder)
-We have
-
-  star(automaton) -> automaton
-  left_mult(weight, automaton) -> automaton
-  right_mult(automaton, weight) -> automaton
-
-that exist at in the various API.  Do the same for ratexps:
-
-  star(ratexp) -> ratexp # This one exists, and is currently named "chain".
-                         # Actually, it is more general, of which star
-                         # is just a special case.
-  left_mult(weight, ratexp) -> ratexp
-  right_mult(ratexp, weight) -> ratexp
-
-in dyn::, and in Python.  Write the corresponding tests in Python only: take
-inspiration from tests/python/derivation.py to write a single *.chk file for
-this task.
-
 ** subsequence (or subword?), prefix, suffix, factor
 From an automaton generate another that corresponds to the subsequences,
 prefixes, suffixes and factors.
@@ -45,6 +26,10 @@ we use polynomials of ratexps, it is just "by chance" that there is a
 function "concat" which is *mostly* like mul.
 
 We should really name "concat" as "mul" in our labelsets.
+
+** left_mult and right_mult should be lmul and rmul
+And how should they behave with weight 0?  Currently they behave badly in
+that the result is not standard.
 
 * Build
 ** --enable-compilation-mode
@@ -111,7 +96,7 @@ Note that when printing an automaton with an empty alphabet, we write
 'lal_char()_b').
 
 ** Parsing errors in ratexps
-
+***
 $ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'
 
 This has three states instead of two:
@@ -136,6 +121,15 @@ So we have two problems here:
   automaton.
 
 In other words, both the parser and the pretty-printer must be revised.
+
+*** Probably related to the previous point:
+This is wrong:
+
+z.ratexp('((<12>a)b)<23>')
+(<12>ab)<23>
+
+z.ratexp('(<12>ab)<23>')
+<12>(ab)<23>
 
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,

@@ -331,7 +331,7 @@ namespace vcsn
     automaton right_mult(const automaton& aut, const weight& w);
 
     /// The right-multiplication of a ratexp with \a w as weight.
-    ratexp right_mult(const weight& w, const ratexp& aut);
+    ratexp right_mult(const ratexp& aut, const weight& w);
 
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);

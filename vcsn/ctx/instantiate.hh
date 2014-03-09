@@ -305,6 +305,7 @@ namespace vcsn
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
+        REGISTER(right_mult_ratexp, rs_t, ws_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_exp, rs_t);
