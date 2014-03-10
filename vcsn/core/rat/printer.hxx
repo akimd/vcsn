@@ -152,8 +152,7 @@ namespace vcsn
       bool needs_parens =
         (force
          || force_parens
-         || (parent_has_precedence && ! (parent.is_unary() && child.is_unary())))
-        && ! (child.type() == type_t::atom && context_t::is_lal);
+         || (parent_has_precedence && ! (parent.is_unary() && child.is_unary())));
       if (needs_parens)
         out_ << lparen_;
       else if (parent.is_unary())

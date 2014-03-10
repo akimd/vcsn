@@ -138,7 +138,6 @@
 
 %type <braced_ratexp> exp input weights;
 
-%precedence RWEIGHT
 %left "+"
 %left ":" "%"
 %left "&"
@@ -146,7 +145,8 @@
 %right "{\\}"
 %left "."
 %right "weight" // Match longest series of "weight".
-%precedence LWEIGHT   // weights exp . "weight": reduce for the LWEIGHT rule.
+%precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
+%precedence RWEIGHT
 %precedence "(" "\\z" "\\e" "letter" "character-class"
 %precedence CONCAT
 %precedence "*" "{c}" "{T}"

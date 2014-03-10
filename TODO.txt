@@ -95,6 +95,9 @@ Note that when printing an automaton with an empty alphabet, we write
 'lal_char_b' which fails to parse correctly for lack of () (should be
 'lal_char()_b').
 
+** Rat
+This works! z.ratexp('a)')
+
 ** Parsing errors in ratexps
 ***
 $ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'
@@ -125,6 +128,7 @@ In other words, both the parser and the pretty-printer must be revised.
 *** Probably related to the previous point:
 This is wrong:
 
+z = vcsn.context('lal_char(abc)_z')
 z.ratexp('((<12>a)b)<23>')
 (<12>ab)<23>
 
