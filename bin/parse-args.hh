@@ -50,6 +50,12 @@ struct options
 
   /// The output stream.
   std::shared_ptr<std::ostream> out;
+
+  void print(bool a) const;
+  void print(vcsn::dyn::automaton a) const;
+  void print(vcsn::dyn::ratexp a) const;
+  void print(vcsn::dyn::polynomial a) const;
+  void print(vcsn::dyn::weight a) const;
 };
 
 /// Read the command line arguments.

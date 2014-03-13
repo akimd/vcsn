@@ -49,7 +49,7 @@ case $1 in
   (-h|--help) help;;
   (-v|--version) version;;
 
-  (accessible|are-equivalent|coaccessible|determinize)
+  (accessible|are-equivalent|are-isomorphic|coaccessible|determinize)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
      exec "vcsn-tafkit" "$cmd" "$@";;

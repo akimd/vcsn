@@ -21,7 +21,7 @@
       auto res = vcsn::dyn::Name(aut);          \
                                                 \
       /* Output. */                             \
-      *opts.out << sort(res) << std::endl;      \
+      opts.print(res);                          \
       return 0;                                 \
     }                                           \
   }
@@ -45,7 +45,7 @@ struct are_equivalent: vcsn_function
     auto res = vcsn::dyn::are_equivalent(lhs, rhs);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 
@@ -63,7 +63,30 @@ struct are_equivalent: vcsn_function
     auto res = vcsn::dyn::are_equivalent(lhs, rhs);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
+    return res ? 0 : 2;
+  }
+};
+
+struct are_isomorphic: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    automaton lhs = read_automaton(opts);
+    // FIXME: hack.
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    automaton rhs = read_automaton(opts2);
+
+    // FIXME: generalize to an arbitrary number of automata
+
+    // Process.
+    auto res = vcsn::dyn::are_isomorphic(lhs, rhs);
+
+    // Output.
+    opts.print(res);
     return res ? 0 : 2;
   }
 };
@@ -83,7 +106,7 @@ struct determinize: vcsn_function
     auto res = vcsn::dyn::determinize(aut, complete);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };
@@ -98,6 +121,7 @@ int main(int argc, char* const argv[])
   if (false) {}
   ALGO(accessible);
   ALGO(are_equivalent);
+  ALGO(are_isomorphic);
   ALGO(coaccessible);
   ALGO(determinize);
   else

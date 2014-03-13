@@ -24,6 +24,31 @@ options::options()
   : data_library(xgetenv("VCSN_DATA_PATH", VCSN_DATADIR), ":")
 {}
 
+void options::print(bool a) const
+{
+  *out << a << std::endl;
+}
+
+void options::print(vcsn::dyn::automaton a) const
+{
+  *out << vcsn::dyn::sort(a) << std::endl;
+}
+
+void options::print(vcsn::dyn::ratexp a) const
+{
+  *out << a << std::endl;
+}
+
+void options::print(vcsn::dyn::polynomial a) const
+{
+  *out << a << std::endl;
+}
+
+void options::print(vcsn::dyn::weight a) const
+{
+  *out << a << std::endl;
+}
+
 /// An istream for the input argv[0].
 static
 std::shared_ptr<std::istream>
