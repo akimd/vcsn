@@ -33,17 +33,14 @@ all_vcsn =                                      \
   %D%/vcsn-enumerate                            \
   %D%/vcsn-evaluate                             \
   %D%/vcsn-expand                               \
-  %D%/vcsn-infiltration                         \
   %D%/vcsn-ladybird                             \
   %D%/vcsn-left-mult                            \
   %D%/vcsn-lift                                 \
   %D%/vcsn-minimize                             \
-  %D%/vcsn-product                              \
   %D%/vcsn-proper                               \
   %D%/vcsn-random                               \
   %D%/vcsn-right-mult                           \
   %D%/vcsn-shortest                             \
-  %D%/vcsn-shuffle                              \
   %D%/vcsn-split                                \
   %D%/vcsn-standard                             \
   %D%/vcsn-star                                 \
@@ -68,18 +65,15 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_enumerate_LDADD        = %D%/libtafkit.la
 %C%_vcsn_evaluate_LDADD         = %D%/libtafkit.la
 %C%_vcsn_expand_LDADD           = %D%/libtafkit.la
-%C%_vcsn_infiltration_LDADD     = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
 %C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la
 %C%_vcsn_lift_LDADD             = %D%/libtafkit.la
 %C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
-%C%_vcsn_product_LDADD          = %D%/libtafkit.la
 %C%_vcsn_proper_LDADD           = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la
 %C%_vcsn_right_mult_LDADD       = %D%/libtafkit.la
 %C%_vcsn_shortest_LDADD         = %D%/libtafkit.la
-%C%_vcsn_shuffle_LDADD          = %D%/libtafkit.la
 %C%_vcsn_split_LDADD            = %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la
 %C%_vcsn_star_LDADD             = %D%/libtafkit.la

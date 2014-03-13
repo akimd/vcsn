@@ -26,26 +26,27 @@
     }                                           \
   }
 
-#define DEFINE_AUT_AUT_FUNCTION(Name)           \
-  struct Name: vcsn_function                    \
-  {                                             \
-    int work_aut(const options& opts) const     \
-    {                                           \
-      using namespace vcsn::dyn;                \
-      /* Input. */                              \
-      auto lhs = read_automaton(opts);          \
-      /* Hack. */                               \
-      options opts2 = opts;                     \
-      opts2.input = opts.argv[0];               \
-      automaton rhs = read_automaton(opts2);    \
-                                                \
-      /* Process. */                            \
-      auto res = vcsn::dyn::Name(lhs, rhs);     \
-                                                \
-      /* Output. */                             \
-      opts.print(res);                          \
-      return 0;                                 \
-    }                                           \
+#define DEFINE_AUT_VARIADIC_FUNCTION(Name)              \
+  struct Name: vcsn_function                            \
+  {                                                     \
+    int work_aut(const options& opts) const             \
+    {                                                   \
+      using namespace vcsn::dyn;                        \
+      /* Input. */                                      \
+      auto res = read_automaton(opts);                  \
+      for (unsigned i = 0; i < opts.argv.size(); ++i)   \
+        {                                               \
+          /* Hack. */                                   \
+          options opts2 = opts;                         \
+          opts2.input = opts.argv[i];                   \
+          automaton rhs = read_automaton(opts2);        \
+          res = vcsn::dyn::Name(res, rhs);              \
+        }                                               \
+                                                        \
+      /* Output. */                                     \
+      opts.print(res);                                  \
+      return 0;                                         \
+    }                                                   \
   }
 
 #define DEFINE_AUT_SIZE_FUNCTION(Name)                          \
@@ -92,9 +93,10 @@ DEFINE_AUT_SIZE_FUNCTION(chain);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
-DEFINE_AUT_AUT_FUNCTION(concatenate);
+DEFINE_AUT_VARIADIC_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
-DEFINE_AUT_AUT_FUNCTION(difference);
+DEFINE_AUT_VARIADIC_FUNCTION(difference);
+DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
 DEFINE_AUT_FUNCTION(is_complete);
 DEFINE_AUT_FUNCTION(is_deterministic);
@@ -106,6 +108,8 @@ DEFINE_AUT_FUNCTION(is_standard);
 DEFINE_AUT_FUNCTION(is_trim);
 DEFINE_AUT_FUNCTION(is_useless);
 DEFINE_AUT_SIZE_FUNCTION(power);
+DEFINE_AUT_VARIADIC_FUNCTION(product);
+DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 
 struct are_equivalent: vcsn_function
 {
@@ -328,6 +332,7 @@ int main(int argc, char* const argv[])
   ALGO(derived_term);
   ALGO(determinize);
   ALGO(difference);
+  ALGO(infiltration);
   ALGO(is_ambiguous);
   ALGO(is_complete);
   ALGO(is_deterministic);
@@ -340,6 +345,8 @@ int main(int argc, char* const argv[])
   ALGO(is_useless);
   ALGO(is_valid);
   ALGO(power);
+  ALGO(product);
+  ALGO(shuffle);
   else
     vcsn::raise("unknown command: " + cmd);
  return vcsn_main(argc - 1, argv + 1, *f);
