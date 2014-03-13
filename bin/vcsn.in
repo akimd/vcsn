@@ -48,7 +48,13 @@ case $1 in
   (-e) shift 1; exec "$@";;
   (-h|--help) help;;
   (-v|--version) version;;
-  (*)  prog="vcsn-$1"; shift; exec "$prog" "$@";;
+
+  (accessible|are-equivalent|coaccessible|determinize)
+     cmd=$(echo "$1" | sed -e 's/-/_/g')
+     shift
+     exec "vcsn-tafkit" "$cmd" "$@";;
+  (*)
+     prog="vcsn-$1"; shift; exec "$prog" "$@";;
 esac
 
 # Local Variables:

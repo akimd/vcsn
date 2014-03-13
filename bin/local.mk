@@ -25,13 +25,10 @@ nodist_bin_SCRIPTS +=                           \
 ## ---------- ##
 
 all_vcsn =                                      \
-  %D%/vcsn-accessible                           \
-  %D%/vcsn-are-equivalent                       \
   %D%/vcsn-are-isomorphic                       \
   %D%/vcsn-aut-to-exp                           \
   %D%/vcsn-cat                                  \
   %D%/vcsn-chain                                \
-  %D%/vcsn-coaccessible                         \
   %D%/vcsn-complement                           \
   %D%/vcsn-complete                             \
   %D%/vcsn-concatenate                          \
@@ -39,7 +36,7 @@ all_vcsn =                                      \
   %D%/vcsn-de-bruijn                            \
   %D%/vcsn-derivation                           \
   %D%/vcsn-derived-term                         \
-  %D%/vcsn-determinize                          \
+  %D%/vcsn-tafkit                               \
   %D%/vcsn-difference                           \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
@@ -87,13 +84,10 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_libtafkit_la_SOURCES = %D%/parse-args.hh %D%/parse-args.cc
 %C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
-%C%_vcsn_accessible_LDADD       = %D%/libtafkit.la
-%C%_vcsn_are_equivalent_LDADD   = %D%/libtafkit.la
 %C%_vcsn_are_isomorphic_LDADD   = %D%/libtafkit.la
 %C%_vcsn_aut_to_exp_LDADD       = %D%/libtafkit.la
 %C%_vcsn_cat_LDADD              = %D%/libtafkit.la
 %C%_vcsn_chain_LDADD            = %D%/libtafkit.la
-%C%_vcsn_coaccessible_LDADD     = %D%/libtafkit.la
 %C%_vcsn_complement_LDADD       = %D%/libtafkit.la
 %C%_vcsn_complete_LDADD         = %D%/libtafkit.la
 %C%_vcsn_concatenate_LDADD      = %D%/libtafkit.la
@@ -101,7 +95,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
 %C%_vcsn_derivation_LDADD       = %D%/libtafkit.la
 %C%_vcsn_derived_term_LDADD     = %D%/libtafkit.la
-%C%_vcsn_determinize_LDADD      = %D%/libtafkit.la
 %C%_vcsn_difference_LDADD       = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
@@ -121,6 +114,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_is_trim_LDADD          = %D%/libtafkit.la
 %C%_vcsn_is_useless_LDADD       = %D%/libtafkit.la
 %C%_vcsn_is_valid_LDADD         = %D%/libtafkit.la
+%C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
 %C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la
 %C%_vcsn_lift_LDADD             = %D%/libtafkit.la
