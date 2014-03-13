@@ -25,7 +25,7 @@ struct right_mult: vcsn_function
     auto res = vcsn::dyn::right_mult(aut, w);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

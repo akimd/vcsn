@@ -13,7 +13,7 @@ struct cat: vcsn_function
     // Input.
     auto aut = read_automaton(opts);
     // Output.
-    *opts.out << sort(aut) << std::endl;
+    opts.print(aut);
     return 0;
   }
 
@@ -23,7 +23,7 @@ struct cat: vcsn_function
     // Input.
     auto exp = read_ratexp(opts);
     // Output.
-    *opts.out << exp << std::endl;
+    opts.print(exp);
     return 0;
   }
 
@@ -33,7 +33,7 @@ struct cat: vcsn_function
     // Input.
     auto exp = read_polynomial(opts);
     // Output.
-    *opts.out << exp << std::endl;
+    opts.print(exp);
     return 0;
   }
 
@@ -43,7 +43,7 @@ struct cat: vcsn_function
     // Input.
     auto w = read_weight(opts);
     // Output.
-    *opts.out << w << std::endl;
+    opts.print(w);
     return 0;
   }
 };

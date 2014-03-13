@@ -17,7 +17,7 @@ struct split: vcsn_function
     auto res = vcsn::dyn::split(exp);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return 0;
   }
 };

@@ -17,7 +17,7 @@ struct proper: vcsn_function
     auto res = vcsn::dyn::proper(aut);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

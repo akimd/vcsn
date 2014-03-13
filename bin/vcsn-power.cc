@@ -20,7 +20,7 @@ struct power: vcsn_function
     auto res = vcsn::dyn::power(aut, n);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

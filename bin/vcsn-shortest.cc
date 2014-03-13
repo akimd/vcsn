@@ -22,7 +22,7 @@ struct shortest: vcsn_function
 
     // Output.
     if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      *opts.out << res << std::endl;
+      opts.print(res);
     return 0;
   }
 
@@ -40,7 +40,7 @@ struct shortest: vcsn_function
 
     // Output.
     if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      *opts.out << res << std::endl;
+      opts.print(res);
     return 0;
   }
 };

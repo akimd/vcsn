@@ -17,7 +17,7 @@ struct is_useless: vcsn_function
     bool res = vcsn::dyn::is_useless(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 };

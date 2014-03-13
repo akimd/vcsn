@@ -17,7 +17,7 @@ struct star_normal_form: vcsn_function
     ratexp res = vcsn::dyn::star_normal_form(exp);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return 0;
   }
 };

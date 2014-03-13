@@ -17,7 +17,7 @@ struct aut_to_exp: vcsn_function
     auto res = vcsn::dyn::aut_to_exp(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return 0;
   }
 };

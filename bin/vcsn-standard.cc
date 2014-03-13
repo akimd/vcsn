@@ -17,7 +17,7 @@ struct standard: vcsn_function
     automaton res = vcsn::dyn::standard(aut);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 
@@ -31,7 +31,7 @@ struct standard: vcsn_function
     automaton res = vcsn::dyn::standard(exp);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

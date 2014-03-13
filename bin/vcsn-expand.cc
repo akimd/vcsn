@@ -17,7 +17,7 @@ struct expand: vcsn_function
     ratexp res = vcsn::dyn::expand(exp);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return 0;
   }
 };

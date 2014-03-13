@@ -17,7 +17,7 @@ struct is_trim: vcsn_function
     bool res = vcsn::dyn::is_trim(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 };

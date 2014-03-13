@@ -17,7 +17,7 @@ struct evaluate: vcsn_function
     auto res = vcsn::dyn::eval(aut, opts.argv[0]);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return 0;
   }
 };

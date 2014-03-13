@@ -18,7 +18,7 @@ struct star: vcsn_function
     auto res = vcsn::dyn::star(aut);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

@@ -17,7 +17,7 @@ struct is_ambiguous: vcsn_function
     bool res = vcsn::dyn::is_ambiguous(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 };

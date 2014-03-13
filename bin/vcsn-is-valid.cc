@@ -17,7 +17,7 @@ struct is_valid: vcsn_function
     bool res = vcsn::dyn::is_valid(aut);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 
@@ -31,7 +31,7 @@ struct is_valid: vcsn_function
     bool res = vcsn::dyn::is_valid(exp);
 
     // Output.
-    *opts.out << res << std::endl;
+    opts.print(res);
     return res ? 0 : 2;
   }
 };

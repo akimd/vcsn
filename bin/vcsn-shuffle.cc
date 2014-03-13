@@ -26,7 +26,7 @@ struct shuffle: vcsn_function
       }
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

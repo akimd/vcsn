@@ -23,7 +23,7 @@ struct union_a: vcsn_function
     auto res = vcsn::dyn::union_a(lhs, rhs);
 
     // Output.
-    *opts.out << sort(res) << std::endl;
+    opts.print(res);
     return 0;
   }
 };

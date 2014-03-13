@@ -21,7 +21,7 @@ try
     automaton aut = ladybird(ctx, n);
 
     // Output.
-    *opts.out << sort(aut) << std::endl;
+    opts.print(aut);
   }
 catch (const std::exception& e)
   {
