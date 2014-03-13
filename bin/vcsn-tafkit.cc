@@ -94,6 +94,7 @@ DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
 DEFINE_AUT_AUT_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
+DEFINE_AUT_AUT_FUNCTION(difference);
 DEFINE_AUT_SIZE_FUNCTION(power);
 
 struct are_equivalent: vcsn_function
@@ -201,6 +202,48 @@ struct cat: vcsn_function
   }
 };
 
+struct derivation: vcsn_function
+{
+  int work_exp(const options& opts) const
+  {
+    // Input.
+    using namespace vcsn::dyn;
+    ratexp exp = read_ratexp(opts);
+    assert(0 < opts.argv.size());
+    std::string s = opts.argv[0];
+    bool breaking = (1 < opts.argv.size()
+                     ? boost::lexical_cast<bool>(opts.argv[1])
+                     : false);
+
+    // Process.
+    auto res = vcsn::dyn::derivation(exp, s, breaking);
+
+    // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
+struct derived_term: vcsn_function
+{
+  int work_exp(const options& opts) const
+  {
+    // Input.
+    using namespace vcsn::dyn;
+    ratexp exp = read_ratexp(opts);
+    bool breaking = (0 < opts.argv.size()
+                     ? boost::lexical_cast<bool>(opts.argv[0])
+                     : false);
+
+    // Process.
+    automaton res = vcsn::dyn::derived_term(exp, breaking);
+
+    // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
 struct determinize: vcsn_function
 {
   int work_aut(const options& opts) const
@@ -240,7 +283,10 @@ int main(int argc, char* const argv[])
   ALGO(complete);
   ALGO(concatenate);
   ALGO(constant_term);
+  ALGO(derivation);
+  ALGO(derived_term);
   ALGO(determinize);
+  ALGO(difference);
   ALGO(power);
   else
     vcsn::raise("unknown command: " + cmd);

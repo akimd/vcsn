@@ -14,7 +14,7 @@ check ()
     ('(?@'*) re=$1;;
     (*)      re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$1";;
   esac
-  run 0 "$3" -vcsn derivation -e "$re" "$2"
+  run 0 "$3" -vcsn derivation -Ee "$re" "$2"
 }
 
 ## -------------------- ##
@@ -31,12 +31,12 @@ E1t="(?@lal_char(ab)_q)$E1"
 ## ------------------- ##
 
 export VCSN_ORIGINS=1
-run 0 -f $medir/e1-dt.gv -vcsn derived-term -e "$E1t"
+run 0 -f $medir/e1-dt.gv -vcsn derived-term -Ee "$E1t"
 unset VCSN_ORIGINS
 
 # Make sure that "\e" is properly escaped.
 export VCSN_ORIGINS=1
-run 0 -f $medir/'a?-dt'.gv -vcsn derived-term -e "a?"
+run 0 -f $medir/'a?-dt'.gv -vcsn derived-term -Ee "a?"
 unset VCSN_ORIGINS
 
 # check_intersection RE1 RE2...
@@ -56,7 +56,7 @@ check_intersection ()
   local auts
   for i
   do
-    run 0 '' -vcsn derived-term -C "$ctx" -e "$i" -o $num.gv
+    run 0 '' -vcsn derived-term -C "$ctx" -Ee "$i" -o $num.gv
     auts="$auts $num.gv"
     num=$((num + 1))
   done
@@ -72,7 +72,7 @@ check_intersection ()
     re="$re&($i)"
   done
   re=${re#&}
-  run 0 '' -vcsn derived-term -C "$ctx" -e "$re" -o intersection.gv
+  run 0 '' -vcsn derived-term -C "$ctx" -Ee "$re" -o intersection.gv
   # Should be the same.
   run 0 -f prod.info -vcsn cat -O info -f intersection.gv
   run 0 -f prod.list -vcsn enumerate -f intersection.gv $length
@@ -108,7 +108,7 @@ check_br ()
     ('(?@'*) re=$1;;
     (*)      re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$1";;
   esac
-  run 0 "$3" -vcsn derivation -e "$re" "$2" 1
+  run 0 "$3" -vcsn derivation -Ee "$re" "$2" 1
 }
 
 
@@ -131,11 +131,11 @@ check "$E2t" bb "b*a($F2)"
 
 # Example 3.
 export VCSN_ORIGINS=1
-run 0 -f $medir/e2-dt.gv -vcsn derived-term -e "$E2t"
+run 0 -f $medir/e2-dt.gv -vcsn derived-term -Ee "$E2t"
 unset VCSN_ORIGINS
 
 # Example 4.
-run 0 "a*a($F2) + b*a($F2)" -vcsn split -e "$E2"
+run 0 "a*a($F2) + b*a($F2)" -vcsn split -Ee "$E2"
 run 0 "a* + b*" -vcsn split -e "$F2"
 
 # Example 5.
@@ -146,11 +146,11 @@ check_br "$E2t" ab 'b*'
 check_br "$E2t" ba "a* + b*"
 check_br "$E2t" bb "b*a($F2)"
 export VCSN_ORIGINS=1
-run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -e "$E2t" 1
+run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -Ee "$E2t" 1
 unset VCSN_ORIGINS
 
 # Figure 3.
 export VCSN_ORIGINS=1
-run 0 -f $medir/h3-dt.gv -vcsn derived-term -e 'a(b+c+d)'
-run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -e 'a(b+c+d)' 1
+run 0 -f $medir/h3-dt.gv -vcsn derived-term -Ee 'a(b+c+d)'
+run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -Ee 'a(b+c+d)' 1
 unset VCSN_ORIGINS

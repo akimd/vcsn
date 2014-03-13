@@ -26,10 +26,7 @@ nodist_bin_SCRIPTS +=                           \
 
 all_vcsn =                                      \
   %D%/vcsn-de-bruijn                            \
-  %D%/vcsn-derivation                           \
-  %D%/vcsn-derived-term                         \
   %D%/vcsn-tafkit                               \
-  %D%/vcsn-difference                           \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-eliminate-state                      \
@@ -76,9 +73,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
-%C%_vcsn_derivation_LDADD       = %D%/libtafkit.la
-%C%_vcsn_derived_term_LDADD     = %D%/libtafkit.la
-%C%_vcsn_difference_LDADD       = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
 %C%_vcsn_eliminate_state_LDADD  = %D%/libtafkit.la
