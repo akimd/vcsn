@@ -110,6 +110,8 @@ DEFINE_AUT_FUNCTION(is_useless);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_VARIADIC_FUNCTION(product);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
+DEFINE_AUT_VARIADIC_FUNCTION(sum);
+DEFINE_AUT_VARIADIC_FUNCTION(union_a);
 
 struct are_equivalent: vcsn_function
 {
@@ -313,6 +315,7 @@ int main(int argc, char* const argv[])
 {
   vcsn::require(1 < argc, "no command given");
   std::string cmd{argv[1]};
+  if (cmd == "union") cmd = "union_a";
   std::unique_ptr<vcsn_function> f;
 #define ALGO(Name)                              \
   else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
@@ -347,6 +350,8 @@ int main(int argc, char* const argv[])
   ALGO(power);
   ALGO(product);
   ALGO(shuffle);
+  ALGO(sum);
+  ALGO(union_a);
   else
     vcsn::raise("unknown command: " + cmd);
  return vcsn_main(argc - 1, argv + 1, *f);

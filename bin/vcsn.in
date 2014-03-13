@@ -49,16 +49,17 @@ case $1 in
   (-h|--help) help;;
   (-v|--version) version;;
 
-  (accessible|are-equivalent|are-isomorphic     \
-      |aut-to-exp                               \
-      |cat|chain|coaccessible|complement|complete\
-      |derivation|derived-term|determinize|difference           \
+  (accessible|are-equivalent|are-isomorphic \
+      |aut-to-exp \
+      |cat|chain|coaccessible|complement|complete \
+      |derivation|derived-term|determinize|difference \
       |infiltration \
-      |is-ambiguous|is-complete|is-deterministic\
-      |is-empty|is-eps-acyclic|is-normalized|is-proper\
+      |is-ambiguous|is-complete|is-deterministic \
+      |is-empty|is-eps-acyclic|is-normalized|is-proper \
       |is-standard|is-trim|is-useless|is-valid \
-      |power|product\
-      |shuffle)
+      |power|product \
+      |shuffle|sum \
+      |union)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
      exec "vcsn-tafkit" "$cmd" "$@";;

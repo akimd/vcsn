@@ -45,12 +45,10 @@ all_vcsn =                                      \
   %D%/vcsn-standard                             \
   %D%/vcsn-star                                 \
   %D%/vcsn-star-normal-form                     \
-  %D%/vcsn-sum                                  \
   %D%/vcsn-thompson                             \
   %D%/vcsn-transpose                            \
   %D%/vcsn-trim                                 \
   %D%/vcsn-u                                    \
-  %D%/vcsn-union                                \
   %D%/vcsn-universal
 
 bin_PROGRAMS += $(all_vcsn)
@@ -78,10 +76,8 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la
 %C%_vcsn_star_LDADD             = %D%/libtafkit.la
 %C%_vcsn_star_normal_form_LDADD = %D%/libtafkit.la
-%C%_vcsn_sum_LDADD              = %D%/libtafkit.la
 %C%_vcsn_thompson_LDADD         = %D%/libtafkit.la
 %C%_vcsn_transpose_LDADD        = %D%/libtafkit.la
 %C%_vcsn_trim_LDADD             = %D%/libtafkit.la
 %C%_vcsn_u_LDADD                = %D%/libtafkit.la
-%C%_vcsn_union_LDADD            = %D%/libtafkit.la
 %C%_vcsn_universal_LDADD        = %D%/libtafkit.la
