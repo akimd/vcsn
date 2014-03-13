@@ -25,11 +25,6 @@ nodist_bin_SCRIPTS +=                           \
 ## ---------- ##
 
 all_vcsn =                                      \
-  %D%/vcsn-cat                                  \
-  %D%/vcsn-complement                           \
-  %D%/vcsn-complete                             \
-  %D%/vcsn-concatenate                          \
-  %D%/vcsn-constant-term                        \
   %D%/vcsn-de-bruijn                            \
   %D%/vcsn-derivation                           \
   %D%/vcsn-derived-term                         \
@@ -80,11 +75,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_libtafkit_la_SOURCES = %D%/parse-args.hh %D%/parse-args.cc
 %C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
-%C%_vcsn_cat_LDADD              = %D%/libtafkit.la
-%C%_vcsn_complement_LDADD       = %D%/libtafkit.la
-%C%_vcsn_complete_LDADD         = %D%/libtafkit.la
-%C%_vcsn_concatenate_LDADD      = %D%/libtafkit.la
-%C%_vcsn_constant_term_LDADD    = %D%/libtafkit.la
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
 %C%_vcsn_derivation_LDADD       = %D%/libtafkit.la
 %C%_vcsn_derived_term_LDADD     = %D%/libtafkit.la

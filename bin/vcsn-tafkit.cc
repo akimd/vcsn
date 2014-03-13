@@ -8,7 +8,7 @@
 
 #include "parse-args.hh"
 
-#define DEFINE_AUTOMATON_FUNCTION(Name)         \
+#define DEFINE_AUT_FUNCTION(Name)               \
   struct Name: vcsn_function                    \
   {                                             \
     int work_aut(const options& opts) const     \
@@ -26,7 +26,29 @@
     }                                           \
   }
 
-#define DEFINE_AUTOMATON_SIZE_FUNCTION(Name)                    \
+#define DEFINE_AUT_AUT_FUNCTION(Name)           \
+  struct Name: vcsn_function                    \
+  {                                             \
+    int work_aut(const options& opts) const     \
+    {                                           \
+      using namespace vcsn::dyn;                \
+      /* Input. */                              \
+      auto lhs = read_automaton(opts);          \
+      /* Hack. */                               \
+      options opts2 = opts;                     \
+      opts2.input = opts.argv[0];               \
+      automaton rhs = read_automaton(opts2);    \
+                                                \
+      /* Process. */                            \
+      auto res = vcsn::dyn::Name(lhs, rhs);     \
+                                                \
+      /* Output. */                             \
+      opts.print(res);                          \
+      return 0;                                 \
+    }                                           \
+  }
+
+#define DEFINE_AUT_SIZE_FUNCTION(Name)                          \
   struct Name: vcsn_function                                    \
   {                                                             \
     int work_aut(const options& opts) const                     \
@@ -46,12 +68,33 @@
     }                                                           \
   }
 
+#define DEFINE_RATEXP_FUNCTION(Name)            \
+  struct Name: vcsn_function                    \
+  {                                             \
+    int work_exp(const options& opts) const     \
+    {                                           \
+      using namespace vcsn::dyn;                \
+      /* Input. */                              \
+      auto exp = read_ratexp(opts);             \
+                                                \
+      /* Process. */                            \
+      auto res = vcsn::dyn::Name(exp);          \
+                                                \
+      /* Output. */                             \
+      opts.print(res);                          \
+      return 0;                                 \
+    }                                           \
+  }
 
-DEFINE_AUTOMATON_FUNCTION(accessible);
-DEFINE_AUTOMATON_FUNCTION(aut_to_exp);
-DEFINE_AUTOMATON_SIZE_FUNCTION(chain);
-DEFINE_AUTOMATON_FUNCTION(coaccessible);
-DEFINE_AUTOMATON_SIZE_FUNCTION(power);
+DEFINE_AUT_FUNCTION(accessible);
+DEFINE_AUT_FUNCTION(aut_to_exp);
+DEFINE_AUT_SIZE_FUNCTION(chain);
+DEFINE_AUT_FUNCTION(coaccessible);
+DEFINE_AUT_FUNCTION(complement);
+DEFINE_AUT_FUNCTION(complete);
+DEFINE_AUT_AUT_FUNCTION(concatenate);
+DEFINE_RATEXP_FUNCTION(constant_term);
+DEFINE_AUT_SIZE_FUNCTION(power);
 
 struct are_equivalent: vcsn_function
 {
@@ -115,6 +158,49 @@ struct are_isomorphic: vcsn_function
   }
 };
 
+struct cat: vcsn_function
+{
+  virtual int work_aut(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto aut = read_automaton(opts);
+    // Output.
+    opts.print(aut);
+    return 0;
+  }
+
+  virtual int work_exp(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_ratexp(opts);
+    // Output.
+    opts.print(exp);
+    return 0;
+  }
+
+  virtual int work_polynomial(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto exp = read_polynomial(opts);
+    // Output.
+    opts.print(exp);
+    return 0;
+  }
+
+  virtual int work_weight(const options& opts) const override
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto w = read_weight(opts);
+    // Output.
+    opts.print(w);
+    return 0;
+  }
+};
+
 struct determinize: vcsn_function
 {
   int work_aut(const options& opts) const
@@ -147,8 +233,13 @@ int main(int argc, char* const argv[])
   ALGO(are_equivalent);
   ALGO(are_isomorphic);
   ALGO(aut_to_exp);
+  ALGO(cat);
   ALGO(chain);
   ALGO(coaccessible);
+  ALGO(complement);
+  ALGO(complete);
+  ALGO(concatenate);
+  ALGO(constant_term);
   ALGO(determinize);
   ALGO(power);
   else

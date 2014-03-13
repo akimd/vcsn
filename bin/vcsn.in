@@ -51,7 +51,8 @@ case $1 in
 
   (accessible|are-equivalent|are-isomorphic     \
       |aut-to-exp                               \
-      |chain|coaccessible|determinize           \
+      |cat|chain|coaccessible|complement|complete\
+      |determinize           \
       |power)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
