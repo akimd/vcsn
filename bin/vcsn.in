@@ -53,6 +53,9 @@ case $1 in
       |aut-to-exp                               \
       |cat|chain|coaccessible|complement|complete\
       |derivation|derived-term|determinize|difference           \
+      |is-ambiguous|is-complete|is-deterministic\
+      |is-empty|is-eps-acyclic|is-normalized|is-proper\
+      |is-standard|is-trim|is-useless|is-valid \
       |power)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift

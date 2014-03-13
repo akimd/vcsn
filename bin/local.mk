@@ -34,17 +34,6 @@ all_vcsn =                                      \
   %D%/vcsn-evaluate                             \
   %D%/vcsn-expand                               \
   %D%/vcsn-infiltration                         \
-  %D%/vcsn-is-ambiguous                         \
-  %D%/vcsn-is-complete                          \
-  %D%/vcsn-is-deterministic                     \
-  %D%/vcsn-is-empty                             \
-  %D%/vcsn-is-eps-acyclic                       \
-  %D%/vcsn-is-normalized                        \
-  %D%/vcsn-is-proper                            \
-  %D%/vcsn-is-standard                          \
-  %D%/vcsn-is-trim                              \
-  %D%/vcsn-is-useless                           \
-  %D%/vcsn-is-valid                             \
   %D%/vcsn-ladybird                             \
   %D%/vcsn-left-mult                            \
   %D%/vcsn-lift                                 \
@@ -80,17 +69,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_evaluate_LDADD         = %D%/libtafkit.la
 %C%_vcsn_expand_LDADD           = %D%/libtafkit.la
 %C%_vcsn_infiltration_LDADD     = %D%/libtafkit.la
-%C%_vcsn_is_ambiguous_LDADD     = %D%/libtafkit.la
-%C%_vcsn_is_complete_LDADD      = %D%/libtafkit.la
-%C%_vcsn_is_deterministic_LDADD = %D%/libtafkit.la
-%C%_vcsn_is_empty_LDADD         = %D%/libtafkit.la
-%C%_vcsn_is_eps_acyclic_LDADD   = %D%/libtafkit.la
-%C%_vcsn_is_normalized_LDADD    = %D%/libtafkit.la
-%C%_vcsn_is_proper_LDADD        = %D%/libtafkit.la
-%C%_vcsn_is_standard_LDADD      = %D%/libtafkit.la
-%C%_vcsn_is_trim_LDADD          = %D%/libtafkit.la
-%C%_vcsn_is_useless_LDADD       = %D%/libtafkit.la
-%C%_vcsn_is_valid_LDADD         = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
 %C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la

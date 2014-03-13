@@ -95,6 +95,16 @@ DEFINE_AUT_FUNCTION(complete);
 DEFINE_AUT_AUT_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
 DEFINE_AUT_AUT_FUNCTION(difference);
+DEFINE_AUT_FUNCTION(is_ambiguous);
+DEFINE_AUT_FUNCTION(is_complete);
+DEFINE_AUT_FUNCTION(is_deterministic);
+DEFINE_AUT_FUNCTION(is_empty);
+DEFINE_AUT_FUNCTION(is_eps_acyclic);
+DEFINE_AUT_FUNCTION(is_normalized);
+DEFINE_AUT_FUNCTION(is_proper);
+DEFINE_AUT_FUNCTION(is_standard);
+DEFINE_AUT_FUNCTION(is_trim);
+DEFINE_AUT_FUNCTION(is_useless);
 DEFINE_AUT_SIZE_FUNCTION(power);
 
 struct are_equivalent: vcsn_function
@@ -264,6 +274,37 @@ struct determinize: vcsn_function
   }
 };
 
+struct is_valid: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    // Input.
+    using namespace vcsn::dyn;
+    automaton aut = read_automaton(opts);
+
+    // Process.
+    bool res = vcsn::dyn::is_valid(aut);
+
+    // Output.
+    opts.print(res);
+    return res ? 0 : 2;
+  }
+
+  int work_exp(const options& opts) const
+  {
+    // Input.
+    using namespace vcsn::dyn;
+    ratexp exp = read_ratexp(opts);
+
+    // Process.
+    bool res = vcsn::dyn::is_valid(exp);
+
+    // Output.
+    opts.print(res);
+    return res ? 0 : 2;
+  }
+};
+
 int main(int argc, char* const argv[])
 {
   vcsn::require(1 < argc, "no command given");
@@ -287,6 +328,17 @@ int main(int argc, char* const argv[])
   ALGO(derived_term);
   ALGO(determinize);
   ALGO(difference);
+  ALGO(is_ambiguous);
+  ALGO(is_complete);
+  ALGO(is_deterministic);
+  ALGO(is_empty);
+  ALGO(is_eps_acyclic);
+  ALGO(is_normalized);
+  ALGO(is_proper);
+  ALGO(is_standard);
+  ALGO(is_trim);
+  ALGO(is_useless);
+  ALGO(is_valid);
   ALGO(power);
   else
     vcsn::raise("unknown command: " + cmd);
