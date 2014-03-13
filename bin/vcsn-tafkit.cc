@@ -26,8 +26,32 @@
     }                                           \
   }
 
+#define DEFINE_AUTOMATON_SIZE_FUNCTION(Name)                    \
+  struct Name: vcsn_function                                    \
+  {                                                             \
+    int work_aut(const options& opts) const                     \
+    {                                                           \
+      using namespace vcsn::dyn;                                \
+      /* Input. */                                              \
+      automaton aut = read_automaton(opts);                     \
+      assert(1 <= opts.argv.size());                            \
+      size_t n = boost::lexical_cast<size_t>(opts.argv[0]);     \
+                                                                \
+      /* Process. */                                            \
+      auto res = vcsn::dyn::Name(aut, n);                       \
+                                                                \
+      /* Output. */                                             \
+      opts.print(res);                                          \
+      return 0;                                                 \
+    }                                                           \
+  }
+
+
 DEFINE_AUTOMATON_FUNCTION(accessible);
+DEFINE_AUTOMATON_FUNCTION(aut_to_exp);
+DEFINE_AUTOMATON_SIZE_FUNCTION(chain);
 DEFINE_AUTOMATON_FUNCTION(coaccessible);
+DEFINE_AUTOMATON_SIZE_FUNCTION(power);
 
 struct are_equivalent: vcsn_function
 {
@@ -122,8 +146,11 @@ int main(int argc, char* const argv[])
   ALGO(accessible);
   ALGO(are_equivalent);
   ALGO(are_isomorphic);
+  ALGO(aut_to_exp);
+  ALGO(chain);
   ALGO(coaccessible);
   ALGO(determinize);
+  ALGO(power);
   else
     vcsn::raise("unknown command: " + cmd);
  return vcsn_main(argc - 1, argv + 1, *f);

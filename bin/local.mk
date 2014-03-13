@@ -25,9 +25,7 @@ nodist_bin_SCRIPTS +=                           \
 ## ---------- ##
 
 all_vcsn =                                      \
-  %D%/vcsn-aut-to-exp                           \
   %D%/vcsn-cat                                  \
-  %D%/vcsn-chain                                \
   %D%/vcsn-complement                           \
   %D%/vcsn-complete                             \
   %D%/vcsn-concatenate                          \
@@ -59,7 +57,6 @@ all_vcsn =                                      \
   %D%/vcsn-left-mult                            \
   %D%/vcsn-lift                                 \
   %D%/vcsn-minimize                             \
-  %D%/vcsn-power                                \
   %D%/vcsn-product                              \
   %D%/vcsn-proper                               \
   %D%/vcsn-random                               \
@@ -83,9 +80,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_libtafkit_la_SOURCES = %D%/parse-args.hh %D%/parse-args.cc
 %C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
-%C%_vcsn_aut_to_exp_LDADD       = %D%/libtafkit.la
 %C%_vcsn_cat_LDADD              = %D%/libtafkit.la
-%C%_vcsn_chain_LDADD            = %D%/libtafkit.la
 %C%_vcsn_complement_LDADD       = %D%/libtafkit.la
 %C%_vcsn_complete_LDADD         = %D%/libtafkit.la
 %C%_vcsn_concatenate_LDADD      = %D%/libtafkit.la
@@ -117,7 +112,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la
 %C%_vcsn_lift_LDADD             = %D%/libtafkit.la
 %C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
-%C%_vcsn_power_LDADD            = %D%/libtafkit.la
 %C%_vcsn_product_LDADD          = %D%/libtafkit.la
 %C%_vcsn_proper_LDADD           = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la

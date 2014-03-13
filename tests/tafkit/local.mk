@@ -86,7 +86,7 @@ EXTRA_DIST +=                                   \
 # one test which requires only a single TAF-Kit command.  Fine grain
 # is dangerous if we forget some dependencies.  We need something
 # automated.
-$(%C%_TESTS:.chk=.log): $(all_vcsn) $(dist_bin_SCRIPTS)
+$(%C%_TESTS:.chk=.log): $(all_vcsn) $(dist_bin_SCRIPTS) $(nodist_bin_SCRIPTS)
 
 .PHONY: check-tafkit
 check-tafkit:
