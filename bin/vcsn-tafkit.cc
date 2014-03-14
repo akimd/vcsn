@@ -189,8 +189,10 @@ DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 DEFINE_RATEXP_FUNCTION(split);
 DEFINE_AUT__RATEXP_FUNCTION(standard);
+DEFINE_AUT_FUNCTION(star);
 DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
+DEFINE_AUT__RATEXP_FUNCTION(transpose);
 DEFINE_AUT_VARIADIC_FUNCTION(union_a);
 
 struct are_equivalent: vcsn_function
@@ -513,8 +515,10 @@ int main(int argc, char* const argv[])
   ALGO(shuffle);
   ALGO(split);
   ALGO(standard);
+  ALGO(star);
   ALGO(star_normal_form);
   ALGO(sum);
+  ALGO(transpose);
   ALGO(union_a);
   else
     vcsn::raise("unknown command: " + cmd);

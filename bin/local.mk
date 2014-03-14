@@ -31,9 +31,7 @@ all_vcsn =                                      \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-ladybird                             \
   %D%/vcsn-random                               \
-  %D%/vcsn-star                                 \
   %D%/vcsn-thompson                             \
-  %D%/vcsn-transpose                            \
   %D%/vcsn-trim                                 \
   %D%/vcsn-u                                    \
   %D%/vcsn-universal
@@ -49,9 +47,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la
-%C%_vcsn_star_LDADD             = %D%/libtafkit.la
 %C%_vcsn_thompson_LDADD         = %D%/libtafkit.la
-%C%_vcsn_transpose_LDADD        = %D%/libtafkit.la
 %C%_vcsn_trim_LDADD             = %D%/libtafkit.la
 %C%_vcsn_u_LDADD                = %D%/libtafkit.la
 %C%_vcsn_universal_LDADD        = %D%/libtafkit.la
