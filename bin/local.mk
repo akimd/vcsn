@@ -30,10 +30,7 @@ all_vcsn =                                      \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-ladybird                             \
-  %D%/vcsn-minimize                             \
-  %D%/vcsn-proper                               \
   %D%/vcsn-random                               \
-  %D%/vcsn-shortest                             \
   %D%/vcsn-split                                \
   %D%/vcsn-standard                             \
   %D%/vcsn-star                                 \
@@ -54,10 +51,7 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
-%C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
-%C%_vcsn_proper_LDADD           = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la
-%C%_vcsn_shortest_LDADD         = %D%/libtafkit.la
 %C%_vcsn_split_LDADD            = %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la
 %C%_vcsn_star_LDADD             = %D%/libtafkit.la

@@ -70,6 +70,48 @@
     }                                                           \
   }
 
+#define DEFINE_ENUMERATION_FUNCTION(Name)                               \
+  struct Name: vcsn_function                                            \
+  {                                                                     \
+    int work_aut(const options& opts) const                             \
+    {                                                                   \
+      using namespace vcsn::dyn;                                        \
+      if (opts.output_format == "default"                               \
+          || opts.output_format == "")                                  \
+        vcsn::dyn::set_format(*opts.out, "list");                       \
+                                                                        \
+      auto aut = read_automaton(opts);                                  \
+      unsigned max = (0 < opts.argv.size()                              \
+                      ? boost::lexical_cast<unsigned>(opts.argv[0])     \
+                      : 1);                                             \
+                                                                        \
+      auto res = vcsn::dyn::Name(aut, max);                             \
+                                                                        \
+      if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")  \
+        opts.print(res);                                                \
+      return 0;                                                         \
+    }                                                                   \
+                                                                        \
+    int work_exp(const options& opts) const                             \
+    {                                                                   \
+      using namespace vcsn::dyn;                                        \
+      if (opts.output_format == "default"                               \
+          || opts.output_format == "")                                  \
+        vcsn::dyn::set_format(*opts.out, "list");                       \
+                                                                        \
+      auto exp = read_ratexp(opts);                                     \
+      unsigned max = (0 < opts.argv.size()                              \
+                      ? boost::lexical_cast<unsigned>(opts.argv[0])     \
+                      : 1);                                             \
+                                                                        \
+      auto res = vcsn::dyn::Name(standard(exp), max);                   \
+                                                                        \
+      if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")  \
+        opts.print(res);                                                \
+      return 0;                                                         \
+    }                                                                   \
+  }
+
 #define DEFINE_RATEXP_FUNCTION(Name)            \
   struct Name: vcsn_function                    \
   {                                             \
@@ -124,6 +166,7 @@ DEFINE_AUT_FUNCTION(complete);
 DEFINE_AUT_VARIADIC_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
+DEFINE_ENUMERATION_FUNCTION(enumerate);
 DEFINE_RATEXP_FUNCTION(expand);
 DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
@@ -140,6 +183,8 @@ DEFINE_AUT__RATEXP_FUNCTION(is_valid);
 DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_VARIADIC_FUNCTION(product);
+DEFINE_AUT_FUNCTION(proper);
+DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
 DEFINE_AUT_VARIADIC_FUNCTION(union_a);
@@ -331,52 +376,6 @@ struct eliminate_state: vcsn_function
   }
 };
 
-struct enumerate: vcsn_function
-{
-  int work_aut(const options& opts) const
-  {
-    using namespace vcsn::dyn;
-    // FIXME: Not perfectly elegant.
-    if (opts.output_format == "default" || opts.output_format == "")
-      vcsn::dyn::set_format(*opts.out, "list");
-
-    // Input.
-    auto aut = read_automaton(opts);
-    unsigned max = (0 < opts.argv.size()
-                    ? boost::lexical_cast<unsigned>(opts.argv[0])
-                    : 1);
-
-    // Process.
-    auto res = vcsn::dyn::enumerate(aut, max);
-
-    // Output.
-    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      opts.print(res);
-    return 0;
-  }
-
-  int work_exp(const options& opts) const
-  {
-    using namespace vcsn::dyn;
-    // FIXME: Not perfectly elegant.
-    if (opts.output_format == "default" || opts.output_format == "")
-      vcsn::dyn::set_format(*opts.out, "list");
-
-    // Input.
-    auto exp = read_ratexp(opts);
-    unsigned max = (0 < opts.argv.size()
-                    ? boost::lexical_cast<unsigned>(opts.argv[0])
-                    : 1);
-
-    // Process.
-    auto res = vcsn::dyn::enumerate(standard(exp), max);
-
-    // Output.
-    if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")
-      opts.print(res);
-    return 0;
-  }
-};
 
 struct evaluate: vcsn_function
 {
@@ -412,6 +411,24 @@ struct left_mult: vcsn_function
 
     // Process.
     auto res = vcsn::dyn::left_mult(w, aut);
+
+    // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
+struct minimize: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    auto aut = read_automaton(opts);
+    std::string algo = 1 <= opts.argv.size() ? opts.argv[0] : "signature";
+
+    // Process.
+    auto res = vcsn::dyn::minimize(aut, algo);
 
     // Output.
     opts.print(res);
@@ -484,8 +501,11 @@ int main(int argc, char* const argv[])
   ALGO(is_useless);
   ALGO(is_valid);
   ALGO(lift);
+  ALGO(minimize);
   ALGO(power);
   ALGO(product);
+  ALGO(proper);
+  ALGO(shortest);
   ALGO(shuffle);
   ALGO(sum);
   ALGO(union_a);

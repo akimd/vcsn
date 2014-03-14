@@ -59,9 +59,10 @@ case $1 in
       |is-empty|is-eps-acyclic|is-normalized|is-proper \
       |is-standard|is-trim|is-useless|is-valid \
       |left-mult|lift \
+      |minimize \
       |power|product \
       |right-mult \
-      |shuffle|sum \
+      |shuffle|shortest|sum \
       |union)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
