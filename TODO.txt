@@ -91,10 +91,6 @@ that "a.proper(False).accessible() == a.proper()".
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
 
-Note that when printing an automaton with an empty alphabet, we write
-'lal_char_b' which fails to parse correctly for lack of () (should be
-'lal_char()_b').
-
 ** Rat
 This works! z.ratexp('a)')
 

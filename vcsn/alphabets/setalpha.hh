@@ -26,7 +26,7 @@ namespace vcsn
     virtual std::string vname(bool full = true) const
     {
       std::string res = sname();
-      if (full && !alphabet_.empty())
+      if (full)
         {
           res += '(';
           for (letter_t c: alphabet_)
