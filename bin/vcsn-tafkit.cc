@@ -185,10 +185,11 @@ DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_VARIADIC_FUNCTION(product);
 DEFINE_AUT_FUNCTION(proper);
-DEFINE_AUT__RATEXP_FUNCTION(standard);
-DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
+DEFINE_RATEXP_FUNCTION(split);
+DEFINE_AUT__RATEXP_FUNCTION(standard);
+DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
 DEFINE_AUT_VARIADIC_FUNCTION(union_a);
 
@@ -510,6 +511,7 @@ int main(int argc, char* const argv[])
   ALGO(proper);
   ALGO(shortest);
   ALGO(shuffle);
+  ALGO(split);
   ALGO(standard);
   ALGO(star_normal_form);
   ALGO(sum);

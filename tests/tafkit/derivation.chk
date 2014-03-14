@@ -136,7 +136,7 @@ unset VCSN_ORIGINS
 
 # Example 4.
 run 0 "a*a($F2) + b*a($F2)" -vcsn split -Ee "$E2"
-run 0 "a* + b*" -vcsn split -e "$F2"
+run 0 "a* + b*" -vcsn split -Ee "$F2"
 
 # Example 5.
 check_br "$E2t"  a "a* + b* + a*a($F2)"
