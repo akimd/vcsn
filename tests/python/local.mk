@@ -45,6 +45,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/kmul.py                                   \
   %D%/ladybird.py                               \
   %D%/minimize.py                               \
+  %D%/power.py                                  \
   %D%/product.py                                \
   %D%/proper.py	                                \
   %D%/ratexp.py                                 \
@@ -90,6 +91,8 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/small-nfa.exp.gv             \
   %D%/minimize.dir/small-weighted.exp.gv        \
   %D%/minimize.dir/small-weighted.gv            \
+  %D%/power.dir/binary^0.gv                     \
+  %D%/power.dir/binary^1.gv                     \
   %D%/product.dir/a.gv                          \
   %D%/product.dir/ab.gv                         \
   %D%/product.dir/abc.gv                        \
@@ -105,6 +108,7 @@ EXTRA_DIST +=                                   \
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log: $(wildcard $(srcdir)/%D%/minimize.dir/*)
+%D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/product.log: $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/union.log:       $(wildcard $(srcdir)/%D%/union.dir/*)
 

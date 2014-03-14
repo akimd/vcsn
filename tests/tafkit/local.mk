@@ -20,7 +20,6 @@
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/lift.chk                                  \
-  %D%/power.chk                                 \
   %D%/transpose.chk
 
 dist_TESTS += $(%C%_TESTS)
@@ -66,9 +65,7 @@ EXTRA_DIST +=                                   \
   %D%/fado.dir/nfa.fado                         \
   %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
-  %D%/grail.dir/a.gv                            \
-  %D%/power.dir/binary^0.gv                     \
-  %D%/power.dir/binary^1.gv
+  %D%/grail.dir/a.gv
 
 %D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/cat.log:         $(wildcard $(srcdir)/%D%/cat.dir/*)
@@ -77,7 +74,6 @@ EXTRA_DIST +=                                   \
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/power.log:       $(wildcard $(srcdir)/%D%/power.dir/*)
 %D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
