@@ -62,7 +62,7 @@ case $1 in
       |minimize \
       |power|product \
       |right-mult \
-      |shuffle|shortest|sum \
+      |shuffle|shortest|standard|star-normal-form|sum \
       |union)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift

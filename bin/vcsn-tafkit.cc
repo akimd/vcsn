@@ -5,6 +5,7 @@
 
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/polynomial.hh>
+#include <vcsn/dyn/ratexp.hh>
 #include <vcsn/misc/raise.hh>
 
 #include "parse-args.hh"
@@ -104,7 +105,7 @@
                       ? boost::lexical_cast<unsigned>(opts.argv[0])     \
                       : 1);                                             \
                                                                         \
-      auto res = vcsn::dyn::Name(standard(exp), max);                   \
+      auto res = vcsn::dyn::Name(vcsn::dyn::standard(exp), max);        \
                                                                         \
       if (!res->empty() || vcsn::dyn::get_format(*opts.out) != "list")  \
         opts.print(res);                                                \
@@ -154,7 +155,7 @@
       opts.print(res);                          \
       return 0;                                 \
     }                                           \
-};
+  }
 
 
 DEFINE_AUT_FUNCTION(accessible);
@@ -184,6 +185,8 @@ DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_VARIADIC_FUNCTION(product);
 DEFINE_AUT_FUNCTION(proper);
+DEFINE_AUT__RATEXP_FUNCTION(standard);
+DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
@@ -507,6 +510,8 @@ int main(int argc, char* const argv[])
   ALGO(proper);
   ALGO(shortest);
   ALGO(shuffle);
+  ALGO(standard);
+  ALGO(star_normal_form);
   ALGO(sum);
   ALGO(union_a);
   else

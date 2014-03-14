@@ -1,7 +1,7 @@
 #! /bin/sh
 
-run 0 '' -vcsn standard -e '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' -o bin.gv
-run 0 '' -vcsn standard -e '(?@lal_char(01)_z)(0+1)*0' -o even.gv
+run 0 '' -vcsn standard -Ee '(?@lal_char(01)_z)(0+1)*1(<2>0+<2>1)*' -o bin.gv
+run 0 '' -vcsn standard -Ee '(?@lal_char(01)_z)(0+1)*0' -o even.gv
 
 # check INPUT OUTPUT
 # ------------------

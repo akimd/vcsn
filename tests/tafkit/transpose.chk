@@ -66,7 +66,7 @@ check_minimization ()
   run 0 -  -vcsn determinize -I dot -O dot -A             -f atdt.out 1
 }
 
-check_minimization -C 'lal_char(ab)_b' -e 'a+a+a+a' <<\EOF
+check_minimization -C 'lal_char(ab)_b' -Ee 'a+a+a+a' <<\EOF
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
