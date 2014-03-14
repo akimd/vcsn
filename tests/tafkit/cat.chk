@@ -21,38 +21,6 @@ check_weight 'lal_char(x)_ratexpset<lal_char(abc)_z>' 'a*<23>bc' 'a*<23>(bc)'
 run 1 '' -vcsn cat -C 'lal_char(ab)_z' -We '123+'
 
 
-## ------------- ##
-## Polynomials.  ##
-## ------------- ##
-
-# check_poly CONTEXT INPUT OUTPUT
-# -------------------------------
-# Check -C and (?@...) support.
-check_poly ()
-{
-  run 0 "$3" -vcsn cat -C "$1" -Pe "$2"
-}
-
-check_poly 'lal_char(a)_b' '\z' '\z'
-check_poly 'lal_char(a)_b' '\z+\z' '\z'
-
-check_poly 'lal_char(a)_b' 'a' 'a'
-check_poly 'lal_char(ab)_b' 'a+b+b+a' 'a + b'
-
-check_poly 'lal_char(ab)_z' 'a+b+b+a+b' '<2>a + <3>b'
-check_poly 'lal_char(ab)_z' 'a+b+b+<-1>a+b' '<3>b'
-
-check_poly 'law_char(a)_b' '\e+\e' '\e'
-
-check_poly 'law_char(ab)_z' 'ba+ab+bb+aa+a+b+\e+bb+aa' \
-      '\e + a + b + <2>aa + ab + ba + <2>bb'
-
-check_poly 'lal_char(abc)_ratexpset<lal_char(xyz)_z>' \
-   'a + a + <x>b + <y>b' '<\e+\e>a + <x+y>b'
-
-# Check that we don't ignore trailing characters.
-run 1 '' -vcsn cat -C 'lal_char(ab)_z' -We '<123>a*'
-
 ## --------- ##
 ## RatExps.  ##
 ## --------- ##
