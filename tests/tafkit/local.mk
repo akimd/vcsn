@@ -19,7 +19,6 @@
   %D%/enumerate.chk                             \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
-  %D%/is-valid.chk                              \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
   %D%/transpose.chk                             \

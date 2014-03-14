@@ -30,7 +30,6 @@ all_vcsn =                                      \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-ladybird                             \
-  %D%/vcsn-lift                                 \
   %D%/vcsn-minimize                             \
   %D%/vcsn-proper                               \
   %D%/vcsn-random                               \
@@ -55,7 +54,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
-%C%_vcsn_lift_LDADD             = %D%/libtafkit.la
 %C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
 %C%_vcsn_proper_LDADD           = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la

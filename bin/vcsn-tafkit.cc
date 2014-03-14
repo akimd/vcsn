@@ -88,6 +88,33 @@
     }                                           \
   }
 
+#define DEFINE_AUT__RATEXP_FUNCTION(Name)       \
+  struct Name: vcsn_function                    \
+  {                                             \
+    int work_aut(const options& opts) const     \
+    {                                           \
+      using namespace vcsn::dyn;                \
+      automaton aut = read_automaton(opts);     \
+                                                \
+      auto res = vcsn::dyn::Name(aut);          \
+                                                \
+      opts.print(res);                          \
+      return 0;                                 \
+    }                                           \
+                                                \
+    int work_exp(const options& opts) const     \
+    {                                           \
+      using namespace vcsn::dyn;                \
+      ratexp exp = read_ratexp(opts);           \
+                                                \
+      auto res = vcsn::dyn::Name(exp);          \
+                                                \
+      opts.print(res);                          \
+      return 0;                                 \
+    }                                           \
+};
+
+
 DEFINE_AUT_FUNCTION(accessible);
 DEFINE_AUT_FUNCTION(aut_to_exp);
 DEFINE_AUT_SIZE_FUNCTION(chain);
@@ -109,6 +136,8 @@ DEFINE_AUT_FUNCTION(is_proper);
 DEFINE_AUT_FUNCTION(is_standard);
 DEFINE_AUT_FUNCTION(is_trim);
 DEFINE_AUT_FUNCTION(is_useless);
+DEFINE_AUT__RATEXP_FUNCTION(is_valid);
+DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
 DEFINE_AUT_VARIADIC_FUNCTION(product);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
@@ -366,37 +395,6 @@ struct evaluate: vcsn_function
   }
 };
 
-struct is_valid: vcsn_function
-{
-  int work_aut(const options& opts) const
-  {
-    // Input.
-    using namespace vcsn::dyn;
-    automaton aut = read_automaton(opts);
-
-    // Process.
-    bool res = vcsn::dyn::is_valid(aut);
-
-    // Output.
-    opts.print(res);
-    return res ? 0 : 2;
-  }
-
-  int work_exp(const options& opts) const
-  {
-    // Input.
-    using namespace vcsn::dyn;
-    ratexp exp = read_ratexp(opts);
-
-    // Process.
-    bool res = vcsn::dyn::is_valid(exp);
-
-    // Output.
-    opts.print(res);
-    return res ? 0 : 2;
-  }
-};
-
 struct left_mult: vcsn_function
 {
   int work_aut(const options& opts) const
@@ -485,6 +483,7 @@ int main(int argc, char* const argv[])
   ALGO(is_trim);
   ALGO(is_useless);
   ALGO(is_valid);
+  ALGO(lift);
   ALGO(power);
   ALGO(product);
   ALGO(shuffle);
