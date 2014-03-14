@@ -11,11 +11,18 @@ from test import *
 def xfail(a):
     XFAIL(lambda: vcsn.automaton(a))
 
-# Invalid label: letter not in alphabet.
+# Invalid context: missing parens.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char_b"
-  vcsn_alphabet = "a"
+  I0 -> 0 -> F0
+}
+''')
+
+# Invalid label: letter not in alphabet.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char()_b"
   0 -> 1 [label = a]
   1 -> F1
   I0 -> 0
