@@ -182,12 +182,9 @@ namespace vcsn
           << "    node [shape = box, style = rounded]" << std::endl;
         for (auto p : orig)
           if (2 <= p.first)
-            {
-              o << "    " << p.first - 2
-                << " [label = \"";
-              o << p.second;
-              o << "\"]" << std::endl;
-            }
+            o << "    " << p.first - 2
+              << " [label = \"" << p.second - 2 << "\"]"
+              << std::endl;
         o << "*/" << std::endl;
         return o;
       }
