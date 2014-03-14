@@ -141,14 +141,6 @@ Loops forever:
 We can check that we reach the same state, but can we have periodic
 behaviors?
 
-** expand
-Beware of the missing parens when displaying weights in iPython
-br = vcsn.context('lal_char(abc)_ratexpset<lal_char(xy)_b>')
-br.ratexp("(a+b+b)*").expand()
-=> (a+\e+\eb)∗
-which is actually
-=> (a+(\e+\e)b)∗
-
 ** infiltration does not work because of the "new_transition" optimization
 The "NEWS.txt" entry is false.
 
@@ -164,10 +156,6 @@ The "NEWS.txt" entry is false.
 Fix this bug, but check that we don't ruin performances of infiltration.
 Uncomment the tests in infiltration.chk (there are two places).
 
-** sum, union: relax the constraints on weightset
-Now that our products support heterogeneous, but compatible, types, we
-should propagate this to other n-ary algorithms.
-
 ** eliminate-states
 This won't work:
 
@@ -182,11 +170,6 @@ We need a lazy implementation of product.
 
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
-
-** Generators and alphabets
-ladybird "works" properly on "lal_char(ab)_b", although it needs abc.
-Of course, output then fails.  Should ladybird enrich the alphabet?
-Or use what's in there instead of always abc?
 
 ** debug compilation mode
 crange should not feature size and empty if !VCSN_DEBUG.
