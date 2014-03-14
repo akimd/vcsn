@@ -91,9 +91,6 @@ that "a.proper(False).accessible() == a.proper()".
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
 
-** Rat
-This works! z.ratexp('a)')
-
 ** Parsing errors in ratexps
 ***
 $ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'

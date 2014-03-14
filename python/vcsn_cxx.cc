@@ -67,6 +67,8 @@ struct automaton
   {
     std::istringstream is(s);
     aut_ = vcsn::dyn::read_automaton(is, format);
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   automaton accessible() const
@@ -324,6 +326,8 @@ struct ratexp
     std::istringstream is(r);
     auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
     r_ = vcsn::dyn::read_ratexp(is, rs);
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   ratexp chain(int min, int max) const
@@ -452,6 +456,8 @@ struct weight
   {
     std::istringstream is(s);
     val_ = vcsn::dyn::read_weight(is, ctx.ctx_);
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   std::string format(const std::string& format = "text") const
