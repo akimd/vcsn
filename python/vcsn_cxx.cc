@@ -12,6 +12,7 @@
 #include <boost/python.hpp>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh> // vname
+#include <vcsn/misc/stream.hh>
 
 struct automaton;
 struct context;
@@ -294,6 +295,8 @@ struct polynomial
   {
     std::istringstream is(s);
     val_ = vcsn::dyn::read_polynomial(is, ctx.ctx_);
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   std::string format(const std::string& format = "text") const

@@ -52,7 +52,7 @@ def XFAIL(fun):
     except RuntimeError:
         PASS()
     else:
-        FAIL('did not raise an exception', fun)
+        FAIL('did not raise an exception', str(fun))
 
 def CHECK_EQ(expected, effective):
     "Check that effective value is equal to expected."

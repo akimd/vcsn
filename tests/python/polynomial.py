@@ -7,9 +7,8 @@ from test import *
 ## Polynomials.  ##
 ## ------------- ##
 
-# check_poly CONTEXT INPUT OUTPUT
-# -------------------------------
-# Check -C and (?@...) support.
+# check CONTEXT INPUT OUTPUT
+# --------------------------
 def check(ctx, p, output):
     ctx = vcsn.context(ctx)
     p = ctx.polynomial(p)
@@ -33,4 +32,4 @@ check('lal_char(abc)_ratexpset<lal_char(xyz)_z>',
       r'a + a + <x>b + <y>b', r'<\e+\e>a + <x+y>b')
 
 # Check that we don't ignore trailing characters.
-# run 1 r'' -vcsn cat -C 'lal_char(ab)_z' -We '<123>a*'
+XFAIL(lambda: vcsn.context('lal_char(ab)_z').polynomial('<123>a*'))
