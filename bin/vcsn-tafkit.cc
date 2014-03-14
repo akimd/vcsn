@@ -192,8 +192,11 @@ DEFINE_AUT__RATEXP_FUNCTION(standard);
 DEFINE_AUT_FUNCTION(star);
 DEFINE_RATEXP_FUNCTION(star_normal_form);
 DEFINE_AUT_VARIADIC_FUNCTION(sum);
+DEFINE_RATEXP_FUNCTION(thompson);
 DEFINE_AUT__RATEXP_FUNCTION(transpose);
+DEFINE_AUT_FUNCTION(trim);
 DEFINE_AUT_VARIADIC_FUNCTION(union_a);
+DEFINE_AUT_FUNCTION(universal);
 
 struct are_equivalent: vcsn_function
 {
@@ -518,8 +521,11 @@ int main(int argc, char* const argv[])
   ALGO(star);
   ALGO(star_normal_form);
   ALGO(sum);
+  ALGO(thompson);
   ALGO(transpose);
+  ALGO(trim);
   ALGO(union_a);
+  ALGO(universal);
   else
     vcsn::raise("unknown command: " + cmd);
  return vcsn_main(argc - 1, argv + 1, *f);

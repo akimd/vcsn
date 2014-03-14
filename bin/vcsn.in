@@ -63,8 +63,8 @@ case $1 in
       |power|product \
       |right-mult \
       |shuffle|shortest|split|standard|star|star-normal-form|sum \
-      |transpose \
-      |union)
+      |thompson|transpose|trim \
+      |union|universal)
      cmd=$(echo "$1" | sed -e 's/-/_/g')
      shift
      exec "vcsn-tafkit" "$cmd" "$@";;
