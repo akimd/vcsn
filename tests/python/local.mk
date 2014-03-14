@@ -57,7 +57,8 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/sum.py                                    \
   %D%/thompson.py                               \
   %D%/transpose.py                              \
-  %D%/union.py
+  %D%/union.py                                  \
+  %D%/universal.py
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \

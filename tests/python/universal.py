@@ -1,9 +1,12 @@
-#! /bin/sh
+#! /usr/bin/env python
+
+import vcsn
+from test import *
 
 ## ------------------------------------ ##
 ## Taken from TAFK, command universal.  ##
 ## ------------------------------------ ##
-cat >out.exp <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -30,13 +33,10 @@ digraph
   2 -> 1 [label = "a, b"]
   2 -> 2 [label = "a, b"]
 }
-EOF
-run 0 out.exp -vcsn universal -f lal_char_b/a1.gv
-# Idempotence.
-run 0 out.exp -vcsn universal -f out.exp
-
-# Start from a rat-exp.
-run 0 out.exp -vcsn universal -Ee '(?@lal_char(ab)_b)(a+b)*ab(a+b)*'
+''')
+a1 = load('lal_char_b/a1.gv')
+CHECK_EQ(exp, a1.universal())
+CHECK_EQ(exp, exp.universal())
 
 
 ## ----------------------------------------------------------- ##
@@ -44,7 +44,7 @@ run 0 out.exp -vcsn universal -Ee '(?@lal_char(ab)_b)(a+b)*ab(a+b)*'
 ## ----------------------------------------------------------- ##
 
 # With p, q, r -> 0, 1, 2
-cat >a.gv <<\EOF
+a = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -61,10 +61,10 @@ digraph
   2 -> 0 [label = c]
   2 -> F
 }
-EOF
+''')
 # This output was checked against Vaucanson 1's result using
 # are-equivalent.
-cat >out.exp <<\EOF
+exp = vcsn.automaton(r'''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -127,7 +127,7 @@ digraph
   6 -> 5 [label = "b"]
   6 -> 6 [label = "b"]
 }
-EOF
-run 0 out.exp -vcsn universal -f a.gv
+''')
+CHECK_EQ(exp, a.universal())
 # Idempotence.
-run 0 out.exp -vcsn universal -f out.exp
+CHECK_EQ(exp, exp.universal())

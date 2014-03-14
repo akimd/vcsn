@@ -21,8 +21,7 @@
   %D%/grail.chk                                 \
   %D%/lift.chk                                  \
   %D%/power.chk                                 \
-  %D%/transpose.chk                             \
-  %D%/universal.chk
+  %D%/transpose.chk
 
 dist_TESTS += $(%C%_TESTS)
 
