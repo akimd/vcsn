@@ -1,0 +1,48 @@
+#! /bin/sh
+
+me=$(basename $0)
+case $# in
+  (0) file=/tmp/$me-$$;;
+  (*) file=$1;;
+esac
+
+case $file in
+  (*.gv);;
+  (*)   file=$file.gv;;
+esac
+
+# Honor origins if there are some.
+# Remove "orientation = landscape" from OpenFST, it breaks OS X's
+# Graphviz rendering.
+perl -pi -0777 -e '
+    my %orig;
+    s{/\* Origins\.\n(.*?\n)\*/\n}
+     {
+        $orig = $1;
+        my %o;
+        $orig =~ s{(\d+) \[label = "(.*?)"\]$}{ $o{$1} = $2 }gem;
+        # Apply %o to %orig into %new, and rename as %orig.
+        my %new;
+        foreach my $k (keys %o)
+        {
+           $new{$k} = defined $orig{$o{$k}} ? $orig{$o{$k}} : $o{$k};
+        }
+        %orig = %new;
+        "";
+     }gmse;
+    s{^    node \[shape = circle\]\n( {4}.*?\n)*}
+     {
+       "    node [shape = box, style = rounded]\n" .
+       join("",
+            map{ sprintf "    %s [label = \"%s\"]\n", $_, $orig{$_} }
+                sort keys %orig);
+     }gmse
+      if %orig;
+    s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
+  ' > $file
+if test -s $file; then
+  open -g $file
+  cat $file
+else
+  exit 1
+fi
