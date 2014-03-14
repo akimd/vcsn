@@ -29,14 +29,11 @@ all_vcsn =                                      \
   %D%/vcsn-tafkit                               \
   %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
-  %D%/vcsn-expand                               \
   %D%/vcsn-ladybird                             \
-  %D%/vcsn-left-mult                            \
   %D%/vcsn-lift                                 \
   %D%/vcsn-minimize                             \
   %D%/vcsn-proper                               \
   %D%/vcsn-random                               \
-  %D%/vcsn-right-mult                           \
   %D%/vcsn-shortest                             \
   %D%/vcsn-split                                \
   %D%/vcsn-standard                             \
@@ -56,15 +53,12 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
 %C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
-%C%_vcsn_expand_LDADD           = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
-%C%_vcsn_left_mult_LDADD        = %D%/libtafkit.la
 %C%_vcsn_lift_LDADD             = %D%/libtafkit.la
 %C%_vcsn_minimize_LDADD         = %D%/libtafkit.la
 %C%_vcsn_proper_LDADD           = %D%/libtafkit.la
 %C%_vcsn_random_LDADD           = %D%/libtafkit.la
-%C%_vcsn_right_mult_LDADD       = %D%/libtafkit.la
 %C%_vcsn_shortest_LDADD         = %D%/libtafkit.la
 %C%_vcsn_split_LDADD            = %D%/libtafkit.la
 %C%_vcsn_standard_LDADD         = %D%/libtafkit.la

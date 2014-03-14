@@ -53,12 +53,14 @@ case $1 in
       |aut-to-exp \
       |cat|chain|coaccessible|complement|complete \
       |derivation|derived-term|determinize|difference \
-      |eliminate-state|enumerate|evaluate \
+      |eliminate-state|enumerate|evaluate|expand \
       |infiltration \
       |is-ambiguous|is-complete|is-deterministic \
       |is-empty|is-eps-acyclic|is-normalized|is-proper \
       |is-standard|is-trim|is-useless|is-valid \
+      |left-mult \
       |power|product \
+      |right-mult \
       |shuffle|sum \
       |union)
      cmd=$(echo "$1" | sed -e 's/-/_/g')

@@ -97,6 +97,7 @@ DEFINE_AUT_FUNCTION(complete);
 DEFINE_AUT_VARIADIC_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
+DEFINE_RATEXP_FUNCTION(expand);
 DEFINE_AUT_VARIADIC_FUNCTION(infiltration);
 DEFINE_AUT_FUNCTION(is_ambiguous);
 DEFINE_AUT_FUNCTION(is_complete);
@@ -396,6 +397,54 @@ struct is_valid: vcsn_function
   }
 };
 
+struct left_mult: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    automaton aut = read_automaton(opts);
+    assert(1 <= opts.argv.size());
+
+    // FIXME: hack.
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    opts2.input_is_file = false;
+    weight w = read_weight(opts2);
+
+    // Process.
+    auto res = vcsn::dyn::left_mult(w, aut);
+
+    // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
+struct right_mult: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    // Input.
+    automaton aut = read_automaton(opts);
+    assert(1 <= opts.argv.size());
+
+    // FIXME: hack.
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    opts2.input_is_file = false;
+    weight w = read_weight(opts2);
+
+    // Process.
+    auto res = vcsn::dyn::right_mult(aut, w);
+
+    // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
 int main(int argc, char* const argv[])
 {
   vcsn::require(1 < argc, "no command given");
@@ -423,6 +472,7 @@ int main(int argc, char* const argv[])
   ALGO(eliminate_state);
   ALGO(enumerate);
   ALGO(evaluate);
+  ALGO(expand);
   ALGO(infiltration);
   ALGO(is_ambiguous);
   ALGO(is_complete);
