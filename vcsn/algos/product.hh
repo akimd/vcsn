@@ -260,44 +260,38 @@ namespace vcsn
       }
 
       template <typename Aut>
-      struct transition
+      struct transition_map
       {
-        typename Aut::weight_t wgt;
-        typename Aut::state_t dst;
+        struct transition
+        {
+          typename Aut::weight_t wgt;
+          typename Aut::state_t dst;
+        };
+
+        using map_t = std::multimap<typename Aut::label_t, transition>;
+        std::unordered_map<typename Aut::state_t, map_t> maps_;
+
+        transition_map(const Aut& aut)
+          : aut_(aut)
+        {}
+
+        map_t& operator()(typename Aut::state_t s)
+        {
+          auto p = maps_.emplace(s, map_t{});
+          auto& res = p.first->second;
+          if (p.second)
+            // First insertion.
+            for (auto t: aut_.all_out(s))
+              res.emplace(aut_.label_of(t),
+                          transition{aut_.weight_of(t), aut_.dst_of(t)});
+          return res;
+        }
+
+        const Aut& aut_;
       };
-      
-      using lhs_map_t = std::multimap<typename Lhs::label_t, transition<Lhs>>;
-      std::unordered_map<typename Lhs::state_t, lhs_map_t> lhs_maps_;
 
-      lhs_map_t&
-      lhs_map_for(typename Lhs::state_t s)
-      {
-        auto p = lhs_maps_.emplace(s, lhs_map_t{});
-        auto& res = p.first->second;
-        if (p.second)
-          // First insertion.
-          for (auto t: lhs_.all_out(s))
-            res.emplace(lhs_.label_of(t),
-                        transition<Lhs>{lhs_.weight_of(t), lhs_.dst_of(t)});
-        return res;
-      }
-
-      using rhs_map_t = std::multimap<typename Rhs::label_t, transition<Rhs>>;
-      std::unordered_map<typename Rhs::state_t, rhs_map_t> rhs_maps_;
-
-      rhs_map_t&
-      rhs_map_for(typename Rhs::state_t s)
-      {
-        auto p = rhs_maps_.emplace(s, rhs_map_t{});
-        auto& res = p.first->second;
-        if (p.second)
-          // First insertion.
-          for (auto t: rhs_.all_out(s))
-            res.emplace(rhs_.label_of(t),
-                        transition<Rhs>{rhs_.weight_of(t), rhs_.dst_of(t)});
-        return res;
-      }
-
+      transition_map<Lhs> lhs_maps{lhs_};
+      transition_map<Rhs> rhs_maps{rhs_};
 
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
@@ -307,8 +301,8 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto& lhs = lhs_map_for(psrc.first);
-        auto& rhs = rhs_map_for(psrc.second);
+        auto& lhs = lhs_maps(psrc.first);
+        auto& rhs = rhs_maps(psrc.second);
         for (auto t: zip_maps(lhs, rhs))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
