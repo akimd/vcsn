@@ -5,13 +5,6 @@
     2 [label = "a*"]
     3 [label = "b*"]
 */
-/* Origins.
-    node [shape = box, style = rounded]
-    0 [label = "0"]
-    1 [label = "1"]
-    2 [label = "2"]
-    3 [label = "3"]
-*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"

@@ -169,7 +169,8 @@ namespace vcsn
       {
         origins_t res;
         for (const auto& pair: map_)
-          res[pair.second] = pair.first;
+          if (pair.second != pair.first)
+            res[pair.second] = pair.first;
         return res;
       }
 
@@ -201,7 +202,11 @@ namespace vcsn
     // FIXME: Not terribly elegant.  But currently there's no mean to
     // associate meta-data to states.
     if (getenv("VCSN_ORIGINS"))
-      sorter.print(std::cout, sorter.origins());
+      {
+        auto o = sorter.origins();
+        if (!o.empty())
+          sorter.print(std::cout, o);
+      }
     return res;
   }
 
