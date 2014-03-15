@@ -16,7 +16,6 @@
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
-  %D%/enumerate.chk                             \
   %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/lift.chk                                  \
