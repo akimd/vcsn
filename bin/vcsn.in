@@ -52,7 +52,8 @@ case $1 in
   (accessible|are-equivalent|are-isomorphic \
       |aut-to-exp \
       |cat|chain|coaccessible|complement|complete \
-      |derivation|derived-term|determinize|difference \
+      |derivation|derived-term|determinize \
+      |difference|divkbaseb \
       |eliminate-state|enumerate|evaluate|expand \
       |infiltration \
       |is-ambiguous|is-complete|is-deterministic \

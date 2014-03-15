@@ -27,7 +27,6 @@ nodist_bin_SCRIPTS +=                           \
 all_vcsn =                                      \
   %D%/vcsn-de-bruijn                            \
   %D%/vcsn-tafkit                               \
-  %D%/vcsn-divkbaseb                            \
   %D%/vcsn-double-ring                          \
   %D%/vcsn-ladybird                             \
   %D%/vcsn-random                               \
@@ -39,7 +38,6 @@ noinst_LTLIBRARIES += %D%/libtafkit.la
 %C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
 
 %C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
-%C%_vcsn_divkbaseb_LDADD        = %D%/libtafkit.la
 %C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
 %C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
 %C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la

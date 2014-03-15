@@ -469,64 +469,97 @@ struct right_mult: vcsn_function
   }
 };
 
+/* "Main" functions. */
+
+void divkbaseb(int argc, char* const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = make_context(opts.context);
+  assert(2 <= argc);
+  auto k = boost::lexical_cast<unsigned>(argv[0]);
+  auto b = boost::lexical_cast<unsigned>(argv[1]);
+
+  // Process.
+  automaton aut = divkbaseb(ctx, k, b);
+
+  // Output.
+  opts.print(aut);
+}
+
+
 int main(int argc, char* const argv[])
+try
 {
   vcsn::require(1 < argc, "no command given");
   std::string cmd{argv[1]};
-  if (cmd == "union") cmd = "union_a";
-  std::unique_ptr<vcsn_function> f;
-#define ALGO(Name)                              \
-  else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
-  if (false) {}
-  ALGO(accessible);
-  ALGO(are_equivalent);
-  ALGO(are_isomorphic);
-  ALGO(aut_to_exp);
-  ALGO(cat);
-  ALGO(chain);
-  ALGO(coaccessible);
-  ALGO(complement);
-  ALGO(complete);
-  ALGO(concatenate);
-  ALGO(constant_term);
-  ALGO(derivation);
-  ALGO(derived_term);
-  ALGO(determinize);
-  ALGO(difference);
-  ALGO(eliminate_state);
-  ALGO(enumerate);
-  ALGO(evaluate);
-  ALGO(expand);
-  ALGO(infiltration);
-  ALGO(is_ambiguous);
-  ALGO(is_complete);
-  ALGO(is_deterministic);
-  ALGO(is_empty);
-  ALGO(is_eps_acyclic);
-  ALGO(is_normalized);
-  ALGO(is_proper);
-  ALGO(is_standard);
-  ALGO(is_trim);
-  ALGO(is_useless);
-  ALGO(is_valid);
-  ALGO(lift);
-  ALGO(minimize);
-  ALGO(power);
-  ALGO(product);
-  ALGO(proper);
-  ALGO(shortest);
-  ALGO(shuffle);
-  ALGO(split);
-  ALGO(standard);
-  ALGO(star);
-  ALGO(star_normal_form);
-  ALGO(sum);
-  ALGO(thompson);
-  ALGO(transpose);
-  ALGO(trim);
-  ALGO(union_a);
-  ALGO(universal);
+  if (cmd == "divkbaseb")
+    divkbaseb(argc - 1, argv + 1);
   else
-    vcsn::raise("unknown command: " + cmd);
- return vcsn_main(argc - 1, argv + 1, *f);
+    {
+      if (cmd == "union") cmd = "union_a";
+      std::unique_ptr<vcsn_function> f;
+#define ALGO(Name)                                                      \
+      else if (cmd == #Name) f = std::unique_ptr<Name>(new Name{})
+      if (false) {}
+      ALGO(accessible);
+      ALGO(are_equivalent);
+      ALGO(are_isomorphic);
+      ALGO(aut_to_exp);
+      ALGO(cat);
+      ALGO(chain);
+      ALGO(coaccessible);
+      ALGO(complement);
+      ALGO(complete);
+      ALGO(concatenate);
+      ALGO(constant_term);
+      ALGO(derivation);
+      ALGO(derived_term);
+      ALGO(determinize);
+      ALGO(difference);
+      ALGO(eliminate_state);
+      ALGO(enumerate);
+      ALGO(evaluate);
+      ALGO(expand);
+      ALGO(infiltration);
+      ALGO(is_ambiguous);
+      ALGO(is_complete);
+      ALGO(is_deterministic);
+      ALGO(is_empty);
+      ALGO(is_eps_acyclic);
+      ALGO(is_normalized);
+      ALGO(is_proper);
+      ALGO(is_standard);
+      ALGO(is_trim);
+      ALGO(is_useless);
+      ALGO(is_valid);
+      ALGO(lift);
+      ALGO(minimize);
+      ALGO(power);
+      ALGO(product);
+      ALGO(proper);
+      ALGO(shortest);
+      ALGO(shuffle);
+      ALGO(split);
+      ALGO(standard);
+      ALGO(star);
+      ALGO(star_normal_form);
+      ALGO(sum);
+      ALGO(thompson);
+      ALGO(transpose);
+      ALGO(trim);
+      ALGO(union_a);
+      ALGO(universal);
+      return vcsn_main(argc - 1, argv + 1, *f);
+    }
+  vcsn::raise("unknown command: " + cmd);
 }
+catch (const std::exception& e)
+{
+  std::cerr << e.what() << std::endl;
+  exit(EXIT_FAILURE);
+ }
