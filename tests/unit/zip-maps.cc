@@ -13,7 +13,6 @@ std::ostream& operator<<(std::ostream& o, std::tuple<Args...>& args)
 
 int main()
 {
-
   std::multimap<char, int> ints
     = { {'1', 1},
         {'2', 20},
@@ -36,5 +35,13 @@ int main()
         {'4', "four"} };
 
   for (auto i: vcsn::zip_maps(ints, floats, strings))
-    std::cout << i.first << ':' << i.second << std::endl;
+    std::cout << std::get<0>(i).first << ':'
+              << '('
+              << std::get<0>(i).second
+              << ", "
+              << std::get<1>(i).second
+              << ", "
+              << std::get<2>(i).second
+              << ')'
+              << std::endl;
 }

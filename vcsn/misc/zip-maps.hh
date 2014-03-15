@@ -94,7 +94,19 @@ namespace vcsn
         return not_equal_(that, indices_t{});
       }
 
-      std::pair<key_t, mapped_t> operator*()
+      values_t operator*()
+      {
+        return derefence_as_tuple();
+      }
+
+      /// Return as <<k1, v1>, <k1, v2>, ...>.
+      values_t derefence_as_tuple()
+      {
+        return dereference_(indices_t{});
+      }
+
+      /// Return as <k1, <v1, v2...>>.
+      std::pair<key_t, mapped_t> dereference_as_pair()
       {
         return {dereference_first_(), dereference_second_(indices_t{})};
       }
@@ -253,13 +265,20 @@ namespace vcsn
       template <std::size_t... I>
       mapped_t dereference_second_(seq<I...>) const
       {
-        return mapped_t{(std::get<I>(is_)->second)...};
+        return {(std::get<I>(is_)->second)...};
       }
 
       /// Tuple of pairs.
       template <std::size_t... I>
       values_t dereference_(seq<I...>) const
       {
+        // clang 3.4 on top of libstdc++ wants this ctor to be
+        // explicitly called:
+
+        // vcsn/misc/zip-maps.hh:275:16: error: chosen constructor is
+        //                     explicit in copy-initialization
+        //  return {(*std::get<I>(is_))...};
+        //         ^~~~~~~~~~~~~~~~~~~~~~~~
         return values_t{(*std::get<I>(is_))...};
       }
     };

@@ -317,10 +317,10 @@ namespace vcsn
 //                 << V(std::get<1>(t.second).wgt));
             new_transition
               (src,
-               std::get<0>(t.second).dst, std::get<1>(t.second).dst,
-               t.first,
+               std::get<0>(t).second.dst, std::get<1>(t).second.dst,
+               std::get<0>(t).first,
                mul_(ws,
-                    std::get<0>(t.second).wgt, std::get<1>(t.second).wgt));
+                    std::get<0>(t).second.wgt, std::get<1>(t).second.wgt));
           }
       }
 
