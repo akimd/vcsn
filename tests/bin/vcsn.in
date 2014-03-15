@@ -37,7 +37,8 @@ export VCSN_LDFLAGS
 case $1 in
   ('') ;; # We are sourced to set up the environment.
   (-e) shift 1; exec "$@";;
-  (*)  prog="vcsn-$1"; shift; exec "$prog" "$@";;
+  (*) # Hopefully not looping here, thanks to the change of PATH.
+      exec vcsn "$@";;
 esac
 
 # Local Variables:
