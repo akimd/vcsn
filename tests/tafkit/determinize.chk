@@ -28,10 +28,11 @@ done
 
 # check FAMILY SIZE
 # -----------------
-# Check determinization on FAMILY ("ladybird", or "de-bruijn" using
+# Check determinization on FAMILY ("ladybird", or "de-bruijn") using
 # the reference files, and check idempotency.
 check ()
 {
+set -x
   case $1 in
    (de-bruijn) ctx='lal_char(ab)_b';;
    (ladybird)  ctx='lal_char(abc)_b';;

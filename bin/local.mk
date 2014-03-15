@@ -20,26 +20,6 @@ dist_bin_SCRIPTS +=                             \
 nodist_bin_SCRIPTS +=                           \
   %D%/vcsn
 
-## ---------- ##
-## Programs.  ##
-## ---------- ##
-
-all_vcsn =                                      \
-  %D%/vcsn-de-bruijn                            \
-  %D%/vcsn-tafkit                               \
-  %D%/vcsn-double-ring                          \
-  %D%/vcsn-ladybird                             \
-  %D%/vcsn-random                               \
-  %D%/vcsn-u
-
-bin_PROGRAMS += $(all_vcsn)
-noinst_LTLIBRARIES += %D%/libtafkit.la
-%C%_libtafkit_la_SOURCES = %D%/parse-args.hh %D%/parse-args.cc
-%C%_libtafkit_la_LIBADD = $(all_libctx) $(libvcsn)
-
-%C%_vcsn_de_bruijn_LDADD        = %D%/libtafkit.la
-%C%_vcsn_double_ring_LDADD      = %D%/libtafkit.la
-%C%_vcsn_tafkit_LDADD           = %D%/libtafkit.la
-%C%_vcsn_ladybird_LDADD         = %D%/libtafkit.la
-%C%_vcsn_random_LDADD           = %D%/libtafkit.la
-%C%_vcsn_u_LDADD                = %D%/libtafkit.la
+bin_PROGRAMS += %D%/vcsn-tafkit
+%C%_vcsn_tafkit_SOURCES = %D%/vcsn-tafkit.cc %D%/parse-args.hh %D%/parse-args.cc
+%C%_vcsn_tafkit_LDADD = $(all_libctx) $(libvcsn)

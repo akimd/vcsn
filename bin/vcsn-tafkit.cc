@@ -469,9 +469,31 @@ struct right_mult: vcsn_function
   }
 };
 
-/* "Main" functions. */
+/*-------------------.
+| "Main" functions.  |
+`-------------------*/
 
-void divkbaseb(int argc, char* const argv[])
+int de_bruijn(int argc, char * const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  assert(1 <= argc);
+  size_t n = boost::lexical_cast<size_t>(argv[0]);
+
+  // Process.
+  automaton aut = de_bruijn(ctx, n);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
+int divkbaseb(int argc, char* const argv[])
 {
   options opts;
   opts.input_format = "text";
@@ -489,16 +511,113 @@ void divkbaseb(int argc, char* const argv[])
 
   // Output.
   opts.print(aut);
+  return 0;
 }
 
+int double_ring(int argc, char * const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  assert(1 <= argc);
+  size_t n = boost::lexical_cast<size_t>(argv[0]);
+  // final states.
+  std::vector<unsigned> f;
+  for (int i = 1; i < argc; ++i)
+    f.emplace_back(boost::lexical_cast<unsigned>(argv[i]));
+
+  // Process.
+  automaton aut = double_ring(ctx, n, f);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
+int ladybird(int argc, char * const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  assert(1 <= argc);
+  size_t n = boost::lexical_cast<size_t>(argv[0]);
+
+  // Process.
+  automaton aut = ladybird(ctx, n);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
+int random(int argc, char * const argv[])
+{
+  options opts;
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  assert(0 < argc);
+  assert(argc <= 4);
+  unsigned num_states  =          boost::lexical_cast<unsigned>(argv[0]);
+  float density        = 1 < argc ? boost::lexical_cast<float>(argv[1])    : .1;
+  unsigned num_initial = 2 < argc ? boost::lexical_cast<unsigned>(argv[2]) : 1;
+  unsigned num_final   = 3 < argc ? boost::lexical_cast<unsigned>(argv[3]) : 1;
+
+  // Process.
+  automaton aut = random_automaton(ctx, num_states, density,
+                                   num_initial, num_final);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
+int u(int argc, char * const argv[])
+{
+  options opts;
+  opts.input_format = "text";
+  parse_args(opts, argc, argv);
+
+  // Input.
+  using namespace vcsn::dyn;
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  assert(1 <= argc);
+  auto n = boost::lexical_cast<unsigned>(argv[0]);
+
+  // Process.
+  automaton aut = u(ctx, n);
+
+  // Output.
+  opts.print(aut);
+  return 0;
+}
+
+
+/*-------.
+| Main.  |
+`-------*/
 
 int main(int argc, char* const argv[])
 try
 {
   vcsn::require(1 < argc, "no command given");
   std::string cmd{argv[1]};
-  if (cmd == "divkbaseb")
-    divkbaseb(argc - 1, argv + 1);
+  if (cmd == "divkbaseb") return divkbaseb(argc - 1, argv + 1);
+  if (cmd == "de_bruijn") return de_bruijn(argc - 1, argv + 1);
+  if (cmd == "double_ring") return double_ring(argc - 1, argv + 1);
+  if (cmd == "ladybird") return ladybird(argc - 1, argv + 1);
+  if (cmd == "random") return random(argc - 1, argv + 1);
+  if (cmd == "u") return u(argc - 1, argv + 1);
   else
     {
       if (cmd == "union") cmd = "union_a";
