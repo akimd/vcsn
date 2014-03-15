@@ -133,9 +133,9 @@ namespace vcsn
       /// Left and right boundaries (typically braces for LaTeX).
       const char* lgroup_ = nullptr;
       const char* rgroup_ = nullptr;
-      /// Left and right brackets for weights.
-      const char* lbracket_ = nullptr;
-      const char* rbracket_ = nullptr;
+      /// Left and right angle brackets for weights.
+      const char* langle_ = nullptr;
+      const char* rangle_ = nullptr;
       /// Left and right parentheses.
       const char* lparen_ = nullptr;
       const char* rparen_ = nullptr;

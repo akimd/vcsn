@@ -34,8 +34,8 @@ namespace vcsn
         {
           lgroup_       = "{";
           rgroup_       = "}";
-          lbracket_     = " \\langle ";
-          rbracket_     = " \\rangle ";
+          langle_       = " \\langle ";
+          rangle_       = " \\rangle ";
           lparen_       = "\\left(";
           rparen_       = "\\right)";
           star_         = "^{*}";
@@ -55,8 +55,8 @@ namespace vcsn
         {
           lgroup_       = "";
           rgroup_       = "";
-          lbracket_     = "<";
-          rbracket_     = ">";
+          langle_       = "<";
+          rangle_       = ">";
           lparen_       = "(";
           rparen_       = ")";
           star_         = "*";
@@ -112,18 +112,18 @@ namespace vcsn
 
     VISIT(lweight)
     {
-      out_ << lbracket_;
+      out_ << langle_;
       ctx_.weightset()->print(out_, v.weight(), format_);
-      out_ << rbracket_ << lmul_;
+      out_ << rangle_ << lmul_;
       print_child(*v.sub(), v);
     }
 
     VISIT(rweight)
     {
       print_child(*v.sub(), v);
-      out_ << rmul_ << lbracket_;
+      out_ << rmul_ << langle_;
       ctx_.weightset()->print(out_, v.weight(), format_);
-      out_ << rbracket_;
+      out_ << rangle_;
     }
 
     VISIT(zero)
