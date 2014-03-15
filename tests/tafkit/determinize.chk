@@ -32,7 +32,6 @@ done
 # the reference files, and check idempotency.
 check ()
 {
-set -x
   case $1 in
    (de-bruijn) ctx='lal_char(ab)_b';;
    (ladybird)  ctx='lal_char(abc)_b';;
