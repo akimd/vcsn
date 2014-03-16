@@ -127,8 +127,7 @@ namespace vcsn
       {
         // We intentionally ignore source states: they should always
         // be identical when we call this.
-        require(a_.src_of(t1) == a_.src_of(t2),
-                __func__, ": not the same source state");
+        assert(a_.src_of(t1) == a_.src_of(t2));
         if (ls_.less_than(a_.label_of(t1), a_.label_of(t2)))
           return true;
         else if (ls_.less_than(a_.label_of(t2), a_.label_of(t1)))
