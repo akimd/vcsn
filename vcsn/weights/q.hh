@@ -252,22 +252,19 @@ namespace vcsn
         }
       return o;
     }
+
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format) const
+    {
+      if (format == "latex")
+        o << "\\mathbb{Q}";
+      else if (format == "text")
+        o << vname();
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
   };
-
-
-  inline
-  std::ostream&
-  print_set(const q& ws,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      o << "\\mathbb{Q}";
-    else if (format == "text")
-      o << ws.vname();
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
 
   VCSN_WEIGHTS_BINARY(q, q, q);
 

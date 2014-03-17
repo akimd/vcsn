@@ -134,6 +134,17 @@ namespace vcsn
         return ws_;
       }
 
+      std::ostream&
+      print_set(std::ostream& o, const std::string& format) const
+      {
+        labelset()->print_set(o, format);
+        if (format == "latex")
+          o << "\\rightarrow";
+        else
+          o << '_';
+        return weightset()->print_set(o, format);
+      }
+
       static constexpr bool
       has_one()
       {

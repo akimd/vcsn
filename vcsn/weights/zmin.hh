@@ -170,21 +170,19 @@ namespace vcsn
       else
         return o << v;
     }
-  };
 
-  inline
-  std::ostream&
-  print_set(const zmin& ws,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      o << "\\mathbb{Z}_{min}";
-    else if (format == "text")
-      o << ws.vname();
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format) const
+    {
+      if (format == "latex")
+        o << "\\mathbb{Z}_{min}";
+      else if (format == "text")
+        o << vname();
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
+  };
 
   VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
 
