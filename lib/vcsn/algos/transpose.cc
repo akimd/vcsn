@@ -23,12 +23,12 @@ namespace vcsn
     | transpose(ratexp).  |
     `--------------------*/
 
-    REGISTER_DEFINE(transpose_exp);
+    REGISTER_DEFINE(transpose_ratexp);
 
     ratexp
     transpose(const dyn::ratexp& e)
     {
-      return detail::transpose_exp_registry().call(e);
+      return detail::transpose_ratexp_registry().call(e);
     }
   }
 }

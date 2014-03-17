@@ -32,12 +32,12 @@ namespace vcsn
     /*----------------.
     | standard(exp).  |
     `----------------*/
-    REGISTER_DEFINE(standard_exp);
+    REGISTER_DEFINE(standard_ratexp);
 
     automaton
     standard(const ratexp& e)
     {
-      return detail::standard_exp_registry().call(e);
+      return detail::standard_ratexp_registry().call(e);
     }
   }
 }

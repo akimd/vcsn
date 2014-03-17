@@ -144,14 +144,14 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       ratexp
-      lift_exp(const ratexp& exp)
+      lift_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         return make_ratexp(::vcsn::detail::lift(e.get_ratexpset()),
                            ::vcsn::lift(e.get_ratexpset(), e.ratexp()));
       }
 
-      REGISTER_DECLARE(lift_exp,
+      REGISTER_DECLARE(lift_ratexp,
                        (const ratexp& aut) -> ratexp);
     }
   }

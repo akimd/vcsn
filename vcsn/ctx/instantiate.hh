@@ -262,7 +262,7 @@ namespace vcsn
         REGISTER(accessible, aut_t);
         REGISTER(aut_to_exp, aut_t);
         REGISTER(chain, aut_t, unsigned);
-        REGISTER(chain_exp, rs_t, int, int);
+        REGISTER(chain_ratexp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
         REGISTER(concatenate, aut_t, aut_t);
         REGISTER(concatenate_ratexp, rs_t, rs_t);
@@ -286,11 +286,11 @@ namespace vcsn
         REGISTER(is_trim, aut_t);
         REGISTER(is_useless, aut_t);
         REGISTER(is_valid, aut_t);
-        REGISTER(is_valid_exp, rs_t);
+        REGISTER(is_valid_ratexp, rs_t);
         REGISTER(left_mult, ws_t, aut_t);
         REGISTER(left_mult_ratexp, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
-        REGISTER(lift_exp, rs_t);
+        REGISTER(lift_ratexp, rs_t);
         REGISTER(linear, rs_t, bool);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
@@ -308,7 +308,7 @@ namespace vcsn
         REGISTER(right_mult_ratexp, rs_t, ws_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
-        REGISTER(standard_exp, rs_t);
+        REGISTER(standard_ratexp, rs_t);
         REGISTER(sort, aut_t);
         REGISTER(sort, taut_t);
         REGISTER(star, aut_t);
@@ -319,7 +319,7 @@ namespace vcsn
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(tikz, taut_t, std::ostream);
         REGISTER(transpose, aut_t);
-        REGISTER(transpose_exp, rs_t);
+        REGISTER(transpose_ratexp, rs_t);
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
         REGISTER(union_a, aut_t, b_aut_t);

@@ -137,7 +137,7 @@ namespace vcsn
       /// Bridge.
       template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
       ratexp
-      copy_exp(const ratexp& exp, const ratexpset& out_rs)
+      copy_ratexp(const ratexp& exp, const ratexpset& out_rs)
       {
         const auto& r = exp->as<InRatExpSet>();
         const auto& ors = out_rs->as<OutRatExpSet>().get_ratexpset();
@@ -147,7 +147,7 @@ namespace vcsn
                                              r.ratexp()));
       }
 
-      REGISTER_DECLARE(copy_exp,
+      REGISTER_DECLARE(copy_ratexp,
                        (const ratexp& exp, const ratexpset& out_rs) -> ratexp);
     }
   }

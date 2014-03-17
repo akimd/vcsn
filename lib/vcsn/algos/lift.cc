@@ -24,12 +24,12 @@ namespace vcsn
     `---------------*/
 
 
-    REGISTER_DEFINE(lift_exp);
+    REGISTER_DEFINE(lift_ratexp);
 
     ratexp
     lift(const ratexp& e)
     {
-      return detail::lift_exp_registry().call(e);
+      return detail::lift_ratexp_registry().call(e);
     }
   }
 }

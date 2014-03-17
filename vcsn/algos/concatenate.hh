@@ -246,14 +246,14 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Int1, typename Int2>
       ratexp
-      chain_exp(const ratexp& re, int min, int max)
+      chain_ratexp(const ratexp& re, int min, int max)
       {
         const auto& r = re->as<RatExpSet>();
         return make_ratexp(r.get_ratexpset(),
                            chain(r.get_ratexpset(), r.ratexp(), min, max));
       }
 
-      REGISTER_DECLARE(chain_exp,
+      REGISTER_DECLARE(chain_ratexp,
                        (const ratexp&, int, int) -> ratexp);
     }
   }
