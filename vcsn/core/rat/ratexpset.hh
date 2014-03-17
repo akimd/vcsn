@@ -154,9 +154,7 @@ namespace vcsn
       if (format == "latex")
         {
           o << "\\mathsf{RatE}[";
-          labelset()->print_set(o, format);
-          o << " \\rightarrow ";
-          weightset()->print_set(o, format);
+          context().print_set(o, format);
           o << ']';
         }
       else if (format == "text")
@@ -165,7 +163,6 @@ namespace vcsn
         raise("invalid format: ", format);
       return o;
     }
-
 
   public:
     /// Whether \a l < \a r.
