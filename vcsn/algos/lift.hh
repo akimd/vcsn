@@ -21,7 +21,7 @@ namespace vcsn
 
     template <typename Context>
     using lifted_context_t =
-      ctx::context<ctx::oneset, ratexpset<Context>>;
+      ctx::context<oneset, ratexpset<Context>>;
 
     template <typename Aut>
     using lifted_automaton_t =
@@ -37,7 +37,7 @@ namespace vcsn
     lift(const ctx::context<LabelSet, WeightSet>& ctx)
     {
       auto rs_in = ratexpset<ctx::context<LabelSet, WeightSet>>(ctx);
-      return {ctx::oneset{}, rs_in};
+      return {oneset{}, rs_in};
     }
 
     // lift(ratexpset) -> ratexpset
