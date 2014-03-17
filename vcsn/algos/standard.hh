@@ -327,7 +327,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       automaton
-      standard_exp(const ratexp& exp)
+      standard_ratexp(const ratexp& exp)
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
@@ -339,7 +339,7 @@ namespace vcsn
                                                     e.ratexp()));
       }
 
-      REGISTER_DECLARE(standard_exp,
+      REGISTER_DECLARE(standard_ratexp,
                        (const ratexp& e) -> automaton);
     }
   }

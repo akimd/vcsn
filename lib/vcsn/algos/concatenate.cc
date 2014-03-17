@@ -27,11 +27,11 @@ namespace vcsn
       return detail::concatenate_ratexp_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(chain_exp);
+    REGISTER_DEFINE(chain_ratexp);
     ratexp
     chain(const ratexp& r, int min, int max)
     {
-      return detail::chain_exp_registry().call(r, min, max);
+      return detail::chain_ratexp_registry().call(r, min, max);
     }
 
   }

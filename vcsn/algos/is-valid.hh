@@ -187,13 +187,13 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       bool
-      is_valid_exp(const ratexp& exp)
+      is_valid_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         return is_valid<RatExpSet>(e.get_ratexpset(), e.ratexp());
       }
 
-      REGISTER_DECLARE(is_valid_exp, (const ratexp& e) -> bool);
+      REGISTER_DECLARE(is_valid_ratexp, (const ratexp& e) -> bool);
     }
   }
 } // namespace vcsn

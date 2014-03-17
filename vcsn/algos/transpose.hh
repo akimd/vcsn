@@ -286,7 +286,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet>
       ratexp
-      transpose_exp(const ratexp& exp)
+      transpose_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
 
@@ -295,7 +295,7 @@ namespace vcsn
                                      e.ratexp()));
       }
 
-      REGISTER_DECLARE(transpose_exp,
+      REGISTER_DECLARE(transpose_ratexp,
                        (const ratexp& e) -> ratexp);
     }
   }

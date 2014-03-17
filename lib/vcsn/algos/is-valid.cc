@@ -23,12 +23,12 @@ namespace vcsn
     | is_valid(exp).  |
     `----------------*/
 
-    REGISTER_DEFINE(is_valid_exp);
+    REGISTER_DEFINE(is_valid_ratexp);
 
     bool
     is_valid(const ratexp& e)
     {
-      return detail::is_valid_exp_registry().call(e);
+      return detail::is_valid_ratexp_registry().call(e);
     }
   }
 }
