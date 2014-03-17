@@ -16,15 +16,6 @@ namespace vcsn
 {
 
   template <typename... LabelSets>
-  inline
-  std::ostream&
-  print_set(const tupleset<LabelSets...>& ts,
-            std::ostream& o, const std::string& format)
-  {
-    return ts.print_set(o, format);
-  }
-
-  template <typename... LabelSets>
   class tupleset
   {
   public:
@@ -469,7 +460,7 @@ namespace vcsn
       vcsn::detail::pass
         {
           (o << (I == 0 ? "" : sep),
-           vcsn::print_set(std::get<I>(sets_), o, format),
+           std::get<I>(sets_).print_set(o, format),
            0)...
         };
       if (format == "text")

@@ -196,6 +196,22 @@ namespace vcsn
         return o;
       }
 
+      std::ostream&
+      print_set(std::ostream& o, const std::string& format) const
+      {
+        if (format == "latex")
+          {
+            o << "(";
+            labelset()->print_set(o, format);
+            o << ")^?";
+          }
+        else if (format == "text")
+          o << vname(true);
+        else
+          raise("invalid format: ", format);
+        return o;
+      }
+
       static void
       make_nullableset_kind(std::istream& is)
       {
@@ -256,26 +272,6 @@ namespace vcsn
 
 
 #undef DEFINE
-
-  template <typename GenSet>
-  inline
-  std::ostream&
-  print_set(const nullableset<GenSet>& ls,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      {
-        o << "(";
-        print_set(*ls.labelset(), o, format);
-        o << ")^?";
-      }
-    else if (format == "text")
-      o << ls.vname(true);
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
-
 }
 
 #endif // !VCSN_LABELSET_NULLABLESET_HH

@@ -139,13 +139,33 @@ namespace vcsn
                  typename ratexpset<Ctx2>::value_t v) const;
 
     value_t conv(self_type, value_t v) const;
-    std::ostream& print(std::ostream& o, const value_t v,
-			const std::string& format = "text") const;
 
     std::set<value_t> convs(std::istream&) const
     {
       raise(vname(), ": ranges not implemented");
     }
+
+    std::ostream& print(std::ostream& o, const value_t v,
+			const std::string& format = "text") const;
+
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format) const
+    {
+      if (format == "latex")
+        {
+          o << "\\mathsf{RatE}[";
+          labelset()->print_set(o, format);
+          o << " \\rightarrow ";
+          weightset()->print_set(o, format);
+          o << ']';
+        }
+      else if (format == "text")
+        o << vname();
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
+
 
   public:
     /// Whether \a l < \a r.
@@ -202,27 +222,6 @@ namespace vcsn
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
   };
-
-  template <typename Context>
-  inline
-  std::ostream&
-  print_set(const ratexpset<Context>& ws,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      {
-	o << "\\mathsf{RatE}[";
-	print_set(*ws.labelset(), o, format);
-        o << " \\rightarrow ";
-	print_set(*ws.weightset(), o, format);
-        o << ']';
-      }
-    else if (format == "text")
-      o << ws.vname();
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
 
   /// The meet of two ratexpsets.
   template <typename Ctx1, typename Ctx2>

@@ -14,19 +14,9 @@
 namespace vcsn
 {
 
-  template <typename LabelSet, typename WeightSet>
-  inline
-  std::ostream&
-  print_ctx(const ctx::context<LabelSet, WeightSet>& ctx,
-            std::ostream& o, const std::string& format)
-  {
-    print_set(*ctx.labelset(), o, format);
-    if (format == "latex")
-      o << "\\rightarrow";
-    else
-      o << '_';
-    return print_set(*ctx.weightset(), o, format);
-  }
+  /*-----------------.
+  | print(context).  |
+  `-----------------*/
 
   namespace dyn
   {
@@ -38,8 +28,7 @@ namespace vcsn
 			      const std::string& format)
       {
         const auto& c = ctx->as<Context>();
-        return vcsn::print_ctx<typename Context::labelset_t,
-                               typename Context::weightset_t>(c, o, format);
+        return c.print_set(o, format);
       }
 
       REGISTER_DECLARE(print_ctx,

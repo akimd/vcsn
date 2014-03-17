@@ -168,6 +168,26 @@ namespace vcsn
       return alphabet_.find(l);
     }
 
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format) const
+    {
+      if (format == "latex")
+        {
+          const char *sep = "\\{";
+          for (auto c: *this)
+            {
+              o << sep << c;
+              sep = ", ";
+            }
+          o << "\\}";
+        }
+      else if (format == "text")
+        o << vname(true);
+      else
+        raise("invalid format: ", format);
+      return o;
+    }
+
     /// Compute the intersection with another alphabet.
     template <typename L2>
     friend set_alphabet<L2>
@@ -187,30 +207,6 @@ namespace vcsn
   private:
     letters_t alphabet_;
   };
-
-  template <typename L>
-  inline
-  std::ostream&
-  print_set(const set_alphabet<L>& alphabet,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      {
-	const char *sep = "\\{";
-	for (auto c: alphabet)
-	  {
-	    o << sep << c;
-	    sep = ", ";
-	  }
-	o << "\\}";
-      }
-    else if (format == "text")
-      o << alphabet.vname(true);
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
-
 }
 
 #endif // !VCSN_ALPHABETS_SETALPHA_HH

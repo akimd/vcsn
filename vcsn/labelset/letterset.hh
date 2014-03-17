@@ -161,6 +161,18 @@ namespace vcsn
           o << str_escape(l);
         return o;
       }
+
+      std::ostream&
+      print_set(std::ostream& o, const std::string& format) const
+      {
+        if (format == "latex")
+          this->genset()->print_set(o, format);
+        else if (format == "text")
+          o << vname(true);
+        else
+          raise("invalid format: ", format);
+        return o;
+      }
     };
 
     /// Compute the meet with another labelset.
@@ -178,22 +190,6 @@ namespace vcsn
     {
       return {get_union(*lhs.genset(), *rhs.genset())};
     }
-
-  template <typename GenSet>
-  inline
-  std::ostream&
-  print_set(const letterset<GenSet>& ls,
-            std::ostream& o, const std::string& format)
-  {
-    if (format == "latex")
-      print_set(*ls.genset(), o, format);
-    else if (format == "text")
-      o << ls.vname(true);
-    else
-      raise("invalid format: ", format);
-    return o;
-  }
-
 }
 
 #endif // !VCSN_LABELSET_LETTERSET_HH
