@@ -128,7 +128,7 @@ namespace vcsn
           else if (kind == "lao")
             {
               header("vcsn/labelset/oneset.hh");
-              os << "vcsn::ctx::oneset";
+              os << "vcsn::oneset";
             }
           else if (kind == "lat" || kind == "tupleset")
             {
