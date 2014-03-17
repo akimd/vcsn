@@ -11,9 +11,9 @@ def dot_to_svg(dot, engine="dot"):
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    proc.stdin.write(dot.encode('ascii'))
+    proc.stdin.write(dot.encode('utf-8'))
     res = proc.communicate()
-    return res[0].decode('ascii')
+    return res[0].decode('utf-8')
 
 def info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.

@@ -12,6 +12,10 @@ def automaton_mul(self, rhs):
     else:
         return self.concatenate(rhs)
 
+def one_epsilon(s):
+    s = re.sub(r'\\\\e', '&epsilon;', s)
+    return s
+
 automaton.__eq__ = is_equal
 automaton.__add__ = automaton.sum
 automaton.__and__ = automaton.product
@@ -23,7 +27,7 @@ automaton.__pow__ = automaton.power
 automaton.__repr__ = lambda self: self.info()['type']
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
-automaton._repr_svg_ = lambda self: dot_to_svg(self.format('dot'))
+automaton._repr_svg_ = lambda self: dot_to_svg(one_epsilon(self.format('dot')))
 
 def automaton_load(file, format = "dot"):
     return automaton(open(file, "r").read(), format)
@@ -43,7 +47,8 @@ automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 automaton.info = lambda self: info_to_dict(self.format('info'))
 
 automaton.lan_to_lal = \
-  lambda self: automaton(re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1', self.format('dot')), 'dot')
+  lambda self: automaton(re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1',
+                         self.format('dot')), 'dot')
 
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
 # proper_real is the genuine binding to dyn::proper.
