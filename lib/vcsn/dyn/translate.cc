@@ -212,6 +212,36 @@ namespace vcsn
             weightset(kind);
         }
 
+        /// Read in \a is a valueset (labelset or weightset).
+        void automaton()
+        {
+          automaton(word());
+        }
+
+        void automaton(const std::string& w)
+        {
+          if (w == "mutable")
+            {
+              eat(is, "_automaton<");
+              os << "vcsn::mutable_automaton<" << incendl;
+              context();
+              eat(is, '>');
+              os << decendl << '>';
+              header("vcsn/core/mutable_automaton.hh");
+            }
+          else if (w == "transpose")
+            {
+              eat(is, "_automaton<");
+              os << "vcsn::detail::transpose_automaton<" << incendl;
+              automaton();
+              eat(is, '>');
+              os << decendl << '>';
+              header("vcsn/algos/transpose.hh");
+            }
+          else
+            raise("invalid automaton name: ", str_escape(w));
+        }
+
         /// Read a thing.
         void type()
         {
@@ -223,18 +253,9 @@ namespace vcsn
           if (w == "const std::string"
               || w == "int"
               || w == "std::ostream")
-            {
-              os << w;
-            }
-          else if (w == "mutable")
-            {
-              eat(is, "_automaton<");
-              os << "vcsn::mutable_automaton<" << incendl;
-              context();
-              eat(is, '>');
-              os << decendl << '>';
-              header("vcsn/core/mutable_automaton.hh");
-            }
+            os << w;
+          else if (w == "mutable" || w == "transpose")
+            automaton(w);
           else
             valueset(w);
         }

@@ -47,7 +47,7 @@ digraph
          lhs & rhs)
 
 ## ------------- ##
-## ab x cd = 0.  ##
+## ab & cd = 0.  ##
 ## ------------- ##
 
 lhs = vcsn.context('lal_char(ab)_b').ratexp('ab').standard()
@@ -72,7 +72,7 @@ digraph
 
 
 ## ---------------------- ##
-## (a+b)* x (c+d)* = \e.  ##
+## (a+b)* & (c+d)* = \e.  ##
 ## ---------------------- ##
 
 lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
@@ -186,7 +186,7 @@ digraph
 }
 ''')
 
-CHECK_EQ(exp, lhs&rhs)
+CHECK_EQ(exp, lhs & rhs)
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -229,7 +229,14 @@ a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
          .ratexp('<u>a<v>b').standard()
 a2 = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
          .ratexp('<x>a<y>b').standard()
-CHECK_EQ('<uxvy>ab', str((a1&a2).enumerate(4)))
+
+def check_enumerate(exp, aut):
+    CHECK_EQ(exp, str(aut.enumerate(4)))
+
+check_enumerate('<uxvy>ab', a1 & a2)
+check_enumerate('\z', a1.transpose() & a2)
+check_enumerate('\z', a1 & a2.transpose())
+check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 
 
 ## ------- ##
@@ -240,4 +247,4 @@ ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
-CHECK_EQ('<abcd>x', str((a['a'] & a['b'] & a['c'] & a['d']).enumerate(10)))
+check_enumerate('<abcd>x', (a['a'] & a['b'] & a['c'] & a['d']))
