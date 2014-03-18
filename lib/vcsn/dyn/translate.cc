@@ -383,22 +383,29 @@ namespace vcsn
         void header(std::string h)
         {
           // Open code some mismatches between algo name, and header
-          // name.  FIXME: algorithms should register this temselves.
+          // name.  FIXME: algorithms should register this themselves.
           if (false) {}
 #define ALGO(In, Out)                           \
           else if (h == "vcsn/algos/" In ".hh") \
             h = "vcsn/algos/" Out ".hh"
+          ALGO("chain_ratexp", "concatenation");
           ALGO("concatenation_ratexp", "concatenation");
+          ALGO("copy_ratexp", "copy");
           ALGO("infiltration", "product");
           ALGO("info_ratexp", "info");
           ALGO("intersection_ratexp", "product");
+          ALGO("is_valid_ratexp", "is_valid");
           ALGO("left_mult_ratexp", "left_mult");
+          ALGO("list_ratexp", "print");
+          ALGO("make_context", "make-context");
           ALGO("print_ratexp", "print");
           ALGO("print_weight", "print");
           ALGO("right_mult", "left_mult");
           ALGO("right_mult_ratexp", "left_mult");
           ALGO("shuffle", "product");
+          ALGO("standard_ratexp", "standard");
           ALGO("sum_ratexp", "sum");
+          ALGO("transpose_ratexp", "transpose");
           ALGO("union_a", "union");
           ALGO("union_ratexp", "union");
 #undef ALGO
