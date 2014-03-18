@@ -12,6 +12,10 @@ def check(ctx, exp = None):
 # Invalid context: missing parens.
 XFAIL(lambda: vcsn.context("lal_char_b"))
 
+# Invalid context: trailing garbage.
+XFAIL(lambda: vcsn.context("lal_char_b_z"))
+
+
 check('lal_char()_b')
 check('lal_char(ab)_b')
 check('lal_char(a-kv-z)_b', 'lal_char(abcdefghijkvwxyz)_b')

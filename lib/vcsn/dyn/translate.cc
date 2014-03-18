@@ -326,6 +326,8 @@ namespace vcsn
           is.str(ctx);
           os << "using ctx_t =" << incendl;
           context();
+          if (is.peek() != -1)
+            vcsn::fail_reading(is, "unexpected trailing characters");
           os << ';' << decendl
              <<
             "\n"
@@ -355,6 +357,8 @@ namespace vcsn
               std::string t = "t" + std::to_string(count) + "_t";
               os << "using " << t << " =" << incendl;
               type();
+              if (is.peek() != -1)
+                vcsn::fail_reading(is, "unexpected trailing characters");
               os << ';' << decendl;
               types += (count ? ", " : "") + t;
               ++count;
@@ -450,12 +454,14 @@ namespace vcsn
       };
     } // namespace detail
 
+    /// Instantiate a given context.
     void compile(const std::string& ctx)
     {
       detail::translation translate;
       translate.compile(ctx);
     }
 
+    /// Instantiate an algorithm for a given signature.
     void compile(const std::string& algo, const signature& sig)
     {
       detail::translation translate;
