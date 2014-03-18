@@ -2,7 +2,12 @@
 
 pyexecdir='@PYEXECDIR@'
 
-PYTHONPATH=$pyexecdir:$PYTHONPATH
+# _Append_ pyexecdir, not prepend, so that the user can still override
+# this path via $PYTHONPATH.  Note in particular that the
+# builddir-tests need to override $PYTHONPATH to use non-installed
+# modules, which would them be overriden here and installed files
+# would be used instead.
+PYTHONPATH=$PYTHONPATH:$pyexecdir
 export PYTHONPATH
 
 help ()
