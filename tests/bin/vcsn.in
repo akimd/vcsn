@@ -23,9 +23,9 @@ export PATH
 # Use the non-installed Python modules, and its libraries.
 PYTHONPATH=$abs_srcdir/python:$abs_builddir/python:$abs_builddir/python/.libs:$PYTHONPATH
 export PYTHONPATH
-LD_LIBRARY_PATH=$abs_builddir/lib/.libs:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$abs_builddir/lib/.libs:$abs_builddir/python/.libs:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
-DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$DYLD_LIBRARY_PATH
+DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$abs_builddir/python/.libs:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
 # If we need to compile, use the non-installed headers and libs.
