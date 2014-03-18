@@ -314,7 +314,11 @@ namespace vcsn
           cxx("-fPIC " + ldflags + " -lvcsn '" + base + ".o' -shared"
               " -o '" + base + ".so'");
           void* lib = dlopen((base + ".so").c_str(), RTLD_LAZY);
-          require (lib, "cannot load lib: ", base, ".so");
+          require(lib, "cannot load lib: ", base, ".so");
+          // Upon success, remove the .o file, it useless and large
+          // (10x compared to the *.so on erebus using clang).  Keep
+          // the .cc file for inspection.
+          boost::filesystem::remove(base + ".o");
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
