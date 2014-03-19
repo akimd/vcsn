@@ -1,7 +1,9 @@
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
 #include <vcsn/algos/make-context.hh>
 #include <lib/vcsn/algos/registry.hh>
+
 
 namespace vcsn
 {
@@ -15,8 +17,9 @@ namespace vcsn
     REGISTER_DEFINE(make_context);
 
     context
-    make_context(const std::string& name)
+    make_context(const std::string& n)
     {
+      std::string name = ast::normalize(n);
       // If the context is not known, try to compile and load it
       // first.
       auto sname = detail::context_base::sname(name);

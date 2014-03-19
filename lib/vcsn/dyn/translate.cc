@@ -10,6 +10,9 @@
 
 #include <boost/filesystem.hpp>
 
+#include <vcsn/dyn/context-parser.hh>
+#include <vcsn/dyn/context-printer.hh>
+
 #include <vcsn/config.hh>
 #include <vcsn/dyn/context.hh>
 #include <vcsn/misc/escape.hh>
@@ -85,189 +88,9 @@ namespace vcsn
           return res;
         }
 
-        void context()
-        {
-          header("vcsn/ctx/context.hh");
-          os << "vcsn::ctx::context<" << incendl;
-          // LabelSet, WeightSet.
-          valueset();
-          eat(is, '_');
-          os << ',' << iendl;
-          valueset();
-          os << decendl << '>';
-        }
-
-        /// Read a labelset in \a is.
-        void labelset()
-        {
-          labelset(word());
-        }
-
-        /// Read in \a is a labelset of \a kind.
-        void labelset(const std::string& kind)
-        {
-          if (kind == "lal" || kind == "law")
-            {
-              if (kind == "lal")
-                {
-                  header("vcsn/labelset/letterset.hh");
-                  // Some instantiation happen here:
-                  header("vcsn/ctx/lal_char.hh");
-                  os << "vcsn::letterset";
-                }
-              else if (kind == "law")
-                {
-                  // Some instantiation happen here:
-                  header("vcsn/ctx/law_char.hh");
-                  os << "vcsn::wordset";
-                }
-              eat(is, "_char");
-              os << "<vcsn::set_alphabet<vcsn::char_letters>>";
-            }
-          else if (kind == "lan")
-            {
-              // Some instantiation happen here:
-              header("vcsn/ctx/lan_char.hh");
-              os << "vcsn::nullableset<" << incendl;
-              eat(is, '<');
-              valueset();
-              eat(is, '>');
-              os << decendl << '>';
-            }
-          else if (kind == "lao")
-            {
-              header("vcsn/labelset/oneset.hh");
-              os << "vcsn::oneset";
-            }
-          else if (kind == "lat" || kind == "tupleset")
-            {
-              // It is very important to load this guy after having
-              // loaded the headers that define the one it aggregates.
-              // See the comments about the 'headers' member.
-              headers_late.insert("vcsn/labelset/tupleset.hh");
-              os << "vcsn::tupleset<" << incendl;
-              eat(is, '<');
-              while (true)
-                {
-                  valueset();
-                  int c = is.peek();
-                  if (c == ',')
-                    {
-                      is.get();
-                      os << ',' << iendl;
-                    }
-                  else
-                    break;
-                }
-              eat(is, '>');
-              os << decendl << '>';
-            }
-          else if (kind == "ratexpset")
-            ratexpset(false);
-          else
-            raise("invalid labelset name: ", str_escape(kind));
-        }
-
-        void ratexpset(bool with_ratexpset = true)
-        {
-          // ratexpset<.
-          if (with_ratexpset)
-            eat(is, "ratexpset");
-          eat(is, '<');
-          os << "vcsn::ratexpset<" << incendl;
-          // LabelSet, WeightSet.
-          context();
-          eat(is, '>');
-          os << decendl << '>';
-          header("vcsn/core/rat/ratexpset.hh");
-        }
-
-        /// Read a weightset in \a is.
-        void weightset()
-        {
-          weightset(word());
-        }
-
-        /// Parse a weightset of type \a ws.
-        void weightset(const std::string& ws)
-        {
-          if (ws == "b" || ws == "f2"  || ws == "q"
-              || ws == "r" || ws == "z" || ws == "zmin")
-            {
-              header("vcsn/weights/" + ws + ".hh");
-              os << "vcsn::" << ws;
-            }
-          else if (ws == "ratexpset")
-            ratexpset(false);
-          else
-            raise("invalid weightset name: ", str_escape(ws));
-        }
-
-        /// Read in \a is a valueset (labelset or weightset).
-        void valueset()
-        {
-          valueset(word());
-        }
-
-        void valueset(const std::string& kind)
-        {
-          if (kind == "lal"
-              || kind == "lan"
-              || kind == "lao"
-              || kind == "lat"
-              || kind == "law")
-            labelset(kind);
-          else
-            weightset(kind);
-        }
-
-        /// Read in \a is a valueset (labelset or weightset).
-        void automaton()
-        {
-          automaton(word());
-        }
-
-        void automaton(const std::string& w)
-        {
-          if (w == "mutable")
-            {
-              eat(is, "_automaton<");
-              os << "vcsn::mutable_automaton<" << incendl;
-              context();
-              eat(is, '>');
-              os << decendl << '>';
-              header("vcsn/core/mutable_automaton.hh");
-            }
-          else if (w == "transpose")
-            {
-              eat(is, "_automaton<");
-              os << "vcsn::detail::transpose_automaton<" << incendl;
-              automaton();
-              eat(is, '>');
-              os << decendl << '>';
-              header("vcsn/algos/transpose.hh");
-            }
-          else
-            raise("invalid automaton name: ", str_escape(w));
-        }
-
-        /// Read a thing.
-        void type()
-        {
-          type(word());
-        }
-
-        void type(const std::string& w)
-        {
-          if (w == "const std::string"
-              || w == "int"
-              || w == "std::ostream")
-            os << w;
-          else if (w == "mutable" || w == "transpose")
-            automaton(w);
-          else
-            valueset(w);
-        }
+        translation()
+          : parser_(is), printer_(os)
+        {}
 
         /// Generate the code to compile in file \a base ".cc".
         ///
@@ -283,28 +106,19 @@ namespace vcsn
           auto tmp = tmpname(base);
           {
             std::ofstream o{tmp + ".cc"};
-            print(o);
+            printer_.print(o);
           }
           boost::filesystem::rename(tmp + ".cc", base + ".cc");
         }
 
-        /// Generate the code to compile on \a o.
-        std::ostream& print(std::ostream& o)
+        void print_ctx(const std::string& ctx)
         {
-          o << "// " << is.str() << "\n";
-          o <<
-            "#define BUILD_LIBVCSN 1\n"
-            "#define VCSN_INSTANTIATION 1\n"
-            "#define MAYBE_EXTERN\n"
-            "\n";
-          for (const auto& h: headers)
-            o << "#include <" << h << ">\n";
-          o << '\n';
-          for (const auto& h: headers_late)
-            o << "#include <" << h << ">\n";
-          o << "\n"
-            << os.str();
-          return o;
+          is.clear();
+          is.str(ctx);
+          auto ast = parser_.parse();
+          ast->accept(printer_);
+          if (is.peek() != -1)
+            vcsn::fail_reading(is, "unexpected trailing characters");
         }
 
         /// Run C++ compiler with arguments \a s.
@@ -358,14 +172,10 @@ namespace vcsn
         /// Compile, and load, a DSO with instantiations for \a ctx.
         void compile(const std::string& ctx)
         {
-          header("vcsn/ctx/instantiate.hh");
+          printer_.header("vcsn/ctx/instantiate.hh");
           std::string base = plugindir() + detail::context_base::sname(ctx);
-          is.clear();
-          is.str(ctx);
           os << "using ctx_t =" << incendl;
-          context();
-          if (is.peek() != -1)
-            vcsn::fail_reading(is, "unexpected trailing characters");
+          print_ctx(ctx);
           os << ';' << decendl
              <<
             "\n"
@@ -381,20 +191,16 @@ namespace vcsn
         /// Compile, and load, a DSO which instantiates \a algo for \a sig.
         void compile(const std::string& name, const signature& sig)
         {
-          header("vcsn/misc/name.hh"); // ssignature
-          header("vcsn/algos/" + name + ".hh");
+          printer_.header("vcsn/misc/name.hh"); // ssignature
+          printer_.header("vcsn/algos/" + name + ".hh");
           std::string base = plugindir() + name + "(" + sig.to_string() + ")";
           int count = 0;
           std::string types;
           for (const auto& s: sig)
             {
-              is.clear();
-              is.str(s);
               std::string t = "t" + std::to_string(count) + "_t";
               os << "using " << t << " =" << incendl;
-              type();
-              if (is.peek() != -1)
-                vcsn::fail_reading(is, "unexpected trailing characters");
+              print_ctx(s);
               os << ';' << decendl;
               types += (count ? ", " : "") + t;
               ++count;
@@ -416,74 +222,12 @@ namespace vcsn
           jit(base);
         }
 
-        /// Record that we need an include for this header.
-        void header(std::string h)
-        {
-          // Open code some mismatches between algo name, and header
-          // name.  FIXME: algorithms should register this themselves.
-          if (false) {}
-#define ALGO(In, Out)                           \
-          else if (h == "vcsn/algos/" In ".hh") \
-            h = "vcsn/algos/" Out ".hh"
-          ALGO("chain_ratexp", "concatenation");
-          ALGO("concatenation_ratexp", "concatenation");
-          ALGO("copy_ratexp", "copy");
-          ALGO("infiltration", "product");
-          ALGO("info_ratexp", "info");
-          ALGO("intersection_ratexp", "product");
-          ALGO("is_valid_ratexp", "is_valid");
-          ALGO("left_mult_ratexp", "left_mult");
-          ALGO("list_ratexp", "print");
-          ALGO("make_context", "make-context");
-          ALGO("print_ratexp", "print");
-          ALGO("print_weight", "print");
-          ALGO("right_mult", "left_mult");
-          ALGO("right_mult_ratexp", "left_mult");
-          ALGO("shuffle", "product");
-          ALGO("standard_ratexp", "standard");
-          ALGO("sum_ratexp", "sum");
-          ALGO("transpose_ratexp", "transpose");
-          ALGO("union_a", "union");
-          ALGO("union_ratexp", "union");
-#undef ALGO
-          headers.insert(h);
-        }
-
         /// The input stream: the specification to translate.
         std::istringstream is;
         /// The output stream: the corresponding C++ snippet to compile.
         std::ostringstream os;
-        /// Headers to include.
-        ///
-        /// Sadly enough functions about tupleset must be defined
-        /// after the functions that define the behavior of the
-        /// components.  The genuine case is that of "print_set",
-        /// which fails for the same reasons as the following does not
-        /// compile:
-        ///
-        /// template <typename T>
-        /// struct wrapper
-        /// {
-        ///   T t;
-        /// };
-        ///
-        /// template <typename T>
-        /// void print(const wrapper<T>& w)
-        /// {
-        ///   print(w.t);
-        /// }
-        ///
-        /// void print(int){}
-        ///
-        /// int main()
-        /// {
-        ///   wrapper<int> w;
-        ///   print(w);
-        /// }
-        ///
-        /// So we use a second set for "late" headers.
-        std::set<std::string> headers;
-        std::set<std::string> headers_late;
+        ast::context_parser parser_;
+        ast::context_printer printer_;
       };
     } // namespace detail
 
