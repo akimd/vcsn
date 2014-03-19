@@ -45,6 +45,24 @@ namespace vcsn
         , den(d)
       {}
 
+      // FIXME: yes, I know, I'm a bad person because of this.
+      value_t(const value_t& that)
+        : num(that.num)
+        , den(that.den)
+      {}
+
+      // FIXME: yes, I know, I'm a bad person because of this.
+      bool operator==(const value_t& that) const
+      {
+        return num == that.num && den == that.den;
+      }
+
+      // FIXME: yes, I know, I'm a bad person because of this.
+      bool operator<(const value_t& that) const
+      {
+        return less_than(*this, that);
+      }
+
       /// Put it in normal form.
       value_t& reduce()
       {
@@ -277,5 +295,18 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(b, q, q);
   VCSN_WEIGHTS_BINARY(q, b, q);
 }
+
+// namespace std
+// {
+//   template <>
+//   class hash<vcsn::q::value_t>
+//   {
+//   public:
+//     size_t operator()(const vcsn::q::value_t& v) const
+//     {
+//       return vcsn::q::hash(v);
+//     }
+//   };
+// }
 
 #endif // !VCSN_WEIGHTS_Q_HH
