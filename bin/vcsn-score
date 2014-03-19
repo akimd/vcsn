@@ -8,9 +8,16 @@ import timeit
 def bench(title, comment, cmd, number=1):
     "Report the best timing of three batches of number runs of cmd."
     t = round(min(timeit.repeat(cmd, number=number)), 2)
-    print("%5.2fs: %-20s # %s" % (t, title, comment))
+    print("%5.2fs: %-20s # %s%s"
+          % (t, title, comment,
+             ', ' + str(number) + 'x' if 1 < number else ''))
 
 b = vcsn.context('lal_char(abc)_b')
+
+# Check the cost of dyn calls.
+bench('b.format("text")', 'b = lal_char(abc)_b',
+      lambda: b.format('text'),
+      number=100000)
 
 # I/O on ratexps.
 e = '(\e+a)' * 500
