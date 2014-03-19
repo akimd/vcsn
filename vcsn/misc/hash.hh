@@ -39,7 +39,7 @@ namespace vcsn
   /// without using non-default constructors; to be used along with
   /// vcsn::ctx::equal_to.
   template <typename ValueSet>
-  class hash : public std::hash<typename ValueSet::value_t>
+  class hash
   {
   public:
     using valueset_t = ValueSet;
@@ -49,6 +49,11 @@ namespace vcsn
     {
       return valueset_t::hash(v);
     }
+
+    // Not used, but needed to satisfy the specification.  See for example
+    // http://www.cplusplus.com/reference/functional/hash/ .
+    using result_type = size_t;
+    using argument_type = value_t;
   };
 
   // Following the naming convention of Boost.
