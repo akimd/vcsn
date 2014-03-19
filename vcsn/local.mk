@@ -117,6 +117,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/context.hh                            \
+  %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/polynomial.hh                         \

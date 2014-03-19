@@ -83,6 +83,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/union.cc                            \
   %D%/algos/universal.cc                        \
   %D%/ctx/ctx.cc                                \
+  %D%/dyn/context-parser.cc                     \
   %D%/dyn/translate.cc                          \
   %D%/misc/escape.cc                            \
   %D%/misc/file-library.cc                      \
