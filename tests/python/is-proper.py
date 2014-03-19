@@ -15,12 +15,12 @@ def check(exp, aut):
      FAIL(exp + " != " + eff)
 
 def check_context(exp, aut, ctx):
-  check(exp, aut.replace('ctx', ctx))
+  check(exp, aut.replace('CTX', ctx))
 
 a = """
 digraph
 {
-  vcsn_context = "lal_char(ab)_b"
+  vcsn_context = "CTX"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -38,7 +38,7 @@ for ls in ["lal", "lan", "law"]:
 a = """
 digraph
 {
-  vcsn_context = "ctx"
+  vcsn_context = "CTX"
   I0 -> 0
   0 -> 1 [label = "\\\\e, a"]
   1 -> F1

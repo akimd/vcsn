@@ -8,7 +8,7 @@ from test import *
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
 def check(re, s, exp, breaking = False):
-    "Check that d/ds(re) = exp."
+    #Check that d/ds(re) = exp.
     r = c.ratexp(re)
     eff = r.derivation(s, breaking)
     print("d/d{}({}) = {}".format(s, r, eff));
