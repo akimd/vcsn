@@ -16,7 +16,6 @@ namespace vcsn
   std::ostream&
   operator<<(std::ostream& os, const signature& sig)
   {
-    std::string res;
     const char* sep = "";
     for (auto s: sig.sig)
       {
