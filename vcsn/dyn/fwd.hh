@@ -64,6 +64,22 @@ namespace vcsn
     }
     using weight = std::shared_ptr<const detail::weight_base>;
   }
+
+  namespace ast
+  {
+    class ast_node;
+    class automaton;
+    class context;
+    class tupleset;
+    class polynomialset;
+    class nullableset;
+    class oneset;
+    class letterset;
+    class ratexpset;
+    class weightset;
+    class wordset;
+    class other;
+  }
 } // namespace vcsn
 
 // FIXME: Not the best place for this.

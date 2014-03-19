@@ -117,12 +117,14 @@ nobase_include_HEADERS =                        \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/context.hh                            \
+  %D%/dyn/context-visitor.hh                    \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/polynomial.hh                         \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \
   %D%/dyn/translate.hh                          \
+  %D%/dyn/type-ast.hh                           \
   %D%/dyn/weight.hh                             \
   %D%/empty.hh                                  \
   %D%/factory/de-bruijn.hh                      \
