@@ -15,7 +15,6 @@ namespace vcsn
 
 # include <vcsn/ctx/instantiate.hh>
 # include <vcsn/algos/are-equivalent.hh> // difference
-# include <vcsn/algos/are-isomorphic.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/derivation.hh>
 # include <vcsn/algos/enumerate.hh>
@@ -54,7 +53,6 @@ namespace vcsn
 
         using namespace dyn::detail;
 
-        REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx, unsigned);
         REGISTER(derivation, rs_t, const std::string, bool);
