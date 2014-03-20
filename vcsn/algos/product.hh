@@ -232,7 +232,6 @@ namespace vcsn
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
       state_t state(typename Lhs::state_t lst, typename Rhs::state_t rst)
-        ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         pair_t pdst(lst, rst);
         auto iter = pmap_.find(pdst);
@@ -276,7 +275,6 @@ namespace vcsn
       void add_product_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
-        ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         // This relies on outgoing transitions being sorted by label
         // by the sort algorithm: thanks to that property we can scan
@@ -333,7 +331,6 @@ namespace vcsn
       void add_shuffle_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
-        ATTRIBUTE_HOT ATTRIBUTE_ALWAYS_INLINE
       {
         typename Lhs::state_t lsrc = psrc.first;
         typename Rhs::state_t rsrc = psrc.second;
