@@ -33,3 +33,19 @@ check(True, b, b)
 check(False, a, b)
 check(True, a+'+'+b, a+'+'+b)
 check(True, a+'+'+b, b+'+'+a)
+
+# Non-deterministic automata.
+a = '(a+a+a+a)'
+b1 = '(a+a+b+a)'
+b2 = '(b+a+a+a)'
+b3 = '(a+a+a+b)'
+check(True, a, a)
+check(False, a, b1)
+check(False, a, b2)
+check(False, a, b3)
+check(True, b1, b1)
+check(True, b2, b2)
+check(True, b3, b3)
+check(True, b1, b2)
+check(True, b1, b3)
+check(True, b2, b3)
