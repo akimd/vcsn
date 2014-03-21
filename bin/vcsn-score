@@ -87,6 +87,12 @@ a = b.de_bruijn(n)
 bench('a.shortest(5)', 'a = de_bruijn({})'.format(n),
       lambda: a.shortest(5))
 
+# sort.
+r = "[a-e]?{600}"
+a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
+bench('a.sort()', 'a = std({})'.format(r),
+      lambda: a.shortest(5))
+
 # proper.
 r = "a?{2000}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
