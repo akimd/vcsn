@@ -187,6 +187,9 @@ namespace vcsn
     /// Whether is normalized (in the Thompson sense).
     bool is_normalized(const automaton& aut);
 
+    /// Whether the outgoing transitions of each state have increasing labels.
+    bool is_out_sorted(const automaton& aut);
+
     /// Whether has no spontaneous transition.
     bool is_proper(const automaton& aut);
 

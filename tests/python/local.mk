@@ -52,6 +52,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/proper.py	                                \
   %D%/ratexp.py                                 \
   %D%/shuffle.py                                \
+  %D%/sort.py                                   \
   %D%/split.py                                  \
   %D%/standard.py                               \
   %D%/star-height.py                            \

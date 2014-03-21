@@ -14,6 +14,58 @@
 namespace vcsn
 {
 
+
+  /*------------------.
+  | is_label_sorted.  |
+  `------------------*/
+
+  /// Whether for each state, the outgoing transitions are sorted by
+  /// increasing label.
+  template <typename Aut>
+  inline
+  bool
+  is_out_sorted(const Aut& a)
+  {
+    for (typename Aut::state_t s: a.states())
+      {
+        // Whether looking at the first outgoing transition from state s.
+        bool first = true;
+        // The symbol of the previous transition.  We could initialize
+        // to special. If we enforce that it is always less-than any
+        // other label, first becomes useless.
+        typename Aut::label_t prev;
+        for (typename Aut::transition_t t: a.out(s))
+          {
+            if (first || a.labelset()->less_than(prev, a.label_of(t)))
+              prev = a.label_of(t);
+            else
+              return false;
+            first = false;
+          }
+      }
+    return true;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+
+      /// Bridge.
+      template <typename Aut>
+      bool
+      is_out_sorted(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return is_out_sorted(a);
+      }
+
+      REGISTER_DECLARE(is_out_sorted,
+                       (const automaton&) -> bool);
+    }
+  }
+
+
   /*-------.
   | sort.  |
   `-------*/
@@ -214,10 +266,7 @@ namespace vcsn
     namespace detail
     {
 
-      /*--------------.
-      | Bridge: sort  |
-      `--------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       sort(const automaton& aut)

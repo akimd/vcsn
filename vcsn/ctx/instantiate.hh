@@ -251,6 +251,7 @@ namespace vcsn
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
+        REGISTER(is_out_sorted, aut_t);
         REGISTER(is_proper, aut_t);
         REGISTER(is_standard, aut_t);
         REGISTER(is_trim, aut_t);
