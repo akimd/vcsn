@@ -18,7 +18,7 @@ def check_accessible(input, output):
     input = vcsn.automaton(input)
   if isinstance(output, str):
     output = vcsn.automaton(output)
-  CHECK_EQ(input.accessible().sort(), output.sort())
+  CHECK_EQ(output.sort(), input.accessible().sort())
 
 ## ----------------------------- ##
 ## Regression: standard(ab+cd).  ##
@@ -177,10 +177,10 @@ digraph
 ## is-trim ##
 ## ------- ##
 
-def check_is_trim (input, output):
+def check_is_trim (input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  CHECK_EQ(input.is_trim(), output)
+  CHECK_EQ(exp, input.is_trim())
 
 check_is_trim(a1, True)
 check_is_trim(b1, True)
@@ -229,10 +229,10 @@ digraph
 ## -------- ##
 ## is-empty ##
 ## -------- ##
-def check_is_empty (input, output):
+def check_is_empty (input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  CHECK_EQ(input.is_empty(), output)
+  CHECK_EQ(exp, input.is_empty())
 check_is_empty(a1, False)
 check_is_empty(b1, False)
 check_is_empty(minab, False)
@@ -271,10 +271,10 @@ digraph
 ## ---------- ##
 ## is-useless ##
 ## ---------- ##
-def check_is_useless (input, output):
+def check_is_useless (input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  CHECK_EQ(input.is_useless(), output)
+  CHECK_EQ(exp, input.is_useless())
 
 check_is_useless(a1, False)
 check_is_useless(b1, False)
@@ -328,12 +328,12 @@ digraph
 ## ---- ##
 ## trim ##
 ## ---- ##
-def check_trim(input, output):
+def check_trim(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  if isinstance(output, str):
-    output = vcsn.automaton(output)
-  CHECK_EQ(input.trim(), output)
+  if isinstance(exp, str):
+    exp = vcsn.automaton(exp)
+  CHECK_EQ(exp, input.trim())
 
 check_trim(a1, a1)
 check_trim(b1, b1)
