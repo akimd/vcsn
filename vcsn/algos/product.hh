@@ -44,8 +44,9 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
 
       producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(std::move(sort(lhs))), rhs_(std::move(sort(rhs))),
-          res_(join(lhs_.context(), rhs_.context()))
+        : lhs_(std::move(sort(lhs)))
+        , rhs_(std::move(sort(rhs)))
+        , res_(join(lhs_.context(), rhs_.context()))
       {}
 
       /// Reset the attributes before a new product.
