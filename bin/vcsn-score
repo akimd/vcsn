@@ -94,7 +94,7 @@ bench('a.sort()', 'a = std({})'.format(r),
       lambda: a.shortest(5))
 
 # proper.
-r = "a?{2000}"
+r = "a?{1200}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
 bench('a.proper()', 'a = thompson({})'.format(r), lambda: a.proper_real())
 
