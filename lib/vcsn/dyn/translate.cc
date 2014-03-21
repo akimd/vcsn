@@ -350,6 +350,7 @@ namespace vcsn
         /// Compile, and load, a DSO which instantiates \a algo for \a sig.
         void compile(const std::string& name, const signature& sig)
         {
+          header("vcsn/misc/name.hh"); // ssignature
           header("vcsn/algos/" + name + ".hh");
           std::string base = plugindir() + name + "(" + sig.to_string() + ")";
           int count = 0;
