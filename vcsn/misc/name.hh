@@ -36,6 +36,7 @@ namespace vcsn
     return sname<T>();
   }
 
+  /// Static signature.
   template <typename ... Args>
   inline
   signature
