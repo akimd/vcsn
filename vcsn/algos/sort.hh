@@ -4,12 +4,13 @@
 # include <algorithm>
 # include <map>
 # include <queue>
-# include <unordered_map>
 # include <vector>
 
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/attributes.hh>
+# include <vcsn/misc/unordered_map.hh>
 
 namespace vcsn
 {
@@ -116,13 +117,12 @@ namespace vcsn
         for (auto t: a_.all_out(s))
           tt.emplace_back(t);
 
-        auto closure =
-          [&](const transition_t t1,
-              const transition_t t2) -> bool
-          {
-            return transition_precedes(t1, t2);
-          };
-        std::sort(tt.begin(), tt.end(), closure);
+        std::sort(tt.begin(), tt.end(),
+                  [&](const transition_t t1,
+                      const transition_t t2) -> bool
+                  {
+                    return transition_less_than(t1, t2);
+                  });
 
         for (auto t: tt)
           {
@@ -160,22 +160,14 @@ namespace vcsn
 
       void push_inaccessible_states()
       {
-        std::vector<state_t> ss;
+        // States are processed in order.
         for (auto s: a_.all_states()) // Like above, a_.states_() would work.
-          if (map_.find(s) == map_.end())
-            ss.emplace_back(s);
-
-        // Just sort by input state number, without looking at
-        // incoming or outgoing transitions.  This is crude, but
-        // acceptable in most situations.
-        std::sort(ss.begin(), ss.end());
-
-        for (auto s: ss)
-          treat_state(s);
+          if (!has(map_, s))
+            treat_state(s);
       }
 
-      bool transition_precedes(const transition_t t1,
-                               const transition_t t2) const
+      bool transition_less_than(const transition_t t1,
+                                const transition_t t2) const
       {
         // We intentionally ignore source states: they should always
         // be identical when we call this.
