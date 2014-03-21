@@ -13,7 +13,7 @@ def check(ctx, exp = None):
 XFAIL(lambda: vcsn.context("lal_char_b"))
 
 # Invalid context: trailing garbage.
-XFAIL(lambda: vcsn.context("lal_char_b_z"))
+XFAIL(lambda: vcsn.context("lal_char(a)_b_z"))
 
 
 check('lal_char()_b')
