@@ -3,11 +3,11 @@
 
 # include <algorithm>
 # include <iostream>
-# include <sstream>
 
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/algos/grail.hh>
+# include <vcsn/algos/accessible.hh> // useful_states
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/set.hh>
 
