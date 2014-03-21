@@ -102,4 +102,3 @@ lib_libvcsn_la_LIBADD =				\
 
 include %D%/dot/local.mk
 include %D%/rat/local.mk
-
