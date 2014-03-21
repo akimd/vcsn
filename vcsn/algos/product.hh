@@ -208,22 +208,13 @@ namespace vcsn
       void initialize_shuffle(const weightset_t& ws)
       {
         initialize();
-
         /// Make the result automaton initial states:
         for (auto lt : lhs_.initial_transitions())
           for (auto rt : rhs_.initial_transitions())
-            {
-              auto lsrc = lhs_.dst_of(lt);
-              auto rsrc = rhs_.dst_of(rt);
-              pair_t pair(lsrc, rsrc);
-              state_t init = res_.new_state();
-              res_.add_initial(init,
-                               mul_(ws,
-                                    lhs_.weight_of(lt),
-                                    rhs_.weight_of(rt)));
-              pmap_[pair] = init;
-              todo_.emplace_back(pair);
-            }
+            res_.add_initial(state(lhs_.dst_of(lt), rhs_.dst_of(rt)),
+                             mul_(ws,
+                                  lhs_.weight_of(lt),
+                                  rhs_.weight_of(rt)));
       }
 
       /// The state in the product corresponding to a pair of states
@@ -234,18 +225,18 @@ namespace vcsn
       /// updating the map; in any case return.
       state_t state(typename Lhs::state_t lst, typename Rhs::state_t rst)
       {
-        pair_t pdst(lst, rst);
-        auto iter = pmap_.find(pdst);
-        state_t dst;
+        pair_t state(lst, rst);
+        auto iter = pmap_.find(state);
+        state_t res;
         if (iter == pmap_.end())
           {
-            dst = res_.new_state();
-            pmap_[pdst] = dst;
-            todo_.emplace_back(pdst);
+            res = res_.new_state();
+            pmap_[state] = res;
+            todo_.emplace_back(state);
           }
         else
-          dst = iter->second;
-        return dst;
+          res = iter->second;
+        return res;
       }
 
       /// Add a transition in the result from destination states in operands.
