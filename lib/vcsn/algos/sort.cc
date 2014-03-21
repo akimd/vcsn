@@ -5,15 +5,16 @@
 
 namespace vcsn
 {
-
-  /*------.
-  | sort. |
-  `------*/
-
   namespace dyn
   {
-    REGISTER_DEFINE(sort);
+    REGISTER_DEFINE(is_out_sorted);
+    bool
+    is_out_sorted(const automaton& aut)
+    {
+      return detail::is_out_sorted_registry().call(aut);
+    }
 
+    REGISTER_DEFINE(sort);
     automaton
     sort(const automaton& aut)
     {

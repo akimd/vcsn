@@ -182,6 +182,11 @@ struct automaton
     return vcsn::dyn::is_normalized(aut_);
   }
 
+  bool is_out_sorted() const
+  {
+    return vcsn::dyn::is_out_sorted(aut_);
+  }
+
   bool is_proper() const
   {
     return vcsn::dyn::is_proper(aut_);
@@ -611,6 +616,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_isomorphic", &automaton::is_isomorphic)
     .def("is_normalized", &automaton::is_normalized)
     .def("is_proper", &automaton::is_proper)
+    .def("is_out_sorted", &automaton::is_out_sorted)
     .def("is_standard", &automaton::is_standard)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
