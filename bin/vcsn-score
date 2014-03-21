@@ -8,9 +8,9 @@ import timeit
 def bench(title, comment, cmd, number=1):
     "Report the best timing of three batches of number runs of cmd."
     t = round(min(timeit.repeat(cmd, number=number)), 2)
-    print("%5.2fs: %-20s # %s%s"
-          % (t, title, comment,
-             ', ' + str(number) + 'x' if 1 < number else ''))
+    if 1 < number:
+        comment += ', {}x'.format(number)
+    print("{:5.2f}s: {:20s} # {}".format(t, title, comment))
 
 b = vcsn.context('lal_char(abc)_b')
 
@@ -23,19 +23,20 @@ bench('b.format("text")', 'b = lal_char(abc)_b',
 e = '(\e+a)' * 500
 bench('b.ratexp(e)', 'e = "(\e+a)" * 500', lambda: b.ratexp(e), number=100)
 r = b.ratexp(e)
-bench('r.format("text")', 'r = b.ratexp("(\e+a)" * 500)', lambda: r.format('text'), number=1000)
+bench('r.format("text")', 'r = b.ratexp("(\e+a)" * 500)',
+      lambda: r.format('text'), number=1000)
 
 # Output should be fast.
 r = 'a?{500}'
 a = b.ratexp(r).standard()
 auts = dict()
 for fmt in ['dot', 'efsm', 'fado', 'grail', 'tikz']:
-    bench('a.format("'+ fmt + '")', 'a = std('+r+')', lambda: a.format(fmt))
+    bench('a.format("'+ fmt + '")', 'a = std({})'.format(r), lambda: a.format(fmt))
     auts[fmt] = a.format(fmt)
 
 # Input should be too.
 for fmt in ['dot', 'efsm', 'fado']:
-    bench('read(a)', 'a = ' + fmt + '(std('+r+'))',
+    bench('read(s)', 's = {}(std({}))'.format(fmt, r),
           lambda: vcsn.automaton(auts[fmt], fmt))
 del auts
 
@@ -69,7 +70,7 @@ bench('r.thompson()', 'r = {} on [a-z]? -> Z'.format(e),
 # determinize.
 n = 21
 a = b.ladybird(n)
-bench('a.determinize()', 'a = ladybird('+str(n)+'))',
+bench('a.determinize()', 'a = ladybird({})'.format(n),
       lambda: a.determinize())
 
 # eval.
@@ -89,24 +90,24 @@ bench('a.shortest(5)', 'a = de_bruijn({})'.format(n),
 # proper.
 r = "a?{2000}"
 a = vcsn.context("lan_char(a)_b").ratexp(r).thompson()
-bench('a.proper()', 'a = thompson('+r+')', lambda: a.proper_real())
+bench('a.proper()', 'a = thompson({})'.format(r), lambda: a.proper_real())
 
 # to-ratexp.
 r = '[a-d]?{100}'
 a = vcsn.context('lal_char(a-d)_b').ratexp(r).standard()
-bench('a.ratexp()', 'a = std('+r+')', lambda: a.ratexp())
+bench('a.ratexp()', 'a = std({})'.format(r), lambda: a.ratexp())
 
 # Other product and power testcases, with more outgoing transitions
 # per state.  This stresses much better the new product algorithm.
 r = "[a-e]?{50}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a.product(a)     ', 'a = std('+r+')', lambda: a.product(a))
-bench('a.shuffle(a)     ', 'a = std('+r+')', lambda: a.shuffle(a))
+bench('a.product(a)     ', 'a = std({})'.format(r), lambda: a.product(a))
+bench('a.shuffle(a)     ', 'a = std({})'.format(r), lambda: a.shuffle(a))
 
 # infiltration.
 r = "[a-e]?{30}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a.infiltration(a)', 'a = std('+r+')', lambda: a.infiltration(a))
+bench('a.infiltration(a)', 'a = std({})'.format(r), lambda: a.infiltration(a))
 
 # power.
 r = "[a-e]*b(<2>[a-e])*"
