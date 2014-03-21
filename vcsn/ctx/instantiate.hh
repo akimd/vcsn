@@ -85,13 +85,9 @@ namespace vcsn
                                                                         \
   /* dot. */                                                            \
   VCSN_CTX_INSTANTIATE_PRINT(dot, mutable_automaton<Ctx>);              \
-  VCSN_CTX_INSTANTIATE_PRINT                                            \
-  (dot, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);     \
                                                                         \
   /* efsm. */                                                           \
   VCSN_CTX_INSTANTIATE_PRINT(efsm, mutable_automaton<Ctx>);             \
-  VCSN_CTX_INSTANTIATE_PRINT                                            \
-  (efsm, vcsn::detail::transpose_automaton<mutable_automaton<Ctx>>);    \
                                                                         \
   /* lift. */                                                           \
   MAYBE_EXTERN template                                                 \
@@ -225,7 +221,6 @@ namespace vcsn
       {
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
-        using taut_t = vcsn::detail::transpose_automaton<aut_t>;
         using rs_t = ratexpset<ctx_t>;
         using ws_t = typename ctx_t::weightset_t;
 
@@ -247,13 +242,10 @@ namespace vcsn
         REGISTER(constant_term, rs_t);
         REGISTER(copy, aut_t);
         REGISTER(dot, aut_t, std::ostream);
-        REGISTER(dot, taut_t, std::ostream);
         REGISTER(efsm, aut_t, std::ostream);
-        REGISTER(efsm, taut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(first_order, rs_t, bool);
         REGISTER(info, aut_t, std::ostream);
-        REGISTER(info, taut_t, std::ostream);
         REGISTER(info_ratexp, rs_t, std::ostream);
         REGISTER(intersection_ratexp, rs_t, rs_t);
         REGISTER(is_empty, aut_t);
@@ -288,14 +280,12 @@ namespace vcsn
         REGISTER(standard, aut_t);
         REGISTER(standard_ratexp, rs_t);
         REGISTER(sort, aut_t);
-        REGISTER(sort, taut_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
         REGISTER(sum_ratexp, rs_t, rs_t);
         REGISTER(tikz, aut_t, std::ostream);
-        REGISTER(tikz, taut_t, std::ostream);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_ratexp, rs_t);
         REGISTER(trim, aut_t);
