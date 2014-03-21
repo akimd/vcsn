@@ -57,6 +57,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/star.hh                             \
   %D%/algos/star-height.hh                      \
   %D%/algos/star-normal-form.hh                 \
+  %D%/algos/synchronizing-word.hh               \
   %D%/algos/sum.hh                              \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \

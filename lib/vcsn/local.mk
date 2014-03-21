@@ -80,6 +80,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/star-height.cc                      \
   %D%/algos/star-normal-form.cc                 \
   %D%/algos/sum.cc                              \
+  %D%/algos/synchronizing-word.cc               \
   %D%/algos/thompson.cc                         \
   %D%/algos/tikz.cc                             \
   %D%/algos/transpose.cc                        \

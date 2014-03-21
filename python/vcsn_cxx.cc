@@ -219,6 +219,11 @@ struct automaton
     return vcsn::dyn::minimize(aut_, algo);
   }
 
+  automaton pair() const
+  {
+    return vcsn::dyn::pair(aut_);
+  }
+
   automaton power(unsigned n) const
   {
     return vcsn::dyn::power(aut_, n);
@@ -626,6 +631,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("minimize", &automaton::minimize, minimize())
+    .def("pair", &automaton::pair)
     .def("power", &automaton::power)
     .def("product_real", &automaton::product_real).staticmethod("product_real")
     .def("proper_real", &automaton::proper, proper())
