@@ -1,7 +1,7 @@
 #undef NDEBUG
 #include <cassert>
 #include <vcsn/ctx/law_char_z.hh>
-#include <vcsn/ctx/law_char_zmin.hh>
+#include <vcsn/weights/zmin.hh>
 #include <vcsn/weights/polynomialset.hh>
 #include <tests/unit/test.hh>
 #include <tests/unit/weight.hh>
@@ -166,7 +166,7 @@ int main()
     errs += check_conv(ps);
   }
   {
-    using context_t = vcsn::ctx::law_char_zmin;
+    using context_t = vcsn::ctx::context<vcsn::ctx::law_char, vcsn::zmin>;
     context_t ctx {{'a', 'b'}};
     using ps_t = vcsn::polynomialset<context_t>;
     ps_t ps{ctx};

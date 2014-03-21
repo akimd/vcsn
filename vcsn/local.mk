@@ -97,7 +97,6 @@ nobase_include_HEADERS =                        \
   %D%/ctx/lal_char_q.hh                         \
   %D%/ctx/lal_char_r.hh                         \
   %D%/ctx/lal_char_z.hh                         \
-  %D%/ctx/lal_char_zmin.hh                      \
   %D%/ctx/lal_char_zr.hh                        \
   %D%/ctx/lal_char_zrr.hh                       \
   %D%/ctx/lan_char.hh                           \
@@ -113,7 +112,6 @@ nobase_include_HEADERS =                        \
   %D%/ctx/law_char_q.hh                         \
   %D%/ctx/law_char_r.hh                         \
   %D%/ctx/law_char_z.hh                         \
-  %D%/ctx/law_char_zmin.hh                      \
   %D%/ctx/law_char_zr.hh                        \
   %D%/ctx/law_char_zrr.hh                       \
   %D%/dyn/algos.hh                              \

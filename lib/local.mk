@@ -25,7 +25,6 @@ liblal_char_br   = lib/liblal_char_br.la
 liblal_char_q    = lib/liblal_char_q.la
 liblal_char_r    = lib/liblal_char_r.la
 liblal_char_z    = lib/liblal_char_z.la
-liblal_char_zmin = lib/liblal_char_zmin.la
 liblal_char_zr   = lib/liblal_char_zr.la
 liblal_char_zrr  = lib/liblal_char_zrr.la
 liblan_char_b    = lib/liblan_char_b.la
@@ -39,7 +38,6 @@ liblaw_char_br   = lib/liblaw_char_br.la
 liblaw_char_q    = lib/liblaw_char_q.la
 liblaw_char_r    = lib/liblaw_char_r.la
 liblaw_char_z    = lib/liblaw_char_z.la
-liblaw_char_zmin = lib/liblaw_char_zmin.la
 liblaw_char_zr   = lib/liblaw_char_zr.la
 liblaw_char_zrr  = lib/liblaw_char_zrr.la
 
@@ -49,7 +47,6 @@ all_libctx =                                    \
   $(liblal_char_q)                              \
   $(liblal_char_r)                              \
   $(liblal_char_z)                              \
-  $(liblal_char_zmin)                           \
   $(liblal_char_zr)                             \
   $(liblal_char_zrr)                            \
   $(liblan_char_b)                              \
@@ -63,7 +60,6 @@ all_libctx =                                    \
   $(liblaw_char_q)                              \
   $(liblaw_char_r)                              \
   $(liblaw_char_z)                              \
-  $(liblaw_char_zmin)                           \
   $(liblaw_char_zr)                             \
   $(liblaw_char_zrr)
 
@@ -136,10 +132,3 @@ lib_liblal_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zrr
 
 lib_liblaw_char_zrr_la_SOURCES = lib/ctx/libctx.cc
 lib_liblaw_char_zrr_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zrr
-
-# char_zmin.
-lib_liblal_char_zmin_la_SOURCES = lib/ctx/libctx.cc
-lib_liblal_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=lal_char_zmin
-
-lib_liblaw_char_zmin_la_SOURCES = lib/ctx/libctx.cc
-lib_liblaw_char_zmin_la_CPPFLAGS = $(AM_CPPFLAGS) -DCTX=law_char_zmin

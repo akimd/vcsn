@@ -9,8 +9,8 @@
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/ctx/law_char_b.hh>
 #include <vcsn/ctx/law_char_z.hh>
-#include <vcsn/ctx/law_char_zmin.hh>
 #include <vcsn/misc/direction.hh>
+#include <vcsn/weights/zmin.hh>
 
 using namespace vcsn;
 
@@ -156,8 +156,9 @@ static void check_law_char_z()
 static void check_law_char_zmin()
 {
   set_alphabet<char_letters> al{'a','b'};
-  ctx::law_char_zmin ct{al};
-  using automaton_t = mutable_automaton<ctx::law_char_zmin>;
+  using law_char_zmin = vcsn::ctx::context<vcsn::ctx::law_char, vcsn::zmin>;
+  law_char_zmin ct{al};
+  using automaton_t = mutable_automaton<law_char_zmin>;
   using state_t = automaton_t::state_t;
 
   automaton_t res{ct};
