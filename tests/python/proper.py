@@ -27,33 +27,6 @@ def check_to_lal(i, o):
   o = vcsn.automaton(o)
   CHECK_EQ(o, i.proper())
 
-## ------------------------------------------- ##
-## law_char_q: check the computation of star.  ##
-## ------------------------------------------- ##
-
-check('''
-digraph
-{
-  vcsn_context = "law_char(ab)_q"
-  I -> 0 -> F
-  0 -> 0 [label = "<1/3>\\\\e"]
-}''','''
-digraph
-{
-  vcsn_context = "law_char(ab)_q"
-  rankdir = LR
-  {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle]
-    0
-  }
-  I0 -> 0
-  0 -> F0 [label = "<3/2>"]
-}''')
 
 ## ------------------------------------------- ##
 ## law_char_r: check the computation of star.  ##

@@ -13,11 +13,4 @@ namespace vcsn
   }
 }
 
-# include <vcsn/ctx/instantiate.hh>
-
-namespace vcsn
-{
-  VCSN_CTX_INSTANTIATE(ctx::law_char_q);
-};
-
 #endif // !VCSN_CTX_LAW_CHAR_Q_HH
