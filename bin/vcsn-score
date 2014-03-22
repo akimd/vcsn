@@ -2,15 +2,22 @@
 
 from __future__ import print_function
 
-import vcsn
-import timeit
+import argparse, re, timeit, vcsn
+
+parser = argparse.ArgumentParser(description='Bench some algorithms.')
+parser.add_argument('--only', metavar='RE',
+                    type=re.compile, default='.*',
+                    help='run only benches whose title is matched by RE')
+
+args = parser.parse_args()
 
 def bench(title, comment, cmd, number=1):
     "Report the best timing of three batches of number runs of cmd."
-    t = round(min(timeit.repeat(cmd, number=number)), 2)
-    if 1 < number:
-        comment += ', {}x'.format(number)
-    print("{:5.2f}s: {:20s} # {}".format(t, title, comment))
+    if args.only.search(title):
+        t = round(min(timeit.repeat(cmd, number=number)), 2)
+        if 1 < number:
+            comment += ', {}x'.format(number)
+        print("{:5.2f}s: {:20s} # {}".format(t, title, comment))
 
 b = vcsn.context('lal_char(abc)_b')
 
