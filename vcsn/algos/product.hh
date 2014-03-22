@@ -225,18 +225,14 @@ namespace vcsn
       /// updating the map; in any case return.
       state_t state(typename Lhs::state_t lst, typename Rhs::state_t rst)
       {
-        pair_t state(lst, rst);
-        auto iter = pmap_.find(state);
-        state_t res;
-        if (iter == pmap_.end())
+        pair_t state{lst, rst};
+        auto lb = pmap_.lower_bound(state);
+        if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
-            res = res_.new_state();
-            pmap_[state] = res;
+            lb = pmap_.emplace_hint(lb, state, res_.new_state());
             todo_.emplace_back(state);
           }
-        else
-          res = iter->second;
-        return res;
+        return lb->second;
       }
 
       /// Add a transition in the result from destination states in operands.
