@@ -84,6 +84,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/universal.cc                        \
   %D%/ctx/ctx.cc                                \
   %D%/dyn/context-parser.cc                     \
+  %D%/dyn/context-printer.cc                    \
   %D%/dyn/signature-printer.cc                  \
   %D%/dyn/translate.cc                          \
   %D%/misc/escape.cc                            \
