@@ -124,6 +124,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \
+  %D%/dyn/signature-printer.hh                  \
   %D%/dyn/translate.hh                          \
   %D%/dyn/type-ast.hh                           \
   %D%/dyn/weight.hh                             \
