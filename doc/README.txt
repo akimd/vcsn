@@ -85,6 +85,9 @@ Read VCSN_DEBUG as an integer specifying the level of details to dump.
 ** VCSN_DYN
 Display information about registration and query about dyn algorithms.
 
+** VCSN_HOME [~/.vcsn]
+Where data is stored at runtime.  See VCSN_PLUGINDIR
+
 ** VCSN_ITERATIVE
 Specify that "power" should perform the naive iterative multiplicative
 approach, instead of the squaring one.
@@ -111,7 +114,7 @@ Graphviz displays.
 ** VCSN_PARENS
 Force the display of useless parentheses.
 
-** VCSN_PLUGINDIR [~/.vcsn/plugins]
+** VCSN_PLUGINDIR [$VCSN_HOME/plugins]
 Where the runtime context instantiation are generated and compiled.
 
 ** VCSN_SEED

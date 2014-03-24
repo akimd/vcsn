@@ -99,10 +99,22 @@ INSTALLCHECK_ENVIRONMENT +=                                             \
 
 # Run the tests with the install-environment.
 #
+# Do not trash the user's ~/.vcsn during installcheck: work in /tmp.
+# Besides, if the user (which might be a buildfarm) runs several
+# distchecks in parallel on different versions of vcsn, race
+# conditions would make it possible to mix shared objects of different
+# versions of vcsn.  Define VCSN_HOME here, not in
+# INSTALLCHECK_ENVIRONMENT, as the latter is evaluated in several
+# shells, yielding several such directories instead of a single one
+# for the whole installcheck run.
+#
 # Disable testsuite laziness, otherwise, installcheck is just not run
 # because of the results of check.
 installcheck-local:
+	VCSN_HOME="$${TMPDIR-/tmp}/vcsn.dc.$$$$/";		\
+	export VCSN_HOME;					\
 	$(MAKE) $(AM_MAKEFLAGS)					\
 	  AM_TESTS_ENVIRONMENT='$$(INSTALLCHECK_ENVIRONMENT)'	\
 	  RECHECK_LOGS='$$(TEST_LOGS)'				\
-	  check
+	  check;						\
+	rm -rf "$$VCSN_HOME"

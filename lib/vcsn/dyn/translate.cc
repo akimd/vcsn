@@ -326,7 +326,7 @@ namespace vcsn
         std::string plugindir() const
         {
           auto res = xgetenv("VCSN_PLUGINDIR",
-                             xgetenv("VCSN_HOME", "~/.vcsn/plugins"));
+                             xgetenv("VCSN_HOME", "~/.vcsn") + "/plugins");
           res = expand_tilda(res);
           ensure_directory(res);
           return res + "/";
