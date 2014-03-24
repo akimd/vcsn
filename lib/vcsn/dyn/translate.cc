@@ -6,6 +6,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <unistd.h> // getpid
 
 #include <boost/filesystem.hpp>
 
@@ -55,6 +56,14 @@ namespace vcsn
       void ensure_directory(const std::string& dir)
       {
         boost::filesystem::create_directories(dir);
+      }
+
+      /// Append ".PID".
+      std::string tmpname(std::string res)
+      {
+        res += ".";
+        res += std::to_string(getpid());
+        return res;
       }
 
       struct translation
@@ -260,6 +269,25 @@ namespace vcsn
             valueset(w);
         }
 
+        /// Generate the code to compile in file \a base ".cc".
+        ///
+        /// Do that atomically.  We could perform the whole generation
+        /// step using BASE.PID.cc -> BASE.PID.o -> BASE.PID.so ->
+        /// BASE.so.  Rather, we use BASE.PID.cc -> BASE.cc ->
+        /// BASE.PID.o, other ccache will always fail to find
+        /// "BASE.PID.cc" in its cache.
+        void print(const std::string& base)
+        {
+          // For atomicity, generate a file with PID, then mv it
+          // (which is atomic on any decent OS/FS).
+          auto tmp = tmpname(base);
+          {
+            std::ofstream o{tmp + ".cc"};
+            print(o);
+          }
+          boost::filesystem::rename(tmp + ".cc", base + ".cc");
+        }
+
         /// Generate the code to compile on \a o.
         std::ostream& print(std::ostream& o)
         {
@@ -305,20 +333,26 @@ namespace vcsn
         }
 
         /// Compile and load a C++ file.
+        ///
+        /// Avoid locks, but avoid races by using temporary files, and
+        /// using rename, which is atomic.
         void jit(const std::string& base)
         {
+          /// Use a temporary base name for object file.
+          std::string tmp = tmpname(base);
           auto cppflags = xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS);
           cxx("-fPIC " + cppflags + " '" + base + ".cc' -c"
-              " -o '" + base + ".o'");
+              " -o '" + tmp + ".o'");
           auto ldflags = xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS);
-          cxx("-fPIC " + ldflags + " -lvcsn '" + base + ".o' -shared"
-              " -o '" + base + ".so'");
+          cxx("-fPIC " + ldflags + " -lvcsn '" + tmp + ".o' -shared"
+              " -o '" + tmp + ".so'");
+          boost::filesystem::rename(tmp + ".so", base + ".so");
           void* lib = dlopen((base + ".so").c_str(), RTLD_LAZY);
           require(lib, "cannot load lib: ", base, ".so");
           // Upon success, remove the .o file, it useless and large
           // (10x compared to the *.so on erebus using clang).  Keep
           // the .cc file for inspection.
-          boost::filesystem::remove(base + ".o");
+          boost::filesystem::remove(tmp + ".o");
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
@@ -340,10 +374,7 @@ namespace vcsn
             "  VCSN_CTX_INSTANTIATE(ctx_t);\n"
             "}\n";
           ;
-          {
-            std::ofstream o{base + ".cc"};
-            print(o);
-          }
+          print(base);
           jit(base);
         }
 
@@ -381,10 +412,7 @@ namespace vcsn
             "    }\n"
             "  }\n"
             "}\n";
-          {
-            std::ofstream o{base + ".cc"};
-            print(o);
-          }
+          print(base);
           jit(base);
         }
 
