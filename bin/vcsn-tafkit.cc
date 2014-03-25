@@ -473,7 +473,7 @@ struct right_mult: vcsn_function
 | "Main" functions.  |
 `-------------------*/
 
-int de_bruijn(int argc, char * const argv[])
+static int de_bruijn(int argc, char * const argv[])
 {
   options opts;
   opts.input_format = "text";
@@ -493,7 +493,7 @@ int de_bruijn(int argc, char * const argv[])
   return 0;
 }
 
-int divkbaseb(int argc, char* const argv[])
+static int divkbaseb(int argc, char* const argv[])
 {
   options opts;
   opts.input_format = "text";
@@ -514,7 +514,7 @@ int divkbaseb(int argc, char* const argv[])
   return 0;
 }
 
-int double_ring(int argc, char * const argv[])
+static int double_ring(int argc, char * const argv[])
 {
   options opts;
   opts.input_format = "text";
@@ -538,7 +538,7 @@ int double_ring(int argc, char * const argv[])
   return 0;
 }
 
-int ladybird(int argc, char * const argv[])
+static int ladybird(int argc, char * const argv[])
 {
   options opts;
   opts.input_format = "text";
@@ -558,7 +558,7 @@ int ladybird(int argc, char * const argv[])
   return 0;
 }
 
-int random(int argc, char * const argv[])
+static int random(int argc, char * const argv[])
 {
   options opts;
   parse_args(opts, argc, argv);
@@ -582,7 +582,7 @@ int random(int argc, char * const argv[])
   return 0;
 }
 
-int u(int argc, char * const argv[])
+static int u(int argc, char * const argv[])
 {
   options opts;
   opts.input_format = "text";

@@ -22,7 +22,7 @@ namespace vcsn
 {
   namespace dyn
   {
-    namespace detail
+    namespace
     {
       /// \a getenv(var) if defined, otherwise \a val.
       std::string
@@ -359,7 +359,7 @@ namespace vcsn
         void compile(const std::string& ctx)
         {
           header("vcsn/ctx/instantiate.hh");
-          std::string base = plugindir() + context_base::sname(ctx);
+          std::string base = plugindir() + detail::context_base::sname(ctx);
           is.clear();
           is.str(ctx);
           os << "using ctx_t =" << incendl;
@@ -490,14 +490,14 @@ namespace vcsn
     /// Instantiate a given context.
     void compile(const std::string& ctx)
     {
-      detail::translation translate;
+      translation translate;
       translate.compile(ctx);
     }
 
     /// Instantiate an algorithm for a given signature.
     void compile(const std::string& algo, const signature& sig)
     {
-      detail::translation translate;
+      translation translate;
       translate.compile(algo, sig);
     }
 

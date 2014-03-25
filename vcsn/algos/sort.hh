@@ -168,6 +168,7 @@ namespace vcsn
 
       bool transition_less_than(const transition_t t1,
                                 const transition_t t2) const
+        ATTRIBUTE_PURE
       {
         // We intentionally ignore source states: they should always
         // be identical when we call this.
