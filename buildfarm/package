@@ -4,5 +4,4 @@ set -e
 . $(dirname "$0")/common
 
 cd "$DIR_BUILD"
-# We _need_ a compiler that groks C++11.
 make distcheck -j${NBPROC:-2} DISTCHECK_CONFIGURE_FLAGS='CXX="$(CXX)"'
