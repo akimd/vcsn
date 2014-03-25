@@ -304,7 +304,6 @@ namespace vcsn
 
 # define PRECHECK_OUT_TRANSITIONS
 # ifdef PRECHECK_OUT_TRANSITIONS
-      // FIXME: this works
       {
         // s1 and s2 are not isomorphic if they have a different set
         // of label and weights on their outgoing transitions.
@@ -393,17 +392,9 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
 
       fill_nouts_();
 
-      //worklist_.push({a1_.pre(), a2_.pre()});
-
-      // while (! worklist_.empty())
-      //   {
-      //   }
-      //std::unordered_set<state_t>
       tentative_mapping_t tm;
       tentative_reverse_mapping_t tr;
-      //tm[a1_.pre()] = a2_.pre();
 
-      //worklist_.push({a1_.pre(), a2_.pre()});
       make_isomorphic(a1_.post(), a2_.post(), tm, tr);
       try
         {
