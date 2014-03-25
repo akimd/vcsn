@@ -268,7 +268,7 @@ namespace vcsn
           typename Aut::state_t dst;
         };
 
-        using map_t = std::multimap<typename Aut::label_t, transition>;
+        using map_t = std::map<typename Aut::label_t, std::vector<transition>>;
         std::map<typename Aut::state_t, map_t> maps_;
 
         transition_map(const Aut& aut)
@@ -284,8 +284,9 @@ namespace vcsn
               lb = maps_.emplace_hint(lb, s, map_t{});
               auto& res = lb->second;
               for (auto t: aut_.all_out(s))
-                res.emplace(aut_.label_of(t),
-                            transition{aut_.weight_of(t), aut_.dst_of(t)});
+                res[aut_.label_of(t)]
+                  // FIXME: why do I have to call the ctor here?
+                  .emplace_back(transition{aut_.weight_of(t), aut_.dst_of(t)});
             }
           return lb->second;
         }
@@ -318,12 +319,14 @@ namespace vcsn
 //                 << V(t.first)
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
-            new_transition
-              (src,
-               std::get<0>(t).second.dst, std::get<1>(t).second.dst,
-               std::get<0>(t).first,
-               mul_(ws,
-                    std::get<0>(t).second.wgt, std::get<1>(t).second.wgt));
+            for (auto lt: std::get<0>(t).second)
+              for (auto rt: std::get<1>(t).second)
+                new_transition
+                  (src,
+                   lt.dst, rt.dst,
+                   std::get<0>(t).first,
+                   mul_(ws,
+                        lt.wgt, rt.wgt));
           }
       }
 
