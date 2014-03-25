@@ -269,7 +269,7 @@ namespace vcsn
         };
 
         using map_t = std::multimap<typename Aut::label_t, transition>;
-        std::unordered_map<typename Aut::state_t, map_t> maps_;
+        std::map<typename Aut::state_t, map_t> maps_;
 
         transition_map(const Aut& aut)
           : aut_(aut)
@@ -277,14 +277,17 @@ namespace vcsn
 
         map_t& operator()(typename Aut::state_t s)
         {
-          auto p = maps_.emplace(s, map_t{});
-          auto& res = p.first->second;
-          if (p.second)
-            // First insertion.
-            for (auto t: aut_.all_out(s))
-              res.emplace(aut_.label_of(t),
-                          transition{aut_.weight_of(t), aut_.dst_of(t)});
-          return res;
+          auto lb = maps_.lower_bound(s);
+          if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
+            {
+              // First insertion.
+              lb = maps_.emplace_hint(lb, s, map_t{});
+              auto& res = lb->second;
+              for (auto t: aut_.all_out(s))
+                res.emplace(aut_.label_of(t),
+                            transition{aut_.weight_of(t), aut_.dst_of(t)});
+            }
+          return lb->second;
         }
 
         const Aut& aut_;
