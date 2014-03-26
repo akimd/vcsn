@@ -51,16 +51,9 @@ digraph
   4 -> 4 [label = "c"]
 }
 ''')
-CHECK_EQ(ab.standard().concatenate(bc.standard()), result)
+CHECK_EQ(result, ab.standard().concatenate(bc.standard()))
 
-# Using AB, BC on concatenate in this form,
-#
-#  ab.concatenate(bc).standard().sort()
-#
-# gives a context of "lal_char(ab)_b", though the correct result
-# should be "lal_char(abc)_b".  For now, we expect this to fail until
-# we fix this issue.  This is a fragile test.
-CHECK_NEQ(ab.concatenate(bc).standard().sort(), result)
+CHECK_EQ(vcsn.context('lal_char(abc)_b').ratexp('[ab]*[bc]*'), ab * bc)
 
 a = vcsn.automaton('''
 digraph
@@ -86,7 +79,7 @@ digraph
 }
 ''').standard()
 
-CHECK_EQ(a.concatenate(a), vcsn.automaton('''
+CHECK_EQ(vcsn.automaton('''
 digraph
 {
   vcsn_context = "lal_char(ab)_z"
@@ -113,7 +106,7 @@ digraph
   4 -> F4 [label = "<2>"]
   4 -> 4 [label = "a, b"]
 }
-'''))
+'''), a.concatenate(a))
 
 ## --------------------- ##
 ## Heterogeneous input.  ##
@@ -146,3 +139,14 @@ check('<0.4>c<2>a', r*z)
 
 check('<0.333333>b<0.4>c', q*r)
 check('<0.4>c<0.333333>b', r*q)
+
+## ----------------- ##
+## ratexp * ratexp.  ##
+## ----------------- ##
+
+br = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
+         .ratexp('<u>a')
+z = vcsn.context('lal_char(b)_z').ratexp('<2>b')
+q = vcsn.context('lal_char(c)_q').ratexp('<1/3>c')
+r = vcsn.context('lal_char(d)_r').ratexp('<.4>d')
+CHECK_EQ('<u>a<<2>\e>b<<0.333333>\e>c<<0.4>\e>d', str(br * z * q * r))

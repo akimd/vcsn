@@ -161,14 +161,14 @@ digraph
 ''')
 CHECK_EQ(a.sum(b), result)
 
+
 ## ----------------- ##
 ## ratexp + ratexp.  ##
 ## ----------------- ##
-
 
 br = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
          .ratexp('<u>a')
 z = vcsn.context('lal_char(b)_z').ratexp('<2>b')
 q = vcsn.context('lal_char(c)_q').ratexp('<1/3>c')
 r = vcsn.context('lal_char(d)_r').ratexp('<.4>d')
-CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br+z+q+r))
+CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))

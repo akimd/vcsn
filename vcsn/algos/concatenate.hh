@@ -187,11 +187,11 @@ namespace vcsn
       concatenate_ratexp(const ratexp& lhs, const ratexp& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
-        const auto& r = rhs->as<RatExpSetLhs>();
-        return make_ratexp(l.get_ratexpset(),
-                           concatenate<RatExpSetLhs>(l.get_ratexpset(),
-                                                     l.ratexp(),
-                                                     r.ratexp()));
+        const auto& r = rhs->as<RatExpSetRhs>();
+        auto rs = join(l.get_ratexpset(), r.get_ratexpset());
+        auto lr = rs.conv(l.get_ratexpset(), l.ratexp());
+        auto rr = rs.conv(r.get_ratexpset(), r.ratexp());
+        return make_ratexp(rs, concatenate(rs, lr, rr));
       }
 
       REGISTER_DECLARE(concatenate_ratexp,
