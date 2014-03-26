@@ -4,6 +4,24 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-03-26
+** concatenation and conjunction of ratexps accepts more heterogenous arguments
+Conversions of both labels and weights are performed if needed.
+
+  >>> a = vcsn.context('ratexpset<lal_char(xy)_b>_z').ratexp("<2>'x*'")
+  >>> b = vcsn.context('lal_char(b)_q')              .ratexp('<1/3>b')
+  >>> a * b
+  <2>x*<1/3>b
+  >>> (a*b).info()['type']
+  'ratexpset<ratexpset<lal_char(bxy)_b>_q>'
+
+  >>> ab = vcsn.context('lal_char(ab)_z').ratexp('(a+b)*')
+  >>> bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*')
+  >>> ab & bc
+  (a+b)*&(b+c)*
+  >>> (ab & bc).info()['type']
+  'ratexpset<lal_char(abc)_z>'
+
 * 2014-03-09
 ** left-mult and right-mult are binded in Python
 Both work on automata and ratexps.  Left multiplication now has its
