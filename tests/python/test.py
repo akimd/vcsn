@@ -14,6 +14,13 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")
 
+def rst_file(name, content):
+    print(name + "::")
+    print()
+    for l in content.splitlines():
+        print("\t" + l)
+    print()
+
 def load(fname):
     "Load the library automaton file fname."
     import vcsn
@@ -61,30 +68,21 @@ def CHECK_EQ(expected, effective):
     else:
         exp = str(expected)
         eff = str(effective)
-        FAIL(exp + " != " + eff)
+        msg = exp + " != " + eff
+        if msg.count("\n") == 0:
+            FAIL(msg)
+        else:
+            FAIL()
+            rst_file("Expected output", exp)
+            rst_file("Effective output", eff)
         if exp[:-1] != '\n':
             exp += '\n'
         if eff[:-1] != '\n':
             eff += '\n'
-        sys.stdout.writelines(diff(exp.splitlines(1),
-                                   eff.splitlines(1),
-                                   fromfile='expected', tofile='effective'))
-
-def CHECK_NEQ(expected, effective):
-    "Check that effective value is not equal to expected."
-    if expected == effective:
-        exp = str(expected)
-        eff = str(effective)
-        FAIL(exp + " != " + eff)
-        if exp[:-1] != '\n':
-            exp += '\n'
-        if eff[:-1] != '\n':
-            eff += '\n'
-        sys.stdout.writelines(diff(exp.splitlines(1),
-                                   eff.splitlines(1),
-                                   fromfile='expected', tofile='effective'))
-    else:
-        PASS()
+        rst_file("Diff on output",
+                 ''.join(diff(exp.splitlines(1),
+                              eff.splitlines(1),
+                              fromfile='expected', tofile='effective')))
 
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
