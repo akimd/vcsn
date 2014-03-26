@@ -209,6 +209,8 @@ We have several places where we want to traverse several maps with the same
 keys (e.g., for automata products, or first-order of a quotient).  A nice
 zip-like iterator would be wonderful.
 
+http://stackoverflow.com/questions/13813007/tmp-how-to-generalize-a-cartesian-product-of-vectors
+
 ** Use Boost.Format to support multiple formats
 We have loads of code that open-code the output format.  This is
 wrong.  We should rather have format strings such as

@@ -59,7 +59,6 @@ namespace vcsn
         : zip_(zip)
         , is_(is...)
         , ends_(ends...)
-        , ranges_{{is, is}...}
         , is_done_(false)
       {
         align_();
@@ -72,8 +71,6 @@ namespace vcsn
       iterators_t is_;
       /// The genuine ends.
       iterators_t ends_;
-      /// Current ranges.
-      ranges_t ranges_;
       /// Whether we reached the end.
       bool is_done_;
 
@@ -123,10 +120,7 @@ namespace vcsn
       {
         detail::pass
           {
-            (std::get<I>(ranges_).first
-             = std::get<I>(ranges_).second
-             = std::get<I>(is_)
-             = std::get<I>(ends_),
+            (std::get<I>(is_) = std::get<I>(ends_),
              is_done_ = true)...
           };
       }
@@ -135,56 +129,23 @@ namespace vcsn
       /// iff there is such a position.
       int next_()
       {
-        auto res = next_(indices_t{});
-        // Reset all the iterators that are before the first one that could
-        // advance.
-        if (res != -1)
-          reset_up_to_(res);
-        SHOWH(V(res));
-        return res;
-      }
-
-      template <std::size_t... I>
-      int next_(seq<I...>)
-      {
-        int res = -1;
-        detail::pass
-          {
-            (res != -1
-             || (std::get<I>(is_) != std::get<I>(ranges_).second
-                 && (std::next(std::get<I>(is_)) != std::get<I>(ranges_).second
-                     ? ++std::get<I>(is_), res = I
-                     : I)))...
-          };
-        return res;
+        return -1;
       }
 
       /// Move beginning of ranges to their end, and align.
-      void reset_up_to_(int n)
+      void reset_up_to_(int)
       {
-        reset_up_to_(n, indices_t{});
-      }
-
-      template <std::size_t... I>
-      void reset_up_to_(size_t n, seq<I...>)
-      {
-        detail::pass
-          {
-            (I < n
-             && ((std::get<I>(is_) = std::get<I>(ranges_).first), true))...
-          };
       }
 
       /// Move beginning of ranges to their end, and align.
       void step_()
       {
-        step_(indices_t{});
+        ++std::get<0>(is_);
       }
 
       template <std::size_t... I>
       void step_(seq<I...>)
       {
-        detail::pass{(std::get<I>(ranges_).first = std::get<I>(ranges_).second)...};
       }
 
       /// Set up the next ranges: the next common key, and the
@@ -219,8 +180,7 @@ namespace vcsn
       key_t align_(key_t k)
       {
         assert(!is_done_);
-        auto& first = std::get<I>(ranges_).first;
-        auto& second = std::get<I>(ranges_).second;
+        auto& first = std::get<I>(is_);
 
         // Look for the beginning of the range for key k.
         // first = second;
@@ -231,19 +191,11 @@ namespace vcsn
             // Nothing left.
             SHOWH("Done: " << V(I) << V(k));
             done_();
-            return k;
           }
         else
-          {
-            // We have a range, find its end.
-            k = first->first;
-            SHOWH("Found: " << V(I) << V(k));
-            second = first;
-            while (second != std::get<I>(ends_) && second->first == k)
-              ++second;
-            std::get<I>(is_) = first;
-            return k;
-          }
+          // Found something, return its key.
+          k = first->first;
+        return k;
       }
 
       template <std::size_t... I>
