@@ -175,6 +175,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/tuple.hh                             \
   %D%/misc/unordered_map.hh                     \
   %D%/misc/unordered_set.hh                     \
+  %D%/misc/vector.hh                            \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
   %D%/misc/zip-maps.hh                          \

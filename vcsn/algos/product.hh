@@ -10,6 +10,8 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/misc/tuple.hh>
+# include <vcsn/misc/vector.hh>
 # include <vcsn/misc/zip-maps.hh>
 
 //# include <vcsn/misc/echo.hh>
@@ -319,14 +321,18 @@ namespace vcsn
 //                 << V(t.first)
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
-            for (auto lt: std::get<0>(t).second)
-              for (auto rt: std::get<1>(t).second)
-                new_transition
-                  (src,
-                   lt.dst, rt.dst,
-                   std::get<0>(t).first,
-                   mul_(ws,
-                        lt.wgt, rt.wgt));
+            detail::cross([&] (typename decltype(std::get<0>(t).second)::value_type lt,
+                               typename decltype(std::get<1>(t).second)::value_type rt)
+                  {
+                    new_transition
+                      (src,
+                       lt.dst, rt.dst,
+                       std::get<0>(t).first,
+                       mul_(ws,
+                            lt.wgt, rt.wgt));
+                  },
+                          std::get<0>(t).second,
+                          std::get<1>(t).second);
           }
       }
 
