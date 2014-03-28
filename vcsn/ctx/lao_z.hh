@@ -3,7 +3,7 @@
 
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/ctx/context.hh>
-# include <vcsn/weights/z.hh>
+# include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {

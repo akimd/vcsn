@@ -1,27 +1,25 @@
-#ifndef VCSN_WEIGHTS_B_HH
-# define VCSN_WEIGHTS_B_HH
+#ifndef VCSN_WEIGHTSETS_Z_HH
+# define VCSN_WEIGHTSETS_Z_HH
 
-# include <cassert>
 # include <ostream>
 # include <string>
 
-# include <vcsn/misc/escape.hh>
-# include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
-# include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
-# include <vcsn/weights/fwd.hh>
+# include <vcsn/misc/stream.hh>
+# include <vcsn/weightset/b.hh>
+# include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {
-  class b
+  class z
   {
   public:
-    using self_type = b;
+    using self_type = z;
 
     static std::string sname()
     {
-      return "b";
+      return "z";
     }
 
     std::string vname(bool = true) const
@@ -30,43 +28,45 @@ namespace vcsn
     }
 
     /// Build from the description in \a is.
-    static b make(std::istream& is)
+    static z make(std::istream& is)
     {
       eat(is, sname());
       return {};
     }
 
-    using value_t = bool;
+    using value_t = int;
 
     static value_t
     zero()
     {
-      return false;
+      return 0;
     }
 
     static value_t
     one()
     {
-      return true;
+      return 1;
     }
 
     static value_t
     add(const value_t l, const value_t r)
     {
-      return l || r;
+      return l + r;
     }
 
     static value_t
     mul(const value_t l, const value_t r)
     {
-      return l && r;
+      return l * r;
     }
 
     static value_t
     rdiv(const value_t l, const value_t r)
     {
       require(!is_zero(r), "div: division by zero");
-      return l;
+      require(!(l % r),
+              "z: div: invalid division: ", l, '/', r);
+      return l / r;
     }
 
     static value_t
@@ -75,10 +75,30 @@ namespace vcsn
       return rdiv(r, l);
     }
 
-    static value_t
-    star(const value_t)
+    value_t
+    star(const value_t v) const
     {
-      return one();
+      if (is_zero(v))
+        return one();
+      else
+        raise("z: star: invalid value: ", format(*this, v));
+    }
+
+    constexpr static bool is_special(value_t)
+    {
+      return false;
+    }
+
+    static bool
+    is_zero(const value_t v)
+    {
+      return v == 0;
+    }
+
+    static bool
+    is_one(const value_t v)
+    {
+      return v == 1;
     }
 
     static bool
@@ -93,30 +113,10 @@ namespace vcsn
       return lhs < rhs;
     }
 
-    constexpr static bool is_special(value_t)
-    {
-      return false;
-    }
-
-    static bool
-    is_zero(const value_t v)
-    {
-      return !v;
-    }
-
-    static bool
-    is_one(const value_t v)
-    {
-      return v;
-    }
-
     static constexpr bool is_commutative_semiring() { return true; }
 
     static constexpr bool show_one() { return false; }
-    static constexpr star_status_t star_status()
-    {
-      return star_status_t::STARRABLE;
-    }
+    static constexpr star_status_t star_status() { return star_status_t::NON_STARRABLE; }
 
     static value_t
     transpose(const value_t v)
@@ -136,37 +136,34 @@ namespace vcsn
     }
 
     static value_t
-    conv(std::istream& is)
+    conv(b, b::value_t v)
     {
-      int i;
-      if (is >> i)
-        {
-          if (i == 0 || i == 1)
-            return i;
-          else
-            vcsn::fail_reading(is,
-                               sname() + ": invalid value: " + std::to_string(i));
-        }
-      else
-        vcsn::fail_reading(is, sname() + ": invalid value");
+      // Conversion from bool to int.
+      return v;
     }
+
+    static value_t
+    conv(std::istream& stream)
+    {
+      int res;
+      if (stream >> res)
+        return res;
+      else
+        vcsn::fail_reading(stream, sname() + ": invalid value");
+     }
 
     static std::ostream&
     print(std::ostream& o, const value_t v,
-          const std::string& format = "text")
+          const std::string& = "text")
     {
-      if (format == "latex")
-        o << (v ? "\\top" : "\\bot");
-      else
-        o << (v ? '1' : '0');
-      return o;
+      return o << v;
     }
 
     std::ostream&
     print_set(std::ostream& o, const std::string& format) const
     {
       if (format == "latex")
-        o << "\\mathbb{B}";
+        o << "\\mathbb{Z}";
       else if (format == "text")
         o << vname();
       else
@@ -175,8 +172,10 @@ namespace vcsn
     }
   };
 
+  VCSN_WEIGHTS_BINARY(z, z, z);
 
-  VCSN_WEIGHTS_BINARY(b, b, b);
+  VCSN_WEIGHTS_BINARY(b, z, z);
+  VCSN_WEIGHTS_BINARY(z, b, z);
 }
 
-#endif // !VCSN_WEIGHTS_B_HH
+#endif // !VCSN_WEIGHTSETS_Z_HH

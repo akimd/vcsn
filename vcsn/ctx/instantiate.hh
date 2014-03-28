@@ -41,8 +41,8 @@
 # include <vcsn/factory/random.hh>
 # include <vcsn/factory/u.hh>
 
-# include <vcsn/weights/b.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/b.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 # include <vcsn/misc/name.hh>
 

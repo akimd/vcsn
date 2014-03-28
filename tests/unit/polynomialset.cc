@@ -1,8 +1,8 @@
 #undef NDEBUG
 #include <cassert>
 #include <vcsn/ctx/law_char_z.hh>
-#include <vcsn/weights/zmin.hh>
-#include <vcsn/weights/polynomialset.hh>
+#include <vcsn/weightset/zmin.hh>
+#include <vcsn/weightset/polynomialset.hh>
 #include <tests/unit/test.hh>
 #include <tests/unit/weight.hh>
 

@@ -3,7 +3,7 @@
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/law_char.hh>
-# include <vcsn/weights/b.hh>
+# include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {

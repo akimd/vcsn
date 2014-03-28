@@ -3,7 +3,7 @@
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/lal_char.hh>
-# include <vcsn/weights/r.hh>
+# include <vcsn/weightset/r.hh>
 
 namespace vcsn
 {

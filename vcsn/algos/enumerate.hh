@@ -15,7 +15,7 @@
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/nullableset.hh>
 # include <vcsn/labelset/wordset.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {

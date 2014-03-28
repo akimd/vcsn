@@ -4,7 +4,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/polynomial.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 # include <vcsn/dyn/weight.hh>
 
 namespace vcsn

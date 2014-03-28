@@ -7,7 +7,7 @@
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/escape.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {

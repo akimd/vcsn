@@ -1,12 +1,12 @@
-#ifndef VCSN_WEIGHTS_POLYNOMIALSET_HH
-# define VCSN_WEIGHTS_POLYNOMIALSET_HH
+#ifndef VCSN_WEIGHTSETS_POLYNOMIALSET_HH
+# define VCSN_WEIGHTSETS_POLYNOMIALSET_HH
 
 # include <iostream>
 # include <sstream>
 # include <type_traits>
 # include <vector>
 
-# include <vcsn/weights/fwd.hh>
+# include <vcsn/weightset/fwd.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh>
@@ -660,4 +660,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_WEIGHTS_POLYNOMIALSET_HH
+#endif // !VCSN_WEIGHTSETS_POLYNOMIALSET_HH

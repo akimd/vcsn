@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTS_Q_HH
-# define VCSN_WEIGHTS_Q_HH
+#ifndef VCSN_WEIGHTSETS_Q_HH
+# define VCSN_WEIGHTSETS_Q_HH
 
 # include <string>
 # include <ostream>
@@ -9,9 +9,9 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weights/fwd.hh>
-# include <vcsn/weights/b.hh>
-# include <vcsn/weights/z.hh>
+# include <vcsn/weightset/fwd.hh>
+# include <vcsn/weightset/b.hh>
+# include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -275,4 +275,4 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(q, b, q);
 }
 
-#endif // !VCSN_WEIGHTS_Q_HH
+#endif // !VCSN_WEIGHTSETS_Q_HH

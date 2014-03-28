@@ -177,14 +177,14 @@ nobase_include_HEADERS =                        \
   %D%/misc/unordered_set.hh                     \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
-  %D%/weights/b.hh                              \
-  %D%/weights/f2.hh                             \
-  %D%/weights/fwd.hh                            \
-  %D%/weights/polynomialset.hh                  \
-  %D%/weights/q.hh                              \
-  %D%/weights/r.hh                              \
-  %D%/weights/z.hh                              \
-  %D%/weights/zmin.hh
+  %D%/weightset/b.hh                            \
+  %D%/weightset/f2.hh                           \
+  %D%/weightset/fwd.hh                          \
+  %D%/weightset/polynomialset.hh                \
+  %D%/weightset/q.hh                            \
+  %D%/weightset/r.hh                            \
+  %D%/weightset/z.hh                            \
+  %D%/weightset/zmin.hh
 
 nobase_nodist_include_HEADERS =                 \
   %D%/config.hh

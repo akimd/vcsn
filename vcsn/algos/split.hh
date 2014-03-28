@@ -6,7 +6,7 @@
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/misc/raise.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {

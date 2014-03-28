@@ -143,7 +143,7 @@ namespace vcsn
 
     DEFINE(weightset)
     {
-      header("vcsn/weights/" + t.get_type() + ".hh");
+      header("vcsn/weightset/" + t.get_type() + ".hh");
       os_ << "vcsn::" << t.get_type();
     }
 
@@ -164,7 +164,7 @@ namespace vcsn
       os_ << "vcsn::polynomialset<" << incendl;
       t.get_content()->accept(*this);
       os_ << decendl << '>';
-      header("vcsn/weights/polynomialset.hh");
+      header("vcsn/weightset/polynomialset.hh");
     }
 #undef DEFINE
   }

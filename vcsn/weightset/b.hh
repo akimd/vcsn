@@ -1,25 +1,27 @@
-#ifndef VCSN_WEIGHTS_F2_HH
-# define VCSN_WEIGHTS_F2_HH
+#ifndef VCSN_WEIGHTSETS_B_HH
+# define VCSN_WEIGHTSETS_B_HH
 
 # include <cassert>
 # include <ostream>
+# include <string>
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
-# include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
+# include <vcsn/misc/star_status.hh>
+# include <vcsn/weightset/fwd.hh>
 
 namespace vcsn
 {
-  class f2
+  class b
   {
   public:
-    using self_type = f2;
+    using self_type = b;
 
     static std::string sname()
     {
-      return "f2";
+      return "b";
     }
 
     std::string vname(bool = true) const
@@ -28,7 +30,7 @@ namespace vcsn
     }
 
     /// Build from the description in \a is.
-    static f2 make(std::istream& is)
+    static b make(std::istream& is)
     {
       eat(is, sname());
       return {};
@@ -51,7 +53,7 @@ namespace vcsn
     static value_t
     add(const value_t l, const value_t r)
     {
-      return l ^ r;
+      return l || r;
     }
 
     static value_t
@@ -74,12 +76,9 @@ namespace vcsn
     }
 
     static value_t
-    star(const value_t v)
+    star(const value_t)
     {
-      if (!v)
-        return true;
-      else
-        throw std::domain_error("f2: star: invalid value: 1");
+      return one();
     }
 
     static bool
@@ -114,9 +113,10 @@ namespace vcsn
     static constexpr bool is_commutative_semiring() { return true; }
 
     static constexpr bool show_one() { return false; }
-
-    static constexpr
-    star_status_t star_status() { return star_status_t::NON_STARRABLE; }
+    static constexpr star_status_t star_status()
+    {
+      return star_status_t::STARRABLE;
+    }
 
     static value_t
     transpose(const value_t v)
@@ -136,33 +136,37 @@ namespace vcsn
     }
 
     static value_t
-    conv(b, b::value_t v)
-    {
-      return v ? one() : zero();
-    }
-
-    static value_t
-    conv(std::istream& stream)
+    conv(std::istream& is)
     {
       int i;
-      if ((stream >> i) && (i == 0 || i == 1))
-        return i;
+      if (is >> i)
+        {
+          if (i == 0 || i == 1)
+            return i;
+          else
+            vcsn::fail_reading(is,
+                               sname() + ": invalid value: " + std::to_string(i));
+        }
       else
-        vcsn::fail_reading(stream, sname() + ": invalid value");
+        vcsn::fail_reading(is, sname() + ": invalid value");
     }
 
     static std::ostream&
     print(std::ostream& o, const value_t v,
-          const std::string& = "text")
+          const std::string& format = "text")
     {
-      return o << (v ? '1' : '0');
+      if (format == "latex")
+        o << (v ? "\\top" : "\\bot");
+      else
+        o << (v ? '1' : '0');
+      return o;
     }
 
     std::ostream&
     print_set(std::ostream& o, const std::string& format) const
     {
       if (format == "latex")
-        o << "\\mathbb{F}_2";
+        o << "\\mathbb{B}";
       else if (format == "text")
         o << vname();
       else
@@ -171,10 +175,8 @@ namespace vcsn
     }
   };
 
-  VCSN_WEIGHTS_BINARY(f2, f2, f2);
 
-  VCSN_WEIGHTS_BINARY(b, f2, f2);
-  VCSN_WEIGHTS_BINARY(f2, b, f2);
+  VCSN_WEIGHTS_BINARY(b, b, b);
 }
 
-#endif // !VCSN_WEIGHTS_F2_HH
+#endif // !VCSN_WEIGHTSETS_B_HH

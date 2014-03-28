@@ -17,7 +17,7 @@
 # include <vcsn/misc/flyweight.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {

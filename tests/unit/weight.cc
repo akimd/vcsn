@@ -1,10 +1,10 @@
 #include <iostream>
 #include <limits>
-#include <vcsn/weights/b.hh>
-#include <vcsn/weights/f2.hh>
-#include <vcsn/weights/r.hh>
-#include <vcsn/weights/q.hh>
-#include <vcsn/weights/zmin.hh>
+#include <vcsn/weightset/b.hh>
+#include <vcsn/weightset/f2.hh>
+#include <vcsn/weightset/r.hh>
+#include <vcsn/weightset/q.hh>
+#include <vcsn/weightset/zmin.hh>
 
 #include <tests/unit/test.hh>
 #include <tests/unit/weight.hh>

@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTS_ZMIN_HH
-# define VCSN_WEIGHTS_ZMIN_HH
+#ifndef VCSN_WEIGHTSETS_ZMIN_HH
+# define VCSN_WEIGHTSETS_ZMIN_HH
 
 # include <limits>
 # include <ostream>
@@ -9,8 +9,8 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weights/fwd.hh>
-# include <vcsn/weights/b.hh>
+# include <vcsn/weightset/fwd.hh>
+# include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
@@ -190,4 +190,4 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(zmin, b, zmin);
 }
 
-#endif // !VCSN_WEIGHTS_ZMIN_HH
+#endif // !VCSN_WEIGHTSETS_ZMIN_HH

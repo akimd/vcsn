@@ -10,7 +10,7 @@
 #include <vcsn/ctx/law_char_b.hh>
 #include <vcsn/ctx/law_char_z.hh>
 #include <vcsn/misc/direction.hh>
-#include <vcsn/weights/zmin.hh>
+#include <vcsn/weightset/zmin.hh>
 
 using namespace vcsn;
 

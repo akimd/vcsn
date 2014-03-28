@@ -6,7 +6,7 @@
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/ctx/context.hh>
-# include <vcsn/weights/b.hh>
+# include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {

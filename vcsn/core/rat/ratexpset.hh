@@ -10,10 +10,10 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/labelset/letterset.hh>
-# include <vcsn/weights/b.hh>
-# include <vcsn/weights/z.hh>
-# include <vcsn/weights/q.hh>
-# include <vcsn/weights/r.hh>
+# include <vcsn/weightset/b.hh>
+# include <vcsn/weightset/z.hh>
+# include <vcsn/weightset/q.hh>
+# include <vcsn/weightset/r.hh>
 
 namespace vcsn
 {

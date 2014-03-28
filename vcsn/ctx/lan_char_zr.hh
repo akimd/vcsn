@@ -4,7 +4,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/lal_char.hh>
 # include <vcsn/ctx/lan_char.hh>
-# include <vcsn/weights/z.hh>
+# include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {

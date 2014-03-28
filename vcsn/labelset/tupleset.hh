@@ -10,7 +10,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/tuple.hh>
-# include <vcsn/weights/b.hh>
+# include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {

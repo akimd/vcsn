@@ -15,7 +15,7 @@
 # include <vcsn/misc/map.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/unordered_set.hh>
-# include <vcsn/weights/polynomialset.hh>
+# include <vcsn/weightset/polynomialset.hh>
 
 //# define DEBUG 1
 
