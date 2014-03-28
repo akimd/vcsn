@@ -166,7 +166,7 @@ int main()
     errs += check_conv(ps);
   }
   {
-    using context_t = vcsn::ctx::context<vcsn::ctx::law_char, vcsn::zmin>;
+    using context_t = vcsn::context<vcsn::ctx::law_char, vcsn::zmin>;
     context_t ctx {{'a', 'b'}};
     using ps_t = vcsn::polynomialset<context_t>;
     ps_t ps{ctx};

@@ -21,7 +21,7 @@ namespace vcsn
   /// an example.
   ///
   /// It is very tempting to turns these guys into members of
-  /// ctx::context, but then, instead of "(if_lal<Ctx, letter_t> v)",
+  /// context, but then, instead of "(if_lal<Ctx, letter_t> v)",
   /// one must write "(typename Cxx::template if_lal<letter_t> v)".
 
 # define DEFINE(Abbrev, Name)                                           \

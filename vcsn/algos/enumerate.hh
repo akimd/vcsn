@@ -33,10 +33,10 @@ namespace vcsn
     {};
 
     template <typename GenSet, typename WeightSet>
-    struct law_traits<ctx::context<wordset<GenSet>, WeightSet>>
+    struct law_traits<context<wordset<GenSet>, WeightSet>>
     {
-      using in_type = ctx::context<wordset<GenSet>, WeightSet>;
-      using type = ctx::context<wordset<GenSet>, WeightSet>;
+      using in_type = context<wordset<GenSet>, WeightSet>;
+      using type = context<wordset<GenSet>, WeightSet>;
 
       static type word_context(const in_type& ctx)
       {
@@ -53,10 +53,10 @@ namespace vcsn
     };
 
     template <typename GenSet, typename WeightSet>
-    struct law_traits<ctx::context<letterset<GenSet>, WeightSet>>
+    struct law_traits<context<letterset<GenSet>, WeightSet>>
     {
-      using in_type = ctx::context<letterset<GenSet>, WeightSet>;
-      using type = ctx::context<wordset<GenSet>, WeightSet>;
+      using in_type = context<letterset<GenSet>, WeightSet>;
+      using type = context<wordset<GenSet>, WeightSet>;
 
       static type word_context(const in_type& ctx)
       {
@@ -73,10 +73,10 @@ namespace vcsn
     };
 
     template <typename GenSet, typename WeightSet>
-    struct law_traits<ctx::context<nullableset<wordset<GenSet>>, WeightSet>>
+    struct law_traits<context<nullableset<wordset<GenSet>>, WeightSet>>
     {
-      using in_type = ctx::context<nullableset<wordset<GenSet>>, WeightSet>;
-      using type = ctx::context<wordset<GenSet>, WeightSet>;
+      using in_type = context<nullableset<wordset<GenSet>>, WeightSet>;
+      using type = context<wordset<GenSet>, WeightSet>;
 
       static type word_context(const in_type& ctx)
       {
@@ -93,10 +93,10 @@ namespace vcsn
     };
 
     template <typename GenSet, typename WeightSet>
-    struct law_traits<ctx::context<nullableset<letterset<GenSet>>, WeightSet>>
+    struct law_traits<context<nullableset<letterset<GenSet>>, WeightSet>>
     {
-      using in_type = ctx::context<nullableset<letterset<GenSet>>, WeightSet>;
-      using type = ctx::context<wordset<GenSet>, WeightSet>;
+      using in_type = context<nullableset<letterset<GenSet>>, WeightSet>;
+      using type = context<wordset<GenSet>, WeightSet>;
 
       static type word_context(const in_type& ctx)
       {

@@ -156,7 +156,7 @@ static void check_law_char_z()
 static void check_law_char_zmin()
 {
   set_alphabet<char_letters> al{'a','b'};
-  using law_char_zmin = vcsn::ctx::context<vcsn::ctx::law_char, vcsn::zmin>;
+  using law_char_zmin = vcsn::context<vcsn::ctx::law_char, vcsn::zmin>;
   law_char_zmin ct{al};
   using automaton_t = mutable_automaton<law_char_zmin>;
   using state_t = automaton_t::state_t;

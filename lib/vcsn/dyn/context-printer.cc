@@ -87,7 +87,7 @@ namespace vcsn
     DEFINE(context)
     {
       header("vcsn/ctx/context.hh");
-      os_ << "vcsn::ctx::context<" << incendl;
+      os_ << "vcsn::context<" << incendl;
       t.get_labelset()->accept(*this);
       os_ << ',' << iendl;
       t.get_weightset()->accept(*this);

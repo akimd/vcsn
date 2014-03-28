@@ -6,11 +6,8 @@
 namespace vcsn
 {
   // context.hh.
-  namespace ctx
-  {
-    template <typename LabelSet, typename WeightSet>
-    class context;
-  }
+  template <typename LabelSet, typename WeightSet>
+  class context;
 };
 
 #endif // !VCSN_CTX_FWD_HH

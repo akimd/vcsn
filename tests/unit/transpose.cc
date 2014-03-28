@@ -16,8 +16,8 @@ check_mutable_automaton()
   auto ks_b = vcsn::ratexpset<vcsn::ctx::lal_char_b>(ctx_b);
   // labels_are_words (a, b, c, d) for labels.
   auto ctx_br =
-    vcsn::ctx::context<vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>,
-                       decltype(ks_b)>
+    vcsn::context<vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>,
+                  decltype(ks_b)>
     {{'a', 'b', 'c', 'd'}, ks_b};
   //  auto ks_br = ctx_br.make_ratexpset();
 
