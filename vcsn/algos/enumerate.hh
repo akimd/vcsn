@@ -38,7 +38,7 @@ namespace vcsn
       using in_type = ctx::context<wordset<GenSet>, WeightSet>;
       using type = ctx::context<wordset<GenSet>, WeightSet>;
 
-      static type context(const in_type& ctx)
+      static type word_context(const in_type& ctx)
       {
         return ctx;
       }
@@ -48,7 +48,7 @@ namespace vcsn
       polynomialset_t
       word_polynomialset(const in_type& ctx)
       {
-        return context(ctx);
+        return word_context(ctx);
       }
     };
 
@@ -58,7 +58,7 @@ namespace vcsn
       using in_type = ctx::context<letterset<GenSet>, WeightSet>;
       using type = ctx::context<wordset<GenSet>, WeightSet>;
 
-      static type context(const in_type& ctx)
+      static type word_context(const in_type& ctx)
       {
         return {*ctx.labelset()->genset(), *ctx.weightset()};
       }
@@ -68,7 +68,7 @@ namespace vcsn
       polynomialset_t
       word_polynomialset(const in_type& ctx)
       {
-        return context(ctx);
+        return word_context(ctx);
       }
     };
 
@@ -78,7 +78,7 @@ namespace vcsn
       using in_type = ctx::context<nullableset<wordset<GenSet>>, WeightSet>;
       using type = ctx::context<wordset<GenSet>, WeightSet>;
 
-      static type context(const in_type& ctx)
+      static type word_context(const in_type& ctx)
       {
         return ctx;
       }
@@ -88,7 +88,7 @@ namespace vcsn
       polynomialset_t
       word_polynomialset(const in_type& ctx)
       {
-        return context(ctx);
+        return word_context(ctx);
       }
     };
 
@@ -98,7 +98,7 @@ namespace vcsn
       using in_type = ctx::context<nullableset<letterset<GenSet>>, WeightSet>;
       using type = ctx::context<wordset<GenSet>, WeightSet>;
 
-      static type context(const in_type& ctx)
+      static type word_context(const in_type& ctx)
       {
         return {*ctx.labelset()->labelset()->genset(), *ctx.weightset()};
       }
@@ -108,7 +108,7 @@ namespace vcsn
       polynomialset_t
       word_polynomialset(const in_type& ctx)
       {
-        return context(ctx);
+        return word_context(ctx);
       }
     };
 
@@ -117,7 +117,7 @@ namespace vcsn
     make_word_polynomialset(const Context& ctx)
       -> typename law_traits<Context>::polynomialset_t
     {
-      return law_traits<Context>::context(ctx);
+      return law_traits<Context>::word_context(ctx);
     }
 
 
@@ -222,8 +222,7 @@ namespace vcsn
       const automaton_t& aut_;
       const labelset_t& ls_ = *aut_.labelset();
       const weightset_t& ws_ = *aut_.weightset();
-      const polynomialset_t ps_
-        = {law_traits<context_t>::context(aut_.context())};
+      const polynomialset_t ps_ = make_word_polynomialset(aut_.context());
       /// For each state, the first orders of its past.
       std::map<state_t, polynomial_t> past_;
     };
