@@ -21,7 +21,7 @@ namespace vcsn
 
   /// This is useful to make hashes with labels or weights as keys
   /// without using non-default constructors; to be used along with
-  /// vcsn::ctx::hash.
+  /// vcsn::hash.
   template <typename ValueSet>
   class equal_to : public std::equal_to<typename ValueSet::value_t>
   {
@@ -37,7 +37,7 @@ namespace vcsn
 
   /// This is useful to make hashes with labels or weights as keys
   /// without using non-default constructors; to be used along with
-  /// vcsn::ctx::equal_to.
+  /// vcsn::equal_to.
   template <typename ValueSet>
   class hash : public std::hash<typename ValueSet::value_t>
   {
