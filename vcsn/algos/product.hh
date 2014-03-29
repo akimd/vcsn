@@ -13,6 +13,7 @@
 # include <vcsn/misc/tuple.hh>
 # include <vcsn/misc/vector.hh>
 # include <vcsn/misc/zip-maps.hh>
+# include <vcsn/misc/raise.hh> // detail::pass
 
 //# include <vcsn/misc/echo.hh>
 
@@ -27,31 +28,37 @@ namespace vcsn
     `----------------------------------*/
 
     /// Build the (accessible part of the) product.
-    template <typename Lhs, typename Rhs>
+    template <typename... Auts>
     class producter
     {
-      static_assert(Lhs::context_t::is_lal,
-                    "requires labels_are_letters");
-      static_assert(Rhs::context_t::is_lal,
-                    "requires labels_are_letters");
+//static_assert(Auts::context_t::is_lal,
+//"requires labels_are_letters")...;
 
       // The _type_ of the context is the "union" of the contexts,
       // independently of the algorithm.  However, its _value_
       // differs: in the case of the product, the labelset is the meet
       // of the labelsets, it is its join for shuffle and
       // infiltration.
-      using context_t = join_t<typename Lhs::context_t,
-                               typename Rhs::context_t>;
+      using context_t = join_t<typename Auts::context_t...>;
       using labelset_t = typename context_t::labelset_t;
       using weightset_t = typename context_t::weightset_t;
 
     public:
+      using automata_t = std::tuple<const Auts&...>;
       using automaton_t = mutable_automaton<context_t>;
 
-      producter(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs)
-        , rhs_(rhs)
-        , res_(join(lhs_.context(), rhs_.context()))
+      template <size_t I>
+      using input_automaton_t
+        = typename std::remove_cv<
+            typename std::remove_reference<
+              typename std::tuple_element<I, automata_t>
+              ::type>
+            ::type>
+        ::type;
+
+      producter(const Auts&... aut)
+        : auts_(aut...)
+        , res_(join(aut.context()...))
       {}
 
       /// Reset the attributes before a new product.
@@ -64,7 +71,8 @@ namespace vcsn
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t product()
       {
-        auto ctx = meet(lhs_.context(), rhs_.context());
+        auto ctx = meet(std::get<0>(auts_).context(),
+                        std::get<1>(auts_).context());
         const auto& ws = *ctx.weightset();
         res_ = std::move(automaton_t(ctx));
 
@@ -85,7 +93,7 @@ namespace vcsn
       /// \a rhs_.
       automaton_t shuffle()
       {
-        auto ctx = join(lhs_.context(), rhs_.context());
+        auto ctx = join(std::get<0>(auts_).context(), std::get<1>(auts_).context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -106,7 +114,7 @@ namespace vcsn
       /// lhs_ and \a rhs_.
       automaton_t infiltration()
       {
-        auto ctx = join(lhs_.context(), rhs_.context());
+        auto ctx = join(std::get<0>(auts_).context(), std::get<1>(auts_).context());
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -135,7 +143,7 @@ namespace vcsn
 
       /// A map from product states to pair of original states.
       using state_t = typename automaton_t::state_t;
-      using pair_t = std::pair<typename Lhs::state_t, typename Rhs::state_t>;
+      using pair_t = std::tuple<typename Auts::state_t...>;
       using origins_t = std::map<state_t, pair_t>;
       origins_t
       origins() const
@@ -159,7 +167,7 @@ namespace vcsn
               << " [label = \""
               << std::get<0>(p.second) - 2
               << ','
-              << std::get<0>(p.second) - 2
+              << std::get<1>(p.second) - 2
               << "\"]\n";
         o << "*/\n";
         return o;
@@ -170,8 +178,7 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
       /// Input automata, supplied at construction time.
-      const Lhs& lhs_;
-      const Rhs& rhs_;
+      automata_t auts_;
 
       /// Map (left-state, right-state) -> product-state.
       using map = std::map<pair_t, state_t>;
@@ -184,8 +191,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pair_t ppre(lhs_.pre(), rhs_.pre());
-        pair_t ppost(lhs_.post(), rhs_.post());
+        pair_t ppre(std::get<0>(auts_).pre(), std::get<1>(auts_).pre());
+        pair_t ppost(std::get<0>(auts_).post(), std::get<1>(auts_).post());
         pmap_[ppre] = res_.pre();
         pmap_[ppost] = res_.post();
       }
@@ -195,17 +202,17 @@ namespace vcsn
       void initialize_product()
       {
         initialize();
-        todo_.emplace_back(pair_t(lhs_.pre(), rhs_.pre()));
+        todo_.emplace_back(pair_t(std::get<0>(auts_).pre(), std::get<1>(auts_).pre()));
       }
 
       /// The product between two weights, possibly from different
       /// weightsets.
       weight_t mul_(const weightset_t& ws,
-                    const typename Lhs::weight_t l,
-                    const typename Rhs::weight_t r) const
+                    const typename input_automaton_t<0>::weight_t l,
+                    const typename input_automaton_t<1>::weight_t r) const
       {
-        return ws.mul(ws.conv(*lhs_.weightset(), l),
-                      ws.conv(*rhs_.weightset(), r));
+        return ws.mul(ws.conv(*std::get<0>(auts_).weightset(), l),
+                      ws.conv(*std::get<1>(auts_).weightset(), r));
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -214,12 +221,13 @@ namespace vcsn
       {
         initialize();
         /// Make the result automaton initial states:
-        for (auto lt : lhs_.initial_transitions())
-          for (auto rt : rhs_.initial_transitions())
-            res_.add_initial(state(lhs_.dst_of(lt), rhs_.dst_of(rt)),
+        for (auto lt : std::get<0>(auts_).initial_transitions())
+          for (auto rt : std::get<1>(auts_).initial_transitions())
+            res_.add_initial(state(std::get<0>(auts_).dst_of(lt),
+                                   std::get<1>(auts_).dst_of(rt)),
                              mul_(ws,
-                                  lhs_.weight_of(lt),
-                                  rhs_.weight_of(rt)));
+                                  std::get<0>(auts_).weight_of(lt),
+                                  std::get<1>(auts_).weight_of(rt)));
       }
 
       /// The state in the product corresponding to a pair of states
@@ -228,9 +236,9 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(typename Lhs::state_t lst, typename Rhs::state_t rst)
+      state_t state(typename Auts::state_t... ss)
       {
-        pair_t state{lst, rst};
+        pair_t state{ss...};
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
@@ -245,20 +253,20 @@ namespace vcsn
       /// \pre !res.has_transition(src, dst, label).
       void
       new_transition(state_t src,
-                     typename Lhs::state_t ldst, typename Rhs::state_t rdst,
+                     typename Auts::state_t... dsts,
                      const label_t& label, const weight_t& weight)
       {
-        res_.new_transition(src, state(ldst, rdst), label, weight);
+        res_.new_transition(src, state(dsts...), label, weight);
       }
 
       /// Add a transition in the result from destination states in operands.
       /// If needed, push the destination state in the work list.
       void
       add_transition(state_t src,
-                     typename Lhs::state_t ldst, typename Rhs::state_t rdst,
+                     typename Auts::state_t... dsts,
                      const label_t& label, const weight_t& weight)
       {
-        res_.add_transition(src, state(ldst, rdst), label, weight);
+        res_.add_transition(src, state(dsts...), label, weight);
       }
 
       template <typename Aut>
@@ -296,8 +304,8 @@ namespace vcsn
         const Aut& aut_;
       };
 
-      transition_map<Lhs> lhs_maps{lhs_};
-      transition_map<Rhs> rhs_maps{rhs_};
+      transition_map<input_automaton_t<0>> lhs_maps{std::get<0>(auts_)};
+      transition_map<input_automaton_t<1>> rhs_maps{std::get<1>(auts_)};
 
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
@@ -307,8 +315,8 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto& lhs = lhs_maps(psrc.first);
-        auto& rhs = rhs_maps(psrc.second);
+        auto& lhs = lhs_maps(std::get<0>(psrc));
+        auto& rhs = rhs_maps(std::get<1>(psrc));
         for (auto t: zip_maps(lhs, rhs))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
@@ -344,13 +352,14 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        typename Lhs::state_t lsrc = psrc.first;
-        typename Rhs::state_t rsrc = psrc.second;
-        if (lhs_.is_final(lsrc) && rhs_.is_final(rsrc))
+        auto lsrc = std::get<0>(psrc);
+        auto rsrc = std::get<1>(psrc);
+        if (std::get<0>(auts_).is_final(lsrc)
+            && std::get<1>(auts_).is_final(rsrc))
           res_.set_final(src,
                          mul_(ws,
-                              lhs_.get_final_weight(lsrc),
-                              rhs_.get_final_weight(rsrc)));
+                              std::get<0>(auts_).get_final_weight(lsrc),
+                              std::get<1>(auts_).get_final_weight(rsrc)));
 
         // The src state is visited for the first time, so all these
         // transitions are new.  *Except* in the case where we have a
@@ -358,29 +367,29 @@ namespace vcsn
         //
         // If add_product_transitions was called before, there may
         // even exist such a transition in the first loop.
-        for (auto lt : lhs_.out(lsrc))
+        for (auto lt : std::get<0>(auts_).out(lsrc))
           {
-            typename Lhs::state_t ldst = lhs_.dst_of(lt);
+            auto ldst = std::get<0>(auts_).dst_of(lt);
             if (lsrc == ldst)
-              add_transition(src, lhs_.dst_of(lt), rsrc,
-                             lhs_.label_of(lt),
-                             ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
+              add_transition(src, std::get<0>(auts_).dst_of(lt), rsrc,
+                             std::get<0>(auts_).label_of(lt),
+                             ws.conv(*std::get<0>(auts_).weightset(), std::get<0>(auts_).weight_of(lt)));
             else
-              new_transition(src, lhs_.dst_of(lt), rsrc,
-                             lhs_.label_of(lt),
-                             ws.conv(*lhs_.weightset(), lhs_.weight_of(lt)));
+              new_transition(src, std::get<0>(auts_).dst_of(lt), rsrc,
+                             std::get<0>(auts_).label_of(lt),
+                             ws.conv(*std::get<0>(auts_).weightset(), std::get<0>(auts_).weight_of(lt)));
           }
-        for (auto rt : rhs_.out(rsrc))
+        for (auto rt : std::get<1>(auts_).out(rsrc))
           {
-            typename Rhs::state_t rdst = rhs_.dst_of(rt);
+            auto rdst = std::get<1>(auts_).dst_of(rt);
             if (rsrc == rdst)
               add_transition(src, lsrc, rdst,
-                             rhs_.label_of(rt),
-                             ws.conv(*rhs_.weightset(), rhs_.weight_of(rt)));
+                             std::get<1>(auts_).label_of(rt),
+                             ws.conv(*std::get<1>(auts_).weightset(), std::get<1>(auts_).weight_of(rt)));
             else
               new_transition(src, lsrc, rdst,
-                             rhs_.label_of(rt),
-                             ws.conv(*rhs_.weightset(), rhs_.weight_of(rt)));
+                             std::get<1>(auts_).label_of(rt),
+                             ws.conv(*std::get<1>(auts_).weightset(), std::get<1>(auts_).weight_of(rt)));
           }
       }
 
