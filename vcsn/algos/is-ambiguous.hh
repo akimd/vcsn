@@ -16,13 +16,13 @@ namespace vcsn
     // the product is accessible, check only for coaccessibles states.
     auto coaccessible = coaccessible_states(prod);
     for (const auto& o: product.origins())
-      if (o.second.first != o.second.second
+      if (std::get<0>(o.second) != std::get<1>(o.second)
           && has(coaccessible, o.first))
         {
           if (getenv("VCSN_DEBUG"))
             std::cerr << "ambiguous: " << o.first - 2
-                      << " (" << o.second.first - 2
-                      << ", " << o.second.second - 2 << ")"
+                      << " (" << std::get<0>(o.second) - 2
+                      << ", " << std::get<1>(o.second) - 2 << ")"
                       << std::endl;
           return true;
         }
