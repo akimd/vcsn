@@ -218,14 +218,6 @@ namespace vcsn
         todo_.emplace_back(pair_t(std::get<0>(auts_).pre(), std::get<1>(auts_).pre()));
       }
 
-      /// The product between two weights, possibly from different
-      /// weightsets.
-      weight_t mul_(const weightset_t& ws,
-                    const weight_t l, const weight_t r) const
-      {
-        return ws.mul(l, r);
-      }
-
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the shuffle algorithm.
       void initialize_shuffle(const weightset_t& ws)
@@ -256,27 +248,6 @@ namespace vcsn
             todo_.emplace_back(state);
           }
         return lb->second;
-      }
-
-      /// Add a transition in the result from destination states in operands.
-      /// If needed, push the destination state in the work list.
-      /// \pre !res.has_transition(src, dst, label).
-      void
-      new_transition(state_t src,
-                     typename Auts::state_t... dsts,
-                     const label_t& label, const weight_t& weight)
-      {
-        res_.new_transition(src, state(dsts...), label, weight);
-      }
-
-      /// Add a transition in the result from destination states in operands.
-      /// If needed, push the destination state in the work list.
-      void
-      add_transition(state_t src,
-                     typename Auts::state_t... dsts,
-                     const label_t& label, const weight_t& weight)
-      {
-        res_.add_transition(src, state(dsts...), label, weight);
       }
 
       template <typename Aut>
@@ -351,12 +322,11 @@ namespace vcsn
             detail::cross([&] (typename decltype(std::get<0>(t).second)::value_type lt,
                                typename decltype(std::get<1>(t).second)::value_type rt)
                   {
-                    new_transition
+                    res_.new_transition
                       (src,
-                       lt.dst, rt.dst,
+                       state(lt.dst, rt.dst),
                        std::get<0>(t).first,
-                       mul_(ws,
-                            lt.wgt, rt.wgt));
+                       ws.mul(lt.wgt, rt.wgt));
                   },
                           std::get<0>(t).second,
                           std::get<1>(t).second);
@@ -398,9 +368,9 @@ namespace vcsn
                 {
                   auto ldst = d.dst;
                   if (lsrc == ldst)
-                    add_transition(src, ldst, rsrc, t.first, d.wgt);
+                    res_.add_transition(src, state(ldst, rsrc), t.first, d.wgt);
                   else
-                    new_transition(src, ldst, rsrc, t.first, d.wgt);
+                    res_.new_transition(src, state(ldst, rsrc), t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
@@ -420,9 +390,9 @@ namespace vcsn
                 {
                   auto rdst = d.dst;
                   if (rsrc == rdst)
-                    add_transition(src, lsrc, rdst, t.first, d.wgt);
+                    res_.add_transition(src, state(lsrc, rdst), t.first, d.wgt);
                   else
-                    new_transition(src, lsrc, rdst, t.first, d.wgt);
+                    res_.new_transition(src, state(lsrc, rdst), t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
