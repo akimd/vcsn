@@ -378,32 +378,44 @@ namespace vcsn
         // transitions are new.  *Except* in the case where we have a
         // loop on both the lhs, and the rhs.
         //
-        // If add_product_transitions was called before, there may
-        // even exist such a transition in the first loop.
-        for (auto lt : std::get<0>(auts_).out(lsrc))
-          {
-            auto ldst = std::get<0>(auts_).dst_of(lt);
-            if (lsrc == ldst)
-              add_transition(src, std::get<0>(auts_).dst_of(lt), rsrc,
-                             std::get<0>(auts_).label_of(lt),
-                             ws.conv(*std::get<0>(auts_).weightset(), std::get<0>(auts_).weight_of(lt)));
-            else
-              new_transition(src, std::get<0>(auts_).dst_of(lt), rsrc,
-                             std::get<0>(auts_).label_of(lt),
-                             ws.conv(*std::get<0>(auts_).weightset(), std::get<0>(auts_).weight_of(lt)));
-          }
-        for (auto rt : std::get<1>(auts_).out(rsrc))
-          {
-            auto rdst = std::get<1>(auts_).dst_of(rt);
-            if (rsrc == rdst)
-              add_transition(src, lsrc, rdst,
-                             std::get<1>(auts_).label_of(rt),
-                             ws.conv(*std::get<1>(auts_).weightset(), std::get<1>(auts_).weight_of(rt)));
-            else
-              new_transition(src, lsrc, rdst,
-                             std::get<1>(auts_).label_of(rt),
-                             ws.conv(*std::get<1>(auts_).weightset(), std::get<1>(auts_).weight_of(rt)));
-          }
+        // If add_product_transitions was called before (in the case
+        // of infiltration), there may even exist such a transition in
+        // the first loop.
+        {
+          auto& ts = lhs_maps(lsrc);
+          for (auto t: ts)
+            if (!std::get<0>(auts_).labelset()->is_special(t.first))
+              for (auto d: t.second)
+                {
+                  auto ldst = d.dst;
+                  if (lsrc == ldst)
+                    add_transition(src, ldst, rsrc,
+                                   t.first,
+                                   ws.conv(*std::get<0>(auts_).weightset(), d.wgt));
+                  else
+                    new_transition(src, ldst, rsrc,
+                                   t.first,
+                                   ws.conv(*std::get<0>(auts_).weightset(), d.wgt));
+                }
+        }
+
+        {
+          auto& ts = rhs_maps(rsrc);
+          for (auto t: ts)
+            if (!std::get<1>(auts_).labelset()->is_special(t.first))
+              for (auto d: t.second)
+                {
+                  auto rdst = d.dst;
+                  if (rsrc == rdst)
+                    add_transition(src, lsrc, rdst,
+                                   t.first,
+                                   ws.conv(*std::get<1>(auts_).weightset(), d.wgt));
+                  else
+                    new_transition(src, lsrc, rdst,
+                                   t.first,
+                                   ws.conv(*std::get<1>(auts_).weightset(), d.wgt));
+                }
+        }
       }
 
     private:
