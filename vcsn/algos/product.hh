@@ -221,11 +221,9 @@ namespace vcsn
       /// The product between two weights, possibly from different
       /// weightsets.
       weight_t mul_(const weightset_t& ws,
-                    const typename input_automaton_t<0>::weight_t l,
-                    const typename input_automaton_t<1>::weight_t r) const
+                    const weight_t l, const weight_t r) const
       {
-        return ws.mul(ws.conv(*std::get<0>(auts_).weightset(), l),
-                      ws.conv(*std::get<1>(auts_).weightset(), r));
+        return ws.mul(l, r);
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -234,13 +232,12 @@ namespace vcsn
       {
         initialize();
         /// Make the result automaton initial states:
-        for (auto lt : std::get<0>(auts_).initial_transitions())
-          for (auto rt : std::get<1>(auts_).initial_transitions())
-            res_.add_initial(state(std::get<0>(auts_).dst_of(lt),
-                                   std::get<1>(auts_).dst_of(rt)),
-                             mul_(ws,
-                                  std::get<0>(auts_).weight_of(lt),
-                                  std::get<1>(auts_).weight_of(rt)));
+        auto lspecial = std::get<0>(auts_).labelset()->special();
+        auto rspecial = std::get<1>(auts_).labelset()->special();
+        for (auto ld: lhs_maps(std::get<0>(auts_).pre())[lspecial])
+          for (auto rd: rhs_maps(std::get<1>(auts_).pre())[rspecial])
+            res_.add_initial(state(ld.dst, rd.dst),
+                             ws.mul(ld.wgt, rd.wgt));
       }
 
       /// The state in the product corresponding to a pair of states
@@ -287,15 +284,17 @@ namespace vcsn
       {
         struct transition
         {
-          typename Aut::weight_t wgt;
+          /// The (converted) weight.
+          weight_t wgt;
           typename Aut::state_t dst;
         };
 
         using map_t = std::map<typename Aut::label_t, std::vector<transition>>;
         std::map<typename Aut::state_t, map_t> maps_;
 
-        transition_map(const Aut& aut)
+        transition_map(const Aut& aut, const weightset_t& ws)
           : aut_(aut)
+          , ws_(ws)
         {}
 
         map_t& operator()(typename Aut::state_t s)
@@ -307,18 +306,25 @@ namespace vcsn
               lb = maps_.emplace_hint(lb, s, map_t{});
               auto& res = lb->second;
               for (auto t: aut_.all_out(s))
-                res[aut_.label_of(t)]
-                  // FIXME: why do I have to call the ctor here?
-                  .emplace_back(transition{aut_.weight_of(t), aut_.dst_of(t)});
+                {
+                  auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+                  res[aut_.label_of(t)]
+                    // FIXME: why do I have to call the ctor here?
+                    .emplace_back(transition{w, aut_.dst_of(t)});
+                }
             }
           return lb->second;
         }
-
+        /// The automaton whose transitions are cached.
         const Aut& aut_;
+        /// The result weightset.
+        const weightset_t& ws_;
       };
 
-      transition_map<input_automaton_t<0>> lhs_maps{std::get<0>(auts_)};
-      transition_map<input_automaton_t<1>> rhs_maps{std::get<1>(auts_)};
+      transition_map<input_automaton_t<0>> lhs_maps{std::get<0>(auts_),
+          *res_.weightset()};
+      transition_map<input_automaton_t<1>> rhs_maps{std::get<1>(auts_),
+          *res_.weightset()};
 
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
@@ -367,12 +373,9 @@ namespace vcsn
       {
         auto lsrc = std::get<0>(psrc);
         auto rsrc = std::get<1>(psrc);
-        if (std::get<0>(auts_).is_final(lsrc)
-            && std::get<1>(auts_).is_final(rsrc))
-          res_.set_final(src,
-                         mul_(ws,
-                              std::get<0>(auts_).get_final_weight(lsrc),
-                              std::get<1>(auts_).get_final_weight(rsrc)));
+
+        /// The weight as a final state.
+        auto w = ws.one();
 
         // The src state is visited for the first time, so all these
         // transitions are new.  *Except* in the case where we have a
@@ -382,40 +385,50 @@ namespace vcsn
         // of infiltration), there may even exist such a transition in
         // the first loop.
         {
+          bool final = false;
           auto& ts = lhs_maps(lsrc);
           for (auto t: ts)
-            if (!std::get<0>(auts_).labelset()->is_special(t.first))
+            if (std::get<0>(auts_).labelset()->is_special(t.first))
+              {
+                w = ws.mul(w, t.second.front().wgt);
+                final = true;
+              }
+            else
               for (auto d: t.second)
                 {
                   auto ldst = d.dst;
                   if (lsrc == ldst)
-                    add_transition(src, ldst, rsrc,
-                                   t.first,
-                                   ws.conv(*std::get<0>(auts_).weightset(), d.wgt));
+                    add_transition(src, ldst, rsrc, t.first, d.wgt);
                   else
-                    new_transition(src, ldst, rsrc,
-                                   t.first,
-                                   ws.conv(*std::get<0>(auts_).weightset(), d.wgt));
+                    new_transition(src, ldst, rsrc, t.first, d.wgt);
                 }
+          if (!final)
+            w = ws.zero();
         }
 
         {
+          bool final = false;
           auto& ts = rhs_maps(rsrc);
           for (auto t: ts)
-            if (!std::get<1>(auts_).labelset()->is_special(t.first))
+            if (std::get<1>(auts_).labelset()->is_special(t.first))
+              {
+                w = ws.mul(w, t.second.front().wgt);
+                final = true;
+              }
+            else
               for (auto d: t.second)
                 {
                   auto rdst = d.dst;
                   if (rsrc == rdst)
-                    add_transition(src, lsrc, rdst,
-                                   t.first,
-                                   ws.conv(*std::get<1>(auts_).weightset(), d.wgt));
+                    add_transition(src, lsrc, rdst, t.first, d.wgt);
                   else
-                    new_transition(src, lsrc, rdst,
-                                   t.first,
-                                   ws.conv(*std::get<1>(auts_).weightset(), d.wgt));
+                    new_transition(src, lsrc, rdst, t.first, d.wgt);
                 }
+          if (!final)
+            w = ws.zero();
         }
+
+        res_.set_final(src, w);
       }
 
     private:
