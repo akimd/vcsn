@@ -34,19 +34,29 @@ namespace vcsn
 //static_assert(Auts::context_t::is_lal,
 //"requires labels_are_letters")...;
 
-      // The _type_ of the context is the "union" of the contexts,
-      // independently of the algorithm.  However, its _value_
-      // differs: in the case of the product, the labelset is the meet
-      // of the labelsets, it is its join for shuffle and
-      // infiltration.
+      /// The type of context of the result.
+      ///
+      /// The type is the "join" of the contexts, independently of the
+      /// algorithm.  However, its _value_ differs: in the case of the
+      /// product, the labelset is the meet of the labelsets, it is
+      /// its join for shuffle and infiltration.
       using context_t = join_t<typename Auts::context_t...>;
       using labelset_t = typename context_t::labelset_t;
       using weightset_t = typename context_t::weightset_t;
 
+      /// A static list of integers.
+      template <std::size_t... I>
+      using seq = vcsn::detail::index_sequence<I...>;
+      /// The list of automaton indices as a static list.
+      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+
     public:
+      /// The type of input automata.
       using automata_t = std::tuple<const Auts&...>;
+      /// The type of the resulting automaton.
       using automaton_t = mutable_automaton<context_t>;
 
+      /// The type of the Ith input automaton, unqualified.
       template <size_t I>
       using input_automaton_t
         = typename std::remove_cv<
@@ -141,12 +151,15 @@ namespace vcsn
         return std::move(res_);
       }
 
-      /// A map from product states to pair of original states.
+      /// Result state type.
       using state_t = typename automaton_t::state_t;
+      /// Tuple of states of input automata.
       using pair_t = std::tuple<typename Auts::state_t...>;
+      /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
-      origins_t
-      origins() const
+
+      /// A map from result state to tuple of original states.
+      origins_t origins() const
       {
         origins_t res;
         for (const auto& p: pmap_)
@@ -180,11 +193,11 @@ namespace vcsn
       /// Input automata, supplied at construction time.
       automata_t auts_;
 
-      /// Map (left-state, right-state) -> product-state.
+      /// Map state-tuple -> result-state.
       using map = std::map<pair_t, state_t>;
       map pmap_;
 
-      /// Worklist of (left-state, right-state).
+      /// Worklist of state tuples.
       std::deque<pair_t> todo_;
 
       /// Add the pre and post states in the result automaton.  This
@@ -346,8 +359,8 @@ namespace vcsn
 
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
-      /// givenpair of input state automata.  Update the worklist with
-      /// the needed source-state pairs.
+      /// given tuple of input state automata.  Update the worklist
+      /// with the needed source-state pairs.
       void add_shuffle_transitions(const weightset_t& ws,
                                    const state_t src,
                                    const pair_t& psrc)
