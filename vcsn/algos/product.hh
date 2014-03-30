@@ -315,7 +315,7 @@ namespace vcsn
           , ws_(ws)
         {}
 
-        map_t& operator()(typename Aut::state_t s)
+        map_t& operator[](typename Aut::state_t s)
         {
           auto lb = maps_.lower_bound(s);
           if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
@@ -347,8 +347,8 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto& lhs = std::get<0>(transition_maps_)(std::get<0>(psrc));
-        auto& rhs = std::get<1>(transition_maps_)(std::get<1>(psrc));
+        auto& lhs = std::get<0>(transition_maps_)[std::get<0>(psrc)];
+        auto& rhs = std::get<1>(transition_maps_)[std::get<1>(psrc)];
         for (auto t: zip_maps(lhs, rhs))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
@@ -398,7 +398,7 @@ namespace vcsn
         // the first loop.
         {
           bool final = false;
-          auto& ts = std::get<0>(transition_maps_)(lsrc);
+          auto& ts = std::get<0>(transition_maps_)[lsrc];
           for (auto t: ts)
             if (std::get<0>(auts_).labelset()->is_special(t.first))
               {
@@ -420,7 +420,7 @@ namespace vcsn
 
         {
           bool final = false;
-          auto& ts = std::get<1>(transition_maps_)(rsrc);
+          auto& ts = std::get<1>(transition_maps_)[rsrc];
           for (auto t: ts)
             if (std::get<1>(auts_).labelset()->is_special(t.first))
               {
