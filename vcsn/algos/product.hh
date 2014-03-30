@@ -69,6 +69,7 @@ namespace vcsn
       producter(const Auts&... aut)
         : auts_(aut...)
         , res_(join(aut.context()...))
+        , transition_maps_{{aut, *res_.weightset()}...}
       {}
 
       /// Reset the attributes before a new product.
@@ -338,11 +339,6 @@ namespace vcsn
         const weightset_t& ws_;
       };
 
-      transition_map<input_automaton_t<0>> lhs_maps{std::get<0>(auts_),
-          *res_.weightset()};
-      transition_map<input_automaton_t<1>> rhs_maps{std::get<1>(auts_),
-          *res_.weightset()};
-
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
@@ -351,8 +347,8 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto& lhs = lhs_maps(std::get<0>(psrc));
-        auto& rhs = rhs_maps(std::get<1>(psrc));
+        auto& lhs = std::get<0>(transition_maps_)(std::get<0>(psrc));
+        auto& rhs = std::get<1>(transition_maps_)(std::get<1>(psrc));
         for (auto t: zip_maps(lhs, rhs))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
@@ -402,7 +398,7 @@ namespace vcsn
         // the first loop.
         {
           bool final = false;
-          auto& ts = lhs_maps(lsrc);
+          auto& ts = std::get<0>(transition_maps_)(lsrc);
           for (auto t: ts)
             if (std::get<0>(auts_).labelset()->is_special(t.first))
               {
@@ -424,7 +420,7 @@ namespace vcsn
 
         {
           bool final = false;
-          auto& ts = rhs_maps(rsrc);
+          auto& ts = std::get<1>(transition_maps_)(rsrc);
           for (auto t: ts)
             if (std::get<1>(auts_).labelset()->is_special(t.first))
               {
@@ -447,9 +443,9 @@ namespace vcsn
         res_.set_final(src, w);
       }
 
-    private:
       /// The computed product.
       automaton_t res_;
+      std::tuple<transition_map<Auts>...> transition_maps_;
     };
   }
 
