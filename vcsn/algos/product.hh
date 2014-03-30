@@ -81,8 +81,7 @@ namespace vcsn
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t product()
       {
-        auto ctx = meet(std::get<0>(auts_).context(),
-                        std::get<1>(auts_).context());
+        auto ctx = meet_();
         const auto& ws = *ctx.weightset();
         res_ = std::move(automaton_t(ctx));
 
@@ -103,7 +102,7 @@ namespace vcsn
       /// \a rhs_.
       automaton_t shuffle()
       {
-        auto ctx = join(std::get<0>(auts_).context(), std::get<1>(auts_).context());
+        auto ctx = join_();
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -124,7 +123,7 @@ namespace vcsn
       /// lhs_ and \a rhs_.
       automaton_t infiltration()
       {
-        auto ctx = join(std::get<0>(auts_).context(), std::get<1>(auts_).context());
+        auto ctx = join_();
         const auto& ws = *ctx.weightset();
         res_ = automaton_t(ctx);
 
@@ -187,6 +186,59 @@ namespace vcsn
       }
 
     private:
+      /// The join of the contexts.
+      context_t join_() const
+      {
+        return join_(indices_t{});
+      }
+
+      template <size_t... I>
+      context_t join_(seq<I...>) const
+      {
+        return join((std::get<I>(auts_).context())...);
+      }
+
+      /// The meet of the contexts.
+      context_t meet_() const
+      {
+        return meet_(indices_t{});
+      }
+
+      template <size_t... I>
+      context_t meet_(seq<I...>) const
+      {
+        return meet((std::get<I>(auts_).context())...);
+      }
+
+      /// The pre of the input automata.
+      pair_t pre_() const
+      {
+        return pre_(indices_t{});
+      }
+
+      template <size_t... I>
+      pair_t pre_(seq<I...>) const
+      {
+        // clang 3.4 on top of libstdc++ wants this ctor to be
+        // explicitly called.
+        return pair_t{(std::get<I>(auts_).pre())...};
+      }
+
+      /// The post of the input automata.
+      pair_t post_() const
+      {
+        return post_(indices_t{});
+      }
+
+      template <size_t... I>
+      pair_t post_(seq<I...>) const
+      {
+        // clang 3.4 on top of libstdc++ wants this ctor to be
+        // explicitly called.
+        return pair_t{(std::get<I>(auts_).post())...};
+      }
+
+
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
 
@@ -204,10 +256,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pair_t ppre(std::get<0>(auts_).pre(), std::get<1>(auts_).pre());
-        pair_t ppost(std::get<0>(auts_).post(), std::get<1>(auts_).post());
-        pmap_[ppre] = res_.pre();
-        pmap_[ppost] = res_.post();
+        pmap_[pre_()] = res_.pre();
+        pmap_[post_()] = res_.post();
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -215,7 +265,7 @@ namespace vcsn
       void initialize_product()
       {
         initialize();
-        todo_.emplace_back(pair_t(std::get<0>(auts_).pre(), std::get<1>(auts_).pre()));
+        todo_.emplace_back(pre_());
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -225,9 +275,7 @@ namespace vcsn
         initialize();
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(ws, res_.pre(),
-                                pair_t(std::get<0>(auts_).pre(),
-                                       std::get<1>(auts_).pre()));
+        add_product_transitions(ws, res_.pre(), pre_());
       }
 
       /// The state in the product corresponding to a pair of states
