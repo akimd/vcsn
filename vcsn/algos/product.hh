@@ -223,13 +223,11 @@ namespace vcsn
       void initialize_shuffle(const weightset_t& ws)
       {
         initialize();
-        /// Make the result automaton initial states:
-        auto lspecial = std::get<0>(auts_).labelset()->special();
-        auto rspecial = std::get<1>(auts_).labelset()->special();
-        for (auto ld: lhs_maps(std::get<0>(auts_).pre())[lspecial])
-          for (auto rd: rhs_maps(std::get<1>(auts_).pre())[rspecial])
-            res_.add_initial(state(ld.dst, rd.dst),
-                             ws.mul(ld.wgt, rd.wgt));
+        // Make the result automaton initial states: same as the
+        // (synchronized) product of pre: synchronized transitions on $.
+        add_product_transitions(ws, res_.pre(),
+                                pair_t(std::get<0>(auts_).pre(),
+                                       std::get<1>(auts_).pre()));
       }
 
       /// The state in the product corresponding to a pair of states
