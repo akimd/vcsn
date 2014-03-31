@@ -107,8 +107,7 @@ namespace vcsn
             aut_.add_transition
               (aut_.src_of(in), aut_.dst_of(out),
                aut_.label_of(in),
-               ws_.mul(ws_.mul(aut_.weight_of(in), loop),
-                       aut_.weight_of(out)));
+               ws_.mul(aut_.weight_of(in), loop, aut_.weight_of(out)));
         aut_.del_state(s);
       }
 
@@ -167,8 +166,8 @@ namespace vcsn
           for (auto out: outs)
             aut_.add_transition
               (aut_.src_of(in), aut_.dst_of(out),
-               rs_.mul(rs_.mul(rs_.lmul(aut_.weight_of(in), aut_.label_of(in)),
-                               loop),
+               rs_.mul(rs_.lmul(aut_.weight_of(in), aut_.label_of(in)),
+                       loop,
                        rs_.lmul(aut_.weight_of(out), aut_.label_of(out))));
         aut_.del_state(s);
       }

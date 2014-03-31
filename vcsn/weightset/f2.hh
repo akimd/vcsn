@@ -9,10 +9,11 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
+# include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
-  class f2
+  class f2_impl
   {
   public:
     using self_type = f2;

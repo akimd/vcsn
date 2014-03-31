@@ -11,10 +11,11 @@
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/weightset/fwd.hh>
+# include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
-  class b
+  class b_impl
   {
   public:
     using self_type = b;
@@ -144,11 +145,11 @@ namespace vcsn
           if (i == 0 || i == 1)
             return i;
           else
-            vcsn::fail_reading(is,
-                               sname() + ": invalid value: " + std::to_string(i));
+            fail_reading(is,
+                         sname() + ": invalid value: " + std::to_string(i));
         }
       else
-        vcsn::fail_reading(is, sname() + ": invalid value");
+        fail_reading(is, sname() + ": invalid value");
     }
 
     static std::ostream&
@@ -175,8 +176,8 @@ namespace vcsn
     }
   };
 
-
   VCSN_WEIGHTS_BINARY(b, b, b);
+
 }
 
 #endif // !VCSN_WEIGHTSETS_B_HH

@@ -3,6 +3,8 @@
 
 # include <memory>
 
+# include <vcsn/weightset/weightset.hh>
+
 namespace vcsn
 {
   namespace rat
@@ -153,7 +155,10 @@ namespace vcsn
 
   // ratexpset.hh.
   template <typename Context>
-  class ratexpset;
+  class ratexpset_impl;
+
+  template <typename Context>
+  using ratexpset = variadic_mul_mixin<ratexpset_impl<Context>>;
 
 } // namespace vcsn
 

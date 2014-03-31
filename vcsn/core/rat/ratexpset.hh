@@ -21,10 +21,10 @@ namespace vcsn
   /// A typed ratexp set.
   /// \tparam Context  the LabelSet and WeightSet types.
   template <typename Context>
-  class ratexpset
+  class ratexpset_impl
   {
   public:
-    using self_type = ratexpset;
+    using self_type = ratexpset<Context>;
     using context_t = Context;
     using labelset_t = typename context_t::labelset_t;
     using weightset_t = typename context_t::weightset_t;
@@ -72,11 +72,11 @@ namespace vcsn
     /// Dynamic description key.
     std::string vname(bool full = true) const;
     /// Build from the description in \a is.
-    static ratexpset make(std::istream& is);
+    static self_type make(std::istream& is);
 
     /// Constructor.
     /// \param ctx    the generator set for the labels, and the weight set.
-    ratexpset(const context_t& ctx);
+    ratexpset_impl(const context_t& ctx);
 
     const context_t& context() const;
     const labelset_ptr& labelset() const;
@@ -135,8 +135,8 @@ namespace vcsn
     value_t conv(const q& ws, typename q::value_t v) const;
     value_t conv(const r& ws, typename r::value_t v) const;
     template <typename Ctx2>
-    value_t conv(const ratexpset<Ctx2>& ws,
-                 typename ratexpset<Ctx2>::value_t v) const;
+    value_t conv(const ratexpset_impl<Ctx2>& ws,
+                 typename ratexpset_impl<Ctx2>::value_t v) const;
 
     value_t conv(self_type, value_t v) const;
 

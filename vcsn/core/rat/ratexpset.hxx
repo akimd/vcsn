@@ -18,7 +18,7 @@
 namespace vcsn
 {
   template <typename Context>
-  ratexpset<Context>::ratexpset(const context_t& ctx)
+  ratexpset_impl<Context>::ratexpset_impl(const context_t& ctx)
     : ctx_(ctx)
   {}
 
@@ -26,7 +26,7 @@ namespace vcsn
   template <typename Context>                   \
   inline                                        \
   auto                                          \
-  ratexpset<Context>
+  ratexpset_impl<Context>
 
   DEFINE::sname()
     -> std::string
@@ -94,7 +94,7 @@ namespace vcsn
   template <rat::exp::type_t Type>
   inline
   auto
-  ratexpset<Context>::gather(ratexps_t& res, value_t v) const
+  ratexpset_impl<Context>::gather(ratexps_t& res, value_t v) const
     -> void
   {
     static bool binary = !! getenv("VCSN_BINARY");
@@ -109,7 +109,7 @@ namespace vcsn
   template <rat::exp::type_t Type>
   inline
   auto
-  ratexpset<Context>::gather(value_t l, value_t r) const
+  ratexpset_impl<Context>::gather(value_t l, value_t r) const
     -> ratexps_t
   {
     ratexps_t res;
@@ -426,7 +426,7 @@ namespace vcsn
   DEFINE::less_than(value_t lhs, value_t rhs)
     -> bool
   {
-    rat::size<ratexpset> sizer;
+    rat::size<ratexpset_impl> sizer;
     size_t l = sizer(lhs), r = sizer(rhs);
 
     if (l < r)
@@ -435,7 +435,7 @@ namespace vcsn
       return false;
     else
       {
-        using less_than_t = rat::less_than<ratexpset>;
+        using less_than_t = rat::less_than<ratexpset_impl>;
         less_than_t lt;
         return lt(lhs, rhs);
       }
@@ -450,7 +450,7 @@ namespace vcsn
   DEFINE::hash(const value_t& v)
     -> size_t
   {
-    rat::hash<ratexpset<Context>> hasher;
+    rat::hash<ratexpset_impl> hasher;
     return hasher(v);
   }
 
@@ -464,8 +464,8 @@ namespace vcsn
   template <typename GenSet>
   inline
   auto
-  ratexpset<Context>::conv(const letterset<GenSet>& ls,
-                           typename letterset<GenSet>::value_t v) const
+  ratexpset_impl<Context>::conv(const letterset<GenSet>& ls,
+                                typename letterset<GenSet>::value_t v) const
     -> value_t
   {
     return atom(labelset()->conv(ls, v));
@@ -501,8 +501,8 @@ namespace vcsn
   template <typename Ctx2>
   inline
   auto
-  ratexpset<Context>::conv(const ratexpset<Ctx2>& ws,
-                           typename ratexpset<Ctx2>::value_t v) const
+  ratexpset_impl<Context>::conv(const ratexpset_impl<Ctx2>& ws,
+                                typename ratexpset_impl<Ctx2>::value_t v) const
     -> value_t
   {
     return copy(ws, *this, v);
@@ -512,7 +512,7 @@ namespace vcsn
     -> value_t
   {
     auto dynres = dyn::read_ratexp(is, dyn::make_ratexpset(*this));
-    const auto& res = dynres->template as<ratexpset>();
+    const auto& res = dynres->template as<ratexpset_impl>();
     return res.ratexp();
   }
 
@@ -520,7 +520,7 @@ namespace vcsn
 		const std::string& format) const
     -> std::ostream&
   {
-    using printer_t = rat::printer<ratexpset>;
+    using printer_t = rat::printer<ratexpset_impl>;
     printer_t print(o, *this);
     print.format(format);
     return print(v);
@@ -529,7 +529,7 @@ namespace vcsn
   DEFINE::transpose(const value_t v) const
     -> value_t
   {
-    detail::transposer<ratexpset> tr{*this};
+    detail::transposer<ratexpset_impl> tr{*this};
     return tr(v);
   }
 

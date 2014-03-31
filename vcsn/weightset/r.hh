@@ -11,10 +11,11 @@
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/z.hh>
+# include <vcsn/weightset/weightset.hh>
 
 namespace vcsn
 {
-  class r
+  class r_impl
   {
   public:
     using self_type = r;

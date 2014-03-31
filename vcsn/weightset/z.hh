@@ -12,7 +12,7 @@
 
 namespace vcsn
 {
-  class z
+  class z_impl
   {
   public:
     using self_type = z;
