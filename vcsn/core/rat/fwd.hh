@@ -151,17 +151,16 @@ namespace vcsn
 
     template <typename Label, typename Weight>
     using ratexp = std::shared_ptr<const node<Label, Weight>>;
-  } // namespace rat
 
-  namespace detail
-  {
+
     // ratexpset.hh.
     template <typename Context>
     class ratexpset_impl;
-  }
+
+  } // namespace rat
 
   template <typename Context>
-  using ratexpset = variadic_mul_mixin<detail::ratexpset_impl<Context>>;
+  using ratexpset = variadic_mul_mixin<rat::ratexpset_impl<Context>>;
 
 } // namespace vcsn
 

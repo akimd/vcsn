@@ -17,7 +17,7 @@
 
 namespace vcsn
 {
-  namespace detail
+  namespace rat
   {
 
   template <typename Context>
@@ -89,7 +89,7 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <rat::exp::type_t Type>
+  template <exp::type_t Type>
   inline
   auto
   ratexpset_impl<Context>::gather(ratexps_t& res, value_t v) const
@@ -104,7 +104,7 @@ namespace vcsn
   }
 
   template <typename Context>
-  template <rat::exp::type_t Type>
+  template <exp::type_t Type>
   inline
   auto
   ratexpset_impl<Context>::gather(value_t l, value_t r) const
@@ -133,7 +133,7 @@ namespace vcsn
   }
 
   DEFINE::type_ignoring_lweight_(value_t e) const
-    -> rat::exp::type_t
+    -> exp::type_t
   {
     return unwrap_possible_lweight_(e)->type();
   }
@@ -424,7 +424,7 @@ namespace vcsn
   DEFINE::less_than(value_t lhs, value_t rhs)
     -> bool
   {
-    rat::size<ratexpset_impl> sizer;
+    size<ratexpset_impl> sizer;
     size_t l = sizer(lhs), r = sizer(rhs);
 
     if (l < r)
@@ -518,7 +518,7 @@ namespace vcsn
 		const std::string& format) const
     -> std::ostream&
   {
-    using printer_t = rat::printer<ratexpset_impl>;
+    using printer_t = printer<ratexpset_impl>;
     printer_t print(o, *this);
     print.format(format);
     return print(v);

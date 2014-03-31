@@ -17,7 +17,7 @@
 
 namespace vcsn
 {
-  namespace detail
+  namespace rat
   {
   /// A typed ratexp set.
   /// \tparam Context  the LabelSet and WeightSet types.
@@ -36,8 +36,12 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
     using const_visitor = rat::const_visitor<label_t, weight_t>;
     /// Type of ratexps.
+    //
+    // See http://stackoverflow.com/questions/15537023 to know why we
+    // add the vcsn::rat:: part: GCC wants it, Clang does not care,
+    // both are right.
 # define DEFINE(Type)                                           \
-    using Type ## _t = rat::Type<label_t, weight_t>
+    using Type ## _t = vcsn::rat::Type<label_t, weight_t>
     DEFINE(atom);
     DEFINE(complement);
     DEFINE(inner);
@@ -55,10 +59,10 @@ namespace vcsn
     DEFINE(transposition);
     DEFINE(zero);
 # undef DEFINE
-    template <rat::exp::type_t Type>
-    using unary_t = rat::unary<Type, label_t, weight_t>;
-    template <rat::exp::type_t Type>
-    using nary_t = rat::nary<Type, label_t, weight_t>;
+    template <exp::type_t Type>
+    using unary_t = unary<Type, label_t, weight_t>;
+    template <exp::type_t Type>
+    using nary_t = nary<Type, label_t, weight_t>;
     using ratexp_t = std::shared_ptr<const node_t>;
 
     using type_t = typename node_t::type_t;
@@ -198,14 +202,14 @@ namespace vcsn
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be sum, intersection, shuffle, or prod.
-    template <rat::exp::type_t Type>
+    template <exp::type_t Type>
     void gather(ratexps_t& res, value_t v) const;
 
     /// A list denoting the gathering of \a l and \a r, applying
     /// associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be SUM or PROD.
-    template <rat::exp::type_t Type>
+    template <exp::type_t Type>
     ratexps_t gather(value_t l, value_t r) const;
 
     /// If Context is LAW.
@@ -216,11 +220,11 @@ namespace vcsn
   private:
     context_t ctx_;
 
-    rat::exp::type_t type_ignoring_lweight_(value_t e) const;
+    exp::type_t type_ignoring_lweight_(value_t e) const;
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
   };
-  } // detail::
+  } // rat::
 
   /// The meet of two ratexpsets.
   template <typename Ctx1, typename Ctx2>
