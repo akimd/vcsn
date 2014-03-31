@@ -339,6 +339,21 @@ namespace vcsn
         const weightset_t& ws_;
       };
 
+
+      /// The outgoing tuple of transitions from state tuple \a ss.
+      std::tuple<typename transition_map<Auts>::map_t&...>
+      out_(const pair_t& ss)
+      {
+        return out_(ss, indices_t{});
+      }
+
+      template <size_t... I>
+      std::tuple<typename transition_map<Auts>::map_t&...>
+      out_(const pair_t& ss, seq<I...>)
+      {
+        return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
+      }
+
       /// Add transitions to the given result automaton, starting from
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
@@ -347,9 +362,7 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto& lhs = std::get<0>(transition_maps_)[std::get<0>(psrc)];
-        auto& rhs = std::get<1>(transition_maps_)[std::get<1>(psrc)];
-        for (auto t: zip_maps(lhs, rhs))
+        for (auto t: zip_map_tuple(out_(psrc)))
           // These are always new transitions: first because the
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
@@ -361,17 +374,14 @@ namespace vcsn
 //                 << V(t.first)
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
-            detail::cross([&] (typename decltype(std::get<0>(t).second)::value_type lt,
-                               typename decltype(std::get<1>(t).second)::value_type rt)
-                  {
-                    res_.new_transition
-                      (src,
-                       state(lt.dst, rt.dst),
-                       std::get<0>(t).first,
-                       ws.mul(lt.wgt, rt.wgt));
-                  },
-                          std::get<0>(t).second,
-                          std::get<1>(t).second);
+            detail::cross
+              ([&] (const typename transition_map<Auts>::transition&... ts)
+               {
+                 res_.new_transition(src, state(ts.dst...),
+                                     std::get<0>(t).first,
+                                     ws.mul(ts.wgt...));
+               },
+               std::get<0>(t).second, std::get<1>(t).second);
           }
       }
 

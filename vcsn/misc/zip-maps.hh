@@ -36,6 +36,10 @@ namespace vcsn
       : maps_(maps...)
     {}
 
+    zipped_maps(const maps_t& maps)
+      : maps_(maps)
+    {}
+
     /// Composite iterator.
     struct iterator
     {
@@ -270,6 +274,12 @@ namespace vcsn
   zipped_maps<Maps...> zip_maps(Maps&&... maps)
   {
     return {std::forward<Maps>(maps)...};
+  }
+
+  template <typename... Maps>
+  zipped_maps<Maps...> zip_map_tuple(const std::tuple<Maps...>& maps)
+  {
+    return {maps};
   }
 }
 
