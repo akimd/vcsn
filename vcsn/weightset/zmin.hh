@@ -15,6 +15,8 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
   class zmin_impl
   {
   public:
@@ -184,6 +186,7 @@ namespace vcsn
       return o;
     }
   };
+  }
 
   VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
 

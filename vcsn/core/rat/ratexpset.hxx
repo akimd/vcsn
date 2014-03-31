@@ -17,6 +17,9 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
+
   template <typename Context>
   ratexpset_impl<Context>::ratexpset_impl(const context_t& ctx)
     : ctx_(ctx)
@@ -64,11 +67,6 @@ namespace vcsn
   {
     return ctx_.weightset();
   }
-
-
-  /*--------------------------------------------------------.
-  | Implementation of ratexpset_base pure virtual methods.  |
-  `--------------------------------------------------------*/
 
   DEFINE::atom(const label_t& v)
     -> value_t
@@ -535,4 +533,5 @@ namespace vcsn
 
 #undef DEFINE
 
+} // namespace rat
 } // namespace vcsn

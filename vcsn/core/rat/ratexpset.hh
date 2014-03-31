@@ -17,7 +17,8 @@
 
 namespace vcsn
 {
-
+  namespace detail
+  {
   /// A typed ratexp set.
   /// \tparam Context  the LabelSet and WeightSet types.
   template <typename Context>
@@ -219,6 +220,7 @@ namespace vcsn
     weight_t possibly_implicit_lweight_(value_t e) const;
     value_t unwrap_possible_lweight_(value_t e) const;
   };
+  } // detail::
 
   /// The meet of two ratexpsets.
   template <typename Ctx1, typename Ctx2>

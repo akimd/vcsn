@@ -13,6 +13,8 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
   class f2_impl
   {
   public:
@@ -171,6 +173,7 @@ namespace vcsn
       return o;
     }
   };
+  }// detail::
 
   VCSN_WEIGHTS_BINARY(f2, f2, f2);
 

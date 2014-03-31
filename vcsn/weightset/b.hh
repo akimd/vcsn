@@ -15,6 +15,8 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
   class b_impl
   {
   public:
@@ -175,9 +177,9 @@ namespace vcsn
       return o;
     }
   };
+  } // detail::
 
   VCSN_WEIGHTS_BINARY(b, b, b);
-
 }
 
 #endif // !VCSN_WEIGHTSETS_B_HH

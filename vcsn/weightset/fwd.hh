@@ -3,40 +3,41 @@
 
 namespace vcsn
 {
+  namespace detail
+  {
+    // b.hh.
+    class b_impl;
 
-  // b.hh.
-  class b_impl;
+    // f2.hh.
+    class f2_impl;
 
-  // f2.hh.
-  class f2_impl;
+    // q.hh.
+    class q_impl;
+
+    // r.hh.
+    class r_impl;
+
+    // z.hh.
+    class z_impl;
+
+    // zmin.hh.
+    class zmin_impl;
+  }
 
   // polynomialset.hh.
   template <class Context>
   class polynomialset;
 
-  // q.hh.
-  class q_impl;
-
-  // r.hh.
-  class r_impl;
-
-  // z.hh.
-  class z_impl;
-
-  // zmin.hh.
-  class zmin_impl;
-
   // weightset.hh.
   template <typename WeightSet>
   struct variadic_mul_mixin;
 
-  using b = variadic_mul_mixin<b_impl>;
-  using z = variadic_mul_mixin<z_impl>;
-  using q = variadic_mul_mixin<q_impl>;
-  using r = variadic_mul_mixin<r_impl>;
-
-  using zmin = variadic_mul_mixin<zmin_impl>;
-  using f2 = variadic_mul_mixin<f2_impl>;
+  using b    = variadic_mul_mixin<detail::b_impl>;
+  using f2   = variadic_mul_mixin<detail::f2_impl>;
+  using q    = variadic_mul_mixin<detail::q_impl>;
+  using r    = variadic_mul_mixin<detail::r_impl>;
+  using z    = variadic_mul_mixin<detail::z_impl>;
+  using zmin = variadic_mul_mixin<detail::zmin_impl>;
 
 } // namespace vcsn
 
