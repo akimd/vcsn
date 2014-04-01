@@ -139,6 +139,7 @@ nobase_include_HEADERS =                        \
   %D%/labelset/tupleset.hh                      \
   %D%/labelset/wordset.hh                       \
   %D%/misc/attributes.hh                        \
+  %D%/misc/backtracker.hh                       \
   %D%/misc/cast.hh                              \
   %D%/misc/const_traits.hh                      \
   %D%/misc/direction.hh                         \
