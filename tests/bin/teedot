@@ -22,7 +22,7 @@ perl -pi -0777 -e '
         my %o;
         $orig =~ s{(\d+) \[label = "(.*?)"\]$}{ $o{$1} = $2 }gem;
         # Apply %o to %orig into %new, and rename as %orig.
-        my %new;
+        my %new = %orig;
         foreach my $k (keys %o)
         {
            $new{$k} = defined $orig{$o{$k}} ? $orig{$o{$k}} : $o{$k};
