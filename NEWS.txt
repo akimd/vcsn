@@ -4,6 +4,24 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-03-28
+** Improve treatment of nullable labelsets
+As introduced earlier, nullablesets are now written "lan<...>", for instance
+"lan<lal_char(ab)>_b".  The former syntax, e.g., "lan_char(ab)_b", is kept
+for backward compatibility and ease of use.
+
+Up to now, "lan<>" would only work on lal and labelsets with already a "one"
+provided, making the improvement quite useless.  Now "lan<...>" will
+manufacture a "one" for the labelsets that don't have one, so it can be
+wrapped around anything.
+
+In addition to that, simplifications are applied; for instance
+"lan<lan<lan_char(ab)>>_b" actually builds "lan<lal_char(ab)>_b".
+Similarly, "lan<lat<lan_char(ab), law_char(ab), ratexpset<lal_char(ab)_b>>>_b"
+generates "lat<lan<lal_char(ab)>, law_char(ab), ratexpset<lal_char(ab)_b>>_b",
+since the tuple wrapped in the outer lan already has a "one", given that all
+of its components have one.
+
 * 2014-03-26
 ** concatenation and conjunction of ratexps accepts more heterogenous arguments
 Conversions of both labels and weights are performed if needed.
