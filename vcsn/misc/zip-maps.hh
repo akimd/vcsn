@@ -19,7 +19,10 @@
 namespace vcsn
 {
 
-  template <typename... Maps>
+  struct as_tuple {};
+  struct as_pair {};
+
+  template <typename Dereference = as_tuple, typename... Maps>
   struct zipped_maps
   {
     /// Type of the tuple of all the maps.
@@ -95,13 +98,24 @@ namespace vcsn
         return not_equal_(that, indices_t{});
       }
 
-      values_t operator*()
+      std::pair<key_t, mapped_t> dereference_(as_pair)
       {
-        return derefence_as_tuple();
+        return dereference_as_pair();
+      }
+
+      values_t dereference_(as_tuple)
+      {
+        return dereference_as_tuple();
+      }
+
+      auto operator*()
+        -> decltype(dereference_(Dereference()))
+      {
+        return dereference_(Dereference());
       }
 
       /// Return as <<k1, v1>, <k1, v2>, ...>.
-      values_t derefence_as_tuple()
+      values_t dereference_as_tuple()
       {
         return dereference_(indices_t{});
       }
@@ -221,7 +235,9 @@ namespace vcsn
       template <std::size_t... I>
       mapped_t dereference_second_(seq<I...>) const
       {
-        return {(std::get<I>(is_)->second)...};
+        // clang 3.4 on top of libstdc++ wants this ctor to be
+        // explicitly called.
+        return mapped_t{(std::get<I>(is_)->second)...};
       }
 
       /// Tuple of pairs.
@@ -270,14 +286,16 @@ namespace vcsn
     maps_t maps_;
   };
 
-  template <typename... Maps>
-  zipped_maps<Maps...> zip_maps(Maps&&... maps)
+  template <typename Dereference = as_pair, typename... Maps>
+  zipped_maps<Dereference, Maps...>
+  zip_maps(Maps&&... maps)
   {
     return {std::forward<Maps>(maps)...};
   }
 
-  template <typename... Maps>
-  zipped_maps<Maps...> zip_map_tuple(const std::tuple<Maps...>& maps)
+  template <typename Dereference = as_pair, typename... Maps>
+  zipped_maps<Dereference, Maps...>
+  zip_map_tuple(const std::tuple<Maps...>& maps)
   {
     return {maps};
   }

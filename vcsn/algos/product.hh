@@ -374,14 +374,13 @@ namespace vcsn
 //                 << V(t.first)
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
-            detail::cross
+            detail::cross_tuple
               ([&] (const typename transition_map<Auts>::transition&... ts)
                {
                  res_.new_transition(src, state(ts.dst...),
-                                     std::get<0>(t).first,
-                                     ws.mul(ts.wgt...));
+                                     t.first, ws.mul(ts.wgt...));
                },
-               std::get<0>(t).second, std::get<1>(t).second);
+               t.second);
           }
       }
 

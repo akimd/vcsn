@@ -30,7 +30,7 @@ int main()
         {'3', "three"},
         {'4', "four"} };
 
-  for (auto i: vcsn::zip_maps(ints, floats, strings))
+  for (auto i: vcsn::zip_maps<vcsn::as_tuple>(ints, floats, strings))
     std::cout << std::get<0>(i).first << ':'
               << '('
               << std::get<0>(i).second
