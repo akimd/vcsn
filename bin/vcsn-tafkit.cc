@@ -183,7 +183,6 @@ DEFINE_AUT_FUNCTION(is_useless);
 DEFINE_AUT__RATEXP_FUNCTION(is_valid);
 DEFINE_AUT__RATEXP_FUNCTION(lift);
 DEFINE_AUT_SIZE_FUNCTION(power);
-DEFINE_AUT_VARIADIC_FUNCTION(product);
 DEFINE_AUT_FUNCTION(proper);
 DEFINE_ENUMERATION_FUNCTION(shortest);
 DEFINE_AUT_VARIADIC_FUNCTION(shuffle);
@@ -440,6 +439,40 @@ struct minimize: vcsn_function
     auto res = vcsn::dyn::minimize(aut, algo);
 
     // Output.
+    opts.print(res);
+    return 0;
+  }
+};
+
+struct product: vcsn_function
+{
+  int work_aut(const options& opts) const
+  {
+    using namespace vcsn::dyn;
+    /* Input. */
+    auto res = read_automaton(opts);
+    if (opts.argv.size() == 2)
+      {
+        options opts2 = opts;
+
+        opts2.input = opts.argv[0];
+        automaton a2 = read_automaton(opts2);
+
+        opts2.input = opts.argv[1];
+        automaton a3 = read_automaton(opts2);
+
+        res = vcsn::dyn::product(res, a2, a3);
+      }
+    else
+      for (unsigned i = 0; i < opts.argv.size(); ++i)
+        {
+          options opts2 = opts;
+          opts2.input = opts.argv[i];
+          automaton rhs = read_automaton(opts2);
+          res = vcsn::dyn::product(res, rhs);
+        }
+
+    /* Output. */
     opts.print(res);
     return 0;
   }

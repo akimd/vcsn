@@ -497,6 +497,45 @@ namespace vcsn
     }
   }
 
+  /*-------------------------------------------.
+  | product(automaton, automaton, automaton).  |
+  `-------------------------------------------*/
+
+  /// Build the (accessible part of the) product.
+  template <typename A, typename B, typename C>
+  auto
+  product(const A& a, const B& b, const C& c)
+    -> typename detail::producter<A, B, C>::automaton_t
+  {
+    detail::producter<A, B, C> product(a, b, c);
+    auto res = product.product();
+    if (getenv("VCSN_ORIGINS"))
+      product.print(std::cout, product.origins());
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+
+      /// Bridge.
+      template <typename A, typename B, typename C>
+      automaton
+      product3(const automaton& a, const automaton& b, const automaton& c)
+      {
+        const auto& a1 = a->as<A>();
+        const auto& b1 = b->as<B>();
+        const auto& c1 = c->as<C>();
+        return make_automaton(product(a1, b1, c1));
+      }
+
+      REGISTER_DECLARE(product3,
+                       (const automaton&, const automaton&,
+                        const automaton&) -> automaton);
+    }
+  }
+
   /*--------------------------------.
   | shuffle(automaton, automaton).  |
   `--------------------------------*/

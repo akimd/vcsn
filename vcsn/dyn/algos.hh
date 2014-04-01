@@ -280,6 +280,11 @@ namespace vcsn
     /// Performs the meet of the contexts.
     automaton product(const automaton& lhs, const automaton& rhs);
 
+    /// The product of automata.
+    /// Performs the meet of the contexts.
+    automaton product(const automaton& a, const automaton& b,
+                      const automaton& c);
+
     /// An equivalent automaton without spontaneous transitions.
     /// \param aut    the automaton in which to remove them
     /// \param prune  whether to delete states that become inaccessible

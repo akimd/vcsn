@@ -14,6 +14,13 @@ namespace vcsn
       return detail::product_registry().call(lhs, rhs);
     }
 
+    REGISTER_DEFINE(product3);
+    automaton
+    product(const automaton& a, const automaton& b, const automaton& c)
+    {
+      return detail::product3_registry().call(a, b, c);
+    }
+
     REGISTER_DEFINE(shuffle);
     automaton
     shuffle(const automaton& lhs, const automaton& rhs)
