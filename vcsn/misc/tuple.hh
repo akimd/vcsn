@@ -5,6 +5,7 @@
 # include <tuple>
 
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/raise.hh> // detail::pass
 
 namespace vcsn
 {
@@ -51,6 +52,23 @@ namespace vcsn
     // http://llvm.org/bugs/show_bug.cgi?id=14858
     //template<class... T>
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
+
+
+    template<typename Fun, typename... Ts>
+    inline void
+    for_(const std::tuple<Ts...>& ts, Fun f)
+    {
+      for_(f, ts, make_index_sequence<sizeof...(Ts)>());
+    }
+
+    template<typename Fun, typename... Ts, size_t... I>
+    inline void
+    for_(Fun f,
+         const std::tuple<Ts...>& ts,
+         index_sequence<I...>)
+    {
+      detail::pass{ (f(std::get<I>(ts)), 0)... };
+    }
 
 
     /*------------------------.

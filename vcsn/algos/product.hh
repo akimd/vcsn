@@ -176,12 +176,14 @@ namespace vcsn
              "    node [shape = box, style = rounded]\n";
         for (auto p: orig)
           if (p.first != automaton_t::pre() && p.first != automaton_t::post())
-            o << "    " << p.first - 2
-              << " [label = \""
-              << std::get<0>(p.second) - 2
-              << ','
-              << std::get<1>(p.second) - 2
-              << "\"]\n";
+            {
+              o << "    " << p.first - 2
+                << " [label = \"";
+              const char* sep = "";
+              for_(p.second,
+                   [&](unsigned s) { o << sep << s - 2; sep = ","; });
+              o << "\"]\n";
+            }
         o << "*/\n";
         return o;
       }
