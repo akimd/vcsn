@@ -205,6 +205,11 @@ export DIR_STAGE=$DIR_ROOT/stage
 export DIR_PACKAGES=$DIR_ROOT/packages
 
 
+
+# Please ccache by allowing different source trees to share the cache.
+export CCACHE_BASEDIR=$DIR_SOURCE
+
+
 ## ------ ##
 ## Main.  ##
 ## ------ ##
