@@ -1,3 +1,6 @@
+/// FIXME: add a comment explaining why we say "sequential" instead of
+/// "deterministic".
+
 #ifndef VCSN_ALGOS_ARE_ISOMORPHIC_HH
 # define VCSN_ALGOS_ARE_ISOMORPHIC_HH
 
@@ -9,11 +12,91 @@
 # include <vector> // FIXME: remove unless needed
 
 # include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/is-deterministic.hh>
+//# include <vcsn/algos/is-sequential.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/backtracker.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh> // vcsn::less FIXME: remove unless needed
+
+// namespace nqueens
+// {
+// std::ostream& operator<<(std::ostream& o, const std::vector<int>& v)
+// {
+//   o << "[ ";
+//   for (const auto i: v)
+//     o << i << " ";
+//   o << "]";
+//   return o;
+// }
+
+// using queen_t = int;
+
+// struct queens_t: public std::vector<queen_t> // queen rows; columns are implicit
+// {
+//   using move_t = queen_t;
+
+//   size_t queen_no;
+// };
+
+// struct mybacktracker: public vcsn::backtracker<queens_t, queen_t, mybacktracker>
+// {
+//   void do_move(queens_t& s, const queen_t& c)
+//   {
+//     s.emplace_back(c);
+//   }
+//   void undo_move(queens_t& s, const queen_t& c __attribute__((unused)))
+//   {
+//     s.pop_back();
+//   }
+
+//   void set_initial(const solution_t& solution)
+//   {
+//     solution_ = solution;
+//   }
+
+//   bool doomed(const move_t* latest_move)
+//   {
+//     if (latest_move == NULL)
+//       return false;
+
+//     int current_size = solution_.size();
+//     int j = current_size - 1;
+// #define COLUMN(i) (i)
+// #define ROW(i) (solution_[i])
+// #define DIAGONAL1(i) (COLUMN(i) - ROW(i))
+// #define DIAGONAL2(i) (COLUMN(i) + ROW(i))
+//     for (int i = 0; i < current_size - 1; ++ i)
+//       if (COLUMN(i) == COLUMN(j)
+//           || ROW(i) == ROW(j)
+//           || DIAGONAL1(i) == DIAGONAL1(j)
+//           || DIAGONAL2(i) == DIAGONAL2(j))
+//         return true; // One old queen is menacing our new one.
+//     return false;
+//   }
+
+//   bool final(const move_t* latest_move)
+//   {
+//     bool res = ! doomed(latest_move) && solution_.size() == solution_.queen_no;
+//     //std::cerr << "Is " << solution_ << " final? (size is " << solution_.size() << ", over " << solution_.queen_no << "): " << res << "\n";
+//     return res;
+//   }
+
+//   void develop(const move_t* latest_move)
+//   {
+//     //std::cerr << "Depth " << depth() << "\n";
+//     //std::cerr << depth() << " ";
+//     ++ vcsn::candidate_solution_no;
+//     //std::cerr << "Considering " << solution_ << "\n";
+//     //int solution_size = solution_.size();
+
+//     if (! doomed(latest_move))
+//       for (move_t row = 0; row < move_t(solution_.queen_no); ++ row)
+//         push_move(row);
+//   }
+// };
+// } // namespace nqueens
+
 
 namespace vcsn
 {
@@ -58,6 +141,7 @@ namespace vcsn
 
     const Aut1& a1_;
     const Aut2& a2_;
+    const size_t a1_state_no_;
 
     /// See the comment for out_ in minimize.hh.
     using dout_t =
@@ -66,21 +150,29 @@ namespace vcsn
                                             std::pair<weight_t, state_t>,
                                             vcsn::hash<labelset_t>,
                                             vcsn::equal_to<labelset_t>>>;
-    dout_t dout1_, dout2_; // For the simpler, faster deterministic case.
+    dout_t dout1_, dout2_; // For the simpler, faster sequential case.
+    // FIXME: factor the type, just for indentation's sake
     std::unordered_map<state_t,
                        std::unordered_map<label_t,
                                           std::unordered_map<weight_t,
                                                              std::vector<state_t>,
                                                              vcsn::hash<weightset_t>,
-                                                             vcsn::equal_to<weightset_t>
-                                                             >,
+                                                             vcsn::equal_to<weightset_t>>,
                                           vcsn::hash<labelset_t>,
                                           vcsn::equal_to<labelset_t>>>
-      nout1_, nout2_; // For the nondeterministic case.
+      nout1_, nout2_; // For the nonsequential case.
 
     /// The maps associating the states of a1_ and the states of a2_.
     std::unordered_map<state1_t, state2_t> s1tos2_;
     std::unordered_map<state2_t, state1_t> s2tos1_;
+    // FIXME: remove these, and use an isomorphism_t-typed member instaed.
+
+    struct isomorphism_t
+    {
+      std::unordered_map<state1_t, state2_t> s1tos2;
+      std::unordered_map<state2_t, state1_t> s2tos1;
+      bool doomed;
+    };
 
     /// A worklist of state pairs which are candidate to be
     /// isomorphic.  Or "A candidate-isomorphic state pair worklist",
@@ -88,13 +180,121 @@ namespace vcsn
     using pair_t = std::pair<state1_t, state2_t>;
     using worklist_t = std::stack<pair_t>;
     worklist_t worklist_;
+    class dummy{}; using dummy_t = dummy;
+
+    //????
+    struct move
+    {
+      state1_t s1;
+      state2_t s2;
+    };
+    using move_t = move;
+    class mybacktracker: public vcsn::backtracker<isomorphism_t, move_t, dummy_t,
+                                                  mybacktracker>
+    {
+    public:
+      are_isomorphicer& outer_;
+
+      // FIXME: is this a good idea?
+      const are_isomorphicer::automaton1_t& a1_;
+      const are_isomorphicer::automaton2_t& a2_;
+
+      mybacktracker(are_isomorphicer& containing_class)
+        : outer_(containing_class)
+        , a1_(outer_.a1_)
+        , a2_(outer_.a2_)
+      {}
+      using super_t = vcsn::backtracker<isomorphism_t, move_t, dummy_t,
+                                        mybacktracker>;
+      using solution_t = typename super_t::solution_t;
+      using move_t = typename super_t::move_t;
+      using undo_info_t = typename super_t::undo_info_t;
+
+      void do_move(solution_t& s, const move_t& c)
+      {
+        make_isomorphic(s, c.s1, c.s2);
+      }
+      void undo_move(solution_t& s, const move_t& m, const undo_info_t&)
+      {
+        state1_t s1 = m.s1;
+        state2_t s2 = m.s2;
+        assert(are_isomorphic(s, s1, s2));
+        assert(! are_nonisomorphic(s, s1, s2));
+        s.s1tos2.erase(s1);
+        s.s1tos2.erase(s2);
+        s.doomed = false;
+        assert(! are_isomorphic(s, s1, s2));
+        assert(! are_nonisomorphic(s, s1, s2));
+      }
+      const undo_info_t undo_info(const solution_t&, const move_t&)
+      {
+        return undo_info_t();
+      }
+      void set_initial(const solution_t& initial)
+      {
+        super_t::solution_ = initial;
+        // maybe
+        super_t::push_move({a1_.pre(), a2_.pre()});
+      }
+      bool final(const move_t* latest_move)
+      {
+        return ! super_t::solution_.doomed
+               && super_t::solution_.s1tos2.size() == outer_.a1_state_no_;
+      }
+      bool are_isomorphic(solution_t& s, state1_t s1, state2_t s2)
+      {
+        auto s1tos2 = s.s1tos2;
+        auto s2tos1 = s.s2tos1;
+        auto s1p = s1tos2.find(s1);
+        auto s2p = s2tos1.find(s2);
+        return s1p != s1tos2.end() && s1p->second == s2
+               && s2p != s2tos1.end() && s2p->second == s1;
+      }
+      /// Asserting the non-isomorphism of two states entails the
+      /// production of a *proof* of the fact that they are not
+      /// isomorphic: this in practice means that at least one of them
+      /// is known to be isomorphic to a different state.
+      /// Non-isomorphism is different from the lack of a known
+      /// isomorphism between two states.
+      bool are_nonisomorphic(solution_t& s, state1_t s1, state2_t s2)
+      {
+        auto s1tos2 = s.s1tos2;
+        auto s2tos1 = s.s2tos1;
+        auto s1p = s1tos2.find(s1);
+        auto s2p = s2tos1.find(s2);
+        return (s1p != s1tos2.end() && s1p->second != s2)
+               || (s2p != s2tos1.end() && s2p->second != s1);
+      }
+      bool make_isomorphic(solution_t& s, state1_t s1, state2_t s2)
+      {
+        assert(! are_isomorphic(s, s1, s2));
+        assert(! are_nonisomorphic(s, s1, s2));
+        auto s1tos2 = s.s1tos2;
+        auto s2tos1 = s.s2tos1;
+        s1tos2[s1] = s2;
+        s2tos1[s2] = s1;
+      }
+      void develop(const move_t* latest_move)
+      {
+        if (latest_move == NULL
+            || super_t::solution_.doomed)
+          return;
+
+        state1_t s1 = latest_move->s1;
+        state1_t s2 = latest_move->s2;
+        assert(are_isomorphic(super_t::solution_, s1, s2));
+
+        // FIXME: develop successors.
+      }
+    } backtracker_;
+    //????
 
     /// A datum specifying if two given automata are isomorphic, and
     /// why if they are not.  This should be a variant record, but
     /// BOOST variants are not really suitable (this is not just a
     /// disjoint union: we also need a case tag), we don't like
     /// unions, and visitors are overkill.  The thing might even get
-    /// simpler when we generalize to non-deterministic automata.
+    /// simpler when we generalize to non-sequential automata.
     struct full_response
     {
       enum class tag
@@ -116,9 +316,9 @@ namespace vcsn
       {}
     } full_response_;
 
-    // Return true and fill \a dout if \a a is deterministic;
+    // Return true and fill \a dout if \a a is sequential;
     // otherwise return false and clear dout.
-    bool is_deterministic_filling(const automaton_t& a, dout_t& dout)
+    bool is_sequential_filling(const automaton_t& a, dout_t& dout)
     {
       for (auto t : a.all_transitions())
         {
@@ -130,23 +330,23 @@ namespace vcsn
           else
             {
               dout.clear();
-              std::cerr << "The automaton is NOT deterministic.\n";
+              std::cerr << "The automaton is NOT sequential.\n";
               return false;
             }
         }
-      std::cerr << "The automaton IS deterministic.\n";
+      std::cerr << "The automaton IS sequential.\n";
       return true;
     }
 
-    // Return true iff both automata are deterministic, and we can
-    // apply the faster version.  We can't use the is_deterministic
+    // Return true iff both automata are sequential, and we can
+    // apply the faster version.  We can't use the is_sequential
     // algorithm as it's only defined for lal.  We seize the occasion
-    // for filling dout1_ and dout2_ in the deterministic case.
-    bool are_automata_deterministic_filling_douts()
+    // for filling dout1_ and dout2_ in the sequential case.
+    bool are_automata_sequential_filling_douts()
     {
-      bool res = is_deterministic_filling(a1_, dout1_)
-                 && is_deterministic_filling(a2_, dout2_);
-      std::cerr << "Are both automata deterministic? " << res << "\n";
+      bool res = is_sequential_filling(a1_, dout1_)
+                 && is_sequential_filling(a2_, dout2_);
+      std::cerr << "Are both automata sequential? " << res << "\n";
       return res;
     }
 
@@ -191,16 +391,30 @@ namespace vcsn
     are_isomorphicer(const Aut1 &a1, const Aut2 &a2)
       : a1_(a1)
       , a2_(a2)
+      , a1_state_no_(a1.num_all_states())
+      , backtracker_(*this)
     {}
+
+    // void play_with_queens()
+    // {
+    //   std::cerr << "Playing with the n-queens problem...\n";
+    //   nqueens::mybacktracker m;
+    //   nqueens::queens_t empty_solution; empty_solution.queen_no = 22;
+    //   std::cerr << m(empty_solution) << "\n";
+    // }
 
     const full_response
     get_full_response()
     {
+      //play_with_queens();
       clear();
 
       // If we prove non-isomorphism at this point, it will be because
       // of sizes.
       full_response_.response = full_response::tag::trivially_different;
+
+      require(is_accessible(a1_) && is_accessible(a2_),
+              "are-isomorphic: input automata must both be accessible");
 
       // Before even initializing our data structures, which is
       // potentially expensive, try to simply compare the number of
@@ -208,18 +422,12 @@ namespace vcsn
       if (trivially_different())
         return full_response_;
 
-      // FIXME: this only works on lal, and the algorithm is
-      // instantiated only on lal contexts anyway.  It would be nice
-      // to generalize this to some non-lal contexts later, but the
-      // current implementation is limited to deterministic lal
-      // automata anyway.
-      require(is_accessible(a1_) && is_accessible(a2_),
-              "are-isomorphic: input automata must both be accessible");
-
-      if (are_automata_deterministic_filling_douts())
-        return get_full_response_deterministic();
+      // FIXME: return trivially_different if only one of the two
+      // automata is sequential.
+      if (are_automata_sequential_filling_douts())
+        return get_full_response_sequential();
       else
-        return get_full_response_nondeterministic();
+        return get_full_response_nonsequential();
     }
 
     /// A mapping from an a1_ state to an a2_ state.
@@ -386,9 +594,9 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
 # undef FAIL
 
     const full_response
-    get_full_response_nondeterministic()
+    get_full_response_nonsequential()
     {
-      std::cerr << "get_full_response_nondeterministic\n";
+      std::cerr << "get_full_response_nonsequential\n";
 
       fill_nouts_();
 
@@ -405,7 +613,7 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
         {
           full_response_.response = full_response::tag::nocounterexample;
         }
-      //if (are_nondeterministic_states_isomorphic(a1_.pre(), a2_.pre(), tm, tr))
+      //if (are_nonsequential_states_isomorphic(a1_.pre(), a2_.pre(), tm, tr))
       //else
       //std::cerr << "Are they isomorphic? " << (full_response_.response == full_response::tag::isomorphic) << "\n";
       //std::cerr << "\n";
@@ -413,9 +621,9 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
     }
 
     const full_response
-    get_full_response_deterministic()
+    get_full_response_sequential()
     {
-      std::cerr << "get_full_response_deterministic\n";
+      std::cerr << "get_full_response_sequential\n";
 
       // If we prove non-isomorphism from now on, it will be by
       // presenting some specific pair of states.
@@ -499,7 +707,7 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
     }
 
     /// A map from each a2_ state to the corresponding a1_ state.
-    using origins_t = std::map<state_t, state_t>;
+    using origins_t = std::map<state2_t, state1_t>;
 
     /// Only meaningful if operator() returned true.
     origins_t
