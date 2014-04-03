@@ -14,11 +14,11 @@ namespace vcsn
       return detail::product_registry().call(lhs, rhs);
     }
 
-    REGISTER_DEFINE(product3);
+    REGISTER_DEFINE(product_vector);
     automaton
-    product(const automaton& a, const automaton& b, const automaton& c)
+    product(const std::vector<automaton>& auts)
     {
-      return detail::product3_registry().call(a, b, c);
+      return detail::product_vector_registry().call_variadic(auts);
     }
 
     REGISTER_DEFINE(shuffle);

@@ -497,17 +497,17 @@ namespace vcsn
     }
   }
 
-  /*-------------------------------------------.
-  | product(automaton, automaton, automaton).  |
-  `-------------------------------------------*/
+  /*------------------------.
+  | product(automaton...).  |
+  `------------------------*/
 
   /// Build the (accessible part of the) product.
-  template <typename A, typename B, typename C>
+  template <typename... Auts>
   auto
-  product(const A& a, const B& b, const C& c)
-    -> typename detail::producter<A, B, C>::automaton_t
+  product(const Auts&... as)
+    -> typename detail::producter<Auts...>::automaton_t
   {
-    detail::producter<A, B, C> product(a, b, c);
+    detail::producter<Auts...> product(as...);
     auto res = product.product();
     if (getenv("VCSN_ORIGINS"))
       product.print(std::cout, product.origins());
@@ -519,20 +519,26 @@ namespace vcsn
     namespace detail
     {
 
-      /// Bridge.
-      template <typename A, typename B, typename C>
+      template <typename... Auts, size_t... I>
       automaton
-      product3(const automaton& a, const automaton& b, const automaton& c)
+      product_(const std::vector<automaton>& as,
+               vcsn::detail::index_sequence<I...>)
       {
-        const auto& a1 = a->as<A>();
-        const auto& b1 = b->as<B>();
-        const auto& c1 = c->as<C>();
-        return make_automaton(product(a1, b1, c1));
+        return make_automaton(product(as[I]->as<Auts>()...));
       }
 
-      REGISTER_DECLARE(product3,
-                       (const automaton&, const automaton&,
-                        const automaton&) -> automaton);
+
+      /// Bridge.
+      template <typename... Auts>
+      automaton
+      product_vector(const std::vector<automaton>& as)
+      {
+        return product_<Auts...>(as,
+                        vcsn::detail::make_index_sequence<sizeof...(Auts)>{});
+      }
+
+      REGISTER_DECLARE(product_vector,
+                       (const std::vector<automaton>&) -> automaton);
     }
   }
 

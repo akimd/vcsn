@@ -282,8 +282,7 @@ namespace vcsn
 
     /// The product of automata.
     /// Performs the meet of the contexts.
-    automaton product(const automaton& a, const automaton& b,
-                      const automaton& c);
+    automaton product(const std::vector<automaton>& as);
 
     /// An equivalent automaton without spontaneous transitions.
     /// \param aut    the automaton in which to remove them

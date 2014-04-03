@@ -84,10 +84,21 @@ namespace vcsn
     template <typename... Args>
     auto
     call(Args&&... args)
-      -> decltype (std::declval<Fun>()(args...))
+      -> decltype(std::declval<Fun>()(args...))
     {
       const auto& sig = vsignature(std::forward<Args>(args)...);
       return (get(sig))(std::forward<Args>(args)...);
+    }
+
+    template <typename T>
+    auto
+    call_variadic(const std::vector<T>& ts)
+      -> decltype(std::declval<Fun>()(ts))
+    {
+      signature sig;
+      for (const auto& t: ts)
+        sig.sig.emplace_back(vname(t));
+      return (get(sig))(ts);
     }
 
   private:

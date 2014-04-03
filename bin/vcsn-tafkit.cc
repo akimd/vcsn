@@ -450,27 +450,15 @@ struct product: vcsn_function
   {
     using namespace vcsn::dyn;
     /* Input. */
-    auto res = read_automaton(opts);
-    if (opts.argv.size() == 2)
+    std::vector<automaton> as;
+    as.emplace_back(read_automaton(opts));
+    for (unsigned i = 0; i < opts.argv.size(); ++i)
       {
         options opts2 = opts;
-
-        opts2.input = opts.argv[0];
-        automaton a2 = read_automaton(opts2);
-
-        opts2.input = opts.argv[1];
-        automaton a3 = read_automaton(opts2);
-
-        res = vcsn::dyn::product(res, a2, a3);
+        opts2.input = opts.argv[i];
+        as.emplace_back(read_automaton(opts2));
       }
-    else
-      for (unsigned i = 0; i < opts.argv.size(); ++i)
-        {
-          options opts2 = opts;
-          opts2.input = opts.argv[i];
-          automaton rhs = read_automaton(opts2);
-          res = vcsn::dyn::product(res, rhs);
-        }
+    auto res = vcsn::dyn::product(as);
 
     /* Output. */
     opts.print(res);

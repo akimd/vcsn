@@ -14,6 +14,8 @@ namespace vcsn LIBVCSN_API
   {
     using sig_t = std::vector<std::string>;
 
+    signature() = default;
+
     signature(const std::initializer_list<std::string>& l)
       : sig(l)
     {}
