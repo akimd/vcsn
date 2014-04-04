@@ -308,7 +308,7 @@ of a simple string that is converted by the weightset.
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
-traversal of the automaton, although one would suffice.  This is because it
+traversals of the automaton, although one would suffice.  This is because it
 is factored a lot, using std::copy for instance.
 
 Keep it factored, but for instance, introduce a std::copy that walks only

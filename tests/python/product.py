@@ -239,15 +239,33 @@ check_enumerate('\z', a1 & a2.transpose())
 check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 
 
-## ------- ##
-## n-ary.  ##
-## ------- ##
+## ---------- ##
+## variadic.  ##
+## ---------- ##
 
+# unary case: return only the accessible part.
+CHECK_EQ(vcsn.automaton('''
+digraph {
+  vcsn_context = "lal_char(ab)_b"
+  I -> 0
+  0 -> 1 [label="a"]
+  1 -> 2 [label="a"]
+}
+'''), vcsn.automaton.product_real((vcsn.automaton('''
+digraph {
+  vcsn_context = "lal_char(ab)_b"
+  I -> 0
+  0 -> 1 [label="a"]
+  1 -> 2 [label="a"]
+}
+'''),)))
+
+# four arguments.
 ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
-check_enumerate('<abcd>x', (a['a'] & a['b'] & a['c'] & a['d']))
+check_enumerate('<abcd>x', a['a'] & a['b'] & a['c'] & a['d'])
 
 
 ## ----------------- ##

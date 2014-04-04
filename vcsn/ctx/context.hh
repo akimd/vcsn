@@ -154,24 +154,22 @@ namespace vcsn
     weightset_ptr ws_;
   };
 
+
+  /*-------.
+  | join.  |
+  `-------*/
+
   template <typename... ValueSets>
   using join_t = decltype(join(std::declval<ValueSets>()...));
 
-  template <typename... ValueSets>
-  using meet_t = decltype(meet(std::declval<ValueSets>()...));
-
-  /// The meet of two contexts.
-  template <typename LhsLabelSet, typename LhsWeightSet,
-            typename RhsLabelSet, typename RhsWeightSet>
+  /// The join of a single valueset.
+  /// Useful for variadic operator on a single argument.
+  template <typename ValueSet>
   auto
-  meet(const context<LhsLabelSet, LhsWeightSet>& a,
-       const context<RhsLabelSet, RhsWeightSet>& b)
-    -> context<meet_t<LhsLabelSet, RhsLabelSet>,
-               join_t<LhsWeightSet, RhsWeightSet>>
+  join(const ValueSet& vs)
+    -> ValueSet
   {
-    auto ls = meet(*a.labelset(), *b.labelset());
-    auto ws = join(*a.weightset(), *b.weightset());
-    return {ls, ws};
+    return vs;
   }
 
   /// The join of two contexts.
@@ -188,17 +186,53 @@ namespace vcsn
     return {ls, ws};
   }
 
-  template <typename ValueSet1, typename ValueSet2, typename ValueSet3, typename... VSs>
+  template <typename ValueSet1, typename ValueSet2,
+            typename ValueSet3, typename... VSs>
   auto
-  join(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3, const VSs&... vs)
+  join(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
+       const VSs&... vs)
     -> decltype(join(join(vs1, vs2), vs3, vs...))
   {
     return join(join(vs1, vs2), vs3, vs...);
   }
 
-  template <typename ValueSet1, typename ValueSet2, typename ValueSet3, typename... VSs>
+
+  /*-------.
+  | meet.  |
+  `-------*/
+
+  template <typename... ValueSets>
+  using meet_t = decltype(meet(std::declval<ValueSets>()...));
+
+  /// The meet of a single valueset.
+  /// Useful for variadic operator on a single argument.
+  template <typename ValueSet>
   auto
-  meet(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3, const VSs&... vs)
+  meet(const ValueSet& vs)
+    -> ValueSet
+  {
+    return vs;
+  }
+
+  /// The meet of two contexts.
+  template <typename LhsLabelSet, typename LhsWeightSet,
+            typename RhsLabelSet, typename RhsWeightSet>
+  auto
+  meet(const context<LhsLabelSet, LhsWeightSet>& a,
+       const context<RhsLabelSet, RhsWeightSet>& b)
+    -> context<meet_t<LhsLabelSet, RhsLabelSet>,
+               join_t<LhsWeightSet, RhsWeightSet>>
+  {
+    auto ls = meet(*a.labelset(), *b.labelset());
+    auto ws = join(*a.weightset(), *b.weightset());
+    return {ls, ws};
+  }
+
+  template <typename ValueSet1, typename ValueSet2, typename ValueSet3,
+            typename... VSs>
+  auto
+  meet(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
+       const VSs&... vs)
     -> decltype(meet(meet(vs1, vs2), vs3, vs...))
   {
     return meet(meet(vs1, vs2), vs3, vs...);
