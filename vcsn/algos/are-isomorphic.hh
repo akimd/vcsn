@@ -163,14 +163,16 @@ namespace vcsn
       nout1_, nout2_; // For the nonsequential case.
 
     /// The maps associating the states of a1_ and the states of a2_.
-    std::unordered_map<state1_t, state2_t> s1tos2_;
-    std::unordered_map<state2_t, state1_t> s2tos1_;
+    using s1tos2_t = std::unordered_map<state1_t, state2_t>;
+    using s2tos1_t = std::unordered_map<state2_t, state1_t>;
+    s1tos2_t s1tos2_;
+    s2tos1_t s2tos1_;
     // FIXME: remove these, and use an isomorphism_t-typed member instaed.
 
     struct isomorphism_t
     {
-      std::unordered_map<state1_t, state2_t> s1tos2;
-      std::unordered_map<state2_t, state1_t> s2tos1;
+      s1tos2_t s1tos2;
+      s2tos1_t s2tos1;
       bool doomed;
     };
 
@@ -203,19 +205,25 @@ namespace vcsn
         : outer_(containing_class)
         , a1_(outer_.a1_)
         , a2_(outer_.a2_)
-      {}
+      {
+        //std::cerr << "OK-D\n";
+      }
       using super_t = vcsn::backtracker<isomorphism_t, move_t, dummy_t,
                                         mybacktracker>;
       using solution_t = typename super_t::solution_t;
       using move_t = typename super_t::move_t;
       using undo_info_t = typename super_t::undo_info_t;
 
-      void do_move(solution_t& s, const move_t& c)
+      void do_move(solution_t& s, const move_t& m)
       {
-        make_isomorphic(s, c.s1, c.s2);
+        //std::cerr << "OK-N 100\n";
+        std::cerr << "+ DOING   " << m.s1 << ", " << m.s2 << "\n";
+        make_isomorphic(s, m.s1, m.s2);
+        //std::cerr << "OK-N 200\n";
       }
       void undo_move(solution_t& s, const move_t& m, const undo_info_t&)
       {
+        std::cerr << "- UNdoing " << m.s1 << ", " << m.s2 << "\n";
         state1_t s1 = m.s1;
         state2_t s2 = m.s2;
         assert(are_isomorphic(s, s1, s2));
@@ -228,6 +236,7 @@ namespace vcsn
       }
       const undo_info_t undo_info(const solution_t&, const move_t&)
       {
+        //std::cerr << "OK L\n";
         return undo_info_t();
       }
       void set_initial(const solution_t& initial)
@@ -236,19 +245,34 @@ namespace vcsn
         // maybe
         super_t::push_move({a1_.pre(), a2_.pre()});
       }
-      bool final(const move_t* latest_move)
+      bool final(const move_t*)
       {
-        return ! super_t::solution_.doomed
-               && super_t::solution_.s1tos2.size() == outer_.a1_state_no_;
+        bool res =
+          ! super_t::solution_.doomed
+          && super_t::solution_.s1tos2.size() == outer_.a1_state_no_;
+        std::cerr << "Final (size " << super_t::solution_.s1tos2.size() << " of " << outer_.a1_state_no_<< ")? " << res << "\n";
+        return res;
       }
       bool are_isomorphic(solution_t& s, state1_t s1, state2_t s2)
       {
-        auto s1tos2 = s.s1tos2;
-        auto s2tos1 = s.s2tos1;
-        auto s1p = s1tos2.find(s1);
-        auto s2p = s2tos1.find(s2);
-        return s1p != s1tos2.end() && s1p->second == s2
-               && s2p != s2tos1.end() && s2p->second == s1;
+        const auto& s1tos2 = s.s1tos2;
+        const auto& s2tos1 = s.s2tos1;
+        // std::cerr << "OK-O s1tos2.size(): " << s1tos2.size() << "\n";
+        // std::cerr << "OK-O s2tos1.size(): " << s2tos1.size() << "\n";
+        // std::cerr << "OK-O s1: " << s1 << "\n";
+        // std::cerr << "OK-O s2: " << s2 << "\n";
+        const auto& s1p = s1tos2.find(s1);
+        const auto& s2p = s2tos1.find(s2);
+        // std::cerr << "OK-O s1p != s1tos2.end(): " << (s1p != s1tos2.end()) << "\n";
+        // if (s1p != s1tos2.end())
+        //   std::cerr << "OK-O s1p->second == s2: " << (s1p->second == s2) << "\n";
+        // std::cerr << "OK-O s2p != s2tos1.end(): " << (s2p != s2tos1.end()) << "\n";
+        // if (s2p != s2tos1.end())
+        //   std::cerr << "OK-O s2p->second == s1: " << (s2p->second == s1) << "\n";
+        bool res = s1p != s1tos2.end() && s1p->second == s2
+          && s2p != s2tos1.end() && s2p->second == s1;
+        // std::cerr << "OK-O res: " << res << "\n";
+        return res;
       }
       /// Asserting the non-isomorphism of two states entails the
       /// production of a *proof* of the fact that they are not
@@ -258,24 +282,34 @@ namespace vcsn
       /// isomorphism between two states.
       bool are_nonisomorphic(solution_t& s, state1_t s1, state2_t s2)
       {
-        auto s1tos2 = s.s1tos2;
-        auto s2tos1 = s.s2tos1;
-        auto s1p = s1tos2.find(s1);
-        auto s2p = s2tos1.find(s2);
+        const auto& s1tos2 = s.s1tos2;
+        const auto& s2tos1 = s.s2tos1;
+        const auto& s1p = s1tos2.find(s1);
+        const auto& s2p = s2tos1.find(s2);
         return (s1p != s1tos2.end() && s1p->second != s2)
                || (s2p != s2tos1.end() && s2p->second != s1);
       }
-      bool make_isomorphic(solution_t& s, state1_t s1, state2_t s2)
+      void make_isomorphic(solution_t& s, state1_t s1, state2_t s2)
       {
+        // std::cerr << "OK-M 100\n";
         assert(! are_isomorphic(s, s1, s2));
         assert(! are_nonisomorphic(s, s1, s2));
-        auto s1tos2 = s.s1tos2;
-        auto s2tos1 = s.s2tos1;
+        auto& s1tos2 = s.s1tos2;
+        auto& s2tos1 = s.s2tos1;
+        assert(s1tos2.find(s1) == s1tos2.end());
+        assert(s2tos1.find(s2) == s2tos1.end());
+        std::cerr << "Making " << s1 << " and " << s2 << " isomorphic.\n";
         s1tos2[s1] = s2;
         s2tos1[s2] = s1;
+        assert(s1tos2.find(s1) != s1tos2.end());
+        assert(s2tos1.find(s2) != s2tos1.end());
+        // std::cerr << "Now " << s1 << " and " << s2 << " should be isomorphic.\n";
+        assert(are_isomorphic(s, s1, s2));
+        // std::cerr << "OK-M 100\n";
       }
       void develop(const move_t* latest_move)
       {
+        // std::cerr << "OK-E\n";
         if (latest_move == NULL
             || super_t::solution_.doomed)
           return;
@@ -596,29 +630,52 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
     const full_response
     get_full_response_nonsequential()
     {
-      std::cerr << "get_full_response_nonsequential\n";
-
-      fill_nouts_();
-
-      tentative_mapping_t tm;
-      tentative_reverse_mapping_t tr;
-
-      make_isomorphic(a1_.post(), a2_.post(), tm, tr);
+      isomorphism_t initial_solution = {s1tos2_t(), s2tos1_t(), false};
       try
         {
-          find_isomorphism(a1_.pre(), a2_.pre(), tm, tr);
+          // std::cerr << "OK-A 100\n";
+          isomorphism_t solution =
+            std::move(backtracker_(std::move(initial_solution)));
+          // std::cerr << "OK-A 110\n";
           full_response_.response = full_response::tag::isomorphic;
+          s1tos2_ = std::move(solution.s1tos2);
+          s2tos1_ = std::move(solution.s2tos1);
         }
-      catch (/*...*/const failure&)
+      catch (const std::out_of_range&)
         {
+          // std::cerr << "OK-B\n";
           full_response_.response = full_response::tag::nocounterexample;
         }
-      //if (are_nonsequential_states_isomorphic(a1_.pre(), a2_.pre(), tm, tr))
-      //else
-      //std::cerr << "Are they isomorphic? " << (full_response_.response == full_response::tag::isomorphic) << "\n";
-      //std::cerr << "\n";
-      return full_response_;
+      // std::cerr << "OK-C\n";
+      return full_response_;;
     }
+
+    // const full_response
+    // get_full_response_nonsequential()
+    // {
+    //   std::cerr << "get_full_response_nonsequential\n";
+
+    //   fill_nouts_();
+
+    //   tentative_mapping_t tm;
+    //   tentative_reverse_mapping_t tr;
+
+    //   make_isomorphic(a1_.post(), a2_.post(), tm, tr);
+    //   try
+    //     {
+    //       find_isomorphism(a1_.pre(), a2_.pre(), tm, tr);
+    //       full_response_.response = full_response::tag::isomorphic;
+    //     }
+    //   catch (/*...*/const failure&)
+    //     {
+    //       full_response_.response = full_response::tag::nocounterexample;
+    //     }
+    //   //if (are_nonsequential_states_isomorphic(a1_.pre(), a2_.pre(), tm, tr))
+    //   //else
+    //   //std::cerr << "Are they isomorphic? " << (full_response_.response == full_response::tag::isomorphic) << "\n";
+    //   //std::cerr << "\n";
+    //   return full_response_;
+    // }
 
     const full_response
     get_full_response_sequential()
