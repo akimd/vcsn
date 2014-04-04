@@ -62,6 +62,26 @@ namespace vcsn
     /// above, and http://stackoverflow.com/questions/17111406.
     using automaton_nocv_t = typename std::remove_cv<automaton_t>::type;
 
+
+    /*--------------------.
+    | constexpr methods.  |
+    `--------------------*/
+
+# define DEFINE(Name)                                                   \
+    template <typename... Args>                                         \
+    static constexpr                                                    \
+    auto                                                                \
+    Name(Args&&... args)                                                \
+      -> decltype(automaton_t::Name(std::forward<Args>(args)...))       \
+    {                                                                   \
+      return automaton_t::Name(std::forward<Args>(args)...);            \
+    }                                                                   \
+
+    DEFINE(null_state);
+    DEFINE(null_transition);
+
+#undef DEFINE
+
   protected:
     /// The wrapped automaton, possibly const.
     // Must be defined early to please decltype.

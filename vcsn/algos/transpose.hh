@@ -183,8 +183,6 @@ namespace vcsn
 
       DEFINE(post(), pre());
       DEFINE(pre(), post());
-      DEFINE(null_state(), null_state());
-      DEFINE(null_transition(), null_transition());
 
 #undef DEFINE
 
