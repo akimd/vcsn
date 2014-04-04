@@ -224,9 +224,12 @@ struct automaton
     return vcsn::dyn::power(aut_, n);
   }
 
-  automaton product(const automaton& rhs) const
+  static automaton product_real(const boost::python::tuple& auts)
   {
-    return vcsn::dyn::product(aut_, rhs.aut_);
+    std::vector<vcsn::dyn::automaton> as;
+    for (int i = 0; i < boost::python::len(auts); ++i)
+      as.emplace_back(boost::python::extract<automaton>(auts[i])().aut_);
+    return vcsn::dyn::product(as);
   }
 
   automaton proper(bool prune = true) const
@@ -624,7 +627,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("left_mult", &automaton::left_mult)
     .def("minimize", &automaton::minimize, minimize())
     .def("power", &automaton::power)
-    .def("product", &automaton::product)
+    .def("product_real", &automaton::product_real).staticmethod("product_real")
     .def("proper_real", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("right_mult", &automaton::right_mult)
