@@ -72,3 +72,33 @@ check_sum('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_sum('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
 check_sum('a', '\e')
 check_sum('a', '\z')
+
+
+## -------- ##
+## format.  ##
+## -------- ##
+
+def check_format(ctx, r, text, latex):
+    ctx = vcsn.context(ctx)
+    CHECK_EQ(text, ctx.ratexp(r).format('text'))
+    CHECK_EQ(latex, ctx.ratexp(r).format('latex'))
+
+check_format('lal_char(abcd)_b',
+            "abcd",
+            "abcd",
+            "a \\, b \\, c \\, d")
+
+check_format('lal_char(abc)_ratexpset<lal_char(def)_ratexpset<lal_char(xyz)_z>>',
+             "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
+             "<<<42>x>d>a+<<<51>x>d>a+(<<<42>y>e>b)*",
+             r' \langle  \langle  \langle 42 \rangle \,x \rangle \,d \rangle \,a +  \langle  \langle  \langle 51 \rangle \,x \rangle \,d \rangle \,a + \left( \langle  \langle  \langle 42 \rangle \,y \rangle \,e \rangle \,b\right)^{*}')
+
+# Check that we do support digits as letters.
+check_format('lal_char(0123)_b',
+             "0123",
+             "0123",
+             "0 \\, 1 \\, 2 \\, 3")
+check_format('lal_char(0123)_z',
+             "<0123>0123",
+             "<123>(0123)",
+             r' \langle 123 \rangle \,\left(0 \, 1 \, 2 \, 3\right)')
