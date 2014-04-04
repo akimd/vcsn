@@ -1,27 +1,5 @@
 #! /bin/sh
 
-
-## ------------------- ##
-## Standard Automata.  ##
-## ------------------- ##
-
-
-# check_stdof CONTEXT RATEXP
-# --------------------------
-# Check that vcsn cat is idempotent on the standard RATEXP.
-check_stdof ()
-{
-  run 0 '' -vcsn standard -E -C "$1" -e "$2" -o std.gv
-  cp std.gv out.exp
-  run 0 out.exp -vcsn cat -Af out.exp
-}
-
-check_stdof 'lal_char(abcd)_b' "abcd"
-check_stdof 'lal_char(abcd)_z' "<3>\\e"
-check_stdof 'lal_char(abcd)_zmin' "<3>(\\e+a)"
-
-
-
 ## ------------------ ##
 ## General Automata.  ##
 ## ------------------ ##
