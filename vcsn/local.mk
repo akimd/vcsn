@@ -70,6 +70,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/universal.hh                        \
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
+  %D%/core/automaton-decorator.hh               \
   %D%/core/crange.hh                            \
   %D%/core/fwd.hh                               \
   %D%/core/kind.hh                              \

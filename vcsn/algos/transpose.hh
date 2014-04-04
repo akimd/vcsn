@@ -6,6 +6,7 @@
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/misc/attributes.hh>
+# include <vcsn/core/automaton-decorator.hh>
 
 namespace vcsn
 {
@@ -17,11 +18,13 @@ namespace vcsn
   {
     /// Read-write on an automaton, that transposes everything.
     template <typename Aut>
-    class transpose_automaton
+    class transpose_automaton : public automaton_decorator<Aut>
     {
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
+      using super = automaton_decorator<Aut>;
+      using automaton_nocv_t = typename super::automaton_nocv_t;
 
       /// The type of the automata to produce from this kind o
       /// automata.  For instance, determinizing a
@@ -44,33 +47,7 @@ namespace vcsn
       using weightset_ptr = typename automaton_t::weightset_ptr;
 
     public:
-      transpose_automaton(automaton_t& aut)
-        : aut_{&aut}
-      {}
-
-      transpose_automaton(transpose_automaton&& aut)
-      {
-        std::swap(aut_, aut.aut_);
-      }
-
-      /// Forward constructor.
-      template <typename... Args>
-      transpose_automaton(Args&&... args)
-        : aut_{new automaton_t{std::forward<Args>(args)...}}
-      {}
-
-      transpose_automaton& operator=(transpose_automaton&& that)
-      {
-        if (this != &that)
-          *aut_ = std::move(*that.aut_);
-        return *this;
-      }
-
-      automaton_t*
-      original_automaton()
-      {
-        return aut_;
-      }
+      using super::automaton_decorator;
 
       static std::string sname()
       {
@@ -82,16 +59,6 @@ namespace vcsn
         return "transpose_automaton<" + this->aut_->vname(full) + ">";
       }
 
-    private:
-      /// Used to workaround issues with decltype, see the const_casts
-      /// above, and http://stackoverflow.com/questions/17111406.
-      using automaton_nocv_t = typename std::remove_cv<automaton_t>::type;
-
-      /// The wrapped automaton, possibly const.
-      // Must be defined early to please decltype.
-      automaton_t* aut_;
-
-    public:
       /*-------------------------------.
       | const methods that transpose.  |
       `-------------------------------*/
