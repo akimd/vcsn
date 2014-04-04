@@ -227,12 +227,13 @@ namespace vcsn
       | forwarded const methods.  |
       `--------------------------*/
 
-# define DEFINE(Name)                           \
-      auto                                      \
-      Name() const                              \
-        -> decltype(aut_->Name())               \
-      {                                         \
-        return aut_->Name();                    \
+# define DEFINE(Name)                                           \
+      template <typename... Args>                               \
+      auto                                                      \
+      Name(Args&&... args) const                                \
+        -> decltype(aut_->Name(std::forward<Args>(args)...))    \
+      {                                                         \
+        return aut_->Name(std::forward<Args>(args)...);         \
       }
 
       DEFINE(all_states);
