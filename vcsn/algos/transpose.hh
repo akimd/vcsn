@@ -79,7 +79,7 @@ namespace vcsn
 
       std::string vname(bool full = true) const
       {
-        return "transpose_automaton<" + aut_->vname(full) + ">";
+        return "transpose_automaton<" + this->aut_->vname(full) + ">";
       }
 
     private:
@@ -98,9 +98,9 @@ namespace vcsn
 # define DEFINE(Signature, Value)               \
       auto                                      \
       Signature const                           \
-      -> decltype(aut_->Value)                  \
+      -> decltype(this->aut_->Value)            \
       {                                         \
-        return aut_->Value;                     \
+        return this->aut_->Value;               \
       }
 
       DEFINE(is_initial(state_t s),          is_final(s));
@@ -116,27 +116,27 @@ namespace vcsn
       DEFINE(final_transitions(),            initial_transitions());
 
       DEFINE(in(state_t s, label_t l),
-             out(s, aut_->labelset()->transpose(l)));
+             out(s, this->aut_->labelset()->transpose(l)));
       DEFINE(out(state_t s, label_t l),
-             in(s, aut_->labelset()->transpose(l)));
+             in(s, this->aut_->labelset()->transpose(l)));
       DEFINE(get_transition(state_t s, state_t d, label_t l),
-             get_transition(d, s, aut_->labelset()->transpose(l)));
+             get_transition(d, s, this->aut_->labelset()->transpose(l)));
       DEFINE(has_transition(state_t s, state_t d, label_t l),
-             has_transition(d, s, aut_->labelset()->transpose(l)));
+             has_transition(d, s, this->aut_->labelset()->transpose(l)));
       DEFINE(label_of(transition_t t),
-             labelset()->transpose(aut_->label_of(t)));
+             labelset()->transpose(this->aut_->label_of(t)));
 
       ATTRIBUTE_PURE
       DEFINE(get_initial_weight(state_t s),
-             weightset()->transpose(aut_->get_final_weight(s)));
+             weightset()->transpose(this->aut_->get_final_weight(s)));
 
       ATTRIBUTE_PURE
       DEFINE(get_final_weight(state_t s),
-             weightset()->transpose(aut_->get_initial_weight(s)));
+             weightset()->transpose(this->aut_->get_initial_weight(s)));
 
       ATTRIBUTE_PURE
       DEFINE(weight_of(transition_t t),
-             weightset()->transpose(aut_->weight_of(t)));
+             weightset()->transpose(this->aut_->weight_of(t)));
 
 # undef DEFINE
 
@@ -145,12 +145,12 @@ namespace vcsn
       | non-const methods that transpose.  |
       `-----------------------------------*/
 
-# define DEFINE(Signature, Value)                               \
-      auto                                                      \
-      Signature                                                 \
-        -> decltype(const_cast<automaton_nocv_t*>(aut_)->Value) \
-      {                                                         \
-        return aut_->Value;                                     \
+# define DEFINE(Signature, Value)                                       \
+      auto                                                              \
+      Signature                                                         \
+        -> decltype(const_cast<automaton_nocv_t*>(this->aut_)->Value)   \
+      {                                                                 \
+        return this->aut_->Value;                                       \
       }
 
       DEFINE(set_initial(state_t s),     set_final(s));
@@ -159,50 +159,45 @@ namespace vcsn
       DEFINE(unset_final(state_t s),     unset_initial(s));
 
       DEFINE(set_weight(transition_t t, weight_t k),
-             set_weight(t, aut_->weightset()->transpose(k)));
+             set_weight(t, this->aut_->weightset()->transpose(k)));
       DEFINE(add_weight(transition_t t, weight_t k),
-             add_weight(t, aut_->weightset()->transpose(k)));
+             add_weight(t, this->aut_->weightset()->transpose(k)));
       DEFINE(lmul_weight(transition_t t, weight_t k),
-             lmul_weight(t, aut_->weightset()->transpose(k)));
+             lmul_weight(t, this->aut_->weightset()->transpose(k)));
       DEFINE(rmul_weight(transition_t t, weight_t k),
-             rmul_weight(t, aut_->weightset()->transpose(k)));
+             rmul_weight(t, this->aut_->weightset()->transpose(k)));
 
       DEFINE(del_transition(transition_t t), del_transition(t));
       DEFINE(del_transition(state_t s, state_t d, label_t l),
-             del_transition(d, s, aut_->labelset()->transpose(l)));
+             del_transition(d, s, this->aut_->labelset()->transpose(l)));
 
       DEFINE(add_transition(state_t s, state_t d, label_t l, weight_t k),
              add_transition(d, s,
-                            aut_->labelset()->transpose(l),
-                            aut_->weightset()->transpose(k)));
+                            this->aut_->labelset()->transpose(l),
+                            this->aut_->weightset()->transpose(k)));
       DEFINE(add_transition(state_t s, state_t d, label_t l),
-             add_transition(d, s, aut_->labelset()->transpose(l)));
+             add_transition(d, s, this->aut_->labelset()->transpose(l)));
 
       DEFINE(new_transition(state_t s, state_t d, label_t l, weight_t k),
              new_transition(d, s,
-                            aut_->labelset()->transpose(l),
-                            aut_->weightset()->transpose(k)));
+                            this->aut_->labelset()->transpose(l),
+                            this->aut_->weightset()->transpose(k)));
       DEFINE(new_transition(state_t s, state_t d, label_t l),
              new_transition(d, s,
-                            aut_->labelset()->transpose(l)));
+                            this->aut_->labelset()->transpose(l)));
 
       DEFINE(set_transition(state_t s, state_t d, label_t l, weight_t k),
              set_transition(d, s,
-                            aut_->labelset()->transpose(l),
-                            aut_->weightset()->transpose(k)));
+                            this->aut_->labelset()->transpose(l),
+                            this->aut_->weightset()->transpose(k)));
       DEFINE(set_initial(state_t s, weight_t k),
-             set_final(s, aut_->weightset()->transpose(k)));
+             set_final(s, this->aut_->weightset()->transpose(k)));
       DEFINE(set_final(state_t s, weight_t k),
-             set_initial(s, aut_->weightset()->transpose(k)));
+             set_initial(s, this->aut_->weightset()->transpose(k)));
       DEFINE(add_initial(state_t s, weight_t k),
-             add_final(s, aut_->weightset()->transpose(k)));
+             add_final(s, this->aut_->weightset()->transpose(k)));
       DEFINE(add_final(state_t s, weight_t k),
-             add_initial(s, aut_->weightset()->transpose(k)));
-
-
-      // Forwarded, does not transpose.
-      DEFINE(del_state(state_t s),       del_state(s));
-      DEFINE(new_state(),                new_state());
+             add_initial(s, this->aut_->weightset()->transpose(k)));
 
 # undef DEFINE
 
@@ -226,17 +221,36 @@ namespace vcsn
 
 #undef DEFINE
 
+
+
+      /*--------------------------------.
+      | Forwarded, does not transpose.  |
+      `--------------------------------*/
+
+# define DEFINE(Name)                                                   \
+      template <typename... Args>                                       \
+      auto                                                              \
+      Name(Args&&... args)                                              \
+        -> decltype(this->aut_->Name(std::forward<Args>(args)...))      \
+      {                                                                 \
+        return this->aut_->Name(std::forward<Args>(args)...);           \
+      }
+
+      DEFINE(del_state);
+      DEFINE(new_state);
+# undef DEFINE
+
       /*--------------------------.
       | forwarded const methods.  |
       `--------------------------*/
 
-# define DEFINE(Name)                                           \
-      template <typename... Args>                               \
-      auto                                                      \
-      Name(Args&&... args) const                                \
-        -> decltype(aut_->Name(std::forward<Args>(args)...))    \
-      {                                                         \
-        return aut_->Name(std::forward<Args>(args)...);         \
+# define DEFINE(Name)                                                   \
+      template <typename... Args>                                       \
+      auto                                                              \
+      Name(Args&&... args) const                                        \
+        -> decltype(this->aut_->Name(std::forward<Args>(args)...))      \
+      {                                                                 \
+        return this->aut_->Name(std::forward<Args>(args)...);           \
       }
 
       DEFINE(all_states);
