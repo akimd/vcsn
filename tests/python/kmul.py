@@ -61,7 +61,7 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 ''')
-CHECK_EQ(exp, a.left_mult(q.weight('3/4')))
+CHECK_EQ(exp, q.weight('3/4') * a)
 
 exp = vcsn.automaton(r'''
 digraph
@@ -88,7 +88,7 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 ''')
-CHECK_EQ(exp, a.right_mult(q.weight('3/4')))
+CHECK_EQ(exp, a * q.weight('3/4'))
 
 
 a = vcsn.automaton(r'''
@@ -148,7 +148,7 @@ digraph
   3 -> F3
 }
 ''')
-CHECK_EQ(exp, a.left_mult(r.weight('3.4')).sort())
+CHECK_EQ(exp, (r.weight('3.4') * a).sort())
 
 exp = vcsn.automaton(r'''
 digraph
@@ -177,12 +177,12 @@ digraph
   3 -> F3 [label = "<3.4>"]
 }
 ''')
-CHECK_EQ(exp, a.right_mult(r.weight('3.4')).sort())
+CHECK_EQ(exp, (a * r.weight('3.4')).sort())
 
 ## -------- ##
 ## ratexp.  ##
 ## -------- ##
 
 r = ctx.ratexp('<x>(<y>a)*<z>')
-CHECK_EQ(ctx.ratexp('<xx>(<y>a)*<z>'), r.left_mult(ctx.weight('x')))
-CHECK_EQ(ctx.ratexp('<x>(<y>a)*<zz>'), r.right_mult(ctx.weight('z')))
+CHECK_EQ(ctx.ratexp('<xx>(<y>a)*<z>'), ctx.weight('x') * r)
+CHECK_EQ(ctx.ratexp('<x>(<y>a)*<zz>'), r * ctx.weight('z'))

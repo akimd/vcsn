@@ -7,6 +7,7 @@ from vcsn_cxx import automaton, weight
 from vcsn import is_equal, info_to_dict, dot_to_svg
 
 def automaton_mul(self, rhs):
+    """Support both "aut * aut" and "aut * weight"."""
     if isinstance(rhs, weight):
         return self.right_mult(rhs)
     else:
