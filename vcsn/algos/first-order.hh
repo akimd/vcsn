@@ -406,7 +406,7 @@ namespace vcsn
           }
       }
 
-      VCSN_RAT_VISIT(intersection, e)
+      VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = first_order(e.head());
         for (const auto& r: e.tail())
@@ -421,7 +421,7 @@ namespace vcsn
                 auto i = rhs.polynomials.find(p.first);
                 if (i != std::end(rhs.polynomials))
                   res_.polynomials[p.first]
-                    = ps_.intersection(p.second, i->second);
+                    = ps_.conjunction(p.second, i->second);
               }
             res_.constant = ws_.mul(lhs.constant, rhs.constant);
           }

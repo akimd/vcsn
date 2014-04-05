@@ -17,7 +17,7 @@ namespace vcsn
     {
       atom = 0;
       complement = 0;
-      intersection = 0;
+      conjunction = 0;
       lweight = 0;
       ldiv = 0;
       one = 0;
@@ -49,9 +49,9 @@ namespace vcsn
         c->accept(*this);
     }
 
-    VISIT(intersection)
+    VISIT(conjunction)
     {
-      ++intersection;
+      ++conjunction;
       for (const auto& c: v)
         c->accept(*this);
     }

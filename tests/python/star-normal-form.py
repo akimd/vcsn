@@ -27,7 +27,7 @@ check('\e*', '\e')
 check('(a*b*)*', '(a+b)*')
 check('(a*b*)**', '(a+b)*')
 
-# We don't support intersection.
+# We don't support conjunction.
 XFAIL(lambda: ctx.ratexp("a*&b*").star_normal_form())
 
 ## FIXME: This is crap, it does not work when there are weights!!!

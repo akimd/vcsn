@@ -177,16 +177,16 @@ namespace vcsn
       return res;
     }
 
-    /// The intersection of polynomials \a l and \a r.
+    /// The conjunction of polynomials \a l and \a r.
     /// Not valid for all the labelsets.
     value_t
-    intersection(const value_t& l, const value_t& r) const
+    conjunction(const value_t& l, const value_t& r) const
     {
       value_t res;
       for (auto i: l)
         for (auto j: r)
           add_weight(res,
-                     labelset()->intersection(i.first, j.first),
+                     labelset()->conjunction(i.first, j.first),
                      weightset()->mul(i.second, j.second));
       return res;
     }

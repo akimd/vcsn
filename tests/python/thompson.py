@@ -17,7 +17,7 @@ def xfail(re):
     r = ctx.ratexp(re)
     XFAIL(lambda: r.thompson())
 
-# We don't support intersection.
+# We don't support conjunction.
 xfail('a*&b*')
 
 ## --- ##

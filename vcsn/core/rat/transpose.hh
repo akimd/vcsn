@@ -70,11 +70,11 @@ namespace vcsn
           res_ = rs_.add(res_, transpose(v));
       }
 
-      VCSN_RAT_VISIT(intersection, e)
+      VCSN_RAT_VISIT(conjunction, e)
       {
         res_ = transpose(e.head());
         for (auto v: e.tail())
-          res_ = rs_.intersection(res_, transpose(v));
+          res_ = rs_.conjunction(res_, transpose(v));
       }
 
       VCSN_RAT_VISIT(shuffle, e)

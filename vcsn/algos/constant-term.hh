@@ -87,7 +87,7 @@ namespace vcsn
       VCSN_RAT_UNSUPPORTED(ldiv)
       VCSN_RAT_UNSUPPORTED(transposition)
 
-      VCSN_RAT_VISIT(intersection, v)
+      VCSN_RAT_VISIT(conjunction, v)
       {
         // FIXME: Code duplication with prod_t.
         weight_t res = ws_.one();

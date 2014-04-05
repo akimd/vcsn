@@ -100,7 +100,7 @@ namespace vcsn
              const typename RatExpSet::ratexp_t& lhs,
              const typename RatExpSet::ratexp_t& rhs)
   {
-    return rs.intersection(lhs, rs.complement(rhs));
+    return rs.conjunction(lhs, rs.complement(rhs));
   }
 
   namespace dyn

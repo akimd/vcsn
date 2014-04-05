@@ -209,7 +209,7 @@ check('(?@lal_char(ab)_b)a+b',
   3 -> F3
 }''')
 
-# B: intersection.
+# B: conjunction.
 xfail('(?@lal_char(abc)_b)a*&b*')
 
 # B: "abc".

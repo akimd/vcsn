@@ -20,10 +20,10 @@ namespace vcsn
         h = "vcsn/algos/" Out ".hh"
       ALGO("chain_ratexp", "concatenate");
       ALGO("concatenate_ratexp", "concatenate");
+      ALGO("conjunction_ratexp", "product");
       ALGO("copy_ratexp", "copy");
       ALGO("infiltration", "product");
       ALGO("info_ratexp", "info");
-      ALGO("intersection_ratexp", "product");
       ALGO("is_valid_ratexp", "is-valid");
       ALGO("left_mult", "left-mult");
       ALGO("left_mult_ratexp", "left-mult");
@@ -31,8 +31,8 @@ namespace vcsn
       ALGO("make_context", "make-context");
       ALGO("print_ratexp", "print");
       ALGO("print_weight", "print");
-      ALGO("product_vector", "product");
       ALGO("product3", "product");
+      ALGO("product_vector", "product");
       ALGO("right_mult", "left-mult");
       ALGO("right_mult_ratexp", "left-mult");
       ALGO("shuffle", "product");

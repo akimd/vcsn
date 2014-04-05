@@ -199,7 +199,7 @@ namespace vcsn
       << "\nsize: " << sizer(e)
       DEFINE(sum)
       DEFINE(shuffle)
-      DEFINE(intersection)
+      DEFINE(conjunction)
       DEFINE(prod)
       DEFINE(star)
       DEFINE(complement)

@@ -41,7 +41,7 @@ namespace vcsn
           star_         = "^{*}";
           complement_   = "^{c}";
           transposition_ = "^{T}";
-          intersection_ = " \\cap ";
+          conjunction_  = " \\cap ";
           shuffle_      = " \\between ";
           product_      = ctx_.is_law ? " \\cdot " : " \\, ";
           sum_          = " + ";
@@ -62,7 +62,7 @@ namespace vcsn
           star_         = "*";
           complement_   = "{c}";
           transposition_ = "{T}";
-          intersection_ = "&";
+          conjunction_  = "&";
           shuffle_      = ":";
           product_      = ctx_.is_law ? "." : "";
           sum_          = "+";
@@ -90,7 +90,7 @@ namespace vcsn
               return precedence_t::Type;
             CASE(atom);
             CASE(complement);
-            CASE(intersection);
+            CASE(conjunction);
             CASE(ldiv);
             CASE(lweight);
             CASE(one);

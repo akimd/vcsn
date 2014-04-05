@@ -174,12 +174,12 @@ terminator:
 
 exp:
   exp "." exp                 { $$ = MAKE(mul, $1.exp, $3.exp); }
-| exp "&" exp                 { $$ = MAKE(intersection, $1.exp, $3.exp); }
+| exp "&" exp                 { $$ = MAKE(conjunction, $1.exp, $3.exp); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
-| exp "%" exp                 { $$ = MAKE(intersection,
+| exp "%" exp                 { $$ = MAKE(conjunction,
                                           $1.exp, MAKE(complement, $3.exp)); }
 | weights exp %prec LWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }
 | exp weights %prec RWEIGHT   { $$ = MAKE(mul, $1.exp, $2.exp); }

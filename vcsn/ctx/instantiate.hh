@@ -244,7 +244,7 @@ namespace vcsn
         REGISTER(first_order, rs_t, bool);
         REGISTER(info, aut_t, std::ostream);
         REGISTER(info_ratexp, rs_t, std::ostream);
-        REGISTER(intersection_ratexp, rs_t, rs_t);
+        REGISTER(conjunction_ratexp, rs_t, rs_t);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);

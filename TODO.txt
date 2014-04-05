@@ -177,7 +177,7 @@ crange should not feature size and empty if !VCSN_DEBUG.
 ** star-normal-form
 It does not work for weighted ratexps.
 
-** intersection
+** conjunction
 Check star-normal-form, standard, thompson.  Check the trivial identities.
 What should be the definition of the B (breaking/splitting) operator?  I
 have taken a definition which is modeled after the one of concatenation (on
@@ -275,7 +275,7 @@ We need to hide the map, and expose a polynomial_t type:
     }
 
 likewise with assignements.  The problem came from derivation with
-intersection:
+conjunction:
 
       virtual void
       visit(const hadam_t& e)

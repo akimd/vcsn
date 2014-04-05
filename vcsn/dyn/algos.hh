@@ -64,6 +64,9 @@ namespace vcsn
     /// Concatenate two ratexps.
     ratexp concatenate(const ratexp& lhs, const ratexp& rhs);
 
+    /// The Hadamard product of ratexps \a lhs and \a rhs.
+    ratexp conjunction(const ratexp& lhs, const ratexp& rhs);
+
     /// The weight associated to the empty word in \a e.
     weight constant_term(const ratexp& e);
 
@@ -156,9 +159,6 @@ namespace vcsn
 
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
-
-    /// The Hadamard product of ratexps \a lhs and \a rhs.
-    ratexp intersection(const ratexp& lhs, const ratexp& rhs);
 
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);

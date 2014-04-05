@@ -52,7 +52,7 @@ namespace vcsn
 
       DEFINE(atom);
       DEFINE(complement)   { visit_unary(v); }
-      DEFINE(intersection) { visit_variadic(v); }
+      DEFINE(conjunction)  { visit_variadic(v); }
       DEFINE(ldiv)         { visit_variadic(v); }
       DEFINE(lweight);
       DEFINE(one)          { visit_nullary(v); }

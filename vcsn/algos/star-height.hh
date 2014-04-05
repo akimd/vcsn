@@ -42,7 +42,7 @@ namespace vcsn
 
       DEFINE(atom)         { (void) v; }
       DEFINE(complement)   { v.sub()->accept(*this); }
-      DEFINE(intersection) { visit_variadic(v); }
+      DEFINE(conjunction)  { visit_variadic(v); }
       DEFINE(ldiv)         { visit_variadic(v); }
       DEFINE(lweight)      { v.sub()->accept(*this); }
       DEFINE(one)          { (void) v; }

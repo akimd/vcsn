@@ -69,9 +69,9 @@ namespace dyn
       return rs_.mul(down(l), down(r));
     }
 
-    DEFINE::intersection(value_t l, value_t r) const -> value_t
+    DEFINE::conjunction(value_t l, value_t r) const -> value_t
     {
-      return rs_.intersection(down(l), down(r));
+      return rs_.conjunction(down(l), down(r));
     }
 
     DEFINE::shuffle(value_t l, value_t r) const -> value_t

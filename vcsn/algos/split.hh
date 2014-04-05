@@ -151,7 +151,7 @@ namespace vcsn
       ///
       /// Returns split(l) x split(r).
       /// FIXME: This is inefficient, we split the lhs way too often.
-      polynomial_t intersection(const ratexp_t& l, const ratexp_t& r)
+      polynomial_t conjunction(const ratexp_t& l, const ratexp_t& r)
       {
         // B(l).
         polynomial_t l_split = split(l);
@@ -163,7 +163,7 @@ namespace vcsn
         // res = proper(B(l))&r.
         polynomial_t res;
         for (const auto& e: l_split)
-          ps_.add_weight(res, rs_.intersection(e.first, r), e.second);
+          ps_.add_weight(res, rs_.conjunction(e.first, r), e.second);
         // res += constant-term(B(l))B(r)
         ps_.add_weight(res,
                        ps_.lmul(l_split_const, split(r)));
@@ -173,20 +173,20 @@ namespace vcsn
       /// The split-product of \a l with \a r.
       ///
       /// Returns l x split(r).
-      polynomial_t intersection(const polynomial_t& l, const ratexp_t& r)
+      polynomial_t conjunction(const polynomial_t& l, const ratexp_t& r)
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_weight(res, ps_.lmul(m.second, intersection(m.first, r)));
+          ps_.add_weight(res, ps_.lmul(m.second, conjunction(m.first, r)));
         return res;
       }
 
-      /// Handle an n-ary intersection.
-      VCSN_RAT_VISIT(intersection, e)
+      /// Handle an n-ary conjunction.
+      VCSN_RAT_VISIT(conjunction, e)
       {
-        auto res = intersection(e[0], e[1]);
+        auto res = conjunction(e[0], e[1]);
         for (unsigned i = 2, n = e.size(); i < n; ++i)
-          res = intersection(res, e[i]);
+          res = conjunction(res, e[i]);
         res_ = std::move(res);
       }
 

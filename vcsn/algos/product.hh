@@ -679,19 +679,19 @@ namespace vcsn
   }
 
 
-  /*-------------------------------.
-  | intersection(ratexp, ratexp).  |
-  `-------------------------------*/
+  /*------------------------------.
+  | conjunction(ratexp, ratexp).  |
+  `------------------------------*/
 
   /// Intersection/Hadamard product of ratexps.
   template <typename RatExpSet>
   inline
   typename RatExpSet::ratexp_t
-  intersection(const RatExpSet& rs,
+  conjunction(const RatExpSet& rs,
                const typename RatExpSet::ratexp_t& lhs,
                const typename RatExpSet::ratexp_t& rhs)
   {
-    return rs.intersection(lhs, rhs);
+    return rs.conjunction(lhs, rhs);
   }
 
   namespace dyn
@@ -701,17 +701,17 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSetLhs, typename RatExpSetRhs>
       ratexp
-      intersection_ratexp(const ratexp& lhs, const ratexp& rhs)
+      conjunction_ratexp(const ratexp& lhs, const ratexp& rhs)
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
         auto rs = join(l.get_ratexpset(), r.get_ratexpset());
         auto lr = rs.conv(l.get_ratexpset(), l.ratexp());
         auto rr = rs.conv(r.get_ratexpset(), r.ratexp());
-        return make_ratexp(rs, intersection(rs, lr, rr));
+        return make_ratexp(rs, conjunction(rs, lr, rr));
       }
 
-      REGISTER_DECLARE(intersection_ratexp,
+      REGISTER_DECLARE(conjunction_ratexp,
                        (const ratexp&, const ratexp&) -> ratexp);
     }
   }

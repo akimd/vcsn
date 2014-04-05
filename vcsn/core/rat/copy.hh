@@ -74,7 +74,7 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(intersection) { copy_variadic(v); }
+      DEFINE(conjunction)  { copy_variadic(v); }
       DEFINE(ldiv)         { copy_variadic(v); }
       DEFINE(prod)         { copy_variadic(v); }
       DEFINE(shuffle)      { copy_variadic(v); }

@@ -348,6 +348,11 @@ struct ratexp
     return vcsn::dyn::concatenate(r_, rhs.r_);
   }
 
+  ratexp conjunction(const ratexp& rhs) const
+  {
+    return vcsn::dyn::conjunction(r_, rhs.r_);
+  }
+
   weight constant_term() const;
 
   polynomial derivation(const std::string& s, bool breaking = true) const
@@ -386,11 +391,6 @@ struct ratexp
     std::ostringstream os;
     vcsn::dyn::print(r_, os, format);
     return os.str();
-  }
-
-  ratexp intersection(const ratexp& rhs) const
-  {
-    return vcsn::dyn::intersection(r_, rhs.r_);
   }
 
   bool is_equivalent(const ratexp& rhs) const
@@ -659,6 +659,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
      bp::init<const context&, const std::string&>())
     .def("chain", &ratexp::chain)
     .def("concatenate", &ratexp::concatenate)
+    .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())
@@ -667,7 +668,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("expand", &ratexp::expand)
     .def("first_order", &ratexp::first_order, first_order())
     .def("format", &ratexp::format)
-    .def("intersection", &ratexp::intersection)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)

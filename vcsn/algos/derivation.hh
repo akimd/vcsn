@@ -118,7 +118,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(intersection, e)
+      VCSN_RAT_VISIT(conjunction, e)
       {
         // The first polynomial.
 	e.head()->accept(*this);
@@ -127,7 +127,7 @@ namespace vcsn
           {
             const auto& v = e[i];
             v->accept(*this);
-            res = ps_.intersection(res, res_);
+            res = ps_.conjunction(res, res_);
           }
         res_ = std::move(res);
       }

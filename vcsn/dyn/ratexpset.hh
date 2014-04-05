@@ -51,7 +51,7 @@ namespace detail
     virtual value_t add(value_t l, value_t r) const = 0;
     /// Explicit product.
     virtual value_t mul(value_t l, value_t r) const = 0;
-    virtual value_t intersection(value_t l, value_t r) const = 0;
+    virtual value_t conjunction(value_t l, value_t r) const = 0;
     virtual value_t shuffle(value_t l, value_t r) const = 0;
     virtual value_t ldiv(value_t l, value_t r) const = 0;
     virtual value_t rdiv(value_t l, value_t r) const = 0;
@@ -123,7 +123,7 @@ namespace detail
 
     virtual value_t mul(value_t l, value_t r) const override;
 
-    virtual value_t intersection(value_t l, value_t r) const override;
+    virtual value_t conjunction(value_t l, value_t r) const override;
 
     virtual value_t shuffle(value_t l, value_t r) const override;
 

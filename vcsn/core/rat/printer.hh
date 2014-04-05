@@ -58,7 +58,7 @@ namespace vcsn
 
       DEFINE(atom);
       DEFINE(complement)    { print(v, complement_); }
-      DEFINE(intersection)  { print(v, intersection_); }
+      DEFINE(conjunction)   { print(v, conjunction_); }
       DEFINE(ldiv)          { print(v, ldiv_); }
       DEFINE(lweight);
       DEFINE(one);
@@ -83,7 +83,7 @@ namespace vcsn
       {
         sum,
         shuffle,
-        intersection,
+        conjunction,
         ldiv,
         prod,
         lweight,
@@ -148,7 +148,7 @@ namespace vcsn
       const char* star_ = nullptr;
       const char* complement_ = nullptr;
       const char* transposition_ = nullptr;
-      const char* intersection_ = nullptr;
+      const char* conjunction_ = nullptr;
       const char* shuffle_ = nullptr;
       const char* product_ = nullptr;
       const char* sum_ = nullptr;

@@ -80,7 +80,7 @@ ab(<f>\e) => (ab)<f>
 \e<f> => <f>\e
 a<f> => <f>a
 
-# "Trivial identities": intersection.
+# "Trivial identities": conjunction.
 \z&<f>\e => \z
 <f>\e&\z => \z
 

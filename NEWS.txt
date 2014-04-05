@@ -4,6 +4,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-04-05
+** ratexps conjunctions
+The "intersection" operation on ratexps is renamed as "conjunction".
+
 * 2014-03-28
 ** Improve treatment of nullable labelsets
 As introduced earlier, nullablesets are now written "lan<...>", for instance

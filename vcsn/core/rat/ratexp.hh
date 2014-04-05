@@ -39,7 +39,7 @@ namespace vcsn
         return vcsn::rat::is_variadic(type());
       }
 
-      /// Whether sum, prod, intersection, shuffle, star.
+      /// Whether sum, prod, conjunction, shuffle, star.
       bool is_inner() const
       {
         type_t t = type();

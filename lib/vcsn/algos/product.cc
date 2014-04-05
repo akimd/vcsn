@@ -42,11 +42,11 @@ namespace vcsn
       return detail::power_registry().call(aut, n);
     }
 
-    REGISTER_DEFINE(intersection_ratexp);
+    REGISTER_DEFINE(conjunction_ratexp);
     ratexp
-    intersection(const ratexp& lhs, const ratexp& rhs)
+    conjunction(const ratexp& lhs, const ratexp& rhs)
     {
-      return detail::intersection_ratexp_registry().call(lhs, rhs);
+      return detail::conjunction_ratexp_registry().call(lhs, rhs);
     }
   }
 }

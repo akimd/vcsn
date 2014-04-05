@@ -45,7 +45,7 @@ namespace vcsn
     DEFINE(atom);
     DEFINE(complement);
     DEFINE(inner);
-    DEFINE(intersection);
+    DEFINE(conjunction);
     DEFINE(leaf);
     DEFINE(ldiv);
     DEFINE(lweight);
@@ -187,7 +187,7 @@ namespace vcsn
     value_t add(value_t l, value_t r) const;
     value_t mul(value_t l, value_t r) const;
     value_t concat(value_t l, value_t r) const;
-    value_t intersection(value_t l, value_t r) const;
+    value_t conjunction(value_t l, value_t r) const;
     value_t shuffle(value_t l, value_t r) const;
     value_t ldiv(value_t l, value_t r) const;
     value_t rdiv(value_t l, value_t r) const;
@@ -201,7 +201,7 @@ namespace vcsn
   private:
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
-    ///               Must be sum, intersection, shuffle, or prod.
+    ///               Must be sum, conjunction, shuffle, or prod.
     template <exp::type_t Type>
     void gather(ratexps_t& res, value_t v) const;
 

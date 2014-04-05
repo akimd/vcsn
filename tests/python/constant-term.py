@@ -42,7 +42,7 @@ check('x(y+y)z', '<x>(<y>a*+<y>b*)<z>')
 # Test mul.
 check('xy', '<x>a*<y>b*')
 
-# Test intersection.
+# Test conjunction.
 check('\z', '<x>a&<y>b')
 check('xy', '<x>a*&<y>b*')
 

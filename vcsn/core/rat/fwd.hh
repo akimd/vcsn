@@ -35,7 +35,7 @@ namespace vcsn
       sum,
       prod,
       ldiv,
-      intersection,
+      conjunction,
       shuffle,
       star,
       transposition,
@@ -62,7 +62,7 @@ namespace vcsn
     /// Whether one of the variadic types.
     constexpr bool is_variadic(type_t t)
     {
-      return (t == type_t::intersection
+      return (t == type_t::conjunction
               || t == type_t::ldiv
               || t == type_t::prod
               || t == type_t::shuffle
@@ -123,7 +123,7 @@ namespace vcsn
     using prod = variadic<type_t::prod, Label, Weight>;
 
     template <typename Label, typename Weight>
-    using intersection = variadic<type_t::intersection, Label, Weight>;
+    using conjunction = variadic<type_t::conjunction, Label, Weight>;
 
     template <typename Label, typename Weight>
     using ldiv = variadic<type_t::ldiv, Label, Weight>;

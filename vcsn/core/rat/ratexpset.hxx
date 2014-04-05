@@ -178,7 +178,7 @@ namespace vcsn
     return res;
   }
 
-  DEFINE::intersection(value_t l, value_t r) const
+  DEFINE::conjunction(value_t l, value_t r) const
     -> value_t
   {
     value_t res = nullptr;
@@ -213,7 +213,7 @@ namespace vcsn
       res = zero();
     // END: Trivial Identity
     else
-      res = std::make_shared<intersection_t>(gather<type_t::intersection>(l, r));
+      res = std::make_shared<conjunction_t>(gather<type_t::conjunction>(l, r));
     return res;
   }
 

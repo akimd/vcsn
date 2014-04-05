@@ -86,7 +86,7 @@ namespace vcsn
         res_ = std::move(res);
       }
 
-      VCSN_RAT_VISIT(intersection, v)
+      VCSN_RAT_VISIT(conjunction, v)
       {
         auto res = expand(v.head());
         for (auto c: v.tail())
@@ -95,7 +95,7 @@ namespace vcsn
             for (const auto& l: res)
               for (const auto& r: expand(c))
                 ps_.add_weight(sum,
-                               rs_.intersection(l.first, r.first),
+                               rs_.conjunction(l.first, r.first),
                                ws_.mul(l.second, r.second));
             res = sum;
           }
