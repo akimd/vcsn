@@ -15,25 +15,25 @@
 namespace vcsn
 {
 
-  template <typename... LabelSets>
+  template <typename... ValueSets>
   class tupleset
   {
   public:
-    using labelsets_t = std::tuple<LabelSets...>;
-    using indices_t = vcsn::detail::make_index_sequence<sizeof...(LabelSets)>;
+    using valuesets_t = std::tuple<ValueSets...>;
+    using indices_t = vcsn::detail::make_index_sequence<sizeof...(ValueSets)>;
     template <std::size_t... I>
     using seq = vcsn::detail::index_sequence<I...>;
 
-    /// The Ith labelset type.
+    /// The Ith valueset type.
     template <std::size_t I>
-    using labelset_t = typename std::tuple_element<I, labelsets_t>::type;
+    using valueset_t = typename std::tuple_element<I, valuesets_t>::type;
 
   public:
     using self_type = tupleset;
-    using value_t = std::tuple<typename LabelSets::value_t...>;
+    using value_t = std::tuple<typename ValueSets::value_t...>;
     using kind_t = labels_are_tuples;
 
-    tupleset(LabelSets... ls)
+    tupleset(ValueSets... ls)
       : sets_(ls...)
     {}
 
@@ -191,7 +191,7 @@ namespace vcsn
       return v ? one() : zero();
     }
 
-    /// Read one letter from i, return the corresponding label.
+    /// Read one letter from i, return the corresponding value.
     value_t
     conv(std::istream& i) const
     {
@@ -224,7 +224,7 @@ namespace vcsn
     {
       std::string res = "lat<";
       const char *sep = "";
-      for (auto n: {(labelset_t<I>::sname())...})
+      for (auto n: {(valueset_t<I>::sname())...})
         {
           res += sep;
           res += n;
@@ -253,14 +253,14 @@ namespace vcsn
     static tupleset make_(std::istream& i, seq<I...>)
     {
       return {((eat_separator_<I>(i, '<', ','),
-                labelset_t<I>::make(i)))...};
+                valueset_t<I>::make(i)))...};
     }
 
     template <std::size_t... I>
     static bool
     equals_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {(labelset_t<I>::equals(std::get<I>(l),
+      for (auto n: {(valueset_t<I>::equals(std::get<I>(l),
                                            std::get<I>(r)))...})
         if (!n)
           return false;
@@ -271,7 +271,7 @@ namespace vcsn
     static bool
     less_than_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {(labelset_t<I>::less_than(std::get<I>(l),
+      for (auto n: {(valueset_t<I>::less_than(std::get<I>(l),
                                               std::get<I>(r)))...})
         if (n)
           return true;
@@ -283,7 +283,7 @@ namespace vcsn
     hash_(const value_t& v, seq<I...>)
     {
       std::size_t res = 0;
-      for (auto h: {(labelset_t<I>::hash(std::get<I>(v)))...})
+      for (auto h: {(valueset_t<I>::hash(std::get<I>(v)))...})
         std::hash_combine(res, h);
       return res;
     }
@@ -292,14 +292,14 @@ namespace vcsn
     static value_t
     special_(seq<I...>)
     {
-      return std::make_tuple((labelset_t<I>::special())...);
+      return std::make_tuple((valueset_t<I>::special())...);
     }
 
     template <std::size_t... I>
     static bool
     is_special_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(labelset_t<I>::is_special(std::get<I>(l)))...})
+      for (auto n: {(valueset_t<I>::is_special(std::get<I>(l)))...})
         if (!n)
           return false;
       return true;
@@ -326,21 +326,21 @@ namespace vcsn
     static constexpr bool
     has_one_(seq<I...>)
     {
-      return all_<labelset_t<I>::has_one()...>();
+      return all_<valueset_t<I>::has_one()...>();
     }
 
     template <std::size_t... I>
     static value_t
     one_(seq<I...>)
     {
-      return std::make_tuple(labelset_t<I>::one()...);
+      return std::make_tuple(valueset_t<I>::one()...);
     }
 
     template <std::size_t... I>
     static bool
     is_one_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(labelset_t<I>::is_one(std::get<I>(l)))...})
+      for (auto n: {(valueset_t<I>::is_one(std::get<I>(l)))...})
         if (!n)
           return false;
       return true;
@@ -350,7 +350,7 @@ namespace vcsn
     static bool
     show_one_(seq<I...>)
     {
-      for (auto n: {(labelset_t<I>::show_one())...})
+      for (auto n: {(valueset_t<I>::show_one())...})
         if (n)
           return true;
       return false;
@@ -541,7 +541,7 @@ namespace vcsn
       return rhs;
     }
 
-    labelsets_t sets_;
+    valuesets_t sets_;
   };
 
 }

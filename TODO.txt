@@ -200,9 +200,6 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 Currently tupleset does not define a one, even if all the members
 do.  Adjust is-eps-acyclic.
 
-** tupleset: it's about ValueSet
-Rename LabelSets etc. to ValueSets to reflect its generality.
-
 * Refactoring
 ** Zip iterators
 We have several places where we want to traverse several maps with the same
