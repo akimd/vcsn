@@ -7,15 +7,6 @@
 # include <vcsn/misc/raise.hh> // pass
 # include <vcsn/misc/tuple.hh>
 
-# if 0
-#  include <vcsn/misc/echo.hh>
-# else
-#  undef SHOWH
-#  define SHOWH(Args)
-#  undef V
-#  define V(Args)
-# endif
-
 namespace vcsn
 {
 
@@ -86,7 +77,6 @@ namespace vcsn
       {
         if (next_() == -1)
           {
-            SHOWH("Step");
             step_();
             align_();
           }
@@ -174,7 +164,6 @@ namespace vcsn
         while (!is_done_)
           {
             auto k2 = align_(k, indices_t{});
-            SHOWH(V(k) << V(k2));
             if (k == k2)
               // We have found a common key for all maps.
               break;
@@ -205,11 +194,8 @@ namespace vcsn
         while (first != std::get<I>(ends_) && first->first < k)
           ++first;
         if (first == std::get<I>(ends_))
-          {
-            // Nothing left.
-            SHOWH("Done: " << V(I) << V(k));
-            done_();
-          }
+          // Nothing left.
+          done_();
         else
           // Found something, return its key.
           k = first->first;
