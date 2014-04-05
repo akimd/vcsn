@@ -10,6 +10,13 @@ namespace vcsn
   public:
     /// The type of automaton to wrap.
     using automaton_t = Aut;
+
+  protected:
+    /// The wrapped automaton, possibly const.
+    // Must be defined early to please decltype.
+    automaton_t* aut_;
+
+  public:
     /// The type of the automata to produce from this kind o
     /// automata.  For instance, determinizing a
     /// transpose_automaton<const mutable_automaton<Ctx>> should
@@ -75,17 +82,57 @@ namespace vcsn
       -> decltype(automaton_t::Name(std::forward<Args>(args)...))       \
     {                                                                   \
       return automaton_t::Name(std::forward<Args>(args)...);            \
-    }                                                                   \
+    }
 
     DEFINE(null_state);
     DEFINE(null_transition);
 
 #undef DEFINE
 
-  protected:
-    /// The wrapped automaton, possibly const.
-    // Must be defined early to please decltype.
-    automaton_t* aut_;
+    /*----------------.
+    | const methods.  |
+    `----------------*/
+
+# define DEFINE(Name)                                           \
+    template <typename... Args>                                 \
+    auto                                                        \
+    Name(Args&&... args) const                                  \
+      -> decltype(aut_->Name(std::forward<Args>(args)...))      \
+    {                                                           \
+      return aut_->Name(std::forward<Args>(args)...);           \
+    }
+
+    DEFINE(all_states);
+    DEFINE(all_transitions);
+    DEFINE(context);
+    DEFINE(labelset);
+    DEFINE(num_all_states);
+    DEFINE(num_finals);
+    DEFINE(num_initials);
+    DEFINE(num_states);
+    DEFINE(num_transitions);
+    DEFINE(states);
+    DEFINE(transitions);
+    DEFINE(weightset);
+# undef DEFINE
+
+
+    /*--------------------------------.
+    | Forwarded, does not transpose.  |
+    `--------------------------------*/
+
+# define DEFINE(Name)                                           \
+    template <typename... Args>                                 \
+    auto                                                        \
+    Name(Args&&... args)                                        \
+      -> decltype(aut_->Name(std::forward<Args>(args)...))      \
+    {                                                           \
+      return aut_->Name(std::forward<Args>(args)...);           \
+    }
+
+    DEFINE(del_state);
+    DEFINE(new_state);
+# undef DEFINE
   };
 
 }

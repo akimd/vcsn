@@ -185,52 +185,6 @@ namespace vcsn
       DEFINE(pre(), post());
 
 #undef DEFINE
-
-
-
-      /*--------------------------------.
-      | Forwarded, does not transpose.  |
-      `--------------------------------*/
-
-# define DEFINE(Name)                                                   \
-      template <typename... Args>                                       \
-      auto                                                              \
-      Name(Args&&... args)                                              \
-        -> decltype(this->aut_->Name(std::forward<Args>(args)...))      \
-      {                                                                 \
-        return this->aut_->Name(std::forward<Args>(args)...);           \
-      }
-
-      DEFINE(del_state);
-      DEFINE(new_state);
-# undef DEFINE
-
-      /*--------------------------.
-      | forwarded const methods.  |
-      `--------------------------*/
-
-# define DEFINE(Name)                                                   \
-      template <typename... Args>                                       \
-      auto                                                              \
-      Name(Args&&... args) const                                        \
-        -> decltype(this->aut_->Name(std::forward<Args>(args)...))      \
-      {                                                                 \
-        return this->aut_->Name(std::forward<Args>(args)...);           \
-      }
-
-      DEFINE(all_states);
-      DEFINE(all_transitions);
-      DEFINE(context);
-      DEFINE(labelset);
-      DEFINE(num_all_states);
-      DEFINE(num_finals);
-      DEFINE(num_initials);
-      DEFINE(num_states);
-      DEFINE(num_transitions);
-      DEFINE(states);
-      DEFINE(transitions);
-      DEFINE(weightset);
-# undef DEFINE
     };
   }
 
