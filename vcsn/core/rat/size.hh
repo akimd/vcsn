@@ -23,7 +23,7 @@ namespace vcsn
       template <type_t Type>
       using unary_t = typename super_type::template unary_t<Type>;
       template <type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
       /// Entry point: return the size of \a v.
@@ -50,16 +50,16 @@ namespace vcsn
 
       DEFINE(atom);
       DEFINE(complement)   { visit_unary(v); }
-      DEFINE(intersection) { visit_nary(v); }
-      DEFINE(ldiv)    { visit_nary(v); }
+      DEFINE(intersection) { visit_variadic(v); }
+      DEFINE(ldiv)         { visit_variadic(v); }
       DEFINE(lweight);
       DEFINE(one);
-      DEFINE(prod)         { visit_nary(v); };
+      DEFINE(prod)         { visit_variadic(v); };
       DEFINE(rweight);
-      DEFINE(shuffle)      { visit_nary(v); };
+      DEFINE(shuffle)      { visit_variadic(v); };
       DEFINE(star)         { visit_unary(v); }
-      DEFINE(sum)          { visit_nary(v); };
-      DEFINE(transposition)    { visit_unary(v); }
+      DEFINE(sum)          { visit_variadic(v); };
+      DEFINE(transposition){ visit_unary(v); }
       DEFINE(zero);
 
 # undef DEFINE
@@ -70,7 +70,7 @@ namespace vcsn
 
       /// Traverse variadic node.
       template <rat::exp::type_t Type>
-      void visit_nary(const nary_t<Type>& n);
+      void visit_variadic(const variadic_t<Type>& n);
 
       size_t size_;
     };

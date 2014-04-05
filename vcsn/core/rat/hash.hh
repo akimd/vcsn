@@ -21,7 +21,7 @@ namespace vcsn
       using node_t = typename super_type::node_t;
       using inner_t = typename super_type::inner_t;
       template <type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
       template <type_t Type>
       using unary_t = typename super_type::template unary_t<Type>;
       template <type_t Type>
@@ -52,16 +52,16 @@ namespace vcsn
 
       DEFINE(atom);
       DEFINE(complement)   { visit_unary(v); }
-      DEFINE(intersection) { visit_nary(v); }
-      DEFINE(ldiv)    { visit_nary(v); }
+      DEFINE(intersection) { visit_variadic(v); }
+      DEFINE(ldiv)         { visit_variadic(v); }
       DEFINE(lweight);
       DEFINE(one)          { visit_nullary(v); }
-      DEFINE(prod)         { visit_nary(v); }
+      DEFINE(prod)         { visit_variadic(v); }
       DEFINE(rweight);
-      DEFINE(shuffle)      { visit_nary(v); }
+      DEFINE(shuffle)      { visit_variadic(v); }
       DEFINE(star)         { visit_unary(v); }
-      DEFINE(sum)          { visit_nary(v); }
-      DEFINE(transposition)    { visit_unary(v); }
+      DEFINE(sum)          { visit_variadic(v); }
+      DEFINE(transposition){ visit_unary(v); }
       DEFINE(zero)         { visit_nullary(v); }
 
 # undef DEFINE
@@ -78,7 +78,7 @@ namespace vcsn
 
       /// Traverse an n-ary node (+, ., &, :).
       template <rat::exp::type_t Type>
-      void visit_nary(const nary_t<Type>& v);
+      void visit_variadic(const variadic_t<Type>& v);
 
       /// Traverse a weight node (lweight, rweight).
       template <rat::exp::type_t Type>

@@ -61,7 +61,7 @@ namespace vcsn
     template <type_t Type>
     inline
     void
-    size<RatExpSet>::visit_nary(const nary_t<Type>& n)
+    size<RatExpSet>::visit_variadic(const variadic_t<Type>& n)
     {
       /* An n-ary node contributes n-1 unit (plus the sum of its
          children sizes) to the ratexp size. */

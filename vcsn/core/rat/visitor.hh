@@ -21,7 +21,7 @@ namespace vcsn
       template <type_t Type>
       using unary_t = rat::unary<Type, label_t, weight_t>;
       template <type_t Type>
-      using nary_t = rat::nary<Type, label_t, weight_t>;
+      using variadic_t = rat::variadic<Type, label_t, weight_t>;
       template <type_t Type>
       using weight_node_t = rat::weight_node<Type, label_t, weight_t>;
 

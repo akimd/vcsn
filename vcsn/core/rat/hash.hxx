@@ -76,7 +76,7 @@ namespace vcsn
     template <type_t Type>
     inline
     void
-    hash<RatExpSet>::visit_nary(const nary_t<Type>& n)
+    hash<RatExpSet>::visit_variadic(const variadic_t<Type>& n)
     {
       combine_type(n);
       for (auto child : n)

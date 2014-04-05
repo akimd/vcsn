@@ -29,7 +29,7 @@ namespace vcsn
       template <rat::exp::type_t Type>
       using unary_t = typename super_type::template unary_t<Type>;
       template <rat::exp::type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
       template <rat::exp::type_t Type>
       using weight_node_t = typename super_type::template weight_node_t<Type>;
 
@@ -104,7 +104,7 @@ namespace vcsn
       }
 
       template <rat::exp::type_t Type>
-      bool less_than_(const nary_t<Type>& lhs, const nary_t<Type>& rhs)
+      bool less_than_(const variadic_t<Type>& lhs, const variadic_t<Type>& rhs)
       {
         auto ls = lhs.size();
         auto rs = rhs.size();

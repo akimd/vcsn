@@ -62,7 +62,7 @@ namespace vcsn
     template <exp::type_t Type>
     using unary_t = unary<Type, label_t, weight_t>;
     template <exp::type_t Type>
-    using nary_t = nary<Type, label_t, weight_t>;
+    using variadic_t = variadic<Type, label_t, weight_t>;
     using ratexp_t = std::shared_ptr<const node_t>;
 
     using type_t = typename node_t::type_t;

@@ -16,7 +16,7 @@ namespace vcsn
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
       template <rat::type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
 
       /// Entry point: return the size of \a v.
       unsigned
@@ -42,15 +42,15 @@ namespace vcsn
 
       DEFINE(atom)         { (void) v; }
       DEFINE(complement)   { v.sub()->accept(*this); }
-      DEFINE(intersection) { visit_nary(v); }
-      DEFINE(ldiv)         { visit_nary(v); }
+      DEFINE(intersection) { visit_variadic(v); }
+      DEFINE(ldiv)         { visit_variadic(v); }
       DEFINE(lweight)      { v.sub()->accept(*this); }
       DEFINE(one)          { (void) v; }
-      DEFINE(prod)         { visit_nary(v); }
+      DEFINE(prod)         { visit_variadic(v); }
       DEFINE(rweight)      { v.sub()->accept(*this); }
-      DEFINE(shuffle)      { visit_nary(v); }
+      DEFINE(shuffle)      { visit_variadic(v); }
       DEFINE(star)         { ++height_; v.sub()->accept(*this); }
-      DEFINE(sum)          { visit_nary(v); }
+      DEFINE(sum)          { visit_variadic(v); }
       DEFINE(transposition){ v.sub()->accept(*this); }
       DEFINE(zero)         { (void) v; }
 
@@ -59,7 +59,7 @@ namespace vcsn
       /// Traverse variadic node.
       template <rat::type_t Type>
       void
-      visit_nary(const nary_t<Type>& n)
+      visit_variadic(const variadic_t<Type>& n)
       {
         /* The height of an n-ary is the max of the n heights. */
         auto max = height_;

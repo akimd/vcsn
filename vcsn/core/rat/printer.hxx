@@ -182,7 +182,7 @@ namespace vcsn
     template <type_t Type>
     inline
     auto
-    printer<RatExpSet>::print(const nary_t<Type>& n, const char* op)
+    printer<RatExpSet>::print(const variadic_t<Type>& n, const char* op)
       -> void
     {
       bool first = true;

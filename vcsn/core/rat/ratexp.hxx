@@ -61,64 +61,64 @@ namespace vcsn
     Node<Type, Label, Weight>
 
 
-    /*-------.
-    | nary.  |
-    `-------*/
+    /*-----------.
+    | variadic.  |
+    `-----------*/
 
-    DEFINE_CTOR(nary)(const ratexps_t& ns)
+    DEFINE_CTOR(variadic)(const ratexps_t& ns)
       : sub_(ns)
     {}
 
 
-    DEFINE(nary)::begin() const
+    DEFINE(variadic)::begin() const
       -> const_iterator
     {
       return sub_.begin();
     }
 
-    DEFINE(nary)::end() const
+    DEFINE(variadic)::end() const
       -> const_iterator
     {
       return sub_.end();
     }
 
-    DEFINE(nary)::rbegin() const
+    DEFINE(variadic)::rbegin() const
       -> const_reverse_iterator
     {
       return sub_.begin();
     }
 
-    DEFINE(nary)::rend() const
+    DEFINE(variadic)::rend() const
       -> const_reverse_iterator
     {
       return sub_.end();
     }
 
-    DEFINE(nary)::size() const
+    DEFINE(variadic)::size() const
       -> size_t
     {
       return sub_.size();
     }
 
-    DEFINE(nary)::operator[](size_t n) const
+    DEFINE(variadic)::operator[](size_t n) const
       -> const value_t
     {
       return sub_[n];
     }
 
-    DEFINE(nary)::head() const
+    DEFINE(variadic)::head() const
       -> const value_t
     {
       return *begin();
     }
 
-    DEFINE(nary)::tail() const
+    DEFINE(variadic)::tail() const
       -> decltype(boost::make_iterator_range(*this, 1, 0))
     {
       return boost::make_iterator_range(*this, 1, 0);
     }
 
-    DEFINE(nary)::accept(typename node_t::const_visitor& v) const
+    DEFINE(variadic)::accept(typename node_t::const_visitor& v) const
       -> void
     {
       v.visit(*this);

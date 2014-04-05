@@ -96,9 +96,9 @@ namespace vcsn
     -> void
   {
     static bool binary = !! getenv("VCSN_BINARY");
-    auto nary = std::dynamic_pointer_cast<const nary_t<Type>>(v);
-    if (nary && ! binary)
-      res.insert(std::end(res), std::begin(*nary), std::end(*nary));
+    auto variadic = std::dynamic_pointer_cast<const variadic_t<Type>>(v);
+    if (variadic && ! binary)
+      res.insert(std::end(res), std::begin(*variadic), std::end(*variadic));
     else
       res.push_back(v);
   }

@@ -25,7 +25,7 @@ namespace vcsn
       template <type_t Type>
       using unary_t = typename super_type::template unary_t<Type>;
       template <type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
       printer(std::ostream& out,
@@ -112,7 +112,7 @@ namespace vcsn
 
       /// Print an n-ary node.
       template <rat::exp::type_t Type>
-      void print(const nary_t<Type>& n, const char* op);
+      void print(const variadic_t<Type>& n, const char* op);
 
       /// Whether the left weight shows.
       ATTRIBUTE_PURE

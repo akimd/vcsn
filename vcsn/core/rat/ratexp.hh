@@ -34,9 +34,9 @@ namespace vcsn
       }
 
       /// Whether one of the variadic types.
-      bool is_nary() const
+      bool is_variadic() const
       {
-        return vcsn::rat::is_nary(type());
+        return vcsn::rat::is_variadic(type());
       }
 
       /// Whether sum, prod, intersection, shuffle, star.
@@ -44,7 +44,7 @@ namespace vcsn
       {
         type_t t = type();
         return (vcsn::rat::is_unary(t)
-		|| vcsn::rat::is_nary(t)
+		|| vcsn::rat::is_variadic(t)
 		|| t == type_t::lweight
 		|| t == type_t::rweight);
       }
@@ -90,18 +90,18 @@ namespace vcsn
     };
 
 
-    /*-------.
-    | nary.  |
-    `-------*/
+    /*-----------.
+    | variadic.  |
+    `-----------*/
 
     /// An inner node with multiple children.
     ///
     /// Implements the Composite Design Pattern.
     template <exp::type_t Type, typename Label, typename Weight>
-    class nary: public inner<Label, Weight>
+    class variadic: public inner<Label, Weight>
     {
     public:
-      static_assert(vcsn::rat::is_nary(Type), "invalid type");
+      static_assert(vcsn::rat::is_variadic(Type), "invalid type");
 
       using label_t = Label;
       using weight_t = Weight;
@@ -130,14 +130,14 @@ namespace vcsn
       /// precondition 0 <= n < size.
       const value_t operator[](size_t n) const;
 
-      /// The first item of this nary.
+      /// The first item of this variadic.
       const value_t head() const;
 
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));
 
-      nary(const ratexps_t& ns = ratexps_t());
-      nary(const nary& that)
+      variadic(const ratexps_t& ns = ratexps_t());
+      variadic(const variadic& that)
         : super_type(that)
         , sub_(that.sub_)
       {}

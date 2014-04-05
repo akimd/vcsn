@@ -60,7 +60,7 @@ namespace vcsn
     }
 
     /// Whether one of the variadic types.
-    constexpr bool is_nary(type_t t)
+    constexpr bool is_variadic(type_t t)
     {
       return (t == type_t::intersection
               || t == type_t::ldiv
@@ -112,27 +112,27 @@ namespace vcsn
     template <typename Label, typename Weight>
     using transposition = unary<type_t::transposition, Label, Weight>;
 
-    /*-------.
-    | nary.  |
-    `-------*/
+    /*-----------.
+    | variadic.  |
+    `-----------*/
 
     template <type_t Type, typename Label, typename Weight>
-    class nary;
+    class variadic;
 
     template <typename Label, typename Weight>
-    using prod = nary<type_t::prod, Label, Weight>;
+    using prod = variadic<type_t::prod, Label, Weight>;
 
     template <typename Label, typename Weight>
-    using intersection = nary<type_t::intersection, Label, Weight>;
+    using intersection = variadic<type_t::intersection, Label, Weight>;
 
     template <typename Label, typename Weight>
-    using ldiv = nary<type_t::ldiv, Label, Weight>;
+    using ldiv = variadic<type_t::ldiv, Label, Weight>;
 
     template <typename Label, typename Weight>
-    using shuffle = nary<type_t::shuffle, Label, Weight>;
+    using shuffle = variadic<type_t::shuffle, Label, Weight>;
 
     template <typename Label, typename Weight>
-    using sum = nary<type_t::sum, Label, Weight>;
+    using sum = variadic<type_t::sum, Label, Weight>;
 
     /*--------------.
     | weight_node.  |

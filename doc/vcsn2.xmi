@@ -63,7 +63,7 @@
             <UML:Generalization xmi.idref="OE1DQeiStCDX"/>
            </UML:GeneralizableElement.generalization>
           </UML:Class>
-          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="ptTMBceQqdtY" name="nary">
+          <UML:Class visibility="public" isSpecification="false" namespace="ROGwGJ2KUHqN" isAbstract="true" isLeaf="false" isRoot="false" xmi.id="ptTMBceQqdtY" name="variadic">
            <UML:ModelElement.templateParameter>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="iiM87qrepRbt" name="Label"/>
             <UML:TemplateParameter visibility="public" isSpecification="false" namespace="jUXOQCOSYiWN" isAbstract="false" isLeaf="false" isRoot="false" xmi.id="jwrXz7inRQHB" name="Weight"/>

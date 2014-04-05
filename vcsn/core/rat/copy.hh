@@ -26,7 +26,7 @@ namespace vcsn
       template <type_t Type>
       using unary_t = typename super_type::template unary_t<Type>;
       template <type_t Type>
-      using nary_t = typename super_type::template nary_t<Type>;
+      using variadic_t = typename super_type::template variadic_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
       copier(const in_ratexpset_t& in_rs, const out_ratexpset_t& out_rs)
@@ -54,13 +54,13 @@ namespace vcsn
       /// Factor the copy of n-ary operations.
       template <exp::type_t Type>
       void
-      copy_nary(const nary_t<Type>& v)
+      copy_variadic(const variadic_t<Type>& v)
       {
-        using out_nary_t = typename out_ratexpset_t::template nary_t<Type>;
+        using out_variadic_t = typename out_ratexpset_t::template variadic_t<Type>;
         typename out_ratexpset_t::ratexps_t sub;
         for (auto s: v)
           sub.emplace_back(copy(s));
-        res_ = std::make_shared<out_nary_t>(sub);
+        res_ = std::make_shared<out_variadic_t>(sub);
       }
 
       out_value_t
@@ -74,11 +74,11 @@ namespace vcsn
       using Type ## _t = typename super_type::Type ## _t;       \
       virtual void visit(const Type ## _t& v)
 
-      DEFINE(intersection) { copy_nary(v); }
-      DEFINE(ldiv)         { copy_nary(v); }
-      DEFINE(prod)         { copy_nary(v); }
-      DEFINE(shuffle)      { copy_nary(v); }
-      DEFINE(sum)          { copy_nary(v); }
+      DEFINE(intersection) { copy_variadic(v); }
+      DEFINE(ldiv)         { copy_variadic(v); }
+      DEFINE(prod)         { copy_variadic(v); }
+      DEFINE(shuffle)      { copy_variadic(v); }
+      DEFINE(sum)          { copy_variadic(v); }
 
       DEFINE(complement)   { copy_unary(v); }
       DEFINE(star)         { copy_unary(v); }
