@@ -334,6 +334,24 @@ namespace vcsn
       return s;
     }
 
+    std::ostream&
+    print_state(std::ostream& o, state_t s) const
+    {
+      return o << s - 2;
+    }
+
+    std::ostream&
+    print_state_name(std::ostream& o, state_t s) const
+    {
+      return print_state(o, s);
+    }
+
+    static constexpr bool
+    state_has_name(state_t)
+    {
+      return false;
+    }
+
     void
     del_state(state_t s)
     {

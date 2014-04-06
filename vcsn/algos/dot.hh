@@ -32,14 +32,12 @@ namespace vcsn
       using typename super_type::state_t;
       using typename super_type::transition_t;
       using typename super_type::weightset_t;
-      using typename super_type::weight_t;
 
       using super_type::aut_;
       using super_type::finals_;
       using super_type::format_entry_;
       using super_type::initials_;
       using super_type::os_;
-      using super_type::states_;
       using super_type::ws_;
 
       using super_type::super_type;
@@ -67,9 +65,17 @@ namespace vcsn
               "  {\n"
               "    node [shape = point, width = 0]\n";
             for (auto s : initials_())
-              os_ << "    I" << states_[s] << '\n';
+              {
+                os_ << "    I";
+                aut_->print_state(os_, s);
+                os_ << '\n';
+              }
             for (auto s : finals_())
-              os_ << "    F" << states_[s] << '\n';
+              {
+                os_ << "    F";
+                aut_->print_state(os_, s);
+                os_ << '\n';
+              }
             os_ << "  }\n";
           }
 
@@ -88,10 +94,17 @@ namespace vcsn
                 << "    node [shape = circle]\n";
             for (auto s : aut_->states())
               {
-                os_ << "    " << states_[s];
-                static bool debug = getenv("VCSN_DEBUG");
-                if (debug)
-                  os_ << " [label = \"" << states_[s] << " (" << s << ")\"]";
+                os_ << "    ";
+                aut_->print_state(os_, s);
+                if (aut_->state_has_name(s))
+                  {
+                    os_ << " [label = \"";
+                    aut_->print_state_name(os_, s);
+                    static bool debug = getenv("VCSN_DEBUG");
+                    if (debug)
+                      os_ << " (" << s << ')';
+                    os_ << "\"]";
+                  }
                 if (!has(useful, s))
                   os_ << " [" << gray << ']';
                 os_ << '\n';
@@ -107,22 +120,28 @@ namespace vcsn
               ds.insert(aut_->dst_of(t));
             for (auto dst: ds)
               {
+                os_ << "  ";
                 if (src == aut_->pre())
                   {
-                    unsigned n = states_[dst];
-                    os_ << "  I" << n << " -> " << n;
+                    os_ << 'I';
+                    aut_->print_state(os_, dst);
+                    os_ << " -> ";
+                    aut_->print_state(os_, dst);
                   }
                 else if (dst == aut_->post())
                   {
-                    unsigned n = states_[src];
-                    os_ << "  " << n << " -> F" << n;
+                    aut_->print_state(os_, src);
+                    os_ << " -> ";
+                    os_ << 'F';
+                    aut_->print_state(os_, src);
                   }
                 else
                   {
-                    unsigned ns = states_[src];
-                    unsigned nd = states_[dst];
-                    os_ << "  " << ns << " -> " << nd;
+                    aut_->print_state(os_, src);
+                    os_ << " -> ";
+                    aut_->print_state(os_, dst);
                   }
+
                 std::string s = format_entry_(src, dst);
                 bool useless = !has(useful, src) || !has(useful, dst);
                 if (!s.empty() || useless)
@@ -138,7 +157,7 @@ namespace vcsn
                       os_ << sep << gray;
                     os_ << ']';
                   }
-                os_ << "\n";
+                os_ << '\n';
               }
           }
         return os_ << '}';

@@ -38,7 +38,6 @@ namespace vcsn
       using super_type::aut_;
       using super_type::format_entry_;
       using super_type::os_;
-      using super_type::states_;
       using super_type::ws_;
 
       using super_type::super_type;
@@ -78,28 +77,37 @@ namespace vcsn
             os_ << "  \\node[state";
             format("initial", aut_->get_initial_weight(s));
             format("accepting", aut_->get_final_weight(s));
-            os_ << ']'
-                << " (" << states_[s] << ')';
-            if (states_[s])
-              os_ << " [right=of " << states_[s] - 1 << ']';
-            os_ << " {$" << states_[s] << "$};\n";
+            os_ << "] (";
+            aut_->print_state(os_, s);
+            os_ << ')';
+            if (2 < s)
+              {
+                os_ << " [right=of ";
+                aut_->print_state(os_, s - 1);
+                os_ << ']';
+              }
+            os_ << " {$";
+            aut_->print_state(os_, s);
+            os_ << "$};\n";
         }
 
         for (auto src : aut_->states())
           {
-            unsigned ns = states_[src];
             std::set<state_t> ds;
             for (auto t: aut_->out(src))
               ds.insert(aut_->dst_of(t));
             for (auto dst: ds)
               {
-                unsigned nd = states_[dst];
-                os_ << "  \\path[->] (" << ns << ')'
+                os_ << "  \\path[->] (";
+                aut_->print_state(os_, src);
+                os_ << ')'
                     << " edge"
-                    << (ns == nd ? "[loop above]" : "")
+                    << (src == dst ? "[loop above]" : "")
                     << " node[above]"
                     << " {$" << format_entry_(src, dst) << "$}"
-                    << " (" << nd << ");\n";
+                    << " (";
+                aut_->print_state(os_, dst);
+                os_ << ");\n";
               }
           }
         os_ <<

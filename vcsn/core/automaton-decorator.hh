@@ -135,7 +135,10 @@ namespace vcsn
       DEFINE(num_transitions);
       DEFINE(out);
       DEFINE(outin);
+      DEFINE(print_state);
+      DEFINE(print_state_name);
       DEFINE(src_of);
+      DEFINE(state_has_name);
       DEFINE(states);
       DEFINE(transitions);
       DEFINE(vname);

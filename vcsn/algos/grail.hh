@@ -33,11 +33,7 @@ namespace vcsn
       outputter(const automaton_ptr& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
-      {
-        // Build a (now trivial) map from state to printed number.
-        for (auto t: aut_->states())
-          states_.emplace(t, t - 2);
-      }
+      {}
 
       // Should not be public, but needed by GCC 4.8.1.
       // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58972
@@ -50,6 +46,7 @@ namespace vcsn
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
+      /// A list of states.
       using states_t = std::vector<state_t>;
 
       /// Convert a label to its representation.
@@ -64,9 +61,9 @@ namespace vcsn
       /// "Src Label Dst".
       virtual void output_transition_(transition_t t)
       {
-        os_ << states_[aut_->src_of(t)]
-            << ' ' << label_(aut_->label_of(t))
-            << ' ' << states_[aut_->dst_of(t)];
+        aut_->print_state(os_, aut_->src_of(t));
+        os_ << ' ' << label_(aut_->label_of(t)) << ' ';
+        aut_->print_state(os_, aut_->dst_of(t));
       }
 
       /// The labels and weights of transitions from \a src to \a dst.
@@ -112,7 +109,10 @@ namespace vcsn
       void list_states_(const states_t& ss)
       {
         for (auto s: ss)
-          os_ << ' ' << states_[s];
+          {
+            os_ << ' ';
+            aut_->print_state(os_, s);
+          }
       }
 
       /// The list of initial states, sorted.
@@ -142,9 +142,7 @@ namespace vcsn
       /// Short-hand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
       /// Short-hand to the polynomialset used to print the entries.
-      const polynomialset<context_t> ps_{aut_->context()};
-      /// Names (natural numbers) to use for the states.
-      std::map<state_t, unsigned> states_;
+      const polynomialset<context_t_of<automaton_t>> ps_{aut_->context()};
     };
 
   }
@@ -281,7 +279,6 @@ namespace vcsn
       using super_type::initials_;
       using super_type::os_;
       using super_type::output_transitions_;
-      using super_type::states_;
       using super_type::ws_;
 
       using super_type::super_type;
@@ -295,13 +292,16 @@ namespace vcsn
         for (auto s: initials_())
           {
             os_ << sep
-                << "(START) |- "  << states_[s];
+                << "(START) |- ";
+            aut_->print_state(os_, s);
             sep = "\n";
           }
         output_transitions_();
         for (auto s: finals_())
-          os_ << '\n'
-              << states_[s] <<  " -| (FINAL)";
+          {
+            os_ << '\n';
+            aut_->print_state(os_, s) <<  " -| (FINAL)";
+          }
       }
     };
   }

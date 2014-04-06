@@ -37,7 +37,6 @@ namespace vcsn
       using super_type::os_;
       using super_type::aut_;
       using super_type::ws_;
-      using super_type::states_;
 
     public:
       using typename super_type::state_t;
@@ -118,10 +117,13 @@ namespace vcsn
 
       void output_transition_(const transition_t t)
       {
-        os_ << states_[aut_->src_of(t)];
+        aut_->print_state(os_, aut_->src_of(t));
         if (aut_->dst_of(t) != aut_->post())
-          os_ << '\t' << states_[aut_->dst_of(t)]
-              << '\t' << label_(aut_->label_of(t));
+          {
+            os_ << '\t';
+            aut_->print_state(os_, aut_->dst_of(t));
+            os_ << '\t' << label_(aut_->label_of(t));
+          }
 
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
           {
