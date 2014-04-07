@@ -10,20 +10,22 @@ namespace vcsn
   namespace ast
   {
 
-    void context_printer::header(std::string h)
+    void context_printer::header_algo(std::string n)
     {
       // Open code some mismatches between algo name, and header
       // name.  FIXME: algorithms should register this themselves.
       if (false) {}
-#define ALGO(In, Out)                       \
-      else if (h == "vcsn/algos/" In ".hh") \
-        h = "vcsn/algos/" Out ".hh"
+#define ALGO(In, Out)                           \
+      else if (n == In)                         \
+        n = Out
+      ALGO("aut_to_exp", "aut-to-exp");
       ALGO("chain_ratexp", "concatenate");
       ALGO("concatenate_ratexp", "concatenate");
       ALGO("conjunction_ratexp", "product");
       ALGO("copy_ratexp", "copy");
       ALGO("infiltration", "product");
       ALGO("info_ratexp", "info");
+      ALGO("is_valid", "is-valid");
       ALGO("is_valid_ratexp", "is-valid");
       ALGO("left_mult", "left-mult");
       ALGO("left_mult_ratexp", "left-mult");
@@ -35,6 +37,7 @@ namespace vcsn
       ALGO("product_vector", "product");
       ALGO("right_mult", "left-mult");
       ALGO("right_mult_ratexp", "left-mult");
+      ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
       ALGO("standard_ratexp", "standard");
       ALGO("sum_ratexp", "sum");
@@ -42,6 +45,11 @@ namespace vcsn
       ALGO("union_a", "union");
       ALGO("union_ratexp", "union");
 #undef ALGO
+      headers_late_.insert("vcsn/algos/" + n + ".hh");
+    }
+
+    void context_printer::header(std::string h)
+    {
       headers_.insert(h);
     }
 

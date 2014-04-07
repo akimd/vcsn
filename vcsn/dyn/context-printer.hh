@@ -20,6 +20,9 @@ namespace vcsn
       /// Record that we need an include for this header.
       void header(std::string h);
 
+      /// Record that we need an include for this algorithm.
+      void header_algo(std::string n);
+
       /// Generate the code to compile on \a o.
       std::ostream& print(std::ostream& o);
 
