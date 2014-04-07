@@ -59,7 +59,8 @@ m4_pattern_forbid([^_?(BOOST|Boost)_])
 # It could be useful to turn this into a macro which extracts the
 # value of any macro.
 m4_define([_BOOST_SED_CPP],
-[AC_LANG_PREPROC_REQUIRE()dnl
+[AC_LANG_PUSH([C++])dnl
+AC_LANG_PREPROC_REQUIRE()dnl
 AC_REQUIRE([AC_PROG_SED])dnl
 AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
@@ -77,7 +78,8 @@ dnl Cannot use 'dnl' after [$4] because a trailing dnl may break AC_CACHE_CHECK
   [$3],
   [$4])
 rm -rf conftest*
-])# AC_EGREP_CPP
+AC_LANG_POP([C++])dnl
+])# _BOOST_SED_CPP
 
 
 
@@ -684,6 +686,29 @@ BOOST_DEFUN([Math],
 [BOOST_FIND_HEADER([boost/math/special_functions.hpp])])
 
 
+# BOOST_MPI([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost MPI.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.  Uses MPICXX variable if it is
+# set, otherwise tries CXX
+#
+BOOST_DEFUN([MPI],
+[boost_save_CXX=${CXX}
+boost_save_CXXCPP=${CXXCPP}
+if test x"${MPICXX}" != x; then
+  CXX=${MPICXX}
+  CXXCPP="${MPICXX} -E"
+fi
+BOOST_FIND_LIB([mpi], [$1],
+               [boost/mpi.hpp],
+               [int argc = 0;
+                char **argv = 0;
+                boost::mpi::environment env(argc,argv);])
+CXX=${boost_save_CXX}
+CXXCPP=${boost_save_CXXCPP}
+])# BOOST_MPI
+
+
 # BOOST_MULTIARRAY()
 # ------------------
 # Look for Boost.MultiArray
@@ -964,7 +989,8 @@ BOOST_DEFUN([Variant],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
 
-# BOOST_POINTERCONTAINER()
+
+# BOOST_POINTER_CONTAINER()
 # ------------------------
 # Look for Boost.PointerContainer
 BOOST_DEFUN([Pointer_Container],
@@ -974,7 +1000,8 @@ BOOST_FIND_HEADER([boost/ptr_container/ptr_vector.hpp])
 BOOST_FIND_HEADER([boost/ptr_container/ptr_array.hpp])
 BOOST_FIND_HEADER([boost/ptr_container/ptr_set.hpp])
 BOOST_FIND_HEADER([boost/ptr_container/ptr_map.hpp])
-])# BOOST_POINTERCONTAINER
+])# BOOST_POINTER_CONTAINER
+
 
 # BOOST_WAVE([PREFERRED-RT-OPT])
 # ------------------------------
@@ -1083,6 +1110,14 @@ AC_LANG_POP([C++])dnl
 m4_define([_BOOST_gcc_test],
 ["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
 
+# _BOOST_mingw_test(MAJOR, MINOR)
+# -----------------------------
+# Internal helper for _BOOST_FIND_COMPILER_TAG.
+m4_define([_BOOST_mingw_test],
+["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC && \
+  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw$1$2"])dnl
+
 
 # _BOOST_FIND_COMPILER_TAG()
 # --------------------------
@@ -1110,14 +1145,23 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
+    _BOOST_mingw_test(4,8) \
     _BOOST_gcc_test(4, 8) \
+    _BOOST_mingw_test(4,7) \
     _BOOST_gcc_test(4, 7) \
+    _BOOST_mingw_test(4,6) \
     _BOOST_gcc_test(4, 6) \
+    _BOOST_mingw_test(4,5) \
     _BOOST_gcc_test(4, 5) \
+    _BOOST_mingw_test(4,4) \
     _BOOST_gcc_test(4, 4) \
+    _BOOST_mingw_test(4,3) \
     _BOOST_gcc_test(4, 3) \
+    _BOOST_mingw_test(4,2) \
     _BOOST_gcc_test(4, 2) \
+    _BOOST_mingw_test(4,1) \
     _BOOST_gcc_test(4, 1) \
+    _BOOST_mingw_test(4,0) \
     _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
@@ -1183,6 +1227,7 @@ fi])dnl end of AC_CACHE_CHECK
 # Thread) flavors of Boost.  Sets boost_guess_use_mt accordingly.
 AC_DEFUN([_BOOST_GUESS_WHETHER_TO_USE_MT],
 [# Check whether we do better use `mt' even though we weren't ask to.
+AC_LANG_PUSH([C++])dnl
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 #if defined _REENTRANT || defined _MT || defined __MT__
 /* use -mt */
@@ -1190,6 +1235,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 # error MT not needed
 #endif
 ]])], [boost_guess_use_mt=:], [boost_guess_use_mt=false])
+AC_LANG_POP([C++])dnl
 ])
 
 # _BOOST_AC_LINK_IFELSE(PROGRAM, [ACTION-IF-TRUE], [ACTION-IF-FALSE])
