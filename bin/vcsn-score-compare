@@ -1,0 +1,22 @@
+#! /usr/bin/env python
+
+from __future__ import print_function
+import os, sys
+
+bench = dict()
+
+def read(fn):
+    with open(fn) as f:
+        for line in f:
+            v, k = map(str.strip, line.split(':', 2))
+            if k not in bench:
+                bench[k] = dict()
+            bench[k][fn] = v
+
+for fn in sys.argv[1:]:
+    read(fn)
+
+for k in bench:
+    for fn in sys.argv[1:]:
+        print("{:6}".format(bench[k][fn]), end = ' ')
+    print(k)
