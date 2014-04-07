@@ -45,16 +45,12 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/a-det-0.gv                \
   %D%/determinize.dir/a-det-1.gv                \
   %D%/determinize.dir/a.gv                      \
-  %D%/determinize.dir/de-bruijn-3-det.gv        \
-  %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/empty-det-0.gv            \
   %D%/determinize.dir/empty-det-1.gv            \
   %D%/determinize.dir/empty.gv                  \
   %D%/determinize.dir/epsilon-det-0.gv          \
   %D%/determinize.dir/epsilon-det-1.gv          \
   %D%/determinize.dir/epsilon.gv                \
-  %D%/determinize.dir/ladybird-4-det.gv         \
-  %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/binary.efsm                      \
   %D%/fado.dir/dfa.fado                         \

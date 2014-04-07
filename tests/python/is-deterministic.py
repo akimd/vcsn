@@ -4,7 +4,7 @@ import vcsn
 from test import *
 
 # check_lal EXPECT, INPUT
-# --------------------------
+# -----------------------
 # Check that is-deterministic(INPUT) = EXPECT in lal.
 def check(expect, i):
     CHECK_EQ(expect, i.is_deterministic())

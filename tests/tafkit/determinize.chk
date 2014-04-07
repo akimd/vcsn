@@ -20,31 +20,3 @@ do
     run 0 out.exp -vcsn determinize -f out.exp
   done
 done
-
-
-## -------------------------------- ##
-## Determinize de bruijn/ladybird.  ##
-## -------------------------------- ##
-
-# check FAMILY SIZE
-# -----------------
-# Check determinization on FAMILY ("ladybird", or "de-bruijn") using
-# the reference files, and check idempotency.
-check ()
-{
-  case $1 in
-   (de-bruijn) ctx='lal_char(ab)_b';;
-   (ladybird)  ctx='lal_char(abc)_b';;
-  esac
-  run 0 '' -vcsn $1          -C "$ctx"   -o $1-$2.gv $2
-  run 0 -f $medir/$1-$2-det.gv -vcsn determinize -f $1-$2.gv 1
-  # Idempotence.
-  run 0 -f $medir/$1-$2-det.gv -vcsn determinize -f $medir/$1-$2-det.gv
-}
-
-
-check de-bruijn 3
-check de-bruijn 8
-
-check ladybird 4
-check ladybird 8

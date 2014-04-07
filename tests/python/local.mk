@@ -25,6 +25,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/constant-term.py                          \
   %D%/de-bruijn.py                              \
   %D%/derivation.py                             \
+  %D%/determinize.py                            \
   %D%/difference.py                             \
   %D%/double-ring.py                            \
   %D%/eliminate-state.py                        \
@@ -78,6 +79,10 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
+  %D%/determinize.dir/de-bruijn-3-det.gv        \
+  %D%/determinize.dir/de-bruijn-8-det.gv        \
+  %D%/determinize.dir/ladybird-4-det.gv         \
+  %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/eliminate-state.dir/lao-elim-0.gv         \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
