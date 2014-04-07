@@ -522,20 +522,20 @@ BOOST_FIND_HEADER([boost/asio.hpp])])
 
 # BOOST_BIND()
 # ------------
-# Look for Boost.Bind
+# Look for Boost.Bind.
 BOOST_DEFUN([Bind],
 [BOOST_FIND_HEADER([boost/bind.hpp])])
 
 
 # BOOST_CHRONO()
-# ------------------
-# Look for Boost.Chrono
+# --------------
+# Look for Boost.Chrono.
 BOOST_DEFUN([Chrono],
 [# Do we have to check for Boost.System?  This link-time dependency was
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
 if test $boost_major_version -ge 135; then
-BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1])
 fi # end of the Boost.System check.
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
@@ -546,11 +546,10 @@ BOOST_FIND_LIB([chrono], [$1],
                 [boost/chrono.hpp],
                 [boost::chrono::thread_clock d;])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
-    AC_SUBST([BOOST_FILESYSTEM_LIBS], ["$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"])
+  BOOST_FILESYSTEM_LIBS="$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 fi
 LIBS=$boost_filesystem_save_LIBS
 LDFLAGS=$boost_filesystem_save_LDFLAGS
-
 ])# BOOST_CHRONO
 
 
@@ -593,7 +592,7 @@ BOOST_DEFUN([Filesystem],
 # added as of 1.35.0.  If we have a version <1.35, we must not attempt to
 # find Boost.System as it didn't exist by then.
 if test $boost_major_version -ge 135; then
-BOOST_SYSTEM([$1])
+  BOOST_SYSTEM([$1])
 fi # end of the Boost.System check.
 boost_filesystem_save_LIBS=$LIBS
 boost_filesystem_save_LDFLAGS=$LDFLAGS
@@ -603,23 +602,34 @@ LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 BOOST_FIND_LIB([filesystem], [$1],
                 [boost/filesystem/path.hpp], [boost::filesystem::path p;])
 if test $enable_static_boost = yes && test $boost_major_version -ge 135; then
-    AC_SUBST([BOOST_FILESYSTEM_LIBS], ["$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"])
+  BOOST_FILESYSTEM_LIBS="$BOOST_FILESYSTEM_LIBS $BOOST_SYSTEM_LIBS"
 fi
 LIBS=$boost_filesystem_save_LIBS
 LDFLAGS=$boost_filesystem_save_LDFLAGS
 ])# BOOST_FILESYSTEM
 
 
+# BOOST_FLYWEIGHT()
+# -----------------
+# Look for Boost.Flyweight.
+BOOST_DEFUN([Flyweight],
+[dnl There's a hidden dependency on pthreads.
+AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
+BOOST_FIND_HEADER([boost/flyweight.hpp])
+AC_SUBST([BOOST_FLYWEIGHT_LIBS], [$boost_cv_pthread_flag])
+])
+
+
 # BOOST_FOREACH()
 # ---------------
-# Look for Boost.Foreach
+# Look for Boost.Foreach.
 BOOST_DEFUN([Foreach],
 [BOOST_FIND_HEADER([boost/foreach.hpp])])
 
 
 # BOOST_FORMAT()
 # --------------
-# Look for Boost.Format
+# Look for Boost.Format.
 # Note: we can't check for boost/format/format_fwd.hpp because the header isn't
 # standalone.  It can't be compiled because it triggers the following error:
 # boost/format/detail/config_macros.hpp:88: error: 'locale' in namespace 'std'
@@ -923,7 +933,6 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 # ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
-# FIXME: Provide an alias "BOOST_THREAD".
 BOOST_DEFUN([Thread],
 [dnl Having the pthread flag is required at least on GCC3 where
 dnl boost/thread.hpp would complain if we try to compile without
@@ -939,11 +948,6 @@ fi # end of the Boost.System check.
 m4_pattern_allow([^BOOST_SYSTEM_(LIBS|LDFLAGS)$])dnl
 LIBS="$LIBS $BOOST_SYSTEM_LIBS $boost_cv_pthread_flag"
 LDFLAGS="$LDFLAGS $BOOST_SYSTEM_LDFLAGS"
-# Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
-# boost/thread.hpp will trigger a #error if -pthread isn't used:
-#   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
-#   is not turned on. Please set the correct command line options for
-#   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
 CPPFLAGS="$CPPFLAGS $boost_cv_pthread_flag"
 
 # When compiling for the Windows platform, the threads library is named
@@ -1063,8 +1067,16 @@ BOOST_DEFUN([Xpressive],
 
 # _BOOST_PTHREAD_FLAG()
 # ---------------------
-# Internal helper for BOOST_THREAD.  Based on ACX_PTHREAD:
-# http://autoconf-archive.cryp.to/acx_pthread.html
+# Internal helper for BOOST_THREAD.  Computes boost_cv_pthread_flag
+# which must be used in CPPFLAGS and LIBS.
+#
+# Yes, we *need* to put the -pthread thing in CPPFLAGS because with GCC3,
+# boost/thread.hpp will trigger a #error if -pthread isn't used:
+#   boost/config/requires_threads.hpp:47:5: #error "Compiler threading support
+#   is not turned on. Please set the correct command line options for
+#   threading: -pthread (Linux), -pthreads (Solaris) or -mthreads (Mingw32)"
+#
+# Based on ACX_PTHREAD: http://autoconf-archive.cryp.to/acx_pthread.html
 AC_DEFUN([_BOOST_PTHREAD_FLAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
@@ -1281,11 +1293,11 @@ boost_use_source=:
 test -f conftest.$ac_objext && ac_ext=$ac_objext && boost_use_source=false &&
   _AS_ECHO_LOG([re-using the existing conftest.$ac_objext])
 AS_IF([_AC_DO_STDERR($ac_link) && {
-	 test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
-	 test ! -s conftest.err
+         test -z "$ac_[]_AC_LANG_ABBREV[]_werror_flag" ||
+         test ! -s conftest.err
        } && test -s conftest$ac_exeext && {
-	 test "$cross_compiling" = yes ||
-	 $as_executable_p conftest$ac_exeext
+         test "$cross_compiling" = yes ||
+         $as_executable_p conftest$ac_exeext
 dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],

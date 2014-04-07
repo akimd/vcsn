@@ -93,10 +93,14 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/path.cc                              \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc
-lib_libvcsn_la_LDFLAGS =			\
-  $(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
-lib_libvcsn_la_LIBADD =				\
-  $(BOOST_FILESYSTEM_LIBS) $(BOOST_REGEX_LIBS)
+# Boost.FileSystem depends on Boost.System, but Boost.m4 does not
+# simplify this for us.
+lib_libvcsn_la_LDFLAGS =					\
+  $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\
+  $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)
+lib_libvcsn_la_LIBADD =					\
+  $(BOOST_FLYWEIGHT_LIBS) $(BOOST_FILESYSTEM_LIBS) 	\
+  $(BOOST_SYSTEM_LIBS) $(BOOST_REGEX_LIBS)
 
 # ratexpset.hxx depends on rat/driver.hh which requires
 # rat/location.hh.  The dot parser, loads ratexpset.hxx, so we _must_
