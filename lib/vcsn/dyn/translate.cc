@@ -198,6 +198,7 @@ namespace vcsn
           std::string types;
           for (const auto& s: sig)
             {
+              os << iendl;
               std::string t = "t" + std::to_string(count) + "_t";
               os << "using " << t << " =" << incendl;
               print_ctx(s);
@@ -207,17 +208,11 @@ namespace vcsn
             }
           os <<
             "\n"
-            "namespace vcsn\n"
-            "{\n"
-            "  namespace dyn\n"
-            "  {\n"
-            "    namespace detail\n"
-            "    {\n"
-            "      static bool f = " << name << "_register(ssignature<" << types << ">(), "
-             << name << "<" << types << ">);\n"
-            "    }\n"
-            "  }\n"
-            "}\n";
+            "static bool f =" << incendl
+             << "vcsn::dyn::detail::" << name << "_register(" << incendl
+             << "vcsn::ssignature<" << types << ">()," << iendl
+             << "vcsn::dyn::detail::" << name << "<" << types << ">" << decendl
+             << ");" << decendl;
           print(base);
           jit(base);
         }
@@ -231,14 +226,12 @@ namespace vcsn
       };
     } // namespace detail
 
-    /// Instantiate a given context.
     void compile(const std::string& ctx)
     {
       translation translate;
       translate.compile(ctx);
     }
 
-    /// Instantiate an algorithm for a given signature.
     void compile(const std::string& algo, const signature& sig)
     {
       translation translate;
