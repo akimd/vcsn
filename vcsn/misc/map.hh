@@ -29,6 +29,14 @@ namespace std
 
 namespace vcsn
 {
+  template <typename Key, typename Value>
+  inline
+  bool
+  has(const std::map<Key, Value>& s, const Key& e)
+  {
+    return s.find(e) != std::end(s);
+  }
+
   template <typename ValueSet>
   class less : public std::less<typename ValueSet::value_t>
   {
