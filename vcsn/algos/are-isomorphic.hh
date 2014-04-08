@@ -91,14 +91,48 @@ namespace vcsn
     s2tos1_t s2tos1_;
     // FIXME: remove these, and use an isomorphism_t-typed member instaed.
 
+    template <typename T>
+    class multi_poppable_stack: public std::vector<T>
+    {
+      int first_free_element_ = 0;
+    public:
+      void push(const T& x)
+      {
+        if (size_t size = std::vector<T>::size() == size_t(first_free_element_))
+      std::vector<T>::resize(size * 2);
+        std::vector<T>::operator[](first_free_element_ ++) = x;
+      }
+      T& top()
+      {
+        return std::vector<T>::operator[](first_free_element_ - 1);
+      }
+      T pop()
+      {
+        auto res = top();
+        -- first_free_element_;
+        return res;
+      }
+      size_t height()
+      {
+        return size_t(first_free_element_);
+      }
+      void set_height(size_t new_height)
+      {
+        require(new_height <= height());
+        first_free_element_ = new_height;
+      }
+    }; // class
+    using next_state_stack_t = multi_poppable_stack<state1_t>;
+
     struct isomorphism_t
     {
       s1tos2_t s1tos2;
       s2tos1_t s2tos1;
       bool doomed;
+      next_state_stack_t stack;
     };
 
-    /// A worklist of state pairs which are candidate to be
+    /// A worklist of pairs of states which are candidate to be
     /// isomorphic.  Or "A candidate-isomorphic state pair worklist",
     /// written in Reverse-Polish English.
     using pair_t = std::pair<state1_t, state2_t>;
@@ -106,20 +140,24 @@ namespace vcsn
     worklist_t worklist_;
     class dummy{}; using dummy_t = dummy;
 
-    //????
+    using next_states_t = std::vector<state1_t>;
     struct move
     {
       state1_t s1;
       state2_t s2;
+      // States to be considered later:
+      next_states_t next_states;
     };
     using move_t = move;
+    //????????????????????????????????????????????????????????????
+    //????????????????????????????????????????????????????????????
+    //????????????????????????????????????????????????????????????
     class mybacktracker: public vcsn::backtracker<isomorphism_t, move_t, dummy_t,
                                                   mybacktracker>
     {
     public:
       are_isomorphicer& outer_;
 
-      // FIXME: is this a good idea?
       const are_isomorphicer::automaton1_t& a1_;
       const are_isomorphicer::automaton2_t& a2_;
 
@@ -159,13 +197,18 @@ namespace vcsn
       const undo_info_t undo_info(const solution_t&, const move_t&)
       {
         //std::cerr << "OK L\n";
+#warning: keep track of next_states
         return undo_info_t();
       }
-      void set_initial(const solution_t& initial)
+      void set_initial(const solution_t& initial) // FIXME: the parameter is useless
       {
         super_t::solution_ = initial;
-        // maybe
-        super_t::push_move({a1_.pre(), a2_.pre()});
+        next_states_t ss;
+        for (auto t: a1_.all_out(a1_.pre()))
+          ss.emplace_back(a1_.dst_of(t));
+        super_t::push_move({a1_.pre(), a2_.pre(), ss});
+        //make_isomorphic(super_t::solution_, a1_.pre(), a2_.pre());
+        std::cerr << "set_initial: done\n";
       }
       bool final(const move_t*)
       {
@@ -231,19 +274,59 @@ namespace vcsn
       }
       void develop(const move_t* latest_move)
       {
-        // std::cerr << "OK-E\n";
-        if (latest_move == NULL
-            || super_t::solution_.doomed)
-          return;
-
+        std::cerr << "develop: start\n";
+        std::cerr << "OK-E 100\n";
+        if (/*latest_move == NULL
+              ||*/ super_t::solution_.doomed)
+          {
+            std::cerr << "OK-E 150 returning\n";
+            return;
+          }
+        std::cerr << "OK-E 200\n";
+        /*
         state1_t s1 = latest_move->s1;
         state1_t s2 = latest_move->s2;
-        assert(are_isomorphic(super_t::solution_, s1, s2));
+        */
+        if (super_t::solution_.stack.empty())
+          {
+            std::cerr << "OK-E 250 returning\n";
+            return;
+          }
+        state1_t s1 = super_t::solution_.stack.pop();
+        std::cerr << "OK-E 300: (" << s1 << /*", " << s2 <<*/ ")\n";
+        // // The move has already been performed.
+        // assert(are_isomorphic(super_t::solution_, s1, s2));
 
+#warning: I am not sure.  Shall I do this here, or at move generation time?
+        // Compute the s1 successors which are not in the isomorphism yet.
+        next_states_t all_successors;
+        std::cerr << "OK-E 400\n";
+        for (auto t: a1_.all_out(s1))
+          {
+            state1_t s = a1_.dst_of(t);
+            std::cerr << "* OK-E 500: " << s1 << " -> " << s << "\n";
+            if (super_t::solution_.s1tos2.find(s) == super_t::solution_.s1tos2.end())
+              nexts.emplace_back(s);
+              //nexts.emplace_back(s);
+              // !!!!!
+          }
+        if (nexts.size() == 0)
+          {
+            std::cerr << "OK-E 550 returning\n";
+            return;
+          }
+        std::cerr << "OK-E 600\n";
+        next_states_t first_successor = all_successors.pop();
+        next_states_t other_successor = all_successors;
+
+        // Develop successors if the solution is not doomed:
         // FIXME: develop successors.
+        // !!!!!!!!!!!!!!
       }
-    } backtracker_;
-    //????
+    } backtracker_; // class
+    //????????????????????????????????????????????????????????????
+    //????????????????????????????????????????????????????????????
+    //????????????????????????????????????????????????????????????
 
     /// A datum specifying if two given automata are isomorphic, and
     /// why if they are not.  This should be a variant record, but
@@ -378,11 +461,12 @@ namespace vcsn
       if (trivially_different())
         return full_response_;
 
-      // FIXME: return trivially_different if only one of the two
-      // automata is sequential.
-      if (are_automata_sequential_filling_douts())
-        return get_full_response_sequential();
-      else
+      // FIXME: re-enable this code after I fix the nonsequential version.
+      // // FIXME: return trivially_different if only one of the two
+      // // automata is sequential.
+      // if (are_automata_sequential_filling_douts())
+      //   return get_full_response_sequential();
+      // else
         return get_full_response_nonsequential();
     }
 
@@ -552,7 +636,9 @@ catch(...){ // FIXME: find the correct exception, after the Internet starts work
     const full_response
     get_full_response_nonsequential()
     {
-      isomorphism_t initial_solution = {s1tos2_t(), s2tos1_t(), false};
+      isomorphism_t initial_solution =
+        {s1tos2_t(), s2tos1_t(), false, {}};
+      initial_solution.stack.push(a1_.pre());
       try
         {
           // std::cerr << "OK-A 100\n";

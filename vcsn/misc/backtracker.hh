@@ -53,32 +53,48 @@ namespace vcsn LIBVCSN_API
 
     solution_t search()
     {
+      std::cerr << "OK-X 100\n";
       if (nonvirtual_final(NULL))
         return std::move(solution_);
+      std::cerr << "OK-X 200\n";
       nonvirtual_develop(NULL);
+      std::cerr << "OK-X 300\n";
       while (! move_actions.empty())
         {
+          std::cerr << "Beginning of the iteration: the stack has height " << move_actions.size() << "\n";
           const move_action_t ma = std::move(move_actions.top());
           move_actions.pop();
 
           switch (ma.tag)
             {
             case move_action::move_tag::push:
+              //std::cerr << "OK G 100\n";
               push_undo_move(ma.move);
               ++ depth_;
+              //std::cerr << "OK G 110\n";
               nonvirtual_do_move(solution_, ma.move);
+              //std::cerr << "OK G 120\n";
               if (nonvirtual_final(& ma.move))
-                return std::move(solution_);
+                {
+                  std::cerr << "Done\n";
+                  return std::move(solution_);
+                }
+              //std::cerr << "OK G 130\n";
               nonvirtual_develop(& ma.move);
+              //std::cerr << "OK G 140\n";
               break;
             case move_action::move_tag::undo:
+              //std::cerr << "OK H 100\n";
               -- depth_;
               nonvirtual_undo_move(solution_, ma.move, ma.undo_info);
               break;
             default:
+              //std::cerr << "OK I 100\n";
               assert(false);
             } // switch
+          std::cerr << "End of the iteration: the stack has height " << move_actions.size() << "\n";
         } // while
+      std::cerr << "Failing: no solutions found\n";
       throw std::out_of_range("no solution");
     }
 
@@ -104,8 +120,10 @@ namespace vcsn LIBVCSN_API
 
     void push_undo_move(const move_t& m)
     {
+      //std::cerr << "OK J 100\n";
       move_actions.push({move_action::move_tag::undo, m,
                          std::move(nonvirtual_undo_info(solution_, m))});
+      //std::cerr << "OK J 200\n";
     }
 
     // Convenience methods.  Reminder to ourselves: don't call virtual methods!
@@ -124,7 +142,9 @@ namespace vcsn LIBVCSN_API
     /// is useful to force the user to override *all* virtual methods.
     inline void nonvirtual_do_move(solution_t& s, const move_t& c)
     {
+      //std::cerr << "OK M 100\n";
       static_cast<Derived*>(this)->do_move(s, c);
+      //std::cerr << "OK M 200\n";
     }
     inline void nonvirtual_undo_move(solution_t& s, const move_t& c,
                                      const undo_info_t& ui)
@@ -134,7 +154,8 @@ namespace vcsn LIBVCSN_API
     inline const undo_info_t nonvirtual_undo_info(const solution_t& s,
                                                   const move_t& m)
     {
-      static_cast<Derived*>(this)->undo_info(s, m);
+      //std::cerr << "OK K\n";
+      return static_cast<Derived*>(this)->undo_info(s, m);
     }
     inline void nonvirtual_set_initial(const solution_t& initial)
     {
