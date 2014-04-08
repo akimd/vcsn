@@ -98,3 +98,16 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''')
+
+
+## --------------------------- ##
+## Conversions: dot and TikZ.  ##
+## --------------------------- ##
+
+import glob
+for fn in glob.glob(os.path.join(medir, '*.in.gv')):
+    a = vcsn.automaton.load(fn)
+    gv   = open(fn.replace('.in.gv', '.out.gv')).read().strip()
+    tikz = open(fn.replace('.in.gv', '.tex')).read().strip()
+    CHECK_EQ(gv,   a.format('dot'))
+    CHECK_EQ(tikz, a.format('tikz'))

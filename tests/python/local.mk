@@ -79,6 +79,18 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
+  %D%/automaton.dir/lal_char_b.in.gv            \
+  %D%/automaton.dir/lal_char_b.out.gv           \
+  %D%/automaton.dir/lal_char_b.tex              \
+  %D%/automaton.dir/lan_char_b.in.gv            \
+  %D%/automaton.dir/lan_char_b.out.gv           \
+  %D%/automaton.dir/lan_char_b.tex              \
+  %D%/automaton.dir/lao_z.in.gv                 \
+  %D%/automaton.dir/lao_z.out.gv                \
+  %D%/automaton.dir/lao_z.tex                   \
+  %D%/automaton.dir/pyramid.in.gv               \
+  %D%/automaton.dir/pyramid.out.gv              \
+  %D%/automaton.dir/pyramid.tex                 \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/ladybird-4-det.gv         \
@@ -112,7 +124,8 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xyz.gv                        \
   %D%/union.dir/abc.gv
 
-%D%/aut-to-exp.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/automaton.log: $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/factory.log: $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/infiltration.log: $(wildcard $(srcdir)/%D%/product.dir/*)

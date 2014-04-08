@@ -12,7 +12,6 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 %C%_TESTS =                                     \
-  %D%/cat.chk                                   \
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
@@ -24,18 +23,6 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/cat.dir/lal_char_b.in.gv                  \
-  %D%/cat.dir/lal_char_b.out.gv                 \
-  %D%/cat.dir/lal_char_b.tex                    \
-  %D%/cat.dir/lan_char_b.in.gv                  \
-  %D%/cat.dir/lan_char_b.out.gv                 \
-  %D%/cat.dir/lan_char_b.tex                    \
-  %D%/cat.dir/lao_z.in.gv                       \
-  %D%/cat.dir/lao_z.out.gv                      \
-  %D%/cat.dir/lao_z.tex                         \
-  %D%/cat.dir/pyramid.in.gv                     \
-  %D%/cat.dir/pyramid.out.gv                    \
-  %D%/cat.dir/pyramid.tex                       \
   %D%/derivation.dir/a?-dt.gv                   \
   %D%/derivation.dir/e1-dt.gv                   \
   %D%/derivation.dir/e2-dt.gv                   \
@@ -62,14 +49,11 @@ EXTRA_DIST +=                                   \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv
 
-%D%/aut-to-exp.log:  $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
-%D%/cat.log:         $(wildcard $(srcdir)/%D%/cat.dir/*)
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
-%D%/random.log:      $(wildcard $(srcdir)/%D%/random.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain
