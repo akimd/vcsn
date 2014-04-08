@@ -28,6 +28,7 @@ AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
 AC_REQUIRE_AUX_FILE([tap-driver.pl])
 AM_SILENT_RULES([yes])
 
+# Shared libs.
 LT_PREREQ([2.2.6])
 LT_INIT([pic-only shared disable-static])
 AC_SUBST([LIBTOOL_DEPS])

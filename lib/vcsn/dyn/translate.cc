@@ -1,6 +1,5 @@
 #include <vcsn/dyn/translate.hh>
 
-#include <dlfcn.h>
 #include <fstream>
 #include <memory>
 #include <set>
@@ -9,6 +8,8 @@
 #include <unistd.h> // getpid
 
 #include <boost/filesystem.hpp>
+
+#include <ltdl.h>
 
 #include <vcsn/dyn/context-parser.hh>
 #include <vcsn/dyn/context-printer.hh>
@@ -161,8 +162,14 @@ namespace vcsn
           cxx("-fPIC " + ldflags + " -lvcsn '" + tmp + ".o' -shared"
               " -o '" + tmp + ".so'");
           boost::filesystem::rename(tmp + ".so", base + ".so");
-          void* lib = dlopen((base + ".so").c_str(), RTLD_LAZY);
-          require(lib, "cannot load lib: ", base, ".so");
+          static bool first = true;
+          if (first)
+            {
+              lt_dlinit();
+              first = false;
+            }
+          lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
+          require(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
           // Upon success, remove the .o file, it useless and large
           // (10x compared to the *.so on erebus using clang).  Keep
           // the .cc file for inspection.
