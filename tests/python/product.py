@@ -188,14 +188,14 @@ digraph
 
 CHECK_EQ(exp, lhs & rhs)
 
-## --------------------- ##
-## Heterogeneous input.  ##
-## --------------------- ##
+## ------------------------------------ ##
+## Heterogeneous (and variadic) input.  ##
+## ------------------------------------ ##
 
 # check OPERATION RES AUT...
 # --------------------------
 def check(operation, exp, *args):
-    CHECK_EQ(exp, str(reduce(lambda l, r: l & r, args).ratexp()))
+    CHECK_EQ(exp, str(vcsn.automaton.product_real(args).ratexp()))
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
