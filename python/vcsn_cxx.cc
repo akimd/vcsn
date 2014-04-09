@@ -197,6 +197,11 @@ struct automaton
     return vcsn::dyn::is_standard(aut_);
   }
 
+  bool is_synchronized_by(const std::string& word) const
+  {
+    return vcsn::dyn::is_synchronized_by(aut_, word);
+  }
+
   bool is_trim() const
   {
     return vcsn::dyn::is_trim(aut_);
@@ -269,6 +274,11 @@ struct automaton
   automaton sum(const automaton& rhs) const
   {
     return vcsn::dyn::sum(aut_, rhs.aut_);
+  }
+
+  std::string synchronizing_word() const
+  {
+    return vcsn::dyn::synchronizing_word(aut_);
   }
 
   ratexp to_ratexp() const;
@@ -626,6 +636,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_proper", &automaton::is_proper)
     .def("is_out_sorted", &automaton::is_out_sorted)
     .def("is_standard", &automaton::is_standard)
+    .def("is_synchronized_by", &automaton::is_synchronized_by)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
@@ -643,6 +654,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)
     .def("sum", &automaton::sum)
+    .def("synchronizing_word", &automaton::synchronizing_word)
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
     .def("union", &automaton::union_a)

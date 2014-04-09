@@ -197,6 +197,9 @@ namespace vcsn
     /// incoming transition).
     bool is_standard(const automaton& aut);
 
+    /// Whether the word synchronizes aut.
+    bool is_synchronized_by(const automaton& aut, const std::string& word);
+
     /// Whether has no useless state.
     bool is_trim(const automaton& aut);
 
@@ -377,6 +380,9 @@ namespace vcsn
 
     /// Sum of two ratexps.
     ratexp sum(const ratexp& lhs, const ratexp& rhs);
+
+    /// Build the pair automaton of the given automaton
+    std::string synchronizing_word(const automaton& aut);
 
     /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);

@@ -70,6 +70,7 @@ namespace vcsn
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
+        REGISTER(is_synchronized_by, aut_t, const std::string);
         REGISTER(ladybird, Ctx, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);
@@ -80,6 +81,7 @@ namespace vcsn
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
+        REGISTER(synchronizing_word, aut_t);
         REGISTER(u, Ctx, unsigned);
 
         return true;

@@ -1,80 +1,181 @@
 #ifndef SYNCHRONIZING_WORD_HH
 # define SYNCHRONIZING_WORD_HH
 
-# include <vector>
-# include <map>
-# include <set>
-# include <queue>
+# include <algorithm>
 # include <iostream>
+# include <map>
+# include <queue>
+# include <set>
+# include <unordered_set>
+# include <utility>
+# include <vector>
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/misc/pair.hh>
+# include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
-  template <typename T>
-  std::pair<T, T> make_ordered_pair(T e1, T e2)
-  {
-    return (e1 > e2) ? std::make_pair(e2, e1) : std::make_pair(e1, e2);
-  }
-
-  template <typename Aut>
-  Aut pair(const Aut& aut)
+  template<typename Aut>
+  bool
+  is_synchronized_by(const Aut& aut,
+                     const std::vector<typename Aut::labelset_t::value_t>& w)
   {
     using context_t = typename Aut::context_t;
     using automaton_t =  mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
-    using weightset_t = typename automaton_t::weightset_t;
-    using weight_t = typename weightset_t::value_t;
-    using pair_t = std::pair<state_t, state_t>;
 
-    auto ctx = aut.context();
-    auto ws = ctx.weightset();
+    std::unordered_set<state_t> todo;
 
-    std::unordered_map<pair_t, state_t> pair_states;
+    for (auto s : aut.states())
+      todo.insert(s);
 
-    automaton_t res(ctx);
-    state_t q0 = res.new_state(); // q0 special state
-
-    for (auto s1: aut.states())
-      for (auto s2: aut.states())
-        if (s1 != s2)
-          {
-            auto np = make_ordered_pair(s1, s2);
-            if (pair_states.find(np) == pair_states.end())
-              pair_states[np] = res.new_state();
-          }
-
-    for (auto ps : pair_states)
+    for (auto l : w)
       {
-        auto pstates = ps.first; // pair of states
-        auto cstate = ps.second; // current state
-
-        for (auto t1: aut.out(pstates.first))
+        std::unordered_set<state_t> new_todo;
+        for (auto s : todo)
           {
-            auto label = aut.label_of(t1);
-            auto dst1 = aut.dst_of(t1);
-            for (auto t2: aut.out(pstates.second, label))
-              {
-                auto dst2 = aut.dst_of(t2);
-                weight_t nw = ws->mul(aut.weight_of(t1), aut.weight_of(t2));
-                if (dst1 != dst2)
-                  {
-                    auto np = make_ordered_pair(dst1, dst2);
-                    res.add_transition(cstate, pair_states.find(np)->second,
-                                       label, nw);
-                  }
-                else
-                    res.add_transition(cstate, q0, label, nw);
-              }
+            auto ntf = aut.out(s, l);
+            if (ntf.empty())
+              raise("automaton must be complete.");
+            if (1 < ntf.size())
+              raise("automaton must be deterministic.");
+            new_todo.insert(aut.dst_of(*ntf.begin()));
           }
+        todo = std::move(new_todo);
       }
 
-    return res;
+    return todo.size() == 1;
   }
 
+  /*----------------------------------------.
+  | is_synchronized_by(automaton, word). |
+  `----------------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut, typename String>
+      bool
+      is_synchronized_by(const automaton& aut, const std::string& word)
+      {
+        using label_t = typename Aut::labelset_t::value_t;
+
+        const auto& a = aut->as<Aut>();
+        std::vector<label_t> labels(word.begin(), word.end());
+        return vcsn::is_synchronized_by(a, labels);
+      }
+
+      REGISTER_DECLARE(is_synchronized_by,
+                       (const automaton&, const std::string&) -> bool);
+    }
+  }
+
+  namespace detail
+  {
+    template <typename Aut>
+    class pairer
+    {
+    public:
+      using context_t = typename Aut::context_t;
+      using automaton_t =  mutable_automaton<context_t>;
+      using state_t = typename automaton_t::state_t;
+      using weightset_t = typename automaton_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+
+    private:
+      using pair_t = std::pair<state_t, state_t>;
+
+    public:
+      pairer(const Aut& aut)
+        : aut_(aut)
+      {}
+
+      Aut pair()
+      {
+        auto ctx = aut_.context();
+        auto ws = ctx.weightset();
+
+        automaton_t res(ctx);
+        q0_ = res.new_state(); // q0 special state
+
+        for (auto l : *aut_.labelset())
+          res.add_transition(q0_, q0_, l, ws->one());
+
+        for (auto s1: aut_.states())
+          for (auto s2: aut_.states())
+            if (s1 != s2)
+              {
+                auto np = make_ordered_pair(s1, s2);
+                if (pair_states_.find(np) == pair_states_.end())
+                  pair_states_[np] = res.new_state();
+              }
+
+        for (auto ps : pair_states_)
+          {
+            auto pstates = ps.first; // pair of states
+            auto cstate = ps.second; // current state
+
+            for (auto t1: aut_.out(pstates.first))
+              {
+                auto label = aut_.label_of(t1);
+                auto dst1 = aut_.dst_of(t1);
+                for (auto t2: aut_.out(pstates.second, label))
+                  {
+                    auto dst2 = aut_.dst_of(t2);
+                    weight_t nw = ws->add(aut_.weight_of(t1),
+                                          aut_.weight_of(t2));
+                    if (dst1 != dst2)
+                      {
+                        auto np = make_ordered_pair(dst1, dst2);
+                        res.add_transition(cstate,
+                                           pair_states_.find(np)->second,
+                                           label, nw);
+                      }
+                    else
+                        res.add_transition(cstate, q0_, label, nw);
+                  }
+              }
+          }
+
+        called_ = true;
+        return res;
+      }
+
+      const std::unordered_map<pair_t, state_t>& get_map_pair()
+      {
+        require(called_,
+                "trying to call get_map_pair() before calling pair()");
+        return pair_states_;
+      }
+
+      state_t get_q0()
+      {
+        require(called_, "trying to call get_q0() before calling pair()");
+        return q0_;
+      }
+
+    private:
+      const Aut& aut_;
+      std::unordered_map<pair_t, state_t> pair_states_;
+      state_t q0_;
+      bool called_ = false;
+    };
+  }
+
+  /*------------------.
+  | pair(automaton).  |
+  `------------------*/
+
+  template <typename Aut>
+  Aut pair(const Aut& aut)
+  {
+    detail::pairer<Aut> sw(aut);
+    return sw.pair();
+  }
 
   namespace dyn
   {
@@ -89,6 +190,129 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(pair, (const automaton&) -> automaton);
+    }
+  }
+
+  template<typename Aut>
+  std::vector<typename Aut::transition_t>
+  find_min_dist(const Aut& aut, typename Aut::state_t start,
+                typename Aut::state_t end)
+  {
+    using context_t = typename Aut::context_t;
+    using automaton_t =  mutable_automaton<context_t>;
+    using state_t = typename automaton_t::state_t;
+    using transition_t = typename automaton_t::transition_t;
+
+    std::queue<state_t> todo;
+    std::unordered_set<state_t> marked;
+    std::unordered_map<state_t, std::pair<state_t, transition_t>> parent;
+
+    todo.push(start);
+    while (!todo.empty())
+      {
+        state_t p = todo.front();
+        todo.pop();
+        marked.insert(p);
+        if (p == end)
+          {
+            std::vector<transition_t> rpath;
+            state_t bt_curr = end;
+            while (bt_curr != start)
+              {
+                transition_t t;
+                std::tie(bt_curr, t) = parent.find(bt_curr)->second;
+                rpath.push_back(t);
+              }
+            std::reverse(rpath.begin(), rpath.end());
+            return rpath;
+          }
+        else
+          for (auto t : aut.out(p))
+            {
+              auto s = aut.dst_of(t);
+              if (marked.find(s) == marked.end())
+                {
+                  todo.push(s);
+                  parent[s] = {p, t};
+                }
+            }
+      }
+    raise("automaton is not synchronizing.");
+  }
+
+  template<typename Aut>
+  std::vector<typename Aut::labelset_t::value_t>
+  synchronizing_word(const Aut& aut)
+  {
+    using letter_t = typename Aut::labelset_t::value_t;
+    using context_t = typename Aut::context_t;
+    using automaton_t =  mutable_automaton<context_t>;
+    using state_t = typename automaton_t::state_t;
+    using transition_t = typename automaton_t::transition_t;
+
+    std::vector<letter_t> res;
+    std::unordered_set<state_t> todo;
+
+    detail::pairer<Aut> pobj(aut);
+    Aut pa = pobj.pair();
+    state_t q0 = pobj.get_q0();
+
+    for (auto s : pa.states())
+      todo.insert(s);
+
+    while (1 < todo.size() || todo.find(q0) == todo.end())
+      {
+        int min = -1;
+        std::vector<transition_t> path;
+        for (auto s : todo)
+          if (s != q0)
+            {
+              auto cpath = find_min_dist(pa, s, q0);
+              if (min == -1 || min > static_cast<long>(cpath.size()))
+                {
+                  min = cpath.size();
+                  path = cpath;
+                }
+            }
+        for (auto t : path)
+          {
+            auto l = pa.label_of(t);
+            std::unordered_set<state_t> new_todo;
+            for (auto s : todo)
+              {
+                auto ntf = pa.out(s, l);
+                if (ntf.empty())
+                  raise("automaton must be complete.");
+                if (1 < ntf.size())
+                  raise("automaton must be deterministic.");
+                new_todo.insert(pa.dst_of(*ntf.begin()));
+              }
+            todo = std::move(new_todo);
+            res.push_back(l);
+          }
+      }
+
+    return res;
+  }
+
+  /*-------------------------------.
+  | synchronizing_word(automaton). |
+  `-------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      std::string
+      synchronizing_word(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        auto sw = vcsn::synchronizing_word(a);
+        return std::string(sw.begin(), sw.end());
+      }
+
+      REGISTER_DECLARE(synchronizing_word, (const automaton&) -> std::string);
     }
   }
 }

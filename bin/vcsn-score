@@ -114,7 +114,7 @@ bench('a.ratexp()', 'a = std({})'.format(r), lambda: a.ratexp())
 # per state.  This stresses much better the new product algorithm.
 r = "[a-e]?{50}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a.product(a)     ', 'a = std({})'.format(r), lambda: a.product(a))
+bench('a.product(a)     ', 'a = std({})'.format(r), lambda: a * a)
 bench('a.shuffle(a)     ', 'a = std({})'.format(r), lambda: a.shuffle(a))
 
 # infiltration.
@@ -138,3 +138,7 @@ r = "[a-k]{2000}"
 a = vcsn.context("lal_char(a-k)_b").ratexp(r).standard()
 bench('a.minimize("moore")', 'a = std({0})'.format(r),
       lambda: a.minimize('moore'))
+
+a = vcsn.context("lal_char(a-c)_b").de_bruijn(6).determinize()
+bench('a.synchronizing_word()', 'a = de_buijn(6)',
+      lambda: a.synchronizing_word())

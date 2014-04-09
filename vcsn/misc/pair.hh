@@ -24,4 +24,19 @@ namespace std
   };
 }
 
+
+namespace vcsn
+{
+
+  /*---------------------------------.
+  | make_ordered_pair(e1<T>, e2<T>). |
+  `---------------------------------*/
+
+  template <typename T>
+  std::pair<T, T> make_ordered_pair(T e1, T e2)
+  {
+    return e1 < e2 ? std::make_pair(e1, e2) : std::make_pair(e2, e1);
+  }
+}
+
 #endif // !VCSN_MISC_PAIR_HH
