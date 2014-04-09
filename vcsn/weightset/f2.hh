@@ -139,12 +139,6 @@ namespace vcsn
     }
 
     static value_t
-    conv(b, b::value_t v)
-    {
-      return v ? one() : zero();
-    }
-
-    static value_t
     conv(std::istream& stream)
     {
       int i;
@@ -176,9 +170,6 @@ namespace vcsn
   }// detail::
 
   VCSN_WEIGHTS_BINARY(f2, f2, f2);
-
-  VCSN_WEIGHTS_BINARY(b, f2, f2);
-  VCSN_WEIGHTS_BINARY(f2, b, f2);
 }
 
 #endif // !VCSN_WEIGHTSETS_F2_HH
