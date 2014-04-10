@@ -21,6 +21,7 @@ namespace vcsn
   public:
     using valuesets_t = std::tuple<ValueSets...>;
     using indices_t = vcsn::detail::make_index_sequence<sizeof...(ValueSets)>;
+    static constexpr indices_t indices{};
     template <std::size_t... I>
     using seq = vcsn::detail::index_sequence<I...>;
 
@@ -39,12 +40,12 @@ namespace vcsn
 
     static std::string sname()
     {
-      return sname_(indices_t{});
+      return sname_(indices);
     }
 
     std::string vname(bool full = true) const
     {
-      return vname_(full, indices_t{});
+      return vname_(full, indices);
     }
 
     /// Build from the description in \a is.
@@ -52,7 +53,7 @@ namespace vcsn
     {
       // name: lat<law_char(abc), law_char(xyz)>
       kind_t::make(is);
-      auto res = make_(is, indices_t{});
+      auto res = make_(is, indices);
       eat(is, '>');
       return res;
     }
@@ -61,61 +62,61 @@ namespace vcsn
     bool
     equals(const value_t& l, const value_t& r)
     {
-      return equals_(l, r, indices_t{});
+      return equals_(l, r, indices);
     }
 
     /// Whether \a l < \a r.
     static bool less_than(const value_t l, const value_t r)
     {
-      return less_than_(l, r, indices_t{});
+      return less_than_(l, r, indices);
     }
 
     static value_t
     special()
     {
-      return special_(indices_t{});
+      return special_(indices);
     }
 
     static bool
     is_special(const value_t& l)
     {
-      return is_special_(l, indices_t{});
+      return is_special_(l, indices);
     }
 
     value_t
     zero() const
     {
-      return zero_(indices_t{});
+      return zero_(indices);
     }
 
     bool
     is_zero(const value_t& l) const
     {
-      return is_zero_(l, indices_t{});
+      return is_zero_(l, indices);
     }
 
     static constexpr bool
     has_one()
     {
-      return has_one_(indices_t{});
+      return has_one_(indices);
     }
 
     static value_t
     one()
     {
-      return one_(indices_t{});
+      return one_(indices);
     }
 
     static bool
     is_one(const value_t& l)
     {
-      return is_one_(l, indices_t{});
+      return is_one_(l, indices);
     }
 
     static bool
     show_one()
     {
-      return show_one_(indices_t{});
+      return show_one_(indices);
     }
 
     bool
@@ -127,31 +128,31 @@ namespace vcsn
     value_t
     add(const value_t& l, const value_t& r) const
     {
-      return add_(l, r, indices_t{});
+      return add_(l, r, indices);
     }
 
     value_t
     mul(const value_t& l, const value_t& r) const
     {
-      return mul_(l, r, indices_t{});
+      return mul_(l, r, indices);
     }
 
     value_t
     rdiv(const value_t& l, const value_t& r) const
     {
-      return rdiv_(l, r, indices_t{});
+      return rdiv_(l, r, indices);
     }
 
     value_t
     ldiv(const value_t& l, const value_t& r) const
     {
-      return ldiv_(l, r, indices_t{});
+      return ldiv_(l, r, indices);
     }
 
     value_t
     star(const value_t& l) const
     {
-      return star_(l, indices_t{});
+      return star_(l, indices);
     }
 
     // FIXME: this needs to be computed.
@@ -163,20 +164,20 @@ namespace vcsn
     value_t
     concat(const value_t& l, const value_t& r) const
     {
-      return concat_(l, r, indices_t{});
+      return concat_(l, r, indices);
     }
 
     value_t
     transpose(const value_t& l) const
     {
-      return transpose_(l, indices_t{});
+      return transpose_(l, indices);
     }
 
     static
     size_t
     hash(const value_t& v)
     {
-      return hash_(v, indices_t{});
+      return hash_(v, indices);
     }
 
     static value_t
@@ -195,7 +196,7 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
-      value_t res = conv_(i, indices_t{});
+      value_t res = conv_(i, indices);
       eat(i, ')');
       return res;
     }
@@ -208,14 +209,14 @@ namespace vcsn
     std::ostream&
     print_set(std::ostream& o, const std::string& format) const
     {
-      return print_set_(o, format, indices_t{});
+      return print_set_(o, format, indices);
     }
 
     std::ostream&
     print(std::ostream& o, const value_t& l,
           const std::string& format = "text") const
     {
-      return print_(o, l, format, indices_t{});
+      return print_(o, l, format, indices);
     }
 
   private:
@@ -500,7 +501,7 @@ namespace vcsn
     tupleset
     meet(const tupleset& lhs, const tupleset& rhs)
     {
-      return lhs.meet_(rhs, indices_t{});
+      return lhs.meet_(rhs, indices);
     }
 
     /// The meet with the B weightset.
@@ -524,7 +525,7 @@ namespace vcsn
     tupleset
     join(const tupleset& lhs, const tupleset& rhs)
     {
-      return lhs.join_(rhs, indices_t{});
+      return lhs.join_(rhs, indices);
     }
 
     /// The join with the B weightset.
