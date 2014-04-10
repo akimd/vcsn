@@ -13,9 +13,6 @@
 # include <vcsn/misc/tuple.hh>
 # include <vcsn/misc/vector.hh>
 # include <vcsn/misc/zip-maps.hh>
-# include <vcsn/misc/raise.hh> // detail::pass
-
-//# include <vcsn/misc/echo.hh>
 
 namespace vcsn
 {

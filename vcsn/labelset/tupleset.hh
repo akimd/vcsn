@@ -431,7 +431,8 @@ namespace vcsn
     {
       if (!is_special(l))
         {
-          vcsn::detail::pass
+          using swallow = int[];
+          (void) swallow
             {
               (o << (I == 0 ? "(" : ", "),
                std::get<I>(sets_).print(o, std::get<I>(l), format),
@@ -457,7 +458,8 @@ namespace vcsn
         }
       else
         raise("invalid format: ", format);
-      vcsn::detail::pass
+      using swallow = int[];
+      (void) swallow
         {
           (o << (I == 0 ? "" : sep),
            std::get<I>(sets_).print_set(o, format),

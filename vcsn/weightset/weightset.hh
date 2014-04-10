@@ -1,8 +1,6 @@
 #ifndef VCSN_WEIGHTSETS_WEIGHTSET_HH
 # define VCSN_WEIGHTSETS_WEIGHTSET_HH
 
-# include <vcsn/misc/raise.hh> // detail::pass
-
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
 // detail::variadic_mul_mixin<q_impl>" would just create an alias of
@@ -33,9 +31,11 @@ namespace vcsn
     value_t mul(const Ts&... ts) const
     {
       value_t res = this->one();
-      detail::pass
+      // FIXME: Remove once GCC is fixed.
+      using swallow = int[];
+      (void) swallow
         {
-          (res = super::mul(res, ts))...
+          ((res = super::mul(res, ts)), 0)...
         };
       return res;
     }

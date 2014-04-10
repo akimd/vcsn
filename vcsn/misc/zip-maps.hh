@@ -99,7 +99,8 @@ namespace vcsn
       }
 
       auto operator*()
-        -> decltype(dereference_(Dereference()))
+        // GCC wants "this->", clang does not need it.
+        -> decltype(this->dereference_(Dereference()))
       {
         return dereference_(Dereference());
       }
@@ -126,7 +127,8 @@ namespace vcsn
       template<std::size_t... I>
       void done_(seq<I...>)
       {
-        detail::pass
+        using swallow = bool[];
+        (void) swallow
           {
             (std::get<I>(is_) = std::get<I>(ends_),
              is_done_ = true)...
@@ -177,7 +179,8 @@ namespace vcsn
       template <std::size_t... I>
       key_t align_(key_t k, seq<I...>)
       {
-        detail::pass{ (is_done_ || (k = align_<I>(k)))... };
+        using swallow = int[];
+        (void) swallow{ ((is_done_ || (k = align_<I>(k))), 0)... };
         return k;
       }
 

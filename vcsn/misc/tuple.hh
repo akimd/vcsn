@@ -5,7 +5,6 @@
 # include <tuple>
 
 # include <vcsn/misc/hash.hh>
-# include <vcsn/misc/raise.hh> // detail::pass
 
 namespace vcsn
 {
@@ -67,7 +66,8 @@ namespace vcsn
          const std::tuple<Ts...>& ts,
          index_sequence<I...>)
     {
-      detail::pass{ (f(std::get<I>(ts)), 0)... };
+      using swallow = int[];
+      (void) swallow{ (f(std::get<I>(ts)), 0)... };
     }
 
 
