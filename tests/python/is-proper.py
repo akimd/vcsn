@@ -49,7 +49,7 @@ for ls in ["lan", "law"]:
   for ws in ["b", "z"]:
     check_context(False, a, ls + "_char(ab)_" + ws)
 
-if os.environ.get('VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER') != None:
+if have_tupleset:
     # Tuples of lan
     a = """
     digraph

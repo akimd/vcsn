@@ -112,10 +112,12 @@ check_tupleset()
   //  what():  unexpected: (: expected ,
   //
   // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
+# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
   ASSERT_EQ(ts.equals(conv(ts, "(abc,xyz)"), l), true);
   ASSERT_EQ(ts.equals(conv(ts, "(abc,\\e)"), label_t{"abc", ""}), true);
   ASSERT_EQ(ts.equals(conv(ts, "(\\e,x)"), label_t{"", "x"}), true);
   ASSERT_EQ(ts.equals(conv(ts, "(\\e,\\e)"), label_t{"", ""}), true);
+#endif
 
   // concat.
 #define CHECK(L1, R1, L2, R2)                                           \
@@ -149,8 +151,6 @@ int main()
 {
   size_t nerrs = 0;
   nerrs += check_letterset();
-# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
   nerrs += check_tupleset();
-# endif
   return !!nerrs;
 }

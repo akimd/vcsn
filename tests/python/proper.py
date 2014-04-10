@@ -330,7 +330,7 @@ digraph
   1 -> F1
 }''')
 
-if os.environ.get('VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER') != None:
+if have_tupleset:
     ## ------------------------- ##
     ## lat<lan_char, lan_char>_b ##
     ## ------------------------- ##

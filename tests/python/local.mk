@@ -23,6 +23,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/complete.py                               \
   %D%/concatenate.py                            \
   %D%/constant-term.py                          \
+  %D%/context.py                                \
   %D%/de-bruijn.py                              \
   %D%/derivation.py                             \
   %D%/determinize.py                            \
@@ -68,7 +69,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
 
 if HAVE_CORRECT_LIST_INITIALIZER_ORDER
 %C%_TESTS +=                                    \
-  %D%/context.py                                \
   %D%/tuples.py
 endif
 
