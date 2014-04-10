@@ -4,15 +4,21 @@ set -e
 . $(dirname "$0")/common
 
 cd "$DIR_BUILD"
+
+# --no-external was introduced in lcov 1.10.
+if lcov --no-external --version; then
+  no_external=--no-external
+fi
+
 lcov --capture                                  \
+     --directory .                              \
      --base-directory $DIR_SOURCE               \
+     --base-directory $DIR_BUILD                \
      -k lib                                     \
      -k vcsn                                    \
-     --no-external                              \
+     $no_external                               \
      --output vcsn2.info
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn2.cov.html          \
      vcsn2.info
-
-

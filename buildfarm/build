@@ -3,6 +3,7 @@
 set -e
 . $(dirname "$0")/common
 
+lcov --directory "$DIR_BUILD" --zerocounters
 cd "$DIR_BUILD"
 # Try silent concurrent builds, and on failures, provide better logs.
 make -j${NBPROC:-2} || make V=1
