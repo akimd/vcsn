@@ -253,8 +253,8 @@ namespace vcsn
     template <std::size_t... I>
     static tupleset make_(std::istream& i, seq<I...>)
     {
-      return {((eat_separator_<I>(i, '<', ','),
-                valueset_t<I>::make(i)))...};
+      return {(eat_separator_<I>(i, '<', ','),
+               valueset_t<I>::make(i))...};
     }
 
     template <std::size_t... I>
@@ -483,8 +483,8 @@ namespace vcsn
     tupleset
     meet_(const tupleset& rhs, seq<I...>) const
     {
-      return {(meet(std::get<I>(sets_),
-                    std::get<I>(rhs.sets_)))...};
+      return {meet(std::get<I>(sets_),
+                   std::get<I>(rhs.sets_))...};
     }
 
     /// The join with another tupleset.
@@ -492,8 +492,8 @@ namespace vcsn
     tupleset
     join_(const tupleset& rhs, seq<I...>) const
     {
-      return {(join(std::get<I>(sets_),
-                    std::get<I>(rhs.sets_)))...};
+      return {join(std::get<I>(sets_),
+                   std::get<I>(rhs.sets_))...};
     }
 
     /// The meet with another tupleset.

@@ -36,8 +36,7 @@ static unsigned
 check_tupleset()
 {
   unsigned nerrs = 0;
-  using labelset_t =
-    vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using labelset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = labelset_t::genset_t;
   genset_t gs1{'a', 'b', 'c'};
   labelset_t ls1{gs1};

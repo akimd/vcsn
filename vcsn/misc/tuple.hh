@@ -53,14 +53,14 @@ namespace vcsn
     //using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
 
-    template<typename Fun, typename... Ts>
+    template <typename Fun, typename... Ts>
     inline void
     for_(const std::tuple<Ts...>& ts, Fun f)
     {
       for_(f, ts, make_index_sequence<sizeof...(Ts)>());
     }
 
-    template<typename Fun, typename... Ts, size_t... I>
+    template <typename Fun, typename... Ts, size_t... I>
     inline void
     for_(Fun f,
          const std::tuple<Ts...>& ts,

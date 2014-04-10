@@ -36,9 +36,9 @@ namespace vcsn
 
   void eat(std::istream& is, char c)
   {
-    require (is.peek() == c,
-             "unexpected: ", str_escape(is.peek()),
-             ": expected ", str_escape(c));
+    require(is.peek() == c,
+            "unexpected: ", str_escape(is.peek()),
+            ": expected ", str_escape(c));
     is.ignore();
   }
 
