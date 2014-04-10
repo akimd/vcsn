@@ -4,6 +4,16 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-04-10
+** Vaucanson 1 has moved
+Vaucanson 1 is now hosted on gitlab.lrde.epita.fr.  It is also renamed
+vaucanson1.git, rather than just vaucanson.git.  To update your existing
+repository, run a command similar to:
+
+  $ git remote set-url origin git@gitlab.lrde.epita.fr:vcsn/vaucanson1
+
+or edit your .git/config file to update the URL.
+
 * 2014-04-05
 ** ratexps conjunctions
 The "intersection" operation on ratexps is renamed as "conjunction".
