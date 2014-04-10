@@ -61,6 +61,18 @@ check_tupleset()
   ASSERT_EQ(ts.vname(false), "lat<law_char,law_char>");
   ASSERT_EQ(ts.vname(), "lat<law_char(abc),law_char(xyz)>");
 
+  // print_set.
+  {
+    std::ostringstream o;
+    ts.print_set(o, "text");
+    ASSERT_EQ(o.str(), "lat<law_char(abc),law_char(xyz)>");
+  }
+  {
+    std::ostringstream o;
+    ts.print_set(o, "latex");
+    ASSERT_EQ(o.str(), "\\{a, b, c\\}^* \\times \\{x, y, z\\}^*");
+  }
+
   // equals.
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "x"}), true);
   ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"abc", "x"}), false);

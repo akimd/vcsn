@@ -171,7 +171,7 @@ namespace vcsn
     {
       if (format == "latex")
         {
-          this->genset()->print(o, format);
+          this->genset()->print_set(o, format);
           o << "^*";
         }
       else if (format == "text")
