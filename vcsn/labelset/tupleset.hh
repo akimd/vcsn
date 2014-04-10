@@ -225,7 +225,7 @@ namespace vcsn
     {
       std::string res = "lat<";
       const char *sep = "";
-      for (auto n: {(valueset_t<I>::sname())...})
+      for (auto n: {valueset_t<I>::sname()...})
         {
           res += sep;
           res += n;
@@ -240,7 +240,7 @@ namespace vcsn
     {
       std::string res = "lat<";
       const char *sep = "";
-      for (auto n: {(std::get<I>(sets_).vname(full))...})
+      for (auto n: {std::get<I>(sets_).vname(full)...})
         {
           res += sep;
           res += n;
@@ -261,8 +261,8 @@ namespace vcsn
     static bool
     equals_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {(valueset_t<I>::equals(std::get<I>(l),
-                                           std::get<I>(r)))...})
+      for (auto n: {valueset_t<I>::equals(std::get<I>(l),
+                                          std::get<I>(r))...})
         if (!n)
           return false;
       return true;
@@ -272,8 +272,8 @@ namespace vcsn
     static bool
     less_than_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {(valueset_t<I>::less_than(std::get<I>(l),
-                                              std::get<I>(r)))...})
+      for (auto n: {valueset_t<I>::less_than(std::get<I>(l),
+                                             std::get<I>(r))...})
         if (n)
           return true;
       return false;
@@ -284,7 +284,7 @@ namespace vcsn
     hash_(const value_t& v, seq<I...>)
     {
       std::size_t res = 0;
-      for (auto h: {(valueset_t<I>::hash(std::get<I>(v)))...})
+      for (auto h: {valueset_t<I>::hash(std::get<I>(v))...})
         std::hash_combine(res, h);
       return res;
     }
@@ -293,14 +293,14 @@ namespace vcsn
     static value_t
     special_(seq<I...>)
     {
-      return std::make_tuple((valueset_t<I>::special())...);
+      return std::make_tuple(valueset_t<I>::special()...);
     }
 
     template <std::size_t... I>
     static bool
     is_special_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(valueset_t<I>::is_special(std::get<I>(l)))...})
+      for (auto n: {valueset_t<I>::is_special(std::get<I>(l))...})
         if (!n)
           return false;
       return true;
@@ -310,14 +310,14 @@ namespace vcsn
     value_t
     zero_(seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).zero())...);
+      return std::make_tuple(std::get<I>(sets_).zero()...);
     }
 
     template <std::size_t... I>
     bool
     is_zero_(const value_t& l, seq<I...>) const
     {
-      for (auto n: {(std::get<I>(sets_).is_zero(std::get<I>(l)))...})
+      for (auto n: {std::get<I>(sets_).is_zero(std::get<I>(l))...})
         if (!n)
           return false;
       return true;
@@ -341,7 +341,7 @@ namespace vcsn
     static bool
     is_one_(const value_t& l, seq<I...>)
     {
-      for (auto n: {(valueset_t<I>::is_one(std::get<I>(l)))...})
+      for (auto n: {valueset_t<I>::is_one(std::get<I>(l))...})
         if (!n)
           return false;
       return true;
@@ -351,7 +351,7 @@ namespace vcsn
     static bool
     show_one_(seq<I...>)
     {
-      for (auto n: {(valueset_t<I>::show_one())...})
+      for (auto n: {valueset_t<I>::show_one()...})
         if (n)
           return true;
       return false;
@@ -361,47 +361,47 @@ namespace vcsn
     value_t
     add_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).add(std::get<I>(l),
-                                                     std::get<I>(r)))...);
+      return std::make_tuple(std::get<I>(sets_).add(std::get<I>(l),
+                                                    std::get<I>(r))...);
     }
 
     template <std::size_t... I>
     value_t
     mul_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).mul(std::get<I>(l),
-                                                     std::get<I>(r)))...);
+      return std::make_tuple(std::get<I>(sets_).mul(std::get<I>(l),
+                                                    std::get<I>(r))...);
     }
 
     template <std::size_t... I>
     value_t
     rdiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).rdiv(std::get<I>(l),
-                                                      std::get<I>(r)))...);
+      return std::make_tuple(std::get<I>(sets_).rdiv(std::get<I>(l),
+                                                     std::get<I>(r))...);
     }
 
     template <std::size_t... I>
     value_t
     ldiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).ldiv(std::get<I>(l),
-                                                      std::get<I>(r)))...);
+      return std::make_tuple(std::get<I>(sets_).ldiv(std::get<I>(l),
+                                                     std::get<I>(r))...);
     }
 
     template <std::size_t... I>
     value_t
     star_(value_t const& l, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).star(std::get<I>(l)))...);
+      return std::make_tuple(std::get<I>(sets_).star(std::get<I>(l))...);
     }
 
     template <std::size_t... I>
     value_t
     concat_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple((std::get<I>(sets_).concat(std::get<I>(l),
-                                                        std::get<I>(r)))...);
+      return std::make_tuple(std::get<I>(sets_).concat(std::get<I>(l),
+                                                       std::get<I>(r))...);
     }
 
     template <std::size_t... I>
