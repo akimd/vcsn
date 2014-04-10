@@ -13,14 +13,15 @@
 
 m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
-AC_PREREQ([2.61])
+AC_PREREQ([2.69])
 
 AC_INIT([Vaucanson], [2b.3],
         [vaucanson-bugs@lrde.epita.fr], [],
         [http://vaucanson.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
-AC_CONFIG_MACRO_DIRS([build-aux/m4])
+# For Autoconf 2.70:
+# AC_CONFIG_MACRO_DIRS([build-aux/m4])
 
 AM_INIT_AUTOMAKE([1.14 tar-ustar no-define foreign dist-xz
                   color-tests parallel-tests nostdinc silent-rules

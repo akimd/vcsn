@@ -174,7 +174,7 @@ To contribute to Vaucanson 2, or to build it from its Git repository,
 you need more tools:
 
 - Automake 1.14 or newer
-- Autoconf 2.61 or newer
+- Autoconf 2.69 or newer
 - Bison 3.0 or newer
 - Flex 2.5.35 or newer
 
