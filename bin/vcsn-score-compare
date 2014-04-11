@@ -16,7 +16,8 @@ def read(fn):
 for fn in sys.argv[1:]:
     read(fn)
 
-for k in bench:
+for k in sorted(bench.keys()):
     for fn in sys.argv[1:]:
-        print("{:6}".format(bench[k][fn]), end = ' ')
+        v = bench[k][fn] if fn in bench[k] else "N/A"
+        print("{:6}".format(v), end = ' ')
     print(k)
