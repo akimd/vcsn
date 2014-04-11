@@ -14,8 +14,7 @@ static unsigned
 check_letterset()
 {
   unsigned nerrs = 0;
-  using labelset_t =
-    vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using labelset_t = vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
   using genset_t = labelset_t::genset_t;
   genset_t gs{'a', 'b', 'c'};
   labelset_t ls{gs};
@@ -36,55 +35,68 @@ static unsigned
 check_tupleset()
 {
   unsigned nerrs = 0;
-  using labelset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
-  using genset_t = labelset_t::genset_t;
+  using wordset_t = vcsn::wordset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using genset_t = wordset_t::genset_t;
   genset_t gs1{'a', 'b', 'c'};
-  labelset_t ls1{gs1};
+  wordset_t ls1{gs1};
   genset_t gs2{'x', 'y', 'z'};
-  labelset_t ls2{gs2};
+  wordset_t ls2{gs2};
 
-  using tupleset_t = vcsn::tupleset<labelset_t, labelset_t>;
-  tupleset_t ts{ls1, ls2};
-  using label_t = tupleset_t::value_t;
+  using wwset_t = vcsn::tupleset<wordset_t, wordset_t>;
+  using ww_t = wwset_t::value_t;
+  wwset_t wwset{ls1, ls2};
 
-  label_t l{"abc", "xyz"};
-
-  using lal_labelset_t =
-    vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
-  using lal_tupleset_t = vcsn::tupleset<labelset_t, lal_labelset_t>;
+  using letterset_t = vcsn::letterset<vcsn::set_alphabet<vcsn::char_letters>>;
+  using wlset_t = vcsn::tupleset<wordset_t, letterset_t>;
+  using wl_t = wlset_t::value_t;
+  wlset_t wlset{ls1, letterset_t{gs2}};
 
   // sname.
-  ASSERT_EQ(tupleset_t::sname(), "lat<law_char,law_char>");
+  ASSERT_EQ(wwset_t::sname(), "lat<law_char,law_char>");
 
   // vname.
-  ASSERT_EQ(ts.vname(false), "lat<law_char,law_char>");
-  ASSERT_EQ(ts.vname(), "lat<law_char(abc),law_char(xyz)>");
+  ASSERT_EQ(wwset.vname(false), "lat<law_char,law_char>");
+  ASSERT_EQ(wwset.vname(), "lat<law_char(abc),law_char(xyz)>");
 
   // print_set.
   {
     std::ostringstream o;
-    ts.print_set(o, "text");
+    wwset.print_set(o, "text");
     ASSERT_EQ(o.str(), "lat<law_char(abc),law_char(xyz)>");
   }
   {
     std::ostringstream o;
-    ts.print_set(o, "latex");
+    wwset.print_set(o, "latex");
     ASSERT_EQ(o.str(), "\\{a, b, c\\}^* \\times \\{x, y, z\\}^*");
   }
 
+  // make.
+# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+  {
+    std::string n = "lat<law_char(ABC),law_char(XYZ)>";
+    std::istringstream is(n);
+    ASSERT_EQ(wwset_t::make(is).vname(), n);
+  }
+  {
+    std::string n = "lat<law_char(ABC),lal_char(XYZ)>";
+    std::istringstream is(n);
+    ASSERT_EQ(wlset_t::make(is).vname(), n);
+  }
+#endif
+
   // equals.
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "x"}), true);
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"abc", "x"}), false);
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"", "x"}), false);
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "xx"}), false);
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", "y"}), false);
-  ASSERT_EQ(ts.equals(label_t{"ab", "x"}, label_t{"ab", ""}), false);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "x"}), true);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"abc", "x"}), false);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"", "x"}), false);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "xx"}), false);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "y"}), false);
+  ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", ""}), false);
 
   // less_than.
-#define CHECK(L, R, Res)                                        \
-  do {                                                          \
-    ASSERT_EQ(ts.less_than(label_t L, label_t R), Res);         \
-    ASSERT_EQ(ts.less_than(label_t R, label_t L), !Res);        \
+#define CHECK(L, R, Res)                                \
+  do {                                                  \
+    ASSERT_EQ(wwset.less_than(ww_t L, ww_t R), Res);    \
+    ASSERT_EQ(wwset.less_than(ww_t R, ww_t L), !Res);   \
   } while (false)
 
   CHECK(("", ""),   ("a", ""),    true);
@@ -97,24 +109,24 @@ check_tupleset()
 #undef CHECK
 
   // special, is_special.
-  ASSERT_EQ(ts.equals(ts.special(), label_t{ls1.special(),ls2.special()}), true);
-  ASSERT_EQ(format(ts, label_t{ls1.special(),ls2.special()}), "");
-  ASSERT_EQ(format(ts, ts.special()), "");
-  ASSERT_EQ(ts.is_special(ts.special()), true);
-  ASSERT_EQ(!ts.is_special(l), true);
+  ASSERT_EQ(wwset.equals(wwset.special(), ww_t{ls1.special(),ls2.special()}), true);
+  ASSERT_EQ(format(wwset, ww_t{ls1.special(),ls2.special()}), "");
+  ASSERT_EQ(format(wwset, wwset.special()), "");
+  ASSERT_EQ(wwset.is_special(wwset.special()), true);
+  ASSERT_EQ(!wwset.is_special(ww_t{"abc", "xyz"}), true);
 
   // is_one.
-  ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.one()}), true);
-  ASSERT_EQ(ts.is_one(label_t{ls1.one(), ls2.special()}), false);
-  ASSERT_EQ(ts.is_one(label_t{ls1.one(), "x"}), false);
+  ASSERT_EQ(wwset.is_one(ww_t{ls1.one(), ls2.one()}), true);
+  ASSERT_EQ(wwset.is_one(ww_t{ls1.one(), ls2.special()}), false);
+  ASSERT_EQ(wwset.is_one(ww_t{ls1.one(), "x"}), false);
 
   // has_one.
-  ASSERT_EQ(tupleset_t::has_one(), true);
-  ASSERT_EQ(lal_tupleset_t::has_one(), false);
+  ASSERT_EQ(wwset_t::has_one(), true);
+  ASSERT_EQ(wlset_t::has_one(), false);
 
   // format, transpose.
-  ASSERT_EQ(format(ts, l), "(abc, xyz)");
-  ASSERT_EQ(format(ts, ts.transpose(l)), "(cba, zyx)");
+  ASSERT_EQ(format(wwset, ww_t{"abc", "xyz"}), "(abc, xyz)");
+  ASSERT_EQ(format(wwset, wwset.transpose(ww_t{"abc", "xyz"})), "(cba, zyx)");
 
   // conv.
   // If you observe a runtime exception here (something like
@@ -124,16 +136,19 @@ check_tupleset()
   //
   // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
 # if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-  ASSERT_EQ(ts.equals(conv(ts, "(abc,xyz)"), l), true);
-  ASSERT_EQ(ts.equals(conv(ts, "(abc,\\e)"), label_t{"abc", ""}), true);
-  ASSERT_EQ(ts.equals(conv(ts, "(\\e,x)"), label_t{"", "x"}), true);
-  ASSERT_EQ(ts.equals(conv(ts, "(\\e,\\e)"), label_t{"", ""}), true);
+  wwset.print(std::cerr, conv(wwset, "(abc,xyz)")) << '\n';
+  ASSERT_EQ(wwset.equals(conv(wwset, "(abc,xyz)"), ww_t{"abc", "xyz"}), true);
+  ASSERT_EQ(wwset.equals(conv(wwset, "(abc,\\e)"), ww_t{"abc", ""}), true);
+  ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,x)"),   ww_t{"", "x"}), true);
+  ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,\\e)"), ww_t{"", ""}), true);
+
+  ASSERT_EQ(wlset.equals(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
 #endif
 
   // concat.
 #define CHECK(L1, R1, L2, R2)                                           \
-  ASSERT_EQ(ts.equals(ts.concat(label_t{L1, R1}, label_t{L2, R2}),      \
-                      label_t{L1 L2, R1 R2}), true)
+  ASSERT_EQ(wwset.equals(wwset.concat(ww_t{L1, R1}, ww_t{L2, R2}),      \
+                         ww_t{L1 L2, R1 R2}), true)
   CHECK("a",  "x",    "b",   "y");
   CHECK("aa", "xx",   "bb",  "yy");
   CHECK("",   "xx",   "bb",  "yy");
