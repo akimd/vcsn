@@ -211,7 +211,7 @@ namespace vcsn
     label_t
     label_(string_t l)
     {
-      static const auto& ls = *res_->labelset();
+      const auto& ls = *res_->labelset();
       auto p = lmap_.emplace(l, label_t{});
       if (p.second)
         p.first->second = conv(ls, l);
@@ -222,7 +222,7 @@ namespace vcsn
     weight_t
     weight_(string_t w)
     {
-      static const auto& ws = *res_->weightset();
+      const auto& ws = *res_->weightset();
       auto p = wmap_.emplace(w, weight_t{});
       if (p.second)
         p.first->second = w.get().empty() ? ws.one() : conv(ws, w);

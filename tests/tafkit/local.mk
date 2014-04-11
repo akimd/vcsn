@@ -15,7 +15,6 @@
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
-  %D%/fado.chk                                  \
   %D%/grail.chk                                 \
   %D%/lift.chk                                  \
   %D%/transpose.chk
@@ -40,19 +39,12 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/binary.efsm                      \
-  %D%/fado.dir/dfa.fado                         \
-  %D%/fado.dir/dfa.gv                           \
-  %D%/fado.dir/enfa.fado                        \
-  %D%/fado.dir/enfa.gv                          \
-  %D%/fado.dir/nfa.fado                         \
-  %D%/fado.dir/nfa.gv                           \
   %D%/grail.dir/a.grail                         \
   %D%/grail.dir/a.gv
 
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
-%D%/fado.log:        $(wildcard $(srcdir)/%D%/fado.dir/*)
 %D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run

@@ -53,6 +53,9 @@ def PASS(*msg):
     print('ok ', count, *msg)
     print()
 
+def SKIP(*msg):
+    PASS('SKIP', *msg)
+
 def XFAIL(fun):
     try:
         fun()

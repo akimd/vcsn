@@ -118,3 +118,6 @@ installcheck-local:
 	  RECHECK_LOGS='$$(TEST_LOGS)'				\
 	  check;						\
 	rm -rf "$$VCSN_HOME"
+
+# Left by FAdo when the test suite runs.
+CLEANFILES += .tableFAdo

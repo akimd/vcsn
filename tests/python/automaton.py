@@ -104,10 +104,50 @@ xfail(r'''digraph
 ## Conversions: dot and TikZ.  ##
 ## --------------------------- ##
 
+try:
+    import FAdo
+    has_fado = True
+except ImportError:
+    has_fado = False
+
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     a = vcsn.automaton.load(fn)
+
     gv   = open(fn.replace('.in.gv', '.out.gv')).read().strip()
+    CHECK_EQ(gv, a.format('dot'))
+
     tikz = open(fn.replace('.in.gv', '.tex')).read().strip()
-    CHECK_EQ(gv,   a.format('dot'))
     CHECK_EQ(tikz, a.format('tikz'))
+
+
+## ------------------- ##
+## Conversions: FAdo.  ##
+## ------------------- ##
+
+try:
+    import FAdo
+    has_fado = True
+except ImportError:
+    has_fado = False
+
+def check_fado(aut):
+    '''Check that FAdo accepts aut.format('fado') as input.'''
+    if has_fado:
+        name = "automaton.fado"
+        from FAdo import fa
+        # I did not find a means to read from a string...
+        with open(name, 'w') as f:
+            f.write(aut.format('fado') + "\n")
+        fa.readFromFile(name)
+        os.remove(name)
+    else:
+        SKIP("FAdo not installed")
+
+for fn in glob.glob(os.path.join(medir, '*.fado')):
+    a = vcsn.automaton.load(fn, 'fado')
+    exp = vcsn.automaton.load(fn.replace('.fado', '.gv'))
+    CHECK_EQ(exp, a)
+    fado   = open(fn).read().strip()
+    CHECK_EQ(fado, a.format('fado'))
+    check_fado(a)

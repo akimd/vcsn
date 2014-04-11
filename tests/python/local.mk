@@ -76,6 +76,10 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
+  %D%/automaton.dir/dfa.fado                    \
+  %D%/automaton.dir/dfa.gv                      \
+  %D%/automaton.dir/enfa.fado                   \
+  %D%/automaton.dir/enfa.gv                     \
   %D%/automaton.dir/lal_char_b.in.gv            \
   %D%/automaton.dir/lal_char_b.out.gv           \
   %D%/automaton.dir/lal_char_b.tex              \
@@ -85,6 +89,8 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/lao_z.in.gv                 \
   %D%/automaton.dir/lao_z.out.gv                \
   %D%/automaton.dir/lao_z.tex                   \
+  %D%/automaton.dir/nfa.fado                    \
+  %D%/automaton.dir/nfa.gv                      \
   %D%/automaton.dir/pyramid.in.gv               \
   %D%/automaton.dir/pyramid.out.gv              \
   %D%/automaton.dir/pyramid.tex                 \
