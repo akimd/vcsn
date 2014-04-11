@@ -112,10 +112,12 @@ namespace vcsn
           boost::filesystem::rename(tmp + ".cc", base + ".cc");
         }
 
-        void print_ctx(const std::string& ctx)
+        /// Generate C++ syntax for type ctx (which might use our
+        /// syntax: 'lal_char(ab)_z').
+        void print_type(const std::string& type)
         {
           is.clear();
-          is.str(ctx);
+          is.str(type);
           auto ast = parser_.parse();
           ast->accept(printer_);
           if (is.peek() != -1)
@@ -182,7 +184,7 @@ namespace vcsn
           printer_.header("vcsn/ctx/instantiate.hh");
           std::string base = plugindir() + detail::context_base::sname(ctx);
           os << "using ctx_t =" << incendl;
-          print_ctx(ctx);
+          print_type(ctx);
           os << ';' << decendl
              <<
             "\n"
@@ -208,7 +210,7 @@ namespace vcsn
               os << iendl;
               std::string t = "t" + std::to_string(count) + "_t";
               os << "using " << t << " =" << incendl;
-              print_ctx(s);
+              print_type(s);
               os << ';' << decendl;
               types += (count ? ", " : "") + t;
               ++count;
