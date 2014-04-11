@@ -25,29 +25,33 @@ def xfail(algo, aut):
 ## as of revision a0761d6.
 redundant = aut("redundant.gv")
 redundant_exp = aut("redundant.exp.gv")
-check('moore', redundant, redundant_exp)
-check('signature', redundant, redundant_exp)
-check('weighted', redundant, redundant_exp)
+check('brzozowski', redundant, redundant_exp)
+check('moore',      redundant, redundant_exp)
+check('signature',  redundant, redundant_exp)
+check('weighted',   redundant, redundant_exp)
 
 ## An automaton equal to redundant.exp, with one transition removed.
 a = aut('incomplete-non-trim.gv')
-xfail('moore', a)
-xfail('signature', a)
-xfail('weighted', a)
+#xfail('brzozowski', a)
+xfail('moore',      a)
+xfail('signature',  a)
+xfail('weighted',   a)
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
 a = aut('no-initial-states.gv')
-xfail('moore', a)
-xfail('signature', a)
-xfail('weighted', a)
+#xfail('brzozowski', a)
+xfail('moore',      a)
+xfail('signature',  a)
+xfail('weighted',   a)
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
 a = aut("no-final-states.gv")
-xfail('moore', a)
-xfail('signature', a)
-xfail('weighted', a)
+#xfail('brzozowski', a)
+xfail('moore',      a)
+xfail('signature',  a)
+xfail('weighted',   a)
 
 ## Non-regression testcase: ensure that moore works and produces a
 ## correct result even with no non-final states.
@@ -55,13 +59,14 @@ all_states_final = vcsn.context('lal_char(a)_b').ratexp('a*').standard()
 check('moore', all_states_final, all_states_final.minimize('signature'))
 
 ## Minimize an intricate automaton into a linear one.
-intricate = vcsn.context('lal_char(abcdefghijk)_b') \
-                .ratexp('(a+b+c+d+e+f+g+h+i+j+k){10}') \
+intricate = vcsn.context('lal_char(a-k)_b') \
+                .ratexp('[a-k]{10}') \
                 .standard()
 intricate_exp = aut("intricate.exp.gv")
-check('moore', intricate, intricate_exp)
-check('signature', intricate, intricate_exp)
-check('weighted', intricate, intricate_exp)
+check('brzozowski', intricate, intricate_exp)
+check('moore',      intricate, intricate_exp)
+check('signature',  intricate, intricate_exp)
+check('weighted',   intricate, intricate_exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
@@ -69,16 +74,18 @@ smallnfa = vcsn.context('lal_char(a)_b') \
                .ratexp('a{2}*+a{2}*') \
                .standard()
 smallnfa_exp = aut("small-nfa.exp.gv")
-xfail('moore', smallnfa)
-check('signature', smallnfa, smallnfa_exp)
-check('weighted', smallnfa, smallnfa_exp)
+check('brzozowski', smallnfa, smallnfa_exp)
+xfail('moore',      smallnfa)
+check('signature',  smallnfa, smallnfa_exp)
+check('weighted',   smallnfa, smallnfa_exp)
 
 ## A small weighted automaton.
 smallweighted = aut("small-weighted.gv")
 smallweighted_exp = aut("small-weighted.exp.gv")
-xfail('moore', smallweighted)
-xfail('signature', smallweighted)
-check('weighted', smallweighted, smallweighted_exp)
+xfail('brzozowski', smallweighted)
+xfail('moore',      smallweighted)
+xfail('signature',  smallweighted)
+check('weighted',   smallweighted, smallweighted_exp)
 
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in
@@ -99,5 +106,6 @@ check('weighted', smallweighted, smallweighted_exp)
 alreadyminimal = vcsn.context('lal_char(ab)_b') \
                      .ratexp("a+ba") \
                      .derived_term()
-check('moore', alreadyminimal, alreadyminimal)
-check('signature', alreadyminimal, alreadyminimal)
+check('brzozowski', alreadyminimal, alreadyminimal)
+check('moore',      alreadyminimal, alreadyminimal)
+check('signature',  alreadyminimal, alreadyminimal)

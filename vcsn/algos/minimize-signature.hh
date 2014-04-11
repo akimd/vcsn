@@ -413,16 +413,17 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
-    inline
-    Aut
-    minimize(const Aut& a)
-    {
-      minimizer<Aut> minimize(a);
-      return minimize();
-    }
-
   } // detail_signature::
+
+  template <typename Aut>
+  inline
+  Aut
+  minimize_signature(const Aut& a)
+  {
+    detail_signature::minimizer<Aut> minimize(a);
+    return minimize();
+  }
+
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_MINIMIZE_SIGNATURE_HH

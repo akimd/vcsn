@@ -15,7 +15,7 @@ namespace vcsn
   /*-------------------------------------------------------------------------.
   | minimization with signatures; general version working on any weightset.  |
   `-------------------------------------------------------------------------*/
-  namespace weighted
+  namespace detail_weighted
   {
     template <typename Aut>
     class minimizer
@@ -389,16 +389,17 @@ namespace vcsn
       }
     };
 
-    template <typename Aut>
-    inline
-    Aut
-    minimize(const Aut& a)
-    {
-      minimizer<Aut> minimize(a);
-      return minimize();
-    }
-
   } // weighted::
+
+  template <typename Aut>
+  inline
+  Aut
+  minimize_weighted(const Aut& a)
+  {
+    detail_weighted::minimizer<Aut> minimize(a);
+    return minimize();
+  }
+
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_MINIMIZE_WEIGHTED_HH
