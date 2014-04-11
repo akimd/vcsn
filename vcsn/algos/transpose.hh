@@ -252,7 +252,7 @@ namespace vcsn
     };
   }
 
-  template <class Aut>
+  template <typename Aut>
   typename detail::transpose_automaton<Aut>
   transpose(Aut& aut)
   {
@@ -274,7 +274,7 @@ namespace vcsn
       {
         auto& a = aut->as<Aut>();
         return make_automaton<Aut,
-                              vcsn::detail::transpose_automaton<Aut>>(std::move(vcsn::copy(a)));
+                              vcsn::detail::transpose_automaton<Aut>>(vcsn::copy(a));
       }
 
       REGISTER_DECLARE(transpose,
