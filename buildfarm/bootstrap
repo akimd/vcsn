@@ -4,6 +4,7 @@ set -ex
 . $(dirname "$0")/common
 
 # Help debugging.
+mkdir -p $DIR_ROOT_BUILD
 env >$DIR_ROOT_BUILD/environment.log
 
 ## ----------- ##
