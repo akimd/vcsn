@@ -64,14 +64,10 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/sum.py                                    \
   %D%/thompson.py                               \
   %D%/transpose.py                              \
+  %D%/tuples.py                                 \
   %D%/union.py                                  \
   %D%/universal.py                              \
   %D%/weight.py
-
-if HAVE_CORRECT_LIST_INITIALIZER_ORDER
-%C%_TESTS +=                                    \
-  %D%/tuples.py
-endif
 
 EXTRA_DIST += %D%/test.py
 $(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) %D%/test.py

@@ -70,6 +70,116 @@ namespace vcsn
       (void) swallow{ (f(std::get<I>(ts)), 0)... };
     }
 
+    /// Map a function on a tuple, return tuple of the results.
+    template <typename Fun, typename... Ts>
+    inline auto
+    map(const std::tuple<Ts...>& ts, Fun f)
+      -> decltype(map_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>()))
+    {
+      return map_tuple_(f, ts, make_index_sequence<sizeof...(Ts)>());
+    }
+
+    template <typename Fun, typename... Ts, size_t... I>
+    inline auto
+    map_tuple_(Fun f,
+               const std::tuple<Ts...>& ts,
+               index_sequence<I...>)
+      -> decltype(map_variadic_(f, std::get<I>(ts)...))
+    {
+      return map_variadic_(f, std::get<I>(ts)...);
+    }
+
+    template<typename Fun>
+    inline auto
+    map_variadic_(Fun)
+      -> decltype(std::make_tuple())
+    {
+      return std::make_tuple();
+    }
+
+    template <typename Fun, typename T, typename... Ts>
+    inline auto
+    map_variadic_(Fun f, T t, Ts&&... ts)
+      -> decltype(std::tuple_cat(std::make_tuple(f(t)), map_variadic_(f, ts...)))
+    {
+      // Enforce evaluation order from left to right.
+      auto r = f(t);
+      return std::tuple_cat(std::make_tuple(r), map_variadic_(f, ts...));
+    }
+
+
+
+#if 0
+
+    /*-----------------.
+    | make_gcc_tuple.  |
+    `-----------------*/
+
+    // This does not work, I don't understand why.  If you know, please
+    // let me (AD) know.
+    inline auto
+    make_gcc_tuple()
+      -> std::tuple<>
+    {
+      return {};
+    }
+
+    template <typename T, typename... Ts>
+    inline auto
+    make_gcc_tuple(T t, Ts&&... ts)
+      -> decltype(std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t)));
+
+    template <typename T, typename... Ts>
+    inline auto
+    make_gcc_tuple(T t, Ts&&... ts)
+      -> decltype(std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t)))
+    {
+      return std::tuple_cat(make_gcc_tuple(std::forward<Ts>(ts)...), std::make_tuple(t));
+    }
+
+#endif
+
+
+    /*----------------.
+    | reverse_tuple.  |
+    `----------------*/
+
+    template <typename... Ts>
+    inline auto
+    reverse_tuple(const std::tuple<Ts...>& t)
+      -> decltype(reverse_tuple(t, make_index_sequence<sizeof...(Ts)>()))
+    {
+      return reverse_tuple(t, make_index_sequence<sizeof...(Ts)>());
+    }
+
+    template <typename... Ts, std::size_t... I>
+    inline auto
+    reverse_tuple(const std::tuple<Ts...>& t, index_sequence<I...>)
+      -> decltype(std::make_tuple(std::get<sizeof...(Ts) - 1 - I>(t)...))
+    {
+      return std::make_tuple(std::get<sizeof...(Ts) - 1 - I>(t)...);
+    }
+
+    /// Same as make_tuple, unless the evaluation of arguments if
+    /// right-to-left, in which case reverse the result.
+#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+    template <typename... Ts>
+    inline auto
+    make_gcc_tuple(Ts&&... ts)
+      -> decltype(std::make_tuple(std::forward<Ts>(ts)...))
+    {
+      return std::make_tuple(std::forward<Ts>(ts)...);
+    }
+#  else
+    template <typename... Ts>
+    inline auto
+    make_gcc_tuple(Ts&&... ts)
+      -> decltype(reverse_tuple(std::make_tuple(std::forward<Ts>(ts)...)))
+    {
+      return reverse_tuple(std::make_tuple(std::forward<Ts>(ts)...));
+    }
+#  endif
+
 
     /*------------------------.
     | print(ostream, tuple).  |

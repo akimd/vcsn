@@ -330,127 +330,126 @@ digraph
   1 -> F1
 }''')
 
-if have_tupleset:
-    ## ------------------------- ##
-    ## lat<lan_char, lan_char>_b ##
-    ## ------------------------- ##
+## ------------------------- ##
+## lat<lan_char, lan_char>_b ##
+## ------------------------- ##
 
-    check('''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
-      I0 -> 0
-      0 -> 1 [label = "(\\\\e, \\\\e)"]
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(b, \\\\e)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''', '''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
-      rankdir = LR
-      {
-        node [style = invis, shape = none, label = "", width = 0, height = 0]
-        I0
-        F0
-        F1
-        F2
-      }
-      {
-        node [shape = circle]
-        0
-        1
-        2
-      }
-      I0 -> 0
-      0 -> F0
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(\\\\e, y), (b, \\\\e)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''')
-
-
-    ## ------------------------- ##
-    ## lat<lan_char, lal_char>_b ##
-    ## ------------------------- ##
-
-    check('''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
-      I0 -> 0
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(b, y)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''', '''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
-      rankdir = LR
-      {
-        node [style = invis, shape = none, label = "", width = 0, height = 0]
-        I0
-        F1
-        F2
-      }
-      {
-        node [shape = circle]
-        0
-        1
-        2
-      }
-      I0 -> 0
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(b, y)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''')
+check('''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(\\\\e, \\\\e)"]
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(b, \\\\e)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''', '''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F0
+    F1
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(\\\\e, y), (b, \\\\e)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''')
 
 
+## ------------------------- ##
+## lat<lan_char, lal_char>_b ##
+## ------------------------- ##
 
-    ## ------------------------------------------------------------- ##
-    ## Check that lat<lan_char, lal_char>_b is not ruined by the lan ##
-    ## to lal transition                                             ##
-    ## ------------------------------------------------------------- ##
+check('''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(b, y)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''', '''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(b, y)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''')
 
-    check_to_lal('''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
-      I0 -> 0
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(b, y)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''', '''
-    digraph
-    {
-      vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
-      rankdir = LR
-      {
-        node [style = invis, shape = none, label = "", width = 0, height = 0]
-        I0
-        F1
-        F2
-      }
-      {
-        node [shape = circle]
-        0
-        1
-        2
-      }
-      I0 -> 0
-      0 -> 1 [label = "(a, x)"]
-      0 -> 2 [label = "(b, y)"]
-      1 -> F1
-      1 -> 2 [label = "(\\\\e, y)"]
-      2 -> F2
-    }''')
+
+
+## ------------------------------------------------------------- ##
+## Check that lat<lan_char, lal_char>_b is not ruined by the lan ##
+## to lal transition                                             ##
+## ------------------------------------------------------------- ##
+
+check_to_lal('''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(b, y)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''', '''
+digraph
+{
+  vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
+  rankdir = LR
+  {
+    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    I0
+    F1
+    F2
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  0 -> 2 [label = "(b, y)"]
+  1 -> F1
+  1 -> 2 [label = "(\\\\e, y)"]
+  2 -> F2
+}''')

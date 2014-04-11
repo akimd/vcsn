@@ -5,6 +5,7 @@
 # include <istream>
 # include <tuple>
 
+# include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
 # include <vcsn/labelset/fwd.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/raise.hh>
@@ -33,6 +34,10 @@ namespace vcsn
     using self_type = tupleset;
     using value_t = std::tuple<typename ValueSets::value_t...>;
     using kind_t = labels_are_tuples;
+
+    tupleset(valuesets_t vs)
+      : sets_(vs)
+    {}
 
     tupleset(ValueSets... ls)
       : sets_(ls...)
@@ -253,8 +258,14 @@ namespace vcsn
     template <std::size_t... I>
     static tupleset make_(std::istream& i, seq<I...>)
     {
+#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
       return {(eat_separator_<I>(i, '<', ','),
                valueset_t<I>::make(i))...};
+#  else
+      return make_gcc_tuple
+        ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
+          valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
+#  endif
     }
 
     template <std::size_t... I>
@@ -408,8 +419,14 @@ namespace vcsn
     value_t
     conv_(std::istream& i, seq<I...>) const
     {
-      return std::make_tuple(((eat_separator_<I>(i, '(', ','),
-                               std::get<I>(sets_).conv(i)))...);
+#  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+      return std::make_tuple((eat_separator_<I>(i, '(', ','),
+                              std::get<I>(sets_).conv(i))...);
+#  else
+      return
+        detail::make_gcc_tuple((eat_separator_<sizeof...(ValueSets)-1 - I>(i, '(', ','),
+                                std::get<sizeof...(ValueSets)-1 - I>(sets_).conv(i))...);
+#  endif
     }
 
     /// Read the separator from the input stream \a i.

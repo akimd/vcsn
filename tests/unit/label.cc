@@ -71,7 +71,13 @@ check_tupleset()
   }
 
   // make.
-# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
+  // If you observe a runtime exception here (something like
+  //
+  // terminate called after throwing an instance of 'std::runtime_error'
+  //  what():  unexpected: (: expected ,
+  //
+  // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
+  // But really, you should no longer see such errors: tupleset has workarounds.
   {
     std::string n = "lat<law_char(ABC),law_char(XYZ)>";
     std::istringstream is(n);
@@ -82,7 +88,6 @@ check_tupleset()
     std::istringstream is(n);
     ASSERT_EQ(wlset_t::make(is).vname(), n);
   }
-#endif
 
   // equals.
   ASSERT_EQ(wwset.equals(ww_t{"ab", "x"}, ww_t{"ab", "x"}), true);
@@ -129,21 +134,13 @@ check_tupleset()
   ASSERT_EQ(format(wwset, wwset.transpose(ww_t{"abc", "xyz"})), "(cba, zyx)");
 
   // conv.
-  // If you observe a runtime exception here (something like
-  //
-  // terminate called after throwing an instance of 'std::runtime_error'
-  //  what():  unexpected: (: expected ,
-  //
-  // then your problem is that your compiler (e.g., G++ 4.8) is buggy.
-# if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-  wwset.print(std::cerr, conv(wwset, "(abc,xyz)")) << '\n';
+  // Exposed to the same bugs as make, see above.
   ASSERT_EQ(wwset.equals(conv(wwset, "(abc,xyz)"), ww_t{"abc", "xyz"}), true);
   ASSERT_EQ(wwset.equals(conv(wwset, "(abc,\\e)"), ww_t{"abc", ""}), true);
   ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,x)"),   ww_t{"", "x"}), true);
   ASSERT_EQ(wwset.equals(conv(wwset, "(\\e,\\e)"), ww_t{"", ""}), true);
 
   ASSERT_EQ(wlset.equals(conv(wlset, "(abc,x)"),   wl_t{"abc", 'x'}), true);
-#endif
 
   // concat.
 #define CHECK(L1, R1, L2, R2)                                           \

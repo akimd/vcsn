@@ -4,6 +4,19 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-04-11
+** GCC is back in business
+GCC compiles Vaucanson incorrectly (i.e., Vaucanson appears to behave
+incorrectly, but it is actually the compiler that is incorrect).  For this
+reason, some features were disabled with such a compiler, and recently GCC
+support was completely dropped.
+
+Efforts were put in finding reasonable workarounds for these bugs, and now
+GCC is, again, supported.  Parts that used to be disabled are now supported.
+
+For more information on this bug, see the following problem report
+<http://gcc.gnu.org/bugzilla/show_bug.cgi?id=51253>.
+
 * 2014-04-10
 ** Vaucanson 1 has moved
 Vaucanson 1 is now hosted on gitlab.lrde.epita.fr.  It is also renamed

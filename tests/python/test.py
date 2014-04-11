@@ -14,9 +14,6 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")
 
-# Whether we can use the tupleset support.
-have_tupleset = os.environ.get('VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER') != None
-
 def rst_file(name, content):
     print(name + "::")
     print()
