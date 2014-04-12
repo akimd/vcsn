@@ -44,9 +44,10 @@ namespace vcsn
       {
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
+        using rs_t = ratexpset<ctx_t>;
+
         // Word polynomialset.
-        using wps_t = typename vcsn::detail::law_traits<Ctx>::polynomialset_t;
-        using rs_t = ratexpset<Ctx>;
+        using wps_t = vcsn::detail::word_polynomialset_t<ctx_t>;
 
         // Same labelset, but over Booleans.
         using b_ctx_t = context<typename Ctx::labelset_t, b>;

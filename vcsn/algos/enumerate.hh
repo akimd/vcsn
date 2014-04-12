@@ -14,6 +14,8 @@
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/nullableset.hh>
+# include <vcsn/labelset/oneset.hh>
+# include <vcsn/labelset/tupleset.hh>
 # include <vcsn/labelset/wordset.hh>
 # include <vcsn/weightset/polynomialset.hh>
 
@@ -28,96 +30,103 @@ namespace vcsn
   namespace detail
   {
     /// The LAW from a LAL.
-    template <typename Context>
+    template <typename ValueSet>
     struct law_traits
     {};
 
-    template <typename GenSet, typename WeightSet>
-    struct law_traits<context<wordset<GenSet>, WeightSet>>
+    template <typename LabelSet>
+    using law_t = typename law_traits<LabelSet>::type;
+
+    template <typename LabelSet>
+    inline law_t<LabelSet>
+    make_wordset(const LabelSet& ls);
+
+    // Converting labelsets.
+    template <>
+    struct law_traits<oneset>
     {
-      using in_type = context<wordset<GenSet>, WeightSet>;
-      using type = context<wordset<GenSet>, WeightSet>;
-
-      static type word_context(const in_type& ctx)
+      using type = oneset;
+      static type value(oneset)
       {
-        return ctx;
-      }
-
-      using polynomialset_t = polynomialset<type>;
-
-      polynomialset_t
-      word_polynomialset(const in_type& ctx)
-      {
-        return word_context(ctx);
+        return {};
       }
     };
 
-    template <typename GenSet, typename WeightSet>
-    struct law_traits<context<letterset<GenSet>, WeightSet>>
+    template <typename GenSet>
+    struct law_traits<letterset<GenSet>>
     {
-      using in_type = context<letterset<GenSet>, WeightSet>;
-      using type = context<wordset<GenSet>, WeightSet>;
-
-      static type word_context(const in_type& ctx)
+      using type = wordset<GenSet>;
+      static type value(const letterset<GenSet>& ls)
       {
-        return {*ctx.labelset()->genset(), *ctx.weightset()};
-      }
-
-      using polynomialset_t = polynomialset<type>;
-
-      polynomialset_t
-      word_polynomialset(const in_type& ctx)
-      {
-        return word_context(ctx);
+        return ls.genset();
       }
     };
 
-    template <typename GenSet, typename WeightSet>
-    struct law_traits<context<nullableset<wordset<GenSet>>, WeightSet>>
+    template <typename GenSet>
+    struct law_traits<wordset<GenSet>>
     {
-      using in_type = context<nullableset<wordset<GenSet>>, WeightSet>;
-      using type = context<wordset<GenSet>, WeightSet>;
-
-      static type word_context(const in_type& ctx)
+      using type = wordset<GenSet>;
+      static type value(const wordset<GenSet>& ls)
       {
-        return ctx;
-      }
-
-      using polynomialset_t = polynomialset<type>;
-
-      polynomialset_t
-      word_polynomialset(const in_type& ctx)
-      {
-        return word_context(ctx);
+        return ls;
       }
     };
 
-    template <typename GenSet, typename WeightSet>
-    struct law_traits<context<nullableset<letterset<GenSet>>, WeightSet>>
+    template <typename LabelSet>
+    struct law_traits<nullableset<LabelSet>>
     {
-      using in_type = context<nullableset<letterset<GenSet>>, WeightSet>;
-      using type = context<wordset<GenSet>, WeightSet>;
-
-      static type word_context(const in_type& ctx)
+      using type = law_t<LabelSet>;
+      static type value(const nullableset<LabelSet>& ls)
       {
-        return {*ctx.labelset()->labelset()->genset(), *ctx.weightset()};
-      }
-
-      using polynomialset_t = polynomialset<type>;
-
-      polynomialset_t
-      word_polynomialset(const in_type& ctx)
-      {
-        return word_context(ctx);
+        return make_wordset(*ls.labelset());
       }
     };
 
-    template <typename Context>
-    auto
-    make_word_polynomialset(const Context& ctx)
-      -> typename law_traits<Context>::polynomialset_t
+    template <typename... LabelSets>
+    struct law_traits<tupleset<LabelSets...>>
     {
-      return law_traits<Context>::word_context(ctx);
+      using labelset_t = tupleset<LabelSets...>;
+      using type = tupleset<law_t<LabelSets>...>;
+
+      template <std::size_t... I>
+      static type value(const labelset_t& ls, detail::index_sequence<I...>)
+      {
+        return {make_wordset(ls.template set<I>())...};
+      }
+
+      static type value(const labelset_t& ls)
+      {
+        return value(ls, detail::make_index_sequence<sizeof...(LabelSets)>{});
+      }
+    };
+
+    template <typename LabelSet>
+    inline law_t<LabelSet>
+    make_wordset(const LabelSet& ls)
+    {
+      return law_traits<LabelSet>::value(ls);
+    };
+
+    template <typename Ctx>
+    using word_context_t
+      = context<law_t<typename Ctx::labelset_t>, typename Ctx::weightset_t>;
+
+    template <typename LabelSet, typename WeightSet>
+    inline word_context_t<context<LabelSet, WeightSet>>
+    make_word_context(const context<LabelSet, WeightSet>& ctx)
+    {
+      return {make_wordset(*ctx.labelset()), *ctx.weightset()};
+    }
+
+    template <typename Ctx>
+    using word_polynomialset_t = polynomialset<word_context_t<Ctx>>;
+
+    template <typename Ctx>
+    inline auto
+    make_word_polynomialset(const Ctx& ctx)
+      -> word_polynomialset_t<Ctx>
+    {
+      return make_word_context(ctx);
     }
 
 
@@ -132,7 +141,7 @@ namespace vcsn
 
       using labelset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using wordset_context_t = typename law_traits<context_t>::type;
+      using wordset_context_t = word_context_t<context_t>;
       using polynomialset_t = polynomialset<wordset_context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using label_t = typename automaton_t::label_t;

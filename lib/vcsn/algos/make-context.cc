@@ -57,5 +57,16 @@ namespace vcsn
     {
       return detail::make_ratexpset_registry().call(ctx);
     }
+
+    /*--------------------.
+    | make_word_context.  |
+    `--------------------*/
+
+    REGISTER_DEFINE(make_word_context);
+    context
+    make_word_context(const context& ctx)
+    {
+      return detail::make_word_context_registry().call(ctx);
+    }
   }
 }

@@ -256,6 +256,9 @@ namespace vcsn
     /// Build an ratexpset from its context.
     ratexpset make_ratexpset(const context& ctx);
 
+    /// The context for words.
+    context make_word_context(const context& ctx);
+
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut);
 

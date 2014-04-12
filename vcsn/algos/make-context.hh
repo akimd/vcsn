@@ -1,8 +1,9 @@
 #ifndef VCSN_ALGOS_MAKE_CONTEXT_HH
 # define VCSN_ALGOS_MAKE_CONTEXT_HH
 
-# include <istream>
+# include <sstream>
 
+# include <vcsn/algos/enumerate.hh> // make_word_context
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -81,6 +82,20 @@ namespace vcsn
       REGISTER_DECLARE(make_ratexpset,
                        (const context& ctx) -> ratexpset);
 
+      /*--------------------.
+      | make_word_context.  |
+      `--------------------*/
+
+      template <typename Ctx>
+      context
+      make_word_context(const context& ctx)
+      {
+        const auto& c = ctx->as<Ctx>();
+        return ::vcsn::dyn::make_context(::vcsn::detail::make_word_context(c));
+      }
+
+      REGISTER_DECLARE(make_word_context,
+                       (const context& ctx) -> context);
     }
   }
 

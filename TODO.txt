@@ -248,6 +248,9 @@ Or something like that.  I'm not sure "wordset" is appropriate, however,
 polynomials for instance really need to go from label_t to word_t, and be
 able to deal with them.
 
+Something, really basic, is already started in enumerate.hh: see law_traits
+and law_t.  Also used in instantiation.
+
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 

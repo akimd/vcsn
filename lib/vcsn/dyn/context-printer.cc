@@ -32,6 +32,8 @@ namespace vcsn
       ALGO("left_mult_ratexp", "left-mult");
       ALGO("list_ratexp", "print");
       ALGO("make_context", "make-context");
+      ALGO("make_ratexpset", "make-context");
+      ALGO("make_word_context", "make-context");
       ALGO("print_ratexp", "print");
       ALGO("print_weight", "print");
       ALGO("product3", "product");
