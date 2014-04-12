@@ -63,7 +63,6 @@ namespace vcsn
     `------------------*/
 
     REGISTER_DEFINE(read_polynomial);
-
     polynomial
     read_polynomial(std::istream& is, const dyn::context& ctx)
     {
@@ -75,7 +74,6 @@ namespace vcsn
     `--------------*/
 
     REGISTER_DEFINE(read_weight);
-
     weight
     read_weight(std::istream& is, const dyn::context& ctx)
     {

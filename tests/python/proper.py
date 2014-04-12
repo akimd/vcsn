@@ -16,7 +16,7 @@ def check_fail(aut):
     a = vcsn.automaton(aut)
     try:
         a.proper()
-        FAIL("invalid \\\\e-cycle not detected")
+        FAIL(r"invalid \\e-cycle not detected")
     except RuntimeError:
         PASS()
 
@@ -32,12 +32,12 @@ def check_to_lal(i, o):
 ## law_char_r: check the computation of star.  ##
 ## ------------------------------------------- ##
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "law_char(ab)_r"
   I -> 0 -> F
-  0 -> 0 [label = "<.5>\\\\e"]
+  0 -> 0 [label = "<.5>\\e"]
 }''','''
 digraph
 {
@@ -62,7 +62,7 @@ digraph
 ## law_char_b.  ##
 ## ------------ ##
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "law_char(ab)_b"
@@ -70,9 +70,9 @@ digraph
   -1 -> 0 [label="a"]
   0 -> 1 [label="a"]
   1 -> -1 [label="a"]
-  -1 -> 1 [label="\\\\e"]
-  0 -> -1 [label="\\\\e"]
-  1 -> 0 [label="\\\\e"]
+  -1 -> 1 [label="\\e"]
+  0 -> -1 [label="\\e"]
+  1 ->  0 [label="\\e"]
   0 -> F1
 }''', '''
 digraph
@@ -199,7 +199,7 @@ digraph
 ## lan_char_zr: a long cycle.  ##
 ## --------------------------- ##
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lan_char(z)_ratexpset<lal_char(abcd)_z>"
@@ -212,10 +212,10 @@ digraph
   }
   { 0 1 2 3 4 }
   I -> 0
-  0 -> 1 [label = "<a>\\\\e"]
-  1 -> 2 [label = "<b>\\\\e"]
-  2 -> 3 [label = "<c>\\\\e"]
-  3 -> 0 [label = "<d>\\\\e"]
+  0 -> 1 [label = "<a>\\e"]
+  1 -> 2 [label = "<b>\\e"]
+  2 -> 3 [label = "<c>\\e"]
+  3 -> 0 [label = "<d>\\e"]
   0 -> 4 [label = "z"]
   4 -> F
 }''', '''
@@ -248,7 +248,7 @@ digraph
 # but leave states that were inaccessible before the elimination of
 # the spontaneous transitions.
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lan_char(z)_ratexpset<lal_char(abcdefgh)_z>"
@@ -262,16 +262,16 @@ digraph
   { 0 1 2 3 4 5 6 7 8 9 }
   I -> 0
 
-  0 -> 3 [label = "<a>\\\\e"]
-  0 -> 5 [label = "<b>\\\\e"]
+  0 -> 3 [label = "<a>\\e"]
+  0 -> 5 [label = "<b>\\e"]
 
-  1 -> 2 [label = "<c>\\\\e"]
-  3 -> 4 [label = "<d>\\\\e"]
-  5 -> 6 [label = "<e>\\\\e"]
-  7 -> 8 [label = "<f>\\\\e"]
+  1 -> 2 [label = "<c>\\e"]
+  3 -> 4 [label = "<d>\\e"]
+  5 -> 6 [label = "<e>\\e"]
+  7 -> 8 [label = "<f>\\e"]
 
-  6 -> 9 [label = "<g>\\\\e"]
-  8 -> 9 [label = "<h>\\\\e"]
+  6 -> 9 [label = "<g>\\e"]
+  8 -> 9 [label = "<h>\\e"]
 
   9 -> F
 }''', '''
@@ -301,13 +301,13 @@ digraph
 ## lan_char_zr: Check conversion to lal.  ##
 ## -------------------------------------- ##
 
-check_to_lal('''
+check_to_lal(r'''
 digraph
 {
   vcsn_context = "lan_char(ab)_b"
   I -> 0
-  0 -> 1 [label = "\\\\e"]
-  1 -> 0 [label = "\\\\e"]
+  0 -> 1 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
   0 -> 4 [label = "a"]
   4 -> F
 }''', '''
@@ -330,22 +330,22 @@ digraph
   1 -> F1
 }''')
 
-## ------------------------- ##
-## lat<lan_char, lan_char>_b ##
-## ------------------------- ##
+## --------------------------- ##
+## lat<lan_char, lan_char>_b.  ##
+## --------------------------- ##
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
   I0 -> 0
-  0 -> 1 [label = "(\\\\e, \\\\e)"]
+  0 -> 1 [label = "(\\e, \\e)"]
   0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, \\\\e)"]
+  0 -> 2 [label = "(b, \\e)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
-}''', '''
+}''', r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
@@ -366,18 +366,18 @@ digraph
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(\\\\e, y), (b, \\\\e)"]
+  0 -> 2 [label = "(\\e, y), (b, \\e)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
 }''')
 
 
-## ------------------------- ##
-## lat<lan_char, lal_char>_b ##
-## ------------------------- ##
+## --------------------------- ##
+## lat<lan_char, lal_char>_b.  ##
+## --------------------------- ##
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
@@ -385,9 +385,9 @@ digraph
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(b, y)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
-}''', '''
+}''', r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
@@ -408,18 +408,18 @@ digraph
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(b, y)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
 }''')
 
 
 
-## ------------------------------------------------------------- ##
-## Check that lat<lan_char, lal_char>_b is not ruined by the lan ##
-## to lal transition                                             ##
-## ------------------------------------------------------------- ##
+## ---------------------------------------------------------------- ##
+## Check that lat<lan_char, lal_char>_b is not ruined by the lan to ##
+## lal transition.                                                  ##
+## ---------------------------------------------------------------- ##
 
-check_to_lal('''
+check_to_lal(r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
@@ -427,9 +427,9 @@ digraph
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(b, y)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
-}''', '''
+}''', r'''
 digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
@@ -450,6 +450,6 @@ digraph
   0 -> 1 [label = "(a, x)"]
   0 -> 2 [label = "(b, y)"]
   1 -> F1
-  1 -> 2 [label = "(\\\\e, y)"]
+  1 -> 2 [label = "(\\e, y)"]
   2 -> F2
 }''')

@@ -71,7 +71,7 @@ namespace vcsn
     }
 
     /// Whether \a l < \a r.
-    static bool less_than(const value_t l, const value_t r)
+    static bool less_than(const value_t& l, const value_t& r)
     {
       return less_than_(l, r, indices);
     }

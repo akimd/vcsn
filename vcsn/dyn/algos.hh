@@ -317,7 +317,7 @@ namespace vcsn
                                unsigned num_final = 1);
 
     /// Read an automaton from a stream.
-    /// \param is    the input stream.
+    /// \param is      the input stream.
     /// \param format  its format.
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default");
@@ -329,14 +329,14 @@ namespace vcsn
     ratexp read_ratexp(std::istream& is, const ratexpset& rs,
                        const std::string& format = "default");
 
-    /// Read a polynomial in a stream
+    /// Read a polynomial from a stream
     /// \param is    the stream to parse.
     /// \param ctx   its context, from which is built its polynomialset.
     polynomial read_polynomial(std::istream& is, const context& ctx);
 
-    /// Read a weight in a file.
+    /// Read a weight from a stream.
     /// \param is    the input stream.
-    /// \param ctx   the context, from which is built its weightset.
+    /// \param ctx   the context.
     weight read_weight(std::istream& is, const context& ctx);
 
     /// The right-mult automaton with \a w as weight.

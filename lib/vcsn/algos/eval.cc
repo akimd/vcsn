@@ -5,16 +5,9 @@
 
 namespace vcsn
 {
-
   namespace dyn
   {
-
-    /*-------.
-    | eval.  |
-    `-------*/
-
     REGISTER_DEFINE(eval);
-
     weight
     eval(const automaton& aut, const std::string& s)
     {

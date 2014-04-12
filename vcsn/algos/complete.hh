@@ -10,9 +10,9 @@
 
 namespace vcsn
 {
-  template <class Aut>
+  template <typename Aut>
   Aut
-  complete (const Aut& aut)
+  complete(const Aut& aut)
   {
     static_assert(Aut::context_t::is_lal, "requires labels_are_letters");
 
@@ -84,6 +84,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       automaton
       complete(const automaton& aut)

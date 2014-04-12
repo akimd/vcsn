@@ -28,12 +28,9 @@ namespace vcsn
 
       static null make(std::istream& is)
       {
-        // name: lal_char(abc)_ratexpset<law_char(xyz)_b>.
-        //       ^^^ ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-        //        |   |    |        weightset
-        //        |   |    +-- gens
-        //        |   +-- letter_type
-        //        +-- kind
+        // name: nullableset<lal_char(abc)>.
+        //                   ^^^^^^^^^^^^
+        //                     labelset
         null::make_nullableset_kind(is);
         eat(is, '<');
         auto ls = null::labelset_t::make(is);

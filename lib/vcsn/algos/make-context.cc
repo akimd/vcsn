@@ -15,7 +15,6 @@ namespace vcsn
     `---------------*/
 
     REGISTER_DEFINE(make_context);
-
     context
     make_context(const std::string& n)
     {
@@ -35,7 +34,6 @@ namespace vcsn
     `-----------------*/
 
     REGISTER_DEFINE(make_ratexpset);
-
     ratexpset
     make_ratexpset(const context& ctx)
     {

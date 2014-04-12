@@ -48,8 +48,8 @@ def is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
-from vcsn.context import *
-from vcsn.weight import *
-from vcsn.automaton import *
+from vcsn.automaton  import *
+from vcsn.context    import *
 from vcsn.polynomial import *
-from vcsn.ratexp import *
+from vcsn.ratexp     import *
+from vcsn.weight     import *

@@ -76,7 +76,7 @@ namespace vcsn
 
   } // namespace detail
 
-  template <class Aut>
+  template <typename Aut>
   inline
   auto
   eval(const Aut& a, const typename Aut::labelset_t::word_t& w)
@@ -85,10 +85,6 @@ namespace vcsn
     detail::evaluator<Aut> e(a);
     return e(w);
   }
-
-  /*----------------.
-  | abstract eval.  |
-  `----------------*/
 
   namespace dyn
   {

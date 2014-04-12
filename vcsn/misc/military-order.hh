@@ -11,7 +11,7 @@ namespace vcsn
   // existence?  http://stackoverflow.com/questions/257288
   namespace detail
   {
-    template<class>
+    template <typename>
     struct sfinae_true : std::true_type {};
 
     template <typename T>

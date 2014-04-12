@@ -169,4 +169,3 @@ check(slowgrow, 'abababb',  0)
 check(slowgrow, 'abbaaa',   0)
 check(slowgrow, 'abbababa', 1)
 check(slowgrow, 'baaaab',   4)
-
