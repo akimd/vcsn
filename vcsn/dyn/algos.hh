@@ -273,6 +273,10 @@ namespace vcsn
     std::ostream& print(const context& c, std::ostream& o,
                         const std::string& format = "default");
 
+    /// Print label \a l on \a o using format \a format.
+    std::ostream& print(std::ostream& o, const label& l,
+                        const std::string& format = "default");
+
     /// Print polynomial \a p on \a o using format \a format.
     std::ostream& print(const polynomial& p, std::ostream& o,
                         const std::string& format = "default");
@@ -330,6 +334,11 @@ namespace vcsn
     /// \param format  its format.
     automaton read_automaton(std::istream& is,
                              const std::string& format = "default");
+
+    /// Read a label from a stream.
+    /// \param is    the input stream.
+    /// \param ctx   the context.
+    label read_label(std::istream& is, const context& ctx);
 
     /// Read a ratexp from a stream.
     /// \param is      the input stream.

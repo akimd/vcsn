@@ -43,6 +43,17 @@ namespace vcsn
         raise(t + ": unknown format");
     }
 
+    /*-------------.
+    | read_label.  |
+    `-------------*/
+
+    REGISTER_DEFINE(read_label);
+    label
+    read_label(std::istream& is, const dyn::context& ctx)
+    {
+      return detail::read_label_registry().call(is, ctx);
+    }
+
     /*--------------.
     | read_ratexp.  |
     `--------------*/

@@ -50,6 +50,7 @@ def is_equal(lhs, rhs):
 
 from vcsn.automaton  import *
 from vcsn.context    import *
+from vcsn.label      import *
 from vcsn.polynomial import *
 from vcsn.ratexp     import *
 from vcsn.weight     import *

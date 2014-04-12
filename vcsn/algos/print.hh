@@ -5,6 +5,7 @@
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
@@ -33,6 +34,39 @@ namespace vcsn
 
       REGISTER_DECLARE(print_ctx,
                        (const context& c, std::ostream& o,
+                        const std::string& format) -> std::ostream&);
+    }
+  }
+
+  /*-----------------------.
+  | print(stream, label).  |
+  `-----------------------*/
+
+  template <typename ValueSet>
+  inline
+  std::ostream&
+  print(std::ostream& o,
+        const ValueSet& vs, const typename ValueSet::value_t& v,
+        const std::string& format)
+  {
+    return vs.print(o, v, format);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Ostream, typename LabelSet, typename String>
+      std::ostream& print_label(std::ostream& o, const label& label,
+                                const std::string& format)
+      {
+        const auto& l = label->as<LabelSet>();
+        return vcsn::print<LabelSet>(o, l.get_labelset(), l.label(), format);
+      }
+
+      REGISTER_DECLARE(print_label,
+                       (std::ostream& o, const label& l,
                         const std::string& format) -> std::ostream&);
     }
   }

@@ -46,6 +46,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-proper.py                              \
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
+  %D%/label.py                                  \
   %D%/ladybird.py                               \
   %D%/minimize.py                               \
   %D%/polynomial.py                             \

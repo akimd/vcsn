@@ -3,12 +3,47 @@
 
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
 {
+
+  /*-------------.
+  | read_label.  |
+  `-------------*/
+
+  template <typename Context>
+  inline
+  auto
+  read_label(std::istream& is, const Context& ctx)
+    -> typename Context::label_t
+  {
+    return ctx.labelset()->conv(is);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Istream, typename Context>
+      auto
+      read_label(std::istream& is, const context& ctx)
+        -> label
+      {
+        const auto& c = ctx->as<Context>();
+        auto res = ::vcsn::read_label(is, c);
+        return make_label(*c.labelset(), res);
+      }
+
+      REGISTER_DECLARE(read_label,
+                       (std::istream& is, const context& ctx) -> label);
+    }
+  }
+
 
   /*------------------.
   | read_polynomial.  |

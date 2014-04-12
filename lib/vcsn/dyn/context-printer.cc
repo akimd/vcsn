@@ -38,6 +38,10 @@ namespace vcsn
       ALGO("print_weight", "print");
       ALGO("product3", "product");
       ALGO("product_vector", "product");
+      ALGO("read_label", "read");
+      ALGO("read_polynomial", "read");
+      ALGO("read_ratexp", "read");
+      ALGO("read_weight", "read");
       ALGO("right_mult", "left-mult");
       ALGO("right_mult_ratexp", "left-mult");
       ALGO("shortest", "enumerate");

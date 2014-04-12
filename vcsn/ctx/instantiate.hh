@@ -220,6 +220,7 @@ namespace vcsn
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
+        using ls_t = typename ctx_t::labelset_t;
         using ws_t = typename ctx_t::weightset_t;
 
         // label polynomialset.
@@ -268,11 +269,13 @@ namespace vcsn
         REGISTER(make_ratexpset, ctx_t);
         REGISTER(make_word_context, ctx_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
+        REGISTER(print_label, std::ostream, ls_t, const std::string);
         REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, bool);
+        REGISTER(read_label, std::istream, ctx_t);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);

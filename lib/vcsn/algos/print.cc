@@ -51,6 +51,32 @@ namespace vcsn
       return detail::print_ctx_registry().call(ctx, out, format);
     }
 
+    /*-----------------------.
+    | print(stream, label).  |
+    `-----------------------*/
+
+    REGISTER_DEFINE(print_label);
+
+    std::ostream&
+    print(std::ostream& out, const dyn::label& w, const std::string& format)
+    {
+      if (format == "null")
+        {}
+      else if (format == "latex")
+        detail::print_label_registry().call(out, w, format);
+      else if (format == "text" || format == "default" || format == "")
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_label_registry().call(out, w, format);
+        }
+      else
+        raise("invalid output format for label: ", str_escape(format));
+      return out;
+    }
+
     /*----------------------------.
     | print(polynomial, stream).  |
     `----------------------------*/

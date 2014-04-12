@@ -16,6 +16,7 @@
 
 struct automaton;
 struct context;
+struct label;
 struct polynomial;
 struct ratexp;
 struct weight;
@@ -313,6 +314,34 @@ struct automaton
   }
 
   vcsn::dyn::automaton aut_;
+};
+
+/*--------.
+| label.  |
+`--------*/
+
+struct label
+{
+  label(const vcsn::dyn::label& val)
+    : val_(val)
+  {}
+
+  label(const context& ctx, const std::string& s)
+  {
+    std::istringstream is(s);
+    val_ = vcsn::dyn::read_label(is, ctx.ctx_);
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
+  }
+
+  std::string format(const std::string& format = "text") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(os, val_, format);
+    return os.str();
+  }
+
+  vcsn::dyn::label val_;
 };
 
 /*-------------.
@@ -685,6 +714,12 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random, random_overloads())
+   ;
+
+  bp::class_<label>
+    ("label",
+     bp::init<const context&, const std::string&>())
+    .def("format", &label::format)
    ;
 
   bp::class_<ratexp>
