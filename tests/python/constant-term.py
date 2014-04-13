@@ -5,15 +5,6 @@ from test import *
 
 ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
-# check_equal WEIGHT WEIGHT
-# -------------------------
-# Helper function to check that two weights are equal.
-def check_equal(ref, test):
-    if ref.format('text') == test.format('text'):
-        PASS(ref)
-    else:
-        FAIL(ref.format('text') + " != " + test.format('text'))
-
 # check WEIGHT RAT-EXP
 # --------------------
 # Check that the constant-term of RAT-EXP is WEIGHT, and check that
@@ -21,9 +12,10 @@ def check_equal(ref, test):
 #
 # Use a context with ratexp weights to check the order of products.
 def check(weight, exp):
+    w = ctx.weight(weight)
     re = ctx.ratexp(exp)
-    check_equal(weight, re.constant_term())
-    check_equal(weight, re.derived_term().eval(''))
+    CHECK_EQ(w, re.constant_term())
+    CHECK_EQ(w, re.derived_term().eval(''))
 
 check('\z', 'a')
 check('\e', 'a*')
