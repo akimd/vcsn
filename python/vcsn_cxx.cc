@@ -26,8 +26,12 @@ struct weight;
 
 struct context
 {
+  context(const vcsn::dyn::context& ctx)
+    : ctx_(ctx)
+  {}
+
   context(const std::string& ctx)
-    : ctx_(vcsn::dyn::make_context(ctx))
+    : context(vcsn::dyn::make_context(ctx))
   {}
 
   automaton de_bruijn(unsigned n) const;
@@ -99,6 +103,11 @@ struct automaton
   automaton concatenate(const automaton& rhs) const
   {
     return vcsn::dyn::concatenate(aut_, rhs.aut_);
+  }
+
+  ::context context() const
+  {
+    return vcsn::dyn::context_of(aut_);
   }
 
   automaton determinize(bool complete = false) const
@@ -616,6 +625,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
     .def("concatenate", &automaton::concatenate)
+    .def("context", &automaton::context)
     .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)

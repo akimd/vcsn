@@ -70,6 +70,9 @@ namespace vcsn
     /// The weight associated to the empty word in \a e.
     weight constant_term(const ratexp& e);
 
+    /// The context of this automaton.
+    context context_of(const automaton& a);
+
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 

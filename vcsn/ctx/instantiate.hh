@@ -237,6 +237,7 @@ namespace vcsn
         REGISTER(concatenate, aut_t, aut_t);
         REGISTER(concatenate_ratexp, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
+        REGISTER(context_of, aut_t);
         REGISTER(copy, aut_t);
         REGISTER(dot, aut_t, std::ostream);
         REGISTER(efsm, aut_t, std::ostream);

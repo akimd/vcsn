@@ -10,6 +10,17 @@ namespace vcsn
   namespace dyn
   {
 
+    /*-------------.
+    | context_of.  |
+    `-------------*/
+
+    REGISTER_DEFINE(context_of);
+    context
+    context_of(const automaton& a)
+    {
+      return detail::context_of_registry().call(a);
+    }
+
     /*---------------.
     | make_context.  |
     `---------------*/

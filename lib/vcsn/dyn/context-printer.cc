@@ -22,6 +22,7 @@ namespace vcsn
       ALGO("chain_ratexp", "concatenate");
       ALGO("concatenate_ratexp", "concatenate");
       ALGO("conjunction_ratexp", "product");
+      ALGO("context_of", "make-context");
       ALGO("copy_ratexp", "copy");
       ALGO("infiltration", "product");
       ALGO("info_ratexp", "info");

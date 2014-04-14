@@ -5,6 +5,7 @@
 
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
 # include <vcsn/dyn/ratexpset.hh>
 # include <vcsn/misc/raise.hh>
@@ -26,14 +27,22 @@ namespace vcsn
     return res;
   }
 
-  /*----------.
-  | dynamic.  |
-  `----------*/
-
   namespace dyn
   {
     namespace detail
     {
+      /// Bridge.
+      template <typename Aut>
+      context
+      context_of(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_context(a.context());
+      }
+
+      REGISTER_DECLARE(context_of,
+                       (const automaton& aut) -> context);
+
       /// Bridge.
       template <typename Ctx>
       context
