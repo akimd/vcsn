@@ -15,7 +15,6 @@
   %D%/derivation.chk                            \
   %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
-  %D%/grail.chk                                 \
   %D%/lift.chk                                  \
   %D%/transpose.chk
 
@@ -38,14 +37,11 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon-det-1.gv          \
   %D%/determinize.dir/epsilon.gv                \
   %D%/efsm.dir/a1.efsm                          \
-  %D%/efsm.dir/binary.efsm                      \
-  %D%/grail.dir/a.grail                         \
-  %D%/grail.dir/a.gv
+  %D%/efsm.dir/binary.efsm
 
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
-%D%/grail.log:       $(wildcard $(srcdir)/%D%/grail.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain

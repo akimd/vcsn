@@ -147,7 +147,34 @@ def check_fado(aut):
 for fn in glob.glob(os.path.join(medir, '*.fado')):
     a = vcsn.automaton.load(fn, 'fado')
     exp = vcsn.automaton.load(fn.replace('.fado', '.gv'))
+    # Check that we can read FAdo.
     CHECK_EQ(exp, a)
+
+    # Check that we can print FAdo.
     fado   = open(fn).read().strip()
     CHECK_EQ(fado, a.format('fado'))
     check_fado(a)
+
+## -------------------- ##
+## Conversions: Grail.  ##
+## -------------------- ##
+
+def check_grail(aut):
+    '''Check that FAdo accepts aut.format('grail') as input.'''
+    if has_fado:
+        name = "automaton.grail"
+        from FAdo import grail
+        # I did not find a means to read from a string...
+        with open(name, 'w') as f:
+            f.write(aut.format('grail') + "\n")
+        grail.importFromGrailFile(name)
+        os.remove(name)
+    else:
+        SKIP("FAdo not installed")
+
+for fn in glob.glob(os.path.join(medir, '*.grail')):
+    a = vcsn.automaton.load(fn.replace('.grail', '.gv'))
+    # Check that we can print Grail.
+    grail  = open(fn).read().strip()
+    CHECK_EQ(grail, a.format('grail'))
+    check_grail(a)

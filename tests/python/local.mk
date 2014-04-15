@@ -76,6 +76,8 @@ dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
   %D%/aut-to-exp.dir/a.gv                       \
+  %D%/automaton.dir/a.grail                     \
+  %D%/automaton.dir/a.gv                        \
   %D%/automaton.dir/dfa.fado                    \
   %D%/automaton.dir/dfa.gv                      \
   %D%/automaton.dir/enfa.fado                   \

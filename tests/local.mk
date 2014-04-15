@@ -120,4 +120,4 @@ installcheck-local:
 	rm -rf "$$VCSN_HOME"
 
 # Left by FAdo when the test suite runs.
-CLEANFILES += .tableFAdo
+CLEANFILES += .tableFAdo .tableGrail
