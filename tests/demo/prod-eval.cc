@@ -7,6 +7,7 @@
 #include <vcsn/core/mutable_automaton.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/dyn/algos.hh>
+#include <vcsn/dyn/context.hh>
 #include <vcsn/dyn/automaton.hh>
 
 namespace vcsn
@@ -17,6 +18,15 @@ namespace vcsn
     {
       auto is = open_input_file(f);
       return read_automaton(*is);
+    }
+
+    static label read_word(const std::string& w, const context& ctx)
+    {
+      std::istringstream is{w};
+      auto res = read_label(is, make_word_context(ctx));
+      if (is.peek() != -1)
+        vcsn::fail_reading(is, "unexpected trailing characters");
+      return res;
     }
   }
 
@@ -33,6 +43,18 @@ namespace vcsn
     auto& r = res->as<Aut>();
     return std::move(r);
   }
+
+  template <typename Ctx>
+  typename Ctx::labelset_t::word_t
+  read_word(const std::string& w, const Ctx& ctx)
+  {
+    auto c = make_word_context(ctx);
+    std::istringstream is{w};
+    auto res = read_label(is, make_word_context(ctx));
+    if (is.peek() != -1)
+      vcsn::fail_reading(is, "unexpected trailing characters");
+    return res;
+  }
 }
 
 template <typename Ctx>
@@ -44,7 +66,8 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   automaton_t l = vcsn::read_automaton<automaton_t>(lhs);
   automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
   automaton_t prod = vcsn::product<automaton_t, automaton_t>(l, r);
-  typename Ctx::weight_t w = vcsn::eval<automaton_t>(prod, word);
+  typename Ctx::labelset_t::word_t input = vcsn::read_word<Ctx>(word, prod.context());
+  typename Ctx::weight_t w = vcsn::eval<automaton_t>(prod, input);
   prod.context().weightset()->print(std::cout, w);
 }
 
@@ -56,7 +79,8 @@ dyn_prod_eval(const std::string& lhs, const std::string& rhs,
   automaton l = read_automaton(lhs);
   automaton r = read_automaton(rhs);
   automaton prod = product(l, r);
-  weight w = eval(prod, word);
+  label input = read_word(word, context_of(prod));
+  weight w = eval(prod, input);
   print(w, std::cout, "text");
 }
 

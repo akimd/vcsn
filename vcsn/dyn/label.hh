@@ -84,6 +84,15 @@ namespace vcsn
     {
       return std::make_shared<detail::label_wrapper<LabelSet>>(l, ls);
     }
+
+    template <typename LabelSet>
+    inline
+    label
+    make_word(const LabelSet& ls,
+              const typename LabelSet::value_t& l)
+    {
+      return make_label(make_wordset(ls), l);
+    }
   } // namespace dyn
 } // namespace vcsn
 

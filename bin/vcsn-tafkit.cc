@@ -392,9 +392,13 @@ struct evaluate: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    opts2.input_is_file = false;
+    label l = read_word(opts2);
 
     // Process.
-    auto res = vcsn::dyn::eval(aut, opts.argv[0]);
+    auto res = vcsn::dyn::eval(aut, l);
 
     // Output.
     opts.print(res);

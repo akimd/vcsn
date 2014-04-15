@@ -6,6 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/weight.hh>
 
 namespace vcsn
@@ -91,19 +92,20 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename String>
+      template <typename Aut, typename LabelSet>
       auto
-      eval(const automaton& aut, const std::string& s)
+      eval(const automaton& aut, const label& lbl)
         -> weight
       {
         const auto& a = aut->as<Aut>();
-        auto res = ::vcsn::eval(a, s);
+        const auto& l = lbl->as<LabelSet>().label();
+        auto res = ::vcsn::eval(a, l);
         const auto& ctx = a.context();
         return make_weight(*ctx.weightset(), res);
       }
 
       REGISTER_DECLARE(eval,
-                       (const automaton& aut, const std::string& s) -> weight);
+                       (const automaton& aut, const label& s) -> weight);
     }
   }
 

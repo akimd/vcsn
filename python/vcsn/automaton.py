@@ -3,7 +3,7 @@
 ## ----------- ##
 
 import re
-from vcsn_cxx import automaton, weight
+from vcsn_cxx import automaton, label, weight
 from vcsn import is_equal, info_to_dict, dot_to_svg
 
 def automaton_mul(self, rhs):
@@ -53,6 +53,13 @@ class conjunction(object):
         return getattr(self.value(), name)
     def __hasattr__(self, name):
         return hasattr(self.value(), name)
+
+def automaton_eval(self, w):
+    c = self.context()
+    if not isinstance(w, label):
+        w = c.word(str(w))
+    return self.eval_(w)
+automaton.eval = automaton_eval
 
 def automaton_load(file, format = "dot"):
     return automaton(open(file, "r").read(), format)

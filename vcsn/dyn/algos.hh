@@ -138,7 +138,7 @@ namespace vcsn
     polynomial enumerate(const automaton& aut, unsigned max);
 
     /// Evaluate \a s on \a aut.
-    weight eval(const automaton& aut, const std::string& s);
+    weight eval(const automaton& aut, const label& l);
 
     /// Distribute product over addition recursively under the starred
     /// subexpressions and group the equal monomials.

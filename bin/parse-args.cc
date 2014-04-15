@@ -88,6 +88,16 @@ read_automaton(const options& opts)
   return res;
 }
 
+vcsn::dyn::label
+read_label(const options& opts)
+{
+  auto ctx = vcsn::dyn::make_context(opts.context);
+  auto is = input(opts);
+  auto res = vcsn::dyn::read_label(*is, ctx);
+  check_eof(*is);
+  return res;
+}
+
 vcsn::dyn::ratexp
 read_ratexp(const options& opts)
 {
@@ -115,6 +125,16 @@ read_weight(const options& opts)
   auto ctx = vcsn::dyn::make_context(opts.context);
   auto is = input(opts);
   auto res = vcsn::dyn::read_weight(*is, ctx);
+  check_eof(*is);
+  return res;
+}
+
+vcsn::dyn::label
+read_word(const options& opts)
+{
+  auto ctx = vcsn::dyn::make_word_context(vcsn::dyn::make_context(opts.context));
+  auto is = input(opts);
+  auto res = vcsn::dyn::read_label(*is, ctx);
   check_eof(*is);
   return res;
 }

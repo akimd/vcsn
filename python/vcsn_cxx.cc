@@ -53,6 +53,8 @@ struct context
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1) const;
 
+  label word(const std::string& s) const;
+
   vcsn::dyn::context ctx_;
 };
 
@@ -128,7 +130,7 @@ struct automaton
 
   polynomial enumerate(unsigned max) const;
 
-  weight eval(const std::string& s) const;
+  weight eval(const label& l) const;
 
   std::string format(const std::string& format = "dot") const
   {
@@ -550,9 +552,9 @@ polynomial automaton::enumerate(unsigned max) const
   return vcsn::dyn::enumerate(aut_, max);
 }
 
-weight automaton::eval(const std::string& s) const
+weight automaton::eval(const label& l) const
 {
-  return vcsn::dyn::eval(aut_, s);
+  return vcsn::dyn::eval(aut_, l.val_);
 }
 
 automaton automaton::left_mult(const weight& w) const
@@ -610,6 +612,12 @@ automaton context::random(unsigned num_states, float density,
                                      num_initial, num_final);
 
 }
+
+label context::word(const std::string& s) const
+{
+  return label(context(vcsn::dyn::make_word_context(ctx_)), s);
+}
+
 
 /*------------------------.
 | ratexp implementation.  |
@@ -664,7 +672,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)
-    .def("eval", &automaton::eval)
+    .def("eval_", &automaton::eval)
     .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
     .def("is_accessible", &automaton::is_accessible)
@@ -714,6 +722,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random, random_overloads())
+    .def("word", &context::word)
    ;
 
   bp::class_<label>

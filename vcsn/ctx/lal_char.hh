@@ -46,6 +46,9 @@ namespace vcsn
         using aut_t = mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
 
+        // Wordset.
+        using wls_t = vcsn::detail::law_t<typename Ctx::labelset_t>;
+
         // Word polynomialset.
         using wps_t = vcsn::detail::word_polynomialset_t<ctx_t>;
 
@@ -66,7 +69,7 @@ namespace vcsn
         REGISTER(divkbaseb, Ctx, unsigned, unsigned);
         REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);
-        REGISTER(eval, aut_t, const std::string);
+        REGISTER(eval, aut_t, wls_t);
         REGISTER(infiltration, aut_t, aut_t);
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);

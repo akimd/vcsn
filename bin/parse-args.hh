@@ -64,9 +64,11 @@ options parse_args(int& argc, char* const*& argv);
 
 /// Read automaton/ratexp according to \a opts.
 vcsn::dyn::automaton read_automaton(const options& opts);
+vcsn::dyn::label read_label(const options& opts);
 vcsn::dyn::ratexp read_ratexp(const options& opts);
 vcsn::dyn::polynomial read_polynomial(const options& opts);
 vcsn::dyn::weight read_weight(const options& opts);
+vcsn::dyn::label read_word(const options& opts);
 
 /// Function object to dispatch calls for automata or rational expressions.
 struct vcsn_function
