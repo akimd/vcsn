@@ -310,13 +310,16 @@ struct derivation: vcsn_function
     using namespace vcsn::dyn;
     ratexp exp = read_ratexp(opts);
     assert(0 < opts.argv.size());
-    std::string s = opts.argv[0];
+    options opts2 = opts;
+    opts2.input = opts.argv[0];
+    opts2.input_is_file = false;
+    label l = read_word(opts2);
     bool breaking = (1 < opts.argv.size()
                      ? boost::lexical_cast<bool>(opts.argv[1])
                      : false);
 
     // Process.
-    auto res = vcsn::dyn::derivation(exp, s, breaking);
+    auto res = vcsn::dyn::derivation(exp, l, breaking);
 
     // Output.
     opts.print(res);
@@ -392,6 +395,7 @@ struct evaluate: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
+    assert(0 < opts.argv.size());
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;

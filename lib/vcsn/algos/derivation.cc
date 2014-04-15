@@ -14,9 +14,9 @@ namespace vcsn
     REGISTER_DEFINE(derivation);
 
     polynomial
-    derivation(const ratexp& e, const std::string& s, bool breaking)
+    derivation(const ratexp& e, const label& l, bool breaking)
     {
-      return detail::derivation_registry().call(e, s, breaking);
+      return detail::derivation_registry().call(e, l, breaking);
     }
 
     /*--------------------.

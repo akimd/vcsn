@@ -87,10 +87,10 @@ namespace vcsn
 
     /// Derive \a exp with respect to \a s.
     /// \param exp       the input ratexp
-    /// \param s         the string of labels used for derivation
+    /// \param l         the label used for derivation
     /// \param breaking  whether to split the result
     /// \pre  \a exp must be LAL.
-    polynomial derivation(const ratexp& exp, const std::string& s,
+    polynomial derivation(const ratexp& exp, const label& l,
                           bool breaking = false);
 
     /// The derived-term automaton of \a e.

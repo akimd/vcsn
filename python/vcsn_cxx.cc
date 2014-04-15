@@ -415,9 +415,9 @@ struct ratexp
     return vcsn::dyn::context_of(r_);
   }
 
-  polynomial derivation(const std::string& s, bool breaking = true) const
+  polynomial derivation(const label& l, bool breaking = true) const
   {
-    return vcsn::dyn::derivation(r_, s, breaking);
+    return vcsn::dyn::derivation(r_, l.val_, breaking);
   }
 
   ratexp copy(const ::context& ctx)
@@ -740,7 +740,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("constant_term", &ratexp::constant_term)
     .def("context", &ratexp::context)
     .def("copy", &ratexp::copy)
-    .def("derivation", &ratexp::derivation, derivation())
+    .def("derivation_", &ratexp::derivation, derivation())
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)

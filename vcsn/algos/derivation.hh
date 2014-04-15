@@ -9,6 +9,7 @@
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/misc/raise.hh>
@@ -202,8 +203,10 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-             typename RatExpSet::label_t a, bool breaking = false)
+  derivation(const RatExpSet& rs,
+             const typename RatExpSet::ratexp_t& e,
+             typename RatExpSet::label_t a,
+             bool breaking = false)
   {
     static_assert(RatExpSet::context_t::is_lal,
                   "requires labels_are_letters");
@@ -221,7 +224,8 @@ namespace vcsn
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const rat::ratexp_polynomial_t<RatExpSet>& p,
-             typename RatExpSet::label_t a, bool breaking = false)
+             typename RatExpSet::label_t a,
+             bool breaking = false)
   {
     auto ps = rat::make_ratexp_polynomialset(rs);
     using polynomial_t = rat::ratexp_polynomial_t<RatExpSet>;
@@ -233,17 +237,19 @@ namespace vcsn
   }
 
 
-  /// Derive a ratexp wrt to a string.
+  /// Derive a ratexp wrt to a word.
   template <typename RatExpSet>
   inline
   rat::ratexp_polynomial_t<RatExpSet>
-  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-             const std::string& s, bool breaking = false)
+  derivation(const RatExpSet& rs,
+             const typename RatExpSet::ratexp_t& e,
+             const typename RatExpSet::labelset_t::word_t& l,
+             bool breaking = false)
   {
-    require(!s.empty(), "cannot derivation wrt an empty string");
-    auto res = derivation(rs, e, s[0], breaking);
-    for (size_t i = 1, len = s.size(); i < len; ++i)
-      res = derivation(rs, res, s[i], breaking);
+    require(!l.empty(), "derivation: word cannot be empty");
+    auto res = derivation(rs, e, l[0], breaking);
+    for (size_t i = 1, len = l.size(); i < len; ++i)
+      res = derivation(rs, res, l[i], breaking);
     return res;
   }
 
@@ -253,20 +259,20 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename String, typename Bool>
+      template <typename RatExpSet, typename Label, typename Bool>
       polynomial
-      derivation(const ratexp& exp, const std::string& s, bool breaking = false)
+      derivation(const ratexp& exp, const label& lbl, bool breaking = false)
       {
         const auto& e = exp->as<RatExpSet>();
+        const auto& l = lbl->as<Label>().label();
         const auto& rs = e.get_ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
-                               derivation<RatExpSet>(rs, e.ratexp(), s,
-                                                     breaking));
+                               derivation(rs, e.ratexp(), l, breaking));
       }
 
       REGISTER_DECLARE(derivation,
-                       (const ratexp& e, const std::string& s,
+                       (const ratexp& e, const label& l,
                         bool breaking) -> polynomial);
     }
   }

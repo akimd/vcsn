@@ -62,7 +62,7 @@ namespace vcsn
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(complete, aut_t);
         REGISTER(de_bruijn, Ctx, unsigned);
-        REGISTER(derivation, rs_t, const std::string, bool);
+        REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(derived_term, rs_t, bool);
         REGISTER(difference, aut_t, b_aut_t);
         REGISTER(difference_ratexp, rs_t, b_rs_t);
