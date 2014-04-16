@@ -140,5 +140,5 @@ bench('a.minimize("moore")', 'a = std({0})'.format(r),
       lambda: a.minimize('moore'))
 
 a = vcsn.context("lal_char(a-c)_b").de_bruijn(6).determinize()
-bench('a.synchronizing_word()', 'a = de_buijn(6)',
+bench('a.synchronizing_word()', 'a = de_bruijn(6)',
       lambda: a.synchronizing_word())
