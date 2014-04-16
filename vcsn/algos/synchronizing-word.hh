@@ -13,15 +13,21 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/label.hh>
 # include <vcsn/misc/pair.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
-  template<typename Aut>
+
+  /*--------------------------------------.
+  | is_synchronized_by(automaton, word).  |
+  `--------------------------------------*/
+
+  template <typename Aut>
   bool
   is_synchronized_by(const Aut& aut,
-                     const std::vector<typename Aut::labelset_t::value_t>& w)
+                     const typename Aut::labelset_t::word_t& w)
   {
     using context_t = typename Aut::context_t;
     using automaton_t =  mutable_automaton<context_t>;
@@ -50,27 +56,22 @@ namespace vcsn
     return todo.size() == 1;
   }
 
-  /*----------------------------------------.
-  | is_synchronized_by(automaton, word). |
-  `----------------------------------------*/
-
   namespace dyn
   {
     namespace detail
     {
-      template <typename Aut, typename String>
+      /// Bridge.
+      template <typename Aut, typename LabelSet>
       bool
-      is_synchronized_by(const automaton& aut, const std::string& word)
+      is_synchronized_by(const automaton& aut, const label& word)
       {
-        using label_t = typename Aut::labelset_t::value_t;
-
         const auto& a = aut->as<Aut>();
-        std::vector<label_t> labels(word.begin(), word.end());
-        return vcsn::is_synchronized_by(a, labels);
+        const auto& w = word->as<LabelSet>();
+        return vcsn::is_synchronized_by(a, w.label());
       }
 
       REGISTER_DECLARE(is_synchronized_by,
-                       (const automaton&, const std::string&) -> bool);
+                       (const automaton&, const label&) -> bool);
     }
   }
 
@@ -240,7 +241,7 @@ namespace vcsn
     raise("automaton is not synchronizing.");
   }
 
-  template<typename Aut>
+  template <typename Aut>
   std::vector<typename Aut::labelset_t::value_t>
   synchronizing_word(const Aut& aut)
   {

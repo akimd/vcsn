@@ -78,6 +78,13 @@ automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
 
 automaton.info = lambda self: info_to_dict(self.format('info'))
 
+def automaton_is_synchronized_by(self, w):
+    c = self.context()
+    if not isinstance(w, label):
+        w = c.word(str(w))
+    return self.is_synchronized_by_(w)
+automaton.is_synchronized_by = automaton_is_synchronized_by
+
 automaton.lan_to_lal = \
   lambda self: automaton(re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1',
                          self.format('dot')), 'dot')

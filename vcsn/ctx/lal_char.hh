@@ -74,7 +74,7 @@ namespace vcsn
         REGISTER(is_ambiguous, aut_t);
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
-        REGISTER(is_synchronized_by, aut_t, const std::string);
+        REGISTER(is_synchronized_by, aut_t, wls_t);
         REGISTER(ladybird, Ctx, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);

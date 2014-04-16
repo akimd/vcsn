@@ -209,10 +209,7 @@ struct automaton
     return vcsn::dyn::is_standard(aut_);
   }
 
-  bool is_synchronized_by(const std::string& word) const
-  {
-    return vcsn::dyn::is_synchronized_by(aut_, word);
-  }
+  bool is_synchronized_by(const label& word) const;
 
   bool is_trim() const
   {
@@ -557,6 +554,11 @@ weight automaton::eval(const label& l) const
   return vcsn::dyn::eval(aut_, l.val_);
 }
 
+bool automaton::is_synchronized_by(const label& word) const
+{
+  return vcsn::dyn::is_synchronized_by(aut_, word.val_);
+}
+
 automaton automaton::left_mult(const weight& w) const
 {
   return vcsn::dyn::left_mult(w.val_, aut_);
@@ -688,7 +690,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_proper", &automaton::is_proper)
     .def("is_out_sorted", &automaton::is_out_sorted)
     .def("is_standard", &automaton::is_standard)
-    .def("is_synchronized_by", &automaton::is_synchronized_by)
+    .def("is_synchronized_by_", &automaton::is_synchronized_by)
     .def("is_trim", &automaton::is_trim)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)

@@ -22,7 +22,7 @@ namespace vcsn
 
     REGISTER_DEFINE(is_synchronized_by);
     bool
-    is_synchronized_by(const automaton& aut, const std::string& word)
+    is_synchronized_by(const automaton& aut, const label& word)
     {
       return detail::is_synchronized_by_registry().call(aut, word);
     }

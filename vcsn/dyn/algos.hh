@@ -204,7 +204,7 @@ namespace vcsn
     bool is_standard(const automaton& aut);
 
     /// Whether the word synchronizes aut.
-    bool is_synchronized_by(const automaton& aut, const std::string& word);
+    bool is_synchronized_by(const automaton& aut, const label& word);
 
     /// Whether has no useless state.
     bool is_trim(const automaton& aut);
