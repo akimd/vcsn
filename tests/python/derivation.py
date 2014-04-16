@@ -5,13 +5,14 @@ from __future__ import print_function
 import vcsn
 from test import *
 
-c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
+ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
 def check(re, s, exp, breaking = False):
-    #Check that d/ds(re) = exp.
-    r = c.ratexp(re)
-    eff = r.derivation(s, breaking)
-    print("d/d{}({}) = {}".format(s, r, eff));
+    "Check that d/ds(re) = exp."
+    if not isinstance(re, vcsn.ratexp):
+        re = ctx.ratexp(re)
+    eff = re.derivation(s, breaking)
+    print("d/d{}({}) = {}".format(s, re, eff));
     CHECK_EQ(exp, str(eff))
 
 
@@ -170,3 +171,51 @@ check_br('(<x>a)*', 'a', '<x>(<x>a)*')
 check_br('(<x>a)*', 'b', '\z')
 check_br('<x>a*',   'a', '<x>a*')
 check_br('<x>(<y>a)*', 'a', '<xy>(<y>a)*')
+
+
+## --------------------- ##
+## Documented examples.  ##
+## --------------------- ##
+
+# On The Number Of Broken Derived Terms Of A Rational Expression.
+ctx = vcsn.context('lal_char(ab)_b')
+F2 = 'a*+b*'
+E2 = "({})(a({}))".format(F2, F2)
+E2t = ctx.ratexp(E2)
+check(E2t, 'a', "{} + a*a({})".format(F2, F2))
+check(E2t, 'b', "b*a({})".format(F2))
+
+# Example 2.
+check(E2t, 'aa', "a* + a*+b* + a*a({})".format(F2))
+check(E2t, 'ab', 'b*')
+check(E2t, 'ba', F2)
+check(E2t, 'bb', "b*a({})".format(F2))
+
+# Example 3.
+#export VCSN_ORIGINS=1
+#run 0 -f $medir/e2-dt.gv -vcsn derived-term -Ee E2t
+#unset VCSN_ORIGINS
+
+# FIXME: Support for polynomials.
+# Example 4.
+CHECK_EQ("a*a({}) + b*a({})".format(F2, F2),
+         str(ctx.ratexp(E2).split()))
+CHECK_EQ("a* + b*",
+         str(ctx.ratexp(F2).split()))
+
+# Example 5.
+check_br(E2t,  'a', "a* + b* + a*a({})".format(F2))
+check_br(E2t,  'b', "b*a({})".format(F2))
+check_br(E2t, 'aa', "a* + b* + a*a({})".format(F2))
+check_br(E2t, 'ab', 'b*')
+check_br(E2t, 'ba', "a* + b*")
+check_br(E2t, 'bb', "b*a({})".format(F2))
+#export VCSN_ORIGINS=1
+#run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -Ee E2t 1
+#unset VCSN_ORIGINS
+
+# Figure 3.
+#export VCSN_ORIGINS=1
+#run 0 -f $medir/h3-dt.gv -vcsn derived-term -Ee 'a(b+c+d)'
+#run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -Ee 'a(b+c+d)' 1
+#unset VCSN_ORIGINS

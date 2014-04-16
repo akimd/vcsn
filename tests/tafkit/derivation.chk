@@ -116,35 +116,20 @@ check_br ()
 ## Documented examples.  ##
 ## --------------------- ##
 
+# FIXME: Migrate to python/derivation.py once we have means to check
+# the origins.
+
 # On The Number Of Broken Derived Terms Of A Rational Expression.
 F2='a*+b*'
 E2="($F2)(a($F2))"
 E2t="(?@lal_char(ab)_b)$E2"
-check "$E2t" a "$F2 + a*a($F2)"
-check "$E2t" b "b*a($F2)"
-
-# Example 2.
-check "$E2t" aa "a* + a*+b* + a*a($F2)"
-check "$E2t" ab 'b*'
-check "$E2t" ba "$F2"
-check "$E2t" bb "b*a($F2)"
 
 # Example 3.
 export VCSN_ORIGINS=1
 run 0 -f $medir/e2-dt.gv -vcsn derived-term -Ee "$E2t"
 unset VCSN_ORIGINS
 
-# Example 4.
-run 0 "a*a($F2) + b*a($F2)" -vcsn split -Ee "$E2"
-run 0 "a* + b*" -vcsn split -Ee "$F2"
-
 # Example 5.
-check_br "$E2t"  a "a* + b* + a*a($F2)"
-check_br "$E2t"  b "b*a($F2)"
-check_br "$E2t" aa "a* + b* + a*a($F2)"
-check_br "$E2t" ab 'b*'
-check_br "$E2t" ba "a* + b*"
-check_br "$E2t" bb "b*a($F2)"
 export VCSN_ORIGINS=1
 run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -Ee "$E2t" 1
 unset VCSN_ORIGINS
