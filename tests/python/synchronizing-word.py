@@ -5,10 +5,6 @@ from test import *
 
 b = vcsn.context('lal_char(ab)_b')
 
-## ---------------------- ##
-## Pair automata.         ##
-## ---------------------- ##
-
 g = vcsn.automaton('''digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -31,6 +27,10 @@ g = vcsn.automaton('''digraph
   3 -> 0 [label="b"]
 }
 ''')
+
+## ---------------- ##
+## automaton.pair.  ##
+## ---------------- ##
 
 CHECK_EQ(vcsn.automaton('''
 digraph
@@ -64,10 +64,14 @@ digraph
 '''),
          g.pair())
 
+## ------------------------------ ##
+## automaton.is_synchronized_by.  ##
+## ------------------------------ ##
+
 CHECK_EQ(g.is_synchronized_by('abbababbba'), True)
 CHECK_EQ(g.is_synchronized_by('abbbabbba'), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word()), True)
 
-for i in range(6):
+for i in [2, 4, 6]:
     db = b.de_bruijn(i + 1).determinize()
     CHECK_EQ(db.is_synchronized_by(db.synchronizing_word()), True)

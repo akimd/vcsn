@@ -399,8 +399,8 @@ namespace vcsn
     /// Sum of two ratexps.
     ratexp sum(const ratexp& lhs, const ratexp& rhs);
 
-    /// Build the pair automaton of the given automaton
-    std::string synchronizing_word(const automaton& aut);
+    /// Return the smallest synchronizing word, or raise if there is none.
+    label synchronizing_word(const automaton& aut);
 
     /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);

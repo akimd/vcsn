@@ -242,16 +242,15 @@ namespace vcsn
   }
 
   template <typename Aut>
-  std::vector<typename Aut::labelset_t::value_t>
+  typename Aut::labelset_t::word_t
   synchronizing_word(const Aut& aut)
   {
-    using letter_t = typename Aut::labelset_t::value_t;
-    using context_t = typename Aut::context_t;
-    using automaton_t =  mutable_automaton<context_t>;
+    using automaton_t = Aut;
+    using word_t = typename automaton_t::labelset_t::word_t;
     using state_t = typename automaton_t::state_t;
     using transition_t = typename automaton_t::transition_t;
 
-    std::vector<letter_t> res;
+    word_t res;
     std::unordered_set<state_t> todo;
 
     detail::pairer<Aut> pobj(aut);
@@ -283,13 +282,13 @@ namespace vcsn
               {
                 auto ntf = pa.out(s, l);
                 if (ntf.empty())
-                  raise("automaton must be complete.");
+                  raise("automaton must be complete");
                 if (1 < ntf.size())
-                  raise("automaton must be deterministic.");
+                  raise("automaton must be deterministic");
                 new_todo.insert(pa.dst_of(*ntf.begin()));
               }
             todo = std::move(new_todo);
-            res.push_back(l);
+            res = aut.labelset()->concat(res, l);
           }
       }
 
@@ -305,15 +304,14 @@ namespace vcsn
     namespace detail
     {
       template <typename Aut>
-      std::string
+      label
       synchronizing_word(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        auto sw = vcsn::synchronizing_word(a);
-        return std::string(sw.begin(), sw.end());
+        return make_label(make_wordset(*a.labelset()), vcsn::synchronizing_word(a));
       }
 
-      REGISTER_DECLARE(synchronizing_word, (const automaton&) -> std::string);
+      REGISTER_DECLARE(synchronizing_word, (const automaton&) -> label);
     }
   }
 }

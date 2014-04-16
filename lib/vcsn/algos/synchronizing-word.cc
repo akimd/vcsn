@@ -14,7 +14,7 @@ namespace vcsn
     }
 
     REGISTER_DEFINE(synchronizing_word);
-    std::string
+    label
     synchronizing_word(const automaton& aut)
     {
       return detail::synchronizing_word_registry().call(aut);

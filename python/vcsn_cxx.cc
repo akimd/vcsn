@@ -285,10 +285,7 @@ struct automaton
     return vcsn::dyn::sum(aut_, rhs.aut_);
   }
 
-  std::string synchronizing_word() const
-  {
-    return vcsn::dyn::synchronizing_word(aut_);
-  }
+  label synchronizing_word() const;
 
   ratexp to_ratexp() const;
 
@@ -572,6 +569,11 @@ automaton automaton::right_mult(const weight& w) const
 polynomial automaton::shortest(unsigned max) const
 {
   return vcsn::dyn::shortest(aut_, max);
+}
+
+label automaton::synchronizing_word() const
+{
+  return vcsn::dyn::synchronizing_word(aut_);
 }
 
 ratexp automaton::to_ratexp() const
