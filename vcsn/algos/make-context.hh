@@ -44,6 +44,18 @@ namespace vcsn
                        (const automaton& aut) -> context);
 
       /// Bridge.
+      template <typename RatExpSet>
+      context
+      context_of_ratexp(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>().get_ratexpset();
+        return make_context(e.context());
+      }
+
+      REGISTER_DECLARE(context_of_ratexp,
+                       (const ratexp& exp) -> context);
+
+      /// Bridge.
       template <typename Ctx>
       context
       make_context(const std::string& name)

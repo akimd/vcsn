@@ -379,12 +379,17 @@ struct ratexp
 
   weight constant_term() const;
 
+  ::context context() const
+  {
+    return vcsn::dyn::context_of(r_);
+  }
+
   polynomial derivation(const std::string& s, bool breaking = true) const
   {
     return vcsn::dyn::derivation(r_, s, breaking);
   }
 
-  ratexp copy(const context& ctx)
+  ratexp copy(const ::context& ctx)
   {
     auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
     return vcsn::dyn::copy(r_, rs);
@@ -689,6 +694,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("concatenate", &ratexp::concatenate)
     .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
+    .def("context", &ratexp::context)
     .def("copy", &ratexp::copy)
     .def("derivation", &ratexp::derivation, derivation())
     .def("derived_term", &ratexp::derived_term, derived_term())

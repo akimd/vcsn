@@ -21,6 +21,13 @@ namespace vcsn
       return detail::context_of_registry().call(a);
     }
 
+    REGISTER_DEFINE(context_of_ratexp);
+    context
+    context_of(const ratexp& e)
+    {
+      return detail::context_of_ratexp_registry().call(e);
+    }
+
     /*---------------.
     | make_context.  |
     `---------------*/

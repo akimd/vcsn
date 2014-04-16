@@ -73,6 +73,9 @@ namespace vcsn
     /// The context of this automaton.
     context context_of(const automaton& a);
 
+    /// The context of this ratexp.
+    context context_of(const ratexp& r);
+
     /// A copy of \a aut.
     automaton copy(const automaton& aut);
 
