@@ -49,7 +49,7 @@ namespace vcsn
       context
       context_of_ratexp(const ratexp& exp)
       {
-        const auto& e = exp->as<RatExpSet>().get_ratexpset();
+        const auto& e = exp->as<RatExpSet>().ratexpset();
         return make_context(e.context());
       }
 

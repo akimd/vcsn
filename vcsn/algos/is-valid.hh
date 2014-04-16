@@ -190,7 +190,7 @@ namespace vcsn
       is_valid_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return is_valid<RatExpSet>(e.get_ratexpset(), e.ratexp());
+        return is_valid<RatExpSet>(e.ratexpset(), e.ratexp());
       }
 
       REGISTER_DECLARE(is_valid_ratexp, (const ratexp& e) -> bool);

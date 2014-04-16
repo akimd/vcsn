@@ -257,7 +257,7 @@ namespace vcsn
       split(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.get_ratexpset();
+        const auto& rs = e.ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
                                split<RatExpSet>(rs, e.ratexp()));

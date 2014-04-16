@@ -113,9 +113,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.get_ratexpset(), r.get_ratexpset());
-        auto lr = rs.conv(l.get_ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.get_ratexpset(), r.ratexp());
+        auto rs = join(l.ratexpset(), r.ratexpset());
+        auto lr = rs.conv(l.ratexpset(), l.ratexp());
+        auto rr = rs.conv(r.ratexpset(), r.ratexp());
         return make_ratexp(rs, sum(rs, lr, rr));
       }
 

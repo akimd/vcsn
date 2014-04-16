@@ -165,8 +165,8 @@ namespace vcsn
       expand(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(e.get_ratexpset(),
-                           expand(e.get_ratexpset(), e.ratexp()));
+        return make_ratexp(e.ratexpset(),
+                           expand(e.ratexpset(), e.ratexp()));
       }
 
       REGISTER_DECLARE(expand, (const ratexp& e) -> ratexp);

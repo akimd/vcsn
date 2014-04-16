@@ -92,11 +92,11 @@ namespace detail
 
     virtual std::string vname(bool full = true) const override
     {
-      return get_ratexpset().vname(full);
+      return ratexpset().vname(full);
     }
 
     /// The ratexpset which this wraps.
-    const ratexpset_t& get_ratexpset() const
+    const ratexpset_t& ratexpset() const
     {
       return rs_;
     }

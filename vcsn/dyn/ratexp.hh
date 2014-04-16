@@ -55,7 +55,7 @@ namespace vcsn
 
         virtual std::string vname(bool full = true) const override
         {
-          return get_ratexpset().vname(full);
+          return ratexpset().vname(full);
         }
 
         const ratexp_t ratexp() const
@@ -63,7 +63,7 @@ namespace vcsn
           return ratexp_;
         }
 
-        const ratexpset_t& get_ratexpset() const
+        const ratexpset_t& ratexpset() const
         {
           return ratexpset_;
         }

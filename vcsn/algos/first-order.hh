@@ -568,7 +568,7 @@ namespace vcsn
       first_order(const ratexp& exp, bool use_spontaneous = false)
       {
         const auto& e = exp->as<RatExpSet>();
-        const auto& rs = e.get_ratexpset();
+        const auto& rs = e.ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
                                first_order<RatExpSet>(rs, e.ratexp(),
@@ -730,7 +730,7 @@ namespace vcsn
       linear(const ratexp& exp, bool use_spontaneous = false)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(linear(r.get_ratexpset(),
+        return make_automaton(linear(r.ratexpset(),
                                      r.ratexp(), use_spontaneous));
       }
 

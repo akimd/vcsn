@@ -265,7 +265,7 @@ namespace vcsn
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& l = lbl->as<Label>().label();
-        const auto& rs = e.get_ratexpset();
+        const auto& rs = e.ratexpset();
         auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
         return make_polynomial(ps,
                                derivation(rs, e.ratexp(), l, breaking));
@@ -438,7 +438,7 @@ namespace vcsn
       derived_term(const ratexp& exp, bool breaking = false)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(derived_term(r.get_ratexpset(),
+        return make_automaton(derived_term(r.ratexpset(),
                                            r.ratexp(), breaking));
       }
 

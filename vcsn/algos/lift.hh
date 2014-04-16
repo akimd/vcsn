@@ -147,8 +147,8 @@ namespace vcsn
       lift_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(::vcsn::detail::lift(e.get_ratexpset()),
-                           ::vcsn::lift(e.get_ratexpset(), e.ratexp()));
+        return make_ratexp(::vcsn::detail::lift(e.ratexpset()),
+                           ::vcsn::lift(e.ratexpset(), e.ratexp()));
       }
 
       REGISTER_DECLARE(lift_ratexp,

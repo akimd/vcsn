@@ -114,8 +114,8 @@ namespace vcsn
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetLhs>();
-        return make_ratexp(l.get_ratexpset(),
-                           ::vcsn::difference<RatExpSetLhs>(l.get_ratexpset(),
+        return make_ratexp(l.ratexpset(),
+                           ::vcsn::difference<RatExpSetLhs>(l.ratexpset(),
                                                             l.ratexp(),
                                                             r.ratexp()));
       }

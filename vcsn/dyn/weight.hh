@@ -52,7 +52,7 @@ namespace vcsn
 
         virtual std::string vname(bool full = true) const override
         {
-          return get_weightset().vname(full);
+          return weightset().vname(full);
         }
 
         const weight_t weight() const
@@ -60,7 +60,7 @@ namespace vcsn
           return weight_;
         }
 
-        const weightset_t& get_weightset() const
+        const weightset_t& weightset() const
         {
           return weightset_;
         }

@@ -222,7 +222,7 @@ namespace vcsn
       std::ostream& info_ratexp(const ratexp& exp, std::ostream& o)
       {
         const auto& e = exp->as<RatExpSet>();
-        vcsn::info<RatExpSet>(e.get_ratexpset(), e.ratexp(), o);
+        vcsn::info<RatExpSet>(e.ratexpset(), e.ratexp(), o);
         return o;
       }
 

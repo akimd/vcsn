@@ -53,7 +53,7 @@ namespace vcsn
 
         virtual std::string vname(bool full = true) const override
         {
-          return get_polynomialset().vname(full);
+          return polynomialset().vname(full);
         }
 
         const polynomial_t polynomial() const
@@ -61,7 +61,7 @@ namespace vcsn
           return polynomial_;
         }
 
-        const polynomialset_t& get_polynomialset() const
+        const polynomialset_t& polynomialset() const
         {
           return polynomialset_;
         }

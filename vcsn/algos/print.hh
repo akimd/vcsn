@@ -62,7 +62,7 @@ namespace vcsn
                                 const std::string& format)
       {
         const auto& l = label->as<LabelSet>();
-        return vcsn::print<LabelSet>(o, l.get_labelset(), l.label(), format);
+        return vcsn::print<LabelSet>(o, l.labelset(), l.label(), format);
       }
 
       REGISTER_DECLARE(print_label,
@@ -113,7 +113,7 @@ namespace vcsn
                                     std::ostream& o)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::list<PolynomialSet>(p.get_polynomialset(),
+        return vcsn::list<PolynomialSet>(p.polynomialset(),
                                          p.polynomial(), o);
       }
 
@@ -126,7 +126,7 @@ namespace vcsn
                                      std::ostream& o, const std::string& format)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::print<PolynomialSet>(p.get_polynomialset(),
+        return vcsn::print<PolynomialSet>(p.polynomialset(),
                                           p.polynomial(), o, format);
       }
 
@@ -163,7 +163,7 @@ namespace vcsn
                                  const std::string& format)
       {
         const auto& e = exp->as<RatExpSet>();
-        return vcsn::print(e.get_ratexpset(), e.ratexp(), o, format);
+        return vcsn::print(e.ratexpset(), e.ratexp(), o, format);
       }
 
       REGISTER_DECLARE(print_ratexp,
@@ -198,7 +198,7 @@ namespace vcsn
                                  const std::string& format)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print<WeightSet>(w.get_weightset(), w.weight(), o, format);
+        return vcsn::print<WeightSet>(w.weightset(), w.weight(), o, format);
       }
 
       REGISTER_DECLARE(print_weight,

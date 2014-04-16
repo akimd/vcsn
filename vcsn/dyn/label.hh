@@ -52,7 +52,7 @@ namespace vcsn
 
         virtual std::string vname(bool full = true) const override
         {
-          return get_labelset().vname(full);
+          return labelset().vname(full);
         }
 
         const label_t label() const
@@ -60,7 +60,7 @@ namespace vcsn
           return label_;
         }
 
-        const labelset_t& get_labelset() const
+        const labelset_t& labelset() const
         {
           return labelset_;
         }

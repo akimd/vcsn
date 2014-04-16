@@ -172,7 +172,7 @@ namespace vcsn
         using ratexpset_t = RatExpSet;
         using automaton_t = mutable_automaton<context_t>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(thompson<automaton_t>(e.get_ratexpset().context(),
+        return make_automaton(thompson<automaton_t>(e.ratexpset().context(),
                                                     e.ratexp()));
       }
 

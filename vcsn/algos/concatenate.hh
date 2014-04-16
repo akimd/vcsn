@@ -188,9 +188,9 @@ namespace vcsn
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.get_ratexpset(), r.get_ratexpset());
-        auto lr = rs.conv(l.get_ratexpset(), l.ratexp());
-        auto rr = rs.conv(r.get_ratexpset(), r.ratexp());
+        auto rs = join(l.ratexpset(), r.ratexpset());
+        auto lr = rs.conv(l.ratexpset(), l.ratexp());
+        auto rr = rs.conv(r.ratexpset(), r.ratexp());
         return make_ratexp(rs, concatenate(rs, lr, rr));
       }
 
@@ -249,8 +249,8 @@ namespace vcsn
       chain_ratexp(const ratexp& re, int min, int max)
       {
         const auto& r = re->as<RatExpSet>();
-        return make_ratexp(r.get_ratexpset(),
-                           chain(r.get_ratexpset(), r.ratexp(), min, max));
+        return make_ratexp(r.ratexpset(),
+                           chain(r.ratexpset(), r.ratexp(), min, max));
       }
 
       REGISTER_DECLARE(chain_ratexp,

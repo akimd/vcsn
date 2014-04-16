@@ -184,10 +184,10 @@ namespace vcsn
       copy_ratexp(const ratexp& exp, const ratexpset& out_rs)
       {
         const auto& r = exp->as<InRatExpSet>();
-        const auto& ors = out_rs->as<OutRatExpSet>().get_ratexpset();
+        const auto& ors = out_rs->as<OutRatExpSet>().ratexpset();
 
         return make_ratexp(ors,
-                           ::vcsn::rat::copy(r.get_ratexpset(), ors,
+                           ::vcsn::rat::copy(r.ratexpset(), ors,
                                              r.ratexp()));
       }
 

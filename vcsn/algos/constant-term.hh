@@ -158,8 +158,8 @@ namespace vcsn
       constant_term(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_weight(*e.get_ratexpset().weightset(),
-                           constant_term<RatExpSet>(e.get_ratexpset(),
+        return make_weight(*e.ratexpset().weightset(),
+                           constant_term<RatExpSet>(e.ratexpset(),
                                                     e.ratexp()));
       }
 
