@@ -1,6 +1,8 @@
 #include <vcsn/dyn/context-printer.hh>
-#include <vcsn/dyn/type-ast.hh>
 
+#include <boost/algorithm/string.hpp>
+
+#include <vcsn/dyn/type-ast.hh>
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
 
@@ -12,45 +14,33 @@ namespace vcsn
 
     void context_printer::header_algo(std::string n)
     {
-      // Open code some mismatches between algo name, and header
-      // name.  FIXME: algorithms should register this themselves.
+      // We use '-' instead of '_' in file names.
+      boost::replace_all(n, "_", "-");
+      // We don't use any suffix in the file names.
+      for (auto s: {"-label", "-polynomial", "-ratexp", "-weight"})
+        if (boost::ends_with(n, s))
+          boost::erase_tail(n, strlen(s));
+      // Open code some mismatches between algo name, and header name.
+      //
+      // FIXME: algorithms should register this themselves.
       if (false) {}
 #define ALGO(In, Out)                           \
       else if (n == In)                         \
         n = Out
-      ALGO("aut_to_exp", "aut-to-exp");
-      ALGO("chain_ratexp", "concatenate");
-      ALGO("concatenate_ratexp", "concatenate");
-      ALGO("conjunction_ratexp", "product");
-      ALGO("context_of", "make-context");
-      ALGO("copy_ratexp", "copy");
+      ALGO("chain", "concatenate");
+      ALGO("conjunction", "product");
+      ALGO("context-of", "make-context");
       ALGO("infiltration", "product");
-      ALGO("info_ratexp", "info");
-      ALGO("is_valid", "is-valid");
-      ALGO("is_valid_ratexp", "is-valid");
-      ALGO("left_mult", "left-mult");
-      ALGO("left_mult_ratexp", "left-mult");
-      ALGO("list_ratexp", "print");
-      ALGO("make_context", "make-context");
-      ALGO("make_ratexpset", "make-context");
-      ALGO("make_word_context", "make-context");
-      ALGO("print_ratexp", "print");
-      ALGO("print_weight", "print");
-      ALGO("product3", "product");
-      ALGO("product_vector", "product");
-      ALGO("read_label", "read");
-      ALGO("read_polynomial", "read");
-      ALGO("read_ratexp", "read");
-      ALGO("read_weight", "read");
-      ALGO("right_mult", "left-mult");
-      ALGO("right_mult_ratexp", "left-mult");
+      ALGO("is-synchronized-by", "synchronizing-word");
+      ALGO("list", "print");
+      ALGO("make-ratexpset", "make-context");
+      ALGO("make-word-context", "make-context");
+      ALGO("pair", "synchronizing-word");
+      ALGO("product-vector", "product");
+      ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
-      ALGO("standard_ratexp", "standard");
-      ALGO("sum_ratexp", "sum");
-      ALGO("transpose_ratexp", "transpose");
-      ALGO("union_a", "union");
-      ALGO("union_ratexp", "union");
+      ALGO("union-a", "union");
 #undef ALGO
       headers_late_.insert("vcsn/algos/" + n + ".hh");
     }
