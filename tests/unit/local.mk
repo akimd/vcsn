@@ -23,6 +23,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/proper                                    \
   %D%/transpose                                 \
   %D%/weight                                    \
+  %D%/zip                                       \
   %D%/zip-maps
 
 unit_ldadd = $(libvcsn)
@@ -50,6 +51,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/proper.chk                               \
   %D%/transpose.chk                            \
   %D%/weight.chk                               \
+  %D%/zip.chk                                  \
   %D%/zip-maps.chk
 
 dist_TESTS += $(%C%_TESTS)
@@ -69,6 +71,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/transpose.log: %D%/transpose
 %D%/weight.log: %D%/weight
 %D%/zip-maps.log: %D%/zip-maps
+%D%/zip.log: %D%/zip
 
 .PHONY: check-unit
 check-unit:

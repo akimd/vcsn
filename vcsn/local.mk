@@ -183,6 +183,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/vector.hh                            \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
+  %D%/misc/zip.hh                               \
   %D%/misc/zip-maps.hh                          \
   %D%/weightset/b.hh                            \
   %D%/weightset/f2.hh                           \
