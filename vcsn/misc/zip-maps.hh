@@ -41,6 +41,8 @@ namespace vcsn
         = std::tuple<typename std::remove_reference<Maps>::type::iterator...>;
       using values_t
         = std::tuple<typename std::remove_reference<Maps>::type::value_type...>;
+      using references_t
+        = std::tuple<typename std::remove_reference<Maps>::type::reference...>;
       using ranges_t
         = std::tuple<std::pair<typename std::remove_reference<Maps>::type::iterator,
                                typename std::remove_reference<Maps>::type::iterator>...>;
@@ -49,7 +51,7 @@ namespace vcsn
         = typename std::remove_const<typename std::tuple_element<0, values_t>::type::first_type>::type;
       /// Tuple of mapped types.
       using mapped_t
-        = std::tuple<typename std::remove_reference<Maps>::type::mapped_type...>;
+        = std::tuple<typename std::remove_reference<Maps>::type::mapped_type&...>;
 
       iterator(zipped_maps& zip,
                typename std::remove_reference<Maps>::type::iterator... is,
@@ -106,7 +108,7 @@ namespace vcsn
       }
 
       /// Return as <<k1, v1>, <k1, v2>, ...>.
-      values_t dereference_as_tuple()
+      references_t dereference_as_tuple()
       {
         return dereference_(indices_t{});
       }
@@ -220,7 +222,7 @@ namespace vcsn
 
       /// Tuple of pairs.
       template <std::size_t... I>
-      values_t dereference_(seq<I...>) const
+      references_t dereference_(seq<I...>) const
       {
         // clang 3.4 on top of libstdc++ wants this ctor to be
         // explicitly called:
@@ -229,7 +231,7 @@ namespace vcsn
         //                     explicit in copy-initialization
         //  return {(*std::get<I>(is_))...};
         //         ^~~~~~~~~~~~~~~~~~~~~~~~
-        return values_t{(*std::get<I>(is_))...};
+        return references_t{(*std::get<I>(is_))...};
       }
     };
 
