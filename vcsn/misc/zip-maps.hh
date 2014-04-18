@@ -121,18 +121,8 @@ namespace vcsn
       /// We have reached the end, move all the cursors to this end.
       void done_()
       {
-        done_(indices_t{});
-      }
-
-      template<std::size_t... I>
-      void done_(seq<I...>)
-      {
-        using swallow = bool[];
-        (void) swallow
-          {
-            (std::get<I>(is_) = std::get<I>(ends_),
-             is_done_ = true)...
-          };
+        is_done_ = true;
+        is_ = ends_;
       }
 
       /// Move to the next position in the current range.  Return true
@@ -144,8 +134,7 @@ namespace vcsn
 
       /// Move beginning of ranges to their end, and align.
       void reset_up_to_(int)
-      {
-      }
+      {}
 
       /// Move beginning of ranges to their end, and align.
       void step_()
