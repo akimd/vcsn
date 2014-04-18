@@ -17,6 +17,7 @@ EXTRA_PROGRAMS +=                               \
   %D%/aut_lal_char_z                            \
   %D%/aut_law_char_z                            \
   %D%/concat                                    \
+  %D%/cross                                     \
   %D%/label                                     \
   %D%/polynomialset                             \
   %D%/proper                                    \
@@ -43,6 +44,7 @@ noinst_HEADERS = %D%/test.hh %D%/weight.hh
   %D%/aut_lal_char_z.chk                       \
   %D%/aut_law_char_z.chk                       \
   %D%/concat.chk                               \
+  %D%/cross.chk                                \
   %D%/label.chk                                \
   %D%/polynomialset.chk                        \
   %D%/proper.chk                               \
@@ -59,6 +61,7 @@ dist_TESTS += $(%C%_TESTS)
 %D%/aut_lao_z.log: %D%/aut_lao_z
 %D%/aut_law_char_z.log: %D%/aut_law_char_z
 %D%/concat.log: %D%/concat
+%D%/cross.log: %D%/cross
 %D%/determinize.log: %D%/determinize
 %D%/label.log: %D%/label
 %D%/polynomialset.log: %D%/polynomialset

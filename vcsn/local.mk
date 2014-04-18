@@ -150,6 +150,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/attributes.hh                        \
   %D%/misc/cast.hh                              \
   %D%/misc/const_traits.hh                      \
+  %D%/misc/cross.hh                             \
   %D%/misc/direction.hh                         \
   %D%/misc/dynamic_bitset.hh                    \
   %D%/misc/echo.hh                              \
