@@ -18,6 +18,79 @@ namespace vcsn
   | copy(automaton).  |
   `------------------*/
 
+  namespace detail
+  {
+    /// Copy an automaton.
+    /// \precondition AutIn <: AutOut.
+    template <typename AutIn, typename AutOut>
+    struct copier
+    {
+      using in_state_t = typename AutIn::state_t;
+      using out_state_t = typename AutOut::state_t;
+
+      // FIXME: GCC does not seem to like that we define keep_state
+      // with a default assignment.  Check and posssibly report.
+      copier()
+        : keep_state([](in_state_t) { return true; })
+      {}
+
+      void operator()(const AutIn& in, AutOut& out)
+      {
+        const auto& out_ls = *out.labelset();
+        const auto& in_ls = *in.labelset();
+        const auto& out_ws = *out.weightset();
+        const auto& in_ws = *in.weightset();
+
+        for (auto s : in.states())
+          if (keep_state(s))
+            {
+              out_state_t ns =  out.new_state();
+              out_state[s] = ns;
+              out.set_initial(ns, out_ws.conv(in_ws, in.get_initial_weight(s)));
+              out.set_final(ns, out_ws.conv(in_ws, in.get_final_weight(s)));
+            }
+        for (auto t : in.transitions())
+          if (keep_state(in.src_of(t))
+              && keep_state(in.dst_of(t)))
+            out.set_transition(out_state[in.src_of(t)],
+                               out_state[in.dst_of(t)],
+                               out_ls.conv(in_ls, in.label_of(t)),
+                               out_ws.conv(in_ws, in.weight_of(t)));
+      }
+
+      /// A map from result state to original state.
+      using origins_t = std::map<out_state_t, in_state_t>;
+      origins_t
+      origins() const
+      {
+        origins_t res;
+        for (const auto& p: out_state)
+          res[p.second] = p.first;
+        return res;
+      }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins.\n"
+          << "    node [shape = box, style = rounded]\n";
+        for (auto p : orig)
+          if (2 <= p.first)
+            o << "    " << p.first - 2
+              << " [label = \"" << p.second - 2 << "\"]\n";
+        o << "*/\n";
+        return o;
+      }
+
+      /// Whether to keep a state (and its transitions) in the result.
+      std::function<bool(in_state_t)> keep_state;
+      /// input state -> output state.
+      std::unordered_map<in_state_t, out_state_t> out_state;
+    };
+  }
+
   /// Copy an automaton.
   /// \precondition AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
@@ -25,31 +98,9 @@ namespace vcsn
   copy(const AutIn& in, AutOut& out,
        std::function<bool(typename AutIn::state_t)> keep_state)
   {
-    using in_state_t = typename AutIn::state_t;
-    using out_state_t = typename AutOut::state_t;
-
-    const auto& out_ls = *out.labelset();
-    const auto& in_ls = *in.labelset();
-    const auto& out_ws = *out.weightset();
-    const auto& in_ws = *in.weightset();
-
-    std::unordered_map<in_state_t, out_state_t> out_state;
-
-    for (auto s : in.states())
-      if (keep_state(s))
-        {
-          out_state_t ns =  out.new_state();
-          out_state[s] = ns;
-          out.set_initial(ns, out_ws.conv(in_ws, in.get_initial_weight(s)));
-          out.set_final(ns, out_ws.conv(in_ws, in.get_final_weight(s)));
-        }
-    for (auto t : in.transitions())
-      if (keep_state(in.src_of(t))
-          && keep_state(in.dst_of(t)))
-        out.set_transition(out_state[in.src_of(t)],
-                           out_state[in.dst_of(t)],
-                           out_ls.conv(in_ls, in.label_of(t)),
-                           out_ws.conv(in_ws, in.weight_of(t)));
+    detail::copier<AutIn, AutOut> copy;
+    copy.keep_state = keep_state;
+    return copy(in, out);
   }
 
   template <typename State>
