@@ -28,34 +28,38 @@ namespace vcsn
       using in_state_t = typename AutIn::state_t;
       using out_state_t = typename AutOut::state_t;
 
-      // FIXME: GCC does not seem to like that we define keep_state
-      // with a default assignment.  Check and posssibly report.
-      copier()
-        : keep_state([](in_state_t) { return true; })
+      copier(const AutIn& in, AutOut& out)
+        : in_(in)
+        , out_(out)
+        // FIXME: GCC does not seem to like that we define keep_state
+        // with a default assignment.  Check and posssibly report.
+        , keep_state([](in_state_t) { return true; })
       {}
 
-      void operator()(const AutIn& in, AutOut& out)
+      void operator()()
       {
-        const auto& out_ls = *out.labelset();
-        const auto& in_ls = *in.labelset();
-        const auto& out_ws = *out.weightset();
-        const auto& in_ws = *in.weightset();
+        const auto& out_ls = *out_.labelset();
+        const auto& in_ls = *in_.labelset();
+        const auto& out_ws = *out_.weightset();
+        const auto& in_ws = *in_.weightset();
 
-        for (auto s : in.states())
+        // Copy the states.  We cannot iterate on the transitions
+        // only, as we would lose the states without transitions.
+        out_state[in_.pre()] = out_.pre();
+        out_state[in_.post()] = out_.post();
+        for (auto s: in_.states())
           if (keep_state(s))
-            {
-              out_state_t ns =  out.new_state();
-              out_state[s] = ns;
-              out.set_initial(ns, out_ws.conv(in_ws, in.get_initial_weight(s)));
-              out.set_final(ns, out_ws.conv(in_ws, in.get_final_weight(s)));
-            }
-        for (auto t : in.transitions())
-          if (keep_state(in.src_of(t))
-              && keep_state(in.dst_of(t)))
-            out.set_transition(out_state[in.src_of(t)],
-                               out_state[in.dst_of(t)],
-                               out_ls.conv(in_ls, in.label_of(t)),
-                               out_ws.conv(in_ws, in.weight_of(t)));
+            out_state[s] = out_.new_state();
+
+        for (auto t : in_.all_transitions())
+          {
+            auto src = out_state.find(in_.src_of(t));
+            auto dst = out_state.find(in_.dst_of(t));
+            if (src != out_state.end() && dst != out_state.end())
+              out_.new_transition(src->second, dst->second,
+                                  out_ls.conv(in_ls, in_.label_of(t)),
+                                  out_ws.conv(in_ws, in_.weight_of(t)));
+          }
       }
 
       /// A map from result state to original state.
@@ -84,6 +88,10 @@ namespace vcsn
         return o;
       }
 
+      /// Input automaton.
+      const AutIn& in_;
+      /// Output automaton.
+      AutOut& out_;
       /// Whether to keep a state (and its transitions) in the result.
       std::function<bool(in_state_t)> keep_state;
       /// input state -> output state.
@@ -98,9 +106,9 @@ namespace vcsn
   copy(const AutIn& in, AutOut& out,
        std::function<bool(typename AutIn::state_t)> keep_state)
   {
-    detail::copier<AutIn, AutOut> copy;
+    detail::copier<AutIn, AutOut> copy(in, out);
     copy.keep_state = keep_state;
-    return copy(in, out);
+    return copy();
   }
 
   template <typename State>
