@@ -4,15 +4,17 @@
 # include <queue>
 # include <unordered_map>
 
-# include <vcsn/misc/unordered_set.hh>
+# include <vcsn/algos/copy.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
+  /// Complete \a aut and return it.
   template <typename Aut>
-  Aut
-  complete(const Aut& aut)
+  Aut&
+  complete_here(Aut& aut)
   {
     static_assert(Aut::context_t::is_lal, "requires labels_are_letters");
 
@@ -20,64 +22,51 @@ namespace vcsn
     using state_t = typename automaton_t::state_t;
     using label_t = typename automaton_t::label_t;
 
-    std::unordered_map<state_t, state_t> states_assoc;
-
-    automaton_t new_aut{aut.context()};
-
-    states_assoc[aut.pre()] = new_aut.pre();
-    states_assoc[aut.post()] = new_aut.post();
-
-    for (auto st : aut.states())
-      {
-        states_assoc[st] = new_aut.new_state();
-        if (aut.is_initial(st))
-          new_aut.set_initial(states_assoc[st]);
-        if (aut.is_final(st))
-          new_aut.set_final(states_assoc[st]);
-      }
-
-    for (auto st : aut.states())
-      for (auto tr : aut.out(st))
-        new_aut.new_transition(states_assoc[st], states_assoc[aut.dst_of(tr)],
-                               aut.label_of(tr), aut.weight_of(tr));
-
-    state_t sink_state = new_aut.new_state();
+    state_t sink_state = aut.new_state();
     bool is_accessible = false; // is sink_state accessible ?
-    std::unordered_set<label_t> labels_met;
 
-    auto letters = *new_aut.labelset();
+    const auto& ls = *aut.labelset();
 
     if (aut.num_initials() == 0)
       {
-        new_aut.set_initial(sink_state);
+        aut.set_initial(sink_state);
         is_accessible = true;
       }
 
-    for (auto st : new_aut.states())
-      {
-        if (st == sink_state)
-          continue;
+    /// The outgoing labels of a state.
+    std::unordered_set<label_t> labels_met;
+    for (auto st : aut.states())
+      if (st != sink_state)
+        {
+          for (auto tr : aut.out(st))
+            labels_met.insert(aut.label_of(tr));
 
-        for (auto tr : new_aut.out(st))
-          labels_met.insert(new_aut.label_of(tr));
+          for (auto letter : ls)
+            if (!has(labels_met, letter))
+              {
+                aut.new_transition(st, sink_state, letter);
+                is_accessible = true;
+              }
 
-        for (auto letter : letters)
-          if (!has(labels_met, letter))
-            {
-              new_aut.new_transition(st, sink_state, letter);
-              is_accessible = true;
-            }
-
-        labels_met.clear();
-      }
+          labels_met.clear();
+        }
 
     if (is_accessible)
-      for (auto letter : letters)
-        new_aut.new_transition(sink_state, sink_state, letter);
+      for (auto letter : ls)
+        aut.new_transition(sink_state, sink_state, letter);
     else
-      new_aut.del_state(sink_state);
+      aut.del_state(sink_state);
 
-    return new_aut;
+    return aut;
+  }
+
+  template <typename Aut>
+  Aut
+  complete(const Aut& aut)
+  {
+    auto res = ::vcsn::copy(aut);
+    complete_here(res);
+    return res;
   }
 
   namespace dyn
