@@ -22,21 +22,20 @@ namespace vcsn
     using state_t = typename automaton_t::state_t;
     using label_t = typename automaton_t::label_t;
 
-    state_t sink_state = aut.new_state();
-    bool is_accessible = false; // is sink_state accessible ?
-
+    // A sink state, to allocate if needed.
+    state_t sink = aut.null_state();
     const auto& ls = *aut.labelset();
 
     if (aut.num_initials() == 0)
       {
-        aut.set_initial(sink_state);
-        is_accessible = true;
+        sink = aut.new_state();
+        aut.set_initial(sink);
       }
 
-    /// The outgoing labels of a state.
+    // The outgoing labels of a state.
     std::unordered_set<label_t> labels_met;
     for (auto st : aut.states())
-      if (st != sink_state)
+      if (st != sink)
         {
           for (auto tr : aut.out(st))
             labels_met.insert(aut.label_of(tr));
@@ -44,18 +43,17 @@ namespace vcsn
           for (auto letter : ls)
             if (!has(labels_met, letter))
               {
-                aut.new_transition(st, sink_state, letter);
-                is_accessible = true;
+                if (sink == aut.null_state())
+                  sink = aut.new_state();
+                aut.new_transition(st, sink, letter);
               }
 
           labels_met.clear();
         }
 
-    if (is_accessible)
+    if (sink != aut.null_state())
       for (auto letter : ls)
-        aut.new_transition(sink_state, sink_state, letter);
-    else
-      aut.del_state(sink_state);
+        aut.new_transition(sink, sink, letter);
 
     return aut;
   }
