@@ -99,7 +99,7 @@ namespace vcsn
     // Create new automaton.
     auto ctx = join(lhs.context(), rhs.context());
     automaton_t res(ctx);
-    ::vcsn::copy(lhs, res, {keep_all_states<typename automaton_t::state_t>});
+    ::vcsn::copy_into(lhs, res, {keep_all_states<typename automaton_t::state_t>});
     concatenate_here(res, rhs);
     return res;
   }

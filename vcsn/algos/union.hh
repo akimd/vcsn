@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 
+# include <vcsn/algos/copy.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
@@ -14,38 +15,24 @@ namespace vcsn
 
   /// Merge transitions of \a b into those of \a res.
   ///
-  /// \precondition The context of \a res must include that of \a b.
-  // FIXME: shouldn't union_here be something like copy_here?
+  /// \precondition AutIn <: AutOut.
   template <typename A, typename B>
+  inline
   A&
   union_here(A& res, const B& b)
   {
-    const auto& ls = *res.labelset();
-    const auto& bls = *b.labelset();
-    const auto& ws = *res.weightset();
-    const auto& bws = *b.weightset();
-    // State in B -> state in Res.
-    std::unordered_map<typename B::state_t, typename A::state_t> m;
-    for (auto s: b.states())
-      m.emplace(s, res.new_state());
-    m.emplace(b.pre(), res.pre());
-    m.emplace(b.post(), res.post());
-
-    for (auto t: b.all_transitions())
-      res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                         ls.conv(bls, b.label_of(t)),
-                         ws.conv(bws, b.weight_of(t)));
+    ::vcsn::copy_into(b, res);
     return res;
   }
 
   /// Union of two automata.
   template <typename A, typename B>
+  inline
   mutable_automaton<join_t<typename A::context_t, typename B::context_t>>
   union_a(const A& laut, const B& raut)
   {
     using automaton_t
       = mutable_automaton<join_t<typename A::context_t, typename B::context_t>>;
-
     // Create new automaton.
     auto ctx = join(laut.context(), raut.context());
     automaton_t res(ctx);
@@ -65,6 +52,7 @@ namespace vcsn
       `---------------*/
 
       template <typename Lhs, typename Rhs>
+      inline
       automaton
       union_a(const automaton& lhs, const automaton& rhs)
       {

@@ -102,9 +102,11 @@ namespace vcsn
   /// Copy an automaton.
   /// \precondition AutIn <: AutOut.
   template <typename AutIn, typename AutOut>
+  inline
   void
-  copy(const AutIn& in, AutOut& out,
-       std::function<bool(typename AutIn::state_t)> keep_state)
+  copy_into(const AutIn& in, AutOut& out,
+            std::function<bool(typename AutIn::state_t)> keep_state
+              = [](typename AutIn::state_t) { return true; })
   {
     detail::copier<AutIn, AutOut> copy(in, out);
     copy.keep_state = keep_state;
@@ -112,10 +114,12 @@ namespace vcsn
   }
 
   template <typename State>
+  inline
   bool
   keep_all_states(State) ATTRIBUTE_CONST;
 
   template <typename State>
+  inline
   bool
   keep_all_states(State)
   {
@@ -124,30 +128,32 @@ namespace vcsn
 
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
-  template <typename Aut>
-  Aut
-  copy(const Aut& input,
-       std::function<bool(typename Aut::state_t)> keep_state)
+  template <typename AutIn, typename AutOut = AutIn>
+  inline
+  AutOut
+  copy(const AutIn& input,
+       std::function<bool(typename AutIn::state_t)> keep_state)
   {
-    using automaton_t = Aut;
-    automaton_t output{input.context()};
+    AutOut res{input.context()};
     /// Beware of clashes with std::copy.
-    ::vcsn::copy(input, output, keep_state);
-    return output;
+    ::vcsn::copy_into(input, res, keep_state);
+    return res;
   }
 
   /// Convenience wrapper for lambdas for instance.
   template <typename Aut, typename StatePred>
+  inline
   Aut
   copy(const Aut& input, StatePred keep_state)
   {
-    return::vcsn::copy(input,
-                       std::function<bool(typename Aut::state_t)>{keep_state});
+    return ::vcsn::copy(input,
+                        std::function<bool(typename Aut::state_t)>{keep_state});
   }
 
   /// A copy of \a input keeping only its states that are members of
   /// \a keep.
   template <typename Aut>
+  inline
   Aut
   copy(const Aut& input, const std::set<typename Aut::state_t>& keep)
   {
@@ -161,6 +167,7 @@ namespace vcsn
   /// Clone \a input.
   // FIXME: Is there a means to use default arguments?
   template <typename Aut>
+  inline
   Aut
   copy(const Aut& input)
   {
@@ -173,6 +180,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename Aut>
+      inline
       automaton
       copy(const automaton& aut)
       {
@@ -195,6 +203,7 @@ namespace vcsn
     {
       /// Bridge.
       template <typename InRatExpSet, typename OutRatExpSet = InRatExpSet>
+      inline
       ratexp
       copy_ratexp(const ratexp& exp, const ratexpset& out_rs)
       {
