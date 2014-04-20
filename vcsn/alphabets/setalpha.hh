@@ -17,6 +17,8 @@ namespace vcsn
     using letter_t = typename L::letter_t;
     using word_t = typename L::word_t;
     using letters_t = std::set<letter_t>;
+    /// The type of our values, when seen as a container.
+    using value_type = letter_t;
 
     static std::string sname()
     {
@@ -152,18 +154,18 @@ namespace vcsn
       return res;
     }
 
-    using iterator_t = typename letters_t::const_iterator;
-    iterator_t begin() const
+    using iterator = typename letters_t::const_iterator;
+    iterator begin() const
     {
       return alphabet_.begin();
     }
 
-    iterator_t end() const
+    iterator end() const
     {
       return alphabet_.end();
     }
 
-    iterator_t find(const letter_t& l) const
+    iterator find(const letter_t& l) const
     {
       return alphabet_.find(l);
     }
