@@ -96,7 +96,7 @@ namespace vcsn
       {
         int res = -1;
         using swallow = int[];
-        swallow
+        (void) swallow
           {
             (res == -1
              && std::get<size-1-I>(is_) != std::get<size-1-I>(ends_)
@@ -118,7 +118,7 @@ namespace vcsn
       void reset_up_to_(size_t n, seq<I...>)
       {
         using swallow = int[];
-        swallow
+        (void) swallow
           {
             (n < I
              && ((std::get<I>(is_) = std::get<I>(begins_)), true))...
