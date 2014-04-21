@@ -177,7 +177,7 @@ namespace vcsn
         polynomial_t res;
         for (const auto& m: past_[aut_.post()])
           ps_.add_weight(res,
-                         ls_.genset()->undelimit(m.first), m.second);
+                         ls_.genset().undelimit(m.first), m.second);
         return res;
       }
 
@@ -197,7 +197,7 @@ namespace vcsn
         for (const auto& m: past_[aut_.post()])
           {
             ps_.add_weight(res,
-                           ls_.genset()->undelimit(m.first), m.second);
+                           ls_.genset().undelimit(m.first), m.second);
             if (--num == 0)
               break;
           }

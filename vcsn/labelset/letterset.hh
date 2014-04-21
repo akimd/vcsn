@@ -163,7 +163,7 @@ namespace vcsn
     print_set(std::ostream& o, const std::string& format) const
     {
       if (format == "latex")
-        this->genset()->print_set(o, format);
+        this->genset().print_set(o, format);
       else if (format == "text")
         o << vname(true);
       else
@@ -177,7 +177,7 @@ namespace vcsn
   letterset<GenSet>
   meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
-    return {intersection(*lhs.genset(), *rhs.genset())};
+    return {intersection(lhs.genset(), rhs.genset())};
   }
 
   /// Compute the join with another labelset.
@@ -185,7 +185,7 @@ namespace vcsn
   letterset<GenSet>
   join(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
-    return {get_union(*lhs.genset(), *rhs.genset())};
+    return {get_union(lhs.genset(), rhs.genset())};
   }
 }
 

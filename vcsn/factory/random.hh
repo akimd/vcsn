@@ -19,7 +19,7 @@ namespace vcsn
   {
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
-    return pick(*ls.genset());
+    return pick(ls.genset());
   };
 
   template <typename GenSet,

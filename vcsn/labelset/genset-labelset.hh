@@ -30,9 +30,9 @@ namespace vcsn
         : genset_labelset{std::make_shared<const genset_t>(gs)}
       {}
 
-      const genset_ptr& genset() const
+      const genset_t& genset() const
       {
-        return gs_;
+        return *gs_;
       }
 
       static std::string sname()
@@ -42,7 +42,7 @@ namespace vcsn
 
       std::string vname(bool full = true) const
       {
-        return this->genset()->vname(full);
+        return this->genset().vname(full);
       }
 
       std::set<letter_t>
@@ -65,11 +65,11 @@ namespace vcsn
                   res.insert('-');
                 else
                   {
-                    auto it = this->genset()->find(previous);
-                    for (; *it != endrange && it != this->genset()->end();
+                    auto it = this->genset().find(previous);
+                    for (; *it != endrange && it != this->genset().end();
                          it++)
                       res.insert(*it);
-                    require(it != this->genset()->end(),
+                    require(it != this->genset().end(),
                             "unexpected ", str_escape(endrange));
                   }
               }
@@ -97,9 +97,9 @@ namespace vcsn
       Attribute                                                         \
       auto                                                              \
       Name(Args&&... args) const                                        \
-        -> decltype(this->genset()->Name(std::forward<Args>(args)...))  \
+        -> decltype(this->genset().Name(std::forward<Args>(args)...))   \
       {                                                                 \
-        return this->genset()->Name(std::forward<Args>(args)...);       \
+        return this->genset().Name(std::forward<Args>(args)...);        \
       }
 
       DEFINE(begin,);

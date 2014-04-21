@@ -378,7 +378,7 @@ namespace vcsn
   Res                                                         \
   Func(const Lhs& lhs, const Rhs& rhs)                        \
   {                                                           \
-    return {Operation(*lhs.genset(), *rhs.genset())};         \
+    return {Operation(lhs.genset(), rhs.genset())};           \
   }
 
   /// Compute the meet with another labelset.

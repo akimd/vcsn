@@ -521,7 +521,7 @@ namespace vcsn
 
       out << '[';
 
-      const auto& alphabet = *labelset()->genset();
+      const auto& alphabet = labelset()->genset();
       auto alphabet_end = alphabet.end();
 
       for (auto it = vs.begin(); it != vs.end(); it++)

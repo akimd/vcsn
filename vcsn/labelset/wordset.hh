@@ -140,7 +140,7 @@ namespace vcsn
     value_t
     conv(std::istream& i) const
     {
-      return this->genset()->conv(i);
+      return this->genset().conv(i);
     }
 
     std::set<value_t>
@@ -168,7 +168,7 @@ namespace vcsn
     {
       if (format == "latex")
         {
-          this->genset()->print_set(o, format);
+          this->genset().print_set(o, format);
           o << "^*";
         }
       else if (format == "text")
@@ -185,7 +185,7 @@ namespace vcsn
   wordset<GenSet>
   meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
-    return {intersection(*lhs.genset(), *rhs.genset())};
+    return {intersection(lhs.genset(), rhs.genset())};
   }
 
   /// Compute the union with another alphabet.
@@ -193,7 +193,7 @@ namespace vcsn
   wordset<GenSet>
   join(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
-    return {get_union(*lhs.genset(), *rhs.genset())};
+    return {get_union(lhs.genset(), rhs.genset())};
   }
 }
 
