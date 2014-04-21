@@ -31,12 +31,10 @@ namespace vcsn
       copier(const AutIn& in, AutOut& out)
         : in_(in)
         , out_(out)
-        // FIXME: GCC does not seem to like that we define keep_state
-        // with a default assignment.  Check and posssibly report.
-        , keep_state([](in_state_t) { return true; })
       {}
 
-      void operator()()
+      template <typename Pred>
+      void operator()(Pred keep_state)
       {
         const auto& out_ls = *out_.labelset();
         const auto& in_ls = *in_.labelset();
@@ -92,8 +90,6 @@ namespace vcsn
       const AutIn& in_;
       /// Output automaton.
       AutOut& out_;
-      /// Whether to keep a state (and its transitions) in the result.
-      std::function<bool(in_state_t)> keep_state;
       /// input state -> output state.
       std::unordered_map<in_state_t, out_state_t> out_state;
     };
@@ -101,53 +97,43 @@ namespace vcsn
 
   /// Copy an automaton.
   /// \precondition AutIn <: AutOut.
+  template <typename AutIn, typename AutOut, typename Pred>
+  inline
+  void
+  copy_into(const AutIn& in, AutOut& out, Pred keep_state)
+  {
+    detail::copier<AutIn, AutOut> copy(in, out);
+    return copy(keep_state);
+  }
+
   template <typename AutIn, typename AutOut>
   inline
   void
-  copy_into(const AutIn& in, AutOut& out,
-            std::function<bool(typename AutIn::state_t)> keep_state
-              = [](typename AutIn::state_t) { return true; })
+  copy_into(const AutIn& in, AutOut& out)
   {
-    detail::copier<AutIn, AutOut> copy(in, out);
-    copy.keep_state = keep_state;
-    return copy();
-  }
-
-  template <typename State>
-  inline
-  bool
-  keep_all_states(State) ATTRIBUTE_CONST;
-
-  template <typename State>
-  inline
-  bool
-  keep_all_states(State)
-  {
-    return true;
+    return copy_into(in, out, [](typename AutIn::state_t) { return true; });
   }
 
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
-  template <typename AutIn, typename AutOut = AutIn>
+  template <typename AutIn, typename AutOut = AutIn, typename Pred>
   inline
   AutOut
-  copy(const AutIn& input,
-       std::function<bool(typename AutIn::state_t)> keep_state)
+  copy(const AutIn& input, Pred keep_state)
   {
     AutOut res{input.context()};
-    /// Beware of clashes with std::copy.
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }
 
-  /// Convenience wrapper for lambdas for instance.
-  template <typename Aut, typename StatePred>
+  /// A copy of \a input.
+  template <typename AutIn, typename AutOut = AutIn>
   inline
-  Aut
-  copy(const Aut& input, StatePred keep_state)
+  AutOut
+  copy(const AutIn& input)
   {
     return ::vcsn::copy(input,
-                        std::function<bool(typename Aut::state_t)>{keep_state});
+                        [](typename AutIn::state_t) { return true; });
   }
 
   /// A copy of \a input keeping only its states that are members of
@@ -157,21 +143,11 @@ namespace vcsn
   Aut
   copy(const Aut& input, const std::set<typename Aut::state_t>& keep)
   {
-    using state_t = typename Aut::state_t;
-    return ::vcsn::copy(input, [&keep](state_t s)
+    return ::vcsn::copy(input,
+                        [&keep](typename Aut::state_t s)
                         {
                           return has(keep, s);
                         });
-  }
-
-  /// Clone \a input.
-  // FIXME: Is there a means to use default arguments?
-  template <typename Aut>
-  inline
-  Aut
-  copy(const Aut& input)
-  {
-    return ::vcsn::copy(input, {keep_all_states<typename Aut::state_t>});
   }
 
   namespace dyn
