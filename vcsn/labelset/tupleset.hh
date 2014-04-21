@@ -281,8 +281,8 @@ namespace vcsn
     static tupleset make_(std::istream& i, seq<I...>)
     {
 #  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return {(eat_separator_<I>(i, '<', ','),
-               valueset_t<I>::make(i))...};
+      return tupleset{(eat_separator_<I>(i, '<', ','),
+                       valueset_t<I>::make(i))...};
 #  else
       return make_gcc_tuple
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
@@ -343,7 +343,7 @@ namespace vcsn
     value_t
     zero_(seq<I...>) const
     {
-      return std::make_tuple(set<I>().zero()...);
+      return value_t{set<I>().zero()...};
     }
 
     template <std::size_t... I>
@@ -367,7 +367,7 @@ namespace vcsn
     static value_t
     one_(seq<I...>)
     {
-      return std::make_tuple(valueset_t<I>::one()...);
+      return value_t{valueset_t<I>::one()...};
     }
 
     template <std::size_t... I>
@@ -394,39 +394,35 @@ namespace vcsn
     value_t
     add_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple(set<I>().add(std::get<I>(l),
-                                          std::get<I>(r))...);
+      return value_t{set<I>().add(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
     value_t
     mul_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple(set<I>().mul(std::get<I>(l),
-                                          std::get<I>(r))...);
+      return value_t{set<I>().mul(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
     value_t
     rdiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple(set<I>().rdiv(std::get<I>(l),
-                                           std::get<I>(r))...);
+      return value_t{set<I>().rdiv(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
     value_t
     ldiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple(set<I>().ldiv(std::get<I>(l),
-                                           std::get<I>(r))...);
+      return value_t{set<I>().ldiv(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
     value_t
     star_(value_t const& l, seq<I...>) const
     {
-      return std::make_tuple(set<I>().star(std::get<I>(l))...);
+      return value_t{set<I>().star(std::get<I>(l))...};
     }
 
     template <std::size_t... I>
@@ -447,8 +443,7 @@ namespace vcsn
     value_t
     concat_(const value_t& l, const value_t& r, seq<I...>) const
     {
-      return std::make_tuple(set<I>().concat(std::get<I>(l),
-                                             std::get<I>(r))...);
+      return value_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
@@ -528,7 +523,7 @@ namespace vcsn
     value_t
     transpose_(value_t const& l, seq<I...>) const
     {
-      return std::make_tuple((set<I>().transpose(std::get<I>(l)))...);
+      return value_t{(set<I>().transpose(std::get<I>(l)))...};
     }
 
     /// The intersection with another tupleset.
@@ -536,7 +531,7 @@ namespace vcsn
     tupleset
     meet_(const tupleset& rhs, seq<I...>) const
     {
-      return {meet(set<I>(), rhs.set<I>())...};
+      return tupleset{meet(set<I>(), rhs.set<I>())...};
     }
 
     /// The join with another tupleset.
@@ -544,7 +539,7 @@ namespace vcsn
     tupleset
     join_(const tupleset& rhs, seq<I...>) const
     {
-      return {join(set<I>(), rhs.set<I>())...};
+      return tupleset{join(set<I>(), rhs.set<I>())...};
     }
 
     /// The meet with another tupleset.
