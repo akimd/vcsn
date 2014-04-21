@@ -20,7 +20,7 @@ namespace vcsn
 
     using label_set_t = std::set<typename Aut::labelset_t::letter_t>;
 
-    const auto& letters = *aut.labelset();
+    const auto& letters = aut.labelset()->genset();
     for (auto state : aut.states())
     {
       label_set_t missing_letters = {std::begin(letters), std::end(letters)};

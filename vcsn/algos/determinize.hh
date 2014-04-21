@@ -58,7 +58,7 @@ namespace vcsn
         // same as the number of states.
         size_t state_size = a.all_states().back() + 1;
 
-        const auto& letters = *a.labelset();
+        const auto& letters = a.labelset()->genset();
         automaton_nocv_t res{a.context()};
 
         // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
