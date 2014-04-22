@@ -76,6 +76,19 @@ epsilon-transitions or no incoming epsilon-transitions.  This is the first
 step in a product algorithm that supports epsilon-transitions.
 
 * 2014-05-02
+** Polynomials are now usable as weights
+Polynomialsets are now usable as a generic weightset.  Polynomials are mostly
+useful on law and ratexpset.
+
+  >>> ctx1 = vcsn.context('lal_char(a-c)_polynomialset<law_char(m-o)_z>')
+  >>> ctx2 = vcsn.context('lal_char(a-c)_polynomialset<law_char(x-z)_b>')
+  >>> a1 = ctx1.ratexp('<<3>\\e>a').standard()
+  >>> a2 = ctx2.ratexp('<\\e>b').standard()
+  >>> a1 + a2
+  [...]
+  >>> a1 & a2
+  [...]
+
 ** Multiplication by a weight no longer requires a standard automaton
 The right-multiplication by a weight uselessly required a standard
 automaton; it now accepts any automaton.  The left-multiplication keeps its
