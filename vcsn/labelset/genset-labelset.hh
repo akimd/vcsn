@@ -105,6 +105,8 @@ namespace vcsn
       DEFINE(begin,);
       DEFINE(concat,);
       DEFINE(conv,);
+      DEFINE(delimit,);
+      DEFINE(undelimit,);
       DEFINE(end,);
       DEFINE(equals, ATTRIBUTE_PURE);
       DEFINE(has, ATTRIBUTE_PURE);

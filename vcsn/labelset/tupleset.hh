@@ -171,6 +171,18 @@ namespace vcsn
       return star_(l, indices);
     }
 
+    value_t
+    delimit(const value_t& l) const
+    {
+      return delimit_(l, indices);
+    }
+
+    value_t
+    undelimit(const value_t& l) const
+    {
+      return undelimit_(l, indices);
+    }
+
     // FIXME: this needs to be computed.
     static constexpr star_status_t star_status()
     {
@@ -415,6 +427,20 @@ namespace vcsn
     star_(value_t const& l, seq<I...>) const
     {
       return std::make_tuple(set<I>().star(std::get<I>(l))...);
+    }
+
+    template <std::size_t... I>
+    value_t
+    delimit_(value_t const& l, seq<I...>) const
+    {
+      return value_t{set<I>().delimit(std::get<I>(l))...};
+    }
+
+    template <std::size_t... I>
+    value_t
+    undelimit_(value_t const& l, seq<I...>) const
+    {
+      return value_t{set<I>().undelimit(std::get<I>(l))...};
     }
 
     template <std::size_t... I>
