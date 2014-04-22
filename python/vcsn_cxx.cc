@@ -52,6 +52,7 @@ struct context
 
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1) const;
+  automaton random_uniform(unsigned num_states) const;
 
   label word(const std::string& s) const;
 
@@ -614,7 +615,11 @@ automaton context::random(unsigned num_states, float density,
   return vcsn::dyn::random_automaton(ctx_,
                                      num_states, density,
                                      num_initial, num_final);
+}
 
+automaton context::random_uniform(unsigned num_states) const
+{
+  return vcsn::dyn::random_automaton_uniform(ctx_, num_states);
 }
 
 label context::word(const std::string& s) const
@@ -726,6 +731,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &context::format)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random, random_overloads())
+    .def("random_uniform", &context::random_uniform)
     .def("word", &context::word)
    ;
 

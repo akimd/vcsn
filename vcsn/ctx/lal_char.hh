@@ -83,6 +83,7 @@ namespace vcsn
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
         REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
+        REGISTER(random_uniform, Ctx, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(synchronizing_word, aut_t);

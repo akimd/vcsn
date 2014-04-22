@@ -329,6 +329,12 @@ namespace vcsn
                                unsigned num_initial = 1,
                                unsigned num_final = 1);
 
+    /// Produce a random uniform automaton.
+    /// \param num_states
+    ///    The number of states wanted in the automata (>0).
+    automaton random_automaton_uniform(const context& ctx,
+                                         unsigned num_states);
+
     /// Read an automaton from a stream.
     /// \param is      the input stream.
     /// \param format  its format.
