@@ -148,7 +148,7 @@ namespace vcsn
       using weight_t = typename automaton_t::weight_t;
       using state_t = typename automaton_t::state_t;
       using genset_t = typename automaton_t::labelset_t::genset_t;
-      using word_t = typename genset_t::word_t;
+      using word_t = typename labelset_t::word_t;
 
       /// Same as polynomial_t::value_type.
       using monomial_t = std::pair<word_t, weight_t>;
@@ -177,7 +177,7 @@ namespace vcsn
         polynomial_t res;
         for (const auto& m: past_[aut_.post()])
           ps_.add_weight(res,
-                         ls_.genset().undelimit(m.first), m.second);
+                         ls_.undelimit(m.first), m.second);
         return res;
       }
 
@@ -197,7 +197,7 @@ namespace vcsn
         for (const auto& m: past_[aut_.post()])
           {
             ps_.add_weight(res,
-                           ls_.genset().undelimit(m.first), m.second);
+                           ls_.undelimit(m.first), m.second);
             if (--num == 0)
               break;
           }
@@ -229,9 +229,9 @@ namespace vcsn
       }
 
       const automaton_t& aut_;
-      const labelset_t& ls_ = *aut_.labelset();
       const weightset_t& ws_ = *aut_.weightset();
       const polynomialset_t ps_ = make_word_polynomialset(aut_.context());
+      const typename polynomialset_t::labelset_t& ls_ = *ps_.labelset();
       /// For each state, the first orders of its past.
       std::map<state_t, polynomial_t> past_;
     };
