@@ -114,6 +114,11 @@ struct automaton
     return vcsn::dyn::complete(aut_);
   }
 
+  automaton compose(const automaton& rhs) const
+  {
+    return vcsn::dyn::compose(aut_, rhs.aut_);
+  }
+
   automaton concatenate(const automaton& rhs) const
   {
     return vcsn::dyn::concatenate(aut_, rhs.aut_);
@@ -737,6 +742,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
+    .def("compose", &automaton::compose)
     .def("concatenate", &automaton::concatenate)
     .def("context", &automaton::context)
     .def("determinize", &automaton::determinize, determinize())

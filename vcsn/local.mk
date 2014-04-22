@@ -18,6 +18,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/aut-to-exp.hh                       \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
+  %D%/algos/compose.hh                          \
   %D%/algos/concatenate.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/copy.hh                             \

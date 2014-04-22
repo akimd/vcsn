@@ -38,6 +38,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/aut-to-exp.cc                       \
   %D%/algos/complement.cc                       \
   %D%/algos/complete.cc                         \
+  %D%/algos/compose.cc                          \
   %D%/algos/concatenate.cc                      \
   %D%/algos/constant-term.cc                    \
   %D%/algos/copy.cc                             \

@@ -61,6 +61,9 @@ namespace vcsn
     /// \pre aut is lal
     automaton complete(const automaton& aut);
 
+    /// The composition of transducers \a lhs and \a rhs.
+    automaton compose(const automaton& lhs, const automaton& rhs);
+
     /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
