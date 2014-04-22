@@ -4,6 +4,20 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-21
+** Polynomials are now usable as weights
+Polynomialsets are now usable as a generic weightset.  Polynomials are mostly
+useful on law and ratexpset.
+
+  >>> ctx1 = vcsn.context('lal_char(a-c)_polynomialset<law_char(m-o)_z>')
+  >>> ctx2 = vcsn.context('lal_char(a-c)_polynomialset<law_char(x-z)_b>')
+  >>> a1 = ctx1.ratexp('<<3>\\e>a').standard()
+  >>> a2 = ctx2.ratexp('<\\e>b').standard()
+  >>> a1 + a2
+  [...]
+  >>> a1 & a2
+  [...]
+
 * 2014-05-18
 ** ratexps: support for negated letter classes
 We may now use '[^...]' to denote a letter other than the listed ones.  The

@@ -200,6 +200,8 @@ namespace vcsn
         return std::make_shared<weightset>(ws);
       else if (ws == "ratexpset")
         return make_ratexpset();
+      else if (ws == "polynomialset")
+        return make_polynomialset();
       else if (ws == "lat")
         return make_tupleset();
       else
@@ -242,6 +244,15 @@ namespace vcsn
       eat(is_, '<');
       std::shared_ptr<ratexpset> res =
         std::make_shared<ratexpset>(make_context());
+      eat(is_, '>');
+      return res;
+    }
+
+    std::shared_ptr<polynomialset> context_parser::make_polynomialset()
+    {
+      eat(is_, '<');
+      std::shared_ptr<polynomialset> res =
+        std::make_shared<polynomialset>(make_context());
       eat(is_, '>');
       return res;
     }

@@ -34,6 +34,7 @@ namespace vcsn
       std::shared_ptr<automaton> make_automaton(const std::string& prefix);
       std::shared_ptr<tupleset> make_tupleset();
       std::shared_ptr<ratexpset> make_ratexpset();
+      std::shared_ptr<polynomialset> make_polynomialset();
       std::shared_ptr<ast_node> make_labelset_or_weightset();
       std::shared_ptr<ast_node>
         make_labelset_or_weightset(const std::string& kind);

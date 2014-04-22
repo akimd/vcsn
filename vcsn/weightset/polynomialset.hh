@@ -1,11 +1,13 @@
 #ifndef VCSN_WEIGHTSETS_POLYNOMIALSET_HH
 # define VCSN_WEIGHTSETS_POLYNOMIALSET_HH
 
+# include <algorithm>
 # include <iostream>
 # include <sstream>
 # include <type_traits>
 # include <vector>
 
+# include <vcsn/ctx/context.hh> // We need context to define join.
 # include <vcsn/weightset/fwd.hh>
 
 # include <vcsn/ctx/traits.hh>
@@ -50,9 +52,11 @@ namespace vcsn
   class polynomialset
   {
   public:
+    using self_type = polynomialset<Context>;
     using context_t = Context;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
+    using polynomialset_t = polynomialset<context_t>;
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
@@ -121,6 +125,7 @@ namespace vcsn
       return add_weight(v, p.first, p.second);
     }
 
+    // FIXME: rename at least this version.
     /// v += (l, k).
     value_t&
     add_weight(value_t& v, const label_t& l, const weight_t k) const
@@ -263,8 +268,20 @@ namespace vcsn
       return res;
     }
 
-    bool
-    equals(const value_t& l, const value_t& r) const ATTRIBUTE_PURE
+    static value_t
+    rdiv(const value_t&, const value_t&)
+    {
+      throw std::runtime_error("not implemented for polynomials");
+    }
+
+    static value_t
+    ldiv(const value_t& l, const value_t& r)
+    {
+      return rdiv(r, l);
+    }
+
+    static bool
+    equals(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {
       return l.size() == r.size()
         // FIXME: this is wrong, it uses operator== instead of equals().
@@ -311,12 +328,74 @@ namespace vcsn
       return v.empty();
     }
 
-    static constexpr bool is_commutative_semiring() { return false; }
-
     static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status()
     {
       return weightset_t::star_status();
+    }
+
+    /// Conversion from (this and) other weightsets.
+    static value_t
+    conv(self_type, value_t v)
+    {
+      return v;
+    }
+
+  private:
+    value_t
+    conv_from_this_weightset(const typename weightset_t::value_t& v) const
+    {
+      monomial_t m{labelset()->one(),
+                   weightset()->mul(v, weightset()->one())};
+      return value_t{m};
+    }
+
+  public:
+    /// FIXME: use enable_if to prevent this from being instantiated
+    /// when WS is a polynomialset.  Then use this same technique for
+    /// ratexps.
+    template <typename WS>
+    value_t
+    conv(const WS& ws, const typename WS::value_t& v) const
+    {
+      return conv_from_this_weightset(weightset()->conv(ws, v));
+    }
+
+    /// Convert from another polynomialset to type_t.
+    template <typename C>
+    value_t
+    conv(const polynomialset<C>& sps,
+         const typename polynomialset<C>::value_t& v) const
+    {
+      value_t res;
+      typename C::labelset_t sls = * sps.labelset();
+      typename C::weightset_t sws = * sps.weightset();
+      labelset_t tls = * labelset();
+      weightset_t tws = * weightset();
+      for (const auto& m: v)
+        // FIXME: rename this version of add_weight.
+        add_weight(res, tls.conv(sls, m.first), tws.conv(sws, m.second));
+      return res;
+    }
+
+
+    static bool monomial_less_than(const monomial_t& lhs,
+                                   const monomial_t& rhs)
+    {
+      if (labelset_t::less_than(lhs.first, rhs.first))
+        return true;
+      else if (labelset_t::less_than(rhs.first, lhs.first))
+        return false;
+      else
+        return weightset_t::less_than(lhs.second, rhs.second);
+    }
+
+    static bool less_than(const value_t& lhs,
+                          const value_t& rhs)
+    {
+      return std::lexicographical_compare(lhs.begin(), lhs.end(),
+                                          rhs.begin(), rhs.end(),
+                                          monomial_less_than);
     }
 
     value_t
@@ -338,7 +417,45 @@ namespace vcsn
 
     static size_t hash(const value_t& v)
     {
-      return hash_value(v);
+      size_t res = 0;
+      for (const auto& m: v)
+        {
+          std::hash_combine(res, labelset_t::hash(m.first));
+          std::hash_combine(res, weightset_t::hash(m.second));
+        }
+      return res;
+    }
+
+    /// Build from the description in \a is.
+    static self_type make(std::istream& is)
+    {
+      // name is, for instance, "polynomialset<lal_char(abcd)_z>".
+      eat(is, "polynomialset<");
+      auto ctx = Context::make(is);
+      eat(is, '>');
+      return {ctx};
+    }
+
+    std::ostream&
+    print_set(std::ostream& o, const std::string& format) const
+    {
+      if (format == "latex")
+        {
+          o << "\\mathsf{Poly}[";
+          labelset()->print_set(o, format);
+          o << " \\to ";
+          weightset()->print_set(o, format);
+          o << "]";
+        }
+      else
+        {
+          o << "polynomialset<";
+          labelset()->print_set(o, format);
+          o << "_";
+          weightset()->print_set(o, format);
+          o << ">";
+        }
+      return o;
     }
 
     /// Construct from a string.
@@ -619,6 +736,42 @@ namespace vcsn
       // nonzero, and that there is only one weight per letter.
       res[aut.label_of(t)] = aut.weight_of(t);
     return res;
+  }
+
+  // FIXME: this works perfectly well, but I'd like a two-parameter version.
+  template <typename PLS1, typename PWS1,
+            typename PLS2, typename PWS2>
+  inline
+  auto
+  join(const polynomialset<context<PLS1, PWS1>>& p1,
+       const polynomialset<context<PLS2, PWS2>>& p2)
+    -> polynomialset<context<join_t<PLS1, PLS2>,
+                             join_t<PWS1, PWS2>>>
+  {
+    return {join(p1.context(), p2.context())};
+  }
+
+  template <typename WS1,
+            typename PLS2, typename PWS2>
+  inline
+  auto
+  join(const WS1& w1,
+       const polynomialset<context<PLS2, PWS2>>& p2)
+    -> polynomialset<context<PLS2, join_t<WS1, PWS2>>>
+  {
+    using ctx_t = context<PLS2, join_t<WS1, PWS2>>;
+    return ctx_t{* p2.labelset(), join(w1, * p2.weightset())};
+  }
+
+  template <typename PLS1, typename PWS1,
+            typename WS2>
+  inline
+  auto
+  join(const polynomialset<context<PLS1, PWS1>>& p1,
+       const WS2& w2)
+    -> polynomialset<context<PLS1, join_t<PWS1, WS2>>>
+  {
+    return join(w2, p1);
   }
 
 }
