@@ -4,6 +4,111 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-04-22
+** Vaucanson 2 has moved
+Vaucanson 2 is now also hosted on gitlab.lrde.epita.fr.  It is also renamed
+vaucanson.git, rather than vaucanson2.git.  To update your existing
+repository, run a command similar to:
+
+  $ git remote set-url origin git@gitlab.lrde.epita.fr:vcsn/vaucanson
+
+or edit your .git/config file to update the URL.
+
+You may also visit <http://gitlab.lrde.epita.fr/vcsn/vaucanson>.
+
+** dyn::label is born
+The familly of dynamic object (which includes dyn::automaton, dyn::weight,
+dyn::polynomial, dyn::ratexp, and others) now features a dyn::label.
+Several algorithms dealing with labels used the "std::string" C++ type to
+this end.  This was inadequate, and the corresponding signatures have been
+cleaned bottom up.
+
+For instance "derivation" used to have the following signatures
+
+Static:
+
+  template <typename RatExpSet>
+  inline
+  rat::ratexp_polynomial_t<RatExpSet>
+  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+             const std::string& word, bool breaking = false)
+
+Dyn:
+
+  polynomial derivation(const ratexp& exp, const std::string& s,
+                        bool breaking = false);
+
+These signatures are now:
+
+  template <typename RatExpSet>
+  inline
+  rat::ratexp_polynomial_t<RatExpSet>
+  derivation(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
+             const typename RatExpSet::labelset_t::word_t& word,
+             bool breaking = false)
+
+
+  polynomial derivation(const ratexp& exp, const label& l,
+                        bool breaking = false);
+
+At the Python level, derivation was adjusted so that one may still pass a
+string, and see it upgraded, so both these calls work:
+
+  >>> ctx = vcsn.context('lal_char(ab)_z')
+  >>> r = ctx.ratexp('(<2>a)*')
+  >>> r.derivation(ctx.word('aa'))
+  <4>(<2>a)*
+  >>> r.derivation('aa')
+  <4>(<2>a)*
+
+** Context extraction
+It is now possible to obtain an automaton or a ratexp's context.  In dyn,
+use "dyn::context_of(obj)", in Python use "obj.context()".
+
+** Copy can now change the type of the automaton
+vcsn::copy used to support only "homogeneous" duplications.  It also offers
+access to the the origins (a map from resulting states to origin states).
+
+** Variadic product of automata
+The synchronized product of automata is now variadic: the product of
+n-automata directly builds an automaton labelled with n-uples of original
+states.  The Python operator, &, is modified to pretend it is variadic
+(rather than binary): it delays the computation until the result is needed.
+The ".value()" method allows to force the evaluation.
+
+  >>> ctx = vcsn.context('lal_char(ab)_z')
+  >>> a1 = ctx.de_bruijn(5)
+  >>> a = ctx.ratexp('a{5}').derived_term()
+  >>> import timeit
+  >>> timeit.timeit(lambda: (((a1&a1).value() & a1).value() & a).value(),
+                    number=1000)
+  1.9550061225891113
+  >>> timeit.timeit(lambda: (a1 & a1 & a1 & a).value(), number=1000)
+  0.5792131423950195
+
+Be aware that if the result is not needed, then it is simply not computed at
+all (hence, appears to be blazzingly fast):
+
+  >>> timeit.timeit(lambda: a1 & a1 & a1 & a, number=1000)
+  0.0039250850677490234
+
+** "Fine grain" runtime compilation works
+So far dyn:: provided support for "context" runtime compilation, i.e., if a
+context is unknown (e.g., "lat<lal_char(ab), lal_char(xy)>_b"), C++ code is
+emitted, compiled, and loaded.  Now Vaucanson also supports per-algorithm
+runtime compilation.
+
+** Brzozowski minimization.
+It is now possible to ask for the Brzozowski's minimization:
+
+  >>> a = vcsn.context('lal_char(ab)_b').ratexp('a+b').standard()
+  >>> a.minimize('moore').info()['number of states']
+  2
+  >>> a.minimize('signature').info()['number of states']
+  2
+  >>> a.minimize('brzozowski').info()['number of states']
+  2
+
 * 2014-04-11
 ** GCC is back in business
 GCC compiles Vaucanson incorrectly (i.e., Vaucanson appears to behave
@@ -26,6 +131,8 @@ repository, run a command similar to:
   $ git remote set-url origin git@gitlab.lrde.epita.fr:vcsn/vaucanson1
 
 or edit your .git/config file to update the URL.
+
+You may also visit <http://gitlab.lrde.epita.fr/vcsn/vaucanson1>.
 
 * 2014-04-05
 ** ratexps conjunctions
