@@ -142,27 +142,27 @@ namespace vcsn
       }
     };
 
-    iterator begin()
+    iterator begin() const
     {
       auto res = begin_(indices_t{});
       return res;
     }
 
-    iterator end()
+    iterator end() const
     {
       return end_(indices_t{});
     }
 
   private:
     template <std::size_t... I>
-    iterator begin_(seq<I...>)
+    iterator begin_(seq<I...>) const
     {
       return iterator(std::get<I>(sequences_).begin()...,
                       std::get<I>(sequences_).end()...);
     }
 
     template <std::size_t... I>
-    iterator end_(seq<I...>)
+    iterator end_(seq<I...>) const
     {
       return iterator(std::get<I>(sequences_).end()...,
                       std::get<I>(sequences_).end()...);
