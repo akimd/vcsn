@@ -189,8 +189,9 @@ namespace vcsn
       return star_status_t::STARRABLE;
     }
 
+    template <typename LhsValue, typename RhsValue>
     value_t
-    concat(const value_t& l, const value_t& r) const
+    concat(const LhsValue& l, const RhsValue& r) const
     {
       return concat_(l, r, indices);
     }
@@ -439,9 +440,9 @@ namespace vcsn
       return value_t{set<I>().undelimit(std::get<I>(l))...};
     }
 
-    template <std::size_t... I>
+    template <typename LhsValue, typename RhsValue, std::size_t... I>
     value_t
-    concat_(const value_t& l, const value_t& r, seq<I...>) const
+    concat_(const LhsValue& l, const RhsValue& r, seq<I...>) const
     {
       return value_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
     }
