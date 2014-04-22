@@ -11,7 +11,7 @@ namespace vcsn
 {
 
   /// Whether state \s is deterministic.
-  template <class Aut>
+  template <typename Aut>
   inline bool
   is_deterministic(const Aut& aut, typename Aut::state_t s)
   {
@@ -20,7 +20,6 @@ namespace vcsn
                   "requires labels_are_letters");
 
     using label_t = typename automaton_t::label_t;
-
     std::unordered_set<label_t> seen;
     for (auto t : aut.all_out(s))
       if (!seen.insert(aut.label_of(t)).second)
@@ -64,6 +63,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       bool
       is_deterministic(const automaton& aut)

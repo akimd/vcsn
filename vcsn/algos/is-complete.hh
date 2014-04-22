@@ -9,7 +9,9 @@
 
 namespace vcsn
 {
-  template <class Aut>
+  /// Whether \a aut is complete.
+  /// \precondition \a aut is LTL
+  template <typename Aut>
   bool is_complete(const Aut& aut)
   {
     static_assert(Aut::context_t::is_lal,
@@ -43,6 +45,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <class Aut>
       bool is_complete(const automaton& aut)
       {
