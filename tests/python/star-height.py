@@ -13,6 +13,7 @@ def check(ratexp, height):
         FAIL(str(height) + " != " + str(res))
 
 check('\e', 0)
+check('\z', 0)
 check('a', 0)
 check('<x>a', 0)
 check('\e*', 1)
@@ -21,3 +22,5 @@ check('<x>a*', 1)
 check('a*+b*+c+c*', 1)
 check('(a*+b*+c+c*)*', 2)
 check('(<x>a*+<y*>b*+c+c*)*', 2)
+# Coverage:
+check('((a{\}a{c}&a*:a)(a*)<x>){T}*', 2)
