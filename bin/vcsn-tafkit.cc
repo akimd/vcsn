@@ -160,7 +160,6 @@
 
 DEFINE_AUT_FUNCTION(accessible);
 DEFINE_AUT_FUNCTION(aut_to_exp);
-DEFINE_AUT_SIZE_FUNCTION(chain);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
@@ -659,7 +658,6 @@ try
       ALGO(are_isomorphic);
       ALGO(aut_to_exp);
       ALGO(cat);
-      ALGO(chain);
       ALGO(coaccessible);
       ALGO(complement);
       ALGO(complete);

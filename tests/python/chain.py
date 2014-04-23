@@ -133,3 +133,28 @@ digraph
   5 -> F5
   6 -> F6
 }'''))
+
+
+## --------------------------------- ##
+## chain on ratexps vs on automata.  ##
+## --------------------------------- ##
+
+def check_isomorphic(a1, a2):
+    # Does not work with non-deterministic automata.
+    # CHECK_EQ(True, a.chain(min, max).is_isomorphic(r.chain(min, max).standard()))
+    CHECK_EQ(a1.info(), a2.info())
+    CHECK_EQ(a1.shortest(4), a2.shortest(4))
+
+ctx = vcsn.context('lal_char(ab)_z')
+def check(r, min, max):
+    r = ctx.ratexp(r)
+    a = r.standard()
+    check_isomorphic(a.chain(min, max), r.chain(min, max).standard())
+
+check('a', 0, 0)
+check('a', 0, 1)
+check('a', 1, 1)
+check('a', 3, 3)
+check('a', 0, 3)
+check('a', 3, -1)
+check('a', -1, -1)

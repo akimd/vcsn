@@ -5,6 +5,7 @@
 # include <vector>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/sum.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/misc/raise.hh> // require
@@ -123,24 +124,55 @@ namespace vcsn
     }
   }
 
-  /*--------.
-  | chain.  |
-  `--------*/
+  /*-----------------------------.
+  | chain(automaton, min, max).  |
+  `-----------------------------*/
 
-  /// Concatenate n-times the standard automaton A.
   template <typename Aut>
   Aut
-  chain(const Aut& aut, size_t n)
+  chain(const Aut& aut, int min, int max)
   {
     Aut res(aut.context());
-    auto s = res.new_state();
-    res.set_initial(s);
-    res.set_final(s);
-
-    for (size_t i = 0; i < n; ++i)
-      concatenate_here(res, aut);
+    if (max == -1)
+      {
+        res = star(aut);
+        if (min != -1)
+          res = concatenate(chain(aut, min, min), res);
+      }
+    else
+      {
+        if (min == -1)
+          min = 0;
+        if (min == 0)
+          {
+            // automatonset::one().
+            auto s = res.new_state();
+            res.set_initial(s);
+            res.set_final(s);
+          }
+        else
+          {
+            res = vcsn::copy(aut);
+            for (int n = 1; n < min; ++n)
+              res = concatenate(res, aut);
+          }
+        if (min < max)
+          {
+            // Aut sum = automatonset.one();
+            Aut sum(aut.context());
+            {
+              auto s = sum.new_state();
+              sum.set_initial(s);
+              sum.set_final(s);
+            }
+            for (int n = 1; n <= max - min; ++n)
+              sum = vcsn::sum(sum, chain(aut, n, n));
+            res = vcsn::concatenate(res, sum);
+          }
+      }
     return res;
   }
+
 
 
   namespace dyn
@@ -148,16 +180,16 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Unsigned>
+      template <typename Aut, typename Int1, typename Int2>
       automaton
-      chain(const automaton& a, unsigned n)
+      chain(const automaton& a, int min, int max)
       {
         const auto& aut = a->as<Aut>();
-        return make_automaton(chain(aut, n));
+        return make_automaton(chain(aut, min, max));
       }
 
       REGISTER_DECLARE(chain,
-                       (const automaton& aut, unsigned n) -> automaton);
+                       (const automaton& aut, int min, int max) -> automaton);
     }
   }
 

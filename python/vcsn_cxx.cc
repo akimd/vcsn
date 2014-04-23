@@ -84,9 +84,15 @@ struct automaton
     return vcsn::dyn::accessible(aut_);
   }
 
-  automaton chain(unsigned n) const
+  automaton chain(int min, int max) const
   {
-    return vcsn::dyn::chain(aut_, n);
+    return vcsn::dyn::chain(aut_, min, max);
+  }
+  using bin_chain_t = automaton (automaton::*)(int min, int max) const;
+
+  automaton chain(int min) const
+  {
+    return chain(min, min);
   }
 
   automaton coaccessible() const
@@ -392,6 +398,12 @@ struct ratexp
   {
     return vcsn::dyn::chain(r_, min, max);
   }
+  using bin_chain_t = ratexp (ratexp::*)(int min, int max) const;
+
+  ratexp chain(int min) const
+  {
+    return chain(min, min);
+  }
 
   ratexp concatenate(const ratexp& rhs) const
   {
@@ -652,6 +664,7 @@ ratexp ratexp::right_mult(const weight& w) const
 | vcsn_cxx.  |
 `-----------*/
 
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
@@ -671,7 +684,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
     .def("accessible", &automaton::accessible)
-    .def("chain", &automaton::chain)
+    .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)
     .def("complete", &automaton::complete)
@@ -744,7 +757,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<ratexp>
     ("ratexp",
      bp::init<const context&, const std::string&>())
-    .def("chain", &ratexp::chain)
+    .def("chain", static_cast<ratexp::bin_chain_t>(&ratexp::chain), chain())
     .def("concatenate", &ratexp::concatenate)
     .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
