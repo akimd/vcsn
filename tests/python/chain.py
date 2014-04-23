@@ -146,10 +146,11 @@ def check_isomorphic(a1, a2):
     CHECK_EQ(a1.shortest(4), a2.shortest(4))
 
 ctx = vcsn.context('lal_char(ab)_z')
-def check(r, min, max):
+def check(r, *args):
+    "Check that standard and chain commute."
     r = ctx.ratexp(r)
     a = r.standard()
-    check_isomorphic(a.chain(min, max), r.chain(min, max).standard())
+    check_isomorphic(a.chain(*args), (r ** args).standard())
 
 check('a', 0, 0)
 check('a', 0, 1)
