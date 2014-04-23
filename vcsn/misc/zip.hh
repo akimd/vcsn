@@ -88,7 +88,7 @@ namespace vcsn
       {
         bool res = true;
         using swallow = int[];
-        swallow
+        (void) swallow
           {
             res
             && (++std::get<I>(is_) == std::get<I>(ends_)

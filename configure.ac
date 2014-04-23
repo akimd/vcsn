@@ -77,16 +77,18 @@ fi
 AC_CACHE_CHECK([whether evaluation order in braced-init-list is correct],
                [ac_cv_cxx_have_correct_list_initializer_order],
 [AC_RUN_IFELSE([AC_LANG_PROGRAM(
-[[struct swallow{
-  template<typename... Types>
-  swallow(Types &&...){}
+[[struct pass
+{
+  template <typename... Types>
+  pass(Types&&...)
+  {}
 };
 
-template<int... IS>
+template <int... IS>
 int f()
 {
   int i = 2;
-  swallow{ i = i * IS + IS... };
+  pass { i = i * IS + IS... };
   return i;
 }]],
 [[
