@@ -169,7 +169,7 @@ namespace vcsn
     {}
 
     nullableset(const std::shared_ptr<const labelset_t>& ls)
-      : labelset_t{*ls}, ls_{ls}
+      : labelset_t{ls}, ls_{ls}
     {}
 
     static std::string sname()
