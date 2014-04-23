@@ -43,8 +43,7 @@ namespace vcsn
     using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
     context(const context& that)
-      : ls_{that.ls_}
-      , ws_{that.ws_}
+      : context{that.ls_, that.ws_}
     {}
 
     /// \param ls  the labelset
@@ -59,7 +58,7 @@ namespace vcsn
     /// \param ws  the weightset
     context(const labelset_t& ls, const weightset_t& ws = {})
       : context{std::make_shared<const labelset_t>(ls),
-        std::make_shared<const weightset_t>(ws)}
+                std::make_shared<const weightset_t>(ws)}
     {}
 
     /// Build a context.
@@ -87,7 +86,7 @@ namespace vcsn
     template <typename LabelSet2 = labelset_t>
     context()
       : context{typename std::enable_if<is_lao, labelset_t>::type{},
-        weightset_t{}}
+                weightset_t{}}
     {}
 
     context& operator=(context&& that)
@@ -127,6 +126,7 @@ namespace vcsn
     {
       return ls_;
     }
+
     const weightset_ptr& weightset() const
     {
       return ws_;
