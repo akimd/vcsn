@@ -11,13 +11,17 @@ if lcov --no-external --version; then
 fi
 
 lcov --capture                                  \
-     --directory .                              \
      --base-directory $DIR_SOURCE               \
-     --base-directory $DIR_BUILD                \
-     -k lib                                     \
-     -k vcsn                                    \
+     --directory .                              \
      $no_external                               \
      --output vcsn2.info
+
+# genhtml fails if it can't find some source files.  And it appears
+# that it can't find sources in the build tree.  Probably related to
+# the fact that these two flex-generated scanners have a #line with
+# that path as path.
+ln -sf "$DIR_BUILD/lib/vcsn/dot/scan.cc" "$DIR_SOURCE/lib/vcsn/dot/scan.cc"
+ln -sf "$DIR_BUILD/lib/vcsn/rat/scan.cc" "$DIR_SOURCE/lib/vcsn/rat/scan.cc"
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn2.cov.html          \
