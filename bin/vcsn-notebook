@@ -3,7 +3,7 @@
 : ${IPYTHON=ipython}
 
 if ($IPYTHON --version) >/dev/null 2>&1; then
-  exec $IPYTHON notebook --pylab=inline "$@"
+  exec $IPYTHON notebook "$@"
 else
   cat >&2 <<EOF
 $0: error: cannot find $IPYTHON
