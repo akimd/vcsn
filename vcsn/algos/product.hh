@@ -7,6 +7,7 @@
 # include <utility>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/insplitting.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
@@ -432,21 +433,111 @@ namespace vcsn
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
           // and so is (right destination, label).
-          {
-//            SHOWH(V(src)
-//                 << V(std::get<0>(t.second).dst)
-//                 << V(std::get<1>(t.second).dst)
-//                 << V(t.first)
-//                 << V(std::get<0>(t.second).wgt)
-//                 << V(std::get<1>(t.second).wgt));
-            detail::cross_tuple
-              ([&] (const typename transition_map_t<Auts>::transition&... ts)
-               {
-                 res_.new_transition(src, state(ts.dst...),
-                                     t.first, ws.mul(ts.wgt...));
-               },
-               t.second);
-          }
+          if (!res_.labelset()->is_one(t.first))
+            {
+  //            SHOWH(V(src)
+  //                 << V(std::get<0>(t.second).dst)
+  //                 << V(std::get<1>(t.second).dst)
+  //                 << V(t.first)
+  //                 << V(std::get<0>(t.second).wgt)
+  //                 << V(std::get<1>(t.second).wgt));
+              detail::cross_tuple
+                ([&] (const typename transition_map_t<Auts>::transition&... ts)
+                 {
+                   res_.new_transition(src, state(ts.dst...),
+                                       t.first, ws.mul(ts.wgt...));
+                 },
+                 t.second);
+            }
+        add_one_transitions_(src, psrc, indices);
+      }
+
+      template <std::size_t... I>
+      void add_one_transitions_(const state_t src, const pair_t& psrc, seq<I...>)
+      {
+        using swallow = int[];
+        (void) swallow
+        {
+            (maybe_add_one_transitions_<I>(*(std::get<I>(auts_).labelset()),
+                                           src, psrc), 0)...
+        };
+      }
+
+      template <std::size_t I, typename L>
+      typename std::enable_if<!L::has_one(), void>::type
+      maybe_add_one_transitions_(const L&, const state_t, const pair_t&)
+      {}
+
+      template <std::size_t I, typename L>
+      typename std::enable_if<L::has_one(), void>::type
+      maybe_add_one_transitions_(const L& ls, const state_t src,
+                                 const pair_t& psrc)
+      {
+        add_one_transitions_<I>(src, psrc,
+                                std::get<I>(transition_maps_)
+                                [std::get<I>(psrc)]
+                                [ls.one()]);
+      }
+
+      template <std::size_t I>
+      void add_one_transitions_(const state_t src, const pair_t& psrc,
+                                const typename
+                                transition_map<input_automaton_t<I>>::transitions_t&
+                                epsilon_out)
+      {
+        if (!has_epsilon_in(psrc, I + 1, indices))
+          for (auto t : epsilon_out)
+            {
+              auto pdst = psrc;
+              std::get<I>(pdst) = t.dst;
+              res_.new_transition(src, state(pdst), res_.labelset()->one(), t.wgt);
+            }
+      }
+
+      template <std::size_t... I>
+      bool has_epsilon_in(const pair_t& psrc, std::size_t i, seq<I...>) const
+      {
+        bool has_ones[] = { has_only_ones_in(std::get<I>(auts_), std::get<I>(psrc))... };
+        for (; i < sizeof...(Auts); ++i)
+          if (has_ones[i])
+            return true;
+        return false;
+      }
+
+      template <typename A>
+      typename std::enable_if<A::context_t::labelset_t::has_one(),
+                              bool>::type
+      is_one(const A& aut, typename A::transition_t tr) const
+      {
+        return aut.labelset()->is_one(aut.label_of(tr));
+      }
+
+      template <typename A>
+      constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
+                              bool>::type
+      is_one(const A&, typename A::transition_t)
+      const
+      {
+        return false;
+      }
+
+      template <typename Aut>
+      constexpr typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+                  bool>::type
+      has_only_ones_in(const Aut&,
+                       typename Aut::state_t) const
+      {
+        return false;
+      }
+
+      template <typename Aut>
+      typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+                 bool>::type
+      has_only_ones_in(const Aut& rhs, typename Aut::state_t rst) const
+      {
+        auto rin = rhs.all_in(rst);
+        auto rtr = rin.begin();
+        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs.is_initial(rst);
       }
 
       /// Add transitions to the given result automaton, starting from
@@ -587,7 +678,8 @@ namespace vcsn
       product_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(product(as[I]->as<Auts>()...));
+        return make_automaton(product((I == 0 ? copy(as[I]->as<Auts>()) :
+                                       insplit(as[I]->as<Auts>()))...));
       }
 
 
