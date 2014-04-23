@@ -126,8 +126,9 @@ namespace vcsn
     template <typename... Auts>
     class producter
     {
-//static_assert(Auts::context_t::is_lal,
-//"requires labels_are_letters")...;
+// FIXME: Check the requirements.
+// static_assert(Auts::context_t::is_lal,
+// "requires labels_are_letters")...;
 
       /// The type of context of the result.
       ///
@@ -144,6 +145,7 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
       /// The list of automaton indices as a static list.
       using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+      static constexpr indices_t indices{};
 
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
@@ -292,7 +294,7 @@ namespace vcsn
       /// The join of the contexts.
       context_t join_() const
       {
-        return join_(indices_t{});
+        return join_(indices);
       }
 
       template <size_t... I>
@@ -304,7 +306,7 @@ namespace vcsn
       /// The meet of the contexts.
       context_t meet_() const
       {
-        return meet_(indices_t{});
+        return meet_(indices);
       }
 
       template <size_t... I>
@@ -316,7 +318,7 @@ namespace vcsn
       /// The pre of the input automata.
       pair_t pre_() const
       {
-        return pre_(indices_t{});
+        return pre_(indices);
       }
 
       template <size_t... I>
@@ -330,7 +332,7 @@ namespace vcsn
       /// The post of the input automata.
       pair_t post_() const
       {
-        return post_(indices_t{});
+        return post_(indices);
       }
 
       template <size_t... I>
@@ -403,7 +405,7 @@ namespace vcsn
       std::tuple<typename transition_map_t<Auts>::map_t&...>
       out_(const pair_t& ss)
       {
-        return out_(ss, indices_t{});
+        return out_(ss, indices);
       }
 
       template <size_t... I>
