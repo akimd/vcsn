@@ -403,10 +403,10 @@ namespace vcsn
          nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
 
   DEFINE(meet, intersection, letterset<GenSet>,
-         nullableset<letterset<GenSet>>, letterset<GenSet>);
+         nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
 
   DEFINE(meet, intersection, nullableset<letterset<GenSet>>,
-         letterset<GenSet>, letterset<GenSet>);
+         letterset<GenSet>, nullableset<letterset<GenSet>>);
 
   template <typename Lls, typename Rls>
   nullableset<meet_t<Lls, Rls>>
