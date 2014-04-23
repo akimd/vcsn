@@ -15,7 +15,7 @@ namespace vcsn
   /// In place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
-  template <class Aut>
+  template <typename Aut>
   Aut&
   star_here(Aut& res)
   {
@@ -55,7 +55,7 @@ namespace vcsn
 
 
   /// Star of a standard automaton.
-  template <class Aut>
+  template <typename Aut>
   Aut
   star(const Aut& aut)
   {
@@ -68,10 +68,7 @@ namespace vcsn
   {
     namespace detail
     {
-      /*------------.
-      | dyn::star.  |
-      `------------*/
-
+      /// Bridge.
       template <typename Aut>
       automaton
       star(const automaton& a)
