@@ -48,11 +48,11 @@ namespace vcsn
         typename Aut::state_t dst;
       };
 
-      using map_t
-        = std::map<typename Aut::label_t,
-                   typename std::conditional<Deterministic,
-                                             transition,
-                                             std::vector<transition>>::type>;
+      using transitions_t
+        = typename std::conditional<Deterministic,
+                                    transition,
+                                    std::vector<transition>>::type;
+      using map_t = std::map<typename Aut::label_t, transitions_t>;
       using maps_t = std::map<typename Aut::state_t, map_t>;
       maps_t maps_;
 
