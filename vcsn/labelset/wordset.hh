@@ -66,6 +66,11 @@ namespace vcsn
       return gs;
     }
 
+    static constexpr bool is_ltl()
+    {
+      return false;
+    }
+
     /// Whether \a l == \a r.
     static bool
     equals(const value_t l, const value_t r)

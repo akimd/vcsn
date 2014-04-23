@@ -189,6 +189,11 @@ namespace vcsn
       return true;
     }
 
+    static constexpr bool is_ltl()
+    {
+      return false;
+    }
+
     ATTRIBUTE_PURE
     static constexpr value_t
     one()

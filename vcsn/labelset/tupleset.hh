@@ -74,6 +74,11 @@ namespace vcsn
       return std::get<I>(sets());
     }
 
+    static constexpr bool is_ltl()
+    {
+      return is_ltl_(indices);
+    }
+
     static bool
     equals(const value_t& l, const value_t& r)
     {
@@ -289,6 +294,13 @@ namespace vcsn
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #  endif
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    is_ltl_(seq<I...>)
+    {
+      return all_<valueset_t<I>::is_ltl()...>();
     }
 
     template <std::size_t... I>

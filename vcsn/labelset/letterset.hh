@@ -71,6 +71,11 @@ namespace vcsn
       return gs;
     }
 
+    static constexpr bool is_ltl()
+    {
+      return true;
+    }
+
     static value_t
     special() ATTRIBUTE_PURE
     {
