@@ -389,9 +389,8 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(typename Auts::state_t... ss)
+      state_t state(pair_t state)
       {
-        pair_t state{ss...};
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
@@ -399,6 +398,11 @@ namespace vcsn
             todo_.emplace_back(state);
           }
         return lb->second;
+      }
+
+      state_t state(typename Auts::state_t... ss)
+      {
+        return state(std::make_tuple(ss...));
       }
 
       /// The outgoing tuple of transitions from state tuple \a ss.
