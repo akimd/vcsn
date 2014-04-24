@@ -460,33 +460,36 @@ namespace vcsn
         res_ = res;
       }
 
-      const labelset_t& letters_(std::true_type)
-      {
-        return *rs_.labelset();
-      }
-
-      std::vector<label_t> letters_(std::false_type)
-      {
-        raise(me(), ": cannot handle complement with generators");
-      }
-
       VCSN_RAT_VISIT(complement, e)
+      {
+        // Complement requires a free labelset.
+        visit_complement<context_t::labelset_t::is_free()>(e);
+      }
+
+      /// Cannot complement on a non-free labelset.
+      template <bool IsFree>
+      typename std::enable_if<!IsFree, void>::type
+      visit_complement(const complement_t&)
+      {
+        raise(me(), ": cannot handle complement without generators");
+      }
+
+      /// Complement on a free labelset.
+      template <bool IsFree>
+      typename std::enable_if<IsFree, void>::type
+      visit_complement(const complement_t& e)
       {
         value_t res = first_order(e.sub());
         res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
 
         // Turn the polynomials into a ratexp, and complement it.
-        // Here, we need to iterate over the set of letters (obviously
-        // required to complement).
-        auto letters
-          = letters_(std::integral_constant<bool,
-                     context_t::is_lal>());
-        for (auto l: letters)
+        for (auto l: rs_.labelset()->genset())
           ps_.add_weight
             (res_.polynomials[l],
              polynomial_t{{rs_.complement(ratexp_(res.polynomials[l])),
                            ws_.one()}});
       }
+
 
       VCSN_RAT_VISIT(transposition, e)
       {

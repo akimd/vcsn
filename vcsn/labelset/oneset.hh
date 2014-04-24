@@ -46,6 +46,14 @@ namespace vcsn
       return {};
     }
 
+    static constexpr bool is_free()
+    {
+      // This is debatable.  However, in Vaucanson, if a labelset
+      // is_free, then we expect to be able to iterate on its genset,
+      // and I don't plan to provide a genset here.
+      return false;
+    }
+
     /// Whether \a l == \a r.
     static bool
     equals(const value_t, const value_t)

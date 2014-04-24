@@ -192,7 +192,7 @@ namespace vcsn
 
     private:
       template <typename A>
-      typename std::enable_if<A::context_t::is_lal,
+      typename std::enable_if<A::context_t::labelset_t::is_free(),
                               bool>::type
       is_deterministic_(const A& a)
       {
@@ -200,7 +200,7 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<A::context_t::is_lan,
+      typename std::enable_if<!A::context_t::labelset_t::is_free(),
                               bool>::type
       is_deterministic_(const A&)
       {

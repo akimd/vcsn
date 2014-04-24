@@ -208,7 +208,7 @@ namespace vcsn
              typename RatExpSet::label_t a,
              bool breaking = false)
   {
-    static_assert(RatExpSet::context_t::is_lal,
+    static_assert(RatExpSet::context_t::labelset_t::is_free(),
                   "requires labels_are_letters");
     rat::derivation_visitor<RatExpSet> derivation{rs};
     auto res = derivation(e, a);
