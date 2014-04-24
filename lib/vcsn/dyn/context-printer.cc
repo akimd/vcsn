@@ -30,6 +30,7 @@ namespace vcsn
       ALGO("chain", "concatenate");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
+      ALGO("derived-term", "derivation");
       ALGO("infiltration", "product");
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("list", "print");
