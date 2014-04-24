@@ -23,6 +23,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/copy.hh                             \
   %D%/algos/derivation.hh                       \
   %D%/algos/determinize.hh                      \
+  %D%/algos/distance.hh                         \
   %D%/algos/dot.hh                              \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \

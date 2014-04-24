@@ -11,6 +11,7 @@
 # include <vector>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/distance.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/label.hh>
@@ -193,53 +194,6 @@ namespace vcsn
     }
   }
 
-  template<typename Aut>
-  std::vector<typename Aut::transition_t>
-  find_min_dist(const Aut& aut, typename Aut::state_t start,
-                typename Aut::state_t end)
-  {
-    using context_t = typename Aut::context_t;
-    using automaton_t =  mutable_automaton<context_t>;
-    using state_t = typename automaton_t::state_t;
-    using transition_t = typename automaton_t::transition_t;
-
-    std::queue<state_t> todo;
-    std::unordered_set<state_t> marked;
-    std::unordered_map<state_t, std::pair<state_t, transition_t>> parent;
-
-    todo.push(start);
-    while (!todo.empty())
-      {
-        state_t p = todo.front();
-        todo.pop();
-        marked.insert(p);
-        if (p == end)
-          {
-            std::vector<transition_t> rpath;
-            state_t bt_curr = end;
-            while (bt_curr != start)
-              {
-                transition_t t;
-                std::tie(bt_curr, t) = parent.find(bt_curr)->second;
-                rpath.push_back(t);
-              }
-            std::reverse(rpath.begin(), rpath.end());
-            return rpath;
-          }
-        else
-          for (auto t : aut.out(p))
-            {
-              auto s = aut.dst_of(t);
-              if (marked.find(s) == marked.end())
-                {
-                  todo.push(s);
-                  parent[s] = {p, t};
-                }
-            }
-      }
-    raise("automaton is not synchronizing");
-  }
-
   template <typename Aut>
   typename Aut::labelset_t::word_t
   synchronizing_word(const Aut& aut)
@@ -256,6 +210,12 @@ namespace vcsn
     Aut pa = pobj.pair();
     state_t q0 = pobj.get_q0();
 
+    std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
+        paths_ibfs(pa, q0);
+
+    if (paths.size() < pa.states().size() - 1)
+        raise("automaton is not synchronizing.");
+
     for (auto s : pa.states())
       todo.insert(s);
 
@@ -266,7 +226,15 @@ namespace vcsn
         for (auto s : todo)
           if (s != q0)
             {
-              auto cpath = find_min_dist(pa, s, q0);
+              std::vector<transition_t> cpath;
+              state_t bt_curr = s;
+              while (bt_curr != q0)
+                {
+                  transition_t t;
+                  std::tie(bt_curr, t) = paths.find(bt_curr)->second;
+                  cpath.push_back(t);
+                }
+
               if (min == -1 || min > static_cast<long>(cpath.size()))
                 {
                   min = cpath.size();
