@@ -16,7 +16,7 @@ namespace vcsn
     template <typename Aut>
     class evaluator
     {
-      static_assert(Aut::context_t::is_lal,
+      static_assert(Aut::context_t::labelset_t::is_free(),
                     "requires labels_are_letters");
 
       using automaton_t = Aut;

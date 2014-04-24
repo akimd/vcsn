@@ -14,7 +14,7 @@ namespace vcsn
   template <typename Aut>
   bool is_complete(const Aut& aut)
   {
-    static_assert(Aut::context_t::is_lal,
+    static_assert(Aut::context_t::labelset_t::is_free(),
                   "requires labels_are_letters");
 
     if (aut.num_initials() == 0)

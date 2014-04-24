@@ -16,7 +16,8 @@ namespace vcsn
   Aut&
   complete_here(Aut& aut)
   {
-    static_assert(Aut::context_t::is_lal, "requires labels_are_letters");
+    static_assert(Aut::context_t::labelset_t::is_free(),
+                  "requires labels_are_letters");
 
     using automaton_t = Aut;
     using state_t = typename automaton_t::state_t;

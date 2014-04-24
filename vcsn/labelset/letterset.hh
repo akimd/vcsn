@@ -71,7 +71,7 @@ namespace vcsn
       return gs;
     }
 
-    static constexpr bool is_ltl()
+    static constexpr bool is_free()
     {
       return true;
     }

@@ -124,9 +124,9 @@ namespace vcsn
       return genset_(indices);
     }
 
-    static constexpr bool is_ltl()
+    static constexpr bool is_free()
     {
-      return is_ltl_(indices);
+      return is_free_(indices);
     }
 
     /// Iterate over the letters of v.
@@ -376,9 +376,9 @@ namespace vcsn
 
     template <std::size_t... I>
     static constexpr bool
-    is_ltl_(seq<I...>)
+    is_free_(seq<I...>)
     {
-      return all_<valueset_t<I>::is_ltl()...>();
+      return all_<valueset_t<I>::is_free()...>();
     }
 
     template <std::size_t... I>
