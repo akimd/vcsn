@@ -1,5 +1,5 @@
-#ifndef SYNCHRONIZING_WORD_HH
-# define SYNCHRONIZING_WORD_HH
+#ifndef VCSN_ALGOS_SYNCHRONIZING_WORD_HH
+# define VCSN_ALGOS_SYNCHRONIZING_WORD_HH
 
 # include <algorithm>
 # include <iostream>
@@ -283,4 +283,4 @@ namespace vcsn
   }
 }
 
-#endif /* !SYNCHRONIZING_WORD_HH */
+#endif // !VCSN_ALGOS_SYNCHRONIZING_WORD_HH
