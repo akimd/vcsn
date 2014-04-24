@@ -54,7 +54,8 @@ namespace vcsn
         weights_t v2{v1};
 
         // Computation.
-        for (auto l : a_.labelset()->genset().delimit(word))
+        const auto& ls = *a_.labelset();
+        for (auto l : ls.letters_of(ls.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
