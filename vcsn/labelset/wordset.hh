@@ -71,6 +71,13 @@ namespace vcsn
       return false;
     }
 
+    /// Prepare to iterate over the letters of v.
+    static word_t
+    letters_of(word_t v)
+    {
+      return v;
+    }
+
     /// Whether \a l == \a r.
     static bool
     equals(const value_t l, const value_t r)

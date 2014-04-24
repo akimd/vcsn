@@ -18,6 +18,8 @@ namespace vcsn
 {
   namespace detail
   {
+    /// Add support for an empty word to a LabelSet that does not
+    /// provide such special label to this end.
     template <typename LabelSet>
     struct nullable_helper
     {
@@ -83,6 +85,8 @@ namespace vcsn
       }
     };
 
+    /// Add support for an empty word to a letterset thanks to the
+    /// one() of its genset.
     template<typename GenSet>
     struct nullable_helper<letterset<GenSet>>
     {
@@ -192,6 +196,13 @@ namespace vcsn
     static constexpr bool is_ltl()
     {
       return false;
+    }
+
+    /// Prepare to iterate over the letters of v.
+    static value_t
+    letters_of(value_t v)
+    {
+      return v;
     }
 
     ATTRIBUTE_PURE

@@ -38,7 +38,7 @@ namespace vcsn
     for (auto s : aut.states())
       todo.insert(s);
 
-    for (auto l : w)
+    for (auto l : aut.labelset()->letters_of(w))
       {
         std::unordered_set<state_t> new_todo;
         for (auto s : todo)

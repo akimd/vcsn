@@ -79,6 +79,19 @@ namespace vcsn
       return is_ltl_(indices);
     }
 
+    /// Iterate over the letters of v.
+    ///
+    /// Templated by Value so that we work for both word_t and label_t.
+    /// Besides, avoids the problem of instantiation with weighset that
+    /// do not provide a word_t type.
+    template <typename Value>
+    static auto
+    letters_of(const Value& v)
+      -> decltype(zip_sequences_tuple(v))
+    {
+      return zip_sequences_tuple(v);
+    }
+
     static bool
     equals(const value_t& l, const value_t& r)
     {

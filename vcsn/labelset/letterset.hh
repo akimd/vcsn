@@ -76,6 +76,13 @@ namespace vcsn
       return true;
     }
 
+    /// Prepare to iterate over the letters of v.
+    static word_t
+    letters_of(word_t v)
+    {
+      return v;
+    }
+
     static value_t
     special() ATTRIBUTE_PURE
     {
