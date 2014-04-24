@@ -171,7 +171,7 @@ namespace vcsn
       key_t align_(key_t k, seq<I...>)
       {
         using swallow = int[];
-        (void) swallow{ ((is_done_ || (k = align_<I>(k))), 0)... };
+        (void) swallow{ (is_done_ || (k = align_<I>(k), false))... };
         return k;
       }
 
