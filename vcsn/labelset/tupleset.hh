@@ -11,11 +11,45 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/misc/tuple.hh>
+# include <vcsn/misc/cross.hh>
+# include <vcsn/misc/raise.hh>
+# include <vcsn/misc/zip.hh>
 # include <vcsn/weightset/b.hh>
 
 namespace vcsn
 {
+  namespace detail
+  {
+    /// A traits so that tupleset may define types that may exist.
+    ///
+    /// The types genset_t, letter_t, and word_t, exists only for
+    /// tuples of labelsets, characterized as featuring a word_t type.
+    template <typename Enable = void, typename... ValueSets>
+    struct labelset_types
+    {
+      using genset_t = void;
+      using letter_t = void;
+      using word_t = void;
+    };
 
+    /// Specialization for tuples of labelsets.
+    template <typename... ValueSets>
+    struct labelset_types<decltype(pass{typename ValueSets::word_t()...}, void()),
+                          ValueSets...>
+    {
+      using genset_t = cross_sequences<const typename ValueSets::genset_t&...>;
+      using letter_t = std::tuple<typename ValueSets::letter_t...>;
+      using word_t = std::tuple<typename ValueSets::word_t...>;
+    };
+  }
+
+  template <typename... ValueSets>
+  using labelset_types = detail::labelset_types<void, ValueSets...>;
+
+  /// A ValueSet which is a Cartesian product of ValueSets.
+  ///
+  /// Exposes a LabelSet interface for products of LabelSets, and similarly
+  /// for WeightSets.
   template <typename... ValueSets>
   class tupleset
   {
@@ -32,7 +66,17 @@ namespace vcsn
 
   public:
     using self_type = tupleset;
+
+    /// A tuple of values.
     using value_t = std::tuple<typename ValueSets::value_t...>;
+
+    /// A tuple of letters if meaningful, void otherwise.
+    using letter_t = typename labelset_types<ValueSets...>::letter_t;
+    /// A tuple of gensets if meaningful, void otherwise.
+    using genset_t = typename labelset_types<ValueSets...>::genset_t;
+    /// A tuple of words if meaningful, void otherwise.
+    using word_t = typename labelset_types<ValueSets...>::word_t;
+
     using kind_t = labels_are_tuples;
 
     tupleset(valuesets_t vs)
@@ -72,6 +116,12 @@ namespace vcsn
     const valueset_t<I>& set() const
     {
       return std::get<I>(sets());
+    }
+
+    genset_t
+    genset() const
+    {
+      return genset_(indices);
     }
 
     static constexpr bool is_ltl()
@@ -315,6 +365,13 @@ namespace vcsn
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #  endif
+    }
+
+    template <std::size_t... I>
+    genset_t
+    genset_(seq<I...>) const
+    {
+      return cross(set<I>().genset()...);
     }
 
     template <std::size_t... I>
