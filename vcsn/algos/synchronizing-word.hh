@@ -44,10 +44,9 @@ namespace vcsn
         for (auto s : todo)
           {
             auto ntf = aut.out(s, l);
-            if (ntf.empty())
-              raise("automaton must be complete.");
-            if (1 < ntf.size())
-              raise("automaton must be deterministic.");
+            auto size = ntf.size();
+            require(0 < size, "automaton must be complete");
+            require(size < 2, "automaton must be deterministic");
             new_todo.insert(aut.dst_of(*ntf.begin()));
           }
         todo = std::move(new_todo);
@@ -238,7 +237,7 @@ namespace vcsn
                 }
             }
       }
-    raise("automaton is not synchronizing.");
+    raise("automaton is not synchronizing");
   }
 
   template <typename Aut>
