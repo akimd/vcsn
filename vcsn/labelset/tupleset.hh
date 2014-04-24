@@ -189,14 +189,22 @@ namespace vcsn
       return star_(l, indices);
     }
 
-    value_t
-    delimit(const value_t& l) const
+    /// Add the special character first and last.
+    ///
+    /// Templated by Value so that we work for both word_t and label_t.
+    /// Besides, avoids the problem of instantiation with weighset that
+    /// do not provide a word_t type.
+    template <typename Value>
+    Value
+    delimit(const Value& l) const
     {
       return delimit_(l, indices);
     }
 
-    value_t
-    undelimit(const value_t& l) const
+    /// Remove first and last characters, that must be "special".
+    template <typename Value>
+    Value
+    undelimit(const Value& l) const
     {
       return undelimit_(l, indices);
     }
@@ -451,18 +459,18 @@ namespace vcsn
       return value_t{set<I>().star(std::get<I>(l))...};
     }
 
-    template <std::size_t... I>
-    value_t
-    delimit_(value_t const& l, seq<I...>) const
+    template <typename Value, std::size_t... I>
+    Value
+    delimit_(Value const& l, seq<I...>) const
     {
-      return value_t{set<I>().delimit(std::get<I>(l))...};
+      return Value{set<I>().delimit(std::get<I>(l))...};
     }
 
-    template <std::size_t... I>
-    value_t
-    undelimit_(value_t const& l, seq<I...>) const
+    template <typename Value, std::size_t... I>
+    Value
+    undelimit_(Value const& l, seq<I...>) const
     {
-      return value_t{set<I>().undelimit(std::get<I>(l))...};
+      return Value{set<I>().undelimit(std::get<I>(l))...};
     }
 
     template <typename LhsValue, typename RhsValue, std::size_t... I>
