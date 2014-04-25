@@ -35,7 +35,7 @@ namespace vcsn
 
     /// A randomly selected member of \a c.
     template <typename Container>
-    auto operator()(const Container& c) -> decltype(*std::begin(c))&
+    auto operator()(const Container& c) -> decltype(*std::begin(c))
     {
       return *select(std::begin(c), std::end(c));
     }

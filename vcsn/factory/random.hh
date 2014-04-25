@@ -2,9 +2,11 @@
 # define VCSN_ALGOS_RANDOM_HH
 
 # include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
-# include <vcsn/labelset/letterset.hh>
 # include <vcsn/labelset/nullableset.hh>
+# include <vcsn/labelset/oneset.hh>
+# include <vcsn/labelset/tupleset.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/random.hh>
 # include <vcsn/misc/set.hh>
@@ -12,39 +14,58 @@
 namespace vcsn
 {
 
-  template <typename GenSet,
+  template <typename RandomGenerator = std::default_random_engine>
+  typename oneset::value_t
+  random_label(const oneset& ls,
+               RandomGenerator& = RandomGenerator())
+  {
+    return ls.one();
+  };
+
+  template <typename... LabelSet,
             typename RandomGenerator = std::default_random_engine>
-  typename detail::genset_labelset<GenSet>::letter_t
-  random_label(const detail::genset_labelset<GenSet>& ls,
+  typename tupleset<LabelSet...>::value_t
+  random_label(const tupleset<LabelSet...>& ls,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    return random_label(ls, gen, ls.indices);
+  };
+
+  template <typename... LabelSet,
+            size_t... I,
+            typename RandomGenerator = std::default_random_engine>
+  typename tupleset<LabelSet...>::value_t
+  random_label(const tupleset<LabelSet...>& ls,
+               RandomGenerator& gen,
+               detail::index_sequence<I...>)
+  {
+    using value_t = typename tupleset<LabelSet...>::value_t;
+    return value_t{random_label(ls.template set<I>(), gen)...};
+  };
+
+
+  template <typename LabelSet,
+            typename RandomGenerator = std::default_random_engine>
+  typename LabelSet::value_t
+  random_label(const LabelSet& ls,
                RandomGenerator& gen = RandomGenerator())
   {
     // Pick a member of a container following a uniform distribution.
     auto pick = make_random_selector(gen);
-    return pick(ls.genset());
+    return ls.value(pick(ls.genset()));
   };
 
-  template <typename GenSet,
+  template <typename LabelSet,
             typename RandomGenerator = std::default_random_engine>
-  typename letterset<GenSet>::value_t
-  random_label(const letterset<GenSet>& ls,
+  typename nullableset<LabelSet>::value_t
+  random_label(const nullableset<LabelSet>& ls,
                RandomGenerator& gen = RandomGenerator())
   {
-    using super = typename letterset<GenSet>::super_type;
-    return random_label(static_cast<const super&>(ls), gen);
-  };
-
-  template <typename GenSet,
-            typename RandomGenerator = std::default_random_engine>
-  typename nullableset<letterset<GenSet>>::value_t
-  random_label(const nullableset<letterset<GenSet>>& ls,
-               RandomGenerator& gen = RandomGenerator())
-  {
-    using super = typename nullableset<letterset<GenSet>>::super_type;
     std::uniform_int_distribution<> dis(0, 1);
     if (dis(gen))
       return ls.one();
     else
-      return random_label(static_cast<const super&>(ls), gen);
+      return ls.value(random_label(*ls.labelset(), gen));
   };
 
 
@@ -58,6 +79,8 @@ namespace vcsn
          unsigned num_states, float density = 0.1,
          unsigned num_initial = 1, unsigned num_final = 1)
   {
+    require(0 <= density && density <= 1,
+            "random: density must be in [0,1]");
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = typename automaton_t::state_t;
     automaton_t res(ctx);
@@ -175,7 +198,7 @@ namespace vcsn
   mutable_automaton<Ctx>
   random_uniform(const Ctx& ctx, unsigned num_states)
   {
-    require(0 < num_states, "num_states must be > 0.");
+    require(0 < num_states, "num_states must be > 0");
 
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = typename automaton_t::state_t;

@@ -141,9 +141,6 @@ namespace vcsn
       bool
       register_kind_functions(labels_are_letters)
       {
-        using ctx_t = Ctx;
-        using namespace dyn::detail;
-        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         return true;
       }
 
@@ -258,7 +255,6 @@ namespace vcsn
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(ladybird, ctx_t, unsigned);
-        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(u, ctx_t, unsigned);
 
         return true;
@@ -352,6 +348,7 @@ namespace vcsn
         REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, bool);
+        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(read_label, std::istream, ctx_t);
         REGISTER(read_polynomial, ctx_t, std::istream);
         REGISTER(read_weight, ctx_t, std::istream);
