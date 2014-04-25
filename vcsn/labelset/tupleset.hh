@@ -266,7 +266,7 @@ namespace vcsn
     }
 
     template <typename LhsValue, typename RhsValue>
-    value_t
+    word_t
     concat(const LhsValue& l, const RhsValue& r) const
     {
       return concat_(l, r, indices);
@@ -531,10 +531,10 @@ namespace vcsn
     }
 
     template <typename LhsValue, typename RhsValue, std::size_t... I>
-    value_t
+    word_t
     concat_(const LhsValue& l, const RhsValue& r, seq<I...>) const
     {
-      return value_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
+      return word_t{set<I>().concat(std::get<I>(l), std::get<I>(r))...};
     }
 
     template <std::size_t... I>
