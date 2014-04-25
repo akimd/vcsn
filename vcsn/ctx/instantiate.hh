@@ -258,7 +258,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_functions(std::true_type)
+      register_functions_has_one(std::true_type)
       {
         using ctx_t = Ctx;
         using rs_t = ratexpset<ctx_t>;
@@ -270,7 +270,7 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_functions(std::false_type)
+      register_functions_has_one(std::false_type)
       {
         return true;
       }
@@ -357,7 +357,7 @@ namespace vcsn
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 
-        register_functions<ctx_t>(std::integral_constant<bool, ctx_t::has_one()>());
+        register_functions_has_one<ctx_t>(std::integral_constant<bool, ctx_t::has_one()>());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
       }
