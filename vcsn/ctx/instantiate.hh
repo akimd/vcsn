@@ -2,16 +2,25 @@
 # define VCSN_CTX_INSTANTIATE_HH
 
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/are-equivalent.hh> // difference
+# include <vcsn/algos/are-isomorphic.hh>
 # include <vcsn/algos/aut-to-exp.hh>
+# include <vcsn/algos/complete.hh>
 # include <vcsn/algos/concatenate.hh>
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/derivation.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
+# include <vcsn/algos/enumerate.hh>
+# include <vcsn/algos/eval.hh>
 # include <vcsn/algos/expand.hh>
 # include <vcsn/algos/first-order.hh>
 # include <vcsn/algos/info.hh>
+# include <vcsn/algos/is-ambiguous.hh>
+# include <vcsn/algos/is-complete.hh>
+# include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -19,16 +28,19 @@
 # include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
+# include <vcsn/algos/minimize.hh>
 # include <vcsn/algos/print.hh>
+# include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
 # include <vcsn/algos/read.hh>
+# include <vcsn/algos/sort.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/algos/standard.hh>
-# include <vcsn/algos/sort.hh>
-# include <vcsn/algos/star.hh>
 # include <vcsn/algos/star-height.hh>
 # include <vcsn/algos/star-normal-form.hh>
+# include <vcsn/algos/star.hh>
 # include <vcsn/algos/sum.hh>
+# include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/algos/thompson.hh>
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
@@ -127,7 +139,57 @@ namespace vcsn
     {
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_letters);
+      register_kind_functions(labels_are_letters)
+      {
+        using ctx_t = Ctx;
+        using aut_t = mutable_automaton<ctx_t>;
+        using rs_t = ratexpset<ctx_t>;
+
+        // Wordset.
+        using wls_t = vcsn::detail::law_t<typename Ctx::labelset_t>;
+
+        // Word polynomialset.
+        using wps_t = vcsn::detail::word_polynomialset_t<ctx_t>;
+
+        // Same labelset, but over Booleans.
+        using b_ctx_t = context<typename Ctx::labelset_t, b>;
+        using b_aut_t = mutable_automaton<b_ctx_t>;
+        using b_rs_t = ratexpset<b_ctx_t>;
+
+        using namespace dyn::detail;
+
+        REGISTER(are_isomorphic, aut_t, aut_t);
+        REGISTER(complete, aut_t);
+        REGISTER(de_bruijn, Ctx, unsigned);
+        REGISTER(derivation, rs_t, wls_t, bool);
+        REGISTER(derived_term, rs_t, bool);
+        REGISTER(difference, aut_t, b_aut_t);
+        REGISTER(difference_ratexp, rs_t, b_rs_t);
+        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
+        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
+        REGISTER(enumerate, aut_t, unsigned);
+        REGISTER(eval, aut_t, wls_t);
+        REGISTER(infiltration, aut_t, aut_t);
+        REGISTER(is_ambiguous, aut_t);
+        REGISTER(is_complete, aut_t);
+        REGISTER(is_deterministic, aut_t);
+        REGISTER(is_synchronized_by, aut_t, wls_t);
+        REGISTER(ladybird, Ctx, unsigned);
+        REGISTER(list_polynomial, wps_t, std::ostream);
+        REGISTER(minimize, aut_t, const std::string);
+        REGISTER(pair, aut_t);
+        REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
+        REGISTER(power, aut_t, unsigned);
+        REGISTER(product, aut_t, aut_t);
+        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
+        REGISTER(random_uniform, Ctx, unsigned);
+        REGISTER(shortest, aut_t, unsigned);
+        REGISTER(shuffle, aut_t, aut_t);
+        REGISTER(synchronizing_word, aut_t);
+        REGISTER(u, Ctx, unsigned);
+
+        return true;
+      }
 
       template <typename Ctx>
       bool
