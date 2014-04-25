@@ -187,8 +187,8 @@ namespace vcsn
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(pair, aut_t);
-        REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(power, aut_t, unsigned);
+        REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(product, aut_t, aut_t);
         REGISTER(random_uniform, ctx_t, unsigned);
         REGISTER(shortest, aut_t, unsigned);
@@ -314,6 +314,7 @@ namespace vcsn
         REGISTER(coaccessible, aut_t);
         REGISTER(concatenate, aut_t, aut_t);
         REGISTER(concatenate_ratexp, rs_t, rs_t);
+        REGISTER(conjunction_ratexp, rs_t, rs_t);
         REGISTER(constant_term, rs_t);
         REGISTER(context_of, aut_t);
         REGISTER(context_of_ratexp, rs_t);
@@ -324,7 +325,6 @@ namespace vcsn
         REGISTER(first_order, rs_t, bool);
         REGISTER(info, aut_t, std::ostream);
         REGISTER(info_ratexp, rs_t, std::ostream);
-        REGISTER(conjunction_ratexp, rs_t, rs_t);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);
@@ -347,9 +347,9 @@ namespace vcsn
         REGISTER(make_word_context, ctx_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
         REGISTER(print_label, std::ostream, ls_t, const std::string);
-        REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);
+        REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, bool);
         REGISTER(read_label, std::istream, ctx_t);
@@ -357,10 +357,10 @@ namespace vcsn
         REGISTER(read_weight, ctx_t, std::istream);
         REGISTER(right_mult, aut_t, ws_t);
         REGISTER(right_mult_ratexp, rs_t, ws_t);
+        REGISTER(sort, aut_t);
         REGISTER(split, rs_t);
         REGISTER(standard, aut_t);
         REGISTER(standard_ratexp, rs_t);
-        REGISTER(sort, aut_t);
         REGISTER(star, aut_t);
         REGISTER(star_height, rs_t);
         REGISTER(star_normal_form, rs_t);
