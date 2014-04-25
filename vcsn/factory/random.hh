@@ -195,7 +195,7 @@ namespace vcsn
       states.push_back(res.new_state());
 
     for (unsigned i = 0; i < num_states; ++i)
-      for (auto l : *ctx.labelset())
+      for (auto l : ctx.labelset()->genset())
         res.add_transition(states[i], states[distrib(gen)], l,
                            ctx.weightset()->one());
 

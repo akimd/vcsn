@@ -103,7 +103,7 @@ namespace vcsn
         automaton_t res(ctx);
         q0_ = res.new_state(); // q0 special state
 
-        for (auto l : *aut_.labelset())
+        for (auto l : aut_.labelset()->genset())
           res.add_transition(q0_, q0_, l, ws->one());
 
         for (auto s1: aut_.states())

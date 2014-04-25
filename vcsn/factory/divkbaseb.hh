@@ -19,8 +19,9 @@ namespace vcsn
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
+    const auto& gens = ctx.labelset()->genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+      {std::begin(gens), std::end(gens)};
 
     require(divisor,
             "divkbaseb: divisor cannot be 0");

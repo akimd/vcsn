@@ -1,7 +1,7 @@
 #ifndef VCSN_FACTORY_DE_BRUIJN_HH
 # define VCSN_FACTORY_DE_BRUIJN_HH
 
-# include <iterator>
+# include <iterator> // std::distance
 # include <stdexcept>
 
 # include <vcsn/alphabets/char.hh>
@@ -17,26 +17,24 @@ namespace vcsn
   mutable_automaton<Context>
   de_bruijn(const Context& ctx, unsigned n)
   {
-    static_assert(Context::is_lal || Context::is_lan,
-                  "requires labels_are_letters or nullable");
-    size_t sz =
-      std::distance(std::begin(*ctx.labelset()), std::end(*ctx.labelset()));
+    const auto& gens = ctx.labelset()->genset();
+    size_t sz = std::distance(std::begin(gens), std::end(gens));
     require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;
     mutable_automaton<context_t> res{ctx};
 
     auto init = res.new_state();
     res.set_initial(init);
-    for (char l: *ctx.labelset())
+    for (auto l: gens)
       res.new_transition(init, init, l);
 
     auto prev = res.new_state();
-    res.new_transition(init, prev, *std::begin(*ctx.labelset()));
+    res.new_transition(init, prev, *std::begin(gens));
 
     while (n--)
       {
         auto next = res.new_state();
-        for (char l: *ctx.labelset())
+        for (auto l: gens)
           res.new_transition(prev, next, l);
         prev = next;
       }

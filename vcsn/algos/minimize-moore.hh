@@ -28,8 +28,8 @@ namespace vcsn
       /// Input automaton, supplied at construction time.
       const automaton_t &a_;
 
-      /// The labelset, and alphabet.
-      const typename Aut::context_t::labelset_t& ls_;
+      /// The generators.
+      const typename Aut::context_t::labelset_t::genset_t gs_;
 
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;
@@ -129,7 +129,7 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , ls_(*a_.labelset())
+        , gs_(a_.labelset()->genset())
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
@@ -167,7 +167,7 @@ namespace vcsn
             for (class_t c = 0; c < num_classes_; ++c)
               {
                 const set_t& c_states = class_to_set_[c];
-                for (auto l : ls_)
+                for (auto l : gs_)
                   {
                     // See the "alreadyminimal" test comment in
                     // tests/python/minimize.py.

@@ -627,7 +627,7 @@ namespace vcsn
       auto s = res.new_state();
       res.set_initial(s);
       res.set_final(s);
-      for (auto l: *res.context().labelset())
+      for (auto l: res.context().labelset()->genset())
         res.new_transition(s, s, l);
     }
 

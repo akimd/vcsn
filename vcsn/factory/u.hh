@@ -18,11 +18,10 @@ namespace vcsn
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
-    static_assert(Context::is_lal || Context::is_lan,
-                  "requires labels_are_letters or nullable");
     require(2 <= n, "u: n must be at least 3");
+    const auto& gens = ctx.labelset()->genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+      {std::begin(gens), std::end(gens)};
     require(3 <= letters.size(), "u: the alphabet needs at least 3 letters");
     automaton_t res{ctx};
 

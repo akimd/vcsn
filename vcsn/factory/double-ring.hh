@@ -16,11 +16,10 @@ namespace vcsn
   double_ring(const Context& ctx, unsigned n,
               const std::vector<unsigned>& finals)
   {
-    static_assert(Context::is_lal || Context::is_lan,
-                  "requires labels_are_letters or nullable");
     using context_t = Context;
+    const auto& gens = ctx.labelset()->genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+      {std::begin(gens), std::end(gens)};
     require(2 <= letters.size(),
             "double_ring: the alphabet needs at least 2 letters");
     auto a = letters[0];

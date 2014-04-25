@@ -246,10 +246,13 @@ namespace vcsn
              const typename RatExpSet::labelset_t::word_t& l,
              bool breaking = false)
   {
-    require(!l.empty(), "derivation: word cannot be empty");
-    auto res = derivation(rs, e, l[0], breaking);
-    for (size_t i = 1, len = l.size(); i < len; ++i)
-      res = derivation(rs, res, l[i], breaking);
+    auto word = rs.labelset()->letters_of(l);
+    auto i = std::begin(word);
+    auto end = std::end(word);
+    require(i != end, "derivation: word cannot be empty");
+    auto res = derivation(rs, e, *i, breaking);
+    for (++i; i != end; ++i)
+      res = derivation(rs, res, *i, breaking);
     return res;
   }
 
@@ -349,9 +352,6 @@ namespace vcsn
       automaton_t operator()(const ratexp_t& ratexp)
       {
         weightset_t ws = *rs_.weightset();
-        // This is the labelset, but when iterated, the list of generators.
-        const auto& ls = *rs_.labelset();
-
         // Turn the ratexp into a polynomial.
         {
           polynomial_t initial
@@ -362,6 +362,7 @@ namespace vcsn
             res_.set_initial(state(p.first), p.second);
         }
 
+        const auto& ls = rs_.labelset()->genset();
         while (!todo_.empty())
           {
             ratexp_t r = todo_.top();

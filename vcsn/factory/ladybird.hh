@@ -15,11 +15,10 @@ namespace vcsn
   mutable_automaton<Context>
   ladybird(const Context& ctx, unsigned n)
   {
-    static_assert(Context::is_lal || Context::is_lan,
-                  "requires labels_are_letters or nullable");
     using context_t = Context;
+    const auto& gens = ctx.labelset()->genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
-      {std::begin(*ctx.labelset()), std::end(*ctx.labelset())};
+      {std::begin(gens), std::end(gens)};
     require(3 <= letters.size(),
             "ladybird: the alphabet needs at least 3 letters");
     auto a = letters[0];
