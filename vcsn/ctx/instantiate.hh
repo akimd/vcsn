@@ -142,6 +142,16 @@ namespace vcsn
       register_kind_functions(labels_are_letters)
       {
         using ctx_t = Ctx;
+        using namespace dyn::detail;
+        REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_functions_is_free(std::true_type)
+      {
+        using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
 
@@ -157,16 +167,15 @@ namespace vcsn
         using b_rs_t = ratexpset<b_ctx_t>;
 
         using namespace dyn::detail;
-
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(complete, aut_t);
-        REGISTER(de_bruijn, Ctx, unsigned);
+        REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(derived_term, rs_t, bool);
         REGISTER(difference, aut_t, b_aut_t);
         REGISTER(difference_ratexp, rs_t, b_rs_t);
-        REGISTER(divkbaseb, Ctx, unsigned, unsigned);
-        REGISTER(double_ring, Ctx, unsigned, const std::vector<unsigned>);
+        REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
+        REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
         REGISTER(enumerate, aut_t, unsigned);
         REGISTER(eval, aut_t, wls_t);
         REGISTER(infiltration, aut_t, aut_t);
@@ -174,20 +183,26 @@ namespace vcsn
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(is_synchronized_by, aut_t, wls_t);
-        REGISTER(ladybird, Ctx, unsigned);
+        REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(pair, aut_t);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(power, aut_t, unsigned);
         REGISTER(product, aut_t, aut_t);
-        REGISTER(random, Ctx, unsigned, float, unsigned, unsigned);
-        REGISTER(random_uniform, Ctx, unsigned);
+        REGISTER(random_uniform, ctx_t, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(synchronizing_word, aut_t);
-        REGISTER(u, Ctx, unsigned);
+        REGISTER(u, ctx_t, unsigned);
 
+        return true;
+      }
+
+      template <typename Ctx>
+      bool
+      register_functions_is_free(std::false_type)
+      {
         return true;
       }
 
@@ -358,6 +373,7 @@ namespace vcsn
         REGISTER(union_a, aut_t, aut_t);
 
         register_functions_has_one<ctx_t>(std::integral_constant<bool, ctx_t::has_one()>());
+        register_functions_is_free<ctx_t>(std::integral_constant<bool, ctx_t::labelset_t::is_free()>());
 
         return register_kind_functions<ctx_t>(typename ctx_t::kind_t());
       }
