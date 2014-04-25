@@ -16,13 +16,19 @@ lcov --capture                                  \
      $no_external                               \
      --output vcsn2.info
 
-# genhtml fails if it can't find some source files.  And it appears
-# that it can't find sources in the build tree.  Probably related to
-# the fact that these two flex-generated scanners have a #line with
-# that path as path.
-ln -sf "$DIR_BUILD/lib/vcsn/dot/scan.cc" "$DIR_SOURCE/lib/vcsn/dot/scan.cc"
-ln -sf "$DIR_BUILD/lib/vcsn/rat/scan.cc" "$DIR_SOURCE/lib/vcsn/rat/scan.cc"
+# There are files we really don't care about (e.g., generated parsers
+# and scanners) that pollute our statistics.  Note that we care about
+# the coverage of their sources (e.g., parse.yy), but not about the
+# coverage of the Bison infrastructure.
+lcov --remove vcsn2.info -o vcsn.info           \
+   '*/dot/stack.hh'                             \
+   '*/parse.cc'                                 \
+   '*/parse.hh'                                 \
+   '*/rat/location.hh'                          \
+   '*/rat/position.hh'                          \
+   '*/rat/stack.hh'                             \
+   '*/scan.cc'
 
 genhtml --legend --demangle-cpp                 \
      --output-directory vcsn2.cov.html          \
-     vcsn2.info
+     vcsn.info
