@@ -5,6 +5,7 @@
 # include <vector>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/standard.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
