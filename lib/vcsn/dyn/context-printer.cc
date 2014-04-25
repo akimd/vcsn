@@ -28,11 +28,18 @@ namespace vcsn
       else if (n == In)                         \
         n = Out
       ALGO("chain", "concatenate");
+      ALGO("coaccessible", "accessible");
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
       ALGO("derived-term", "derivation");
       ALGO("infiltration", "product");
+      ALGO("is-accessible", "accessible");
+      ALGO("is-coaccessible", "accessible");
+      ALGO("is-empty", "accessible");
+      ALGO("is-standard", "standard");
       ALGO("is-synchronized-by", "synchronizing-word");
+      ALGO("is-trim", "accessible");
+      ALGO("is-useless", "accessible");
       ALGO("list", "print");
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");
@@ -41,6 +48,7 @@ namespace vcsn
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
+      ALGO("trim", "accessible");
       ALGO("union-a", "union");
 #undef ALGO
       headers_late_.insert("vcsn/algos/" + n + ".hh");
