@@ -34,6 +34,9 @@ namespace vcsn
 
     /// Composite iterator.
     struct iterator
+      : std::iterator<std::forward_iterator_tag,
+                      std::tuple<typename std::remove_reference<Sequences>::type::value_type...>,
+                      size_t>
     {
       using iterators_t
         = std::tuple<typename std::remove_reference<Sequences>::type::iterator...>;
