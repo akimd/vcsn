@@ -51,7 +51,16 @@ namespace vcsn
       ALGO("trim", "accessible");
       ALGO("union-a", "union");
 #undef ALGO
-      headers_late_.insert("vcsn/algos/" + n + ".hh");
+      if (n == "de-bruijn"
+          || n == "divkbaseb"
+          || n == "double-ring"
+          || n == "ladybird"
+          || n == "random"
+          || n == "u")
+        n = "vcsn/factory/" + n + ".hh";
+      else
+        n = "vcsn/algos/" + n + ".hh";
+      headers_late_.insert(n);
     }
 
     void context_printer::header(std::string h)
