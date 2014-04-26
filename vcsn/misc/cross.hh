@@ -24,6 +24,10 @@ namespace vcsn
     /// Index sequence for our maps.
     using indices_t = vcsn::detail::make_index_sequence<sizeof...(Sequences)>;
 
+    /// The type of the members.
+    using value_type
+      = std::tuple<typename std::remove_reference<Sequences>::type::value_type...>;
+
     cross_sequences(const sequences_t& sequences)
       : sequences_(sequences)
     {}
@@ -34,14 +38,10 @@ namespace vcsn
 
     /// Composite iterator.
     struct iterator
-      : std::iterator<std::forward_iterator_tag,
-                      std::tuple<typename std::remove_reference<Sequences>::type::value_type...>,
-                      size_t>
+      : std::iterator<std::forward_iterator_tag, value_type, size_t>
     {
       using iterators_t
         = std::tuple<typename std::remove_reference<Sequences>::type::iterator...>;
-      using value_type
-        = std::tuple<typename std::remove_reference<Sequences>::type::value_type...>;
 
       iterator(typename std::remove_reference<Sequences>::type::iterator... is,
                typename std::remove_reference<Sequences>::type::iterator... ends)
