@@ -54,6 +54,13 @@ namespace vcsn
       return false;
     }
 
+    /// Value constructor.
+    template <typename... Args>
+    value_t value(Args&&... args) const
+    {
+      return value_t{std::forward<Args>(args)...};
+    }
+
     /// Whether \a l == \a r.
     static bool
     equals(const value_t, const value_t)

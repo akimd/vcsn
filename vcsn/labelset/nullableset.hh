@@ -72,7 +72,7 @@ namespace vcsn
 
       ATTRIBUTE_PURE
       static value_t
-      make_value(const typename labelset_t::value_t &v)
+      value(const typename labelset_t::value_t &v)
       {
         return {v, false};
       }
@@ -136,7 +136,7 @@ namespace vcsn
 
       ATTRIBUTE_PURE
       static value_t
-      make_value(const typename labelset_t::value_t& v)
+      value(const typename labelset_t::value_t& v)
       {
         return v;
       }
@@ -236,6 +236,12 @@ namespace vcsn
       return ls_;
     }
 
+    static value_t
+    value(const typename labelset_t::value_t& v)
+    {
+      return helper_t::value(v);
+    }
+
     static bool equals(const value_t& l, const value_t& r)
     {
       if (is_one(l))
@@ -256,7 +262,7 @@ namespace vcsn
     static value_t
     special()
     {
-      return helper_t::make_value(labelset_t::special());
+      return helper_t::value(labelset_t::special());
     }
 
     static bool
@@ -293,7 +299,7 @@ namespace vcsn
           res = one();
         }
       else
-        res = make_value(ls_->conv(i));
+        res = value(ls_->conv(i));
       return res;
     }
 
@@ -303,7 +309,7 @@ namespace vcsn
       auto l = ls_->convs(i);
       std::set<value_t> res;
       for (auto v : l)
-        res.emplace(make_value(v));
+        res.emplace(value(v));
       return res;
     }
 
@@ -332,7 +338,7 @@ namespace vcsn
     value_t
     zero() const
     {
-      return make_value(labelset()->zero());
+      return value(labelset()->zero());
     }
 
     bool
@@ -352,7 +358,7 @@ namespace vcsn
     {
       if (is_one(l))
         return l;
-      return make_value(ls_->transpose(get_value(l)));
+      return value(ls_->transpose(get_value(l)));
     }
 
     std::ostream&
@@ -372,17 +378,10 @@ namespace vcsn
     }
 
   private:
-
     static typename labelset_t::value_t
     get_value(const value_t& v)
     {
       return helper_t::get_value(v);
-    }
-
-    static value_t
-    make_value(const typename labelset_t::value_t& v)
-    {
-      return helper_t::make_value(v);
     }
 
     labelset_ptr ls_;

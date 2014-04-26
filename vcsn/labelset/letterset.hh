@@ -76,6 +76,13 @@ namespace vcsn
       return true;
     }
 
+    /// Value constructor.
+    template <typename... Args>
+    value_t value(Args&&... args) const
+    {
+      return value_t{std::forward<Args>(args)...};
+    }
+
     /// Prepare to iterate over the letters of v.
     static word_t
     letters_of(word_t v)

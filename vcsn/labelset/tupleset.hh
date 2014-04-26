@@ -107,17 +107,27 @@ namespace vcsn
       return res;
     }
 
+    /// The componants valuesets, as a tuple.
     const valuesets_t& sets() const
     {
       return sets_;
     }
 
+    /// The Ith component valueset.
     template <size_t I>
     const valueset_t<I>& set() const
     {
       return std::get<I>(sets());
     }
 
+    /// Construct a value.
+    template <typename... Args>
+    value_t value(const std::tuple<Args...>& args) const
+    {
+      return value_(args, indices);
+    }
+
+    /// The generators.  Meaningful for labelsets only.
     genset_t
     genset() const
     {
@@ -365,6 +375,12 @@ namespace vcsn
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #  endif
+    }
+
+    template <typename... Args, std::size_t... I>
+    value_t value_(const std::tuple<Args...>& args, seq<I...>) const
+    {
+      return value_t{set<I>().value(std::get<I>(args))...};
     }
 
     template <std::size_t... I>
