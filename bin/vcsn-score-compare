@@ -1,14 +1,20 @@
 #! /usr/bin/env python
 
 from __future__ import print_function
-import os, sys
+import os, re, sys
 
 bench = dict()
+
+def normalize(k):
+    k = re.sub(r'a\*\*(\d+) ', r'a & \1', k)
+    k = re.sub(r'de_buijn', 'de_bruijn', k)
+    return k
 
 def read(fn):
     with open(fn) as f:
         for line in f:
             v, k = map(str.strip, line.split(':', 2))
+            k = normalize(k)
             if k not in bench:
                 bench[k] = dict()
             bench[k][fn] = v

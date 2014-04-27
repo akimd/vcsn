@@ -33,15 +33,20 @@ automaton._repr_svg_ = lambda self: dot_to_svg(one_epsilon(self.format('dot')))
 class conjunction(object):
     """A proxy class that delays calls to the & operator in order
     to turn a & b & c into a variadic evaluation of
-    automaton.product_real(a, b, c)."""
-    def __init__(self, *auts):
-        self.auts = auts
-    def __and__(self, aut):
-        self.auts += (aut,)
+    automaton.product_(a, b, c)."""
+    def __init__(self, *args):
+        self.auts = [args[0]]
+        for arg in args[1:]:
+            self.__and__(arg)
+    def __and__(self, arg):
+        if isinstance(arg, int):
+            self.auts[-1] = self.auts[-1].power(arg)
+        else:
+            self.auts += (arg,)
         return self
     def value(self):
-        if isinstance(self.auts, tuple):
-            self.auts = automaton.product_real(self.auts)
+        if isinstance(self.auts, list):
+            self.auts = automaton.product_(self.auts)
         return self.auts
     def __nonzero__(self):
         return bool(self.value())

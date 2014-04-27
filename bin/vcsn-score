@@ -114,7 +114,7 @@ bench('a.ratexp()', 'a = std({})'.format(r), lambda: a.ratexp())
 # per state.  This stresses much better the new product algorithm.
 r = "[a-e]?{50}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a.product(a)', 'a = std({})'.format(r), lambda: a.product_real((a,a)))
+bench('a.product(a)', 'a = std({})'.format(r), lambda: a.product_((a,a)))
 bench('a.shuffle(a)', 'a = std({})'.format(r), lambda: a.shuffle(a))
 
 # infiltration.
@@ -126,7 +126,7 @@ bench('a.infiltration(a)', 'a = std({})'.format(r), lambda: a.infiltration(a))
 r = "[a-e]*b(<2>[a-e])*"
 n = 12
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
-bench('a**{}'.format(n), 'a = std({})'.format(r), lambda: a ** n)
+bench('a & {}'.format(n), 'a = std({})'.format(r), lambda: a & n)
 
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
