@@ -4,16 +4,10 @@
 
 import re
 from vcsn_cxx import automaton, label, weight
-from vcsn import is_equal, info_to_dict, dot_to_svg
-
-def automaton_mul(self, rhs):
-    """Support both "aut * aut" and "aut * weight"."""
-    if isinstance(rhs, weight):
-        return self.right_mult(rhs)
-    else:
-        return self.concatenate(rhs)
+from vcsn import is_equal, info_to_dict, dot_to_svg, left_mult, right_mult
 
 def one_epsilon(s):
+    "Convert s to use the genuine epsilon character."
     s = re.sub(r'\\\\e', '&epsilon;', s)
     return s
 
@@ -21,11 +15,12 @@ automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: conjunction(l, r)
 automaton.__invert__ = automaton.complement
-automaton.__mul__ = automaton_mul
+automaton.__mul__ = right_mult
 automaton.__mod__ = automaton.difference
 automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.power
 automaton.__repr__ = lambda self: self.info()['type']
+automaton.__rmul__ = left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
 automaton._repr_svg_ = lambda self: dot_to_svg(one_epsilon(self.format('dot')))

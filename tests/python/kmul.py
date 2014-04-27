@@ -148,7 +148,7 @@ digraph
   3 -> F3
 }
 ''')
-CHECK_EQ(exp, (r.weight('3.4') * a).sort())
+CHECK_EQ(exp, (3.4 * a).sort())
 
 exp = vcsn.automaton(r'''
 digraph
@@ -177,12 +177,12 @@ digraph
   3 -> F3 [label = "<3.4>"]
 }
 ''')
-CHECK_EQ(exp, (a * r.weight('3.4')).sort())
+CHECK_EQ(exp, (a * 3.4).sort())
 
 ## -------- ##
 ## ratexp.  ##
 ## -------- ##
 
 r = ctx.ratexp('<x>(<y>a)*<z>')
-CHECK_EQ(ctx.ratexp('<xx>(<y>a)*<z>'), ctx.weight('x') * r)
-CHECK_EQ(ctx.ratexp('<x>(<y>a)*<zz>'), r * ctx.weight('z'))
+CHECK_EQ(ctx.ratexp('<xx>(<y>a)*<z>'), 'x' * r)
+CHECK_EQ(ctx.ratexp('<x>(<y>a)*<zz>'), r * 'z')

@@ -48,6 +48,22 @@ def is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
+def left_mult(self, lhs):
+    """Support "aut * weight".  Also serves for ratexps."""
+    return self.left_mult(self.context().weight(str(lhs)))
+
+def right_mult(self, rhs):
+    """Support both "aut * aut" and "aut * weight".  Also serves for
+    ratexps."""
+    if isinstance(rhs, type(self)):
+        return self.concatenate(rhs)
+    elif isinstance(rhs, weight):
+        return self.right_mult(rhs)
+    else:
+        return self.right_mult(self.context().weight(str(rhs)))
+
+
+
 from vcsn.automaton  import *
 from vcsn.context    import *
 from vcsn.label      import *

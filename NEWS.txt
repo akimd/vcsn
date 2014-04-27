@@ -4,6 +4,24 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-04-27
+** Python syntactic sugar
+Multiplication by a scalar on the left, and on the right, can be performed
+with implicit conversion of the weights.  Instead of
+
+  >>> z = vcsn.context('lal_char(ab)_z')
+  >>> r = z.ratexp('[ab]*')
+  >>> z.weight(2) * r * z.weight(3)
+
+one can now write
+
+  >>> 2 * r * 3
+
+and similarly for automata.
+
+Besides, repeated &-product can be denoted with the same symbol, &: 'a & 3'
+denotes 'a & a & a'.
+
 * 2014-04-22
 ** Vaucanson 2 has moved
 Vaucanson 2 is now also hosted on gitlab.lrde.epita.fr.  It is also renamed
