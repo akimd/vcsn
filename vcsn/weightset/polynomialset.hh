@@ -452,10 +452,11 @@ namespace vcsn
       return out;
     }
 
-    /// Print a full polynomial value, without trying to make ranges
-    std::ostream& print_all(std::ostream& out, const value_t& v,
-                            const std::string& format = "text",
-                            const std::string& sep = " + ") const
+    /// Print a full polynomial value, without trying to make ranges.
+    std::ostream&
+    print_without_ranges_(std::ostream& out, const value_t& v,
+                          const std::string& format = "text",
+                          const std::string& sep = " + ") const
     {
       bool first = true;
       for (const auto& m: v)
@@ -468,28 +469,16 @@ namespace vcsn
       return out;
     }
 
-    /// Print a polynomial value without ranges (neither a lan nor a lal case)
-    template <typename context>
-    typename std::enable_if<!(context::is_lal || context::is_lan),
+    /// Print a polynomial value with ranges.
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lal || Ctx::is_lan,
                             std::ostream&>::type
-    print_ctx(std::ostream& out, const value_t& v,
-              const std::string& format = "text",
-              const std::string& sep = " + ") const
-    {
-      // We just print everything if it's not nullables or letters
-      return print_all(out, v, format, sep);
-    }
-
-    /// Print a polynomial value with ranges (lan or lal case)
-    template <typename context>
-    typename std::enable_if<context::is_lal || context::is_lan,
-                            std::ostream&>::type
-    print_ctx_corpse(std::ostream& out, const value_t& v,
-                     const std::string& format = "text",
-                     const std::string& sep = " + ") const
+    print_with_ranges_(std::ostream& out, const value_t& v,
+                       const std::string& format = "text",
+                       const std::string& sep = " + ") const
     {
       if (sep == " + " || v.size() <= 2)
-        return print_all(out, v, format, sep);
+        return print_without_ranges_(out, v, format, sep);
 
       // We put all the labels in a vector and check if their weight
       // is always the same.
@@ -500,13 +489,11 @@ namespace vcsn
       weight_t first_w = v.begin()->second;
       for (const auto& m: v)
         {
-          // If the weights aren't all the same, fallback to print_all.
+          // No ranges if the weights aren't all the same.
           if (!weightset()->equals(m.second, first_w))
-            return print_all(out, v, format, sep);
+            return print_without_ranges_(out, v, format, sep);
           letters.push_back(m.first);
         }
-
-      // Then we sort the vector to find efficient ranges.
       sort(letters.begin(), letters.end());
 
       if (weightset()->show_one() || !weightset()->is_one(first_w))
@@ -516,13 +503,13 @@ namespace vcsn
           out << (format == "latex" ? "\\rangle " : std::string{rangle});
         }
 
+      // Print the character class.
       out << '[';
-
       const auto& alphabet = labelset()->genset();
-      for (auto it = letters.begin(); it != letters.end(); ++it)
+      for (auto it = std::begin(letters), letters_end = std::end(letters);
+           it != letters_end; ++it)
         {
-          // Find first mismatch between letter set and alphabet.
-          auto end = std::mismatch(it, letters.end(), alphabet.find(*it)).first;
+          auto end = std::mismatch(it, letters_end, alphabet.find(*it)).first;
           labelset()->print(out, *it, format);
           // No ranges for less than two letters.
           auto width = std::distance(it, end);
@@ -538,22 +525,35 @@ namespace vcsn
       return out;
     }
 
+    /// Print a non-null value for neither LAL nor LAN.
     template <typename context>
-    typename std::enable_if<context::is_lal,
+    typename std::enable_if<!(context::is_lal || context::is_lan),
                             std::ostream&>::type
-    print_ctx(std::ostream& out, const value_t& v,
+    print_(std::ostream& out, const value_t& v,
               const std::string& format = "text",
               const std::string& sep = " + ") const
     {
-      return print_ctx_corpse<context>(out, v, format, sep);
+      return print_without_ranges_(out, v, format, sep);
     }
 
-    template <typename context>
-    typename std::enable_if<context::is_lan,
+    /// Print a non-null value for LAL.
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lal,
                             std::ostream&>::type
-    print_ctx(std::ostream& out, const value_t& v,
-              const std::string& format = "text",
-              const std::string& sep = " + ") const
+    print_(std::ostream& out, const value_t& v,
+           const std::string& format = "text",
+           const std::string& sep = " + ") const
+    {
+      return print_with_ranges_<Ctx>(out, v, format, sep);
+    }
+
+    /// Print a non-null value for LAN.
+    template <typename Ctx>
+    typename std::enable_if<Ctx::is_lan,
+                            std::ostream&>::type
+    print_(std::ostream& out, const value_t& v,
+           const std::string& format = "text",
+           const std::string& sep = " + ") const
     {
       unsigned n = 0;
       value_t vn;
@@ -575,18 +575,19 @@ namespace vcsn
           vn[m.first] = m.second;
       if (n && n < v.size())
         out << sep;
-      return print_ctx_corpse<context>(out, vn, format, sep);
+      return print_with_ranges_<Ctx>(out, vn, format, sep);
     }
 
-    /// Call print_ctx templated with the current context
-    std::ostream& print(std::ostream& out, const value_t& v,
+    /// Print a value.
+    std::ostream&
+    print(std::ostream& out, const value_t& v,
           const std::string& format = "text",
           const std::string& sep = " + ") const
     {
       if (v.empty())
         out << (format == "latex" ? "\\emptyset" : "\\z");
       else
-        return print_ctx<context_t>(out, v, format, sep);
+        return print_<context_t>(out, v, format, sep);
       return out;
     }
 
