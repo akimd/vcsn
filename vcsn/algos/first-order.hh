@@ -380,7 +380,7 @@ namespace vcsn
                           auto q = rs_.ldiv(lm.first, rm.first);
                           if (use_spontaneous_)
                             {
-                              static auto one =
+                              auto one =
                                 one_(std::integral_constant<bool,
                                      context_t::has_one()>());
                               auto w = ws_.ldiv(lm.second, rm.second);

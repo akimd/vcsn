@@ -119,8 +119,7 @@ namespace vcsn
           os_ << '\t' << states_[aut_.dst_of(t)]
               << '\t' << label_(aut_.label_of(t));
 
-        static bool show_one = ws_.show_one();
-        if (show_one || !ws_.is_one(aut_.weight_of(t)))
+        if (ws_.show_one() || !ws_.is_one(aut_.weight_of(t)))
           {
             os_ << '\t';
             ws_.print(os_, aut_.weight_of(t));

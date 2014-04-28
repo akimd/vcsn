@@ -27,7 +27,6 @@ namespace vcsn
     public:
       outputter(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
-        , ws_(*aut_.weightset())
         , os_(out)
       {
         // Build a (now trivial) map from state to printed number.
@@ -71,11 +70,8 @@ namespace vcsn
       /// is sorted (hence more deterministic).
       std::string format_entry_(state_t src, state_t dst)
       {
-        using context_t = typename automaton_t::context_t;
-        static auto ps = polynomialset<context_t>{aut_.context()};
-
         auto entry = get_entry(aut_, src, dst);
-        return ps.format(entry, ", ");
+        return ps_.format(entry, ", ");
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).
@@ -135,10 +131,12 @@ namespace vcsn
 
       /// The automaton we have to output.
       const automaton_t& aut_;
-      /// Short-hand to the weightset.
-      const weightset_t& ws_;
       /// Output stream.
       std::ostream& os_;
+      /// Short-hand to the weightset.
+      const weightset_t& ws_ = *aut_.weightset();
+      /// Short-hand to the polynomialset used to print the entries.
+      const polynomialset<typename automaton_t::context_t> ps_{aut_.context()};
       /// Names (natural numbers) to use for the states.
       std::map<state_t, unsigned> states_;
     };
