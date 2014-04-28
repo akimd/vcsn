@@ -37,39 +37,6 @@ Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both
 NDEBUG and GLIBCXX_DEBUG are used.  It would be nice to find where and send
 a bug report...
 
-** Coverage
-We need to add coverage tests on the BF.  From ADL:
-
-  First, compile (and link) Spot with coverage enabled.
-
-   % ./configure CXX='g++ --coverage'
-   % make
-
-  Then run the test suite (or any program you want to study).
-
-   % make check
-
-  Executing programs using Spot will generate a lot of *.gc* files
-  everywhere.  Collect these using lcov:
-
-   % lcov --capture --directory src --output spot.info
-
-  Finally generate a coverage report in HTML:
-
-   % genhtml --legend --demangle-cpp --output-directory html spot.info
-
-  This should create the directory html/.
-
-For Vcsn, I use:
-
-  $ lcov --capture \
-      --directory _build/34c \
-      --base-directory . \
-      --base-directory _build/34c \
-      -k lib -k vcsn \
-      --no-external \
-      --output vcsn2.info
-
 ** -fsanitize=address
 Try that on the BF.  For some reason, Libtool strips this flag at link time.
 Use -Wc,-fsanitize=address.
@@ -195,19 +162,7 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 ** eps-removal
 (1+a)^n
 
-* Transducers
-** tupleset::one/is_one
-Currently tupleset does not define a one, even if all the members
-do.  Adjust is-eps-acyclic.
-
 * Refactoring
-** Zip iterators
-We have several places where we want to traverse several maps with the same
-keys (e.g., for automata products, or first-order of a quotient).  A nice
-zip-like iterator would be wonderful.
-
-http://stackoverflow.com/questions/13813007/tmp-how-to-generalize-a-cartesian-product-of-vectors
-
 ** Use Boost.Format to support multiple formats
 We have loads of code that open-code the output format.  This is
 wrong.  We should rather have format strings such as
@@ -232,24 +187,12 @@ sure this is not (much) costlier.
 
 Getting rid of this will allow rat::node to use single inheritance.
 
-** Make nullableset a labelset wrapper
-One would say 'nullableset<letterset>'.  This would allow to introduce
-'nullableset<tupleset<lal, lal>>', which is not possible currently.
-
 ** Remove references to ratexp/ratexpset from context
 On second thought, while it is definitely handy, it is not normal that
 contexts depend on ratexpset.
 
 ** More documentation
 The Doxygen style documentation is way too poor.  Aim at completion.
-
-** We need to go from a labelset to its wordset
-Or something like that.  I'm not sure "wordset" is appropriate, however,
-polynomials for instance really need to go from label_t to word_t, and be
-able to deal with them.
-
-Something, really basic, is already started in enumerate.hh: see law_traits
-and law_t.  Also used in instantiation.
 
 ** polynomialset
 It seems that monomials would be a useful abstraction.
@@ -302,8 +245,8 @@ We need to keep metadata about automata, especially state names.  Then
 update all the "VCSN_ORIGINS" uses.
 
 ** Dyn weights
-Now that we have dynamic weights, they could be used when parsing, instead
-of a simple string that is converted by the weightset.
+Now that we have dynamic weights, they could be used in lib/vcsn/rat
+parsing, instead of a simple string that is converted by the weightset.
 
 * Optimizations
 ** accessible etc.
@@ -329,7 +272,12 @@ transitions.
 ** evaluate
 Vectors of weights indexed by states are bad structures to iterate upon.  We
 don't need to work on states that are not part of the computation.  This
-shows in the "if (!ws_.is_zero(v1[s]))" in the code.
+shows in the "if (!ws_.is_zero(v1[s]))" in the code.  On the other hand, it
+is extremely efficient when the number of (concurrently) visited states is
+"dense", which is the case of the bench case used in score.
+
+So maybe we should change this bench case and rather focus on the more
+common case where the number of "active" states is "sparse".
 
 ** power
 There are better means to compute the power in some cases, see
@@ -359,12 +307,6 @@ used everywhere else.
 * dyn::
 ** Implement implicit conversions
 So that, for instance, we can run is-derministic on a proper lan.
-
-** n-ary product, shuffle and infiltration
-Currently it works at TAF-Kit level.  It should be easy to do at dyn::
-level, and we should accept 0-ary.
-
-It would be nice to think about n-ary static too (variadic).
 
 * trivial identities
 ** Difference bw lal and law
@@ -459,13 +401,6 @@ Work for trim automata.
 We need generalizations of minimization for weighted automata.  See TAF-Kit
 1 and quotient.
 
-** variadic products
-Our products (product, infiltration, shuffle) should provide variadic
-versions.  dyn:: for a start, but a variadic template for products would be
-very nice too.
-
-And then convert "n-ary" tests in tests/python/product and infiltration.
-
 ** "check" algorithm
 There should be a means to check that the invariants are verified.  A
 separate algorithm would do.  In particular check the alphabet, that
@@ -494,9 +429,6 @@ build its underlying automaton.  This means that using a const& to
 keep the original automaton is not the best model: pointers would be
 better.  But then there are issues with memory tracking, issues that
 we already know how to handle thanks to shared_ptr.
-
-* compilation jit
-Well, you know what I mean.
 
 * move files around
 The hierarchy and the namespaces do not match.
