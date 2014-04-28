@@ -438,12 +438,7 @@ namespace vcsn
           const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
-      if (parens || weightset()->show_one() || !weightset()->is_one(m.second))
-        {
-          out << (format == "latex" ? "\\langle " : std::string{langle});
-          weightset()->print(out, m.second, format);
-          out << (format == "latex" ? "\\rangle " : std::string{rangle});
-        }
+      print_(out, m.second, format);
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");
       labelset()->print(out, m.first, format);
@@ -451,6 +446,53 @@ namespace vcsn
         out << (format == "latex" ? "\\right)" : ")");
       return out;
     }
+
+    /// Print a value (a polynomial).
+    std::ostream&
+    print(std::ostream& out, const value_t& v,
+          const std::string& format = "text",
+          const std::string& sep = " + ") const
+    {
+      if (v.empty())
+        out << (format == "latex" ? "\\emptyset" : "\\z");
+      else
+        return print_<context_t>(out, v, format, sep);
+      return out;
+    }
+
+    std::string
+    format(const value_t& v, const std::string& sep = " + ") const
+    {
+      std::ostringstream o;
+      print(o, v, "text", sep);
+      return o.str();
+    }
+
+    /// Format a monomial.
+    std::string
+    format(const monomial_t& m) const
+    {
+      std::ostringstream o;
+      print(o, m, "text");
+      return o.str();
+    }
+
+  private:
+    /// Print a weight.
+    std::ostream&
+    print_(std::ostream& out, const weight_t& w,
+           const std::string& format = "text") const
+    {
+      static bool parens = getenv("VCSN_PARENS");
+      if (parens || weightset()->show_one() || !weightset()->is_one(w))
+        {
+          out << (format == "latex" ? "\\langle " : std::string{langle});
+          weightset()->print(out, w, format);
+          out << (format == "latex" ? "\\rangle " : std::string{rangle});
+        }
+      return out;
+    }
+
 
     /// Print a full polynomial value, without trying to make ranges.
     std::ostream&
@@ -496,12 +538,8 @@ namespace vcsn
         }
       sort(letters.begin(), letters.end());
 
-      if (weightset()->show_one() || !weightset()->is_one(first_w))
-        {
-          out << (format == "latex" ? "\\langle " : std::string{langle});
-          weightset()->print(out, first_w, format);
-          out << (format == "latex" ? "\\rangle " : std::string{rangle});
-        }
+      // The weight.
+      print_(out, first_w, format);
 
       // Print the character class.
       out << '[';
@@ -530,8 +568,8 @@ namespace vcsn
     typename std::enable_if<!(context::is_lal || context::is_lan),
                             std::ostream&>::type
     print_(std::ostream& out, const value_t& v,
-              const std::string& format = "text",
-              const std::string& sep = " + ") const
+           const std::string& format = "text",
+           const std::string& sep = " + ") const
     {
       return print_without_ranges_(out, v, format, sep);
     }
@@ -555,58 +593,25 @@ namespace vcsn
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      unsigned n = 0;
+      // The number of constants (aka, ones) printed.
+      unsigned ones = 0;
+      // The non-one monomials.
       value_t vn;
       for (const auto& m: v)
         if (labelset()->is_one(m.first))
           {
-            if (n)
+            if (ones)
               out << sep;
-            if (weightset()->show_one() || !weightset()->is_one(m.second))
-              {
-                out << (format == "latex" ? "\\langle " : std::string{langle});
-                weightset()->print(out, m.second, format);
-                out << (format == "latex" ? "\\rangle " : std::string{rangle});
-              }
-            labelset()->print(out, m.first, format);
-            n++;
+            print(out, m, format);
+            ++ones;
           }
         else
           vn[m.first] = m.second;
-      if (n && n < v.size())
+      if (0 < ones && ones < v.size())
         out << sep;
       return print_with_ranges_<Ctx>(out, vn, format, sep);
     }
 
-    /// Print a value.
-    std::ostream&
-    print(std::ostream& out, const value_t& v,
-          const std::string& format = "text",
-          const std::string& sep = " + ") const
-    {
-      if (v.empty())
-        out << (format == "latex" ? "\\emptyset" : "\\z");
-      else
-        return print_<context_t>(out, v, format, sep);
-      return out;
-    }
-
-    std::string
-    format(const value_t& v, const std::string& sep = " + ") const
-    {
-      std::ostringstream o;
-      print(o, v, "text", sep);
-      return o.str();
-    }
-
-    /// Format a monomial.
-    std::string
-    format(const monomial_t& m) const
-    {
-      std::ostringstream o;
-      print(o, m, "text");
-      return o.str();
-    }
 
   private:
     context_t ctx_;
