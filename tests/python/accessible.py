@@ -7,9 +7,9 @@ a1 = load('lal_char_b/a1.gv')
 b1 = load('lal_char_z/b1.gv')
 minab = load('lal_char_zmin/minab.gv')
 
-## ----------- ##
-## Accessible. ##
-## ----------- ##
+## ------------ ##
+## Accessible.  ##
+## ------------ ##
 
 ## check_accessible INPUT OUTPUT
 ## -----------------------------
@@ -18,30 +18,25 @@ def check_accessible(input, output):
     input = vcsn.automaton(input)
   if isinstance(output, str):
     output = vcsn.automaton(output)
+  CHECK_EQ(True, output.is_accessible())
   CHECK_EQ(output.sort(), input.accessible().sort())
 
-## ----------------------------- ##
-## Regression: standard(ab+cd).  ##
-## ----------------------------- ##
-
+# Regression.
 a = vcsn.context('lal_char(abcd)_b').ratexp('ab+cd').standard()
 check_accessible(a, a)
 
-## ------- ##
-## Cycle.  ##
-## ------- ##
-
+# Cycle.
 check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
     0 -> 1 [label="a"]
-    1 -> 2[label="a"]
-    2 -> 3[label="a"]
-    3 -> 5[label="a"]
-    5 -> 2[label="a"]
+    1 -> 2 [label="a"]
+    2 -> 3 [label="a"]
+    3 -> 5 [label="a"]
+    5 -> 2 [label="a"]
     3 -> F5
-    4 -> 1[label="a"]
+    4 -> 1 [label="a"]
 }''',
 '''
 digraph
@@ -72,18 +67,15 @@ digraph
 ''')
 
 
-## ---------------- ##
-## No final State.  ##
-## ---------------- ##
-
+# No final state.
 check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
     I0 -> 0
     0 -> 1 [label="a"]
-    1 -> 2[label="a"]
-    2 -> 3[label="a"]
-    4 -> 1[label="a"]
+    1 -> 2 [label="a"]
+    2 -> 3 [label="a"]
+    4 -> 1 [label="a"]
 }
 ''',
 '''
@@ -109,10 +101,7 @@ digraph
 }
 ''')
 
-## ------------------ ##
-## No initial state.  ##
-## ------------------ ##
-
+# No initial state.
 check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
@@ -132,10 +121,7 @@ digraph
 ''')
 
 
-## -------------- ##
-## Simple input.  ##
-## -------------- ##
-
+# Simple input.
 check_accessible('''
 digraph {
     vcsn_context = "law_char(ab)_b"
@@ -173,9 +159,9 @@ digraph
 ''')
 
 
-## ------- ##
-## is-trim ##
-## ------- ##
+## --------- ##
+## is-trim.  ##
+## --------- ##
 
 def check_is_trim (input, exp):
   if isinstance(input, str):
@@ -197,9 +183,7 @@ digraph
 }
 ''', False)
 
-## ---------- ##
-## no initial ##
-## ---------- ##
+# No initial.
 check_is_trim('''
 digraph
 {
@@ -211,9 +195,7 @@ digraph
 }
 ''', False)
 
-## -------- ##
-## no final. ##
-## -------- ##
+# No final.
 check_is_trim('''
 digraph
 {
@@ -226,9 +208,9 @@ digraph
 ''', False)
 
 
-## -------- ##
-## is-empty ##
-## -------- ##
+## ---------- ##
+## is-empty.  ##
+## ---------- ##
 def check_is_empty (input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
@@ -268,9 +250,9 @@ digraph
 }
 ''', True)
 
-## ---------- ##
-## is-useless ##
-## ---------- ##
+## ------------ ##
+## is-useless.  ##
+## ------------ ##
 def check_is_useless (input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
@@ -296,9 +278,7 @@ digraph
 }
 ''', True)
 
-## ---------- ##
-## no initial ##
-## ---------- ##
+# no initial.
 check_is_useless('''
 digraph
 {
@@ -310,9 +290,7 @@ digraph
 }
 ''', True)
 
-## -------- ##
-## no final ##
-## -------- ##
+# no final.
 check_is_useless('''
 digraph
 {
@@ -325,15 +303,20 @@ digraph
 ''', True)
 
 
-## ---- ##
-## trim ##
-## ---- ##
+## ------ ##
+## trim.  ##
+## ------ ##
 def check_trim(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
   if isinstance(exp, str):
     exp = vcsn.automaton(exp)
+  CHECK_EQ(True, exp.is_trim())
+  CHECK_EQ(True, exp.is_accessible())
+  CHECK_EQ(True, exp.is_coaccessible())
   CHECK_EQ(exp, input.trim())
+  CHECK_EQ(exp, input.coaccessible().accessible())
+  CHECK_EQ(exp, input.accessible().coaccessible())
 
 check_trim(a1, a1)
 check_trim(b1, b1)

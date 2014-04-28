@@ -11,6 +11,19 @@ from test import *
 def xfail(a):
     XFAIL(lambda: vcsn.automaton(a))
 
+# Syntax error: missing }.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+''')
+
+# Syntax error: label not closed.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b
+}
+''')
+
 # Invalid context: missing parens.
 xfail(r'''digraph
 {
@@ -99,6 +112,24 @@ xfail(r'''digraph
 }
 ''')
 
+# Coverage: different rarely used features.
+CHECK_EQ(vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char()_b"
+}'''),
+vcsn.automaton(r'''digraph "a graph
+                            name"
+{
+  vcsn_context // single line comment
+  =
+  /* a
+     multiline
+     comment.  */
+  "lal_char()_b"
+  graph [label = "graph attribute"]
+  edge [label = "edge attribute"]
+  node [label = "node attribute"]
+}'''))
 
 ## --------------------------- ##
 ## Conversions: dot and TikZ.  ##
