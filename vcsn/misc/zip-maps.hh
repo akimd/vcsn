@@ -77,9 +77,9 @@ namespace vcsn
       /// Advance to next position.
       iterator& operator++()
       {
-        if (next_() == -1)
+        if (!is_done_)
           {
-            step_();
+            ++std::get<0>(is_);
             align_();
           }
         return *this;
@@ -127,41 +127,25 @@ namespace vcsn
         is_ = ends_;
       }
 
-      /// Move to the next position in the current range.  Return true
-      /// iff there is such a position.
-      int next_()
-      {
-        return -1;
-      }
-
-      /// Move beginning of ranges to their end, and align.
-      void reset_up_to_(int)
-      {}
-
-      /// Move beginning of ranges to their end, and align.
-      void step_()
-      {
-        ++std::get<0>(is_);
-      }
-
-      template <std::size_t... I>
-      void step_(seq<I...>)
-      {
-      }
-
-      /// Set up the next ranges: the next common key, and the
-      /// associated ranges.  Does not advance, just aligns all ranges.
+      /// Align all iterators on the first common key.
+      ///
+      /// Called at construction of the iterators, including end(),
+      /// therefore must be robust to be already at end().
       void align_()
       {
-        key_t k = std::get<0>(is_)->first;
-        while (!is_done_)
+        if (std::get<0>(is_) == std::get<0>(ends_))
+          done_();
+        if (!is_done_)
           {
-            auto k2 = align_(k, indices_t{});
-            if (k == k2)
-              // We have found a common key for all maps.
-              break;
-            else
-              k = k2;
+            key_t k = std::get<0>(is_)->first;
+            while (!is_done_)
+              {
+                auto k2 = align_(k, indices_t{});
+                if (is_done_ || k == k2)
+                  break;
+                else
+                  k = k2;
+              }
           }
       }
 
@@ -171,7 +155,7 @@ namespace vcsn
       key_t align_(key_t k, seq<I...>)
       {
         using swallow = int[];
-        (void) swallow{ (is_done_ || (k = align_<I>(k), false))... };
+        (void) swallow{ (!is_done_ && (k = align_<I>(k), false))... };
         return k;
       }
 
