@@ -491,26 +491,23 @@ namespace vcsn
       if (sep == " + " || v.size() <= 2)
         return print_all(out, v, format, sep);
 
-      // We put all the labels in a vector and check if their weight is
-      // always the same
+      // We put all the labels in a vector and check if their weight
+      // is always the same.
 
-      // This is actually facter than a set, because insertion is O(1)
-      // amortized, and sort is in N log(N), whereas insertion in a set is
-      // N log(size + N).
-
-      std::vector<label_t> vs;
+      // Faster than a set: insertion is O(1) amortized, and sort is
+      // in N log(N), whereas insertion in a set is N log(size + N).
+      std::vector<label_t> letters;
       weight_t first_w = v.begin()->second;
       for (const auto& m: v)
         {
-          // If the weights aren't all the same, we fallback in the
-          // print_all method.
+          // If the weights aren't all the same, fallback to print_all.
           if (!weightset()->equals(m.second, first_w))
             return print_all(out, v, format, sep);
-          vs.push_back(m.first);
+          letters.push_back(m.first);
         }
 
       // Then we sort the vector to find efficient ranges.
-      sort(vs.begin(), vs.end());
+      sort(letters.begin(), letters.end());
 
       if (weightset()->show_one() || !weightset()->is_one(first_w))
         {
@@ -522,39 +519,19 @@ namespace vcsn
       out << '[';
 
       const auto& alphabet = labelset()->genset();
-      auto alphabet_end = alphabet.end();
-
-      for (auto it = vs.begin(); it != vs.end(); it++)
+      for (auto it = letters.begin(); it != letters.end(); ++it)
         {
-          // Delta from current index to end of range
-          unsigned end_range = 0;
-
-          // Alphabet iterator.
-          auto it_lset = alphabet.find(*it);
-
-          // Find the end of the range.
-          while (it + end_range != vs.end() &&
-                 it_lset != alphabet_end)
+          // Find first mismatch between letter set and alphabet.
+          auto end = std::mismatch(it, letters.end(), alphabet.find(*it)).first;
+          labelset()->print(out, *it, format);
+          // No ranges for less than two letters.
+          auto width = std::distance(it, end);
+          if (2 <= width)
             {
-              it_lset++;
-              if (it + end_range + 1 == vs.end() ||
-                  *(it + end_range + 1) != *it_lset)
-                break;
-              end_range++;
-            }
-
-          // If end_range >= 2, printing letters as a range is efficient.
-          if (end_range >= 2)
-            {
+              it += width - 1;
+              out << '-';
               labelset()->print(out, *it, format);
-              out << "-";
-              labelset()->print(out, *(it + end_range), format);
-
-              // Skip the range
-              it += end_range;
             }
-          else
-            labelset()->print(out, *it, format);
         }
       out << ']';
 
