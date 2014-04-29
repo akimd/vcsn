@@ -9,12 +9,23 @@ from test import *
 ## divkbaseb.  ##
 ## ----------- ##
 
-b = vcsn.context('lal_char(0-4)_b')
+b = vcsn.context('lal_char(0-9)_b')
 
 XFAIL(lambda: b.divkbaseb(0, 2))
 XFAIL(lambda: b.divkbaseb(2, 0))
 XFAIL(lambda: b.divkbaseb(2, 1))
-XFAIL(lambda: b.divkbaseb(2, 10))
+XFAIL(lambda: b.divkbaseb(2, 11))
+
+# FIXME: we don't parse polynomials yet.
+CHECK_EQ(r'\e + 0 + 00 + 10 + 000 + 010 + 100 + 110 + 0000 + 0010',
+         str(b.divkbaseb(2,2).shortest(10)))
+CHECK_EQ(r'\e + 0 + 00 + 10 + 20 + 30 + 40 + 50 + 60 + 70',
+         str(b.divkbaseb(10,10).shortest(10)))
+CHECK_EQ(r'\e + 0 + 5 + 00 + 05 + 10 + 15 + 20 + 25 + 30',
+         str(b.divkbaseb(5,10).shortest(10)))
+CHECK_EQ(r'\e + 0 + 3 + 6 + 9 + 00 + 03 + 06 + 09 + 12',
+         str(b.divkbaseb(3,10).shortest(10)))
+
 
 ## -------- ##
 ## random.  ##
