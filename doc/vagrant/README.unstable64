@@ -1,0 +1,77 @@
+The creation of `unstable64.box'			-*- outline -*-
+
+Download the latest `testing' ISO image for `amd64', for example:
+
+   http://cdimage.debian.org/cdimage/weekly-builds/amd64/iso-cd/debian-testing-amd64-netinst.iso
+
+Create a virtual machine called `unstable64' in Virtual Box; accept
+all the defaults but disable Audio and USB support.  Use the ISO image
+as boot media.
+
+The following settings where used in the Debian Installer:
+
+  - Language/Country: English/United states.
+
+  - Keymap: US
+
+  - Hostname: vagrant-debian-testing
+
+  - Domain name: vagrantup.com
+
+  - Root password: vagrant
+
+  - Initial user: vagrant with the password vagrant.
+
+  - Timezone: Eastern
+
+  - Defaults for the disk setup (all on a single partition)
+
+  - Unselect all tasks except "standard system utilities".
+
+When the installation is finished, do the following to make Vagrant
+happy.  And then issue the following command to actually creating the
+Vagrant box (NAME-OF-VM is what the VM is called inside VirtualBox):
+
+  : vagrant package --base NAME-OF-VM --output unstable64.box
+
+* Virtual Box Guest Additions ISO
+
+  : apt-get install build-essential module-assistant
+  : m-a prepare
+  : mount /media/cdrom
+  : sh /media/cdrom/VBoxLinuxAdditions.run
+
+* SSH access
+
+  : apt-get install openssh-server
+  : mkdir /home/vagrant/.ssh
+  : cd /home/vagrant/.ssh
+  : wget https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
+  : mv vagrant.pub authorized_keys
+  : cd -
+  : chmod 700 /home/vagrant/.ssh
+  : chown -R vagrant:vagrant /home/vagrant/.ssh
+
+* Sudo setup
+
+  : apt-get install sudo
+
+Update /etc/sudoers using visudo, and add:
+
+  : vagrant ALL = NOPASSWD: ALL
+
+* Zeroing unused disk space
+
+  : init 1
+  : mount -o remount,ro /dev/sda1
+  : zerofree /dev/sda1
+
+* Known issues
+
+** VirtualBox 4.3.10
+
+When using 4.3.10 guest additions, one needs to run the following:
+
+  : sudo ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
+
+See https://www.virtualbox.org/ticket/12879 for details.

@@ -1,0 +1,59 @@
+The VCSN virtual machine				-*- outline -*-
+
+The following directory contains the infrastructure for creating
+vritual machines capable of compiling Vaucanson; and running the
+Notebook.  The following are strict requirements to successfully
+create a virtual machine:
+
+  - VirtualBox (http://virtualbox.org/)
+
+  - Vagrant (http://www.vagrantup.com/)
+
+The end result is something that can be easily distributed and
+installed by anyone following the instructions under VM/README
+
+With that said, all you need to do is run `make' and VM/ will contain
+a virtual machine and all auxiliary files that one can distribute to
+users.
+
+You can also run `make vcsn-bootstrap', which will create a temporary
+virtual machine that can be connected to using the normal vagrant
+commands.
+
+Short summary of vagrant commands:
+
+  - vagrant up :: brings up the virtual machine.
+
+  - vagrant ssh :: connects to the virtual machine using ssh
+
+  - vagrant halt :: stops the virtual machine.
+
+  - vagrant destroy :: removes it from permanently.
+
+Some notes on the files that are in this directory:
+
+VM/vcsn.box is the full installation, with VCSN compiled.  This file
+  is large (~1G) so it is best.  This, and VM/Vagrantfile (see below)
+  would be what is distributed to users.
+ 
+VM/Vagrantfile contains instructions for `vagrant' for setting up the
+  VCSN virtual machine.
+ 
+The following files are only useful for people who want to create
+`vcsn.box':
+ 
+unstable64.box is a `clean' installation of Debian (unstable); patched
+  for Vagrant use.  See README.unstable64 (attached) for instructions
+  on how it was created.  This base box can be downloaded from
+  minsky:~ams/unstable64.box.
+ 
+Vagrantfile contains the instructions for Vagrant that it needs to
+  execute.  This file might need to be edited depending on what kind
+  of machine is being used to build.  It is used by `vagrant' for
+  setting up the unstable64 virtual machine.
+ 
+vcsn-bootstrap.sh contains commands to install any build dependencies
+  required for VCSN; fetch the latest version of VCSN; and finally
+  fires up the notebook.
+
+
