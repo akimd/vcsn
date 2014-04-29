@@ -10,8 +10,8 @@
 namespace vcsn
 {
 
-  // Build the Boolean automaton which accepts a word n representing a
-  // number in base "base" if and only if divisor|n.
+  /// Build the Boolean automaton which accepts a word n representing a
+  /// number in base "base" if and only if divisor|n.
   template <typename Context>
   mutable_automaton<Context>
   divkbaseb(const Context& ctx, unsigned divisor, unsigned base)
@@ -58,9 +58,6 @@ namespace vcsn
     return res;
   }
 
-  /*-----------------.
-  | dyn::divkbaseb.  |
-  `-----------------*/
 
   namespace dyn
   {

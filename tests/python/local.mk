@@ -106,6 +106,7 @@ EXTRA_DIST +=                                   \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
   %D%/eliminate-state.dir/lao.gv                \
   %D%/factory.dir/clique-a-4.gv                 \
+  %D%/factory.dir/u-5.gv                        \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \
   %D%/minimize.dir/intricate.exp.gv             \
