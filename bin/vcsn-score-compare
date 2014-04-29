@@ -7,7 +7,22 @@ bench = dict()
 
 def normalize(k):
     k = re.sub(r'a\*\*(\d+) ', r'a & \1', k)
+    # Fix: spello.
     k = re.sub(r'de_buijn', 'de_bruijn', k)
+    # Fix: extraneous paren.
+    k = re.sub(r'ladybird\(21\)\)', 'ladybird(21)', k)
+    # Fix: Incorrect use of .format.
+    k = re.sub(r'a.shuffle\(a\)         # a = std\(\{\}\).format\(r\)',
+               r'a.shuffle(a)         # a = std([a-e]?{50})', k)
+    k = re.sub(r'a.product\(a\)         # a = std\(\{\}\).format\(r\)',
+               r'a.product(a)         # a = std([a-e]?{50})', k)
+    # Fix: now use 's' to denote a string, instead of 'a'.
+    k = re.sub(r'read\(a\)              # a =',
+               r'read(s)              # s =', k)
+    # Now we display the number of repetitions.
+    k = re.sub(r'(# a = de_bruijn\(150\))$', r'\1, 1000x', k)
+    k = re.sub(r'(# e = "\(\\e\+a\)" \* 500)$', r'\1, 100x', k)
+    k = re.sub(r'(# r = b\.ratexp\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x', k)
     return k
 
 def read(fn):
