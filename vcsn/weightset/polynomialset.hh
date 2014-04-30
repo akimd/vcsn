@@ -494,7 +494,7 @@ namespace vcsn
     }
 
 
-    /// Print a full polynomial value, without trying to make ranges.
+    /// Print a polynomial value without ranges.
     std::ostream&
     print_without_ranges_(std::ostream& out, const value_t& v,
                           const std::string& format = "text",
@@ -512,9 +512,7 @@ namespace vcsn
     }
 
     /// Print a polynomial value with ranges.
-    template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal || Ctx::is_lan,
-                            std::ostream&>::type
+    std::ostream&
     print_with_ranges_(std::ostream& out, const value_t& v,
                        const std::string& format = "text",
                        const std::string& sep = " + ") const
@@ -522,26 +520,31 @@ namespace vcsn
       if (sep == " + " || v.size() <= 2)
         return print_without_ranges_(out, v, format, sep);
 
-      // We put all the labels in a vector and check if their weight
-      // is always the same.
-
-      // Faster than a set: insertion is O(1) amortized, and sort is
-      // in N log(N), whereas insertion in a set is N log(size + N).
+      // No ranges if the weights aren't all the same.
       std::vector<label_t> letters;
-      weight_t first_w = v.begin()->second;
+      weight_t first_w = weightset()->zero();
       for (const auto& m: v)
         {
-          // No ranges if the weights aren't all the same.
-          if (!weightset()->equals(m.second, first_w))
+          if (weightset()->is_zero(first_w))
+            first_w = m.second;
+          else if (!weightset()->equals(m.second, first_w))
             return print_without_ranges_(out, v, format, sep);
           letters.push_back(m.first);
         }
-      sort(letters.begin(), letters.end());
+
+      // Print with ranges.  First, the constant-term.
+      if (labelset()->is_one(std::begin(v)->first))
+        {
+          print(out, *std::begin(v), format);
+          if (1 < v.size())
+            out << sep;
+        }
 
       // The weight.
       print_(out, first_w, format);
 
-      // Print the character class.
+      // Print the character class.  letters are sorted, since
+      // polynomials are shortlex-sorted on the labels.
       out << '[';
       const auto& alphabet = labelset()->genset();
       for (auto it = std::begin(letters), letters_end = std::end(letters);
@@ -574,42 +577,15 @@ namespace vcsn
       return print_without_ranges_(out, v, format, sep);
     }
 
-    /// Print a non-null value for LAL.
+    /// Print a non-null value for LAL or LAN.
     template <typename Ctx>
-    typename std::enable_if<Ctx::is_lal,
+    typename std::enable_if<Ctx::is_lal || Ctx::is_lan,
                             std::ostream&>::type
     print_(std::ostream& out, const value_t& v,
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      return print_with_ranges_<Ctx>(out, v, format, sep);
-    }
-
-    /// Print a non-null value for LAN.
-    template <typename Ctx>
-    typename std::enable_if<Ctx::is_lan,
-                            std::ostream&>::type
-    print_(std::ostream& out, const value_t& v,
-           const std::string& format = "text",
-           const std::string& sep = " + ") const
-    {
-      // The number of constants (aka, ones) printed.
-      unsigned ones = 0;
-      // The non-one monomials.
-      value_t vn;
-      for (const auto& m: v)
-        if (labelset()->is_one(m.first))
-          {
-            if (ones)
-              out << sep;
-            print(out, m, format);
-            ++ones;
-          }
-        else
-          vn[m.first] = m.second;
-      if (0 < ones && ones < v.size())
-        out << sep;
-      return print_with_ranges_<Ctx>(out, vn, format, sep);
+      return print_with_ranges_(out, v, format, sep);
     }
 
 
