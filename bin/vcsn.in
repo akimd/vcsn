@@ -69,7 +69,7 @@ case $1 in
       |is-standard|is-trim|is-useless|is-valid \
       |ladybird|left-mult|lift \
       |minimize \
-      |power|product \
+      |power|product|proper \
       |random|right-mult \
       |shuffle|shortest|split|standard|star|star-normal-form|sum \
       |thompson|transpose|trim \
