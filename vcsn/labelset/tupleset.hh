@@ -412,10 +412,14 @@ namespace vcsn
     static bool
     less_than_(const value_t& l, const value_t& r, seq<I...>)
     {
-      for (auto n: {valueset_t<I>::less_than(std::get<I>(l),
-                                             std::get<I>(r))...})
-        if (n)
+      for (auto n: {std::make_pair(valueset_t<I>::less_than(std::get<I>(l),
+                                                            std::get<I>(r)),
+                                   valueset_t<I>::less_than(std::get<I>(r),
+                                                            std::get<I>(l)))...})
+        if (n.first)
           return true;
+        else if (n.second)
+          return false;
       return false;
     }
 
