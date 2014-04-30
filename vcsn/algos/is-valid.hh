@@ -33,7 +33,7 @@ namespace vcsn
       using automaton_t = typename std::remove_cv<Aut>::type;
       using weightset_t = typename automaton_t::weightset_t;
 
-      /** @brief Test whether an automaton is valid.
+      /** @brief Whether an automaton is valid.
 
          The behavior of this method depends on the star_status of
          the weight_set:
@@ -134,11 +134,6 @@ namespace vcsn
 
   namespace dyn
   {
-
-    /*---------------------.
-    | dyn::is_valid(aut).  |
-    `---------------------*/
-
     namespace detail
     {
       /// Bridge.
@@ -152,7 +147,6 @@ namespace vcsn
      REGISTER_DECLARE(is_valid,
                       (const automaton& aut) -> bool);
     }
-
   }
 
 
@@ -180,10 +174,6 @@ namespace vcsn
   {
     namespace detail
     {
-      /*---------------------.
-      | dyn::is_valid(exp).  |
-      `---------------------*/
-
       /// Bridge.
       template <typename RatExpSet>
       bool

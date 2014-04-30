@@ -242,6 +242,7 @@ namespace vcsn
       return helper_t::value(v);
     }
 
+    /// Whether l == r.
     static bool equals(const value_t& l, const value_t& r)
     {
       if (is_one(l))
@@ -249,6 +250,7 @@ namespace vcsn
       return !is_one(r) && labelset_t::equals(get_value(l), get_value(r));
     }
 
+    /// Whether l < r.
     static bool less_than(const value_t& l, const value_t& r)
     {
       if (is_one(r))

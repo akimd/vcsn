@@ -44,7 +44,8 @@ namespace vcsn
     ///
     /// This class is specialized for labels_are_letter automata since
     /// all these methods become trivial.
-    template <typename Aut, bool has_one = Aut::context_t::labelset_t::has_one()>
+    template <typename Aut,
+              bool has_one = Aut::context_t::labelset_t::has_one()>
     class properer
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
@@ -167,8 +168,7 @@ namespace vcsn
           : state(s)
           , in_sp(insp), in_nsp(in - insp)
           , out_sp(outsp), out_nsp(out - outsp)
-        {
-        }
+        {}
 
         void update(size_t insp, size_t in,
                     size_t outsp, size_t out)
@@ -513,9 +513,9 @@ namespace vcsn
     };
 
 
-    /*---------------------.
-    | labels_are_letters.  |
-    `---------------------*/
+    /*----------------------------------------------.
+    | Specialization when there is no 'one' label.  |
+    `----------------------------------------------*/
 
     template <typename Aut>
     class properer<Aut, false>
@@ -542,6 +542,8 @@ namespace vcsn
   | proper.  |
   `---------*/
 
+  /// Blindly eliminate epsilon transitions without checking for the
+  /// validity of the automaton.  Return true iff the process worked.
   template <typename Aut>
   inline
   bool in_situ_remover(Aut& aut, bool prune)
@@ -549,7 +551,9 @@ namespace vcsn
     return detail::properer<Aut>::in_situ_remover(aut, prune);
   }
 
-  template <class Aut>
+  /// Eliminate epsilon transitions in place.  Raise if the automaton
+  /// was not valid.
+  template <typename Aut>
   inline
   void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD,
                    bool prune = true)
@@ -567,7 +571,9 @@ namespace vcsn
       }
   }
 
-  template <class Aut>
+  /// Eliminate epsilon transitions.  Raise if the automaton was not
+  /// valid.
+  template <typename Aut>
   Aut proper(const Aut& aut, direction_t dir = direction_t::BACKWARD,
              bool prune = true)
   {

@@ -3,8 +3,8 @@
 import vcsn
 from test import *
 
-# check complete algorithm
-# ------------------------
+# check INPUT EXP
+# ---------------
 def check(i, o):
   i = vcsn.automaton(i)
   o = vcsn.automaton(o)
