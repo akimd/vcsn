@@ -57,19 +57,35 @@ namespace vcsn
       }
 
     private:
+      /// Copy of \a aut, with absolute values.
+      /// Templated to avoid useless instantiations.
+      template <typename Aut2>
+      static Aut2 absval_(const Aut2& aut)
+      {
+        automaton_t res = copy(aut);
+        // Apply absolute value to the weight of each transition.
+        const auto& weightset = *aut.weightset();
+        for (auto t: res.transitions())
+          res.set_weight(t, weightset.abs(res.weight_of(t)));
+        return res;
+      }
+
+      /// Whether proper_here(aut) succeeds.
+      /// Destroys aut.
+      static bool is_properable_(automaton_t&& aut)
+      {
+        return in_situ_remover(aut);
+      }
+
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::TOPS,
                               bool>::type
       is_valid_(const automaton_t& aut)
       {
-        if (is_proper(aut) || is_eps_acyclic(aut))
-          return true;
-        else
-          {
-            automaton_t a = copy(aut);
-            return in_situ_remover(a);
-          }
+        return (is_proper(aut)
+                || is_eps_acyclic(aut)
+                || is_properable_(copy(aut)));
       }
 
       template <star_status_t Status>
@@ -78,18 +94,9 @@ namespace vcsn
                               bool>::type
       is_valid_(const automaton_t& aut)
       {
-        if (is_proper(aut) || is_eps_acyclic(aut))
-          return true;
-        else
-          {
-            automaton_t a = copy(aut);
-            // Apply absolute value to the weight of each transition.
-            const auto& weightset = *aut.weightset();
-            for (auto t: a.transitions())
-              a.set_weight(t, weightset.abs(a.weight_of(t)));
-            // Apply proper.
-            return in_situ_remover(a);
-          }
+        return (is_proper(aut)
+                || is_eps_acyclic(aut)
+                || is_properable_(absval_(aut)));
       }
 
       template <star_status_t Status>
