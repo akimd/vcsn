@@ -416,13 +416,9 @@ namespace vcsn
             std::swap(res_, lhs);
             value_t rhs = first_order(r);
 
-            for (auto& p: lhs.polynomials)
-              {
-                auto i = rhs.polynomials.find(p.first);
-                if (i != std::end(rhs.polynomials))
-                  res_.polynomials[p.first]
-                    = ps_.conjunction(p.second, i->second);
-              }
+            for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
+              res_.polynomials[p.first]
+                = ps_.conjunction(std::get<0>(p.second), std::get<1>(p.second));
             res_.constant = ws_.mul(lhs.constant, rhs.constant);
           }
       }
