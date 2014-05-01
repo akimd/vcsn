@@ -20,6 +20,57 @@ namespace vcsn
   namespace detail
   {
 
+    /// Cache the outgoing transitions of an automaton as efficient
+    /// maps label -> vector<(weight, dst)>.  Easy to zip.
+    template <typename Aut, typename WeightSet = typename Aut::weightset_t>
+    struct transition_map
+    {
+      using weightset_t = WeightSet;
+      using weight_t = typename weightset_t::value_t;
+      struct transition
+      {
+        /// The (converted) weight.
+        weight_t wgt;
+        typename Aut::state_t dst;
+      };
+
+      using map_t = std::map<typename Aut::label_t, std::vector<transition>>;
+      std::map<typename Aut::state_t, map_t> maps_;
+
+      transition_map(const Aut& aut, const weightset_t& ws)
+        : aut_(aut)
+        , ws_(ws)
+      {}
+
+      transition_map(const Aut& aut)
+        : transition_map(aut, *aut.weightset())
+      {}
+
+      map_t& operator[](typename Aut::state_t s)
+      {
+        auto lb = maps_.lower_bound(s);
+        if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
+          {
+            // First insertion.
+            lb = maps_.emplace_hint(lb, s, map_t{});
+            auto& res = lb->second;
+            for (auto t: aut_.all_out(s))
+              {
+                auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+                res[aut_.label_of(t)]
+                  // FIXME: why do I have to call the ctor here?
+                  .emplace_back(transition{w, aut_.dst_of(t)});
+              }
+          }
+        return lb->second;
+      }
+      /// The automaton whose transitions are cached.
+      const Aut& aut_;
+      /// The result weightset.
+      const weightset_t& ws_;
+    };
+
+
     /*----------------------------------.
     | producter<automaton, automaton>.  |
     `----------------------------------*/
@@ -296,58 +347,15 @@ namespace vcsn
         return lb->second;
       }
 
-      template <typename Aut>
-      struct transition_map
-      {
-        struct transition
-        {
-          /// The (converted) weight.
-          weight_t wgt;
-          typename Aut::state_t dst;
-        };
-
-        using map_t = std::map<typename Aut::label_t, std::vector<transition>>;
-        std::map<typename Aut::state_t, map_t> maps_;
-
-        transition_map(const Aut& aut, const weightset_t& ws)
-          : aut_(aut)
-          , ws_(ws)
-        {}
-
-        map_t& operator[](typename Aut::state_t s)
-        {
-          auto lb = maps_.lower_bound(s);
-          if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
-            {
-              // First insertion.
-              lb = maps_.emplace_hint(lb, s, map_t{});
-              auto& res = lb->second;
-              for (auto t: aut_.all_out(s))
-                {
-                  auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-                  res[aut_.label_of(t)]
-                    // FIXME: why do I have to call the ctor here?
-                    .emplace_back(transition{w, aut_.dst_of(t)});
-                }
-            }
-          return lb->second;
-        }
-        /// The automaton whose transitions are cached.
-        const Aut& aut_;
-        /// The result weightset.
-        const weightset_t& ws_;
-      };
-
-
       /// The outgoing tuple of transitions from state tuple \a ss.
-      std::tuple<typename transition_map<Auts>::map_t&...>
+      std::tuple<typename transition_map<Auts, weightset_t>::map_t&...>
       out_(const pair_t& ss)
       {
         return out_(ss, indices_t{});
       }
 
       template <size_t... I>
-      std::tuple<typename transition_map<Auts>::map_t&...>
+      std::tuple<typename transition_map<Auts, weightset_t>::map_t&...>
       out_(const pair_t& ss, seq<I...>)
       {
         return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
@@ -374,7 +382,7 @@ namespace vcsn
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
             detail::cross_tuple
-              ([&] (const typename transition_map<Auts>::transition&... ts)
+              ([&] (const typename transition_map<Auts, weightset_t>::transition&... ts)
                {
                  res_.new_transition(src, state(ts.dst...),
                                      t.first, ws.mul(ts.wgt...));
@@ -453,7 +461,7 @@ namespace vcsn
 
       /// The computed product.
       automaton_t res_;
-      std::tuple<transition_map<Auts>...> transition_maps_;
+      std::tuple<transition_map<Auts, weightset_t>...> transition_maps_;
     };
   }
 
