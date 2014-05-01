@@ -22,7 +22,9 @@ namespace vcsn
 
     /// Cache the outgoing transitions of an automaton as efficient
     /// maps label -> vector<(weight, dst)>.  Easy to zip.
-    template <typename Aut, typename WeightSet = typename Aut::weightset_t>
+    template <typename Aut,
+              typename WeightSet = typename Aut::weightset_t,
+              bool Deterministic = false>
     struct transition_map
     {
       using weightset_t = WeightSet;
@@ -34,8 +36,13 @@ namespace vcsn
         typename Aut::state_t dst;
       };
 
-      using map_t = std::map<typename Aut::label_t, std::vector<transition>>;
-      std::map<typename Aut::state_t, map_t> maps_;
+      using map_t
+        = std::map<typename Aut::label_t,
+                   typename std::conditional<Deterministic,
+                                             transition,
+                                             std::vector<transition>>::type>;
+      using maps_t = std::map<typename Aut::state_t, map_t>;
+      maps_t maps_;
 
       transition_map(const Aut& aut, const weightset_t& ws)
         : aut_(aut)
@@ -46,24 +53,51 @@ namespace vcsn
         : transition_map(aut, *aut.weightset())
       {}
 
+      /// Build the transition map for state s, store at res.
+      /// Return the iterator of where the insertion took place.
+      template <bool Deterministic_>
+      typename maps_t::iterator
+      build_map_(typename maps_t::iterator res, typename Aut::state_t s,
+                 typename std::enable_if<Deterministic_>::type* = nullptr)
+      {
+        res = maps_.emplace_hint(res, s, map_t{});
+        auto& map = res->second;
+        for (auto t: aut_.all_out(s))
+          {
+            auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+            map.emplace(aut_.label_of(t), transition{w, aut_.dst_of(t)});
+          }
+        return res;
+      }
+
+      /// Build the transition map for state s, store at res.
+      /// Return the iterator of where the insertion took place.
+      template <bool Deterministic_>
+      typename maps_t::iterator
+      build_map_(typename maps_t::iterator res, typename Aut::state_t s,
+                 typename std::enable_if<!Deterministic_>::type* = nullptr)
+      {
+        res = maps_.emplace_hint(res, s, map_t{});
+        auto& map = res->second;
+        for (auto t: aut_.all_out(s))
+          {
+            auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+            map[aut_.label_of(t)]
+              // FIXME: why do I have to call the ctor here?
+              .emplace_back(transition{w, aut_.dst_of(t)});
+          }
+        return res;
+      }
+
       map_t& operator[](typename Aut::state_t s)
       {
         auto lb = maps_.lower_bound(s);
         if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
-          {
-            // First insertion.
-            lb = maps_.emplace_hint(lb, s, map_t{});
-            auto& res = lb->second;
-            for (auto t: aut_.all_out(s))
-              {
-                auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-                res[aut_.label_of(t)]
-                  // FIXME: why do I have to call the ctor here?
-                  .emplace_back(transition{w, aut_.dst_of(t)});
-              }
-          }
+          // First insertion.
+          lb = build_map_<Deterministic>(lb, s);
         return lb->second;
       }
+
       /// The automaton whose transitions are cached.
       const Aut& aut_;
       /// The result weightset.
