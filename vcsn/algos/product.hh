@@ -65,40 +65,39 @@ namespace vcsn
         : transition_map(aut, *aut.weightset())
       {}
 
-      /// Build the transition map for state s, store at res.
-      /// Return the iterator of where the insertion took place.
+      /// Insert l -> t in map.
       template <bool Deterministic_>
-      typename maps_t::iterator
-      build_map_(typename maps_t::iterator res, typename Aut::state_t s,
-                 typename std::enable_if<Deterministic_>::type* = nullptr)
+      void
+      insert_(map_t& map,
+              typename Aut::label_t l, transition t,
+              typename std::enable_if<Deterministic_>::type* = nullptr)
       {
-        res = maps_.emplace_hint(res, s, map_t{});
-        auto& map = res->second;
-        for (auto t: aut_.all_out(s))
-          if (AllOut || !aut_.labelset()->is_special(aut_.label_of(t)))
-            {
-              auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-              map.emplace(aut_.label_of(t), transition{w, aut_.dst_of(t)});
-            }
-        return res;
+        map.emplace(l, t);
       }
 
-      /// Build the transition map for state s, store at res.
-      /// Return the iterator of where the insertion took place.
+      /// Insert l -> t in map.
       template <bool Deterministic_>
-      typename maps_t::iterator
-      build_map_(typename maps_t::iterator res, typename Aut::state_t s,
-                 typename std::enable_if<!Deterministic_>::type* = nullptr)
+      void
+      insert_(map_t& map,
+              typename Aut::label_t l, transition t,
+              typename std::enable_if<!Deterministic_>::type* = nullptr)
       {
-        res = maps_.emplace_hint(res, s, map_t{});
-        auto& map = res->second;
+        map[l].emplace_back(t);
+      }
+
+      /// Build and return the transition map for state s, store at res.
+      /// Insert it in the cache.
+      map_t&
+      build_map_(typename maps_t::iterator lb, typename Aut::state_t s)
+      {
+        auto& res = maps_.emplace_hint(lb, s, map_t{})->second;
         for (auto t: aut_.all_out(s))
           if (AllOut || !aut_.labelset()->is_special(aut_.label_of(t)))
             {
               auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-              map[aut_.label_of(t)]
-                // FIXME: why do I have to call the ctor here?
-                .emplace_back(transition{w, aut_.dst_of(t)});
+              insert_<Deterministic>(res,
+                                     aut_.label_of(t),
+                                     transition{w, aut_.dst_of(t)});
             }
         return res;
       }
@@ -107,9 +106,9 @@ namespace vcsn
       {
         auto lb = maps_.lower_bound(s);
         if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
-          // First insertion.
-          lb = build_map_<Deterministic>(lb, s);
-        return lb->second;
+          return build_map_(lb, s);
+        else
+          return lb->second;
       }
 
       /// The automaton whose transitions are cached.
