@@ -88,14 +88,16 @@ namespace vcsn
       using weight_t = typename weightset_t::value_t;
 
     private:
+      /// The semantics of the result states: ordered pair of input
+      /// states.
       using pair_t = std::pair<state_t, state_t>;
 
     public:
-      pairer(const Aut& aut)
+      pairer(const automaton_t& aut)
         : aut_(aut)
       {}
 
-      Aut pair()
+      automaton_t pair()
       {
         auto ctx = aut_.context();
         auto ws = ctx.weightset();
@@ -146,21 +148,22 @@ namespace vcsn
         return res;
       }
 
-      const std::unordered_map<pair_t, state_t>& get_map_pair()
+      const std::unordered_map<pair_t, state_t>& get_map_pair() const
       {
         require(called_,
                 "trying to call get_map_pair() before calling pair()");
         return pair_states_;
       }
 
-      state_t get_q0()
+      state_t get_q0() const
       {
         require(called_, "trying to call get_q0() before calling pair()");
         return q0_;
       }
 
     private:
-      const Aut& aut_;
+      /// Input automaton.
+      const automaton_t& aut_;
       std::unordered_map<pair_t, state_t> pair_states_;
       state_t q0_;
       bool called_ = false;
