@@ -3,12 +3,13 @@
 
 # include <functional> // std::function
 # include <type_traits>
+
 # include <boost/iterator/filter_iterator.hpp>
 
 namespace vcsn
 {
   /// Restrict the interface of a container to begin/end.
-  template <class C>
+  template <typename C>
   struct container_range
   {
   public:
@@ -43,7 +44,7 @@ namespace vcsn
   };
 
 
-  template <class C>
+  template <typename C>
   struct container_filter_range
   {
   public:
@@ -54,17 +55,18 @@ namespace vcsn
       = boost::filter_iterator<predicate_t, typename unref_C::const_iterator>;
   public:
     container_filter_range(const unref_C& cont, predicate_t predicate)
-      : cont_(cont), predicate_(predicate)
+      : cont_(cont)
+      , predicate_(predicate)
     {}
 
     const_iterator begin() const
     {
-      return const_iterator(predicate_, cont_.begin(), cont_.end());
+      return {predicate_, cont_.begin(), cont_.end()};
     }
 
     const_iterator end() const
     {
-      return const_iterator(predicate_, cont_.end(), cont_.end());
+      return {predicate_, cont_.end(), cont_.end()};
     }
 
     /// The first element.
