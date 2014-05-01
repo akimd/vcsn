@@ -72,6 +72,6 @@ CHECK_EQ(g.is_synchronized_by('abbababbba'), True)
 CHECK_EQ(g.is_synchronized_by('abbbabbba'), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word()), True)
 
-for i in [2, 4, 6]:
-    db = b.de_bruijn(i + 1).determinize()
+for i in [3, 5, 7]:
+    db = b.de_bruijn(i).determinize()
     CHECK_EQ(db.is_synchronized_by(db.synchronizing_word()), True)
