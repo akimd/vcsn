@@ -22,9 +22,21 @@ namespace vcsn
 
     /// Cache the outgoing transitions of an automaton as efficient
     /// maps label -> vector<(weight, dst)>.  Easy to zip.
+    /// \tparam Aut
+    ///    The automaton type.
+    /// \tparam WeightSet
+    ///    The set of weights into which the weights will be converted.
+    /// \tparam Deterministic
+    ///    Wether the automaton is guaranteed to be deterministic.
+    ///    If it is, transition_map[state][label] returns a single
+    ///    result, otherwise a vector.
+    /// \tparam AllOut
+    ///    Whether even the transitions to post() (via the
+    ///    special label) are to be included.
     template <typename Aut,
               typename WeightSet = typename Aut::weightset_t,
-              bool Deterministic = false>
+              bool Deterministic = false,
+              bool AllOut = false>
     struct transition_map
     {
       using weightset_t = WeightSet;
@@ -63,10 +75,11 @@ namespace vcsn
         res = maps_.emplace_hint(res, s, map_t{});
         auto& map = res->second;
         for (auto t: aut_.all_out(s))
-          {
-            auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-            map.emplace(aut_.label_of(t), transition{w, aut_.dst_of(t)});
-          }
+          if (AllOut || !aut_.labelset()->is_special(aut_.label_of(t)))
+            {
+              auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+              map.emplace(aut_.label_of(t), transition{w, aut_.dst_of(t)});
+            }
         return res;
       }
 
@@ -80,12 +93,13 @@ namespace vcsn
         res = maps_.emplace_hint(res, s, map_t{});
         auto& map = res->second;
         for (auto t: aut_.all_out(s))
-          {
-            auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
-            map[aut_.label_of(t)]
-              // FIXME: why do I have to call the ctor here?
-              .emplace_back(transition{w, aut_.dst_of(t)});
-          }
+          if (AllOut || !aut_.labelset()->is_special(aut_.label_of(t)))
+            {
+              auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+              map[aut_.label_of(t)]
+                // FIXME: why do I have to call the ctor here?
+                .emplace_back(transition{w, aut_.dst_of(t)});
+            }
         return res;
       }
 
@@ -131,6 +145,11 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
       /// The list of automaton indices as a static list.
       using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+
+      /// The type of our transition maps: convert the weight to weightset_t,
+      /// non deterministic, and including transitions to post().
+      template <typename A>
+      using transition_map_t = transition_map<A, weightset_t, false, true>;
 
     public:
       /// The type of input automata.
@@ -382,14 +401,14 @@ namespace vcsn
       }
 
       /// The outgoing tuple of transitions from state tuple \a ss.
-      std::tuple<typename transition_map<Auts, weightset_t>::map_t&...>
+      std::tuple<typename transition_map_t<Auts>::map_t&...>
       out_(const pair_t& ss)
       {
         return out_(ss, indices_t{});
       }
 
       template <size_t... I>
-      std::tuple<typename transition_map<Auts, weightset_t>::map_t&...>
+      std::tuple<typename transition_map_t<Auts>::map_t&...>
       out_(const pair_t& ss, seq<I...>)
       {
         return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
@@ -416,7 +435,7 @@ namespace vcsn
 //                 << V(std::get<0>(t.second).wgt)
 //                 << V(std::get<1>(t.second).wgt));
             detail::cross_tuple
-              ([&] (const typename transition_map<Auts, weightset_t>::transition&... ts)
+              ([&] (const typename transition_map_t<Auts>::transition&... ts)
                {
                  res_.new_transition(src, state(ts.dst...),
                                      t.first, ws.mul(ts.wgt...));
@@ -495,7 +514,7 @@ namespace vcsn
 
       /// The computed product.
       automaton_t res_;
-      std::tuple<transition_map<Auts, weightset_t>...> transition_maps_;
+      std::tuple<transition_map_t<Auts>...> transition_maps_;
     };
   }
 
