@@ -38,24 +38,26 @@ namespace vcsn
     struct iterator
     {
       using iterators_t
-        = std::tuple<typename std::remove_reference<Maps>::type::iterator...>;
+        = std::tuple<typename std::remove_reference<Maps>::type::const_iterator...>;
       using values_t
         = std::tuple<typename std::remove_reference<Maps>::type::value_type...>;
+      // FIXME: we should be using ::reference, but I can't get it to
+      // work with const.
       using references_t
-        = std::tuple<typename std::remove_reference<Maps>::type::reference...>;
+        = std::tuple<const typename std::remove_reference<Maps>::type::value_type&...>;
       using ranges_t
-        = std::tuple<std::pair<typename std::remove_reference<Maps>::type::iterator,
-                               typename std::remove_reference<Maps>::type::iterator>...>;
+        = std::tuple<std::pair<typename std::remove_reference<Maps>::type::const_iterator,
+                               typename std::remove_reference<Maps>::type::const_iterator>...>;
       /// Common key type.
       using key_t
         = typename std::remove_const<typename std::tuple_element<0, values_t>::type::first_type>::type;
       /// Tuple of mapped types.
       using mapped_t
-        = std::tuple<typename std::remove_reference<Maps>::type::mapped_type&...>;
+        = std::tuple<const typename std::remove_reference<Maps>::type::mapped_type&...>;
 
       iterator(zipped_maps& zip,
-               typename std::remove_reference<Maps>::type::iterator... is,
-               typename std::remove_reference<Maps>::type::iterator... ends)
+               typename std::remove_reference<Maps>::type::const_iterator... is,
+               typename std::remove_reference<Maps>::type::const_iterator... ends)
         : zip_(zip)
         , is_(is...)
         , ends_(ends...)
