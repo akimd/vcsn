@@ -22,15 +22,15 @@
 namespace vcsn
 {
 
-  /*----------------------.
-  | first_order(ratexp).  |
-  `----------------------*/
-
   namespace rat
   {
+
+    /*---------------.
+    | expansionset.  |
+    `---------------*/
+
     template <typename RatExpSet>
-    class first_order_visitor
-      : public RatExpSet::const_visitor
+    struct expansionset
     {
     public:
       using ratexpset_t = RatExpSet;
@@ -45,11 +45,7 @@ namespace vcsn
       using polynomial_t = typename polynomialset_t::value_t;
       using monomial_t = typename polynomialset_t::monomial_t;
 
-      using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
-
-      constexpr static const char* me() { return "first_order"; }
+      constexpr static const char* me() { return "expansion"; }
 
       // Keep it sorted to ensure determinism, and better looking
       // results.  Anyway, rough benches show no difference between
@@ -62,6 +58,102 @@ namespace vcsn
         weight_t constant;
         polys_t polynomials;
       };
+
+      expansionset(const ratexpset_t& rs)
+        : rs_(rs)
+      {}
+
+      /// Print a first order development.
+      std::ostream& print(std::ostream& o, const value_t& v) const
+      {
+        ws_.print(o, v.constant);
+        for (const auto& p: v.polynomials)
+          {
+            o << " + ";
+            rs_.labelset()->print(o, p.first) << ".[";
+            ps_.print(o, p.second) << ']';
+          }
+        return o;
+      }
+
+      /// In place addition.
+      void add_here(value_t& lhs, const value_t& rhs) const
+      {
+        lhs.constant = ws_.add(lhs.constant, rhs.constant);
+        for (const auto& p: rhs.polynomials)
+          ps_.add_weight(lhs.polynomials[p.first], p.second);
+      }
+
+      /// Inplace left-multiplication by \a w of \a res.
+      value_t& lmul_here(const weight_t& w, value_t& res) const
+      {
+        res.constant = ws_.mul(w, res.constant);
+        for (auto& p: res.polynomials)
+          p.second = ps_.lmul(w, p.second);
+        return res;
+      }
+
+      /// Right-multiplication of \a lhs by \a w.
+      value_t rmul(const value_t& lhs, const weight_t& w) const
+      {
+        value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
+        for (auto& p: lhs.polynomials)
+          for (const auto& m: p.second)
+            ps_.add_weight(res.polynomials[p.first],
+                           rs_.rmul(m.first, w), m.second);
+        return res;
+      }
+
+      /// Inplace left-division by \a w of \a res.
+      value_t& ldiv_here(const weight_t& w, value_t& res) const
+      {
+        res.constant = ws_.ldiv(w, res.constant);
+        for (auto& p: res.polynomials)
+          for (auto& m: p.second)
+            m.second = ws_.ldiv(w, m.second);
+        return res;
+      }
+
+    private:
+      /// The ratexpset used for the expressions.
+      ratexpset_t rs_;
+      /// Shorthand to the weightset.
+      weightset_t ws_ = *rs_.weightset();
+      /// The polynomialset for the polynomials.
+      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+    };
+
+
+    /*----------------------.
+    | first_order_visitor.  |
+    `----------------------*/
+
+    template <typename RatExpSet>
+    class first_order_visitor
+      : public RatExpSet::const_visitor
+    {
+    public:
+      using ratexpset_t = RatExpSet;
+      using context_t = typename ratexpset_t::context_t;
+      using labelset_t = typename context_t::labelset_t;
+      using label_t = typename context_t::label_t;
+      using ratexp_t = typename ratexpset_t::value_t;
+      using weightset_t = typename ratexpset_t::weightset_t;
+      using weight_t = typename weightset_t::value_t;
+      using expansionset_t = expansionset<ratexpset_t>;
+
+      using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
+      using monomial_t = typename polynomialset_t::monomial_t;
+
+      using super_type = typename ratexpset_t::const_visitor;
+      using node_t = typename super_type::node_t;
+      using inner_t = typename super_type::inner_t;
+
+      constexpr static const char* me() { return "first_order"; }
+
+      using polys_t = typename expansionset_t::polys_t;
+      using value_t = typename expansionset_t::value_t;
 
       first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = false)
         : rs_(rs)
@@ -154,57 +246,13 @@ namespace vcsn
          return res;
       }
 
-      /// Print a first order development.
+      /// Print an expansion.
       std::ostream& print_(std::ostream& o, const value_t& v) const
       {
-        ws_.print(o, v.constant);
-        for (const auto& p: v.polynomials)
-          {
-            o << " + ";
-            rs_.labelset()->print(o, p.first) << ".[";
-            ps_.print(o, p.second) << ']';
-          }
+        es_.print(o, v);
         if (transposed_)
           o << " (transposed)";
         return o;
-      }
-
-      /// In place addition.
-      void add_(value_t& lhs, const value_t& rhs) const
-      {
-        lhs.constant = ws_.add(lhs.constant, rhs.constant);
-        for (const auto& p: rhs.polynomials)
-          ps_.add_weight(lhs.polynomials[p.first], p.second);
-      }
-
-      /// Inplace left-multiplication by \a w of \a res.
-      value_t& lmul_(const weight_t& w, value_t& res) const
-      {
-        res.constant = ws_.mul(w, res.constant);
-        for (auto& p: res.polynomials)
-          p.second = ps_.lmul(w, p.second);
-        return res;
-      }
-
-      /// Right-multiplication of \a lhs by \a w.
-      value_t rmul_(const value_t& lhs, const weight_t& w) const
-      {
-        value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
-        for (auto& p: lhs.polynomials)
-          for (const auto& m: p.second)
-            ps_.add_weight(res.polynomials[p.first],
-                           rs_.rmul(m.first, w), m.second);
-        return res;
-      }
-
-      /// Inplace left-division by \a w of \a res.
-      value_t& ldiv_(const weight_t& w, value_t& res) const
-      {
-        res.constant = ws_.ldiv(w, res.constant);
-        for (auto& p: res.polynomials)
-          for (auto& m: p.second)
-            m.second = ws_.ldiv(w, m.second);
-        return res;
       }
 
       VCSN_RAT_VISIT(zero,)
@@ -226,7 +274,7 @@ namespace vcsn
       {
         res_ = {ws_.zero(), polys_t{}};
         for (const auto& v: e)
-          add_(res_, first_order(v));
+          es_.add_here(res_, first_order(v));
       }
 
       // fo(l) = c(l) + a.A(l) + ...
@@ -357,10 +405,11 @@ namespace vcsn
                 if (transposed_)
                   {
                     auto rhs_transposed = first_order(e[1]);
-                    add_(res_, ldiv_(lhs.constant, rhs_transposed));
+                    es_.add_here(res_,
+                                 es_.ldiv_here(lhs.constant, rhs_transposed));
                   }
                 else
-                  add_(res_, ldiv_(lhs.constant, rhs));
+                  es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
               }
             for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
               for (const auto& lm: std::get<0>(p.second))
@@ -386,7 +435,9 @@ namespace vcsn
                         print_(std::cerr, p) << '\n';
 #endif
                         // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
-                        add_(res_, ldiv_(lm.second, lmul_(rm.second, p)));
+                        es_.add_here(res_,
+                                     es_.ldiv_here(lm.second,
+                                                   es_.lmul_here(rm.second, p)));
                       }
                   }
           }
@@ -503,8 +554,8 @@ namespace vcsn
         auto r = first_order(e.sub());
         res_
           = transposed_
-          ? rmul_(r, ws_.transpose(l))
-          : lmul_(l, r);
+          ? es_.rmul(r, ws_.transpose(l))
+          : es_.lmul_here(l, r);
       }
 
       VCSN_RAT_VISIT(rweight, e)
@@ -513,12 +564,14 @@ namespace vcsn
         auto r = e.weight();
         res_
           = transposed_
-          ? lmul_(ws_.transpose(r), l)
-          : rmul_(l, r);
+          ? es_.lmul_here(ws_.transpose(r), l)
+          : es_.rmul(l, r);
       }
 
       // private:
       ratexpset_t rs_;
+      /// The structure to manipulation expansions.
+      expansionset_t es_ = expansionset_t(rs_);
       /// Whether to use spontaneous transitions.
       bool use_spontaneous_;
       /// Whether to work transposed.
