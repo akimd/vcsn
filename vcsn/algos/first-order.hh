@@ -76,6 +76,24 @@ namespace vcsn
         return o;
       }
 
+      /// The zero.
+      value_t zero() const
+      {
+        return {ws_.zero(), polys_t{}};
+      }
+
+      /// The one.
+      value_t one() const
+      {
+        return {ws_.one(), polys_t{}};
+      }
+
+      /// A single label.
+      value_t atom(const label_t& l) const
+      {
+        return {ws_.zero(), {{l, ps_.one()}}};
+      }
+
       /// In place addition.
       void add_here(value_t& lhs, const value_t& rhs) const
       {
@@ -257,22 +275,22 @@ namespace vcsn
 
       VCSN_RAT_VISIT(zero,)
       {
-        res_ = {ws_.zero(), polys_t{}};
+        res_ = es_.zero();
       }
 
       VCSN_RAT_VISIT(one,)
       {
-        res_ = {ws_.one(), polys_t{}};
+        res_ = es_.one();
       }
 
       VCSN_RAT_VISIT(atom, e)
       {
-        res_ = {ws_.zero(), {{e.value(), ps_.one()}}};
+        res_ = es_.atom(e.value());
       }
 
       VCSN_RAT_VISIT(sum, e)
       {
-        res_ = {ws_.zero(), polys_t{}};
+        res_ = es_.zero();
         for (const auto& v: e)
           es_.add_here(res_, first_order(v));
       }
@@ -284,7 +302,7 @@ namespace vcsn
       // A(fo(lr)) = A(l).r + c(l).A(r)
       VCSN_RAT_VISIT(prod, e)
       {
-        res_ = {ws_.one(), polys_t{}};
+        res_ = es_.one();
         auto last = e.size() - 1;
         for (size_t i = 0; i <= last; ++i)
           {
@@ -463,7 +481,7 @@ namespace vcsn
       // FO(E:F) = FO(E):F + E:FO(F)
       VCSN_RAT_VISIT(shuffle, e)
       {
-        value_t res = {ws_.one(), polys_t{}};
+        value_t res = es_.one();
         // The shuffle-product of the previously traversed siblings.
         // Initially the neutral element: \e.
         ratexp_t prev = rs_.one();
