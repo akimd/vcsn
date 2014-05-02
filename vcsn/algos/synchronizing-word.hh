@@ -12,6 +12,7 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/distance.hh>
+# include <vcsn/algos/product.hh> // transition_map
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/label.hh>
@@ -96,6 +97,7 @@ namespace vcsn
       pairer(const automaton_t& aut)
         : aut_(aut)
         , res_(aut.context())
+        , transition_map_(aut)
       {}
 
       automaton_t pair()
@@ -130,20 +132,15 @@ namespace vcsn
             auto pstates = ps.first; // pair of states
             auto cstate = ps.second; // current state
 
-            for (auto t1: aut_.out(pstates.first))
-              {
-                auto label = aut_.label_of(t1);
-                auto dst1 = aut_.dst_of(t1);
-                for (auto t2: aut_.out(pstates.second, label))
-                  {
-                    auto dst2 = aut_.dst_of(t2);
-                    weight_t nw = ws->add(aut_.weight_of(t1),
-                                          aut_.weight_of(t2));
-                    res_.add_transition(cstate,
-                                        state_(dst1, dst2),
-                                        label, nw);
-                  }
-              }
+            for (const auto& p : zip_maps(transition_map_[pstates.first],
+                                          transition_map_[pstates.second]))
+              res_.add_transition(cstate,
+                                  state_(std::get<0>(p.second).dst,
+                                         std::get<1>(p.second).dst),
+                                  p.first,
+                                  // FIXME: Adding weights is really suspicious.
+                                  ws->add(std::get<0>(p.second).wgt,
+                                          std::get<1>(p.second).wgt));
           }
 
         called_ = true;
@@ -212,6 +209,9 @@ namespace vcsn
       /// Result.
       automaton_t res_;
       /// Fast maps label -> (weight, label).
+      using transition_map_t
+        = transition_map<automaton_t, typename automaton_t::weightset_t, true>;
+      transition_map_t transition_map_;
       std::unordered_map<pair_t, state_t> pair_states_;
       state_t q0_;
       bool called_ = false;
