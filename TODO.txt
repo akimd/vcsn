@@ -63,7 +63,7 @@ We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
 
 ** Parsing errors in ratexps
-***
+*** In derived-term
 $ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'
 
 This has three states instead of two:
@@ -98,6 +98,20 @@ z.ratexp('((<12>a)b)<23>')
 
 z.ratexp('(<12>ab)<23>')
 <12>(ab)<23>
+
+*** Probably yet another incarnation of the previous point:
+
+a = q.ratexp('ab').derived_term() | q.ratexp('ab').derived_term()
+CHECK_EQ(q.ratexp('<3/4>ab+<3/4>ab'),
+         ('3/4' * a).ratexp())
+
+FAIL: tests/python/kmul.py 5 <3/4>(ab)+<3/4>(ab) != <3/4>ab+<3/4>ab
+
+Need to write:
+
+CHECK_EQ(q.ratexp('(<3/4>a)b+(<3/4>a)b'),
+         ('3/4' * a).ratexp())
+
 
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,

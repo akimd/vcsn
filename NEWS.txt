@@ -4,6 +4,17 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-02
+** Multiplication by a weight no longer requires a standard automaton
+The right-multiplication by a weight uselessly required a standard
+automaton; it now accepts any automaton.  The left-multiplication keeps its
+specification for standard automata, but now supports non-standard automata,
+in which case the weight is put on the initial arrows.
+
+** Multiplication by 0 is fixed
+The multiplication of an automaton by the null weight results in the "zero
+automaton": a single state, initial, and no transitions.
+
 * 2014-04-27
 ** Python syntactic sugar
 Multiplication by a scalar on the left, and on the right, can be performed

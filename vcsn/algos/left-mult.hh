@@ -20,26 +20,49 @@ namespace vcsn
       using weightset_t = typename context_t::weightset_t;
       using state_t = typename automaton_t::state_t;
 
+      /// Left-multiplication by a weight.
       static automaton_t&
       left_mult_here(automaton_t& res, const weight_t& w)
       {
-        require(is_standard(res), __func__, ": input must be standard");
-
         weightset_t ws(*res.context().weightset());
-        state_t initial = res.dst_of(res.initial_transitions().front());
-
-        if (!ws.is_one(w))
-          for (auto t: res.all_out(initial))
+        if (ws.is_zero(w))
+          zero_here(res);
+        else if (ws.is_one(w))
+          {}
+        else if (is_standard(res))
+          {
+            state_t initial = res.dst_of(res.initial_transitions().front());
+            for (auto t: res.all_out(initial))
+              res.lmul_weight(t, w);
+          }
+        else
+          for (auto t: res.initial_transitions())
             res.lmul_weight(t, w);
         return res;
       }
 
+      /// Right-multiplication by a weight.
       static automaton_t&
       right_mult_here(automaton_t& res, const weight_t& w)
       {
-        require(is_standard(res), __func__, ": input must be standard");
-        for (auto t: res.final_transitions())
-          res.rmul_weight(t, w);
+        weightset_t ws(*res.context().weightset());
+        if (ws.is_zero(w))
+          zero_here(res);
+        else if (ws.is_one(w))
+          {}
+        else
+          for (auto t: res.final_transitions())
+            res.rmul_weight(t, w);
+        return res;
+      }
+
+      /// Transform \a res into the (standard) empty automaton.
+      static automaton_t&
+      zero_here(automaton_t& res)
+      {
+        automaton_t a(res.context());
+        a.set_initial(a.new_state());
+        res = std::move(a);
         return res;
       }
     };
