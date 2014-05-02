@@ -93,17 +93,22 @@ def CHECK_EQ(expected, effective):
             rst_file("Effective output", eff)
         rst_diff(exp, eff)
 
-def CHECK_ISOMORPHIC(left, right):
-    "Check that left and right are isomorphic."
-    if left.is_isomorphic(right):
+def CHECK_ISOMORPHIC(a1, a2):
+    "Check that a1 and a2 are isomorphic."
+    # Isomorphism checking is not good enough.
+    if not a1.is_deterministic() or not a2.is_deterministic():
+        # Gee...  That's poor.
+        CHECK_EQ(a1.info(), a2.info())
+        CHECK_EQ(a1.shortest(4), a2.shortest(4))
+    elif a1.is_isomorphic(a2):
         PASS()
     else:
-        exp = str(expected)
-        eff = str(effective)
+        a1 = str(a1)
+        a2 = str(a2)
         FAIL("automata are not isomorphic")
-        rst_file("Left automaton", exp)
-        rst_file("Right automaton", eff)
-        rst_diff(exp, eff)
+        rst_file("Left automaton", a1)
+        rst_file("Right automaton", a2)
+        rst_diff(a1, a2)
 
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
