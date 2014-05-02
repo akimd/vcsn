@@ -161,6 +161,36 @@ namespace vcsn
         return q0_;
       }
 
+      /// A map from result state to tuple of original states.
+      using origins_t = std::map<state_t, pair_t>;
+
+      /// A map from result state to tuple of original states.
+      origins_t origins() const
+      {
+        origins_t res;
+        for (const auto& p: pair_states_)
+          res.emplace(p.second, p.first);
+        return res;
+      }
+
+      /// Print the origins.
+      static
+      std::ostream&
+      print(std::ostream& o, const origins_t& orig)
+      {
+        o << "/* Origins.\n"
+             "    node [shape = box, style = rounded]\n"
+             "    0 [label = \"q0\"]\n";
+        for (auto p: orig)
+          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+            o << "    " << p.first - 2
+              << " [label = \""
+              << p.second.first - 2 << ", " << p.second.second - 2
+              << "\"]\n";
+        o << "*/\n";
+        return o;
+      }
+
     private:
       /// Input automaton.
       const automaton_t& aut_;
@@ -177,8 +207,11 @@ namespace vcsn
   template <typename Aut>
   Aut pair(const Aut& aut)
   {
-    detail::pairer<Aut> sw(aut);
-    return sw.pair();
+    detail::pairer<Aut> pair(aut);
+    auto res = pair.pair();
+    if (getenv("VCSN_ORIGINS"))
+      pair.print(std::cout, pair.origins());
+    return res;
   }
 
   namespace dyn
