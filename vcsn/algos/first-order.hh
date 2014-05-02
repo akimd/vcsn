@@ -132,6 +132,16 @@ namespace vcsn
         return res;
       }
 
+      value_t conjunction(const value_t& l, const value_t& r) const
+      {
+        value_t res = zero();
+        res.constant = ws_.mul(l.constant, r.constant);
+        for (const auto& p: zip_maps(l.polynomials, r.polynomials))
+          res.polynomials[p.first] = ps_.conjunction(std::get<0>(p.second),
+                                                     std::get<1>(p.second));
+        return res;
+      }
+
     private:
       /// The ratexpset used for the expressions.
       ratexpset_t rs_;
@@ -465,17 +475,7 @@ namespace vcsn
       {
         res_ = first_order(e.head());
         for (const auto& r: e.tail())
-          {
-            // Save current result in lhs, and compute the result in res.
-            value_t lhs = {ws_.zero(), polys_t{}};
-            std::swap(res_, lhs);
-            value_t rhs = first_order(r);
-
-            for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
-              res_.polynomials[p.first]
-                = ps_.conjunction(std::get<0>(p.second), std::get<1>(p.second));
-            res_.constant = ws_.mul(lhs.constant, rhs.constant);
-          }
+          res_ = es_.conjunction(res_, first_order(r));
       }
 
       // FO(E:F) = FO(E):F + E:FO(F)
