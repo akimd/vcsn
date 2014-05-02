@@ -362,47 +362,33 @@ namespace vcsn
                 else
                   add_(res_, ldiv_(lhs.constant, rhs));
               }
-            /// FIXME: We really want some means to iterate on two
-            /// maps simultaneously, which matching keys.  Explore
-            /// this: <http://stackoverflow.com/questions/13840998>.
-            for (const auto& lp: lhs.polynomials)
-              {
-                auto i = rhs.polynomials.find(lp.first);
-                if (i != std::end(rhs.polynomials))
+            for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
+              for (const auto& lm: std::get<0>(p.second))
+                for (const auto& rm: std::get<1>(p.second))
                   {
-                    // rp: (label, right_polynomial).
-                    const auto& rp = *i;
-                    for (const auto& lm: lp.second)
-                      for (const auto& rm: rp.second)
-                        {
-                          // Now, recursively develop the quotient of
-                          // monomials, directly in res_.
-                          auto q = rs_.ldiv(lm.first, rm.first);
-                          if (use_spontaneous_)
-                            {
-                              auto one =
-                                one_(std::integral_constant<bool,
-                                     context_t::has_one()>());
-                              auto w = ws_.ldiv(lm.second, rm.second);
-                              ps_.add_weight(res_.polynomials[one],
-                                             q, w);
-                            }
-                          else
-                            {
+                    // Now, recursively develop the quotient of
+                    // monomials, directly in res_.
+                    auto q = rs_.ldiv(lm.first, rm.first);
+                    if (use_spontaneous_)
+                      {
+                        auto one = one_(std::integral_constant<bool,
+                                        context_t::has_one()>());
+                        auto w = ws_.ldiv(lm.second, rm.second);
+                        ps_.add_weight(res_.polynomials[one], q, w);
+                      }
+                    else
+                      {
 #if DEBUG
-                              std::cerr << "Rec: (";
+                        std::cerr << "Rec: (";
 #endif
-                              auto p = first_order(q);
+                        auto p = first_order(q);
 #if DEBUG
-                              print_(std::cerr, p) << '\n';
+                        print_(std::cerr, p) << '\n';
 #endif
-
-                              // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
-                              add_(res_, ldiv_(lm.second, lmul_(rm.second, p)));
-                            }
-                        }
+                        // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
+                        add_(res_, ldiv_(lm.second, lmul_(rm.second, p)));
+                      }
                   }
-              }
           }
       }
 
