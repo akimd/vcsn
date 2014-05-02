@@ -95,6 +95,7 @@ namespace vcsn
     public:
       pairer(const automaton_t& aut)
         : aut_(aut)
+        , res_(aut.context())
       {}
 
       automaton_t pair()
@@ -102,20 +103,27 @@ namespace vcsn
         auto ctx = aut_.context();
         auto ws = ctx.weightset();
 
-        automaton_t res(ctx);
-        q0_ = res.new_state(); // q0 special state
+        q0_ = res_.new_state(); // q0 special state
 
         for (auto l : aut_.labelset()->genset())
-          res.add_transition(q0_, q0_, l, ws->one());
+          res_.add_transition(q0_, q0_, l, ws->one());
 
-        for (auto s1: aut_.states())
-          for (auto s2: aut_.states())
-            if (s1 != s2)
-              {
-                auto np = make_ordered_pair(s1, s2);
-                if (pair_states_.find(np) == pair_states_.end())
-                  pair_states_[np] = res.new_state();
-              }
+        // States are "ordered": (s1, s2) is defined only for s1 < s2.
+        {
+          auto states = aut_.states();
+          auto end = std::end(states);
+          for (auto i1 = std::begin(states); i1 != end; ++i1)
+            {
+              // FIXME: cannot use i2 = std::next(i1) with clang 3.5
+              // and Boost 1.55.
+              // https://svn.boost.org/trac/boost/ticket/9984
+              auto i2 = i1;
+              for (++i2; i2 != end; ++i2)
+                // s1 < s2, no need for make_ordered_pair.
+                pair_states_.emplace(std::make_pair(*i1, *i2),
+                                     res_.new_state());
+            }
+        }
 
         for (auto ps : pair_states_)
           {
@@ -131,21 +139,15 @@ namespace vcsn
                     auto dst2 = aut_.dst_of(t2);
                     weight_t nw = ws->add(aut_.weight_of(t1),
                                           aut_.weight_of(t2));
-                    if (dst1 != dst2)
-                      {
-                        auto np = make_ordered_pair(dst1, dst2);
-                        res.add_transition(cstate,
-                                           pair_states_.find(np)->second,
-                                           label, nw);
-                      }
-                    else
-                        res.add_transition(cstate, q0_, label, nw);
+                    res_.add_transition(cstate,
+                                        state_(dst1, dst2),
+                                        label, nw);
                   }
               }
           }
 
         called_ = true;
-        return res;
+        return std::move(res_);
       }
 
       const std::unordered_map<pair_t, state_t>& get_map_pair() const
@@ -192,8 +194,24 @@ namespace vcsn
       }
 
     private:
+      /// The state in the result automaton that corresponds to (s1,
+      /// s2).  Allocate it if needed.
+      state_t state_(state_t s1, state_t s2)
+      {
+        // Benches show it is slightly faster to handle this case
+        // especially rather that mapping these "diagonal states" to
+        // q0_ in pair_states_.
+        if (s1 == s2)
+          return q0_;
+        else
+          return pair_states_[make_ordered_pair(s1, s2)];
+      }
+
       /// Input automaton.
       const automaton_t& aut_;
+      /// Result.
+      automaton_t res_;
+      /// Fast maps label -> (weight, label).
       std::unordered_map<pair_t, state_t> pair_states_;
       state_t q0_;
       bool called_ = false;
