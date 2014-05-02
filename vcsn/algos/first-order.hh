@@ -122,6 +122,14 @@ namespace vcsn
         return res;
       }
 
+      /// In place right multiplication by a ratexp.
+      value_t& rmul_here(value_t& res, const ratexp_t& rhs) const
+      {
+        for (auto& p: res.polynomials)
+          p.second = ps_.rmul(p.second, rhs);
+        return res;
+      }
+
       /// Inplace left-division by \a w of \a res.
       value_t& ldiv_here(const weight_t& w, value_t& res) const
       {
@@ -132,6 +140,7 @@ namespace vcsn
         return res;
       }
 
+      /// The conjunction of \a l and \a r.
       value_t conjunction(const value_t& l, const value_t& r) const
       {
         value_t res = zero();
@@ -322,8 +331,7 @@ namespace vcsn
               r = rs_.transposition(r);
 
             // (i): A(fo(lr)) = A(l).r
-            for (auto& p: res_.polynomials)
-              p.second = ps_.rmul(p.second, r);
+            es_.rmul_here(res_, r);
 
             // Don't leave \z polynomials.
             if (ws_.is_zero(res_.constant))
@@ -339,8 +347,7 @@ namespace vcsn
                   ? rs_.transposition(prod_(e.begin(),
                                             std::next(e.begin(), last-i)))
                   : prod_(std::next(e.begin(), i+1), std::end(e));
-                for (auto& p: res_.polynomials)
-                  p.second = ps_.rmul(p.second, rhss);
+                es_.rmul_here(res_, rhss);
                 break;
               }
             else
