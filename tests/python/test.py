@@ -4,6 +4,8 @@ from difflib import unified_diff as diff
 import inspect, os, sys
 
 count = 0
+npass = 0
+nfail = 0
 
 # For build-checks, use our abs_srcdir from tests/bin/vcsn. For
 # install checks, since the latter is not run (it runs
@@ -48,8 +50,9 @@ def here():
     return finfo.filename + ":" + str(finfo.lineno)
 
 def FAIL(*msg):
-    global count
+    global count, nfail
     count += 1
+    nfail += 1
     # Don't display multi-line failure messages, only the first line
     # will be reported anyway by the TAP driver.
     m = ' '.join(msg)
@@ -61,8 +64,9 @@ def FAIL(*msg):
     print()
 
 def PASS(*msg):
-    global count
+    global count, npass
     count += 1
+    npass += 1
     print('ok ', count, *msg)
     print()
 
@@ -113,6 +117,8 @@ def CHECK_ISOMORPHIC(a1, a2):
 def PLAN():
     "TAP requires that we announce the plan: the number of tests."
     print('1..'+str(count))
+    print('PASS:', npass)
+    print('FAIL:', nfail)
 
 import atexit
 atexit.register(PLAN)
