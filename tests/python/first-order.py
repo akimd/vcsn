@@ -5,10 +5,10 @@ from test import *
 
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
-def check(re, exp, breaking = False):
+def check(re, exp, use_spontaneous = False):
     "Check that fo(re) = exp."
     r = c.ratexp(re)
-    eff = r.first_order()
+    eff = r.first_order(use_spontaneous)
     print("first_order({}) = {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
 
@@ -103,6 +103,46 @@ check('a*{/}a*', '<\e*>\e + aa*{T}(a{\}a)*{T}')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
 '<(y{\}x){T}*>\e + a<x>((<x>a){T}*{T}((<y>a){T}{\}(<x>a){T})*{T})')
+
+
+## ------------------------------ ##
+## With spontaneous transitions.  ##
+## ------------------------------ ##
+
+c = vcsn.context("lan_char(abc)_ratexpset<lal_char(xyz)_z>")
+
+# Lquotient with spontaneous transitions.
+check('\e{\}\z', '\z', True)
+check('\e{\}\e', '\e', True)
+check('\e{\}abc', 'abc', True)
+check('a{\}a', '\e', True)
+check('a{\}b', '\z', True)
+
+check('a{\}<x>a', '<x>\e', True)
+check('<x>a{\}<y>a', '<x{\}y>\e', True)
+check('a{\}(<x>a)*', '<x>(<x>a)*', True)
+check('a*{\}a', 'a + a*{\}\e', True)
+check('a*{\}a*', '\e + aa* + a*{\}a*', True)
+check('(<x>a)*{\}(<y>a)*', '\e + a<y>(<y>a)* + <x{\}y>((<x>a)*{\}(<y>a)*)', True)
+
+# Right quotient with spontaneous transitions.
+check('\z{/}\e', '\z', True)
+check('\e{/}\e', '\e', True)
+check('abc{/}\e', 'abc', True)
+check('a{/}a', '\e', True)
+check('a{/}b', '\z', True)
+
+check('(<x>a){/}a', '<x>\e', True)
+check('<x>a{/}<y>a', '<y>\e{\}<x>\e', True)
+check('a{/}(<x>a)*', 'a + <x>(<x>a)*{T}{\}\e', True)
+# I don't know for sure this is right :(
+check('(<x>a)*{/}(a)*',
+'\e + a<x>(<x>a)* + a*{T}{\}<x>(<x>a)*{T}', True)
+check('a*{/}a', 'a*{T}', True)
+check('a*{/}a*', '\e + aa* + a*{T}{\}a*{T}', True)
+# I don't know for sure this is right :(
+check('(<x>a)*{/}(<y>a)*',
+'\e + a<x>(<x>a)* + <y>(<y>a)*{T}{\}<x>(<x>a)*{T}', True)
 
 
 ## -------------------- ##
