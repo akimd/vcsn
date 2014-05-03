@@ -19,6 +19,14 @@
 
 //# define DEBUG 1
 
+#if DEBUG
+# define DEBUG_IFELSE(Then, Else) Then
+#else
+# define DEBUG_IFELSE(Then, Else) Else
+#endif
+
+# define DEBUG_IF(Then) DEBUG_IFELSE(Then,)
+
 namespace vcsn
 {
 
@@ -217,22 +225,20 @@ namespace vcsn
         if (insert.second)
           {
             std::swap(res, res_);
-#if DEBUG
-            rs_.print(std::cerr, e) << "..." << incendl;
-#endif
+            DEBUG_IF(rs_.print(std::cerr, e) << "..." << incendl);
             e->accept(*this);
             std::swap(res, res_);
-#if DEBUG
-            rs_.print(std::cerr, e) << " => ";
-            print_(std::cerr, res) << decendl;
-#endif
+            DEBUG_IF(
+                     rs_.print(std::cerr, e) << " => ";
+                     print_(std::cerr, res) << decendl;
+                     );
           }
         else
           {
-#if DEBUG
-            rs_.print(std::cerr, e) << " -> ";
-            print_(std::cerr, res) << iendl;
-#endif
+            DEBUG_IF(
+                     rs_.print(std::cerr, e) << " -> ";
+                     print_(std::cerr, res) << iendl;
+                     );
           }
         return res;
 #else
@@ -240,10 +246,10 @@ namespace vcsn
         std::swap(res, res_);
         e->accept(*this);
         std::swap(res, res_);
-#if DEBUG
-        rs_.print(std::cerr, e) << " -> ";
-        print_(std::cerr, res) << iendl;
-#endif
+        DEBUG_IF(
+                 rs_.print(std::cerr, e) << " -> ";
+                 print_(std::cerr, res) << iendl;
+                 );
         return res;
 #endif
       }
@@ -408,10 +414,10 @@ namespace vcsn
       VCSN_RAT_VISIT(ldiv, e)
       {
         assert(e.size() == 2);
-#if DEBUG
-        std::cerr << "Start: ";
-        rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
-#endif
+        DEBUG_IF(
+                 std::cerr << "Start: ";
+                 rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
+                 );
         if (use_spontaneous_)
           visit_ldiv_with_one(e);
         else
@@ -425,10 +431,10 @@ namespace vcsn
         value_t lhs = first_order(e[0]);
         value_t rhs = first_order(e[1]);
         transposed_ = transposed;
-#if DEBUG
-        std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
-        std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
-#endif
+        DEBUG_IF(
+                 std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
+                 std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+                 );
         res_ = es_.zero();
         // lp: (label, left_polynomial)
         if (!ws_.is_zero(lhs.constant))
@@ -472,10 +478,10 @@ namespace vcsn
             value_t lhs = first_order(e[0]);
             value_t rhs = first_order(e[1]);
             transposed_ = transposed;
-#if DEBUG
-            std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
-            std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
-#endif
+            DEBUG_IF(
+                     std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
+                     std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+                     );
             res_ = es_.zero();
             // lp: (label, left_polynomial)
             if (!ws_.is_zero(lhs.constant))
@@ -496,13 +502,9 @@ namespace vcsn
                     // Now, recursively develop the quotient of
                     // monomials, directly in res_.
                     auto q = rs_.ldiv(lm.first, rm.first);
-#if DEBUG
-                    std::cerr << "Rec: (";
-#endif
+                    DEBUG_IF(std::cerr << "Rec: (");
                     auto p = first_order(q);
-#if DEBUG
-                    print_(std::cerr, p) << '\n';
-#endif
+                    DEBUG_IF(print_(std::cerr, p) << '\n');
                     // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
                     es_.add_here(res_,
                                  es_.ldiv_here(lm.second,
@@ -720,10 +722,10 @@ namespace vcsn
         auto i = map_.find(r);
         if (i == end(map_))
           {
-#if DEBUG
-            std::cerr << "New state: ";
-            rs_.print(std::cerr, r) << '\n';
-#endif
+            DEBUG_IF(
+                     std::cerr << "New state: ";
+                     rs_.print(std::cerr, r) << '\n';
+                     );
             dst = res_.new_state();
             map_[r] = dst;
             todo_.push(r);
