@@ -44,11 +44,11 @@ nobase_include_HEADERS =                        \
   %D%/algos/left-mult.hh                        \
   %D%/algos/lift.hh                             \
   %D%/algos/make-context.hh                     \
-  %D%/algos/minimize.hh                         \
   %D%/algos/minimize-brzozowski.hh              \
   %D%/algos/minimize-moore.hh                   \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \
+  %D%/algos/minimize.hh                         \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \
@@ -57,11 +57,11 @@ nobase_include_HEADERS =                        \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \
-  %D%/algos/star.hh                             \
   %D%/algos/star-height.hh                      \
   %D%/algos/star-normal-form.hh                 \
-  %D%/algos/synchronizing-word.hh               \
+  %D%/algos/star.hh                             \
   %D%/algos/sum.hh                              \
+  %D%/algos/synchronizing-word.hh               \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
   %D%/algos/transpose.hh                        \
@@ -120,13 +120,13 @@ nobase_include_HEADERS =                        \
   %D%/ctx/law_char_zrr.hh                       \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
-  %D%/dyn/context.hh                            \
   %D%/dyn/context-parser.hh                     \
   %D%/dyn/context-printer.hh                    \
   %D%/dyn/context-visitor.hh                    \
+  %D%/dyn/context.hh                            \
   %D%/dyn/fwd.hh                                \
-  %D%/dyn/polynomial.hh                         \
   %D%/dyn/label.hh                              \
+  %D%/dyn/polynomial.hh                         \
   %D%/dyn/ratexp.hh                             \
   %D%/dyn/ratexpset.hh                          \
   %D%/dyn/ratexpset.hxx                         \
@@ -136,8 +136,8 @@ nobase_include_HEADERS =                        \
   %D%/dyn/weight.hh                             \
   %D%/empty.hh                                  \
   %D%/factory/de-bruijn.hh                      \
-  %D%/factory/double-ring.hh                    \
   %D%/factory/divkbaseb.hh                      \
+  %D%/factory/double-ring.hh                    \
   %D%/factory/ladybird.hh                       \
   %D%/factory/random.hh                         \
   %D%/factory/u.hh                              \
@@ -168,14 +168,14 @@ nobase_include_HEADERS =                        \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
   %D%/misc/pair.hh                              \
-  %D%/misc/random.hh                            \
   %D%/misc/path.hh                              \
   %D%/misc/path.hxx                             \
   %D%/misc/raise.hh                             \
+  %D%/misc/random.hh                            \
   %D%/misc/regex.hh                             \
   %D%/misc/set.hh                               \
-  %D%/misc/signature.hh                         \
   %D%/misc/set.hxx                              \
+  %D%/misc/signature.hh                         \
   %D%/misc/star_status.hh                       \
   %D%/misc/stream.hh                            \
   %D%/misc/tuple.hh                             \
@@ -184,8 +184,8 @@ nobase_include_HEADERS =                        \
   %D%/misc/vector.hh                            \
   %D%/misc/xalloc.hh                            \
   %D%/misc/xalloc.hxx                           \
-  %D%/misc/zip.hh                               \
   %D%/misc/zip-maps.hh                          \
+  %D%/misc/zip.hh                               \
   %D%/weightset/b.hh                            \
   %D%/weightset/f2.hh                           \
   %D%/weightset/fwd.hh                          \
