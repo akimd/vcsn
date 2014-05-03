@@ -159,6 +159,36 @@ namespace vcsn
         return res;
       }
 
+      /// Convert an expansion to a polynomial.
+      polynomial_t as_polynomial(const value_t& v) const
+      {
+        // FIXME: polynomial_t{{rs_.one(), constant}} is wrong,
+        // because the (default) ctor will not eliminate the monomial
+        // when constant is zero.
+        polynomial_t res;
+        ps_.add_weight(res, rs_.one(), v.constant);
+        for (const auto& p: v.polynomials)
+          // We may add a label on our maps, and later map it to 0.
+          // In this case polynomialset builds '\z -> 1', i.e., it
+          // does insert \z as a label in the polynomial.  Avoid this.
+          //
+          // FIXME: shouldn't polynomialset do that itself?
+          if (!ps_.is_zero(p.second))
+            ps_.add_weight(res,
+                           rs_.mul(rs_.atom(p.first), as_ratexp(p.second)),
+                           ws_.one());
+        return res;
+      }
+
+      // FIXME: duplicate with expand.
+      ratexp_t as_ratexp(const polynomial_t& p) const
+      {
+        ratexp_t res = rs_.zero();
+        for (const auto& m: p)
+          res = rs_.add(res, rs_.lmul(m.second, m.first));
+         return res;
+      }
+
     private:
       /// The ratexpset used for the expressions.
       ratexpset_t rs_;
@@ -255,36 +285,7 @@ namespace vcsn
       polynomial_t first_order_as_polynomial(const ratexp_t& e)
       {
         operator()(e);
-        return as_polynomial(res_);
-      }
-
-      polynomial_t as_polynomial(const value_t& v)
-      {
-        // FIXME: polynomial_t{{rs_.one(), constant}} is wrong,
-        // because the (default) ctor will not eliminate the monomial
-        // when constant is zero.
-        polynomial_t res;
-        ps_.add_weight(res, rs_.one(), v.constant);
-        for (const auto& p: v.polynomials)
-          // We may add a label on our maps, and later map it to 0.
-          // In this case polynomialset builds '\z -> 1', i.e., it
-          // does insert \z as a label in the polynomial.  Avoid this.
-          //
-          // FIXME: shouldn't polynomialset do that itself?
-          if (!ps_.is_zero(p.second))
-            ps_.add_weight(res,
-                           rs_.mul(rs_.atom(p.first), ratexp_(p.second)),
-                           ws_.one());
-        return res;
-      }
-
-      // FIXME: duplicate with expand.
-      ratexp_t ratexp_(const polynomial_t p)
-      {
-        ratexp_t res = rs_.zero();
-        for (const auto& m: p)
-          res = rs_.add(res, rs_.lmul(m.second, m.first));
-         return res;
+        return es_.as_polynomial(res_);
       }
 
       /// Print an expansion.
@@ -577,7 +578,7 @@ namespace vcsn
         for (auto l: rs_.labelset()->genset())
           ps_.add_weight
             (res_.polynomials[l],
-             polynomial_t{{rs_.complement(ratexp_(res.polynomials[l])),
+             polynomial_t{{rs_.complement(es_.as_ratexp(res.polynomials[l])),
                            ws_.one()}});
       }
 
