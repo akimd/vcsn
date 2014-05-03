@@ -207,9 +207,7 @@ namespace vcsn
 
       void operator()(const ratexp_t& v)
       {
-        // FIXME: make a libc++ bug report: "{ws_.zero(), {}}" should
-        // suffice.
-        res_ = {ws_.zero(), polys_t{}};
+        res_ = es_.zero();
         v->accept(*this);
       }
 
@@ -220,7 +218,7 @@ namespace vcsn
       value_t first_order(const ratexp_t& e)
       {
 #if CACHE
-        auto insert = cache_.emplace(e, value_t{ws_.zero(), polys_t{}});
+        auto insert = cache_.emplace(e, es_.zero());
         auto& res = insert.first->second;
         if (insert.second)
           {
@@ -242,7 +240,7 @@ namespace vcsn
           }
         return res;
 #else
-        auto res = value_t{ws_.zero(), polys_t{}};
+        auto res = es_.zero();
         std::swap(res, res_);
         e->accept(*this);
         std::swap(res, res_);
