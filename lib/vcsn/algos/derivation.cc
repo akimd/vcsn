@@ -28,7 +28,7 @@ namespace vcsn
     derived_term(const ratexp& e, bool breaking)
     {
       return getenv("VCSN_LINEAR")
-        ? linear(e, breaking)
+        ? linear(e)
         : detail::derived_term_registry().call(e, breaking);
     }
 
@@ -38,9 +38,9 @@ namespace vcsn
 
     REGISTER_DEFINE(linear);
     automaton
-    linear(const ratexp& e, bool breaking)
+    linear(const ratexp& e, bool use_spontaneous)
     {
-      return detail::linear_registry().call(e, breaking);
+      return detail::linear_registry().call(e, use_spontaneous);
     }
 
     /*---------------------------.

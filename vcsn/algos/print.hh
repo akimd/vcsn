@@ -15,9 +15,9 @@
 namespace vcsn
 {
 
-  /*-----------------.
-  | print(context).  |
-  `-----------------*/
+  /*-------------------------.
+  | print(context, stream).  |
+  `-------------------------*/
 
   namespace dyn
   {
@@ -71,9 +71,9 @@ namespace vcsn
     }
   }
 
-  /*---------------------------------.
-  | list/print(polynomial, stream).  |
-  `---------------------------------*/
+  /*---------------------------.
+  | list(polynomial, stream).  |
+  `---------------------------*/
 
   template <typename PolynomialSet>
   inline
@@ -92,17 +92,6 @@ namespace vcsn
     return o;
   }
 
-  /// Actually applies to (ValueSet, Value, ostream, string): for
-  /// polynomialset, ratexpset, and weightset.
-  template <typename PolynomialSet>
-  inline
-  std::ostream&
-  print(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
-        std::ostream& o, const std::string& format)
-  {
-    return ps.print(o, p, format);
-  }
-
   namespace dyn
   {
     namespace detail
@@ -119,7 +108,28 @@ namespace vcsn
 
       REGISTER_DECLARE(list_polynomial,
                        (const polynomial& p, std::ostream& o) -> std::ostream&);
+    }
+  }
 
+  /*----------------------------.
+  | print(polynomial, stream).  |
+  `----------------------------*/
+
+  /// Actually applies to (ValueSet, Value, ostream, string): for
+  /// polynomialset, ratexpset, and weightset.
+  template <typename PolynomialSet>
+  inline
+  std::ostream&
+  print(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
+        std::ostream& o, const std::string& format)
+  {
+    return ps.print(o, p, format);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
       /// Bridge.
       template <typename PolynomialSet, typename Ostream, typename String>
       std::ostream& print_polynomial(const polynomial& polynomial,

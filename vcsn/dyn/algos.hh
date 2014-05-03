@@ -244,8 +244,10 @@ namespace vcsn
 
     /// FIXME: The derived-term automaton of \a e.
     /// \param e         the input ratexp
-    /// \param breaking  whether to split the result
-    automaton linear(const ratexp& e, bool breaking = false);
+    /// \param use_spontaenous
+    ///     whether to generate "spontaneous" terms
+    ///     instead of recursive development
+    automaton linear(const ratexp& e, bool use_spontaenous = false);
 
     /// Build a context from its name.
     context make_context(const std::string& name);
