@@ -442,18 +442,15 @@ namespace vcsn
             else
               es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
           }
+        auto one = one_(std::integral_constant<bool, context_t::has_one()>());
         for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
           for (const auto& lm: std::get<0>(p.second))
             for (const auto& rm: std::get<1>(p.second))
-              {
-                // Now, recursively develop the quotient of
-                // monomials, directly in res_.
-                auto q = rs_.ldiv(lm.first, rm.first);
-                auto one = one_(std::integral_constant<bool,
-                                context_t::has_one()>());
-                auto w = ws_.ldiv(lm.second, rm.second);
-                ps_.add_weight(res_.polynomials[one], q, w);
-              }
+              // Now, recursively develop the quotient of monomials,
+              // directly in res_.
+              ps_.add_weight(res_.polynomials[one],
+                             rs_.ldiv(lm.first, rm.first),
+                             ws_.ldiv(lm.second, rm.second));
       }
 
       void visit_ldiv_without_one(const ldiv_t& e)
