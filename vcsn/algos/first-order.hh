@@ -412,10 +412,56 @@ namespace vcsn
         std::cerr << "Start: ";
         rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
 #endif
+        if (use_spontaneous_)
+          visit_ldiv_with_one(e);
+        else
+          visit_ldiv_without_one(e);
+      }
+
+      void visit_ldiv_with_one(const ldiv_t& e)
+      {
+        bool transposed = transposed_;
+        transposed_ = false;
+        value_t lhs = first_order(e[0]);
+        value_t rhs = first_order(e[1]);
+        transposed_ = transposed;
+#if DEBUG
+        std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
+        std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+#endif
+        res_ = es_.zero();
+        // lp: (label, left_polynomial)
+        if (!ws_.is_zero(lhs.constant))
+          {
+            if (transposed_)
+              {
+                auto rhs_transposed = first_order(e[1]);
+                es_.add_here(res_,
+                             es_.ldiv_here(lhs.constant, rhs_transposed));
+              }
+            else
+              es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
+          }
+        for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
+          for (const auto& lm: std::get<0>(p.second))
+            for (const auto& rm: std::get<1>(p.second))
+              {
+                // Now, recursively develop the quotient of
+                // monomials, directly in res_.
+                auto q = rs_.ldiv(lm.first, rm.first);
+                auto one = one_(std::integral_constant<bool,
+                                context_t::has_one()>());
+                auto w = ws_.ldiv(lm.second, rm.second);
+                ps_.add_weight(res_.polynomials[one], q, w);
+              }
+      }
+
+      void visit_ldiv_without_one(const ldiv_t& e)
+      {
         // Special case the quotient of stars.
         ratexp_t lchild = star_child(e[0]);
         ratexp_t rchild = star_child(e[1]);
-        if (!use_spontaneous_ && lchild && rchild)
+        if (lchild && rchild)
           {
             // (e*) \ (f*) = (e\f)* . f*
             auto q = rs_.mul(rs_.star(rs_.ldiv(lchild, rchild)),
@@ -433,7 +479,7 @@ namespace vcsn
             std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
             std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
 #endif
-            res_ = {ws_.zero(), polys_t{}};
+            res_ = es_.zero();
             // lp: (label, left_polynomial)
             if (!ws_.is_zero(lhs.constant))
               {
@@ -453,27 +499,17 @@ namespace vcsn
                     // Now, recursively develop the quotient of
                     // monomials, directly in res_.
                     auto q = rs_.ldiv(lm.first, rm.first);
-                    if (use_spontaneous_)
-                      {
-                        auto one = one_(std::integral_constant<bool,
-                                        context_t::has_one()>());
-                        auto w = ws_.ldiv(lm.second, rm.second);
-                        ps_.add_weight(res_.polynomials[one], q, w);
-                      }
-                    else
-                      {
 #if DEBUG
-                        std::cerr << "Rec: (";
+                    std::cerr << "Rec: (";
 #endif
-                        auto p = first_order(q);
+                    auto p = first_order(q);
 #if DEBUG
-                        print_(std::cerr, p) << '\n';
+                    print_(std::cerr, p) << '\n';
 #endif
-                        // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
-                        es_.add_here(res_,
-                                     es_.ldiv_here(lm.second,
-                                                   es_.lmul_here(rm.second, p)));
-                      }
+                    // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
+                    es_.add_here(res_,
+                                 es_.ldiv_here(lm.second,
+                                               es_.lmul_here(rm.second, p)));
                   }
           }
       }
