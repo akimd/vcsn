@@ -126,6 +126,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/context-printer.hh                    \
   %D%/dyn/context-visitor.hh                    \
   %D%/dyn/context.hh                            \
+  %D%/dyn/expansion.hh                          \
   %D%/dyn/fwd.hh                                \
   %D%/dyn/label.hh                              \
   %D%/dyn/polynomial.hh                         \

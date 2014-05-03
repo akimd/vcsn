@@ -12,10 +12,12 @@
 #include <boost/python.hpp>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh> // vname
+#include <vcsn/misc/raise.hh>
 #include <vcsn/misc/stream.hh>
 
 struct automaton;
 struct context;
+struct expansion;
 struct label;
 struct polynomial;
 struct ratexp;
@@ -324,6 +326,31 @@ struct automaton
   }
 
   vcsn::dyn::automaton aut_;
+};
+
+/*------------.
+| expansion.  |
+`------------*/
+
+struct expansion
+{
+  expansion(const vcsn::dyn::expansion& val)
+    : val_(val)
+  {}
+
+  expansion(const std::string&)
+  {
+    vcsn::raise("not implemented");
+  }
+
+  std::string format(const std::string& format = "text") const
+  {
+    std::ostringstream os;
+    vcsn::dyn::print(val_, os, format);
+    return os.str();
+  }
+
+  vcsn::dyn::expansion val_;
 };
 
 /*--------.
@@ -760,6 +787,12 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("random_uniform", &context::random_uniform)
     .def("u", &context::u)
     .def("word", &context::word)
+   ;
+
+  bp::class_<expansion>
+    ("expansion",
+     bp::init<const std::string&>())
+    .def("format", &expansion::format)
    ;
 
   bp::class_<label>

@@ -303,7 +303,10 @@ namespace vcsn
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;
         // ratexp polynomialset.
-        using rps_t = typename rat::ratexp_polynomialset_t<rs_t>;
+        using rps_t = rat::ratexp_polynomialset_t<rs_t>;
+        // expansionset.
+        using es_t = rat::expansionset<rs_t>;
+
 
         using namespace dyn::detail;
 
@@ -346,6 +349,7 @@ namespace vcsn
         REGISTER(make_ratexpset, ctx_t);
         REGISTER(make_word_context, ctx_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
+        REGISTER(print_expansion, es_t, std::ostream, const std::string);
         REGISTER(print_label, std::ostream, ls_t, const std::string);
         REGISTER(print_polynomial, lps_t, std::ostream, const std::string);
         REGISTER(print_polynomial, rps_t, std::ostream, const std::string);

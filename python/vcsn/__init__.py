@@ -66,6 +66,7 @@ def right_mult(self, rhs):
 
 from vcsn.automaton  import *
 from vcsn.context    import *
+from vcsn.expansion  import *
 from vcsn.label      import *
 from vcsn.polynomial import *
 from vcsn.ratexp     import *

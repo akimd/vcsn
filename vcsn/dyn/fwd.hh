@@ -28,6 +28,15 @@ namespace vcsn
     }
     using context = std::shared_ptr<const detail::context_base>;
 
+    // vcsn/dyn/expansion.hh.
+    namespace detail
+    {
+      class expansion_base;
+      template <typename Aut>
+      class expansion_wrapper;
+    }
+    using expansion = std::shared_ptr<const detail::expansion_base>;
+
     // vcsn/dyn/label.hh.
     namespace detail
     {

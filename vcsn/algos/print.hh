@@ -5,6 +5,7 @@
 
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/context.hh>
+# include <vcsn/dyn/expansion.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/dyn/polynomial.hh>
@@ -38,9 +39,9 @@ namespace vcsn
     }
   }
 
-  /*-----------------------.
-  | print(stream, label).  |
-  `-----------------------*/
+  /*---------------------------.
+  | print(expansion, stream).  |
+  `---------------------------*/
 
   template <typename ValueSet>
   inline
@@ -51,6 +52,29 @@ namespace vcsn
   {
     return vs.print(o, v, format);
   }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename ExpansionSet, typename Ostream, typename String>
+      std::ostream& print_expansion(const expansion& expansion, std::ostream& o,
+                                    const std::string& format)
+      {
+        const auto& e = expansion->as<ExpansionSet>();
+        return vcsn::print<ExpansionSet>(o, e.expansionset(), e.expansion(), format);
+      }
+
+      REGISTER_DECLARE(print_expansion,
+                       (const expansion& l, std::ostream& o,
+                        const std::string& format) -> std::ostream&);
+    }
+  }
+
+  /*-----------------------.
+  | print(stream, label).  |
+  `-----------------------*/
 
   namespace dyn
   {

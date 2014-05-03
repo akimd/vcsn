@@ -281,6 +281,10 @@ namespace vcsn
     std::ostream& print(const context& c, std::ostream& o,
                         const std::string& format = "default");
 
+    /// Print expansion \a e on \a o using format \a format.
+    std::ostream& print(const expansion& e, std::ostream& o,
+                        const std::string& format = "default");
+
     /// Print label \a l on \a o using format \a format.
     std::ostream& print(std::ostream& o, const label& l,
                         const std::string& format = "default");
@@ -450,6 +454,9 @@ namespace std LIBVCSN_API
 
   /// Output context \a c on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::context& c);
+
+  /// Output expansion \a e on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::expansion& e);
 
   /// Output label \a l on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);

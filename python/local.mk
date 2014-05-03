@@ -5,6 +5,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/__init__.py                          \
   %D%/vcsn/automaton.py                         \
   %D%/vcsn/context.py                           \
+  %D%/vcsn/expansion.py                         \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
   %D%/vcsn/ratexp.py                            \

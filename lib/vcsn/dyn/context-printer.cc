@@ -17,7 +17,7 @@ namespace vcsn
       // We use '-' instead of '_' in file names.
       boost::replace_all(n, "_", "-");
       // We don't use any suffix in the file names.
-      for (auto s: {"-label", "-polynomial", "-ratexp", "-weight"})
+      for (auto s: {"-expansion", "-label", "-polynomial", "-ratexp", "-weight"})
         if (boost::ends_with(n, s))
           boost::erase_tail(n, strlen(s));
       // Open code some mismatches between algo name, and header name.

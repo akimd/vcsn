@@ -51,6 +51,32 @@ namespace vcsn
       return detail::print_ctx_registry().call(ctx, out, format);
     }
 
+    /*---------------------------.
+    | print(expansion, stream).  |
+    `---------------------------*/
+
+    REGISTER_DEFINE(print_expansion);
+
+    std::ostream&
+    print(const dyn::expansion& w, std::ostream& out, const std::string& format)
+    {
+      if (format == "null")
+        {}
+      else if (format == "latex")
+        detail::print_expansion_registry().call(w, out, format);
+      else if (format == "text" || format == "default" || format == "")
+        {
+          // FIXME: problem with rvalue if we pass
+          // 'std::string("text")'.
+          // FIXME: We _need_ the const, see name.hh.
+          const std::string format = "text";
+          detail::print_expansion_registry().call(w, out, format);
+        }
+      else
+        raise("invalid output format for expansion: ", str_escape(format));
+      return out;
+    }
+
     /*-----------------------.
     | print(stream, label).  |
     `-----------------------*/
@@ -200,6 +226,12 @@ namespace std
   operator<<(std::ostream& o, const vcsn::dyn::context& c)
   {
     return vcsn::dyn::print(c, o, vcsn::dyn::get_format(o));
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const vcsn::dyn::expansion& e)
+  {
+    return vcsn::dyn::print(e, o, vcsn::dyn::get_format(o));
   }
 
   std::ostream&
