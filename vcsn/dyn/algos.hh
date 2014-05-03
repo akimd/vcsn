@@ -442,6 +442,12 @@ namespace std LIBVCSN_API
   /// Output automaton \a a on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::automaton& a);
 
+  /// Output context \a c on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::context& c);
+
+  /// Output label \a l on \a o.
+  std::ostream& operator<<(std::ostream& o, const vcsn::dyn::label& l);
+
   /// Output polynomial \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const vcsn::dyn::polynomial& p);
 
