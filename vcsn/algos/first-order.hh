@@ -8,6 +8,7 @@
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/core/rat/expansionset.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/expansion.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/misc/indent.hh>
@@ -480,12 +481,12 @@ namespace vcsn
   /// First order expansion.
   template <typename RatExpSet>
   inline
-  rat::ratexp_polynomial_t<RatExpSet>
+  typename rat::expansionset<RatExpSet>::value_t
   first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
               bool use_spontaneous = false)
   {
     rat::first_order_visitor<RatExpSet> first_order{rs, use_spontaneous};
-    return first_order.first_order_as_polynomial(e);
+    return first_order.first_order(e);
   }
 
   namespace dyn
@@ -494,19 +495,19 @@ namespace vcsn
     {
       /// Bridge.
       template <typename RatExpSet, typename Bool>
-      polynomial
+      expansion
       first_order(const ratexp& exp, bool use_spontaneous = false)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.ratexpset();
-        auto ps = vcsn::rat::make_ratexp_polynomialset(rs);
-        return make_polynomial(ps,
-                               first_order<RatExpSet>(rs, e.ratexp(),
-                                                      use_spontaneous));
+        auto es = vcsn::rat::expansionset<RatExpSet>(rs);
+        return make_expansion(es,
+                              first_order<RatExpSet>(rs, e.ratexp(),
+                                                     use_spontaneous));
       }
 
       REGISTER_DECLARE(first_order,
-                       (const ratexp& e, bool use_spontaneous) -> polynomial);
+                       (const ratexp& e, bool use_spontaneous) -> expansion);
     }
   }
 

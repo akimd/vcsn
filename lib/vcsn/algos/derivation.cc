@@ -48,7 +48,7 @@ namespace vcsn
     `---------------------------*/
     REGISTER_DEFINE(first_order);
 
-    polynomial
+    expansion
     first_order(const ratexp& e, bool use_spontaneous)
     {
       return detail::first_order_registry().call(e, use_spontaneous);

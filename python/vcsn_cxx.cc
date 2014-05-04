@@ -482,7 +482,7 @@ struct ratexp
     return vcsn::dyn::expand(r_);
   }
 
-  polynomial first_order(bool use_spontaneous = false) const
+  expansion first_order(bool use_spontaneous = false) const
   {
     return vcsn::dyn::first_order(r_, use_spontaneous);
   }
