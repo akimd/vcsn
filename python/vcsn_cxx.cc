@@ -450,9 +450,9 @@ struct ratexp
     return vcsn::dyn::expand(r_);
   }
 
-  polynomial first_order(bool breaking = false) const
+  polynomial first_order(bool use_spontaneous = false) const
   {
-    return vcsn::dyn::first_order(r_, breaking);
+    return vcsn::dyn::first_order(r_, use_spontaneous);
   }
 
   std::string format(const std::string& format = "text") const
@@ -474,9 +474,9 @@ struct ratexp
 
   ratexp left_mult(const weight& w) const;
 
-  automaton linear(bool breaking = false) const
+  automaton linear(bool use_spontaneous = false) const
   {
-    return vcsn::dyn::linear(r_, breaking);
+    return vcsn::dyn::linear(r_, use_spontaneous);
   }
 
   ratexp right_mult(const weight& w) const;
