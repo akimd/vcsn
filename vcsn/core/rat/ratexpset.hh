@@ -180,8 +180,6 @@ namespace vcsn
     static size_t hash(const value_t& l);
 
     // Concrete type implementation.
-    // FIXME: why aren't these all static?  I think they should be.
-    //        The only state in ratexpset is ctx_.
     value_t zero() const;
     static value_t one();
     value_t add(value_t l, value_t r) const;
@@ -192,10 +190,15 @@ namespace vcsn
     value_t ldiv(value_t l, value_t r) const;
     value_t rdiv(value_t l, value_t r) const;
     value_t star(value_t e) const;
+    /// Add a complement operator.
     value_t complement(value_t e) const;
+    /// Add a transposition operator.
     value_t transposition(value_t e) const;
+    /// Right-multiplication by a weight.
     value_t rmul(value_t e, const weight_t& w) const;
+    /// Left-multiplication by a weight.
     value_t lmul(const weight_t& w, value_t e) const;
+    /// The transposed of this rational expression.
     value_t transpose(value_t e) const;
 
   private:

@@ -1,8 +1,8 @@
 #ifndef VCSN_DYN_RATEXPSET_HH
 # define VCSN_DYN_RATEXPSET_HH
 
-# include <string>
 # include <memory>  // shared_ptr
+# include <string>
 
 # include <vcsn/dyn/fwd.hh> // dyn::ratexp.
 # include <vcsn/core/rat/fwd.hh> // rat::exp_t.
@@ -19,7 +19,7 @@ namespace detail
   /// Use it when you want to avoid depending on the ratexpset
   /// parameters (e.g., from a parser).  To use it, actually create a
   /// derived class (ratexpset_wrapper) with the given
-  /// parameters, but handle as a reference to an ratexpset_base.
+  /// parameters, but handle as a reference to a ratexpset_base.
   class ratexpset_base
   {
   public:
@@ -59,9 +59,13 @@ namespace detail
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
     virtual value_t star(value_t e) const = 0;
+    /// Add a complement operator.
     virtual value_t complement(value_t e) const = 0;
+    /// Add a transposition operator.
     virtual value_t transposition(value_t e) const = 0;
+    /// Left-multiplication by a weight.
     virtual value_t lmul(const std::string& w, value_t e) const = 0;
+    /// Right-multiplication by a weight.
     virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
