@@ -78,6 +78,12 @@ namespace vcsn
       return value_t{std::forward<Args>(args)...};
     }
 
+    /// Convert to a word.
+    word_t word(const value_t& v) const
+    {
+      return v;
+    }
+
     /// Prepare to iterate over the letters of v.
     static word_t
     letters_of(word_t v)

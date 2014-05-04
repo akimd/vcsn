@@ -162,6 +162,7 @@ namespace vcsn
     using kind_t = typename helper_t::kind_t;
 
     using value_t = typename helper_t::value_t;
+    using word_t = typename labelset_t::word_t;
 
     nullableset(const labelset_t& ls)
       : labelset_t{ls}, ls_{std::make_shared<const labelset_t>(ls)}
@@ -233,6 +234,12 @@ namespace vcsn
     value(const typename labelset_t::value_t& v)
     {
       return helper_t::value(v);
+    }
+
+    word_t
+    word(const value_t& l) const
+    {
+      return labelset()->word(get_value(l));
     }
 
     /// Whether l == r.

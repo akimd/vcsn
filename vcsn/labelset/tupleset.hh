@@ -166,6 +166,15 @@ namespace vcsn
       return letters_of_(v, indices);
     }
 
+    /// Convert to a word.
+    template <typename... Args>
+    auto
+    word(const std::tuple<Args...>& v) const
+      -> word_t
+    {
+      return word_(v, indices);
+    }
+
     static bool
     equals(const value_t& l, const value_t& r)
     {
@@ -409,6 +418,13 @@ namespace vcsn
     is_free_(seq<I...>)
     {
       return all_<valueset_t<I>::is_free()...>();
+    }
+
+    template <typename... Args, std::size_t... I>
+    word_t
+    word_(const std::tuple<Args...>& l, seq<I...>) const
+    {
+      return word_t{set<I>().word(std::get<I>(l))...};
     }
 
     template <std::size_t... I>
