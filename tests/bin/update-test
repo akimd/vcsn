@@ -1,0 +1,54 @@
+#! /usr/bin/perl -w
+
+# A very rough utility to update a test file from its log file.  This
+# is very handy when there is a change of syntax: changing every
+# single expected output is tedious and error-prone.
+#
+# usage:
+#   update-test tests/python/first-order.py _build/tests/testsuite.log >s
+#   colordiff  tests/python/first-order.py s
+#   mv s tests/python/first-order.py
+#   chmod +x tests/python/first-order.py
+
+use strict;
+
+=item C<file_contents ($file)>
+
+The contents of C<$file> as a single string.
+
+=cut
+
+sub file_contents($)
+{
+  my ($file) = @_;
+  local $/;                     # Turn on slurp-mode.
+  use IO::File;
+  my $f = new IO::File "$file"
+      or die;
+  my $res = $f->getline;
+  $f->close;
+  $res;
+}
+
+
+my $test = file_contents($ARGV[0]);
+my $log = file_contents($ARGV[1]);
+my %subst;
+$log =~ s{((?:^\t-.*\n)+)((?:^\t\+.*\n)*)}
+  {
+    my $from = $1;
+    my $to = $2;
+    $from =~ s/^\t-//gm;
+    $to =~ s/^\t\+//gm;
+    chomp($from);
+    chomp($to);
+    $subst{$from} = $to;
+  }gem;
+
+my $from = join('|', map { "\Q$_\E" } keys %subst);
+$test =~ s{(?<=['"\n])($from)(?=['"\n])}
+{
+  $subst{$1}
+}gem;
+
+print $test;
