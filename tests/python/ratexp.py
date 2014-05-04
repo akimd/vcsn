@@ -9,6 +9,8 @@ ctx = vcsn.context("lal_char(abcd)_b")
 ## Concat.  ##
 ## -------- ##
 def check_concat(r1, r2):
+    """Check that `*` between rational expression corresponds to
+    concatenation concrete syntax."""
     eff = ctx.ratexp(r1) * ctx.ratexp(r2)
     exp = ctx.ratexp('({})({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -26,6 +28,8 @@ check_concat('a', '\z')
 ## Difference.  ##
 ## ------------ ##
 def check_difference(r1, r2):
+    """Check that `%` between rational expression corresponds to
+    `%` in concrete syntax."""
     eff = ctx.ratexp(r1) % ctx.ratexp(r2)
     exp = ctx.ratexp('({})%({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
@@ -39,27 +43,31 @@ check_difference('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
 check_difference('a', '\e')
 check_difference('a', '\z')
 
-## -------------- ##
-## Intersection.  ##
-## -------------- ##
-def check_inter(r1, r2):
+## ------------- ##
+## Conjunction.  ##
+## ------------- ##
+def check_conj(r1, r2):
+    """Check that `&` between rational expression corresponds to
+    `&` in concrete syntax."""
     eff = ctx.ratexp(r1) & ctx.ratexp(r2)
     exp = ctx.ratexp('({})&({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
 
-check_inter('ab', 'cd')
-check_inter('a', 'bcd')
-check_inter('abab', 'bbbb')
-check_inter('a*', 'a*b*')
-check_inter('a*+b*+c+c*', '(a*+b*+c+c*)*')
-check_inter('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
-check_inter('a', '\e')
-check_inter('a', '\z')
+check_conj('ab', 'cd')
+check_conj('a', 'bcd')
+check_conj('abab', 'bbbb')
+check_conj('a*', 'a*b*')
+check_conj('a*+b*+c+c*', '(a*+b*+c+c*)*')
+check_conj('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
+check_conj('a', '\e')
+check_conj('a', '\z')
 
 ## ----- ##
 ## Sum.  ##
 ## ----- ##
 def check_sum(r1, r2):
+    """Check that `+` between rational expression corresponds to
+    `+` in concrete syntax."""
     eff = ctx.ratexp(r1) + ctx.ratexp(r2)
     exp = ctx.ratexp('({})+({})'.format(r1, r2))
     CHECK_EQ(exp, eff)
