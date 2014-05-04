@@ -30,4 +30,8 @@ def ratexp_derivation(self, w, *args):
     return self.derivation_(w, *args)
 ratexp.derivation = ratexp_derivation
 
+ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)
+
 ratexp.info = lambda self: info_to_dict(self.format('info'))
+
+ratexp.shortest = lambda self, num = 1: self.standard().shortest(num)
