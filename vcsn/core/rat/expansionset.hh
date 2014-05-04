@@ -62,12 +62,23 @@ namespace vcsn
       std::ostream& print(std::ostream& o, const value_t& v,
                           const std::string& format = "text") const
       {
-        ws_.print(o, v.constant, format);
+        bool first = true;
+        if (!ws_.is_zero(v.constant) || v.polynomials.empty())
+          {
+            o << (format == "latex" ? "\\langle " : "<");
+            ws_.print(o, v.constant, format);
+            o << (format == "latex" ? "\\rangle " : ">");
+            first = false;
+          }
         for (const auto& p: v.polynomials)
           {
-            o << " + ";
-            rs_.labelset()->print(o, p.first, format) << ".[";
-            ps_.print(o, p.second, format) << ']';
+            if (!first)
+              o << (format == "latex" ? " \\oplus " : " + ");
+            first = false;
+            rs_.labelset()->print(o, p.first, format);
+            o << (format == "latex" ? " \\odot \\left[" : ".[");;
+            ps_.print(o, p.second, format);
+            o << (format == "latex" ? "\\right]" : "]");;
           }
         return o;
       }
