@@ -198,13 +198,6 @@ namespace vcsn
       return false;
     }
 
-    /// Prepare to iterate over the letters of v.
-    static value_t
-    letters_of(value_t v)
-    {
-      return v;
-    }
-
     ATTRIBUTE_PURE
     static constexpr value_t
     one()
