@@ -24,6 +24,10 @@ namespace vcsn
     /// Index sequence for our maps.
     using indices_t = vcsn::detail::make_index_sequence<sizeof...(Sequences)>;
 
+    /// Tuple of values.
+    using value_type
+      = std::tuple<typename std::remove_reference<Sequences>::type::value_type...>;
+
     zip_sequences(const sequences_t& sequences)
       : sequences_(sequences)
     {}
@@ -34,14 +38,13 @@ namespace vcsn
 
     /// Composite iterator.
     struct iterator
+      : std::iterator<std::forward_iterator_tag, value_type, size_t>
     {
       using iterators_t
-        = std::tuple<typename std::remove_reference<Sequences>::type::iterator...>;
-      using values_t
-        = std::tuple<typename std::remove_reference<Sequences>::type::value_type...>;
+        = std::tuple<typename std::remove_reference<Sequences>::type::const_iterator...>;
 
-      iterator(typename std::remove_reference<Sequences>::type::iterator... is,
-               typename std::remove_reference<Sequences>::type::iterator... ends)
+      iterator(typename std::remove_reference<Sequences>::type::const_iterator... is,
+               typename std::remove_reference<Sequences>::type::const_iterator... ends)
         : is_{is...}
         , ends_{ends...}
       {}
@@ -64,7 +67,7 @@ namespace vcsn
         return not_equal_(that, indices_t{});
       }
 
-      values_t operator*()
+      value_type operator*()
       {
         return dereference_(indices_t{});
       }
@@ -110,33 +113,35 @@ namespace vcsn
 
       /// Tuple of values.
       template <std::size_t... I>
-      values_t dereference_(seq<I...>) const
+      value_type dereference_(seq<I...>) const
       {
-        return values_t{(*std::get<I>(is_))...};
+        return value_type{(*std::get<I>(is_))...};
       }
     };
 
-    iterator begin()
+    using const_iterator = iterator;
+
+    iterator begin() const
     {
       auto res = begin_(indices_t{});
       return res;
     }
 
-    iterator end()
+    iterator end() const
     {
       return end_(indices_t{});
     }
 
   private:
     template <std::size_t... I>
-    iterator begin_(seq<I...>)
+    iterator begin_(seq<I...>) const
     {
       return iterator(std::get<I>(sequences_).begin()...,
                       std::get<I>(sequences_).end()...);
     }
 
     template <std::size_t... I>
-    iterator end_(seq<I...>)
+    iterator end_(seq<I...>) const
     {
       return iterator(std::get<I>(sequences_).end()...,
                       std::get<I>(sequences_).end()...);
@@ -154,7 +159,7 @@ namespace vcsn
 
   template <typename... Sequences>
   zip_sequences<Sequences...>
-  zip_sequences_tuple(const std::tuple<Sequences...>& seqs)
+  zip_tuple(const std::tuple<Sequences...>& seqs)
   {
     return {seqs};
   }
