@@ -18,10 +18,10 @@
 check_PROGRAMS =
 TAP_DRIVER = $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl
 
-dist_noinst_SCRIPTS += %D%/checker
+dist_noinst_SCRIPTS += %D%/bin/checker
 TEST_EXTENSIONS += .chk
-CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/checker
-$(dist_TESTS:.chk=.log): %D%/checker
+CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/bin/checker
+$(dist_TESTS:.chk=.log): %D%/bin/checker
 
 TESTS = $(dist_TESTS)
 # Lazy test suite.
