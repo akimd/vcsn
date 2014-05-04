@@ -77,6 +77,9 @@ namespace vcsn
     /// A tuple of words if meaningful, void otherwise.
     using word_t = typename labelset_types<ValueSets...>::word_t;
 
+    /// To be iterable.
+    using value_type = letter_t;
+
     using kind_t = labels_are_tuples;
 
     tupleset(valuesets_t vs)
@@ -139,6 +142,17 @@ namespace vcsn
       return is_free_(indices);
     }
 
+  private:
+    /// Must be declared before, as we use its result in decltype.
+    template <typename Value, std::size_t... I>
+    static auto
+    letters_of_(const Value& v, seq<I...>)
+      -> decltype(zip(valueset_t<I>::letters_of(std::get<I>(v))...))
+    {
+      return zip(valueset_t<I>::letters_of(std::get<I>(v))...);
+    }
+
+  public:
     /// Iterate over the letters of v.
     ///
     /// Templated by Value so that we work for both word_t and label_t.
@@ -147,9 +161,9 @@ namespace vcsn
     template <typename Value>
     static auto
     letters_of(const Value& v)
-      -> decltype(zip_sequences_tuple(v))
+      -> decltype(letters_of_(v, indices))
     {
-      return zip_sequences_tuple(v);
+      return letters_of_(v, indices);
     }
 
     static bool
