@@ -121,6 +121,12 @@ namespace vcsn
       return false;
     }
 
+    static constexpr bool
+    is_letterized()
+    {
+      return true;
+    }
+
     static bool
     is_special(value_t v) ATTRIBUTE_PURE
     {

@@ -218,6 +218,12 @@ namespace vcsn
       return has_one_(indices);
     }
 
+    static constexpr bool
+    is_letterized()
+    {
+      return is_letterized_(indices);
+    }
+
     static value_t
     one()
     {
@@ -502,6 +508,13 @@ namespace vcsn
     has_one_(seq<I...>)
     {
       return all_<valueset_t<I>::has_one()...>();
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    is_letterized_(seq<I...>)
+    {
+      return all_<valueset_t<I>::is_letterized()...>();
     }
 
     template <std::size_t... I>

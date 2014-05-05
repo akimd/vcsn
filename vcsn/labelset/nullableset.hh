@@ -208,6 +208,12 @@ namespace vcsn
       return true;
     }
 
+    static constexpr bool
+    is_letterized()
+    {
+      return labelset_t::is_letterized();
+    }
+
     static constexpr bool is_free()
     {
       return false;

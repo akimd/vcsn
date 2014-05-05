@@ -92,6 +92,12 @@ namespace vcsn
       return true;
     }
 
+    static constexpr bool
+    is_letterized()
+    {
+      return true;
+    }
+
     static empty_t one()
     {
       return {};
