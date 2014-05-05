@@ -4,17 +4,6 @@ from __future__ import print_function
 
 import os, re, subprocess, sys, vcsn
 
-black = '' # `tput setaf 0`;
-blue  = '' # `tput setaf 4`;
-cyan  = '' # `tput setaf 6`;
-green = '' # `tput setaf 2`;
-red   = '' # `tput setaf 1`;
-white = '' # `tput setaf 7`;
-std   = '' # `tput init`;
-
-FAIL = red + "FAIL:" + std
-PASS = green + "PASS:" + std
-
 fail = 0
 count = 0
 
