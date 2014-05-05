@@ -127,9 +127,8 @@ namespace vcsn
     template <typename... Auts>
     class producter
     {
-// FIXME: Check the requirements.
-// static_assert(Auts::context_t::is_lal,
-// "requires labels_are_letters")...;
+      static_assert(all_<Auts::labelset_t::is_letterized()...>(),
+                    "requires letterized labels");
 
       /// The type of context of the result.
       ///
