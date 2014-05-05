@@ -205,7 +205,7 @@ namespace vcsn
     };
 
     template <typename... Args>
-    std::ostream& print(std::ostream& o, std::tuple<Args...>& args)
+    std::ostream& print(std::ostream& o, const std::tuple<Args...>& args)
     {
       o << '(';
       tuple_printer<decltype(args), sizeof...(Args)>::print(o, args);
