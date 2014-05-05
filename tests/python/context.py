@@ -20,10 +20,15 @@ check('lal_char()_b')
 check('lal_char(ab)_b')
 check('lal_char(a-kv-z)_b', 'lal_char(abcdefghijkvwxyz)_b')
 check('lal_char(-0-9)_b', 'lal_char(-0123456789)_b')
+# This is obviously wrong: we will not be able to re-read the result,
+# as the backslash is not escaped.
 check(r'lal_char(\\\-)_b', r'lal_char(-\)_b')
 check(r'lal_char(\--\-)_b', r'lal_char(-)_b')
 
 check('lal_char(ab)_q')
+
+# Arguable useless, but stresses our tupleset implementation.
+# FIXME: does not work: check('lat<lat<lal_char(a)>>_b')
 
 check('lat<lal_char(a),lal_char(a)>_b')
 check('lat<lal_char(a), lal_char(a)>_b', 'lat<lal_char(a),lal_char(a)>_b')
