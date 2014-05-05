@@ -1,2 +1,13 @@
 %weight: b
 %include: common-weights.rat
+
+# Check character classes.
+[a] => a
+[ac] => a+c
+[abcd] => a+b+c+d
+[abcdabcd] => a+b+c+d
+[badcabcd] => a+b+c+d
+[a-a] => a
+[a-b] => a+b
+[a-bc-d] => a+b+c+d
+[b-a] => \z
