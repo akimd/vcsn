@@ -283,7 +283,7 @@ namespace std
 
   /*-------------------------.
   | std::hash(tuple<T...>).  |
-  `--------------------------*/
+  `-------------------------*/
 
   template <typename... Elements>
   struct hash<std::tuple<Elements...>>
@@ -302,11 +302,14 @@ namespace std
     hash_(const value_t& v, vcsn::detail::index_sequence<I...>)
     {
       std::size_t res = 0;
-      for (const auto& e: {std::get<I>(v)...})
-        std::hash_combine(res, e);
+      using swallow = int[];
+      (void) swallow
+        {
+          (std::hash_combine(res, std::get<I>(v)), 0)...
+        };
       return res;
     }
-  }; // class
+  };
 }
 
 #endif // !VCSN_MISC_TUPLE_HH
