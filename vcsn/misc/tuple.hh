@@ -45,6 +45,31 @@ namespace vcsn
     template<> struct make_index_sequence<0> : index_sequence<>{};
     template<> struct make_index_sequence<1> : index_sequence<0>{};
 
+    template<std::size_t off, class S2> struct int_range;
+
+    template<std::size_t off, std::size_t... I>
+    struct int_range<off, index_sequence<I...>>
+      : index_sequence<I + off...>{};
+
+    template<std::size_t S, std::size_t L>
+    struct make_index_range
+      : int_range<S, typename make_index_sequence<L>::type>{};
+
+    template<std::size_t S>
+    struct make_index_range<S, 0> : index_sequence<>{};
+    template<std::size_t S>
+    struct make_index_range<S, -1U> : index_sequence<>{};
+
+    template<typename S1, typename S2>
+    struct concat_index_sequence;
+
+    template<std::size_t... I1, std::size_t... I2>
+    struct concat_index_sequence<index_sequence<I1...>, index_sequence<I2...>>
+      : index_sequence<I1..., I2...>{};
+
+    template <typename S1, typename S2>
+    using concat_sequence = typename concat_index_sequence<S1, S2>::type;
+
     // There is a bug in clang making this one useless...
     // The index sequence generated is always <0>
     // Bug report:
