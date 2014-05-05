@@ -37,7 +37,7 @@ namespace vcsn
     struct labelset_types<decltype(pass{typename ValueSets::word_t()...}, void()),
                           ValueSets...>
     {
-      using genset_t = cross_sequences<const typename ValueSets::genset_t&...>;
+      using genset_t = cross_sequences<decltype(std::declval<ValueSets>().genset())...>;
       using letter_t = std::tuple<typename ValueSets::letter_t...>;
       using word_t = std::tuple<typename ValueSets::word_t...>;
     };

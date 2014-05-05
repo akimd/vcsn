@@ -58,16 +58,6 @@ Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
 * Bugs
-** tupleset<tupleset<>>
-See tests/python/context.py:
-
-  # FIXME: does not work: check('lat<lat<lal_char(a)>>_b')
-
-we have constness problems when iterating on the gensets.  This is tricky,
-and just randomly a couple of const only worsens the problem...  Our special
-iterators (zip and cross in particular) should be made more conformant.  See
-Boost.Iterator.
-
 ** Parse error
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.

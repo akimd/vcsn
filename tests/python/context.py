@@ -28,7 +28,7 @@ check(r'lal_char(\--\-)_b', r'lal_char(-)_b')
 check('lal_char(ab)_q')
 
 # Arguable useless, but stresses our tupleset implementation.
-# FIXME: does not work: check('lat<lat<lal_char(a)>>_b')
+check('lat<lat<lal_char(a)>>_b')
 
 check('lat<lal_char(a),lal_char(a)>_b')
 check('lat<lal_char(a), lal_char(a)>_b', 'lat<lal_char(a),lal_char(a)>_b')
