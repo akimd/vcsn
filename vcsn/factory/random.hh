@@ -39,8 +39,7 @@ namespace vcsn
                RandomGenerator& gen,
                detail::index_sequence<I...>)
   {
-    using value_t = typename tupleset<LabelSet...>::value_t;
-    return value_t{random_label(ls.template set<I>(), gen)...};
+    return ls.value(std::make_tuple(random_label(ls.template set<I>(), gen)...));
   };
 
 
