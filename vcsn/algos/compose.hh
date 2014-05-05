@@ -186,16 +186,18 @@ namespace vcsn
       transition_t new_transition_copy(const A& aut, state_t src,
                                        state_t dst, transition_t t, weight_t k)
       {
-        return hide_(this->aut_->new_tranisiton_copy(*aut.original_automaton(),
-                                               src, dst, t, k));
+        return this->aut_->new_transition_copy(*const_cast<A*>(&aut)->
+                                                 original_automaton(),
+                                               src, dst, t, k);
       }
 
       template <typename A>
       weight_t add_transition_copy(const A& aut, state_t src,
                                    state_t dst, transition_t t, weight_t k)
       {
-        return this->aut_->add_transition_copy(*aut.original_automaton(),
-                                         src, dst, t, k);
+        return this->aut_->add_transition_copy(*const_cast<A*>(&aut)
+                                                 ->original_automaton(),
+                                               src, dst, t, k);
       }
 
       /*------------------------------.

@@ -467,6 +467,25 @@ namespace vcsn
         }
     }
 
+    /// Copy the label of a transition between two states, creating a new
+    /// transition.
+    /// There must not exist a previous transition with same (src, dst,
+    /// label_of(l)).
+    ///
+    /// \param src  source state
+    /// \param dst  destination state
+    /// \param t    transition whose label to copy
+    /// \param k    weight of the transition
+    ///
+    /// \pre the label is _not checked_, for efficiency.
+    /// \pre ! has_transition(src, dst, label_of(l)).
+    template <typename A>
+    transition_t
+    new_transition_copy(const A& aut, state_t src, state_t dst, transition_t t, weight_t k)
+    {
+      return new_transition(src, dst, aut.label_of(t), k);
+    }
+
     /// Same as above, with weight one.
     transition_t
     new_transition(state_t src, state_t dst, label_t l)
@@ -548,6 +567,24 @@ namespace vcsn
     add_transition(state_t src, state_t dst, label_t l)
     {
       return add_transition(src, dst, l, weightset()->one());
+    }
+
+    /// Add a transition between two states, copying the label from the given
+    /// transition.  Merge with an existing one with same label.
+    ///
+    /// \param src  source state
+    /// \param dst  destination state
+    /// \param t    transition whose label to copy
+    /// \param k    weight of the transition
+    ///
+    /// \pre the label is _not checked_, for efficiency.  Letters out
+    /// of the alphabet will be accepted.
+    template <typename Aut>
+    weight_t
+    add_transition_copy(const Aut& aut, state_t src, state_t dst,
+                        transition_t t, weight_t k)
+    {
+      return add_transition(src, dst, aut.label_of(t), k);
     }
 
     std::string

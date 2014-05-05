@@ -168,6 +168,29 @@ namespace vcsn
 
 # undef DEFINE
 
+
+      template <typename A>
+      transition_t new_transition_copy(const A& aut, state_t src,
+                                       state_t dst, transition_t t, weight_t k)
+      {
+        return this->aut_->new_transition_copy(*const_cast<A*>(&aut)
+                                                 ->original_automaton(),
+                                               dst, src,
+                                               this->aut_->labelset()->transpose(t),
+                                               this->aut_->weightset()->transpose(k));
+      }
+
+      template <typename A>
+      weight_t add_transition_copy(const A& aut, state_t src,
+                                   state_t dst, transition_t t, weight_t k)
+      {
+        return this->aut_->add_transition_copy(*const_cast<A*>(&aut)
+                                                 ->original_automaton(),
+                                               dst, src,
+                                               this->aut_->labelset()->transpose(t),
+                                               this->aut_->weightset()->transpose(k));
+      }
+
       /*-----------------------------------.
       | constexpr methods that transpose.  |
       `-----------------------------------*/
