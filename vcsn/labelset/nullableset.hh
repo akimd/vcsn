@@ -47,6 +47,13 @@ namespace vcsn
         return value_t{null::labelset_t::special(), true};
       }
 
+      ATTRIBUTE_PURE
+      static constexpr value_t
+      special()
+      {
+        return value_t{null::labelset_t::special(), false};
+      }
+
       template<typename Ls>
       ATTRIBUTE_PURE
       static typename std::enable_if<Ls::has_one(), bool>::type
@@ -70,11 +77,11 @@ namespace vcsn
         return is_one_<labelset_t>(l);
       }
 
-      ATTRIBUTE_PURE
+      template <typename... Args>
       static value_t
-      value(const typename labelset_t::value_t &v)
+      value(const labelset_t& ls, Args&&... args)
       {
-        return {v, false};
+        return {ls.value(std::forward<Args>(args)...), false};
       }
 
       ATTRIBUTE_PURE
@@ -122,6 +129,13 @@ namespace vcsn
 
       ATTRIBUTE_PURE
       static constexpr typename null::value_t
+      special()
+      {
+        return genset_t::special();
+      }
+
+      ATTRIBUTE_PURE
+      static constexpr typename null::value_t
       one()
       {
         return genset_t::one_letter();
@@ -134,11 +148,11 @@ namespace vcsn
         return l == one();
       }
 
-      ATTRIBUTE_PURE
+      template <typename... Args>
       static value_t
-      value(const typename labelset_t::value_t& v)
+      value(const labelset_t& ls, Args&&... args)
       {
-        return v;
+        return ls.value(std::forward<Args>(args)...);
       }
 
       ATTRIBUTE_PURE
@@ -230,10 +244,11 @@ namespace vcsn
       return ls_;
     }
 
-    static value_t
-    value(const typename labelset_t::value_t& v)
+    template <typename... Args>
+    value_t
+    value(Args&&... args) const
     {
-      return helper_t::value(v);
+      return helper_t::value(*ls_, std::forward<Args>(args)...);
     }
 
     word_t
@@ -264,7 +279,7 @@ namespace vcsn
     static value_t
     special()
     {
-      return helper_t::value(labelset_t::special());
+      return helper_t::special();
     }
 
     static bool
