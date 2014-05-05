@@ -9,6 +9,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
+# include <vcsn/labelset/oneset.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/z.hh>
@@ -201,6 +202,10 @@ namespace vcsn
     /// The transposed of this rational expression.
     value_t transpose(value_t e) const;
 
+    /// A ratexp matching one character amongst \a chars.
+    template <typename... Args>
+    value_t char_class(Args&&... chars) const;
+
   private:
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
@@ -219,6 +224,17 @@ namespace vcsn
     value_t concat_(value_t l, value_t r, std::true_type) const;
     /// If Context is not LAW.
     value_t concat_(value_t l, value_t r, std::false_type) const;
+
+    /// If context is oneset.
+    template <typename LabelSet_, typename... Args>
+    value_t char_class_(const Args&&... chars, std::true_type) const;
+
+    /// If context is not oneset.
+    template <typename LabelSet_>
+    value_t
+    char_class_(const std::set<std::pair<typename LabelSet_::letter_t,
+                                         typename LabelSet_::letter_t>>& chars,
+                std::false_type) const;
 
   private:
     context_t ctx_;

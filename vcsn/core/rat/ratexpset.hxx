@@ -11,6 +11,7 @@
 #include <vcsn/dyn/algos.hh> // dyn::read_ratexp_string
 #include <vcsn/dyn/fwd.hh>
 #include <vcsn/dyn/ratexpset.hh> // dyn::make_ratexpset
+#include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/attributes.hh>
 #include <vcsn/misc/cast.hh>
 #include <vcsn/misc/stream.hh>
@@ -529,6 +530,51 @@ namespace vcsn
   {
     detail::transposer<ratexpset_impl> tr{*this};
     return tr(v);
+  }
+
+  template <typename Context>
+  template <typename... Args>
+  inline
+  auto
+  ratexpset_impl<Context>::char_class(Args&&... args) const
+    -> value_t
+  {
+    return char_class_<labelset_t>(std::forward<Args>(args)...,
+                                   std::is_same<labelset_t, vcsn::oneset>{});
+  }
+
+  template <typename Context>
+  template <typename LabelSet_>
+  inline
+  auto
+  ratexpset_impl<Context>::char_class_(const std::set<std::pair<typename LabelSet_::letter_t,
+                                       typename LabelSet_::letter_t>>& ccs,
+                                       std::false_type) const
+    -> value_t
+  {
+    value_t res = zero();
+    auto gens = labelset()->genset();
+    if (ccs.empty())
+      for (auto l: gens)
+        res = add(res, atom(labelset()->value(l)));
+    else
+      for (auto cc: ccs)
+        for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
+               end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
+             i != end; ++i)
+          res = add(res, atom(labelset()->value(*i)));
+    return res;
+  }
+
+  template <typename Context>
+  template <typename LabelSet_, typename... Args>
+  inline
+  auto
+  ratexpset_impl<Context>::char_class_(const Args&&...,
+                                       std::true_type) const
+    -> value_t
+  {
+    return one();
   }
 
 #undef DEFINE

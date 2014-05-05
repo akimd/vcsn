@@ -51,9 +51,6 @@ YY_FLEX_NAMESPACE_BEGIN
 namespace
 {
   irange_type quantifier(driver& d, const location& loc, const std::string& s);
-
-  /// Append all the characters between first and last.
-  void insert_interval(std::set<char>& res, char first, char last);
 }
 %}
 
@@ -68,7 +65,6 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   // Build a context string.  "static" only to save build/dtor.
   static std::string context;
   std::string s;
-  std::set<char> chars;
   loc.step();
 %}
 
@@ -113,7 +109,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   "'"[^\']+"'"  return parser::make_LETTER(std::string(yytext+1, yyleng-2), loc);
 
   /* Character classes.  */
-  "["     yy_push_state(SC_CLASS);
+  "["     yy_push_state(SC_CLASS); return parser::make_LBRACKET(loc);
 
   \\.|.|\n   driver_.invalid(loc, yytext);
 }
@@ -121,20 +117,17 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 <SC_CLASS>{ /* Character-class.  Initial [ is eaten. */
   "]" {
     BEGIN INITIAL;
-    return parser::make_CLASS(chars, loc);
+    return parser::make_RBRACKET(loc);
   }
+  "-" return parser::make_DASH(loc);
 
-  .       chars.insert(yytext[0]);
-  \\.     chars.insert(yytext[1]);
-  .-.     insert_interval(chars, yytext[0], yytext[2]);
-  .-\\.   insert_interval(chars, yytext[0], yytext[3]);
-  \\.-.   insert_interval(chars, yytext[1], yytext[3]);
-  \\.-\\. insert_interval(chars, yytext[1], yytext[4]);
+  {char}        return parser::make_LETTER(yytext, loc);
+  "'"[^\']+"'"  return parser::make_LETTER(std::string(yytext+1, yyleng-2), loc);
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a character-class");
     BEGIN INITIAL;
-    return parser::make_CLASS(chars, loc);
+    return parser::make_RBRACKET(loc);
   }
 }
 
@@ -227,12 +220,6 @@ namespace
       // No comma: single argument.
       std::get<1>(res) = std::get<0>(res);
     return res;
-  }
-
-  void insert_interval(std::set<char>& res, char first, char last)
-  {
-    while (first <= last)
-      res.insert(first++);
   }
 }
 

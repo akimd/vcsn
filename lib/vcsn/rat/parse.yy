@@ -63,9 +63,6 @@
       /// Generate a ratexp for "e{range.first, range.second}".
       static
       exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
-      /// Generate a ratexp matching one character amongst \a chars.
-      static
-      exp_t char_class(const dyn::ratexpset& rs, const std::set<char>& chars);
 
       /// Use our local scanner object.
       static
@@ -108,8 +105,12 @@
 }
 
 %printer { yyo << '"' << $$ << '"'; } <std::string>;
-%printer { yyo << '['; for (auto c: $$) yyo << c; yyo << ']'; }
-         <std::set<char>>;
+%printer
+{
+  yyo << '[';
+  for (auto c: $$) yyo << c.first << "-" << c.second;
+  yyo << ']';
+} <std::set<std::pair<std::string,std::string>>>;
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer { driver_.ratexpset_->print(yyo, $$.exp); } <braced_ratexp>;
 
@@ -119,12 +120,15 @@
   COLON      ":"
   COMMA      ","
   COMPLEMENT "{c}"
+  DASH       "-"
   DOT        "."
   END 0      "end"
+  LBRACKET   "["
   LPAREN     "("
   ONE        "\\e"
   PERCENT    "%"
   PLUS       "+"
+  RBRACKET   "]"
   RPAREN     ")"
   TRANSPOSITION "{T}"
   SLASH      "{/}"
@@ -134,9 +138,9 @@
 %token <irange_type> STAR "*";
 %token <std::string> LETTER  "letter";
 %token <std::string> WEIGHT  "weight";
-%token <std::set<char>> CLASS "character-class";
 
 %type <braced_ratexp> exp input weights;
+%type <std::set<std::pair<std::string,std::string>>> class;
 
 %left "+"
 %left ":" "%"
@@ -147,7 +151,7 @@
 %right "weight" // Match longest series of "weight".
 %precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence RWEIGHT
-%precedence "(" "\\z" "\\e" "letter" "character-class"
+%precedence "(" "\\z" "\\e" "letter" "["
 %precedence CONCAT
 %precedence "*" "{c}" "{T}"
 
@@ -197,10 +201,10 @@ exp:
 | exp "*"          { $$ = power(driver_.ratexpset_, $1.exp, $2); }
 | exp "{c}"        { $$ = MAKE(complement, $1.exp); }
 | exp "{T}"        { $$ = MAKE(transposition, $1.exp); }
-| ZERO             { $$ = MAKE(zero); }
-| ONE              { $$ = MAKE(one); }
-| "letter"         { TRY(@$, $$ = MAKE(atom, $1)); }
-| "character-class" { $$ = char_class(driver_.ratexpset_, $1); }
+| "\\z"            { $$ = MAKE(zero); }
+| "\\e"            { $$ = MAKE(one); }
+| LETTER           { TRY(@$, $$ = MAKE(atom, $1)); }
+| "[" class "]"    { $$ = MAKE(char_class, $2); }
 | "(" exp ")"      { $$.exp = $2.exp; $$.parens = true; }
 ;
 
@@ -209,6 +213,11 @@ weights:
 | "weight" weights { TRY(@$ + 1, $$ = MAKE(lmul, $1, $2.exp)); }
 ;
 
+class:
+  %empty                    {}
+| class LETTER              { $$ = $1; $$.emplace($2, $2); }
+| class LETTER "-" LETTER   { $$ = $1; $$.emplace($2, $4); }
+;
 
 %%
 
@@ -255,16 +264,6 @@ namespace vcsn
     power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
     {
       return power(es, e, std::get<0>(range), std::get<1>(range));
-    }
-
-    static
-    exp_t
-    char_class(const dyn::ratexpset& rs, const std::set<char>& chars)
-    {
-      exp_t res = rs->zero();
-      for (auto c: chars)
-        res = rs->add(res, rs->atom(std::string(1, c)));
-      return res;
     }
 
     void

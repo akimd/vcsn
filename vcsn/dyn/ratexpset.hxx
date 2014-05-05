@@ -1,7 +1,9 @@
 #include <sstream>
+
+#include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+#include <vcsn/labelset/oneset.hh>
 #include <vcsn/misc/cast.hh> // down_pointer_cast
 #include <vcsn/misc/stream.hh> // conv
-#include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 
 namespace vcsn
 {
@@ -117,6 +119,53 @@ namespace dyn
     DEFINE::rmul(value_t v, const std::string& w) const -> value_t
     {
       return rs_.rmul(down(v), down(w));
+    }
+
+    DEFINE::char_class(const char_class_t& cs) const -> value_t
+    {
+      using labelset_t = typename ratexpset_t::labelset_t;
+      return char_class_<labelset_t>(cs, std::is_same<labelset_t,
+                                     vcsn::oneset>{});
+    }
+
+    template <typename RatExpSet>
+    template <typename LabelSet_>
+    inline
+    auto
+    ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t& chars,
+                                              std::false_type) const -> value_t
+    {
+      auto ls = *rs_.labelset();
+
+      using labelset_t = decltype(ls);
+      using word_t = typename labelset_t::word_t;
+      using label_t = typename labelset_t::value_t;
+      using letter_t = typename labelset_t::letter_t;
+
+      std::set<std::pair<letter_t, letter_t>> ccs;
+      for (auto cc: chars)
+        {
+          // Yes, this is ugly.
+          label_t lbl1 = ::vcsn::conv(ls, cc.first);
+          label_t lbl2 = ::vcsn::conv(ls, cc.second);
+          word_t w1 = ls.word(lbl1);
+          word_t w2 = ls.word(lbl2);
+          letter_t l1 = *std::begin(ls.letters_of(w1));
+          letter_t l2 = *std::begin(ls.letters_of(w2));
+          ccs.emplace(l1, l2);
+        }
+      return rs_.char_class(ccs);
+    }
+
+    template <typename RatExpSet>
+    template <typename LabelSet_>
+    inline
+    auto
+    ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t&,
+                                              std::true_type) const
+      -> value_t
+    {
+      return one();
     }
 
     DEFINE::conv(std::istream& is) const -> value_t
