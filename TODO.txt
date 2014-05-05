@@ -211,6 +211,10 @@ update all the "VCSN_ORIGINS" uses.
 Now that we have dynamic weights, they could be used in lib/vcsn/rat
 parsing, instead of a simple string that is converted by the weightset.
 
+** REGISTER namespace
+In vcsn/ctx/instantiate.hh, we shouldn't need to say
+"using namespace dyn::detail". Add it in REGISTER?
+
 * Optimizations
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
