@@ -482,7 +482,7 @@ namespace vcsn
       template <std::size_t I>
       void add_one_transitions_(const state_t src, const pair_t& psrc,
                                 const typename
-                                transition_map<input_automaton_t<I>>::transitions_t&
+                                transition_map_t<input_automaton_t<I>>::transitions_t&
                                 epsilon_out)
       {
         if (!has_epsilon_in(psrc, I + 1, indices))
@@ -673,15 +673,28 @@ namespace vcsn
     namespace detail
     {
 
+      template <std::size_t I, typename Aut>
+      typename std::enable_if<Aut::labelset_t::has_one() && I != 0, Aut>::type
+      do_insplit(Aut& aut)
+      {
+        return insplit(aut);
+      }
+
+      template <std::size_t I, typename Aut>
+      typename std::enable_if<!Aut::labelset_t::has_one()
+                              || I == 0, Aut&>::type
+      do_insplit(Aut& aut)
+      {
+        return aut;
+      }
+
       template <typename... Auts, size_t... I>
       automaton
       product_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(product((I == 0 ? copy(as[I]->as<Auts>()) :
-                                       insplit(as[I]->as<Auts>()))...));
+        return make_automaton(product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
-
 
       /// Bridge.
       template <typename... Auts>
