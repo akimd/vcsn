@@ -155,17 +155,29 @@ namespace vcsn
     }
 
     using iterator = typename letters_t::const_iterator;
-    iterator begin() const
+    using const_iterator = typename letters_t::const_iterator;
+
+    const_iterator begin() const
     {
       return alphabet_.begin();
     }
 
-    iterator end() const
+    const_iterator end() const
     {
       return alphabet_.end();
     }
 
-    iterator find(const letter_t& l) const
+    const_iterator cbegin() const
+    {
+      return alphabet_.begin();
+    }
+
+    const_iterator cend() const
+    {
+      return alphabet_.end();
+    }
+
+    const_iterator find(const letter_t& l) const
     {
       return alphabet_.find(l);
     }
