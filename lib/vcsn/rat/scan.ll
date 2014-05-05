@@ -119,6 +119,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
     BEGIN INITIAL;
     return parser::make_RBRACKET(loc);
   }
+  "^" return parser::make_CARET(loc);
   "-" return parser::make_DASH(loc);
 
   {char}        return parser::make_LETTER(yytext, loc);

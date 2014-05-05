@@ -232,8 +232,9 @@ namespace vcsn
     /// If context is not oneset.
     template <typename LabelSet_>
     value_t
-    char_class_(const std::set<std::pair<typename LabelSet_::letter_t,
-                                         typename LabelSet_::letter_t>>& chars,
+    char_class_(std::set<std::pair<typename LabelSet_::letter_t,
+                                   typename LabelSet_::letter_t>> chars,
+                bool accept,
                 std::false_type) const;
 
   private:

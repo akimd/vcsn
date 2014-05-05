@@ -547,22 +547,39 @@ namespace vcsn
   template <typename LabelSet_>
   inline
   auto
-  ratexpset_impl<Context>::char_class_(const std::set<std::pair<typename LabelSet_::letter_t,
-                                       typename LabelSet_::letter_t>>& ccs,
+  ratexpset_impl<Context>::char_class_(std::set<std::pair<typename LabelSet_::letter_t,
+                                                          typename LabelSet_::letter_t>> ccs,
+                                       bool accept,
                                        std::false_type) const
     -> value_t
   {
     value_t res = zero();
     auto gens = labelset()->genset();
-    if (ccs.empty())
-      for (auto l: gens)
-        res = add(res, atom(labelset()->value(l)));
+    if (accept)
+      {
+        if (ccs.empty())
+          for (auto l: gens)
+            res = add(res, atom(labelset()->value(l)));
+        else
+          for (auto cc: ccs)
+            for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
+                   end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
+                 i != end; ++i)
+              res = add(res, atom(labelset()->value(*i)));
+      }
     else
-      for (auto cc: ccs)
-        for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
-               end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
-             i != end; ++i)
-          res = add(res, atom(labelset()->value(*i)));
+      {
+        // Match the letters that are in no interval.
+        std::set<typename LabelSet_::letter_t> accepted;
+        for (auto cc: ccs)
+          for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
+                 end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
+               i != end; ++i)
+            accepted.emplace(*i);
+        for (auto c: gens)
+          if (!has(accepted, c))
+            res = add(res, atom(labelset()->value(c)));
+      }
     return res;
   }
 

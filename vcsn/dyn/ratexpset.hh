@@ -70,8 +70,12 @@ namespace detail
     virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
     /// A ratexp matching one character amongst \a chars.
+    /// \param accept
+    ///   Whether to accept these characters ([abc]) as opposed
+    ///   to refusing them ([^abc]).
     using char_class_t = std::set<std::pair<std::string, std::string>>;
-    virtual value_t char_class(const char_class_t& chars) const = 0;
+    virtual value_t char_class(const char_class_t& chars,
+                               bool accept = true) const = 0;
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
 
@@ -152,7 +156,8 @@ namespace detail
 
     virtual value_t rmul(value_t v, const std::string& w) const override;
 
-    virtual value_t char_class(const char_class_t& chars) const override;
+    virtual value_t char_class(const char_class_t& chars,
+                               bool accept = true) const override;
 
     /// Parsing.
     virtual value_t conv(std::istream& is) const override;
@@ -162,10 +167,12 @@ namespace detail
   private:
     /// If context is oneset.
     template <typename LabelSet_>
-    value_t char_class_(const char_class_t& chars, std::true_type) const;
+    value_t char_class_(const char_class_t& chars,
+                               bool accept, std::true_type) const;
     /// If context is not oneset.
     template <typename LabelSet_>
-    value_t char_class_(const char_class_t& chars, std::false_type) const;
+    value_t char_class_(const char_class_t& chars,
+                               bool accept, std::false_type) const;
 
     ratexpset_t rs_;
   };

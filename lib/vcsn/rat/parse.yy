@@ -117,6 +117,7 @@
 %token
   AMPERSAND  "&"
   BACKSLASH  "{\\}"
+  CARET      "^"
   COLON      ":"
   COMMA      ","
   COMPLEMENT "{c}"
@@ -198,14 +199,15 @@ exp:
         $$.parens = $2.parens;
       }
   }
-| exp "*"          { $$ = power(driver_.ratexpset_, $1.exp, $2); }
-| exp "{c}"        { $$ = MAKE(complement, $1.exp); }
-| exp "{T}"        { $$ = MAKE(transposition, $1.exp); }
-| "\\z"            { $$ = MAKE(zero); }
-| "\\e"            { $$ = MAKE(one); }
-| LETTER           { TRY(@$, $$ = MAKE(atom, $1)); }
-| "[" class "]"    { $$ = MAKE(char_class, $2); }
-| "(" exp ")"      { $$.exp = $2.exp; $$.parens = true; }
+| exp "*"           { $$ = power(driver_.ratexpset_, $1.exp, $2); }
+| exp "{c}"         { $$ = MAKE(complement, $1.exp); }
+| exp "{T}"         { $$ = MAKE(transposition, $1.exp); }
+| "\\z"             { $$ = MAKE(zero); }
+| "\\e"             { $$ = MAKE(one); }
+| LETTER            { TRY(@$, $$ = MAKE(atom, $1)); }
+| "[" class "]"     { $$ = MAKE(char_class, $2, true); }
+| "[" "^" class "]" { $$ = MAKE(char_class, $3, false); }
+| "(" exp ")"       { $$.exp = $2.exp; $$.parens = true; }
 ;
 
 weights:

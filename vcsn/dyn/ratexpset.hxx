@@ -121,11 +121,11 @@ namespace dyn
       return rs_.rmul(down(v), down(w));
     }
 
-    DEFINE::char_class(const char_class_t& cs) const -> value_t
+    DEFINE::char_class(const char_class_t& cs, bool accept) const -> value_t
     {
       using labelset_t = typename ratexpset_t::labelset_t;
-      return char_class_<labelset_t>(cs, std::is_same<labelset_t,
-                                     vcsn::oneset>{});
+      return char_class_<labelset_t>(cs, accept,
+                                     std::is_same<labelset_t, vcsn::oneset>{});
     }
 
     template <typename RatExpSet>
@@ -133,6 +133,7 @@ namespace dyn
     inline
     auto
     ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t& chars,
+                                              bool accept,
                                               std::false_type) const -> value_t
     {
       auto ls = *rs_.labelset();
@@ -154,7 +155,7 @@ namespace dyn
           letter_t l2 = *std::begin(ls.letters_of(w2));
           ccs.emplace(l1, l2);
         }
-      return rs_.char_class(ccs);
+      return rs_.char_class(ccs, accept);
     }
 
     template <typename RatExpSet>
@@ -162,6 +163,7 @@ namespace dyn
     inline
     auto
     ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t&,
+                                              bool,
                                               std::true_type) const
       -> value_t
     {
