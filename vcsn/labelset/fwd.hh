@@ -9,7 +9,7 @@ namespace vcsn
   class letterset;
 
   // nullableset.hh.
-  template <typename GenSet>
+  template <typename LabelSet>
   class nullableset;
 
   // oneset.hh.
