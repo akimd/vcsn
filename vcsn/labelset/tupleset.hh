@@ -3,6 +3,7 @@
 
 # include <iosfwd>
 # include <istream>
+# include <set>
 # include <tuple>
 
 # include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
@@ -98,6 +99,11 @@ namespace vcsn
     std::string vname(bool full = true) const
     {
       return vname_(full, indices);
+    }
+
+    static constexpr std::size_t size()
+    {
+      return sizeof...(ValueSets);
     }
 
     /// Build from the description in \a is.
