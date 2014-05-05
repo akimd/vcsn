@@ -562,20 +562,26 @@ namespace vcsn
             res = add(res, atom(labelset()->value(l)));
         else
           for (auto cc: ccs)
-            for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
-                   end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
-                 i != end; ++i)
-              res = add(res, atom(labelset()->value(*i)));
+            {
+              auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+              auto end = std::find(i, std::end(gens), cc.second);
+              if (end != std::end(gens))
+                for (end = std::next(end); i != end; ++i)
+                  res = add(res, atom(labelset()->value(*i)));
+            }
       }
     else
       {
         // Match the letters that are in no interval.
         std::set<typename LabelSet_::letter_t> accepted;
         for (auto cc: ccs)
-          for (auto i = std::find(std::begin(gens), std::end(gens), cc.first),
-                 end = std::next(std::find(std::begin(gens), std::end(gens), cc.second));
-               i != end; ++i)
-            accepted.emplace(*i);
+            {
+              auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+              auto end = std::find(i, std::end(gens), cc.second);
+              if (end != std::end(gens))
+                for (end = std::next(end); i != end; ++i)
+                  accepted.emplace(*i);
+            }
         for (auto c: gens)
           if (!has(accepted, c))
             res = add(res, atom(labelset()->value(c)));
