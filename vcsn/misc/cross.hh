@@ -1,7 +1,7 @@
 #ifndef VCSN_MISC_CROSS_HH
 # define VCSN_MISC_CROSS_HH
 
-# include <type_traits>
+# include <boost/iterator/iterator_facade.hpp>
 
 # include <vcsn/misc/raise.hh> // pass
 # include <vcsn/misc/tuple.hh>
@@ -19,14 +19,19 @@ namespace vcsn
     template <std::size_t... I>
     using seq = vcsn::detail::index_sequence<I...>;
 
+    /// Number of sequences.
     static constexpr size_t size = sizeof...(Sequences);
 
-    /// Index sequence for our maps.
+    /// Index sequence for our sequences.
     using indices_t = vcsn::detail::make_index_sequence<sizeof...(Sequences)>;
+
+    /// The type of the underlying sequences, without reference.
+    template <typename Seq>
+      using seq_t = typename std::remove_reference<Seq>::type;
 
     /// The type of the members.
     using value_type
-      = std::tuple<typename std::remove_reference<Sequences>::type::value_type...>;
+      = std::tuple<typename seq_t<Sequences>::value_type...>;
 
     cross_sequences(const sequences_t& sequences)
       : sequences_(sequences)
@@ -36,46 +41,68 @@ namespace vcsn
       : sequences_(sequences...)
     {}
 
-    /// Composite iterator.
-    struct iterator
-      : std::iterator<std::forward_iterator_tag, value_type, size_t>
-    {
-      using iterators_t
-        = std::tuple<typename std::remove_reference<Sequences>::type::iterator...>;
+    /// Tuple of const_iterators.
+    using const_iterators_t
+      = std::tuple<typename seq_t<Sequences>::const_iterator...>;
 
-      iterator(typename std::remove_reference<Sequences>::type::iterator... is,
-               typename std::remove_reference<Sequences>::type::iterator... ends)
-        : is_{is...}
-        , begins_{is...}
-        , ends_{ends...}
+    /// Tuple of iterators.
+    using iterators_t
+      = std::tuple<typename seq_t<Sequences>::iterator...>;
+
+    /// Composite iterator.
+    template <typename ValueType,
+              typename IteratorsType>
+    struct cross_iterator
+      : public boost::iterator_facade<
+           cross_iterator<ValueType, IteratorsType>
+         , ValueType
+         , boost::forward_traversal_tag
+        >
+    {
+      /// Underlying iterators.
+      using iterators_type = IteratorsType;
+
+      cross_iterator(const iterators_type& is, const iterators_type& ends)
+        : is_{is}
+        , begins_{is}
+        , ends_{ends}
+      {}
+
+      template <typename OtherValue, typename OtherIterators>
+      cross_iterator(cross_iterator<OtherValue, OtherIterators> const& that)
+        : is_{that.is_}
+        , begins_{that.begins_}
+        , ends_{that.ends_}
       {}
 
       /// The current position.
-      iterators_t is_;
+      iterators_type is_;
       /// The begins.
-      iterators_t begins_;
+      iterators_type begins_;
       /// The ends.
-      iterators_t ends_;
+      iterators_type ends_;
 
       /// Advance to next position.
-      iterator& operator++()
+      cross_iterator& operator++()
       {
         if (next_() == -1)
           done_();
         return *this;
       }
 
-      bool operator!=(const iterator& that) const
+      bool operator!=(const cross_iterator& that) const
       {
         return not_equal_(that, indices_t{});
       }
 
-      value_type operator*()
+      value_type operator*() const
       {
         return dereference_(indices_t{});
       }
 
     private:
+      friend class boost::iterator_core_access;
+
       /// We have reached the end, move all the cursors to this end.
       void done_()
       {
@@ -129,7 +156,7 @@ namespace vcsn
       }
 
       template <std::size_t... I>
-      bool not_equal_(const iterator& that, seq<I...>) const
+      bool not_equal_(const cross_iterator& that, seq<I...>) const
       {
         for (auto n: {(std::get<I>(is_) != std::get<I>(that.is_))...})
           if (n)
@@ -145,32 +172,74 @@ namespace vcsn
       }
     };
 
-    iterator begin() const
+    /// Mutable iterator.
+    using iterator = cross_iterator<value_type, iterators_t>;
+
+    /// Const iterator.
+    using const_iterator = cross_iterator<const value_type, const_iterators_t>;
+
+    const_iterator cbegin() const
+    {
+      auto res = cbegin_(indices_t{});
+      return res;
+    }
+
+    const_iterator cend() const
+    {
+      return cend_(indices_t{});
+    }
+
+    const_iterator begin() const
+    {
+      return cbegin();
+    }
+
+    const_iterator end() const
+    {
+      return cend();
+    }
+
+    iterator begin()
     {
       auto res = begin_(indices_t{});
       return res;
     }
 
-    iterator end() const
+    iterator end()
     {
       return end_(indices_t{});
     }
 
   private:
     template <std::size_t... I>
-    iterator begin_(seq<I...>) const
+    const_iterator cbegin_(seq<I...>) const
     {
-      return iterator(std::get<I>(sequences_).begin()...,
-                      std::get<I>(sequences_).end()...);
+      return {const_iterators_t{std::get<I>(sequences_).cbegin()...},
+              const_iterators_t{std::get<I>(sequences_).cend()...}};
     }
 
     template <std::size_t... I>
-    iterator end_(seq<I...>) const
+    const_iterator cend_(seq<I...>) const
     {
-      return iterator(std::get<I>(sequences_).end()...,
-                      std::get<I>(sequences_).end()...);
+      return {const_iterators_t{std::get<I>(sequences_).cend()...},
+              const_iterators_t{std::get<I>(sequences_).cend()...}};
     }
 
+    template <std::size_t... I>
+    iterator begin_(seq<I...>)
+    {
+      return {iterators_t{std::get<I>(sequences_).begin()...},
+              iterators_t{std::get<I>(sequences_).end()...}};
+    }
+
+    template <std::size_t... I>
+    iterator end_(seq<I...>)
+    {
+      return {iterators_t{std::get<I>(sequences_).end()...},
+              iterators_t{std::get<I>(sequences_).end()...}};
+    }
+
+    /// The sequences we iterate upon.
     sequences_t sequences_;
   };
 

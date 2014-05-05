@@ -1,15 +1,18 @@
-#include <vcsn/misc/tuple.hh>
-#include <vcsn/misc/cross.hh>
-
 #include <iostream>
 #include <list>
 #include <vector>
 #include <string>
 
-template <typename... Args>
-std::ostream& operator<<(std::ostream& o, std::tuple<Args...>& args)
+#include <vcsn/misc/tuple.hh>
+#include <vcsn/misc/cross.hh>
+
+namespace std
 {
-  return vcsn::detail::print(o, args);
+  template <typename... Args>
+  ostream& operator<<(ostream& o, const tuple<Args...>& args)
+  {
+    return vcsn::detail::print(o, args);
+  }
 }
 
 int main()
@@ -21,13 +24,16 @@ int main()
   std::vector<std::string> strings
     = { "one", "deux", "three", "four" };
 
-  for (auto i: vcsn::cross(ints, floats, strings))
-    std::cout << '('
-              << std::get<0>(i)
-              << ", "
-              << std::get<1>(i)
-              << ", "
-              << std::get<2>(i)
-              << ')'
-              << std::endl;
+  using vcsn::cross;
+  for (auto i: cross(ints, floats, strings))
+    std::cout << i << std::endl;
+
+  for (auto i: cross(cross(ints), cross(floats, strings)))
+    std::cout << i << std::endl;
+
+  // Make sure iterator and const_iterators are compatible.
+  auto c = cross(ints, cross(floats, strings));
+  auto i = c.begin();
+  auto i_const = c.cbegin();
+  i_const = i;
 }
