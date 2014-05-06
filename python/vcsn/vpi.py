@@ -2,6 +2,8 @@
 ## Vaucanson Python Interface  ##
 ## =========================== ##
 
+# Import globals from the vcsn module
+from vcsn import *
 
 ## --------------------------------------- ##
 ## Automaton loading/saving functionality  ##
