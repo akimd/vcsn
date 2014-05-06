@@ -62,8 +62,7 @@ namespace vcsn
           {
             os_ <<
               "  {\n"
-              "    node [style = invis, shape = none, label = \"\""
-              ", width = 0, height = 0]\n";
+              "    node [shape = point, width = 0]\n";
             for (auto s : initials_())
               os_ << "    I" << states_[s] << '\n';
             for (auto s : finals_())

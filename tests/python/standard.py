@@ -17,7 +17,7 @@ digraph
   vcsn_context = "lal_char(ab)_q"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     I2
     F
@@ -43,7 +43,7 @@ digraph
   vcsn_context = "lal_char(ab)_q"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I3
     F2
     F3
@@ -74,7 +74,7 @@ a = vcsn.automaton('''digraph
  vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
  rankdir = LR
  {
-   node [style = invis, shape = none, label = "", width = 0, height = 0]
+   node [shape = point, width = 0]
    I0
    F0
    F1
@@ -93,7 +93,7 @@ exp = '''digraph
   vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I1
     F1
   }
@@ -134,7 +134,7 @@ check('(?@lal_char(ab)_b)\z',
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
   }
   {
@@ -151,7 +151,7 @@ check('(?@lal_char(ab)_b)\e',
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -170,7 +170,7 @@ check('(?@lal_char(ab)_b)a',
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -191,7 +191,7 @@ check('(?@lal_char(ab)_b)a+b',
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
     F3
@@ -219,7 +219,7 @@ check('(?@lal_char(abc)_b)abc',
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F4
   }
@@ -244,7 +244,7 @@ check('(?@lal_char(abcd)_b)ab+cd',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F3
     F6
@@ -273,7 +273,7 @@ check('(?@lal_char(abcd)_b)a(b+c)d',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F4
   }
@@ -301,7 +301,7 @@ check('(?@lal_char(abcd)_b)(ab+cd+abcd)abc',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F12
   }
@@ -348,7 +348,7 @@ check('(?@lal_char(abcd)_b)\z*',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -366,7 +366,7 @@ check('(?@lal_char(abcd)_b)\e*',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -384,7 +384,7 @@ check('(?@lal_char(abcd)_b)a*',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -407,7 +407,7 @@ check('(?@lal_char(abcd)_b)(a+b)*',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -437,7 +437,7 @@ check('(?@lal_char(abcd)_b)(ab)*',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F3
@@ -462,7 +462,7 @@ check('(?@lal_char(abcd)_b)a**',
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -491,7 +491,7 @@ check('(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)',
   vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
     F4
@@ -522,7 +522,7 @@ check('(?@lal_char(ab)_z)<12>\e',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -545,7 +545,7 @@ check('(?@lal_char(ab)_z)\e+a+\e',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F2
@@ -568,7 +568,7 @@ check('(?@lal_char(ab)_z)<12>\e+<23>a+<34>b',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F2
@@ -595,7 +595,7 @@ check('(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F2
@@ -622,7 +622,7 @@ check('(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F2
@@ -653,7 +653,7 @@ check('(?@lal_char(ab)_z)<12>(ab)<23>',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F3
   }
@@ -679,7 +679,7 @@ check('(?@lal_char(ab)_z)\z*',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -699,7 +699,7 @@ check('(?@lal_char(ab)_z)(<2>a)*',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -722,7 +722,7 @@ check('(?@lal_char(ab)_z)<2>a*<3>',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -745,7 +745,7 @@ check('(?@lal_char(ab)_z)(<2>a+<3>b)*',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -775,7 +775,7 @@ check('(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -805,7 +805,7 @@ check('(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F3
@@ -836,7 +836,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F5
@@ -863,7 +863,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F4

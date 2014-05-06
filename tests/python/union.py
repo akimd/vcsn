@@ -18,7 +18,7 @@ digraph
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -50,7 +50,7 @@ digraph
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -72,7 +72,7 @@ digraph
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     I3
     F0
@@ -115,7 +115,7 @@ digraph
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     I2
     F0

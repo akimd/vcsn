@@ -20,7 +20,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -45,7 +45,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -68,7 +68,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -91,7 +91,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -115,7 +115,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }

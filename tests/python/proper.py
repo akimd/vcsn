@@ -44,7 +44,7 @@ digraph
   vcsn_context = "law_char(ab)_r"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
   }
@@ -80,7 +80,7 @@ digraph
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -149,7 +149,7 @@ digraph
   vcsn_context = "law_char(ab)_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
     F2
@@ -206,7 +206,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I
     F
   }
@@ -224,7 +224,7 @@ digraph
   vcsn_context = "lan_char(z)_ratexpset<lal_char(abcd)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -255,7 +255,7 @@ digraph
   rankdir = LR
   node [shape = circle]
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I
     F
   }
@@ -280,7 +280,7 @@ digraph
   vcsn_context = "lan_char(z)_ratexpset<lal_char(abcdefgh)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F2
@@ -316,7 +316,7 @@ digraph
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -351,7 +351,7 @@ digraph
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F0
     F1
@@ -393,7 +393,7 @@ digraph
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
     F2
@@ -435,7 +435,7 @@ digraph
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
     F2

@@ -31,7 +31,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(a)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -56,7 +56,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F7
   }
@@ -91,7 +91,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F7
   }
@@ -126,7 +126,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F9
   }
@@ -166,7 +166,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F9
   }
@@ -210,7 +210,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F3
   }
@@ -238,7 +238,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F1
   }
@@ -258,7 +258,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -284,7 +284,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -310,7 +310,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -336,7 +336,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -371,7 +371,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -406,7 +406,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -436,7 +436,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(ab)>_z"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -472,7 +472,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -515,7 +515,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(abcd)>_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F2
   }
@@ -556,7 +556,7 @@ r'''digraph
   vcsn_context = "lan<lal_char(a)>_ratexpset<lal_char(xyz)_z>"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F7
   }
