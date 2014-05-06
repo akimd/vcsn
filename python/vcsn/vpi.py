@@ -365,3 +365,6 @@ def show():
 def list_functions():
   import vcsn
   help(vcsn)
+
+# Work around a temporary glitch:
+automaton.__and__ = lambda l, r: clone(conjunction(l, r))
