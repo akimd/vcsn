@@ -133,10 +133,12 @@ namespace vcsn
           s = xgetenv("VCSN_CXX", VCSN_CXX)
             + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
             + " " + s;
-          if (getenv("VCSN_DEBUG"))
+          //if (getenv("VCSN_DEBUG"))
             std::cerr << "run: " << s << std::endl;
           if (system(s.c_str()))
             raise("cannot run: ", s);
+          else
+            std::cerr << "Success.\n";
         }
 
         /// Where the runtime compilation files must be put.
