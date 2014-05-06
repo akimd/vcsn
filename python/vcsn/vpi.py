@@ -235,12 +235,27 @@ def context_name(*arguments):
     argno = len(arguments)
     if argno < 1:
         raise Exception("too few parameters")
+    elif type(arguments[0]) == list:
+        if argno == 2:
+            return transducer_context_name(*arguments)
+        else:
+            raise Exception("transducer syntax requires two arguments")
     elif argno > 3:
         raise Exception("too many parameters")
     elif argno == 1:
         return arguments[0]
     else:
         return context_name_2_or_3(*arguments)
+def transducer_context_name(alphabets, weightset):
+    res = 'lat<'
+    initial = True
+    for a in alphabets:
+        if not initial:
+            res += ', '
+        initial = False
+        res += 'lan_char(' + a +  ')'
+    res += '>_' + weightset
+    return res
 
 original_context = context
 def context(*args):
