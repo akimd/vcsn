@@ -451,6 +451,8 @@ namespace vcsn
         add_one_transitions_(src, psrc, indices);
       }
 
+      /// Add the epsilon transitions leaving the state src, if it is relevant
+      /// (i.e. only for the labelsets that have epsilons).
       template <std::size_t... I>
       void add_one_transitions_(const state_t src, const pair_t& psrc, seq<I...>)
       {
@@ -462,11 +464,14 @@ namespace vcsn
         };
       }
 
+      /// In the case where the labelset doesn't have epsilon, do nothing
       template <std::size_t I, typename L>
       typename std::enable_if<!L::has_one(), void>::type
       maybe_add_one_transitions_(const L&, const state_t, const pair_t&)
       {}
 
+      /// If the labelset has epsilon, add the relevant epsilon-transitions
+      /// leaving the state
       template <std::size_t I, typename L>
       typename std::enable_if<L::has_one(), void>::type
       maybe_add_one_transitions_(const L& ls, const state_t src,
@@ -478,6 +483,9 @@ namespace vcsn
                                 [ls.one()]);
       }
 
+      /// If every band after this one has only incoming epsilon transitions,
+      /// add in the result automaton all the outgoing epsilon transitions of
+      /// the Ith band.
       template <std::size_t I>
       void add_one_transitions_(const state_t src, const pair_t& psrc,
                                 const typename
@@ -493,6 +501,8 @@ namespace vcsn
             }
       }
 
+      /// Check if all the bands after the Ith have only incoming epsilon
+      /// transitions.
       template <std::size_t... I>
       bool has_epsilon_in(const pair_t& psrc, std::size_t i, seq<I...>) const
       {
@@ -503,6 +513,8 @@ namespace vcsn
         return false;
       }
 
+      /// Check if the transition is epsilon (in the case of a labelset with
+      /// epsilon).
       template <typename A>
       typename std::enable_if<A::context_t::labelset_t::has_one(),
                               bool>::type
@@ -511,6 +523,8 @@ namespace vcsn
         return aut.labelset()->is_one(aut.label_of(tr));
       }
 
+      /// Same as above, but for labelsets without epsilon, so it's always
+      /// false.
       template <typename A>
       constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
                               bool>::type
@@ -520,6 +534,8 @@ namespace vcsn
         return false;
       }
 
+      /// Check if the state has only incoming epsilon transitions.
+      /// As it is in the case of the epsilon-free labelset, it's always false.
       template <typename Aut>
       constexpr typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
                   bool>::type
@@ -529,6 +545,7 @@ namespace vcsn
         return false;
       }
 
+      /// Check if the state has only incoming epsilon transitions.
       template <typename Aut>
       typename std::enable_if<Aut::context_t::labelset_t::has_one(),
                  bool>::type
