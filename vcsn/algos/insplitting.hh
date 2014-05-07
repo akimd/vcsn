@@ -5,6 +5,7 @@
 
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/fwd.hh>
 # include <vcsn/misc/pair.hh>
 # include <vcsn/misc/attributes.hh>
 
@@ -12,11 +13,29 @@ namespace vcsn
 {
   namespace detail
   {
+    template <typename A, typename B>
+    struct maybe_blind_copier
+    {
+      void operator()(const A& src, B& dst)
+      {
+        copy_into(src, dst);
+      }
+    };
+
+    template <typename A, std::size_t I, typename B>
+    struct maybe_blind_copier<blind_automaton<I, A>, B>
+    {
+      void operator()(const blind_automaton<I, A>&, B&)
+      {
+        raise("Cannot copy a blind_automaton");
+      }
+    };
+
     template <class Aut>
     class insplitter
     {
-
       using automaton_t = Aut;
+      using res_automaton_t = typename automaton_t::self_nocv_t;
       using state_t = typename automaton_t::state_t;
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
@@ -34,10 +53,13 @@ namespace vcsn
         : res_(aut.context())
       {}
 
-      Aut split(const Aut& aut)
+      res_automaton_t split(const Aut& aut)
       {
         if (!Aut::context_t::labelset_t::has_one())
-          return copy(aut);
+          {
+            maybe_blind_copier<automaton_t, res_automaton_t>{}(aut, res_);
+            return std::move(res_);
+          }
 
         states_assoc[pair_t(aut.pre(), false)] = res_.pre();
         states_assoc[pair_t(aut.post(), false)] = res_.post();
@@ -66,10 +88,10 @@ namespace vcsn
           for (bool epsilon : { false, true })
             if (exists(st, epsilon))
               for (auto tr : aut.all_out(st))
-                res_.add_transition(states_assoc[pair_t(st, epsilon)],
-                                   states_assoc[pair_t(aut.dst_of(tr),
-                                                       is_one(aut, tr))],
-                                   aut.label_of(tr), aut.weight_of(tr));
+                res_.add_transition_copy(aut, states_assoc[pair_t(st, epsilon)],
+                                         states_assoc[pair_t(aut.dst_of(tr),
+                                                             is_one(aut, tr))],
+                                         tr, aut.weight_of(tr));
 
         return std::move(res_);
       }
@@ -97,14 +119,14 @@ namespace vcsn
       }
 
 
-      automaton_t res_;
+      res_automaton_t res_;
     };
 
   } // namespace detail
 
   template <typename Aut>
   inline
-  Aut
+  typename Aut::self_nocv_t
   insplit(const Aut& aut)
   {
     detail::insplitter<Aut> insplit{aut};

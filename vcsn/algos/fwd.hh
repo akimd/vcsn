@@ -12,6 +12,11 @@ namespace vcsn
   template <typename Aut>
   bool is_valid(const Aut& aut);
 
+  namespace detail
+  {
+    template <std::size_t Band, typename Aut>
+    class blind_automaton;
+  }
 }
 
 #endif // !VCSN_ALGOS_FWD_HH

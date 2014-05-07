@@ -45,7 +45,7 @@ namespace vcsn
       static_assert(Aut::context_t::labelset_t::size() > Band, "band outside of the tuple");
 
       /// The type of the automata to produce from this kind o
-      /// automata.  For instance, determinizing a
+      /// automata.  For instance, insplitting on a
       /// blind_automaton<const mutable_automaton<Ctx>> should
       /// yield a blind_automaton<mutable_automaton<Ctx>>, without
       /// the "inner" const.
@@ -74,8 +74,6 @@ namespace vcsn
       using res_label_t = typename res_labelset_t::value_t;
       using weightset_t = typename automaton_t::weightset_t;
 
-      //FIXME: not pretty, a bit of a short-circuit.
-      //using kind_t = typename labelset_t::kind_t;
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using context_t = ::vcsn::context<res_labelset_t, weightset_t>;
 
@@ -112,7 +110,7 @@ namespace vcsn
         return res_labelset_(hidden_indices);
       }
 
-      labelset_t
+      std::shared_ptr<labelset_t>
       labelset() const
       {
         return std::make_shared<labelset_t>(std::get<Band>(this->aut_->labelset()->sets()));
@@ -250,10 +248,8 @@ namespace vcsn
 
       DEFINE(get_initial_weight);
 
-      //ATTRIBUTE_PURE
       DEFINE(get_final_weight);
 
-      //ATTRIBUTE_PURE
       DEFINE(weight_of);
 # undef DEFINE
     };
@@ -287,8 +283,8 @@ namespace vcsn
       using seq = vcsn::detail::index_sequence<I...>;
 
     public:
-      using clhs_t = blind_automaton<1, Lhs>;
-      using crhs_t = blind_automaton<0, Lhs>;
+      using clhs_t = Lhs;
+      using crhs_t = Rhs;
       using hidden_l_label_t = typename clhs_t::res_label_t;
       using hidden_r_label_t = typename crhs_t::res_label_t;
       using hidden_l_labelset_t = typename clhs_t::res_labelset_t;
@@ -302,7 +298,8 @@ namespace vcsn
       /// its join for shuffle and infiltration.
       using weightset_t = join_t<typename Lhs::context_t::weightset_t,
                                  typename Rhs::context_t::weightset_t>;
-      using labelset_t = typename concat_tupleset<hidden_l_labelset_t, hidden_r_labelset_t>::type;
+      using labelset_t = typename concat_tupleset<hidden_l_labelset_t,
+                                                  hidden_r_labelset_t>::type;
 
       using res_label_t = typename labelset_t::value_t;
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
@@ -555,7 +552,7 @@ namespace vcsn
                               bool>::type
       is_one(const A& aut, typename A::transition_t tr) const
       {
-        return aut.labelset().is_one(aut.label_of(tr));
+        return aut.labelset()->is_one(aut.label_of(tr));
       }
 
       template <typename A>
@@ -601,11 +598,19 @@ namespace vcsn
   template <typename Lhs, typename Rhs>
   auto
   compose(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::composer<const Lhs, const Rhs>::automaton_t
+    -> typename detail::composer<detail::blind_automaton<1, const Lhs>,
+                                 typename detail::blind_automaton<0, const Rhs>
+                                   ::self_nocv_t>::automaton_t
   {
-    auto l = sort(lhs);
-    auto r = sort(rhs);
-    detail::composer<const Lhs, const Rhs> compose(l, r);
+    auto sorted = sort(lhs); //Need an lvalue to take the address
+    detail::blind_automaton<1, const Lhs> l
+      = detail::blind_automaton<1, const Lhs>{sorted};
+    detail::blind_automaton<0, const Rhs> tmp_r{rhs};
+    typename detail::blind_automaton<0, const Rhs>::self_nocv_t r
+      = insplit(tmp_r); // Same here
+    detail::composer<detail::blind_automaton<1, const Lhs>,
+                     typename detail::blind_automaton<0, const Rhs>::self_nocv_t>
+                       compose(l, r);
     auto res = compose.compose();
     if (getenv("VCSN_ORIGINS"))
       compose.print(std::cout, compose.origins());
