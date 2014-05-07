@@ -31,7 +31,7 @@ namespace vcsn
     public:
 
       insplitter (const Aut& aut)
-        : res(aut.context())
+        : res_(aut.context())
       {}
 
       Aut split(const Aut& aut)
@@ -39,8 +39,8 @@ namespace vcsn
         if (!Aut::context_t::labelset_t::has_one())
           return copy(aut);
 
-        states_assoc[pair_t(aut.pre(), false)] = res.pre();
-        states_assoc[pair_t(aut.post(), false)] = res.post();
+        states_assoc[pair_t(aut.pre(), false)] = res_.pre();
+        states_assoc[pair_t(aut.post(), false)] = res_.post();
 
         for (auto st : aut.states())
         {
@@ -57,21 +57,21 @@ namespace vcsn
               break;
           }
           if (epsilon_in)
-            states_assoc[pair_t(st, true)] = res.new_state();
+            states_assoc[pair_t(st, true)] = res_.new_state();
           if (letter_in)
-            states_assoc[pair_t(st, false)] = res.new_state();
+            states_assoc[pair_t(st, false)] = res_.new_state();
         }
 
         for (auto st : aut.all_states())
           for (bool epsilon : { false, true })
             if (exists(st, epsilon))
               for (auto tr : aut.all_out(st))
-                res.add_transition(states_assoc[pair_t(st, epsilon)],
+                res_.add_transition(states_assoc[pair_t(st, epsilon)],
                                    states_assoc[pair_t(aut.dst_of(tr),
                                                        is_one(aut, tr))],
                                    aut.label_of(tr), aut.weight_of(tr));
 
-        return std::move(res);
+        return std::move(res_);
       }
     private:
 
@@ -97,7 +97,7 @@ namespace vcsn
       }
 
 
-      automaton_t res;
+      automaton_t res_;
     };
 
   } // namespace detail
