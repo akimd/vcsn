@@ -6,6 +6,7 @@
 # include <map>
 
 # include <vcsn/algos/insplitting.hh>
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
@@ -33,11 +34,12 @@ namespace vcsn
 
     /// Read-write on an automaton, that hides all bands but one.
     template <std::size_t Band, typename Aut>
-    class blind_automaton
+    class blind_automaton : public automaton_decorator<Aut>
     {
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
+      using super = automaton_decorator<Aut>;
 
       static_assert(Aut::context_t::is_lat, "requires labels_are_tuples");
       static_assert(Aut::context_t::labelset_t::size() > Band, "band outside of the tuple");
@@ -80,35 +82,7 @@ namespace vcsn
       using weightset_ptr = typename automaton_t::weightset_ptr;
 
     public:
-      blind_automaton(automaton_t& aut)
-        : aut_{&aut}
-      {}
-
-      blind_automaton(blind_automaton&& aut)
-      {
-        std::swap(aut_, aut.aut_);
-      }
-
-      /// Forward constructor.
-      template <typename... Args>
-      blind_automaton(Args&&... args)
-      {
-        automaton_t* a = new automaton_t(std::forward<Args>(args)...);
-        aut_= a;
-      }
-
-      blind_automaton& operator=(blind_automaton&& that)
-      {
-        if (this != &that)
-          *aut_ = std::move(*that.aut_);
-        return *this;
-      }
-
-      automaton_t*
-      original_automaton()
-      {
-        return aut_;
-      }
+      using super::automaton_decorator;
 
       static std::string sname()
       {
@@ -117,7 +91,7 @@ namespace vcsn
 
       std::string vname(bool full = true) const
       {
-        return "blind_automaton<" + aut_->vname(full) + ">";
+        return "blind_automaton<" + this->aut_->vname(full) + ">";
       }
 
       res_label_t
@@ -141,14 +115,10 @@ namespace vcsn
       labelset_t
       labelset() const
       {
-        return std::get<Band>(aut_->labelset()->sets());
+        return std::make_shared<labelset_t>(std::get<Band>(this->aut_->labelset()->sets()));
       }
 
     private:
-      /// The wrapped automaton.
-      // Must be defined early to please decltype.
-      automaton_t* aut_;
-
       hidden_indices_t hidden_indices{};
 
       static label_t hide_(hidden_label_t l)
@@ -159,7 +129,7 @@ namespace vcsn
       template <std::size_t... I>
       res_label_t hidden_label_of_(transition_t t, index_sequence<I...>) const
       {
-        hidden_label_t l = aut_->label_of(t);
+        hidden_label_t l = this->aut_->label_of(t);
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -167,7 +137,7 @@ namespace vcsn
       typename std::enable_if<L::has_one(), res_label_t>::type
       hidden_one_(index_sequence<I...>) const
       {
-        hidden_label_t l = aut_->labelset()->one();
+        hidden_label_t l = this->aut_->labelset()->one();
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -181,7 +151,7 @@ namespace vcsn
       template <std::size_t... I>
       res_labelset_t res_labelset_(index_sequence<I...>) const
       {
-        return res_labelset_t{std::get<I>(aut_->labelset()->sets())...};
+        return res_labelset_t{std::get<I>(this->aut_->labelset()->sets())...};
       }
 
     public:
@@ -191,12 +161,42 @@ namespace vcsn
       `----------------------------*/
 
       auto label_of(transition_t t) const
-        -> decltype(hide_(aut_->label_of(t)))
+        -> decltype(hide_(this->aut_->label_of(t)))
       {
-        return hide_(aut_->label_of(t));
+        return hide_(this->aut_->label_of(t));
       }
 
+      /*------------------------------.
+      | non-const forwarded methods.  |
+      `------------------------------*/
+
+# define DEFINE(Name)                                               \
+      template <typename... Args>                                   \
+      auto Name(Args&&... args)                                     \
+        -> decltype(this->aut_->Name(std::forward<Args>(args)...))  \
+      {                                                             \
+        return this->aut_->Name(std::forward<Args>(args)...);       \
+      }
+
+      DEFINE(new_state);
+
 # undef DEFINE
+
+      template <typename A>
+      transition_t new_transition_copy(const A& aut, state_t src,
+                                       state_t dst, transition_t t, weight_t k)
+      {
+        return hide_(this->aut_->new_tranisiton_copy(*aut.original_automaton(),
+                                               src, dst, t, k));
+      }
+
+      template <typename A>
+      weight_t add_transition_copy(const A& aut, state_t src,
+                                   state_t dst, transition_t t, weight_t k)
+      {
+        return this->aut_->add_transition_copy(*aut.original_automaton(),
+                                         src, dst, t, k);
+      }
 
       /*------------------------------.
       | constexpr forwarded methods.  |
@@ -213,8 +213,6 @@ namespace vcsn
 
       DEFINE(post);
       DEFINE(pre);
-      DEFINE(null_state);
-      DEFINE(null_transition);
 
 #undef DEFINE
 
@@ -224,16 +222,16 @@ namespace vcsn
 
       const typename automaton_t::context_t& context() const
       {
-        return aut_->context();
+        return this->aut_->context();
       }
 
-# define DEFINE(Name)                                           \
-      template <typename... Args>                               \
-      auto                                                      \
-      Name(Args&&... args) const                                \
-        -> decltype(aut_->Name(std::forward<Args>(args)...))    \
-      {                                                         \
-        return aut_->Name(std::forward<Args>(args)...);         \
+# define DEFINE(Name)                                                 \
+      template <typename... Args>                                     \
+      auto                                                            \
+      Name(Args&&... args) const                                      \
+        -> decltype(this->aut_->Name(std::forward<Args>(args)...))    \
+      {                                                               \
+        return this->aut_->Name(std::forward<Args>(args)...);         \
       }
 
       DEFINE(is_initial);
@@ -248,19 +246,6 @@ namespace vcsn
       DEFINE(initial_transitions);
       DEFINE(final_transitions);
 
-      DEFINE(all_states);
-      DEFINE(all_transitions);
-      DEFINE(labelset);
-      DEFINE(num_all_states);
-      DEFINE(num_finals);
-      DEFINE(num_initials);
-      DEFINE(num_states);
-      DEFINE(num_transitions);
-      DEFINE(states);
-      DEFINE(transitions);
-      DEFINE(weightset);
-
-      //ATTRIBUTE_PURE
       DEFINE(get_initial_weight);
 
       //ATTRIBUTE_PURE
