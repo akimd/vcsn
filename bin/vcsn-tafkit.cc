@@ -700,7 +700,8 @@ try
       ALGO(trim);
       ALGO(union_a);
       ALGO(universal);
-      return vcsn_main(argc - 1, argv + 1, *f);
+      if (f)
+        return vcsn_main(argc - 1, argv + 1, *f);
     }
   vcsn::raise("unknown command: " + cmd);
 }
