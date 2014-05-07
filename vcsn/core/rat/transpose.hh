@@ -104,7 +104,26 @@ namespace vcsn
 
       VCSN_RAT_VISIT(transposition, e)
       {
-        res_ = rs_.transposition(transpose(e.sub()));
+        // Don't stack indefinitly transpositions on top of
+        // transitions.  Not only is this useless, it would also break
+        // the involution as r.transpose().transpose() would not be r,
+        // but "r{T}{T}".  On the other hand, if "(abc){T}".tranpose()
+        // return "abc", we also lose the involution.
+        //
+        // So rather, don't stack more that two transpositions:
+        //
+        // (abc){T}.transpose() => (abc){T}{T}
+        // (abc){T}{T}.transpose() => (abc){T}
+        //
+        // Do the same with ldiv, for the same reasons: involution.
+        //
+        // (E\F).transpose() => (E\F){T}
+        // (E\F){T}.transpose() => (E\F)
+        if (e.sub()->type() == rat::type_t::transposition
+            || e.sub()->type() == rat::type_t::ldiv)
+          res_ = e.sub();
+        else
+          res_ = rs_.transposition(e.shared_from_this());
       }
 
       VCSN_RAT_VISIT(ldiv, e)

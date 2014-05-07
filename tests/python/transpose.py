@@ -14,9 +14,9 @@ def check(re, exp):
     CHECK_EQ(exp, r.transpose())
     CHECK_EQ(r, exp.transpose())
 
-## ------------------------ ##
-## vcsn transpose(ratexp).  ##
-## ------------------------ ##
+## ------------------- ##
+## transpose(ratexp).  ##
+## ------------------- ##
 
 ctx = vcsn.context('lal_char(abcd)_b')
 check('\e', '\e')
@@ -26,6 +26,9 @@ check('ab', 'ba')
 check('abc+aba', 'cba+aba')
 check('abc&aba', 'cba&aba')
 check('(ab)*', '(ba)*')
+check('(abcd){T}', '(abcd){T}{T}')
+check('ab{\}cd', '(ab{\}cd){T}')
+check('ab{/}cd', '((cd){T}{\}(ab){T})')
 
 ctx = vcsn.context('law_char(abcd)_b')
 check('\e', '\e')
