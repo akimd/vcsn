@@ -163,6 +163,7 @@ DEFINE_AUT_FUNCTION(aut_to_exp);
 DEFINE_AUT_FUNCTION(coaccessible);
 DEFINE_AUT_FUNCTION(complement);
 DEFINE_AUT_FUNCTION(complete);
+DEFINE_AUT_VARIADIC_FUNCTION(compose);
 DEFINE_AUT_VARIADIC_FUNCTION(concatenate);
 DEFINE_RATEXP_FUNCTION(constant_term);
 DEFINE_AUT_VARIADIC_FUNCTION(difference);
@@ -661,6 +662,7 @@ try
       ALGO(coaccessible);
       ALGO(complement);
       ALGO(complete);
+      ALGO(compose);
       ALGO(concatenate);
       ALGO(constant_term);
       ALGO(derivation);

@@ -57,7 +57,7 @@ case $1 in
   (accessible|are-equivalent|are-isomorphic \
       |aut-to-exp \
       |cat|chain|coaccessible|complement|complete \
-      |concatenate \
+      |compose|concatenate \
       |de-bruijn \
       |derivation|derived-term|determinize \
       |difference|divkbaseb \
