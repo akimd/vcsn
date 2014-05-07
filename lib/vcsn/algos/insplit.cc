@@ -1,5 +1,5 @@
 #include <vcsn/dyn/algos.hh>
-#include <vcsn/algos/insplitting.hh>
+#include <vcsn/algos/insplit.hh>
 #include <lib/vcsn/algos/registry.hh>
 
 

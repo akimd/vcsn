@@ -7,7 +7,7 @@
 # include <utility>
 
 # include <vcsn/algos/copy.hh>
-# include <vcsn/algos/insplitting.hh>
+# include <vcsn/algos/insplit.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp

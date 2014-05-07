@@ -1,5 +1,5 @@
-#ifndef VCSN_ALGOS_INSPLITTING_HH
-# define VCSN_ALGOS_INSPLITTING_HH
+#ifndef VCSN_ALGOS_INSPLIT_HH
+# define VCSN_ALGOS_INSPLIT_HH
 
 # include <unordered_map>
 
@@ -153,4 +153,4 @@ namespace vcsn
 
 } // namespace vcsn
 
-#endif // !VCSN_ALGOS_INSPLITTING_HH
+#endif // !VCSN_ALGOS_INSPLIT_HH

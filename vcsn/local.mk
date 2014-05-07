@@ -35,7 +35,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/info.hh                             \
-  %D%/algos/insplitting.hh                      \
+  %D%/algos/insplit.hh                          \
   %D%/algos/is-ambiguous.hh                     \
   %D%/algos/is-complete.hh                      \
   %D%/algos/is-deterministic.hh                 \
