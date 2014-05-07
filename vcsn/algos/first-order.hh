@@ -161,45 +161,41 @@ namespace vcsn
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = es_.one();
-        auto last = e.size() - 1;
-        for (size_t i = 0; i <= last; ++i)
-          {
-            auto r = e[transposed_ ? last - i : i];
-            value_t rhs = first_order(r);
-            if (transposed_)
-              r = rs_.transposition(r);
+        for (size_t i = 0, size = e.size(); i < size; ++i)
+          if (ws_.is_zero(res_.constant))
+            {
+              // Finish the product with all the remaining rhs and
+              // break.  This optimization (as opposed to performing
+              // all the remaining iterations and repeatedly calling
+              // ps.mul) improves the score for
+              // linear([ab]*a[ab]{150}) from 0.32s to 0.23s on
+              // erebus, clang++ 3.4.
+              ratexp_t rhss
+                = transposed_
+                ? rs_.transposition(prod_(e.begin(),
+                                          std::next(e.begin(), size-i)))
+                : prod_(std::next(e.begin(), i), std::end(e));
+              es_.rmul_here(res_, rhss);
+              break;
+            }
+          else
+            {
+              auto r = e[transposed_ ? size-1 - i : i];
+              value_t rhs = first_order(r);
+              if (transposed_)
+                r = rs_.transposition(r);
 
-            // (i): A(fo(lr)) = A(l).r
-            es_.rmul_here(res_, r);
+              // (i): A(fo(lr)) = A(l).r
+              es_.rmul_here(res_, r);
 
-            // Don't leave \z polynomials.
-            if (ws_.is_zero(res_.constant))
-              {
-                // Finish the product with all the remaining rhs and
-                // break.  This optimization (as opposed to performing
-                // all the remaining iterations and repeatedly calling
-                // ps.mul) improves the score for
-                // linear([ab]*a[ab]{150}) from 0.32s to 0.23s on
-                // erebus, clang++ 3.4.
-                ratexp_t rhss
-                  = transposed_
-                  ? rs_.transposition(prod_(e.begin(),
-                                            std::next(e.begin(), last-i)))
-                  : prod_(std::next(e.begin(), i+1), std::end(e));
-                es_.rmul_here(res_, rhss);
-                break;
-              }
-            else
-              {
-                // (ii) A(fo(lr)) += c(l).A(r)
-                for (const auto& p: rhs.polynomials)
-                  ps_.add_weight(res_.polynomials[p.first],
-                                 ps_.lmul(res_.constant, p.second));
+              // (ii) A(fo(lr)) += c(l).A(r)
+              for (const auto& p: rhs.polynomials)
+                ps_.add_weight(res_.polynomials[p.first],
+                               ps_.lmul(res_.constant, p.second));
 
-                // (iii) c(fo(lr)) = c(l).c(r)
-                res_.constant = ws_.mul(res_.constant, rhs.constant);
-              }
-          }
+              // (iii) c(fo(lr)) = c(l).c(r)
+              res_.constant = ws_.mul(res_.constant, rhs.constant);
+            }
       }
 
       /// Build a product for these expressions.  Pay attention to not

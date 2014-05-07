@@ -64,12 +64,12 @@ check('a{c}{c}', 'a.[\e{c}{c}] + b.[\z{c}{c}] + c.[\z{c}{c}]')
 check('\z{T}', '<\z>')
 check('\e{T}', '<\e>')
 check('a{T}', 'a.[\e]')
-check('(abc){T}', 'c.[ba]')
-check('(abc+aabbcc){T}', 'c.[ba + c(aabb){T}]')
-check('(<xy>abc<yz>){T}', 'c.[<zy>(ba)<yx>]')
+check('(abc){T}', 'c.[(ab){T}]')
+check('(abc+aabbcc){T}', 'c.[(ab){T} + (aabbc){T}]')
+check('(<xy>abc<yz>){T}', 'c.[<zy>(ab){T}<yx>]')
 
 check('(ab)*{T}', '<\e> + b.[a(ab)*{T}]')
-check('(<xy>abc<yz>)*{T}', '<\e> + c.[<zy>(ba)<yx>(<xy>(abc)<yz>)*{T}]')
+check('(<xy>abc<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 
 # Lquotient
 check('\e{\}\z', '<\z>')
