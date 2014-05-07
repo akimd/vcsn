@@ -5,6 +5,19 @@ from test import *
 
 ctx = vcsn.context("lal_char(abcd)_b")
 
+## ------------ ##
+## Complement.  ##
+## ------------ ##
+def check_complement(r1):
+    """Check that `complement` on a rational expression corresponds to
+    its concrete syntax."""
+    eff = ctx.ratexp(r1).complement()
+    exp = ctx.ratexp('({}){{c}}'.format(r1))
+    CHECK_EQ(exp, eff)
+
+check_complement('\z')
+check_complement('ab')
+
 ## -------- ##
 ## Concat.  ##
 ## -------- ##
@@ -80,6 +93,20 @@ check_sum('a*+b*+c+c*', '(a*+b*+c+c*)*')
 check_sum('(a*+b*+c+c*)*', '(a*a*a*b*b*a+b+a+b+a)')
 check_sum('a', '\e')
 check_sum('a', '\z')
+
+
+## --------------- ##
+## Transposition.  ##
+## --------------- ##
+def check_transposition(r1):
+    """Check that `transposition` on a rational expression corresponds to
+    its concrete syntax."""
+    eff = ctx.ratexp(r1).transposition()
+    exp = ctx.ratexp('({}){{T}}'.format(r1))
+    CHECK_EQ(exp, eff)
+
+check_complement('\z')
+check_complement('ab')
 
 
 ## -------- ##

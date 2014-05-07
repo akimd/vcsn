@@ -30,5 +30,12 @@ namespace vcsn
     {
       return detail::transpose_ratexp_registry().call(e);
     }
+
+    REGISTER_DEFINE(transposition_ratexp);
+    ratexp
+    transposition(const ratexp& r)
+    {
+      return detail::transposition_ratexp_registry().call(r);
+    }
   }
 }

@@ -439,6 +439,11 @@ struct ratexp
     return chain(min, min);
   }
 
+  ratexp complement() const
+  {
+    return vcsn::dyn::complement(r_);
+  }
+
   ratexp concatenate(const ratexp& rhs) const
   {
     return vcsn::dyn::concatenate(r_, rhs.r_);
@@ -543,9 +548,14 @@ struct ratexp
     return vcsn::dyn::thompson(r_);
   }
 
-  ratexp transpose()
+  ratexp transpose() const
   {
     return vcsn::dyn::transpose(r_);
+  }
+
+  ratexp transposition() const
+  {
+    return vcsn::dyn::transposition(r_);
   }
 
   vcsn::dyn::ratexp r_;
@@ -805,6 +815,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     ("ratexp",
      bp::init<const context&, const std::string&>())
     .def("chain", static_cast<ratexp::bin_chain_t>(&ratexp::chain), chain())
+    .def("complement", &ratexp::complement)
     .def("concatenate", &ratexp::concatenate)
     .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
@@ -828,6 +839,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("sum", &ratexp::sum)
     .def("thompson", &ratexp::thompson)
     .def("transpose", &ratexp::transpose)
+    .def("transposition", &ratexp::transposition)
     ;
 
   bp::class_<polynomial>

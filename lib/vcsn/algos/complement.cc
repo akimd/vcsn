@@ -8,11 +8,17 @@ namespace vcsn
   namespace dyn
   {
     REGISTER_DEFINE(complement);
-
     automaton
     complement(const automaton& aut)
     {
       return detail::complement_registry().call(aut);
+    }
+
+    REGISTER_DEFINE(complement_ratexp);
+    ratexp
+    complement(const ratexp& r)
+    {
+      return detail::complement_ratexp_registry().call(r);
     }
   }
 }

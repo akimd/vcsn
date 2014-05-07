@@ -35,7 +35,3 @@ ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)
 ratexp.info = lambda self: info_to_dict(self.format('info'))
 
 ratexp.shortest = lambda self, num = 1: self.standard().shortest(num)
-
-# FIXME: should be in C++.  Likewise for complement etc.
-ratexp.transposition = \
-  lambda self: self.context().ratexp("({}){{T}}".format(self))

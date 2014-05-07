@@ -315,6 +315,7 @@ namespace vcsn
         REGISTER(chain, aut_t, int, int);
         REGISTER(chain_ratexp, rs_t, int, int);
         REGISTER(coaccessible, aut_t);
+        REGISTER(complement_ratexp, rs_t);
         REGISTER(concatenate, aut_t, aut_t);
         REGISTER(concatenate_ratexp, rs_t, rs_t);
         REGISTER(conjunction_ratexp, rs_t, rs_t);
@@ -374,6 +375,7 @@ namespace vcsn
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_ratexp, rs_t);
+        REGISTER(transposition_ratexp, rs_t);
         REGISTER(trim, aut_t);
         REGISTER(union_a, aut_t, aut_t);
 

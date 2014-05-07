@@ -12,6 +12,10 @@
 namespace vcsn
 {
 
+  /*------------------------.
+  | complement(automaton).  |
+  `------------------------*/
+
   template <typename Aut>
   void
   complement_here(Aut& aut)
@@ -52,16 +56,11 @@ namespace vcsn
     return res;
   }
 
-
-  /*------------------.
-  | dyn::complement.  |
-  `------------------*/
-
   namespace dyn
   {
     namespace detail
     {
-
+      /// Bridge.
       template <typename Aut>
       automaton
       complement(const automaton& aut)
@@ -72,6 +71,30 @@ namespace vcsn
 
       REGISTER_DECLARE(complement,
                        (const automaton& aut) -> automaton);
+    }
+  }
+
+  /*---------------------.
+  | complement(ratexp).  |
+  `---------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet>
+      ratexp
+      complement_ratexp(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>();
+
+        return make_ratexp(e.ratexpset(),
+                           e.ratexpset().complement(e.ratexp()));
+      }
+
+      REGISTER_DECLARE(complement_ratexp,
+                       (const ratexp& e) -> ratexp);
     }
   }
 

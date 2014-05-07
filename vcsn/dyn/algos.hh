@@ -54,6 +54,9 @@ namespace vcsn
     /// \pre aut is complete
     automaton complement(const automaton& aut);
 
+    /// Add the complement operator to \a r.
+    ratexp complement(const ratexp& r);
+
     /// A completed copy of \a aut.
     /// \pre aut is lal
     automaton complete(const automaton& aut);
@@ -431,6 +434,9 @@ namespace vcsn
 
     /// Transpose \a e.
     ratexp transpose(const ratexp& e);
+
+    /// Add the transposition operator to \a r.
+    ratexp transposition(const ratexp& r);
 
     /// The useful subautomaton of \a aut.
     automaton trim(const automaton& aut);

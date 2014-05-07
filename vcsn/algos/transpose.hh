@@ -10,6 +10,9 @@
 namespace vcsn
 {
 
+  /*-----------------------.
+  | transpose(automaton).  |
+  `-----------------------*/
   namespace detail
   {
     /// Read-write on an automaton, that transposes everything.
@@ -260,14 +263,11 @@ namespace vcsn
   }
 
 
-
   namespace dyn
   {
     namespace detail
     {
-      /*----------------------------.
-      | dyn::transpose(automaton).  |
-      `----------------------------*/
+      /// Bridge.
       template <typename Aut>
       automaton
       transpose(automaton& aut)
@@ -279,11 +279,17 @@ namespace vcsn
 
       REGISTER_DECLARE(transpose,
                        (automaton& aut) -> automaton);
+    }
+  }
 
 
-      /*-------------------------.
-      | dyn::transpose(ratexp).  |
-      `-------------------------*/
+  /*-------------------------.
+  | dyn::transpose(ratexp).  |
+  `-------------------------*/
+  namespace dyn
+  {
+    namespace detail
+    {
       /// Bridge.
       template <typename RatExpSet>
       ratexp
@@ -297,6 +303,29 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(transpose_ratexp,
+                       (const ratexp& e) -> ratexp);
+    }
+  }
+
+  /*-----------------------------.
+  | dyn::transposition(ratexp).  |
+  `-----------------------------*/
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSet>
+      ratexp
+      transposition_ratexp(const ratexp& exp)
+      {
+        const auto& e = exp->as<RatExpSet>();
+
+        return make_ratexp(e.ratexpset(),
+                           e.ratexpset().transposition(e.ratexp()));
+      }
+
+      REGISTER_DECLARE(transposition_ratexp,
                        (const ratexp& e) -> ratexp);
     }
   }
