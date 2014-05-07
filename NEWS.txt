@@ -5,7 +5,7 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-05-05
-** insplitting: new algorithm
+** insplit: new algorithm (static, dyn, Python)
 It is now possible to do the in-splitting of an automaton, i.e. to get the
 equivalent automaton such that each state have either only incoming
 epsilon-transitions or no incoming epsilon-transitions.  This is the first
