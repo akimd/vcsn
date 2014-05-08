@@ -70,8 +70,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/universal.py                              \
   %D%/weight.py
 
-EXTRA_DIST += %D%/test.py
-$(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) %D%/test.py
+$(%C%_TESTS:.py=.log): $(VCSN_PYTHON_DEPS) $(srcdir)/tests/bin/test.py
 
 dist_TESTS += $(%C%_TESTS)
 

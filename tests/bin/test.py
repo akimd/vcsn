@@ -49,7 +49,7 @@ def here():
     finfo = inspect.getframeinfo(frame)
     return finfo.filename + ":" + str(finfo.lineno)
 
-def FAIL(*msg):
+def FAIL(*msg, **kwargs):
     global count, nfail
     count += 1
     nfail += 1
@@ -60,10 +60,11 @@ def FAIL(*msg):
         print('not ok ', count, m)
     else:
         print('not ok ', count)
-    print(here() + ": fail:", *msg)
+    loc = kwargs['loc'] if 'loc' in kwargs else here()
+    print(loc + ": fail:", *msg)
     print()
 
-def PASS(*msg):
+def PASS(*msg, **kwargs):
     global count, npass
     count += 1
     npass += 1
@@ -81,7 +82,7 @@ def XFAIL(fun):
     else:
         FAIL('did not raise an exception', str(fun))
 
-def CHECK_EQ(expected, effective):
+def CHECK_EQ(expected, effective, loc = None):
     "Check that effective value is equal to expected."
     if expected == effective:
         PASS()
@@ -90,9 +91,9 @@ def CHECK_EQ(expected, effective):
         eff = str(effective)
         msg = exp + " != " + eff
         if msg.count("\n") == 0:
-            FAIL(msg)
+            FAIL(msg, loc=loc)
         else:
-            FAIL()
+            FAIL(loc=loc)
             rst_file("Expected output", exp)
             rst_file("Effective output", eff)
         rst_diff(exp, eff)

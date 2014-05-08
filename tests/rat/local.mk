@@ -16,6 +16,7 @@ RAT_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/tests/bin/rat.py
 AM_RAT_LOG_DEPS =				\
   $(RAT_LOG_DRIVER)				\
   $(VCSN_PYTHON_DEPS)				\
+  $(srcdir)/tests/bin/test.py                   \
   %D%/common.rat %D%/common-weights.rat
 $(%C%_TESTS:.rat=.log): $(AM_RAT_LOG_DEPS)
 

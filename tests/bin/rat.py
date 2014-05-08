@@ -2,10 +2,8 @@
 
 from __future__ import print_function
 
-import os, re, subprocess, sys, vcsn
-
-fail = 0
-count = 0
+import os, re, sys, vcsn
+from test import *
 
 # The current atom kind (argument for -a).
 labels = 'letters'
@@ -35,31 +33,22 @@ def context_update():
   ctx = vcsn.context(name)
   print("#", ctx, "(", labels, ",", ws, "->", name, ")")
 
-#=item C<pp($in)>
-#
-#Parse and pretty-print.  If it fails, prepend "! " to the error
-#message and return it as result.  Strip the "try -h" line.
-#
-#=cut
 
 def pp(re):
+  '''Parse and pretty-print.  If it fails, prepend "! " to the error
+  message and return it as result.  Strip the "try -h" line.'''
   try:
     return str(ctx.ratexp(re))
   except RuntimeError:
     return "! " + str(sys.exc_info()[1])
 
-# =item C<check_rat_exp($file)
-#
-# Run C<$prog> on the content of C<$file>.
-#
-# =cut
-
 def check_rat_exp(fname):
   file = open(fname, 'r')
   lineno = 0
-  global ws, labels, count, fail
+  global ws, labels
   for line in file:
     lineno += 1
+    loc = fname + ':' + str(lineno)
 
     m = re.match('#.*$|$', line)
     if m is not None:
@@ -84,9 +73,6 @@ def check_rat_exp(fname):
       check_rat_exp(os.path.dirname(fname) + '/' + m.group(1))
       continue
 
-    # Location prefix for error messages.
-    loc = fname + ':' + str(lineno) + ':'
-
     # == tests that boths are equivalent.
     # => check the actual result.
     m = re.match('(.*\S)\s*(=>|==)\s*(.*)$', line)
@@ -99,13 +85,7 @@ def check_rat_exp(fname):
         R = pp(r)
       else:
         R = r
-      global count
-      count += 1
-      if L == R:
-        print('ok', count)      #, L, '==', R
-      else:
-        fail += 1
-        print('not ok', count, loc, L, '!=', R)
+      CHECK_EQ(R, L, loc)
       continue
 
     # !: Look for syntax errors.
@@ -114,15 +94,9 @@ def check_rat_exp(fname):
       l = m.group(1)
       err = m.group(2)
       L = pp(l)
-      count += 1
-      if L == err:
-        print('ok', count)      #, l, '=>', L
-      else:
-        fail += 1
-        print('not ok', count, loc, l, '=>', L, "!=", err)
+      CHECK_EQ(err, L, loc)
       continue
 
-    print(loc, 'invalid input:', line)
+    print(loc + ":", 'invalid input:', line)
 
 check_rat_exp(sys.argv[1])
-print('1..'+str(count))

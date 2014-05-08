@@ -18,6 +18,8 @@
 check_PROGRAMS =
 TAP_DRIVER = $(PERL) $(top_srcdir)/build-aux/bin/tap-driver.pl
 
+EXTRA_DIST += %D%/bin/test.py
+
 dist_noinst_SCRIPTS += %D%/bin/checker
 TEST_EXTENSIONS += .chk
 CHK_LOG_DRIVER = $(TAP_DRIVER) $(srcdir)/%D%/bin/checker
@@ -90,12 +92,17 @@ $(TEST_LOGS): %D%/bin/vcsn
 AM_TESTS_ENVIRONMENT = $(BUILDCHECK_ENVIRONMENT)
 
 # Use the wrappers to run the non-installed executables.
-BUILDCHECK_ENVIRONMENT +=                       \
-  . $(abs_top_builddir)/tests/bin/vcsn;
+# Find test.py which is in tests/bin.
+BUILDCHECK_ENVIRONMENT +=                               \
+  . $(abs_top_builddir)/tests/bin/vcsn;                 \
+  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$$PYTHONPATH;  \
+  export PYTHONPATH;
 
-INSTALLCHECK_ENVIRONMENT +=                                             \
-  PATH=$(DESTDIR)$(bindir):$$PATH; export PATH;                         \
-  PYTHONPATH=$(DESTDIR)$(pyexecdir):$$PYTHONPATH; export PYTHONPATH;
+INSTALLCHECK_ENVIRONMENT +=						      \
+  PATH=$(DESTDIR)$(bindir):$$PATH;					      \
+  export PATH;								      \
+  PYTHONPATH=$(abs_top_srcdir)/tests/bin:$(DESTDIR)$(pyexecdir):$$PYTHONPATH; \
+  export PYTHONPATH;
 
 # Run the tests with the install-environment.
 #
@@ -104,7 +111,7 @@ INSTALLCHECK_ENVIRONMENT +=                                             \
 # distchecks in parallel on different versions of vcsn, race
 # conditions would make it possible to mix shared objects of different
 # versions of vcsn.  Define VCSN_HOME here, not in
-# INSTALLCHECK_ENVIRONMENT, as the latter is evaluated in several
+# INSTALLCHECK_ENVIROMNENT, as the latter is evaluated in several
 # shells, yielding several such directories instead of a single one
 # for the whole installcheck run.
 #
