@@ -71,3 +71,5 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
   I0 -> 0
   0 -> F0
 }"""))
+
+check(load("left.gv"), load("right.gv"), load("result.gv"))
