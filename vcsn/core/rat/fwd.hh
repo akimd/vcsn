@@ -45,14 +45,14 @@ namespace vcsn
     };
 
     /// Whether is a constant (\z or \e).
-    constexpr bool is_constant(type_t t)
+    inline constexpr bool is_constant(type_t t)
     {
       return (t == type_t::one
               || t == type_t::zero);
     }
 
     /// Whether star, complement.
-    constexpr bool is_unary(type_t t)
+    inline constexpr bool is_unary(type_t t)
     {
       return (t == type_t::complement
               || t == type_t::star
@@ -60,7 +60,7 @@ namespace vcsn
     }
 
     /// Whether one of the variadic types.
-    constexpr bool is_variadic(type_t t)
+    inline constexpr bool is_variadic(type_t t)
     {
       return (t == type_t::conjunction
               || t == type_t::ldiv

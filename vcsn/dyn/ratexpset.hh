@@ -69,11 +69,11 @@ namespace detail
     /// Right-multiplication by a weight.
     virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
+    using char_class_t = std::set<std::pair<std::string, std::string>>;
     /// A ratexp matching one character amongst \a chars.
     /// \param accept
     ///   Whether to accept these characters ([abc]) as opposed
     ///   to refusing them ([^abc]).
-    using char_class_t = std::set<std::pair<std::string, std::string>>;
     virtual value_t char_class(const char_class_t& chars,
                                bool accept = true) const = 0;
 
