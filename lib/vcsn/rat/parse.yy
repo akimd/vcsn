@@ -154,10 +154,11 @@
 %right "{\\}"
 %left "."
 %right "weight" // Match longest series of "weight".
-%precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
+%precedence "(" "\\z" "\\e" "["
+%precedence CONCAT // exp exp . "(": reduce
 %precedence RWEIGHT
-%precedence "(" "\\z" "\\e" "letter" "["
-%precedence CONCAT
+%precedence "letter" // RWEIGHT < LETTER: a <x> . b => shift
+%precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
 %precedence "*" "{c}" "{T}"
 
 %start input
@@ -200,7 +201,7 @@ exp:
     else
       {
         $$.exp = MAKE(mul, $1.exp, $2.exp);
-        $$.parens = $2.parens;
+        $$.parens = $1.parens || $2.parens;
       }
   }
 | exp "*"           { $$ = power(driver_.ratexpset_, $1.exp, $2); }

@@ -135,5 +135,5 @@ check_format('lal_char(0123)_b',
              "0 \\, 1 \\, 2 \\, 3")
 check_format('lal_char(0123)_z',
              "<0123>0123",
-             "<123>(0123)",
-             r' \langle 123 \rangle \,\left(0 \, 1 \, 2 \, 3\right)')
+             "<123>0123",
+             r' \langle 123 \rangle \,0 \, 1 \, 2 \, 3')

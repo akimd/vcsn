@@ -62,57 +62,6 @@ that "a.proper(False).accessible() == a.proper()".
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
 
-** Parsing errors in ratexps
-*** In derived-term
-$ VCSN_ORIGINS=1 vcsn derived-term -C "lal_char(ab)_ratexpset<lal_char(xy)_b>" -e '(<x>b)*<y>a(<x>b+<y>a(<x>b)*<y>a)*'
-
-This has three states instead of two:
-
-/* Origins.
-    node [shape = box, style = rounded]
-    0 [label = "(<x>b)*<y>(a(<x>b+<y>(a(<x>b)*)<y>a)*)"]
-    1 [label = "(<x>b+<y>(a(<x>b)*)<y>a)*"]
-    2 [label = "(<x>b)*<y>a(<x>b+<y>(a(<x>b)*)<y>a)*"]
-
-as can be seen the problem is where the first <y> weight is attached.  In
-state 2, it is bound to the "a", which is not shown, but should:
-"...(<y>a)...".  We have the dual problem in the other expression.
-
-So we have two problems here:
-
-- the pretty-printing and the reader do not agree, as when entering the
-  ratexp of state 2 we get the expression of state 1.
-
-- when entering expression 2, we would prefer attaching the weight to the
-  "a" instead of all the rest, as it results in a smaller derived-term
-  automaton.
-
-In other words, both the parser and the pretty-printer must be revised.
-
-*** Probably related to the previous point:
-This is wrong:
-
-z = vcsn.context('lal_char(abc)_z')
-z.ratexp('((<12>a)b)<23>')
-(<12>ab)<23>
-
-z.ratexp('(<12>ab)<23>')
-<12>(ab)<23>
-
-*** Probably yet another incarnation of the previous point:
-
-a = q.ratexp('ab').derived_term() | q.ratexp('ab').derived_term()
-CHECK_EQ(q.ratexp('<3/4>ab+<3/4>ab'),
-         ('3/4' * a).ratexp())
-
-FAIL: tests/python/kmul.py 5 <3/4>(ab)+<3/4>(ab) != <3/4>ab+<3/4>ab
-
-Need to write:
-
-CHECK_EQ(q.ratexp('(<3/4>a)b+(<3/4>a)b'),
-         ('3/4' * a).ratexp())
-
-
 ** Open coded file names
 We must use genuine temporary files for vcsn.py conversions.  When possible,
 avoid files and use streams.

@@ -66,10 +66,10 @@ check('\e{T}', '<\e>')
 check('a{T}', 'a.[\e]')
 check('(abc){T}', 'c.[(ab){T}]')
 check('(abc+aabbcc){T}', 'c.[(ab){T} + (aabbc){T}]')
-check('(<xy>abc<yz>){T}', 'c.[<zy>(ab){T}<yx>]')
+check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>ab){T}]')
 
 check('(ab)*{T}', '<\e> + b.[a(ab)*{T}]')
-check('(<xy>abc<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
+check('(<xy>abc<yz>)*{T}', '<\e> + c.[<zy>(<xy>ab){T}((<xy>abc)<yz>)*{T}]')
 
 # Lquotient
 check('\e{\}\z', '<\z>')
