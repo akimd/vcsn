@@ -112,7 +112,11 @@
   yyo << ']';
 } <std::set<std::pair<std::string,std::string>>>;
 %printer { yyo << '<' << $$ << '>'; } "weight";
-%printer { driver_.ratexpset_->print(yyo, $$.exp); } <braced_ratexp>;
+%printer
+{
+  driver_.ratexpset_->print(yyo, $$.exp);
+  yyo << ($$.parens ? " (parens)" : " (no parens)");
+} <braced_ratexp>;
 
 %token
   AMPERSAND  "&"
