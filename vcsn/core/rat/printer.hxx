@@ -181,16 +181,15 @@ namespace vcsn
       ctx_.labelset()->print(out_, v.value(), format_);
     }
 
-    DEFINE::print_child(const node_t& child, const node_t& parent,
-                        bool force_parens)
+    DEFINE::print_child(const node_t& child, const node_t& parent)
       -> void
     {
       static bool force = !! getenv("VCSN_PARENS");
       bool parent_has_precedence = precedence(child) <= precedence(parent);
       bool needs_parens =
         (force
-         || force_parens
-         || (parent_has_precedence && ! (parent.is_unary() && child.is_unary())));
+         || (parent_has_precedence
+             && ! (parent.is_unary() && child.is_unary())));
       if (needs_parens)
         out_ << lparen_;
       else if (parent.is_unary())
@@ -209,10 +208,7 @@ namespace vcsn
     printer<RatExpSet>::print(const unary_t<Type>& v, const char* op)
       -> void
     {
-      // Force parens around the child if it is a left weight.  This
-      // is not needed for right weights: compare e<w>* with (<w>e)*.
-      const node_t& child = *v.sub();
-      print_child(child, v, child.type() == rat::type_t::lweight);
+      print_child(*v.sub(), v);
       out_ << op;
     }
 

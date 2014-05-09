@@ -95,11 +95,8 @@ namespace vcsn
       /// The precedence of \a v (to decide when to print parens).
       precedence_t precedence(const node_t& v) const;
 
-      /// Print the given child node, also knowing its parent.  If force_parens
-      /// is true then print parens around it, even if they are not needed to
-      /// disambiguate.
-      void print_child(const node_t& child, const node_t& parent,
-                       bool force_parens = false);
+      /// Print the given child node, also knowing its parent.
+      void print_child(const node_t& child, const node_t& parent);
 
       /// Print a unary node.
       template <rat::exp::type_t Type>

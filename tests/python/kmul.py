@@ -31,9 +31,9 @@ CHECK_ISOMORPHIC((r * '3/4').standard(),
 
 # Non-standard automata.  This time, it does not commute,
 # unfortunately we don't have a CHECK_EQUIV, because we don't have a
-# are_equivalent that works for automata.
+# are_equivalent that works for non-deterministic automata.
 a = q.ratexp('ab').derived_term() | q.ratexp('ab').derived_term()
-CHECK_EQ(q.ratexp('(<3/4>a)b+(<3/4>a)b'),
+CHECK_EQ(q.ratexp('<3/4>ab+<3/4>ab'),
          ('3/4' * a).ratexp())
 CHECK_EQ(q.ratexp('ab<3/4>+ab<3/4>'),
          (a * '3/4').ratexp())
