@@ -6,6 +6,7 @@
 # include <map>
 
 # include <vcsn/algos/insplit.hh>
+# include <vcsn/algos/sort.hh>
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/ctx/context.hh>
@@ -81,6 +82,10 @@ namespace vcsn
 
     public:
       using super::automaton_decorator;
+
+      blind_automaton(const typename automaton_t::context_t& ctx)
+        : blind_automaton(new automaton_t{ctx})
+      {}
 
       static std::string sname()
       {
@@ -602,13 +607,12 @@ namespace vcsn
                                  typename detail::blind_automaton<0, const Rhs>
                                    ::self_nocv_t>::automaton_t
   {
-    auto sorted = sort(lhs); //Need an lvalue to take the address
-    detail::blind_automaton<1, const Lhs> l
-      = detail::blind_automaton<1, const Lhs>{sorted};
-    detail::blind_automaton<0, const Rhs> tmp_r{rhs};
+    // We need a local variable for correct scope
+    typename detail::blind_automaton<1, const Lhs>::self_nocv_t l
+      = sort(detail::blind_automaton<1, const Lhs>{lhs});
     typename detail::blind_automaton<0, const Rhs>::self_nocv_t r
-      = insplit(tmp_r); // Same here
-    detail::composer<detail::blind_automaton<1, const Lhs>,
+      = sort(insplit(detail::blind_automaton<0, const Rhs>{rhs})); // Same here
+    detail::composer<typename detail::blind_automaton<1, const Lhs>::self_nocv_t,
                      typename detail::blind_automaton<0, const Rhs>::self_nocv_t>
                        compose(l, r);
     auto res = compose.compose();
