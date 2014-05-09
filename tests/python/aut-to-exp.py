@@ -49,7 +49,7 @@ check_exp('ab',                           'ab')
 check_exp('a*',                           '\e+aa*')
 check_exp('a+b',                          'a+b')
 check_exp('(?@lal_char(ab)_z)<2>(ab)<3>', '(<2>ab)<3>')
-check_exp('(?@law_char(ab)_z)<2>(ab)<3>', '<6>ab')
+check_exp('(?@law_char(ab)_z)<2>(ab)<3>', '<6>(ab)')
 
 
 check_exp('(?@lal_char(abc)_z)<2>(<3>a+<5>b)<7>c<11>', \

@@ -86,9 +86,9 @@ namespace vcsn
         conjunction,
         ldiv,
         prod,
+        word = prod, // Multi-letter atoms.
         lweight,
         rweight,
-        word, // Multi-letter atoms.
         star,
         complement,
         transposition,

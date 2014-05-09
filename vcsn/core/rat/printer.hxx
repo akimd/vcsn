@@ -43,7 +43,7 @@ namespace vcsn
           transposition_ = "^{T}";
           conjunction_  = " \\& ";
           shuffle_      = " \\between ";
-          product_      = ctx_.is_law ? " \\cdot " : " \\, ";
+          product_      = " \\, ";
           sum_          = " + ";
           zero_         = "\\emptyset";
           one_          = "\\varepsilon";
@@ -64,7 +64,7 @@ namespace vcsn
           transposition_ = "{T}";
           conjunction_  = "&";
           shuffle_      = ":";
-          product_      = ctx_.is_law ? "." : "";
+          product_      = "";
           sum_          = "+";
           zero_         = "\\z";
           one_          = "\\e";

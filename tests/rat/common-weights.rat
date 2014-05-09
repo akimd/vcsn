@@ -30,16 +30,16 @@ axb ! 1.2: law_char: invalid value: x, unexpected x
 # Precedence and associativity.
 (ab)* => (ab)*
 abc => abc
-a(bc) => a.bc
-ab(ab) => ab.ab
-(ab)ab => ab.ab
-ab(ab)ab => ab.ab.ab
-ab(ab)abc*  => ab.ab.ab.c*
-(abc).(cba) => abc.cba
+a(bc) => a(bc)
+ab(ab) => (ab)(ab)
+(ab)ab => (ab)(ab)
+ab(ab)ab => (ab)(ab)(ab)
+ab(ab)abc*  => (ab)(ab)(ab)c*
+(abc).(cba) => (abc)(cba)
 
 # Power is about mul, not concat.
-(ab){2} => ab.ab
-(ab){3} => ab.ab.ab
-(ab){,2} => \e+ab+ab.ab
-(ab){1,2} => ab.(\e+ab)
-(ab){2,} => ab.ab.(ab)*
+(ab){2} => (ab)(ab)
+(ab){3} => (ab)(ab)(ab)
+(ab){,2} => \e+ab+(ab)(ab)
+(ab){1,2} => (ab)(\e+ab)
+(ab){2,} => (ab)(ab)(ab)*
