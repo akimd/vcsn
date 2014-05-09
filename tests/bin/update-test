@@ -1,54 +1,54 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env python
 
 # A very rough utility to update a test file from its log file.  This
 # is very handy when there is a change of syntax: changing every
 # single expected output is tedious and error-prone.
 #
 # usage:
-#   update-test tests/python/first-order.py _build/tests/testsuite.log >s
-#   colordiff  tests/python/first-order.py s
-#   mv s tests/python/first-order.py
-#   chmod +x tests/python/first-order.py
+#   update-test --builddir=_build tests/python/*.py
 
-use strict;
+from __future__ import print_function
+import argparse, os, re, sys
 
-=item C<file_contents ($file)>
+parser = argparse.ArgumentParser(description='Update test cases.')
+parser.add_argument('tests', metavar='test', nargs='+',
+                    type=str, default=None,
+                    help='a test file to update')
+parser.add_argument('--builddir', metavar='DIR',
+                    type=str, default=None,
+                    help='look for the logs in DIR')
 
-The contents of C<$file> as a single string.
+args = parser.parse_args()
 
-=cut
+subst = dict()
 
-sub file_contents($)
-{
-  my ($file) = @_;
-  local $/;                     # Turn on slurp-mode.
-  use IO::File;
-  my $f = new IO::File "$file"
-      or die;
-  my $res = $f->getline;
-  $f->close;
-  $res;
-}
+def diff_to_re(match):
+  frm = match.group(1)
+  to  = match.group(2)
+  frm = re.sub(r'^\t-',  '', frm, flags = re.MULTILINE).rstrip('\n')
+  to  = re.sub(r'^\t\+', '', to,  flags = re.MULTILINE).rstrip('\n')
+  print(frm, "=>", to, file=sys.stderr)
+  global subst
+  subst[frm] = to
 
+def update(test, log):
+  log = open(log).read()
+  global subst
+  subst = dict()
+  re.sub(r'((?:^\t-.*\n)+)((?:^\t\+.*\n)*)',
+         diff_to_re, log, flags = re.MULTILINE)
+  if subst != dict():
+    test = open(test).read()
+    # Turn "subst{frm} => to" into a large RE.
+    frm = '|'.join(map(re.escape, subst.keys()))
+    res = re.sub(r'''(?<=['"\n])({frm})(?=['"\n])'''.format(frm=frm),
+                 lambda m: subst[m.group(1)],
+                 test, flags = re.MULTILINE)
+    if res != test:
+      return res
 
-my $test = file_contents($ARGV[0]);
-my $log = file_contents($ARGV[1]);
-my %subst;
-$log =~ s{((?:^\t-.*\n)+)((?:^\t\+.*\n)*)}
-  {
-    my $from = $1;
-    my $to = $2;
-    $from =~ s/^\t-//gm;
-    $to =~ s/^\t\+//gm;
-    chomp($from);
-    chomp($to);
-    $subst{$from} = $to;
-  }gem;
-
-my $from = join('|', map { "\Q$_\E" } keys %subst);
-$test =~ s{(?<=['"\n])($from)(?=['"\n])}
-{
-  $subst{$1}
-}gem;
-
-print $test;
+for t in args.tests:
+  l = args.builddir + '/' + t[:t.rfind('.')] + '.log'
+  r = update(t, l)
+  if r is not None:
+    open(t, 'w').write(r)
