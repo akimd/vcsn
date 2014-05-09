@@ -135,7 +135,7 @@ namespace vcsn
     /// final transitions.
     ///
     /// Use the public special() interface.
-    static constexpr letter_t special_letter() { return 255; }
+    static constexpr letter_t special_letter() { return 127; }
 
   public:
     std::ostream&
