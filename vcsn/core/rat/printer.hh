@@ -36,12 +36,7 @@ namespace vcsn
       void format(const std::string& format);
 
       /// Entry point: print \a v.
-      std::ostream&
-      operator()(const node_t& v)
-      {
-        v.accept(*this);
-        return out_;
-      }
+      std::ostream& operator()(const node_t& v);
 
       /// Entry point: print \a v.
       std::ostream&

@@ -95,29 +95,22 @@ Specify that "power" should perform the naive iterative multiplicative
 approach, instead of the squaring one.
 
 ** VCSN_ORIGINS
-Dump on stdout the "origins" of states for algorithms that build
-automata from sets of states of input automata or other types of
-information (e.g., derived-term, product, determinize, minimize,
-shuffle, infiltration...).
-
-Use this Perl snippet to put turn this information in something that
+Works only in TAF-Kit.  Dump on stdout the "origins" of states for
+algorithms that build automata from sets of states of input automata
+or other types of information (e.g., derived-term, product,
+determinize, minimize, shuffle, infiltration...).  Use
+tests/bin/teedot to put turn this information in something that
 Graphviz displays.
-
-  # Honor origins if there are some.
-  # Remove "orientation = landscape" from OpenFST, it breaks OS X's
-  # Graphviz rendering.
-  perl -pi -0777 -e '
-      s{/\* Origins\.\n(.*?\n)\*/\n}{ $orig = $1; ""; }gmse;
-      s{^    node \[shape = circle\]\n( {4}.*?\n)*}{$orig}gms
-        if $orig;
-      s{^(orientation = Landscape;)$}{/* teedot: $1 */}m;
-    ' $file
 
 ** VCSN_PARENS
 Force the display of useless parentheses.
 
 ** VCSN_PLUGINDIR [$VCSN_HOME/plugins]
 Where the runtime context instantiation are generated and compiled.
+
+** VCSN_PRINT
+Force a more verbose display of ratexp (XML like), where one can
+actually see the nesting of the structures.
 
 ** VCSN_SEED
 Disable the generation of a random seed, stick to the compile-time

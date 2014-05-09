@@ -69,6 +69,8 @@ namespace vcsn
               || t == type_t::sum);
     }
 
+    std::ostream&
+    operator<<(std::ostream& o, type_t t);
 
 # define DEFINE(Node)                           \
     template <typename Label, typename Weight>  \

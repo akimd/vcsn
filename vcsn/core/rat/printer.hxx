@@ -2,12 +2,38 @@
 # define VCSN_CORE_RAT_PRINTER_HXX
 
 # include <vcsn/misc/escape.hh>
+# include <vcsn/misc/indent.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
 {
   namespace rat
   {
+
+    inline
+    std::ostream&
+    operator<<(std::ostream& o, type_t t)
+    {
+      switch (t)
+        {
+# define CASE(T) case type_t::T: o << #T; break
+          CASE(zero);
+          CASE(one);
+          CASE(atom);
+          CASE(sum);
+          CASE(prod);
+          CASE(ldiv);
+          CASE(conjunction);
+          CASE(shuffle);
+          CASE(star);
+          CASE(transposition);
+          CASE(lweight);
+          CASE(rweight);
+          CASE(complement);
+# undef CASE
+        }
+      return o;
+    }
 
     template <typename RatExpSet>
     inline
@@ -25,6 +51,18 @@ namespace vcsn
     inline                                      \
     auto                                        \
     printer<RatExpSet>
+
+    DEFINE::operator()(const node_t& v)
+      -> std::ostream&
+    {
+      static bool print = !! getenv("VCSN_PRINT");
+      if (print)
+        out_ << '<' << v.type() << '>' << vcsn::incendl;
+      v.accept(*this);
+      if (print)
+        out_ << vcsn::decendl << "</" << v.type() << '>';
+      return out_;
+    }
 
     DEFINE::format(const std::string& format)
       -> void
@@ -157,7 +195,7 @@ namespace vcsn
         out_ << lparen_;
       else if (parent.is_unary())
         out_ << lgroup_;
-      child.accept(*this);
+      operator()(child);
       if (needs_parens)
         out_ << rparen_;
       else if (parent.is_unary())
