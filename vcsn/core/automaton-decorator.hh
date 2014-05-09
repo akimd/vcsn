@@ -41,16 +41,22 @@ namespace vcsn
       : aut_{&aut}
     {}
 
+    automaton_decorator(automaton_t&& aut)
+      : aut_{new automaton_t(std::move(aut))}
+    {}
+
+    automaton_decorator(automaton_t* aut)
+      : aut_{aut}
+    {}
+
+    automaton_decorator(const automaton_decorator& aut)
+      : aut_(aut.aut_)
+    {}
+
     automaton_decorator(automaton_decorator&& aut)
     {
       std::swap(aut_, aut.aut_);
     }
-
-    /// Forward constructor.
-    template <typename... Args>
-    automaton_decorator(Args&&... args)
-      : aut_{new automaton_t{std::forward<Args>(args)...}}
-    {}
 
     automaton_decorator& operator=(automaton_decorator&& that)
     {
