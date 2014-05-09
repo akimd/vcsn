@@ -294,7 +294,6 @@ namespace vcsn
             return std::make_shared<prod_t>(ratexps);
           }
       }
-    // The following cases do not occur when parsing an expression.
     else if (auto rhs = std::dynamic_pointer_cast<const prod_t>(r))
       {
         if (l->type() == type_t::atom)
@@ -306,9 +305,13 @@ namespace vcsn
           }
         else if (auto lhs = std::dynamic_pointer_cast<const prod_t>(l))
           {
-            // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)".
-            ratexps_t ratexps { lhs->begin(), lhs->end() };
-            ratexps.back() = concat(ratexps.back(), *rhs->begin());
+            // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)",
+            // but beware not to nest a prod in a prod if concat fell
+            // back to prod.
+            auto size = lhs->size();
+            ratexps_t ratexps { lhs->begin(), lhs->begin() + (size - 1) };
+            gather<type_t::prod>(ratexps,
+                                 concat(lhs->back(), rhs->head()));
             ratexps.insert(ratexps.end(),
                            rhs->begin() + 1, rhs->end());
             return std::make_shared<prod_t>(ratexps);

@@ -132,6 +132,8 @@ namespace vcsn
 
       /// The first item of this variadic.
       const value_t head() const;
+      /// The last item of this variadic.
+      const value_t back() const;
 
       /// The non-first items.
       auto tail() const -> decltype(boost::make_iterator_range(*this, 1, 0));

@@ -112,6 +112,12 @@ namespace vcsn
       return *begin();
     }
 
+    DEFINE(variadic)::back() const
+      -> const value_t
+    {
+      return sub_.back();
+    }
+
     DEFINE(variadic)::tail() const
       -> decltype(boost::make_iterator_range(*this, 1, 0))
     {
