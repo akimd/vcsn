@@ -289,7 +289,7 @@ namespace vcsn
                         const std::string& format = "default");
 
     /// Print label \a l on \a o using format \a format.
-    std::ostream& print(std::ostream& o, const label& l,
+    std::ostream& print(const label& l, std::ostream& o,
                         const std::string& format = "default");
 
     /// Print polynomial \a p on \a o using format \a format.

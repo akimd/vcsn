@@ -374,7 +374,7 @@ struct label
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
-    vcsn::dyn::print(os, val_, format);
+    vcsn::dyn::print(val_, os, format);
     return os.str();
   }
 

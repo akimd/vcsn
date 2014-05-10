@@ -69,6 +69,8 @@ transition: t
 ostream: os, o
 istream: is
 
+The print functions take the printee first, then the stream.
+
 * Environment variables
 ** VCSN_BINARY
 Force ratexpset to build AST variadic nodes with only two children.

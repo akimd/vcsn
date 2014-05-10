@@ -78,25 +78,25 @@ namespace vcsn
     }
 
     /*-----------------------.
-    | print(stream, label).  |
+    | print(label, stream).  |
     `-----------------------*/
 
     REGISTER_DEFINE(print_label);
 
     std::ostream&
-    print(std::ostream& out, const dyn::label& w, const std::string& format)
+    print(const dyn::label& w, std::ostream& out, const std::string& format)
     {
       if (format == "null")
         {}
       else if (format == "latex")
-        detail::print_label_registry().call(out, w, format);
+        detail::print_label_registry().call(w, out, format);
       else if (format == "text" || format == "default" || format == "")
         {
           // FIXME: problem with rvalue if we pass
           // 'std::string("text")'.
           // FIXME: We _need_ the const, see name.hh.
           const std::string format = "text";
-          detail::print_label_registry().call(out, w, format);
+          detail::print_label_registry().call(w, out, format);
         }
       else
         raise("invalid output format for label: ", str_escape(format));
@@ -237,7 +237,7 @@ namespace std
   std::ostream&
   operator<<(std::ostream& o, const vcsn::dyn::label& l)
   {
-    return vcsn::dyn::print(o, l, vcsn::dyn::get_format(o));
+    return vcsn::dyn::print(l, o, vcsn::dyn::get_format(o));
   }
 
   std::ostream&

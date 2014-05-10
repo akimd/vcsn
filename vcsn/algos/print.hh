@@ -81,8 +81,8 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Ostream, typename LabelSet, typename String>
-      std::ostream& print_label(std::ostream& o, const label& label,
+      template <typename LabelSet, typename Ostream, typename String>
+      std::ostream& print_label(const label& label, std::ostream& o,
                                 const std::string& format)
       {
         const auto& l = label->as<LabelSet>();
@@ -90,7 +90,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(print_label,
-                       (std::ostream& o, const label& l,
+                       (const label& l, std::ostream& o,
                         const std::string& format) -> std::ostream&);
     }
   }
