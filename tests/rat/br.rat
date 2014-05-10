@@ -11,12 +11,15 @@ a<x> ! 1.2-5: 1.1: law_char: invalid value: x, unexpected x
 
 # Check associativities.
 %labels: letters
-<e>b<f>d<e> => (<e>b<f>d)<e>
-<e>bb<f>dd<e> => (<e>bb<f>dd)<e>
+<e>b<f>d<e> => <e>b<fe>d
+(<e>b<f>d)<e> => (<e>b<f>d)<e>
+<e>bb<f>dd<e> => <e>bb<f>d<e>d
+(<e>bb<f>dd)<e> => (<e>bb<f>dd)<e>
 <e>b.b<f>d.d<e> => <e>bb<f>d<e>d
-<e>ab*<f>ab*<g> => (<e>ab*<f>ab*)<g>
+(<e>ab*<f>ab*)<g> => (<e>ab*<f>ab*)<g>
 %labels: words
-<e>bb<f>dd<e> => (<e>bb<f>dd)<e>
+(<e>bb<f>dd)<e> => (<e>bb<f>dd)<e>
+<e>bb<f>dd<e> => <e>bb<f>d<e>d
 %labels: letters
 
 # Check the ?, *, and + quantifiers.

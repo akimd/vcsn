@@ -857,7 +857,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
   5 -> 2 [label = "<e*>a"]
 }''')
 
-check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
+check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+(ab)<f>)*',
 '''digraph
 {
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"

@@ -29,8 +29,12 @@
     {
       struct braced_ratexp
       {
+        /// The expression parsed so far.
         exp_t exp;
-        bool parens = false;
+        /// Whether there was a left-paren.
+        bool lparen = false;
+        /// Whether there was a right-paren.
+        bool rparen = false;
         braced_ratexp& operator=(exp_t e)
         {
           exp = e;
@@ -115,7 +119,8 @@
 %printer
 {
   driver_.ratexpset_->print(yyo, $$.exp);
-  yyo << ($$.parens ? " (parens)" : " (no parens)");
+  yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
+  yyo << ($$.rparen ? "rpar)" : "no rpar)");
 } <braced_ratexp>;
 
 %token
@@ -153,9 +158,9 @@
 %left "{/}"
 %right "{\\}"
 %left "."
-%right "weight" // Match longest series of "weight".
 %precedence "(" "\\z" "\\e" "["
 %precedence CONCAT // exp exp . "(": reduce
+%right "weight" // Match longest series of "weight".
 %precedence RWEIGHT
 %precedence "letter" // RWEIGHT < LETTER: a <x> . b => shift
 %precedence LWEIGHT  // weights exp . "weight": reduce for the LWEIGHT rule.
@@ -196,12 +201,13 @@ exp:
 | exp exp %prec CONCAT
   {
     // See README.txt.
-    if (!$1.parens && !$2.parens)
+    if (!$1.rparen && !$2.lparen)
       $$ = MAKE(concat, $1.exp, $2.exp);
     else
       {
         $$.exp = MAKE(mul, $1.exp, $2.exp);
-        $$.parens = $1.parens || $2.parens;
+        $$.lparen = $1.lparen;
+        $$.rparen = $2.rparen;
       }
   }
 | exp "*"           { $$ = power(driver_.ratexpset_, $1.exp, $2); }
@@ -212,7 +218,7 @@ exp:
 | LETTER            { TRY(@$, $$ = MAKE(atom, $1)); }
 | "[" class "]"     { $$ = MAKE(char_class, $2, true); }
 | "[" "^" class "]" { $$ = MAKE(char_class, $3, false); }
-| "(" exp ")"       { $$.exp = $2.exp; $$.parens = true; }
+| "(" exp ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 
 weights:

@@ -281,44 +281,38 @@ namespace vcsn
   DEFINE::concat_(value_t l, value_t r, std::true_type) const
     -> value_t
   {
-    // Implicit concatenation between l and r.
-    if (auto rhs = std::dynamic_pointer_cast<const atom_t>(r))
+    // concat((ab).c, d.(ef)) = (ab).(cd).(ef).
+    //
+    // Store (ab) in ratexp, then concat(c, d) if c and d are atoms,
+    // otherwise c then d, then (ef).
+    if ((l->type() == type_t::atom || l->type() == type_t::prod)
+        && (r->type() == type_t::atom || r->type() == type_t::prod))
       {
-        if (auto lhs = std::dynamic_pointer_cast<const atom_t>(l))
-          return atom(labelset()->concat(lhs->value(), rhs->value()));
-        else if (auto lhs = std::dynamic_pointer_cast<const prod_t>(l))
+        // Left-hand sides.
+        ratexps_t ls;
+        gather<type_t::prod>(ls, l);
+        // Right-hand sides.
+        ratexps_t rs;
+        gather<type_t::prod>(rs, r);
+
+        if (ls.back()->type() == type_t::atom
+            && rs.front()->type() == type_t::atom)
           {
-            // Concat of "(ab).a" and "b" is "(ab).(ab)".
-            ratexps_t ratexps { lhs->begin(), lhs->end() };
-            ratexps.back() = concat(ratexps.back(), r);
-            return std::make_shared<prod_t>(ratexps);
+            auto lhs = std::dynamic_pointer_cast<const atom_t>(ls.back());
+            auto rhs = std::dynamic_pointer_cast<const atom_t>(rs.front());
+            ls.back() = atom(labelset()->concat(lhs->value(), rhs->value()));
+            ls.insert(ls.end(), rs.begin() + 1, rs.end());
           }
+        else
+          ls.insert(ls.end(), rs.begin(), rs.end());
+        if (ls.size() == 1)
+          return ls.front();
+        else
+          return std::make_shared<prod_t>(ls);
       }
-    else if (auto rhs = std::dynamic_pointer_cast<const prod_t>(r))
-      {
-        if (l->type() == type_t::atom)
-          {
-            // Concat of "a" and "b.(ab)", is "(ab).(ab)".
-            ratexps_t ratexps { rhs->begin(), rhs->end() };
-            ratexps.front() = concat(l, ratexps.front());
-            return std::make_shared<prod_t>(ratexps);
-          }
-        else if (auto lhs = std::dynamic_pointer_cast<const prod_t>(l))
-          {
-            // Concat of "(ab).a" and "b.(ab)" is "(ab).(ab).(ab)",
-            // but beware not to nest a prod in a prod if concat fell
-            // back to prod.
-            auto size = lhs->size();
-            ratexps_t ratexps { lhs->begin(), lhs->begin() + (size - 1) };
-            gather<type_t::prod>(ratexps,
-                                 concat(lhs->back(), rhs->head()));
-            ratexps.insert(ratexps.end(),
-                           rhs->begin() + 1, rhs->end());
-            return std::make_shared<prod_t>(ratexps);
-          }
-      }
-    // Fall back to explicit concatenation.
-    return mul(l, r);
+    else
+      // Handle all the trivial identities.
+      return mul(l, r);
   }
 
   DEFINE::star(value_t e) const

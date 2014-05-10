@@ -35,7 +35,7 @@ CHECK_ISOMORPHIC((r * '3/4').standard(),
 a = q.ratexp('ab').derived_term() | q.ratexp('ab').derived_term()
 CHECK_EQ(q.ratexp('<3/4>ab+<3/4>ab'),
          ('3/4' * a).ratexp())
-CHECK_EQ(q.ratexp('ab<3/4>+ab<3/4>'),
+CHECK_EQ(q.ratexp('(ab)<3/4>+(ab)<3/4>'),
          (a * '3/4').ratexp())
 
 # Check the case of multiplication by 0.
