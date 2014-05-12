@@ -106,6 +106,14 @@ def alias_method_as_variadic_function(method_name):
                  variadically_call_method(method_name, *args))
 
 
+## ----------------- ##
+## Weight conversion ##
+## ----------------- ##
+
+def weight(context, string):
+    return context.weight(string)
+
+
 ## ------------------------- ##
 ## Method-wrapping functions ##
 ## ------------------------- ##
