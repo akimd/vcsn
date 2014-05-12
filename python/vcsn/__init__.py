@@ -70,4 +70,5 @@ from vcsn.expansion  import *
 from vcsn.label      import *
 from vcsn.polynomial import *
 from vcsn.ratexp     import *
+from vcsn.vpi        import *
 from vcsn.weight     import *
