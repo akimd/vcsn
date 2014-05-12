@@ -151,12 +151,17 @@ def automaton_to_context(a):
     return context(name)
 
 
-# Wrapper to horrible methods.  The context shouldn't be a parameter
-# at all.
+# Wrapper to be able to *also* pass weights as strings.
 def left_mult(a, w):
-    return a.left_mult(automaton_to_context(a), w);
+    if type(w) == str:
+        return a.left_mult(a.context().weight(w))
+    else:
+        return a.left_mult(w)
 def right_mult(a, w):
-    return a.right_mult(automaton_to_context(a), w);
+    if type(w) == str:
+        return a.right_mult(a.context().weight(w))
+    else:
+        return a.right_mult(w)
 
 
 ## ------- ##
