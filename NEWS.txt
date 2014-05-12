@@ -4,6 +4,13 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-12
+** transducer composition
+A new algorithm has been introduced to allow the composition of two
+transducers.  It computes the accessible part of the transducer resulting
+from the composition of the second band of the first transducer with the
+first band of the second one.
+
 * 2014-05-05
 ** insplit: new algorithm (static, dyn, Python)
 It is now possible to do the in-splitting of an automaton, i.e. to get the
