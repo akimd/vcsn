@@ -248,7 +248,6 @@ namespace vcsn
       register_kind_functions(labels_are_nullable)
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
 
         using namespace dyn::detail;
 
