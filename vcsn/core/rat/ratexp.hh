@@ -33,12 +33,6 @@ namespace vcsn
         return vcsn::rat::is_unary(type());
       }
 
-      /// Whether one of the variadic types.
-      bool is_variadic() const
-      {
-        return vcsn::rat::is_variadic(type());
-      }
-
       /// Whether a leaf of the ratexp tree.
       bool is_leaf() const
       {
