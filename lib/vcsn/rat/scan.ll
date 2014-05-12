@@ -1,6 +1,6 @@
 %option c++
 %option debug
-%option noinput nounput
+%option noinput
 %option stack noyy_top_state
 
 %top{
@@ -127,8 +127,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
 
   <<EOF>> {
     driver_.error(loc, "unexpected end of file in a character-class");
-    BEGIN INITIAL;
-    return parser::make_RBRACKET(loc);
+    unput(']');
   }
 }
 
@@ -151,6 +150,11 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       }
   }
   [^()]+   context += yytext;
+
+  <<EOF>> {
+    driver_.error(loc, "unexpected end of file in a context comment");
+    unput(')');
+  }
 }
 
 <SC_WEIGHT>{ /* Weight.  */
@@ -172,6 +176,11 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
       }
   }
   [^<>]+       s += yytext;
+
+  <<EOF>> {
+    driver_.error(loc, "unexpected end of file in a weight");
+    unput('>');
+  }
 }
 
 %%

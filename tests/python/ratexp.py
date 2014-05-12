@@ -109,6 +109,33 @@ check_complement('\z')
 check_complement('ab')
 
 
+## ----------------- ##
+## Invalid ratexps.  ##
+## ----------------- ##
+
+# Check invalid input.
+def xfail(r):
+    XFAIL(lambda: ctx.ratexp(r))
+
+ctx = vcsn.context('lal_char(abc)_b')
+xfail('')
+xfail('<2>')
+xfail('<2>a')
+xfail('x')
+xfail('a+')
+xfail('a(')
+xfail('a[')
+xfail('*')
+xfail('&a')
+xfail('a&')
+xfail('\a')
+
+ctx = vcsn.context('lal_char(abc)_z')
+xfail('(?@lal_char(abc)_b)<2>a')
+xfail('(?@lal_char(abc)_b')
+xfail('(?@foobar)foo')
+
+
 ## -------- ##
 ## format.  ##
 ## -------- ##
