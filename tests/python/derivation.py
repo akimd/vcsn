@@ -47,7 +47,7 @@ check('ab', 'a', 'b')
 check('ab', 'b', '\z')
 check('(<x>a).(<y>a).(<z>a)', 'a', '<x><y>a<z>a')
 
-# Intersection.
+# Conjunction.
 check('<x>a&<y>a&<z>a', 'a', '<xyz>\e')
 check('<x>a&<y>a&<z>a', 'b', '\z')
 

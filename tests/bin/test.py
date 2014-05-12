@@ -101,6 +101,9 @@ def CHECK_EQ(expected, effective, loc = None):
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that a1 and a2 are isomorphic."
     # Isomorphism checking is not good enough.
+    # FIXME: when are_isomorphic works properly, in particular
+    # when we deal properly with RatS instead of RatE as weights,
+    # remove the no_linear hacks in first-order.py.
     if not a1.is_deterministic() or not a2.is_deterministic():
         # Gee...  That's poor.
         CHECK_EQ(a1.info(), a2.info())

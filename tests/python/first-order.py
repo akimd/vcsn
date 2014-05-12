@@ -5,13 +5,22 @@ from test import *
 
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
-def check(re, exp, use_spontaneous = False):
-    "Check that fo(re) = exp."
+def check(re, exp, use_spontaneous = False, no_linear = False):
+    '''Check that fo(re) = exp.  Also check that linear and derived_term
+    compute the same result, unless no_linear = True.'''
     r = c.ratexp(re)
     eff = r.first_order(use_spontaneous)
     print("first_order({}) = {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
-
+    # Check that if derived_term can do it, them it's the same
+    # automaton.
+    if not use_spontaneous and not no_linear:
+        try:
+            dt = r.derived_term()
+        except:
+            pass
+        else:
+            CHECK_ISOMORPHIC(dt, r.linear())
 
 ##########################
 ## Regular derivation.  ##
@@ -34,12 +43,20 @@ check('<x>a+<y>a', 'a.[<x+y>\e]')
 check('ab', 'a.[b]')
 check('(<x>a).(<y>a).(<z>a)', 'a.[<x><y>a<z>a]')
 
-# Intersection.
+# Conjunction.
 check('<x>a&<y>a&<z>a', 'a.[<xyz>\e]')
 check('(<x>a+<y>b)*&(<z>b+<x>c)*', '<\e> + b.[<yz>(<x>a+<y>b)*&(<z>b+<x>c)*]')
 
 # Shuffle.
-check('<x>a:<y>a:<z>a', 'a.[<z><x>a:<y>a + <y><x>a:<z>a + <x><y>a:<z>a]')
+# FIXME: CHECK_ISOMORPHIC fails to see both results are the same:
+#
+#   --- expected
+#   +++ effective
+#   @@ -1 +1 @@
+#   -<xyz+xzy+yxz+yzx+zxy+zyx>aaa
+#   +<zyx+zxy+yzx+yxz+xzy+xyz>aaa
+check('<x>a:<y>a:<z>a', 'a.[<z><x>a:<y>a + <y><x>a:<z>a + <x><y>a:<z>a]',
+      no_linear = True)
 check('(<x>a<y>b)*:(<x>a<x>c)*', '<\e> + a.[<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*]')
 
 # Star.
