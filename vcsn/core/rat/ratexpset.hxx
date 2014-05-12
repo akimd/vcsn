@@ -167,10 +167,10 @@ namespace vcsn
       res = l;
     else if (r->type() == type_t::zero)
       res = r;
-    // U_K: E.({k}1) ⇒ E{k}, subsuming T: E.1 = E.
+    // U_K: E.(<k>1) ⇒ E<k>, subsuming T: E.1 = E.
     else if (type_ignoring_lweight_(r) == type_t::one)
       res = rmul(l, possibly_implicit_lweight_(r));
-    // U_K: ({k}1).E ⇒ {k}E, subsuming T: 1.E = E.
+    // U_K: (<k>1).E ⇒ <k>E, subsuming T: 1.E = E.
     else if (type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
     // END: Trivial Identity
