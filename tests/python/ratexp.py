@@ -105,8 +105,8 @@ def check_transposition(r1):
     exp = ctx.ratexp('({}){{T}}'.format(r1))
     CHECK_EQ(exp, eff)
 
-check_complement('\z')
-check_complement('ab')
+check_transposition('\z')
+check_transposition('ab')
 
 
 ## ----------------- ##
