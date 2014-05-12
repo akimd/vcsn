@@ -39,14 +39,12 @@ namespace vcsn
         return vcsn::rat::is_variadic(type());
       }
 
-      /// Whether sum, prod, conjunction, shuffle, star.
-      bool is_inner() const
+      /// Whether a leaf of the ratexp tree.
+      bool is_leaf() const
       {
         type_t t = type();
-        return (vcsn::rat::is_unary(t)
-		|| vcsn::rat::is_variadic(t)
-		|| t == type_t::lweight
-		|| t == type_t::rweight);
+        return (vcsn::rat::is_constant(t)
+                || t == type_t::atom);
       }
     };
 

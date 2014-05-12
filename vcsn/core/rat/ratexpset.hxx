@@ -383,8 +383,8 @@ namespace vcsn
   DEFINE::rmul(value_t e, const weight_t& w) const
     -> value_t
   {
-    if (! e->is_inner())
-    // Leafs only have left weights and lmul takes care of normalization.
+    if (e->is_leaf())
+      // Can only have left weights and lmul takes care of normalization.
       return lmul(w, e);
     // Trivial identities $T_K$: E<0> => 0.
     else if (weightset()->is_zero(w))
