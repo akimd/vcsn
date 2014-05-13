@@ -54,14 +54,13 @@ standard(exp).  We should use fewer contexts, to speed up our development.
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
+** efsm
+Check support from Python, not just TAF-Kit.
+
 * Bugs
 ** Parse error
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
-
-** Open coded file names
-We must use genuine temporary files for vcsn.py conversions.  When possible,
-avoid files and use streams.
 
 ** shortest
 Loops forever:

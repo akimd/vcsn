@@ -66,11 +66,23 @@ def automaton_load(file, format = "dot"):
 automaton.load = staticmethod(automaton_load)
 
 def automaton_fst(aut, cmd):
-    open("/tmp/in.efsm", "w").write(aut.format("efsm"))
-    from subprocess import check_call, check_output
-    check_call(['efstcompile',   '/tmp/in.efsm', '/tmp/in.fst'])
-    check_call([cmd,             '/tmp/in.fst',  '/tmp/out.fst'])
-    res = check_output(['efstdecompile', '/tmp/out.fst'])
+    import subprocess
+    p1 = subprocess.Popen(['efstcompile'],
+                          stdin=subprocess.PIPE,
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+    p2 = subprocess.Popen([cmd],
+                          stdin=p1.stdout,
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
+    p3 = subprocess.Popen(['efstdecompile'],
+                          stdin=p2.stdout,
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE)
+    p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
+    p1.stdin.write(aut.format('efsm'))
+    res = p3.communicate()[0]
     return automaton(res, "efsm")
 
 automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
