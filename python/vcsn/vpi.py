@@ -125,8 +125,21 @@ def weight(context, string):
 for name in ["accessible", "coaccessible", "complement", "complete", "concatenate", "determinize", "difference", "enumerate", "eval", "format", "is_accessible", "is_ambiguous", "is_coaccessible", "is_complete", "is_deterministic", "is_eps_acyclic", "is_equivalent", "is_proper", "is_standard", "is_trim", "is_useless", "is_valid", "proper", "shortest", "standard", "star", "trim", "union", "universal", "constant_term", "copy", "derivation", "derived_term", "expand", "is_equivalent", "is_valid", "split", "sort", "star_normal_form", "thompson", "transpose", "de_bruijn", "ladybird", "lan_to_lal"]:
     alias_method_as_function(name)
 
-for name in ["infiltration", "product", "shuffle", "sum", "union"]:
+for name in ["infiltration", "shuffle", "sum", "union"]:
     alias_method_as_variadic_function(name)
+
+# FIXME: didn't we use to have a nice method for product, other than
+# the infix operator?  With that I could use
+# alias_method_as_variadic_function and then define a trivial alias,
+# insted of iterating here.
+def product(*x):
+    if len(x) == 0:
+        raise Exception("zero operands")
+    else:
+        res = x[0]
+        for i in range(1, len(x)):
+            res = res & x[i]
+        return res
 
 def power(x, n):
     return x ** n
