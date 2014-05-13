@@ -154,22 +154,41 @@ def aut_to_exp(a):
 def are_isomorphic(a, b):
     return a.is_isomorphic(b)
 
+def is_lan(a):
+    n = automaton_to_context_name(a)
+    return re.search('^lan<', n) != None
+
+def is_lal(a):
+    n = automaton_to_context_name(a)
+    return re.search('^lal_char', n) != None
+
+def lan_to_lal(a):
+    if is_lan(a):
+        return a.lan_to_lal()
+    else:
+        raise Exception("argument not lan")
+
 def lal_to_lan(a):
-    return automaton(a.format('dot').replace('\"lal_', '\"lan_'), "dot")
+    if is_lal(a):
+        return automaton(a.format('dot').replace('\"lal_', '\"lan_'), "dot")
+    else:
+        raise Exception("argument not lal")
 
 def make_automaton(ctx):
     a = ctx.ratexp('\z').standard()
     a.remove_state(0)
     return clone(a)
 
-def automaton_to_context(a):
+def automaton_to_context_name(a):
     import re
     s = a.format('dot')
     r = re.search('vcsn_context = \"[^\"]*\"', s).span()
     line = s[r[0]:r[1]]
     r = re.search('\"[^\"]*\"', line).span()
-    name = line[r[0]:r[1]][1:-1]
-    return context(name)
+    return line[r[0]:r[1]][1:-1]
+
+def automaton_to_context(a):
+    return context(automaton_to_context_name(a))
 
 
 # Wrapper to be able to *also* pass weights as strings.
