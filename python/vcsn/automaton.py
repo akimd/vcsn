@@ -4,28 +4,27 @@
 
 import re
 from vcsn_cxx import automaton, label, weight
-from vcsn import is_equal, info_to_dict, dot_to_svg, left_mult, right_mult
+from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
 
-def one_epsilon(s):
+def _one_epsilon(s):
     "Convert s to use the genuine epsilon character."
-    s = re.sub(r'\\\\e', '&epsilon;', s)
-    return s
+    return re.sub(r'\\\\e', '&epsilon;', s)
 
 automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
-automaton.__and__ = lambda l, r: conjunction(l, r)
+automaton.__and__ = lambda l, r: _conjunction(l, r)
 automaton.__invert__ = automaton.complement
-automaton.__mul__ = right_mult
+automaton.__mul__ = _right_mult
 automaton.__mod__ = automaton.difference
 automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.power
 automaton.__repr__ = lambda self: self.info()['type']
-automaton.__rmul__ = left_mult
+automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
-automaton._repr_svg_ = lambda self: dot_to_svg(one_epsilon(self.format('dot')))
+automaton._repr_svg_ = lambda self: _dot_to_svg(_one_epsilon(self.format('dot')))
 
-class conjunction(object):
+class _conjunction(object):
     """A proxy class that delays calls to the & operator in order
     to turn a & b & c into a variadic evaluation of
     automaton.product_(a, b, c)."""
@@ -54,18 +53,18 @@ class conjunction(object):
     def __hasattr__(self, name):
         return hasattr(self.value(), name)
 
-def automaton_eval(self, w):
+def _automaton_eval(self, w):
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
     return self.eval_(w)
-automaton.eval = automaton_eval
+automaton.eval = _automaton_eval
 
-def automaton_load(file, format = "dot"):
+def _automaton_load(file, format = "dot"):
     return automaton(open(file, "r").read(), format)
-automaton.load = staticmethod(automaton_load)
+automaton.load = staticmethod(_automaton_load)
 
-def automaton_fst(aut, cmd):
+def _automaton_fst(aut, cmd):
     import subprocess
     p1 = subprocess.Popen(['efstcompile'],
                           stdin=subprocess.PIPE,
@@ -85,17 +84,17 @@ def automaton_fst(aut, cmd):
     res = p3.communicate()[0]
     return automaton(res, "efsm")
 
-automaton.fstdeterminize = lambda self: automaton_fst(self, "fstdeterminize")
-automaton.fstminimize = lambda self: automaton_fst(self, "fstminimize")
+automaton.fstdeterminize = lambda self: _automaton_fst(self, "fstdeterminize")
+automaton.fstminimize = lambda self: _automaton_fst(self, "fstminimize")
 
-automaton.info = lambda self: info_to_dict(self.format('info'))
+automaton.info = lambda self: _info_to_dict(self.format('info'))
 
-def automaton_is_synchronized_by(self, w):
+def _automaton_is_synchronized_by(self, w):
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
     return self.is_synchronized_by_(w)
-automaton.is_synchronized_by = automaton_is_synchronized_by
+automaton.is_synchronized_by = _automaton_is_synchronized_by
 
 automaton.lan_to_lal = \
   lambda self: automaton(re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1',

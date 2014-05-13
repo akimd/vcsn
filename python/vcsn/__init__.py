@@ -4,7 +4,7 @@ import sys
 from vcsn_cxx import *
 from vcsn_version import *
 
-def dot_to_svg(dot, engine="dot"):
+def _dot_to_svg(dot, engine="dot"):
     "Return the conversion of a Dot source into SVG."
     import subprocess
     proc = subprocess.Popen([engine, '-Tsvg'],
@@ -15,7 +15,7 @@ def dot_to_svg(dot, engine="dot"):
     res = proc.communicate()
     return res[0].decode('utf-8')
 
-def info_to_dict(info):
+def _info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers."""
     res = dict()
@@ -44,15 +44,15 @@ def info_to_dict(info):
     return res
 
 # FIXME: Get rid of this.
-def is_equal(lhs, rhs):
+def _is_equal(lhs, rhs):
     "A stupid string-based comparison.  Must be eliminated once we DRT."
     return isinstance(rhs, lhs.__class__) and str(lhs) == str(rhs)
 
-def left_mult(self, lhs):
+def _left_mult(self, lhs):
     """Support "aut * weight".  Also serves for ratexps."""
     return self.left_mult(self.context().weight(str(lhs)))
 
-def right_mult(self, rhs):
+def _right_mult(self, rhs):
     """Support both "aut * aut" and "aut * weight".  Also serves for
     ratexps."""
     if isinstance(rhs, type(self)):

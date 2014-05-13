@@ -3,9 +3,9 @@
 ## --------- ##
 
 from vcsn_cxx import context
-from vcsn import is_equal, label, polynomial, ratexp, weight
+from vcsn import _is_equal, label, polynomial, ratexp, weight
 
-context.__eq__ = is_equal
+context.__eq__ = _is_equal
 context.__repr__ = lambda self: self.format('text')
 context._repr_latex_ = lambda self: '$' + self.format('latex') + '$'
 
