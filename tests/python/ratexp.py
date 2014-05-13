@@ -119,7 +119,6 @@ def xfail(r):
 
 ctx = vcsn.context('lal_char(abc)_b')
 xfail('')
-xfail('<2>')
 xfail('<2>a')
 xfail('x')
 xfail('a+')
@@ -134,6 +133,8 @@ ctx = vcsn.context('lal_char(abc)_z')
 xfail('(?@lal_char(abc)_b)<2>a')
 xfail('(?@lal_char(abc)_b')
 xfail('(?@foobar)foo')
+xfail('<2>')
+xfail('a<2')
 
 
 ## -------- ##
