@@ -463,17 +463,19 @@ namespace vcsn
       }
 
       template<typename Aut>
-      typename std::enable_if<Aut::labelset_t::has_one(), typename Aut::res_label_t>::type
+      typename std::enable_if<Aut::labelset_t::has_one(),
+                              typename Aut::res_label_t>::type
       get_hidden_one(const Aut& aut)
       {
         return aut.hidden_one();
       }
 
       template<typename Aut>
-      typename std::enable_if<!Aut::labelset_t::has_one(), typename Aut::res_label_t>::type
-      get_hidden_one(const Aut& aut)
+      typename std::enable_if<!Aut::labelset_t::has_one(),
+                              typename Aut::res_label_t>::type
+      get_hidden_one(const Aut&)
       {
-        raise("Should not get here");
+        raise("should not get here");
       }
 
       /// Add transitions to the given result automaton, starting from
