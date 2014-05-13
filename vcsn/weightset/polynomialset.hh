@@ -453,10 +453,12 @@ namespace vcsn
           const std::string& format = "text",
           const std::string& sep = " + ") const
     {
+      bool latex = format == "latex";
       if (v.empty())
-        out << (format == "latex" ? "\\emptyset" : "\\z");
+        out << (latex ? "\\emptyset" : "\\z");
       else
-        return print_<context_t>(out, v, format, sep);
+        print_<context_t>(out, v, format,
+                          latex && sep == " + " ? " \\oplus " : sep);
       return out;
     }
 

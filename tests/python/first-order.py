@@ -171,3 +171,11 @@ E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
 E1t="(?@lal_char(ab)_q)"+E1
 check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
+
+
+## ----------------- ##
+## LaTeX rendering.  ##
+## ----------------- ##
+
+CHECK_EQ(r'a \odot \left[a \oplus \langle x\rangle b \, c\right] \oplus b \odot \left[\langle y\rangle c\right]',
+         c.ratexp(r'aa+<x>abc+<y>bc').first_order().format("latex"))

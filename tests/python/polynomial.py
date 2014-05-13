@@ -38,3 +38,11 @@ check('lat<lan_char(abc), lan_char(xyz)>_z',
 
 # Check that we don't ignore trailing characters.
 XFAIL(lambda: vcsn.context('lal_char(ab)_z').polynomial('<123>a*'))
+
+## ----------------- ##
+## LaTeX rendering.  ##
+## ----------------- ##
+
+c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
+CHECK_EQ(r'\langle \varepsilon + \varepsilon\rangle a \oplus \langle x + y\rangle b',
+         c.polynomial(r'a + a + <x>b + <y>b').format("latex"))
