@@ -27,7 +27,7 @@ automaton._repr_svg_ = lambda self: _dot_to_svg(_one_epsilon(self.format('dot'))
 class _conjunction(object):
     """A proxy class that delays calls to the & operator in order
     to turn a & b & c into a variadic evaluation of
-    automaton.product_(a, b, c)."""
+    automaton._product(a, b, c)."""
     def __init__(self, *args):
         self.auts = [args[0]]
         for arg in args[1:]:
@@ -40,7 +40,7 @@ class _conjunction(object):
         return self
     def value(self):
         if isinstance(self.auts, list):
-            self.auts = automaton.product_(self.auts)
+            self.auts = automaton._product(self.auts)
         return self.auts
     def __nonzero__(self):
         return bool(self.value())
@@ -57,7 +57,7 @@ def _automaton_eval(self, w):
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
-    return self.eval_(w)
+    return self._eval(w)
 automaton.eval = _automaton_eval
 
 def _automaton_load(file, format = "dot"):
@@ -93,7 +93,7 @@ def _automaton_is_synchronized_by(self, w):
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
-    return self.is_synchronized_by_(w)
+    return self._is_synchronized_by(w)
 automaton.is_synchronized_by = _automaton_is_synchronized_by
 
 automaton.lan_to_lal = \
@@ -101,5 +101,5 @@ automaton.lan_to_lal = \
                          self.format('dot')), 'dot')
 
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
-# proper_real is the genuine binding to dyn::proper.
-automaton.proper = lambda self, prune = True: self.proper_real(prune).lan_to_lal()
+# _proper is the genuine binding to dyn::proper.
+automaton.proper = lambda self, prune = True: self._proper(prune).lan_to_lal()

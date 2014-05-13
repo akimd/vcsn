@@ -27,7 +27,7 @@ def _ratexp_derivation(self, w, *args):
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
-    return self.derivation_(w, *args)
+    return self._derivation(w, *args)
 ratexp.derivation = _ratexp_derivation
 
 ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)

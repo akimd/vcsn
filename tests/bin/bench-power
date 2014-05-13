@@ -91,7 +91,7 @@ for i in val:
 
 for i in val:
     for j in val:
-        t = min(timeit.repeat(lambda: vcsn.automaton.product_((a[i], a[j])),
+        t = min(timeit.repeat(lambda: vcsn.automaton._product((a[i], a[j])),
                               number=1, repeat=repetitions))
         time[i][j] = t
         print('a[{:2}] & a[{:2}], {:.2f}'.format(i, j, t))

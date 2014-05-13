@@ -239,7 +239,7 @@ def check_conjunction(*ratexps):
     for r in ratexps:
         auts += [ctx.ratexp(r).derived_term()]
     rat = ctx.ratexp('(' + ')&('.join(ratexps) + ')')
-    a1 = vcsn.automaton.product_(auts)
+    a1 = vcsn.automaton._product(auts)
     a2 = rat.derived_term()
     CHECK_ISOMORPHIC(a1, a2)
 

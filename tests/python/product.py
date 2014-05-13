@@ -195,7 +195,7 @@ CHECK_EQ(exp, lhs & rhs)
 # check OPERATION RES AUT...
 # --------------------------
 def check(operation, exp, *args):
-    CHECK_EQ(exp, str(vcsn.automaton.product_(list(args)).ratexp()))
+    CHECK_EQ(exp, str(vcsn.automaton._product(list(args)).ratexp()))
 
 # RatE and B, in both directions.
 a1 = vcsn.context('lal_char(ab)_ratexpset<lal_char(uv)_b>') \
@@ -251,7 +251,7 @@ digraph {
   0 -> 1 [label="a"]
   1 -> 2 [label="a"]
 }
-'''), vcsn.automaton.product_([vcsn.automaton('''
+'''), vcsn.automaton._product([vcsn.automaton('''
 digraph {
   vcsn_context = "lal_char(ab)_b"
   I -> 0

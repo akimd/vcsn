@@ -8,9 +8,9 @@ from test import *
 def check(i, o):
   i = vcsn.automaton(i)
   o = vcsn.automaton(o)
-  CHECK_EQ(o.sort(), i.proper_real().sort())
+  CHECK_EQ(o.sort(), i._proper().sort())
   # Idempotence.
-  CHECK_EQ(o.sort(), o.proper_real().sort())
+  CHECK_EQ(o.sort(), o._proper().sort())
 
 def check_fail(aut):
     a = vcsn.automaton(aut)
