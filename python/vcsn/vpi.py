@@ -305,6 +305,8 @@ def transducer_context_name(alphabets, weightset):
 original_context = context
 def context(*args):
     if len(args) == 1:
+        if type(args[0]) == automaton or type(args[0]) == ratexp:
+            return args[0].context()
         name = args[0]
     else:
         name = context_name(*args)
