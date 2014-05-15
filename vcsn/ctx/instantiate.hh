@@ -166,6 +166,7 @@ namespace vcsn
         using namespace dyn::detail;
         REGISTER(are_isomorphic, aut_t, aut_t);
         REGISTER(complete, aut_t);
+        REGISTER(concatenate_polynomial, wps_t, wps_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
         REGISTER(derived_term, rs_t, bool);

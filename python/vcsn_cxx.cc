@@ -411,6 +411,11 @@ struct polynomial
     return os.str();
   }
 
+  polynomial concatenate(const polynomial& rhs) const
+  {
+    return vcsn::dyn::concatenate(val_, rhs.val_);
+  }
+
   vcsn::dyn::polynomial val_;
 };
 
@@ -817,6 +822,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &label::format)
    ;
 
+  bp::class_<polynomial>
+    ("polynomial",
+     bp::init<const context&, const std::string&>())
+    .def("concatenate", &polynomial::concatenate)
+    .def("format", &polynomial::format)
+   ;
+
   bp::class_<ratexp>
     ("ratexp",
      bp::init<const context&, const std::string&>())
@@ -847,12 +859,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("transpose", &ratexp::transpose)
     .def("transposition", &ratexp::transposition)
     ;
-
-  bp::class_<polynomial>
-    ("polynomial",
-     bp::init<const context&, const std::string&>())
-    .def("format", &polynomial::format)
-   ;
 
   bp::class_<weight>
     ("weight",

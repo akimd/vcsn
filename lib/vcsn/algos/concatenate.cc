@@ -34,5 +34,11 @@ namespace vcsn
       return detail::chain_ratexp_registry().call(r, min, max);
     }
 
+    REGISTER_DEFINE(concatenate_polynomial);
+    polynomial
+    concatenate(const polynomial& lhs, const polynomial& rhs)
+    {
+      return detail::concatenate_polynomial_registry().call(lhs, rhs);
+    }
   }
 }

@@ -9,6 +9,7 @@
 # include <vcsn/algos/sum.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
@@ -199,15 +200,15 @@ namespace vcsn
   | concatenate(ratexp, ratexp).  |
   `------------------------------*/
 
-  /// Concatenation/product of ratexps.
-  template <typename RatExpSet>
+  /// Concatenation/product of polynomials/ratexps.
+  template <typename ValueSet>
   inline
-  typename RatExpSet::ratexp_t
-  concatenate(const RatExpSet& rs,
-              const typename RatExpSet::ratexp_t& lhs,
-              const typename RatExpSet::ratexp_t& rhs)
+  typename ValueSet::value_t
+  concatenate(const ValueSet& vs,
+              const typename ValueSet::value_t& lhs,
+              const typename ValueSet::value_t& rhs)
   {
-    return rs.mul(lhs, rhs);
+    return vs.mul(lhs, rhs);
   }
 
   namespace dyn
@@ -288,6 +289,36 @@ namespace vcsn
 
       REGISTER_DECLARE(chain_ratexp,
                        (const ratexp&, int, int) -> ratexp);
+    }
+  }
+
+
+  /*------------------------------.
+  | mul(polynomial, polynomial).  |
+  `------------------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
+      polynomial
+      concatenate_polynomial(const polynomial& lhs, const polynomial& rhs)
+      {
+        const auto& l = lhs->as<PolynomialSetLhs>();
+        const auto& r = rhs->as<PolynomialSetRhs>();
+        // FIXME: Luca said he wrote join for polynomialsets.
+        //auto rs = join(l.polynomialset(), r.polynomialset());
+        //auto lr = rs.conv(l.polynomialset(), l.polynomial());
+        //auto rr = rs.conv(r.polynomialset(), r.polynomial());
+        return make_polynomial(l.polynomialset(),
+                               concatenate(l.polynomialset(),
+                                           l.polynomial(), r.polynomial()));
+      }
+
+      REGISTER_DECLARE(concatenate_polynomial,
+                       (const polynomial&, const polynomial&) -> polynomial);
     }
   }
 }

@@ -67,6 +67,9 @@ namespace vcsn
     /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);
 
+    /// Concatenate two polynomials.
+    polynomial concatenate(const polynomial& lhs, const polynomial& rhs);
+
     /// Concatenate two ratexps.
     ratexp concatenate(const ratexp& lhs, const ratexp& rhs);
 
