@@ -81,7 +81,7 @@ namespace vcsn
       using weightset_ptr = typename automaton_t::weightset_ptr;
 
     public:
-      using super::automaton_decorator;
+      using super::super;
 
       blind_automaton(const typename automaton_t::context_t& ctx)
         : blind_automaton(new automaton_t{ctx})

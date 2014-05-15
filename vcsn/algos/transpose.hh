@@ -47,7 +47,7 @@ namespace vcsn
       using weightset_ptr = typename automaton_t::weightset_ptr;
 
     public:
-      using super::automaton_decorator;
+      using super::super;
 
       static std::string sname()
       {
