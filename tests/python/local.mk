@@ -21,6 +21,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/chain.py                                  \
   %D%/complement.py                             \
   %D%/complete.py                               \
+  %D%/compose.py                                \
   %D%/concatenate.py                            \
   %D%/constant-term.py                          \
   %D%/context.py                                \
@@ -96,6 +97,9 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/pyramid.in.gv               \
   %D%/automaton.dir/pyramid.out.gv              \
   %D%/automaton.dir/pyramid.tex                 \
+  %D%/compose.dir/left.gv                       \
+  %D%/compose.dir/result.gv                     \
+  %D%/compose.dir/right.gv                      \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/ladybird-4-det.gv         \

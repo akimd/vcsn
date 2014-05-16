@@ -40,6 +40,7 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(x, d)'*").standard(),
   {
     node [style = invis, shape = none, label = "", width = 0, height = 0]
     I0
+    F0
     F1
   }
   {
@@ -48,6 +49,7 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(x, d)'*").standard(),
     1
   }
   I0 -> 0
+  0 -> F0
   0 -> 1 [label = "(a, d)"]
   1 -> F1
   1 -> 1 [label = "(a, d)"]
@@ -72,4 +74,6 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
   0 -> F0
 }"""))
 
-check(load("left.gv"), load("right.gv"), load("result.gv"))
+check(vcsn.automaton.load(medir + "/left.gv"),
+      vcsn.automaton.load(medir + "/right.gv"),
+      vcsn.automaton.load(medir + "/result.gv"))
