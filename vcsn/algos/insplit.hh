@@ -27,6 +27,8 @@ namespace vcsn
     {
       void operator()(const blind_automaton<I, A>&, B&)
       {
+        // We should check the type of the automaton (i.e. has_one()) instead
+        // of calling insplit, to avoid unnecessary copies
         raise("Cannot copy a blind_automaton");
       }
     };

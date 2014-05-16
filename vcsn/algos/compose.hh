@@ -607,6 +607,23 @@ namespace vcsn
     {
       return {aut};
     }
+
+    template<typename Aut>
+    typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+             typename detail::blind_automaton<0, const Aut>::self_nocv_t>::type
+    get_insplit(const Aut& aut)
+    {
+      return insplit(make_blind_automaton<0>(aut));
+    }
+
+    template<typename Aut>
+    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+             typename detail::blind_automaton<0, const Aut>>::type
+    get_insplit(const Aut& aut)
+    {
+      return make_blind_automaton<0>(aut);
+    }
+
   }
 
   /*--------------------------------.
@@ -617,14 +634,13 @@ namespace vcsn
   template <typename Lhs, typename Rhs>
   auto
   compose(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::composer<detail::blind_automaton<1, const Lhs>,
-                                 typename detail::blind_automaton<0, const Rhs>
-                                   ::self_nocv_t>::automaton_t
+    -> typename detail::composer<typename detail::blind_automaton<1, const Lhs>::self_nocv_t,
+                                 typename detail::blind_automaton<0, const Rhs>::self_nocv_t>::automaton_t
   {
     using lhs_t = typename detail::blind_automaton<1, const Lhs>::self_nocv_t;
     using rhs_t = typename detail::blind_automaton<0, const Rhs>::self_nocv_t;
     lhs_t l = sort(detail::make_blind_automaton<1>(lhs));
-    rhs_t r = sort(insplit(detail::make_blind_automaton<0>(rhs)));
+    rhs_t r = sort(detail::get_insplit(rhs));
     detail::composer<lhs_t, rhs_t>compose(l, r);
     auto res = compose.compose();
     if (getenv("VCSN_ORIGINS"))
