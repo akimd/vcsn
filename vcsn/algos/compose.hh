@@ -295,6 +295,10 @@ namespace vcsn
       using hidden_r_label_t = typename crhs_t::res_label_t;
       using hidden_l_labelset_t = typename clhs_t::res_labelset_t;
       using hidden_r_labelset_t = typename crhs_t::res_labelset_t;
+
+      static_assert(std::is_same<typename clhs_t::labelset_t,
+                    typename crhs_t::labelset_t>::value,
+                    "common band must be of same type");
       using middle_labelset_t = typename clhs_t::labelset_t;
       /// The type of context of the result.
       ///
