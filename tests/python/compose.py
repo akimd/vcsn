@@ -5,7 +5,7 @@ from test import *
 
 def check(a1, a2, exp):
     res = a1.compose(a2)
-    CHECK_EQ(res, exp)
+    CHECK_EQ(exp, res)
 
 
 c1 = vcsn.context("lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>_b")
