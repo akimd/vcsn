@@ -43,7 +43,8 @@ namespace vcsn
       using super = automaton_decorator<Aut>;
 
       static_assert(Aut::context_t::is_lat, "requires labels_are_tuples");
-      static_assert(Aut::context_t::labelset_t::size() > Band, "band outside of the tuple");
+      static_assert(Band < Aut::context_t::labelset_t::size(),
+                    "band outside of the tuple");
 
       /// The type of the automata to produce from this kind o
       /// automata.  For instance, insplitting on a
@@ -339,7 +340,8 @@ namespace vcsn
                                        const hidden_r_labelset_t& rl,
                                        seq<I2...>)
       {
-        return labelset_t{std::get<I1>(ll.sets())..., std::get<I2>(rl.sets())...};
+        return labelset_t{std::get<I1>(ll.sets())...,
+                          std::get<I2>(rl.sets())...};
       }
 
       /// Reset the attributes before a new product.
@@ -595,6 +597,12 @@ namespace vcsn
       automaton_t res_;
     };
 
+    template <std::size_t Band, typename Aut>
+    detail::blind_automaton<Band, Aut>
+    make_blind_automaton(Aut& aut)
+    {
+      return {aut};
+    }
   }
 
   /*--------------------------------.
@@ -609,14 +617,11 @@ namespace vcsn
                                  typename detail::blind_automaton<0, const Rhs>
                                    ::self_nocv_t>::automaton_t
   {
-    // We need a local variable for correct scope
-    typename detail::blind_automaton<1, const Lhs>::self_nocv_t l
-      = sort(detail::blind_automaton<1, const Lhs>{lhs});
-    typename detail::blind_automaton<0, const Rhs>::self_nocv_t r
-      = sort(insplit(detail::blind_automaton<0, const Rhs>{rhs})); // Same here
-    detail::composer<typename detail::blind_automaton<1, const Lhs>::self_nocv_t,
-                     typename detail::blind_automaton<0, const Rhs>::self_nocv_t>
-                       compose(l, r);
+    using lhs_t = typename detail::blind_automaton<1, const Lhs>::self_nocv_t;
+    using rhs_t = typename detail::blind_automaton<0, const Rhs>::self_nocv_t;
+    lhs_t l = sort(detail::make_blind_automaton<1>(lhs));
+    rhs_t r = sort(insplit(detail::make_blind_automaton<0>(rhs)));
+    detail::composer<lhs_t, rhs_t>compose(l, r);
     auto res = compose.compose();
     if (getenv("VCSN_ORIGINS"))
       compose.print(std::cout, compose.origins());
