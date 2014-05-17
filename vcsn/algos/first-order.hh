@@ -62,24 +62,25 @@ namespace vcsn
       constexpr static const char* me() { return "first_order"; }
 
       using polys_t = typename expansionset_t::polys_t;
-      using value_t = typename expansionset_t::value_t;
+      using expansion_t = typename expansionset_t::value_t;
 
       first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = false)
         : rs_(rs)
         , use_spontaneous_(use_spontaneous)
       {}
 
-      void operator()(const ratexp_t& v)
+      expansion_t operator()(const ratexp_t& v)
       {
         res_ = es_.zero();
         v->accept(*this);
+        return res_;
       }
 
-      std::unordered_map<ratexp_t, value_t,
+      std::unordered_map<ratexp_t, expansion_t,
                          vcsn::hash<ratexpset_t>,
                          vcsn::equal_to<ratexpset_t>> cache_;
 
-      value_t first_order(const ratexp_t& e)
+      expansion_t first_order(const ratexp_t& e)
       {
 #if CACHE
         auto insert = cache_.emplace(e, es_.zero());
@@ -123,7 +124,7 @@ namespace vcsn
       }
 
       /// Print an expansion.
-      std::ostream& print_(std::ostream& o, const value_t& v) const
+      std::ostream& print_(std::ostream& o, const expansion_t& v) const
       {
         es_.print(o, v);
         if (transposed_)
@@ -131,6 +132,7 @@ namespace vcsn
         return o;
       }
 
+    private:
       VCSN_RAT_VISIT(zero,)
       {
         res_ = es_.zero();
@@ -176,7 +178,7 @@ namespace vcsn
           else
             {
               auto r = e[transposed_ ? size-1 - i : i];
-              value_t rhs = first_order(r);
+              expansion_t rhs = first_order(r);
               if (transposed_)
                 r = rs_.transposition(r);
 
@@ -248,8 +250,8 @@ namespace vcsn
       {
         bool transposed = transposed_;
         transposed_ = false;
-        value_t lhs = first_order(e[0]);
-        value_t rhs = first_order(e[1]);
+        expansion_t lhs = first_order(e[0]);
+        expansion_t rhs = first_order(e[1]);
         transposed_ = transposed;
         DEBUG_IF(
                  std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
@@ -295,8 +297,8 @@ namespace vcsn
           {
             bool transposed = transposed_;
             transposed_ = false;
-            value_t lhs = first_order(e[0]);
-            value_t rhs = first_order(e[1]);
+            expansion_t lhs = first_order(e[0]);
+            expansion_t rhs = first_order(e[1]);
             transposed_ = transposed;
             DEBUG_IF(
                      std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
@@ -343,17 +345,17 @@ namespace vcsn
       // FO(E:F) = FO(E):F + E:FO(F)
       VCSN_RAT_VISIT(shuffle, e)
       {
-        value_t res = es_.one();
+        expansion_t res = es_.one();
         // The shuffle-product of the previously traversed siblings.
         // Initially the neutral element: \e.
         ratexp_t prev = rs_.one();
         for (const auto& rhs: e)
           {
             // Save current result in lhs, and compute the result in res.
-            value_t lhs; lhs.constant = ws_.zero();
+            expansion_t lhs; lhs.constant = ws_.zero();
             std::swap(res, lhs);
 
-            value_t r = first_order(rhs);
+            expansion_t r = first_order(rhs);
             res.constant = ws_.mul(lhs.constant, r.constant);
 
             // (i) fo(lhs) -> fo(lhs):r, that is, shuffle-multiply the
@@ -392,7 +394,7 @@ namespace vcsn
       typename std::enable_if<IsFree, void>::type
       visit_complement(const complement_t& e)
       {
-        value_t res = first_order(e.sub());
+        expansion_t res = first_order(e.sub());
         res_.constant = ws_.is_zero(res.constant) ? ws_.one() : ws_.zero();
 
         // Turn the polynomials into a ratexp, and complement it.
@@ -413,7 +415,7 @@ namespace vcsn
 
       VCSN_RAT_VISIT(star, e)
       {
-        value_t res = first_order(e.sub());
+        expansion_t res = first_order(e.sub());
         res_.constant = ws_.star(res.constant);
         auto f = e.shared_from_this();
         if (transposed_)
@@ -448,19 +450,23 @@ namespace vcsn
           : es_.rmul(l, r);
       }
 
-      // private:
+      /// Manipulate the ratexps.
       ratexpset_t rs_;
-      /// The structure to manipulation expansions.
+      /// Manipulate the labels.
+      labelset_t ls_ = *rs_.labelset();
+      /// Manipulate the weights.
+      weightset_t ws_ = *rs_.weightset();
+      /// Manipulate the polynomials of ratexps.
+      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
+      /// Manipulate the expansions.
       expansionset_t es_ = expansionset_t(rs_);
+
       /// Whether to use spontaneous transitions.
       bool use_spontaneous_;
       /// Whether to work transposed.
       bool transposed_ = false;
-      /// Shorthand to the weightset.
-      weightset_t ws_ = *rs_.weightset();
-      polynomialset_t ps_ = make_ratexp_polynomialset(rs_);
       /// The result.
-      value_t res_;
+      expansion_t res_;
     };
 
   } // rat::
@@ -574,9 +580,9 @@ namespace vcsn
             ratexp_t r = todo_.top();
             todo_.pop();
             state_t src = map_[r];
-            expand(r);
-            res_.set_final(src, expand.res_.constant);
-            for (const auto& p: expand.res_.polynomials)
+            auto expansion = expand(r);
+            res_.set_final(src, expansion.constant);
+            for (const auto& p: expansion.polynomials)
               for (const auto& m: p.second)
                 res_.add_transition(src, state(m.first), p.first, m.second);
           }
