@@ -292,7 +292,9 @@ namespace vcsn
         // Special case the quotient of stars.
         ratexp_t lchild = star_child(e[0]);
         ratexp_t rchild = star_child(e[1]);
-        if (lchild && rchild)
+        // This is wrong, and I can't find how I supposedly
+        // demonstrated that.  Won't work with a*\(ab)* for instance.
+        if (false && lchild && rchild)
           {
             // (e*) \ (f*) = (e\f)* . f*
             auto q = rs_.mul(rs_.star(rs_.ldiv(lchild, rchild)),
