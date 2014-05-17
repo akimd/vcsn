@@ -153,6 +153,7 @@ nobase_include_HEADERS =                        \
   %D%/labelset/oneset.hh                        \
   %D%/labelset/tupleset.hh                      \
   %D%/labelset/wordset.hh                       \
+  %D%/misc/algorithm.hh                         \
   %D%/misc/attributes.hh                        \
   %D%/misc/cast.hh                              \
   %D%/misc/const_traits.hh                      \

@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_SORT_HH
 # define VCSN_ALGOS_SORT_HH
 
-# include <algorithm>
 # include <map>
 # include <queue>
 # include <vector>
@@ -9,6 +8,7 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/misc/algorithm.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/unordered_map.hh>
 
@@ -27,23 +27,15 @@ namespace vcsn
   bool
   is_out_sorted(const Aut& a)
   {
+    using transition_t = typename Aut::transition_t;
     for (typename Aut::state_t s: a.states())
-      {
-        // Whether looking at the first outgoing transition from state s.
-        bool first = true;
-        // The symbol of the previous transition.  We could initialize
-        // to special. If we enforce that it is always less-than any
-        // other label, first becomes useless.
-        typename Aut::label_t prev;
-        for (typename Aut::transition_t t: a.out(s))
-          {
-            if (first || a.labelset()->less_than(prev, a.label_of(t)))
-              prev = a.label_of(t);
-            else
-              return false;
-            first = false;
-          }
-      }
+      if (!detail::is_sorted(a.out(s),
+                             [&a] (transition_t l, transition_t r)
+                             {
+                               return a.labelset()->less_than(a.label_of(l),
+                                                              a.label_of(r));
+                             }))
+        return false;
     return true;
   }
 
