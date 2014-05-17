@@ -350,9 +350,9 @@ namespace vcsn
     // 1{T} = 1.
     else if (e->type() == type_t::one)
       res = e;
-    // a{T} = a.
-    else if (e->type() == type_t::atom)
-      res = e;
+    // a{T} = a, (abc){T} = cba.
+    else if (auto l = std::dynamic_pointer_cast<const atom_t>(e))
+      res = atom(labelset()->transpose(l->value()));
     // END: Trivial Identity
     else
       res = std::make_shared<transposition_t>(e);

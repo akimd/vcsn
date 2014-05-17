@@ -109,7 +109,21 @@ a<f> => <f>a
 <e>a:<f>\e => <e>a:<f>\e
 <e>a:<f>a => <e>a:<f>a
 
+# Trivial identities: transpose.
+%labels: letters
+\e{T} => \e
+\z{T} => \z
+a{T} => a
+(abc){T} => (abc){T}
+
+%labels: words
+\e{T} => \e
+\z{T} => \z
+a{T} => a
+(abc){T} => cba
+
 # Complement: same precedence/behavior as *.
+%labels: letters
 <e>a{c} => <e>a{c}
 <e>(a+b){c} => <e>(a+b){c}
 
