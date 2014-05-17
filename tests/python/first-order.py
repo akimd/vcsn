@@ -5,6 +5,9 @@ from test import *
 
 c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
+def is_wordset(c):
+    return str(c).startswith("law_")
+
 def check(re, exp, use_spontaneous = False, no_linear = False):
     '''Check that fo(re) = exp.  Also check that linear and derived_term
     compute the same result, unless no_linear = True.  `no_linear` exists
@@ -16,7 +19,7 @@ def check(re, exp, use_spontaneous = False, no_linear = False):
     CHECK_EQ(exp, str(eff))
     # Check that if derived_term can do it, them it's the same
     # automaton.
-    if not use_spontaneous and not no_linear:
+    if not use_spontaneous and not no_linear and not is_wordset(c):
         try:
             dt = r.derived_term()
         except:
@@ -181,3 +184,23 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 
 CHECK_EQ(r'a \odot \left[a \oplus \langle x\rangle b \, c\right] \oplus b \odot \left[\langle y\rangle c\right]',
          c.ratexp(r'aa+<x>abc+<y>bc').first_order().format("latex"))
+
+
+## ------------ ##
+## On wordset.  ##
+## ------------ ##
+
+c = vcsn.context("law_char(a-z)_ratexpset<lal_char(xyz)_z>")
+
+# Transposition is the most risky one, as we must not forget to
+# transpose the labels in the expansion.
+check('\z{T}', '<\z>')
+check('\e{T}', '<\e>')
+check('a{T}', 'a.[\e]')
+check('(abc){T}', 'cba.[\e]')
+check('(abc+aabbcc){T}', 'cba.[\e] + ccbbaa.[\e]')
+check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>ab){T}]')
+check('((foo)(bar)(baz)){T}', 'zab.[((foo)(bar)){T}]')
+check('(ab)*{T}', '<\e> + ba.[(ab)*{T}]')
+check('(<xy>((abc)(abc))<yz>)*{T}',
+      '<\e> + cba.[<zy><yx>(cba)(<xy>((abc)(abc))<yz>)*{T}]')
