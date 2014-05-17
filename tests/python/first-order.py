@@ -7,10 +7,12 @@ c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
 def check(re, exp, use_spontaneous = False, no_linear = False):
     '''Check that fo(re) = exp.  Also check that linear and derived_term
-    compute the same result, unless no_linear = True.'''
+    compute the same result, unless no_linear = True.  `no_linear` exists
+    for a bad reason: our isomorphism check fails.
+    '''
     r = c.ratexp(re)
     eff = r.first_order(use_spontaneous)
-    print("first_order({}) = {}".format(r, eff));
+    print("d: {} => {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
     # Check that if derived_term can do it, them it's the same
     # automaton.

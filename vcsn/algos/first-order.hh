@@ -153,11 +153,6 @@ namespace vcsn
           es_.add_here(res_, first_order(v));
       }
 
-      // fo(l) = c(l) + a.A(l) + ...
-      // fo(r) = c(r) + a.A(r) + ...
-      // fo(l.r) = (c(l) + a.A(l) + ...) (c(r) + a.A(r) + ...)
-      // c(fo(lr)) = c(l).c(r)
-      // A(fo(lr)) = A(l).r + c(l).A(r)
       VCSN_RAT_VISIT(prod, e)
       {
         res_ = es_.one();
@@ -185,15 +180,11 @@ namespace vcsn
               if (transposed_)
                 r = rs_.transposition(r);
 
-              // (i): A(fo(lr)) = A(l).r
               es_.rmul_here(res_, r);
 
-              // (ii) A(fo(lr)) += c(l).A(r)
               for (const auto& p: rhs.polynomials)
                 ps_.add_weight(res_.polynomials[p.first],
                                ps_.lmul(res_.constant, p.second));
-
-              // (iii) c(fo(lr)) = c(l).c(r)
               res_.constant = ws_.mul(res_.constant, rhs.constant);
             }
       }
