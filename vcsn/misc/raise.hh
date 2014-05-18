@@ -26,7 +26,11 @@ namespace vcsn
   inline void raise(const Args&... args)
   {
     std::ostringstream o;
-    detail::pass{(o << args, 0)...};
+    using swallow = int[];
+    (void) swallow
+      {
+        (o << args, 0)...
+      };
     throw std::runtime_error{o.str()};
   }
 
