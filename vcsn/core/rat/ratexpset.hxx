@@ -553,37 +553,51 @@ namespace vcsn
   {
     value_t res = zero();
     auto gens = labelset()->genset();
+    // FIXME: This piece of code screams for factoring.  Yet, I want
+    // to avoid useless costs such as building a empty/full set of
+    // letters for [^].
+
+    // [a-c].
     if (accept)
-      {
-        if (ccs.empty())
-          for (auto l: gens)
-            res = add(res, atom(labelset()->value(l)));
-        else
-          for (auto cc: ccs)
-            {
-              auto i = std::find(std::begin(gens), std::end(gens), cc.first);
-              auto end = std::find(i, std::end(gens), cc.second);
-              if (end != std::end(gens))
-                for (end = std::next(end); i != end; ++i)
-                  res = add(res, atom(labelset()->value(*i)));
-            }
-      }
+      for (auto cc: ccs)
+        {
+          auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+          auto end = std::find(i, std::end(gens), cc.second);
+          require(end != std::end(gens),
+                  "invalid letter interval: ",
+                  format(*labelset(), labelset()->value(std::get<0>(cc))),
+                  '-',
+                  format(*labelset(), labelset()->value(std::get<1>(cc))));
+          for (end = std::next(end); i != end; ++i)
+            res = add(res, atom(labelset()->value(*i)));
+        }
+    // [^].
+    else if (ccs.empty())
+      for (auto l: gens)
+        res = add(res, atom(labelset()->value(l)));
+    // [^a-z].
     else
       {
         // Match the letters that are in no interval.
         std::set<typename LabelSet_::letter_t> accepted;
         for (auto cc: ccs)
-            {
-              auto i = std::find(std::begin(gens), std::end(gens), cc.first);
-              auto end = std::find(i, std::end(gens), cc.second);
-              if (end != std::end(gens))
-                for (end = std::next(end); i != end; ++i)
-                  accepted.emplace(*i);
-            }
+          {
+            auto i = std::find(std::begin(gens), std::end(gens), cc.first);
+            auto end = std::find(i, std::end(gens), cc.second);
+            require(end != std::end(gens),
+                    "invalid letter interval: ",
+                    format(*labelset(), labelset()->value(std::get<0>(cc))),
+                    '-',
+                    format(*labelset(), labelset()->value(std::get<1>(cc))));
+            for (end = std::next(end); i != end; ++i)
+              accepted.emplace(*i);
+          }
         for (auto c: gens)
           if (!has(accepted, c))
             res = add(res, atom(labelset()->value(c)));
       }
+    require(!is_zero(res),
+            "invalid empty letter class");
     return res;
   }
 

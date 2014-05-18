@@ -10,9 +10,13 @@
 [a-a] => a
 [a-b] => a+b
 [a-bc-d] => a+b+c+d
-[b-a] => \z
 
-[] => a+b+c+d
+[b-a] ! invalid letter interval: b-a
+[]    ! invalid empty letter class
+
+[^] => a+b+c+d
 [^a] => b+c+d
 [^a-b] => c+d
 [^a-bd] => c
+[^b-a] ! invalid letter interval: b-a
+[^a-d] ! invalid empty letter class

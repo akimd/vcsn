@@ -4,6 +4,42 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-18
+** ratexps: support for negated letter classes
+We may now use '[^...]' to denote a letter other than the listed ones.  The
+special case '[^]' denotes any character of the alphabet.
+
+  >>> c = vcsn.context('lal_char(0-9)_b')
+  >>> c.ratexp('0+[^0][^]*')
+  0+(1+2+3+4+5+6+7+8+9)(0+1+2+3+4+5+6+7+8+9)*
+
+** ratexps: invalid letter classes are rejected
+Instead of being ignored, invalid intervals, or empty classes, are now
+rejected.
+
+  >>> c.ratexp('[9-0]')
+  RuntimeError: invalid letter interval: 9-0
+  >>> c.ratexp('[]')
+  RuntimeError: invalid empty letter class
+
+** ratexps: improved support for letter classes
+Previously letter classes were supported only for context on top of a simple
+alphabet (LAL, LAN and LAW).  Generators of more complex contexts such as
+LAL x LAN are now supported:
+
+  >>> c = vcsn.context('lat<lal_char(abc),lan_char(xyz)>_b')
+  >>> c.ratexp("['(a,x)''(c,z)']")
+  (a,x)+(c,z)
+
+  >>> c.ratexp("[^'(a,x)''(c,z)']")
+  (a,y)+(a,z)+(b,x)+(b,y)+(b,z)+(c,x)+(c,y)
+
+  >>> c.ratexp("['(a,x)'-'(a,z)']")
+  (a,x)+(a,y)+(a,z)
+
+  >>> c.ratexp("[^]")
+  (a,x)+(a,y)+(a,z)+(b,x)+(b,y)+(b,z)+(c,x)+(c,y)+(c,z)
+
 * 2014-05-12
 ** compose: new algorithm (static, dyn, Python)
 A new algorithm has been introduced to allow the composition of two
@@ -471,7 +507,7 @@ To install Vaucanson from a tarball, Bison is no longer needed.  Of course,
 modifying one of grammar files will fail, unless Bison 3.0 is installed.
 
 * 2014-01-13
-** Character classes in context specifications
+** Letter classes in context specifications
 It is now possible to use ranges to define alphabets.  For instance in
 Python,
 
@@ -483,8 +519,8 @@ builds a context whose alphabet covers letters, digits, and underscore.
 Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
 "vaucanson".
 
-** Character classes
-Character classes are available in ratexps: '[a-d0-9_]' is expanded into
+** Letter classes
+Letter classes are available in ratexps: '[a-d0-9_]' is expanded into
 (a+b+c+d+0+1+2+3+4+5+6+7+8+9+_).  The negation ([^...]) is not supported.
 
 * 2014-01-02
