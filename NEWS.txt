@@ -5,11 +5,18 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-05-12
-** transducer composition
+** compose: new algorithm (static, dyn, Python)
 A new algorithm has been introduced to allow the composition of two
 transducers.  It computes the accessible part of the transducer resulting
 from the composition of the second band of the first transducer with the
 first band of the second one.
+
+  >>> c1 = vcsn.context('lat<lan_char(abc),lan_char(ijk)>_b')
+  >>> c2 = vcsn.context('lat<lan_char(ijk),lan_char(xyz)>_b')
+  >>> t1 = c1.ratexp("('(a,i)'+'(b,j)'+'(c,k)')*").thompson()
+  >>> t2 = c2.ratexp("('(i,x)'+'(j,y)'+'(k,z)')*").standard()
+  >>> t1.compose(t2).proper().shortest(8)
+  (\e,\e) + (a,x) + (b,y) + (c,z) + (aa,xx) + (ab,xy) + (ac,xz) + (ba,yx)
 
 * 2014-05-05
 ** insplit: new algorithm (static, dyn, Python)
