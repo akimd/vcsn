@@ -69,12 +69,12 @@ namespace detail
     /// Right-multiplication by a weight.
     virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
-    using char_class_t = std::set<std::pair<std::string, std::string>>;
+    using letter_class_t = std::set<std::pair<std::string, std::string>>;
     /// A ratexp matching one character amongst \a chars.
     /// \param accept
     ///   Whether to accept these characters ([abc]) as opposed
     ///   to refusing them ([^abc]).
-    virtual value_t char_class(const char_class_t& chars,
+    virtual value_t letter_class(const letter_class_t& chars,
                                bool accept = true) const = 0;
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
@@ -156,7 +156,7 @@ namespace detail
 
     virtual value_t rmul(value_t v, const std::string& w) const override;
 
-    virtual value_t char_class(const char_class_t& chars,
+    virtual value_t letter_class(const letter_class_t& chars,
                                bool accept = true) const override;
 
     /// Parsing.
@@ -167,11 +167,11 @@ namespace detail
   private:
     /// If context is oneset.
     template <typename LabelSet_>
-    value_t char_class_(const char_class_t& chars,
+    value_t letter_class_(const letter_class_t& chars,
                                bool accept, std::true_type) const;
     /// If context is not oneset.
     template <typename LabelSet_>
-    value_t char_class_(const char_class_t& chars,
+    value_t letter_class_(const letter_class_t& chars,
                                bool accept, std::false_type) const;
 
     ratexpset_t rs_;

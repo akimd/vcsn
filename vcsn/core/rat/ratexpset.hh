@@ -204,7 +204,7 @@ namespace vcsn
 
     /// A ratexp matching one character amongst \a chars.
     template <typename... Args>
-    value_t char_class(Args&&... chars) const;
+    value_t letter_class(Args&&... chars) const;
 
   private:
     /// Push \a v in \a res, applying associativity if possible.
@@ -227,12 +227,12 @@ namespace vcsn
 
     /// If context is oneset.
     template <typename LabelSet_, typename... Args>
-    value_t char_class_(const Args&&... chars, std::true_type) const;
+    value_t letter_class_(const Args&&... chars, std::true_type) const;
 
     /// If context is not oneset.
     template <typename LabelSet_>
     value_t
-    char_class_(std::set<std::pair<typename LabelSet_::letter_t,
+    letter_class_(std::set<std::pair<typename LabelSet_::letter_t,
                                    typename LabelSet_::letter_t>> chars,
                 bool accept,
                 std::false_type) const;

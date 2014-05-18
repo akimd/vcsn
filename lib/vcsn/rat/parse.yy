@@ -216,8 +216,8 @@ exp:
 | "\\z"             { $$ = MAKE(zero); }
 | "\\e"             { $$ = MAKE(one); }
 | LETTER            { TRY(@$, $$ = MAKE(atom, $1)); }
-| "[" class "]"     { $$ = MAKE(char_class, $2, true); }
-| "[" "^" class "]" { $$ = MAKE(char_class, $3, false); }
+| "[" class "]"     { $$ = MAKE(letter_class, $2, true); }
+| "[" "^" class "]" { $$ = MAKE(letter_class, $3, false); }
 | "(" exp ")"       { $$.exp = $2.exp; $$.lparen = $$.rparen = true; }
 ;
 

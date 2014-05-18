@@ -121,10 +121,10 @@ namespace dyn
       return rs_.rmul(down(v), down(w));
     }
 
-    DEFINE::char_class(const char_class_t& cs, bool accept) const -> value_t
+    DEFINE::letter_class(const letter_class_t& cs, bool accept) const -> value_t
     {
       using labelset_t = typename ratexpset_t::labelset_t;
-      return char_class_<labelset_t>(cs, accept,
+      return letter_class_<labelset_t>(cs, accept,
                                      std::is_same<labelset_t, vcsn::oneset>{});
     }
 
@@ -132,7 +132,7 @@ namespace dyn
     template <typename LabelSet_>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t& chars,
+    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
                                               bool accept,
                                               std::false_type) const -> value_t
     {
@@ -146,7 +146,10 @@ namespace dyn
       std::set<std::pair<letter_t, letter_t>> ccs;
       for (auto cc: chars)
         {
-          // Yes, this is ugly.
+          // Yes, this is ugly: to convert an std::string into a
+          // letter_t, we (i) parse the string into a label, (ii)
+          // convert it into a word_t, (iii) from which we extract its
+          // first letter.
           label_t lbl1 = ::vcsn::conv(ls, cc.first);
           label_t lbl2 = ::vcsn::conv(ls, cc.second);
           word_t w1 = ls.word(lbl1);
@@ -155,14 +158,14 @@ namespace dyn
           letter_t l2 = *std::begin(ls.letters_of(w2));
           ccs.emplace(l1, l2);
         }
-      return rs_.char_class(ccs, accept);
+      return rs_.letter_class(ccs, accept);
     }
 
     template <typename RatExpSet>
     template <typename LabelSet_>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::char_class_(const char_class_t&,
+    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
                                               bool,
                                               std::true_type) const
       -> value_t

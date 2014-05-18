@@ -533,10 +533,10 @@ namespace vcsn
   template <typename... Args>
   inline
   auto
-  ratexpset_impl<Context>::char_class(Args&&... args) const
+  ratexpset_impl<Context>::letter_class(Args&&... args) const
     -> value_t
   {
-    return char_class_<labelset_t>(std::forward<Args>(args)...,
+    return letter_class_<labelset_t>(std::forward<Args>(args)...,
                                    std::is_same<labelset_t, vcsn::oneset>{});
   }
 
@@ -544,10 +544,11 @@ namespace vcsn
   template <typename LabelSet_>
   inline
   auto
-  ratexpset_impl<Context>::char_class_(std::set<std::pair<typename LabelSet_::letter_t,
-                                                          typename LabelSet_::letter_t>> ccs,
-                                       bool accept,
-                                       std::false_type) const
+  ratexpset_impl<Context>::letter_class_
+    (std::set<std::pair<typename LabelSet_::letter_t,
+                        typename LabelSet_::letter_t>> ccs,
+     bool accept,
+     std::false_type) const
     -> value_t
   {
     value_t res = zero();
@@ -590,7 +591,7 @@ namespace vcsn
   template <typename LabelSet_, typename... Args>
   inline
   auto
-  ratexpset_impl<Context>::char_class_(const Args&&...,
+  ratexpset_impl<Context>::letter_class_(const Args&&...,
                                        std::true_type) const
     -> value_t
   {
