@@ -145,13 +145,9 @@ namespace vcsn
 
       VCSN_RAT_VISIT(atom, e)
       {
-        ls_.print(std::cerr, e.value())
-          << " " << transposed_
-          << " => ";
         res_ = es_.atom(transposed_
                         ? ls_.transpose(e.value())
                         : e.value());
-        es_.print(std::cerr, res_) << '\n';
       }
 
       VCSN_RAT_VISIT(sum, e)
