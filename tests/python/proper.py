@@ -339,11 +339,11 @@ digraph
 {
   vcsn_context = "lat<lan_char(ab),lan_char(xy)>_b"
   I0 -> 0
-  0 -> 1 [label = "(\\e, \\e)"]
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, \\e)"]
+  0 -> 1 [label = "(\\e,\\e)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(b,\\e)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''', r'''
 digraph
@@ -365,10 +365,10 @@ digraph
   }
   I0 -> 0
   0 -> F0
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(\\e, y), (b, \\e)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(\\e,y), (b,\\e)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''')
 
@@ -382,10 +382,10 @@ digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
   I0 -> 0
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, y)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(b,y)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''', r'''
 digraph
@@ -405,10 +405,10 @@ digraph
     2
   }
   I0 -> 0
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, y)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(b,y)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''')
 
@@ -424,10 +424,10 @@ digraph
 {
   vcsn_context = "lat<lan_char(ab),lal_char(xy)>_b"
   I0 -> 0
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, y)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(b,y)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''', r'''
 digraph
@@ -447,9 +447,9 @@ digraph
     2
   }
   I0 -> 0
-  0 -> 1 [label = "(a, x)"]
-  0 -> 2 [label = "(b, y)"]
+  0 -> 1 [label = "(a,x)"]
+  0 -> 2 [label = "(b,y)"]
   1 -> F1
-  1 -> 2 [label = "(\\e, y)"]
+  1 -> 2 [label = "(\\e,y)"]
   2 -> F2
 }''')

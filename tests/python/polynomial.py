@@ -34,7 +34,7 @@ check('lal_char(abc)_ratexpset<lal_char(xyz)_z>',
 # Be sure to have proper ordering on tuples with LAN.
 check('lat<lan_char(abc), lan_char(xyz)>_z',
       r'(a,\e) + (\e,x) + (a,\e) + (a, x) + (\e,y)',
-      r'(\e, x) + (\e, y) + <2>(a, \e) + (a, x)')
+      r'(\e,x) + (\e,y) + <2>(a,\e) + (a,x)')
 
 # Check that we don't ignore trailing characters.
 XFAIL(lambda: vcsn.context('lal_char(ab)_z').polynomial('<123>a*'))

@@ -643,7 +643,7 @@ namespace vcsn
           using swallow = int[];
           (void) swallow
             {
-              (o << (I == 0 ? "(" : ", "),
+              (o << (I == 0 ? '(' : ','),
                set<I>().print(o, std::get<I>(l), format),
                0)...
             };
