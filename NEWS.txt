@@ -268,12 +268,14 @@ that became non-accessible.
 Its behavior was completely wrong.
 
 * 2014-02-21
-** parse and display brackets in transitions
-It is now possible to directly write entries in bracket notation, for
-instance [a-ky] which means "every letter between a and k in the alphabet, or
-y".
-When printed, entries also are displayed in the minimized form:
-'g, a, b, d, c, f' becomes [a-dfg] but 'a, b' stays in this form.
+** parse and display letter classes in transitions
+It is now possible to directly write labels of transitions with letter
+classes.  For instance '[a-ky]' denotes every letter between a and k in the
+alphabet, or y.
+
+Transition labels with equal weights are displayed this way.  For instance
+'g, a, b, d, c, f' becomes [a-dfg] and '<2>a, <2>b, <2>c" is displayed
+'<2>[abc]', but 'a, b' stays in this form.
 
 * 2014-02-20
 ** union accepts more heterogenous arguments
