@@ -20,11 +20,16 @@ namespace vcsn
   {
     std::istringstream is{name};
     auto res = Ctx::make(is);
-    std::string remainder;
-    is >> remainder;
-    require(remainder.empty(),
-            __func__, ": unexpected characters after context: ",
-            str_escape(remainder));
+    // Something extremely weird is going wrong with str_escape when
+    // called here from Python.  I have not been able to understand
+    // what the problem was, and maybe it's actually a problem bw the
+    // compiler (clang 3.4), the c++ lib (libstc++), and Python, and
+    // possibly Boost after all.
+    //
+    // The good news is that this seems to work properly.
+    if (is.peek() != -1)
+      raise(__func__, ": invalid context name: ", str_escape(name),
+            ", unexpected ", str_escape(is.peek()));
     return res;
   }
 
