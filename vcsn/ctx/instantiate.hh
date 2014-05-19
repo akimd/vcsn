@@ -184,7 +184,7 @@ namespace vcsn
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);
-        REGISTER(pair, aut_t);
+        REGISTER(pair, aut_t, bool);
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(product, aut_t, aut_t);

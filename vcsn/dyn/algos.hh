@@ -277,7 +277,7 @@ namespace vcsn
     context make_word_context(const context& ctx);
 
     /// Build the pair automaton of the given automaton
-    automaton pair(const automaton& aut);
+    automaton pair(const automaton& aut, bool);
 
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);

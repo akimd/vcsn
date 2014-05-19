@@ -8,9 +8,9 @@ namespace vcsn
   {
     REGISTER_DEFINE(pair);
     automaton
-    pair(const automaton& aut)
+    pair(const automaton& aut, bool keep_initials)
     {
-      return detail::pair_registry().call(aut);
+      return detail::pair_registry().call(aut, keep_initials);
     }
 
     REGISTER_DEFINE(synchronizing_word);

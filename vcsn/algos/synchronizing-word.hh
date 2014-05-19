@@ -95,10 +95,11 @@ namespace vcsn
       using pair_t = std::pair<state_t, state_t>;
 
     public:
-      pairer(const automaton_t& aut)
+      pairer(const automaton_t& aut, bool keep_initials = false)
         : aut_(aut)
         , res_(aut.context())
         , transition_map_(aut)
+        , keep_initials_(keep_initials)
       {}
 
       automaton_t pair()
@@ -106,10 +107,15 @@ namespace vcsn
         auto ctx = aut_.context();
         auto ws = ctx.weightset();
 
-        q0_ = res_.new_state(); // q0 special state
-
-        for (auto l : aut_.labelset()->genset())
-          res_.add_transition(q0_, q0_, l, ws->one());
+        if (!keep_initials_)
+          {
+            q0_ = res_.new_state(); // q0 special state
+            for (auto l : aut_.labelset()->genset())
+              res_.add_transition(q0_, q0_, l, ws->one());
+          }
+        else
+          for (auto s : aut_.states())
+            pair_states_.emplace(std::make_pair(s, s), res_.new_state());
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
@@ -157,6 +163,8 @@ namespace vcsn
 
       state_t get_q0() const
       {
+        require(!keep_initials_, "can't get_q0() on a pairer that "
+                "keeps origins");
         require(called_, "trying to call get_q0() before calling pair()");
         return q0_;
       }
@@ -199,7 +207,7 @@ namespace vcsn
         // Benches show it is slightly faster to handle this case
         // especially rather that mapping these "diagonal states" to
         // q0_ in pair_states_.
-        if (s1 == s2)
+        if (s1 == s2 && !keep_initials_)
           return q0_;
         else
           return pair_states_[make_ordered_pair(s1, s2)];
@@ -216,6 +224,7 @@ namespace vcsn
       std::unordered_map<pair_t, state_t> pair_states_;
       state_t q0_;
       bool called_ = false;
+      bool keep_initials_ = false;
     };
   }
 
@@ -224,9 +233,9 @@ namespace vcsn
   `------------------*/
 
   template <typename Aut>
-  Aut pair(const Aut& aut)
+  Aut pair(const Aut& aut, bool keep_initials)
   {
-    detail::pairer<Aut> pair(aut);
+    detail::pairer<Aut> pair(aut, keep_initials);
     auto res = pair.pair();
     if (getenv("VCSN_ORIGINS"))
       pair.print(std::cout, pair.origins());
@@ -237,15 +246,15 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <typename Aut, typename>
       automaton
-      pair(const automaton& aut)
+      pair(const automaton& aut, bool keep_initials = false)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(pair(a));
+        return make_automaton(pair(a, keep_initials));
       }
 
-      REGISTER_DECLARE(pair, (const automaton&) -> automaton);
+      REGISTER_DECLARE(pair, (const automaton&, bool) -> automaton);
     }
   }
 

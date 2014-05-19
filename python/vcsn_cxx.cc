@@ -254,9 +254,9 @@ struct automaton
     return vcsn::dyn::minimize(aut_, algo);
   }
 
-  automaton pair() const
+  automaton pair(bool keep_initials = false) const
   {
-    return vcsn::dyn::pair(aut_);
+    return vcsn::dyn::pair(aut_, keep_initials);
   }
 
   automaton power(unsigned n) const
@@ -731,6 +731,7 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(linear, linear, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
@@ -777,7 +778,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
     .def("minimize", &automaton::minimize, minimize())
-    .def("pair", &automaton::pair)
+    .def("pair", &automaton::pair, pair())
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper, proper())
