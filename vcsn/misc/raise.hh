@@ -23,7 +23,7 @@ namespace vcsn
   /// Raise a runtime_error with the concatenation of \a args as message.
   template <typename... Args>
   ATTRIBUTE_NORETURN
-  inline void raise(const Args&... args)
+  inline void raise(Args&&... args)
   {
     std::ostringstream o;
     using swallow = int[];
