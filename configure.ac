@@ -163,7 +163,11 @@ BOOST_PYTHON
 VCSN_REGEX
 # Whether to enable _GLIBCXX_DEBUG.
 VCSN_GLIBCXX_DEBUG
-case $ac_cv_GLIBCXX_DEBUG in (yes)
+# For some reason, that I could not reduce to something understandable
+# out of Vcsn, we have failures on ArchLinux bw clang, python, boost,
+# and libstdc++: a double free.  I failed to understand what was going
+# on, and wasted quite some time on it.
+case $ac_cv_GLIBCXX_DEBUG:$vcsn_cv_cxx_is_clang in (yes:no)
   CPPFLAGS="$CPPFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 esac
 
