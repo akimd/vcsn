@@ -23,6 +23,9 @@ export PATH
 # Use the non-installed Python modules, and its libraries.
 PYTHONPATH=$abs_srcdir/python:$abs_builddir/python:$abs_builddir/python/.libs:$PYTHONPATH
 export PYTHONPATH
+# Be sure to find tests/bin/test.py when this script is ran by hand.
+PYTHONPATH=$abs_srcdir/tests/bin:$PYTHONPATH
+export PYTHONPATH
 LD_LIBRARY_PATH=$abs_builddir/lib/.libs:$abs_builddir/python/.libs:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH
 DYLD_LIBRARY_PATH=$abs_builddir/lib/.libs:$abs_builddir/python/.libs:$DYLD_LIBRARY_PATH
