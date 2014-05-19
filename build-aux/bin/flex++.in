@@ -60,19 +60,42 @@ fi
 
 # Tweak Flex's output.
 #
-# 1. Use "output.hh" as header.
+# - Paste the pragma bits which will save us from stupid warnings.
 #
-# 2. Use "output" in synclines, not output.tmp.
+# - Use "output.hh" as header.
 #
-# 3. Disable the declarations of yyalloc, yyrealloc and yyfree
-#    declarations, which are not in YY_FLEX_NAMESPACE, while the
-#    implementations are.
-perl -pi                                                \
-     -e "s{<FlexLexer\\.h>}{<$output_header>}g;"        \
-     -e "s{\\Q$output.tmp\\E}{$output}g;"               \
-     -e 's{(^void \*yy(re)?alloc.*;)}{// $1}g;'         \
-     -e 's{(^void yyfree.*;)}{// $1}g;'                 \
-     "$output.tmp"
+# - Use "output" in synclines, not output.tmp.
+#
+# - Disable the declarations of yyalloc, yyrealloc and yyfree
+#   declarations, which are not in YY_FLEX_NAMESPACE, while the
+#   implementations are.
+perl -pi -e '
+  # Cannot use a print in a BEGIN here, stdout is not set up.
+  if ($. == 1)
+  {
+     $_ = <<EOF . $_;
+// Added by flex++.
+#pragma GCC diagnostic ignored "-Wsign-compare"
+// Check Clang first, as it does not support -Wzero... but it
+// defines __GNUC__.
+#if defined __clang__
+# pragma clang diagnostic ignored "-Wdeprecated"
+# pragma clang diagnostic ignored "-Wnull-conversion"
+#elif defined __GNUC__
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=const"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=noreturn"
+# pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+# pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
+
+EOF
+  }
+
+  s{<FlexLexer\.h>}{<'"$output_header"'>}g;
+  s{\Q'"$output"'.tmp\E}{'"$output"'}g;
+  s{(^void \*yy(re)?alloc.*;)}{// $1}g;
+  s{(^void yyfree.*;)}{// $1}g;
+' "$output.tmp"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"
 
