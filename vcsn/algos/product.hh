@@ -518,7 +518,7 @@ namespace vcsn
       template <typename A>
       typename std::enable_if<A::context_t::labelset_t::has_one(),
                               bool>::type
-      is_one(const A& aut, typename A::transition_t tr) const
+      is_one(const A& aut, transition_t_of<A> tr) const
       {
         return aut.labelset()->is_one(aut.label_of(tr));
       }
@@ -528,7 +528,7 @@ namespace vcsn
       template <typename A>
       constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
                               bool>::type
-      is_one(const A&, typename A::transition_t)
+      is_one(const A&, transition_t_of<A>)
       const
       {
         return false;

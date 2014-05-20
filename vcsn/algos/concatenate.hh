@@ -38,7 +38,7 @@ namespace vcsn
     // The set of the current (left-hand side) final transitions.
     auto ftr_ = res.final_transitions();
     // Store these transitions by copy.
-    using transs_t = std::vector<typename automaton_t::transition_t>;
+    using transs_t = std::vector<transition_t_of<automaton_t>>;
     transs_t ftr{ begin(ftr_), end(ftr_) };
 
     typename B::state_t b_initial = b.dst_of(b.initial_transitions().front());

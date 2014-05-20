@@ -54,7 +54,7 @@ namespace vcsn
       using self_nocv_t
         = blind_automaton<Band, typename automaton_t::self_nocv_t>;
       using state_t = typename automaton_t::state_t;
-      using transition_t = typename automaton_t::transition_t;
+      using transition_t = transition_t_of<automaton_t>;
       // Exposed label
       using label_t =
         typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
@@ -563,7 +563,7 @@ namespace vcsn
       template <typename A>
       typename std::enable_if<A::context_t::labelset_t::has_one(),
                               bool>::type
-      is_one(const A& aut, typename A::transition_t tr) const
+      is_one(const A& aut, transition_t_of<A> tr) const
       {
         return aut.labelset()->is_one(aut.label_of(tr));
       }
@@ -571,7 +571,7 @@ namespace vcsn
       template <typename A>
       constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
                               bool>::type
-      is_one(const A&, typename A::transition_t)
+      is_one(const A&, transition_t_of<A>)
       const
       {
         return false;

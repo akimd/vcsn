@@ -62,7 +62,7 @@ namespace vcsn
 
     const auto& ws = *aut.weightset();
     const auto& inits = aut.initial_transitions();
-    std::vector<typename Aut::transition_t> initials{begin(inits), end(inits)};
+    std::vector<transition_t_of<Aut>> initials{begin(inits), end(inits)};
 
     // See TAF-Kit documentation for the implementation details.
     //
@@ -221,7 +221,7 @@ namespace vcsn
             // The set of the current (left-hand side) final transitions.
             auto ftr_ = res_.final_transitions();
             // Store transitions by copy.
-            using transs_t = std::vector<typename automaton_t::transition_t>;
+            using transs_t = std::vector<transition_t_of<automaton_t>>;
             transs_t ftr{ begin(ftr_), end(ftr_) };
 
             // Visit the next member of the product.

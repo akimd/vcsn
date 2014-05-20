@@ -255,7 +255,7 @@ namespace vcsn
     using automaton_t = Aut;
     using word_t = typename automaton_t::labelset_t::word_t;
     using state_t = typename automaton_t::state_t;
-    using transition_t = typename automaton_t::transition_t;
+    using transition_t = transition_t_of<automaton_t>;
 
     word_t res;
     std::unordered_set<state_t> todo;

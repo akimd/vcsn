@@ -36,6 +36,23 @@ namespace vcsn
   using label_t_of = typename detail::label_t_of_impl<ValueSet>::type;
 
 
+  /*------------------.
+  | transition_t_of.  |
+  `------------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct transition_t_of_impl
+    {
+      using type = typename ValueSet::transition_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using transition_t_of = typename detail::transition_t_of_impl<ValueSet>::type;
+
+
+
   /*--------------.
   | weight_t_of.  |
   `--------------*/

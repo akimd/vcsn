@@ -25,7 +25,7 @@ namespace vcsn
     using self_nocv_t = automaton_decorator<typename automaton_t::self_nocv_t>;
     using context_t = context_t_of<automaton_t>;
     using state_t = typename automaton_t::state_t;
-    using transition_t = typename automaton_t::transition_t;
+    using transition_t = transition_t_of<automaton_t>;
     using label_t = label_t_of<automaton_t>;
     using weight_t = weight_t_of<automaton_t>;
 
