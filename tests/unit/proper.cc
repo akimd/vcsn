@@ -26,7 +26,7 @@ static void check_lal_b()
   set_alphabet<char_letters> al{'a','b'};
   ctx::lal_char_b ct{al};
   using automaton_t = mutable_automaton<ctx::lal_char_b>;
-  using state_t = automaton_t::state_t;
+  using state_t = state_t_of<automaton_t>;
 
   automaton_t res{ct};
   state_t s[3];
@@ -55,7 +55,7 @@ static void check_law_char_b()
   set_alphabet<char_letters> al{'a','b'};
   ctx::law_char_b ct{al};
   using automaton_t = mutable_automaton<ctx::law_char_b>;
-  using state_t = automaton_t::state_t;
+  using state_t = state_t_of<automaton_t>;
 
   automaton_t res{ct};
   state_t s[3];
@@ -87,7 +87,7 @@ static void check_lal_char_z()
   set_alphabet<char_letters> al{'a','b'};
   ctx::lal_char_z ct{al};
   using automaton_t = mutable_automaton<ctx::lal_char_z>;
-  using state_t = automaton_t::state_t;
+  using state_t = state_t_of<automaton_t>;
 
   automaton_t res{ct};
   state_t s[3];
@@ -113,7 +113,7 @@ static void check_law_char_z()
   set_alphabet<char_letters> al{'a','b'};
   ctx::law_char_z ct{al};
   using automaton_t = mutable_automaton<ctx::law_char_z>;
-  using state_t = automaton_t::state_t;
+  using state_t = state_t_of<automaton_t>;
 
   automaton_t res{ct};
   state_t s[3];
@@ -159,7 +159,7 @@ static void check_law_char_zmin()
   using law_char_zmin = vcsn::context<vcsn::ctx::law_char, vcsn::zmin>;
   law_char_zmin ct{al};
   using automaton_t = mutable_automaton<law_char_zmin>;
-  using state_t = automaton_t::state_t;
+  using state_t = state_t_of<automaton_t>;
 
   automaton_t res{ct};
   state_t s[3];

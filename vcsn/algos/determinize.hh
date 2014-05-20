@@ -35,7 +35,7 @@ namespace vcsn
       using automaton_t = Aut;
       using automaton_nocv_t = typename automaton_t::self_nocv_t;
       using label_t = label_t_of<automaton_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
 
       // Set of (input) states.
       using state_set = dynamic_bitset;

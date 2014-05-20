@@ -61,7 +61,7 @@ namespace vcsn
   {
     using auto_in_t = Aut;
     using ctx_in_t = context_t_of<auto_in_t>;
-    using state_in_t = typename auto_in_t::state_t;
+    using state_in_t = state_t_of<auto_in_t>;
 
     // Produce RatExps of the same context as the original automaton.
     using rs_in_t = ratexpset<ctx_in_t>;
@@ -69,7 +69,7 @@ namespace vcsn
 
     auto ctx_out = detail::lift_context(a.context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
-    using state_out_t = typename auto_out_t::state_t;
+    using state_out_t = state_t_of<auto_out_t>;
     auto_out_t res{ctx_out};
     std::map<state_in_t, state_out_t> map;
     map[a.pre()] = res.pre();

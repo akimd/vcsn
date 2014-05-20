@@ -20,7 +20,7 @@ namespace vcsn
                   "requires labels_are_letters");
 
     using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     using letter_t = typename automaton_t::labelset_t::letter_t;
 
     // A sink state, to allocate if needed.

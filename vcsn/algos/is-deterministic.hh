@@ -14,7 +14,7 @@ namespace vcsn
   /// Whether state \s is deterministic.
   template <typename Aut>
   inline bool
-  is_deterministic(const Aut& aut, typename Aut::state_t s)
+  is_deterministic(const Aut& aut, state_t_of<Aut> s)
   {
     using automaton_t = Aut;
     static_assert(automaton_t::context_t::labelset_t::is_free(),

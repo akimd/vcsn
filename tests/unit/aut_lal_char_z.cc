@@ -9,10 +9,10 @@ using context_t = vcsn::ctx::lal_char_z;
 using automaton_t = vcsn::mutable_automaton<context_t>;
 
 template <typename Aut>
-std::vector<typename Aut::state_t>
+std::vector<vcsn::state_t_of<Aut>>
 new_states(Aut& aut, size_t n)
 {
-  std::vector<typename Aut::state_t> res;
+  std::vector<vcsn::state_t_of<Aut>> res;
   res.reserve(n);
   for (size_t i = 0; i < n; ++i)
     res.push_back(aut.new_state());
@@ -104,7 +104,7 @@ check_del_transition(const context_t& ctx)
   automaton_t aut = clique<automaton_t>(ctx, 3);
   ASSERT_EQ(aut.num_transitions(), 3 * 3 * 4u); // 4 letters.
   const auto& ss = aut.states();
-  std::vector<automaton_t::state_t> s{std::begin(ss), std::end(ss)};
+  std::vector<vcsn::state_t_of<automaton_t>> s{std::begin(ss), std::end(ss)};
 
   aut.del_transition(s[0], s[1]);
   ASSERT_EQ(aut.num_transitions(), (3 * 3 - 1) * 4u);

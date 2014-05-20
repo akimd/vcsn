@@ -32,7 +32,7 @@ namespace vcsn
     require(is_complete(aut),
             "complement: requires a complete automaton");
 
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
 
     // The final states of aut.
     std::set<state_t> finals;

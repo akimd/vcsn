@@ -53,7 +53,7 @@ namespace vcsn
       /// the "inner" const.
       using self_nocv_t
         = blind_automaton<Band, typename automaton_t::self_nocv_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       // Exposed label
       using label_t =
@@ -318,9 +318,9 @@ namespace vcsn
       using automaton_t = mutable_automaton<context_t>;
 
       /// Result state type.
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       /// Tuple of states of input automata.
-      using pair_t = std::pair<typename Lhs::state_t, typename Rhs::state_t>;
+      using pair_t = std::pair<state_t_of<Lhs>, state_t_of<Rhs>>;
       /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
 
@@ -451,7 +451,7 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(typename Lhs::state_t ls, typename Rhs::state_t rs)
+      state_t state(state_t_of<Lhs> ls, state_t_of<Rhs> rs)
       {
         pair_t state{ls, rs};
         auto lb = pmap_.lower_bound(state);
@@ -581,7 +581,7 @@ namespace vcsn
       constexpr typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
                   bool>::type
       has_only_ones_in(const Aut&,
-                       typename Aut::state_t) const
+                       state_t_of<Aut>) const
       {
         return false;
       }
@@ -589,7 +589,7 @@ namespace vcsn
       template <typename Aut>
       typename std::enable_if<Aut::context_t::labelset_t::has_one(),
                  bool>::type
-      has_only_ones_in(const Aut& rhs, typename Aut::state_t rst) const
+      has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
         auto rin = rhs.all_in(rst);
         auto rtr = rin.begin();

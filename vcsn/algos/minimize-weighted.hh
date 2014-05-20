@@ -36,7 +36,7 @@ namespace vcsn
 
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using class_t = unsigned;
       using set_t = std::vector<state_t>;
       using state_to_class_t = std::unordered_map<state_t, class_t>;

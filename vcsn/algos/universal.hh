@@ -23,7 +23,7 @@ namespace vcsn
                     "requires Boolean weights");
 
       using automaton_t = Aut;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using state_set_t = std::set<state_t>;
       using pstate_t = std::set<state_set_t>;
       using map_t = std::map<state_t, state_set_t>;

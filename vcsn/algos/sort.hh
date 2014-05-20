@@ -29,7 +29,7 @@ namespace vcsn
   is_out_sorted(const Aut& a)
   {
     using transition_t = transition_t_of<Aut>;
-    for (typename Aut::state_t s: a.states())
+    for (state_t_of<Aut> s: a.states())
       if (!detail::is_sorted(a.out(s),
                              [&a] (transition_t l, transition_t r)
                              {
@@ -74,7 +74,7 @@ namespace vcsn
       using context_t = context_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 
       using labelset_t = typename automaton_t::labelset_t;

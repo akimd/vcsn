@@ -606,7 +606,7 @@ namespace vcsn
   template <typename Aut>
   typename polynomialset<context_t_of<Aut>>::value_t
   get_entry(const Aut& aut,
-            typename Aut::state_t s, typename Aut::state_t d)
+            state_t_of<Aut> s, state_t_of<Aut> d)
   {
     using automaton_t = Aut;
     using context_t = context_t_of<automaton_t>;

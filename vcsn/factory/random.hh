@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_RANDOM_HH
 # define VCSN_ALGOS_RANDOM_HH
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/context.hh>
@@ -81,7 +82,7 @@ namespace vcsn
     require(0 <= density && density <= 1,
             "random: density must be in [0,1]");
     using automaton_t = mutable_automaton<Ctx>;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     automaton_t res(ctx);
 
     // A good source of random integers.
@@ -200,7 +201,7 @@ namespace vcsn
     require(0 < num_states, "num_states must be > 0");
 
     using automaton_t = mutable_automaton<Ctx>;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     automaton_t res(ctx);
 
     std::random_device rd;

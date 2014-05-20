@@ -32,7 +32,7 @@ namespace vcsn
       const typename Aut::context_t::labelset_t::genset_t gs_;
 
       using label_t = label_t_of<automaton_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using class_t = unsigned;
       using classes_t = std::vector<class_t>;
       using set_t = std::vector<state_t>;

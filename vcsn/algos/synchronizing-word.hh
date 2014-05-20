@@ -33,7 +33,7 @@ namespace vcsn
   {
     using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
 
     std::unordered_set<state_t> todo;
 
@@ -84,7 +84,7 @@ namespace vcsn
     public:
       using context_t = context_t_of<Aut>;
       using automaton_t =  mutable_automaton<context_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using weightset_t = typename automaton_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
 
@@ -254,7 +254,7 @@ namespace vcsn
   {
     using automaton_t = Aut;
     using word_t = typename automaton_t::labelset_t::word_t;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     using transition_t = transition_t_of<automaton_t>;
 
     word_t res;

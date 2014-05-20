@@ -1,6 +1,7 @@
 #ifndef VCSN_FACTORY_DIVKBASEB_HH
 # define VCSN_FACTORY_DIVKBASEB_HH
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
@@ -18,7 +19,7 @@ namespace vcsn
   {
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     const auto& gens = ctx.labelset()->genset();
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(gens), std::end(gens)};

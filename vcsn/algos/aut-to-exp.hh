@@ -18,7 +18,7 @@ namespace vcsn
   template <typename Aut,
             typename Lifted = detail::lifted_automaton_t<Aut>>
   using state_chooser_t =
-    std::function<typename Lifted::state_t(const Lifted&)>;
+    std::function<state_t_of<Lifted>(const Lifted&)>;
 
 
   /*--------------------------.
@@ -26,10 +26,10 @@ namespace vcsn
   `--------------------------*/
 
   template <typename Aut>
-  typename Aut::state_t
+  state_t_of<Aut>
   next_naive(const Aut& a)
   {
-    typename Aut::state_t best = 0;
+    state_t_of<Aut> best = 0;
     bool best_has_loop = false;
     size_t best_degree = std::numeric_limits<size_t>::max();
     for (auto s: a.states())
@@ -74,7 +74,7 @@ namespace vcsn
                     "requires labels_are_one");
 
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using weightset_t = typename automaton_t::weightset_t;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
@@ -135,7 +135,7 @@ namespace vcsn
                     "requires labels_are_ratexps");
 
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using ratexpset_t = typename automaton_t::labelset_t;
       using weightset_t = typename automaton_t::weightset_t;
       /// State selector type.
@@ -205,7 +205,7 @@ namespace vcsn
       automaton
       eliminate_state(const automaton& aut, int state)
       {
-        using state_t = typename Aut::state_t;
+        using state_t = state_t_of<Aut>;
         const auto& a = aut->as<Aut>();
         auto res = vcsn::copy(a);
         state_t s = state == -1 ? next_naive(res) : state + 2;

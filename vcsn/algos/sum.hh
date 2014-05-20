@@ -3,6 +3,7 @@
 
 # include <map>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/misc/raise.hh> // require
@@ -26,8 +27,8 @@ namespace vcsn
     require(is_standard(b), __func__, ": rhs must be standard");
 
     // State in B -> state in Res.
-    std::map<typename B::state_t, typename A::state_t> m;
-    typename A::state_t initial = res.dst_of(res.initial_transitions().front());
+    std::map<state_t_of<B>, state_t_of<A>> m;
+    state_t_of<A> initial = res.dst_of(res.initial_transitions().front());
     for (auto s: b.states())
       m.emplace(s, b.is_initial(s) ? initial : res.new_state());
     m.emplace(b.pre(), res.pre());

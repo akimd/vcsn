@@ -36,6 +36,22 @@ namespace vcsn
   using label_t_of = typename detail::label_t_of_impl<ValueSet>::type;
 
 
+  /*-------------.
+  | state_t_of.  |
+  `-------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct state_t_of_impl
+    {
+      using type = typename ValueSet::state_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using state_t_of = typename detail::state_t_of_impl<ValueSet>::type;
+
+
   /*------------------.
   | transition_t_of.  |
   `------------------*/

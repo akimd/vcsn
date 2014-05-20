@@ -41,10 +41,10 @@ namespace vcsn
     using transs_t = std::vector<transition_t_of<automaton_t>>;
     transs_t ftr{ begin(ftr_), end(ftr_) };
 
-    typename B::state_t b_initial = b.dst_of(b.initial_transitions().front());
+    state_t_of<B> b_initial = b.dst_of(b.initial_transitions().front());
     // State in B -> state in Res.
     // The initial state of b is not copied.
-    std::unordered_map<typename B::state_t, typename A::state_t> m;
+    std::unordered_map<state_t_of<B>, state_t_of<A>> m;
     m.emplace(b.post(), res.post());
     for (auto s: b.states())
       if (!b.is_initial(s))

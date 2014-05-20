@@ -40,7 +40,7 @@ namespace vcsn
 
       // Should not be public, but needed by GCC 4.8.1.
       // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58972
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
 
     protected:
       using context_t = context_t_of<automaton_t>;

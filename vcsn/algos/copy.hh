@@ -25,8 +25,8 @@ namespace vcsn
     template <typename AutIn, typename AutOut>
     struct copier
     {
-      using in_state_t = typename AutIn::state_t;
-      using out_state_t = typename AutOut::state_t;
+      using in_state_t = state_t_of<AutIn>;
+      using out_state_t = state_t_of<AutOut>;
 
       copier(const AutIn& in, AutOut& out)
         : in_(in)
@@ -111,7 +111,7 @@ namespace vcsn
   void
   copy_into(const AutIn& in, AutOut& out)
   {
-    return copy_into(in, out, [](typename AutIn::state_t) { return true; });
+    return copy_into(in, out, [](state_t_of<AutIn>) { return true; });
   }
 
   /// A copy of \a input keeping only its states that are accepted by
@@ -133,7 +133,7 @@ namespace vcsn
   copy(const AutIn& input)
   {
     return ::vcsn::copy(input,
-                        [](typename AutIn::state_t) { return true; });
+                        [](state_t_of<AutIn>) { return true; });
   }
 
   /// A copy of \a input keeping only its states that are members of
@@ -141,10 +141,10 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut
-  copy(const Aut& input, const std::set<typename Aut::state_t>& keep)
+  copy(const Aut& input, const std::set<state_t_of<Aut>>& keep)
   {
     return ::vcsn::copy(input,
-                        [&keep](typename Aut::state_t s)
+                        [&keep](state_t_of<Aut> s)
                         {
                           return has(keep, s);
                         });

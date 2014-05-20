@@ -299,7 +299,7 @@ namespace vcsn
       using weight_t = weight_t_of<context_t>;
 
       using automaton_t = mutable_automaton<context_t>;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
 
       /// Symbolic states: the derived terms are polynomials of ratexps.
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;

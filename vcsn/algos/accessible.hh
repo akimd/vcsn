@@ -20,11 +20,11 @@ namespace vcsn
 
   // The set of accessible states, including pre(), and possibly post().
   template <typename Aut>
-  std::set<typename Aut::state_t>
+  std::set<state_t_of<Aut>>
   accessible_states(const Aut& a)
   {
     using automaton_t = Aut;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
 
     // Reachable states.
     std::set<state_t> res{a.pre()};
@@ -53,7 +53,7 @@ namespace vcsn
 
   // The set of coaccessible states, including post(), and possibly pre().
   template <typename Aut>
-  std::set<typename Aut::state_t>
+  std::set<state_t_of<Aut>>
   coaccessible_states(const Aut& a)
   {
     return accessible_states(transpose(a));
@@ -61,7 +61,7 @@ namespace vcsn
 
   // The set of coaccessible states, including post(), and possibly pre().
   template <typename Aut>
-  std::set<typename Aut::state_t>
+  std::set<state_t_of<Aut>>
   useful_states(const Aut& a)
   {
     auto accessible = accessible_states(a);

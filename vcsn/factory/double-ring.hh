@@ -3,6 +3,7 @@
 
 # include <map>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/alphabets/char.hh>
 # include <vcsn/alphabets/setalpha.hh>
 # include <vcsn/core/mutable_automaton.hh>
@@ -26,7 +27,7 @@ namespace vcsn
     auto b = letters[1];
 
     using automaton_t = mutable_automaton<context_t>;
-    using state_t = typename automaton_t::state_t;
+    using state_t = state_t_of<automaton_t>;
     automaton_t res{ctx};
     if (n == 0)
       return res;

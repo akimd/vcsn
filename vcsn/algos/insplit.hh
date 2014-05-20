@@ -38,7 +38,7 @@ namespace vcsn
     {
       using automaton_t = Aut;
       using res_automaton_t = typename automaton_t::self_nocv_t;
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
 

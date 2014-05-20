@@ -46,7 +46,7 @@ namespace vcsn
       {
         /// The (converted) weight.
         weight_t wgt;
-        typename Aut::state_t dst;
+        state_t_of<Aut> dst;
       };
 
       using transitions_t
@@ -54,7 +54,7 @@ namespace vcsn
                                     transition,
                                     std::vector<transition>>::type;
       using map_t = std::map<label_t_of<Aut>, transitions_t>;
-      using maps_t = std::map<typename Aut::state_t, map_t>;
+      using maps_t = std::map<state_t_of<Aut>, map_t>;
       maps_t maps_;
 
       transition_map(const Aut& aut, const weightset_t& ws)
@@ -89,7 +89,7 @@ namespace vcsn
       /// Build and return the transition map for state s, store at res.
       /// Insert it in the cache.
       map_t&
-      build_map_(typename maps_t::iterator lb, typename Aut::state_t s)
+      build_map_(typename maps_t::iterator lb, state_t_of<Aut> s)
       {
         auto& res = maps_.emplace_hint(lb, s, map_t{})->second;
         for (auto t: aut_.all_out(s))
@@ -103,7 +103,7 @@ namespace vcsn
         return res;
       }
 
-      map_t& operator[](typename Aut::state_t s)
+      map_t& operator[](state_t_of<Aut> s)
       {
         auto lb = maps_.lower_bound(s);
         if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
@@ -254,9 +254,9 @@ namespace vcsn
       }
 
       /// Result state type.
-      using state_t = typename automaton_t::state_t;
+      using state_t = state_t_of<automaton_t>;
       /// Tuple of states of input automata.
-      using pair_t = std::tuple<typename Auts::state_t...>;
+      using pair_t = std::tuple<state_t_of<Auts>...>;
       /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
 
@@ -400,7 +400,7 @@ namespace vcsn
         return lb->second;
       }
 
-      state_t state(typename Auts::state_t... ss)
+      state_t state(state_t_of<Auts>... ss)
       {
         return state(std::make_tuple(ss...));
       }
@@ -540,7 +540,7 @@ namespace vcsn
       constexpr typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
                   bool>::type
       has_only_ones_in(const Aut&,
-                       typename Aut::state_t) const
+                       state_t_of<Aut>) const
       {
         return false;
       }
@@ -549,7 +549,7 @@ namespace vcsn
       template <typename Aut>
       typename std::enable_if<Aut::context_t::labelset_t::has_one(),
                  bool>::type
-      has_only_ones_in(const Aut& rhs, typename Aut::state_t rst) const
+      has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
         auto rin = rhs.all_in(rst);
         auto rtr = rin.begin();
