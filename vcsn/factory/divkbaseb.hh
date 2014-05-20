@@ -34,7 +34,7 @@ namespace vcsn
             + ") must be less than or equal to the alphabet size ("
             + std::to_string(letters.size()) + ")");
 
-    automaton_t res{ctx};
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
     // Add one state for each possible remainder. The last state encountered
     // during the evaluation will be n % k. If the last state is the state 0,
@@ -42,10 +42,10 @@ namespace vcsn
     // number is a multiple of k.
     std::vector<state_t> states;
     for (unsigned i = 0; i < divisor; ++i)
-      states.emplace_back(res.new_state());
+      states.emplace_back(res->new_state());
 
-    res.set_initial(states[0]);
-    res.set_final(states[0]);
+    res->set_initial(states[0]);
+    res->set_final(states[0]);
 
     for (unsigned i = 0; i < divisor; ++i)
       {
@@ -53,7 +53,7 @@ namespace vcsn
         for (unsigned l = 0; l < base; ++l)
           {
             int d = (e + l) % divisor;
-            res.new_transition(states[i], states[d], letters[l]);
+            res->new_transition(states[i], states[d], letters[l]);
           }
       }
     return res;

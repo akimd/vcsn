@@ -24,7 +24,7 @@ namespace vcsn
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lal_char_b);
-
+# if 0
   MAYBE_EXTERN template
   auto
   determinize(const mutable_automaton<ctx::lal_char_b>& aut, bool complete)
@@ -51,6 +51,7 @@ namespace vcsn
   grail<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>>
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lal_char_b>>& aut,
    std::ostream& out);
+# endif
 
 # if VCSN_INSTANTIATION
   namespace ctx

@@ -129,7 +129,7 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , gs_(a_.labelset()->genset())
+        , gs_(a_->labelset()->genset())
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
@@ -137,20 +137,20 @@ namespace vcsn
                 "minimize: moore: input must be deterministic");
         require(is_trim(a_),
                 "minimize: moore: input must be trim");
-        for (auto t : a_.all_transitions())
-          out_[a_.src_of(t)][a_.label_of(t)] = a_.dst_of(t);
+        for (auto t : a_->all_transitions())
+          out_[a_->src_of(t)][a_->label_of(t)] = a_->dst_of(t);
       }
 
       /// Build the initial classes, and split until fix point.
       void build_classes_()
       {
         // Initialization: two classes, partitioning final and non-final states.
-        make_class({a_.pre()});
-        make_class({a_.post()});
+        make_class({a_->pre()});
+        make_class({a_->post()});
         {
           set_t nonfinals, finals;
-          for (auto s : a_.states())
-            if (a_.is_final(s))
+          for (auto s : a_->states())
+            if (a_->is_final(s))
               finals.emplace_back(s);
             else
               nonfinals.emplace_back(s);

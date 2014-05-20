@@ -8,19 +8,21 @@
 # include <boost/range/irange.hpp>
 
 # include <vcsn/core/crange.hh>
+# include <vcsn/core/fwd.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
-
+  namespace detail
+  {
   template <typename Context>
-  class mutable_automaton
+  class mutable_automaton_impl
   {
   public:
     using context_t = Context;
-    using self_nocv_t = mutable_automaton<context_t>;
+    using self_nocv_t = mutable_automaton_impl<context_t>;
     using labelset_t = labelset_t_of<context_t>;
     using weightset_t = weightset_t_of<context_t>;
     using kind_t = typename context_t::kind_t;
@@ -71,22 +73,22 @@ namespace vcsn
     label_t prepost_label_;
 
   public:
-    mutable_automaton() = delete;
-    mutable_automaton(const mutable_automaton&) = delete;
-    mutable_automaton(const context_t& ctx)
+    mutable_automaton_impl() = delete;
+    mutable_automaton_impl(const mutable_automaton_impl&) = delete;
+    mutable_automaton_impl(const context_t& ctx)
       : ctx_{ctx}
       , states_{2}
       , prepost_label_(ctx.labelset()->special())
     {}
 
-    mutable_automaton(mutable_automaton&& that)
+    mutable_automaton_impl(mutable_automaton_impl&& that)
       : ctx_(that.ctx_)
       , prepost_label_(that.prepost_label_)
     {
       *this = std::move(that);
     }
 
-    mutable_automaton& operator=(mutable_automaton&& that)
+    mutable_automaton_impl& operator=(mutable_automaton_impl&& that)
     {
       if (this != &that)
         {
@@ -484,7 +486,7 @@ namespace vcsn
     transition_t
     new_transition_copy(const A& aut, state_t src, state_t dst, transition_t t, weight_t k)
     {
-      return new_transition(src, dst, aut.label_of(t), k);
+      return new_transition(src, dst, aut->label_of(t), k);
     }
 
     /// Same as above, with weight one.
@@ -585,7 +587,7 @@ namespace vcsn
     add_transition_copy(const Aut& aut, state_t src, state_t dst,
                         transition_t t, weight_t k)
     {
-      return add_transition(src, dst, aut.label_of(t), k);
+      return add_transition(src, dst, aut->label_of(t), k);
     }
 
     std::string
@@ -792,12 +794,13 @@ namespace vcsn
                 { return this->transitions_[i].dst == d; }};
     }
   };
+  }
 
   template <typename Context>
   mutable_automaton<Context>
   make_mutable_automaton(const Context& ctx)
   {
-    return {ctx};
+    return std::make_shared<detail::mutable_automaton_impl<Context>>(ctx);
   }
 }
 

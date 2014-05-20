@@ -73,11 +73,11 @@ namespace vcsn
           "\\begin{tikzpicture}[automaton]\n"
           ;
 
-        for (auto s : aut_.states())
+        for (auto s : aut_->states())
           {
             os_ << "  \\node[state";
-            format("initial", aut_.get_initial_weight(s));
-            format("accepting", aut_.get_final_weight(s));
+            format("initial", aut_->get_initial_weight(s));
+            format("accepting", aut_->get_final_weight(s));
             os_ << ']'
                 << " (" << states_[s] << ')';
             if (states_[s])
@@ -85,12 +85,12 @@ namespace vcsn
             os_ << " {$" << states_[s] << "$};\n";
         }
 
-        for (auto src : aut_.states())
+        for (auto src : aut_->states())
           {
             unsigned ns = states_[src];
             std::set<state_t> ds;
-            for (auto t: aut_.out(src))
-              ds.insert(aut_.dst_of(t));
+            for (auto t: aut_->out(src))
+              ds.insert(aut_->dst_of(t));
             for (auto dst: ds)
               {
                 unsigned nd = states_[dst];
@@ -112,11 +112,11 @@ namespace vcsn
   /// \brief Format automaton to TikZ format.
   ///
   /// \tparam Aut an automaton type, not a pointer type.
-  template <typename Aut>
+  template <typename AutPtr>
   std::ostream&
-  tikz(const Aut& aut, std::ostream& out)
+  tikz(const AutPtr& aut, std::ostream& out)
   {
-    detail::tikzer<Aut> t{aut, out};
+    detail::tikzer<AutPtr> t{aut, out};
     t();
     return out;
   }
@@ -133,7 +133,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(tikz,
-                        (const automaton& aut, std::ostream& out) -> std::ostream&);
+                       (const automaton& aut, std::ostream& out) -> std::ostream&);
     }
   }
 }

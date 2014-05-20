@@ -34,47 +34,47 @@ namespace vcsn
       constexpr static const char* me() { return "thompson"; }
 
       thompson_visitor(const context_t& ctx)
-        : res_(ctx)
+        : res_(std::make_shared<typename automaton_t::element_type>(ctx))
       {}
 
       automaton_t
       operator()(const typename context_t::ratexp_t& v)
       {
         v->accept(*this);
-        res_.set_initial(initial_);
-        res_.set_final(final_);
+        res_->set_initial(initial_);
+        res_->set_final(final_);
         return std::move(res_);
       }
 
       VCSN_RAT_VISIT(zero,)
       {
-        initial_ = res_.new_state();
-        final_ = res_.new_state();
+        initial_ = res_->new_state();
+        final_ = res_->new_state();
       }
 
       VCSN_RAT_VISIT(one,)
       {
-        initial_ = res_.new_state();
-        final_ = res_.new_state();
-        res_.new_transition(initial_, final_, epsilon_);
+        initial_ = res_->new_state();
+        final_ = res_->new_state();
+        res_->new_transition(initial_, final_, epsilon_);
       }
 
       VCSN_RAT_VISIT(atom, e)
       {
-        initial_ = res_.new_state();
-        final_ = res_.new_state();
-        res_.new_transition(initial_, final_, e.value());
+        initial_ = res_->new_state();
+        final_ = res_->new_state();
+        res_->new_transition(initial_, final_, e.value());
       }
 
       VCSN_RAT_VISIT(sum, e)
       {
-        state_t initial = res_.new_state();
-        state_t final = res_.new_state();
+        state_t initial = res_->new_state();
+        state_t final = res_->new_state();
         for (auto c: e)
           {
             c->accept(*this);
-            res_.new_transition(initial, initial_, epsilon_);
-            res_.new_transition(final_, final, epsilon_);
+            res_->new_transition(initial, initial_, epsilon_);
+            res_->new_transition(final_, final, epsilon_);
           }
         initial_ = initial;
         final_ = final;
@@ -96,7 +96,7 @@ namespace vcsn
           {
             state_t final = final_;
             c->accept(*this);
-            res_.new_transition(final, initial_, epsilon_);
+            res_->new_transition(final, initial_, epsilon_);
           }
         initial_ = initial;
       }
@@ -104,12 +104,12 @@ namespace vcsn
       VCSN_RAT_VISIT(star, e)
       {
         e.sub()->accept(*this);
-        state_t initial = res_.new_state();
-        state_t final = res_.new_state();
-        res_.new_transition(initial, initial_, epsilon_);
-        res_.new_transition(final_,  final,    epsilon_);
-        res_.new_transition(final_,  initial_, epsilon_);
-        res_.new_transition(initial, final,    epsilon_);
+        state_t initial = res_->new_state();
+        state_t final = res_->new_state();
+        res_->new_transition(initial, initial_, epsilon_);
+        res_->new_transition(final_,  final,    epsilon_);
+        res_->new_transition(final_,  initial_, epsilon_);
+        res_->new_transition(initial, final,    epsilon_);
         initial_ = initial;
         final_ = final;
       }
@@ -119,8 +119,8 @@ namespace vcsn
         e.sub()->accept(*this);
 
         const weight_t& w = e.weight();
-        for (auto t: res_.out(initial_))
-          res_.set_weight(t, ws_.mul(w, res_.weight_of(t)));
+        for (auto t: res_->out(initial_))
+          res_->set_weight(t, ws_.mul(w, res_->weight_of(t)));
       }
 
       VCSN_RAT_VISIT(rweight, e)
@@ -128,17 +128,17 @@ namespace vcsn
         e.sub()->accept(*this);
 
         const weight_t& w = e.weight();
-        for (auto t: res_.in(final_))
-          res_.set_weight(t, ws_.mul(res_.weight_of(t), w));
+        for (auto t: res_->in(final_))
+          res_->set_weight(t, ws_.mul(res_->weight_of(t), w));
       }
 
     private:
       automaton_t res_;
-      const weightset_t& ws_ = *res_.weightset();
+      const weightset_t& ws_ = *res_->weightset();
       using label_t = label_t_of<automaton_t>;
-      const label_t epsilon_ = res_.labelset()->one();
-      state_t initial_ = automaton_t::null_state();
-      state_t final_ = automaton_t::null_state();
+      const label_t epsilon_ = res_->labelset()->one();
+      state_t initial_ = automaton_t::element_type::null_state();
+      state_t final_ = automaton_t::element_type::null_state();
     };
 
   } // rat::

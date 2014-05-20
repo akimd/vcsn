@@ -32,18 +32,18 @@ namespace vcsn
     state_t_of<Aut> best = 0;
     bool best_has_loop = false;
     size_t best_degree = std::numeric_limits<size_t>::max();
-    for (auto s: a.states())
+    for (auto s: a->states())
       {
         size_t out = 0;
         // Since we are in LAO, there can be at most one such loop.
         bool has_loop = false;
         // Don't count the loops as out-degree.
-        for (auto t: a.all_out(s))
-          if (a.dst_of(t) != s)
+        for (auto t: a->all_out(s))
+          if (a->dst_of(t) != s)
             ++out;
           else
             has_loop = true;
-        size_t in = a.all_in(s).size();
+        size_t in = a->all_in(s).size();
         size_t degree = in * out;
         // We prefer to delete a state that has no loop transition.
         if (degree < best_degree
@@ -64,13 +64,13 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename Aut, typename Kind = typename Aut::context_t::kind_t>
+    template <typename Aut, typename Kind = typename context_t_of<Aut>::kind_t>
     struct state_eliminator;
 
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_one>
     {
-      static_assert(Aut::context_t::is_lao,
+      static_assert(context_t_of<Aut>::is_lao,
                     "requires labels_are_one");
 
       using automaton_t = typename std::remove_cv<Aut>::type;
@@ -87,35 +87,35 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
-        require(aut_.has_state(s), "not a valid state: " + std::to_string(s));
+        require(aut_->has_state(s), "not a valid state: " + std::to_string(s));
 
         // The loop's weight.
         auto loop = ws_.zero();
-        assert(aut_.outin(s, s).size() <= 1);
+        assert(aut_->outin(s, s).size() <= 1);
         // There is a single possible loop labeled by \e, but it's
         // easier and symmetrical with LAR to use a for-loop.
-        for (auto t: to_vector(aut_.outin(s, s)))
+        for (auto t: to_vector(aut_->outin(s, s)))
           {
-            loop = ws_.add(loop, aut_.weight_of(t));
-            aut_.del_transition(t);
+            loop = ws_.add(loop, aut_->weight_of(t));
+            aut_->del_transition(t);
           }
         loop = ws_.star(loop);
 
         // Get all the predecessors, and successors, except itself.
-        auto outs = aut_.all_out(s);
-        for (auto in: aut_.all_in(s))
+        auto outs = aut_->all_out(s);
+        for (auto in: aut_->all_in(s))
           for (auto out: outs)
-            aut_.add_transition
-              (aut_.src_of(in), aut_.dst_of(out),
-               aut_.label_of(in),
-               ws_.mul(aut_.weight_of(in), loop, aut_.weight_of(out)));
-        aut_.del_state(s);
+            aut_->add_transition
+              (aut_->src_of(in), aut_->dst_of(out),
+               aut_->label_of(in),
+               ws_.mul(aut_->weight_of(in), loop, aut_->weight_of(out)));
+        aut_->del_state(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
       void operator()(const state_chooser_t& next_state)
       {
-        while (aut_.num_states())
+        while (aut_->num_states())
           operator()(next_state(aut_));
       }
 
@@ -125,13 +125,13 @@ namespace vcsn
       /// The automaton we work on.
       automaton_t& aut_;
       /// Shorthand to the weightset.
-      const weightset_t& ws_ = *aut_.weightset();
+      const weightset_t& ws_ = *aut_->weightset();
     };
 
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_ratexps>
     {
-      static_assert(Aut::context_t::is_lar,
+      static_assert(context_t_of<Aut>::is_lar,
                     "requires labels_are_ratexps");
 
       using automaton_t = typename std::remove_cv<Aut>::type;
@@ -149,34 +149,34 @@ namespace vcsn
       /// Eliminate state s.
       void operator()(state_t s)
       {
-        require(aut_.has_state(s), "not a valid state: " + std::to_string(s));
+        require(aut_->has_state(s), "not a valid state: " + std::to_string(s));
 
         // The loops' ratexp.
         auto loop = rs_.zero();
-        for (auto t: to_vector(aut_.outin(s, s)))
+        for (auto t: to_vector(aut_->outin(s, s)))
           {
             loop = rs_.add(loop,
-                           rs_.lmul(aut_.weight_of(t), aut_.label_of(t)));
-            aut_.del_transition(t);
+                           rs_.lmul(aut_->weight_of(t), aut_->label_of(t)));
+            aut_->del_transition(t);
           }
         loop = rs_.star(loop);
 
         // Get all the predecessors, and successors, except itself.
-        auto outs = aut_.all_out(s);
-        for (auto in: aut_.all_in(s))
+        auto outs = aut_->all_out(s);
+        for (auto in: aut_->all_in(s))
           for (auto out: outs)
-            aut_.add_transition
-              (aut_.src_of(in), aut_.dst_of(out),
-               rs_.mul(rs_.lmul(aut_.weight_of(in), aut_.label_of(in)),
+            aut_->add_transition
+              (aut_->src_of(in), aut_->dst_of(out),
+               rs_.mul(rs_.lmul(aut_->weight_of(in), aut_->label_of(in)),
                        loop,
-                       rs_.lmul(aut_.weight_of(out), aut_.label_of(out))));
-        aut_.del_state(s);
+                       rs_.lmul(aut_->weight_of(out), aut_->label_of(out))));
+        aut_->del_state(s);
       }
 
       /// Eliminate all the states, in the order specified by \a next_state.
       void operator()(const state_chooser_t& next_state)
       {
-        while (aut_.num_states())
+        while (aut_->num_states())
           operator()(next_state(aut_));
       }
 
@@ -186,9 +186,9 @@ namespace vcsn
       /// The automaton we work on.
       automaton_t& aut_;
       /// Shorthand to the labelset, which is a ratexpset.
-      const ratexpset_t& rs_ = *aut_.labelset();
+      const ratexpset_t& rs_ = *aut_->labelset();
       /// Shorthand to the weightset.
-      const weightset_t& ws_ = *aut_.weightset();
+      const weightset_t& ws_ = *aut_->weightset();
     };
   }
 
@@ -234,7 +234,7 @@ namespace vcsn
     auto aut = lift(a);
     detail::state_eliminator<decltype(aut)> eliminate_states(aut);
     eliminate_states(next_state);
-    return aut.get_initial_weight(aut.post());
+    return aut->get_initial_weight(aut->post());
   }
 
 
@@ -265,7 +265,7 @@ namespace vcsn
         using context_t = context_t_of<Aut>;
         using ratexpset_t = vcsn::ratexpset<context_t>;
         const auto& a = aut->as<Aut>();
-        return make_ratexp(ratexpset_t(a.context()),
+        return make_ratexp(ratexpset_t(a->context()),
                            aut_to_exp_naive(a));
       }
 

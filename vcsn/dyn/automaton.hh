@@ -46,13 +46,13 @@ namespace vcsn
       public:
         using automaton_t = Aut;
 
-        automaton_wrapper(automaton_t&& aut)
-          : automaton_(std::move(aut))
+        automaton_wrapper(automaton_t aut)
+          : automaton_(aut)
         {}
 
         virtual std::string vname(bool full = true) const override
         {
-          return automaton().vname(full);
+          return automaton()->vname(full);
         }
 
         automaton_t& automaton()
@@ -74,20 +74,12 @@ namespace vcsn
     using automaton = std::shared_ptr<detail::automaton_base>;
 
     /// Build a dyn::automaton.
-    template <typename AutIn, typename AutOut = AutIn>
+    template <typename Aut>
     inline
     automaton
-    make_automaton(const AutIn& aut)
+    make_automaton(const Aut& aut)
     {
-      return std::make_shared<detail::automaton_wrapper<AutOut>>(aut);
-    }
-
-    template <typename AutIn, typename AutOut = AutIn>
-    inline
-    automaton
-    make_automaton(AutIn&& aut)
-    {
-      return std::make_shared<detail::automaton_wrapper<AutOut>>(std::move(aut));
+      return std::make_shared<detail::automaton_wrapper<Aut>>(aut);
     }
   }
 }

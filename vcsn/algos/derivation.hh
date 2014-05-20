@@ -328,7 +328,7 @@ namespace vcsn
       derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
-        , res_{rs_.context()}
+        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
       {}
 
       /// The state for ratexp \a r.
@@ -339,8 +339,8 @@ namespace vcsn
         auto i = map_.find(r);
         if (i == end(map_))
           {
-            dst = res_.new_state();
-            res_.set_final(dst, constant_term(rs_, r));
+            dst = res_->new_state();
+            res_->set_final(dst, constant_term(rs_, r));
             map_[r] = dst;
             todo_.push(r);
           }
@@ -359,7 +359,7 @@ namespace vcsn
             : polynomial_t{{ratexp, ws.one()}};
           for (const auto& p: initial)
             // Also loads todo_ via state().
-            res_.set_initial(state(p.first), p.second);
+            res_->set_initial(state(p.first), p.second);
         }
 
         const auto& ls = rs_.labelset()->genset();
@@ -370,7 +370,7 @@ namespace vcsn
             state_t src = map_[r];
             for (auto l : ls)
               for (const auto& m: derivation(rs_, r, l, breaking_))
-                res_.add_transition(src, state(m.first), l, m.second);
+                res_->add_transition(src, state(m.first), l, m.second);
           }
         return std::move(res_);
       }

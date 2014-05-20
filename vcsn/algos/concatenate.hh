@@ -31,36 +31,36 @@ namespace vcsn
     require(is_standard(b), __func__, ": rhs must be standard");
 
     using automaton_t = A;
-    const auto& ls = *res.labelset();
-    const auto& bls = *b.labelset();
-    const auto& ws = *res.weightset();
-    const auto& bws = *b.weightset();
+    const auto& ls = *res->labelset();
+    const auto& bls = *b->labelset();
+    const auto& ws = *res->weightset();
+    const auto& bws = *b->weightset();
 
     // The set of the current (left-hand side) final transitions.
-    auto ftr_ = res.final_transitions();
+    auto ftr_ = res->final_transitions();
     // Store these transitions by copy.
     using transs_t = std::vector<transition_t_of<automaton_t>>;
     transs_t ftr{ begin(ftr_), end(ftr_) };
 
-    state_t_of<B> b_initial = b.dst_of(b.initial_transitions().front());
+    state_t_of<B> b_initial = b->dst_of(b->initial_transitions().front());
     // State in B -> state in Res.
     // The initial state of b is not copied.
     std::unordered_map<state_t_of<B>, state_t_of<A>> m;
-    m.emplace(b.post(), res.post());
-    for (auto s: b.states())
-      if (!b.is_initial(s))
-        m.emplace(s, res.new_state());
+    m.emplace(b->post(), res->post());
+    for (auto s: b->states())
+      if (!b->is_initial(s))
+        m.emplace(s, res->new_state());
 
     // Import all the B transitions, except the initial ones
     // and those from its (genuine) initial state.
     //
     // FIXME: provide generalized copy() that returns the map of
     // states orig -> copy.
-    for (auto t: b.all_transitions())
-      if (b.src_of(t) != b.pre() && b.src_of(t) != b_initial)
-        res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                           ls.conv(bls, b.label_of(t)),
-                           ws.conv(bws, b.weight_of(t)));
+    for (auto t: b->all_transitions())
+      if (b->src_of(t) != b->pre() && b->src_of(t) != b_initial)
+        res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
+                           ls.conv(bls, b->label_of(t)),
+                           ws.conv(bws, b->weight_of(t)));
 
     // Branch all the final transitions of res to the successors of
     // b's initial state.
@@ -76,15 +76,15 @@ namespace vcsn
         //
         // Besides, s1 will become final with weight {3}, which might
         // interfere with {5}a too.
-        auto s1 = res.src_of(t1);
-        auto w1 = res.weight_of(t1);
-        res.del_transition(t1);
-        for (auto t2: b.all_out(b_initial))
-          res.set_transition(s1,
-                             m[b.dst_of(t2)],
-                             ls.conv(bls, b.label_of(t2)),
+        auto s1 = res->src_of(t1);
+        auto w1 = res->weight_of(t1);
+        res->del_transition(t1);
+        for (auto t2: b->all_out(b_initial))
+          res->set_transition(s1,
+                             m[b->dst_of(t2)],
+                             ls.conv(bls, b->label_of(t2)),
                              ws.mul(w1,
-                                    ws.conv(bws, b.weight_of(t2))));
+                                    ws.conv(bws, b->weight_of(t2))));
       }
     return res;
   }
@@ -101,8 +101,8 @@ namespace vcsn
       = mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>;
 
     // Create new automaton.
-    auto ctx = join(lhs.context(), rhs.context());
-    automaton_t res(ctx);
+    auto ctx = join(lhs->context(), rhs->context());
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
     ::vcsn::copy_into(lhs, res);
     concatenate_here(res, rhs);
     return res;
@@ -131,11 +131,12 @@ namespace vcsn
   | chain(automaton, min, max).  |
   `-----------------------------*/
 
-  template <typename Aut>
-  Aut
-  chain(const Aut& aut, int min, int max)
+  template <typename AutPtr>
+  AutPtr
+  chain(const AutPtr& aut, int min, int max)
   {
-    Aut res(aut.context());
+    AutPtr res =
+      std::make_shared<typename AutPtr::element_type>(aut->context());
     if (max == -1)
       {
         res = star(aut);
@@ -149,9 +150,9 @@ namespace vcsn
         if (min == 0)
           {
             // automatonset::one().
-            auto s = res.new_state();
-            res.set_initial(s);
-            res.set_final(s);
+            auto s = res->new_state();
+            res->set_initial(s);
+            res->set_final(s);
           }
         else
           {
@@ -162,11 +163,12 @@ namespace vcsn
         if (min < max)
           {
             // Aut sum = automatonset.one();
-            Aut sum(aut.context());
+            AutPtr sum
+              = std::make_shared<typename AutPtr::element_type>(aut->context());
             {
-              auto s = sum.new_state();
-              sum.set_initial(s);
-              sum.set_final(s);
+              auto s = sum->new_state();
+              sum->set_initial(s);
+              sum->set_final(s);
             }
             for (int n = 1; n <= max - min; ++n)
               sum = vcsn::sum(sum, chain(aut, n, n));

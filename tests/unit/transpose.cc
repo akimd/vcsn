@@ -23,30 +23,30 @@ check_mutable_automaton()
 
   auto aut1 = vcsn::make_mutable_automaton(ctx_br);
 
-  auto s0 = aut1.new_state();
-  auto s1 = aut1.new_state();
-  auto s2 = aut1.new_state();
+  auto s0 = aut1->new_state();
+  auto s1 = aut1->new_state();
+  auto s2 = aut1->new_state();
 
-  aut1.set_initial(s0, conv(ks_b, "wxyz"));
-  aut1.add_transition(s0, s0, "cd", conv(ks_b, "wx"));
-  aut1.add_transition(s0, s1, "cd", conv(ks_b, "wxyz"));
-  aut1.add_transition(s1, s2, "cd");
-  aut1.set_initial(s2, conv(ks_b, "wxyz"));
+  aut1->set_initial(s0, conv(ks_b, "wxyz"));
+  aut1->add_transition(s0, s0, "cd", conv(ks_b, "wx"));
+  aut1->add_transition(s0, s1, "cd", conv(ks_b, "wxyz"));
+  aut1->add_transition(s1, s2, "cd");
+  aut1->set_initial(s2, conv(ks_b, "wxyz"));
   vcsn::dot(aut1, std::cout) << '\n';
 
   auto aut2 = vcsn::transpose(aut1);
   vcsn::dot(aut2, std::cout) << '\n';
 
 # define ASSERT_WEIGHT(Aut, Src, Dst, Lbl, Wgt)                         \
-  ASSERT_EQ(format(*Aut.weightset(),                                    \
-                   Aut.weight_of(Aut.get_transition(Src, Dst, Lbl))),   \
+  ASSERT_EQ(format(*Aut->weightset(),                                    \
+                   Aut->weight_of(Aut->get_transition(Src, Dst, Lbl))),   \
             Wgt);
 
   // Check has_transition and get_transition.
-  assert(aut1.has_transition(s0, s1, "cd"));
+  assert(aut1->has_transition(s0, s1, "cd"));
   // FIXME: we would really like to have equality here on ratexp.
   ASSERT_WEIGHT(aut1, s0, s1, "cd", "wxyz");
-  assert(aut2.has_transition(s1, s0, "dc"));
+  assert(aut2->has_transition(s1, s0, "dc"));
   ASSERT_WEIGHT(aut2, s1, s0, "dc", "zyxw");
 
   {
@@ -64,10 +64,10 @@ check_mutable_automaton()
 
   // Now change the transposed automaton, and check the modifications
   // on the original.
-  aut2.set_transition(s1, s0, "dc", conv(ks_b, "yyxx"));
+  aut2->set_transition(s1, s0, "dc", conv(ks_b, "yyxx"));
   ASSERT_WEIGHT(aut1, s0, s1, "cd", "xxyy");
-  aut2.del_state(s2);
-  aut2.set_initial(s1);
+  aut2->del_state(s2);
+  aut2->set_initial(s1);
 
   vcsn::dot(aut1, std::cout) << '\n';
   return nerrs;

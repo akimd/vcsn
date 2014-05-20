@@ -36,27 +36,27 @@ namespace vcsn
       template <typename Pred>
       void operator()(Pred keep_state)
       {
-        const auto& out_ls = *out_.labelset();
-        const auto& in_ls = *in_.labelset();
-        const auto& out_ws = *out_.weightset();
-        const auto& in_ws = *in_.weightset();
+        const auto& out_ls = *out_->labelset();
+        const auto& in_ls = *in_->labelset();
+        const auto& out_ws = *out_->weightset();
+        const auto& in_ws = *in_->weightset();
 
         // Copy the states.  We cannot iterate on the transitions
         // only, as we would lose the states without transitions.
-        out_state[in_.pre()] = out_.pre();
-        out_state[in_.post()] = out_.post();
-        for (auto s: in_.states())
+        out_state[in_->pre()] = out_->pre();
+        out_state[in_->post()] = out_->post();
+        for (auto s: in_->states())
           if (keep_state(s))
-            out_state[s] = out_.new_state();
+            out_state[s] = out_->new_state();
 
-        for (auto t : in_.all_transitions())
+        for (auto t : in_->all_transitions())
           {
-            auto src = out_state.find(in_.src_of(t));
-            auto dst = out_state.find(in_.dst_of(t));
+            auto src = out_state.find(in_->src_of(t));
+            auto dst = out_state.find(in_->dst_of(t));
             if (src != out_state.end() && dst != out_state.end())
-              out_.new_transition(src->second, dst->second,
-                                  out_ls.conv(in_ls, in_.label_of(t)),
-                                  out_ws.conv(in_ws, in_.weight_of(t)));
+              out_->new_transition(src->second, dst->second,
+                                  out_ls.conv(in_ls, in_->label_of(t)),
+                                  out_ws.conv(in_ws, in_->weight_of(t)));
           }
       }
 
@@ -121,7 +121,7 @@ namespace vcsn
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
-    AutOut res{input.context()};
+    AutOut res = std::make_shared<typename AutOut::element_type>(input->context());
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }

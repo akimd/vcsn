@@ -731,10 +731,10 @@ namespace vcsn
     using polynomial_t = typename polynomialset_t::value_t;
 
     polynomial_t res;
-    for (auto t : aut.outin(s, d))
+    for (auto t : aut->outin(s, d))
       // Bypass set_weight(), because we know that the weight is
       // nonzero, and that there is only one weight per letter.
-      res[aut.label_of(t)] = aut.weight_of(t);
+      res[aut->label_of(t)] = aut->weight_of(t);
     return res;
   }
 

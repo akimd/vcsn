@@ -26,7 +26,7 @@ namespace vcsn
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
-      const automaton_t &a_;
+      const automaton_t& a_;
 
       using labelset_t = labelset_t_of<automaton_t>;
       const labelset_t& ls_;
@@ -291,20 +291,20 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , ls_(*a_.labelset())
-        , ws_(*a_.weightset())
+        , ls_(*a_->labelset())
+        , ws_(*a_->weightset())
       {
         require(is_trim(a_), "non-trim input");
 
         // Fill state_to_state_output.
-        for (auto s : a_.all_states())
+        for (auto s : a_->all_states())
           {
             // Get the out-states from s, by label:
             label_to_weights_and_states_t label_to_weights_and_states(*this);
-            for (auto t : a_.all_out(s))
-              label_to_weights_and_states[a_.label_of(t)]
-                .emplace_back(std::pair<weight_t, state_t>{a_.weight_of(t),
-                                                           a_.dst_of(t)});
+            for (auto t : a_->all_out(s))
+              label_to_weights_and_states[a_->label_of(t)]
+                .emplace_back(std::pair<weight_t, state_t>{a_->weight_of(t),
+                                                           a_->dst_of(t)});
 
             // Associate this information to s, as a vector sorted by label:
             state_output_t& state_output = state_to_state_output_[s];
@@ -312,15 +312,15 @@ namespace vcsn
               {
                 std::sort(l_wss.second.begin(),
                           l_wss.second.end(),
-                          [](const weight_and_state_t& a,
-                             const weight_and_state_t& b)
+                          [](const weight_and_state_t& l,
+                             const weight_and_state_t& r)
                           {
-                            if (a.second < b.second)
+                            if (l.second < r.second)
                               return true;
-                            else if (b.second < a.second)
+                            else if (r.second < l.second)
                               return false;
                             else
-                              return weightset_t::less_than(a.first, b.first);
+                              return weightset_t::less_than(l.first, r.first);
                           });
                 state_output.emplace_back(state_output_for_label_t{l_wss.first,
                       std::move(l_wss.second)});
@@ -336,7 +336,7 @@ namespace vcsn
         // signature.
         std::unordered_set<class_t> classes;
         {
-          const auto& all = a_.all_states();
+          const auto& all = a_->all_states();
           classes.insert(make_class(set_t{std::begin(all), std::end(all)}));
         }
 

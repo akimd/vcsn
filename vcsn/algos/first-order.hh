@@ -541,7 +541,7 @@ namespace vcsn
       linearer(const ratexpset_t& rs, bool use_spontaneous = false)
         : rs_(rs)
         , use_spontaneous_(use_spontaneous)
-        , res_{rs_.context()}
+        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
       {}
 
       /// The state for ratexp \a r.
@@ -556,7 +556,7 @@ namespace vcsn
                      std::cerr << "New state: ";
                      rs_.print(std::cerr, r) << '\n';
                      );
-            dst = res_.new_state();
+            dst = res_->new_state();
             map_[r] = dst;
             todo_.push(r);
           }
@@ -575,7 +575,7 @@ namespace vcsn
             : polynomial_t{{ratexp, ws.one()}};
           for (const auto& p: initial)
             // Also loads todo_ via state().
-            res_.set_initial(state(p.first), p.second);
+            res_->set_initial(state(p.first), p.second);
         }
         rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
 
@@ -585,10 +585,10 @@ namespace vcsn
             todo_.pop();
             state_t src = map_[r];
             auto expansion = expand(r);
-            res_.set_final(src, expansion.constant);
+            res_->set_final(src, expansion.constant);
             for (const auto& p: expansion.polynomials)
               for (const auto& m: p.second)
-                res_.add_transition(src, state(m.first), p.first, m.second);
+                res_->add_transition(src, state(m.first), p.first, m.second);
           }
         return std::move(res_);
       }

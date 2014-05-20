@@ -18,8 +18,8 @@ namespace vcsn
                             bool>::type
     is_proper_(const Aut& aut)
     {
-      for (auto t: aut.transitions())
-        if (aut.labelset()->is_one(aut.label_of(t)))
+      for (auto t: aut->transitions())
+        if (aut->labelset()->is_one(aut->label_of(t)))
           return false;
       return true;
     }

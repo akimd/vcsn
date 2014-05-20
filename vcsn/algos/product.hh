@@ -63,7 +63,7 @@ namespace vcsn
       {}
 
       transition_map(const Aut& aut)
-        : transition_map(aut, *aut.weightset())
+        : transition_map(aut, *aut->weightset())
       {}
 
       /// Insert l -> t in map.
@@ -92,13 +92,13 @@ namespace vcsn
       build_map_(typename maps_t::iterator lb, state_t_of<Aut> s)
       {
         auto& res = maps_.emplace_hint(lb, s, map_t{})->second;
-        for (auto t: aut_.all_out(s))
-          if (AllOut || !aut_.labelset()->is_special(aut_.label_of(t)))
+        for (auto t: aut_->all_out(s))
+          if (AllOut || !aut_->labelset()->is_special(aut_->label_of(t)))
             {
-              auto w = ws_.conv(*aut_.weightset(), aut_.weight_of(t));
+              auto w = ws_.conv(*aut_->weightset(), aut_->weight_of(t));
               insert_<Deterministic>(res,
-                                     aut_.label_of(t),
-                                     transition{w, aut_.dst_of(t)});
+                                     aut_->label_of(t),
+                                     transition{w, aut_->dst_of(t)});
             }
         return res;
       }
@@ -127,7 +127,7 @@ namespace vcsn
     template <typename... Auts>
     class producter
     {
-      static_assert(all_<Auts::labelset_t::is_letterized()...>(),
+      static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "requires letterized labels");
 
       /// The type of context of the result.
@@ -170,8 +170,8 @@ namespace vcsn
 
       producter(const Auts&... aut)
         : auts_(aut...)
-        , res_(join(aut.context()...))
-        , transition_maps_{{aut, *res_.weightset()}...}
+        , res_(std::make_shared<typename automaton_t::element_type>(join(aut->context()...)))
+        , transition_maps_{{aut, *res_->weightset()}...}
       {}
 
       /// Reset the attributes before a new product.
@@ -186,7 +186,7 @@ namespace vcsn
       {
         auto ctx = meet_();
         const auto& ws = *ctx.weightset();
-        res_ = std::move(automaton_t(ctx));
+        res_ = std::make_shared<typename automaton_t::element_type>(ctx);
 
         initialize_product();
 
@@ -207,7 +207,7 @@ namespace vcsn
       {
         auto ctx = join_();
         const auto& ws = *ctx.weightset();
-        res_ = automaton_t(ctx);
+        automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
         initialize_shuffle(ws);
 
@@ -228,7 +228,7 @@ namespace vcsn
       {
         auto ctx = join_();
         const auto& ws = *ctx.weightset();
-        res_ = automaton_t(ctx);
+        automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
@@ -277,7 +277,8 @@ namespace vcsn
         o << "/* Origins.\n"
              "    node [shape = box, style = rounded]\n";
         for (auto p: orig)
-          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+          if (p.first != automaton_t::element_type::pre()
+              && p.first != automaton_t::element_type::post())
             {
               o << "    " << p.first - 2
                 << " [label = \"";
@@ -300,7 +301,7 @@ namespace vcsn
       template <size_t... I>
       context_t join_(seq<I...>) const
       {
-        return join((std::get<I>(auts_).context())...);
+        return join((std::get<I>(auts_)->context())...);
       }
 
       /// The meet of the contexts.
@@ -312,7 +313,7 @@ namespace vcsn
       template <size_t... I>
       context_t meet_(seq<I...>) const
       {
-        return meet((std::get<I>(auts_).context())...);
+        return meet((std::get<I>(auts_)->context())...);
       }
 
       /// The pre of the input automata.
@@ -326,7 +327,7 @@ namespace vcsn
       {
         // clang 3.4 on top of libstdc++ wants this ctor to be
         // explicitly called.
-        return pair_t{(std::get<I>(auts_).pre())...};
+        return pair_t{(std::get<I>(auts_)->pre())...};
       }
 
       /// The post of the input automata.
@@ -340,7 +341,7 @@ namespace vcsn
       {
         // clang 3.4 on top of libstdc++ wants this ctor to be
         // explicitly called.
-        return pair_t{(std::get<I>(auts_).post())...};
+        return pair_t{(std::get<I>(auts_)->post())...};
       }
 
 
@@ -361,8 +362,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pmap_[pre_()] = res_.pre();
-        pmap_[post_()] = res_.post();
+        pmap_[pre_()] = res_->pre();
+        pmap_[post_()] = res_->post();
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -380,7 +381,7 @@ namespace vcsn
         initialize();
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(ws, res_.pre(), pre_());
+        add_product_transitions(ws, res_->pre(), pre_());
       }
 
       /// The state in the product corresponding to a pair of states
@@ -394,7 +395,7 @@ namespace vcsn
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
-            lb = pmap_.emplace_hint(lb, state, res_.new_state());
+            lb = pmap_.emplace_hint(lb, state, res_->new_state());
             todo_.emplace_back(state);
           }
         return lb->second;
@@ -432,7 +433,7 @@ namespace vcsn
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
           // and so is (right destination, label).
-          if (!res_.labelset()->is_one(t.first))
+          if (!res_->labelset()->is_one(t.first))
             {
   //            SHOWH(V(src)
   //                 << V(std::get<0>(t.second).dst)
@@ -443,7 +444,7 @@ namespace vcsn
               detail::cross_tuple
                 ([&] (const typename transition_map_t<Auts>::transition&... ts)
                  {
-                   res_.new_transition(src, state(ts.dst...),
+                   res_->new_transition(src, state(ts.dst...),
                                        t.first, ws.mul(ts.wgt...));
                  },
                  t.second);
@@ -459,7 +460,7 @@ namespace vcsn
         using swallow = int[];
         (void) swallow
         {
-            (maybe_add_one_transitions_<I>(*(std::get<I>(auts_).labelset()),
+            (maybe_add_one_transitions_<I>(*(std::get<I>(auts_)->labelset()),
                                            src, psrc), 0)...
         };
       }
@@ -497,7 +498,7 @@ namespace vcsn
             {
               auto pdst = psrc;
               std::get<I>(pdst) = t.dst;
-              res_.new_transition(src, state(pdst), res_.labelset()->one(), t.wgt);
+              res_->new_transition(src, state(pdst), res_->labelset()->one(), t.wgt);
             }
       }
 
@@ -520,7 +521,7 @@ namespace vcsn
                               bool>::type
       is_one(const Aut& aut, transition_t_of<Aut> tr) const
       {
-        return aut.labelset()->is_one(aut.label_of(tr));
+        return aut->labelset()->is_one(aut->label_of(tr));
       }
 
       /// Same as above, but for labelsets without epsilon, so it's always
@@ -551,9 +552,9 @@ namespace vcsn
                  bool>::type
       has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
-        auto rin = rhs.all_in(rst);
+        auto rin = rhs->all_in(rst);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs.is_initial(rst);
+        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
       /// Add transitions to the given result automaton, starting from
@@ -581,7 +582,7 @@ namespace vcsn
           bool final = false;
           auto& ts = std::get<0>(transition_maps_)[lsrc];
           for (auto t: ts)
-            if (std::get<0>(auts_).labelset()->is_special(t.first))
+            if (std::get<0>(auts_)->labelset()->is_special(t.first))
               {
                 w = ws.mul(w, t.second.front().wgt);
                 final = true;
@@ -591,9 +592,9 @@ namespace vcsn
                 {
                   auto ldst = d.dst;
                   if (lsrc == ldst)
-                    res_.add_transition(src, state(ldst, rsrc), t.first, d.wgt);
+                    res_->add_transition(src, state(ldst, rsrc), t.first, d.wgt);
                   else
-                    res_.new_transition(src, state(ldst, rsrc), t.first, d.wgt);
+                    res_->new_transition(src, state(ldst, rsrc), t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
@@ -603,7 +604,7 @@ namespace vcsn
           bool final = false;
           auto& ts = std::get<1>(transition_maps_)[rsrc];
           for (auto t: ts)
-            if (std::get<1>(auts_).labelset()->is_special(t.first))
+            if (std::get<1>(auts_)->labelset()->is_special(t.first))
               {
                 w = ws.mul(w, t.second.front().wgt);
                 final = true;
@@ -613,15 +614,15 @@ namespace vcsn
                 {
                   auto rdst = d.dst;
                   if (rsrc == rdst)
-                    res_.add_transition(src, state(lsrc, rdst), t.first, d.wgt);
+                    res_->add_transition(src, state(lsrc, rdst), t.first, d.wgt);
                   else
-                    res_.new_transition(src, state(lsrc, rdst), t.first, d.wgt);
+                    res_->new_transition(src, state(lsrc, rdst), t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
         }
 
-        res_.set_final(src, w);
+        res_->set_final(src, w);
       }
 
       /// The computed product.
@@ -690,14 +691,15 @@ namespace vcsn
     {
 
       template <std::size_t I, typename Aut>
-      typename std::enable_if<Aut::labelset_t::has_one() && I != 0, Aut>::type
+      typename std::enable_if<labelset_t_of<Aut>::has_one()
+                              && I != 0, Aut>::type
       do_insplit(Aut& aut)
       {
         return insplit(aut);
       }
 
       template <std::size_t I, typename Aut>
-      typename std::enable_if<!Aut::labelset_t::has_one()
+      typename std::enable_if<!labelset_t_of<Aut>::has_one()
                               || I == 0, Aut&>::type
       do_insplit(Aut& aut)
       {
@@ -808,14 +810,14 @@ namespace vcsn
   Aut
   power(const Aut& aut, unsigned n)
   {
-    Aut res(aut.context());
+    Aut res = std::make_shared<typename Aut::element_type>(aut->context());
     {
       // automatonset::one().
-      auto s = res.new_state();
-      res.set_initial(s);
-      res.set_final(s);
-      for (auto l: res.context().labelset()->genset())
-        res.new_transition(s, s, l);
+      auto s = res->new_state();
+      res->set_initial(s);
+      res->set_final(s);
+      for (auto l: res->context().labelset()->genset())
+        res->new_transition(s, s, l);
     }
 
     if (n)

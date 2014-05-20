@@ -316,17 +316,17 @@ namespace vcsn
     public:
       minimizer(const Aut& a)
         : a_(a)
-        , ls_(*a_.labelset())
+        , ls_(*a_->labelset())
       {
         require(is_trim(a_), "minimize: signature: input must be trim");
 
         // Fill state_to_state_output.
-        for (auto s : a_.all_states())
+        for (auto s : a_->all_states())
           {
             // Get the out-states from s, by label:
             label_to_states_t label_to_states;
-            for (auto t : a_.all_out(s))
-              label_to_states[a_.label_of(t)].emplace_back(a_.dst_of(t));
+            for (auto t : a_->all_out(s))
+              label_to_states[a_->label_of(t)].emplace_back(a_->dst_of(t));
 
             // Associate this information to s, as a vector sorted by label:
             state_output_t& state_output = state_to_state_output_[s];
@@ -346,7 +346,7 @@ namespace vcsn
         // states, this initialization is useless.
         std::unordered_set<class_t> classes;
         {
-          const auto& all = a_.all_states();
+          const auto& all = a_->all_states();
           classes.insert(make_class(set_t{std::begin(all), std::end(all)}));
         }
 

@@ -38,19 +38,19 @@ namespace vcsn
 
     std::unordered_set<state_t> todo;
 
-    for (auto s : aut.states())
+    for (auto s : aut->states())
       todo.insert(s);
 
-    for (auto l : aut.labelset()->letters_of(w))
+    for (auto l : aut->labelset()->letters_of(w))
       {
         std::unordered_set<state_t> new_todo;
         for (auto s : todo)
           {
-            auto ntf = aut.out(s, l);
+            auto ntf = aut->out(s, l);
             auto size = ntf.size();
             require(0 < size, "automaton must be complete");
             require(size < 2, "automaton must be deterministic");
-            new_todo.insert(aut.dst_of(*ntf.begin()));
+            new_todo.insert(aut->dst_of(*ntf.begin()));
           }
         todo = std::move(new_todo);
       }
@@ -97,29 +97,29 @@ namespace vcsn
     public:
       pairer(const automaton_t& aut, bool keep_initials = false)
         : aut_(aut)
-        , res_(aut.context())
+        , res_(std::make_shared<typename automaton_t::element_type>(aut->context()))
         , transition_map_(aut)
         , keep_initials_(keep_initials)
       {}
 
       automaton_t pair()
       {
-        auto ctx = aut_.context();
+        auto ctx = aut_->context();
         auto ws = ctx.weightset();
 
         if (!keep_initials_)
           {
-            q0_ = res_.new_state(); // q0 special state
-            for (auto l : aut_.labelset()->genset())
-              res_.add_transition(q0_, q0_, l, ws->one());
+            q0_ = res_->new_state(); // q0 special state
+            for (auto l : aut_->labelset()->genset())
+              res_->add_transition(q0_, q0_, l, ws->one());
           }
         else
-          for (auto s : aut_.states())
-            pair_states_.emplace(std::make_pair(s, s), res_.new_state());
+          for (auto s : aut_->states())
+            pair_states_.emplace(std::make_pair(s, s), res_->new_state());
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
-          auto states = aut_.states();
+          auto states = aut_->states();
           auto end = std::end(states);
           for (auto i1 = std::begin(states); i1 != end; ++i1)
             {
@@ -130,7 +130,7 @@ namespace vcsn
               for (++i2; i2 != end; ++i2)
                 // s1 < s2, no need for make_ordered_pair.
                 pair_states_.emplace(std::make_pair(*i1, *i2),
-                                     res_.new_state());
+                                     res_->new_state());
             }
         }
 
@@ -141,7 +141,7 @@ namespace vcsn
 
             for (const auto& p : zip_maps(transition_map_[pstates.first],
                                           transition_map_[pstates.second]))
-              res_.add_transition(cstate,
+              res_->add_transition(cstate,
                                   state_(std::get<0>(p.second).dst,
                                          std::get<1>(p.second).dst),
                                   p.first,
@@ -190,7 +190,8 @@ namespace vcsn
              "    node [shape = box, style = rounded]\n"
              "    0 [label = \"q0\"]\n";
         for (auto p: orig)
-          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+          if (p.first != automaton_t::element_type::pre()
+              && p.first != automaton_t::element_type::post())
             o << "    " << p.first - 2
               << " [label = \""
               << p.second.first - 2 << ", " << p.second.second - 2
@@ -263,7 +264,7 @@ namespace vcsn
   synchronizing_word(const Aut& aut)
   {
     using automaton_t = Aut;
-    using word_t = typename automaton_t::labelset_t::word_t;
+    using word_t = typename labelset_t_of<automaton_t>::word_t;
     using state_t = state_t_of<automaton_t>;
     using transition_t = transition_t_of<automaton_t>;
 
@@ -277,10 +278,10 @@ namespace vcsn
     std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
         paths_ibfs(pa, q0);
 
-    if (paths.size() < pa.states().size() - 1)
+    if (paths.size() < pa->states().size() - 1)
         raise("automaton is not synchronizing.");
 
-    for (auto s : pa.states())
+    for (auto s : pa->states())
       todo.insert(s);
 
     while (1 < todo.size() || todo.find(q0) == todo.end())
@@ -307,19 +308,19 @@ namespace vcsn
             }
         for (auto t : path)
           {
-            auto l = pa.label_of(t);
+            auto l = pa->label_of(t);
             std::unordered_set<state_t> new_todo;
             for (auto s : todo)
               {
-                auto ntf = pa.out(s, l);
+                auto ntf = pa->out(s, l);
                 if (ntf.empty())
                   raise("automaton must be complete");
                 if (1 < ntf.size())
                   raise("automaton must be deterministic");
-                new_todo.insert(pa.dst_of(*ntf.begin()));
+                new_todo.insert(pa->dst_of(*ntf.begin()));
               }
             todo = std::move(new_todo);
-            res = aut.labelset()->concat(res, l);
+            res = aut->labelset()->concat(res, l);
           }
       }
 
@@ -339,7 +340,8 @@ namespace vcsn
       synchronizing_word(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_label(make_wordset(*a.labelset()), vcsn::synchronizing_word(a));
+        return make_label(make_wordset(*a->labelset()),
+                          vcsn::synchronizing_word(a));
       }
 
       REGISTER_DECLARE(synchronizing_word, (const automaton&) -> label);

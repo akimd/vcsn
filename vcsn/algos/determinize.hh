@@ -24,16 +24,17 @@ namespace vcsn
     /// \brief Determinize an automaton.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
-    template <typename Aut>
+    template <typename AutPtr>
     class determinizer
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
+      static_assert(labelset_t_of<AutPtr>::is_free(),
                     "requires labels_are_letters");
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weight_t_of<AutPtr>, bool>::value,
                     "requires Boolean weights");
 
-      using automaton_t = Aut;
-      using automaton_nocv_t = typename automaton_t::self_nocv_t;
+      using automaton_ptr = AutPtr;
+      using automaton_t = typename automaton_ptr::element_type;
+      using automaton_nocv_t = std::shared_ptr<typename automaton_t::self_nocv_t>;
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
 
@@ -53,6 +54,14 @@ namespace vcsn
       /// The determinized automaton.
       /// \param a         the automaton to determinize
       /// \param complete  whether to force the result to be complete
+      automaton_nocv_t operator()(const automaton_ptr& a, bool complete = false)
+      {
+        return operator()(*a, complete);
+      }
+
+      /// The determinized automaton.
+      /// \param a         the automaton to determinize
+      /// \param complete  whether to force the result to be complete
       automaton_nocv_t operator()(const automaton_t& a, bool complete = false)
       {
         clear();
@@ -63,7 +72,8 @@ namespace vcsn
         size_t state_size = a.all_states().back() + 1;
 
         const auto& letters = a.labelset()->genset();
-        automaton_nocv_t res{a.context()};
+        auto res
+          = std::make_shared<typename automaton_nocv_t::element_type>(a.context());
 
         // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
         using successors_t
@@ -93,11 +103,11 @@ namespace vcsn
         auto push_new_state =
           [this,&res,&todo,&finals] (const state_set& ss) -> state_t
           {
-            state_t r = res.new_state();
+            state_t r = res->new_state();
             map_[ss] = r;
 
             if (ss.intersects(finals))
-              res.set_final(r);
+              res->set_final(r);
 
             todo.push(ss);
             return r;
@@ -108,7 +118,7 @@ namespace vcsn
         next.resize(state_size);
         for (auto t : a.initial_transitions())
           next.set(a.dst_of(t));
-        res.set_initial(push_new_state(next));
+        res->set_initial(push_new_state(next));
 
         while (!todo.empty())
           {
@@ -127,11 +137,11 @@ namespace vcsn
                     state_t n = ((i == map_.end())
                                  ? push_new_state(next)
                                  : i->second);
-                    res.new_transition(map_[ss], n, l);
+                    res->new_transition(map_[ss], n, l);
                   }
               }
           }
-        return std::move(res);
+        return res;
       }
 
       /// A map from determinized states to sets of original states.
@@ -177,12 +187,13 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <typename AutPtr>
   inline
-  Aut
-  determinize(const Aut& a, bool complete = false)
+  auto
+  determinize(const AutPtr& a, bool complete = false)
+    -> decltype(detail::determinizer<AutPtr>()(a))
   {
-    detail::determinizer<Aut> determinize;
+    detail::determinizer<AutPtr> determinize;
     auto res = determinize(a, complete);
     if (getenv("VCSN_ORIGINS"))
       determinize.print(std::cout, determinize.origins());

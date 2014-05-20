@@ -38,9 +38,9 @@ namespace vcsn
     dyn::automaton res = dyn::read_automaton(f);
     // Automaton typename.
     auto sname = res->vname(false);
-    if (sname != Aut::sname())
+    if (sname != Aut::element_type::sname())
       throw std::runtime_error(f + ": invalid context: " + sname
-                               + ", expected: " + Aut::sname());
+                               + ", expected: " + Aut::element_type::sname());
     auto& r = res->as<Aut>();
     return std::move(r);
   }
@@ -67,9 +67,10 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   automaton_t l = vcsn::read_automaton<automaton_t>(lhs);
   automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
   automaton_t prod = vcsn::product<automaton_t, automaton_t>(l, r);
-  typename Ctx::labelset_t::word_t input = vcsn::read_word<Ctx>(word, prod.context());
+  typename Ctx::labelset_t::word_t input
+    = vcsn::read_word<Ctx>(word, prod->context());
   vcsn::weight_t_of<Ctx> w = vcsn::eval<automaton_t>(prod, input);
-  prod.context().weightset()->print(std::cout, w);
+  prod->context().weightset()->print(std::cout, w);
 }
 
 static void

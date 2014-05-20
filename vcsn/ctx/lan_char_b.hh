@@ -19,7 +19,7 @@ namespace vcsn
 namespace vcsn
 {
   VCSN_CTX_INSTANTIATE(ctx::lan_char_b);
-
+# if 0
   /* fado. */
   MAYBE_EXTERN template
   std::ostream& fado<mutable_automaton<ctx::lan_char_b>>
@@ -41,6 +41,7 @@ namespace vcsn
   grail<vcsn::detail::transpose_automaton<mutable_automaton<ctx::lan_char_b>>>
   (const vcsn::detail::transpose_automaton<mutable_automaton<ctx::lan_char_b>>& aut,
    std::ostream& out);
+# endif
 
 # if VCSN_INSTANTIATION
   namespace

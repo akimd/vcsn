@@ -86,12 +86,12 @@ namespace vcsn
 
     void fill_outs_()
     {
-      for (auto t1 : a1_.all_transitions())
-        out1_[a1_.src_of(t1)][a1_.label_of(t1)] = {a1_.weight_of(t1),
-                                                   a1_.dst_of(t1)};
-      for (auto t2 : a2_.all_transitions())
-        out2_[a2_.src_of(t2)][a2_.label_of(t2)] = {a2_.weight_of(t2),
-                                                   a2_.dst_of(t2)};
+      for (auto t1 : a1_->all_transitions())
+        out1_[a1_->src_of(t1)][a1_->label_of(t1)] = {a1_->weight_of(t1),
+                                                   a1_->dst_of(t1)};
+      for (auto t2 : a2_->all_transitions())
+        out2_[a2_->src_of(t2)][a2_->label_of(t2)] = {a2_->weight_of(t2),
+                                                   a2_->dst_of(t2)};
     }
 
     void clear()
@@ -103,9 +103,9 @@ namespace vcsn
     bool trivially_different()
     {
       // Automata of different sizes are different.
-      if (a1_.num_states() != a2_.num_states())
+      if (a1_->num_states() != a2_->num_states())
         return true;
-      if (a1_.num_transitions() != a2_.num_transitions())
+      if (a1_->num_transitions() != a2_->num_transitions())
         return true;
 
       // The idea of comparing alphabet sizes here is tempting, but
@@ -121,17 +121,20 @@ namespace vcsn
 
     bool are_isomorphic()
     {
-      require(is_accessible(a1_) && is_accessible(a2_),
-              "are-isomorphic: input automata must both be accessible");
+      require(is_accessible(a1_),
+              "are-isomorphic: left-hand side automaton must be accessible");
+      require(is_accessible(a2_),
+              "are-isomorphic: right-hand side automaton must be accessible");
 
       // FIXME: this only works on lal, and the algorithm is
       // instantiated only on lal contexts anyway.  It would be nice
       // to generalize this to some non-lal contexts later, but the
       // current implementation only is limited to deterministic lal
       // automata anyway.
-      require(is_deterministic(a1_) && is_deterministic(a2_),
-              "are-isomorphic: input automata must both be deterministic"
-              " (at this time)");
+      require(is_deterministic(a1_),
+              "are-isomorphic: left-hand side automaton must be deterministic");
+      require(is_deterministic(a2_),
+              "are-isomorphic: right-hand side automaton must be deterministic");
 
       // If we prove non-isomorphism at this point, it will be because
       // of sizes.
@@ -150,7 +153,7 @@ namespace vcsn
       // presenting some specific pair of states.
       non_isomorphism_reason_ = non_isomorphism_reason::pair;
 
-      worklist_.push({a1_.pre(), a2_.pre()});
+      worklist_.push({a1_->pre(), a2_->pre()});
 
       while (! worklist_.empty())
         {

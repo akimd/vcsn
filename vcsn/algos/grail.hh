@@ -21,20 +21,21 @@ namespace vcsn
 
     /// \brief Factor common bits in automaton formatting.
     ///
-    /// \tparam Aut an automaton type, not a pointer type.
-    template <typename Aut>
+    /// \tparam AutPtr an automaton type.
+    template <typename AutPtr>
     class outputter
     {
     protected:
-      using automaton_t = Aut;
+      using automaton_ptr = AutPtr;
+      using automaton_t = typename automaton_ptr::element_type;
 
     public:
-      outputter(const automaton_t& aut, std::ostream& out)
+      outputter(const automaton_ptr& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
       {
         // Build a (now trivial) map from state to printed number.
-        for (auto t: aut_.states())
+        for (auto t: aut_->states())
           states_.emplace(t, t - 2);
       }
 
@@ -55,23 +56,23 @@ namespace vcsn
       virtual std::string
       label_(const label_t& l)
       {
-        return (aut_.labelset()->is_one(l) ? "@epsilon"
-                : format(*aut_.labelset(), l));
+        return (aut_->labelset()->is_one(l) ? "@epsilon"
+                : format(*aut_->labelset(), l));
       }
 
       /// Output the transition \a t.  Do not insert eol.
       /// "Src Label Dst".
       virtual void output_transition_(transition_t t)
       {
-        os_ << states_[aut_.src_of(t)]
-            << ' ' << label_(aut_.label_of(t))
-            << ' ' << states_[aut_.dst_of(t)];
+        os_ << states_[aut_->src_of(t)]
+            << ' ' << label_(aut_->label_of(t))
+            << ' ' << states_[aut_->dst_of(t)];
       }
 
       /// The labels and weights of transitions from \a src to \a dst.
       ///
       /// The main advantage of using polynomials instead of directly
-      /// iterating over aut_.outin(src, dst) is to get a result which
+      /// iterating over aut_->outin(src, dst) is to get a result which
       /// is sorted (hence more deterministic).
       std::string format_entry_(state_t src, state_t dst)
       {
@@ -83,14 +84,14 @@ namespace vcsn
       void output_state_(const state_t s)
       {
         std::vector<transition_t> ts;
-        for (auto t : aut_.out(s))
+        for (auto t : aut_->out(s))
           ts.push_back(t);
         std::sort
           (begin(ts), end(ts),
            [this](transition_t l, transition_t r)
            {
-             return (std::forward_as_tuple(aut_.label_of(l), aut_.dst_of(l))
-                     < std::forward_as_tuple(aut_.label_of(r), aut_.dst_of(r)));
+             return (std::forward_as_tuple(aut_->label_of(l), aut_->dst_of(l))
+                     < std::forward_as_tuple(aut_->label_of(r), aut_->dst_of(r)));
            });
         for (auto t : ts)
           {
@@ -103,7 +104,7 @@ namespace vcsn
       /// "Src Label Dst\n".
       void output_transitions_()
       {
-        for (auto s: aut_.states())
+        for (auto s: aut_->states())
           output_state_(s);
       }
 
@@ -118,8 +119,8 @@ namespace vcsn
       states_t initials_()
       {
         states_t res;
-        for (auto t: aut_.initial_transitions())
-          res.emplace_back(aut_.dst_of(t));
+        for (auto t: aut_->initial_transitions())
+          res.emplace_back(aut_->dst_of(t));
         std::sort(begin(res), end(res));
         return res;
       }
@@ -128,20 +129,20 @@ namespace vcsn
       states_t finals_()
       {
         states_t res;
-        for (auto t: aut_.final_transitions())
-          res.emplace_back(aut_.src_of(t));
+        for (auto t: aut_->final_transitions())
+          res.emplace_back(aut_->src_of(t));
         std::sort(begin(res), end(res));
         return res;
       }
 
       /// The automaton we have to output.
-      const automaton_t& aut_;
+      const automaton_ptr& aut_;
       /// Output stream.
       std::ostream& os_;
       /// Short-hand to the weightset.
-      const weightset_t& ws_ = *aut_.weightset();
+      const weightset_t& ws_ = *aut_->weightset();
       /// Short-hand to the polynomialset used to print the entries.
-      const polynomialset<context_t> ps_{aut_.context()};
+      const polynomialset<context_t> ps_{aut_->context()};
       /// Names (natural numbers) to use for the states.
       std::map<state_t, unsigned> states_;
     };
@@ -162,7 +163,7 @@ namespace vcsn
     template <typename Aut>
     class fadoer: public outputter<Aut>
     {
-      static_assert(Aut::context_t::is_lal || Aut::context_t::is_lan,
+      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
@@ -216,11 +217,11 @@ namespace vcsn
 
   }
 
-  template <typename Aut>
+  template <typename AutPtr>
   std::ostream&
-  fado(const Aut& aut, std::ostream& out)
+  fado(const AutPtr& aut, std::ostream& out)
   {
-    detail::fadoer<Aut> fado{aut, out};
+    detail::fadoer<AutPtr> fado{aut, out};
     fado();
     return out;
   }
@@ -263,7 +264,7 @@ namespace vcsn
     template <typename Aut>
     class grailer: public outputter<Aut>
     {
-      static_assert(Aut::context_t::is_lal || Aut::context_t::is_lan,
+      static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
@@ -305,11 +306,11 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
+  template <typename AutPtr>
   std::ostream&
-  grail(const Aut& aut, std::ostream& out)
+  grail(const AutPtr& aut, std::ostream& out)
   {
-    detail::grailer<Aut> grail{aut, out};
+    detail::grailer<AutPtr> grail{aut, out};
     grail();
     return out;
   }

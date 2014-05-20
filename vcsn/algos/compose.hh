@@ -35,14 +35,14 @@ namespace vcsn
 
     /// Read-write on an automaton, that hides all bands but one.
     template <std::size_t Band, typename Aut>
-    class blind_automaton : public automaton_decorator<Aut>
+    class blind_automaton_impl : public automaton_decorator<Aut>
     {
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
       using super = automaton_decorator<Aut>;
 
-      static_assert(Aut::context_t::is_lat, "requires labels_are_tuples");
+      static_assert(context_t_of<Aut>::is_lat, "requires labels_are_tuples");
       static_assert(Band < labelset_t_of<Aut>::size(),
                     "band outside of the tuple");
 
@@ -52,7 +52,7 @@ namespace vcsn
       /// yield a blind_automaton<mutable_automaton<Ctx>>, without
       /// the "inner" const.
       using self_nocv_t
-        = blind_automaton<Band, typename automaton_t::self_nocv_t>;
+      = blind_automaton_impl<Band, std::shared_ptr<typename automaton_t::element_type::self_nocv_t>>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       // Exposed label
@@ -67,8 +67,9 @@ namespace vcsn
                                  std::tuple_size<hidden_label_t>::value
                                    - Band - 1>::type>;
 
-      using labelset_t = typename std::tuple_element<Band,
-            typename automaton_t::labelset_t::valuesets_t>::type;
+      using labelset_t
+      = typename std::tuple_element<Band,
+                                    typename labelset_t_of<automaton_t>::valuesets_t>::type;
       using hidden_labelset_t = labelset_t_of<automaton_t>;
 
       // All bands except the exposed one
@@ -79,13 +80,13 @@ namespace vcsn
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using context_t = ::vcsn::context<res_labelset_t, weightset_t>;
 
-      using weightset_ptr = typename automaton_t::weightset_ptr;
+      using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
 
     public:
       using super::super;
 
-      blind_automaton(const context_t_of<automaton_t>& ctx)
-        : blind_automaton(new automaton_t{ctx})
+      blind_automaton_impl(const context_t_of<automaton_t>& ctx)
+        : blind_automaton_impl(std::make_shared<typename automaton_t::element_type>(ctx))
       {}
 
       static std::string sname()
@@ -190,8 +191,7 @@ namespace vcsn
       transition_t new_transition_copy(const A& aut, state_t src,
                                        state_t dst, transition_t t, weight_t k)
       {
-        return this->aut_->new_transition_copy(*const_cast<A*>(&aut)->
-                                                 original_automaton(),
+        return this->aut_->new_transition_copy(aut->original_automaton(),
                                                src, dst, t, k);
       }
 
@@ -199,28 +199,9 @@ namespace vcsn
       weight_t add_transition_copy(const A& aut, state_t src,
                                    state_t dst, transition_t t, weight_t k)
       {
-        return this->aut_->add_transition_copy(*const_cast<A*>(&aut)
-                                                 ->original_automaton(),
+        return this->aut_->add_transition_copy(aut->original_automaton(),
                                                src, dst, t, k);
       }
-
-      /*------------------------------.
-      | constexpr forwarded methods.  |
-      `------------------------------*/
-
-# define DEFINE(Name)                           \
-      static constexpr                          \
-      auto                                      \
-      Name()                                    \
-        -> decltype(automaton_t::Name())        \
-      {                                         \
-        return automaton_t::Name();             \
-      }
-
-      DEFINE(post);
-      DEFINE(pre);
-
-#undef DEFINE
 
       /*--------------------------.
       | forwarded const methods.  |
@@ -230,34 +211,6 @@ namespace vcsn
       {
         return this->aut_->context();
       }
-
-# define DEFINE(Name)                                                 \
-      template <typename... Args>                                     \
-      auto                                                            \
-      Name(Args&&... args) const                                      \
-        -> decltype(this->aut_->Name(std::forward<Args>(args)...))    \
-      {                                                               \
-        return this->aut_->Name(std::forward<Args>(args)...);         \
-      }
-
-      DEFINE(is_initial);
-      DEFINE(is_final);
-      DEFINE(all_in);
-      DEFINE(all_out);
-      DEFINE(in);
-      DEFINE(out);
-      DEFINE(outin);
-      DEFINE(src_of);
-      DEFINE(dst_of);
-      DEFINE(initial_transitions);
-      DEFINE(final_transitions);
-
-      DEFINE(get_initial_weight);
-
-      DEFINE(get_final_weight);
-
-      DEFINE(weight_of);
-# undef DEFINE
     };
 
 
@@ -279,9 +232,9 @@ namespace vcsn
     template <typename Lhs, typename Rhs>
     class composer
     {
-      static_assert(Lhs::context_t::is_lat,
+      static_assert(context_t_of<Lhs>::is_lat,
                     "requires labels_are_tuples");
-      static_assert(Rhs::context_t::is_lat,
+      static_assert(context_t_of<Rhs>::is_lat,
                     "requires labels_are_tuples");
 
       /// A static list of integers.
@@ -291,10 +244,10 @@ namespace vcsn
     public:
       using clhs_t = Lhs;
       using crhs_t = Rhs;
-      using hidden_l_label_t = typename clhs_t::res_label_t;
-      using hidden_r_label_t = typename crhs_t::res_label_t;
-      using hidden_l_labelset_t = typename clhs_t::res_labelset_t;
-      using hidden_r_labelset_t = typename crhs_t::res_labelset_t;
+      using hidden_l_label_t = typename clhs_t::element_type::res_label_t;
+      using hidden_r_label_t = typename crhs_t::element_type::res_label_t;
+      using hidden_l_labelset_t = typename clhs_t::element_type::res_labelset_t;
+      using hidden_r_labelset_t = typename crhs_t::element_type::res_labelset_t;
 
       static_assert(std::is_same<labelset_t_of<clhs_t>,
                     labelset_t_of<crhs_t>>::value,
@@ -327,8 +280,8 @@ namespace vcsn
       composer(const Lhs& lhs, const Rhs& rhs)
         : lhs_(lhs)
         , rhs_(rhs)
-        , res_(context_t{make_labelset_(lhs_.res_labelset(), rhs_.res_labelset()),
-                       join(*lhs.weightset(), *rhs.weightset())})
+        , res_(std::make_shared<typename automaton_t::element_type>(context_t{make_labelset_(lhs_->res_labelset(), rhs_->res_labelset()),
+                join(*lhs->weightset(), *rhs->weightset())}))
       {}
 
       static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
@@ -359,7 +312,7 @@ namespace vcsn
       automaton_t compose()
       {
         initialize_compose();
-        const auto& ws = *res_.context().weightset();
+        const auto& ws = *res_->context().weightset();
 
         while (!todo_.empty())
           {
@@ -390,7 +343,8 @@ namespace vcsn
         o << "/* Origins.\n"
              "    node [shape = box, style = rounded]\n";
         for (auto p: orig)
-          if (p.first != automaton_t::pre() && p.first != automaton_t::post())
+          if (p.first != automaton_t::element_type::pre()
+              && p.first != automaton_t::element_type::post())
             {
               o << "    " << p.first - 2
                 << " [label = \"";
@@ -406,13 +360,13 @@ namespace vcsn
       /// The pre of the input automata.
       pair_t pre_() const
       {
-        return pair_t{lhs_.pre(), rhs_.pre()};
+        return pair_t{lhs_->pre(), rhs_->pre()};
       }
 
       /// The post of the input automata.
       pair_t post_() const
       {
-        return pair_t{lhs_.post(), rhs_.post()};
+        return pair_t{lhs_->post(), rhs_->post()};
       }
 
       /// Map state-tuple -> result-state.
@@ -433,8 +387,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pmap_[pre_()] = res_.pre();
-        pmap_[post_()] = res_.post();
+        pmap_[pre_()] = res_->pre();
+        pmap_[post_()] = res_->post();
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -457,7 +411,7 @@ namespace vcsn
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
-            lb = pmap_.emplace_hint(lb, state, res_.new_state());
+            lb = pmap_.emplace_hint(lb, state, res_->new_state());
             todo_.emplace_back(state);
           }
         return lb->second;
@@ -469,16 +423,16 @@ namespace vcsn
       }
 
       template<typename Aut>
-      typename std::enable_if<Aut::labelset_t::has_one(),
-                              typename Aut::res_label_t>::type
+      typename std::enable_if<labelset_t_of<Aut>::has_one(),
+                              typename Aut::element_type::res_label_t>::type
       get_hidden_one(const Aut& aut)
       {
-        return aut.hidden_one();
+        return aut->hidden_one();
       }
 
       template<typename Aut>
-      typename std::enable_if<!Aut::labelset_t::has_one(),
-                              typename Aut::res_label_t>::type
+      typename std::enable_if<!labelset_t_of<Aut>::has_one(),
+                              typename Aut::element_type::res_label_t>::type
       get_hidden_one(const Aut&)
       {
         raise("should not get here");
@@ -496,29 +450,29 @@ namespace vcsn
         // by the sort algorithm: thanks to that property we can scan
         // the two successor lists in lockstep. Thus if there is a one
         // transition, it is at the beginning.
-        auto ls = lhs_.all_out(psrc.first);
-        auto rs = rhs_.all_out(psrc.second);
+        auto ls = lhs_->all_out(psrc.first);
+        auto rs = rhs_->all_out(psrc.second);
         auto li = ls.begin();
         auto ri = rs.begin();
 
         for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
           if (!has_only_ones_in(rhs_, psrc.second))
-            res_.new_transition(src, state(lhs_.dst_of(*li), psrc.second),
-                                join_label(lhs_.hidden_label_of(*li),
+            res_->new_transition(src, state(lhs_->dst_of(*li), psrc.second),
+                                join_label(lhs_->hidden_label_of(*li),
                                            get_hidden_one(rhs_)),
-                                ws.mul(ws.conv(*lhs_.weightset(),
-                                               lhs_.weight_of(*li)),
-                                       ws.conv(*rhs_.weightset(),
-                                               rhs_.context().weightset()->one())));
+                                ws.mul(ws.conv(*lhs_->weightset(),
+                                               lhs_->weight_of(*li)),
+                                       ws.conv(*rhs_->weightset(),
+                                               rhs_->context().weightset()->one())));
 
         for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
-          res_.new_transition(src, state(psrc.first, rhs_.dst_of(*ri)),
+          res_->new_transition(src, state(psrc.first, rhs_->dst_of(*ri)),
                               join_label(get_hidden_one(lhs_),
-                                         rhs_.hidden_label_of(*ri)),
-                              ws.mul(ws.conv(*lhs_.weightset(),
-                                             lhs_.context().weightset()->one()),
-                                     ws.conv(*rhs_.weightset(),
-                                             rhs_.weight_of(*ri))));
+                                         rhs_->hidden_label_of(*ri)),
+                              ws.mul(ws.conv(*lhs_->weightset(),
+                                             lhs_->context().weightset()->one()),
+                                     ws.conv(*rhs_->weightset(),
+                                             rhs_->weight_of(*ri))));
 
 
         for (/* Nothing. */;
@@ -526,34 +480,34 @@ namespace vcsn
              ++ li)
         {
           auto lt = *li;
-          label_t_of<clhs_t> label = lhs_.label_of(lt);
+          label_t_of<clhs_t> label = lhs_->label_of(lt);
           // Skip right-hand transitions with labels we don't have
           // on the left hand.
-          while (middle_labelset_t::less_than(rhs_.label_of(*ri), label))
+          while (middle_labelset_t::less_than(rhs_->label_of(*ri), label))
             if (++ ri == rs.end())
               return;
 
           // If the smallest label on the right-hand side is bigger
           // than the left-hand one, we have no hope of ever adding
           // transitions with this label.
-          if (middle_labelset_t::less_than(label, rhs_.label_of(*ri)))
+          if (middle_labelset_t::less_than(label, rhs_->label_of(*ri)))
             continue;
 
-          assert(middle_labelset_t::equals(label, rhs_.label_of(*ri)));
+          assert(middle_labelset_t::equals(label, rhs_->label_of(*ri)));
           auto rstart = ri;
-          while (middle_labelset_t::equals(rhs_.label_of(*ri), label))
+          while (middle_labelset_t::equals(rhs_->label_of(*ri), label))
           {
             // These are always new transitions: first because the
             // source state is visited for the first time, and
             // second because the couple (left destination, label)
             // is unique, and so is (right destination, label).
-            res_.new_transition(src, state(lhs_.dst_of(lt), rhs_.dst_of(*ri)),
-                                join_label(lhs_.hidden_label_of(*li),
-                                           rhs_.hidden_label_of(*ri)),
-                                ws.mul(ws.conv(*lhs_.weightset(),
-                                               lhs_.weight_of(lt)),
-                                       ws.conv(*rhs_.weightset(),
-                                               rhs_.weight_of(*ri))));
+            res_->new_transition(src, state(lhs_->dst_of(lt), rhs_->dst_of(*ri)),
+                                join_label(lhs_->hidden_label_of(*li),
+                                           rhs_->hidden_label_of(*ri)),
+                                ws.mul(ws.conv(*lhs_->weightset(),
+                                               lhs_->weight_of(lt)),
+                                       ws.conv(*rhs_->weightset(),
+                                               rhs_->weight_of(*ri))));
 
             if (++ ri == rs.end())
               break;
@@ -567,15 +521,16 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<A::context_t::labelset_t::has_one(),
+      typename std::enable_if<labelset_t_of<A>::has_one(),
                               bool>::type
       is_one(const A& aut, transition_t_of<A> tr) const
       {
-        return aut.labelset()->is_one(aut.label_of(tr));
+        return aut->labelset()->is_one(aut->label_of(tr));
       }
 
       template <typename A>
-      constexpr typename std::enable_if<!A::context_t::labelset_t::has_one(),
+      constexpr
+      typename std::enable_if<!labelset_t_of<A>::has_one(),
                               bool>::type
       is_one(const A&, transition_t_of<A>)
       const
@@ -584,22 +539,22 @@ namespace vcsn
       }
 
       template <typename Aut>
-      constexpr typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                  bool>::type
-      has_only_ones_in(const Aut&,
-                       state_t_of<Aut>) const
+      constexpr
+      typename std::enable_if<!labelset_t_of<Aut>::has_one(),
+                              bool>::type
+      has_only_ones_in(const Aut&, state_t_of<Aut>) const
       {
         return false;
       }
 
       template <typename Aut>
       typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                 bool>::type
+                              bool>::type
       has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
-        auto rin = rhs.all_in(rst);
+        auto rin = rhs->all_in(rst);
         auto rtr = rin.begin();
-        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs.is_initial(rst);
+        return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
 
@@ -607,16 +562,20 @@ namespace vcsn
       automaton_t res_;
     };
 
+    template <std::size_t Band, typename AutPtr>
+    using blind_automaton
+      = std::shared_ptr<detail::blind_automaton_impl<Band, AutPtr>>;
+
     template <std::size_t Band, typename Aut>
-    detail::blind_automaton<Band, Aut>
+    blind_automaton<Band, Aut>
     make_blind_automaton(Aut& aut)
     {
-      return {aut};
+      return std::make_shared<detail::blind_automaton_impl<Band, Aut>>(aut);
     }
 
     template<typename Aut>
     typename std::enable_if<labelset_t_of<Aut>::has_one(),
-             typename detail::blind_automaton<0, const Aut>::self_nocv_t>::type
+                            detail::blind_automaton<0, Aut>>::type
     get_insplit(const Aut& aut)
     {
       return insplit(make_blind_automaton<0>(aut));
@@ -624,7 +583,7 @@ namespace vcsn
 
     template<typename Aut>
     typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-             typename detail::blind_automaton<0, const Aut>>::type
+                            detail::blind_automaton<0, Aut>>::type
     get_insplit(const Aut& aut)
     {
       return make_blind_automaton<0>(aut);
@@ -639,15 +598,16 @@ namespace vcsn
   /// Build the (accessible part of the) composition.
   template <typename Lhs, typename Rhs>
   auto
-  compose(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::composer<typename detail::blind_automaton<1, const Lhs>::self_nocv_t,
-                                 typename detail::blind_automaton<0, const Rhs>::self_nocv_t>::automaton_t
+  compose(Lhs& lhs, Rhs& rhs)
+    -> typename detail::composer<detail::blind_automaton<1, Lhs>,
+                                 detail::blind_automaton<0, Rhs>>::automaton_t
   {
-    using lhs_t = typename detail::blind_automaton<1, const Lhs>::self_nocv_t;
-    using rhs_t = typename detail::blind_automaton<0, const Rhs>::self_nocv_t;
-    lhs_t l = sort(detail::make_blind_automaton<1>(lhs));
-    rhs_t r = sort(detail::get_insplit(rhs));
-    detail::composer<lhs_t, rhs_t>compose(l, r);
+    using lhs_t = detail::blind_automaton<1, Lhs>;
+    using rhs_t = detail::blind_automaton<0, Rhs>;
+    lhs_t blind_lhs = detail::make_blind_automaton<1>(lhs);
+    auto l = sort(blind_lhs);
+    auto r = sort(detail::get_insplit(rhs));
+    detail::composer<decltype(l), decltype(r)>compose(l, r);
     auto res = compose.compose();
     if (getenv("VCSN_ORIGINS"))
       compose.print(std::cout, compose.origins());

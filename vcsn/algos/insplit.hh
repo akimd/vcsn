@@ -33,11 +33,11 @@ namespace vcsn
       }
     };
 
-    template <class Aut>
+    template <typename Aut>
     class insplitter
     {
       using automaton_t = Aut;
-      using res_automaton_t = typename automaton_t::self_nocv_t;
+      using res_automaton_t = std::shared_ptr<typename automaton_t::element_type::self_nocv_t>;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -50,9 +50,8 @@ namespace vcsn
       std::unordered_map<pair_t, state_t> states_assoc;
 
     public:
-
-      insplitter (const Aut& aut)
-        : res_(aut.context())
+      insplitter(const Aut& aut)
+        : res_(std::make_shared<typename res_automaton_t::element_type>(aut->context()))
       {}
 
       res_automaton_t split(const Aut& aut)
@@ -63,15 +62,15 @@ namespace vcsn
             return std::move(res_);
           }
 
-        states_assoc[pair_t(aut.pre(), false)] = res_.pre();
-        states_assoc[pair_t(aut.post(), false)] = res_.post();
+        states_assoc[pair_t(aut->pre(), false)] = res_->pre();
+        states_assoc[pair_t(aut->post(), false)] = res_->post();
 
-        for (auto st : aut.states())
+        for (auto st : aut->states())
         {
           bool epsilon_in = false;
           bool letter_in = false;
 
-          for (auto tr : aut.all_in(st))
+          for (auto tr : aut->all_in(st))
           {
             if (is_one(aut, tr))
               epsilon_in = true;
@@ -81,19 +80,19 @@ namespace vcsn
               break;
           }
           if (epsilon_in)
-            states_assoc[pair_t(st, true)] = res_.new_state();
+            states_assoc[pair_t(st, true)] = res_->new_state();
           if (letter_in)
-            states_assoc[pair_t(st, false)] = res_.new_state();
+            states_assoc[pair_t(st, false)] = res_->new_state();
         }
 
-        for (auto st : aut.all_states())
+        for (auto st : aut->all_states())
           for (bool epsilon : { false, true })
             if (exists(st, epsilon))
-              for (auto tr : aut.all_out(st))
-                res_.add_transition_copy(aut, states_assoc[pair_t(st, epsilon)],
-                                         states_assoc[pair_t(aut.dst_of(tr),
+              for (auto tr : aut->all_out(st))
+                res_->add_transition_copy(aut, states_assoc[pair_t(st, epsilon)],
+                                         states_assoc[pair_t(aut->dst_of(tr),
                                                              is_one(aut, tr))],
-                                         tr, aut.weight_of(tr));
+                                         tr, aut->weight_of(tr));
 
         return std::move(res_);
       }
@@ -109,7 +108,7 @@ namespace vcsn
                               bool>::type
       is_one(const A& aut, transition_t tr)
       {
-        return aut.labelset()->is_one(aut.label_of(tr));
+        return aut->labelset()->is_one(aut->label_of(tr));
       }
 
       template <typename A>
@@ -128,8 +127,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename Aut::self_nocv_t
+  auto
   insplit(const Aut& aut)
+    -> decltype(detail::insplitter<const Aut>(aut).split(aut))
   {
     detail::insplitter<Aut> insplit{aut};
     return insplit.split(aut);

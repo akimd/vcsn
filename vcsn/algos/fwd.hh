@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_FWD_HH
 # define VCSN_ALGOS_FWD_HH
 
+# include <memory>
+
 namespace vcsn
 {
   template <typename Aut>
@@ -15,7 +17,11 @@ namespace vcsn
   namespace detail
   {
     template <std::size_t Band, typename Aut>
-    class blind_automaton;
+    class blind_automaton_impl;
+
+    template <std::size_t Band, typename AutPtr>
+    using blind_automaton
+    = std::shared_ptr<blind_automaton_impl<Band, AutPtr>>;
   }
 }
 

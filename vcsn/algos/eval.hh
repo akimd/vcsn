@@ -21,7 +21,7 @@ namespace vcsn
 
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;
-      using word_t = typename automaton_t::labelset_t::word_t;
+      using word_t = typename labelset_t_of<automaton_t>::word_t;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
 
@@ -31,7 +31,7 @@ namespace vcsn
     public:
       evaluator(const automaton_t& a)
         : a_(a)
-        , ws_(*a_.weightset())
+        , ws_(*a_->weightset())
       {}
 
       weight_t operator()(const word_t& word) const
@@ -43,33 +43,33 @@ namespace vcsn
         // all the states, they are costly at each iteration.
 
         /// An array indexed by state numbers.
-        const auto& states = a_.states();
+        const auto& states = a_->states();
         size_t last_state = *std::max_element(std::begin(states),
                                               std::end(states));
         // Do not use braces (v1{size, zero}): the type of zero might
         // result in the compiler believing we are building a vector
-        // with two values: a_.num_all_states() and zero.
+        // with two values: a_->num_all_states() and zero.
         weights_t v1(last_state + 1, zero);
-        v1[a_.pre()] = ws_.one();
+        v1[a_->pre()] = ws_.one();
         weights_t v2{v1};
 
         // Computation.
-        const auto& ls = *a_.labelset();
+        const auto& ls = *a_->labelset();
         for (auto l : ls.letters_of(ls.delimit(word)))
           {
             v2.assign(v2.size(), zero);
             for (size_t s = 0; s < v1.size(); ++s)
               if (!ws_.is_zero(v1[s])) // delete if bench >
-                for (auto t : a_.out(s, l))
-                  // Introducing a reference to v2[a_.dst_of(tr)] is
+                for (auto t : a_->out(s, l))
+                  // Introducing a reference to v2[a_->dst_of(tr)] is
                   // tempting, but won't work for std::vector<bool>.
                   // FIXME: Specialize for Boolean?
-                  v2[a_.dst_of(t)] =
-                    ws_.add(v2[a_.dst_of(t)],
-                            ws_.mul(v1[s], a_.weight_of(t)));
+                  v2[a_->dst_of(t)] =
+                    ws_.add(v2[a_->dst_of(t)],
+                            ws_.mul(v1[s], a_->weight_of(t)));
             std::swap(v1, v2);
           }
-        return v1[a_.post()];
+        return v1[a_->post()];
       }
     private:
       const automaton_t& a_;
@@ -101,7 +101,7 @@ namespace vcsn
         const auto& a = aut->as<Aut>();
         const auto& l = lbl->as<LabelSet>().label();
         auto res = ::vcsn::eval(a, l);
-        const auto& ctx = a.context();
+        const auto& ctx = a->context();
         return make_weight(*ctx.weightset(), res);
       }
 

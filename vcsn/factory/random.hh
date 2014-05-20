@@ -83,7 +83,7 @@ namespace vcsn
             "random: density must be in [0,1]");
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res(ctx);
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
     // A good source of random integers.
     std::random_device rd;
@@ -108,13 +108,13 @@ namespace vcsn
 
     for (unsigned i = 0; i < num_states; ++i)
       {
-        states.push_back(res.new_state());
+        states.push_back(res->new_state());
         state_randomizer.push_back(i);
         // State 0 is "reachable" from 0.
         if (i)
           unreachables.emplace(i);
         if (i < num_initial)
-          res.set_initial(states[i]);
+          res->set_initial(states[i]);
       }
     worklist.insert(0);
 
@@ -123,7 +123,7 @@ namespace vcsn
       {
         std::uniform_int_distribution<> dis(i, num_states - 1);
         int index = dis(gen);
-        res.set_final(states[state_randomizer[index]]);
+        res->set_final(states[state_randomizer[index]]);
         // Swap it at the beginning of state_randomizer, so we cannot
         // pick it again.
         std::swap(state_randomizer[index], state_randomizer[i]);
@@ -187,7 +187,7 @@ namespace vcsn
                     saw_unreachable = true;
                   }
               }
-            res.add_transition(src, states[dst],
+            res->add_transition(src, states[dst],
                                random_label(*ctx.labelset(), gen));
           }
       }
@@ -202,7 +202,7 @@ namespace vcsn
 
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res(ctx);
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
     std::random_device rd;
     auto seed = rd();
@@ -215,17 +215,17 @@ namespace vcsn
     states.reserve(num_states);
 
     for (unsigned i = 0; i < num_states; ++i)
-      states.push_back(res.new_state());
+      states.push_back(res->new_state());
 
     for (unsigned i = 0; i < num_states; ++i)
       for (auto l : ctx.labelset()->genset())
-        res.add_transition(states[i], states[distrib(gen)], l,
+        res->add_transition(states[i], states[distrib(gen)], l,
                            ctx.weightset()->one());
 
-    res.set_initial(states[distrib(gen)]);
-    res.set_final(states[distrib(gen)]);
+    res->set_initial(states[distrib(gen)]);
+    res->set_final(states[distrib(gen)]);
 
-    return std::move(res);
+    return res;
   }
 
   namespace dyn

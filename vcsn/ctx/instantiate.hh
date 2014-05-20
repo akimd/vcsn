@@ -149,7 +149,7 @@ namespace vcsn
       register_functions_is_free(std::true_type)
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
+        using aut_t = vcsn::mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
 
         // Wordset.
@@ -209,7 +209,7 @@ namespace vcsn
       register_kind_functions(labels_are_one)
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
+        using aut_t = vcsn::mutable_automaton<ctx_t>;
 
         using namespace dyn::detail;
 
@@ -223,7 +223,7 @@ namespace vcsn
       register_kind_functions(labels_are_ratexps)
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
+        using aut_t = vcsn::mutable_automaton<ctx_t>;
 
         using namespace dyn::detail;
 
@@ -292,7 +292,7 @@ namespace vcsn
       register_functions()
       {
         using ctx_t = Ctx;
-        using aut_t = mutable_automaton<ctx_t>;
+        using aut_t = vcsn::mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
         using ls_t = labelset_t_of<ctx_t>;
         using ws_t = weightset_t_of<ctx_t>;
@@ -402,7 +402,7 @@ namespace vcsn
 # endif
 
 # define VCSN_CTX_INSTANTIATE(Ctx)              \
-  VCSN_CTX_INSTANTIATE_1(Ctx);                  \
+  /* VCSN_CTX_INSTANTIATE_1(Ctx);*/             \
   VCSN_CTX_INSTANTIATE_2(Ctx)
 
 # ifndef MAYBE_EXTERN

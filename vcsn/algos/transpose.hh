@@ -1,12 +1,14 @@
 #ifndef VCSN_ALGOS_TRANSPOSE_HH
 # define VCSN_ALGOS_TRANSPOSE_HH
 
-# include <vcsn/algos/copy.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/core/automaton-decorator.hh>
+# include <vcsn/dyn/automaton.hh>
+
+# include <vcsn/core/mutable_automaton.hh>// FIXME: Needed?
 
 namespace vcsn
 {
@@ -17,13 +19,14 @@ namespace vcsn
   namespace detail
   {
     /// Read-write on an automaton, that transposes everything.
-    template <typename Aut>
-    class transpose_automaton : public automaton_decorator<Aut>
+    template <typename AutPtr>
+    class transpose_automaton_impl : public automaton_decorator<AutPtr>
     {
     public:
       /// The type of automaton to wrap.
-      using automaton_t = Aut;
-      using super = automaton_decorator<Aut>;
+      using automaton_ptr = AutPtr;
+      using automaton_t = typename automaton_ptr::element_type;
+      using super = automaton_decorator<AutPtr>;
       using automaton_nocv_t = typename super::automaton_nocv_t;
 
       /// The type of the automata to produce from this kind o
@@ -32,7 +35,7 @@ namespace vcsn
       /// yield a transpose_automaton<mutable_automaton<Ctx>>, without
       /// the "inner" const.
       using self_nocv_t
-        = transpose_automaton<typename automaton_t::self_nocv_t>;
+        = transpose_automaton_impl<std::shared_ptr<typename automaton_t::self_nocv_t>>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -115,7 +118,7 @@ namespace vcsn
 # define DEFINE(Signature, Value)                                       \
       auto                                                              \
       Signature                                                         \
-        -> decltype(const_cast<automaton_nocv_t*>(this->aut_)->Value)   \
+      -> decltype(std::static_pointer_cast<automaton_nocv_t>(this->aut_)->Value) \
       {                                                                 \
         return this->aut_->Value;                                       \
       }
@@ -166,30 +169,26 @@ namespace vcsn
       DEFINE(add_final(state_t s, weight_t k),
              add_initial(s, this->aut_->weightset()->transpose(k)));
 
+      // FIXME: fails to transpose the label.
+      template <typename A>
+      DEFINE(add_transition_copy(const A& aut, state_t src,
+                                 state_t dst, transition_t t, weight_t k),
+             add_transition_copy(aut,
+                                 dst, src,
+                                 t,
+                                 this->aut_->weightset()->transpose(k)));
+
+      template <typename A>
+      DEFINE(new_transition_copy(const A& aut, state_t src,
+                                 state_t dst, transition_t t, weight_t k),
+             new_transition_copy(aut,
+                                 dst, src,
+                                 t,
+                                 this->aut_->weightset()->transpose(k)));
+
 # undef DEFINE
 
 
-      template <typename A>
-      transition_t new_transition_copy(const A& aut, state_t src,
-                                       state_t dst, transition_t t, weight_t k)
-      {
-        return this->aut_->new_transition_copy(*const_cast<A*>(&aut)
-                                                 ->original_automaton(),
-                                               dst, src,
-                                               this->aut_->labelset()->transpose(t),
-                                               this->aut_->weightset()->transpose(k));
-      }
-
-      template <typename A>
-      weight_t add_transition_copy(const A& aut, state_t src,
-                                   state_t dst, transition_t t, weight_t k)
-      {
-        return this->aut_->add_transition_copy(*const_cast<A*>(&aut)
-                                                 ->original_automaton(),
-                                               dst, src,
-                                               this->aut_->labelset()->transpose(t),
-                                               this->aut_->weightset()->transpose(k));
-      }
 
       /*-----------------------------------.
       | constexpr methods that transpose.  |
@@ -211,11 +210,15 @@ namespace vcsn
     };
   }
 
-  template <typename Aut>
-  typename detail::transpose_automaton<Aut>
-  transpose(Aut& aut)
+  template <typename AutPtr>
+  using transpose_automaton
+    = std::shared_ptr<detail::transpose_automaton_impl<AutPtr>>;
+
+  template <typename AutPtr>
+  transpose_automaton<AutPtr>
+  transpose(AutPtr& aut)
   {
-    return detail::transpose_automaton<Aut>{aut};
+    return std::make_shared<detail::transpose_automaton_impl<AutPtr>>(aut);
   }
 
 
@@ -229,8 +232,7 @@ namespace vcsn
       transpose(automaton& aut)
       {
         auto& a = aut->as<Aut>();
-        return make_automaton<Aut,
-                              vcsn::detail::transpose_automaton<Aut>>(vcsn::copy(a));
+        return make_automaton(transpose(a));
       }
 
       REGISTER_DECLARE(transpose,

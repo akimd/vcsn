@@ -25,22 +25,23 @@ namespace vcsn
     auto b = letters[1];
     auto c = letters[2];
 
-    mutable_automaton<context_t> res{ctx};
+    using automaton_t = mutable_automaton<Context>;
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
 
-    auto p = res.new_state();
-    res.set_initial(p);
-    res.set_final(p);
+    auto p = res->new_state();
+    res->set_initial(p);
+    res->set_final(p);
     auto x = p;
     for (unsigned i = 1; i < n; ++i)
       {
-        auto y = res.new_state();
-        res.new_transition(x, y, a);
-        res.new_transition(y, y, b);
-        res.new_transition(y, y, c);
-        res.new_transition(y, p, c);
+        auto y = res->new_state();
+        res->new_transition(x, y, a);
+        res->new_transition(y, y, b);
+        res->new_transition(y, y, c);
+        res->new_transition(y, p, c);
         x = y;
       }
-    res.new_transition(x, p, a);
+    res->new_transition(x, p, a);
     return res;
   }
 

@@ -26,7 +26,7 @@ namespace vcsn
   namespace detail
   {
 
-    template <typename Aut, bool has_one = Aut::context_t::has_one()>
+    template <typename Aut, bool has_one = context_t_of<Aut>::has_one()>
     class is_valider
     {
     public:
@@ -64,9 +64,9 @@ namespace vcsn
       {
         automaton_t res = copy(aut);
         // Apply absolute value to the weight of each transition.
-        const auto& weightset = *aut.weightset();
-        for (auto t: res.transitions())
-          res.set_weight(t, weightset.abs(res.weight_of(t)));
+        const auto& ws = *aut->weightset();
+        for (auto t: res->transitions())
+          res->set_weight(t, ws.abs(res->weight_of(t)));
         return res;
       }
 

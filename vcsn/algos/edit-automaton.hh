@@ -93,14 +93,9 @@ namespace vcsn
 
   public:
     edit_automaton(const context_t& ctx)
-      : res_(new automaton_t(ctx))
+      : res_(std::make_shared<typename automaton_t::element_type>(ctx))
       , ps_(ctx)
     {}
-
-    ~edit_automaton()
-    {
-      delete res_;
-    }
 
     /// Register the existence of state named \a s.
     virtual void
@@ -196,7 +191,7 @@ namespace vcsn
     virtual dyn::automaton
     result() override final
     {
-      return dyn::make_automaton(std::move(*res_));
+      return dyn::make_automaton(res_);
     }
 
     /// Detach the built automaton.
@@ -233,14 +228,14 @@ namespace vcsn
     state_t
     state_(string_t k)
     {
-      auto p = smap_.emplace(k, Aut::null_state());
+      auto p = smap_.emplace(k, Aut::element_type::null_state());
       if (p.second)
         p.first->second = res_->new_state();
       return p.first->second;
     }
 
     /// The automaton under construction.
-    automaton_t* res_;
+    automaton_t res_;
     /// Entries handler.
     polynomialset<context_t> ps_;
 

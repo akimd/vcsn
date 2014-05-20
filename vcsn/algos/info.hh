@@ -118,8 +118,8 @@ namespace vcsn
     num_eps_transitions(const Aut& aut)
     {
       size_t res = 0;
-      for (auto t : aut.transitions())
-        res += aut.labelset()->is_one(aut.label_of(t));
+      for (auto t : aut->transitions())
+        res += aut->labelset()->is_one(aut->label_of(t));
       return res;
     }
   }
@@ -134,14 +134,14 @@ namespace vcsn
   {
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
-    ECHO("type", aut.vname(true));
-    ECHO("number of states", aut.num_states());
-    ECHO("number of initial states", aut.num_initials());
-    ECHO("number of final states", aut.num_finals());
+    ECHO("type", aut->vname(true));
+    ECHO("number of states", aut->num_states());
+    ECHO("number of initial states", aut->num_initials());
+    ECHO("number of final states", aut->num_finals());
     ECHO("number of accessible states", num_accessible_states(aut));
     ECHO("number of coaccessible states", num_coaccessible_states(aut));
     ECHO("number of useful states", num_useful_states(aut));
-    ECHO("number of transitions", aut.num_transitions());
+    ECHO("number of transitions", aut->num_transitions());
     ECHO("number of deterministic states",
          detail_info::num_deterministic_states(aut));
     ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));

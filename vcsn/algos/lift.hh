@@ -19,6 +19,21 @@ namespace vcsn
     | lift(types).  |
     `--------------*/
 
+    template <typename ValueSet>
+    struct context_of
+    {
+      using type = typename ValueSet::context_t;
+    };
+
+    template <typename Context>
+    struct context_of<vcsn::mutable_automaton<Context>>
+    {
+      using type = Context;
+    };
+
+    template <typename ValueSet>
+    using context_of_t = typename context_of<ValueSet>::type;
+
     template <typename Context>
     using lifted_context_t =
       context<oneset, ratexpset<Context>>;
@@ -54,41 +69,41 @@ namespace vcsn
   | lift(automaton).  |
   `------------------*/
 
-  template <typename Aut>
+  template <typename AutPtr>
   inline
-  detail::lifted_automaton_t<Aut>
-  lift(const Aut& a)
+  detail::lifted_automaton_t<AutPtr>
+  lift(const AutPtr& a)
   {
-    using auto_in_t = Aut;
+    using auto_in_t = typename AutPtr::element_type;
     using ctx_in_t = context_t_of<auto_in_t>;
     using state_in_t = state_t_of<auto_in_t>;
 
     // Produce RatExps of the same context as the original automaton.
     using rs_in_t = ratexpset<ctx_in_t>;
-    rs_in_t rs_in{a.context()};
+    rs_in_t rs_in{a->context()};
 
-    auto ctx_out = detail::lift_context(a.context());
+    auto ctx_out = detail::lift_context(a->context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
     using state_out_t = state_t_of<auto_out_t>;
-    auto_out_t res{ctx_out};
+    auto_out_t res = std::make_shared<typename auto_out_t::element_type>(ctx_out);
     std::map<state_in_t, state_out_t> map;
-    map[a.pre()] = res.pre();
-    map[a.post()] = res.post();
-    for (auto s: a.states())
-      map[s] = res.new_state();
+    map[a->pre()] = res->pre();
+    map[a->post()] = res->post();
+    for (auto s: a->states())
+      map[s] = res->new_state();
 
-    for (auto t: a.all_transitions())
-      if (a.src_of(t) == a.pre())
-        res.add_initial(map[a.dst_of(t)],
-                        rs_in.lmul(a.weight_of(t), rs_in.one()));
-      else if (a.dst_of(t) == a.post())
-        res.add_final(map[a.src_of(t)],
-                      rs_in.lmul(a.weight_of(t), rs_in.one()));
+    for (auto t: a->all_transitions())
+      if (a->src_of(t) == a->pre())
+        res->add_initial(map[a->dst_of(t)],
+                        rs_in.lmul(a->weight_of(t), rs_in.one()));
+      else if (a->dst_of(t) == a->post())
+        res->add_final(map[a->src_of(t)],
+                      rs_in.lmul(a->weight_of(t), rs_in.one()));
       else
-        res.add_transition
-          (map[a.src_of(t)], map[a.dst_of(t)],
+        res->add_transition
+          (map[a->src_of(t)], map[a->dst_of(t)],
            {},
-           rs_in.lmul(a.weight_of(t), rs_in.atom(a.label_of(t))));
+           rs_in.lmul(a->weight_of(t), rs_in.atom(a->label_of(t))));
     return res;
   }
 
@@ -120,7 +135,6 @@ namespace vcsn
     template <typename Exp>
     using lifted_ratexp_t =
       typename lifted_context_t<context_t_of<Exp>>::ratexp_t;
-
   }
 
   template <typename RatExpSet>

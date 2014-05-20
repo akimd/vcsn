@@ -63,8 +63,8 @@ namespace vcsn
       properer(automaton_t& aut, bool prune = true)
         : debug_(debug_level())
         , aut_(aut)
-        , ws_(*aut.weightset())
-        , empty_word_(aut.labelset()->one())
+        , ws_(*aut->weightset())
+        , empty_word_(aut->labelset()->one())
         , prune_(prune)
       {}
 
@@ -210,24 +210,24 @@ namespace vcsn
       void update_profile_(state_t s)
       {
         if (auto p = profile(s))
-          p->update(aut_.in(s, empty_word_).size(),
-                    aut_.in(s).size(),
-                    aut_.out(s, empty_word_).size(),
-                    aut_.all_out(s).size());
+          p->update(aut_->in(s, empty_word_).size(),
+                    aut_->in(s).size(),
+                    aut_->out(s, empty_word_).size(),
+                    aut_->all_out(s).size());
       }
 
       /// Build the profiles and the heap for states with incoming
       /// spontaneous transitions.
       void build_heap_()
       {
-        for (auto s: aut_.states())
+        for (auto s: aut_->states())
           // We don't care about states without incoming spontaneous
           // transitions.
-          if (auto in_sp = aut_.in(s, empty_word_).size())
+          if (auto in_sp = aut_->in(s, empty_word_).size())
             {
-              auto in = aut_.in(s).size();
-              auto out_sp = aut_.out(s, empty_word_).size();
-              auto out = aut_.all_out(s).size();
+              auto in = aut_->in(s).size();
+              auto out_sp = aut_->out(s, empty_word_).size();
+              auto out = aut_->all_out(s).size();
               auto h = todo_.emplace(state_profile
                                      {s, in_sp, in, out_sp, out});
               handles_.emplace(s, h);
@@ -297,7 +297,7 @@ namespace vcsn
       /// is moved higher, before the state_profile definition.
       void in_situ_remover_(state_t s)
       {
-        const auto& tr = aut_.in(s, empty_word_);
+        const auto& tr = aut_->in(s, empty_word_);
         // Iterate on a copy, as we remove these transitions in the
         // loop.
         transitions_t transitions{tr.begin(), tr.end()};
@@ -307,14 +307,14 @@ namespace vcsn
         std::vector<state_weight_t> closure;
         for (auto t : transitions)
           {
-            weight_t weight = aut_.weight_of(t);
-            state_t src = aut_.src_of(t);
+            weight_t weight = aut_->weight_of(t);
+            state_t src = aut_->src_of(t);
             if (src == s)  //loop
               star = ws_.star(weight);
             else
               closure.emplace_back(src, weight);
             // Delete incoming epsilon transitions.
-            aut_.del_transition(t);
+            aut_->del_transition(t);
           }
 
         /*
@@ -331,33 +331,33 @@ namespace vcsn
           pair-second * weight is added to the final weight
           of closure->first
         */
-        for (auto t: aut_.all_out(s))
+        for (auto t: aut_->all_out(s))
           {
             // "Blowing": For each transition (or terminal arrow)
             // outgoing from (s), the weight is multiplied by
             // (star).
-            weight_t blow = ws_.mul(star, aut_.weight_of(t));
-            aut_.set_weight(t, blow);
+            weight_t blow = ws_.mul(star, aut_->weight_of(t));
+            aut_->set_weight(t, blow);
 
-            label_t label = aut_.label_of(t);
-            state_t dst = aut_.dst_of(t);
+            label_t label = aut_->label_of(t);
+            state_t dst = aut_->dst_of(t);
             for (auto pair: closure)
               {
                 state_t src = pair.first;
                 weight_t w = ws_.mul(pair.second, blow);
-                aut_.add_transition(src, dst, label, w);
+                aut_->add_transition(src, dst, label, w);
               }
           }
 #ifdef STATS
-        unsigned added = aut_.all_out(s).size() * closure.size();
+        unsigned added = aut_->all_out(s).size() * closure.size();
         unsigned removed = transitions.size();
 #endif
-        if (prune_ && aut_.all_in(s).empty())
+        if (prune_ && aut_->all_in(s).empty())
           {
 #ifdef STATS
-            removed += aut_.all_out(s).size();
+            removed += aut_->all_out(s).size();
 #endif
-            aut_.del_state(s);
+            aut_->del_state(s);
           }
 #ifdef STATS
         added_ += added;
@@ -407,15 +407,15 @@ namespace vcsn
             auto s = p.state;
             handles_.erase(s);
             neighbors.clear();
-            for (auto t: aut_.in(s))
+            for (auto t: aut_->in(s))
               {
-                state_t n = aut_.src_of(t);
+                state_t n = aut_->src_of(t);
                 if (n != s)
                   neighbors.emplace(n);
               }
-            for (auto t: aut_.out(s))
+            for (auto t: aut_->out(s))
               {
-                state_t n = aut_.dst_of(t);
+                state_t n = aut_->dst_of(t);
                 if (n != s)
                   neighbors.emplace(n);
               }
@@ -430,7 +430,7 @@ namespace vcsn
             if (1 < debug_)
               std::cerr << " #tr: "
                         << detail_info::num_eps_transitions(aut_)
-                        << "/" << aut_.num_transitions() << std::endl;
+                        << "/" << aut_->num_transitions() << std::endl;
             if (2 < debug_)
               {
                 std::cerr << "After:  ";

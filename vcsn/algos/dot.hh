@@ -23,11 +23,11 @@ namespace vcsn
     /// \brief Format an automaton into Dot.
     ///
     /// \tparam Aut an automaton type, not a pointer type.
-    template <typename Aut>
-    class dotter: public outputter<Aut>
+    template <typename AutPtr>
+    class dotter: public outputter<AutPtr>
     {
     private:
-      using super_type = outputter<Aut>;
+      using super_type = outputter<AutPtr>;
       using typename super_type::automaton_t;
       using typename super_type::state_t;
       using typename super_type::transition_t;
@@ -56,12 +56,12 @@ namespace vcsn
         os_ <<
           "digraph\n"
           "{\n"
-          "  vcsn_context = \"" << aut_.context().vname() << "\"\n"
+          "  vcsn_context = \"" << aut_->context().vname() << "\"\n"
           "  rankdir = LR\n";
 
         // Output the pre-initial and post-final states.
-        if (!aut_.initial_transitions().empty()
-            || !aut_.final_transitions().empty())
+        if (!aut_->initial_transitions().empty()
+            || !aut_->final_transitions().empty())
           {
             os_ <<
               "  {\n"
@@ -82,11 +82,11 @@ namespace vcsn
         //
         // because 2 was already "declared", and dot does not associate
         // "color = gray" to it.
-        if (!aut_.states().empty())
+        if (!aut_->states().empty())
           {
             os_ << "  {\n"
                 << "    node [shape = circle]\n";
-            for (auto s : aut_.states())
+            for (auto s : aut_->states())
               {
                 os_ << "    " << states_[s];
                 static bool debug = getenv("VCSN_DEBUG");
@@ -99,20 +99,20 @@ namespace vcsn
             os_ << "  }\n";
           }
 
-        for (auto src : aut_.all_states())
+        for (auto src : aut_->all_states())
           {
             // Sort by destination state.
             std::set<state_t> ds;
-            for (auto t: aut_.all_out(src))
-              ds.insert(aut_.dst_of(t));
+            for (auto t: aut_->all_out(src))
+              ds.insert(aut_->dst_of(t));
             for (auto dst: ds)
               {
-                if (src == aut_.pre())
+                if (src == aut_->pre())
                   {
                     unsigned n = states_[dst];
                     os_ << "  I" << n << " -> " << n;
                   }
-                else if (dst == aut_.post())
+                else if (dst == aut_->post())
                   {
                     unsigned n = states_[src];
                     os_ << "  " << n << " -> F" << n;

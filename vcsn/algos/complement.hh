@@ -36,15 +36,15 @@ namespace vcsn
 
     // The final states of aut.
     std::set<state_t> finals;
-    for (auto t: aut.final_transitions())
-      finals.insert(aut.src_of(t));
+    for (auto t: aut->final_transitions())
+      finals.insert(aut->src_of(t));
 
     // Complement.
-    for (auto s: aut.states())
+    for (auto s: aut->states())
       if (!has(finals, s))
-        aut.set_final(s);
+        aut->set_final(s);
       else
-        aut.unset_final(s);
+        aut->unset_final(s);
   }
 
   template <typename Aut>

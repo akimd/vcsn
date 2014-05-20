@@ -101,7 +101,7 @@ namespace vcsn
       }
       else if (t.get_type() == "transpose_automaton")
       {
-        os_ << "vcsn::detail::transpose_automaton<" << incendl;
+        os_ << "vcsn::transpose_automaton<" << incendl;
         t.get_content()->accept(*this);
         os_ << decendl << '>';
         header("vcsn/algos/transpose.hh");

@@ -30,24 +30,24 @@ namespace vcsn
 
     // State in B -> state in Res.
     std::map<state_t_of<B>, state_t_of<A>> m;
-    state_t_of<A> initial = res.dst_of(res.initial_transitions().front());
-    for (auto s: b.states())
-      m.emplace(s, b.is_initial(s) ? initial : res.new_state());
-    m.emplace(b.pre(), res.pre());
-    m.emplace(b.post(), res.post());
+    state_t_of<A> initial = res->dst_of(res->initial_transitions().front());
+    for (auto s: b->states())
+      m.emplace(s, b->is_initial(s) ? initial : res->new_state());
+    m.emplace(b->pre(), res->pre());
+    m.emplace(b->post(), res->post());
 
     // Add b.
-    for (auto t: b.all_transitions())
+    for (auto t: b->all_transitions())
       // Do not add initial transitions, the unique initial state is
       // already declared as such, and its weight must remain 1.
-      if (b.src_of(t) != b.pre())
+      if (b->src_of(t) != b->pre())
         {
-          if (b.dst_of(t) == b.post())
-            res.add_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                               b.label_of(t), b.weight_of(t));
+          if (b->dst_of(t) == b->post())
+            res->add_transition(m[b->src_of(t)], m[b->dst_of(t)],
+                               b->label_of(t), b->weight_of(t));
           else
-            res.new_transition(m[b.src_of(t)], m[b.dst_of(t)],
-                               b.label_of(t), b.weight_of(t));
+            res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
+                               b->label_of(t), b->weight_of(t));
         }
     return res;
   }
@@ -61,10 +61,10 @@ namespace vcsn
     using automaton_t = A;
 
     // Create new automata.
-    auto ctx = join(laut.context(), raut.context());
-    automaton_t res(ctx);
+    auto ctx = join(laut->context(), raut->context());
+    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
     // A standard automaton has a single initial state.
-    res.set_initial(res.new_state());
+    res->set_initial(res->new_state());
 
     sum_here(res, laut);
     sum_here(res, raut);

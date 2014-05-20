@@ -24,37 +24,37 @@ namespace vcsn
     using letter_t = typename labelset_t_of<automaton_t>::letter_t;
 
     // A sink state, to allocate if needed.
-    state_t sink = aut.null_state();
-    const auto& ls = *aut.labelset();
+    state_t sink = aut->null_state();
+    const auto& ls = *aut->labelset();
 
-    if (aut.num_initials() == 0)
+    if (aut->num_initials() == 0)
       {
-        sink = aut.new_state();
-        aut.set_initial(sink);
+        sink = aut->new_state();
+        aut->set_initial(sink);
       }
 
     // The outgoing labels of a state.
     std::unordered_set<letter_t> labels_met;
-    for (auto st : aut.states())
+    for (auto st : aut->states())
       if (st != sink)
         {
-          for (auto tr : aut.out(st))
-            labels_met.insert(aut.label_of(tr));
+          for (auto tr : aut->out(st))
+            labels_met.insert(aut->label_of(tr));
 
           for (auto letter : ls.genset())
             if (!has(labels_met, letter))
               {
-                if (sink == aut.null_state())
-                  sink = aut.new_state();
-                aut.new_transition(st, sink, letter);
+                if (sink == aut->null_state())
+                  sink = aut->new_state();
+                aut->new_transition(st, sink, letter);
               }
 
           labels_met.clear();
         }
 
-    if (sink != aut.null_state())
+    if (sink != aut->null_state())
       for (auto letter : ls.genset())
-        aut.new_transition(sink, sink, letter);
+        aut->new_transition(sink, sink, letter);
 
     return aut;
   }

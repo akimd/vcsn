@@ -26,7 +26,7 @@ namespace vcsn
     // mutable_automaton, don't tranpose the result again.
     //
     // FIXME: transpose(transpose(a)) should be the identity.
-    return determinize(*codet.original_automaton());
+    return determinize(codet->original_automaton());
   }
 
 } // namespace vcsn

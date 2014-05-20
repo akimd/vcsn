@@ -25,20 +25,20 @@ namespace vcsn
       static automaton_t&
       left_mult_here(automaton_t& res, const weight_t& w)
       {
-        weightset_t ws(*res.context().weightset());
+        weightset_t ws(*res->context().weightset());
         if (ws.is_zero(w))
           zero_here(res);
         else if (ws.is_one(w))
           {}
         else if (is_standard(res))
           {
-            state_t initial = res.dst_of(res.initial_transitions().front());
-            for (auto t: res.all_out(initial))
-              res.lmul_weight(t, w);
+            state_t initial = res->dst_of(res->initial_transitions().front());
+            for (auto t: res->all_out(initial))
+              res->lmul_weight(t, w);
           }
         else
-          for (auto t: res.initial_transitions())
-            res.lmul_weight(t, w);
+          for (auto t: res->initial_transitions())
+            res->lmul_weight(t, w);
         return res;
       }
 
@@ -46,14 +46,14 @@ namespace vcsn
       static automaton_t&
       right_mult_here(automaton_t& res, const weight_t& w)
       {
-        weightset_t ws(*res.context().weightset());
+        weightset_t ws(*res->context().weightset());
         if (ws.is_zero(w))
           zero_here(res);
         else if (ws.is_one(w))
           {}
         else
-          for (auto t: res.final_transitions())
-            res.rmul_weight(t, w);
+          for (auto t: res->final_transitions())
+            res->rmul_weight(t, w);
         return res;
       }
 
@@ -61,8 +61,9 @@ namespace vcsn
       static automaton_t&
       zero_here(automaton_t& res)
       {
-        automaton_t a(res.context());
-        a.set_initial(a.new_state());
+        automaton_t a
+          = std::make_shared<typename automaton_t::element_type>(res->context());
+        a->set_initial(a->new_state());
         res = std::move(a);
         return res;
       }

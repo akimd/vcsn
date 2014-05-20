@@ -69,6 +69,10 @@ namespace vcsn
   `------------------*/
 
 
+  template <typename T>
+  struct snamer<std::shared_ptr<T>>: snamer<T>
+  {};
+
 #define DEFINE(Type)                            \
   template <>                                   \
   struct snamer<Type>                           \

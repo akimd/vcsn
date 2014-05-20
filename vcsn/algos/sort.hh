@@ -29,12 +29,12 @@ namespace vcsn
   is_out_sorted(const Aut& a)
   {
     using transition_t = transition_t_of<Aut>;
-    for (state_t_of<Aut> s: a.states())
-      if (!detail::is_sorted(a.out(s),
+    for (state_t_of<Aut> s: a->states())
+      if (!detail::is_sorted(a->out(s),
                              [&a] (transition_t l, transition_t r)
                              {
-                               return a.labelset()->less_than(a.label_of(l),
-                                                              a.label_of(r));
+                               return a->labelset()->less_than(a->label_of(l),
+                                                              a->label_of(r));
                              }))
         return false;
     return true;
@@ -70,7 +70,8 @@ namespace vcsn
     class sorter
     {
       using automaton_t = Aut;
-      using res_automaton_t = typename automaton_t::self_nocv_t;
+      using res_automaton_t
+        = std::shared_ptr<typename automaton_t::element_type::self_nocv_t>;
       using context_t = context_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
@@ -96,19 +97,19 @@ namespace vcsn
       {
         worklist_ = std::move(std::queue<pair_t>()); // There's no clear method.
         map_.clear();
-        map_[a_.pre()] = res_.pre();
-        map_[a_.post()] = res_.post();
-        worklist_.push({a_.pre(), res_.pre()});
+        map_[a_->pre()] = res_->pre();
+        map_[a_->post()] = res_->post();
+        worklist_.push({a_->pre(), res_->pre()});
       }
 
       void visit_successors_of(state_t s, res_state_t res_s)
       {
         std::vector<transition_t> tt;
-        // Here a_.out(s) would just as well as a_.all_out(s) but it
+        // Here a_->out(s) would just as well as a_->all_out(s) but it
         // would be slower; later we have to test one condition per
         // transition anyway, which is just the additional work
         // performed by out.
-        for (auto t: a_.all_out(s))
+        for (auto t: a_->all_out(s))
           tt.emplace_back(t);
 
         std::sort(tt.begin(), tt.end(),
@@ -120,23 +121,23 @@ namespace vcsn
 
         for (auto t: tt)
           {
-            state_t dst = a_.dst_of(t);
+            state_t dst = a_->dst_of(t);
             res_state_t res_dst;
             if (map_.find(dst) == map_.end())
               res_dst = treat_state(dst);
             else
               res_dst = map_.at(dst);
-            res_.new_transition_copy(a_, res_s,
-                                res_dst,
-                                t,
-                                a_.weight_of(t));
+            res_->new_transition_copy(a_, res_s,
+                                      res_dst,
+                                      t,
+                                      a_->weight_of(t));
           }
       }
 
       /// Also return the res_ state.  This lets the caller avoid hash accesses.
       res_state_t treat_state(state_t s)
       {
-        state_t res = res_.new_state();
+        state_t res = res_->new_state();
         map_[s] = res;
         worklist_.push({s, res});
         return res;
@@ -155,7 +156,7 @@ namespace vcsn
       void push_inaccessible_states()
       {
         // States are processed in order.
-        for (auto s: a_.all_states()) // Like above, a_.states_() would work.
+        for (auto s: a_->all_states()) // Like above, a_->states_() would work.
           if (!has(map_, s))
             treat_state(s);
       }
@@ -166,18 +167,18 @@ namespace vcsn
       {
         // We intentionally ignore source states: they should always
         // be identical when we call this.
-        assert(a_.src_of(t1) == a_.src_of(t2));
-        if (ls_.less_than(a_.label_of(t1), a_.label_of(t2)))
+        assert(a_->src_of(t1) == a_->src_of(t2));
+        if (ls_.less_than(a_->label_of(t1), a_->label_of(t2)))
           return true;
-        else if (ls_.less_than(a_.label_of(t2), a_.label_of(t1)))
+        else if (ls_.less_than(a_->label_of(t2), a_->label_of(t1)))
           return false;
-        else if (ws_.less_than(a_.weight_of(t1), a_.weight_of(t2)))
+        else if (ws_.less_than(a_->weight_of(t1), a_->weight_of(t2)))
           return true;
-        else if (ws_.less_than(a_.weight_of(t2), a_.weight_of(t1)))
+        else if (ws_.less_than(a_->weight_of(t2), a_->weight_of(t1)))
           return false;
-        else if (a_.dst_of(t1) < a_.dst_of(t2))
+        else if (a_->dst_of(t1) < a_->dst_of(t2))
           return true;
-        else if (a_.dst_of(t2) < a_.dst_of(t1))
+        else if (a_->dst_of(t2) < a_->dst_of(t1))
           return false;
         else
           return false; // The compiler optimizer will "factor" for us.
@@ -186,9 +187,9 @@ namespace vcsn
     public:
       sorter(const automaton_t& a)
         : a_(a)
-        , ls_(* a.labelset())
-        , ws_(* a.weightset())
-        , res_(a_.context())
+        , ls_(*a_->labelset())
+        , ws_(*a_->weightset())
+        , res_(std::make_shared<typename res_automaton_t::element_type>(a_->context()))
       {}
 
       res_automaton_t operator()()
@@ -232,7 +233,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename Aut::self_nocv_t
+  typename std::shared_ptr<typename Aut::element_type::self_nocv_t>
   sort(const Aut& a)
   {
     detail::sorter<Aut> sorter(a);

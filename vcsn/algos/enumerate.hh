@@ -147,7 +147,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
-      using genset_t = typename automaton_t::labelset_t::genset_t;
+      using genset_t = typename labelset_t_of<automaton_t>::genset_t;
       using word_t = typename labelset_t::word_t;
 
       /// Same as polynomial_t::value_type.
@@ -157,14 +157,14 @@ namespace vcsn
       enumerater(const automaton_t& aut)
         : aut_(aut)
       {
-        past_[aut_.pre()] = ps_.one();
+        past_[aut_->pre()] = ps_.one();
       }
 
       /// The weighted accepted word with length at most \a max.
       polynomial_t enumerate(unsigned max)
       {
         queue_t queue;
-        queue.emplace_back(aut_.pre(), ps_.monomial_one());
+        queue.emplace_back(aut_->pre(), ps_.monomial_one());
 
         // We match words that include the initial and final special
         // characters.
@@ -175,7 +175,7 @@ namespace vcsn
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
         polynomial_t res;
-        for (const auto& m: past_[aut_.post()])
+        for (const auto& m: past_[aut_->post()])
           ps_.add_weight(res,
                          ls_.undelimit(m.first), m.second);
         return res;
@@ -186,15 +186,15 @@ namespace vcsn
       polynomial_t shortest(unsigned num)
       {
         queue_t queue;
-        queue.emplace_back(aut_.pre(), ps_.monomial_one());
+        queue.emplace_back(aut_->pre(), ps_.monomial_one());
 
-        while (past_[aut_.post()].size() < num && !queue.empty())
+        while (past_[aut_->post()].size() < num && !queue.empty())
           propagate_(queue);
 
         // Return the past of post(), but remove the initial and final
         // special characters for the words.
         polynomial_t res;
-        for (const auto& m: past_[aut_.post()])
+        for (const auto& m: past_[aut_->post()])
           {
             ps_.add_weight(res,
                            ls_.undelimit(m.first), m.second);
@@ -216,21 +216,21 @@ namespace vcsn
             monomial_t m;
             tie(s, m) = std::move(q1.front());
             q1.pop_front();
-            for (const auto t: aut_.all_out(s))
+            for (const auto t: aut_->all_out(s))
               {
                 // FIXME: monomial mul.
-                monomial_t n(ls_.concat(m.first, aut_.label_of(t)),
-                             ws_.mul(m.second, aut_.weight_of(t)));
-                ps_.add_weight(past_[aut_.dst_of(t)], n);
-                q2.emplace_back(aut_.dst_of(t), n);
+                monomial_t n(ls_.concat(m.first, aut_->label_of(t)),
+                             ws_.mul(m.second, aut_->weight_of(t)));
+                ps_.add_weight(past_[aut_->dst_of(t)], n);
+                q2.emplace_back(aut_->dst_of(t), n);
               }
           }
         q1.swap(q2);
       }
 
       const automaton_t& aut_;
-      const weightset_t& ws_ = *aut_.weightset();
-      const polynomialset_t ps_ = make_word_polynomialset(aut_.context());
+      const weightset_t& ws_ = *aut_->weightset();
+      const polynomialset_t ps_ = make_word_polynomialset(aut_->context());
       const labelset_t_of<polynomialset_t>& ls_ = *ps_.labelset();
       /// For each state, the first orders of its past.
       std::map<state_t, polynomial_t> past_;
@@ -270,7 +270,7 @@ namespace vcsn
       enumerate(const automaton& aut, unsigned max)
       {
         const auto& a = aut->as<Aut>();
-        auto ps = vcsn::detail::make_word_polynomialset(a.context());
+        auto ps = vcsn::detail::make_word_polynomialset(a->context());
         return make_polynomial(ps, enumerate(a, max));
       }
 
@@ -288,7 +288,7 @@ namespace vcsn
       shortest(const automaton& aut, unsigned num)
       {
         const auto& a = aut->as<Aut>();
-        auto ps = vcsn::detail::make_word_polynomialset(a.context());
+        auto ps = vcsn::detail::make_word_polynomialset(a->context());
         return make_polynomial(ps, shortest(a, num));
       }
 

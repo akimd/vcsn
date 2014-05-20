@@ -43,7 +43,7 @@ namespace vcsn
       context_of(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_context(a.context());
+        return make_context(a->context());
       }
 
       REGISTER_DECLARE(context_of,

@@ -107,8 +107,8 @@ namespace vcsn
       label_(const label_t& l)
       {
         /// FIXME: not very elegant, \\e should be treated elsewhere.
-        std::string res = (aut_.labelset()->is_special(l) ? "\\e"
-                           : format(*aut_.labelset(), l));
+        std::string res = (aut_->labelset()->is_special(l) ? "\\e"
+                           : format(*aut_->labelset(), l));
         auto insert = names_.emplace(res, name_);
         // If the label is fresh, prepare the next name.
         if (insert.second)
@@ -118,15 +118,15 @@ namespace vcsn
 
       void output_transition_(const transition_t t)
       {
-        os_ << states_[aut_.src_of(t)];
-        if (aut_.dst_of(t) != aut_.post())
-          os_ << '\t' << states_[aut_.dst_of(t)]
-              << '\t' << label_(aut_.label_of(t));
+        os_ << states_[aut_->src_of(t)];
+        if (aut_->dst_of(t) != aut_->post())
+          os_ << '\t' << states_[aut_->dst_of(t)]
+              << '\t' << label_(aut_->label_of(t));
 
-        if (ws_.show_one() || !ws_.is_one(aut_.weight_of(t)))
+        if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
           {
             os_ << '\t';
-            ws_.print(os_, aut_.weight_of(t));
+            ws_.print(os_, aut_->weight_of(t));
           }
       }
 
@@ -136,8 +136,8 @@ namespace vcsn
         // FSM format supports a single initial state, which requires,
         // when we have several initial states, to "exhibit" pre() and
         // spontaneous transitions.  Avoid this when possible.
-        if (aut_.initial_transitions().size() != 1)
-          for (auto t : aut_.initial_transitions())
+        if (aut_->initial_transitions().size() != 1)
+          for (auto t : aut_->initial_transitions())
             {
               os_ << '\n';
               output_transition_(t);
@@ -145,18 +145,18 @@ namespace vcsn
 
         // We _must_ start by the initial state.
         {
-          std::vector<state_t> states(std::begin(aut_.states()),
-                                      std::end(aut_.states()));
+          std::vector<state_t> states(std::begin(aut_->states()),
+                                      std::end(aut_->states()));
           std::sort(begin(states), end(states),
                     [this](state_t l, state_t r)
                     {
-                      return (std::forward_as_tuple(!aut_.is_initial(l), l)
-                              < std::forward_as_tuple(!aut_.is_initial(r), r));
+                      return (std::forward_as_tuple(!aut_->is_initial(l), l)
+                              < std::forward_as_tuple(!aut_->is_initial(r), r));
                     });
           for (auto s: states)
             this->output_state_(s);
         }
-        for (auto t : aut_.final_transitions())
+        for (auto t : aut_->final_transitions())
           {
             os_ << '\n';
             output_transition_(t);
@@ -169,8 +169,8 @@ namespace vcsn
         // Find all the labels, to number them.
         {
           std::set<label_t> labels;
-          for (auto t : aut_.transitions())
-            labels.insert(aut_.label_of(t));
+          for (auto t : aut_->transitions())
+            labels.insert(aut_->label_of(t));
           for (auto l: labels)
             label_(l);
         }
@@ -195,11 +195,11 @@ namespace vcsn
   /// \brief Format automaton to EFSM format, based on FSM format.
   ///
   /// \tparam Aut an automaton type, not a pointer type.
-  template <typename Aut>
+  template <typename AutPtr>
   std::ostream&
-  efsm(const Aut& aut, std::ostream& out)
+  efsm(const AutPtr& aut, std::ostream& out)
   {
-    detail::efsmer<Aut> efsm{aut, out};
+    detail::efsmer<AutPtr> efsm{aut, out};
     efsm();
     return out;
   }

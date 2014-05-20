@@ -22,10 +22,10 @@ namespace vcsn
   is_standard(const Aut& a)
   {
     return
-      a.num_initials() == 1
-      && a.weightset()->is_one(a.weight_of(a.initial_transitions().front()))
+      a->num_initials() == 1
+      && a->weightset()->is_one(a->weight_of(a->initial_transitions().front()))
       // No arrival on the initial state.
-      && a.in(a.dst_of(a.initial_transitions().front())).empty();
+      && a->in(a->dst_of(a->initial_transitions().front())).empty();
   }
 
   namespace dyn
@@ -60,32 +60,32 @@ namespace vcsn
     if (is_standard(aut))
       return;
 
-    const auto& ws = *aut.weightset();
-    const auto& inits = aut.initial_transitions();
+    const auto& ws = *aut->weightset();
+    const auto& inits = aut->initial_transitions();
     std::vector<transition_t_of<Aut>> initials{begin(inits), end(inits)};
 
     // See TAF-Kit documentation for the implementation details.
     //
     // (i.a) Add a new state s...
-    auto ini = aut.new_state();
+    auto ini = aut->new_state();
     for (auto ti: initials)
       {
         // The initial state.
-        auto i = aut.dst_of(ti);
-        auto wi = aut.weight_of(ti);
-        for (auto t: aut.all_out(i))
-          aut.new_transition(ini, aut.dst_of(t), aut.label_of(t),
-                             ws.mul(wi, aut.weight_of(t)));
-        aut.del_transition(ti);
+        auto i = aut->dst_of(ti);
+        auto wi = aut->weight_of(ti);
+        for (auto t: aut->all_out(i))
+          aut->new_transition(ini, aut->dst_of(t), aut->label_of(t),
+                              ws.mul(wi, aut->weight_of(t)));
+        aut->del_transition(ti);
 
         // (iv) Remove the former initial states of A that are the
         // destination of no incoming transition.
-        if (aut.all_in(i).empty())
-          aut.del_state(i);
+        if (aut->all_in(i).empty())
+          aut->del_state(i);
       }
     // (i.b) Make [state s] initial, with initial multiplicity equal
     // to the unit of the multiplicity semiring.
-    aut.set_initial(ini);
+    aut->set_initial(ini);
   }
 
   namespace dyn
@@ -123,7 +123,8 @@ namespace vcsn
       : public Context::const_visitor
     {
     public:
-      using automaton_t = Aut;
+      using automaton_ptr = Aut;
+      using automaton_t = typename automaton_ptr::element_type;
       using context_t = Context;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
@@ -135,14 +136,14 @@ namespace vcsn
 
       standard_visitor(const context_t& ctx)
         : ws_(*ctx.weightset())
-        , res_(ctx)
+        , res_(std::make_shared<automaton_t>(ctx))
       {}
 
-      automaton_t
+      automaton_ptr
       operator()(const typename context_t::ratexp_t& v)
       {
         v->accept(*this);
-        res_.set_initial(initial_);
+        res_->set_initial(initial_);
         return std::move(res_);
       }
 
@@ -154,23 +155,23 @@ namespace vcsn
 
       VCSN_RAT_VISIT(zero,)
       {
-        initial_ = res_.new_state();
+        initial_ = res_->new_state();
       }
 
       VCSN_RAT_VISIT(one,)
       {
-        auto i = res_.new_state();
+        auto i = res_->new_state();
         initial_ = i;
-        res_.set_final(i);
+        res_->set_final(i);
       }
 
       VCSN_RAT_VISIT(atom, e)
       {
-        auto i = res_.new_state();
-        auto f = res_.new_state();
+        auto i = res_->new_state();
+        auto f = res_->new_state();
         initial_ = i;
-        res_.new_transition(i, f, e.value());
-        res_.set_final(f);
+        res_->new_transition(i, f, e.value());
+        res_->set_final(f);
       }
 
       /// The current set of final states.
@@ -179,8 +180,8 @@ namespace vcsn
       finals()
       {
         states_t res;
-        for (auto t: res_.final_transitions())
-          res.insert(res_.src_of(t));
+        for (auto t: res_->final_transitions())
+          res.insert(res_->src_of(t));
         return res;
       }
 
@@ -192,14 +193,14 @@ namespace vcsn
         for (auto c: e.tail())
           {
             c->accept(*this);
-            for (auto t: res_.all_out(initial_))
+            for (auto t: res_->all_out(initial_))
               // Not set_transition: for instance 'a*+a*' will make
               // "initial" go twice to post().
-              res_.add_transition(initial,
-                                  res_.dst_of(t),
-                                  res_.label_of(t),
-                                  res_.weight_of(t));
-            res_.del_state(initial_);
+              res_->add_transition(initial,
+                                  res_->dst_of(t),
+                                  res_->label_of(t),
+                                  res_->weight_of(t));
+            res_->del_state(initial_);
           }
         initial_ = initial;
       }
@@ -219,7 +220,7 @@ namespace vcsn
         for (auto c: e.tail())
           {
             // The set of the current (left-hand side) final transitions.
-            auto ftr_ = res_.final_transitions();
+            auto ftr_ = res_->final_transitions();
             // Store transitions by copy.
             using transs_t = std::vector<transition_t_of<automaton_t>>;
             transs_t ftr{ begin(ftr_), end(ftr_) };
@@ -230,7 +231,7 @@ namespace vcsn
             // Branch all the previously added final transitions to
             // the successors of the new initial state.
             for (auto t1: ftr)
-              if (!has(other_finals, res_.src_of(t1)))
+              if (!has(other_finals, res_->src_of(t1)))
                 {
                   // Remove the previous final transition first, as we
                   // might add a final transition for the same state
@@ -244,16 +245,16 @@ namespace vcsn
                   //
                   // Besides, s1 will become final with weight {3}, which
                   // might interfere with {5}a too.
-                  auto s1 = res_.src_of(t1);
-                  auto w1 = res_.weight_of(t1);
-                  res_.del_transition(t1);
-                  for (auto t2: res_.all_out(initial_))
-                    res_.set_transition(s1,
-                                        res_.dst_of(t2),
-                                        res_.label_of(t2),
-                                        ws_.mul(w1, res_.weight_of(t2)));
+                  auto s1 = res_->src_of(t1);
+                  auto w1 = res_->weight_of(t1);
+                  res_->del_transition(t1);
+                  for (auto t2: res_->all_out(initial_))
+                    res_->set_transition(s1,
+                                        res_->dst_of(t2),
+                                        res_->label_of(t2),
+                                        ws_.mul(w1, res_->weight_of(t2)));
                 }
-            res_.del_state(initial_);
+            res_->del_state(initial_);
           }
         initial_ = initial;
       }
@@ -264,50 +265,50 @@ namespace vcsn
         states_t other_finals = finals();
         e.sub()->accept(*this);
         // The "final weight of the initial state", starred.
-        weight_t w = ws_.star(res_.get_final_weight(initial_));
+        weight_t w = ws_.star(res_->get_final_weight(initial_));
         // Branch all the final states (but initial) to the successors
         // of initial.
-        for (auto ti: res_.out(initial_))
+        for (auto ti: res_->out(initial_))
           {
-            res_.lmul_weight(ti, w);
-            for (auto tf: res_.final_transitions())
-              if (res_.src_of(tf) != initial_
-                  && !has(other_finals, res_.src_of(tf)))
+            res_->lmul_weight(ti, w);
+            for (auto tf: res_->final_transitions())
+              if (res_->src_of(tf) != initial_
+                  && !has(other_finals, res_->src_of(tf)))
                 // Note that the weight of ti has already been
                 // multiplied, on the left, by w.
                 //
                 // Not set_transition, as for instance with "a**", the
                 // second star modifies many existing transitions.
-                res_.add_transition
-                  (res_.src_of(tf),
-                   res_.dst_of(ti),
-                   res_.label_of(ti),
-                   ws_.mul(res_.weight_of(tf), res_.weight_of(ti)));
+                res_->add_transition
+                  (res_->src_of(tf),
+                   res_->dst_of(ti),
+                   res_->label_of(ti),
+                   ws_.mul(res_->weight_of(tf), res_->weight_of(ti)));
           }
-        for (auto tf: res_.final_transitions())
-          res_.rmul_weight(tf, w);
-        res_.set_final(initial_, w);
+        for (auto tf: res_->final_transitions())
+          res_->rmul_weight(tf, w);
+        res_->set_final(initial_, w);
       }
 
       VCSN_RAT_VISIT(lweight, e)
       {
         e.sub()->accept(*this);
-        for (auto t: res_.all_out(initial_))
-          res_.lmul_weight(t, e.weight());
+        for (auto t: res_->all_out(initial_))
+          res_->lmul_weight(t, e.weight());
       }
 
       VCSN_RAT_VISIT(rweight, e)
       {
         states_t other_finals = finals();
         e.sub()->accept(*this);
-        for (auto t: res_.final_transitions())
-          if (! has(other_finals, res_.src_of(t)))
-            res_.rmul_weight(t, e.weight());
+        for (auto t: res_->final_transitions())
+          if (! has(other_finals, res_->src_of(t)))
+            res_->rmul_weight(t, e.weight());
       }
 
     private:
       const weightset_t& ws_;
-      automaton_t res_;
+      automaton_ptr res_;
       state_t initial_ = automaton_t::null_state();
     };
 
@@ -340,10 +341,10 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<RatExpSet>;
         using ratexpset_t = RatExpSet;
-        using automaton_t = mutable_automaton<context_t>;
+        using automaton_ptr = vcsn::mutable_automaton<context_t>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(standard<automaton_t>(e.ratexpset().context(),
-                                                    e.ratexp()));
+        return make_automaton(standard<automaton_ptr>(e.ratexpset().context(),
+                                                      e.ratexp()));
       }
 
       REGISTER_DECLARE(standard_ratexp,

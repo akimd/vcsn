@@ -70,15 +70,16 @@ namespace vcsn
           for (auto s: class_to_set_[c])
             state_to_class[s] = c;
 
-        automaton_t res{aut.context()};
+        automaton_t res
+          = std::make_shared<typename automaton_t::element_type>(aut->context());
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
             state_t s = class_to_set_[c][0];
             class_to_res_state_[c]
-              = s == aut.pre()  ? res.pre()
-              : s == aut.post() ? res.post()
-              : res.new_state();
+              = s == aut->pre()  ? res->pre()
+              : s == aut->post() ? res->post()
+              : res->new_state();
           }
         for (unsigned c = 0; c < num_classes_; ++c)
           {
@@ -86,11 +87,11 @@ namespace vcsn
             // the result.
             state_t s = class_to_set_[c][0];
             state_t src = class_to_res_state_[c];
-            for (auto t : aut.all_out(s))
+            for (auto t : aut->all_out(s))
               {
-                state_t d = aut.dst_of(t);
+                state_t d = aut->dst_of(t);
                 state_t dst = class_to_res_state_[state_to_class[d]];
-                res.add_transition(src, dst, aut.label_of(t), aut.weight_of(t));
+                res->add_transition(src, dst, aut->label_of(t), aut->weight_of(t));
               }
           }
         return std::move(res);

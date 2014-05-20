@@ -17,18 +17,18 @@ namespace vcsn
     static_assert(labelset_t_of<Aut>::is_free(),
                   "requires labels_are_letters");
 
-    if (aut.num_initials() == 0)
+    if (aut->num_initials() == 0)
       return false;
 
     using label_set_t = std::set<typename labelset_t_of<Aut>::letter_t>;
 
-    const auto& letters = aut.labelset()->genset();
-    for (auto state : aut.states())
+    const auto& letters = aut->labelset()->genset();
+    for (auto state : aut->states())
     {
       label_set_t missing_letters = {std::begin(letters), std::end(letters)};
 
-      for (auto tr : aut.all_out(state))
-        missing_letters.erase(aut.label_of(tr));
+      for (auto tr : aut->all_out(state))
+        missing_letters.erase(aut->label_of(tr));
 
       if (!missing_letters.empty())
         return false;

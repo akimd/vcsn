@@ -54,19 +54,12 @@ namespace vcsn
   difference(const Lhs& lhs, const Rhs& rhs)
   {
     // Meet complement()'s requirements.
-    const Rhs* r = &rhs;
-    std::unique_ptr<Rhs> rhscd;
-    if (!is_deterministic(rhs))
-      {
-        rhscd.reset(new Rhs{determinize(rhs, true)});
-        r = rhscd.get();
-      }
-    else if (!is_complete(rhs))
-      {
-        rhscd.reset(new Rhs{complete(rhs)});
-        r = rhscd.get();
-      }
-    return product(lhs, complement(*r));
+    Rhs r = rhs;
+    if (!is_deterministic(r))
+      r = determinize(r, true);
+    else if (!is_complete(r))
+      r = complete(r);
+    return product(lhs, complement(r));
   }
 
   namespace dyn
@@ -84,7 +77,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(difference,
-                        (const automaton&, const automaton&) -> automaton);
+                       (const automaton&, const automaton&) -> automaton);
     }
   }
 

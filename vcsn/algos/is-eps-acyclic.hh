@@ -14,7 +14,7 @@ namespace vcsn
   {
 
     template <typename Aut,
-              bool has_one = Aut::context_t::has_one()>
+              bool has_one = context_t_of<Aut>::has_one()>
     struct epsilon_acyclic;
 
     /// @class epsilon_acylic
@@ -38,7 +38,7 @@ namespace vcsn
          if tag[s]='c', there is an eps-circuit accessible from s
          */
 
-      const automaton_t& input;
+      const automaton_t& aut_;
       label_t empty_word;
 
       // Return true if an epsilon-circuit is accessible from s by
@@ -49,8 +49,8 @@ namespace vcsn
         if (it == tag.end())
         {
           tag[s] = 'u';
-          for (auto t : input.out(s, empty_word))
-            if (has_epsilon_circuit(input.dst_of(t)))
+          for (auto t : aut_->out(s, empty_word))
+            if (has_epsilon_circuit(aut_->dst_of(t)))
             {
               tag[s] = 'c';
               return true;
@@ -75,15 +75,15 @@ namespace vcsn
         }
       }
 
-      epsilon_acyclic(const automaton_t& input)
-        : input(input)
-        , empty_word(input.labelset()->one())
+      epsilon_acyclic(const automaton_t& aut)
+        : aut_(aut)
+        , empty_word(aut->labelset()->one())
       {
       }
 
       bool is_eps_acyclic()
       {
-        for (auto s : input.states())
+        for (auto s : aut_->states())
           if (has_epsilon_circuit(s))
             return false;
         return true;
@@ -106,13 +106,13 @@ namespace vcsn
   }
 
   template <typename Aut>
-  bool is_eps_acyclic(const Aut& input)
+  bool is_eps_acyclic(const Aut& aut)
     ATTRIBUTE_CONST;
 
   template <typename Aut>
-  bool is_eps_acyclic(const Aut& input)
+  bool is_eps_acyclic(const Aut& aut)
   {
-    epsilon_acyclic<Aut> t{input};
+    epsilon_acyclic<Aut> t{aut};
     return t.is_eps_acyclic();
   }
 
