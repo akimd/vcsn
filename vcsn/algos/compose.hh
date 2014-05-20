@@ -69,12 +69,12 @@ namespace vcsn
 
       using labelset_t = typename std::tuple_element<Band,
             typename automaton_t::labelset_t::valuesets_t>::type;
-      using hidden_labelset_t = typename automaton_t::labelset_t;
+      using hidden_labelset_t = labelset_t_of<automaton_t>;
 
       // All bands except the exposed one
       using res_labelset_t = typename hidden_label_type<Aut, hidden_indices_t>::type;
       using res_label_t = typename res_labelset_t::value_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
 
       using labelset_ptr = std::shared_ptr<const labelset_t>;
       using context_t = ::vcsn::context<res_labelset_t, weightset_t>;
@@ -296,18 +296,18 @@ namespace vcsn
       using hidden_l_labelset_t = typename clhs_t::res_labelset_t;
       using hidden_r_labelset_t = typename crhs_t::res_labelset_t;
 
-      static_assert(std::is_same<typename clhs_t::labelset_t,
-                    typename crhs_t::labelset_t>::value,
+      static_assert(std::is_same<labelset_t_of<clhs_t>,
+                    labelset_t_of<crhs_t>>::value,
                     "common band must be of same type");
-      using middle_labelset_t = typename clhs_t::labelset_t;
+      using middle_labelset_t = labelset_t_of<clhs_t>;
       /// The type of context of the result.
       ///
       /// The type is the "join" of the contexts, independently of the
       /// algorithm.  However, its _value_ differs: in the case of the
       /// product, the labelset is the meet of the labelsets, it is
       /// its join for shuffle and infiltration.
-      using weightset_t = join_t<typename Lhs::context_t::weightset_t,
-                                 typename Rhs::context_t::weightset_t>;
+      using weightset_t = join_t<weightset_t_of<context_t_of<Lhs>>,
+                                 weightset_t_of<context_t_of<Rhs>>>;
       using labelset_t = typename concat_tupleset<hidden_l_labelset_t,
                                                   hidden_r_labelset_t>::type;
 

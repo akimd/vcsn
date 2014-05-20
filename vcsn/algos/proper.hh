@@ -50,7 +50,7 @@ namespace vcsn
     {
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;

@@ -26,7 +26,7 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using ratexp_t = typename ratexpset_t::value_t;
       using context_t = context_t_of<ratexpset_t>;
-      using weightset_t = typename ratexpset_t::weightset_t;
+      using weightset_t = weightset_t_of<ratexpset_t>;
       using weight_t = typename weightset_t::value_t;
 
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;

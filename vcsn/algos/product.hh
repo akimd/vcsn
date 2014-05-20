@@ -35,7 +35,7 @@ namespace vcsn
     ///    Whether even the transitions to post() (via the
     ///    special label) are to be included.
     template <typename Aut,
-              typename WeightSet = typename Aut::weightset_t,
+              typename WeightSet = weightset_t_of<Aut>,
               bool Deterministic = false,
               bool AllOut = false>
     struct transition_map
@@ -137,8 +137,8 @@ namespace vcsn
       /// product, the labelset is the meet of the labelsets, it is
       /// its join for shuffle and infiltration.
       using context_t = join_t<context_t_of<Auts>...>;
-      using labelset_t = typename context_t::labelset_t;
-      using weightset_t = typename context_t::weightset_t;
+      using labelset_t = labelset_t_of<context_t>;
+      using weightset_t = weightset_t_of<context_t>;
 
       /// A static list of integers.
       template <std::size_t... I>

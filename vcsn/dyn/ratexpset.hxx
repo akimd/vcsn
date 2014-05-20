@@ -123,7 +123,7 @@ namespace dyn
 
     DEFINE::letter_class(const letter_class_t& cs, bool accept) const -> value_t
     {
-      using labelset_t = typename ratexpset_t::labelset_t;
+      using labelset_t = labelset_t_of<ratexpset_t>;
       return letter_class_<labelset_t>(cs, accept,
                                      std::is_same<labelset_t, vcsn::oneset>{});
     }

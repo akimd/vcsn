@@ -31,7 +31,7 @@ namespace vcsn
     {
     public:
       using automaton_t = typename std::remove_cv<Aut>::type;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
 
       /** @brief Whether an automaton is valid.
 

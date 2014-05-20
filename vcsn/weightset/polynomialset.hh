@@ -51,8 +51,8 @@ namespace vcsn
   {
   public:
     using context_t = Context;
-    using labelset_t = typename context_t::labelset_t;
-    using weightset_t = typename context_t::weightset_t;
+    using labelset_t = labelset_t_of<context_t>;
+    using weightset_t = weightset_t_of<context_t>;
 
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;

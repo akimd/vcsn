@@ -18,7 +18,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weight_t = weight_t_of<context_t>;
-      using weightset_t = typename context_t::weightset_t;
+      using weightset_t = weightset_t_of<context_t>;
       using state_t = state_t_of<automaton_t>;
 
       /// Left-multiplication by a weight.

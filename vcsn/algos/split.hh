@@ -20,7 +20,7 @@ namespace vcsn
     template <typename RatExpSet>
     using ratexp_polynomialset_t
       = polynomialset<context<RatExpSet,
-                              typename RatExpSet::weightset_t>>;
+                              weightset_t_of<RatExpSet>>>;
 
     /// Type of polynomials of ratexps from the RatExpSet type.
     template <typename RatExpSet>
@@ -34,7 +34,7 @@ namespace vcsn
     make_ratexp_polynomialset(const RatExpSet& rs)
     {
       using context_t = context<RatExpSet,
-                                typename RatExpSet::weightset_t>;
+                                weightset_t_of<RatExpSet>>;
       return context_t{rs, *rs.weightset()};
     }
   }
@@ -53,10 +53,10 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = typename context_t::labelset_t;
+      using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = typename ratexpset_t::weightset_t;
+      using weightset_t = weightset_t_of<ratexpset_t>;
       using weight_t = typename weightset_t::value_t;
 
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;

@@ -75,7 +75,7 @@ namespace vcsn
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
 
@@ -136,8 +136,8 @@ namespace vcsn
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
-      using ratexpset_t = typename automaton_t::labelset_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using ratexpset_t = labelset_t_of<automaton_t>;
+      using weightset_t = weightset_t_of<automaton_t>;
       /// State selector type.
       using state_chooser_t = std::function<state_t(const automaton_t&)>;
 

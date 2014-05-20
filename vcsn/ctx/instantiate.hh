@@ -153,13 +153,13 @@ namespace vcsn
         using rs_t = ratexpset<ctx_t>;
 
         // Wordset.
-        using wls_t = vcsn::detail::law_t<typename Ctx::labelset_t>;
+        using wls_t = vcsn::detail::law_t<labelset_t_of<Ctx>>;
 
         // Word polynomialset.
         using wps_t = vcsn::detail::word_polynomialset_t<ctx_t>;
 
         // Same labelset, but over Booleans.
-        using b_ctx_t = context<typename Ctx::labelset_t, b>;
+        using b_ctx_t = context<labelset_t_of<Ctx>, b>;
         using b_aut_t = mutable_automaton<b_ctx_t>;
         using b_rs_t = ratexpset<b_ctx_t>;
 
@@ -294,8 +294,8 @@ namespace vcsn
         using ctx_t = Ctx;
         using aut_t = mutable_automaton<ctx_t>;
         using rs_t = ratexpset<ctx_t>;
-        using ls_t = typename ctx_t::labelset_t;
-        using ws_t = typename ctx_t::weightset_t;
+        using ls_t = labelset_t_of<ctx_t>;
+        using ws_t = weightset_t_of<ctx_t>;
 
         // label polynomialset.
         using lps_t = polynomialset<ctx_t>;

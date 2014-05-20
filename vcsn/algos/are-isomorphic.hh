@@ -32,8 +32,8 @@ namespace vcsn
   {
     using automaton1_t = Aut1;
     using context1_t = context_t_of<automaton1_t>;
-    using weightset1_t = typename automaton1_t::weightset_t;
-    using labelset1_t = typename context1_t::labelset_t;
+    using weightset1_t = weightset_t_of<automaton1_t>;
+    using labelset1_t = labelset_t_of<context1_t>;
     using state1_t = state_t_of<automaton1_t>;
     using label1_t = label_t_of<automaton1_t>;
     using weight1_t = weight_t_of<automaton1_t>;
@@ -41,8 +41,8 @@ namespace vcsn
 
     using automaton2_t = Aut2;
     using context2_t = context_t_of<automaton2_t>;
-    using weightset2_t = typename automaton1_t::weightset_t;
-    using labelset2_t = typename context2_t::labelset_t;
+    using weightset2_t = weightset_t_of<automaton1_t>;
+    using labelset2_t = labelset_t_of<context2_t>;
     using state2_t = state_t_of<automaton2_t>;
     using label2_t = label_t_of<automaton2_t>;
     using weight2_t = weight_t_of<automaton2_t>;

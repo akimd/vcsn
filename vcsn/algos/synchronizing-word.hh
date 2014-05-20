@@ -85,7 +85,7 @@ namespace vcsn
       using context_t = context_t_of<Aut>;
       using automaton_t =  mutable_automaton<context_t>;
       using state_t = state_t_of<automaton_t>;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
 
     private:
@@ -210,7 +210,7 @@ namespace vcsn
       automaton_t res_;
       /// Fast maps label -> (weight, label).
       using transition_map_t
-        = transition_map<automaton_t, typename automaton_t::weightset_t, true>;
+        = transition_map<automaton_t, weightset_t_of<automaton_t>, true>;
       transition_map_t transition_map_;
       std::unordered_map<pair_t, state_t> pair_states_;
       state_t q0_;

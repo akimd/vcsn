@@ -109,7 +109,7 @@ namespace vcsn
 
     template <typename Ctx>
     using word_context_t
-      = context<law_t<typename Ctx::labelset_t>, typename Ctx::weightset_t>;
+      = context<law_t<labelset_t_of<Ctx>>, weightset_t_of<Ctx>>;
 
     template <typename LabelSet, typename WeightSet>
     inline word_context_t<context<LabelSet, WeightSet>>
@@ -139,8 +139,8 @@ namespace vcsn
       static_assert(context_t::labelset_t::is_free(),
                     "requires labels_are_letters");
 
-      using labelset_t = typename automaton_t::labelset_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using labelset_t = labelset_t_of<automaton_t>;
+      using weightset_t = weightset_t_of<automaton_t>;
       using wordset_context_t = word_context_t<context_t>;
       using polynomialset_t = polynomialset<wordset_context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
@@ -231,7 +231,7 @@ namespace vcsn
       const automaton_t& aut_;
       const weightset_t& ws_ = *aut_.weightset();
       const polynomialset_t ps_ = make_word_polynomialset(aut_.context());
-      const typename polynomialset_t::labelset_t& ls_ = *ps_.labelset();
+      const labelset_t_of<polynomialset_t>& ls_ = *ps_.labelset();
       /// For each state, the first orders of its past.
       std::map<state_t, polynomial_t> past_;
     };

@@ -34,7 +34,7 @@ namespace vcsn
       /// Input automaton, supplied at construction time.
       const automaton_t &a_;
 
-      using labelset_t = typename automaton_t::labelset_t;
+      using labelset_t = labelset_t_of<automaton_t>;
       const labelset_t& ls_;
 
       using label_t = label_t_of<automaton_t>;

@@ -31,10 +31,10 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = typename context_t::labelset_t;
+      using labelset_t = labelset_t_of<context_t>;
       using label_t = label_t_of<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
-      using weightset_t = typename ratexpset_t::weightset_t;
+      using weightset_t = weightset_t_of<ratexpset_t>;
       using weight_t = typename weightset_t::value_t;
 
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
@@ -293,9 +293,9 @@ namespace vcsn
       using ratexp_t = typename ratexpset_t::value_t;
 
       using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = typename context_t::labelset_t;
+      using labelset_t = labelset_t_of<context_t>;
       using label_t = typename labelset_t::value_t;
-      using weightset_t = typename context_t::weightset_t;
+      using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
 
       using automaton_t = mutable_automaton<context_t>;

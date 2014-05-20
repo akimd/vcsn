@@ -36,6 +36,22 @@ namespace vcsn
   using label_t_of = typename detail::label_t_of_impl<ValueSet>::type;
 
 
+  /*----------------.
+  | labelset_t_of.  |
+  `----------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct labelset_t_of_impl
+    {
+      using type = typename ValueSet::labelset_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using labelset_t_of = typename detail::labelset_t_of_impl<ValueSet>::type;
+
+
   /*-------------.
   | state_t_of.  |
   `-------------*/
@@ -68,7 +84,6 @@ namespace vcsn
   using transition_t_of = typename detail::transition_t_of_impl<ValueSet>::type;
 
 
-
   /*--------------.
   | weight_t_of.  |
   `--------------*/
@@ -83,6 +98,22 @@ namespace vcsn
 
   template <typename ValueSet>
   using weight_t_of = typename detail::weight_t_of_impl<ValueSet>::type;
+
+
+  /*-----------------.
+  | weightset_t_of.  |
+  `-----------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct weightset_t_of_impl
+    {
+      using type = typename ValueSet::weightset_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using weightset_t_of = typename detail::weightset_t_of_impl<ValueSet>::type;
 }
 
 #endif // !VCSN_CTX_TRAITS_HH

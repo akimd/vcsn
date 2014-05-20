@@ -39,8 +39,8 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
-      using labelset_t = typename automaton_t::labelset_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using labelset_t = labelset_t_of<automaton_t>;
+      using weightset_t = weightset_t_of<automaton_t>;
       using kind_t = typename automaton_t::kind_t;
 
       using labelset_ptr = typename automaton_t::labelset_ptr;

@@ -46,7 +46,7 @@ namespace vcsn
       using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      using weightset_t = typename automaton_t::weightset_t;
+      using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
       using states_t = std::vector<state_t>;

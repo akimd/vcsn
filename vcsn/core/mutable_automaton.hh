@@ -10,6 +10,7 @@
 # include <vcsn/core/crange.hh>
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
@@ -20,8 +21,8 @@ namespace vcsn
   public:
     using context_t = Context;
     using self_nocv_t = mutable_automaton<context_t>;
-    using labelset_t = typename context_t::labelset_t;
-    using weightset_t = typename context_t::weightset_t;
+    using labelset_t = labelset_t_of<context_t>;
+    using weightset_t = weightset_t_of<context_t>;
     using kind_t = typename context_t::kind_t;
 
     using labelset_ptr = typename context_t::labelset_ptr;
