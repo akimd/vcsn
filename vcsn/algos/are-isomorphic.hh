@@ -31,7 +31,7 @@ namespace vcsn
   class are_isomorphicer // FIXME: this naming convention is really getting too silly
   {
     using automaton1_t = Aut1;
-    using context1_t = typename automaton1_t::context_t;
+    using context1_t = context_t_of<automaton1_t>;
     using weightset1_t = typename automaton1_t::weightset_t;
     using labelset1_t = typename context1_t::labelset_t;
     using state1_t = typename automaton1_t::state_t;
@@ -40,7 +40,7 @@ namespace vcsn
     using transition1_t = typename automaton1_t::transition_t;
 
     using automaton2_t = Aut2;
-    using context2_t = typename automaton2_t::context_t;
+    using context2_t = context_t_of<automaton2_t>;
     using weightset2_t = typename automaton1_t::weightset_t;
     using labelset2_t = typename context2_t::labelset_t;
     using state2_t = typename automaton2_t::state_t;

@@ -4,6 +4,7 @@
 # include <set>
 
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/ratexp.hh>
@@ -26,7 +27,7 @@ namespace vcsn
     {
     public:
       using ratexpset_t = RatExpSet;
-      using context_t = typename ratexpset_t::context_t;
+      using context_t = context_t_of<ratexpset_t>;
       using ratexp_t = typename ratexpset_t::ratexp_t;
       using weight_t = typename ratexpset_t::weight_t;
       using weightset_t = typename ratexpset_t::weightset_t;

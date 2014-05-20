@@ -8,6 +8,7 @@
 # include <unordered_map>
 # include <vector>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>

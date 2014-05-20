@@ -2,6 +2,7 @@
 # define VCSN_ALGOS_THOMPSON_HH
 
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -15,7 +16,7 @@ namespace vcsn
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
     template <typename Aut,
-              typename Context = typename Aut::context_t>
+              typename Context = context_t_of<Aut>>
     class thompson_visitor
       : public Context::const_visitor
     {
@@ -145,7 +146,7 @@ namespace vcsn
   /// \tparam Aut      relative to the generated automaton.
   /// \tparam Context  relative to the RatExp.
   template <typename Aut,
-            typename Context = typename Aut::context_t>
+            typename Context = context_t_of<Aut>>
   Aut
   thompson(const Context& ctx, const typename Context::ratexp_t& e)
   {
@@ -168,7 +169,7 @@ namespace vcsn
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
-        using context_t = typename RatExpSet::context_t;
+        using context_t = context_t_of<RatExpSet>;
         using ratexpset_t = RatExpSet;
         using automaton_t = mutable_automaton<context_t>;
         const auto& e = exp->as<ratexpset_t>();

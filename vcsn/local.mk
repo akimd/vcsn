@@ -122,6 +122,7 @@ nobase_include_HEADERS =                        \
   %D%/ctx/law_char_z.hh                         \
   %D%/ctx/law_char_zr.hh                        \
   %D%/ctx/law_char_zrr.hh                       \
+  %D%/ctx/traits.hh                             \
   %D%/dyn/algos.hh                              \
   %D%/dyn/automaton.hh                          \
   %D%/dyn/context-parser.hh                     \

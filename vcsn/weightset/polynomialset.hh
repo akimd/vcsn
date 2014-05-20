@@ -7,6 +7,8 @@
 # include <vector>
 
 # include <vcsn/weightset/fwd.hh>
+
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh>
@@ -602,12 +604,12 @@ namespace vcsn
 
   /// The entry between two states of an automaton.
   template <typename Aut>
-  typename polynomialset<typename Aut::context_t>::value_t
+  typename polynomialset<context_t_of<Aut>>::value_t
   get_entry(const Aut& aut,
             typename Aut::state_t s, typename Aut::state_t d)
   {
     using automaton_t = Aut;
-    using context_t = typename automaton_t::context_t;
+    using context_t = context_t_of<automaton_t>;
     using polynomialset_t = polynomialset<context_t>;
     using polynomial_t = typename polynomialset_t::value_t;
 

@@ -1,8 +1,9 @@
 #ifndef VCSN_ALGOS_LEFT_MULT_HH
 # define VCSN_ALGOS_LEFT_MULT_HH
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
-# include <vcsn/dyn/ratexp.hh> // dyn::make_automaton
+# include <vcsn/dyn/ratexp.hh>
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -15,7 +16,7 @@ namespace vcsn
     struct standard_operations
     {
       using automaton_t = Aut;
-      using context_t = typename automaton_t::context_t;
+      using context_t = context_t_of<automaton_t>;
       using weight_t = typename context_t::weight_t;
       using weightset_t = typename context_t::weightset_t;
       using state_t = typename automaton_t::state_t;

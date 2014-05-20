@@ -5,6 +5,7 @@
 # include <set>
 # include <string>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/fwd.hh> // dyn::ratexp.
 # include <vcsn/core/rat/fwd.hh> // rat::exp_t.
 
@@ -91,7 +92,7 @@ namespace detail
   {
   public:
     using ratexpset_t = RatExpSet;
-    using context_t = typename ratexpset_t::context_t;
+    using context_t = context_t_of<ratexpset_t>;
     using super_type = ratexpset_base;
     using label_t = typename context_t::label_t;
     using weight_t = typename context_t::weight_t;

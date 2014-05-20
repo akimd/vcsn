@@ -90,14 +90,14 @@ namespace vcsn
 
   /// Concatenate two standard automata.
   template <typename A, typename B>
-  mutable_automaton<join_t<typename A::context_t, typename B::context_t>>
+  mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>
   concatenate(const A& lhs, const B& rhs)
   {
     require(is_standard(lhs), __func__, ": lhs must be standard");
     require(is_standard(rhs), __func__, ": rhs must be standard");
 
     using automaton_t
-      = mutable_automaton<join_t<typename A::context_t, typename B::context_t>>;
+      = mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>;
 
     // Create new automaton.
     auto ctx = join(lhs.context(), rhs.context());

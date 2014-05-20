@@ -31,7 +31,7 @@ namespace vcsn
   is_synchronized_by(const Aut& aut,
                      const typename Aut::labelset_t::word_t& w)
   {
-    using context_t = typename Aut::context_t;
+    using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
 
@@ -82,7 +82,7 @@ namespace vcsn
     class pairer
     {
     public:
-      using context_t = typename Aut::context_t;
+      using context_t = context_t_of<Aut>;
       using automaton_t =  mutable_automaton<context_t>;
       using state_t = typename automaton_t::state_t;
       using weightset_t = typename automaton_t::weightset_t;

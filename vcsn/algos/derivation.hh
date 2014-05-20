@@ -30,7 +30,7 @@ namespace vcsn
     {
     public:
       using ratexpset_t = RatExpSet;
-      using context_t = typename ratexpset_t::context_t;
+      using context_t = context_t_of<ratexpset_t>;
       using labelset_t = typename context_t::labelset_t;
       using label_t = typename context_t::label_t;
       using ratexp_t = typename ratexpset_t::value_t;
@@ -292,7 +292,7 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using ratexp_t = typename ratexpset_t::value_t;
 
-      using context_t = typename ratexpset_t::context_t;
+      using context_t = context_t_of<ratexpset_t>;
       using labelset_t = typename context_t::labelset_t;
       using label_t = typename labelset_t::value_t;
       using weightset_t = typename context_t::weightset_t;
@@ -418,7 +418,7 @@ namespace vcsn
   /// Derive a ratexp wrt to a string.
   template <typename RatExpSet>
   inline
-  mutable_automaton<typename RatExpSet::context_t>
+  mutable_automaton<context_t_of<RatExpSet>>
   derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
                bool breaking = false)
   {

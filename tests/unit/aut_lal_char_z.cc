@@ -21,7 +21,7 @@ new_states(Aut& aut, size_t n)
 
 template <typename Aut>
 Aut
-clique(const typename Aut::context_t& ctx, size_t size)
+clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
 {
   Aut res{ctx};
   const auto& letters = *ctx.labelset();

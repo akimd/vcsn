@@ -52,7 +52,7 @@ namespace vcsn
     {
     public:
       using ratexpset_t = RatExpSet;
-      using context_t = typename ratexpset_t::context_t;
+      using context_t = context_t_of<ratexpset_t>;
       using labelset_t = typename context_t::labelset_t;
       using label_t = typename context_t::label_t;
       using ratexp_t = typename ratexpset_t::value_t;

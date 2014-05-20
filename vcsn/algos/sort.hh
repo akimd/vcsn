@@ -5,6 +5,7 @@
 # include <queue>
 # include <vector>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
@@ -70,7 +71,7 @@ namespace vcsn
     {
       using automaton_t = Aut;
       using res_automaton_t = typename automaton_t::self_nocv_t;
-      using context_t = typename automaton_t::context_t;
+      using context_t = context_t_of<automaton_t>;
       using weight_t = typename automaton_t::weight_t;
       using label_t = typename automaton_t::label_t;
       using state_t = typename automaton_t::state_t;

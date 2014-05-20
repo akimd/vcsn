@@ -1,10 +1,9 @@
 #ifndef VCSN_ALGOS_STAR_HH
 # define VCSN_ALGOS_STAR_HH
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/misc/raise.hh> // require
-
-# include <vector>
 
 namespace vcsn
 {
@@ -22,7 +21,7 @@ namespace vcsn
     require(is_standard(res), __func__, ": input must be standard");
 
     using automaton_t = Aut;
-    using context_t = typename automaton_t::context_t;
+    using context_t = context_t_of<automaton_t>;
     using weightset_t = typename context_t::weightset_t;
     using weight_t = typename context_t::weight_t;
     using state_t = typename automaton_t::state_t;

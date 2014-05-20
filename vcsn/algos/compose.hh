@@ -84,7 +84,7 @@ namespace vcsn
     public:
       using super::super;
 
-      blind_automaton(const typename automaton_t::context_t& ctx)
+      blind_automaton(const context_t_of<automaton_t>& ctx)
         : blind_automaton(new automaton_t{ctx})
       {}
 
@@ -226,7 +226,7 @@ namespace vcsn
       | forwarded const methods.  |
       `--------------------------*/
 
-      const typename automaton_t::context_t& context() const
+      const context_t_of<automaton_t>& context() const
       {
         return this->aut_->context();
       }

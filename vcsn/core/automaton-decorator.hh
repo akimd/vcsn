@@ -23,7 +23,7 @@ namespace vcsn
     /// yield a transpose_automaton<mutable_automaton<Ctx>>, without
     /// the "inner" const.
     using self_nocv_t = automaton_decorator<typename automaton_t::self_nocv_t>;
-    using context_t = typename automaton_t::context_t;
+    using context_t = context_t_of<automaton_t>;
     using state_t = typename automaton_t::state_t;
     using transition_t = typename automaton_t::transition_t;
     using label_t = typename automaton_t::label_t;

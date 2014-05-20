@@ -21,7 +21,7 @@ namespace vcsn
                                typename Aut::transition_t>>
   paths_ibfs(const Aut& aut, typename Aut::state_t start)
   {
-    using context_t = typename Aut::context_t;
+    using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
     using transition_t = typename automaton_t::transition_t;
@@ -54,7 +54,7 @@ namespace vcsn
   path_bfs(const Aut& aut, typename Aut::state_t start,
                                typename Aut::state_t end)
   {
-    using context_t = typename Aut::context_t;
+    using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
     using state_t = typename automaton_t::state_t;
     using transition_t = typename automaton_t::transition_t;

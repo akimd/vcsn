@@ -225,7 +225,7 @@ namespace vcsn
   `-------------*/
 
   template <typename Aut,
-            typename Context = typename Aut::context_t>
+            typename Context = context_t_of<Aut>>
   typename Context::ratexp_t
   aut_to_exp(const Aut& a,
              const state_chooser_t<Aut>& next_state)
@@ -239,7 +239,7 @@ namespace vcsn
 
 
   template <typename Aut,
-            typename Context = typename Aut::context_t>
+            typename Context = context_t_of<Aut>>
   typename Context::ratexp_t
   aut_to_exp_naive(const Aut& a)
   {
@@ -262,7 +262,7 @@ namespace vcsn
       {
         // FIXME: So far, there is a single implementation of ratexps,
         // but we should actually be parameterized by its type too.
-        using context_t = typename Aut::context_t;
+        using context_t = context_t_of<Aut>;
         using ratexpset_t = vcsn::ratexpset<context_t>;
         const auto& a = aut->as<Aut>();
         return make_ratexp(ratexpset_t(a.context()),

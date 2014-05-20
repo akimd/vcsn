@@ -135,7 +135,7 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
-      using context_t = typename Aut::context_t;
+      using context_t = context_t_of<Aut>;
       static_assert(context_t::labelset_t::is_free(),
                     "requires labels_are_letters");
 

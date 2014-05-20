@@ -25,16 +25,16 @@ namespace vcsn
 
     template <typename Aut>
     using lifted_automaton_t =
-      mutable_automaton<lifted_context_t<typename Aut::context_t>>;
+      mutable_automaton<lifted_context_t<context_t_of<Aut>>>;
 
     template <typename RatExpSet>
     using lifted_ratexpset_t =
-      ratexpset<lifted_context_t<typename RatExpSet::context_t>>;
+      ratexpset<lifted_context_t<context_t_of<RatExpSet>>>;
 
     // lift(ctx) -> ctx
     template <typename LabelSet, typename WeightSet>
     lifted_context_t<context<LabelSet, WeightSet>>
-    lift(const context<LabelSet, WeightSet>& ctx)
+    lift_context(const context<LabelSet, WeightSet>& ctx)
     {
       auto rs_in = ratexpset<context<LabelSet, WeightSet>>(ctx);
       return {oneset{}, rs_in};
@@ -43,9 +43,9 @@ namespace vcsn
     // lift(ratexpset) -> ratexpset
     template <typename Context>
     lifted_ratexpset_t<ratexpset<Context>>
-    lift(const ratexpset<Context>& rs)
+    lift_ratexpset(const ratexpset<Context>& rs)
     {
-      return {lift(rs.context())};
+      return {lift_context(rs.context())};
     }
 
   }
@@ -60,14 +60,14 @@ namespace vcsn
   lift(const Aut& a)
   {
     using auto_in_t = Aut;
-    using ctx_in_t = typename auto_in_t::context_t;
+    using ctx_in_t = context_t_of<auto_in_t>;
     using state_in_t = typename auto_in_t::state_t;
 
     // Produce RatExps of the same context as the original automaton.
     using rs_in_t = ratexpset<ctx_in_t>;
     rs_in_t rs_in{a.context()};
 
-    auto ctx_out = detail::lift(a.context());
+    auto ctx_out = detail::lift_context(a.context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
     using state_out_t = typename auto_out_t::state_t;
     auto_out_t res{ctx_out};
@@ -119,7 +119,7 @@ namespace vcsn
   {
     template <typename Exp>
     using lifted_ratexp_t =
-      typename lifted_context_t<typename Exp::context_t>::ratexp_t;
+      typename lifted_context_t<context_t_of<Exp>>::ratexp_t;
 
   }
 
@@ -128,7 +128,7 @@ namespace vcsn
   typename detail::lifted_ratexpset_t<RatExpSet>::ratexp_t
   lift(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
-    auto lrs = detail::lift(rs);
+    auto lrs = detail::lift_ratexpset(rs);
     return lrs.lmul(e, lrs.one());
   }
 
@@ -147,7 +147,7 @@ namespace vcsn
       lift_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
-        return make_ratexp(::vcsn::detail::lift(e.ratexpset()),
+        return make_ratexp(::vcsn::detail::lift_ratexpset(e.ratexpset()),
                            ::vcsn::lift(e.ratexpset(), e.ratexp()));
       }
 

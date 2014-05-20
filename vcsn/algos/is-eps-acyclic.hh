@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/core/fwd.hh>

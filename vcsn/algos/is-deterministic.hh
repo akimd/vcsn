@@ -4,6 +4,7 @@
 # include <queue>
 # include <unordered_set>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 
