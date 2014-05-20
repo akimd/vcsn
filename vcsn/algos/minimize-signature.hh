@@ -37,7 +37,7 @@ namespace vcsn
       using labelset_t = typename automaton_t::labelset_t;
       const labelset_t& ls_;
 
-      using label_t = typename automaton_t::label_t;
+      using label_t = label_t_of<automaton_t>;
       using state_t = typename automaton_t::state_t;
       using class_t = unsigned;
       using set_t = std::vector<state_t>;

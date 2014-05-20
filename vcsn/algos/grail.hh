@@ -44,7 +44,7 @@ namespace vcsn
 
     protected:
       using context_t = context_t_of<automaton_t>;
-      using label_t = typename automaton_t::label_t;
+      using label_t = label_t_of<automaton_t>;
       using transition_t = typename automaton_t::transition_t;
       using weightset_t = typename automaton_t::weightset_t;
       using weight_t = typename automaton_t::weight_t;

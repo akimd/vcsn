@@ -73,7 +73,7 @@ namespace vcsn
       using res_automaton_t = typename automaton_t::self_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using weight_t = typename automaton_t::weight_t;
-      using label_t = typename automaton_t::label_t;
+      using label_t = label_t_of<automaton_t>;
       using state_t = typename automaton_t::state_t;
       using transition_t = typename automaton_t::transition_t;
 

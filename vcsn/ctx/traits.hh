@@ -18,6 +18,22 @@ namespace vcsn
 
   template <typename ValueSet>
   using context_t_of = typename detail::context_t_of_impl<ValueSet>::type;
+
+
+  /*-------------.
+  | label_t_of.  |
+  `-------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct label_t_of_impl
+    {
+      using type = typename ValueSet::label_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using label_t_of = typename detail::label_t_of_impl<ValueSet>::type;
 }
 
 #endif // !VCSN_CTX_TRAITS_HH

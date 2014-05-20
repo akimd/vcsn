@@ -53,7 +53,7 @@ namespace vcsn
         = typename std::conditional<Deterministic,
                                     transition,
                                     std::vector<transition>>::type;
-      using map_t = std::map<typename Aut::label_t, transitions_t>;
+      using map_t = std::map<label_t_of<Aut>, transitions_t>;
       using maps_t = std::map<typename Aut::state_t, map_t>;
       maps_t maps_;
 
@@ -70,7 +70,7 @@ namespace vcsn
       template <bool Deterministic_>
       void
       insert_(map_t& map,
-              typename Aut::label_t l, transition t,
+              label_t_of<Aut> l, transition t,
               typename std::enable_if<Deterministic_>::type* = nullptr)
       {
         map.emplace(l, t);
@@ -80,7 +80,7 @@ namespace vcsn
       template <bool Deterministic_>
       void
       insert_(map_t& map,
-              typename Aut::label_t l, transition t,
+              label_t_of<Aut> l, transition t,
               typename std::enable_if<!Deterministic_>::type* = nullptr)
       {
         map[l].emplace_back(t);

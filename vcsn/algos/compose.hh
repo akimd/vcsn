@@ -57,9 +57,9 @@ namespace vcsn
       using transition_t = typename automaton_t::transition_t;
       // Exposed label
       using label_t =
-        typename std::tuple_element<Band, typename automaton_t::label_t>::type;
+        typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
       // Underlying automaton label
-      using hidden_label_t = typename automaton_t::label_t;
+      using hidden_label_t = label_t_of<automaton_t>;
       using weight_t = typename automaton_t::weight_t;
       using hidden_indices_t = concat_sequence<
                                typename make_index_range<0, Band>::type,
@@ -522,7 +522,7 @@ namespace vcsn
              ++ li)
         {
           auto lt = *li;
-          typename clhs_t::label_t label = lhs_.label_of(lt);
+          label_t_of<clhs_t> label = lhs_.label_of(lt);
           // Skip right-hand transitions with labels we don't have
           // on the left hand.
           while (middle_labelset_t::less_than(rhs_.label_of(*ri), label))

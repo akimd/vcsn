@@ -34,7 +34,7 @@ namespace vcsn
       using weightset_t = typename automaton_t::weightset_t;
       const weightset_t& ws_;
 
-      using label_t = typename automaton_t::label_t;
+      using label_t = label_t_of<automaton_t>;
       using weight_t = typename automaton_t::weight_t;
       using state_t = typename automaton_t::state_t;
       using class_t = unsigned;

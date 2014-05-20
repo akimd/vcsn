@@ -33,7 +33,7 @@ namespace vcsn
     using kind_t = labels_are_ratexps;
     using labelset_ptr = typename context_t::labelset_ptr;
     using weightset_ptr = typename context_t::weightset_ptr;
-    using label_t = typename context_t::label_t;
+    using label_t = label_t_of<context_t>;
     using weight_t = typename weightset_t::value_t;
     using const_visitor = rat::const_visitor<label_t, weight_t>;
     /// Type of ratexps.

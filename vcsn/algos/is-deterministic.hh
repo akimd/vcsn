@@ -20,7 +20,7 @@ namespace vcsn
     static_assert(automaton_t::context_t::labelset_t::is_free(),
                   "requires labels_are_letters");
 
-    using label_t = typename automaton_t::label_t;
+    using label_t = label_t_of<automaton_t>;
     std::unordered_set<label_t> seen;
     for (auto t : aut.all_out(s))
       if (!seen.insert(aut.label_of(t)).second)

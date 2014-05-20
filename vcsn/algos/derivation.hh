@@ -32,7 +32,7 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
       using labelset_t = typename context_t::labelset_t;
-      using label_t = typename context_t::label_t;
+      using label_t = label_t_of<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
       using weightset_t = typename ratexpset_t::weightset_t;
       using weight_t = typename weightset_t::value_t;
@@ -205,7 +205,7 @@ namespace vcsn
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const typename RatExpSet::ratexp_t& e,
-             typename RatExpSet::label_t a,
+             label_t_of<RatExpSet> a,
              bool breaking = false)
   {
     static_assert(RatExpSet::context_t::labelset_t::is_free(),
@@ -224,7 +224,7 @@ namespace vcsn
   rat::ratexp_polynomial_t<RatExpSet>
   derivation(const RatExpSet& rs,
              const rat::ratexp_polynomial_t<RatExpSet>& p,
-             typename RatExpSet::label_t a,
+             label_t_of<RatExpSet> a,
              bool breaking = false)
   {
     auto ps = rat::make_ratexp_polynomialset(rs);

@@ -19,7 +19,7 @@ namespace vcsn
   inline
   auto
   read_label(std::istream& is, const Context& ctx)
-    -> typename Context::label_t
+    -> label_t_of<Context>
   {
     return ctx.labelset()->conv(is);
   }

@@ -135,7 +135,7 @@ namespace vcsn
     private:
       automaton_t res_;
       const weightset_t& ws_ = *res_.weightset();
-      using label_t = typename automaton_t::context_t::label_t;
+      using label_t = label_t_of<automaton_t>;
       const label_t epsilon_ = res_.labelset()->one();
       state_t initial_ = automaton_t::null_state();
       state_t final_ = automaton_t::null_state();
