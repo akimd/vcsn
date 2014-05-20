@@ -126,7 +126,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = Context;
       using weightset_t = typename context_t::weightset_t;
-      using weight_t = typename context_t::weight_t;
+      using weight_t = weight_t_of<context_t>;
       using state_t = typename automaton_t::state_t;
 
       using super_type = typename Context::const_visitor;

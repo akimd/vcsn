@@ -88,7 +88,7 @@ namespace vcsn
   inline
   auto
   read_weight(const Context& ctx, std::istream& is)
-    -> typename Context::weight_t
+    -> weight_t_of<Context>
   {
     return ctx.weightset()->conv(is);
   }

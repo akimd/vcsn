@@ -47,7 +47,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using transition_t = typename automaton_t::transition_t;
       using weightset_t = typename automaton_t::weightset_t;
-      using weight_t = typename automaton_t::weight_t;
+      using weight_t = weight_t_of<automaton_t>;
 
       using states_t = std::vector<state_t>;
 
@@ -165,7 +165,7 @@ namespace vcsn
       static_assert(Aut::context_t::is_lal || Aut::context_t::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
-      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                     "requires Boolean weights");
 
       using super_type = outputter<Aut>;
@@ -266,7 +266,7 @@ namespace vcsn
       static_assert(Aut::context_t::is_lal || Aut::context_t::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
-      static_assert(std::is_same<typename Aut::weight_t, bool>::value,
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                     "requires Boolean weights");
 
       using super_type = outputter<Aut>;

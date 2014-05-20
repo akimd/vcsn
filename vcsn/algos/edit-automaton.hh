@@ -89,7 +89,7 @@ namespace vcsn
     using entry_t = typename polynomialset<context_t>::value_t;
     using state_t = typename automaton_t::state_t;
     using label_t = label_t_of<automaton_t>;
-    using weight_t = typename automaton_t::weight_t;
+    using weight_t = weight_t_of<automaton_t>;
 
   public:
     edit_automaton(const context_t& ctx)

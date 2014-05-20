@@ -58,7 +58,7 @@ namespace vcsn
     using weightset_ptr = typename context_t::weightset_ptr;
     /// Polynomials over labels.
     using label_t = typename labelset_t::value_t;
-    using weight_t = typename context_t::weight_t;
+    using weight_t = weight_t_of<context_t>;
 
     using value_t = std::map<label_t, weight_t, vcsn::less<labelset_t>>;
     /// A pair <label, weight>.

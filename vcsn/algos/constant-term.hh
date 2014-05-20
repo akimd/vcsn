@@ -29,7 +29,7 @@ namespace vcsn
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
       using ratexp_t = typename ratexpset_t::ratexp_t;
-      using weight_t = typename ratexpset_t::weight_t;
+      using weight_t = weight_t_of<ratexpset_t>;
       using weightset_t = typename ratexpset_t::weightset_t;
 
       using super_type = typename ratexpset_t::const_visitor;
@@ -140,7 +140,7 @@ namespace vcsn
   } // rat::
 
   template <typename RatExpSet>
-  typename RatExpSet::weight_t
+  weight_t_of<RatExpSet>
   constant_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
     rat::constant_term_visitor<RatExpSet> constant_term{rs};

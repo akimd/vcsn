@@ -5,6 +5,7 @@
 #include <string>
 
 #include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/ctx/traits.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh>
@@ -67,7 +68,7 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   automaton_t r = vcsn::read_automaton<automaton_t>(rhs);
   automaton_t prod = vcsn::product<automaton_t, automaton_t>(l, r);
   typename Ctx::labelset_t::word_t input = vcsn::read_word<Ctx>(word, prod.context());
-  typename Ctx::weight_t w = vcsn::eval<automaton_t>(prod, input);
+  vcsn::weight_t_of<Ctx> w = vcsn::eval<automaton_t>(prod, input);
   prod.context().weightset()->print(std::cout, w);
 }
 

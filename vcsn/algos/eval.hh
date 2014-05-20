@@ -82,7 +82,7 @@ namespace vcsn
   inline
   auto
   eval(const Aut& a, const typename Aut::labelset_t::word_t& w)
-    -> typename Aut::weight_t
+    -> weight_t_of<Aut>
   {
     detail::evaluator<Aut> e(a);
     return e(w);

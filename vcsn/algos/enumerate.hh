@@ -145,7 +145,7 @@ namespace vcsn
       using polynomialset_t = polynomialset<wordset_context_t>;
       using polynomial_t = typename polynomialset_t::value_t;
       using label_t = label_t_of<automaton_t>;
-      using weight_t = typename automaton_t::weight_t;
+      using weight_t = weight_t_of<automaton_t>;
       using state_t = typename automaton_t::state_t;
       using genset_t = typename automaton_t::labelset_t::genset_t;
       using word_t = typename labelset_t::word_t;

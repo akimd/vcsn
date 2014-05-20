@@ -21,7 +21,7 @@ namespace vcsn
       using context_t = context_t_of<ratexpset_t>;
       using labelset_t = typename context_t::labelset_t;
       using weightset_t = typename context_t::weightset_t;
-      using weight_t = typename context_t::weight_t;
+      using weight_t = weight_t_of<context_t>;
       using ratexp_t = typename context_t::ratexp_t;
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;

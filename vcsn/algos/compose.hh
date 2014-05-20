@@ -60,7 +60,7 @@ namespace vcsn
         typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
       // Underlying automaton label
       using hidden_label_t = label_t_of<automaton_t>;
-      using weight_t = typename automaton_t::weight_t;
+      using weight_t = weight_t_of<automaton_t>;
       using hidden_indices_t = concat_sequence<
                                typename make_index_range<0, Band>::type,
                                typename make_index_range<Band + 1,

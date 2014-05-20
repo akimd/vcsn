@@ -17,7 +17,7 @@ namespace vcsn
     {
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
-      using weight_t = typename context_t::weight_t;
+      using weight_t = weight_t_of<context_t>;
       using weightset_t = typename context_t::weightset_t;
       using state_t = typename automaton_t::state_t;
 
@@ -120,7 +120,7 @@ namespace vcsn
   inline
   typename RatExpSet::ratexp_t
   left_mult(const RatExpSet& rs,
-            const typename RatExpSet::weight_t& w,
+            const weight_t_of<RatExpSet>& w,
             const typename RatExpSet::value_t& r)
   {
     return rs.lmul(w, r);
@@ -197,7 +197,7 @@ namespace vcsn
   typename RatExpSet::ratexp_t
   right_mult(const RatExpSet& rs,
              const typename RatExpSet::value_t& r,
-             const typename RatExpSet::weight_t& w)
+             const weight_t_of<RatExpSet>& w)
   {
     return rs.rmul(r, w);
   }

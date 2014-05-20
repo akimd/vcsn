@@ -95,7 +95,7 @@ namespace detail
     using context_t = context_t_of<ratexpset_t>;
     using super_type = ratexpset_base;
     using label_t = label_t_of<context_t>;
-    using weight_t = typename context_t::weight_t;
+    using weight_t = weight_t_of<context_t>;
     using value_t = typename super_type::value_t;
     /// Concrete value type.
     using node_t = typename context_t::node_t;

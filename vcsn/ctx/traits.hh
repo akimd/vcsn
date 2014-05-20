@@ -34,6 +34,22 @@ namespace vcsn
 
   template <typename ValueSet>
   using label_t_of = typename detail::label_t_of_impl<ValueSet>::type;
+
+
+  /*--------------.
+  | weight_t_of.  |
+  `--------------*/
+  namespace detail
+  {
+    template <typename ValueSet>
+    struct weight_t_of_impl
+    {
+      using type = typename ValueSet::weight_t;
+    };
+  }
+
+  template <typename ValueSet>
+  using weight_t_of = typename detail::weight_t_of_impl<ValueSet>::type;
 }
 
 #endif // !VCSN_CTX_TRAITS_HH

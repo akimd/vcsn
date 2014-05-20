@@ -15,7 +15,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<typename Aut::weight_t, bool>::value,
+  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value,
                           Aut>::type
   minimize(const Aut& a, const std::string& algo)
   {
@@ -33,7 +33,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<!std::is_same<typename Aut::weight_t, bool>::value,
+  typename std::enable_if<!std::is_same<weight_t_of<Aut>, bool>::value,
                           Aut>::type
   minimize(const Aut& a, const std::string& algo)
   {
