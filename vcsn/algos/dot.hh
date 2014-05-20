@@ -20,6 +20,9 @@ namespace vcsn
     | dot(automaton, stream).  |
     `-------------------------*/
 
+    /// \brief Format an automaton into Dot.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
     class dotter: public outputter<Aut>
     {

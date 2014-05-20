@@ -22,6 +22,9 @@ namespace vcsn
 
   namespace detail
   {
+    /// \brief Format automaton to TikZ format.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
     class tikzer: public outputter<Aut>
     {
@@ -106,6 +109,9 @@ namespace vcsn
     };
   }
 
+  /// \brief Format automaton to TikZ format.
+  ///
+  /// \tparam Aut an automaton type, not a pointer type.
   template <typename Aut>
   std::ostream&
   tikz(const Aut& aut, std::ostream& out)

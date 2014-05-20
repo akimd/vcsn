@@ -19,6 +19,10 @@ namespace vcsn
   namespace detail
   {
 
+    /// \brief Format automaton to EFSM format, based on FSM format.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
+    ///
     /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
     template <typename Aut>
     class efsmer: public outputter<Aut>
@@ -188,6 +192,9 @@ namespace vcsn
   }
 
 
+  /// \brief Format automaton to EFSM format, based on FSM format.
+  ///
+  /// \tparam Aut an automaton type, not a pointer type.
   template <typename Aut>
   std::ostream&
   efsm(const Aut& aut, std::ostream& out)

@@ -1,8 +1,6 @@
 #ifndef VCSN_CORE_FWD_HH
 # define VCSN_CORE_FWD_HH
 
-# include <memory> // shared_ptr
-
 namespace vcsn
 {
 

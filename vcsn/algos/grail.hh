@@ -18,6 +18,10 @@ namespace vcsn
     /*------------.
     | outputter.  |
     `------------*/
+
+    /// \brief Factor common bits in automaton formatting.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
     class outputter
     {
@@ -39,6 +43,7 @@ namespace vcsn
       using state_t = typename automaton_t::state_t;
 
     protected:
+      using context_t = typename automaton_t::context_t;
       using label_t = typename automaton_t::label_t;
       using transition_t = typename automaton_t::transition_t;
       using weightset_t = typename automaton_t::weightset_t;
@@ -136,7 +141,7 @@ namespace vcsn
       /// Short-hand to the weightset.
       const weightset_t& ws_ = *aut_.weightset();
       /// Short-hand to the polynomialset used to print the entries.
-      const polynomialset<typename automaton_t::context_t> ps_{aut_.context()};
+      const polynomialset<context_t> ps_{aut_.context()};
       /// Names (natural numbers) to use for the states.
       std::map<state_t, unsigned> states_;
     };
@@ -151,6 +156,9 @@ namespace vcsn
   namespace detail
   {
 
+    /// \brief Format an automaton into Fado.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
     template <typename Aut>
     class fadoer: public outputter<Aut>
     {
@@ -247,7 +255,11 @@ namespace vcsn
 
   namespace detail
   {
-    // https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf
+    /// \brief Format an automaton into Fado.
+    ///
+    /// \tparam Aut an automaton type, not a pointer type.
+    ///
+    /// See https://cs.uwaterloo.ca/research/tr/1993/01/93-01.pdf.
     template <typename Aut>
     class grailer: public outputter<Aut>
     {

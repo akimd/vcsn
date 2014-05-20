@@ -16,13 +16,10 @@ namespace vcsn
               bool has_one = Aut::context_t::has_one()>
     struct epsilon_acyclic;
 
-    /**
-      @class epsilon_acylic
-      @brief Detect epsilon-circuits.
-
-      In this algorithm, only epsilon-transitions are considered.
-
-    */
+    /// @class epsilon_acylic
+    /// @brief Detect epsilon-circuits.
+    ///
+    /// In this algorithm, only epsilon-transitions are considered.
     template <typename Aut>
     struct epsilon_acyclic<Aut, true>
     {
@@ -61,8 +58,9 @@ namespace vcsn
           return false;
         }
 
+        // Switch with respect to tag[s].
         switch (it->second)
-        {//switch with respect to tag[s]
+        {
           case 'u':
             // s is reached while we are exploring successors of s:
             // there is a circuit.

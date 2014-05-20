@@ -49,7 +49,9 @@ namespace vcsn
   | standard(automaton).  |
   `----------------------*/
 
-  /// Turn \a aut into a standard automaton.
+  /// \brief Turn \a aut into a standard automaton.
+  ///
+  /// \tparam Aut an automaton type, not a pointer type.
   template <typename Aut>
   void
   standard_here(Aut& aut)
@@ -110,7 +112,8 @@ namespace vcsn
 
   namespace rat
   {
-
+    /// \brief Convert a ratexp to a standard automaton.
+    ///
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
     template <typename Aut,
@@ -309,6 +312,9 @@ namespace vcsn
 
   } // rat::
 
+
+  /// \brief Convert a ratexp to a standard automaton.
+  ///
   /// \tparam Aut      relative to the generated automaton.
   /// \tparam Context  relative to the RatExp.
   template <typename Aut,
