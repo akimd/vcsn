@@ -27,7 +27,7 @@ namespace vcsn
     template <typename Aut>
     class determinizer
     {
-      static_assert(Aut::context_t::labelset_t::is_free(),
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
       static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                     "requires Boolean weights");

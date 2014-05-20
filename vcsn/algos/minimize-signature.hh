@@ -22,7 +22,7 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(Aut::context_t::labelset_t::is_free(),
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
       // FIXME: I'm nearly sure I can remove this, as now I check for
       // the weightset when looking at the algorithm string parameter.

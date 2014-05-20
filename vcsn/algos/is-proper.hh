@@ -3,6 +3,7 @@
 
 # include <type_traits>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/dyn/automaton.hh> // make_automaton
@@ -13,7 +14,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<labelset_t_of<Aut>::has_one(),
                             bool>::type
     is_proper_(const Aut& aut)
     {
@@ -25,7 +26,7 @@ namespace vcsn
 
     template <typename Aut>
     constexpr
-    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                             bool>::type
     is_proper_(const Aut&)
     {

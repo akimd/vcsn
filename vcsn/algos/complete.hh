@@ -16,12 +16,12 @@ namespace vcsn
   Aut&
   complete_here(Aut& aut)
   {
-    static_assert(Aut::context_t::labelset_t::is_free(),
+    static_assert(labelset_t_of<Aut>::is_free(),
                   "requires labels_are_letters");
 
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
-    using letter_t = typename automaton_t::labelset_t::letter_t;
+    using letter_t = typename labelset_t_of<automaton_t>::letter_t;
 
     // A sink state, to allocate if needed.
     state_t sink = aut.null_state();

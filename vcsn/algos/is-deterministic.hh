@@ -33,7 +33,7 @@ namespace vcsn
   inline size_t
   num_deterministic_states(const Aut& aut)
   {
-    static_assert(Aut::context_t::labelset_t::is_free(),
+    static_assert(labelset_t_of<Aut>::is_free(),
                   "requires labels_are_letters");
 
     size_t res = 0;
@@ -48,7 +48,7 @@ namespace vcsn
   inline bool
   is_deterministic(const Aut& aut)
   {
-    static_assert(Aut::context_t::labelset_t::is_free(),
+    static_assert(labelset_t_of<Aut>::is_free(),
                   "requires labels_are_letters");
 
     if (1 < aut.initial_transitions().size())

@@ -20,7 +20,7 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(Aut::context_t::labelset_t::is_free(),
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
 
       using automaton_t = Aut;
@@ -29,7 +29,7 @@ namespace vcsn
       const automaton_t &a_;
 
       /// The generators.
-      const typename Aut::context_t::labelset_t::genset_t gs_;
+      const typename labelset_t_of<Aut>::genset_t gs_;
 
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;

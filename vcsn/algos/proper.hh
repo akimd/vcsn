@@ -45,7 +45,7 @@ namespace vcsn
     /// This class is specialized for labels_are_letter automata since
     /// all these methods become trivial.
     template <typename Aut,
-              bool has_one = Aut::context_t::labelset_t::has_one()>
+              bool has_one = labelset_t_of<Aut>::has_one()>
     class properer
     {
       using automaton_t = typename std::remove_cv<Aut>::type;

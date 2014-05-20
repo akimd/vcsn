@@ -23,7 +23,7 @@ namespace vcsn
     | is-ambiguous.  |
     `---------------*/
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
                             bool>::type
     is_ambiguous(const Aut& a)
     {
@@ -31,7 +31,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     is_ambiguous(const Aut&)
     {
@@ -42,7 +42,7 @@ namespace vcsn
     | is-complete.  |
     `--------------*/
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
                             bool>::type
     is_complete(const Aut& a)
     {
@@ -50,7 +50,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     is_complete(const Aut&)
     {
@@ -61,7 +61,7 @@ namespace vcsn
     | is_deterministic.  |
     `-------------------*/
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
                             bool>::type
     is_deterministic(const Aut& a)
     {
@@ -69,7 +69,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     is_deterministic(const Aut&)
     {
@@ -80,7 +80,7 @@ namespace vcsn
     | num_deterministic_states.  |
     `---------------------------*/
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
                             size_t>::type
     num_deterministic_states(const Aut& a)
     {
@@ -88,7 +88,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::is_free(),
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     num_deterministic_states(const Aut&)
     {
@@ -99,13 +99,13 @@ namespace vcsn
     | num_eps_transitions.  |
     `----------------------*/
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                             size_t>::type
     num_eps_transitions(const Aut&)
       ATTRIBUTE_CONST;
 
     template <typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                             size_t>::type
     num_eps_transitions(const Aut&)
     {
@@ -113,7 +113,7 @@ namespace vcsn
     }
 
     template <typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<labelset_t_of<Aut>::has_one(),
                             size_t>::type
     num_eps_transitions(const Aut& aut)
     {

@@ -16,7 +16,7 @@ namespace vcsn
     template <typename Aut>
     class evaluator
     {
-      static_assert(Aut::context_t::labelset_t::is_free(),
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
 
       using automaton_t = Aut;
@@ -81,7 +81,7 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  eval(const Aut& a, const typename Aut::labelset_t::word_t& w)
+  eval(const Aut& a, const typename labelset_t_of<Aut>::word_t& w)
     -> weight_t_of<Aut>
   {
     detail::evaluator<Aut> e(a);

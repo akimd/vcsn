@@ -76,7 +76,7 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut&
-  left_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
+  left_mult_here(Aut& res, const weight_t_of<Aut>& w)
   {
     return detail::standard_operations<Aut>::left_mult_here(res, w);
   }
@@ -84,7 +84,7 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut
-  left_mult(const typename Aut::context_t::weight_t& w, const Aut& aut)
+  left_mult(const weight_t_of<Aut>& w, const Aut& aut)
   {
     auto res = copy(aut);
     left_mult_here(res, w);
@@ -154,7 +154,7 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut&
-  right_mult_here(Aut& res, const typename Aut::context_t::weight_t& w)
+  right_mult_here(Aut& res, const weight_t_of<Aut>& w)
   {
     return detail::standard_operations<Aut>::right_mult_here(res, w);
   }
@@ -162,7 +162,7 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut
-  right_mult(const Aut& aut, const typename Aut::context_t::weight_t& w)
+  right_mult(const Aut& aut, const weight_t_of<Aut>& w)
   {
     auto res = copy(aut);
     right_mult_here(res, w);

@@ -14,6 +14,7 @@
 # include <vcsn/algos/distance.hh>
 # include <vcsn/algos/product.hh> // transition_map
 # include <vcsn/ctx/context.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/label.hh>
 # include <vcsn/misc/pair.hh>
@@ -29,7 +30,7 @@ namespace vcsn
   template <typename Aut>
   bool
   is_synchronized_by(const Aut& aut,
-                     const typename Aut::labelset_t::word_t& w)
+                     const typename labelset_t_of<Aut>::word_t& w)
   {
     using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
@@ -249,7 +250,7 @@ namespace vcsn
   }
 
   template <typename Aut>
-  typename Aut::labelset_t::word_t
+  typename labelset_t_of<Aut>::word_t
   synchronizing_word(const Aut& aut)
   {
     using automaton_t = Aut;

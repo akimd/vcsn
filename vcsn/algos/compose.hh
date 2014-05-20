@@ -28,7 +28,7 @@ namespace vcsn
     {
       template <std::size_t J>
       using elem = typename std::tuple_element<J,
-            typename Aut::labelset_t::valuesets_t>::type;
+            typename labelset_t_of<Aut>::valuesets_t>::type;
 
       using type = tupleset<elem<I>...>;
     };
@@ -43,7 +43,7 @@ namespace vcsn
       using super = automaton_decorator<Aut>;
 
       static_assert(Aut::context_t::is_lat, "requires labels_are_tuples");
-      static_assert(Band < Aut::context_t::labelset_t::size(),
+      static_assert(Band < labelset_t_of<Aut>::size(),
                     "band outside of the tuple");
 
       /// The type of the automata to produce from this kind o
@@ -578,7 +578,7 @@ namespace vcsn
       }
 
       template <typename Aut>
-      constexpr typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+      constexpr typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                   bool>::type
       has_only_ones_in(const Aut&,
                        state_t_of<Aut>) const
@@ -587,7 +587,7 @@ namespace vcsn
       }
 
       template <typename Aut>
-      typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+      typename std::enable_if<labelset_t_of<Aut>::has_one(),
                  bool>::type
       has_only_ones_in(const Aut& rhs, state_t_of<Aut> rst) const
       {
@@ -609,7 +609,7 @@ namespace vcsn
     }
 
     template<typename Aut>
-    typename std::enable_if<Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<labelset_t_of<Aut>::has_one(),
              typename detail::blind_automaton<0, const Aut>::self_nocv_t>::type
     get_insplit(const Aut& aut)
     {
@@ -617,7 +617,7 @@ namespace vcsn
     }
 
     template<typename Aut>
-    typename std::enable_if<!Aut::context_t::labelset_t::has_one(),
+    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
              typename detail::blind_automaton<0, const Aut>>::type
     get_insplit(const Aut& aut)
     {

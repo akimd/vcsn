@@ -14,13 +14,13 @@ namespace vcsn
   template <typename Aut>
   bool is_complete(const Aut& aut)
   {
-    static_assert(Aut::context_t::labelset_t::is_free(),
+    static_assert(labelset_t_of<Aut>::is_free(),
                   "requires labels_are_letters");
 
     if (aut.num_initials() == 0)
       return false;
 
-    using label_set_t = std::set<typename Aut::labelset_t::letter_t>;
+    using label_set_t = std::set<typename labelset_t_of<Aut>::letter_t>;
 
     const auto& letters = aut.labelset()->genset();
     for (auto state : aut.states())

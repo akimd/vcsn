@@ -57,7 +57,7 @@ namespace vcsn
 
       res_automaton_t split(const Aut& aut)
       {
-        if (!Aut::context_t::labelset_t::has_one())
+        if (!labelset_t_of<Aut>::has_one())
           {
             maybe_blind_copier<automaton_t, res_automaton_t>{}(aut, res_);
             return std::move(res_);
@@ -97,15 +97,15 @@ namespace vcsn
 
         return std::move(res_);
       }
-    private:
 
+    private:
       inline bool exists(state_t st, bool epsilon)
       {
         return states_assoc.find(pair_t(st, epsilon)) != states_assoc.end();
       }
 
       template <typename A>
-      typename std::enable_if<A::context_t::labelset_t::has_one(),
+      typename std::enable_if<labelset_t_of<A>::has_one(),
                               bool>::type
       is_one(const A& aut, transition_t tr)
       {
@@ -113,7 +113,7 @@ namespace vcsn
       }
 
       template <typename A>
-      typename std::enable_if<!A::context_t::labelset_t::has_one(),
+      typename std::enable_if<!labelset_t_of<A>::has_one(),
                               bool>::type
       is_one(const A&, transition_t)
       {
