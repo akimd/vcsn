@@ -309,13 +309,10 @@ namespace vcsn
       {
         const auto& l = lhs->as<PolynomialSetLhs>();
         const auto& r = rhs->as<PolynomialSetRhs>();
-        // FIXME: Luca said he wrote join for polynomialsets.
-        //auto rs = join(l.polynomialset(), r.polynomialset());
-        //auto lr = rs.conv(l.polynomialset(), l.polynomial());
-        //auto rr = rs.conv(r.polynomialset(), r.polynomial());
-        return make_polynomial(l.polynomialset(),
-                               concatenate(l.polynomialset(),
-                                           l.polynomial(), r.polynomial()));
+        auto rs = join(l.polynomialset(), r.polynomialset());
+        auto lr = rs.conv(l.polynomialset(), l.polynomial());
+        auto rr = rs.conv(r.polynomialset(), r.polynomial());
+        return make_polynomial(rs, concatenate(rs, lr, rr));
       }
 
       REGISTER_DECLARE(concatenate_polynomial,
