@@ -30,7 +30,7 @@ struct weight;
 struct context
 {
   context(const vcsn::dyn::context& ctx)
-    : ctx_(ctx)
+    : val_(ctx)
   {}
 
   context(const std::string& ctx)
@@ -46,7 +46,7 @@ struct context
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
-    vcsn::dyn::print(ctx_, os, format);
+    vcsn::dyn::print(val_, os, format);
     return os.str();
   }
 
@@ -60,7 +60,7 @@ struct context
 
   label word(const std::string& s) const;
 
-  vcsn::dyn::context ctx_;
+  vcsn::dyn::context val_;
 };
 
 /*------------.
@@ -70,7 +70,7 @@ struct context
 struct automaton
 {
   automaton(const vcsn::dyn::automaton& a)
-    : aut_(a)
+    : val_(a)
   {}
 
   automaton(const ratexp& r);
@@ -78,19 +78,19 @@ struct automaton
   automaton(const std::string& s, const std::string& format = "default")
   {
     std::istringstream is(s);
-    aut_ = vcsn::dyn::read_automaton(is, format);
+    val_ = vcsn::dyn::read_automaton(is, format);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   automaton accessible() const
   {
-    return vcsn::dyn::accessible(aut_);
+    return vcsn::dyn::accessible(val_);
   }
 
   automaton chain(int min, int max) const
   {
-    return vcsn::dyn::chain(aut_, min, max);
+    return vcsn::dyn::chain(val_, min, max);
   }
   using bin_chain_t = automaton (automaton::*)(int min, int max) const;
 
@@ -101,47 +101,47 @@ struct automaton
 
   automaton coaccessible() const
   {
-    return vcsn::dyn::coaccessible(aut_);
+    return vcsn::dyn::coaccessible(val_);
   }
 
   automaton complement() const
   {
-    return vcsn::dyn::complement(aut_);
+    return vcsn::dyn::complement(val_);
   }
 
   automaton complete() const
   {
-    return vcsn::dyn::complete(aut_);
+    return vcsn::dyn::complete(val_);
   }
 
   automaton compose(const automaton& rhs) const
   {
-    return vcsn::dyn::compose(aut_, rhs.aut_);
+    return vcsn::dyn::compose(val_, rhs.val_);
   }
 
   automaton concatenate(const automaton& rhs) const
   {
-    return vcsn::dyn::concatenate(aut_, rhs.aut_);
+    return vcsn::dyn::concatenate(val_, rhs.val_);
   }
 
   ::context context() const
   {
-    return vcsn::dyn::context_of(aut_);
+    return vcsn::dyn::context_of(val_);
   }
 
   automaton determinize(bool complete = false) const
   {
-    return vcsn::dyn::determinize(aut_, complete);
+    return vcsn::dyn::determinize(val_, complete);
   }
 
   automaton difference(const automaton& rhs) const
   {
-    return vcsn::dyn::difference(aut_, rhs.aut_);
+    return vcsn::dyn::difference(val_, rhs.val_);
   }
 
   automaton eliminate_state(int s) const
   {
-    return vcsn::dyn::eliminate_state(aut_, s);
+    return vcsn::dyn::eliminate_state(val_, s);
   }
 
   polynomial enumerate(unsigned max) const;
@@ -151,130 +151,130 @@ struct automaton
   std::string format(const std::string& format = "dot") const
   {
     std::ostringstream os;
-    vcsn::dyn::print(aut_, os, format);
+    vcsn::dyn::print(val_, os, format);
     return os.str();
   }
 
   automaton infiltration(const automaton& rhs) const
   {
-    return vcsn::dyn::infiltration(aut_, rhs.aut_);
+    return vcsn::dyn::infiltration(val_, rhs.val_);
   }
 
   automaton insplit() const
   {
-    return vcsn::dyn::insplit(aut_);
+    return vcsn::dyn::insplit(val_);
   }
 
   bool is_accessible() const
   {
-    return vcsn::dyn::is_accessible(aut_);
+    return vcsn::dyn::is_accessible(val_);
   }
 
   bool is_ambiguous() const
   {
-    return vcsn::dyn::is_ambiguous(aut_);
+    return vcsn::dyn::is_ambiguous(val_);
   }
 
   bool is_coaccessible() const
   {
-    return vcsn::dyn::is_coaccessible(aut_);
+    return vcsn::dyn::is_coaccessible(val_);
   }
 
   bool is_complete() const
   {
-    return vcsn::dyn::is_complete(aut_);
+    return vcsn::dyn::is_complete(val_);
   }
 
   bool is_deterministic() const
   {
-    return vcsn::dyn::is_deterministic(aut_);
+    return vcsn::dyn::is_deterministic(val_);
   }
 
   bool is_empty() const
   {
-    return vcsn::dyn::is_empty(aut_);
+    return vcsn::dyn::is_empty(val_);
   }
 
   bool is_eps_acyclic() const
   {
-    return vcsn::dyn::is_eps_acyclic(aut_);
+    return vcsn::dyn::is_eps_acyclic(val_);
   }
 
   bool is_equivalent(const automaton& rhs) const
   {
-    return vcsn::dyn::are_equivalent(aut_, rhs.aut_);
+    return vcsn::dyn::are_equivalent(val_, rhs.val_);
   }
 
   bool is_isomorphic(const automaton& rhs) const
   {
-    return vcsn::dyn::are_isomorphic(aut_, rhs.aut_);
+    return vcsn::dyn::are_isomorphic(val_, rhs.val_);
   }
 
   bool is_normalized() const
   {
-    return vcsn::dyn::is_normalized(aut_);
+    return vcsn::dyn::is_normalized(val_);
   }
 
   bool is_out_sorted() const
   {
-    return vcsn::dyn::is_out_sorted(aut_);
+    return vcsn::dyn::is_out_sorted(val_);
   }
 
   bool is_proper() const
   {
-    return vcsn::dyn::is_proper(aut_);
+    return vcsn::dyn::is_proper(val_);
   }
 
   bool is_standard() const
   {
-    return vcsn::dyn::is_standard(aut_);
+    return vcsn::dyn::is_standard(val_);
   }
 
   bool is_synchronized_by(const label& word) const;
 
   bool is_trim() const
   {
-    return vcsn::dyn::is_trim(aut_);
+    return vcsn::dyn::is_trim(val_);
   }
 
   bool is_useless() const
   {
-    return vcsn::dyn::is_useless(aut_);
+    return vcsn::dyn::is_useless(val_);
   }
 
   bool is_valid() const
   {
-    return vcsn::dyn::is_valid(aut_);
+    return vcsn::dyn::is_valid(val_);
   }
 
   automaton left_mult(const weight& w) const;
 
   automaton minimize(const std::string& algo = "weighted") const
   {
-    return vcsn::dyn::minimize(aut_, algo);
+    return vcsn::dyn::minimize(val_, algo);
   }
 
   automaton pair(bool keep_initials = false) const
   {
-    return vcsn::dyn::pair(aut_, keep_initials);
+    return vcsn::dyn::pair(val_, keep_initials);
   }
 
   automaton power(unsigned n) const
   {
-    return vcsn::dyn::power(aut_, n);
+    return vcsn::dyn::power(val_, n);
   }
 
   static automaton product_(const boost::python::list& auts)
   {
     std::vector<vcsn::dyn::automaton> as;
     for (int i = 0; i < boost::python::len(auts); ++i)
-      as.emplace_back(boost::python::extract<automaton>(auts[i])().aut_);
+      as.emplace_back(boost::python::extract<automaton>(auts[i])().val_);
     return vcsn::dyn::product(as);
   }
 
   automaton proper(bool prune = true) const
   {
-    return vcsn::dyn::proper(aut_, prune);
+    return vcsn::dyn::proper(val_, prune);
   }
 
   automaton right_mult(const weight& w) const;
@@ -283,27 +283,27 @@ struct automaton
 
   automaton shuffle(const automaton& rhs) const
   {
-    return vcsn::dyn::shuffle(aut_, rhs.aut_);
+    return vcsn::dyn::shuffle(val_, rhs.val_);
   }
 
   automaton sort() const
   {
-    return vcsn::dyn::sort(aut_);
+    return vcsn::dyn::sort(val_);
   }
 
   automaton standard() const
   {
-    return vcsn::dyn::standard(aut_);
+    return vcsn::dyn::standard(val_);
   }
 
   automaton star() const
   {
-    return vcsn::dyn::star(aut_);
+    return vcsn::dyn::star(val_);
   }
 
   automaton sum(const automaton& rhs) const
   {
-    return vcsn::dyn::sum(aut_, rhs.aut_);
+    return vcsn::dyn::sum(val_, rhs.val_);
   }
 
   label synchronizing_word() const;
@@ -312,25 +312,25 @@ struct automaton
 
   automaton transpose()
   {
-    return vcsn::dyn::transpose(aut_);
+    return vcsn::dyn::transpose(val_);
   }
 
   automaton trim() const
   {
-    return vcsn::dyn::trim(aut_);
+    return vcsn::dyn::trim(val_);
   }
 
   automaton union_a(const automaton& rhs) const
   {
-    return vcsn::dyn::union_a(aut_, rhs.aut_);
+    return vcsn::dyn::union_a(val_, rhs.val_);
   }
 
   automaton universal() const
   {
-    return vcsn::dyn::universal(aut_);
+    return vcsn::dyn::universal(val_);
   }
 
-  vcsn::dyn::automaton aut_;
+  vcsn::dyn::automaton val_;
 };
 
 /*------------.
@@ -371,7 +371,7 @@ struct label
   label(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_label(is, ctx.ctx_);
+    val_ = vcsn::dyn::read_label(is, ctx.val_);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -399,7 +399,7 @@ struct polynomial
   polynomial(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_polynomial(is, ctx.ctx_);
+    val_ = vcsn::dyn::read_polynomial(is, ctx.val_);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -431,21 +431,21 @@ struct polynomial
 struct ratexp
 {
   ratexp(const vcsn::dyn::ratexp& r)
-    : r_(r)
+    : val_(r)
   {}
 
   ratexp(const context& ctx, const std::string& r)
   {
     std::istringstream is(r);
-    auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
-    r_ = vcsn::dyn::read_ratexp(is, rs);
+    auto rs = vcsn::dyn::make_ratexpset(ctx.val_);
+    val_ = vcsn::dyn::read_ratexp(is, rs);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
   ratexp chain(int min, int max) const
   {
-    return vcsn::dyn::chain(r_, min, max);
+    return vcsn::dyn::chain(val_, min, max);
   }
   using bin_chain_t = ratexp (ratexp::*)(int min, int max) const;
 
@@ -456,124 +456,124 @@ struct ratexp
 
   ratexp complement() const
   {
-    return vcsn::dyn::complement(r_);
+    return vcsn::dyn::complement(val_);
   }
 
   ratexp concatenate(const ratexp& rhs) const
   {
-    return vcsn::dyn::concatenate(r_, rhs.r_);
+    return vcsn::dyn::concatenate(val_, rhs.val_);
   }
 
   ratexp conjunction(const ratexp& rhs) const
   {
-    return vcsn::dyn::conjunction(r_, rhs.r_);
+    return vcsn::dyn::conjunction(val_, rhs.val_);
   }
 
   weight constant_term() const;
 
   ::context context() const
   {
-    return vcsn::dyn::context_of(r_);
+    return vcsn::dyn::context_of(val_);
   }
 
   polynomial derivation(const label& l, bool breaking = true) const
   {
-    return vcsn::dyn::derivation(r_, l.val_, breaking);
+    return vcsn::dyn::derivation(val_, l.val_, breaking);
   }
 
   ratexp copy(const ::context& ctx)
   {
-    auto rs = vcsn::dyn::make_ratexpset(ctx.ctx_);
-    return vcsn::dyn::copy(r_, rs);
+    auto rs = vcsn::dyn::make_ratexpset(ctx.val_);
+    return vcsn::dyn::copy(val_, rs);
   }
 
   automaton derived_term(bool breaking = false) const
   {
-    return vcsn::dyn::derived_term(r_, breaking);
+    return vcsn::dyn::derived_term(val_, breaking);
   }
 
   ratexp difference(const ratexp& rhs) const
   {
-    return vcsn::dyn::difference(r_, rhs.r_);
+    return vcsn::dyn::difference(val_, rhs.val_);
   }
 
   ratexp expand() const
   {
-    return vcsn::dyn::expand(r_);
+    return vcsn::dyn::expand(val_);
   }
 
   expansion first_order(bool use_spontaneous = false) const
   {
-    return vcsn::dyn::first_order(r_, use_spontaneous);
+    return vcsn::dyn::first_order(val_, use_spontaneous);
   }
 
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
-    vcsn::dyn::print(r_, os, format);
+    vcsn::dyn::print(val_, os, format);
     return os.str();
   }
 
   bool is_equivalent(const ratexp& rhs) const
   {
-    return vcsn::dyn::are_equivalent(r_, rhs.r_);
+    return vcsn::dyn::are_equivalent(val_, rhs.val_);
   }
 
   bool is_valid() const
   {
-    return vcsn::dyn::is_valid(r_);
+    return vcsn::dyn::is_valid(val_);
   }
 
   ratexp left_mult(const weight& w) const;
 
   automaton linear(bool use_spontaneous = false) const
   {
-    return vcsn::dyn::linear(r_, use_spontaneous);
+    return vcsn::dyn::linear(val_, use_spontaneous);
   }
 
   ratexp right_mult(const weight& w) const;
 
   polynomial split() const
   {
-    return vcsn::dyn::split(r_);
+    return vcsn::dyn::split(val_);
   }
 
   automaton standard() const
   {
-    return vcsn::dyn::standard(r_);
+    return vcsn::dyn::standard(val_);
   }
 
   unsigned star_height() const
   {
-    return vcsn::dyn::star_height(r_);
+    return vcsn::dyn::star_height(val_);
   }
 
   ratexp star_normal_form() const
   {
-    return vcsn::dyn::star_normal_form(r_);
+    return vcsn::dyn::star_normal_form(val_);
   }
 
   ratexp sum(const ratexp& rhs) const
   {
-    return vcsn::dyn::sum(r_, rhs.r_);
+    return vcsn::dyn::sum(val_, rhs.val_);
   }
 
   automaton thompson() const
   {
-    return vcsn::dyn::thompson(r_);
+    return vcsn::dyn::thompson(val_);
   }
 
   ratexp transpose() const
   {
-    return vcsn::dyn::transpose(r_);
+    return vcsn::dyn::transpose(val_);
   }
 
   ratexp transposition() const
   {
-    return vcsn::dyn::transposition(r_);
+    return vcsn::dyn::transposition(val_);
   }
 
-  vcsn::dyn::ratexp r_;
+  vcsn::dyn::ratexp val_;
 };
 
 /*---------.
@@ -589,7 +589,7 @@ struct weight
   weight(const context& ctx, const std::string& s)
   {
     std::istringstream is(s);
-    val_ = vcsn::dyn::read_weight(is, ctx.ctx_);
+    val_ = vcsn::dyn::read_weight(is, ctx.val_);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
@@ -625,42 +625,42 @@ automaton::automaton(const ratexp& r)
 
 polynomial automaton::enumerate(unsigned max) const
 {
-  return vcsn::dyn::enumerate(aut_, max);
+  return vcsn::dyn::enumerate(val_, max);
 }
 
 weight automaton::eval(const label& l) const
 {
-  return vcsn::dyn::eval(aut_, l.val_);
+  return vcsn::dyn::eval(val_, l.val_);
 }
 
 bool automaton::is_synchronized_by(const label& word) const
 {
-  return vcsn::dyn::is_synchronized_by(aut_, word.val_);
+  return vcsn::dyn::is_synchronized_by(val_, word.val_);
 }
 
 automaton automaton::left_mult(const weight& w) const
 {
-  return vcsn::dyn::left_mult(w.val_, aut_);
+  return vcsn::dyn::left_mult(w.val_, val_);
 }
 
 automaton automaton::right_mult(const weight& w) const
 {
-  return vcsn::dyn::right_mult(aut_, w.val_);
+  return vcsn::dyn::right_mult(val_, w.val_);
 }
 
 polynomial automaton::shortest(unsigned max) const
 {
-  return vcsn::dyn::shortest(aut_, max);
+  return vcsn::dyn::shortest(val_, max);
 }
 
 label automaton::synchronizing_word() const
 {
-  return vcsn::dyn::synchronizing_word(aut_);
+  return vcsn::dyn::synchronizing_word(val_);
 }
 
 ratexp automaton::to_ratexp() const
 {
-  return vcsn::dyn::aut_to_exp(aut_);
+  return vcsn::dyn::aut_to_exp(val_);
 }
 
 /*-------------------------.
@@ -669,12 +669,12 @@ ratexp automaton::to_ratexp() const
 
 automaton context::de_bruijn(unsigned n) const
 {
-  return vcsn::dyn::de_bruijn(ctx_, n);
+  return vcsn::dyn::de_bruijn(val_, n);
 }
 
 automaton context::divkbaseb(unsigned divisor, unsigned base) const
 {
-  return vcsn::dyn::divkbaseb(ctx_, divisor, base);
+  return vcsn::dyn::divkbaseb(val_, divisor, base);
 }
 
 automaton context::double_ring(unsigned n, const boost::python::list& finals) const
@@ -682,35 +682,35 @@ automaton context::double_ring(unsigned n, const boost::python::list& finals) co
   std::vector<unsigned> f;
   for (int i = 0; i < boost::python::len(finals); ++i)
     f.emplace_back(boost::python::extract<unsigned>(finals[i]));
-  return vcsn::dyn::double_ring(ctx_, n, f);
+  return vcsn::dyn::double_ring(val_, n, f);
 }
 
 automaton context::ladybird(unsigned n) const
 {
-  return vcsn::dyn::ladybird(ctx_, n);
+  return vcsn::dyn::ladybird(val_, n);
 }
 
 automaton context::random(unsigned num_states, float density,
                           unsigned num_initial, unsigned num_final) const
 {
-  return vcsn::dyn::random_automaton(ctx_,
+  return vcsn::dyn::random_automaton(val_,
                                      num_states, density,
                                      num_initial, num_final);
 }
 
 automaton context::random_uniform(unsigned num_states) const
 {
-  return vcsn::dyn::random_automaton_uniform(ctx_, num_states);
+  return vcsn::dyn::random_automaton_uniform(val_, num_states);
 }
 
 automaton context::u(unsigned num_states) const
 {
-  return vcsn::dyn::u(ctx_, num_states);
+  return vcsn::dyn::u(val_, num_states);
 }
 
 label context::word(const std::string& s) const
 {
-  return label(context(vcsn::dyn::make_word_context(ctx_)), s);
+  return label(context(vcsn::dyn::make_word_context(val_)), s);
 }
 
 
@@ -720,17 +720,17 @@ label context::word(const std::string& s) const
 
 weight ratexp::constant_term() const
 {
-  return vcsn::dyn::constant_term(r_);
+  return vcsn::dyn::constant_term(val_);
 }
 
 ratexp ratexp::left_mult(const weight& w) const
 {
-  return vcsn::dyn::left_mult(w.val_, r_);
+  return vcsn::dyn::left_mult(w.val_, val_);
 }
 
 ratexp ratexp::right_mult(const weight& w) const
 {
-  return vcsn::dyn::right_mult(r_, w.val_);
+  return vcsn::dyn::right_mult(val_, w.val_);
 }
 
 
