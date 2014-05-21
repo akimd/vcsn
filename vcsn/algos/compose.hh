@@ -506,15 +506,19 @@ namespace vcsn
             res_.new_transition(src, state(lhs_.dst_of(*li), psrc.second),
                                 join_label(lhs_.hidden_label_of(*li),
                                            get_hidden_one(rhs_)),
-                                ws.mul(lhs_.weight_of(*li),
-                                       rhs_.context().weightset()->one()));
+                                ws.mul(ws.conv(*lhs_.weightset(),
+                                               lhs_.weight_of(*li)),
+                                       ws.conv(*rhs_.weightset(),
+                                               rhs_.context().weightset()->one())));
 
         for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
           res_.new_transition(src, state(psrc.first, rhs_.dst_of(*ri)),
                               join_label(get_hidden_one(lhs_),
                                          rhs_.hidden_label_of(*ri)),
-                              ws.mul(lhs_.context().weightset()->one(),
-                                     rhs_.weight_of(*ri)));
+                              ws.mul(ws.conv(*lhs_.weightset(),
+                                             lhs_.context().weightset()->one()),
+                                     ws.conv(*rhs_.weightset(),
+                                             rhs_.weight_of(*ri))));
 
 
         for (/* Nothing. */;
@@ -546,8 +550,10 @@ namespace vcsn
             res_.new_transition(src, state(lhs_.dst_of(lt), rhs_.dst_of(*ri)),
                                 join_label(lhs_.hidden_label_of(*li),
                                            rhs_.hidden_label_of(*ri)),
-                                ws.mul(lhs_.weight_of(lt),
-                                       rhs_.weight_of(*ri)));
+                                ws.mul(ws.conv(*lhs_.weightset(),
+                                               lhs_.weight_of(lt)),
+                                       ws.conv(*rhs_.weightset(),
+                                               rhs_.weight_of(*ri))));
 
             if (++ ri == rs.end())
               break;
