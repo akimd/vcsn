@@ -28,6 +28,8 @@ We should really name "concat" as "mul" in our labelsets.
 
 ** left_mult and right_mult should be lmul and rmul
 
+** sum should be add
+
 * Build
 ** --enable-compilation-mode
 Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both

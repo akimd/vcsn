@@ -346,6 +346,7 @@ namespace vcsn
         REGISTER(make_context, ctx_t);
         REGISTER(make_ratexpset, ctx_t);
         REGISTER(make_word_context, ctx_t);
+        REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);
         REGISTER(print_label, ls_t, std::ostream, const std::string);
@@ -369,6 +370,7 @@ namespace vcsn
         REGISTER(star_normal_form, rs_t);
         REGISTER(sum, aut_t, aut_t);
         REGISTER(sum_ratexp, rs_t, rs_t);
+        REGISTER(sum_weight, ws_t, ws_t);
         REGISTER(tikz, aut_t, std::ostream);
         REGISTER(transpose, aut_t);
         REGISTER(transpose_ratexp, rs_t);

@@ -6,6 +6,7 @@
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
+# include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
@@ -51,7 +52,7 @@ namespace vcsn
   }
 
 
-  template <class A, class B>
+  template <typename A, typename B>
   A
   sum(const A& laut, const B& raut)
   {
@@ -88,20 +89,22 @@ namespace vcsn
     }
   }
 
+
   /*----------------------.
   | sum(ratexp, ratexp).  |
   `----------------------*/
 
-  /// Sum of ratexps.
-  template <typename RatExpSet>
+  /// Sums of values.
+  template <typename ValueSet>
   inline
-  typename RatExpSet::ratexp_t
-  sum(const RatExpSet& rs,
-      const typename RatExpSet::ratexp_t& lhs,
-      const typename RatExpSet::ratexp_t& rhs)
+  typename ValueSet::value_t
+  sum(const ValueSet& vs,
+      const typename ValueSet::value_t& lhs,
+      const typename ValueSet::value_t& rhs)
   {
-    return rs.add(lhs, rhs);
+    return vs.add(lhs, rhs);
   }
+
 
   namespace dyn
   {
@@ -122,6 +125,33 @@ namespace vcsn
 
       REGISTER_DECLARE(sum_ratexp,
                        (const ratexp&, const ratexp&) -> ratexp);
+    }
+  }
+
+
+  /*----------------------.
+  | sum(weight, weight).  |
+  `----------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename WeightSetLhs, typename WeightSetRhs>
+      weight
+      sum_weight(const weight& lhs, const weight& rhs)
+      {
+        const auto& l = lhs->as<WeightSetLhs>();
+        const auto& r = rhs->as<WeightSetRhs>();
+        auto rs = join(l.weightset(), r.weightset());
+        auto lr = rs.conv(l.weightset(), l.weight());
+        auto rr = rs.conv(r.weightset(), r.weight());
+        return make_weight(rs, sum(rs, lr, rr));
+      }
+
+      REGISTER_DECLARE(sum_weight,
+                       (const weight&, const weight&) -> weight);
     }
   }
 }

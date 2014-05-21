@@ -40,5 +40,12 @@ namespace vcsn
     {
       return detail::concatenate_polynomial_registry().call(lhs, rhs);
     }
+
+    REGISTER_DEFINE(multiply_weight);
+    weight
+    multiply(const weight& lhs, const weight& rhs)
+    {
+      return detail::multiply_weight_registry().call(lhs, rhs);
+    }
   }
 }

@@ -21,5 +21,12 @@ namespace vcsn
     {
       return detail::sum_ratexp_registry().call(lhs, rhs);
     }
+
+    REGISTER_DEFINE(sum_weight);
+    weight
+    sum(const weight& lhs, const weight& rhs)
+    {
+      return detail::sum_weight_registry().call(lhs, rhs);
+    }
   }
 }

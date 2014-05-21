@@ -43,6 +43,7 @@ namespace vcsn
       ALGO("list", "print");
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");
+      ALGO("multiply", "concatenate");
       ALGO("pair", "synchronizing-word");
       ALGO("product-vector", "product");
       ALGO("right-mult", "left-mult");

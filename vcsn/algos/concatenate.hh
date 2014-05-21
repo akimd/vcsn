@@ -10,6 +10,7 @@
 # include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
+# include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh> // require
 
 namespace vcsn
@@ -319,6 +320,43 @@ namespace vcsn
 
       REGISTER_DECLARE(concatenate_polynomial,
                        (const polynomial&, const polynomial&) -> polynomial);
+    }
+  }
+
+  /*----------------------.
+  | mul(weight, weight).  |
+  `----------------------*/
+
+  /// Product of weights.
+  template <typename ValueSet>
+  inline
+  typename ValueSet::value_t
+  multiply(const ValueSet& vs,
+           const typename ValueSet::value_t& lhs,
+           const typename ValueSet::value_t& rhs)
+  {
+    return vs.mul(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename WeightSetLhs, typename WeightSetRhs>
+      weight
+      multiply_weight(const weight& lhs, const weight& rhs)
+      {
+        const auto& l = lhs->as<WeightSetLhs>();
+        const auto& r = rhs->as<WeightSetRhs>();
+        auto rs = join(l.weightset(), r.weightset());
+        auto lr = rs.conv(l.weightset(), l.weight());
+        auto rr = rs.conv(r.weightset(), r.weight());
+        return make_weight(rs, multiply(rs, lr, rr));
+      }
+
+      REGISTER_DECLARE(multiply_weight,
+                       (const weight&, const weight&) -> weight);
     }
   }
 }

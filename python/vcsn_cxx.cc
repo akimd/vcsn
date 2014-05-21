@@ -596,6 +596,16 @@ struct weight
     return os.str();
   }
 
+  weight multiply(const weight& rhs) const
+  {
+    return vcsn::dyn::multiply(val_, rhs.val_);
+  }
+
+  weight sum(const weight& rhs) const
+  {
+    return vcsn::dyn::sum(val_, rhs.val_);
+  }
+
   vcsn::dyn::weight val_;
 };
 
@@ -865,6 +875,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     ("weight",
      bp::init<const context&, const std::string&>())
     .def("format", &weight::format)
+    .def("multiply", &weight::multiply)
+    .def("sum", &weight::sum)
    ;
 
 }

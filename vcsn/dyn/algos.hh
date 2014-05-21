@@ -276,6 +276,9 @@ namespace vcsn
     /// The context for words.
     context make_word_context(const context& ctx);
 
+    /// Multiply two weights.
+    weight multiply(const weight& lhs, const weight& rhs);
+
     /// Build the pair automaton of the given automaton
     automaton pair(const automaton& aut, bool);
 
@@ -425,6 +428,9 @@ namespace vcsn
 
     /// Sum of two ratexps.
     ratexp sum(const ratexp& lhs, const ratexp& rhs);
+
+    /// Sum of two weights.
+    weight sum(const weight& lhs, const weight& rhs);
 
     /// Return the smallest synchronizing word, or raise if there is none.
     label synchronizing_word(const automaton& aut);
