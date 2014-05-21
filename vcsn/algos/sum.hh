@@ -5,6 +5,7 @@
 
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/dyn/weight.hh>
 # include <vcsn/misc/raise.hh> // require
@@ -90,9 +91,9 @@ namespace vcsn
   }
 
 
-  /*----------------------.
-  | sum(ratexp, ratexp).  |
-  `----------------------*/
+  /*------------------------------.
+  | sum(polynomial, polynomial).  |
+  `------------------------------*/
 
   /// Sums of values.
   template <typename ValueSet>
@@ -105,6 +106,33 @@ namespace vcsn
     return vs.add(lhs, rhs);
   }
 
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename PolynomialSetLhs, typename PolynomialSetRhs>
+      polynomial
+      sum_polynomial(const polynomial& lhs, const polynomial& rhs)
+      {
+        const auto& l = lhs->as<PolynomialSetLhs>();
+        const auto& r = rhs->as<PolynomialSetRhs>();
+        auto rs = join(l.polynomialset(), r.polynomialset());
+        auto lr = rs.conv(l.polynomialset(), l.polynomial());
+        auto rr = rs.conv(r.polynomialset(), r.polynomial());
+        return make_polynomial(rs, sum(rs, lr, rr));
+      }
+
+      REGISTER_DECLARE(sum_polynomial,
+                       (const polynomial&, const polynomial&) -> polynomial);
+    }
+  }
+
+
+  /*----------------------.
+  | sum(ratexp, ratexp).  |
+  `----------------------*/
 
   namespace dyn
   {

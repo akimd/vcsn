@@ -15,6 +15,13 @@ namespace vcsn
       return detail::sum_registry().call(lhs, rhs);
     }
 
+    REGISTER_DEFINE(sum_polynomial);
+    polynomial
+    sum(const polynomial& lhs, const polynomial& rhs)
+    {
+      return detail::sum_polynomial_registry().call(lhs, rhs);
+    }
+
     REGISTER_DEFINE(sum_ratexp);
     ratexp
     sum(const ratexp& lhs, const ratexp& rhs)

@@ -404,6 +404,11 @@ struct polynomial
       vcsn::fail_reading(is, "unexpected trailing characters");
   }
 
+  polynomial concatenate(const polynomial& rhs) const
+  {
+    return vcsn::dyn::concatenate(val_, rhs.val_);
+  }
+
   std::string format(const std::string& format = "text") const
   {
     std::ostringstream os;
@@ -411,9 +416,9 @@ struct polynomial
     return os.str();
   }
 
-  polynomial concatenate(const polynomial& rhs) const
+  polynomial sum(const polynomial& rhs) const
   {
-    return vcsn::dyn::concatenate(val_, rhs.val_);
+    return vcsn::dyn::sum(val_, rhs.val_);
   }
 
   vcsn::dyn::polynomial val_;
@@ -838,6 +843,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
      bp::init<const context&, const std::string&>())
     .def("concatenate", &polynomial::concatenate)
     .def("format", &polynomial::format)
+    .def("sum", &polynomial::sum)
    ;
 
   bp::class_<ratexp>

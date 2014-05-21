@@ -426,6 +426,9 @@ namespace vcsn
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 
+    /// Sum of two polynomials.
+    polynomial sum(const polynomial& lhs, const polynomial& rhs);
+
     /// Sum of two ratexps.
     ratexp sum(const ratexp& lhs, const ratexp& rhs);
 
