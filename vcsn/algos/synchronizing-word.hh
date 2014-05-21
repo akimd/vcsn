@@ -261,6 +261,56 @@ namespace vcsn
     }
   }
 
+
+  /*-----------------------------.
+  | is_synchronizing(automaton). |
+  `-----------------------------*/
+
+  template <typename Aut>
+  bool
+  is_synchronizing(const Aut& aut)
+  {
+    using automaton_t = Aut;
+    using state_t = state_t_of<automaton_t>;
+    using transition_t = transition_t_of<automaton_t>;
+
+    detail::pairer<Aut> pobj(aut);
+    auto pa = pobj.pair();
+    state_t q0 = pobj.get_q0();
+
+    // We just perform an inverse BFS from q0 and put all the accessible states
+    // in 'paths'. If the size of paths is the same than the number of states
+    // of pa (minus q0), then for each pair of states (p, q), there is a word w
+    // such that d(p, w) = d(q, w), thus the automaton is synchronizing.
+
+    std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
+        paths_ibfs(pa, q0);
+
+    return paths.size() == pa->states().size() - 1;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      bool
+      is_synchronizing(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return vcsn::is_synchronizing(a);
+      }
+
+      REGISTER_DECLARE(is_synchronizing,
+                       (const automaton&) -> bool);
+    }
+  }
+
+
+  /*-------------------------------.
+  | synchronizing_word(automaton). |
+  `-------------------------------*/
+
   template <typename Aut>
   typename labelset_t_of<Aut>::word_t
   synchronizing_word(const Aut& aut)
@@ -327,10 +377,6 @@ namespace vcsn
 
     return res;
   }
-
-  /*-------------------------------.
-  | synchronizing_word(automaton). |
-  `-------------------------------*/
 
   namespace dyn
   {

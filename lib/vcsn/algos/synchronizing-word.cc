@@ -26,5 +26,12 @@ namespace vcsn
     {
       return detail::is_synchronized_by_registry().call(aut, word);
     }
+
+    REGISTER_DEFINE(is_synchronizing);
+    bool
+    is_synchronizing(const automaton& aut)
+    {
+      return detail::is_synchronizing_registry().call(aut);
+    }
   }
 }

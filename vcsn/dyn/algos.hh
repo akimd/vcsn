@@ -221,6 +221,9 @@ namespace vcsn
     /// Whether the word synchronizes aut.
     bool is_synchronized_by(const automaton& aut, const label& word);
 
+    /// Whether is synchronizing.
+    bool is_synchronizing(const automaton& aut);
+
     /// Whether has no useless state.
     bool is_trim(const automaton& aut);
 

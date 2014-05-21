@@ -181,6 +181,7 @@ namespace vcsn
         REGISTER(is_complete, aut_t);
         REGISTER(is_deterministic, aut_t);
         REGISTER(is_synchronized_by, aut_t, wls_t);
+        REGISTER(is_synchronizing, aut_t);
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
         REGISTER(minimize, aut_t, const std::string);
