@@ -11,6 +11,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/algos/standard.hh>
+# include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/core/rat/info.hh>
 # include <vcsn/core/rat/size.hh>
 # include <vcsn/dyn/fwd.hh>
@@ -74,6 +75,25 @@ namespace vcsn
     typename std::enable_if<!labelset_t_of<Aut>::is_free(),
                             std::string>::type
     is_deterministic(const Aut&)
+    {
+      return "N/A";
+    }
+
+    /*-------------------.
+    | is_synchronizing.  |
+    `-------------------*/
+    template <typename Aut>
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
+                            bool>::type
+    is_synchronizing(const Aut& a)
+    {
+      return vcsn::is_synchronizing(a);
+    }
+
+    template <typename Aut>
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
+                            std::string>::type
+    is_synchronizing(const Aut&)
     {
       return "N/A";
     }
@@ -155,6 +175,7 @@ namespace vcsn
     ECHO("is normalized", is_normalized(aut));
     ECHO("is proper", is_proper(aut));
     ECHO("is standard", is_standard(aut));
+    ECHO("is synchronizing", detail_info::is_synchronizing(aut));
     ECHO("is trim", is_trim(aut));
     ECHO("is useless", is_useless(aut));
 #undef ECHO

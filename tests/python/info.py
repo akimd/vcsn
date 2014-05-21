@@ -12,7 +12,7 @@ def check_eq_dict(exp, eff):
             FAIL("different dictionary sizes")
         for k in exp.keys():
             if exp[k] != eff[k]:
-                FAIL("different " + k + ": " + exp[k] + " != " + eff[k])
+                FAIL("different {}: {} != {}".format(k, exp[k], eff[k]))
 
 # check OBJ EXPECTED
 # ------------------
@@ -36,6 +36,7 @@ check(ctx.ratexp("a+ab").standard(),
        'is normalized': False,
        'is proper': True,
        'is standard': True,
+       'is synchronizing': False,
        'is trim': True,
        'is useless': False,
        'is valid': True,
@@ -59,6 +60,7 @@ check(ctx.ratexp("<1>a+(<2>b<3>*<4>)<5>").standard(),
        'is normalized': False,
        'is proper': True,
        'is standard': True,
+       'is synchronizing': False,
        'is trim': True,
        'is useless': False,
        'is valid': True,
@@ -83,6 +85,7 @@ check(vcsn.context('law_char(ab)_b').ratexp('a(a+b)*').standard(),
        'is normalized': False,
        'is proper': True,
        'is standard': True,
+       'is synchronizing': 'N/A',
        'is trim': True,
        'is useless': False,
        'is valid': True,
