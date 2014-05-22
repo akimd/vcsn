@@ -171,22 +171,6 @@ namespace vcsn
         return hide_(this->aut_->label_of(t));
       }
 
-      /*------------------------------.
-      | non-const forwarded methods.  |
-      `------------------------------*/
-
-# define DEFINE(Name)                                               \
-      template <typename... Args>                                   \
-      auto Name(Args&&... args)                                     \
-        -> decltype(this->aut_->Name(std::forward<Args>(args)...))  \
-      {                                                             \
-        return this->aut_->Name(std::forward<Args>(args)...);       \
-      }
-
-      DEFINE(new_state);
-
-# undef DEFINE
-
       template <typename A>
       transition_t new_transition_copy(const A& aut, state_t src,
                                        state_t dst, transition_t t, weight_t k)
@@ -201,15 +185,6 @@ namespace vcsn
       {
         return this->aut_->add_transition_copy(aut->original_automaton(),
                                                src, dst, t, k);
-      }
-
-      /*--------------------------.
-      | forwarded const methods.  |
-      `--------------------------*/
-
-      const context_t_of<automaton_t>& context() const
-      {
-        return this->aut_->context();
       }
     };
 
