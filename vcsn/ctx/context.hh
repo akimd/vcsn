@@ -154,13 +154,20 @@ namespace vcsn
     weightset_ptr ws_;
   };
 
-
-  /*-------.
-  | join.  |
-  `-------*/
+  /*-----------------.
+  | join_t, meet_t.  |
+  `-----------------*/
 
   template <typename... ValueSets>
   using join_t = decltype(join(std::declval<ValueSets>()...));
+
+  template <typename... ValueSets>
+  using meet_t = decltype(meet(std::declval<ValueSets>()...));
+
+
+  /*-------------------------.
+  | Variadic join and meet.  |
+  `-------------------------*/
 
   /// The join of a single valueset.
   /// Useful for variadic operator on a single argument.
@@ -171,6 +178,41 @@ namespace vcsn
   {
     return vs;
   }
+
+  template <typename ValueSet1, typename ValueSet2,
+            typename ValueSet3, typename... VSs>
+  auto
+  join(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
+       const VSs&... vs)
+    -> decltype(join(join(vs1, vs2), vs3, vs...))
+  {
+    return join(join(vs1, vs2), vs3, vs...);
+  }
+
+  /// The meet of a single valueset.
+  /// Useful for variadic operator on a single argument.
+  template <typename ValueSet>
+  auto
+  meet(const ValueSet& vs)
+    -> ValueSet
+  {
+    return vs;
+  }
+
+  template <typename ValueSet1, typename ValueSet2, typename ValueSet3,
+            typename... VSs>
+  auto
+  meet(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
+       const VSs&... vs)
+    -> decltype(meet(meet(vs1, vs2), vs3, vs...))
+  {
+    return meet(meet(vs1, vs2), vs3, vs...);
+  }
+
+
+  /*-------------------------.
+  | join(context, context).  |
+  `-------------------------*/
 
   /// The join of two contexts.
   template <typename LhsLabelSet, typename LhsWeightSet,
@@ -186,33 +228,10 @@ namespace vcsn
     return {ls, ws};
   }
 
-  template <typename ValueSet1, typename ValueSet2,
-            typename ValueSet3, typename... VSs>
-  auto
-  join(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
-       const VSs&... vs)
-    -> decltype(join(join(vs1, vs2), vs3, vs...))
-  {
-    return join(join(vs1, vs2), vs3, vs...);
-  }
 
-
-  /*-------.
-  | meet.  |
-  `-------*/
-
-  template <typename... ValueSets>
-  using meet_t = decltype(meet(std::declval<ValueSets>()...));
-
-  /// The meet of a single valueset.
-  /// Useful for variadic operator on a single argument.
-  template <typename ValueSet>
-  auto
-  meet(const ValueSet& vs)
-    -> ValueSet
-  {
-    return vs;
-  }
+  /*-------------------------.
+  | meet(context, context).  |
+  `-------------------------*/
 
   /// The meet of two contexts.
   template <typename LhsLabelSet, typename LhsWeightSet,
@@ -228,15 +247,6 @@ namespace vcsn
     return {ls, ws};
   }
 
-  template <typename ValueSet1, typename ValueSet2, typename ValueSet3,
-            typename... VSs>
-  auto
-  meet(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
-       const VSs&... vs)
-    -> decltype(meet(meet(vs1, vs2), vs3, vs...))
-  {
-    return meet(meet(vs1, vs2), vs3, vs...);
-  }
 }
 
 #endif // !VCSN_CTX_CONTEXT_HH
