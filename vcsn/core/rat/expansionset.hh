@@ -1,6 +1,7 @@
 #ifndef VCSN_CORE_RAT_EXPANSIONSET_HH
 # define VCSN_CORE_RAT_EXPANSIONSET_HH
 
+# include <vcsn/algos/split.hh> // ratexp_polynomialset_t.
 
 namespace vcsn
 {
