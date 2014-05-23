@@ -1,7 +1,9 @@
 from __future__ import print_function
 
 from difflib import unified_diff as diff
-import inspect, os, sys
+import inspect
+import os
+import sys
 
 count = 0
 npass = 0
@@ -23,10 +25,18 @@ def rst_file(name, content):
         print("\t" + l)
     print()
 
+def format(d):
+    """Pretty-print `d` into a diffable string."""
+    if isinstance(d, dict):
+        return "\n".join(["{}: {}".format(k, format(d[k]))
+                          for k in sorted(d.keys())])
+    else:
+        return str(d)
+
 def rst_diff(expected, effective):
     "Report the difference bw expected and effective."
-    exp = str(expected)
-    eff = str(effective)
+    exp = format(expected)
+    eff = format(effective)
     if exp[:-1] != '\n':
         exp += '\n'
     if eff[:-1] != '\n':
@@ -60,7 +70,7 @@ def FAIL(*msg, **kwargs):
         print('not ok ', count, m)
     else:
         print('not ok ', count)
-    loc = kwargs['loc'] if 'loc' in kwargs else here()
+    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
     print(loc + ": fail:", *msg)
     print()
 
@@ -87,8 +97,8 @@ def CHECK_EQ(expected, effective, loc = None):
     if expected == effective:
         PASS()
     else:
-        exp = str(expected)
-        eff = str(effective)
+        exp = format(expected)
+        eff = format(effective)
         msg = exp + " != " + eff
         if msg.count("\n") == 0:
             FAIL(msg, loc=loc)
@@ -106,13 +116,18 @@ def CHECK_ISOMORPHIC(a1, a2):
     # remove the no_linear hacks in first-order.py.
     if not a1.is_deterministic() or not a2.is_deterministic():
         # Gee...  That's poor.
-        CHECK_EQ(a1.info(), a2.info())
+        info1 = a1.info()
+        info2 = a2.info()
+        # Ignore differences in type.
+        info1['type'] = 'hidden type'
+        info2['type'] = 'hidden type'
+        CHECK_EQ(info1, info2)
         CHECK_EQ(a1.shortest(4), a2.shortest(4))
     elif a1.is_isomorphic(a2):
         PASS()
     else:
-        a1 = str(a1)
-        a2 = str(a2)
+        a1 = format(a1)
+        a2 = format(a2)
         FAIL("automata are not isomorphic")
         rst_file("Left automaton", a1)
         rst_file("Right automaton", a2)
