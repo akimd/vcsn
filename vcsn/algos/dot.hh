@@ -22,7 +22,7 @@ namespace vcsn
 
     /// \brief Format an automaton into Dot.
     ///
-    /// \tparam Aut an automaton type, not a pointer type.
+    /// \tparam AutPtr an automaton type.
     template <typename AutPtr>
     class dotter: public outputter<AutPtr>
     {

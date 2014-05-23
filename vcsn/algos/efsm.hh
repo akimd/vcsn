@@ -194,7 +194,7 @@ namespace vcsn
 
   /// \brief Format automaton to EFSM format, based on FSM format.
   ///
-  /// \tparam Aut an automaton type, not a pointer type.
+  /// \tparam AutPtr an automaton type.
   template <typename AutPtr>
   std::ostream&
   efsm(const AutPtr& aut, std::ostream& out)

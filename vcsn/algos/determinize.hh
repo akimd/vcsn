@@ -23,7 +23,7 @@ namespace vcsn
   {
     /// \brief Determinize an automaton.
     ///
-    /// \tparam Aut an automaton type, not a pointer type.
+    /// \tparam AutPtr an automaton type.
     template <typename AutPtr>
     class determinizer
     {

@@ -111,7 +111,7 @@ namespace vcsn
 
   /// \brief Format automaton to TikZ format.
   ///
-  /// \tparam Aut an automaton type, not a pointer type.
+  /// \tparam AutPtr an automaton type.
   template <typename AutPtr>
   std::ostream&
   tikz(const AutPtr& aut, std::ostream& out)
