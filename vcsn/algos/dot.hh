@@ -103,7 +103,7 @@ namespace vcsn
                     static bool debug = getenv("VCSN_DEBUG");
                     if (debug)
                       os_ << " (" << s << ')';
-                    os_ << "\"]";
+                    os_ << "\", shape = box, style = rounded]";
                   }
                 if (!has(useful, s))
                   os_ << " [" << gray << ']';

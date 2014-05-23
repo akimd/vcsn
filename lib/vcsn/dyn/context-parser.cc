@@ -12,7 +12,9 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::parse_()
     {
       std::string w = word();
-      if (w == "mutable" || w == "transpose")
+      if (w == "linear"
+          || w == "mutable"
+          || w == "transpose")
         return make_automaton(w);
       else if (w == "context")
       {
@@ -211,14 +213,25 @@ namespace vcsn
     std::shared_ptr<automaton>
     context_parser::make_automaton(const std::string& prefix)
     {
-      eat(is_, "_automaton<");
       std::shared_ptr<automaton> res = nullptr;
       if (prefix == "mutable")
-        res = std::make_shared<automaton>(prefix + "_automaton",
-                                          make_context());
+        {
+          eat(is_, "_automaton<");
+          res = std::make_shared<automaton>("mutable_automaton",
+                                            make_context());
+        }
+      else if (prefix == "linear")
+        {
+          eat(is_, "_automaton<");
+          res = std::make_shared<automaton>("linear_automaton",
+                                            make_automaton(word()));
+        }
       else if (prefix == "transpose")
-        res = std::make_shared<automaton>(prefix + "_automaton",
-                                          make_automaton(word()));
+        {
+          eat(is_, "_automaton<");
+          res = std::make_shared<automaton>("transpose_automaton",
+                                            make_automaton(word()));
+        }
       else
         raise("invalid automaton name: ", str_escape(prefix));
       eat(is_, '>');

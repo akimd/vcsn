@@ -21,8 +21,19 @@ namespace vcsn
 
     template <std::size_t Band, typename AutPtr>
     using blind_automaton
-    = std::shared_ptr<blind_automaton_impl<Band, AutPtr>>;
+      = std::shared_ptr<blind_automaton_impl<Band, AutPtr>>;
   }
+
+  // vcsn/core/first-order.hh.
+  namespace detail
+  {
+    template <typename Aut>
+    struct linear_automaton_impl;
+  }
+
+  template <typename Aut>
+  using linear_automaton
+    = std::shared_ptr<detail::linear_automaton_impl<Aut>>;
 }
 
 #endif // !VCSN_ALGOS_FWD_HH

@@ -5,8 +5,11 @@
 # include <stack>
 # include <unordered_map>
 
-# include <vcsn/core/rat/visitor.hh>
+# include <vcsn/core/automaton-decorator.hh>
+# include <vcsn/core/mutable_automaton.hh>
 # include <vcsn/core/rat/expansionset.hh>
+# include <vcsn/core/rat/ratexpset.hh>
+# include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/expansion.hh>
 # include <vcsn/dyn/polynomial.hh>
@@ -508,41 +511,44 @@ namespace vcsn
     }
   }
 
-  /*-----------------.
-  | linear(ratexp).  |
-  `-----------------*/
+  /*-------------------.
+  | linear_automaton.  |
+  `-------------------*/
 
   namespace detail
   {
-    template <typename RatExpSet>
-    struct linearer
+    /// An incremental automaton whose states are ratexps.
+    template <typename Aut>
+    struct linear_automaton_impl : automaton_decorator<Aut>
     {
-      using ratexpset_t = RatExpSet;
+      using automaton_t = Aut;
+      using context_t = context_t_of<Aut>;
+      using ratexpset_t = ratexpset<context_t>;
       using ratexp_t = typename ratexpset_t::value_t;
+      using super_t = automaton_decorator<mutable_automaton<context_t>>;
+      using state_t = state_t_of<super_t>;
+      using label_t = label_t_of<super_t>;
+      using weight_t = weight_t_of<super_t>;
 
-      using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = labelset_t_of<context_t>;
-      using label_t = typename labelset_t::value_t;
-      using weightset_t = weightset_t_of<context_t>;
-      using weight_t = weight_t_of<context_t>;
+      linear_automaton_impl(const context_t& ctx)
+        : super_t(ctx)
+        , rs_(ctx)
+      {}
 
-      using automaton_t = mutable_automaton<context_t>;
-      using state_t = state_t_of<automaton_t>;
+      static std::string sname()
+      {
+        return "linear_automaton<" + super_t::sname() + ">";
+      }
 
-      /// Symbolic states: the derived terms are polynomials of ratexps.
-      using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
-      using polynomial_t = typename polynomialset_t::value_t;
+      std::string vname(bool full = true) const
+      {
+        return "linear_automaton<" + super_t::vname(full) + ">";
+      }
 
       /// Symbolic states to state handlers.
       using smap = std::unordered_map<ratexp_t, state_t,
                                       vcsn::hash<ratexpset_t>,
                                       vcsn::equal_to<ratexpset_t>>;
-
-      linearer(const ratexpset_t& rs, bool use_spontaneous = false)
-        : rs_(rs)
-        , use_spontaneous_(use_spontaneous)
-        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
-      {}
 
       /// The state for ratexp \a r.
       /// If this is a new state, schedule it for visit.
@@ -556,7 +562,7 @@ namespace vcsn
                      std::cerr << "New state: ";
                      rs_.print(std::cerr, r) << '\n';
                      );
-            dst = res_->new_state();
+            dst = super_t::new_state();
             map_[r] = dst;
             todo_.push(r);
           }
@@ -565,36 +571,48 @@ namespace vcsn
         return dst;
       }
 
-      automaton_t operator()(const ratexp_t& ratexp)
+      using super_t::add_transition;
+      void
+      add_transition(const ratexp_t& src, const ratexp_t& dst,
+                     const label_t& l, const weight_t& w)
       {
-        weightset_t ws = *rs_.weightset();
-        // Turn the ratexp into a polynomial.
-        {
-          polynomial_t initial
-            = breaking_ ? split(rs_, ratexp)
-            : polynomial_t{{ratexp, ws.one()}};
-          for (const auto& p: initial)
-            // Also loads todo_ via state().
-            res_->set_initial(state(p.first), p.second);
-        }
-        rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
+        super_t::add_transition(state(src), state(dst), l, w);
+      }
 
-        while (!todo_.empty())
-          {
-            ratexp_t r = todo_.top();
-            todo_.pop();
-            state_t src = map_[r];
-            auto expansion = expand(r);
-            res_->set_final(src, expansion.constant);
-            for (const auto& p: expansion.polynomials)
-              for (const auto& m: p.second)
-                res_->add_transition(src, state(m.first), p.first, m.second);
-          }
-        return std::move(res_);
+      using super_t::set_initial;
+      void
+      set_initial(const ratexp_t& s, const weight_t& w)
+      {
+        super_t::set_initial(state(s), w);
+      }
+
+      using super_t::set_final;
+      void
+      set_final(const ratexp_t& s, const weight_t& w)
+      {
+        super_t::set_final(state(s), w);
+      }
+
+      bool state_has_name(state_t s) const
+      {
+        return s != super_t::pre() && s != super_t::post();
+      }
+
+      std::ostream&
+      print_state_name(std::ostream& o, state_t s) const
+      {
+        if (origins_.empty())
+          origins_ = origins();
+        if (has(origins_, s))
+          o << str_escape(format(rs_, origins_[s]));
+        else
+          o << "unknown: " << s;
+        return o;
       }
 
       /// Ordered map: state -> its derived term.
       using origins_t = std::map<state_t, ratexp_t>;
+      mutable origins_t origins_;
       origins_t
       origins() const
       {
@@ -619,13 +637,82 @@ namespace vcsn
         return o;
       }
 
-    private:
-      /// States to visit.
-      std::stack<ratexp_t> todo_;
       /// The ratexp's set.
       ratexpset_t rs_;
+      /// States to visit.
+      std::stack<ratexp_t> todo_;
       /// ratexp -> state.
       smap map_;
+    };
+  }
+
+  template <typename Aut>
+  using linear_automaton
+    = std::shared_ptr<detail::linear_automaton_impl<Aut>>;
+
+
+  /*-----------------.
+  | linear(ratexp).  |
+  `-----------------*/
+
+  namespace detail
+  {
+    /// Build the derived-term automaton via expansions.
+    template <typename RatExpSet>
+    struct linearer
+    {
+      using ratexpset_t = RatExpSet;
+      using ratexp_t = typename ratexpset_t::value_t;
+
+      using context_t = context_t_of<ratexpset_t>;
+      using labelset_t = labelset_t_of<context_t>;
+      using label_t = typename labelset_t::value_t;
+      using weightset_t = weightset_t_of<context_t>;
+      using weight_t = weight_t_of<context_t>;
+
+      using automaton_t = linear_automaton<mutable_automaton<context_t>>;
+      using state_t = state_t_of<automaton_t>;
+
+      /// Symbolic states: the derived terms are polynomials of ratexps.
+      using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
+      using polynomial_t = typename polynomialset_t::value_t;
+
+      linearer(const ratexpset_t& rs, bool use_spontaneous = false)
+        : rs_(rs)
+        , use_spontaneous_(use_spontaneous)
+        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
+      {}
+
+      automaton_t operator()(const ratexp_t& ratexp)
+      {
+        weightset_t ws = *rs_.weightset();
+        // Turn the ratexp into a polynomial.
+        {
+          polynomial_t initial
+            = breaking_ ? split(rs_, ratexp)
+            : polynomial_t{{ratexp, ws.one()}};
+          for (const auto& p: initial)
+            // Also loads todo_ via state().
+            res_->set_initial(p.first, p.second);
+        }
+        rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
+
+        while (!res_->todo_.empty())
+          {
+            ratexp_t src = res_->todo_.top();
+            res_->todo_.pop();
+            auto expansion = expand(src);
+            res_->set_final(src, expansion.constant);
+            for (const auto& p: expansion.polynomials)
+              for (const auto& m: p.second)
+                res_->add_transition(src, m.first, p.first, m.second);
+          }
+        return std::move(res_);
+      }
+
+    private:
+      /// The ratexp's set.
+      ratexpset_t rs_;
       bool use_spontaneous_ = false;
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
@@ -637,14 +724,14 @@ namespace vcsn
   /// Derive a ratexp wrt to a string.
   template <typename RatExpSet>
   inline
-  mutable_automaton<context_t_of<RatExpSet>>
+  linear_automaton<mutable_automaton<typename RatExpSet::context_t>>
   linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
          bool use_spontaneous = false)
   {
     detail::linearer<RatExpSet> dt{rs, use_spontaneous};
     auto res = dt(r);
     if (getenv("VCSN_ORIGINS"))
-      dt.print(std::cout, dt.origins());
+      res->print(std::cout, res->origins());
     return res;
   }
 
@@ -653,7 +740,7 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Book>
+      template <typename RatExpSet, typename Bool>
       automaton
       linear(const ratexp& exp, bool use_spontaneous = false)
       {

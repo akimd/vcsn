@@ -92,7 +92,14 @@ namespace vcsn
 
     DEFINE(automaton)
     {
-      if (t.get_type() == "mutable_automaton")
+      if (t.get_type() == "linear_automaton")
+      {
+        os_ << "vcsn::linear_automaton<" << incendl;
+        t.get_content()->accept(*this);
+        os_ << decendl << '>';
+        header("vcsn/algos/first-order.hh");
+      }
+      else if (t.get_type() == "mutable_automaton")
       {
         os_ << "vcsn::mutable_automaton<" << incendl;
         t.get_content()->accept(*this);
