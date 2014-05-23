@@ -72,9 +72,9 @@ namespace vcsn
       return aut_;
     }
 
-    /*--------------------.
-    | constexpr methods.  |
-    `--------------------*/
+    /*------------.
+    | constexpr.  |
+    `------------*/
 
 # define DEFINE(Name)                                                   \
     template <typename... Args>                                         \
@@ -90,12 +90,13 @@ namespace vcsn
     DEFINE(null_transition);
     DEFINE(post);
     DEFINE(pre);
+    DEFINE(sname);
 
 #undef DEFINE
 
-    /*----------------.
-    | const methods.  |
-    `----------------*/
+    /*--------.
+    | const.  |
+    `--------*/
 
 # define DEFINE(Name)                                           \
     template <typename... Args>                                 \
@@ -115,10 +116,14 @@ namespace vcsn
     DEFINE(final_transitions);
     DEFINE(get_final_weight);
     DEFINE(get_initial_weight);
+    DEFINE(get_transition);
+    DEFINE(has_transition);
+    DEFINE(has_state);
     DEFINE(in);
     DEFINE(initial_transitions);
     DEFINE(is_final);
     DEFINE(is_initial);
+    DEFINE(label_of);
     DEFINE(labelset);
     DEFINE(num_all_states);
     DEFINE(num_finals);
@@ -130,14 +135,15 @@ namespace vcsn
     DEFINE(src_of);
     DEFINE(states);
     DEFINE(transitions);
+    DEFINE(vname);
     DEFINE(weight_of);
     DEFINE(weightset);
 # undef DEFINE
 
 
-    /*----------------------.
-    | Forwarded non const.  |
-    `----------------------*/
+    /*------------.
+    | non const.  |
+    `------------*/
 
 # define DEFINE(Name)                                           \
     template <typename... Args>                                 \
@@ -148,8 +154,25 @@ namespace vcsn
       return aut_->Name(std::forward<Args>(args)...);           \
     }
 
+    DEFINE(add_final);
+    DEFINE(add_initial);
+    DEFINE(add_transition);
+    DEFINE(add_transition_copy);
+    DEFINE(add_weight);
     DEFINE(del_state);
+    DEFINE(del_transition);
+    DEFINE(lmul_weight);
     DEFINE(new_state);
+    DEFINE(new_transition);
+    DEFINE(new_transition_copy);
+    DEFINE(rmul_weight);
+    DEFINE(set_final);
+    DEFINE(set_initial);
+    DEFINE(set_transition);
+    DEFINE(set_weight);
+    DEFINE(unset_final);
+    DEFINE(unset_initial);
+
 # undef DEFINE
   };
 
