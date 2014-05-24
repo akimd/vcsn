@@ -67,7 +67,7 @@ namespace vcsn
       using polys_t = typename expansionset_t::polys_t;
       using expansion_t = typename expansionset_t::value_t;
 
-      first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = false)
+      first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = true)
         : rs_(rs)
         , use_spontaneous_(use_spontaneous)
       {}
@@ -483,7 +483,7 @@ namespace vcsn
   inline
   typename rat::expansionset<RatExpSet>::value_t
   first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-              bool use_spontaneous = false)
+              bool use_spontaneous = true)
   {
     rat::first_order_visitor<RatExpSet> first_order{rs, use_spontaneous};
     return first_order.first_order(e);
@@ -496,7 +496,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Bool>
       expansion
-      first_order(const ratexp& exp, bool use_spontaneous = false)
+      first_order(const ratexp& exp, bool use_spontaneous = true)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.ratexpset();
@@ -677,7 +677,7 @@ namespace vcsn
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      linearer(const ratexpset_t& rs, bool use_spontaneous = false)
+      linearer(const ratexpset_t& rs, bool use_spontaneous = true)
         : rs_(rs)
         , use_spontaneous_(use_spontaneous)
         , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
@@ -713,7 +713,7 @@ namespace vcsn
     private:
       /// The ratexp's set.
       ratexpset_t rs_;
-      bool use_spontaneous_ = false;
+      bool use_spontaneous_ = true;
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.
@@ -726,7 +726,7 @@ namespace vcsn
   inline
   linear_automaton<mutable_automaton<typename RatExpSet::context_t>>
   linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
-         bool use_spontaneous = false)
+         bool use_spontaneous = true)
   {
     detail::linearer<RatExpSet> dt{rs, use_spontaneous};
     auto res = dt(r);
@@ -742,7 +742,7 @@ namespace vcsn
       /// Bridge.
       template <typename RatExpSet, typename Bool>
       automaton
-      linear(const ratexp& exp, bool use_spontaneous = false)
+      linear(const ratexp& exp, bool use_spontaneous = true)
       {
         const auto& r = exp->as<RatExpSet>();
         return make_automaton(linear(r.ratexpset(),

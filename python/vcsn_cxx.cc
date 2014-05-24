@@ -502,7 +502,7 @@ struct ratexp
     return vcsn::dyn::expand(val_);
   }
 
-  expansion first_order(bool use_spontaneous = false) const
+  expansion first_order(bool use_spontaneous = true) const
   {
     return vcsn::dyn::first_order(val_, use_spontaneous);
   }
@@ -526,7 +526,7 @@ struct ratexp
 
   ratexp left_mult(const weight& w) const;
 
-  automaton linear(bool use_spontaneous = false) const
+  automaton linear(bool use_spontaneous = true) const
   {
     return vcsn::dyn::linear(val_, use_spontaneous);
   }

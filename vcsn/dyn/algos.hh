@@ -160,7 +160,7 @@ namespace vcsn
     /// \param exp              the input ratexp
     /// \param use_spontaenous  whether to generate "spontaneous" terms
     ///                         instead of recursive development
-    expansion first_order(const ratexp& exp, bool use_spontaenous = false);
+    expansion first_order(const ratexp& exp, bool use_spontaenous = true);
 
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
