@@ -274,6 +274,11 @@ struct automaton
     return vcsn::dyn::is_proper(val_);
   }
 
+  bool is_sequential() const
+  {
+    return vcsn::dyn::is_sequential(val_);
+  }
+
   bool is_standard() const
   {
     return vcsn::dyn::is_standard(val_);
@@ -946,6 +951,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_normalized", &automaton::is_normalized)
     .def("is_proper", &automaton::is_proper)
     .def("is_out_sorted", &automaton::is_out_sorted)
+    .def("is_sequential", &automaton::is_sequential)
     .def("is_standard", &automaton::is_standard)
     .def("_is_synchronized_by", &automaton::is_synchronized_by)
     .def("is_synchronizing", &automaton::is_synchronizing)
