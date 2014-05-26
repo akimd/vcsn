@@ -79,7 +79,7 @@ try:
     automaton.display = \
         lambda self: interact(lambda mode: _automaton_display(self, mode),
                               mode = ['dot', 'info', 'tooltip', 'type'])
-except:
+except ImportError:
     pass
 
 automaton.dot = lambda self: _one_epsilon(self.format('dot'))
