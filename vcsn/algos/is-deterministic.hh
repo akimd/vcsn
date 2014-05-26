@@ -13,7 +13,7 @@ namespace vcsn
   /// Whether state \a s is deterministic in \a aut.
   template <typename Aut>
   inline bool
-  is_deterministic(const Aut& aut, state_t_of<Aut> s)
+  is_sequential(const Aut& aut, state_t_of<Aut> s)
   {
     using automaton_t = Aut;
     static_assert(labelset_t_of<automaton_t>::is_free(),
@@ -27,6 +27,32 @@ namespace vcsn
     return true;
   }
 
+  /// Number of non-sequential states.
+  template <class Aut>
+  inline size_t
+  num_sequential_states(const Aut& aut)
+  {
+    size_t res = 0;
+    for (auto s: aut->states())
+      res += is_sequential(aut, s);
+    return res;
+  }
+
+  /// Whether has at most an initial state, and all its states
+  /// are sequential.
+  template <class Aut>
+  inline bool
+  is_sequential(const Aut& aut)
+  {
+    if (1 < aut->initial_transitions().size())
+      return false;
+
+    for (auto s: aut->states())
+      if (!is_sequential(aut, s))
+        return false;
+    return true;
+  }
+
   /// Number of non-deterministic states.
   template <class Aut>
   inline size_t
@@ -35,10 +61,7 @@ namespace vcsn
     static_assert(labelset_t_of<Aut>::is_free(),
                   "num_deterministic_states: requires free labelset");
 
-    size_t res = 0;
-    for (auto s: aut->states())
-      res += is_deterministic(aut, s);
-    return res;
+    return num_sequential_states(aut);
   }
 
   /// Whether has at most an initial state, and all its states
@@ -50,13 +73,7 @@ namespace vcsn
     static_assert(labelset_t_of<Aut>::is_free(),
                   "is_deterministic: requires free labelset");
 
-    if (1 < aut->initial_transitions().size())
-      return false;
-
-    for (auto s: aut->states())
-      if (!is_deterministic(aut, s))
-        return false;
-    return true;
+    return is_sequential(aut);
   }
 
   namespace dyn
@@ -66,11 +83,20 @@ namespace vcsn
       /// Bridge.
       template <typename Aut>
       bool
-      is_deterministic(const automaton& aut)
+      is_sequential(const automaton& aut)
       {
-        return is_deterministic(aut->as<Aut>());
+        return is_sequential(aut->as<Aut>());
       }
 
+      template <typename Aut>
+      bool
+      is_deterministic(const automaton& aut)
+      {
+        return is_sequential(aut->as<Aut>());
+      }
+
+      REGISTER_DECLARE(is_sequential,
+                       (const automaton& aut) -> bool);
       REGISTER_DECLARE(is_deterministic,
                        (const automaton& aut) -> bool);
     }
