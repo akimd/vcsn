@@ -85,6 +85,28 @@ namespace vcsn
         map_.clear();
       }
 
+      /// The state for set of states \a ss.
+      /// If this is a new state, schedule it for visit.
+      state_t state(const state_set& ss)
+      {
+        state_t res;
+        auto i = map_.find(ss);
+        if (i == std::end(map_))
+          {
+            res = res_->new_state();
+            map_[ss] = res;
+
+            if (ss.intersects(finals_))
+              res_->set_final(res);
+
+            todo_.push(ss);
+            return res;
+          }
+        else
+          res = i->second;
+        return res;
+      };
+
       /// The determinized automaton.
       automaton_nocv_t operator()()
       {
@@ -105,32 +127,17 @@ namespace vcsn
                 ss.set(aut_->dst_of(tr));
             }
 
-
-        // Create a new output state from SS. Insert in the output
-        // automaton, in the map, and push in the stack.
-        auto push_new_state =
-          [this] (const state_set& ss) -> state_t
-          {
-            state_t r = res_->new_state();
-            map_[ss] = r;
-
-            if (ss.intersects(finals_))
-              res_->set_final(r);
-
-            todo_.push(ss);
-            return r;
-          };
-
         // The input initial states.
         state_set next;
         next.resize(state_size_);
         for (auto t : aut_->initial_transitions())
           next.set(aut_->dst_of(t));
-        res_->set_initial(push_new_state(next));
+        res_->set_initial(state(next));
 
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
+            state_t src = state(ss);
             todo_.pop();
             for (auto l: letters)
               {
@@ -140,13 +147,7 @@ namespace vcsn
                   next |= successors[s][l];
                 // Don't generate the sink.
                 if (complete_ || next.any())
-                  {
-                    auto i = map_.find(next);
-                    state_t n = ((i == map_.end())
-                                 ? push_new_state(next)
-                                 : i->second);
-                    res_->new_transition(map_[ss], n, l);
-                  }
+                  res_->new_transition(src, state(next), l);
               }
           }
         return res_;
