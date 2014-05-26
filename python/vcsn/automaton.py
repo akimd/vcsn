@@ -2,6 +2,7 @@
 ## automaton.  ##
 ## ----------- ##
 
+from IPython.display import display, SVG
 import re
 from vcsn_cxx import automaton, label, weight
 from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
@@ -22,7 +23,7 @@ automaton.__repr__ = lambda self: self.info()['type']
 automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
-automaton._repr_svg_ = lambda self: _dot_to_svg(_one_epsilon(self.format('dot')))
+automaton._repr_svg_ = lambda self: _dot_to_svg(self.dot())
 
 class _conjunction(object):
     """A proxy class that delays calls to the & operator in order
@@ -53,7 +54,40 @@ class _conjunction(object):
     def __hasattr__(self, name):
         return hasattr(self.value(), name)
 
+def _automaton_display(self, mode):
+    """Display automaton `self` with a local menu to propose different
+    formats.
+    """
+    if mode == "dot" or mode == "tooltip":
+        dot = _one_epsilon(self.format("dot"))
+        if mode == "tooltip":
+            dot = re.sub(r'label = (".*?"), shape = box, style = rounded',
+                         r'tooltip = \1',
+                         dot)
+        svg = _dot_to_svg(dot)
+        display(SVG(svg))
+    elif mode == "info":
+        display(self.info())
+    elif mode == "type":
+        display(repr(self))
+    else:
+        raise(ValueError("invalid display format: " + mode))
+
+# Requires IPython 2.0.
+try:
+    from IPython.html.widgets import interact
+    automaton.display = \
+        lambda self: interact(lambda mode: _automaton_display(self, mode),
+                              mode = ['dot', 'info', 'tooltip', 'type'])
+except:
+    pass
+
+automaton.dot = lambda self: _one_epsilon(self.format('dot'))
+
 def _automaton_eval(self, w):
+    """Evaluation of word `w` on `self`, with possible conversion from
+    plain string to genuine label object.
+    """
     c = self.context()
     if not isinstance(w, label):
         w = c.word(str(w))
