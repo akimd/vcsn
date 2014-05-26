@@ -10,8 +10,14 @@ namespace vcsn
 
   namespace dyn
   {
+    REGISTER_DEFINE(is_sequential);
     REGISTER_DEFINE(is_deterministic);
 
+    bool
+    is_sequential(const automaton& aut)
+    {
+      return detail::is_sequential_registry().call(aut);
+    }
     bool
     is_deterministic(const automaton& aut)
     {
