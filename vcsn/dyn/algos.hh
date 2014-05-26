@@ -214,6 +214,9 @@ namespace vcsn
     /// Whether has no spontaneous transition.
     bool is_proper(const automaton& aut);
 
+    /// Whether \a aut is sequential.
+    bool is_sequential(const automaton& aut);
+
     /// Whether is standard (unique initial state, with weight one, no
     /// incoming transition).
     bool is_standard(const automaton& aut);
