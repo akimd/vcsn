@@ -14,20 +14,16 @@
 namespace vcsn
 {
 
-  /*--------------------------------------.
-  | minimization with Moore's algorithm.  |
-  `--------------------------------------*/
+  /*---------------------------------------------------------.
+  | minimization with Moore's algorithm: signature variant.  |
+  `---------------------------------------------------------*/
   namespace detail_signature
   {
     template <typename Aut>
     class minimizer
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires labels_are_letters");
-      // FIXME: I'm nearly sure I can remove this, as now I check for
-      // the weightset when looking at the algorithm string parameter.
-      // static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
-      //               "requires Boolean weights");
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+                    "requires Boolean weights");
 
       using automaton_t = Aut;
 
@@ -43,6 +39,8 @@ namespace vcsn
       using set_t = std::vector<state_t>;
       using state_to_class_t = std::unordered_map<state_t, class_t>;
       using class_to_set_t = std::vector<set_t>;
+
+      constexpr static const char* me() { return "minimize-signature"; }
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
@@ -318,7 +316,7 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
       {
-        require(is_trim(a_), "minimize: signature: input must be trim");
+        require(is_trim(a_), std::string(me()) + ": input must be trim");
 
         // Fill state_to_state_output.
         for (auto s : a_->all_states())

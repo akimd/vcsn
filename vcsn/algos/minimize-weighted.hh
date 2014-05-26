@@ -20,9 +20,6 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires labels_are_letters");
-
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
@@ -41,6 +38,8 @@ namespace vcsn
       using set_t = std::vector<state_t>;
       using state_to_class_t = std::unordered_map<state_t, class_t>;
       using class_to_set_t = std::vector<set_t>;
+
+      constexpr static const char* me() { return "minimize-weighted"; }
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
@@ -294,7 +293,7 @@ namespace vcsn
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
       {
-        require(is_trim(a_), "non-trim input");
+        require(is_trim(a_), std::string(me()) + ": input must be trim");
 
         // Fill state_to_state_output.
         for (auto s : a_->all_states())
