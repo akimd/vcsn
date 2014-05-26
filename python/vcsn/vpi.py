@@ -11,7 +11,7 @@ from vcsn import *
 
 # automaton_load is already there.
 def load_automaton(filename):
-    return automaton_load(filename)
+    return automaton.load(filename)
 
 def save_automaton(automaton, filename):
     open(filename, 'w').write(automaton.format('dot'))
@@ -412,6 +412,3 @@ def show():
 def list_functions():
   import vcsn
   help(vcsn)
-
-# Work around a temporary glitch:
-automaton.__and__ = lambda l, r: clone(conjunction(l, r))

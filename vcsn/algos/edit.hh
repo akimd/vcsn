@@ -5,6 +5,7 @@
 # include <string>
 # include <type_traits>
 
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
@@ -36,12 +37,12 @@ namespace vcsn
     class editer // Yep.
     {
       using automaton_t = Aut;
-      using label_t = typename automaton_t::label_t;
-      using weight_t = typename automaton_t::weight_t;
-      using state_t = typename automaton_t::state_t;
-      using transition_t = typename automaton_t::transition_t;
-      using labelset_t = typename automaton_t::labelset_t;
-      using weightset_t = typename automaton_t::weightset_t;
+      using label_t = label_t_of<automaton_t>;
+      using weight_t = weight_t_of<automaton_t>;
+      using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
+      using labelset_t = labelset_t_of<automaton_t>;
+      using weightset_t = weightset_t_of<automaton_t>;
 
       /// The automaton we're working on, and its context data.
       automaton_t& a_;
@@ -64,7 +65,7 @@ namespace vcsn
 
       void ensure_state_presence(const state_t s)
       {
-        if (s == a_.pre() || s == a_.post() || ! a_.has_state(s))
+        if (s == a_->pre() || s == a_->post() || ! a_->has_state(s))
           throw std::runtime_error("state not present " + int_to_string(s));
       }
 
@@ -96,8 +97,8 @@ namespace vcsn
              const std::string& label,
              const std::string& weight)
         : a_(a)
-        , ls_(* a.labelset())
-        , ws_(* a.weightset())
+        , ls_(* a->labelset())
+        , ws_(* a->weightset())
         , opcode_(opcode)
         , int1_(int1)
         , int2_(int2)
@@ -110,12 +111,12 @@ namespace vcsn
         switch (opcode_)
           {
           case edit_opcode::add_state:
-            return int(a_.new_state());
+            return int(a_->new_state());
           case edit_opcode::remove_state:
             {
               state_t s = int1_;
               ensure_state_presence(s);
-              a_.del_state(s);
+              a_->del_state(s);
               return -1;
             }
           case edit_opcode::add_transition:
@@ -123,7 +124,7 @@ namespace vcsn
               state_t s1 = int1_, s2 = int2_;
               ensure_state_presence(s1);
               ensure_state_presence(s2);
-              a_.add_transition(s1, s2, string_to_label(label_),
+              a_->add_transition(s1, s2, string_to_label(label_),
                                 string_to_weight(weight_));
               return -1;
             }
@@ -133,8 +134,8 @@ namespace vcsn
               ensure_state_presence(s1);
               ensure_state_presence(s2);
               label_t l = string_to_label(label_);
-              a_.del_transition(s1, s2, l);
-              a_.add_transition(s1, s2, l, string_to_weight(weight_));
+              a_->del_transition(s1, s2, l);
+              a_->add_transition(s1, s2, l, string_to_weight(weight_));
               return -1;
             }
           case edit_opcode::get_transition:
@@ -143,17 +144,17 @@ namespace vcsn
               ensure_state_presence(s1);
               ensure_state_presence(s2);
               label_t l = string_to_label(label_);
-              if (a_.has_transition(s1, s2, l))
-                return a_.get_transition(s1, s2, l);
+              if (a_->has_transition(s1, s2, l))
+                return a_->get_transition(s1, s2, l);
               else
                 throw std::runtime_error("transition not present");
             }
           case edit_opcode::remove_transition:
             {
               transition_t t = int1_;
-              if (! a_.has_transition(t))
+              if (! a_->has_transition(t))
                 throw std::runtime_error("transition not present");
-              a_.del_transition(t);
+              a_->del_transition(t);
               return -1;
             }
           case edit_opcode::set_initialness:
@@ -163,12 +164,12 @@ namespace vcsn
               weight_t w = string_to_weight(weight_);
               ensure_state_presence(s);
               if (initialness)
-                a_.set_initial(s, w);
+                a_->set_initial(s, w);
               else
                 {
                   if (! ws_.is_one(w))
                     throw std::runtime_error("non-one weight on unset");
-                  a_.unset_initial(s);
+                  a_->unset_initial(s);
                 }
               return -1;
             }
@@ -179,12 +180,12 @@ namespace vcsn
               weight_t w = string_to_weight(weight_);
               ensure_state_presence(s);
               if (finalness)
-                a_.set_final(s, w);
+                a_->set_final(s, w);
               else
                 {
                   if (! ws_.is_one(w))
                     throw std::runtime_error("non-one weight on unset");
-                  a_.unset_final(s);
+                  a_->unset_final(s);
                 }
               return -1;
             }

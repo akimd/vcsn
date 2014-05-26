@@ -147,7 +147,7 @@ struct automaton
   int edit(int opcode, int int1, int int2, const std::string& label,
            const std::string& weight)
   {
-    return vcsn::dyn::edit(aut_, opcode, int1, int2, label, weight);
+    return vcsn::dyn::edit(val_, opcode, int1, int2, label, weight);
   }
 
   polynomial enumerate(unsigned max) const;
