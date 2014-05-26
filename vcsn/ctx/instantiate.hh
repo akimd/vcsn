@@ -184,7 +184,6 @@ namespace vcsn
         REGISTER(is_synchronized_by, aut_t, wls_t);
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(list_polynomial, wps_t, std::ostream);
-        REGISTER(minimize, aut_t, const std::string);
         REGISTER(pair, aut_t, bool);
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
@@ -350,6 +349,7 @@ namespace vcsn
         REGISTER(make_context, ctx_t);
         REGISTER(make_ratexpset, ctx_t);
         REGISTER(make_word_context, ctx_t);
+        REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);
         REGISTER(print_ctx, ctx_t, std::ostream, const std::string);
         REGISTER(print_expansion, es_t, std::ostream, const std::string);

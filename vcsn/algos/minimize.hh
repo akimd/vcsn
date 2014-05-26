@@ -15,7 +15,8 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value,
+  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+                          && labelset_t_of<Aut>::is_free(),
                           Aut>::type
   minimize(const Aut& a, const std::string& algo)
   {
@@ -24,6 +25,23 @@ namespace vcsn
     else if (algo == "moore")
       return minimize_moore(a);
     else if (algo == "signature")
+      return minimize_signature(a);
+    else if (algo == "weighted")
+      return minimize_weighted(a); // FIXME: fix
+    else
+      raise("minimize: invalid algorithm: ", str_escape(algo));
+  }
+
+  template <typename Aut>
+  inline
+  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+                          && ! labelset_t_of<Aut>::is_free(),
+                          Aut>::type
+  minimize(const Aut& a, const std::string& algo)
+  {
+    // "moore" requires a finite alphabet; I guess it could be adapted
+    // to lan, however.
+    if (algo == "signature")
       return minimize_signature(a);
     else if (algo == "weighted")
       return minimize_weighted(a); // FIXME: fix

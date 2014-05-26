@@ -22,8 +22,6 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires labels_are_letters");
       // FIXME: I'm nearly sure I can remove this, as now I check for
       // the weightset when looking at the algorithm string parameter.
       // static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
@@ -318,8 +316,6 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
       {
-        require(is_trim(a_), "minimize: signature: input must be trim");
-
         // Fill state_to_state_output.
         for (auto s : a_->all_states())
           {

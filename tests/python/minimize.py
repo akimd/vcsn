@@ -34,24 +34,20 @@ check('weighted',   redundant, redundant_exp)
 a = aut('incomplete-non-trim.gv')
 #xfail('brzozowski', a)
 xfail('moore',      a)
-xfail('signature',  a)
-xfail('weighted',   a)
+check('signature',  a,         a)
+check('weighted',   a,         a)
 
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
 a = aut('no-initial-states.gv')
 #xfail('brzozowski', a)
 xfail('moore',      a)
-xfail('signature',  a)
-xfail('weighted',   a)
 
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
 a = aut("no-final-states.gv")
 #xfail('brzozowski', a)
 xfail('moore',      a)
-xfail('signature',  a)
-xfail('weighted',   a)
 
 ## Non-regression testcase: ensure that moore works and produces a
 ## correct result even with no non-final states.

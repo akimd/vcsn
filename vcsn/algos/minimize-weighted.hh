@@ -20,9 +20,6 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires labels_are_letters");
-
       using automaton_t = Aut;
 
       /// Input automaton, supplied at construction time.
@@ -294,8 +291,6 @@ namespace vcsn
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
       {
-        require(is_trim(a_), "non-trim input");
-
         // Fill state_to_state_output.
         for (auto s : a_->all_states())
           {
