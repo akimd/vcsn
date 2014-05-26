@@ -33,8 +33,7 @@ namespace vcsn
   is_synchronized_by(const Aut& aut,
                      const typename labelset_t_of<Aut>::word_t& w)
   {
-    using context_t = context_t_of<Aut>;
-    using automaton_t =  mutable_automaton<context_t>;
+    using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
 
     std::unordered_set<state_t> todo;
