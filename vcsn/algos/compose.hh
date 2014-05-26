@@ -552,7 +552,7 @@ namespace vcsn
     template<typename Aut>
     typename std::enable_if<labelset_t_of<Aut>::has_one(),
                             detail::blind_automaton<0, Aut>>::type
-    get_insplit(const Aut& aut)
+    get_insplit(Aut& aut)
     {
       return insplit(make_blind_automaton<0>(aut));
     }
@@ -560,7 +560,7 @@ namespace vcsn
     template<typename Aut>
     typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                             detail::blind_automaton<0, Aut>>::type
-    get_insplit(const Aut& aut)
+    get_insplit(Aut& aut)
     {
       return make_blind_automaton<0>(aut);
     }
@@ -578,10 +578,7 @@ namespace vcsn
     -> typename detail::composer<detail::blind_automaton<1, Lhs>,
                                  detail::blind_automaton<0, Rhs>>::automaton_t
   {
-    using lhs_t = detail::blind_automaton<1, Lhs>;
-    using rhs_t = detail::blind_automaton<0, Rhs>;
-    lhs_t blind_lhs = detail::make_blind_automaton<1>(lhs);
-    auto l = sort(blind_lhs);
+    auto l = sort(detail::make_blind_automaton<1>(lhs));
     auto r = sort(detail::get_insplit(rhs));
     detail::composer<decltype(l), decltype(r)>compose(l, r);
     auto res = compose.compose();

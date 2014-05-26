@@ -37,7 +37,6 @@ namespace vcsn
     class insplitter
     {
       using automaton_t = Aut;
-      using res_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -51,16 +50,13 @@ namespace vcsn
 
     public:
       insplitter(const Aut& aut)
-        : res_(std::make_shared<typename res_automaton_t::element_type>(aut->context()))
+        : res_(std::make_shared<typename automaton_t::element_type>(aut->context()))
       {}
 
-      res_automaton_t split(const Aut& aut)
+      automaton_t split(const Aut& aut)
       {
         if (!labelset_t_of<Aut>::has_one())
-          {
-            maybe_blind_copier<automaton_t, res_automaton_t>{}(aut, res_);
-            return std::move(res_);
-          }
+            return aut;
 
         states_assoc[pair_t(aut->pre(), false)] = res_->pre();
         states_assoc[pair_t(aut->post(), false)] = res_->post();
@@ -120,7 +116,7 @@ namespace vcsn
       }
 
 
-      res_automaton_t res_;
+      automaton_t res_;
     };
 
   } // namespace detail
