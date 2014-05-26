@@ -70,7 +70,6 @@ namespace vcsn
     class sorter
     {
       using automaton_t = Aut;
-      using res_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
@@ -83,7 +82,7 @@ namespace vcsn
       const labelset_t& ls_;
       const weightset_t& ws_;
 
-      res_automaton_t res_;
+      automaton_t res_;
       using res_state_t = state_t;
 
       using pair_t = std::pair<state_t, res_state_t>;
@@ -188,10 +187,10 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
-        , res_(std::make_shared<typename res_automaton_t::element_type>(a_->context()))
+        , res_(std::make_shared<typename automaton_t::element_type>(a_->context()))
       {}
 
-      res_automaton_t operator()()
+      automaton_t operator()()
       {
         initialize();
         visit_and_update_res();
@@ -232,7 +231,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename Aut::element_type::automaton_nocv_t
+  Aut
   sort(const Aut& a)
   {
     detail::sorter<Aut> sorter(a);
