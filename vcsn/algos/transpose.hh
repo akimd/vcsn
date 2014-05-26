@@ -29,13 +29,6 @@ namespace vcsn
       using super = automaton_decorator<AutPtr>;
       using automaton_nocv_t = typename super::automaton_nocv_t;
 
-      /// The type of the automata to produce from this kind o
-      /// automata.  For instance, determinizing a
-      /// transpose_automaton<const mutable_automaton<Ctx>> should
-      /// yield a transpose_automaton<mutable_automaton<Ctx>>, without
-      /// the "inner" const.
-      using self_nocv_t
-        = transpose_automaton_impl<std::shared_ptr<typename automaton_t::self_nocv_t>>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -115,12 +108,12 @@ namespace vcsn
       | non-const methods that transpose.  |
       `-----------------------------------*/
 
-# define DEFINE(Signature, Value)                                       \
-      auto                                                              \
-      Signature                                                         \
-      -> decltype(std::static_pointer_cast<automaton_nocv_t>(this->aut_)->Value) \
-      {                                                                 \
-        return this->aut_->Value;                                       \
+# define DEFINE(Signature, Value)               \
+      auto                                      \
+      Signature                                 \
+        -> decltype(this->aut_->Value)          \
+      {                                         \
+        return this->aut_->Value;               \
       }
 
       DEFINE(set_initial(state_t s),     set_final(s));

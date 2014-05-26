@@ -13,7 +13,6 @@
 
 %C%_TESTS =                                     \
   %D%/derivation.chk                            \
-  %D%/determinize.chk                           \
   %D%/efsm.chk                                  \
   %D%/lift.chk                                  \
   %D%/transpose.chk
@@ -27,20 +26,10 @@ EXTRA_DIST +=                                   \
   %D%/derivation.dir/e2-dt-breaking.gv          \
   %D%/derivation.dir/h3-dt.gv                   \
   %D%/derivation.dir/h3-dt-breaking.gv          \
-  %D%/determinize.dir/a-det-0.gv                \
-  %D%/determinize.dir/a-det-1.gv                \
-  %D%/determinize.dir/a.gv                      \
-  %D%/determinize.dir/empty-det-0.gv            \
-  %D%/determinize.dir/empty-det-1.gv            \
-  %D%/determinize.dir/empty.gv                  \
-  %D%/determinize.dir/epsilon-det-0.gv          \
-  %D%/determinize.dir/epsilon-det-1.gv          \
-  %D%/determinize.dir/epsilon.gv                \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/binary.efsm
 
 %D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
-%D%/determinize.log: $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run

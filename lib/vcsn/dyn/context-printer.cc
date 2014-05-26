@@ -32,6 +32,7 @@ namespace vcsn
       ALGO("conjunction", "product");
       ALGO("context-of", "make-context");
       ALGO("derived-term", "derivation");
+      ALGO("difference", "are-equivalent");
       ALGO("infiltration", "product");
       ALGO("is-accessible", "accessible");
       ALGO("is-coaccessible", "accessible");
@@ -92,29 +93,37 @@ namespace vcsn
 
     DEFINE(automaton)
     {
-      if (t.get_type() == "linear_automaton")
+      auto type = t.get_type();
+      if (type == "determinized_automaton")
       {
-        os_ << "vcsn::linear_automaton<" << incendl;
+        os_ << "vcsn::" << type << '<' << incendl;
+        t.get_content()->accept(*this);
+        os_ << decendl << '>';
+        header("vcsn/algos/determinize.hh");
+      }
+      else if (type == "linear_automaton")
+      {
+        os_ << "vcsn::" << type << '<' << incendl;
         t.get_content()->accept(*this);
         os_ << decendl << '>';
         header("vcsn/algos/first-order.hh");
       }
-      else if (t.get_type() == "mutable_automaton")
+      else if (type == "mutable_automaton")
       {
-        os_ << "vcsn::mutable_automaton<" << incendl;
+        os_ << "vcsn::" << type << '<' << incendl;
         t.get_content()->accept(*this);
         os_ << decendl << '>';
         header("vcsn/core/mutable_automaton.hh");
       }
-      else if (t.get_type() == "transpose_automaton")
+      else if (type == "transpose_automaton")
       {
-        os_ << "vcsn::transpose_automaton<" << incendl;
+        os_ << "vcsn::" << type << '<' << incendl;
         t.get_content()->accept(*this);
         os_ << decendl << '>';
         header("vcsn/algos/transpose.hh");
       }
       else
-        raise("unsupported automaton type: ", t.get_type());
+        raise("unsupported automaton type: ", type);
     }
 
     DEFINE(context)

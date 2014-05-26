@@ -646,6 +646,7 @@ namespace vcsn
     };
   }
 
+  /// A linear automaton as a shared pointer.
   template <typename Aut>
   using linear_automaton
     = std::shared_ptr<detail::linear_automaton_impl<Aut>>;

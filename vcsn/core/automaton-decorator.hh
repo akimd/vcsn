@@ -15,22 +15,11 @@ namespace vcsn
       using automaton_ptr = AutPtr;
       using automaton_t = typename automaton_ptr::element_type;
 
-    protected:
-      /// The wrapped automaton, possibly const.
-      // Must be defined early to please decltype.
-      automaton_ptr aut_;
-
     public:
-      /// Used to workaround issues with decltype, see the const_casts
-      /// above, and http://stackoverflow.com/questions/17111406.
-      using automaton_nocv_t = typename automaton_t::self_nocv_t;
+      /// The (shared pointer) type to use it we have to create an
+      /// automaton of the same (underlying) type.
+      using automaton_nocv_t = typename automaton_t::automaton_nocv_t;
 
-      /// The type of the automata to produce from this kind o
-      /// automata.  For instance, determinizing a
-      /// transpose_automaton<const mutable_automaton<Ctx>> should
-      /// yield a transpose_automaton<mutable_automaton<Ctx>>, without
-      /// the "inner" const.
-      using self_nocv_t = automaton_decorator<std::shared_ptr<automaton_nocv_t>>;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -75,6 +64,13 @@ namespace vcsn
         return aut_;
       }
 
+    protected:
+      /// The wrapped automaton, possibly const.
+      // Must be defined early to please decltype.
+      automaton_ptr aut_;
+
+
+    public:
       /*------------.
       | constexpr.  |
       `------------*/

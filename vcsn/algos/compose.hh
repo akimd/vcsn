@@ -51,13 +51,14 @@ namespace vcsn
       /// blind_automaton<const mutable_automaton<Ctx>> should
       /// yield a blind_automaton<mutable_automaton<Ctx>>, without
       /// the "inner" const.
-      using self_nocv_t
-      = blind_automaton_impl<Band, std::shared_ptr<typename automaton_t::element_type::self_nocv_t>>;
+      using automaton_nocv_t
+        = blind_automaton<Band,
+                          typename automaton_t::element_type::automaton_nocv_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       // Exposed label
-      using label_t =
-        typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
+      using label_t
+        = typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
       // Underlying automaton label
       using hidden_label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
@@ -68,8 +69,8 @@ namespace vcsn
                                    - Band - 1>::type>;
 
       using labelset_t
-      = typename std::tuple_element<Band,
-                                    typename labelset_t_of<automaton_t>::valuesets_t>::type;
+        = typename std::tuple_element<Band,
+                                      typename labelset_t_of<automaton_t>::valuesets_t>::type;
       using hidden_labelset_t = labelset_t_of<automaton_t>;
 
       // All bands except the exposed one

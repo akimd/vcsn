@@ -12,6 +12,7 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/distance.hh>
+# include <vcsn/algos/enumerate.hh> // make_wordset
 # include <vcsn/algos/product.hh> // transition_map
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
@@ -83,8 +84,10 @@ namespace vcsn
     class pairer
     {
     public:
-      using context_t = context_t_of<Aut>;
-      using automaton_t =  mutable_automaton<context_t>;
+      using automaton_t =  Aut;
+      using automaton_nocv_t
+        = typename automaton_t::element_type::automaton_nocv_t;
+      using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
@@ -97,12 +100,12 @@ namespace vcsn
     public:
       pairer(const automaton_t& aut, bool keep_initials = false)
         : aut_(aut)
-        , res_(std::make_shared<typename automaton_t::element_type>(aut->context()))
+        , res_(std::make_shared<typename automaton_nocv_t::element_type>(aut->context()))
         , transition_map_(aut)
         , keep_initials_(keep_initials)
       {}
 
-      automaton_t pair()
+      automaton_nocv_t pair()
       {
         auto ctx = aut_->context();
         auto ws = ctx.weightset();
@@ -151,7 +154,7 @@ namespace vcsn
           }
 
         called_ = true;
-        return std::move(res_);
+        return res_;
       }
 
       const std::unordered_map<pair_t, state_t>& get_map_pair() const
@@ -217,7 +220,7 @@ namespace vcsn
       /// Input automaton.
       const automaton_t& aut_;
       /// Result.
-      automaton_t res_;
+      automaton_nocv_t res_;
       /// Fast maps label -> (weight, label).
       using transition_map_t
         = transition_map<automaton_t, weightset_t_of<automaton_t>, true>;
@@ -272,7 +275,7 @@ namespace vcsn
     std::unordered_set<state_t> todo;
 
     detail::pairer<Aut> pobj(aut);
-    Aut pa = pobj.pair();
+    auto pa = pobj.pair();
     state_t q0 = pobj.get_q0();
 
     std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
@@ -313,10 +316,9 @@ namespace vcsn
             for (auto s : todo)
               {
                 auto ntf = pa->out(s, l);
-                if (ntf.empty())
-                  raise("automaton must be complete");
-                if (1 < ntf.size())
-                  raise("automaton must be deterministic");
+                auto size = ntf.size();
+                require(0 < size, "automaton must be complete");
+                require(size < 2, "automaton must be deterministic");
                 new_todo.insert(pa->dst_of(*ntf.begin()));
               }
             todo = std::move(new_todo);

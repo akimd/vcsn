@@ -10,10 +10,7 @@ b = vcsn.context('lal_char(ab)_b')
 # Check that are-equivalent(RAT1, RAT2) == EXPECTED.
 def check(exp, r1, r2):
     eff = b.ratexp(r1).is_equivalent(b.ratexp(r2))
-    if eff == exp:
-        PASS()
-    else:
-        FAIL(exp + " != " + eff)
+    CHECK_EQ(exp, eff)
 
 
 check(True, '\z', '\z')

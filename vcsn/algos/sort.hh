@@ -70,8 +70,7 @@ namespace vcsn
     class sorter
     {
       using automaton_t = Aut;
-      using res_automaton_t
-        = std::shared_ptr<typename automaton_t::element_type::self_nocv_t>;
+      using res_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
@@ -233,7 +232,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::shared_ptr<typename Aut::element_type::self_nocv_t>
+  typename Aut::element_type::automaton_nocv_t
   sort(const Aut& a)
   {
     detail::sorter<Aut> sorter(a);

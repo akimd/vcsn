@@ -5,13 +5,16 @@
 # include <stack>
 # include <string>
 # include <type_traits>
+# include <map>
 # include <unordered_map>
 # include <vector>
 
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
+# include <vcsn/misc/map.hh> // vcsn::has
 
 namespace vcsn
 {
@@ -21,68 +24,73 @@ namespace vcsn
   `----------------------*/
   namespace detail
   {
-    /// \brief Determinize an automaton.
+    /// \brief The subset construction automaton from another.
     ///
     /// \tparam AutPtr an automaton type.
+    /// \precondition labelset is free.
+    /// \precondition weightset is Boolean.
     template <typename AutPtr>
-    class determinizer
+    class determinized_automaton_impl
+      : public automaton_decorator<typename AutPtr::element_type::automaton_nocv_t>
     {
       static_assert(labelset_t_of<AutPtr>::is_free(),
                     "determinize: requires free labelset");
       static_assert(std::is_same<weight_t_of<AutPtr>, bool>::value,
                     "determinize: requires Boolean weights");
 
+    public:
       using automaton_ptr = AutPtr;
       using automaton_t = typename automaton_ptr::element_type;
-      using automaton_nocv_t = std::shared_ptr<typename automaton_t::self_nocv_t>;
+      using automaton_nocv_t = typename automaton_t::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
-      using state_t = state_t_of<automaton_t>;
+      using super_t = automaton_decorator<automaton_nocv_t>;
 
       /// Set of (input) states.
       using state_set = dynamic_bitset;
 
-      /// Set of input states -> output state.
-      using map = std::unordered_map<state_set, state_t>;
-      map map_;
+      /// Result automaton state type.
+      using state_t = state_t_of<automaton_t>;
 
-      /// Input automaton.
-      automaton_ptr aut_;
-
-      /// Whether to build a complete automaton.
-      bool complete_ = false;
-
-      /// We use state numbers as indexes, so we need to know the last
-      /// state number.  If states were removed, it is not the same as
-      /// the number of states.
-      size_t state_size_ = aut_->all_states().back() + 1;
-
-      /// The sets of (input) states waiting to be processed.
-      using stack = std::stack<state_set>;
-      stack todo_;
-
-      /// Set of final states in the input automaton.
-      state_set finals_;
-
-      /// The result.
-      automaton_nocv_t res_;
-
-    public:
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       /// \param complete  whether to force the result to be complete
-      determinizer(const automaton_ptr& a, bool complete = false)
-        : aut_(a)
+      determinized_automaton_impl(const automaton_ptr& a, bool complete = false)
+        : super_t(a->context())
+        , input_(a)
         , complete_(complete)
         , finals_(state_size_)
-        , res_(std::make_shared<typename automaton_nocv_t::element_type>(aut_->context()))
       {
-        for (auto t : aut_->final_transitions())
-          finals_.set(aut_->src_of(t));
+        // Input final states.
+        for (auto t : input_->final_transitions())
+          finals_.set(input_->src_of(t));
+
+        // Cache the successor states per letter.
+        for (auto st : input_->all_states())
+          for (auto l : letters_)
+            {
+              state_set& ss = successors_[st][l];
+              ss.resize(state_size_);
+              for (auto tr : input_->out(st, l))
+                ss.set(input_->dst_of(tr));
+            }
+
+        // The input initial states.
+        state_set next;
+        next.resize(state_size_);
+        for (auto t : input_->initial_transitions())
+          next.set(input_->dst_of(t));
+        // Also pushes the initial state in the todo.
+        this->set_initial(state(next));
       }
 
-      void clear()
+      static std::string sname()
       {
-        map_.clear();
+        return "determinized_automaton<" + automaton_t::sname() + ">";
+      }
+
+      std::string vname(bool full = true) const
+      {
+        return "determinized_automaton<" + input_->vname(full) + ">";
       }
 
       /// The state for set of states \a ss.
@@ -93,68 +101,70 @@ namespace vcsn
         auto i = map_.find(ss);
         if (i == std::end(map_))
           {
-            res = res_->new_state();
+            res = this->new_state();
             map_[ss] = res;
 
             if (ss.intersects(finals_))
-              res_->set_final(res);
+              this->set_final(res);
 
             todo_.push(ss);
-            return res;
           }
         else
           res = i->second;
         return res;
       };
 
-      /// The determinized automaton.
-      automaton_nocv_t operator()()
+      /// Determinize all the states.
+      void operator()()
       {
-        clear();
-
-        const auto& letters = aut_->labelset()->genset();
-
-        // successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-        using successors_t
-          = std::vector<std::unordered_map<label_t, state_set>>;
-        successors_t successors{state_size_};
-        for (auto st : aut_->all_states())
-          for (auto l : letters)
-            {
-              state_set& ss = successors[st][l];
-              ss.resize(state_size_);
-              for (auto tr : aut_->out(st, l))
-                ss.set(aut_->dst_of(tr));
-            }
-
-        // The input initial states.
         state_set next;
         next.resize(state_size_);
-        for (auto t : aut_->initial_transitions())
-          next.set(aut_->dst_of(t));
-        res_->set_initial(state(next));
-
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
             state_t src = state(ss);
             todo_.pop();
-            for (auto l: letters)
+            for (auto l: letters_)
               {
                 next.reset();
                 for (auto s = ss.find_first(); s != ss.npos;
                      s = ss.find_next(s))
-                  next |= successors[s][l];
+                  next |= successors_[s][l];
                 // Don't generate the sink.
                 if (complete_ || next.any())
-                  res_->new_transition(src, state(next), l);
+                  this->new_transition(src, state(next), l);
               }
           }
-        return res_;
+      }
+
+      bool state_has_name(state_t s) const
+      {
+        if (origins_.empty())
+          origins_ = origins();
+        return (s != super_t::pre()
+                && s != super_t::post()
+                && has(origins_, s));
+      }
+
+      std::ostream&
+      print_state_name(std::ostream& o, state_t ss) const
+      {
+        if (origins_.empty())
+          origins_ = origins();
+        const char* sep = "";
+        for (auto s: origins_[ss])
+          {
+            o << sep;
+            input_->print_state_name(o, s);
+            sep = ", ";
+          }
+        return o;
       }
 
       /// A map from determinized states to sets of original states.
       using origins_t = std::map<state_t, std::set<state_t>>;
+      mutable origins_t origins_;
+
       origins_t
       origins() const
       {
@@ -193,20 +203,58 @@ namespace vcsn
         o << "*/\n";
         return o;
       }
+
+    private:
+      /// Set of input states -> output state.
+      using map = std::unordered_map<state_set, state_t>;
+      map map_;
+
+      /// Input automaton.
+      automaton_ptr input_;
+
+      /// Whether to build a complete automaton.
+      bool complete_ = false;
+
+      /// We use state numbers as indexes, so we need to know the last
+      /// state number.  If states were removed, it is not the same as
+      /// the number of states.
+      size_t state_size_ = input_->all_states().back() + 1;
+
+      /// The sets of (input) states waiting to be processed.
+      using stack = std::stack<state_set>;
+      stack todo_;
+
+      /// Set of final states in the input automaton.
+      state_set finals_;
+
+      /// The generators.
+      const typename labelset_t_of<AutPtr>::genset_t& letters_
+        = input_->labelset()->genset();
+
+      /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
+      using successors_t
+        = std::vector<std::unordered_map<label_t, state_set>>;
+      successors_t successors_{state_size_};
+
     };
   }
+
+  /// A determinized automaton as a shared pointer.
+  template <typename Aut>
+  using determinized_automaton
+    = std::shared_ptr<detail::determinized_automaton_impl<Aut>>;
 
   template <typename AutPtr>
   inline
   auto
   determinize(const AutPtr& a, bool complete = false)
-    -> decltype(detail::determinizer<AutPtr>(a)())
+    -> determinized_automaton<AutPtr>
   {
-    detail::determinizer<AutPtr> determinize(a, complete);
-    auto res = determinize();
-    if (getenv("VCSN_ORIGINS"))
-      determinize.print(std::cout, determinize.origins());
-    return res;
+    auto determinized
+      = std::make_shared<detail::determinized_automaton_impl<AutPtr>>(a, complete);
+    // Determinize.
+    determinized->operator()();
+    return determinized;
   }
 
   namespace dyn

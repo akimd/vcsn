@@ -37,8 +37,7 @@ namespace vcsn
     class insplitter
     {
       using automaton_t = Aut;
-      using res_automaton_t
-        = std::shared_ptr<typename automaton_t::element_type::self_nocv_t>;
+      using res_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
       using state_t = state_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;

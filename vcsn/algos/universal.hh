@@ -32,7 +32,7 @@ namespace vcsn
       automaton_t operator()(const Aut& automaton)
       {
         if (!is_deterministic(automaton))
-          return work_(determinize(automaton));
+          return work_(determinize(automaton)->original_automaton());
         else if (!is_complete(automaton))
           return work_(complete(automaton));
         else
@@ -51,11 +51,8 @@ namespace vcsn
         // compute the co-determinized of the minimal automaton
         // and retrieve the origin of each state.
         const auto transposed = transpose(aut);
-        detail::determinizer<decltype(transposed)> determinize(transposed);
-        // FIXME: we don't need the determinized automaton, just the
-        // "origins" map.
-        /* auto const co_det = */ determinize();
-        map_t origin = determinize.origins();
+        auto codet = determinize(transposed);
+        map_t origin = codet->origins();
 
         // the 'origin' is a map from co_det's state_t to
         // minimal's state_set_t.

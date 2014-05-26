@@ -17,16 +17,8 @@ namespace vcsn
   Aut
   minimize_brzozoski(const Aut& a)
   {
-    // FIXME: this is ugly, we want a "transposed" routine that
-    // returns a copy.
-    auto aut = vcsn::copy(a);
-    auto codet = determinize(transpose(aut));
-    // FIXME: still ugly: transpose produces a transpose_automaton,
-    // which is the type determinize will use.  To get back a
-    // mutable_automaton, don't tranpose the result again.
-    //
-    // FIXME: transpose(transpose(a)) should be the identity.
-    return determinize(codet->original_automaton());
+    auto codet = determinize(transpose(a))->original_automaton();
+    return determinize(transpose(codet))->original_automaton();
   }
 
 } // namespace vcsn
