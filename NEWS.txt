@@ -4,6 +4,14 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-06-19
+** minimize: extend 'weighted' and 'signature' variants
+Lift arbitrary restrictions on the labelset of the 'weighted' and
+'signature' minimization variants.
+
+  >>> ctx = vcsn.context('law_char(a-z)_b')
+  >>> ctx.ratexp('ab+<3>cd+ac').standard().minimize('weighted')
+
 * 2014-05-28
 ** Optimization: composing two automata transposition yields the identity
 Transposing an automata twice now yields the original automata, instead of

@@ -11,11 +11,12 @@
 namespace vcsn
 {
 
-  // FIXME: there must exist something nicer to do that.
+  // FIXME: there must exist some nicer way to do this.
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value,
+  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+                          && labelset_t_of<Aut>::is_free(),
                           typename Aut::element_type::automaton_nocv_t>::type
   minimize(const Aut& a, const std::string& algo)
   {
@@ -28,7 +29,24 @@ namespace vcsn
     else if (algo == "weighted")
       return minimize_weighted(strip(a)); // FIXME: fix
     else
-      raise("minimize: invalid algorithm: ", str_escape(algo));
+      raise("minimize: invalid algorithm (Boolean, free labelset): ",
+            str_escape(algo));
+  }
+
+  template <typename Aut>
+  inline
+  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+                          && ! labelset_t_of<Aut>::is_free(),
+                          typename Aut::element_type::automaton_nocv_t>::type
+  minimize(const Aut& a, const std::string& algo)
+  {
+    if (algo == "signature")
+      return minimize_signature(a);
+    else if (algo == "weighted")
+      return minimize_weighted(a); // FIXME: fix
+    else
+      raise("minimize: invalid algorithm (Boolean, non-free labelset): ",
+            str_escape(algo));
   }
 
   template <typename Aut>
@@ -40,7 +58,7 @@ namespace vcsn
     if (algo == "weighted")
       return minimize_weighted(strip(a)); // FIXME: fix
     else
-      raise("minimize: invalid algorithm: ", str_escape(algo));
+      raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));
   }
 
 

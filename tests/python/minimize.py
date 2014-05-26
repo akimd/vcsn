@@ -87,6 +87,12 @@ xfail('moore',      smallweighted)
 xfail('signature',  smallweighted)
 check('weighted',   smallweighted, smallweighted_exp)
 
+## Non-lal automata.
+nonlal = \
+  vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard().strip()
+check("signature", nonlal, aut("nonlal.exp.gv"))
+check("weighted",  nonlal, aut("nonlal.exp.gv"))
+
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in
 ## vcsn/algos/minimize.hh.  The idea was to never store invalid_class
@@ -103,9 +109,12 @@ check('weighted',   smallweighted, smallweighted_exp)
 ## It remained associated to its old class identifier in
 ## state_to_class, which in the mean time would come to identify some
 ## subset of its old value.
-alreadyminimal = vcsn.context('lal_char(ab)_b') \
-                     .ratexp("a+ba") \
-                     .derived_term().strip()
-check('brzozowski', alreadyminimal, alreadyminimal)
-check('moore',      alreadyminimal, alreadyminimal)
-check('signature',  alreadyminimal, alreadyminimal)
+a = vcsn.context('lal_char(ab)_b').ratexp("a+ba").derived_term().strip()
+check('brzozowski', a, a)
+check('moore',      a, a)
+check('signature',  a, a)
+
+## Check minimization idempotency in the non-lal case as well.
+a = vcsn.context('law_char(ab)_b').ratexp("ab").standard()
+check('signature',  a, a)
+check('weighted',   a, a)

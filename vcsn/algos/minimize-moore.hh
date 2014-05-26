@@ -15,11 +15,13 @@ namespace vcsn
   /*--------------------------------------.
   | minimization with Moore's algorithm.  |
   `--------------------------------------*/
-  namespace detail
+  namespace detail_moore
   {
     template <typename Aut>
     class minimizer
     {
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+                    "requires Boolean weights");
       static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
 
@@ -40,6 +42,8 @@ namespace vcsn
       using target_class_to_states_t = std::unordered_map<class_t, set_t>;
       using class_to_set_t = std::vector<set_t>;
       using class_to_state_t = std::vector<state_t>;
+
+      constexpr static const char* me() { return "minimize-moore"; }
 
       /// An invalid class.
       constexpr static class_t class_invalid = -1;
@@ -133,10 +137,8 @@ namespace vcsn
       {
         // We _really_ need determinism here.  See for instance
         // minimization of standard(aa+a) (not a+aa).
-        require(is_deterministic(a_),
-                "minimize: moore: input must be deterministic");
-        require(is_trim(a_),
-                "minimize: moore: input must be trim");
+        require(is_deterministic(a_), me(), ": input must be deterministic");
+        require(is_trim(a_), me(), ": input must be trim");
         for (auto t : a_->all_transitions())
           out_[a_->src_of(t)][a_->label_of(t)] = a_->dst_of(t);
       }
@@ -213,7 +215,7 @@ namespace vcsn
   Aut
   minimize_moore(const Aut& a)
   {
-    detail::minimizer<Aut> minimize(a);
+    detail_moore::minimizer<Aut> minimize(a);
     return minimize();
   }
 
