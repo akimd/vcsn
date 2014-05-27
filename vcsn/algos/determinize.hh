@@ -232,10 +232,8 @@ namespace vcsn
         = input_->labelset()->genset();
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-      using successors_t
-        = std::vector<std::unordered_map<label_t, state_set>>;
+      using successors_t = std::vector<std::unordered_map<label_t, state_set>>;
       successors_t successors_{state_size_};
-
     };
   }
 
@@ -244,17 +242,16 @@ namespace vcsn
   using determinized_automaton
     = std::shared_ptr<detail::determinized_automaton_impl<Aut>>;
 
-  template <typename AutPtr>
+  template <typename Aut>
   inline
   auto
-  determinize(const AutPtr& a, bool complete = false)
-    -> determinized_automaton<AutPtr>
+  determinize(const Aut& a, bool complete = false)
+    -> determinized_automaton<Aut>
   {
-    auto determinized
-      = std::make_shared<detail::determinized_automaton_impl<AutPtr>>(a, complete);
+    auto res = make_shared_ptr<determinized_automaton<Aut>>(a, complete);
     // Determinize.
-    determinized->operator()();
-    return determinized;
+    res->operator()();
+    return res;
   }
 
   namespace dyn
