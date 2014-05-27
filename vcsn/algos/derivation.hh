@@ -7,6 +7,7 @@
 
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/split.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/label.hh>

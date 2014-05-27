@@ -1,14 +1,12 @@
 #ifndef VCSN_ALGOS_TRANSPOSE_HH
 # define VCSN_ALGOS_TRANSPOSE_HH
 
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/context.hh>
-# include <vcsn/misc/attributes.hh>
-# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/dyn/automaton.hh>
-
-# include <vcsn/core/mutable-automaton.hh>// FIXME: Needed?
+# include <vcsn/misc/attributes.hh>
 
 namespace vcsn
 {

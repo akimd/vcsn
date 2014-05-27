@@ -6,7 +6,6 @@
 # include <vector>
 
 # include <vcsn/ctx/traits.hh>
-# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/algorithm.hh>

@@ -6,7 +6,6 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn

@@ -3,7 +3,6 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/lift.hh>
-# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/misc/vector.hh>
 
