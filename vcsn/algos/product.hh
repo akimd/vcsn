@@ -10,6 +10,7 @@
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
+# include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
 # include <vcsn/misc/tuple.hh>
@@ -20,6 +21,48 @@ namespace vcsn
 {
   namespace detail
   {
+
+    /// Join between automata in tuple.
+    template <typename... Auts>
+    mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+    join(const std::tuple<Auts...>& auts)
+    {
+      auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+      return join_(auts, indices);
+    }
+
+    template <typename... Auts, size_t... I>
+    mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+    join_(const std::tuple<Auts...>& auts,
+          vcsn::detail::index_sequence<I...>)
+    {
+      using ctx_t = join_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
+      ctx_t ctx = join(std::get<I>(auts)->context()...);
+      using res_t = mutable_automaton<ctx_t>;
+      return make_shared_ptr<res_t>(ctx);
+    }
+
+    /// Meet between automata in tuple.
+    template <typename... Auts>
+    mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+    meet(const std::tuple<Auts...>& auts)
+    {
+      auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+      return meet_(auts, indices);
+    }
+
+    template <typename... Auts, size_t... I>
+    mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+    meet_(const std::tuple<Auts...>& auts,
+          vcsn::detail::index_sequence<I...>)
+    {
+      using ctx_t = meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
+      ctx_t ctx = meet(std::get<I>(auts)->context()...);
+      using res_t = mutable_automaton<ctx_t>;
+      return make_shared_ptr<res_t>(ctx);
+    }
+
+
     /*----------------------------------.
     | producter<automaton, automaton>.  |
     `----------------------------------*/
@@ -85,9 +128,8 @@ namespace vcsn
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
       automaton_t product()
       {
-        auto ctx = meet_();
-        const auto& ws = *ctx.weightset();
-        res_ = make_shared_ptr<automaton_t>(ctx);
+        res_ = meet(auts_);
+        const auto& ws = *res_->weightset();
 
         initialize_product();
 
@@ -106,9 +148,8 @@ namespace vcsn
       /// \a rhs_.
       automaton_t shuffle()
       {
-        auto ctx = join_();
-        const auto& ws = *ctx.weightset();
-        automaton_t res = make_shared_ptr<automaton_t>(ctx);
+        res_ = join(auts_);
+        const auto& ws = *res_->weightset();
 
         initialize_shuffle(ws);
 
@@ -127,9 +168,8 @@ namespace vcsn
       /// lhs_ and \a rhs_.
       automaton_t infiltration()
       {
-        auto ctx = join_();
-        const auto& ws = *ctx.weightset();
-        automaton_t res = make_shared_ptr<automaton_t>(ctx);
+        res_ = join(auts_);
+        const auto& ws = *res_->weightset();
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
@@ -193,30 +233,6 @@ namespace vcsn
       }
 
     private:
-      /// The join of the contexts.
-      context_t join_() const
-      {
-        return join_(indices);
-      }
-
-      template <size_t... I>
-      context_t join_(seq<I...>) const
-      {
-        return join((std::get<I>(auts_)->context())...);
-      }
-
-      /// The meet of the contexts.
-      context_t meet_() const
-      {
-        return meet_(indices);
-      }
-
-      template <size_t... I>
-      context_t meet_(seq<I...>) const
-      {
-        return meet((std::get<I>(auts_)->context())...);
-      }
-
       /// The pre of the input automata.
       pair_t pre_() const
       {
