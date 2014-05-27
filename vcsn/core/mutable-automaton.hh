@@ -505,9 +505,13 @@ namespace vcsn
     /// \pre ! has_transition(src, dst, label_of(l)).
     template <typename A>
     transition_t
-    new_transition_copy(const A& aut, state_t src, state_t dst, transition_t t, weight_t k)
+    new_transition_copy(const A& aut, state_t src, state_t dst, transition_t t,
+                        weight_t k, bool transpose = false)
     {
-      return new_transition(src, dst, aut->label_of(t), k);
+      auto l = aut->label_of(t);
+      return new_transition(src, dst, transpose ? aut->labelset()->transpose(l)
+                                                : l
+                                                , k);
     }
 
     /// Same as above, with weight one.
@@ -606,9 +610,12 @@ namespace vcsn
     template <typename Aut>
     weight_t
     add_transition_copy(const Aut& aut, state_t src, state_t dst,
-                        transition_t t, weight_t k)
+                        transition_t t, weight_t k, bool transpose = false)
     {
-      return add_transition(src, dst, aut->label_of(t), k);
+      auto l = aut->label_of(t);
+      return add_transition(src, dst, transpose ? aut->labelset()->transpose(l)
+                                                : l,
+                                                k);
     }
 
     std::string

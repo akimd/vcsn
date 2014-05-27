@@ -160,22 +160,23 @@ namespace vcsn
       DEFINE(add_final(state_t s, weight_t k),
              add_initial(s, this->aut_->weightset()->transpose(k)));
 
-      // FIXME: fails to transpose the label.
       template <typename A>
       DEFINE(add_transition_copy(const A& aut, state_t src,
-                                 state_t dst, transition_t t, weight_t k),
+                                 state_t dst, transition_t t, weight_t k,
+                                 bool transpose = false),
              add_transition_copy(aut,
-                                 dst, src,
-                                 t,
-                                 this->aut_->weightset()->transpose(k)));
+                                 dst, src, t,
+                                 this->aut_->weightset()->transpose(k),
+                                 !transpose));
 
       template <typename A>
       DEFINE(new_transition_copy(const A& aut, state_t src,
-                                 state_t dst, transition_t t, weight_t k),
+                                 state_t dst, transition_t t, weight_t k,
+                                 bool transpose = false),
              new_transition_copy(aut,
-                                 dst, src,
-                                 t,
-                                 this->aut_->weightset()->transpose(k)));
+                                 dst, src, t,
+                                 this->aut_->weightset()->transpose(k),
+                                 !transpose));
 
 # undef DEFINE
 
