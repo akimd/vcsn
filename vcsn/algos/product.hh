@@ -6,7 +6,6 @@
 # include <map>
 # include <utility>
 
-# include <vcsn/algos/copy.hh>
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
@@ -190,7 +189,6 @@ namespace vcsn
             add_product_transitions(ws, src, psrc);
             add_shuffle_transitions(ws, src, psrc);
           }
-
         return std::move(res_);
       }
 
@@ -742,18 +740,18 @@ namespace vcsn
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
-            res = std::move(product(res, aut));
+            res = product(res, aut);
         else
           {
-            Aut power = copy(aut);
+            Aut power = aut;
             while (true)
               {
                 if (n % 2)
-                  res = std::move(product(res, power));
+                  res = product(res, power);
                 n /= 2;
                 if (!n)
                   break;
-                power = std::move(product(power, power));
+                power = product(power, power);
               }
           }
       }

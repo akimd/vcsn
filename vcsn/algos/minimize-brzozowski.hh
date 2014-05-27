@@ -1,7 +1,6 @@
 #ifndef VCSN_ALGOS_MINIMIZE_BRZOZOWSKI_HH
 # define VCSN_ALGOS_MINIMIZE_BRZOZOWSKI_HH
 
-# include <vcsn/algos/copy.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/transpose.hh>
 
