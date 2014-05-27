@@ -2,7 +2,6 @@
 ## automaton.  ##
 ## ----------- ##
 
-from IPython.display import display, SVG
 import re
 from vcsn_cxx import automaton, label, weight
 from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
@@ -58,6 +57,7 @@ def _automaton_display(self, mode):
     """Display automaton `self` with a local menu to propose different
     formats.
     """
+    from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
         dot = _one_epsilon(self.format("dot"))
         if mode == "tooltip":
