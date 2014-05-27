@@ -18,50 +18,48 @@
 
 namespace vcsn
 {
+  /// Join between automata in tuple.
+  template <typename... Auts>
+  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  join(const std::tuple<Auts...>& auts)
+  {
+    auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+    return join_(auts, indices);
+  }
+
+  template <typename... Auts, size_t... I>
+  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  join_(const std::tuple<Auts...>& auts,
+        vcsn::detail::index_sequence<I...>)
+  {
+    using ctx_t = join_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
+    ctx_t ctx = join(std::get<I>(auts)->context()...);
+    using res_t = mutable_automaton<ctx_t>;
+    return make_shared_ptr<res_t>(ctx);
+  }
+
+  /// Meet between automata in tuple.
+  template <typename... Auts>
+  mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  meet(const std::tuple<Auts...>& auts)
+  {
+    auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+    return meet_(auts, indices);
+  }
+
+  template <typename... Auts, size_t... I>
+  mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  meet_(const std::tuple<Auts...>& auts,
+        vcsn::detail::index_sequence<I...>)
+  {
+    using ctx_t = meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
+    ctx_t ctx = meet(std::get<I>(auts)->context()...);
+    using res_t = mutable_automaton<ctx_t>;
+    return make_shared_ptr<res_t>(ctx);
+  }
+
   namespace detail
   {
-
-    /// Join between automata in tuple.
-    template <typename... Auts>
-    mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
-    join(const std::tuple<Auts...>& auts)
-    {
-      auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-      return join_(auts, indices);
-    }
-
-    template <typename... Auts, size_t... I>
-    mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
-    join_(const std::tuple<Auts...>& auts,
-          vcsn::detail::index_sequence<I...>)
-    {
-      using ctx_t = join_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
-      ctx_t ctx = join(std::get<I>(auts)->context()...);
-      using res_t = mutable_automaton<ctx_t>;
-      return make_shared_ptr<res_t>(ctx);
-    }
-
-    /// Meet between automata in tuple.
-    template <typename... Auts>
-    mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
-    meet(const std::tuple<Auts...>& auts)
-    {
-      auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-      return meet_(auts, indices);
-    }
-
-    template <typename... Auts, size_t... I>
-    mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
-    meet_(const std::tuple<Auts...>& auts,
-          vcsn::detail::index_sequence<I...>)
-    {
-      using ctx_t = meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
-      ctx_t ctx = meet(std::get<I>(auts)->context()...);
-      using res_t = mutable_automaton<ctx_t>;
-      return make_shared_ptr<res_t>(ctx);
-    }
-
-
     /*----------------------------------.
     | producter<automaton, automaton>.  |
     `----------------------------------*/
