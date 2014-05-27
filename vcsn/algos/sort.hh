@@ -186,7 +186,7 @@ namespace vcsn
         : a_(a)
         , ls_(*a_->labelset())
         , ws_(*a_->weightset())
-        , res_(std::make_shared<typename automaton_t::element_type>(a_->context()))
+        , res_(make_shared_ptr<automaton_t>(a_->context()))
       {}
 
       automaton_t operator()()

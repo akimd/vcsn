@@ -34,7 +34,7 @@ namespace vcsn
             + ") must be less than or equal to the alphabet size ("
             + std::to_string(letters.size()) + ")");
 
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     // Add one state for each possible remainder. The last state encountered
     // during the evaluation will be n % k. If the last state is the state 0,

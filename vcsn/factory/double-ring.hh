@@ -28,7 +28,7 @@ namespace vcsn
 
     using automaton_t = mutable_automaton<context_t>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
     if (n == 0)
       return res;
 

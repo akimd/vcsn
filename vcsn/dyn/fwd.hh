@@ -1,10 +1,9 @@
 #ifndef VCSN_DYN_FWD_HH
 # define VCSN_DYN_FWD_HH
 
-# include <memory> // shared_ptr
-
 # include <vcsn/misc/export.hh> // LIBVCSN_API
 # include <vcsn/misc/fwd.hh>
+# include <vcsn/misc/memory.hh> // make_shared_ptr
 
 namespace vcsn
 {

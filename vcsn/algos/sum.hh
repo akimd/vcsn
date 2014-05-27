@@ -62,7 +62,7 @@ namespace vcsn
 
     // Create new automata.
     auto ctx = join(laut->context(), raut->context());
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
     // A standard automaton has a single initial state.
     res->set_initial(res->new_state());
 

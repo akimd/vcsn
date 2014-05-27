@@ -71,7 +71,7 @@ namespace vcsn
 
       producter(const Auts&... aut)
         : auts_(aut...)
-        , res_(std::make_shared<typename automaton_t::element_type>(join(aut->context()...)))
+        , res_(make_shared_ptr<automaton_t>(join(aut->context()...)))
         , transition_maps_{{aut, *res_->weightset()}...}
       {}
 
@@ -87,7 +87,7 @@ namespace vcsn
       {
         auto ctx = meet_();
         const auto& ws = *ctx.weightset();
-        res_ = std::make_shared<typename automaton_t::element_type>(ctx);
+        res_ = make_shared_ptr<automaton_t>(ctx);
 
         initialize_product();
 
@@ -108,7 +108,7 @@ namespace vcsn
       {
         auto ctx = join_();
         const auto& ws = *ctx.weightset();
-        automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+        automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
         initialize_shuffle(ws);
 
@@ -129,7 +129,7 @@ namespace vcsn
       {
         auto ctx = join_();
         const auto& ws = *ctx.weightset();
-        automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+        automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
@@ -710,7 +710,7 @@ namespace vcsn
   Aut
   power(const Aut& aut, unsigned n)
   {
-    Aut res = std::make_shared<typename Aut::element_type>(aut->context());
+    Aut res = make_shared_ptr<Aut>(aut->context());
     {
       // automatonset::one().
       auto s = res->new_state();

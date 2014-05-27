@@ -63,7 +63,7 @@ namespace vcsn
 
         // The universal automaton.
         automaton_t res
-          = std::make_shared<typename automaton_t::element_type>(aut->context());
+          = make_shared_ptr<automaton_t>(aut->context());
 
         // The final states of aut.
         std::set<state_t> automaton_finals;

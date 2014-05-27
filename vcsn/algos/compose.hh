@@ -87,7 +87,7 @@ namespace vcsn
       using super::super;
 
       blind_automaton_impl(const context_t_of<automaton_t>& ctx)
-        : blind_automaton_impl(std::make_shared<typename automaton_t::element_type>(ctx))
+        : blind_automaton_impl(make_shared_ptr<automaton_t>(ctx))
       {}
 
       static std::string sname()
@@ -256,7 +256,7 @@ namespace vcsn
       composer(const Lhs& lhs, const Rhs& rhs)
         : lhs_(lhs)
         , rhs_(rhs)
-        , res_(std::make_shared<typename automaton_t::element_type>(context_t{make_labelset_(lhs_->res_labelset(), rhs_->res_labelset()),
+        , res_(make_shared_ptr<automaton_t>(context_t{make_labelset_(lhs_->res_labelset(), rhs_->res_labelset()),
                 join(*lhs->weightset(), *rhs->weightset())}))
       {}
 

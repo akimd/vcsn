@@ -102,7 +102,7 @@ namespace vcsn
 
     // Create new automaton.
     auto ctx = join(lhs->context(), rhs->context());
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
     ::vcsn::copy_into(lhs, res);
     concatenate_here(res, rhs);
     return res;
@@ -136,7 +136,7 @@ namespace vcsn
   chain(const AutPtr& aut, int min, int max)
   {
     AutPtr res =
-      std::make_shared<typename AutPtr::element_type>(aut->context());
+      make_shared_ptr<AutPtr>(aut->context());
     if (max == -1)
       {
         res = star(aut);
@@ -164,7 +164,7 @@ namespace vcsn
           {
             // Aut sum = automatonset.one();
             AutPtr sum
-              = std::make_shared<typename AutPtr::element_type>(aut->context());
+              = make_shared_ptr<AutPtr>(aut->context());
             {
               auto s = sum->new_state();
               sum->set_initial(s);

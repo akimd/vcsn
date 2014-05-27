@@ -23,7 +23,7 @@ template <typename Aut>
 Aut
 clique(const vcsn::context_t_of<Aut>& ctx, size_t size)
 {
-  auto res = std::make_shared<typename Aut::element_type>(ctx);
+  auto res = vcsn::make_shared_ptr<Aut>(ctx);
   const auto& letters = *ctx.labelset();
   auto ss = new_states(res, size);
   for (auto s: ss)
@@ -37,7 +37,7 @@ static size_t
 check_various(const context_t& ctx)
 {
   size_t nerrs = 0;
-  automaton_t aut = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t aut = vcsn::make_shared_ptr<automaton_t>(ctx);
 
   auto s1 = aut->new_state();
   auto s2 = aut->new_state();

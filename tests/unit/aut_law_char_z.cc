@@ -9,7 +9,7 @@ int main()
   using context_t = vcsn::ctx::law_char_z;
   context_t ctx {{'a', 'b', 'c', 'd'}};
   using automaton_t = vcsn::mutable_automaton<context_t>;
-  automaton_t aut = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t aut = vcsn::make_shared_ptr<automaton_t>(ctx);
 
   auto s1 = aut->new_state();
   auto s2 = aut->new_state();

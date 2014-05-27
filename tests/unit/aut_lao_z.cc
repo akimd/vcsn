@@ -11,7 +11,7 @@ int main()
   context_t ctx;
 
   using automaton_t = vcsn::mutable_automaton<context_t>;
-  automaton_t aut = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t aut = vcsn::make_shared_ptr<automaton_t>(ctx);
 
   auto s1 = aut->new_state();
   auto s2 = aut->new_state();

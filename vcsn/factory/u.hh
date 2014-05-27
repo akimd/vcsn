@@ -24,7 +24,7 @@ namespace vcsn
     std::vector<typename context_t::labelset_t::letter_t> letters
       {std::begin(gens), std::end(gens)};
     require(3 <= letters.size(), "u: the alphabet needs at least 3 letters");
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     // The states.
     std::vector<state_t> states;

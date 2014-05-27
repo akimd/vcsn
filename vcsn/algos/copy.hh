@@ -121,7 +121,7 @@ namespace vcsn
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
-    AutOut res = std::make_shared<typename AutOut::element_type>(input->context());
+    AutOut res = make_shared_ptr<AutOut>(input->context());
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }

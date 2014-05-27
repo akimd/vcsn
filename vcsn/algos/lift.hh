@@ -85,7 +85,7 @@ namespace vcsn
     auto ctx_out = detail::lift_context(a->context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;
     using state_out_t = state_t_of<auto_out_t>;
-    auto_out_t res = std::make_shared<typename auto_out_t::element_type>(ctx_out);
+    auto_out_t res = make_shared_ptr<auto_out_t>(ctx_out);
     std::map<state_in_t, state_out_t> map;
     map[a->pre()] = res->pre();
     map[a->post()] = res->post();

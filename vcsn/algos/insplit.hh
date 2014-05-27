@@ -50,7 +50,7 @@ namespace vcsn
 
     public:
       insplitter(const Aut& aut)
-        : res_(std::make_shared<typename automaton_t::element_type>(aut->context()))
+        : res_(make_shared_ptr<automaton_t>(aut->context()))
       {}
 
       automaton_t split(const Aut& aut)

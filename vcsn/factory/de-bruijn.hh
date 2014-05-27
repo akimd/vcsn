@@ -22,7 +22,7 @@ namespace vcsn
     require(2 <= sz, "de_bruijn: the alphabet needs at least 2 letters");
     using context_t = Context;
     using automaton_t = mutable_automaton<context_t>;
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     auto init = res->new_state();
     res->set_initial(init);

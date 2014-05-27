@@ -61,8 +61,7 @@ namespace vcsn
       static automaton_t&
       zero_here(automaton_t& res)
       {
-        automaton_t a
-          = std::make_shared<typename automaton_t::element_type>(res->context());
+        automaton_t a = make_shared_ptr<automaton_t>(res->context());
         a->set_initial(a->new_state());
         res = std::move(a);
         return res;

@@ -35,7 +35,7 @@ namespace vcsn
       = mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>;
     // Create new automaton.
     auto ctx = join(laut->context(), raut->context());
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     union_here(res, laut);
     union_here(res, raut);

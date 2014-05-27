@@ -12,6 +12,7 @@
 # include <vcsn/core/transition.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
+# include <vcsn/misc/memory.hh>
 
 namespace vcsn
 {
@@ -820,7 +821,7 @@ namespace vcsn
   mutable_automaton<Context>
   make_mutable_automaton(const Context& ctx)
   {
-    return std::make_shared<detail::mutable_automaton_impl<Context>>(ctx);
+    return make_shared_ptr<mutable_automaton<Context>>(ctx);
   }
 }
 

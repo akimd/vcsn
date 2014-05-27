@@ -28,7 +28,7 @@ static void check_lal_b()
   using automaton_t = mutable_automaton<ctx::lal_char_b>;
   using state_t = state_t_of<automaton_t>;
 
-  automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
   for(int i=0;i<3;i++)
     s[i]=res->new_state();
@@ -57,7 +57,7 @@ static void check_law_char_b()
   using automaton_t = mutable_automaton<ctx::law_char_b>;
   using state_t = state_t_of<automaton_t>;
 
-  automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
   for(int i=0;i<3;i++)
     s[i]=res->new_state();
@@ -89,7 +89,7 @@ static void check_lal_char_z()
   using automaton_t = mutable_automaton<ctx::lal_char_z>;
   using state_t = state_t_of<automaton_t>;
 
-  automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
   for(int i=0;i<3;i++)
     s[i]=res->new_state();
@@ -115,7 +115,7 @@ static void check_law_char_z()
   using automaton_t = mutable_automaton<ctx::law_char_z>;
   using state_t = state_t_of<automaton_t>;
 
-  automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
   for(int i=0;i<3;i++)
     s[i]=res->new_state();
@@ -161,7 +161,7 @@ static void check_law_char_zmin()
   using automaton_t = mutable_automaton<law_char_zmin>;
   using state_t = state_t_of<automaton_t>;
 
-  automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+  automaton_t res = vcsn::make_shared_ptr<automaton_t>(ctx);
   state_t s[3];
   for(int i=0;i<3;i++)
     s[i]=res->new_state();

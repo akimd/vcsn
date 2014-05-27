@@ -98,7 +98,7 @@ namespace vcsn
     public:
       pairer(const automaton_t& aut, bool keep_initials = false)
         : aut_(aut)
-        , res_(std::make_shared<typename automaton_nocv_t::element_type>(aut->context()))
+        , res_(make_shared_ptr<automaton_nocv_t>(aut->context()))
         , transition_map_(aut)
         , keep_initials_(keep_initials)
       {}

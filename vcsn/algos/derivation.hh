@@ -329,7 +329,7 @@ namespace vcsn
       derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
-        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
+        , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
       /// The state for ratexp \a r.

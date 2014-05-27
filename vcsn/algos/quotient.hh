@@ -71,7 +71,7 @@ namespace vcsn
             state_to_class[s] = c;
 
         automaton_t res
-          = std::make_shared<typename automaton_t::element_type>(aut->context());
+          = make_shared_ptr<automaton_t>(aut->context());
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {

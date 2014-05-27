@@ -34,7 +34,7 @@ namespace vcsn
       constexpr static const char* me() { return "thompson"; }
 
       thompson_visitor(const context_t& ctx)
-        : res_(std::make_shared<typename automaton_t::element_type>(ctx))
+        : res_(make_shared_ptr<automaton_t>(ctx))
       {}
 
       automaton_t

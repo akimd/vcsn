@@ -681,7 +681,7 @@ namespace vcsn
       linearer(const ratexpset_t& rs, bool use_spontaneous = true)
         : rs_(rs)
         , use_spontaneous_(use_spontaneous)
-        , res_{std::make_shared<typename automaton_t::element_type>(rs_.context())}
+        , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
       automaton_t operator()(const ratexp_t& ratexp)

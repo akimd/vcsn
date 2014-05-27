@@ -83,7 +83,7 @@ namespace vcsn
             "random: density must be in [0,1]");
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     // A good source of random integers.
     std::random_device rd;
@@ -202,7 +202,7 @@ namespace vcsn
 
     using automaton_t = mutable_automaton<Ctx>;
     using state_t = state_t_of<automaton_t>;
-    automaton_t res = std::make_shared<typename automaton_t::element_type>(ctx);
+    automaton_t res = make_shared_ptr<automaton_t>(ctx);
 
     std::random_device rd;
     auto seed = rd();
