@@ -14,7 +14,7 @@ def check(input, exp):
   CHECK_EQ(True, exp.is_out_sorted())
   CHECK_EQ(exp, input.sort())
 
-check(r'''digraph
+a = vcsn.automaton(r'''digraph
 {
   vcsn_context = "lal_char(a-e)_b"
   I -> 0
@@ -25,8 +25,8 @@ check(r'''digraph
   1 -> 0 [label = a]
   2 -> 0 [label = b]
   2 -> 1 [label = a]
-}'''
-, r'''digraph
+}''')
+b = vcsn.automaton(r'''digraph
 {
   vcsn_context = "lal_char(abcde)_b"
   rankdir = LR
@@ -51,3 +51,6 @@ check(r'''digraph
   2 -> 1 [label = "b"]
 }
 ''')
+check(a, b)
+
+check(a.transpose(), b)
