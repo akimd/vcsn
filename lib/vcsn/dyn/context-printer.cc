@@ -95,35 +95,28 @@ namespace vcsn
     {
       auto type = t.get_type();
       if (type == "determinized_automaton")
-      {
-        os_ << "vcsn::" << type << '<' << incendl;
-        t.get_content()->accept(*this);
-        os_ << decendl << '>';
         header("vcsn/algos/determinize.hh");
-      }
       else if (type == "linear_automaton")
-      {
-        os_ << "vcsn::" << type << '<' << incendl;
-        t.get_content()->accept(*this);
-        os_ << decendl << '>';
         header("vcsn/algos/first-order.hh");
-      }
       else if (type == "mutable_automaton")
-      {
-        os_ << "vcsn::" << type << '<' << incendl;
-        t.get_content()->accept(*this);
-        os_ << decendl << '>';
         header("vcsn/core/mutable-automaton.hh");
-      }
       else if (type == "transpose_automaton")
-      {
-        os_ << "vcsn::" << type << '<' << incendl;
-        t.get_content()->accept(*this);
-        os_ << decendl << '>';
         header("vcsn/algos/transpose.hh");
-      }
+      else if (type == "product_automaton")
+        header("vcsn/algos/product.hh");
       else
         raise("unsupported automaton type: ", type);
+
+      os_ << "vcsn::" << type << '<' << incendl;
+      bool first = true;
+      for (auto c: t.get_content())
+        {
+          if (!first)
+            os_ << ',' << iendl;
+          first = false;
+          c->accept(*this);
+        }
+      os_ << decendl << '>';
     }
 
     DEFINE(context)

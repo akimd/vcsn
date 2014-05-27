@@ -21,8 +21,7 @@ CHECK_EQ('a*a', str(a2.ratexp()))
 
 lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 rhs = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(b)_b"
   rankdir = LR
@@ -34,17 +33,16 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "3, 1", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> F0
   0 -> 1 [label = "b"]
   1 -> F1
   1 -> 1 [label = "b"]
-}
-'''),
-         lhs & rhs)
+}''',
+         str(lhs & rhs))
 
 ## ------------- ##
 ## ab & cd = 0.  ##
@@ -52,8 +50,7 @@ digraph
 
 lhs = vcsn.context('lal_char(ab)_b').ratexp('ab').standard()
 rhs = vcsn.context('lal_char(cd)_b').ratexp('cd').standard()
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char()_b"
   rankdir = LR
@@ -63,11 +60,10 @@ digraph
   }
   {
     node [shape = circle]
-    0 [color = DimGray]
+    0 [label = "0, 0", shape = box, style = rounded] [color = DimGray]
   }
   I0 -> 0 [color = DimGray]
-}
-'''), lhs & rhs)
+}''', str(lhs & rhs))
 
 
 
@@ -77,8 +73,7 @@ digraph
 
 lhs = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 rhs = vcsn.context('lal_char(cd)_b').ratexp('(c+d)*').standard()
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char()_b"
   rankdir = LR
@@ -89,13 +84,12 @@ digraph
   }
   {
     node [shape = circle]
-    0
+    0 [label = "0, 0", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> F0
-}
-'''),
-         lhs & rhs)
+}''',
+         str(lhs & rhs))
 
 
 
@@ -118,8 +112,8 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "3, 1", shape = box, style = rounded]
     2
   }
   I0 -> 0 [label = "<2>"]
@@ -148,8 +142,8 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "3, 1", shape = box, style = rounded]
   }
   I0 -> 0 [label = "<3>"]
   0 -> F0
@@ -158,8 +152,7 @@ digraph
 }
 ''')
 
-exp = vcsn.automaton('''
-digraph
+exp = '''digraph
 {
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
@@ -171,10 +164,10 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2 [color = DimGray]
-    3
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "0, 1", shape = box, style = rounded]
+    2 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
+    3 [label = "1, 0", shape = box, style = rounded]
   }
   I0 -> 0 [label = "<6>"]
   0 -> F0
@@ -183,10 +176,9 @@ digraph
   1 -> 3 [label = "<3>b"]
   3 -> F3
   3 -> 2 [label = "a", color = DimGray]
-}
-''')
+}'''
 
-CHECK_EQ(exp, lhs & rhs)
+CHECK_EQ(exp, str(lhs & rhs))
 
 ## ------------------------------------ ##
 ## Heterogeneous (and variadic) input.  ##
@@ -231,7 +223,7 @@ a2 = vcsn.context('lal_char(ab)_ratexpset<lal_char(xy)_b>') \
          .ratexp('<x>a<y>b').standard()
 
 def check_enumerate(exp, aut):
-    CHECK_EQ(exp, str(aut.enumerate(4)))
+    CHECK_EQ(exp, str(aut.strip().enumerate(4)))
 
 check_enumerate('<uxvy>ab', a1 & a2)
 check_enumerate('\z', a1.transpose() & a2)
@@ -244,21 +236,43 @@ check_enumerate('<vyux>ba', a1.transpose() & a2.transpose())
 ## ---------- ##
 
 # unary case: return only the accessible part.
-CHECK_EQ(vcsn.automaton('''
-digraph {
+CHECK_EQ('''digraph
+{
   vcsn_context = "lal_char(ab)_b"
-  I -> 0
-  0 -> 1 [label="a"]
-  1 -> 2 [label="a"]
-}
-'''), vcsn.automaton._product([vcsn.automaton('''
-digraph {
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+  }
+  {
+    node [shape = circle]
+    0 [label = "0", shape = box, style = rounded] [color = DimGray]
+    1 [label = "1", shape = box, style = rounded] [color = DimGray]
+    2 [label = "2", shape = box, style = rounded] [color = DimGray]
+  }
+  I0 -> 0 [color = DimGray]
+  0 -> 1 [label = "a", color = DimGray]
+  1 -> 2 [label = "a", color = DimGray]
+}''', str(vcsn.automaton._product([vcsn.automaton('''
+digraph
+{
   vcsn_context = "lal_char(ab)_b"
-  I -> 0
-  0 -> 1 [label="a"]
-  1 -> 2 [label="a"]
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+  }
+  {
+    node [shape = circle]
+    0 [label = "0", shape = box, style = rounded] [color = DimGray]
+    1 [label = "1", shape = box, style = rounded] [color = DimGray]
+    2 [label = "2", shape = box, style = rounded] [color = DimGray]
+  }
+  I0 -> 0 [color = DimGray]
+  0 -> 1 [label = "a", color = DimGray]
+  1 -> 2 [label = "a", color = DimGray]
 }
-''')]))
+''')])))
 
 # four arguments.
 ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
@@ -293,62 +307,62 @@ def check_equivalent(a1, a2):
 
 lhs = vcsn.context('lan_char(ab)_b').ratexp('(a+b)*').thompson()
 rhs = vcsn.context('lan_char(bc)_b').ratexp('(b+c)*').thompson()
-res = vcsn.automaton(r'''digraph
+res = r'''digraph
 {
   vcsn_context = "lan<lal_char(b)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F10
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3 [color = DimGray]
-    4 [color = DimGray]
-    5 [color = DimGray]
-    6
-    7 [color = DimGray]
-    8 [color = DimGray]
-    9 [color = DimGray]
-    10
-    11 [color = DimGray]
-    12 [color = DimGray]
-    13 [color = DimGray]
-    14 [color = DimGray]
-    15
-    16 [color = DimGray]
-    17 [color = DimGray]
-    18 [color = DimGray]
-    19 [color = DimGray]
-    20 [color = DimGray]
-    21 [color = DimGray]
-    22 [color = DimGray]
-    23
-    24 [color = DimGray]
-    25
-    26
-    27 [color = DimGray]
-    28
-    29
-    30 [color = DimGray]
-    31 [color = DimGray]
-    32 [color = DimGray]
-    33
-    34 [color = DimGray]
-    35
-    36 [color = DimGray]
-    37 [color = DimGray]
-    38 [color = DimGray]
-    39 [color = DimGray]
-    40 [color = DimGray]
-    41 [color = DimGray]
-    42
-    43 [color = DimGray]
-    44 [color = DimGray]
+    0 [label = "6, 6", shape = box, style = rounded]
+    1 [label = "0, 6", shape = box, style = rounded]
+    2 [label = "7, 6", shape = box, style = rounded]
+    3 [label = "6, 0", shape = box, style = rounded] [color = DimGray]
+    4 [label = "6, 7", shape = box, style = rounded] [color = DimGray]
+    5 [label = "2, 6", shape = box, style = rounded] [color = DimGray]
+    6 [label = "4, 6", shape = box, style = rounded]
+    7 [label = "0, 0", shape = box, style = rounded] [color = DimGray]
+    8 [label = "0, 7", shape = box, style = rounded] [color = DimGray]
+    9 [label = "7, 0", shape = box, style = rounded] [color = DimGray]
+    10 [label = "7, 7", shape = box, style = rounded]
+    11 [label = "6, 2", shape = box, style = rounded] [color = DimGray]
+    12 [label = "6, 4", shape = box, style = rounded] [color = DimGray]
+    13 [label = "2, 0", shape = box, style = rounded] [color = DimGray]
+    14 [label = "2, 7", shape = box, style = rounded] [color = DimGray]
+    15 [label = "4, 0", shape = box, style = rounded]
+    16 [label = "4, 7", shape = box, style = rounded] [color = DimGray]
+    17 [label = "0, 2", shape = box, style = rounded] [color = DimGray]
+    18 [label = "0, 4", shape = box, style = rounded] [color = DimGray]
+    19 [label = "7, 2", shape = box, style = rounded] [color = DimGray]
+    20 [label = "7, 4", shape = box, style = rounded] [color = DimGray]
+    21 [label = "2, 2", shape = box, style = rounded] [color = DimGray]
+    22 [label = "2, 4", shape = box, style = rounded] [color = DimGray]
+    23 [label = "4, 2", shape = box, style = rounded]
+    24 [label = "4, 4", shape = box, style = rounded] [color = DimGray]
+    25 [label = "5, 3", shape = box, style = rounded]
+    26 [label = "1, 3", shape = box, style = rounded]
+    27 [label = "5, 1", shape = box, style = rounded] [color = DimGray]
+    28 [label = "7, 3", shape = box, style = rounded]
+    29 [label = "0, 3", shape = box, style = rounded]
+    30 [label = "1, 1", shape = box, style = rounded] [color = DimGray]
+    31 [label = "5, 7", shape = box, style = rounded] [color = DimGray]
+    32 [label = "5, 0", shape = box, style = rounded] [color = DimGray]
+    33 [label = "7, 1", shape = box, style = rounded]
+    34 [label = "2, 3", shape = box, style = rounded] [color = DimGray]
+    35 [label = "4, 3", shape = box, style = rounded]
+    36 [label = "0, 1", shape = box, style = rounded] [color = DimGray]
+    37 [label = "1, 7", shape = box, style = rounded] [color = DimGray]
+    38 [label = "1, 0", shape = box, style = rounded] [color = DimGray]
+    39 [label = "5, 2", shape = box, style = rounded] [color = DimGray]
+    40 [label = "5, 4", shape = box, style = rounded] [color = DimGray]
+    41 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
+    42 [label = "4, 1", shape = box, style = rounded]
+    43 [label = "1, 2", shape = box, style = rounded] [color = DimGray]
+    44 [label = "1, 4", shape = box, style = rounded] [color = DimGray]
   }
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -404,344 +418,345 @@ res = vcsn.automaton(r'''digraph
   41 -> 14 [label = "\\e", color = DimGray]
   42 -> 15 [label = "\\e"]
   42 -> 16 [label = "\\e", color = DimGray]
-}''')
-CHECK_EQ(res, lhs & rhs)
-check_equivalent(res.proper(), vcsn.context("lal_char(b)_b").ratexp("b*").standard())
+}'''
+CHECK_EQ(res, str(lhs & rhs))
+check_equivalent(vcsn.automaton(res).proper(),
+                 vcsn.context("lal_char(b)_b").ratexp("b*").standard())
 
 third = vcsn.context('lan_char(bcd)_b').ratexp('(b+c+d)*').thompson()
-res = vcsn.automaton(r'''digraph
+res = r'''digraph
 {
   vcsn_context = "lan<lal_char(b)>_b"
   rankdir = LR
   {
-    node [style = invis, shape = none, label = "", width = 0, height = 0]
+    node [shape = point, width = 0]
     I0
     F48
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3 [color = DimGray]
-    4 [color = DimGray]
-    5 [color = DimGray]
-    6 [color = DimGray]
-    7 [color = DimGray]
-    8
-    9 [color = DimGray]
-    10 [color = DimGray]
-    11 [color = DimGray]
-    12 [color = DimGray]
-    13 [color = DimGray]
-    14
-    15 [color = DimGray]
-    16 [color = DimGray]
-    17 [color = DimGray]
-    18 [color = DimGray]
-    19 [color = DimGray]
-    20 [color = DimGray]
-    21 [color = DimGray]
-    22 [color = DimGray]
-    23 [color = DimGray]
-    24 [color = DimGray]
-    25 [color = DimGray]
-    26 [color = DimGray]
-    27 [color = DimGray]
-    28 [color = DimGray]
-    29 [color = DimGray]
-    30
-    31 [color = DimGray]
-    32 [color = DimGray]
-    33 [color = DimGray]
-    34 [color = DimGray]
-    35 [color = DimGray]
-    36 [color = DimGray]
-    37 [color = DimGray]
-    38 [color = DimGray]
-    39 [color = DimGray]
-    40 [color = DimGray]
-    41 [color = DimGray]
-    42 [color = DimGray]
-    43 [color = DimGray]
-    44 [color = DimGray]
-    45 [color = DimGray]
-    46 [color = DimGray]
-    47 [color = DimGray]
-    48
-    49 [color = DimGray]
-    50 [color = DimGray]
-    51 [color = DimGray]
-    52 [color = DimGray]
-    53 [color = DimGray]
-    54 [color = DimGray]
-    55 [color = DimGray]
-    56 [color = DimGray]
-    57 [color = DimGray]
-    58 [color = DimGray]
-    59 [color = DimGray]
-    60 [color = DimGray]
-    61 [color = DimGray]
-    62 [color = DimGray]
-    63 [color = DimGray]
-    64 [color = DimGray]
-    65 [color = DimGray]
-    66 [color = DimGray]
-    67 [color = DimGray]
-    68 [color = DimGray]
-    69 [color = DimGray]
-    70 [color = DimGray]
-    71
-    72 [color = DimGray]
-    73 [color = DimGray]
-    74 [color = DimGray]
-    75 [color = DimGray]
-    76 [color = DimGray]
-    77 [color = DimGray]
-    78 [color = DimGray]
-    79 [color = DimGray]
-    80 [color = DimGray]
-    81 [color = DimGray]
-    82 [color = DimGray]
-    83 [color = DimGray]
-    84 [color = DimGray]
-    85 [color = DimGray]
-    86 [color = DimGray]
-    87 [color = DimGray]
-    88 [color = DimGray]
-    89 [color = DimGray]
-    90 [color = DimGray]
-    91 [color = DimGray]
-    92 [color = DimGray]
-    93 [color = DimGray]
-    94 [color = DimGray]
-    95 [color = DimGray]
-    96 [color = DimGray]
-    97 [color = DimGray]
-    98 [color = DimGray]
-    99 [color = DimGray]
-    100 [color = DimGray]
-    101 [color = DimGray]
-    102 [color = DimGray]
-    103 [color = DimGray]
-    104 [color = DimGray]
-    105 [color = DimGray]
-    106 [color = DimGray]
-    107 [color = DimGray]
-    108 [color = DimGray]
-    109 [color = DimGray]
-    110 [color = DimGray]
-    111 [color = DimGray]
-    112 [color = DimGray]
-    113 [color = DimGray]
-    114 [color = DimGray]
-    115 [color = DimGray]
-    116
-    117 [color = DimGray]
-    118 [color = DimGray]
-    119 [color = DimGray]
-    120 [color = DimGray]
-    121 [color = DimGray]
-    122 [color = DimGray]
-    123 [color = DimGray]
-    124 [color = DimGray]
-    125 [color = DimGray]
-    126 [color = DimGray]
-    127 [color = DimGray]
-    128 [color = DimGray]
-    129 [color = DimGray]
-    130 [color = DimGray]
-    131 [color = DimGray]
-    132 [color = DimGray]
-    133 [color = DimGray]
-    134 [color = DimGray]
-    135 [color = DimGray]
-    136 [color = DimGray]
-    137 [color = DimGray]
-    138 [color = DimGray]
-    139 [color = DimGray]
-    140 [color = DimGray]
-    141 [color = DimGray]
-    142 [color = DimGray]
-    143 [color = DimGray]
-    144
-    145 [color = DimGray]
-    146 [color = DimGray]
-    147 [color = DimGray]
-    148 [color = DimGray]
-    149 [color = DimGray]
-    150
-    151
-    152 [color = DimGray]
-    153 [color = DimGray]
-    154
-    155
-    156 [color = DimGray]
-    157 [color = DimGray]
-    158 [color = DimGray]
-    159 [color = DimGray]
-    160 [color = DimGray]
-    161 [color = DimGray]
-    162 [color = DimGray]
-    163
-    164 [color = DimGray]
-    165 [color = DimGray]
-    166
-    167 [color = DimGray]
-    168 [color = DimGray]
-    169 [color = DimGray]
-    170 [color = DimGray]
-    171 [color = DimGray]
-    172 [color = DimGray]
-    173 [color = DimGray]
-    174 [color = DimGray]
-    175 [color = DimGray]
-    176 [color = DimGray]
-    177 [color = DimGray]
-    178 [color = DimGray]
-    179 [color = DimGray]
-    180 [color = DimGray]
-    181 [color = DimGray]
-    182 [color = DimGray]
-    183
-    184 [color = DimGray]
-    185 [color = DimGray]
-    186 [color = DimGray]
-    187 [color = DimGray]
-    188 [color = DimGray]
-    189 [color = DimGray]
-    190
-    191 [color = DimGray]
-    192 [color = DimGray]
-    193 [color = DimGray]
-    194 [color = DimGray]
-    195 [color = DimGray]
-    196 [color = DimGray]
-    197 [color = DimGray]
-    198 [color = DimGray]
-    199 [color = DimGray]
-    200 [color = DimGray]
-    201 [color = DimGray]
-    202 [color = DimGray]
-    203 [color = DimGray]
-    204 [color = DimGray]
-    205 [color = DimGray]
-    206 [color = DimGray]
-    207 [color = DimGray]
-    208 [color = DimGray]
-    209 [color = DimGray]
-    210 [color = DimGray]
-    211 [color = DimGray]
-    212 [color = DimGray]
-    213 [color = DimGray]
-    214 [color = DimGray]
-    215
-    216 [color = DimGray]
-    217 [color = DimGray]
-    218 [color = DimGray]
-    219 [color = DimGray]
-    220 [color = DimGray]
-    221 [color = DimGray]
-    222 [color = DimGray]
-    223 [color = DimGray]
-    224 [color = DimGray]
-    225 [color = DimGray]
-    226 [color = DimGray]
-    227 [color = DimGray]
-    228 [color = DimGray]
-    229 [color = DimGray]
-    230
-    231 [color = DimGray]
-    232 [color = DimGray]
-    233 [color = DimGray]
-    234 [color = DimGray]
-    235 [color = DimGray]
-    236 [color = DimGray]
-    237 [color = DimGray]
-    238 [color = DimGray]
-    239 [color = DimGray]
-    240 [color = DimGray]
-    241 [color = DimGray]
-    242 [color = DimGray]
-    243 [color = DimGray]
-    244 [color = DimGray]
-    245 [color = DimGray]
-    246 [color = DimGray]
-    247 [color = DimGray]
-    248 [color = DimGray]
-    249 [color = DimGray]
-    250 [color = DimGray]
-    251 [color = DimGray]
-    252 [color = DimGray]
-    253 [color = DimGray]
-    254 [color = DimGray]
-    255 [color = DimGray]
-    256 [color = DimGray]
-    257 [color = DimGray]
-    258 [color = DimGray]
-    259 [color = DimGray]
-    260 [color = DimGray]
-    261 [color = DimGray]
-    262 [color = DimGray]
-    263 [color = DimGray]
-    264 [color = DimGray]
-    265 [color = DimGray]
-    266 [color = DimGray]
-    267 [color = DimGray]
-    268 [color = DimGray]
-    269 [color = DimGray]
-    270 [color = DimGray]
-    271 [color = DimGray]
-    272 [color = DimGray]
-    273 [color = DimGray]
-    274 [color = DimGray]
-    275 [color = DimGray]
-    276 [color = DimGray]
-    277
-    278 [color = DimGray]
-    279 [color = DimGray]
-    280 [color = DimGray]
-    281 [color = DimGray]
-    282 [color = DimGray]
-    283 [color = DimGray]
-    284 [color = DimGray]
-    285 [color = DimGray]
-    286 [color = DimGray]
-    287 [color = DimGray]
-    288 [color = DimGray]
-    289 [color = DimGray]
-    290 [color = DimGray]
-    291 [color = DimGray]
-    292 [color = DimGray]
-    293 [color = DimGray]
-    294 [color = DimGray]
-    295 [color = DimGray]
-    296 [color = DimGray]
-    297 [color = DimGray]
-    298 [color = DimGray]
-    299 [color = DimGray]
-    300 [color = DimGray]
-    301 [color = DimGray]
-    302 [color = DimGray]
-    303 [color = DimGray]
-    304 [color = DimGray]
-    305 [color = DimGray]
-    306 [color = DimGray]
-    307 [color = DimGray]
-    308 [color = DimGray]
-    309 [color = DimGray]
-    310 [color = DimGray]
-    311
-    312 [color = DimGray]
-    313 [color = DimGray]
-    314 [color = DimGray]
-    315 [color = DimGray]
-    316 [color = DimGray]
-    317 [color = DimGray]
-    318 [color = DimGray]
-    319 [color = DimGray]
-    320 [color = DimGray]
-    321 [color = DimGray]
+    0 [label = "6, 6, 8", shape = box, style = rounded]
+    1 [label = "0, 6, 8", shape = box, style = rounded]
+    2 [label = "7, 6, 8", shape = box, style = rounded]
+    3 [label = "6, 0, 8", shape = box, style = rounded] [color = DimGray]
+    4 [label = "6, 7, 8", shape = box, style = rounded] [color = DimGray]
+    5 [label = "6, 6, 0", shape = box, style = rounded] [color = DimGray]
+    6 [label = "6, 6, 9", shape = box, style = rounded] [color = DimGray]
+    7 [label = "2, 6, 8", shape = box, style = rounded] [color = DimGray]
+    8 [label = "4, 6, 8", shape = box, style = rounded]
+    9 [label = "0, 0, 8", shape = box, style = rounded] [color = DimGray]
+    10 [label = "0, 7, 8", shape = box, style = rounded] [color = DimGray]
+    11 [label = "0, 6, 0", shape = box, style = rounded] [color = DimGray]
+    12 [label = "0, 6, 9", shape = box, style = rounded] [color = DimGray]
+    13 [label = "7, 0, 8", shape = box, style = rounded] [color = DimGray]
+    14 [label = "7, 7, 8", shape = box, style = rounded]
+    15 [label = "7, 6, 0", shape = box, style = rounded] [color = DimGray]
+    16 [label = "7, 6, 9", shape = box, style = rounded] [color = DimGray]
+    17 [label = "6, 2, 8", shape = box, style = rounded] [color = DimGray]
+    18 [label = "6, 4, 8", shape = box, style = rounded] [color = DimGray]
+    19 [label = "6, 0, 0", shape = box, style = rounded] [color = DimGray]
+    20 [label = "6, 0, 9", shape = box, style = rounded] [color = DimGray]
+    21 [label = "6, 7, 0", shape = box, style = rounded] [color = DimGray]
+    22 [label = "6, 7, 9", shape = box, style = rounded] [color = DimGray]
+    23 [label = "6, 6, 2", shape = box, style = rounded] [color = DimGray]
+    24 [label = "6, 6, 4", shape = box, style = rounded] [color = DimGray]
+    25 [label = "6, 6, 6", shape = box, style = rounded] [color = DimGray]
+    26 [label = "2, 0, 8", shape = box, style = rounded] [color = DimGray]
+    27 [label = "2, 7, 8", shape = box, style = rounded] [color = DimGray]
+    28 [label = "2, 6, 0", shape = box, style = rounded] [color = DimGray]
+    29 [label = "2, 6, 9", shape = box, style = rounded] [color = DimGray]
+    30 [label = "4, 0, 8", shape = box, style = rounded]
+    31 [label = "4, 7, 8", shape = box, style = rounded] [color = DimGray]
+    32 [label = "4, 6, 0", shape = box, style = rounded] [color = DimGray]
+    33 [label = "4, 6, 9", shape = box, style = rounded] [color = DimGray]
+    34 [label = "0, 2, 8", shape = box, style = rounded] [color = DimGray]
+    35 [label = "0, 4, 8", shape = box, style = rounded] [color = DimGray]
+    36 [label = "0, 0, 0", shape = box, style = rounded] [color = DimGray]
+    37 [label = "0, 0, 9", shape = box, style = rounded] [color = DimGray]
+    38 [label = "0, 7, 0", shape = box, style = rounded] [color = DimGray]
+    39 [label = "0, 7, 9", shape = box, style = rounded] [color = DimGray]
+    40 [label = "0, 6, 2", shape = box, style = rounded] [color = DimGray]
+    41 [label = "0, 6, 4", shape = box, style = rounded] [color = DimGray]
+    42 [label = "0, 6, 6", shape = box, style = rounded] [color = DimGray]
+    43 [label = "7, 2, 8", shape = box, style = rounded] [color = DimGray]
+    44 [label = "7, 4, 8", shape = box, style = rounded] [color = DimGray]
+    45 [label = "7, 0, 0", shape = box, style = rounded] [color = DimGray]
+    46 [label = "7, 0, 9", shape = box, style = rounded] [color = DimGray]
+    47 [label = "7, 7, 0", shape = box, style = rounded] [color = DimGray]
+    48 [label = "7, 7, 9", shape = box, style = rounded]
+    49 [label = "7, 6, 2", shape = box, style = rounded] [color = DimGray]
+    50 [label = "7, 6, 4", shape = box, style = rounded] [color = DimGray]
+    51 [label = "7, 6, 6", shape = box, style = rounded] [color = DimGray]
+    52 [label = "6, 2, 0", shape = box, style = rounded] [color = DimGray]
+    53 [label = "6, 2, 9", shape = box, style = rounded] [color = DimGray]
+    54 [label = "6, 4, 0", shape = box, style = rounded] [color = DimGray]
+    55 [label = "6, 4, 9", shape = box, style = rounded] [color = DimGray]
+    56 [label = "6, 0, 2", shape = box, style = rounded] [color = DimGray]
+    57 [label = "6, 0, 4", shape = box, style = rounded] [color = DimGray]
+    58 [label = "6, 0, 6", shape = box, style = rounded] [color = DimGray]
+    59 [label = "6, 7, 2", shape = box, style = rounded] [color = DimGray]
+    60 [label = "6, 7, 4", shape = box, style = rounded] [color = DimGray]
+    61 [label = "6, 7, 6", shape = box, style = rounded] [color = DimGray]
+    62 [label = "2, 2, 8", shape = box, style = rounded] [color = DimGray]
+    63 [label = "2, 4, 8", shape = box, style = rounded] [color = DimGray]
+    64 [label = "2, 0, 0", shape = box, style = rounded] [color = DimGray]
+    65 [label = "2, 0, 9", shape = box, style = rounded] [color = DimGray]
+    66 [label = "2, 7, 0", shape = box, style = rounded] [color = DimGray]
+    67 [label = "2, 7, 9", shape = box, style = rounded] [color = DimGray]
+    68 [label = "2, 6, 2", shape = box, style = rounded] [color = DimGray]
+    69 [label = "2, 6, 4", shape = box, style = rounded] [color = DimGray]
+    70 [label = "2, 6, 6", shape = box, style = rounded] [color = DimGray]
+    71 [label = "4, 2, 8", shape = box, style = rounded]
+    72 [label = "4, 4, 8", shape = box, style = rounded] [color = DimGray]
+    73 [label = "4, 0, 0", shape = box, style = rounded] [color = DimGray]
+    74 [label = "4, 0, 9", shape = box, style = rounded] [color = DimGray]
+    75 [label = "4, 7, 0", shape = box, style = rounded] [color = DimGray]
+    76 [label = "4, 7, 9", shape = box, style = rounded] [color = DimGray]
+    77 [label = "4, 6, 2", shape = box, style = rounded] [color = DimGray]
+    78 [label = "4, 6, 4", shape = box, style = rounded] [color = DimGray]
+    79 [label = "4, 6, 6", shape = box, style = rounded] [color = DimGray]
+    80 [label = "0, 2, 0", shape = box, style = rounded] [color = DimGray]
+    81 [label = "0, 2, 9", shape = box, style = rounded] [color = DimGray]
+    82 [label = "0, 4, 0", shape = box, style = rounded] [color = DimGray]
+    83 [label = "0, 4, 9", shape = box, style = rounded] [color = DimGray]
+    84 [label = "0, 0, 2", shape = box, style = rounded] [color = DimGray]
+    85 [label = "0, 0, 4", shape = box, style = rounded] [color = DimGray]
+    86 [label = "0, 0, 6", shape = box, style = rounded] [color = DimGray]
+    87 [label = "0, 7, 2", shape = box, style = rounded] [color = DimGray]
+    88 [label = "0, 7, 4", shape = box, style = rounded] [color = DimGray]
+    89 [label = "0, 7, 6", shape = box, style = rounded] [color = DimGray]
+    90 [label = "7, 2, 0", shape = box, style = rounded] [color = DimGray]
+    91 [label = "7, 2, 9", shape = box, style = rounded] [color = DimGray]
+    92 [label = "7, 4, 0", shape = box, style = rounded] [color = DimGray]
+    93 [label = "7, 4, 9", shape = box, style = rounded] [color = DimGray]
+    94 [label = "7, 0, 2", shape = box, style = rounded] [color = DimGray]
+    95 [label = "7, 0, 4", shape = box, style = rounded] [color = DimGray]
+    96 [label = "7, 0, 6", shape = box, style = rounded] [color = DimGray]
+    97 [label = "7, 7, 2", shape = box, style = rounded] [color = DimGray]
+    98 [label = "7, 7, 4", shape = box, style = rounded] [color = DimGray]
+    99 [label = "7, 7, 6", shape = box, style = rounded] [color = DimGray]
+    100 [label = "6, 2, 2", shape = box, style = rounded] [color = DimGray]
+    101 [label = "6, 2, 4", shape = box, style = rounded] [color = DimGray]
+    102 [label = "6, 2, 6", shape = box, style = rounded] [color = DimGray]
+    103 [label = "6, 4, 2", shape = box, style = rounded] [color = DimGray]
+    104 [label = "6, 4, 4", shape = box, style = rounded] [color = DimGray]
+    105 [label = "6, 4, 6", shape = box, style = rounded] [color = DimGray]
+    106 [label = "2, 2, 0", shape = box, style = rounded] [color = DimGray]
+    107 [label = "2, 2, 9", shape = box, style = rounded] [color = DimGray]
+    108 [label = "2, 4, 0", shape = box, style = rounded] [color = DimGray]
+    109 [label = "2, 4, 9", shape = box, style = rounded] [color = DimGray]
+    110 [label = "2, 0, 2", shape = box, style = rounded] [color = DimGray]
+    111 [label = "2, 0, 4", shape = box, style = rounded] [color = DimGray]
+    112 [label = "2, 0, 6", shape = box, style = rounded] [color = DimGray]
+    113 [label = "2, 7, 2", shape = box, style = rounded] [color = DimGray]
+    114 [label = "2, 7, 4", shape = box, style = rounded] [color = DimGray]
+    115 [label = "2, 7, 6", shape = box, style = rounded] [color = DimGray]
+    116 [label = "4, 2, 0", shape = box, style = rounded]
+    117 [label = "4, 2, 9", shape = box, style = rounded] [color = DimGray]
+    118 [label = "4, 4, 0", shape = box, style = rounded] [color = DimGray]
+    119 [label = "4, 4, 9", shape = box, style = rounded] [color = DimGray]
+    120 [label = "4, 0, 2", shape = box, style = rounded] [color = DimGray]
+    121 [label = "4, 0, 4", shape = box, style = rounded] [color = DimGray]
+    122 [label = "4, 0, 6", shape = box, style = rounded] [color = DimGray]
+    123 [label = "4, 7, 2", shape = box, style = rounded] [color = DimGray]
+    124 [label = "4, 7, 4", shape = box, style = rounded] [color = DimGray]
+    125 [label = "4, 7, 6", shape = box, style = rounded] [color = DimGray]
+    126 [label = "0, 2, 2", shape = box, style = rounded] [color = DimGray]
+    127 [label = "0, 2, 4", shape = box, style = rounded] [color = DimGray]
+    128 [label = "0, 2, 6", shape = box, style = rounded] [color = DimGray]
+    129 [label = "0, 4, 2", shape = box, style = rounded] [color = DimGray]
+    130 [label = "0, 4, 4", shape = box, style = rounded] [color = DimGray]
+    131 [label = "0, 4, 6", shape = box, style = rounded] [color = DimGray]
+    132 [label = "7, 2, 2", shape = box, style = rounded] [color = DimGray]
+    133 [label = "7, 2, 4", shape = box, style = rounded] [color = DimGray]
+    134 [label = "7, 2, 6", shape = box, style = rounded] [color = DimGray]
+    135 [label = "7, 4, 2", shape = box, style = rounded] [color = DimGray]
+    136 [label = "7, 4, 4", shape = box, style = rounded] [color = DimGray]
+    137 [label = "7, 4, 6", shape = box, style = rounded] [color = DimGray]
+    138 [label = "2, 2, 2", shape = box, style = rounded] [color = DimGray]
+    139 [label = "2, 2, 4", shape = box, style = rounded] [color = DimGray]
+    140 [label = "2, 2, 6", shape = box, style = rounded] [color = DimGray]
+    141 [label = "2, 4, 2", shape = box, style = rounded] [color = DimGray]
+    142 [label = "2, 4, 4", shape = box, style = rounded] [color = DimGray]
+    143 [label = "2, 4, 6", shape = box, style = rounded] [color = DimGray]
+    144 [label = "4, 2, 2", shape = box, style = rounded]
+    145 [label = "4, 2, 4", shape = box, style = rounded] [color = DimGray]
+    146 [label = "4, 2, 6", shape = box, style = rounded] [color = DimGray]
+    147 [label = "4, 4, 2", shape = box, style = rounded] [color = DimGray]
+    148 [label = "4, 4, 4", shape = box, style = rounded] [color = DimGray]
+    149 [label = "4, 4, 6", shape = box, style = rounded] [color = DimGray]
+    150 [label = "5, 3, 3", shape = box, style = rounded]
+    151 [label = "1, 3, 3", shape = box, style = rounded]
+    152 [label = "5, 1, 3", shape = box, style = rounded] [color = DimGray]
+    153 [label = "5, 3, 1", shape = box, style = rounded] [color = DimGray]
+    154 [label = "7, 3, 3", shape = box, style = rounded]
+    155 [label = "0, 3, 3", shape = box, style = rounded]
+    156 [label = "1, 1, 3", shape = box, style = rounded] [color = DimGray]
+    157 [label = "1, 3, 1", shape = box, style = rounded] [color = DimGray]
+    158 [label = "5, 7, 3", shape = box, style = rounded] [color = DimGray]
+    159 [label = "5, 0, 3", shape = box, style = rounded] [color = DimGray]
+    160 [label = "5, 1, 1", shape = box, style = rounded] [color = DimGray]
+    161 [label = "5, 3, 9", shape = box, style = rounded] [color = DimGray]
+    162 [label = "5, 3, 0", shape = box, style = rounded] [color = DimGray]
+    163 [label = "7, 1, 3", shape = box, style = rounded]
+    164 [label = "7, 3, 1", shape = box, style = rounded] [color = DimGray]
+    165 [label = "2, 3, 3", shape = box, style = rounded] [color = DimGray]
+    166 [label = "4, 3, 3", shape = box, style = rounded]
+    167 [label = "0, 1, 3", shape = box, style = rounded] [color = DimGray]
+    168 [label = "0, 3, 1", shape = box, style = rounded] [color = DimGray]
+    169 [label = "1, 7, 3", shape = box, style = rounded] [color = DimGray]
+    170 [label = "1, 0, 3", shape = box, style = rounded] [color = DimGray]
+    171 [label = "1, 1, 1", shape = box, style = rounded] [color = DimGray]
+    172 [label = "1, 3, 9", shape = box, style = rounded] [color = DimGray]
+    173 [label = "1, 3, 0", shape = box, style = rounded] [color = DimGray]
+    174 [label = "5, 7, 1", shape = box, style = rounded] [color = DimGray]
+    175 [label = "5, 2, 3", shape = box, style = rounded] [color = DimGray]
+    176 [label = "5, 4, 3", shape = box, style = rounded] [color = DimGray]
+    177 [label = "5, 0, 1", shape = box, style = rounded] [color = DimGray]
+    178 [label = "5, 1, 9", shape = box, style = rounded] [color = DimGray]
+    179 [label = "5, 1, 0", shape = box, style = rounded] [color = DimGray]
+    180 [label = "5, 3, 2", shape = box, style = rounded] [color = DimGray]
+    181 [label = "5, 3, 4", shape = box, style = rounded] [color = DimGray]
+    182 [label = "5, 3, 6", shape = box, style = rounded] [color = DimGray]
+    183 [label = "7, 7, 3", shape = box, style = rounded]
+    184 [label = "7, 0, 3", shape = box, style = rounded] [color = DimGray]
+    185 [label = "7, 1, 1", shape = box, style = rounded] [color = DimGray]
+    186 [label = "7, 3, 9", shape = box, style = rounded] [color = DimGray]
+    187 [label = "7, 3, 0", shape = box, style = rounded] [color = DimGray]
+    188 [label = "2, 1, 3", shape = box, style = rounded] [color = DimGray]
+    189 [label = "2, 3, 1", shape = box, style = rounded] [color = DimGray]
+    190 [label = "4, 1, 3", shape = box, style = rounded]
+    191 [label = "4, 3, 1", shape = box, style = rounded] [color = DimGray]
+    192 [label = "0, 7, 3", shape = box, style = rounded] [color = DimGray]
+    193 [label = "0, 0, 3", shape = box, style = rounded] [color = DimGray]
+    194 [label = "0, 1, 1", shape = box, style = rounded] [color = DimGray]
+    195 [label = "0, 3, 9", shape = box, style = rounded] [color = DimGray]
+    196 [label = "0, 3, 0", shape = box, style = rounded] [color = DimGray]
+    197 [label = "1, 7, 1", shape = box, style = rounded] [color = DimGray]
+    198 [label = "1, 2, 3", shape = box, style = rounded] [color = DimGray]
+    199 [label = "1, 4, 3", shape = box, style = rounded] [color = DimGray]
+    200 [label = "1, 0, 1", shape = box, style = rounded] [color = DimGray]
+    201 [label = "1, 1, 9", shape = box, style = rounded] [color = DimGray]
+    202 [label = "1, 1, 0", shape = box, style = rounded] [color = DimGray]
+    203 [label = "1, 3, 2", shape = box, style = rounded] [color = DimGray]
+    204 [label = "1, 3, 4", shape = box, style = rounded] [color = DimGray]
+    205 [label = "1, 3, 6", shape = box, style = rounded] [color = DimGray]
+    206 [label = "5, 7, 9", shape = box, style = rounded] [color = DimGray]
+    207 [label = "5, 7, 0", shape = box, style = rounded] [color = DimGray]
+    208 [label = "5, 2, 1", shape = box, style = rounded] [color = DimGray]
+    209 [label = "5, 4, 1", shape = box, style = rounded] [color = DimGray]
+    210 [label = "5, 0, 9", shape = box, style = rounded] [color = DimGray]
+    211 [label = "5, 0, 0", shape = box, style = rounded] [color = DimGray]
+    212 [label = "5, 1, 2", shape = box, style = rounded] [color = DimGray]
+    213 [label = "5, 1, 4", shape = box, style = rounded] [color = DimGray]
+    214 [label = "5, 1, 6", shape = box, style = rounded] [color = DimGray]
+    215 [label = "7, 7, 1", shape = box, style = rounded]
+    216 [label = "7, 2, 3", shape = box, style = rounded] [color = DimGray]
+    217 [label = "7, 4, 3", shape = box, style = rounded] [color = DimGray]
+    218 [label = "7, 0, 1", shape = box, style = rounded] [color = DimGray]
+    219 [label = "7, 1, 9", shape = box, style = rounded] [color = DimGray]
+    220 [label = "7, 1, 0", shape = box, style = rounded] [color = DimGray]
+    221 [label = "7, 3, 2", shape = box, style = rounded] [color = DimGray]
+    222 [label = "7, 3, 4", shape = box, style = rounded] [color = DimGray]
+    223 [label = "7, 3, 6", shape = box, style = rounded] [color = DimGray]
+    224 [label = "2, 7, 3", shape = box, style = rounded] [color = DimGray]
+    225 [label = "2, 0, 3", shape = box, style = rounded] [color = DimGray]
+    226 [label = "2, 1, 1", shape = box, style = rounded] [color = DimGray]
+    227 [label = "2, 3, 9", shape = box, style = rounded] [color = DimGray]
+    228 [label = "2, 3, 0", shape = box, style = rounded] [color = DimGray]
+    229 [label = "4, 7, 3", shape = box, style = rounded] [color = DimGray]
+    230 [label = "4, 0, 3", shape = box, style = rounded]
+    231 [label = "4, 1, 1", shape = box, style = rounded] [color = DimGray]
+    232 [label = "4, 3, 9", shape = box, style = rounded] [color = DimGray]
+    233 [label = "4, 3, 0", shape = box, style = rounded] [color = DimGray]
+    234 [label = "0, 7, 1", shape = box, style = rounded] [color = DimGray]
+    235 [label = "0, 2, 3", shape = box, style = rounded] [color = DimGray]
+    236 [label = "0, 4, 3", shape = box, style = rounded] [color = DimGray]
+    237 [label = "0, 0, 1", shape = box, style = rounded] [color = DimGray]
+    238 [label = "0, 1, 9", shape = box, style = rounded] [color = DimGray]
+    239 [label = "0, 1, 0", shape = box, style = rounded] [color = DimGray]
+    240 [label = "0, 3, 2", shape = box, style = rounded] [color = DimGray]
+    241 [label = "0, 3, 4", shape = box, style = rounded] [color = DimGray]
+    242 [label = "0, 3, 6", shape = box, style = rounded] [color = DimGray]
+    243 [label = "1, 7, 9", shape = box, style = rounded] [color = DimGray]
+    244 [label = "1, 7, 0", shape = box, style = rounded] [color = DimGray]
+    245 [label = "1, 2, 1", shape = box, style = rounded] [color = DimGray]
+    246 [label = "1, 4, 1", shape = box, style = rounded] [color = DimGray]
+    247 [label = "1, 0, 9", shape = box, style = rounded] [color = DimGray]
+    248 [label = "1, 0, 0", shape = box, style = rounded] [color = DimGray]
+    249 [label = "1, 1, 2", shape = box, style = rounded] [color = DimGray]
+    250 [label = "1, 1, 4", shape = box, style = rounded] [color = DimGray]
+    251 [label = "1, 1, 6", shape = box, style = rounded] [color = DimGray]
+    252 [label = "5, 7, 2", shape = box, style = rounded] [color = DimGray]
+    253 [label = "5, 7, 4", shape = box, style = rounded] [color = DimGray]
+    254 [label = "5, 7, 6", shape = box, style = rounded] [color = DimGray]
+    255 [label = "5, 2, 9", shape = box, style = rounded] [color = DimGray]
+    256 [label = "5, 2, 0", shape = box, style = rounded] [color = DimGray]
+    257 [label = "5, 4, 9", shape = box, style = rounded] [color = DimGray]
+    258 [label = "5, 4, 0", shape = box, style = rounded] [color = DimGray]
+    259 [label = "5, 0, 2", shape = box, style = rounded] [color = DimGray]
+    260 [label = "5, 0, 4", shape = box, style = rounded] [color = DimGray]
+    261 [label = "5, 0, 6", shape = box, style = rounded] [color = DimGray]
+    262 [label = "7, 2, 1", shape = box, style = rounded] [color = DimGray]
+    263 [label = "7, 4, 1", shape = box, style = rounded] [color = DimGray]
+    264 [label = "7, 1, 2", shape = box, style = rounded] [color = DimGray]
+    265 [label = "7, 1, 4", shape = box, style = rounded] [color = DimGray]
+    266 [label = "7, 1, 6", shape = box, style = rounded] [color = DimGray]
+    267 [label = "2, 7, 1", shape = box, style = rounded] [color = DimGray]
+    268 [label = "2, 2, 3", shape = box, style = rounded] [color = DimGray]
+    269 [label = "2, 4, 3", shape = box, style = rounded] [color = DimGray]
+    270 [label = "2, 0, 1", shape = box, style = rounded] [color = DimGray]
+    271 [label = "2, 1, 9", shape = box, style = rounded] [color = DimGray]
+    272 [label = "2, 1, 0", shape = box, style = rounded] [color = DimGray]
+    273 [label = "2, 3, 2", shape = box, style = rounded] [color = DimGray]
+    274 [label = "2, 3, 4", shape = box, style = rounded] [color = DimGray]
+    275 [label = "2, 3, 6", shape = box, style = rounded] [color = DimGray]
+    276 [label = "4, 7, 1", shape = box, style = rounded] [color = DimGray]
+    277 [label = "4, 2, 3", shape = box, style = rounded]
+    278 [label = "4, 4, 3", shape = box, style = rounded] [color = DimGray]
+    279 [label = "4, 0, 1", shape = box, style = rounded] [color = DimGray]
+    280 [label = "4, 1, 9", shape = box, style = rounded] [color = DimGray]
+    281 [label = "4, 1, 0", shape = box, style = rounded] [color = DimGray]
+    282 [label = "4, 3, 2", shape = box, style = rounded] [color = DimGray]
+    283 [label = "4, 3, 4", shape = box, style = rounded] [color = DimGray]
+    284 [label = "4, 3, 6", shape = box, style = rounded] [color = DimGray]
+    285 [label = "0, 2, 1", shape = box, style = rounded] [color = DimGray]
+    286 [label = "0, 4, 1", shape = box, style = rounded] [color = DimGray]
+    287 [label = "0, 1, 2", shape = box, style = rounded] [color = DimGray]
+    288 [label = "0, 1, 4", shape = box, style = rounded] [color = DimGray]
+    289 [label = "0, 1, 6", shape = box, style = rounded] [color = DimGray]
+    290 [label = "1, 7, 2", shape = box, style = rounded] [color = DimGray]
+    291 [label = "1, 7, 4", shape = box, style = rounded] [color = DimGray]
+    292 [label = "1, 7, 6", shape = box, style = rounded] [color = DimGray]
+    293 [label = "1, 2, 9", shape = box, style = rounded] [color = DimGray]
+    294 [label = "1, 2, 0", shape = box, style = rounded] [color = DimGray]
+    295 [label = "1, 4, 9", shape = box, style = rounded] [color = DimGray]
+    296 [label = "1, 4, 0", shape = box, style = rounded] [color = DimGray]
+    297 [label = "1, 0, 2", shape = box, style = rounded] [color = DimGray]
+    298 [label = "1, 0, 4", shape = box, style = rounded] [color = DimGray]
+    299 [label = "1, 0, 6", shape = box, style = rounded] [color = DimGray]
+    300 [label = "5, 2, 2", shape = box, style = rounded] [color = DimGray]
+    301 [label = "5, 2, 4", shape = box, style = rounded] [color = DimGray]
+    302 [label = "5, 2, 6", shape = box, style = rounded] [color = DimGray]
+    303 [label = "5, 4, 2", shape = box, style = rounded] [color = DimGray]
+    304 [label = "5, 4, 4", shape = box, style = rounded] [color = DimGray]
+    305 [label = "5, 4, 6", shape = box, style = rounded] [color = DimGray]
+    306 [label = "2, 2, 1", shape = box, style = rounded] [color = DimGray]
+    307 [label = "2, 4, 1", shape = box, style = rounded] [color = DimGray]
+    308 [label = "2, 1, 2", shape = box, style = rounded] [color = DimGray]
+    309 [label = "2, 1, 4", shape = box, style = rounded] [color = DimGray]
+    310 [label = "2, 1, 6", shape = box, style = rounded] [color = DimGray]
+    311 [label = "4, 2, 1", shape = box, style = rounded]
+    312 [label = "4, 4, 1", shape = box, style = rounded] [color = DimGray]
+    313 [label = "4, 1, 2", shape = box, style = rounded] [color = DimGray]
+    314 [label = "4, 1, 4", shape = box, style = rounded] [color = DimGray]
+    315 [label = "4, 1, 6", shape = box, style = rounded] [color = DimGray]
+    316 [label = "1, 2, 2", shape = box, style = rounded] [color = DimGray]
+    317 [label = "1, 2, 4", shape = box, style = rounded] [color = DimGray]
+    318 [label = "1, 2, 6", shape = box, style = rounded] [color = DimGray]
+    319 [label = "1, 4, 2", shape = box, style = rounded] [color = DimGray]
+    320 [label = "1, 4, 4", shape = box, style = rounded] [color = DimGray]
+    321 [label = "1, 4, 6", shape = box, style = rounded] [color = DimGray]
   }
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -1098,6 +1113,7 @@ res = vcsn.automaton(r'''digraph
   311 -> 117 [label = "\\e", color = DimGray]
   312 -> 118 [label = "\\e", color = DimGray]
   312 -> 119 [label = "\\e", color = DimGray]
-}''')
-CHECK_EQ(res, lhs & rhs & third)
-check_equivalent(res.proper(), vcsn.context("lal_char(b)_b").ratexp("b*").standard())
+}'''
+CHECK_EQ(res, str(lhs & rhs & third))
+check_equivalent(vcsn.automaton(res).proper(),
+                 vcsn.context("lal_char(b)_b").ratexp("b*").standard())

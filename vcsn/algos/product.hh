@@ -7,6 +7,7 @@
 # include <utility>
 
 # include <vcsn/algos/insplit.hh>
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
@@ -28,7 +29,7 @@ namespace vcsn
 
   /// Meet between automata.
   template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<Auts>...>>
+  mutable_automaton<meet_t<context_t_of<Auts>...>>
   meet_automata(Auts&&... auts)
   {
     return make_mutable_automaton(meet(auts->context()...));
@@ -70,16 +71,40 @@ namespace vcsn
 
   namespace detail
   {
-    /*----------------------------------.
-    | producter<automaton, automaton>.  |
-    `----------------------------------*/
+    /*---------------------------------.
+    | product_automaton_impl<Aut...>.  |
+    `---------------------------------*/
 
     /// Build the (accessible part of the) product.
     template <typename... Auts>
-    class producter
+    class product_automaton_impl
+      : public automaton_decorator<decltype(join_automata(std::declval<Auts>()...))>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "requires letterized labels");
+
+      /// The type of the resulting automaton.
+      using automaton_t = decltype(join_automata(std::declval<Auts>()...));
+      using super_t = automaton_decorator<automaton_t>;
+
+    public:
+      static std::string sname()
+      {
+        std::string res = "product_automaton";
+        const char* sep = "<";
+        using swallow = int[];
+        (void) swallow
+          {
+            (res += sep + Auts::element_type::sname(), sep = ", ", 0)...
+          };
+        res += ">";
+        return res;
+      }
+
+      std::string vname(bool) const
+      {
+        return sname();
+      }
 
       /// The type of context of the result.
       ///
@@ -91,12 +116,8 @@ namespace vcsn
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;
 
-      /// A static list of integers.
-      template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
-      /// The list of automaton indices as a static list.
-      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
-      static constexpr indices_t indices{};
+      using label_t = typename labelset_t::value_t;
+      using weight_t = typename weightset_t::value_t;
 
       /// The type of our transition maps: convert the weight to weightset_t,
       /// non deterministic, and including transitions to post().
@@ -105,33 +126,26 @@ namespace vcsn
 
     public:
       /// The type of input automata.
-      using automata_t = std::tuple<const Auts&...>;
-      /// The type of the resulting automaton.
-      using automaton_t = mutable_automaton<context_t>;
+      using automata_t = std::tuple<Auts...>;
 
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
       using input_automaton_t
         = base_t<typename std::tuple_element<I, automata_t>::type>;
 
-      producter(const Auts&... aut)
-        : auts_(aut...)
-        , res_(make_shared_ptr<automaton_t>(join(aut->context()...)))
-        , transition_maps_{{aut, *res_->weightset()}...}
+      using super_t::aut_;
+
+      product_automaton_impl(const Auts&... aut)
+        : super_t(join_automata(aut...))
+        , auts_(aut...)
+        , transition_maps_{{aut, *aut_->weightset()}...}
       {}
 
-      /// Reset the attributes before a new product.
-      void clear()
+      /// Compute the (accessible part of the) product.
+      void product()
       {
-        pmap_.clear();
-        todo_.clear();
-      }
-
-      /// The (accessible part of the) product of \a lhs_ and \a rhs_.
-      automaton_t product()
-      {
-        res_ = meet(auts_);
-        const auto& ws = *res_->weightset();
+        aut_ = meet(auts_);
+        const auto& ws = *aut_->weightset();
 
         initialize_product();
 
@@ -143,15 +157,13 @@ namespace vcsn
 
             add_product_transitions(ws, src, psrc);
           }
-        return std::move(res_);
       }
 
-      /// The (accessible part of the) shuffle product of \a lhs_ and
-      /// \a rhs_.
-      automaton_t shuffle()
+      /// Compute the (accessible part of the) shuffle product.
+      void shuffle()
       {
-        res_ = join(auts_);
-        const auto& ws = *res_->weightset();
+        aut_ = join(auts_);
+        const auto& ws = *aut_->weightset();
 
         initialize_shuffle(ws);
 
@@ -163,15 +175,13 @@ namespace vcsn
 
             add_shuffle_transitions(ws, src, psrc);
           }
-        return std::move(res_);
       }
 
-      /// The (accessible part of the) infiltration product of \a
-      /// lhs_ and \a rhs_.
-      automaton_t infiltration()
+      /// Compute the (accessible part of the) infiltration product.
+      void infiltration()
       {
-        res_ = join(auts_);
-        const auto& ws = *res_->weightset();
+        aut_ = join(auts_);
+        const auto& ws = *aut_->weightset();
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
@@ -192,7 +202,19 @@ namespace vcsn
             add_product_transitions(ws, src, psrc);
             add_shuffle_transitions(ws, src, psrc);
           }
-        return std::move(res_);
+      }
+
+      bool state_has_name(typename super_t::state_t s) const
+      {
+        return (s != super_t::pre()
+                && s != super_t::post()
+                && has(origins(), s));
+      }
+
+      std::ostream&
+      print_state_name(std::ostream& o, typename super_t::state_t s) const
+      {
+        return print_state_name_(o, s, indices);
       }
 
       /// Result state type.
@@ -201,39 +223,25 @@ namespace vcsn
       using pair_t = std::tuple<state_t_of<Auts>...>;
       /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
+      mutable origins_t origins_;
 
       /// A map from result state to tuple of original states.
-      origins_t origins() const
+      const origins_t& origins() const
       {
-        origins_t res;
-        for (const auto& p: pmap_)
-          res.emplace(p.second, p.first);
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig)
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p: orig)
-          if (p.first != automaton_t::element_type::pre()
-              && p.first != automaton_t::element_type::post())
-            {
-              o << "    " << p.first - 2
-                << " [label = \"";
-              const char* sep = "";
-              for_(p.second,
-                   [&](unsigned s) { o << sep << s - 2; sep = ","; });
-              o << "\"]\n";
-            }
-        o << "*/\n";
-        return o;
+        if (origins_.empty())
+          for (const auto& p: pmap_)
+            origins_.emplace(p.second, p.first);
+        return origins_;
       }
 
     private:
+      /// A static list of integers.
+      template <std::size_t... I>
+      using seq = vcsn::detail::index_sequence<I...>;
+      /// The list of automaton indices as a static list.
+      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
+      static constexpr indices_t indices{};
+
       /// The pre of the input automata.
       pair_t pre_() const
       {
@@ -263,9 +271,6 @@ namespace vcsn
       }
 
 
-      using label_t = typename labelset_t::value_t;
-      using weight_t = typename weightset_t::value_t;
-
       /// Input automata, supplied at construction time.
       automata_t auts_;
 
@@ -280,8 +285,8 @@ namespace vcsn
       /// is needed for all three algorithms here.
       void initialize()
       {
-        pmap_[pre_()] = res_->pre();
-        pmap_[post_()] = res_->post();
+        pmap_[pre_()] = aut_->pre();
+        pmap_[post_()] = aut_->post();
       }
 
       /// Fill the worklist with the initial source-state pairs, as
@@ -299,7 +304,7 @@ namespace vcsn
         initialize();
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(ws, res_->pre(), pre_());
+        add_product_transitions(ws, aut_->pre(), pre_());
       }
 
       /// The state in the product corresponding to a pair of states
@@ -313,7 +318,7 @@ namespace vcsn
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
           {
-            lb = pmap_.emplace_hint(lb, state, res_->new_state());
+            lb = pmap_.emplace_hint(lb, state, aut_->new_state());
             todo_.emplace_back(state);
           }
         return lb->second;
@@ -351,11 +356,11 @@ namespace vcsn
           // source state is visited for the first time, and second
           // because the couple (left destination, label) is unique,
           // and so is (right destination, label).
-          if (!res_->labelset()->is_one(t.first))
+          if (!aut_->labelset()->is_one(t.first))
             detail::cross_tuple
               ([&] (const typename transition_map_t<Auts>::transition&... ts)
                {
-                 res_->new_transition(src, state(ts.dst...),
+                 aut_->new_transition(src, state(ts.dst...),
                                       t.first, ws.mul(ts.wgt...));
                },
                t.second);
@@ -409,8 +414,8 @@ namespace vcsn
             {
               auto pdst = psrc;
               std::get<I>(pdst) = t.dst;
-              res_->new_transition(src, state(pdst),
-                                   res_->labelset()->one(), t.wgt);
+              aut_->new_transition(src, state(pdst),
+                                   aut_->labelset()->one(), t.wgt);
             }
       }
 
@@ -505,10 +510,10 @@ namespace vcsn
                 {
                   auto ldst = d.dst;
                   if (lsrc == ldst)
-                    res_->add_transition(src, state(ldst, rsrc),
+                    aut_->add_transition(src, state(ldst, rsrc),
                                          t.first, d.wgt);
                   else
-                    res_->new_transition(src, state(ldst, rsrc),
+                    aut_->new_transition(src, state(ldst, rsrc),
                                          t.first, d.wgt);
                 }
           if (!final)
@@ -529,24 +534,56 @@ namespace vcsn
                 {
                   auto rdst = d.dst;
                   if (rsrc == rdst)
-                    res_->add_transition(src, state(lsrc, rdst),
+                    aut_->add_transition(src, state(lsrc, rdst),
                                          t.first, d.wgt);
                   else
-                    res_->new_transition(src, state(lsrc, rdst),
+                    aut_->new_transition(src, state(lsrc, rdst),
                                          t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
         }
 
-        res_->set_final(src, w);
+        aut_->set_final(src, w);
       }
 
-      /// The computed product.
-      automaton_t res_;
+      template <size_t... I>
+      std::ostream&
+      print_state_name_(std::ostream& o, typename super_t::state_t s, seq<I...>) const
+      {
+        const char* sep = "";
+        auto ss = origins().at(s);
+        using swallow = int[];
+        (void) swallow
+        {
+          (o << sep,
+           std::get<I>(auts_)->print_state_name(o, std::get<I>(ss)),
+           sep = ", ",
+           0)...
+        };
+        return o;
+      }
+
+      /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
     };
   }
+
+  /// A product automaton as a shared pointer.
+  template <typename... Auts>
+  using product_automaton
+    = std::shared_ptr<detail::product_automaton_impl<Auts...>>;
+
+  template <typename... Auts>
+  inline
+  auto
+  make_product_automaton(const Auts&... auts)
+    -> product_automaton<Auts...>
+  {
+    using res_t = product_automaton<Auts...>;
+    return make_shared_ptr<res_t>(auts...);
+  }
+
 
   /*--------------------------------.
   | product(automaton, automaton).  |
@@ -554,14 +591,13 @@ namespace vcsn
 
   /// Build the (accessible part of the) product.
   template <typename Lhs, typename Rhs>
+  inline
   auto
   product(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::producter<Lhs, Rhs>::automaton_t
+    -> product_automaton<Lhs, Rhs>
   {
-    detail::producter<Lhs, Rhs> product(lhs, rhs);
-    auto res = product.product();
-    if (getenv("VCSN_ORIGINS"))
-      product.print(std::cout, product.origins());
+    auto res = make_product_automaton(lhs, rhs);
+    res->product();
     return res;
   }
 
@@ -591,14 +627,13 @@ namespace vcsn
 
   /// Build the (accessible part of the) product.
   template <typename... Auts>
+  inline
   auto
   product(const Auts&... as)
-    -> typename detail::producter<Auts...>::automaton_t
+    -> product_automaton<Auts...>
   {
-    detail::producter<Auts...> product(as...);
-    auto res = product.product();
-    if (getenv("VCSN_ORIGINS"))
-      product.print(std::cout, product.origins());
+    auto res = make_product_automaton(as...);
+    res->product();
     return res;
   }
 
@@ -651,14 +686,13 @@ namespace vcsn
 
   /// Build the (accessible part of the) shuffle.
   template <typename Lhs, typename Rhs>
+  inline
   auto
   shuffle(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::producter<Lhs, Rhs>::automaton_t
+    -> product_automaton<Lhs, Rhs>
   {
-    detail::producter<Lhs, Rhs> product(lhs, rhs);
-    auto res = product.shuffle();
-    if (getenv("VCSN_ORIGINS"))
-      product.print(std::cout, product.origins());
+    auto res = make_product_automaton(lhs, rhs);
+    res->shuffle();
     return res;
   }
 
@@ -688,14 +722,13 @@ namespace vcsn
 
   /// Build the (accessible part of the) infiltration.
   template <typename Lhs, typename Rhs>
+  inline
   auto
   infiltration(const Lhs& lhs, const Rhs& rhs)
-    -> typename detail::producter<Lhs, Rhs>::automaton_t
+    -> product_automaton<Lhs, Rhs>
   {
-    detail::producter<Lhs, Rhs> product(lhs, rhs);
-    auto res = product.infiltration();
-    if (getenv("VCSN_ORIGINS"))
-      product.print(std::cout, product.origins());
+    auto res = make_product_automaton(lhs, rhs);
+    res->infiltration();
     return res;
   }
 
@@ -743,18 +776,18 @@ namespace vcsn
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
-            res = product(res, aut);
+            res = product(res, aut)->strip();
         else
           {
             Aut power = aut;
             while (true)
               {
                 if (n % 2)
-                  res = product(res, power);
+                  res = product(res, power)->strip();
                 n /= 2;
                 if (!n)
                   break;
-                power = product(power, power);
+                power = product(power, power)->strip();
               }
           }
       }

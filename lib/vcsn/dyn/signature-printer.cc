@@ -27,7 +27,14 @@ namespace vcsn
     DEFINE(automaton)
     {
       os_ << t.get_type() << '<';
-      t.get_content()->accept(*this);
+      bool first = true;
+      for (auto c: t.get_content())
+        {
+          if (!first)
+            os_ << ',';
+          first = false;
+          c->accept(*this);
+        }
       os_ << '>';
     }
 

@@ -207,8 +207,16 @@ namespace vcsn
     class automaton: public ast_node
     {
     public:
-      automaton(const std::string& type, std::shared_ptr<ast_node> child)
-        : type_(type), child_(child)
+      using node_t = std::shared_ptr<ast_node>;
+      using nodes_t = std::vector<node_t>;
+      automaton(const std::string& type, const node_t& child)
+        : type_(type)
+        , children_{child}
+      {}
+
+      automaton(const std::string& type, const nodes_t& children)
+        : type_(type)
+        , children_(children)
       {}
 
       const std::string& get_type() const
@@ -216,16 +224,21 @@ namespace vcsn
         return type_;
       }
 
-      const std::shared_ptr<ast_node>& get_content() const
+      const nodes_t& get_content() const
       {
-        return child_;
+        return children_;
+      }
+
+      nodes_t& get_content()
+      {
+        return children_;
       }
 
       ACCEPT()
 
     private:
       std::string type_;
-      std::shared_ptr<ast_node> child_;
+      nodes_t children_;
     };
 
     class polynomialset : public ast_node

@@ -15,6 +15,7 @@ namespace vcsn
       if (w == "determinized"
           || w == "linear"
           || w == "mutable"
+          || w == "product"
           || w == "transpose")
         return make_automaton(w);
       else if (w == "context")
@@ -226,8 +227,19 @@ namespace vcsn
       else if (prefix == "mutable")
         {
           eat(is_, "_automaton<");
-          res = std::make_shared<automaton>("mutable_automaton",
+          res = std::make_shared<automaton>(prefix + "_automaton",
                                             make_context());
+        }
+      else if (prefix == "product")
+        {
+          eat(is_, "_automaton<");
+          res = std::make_shared<automaton>(prefix + "_automaton",
+                                            make_automaton(word()));
+          while (is_.peek() == ',')
+            {
+              eat(is_, ',');
+              res->get_content().emplace_back(make_automaton(word()));
+            }
         }
       else
         raise("invalid automaton name: ", str_escape(prefix));

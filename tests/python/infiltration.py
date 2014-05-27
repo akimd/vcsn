@@ -23,8 +23,7 @@ a1 = b.ratexp('a*a').derived_term()
 
 # a infiltration a
 a = vcsn.automaton.load(medir + "/a.gv")
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(a)_z"
   rankdir = LR
@@ -35,10 +34,10 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 1", shape = box, style = rounded]
+    2 [label = "1, 0", shape = box, style = rounded]
+    3 [label = "0, 1", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -47,13 +46,11 @@ digraph
   1 -> F1
   2 -> 1 [label = "a"]
   3 -> 1 [label = "a"]
-}
-'''),  a.infiltration(a))
+}''',  a.infiltration(a))
 
 # abc infiltration abc
 abc = vcsn.automaton.load(medir + "/abc.gv")
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
@@ -64,22 +61,22 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    11
-    12
-    13
-    14
-    15
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 1", shape = box, style = rounded]
+    2 [label = "1, 0", shape = box, style = rounded]
+    3 [label = "0, 1", shape = box, style = rounded]
+    4 [label = "2, 2", shape = box, style = rounded]
+    5 [label = "2, 1", shape = box, style = rounded]
+    6 [label = "1, 2", shape = box, style = rounded]
+    7 [label = "2, 0", shape = box, style = rounded]
+    8 [label = "0, 2", shape = box, style = rounded]
+    9 [label = "3, 3", shape = box, style = rounded]
+    10 [label = "3, 2", shape = box, style = rounded]
+    11 [label = "2, 3", shape = box, style = rounded]
+    12 [label = "3, 1", shape = box, style = rounded]
+    13 [label = "1, 3", shape = box, style = rounded]
+    14 [label = "3, 0", shape = box, style = rounded]
+    15 [label = "0, 3", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -110,13 +107,11 @@ digraph
   13 -> 11 [label = "b"]
   14 -> 12 [label = "a"]
   15 -> 13 [label = "a"]
-}
-'''), abc.infiltration(abc))
+}''', abc.infiltration(abc))
 
 # abc infiltration xy
 xy = vcsn.automaton.load(medir + "/xy.gv")
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abcxy)_z"
   rankdir = LR
@@ -127,18 +122,18 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    11
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 0", shape = box, style = rounded]
+    2 [label = "0, 1", shape = box, style = rounded]
+    3 [label = "2, 0", shape = box, style = rounded]
+    4 [label = "1, 1", shape = box, style = rounded]
+    5 [label = "0, 2", shape = box, style = rounded]
+    6 [label = "3, 0", shape = box, style = rounded]
+    7 [label = "2, 1", shape = box, style = rounded]
+    8 [label = "1, 2", shape = box, style = rounded]
+    9 [label = "3, 1", shape = box, style = rounded]
+    10 [label = "2, 2", shape = box, style = rounded]
+    11 [label = "3, 2", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -159,8 +154,7 @@ digraph
   9 -> 11 [label = "y"]
   10 -> 11 [label = "c"]
   11 -> F11
-}
-'''), abc.infiltration(xy))
+}''', abc.infiltration(xy))
 
 
 ## --------------------- ##
@@ -203,8 +197,9 @@ CHECK_EQ('''<abcd>x
 <adbc+adcb+bdac+bdca+cdab+cdba+acbd+acdb+bcad+bcda+abcd+abdc+abdc+acdb+abcd+abcd+acbd+adbc+badc+bcda+bacd+bacd+bcad+bdac+cadb+cbda+cabd+cabd+cbad+cdab+dacb+dbca+dabc+dabc+dbac+dcab>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
     a['a']
-    .infiltration(a['b'])
-    .infiltration(a['c'])
-    .infiltration(a['d'])
+    # FIXME: strip otherwise we get too long a file name.
+    .infiltration(a['b']).strip()
+    .infiltration(a['c']).strip()
+    .infiltration(a['d']).strip()
     .enumerate(10)
     .format('list'))

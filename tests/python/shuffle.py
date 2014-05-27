@@ -33,7 +33,7 @@ digraph
   }
   {
     node [shape = circle]
-    0
+    0 [label = "0, 0", shape = box, style = rounded]
     1
   }
   I0 -> 0
@@ -55,7 +55,7 @@ digraph
   }
   {
     node [shape = circle]
-    0
+    0 [label = "0, 0", shape = box, style = rounded]
     1
   }
   I0 -> 0
@@ -65,8 +65,7 @@ digraph
 }
 ''')
 
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
@@ -77,10 +76,10 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 0", shape = box, style = rounded]
+    2 [label = "0, 1", shape = box, style = rounded]
+    3 [label = "1, 1", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> F0
@@ -92,8 +91,7 @@ digraph
   2 -> 3 [label = "a"]
   3 -> 1 [label = "b"]
   3 -> 2 [label = "b"]
-}
-'''), abs.shuffle(mabs))
+}''', str(abs.shuffle(mabs)))
 
 
 ## ---------------------- ##
@@ -103,8 +101,7 @@ digraph
 
 pas = vcsn.context("lal_char(a)_z").ratexp('a*').derived_term()
 mas = vcsn.context("lal_char(a)_z").ratexp('(<-1>a)*').derived_term()
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(a)_z"
   rankdir = LR
@@ -115,12 +112,11 @@ digraph
   }
   {
     node [shape = circle]
-    0
+    0 [label = "0, 0", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> F0
-}
-'''), pas.shuffle(mas))
+}''', str(pas.shuffle(mas)))
 
 
 ## ---------- ##
@@ -130,8 +126,7 @@ digraph
 ab = vcsn.context('lal_char(ab)_z').ratexp('ab').standard()
 ABC = vcsn.context('lal_char(ABC)_z').ratexp('ABC').standard()
 ABCab = ABC.shuffle(ab)
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(ABCab)_z"
   rankdir = LR
@@ -142,18 +137,18 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
-    4
-    5
-    6
-    7
-    8
-    9
-    10
-    11
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 0", shape = box, style = rounded]
+    2 [label = "0, 1", shape = box, style = rounded]
+    3 [label = "3, 0", shape = box, style = rounded]
+    4 [label = "1, 1", shape = box, style = rounded]
+    5 [label = "0, 3", shape = box, style = rounded]
+    6 [label = "4, 0", shape = box, style = rounded]
+    7 [label = "3, 1", shape = box, style = rounded]
+    8 [label = "1, 3", shape = box, style = rounded]
+    9 [label = "4, 1", shape = box, style = rounded]
+    10 [label = "3, 3", shape = box, style = rounded]
+    11 [label = "4, 3", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> 1 [label = "A"]
@@ -174,8 +169,7 @@ digraph
   9 -> 11 [label = "b"]
   10 -> 11 [label = "C"]
   11 -> F11
-}
-'''),  ABCab)
+}''',  str(ABCab))
 
 # Of course we'll have 5 letters.
 CHECK_EQ('''ABCab
@@ -226,8 +220,9 @@ for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
 CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx',
     a['a']
-    .shuffle(a['b'])
-    .shuffle(a['c'])
-    .shuffle(a['d'])
+    # FIXME: strip otherwise we get too long a file name.
+    .shuffle(a['b']).strip()
+    .shuffle(a['c']).strip()
+    .shuffle(a['d']).strip()
     .enumerate(10)
     .format('list'))

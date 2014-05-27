@@ -2530,7 +2530,7 @@ As an extreme example, the following snippet:
 applies the standard-of algorithm to a transposed mutable_automaton.  In
 other words,
 
-  aut.original_automaton();
+  aut.strip();
 
 is the transposition of a standard automaton, except that it is a
 mutable_automaton, not a transpose_automaton<mutable_automaton>.

@@ -59,7 +59,7 @@ namespace vcsn
       r = determinize(r, true)->strip();
     else if (!is_complete(r))
       r = complete(r);
-    return product(lhs, complement(r));
+    return product(lhs, complement(r))->strip();
   }
 
   namespace dyn
