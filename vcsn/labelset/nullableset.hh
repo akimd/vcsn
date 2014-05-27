@@ -9,6 +9,7 @@
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/labelset/labelset.hh>
 # include <vcsn/labelset/fwd.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
@@ -409,6 +410,19 @@ namespace vcsn
 
     labelset_ptr ls_;
   };
+
+  namespace detail
+  {
+    template <typename LabelSet>
+    struct law_traits<nullableset<LabelSet>>
+    {
+      using type = law_t<LabelSet>;
+      static type value(const nullableset<LabelSet>& ls)
+      {
+        return make_wordset(*ls.labelset());
+      }
+    };
+  }
 
 
 #define DEFINE(Func, Operation, Lhs, Rhs, Res)                \

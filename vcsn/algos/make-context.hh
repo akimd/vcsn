@@ -3,7 +3,6 @@
 
 # include <sstream>
 
-# include <vcsn/algos/enumerate.hh> // make_word_context
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/automaton.hh>

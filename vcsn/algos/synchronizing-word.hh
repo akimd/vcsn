@@ -12,7 +12,6 @@
 
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/distance.hh>
-# include <vcsn/algos/enumerate.hh> // make_wordset
 # include <vcsn/algos/product.hh> // transition_map
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>

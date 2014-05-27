@@ -149,6 +149,7 @@ nobase_include_HEADERS =                        \
   %D%/factory/u.hh                              \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
+  %D%/labelset/labelset.hh                      \
   %D%/labelset/letterset.hh                     \
   %D%/labelset/nullableset.hh                   \
   %D%/labelset/oneset.hh                        \

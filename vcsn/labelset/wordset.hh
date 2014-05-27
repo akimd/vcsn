@@ -6,6 +6,7 @@
 
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/labelset/labelset.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -209,6 +210,19 @@ namespace vcsn
       return o;
     }
   };
+
+  namespace detail
+  {
+    template <typename GenSet>
+    struct law_traits<wordset<GenSet>>
+    {
+      using type = wordset<GenSet>;
+      static type value(const wordset<GenSet>& ls)
+      {
+        return ls;
+      }
+    };
+  }
 
   /// Compute the meet with another alphabet.
   // FIXME: Factor in genset_labelset?

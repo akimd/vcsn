@@ -8,6 +8,7 @@
 
 # include <vcsn/config.hh> // VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
 # include <vcsn/labelset/fwd.hh>
+# include <vcsn/labelset/labelset.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/stream.hh>
@@ -752,6 +753,27 @@ namespace vcsn
 
     valuesets_t sets_;
   };
+
+  namespace detail
+  {
+    template <typename... LabelSets>
+    struct law_traits<tupleset<LabelSets...>>
+    {
+      using labelset_t = tupleset<LabelSets...>;
+      using type = tupleset<law_t<LabelSets>...>;
+
+      template <std::size_t... I>
+      static type value(const labelset_t& ls, detail::index_sequence<I...>)
+      {
+        return {make_wordset(ls.template set<I>())...};
+      }
+
+      static type value(const labelset_t& ls)
+      {
+        return value(ls, detail::make_index_sequence<sizeof...(LabelSets)>{});
+      }
+    };
+  }
 
 }
 #endif // !VCSN_LABELSET_TUPLESET_HH

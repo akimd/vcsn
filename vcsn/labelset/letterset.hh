@@ -10,6 +10,8 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/set.hh> // intersection
 # include <vcsn/labelset/genset-labelset.hh>
+# include <vcsn/labelset/labelset.hh>
+# include <vcsn/labelset/wordset.hh>
 
 namespace vcsn
 {
@@ -202,6 +204,19 @@ namespace vcsn
       return o;
     }
   };
+
+  namespace detail
+  {
+    template <typename GenSet>
+    struct law_traits<letterset<GenSet>>
+    {
+      using type = wordset<GenSet>;
+      static type value(const letterset<GenSet>& ls)
+      {
+        return ls.genset();
+      }
+    };
+  }
 
   /// Compute the meet with another labelset.
   template <typename GenSet>

@@ -5,8 +5,9 @@
 # include <set>
 # include <stdexcept>
 
-# include <vcsn/empty.hh>
 # include <vcsn/core/kind.hh>
+# include <vcsn/empty.hh>
+# include <vcsn/labelset/labelset.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
 
@@ -175,6 +176,20 @@ namespace vcsn
       return o;
     }
   };
+
+  namespace detail
+  {
+    // Converting labelsets.
+    template <>
+    struct law_traits<oneset>
+    {
+      using type = oneset;
+      static type value(oneset)
+      {
+        return {};
+      }
+    };
+  }
 
   /// The meet of two labelsets.
   inline
