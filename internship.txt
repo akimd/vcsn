@@ -165,7 +165,7 @@ Finally, we write the different transitions with the following syntax:
     - "0 -> F0"
 
 Using an automaton:
-The file "vcsn/core/mutable_automaton.hh" contains all the functions you will
+The file "vcsn/core/mutable-automaton.hh" contains all the functions you will
 need to manipulate an automaton. Here are a few examples:
 aut = an automata object.
 aut.all_transitions()                # includes pre and post transitions.

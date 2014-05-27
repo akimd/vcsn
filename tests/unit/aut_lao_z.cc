@@ -2,7 +2,7 @@
 #undef NDEBUG
 #include <iostream>
 #include <vcsn/algos/dot.hh>
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/lao_z.hh>
 
 int main()

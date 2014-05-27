@@ -2,7 +2,7 @@
 #include <tests/unit/test.hh>
 #include <iostream>
 #include <vcsn/algos/dot.hh>
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 
 using context_t = vcsn::ctx::lal_char_z;

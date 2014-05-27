@@ -4,7 +4,7 @@
 # include <unordered_map>
 
 # include <vcsn/algos/copy.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
 namespace vcsn

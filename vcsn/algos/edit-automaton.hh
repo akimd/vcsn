@@ -7,7 +7,7 @@
 # include <utility>
 # include <vector>
 
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/algos.hh>

@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/traits.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/dyn/algos.hh>

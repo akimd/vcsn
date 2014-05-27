@@ -3,7 +3,7 @@
 
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/ctx/traits.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/ratexp.hh>

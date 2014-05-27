@@ -1,7 +1,7 @@
 #undef NDEBUG
 #include <tests/unit/test.hh>
 #include <vcsn/algos/transpose.hh>
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/core/rat/ratexpset.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/labelset/wordset.hh>

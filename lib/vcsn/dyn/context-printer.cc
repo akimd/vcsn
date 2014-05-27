@@ -113,7 +113,7 @@ namespace vcsn
         os_ << "vcsn::" << type << '<' << incendl;
         t.get_content()->accept(*this);
         os_ << decendl << '>';
-        header("vcsn/core/mutable_automaton.hh");
+        header("vcsn/core/mutable-automaton.hh");
       }
       else if (type == "transpose_automaton")
       {

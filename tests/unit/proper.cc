@@ -4,7 +4,7 @@
 #include <vcsn/algos/dot.hh>
 #include <vcsn/algos/info.hh>
 #include <vcsn/algos/proper.hh>
-#include <vcsn/core/mutable_automaton.hh>
+#include <vcsn/core/mutable-automaton.hh>
 #include <vcsn/ctx/lal_char_b.hh>
 #include <vcsn/ctx/lal_char_z.hh>
 #include <vcsn/ctx/law_char_b.hh>

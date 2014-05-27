@@ -1,7 +1,7 @@
 #ifndef VCSN_CORE_AUTOMATONSET_HH
 # define VCSN_CORE_AUTOMATONSET_HH
 
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/ctx/context.hh>
 
 namespace vcsn

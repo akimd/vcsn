@@ -86,7 +86,7 @@ The "NEWS.txt" entry is false.
   $ vcsn derived-term -C 'lal_char(ab)_ratexpset<lal_char(uv)_b>' \
                       -e '(<u>a+<v>b)*' -o ab.gv
   $ vcsn infiltration -f ab.gv a.gv | vcsn shortest -f - 4
-  Assertion failed: (!has_transition(src, dst, l)), function new_transition, file ../../vcsn/core/mutable_automaton.hh, line 442.
+  Assertion failed: (!has_transition(src, dst, l)), function new_transition, file ../../vcsn/core/mutable-automaton.hh, line 442.
   vcsn shortest: 1.1: syntax error, unexpected $end, expecting digraph
   zsh: abort      vcsn infiltration -f ab.gv a.gv |
   zsh: exit 1     vcsn shortest -f - 4

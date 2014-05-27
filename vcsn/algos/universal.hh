@@ -4,7 +4,7 @@
 # include <map>
 
 # include <vcsn/misc/set.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/transpose.hh>
 

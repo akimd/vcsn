@@ -13,7 +13,7 @@ namespace vcsn
   template <class C>
   struct container_filter_range;
 
-  // vcsn/core/mutable_automaton.hh
+  // vcsn/core/mutable-automaton.hh
   namespace detail
   {
     template <typename Context>

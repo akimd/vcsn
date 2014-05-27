@@ -8,7 +8,7 @@
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/algos/sort.hh>
 # include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/labelset/tupleset.hh>

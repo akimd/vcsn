@@ -6,7 +6,7 @@
 # include <unordered_map>
 
 # include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/expansionset.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/visitor.hh>

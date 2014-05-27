@@ -6,7 +6,7 @@
 # include <vcsn/ctx/context.hh>
 # include <vcsn/labelset/oneset.hh>
 # include <vcsn/dyn/automaton.hh>
-# include <vcsn/core/mutable_automaton.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/core/rat/ratexp.hh>
 

@@ -8,7 +8,7 @@
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/dyn/automaton.hh>
 
-# include <vcsn/core/mutable_automaton.hh>// FIXME: Needed?
+# include <vcsn/core/mutable-automaton.hh>// FIXME: Needed?
 
 namespace vcsn
 {
