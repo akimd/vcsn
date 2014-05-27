@@ -10,15 +10,15 @@
 # include <utility>
 # include <vector>
 
-# include <vcsn/algos/copy.hh>
 # include <vcsn/algos/distance.hh>
-# include <vcsn/algos/product.hh> // transition_map
+# include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/label.hh>
 # include <vcsn/misc/pair.hh>
 # include <vcsn/misc/raise.hh>
+# include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
