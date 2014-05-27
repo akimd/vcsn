@@ -20,7 +20,7 @@ namespace vcsn
 {
   /// Join between automata.
   template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<join_t<context_t_of<Auts>...>>
   join_automata(Auts&&... auts)
   {
     return make_mutable_automaton(join(auts->context()...));
@@ -28,7 +28,7 @@ namespace vcsn
 
   /// Meet between automata.
   template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<join_t<context_t_of<Auts>...>>
   meet_automata(Auts&&... auts)
   {
     return make_mutable_automaton(meet(auts->context()...));
@@ -36,7 +36,7 @@ namespace vcsn
 
   /// Join between automata in tuple.
   template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<join_t<context_t_of<Auts>...>>
   join(const std::tuple<Auts...>& auts)
   {
     auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
@@ -44,7 +44,7 @@ namespace vcsn
   }
 
   template <typename... Auts, size_t... I>
-  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<join_t<context_t_of<Auts>...>>
   join_(const std::tuple<Auts...>& auts,
         vcsn::detail::index_sequence<I...>)
   {
@@ -53,7 +53,7 @@ namespace vcsn
 
   /// Meet between automata in tuple.
   template <typename... Auts>
-  mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<meet_t<context_t_of<Auts>...>>
   meet(const std::tuple<Auts...>& auts)
   {
     auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
@@ -61,7 +61,7 @@ namespace vcsn
   }
 
   template <typename... Auts, size_t... I>
-  mutable_automaton<meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  mutable_automaton<meet_t<context_t_of<Auts>...>>
   meet_(const std::tuple<Auts...>& auts,
         vcsn::detail::index_sequence<I...>)
   {
@@ -112,12 +112,7 @@ namespace vcsn
       /// The type of the Ith input automaton, unqualified.
       template <size_t I>
       using input_automaton_t
-        = typename std::remove_cv<
-            typename std::remove_reference<
-              typename std::tuple_element<I, automata_t>
-              ::type>
-            ::type>
-        ::type;
+        = base_t<typename std::tuple_element<I, automata_t>::type>;
 
       producter(const Auts&... aut)
         : auts_(aut...)

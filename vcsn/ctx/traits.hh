@@ -6,6 +6,11 @@
 namespace vcsn
 {
 
+  /// T without reference or const/volatile qualifiers.
+  template <typename T>
+  using base_t
+    = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+
   /*---------------.
   | context_t_of.  |
   `---------------*/
@@ -19,7 +24,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using context_t_of = typename detail::context_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using context_t_of = typename detail::context_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*-------------.
@@ -35,7 +40,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using label_t_of = typename detail::label_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using label_t_of = typename detail::label_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*----------------.
@@ -51,7 +56,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using labelset_t_of = typename detail::labelset_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using labelset_t_of = typename detail::labelset_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*-------------.
@@ -67,7 +72,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using state_t_of = typename detail::state_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using state_t_of = typename detail::state_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*------------------.
@@ -83,7 +88,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using transition_t_of = typename detail::transition_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using transition_t_of = typename detail::transition_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*--------------.
@@ -99,7 +104,7 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using weight_t_of = typename detail::weight_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using weight_t_of = typename detail::weight_t_of_impl<base_t<ValueSet>>::type;
 
 
   /*-----------------.
@@ -115,15 +120,15 @@ namespace vcsn
   }
 
   template <typename ValueSet>
-  using weightset_t_of = typename detail::weightset_t_of_impl<typename std::remove_cv<ValueSet>::type>::type;
+  using weightset_t_of = typename detail::weightset_t_of_impl<base_t<ValueSet>>::type;
 
 
   namespace detail
   {
-#define DEFINE(Traits)                                                  \
-    template <typename ValueSet>                                        \
-    struct Traits ## _t_of_impl<std::shared_ptr<ValueSet>>              \
-      : Traits ## _t_of_impl<typename std::remove_cv<ValueSet>::type>   \
+#define DEFINE(Traits)                                          \
+    template <typename ValueSet>                                \
+    struct Traits ## _t_of_impl<std::shared_ptr<ValueSet>>      \
+      : Traits ## _t_of_impl<base_t<ValueSet>>                  \
     {}
 
     DEFINE(context);
