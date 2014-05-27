@@ -18,6 +18,22 @@
 
 namespace vcsn
 {
+  /// Join between automata.
+  template <typename... Auts>
+  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  join_automata(Auts&&... auts)
+  {
+    return make_mutable_automaton(join(auts->context()...));
+  }
+
+  /// Meet between automata.
+  template <typename... Auts>
+  mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
+  meet_automata(Auts&&... auts)
+  {
+    return make_mutable_automaton(meet(auts->context()...));
+  }
+
   /// Join between automata in tuple.
   template <typename... Auts>
   mutable_automaton<join_t<context_t_of<typename std::remove_reference<Auts>::type>...>>
@@ -32,10 +48,7 @@ namespace vcsn
   join_(const std::tuple<Auts...>& auts,
         vcsn::detail::index_sequence<I...>)
   {
-    using ctx_t = join_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
-    ctx_t ctx = join(std::get<I>(auts)->context()...);
-    using res_t = mutable_automaton<ctx_t>;
-    return make_shared_ptr<res_t>(ctx);
+    return join_automata(std::get<I>(auts)...);
   }
 
   /// Meet between automata in tuple.
@@ -52,10 +65,7 @@ namespace vcsn
   meet_(const std::tuple<Auts...>& auts,
         vcsn::detail::index_sequence<I...>)
   {
-    using ctx_t = meet_t<context_t_of<typename std::remove_reference<Auts>::type>...>;
-    ctx_t ctx = meet(std::get<I>(auts)->context()...);
-    using res_t = mutable_automaton<ctx_t>;
-    return make_shared_ptr<res_t>(ctx);
+    return meet_automata(std::get<I>(auts)...);
   }
 
   namespace detail

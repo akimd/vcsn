@@ -5,6 +5,7 @@
 # include <vector>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/sum.hh>
 # include <vcsn/core/mutable-automaton.hh>
@@ -91,18 +92,14 @@ namespace vcsn
 
   /// Concatenate two standard automata.
   template <typename A, typename B>
-  mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>
+  inline
+  auto
   concatenate(const A& lhs, const B& rhs)
+    -> decltype(join_automata(lhs, rhs))
   {
     require(is_standard(lhs), __func__, ": lhs must be standard");
     require(is_standard(rhs), __func__, ": rhs must be standard");
-
-    using automaton_t
-      = mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>;
-
-    // Create new automaton.
-    auto ctx = join(lhs->context(), rhs->context());
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
+    auto res = join_automata(lhs, rhs);
     ::vcsn::copy_into(lhs, res);
     concatenate_here(res, rhs);
     return res;

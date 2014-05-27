@@ -3,6 +3,7 @@
 
 # include <map>
 
+# include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
@@ -54,20 +55,16 @@ namespace vcsn
 
 
   template <typename A, typename B>
-  A
-  sum(const A& laut, const B& raut)
+  inline
+  auto
+  sum(const A& lhs, const B& rhs)
+    -> decltype(join_automata(lhs, rhs))
   {
-    // Sum only works on standard automata.
-    using automaton_t = A;
-
-    // Create new automata.
-    auto ctx = join(laut->context(), raut->context());
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
+    auto res = join_automata(lhs, rhs);
     // A standard automaton has a single initial state.
     res->set_initial(res->new_state());
-
-    sum_here(res, laut);
-    sum_here(res, raut);
+    sum_here(res, lhs);
+    sum_here(res, rhs);
     return res;
   }
 

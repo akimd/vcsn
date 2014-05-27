@@ -4,6 +4,7 @@
 # include <unordered_map>
 
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 
@@ -28,18 +29,13 @@ namespace vcsn
   /// Union of two automata.
   template <typename A, typename B>
   inline
-  mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>
-  union_a(const A& laut, const B& raut)
+  auto
+  union_a(const A& lhs, const B& rhs)
+    -> decltype(join_automata(lhs, rhs))
   {
-    using automaton_t
-      = mutable_automaton<join_t<context_t_of<A>, context_t_of<B>>>;
-    // Create new automaton.
-    auto ctx = join(laut->context(), raut->context());
-    automaton_t res = make_shared_ptr<automaton_t>(ctx);
-
-    union_here(res, laut);
-    union_here(res, raut);
-
+    auto res = join_automata(lhs, rhs);
+    union_here(res, lhs);
+    union_here(res, rhs);
     return res;
   }
 
