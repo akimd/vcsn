@@ -37,6 +37,7 @@ namespace vcsn
       ALGO("is-accessible", "accessible");
       ALGO("is-coaccessible", "accessible");
       ALGO("is-empty", "accessible");
+      ALGO("is-out-sorted", "sort");
       ALGO("is-standard", "standard");
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("is-trim", "accessible");
