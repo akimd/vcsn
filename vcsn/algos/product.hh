@@ -335,34 +335,27 @@ namespace vcsn
           // because the couple (left destination, label) is unique,
           // and so is (right destination, label).
           if (!res_->labelset()->is_one(t.first))
-            {
-  //            SHOWH(V(src)
-  //                 << V(std::get<0>(t.second).dst)
-  //                 << V(std::get<1>(t.second).dst)
-  //                 << V(t.first)
-  //                 << V(std::get<0>(t.second).wgt)
-  //                 << V(std::get<1>(t.second).wgt));
-              detail::cross_tuple
-                ([&] (const typename transition_map_t<Auts>::transition&... ts)
-                 {
-                   res_->new_transition(src, state(ts.dst...),
-                                       t.first, ws.mul(ts.wgt...));
-                 },
-                 t.second);
-            }
+            detail::cross_tuple
+              ([&] (const typename transition_map_t<Auts>::transition&... ts)
+               {
+                 res_->new_transition(src, state(ts.dst...),
+                                      t.first, ws.mul(ts.wgt...));
+               },
+               t.second);
         add_one_transitions_(src, psrc, indices);
       }
 
       /// Add the epsilon transitions leaving the state src, if it is relevant
       /// (i.e. only for the labelsets that have epsilons).
       template <std::size_t... I>
-      void add_one_transitions_(const state_t src, const pair_t& psrc, seq<I...>)
+      void
+      add_one_transitions_(const state_t src, const pair_t& psrc, seq<I...>)
       {
         using swallow = int[];
         (void) swallow
         {
-            (maybe_add_one_transitions_<I>(*(std::get<I>(auts_)->labelset()),
-                                           src, psrc), 0)...
+          (maybe_add_one_transitions_<I>(*(std::get<I>(auts_)->labelset()),
+                                         src, psrc), 0)...
         };
       }
 
@@ -399,7 +392,8 @@ namespace vcsn
             {
               auto pdst = psrc;
               std::get<I>(pdst) = t.dst;
-              res_->new_transition(src, state(pdst), res_->labelset()->one(), t.wgt);
+              res_->new_transition(src, state(pdst),
+                                   res_->labelset()->one(), t.wgt);
             }
       }
 
@@ -408,7 +402,8 @@ namespace vcsn
       template <std::size_t... I>
       bool has_epsilon_in(const pair_t& psrc, std::size_t i, seq<I...>) const
       {
-        bool has_ones[] = { has_only_ones_in(std::get<I>(auts_), std::get<I>(psrc))... };
+        bool has_ones[] = { has_only_ones_in(std::get<I>(auts_),
+                                             std::get<I>(psrc))... };
         for (; i < sizeof...(Auts); ++i)
           if (has_ones[i])
             return true;
@@ -493,9 +488,11 @@ namespace vcsn
                 {
                   auto ldst = d.dst;
                   if (lsrc == ldst)
-                    res_->add_transition(src, state(ldst, rsrc), t.first, d.wgt);
+                    res_->add_transition(src, state(ldst, rsrc),
+                                         t.first, d.wgt);
                   else
-                    res_->new_transition(src, state(ldst, rsrc), t.first, d.wgt);
+                    res_->new_transition(src, state(ldst, rsrc),
+                                         t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
@@ -515,9 +512,11 @@ namespace vcsn
                 {
                   auto rdst = d.dst;
                   if (rsrc == rdst)
-                    res_->add_transition(src, state(lsrc, rdst), t.first, d.wgt);
+                    res_->add_transition(src, state(lsrc, rdst),
+                                         t.first, d.wgt);
                   else
-                    res_->new_transition(src, state(lsrc, rdst), t.first, d.wgt);
+                    res_->new_transition(src, state(lsrc, rdst),
+                                         t.first, d.wgt);
                 }
           if (!final)
             w = ws.zero();
