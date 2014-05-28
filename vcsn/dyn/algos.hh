@@ -404,11 +404,11 @@ namespace vcsn
     /// Performs the union of the alphabets.
     automaton shuffle(const automaton& lhs, const automaton& rhs);
 
-    /// Break \a ratexp.
-    polynomial split(const ratexp& exp);
-
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
+
+    /// Break \a ratexp.
+    polynomial split(const ratexp& exp);
 
     /// A standardized \a a.
     automaton standard(const automaton& a);
@@ -425,6 +425,9 @@ namespace vcsn
     /// A normalized form where star is applied only to expression
     /// without null constant-term.
     ratexp star_normal_form(const ratexp& e);
+
+    /// The automaton in \a a with its metadata layers removed.
+    automaton strip(const automaton& a);
 
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);

@@ -56,7 +56,7 @@ namespace vcsn
     // Meet complement()'s requirements.
     Rhs r = rhs;
     if (!is_deterministic(r))
-      r = determinize(r, true)->original_automaton();
+      r = determinize(r, true)->strip();
     else if (!is_complete(r))
       r = complete(r);
     return product(lhs, complement(r));

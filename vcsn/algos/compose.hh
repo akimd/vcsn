@@ -176,7 +176,7 @@ namespace vcsn
       transition_t new_transition_copy(const A& aut, state_t src,
                                        state_t dst, transition_t t, weight_t k)
       {
-        return this->aut_->new_transition_copy(aut->original_automaton(),
+        return this->aut_->new_transition_copy(aut->strip(),
                                                src, dst, t, k);
       }
 
@@ -184,7 +184,7 @@ namespace vcsn
       weight_t add_transition_copy(const A& aut, state_t src,
                                    state_t dst, transition_t t, weight_t k)
       {
-        return this->aut_->add_transition_copy(aut->original_automaton(),
+        return this->aut_->add_transition_copy(aut->strip(),
                                                src, dst, t, k);
       }
     };

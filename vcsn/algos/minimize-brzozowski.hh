@@ -16,8 +16,8 @@ namespace vcsn
   Aut
   minimize_brzozoski(const Aut& a)
   {
-    auto codet = determinize(transpose(a))->original_automaton();
-    return determinize(transpose(codet))->original_automaton();
+    auto codet = determinize(transpose(a))->strip();
+    return determinize(transpose(codet))->strip();
   }
 
 } // namespace vcsn

@@ -81,6 +81,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/star.cc                             \
   %D%/algos/star-height.cc                      \
   %D%/algos/star-normal-form.cc                 \
+  %D%/algos/strip.cc                            \
   %D%/algos/sum.cc                              \
   %D%/algos/synchronizing-word.cc               \
   %D%/algos/thompson.cc                         \
@@ -100,6 +101,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/misc/path.cc                              \
   %D%/misc/signature.cc                         \
   %D%/misc/stream.cc
+
 lib_libvcsn_la_LDFLAGS =					\
   $(BOOST_FLYWEIGHT_LDFLAGS) $(BOOST_FILESYSTEM_LDFLAGS) 	\
   $(BOOST_SYSTEM_LDFLAGS) $(BOOST_REGEX_LDFLAGS)

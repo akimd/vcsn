@@ -59,7 +59,7 @@ namespace vcsn
       }
 
       automaton_ptr
-      original_automaton()
+      strip()
       {
         return aut_;
       }

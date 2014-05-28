@@ -31,7 +31,7 @@ namespace vcsn
       automaton_t operator()(const Aut& automaton)
       {
         if (!is_deterministic(automaton))
-          return work_(determinize(automaton)->original_automaton());
+          return work_(determinize(automaton)->strip());
         else if (!is_complete(automaton))
           return work_(complete(automaton));
         else
