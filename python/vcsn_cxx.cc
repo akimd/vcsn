@@ -271,10 +271,7 @@ struct automaton
 
   static automaton product_(const boost::python::list& auts)
   {
-    std::vector<vcsn::dyn::automaton> as;
-    for (int i = 0; i < boost::python::len(auts); ++i)
-      as.emplace_back(boost::python::extract<automaton>(auts[i])().val_);
-    return vcsn::dyn::product(as);
+    return vcsn::dyn::product(automata_(auts));
   }
 
   automaton proper(bool prune = true) const
@@ -286,9 +283,9 @@ struct automaton
 
   polynomial shortest(unsigned max) const;
 
-  automaton shuffle(const automaton& rhs) const
+  static automaton shuffle_(const boost::python::list& auts)
   {
-    return vcsn::dyn::shuffle(val_, rhs.val_);
+    return vcsn::dyn::shuffle(automata_(auts));
   }
 
   automaton sort() const
@@ -338,6 +335,16 @@ struct automaton
   automaton universal() const
   {
     return vcsn::dyn::universal(val_);
+  }
+
+  /// Convert to a vector of automata.
+  using automata_t = std::vector<vcsn::dyn::automaton>;
+  static automata_t automata_(const boost::python::list& auts)
+  {
+    automata_t res;
+    for (int i = 0; i < boost::python::len(auts); ++i)
+      res.emplace_back(boost::python::extract<automaton>(auts[i])().val_);
+    return res;
   }
 
   vcsn::dyn::automaton val_;
@@ -811,7 +818,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)
-    .def("shuffle", &automaton::shuffle)
+    .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")
     .def("sort", &automaton::sort)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)

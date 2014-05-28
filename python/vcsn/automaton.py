@@ -144,3 +144,5 @@ automaton.lan_to_lal = lambda self: _lan_to_lal(self)
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
 # _proper is the genuine binding to dyn::proper.
 automaton.proper = lambda self, prune = True: self._proper(prune).lan_to_lal()
+
+automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))

@@ -655,8 +655,8 @@ namespace vcsn
       automaton
       product_vector(const std::vector<automaton>& as)
       {
-        return product_<Auts...>(as,
-                        vcsn::detail::make_index_sequence<sizeof...(Auts)>{});
+        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+        return product_<Auts...>(as, indices);
       }
 
       REGISTER_DECLARE(product_vector,
@@ -684,7 +684,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
@@ -699,6 +698,50 @@ namespace vcsn
                        (const automaton&, const automaton&) -> automaton);
     }
   }
+
+  /*------------------------.
+  | shuffle(automaton...).  |
+  `------------------------*/
+
+  /// Build the (accessible part of the) product.
+  template <typename... Auts>
+  inline
+  auto
+  shuffle(const Auts&... as)
+    -> product_automaton<Auts...>
+  {
+    auto res = make_product_automaton(as...);
+    res->shuffle();
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename... Auts, size_t... I>
+      automaton
+      shuffle_(const std::vector<automaton>& as,
+               vcsn::detail::index_sequence<I...>)
+      {
+        auto res = vcsn::shuffle(as[I]->as<Auts>()...);
+        return make_automaton(res);
+      }
+
+      /// Bridge.
+      template <typename... Auts>
+      automaton
+      shuffle_vector(const std::vector<automaton>& as)
+      {
+        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+        return shuffle_<Auts...>(as, indices);
+      }
+
+      REGISTER_DECLARE(shuffle_vector,
+                       (const std::vector<automaton>&) -> automaton);
+    }
+  }
+
 
   /*-------------------------------------.
   | infiltration(automaton, automaton).  |

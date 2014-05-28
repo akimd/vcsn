@@ -400,9 +400,13 @@ namespace vcsn
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);
 
-    /// The shuffle of automata \a lhs and \a rhs.
-    /// Performs the union of the alphabets.
+    /// The shuffle product of automata \a lhs and \a rhs.
+    /// Performs the join of their type.
     automaton shuffle(const automaton& lhs, const automaton& rhs);
+
+    /// The shuffle product of automata.
+    /// Performs the join of their types.
+    automaton shuffle(const std::vector<automaton>& as);
 
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);

@@ -17,7 +17,8 @@ namespace vcsn
       // We use '-' instead of '_' in file names.
       boost::replace_all(n, "_", "-");
       // We don't use any suffix in the file names.
-      for (auto s: {"-expansion", "-label", "-polynomial", "-ratexp", "-weight"})
+      for (auto s: {"-expansion", "-label", "-polynomial",
+                    "-ratexp", "-vector", "-weight"})
         if (boost::ends_with(n, s))
           boost::erase_tail(n, strlen(s));
       // Open code some mismatches between algo name, and header name.
@@ -47,7 +48,6 @@ namespace vcsn
       ALGO("make-word-context", "make-context");
       ALGO("multiply", "concatenate");
       ALGO("pair", "synchronizing-word");
-      ALGO("product-vector", "product");
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
