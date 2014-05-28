@@ -139,7 +139,11 @@ namespace vcsn
         : super_t(join_automata(aut...))
         , auts_(aut...)
         , transition_maps_{{aut, *aut_->weightset()}...}
-      {}
+      {
+        // Common for all three algorithms here.
+        pmap_[pre_()] = aut_->pre();
+        pmap_[post_()] = aut_->post();
+      }
 
       /// Compute the (accessible part of the) product.
       void product()
@@ -281,19 +285,10 @@ namespace vcsn
       /// Worklist of state tuples.
       std::deque<pair_t> todo_;
 
-      /// Add the pre and post states in the result automaton.  This
-      /// is needed for all three algorithms here.
-      void initialize()
-      {
-        pmap_[pre_()] = aut_->pre();
-        pmap_[post_()] = aut_->post();
-      }
-
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
       void initialize_product()
       {
-        initialize();
         todo_.emplace_back(pre_());
       }
 
@@ -301,7 +296,6 @@ namespace vcsn
       /// needed for the shuffle algorithm.
       void initialize_shuffle(const weightset_t& ws)
       {
-        initialize();
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
         add_product_transitions(ws, aut_->pre(), pre_());
