@@ -4,6 +4,36 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-05-22
+** Automata are now handled via shared pointers
+Types such as vcsn::mutable_automaton<Ctx> used to support the so called
+"move semantics" only.  In particular, simple assignment between automata
+was not possible.  This intentional limitation was introduced to avoid
+accidental lose of performance by unexpected deep copies of automata, while
+keeping partly "value semantics".
+
+This, however, resulted in too many constraints, especially when one wants
+to embed automata in other structures (which is for instance the case of
+transpose_automaton which wraps an automaton).
+
+To address these issues, types such as vcsn::mutable_automaton<Ctx> are now
+std::shared_ptr.  This does change the programming style, both when
+instantiating an automaton (typically now using make_mutable_automaton), and
+when using it (with '->' instead of '.'):
+
+Instead of:
+
+  automaton_t aut{ctx};
+  auto s1 = aut.new_state();
+  aut.set_initial(s1);
+
+write:
+
+  auto aut = vcsn::make_mutable_automaton(ctx);
+  // or: auto aut = vcsn::make_shared_ptr<automaton_t>(ctx);
+  auto s1 = aut->new_state();
+  aut->set_initial(s1);
+
 * 2014-05-21
 ** Polynomials are now usable as weights
 Polynomialsets are now usable as a generic weightset.  Polynomials are mostly
