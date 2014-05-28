@@ -40,9 +40,15 @@ a bug report...
 Try that on the BF.
 
 It works well at least with clang 3.5 on OS X.  To get good error messages,
-run dsymutil on all the *.dylib, and run the tests with
-ASAN_SYMBOLIZER_PATH=$(which llvm-symbolizer-mp-3.5) (of course, adjust the
-version number, here MacPorts 3.5).
+run dsymutil on all the *.dylib, something like
+
+  find _build/35d -name '*.dylib' | xargs -n 1 dsymutil
+
+and run the tests with $ASAN_SYMBOLIZER_PATH defined, something like
+
+  ASAN_SYMBOLIZER_PATH=$(which llvm-symbolizer-mp-3.5) 35d check
+
+(of course, adjust the version number, here MacPorts 3.5).
 
 For some reason, Libtool strips this flag when linking python/vcsn-cxx.so.
 To force it (which is needed), use -Wc,-fsanitize=address when linking it.
