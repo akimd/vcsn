@@ -149,8 +149,6 @@ namespace vcsn
       void product()
       {
         aut_ = meet(auts_);
-        const auto& ws = *aut_->weightset();
-
         initialize_product();
 
         while (!todo_.empty())
@@ -159,7 +157,7 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            add_product_transitions(ws, src, psrc);
+            add_product_transitions(src, psrc);
           }
       }
 
@@ -167,9 +165,7 @@ namespace vcsn
       void shuffle()
       {
         aut_ = join(auts_);
-        const auto& ws = *aut_->weightset();
-
-        initialize_shuffle(ws);
+        initialize_shuffle();
 
         while (!todo_.empty())
           {
@@ -177,7 +173,7 @@ namespace vcsn
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
-            add_shuffle_transitions(ws, src, psrc);
+            add_shuffle_transitions(src, psrc);
           }
       }
 
@@ -185,12 +181,11 @@ namespace vcsn
       void infiltration()
       {
         aut_ = join(auts_);
-        const auto& ws = *aut_->weightset();
 
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
         // initial states for product:
-        initialize_shuffle(ws);
+        initialize_shuffle();
 
         while (!todo_.empty())
           {
@@ -203,8 +198,8 @@ namespace vcsn
             // Product transitions must be added before shuffle ones:
             // this way "product" can use "new_transition" only, which
             // is faster than "add_transition".
-            add_product_transitions(ws, src, psrc);
-            add_shuffle_transitions(ws, src, psrc);
+            add_product_transitions(src, psrc);
+            add_shuffle_transitions(src, psrc);
           }
       }
 
@@ -274,17 +269,6 @@ namespace vcsn
         return pair_t{(std::get<I>(auts_)->post())...};
       }
 
-
-      /// Input automata, supplied at construction time.
-      automata_t auts_;
-
-      /// Map state-tuple -> result-state.
-      using map = std::map<pair_t, state_t>;
-      map pmap_;
-
-      /// Worklist of state tuples.
-      std::deque<pair_t> todo_;
-
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
       void initialize_product()
@@ -294,11 +278,11 @@ namespace vcsn
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the shuffle algorithm.
-      void initialize_shuffle(const weightset_t& ws)
+      void initialize_shuffle()
       {
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
-        add_product_transitions(ws, aut_->pre(), pre_());
+        add_product_transitions(aut_->pre(), pre_());
       }
 
       /// The state in the product corresponding to a pair of states
@@ -341,8 +325,7 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
-      void add_product_transitions(const weightset_t& ws,
-                                   const state_t src,
+      void add_product_transitions(const state_t src,
                                    const pair_t& psrc)
       {
         for (auto t: zip_map_tuple(out_(psrc)))
@@ -355,7 +338,7 @@ namespace vcsn
               ([&] (const typename transition_map_t<Auts>::transition&... ts)
                {
                  aut_->new_transition(src, state(ts.dst...),
-                                      t.first, ws.mul(ts.wgt...));
+                                      t.first, aut_->weightset()->mul(ts.wgt...));
                },
                t.second);
         add_one_transitions_(src, psrc, indices);
@@ -473,11 +456,10 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given tuple of input state automata.  Update the worklist
       /// with the needed source-state pairs.
-      void add_shuffle_transitions(const weightset_t& ws,
-                                   const state_t src,
+      void add_shuffle_transitions(const state_t src,
                                    const pair_t& psrc)
       {
-        weight_t final = add_shuffle_transitions_(ws, src, psrc, indices);
+        weight_t final = add_shuffle_transitions_(src, psrc, indices);
         aut_->set_final(src, final);
       }
 
@@ -486,17 +468,16 @@ namespace vcsn
       ///
       /// Return the product of the final states.
       template <size_t... I>
-      weight_t add_shuffle_transitions_(const weightset_t& ws,
-                                        const state_t src,
+      weight_t add_shuffle_transitions_(const state_t src,
                                         const pair_t& psrc,
                                         seq<I...>)
       {
-        weight_t res = ws.one();
+        weight_t res = aut_->weightset()->one();
         using swallow = int[];
         (void) swallow
         {
-          (res = ws.mul(res,
-                        add_shuffle_transitions_<I>(ws, src, psrc)),
+          (res = aut_->weightset()->mul(res,
+                                        add_shuffle_transitions_<I>(src, psrc)),
            0)...
         };
         return res;
@@ -509,12 +490,11 @@ namespace vcsn
       /// weight (zero otherwise).
       template <size_t I>
       weight_t
-      add_shuffle_transitions_(const weightset_t& ws,
-                               const state_t src,
+      add_shuffle_transitions_(const state_t src,
                                const pair_t& psrc)
       {
         // Whether is a final state.
-        weight_t res = ws.zero();
+        weight_t res = aut_->weightset()->zero();
 
         auto& ts = std::get<I>(transition_maps_)[std::get<I>(psrc)];
         for (auto t: ts)
@@ -557,6 +537,16 @@ namespace vcsn
         };
         return o;
       }
+
+      /// Input automata, supplied at construction time.
+      automata_t auts_;
+
+      /// Map state-tuple -> result-state.
+      using map = std::map<pair_t, state_t>;
+      map pmap_;
+
+      /// Worklist of state tuples.
+      std::deque<pair_t> todo_;
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
