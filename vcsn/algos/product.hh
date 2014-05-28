@@ -477,73 +477,73 @@ namespace vcsn
                                    const state_t src,
                                    const pair_t& psrc)
       {
-        auto lsrc = std::get<0>(psrc);
-        auto rsrc = std::get<1>(psrc);
+        weight_t final = add_shuffle_transitions_(ws, src, psrc, indices);
+        aut_->set_final(src, final);
+      }
 
-        /// The weight as a final state.
-        auto w = ws.one();
-
-        // The src state is visited for the first time, so all these
-        // transitions are new.  *Except* in the case where we have a
-        // loop on both the lhs, and the rhs.
-        //
-        // If add_product_transitions was called before (in the case
-        // of infiltration), there may even exist such a transition in
-        // the first loop.
+      /// Let all automata advance one after the other, and add the
+      /// corresponding transitions in the output.
+      ///
+      /// Return the product of the final states.
+      template <size_t... I>
+      weight_t add_shuffle_transitions_(const weightset_t& ws,
+                                        const state_t src,
+                                        const pair_t& psrc,
+                                        seq<I...>)
+      {
+        weight_t res = ws.one();
+        using swallow = int[];
+        (void) swallow
         {
-          bool final = false;
-          auto& ts = std::get<0>(transition_maps_)[lsrc];
-          for (auto t: ts)
-            if (std::get<0>(auts_)->labelset()->is_special(t.first))
-              {
-                w = ws.mul(w, t.second.front().wgt);
-                final = true;
-              }
-            else
-              for (auto d: t.second)
-                {
-                  auto ldst = d.dst;
-                  if (lsrc == ldst)
-                    aut_->add_transition(src, state(ldst, rsrc),
-                                         t.first, d.wgt);
-                  else
-                    aut_->new_transition(src, state(ldst, rsrc),
-                                         t.first, d.wgt);
-                }
-          if (!final)
-            w = ws.zero();
-        }
+          (res = ws.mul(res,
+                        add_shuffle_transitions_<I>(ws, src, psrc)),
+           0)...
+        };
+        return res;
+      }
 
-        {
-          bool final = false;
-          auto& ts = std::get<1>(transition_maps_)[rsrc];
-          for (auto t: ts)
-            if (std::get<1>(auts_)->labelset()->is_special(t.first))
-              {
-                w = ws.mul(w, t.second.front().wgt);
-                final = true;
-              }
-            else
-              for (auto d: t.second)
-                {
-                  auto rdst = d.dst;
-                  if (rsrc == rdst)
-                    aut_->add_transition(src, state(lsrc, rdst),
-                                         t.first, d.wgt);
-                  else
-                    aut_->new_transition(src, state(lsrc, rdst),
-                                         t.first, d.wgt);
-                }
-          if (!final)
-            w = ws.zero();
-        }
+      /// Let Ith automaton advance, and add the corresponding
+      /// transitions in the output.
+      ///
+      /// If we reach a final state, return the corresponding final
+      /// weight (zero otherwise).
+      template <size_t I>
+      weight_t
+      add_shuffle_transitions_(const weightset_t& ws,
+                               const state_t src,
+                               const pair_t& psrc)
+      {
+        // Whether is a final state.
+        weight_t res = ws.zero();
 
-        aut_->set_final(src, w);
+        auto& ts = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+        for (auto t: ts)
+          if (std::get<I>(auts_)->labelset()->is_special(t.first))
+            res = t.second.front().wgt;
+          else
+            // The src state is visited for the first time, so all
+            // these transitions are new.  *Except* in the case where
+            // we have a loop on some bands.
+            //
+            // If add_product_transitions was called before (in the
+            // case of infiltration), there may even exist such a
+            // transition in the first loop.
+            for (auto d: t.second)
+              if (std::get<I>(psrc) == d.dst)
+                aut_->add_transition(src, src, t.first, d.wgt);
+              else
+                {
+                  auto pdst = psrc;
+                  std::get<I>(pdst) = d.dst;
+                  aut_->new_transition(src, state(pdst), t.first, d.wgt);
+                }
+        return res;
       }
 
       template <size_t... I>
       std::ostream&
-      print_state_name_(std::ostream& o, typename super_t::state_t s, seq<I...>) const
+      print_state_name_(std::ostream& o, typename super_t::state_t s,
+                        seq<I...>) const
       {
         const char* sep = "";
         auto ss = origins().at(s);
