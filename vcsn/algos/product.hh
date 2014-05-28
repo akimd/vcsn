@@ -378,18 +378,23 @@ namespace vcsn
         auto ri = rs.begin();
 
 
+        bool has_eps_out = false;
         for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
+        {
+          has_eps_out = true;
           if (!has_only_ones_in(rhs_, psrc.second))
             new_transition(src, lhs_.dst_of(*li),
                            psrc.second, lhs_.label_of(*li),
                            mul_(ws, lhs_.weight_of(*li),
                                 rhs_.context().weightset()->one()));
+        }
 
-        for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
-          new_transition(src, psrc.first, rhs_.dst_of(*ri),
-                         rhs_.label_of(*ri),
-                         mul_(ws, lhs_.context().weightset()->one(),
-                              rhs_.weight_of(*ri)));
+        if (!has_eps_out || li != ls.end())
+          for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
+            new_transition(src, psrc.first, rhs_.dst_of(*ri),
+                           rhs_.label_of(*ri),
+                           mul_(ws, lhs_.context().weightset()->one(),
+                                rhs_.weight_of(*ri)));
 
 
         for (/* Nothing. */;
