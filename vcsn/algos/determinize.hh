@@ -139,20 +139,16 @@ namespace vcsn
 
       bool state_has_name(state_t s) const
       {
-        if (origins_.empty())
-          origins_ = origins();
         return (s != super_t::pre()
                 && s != super_t::post()
-                && has(origins_, s));
+                && has(origins(), s));
       }
 
       std::ostream&
       print_state_name(std::ostream& o, state_t ss) const
       {
-        if (origins_.empty())
-          origins_ = origins();
         const char* sep = "";
-        for (auto s: origins_[ss])
+        for (auto s: origins().at(ss))
           {
             o << sep;
             input_->print_state_name(o, s);
@@ -165,43 +161,20 @@ namespace vcsn
       using origins_t = std::map<state_t, std::set<state_t>>;
       mutable origins_t origins_;
 
-      origins_t
+      const origins_t&
       origins() const
       {
-        origins_t res;
-        for (const auto& p: map_)
-          {
-            std::set<state_t> from;
-            const auto& ss = p.first;
-            for (auto s = ss.find_first(); s != ss.npos;
-                 s = ss.find_next(s))
-              from.emplace(s);
-            res.emplace(p.second, std::move(from));
-          }
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig)
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p : orig)
-          {
-            o << "    " << p.first - 2
-              << " [label = \"";
-            const char* sep = "";
-            for (auto s: p.second)
-              {
-                o << sep << s - 2;
-                sep = ",";
-              }
-            o << "\"]\n";
-          }
-        o << "*/\n";
-        return o;
+        if (origins_.empty())
+          for (const auto& p: map_)
+            {
+              std::set<state_t> from;
+              const auto& ss = p.first;
+              for (auto s = ss.find_first(); s != ss.npos;
+                   s = ss.find_next(s))
+                from.emplace(s);
+              origins_.emplace(p.second, std::move(from));
+            }
+        return origins_;
       }
 
     private:

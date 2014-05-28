@@ -595,46 +595,27 @@ namespace vcsn
 
       bool state_has_name(state_t s) const
       {
-        return s != super_t::pre() && s != super_t::post();
+        return (s != super_t::pre()
+                && s != super_t::post()
+                && has(origins(), s));
       }
 
       std::ostream&
       print_state_name(std::ostream& o, state_t s) const
       {
-        if (origins_.empty())
-          origins_ = origins();
-        if (has(origins_, s))
-          o << str_escape(format(rs_, origins_[s]));
-        else
-          o << "unknown: " << s;
-        return o;
+        return o << str_escape(format(rs_, origins().at(s)));
       }
 
       /// Ordered map: state -> its derived term.
       using origins_t = std::map<state_t, ratexp_t>;
       mutable origins_t origins_;
-      origins_t
+      const origins_t&
       origins() const
       {
-        origins_t res;
-        for (const auto& p: map_)
-          res[p.second] = p.first;
-        return res;
-      }
-
-      /// Print the origins.
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig) const
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p : orig)
-          o << "    " << p.first - 2
-            << " [label = \""
-            << str_escape(format(rs_, p.second))
-            << "\"]\n";
-        o << "*/\n";
-        return o;
+        if (origins_.empty())
+          for (const auto& p: map_)
+            origins_[p.second] = p.first;
+        return origins_;
       }
 
       /// The ratexp's set.
@@ -730,10 +711,7 @@ namespace vcsn
          bool use_spontaneous = true)
   {
     detail::linearer<RatExpSet> dt{rs, use_spontaneous};
-    auto res = dt(r);
-    if (getenv("VCSN_ORIGINS"))
-      res->print(std::cout, res->origins());
-    return res;
+    return dt(r);
   }
 
   namespace dyn
