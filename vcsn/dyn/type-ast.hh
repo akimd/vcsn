@@ -14,9 +14,6 @@ namespace vcsn
   namespace ast
   {
 
-# define IS_ONE()                                   \
-      virtual bool is_one() const
-
 # define ACCEPT()                                   \
       virtual void accept(context_visitor &v) const \
       {                                             \
@@ -31,7 +28,7 @@ namespace vcsn
 
       virtual void accept(context_visitor &v) const = 0;
 
-      IS_ONE() { return false; }
+      virtual bool has_one() const { return false; }
     };
 
     class context: public ast_node
@@ -73,10 +70,10 @@ namespace vcsn
       }
 
       ACCEPT()
-      IS_ONE()
+      virtual bool has_one() const
       {
         for (auto s : get_sets())
-          if (!s->is_one())
+          if (!s->has_one())
             return false;
         return true;
       }
@@ -99,7 +96,7 @@ namespace vcsn
 
       ACCEPT()
 
-      IS_ONE() { return true; }
+      virtual bool has_one() const { return true; }
 
     private:
       std::shared_ptr<ast_node> ls_;
@@ -112,7 +109,7 @@ namespace vcsn
       {}
 
       ACCEPT()
-      IS_ONE() { return true; }
+      virtual bool has_one() const { return true; }
     };
 
     class letterset: public ast_node
@@ -128,7 +125,7 @@ namespace vcsn
       }
 
       ACCEPT()
-      IS_ONE() { return false; }
+      virtual bool has_one() const { return false; }
     private:
       const std::string alpha_;
     };
@@ -146,7 +143,7 @@ namespace vcsn
       }
 
       ACCEPT()
-      IS_ONE() { return true; }
+      virtual bool has_one() const { return true; }
     private:
       const std::string alpha_;
     };
@@ -164,7 +161,7 @@ namespace vcsn
       }
 
       ACCEPT()
-      IS_ONE() { return true; }
+      virtual bool has_one() const { return true; }
 
     private:
       std::shared_ptr<context> ctx_;
@@ -259,7 +256,6 @@ namespace vcsn
         std::shared_ptr<ast_node> child_;
     };
 # undef ACCEPT
-# undef IS_ONE
   }
 }
 

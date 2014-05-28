@@ -178,7 +178,7 @@ namespace vcsn
         {
           eat(is_, '<');
           std::shared_ptr<ast_node> res = make_labelset();
-          if (!res->is_one())
+          if (!res->has_one())
             res = std::make_shared<nullableset>(res);
           eat(is_, '>');
           return res;
