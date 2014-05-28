@@ -9,14 +9,9 @@ changes in the internal API may also be documented.
 Polynomialsets are now usable as a generic weightset.  Polynomials are mostly
 useful on law and ratexpset.
 
-  >>> ctx1 = vcsn.context('lal_char(a-c)_polynomialset<law_char(m-o)_z>')
-  >>> ctx2 = vcsn.context('lal_char(a-c)_polynomialset<law_char(x-z)_b>')
-  >>> a1 = ctx1.ratexp('<<3>\\e>a').standard()
-  >>> a2 = ctx2.ratexp('<\\e>b').standard()
-  >>> a1 + a2
-  [...]
-  >>> a1 & a2
-  [...]
+  >>> ctx = vcsn.context('lal_char(abc)_polynomialset<law_char(xyz)_z>')
+  >>> ctx.ratexp('<x + xy + x + \e>a')
+  <\e + <2>x + xy>a
 
 * 2014-05-18
 ** ratexps: support for negated letter classes
