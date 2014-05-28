@@ -79,6 +79,8 @@ def PASS(*msg, **kwargs):
     count += 1
     npass += 1
     print('ok ', count, *msg)
+    loc = kwargs['loc'] if 'loc' in kwargs and kwargs['loc'] is not None else here()
+    print(loc + ": pass:", *msg)
     print()
 
 def SKIP(*msg):
@@ -95,7 +97,7 @@ def XFAIL(fun):
 def CHECK_EQ(expected, effective, loc = None):
     "Check that effective value is equal to expected."
     if expected == effective:
-        PASS()
+        PASS(loc=loc)
     else:
         exp = format(expected)
         eff = format(effective)
