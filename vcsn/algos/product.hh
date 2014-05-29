@@ -220,9 +220,9 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       /// Tuple of states of input automata.
       using pair_t = std::tuple<state_t_of<Auts>...>;
+
       /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
-      mutable origins_t origins_;
 
       /// A map from result state to tuple of original states.
       const origins_t& origins() const
@@ -550,6 +550,8 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
+
+      mutable origins_t origins_;
     };
   }
 
