@@ -11,16 +11,17 @@ apt-get update
 apt-get upgrade
 
 echo ";; Installing build requirements..."
-$install git
-$install make
 $install autoconf
 $install automake
-$install libtool
-$install flex
 $install bison xsltproc
-$install libboost-all-dev
-$install ipython ipython-notebook python-matplotlib
+$install ccache
+$install flex
+$install git
 $install graphviz
+$install ipython ipython-notebook python-matplotlib
+$install libboost-all-dev
+$install libtool
+$install make
 
 echo ";;; Building VCSN..."
 (
@@ -34,7 +35,7 @@ echo ";;; Building VCSN..."
 
     cd $vcsndir
     ./bootstrap
-    ./configure
+    ./configure CPPFLAGS='-DNDEBUG' CXX='ccache g++' CXXFLAGS='-O3'
     make all
     # make check		      # Takes to long for my patience --- ams
 )
