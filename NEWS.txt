@@ -5,6 +5,10 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-05-28
+** Optimization: composing two automata transposition yields the identity
+Transposing an automata twice now yields the original automata, instead of
+an automata wrapped by two decorator layers.
+
 ** is-isomorphic: extend to any context and any automata
 Lift the previous limitation of is-isomorphic to deterministic lal automata.
 The sequential case keeps its linear complexity, but the new generic code

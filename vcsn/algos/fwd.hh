@@ -24,7 +24,7 @@ namespace vcsn
       = std::shared_ptr<blind_automaton_impl<Band, AutPtr>>;
   }
 
-  // vcsn/core/first-order.hh.
+  // vcsn/algos/first-order.hh.
   namespace detail
   {
     template <typename Aut>
@@ -34,6 +34,17 @@ namespace vcsn
   template <typename Aut>
   using linear_automaton
     = std::shared_ptr<detail::linear_automaton_impl<Aut>>;
+
+  // vcsn/algos/transpose.hh
+  namespace detail
+  {
+    template <typename Aut>
+    class transpose_automaton_impl;
+  }
+
+  template <typename AutPtr>
+  using transpose_automaton
+    = std::shared_ptr<detail::transpose_automaton_impl<AutPtr>>;
 }
 
 #endif // !VCSN_ALGOS_FWD_HH

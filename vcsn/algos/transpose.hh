@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_TRANSPOSE_HH
 # define VCSN_ALGOS_TRANSPOSE_HH
 
+# include <vcsn/algos/fwd.hh>
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/core/rat/ratexpset.hh>
@@ -206,13 +207,24 @@ namespace vcsn
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<AutPtr>>;
 
+  // Rely on the fact that int takes precedence over long to express
+  // a precedence of this first function over the second one.
+
   template <typename AutPtr>
-  transpose_automaton<AutPtr>
-  transpose(AutPtr& aut)
+  inline
+  AutPtr
+  transpose(const transpose_automaton<AutPtr>& aut, int = 0)
   {
-    return std::make_shared<detail::transpose_automaton_impl<AutPtr>>(aut);
+    return aut->strip();
   }
 
+  template <typename AutPtr>
+  inline
+  transpose_automaton<AutPtr>
+  transpose(AutPtr aut, long = 0)
+  {
+    return make_shared_ptr<transpose_automaton<AutPtr>>(aut);
+  }
 
   namespace dyn
   {
@@ -224,7 +236,7 @@ namespace vcsn
       transpose(automaton& aut)
       {
         auto& a = aut->as<Aut>();
-        return make_automaton(transpose(a));
+        return make_automaton(vcsn::transpose(a));
       }
 
       REGISTER_DECLARE(transpose,
