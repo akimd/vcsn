@@ -579,18 +579,18 @@ namespace vcsn
         super_t::add_transition(state(src), state(dst), l, w);
       }
 
+      void
+      add_transition(state_t src, const ratexp_t& dst,
+                     const label_t& l, const weight_t& w)
+      {
+        super_t::add_transition(src, state(dst), l, w);
+      }
+
       using super_t::set_initial;
       void
       set_initial(const ratexp_t& s, const weight_t& w)
       {
         super_t::set_initial(state(s), w);
-      }
-
-      using super_t::set_final;
-      void
-      set_final(const ratexp_t& s, const weight_t& w)
-      {
-        super_t::set_final(state(s), w);
       }
 
       bool state_has_name(state_t s) const
@@ -682,14 +682,15 @@ namespace vcsn
         while (!res_->todo_.empty())
           {
             ratexp_t src = res_->todo_.top();
+            auto s = res_->state(src);
             res_->todo_.pop();
             auto expansion = expand(src);
-            res_->set_final(src, expansion.constant);
+            res_->set_final(s, expansion.constant);
             for (const auto& p: expansion.polynomials)
               for (const auto& m: p.second)
-                res_->add_transition(src, m.first, p.first, m.second);
+                res_->add_transition(s, m.first, p.first, m.second);
           }
-        return std::move(res_);
+        return res_;
       }
 
     private:
