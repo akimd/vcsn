@@ -13,25 +13,22 @@ namespace vcsn
     namespace detail
     {
       /// Base class for automata.
-      ///
-      /// FIXME: Should not exist, we should model as we did for ratexp.
       class LIBVCSN_API automaton_base
       {
       public:
-        /// Base class for automata.
-        virtual ~automaton_base() = default;
-
         /// A description of the automaton, sufficient to build it.
         /// \param full  whether to include the genset.
         ///              if false, same as sname.
         virtual std::string vname(bool full = true) const = 0;
 
+        /// Extract wrapped typed automaton.
         template <typename Aut>
         Aut& as()
         {
           return dynamic_cast<automaton_wrapper<Aut>&>(*this).automaton();
         }
 
+        /// Extract wrapped typed automaton.
         template <typename Aut>
         const Aut& as() const
         {
