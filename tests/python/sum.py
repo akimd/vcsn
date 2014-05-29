@@ -3,6 +3,11 @@
 import vcsn
 from test import *
 
+ctxbr = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>')
+ctxz = vcsn.context('lal_char(b)_z')
+ctxq = vcsn.context('lal_char(c)_q')
+ctxr = vcsn.context('lal_char(d)_r')
+
 ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
 result = vcsn.automaton('''
@@ -162,13 +167,35 @@ digraph
 CHECK_EQ(a.sum(b), result)
 
 
+## ------------------------- ##
+## polynomial + polynomial.  ##
+## ------------------------- ##
+
+br = ctxbr.polynomial('<u>a')
+z = ctxz.polynomial('<2>b')
+q = ctxq.polynomial('<1/3>c')
+r = ctxr.polynomial('<.4>d')
+CHECK_EQ('<u>a + <<2>\e>b + <<0.333333>\e>c + <<0.4>\e>d', str(br + z + q + r))
+
+
 ## ----------------- ##
 ## ratexp + ratexp.  ##
 ## ----------------- ##
 
-br = vcsn.context('lal_char(a)_ratexpset<lal_char(uv)_b>') \
-         .ratexp('<u>a')
-z = vcsn.context('lal_char(b)_z').ratexp('<2>b')
-q = vcsn.context('lal_char(c)_q').ratexp('<1/3>c')
-r = vcsn.context('lal_char(d)_r').ratexp('<.4>d')
+br = ctxbr.ratexp('<u>a')
+z = ctxz.ratexp('<2>b')
+q = ctxq.ratexp('<1/3>c')
+r = ctxr.ratexp('<.4>d')
 CHECK_EQ('<u>a+<<2>\e>b+<<0.333333>\e>c+<<0.4>\e>d', str(br + z + q + r))
+
+
+## ----------------- ##
+## weight + weight.  ##
+## ----------------- ##
+
+br = ctxbr.weight('u')
+z = ctxz.weight('2')
+q = ctxq.weight('1/3')
+r = ctxr.weight('.4')
+CHECK_EQ('2.73333', str(z + q + r))
+CHECK_EQ('u+<2>\e+<0.333333>\e+<0.4>\e', str(br + z + q + r))
