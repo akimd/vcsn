@@ -3,6 +3,7 @@
 
 # include <initializer_list>
 # include <iostream>
+# include <memory>
 # include <vector>
 # include <string>
 
