@@ -7,6 +7,7 @@
 # include <utility>
 
 # include <vcsn/algos/insplit.hh>
+# include <vcsn/algos/strip.hh>
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
@@ -651,7 +652,7 @@ namespace vcsn
       product_(const std::vector<automaton>& as,
                vcsn::detail::index_sequence<I...>)
       {
-        return make_automaton(product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
+        return make_automaton(vcsn::product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
       /// Bridge.
@@ -826,10 +827,12 @@ namespace vcsn
   `----------------------*/
 
   template <typename Aut>
-  Aut
+  auto
   power(const Aut& aut, unsigned n)
+    -> typename Aut::element_type::automaton_nocv_t
   {
-    Aut res = make_shared_ptr<Aut>(aut->context());
+    using res_t = typename Aut::element_type::automaton_nocv_t;
+    auto res = make_shared_ptr<res_t>(aut->context());
     {
       // automatonset::one().
       auto s = res->new_state();
@@ -845,18 +848,18 @@ namespace vcsn
         static bool iterative = getenv("VCSN_ITERATIVE");
         if (iterative)
           for (size_t i = 0; i < n; ++i)
-            res = product(res, aut)->strip();
+            res = strip(product(res, aut));
         else
           {
-            Aut power = aut;
+            auto power = strip(aut);
             while (true)
               {
                 if (n % 2)
-                  res = product(res, power)->strip();
+                  res = strip(product(res, power));
                 n /= 2;
                 if (!n)
                   break;
-                power = product(power, power)->strip();
+                power = strip(product(power, power));
               }
           }
       }
