@@ -62,7 +62,7 @@ namespace vcsn
       template <typename Aut2>
       static Aut2 absval_(const Aut2& aut)
       {
-        automaton_t res = copy(aut);
+        automaton_t res = copy<automaton_t, automaton_t>(aut);
         // Apply absolute value to the weight of each transition.
         const auto& ws = *aut->weightset();
         for (auto t: res->transitions())

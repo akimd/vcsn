@@ -116,38 +116,40 @@ namespace vcsn
 
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
-  template <typename AutIn, typename AutOut = AutIn, typename Pred>
+  template <typename AutIn,
+            typename AutOut = typename AutIn::element_type::automaton_nocv_t,
+            typename Pred>
   inline
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
-    AutOut res = make_shared_ptr<AutOut>(input->context());
+    auto res = make_shared_ptr<AutOut>(input->context());
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }
 
   /// A copy of \a input.
-  template <typename AutIn, typename AutOut = AutIn>
+  template <typename AutIn,
+            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
   inline
   AutOut
   copy(const AutIn& input)
   {
-    return ::vcsn::copy(input,
-                        [](state_t_of<AutIn>) { return true; });
+    return ::vcsn::copy<AutIn, AutOut>(input,
+                                       [](state_t_of<AutIn>) { return true; });
   }
 
   /// A copy of \a input keeping only its states that are members of
   /// \a keep.
-  template <typename Aut>
+  template <typename AutIn,
+            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
   inline
-  Aut
-  copy(const Aut& input, const std::set<state_t_of<Aut>>& keep)
+  AutOut
+  copy(const AutIn& input, const std::set<state_t_of<AutIn>>& keep)
   {
-    return ::vcsn::copy(input,
-                        [&keep](state_t_of<Aut> s)
-                        {
-                          return has(keep, s);
-                        });
+    return ::vcsn::copy<AutIn, AutOut>
+      (input,
+       [&keep](state_t_of<AutIn> s) { return has(keep, s); });
   }
 
   namespace dyn

@@ -120,20 +120,23 @@ namespace vcsn
   | accessible, coaccessible, useful subautomata.  |
   `-----------------------------------------------*/
 
-  template <typename AutPtr>
-  AutPtr accessible(const AutPtr& a)
+  template <typename Aut>
+  typename Aut::element_type::automaton_nocv_t
+  accessible(const Aut& a)
   {
     return vcsn::copy(a, accessible_states(a));
   }
 
-  template <typename AutPtr>
-  AutPtr coaccessible(const AutPtr& a)
+  template <typename Aut>
+  typename Aut::element_type::automaton_nocv_t
+  coaccessible(const Aut& a)
   {
     return vcsn::copy(a, coaccessible_states(a));
   }
 
-  template <typename AutPtr>
-  AutPtr trim(const AutPtr& a)
+  template <typename Aut>
+  typename Aut::element_type::automaton_nocv_t
+  trim(const Aut& a)
   {
     return vcsn::copy(a, useful_states(a));
   }
