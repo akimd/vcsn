@@ -121,7 +121,7 @@ def weight(context, string):
 # Don't do this on ratexp: the functional definition is already there and we don't want to break it
 # Don't do this for minimize: we want to hide algorithm choice
 # Yes, I did redefine eval.  Python doesn't seem to mind.
-for name in ["accessible", "coaccessible", "complement", "complete", "concatenate", "determinize", "difference", "enumerate", "eval", "format", "is_accessible", "is_ambiguous", "is_coaccessible", "is_complete", "is_deterministic", "is_eps_acyclic", "is_equivalent", "is_proper", "is_standard", "is_trim", "is_useless", "is_valid", "proper", "shortest", "standard", "star", "trim", "union", "universal", "constant_term", "copy", "derivation", "derived_term", "expand", "is_equivalent", "is_valid", "split", "sort", "star_normal_form", "thompson", "transpose", "de_bruijn", "ladybird", "lan_to_lal"]:
+for name in ["accessible", "coaccessible", "complement", "complete", "concatenate", "determinize", "difference", "enumerate", "eval", "format", "is_accessible", "is_ambiguous", "is_coaccessible", "is_complete", "is_deterministic", "is_sequential" ,"is_eps_acyclic", "is_equivalent", "is_proper", "is_standard", "is_trim", "is_useless", "is_valid", "proper", "shortest", "standard", "star", "trim", "union", "universal", "constant_term", "copy", "derivation", "derived_term", "expand", "is_equivalent", "is_valid", "split", "sort", "star_normal_form", "thompson", "transpose", "de_bruijn", "ladybird", "lan_to_lal"]:
     alias_method_as_function(name)
 
 for name in ["infiltration", "shuffle", "sum", "union"]:
@@ -208,10 +208,16 @@ def right_mult(a, w):
 ## ------- ##
 
 def quotient(a):
-    return a.minimize("weighted")
+    return a.trim().minimize("weighted")
 
 def minimize(a):
-    return quotient(a)
+    if not is_lal(a):
+        raise Exception("automaton on non-letter labels")
+    if not is_trim(a):
+        raise Exception("non-trim automaton")
+    if not is_sequential(a):
+        raise Exception("non-deterministic automaton")
+    return a.minimize("moore")
 
 
 ## ----------------------------------------------------- ##
