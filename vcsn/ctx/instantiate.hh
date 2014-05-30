@@ -12,6 +12,7 @@
 # include <vcsn/algos/derivation.hh>
 # include <vcsn/algos/derived-term.hh>
 # include <vcsn/algos/dot.hh>
+# include <vcsn/algos/edit.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
 # include <vcsn/algos/enumerate.hh>
@@ -316,6 +317,7 @@ namespace vcsn
         REGISTER(context_of_ratexp, rs_t);
         REGISTER(copy, aut_t);
         REGISTER(dot, aut_t, std::ostream, bool);
+        REGISTER(edit, aut_t, int, int, int, const std::string, const std::string);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(first_order, rs_t);
