@@ -208,9 +208,10 @@ def right_mult(a, w):
 ## ------- ##
 
 def quotient(a):
-    return a.trim().minimize("weighted")
+    return a.strip().trim().minimize("weighted")
 
 def minimize(a):
+    a = a.strip()
     if not is_lal(a):
         raise Exception("automaton on non-letter labels")
     if not is_trim(a):
