@@ -11,6 +11,7 @@ vcsn_python_PYTHON =                            \
   %D%/vcsn/label.py                             \
   %D%/vcsn/polynomial.py                        \
   %D%/vcsn/ratexp.py                            \
+  %D%/vcsn/vpi.py                               \
   %D%/vcsn/weight.py
 
 pyexec_LTLIBRARIES = %D%/vcsn_cxx.la
