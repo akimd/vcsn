@@ -32,7 +32,7 @@ ratexp.derivation = _ratexp_derivation
 
 ratexp.enumerate = lambda self, num = 1: self.standard().enumerate(num)
 
-ratexp.info = lambda self: _info_to_dict(self.format('info'))
+ratexp.info = lambda self, detailed = False: _info_to_dict(self.format('info'))
 
 ratexp.shortest = lambda self, num = 1: self.standard().shortest(num)
 ratexp.star = lambda self: self.chain(-1)

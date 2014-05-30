@@ -31,6 +31,8 @@ namespace vcsn
         grail(aut, out);
       else if (format == "info")
         info(aut, out);
+      else if (format == "info,detailed")
+        info(aut, out, true);
       else if (format == "null")
         {}
       else if (format == "tikz")

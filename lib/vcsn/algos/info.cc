@@ -14,9 +14,9 @@ namespace vcsn
     REGISTER_DEFINE(info);
 
     std::ostream&
-    info(const automaton& aut, std::ostream& out)
+    info(const automaton& aut, std::ostream& out, bool detailed)
     {
-      detail::info_registry().call(aut, out);
+      detail::info_registry().call(aut, out, detailed);
       return out;
     }
 

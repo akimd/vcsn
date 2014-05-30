@@ -169,8 +169,13 @@ namespace vcsn
     /// Performs the union of the alphabets.
     automaton infiltration(const automaton& lhs, const automaton& rhs);
 
-    /// Output various facts about \a aut.
-    std::ostream& info(const automaton& aut, std::ostream& out);
+    /// Output various facts about an automaton.
+    /// \param aut  the automaton under study
+    /// \param out  the output stream where to print the info
+    /// \param detailed
+    ///    whether to print even facts costly to compute.
+    std::ostream& info(const automaton& aut, std::ostream& out,
+                       bool detailed = false);
 
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);

@@ -152,7 +152,7 @@ namespace vcsn
 
   template <class A>
   std::ostream&
-  info(const A& aut, std::ostream& out)
+  info(const A& aut, std::ostream& out, bool detailed = false)
   {
 #define ECHO(Name, Value)                               \
     out << Name ": " << Value << '\n'
@@ -167,7 +167,8 @@ namespace vcsn
     ECHO("number of deterministic states",
          detail_info::num_deterministic_states(aut));
     ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
-    ECHO("is ambiguous", detail_info::is_ambiguous(aut));
+    if (detailed)
+      ECHO("is ambiguous", detail_info::is_ambiguous(aut));
     ECHO("is complete", detail_info::is_complete(aut));
     ECHO("is deterministic", detail_info::is_deterministic(aut));
     ECHO("is empty", is_empty(aut));
@@ -175,7 +176,8 @@ namespace vcsn
     ECHO("is normalized", is_normalized(aut));
     ECHO("is proper", is_proper(aut));
     ECHO("is standard", is_standard(aut));
-    ECHO("is synchronizing", detail_info::is_synchronizing(aut));
+    if (detailed)
+      ECHO("is synchronizing", detail_info::is_synchronizing(aut));
     ECHO("is trim", is_trim(aut));
     ECHO("is useless", is_useless(aut));
 #undef ECHO
@@ -189,15 +191,17 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Ostream>
-      std::ostream& info(const automaton& aut, std::ostream& out)
+      template <typename Aut, typename Ostream, typename Bool>
+      std::ostream& info(const automaton& aut, std::ostream& out,
+                         bool detailed)
       {
-        info(aut->as<Aut>(), out);
+        info(aut->as<Aut>(), out, detailed);
         return out;
       }
 
       REGISTER_DECLARE(info,
-                        (const automaton& aut, std::ostream& out) -> std::ostream&);
+                       (const automaton& aut, std::ostream& out,
+                        bool detailed) -> std::ostream&);
     }
   }
 

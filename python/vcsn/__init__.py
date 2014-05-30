@@ -17,7 +17,8 @@ def _dot_to_svg(dot, engine="dot"):
 
 def _info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.
-    Convert Booleans into bool, and likewise for integers."""
+    Convert Booleans into bool, and likewise for integers.
+    """
     res = dict()
     for l in info.splitlines():
         (k, v) = l.split(':')

@@ -326,7 +326,7 @@ namespace vcsn
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(first_order, rs_t, bool);
-        REGISTER(info, aut_t, std::ostream);
+        REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_ratexp, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);

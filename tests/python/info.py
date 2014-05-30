@@ -4,24 +4,13 @@ import vcsn
 
 from test import *
 
-def check_eq_dict(exp, eff):
-    if eff == exp:
-        PASS()
-    else:
-        if len(exp) != len(eff):
-            FAIL("different dictionary sizes")
-        for k in exp.keys():
-            if exp[k] != eff[k]:
-                FAIL("different {}: {} != {}".format(k, exp[k], eff[k]))
-
 # check OBJ EXPECTED
 # ------------------
-# Check that OBJ.info() == EXPECTED.
+# Check that OBJ.info(True) == EXPECTED.
 def check(obj, exp):
-    check_eq_dict(exp, obj.info())
+    CHECK_EQ(exp, obj.info(True))
 
 ctx = vcsn.context('lal_char(a-z)_z')
-
 
 ## ---------------- ##
 ## automaton.info.  ##

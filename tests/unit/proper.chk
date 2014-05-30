@@ -12,7 +12,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -20,7 +19,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -35,7 +33,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -43,7 +40,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -58,7 +54,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -66,7 +61,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -81,7 +75,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -89,7 +82,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -104,7 +96,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -112,7 +103,6 @@ is eps-acyclic: 0
 is normalized: 0
 is proper: 0
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -127,7 +117,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -135,7 +124,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -150,7 +138,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -158,7 +145,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -173,7 +159,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -181,7 +166,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -196,7 +180,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -204,7 +187,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -219,7 +201,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -227,7 +208,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -242,7 +222,6 @@ number of useful states: 3
 number of transitions: 3
 number of deterministic states: 3
 number of eps transitions: 0
-is ambiguous: 0
 is complete: 0
 is deterministic: 1
 is empty: 0
@@ -250,7 +229,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: 0
 is trim: 1
 is useless: 0
 is valid: 1
@@ -266,7 +244,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -274,7 +251,6 @@ is eps-acyclic: 0
 is normalized: 0
 is proper: 0
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 0
@@ -290,7 +266,6 @@ number of useful states: 3
 number of transitions: 5
 number of deterministic states: N/A
 number of eps transitions: 2
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -298,7 +273,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 0
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -313,7 +287,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -321,7 +294,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -336,7 +308,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -344,7 +315,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -359,7 +329,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -367,7 +336,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -383,7 +351,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -391,7 +358,6 @@ is eps-acyclic: 0
 is normalized: 0
 is proper: 0
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 0
@@ -407,7 +373,6 @@ number of useful states: 3
 number of transitions: 6
 number of deterministic states: N/A
 number of eps transitions: 3
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -415,7 +380,6 @@ is eps-acyclic: 0
 is normalized: 0
 is proper: 0
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -430,7 +394,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -438,7 +401,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -453,7 +415,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -461,7 +422,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1
@@ -507,7 +467,6 @@ number of useful states: 3
 number of transitions: 9
 number of deterministic states: N/A
 number of eps transitions: 0
-is ambiguous: N/A
 is complete: N/A
 is deterministic: N/A
 is empty: 0
@@ -515,7 +474,6 @@ is eps-acyclic: 1
 is normalized: 0
 is proper: 1
 is standard: 0
-is synchronizing: N/A
 is trim: 1
 is useless: 0
 is valid: 1

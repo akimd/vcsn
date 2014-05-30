@@ -54,9 +54,7 @@ class _conjunction(object):
         return hasattr(self.value(), name)
 
 def _automaton_display(self, mode):
-    """Display automaton `self` with a local menu to propose different
-    formats.
-    """
+    """Display automaton `self` in `mode`."""
     from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
         dot = _one_epsilon(self.format("dot"))
@@ -67,20 +65,28 @@ def _automaton_display(self, mode):
         svg = _dot_to_svg(dot)
         display(SVG(svg))
     elif mode == "info":
-        display(self.info())
+        display(self.info(False))
+    elif mode == "info,detailed":
+        display(self.info(True))
     elif mode == "type":
         display(repr(self))
     else:
         raise(ValueError("invalid display format: " + mode))
 
 # Requires IPython 2.0.
-try:
+def _automaton_interact(self):
+    """Display automaton `self` with a local menu to the select
+    the display mode.  Pay attention to not displaying large
+    automata by default.
+    """
     from IPython.html.widgets import interact
-    automaton.display = \
-        lambda self: interact(lambda mode: _automaton_display(self, mode),
-                              mode = ['dot', 'info', 'tooltip', 'type'])
-except ImportError:
-    pass
+    if 20 < self.state_number():
+        modes = ['info', 'dot', 'info,detailed', 'tooltip', 'type']
+    else:
+        modes = ['dot', 'info', 'info,detailed', 'tooltip', 'type']
+    interact(lambda mode: _automaton_display(self, mode), mode = modes)
+
+automaton.display = _automaton_interact
 
 automaton.dot = lambda self: _one_epsilon(self.format('dot'))
 
@@ -121,7 +127,8 @@ def _automaton_fst(aut, cmd):
 automaton.fstdeterminize = lambda self: _automaton_fst(self, "fstdeterminize")
 automaton.fstminimize = lambda self: _automaton_fst(self, "fstminimize")
 
-automaton.info = lambda self: _info_to_dict(self.format('info'))
+automaton.info = lambda self, detailed = False: \
+  _info_to_dict(self.format('info,detailed' if detailed else 'info'))
 
 def _automaton_is_synchronized_by(self, w):
     c = self.context()
@@ -146,3 +153,5 @@ automaton.lan_to_lal = lambda self: _lan_to_lal(self)
 automaton.proper = lambda self, prune = True: self._proper(prune).lan_to_lal()
 
 automaton.shuffle = lambda *auts: automaton._shuffle(list(auts))
+
+automaton.state_number = lambda self: self.info(False)['number of states']
