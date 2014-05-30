@@ -40,7 +40,10 @@ class _conjunction(object):
         return self
     def value(self):
         if isinstance(self.auts, list):
-            self.auts = automaton._product(self.auts)
+            if len(self.auts) == 1:
+                self.auts = self.auts[0]
+            else:
+                self.auts = automaton._product(self.auts)
         return self.auts
     def __nonzero__(self):
         return bool(self.value())
