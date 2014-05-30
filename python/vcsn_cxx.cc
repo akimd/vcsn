@@ -168,6 +168,12 @@ struct automaton
     return vcsn::dyn::eliminate_state(val_, s);
   }
 
+  int edit(int opcode, int int1, int int2, const std::string& label,
+           const std::string& weight)
+  {
+    return vcsn::dyn::edit(val_, opcode, int1, int2, label, weight);
+  }
+
   polynomial enumerate(unsigned max) const;
 
   weight eval(const label& l) const;
@@ -984,6 +990,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
                                synchronizing_word())
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
+    .def("trivial_lowlevel_edit", &automaton::edit)
     .def("union", &automaton::union_a)
     .def("universal", &automaton::universal)
     ;

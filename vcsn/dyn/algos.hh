@@ -164,6 +164,10 @@ namespace vcsn
     automaton double_ring(const context& ctx, unsigned n,
                           const std::vector<unsigned>& f);
 
+    int edit(automaton& aut, int opcode,
+             int int1 = -1, int int2 = -1, const std::string& label = "",
+             const std::string& weight = "");
+
     /// The LAO automaton \a aut with state \a s removed.
     automaton eliminate_state(const automaton& aut, int s);
 

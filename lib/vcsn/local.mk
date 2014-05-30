@@ -49,6 +49,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/divkbaseb.cc                        \
   %D%/algos/dot.cc                              \
   %D%/algos/double-ring.cc                      \
+  %D%/algos/edit.cc                             \
   %D%/algos/edit-automaton.cc                   \
   %D%/algos/efsm.cc                             \
   %D%/algos/enumerate.cc                        \
