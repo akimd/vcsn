@@ -48,6 +48,7 @@ namespace vcsn
       ALGO("make-word-context", "make-context");
       ALGO("multiply", "concatenate");
       ALGO("pair", "synchronizing-word");
+      ALGO("power", "product");
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
