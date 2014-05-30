@@ -64,7 +64,7 @@ namespace vcsn
           "\\documentclass{standalone}\n"
           "  \\usepackage{tikz}\n"
           "  \\usetikzlibrary{arrows, automata, positioning}\n"
-          "  \\tikzstyle{automaton}=[shorten >=1pt, node distance=2cm, pos=.4,\n"
+          "  \\tikzstyle{automaton}=[shorten >=1pt, pos=.4,\n"
           "                         >=stealth', initial text=]\n"
           "  \\tikzstyle{accepting}=[accepting by arrow]\n"
           "\n"
