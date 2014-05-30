@@ -745,6 +745,44 @@ namespace vcsn
   }
 
 
+  /*--------------------------.
+  | shuffle(ratexp, ratexp).  |
+  `--------------------------*/
+
+  /// Shuffle product of ratexps.
+  template <typename ValueSet>
+  inline
+  typename ValueSet::value_t
+  shuffle(const ValueSet& vs,
+          const typename ValueSet::value_t& lhs,
+          const typename ValueSet::value_t& rhs)
+  {
+    return vs.shuffle(lhs, rhs);
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename RatExpSetLhs, typename RatExpSetRhs>
+      ratexp
+      shuffle_ratexp(const ratexp& lhs, const ratexp& rhs)
+      {
+        const auto& l = lhs->as<RatExpSetLhs>();
+        const auto& r = rhs->as<RatExpSetRhs>();
+        auto rs = join(l.ratexpset(), r.ratexpset());
+        auto lr = rs.conv(l.ratexpset(), l.ratexp());
+        auto rr = rs.conv(r.ratexpset(), r.ratexp());
+        return make_ratexp(rs, shuffle(rs, lr, rr));
+      }
+
+      REGISTER_DECLARE(shuffle_ratexp,
+                       (const ratexp&, const ratexp&) -> ratexp);
+    }
+  }
+
+
   /*-------------------------------------.
   | infiltration(automaton, automaton).  |
   `-------------------------------------*/

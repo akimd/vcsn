@@ -35,6 +35,13 @@ namespace vcsn
       return detail::shuffle_vector_registry().call_variadic(auts);
     }
 
+    REGISTER_DEFINE(shuffle_ratexp);
+    ratexp
+    shuffle(const ratexp& lhs, const ratexp& rhs)
+    {
+      return detail::shuffle_ratexp_registry().call(lhs, rhs);
+    }
+
     REGISTER_DEFINE(infiltration);
     automaton
     infiltration(const automaton& lhs, const automaton& rhs)

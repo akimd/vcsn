@@ -408,6 +408,10 @@ namespace vcsn
     /// Performs the join of their types.
     automaton shuffle(const std::vector<automaton>& as);
 
+    /// The shuffle product of ratexps \a lhs and \a rhs.
+    /// Performs the join of their type.
+    ratexp shuffle(const ratexp& lhs, const ratexp& rhs);
+
     /// A copy of \a a with normalized state numbers.
     automaton sort(const automaton& a);
 
