@@ -322,7 +322,7 @@ namespace vcsn
         REGISTER(context_of, aut_t);
         REGISTER(context_of_ratexp, rs_t);
         REGISTER(copy, aut_t);
-        REGISTER(dot, aut_t, std::ostream);
+        REGISTER(dot, aut_t, std::ostream, bool);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(first_order, rs_t, bool);

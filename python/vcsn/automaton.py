@@ -22,7 +22,7 @@ automaton.__repr__ = lambda self: self.info()['type']
 automaton.__rmul__ = _left_mult
 automaton.__str__ = lambda self: self.format('dot')
 automaton.__sub__ = automaton.difference
-automaton._repr_svg_ = lambda self: _dot_to_svg(self.dot())
+automaton._repr_svg_ = lambda self: self.as_svg()
 
 class _conjunction(object):
     """A proxy class that delays calls to the & operator in order
@@ -53,6 +53,31 @@ class _conjunction(object):
     def __hasattr__(self, name):
         return hasattr(self.value(), name)
 
+def _automaton_as_svg(self, format = "dot"):
+    if format == "dot":
+        return _dot_to_svg(self.dot())
+    elif format == "dot2tex":
+        dot2tex = self.format("dot2tex")
+        import tempfile
+        tmp = tempfile.NamedTemporaryFile().name
+        import subprocess
+        p1 = subprocess.Popen(['dot2tex'],
+                              stdin=subprocess.PIPE,
+                              stdout=open(tmp + ".tex", "w"),
+                              stderr=subprocess.PIPE)
+        p1.stdin.write(dot2tex.encode('utf-8'))
+        res = p1.communicate()
+        subprocess.check_call(["texi2pdf", "--batch", "--clean",
+                               "--output", tmp + ".pdf", tmp + ".tex"])
+        subprocess.check_call(["inkscape", "--export-plain-svg",
+                               tmp + ".svg", "-f", tmp + ".pdf"])
+        from IPython.display import SVG
+        return SVG(open(tmp + ".svg").read())
+    else:
+        raise(ValueError("invalid format: ", format))
+
+automaton.as_svg = lambda self, fmt = "dot": _automaton_as_svg(self, fmt)
+
 def _automaton_display(self, mode):
     """Display automaton `self` in `mode`."""
     from IPython.display import display, SVG
@@ -64,6 +89,8 @@ def _automaton_display(self, mode):
                          dot)
         svg = _dot_to_svg(dot)
         display(SVG(svg))
+    elif mode == "dot2tex":
+        display(self.as_svg(mode))
     elif mode == "info":
         display(self.info(False))
     elif mode == "info,detailed":
@@ -81,9 +108,10 @@ def _automaton_interact(self):
     """
     from IPython.html.widgets import interact
     if 20 < self.state_number():
-        modes = ['info', 'dot', 'info,detailed', 'tooltip', 'type']
+        modes = ['info', 'dot']
     else:
-        modes = ['dot', 'info', 'info,detailed', 'tooltip', 'type']
+        modes = ['dot', 'info']
+    modes += ['info,detailed', 'tooltip', 'type', 'dot2tex']
     interact(lambda mode: _automaton_display(self, mode), mode = modes)
 
 automaton.display = _automaton_interact

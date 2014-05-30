@@ -128,7 +128,13 @@ namespace vcsn
     automaton divkbaseb(const context& ctx, unsigned divisor, unsigned base);
 
     /// Output \a aut in GraphViz' Dot format.
-    std::ostream& dot(const automaton& aut, std::ostream& out);
+    /// \param aut  the automaton to format
+    /// \param out  the output stream where to print the dot file
+    /// \param dot2tex
+    ///    whether to generate LaTeX escapes in the dot file for
+    ///    use with dot2tex.
+    std::ostream& dot(const automaton& aut, std::ostream& out,
+                      bool dot2tex = false);
 
     /// A string representing \a aut in GraphViz' Dot format.
     std::string dot(const automaton& aut);

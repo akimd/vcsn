@@ -14,9 +14,9 @@ namespace vcsn
     REGISTER_DEFINE(dot);
 
     std::ostream&
-    dot(const automaton& aut, std::ostream& out)
+    dot(const automaton& aut, std::ostream& out, bool dot2tex)
     {
-      detail::dot_registry().call(aut, out);
+      detail::dot_registry().call(aut, out, dot2tex);
       return out;
     }
   }

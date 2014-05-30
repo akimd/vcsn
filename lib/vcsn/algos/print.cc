@@ -22,7 +22,9 @@ namespace vcsn
           const std::string& format)
     {
       if (format == "dot" || format == "default" || format == "")
-        dot(aut, out);
+        dot(aut, out, false);
+      else if (format == "dot2tex")
+        dot(aut, out, true);
       else if (format == "efsm")
         efsm(aut, out);
       else if (format == "fado")
