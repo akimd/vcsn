@@ -21,16 +21,15 @@ namespace vcsn
 
     /// \brief Factor common bits in automaton formatting.
     ///
-    /// \tparam AutPtr an automaton type.
-    template <typename AutPtr>
+    /// \tparam Aut an automaton type.
+    template <typename Aut>
     class outputter
     {
     protected:
-      using automaton_ptr = AutPtr;
-      using automaton_t = typename automaton_ptr::element_type;
+      using automaton_t = Aut;
 
     public:
-      outputter(const automaton_ptr& aut, std::ostream& out)
+      outputter(const automaton_t& aut, std::ostream& out)
         : aut_(aut)
         , os_(out)
       {}
@@ -71,10 +70,11 @@ namespace vcsn
       /// The main advantage of using polynomials instead of directly
       /// iterating over aut_->outin(src, dst) is to get a result which
       /// is sorted (hence more deterministic).
-      std::string format_entry_(state_t src, state_t dst)
+      std::string format_entry_(state_t src, state_t dst,
+                                const std::string& fmt = "text")
       {
         auto entry = get_entry(aut_, src, dst);
-        return ps_.format(entry, ", ");
+        return ps_.format(entry, ", ", fmt);
       }
 
       /// Output transitions, sorted lexicographically on (Label, Dest).
@@ -136,7 +136,7 @@ namespace vcsn
       }
 
       /// The automaton we have to output.
-      const automaton_ptr& aut_;
+      const automaton_t& aut_;
       /// Output stream.
       std::ostream& os_;
       /// Short-hand to the weightset.

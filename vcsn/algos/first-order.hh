@@ -601,9 +601,10 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(std::ostream& o, state_t s) const
+      print_state_name(std::ostream& o, state_t s,
+                       const std::string& fmt) const
       {
-        return o << str_escape(format(rs_, origins().at(s)));
+        return o << str_escape(format(rs_, origins().at(s), fmt));
       }
 
       /// Ordered map: state -> its derived term.

@@ -211,9 +211,10 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(std::ostream& o, typename super_t::state_t s) const
+      print_state_name(std::ostream& o, typename super_t::state_t s,
+                       const std::string& fmt = "text") const
       {
-        return print_state_name_(o, s, indices);
+        return print_state_name_(o, s, fmt, indices);
       }
 
       /// Result state type.
@@ -523,6 +524,7 @@ namespace vcsn
       template <size_t... I>
       std::ostream&
       print_state_name_(std::ostream& o, typename super_t::state_t s,
+                        const std::string& fmt,
                         seq<I...>) const
       {
         const char* sep = "";
@@ -531,7 +533,7 @@ namespace vcsn
         (void) swallow
         {
           (o << sep,
-           std::get<I>(auts_)->print_state_name(o, std::get<I>(ss)),
+           std::get<I>(auts_)->print_state_name(o, std::get<I>(ss), fmt),
            sep = ", ",
            0)...
         };

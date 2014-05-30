@@ -582,10 +582,11 @@ namespace vcsn
     }
 
     std::string
-    format(const value_t& v, const std::string& sep = " + ") const
+    format(const value_t& v, const std::string& sep = " + ",
+           const std::string& fmt = "text") const
     {
       std::ostringstream o;
-      print(o, v, "text", sep);
+      print(o, v, fmt, sep);
       return o.str();
     }
 
