@@ -388,7 +388,7 @@ namespace vcsn
                                 transition_map_t<input_automaton_t<I>>::transitions_t&
                                 epsilon_out)
       {
-        if (!has_epsilon_in(psrc, I + 1, indices))
+        if (!has_epsilon_in(psrc, I + 1, indices) && !has_only_epsilon_out(psrc, I, indices))
           for (auto t : epsilon_out)
             {
               auto pdst = psrc;
@@ -407,6 +407,19 @@ namespace vcsn
                                              std::get<I>(psrc))... };
         for (; i < sizeof...(Auts); ++i)
           if (has_ones[i])
+            return true;
+        return false;
+      }
+
+      /// Check if all the bands before the Ith have only outgoing epsilon
+      /// transitions.
+      template <std::size_t... I>
+      bool has_only_epsilon_out(const pair_t& psrc, std::size_t i, seq<I...>)
+      {
+        bool has_ones[] = { has_only_ones_out(I, std::get<I>(auts_),
+                                              std::get<I>(psrc))... };
+        for (size_t j = 0; j < i; ++j)
+          if (has_ones[j])
             return true;
         return false;
       }
@@ -452,6 +465,30 @@ namespace vcsn
         auto rin = rhs->all_in(rst);
         auto rtr = rin.begin();
         return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
+      }
+
+      using out_pair_t = std::pair<size_t, state_t>;
+      using out_map_t = std::map<out_pair_t, bool>;
+      out_map_t out_map;
+
+      /// Check if the state has only incoming epsilon transitions.
+      template <typename Aut>
+      typename std::enable_if<labelset_t_of<Aut>::has_one(),
+                 bool>::type
+      has_only_ones_out(size_t I, const Aut& a, state_t_of<Aut> st)
+      {
+        auto p = out_pair_t{I, st};
+        auto it = out_map.find(p);
+        if (it != out_map.end())
+          return it->second;
+        for (auto t : a->all_out(st))
+          if (!is_one(a, t))
+          {
+            out_map[p] = false;
+            return false;
+          }
+        out_map[p] = true;
+        return true;
       }
 
       /// Add transitions to the given result automaton, starting from
