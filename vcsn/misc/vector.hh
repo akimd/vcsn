@@ -1,8 +1,10 @@
 #ifndef VCSN_MISC_VECTOR_HH
 # define VCSN_MISC_VECTOR_HH
 
+# include <algorithm>
 # include <vector>
 
+# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/tuple.hh> // make_index_sequence.
 
 namespace vcsn
@@ -55,6 +57,25 @@ namespace vcsn
     {
       return {std::begin(cont), std::end(cont)};
     }
+  }
+
+  /// Convenience wrapper around std::find.
+  template <typename T, typename Alloc>
+  ATTRIBUTE_PURE
+  auto
+  find(const std::vector<T, Alloc>& s, const T& e)
+    -> typename std::vector<T, Alloc>::const_iterator
+  {
+    return std::find(std::begin(s), std::end(s), e);
+  }
+
+  /// Whether \a e is member of \a s.
+  template <typename T, typename Alloc>
+  ATTRIBUTE_PURE
+  bool
+  has(const std::vector<T, Alloc>& s, const T& e)
+  {
+    return find(s, e) != std::end(s);
   }
 }
 

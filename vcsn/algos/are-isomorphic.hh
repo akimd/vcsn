@@ -6,22 +6,18 @@
 # include <stack>
 # include <unordered_map>
 # include <unordered_set>
-# include <vector>
-
-# include <vcsn/misc/hash.hh>
-# include <vcsn/misc/map.hh>
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh>
+# include <vcsn/misc/vector.hh>
 
-
-/// What we refer to as "sequentiality" in this algorithm is an
-/// obvious generalization to any context of the notion of
-/// sequentiality defined only for lal, in its turn an obvious
-/// generalization of determinism to weighted automata.
+// What we refer to as "sequentiality" in this algorithm is an obvious
+// generalization to any context of the notion of sequentiality
+// defined only for lal, in its turn an obvious generalization of
+// determinism to weighted automata.
 
 namespace vcsn
 {
@@ -193,15 +189,6 @@ namespace vcsn
       // and it's not obvious that performing an additional check now
       // would pay in real usage.  FIXME: benchmark in real cases.
 
-      return false;
-    }
-
-    template <typename T>
-    bool vector_has(const std::vector<T>& v, const T& x)
-    {
-      for (const auto& y: v)
-        if (y == x)
-          return true;
       return false;
     }
 
@@ -434,7 +421,7 @@ namespace vcsn
               const auto& l1 = a1_->label_of(t1);
               const auto& d2s = nout2_.at(s2).at(l1).at(w1);
               auto d2 = fr_.s1tos2_.at(d1); // according to the isomorphism
-              if (! vector_has(d2s, d2))
+              if (!has(d2s, d2))
                 return false;
               worklist.push({d1, d2});
               ++ t1n;
@@ -446,7 +433,7 @@ namespace vcsn
               const auto& l2 = a2_->label_of(t2);
               const auto& d1s = nout1_.at(s1).at(l2).at(w2);
               auto d1 = fr_.s2tos1_.at(d2); // according to the isomorphism
-              if (! vector_has(d1s, d1))
+              if (!has(d1s, d1))
                 return false;
               worklist.push({d1, d2});
               ++ t2n;
