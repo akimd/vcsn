@@ -324,7 +324,7 @@ struct automaton
     return vcsn::dyn::sum(val_, rhs.val_);
   }
 
-  label synchronizing_word() const;
+  label synchronizing_word(const std::string& algo = "greedy") const;
 
   ratexp to_ratexp() const;
 
@@ -686,9 +686,9 @@ polynomial automaton::shortest(unsigned max) const
   return vcsn::dyn::shortest(val_, max);
 }
 
-label automaton::synchronizing_word() const
+label automaton::synchronizing_word(const std::string& algo) const
 {
-  return vcsn::dyn::synchronizing_word(val_);
+  return vcsn::dyn::synchronizing_word(val_, algo);
 }
 
 ratexp automaton::to_ratexp() const
@@ -778,6 +778,8 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(synchronizing_word, synchronizing_word,
+                                       0, 1);
 
 BOOST_PYTHON_MODULE(vcsn_cxx)
 {
@@ -837,7 +839,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("star", &automaton::star)
     .def("strip", &automaton::strip)
     .def("sum", &automaton::sum)
-    .def("synchronizing_word", &automaton::synchronizing_word)
+    .def("synchronizing_word", &automaton::synchronizing_word,
+                               synchronizing_word())
     .def("transpose", &automaton::transpose)
     .def("trim", &automaton::trim)
     .def("union", &automaton::union_a)

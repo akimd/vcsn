@@ -235,7 +235,7 @@ namespace vcsn
   `------------------*/
 
   template <typename Aut>
-  Aut pair(const Aut& aut, bool keep_initials)
+  Aut pair(const Aut& aut, bool keep_initials = false)
   {
     detail::pairer<Aut> pair(aut, keep_initials);
     auto res = pair.pair();
@@ -310,87 +310,134 @@ namespace vcsn
   | synchronizing_word(automaton). |
   `-------------------------------*/
 
-  template <typename Aut>
-  typename labelset_t_of<Aut>::word_t
-  synchronizing_word(const Aut& aut)
+  namespace detail
   {
-    using automaton_t = Aut;
-    using word_t = typename labelset_t_of<automaton_t>::word_t;
-    using state_t = state_t_of<automaton_t>;
-    using transition_t = transition_t_of<automaton_t>;
+    template <typename Aut>
+    class synchronizer
+    {
+    public:
+      using automaton_t = Aut;
+      using word_t = typename labelset_t_of<automaton_t>::word_t;
+      using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
 
-    word_t res;
-    std::unordered_set<state_t> todo;
+    private:
+      automaton_t aut_;
+      typename automaton_t::element_type::automaton_nocv_t pair_;
+      std::unordered_map<state_t, std::pair<state_t, transition_t>> paths_;
+      std::unordered_set<state_t> todo_;
+      state_t q0_;
 
-    detail::pairer<Aut> pobj(aut);
-    auto pa = pobj.pair();
-    state_t q0 = pobj.get_q0();
+    public:
+      synchronizer(const automaton_t& aut)
+        : aut_(aut)
+        {}
 
-    std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
-        paths_ibfs(pa, q0);
-
-    if (paths.size() < pa->states().size() - 1)
-        raise("automaton is not synchronizing.");
-
-    for (auto s : pa->states())
-      todo.insert(s);
-
-    while (1 < todo.size() || todo.find(q0) == todo.end())
+    private:
+      void init_pair()
       {
-        int min = -1;
-        std::vector<transition_t> path;
-        for (auto s : todo)
-          if (s != q0)
-            {
-              std::vector<transition_t> cpath;
-              state_t bt_curr = s;
-              while (bt_curr != q0)
-                {
-                  transition_t t;
-                  std::tie(bt_curr, t) = paths.find(bt_curr)->second;
-                  cpath.push_back(t);
-                }
+        detail::pairer<Aut> pobj(aut_);
+        pair_ = pobj.pair();
+        q0_ = pobj.get_q0();
 
-              if (min == -1 || min > static_cast<long>(cpath.size()))
-                {
-                  min = cpath.size();
-                  path = cpath;
-                }
-            }
+        paths_ = paths_ibfs(pair_, q0_);
+        require(pair_->states().size() == paths_.size() + 1,
+                "automaton is not synchronizing");
+
+        for (auto s : pair_->states())
+          todo_.insert(s);
+      }
+
+      std::vector<transition_t> recompose_path(state_t from)
+      {
+        std::vector<transition_t> res;
+        state_t bt_curr = from;
+        while (bt_curr != q0_)
+          {
+            transition_t t;
+            std::tie(bt_curr, t) = paths_.find(bt_curr)->second;
+            res.push_back(t);
+          }
+        return res;
+      }
+
+      // "Apply" a word to the set of active states (for each state, for each
+      // label, perform s = d(s))
+      void apply_path(const std::vector<transition_t>& path)
+      {
         for (auto t : path)
           {
-            auto l = pa->label_of(t);
+            auto l = pair_->label_of(t);
             std::unordered_set<state_t> new_todo;
-            for (auto s : todo)
+            for (auto s : todo_)
               {
-                auto ntf = pa->out(s, l);
+                auto ntf = pair_->out(s, l);
                 auto size = ntf.size();
                 require(0 < size, "automaton must be complete");
                 require(size < 2, "automaton must be deterministic");
-                new_todo.insert(pa->dst_of(*ntf.begin()));
+                new_todo.insert(pair_->dst_of(*ntf.begin()));
               }
-            todo = std::move(new_todo);
-            res = aut->labelset()->concat(res, l);
+            todo_ = std::move(new_todo);
           }
       }
 
-    return res;
+    public:
+      word_t greedy()
+      {
+        word_t res;
+
+        init_pair();
+        while (1 < todo_.size() || todo_.find(q0_) == todo_.end())
+          {
+            unsigned min = -1;
+            std::vector<transition_t> path;
+            for (auto s : todo_)
+              if (s != q0_)
+                {
+                  auto cpath = recompose_path(s);
+                  if (cpath.size() < min)
+                    {
+                      min = cpath.size();
+                      path = cpath;
+                    }
+                }
+
+            apply_path(path);
+            for (auto t : path)
+              res = aut_->labelset()->concat(res, pair_->label_of(t));
+          }
+        return res;
+      }
+
+    };
+  }
+
+  template <typename Aut>
+  typename labelset_t_of<Aut>::word_t
+  synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
+  {
+    vcsn::detail::synchronizer<Aut> sync(aut);
+    if (algo == "greedy")
+      return sync.greedy();
+    else
+      raise("synchronizing_word: invalid algorithm: ", str_escape(algo));
   }
 
   namespace dyn
   {
     namespace detail
     {
-      template <typename Aut>
+      template <typename Aut, typename String>
       label
-      synchronizing_word(const automaton& aut)
+      synchronizing_word(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_label(make_wordset(*a->labelset()),
-                          vcsn::synchronizing_word(a));
+        auto word = vcsn::synchronizing_word(a, algo);
+        return make_label(make_wordset(*a->labelset()), word);
       }
 
-      REGISTER_DECLARE(synchronizing_word, (const automaton&) -> label);
+      REGISTER_DECLARE(synchronizing_word,
+                       (const automaton&, const std::string&) -> label);
     }
   }
 }

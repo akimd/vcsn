@@ -294,7 +294,7 @@ namespace vcsn
     weight multiply(const weight& lhs, const weight& rhs);
 
     /// Build the pair automaton of the given automaton
-    automaton pair(const automaton& aut, bool);
+    automaton pair(const automaton& aut, bool keep_initials = false);
 
     /// Repeated product of \a aut with itself.
     automaton power(const automaton& aut, unsigned n);
@@ -461,7 +461,8 @@ namespace vcsn
     weight sum(const weight& lhs, const weight& rhs);
 
     /// Return the smallest synchronizing word, or raise if there is none.
-    label synchronizing_word(const automaton& aut);
+    label synchronizing_word(const automaton& aut,
+                             const std::string& algo = "greedy");
 
     /// The Thompson automaton of \a e.
     automaton thompson(const ratexp& e);

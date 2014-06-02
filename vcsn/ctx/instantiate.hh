@@ -192,7 +192,7 @@ namespace vcsn
         REGISTER(random_uniform, ctx_t, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
-        REGISTER(synchronizing_word, aut_t);
+        REGISTER(synchronizing_word, aut_t, const std::string);
         REGISTER(u, ctx_t, unsigned);
 
         return true;
