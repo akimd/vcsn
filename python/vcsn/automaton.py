@@ -56,15 +56,15 @@ class _conjunction(object):
     def __hasattr__(self, name):
         return hasattr(self.value(), name)
 
-def _automaton_as_svg(self, format = "dot"):
+def _automaton_as_svg(self, format = "dot", engine = "dot"):
     if format == "dot":
-        return _dot_to_svg(self.dot())
+        return _dot_to_svg(self.dot(), engine)
     elif format == "dot2tex":
         dot2tex = self.format("dot2tex")
         import tempfile
         tmp = tempfile.NamedTemporaryFile().name
         import subprocess
-        p1 = subprocess.Popen(['dot2tex'],
+        p1 = subprocess.Popen(['dot2tex', '--prog', engine],
                               stdin=subprocess.PIPE,
                               stdout=open(tmp + ".tex", "w"),
                               stderr=subprocess.PIPE)
@@ -78,10 +78,10 @@ def _automaton_as_svg(self, format = "dot"):
     else:
         raise(ValueError("invalid format: ", format))
 
-automaton.as_svg = lambda self, fmt = "dot": _automaton_as_svg(self, fmt)
+automaton.as_svg = lambda self, fmt = "dot", engine = "dot": _automaton_as_svg(self, fmt, engine)
 
-def _automaton_display(self, mode):
-    """Display automaton `self` in `mode`."""
+def _automaton_display(self, mode, engine = "dot"):
+    """Display automaton `self` in `mode` with Graphviz `engine`."""
     from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
         dot = _one_epsilon(self.format("dot"))
@@ -89,10 +89,10 @@ def _automaton_display(self, mode):
             dot = re.sub(r'label = (".*?"), shape = box, style = rounded',
                          r'tooltip = \1',
                          dot)
-        svg = _dot_to_svg(dot)
+        svg = _dot_to_svg(dot, engine)
         display(SVG(svg))
     elif mode == "dot2tex":
-        display(self.as_svg(mode))
+        display(self.as_svg(mode, engine))
     elif mode == "info":
         display(self.info(False))
     elif mode == "info,detailed":
@@ -114,7 +114,9 @@ def _automaton_interact(self):
     else:
         modes = ['dot', 'info']
     modes += ['info,detailed', 'tooltip', 'type', 'dot2tex']
-    interact(lambda mode: _automaton_display(self, mode), mode = modes)
+    engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
+    interact(lambda mode, engine: _automaton_display(self, mode, engine),
+             mode = modes, engine = engines)
 
 automaton.display = _automaton_interact
 
