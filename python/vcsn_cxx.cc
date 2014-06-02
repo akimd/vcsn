@@ -22,6 +22,17 @@ struct label;
 struct polynomial;
 struct ratexp;
 struct weight;
+
+/// Convert a Python list to a C++ vector.
+template <typename T>
+std::vector<T>
+to_vector(const boost::python::list& list)
+{
+  std::vector<T> res;
+  for (int i = 0; i < boost::python::len(list); ++i)
+    res.emplace_back(boost::python::extract<T>(list[i]));
+  return res;
+}
 
 /*----------.
 | context.  |
@@ -696,10 +707,7 @@ automaton context::divkbaseb(unsigned divisor, unsigned base) const
 
 automaton context::double_ring(unsigned n, const boost::python::list& finals) const
 {
-  std::vector<unsigned> f;
-  for (int i = 0; i < boost::python::len(finals); ++i)
-    f.emplace_back(boost::python::extract<unsigned>(finals[i]));
-  return vcsn::dyn::double_ring(val_, n, f);
+  return vcsn::dyn::double_ring(val_, n, to_vector<unsigned>(finals));
 }
 
 automaton context::ladybird(unsigned n) const
