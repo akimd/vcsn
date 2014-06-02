@@ -55,7 +55,7 @@ namespace vcsn
         return value_t{null::labelset_t::special(), false};
       }
 
-      template<typename Ls>
+      template <typename Ls>
       ATTRIBUTE_PURE
       static typename std::enable_if<Ls::has_one(), bool>::type
       is_one_(value_t l)
@@ -63,7 +63,7 @@ namespace vcsn
         return std::get<1>(l) || Ls::is_one(get_value(l));
       }
 
-      template<typename Ls>
+      template <typename Ls>
       ATTRIBUTE_PURE
       static typename std::enable_if<!Ls::has_one(), bool>::type
       is_one_(value_t l)
@@ -95,7 +95,7 @@ namespace vcsn
 
     /// Add support for an empty word to a letterset thanks to the
     /// one() of its genset.
-    template<typename GenSet>
+    template <typename GenSet>
     struct nullable_helper<letterset<GenSet>>
     {
       using labelset_t = letterset<GenSet>;
