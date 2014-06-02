@@ -43,7 +43,7 @@ namespace vcsn
     using const_visitor = vcsn::rat::const_visitor<label_t, weight_t>;
 
     context(const context& that)
-      : context{that.ls_, that.ws_}
+      : context(that.ls_, that.ws_)
     {}
 
     /// \param ls  the labelset
@@ -57,8 +57,8 @@ namespace vcsn
     /// \param ls  the labelset
     /// \param ws  the weightset
     context(const labelset_t& ls, const weightset_t& ws = {})
-      : context{std::make_shared<const labelset_t>(ls),
-                std::make_shared<const weightset_t>(ws)}
+      : context(std::make_shared<const labelset_t>(ls),
+                std::make_shared<const weightset_t>(ws))
     {}
 
     /// Build a context.
