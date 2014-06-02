@@ -128,6 +128,12 @@ namespace vcsn
     }
 
     static constexpr bool
+    is_ratexpset()
+    {
+      return false;
+    }
+
+    static constexpr bool
     has_one()
     {
       return true;

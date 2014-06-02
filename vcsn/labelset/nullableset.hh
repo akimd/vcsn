@@ -210,6 +210,12 @@ namespace vcsn
     }
 
     static constexpr bool
+    is_ratexpset()
+    {
+      return false;
+    }
+
+    static constexpr bool
     is_letterized()
     {
       return labelset_t::is_letterized();

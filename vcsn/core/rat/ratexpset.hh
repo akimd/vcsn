@@ -127,6 +127,11 @@ namespace vcsn
       return true;
     }
 
+    static constexpr bool is_ratexpset()
+    {
+      return true;
+    }
+
     static constexpr star_status_t star_status()
     {
       return star_status_t::STARRABLE;

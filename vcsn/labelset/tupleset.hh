@@ -226,6 +226,12 @@ namespace vcsn
     }
 
     static constexpr bool
+    is_ratexpset()
+    {
+      return is_ratexpset_(indices);
+    }
+
+    static constexpr bool
     is_letterized()
     {
       return is_letterized_(indices);
@@ -515,6 +521,13 @@ namespace vcsn
     has_one_(seq<I...>)
     {
       return all_<valueset_t<I>::has_one()...>();
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    is_ratexpset_(seq<I...>)
+    {
+      return all_<valueset_t<I>::is_ratexpset()...>();
     }
 
     template <std::size_t... I>
