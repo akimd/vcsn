@@ -68,6 +68,14 @@ namespace vcsn
       return ls.value(random_label(*ls.labelset(), gen));
   };
 
+  template <typename Context,
+            typename RandomGenerator = std::default_random_engine>
+  typename ratexpset<Context>::value_t
+  random_label(const ratexpset<Context>& rs,
+               RandomGenerator& gen = RandomGenerator())
+  {
+    return rs.atom(random_label(*rs.labelset(), gen));
+  };
 
   /*--------------------.
   | random(automaton).  |

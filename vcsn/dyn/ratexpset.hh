@@ -167,13 +167,19 @@ namespace detail
 
   private:
     /// If context is oneset.
-    template <typename LabelSet_>
+    template <typename LabelSet_, typename Bool>
     value_t letter_class_(const letter_class_t& chars,
-                               bool accept, std::true_type) const;
+                               bool accept, std::true_type, Bool) const;
     /// If context is not oneset.
     template <typename LabelSet_>
     value_t letter_class_(const letter_class_t& chars,
-                               bool accept, std::false_type) const;
+                               bool accept, std::false_type,
+                               std::false_type) const;
+    /// If context is not oneset.
+    template <typename LabelSet_>
+    value_t letter_class_(const letter_class_t& chars,
+                               bool accept, std::false_type,
+                               std::true_type) const;
 
     ratexpset_t rs_;
   };

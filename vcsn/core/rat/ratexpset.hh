@@ -10,6 +10,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/labelset/oneset.hh>
+# include <vcsn/labelset/labelset.hh>
 # include <vcsn/labelset/letterset.hh>
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/z.hh>
@@ -72,6 +73,9 @@ namespace vcsn
     /// The value this is a set of: typeful shared pointers.
     using value_t = typename node_t::value_t;
 
+    using word_t = self_type;
+    using letter_t = self_type;
+
   public:
     /// Static description key.
     static std::string sname();
@@ -130,6 +134,11 @@ namespace vcsn
     static constexpr bool is_ratexpset()
     {
       return true;
+    }
+
+    static constexpr bool is_free()
+    {
+      return false;
     }
 
     static constexpr star_status_t star_status()
@@ -207,6 +216,12 @@ namespace vcsn
     /// The transposed of this rational expression.
     value_t transpose(value_t e) const;
 
+    /// Make a `word' out of a ratexp
+    word_t word(label_t l) const
+    {
+      return l;
+    }
+
     /// A ratexp matching one character amongst \a chars.
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
@@ -250,6 +265,19 @@ namespace vcsn
     value_t unwrap_possible_lweight_(value_t e) const;
   };
   } // rat::
+
+  namespace detail
+  {
+    template <typename Ctx>
+    struct law_traits<ratexpset<Ctx>>
+    {
+      using type = ratexpset<Ctx>;
+      static type value(const type& ls)
+      {
+        return ls;
+      }
+    };
+  }
 
   /// The meet of two ratexpsets.
   template <typename Ctx1, typename Ctx2>
