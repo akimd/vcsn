@@ -135,9 +135,13 @@ def product(*x):
     if len(x) == 0:
         raise Exception("zero operands")
     else:
+        t = type(x[0]) # If the list is not homogeneous we're gonna fail later.
         res = x[0]
         for i in range(1, len(x)):
-            res = res & x[i]
+            if t == polynomial:
+                res = res * x[i]
+            else:
+                res = res & x[i]
         return res
 
 def power(x, n):
