@@ -261,55 +261,6 @@ namespace vcsn
   }
 
 
-  /*-----------------------------.
-  | is_synchronizing(automaton). |
-  `-----------------------------*/
-
-  template <typename Aut>
-  bool
-  is_synchronizing(const Aut& aut)
-  {
-    using automaton_t = Aut;
-    using state_t = state_t_of<automaton_t>;
-    using transition_t = transition_t_of<automaton_t>;
-
-    detail::pairer<Aut> pobj(aut);
-    auto pa = pobj.pair();
-    state_t q0 = pobj.get_q0();
-
-    // We just perform an inverse BFS from q0 and put all the accessible states
-    // in 'paths'. If the size of paths is the same than the number of states
-    // of pa (minus q0), then for each pair of states (p, q), there is a word w
-    // such that d(p, w) = d(q, w), thus the automaton is synchronizing.
-
-    std::unordered_map<state_t, std::pair<state_t, transition_t>> paths =
-        paths_ibfs(pa, q0);
-
-    return paths.size() == pa->states().size() - 1;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      template <typename Aut>
-      bool
-      is_synchronizing(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return vcsn::is_synchronizing(a);
-      }
-
-      REGISTER_DECLARE(is_synchronizing,
-                       (const automaton&) -> bool);
-    }
-  }
-
-
-  /*-------------------------------.
-  | synchronizing_word(automaton). |
-  `-------------------------------*/
-
   namespace detail
   {
     template <typename Aut>
@@ -339,11 +290,11 @@ namespace vcsn
         detail::pairer<Aut> pobj(aut_);
         pair_ = pobj.pair();
         q0_ = pobj.get_q0();
-
         paths_ = paths_ibfs(pair_, q0_);
-        require(pair_->states().size() == paths_.size() + 1,
-                "automaton is not synchronizing");
+      }
 
+      void init_todo()
+      {
         for (auto s : pair_->states())
           todo_.insert(s);
       }
@@ -382,11 +333,27 @@ namespace vcsn
       }
 
     public:
+
+      // We just perform an inverse BFS from q0 and put all the accessible
+      // states in 'paths'. If the size of paths is the same than the number
+      // of states of pa (minus q0), then for each pair of states (p, q),
+      // there is a word w such that d(p, w) = d(q, w), thus the automaton is
+      // synchronizing.
+      bool is_synchronizing()
+      {
+        init_pair();
+        return paths_.size() == pair_->states().size() - 1;
+      }
+
+      // Greedy algorithm which finds the pair closest to q0 and synchronizes
+      // it.
       word_t greedy()
       {
         word_t res;
-
         init_pair();
+        require(pair_->states().size() == paths_.size() + 1,
+                "automaton is not synchronizing");
+        init_todo();
         while (1 < todo_.size() || todo_.find(q0_) == todo_.end())
           {
             unsigned min = -1;
@@ -408,9 +375,40 @@ namespace vcsn
           }
         return res;
       }
-
     };
   }
+
+
+  /*-----------------------------.
+  | is_synchronizing(automaton). |
+  `-----------------------------*/
+
+  template <typename Aut>
+  bool is_synchronizing(const Aut& aut)
+  {
+    vcsn::detail::synchronizer<Aut> sync(aut);
+    return sync.is_synchronizing();
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      template <typename Aut>
+      bool is_synchronizing(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return vcsn::is_synchronizing(a);
+      }
+
+      REGISTER_DECLARE(is_synchronizing, (const automaton&) -> bool);
+    }
+  }
+
+
+  /*-------------------------------.
+  | synchronizing_word(automaton). |
+  `-------------------------------*/
 
   template <typename Aut>
   typename labelset_t_of<Aut>::word_t
