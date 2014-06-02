@@ -137,13 +137,13 @@ namespace vcsn
         if (dot2tex_)
           os_ <<
             "  d2toptions = \"--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize\"\n"
-            "  d2tdocpreamble = \"\n"
-            "    \\usepackage{amssymb}\n"
-            "    \\usetikzlibrary{arrows, automata}\n"
-            "    \\tikzstyle{automaton}=[shorten >=1pt, pos=.4, >=stealth', initial text=]\n"
-            "    \\tikzstyle{named}=[rectangle, rounded corners]\n"
-            "    \\tikzstyle{initial}=[initial by arrow]\n"
-            "    \\tikzstyle{accepting}=[accepting by arrow]\n"
+            "  d2tdocpreamble = \""
+            "    \\usepackage{amssymb}"
+            "    \\usetikzlibrary{arrows, automata}"
+            "    \\tikzstyle{automaton}=[shorten >=1pt, pos=.4, >=stealth', initial text=]"
+            "    \\tikzstyle{named}=[rectangle, rounded corners]"
+            "    \\tikzstyle{initial}=[initial by arrow]"
+            "    \\tikzstyle{accepting}=[accepting by arrow]"
             "  \"\n";
         else
           {
