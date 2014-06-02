@@ -251,7 +251,7 @@ def codeterminize(a):
 ## -------------------- ##
 
 def display_automaton(a):
-    svg_data = dot_to_svg(a.format('dot'))
+    svg_data = _dot_to_svg(a.format('dot'))
     from IPython.display import display, SVG
     display(SVG(data = svg_data))
 
