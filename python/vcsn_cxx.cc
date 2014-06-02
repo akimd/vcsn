@@ -561,6 +561,11 @@ struct ratexp
 
   ratexp right_mult(const weight& w) const;
 
+  ratexp shuffle(const ratexp& rhs)
+  {
+    return vcsn::dyn::shuffle(val_, rhs.val_);
+  }
+
   polynomial split() const
   {
     return vcsn::dyn::split(val_);
@@ -894,6 +899,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("left_mult", &ratexp::left_mult)
     .def("linear", &ratexp::linear, linear())
     .def("right_mult", &ratexp::right_mult)
+    .def("shuffle", &ratexp::shuffle)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)
     .def("star_height", &ratexp::star_height)
