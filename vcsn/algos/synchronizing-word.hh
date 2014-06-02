@@ -275,7 +275,7 @@ namespace vcsn
     private:
       automaton_t aut_;
       typename automaton_t::element_type::automaton_nocv_t pair_;
-      std::unordered_map<state_t, std::pair<state_t, transition_t>> paths_;
+      std::unordered_map<state_t, std::pair<unsigned, transition_t>> paths_;
       std::unordered_set<state_t> todo_;
       state_t q0_;
 
@@ -305,11 +305,16 @@ namespace vcsn
         state_t bt_curr = from;
         while (bt_curr != q0_)
           {
-            transition_t t;
-            std::tie(bt_curr, t) = paths_.find(bt_curr)->second;
+            transition_t t = paths_.find(bt_curr)->second.second;
             res.push_back(t);
+            bt_curr = pair_->dst_of(t);
           }
         return res;
+      }
+
+      int dist(state_t s)
+      {
+        return paths_.find(s)->second.first;
       }
 
       // "Apply" a word to the set of active states (for each state, for each
@@ -357,18 +362,19 @@ namespace vcsn
         while (1 < todo_.size() || todo_.find(q0_) == todo_.end())
           {
             unsigned min = -1;
-            std::vector<transition_t> path;
+            state_t s_min;
             for (auto s : todo_)
               if (s != q0_)
                 {
-                  auto cpath = recompose_path(s);
-                  if (cpath.size() < min)
+                  int d = dist(s);
+                  if (d < min)
                     {
-                      min = cpath.size();
-                      path = cpath;
+                      min = d;
+                      s_min = s;
                     }
                 }
 
+            std::vector<transition_t> path = recompose_path(s_min);
             apply_path(path);
             for (auto t : path)
               res = aut_->labelset()->concat(res, pair_->label_of(t));

@@ -17,7 +17,7 @@ namespace vcsn
 {
   template<typename Aut>
   std::unordered_map<state_t_of<Aut>,
-                     std::pair<state_t_of<Aut>,
+                     std::pair<unsigned,
                                transition_t_of<Aut>>>
   paths_ibfs(const Aut& aut, state_t_of<Aut> start)
   {
@@ -42,7 +42,13 @@ namespace vcsn
             if (marked.find(s) == marked.end())
               {
                 todo.push(s);
-                parent[s] = {p, t};
+                auto cur_p = parent.find(p);
+                unsigned cur_d;
+                if (cur_p == parent.end())
+                    cur_d = 1;
+                else
+                    cur_d = cur_p->second.first + 1;
+                parent[s] = {cur_d, t};
               }
           }
       }
