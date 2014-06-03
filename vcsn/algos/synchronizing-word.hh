@@ -3,12 +3,15 @@
 
 # include <algorithm>
 # include <iostream>
+# include <limits>
 # include <map>
 # include <queue>
 # include <set>
 # include <unordered_set>
 # include <utility>
 # include <vector>
+
+# include <boost/algorithm/string.hpp>
 
 # include <vcsn/algos/distance.hh>
 # include <vcsn/core/transition-map.hh>
@@ -296,7 +299,8 @@ namespace vcsn
       void init_todo()
       {
         for (auto s : pair_->states())
-          todo_.insert(s);
+          if (s != q0_)
+            todo_.insert(s);
       }
 
       std::vector<transition_t> recompose_path(state_t from)
@@ -314,6 +318,8 @@ namespace vcsn
 
       int dist(state_t s)
       {
+        if (s == q0_)
+          return 0;
         return paths_.find(s)->second.first;
       }
 
@@ -331,7 +337,9 @@ namespace vcsn
                 auto size = ntf.size();
                 require(0 < size, "automaton must be complete");
                 require(size < 2, "automaton must be deterministic");
-                new_todo.insert(pair_->dst_of(*ntf.begin()));
+                auto new_state = pair_->dst_of(*ntf.begin());
+                if (new_state != q0_)
+                  new_todo.insert(new_state);
               }
             todo_ = std::move(new_todo);
           }
@@ -350,35 +358,79 @@ namespace vcsn
         return paths_.size() == pair_->states().size() - 1;
       }
 
+      word_t greedy()
+      {
+        return synchro(true);
+      }
+
+      word_t synchroP()
+      {
+        return synchro(false, false);
+      }
+
+      word_t synchroPL()
+      {
+        return synchro(false, true);
+      }
+
+    private:
       // Greedy algorithm which finds the pair closest to q0 and synchronizes
       // it.
-      word_t greedy()
+      word_t synchro(bool greedy = true, bool reward = true)
       {
         word_t res;
         init_pair();
         require(pair_->states().size() == paths_.size() + 1,
                 "automaton is not synchronizing");
         init_todo();
-        while (1 < todo_.size() || todo_.find(q0_) == todo_.end())
+        while (0 < todo_.size())
           {
-            unsigned min = -1;
-            state_t s_min;
+            int min = std::numeric_limits<int>::max();
+            state_t s_min = 0;
             for (auto s : todo_)
-              if (s != q0_)
-                {
-                  int d = dist(s);
-                  if (d < min)
-                    {
-                      min = d;
-                      s_min = s;
-                    }
-                }
+              {
+                int d = greedy ? dist(s) : phi(s, reward);
+                if (d < min)
+                  {
+                    min = d;
+                    s_min = s;
+                  }
+              }
 
             std::vector<transition_t> path = recompose_path(s_min);
             apply_path(path);
             for (auto t : path)
               res = aut_->labelset()->concat(res, pair_->label_of(t));
           }
+        return res;
+      }
+
+      int delta(state_t p, std::vector<transition_t> w)
+      {
+        state_t np = p;
+        for (auto t : w)
+          {
+            auto l = pair_->label_of(t);
+            auto ntf = pair_->out(np, l);
+            auto size = ntf.size();
+            require(0 < size, "automaton must be complete");
+            require(size < 2, "automaton must be deterministic");
+            np = pair_->dst_of(*ntf.begin());
+          }
+
+        return dist(np) - dist(p);
+      }
+
+      int phi(state_t p, bool reward = false)
+      {
+        int res = 0;
+        auto w = recompose_path(p);
+        for (auto s: todo_)
+          if (s != p)
+            res += delta(s, w);
+
+        if (reward)
+          res += dist(p);
         return res;
       }
     };
@@ -421,8 +473,12 @@ namespace vcsn
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
   {
     vcsn::detail::synchronizer<Aut> sync(aut);
-    if (algo == "greedy")
+    if (boost::iequals(algo, "greedy"))
       return sync.greedy();
+    else if (boost::iequals(algo, "synchrop"))
+      return sync.synchroP();
+    else if (boost::iequals(algo, "synchropl"))
+      return sync.synchroPL();
     else
       raise("synchronizing_word: invalid algorithm: ", str_escape(algo));
   }
