@@ -473,7 +473,7 @@ namespace vcsn
   synchronizing_word(const Aut& aut, const std::string& algo = "greedy")
   {
     vcsn::detail::synchronizer<Aut> sync(aut);
-    if (boost::iequals(algo, "greedy"))
+    if (boost::iequals(algo, "greedy") || boost::iequals(algo, "eppstein"))
       return sync.greedy();
     else if (boost::iequals(algo, "synchrop"))
       return sync.synchroP();
