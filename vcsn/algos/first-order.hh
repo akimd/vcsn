@@ -56,11 +56,8 @@ namespace vcsn
 
       using polynomialset_t = ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
-      using monomial_t = typename polynomialset_t::monomial_t;
 
       using super_type = typename ratexpset_t::const_visitor;
-      using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
 
       constexpr static const char* me() { return "first_order"; }
 
@@ -648,8 +645,6 @@ namespace vcsn
       using ratexp_t = typename ratexpset_t::value_t;
 
       using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = labelset_t_of<context_t>;
-      using label_t = typename labelset_t::value_t;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
 
@@ -675,7 +670,7 @@ namespace vcsn
             = breaking_ ? split(rs_, ratexp)
             : polynomial_t{{ratexp, ws.one()}};
           for (const auto& p: initial)
-            // Also loads todo_ via state().
+            // Also loads todo_.
             res_->set_initial(p.first, p.second);
         }
         rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
