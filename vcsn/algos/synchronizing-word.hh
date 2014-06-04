@@ -14,11 +14,13 @@
 # include <boost/algorithm/string.hpp>
 
 # include <vcsn/algos/distance.hh>
+# include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
-# include <vcsn/dyn/automaton.hh> // dyn::make_automaton
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/label.hh>
+# include <vcsn/misc/map.hh>
 # include <vcsn/misc/pair.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/zip-maps.hh>
@@ -82,16 +84,19 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    class pairer
+    class pair_automaton_impl
+      : public automaton_decorator<
+          typename Aut::element_type::automaton_nocv_t>
     {
     public:
       using automaton_t =  Aut;
-      using automaton_nocv_t
-        = typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t =
+          typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
+      using super_t = automaton_decorator<automaton_nocv_t>;
 
     private:
       /// The semantics of the result states: ordered pair of input
@@ -99,31 +104,41 @@ namespace vcsn
       using pair_t = std::pair<state_t, state_t>;
 
     public:
-      pairer(const automaton_t& aut, bool keep_initials = false)
-        : aut_(aut)
-        , res_(make_shared_ptr<automaton_nocv_t>(aut->context()))
+      pair_automaton_impl(const automaton_t& aut, bool keep_initials = false)
+        : super_t(aut->context())
+        , input_(aut)
         , transition_map_(aut)
         , keep_initials_(keep_initials)
       {}
 
-      automaton_nocv_t pair()
+      static std::string sname()
       {
-        auto ctx = aut_->context();
+        return "pair_automaton<" + automaton_t::element_type::sname() + ">";
+      }
+
+      std::string vname(bool full = true) const
+      {
+        return "pair_automaton<" + input_->vname(full) + ">";
+      }
+
+      void pair()
+      {
+        auto ctx = input_->context();
         auto ws = ctx.weightset();
 
         if (!keep_initials_)
           {
-            q0_ = res_->new_state(); // q0 special state
-            for (auto l : aut_->labelset()->genset())
-              res_->add_transition(q0_, q0_, l, ws->one());
+            q0_ = this->new_state(); // q0 special state
+            for (auto l : input_->labelset()->genset())
+              this->add_transition(q0_, q0_, l, ws->one());
           }
         else
-          for (auto s : aut_->states())
-            pair_states_.emplace(std::make_pair(s, s), res_->new_state());
+          for (auto s : input_->states())
+            pair_states_.emplace(std::make_pair(s, s), this->new_state());
 
         // States are "ordered": (s1, s2) is defined only for s1 < s2.
         {
-          auto states = aut_->states();
+          auto states = input_->states();
           auto end = std::end(states);
           for (auto i1 = std::begin(states); i1 != end; ++i1)
             {
@@ -134,7 +149,7 @@ namespace vcsn
               for (++i2; i2 != end; ++i2)
                 // s1 < s2, no need for make_ordered_pair.
                 pair_states_.emplace(std::make_pair(*i1, *i2),
-                                     res_->new_state());
+                                     this->new_state());
             }
         }
 
@@ -145,7 +160,7 @@ namespace vcsn
 
             for (const auto& p : zip_maps(transition_map_[pstates.first],
                                           transition_map_[pstates.second]))
-              res_->add_transition(cstate,
+              this->add_transition(cstate,
                                   state_(std::get<0>(p.second).dst,
                                          std::get<1>(p.second).dst),
                                   p.first,
@@ -155,7 +170,6 @@ namespace vcsn
           }
 
         called_ = true;
-        return res_;
       }
 
       const std::unordered_map<pair_t, state_t>& get_map_pair() const
@@ -185,24 +199,24 @@ namespace vcsn
         return res;
       }
 
-      /// Print the origins.
-      static
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig)
+      bool state_has_name(state_t s) const
       {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n"
-             "    0 [label = \"q0\"]\n";
-        for (auto p: orig)
-          if (p.first != automaton_t::element_type::pre()
-              && p.first != automaton_t::element_type::post())
-            o << "    " << p.first - 2
-              << " [label = \""
-              << p.second.first - 2 << ", " << p.second.second - 2
-              << "\"]\n";
-        o << "*/\n";
+        return (s != super_t::pre()
+                && s != super_t::post()
+                && has(origins(), s));
+      }
+
+      std::ostream&
+      print_state_name(std::ostream& o, state_t ss,
+                       const std::string& fmt = "text") const
+      {
+        auto ps = origins().at(ss);
+        input_->print_state_name(o, ps.first, fmt);
+        o << ", ";
+        input_->print_state_name(o, ps.second, fmt);
         return o;
       }
+
 
     private:
       /// The state in the result automaton that corresponds to (s1,
@@ -219,9 +233,7 @@ namespace vcsn
       }
 
       /// Input automaton.
-      const automaton_t& aut_;
-      /// Result.
-      automaton_nocv_t res_;
+      automaton_t input_;
       /// Fast maps label -> (weight, label).
       using transition_map_t
         = transition_map<automaton_t, weightset_t_of<automaton_t>, true>;
@@ -233,17 +245,19 @@ namespace vcsn
     };
   }
 
+  template <typename Aut>
+  using pair_automaton
+    = std::shared_ptr<detail::pair_automaton_impl<Aut>>;
+
   /*------------------.
   | pair(automaton).  |
   `------------------*/
 
   template <typename Aut>
-  Aut pair(const Aut& aut, bool keep_initials = false)
+  pair_automaton<Aut> pair(const Aut& aut, bool keep_initials = false)
   {
-    detail::pairer<Aut> pair(aut, keep_initials);
-    auto res = pair.pair();
-    if (getenv("VCSN_ORIGINS"))
-      pair.print(std::cout, pair.origins());
+    auto res = make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
+    res->pair();
     return res;
   }
 
@@ -277,7 +291,7 @@ namespace vcsn
 
     private:
       automaton_t aut_;
-      typename automaton_t::element_type::automaton_nocv_t pair_;
+      pair_automaton<Aut> pair_;
       std::unordered_map<state_t, std::pair<unsigned, transition_t>> paths_;
       std::unordered_set<state_t> todo_;
       state_t q0_;
@@ -290,9 +304,8 @@ namespace vcsn
     private:
       void init_pair()
       {
-        detail::pairer<Aut> pobj(aut_);
-        pair_ = pobj.pair();
-        q0_ = pobj.get_q0();
+        pair_ = pair(aut_);
+        q0_ = pair_->get_q0();
         paths_ = paths_ibfs(pair_, q0_);
       }
 

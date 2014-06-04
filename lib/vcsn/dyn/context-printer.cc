@@ -100,6 +100,8 @@ namespace vcsn
         header("vcsn/algos/determinize.hh");
       else if (type == "mutable_automaton")
         header("vcsn/core/mutable-automaton.hh");
+      else if (type == "pair_automaton")
+        header("vcsn/algos/synchronizing-word.hh");
       else if (type == "product_automaton")
         header("vcsn/algos/product.hh");
       else if (type == "ratexp_automaton")

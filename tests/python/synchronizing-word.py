@@ -23,44 +23,41 @@ g = vcsn.automaton('''digraph
   1 -> 2 [label="b"]
   2 -> 3 [label="b"]
   3 -> 0 [label="b"]
-}
-''')
+}''')
 
 ## ---------------- ##
 ## automaton.pair.  ##
 ## ---------------- ##
 
-CHECK_EQ(vcsn.automaton('''
-digraph
+CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
   {
     node [shape = circle]
     0 [color = DimGray]
-    1 [color = DimGray]
-    2 [color = DimGray]
-    3 [color = DimGray]
-    4 [color = DimGray]
-    5 [color = DimGray]
-    6 [color = DimGray]
+    1 [label = "0, 1", shape = box, style = rounded] [color = DimGray]
+    2 [label = "0, 2", shape = box, style = rounded] [color = DimGray]
+    3 [label = "0, 3", shape = box, style = rounded] [color = DimGray]
+    4 [label = "1, 2", shape = box, style = rounded] [color = DimGray]
+    5 [label = "1, 3", shape = box, style = rounded] [color = DimGray]
+    6 [label = "2, 3", shape = box, style = rounded] [color = DimGray]
   }
-  0 -> 0 [label = "a, b"]
-  1 -> 0 [label = "a"]
-  1 -> 4 [label = "b"]
-  2 -> 4 [label = "a"]
-  2 -> 5 [label = "b"]
-  3 -> 1 [label = "b"]
-  3 -> 5 [label = "a"]
-  4 -> 4 [label = "a"]
-  4 -> 6 [label = "b"]
-  5 -> 2 [label = "b"]
-  5 -> 5 [label = "a"]
-  6 -> 3 [label = "b"]
-  6 -> 6 [label = "a"]
-}
-'''),
-         g.pair())
+  0 -> 0 [label = "a, b", color = DimGray]
+  1 -> 0 [label = "a", color = DimGray]
+  1 -> 4 [label = "b", color = DimGray]
+  2 -> 4 [label = "a", color = DimGray]
+  2 -> 5 [label = "b", color = DimGray]
+  3 -> 1 [label = "b", color = DimGray]
+  3 -> 5 [label = "a", color = DimGray]
+  4 -> 4 [label = "a", color = DimGray]
+  4 -> 6 [label = "b", color = DimGray]
+  5 -> 2 [label = "b", color = DimGray]
+  5 -> 5 [label = "a", color = DimGray]
+  6 -> 3 [label = "b", color = DimGray]
+  6 -> 6 [label = "a", color = DimGray]
+}''',
+         str(g.pair()))
 
 ## ------------------------------ ##
 ## automaton.is_synchronized_by.  ##
@@ -90,8 +87,7 @@ digraph
   2 -> F2
   2 -> 1 [label = "a"]
   2 -> 2 [label = "b"]
-}
-''')
+}''')
 
 CHECK_EQ(not_synchronizing.is_synchronizing(), False)
 CHECK_EQ(g.is_synchronizing(), True)

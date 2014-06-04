@@ -14,6 +14,7 @@ namespace vcsn
       std::string w = word();
       if (w == "determinized"
           || w == "mutable"
+          || w == "pair"
           || w == "product"
           || w == "ratexp"
           || w == "transpose")
@@ -217,6 +218,7 @@ namespace vcsn
     {
       std::shared_ptr<automaton> res = nullptr;
       if (prefix == "determinized"
+          || prefix == "pair"
           || prefix == "ratexp"
           || prefix == "transpose")
         {
