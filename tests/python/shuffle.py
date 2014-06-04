@@ -112,7 +112,7 @@ CHECK_EQ('''digraph
   }
   {
     node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
+    0 [label = "a*, (<-1>a)*", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> F0

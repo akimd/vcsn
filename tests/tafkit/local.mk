@@ -12,7 +12,6 @@
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 %C%_TESTS =                                     \
-  %D%/derivation.chk                            \
   %D%/efsm.chk                                  \
   %D%/lift.chk                                  \
   %D%/transpose.chk
@@ -20,16 +19,9 @@
 dist_TESTS += $(%C%_TESTS)
 
 EXTRA_DIST +=                                   \
-  %D%/derivation.dir/a?-dt.gv                   \
-  %D%/derivation.dir/e1-dt.gv                   \
-  %D%/derivation.dir/e2-dt.gv                   \
-  %D%/derivation.dir/e2-dt-breaking.gv          \
-  %D%/derivation.dir/h3-dt.gv                   \
-  %D%/derivation.dir/h3-dt-breaking.gv          \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/binary.efsm
 
-%D%/derivation.log:  $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run

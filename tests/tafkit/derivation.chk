@@ -30,37 +30,11 @@ E1t="(?@lal_char(ab)_q)$E1"
 ## derived_term(exp).  ##
 ## ------------------- ##
 
-export VCSN_ORIGINS=1
-run 0 -f $medir/e1-dt.gv -vcsn derived-term -Ee "$E1t"
-unset VCSN_ORIGINS
-
-# Make sure that "\e" is properly escaped.
-export VCSN_ORIGINS=1
-run 0 -f $medir/'a?-dt'.gv -vcsn derived-term -Ee "a?"
-unset VCSN_ORIGINS
 
 
 ###########################
 ## Breaking derivation.  ##
 ###########################
-
-
-## -------------------------- ##
-## breaking-derivation(exp).  ##
-## -------------------------- ##
-
-# check_br RAT-EXP STRING RESULT
-# ------------------------------
-# Check that the breaking derivation of RAT-EXP by STRING is RESULT.
-check_br ()
-{
-  local re
-  case $1 in
-    ('(?@'*) re=$1;;
-    (*)      re="(?@lal_char(abc)_ratexpset<lal_char(xyz)_z>)$1";;
-  esac
-  run 0 "$3" -vcsn derivation -Ee "$re" "$2" 1
-}
 
 
 ## --------------------- ##
@@ -75,10 +49,6 @@ F2='a*+b*'
 E2="($F2)(a($F2))"
 E2t="(?@lal_char(ab)_b)$E2"
 
-# Example 3.
-export VCSN_ORIGINS=1
-run 0 -f $medir/e2-dt.gv -vcsn derived-term -Ee "$E2t"
-unset VCSN_ORIGINS
 
 # Example 5.
 export VCSN_ORIGINS=1

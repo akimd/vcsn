@@ -1,10 +1,3 @@
-/* Origins.
-    node [shape = box, style = rounded]
-    0 [label = "a*a(a*+b*)"]
-    1 [label = "b*a(a*+b*)"]
-    2 [label = "a*"]
-    3 [label = "b*"]
-*/
 digraph
 {
   vcsn_context = "lal_char(ab)_b"
@@ -18,10 +11,10 @@ digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
-    3
+    0 [label = "a*a(a*+b*)", shape = box, style = rounded]
+    1 [label = "b*a(a*+b*)", shape = box, style = rounded]
+    2 [label = "a*", shape = box, style = rounded]
+    3 [label = "b*", shape = box, style = rounded]
   }
   I0 -> 0
   I1 -> 1

@@ -123,13 +123,16 @@ check('(<x>a)*(<y>b)*', 'aabb', '<xxyy>(<y>b)*')
 # EAT, Example 4.3.
 E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
-E1t="(?@lal_char(ab)_q)"+E1
+E1t = vcsn.context('lal_char(ab)_q').ratexp(E1)
 check(E1t,  'a',  "<1/3>a*"+E1)
 check(E1t,  'b',  "<2/3>b*"+E1)
 check(E1t, 'aa',  "<4/9>a*"+E1)
 check(E1t, 'ab',  "<2/9>b*"+E1)
 check(E1t, 'ba',  "<2/9>a*"+E1)
 check(E1t, 'bb', "<10/9>b*"+E1)
+
+CHECK_EQ(open(medir + '/e1-dt.gv').read().strip(),
+         str(E1t.derived_term()))
 
 
 ###########################
@@ -192,9 +195,8 @@ check(E2t, 'ba', F2)
 check(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 3.
-#export VCSN_ORIGINS=1
-#run 0 -f $medir/e2-dt.gv -vcsn derived-term -Ee E2t
-#unset VCSN_ORIGINS
+CHECK_EQ(open(medir + '/e2-dt.gv').read().strip(),
+         str(E2t.derived_term()))
 
 # FIXME: Support for polynomials.
 # Example 4.
@@ -210,15 +212,18 @@ check_br(E2t, 'aa', "a* + b* + a*a({})".format(F2))
 check_br(E2t, 'ab', 'b*')
 check_br(E2t, 'ba', "a* + b*")
 check_br(E2t, 'bb', "b*a({})".format(F2))
-#export VCSN_ORIGINS=1
-#run 0 -f $medir/e2-dt-breaking.gv -vcsn derived-term -Ee E2t 1
-#unset VCSN_ORIGINS
+
+# Example 6.
+CHECK_EQ(open(medir + '/e2-dt-breaking.gv').read().strip(),
+         str(E2t.derived_term(True)))
 
 # Figure 3.
-#export VCSN_ORIGINS=1
-#run 0 -f $medir/h3-dt.gv -vcsn derived-term -Ee 'a(b+c+d)'
-#run 0 -f $medir/h3-dt-breaking.gv -vcsn derived-term -Ee 'a(b+c+d)' 1
-#unset VCSN_ORIGINS
+fig3 = vcsn.context('lal_char(abcd)_b').ratexp('a(b+c+d)')
+CHECK_EQ(open(medir + '/h3-dt.gv').read().strip(),
+         str(fig3.derived_term()))
+CHECK_EQ(open(medir + '/h3-dt-breaking.gv').read().strip(),
+         str(fig3.derived_term(True)))
+
 
 
 

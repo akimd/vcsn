@@ -105,7 +105,7 @@ check('weighted',   smallweighted, smallweighted_exp)
 ## subset of its old value.
 alreadyminimal = vcsn.context('lal_char(ab)_b') \
                      .ratexp("a+ba") \
-                     .derived_term()
+                     .derived_term().strip()
 check('brzozowski', alreadyminimal, alreadyminimal)
 check('moore',      alreadyminimal, alreadyminimal)
 check('signature',  alreadyminimal, alreadyminimal)

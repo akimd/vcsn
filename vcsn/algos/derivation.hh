@@ -1,14 +1,11 @@
 #ifndef VCSN_ALGOS_DERIVATION_HH
 # define VCSN_ALGOS_DERIVATION_HH
 
-# include <stack>
-# include <map>
-# include <unordered_map>
-
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/core/ratexp-automaton.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/polynomial.hh>
@@ -43,7 +40,6 @@ namespace vcsn
 
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
-      using inner_t = typename super_type::inner_t;
 
       constexpr static const char* me() { return "derivation"; }
 
@@ -294,61 +290,20 @@ namespace vcsn
       using ratexp_t = typename ratexpset_t::value_t;
 
       using context_t = context_t_of<ratexpset_t>;
-      using labelset_t = labelset_t_of<context_t>;
-      using label_t = typename labelset_t::value_t;
       using weightset_t = weightset_t_of<context_t>;
-      using weight_t = weight_t_of<context_t>;
 
-      using automaton_t = mutable_automaton<context_t>;
+      using automaton_t = ratexp_automaton<mutable_automaton<context_t>>;
       using state_t = state_t_of<automaton_t>;
 
       /// Symbolic states: the derived terms are polynomials of ratexps.
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      struct ratexp_hash
-      {
-        size_t operator()(const ratexp_t& r) const
-        {
-          return ratexpset_t::hash(r);
-        }
-      };
-
-      struct ratexp_equals
-      {
-        bool operator()(const ratexp_t& lhs, const ratexp_t& rhs) const
-        {
-          return ratexpset_t::equals(lhs, rhs);
-        }
-      };
-
-      /// Symbolic states to state handlers.
-      using smap = std::unordered_map<ratexp_t, state_t,
-                                      ratexp_hash, ratexp_equals>;
-
       derived_termer(const ratexpset_t& rs, bool breaking = false)
         : rs_(rs)
         , breaking_(breaking)
         , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
-
-      /// The state for ratexp \a r.
-      /// If this is a new state, schedule it for visit.
-      state_t state(const ratexp_t& r)
-      {
-        state_t dst;
-        auto i = map_.find(r);
-        if (i == end(map_))
-          {
-            dst = res_->new_state();
-            res_->set_final(dst, constant_term(rs_, r));
-            map_[r] = dst;
-            todo_.push(r);
-          }
-        else
-          dst = i->second;
-        return dst;
-      }
 
       automaton_t operator()(const ratexp_t& ratexp)
       {
@@ -359,56 +314,27 @@ namespace vcsn
             = breaking_ ? split(rs_, ratexp)
             : polynomial_t{{ratexp, ws.one()}};
           for (const auto& p: initial)
-            // Also loads todo_ via state().
-            res_->set_initial(state(p.first), p.second);
+            // Also loads todo_.
+            res_->set_initial(p.first, p.second);
         }
 
         const auto& ls = rs_.labelset()->genset();
-        while (!todo_.empty())
+        while (!res_->todo_.empty())
           {
-            ratexp_t r = todo_.top();
-            todo_.pop();
-            state_t src = map_[r];
+            ratexp_t src = res_->todo_.top();
+            auto s = res_->state(src);
+            res_->todo_.pop();
+            res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
-              for (const auto& m: derivation(rs_, r, l, breaking_))
-                res_->add_transition(src, state(m.first), l, m.second);
+              for (const auto& m: derivation(rs_, src, l, breaking_))
+                res_->add_transition(s, m.first, l, m.second);
           }
         return std::move(res_);
       }
 
-      /// Ordered map: state -> its derived term.
-      using origins_t = std::map<state_t, ratexp_t>;
-      origins_t
-      origins() const
-      {
-        origins_t res;
-        for (const auto& p: map_)
-          res[p.second] = p.first;
-        return res;
-      }
-
-      /// Print the origins.
-      std::ostream&
-      print(std::ostream& o, const origins_t& orig) const
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p : orig)
-          o << "    " << p.first - 2
-            << " [label = \""
-            << str_escape(format(rs_, p.second))
-            << "\"]\n";
-        o << "*/\n";
-        return o;
-      }
-
     private:
-      /// List of states to visit.
-      std::stack<ratexp_t> todo_;
       /// The ratexp's set.
       ratexpset_t rs_;
-      /// ratexp -> state.
-      smap map_;
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.
@@ -419,15 +345,12 @@ namespace vcsn
   /// Derive a ratexp wrt to a string.
   template <typename RatExpSet>
   inline
-  mutable_automaton<context_t_of<RatExpSet>>
+  ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
   derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
                bool breaking = false)
   {
     detail::derived_termer<RatExpSet> dt{rs, breaking};
-    auto res = dt(r);
-    if (getenv("VCSN_ORIGINS"))
-      dt.print(std::cout, dt.origins());
-    return res;
+    return dt(r);
   }
 
   namespace dyn

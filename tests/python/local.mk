@@ -100,6 +100,11 @@ EXTRA_DIST +=                                   \
   %D%/compose.dir/left.gv                       \
   %D%/compose.dir/result.gv                     \
   %D%/compose.dir/right.gv                      \
+  %D%/derivation.dir/e1-dt.gv                   \
+  %D%/derivation.dir/e2-dt.gv                   \
+  %D%/derivation.dir/e2-dt-breaking.gv          \
+  %D%/derivation.dir/h3-dt.gv                   \
+  %D%/derivation.dir/h3-dt-breaking.gv          \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/deterministic-det-0.gv    \
@@ -146,6 +151,7 @@ EXTRA_DIST +=                                   \
 %D%/aut-to-exp.log:	 $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/automaton.log:	 $(wildcard $(srcdir)/%D%/automaton.dir/*)
 %D%/compose.log:	 $(wildcard $(srcdir)/%D%/compose/*)
+%D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:	 $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/factory.log:	 $(wildcard $(srcdir)/%D%/factory.dir/*)
