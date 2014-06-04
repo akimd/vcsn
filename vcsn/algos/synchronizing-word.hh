@@ -338,17 +338,22 @@ namespace vcsn
         return paths_.find(s)->second.first;
       }
 
+      state_t dest_state(state_t s, const label_t& l)
+      {
+        auto ntf = pair_->out(s, l);
+        auto size = ntf.size();
+        require(0 < size, "automaton must be complete");
+        require(size < 2, "automaton must be deterministic");
+        return pair_->dst_of(*ntf.begin());
+      }
+
       void apply_label(const label_t& label)
       {
         res_ = aut_->labelset()->concat(res_, label);
         std::unordered_set<state_t> new_todo;
         for (auto s : todo_)
           {
-            auto ntf = pair_->out(s, label);
-            auto size = ntf.size();
-            require(0 < size, "automaton must be complete");
-            require(size < 2, "automaton must be deterministic");
-            auto new_state = pair_->dst_of(*ntf.begin());
+            auto new_state = dest_state(s, label);
             if (new_state != q0_)
               new_todo.insert(new_state);
           }
@@ -414,18 +419,11 @@ namespace vcsn
         return res_;
       }
 
-      int delta(state_t p, std::vector<transition_t> w)
+      int delta(state_t p, const std::vector<transition_t>& w)
       {
         state_t np = p;
         for (auto t : w)
-          {
-            auto l = pair_->label_of(t);
-            auto ntf = pair_->out(np, l);
-            auto size = ntf.size();
-            require(0 < size, "automaton must be complete");
-            require(size < 2, "automaton must be deterministic");
-            np = pair_->dst_of(*ntf.begin());
-          }
+          np = dest_state(np, pair_->label_of(t));
 
         return dist(np) - dist(p);
       }
