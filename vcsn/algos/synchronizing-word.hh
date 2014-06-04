@@ -285,6 +285,7 @@ namespace vcsn
       using word_t = typename labelset_t_of<automaton_t>::word_t;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
+      using label_t = label_t_of<automaton_t>;
 
     private:
       automaton_t aut_;
@@ -292,6 +293,7 @@ namespace vcsn
       std::unordered_map<state_t, std::pair<unsigned, transition_t>> paths_;
       std::unordered_set<state_t> todo_;
       state_t q0_;
+      word_t res_;
 
     public:
       synchronizer(const automaton_t& aut)
@@ -306,8 +308,11 @@ namespace vcsn
         paths_ = paths_ibfs(pair_, q0_);
       }
 
-      void init_todo()
+      void init_synchro()
       {
+        init_pair();
+        require(pair_->states().size() == paths_.size() + 1,
+                "automaton is not synchronizing");
         for (auto s : pair_->states())
           if (s != q0_)
             todo_.insert(s);
@@ -333,26 +338,29 @@ namespace vcsn
         return paths_.find(s)->second.first;
       }
 
+      void apply_label(const label_t& label)
+      {
+        res_ = aut_->labelset()->concat(res_, label);
+        std::unordered_set<state_t> new_todo;
+        for (auto s : todo_)
+          {
+            auto ntf = pair_->out(s, label);
+            auto size = ntf.size();
+            require(0 < size, "automaton must be complete");
+            require(size < 2, "automaton must be deterministic");
+            auto new_state = pair_->dst_of(*ntf.begin());
+            if (new_state != q0_)
+              new_todo.insert(new_state);
+          }
+        todo_ = std::move(new_todo);
+      }
+
       // "Apply" a word to the set of active states (for each state, for each
       // label, perform s = d(s))
       void apply_path(const std::vector<transition_t>& path)
       {
         for (auto t : path)
-          {
-            auto l = pair_->label_of(t);
-            std::unordered_set<state_t> new_todo;
-            for (auto s : todo_)
-              {
-                auto ntf = pair_->out(s, l);
-                auto size = ntf.size();
-                require(0 < size, "automaton must be complete");
-                require(size < 2, "automaton must be deterministic");
-                auto new_state = pair_->dst_of(*ntf.begin());
-                if (new_state != q0_)
-                  new_todo.insert(new_state);
-              }
-            todo_ = std::move(new_todo);
-          }
+          apply_label(pair_->label_of(t));
       }
 
     public:
@@ -370,36 +378,30 @@ namespace vcsn
 
       word_t greedy()
       {
-        return synchro(true);
+        return synchro(&synchronizer::dist);
       }
 
       word_t synchroP()
       {
-        return synchro(false, false);
+        return synchro(&synchronizer::phi_1);
       }
 
       word_t synchroPL()
       {
-        return synchro(false, true);
+        return synchro(&synchronizer::phi_2);
       }
 
     private:
-      // Greedy algorithm which finds the pair closest to q0 and synchronizes
-      // it.
-      word_t synchro(bool greedy = true, bool reward = true)
+      word_t synchro(int (synchronizer::*heuristic)(state_t))
       {
-        word_t res;
-        init_pair();
-        require(pair_->states().size() == paths_.size() + 1,
-                "automaton is not synchronizing");
-        init_todo();
+        init_synchro();
         while (0 < todo_.size())
           {
             int min = std::numeric_limits<int>::max();
             state_t s_min = 0;
             for (auto s : todo_)
               {
-                int d = greedy ? dist(s) : phi(s, reward);
+                int d = (this->*(heuristic))(s);
                 if (d < min)
                   {
                     min = d;
@@ -407,12 +409,9 @@ namespace vcsn
                   }
               }
 
-            std::vector<transition_t> path = recompose_path(s_min);
-            apply_path(path);
-            for (auto t : path)
-              res = aut_->labelset()->concat(res, pair_->label_of(t));
+            apply_path(recompose_path(s_min));
           }
-        return res;
+        return res_;
       }
 
       int delta(state_t p, std::vector<transition_t> w)
@@ -431,17 +430,19 @@ namespace vcsn
         return dist(np) - dist(p);
       }
 
-      int phi(state_t p, bool reward = false)
+      int phi_1(state_t p)
       {
         int res = 0;
         auto w = recompose_path(p);
         for (auto s: todo_)
           if (s != p)
             res += delta(s, w);
-
-        if (reward)
-          res += dist(p);
         return res;
+      }
+
+      int phi_2(state_t p)
+      {
+          return phi_1(p) + dist(p);
       }
     };
   }
