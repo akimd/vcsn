@@ -6,6 +6,7 @@
 
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/fwd.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/weight.hh>
 
