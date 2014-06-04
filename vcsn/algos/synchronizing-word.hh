@@ -396,8 +396,15 @@ namespace vcsn
         return synchro(&synchronizer::phi_2);
       }
 
+      word_t fastsynchro()
+      {
+        return fastsynchro_();
+      }
+
     private:
-      word_t synchro(int (synchronizer::*heuristic)(state_t))
+      using heuristic_t = auto (synchronizer::*)(state_t) -> int;
+
+      word_t synchro(heuristic_t heuristic)
       {
         init_synchro();
         while (0 < todo_.size())
@@ -419,12 +426,61 @@ namespace vcsn
         return res_;
       }
 
+      word_t fastsynchro_()
+      {
+        init_synchro();
+
+        // The drawback of this algorithm is that it does not guarantee us to
+        // converge, so we this to counter prevent potential infinite loops.
+        unsigned count = 0;
+        while (0 < todo_.size())
+          {
+            // compute lmin = arg min { phi_3(l) } forall l in labelset
+            label_t lmin;
+            int min = std::numeric_limits<int>::max();
+            for (const auto& l : pair_->labelset()->genset())
+              {
+                int cur_min = phi_3(l);
+                if (cur_min < min)
+                  {
+                    min = cur_min;
+                    lmin = l;
+                  }
+              }
+
+            unsigned sq_bound = aut_->states().size();
+            if (min < 0 && count++ < (sq_bound * sq_bound))
+              apply_label(lmin);
+            else
+              {
+                // fallback on the phi_2 heuristic, with a size restriction.
+                int count = 0;
+                size_t t = todo_.size();
+                int bound = std::min(aut_->states().size(), (t * t - t / 2));
+                int min = std::numeric_limits<int>::max();
+                state_t s_min = 0;
+                for (auto s : todo_)
+                  {
+                    if (count++ >= bound)
+                      break;
+                    int d = phi_2(s);
+                    if (d < min)
+                      {
+                        min = d;
+                        s_min = s;
+                      }
+                  }
+                apply_path(recompose_path(s_min));
+              }
+          }
+        return res_;
+      }
+
       int delta(state_t p, const std::vector<transition_t>& w)
       {
         state_t np = p;
         for (auto t : w)
           np = dest_state(np, pair_->label_of(t));
-
         return dist(np) - dist(p);
       }
 
@@ -440,7 +496,15 @@ namespace vcsn
 
       int phi_2(state_t p)
       {
-          return phi_1(p) + dist(p);
+        return phi_1(p) + dist(p);
+      }
+
+      int phi_3(const label_t& l)
+      {
+        int res = 0;
+        for (auto s: todo_)
+          res += dist(dest_state(s, l)) - dist(s);
+        return res;
       }
     };
   }
@@ -488,6 +552,8 @@ namespace vcsn
       return sync.synchroP();
     else if (boost::iequals(algo, "synchropl"))
       return sync.synchroPL();
+    else if (boost::iequals(algo, "fastsynchro"))
+      return sync.fastsynchro();
     else
       raise("synchronizing_word: invalid algorithm: ", str_escape(algo));
   }
