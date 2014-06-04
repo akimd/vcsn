@@ -5,6 +5,7 @@
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/product.hh>
+# include <vcsn/algos/strip.hh>
 # include <vcsn/dyn/fwd.hh>
 
 namespace vcsn
@@ -48,18 +49,17 @@ namespace vcsn
   `-----------------------------------*/
 
   /// An automaton that computes weights of \a lhs, but not by \a rhs.
-  /// The return type is really the Lhs one.
   template <typename Lhs, typename Rhs>
-  Lhs
+  typename Lhs::element_type::automaton_nocv_t
   difference(const Lhs& lhs, const Rhs& rhs)
   {
     // Meet complement()'s requirements.
-    Rhs r = rhs;
+    auto r = strip(rhs);
     if (!is_deterministic(r))
-      r = determinize(r, true)->strip();
+      r = strip(determinize(r, true));
     else if (!is_complete(r))
       r = complete(r);
-    return product(lhs, complement(r))->strip();
+    return strip(product(lhs, complement(r)));
   }
 
   namespace dyn

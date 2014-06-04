@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_STAR_HH
 # define VCSN_ALGOS_STAR_HH
 
+# include <vcsn/algos/copy.hh>
+# include <vcsn/algos/standard.hh> // is_standard
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/misc/raise.hh> // require
@@ -56,7 +58,7 @@ namespace vcsn
 
   /// Star of a standard automaton.
   template <typename Aut>
-  Aut
+  typename Aut::element_type::automaton_nocv_t
   star(const Aut& aut)
   {
     auto res = copy(aut);

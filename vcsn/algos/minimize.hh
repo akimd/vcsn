@@ -16,17 +16,17 @@ namespace vcsn
   template <typename Aut>
   inline
   typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value,
-                          Aut>::type
+                          typename Aut::element_type::automaton_nocv_t>::type
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "brzozowski")
-      return minimize_brzozoski(a);
+      return minimize_brzozoski(strip(a));
     else if (algo == "moore")
-      return minimize_moore(a);
+      return minimize_moore(strip(a));
     else if (algo == "signature")
-      return minimize_signature(a);
+      return minimize_signature(strip(a));
     else if (algo == "weighted")
-      return minimize_weighted(a); // FIXME: fix
+      return minimize_weighted(strip(a)); // FIXME: fix
     else
       raise("minimize: invalid algorithm: ", str_escape(algo));
   }
@@ -34,11 +34,11 @@ namespace vcsn
   template <typename Aut>
   inline
   typename std::enable_if<!std::is_same<weight_t_of<Aut>, bool>::value,
-                          Aut>::type
+                          typename Aut::element_type::automaton_nocv_t>::type
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "weighted")
-      return minimize_weighted(a); // FIXME: fix
+      return minimize_weighted(strip(a)); // FIXME: fix
     else
       raise("minimize: invalid algorithm: ", str_escape(algo));
   }

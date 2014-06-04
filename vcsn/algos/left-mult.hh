@@ -1,6 +1,8 @@
 #ifndef VCSN_ALGOS_LEFT_MULT_HH
 # define VCSN_ALGOS_LEFT_MULT_HH
 
+# include <vcsn/algos/copy.hh>
+# include <vcsn/algos/standard.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh>
@@ -83,7 +85,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  typename Aut::element_type::automaton_nocv_t
   left_mult(const weight_t_of<Aut>& w, const Aut& aut)
   {
     auto res = copy(aut);
@@ -161,7 +163,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  typename Aut::element_type::automaton_nocv_t
   right_mult(const Aut& aut, const weight_t_of<Aut>& w)
   {
     auto res = copy(aut);
