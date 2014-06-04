@@ -23,6 +23,16 @@ namespace vcsn
   using mutable_automaton
     = std::shared_ptr<detail::mutable_automaton_impl<Context>>;
 
+  // vcsn/core/ratexp-automaton.hh.
+  namespace detail
+  {
+    template <typename Aut>
+    struct ratexp_automaton_impl;
+  }
+  template <typename Aut>
+  using ratexp_automaton
+    = std::shared_ptr<detail::ratexp_automaton_impl<Aut>>;
+
 } // namespace vcsn
 
 #endif // !VCSN_CORE_FWD_HH

@@ -13,9 +13,9 @@ namespace vcsn
     {
       std::string w = word();
       if (w == "determinized"
-          || w == "linear"
           || w == "mutable"
           || w == "product"
+          || w == "ratexp"
           || w == "transpose")
         return make_automaton(w);
       else if (w == "context")
@@ -217,7 +217,7 @@ namespace vcsn
     {
       std::shared_ptr<automaton> res = nullptr;
       if (prefix == "determinized"
-          || prefix == "linear"
+          || prefix == "ratexp"
           || prefix == "transpose")
         {
           eat(is_, "_automaton<");

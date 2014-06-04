@@ -98,14 +98,14 @@ namespace vcsn
       auto type = t.get_type();
       if (type == "determinized_automaton")
         header("vcsn/algos/determinize.hh");
-      else if (type == "linear_automaton")
-        header("vcsn/algos/first-order.hh");
       else if (type == "mutable_automaton")
         header("vcsn/core/mutable-automaton.hh");
-      else if (type == "transpose_automaton")
-        header("vcsn/algos/transpose.hh");
       else if (type == "product_automaton")
         header("vcsn/algos/product.hh");
+      else if (type == "ratexp_automaton")
+        header("vcsn/core/ratexp-automaton.hh");
+      else if (type == "transpose_automaton")
+        header("vcsn/algos/transpose.hh");
       else
         raise("unsupported automaton type: ", type);
 
