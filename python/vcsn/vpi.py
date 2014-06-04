@@ -214,13 +214,14 @@ def right_mult(a, w):
 def quotient(a):
     return a.strip().trim().minimize("weighted")
 
+# FIXME: trimness should *not* be a precodition for minimize, nor for quotient. [Discuss?]
 def minimize(a):
-    a = a.strip()
+    a = a.strip().trim()
     if not is_lal(a):
         raise Exception("automaton on non-letter labels")
-    if not is_trim(a):
-        raise Exception("non-trim automaton")
-    if not is_sequential(a):
+    # FIXME: fail with a nicer error message in case of non-lal or
+    # non-B, instead of letting moore fail.
+    if not is_deterministic(a):
         raise Exception("non-deterministic automaton")
     return a.minimize("moore")
 
@@ -245,6 +246,9 @@ def info(x):
 
 def coquotient(a):
   return transpose(quotient(transpose(a)))
+
+def cominimize(a):
+  return transpose(minimize(transpose(a)))
 
 def codeterminize(a):
   return transpose(determinize(transpose(a)))
