@@ -603,3 +603,80 @@ res = r'''digraph
 CHECK_EQ(res, str(lhs & rhs & third))
 check_equivalent(vcsn.automaton(res).proper(),
                  vcsn.context("lal_char(b)_b").ratexp("b*").standard())
+
+###############################################
+## Check mixed epsilon and letters going out ##
+###############################################
+
+
+a1 = vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lan<lal_char(abc)>_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+    F5
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    5
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  1 -> F1
+  0 -> 5 [label = "\\e"]
+  5 -> F5
+}''')
+
+
+a2 = vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lan<lal_char(abc)>_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+    F5
+  }
+  {
+    node [shape = circle]
+    0
+    5
+  }
+  I0 -> 0
+  0 -> 5 [label = "\\e"]
+  5 -> 6 [label = "a"]
+  6 -> F6
+}''')
+
+res = r'''digraph
+{
+  vcsn_context = "lan<lal_char(abc)>_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F4
+  }
+  {
+    node [shape = circle]
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "2, 0", shape = box, style = rounded] [color = DimGray]
+    2 [label = "0, 1", shape = box, style = rounded]
+    3 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
+    4 [label = "1, 2", shape = box, style = rounded]
+  }
+  I0 -> 0
+  0 -> 1 [label = "\\e", color = DimGray]
+  0 -> 2 [label = "\\e"]
+  1 -> 3 [label = "\\e", color = DimGray]
+  2 -> 4 [label = "a"]
+  4 -> F4
+}'''
+
+CHECK_EQ(res, str(vcsn.automaton._product([a1, a2])))
