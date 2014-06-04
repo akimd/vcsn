@@ -163,10 +163,7 @@ namespace vcsn
               this->add_transition(cstate,
                                   state_(std::get<0>(p.second).dst,
                                          std::get<1>(p.second).dst),
-                                  p.first,
-                                  // FIXME: Adding weights is really suspicious.
-                                  ws->add(std::get<0>(p.second).wgt,
-                                          std::get<1>(p.second).wgt));
+                                  p.first, ws->one());
           }
 
         called_ = true;
