@@ -56,10 +56,11 @@ namespace vcsn
         return res;
       }
 
-      /// Ensure a directory exists.
-      void ensure_directory(const std::string& dir)
+      /// Ensure that parent directories exist.
+      void ensure_parent_directory(const std::string& path)
       {
-        boost::filesystem::create_directories(dir);
+        boost::filesystem::path p(path);
+        boost::filesystem::create_directories(p.parent_path());
       }
 
       /// Append ".PID".
@@ -102,6 +103,7 @@ namespace vcsn
         /// "BASE.PID.cc" in its cache.
         void print(const std::string& base)
         {
+          ensure_parent_directory(base);
           // For atomicity, generate a file with PID, then mv it
           // (which is atomic on any decent OS/FS).
           auto tmp = tmpname(base);
@@ -145,8 +147,22 @@ namespace vcsn
           auto res = xgetenv("VCSN_PLUGINDIR",
                              xgetenv("VCSN_HOME", "~/.vcsn") + "/plugins");
           res = expand_tilda(res);
-          ensure_directory(res);
           return res + "/";
+        }
+
+        /// Split file names that are too long into something with '/'
+        /// inserted to avoid file name limits.
+        std::string split(const std::string& s) const
+        {
+          std::string res;
+          const size_t size = 200;
+          for (unsigned i = 0; i < s.length(); i += size)
+            {
+              if (i)
+                res += '/';
+              res += s.substr(i, size);
+            }
+          return res;
         }
 
         /// Compile and load a C++ file.
@@ -182,7 +198,7 @@ namespace vcsn
         void compile(const std::string& ctx)
         {
           printer_.header("vcsn/ctx/instantiate.hh");
-          std::string base = plugindir() + detail::context_base::sname(ctx);
+          std::string base = plugindir() + "contexts/" + split(detail::context_base::sname(ctx));
           os << "using ctx_t =" << incendl;
           print_type(ctx);
           os << ';' << decendl
@@ -202,7 +218,7 @@ namespace vcsn
         {
           printer_.header("vcsn/misc/name.hh"); // ssignature
           printer_.header_algo(name);
-          std::string base = plugindir() + name + "(" + sig.to_string() + ")";
+          std::string base = plugindir() + "algos/" + name + "/" + split(sig.to_string());
           int count = 0;
           std::string types;
           for (const auto& s: sig)
