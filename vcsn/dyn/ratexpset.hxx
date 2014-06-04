@@ -125,8 +125,8 @@ namespace dyn
     {
       using labelset_t = labelset_t_of<ratexpset_t>;
       return letter_class_<labelset_t>(cs, accept,
-                                     std::is_same<labelset_t, vcsn::oneset>{},
-                                     std::integral_constant<bool,
+                                       std::is_same<labelset_t, vcsn::oneset>{},
+                                       std::integral_constant<bool,
                                        labelset_t::is_ratexpset()>{});
     }
 
@@ -134,10 +134,11 @@ namespace dyn
     template <typename LabelSet_>
     inline
     auto
-    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
-                                              bool accept,
-                                              std::false_type,
-                                              std::true_type) const -> value_t
+    ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t&,
+                                                bool,
+                                                std::false_type,
+                                                std::true_type) const
+      -> value_t
     {
       raise("not implemented");
     }
@@ -147,9 +148,10 @@ namespace dyn
     inline
     auto
     ratexpset_wrapper<RatExpSet>::letter_class_(const letter_class_t& chars,
-                                              bool accept,
-                                              std::false_type,
-                                              std::false_type) const -> value_t
+                                                bool accept,
+                                                std::false_type,
+                                                std::false_type) const
+      -> value_t
     {
       auto ls = *rs_.labelset();
 

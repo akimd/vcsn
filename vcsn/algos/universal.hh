@@ -62,8 +62,7 @@ namespace vcsn
         pstate_t univers_states(intersection_closure(transp_states));
 
         // The universal automaton.
-        automaton_t res
-          = make_shared_ptr<automaton_t>(aut->context());
+        automaton_t res = make_shared_ptr<automaton_t>(aut->context());
 
         // The final states of aut.
         std::set<state_t> automaton_finals;
