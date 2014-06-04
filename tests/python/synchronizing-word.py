@@ -142,3 +142,44 @@ except RuntimeError:
     PASS()
 else:
     FAIL('should raise an exception: automaton is not synchronizing')
+
+
+synchro_regression = vcsn.automaton('''
+digraph
+{
+  vcsn_context = "lal_char(ab)_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F3
+  }
+  {
+    node [shape = circle]
+    0 [color = DimGray]
+    1 [color = DimGray]
+    2 [color = DimGray]
+    3 [color = DimGray]
+    4 [color = DimGray]
+    5 [color = DimGray]
+  }
+  I0 -> 0 [color = DimGray]
+  0 -> 1 [label = "b", color = DimGray]
+  0 -> 2 [label = "a", color = DimGray]
+  1 -> 1 [label = "a", color = DimGray]
+  1 -> 4 [label = "b", color = DimGray]
+  2 -> 2 [label = "b", color = DimGray]
+  2 -> 5 [label = "a", color = DimGray]
+  3 -> F3 [color = DimGray]
+  3 -> 4 [label = "a, b", color = DimGray]
+  4 -> 0 [label = "a", color = DimGray]
+  4 -> 2 [label = "b", color = DimGray]
+  5 -> 1 [label = "b", color = DimGray]
+  5 -> 2 [label = "a", color = DimGray]
+}
+''')
+
+CHECK_EQ(str(synchro_regression.synchronizing_word('greedy')), 'bbb')
+CHECK_EQ(str(synchro_regression.synchronizing_word('synchrop')), 'bbb')
+CHECK_EQ(str(synchro_regression.synchronizing_word('synchropl')), 'bbb')
+CHECK_EQ(str(synchro_regression.synchronizing_word('fastsynchro')), 'bbb')
