@@ -13,15 +13,15 @@
 # include <boost/lexical_cast.hpp>
 # include <boost/heap/fibonacci_heap.hpp>
 
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/algos/dot.hh>
 # include <vcsn/algos/copy.hh>
+# include <vcsn/algos/dot.hh>
+# include <vcsn/algos/fwd.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/core/kind.hh>
-# include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>
+# include <vcsn/misc/star_status.hh>
 
 # include <vcsn/algos/info.hh>
 

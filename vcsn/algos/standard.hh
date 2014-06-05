@@ -3,10 +3,12 @@
 
 # include <set>
 
-# include <vcsn/ctx/traits.hh>
-# include <vcsn/ctx/fwd.hh>
+# include <vcsn/algos/copy.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/rat/visitor.hh>
+# include <vcsn/ctx/fwd.hh>
+# include <vcsn/ctx/traits.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/ratexp.hh>
 # include <vcsn/misc/raise.hh>
 
