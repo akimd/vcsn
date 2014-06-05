@@ -17,6 +17,9 @@ parser.add_argument('tests', metavar='test', nargs='+',
 parser.add_argument('--builddir', metavar='DIR',
                     type=str, default=None,
                     help='look for the logs in DIR')
+parser.add_argument('--log', metavar='FILE', nargs="+",
+                    type=str, default=[],
+                    help='consider DIR/FILE')
 
 args = parser.parse_args()
 
@@ -32,23 +35,27 @@ def diff_to_re(match):
   subst[frm] = to
 
 def update(test, log):
-  log = open(log).read()
-  global subst
-  subst = dict()
-  re.sub(r'((?:^\t-.*\n)+)((?:^\t\+.*\n)*)',
-         diff_to_re, log, flags = re.MULTILINE)
-  if subst != dict():
-    test = open(test).read()
-    # Turn "subst{frm} => to" into a large RE.
-    frm = '|'.join(map(re.escape, subst.keys()))
-    res = re.sub(r'''(?<=['"\n])({frm})(?=['"\n])'''.format(frm=frm),
-                 lambda m: subst[m.group(1)],
-                 test, flags = re.MULTILINE)
-    if res != test:
-      return res
+  try:
+    log = open(args.builddir + '/' + log).read()
+    global subst
+    subst = dict()
+    re.sub(r'((?:^\t-.*\n)+)((?:^\t\+.*\n)*)',
+           diff_to_re, log, flags = re.MULTILINE)
+    if subst != dict():
+      # Turn "subst{frm} => to" into a large RE.
+      frm = '|'.join(map(re.escape, subst.keys()))
+      test = re.sub(r'''(?<=['"\n])({frm})(?=['"\n])'''.format(frm=frm),
+                   lambda m: subst[m.group(1)],
+                   test, flags = re.MULTILINE)
+    return test
+  except:
+    return test
 
 for t in args.tests:
-  l = args.builddir + '/' + t[:t.rfind('.')] + '.log'
-  r = update(t, l)
-  if r is not None:
-    open(t, 'w').write(r)
+  old = open(t).read()
+  new = old
+  for l in args.log + [t[:t.rfind('.')] + '.log']:
+    print(l)
+    new = update(new, l)
+  if new != old:
+    open(t, 'w').write(new)
