@@ -383,12 +383,14 @@ namespace vcsn
       /// add in the result automaton all the outgoing epsilon transitions of
       /// the Ith band.
       template <std::size_t I>
-      void add_one_transitions_(const state_t src, const pair_t& psrc,
-                                const typename
-                                transition_map_t<input_automaton_t<I>>::transitions_t&
-                                epsilon_out)
+      void
+      add_one_transitions_(const state_t src, const pair_t& psrc,
+                           const typename
+                           transition_map_t<input_automaton_t<I>>::transitions_t&
+                           epsilon_out)
       {
-        if (!has_epsilon_in(psrc, I + 1, indices) && !has_only_epsilon_out(psrc, I, indices))
+        if (!has_epsilon_in(psrc, I + 1, indices)
+            && !has_only_epsilon_out(psrc, I, indices))
           for (auto t : epsilon_out)
             {
               auto pdst = psrc;
