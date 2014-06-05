@@ -476,6 +476,7 @@ namespace vcsn
         return res_;
       }
 
+      /// Compute dist(d(s, w)) - dist(s).
       int delta(state_t p, const std::vector<transition_t>& w)
       {
         state_t np = p;
@@ -484,6 +485,9 @@ namespace vcsn
         return dist(np) - dist(p);
       }
 
+      /// Heuristic used for SynchroP.
+      /// phi_1(p) = Sum delta(s, w) for all s in the active states, with
+      /// s != p. w is the shortest word that syncs the pair p.
       int phi_1(state_t p)
       {
         int res = 0;
@@ -494,11 +498,15 @@ namespace vcsn
         return res;
       }
 
+      /// Heuristic used for SynchroPL.
+      /// phi2(p) = phi_1(p).
       int phi_2(state_t p)
       {
         return phi_1(p) + dist(p);
       }
 
+      /// Heuristic used for FastSynchro.
+      /// phi3(l) = Sum dist(d(s, l)) - dist(s) forall s in the active states.
       int phi_3(const label_t& l)
       {
         int res = 0;
