@@ -385,10 +385,6 @@ namespace vcsn
         return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
-      using out_pair_t = std::pair<size_t, state_t>;
-      using out_map_t = std::map<out_pair_t, bool>;
-      out_map_t out_map;
-
       /// Check if the state has only incoming epsilon transitions.
       template <typename Aut>
       typename std::enable_if<labelset_t_of<Aut>::has_one(),
@@ -396,16 +392,16 @@ namespace vcsn
       has_only_ones_out(size_t I, const Aut& a, state_t_of<Aut> st)
       {
         auto p = out_pair_t{I, st};
-        auto it = out_map.find(p);
-        if (it != out_map.end())
-          return it->second;
+        auto lb = out_map.lower_bound(p);
+        if (lb != out_map.end() && !out_map.key_comp()(p, lb->first))
+          return lb->second;
         for (auto t : a->all_out(st))
           if (!is_one(a, t))
           {
-            out_map[p] = false;
+            out_map.insert(lb, typename out_map_t::value_type(p, false));
             return false;
           }
-        out_map[p] = true;
+        out_map.insert(lb, typename out_map_t::value_type(p, true));
         return true;
       }
 
@@ -479,6 +475,10 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
+      /// Map (automaton, state) -> has_only_epsilon_out
+      using out_pair_t = std::pair<size_t, state_t>;
+      using out_map_t = std::map<out_pair_t, bool>;
+      out_map_t out_map;
     };
   }
 
