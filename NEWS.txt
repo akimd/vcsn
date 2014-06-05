@@ -4,6 +4,21 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-06-24
+** minimize: new subset decorators, except for the "brzozowski" variant
+Minimizing an automaton now yields a decorated automaton keeping track of
+source state names.  The new "subset decorator" code is decoupled from
+minimization and is intended to be used for other algorithms as well.
+
+  >>> a = vcsn.context('lal_char(a-z)_b').ratexp('a+b*e+c+dc').standard(); a
+  >>> a.minimize()
+
+The minimize algorithm no longer recognizes the "brzozowski" variant at the
+Static level, as it would require a very different, and likely
+uninteresting, decorator; the user can still directly call
+minimize_brzozowski at the Static level.  We still support "brzozowski" as a
+variant at the Dyn and Python levels.
+
 * 2014-06-23
 ** efsm: support for transducers
 Exchange with OpenFST via efstcompile/efstdecompile now supports
@@ -19,7 +34,7 @@ TAF-Kit is no longer checked at all by the test suite.
 One can now lift automata and ratexps from Python.
 
 * 2014-06-19
-** minimize: extend 'weighted' and 'signature' variants
+** Minimize: extend 'weighted' and 'signature' variants
 Lift arbitrary restrictions on the labelset of the 'weighted' and
 'signature' minimization variants.
 

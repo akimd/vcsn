@@ -381,7 +381,7 @@ namespace vcsn
       }
 
       /// The minimized automaton.
-      automaton_t operator()()
+      subset_automaton<automaton_t> operator()()
       {
         build_classes_();
         return quotient(a_, class_to_set_);
@@ -392,8 +392,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  auto
   minimize_weighted(const Aut& a)
+    -> subset_automaton<Aut>
   {
     detail_weighted::minimizer<Aut> minimize(a);
     return minimize();

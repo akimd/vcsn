@@ -202,7 +202,7 @@ namespace vcsn
       }
 
       /// Return the quotient.
-      automaton_t operator()()
+      subset_automaton<automaton_t> operator()()
       {
         build_classes_();
         return quotient(a_, class_to_set_);
@@ -212,8 +212,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  auto
   minimize_moore(const Aut& a)
+    -> subset_automaton<Aut>
   {
     detail_moore::minimizer<Aut> minimize(a);
     return minimize();

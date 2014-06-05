@@ -5,6 +5,7 @@
 # include <unordered_set>
 
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/quotient.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/indent.hh>
@@ -404,7 +405,7 @@ namespace vcsn
       }
 
       /// The minimized automaton.
-      automaton_t operator()()
+      subset_automaton<automaton_t> operator()()
       {
         build_classes_();
         return quotient(a_, class_to_set_);
@@ -415,8 +416,9 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  auto
   minimize_signature(const Aut& a)
+    -> subset_automaton<Aut>
   {
     detail_signature::minimizer<Aut> minimize(a);
     return minimize();

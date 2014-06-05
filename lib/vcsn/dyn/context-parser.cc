@@ -17,6 +17,7 @@ namespace vcsn
           || w == "pair"
           || w == "product"
           || w == "ratexp"
+          || w == "subset"
           || w == "transpose")
         return make_automaton(w);
       else if (w == "context")
@@ -218,8 +219,10 @@ namespace vcsn
     {
       std::shared_ptr<automaton> res = nullptr;
       if (prefix == "determinized"
+          || prefix == "linear"
           || prefix == "pair"
           || prefix == "ratexp"
+          || prefix == "subset"
           || prefix == "transpose")
         {
           eat(is_, "_automaton<");

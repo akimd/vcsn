@@ -102,6 +102,8 @@ namespace vcsn
         header("vcsn/algos/product.hh");
       else if (type == "ratexp_automaton")
         header("vcsn/core/ratexp-automaton.hh");
+      else if (type == "subset_automaton")
+        header("vcsn/core/subset-automaton.hh");
       else if (type == "transpose_automaton")
         header("vcsn/algos/transpose.hh");
       else

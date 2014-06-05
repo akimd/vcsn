@@ -7,6 +7,7 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is-deterministic.hh>
+# include <vcsn/core/subset-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 
@@ -21,6 +22,7 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
+      using subset_automaton_t = subset_automaton<automaton_t>;
 
       using class_t = unsigned;
       using state_t = state_t_of<automaton_t>;
@@ -63,23 +65,24 @@ namespace vcsn
       }
 
       /// Build the resulting automaton.
-      automaton_t build_result_(const automaton_t& aut)
+      subset_automaton_t build_result_(const automaton_t& aut)
       {
         state_to_class_t state_to_class;
         for (unsigned c = 0; c < num_classes_; ++c)
           for (auto s: class_to_set_[c])
             state_to_class[s] = c;
 
-        automaton_t res
-          = make_shared_ptr<automaton_t>(aut->context());
+        subset_automaton_t res
+          = make_shared_ptr<subset_automaton_t>(aut);
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
-            state_t s = class_to_set_[c][0];
+            const std::vector<state_t>& set = class_to_set_[c];
+            state_t s = set[0];
             class_to_res_state_[c]
               = s == aut->pre()  ? res->pre()
               : s == aut->post() ? res->post()
-              : res->new_state();
+              : res->new_state(set);
           }
         for (unsigned c = 0; c < num_classes_; ++c)
           {
@@ -98,45 +101,9 @@ namespace vcsn
       }
 
       /// The minimized automaton.
-      automaton_t operator()(const automaton_t& aut)
+      subset_automaton_t operator()(const automaton_t& aut)
       {
         return build_result_(aut);
-      }
-
-      /// A map from quotient states to sets of original states.
-      using origins_t = std::map<state_t, std::set<state_t>>;
-      origins_t
-      origins()
-      {
-        origins_t res;
-        for (unsigned c = 0; c < num_classes_; ++c)
-          res[class_to_res_state_[c]]
-              .insert(begin(class_to_set_[c]), end(class_to_set_[c]));
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(const origins_t& orig, std::ostream& o)
-      {
-        o << "/* Origins." << std::endl
-          << "    node [shape = box, style = rounded]" << std::endl;
-        for (auto p : orig)
-          if (2 <= p.first)
-            {
-              o << "    " << p.first - 2
-                << " [label = \"";
-              const char* sep = "";
-              for (auto s: p.second)
-                {
-                  o << sep << s - 2;
-                  sep = ",";
-                }
-              o << "\"]" << std::endl;
-            }
-        o << "*/" << std::endl;
-        return o;
       }
 
     private:
@@ -162,6 +129,7 @@ namespace vcsn
         return o;
       }
 
+    private:
       class_to_set_t& class_to_set_;
       unsigned num_classes_;
       class_to_state_t class_to_res_state_;
@@ -170,17 +138,13 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  Aut
+  auto
   quotient(const Aut& a,
            typename detail::quotienter<Aut>::class_to_set_t& classes)
+    -> subset_automaton<Aut>
   {
     detail::quotienter<Aut> quotient(classes);
-    auto res = quotient(a);
-    // FIXME: Not absolutely elegant.  But currently no means to
-    // associate meta-data to states.
-    if (getenv("VCSN_ORIGINS"))
-      quotient.print(quotient.origins(), std::cout);
-    return res;
+    return quotient(a);
   }
 
 } // namespace vcsn

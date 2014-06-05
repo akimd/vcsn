@@ -7,8 +7,11 @@ from test import *
 def aut(file):
     return vcsn.automaton.load(medir + "/" + file)
 
+def file_to_string(file):
+    return open(medir + "/" + file, "r").read().strip()
+
 def check(algo, aut, exp):
-    CHECK_EQ(exp, aut.minimize(algo))
+    CHECK_EQ(exp, aut.minimize(algo).format('dot'))
 
 def xfail(algo, aut):
     res = ''
@@ -17,15 +20,15 @@ def xfail(algo, aut):
     except RuntimeError:
         PASS()
     else:
-        FAIL('did not raise an exception', res)
+        FAIL('did not raise an exception', str(res))
 
 
 ## Simple minimization test.  The example comes from the "Theorie des
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
 redundant = aut("redundant.gv")
-redundant_exp = aut("redundant.exp.gv")
-check('brzozowski', redundant, redundant_exp)
+redundant_exp = file_to_string("redundant.exp.gv")
+check('brzozowski', redundant, vcsn.automaton(redundant_exp))
 check('moore',      redundant, redundant_exp)
 check('signature',  redundant, redundant_exp)
 check('weighted',   redundant, redundant_exp)
@@ -40,7 +43,8 @@ xfail('weighted',   a)
 ## An automaton equal to redundant.exp, with no initial states.  It
 ## must be minimized into an empty automaton.
 a = aut('no-initial-states.gv')
-#xfail('brzozowski', a)
+z = vcsn.context('lal_char(a-e)_b').ratexp('\z').standard().format('dot')
+check('brzozowski', a, z)
 xfail('moore',      a)
 xfail('signature',  a)
 xfail('weighted',   a)
@@ -48,7 +52,7 @@ xfail('weighted',   a)
 ## An automaton equal to redundant.exp, with no final states.  It must
 ## be minimized into an empty automaton.
 a = aut("no-final-states.gv")
-#xfail('brzozowski', a)
+check('brzozowski', a, z)
 xfail('moore',      a)
 xfail('signature',  a)
 xfail('weighted',   a)
@@ -62,8 +66,8 @@ check('moore', all_states_final, all_states_final.minimize('signature'))
 intricate = vcsn.context('lal_char(a-k)_b') \
                 .ratexp('[a-k]{10}') \
                 .standard()
-intricate_exp = aut("intricate.exp.gv")
-check('brzozowski', intricate, intricate_exp)
+intricate_exp = file_to_string("intricate.exp.gv")
+check('brzozowski', intricate, vcsn.automaton(intricate_exp))
 check('moore',      intricate, intricate_exp)
 check('signature',  intricate, intricate_exp)
 check('weighted',   intricate, intricate_exp)
@@ -73,15 +77,15 @@ check('weighted',   intricate, intricate_exp)
 smallnfa = vcsn.context('lal_char(a)_b') \
                .ratexp('a{2}*+a{2}*') \
                .standard()
-smallnfa_exp = aut("small-nfa.exp.gv")
-check('brzozowski', smallnfa, smallnfa_exp)
+smallnfa_exp = file_to_string("small-nfa.exp.gv")
+check('brzozowski', smallnfa, vcsn.automaton(smallnfa_exp))
 xfail('moore',      smallnfa)
 check('signature',  smallnfa, smallnfa_exp)
 check('weighted',   smallnfa, smallnfa_exp)
 
 ## A small weighted automaton.
 smallweighted = aut("small-weighted.gv")
-smallweighted_exp = aut("small-weighted.exp.gv")
+smallweighted_exp = file_to_string("small-weighted.exp.gv")
 xfail('brzozowski', smallweighted)
 xfail('moore',      smallweighted)
 xfail('signature',  smallweighted)
@@ -89,9 +93,10 @@ check('weighted',   smallweighted, smallweighted_exp)
 
 ## Non-lal automata.
 nonlal = \
-  vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard().strip()
-check("signature", nonlal, aut("nonlal.exp.gv"))
-check("weighted",  nonlal, aut("nonlal.exp.gv"))
+  vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard()
+nonlal_exp = file_to_string("nonlal.exp.gv")
+check("signature", nonlal, nonlal_exp)
+check("weighted",  nonlal, nonlal_exp)
 
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in
@@ -111,10 +116,10 @@ check("weighted",  nonlal, aut("nonlal.exp.gv"))
 ## subset of its old value.
 a = vcsn.context('lal_char(ab)_b').ratexp("a+ba").derived_term().strip()
 check('brzozowski', a, a)
-check('moore',      a, a)
-check('signature',  a, a)
+CHECK_ISOMORPHIC(a.minimize('moore'), a)
+CHECK_ISOMORPHIC(a.minimize('signature'), a)
 
 ## Check minimization idempotency in the non-lal case as well.
 a = vcsn.context('law_char(ab)_b').ratexp("ab").standard()
-check('signature',  a, a)
-check('weighted',   a, a)
+CHECK_ISOMORPHIC(a.minimize('signature'), a)
+CHECK_ISOMORPHIC(a.minimize('weighted'), a)
