@@ -5,14 +5,14 @@ digraph
   {
     node [shape = point, width = 0]
     I0
-    F1
+    F2
   }
   {
     node [shape = circle]
     0
-    1
+    2
   }
   I0 -> 0
-  0 -> 1 [label = "<ab*c>"]
-  1 -> F1
+  0 -> 2 [label = "<ab*c>"]
+  2 -> F2
 }
