@@ -1,4 +1,4 @@
-#include <vcsn/factory/de-bruijn.hh>
+#include <vcsn/algos/de-bruijn.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

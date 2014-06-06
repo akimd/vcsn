@@ -1,6 +1,6 @@
 #include <vector>
 
-#include <vcsn/factory/double-ring.hh>
+#include <vcsn/algos/double-ring.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

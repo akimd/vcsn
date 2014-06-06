@@ -22,10 +22,13 @@ nobase_include_HEADERS =                        \
   %D%/algos/concatenate.hh                      \
   %D%/algos/constant-term.hh                    \
   %D%/algos/copy.hh                             \
+  %D%/algos/de-bruijn.hh                        \
   %D%/algos/derivation.hh                       \
   %D%/algos/determinize.hh                      \
   %D%/algos/distance.hh                         \
+  %D%/algos/divkbaseb.hh                        \
   %D%/algos/dot.hh                              \
+  %D%/algos/double-ring.hh                      \
   %D%/algos/edit-automaton.hh                   \
   %D%/algos/efsm.hh                             \
   %D%/algos/enumerate.hh                        \
@@ -43,6 +46,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-normalized.hh                    \
   %D%/algos/is-proper.hh                        \
   %D%/algos/is-valid.hh                         \
+  %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
   %D%/algos/lift.hh                             \
   %D%/algos/make-context.hh                     \
@@ -55,6 +59,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \
   %D%/algos/quotient.hh                         \
+  %D%/algos/random.hh                           \
   %D%/algos/read.hh                             \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
@@ -68,6 +73,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/thompson.hh                         \
   %D%/algos/tikz.hh                             \
   %D%/algos/transpose.hh                        \
+  %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \
   %D%/algos/universal.hh                        \
   %D%/alphabets/char.hh                         \
@@ -144,12 +150,6 @@ nobase_include_HEADERS =                        \
   %D%/dyn/type-ast.hh                           \
   %D%/dyn/weight.hh                             \
   %D%/empty.hh                                  \
-  %D%/factory/de-bruijn.hh                      \
-  %D%/factory/divkbaseb.hh                      \
-  %D%/factory/double-ring.hh                    \
-  %D%/factory/ladybird.hh                       \
-  %D%/factory/random.hh                         \
-  %D%/factory/u.hh                              \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
   %D%/labelset/labelset.hh                      \

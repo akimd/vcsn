@@ -46,12 +46,12 @@
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/union.hh>
 
-# include <vcsn/factory/de-bruijn.hh>
-# include <vcsn/factory/divkbaseb.hh>
-# include <vcsn/factory/double-ring.hh>
-# include <vcsn/factory/ladybird.hh>
-# include <vcsn/factory/random.hh>
-# include <vcsn/factory/u.hh>
+# include <vcsn/algos/de-bruijn.hh>
+# include <vcsn/algos/divkbaseb.hh>
+# include <vcsn/algos/double-ring.hh>
+# include <vcsn/algos/ladybird.hh>
+# include <vcsn/algos/random.hh>
+# include <vcsn/algos/u.hh>
 
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/polynomialset.hh>

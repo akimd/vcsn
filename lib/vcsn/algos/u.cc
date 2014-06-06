@@ -1,4 +1,4 @@
-#include <vcsn/factory/u.hh>
+#include <vcsn/algos/u.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

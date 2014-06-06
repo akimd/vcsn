@@ -1,4 +1,4 @@
-#include <vcsn/factory/ladybird.hh>
+#include <vcsn/algos/ladybird.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

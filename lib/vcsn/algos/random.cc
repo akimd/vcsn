@@ -1,4 +1,4 @@
-#include <vcsn/factory/random.hh>
+#include <vcsn/algos/random.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

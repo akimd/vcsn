@@ -1,4 +1,4 @@
-#include <vcsn/factory/divkbaseb.hh>
+#include <vcsn/algos/divkbaseb.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 
