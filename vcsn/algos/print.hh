@@ -43,14 +43,15 @@ namespace vcsn
   | print(expansion, stream).  |
   `---------------------------*/
 
+  /// Applies to (ValueSet, Value, ostream, string): for expansionset,
+  /// polynomialset, ratexpset, and weightset.
   template <typename ValueSet>
   inline
   std::ostream&
-  print(std::ostream& o,
-        const ValueSet& vs, const typename ValueSet::value_t& v,
-        const std::string& format)
+  print(const ValueSet& vs, const typename ValueSet::value_t& v,
+        std::ostream& o, const std::string& format)
   {
-    return vs.print(o, v, format);
+    return vs.print(v, o, format);
   }
 
   namespace dyn
@@ -63,7 +64,7 @@ namespace vcsn
                                     const std::string& format)
       {
         const auto& e = expansion->as<ExpansionSet>();
-        return vcsn::print<ExpansionSet>(o, e.expansionset(), e.expansion(), format);
+        return vcsn::print(e.expansionset(), e.expansion(), o, format);
       }
 
       REGISTER_DECLARE(print_expansion,
@@ -86,7 +87,7 @@ namespace vcsn
                                 const std::string& format)
       {
         const auto& l = label->as<LabelSet>();
-        return vcsn::print<LabelSet>(o, l.labelset(), l.label(), format);
+        return vcsn::print(l.labelset(), l.label(), o, format);
       }
 
       REGISTER_DECLARE(print_label,
@@ -111,7 +112,7 @@ namespace vcsn
         if (!first)
           o << std::endl;
         first = false;
-        ps.print(o, m);
+        ps.print(m, o);
       }
     return o;
   }
@@ -126,8 +127,7 @@ namespace vcsn
                                     std::ostream& o)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::list<PolynomialSet>(p.polynomialset(),
-                                         p.polynomial(), o);
+        return vcsn::list(p.polynomialset(), p.polynomial(), o);
       }
 
       REGISTER_DECLARE(list_polynomial,
@@ -139,17 +139,6 @@ namespace vcsn
   | print(polynomial, stream).  |
   `----------------------------*/
 
-  /// Actually applies to (ValueSet, Value, ostream, string): for
-  /// polynomialset, ratexpset, and weightset.
-  template <typename PolynomialSet>
-  inline
-  std::ostream&
-  print(const PolynomialSet& ps, const typename PolynomialSet::value_t& p,
-        std::ostream& o, const std::string& format)
-  {
-    return ps.print(o, p, format);
-  }
-
   namespace dyn
   {
     namespace detail
@@ -160,8 +149,7 @@ namespace vcsn
                                      std::ostream& o, const std::string& format)
       {
         const auto& p = polynomial->as<PolynomialSet>();
-        return vcsn::print<PolynomialSet>(p.polynomialset(),
-                                          p.polynomial(), o, format);
+        return vcsn::print(p.polynomialset(), p.polynomial(), o, format);
       }
 
       REGISTER_DECLARE(print_polynomial,
@@ -183,7 +171,7 @@ namespace vcsn
   print(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
         std::ostream& o, const std::string& format)
   {
-    return rs.print(o, e, format);
+    return rs.print(e, o, format);
   }
 #endif
 
@@ -218,7 +206,7 @@ namespace vcsn
   print(const WeightSet& ws, const typename WeightSet::value_t& w,
         std::ostream& o)
   {
-    return ws.print(o, w);
+    return ws.print(w, o);
   }
 #endif
 
@@ -232,7 +220,7 @@ namespace vcsn
                                  const std::string& format)
       {
         const auto& w = weight->as<WeightSet>();
-        return vcsn::print<WeightSet>(w.weightset(), w.weight(), o, format);
+        return vcsn::print(w.weightset(), w.weight(), o, format);
       }
 
       REGISTER_DECLARE(print_weight,

@@ -344,13 +344,13 @@ namespace vcsn
     }
 
     std::ostream&
-    print(std::ostream& o, value_t l,
+    print(value_t l, std::ostream& o,
           const std::string& format = "text") const
     {
       if (is_one(l))
         o << (format == "latex" ? "\\varepsilon" : "\\e");
       else
-        labelset()->print(o, get_value(l), format);
+        labelset()->print(get_value(l), o, format);
       return o;
     }
 

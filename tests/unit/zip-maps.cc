@@ -8,7 +8,7 @@
 template <typename... Args>
 std::ostream& operator<<(std::ostream& o, std::tuple<Args...>& args)
 {
-  return vcsn::detail::print(o, args);
+  return vcsn::detail::print(args, o);
 }
 
 int main()

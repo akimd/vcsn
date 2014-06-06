@@ -213,7 +213,7 @@ namespace vcsn
       /// Print the origins.
       static
       std::ostream&
-      print(std::ostream& o, const origins_t& orig)
+      print(const origins_t& orig, std::ostream& o)
       {
         o << "/* Origins." << std::endl
           << "    node [shape = box, style = rounded]" << std::endl;
@@ -241,7 +241,7 @@ namespace vcsn
       {
         auto o = sorter.origins();
         if (!o.empty())
-          sorter.print(std::cout, o);
+          sorter.print(o, std::cout);
       }
     return res;
   }

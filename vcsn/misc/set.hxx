@@ -72,7 +72,7 @@ namespace vcsn
   template <typename T>
   inline
   std::ostream&
-  print(std::ostream& o, const std::set<T>& set)
+  print(const std::set<T>& set, std::ostream& o)
   {
     const char* sep = "";
     for (const auto& m: set)

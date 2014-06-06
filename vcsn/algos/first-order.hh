@@ -84,19 +84,19 @@ namespace vcsn
         if (insert.second)
           {
             std::swap(res, res_);
-            DEBUG_IF(rs_.print(std::cerr, e) << "..." << incendl);
+            DEBUG_IF(rs_.print(e, std::cerr) << "..." << incendl);
             e->accept(*this);
             std::swap(res, res_);
             DEBUG_IF(
-                     rs_.print(std::cerr, e) << " => ";
-                     print_(std::cerr, res) << decendl;
+                     rs_.print(e, std::cerr) << " => ";
+                     print_(res, std::cerr) << decendl;
                      );
           }
         else
           {
             DEBUG_IF(
-                     rs_.print(std::cerr, e) << " -> ";
-                     print_(std::cerr, res) << iendl;
+                     rs_.print(e, std::cerr) << " -> ";
+                     print_(res, std::cerr) << iendl;
                      );
           }
         return res;
@@ -106,8 +106,8 @@ namespace vcsn
         e->accept(*this);
         std::swap(res, res_);
         DEBUG_IF(
-                 rs_.print(std::cerr, e) << " -> ";
-                 print_(std::cerr, res) << iendl;
+                 rs_.print(e, std::cerr) << " -> ";
+                 print_(res, std::cerr) << iendl;
                  );
         return res;
 #endif
@@ -120,9 +120,9 @@ namespace vcsn
       }
 
       /// Print an expansion.
-      std::ostream& print_(std::ostream& o, const expansion_t& v) const
+      std::ostream& print_(const expansion_t& v, std::ostream& o) const
       {
-        es_.print(o, v);
+        es_.print(v, o);
         if (transposed_)
           o << " (transposed)";
         return o;
@@ -236,7 +236,7 @@ namespace vcsn
         assert(e.size() == 2);
         DEBUG_IF(
                  std::cerr << "Start: ";
-                 rs_.print(std::cerr, e.shared_from_this()) << " =>\n";
+                 rs_.print(e.shared_from_this, std::cerr()) << " =>\n";
                  );
         if (use_spontaneous_)
           visit_ldiv_with_one(e);
@@ -252,8 +252,8 @@ namespace vcsn
         expansion_t rhs = first_order(e[1]);
         transposed_ = transposed;
         DEBUG_IF(
-                 std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
-                 std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+                 std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
+                 std::cerr << "Rhs: "; print_(rhs, std::cerr) << '\n';
                  );
         res_ = es_.zero();
         // lp: (label, left_polynomial)
@@ -301,8 +301,8 @@ namespace vcsn
             expansion_t rhs = first_order(e[1]);
             transposed_ = transposed;
             DEBUG_IF(
-                     std::cerr << "Lhs: "; print_(std::cerr, lhs) << '\n';
-                     std::cerr << "Rhs: "; print_(std::cerr, rhs) << '\n';
+                     std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
+                     std::cerr << "Rhs: "; print_(rhs, std::cerr) << '\n';
                      );
             res_ = es_.zero();
             // lp: (label, left_polynomial)
@@ -326,7 +326,7 @@ namespace vcsn
                     auto q = rs_.ldiv(lm.first, rm.first);
                     DEBUG_IF(std::cerr << "Rec: (");
                     auto p = first_order(q);
-                    DEBUG_IF(print_(std::cerr, p) << '\n');
+                    DEBUG_IF(print_(p, std::cerr) << '\n');
                     // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
                     es_.add_here(res_,
                                  es_.ldiv_here(lm.second,

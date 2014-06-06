@@ -512,12 +512,12 @@ namespace vcsn
     return res.ratexp();
   }
 
-  DEFINE::print(std::ostream& o, const value_t v,
+  DEFINE::print(const value_t v, std::ostream& o,
 		const std::string& format) const
     -> std::ostream&
   {
     using printer_t = printer<ratexpset_impl>;
-    printer_t print(o, *this);
+    printer_t print(*this, o);
     print.format(format);
     return print(v);
   }

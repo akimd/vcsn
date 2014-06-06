@@ -37,8 +37,8 @@ namespace vcsn
 
     template <typename RatExpSet>
     inline
-    printer<RatExpSet>::printer(std::ostream& out,
-                                const ratexpset_t& rs,
+    printer<RatExpSet>::printer(const ratexpset_t& rs,
+                                std::ostream& out,
                                 const bool debug)
       : out_(out)
       , ctx_(rs.context())
@@ -151,7 +151,7 @@ namespace vcsn
     VISIT(lweight)
     {
       out_ << langle_;
-      ctx_.weightset()->print(out_, v.weight(), format_);
+      ctx_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_ << lmul_;
       print_child(*v.sub(), v);
     }
@@ -160,7 +160,7 @@ namespace vcsn
     {
       print_child(*v.sub(), v);
       out_ << rmul_ << langle_;
-      ctx_.weightset()->print(out_, v.weight(), format_);
+      ctx_.weightset()->print(v.weight(), out_, format_);
       out_ << rangle_;
     }
 
@@ -178,7 +178,7 @@ namespace vcsn
 
     VISIT(atom)
     {
-      ctx_.labelset()->print(out_, v.value(), format_);
+      ctx_.labelset()->print(v.value(), out_, format_);
     }
 
     DEFINE::print_child(const node_t& child, const node_t& parent)

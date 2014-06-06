@@ -149,7 +149,7 @@ namespace vcsn
     }
 
     static std::ostream&
-    print(std::ostream& o, const value_t v,
+    print(const value_t v, std::ostream& o,
           const std::string& = "text")
     {
       return o << (v ? '1' : '0');

@@ -207,15 +207,15 @@ namespace vcsn
 
 
     /*------------------------.
-    | print(ostream, tuple).  |
+    | print(tuple, ostream).  |
     `------------------------*/
 
     template<class Tuple, std::size_t N>
     struct tuple_printer
     {
-      static void print(std::ostream& o, const Tuple& t)
+      static void print(const Tuple& t, std::ostream& o)
       {
-        tuple_printer<Tuple, N-1>::print(o, t);
+        tuple_printer<Tuple, N-1>::print(t, o);
         o << ", " << std::get<N-1>(t);
       }
     };
@@ -223,17 +223,17 @@ namespace vcsn
     template<class Tuple>
     struct tuple_printer<Tuple, 1>
     {
-      static void print(std::ostream& o, const Tuple& t)
+      static void print(const Tuple& t, std::ostream& o)
       {
         o << std::get<0>(t);
       }
     };
 
     template <typename... Args>
-    std::ostream& print(std::ostream& o, const std::tuple<Args...>& args)
+    std::ostream& print(const std::tuple<Args...>& args, std::ostream& o)
     {
       o << '(';
-      tuple_printer<decltype(args), sizeof...(Args)>::print(o, args);
+      tuple_printer<decltype(args), sizeof...(Args)>::print(args, o);
       return o << ')';
     }
 

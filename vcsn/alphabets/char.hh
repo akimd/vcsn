@@ -139,7 +139,7 @@ namespace vcsn
 
   public:
     std::ostream&
-    print(std::ostream& o, const letter_t& l) const
+    print(const letter_t& l, std::ostream& o) const
     {
       if (l != one_letter() && l != special_letter())
         o << l;
@@ -147,7 +147,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(std::ostream& o, const word_t& w) const
+    print(const word_t& w, std::ostream& o) const
     {
       return o << format(w);
     }

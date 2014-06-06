@@ -11,7 +11,7 @@ namespace std
   template <typename... Args>
   ostream& operator<<(ostream& o, const tuple<Args...>& args)
   {
-    return vcsn::detail::print(o, args);
+    return vcsn::detail::print(args, o);
   }
 }
 

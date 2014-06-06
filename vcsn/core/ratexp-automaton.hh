@@ -73,7 +73,7 @@ namespace vcsn
           {
             DEBUG_IF(
                      std::cerr << "New state: ";
-                     rs_.print(std::cerr, r) << '\n';
+                     rs_.print(r, std::cerr) << '\n';
                      );
             dst = super_t::new_state();
             map_[r] = dst;

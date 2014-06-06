@@ -30,8 +30,8 @@ namespace vcsn
       using variadic_t = typename super_type::template variadic_t<Type>;
       using leaf_t = typename super_type::leaf_t;
 
-      printer(std::ostream& out,
-              const ratexpset_t& rs,
+      printer(const ratexpset_t& rs,
+              std::ostream& out,
               const bool debug = !!getenv("VCSN_PARENS"));
 
       /// Set output format.

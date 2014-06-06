@@ -191,7 +191,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print(std::ostream& o, const value_t& l,
+    print(const value_t& l, std::ostream& o,
           const std::string& format = "text") const
     {
       if (is_one(l))

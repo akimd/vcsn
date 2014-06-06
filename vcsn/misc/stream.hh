@@ -67,7 +67,7 @@ namespace vcsn LIBVCSN_API
     -> std::string
   {
     std::ostringstream o;
-    vs.print(o, v, std::forward<Args>(args)...);
+    vs.print(v, o, std::forward<Args>(args)...);
     return o.str();
   }
 

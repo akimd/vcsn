@@ -118,7 +118,7 @@
 %printer { yyo << '<' << $$ << '>'; } "weight";
 %printer
 {
-  driver_.ratexpset_->print(yyo, $$.exp);
+  driver_.ratexpset_->print($$.exp, yyo);
   yyo << ($$.lparen ? " (lpar, " : " (no lpar, ");
   yyo << ($$.rparen ? "rpar)" : "no rpar)");
 } <braced_ratexp>;

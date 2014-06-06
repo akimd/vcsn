@@ -83,7 +83,7 @@ namespace detail
     /// Parsing.
     virtual value_t conv(std::istream& s) const = 0;
 
-    virtual std::ostream& print(std::ostream& o, const value_t v) const = 0;
+    virtual std::ostream& print(const value_t v, std::ostream& o) const = 0;
   };
 
   /// Wrapper around a ratexpset.
@@ -163,7 +163,7 @@ namespace detail
     /// Parsing.
     virtual value_t conv(std::istream& is) const override;
 
-    virtual std::ostream& print(std::ostream& o, value_t v) const override;
+    virtual std::ostream& print(value_t v, std::ostream& o) const override;
 
   private:
     /// If context is oneset.

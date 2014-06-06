@@ -118,7 +118,7 @@ namespace vcsn
       /// Print the origins.
       static
       std::ostream&
-      print(std::ostream& o, const origins_t& orig)
+      print(const origins_t& orig, std::ostream& o)
       {
         o << "/* Origins." << std::endl
           << "    node [shape = box, style = rounded]" << std::endl;
@@ -140,7 +140,7 @@ namespace vcsn
       }
 
     private:
-      std::ostream& print_(std::ostream& o, const set_t& ss) const
+      std::ostream& print_(const set_t& ss, std::ostream& o) const
       {
         const char* sep = "{";
         for (auto s : ss)
@@ -150,13 +150,13 @@ namespace vcsn
           }
         return o << "}";
       }
-      std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss) const
+      std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o) const
       {
         const char* sep = "";
         for (unsigned i = 0; i < c2ss.size(); ++i)
           {
             o << sep << '[' << i << "] = ";
-            print_(o, c2ss[i]);
+            print_(c2ss[i], o);
             sep = "\n";
           }
         return o;
@@ -179,7 +179,7 @@ namespace vcsn
     // FIXME: Not absolutely elegant.  But currently no means to
     // associate meta-data to states.
     if (getenv("VCSN_ORIGINS"))
-      quotient.print(std::cout, quotient.origins());
+      quotient.print(quotient.origins(), std::cout);
     return res;
   }
 

@@ -128,7 +128,7 @@ namespace vcsn
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
           {
             os_ << '\t';
-            ws_.print(os_, aut_->weight_of(t));
+            ws_.print(aut_->weight_of(t), os_);
           }
       }
 

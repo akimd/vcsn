@@ -70,7 +70,7 @@ sta_prod_eval(const std::string& lhs, const std::string& rhs,
   typename Ctx::labelset_t::word_t input
     = vcsn::read_word<Ctx>(word, prod->context());
   vcsn::weight_t_of<Ctx> w = vcsn::eval<automaton_t>(prod, input);
-  prod->context().weightset()->print(std::cout, w);
+  prod->context().weightset()->print(w, std::cout);
 }
 
 static void

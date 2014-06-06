@@ -629,9 +629,9 @@ namespace vcsn
       o << src_of(t)
         << " -- "
         << langle;
-      weightset()->print(o, weight_of(t))
+      weightset()->print(weight_of(t), o)
         << rangle;
-      labelset()->print(o, label_of(t))
+      labelset()->print(label_of(t), o)
         << " --> "
         << dst_of(t);
       return o.str();

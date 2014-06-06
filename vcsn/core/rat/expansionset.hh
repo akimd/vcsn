@@ -60,14 +60,14 @@ namespace vcsn
       }
 
       /// Print a first order development.
-      std::ostream& print(std::ostream& o, const value_t& v,
+      std::ostream& print(const value_t& v, std::ostream& o,
                           const std::string& format = "text") const
       {
         bool first = true;
         if (!ws_.is_zero(v.constant) || v.polynomials.empty())
           {
             o << (format == "latex" ? "\\langle " : "<");
-            ws_.print(o, v.constant, format);
+            ws_.print(v.constant, o, format);
             o << (format == "latex" ? "\\rangle " : ">");
             first = false;
           }
@@ -76,9 +76,9 @@ namespace vcsn
             if (!first)
               o << (format == "latex" ? " \\oplus " : " + ");
             first = false;
-            rs_.labelset()->print(o, p.first, format);
+            rs_.labelset()->print(p.first, o, format);
             o << (format == "latex" ? " \\odot \\left[" : ".[");;
-            ps_.print(o, p.second, format);
+            ps_.print(p.second, o, format);
             o << (format == "latex" ? "\\right]" : "]");;
           }
         return o;

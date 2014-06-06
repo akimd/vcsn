@@ -553,14 +553,14 @@ namespace vcsn
 
     /// Print a monomial.
     std::ostream&
-    print(std::ostream& out, const monomial_t& m,
+    print(const monomial_t& m, std::ostream& out,
           const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
-      print_(out, m.second, format);
+      print_(m.second, out, format);
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");
-      labelset()->print(out, m.first, format);
+      labelset()->print(m.first, out, format);
       if (parens)
         out << (format == "latex" ? "\\right)" : ")");
       return out;
@@ -568,7 +568,7 @@ namespace vcsn
 
     /// Print a value (a polynomial).
     std::ostream&
-    print(std::ostream& out, const value_t& v,
+    print(const value_t& v, std::ostream& out,
           const std::string& format = "text",
           const std::string& sep = " + ") const
     {
@@ -576,7 +576,7 @@ namespace vcsn
       if (v.empty())
         out << (latex ? "\\emptyset" : "\\z");
       else
-        print_<context_t>(out, v, format,
+        print_<context_t>(v, out, format,
                           latex && sep == " + " ? " \\oplus " : sep);
       return out;
     }
@@ -586,7 +586,7 @@ namespace vcsn
            const std::string& fmt = "text") const
     {
       std::ostringstream o;
-      print(o, v, fmt, sep);
+      print(v, o, fmt, sep);
       return o.str();
     }
 
@@ -595,21 +595,21 @@ namespace vcsn
     format(const monomial_t& m) const
     {
       std::ostringstream o;
-      print(o, m, "text");
+      print(m, o, "text");
       return o.str();
     }
 
   private:
     /// Print a weight.
     std::ostream&
-    print_(std::ostream& out, const weight_t& w,
+    print_(const weight_t& w, std::ostream& out,
            const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
       if (parens || weightset()->show_one() || !weightset()->is_one(w))
         {
           out << (format == "latex" ? "\\langle " : std::string{langle});
-          weightset()->print(out, w, format);
+          weightset()->print(w, out, format);
           out << (format == "latex" ? "\\rangle " : std::string{rangle});
         }
       return out;
@@ -618,7 +618,7 @@ namespace vcsn
 
     /// Print a polynomial value without ranges.
     std::ostream&
-    print_without_ranges_(std::ostream& out, const value_t& v,
+    print_without_ranges_(const value_t& v, std::ostream& out,
                           const std::string& format = "text",
                           const std::string& sep = " + ") const
     {
@@ -628,19 +628,19 @@ namespace vcsn
           if (!first)
             out << sep;
           first = false;
-          print(out, m, format);
+          print(m, out, format);
         }
       return out;
     }
 
     /// Print a polynomial value with ranges.
     std::ostream&
-    print_with_ranges_(std::ostream& out, const value_t& v,
+    print_with_ranges_(const value_t& v, std::ostream& out,
                        const std::string& format = "text",
                        const std::string& sep = " + ") const
     {
       if (sep == " + " || v.size() <= 2)
-        return print_without_ranges_(out, v, format, sep);
+        return print_without_ranges_(v, out, format, sep);
 
       // No ranges if the weights aren't all the same.
       std::vector<label_t> letters;
@@ -650,20 +650,20 @@ namespace vcsn
           if (weightset()->is_zero(first_w))
             first_w = m.second;
           else if (!weightset()->equals(m.second, first_w))
-            return print_without_ranges_(out, v, format, sep);
+            return print_without_ranges_(v, out, format, sep);
           letters.push_back(m.first);
         }
 
       // Print with ranges.  First, the constant-term.
       if (labelset()->is_one(std::begin(v)->first))
         {
-          print(out, *std::begin(v), format);
+          print(*std::begin(v), out, format);
           if (1 < v.size())
             out << sep;
         }
 
       // The weight.
-      print_(out, first_w, format);
+      print_(first_w, out, format);
 
       // Print the character class.  letters are sorted, since
       // polynomials are shortlex-sorted on the labels.
@@ -673,14 +673,14 @@ namespace vcsn
            it != letters_end; ++it)
         {
           auto end = std::mismatch(it, letters_end, alphabet.find(*it)).first;
-          labelset()->print(out, *it, format);
+          labelset()->print(*it, out, format);
           // No ranges for less than two letters.
           auto width = std::distance(it, end);
           if (2 <= width)
             {
               it += width - 1;
               out << '-';
-              labelset()->print(out, *it, format);
+              labelset()->print(*it, out, format);
             }
         }
       out << ']';
@@ -692,22 +692,22 @@ namespace vcsn
     template <typename context>
     typename std::enable_if<!(context::is_lal || context::is_lan),
                             std::ostream&>::type
-    print_(std::ostream& out, const value_t& v,
+    print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      return print_without_ranges_(out, v, format, sep);
+      return print_without_ranges_(v, out, format, sep);
     }
 
     /// Print a non-null value for LAL or LAN.
     template <typename Ctx>
     typename std::enable_if<Ctx::is_lal || Ctx::is_lan,
                             std::ostream&>::type
-    print_(std::ostream& out, const value_t& v,
+    print_(const value_t& v, std::ostream& out,
            const std::string& format = "text",
            const std::string& sep = " + ") const
     {
-      return print_with_ranges_(out, v, format, sep);
+      return print_with_ranges_(v, out, format, sep);
     }
 
 

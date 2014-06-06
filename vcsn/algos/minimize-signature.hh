@@ -52,7 +52,7 @@ namespace vcsn
       state_to_class_t state_to_class_;
 
     public:
-      static std::ostream& print_(std::ostream& o, const set_t& ss)
+      static std::ostream& print_(const set_t& ss, std::ostream& o)
       {
         const char* sep = "{";
         for (auto s : ss)
@@ -64,13 +64,13 @@ namespace vcsn
       }
 
     public:
-      static std::ostream& print_(std::ostream& o, const class_to_set_t& c2ss)
+      static std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o)
       {
         const char* sep = "";
         for (unsigned i = 0; i < c2ss.size(); ++i)
           {
             o << sep << '[' << i << "] = ";
-            print_(o, c2ss[i]);
+            print_(c2ss[i], o);
             sep = "\n";
           }
         return o;
@@ -102,7 +102,7 @@ namespace vcsn
       using state_output_t = std::vector<state_output_for_label_t>;
 
     public:
-      static std::ostream& print_(std::ostream& o, const state_output_t& outs)
+      static std::ostream& print_(const state_output_t& outs, std::ostream& o)
       {
         bool first = true;
         o << '{';
@@ -152,7 +152,7 @@ namespace vcsn
               std::hash_combine(res, bits);
             }
 #if DEBUG
-          print_(std::cerr, state_output) << " = " << res << std::endl;
+          print_(state_output, std::cerr) << " = " << res << std::endl;
 #endif
           return res;
         }
@@ -183,8 +183,8 @@ namespace vcsn
           const state_output_t& as = *as_;
           const state_output_t& bs = *bs_;
 #if DEBUG
-          print_(std::cerr, as) << " =? ";
-          print_(std::cerr, bs) << " = ";
+          print_(as, std::cerr) << " =? ";
+          print_(bs, std::cerr) << " = ";
 #endif
           if (as.size() != bs.size())
             {
@@ -272,7 +272,7 @@ namespace vcsn
           o << '{' << incendl;
           for (const auto& o_s : mm)
             {
-              print_(o, *o_s.first);
+              print_(*o_s.first, o);
               const char* sep = " : {";
               for (auto s: o_s.second)
                 {
@@ -355,7 +355,7 @@ namespace vcsn
           {
             go_on = false;
 #if DEBUG
-            print_(std::cerr, class_to_set_) << std::endl;
+            print_(class_to_set_, std::cerr) << std::endl;
 #endif
             for (auto i = std::begin(classes), end = std::end(classes);
                  i != end;
@@ -379,7 +379,7 @@ namespace vcsn
                   {
 #if DEBUG
                     std::cerr << "class %" << c << " state: " << s << ' ';
-                    print_(std::cerr, state_to_state_output_[s]) << std::endl;
+                    print_(state_to_state_output_[s], std::cerr) << std::endl;
 #endif
                     signature_to_state[&state_to_state_output_[s]].emplace_back(s);
                   }

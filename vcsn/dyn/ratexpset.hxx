@@ -196,9 +196,9 @@ namespace dyn
       return rs_.conv(is);
     }
 
-    DEFINE::print(std::ostream& o, value_t v) const -> std::ostream&
+    DEFINE::print(value_t v, std::ostream& o) const -> std::ostream&
     {
-      return rs_.print(o, down(v));
+      return rs_.print(down(v), o);
     }
 
 #undef DEFINE

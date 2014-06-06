@@ -165,7 +165,7 @@ namespace vcsn
       raise(vname(), ": ranges not implemented");
     }
 
-    std::ostream& print(std::ostream& o, const value_t v,
+    std::ostream& print(const value_t v, std::ostream& o,
 			const std::string& format = "text") const;
 
     std::ostream&

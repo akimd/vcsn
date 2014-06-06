@@ -61,7 +61,7 @@ namespace vcsn
   /// Print with a separator.  Meant to help debugging.
   template <typename T, typename Compare, typename Alloc>
   std::ostream&
-  print(std::ostream& o, const std::set<T, Compare, Alloc>& set);
+  print(const std::set<T, Compare, Alloc>& set, std::ostream& o);
 
   /// Whether set1 \subset set2.
   template <typename Container1, typename Container2>

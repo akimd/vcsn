@@ -74,7 +74,7 @@ namespace vcsn
       /// Print the origins.
       static
       std::ostream&
-      print(std::ostream& o, const origins_t& orig)
+      print(const origins_t& orig, std::ostream& o)
       {
         o << "/* Origins.\n"
           << "    node [shape = box, style = rounded]\n";

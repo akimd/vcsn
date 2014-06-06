@@ -68,7 +68,7 @@ namespace vcsn
             if (ws_.show_one() || !ws_.is_one(w))
               {
                 os_ << ", " << kind << " text={";
-                ws_.print(os_, w) << '}';
+                ws_.print(w, os_) << '}';
               }
             return true;
           }

@@ -369,10 +369,10 @@ namespace vcsn
     }
 
     std::ostream&
-    print(std::ostream& o, const value_t& l,
+    print(const value_t& l, std::ostream& o,
           const std::string& format = "text") const
     {
-      return print_(o, l, format, indices);
+      return print_(l, o, format, indices);
     }
 
   private:
@@ -649,7 +649,7 @@ namespace vcsn
 
     template <std::size_t... I>
     std::ostream&
-    print_(std::ostream& o, value_t const& l,
+    print_(value_t const& l, std::ostream& o,
            const std::string& format, seq<I...>) const
     {
       if (!is_special(l))
@@ -658,7 +658,7 @@ namespace vcsn
           (void) swallow
             {
               (o << (I == 0 ? '(' : ','),
-               set<I>().print(o, std::get<I>(l), format),
+               set<I>().print(std::get<I>(l), o, format),
                0)...
             };
           o << ')';
