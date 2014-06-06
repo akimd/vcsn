@@ -34,6 +34,7 @@ namespace vcsn
       ALGO("context-of", "make-context");
       ALGO("derived-term", "derivation");
       ALGO("difference", "are-equivalent");
+      ALGO("eliminate-state", "aut-to-exp");
       ALGO("infiltration", "product");
       ALGO("is-accessible", "accessible");
       ALGO("is-coaccessible", "accessible");

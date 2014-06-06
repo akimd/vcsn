@@ -7,6 +7,7 @@
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/core/ratexp-automaton.hh>
 # include <vcsn/ctx/fwd.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/label.hh>
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/ratexp.hh>

@@ -214,7 +214,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(eliminate_state,
-                        (const automaton& aut, int) -> automaton);
+                       (const automaton& aut, int) -> automaton);
     }
   }
 
