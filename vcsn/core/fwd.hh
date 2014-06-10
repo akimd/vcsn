@@ -3,6 +3,22 @@
 
 # include <vcsn/misc/memory.hh> // make_shared_ptr.
 
+// Doxygen hack: we need to comment a namespace, just once, in order
+// for its members to show up in the documentation; if we don't do
+// this then only classes will be shown, but we have many important
+// naked functions as well --- at least one per algorithm.
+
+/// The Vaucanson Static layer, containing data structures and
+/// algorithm implementation at the lowest level.
+namespace vcsn
+{
+
+  /// The Vaucanson Dyn layer, containing data structures and
+  /// algorithm implementation at the lowest level.
+  namespace dyn
+  {}
+}
+
 namespace vcsn
 {
 

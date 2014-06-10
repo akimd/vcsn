@@ -30,3 +30,18 @@ CLEANFILES += %D%/vcsn.dox
 # We cannot simply use html_DATA here, since Automake does not
 # support installing directories.
 html_DIR += %D%/vcsn.htmldir
+
+# FIXME: developed independently; I'm not necessarily saying
+# this needs to stay, but I find it convenient.  --LS
+.PHONY: doxygen
+doxygen:
+	@if [ @DOXYGEN@ = nodoxygen ]; then \
+	  echo 'Not generating doxygen documentation'; \
+	else \
+	  cd $(abs_top_srcdir) \
+	  && $(DOXYGEN) \
+          && $(MAKE) -C $(abs_top_srcdir)/doc/doxygen/latex pdf; \
+	fi
+
+.PHONY: doc
+doc: doxygen # FIXME: add more doc dependencies
