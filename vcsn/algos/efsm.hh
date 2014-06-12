@@ -117,11 +117,11 @@ namespace vcsn
 
       void output_transition_(const transition_t t)
       {
-        aut_->print_state(os_, aut_->src_of(t));
+        aut_->print_state(aut_->src_of(t), os_);
         if (aut_->dst_of(t) != aut_->post())
           {
             os_ << '\t';
-            aut_->print_state(os_, aut_->dst_of(t));
+            aut_->print_state(aut_->dst_of(t), os_);
             os_ << '\t' << label_(aut_->label_of(t));
           }
 

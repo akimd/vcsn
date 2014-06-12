@@ -338,16 +338,16 @@ namespace vcsn
     }
 
     std::ostream&
-    print_state(std::ostream& o, state_t s) const
+    print_state(state_t s, std::ostream& o) const
     {
       return o << s - 2;
     }
 
     std::ostream&
-    print_state_name(std::ostream& o, state_t s,
+    print_state_name(state_t s, std::ostream& o,
                      const std::string& = "text") const
     {
-      return print_state(o, s);
+      return print_state(s, o);
     }
 
     static constexpr bool

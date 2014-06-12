@@ -78,16 +78,16 @@ namespace vcsn
             format("initial", aut_->get_initial_weight(s));
             format("accepting", aut_->get_final_weight(s));
             os_ << "] (";
-            aut_->print_state(os_, s);
+            aut_->print_state(s, os_);
             os_ << ')';
             if (2 < s)
               {
                 os_ << " [right=of ";
-                aut_->print_state(os_, s - 1);
+                aut_->print_state(s - 1, os_);
                 os_ << ']';
               }
             os_ << " {$";
-            aut_->print_state(os_, s);
+            aut_->print_state(s, os_);
             os_ << "$};\n";
         }
 
@@ -99,14 +99,14 @@ namespace vcsn
             for (auto dst: ds)
               {
                 os_ << "  \\path[->] (";
-                aut_->print_state(os_, src);
+                aut_->print_state(src, os_);
                 os_ << ')'
                     << " edge"
                     << (src == dst ? "[loop above]" : "")
                     << " node[above]"
                     << " {$" << format_entry_(src, dst) << "$}"
                     << " (";
-                aut_->print_state(os_, dst);
+                aut_->print_state(dst, os_);
                 os_ << ");\n";
               }
           }

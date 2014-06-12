@@ -114,7 +114,7 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(std::ostream& o, state_t s,
+      print_state_name(state_t s, std::ostream& o,
                        const std::string& fmt) const
       {
         return o << str_escape(format(rs_, origins().at(s), fmt));

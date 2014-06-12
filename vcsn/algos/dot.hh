@@ -78,7 +78,7 @@ namespace vcsn
       void
       print_state_(state_t s)
       {
-        aut_->print_state(os_, s);
+        aut_->print_state(s, os_);
         if (dot2tex_)
           {
             os_ << " [";
@@ -90,7 +90,7 @@ namespace vcsn
             if (aut_->state_has_name(s))
               {
                 os_ << "label = \"";
-                aut_->print_state_name(os_, s, "latex");
+                aut_->print_state_name(s, os_, "latex");
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   os_ << " (" << s << ')';
@@ -115,7 +115,7 @@ namespace vcsn
             if (aut_->state_has_name(s))
               {
                 os_ << " [label = \"";
-                aut_->print_state_name(os_, s, "text");
+                aut_->print_state_name(s, os_, "text");
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   os_ << " (" << s << ')';
@@ -157,13 +157,13 @@ namespace vcsn
                 for (auto s : initials_())
                   {
                     os_ << "    I";
-                    aut_->print_state(os_, s);
+                    aut_->print_state(s, os_);
                     os_ << '\n';
                   }
                 for (auto s : finals_())
                   {
                     os_ << "    F";
-                    aut_->print_state(os_, s);
+                    aut_->print_state(s, os_);
                     os_ << '\n';
                   }
                 os_ << "  }\n";
@@ -216,22 +216,22 @@ namespace vcsn
                 if (src == aut_->pre())
                   {
                     os_ << 'I';
-                    aut_->print_state(os_, dst);
+                    aut_->print_state(dst, os_);
                     os_ << " -> ";
-                    aut_->print_state(os_, dst);
+                    aut_->print_state(dst, os_);
                   }
                 else if (dst == aut_->post())
                   {
-                    aut_->print_state(os_, src);
+                    aut_->print_state(src, os_);
                     os_ << " -> ";
                     os_ << 'F';
-                    aut_->print_state(os_, src);
+                    aut_->print_state(src, os_);
                   }
                 else
                   {
-                    aut_->print_state(os_, src);
+                    aut_->print_state(src, os_);
                     os_ << " -> ";
-                    aut_->print_state(os_, dst);
+                    aut_->print_state(dst, os_);
                   }
 
                 std::string s = format_entry_(src, dst,

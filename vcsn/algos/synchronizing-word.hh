@@ -204,13 +204,13 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(std::ostream& o, state_t ss,
+      print_state_name(state_t ss, std::ostream& o,
                        const std::string& fmt = "text") const
       {
         auto ps = origins().at(ss);
-        input_->print_state_name(o, ps.first, fmt);
+        input_->print_state_name(ps.first, o, fmt);
         o << ", ";
-        input_->print_state_name(o, ps.second, fmt);
+        input_->print_state_name(ps.second, o, fmt);
         return o;
       }
 

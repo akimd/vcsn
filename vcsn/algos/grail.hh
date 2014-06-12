@@ -60,9 +60,9 @@ namespace vcsn
       /// "Src Label Dst".
       virtual void output_transition_(transition_t t)
       {
-        aut_->print_state(os_, aut_->src_of(t));
+        aut_->print_state(aut_->src_of(t), os_);
         os_ << ' ' << label_(aut_->label_of(t)) << ' ';
-        aut_->print_state(os_, aut_->dst_of(t));
+        aut_->print_state(aut_->dst_of(t), os_);
       }
 
       /// The labels and weights of transitions from \a src to \a dst.
@@ -111,7 +111,7 @@ namespace vcsn
         for (auto s: ss)
           {
             os_ << ' ';
-            aut_->print_state(os_, s);
+            aut_->print_state(s, os_);
           }
       }
 
@@ -293,14 +293,14 @@ namespace vcsn
           {
             os_ << sep
                 << "(START) |- ";
-            aut_->print_state(os_, s);
+            aut_->print_state(s, os_);
             sep = "\n";
           }
         output_transitions_();
         for (auto s: finals_())
           {
             os_ << '\n';
-            aut_->print_state(os_, s) <<  " -| (FINAL)";
+            aut_->print_state(s, os_) <<  " -| (FINAL)";
           }
       }
     };
