@@ -5,6 +5,13 @@
 
 namespace vcsn
 {
+  // Beware that this file is dangerous, as it prevents automatic
+  // instantiation of these algos.  It exists only to solve mutual
+  // dependencies (e.g.: proper uses is-valid which uses proper).
+  //
+  // FIXME: We should probably resolves these issues in some other
+  // way.
+
   template <typename Aut>
   bool in_situ_remover(Aut& aut, bool prune = true);
 
@@ -13,6 +20,13 @@ namespace vcsn
 
   template <typename Aut>
   bool is_valid(const Aut& aut);
+
+  namespace detail_info
+  {
+    template <typename Aut>
+    size_t
+    num_eps_transitions(const Aut&);
+  }
 
   namespace detail
   {

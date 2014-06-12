@@ -106,10 +106,7 @@ namespace vcsn
   }
 
   template <typename Aut>
-  bool is_eps_acyclic(const Aut& aut)
-    ATTRIBUTE_CONST;
-
-  template <typename Aut>
+  ATTRIBUTE_CONST
   bool is_eps_acyclic(const Aut& aut)
   {
     epsilon_acyclic<Aut> t{aut};

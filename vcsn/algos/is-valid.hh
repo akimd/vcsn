@@ -12,6 +12,8 @@
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-proper.hh>
+# include <vcsn/algos/proper.hh>
+# include <vcsn/algos/strip.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/direction.hh>
@@ -25,6 +27,29 @@ namespace vcsn
 
   namespace detail
   {
+
+    /// Copy of \a aut, with absolute values.
+    /// Templated to avoid useless instantiations.
+    template <typename Aut>
+    typename Aut::element_type::automaton_nocv_t
+    absval(const Aut& aut)
+    {
+      auto res = copy(aut);
+      // Apply absolute value to the weight of each transition.
+      const auto& ws = *aut->weightset();
+      for (auto t: res->transitions())
+        res->set_weight(t, ws.abs(res->weight_of(t)));
+      return res;
+    }
+
+    /// Whether proper_here(aut) succeeds.
+    /// Destroys aut.
+    template <typename Aut>
+    bool is_properable(Aut&& aut)
+    {
+      return in_situ_remover(aut);
+    }
+
 
     template <typename Aut, bool has_one = context_t_of<Aut>::has_one()>
     class is_valider
@@ -57,26 +82,6 @@ namespace vcsn
       }
 
     private:
-      /// Copy of \a aut, with absolute values.
-      /// Templated to avoid useless instantiations.
-      template <typename Aut2>
-      static Aut2 absval_(const Aut2& aut)
-      {
-        automaton_t res = copy<automaton_t, automaton_t>(aut);
-        // Apply absolute value to the weight of each transition.
-        const auto& ws = *aut->weightset();
-        for (auto t: res->transitions())
-          res->set_weight(t, ws.abs(res->weight_of(t)));
-        return res;
-      }
-
-      /// Whether proper_here(aut) succeeds.
-      /// Destroys aut.
-      static bool is_properable_(automaton_t&& aut)
-      {
-        return in_situ_remover(aut);
-      }
-
       template <star_status_t Status>
       static
       typename std::enable_if<Status == star_status_t::TOPS,
@@ -85,7 +90,7 @@ namespace vcsn
       {
         return (is_proper(aut)
                 || is_eps_acyclic(aut)
-                || is_properable_(copy(aut)));
+                || is_properable(copy(aut)));
       }
 
       template <star_status_t Status>
@@ -96,7 +101,7 @@ namespace vcsn
       {
         return (is_proper(aut)
                 || is_eps_acyclic(aut)
-                || is_properable_(absval_(aut)));
+                || is_properable(absval(aut)));
       }
 
       template <star_status_t Status>
@@ -148,7 +153,7 @@ namespace vcsn
       bool is_valid(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return is_valid(a);
+        return is_valid(strip(a));
       }
 
      REGISTER_DECLARE(is_valid,

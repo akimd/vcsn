@@ -120,16 +120,12 @@ namespace vcsn
     /*----------------------.
     | num_eps_transitions.  |
     `----------------------*/
-    template <typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                            size_t>::type
-    num_eps_transitions(const Aut&)
-      ATTRIBUTE_CONST;
 
     template <typename Aut>
+    ATTRIBUTE_CONST
     typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                             size_t>::type
-    num_eps_transitions(const Aut&)
+    num_eps_transitions_(const Aut&)
     {
       return 0;
     }
@@ -137,12 +133,19 @@ namespace vcsn
     template <typename Aut>
     typename std::enable_if<labelset_t_of<Aut>::has_one(),
                             size_t>::type
-    num_eps_transitions(const Aut& aut)
+    num_eps_transitions_(const Aut& aut)
     {
       size_t res = 0;
       for (auto t : aut->transitions())
         res += aut->labelset()->is_one(aut->label_of(t));
       return res;
+    }
+
+    template <typename Aut>
+    size_t
+    num_eps_transitions(const Aut& aut)
+    {
+      return num_eps_transitions_(aut);
     }
   }
 
