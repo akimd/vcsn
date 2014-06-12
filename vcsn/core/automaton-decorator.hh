@@ -1,24 +1,25 @@
 #ifndef VCSN_CORE_AUTOMATON_DECORATOR_HH
 # define VCSN_CORE_AUTOMATON_DECORATOR_HH
 
+# include <vcsn/misc/memory.hh>
 # include <vcsn/ctx/traits.hh>
 
 namespace vcsn
 {
   namespace detail
   {
-    template <typename AutPtr>
+    /// Aggregate an automaton, and forward calls to it.
+    template <typename Aut>
     class automaton_decorator
     {
     public:
       /// The type of automaton to wrap.
-      using automaton_ptr = AutPtr;
-      using automaton_t = typename automaton_ptr::element_type;
+      using automaton_t = Aut;
 
     public:
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
-      using automaton_nocv_t = typename automaton_t::automaton_nocv_t;
+      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
 
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
@@ -28,13 +29,13 @@ namespace vcsn
 
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
-      using kind_t = typename automaton_t::kind_t;
+      using kind_t = typename automaton_t::element_type::kind_t;
 
-      using labelset_ptr = typename automaton_t::labelset_ptr;
-      using weightset_ptr = typename automaton_t::weightset_ptr;
+      using labelset_ptr = typename automaton_t::element_type::labelset_ptr;
+      using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
 
     public:
-      automaton_decorator(automaton_ptr aut)
+      automaton_decorator(automaton_t aut)
         : aut_{aut}
       {}
 
@@ -43,7 +44,7 @@ namespace vcsn
       {}
 
       automaton_decorator(const context_t& ctx)
-        : aut_(std::make_shared<automaton_t>(ctx))
+        : aut_(make_shared_ptr<automaton_t>(ctx))
       {}
 
       automaton_decorator(automaton_decorator&& aut)
@@ -58,7 +59,7 @@ namespace vcsn
         return *this;
       }
 
-      automaton_ptr
+      automaton_t
       strip()
       {
         return aut_;
@@ -67,7 +68,7 @@ namespace vcsn
     protected:
       /// The wrapped automaton, possibly const.
       // Must be defined early to please decltype.
-      automaton_ptr aut_;
+      automaton_t aut_;
 
 
     public:
@@ -80,9 +81,9 @@ namespace vcsn
       static constexpr                                                  \
       auto                                                              \
       Name(Args&&... args)                                              \
-        -> decltype(automaton_t::Name(std::forward<Args>(args)...))     \
+        -> decltype(automaton_t::element_type::Name(std::forward<Args>(args)...))     \
       {                                                                 \
-        return automaton_t::Name(std::forward<Args>(args)...);          \
+        return automaton_t::element_type::Name(std::forward<Args>(args)...);          \
       }
 
       DEFINE(null_state);

@@ -19,9 +19,9 @@ namespace vcsn
     template <std::size_t Band, typename Aut>
     class blind_automaton_impl;
 
-    template <std::size_t Band, typename AutPtr>
+    template <std::size_t Band, typename Aut>
     using blind_automaton
-      = std::shared_ptr<blind_automaton_impl<Band, AutPtr>>;
+      = std::shared_ptr<blind_automaton_impl<Band, Aut>>;
   }
 
   // vcsn/algos/transpose.hh
@@ -31,9 +31,9 @@ namespace vcsn
     class transpose_automaton_impl;
   }
 
-  template <typename AutPtr>
+  template <typename Aut>
   using transpose_automaton
-    = std::shared_ptr<detail::transpose_automaton_impl<AutPtr>>;
+    = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
 }
 
 #endif // !VCSN_ALGOS_FWD_HH
