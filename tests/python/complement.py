@@ -101,7 +101,7 @@ digraph
   2 -> 2 [label = "a, b"]
 }
 ''')
-CHECK_EQ(True, a.complement().is_equivalent(o))
+CHECK_EQUIV(o, a.complement())
 
 # Involution.
-CHECK_EQ(True, a.complement().complement().is_equivalent(a))
+CHECK_EQUIV(a, a.complement().complement())

@@ -24,19 +24,17 @@ CHECK_EQ((r * '3/4').derived_term().strip(),
 # Standard commutes with kmul. They should be equal, but "standard"
 # leaves holes in the state numbers.
 CHECK_ISOMORPHIC(('3/4' * r).standard(),
-                 '3/4' * (r.standard()))
+                 '3/4' * r.standard())
 
 CHECK_ISOMORPHIC((r * '3/4').standard(),
                  r.standard() * '3/4')
 
-# Non-standard automata.  This time, it does not commute,
-# unfortunately we don't have a CHECK_EQUIV, because we don't have a
-# are_equivalent that works for non-deterministic automata.
+# Non-standard automata.  This time, it does not commute.
 a = q.ratexp('ab').derived_term() | q.ratexp('ab').derived_term()
-CHECK_EQ(q.ratexp('<3/4>ab+<3/4>ab'),
-         ('3/4' * a).ratexp())
-CHECK_EQ(q.ratexp('(ab)<3/4>+(ab)<3/4>'),
-         (a * '3/4').ratexp())
+CHECK_EQUIV(q.ratexp('<3/4>ab+<3/4>ab').derived_term(),
+            '3/4' * a)
+CHECK_EQUIV(q.ratexp('(ab)<3/4>+(ab)<3/4>').derived_term(),
+            a * '3/4')
 
 # Check the case of multiplication by 0.
 CHECK_EQ(q.ratexp('\z').standard(),

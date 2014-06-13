@@ -3,6 +3,7 @@ from __future__ import print_function
 from difflib import unified_diff as diff
 import inspect
 import os
+import re
 import sys
 
 count = 0
@@ -34,7 +35,7 @@ def format(d):
         return str(d)
 
 def rst_diff(expected, effective):
-    "Report the difference bw expected and effective."
+    "Report the difference bw `expected` and `effective`."
     exp = format(expected)
     eff = format(effective)
     if exp[:-1] != '\n':
@@ -47,7 +48,7 @@ def rst_diff(expected, effective):
                           fromfile='expected', tofile='effective')))
 
 def load(fname):
-    "Load the library automaton file fname."
+    "Load the library automaton file `fname`."
     import vcsn
     return vcsn.automaton.load(vcsn.datadir + "/" + fname)
 
@@ -110,6 +111,16 @@ def CHECK_EQ(expected, effective, loc = None):
             rst_file("Effective output", eff)
         rst_diff(exp, eff)
 
+def CHECK_EQUIV(a1, a2):
+    """Check that a1 and a2 are equivalent."""
+    is_bool = re.compile('lal_char\([a-z]*\)_b')
+    a1 = a1.strip()
+    a2 = a2.strip()
+    if is_bool.match(str(a1.context())) and is_bool.match(str(a1.context())):
+        CHECK_EQ(True, a1.is_equivalent(a2))
+    else:
+        CHECK_EQ(a1.proper().shortest(4), a2.proper().shortest(4))
+
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that a1 and a2 are isomorphic."
     # Isomorphism checking is not good enough.
@@ -124,7 +135,7 @@ def CHECK_ISOMORPHIC(a1, a2):
         info1['type'] = 'hidden type'
         info2['type'] = 'hidden type'
         CHECK_EQ(info1, info2)
-        CHECK_EQ(a1.shortest(4), a2.shortest(4))
+        CHECK_EQUIV(a1, a2)
     elif a1.is_isomorphic(a2):
         PASS()
     else:

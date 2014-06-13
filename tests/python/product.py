@@ -299,12 +299,6 @@ CHECK_EQ('<u>a*&<<2>\e>b*&<<0.333333>\e>c*&<<0.4>\e>d*', str(br & z & q & r))
 ## nullable labels.  ##
 ## ----------------- ##
 
-def check_equivalent(a1, a2):
-    if a1.is_equivalent(a2):
-        PASS()
-    else:
-        FAIL(a1 + " not equivalent to " + a2);
-
 lhs = vcsn.context('lan_char(ab)_b').ratexp('(a+b)*').thompson()
 rhs = vcsn.context('lan_char(bc)_b').ratexp('(b+c)*').thompson()
 res = r'''digraph
@@ -380,8 +374,8 @@ res = r'''digraph
   25 -> 10 [label = "\\e", color = DimGray]
 }'''
 CHECK_EQ(res, str(lhs & rhs))
-check_equivalent(vcsn.automaton(res).proper(),
-                 vcsn.context("lal_char(b)_b").ratexp("b*").standard())
+CHECK_EQUIV(vcsn.automaton(res).proper(),
+            vcsn.context("lal_char(b)_b").ratexp("b*").standard())
 
 third = vcsn.context('lan_char(bcd)_b').ratexp('(b+c+d)*').thompson()
 res = r'''digraph
@@ -601,8 +595,8 @@ res = r'''digraph
   91 -> 40 [label = "\\e", color = DimGray]
 }'''
 CHECK_EQ(res, str(lhs & rhs & third))
-check_equivalent(vcsn.automaton(res).proper(),
-                 vcsn.context("lal_char(b)_b").ratexp("b*").standard())
+CHECK_EQUIV(vcsn.automaton(res).proper(),
+            vcsn.context("lal_char(b)_b").ratexp("b*").standard())
 
 ###############################################
 ## Check mixed epsilon and letters going out ##
