@@ -567,16 +567,22 @@ namespace vcsn
                         const std::string& fmt,
                         seq<I...>) const
       {
-        const char* sep = "";
-        auto ss = origins().at(s);
-        using swallow = int[];
-        (void) swallow
-        {
-          (o << sep,
-           std::get<I>(auts_)->print_state_name(std::get<I>(ss), o, fmt),
-           sep = ", ",
-           0)...
-        };
+        auto i = origins().find(s);
+        if (i == std::end(origins()))
+          this->print_state(s, o);
+        else
+          {
+            const char* sep = "";
+            using swallow = int[];
+            (void) swallow
+              {
+                (o << sep,
+                 std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
+                                                      o, fmt),
+                 sep = ", ",
+                 0)...
+               };
+          }
         return o;
       }
 

@@ -148,12 +148,18 @@ namespace vcsn
       print_state_name(state_t ss, std::ostream& o,
                        const std::string& fmt = "text") const
       {
-        const char* sep = "";
-        for (auto s: origins().at(ss))
+        auto i = origins().find(ss);
+        if (i == std::end(origins()))
+          this->print_state(ss, o);
+        else
           {
-            o << sep;
-            input_->print_state_name(s, o, fmt);
-            sep = ", ";
+            const char* sep = "";
+            for (auto s: i->second)
+              {
+                o << sep;
+                input_->print_state_name(s, o, fmt);
+                sep = ", ";
+              }
           }
         return o;
       }

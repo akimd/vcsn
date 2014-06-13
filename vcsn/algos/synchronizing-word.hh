@@ -186,14 +186,15 @@ namespace vcsn
 
       /// A map from result state to tuple of original states.
       using origins_t = std::map<state_t, pair_t>;
+      mutable origins_t origins_;
 
       /// A map from result state to tuple of original states.
-      origins_t origins() const
+      const origins_t& origins() const
       {
-        origins_t res;
-        for (const auto& p: pair_states_)
-          res.emplace(p.second, p.first);
-        return res;
+        if (origins_.empty())
+          for (const auto& p: pair_states_)
+            origins_.emplace(p.second, p.first);
+        return origins_;
       }
 
       bool state_has_name(state_t s) const
@@ -207,10 +208,15 @@ namespace vcsn
       print_state_name(state_t ss, std::ostream& o,
                        const std::string& fmt = "text") const
       {
-        auto ps = origins().at(ss);
-        input_->print_state_name(ps.first, o, fmt);
-        o << ", ";
-        input_->print_state_name(ps.second, o, fmt);
+        auto i = origins().find(ss);
+        if (i == std::end(origins()))
+          this->print_state(ss, o);
+        else
+          {
+            input_->print_state_name(i->second.first, o, fmt);
+            o << ", ";
+            input_->print_state_name(i->second.second, o, fmt);
+          }
         return o;
       }
 

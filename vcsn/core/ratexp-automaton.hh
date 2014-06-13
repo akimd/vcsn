@@ -7,6 +7,7 @@
 
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/map.hh>
+# include <vcsn/misc/stream.hh> // format
 # include <vcsn/misc/unordered_map.hh>
 
 # include <vcsn/core/automaton-decorator.hh>
@@ -117,7 +118,12 @@ namespace vcsn
       print_state_name(state_t s, std::ostream& o,
                        const std::string& fmt) const
       {
-        return o << str_escape(format(rs_, origins().at(s), fmt));
+        auto i = origins().find(s);
+        if (i == std::end(origins()))
+          this->print_state(s, o);
+        else
+          o << str_escape(format(rs_, i->second, fmt));
+        return o;
       }
 
       /// Ordered map: state -> its derived term.
