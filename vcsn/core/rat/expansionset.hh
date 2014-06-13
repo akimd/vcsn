@@ -2,6 +2,7 @@
 # define VCSN_CORE_RAT_EXPANSIONSET_HH
 
 # include <vcsn/algos/split.hh> // ratexp_polynomialset_t.
+# include <vcsn/misc/map.hh>
 
 namespace vcsn
 {
@@ -84,6 +85,63 @@ namespace vcsn
         return o;
       }
 
+      /// Normalize \a res:
+      /// There must not remain a constant-term associated to one:
+      /// put it with the constant term of the expansion.
+      value_t& normalize_(value_t& res, std::true_type) const
+      {
+        auto one = rs_.labelset()->one();
+        auto i = res.polynomials.find(one);
+        if (i != std::end(res.polynomials))
+          {
+            auto j = i->second.find(rs_.one());
+            if (j != std::end(i->second))
+              {
+                res.constant = ws_.add(res.constant, j->second);
+                i->second.erase(j);
+                if (i->second.empty())
+                  res.polynomials.erase(i);
+              }
+          }
+        return res;
+      }
+
+      value_t& normalize_(value_t& res, std::false_type) const
+      {
+        return res;
+      }
+
+      value_t& normalize(value_t& res) const
+      {
+        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        return normalize_(res, has_one);
+      }
+
+      /// Denormalize \a res move the constant to the polynomial
+      /// associated to one.
+      value_t& denormalize_(value_t& res, std::true_type) const
+      {
+        auto one = rs_.labelset()->one();
+        if (!ws_.is_zero(res.constant))
+          {
+            ps_.add_weight(res.polynomials[one],
+                           polynomial_t{{rs_.one(), res.constant}});
+            res.constant = ws_.zero();
+          }
+        return res;
+      }
+
+      value_t& denormalize_(value_t& res, std::false_type) const
+      {
+        return res;
+      }
+
+      value_t& denormalize(value_t& res) const
+      {
+        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        return denormalize_(res, has_one);
+      }
+
       /// The zero.
       value_t zero() const
       {
@@ -145,17 +203,59 @@ namespace vcsn
         for (auto& p: res.polynomials)
           for (auto& m: p.second)
             m.second = ws_.ldiv(w, m.second);
-        return res;
+        return normalize(res);
+      }
+
+      void
+      conjunctions_with_one_(value_t&,
+                             const value_t&, const value_t&,
+                             std::false_type) const
+      {}
+
+      void
+      conjunctions_with_one_(value_t& res,
+                             const value_t& l, const value_t& r,
+                             std::true_type) const
+      {
+        // Spontaneous transitions from the lhs.
+        auto one = rs_.labelset()->one();
+        {
+          auto i = l.polynomials.find(one);
+          if (i != std::end(l.polynomials))
+            for (const auto& rhs: r.polynomials)
+              if (!rs_.labelset()->is_one(rhs.first))
+                ps_.add_weight(res.polynomials[one],
+                               ps_.conjunction(i->second,
+                                               ps_.lmul(rs_.atom(rhs.first),
+                                                        rhs.second)));
+        }
+        // Spontaneous transitions from the rhs.
+        {
+          auto i = r.polynomials.find(one);
+          if (i != std::end(r.polynomials))
+            for (const auto& lhs: l.polynomials)
+              if (!rs_.labelset()->is_one(lhs.first))
+                ps_.add_weight(res.polynomials[one],
+                               ps_.conjunction(ps_.lmul(rs_.atom(lhs.first),
+                                                        lhs.second),
+                                               i->second));
+        }
+        normalize(res);
       }
 
       /// The conjunction of \a l and \a r.
-      value_t conjunction(const value_t& l, const value_t& r) const
+      value_t conjunction(value_t l, value_t r) const
       {
         value_t res = zero();
+        denormalize(l);
+        denormalize(r);
         res.constant = ws_.mul(l.constant, r.constant);
         for (const auto& p: zip_maps(l.polynomials, r.polynomials))
-          res.polynomials[p.first] = ps_.conjunction(std::get<0>(p.second),
-                                                     std::get<1>(p.second));
+          res.polynomials[p.first]
+            = ps_.conjunction(std::get<0>(p.second), std::get<1>(p.second));
+
+        auto has_one = std::integral_constant<bool, context_t::has_one()>();
+        conjunctions_with_one_(res, l, r, has_one);
         return res;
       }
 

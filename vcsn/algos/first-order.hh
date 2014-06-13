@@ -277,6 +277,7 @@ namespace vcsn
               ps_.add_weight(res_.polynomials[one],
                              rs_.ldiv(lm.first, rm.first),
                              ws_.ldiv(lm.second, rm.second));
+        es_.normalize(res_);
       }
 
       void visit_ldiv_without_one(const ldiv_t& e)

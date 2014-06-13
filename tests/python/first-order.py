@@ -137,21 +137,24 @@ c = vcsn.context("lan_char(abc)_ratexpset<lal_char(xyz)_z>")
 check('\e{\}\z', '<\z>', True)
 check('\e{\}\e', '<\e>', True)
 check('\e{\}abc', 'a.[bc]', True)
-check('a{\}a', '\e.[\e]', True)
+check('a{\}a', '<\e>', True)
 check('a{\}b', '<\z>', True)
 
-check('a{\}<x>a', '\e.[<x>\e]', True)
-check('<x>a{\}<y>a', '\e.[<x{\}y>\e]', True)
+check('a{\}<x>a', '<x>', True)
+check('<x>a{\}<y>a', '<x{\}y>', True)
 check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]', True)
 check('a*{\}a', '\e.[a*{\}\e] + a.[\e]', True)
 check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]', True)
 check('(<x>a)*{\}(<y>a)*', '<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]', True)
 
+# Left quotient vs. conjunction.
+check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]', True)
+
 # Right quotient with spontaneous transitions.
 check('\z{/}\e', '<\z>', True)
 check('\e{/}\e', '<\e>', True)
 check('abc{/}\e', 'a.[bc]', True)
-check('a{/}a', '\e.[\e]', True)
+check('a{/}a', '<\e>', True)
 check('a{/}b', '<\z>', True)
 
 check('(<x>a){/}a', '\e.[<x>\e]', True)
@@ -186,7 +189,7 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 # check_conjunction RE1 RE2...
 # -----------------------------
 # Check linear(conjunction) = conjunction(linear).
-def check_conjunction(*ratexps):
+def check_conjunction(*ratexps, **kwargs):
     rat = None
     auts = []
     for r in ratexps:
@@ -196,9 +199,14 @@ def check_conjunction(*ratexps):
         else:
             rat &= exp
         auts += [exp.linear()]
+    # Product of automata.
     a1 = vcsn.automaton._product(auts)
+    # Automaton of product.
     a2 = rat.linear()
-    CHECK_ISOMORPHIC(a1, a2)
+    if 'equiv' in kwargs:
+        CHECK_EQUIV(a1, a2)
+    else:
+        CHECK_ISOMORPHIC(a1, a2)
 
 ctx = vcsn.context('lal_char(abc)_q')
 check_conjunction('(<1/6>a*+<1/3>b*)*', 'a*')
@@ -210,7 +218,13 @@ check_conjunction('(a+b+c)*<x>a(a+b+c)*',
                   '(a+b+c)*<y>b(a+b+c)*',
                   '(a+b+c)*<z>c(a+b+c)*')
 
-
+# Use a{\}a to introduce expansions with the empty word as label.
+ctx = vcsn.context('lan_char(abc)_q')
+check_conjunction(r'(a{\}a)a', r'a(a{\}a)', equiv = True)
+check_conjunction(r'(a{\}a)[ab]', r'a(a{\}a+b)', equiv = True)
+check_conjunction(r'(a{\}a)[ab]', r'a(a{\}a+b)', equiv = True)
+check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
+                  equiv = True)
 
 ## ----------------- ##
 ## LaTeX rendering.  ##
