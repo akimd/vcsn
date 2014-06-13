@@ -11,10 +11,10 @@ namespace std
   | hash(map<Key, Value>).  |
   `------------------------*/
 
-  template <typename Key, typename Value>
-  struct hash<map<Key, Value>>
+  template <typename Key, typename Value, typename Compare, typename Alloc>
+  struct hash<map<Key, Value, Compare, Alloc>>
   {
-    size_t operator()(const map<Key, Value>& m) const
+    size_t operator()(const map<Key, Value, Compare, Alloc>& m) const
     {
       size_t res = 0;
       for (const auto& kv: m)
@@ -29,10 +29,10 @@ namespace std
 
 namespace vcsn
 {
-  template <typename Key, typename Value>
+  template <typename Key, typename Value, typename Compare, typename Alloc>
   inline
   bool
-  has(const std::map<Key, Value>& s, const Key& e)
+  has(const std::map<Key, Value, Compare, Alloc>& s, const Key& e)
   {
     return s.find(e) != std::end(s);
   }
