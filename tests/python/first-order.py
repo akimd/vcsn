@@ -9,9 +9,9 @@ def is_wordset(c):
     return str(c).startswith("law_")
 
 def check(re, exp, use_spontaneous = False, no_linear = False):
-    '''Check that fo(re) = exp.  Also check that linear and derived_term
-    compute the same result, unless no_linear = True.  `no_linear` exists
-    for a bad reason: our isomorphism check fails.
+    '''Check that fo(re) = exp.  Also check that `linear` and
+    `derived_term` compute the same result, unless no_linear = True.
+    `no_linear` exists for a bad reason: our isomorphism check fails.
     '''
     r = c.ratexp(re)
     eff = r.first_order(use_spontaneous)
@@ -177,6 +177,39 @@ E1='(<1/6>a*+<1/3>b*)*'
 # E1 typed.
 E1t="(?@lal_char(ab)_q)"+E1
 check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
+
+
+############################################
+## Conjunction and derived-term commute.  ##
+############################################
+
+# check_conjunction RE1 RE2...
+# -----------------------------
+# Check linear(conjunction) = conjunction(linear).
+def check_conjunction(*ratexps):
+    rat = None
+    auts = []
+    for r in ratexps:
+        exp = ctx.ratexp(r)
+        if rat is None:
+            rat = exp
+        else:
+            rat &= exp
+        auts += [exp.linear()]
+    a1 = vcsn.automaton._product(auts)
+    a2 = rat.linear()
+    CHECK_ISOMORPHIC(a1, a2)
+
+ctx = vcsn.context('lal_char(abc)_q')
+check_conjunction('(<1/6>a*+<1/3>b*)*', 'a*')
+check_conjunction('(<1/6>a*+<1/3>b*)*', 'b*')
+check_conjunction('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
+
+ctx = vcsn.context('lal_char(abc)_ratexpset<lal_char(xyz)_b>')
+check_conjunction('(a+b+c)*<x>a(a+b+c)*',
+                  '(a+b+c)*<y>b(a+b+c)*',
+                  '(a+b+c)*<z>c(a+b+c)*')
+
 
 
 ## ----------------- ##

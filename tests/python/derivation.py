@@ -223,37 +223,3 @@ CHECK_EQ(open(medir + '/h3-dt.gv').read().strip(),
          str(fig3.derived_term()))
 CHECK_EQ(open(medir + '/h3-dt-breaking.gv').read().strip(),
          str(fig3.derived_term(True)))
-
-
-
-
-############################################
-## Conjunction and derived-term commute.  ##
-############################################
-
-# check_conjunction RE1 RE2...
-# -----------------------------
-# Check derived-term(conjunction) = conjunction(derived-term).
-#
-# Of course we'd like to use a "are-isomorphic", but we don't have one
-# currently.  Meanwhile, check equality on the first accepted words,
-# and one the info of both automata.
-def check_conjunction(*ratexps):
-    auts = []
-    rat = ctx.ratexp('\e')
-    for r in ratexps:
-        auts += [ctx.ratexp(r).derived_term()]
-    rat = ctx.ratexp('(' + ')&('.join(ratexps) + ')')
-    a1 = vcsn.automaton._product(auts)
-    a2 = rat.derived_term()
-    CHECK_ISOMORPHIC(a1, a2)
-
-ctx = vcsn.context('lal_char(abc)_q')
-check_conjunction('(<1/6>a*+<1/3>b*)*', 'a*')
-check_conjunction('(<1/6>a*+<1/3>b*)*', 'b*')
-check_conjunction('(a+b+c)*a(a+b+c)*', '(a+b+c)*b(a+b+c)*', '(a+b+c)*c(a+b+c)*')
-
-ctx = vcsn.context('lal_char(abc)_ratexpset<lal_char(xyz)_b>')
-check_conjunction('(a+b+c)*<x>a(a+b+c)*',
-                  '(a+b+c)*<y>b(a+b+c)*',
-                  '(a+b+c)*<z>c(a+b+c)*')
