@@ -10,7 +10,7 @@ def is_wordset(c):
 
 def check(re, exp, use_spontaneous = False, no_linear = False):
     '''Check that fo(re) = exp.  Also check that `linear` and
-    `derived_term` compute the same result, unless no_linear = True.
+    `derived_term` compute the same result, unless `no_linear = True`.
     `no_linear` exists for a bad reason: our isomorphism check fails.
     '''
     r = c.ratexp(re)
@@ -131,7 +131,7 @@ check('a*{/}a', '<\e> + a.[a*]')
 ## With spontaneous transitions.  ##
 ## ------------------------------ ##
 
-c = vcsn.context("lan_char(abc)_ratexpset<lal_char(xyz)_z>")
+c = vcsn.context("lan_char(abcd)_ratexpset<lal_char(xyz)_z>")
 
 # Lquotient with spontaneous transitions.
 check('\e{\}\z', '<\z>', True)
@@ -153,21 +153,28 @@ check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]', True)
 # Right quotient with spontaneous transitions.
 check('\z{/}\e', '<\z>', True)
 check('\e{/}\e', '<\e>', True)
-check('abc{/}\e', 'a.[bc]', True)
 check('a{/}a', '<\e>', True)
 check('a{/}b', '<\z>', True)
+check('abcd{/}\e', 'a.[bcd]', True)
+check('abcd{/}d', '\e.[(abc){T}{T}]', True)
+check('abcd{/}cd', '\e.[(c{\}(abc){T}){T}]', True)
+check('abcd{/}bcd', '\e.[((bc){T}{\}(abc){T}){T}]', True)
+check('abcd{/}abcd', '\e.[((abc){T}{\}(abc){T}){T}]', True)
 
-check('(<x>a){/}a', '\e.[<x>\e]', True)
-check('<x>a{/}<y>a', '\e.[<y>\e{\}<x>\e]', True)
-check('a{/}(<x>a)*', '\e.[<x>(<x>a)*{T}{\}\e] + a.[\e]', True)
+check('(<x>a){/}a', '\e.[(<x>\e){T}]', True)
+check('<x>a{/}<y>a', '\e.[(<y>\e{\}<x>\e){T}]', True)
+check('a{/}(<x>a)*', '\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]', True)
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(a)*',
-'<\e> + \e.[a*{T}{\}<x>(<x>a)*{T}] + a.[<x>(<x>a)*]', True)
-check('a*{/}a', '\e.[a*{T}]', True)
-check('a*{/}a*', '<\e> + \e.[a*{T}{\}a*{T}] + a.[a*]', True)
+'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]', True)
+check('a*{/}a', '\e.[a*{T}{T}]', True)
+check('a*{/}a*', '<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]', True)
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-'<\e> + \e.[<y>(<y>a)*{T}{\}<x>(<x>a)*{T}] + a.[<x>(<x>a)*]', True)
+'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]', True)
+
+# Right quotient vs. conjunction.
+check('(ab{/}ab)c&c', '\e.[(a{\}a){T}c&c]', True)
 
 
 
@@ -218,11 +225,11 @@ check_conjunction('(a+b+c)*<x>a(a+b+c)*',
                   '(a+b+c)*<y>b(a+b+c)*',
                   '(a+b+c)*<z>c(a+b+c)*')
 
-# Use a{\}a to introduce expansions with the empty word as label.
+# Use ab{\}ab to introduce expansions with the empty word as label.
 ctx = vcsn.context('lan_char(abc)_q')
-check_conjunction(r'(a{\}a)a', r'a(a{\}a)', equiv = True)
-check_conjunction(r'(a{\}a)[ab]', r'a(a{\}a+b)', equiv = True)
-check_conjunction(r'(a{\}a)[ab]', r'a(a{\}a+b)', equiv = True)
+check_conjunction(r'(ab{\}ab)a', r'a(ab{\}ab)', equiv = True)
+check_conjunction(r'(ab{\}ab)[ab]', r'a(ab{\}ab+b)', equiv = True)
+check_conjunction(r'(ab{\}ab)[ab]', r'a(ab{\}ab+b)', equiv = True)
 check_conjunction(r'<1/10>(ab{\}<1/2>ab+c)<2>', '<1/20>(ab{\}<1/3>ab+c)<3>',
                   equiv = True)
 

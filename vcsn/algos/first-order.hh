@@ -274,9 +274,14 @@ namespace vcsn
             for (const auto& rm: std::get<1>(p.second))
               // Now, recursively develop the quotient of monomials,
               // directly in res_.
-              ps_.add_weight(res_.polynomials[one],
-                             rs_.ldiv(lm.first, rm.first),
-                             ws_.ldiv(lm.second, rm.second));
+              if (transposed_)
+                ps_.add_weight(res_.polynomials[one],
+                               rs_.transposition(rs_.ldiv(lm.first, rm.first)),
+                               ws_.transpose(ws_.ldiv(lm.second, rm.second)));
+              else
+                ps_.add_weight(res_.polynomials[one],
+                               rs_.ldiv(lm.first, rm.first),
+                               ws_.ldiv(lm.second, rm.second));
         es_.normalize(res_);
       }
 
