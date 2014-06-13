@@ -20,11 +20,13 @@ namespace vcsn
     automaton accessible(const automaton& aut);
 
     /// Whether define the same language.
-    /// \pre lhs and rhs are lal
+    /// \pre The labelsets of lhs and rhs are free.
     /// \pre lhs and rhs are Boolean
     bool are_equivalent(const automaton& lhs, const automaton& rhs);
 
     /// Whether define the same language.
+    /// \pre The labelsets of lhs and rhs are free.
+    /// \pre lhs and rhs are Boolean
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
     /// Whether there exists an isomorphism between \a lhs's states
