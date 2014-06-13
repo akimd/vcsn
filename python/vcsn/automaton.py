@@ -72,9 +72,9 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
         res = p1.communicate()
         subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                                "--output", tmp + ".pdf", tmp + ".tex"])
-        # sudo easy_install wand
-        from wand.image import Image as WImage
-        return WImage(filename=tmp + '.pdf', resolution = 600)
+        subprocess.check_call(["pdf2svg", tmp + ".pdf", tmp + ".svg"])
+        from IPython.display import SVG
+        return SVG(filename=tmp + '.svg')
     else:
         raise(ValueError("invalid format: ", format))
 
