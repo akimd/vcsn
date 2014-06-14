@@ -217,10 +217,6 @@ conjunction:
 here, res _can_ be \z, in which case we build a polynomial (\z -> 1), which
 is forbidden (this should be the empty polynomial).
 
-** Metadata
-We need to keep metadata about automata, especially state names.  Then
-update all the "VCSN_ORIGINS" uses.
-
 ** Dyn weights
 Now that we have dynamic weights, they could be used in lib/vcsn/rat
 parsing, instead of a simple string that is converted by the weightset.
@@ -341,10 +337,6 @@ automaton.
 At some point, someone should really work on the XML formalism.
 
 * More algorithms
-** are-isomorphic
-Implement it.  Sources of inspiration: Vaucanson 1 (I have been told there
-are two implementations there), Forlan.
-
 ** determinization
 Look for other implementations (cf. "Five determinization algorithms").  And
 pay attention to the case of large alphabets.
@@ -377,9 +369,6 @@ Is this what we want?
 We should find a means to forbid transition from pre to post.  This
 was the case initially, but it is a useless constraint in aut-to-exp.
 Maybe it should be efforced only in non labels_are_unit case.
-
-* move files around
-The hierarchy and the namespaces do not match.
 
 * Readings
 About dyn/static bridge:
