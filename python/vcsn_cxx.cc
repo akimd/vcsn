@@ -265,6 +265,11 @@ struct automaton
 
   automaton left_mult(const weight& w) const;
 
+  automaton lift() const
+  {
+    return vcsn::dyn::lift(val_);
+  }
+
   automaton minimize(const std::string& algo = "weighted") const
   {
     return vcsn::dyn::minimize(val_, algo);
@@ -554,6 +559,11 @@ struct ratexp
 
   ratexp left_mult(const weight& w) const;
 
+  ratexp lift() const
+  {
+    return vcsn::dyn::lift(val_);
+  }
+
   automaton linear(bool use_spontaneous = true) const
   {
     return vcsn::dyn::linear(val_, use_spontaneous);
@@ -825,6 +835,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_useless", &automaton::is_useless)
     .def("is_valid", &automaton::is_valid)
     .def("left_mult", &automaton::left_mult)
+    .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, minimize())
     .def("pair", &automaton::pair, pair())
     .def("power", &automaton::power)
@@ -901,6 +912,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)
     .def("linear", &ratexp::linear, linear())
+    .def("lift", &ratexp::lift)
     .def("right_mult", &ratexp::right_mult)
     .def("shuffle", &ratexp::shuffle)
     .def("split", &ratexp::split)

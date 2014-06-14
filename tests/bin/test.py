@@ -96,7 +96,9 @@ def XFAIL(fun):
         FAIL('did not raise an exception', str(fun))
 
 def CHECK_EQ(expected, effective, loc = None):
-    "Check that effective value is equal to expected."
+    "Check that `effective` is equal to `expected`."
+    if isinstance(expected, str) and not isinstance(effective, str):
+        effective = str(effective)
     if expected == effective:
         PASS(loc=loc)
     else:
@@ -112,7 +114,7 @@ def CHECK_EQ(expected, effective, loc = None):
         rst_diff(exp, eff)
 
 def CHECK_EQUIV(a1, a2):
-    """Check that a1 and a2 are equivalent."""
+    """Check that `a1` and `a2` are equivalent."""
     is_bool = re.compile('lal_char\([a-z]*\)_b')
     a1 = a1.strip()
     a2 = a2.strip()
@@ -122,7 +124,7 @@ def CHECK_EQUIV(a1, a2):
         CHECK_EQ(a1.proper().shortest(4), a2.proper().shortest(4))
 
 def CHECK_ISOMORPHIC(a1, a2):
-    "Check that a1 and a2 are isomorphic."
+    "Check that `a1` and `a2` are isomorphic."
     # Isomorphism checking is not good enough.
     # FIXME: when are_isomorphic works properly, in particular
     # when we deal properly with RatS instead of RatE as weights,
