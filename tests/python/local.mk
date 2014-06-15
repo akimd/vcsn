@@ -152,19 +152,19 @@ EXTRA_DIST +=                                   \
   %D%/product.dir/xyz.gv                        \
   %D%/union.dir/abc.gv
 
-%D%/aut-to-exp.log:	 $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
-%D%/automaton.log:	 $(wildcard $(srcdir)/%D%/automaton.dir/*)
-%D%/compose.log:	 $(wildcard $(srcdir)/%D%/compose/*)
+%D%/aut-to-exp.log:      $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
+%D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
+%D%/compose.log:         $(wildcard $(srcdir)/%D%/compose/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
-%D%/determinize.log:	 $(wildcard $(srcdir)/%D%/determinize.dir/*)
+%D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
 %D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
-%D%/factory.log:	 $(wildcard $(srcdir)/%D%/factory.dir/*)
-%D%/infiltration.log:	 $(wildcard $(srcdir)/%D%/product.dir/*)
-%D%/minimize.log:	 $(wildcard $(srcdir)/%D%/minimize.dir/*)
-%D%/power.log:		 $(wildcard $(srcdir)/%D%/power.dir/*)
-%D%/product.log:	 $(wildcard $(srcdir)/%D%/product.dir/*)
-%D%/union.log:		 $(wildcard $(srcdir)/%D%/union.dir/*)
+%D%/factory.log:         $(wildcard $(srcdir)/%D%/factory.dir/*)
+%D%/infiltration.log:    $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
+%D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
+%D%/product.log:         $(wildcard $(srcdir)/%D%/product.dir/*)
+%D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 
 .PHONY: check-python
 check-python:
