@@ -11,16 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
-%C%_TESTS =                                     \
-  %D%/efsm.chk
-
 dist_TESTS += $(%C%_TESTS)
-
-EXTRA_DIST +=                                   \
-  %D%/efsm.dir/a1.efsm                          \
-  %D%/efsm.dir/binary.efsm
-
-%D%/efsm.log:        $(wildcard $(srcdir)/%D%/efsm.dir/*)
 
 # Very coarse grain: we compile the whole TAF-Kit even if we just run
 # one test which requires only a single TAF-Kit command.  Fine grain

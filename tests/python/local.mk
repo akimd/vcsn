@@ -29,6 +29,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/derivation.py                             \
   %D%/determinize.py                            \
   %D%/difference.py                             \
+  %D%/efsm.py                                   \
   %D%/eliminate-state.py                        \
   %D%/enumerate.py                              \
   %D%/evaluate.py                               \
@@ -119,6 +120,8 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
+  %D%/efsm.dir/a1.efsm                          \
+  %D%/efsm.dir/binary.efsm                      \
   %D%/eliminate-state.dir/lao-elim-0.gv         \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
@@ -155,6 +158,7 @@ EXTRA_DIST +=                                   \
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:	 $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)
+%D%/efsm.log:            $(wildcard $(srcdir)/%D%/efsm.dir/*)
 %D%/factory.log:	 $(wildcard $(srcdir)/%D%/factory.dir/*)
 %D%/infiltration.log:	 $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log:	 $(wildcard $(srcdir)/%D%/minimize.dir/*)

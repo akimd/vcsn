@@ -136,7 +136,10 @@ def _automaton_load(file, format = "dot"):
     return automaton(open(file, "r").read(), format)
 automaton.load = staticmethod(_automaton_load)
 
-def _automaton_fst(aut, cmd):
+def _automaton_fst(cmd, aut):
+    '''Run the command `cmd` on the automaton `aut` coded in OpenFST
+    format via pipes.
+    '''
     import subprocess
     p1 = subprocess.Popen(['efstcompile'],
                           stdin=subprocess.PIPE,
@@ -156,8 +159,37 @@ def _automaton_fst(aut, cmd):
     res = p3.communicate()[0]
     return automaton(res, "efsm")
 
-automaton.fstdeterminize = lambda self: _automaton_fst(self, "fstdeterminize")
-automaton.fstminimize = lambda self: _automaton_fst(self, "fstminimize")
+def _automaton_fst_files(cmd, *aut):
+    '''Run the command `cmd` on the automata `aut` coded in OpenFST
+    format, via files.
+    '''
+    import subprocess
+    files = []
+    import tempfile
+    import subprocess
+    for a in aut:
+        file = tempfile.NamedTemporaryFile().name + '.fst'
+        proc = subprocess.Popen(['efstcompile'],
+                                stdin=subprocess.PIPE,
+                                stdout=open(file, 'w'),
+                                stderr=subprocess.PIPE)
+        proc.stdin.write(a.format('efsm'))
+        proc.communicate()
+        files += [file]
+    proc = subprocess.Popen([cmd] + files,
+                            stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    decode = subprocess.Popen(['efstdecompile'],
+                              stdin=proc.stdout,
+                              stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE)
+    res = decode.communicate()[0]
+    return automaton(res, "efsm")
+
+automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
+automaton.fstintersect = lambda a, b: _automaton_fst_files("fstintersect", a, b)
+automaton.fstminimize = lambda self: _automaton_fst("fstminimize", self)
 
 automaton.info = lambda self, detailed = False: \
   _info_to_dict(self.format('info,detailed' if detailed else 'info'))
