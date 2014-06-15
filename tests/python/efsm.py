@@ -5,24 +5,33 @@ from test import *
 
 from vcsn.automaton import _automaton_fst, _automaton_fst_files
 
-# check GV EFSM
-# -------------
-# Check the conversion from Dot to FSM, and back.
-def check (fgv, fefsm):
-  gv = open(vcsn.datadir + "/" + fgv).read().strip()
+def check (aut, fefsm):
+  'Check the conversion from Dot to FSM, and back.'
   efsm = open(medir + "/" + fefsm).read().strip()
 
   # Check support for EFSM I/O.
-  CHECK_EQ(efsm, vcsn.automaton(gv, 'dot').format('efsm'))
+  CHECK_EQ(efsm, aut.format('efsm'))
   CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
 
   # Check OpenFST's support for EFSM I/O.
-  aut = vcsn.automaton(gv)
   CHECK_EQ(aut, _automaton_fst('cat', aut))
 
-check('lal_char_b/a1.gv', 'a1.efsm')
-check('lal_char_z/binary.gv', 'binary.efsm')
+a1 = load('lal_char_b/a1.gv')
+check(a1, 'a1.efsm')
+bin = load('lal_char_z/binary.gv')
+check(bin, 'binary.efsm')
 
+# Check the support of spontaneous transitions.
+# Note that "sort" is critical here, otherwise the transitions
+# are not issued in the state-order, so when we read back, the
+# states numbers are different.
+abs = vcsn.context('lan_char(ab)_b').ratexp('ab*').thompson().sort()
+check(abs, 'abs.efsm')
+
+# Using law_char(a-z)_b is tempting, but when reading back, we take
+# the smallest possible alphabet.
+str = vcsn.context('law_char(acdeghilnprt)_b').ratexp('(grand)*(parent+child)').thompson().sort()
+check(str, 'str.efsm')
 
 # Check that Open FST and V2 understand the weights the same way.
 #

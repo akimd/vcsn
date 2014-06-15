@@ -121,7 +121,9 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/efsm.dir/a1.efsm                          \
+  %D%/efsm.dir/abs.efsm                         \
   %D%/efsm.dir/binary.efsm                      \
+  %D%/efsm.dir/str.efsm                         \
   %D%/eliminate-state.dir/lao-elim-0.gv         \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \

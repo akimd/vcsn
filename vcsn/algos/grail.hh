@@ -52,8 +52,7 @@ namespace vcsn
       virtual std::string
       label_(const label_t& l)
       {
-        return (aut_->labelset()->is_one(l) ? "@epsilon"
-                : format(*aut_->labelset(), l));
+        return ls_.is_one(l) ? "@epsilon" : format(ls_, l);
       }
 
       /// Output the transition \a t.  Do not insert eol.
@@ -139,6 +138,8 @@ namespace vcsn
       const automaton_t& aut_;
       /// Output stream.
       std::ostream& os_;
+      /// Short-hand to the labelset.
+      const labelset_t_of<automaton_t>& ls_ = *aut_->labelset();
       /// Short-hand to the weightset.
       const weightset_t& ws_ = *aut_->weightset();
       /// Short-hand to the polynomialset used to print the entries.

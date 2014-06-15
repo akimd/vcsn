@@ -1,0 +1,30 @@
+#! /bin/sh
+
+me=$(basename "$0")
+medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
+
+cat >$medir/isymbols.txt <<\EOFSM
+\e	0
+a	1
+b	2
+EOFSM
+
+cat >$medir/transitions.fsm <<\EOFSM
+0	1	a
+1	2	\e
+2	3	\e
+2	4	\e
+3	5	b
+5	3	\e
+5	4	\e
+4
+EOFSM
+
+fstcompile --acceptor \
+  --keep_isymbols --isymbols=$medir/isymbols.txt \
+  --keep_osymbols --osymbols=$medir/isymbols.txt \
+  $medir/transitions.fsm "$@"
+sta=$?
+
+rm -rf $medir
+exit $sta
