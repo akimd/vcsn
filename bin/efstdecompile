@@ -4,7 +4,7 @@
 me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
-syms=$medir/symbols.txt
+syms=$medir/isymbols.txt
 trans=$medir/transitions.fsm
 fstprint --acceptor --save_isymbols=$syms "$@" > $trans
 
@@ -15,7 +15,7 @@ cat <<EOF
 me=\$(basename "\$0")
 medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
 
-cat >\$medir/symbols.txt <<\EOFSM
+cat >\$medir/isymbols.txt <<\EOFSM
 $(sort -n -k2 $syms)
 EOFSM
 
@@ -24,8 +24,8 @@ $(cat $trans)
 EOFSM
 
 fstcompile --acceptor \\
-  --keep_isymbols --isymbols=\$medir/symbols.txt \\
-  --keep_osymbols --osymbols=\$medir/symbols.txt \\
+  --keep_isymbols --isymbols=\$medir/isymbols.txt \\
+  --keep_osymbols --osymbols=\$medir/isymbols.txt \\
   \$medir/transitions.fsm "\$@"
 sta=\$?
 

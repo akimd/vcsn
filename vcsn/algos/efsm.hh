@@ -23,7 +23,7 @@ namespace vcsn
     ///
     /// \tparam Aut an automaton type, not a pointer type.
     ///
-    /// http://www2.research.att.com/~efsmtools/efsm/man4/efsm.5.html
+    /// http://www2.research.att.com/~fsmtools/fsm/man4/fsm.5.html
     template <typename Aut>
     class efsmer: public outputter<Aut>
     {
@@ -45,9 +45,9 @@ namespace vcsn
         : super_type(aut, out)
       {
         // Special label.
-        names_[""] = 0;
+        isymbols_[""] = 0;
         // Empty label.
-        names_["\\e"] = 0;
+        isymbols_["\\e"] = 0;
       }
 
       /// Actually output \a aut_ on \a os_.
@@ -62,9 +62,9 @@ namespace vcsn
 
           // Provide the symbols first, as when reading EFSM, knowing
           // how \e is represented will help reading the transitions.
-          "cat >$medir/symbols.txt <<\\EOFSM\n"
+          "cat >$medir/isymbols.txt <<\\EOFSM\n"
           ;
-        output_input_labels_();
+        output_isymbols_();
         os_ <<
           "EOFSM\n"
           "\n"
@@ -85,8 +85,8 @@ namespace vcsn
           // bases its implementation of intersect on its (transducer)
           // composition.
           "fstcompile --acceptor \\\n"
-          "  --keep_isymbols --isymbols=$medir/symbols.txt \\\n"
-          "  --keep_osymbols --osymbols=$medir/symbols.txt \\\n"
+          "  --keep_isymbols --isymbols=$medir/isymbols.txt \\\n"
+          "  --keep_osymbols --osymbols=$medir/isymbols.txt \\\n"
           "  $medir/transitions.fsm \"$@\"\n"
           "sta=$?\n"
           "\n"
@@ -99,7 +99,7 @@ namespace vcsn
       /// The FSM format uses integers for labels.  Reserve 0 for
       /// epsilon (and the special symbol, that flags initial and
       /// final transitions).
-      using label_names_t = std::map<std::string, unsigned>;
+      using symbols_t = std::map<std::string, unsigned>;
 
       /// Return the label \a l, record it for the input symbol lists.
       virtual std::string
@@ -108,7 +108,7 @@ namespace vcsn
         /// FIXME: not very elegant, \\e should be treated elsewhere.
         std::string res = (aut_->labelset()->is_special(l) ? "\\e"
                            : format(*aut_->labelset(), l));
-        auto insert = names_.emplace(res, name_);
+        auto insert = isymbols_.emplace(res, name_);
         // If the label is fresh, prepare the next name.
         if (insert.second)
           ++name_;
@@ -166,7 +166,7 @@ namespace vcsn
       }
 
       /// Output the mapping from label name, to label number.
-      void output_input_labels_()
+      void output_isymbols_()
       {
         // Find all the labels, to number them.
         {
@@ -179,14 +179,14 @@ namespace vcsn
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.
         os_ << "\\e\t0\n";
-        for (const auto& p: names_)
+        for (const auto& p: isymbols_)
           // Don't define 0 again.
           if (p.second)
             os_ << p.first << '\t' << p.second << '\n';
       }
 
       /// The FSM format uses integers for labels.
-      label_names_t names_;
+      symbols_t isymbols_;
       /// A counter used to name the labels.
       /// 0 is already used for epsilon and special.
       unsigned name_ = 1;
