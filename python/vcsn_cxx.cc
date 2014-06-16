@@ -280,6 +280,11 @@ struct automaton
     return vcsn::dyn::pair(val_, keep_initials);
   }
 
+  automaton prefix() const
+  {
+    return vcsn::dyn::prefix(val_);
+  }
+
   automaton power(unsigned n) const
   {
     return vcsn::dyn::power(val_, n);
@@ -838,6 +843,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, minimize())
     .def("pair", &automaton::pair, pair())
+    .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper, proper())

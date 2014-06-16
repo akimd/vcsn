@@ -55,6 +55,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/minimize-signature.hh               \
   %D%/algos/minimize-weighted.hh                \
   %D%/algos/minimize.hh                         \
+  %D%/algos/prefix.hh                           \
   %D%/algos/print.hh                            \
   %D%/algos/product.hh                          \
   %D%/algos/proper.hh                           \

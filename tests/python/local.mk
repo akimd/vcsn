@@ -52,10 +52,11 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/ladybird.py                               \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
+  %D%/prefix.py                                 \
   %D%/polynomial.py                             \
   %D%/power.py                                  \
   %D%/product.py                                \
-  %D%/proper.py	                                \
+  %D%/proper.py                                 \
   %D%/ratexp.py                                 \
   %D%/shuffle.py                                \
   %D%/sort.py                                   \
