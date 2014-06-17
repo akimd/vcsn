@@ -5,9 +5,9 @@
 # include <iostream>
 # include <map>
 
-# include <vcsn/dyn/fwd.hh>
 # include <vcsn/algos/grail.hh> // outputter
-
+# include <vcsn/dyn/fwd.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/misc/escape.hh>
 
 namespace vcsn
@@ -18,6 +18,18 @@ namespace vcsn
   `--------------------------*/
   namespace detail
   {
+    /// Number of tapes.
+    template <typename LabelSet>
+    struct rank
+    {
+      static constexpr size_t value = 1;
+    };
+
+    template <typename... LabelSet>
+    struct rank<tupleset<LabelSet...>>
+    {
+      static constexpr size_t value = sizeof...(LabelSet);
+    };
 
     /// \brief Format automaton to EFSM format, based on FSM format.
     ///
@@ -51,17 +63,13 @@ namespace vcsn
           "\n"
           "me=$(basename \"$0\")\n"
           "medir=$(mktemp -d \"/tmp/$me.XXXXXX\") || exit 1\n"
-          "\n"
+          "\n";
 
           // Provide the symbols first, as when reading EFSM, knowing
           // how \e is represented will help reading the transitions.
-          "cat >$medir/isymbols.txt <<\\EOFSM\n"
-          ;
-        output_isymbols_();
-        os_ <<
-          "EOFSM\n"
-          "\n"
+        output_symbols_();
 
+        os_ <<
           "cat >$medir/transitions.fsm <<\\EOFSM";
         output_transitions_();
         os_ <<
@@ -77,9 +85,9 @@ namespace vcsn
           // osymbols; this seems to be due to the fact that Open FST
           // bases its implementation of intersect on its (transducer)
           // composition.
-          "fstcompile --acceptor \\\n"
-          "  --keep_isymbols --isymbols=$medir/isymbols.txt \\\n"
-          "  --keep_osymbols --osymbols=$medir/isymbols.txt \\\n"
+          "fstcompile" << (is_transducer ? "" : " --acceptor") << " \\\n"
+          "  --keep_isymbols --isymbols=" << isymbols_ << " \\\n"
+          "  --keep_osymbols --osymbols=" << osymbols_ << " \\\n"
           "  $medir/transitions.fsm \"$@\"\n"
           "sta=$?\n"
           "\n"
@@ -89,10 +97,21 @@ namespace vcsn
       }
 
     private:
-      /// The FSM format uses integers for labels.  Reserve 0 for
-      /// epsilon (and the special symbol, that flags initial and
-      /// final transitions).
-      using symbols_t = std::map<label_t, unsigned>;
+      /// Acceptor.
+      template <typename Label>
+      void output_label_(const Label& l, std::false_type)
+      {
+        ls_.print(l, os_);
+      }
+
+      /// Two-tape automaton.
+      template <typename Label>
+      void output_label_(const Label& l, std::true_type)
+      {
+        ls_.template set<0>().print(std::get<0>(l), os_);
+        os_ << '\t';
+        ls_.template set<1>().print(std::get<1>(l), os_);
+      }
 
       void output_transition_(const transition_t t)
       {
@@ -105,7 +124,7 @@ namespace vcsn
             if (ls_.is_special(aut_->label_of(t)))
               os_ << "\\e";
             else
-              ls_.print(aut_->label_of(t), os_);
+              output_label_(aut_->label_of(t), is_transducer);
           }
 
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
@@ -148,35 +167,108 @@ namespace vcsn
           }
       }
 
-      /// Output the mapping from label name, to label number.  The
-      /// FSM format uses integers for labels.
-      void output_isymbols_()
+      /// Output the mapping from label name, to label number.
+      ///
+      /// The FSM format uses integers for labels.  Reserve 0 for
+      /// epsilon (and the special symbol, that flags initial and
+      /// final transitions).
+      ///
+      /// Instead of directly printing the labels, use a projection
+      /// function.  So when printing transducers, this function is
+      /// used twice, once for each tape, with a projection function
+      /// from two-tape labels to either one.
+      ///
+      /// \tparam LabelSet
+      ///    the type of the labelset of the labels  to declare.
+      /// \tparam GetLabel
+      ///    the type of the lambda to apply to project the labels.
+      ///
+      /// \param name
+      ///    name of the files to create (e.g., "isymbols.txt").
+      /// \param ls
+      ///    The LabelSet to use to print the labels.
+      /// \param get_label
+      ///    A projection from exact labels to the one we output.
+      template <typename LabelSet, typename GetLabel>
+      void output_symbols_(const std::string& name,
+                           const LabelSet& ls,
+                           GetLabel get_label)
       {
-        symbols_t isymbols;
+        // The labels we declare.
+        using label_t = typename LabelSet::value_t;
+        using symbols_t = std::map<label_t, unsigned>;
 
-        // Find all the labels, to number them.
+        symbols_t syms;
         {
           std::set<label_t> labels;
           for (auto t : aut_->transitions())
-            labels.insert(aut_->label_of(t));
+            labels.insert(get_label(aut_->label_of(t)));
           // 0 is reserved for one and special.
-          isymbols[ls_.special()] = 0;
-          unsigned name_ = 1;
+          syms[ls.special()] = 0;
+          unsigned num = 1;
           for (auto l: labels)
-            isymbols.emplace(l, ls_.is_one(l) ? 0 : name_++);
+            syms.emplace(l, ls.is_one(l) ? 0 : num++);
         }
 
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.
-        os_ << "\\e\t0\n";
-        for (const auto& p: isymbols)
+        os_ <<
+          "cat >" << name << " <<\\EOFSM\n"
+          "\\e\t0\n";
+        for (const auto& p: syms)
           // Don't define 0 again.
           if (p.second)
             {
-              ls_.print(p.first, os_);
+              ls.print(p.first, os_);
               os_ << '\t' << p.second << '\n';
             }
+        os_ <<
+          "EOFSM\n"
+          "\n";
       }
+
+      /// Labels of an acceptor.
+      template <typename>
+      void
+      output_symbols_impl_(std::false_type)
+      {
+        output_symbols_(isymbols_,
+                        ls_,
+                        [](label_t l) { return l; });
+      }
+
+      /// Labels of a two-tape automaton.
+      template <typename>
+      void
+      output_symbols_impl_(std::true_type)
+      {
+        output_symbols_(isymbols_,
+                        ls_.template set<0>(),
+                        [](const label_t& l) { return std::get<0>(l); });
+        output_symbols_(osymbols_,
+                        ls_.template set<1>(),
+                        [](const label_t& l) { return std::get<1>(l); });
+      }
+
+      void
+      output_symbols_()
+      {
+        output_symbols_impl_<automaton_t>(is_transducer);
+      }
+
+      /// Whether is a transducer (two-tape automaton) as opposed to
+      /// an acceptor.
+      using is_transducer_t =
+        std::integral_constant<bool,
+                               2 <= rank<labelset_t_of<automaton_t>>::value>;
+      static is_transducer_t is_transducer;
+
+      /// File name for input tape symbols.
+      static constexpr const char* isymbols_ =
+        is_transducer ? "$medir/isymbols.txt" : "$medir/symbols.txt";
+      /// File name for output tape symbols.
+      static constexpr const char* osymbols_ =
+        is_transducer ? "$medir/osymbols.txt" : "$medir/symbols.txt";
     };
   }
 

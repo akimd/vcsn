@@ -4,18 +4,27 @@
 me=$(basename "$0")
 medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 
-syms=$medir/isymbols.txt
-trans=$medir/transitions.fsm
-fstprint --acceptor --save_isymbols=$syms "$@" > $trans
+# We are going to read the input several times.  Be sure to save it,
+# in case it were stdin.
+input=$medir/a.fst
 
-# Sort symbols per number, not per value.
-cat <<EOF
+cat "$@" >$input
+
+# Is this an acceptor?
+trans=$medir/transitions.fsm
+if fstinfo $input | grep -q '^acceptor  *y$'; then
+  # This is an acceptor.
+  syms=$medir/symbols.txt
+  fstprint --acceptor --save_isymbols=$syms $input > $trans
+
+  # Sort symbols per number, not per value.
+  cat <<EOF
 #! /bin/sh
 
 me=\$(basename "\$0")
 medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
 
-cat >\$medir/isymbols.txt <<\EOFSM
+cat >\$medir/symbols.txt <<\EOFSM
 $(sort -n -k2 $syms)
 EOFSM
 
@@ -24,13 +33,49 @@ $(cat $trans)
 EOFSM
 
 fstcompile --acceptor \\
-  --keep_isymbols --isymbols=\$medir/isymbols.txt \\
-  --keep_osymbols --osymbols=\$medir/isymbols.txt \\
+  --keep_isymbols --isymbols=\$medir/symbols.txt \\
+  --keep_osymbols --osymbols=\$medir/symbols.txt \\
   \$medir/transitions.fsm "\$@"
 sta=\$?
 
 rm -rf \$medir
 exit \$sta
 EOF
+else
+  # This is a transducer.
+  isyms=$medir/isymbols.txt
+  osyms=$medir/osymbols.txt
+  fstprint --save_isymbols=$isyms \
+           --save_osymbols=$osyms $input > $trans
+
+  # Sort symbols per number, not per value.
+  cat <<EOF
+#! /bin/sh
+
+me=\$(basename "\$0")
+medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
+
+cat >\$medir/isymbols.txt <<\EOFSM
+$(sort -n -k2 $isyms)
+EOFSM
+
+cat >\$medir/osymbols.txt <<\EOFSM
+$(sort -n -k2 $osyms)
+EOFSM
+
+cat >\$medir/transitions.fsm <<\EOFSM
+$(cat $trans)
+EOFSM
+
+fstcompile \\
+  --keep_isymbols --isymbols=\$medir/isymbols.txt \\
+  --keep_osymbols --osymbols=\$medir/osymbols.txt \\
+  \$medir/transitions.fsm "\$@"
+sta=\$?
+
+rm -rf \$medir
+exit \$sta
+EOF
+fi
 
 rm -rf $medir

@@ -66,9 +66,9 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
         import subprocess
         p1 = subprocess.Popen(['dot2tex', '--prog', engine],
                               stdin=subprocess.PIPE,
-                              stdout=open(tmp + ".tex", "w"),
-                              stderr=subprocess.PIPE)
+                              stdout=open(tmp + ".tex", "w"))
         p1.stdin.write(dot2tex.encode('utf-8'))
+        p1.stdin.close()
         res = p1.communicate()
         subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                                "--output", tmp + ".pdf", tmp + ".tex"])
@@ -143,19 +143,17 @@ def _automaton_fst(cmd, aut):
     import subprocess
     p1 = subprocess.Popen(['efstcompile'],
                           stdin=subprocess.PIPE,
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE)
-    p2 = subprocess.Popen([cmd],
+                          stdout=subprocess.PIPE)
+    p2 = subprocess.Popen(cmd,
                           stdin=p1.stdout,
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE)
+                          stdout=subprocess.PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p3 = subprocess.Popen(['efstdecompile'],
                           stdin=p2.stdout,
-                          stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE)
+                          stdout=subprocess.PIPE)
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
     p1.stdin.write(aut.format('efsm').encode('utf-8'))
+    p1.stdin.close()
     res = p3.communicate()[0]
     return automaton(res, "efsm")
 
@@ -171,19 +169,17 @@ def _automaton_fst_files(cmd, *aut):
         file = tempfile.NamedTemporaryFile().name + '.fst'
         proc = subprocess.Popen(['efstcompile'],
                                 stdin=subprocess.PIPE,
-                                stdout=open(file, 'w'),
-                                stderr=subprocess.PIPE)
+                                stdout=open(file, 'w'))
         proc.stdin.write(a.format('efsm').encode('utf-8'))
+        proc.stdin.close()
         proc.communicate()
         files += [file]
     proc = subprocess.Popen([cmd] + files,
                             stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
+                            stdout=subprocess.PIPE)
     decode = subprocess.Popen(['efstdecompile'],
                               stdin=proc.stdout,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE)
+                              stdout=subprocess.PIPE)
     res = decode.communicate()[0]
     return automaton(res, "efsm")
 

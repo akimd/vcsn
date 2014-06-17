@@ -1,5 +1,4 @@
 #! /bin/sh
 
 # Convert an efsm text file into a binary OpenFST file.
-
-/bin/sh "$@"
+exec /bin/sh "$@"
