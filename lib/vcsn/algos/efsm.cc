@@ -65,57 +65,38 @@ namespace vcsn
       }
 
 #define SKIP_SPACES()                           \
-      while (isspace(is.peek()))        \
+      while (isspace(is.peek()))                \
         is.ignore()
+      // Eat empty lines
+      SKIP_SPACES();
       vcsn::lazy_automaton_editor edit;
-      // Get initial state + transition
-      {
-        // Eat empty lines
-        SKIP_SPACES();
-        std::string line;
-        string_t s, d, l, w;
-        std::getline(is, line, '\n');
-        std::istringstream ss{line};
-        ss >> s >> d >> l >> w;
-        edit.add_initial(s);
-        if (l == one)
-          l = "\\e";
-        if (l.get().empty())
-          // FinalState [Weight]
-          edit.add_final(s, d);
-        else
-          // Src Dst Lbl Wgt
-          edit.add_transition(s, d, l, w);
-      }
-
-      {
+      bool first = true;
         // Line: Source Destination Label [Weight].
-        std::string line;
-        do
-          {
-            std::getline(is, line, '\n');
-            if (line == "EOFSM")
-              break;
-            std::istringstream ss{line};
-            // Eat blank lines.
-            SKIP_SPACES();
-            string_t s, d, l, w;
-            ss >> s >> d >> l >> w;
-            if (l == one)
-              l = "\\e";
-            if (l.get().empty())
-              // FinalState [Weight]
-              edit.add_final(s, d);
-            else
-              // Src Dst Lbl Wgt
-              edit.add_transition(s, d, l, w);
-          } while (is.good());
+      std::string line;
+      while (is.good())
+        {
+          std::getline(is, line, '\n');
+          if (line == "EOFSM")
+            break;
+          std::istringstream ss{line};
+          string_t s, d, l, w;
+          ss >> s >> d >> l >> w;
+          if (first)
+            edit.add_initial(s);
+          if (l == one)
+            l = "\\e";
+          if (l.get().empty())
+            // FinalState [Weight]
+            edit.add_final(s, d);
+          else
+            // Src Dst Lbl Wgt
+            edit.add_transition(s, d, l, w);
+          first = false;
+        }
 #undef SKIP_SPACES
 
-        if (line != "EOFSM")
-          raise(file, ": bad input format, missing EOFSM");
-      }
-
+      if (line != "EOFSM")
+        raise(file, ": bad input format, missing EOFSM");
       // Flush till EOF.
       while (is.get() != EOF)
         continue;
