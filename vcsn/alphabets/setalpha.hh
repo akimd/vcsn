@@ -177,7 +177,7 @@ namespace vcsn
       return alphabet_.end();
     }
 
-    const_iterator find(const letter_t& l) const
+    const_iterator find(letter_t l) const
     {
       return alphabet_.find(l);
     }
