@@ -208,7 +208,7 @@ namespace vcsn
       state_set finals_;
 
       /// The generators.
-      const typename labelset_t_of<AutPtr>::genset_t& letters_
+      const typename labelset_t_of<AutPtr>::genset_t letters_
         = input_->labelset()->genset();
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
