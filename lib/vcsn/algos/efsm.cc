@@ -70,6 +70,9 @@ namespace vcsn
       // Eat empty lines
       SKIP_SPACES();
       vcsn::lazy_automaton_editor edit;
+      edit.open(true);
+
+      // The first transition also provides the initial state.
       bool first = true;
         // Line: Source Destination Label [Weight].
       std::string line;

@@ -54,6 +54,12 @@ namespace vcsn
     return {ctx};
   }
 
+  DEFINE::open(bool o) const
+    -> bool
+  {
+    return this->labelset()->open(o);
+  }
+
   DEFINE::context() const -> const context_t&
   {
     return ctx_;

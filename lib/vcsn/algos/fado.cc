@@ -43,6 +43,7 @@ namespace vcsn
       }
 
       vcsn::lazy_automaton_editor edit;
+      edit.open(true);
 
       char c;
       // Whether we process initial states.

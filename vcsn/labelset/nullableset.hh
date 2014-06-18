@@ -203,6 +203,14 @@ namespace vcsn
       return helper_t::make(i);
     }
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept unknown letters
+    /// \returns   the previous status.
+    bool open(bool o) const
+    {
+      return this->labelset()->open(o);
+    }
+
     static constexpr bool
     has_one()
     {

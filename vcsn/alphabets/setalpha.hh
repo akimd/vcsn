@@ -116,6 +116,15 @@ namespace vcsn
       : alphabet_{l}
     {}
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
+    bool open(bool o) const
+    {
+      std::swap(o, open_);
+      return o;
+    }
+
     /// Modify \a this by adding \a l, and return *this.
     set_alphabet&
     add_letter(letter_t l)
@@ -129,7 +138,14 @@ namespace vcsn
     bool
     has(letter_t l) const
     {
-      return ::vcsn::has(alphabet_, l);
+      if (open_)
+        {
+          // FIXME: OMG...
+          const_cast<set_alphabet&>(*this).add_letter(l);
+          return true;
+        }
+      else
+        return ::vcsn::has(alphabet_, l);
     }
 
     /// Extract and return the next word from \a i.
@@ -149,10 +165,18 @@ namespace vcsn
           i.ignore();
         }
       else
-        // FIXME: This wrongly assumes that letters are characters.
-        // It will break with integer or string alphabets.
-        while (has(i.peek()))
-          res = this->concat(res, letter_t(i.get()));
+        {
+          // FIXME: This wrongly assumes that letters are characters.
+          // It will break with integer or string alphabets.
+          int c;
+          while (i.good()
+                 && (c = i.peek()) != EOF
+                 && c != ','
+                 && c != '('
+                 && c != ')'
+                 && has(c))
+            res = this->concat(res, letter_t(i.get()));
+        }
       return res;
     }
 
@@ -221,7 +245,9 @@ namespace vcsn
     }
 
   private:
-    letters_t alphabet_;
+    // FIXME: OMG...
+    mutable letters_t alphabet_;
+    mutable bool open_ = false;
   };
 }
 

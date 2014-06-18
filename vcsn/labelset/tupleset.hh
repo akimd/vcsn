@@ -130,6 +130,14 @@ namespace vcsn
       return std::get<I>(sets());
     }
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
+    bool open(bool o) const
+    {
+      return open_(o, indices);
+    }
+
     /// Construct a value.
     template <typename... Args>
     value_t value(const std::tuple<Args...>& args) const
@@ -417,6 +425,15 @@ namespace vcsn
         ((eat_separator_<sizeof...(ValueSets)-1 -I>(i, '<', ','),
           valueset_t<sizeof...(ValueSets)-1 -I>::make(i))...);
 #  endif
+    }
+
+    template <std::size_t... I>
+    bool open_(bool o, seq<I...>) const
+    {
+      using swallow = int[];
+      (void) swallow { set<I>().open(o)... };
+      std::swap(o, open__);
+      return o;
     }
 
     template <typename... Args, std::size_t... I>
@@ -765,6 +782,7 @@ namespace vcsn
     }
 
     valuesets_t sets_;
+    mutable bool open__ = false;
   };
 
   namespace detail

@@ -73,6 +73,14 @@ namespace vcsn
       return gs;
     }
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
+    bool open(bool o) const
+    {
+      return this->genset().open(o);
+    }
+
     static constexpr bool is_free()
     {
       return true;

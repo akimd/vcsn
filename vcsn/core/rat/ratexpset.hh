@@ -88,6 +88,11 @@ namespace vcsn
     /// \param ctx    the generator set for the labels, and the weight set.
     ratexpset_impl(const context_t& ctx);
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept unknown letters
+    /// \returns   the previous status.
+    bool open(bool o) const;
+
     const context_t& context() const;
     const labelset_ptr& labelset() const;
     const weightset_ptr& weightset() const;

@@ -54,8 +54,11 @@ namespace vcsn
                                 string_t label,
                                 string_t weight = {}) = 0;
 
+    virtual bool open(bool o) = 0;
+
     /// The final result.
     virtual dyn::automaton result() = 0;
+
     /// Forget about the current automaton, but do not free it.
     virtual void reset() = 0;
 
@@ -89,6 +92,7 @@ namespace vcsn
     using entry_t = typename polynomialset<context_t>::value_t;
     using state_t = state_t_of<automaton_t>;
     using label_t = label_t_of<automaton_t>;
+    using labelset_t = labelset_t_of<automaton_t>;
     using weight_t = weight_t_of<automaton_t>;
 
   public:
@@ -96,6 +100,12 @@ namespace vcsn
       : res_(make_shared_ptr<automaton_t>(ctx))
       , ps_(ctx)
     {}
+
+    virtual bool
+    open(bool o) override final
+    {
+      return const_cast<labelset_t&>(*res_->context().labelset()).open(o);
+    }
 
     /// Register the existence of state named \a s.
     virtual void
@@ -190,6 +200,7 @@ namespace vcsn
     virtual dyn::automaton
     result() override final
     {
+      const_cast<labelset_t&>(*res_->context().labelset()).open(false);
       return dyn::make_automaton(res_);
     }
 
@@ -276,6 +287,11 @@ namespace vcsn
     /// Return the built automaton.
     dyn::automaton result();
 
+    /// Whether unknown letters should be added, or rejected.
+    /// \param o   whether to accept
+    /// \returns   the previous status.
+    bool open(bool o);
+
     /// Get ready to build another automaton.
     void reset();
 
@@ -290,12 +306,12 @@ namespace vcsn
     bool is_lan_ = false;
     /// Whether we saw a multi-chars label.
     bool is_law_ = false;
-    /// The collected letters from the labels.
-    std::set<char> letters_;
     /// Whether we saw a non-empty weight.
     bool weighted_ = false;
     /// Whether we saw a period in a the weight.
     bool real_ = false;
+    /// Whether the labelset is open.
+    bool open_ = false;
   };
 
   namespace dyn

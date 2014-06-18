@@ -47,6 +47,12 @@ namespace vcsn
       return {};
     }
 
+    /// Does not make a lot of sense.
+    bool open(bool o) const
+    {
+      return !o;
+    }
+
     static constexpr bool is_free()
     {
       // This is debatable.  However, in Vaucanson, if a labelset

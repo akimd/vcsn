@@ -32,13 +32,8 @@ namespace vcsn
     transitions_.emplace_back(src, dst, lbl, weight);
     if (lbl == "\\e")
       is_lan_ = true;
-    else
-      {
-        for (auto c: lbl.get())
-          letters_.emplace(c);
-        if (1 < lbl.get().size())
-          is_law_ = true;
-      }
+    else if (1 < lbl.get().size())
+      is_law_ = true;
     if (!weight.get().empty())
       {
         weighted_ = true;
@@ -48,20 +43,25 @@ namespace vcsn
       }
   }
 
+  bool
+  lazy_automaton_editor::open(bool o)
+  {
+    std::swap(open_, o);
+    return o;
+  }
+
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
     std::string ctx = (is_law_ ? "law" :
                        is_lan_ ? "lan" : "lal");
-    ctx += "_char(";
-    for (auto l: letters_)
-      ctx += l;
-    ctx += ")_";
+    ctx += "_char()_";
     ctx += (real_ ? "r"
             : weighted_ ? "z"
             : "b");
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
+    edit->open(open_);
 
     for (auto t: transitions_)
       edit->add_transition(std::get<0>(t), std::get<1>(t),
@@ -72,14 +72,12 @@ namespace vcsn
 
     for (auto p: final_states_)
       edit->add_final(p.first, p.second);
-
     return edit->result();
   }
 
   void
   lazy_automaton_editor::reset()
   {
-    letters_.clear();
     transitions_.clear();
     final_states_.clear();
     initial_states_.clear();
