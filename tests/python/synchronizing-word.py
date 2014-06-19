@@ -94,8 +94,10 @@ CHECK_EQ(g.is_synchronizing(), True)
 CHECK_EQ(g.is_synchronized_by('abbababbba'), True)
 CHECK_EQ(g.is_synchronized_by('abbbabbba'), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('greedy')), True)
+CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('cycle')), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('synchrop')), True)
 CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('synchropl')), True)
+CHECK_EQ(g.is_synchronized_by(g.synchronizing_word('fastsynchro')), True)
 
 b = vcsn.context('lal_char(ab)_b')
 

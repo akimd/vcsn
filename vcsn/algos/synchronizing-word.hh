@@ -183,7 +183,7 @@ namespace vcsn
           return s == q0_;
       }
 
-      std::vector<state_t> singletons()
+      const std::vector<state_t>& singletons()
       {
         return singletons_;
       }
@@ -313,10 +313,11 @@ namespace vcsn
 
     private:
       using pair_t = std::pair<state_t, state_t>;
+      using dist_transition_t = std::pair<unsigned, transition_t>;
 
       automaton_t aut_;
       pair_automaton<Aut> pair_;
-      std::unordered_map<state_t, std::pair<unsigned, transition_t>> paths_;
+      std::unordered_map<state_t, dist_transition_t> paths_;
       std::unordered_set<state_t> todo_;
       word_t res_;
 
@@ -330,13 +331,23 @@ namespace vcsn
       {
         pair_ = pair(aut_, keep_initials);
         paths_ = paths_ibfs(pair_, pair_->singletons());
+
+        if (keep_initials)
+          for (auto it = paths_.begin(); it != paths_.end(); /* nothing */)
+            {
+              if (pair_->is_singleton(it->first))
+                paths_.erase(it++);
+              else
+                ++it;
+            }
       }
 
       void init_synchro(bool keep_initials = false)
       {
         init_pair(keep_initials);
-        require(pair_->states().size() == paths_.size() + 1,
-                "automaton is not synchronizing");
+        require(pair_->states().size() == paths_.size() +
+                pair_->singletons().size(), "automaton is not synchronizing");
+
         for (auto s : pair_->states())
           if (!pair_->is_singleton(s))
             todo_.insert(s);
@@ -410,6 +421,11 @@ namespace vcsn
         return synchro(&synchronizer::dist);
       }
 
+      word_t cycle()
+      {
+        return cycle_();
+      }
+
       word_t synchroP()
       {
         return synchro(&synchronizer::phi_1);
@@ -446,6 +462,39 @@ namespace vcsn
               }
 
             apply_path(recompose_path(s_min));
+          }
+        return res_;
+      }
+
+      word_t cycle_()
+      {
+        init_synchro(true);
+        bool first = true;
+        state_t previous = 0;
+        while (0 < todo_.size())
+          {
+            int min = std::numeric_limits<int>::max();
+            state_t s_min = 0;
+            for (auto s : todo_)
+              {
+                pair_t o = pair_->get_origin(s);
+                if (!first && o.first != previous && o.second != previous)
+                  continue;
+                int d = dist(s);
+                if (d < min)
+                  {
+                    min = d;
+                    s_min = s;
+                  }
+              }
+
+            const auto& path = recompose_path(s_min);
+            pair_t pair_end = pair_->get_origin(
+                    pair_->dst_of(path[path.size() - 1]));
+            assert(pair_end.first == pair_end.second);
+            previous = pair_end.first;
+            first = false;
+            apply_path(path);
           }
         return res_;
       }
@@ -580,6 +629,8 @@ namespace vcsn
     vcsn::detail::synchronizer<Aut> sync(aut);
     if (boost::iequals(algo, "greedy") || boost::iequals(algo, "eppstein"))
       return sync.greedy();
+    else if (boost::iequals(algo, "cycle"))
+      return sync.cycle();
     else if (boost::iequals(algo, "synchrop"))
       return sync.synchroP();
     else if (boost::iequals(algo, "synchropl"))
