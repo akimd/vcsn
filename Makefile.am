@@ -1,5 +1,5 @@
 # Vaucanson 2, a generic library for finite state machines.
-# Copyright (C) 2012-2013 Vaucanson Group.
+# Copyright (C) 2012-2014 Vaucanson Group.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -33,4 +33,9 @@ include tests/local.mk
 include vcsn/local.mk
 
 EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt \
-  build-aux/bin/fuse-switch
+  build-aux/bin/coverage build-aux/bin/fuse-switch
+
+# Code coverage.
+.PHONY: coverage
+coverage:
+	CXX='$(CXX)' $(top_srcdir)/build-aux/bin/coverage

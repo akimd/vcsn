@@ -1,0 +1,33 @@
+#! /bin/sh
+
+# --no-external was introduced in lcov 1.10.
+if lcov --no-external --version; then
+  no_external=--no-external
+fi
+
+# g++-4.8 -> gcov-4.8.
+gcov=$(echo "$CXX" | perl -ne '/(?:clang|g)\+\+(-[\d.]+)?/ and print "gcov$1\n";')
+
+lcov --capture                                  \
+     --base-directory $DIR_SOURCE               \
+     --directory .                              \
+     --gcov-tool "$gcov"                        \
+     $no_external                               \
+     --output vcsn2.info
+
+# There are files we really don't care about (e.g., generated parsers
+# and scanners) that pollute our statistics.  Note that we care about
+# the coverage of their sources (e.g., parse.yy), but not about the
+# coverage of the Bison infrastructure.
+lcov --remove vcsn2.info -o vcsn.info           \
+   '*/dot/stack.hh'                             \
+   '*/parse.cc'                                 \
+   '*/parse.hh'                                 \
+   '*/rat/location.hh'                          \
+   '*/rat/position.hh'                          \
+   '*/rat/stack.hh'                             \
+   '*/scan.cc'
+
+genhtml --legend --demangle-cpp                 \
+     --output-directory vcsn2.cov.html          \
+     vcsn.info
