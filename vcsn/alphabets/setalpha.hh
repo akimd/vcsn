@@ -120,7 +120,7 @@ namespace vcsn
     set_alphabet&
     add_letter(letter_t l)
     {
-      assert(l != alphabet_.special_letter());
+      assert(l != this->template special<letter_t>());
       alphabet_.insert(l);
       return *this;
     }
