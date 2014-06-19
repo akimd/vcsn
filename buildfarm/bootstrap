@@ -19,9 +19,14 @@ env >$DIR_ROOT_BUILD/environment.log
 # --verbose, -t
 find . -type l -print | perl -nle '-e || print' | xargs -t rm -f
 
+# If some files source file for configure changed, restart.
+#
 # If there is not even config.status, something must have gone
 # really wrong in the previous build.  Start from scratch.
-if $(older "$DIR_SOURCE/configure" "$0" "$DIR_SOURCE/configure.ac") \
+if $(older "$DIR_SOURCE/configure"              \
+           "$0"                                 \
+           "$DIR_SOURCE/configure.ac"           \
+           "$DIR_SOURCE/build-aux/m4/"*)        \
     || test ! -e $DIR_BUILD/config.status; then
   cd "$DIR_SOURCE"
   ./bootstrap

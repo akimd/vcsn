@@ -27,8 +27,10 @@ if $(older "$DIR_BUILD/Makefile" "$0"); then
       export CXXFLAGS
       ;;
   esac
+  # Don't keep the cache, we often don't need to rerun configure, and
+  # when we do, it's often because configure itself changed, in which
+  # case config.cache becomes a nuisance.
   run "$DIR_SOURCE/configure"                   \
-    --config-cache                              \
     --enable-dependency-tracking                \
     "$@"
 fi
