@@ -1,20 +1,25 @@
 
 # VCSN_GLIBCXX_DEBUG
 # ------------------
-# For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
-# stringstreams.  This is well known, ancient, yet still the case
-# today (G++ 4.7, XCode 4.2).
-# http://stackoverflow.com/questions/7623070
-#
-# If we use Boost.Regex, do not enable _GLIBCXX_DEBUG if the result fails.
-# https://svn.boost.org/trac/boost/ticket/5911
-#
-# If needed, Check for REGEX before _GLIBCXX_DEBUG (with VCSN_REGEX).
+# If needed, check for REGEX before _GLIBCXX_DEBUG (with VCSN_REGEX).
 AC_DEFUN([VCSN_GLIBCXX_DEBUG],
 [AC_CACHE_CHECK([whether to enable _GLIBCXX_DEBUG],
                [ac_cv_GLIBCXX_DEBUG],
 [# Set to "yes" and let each test so to "no" on failure.
 ac_cv_GLIBCXX_DEBUG=yes
+
+# Makes sense only for libstdc++.
+if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+  AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE(
+  [[#ifndef __GLIBCXX__
+   error: not libstdc++
+   #endif
+  ]])],
+    [],
+    [ac_cv_GLIBCXX_DEBUG='no (not using libstdc++)'])
+fi
+
 
 # I, Akim, on Erebus (Mac OS X, G++ 4.8) have errors like:
 #
@@ -27,11 +32,23 @@ ac_cv_GLIBCXX_DEBUG=yes
 # fault, and I am tired to trying to fight such issues.  Since after
 # all, it does not make a lot of sense to use _GLIBCXX_DEBUG with
 # NDEBUG, let's use the easy way.
-case $CPPFLAGS in
-  (*' -DNDEBUG '*|'-DNDEBUG '*|*' -DNDEBUG'|'-DNDEBUG')
-    ac_cv_GLIBCXX_DEBUG='no (NDEBUG is set, which will leads to aborts)';;
-esac
+if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+  AC_COMPILE_IFELSE(
+  [AC_LANG_SOURCE(
+  [[#ifdef NDEBUG
+   error: NDEBUG is enabled
+   #endif
+  ]])],
+    [],
+    [ac_cv_GLIBCXX_DEBUG='no (incompatible with NDEBUG)'])
+fi
 
+
+# For some reason, on OS X, enabling _GLIBCXX_DEBUG breaks the
+# stringstreams.  This is well known, ancient, yet still the case
+# today (G++ 4.7, XCode 4.2).
+#
+# http://stackoverflow.com/questions/7623070
 if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
   AC_RUN_IFELSE(
   [AC_LANG_PROGRAM([#define _GLIBCXX_DEBUG
@@ -53,6 +70,36 @@ if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
        [ac_cv_GLIBCXX_DEBUG='no (cross-compilation)'])
 fi
 
+
+# _GLIBCXX_DEBUG may cause std::regex to lead to multiple symbol
+# definitions.
+#
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61329
+if test "$ac_cv_GLIBCXX_DEBUG" = yes; then
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+  #define _GLIBCXX_DEBUG
+  #define _GLIBCXX_DEBUG_PEDANTIC
+  #include <regex>
+  std::regex r1;]])],
+                    [mv conftest.$OBJEXT conftest1.$OBJEXT])
+  save_LIBS=$LIBS
+  LIBS="$LIBS conftest1.$OBJEXT"
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+  #define _GLIBCXX_DEBUG
+  #define _GLIBCXX_DEBUG_PEDANTIC
+  #include <regex>
+  ]],
+  [[std::regex r2;]])],
+                 [],
+                 [ac_cv_GLIBCXX_DEBUG='no (multiple symbols at link time)'])
+  rm -f conftest1.$OBJEXT
+  LIBS=$save_LIBS
+fi
+
+
+# If we use Boost.Regex, do not enable _GLIBCXX_DEBUG if the result fails.
+#
+# https://svn.boost.org/trac/boost/ticket/5911
 if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
   vcsn_save_LIBS=$LIBS
   LIBS="$LIBS $BOOST_REGEX_LDFLAGS $BOOST_REGEX_LIBS"
@@ -68,7 +115,7 @@ if test "$ac_cv_GLIBCXX_DEBUG" = yes && test -n "$BOOST_REGEX_LIBS"; then
       assert(boost::regex_match("asdf", re));
     }
   ])], [],
-       [ac_cv_GLIBCXX_DEBUG='no (Boost.Regexp)'])
+       [ac_cv_GLIBCXX_DEBUG='no (breaks Boost.Regexp)'])
   LIBS=$vcsn_save_LIBS
 fi
 ])
