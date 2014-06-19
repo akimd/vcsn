@@ -155,7 +155,7 @@ def _automaton_fst(cmd, aut):
                           stdout=subprocess.PIPE,
                           stderr=subprocess.PIPE)
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(aut.format('efsm'))
+    p1.stdin.write(aut.format('efsm').encode('utf-8'))
     res = p3.communicate()[0]
     return automaton(res, "efsm")
 
@@ -173,7 +173,7 @@ def _automaton_fst_files(cmd, *aut):
                                 stdin=subprocess.PIPE,
                                 stdout=open(file, 'w'),
                                 stderr=subprocess.PIPE)
-        proc.stdin.write(a.format('efsm'))
+        proc.stdin.write(a.format('efsm').encode('utf-8'))
         proc.communicate()
         files += [file]
     proc = subprocess.Popen([cmd] + files,
