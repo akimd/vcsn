@@ -19,7 +19,7 @@ namespace vcsn
   std::unordered_map<state_t_of<Aut>,
                      std::pair<unsigned,
                                transition_t_of<Aut>>>
-  paths_ibfs(const Aut& aut, state_t_of<Aut> start)
+  paths_ibfs(const Aut& aut, std::vector<state_t_of<Aut>> start)
   {
     using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
@@ -30,7 +30,9 @@ namespace vcsn
     std::unordered_set<state_t> marked;
     std::unordered_map<state_t, std::pair<state_t, transition_t>> parent;
 
-    todo.push(start);
+    for (auto s : start)
+      todo.push(s);
+
     while (!todo.empty())
       {
         state_t p = todo.front();

@@ -94,6 +94,7 @@ namespace vcsn
           typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
+      using transition_t = transition_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
       using weight_t = typename weightset_t::value_t;
       using super_t = automaton_decorator<automaton_nocv_t>;
@@ -102,6 +103,7 @@ namespace vcsn
       /// The semantics of the result states: ordered pair of input
       /// states.
       using pair_t = std::pair<state_t, state_t>;
+      using origins_t = std::map<state_t, pair_t>;
 
     public:
       pair_automaton_impl(const automaton_t& aut, bool keep_initials = false)
@@ -109,19 +111,6 @@ namespace vcsn
         , input_(aut)
         , transition_map_(aut)
         , keep_initials_(keep_initials)
-      {}
-
-      static std::string sname()
-      {
-        return "pair_automaton<" + automaton_t::element_type::sname() + ">";
-      }
-
-      std::string vname(bool full = true) const
-      {
-        return "pair_automaton<" + input_->vname(full) + ">";
-      }
-
-      void pair()
       {
         auto ctx = input_->context();
         auto ws = ctx.weightset();
@@ -166,35 +155,65 @@ namespace vcsn
                                   p.first, ws->one());
           }
 
-        called_ = true;
-      }
+        for (const auto& p: pair_states_)
+          origins_.emplace(p.second, p.first);
 
-      const std::unordered_map<pair_t, state_t>& get_map_pair() const
-      {
-        require(called_,
-                "trying to call get_map_pair() before calling pair()");
-        return pair_states_;
+        if (keep_initials_)
+          for (auto s : input_->states())
+            singletons_.push_back(state_(s, s));
+        else
+          singletons_.push_back(q0_);
       }
 
       state_t get_q0() const
       {
         require(!keep_initials_, "can't get_q0() on a pairer that "
                 "keeps origins");
-        require(called_, "trying to call get_q0() before calling pair()");
         return q0_;
       }
 
-      /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, pair_t>;
-      mutable origins_t origins_;
+      bool is_singleton(state_t s) const
+      {
+        if (keep_initials_)
+          {
+            pair_t p = get_origin(s);
+            return p.first == p.second;
+          }
+        else
+          return s == q0_;
+      }
+
+      std::vector<state_t> singletons()
+      {
+        return singletons_;
+      }
+
+      static std::string sname()
+      {
+        return "pair_automaton<" + automaton_t::element_type::sname() + ">";
+      }
+
+      std::string vname(bool full = true) const
+      {
+        return "pair_automaton<" + input_->vname(full) + ">";
+      }
+
+      const std::unordered_map<pair_t, state_t>& get_map_pair() const
+      {
+        return pair_states_;
+      }
 
       /// A map from result state to tuple of original states.
       const origins_t& origins() const
       {
-        if (origins_.empty())
-          for (const auto& p: pair_states_)
-            origins_.emplace(p.second, p.first);
         return origins_;
+      }
+
+      const pair_t get_origin(state_t s) const
+      {
+        auto i = origins().find(s);
+        require(i != std::end(origins()), "state not found in origins");
+        return i->second;
       }
 
       bool state_has_name(state_t s) const
@@ -220,7 +239,6 @@ namespace vcsn
         return o;
       }
 
-
     private:
       /// The state in the result automaton that corresponds to (s1,
       /// s2).  Allocate it if needed.
@@ -242,8 +260,9 @@ namespace vcsn
         = transition_map<automaton_t, weightset_t_of<automaton_t>, true>;
       transition_map_t transition_map_;
       std::unordered_map<pair_t, state_t> pair_states_;
+      origins_t origins_;
+      std::vector<state_t> singletons_;
       state_t q0_;
-      bool called_ = false;
       bool keep_initials_ = false;
     };
   }
@@ -260,7 +279,6 @@ namespace vcsn
   pair_automaton<Aut> pair(const Aut& aut, bool keep_initials = false)
   {
     auto res = make_shared_ptr<pair_automaton<Aut>>(aut, keep_initials);
-    res->pair();
     return res;
   }
 
@@ -294,11 +312,12 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
 
     private:
+      using pair_t = std::pair<state_t, state_t>;
+
       automaton_t aut_;
       pair_automaton<Aut> pair_;
       std::unordered_map<state_t, std::pair<unsigned, transition_t>> paths_;
       std::unordered_set<state_t> todo_;
-      state_t q0_;
       word_t res_;
 
     public:
@@ -307,20 +326,19 @@ namespace vcsn
         {}
 
     private:
-      void init_pair()
+      void init_pair(bool keep_initials = false)
       {
-        pair_ = pair(aut_);
-        q0_ = pair_->get_q0();
-        paths_ = paths_ibfs(pair_, q0_);
+        pair_ = pair(aut_, keep_initials);
+        paths_ = paths_ibfs(pair_, pair_->singletons());
       }
 
-      void init_synchro()
+      void init_synchro(bool keep_initials = false)
       {
-        init_pair();
+        init_pair(keep_initials);
         require(pair_->states().size() == paths_.size() + 1,
                 "automaton is not synchronizing");
         for (auto s : pair_->states())
-          if (s != q0_)
+          if (!pair_->is_singleton(s))
             todo_.insert(s);
       }
 
@@ -328,7 +346,7 @@ namespace vcsn
       {
         std::vector<transition_t> res;
         state_t bt_curr = from;
-        while (bt_curr != q0_)
+        while (!pair_->is_singleton(bt_curr))
           {
             transition_t t = paths_.find(bt_curr)->second.second;
             res.push_back(t);
@@ -339,7 +357,7 @@ namespace vcsn
 
       int dist(state_t s)
       {
-        if (s == q0_)
+        if (pair_->is_singleton(s))
           return 0;
         return paths_.find(s)->second.first;
       }
@@ -360,7 +378,7 @@ namespace vcsn
         for (auto s : todo_)
           {
             auto new_state = dest_state(s, label);
-            if (new_state != q0_)
+            if (!pair_->is_singleton(new_state))
               new_todo.insert(new_state);
           }
         todo_ = std::move(new_todo);
