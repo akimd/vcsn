@@ -19,6 +19,26 @@ srcdir = os.environ['abs_srcdir'] if 'abs_srcdir' in os.environ \
 # The directory associated to the current test.
 medir = sys.argv[0].replace(".py", ".dir")
 
+# http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+def which(program):
+    'Return the file name for program if it exists, None otherwise.'
+    import os
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
+
 def rst_file(name, content):
     print(name + "::")
     print()

@@ -1,9 +1,14 @@
 #! /usr/bin/env python
 
+import subprocess
 import vcsn
 from test import *
 
 from vcsn.automaton import _automaton_fst, _automaton_fst_files
+
+# Do we have OpenFST installed?
+# Calling 'fstprint --help' is tempting, but it exits 1.
+have_ofst = which('fstprint') is not None
 
 def check (aut, fefsm):
   'Check the conversion from Dot to FSM, and back.'
@@ -14,7 +19,10 @@ def check (aut, fefsm):
   CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
 
   # Check OpenFST's support for EFSM I/O.
-  CHECK_EQ(aut, _automaton_fst('cat', aut))
+  if have_ofst:
+    CHECK_EQ(aut, _automaton_fst('cat', aut))
+  else:
+    SKIP('OpenFST is missing')
 
 a1 = load('lal_char_b/a1.gv')
 check(a1, 'a1.efsm')
@@ -33,15 +41,18 @@ check(abs, 'abs.efsm')
 str = vcsn.context('law_char(acdeghilnprt)_b').ratexp('(grand)*(parent+child)').thompson().sort()
 check(str, 'str.efsm')
 
-# Check that Open FST and V2 understand the weights the same way.
-#
-# c1 & 2 by v2.
-c1 = load('lal_char_z/c1.gv')
-c2_vcsn = c1 & 2
+if have_ofst:
+  # Check that Open FST and V2 understand the weights the same way.
+  #
+  # c1 & 2 by v2.
+  c1 = load('lal_char_z/c1.gv')
+  c2_vcsn = c1 & 2
 
-# c1 & c1 by OpenFST.
-c2_ofst = c1.fstintersect(c1)
+  # c1 & c1 by OpenFST.
+  c2_ofst = c1.fstintersect(c1)
 
-CHECK_EQ(c2_vcsn, c2_ofst)
-# Let OpenFST compare them.
-# fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
+  CHECK_EQ(c2_vcsn, c2_ofst)
+  # Let OpenFST compare them.
+  # fst 0 '' -fstequal c12.v2.ofst c12.ofst.ofst
+else:
+  SKIP('OpenFST is missing')
