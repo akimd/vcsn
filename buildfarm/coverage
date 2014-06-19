@@ -10,9 +10,13 @@ if lcov --no-external --version; then
   no_external=--no-external
 fi
 
+# g++-4.8 -> gcov-4.8.
+gcov=$(echo "$CXX" | perl -pe 's/(clang|g)\+\+/gcov/')
+
 lcov --capture                                  \
      --base-directory $DIR_SOURCE               \
      --directory .                              \
+     --gcov-tool "$gcov"                        \
      $no_external                               \
      --output vcsn2.info
 
