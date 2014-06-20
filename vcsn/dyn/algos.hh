@@ -453,6 +453,9 @@ namespace vcsn
     /// The automaton in \a a with its metadata layers removed.
     automaton strip(const automaton& a);
 
+    /// Create a suffix automaton from \a aut.
+    automaton suffix(const automaton& aut);
+
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 

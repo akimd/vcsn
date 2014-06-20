@@ -7,20 +7,60 @@
 
 namespace vcsn
 {
+  /// Create a suffix automaton from \a aut and return it.
+  template <typename Aut>
+  Aut&
+  suffix_here(Aut& aut)
+  {
+    for (auto s : accessible_states(aut))
+      if (s != aut->pre() && s != aut->post())
+        aut->set_initial(s);
+    return aut;
+  }
+
+  template <typename Aut>
+  auto
+  suffix(const Aut& aut)
+    ->decltype(::vcsn::copy(aut))
+  {
+    auto res = ::vcsn::copy(aut);
+    suffix_here(res);
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut>
+      automaton
+      suffix(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return make_automaton(suffix(a));
+      }
+
+      REGISTER_DECLARE(suffix,
+                       (const automaton& aut) -> automaton);
+    }
+  }
+
+
+  /// Create a prefix automaton from \a aut and return it.
   template <typename Aut>
   Aut&
   prefix_here(Aut& aut)
   {
-    for (auto s : coaccessible_states(aut))
-      if (s != aut->pre() && s != aut->post())
-	aut->set_final(s);
+    auto t = transpose(aut);
+    suffix_here(t);
     return aut;
   }
 
-  /// Create a prefix automaton from \a aut and return it.
   template <typename Aut>
-  Aut
+  auto
   prefix(const Aut& aut)
+    ->decltype(::vcsn::copy(aut))
   {
     auto res = ::vcsn::copy(aut);
     prefix_here(res);

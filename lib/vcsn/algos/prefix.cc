@@ -5,9 +5,9 @@
 
 namespace vcsn
 {
-  /*--------.
-  | prefix.  |
-  `-----------*/
+  /*---------------.
+  | prefix/suffix.  |
+  `-----------------*/
 
   namespace dyn
   {
@@ -17,6 +17,14 @@ namespace vcsn
     prefix(const automaton& aut)
     {
       return detail::prefix_registry().call(aut);
+    }
+
+    REGISTER_DEFINE(suffix);
+
+    automaton
+    suffix(const automaton& aut)
+    {
+      return detail::suffix_registry().call(aut);
     }
   }
 }

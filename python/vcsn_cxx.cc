@@ -329,6 +329,11 @@ struct automaton
     return vcsn::dyn::strip(val_);
   }
 
+  automaton suffix() const
+  {
+    return vcsn::dyn::suffix(val_);
+  }
+
   automaton sum(const automaton& rhs) const
   {
     return vcsn::dyn::sum(val_, rhs.val_);
@@ -855,6 +860,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("standard", &automaton::standard)
     .def("star", &automaton::star)
     .def("strip", &automaton::strip)
+    .def("suffix", &automaton::suffix)
     .def("sum", &automaton::sum)
     .def("synchronizing_word", &automaton::synchronizing_word,
                                synchronizing_word())
