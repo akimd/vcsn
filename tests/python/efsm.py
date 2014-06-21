@@ -10,19 +10,21 @@ from vcsn.automaton import _automaton_fst, _automaton_fst_files
 # Calling 'fstprint --help' is tempting, but it exits 1.
 have_ofst = which('fstprint') is not None
 
-def check (aut, fefsm):
+def check (aut, fefsm, check_read = True):
   'Check the conversion from Dot to FSM, and back.'
   efsm = open(medir + "/" + fefsm).read().strip()
 
   # Check support for EFSM I/O.
   CHECK_EQ(efsm, aut.format('efsm'))
-  CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
+  if check_read:
+    CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
 
   # Check OpenFST's support for EFSM I/O.
-  if have_ofst:
-    CHECK_EQ(aut, _automaton_fst('cat', aut))
-  else:
-    SKIP('OpenFST is missing')
+  if check_read:
+    if have_ofst:
+      CHECK_EQ(aut, _automaton_fst('cat', aut))
+    else:
+      SKIP('OpenFST is missing')
 
 a1 = load('lal_char_b/a1.gv')
 check(a1, 'a1.efsm')
@@ -38,8 +40,14 @@ check(abs, 'abs.efsm')
 
 # Using law_char(a-z)_b is tempting, but when reading back, we take
 # the smallest possible alphabet.
-str = vcsn.context('law_char(acdeghilnprt)_b').ratexp('(grand)*(parent+child)').thompson().sort()
+str = vcsn.context('law_char(acdeghilnprt)_b')\
+      .ratexp('(grand)*(parent+child)').thompson().sort()
 check(str, 'str.efsm')
+
+# A transducer.
+a2x = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_b')\
+      .ratexp("('(a,x)'+'(b,y)'+'(c,z)')*").standard().sort()
+check(a2x, 'a2x.efsm', False)
 
 if have_ofst:
   # Check that Open FST and V2 understand the weights the same way.
