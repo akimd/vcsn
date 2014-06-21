@@ -50,8 +50,9 @@ namespace vcsn
     /// The abstract parameterized, root for all rational expression
     /// types.
     template <typename Label, typename Weight>
-    class node : public std::enable_shared_from_this<node<Label, Weight>>
-               , public exp
+    class node
+      : public std::enable_shared_from_this<node<Label, Weight>>
+      , public exp
     {
     public:
       using label_t = Label;
@@ -72,7 +73,8 @@ namespace vcsn
 
     /// An inner node.
     template <typename Label, typename Weight>
-    class inner : public node<Label, Weight>
+    class inner
+      : public node<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -90,7 +92,8 @@ namespace vcsn
     ///
     /// Implements the Composite Design Pattern.
     template <exp::type_t Type, typename Label, typename Weight>
-    class variadic: public inner<Label, Weight>
+    class variadic
+      : public inner<Label, Weight>
     {
     public:
       static_assert(vcsn::rat::is_variadic(Type), "invalid type");
@@ -147,7 +150,8 @@ namespace vcsn
     `--------*/
 
     template <exp::type_t Type, typename Label, typename Weight>
-    class unary : public inner<Label, Weight>
+    class unary
+      : public inner<Label, Weight>
     {
     public:
       static_assert(is_unary(Type), "invalid type");
@@ -178,7 +182,8 @@ namespace vcsn
     ///
     /// Implements the Composite Design Pattern.
     template <exp::type_t Type, typename Label, typename Weight>
-    class weight_node: public inner<Label, Weight>
+    class weight_node
+      : public inner<Label, Weight>
     {
     public:
       static_assert(Type == type_t::lweight
@@ -217,7 +222,8 @@ namespace vcsn
 
     /// The root from which to derive the final node types.
     template <typename Label, typename Weight>
-    class leaf : public node<Label, Weight>
+    class leaf
+      : public node<Label, Weight>
     {
     public:
       using label_t = Label;
@@ -230,7 +236,8 @@ namespace vcsn
 
 
     template <exp::type_t Type, typename Label, typename Weight>
-    class constant : public leaf<Label, Weight>
+    class constant
+      : public leaf<Label, Weight>
     {
     public:
       static_assert(is_constant(Type), "invalid type");
@@ -247,7 +254,8 @@ namespace vcsn
 
 
     template <typename Label, typename Weight>
-    class atom : public leaf<Label, Weight>
+    class atom
+      : public leaf<Label, Weight>
     {
     public:
       using label_t = Label;
