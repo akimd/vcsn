@@ -280,6 +280,12 @@ namespace vcsn
     void reset();
 
   private:
+    /// The collected transitions: (Source, Destination, Label, Weight).
+    std::vector<std::tuple<string_t, string_t, string_t, string_t>> transitions_;
+    /// The collected initial states: (State, Weight).
+    std::vector<std::pair<string_t, string_t>> initial_states_;
+    /// The collected final states: (State, Weight).
+    std::vector<std::pair<string_t, string_t>> final_states_;
     /// Whether we saw a "\e" as label.
     bool is_lan_ = false;
     /// Whether we saw a multi-chars label.
@@ -290,12 +296,6 @@ namespace vcsn
     bool weighted_ = false;
     /// Whether we saw a period in a the weight.
     bool real_ = false;
-    /// The collected transitions: (Source, Destination, Label, Weight).
-    std::vector<std::tuple<string_t, string_t, string_t, string_t>> transitions_;
-    /// The collected initial states: (State, Weight).
-    std::vector<std::pair<string_t, string_t>> initial_states_;
-    /// The collected final states: (State, Weight).
-    std::vector<std::pair<string_t, string_t>> final_states_;
   };
 
   namespace dyn
