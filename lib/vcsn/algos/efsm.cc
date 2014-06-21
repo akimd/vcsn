@@ -2,19 +2,72 @@
 #include <set>
 #include <string>
 
-#include <vcsn/misc/flyweight.hh>
-
-#include <lib/vcsn/algos/registry.hh>
 #include <lib/vcsn/algos/fwd.hh>
+#include <lib/vcsn/algos/registry.hh>
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/algos/efsm.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/flyweight.hh>
+#include <vcsn/misc/regex.hh>
 
 namespace vcsn
 {
   namespace dyn
   {
+    namespace
+    {
+      /// Look for the next "cat >$medir/FILE <<\EOFSM" file,
+      /// and return FILE.
+      std::string
+      next_here_doc(std::istream& is)
+      {
+        static std::regex re("cat >\\$medir/([a-z]+)\\.[a-z]* <<\\\\EOFSM",
+                             std::regex::extended);
+        std::string line;
+        std::smatch res;
+        while (is.good())
+          {
+            std::getline(is, line, '\n');
+            if (std::regex_match(line, res, re))
+              return res[1];
+          }
+        raise("invalid file: missing \"cat\" symbol");
+      }
+
+      /// Swallow a symbol table (i.e., eat up to the next EOFSM) and
+      /// return the single piece of information we need from the
+      /// symbol table: the representation of the empty word.
+      std::string
+      swallow_symbol_table(std::istream& is)
+      {
+        std::string res;
+        std::string line;
+        std::string val;
+        while (is.good())
+          {
+            std::getline(is, line, '\n');
+            std::istringstream ss{line};
+            ss >> res;
+            if (ss.fail())
+              continue;
+            ss >> val;
+            if (ss.fail())
+              raise("invalid file");
+            if (val == "0" || res == "EOFSM")
+              break;
+          }
+
+        while (line != "EOFSM" && is.good())
+            std::getline(is, line, '\n');
+
+        require(line == "EOFSM",
+                "invalid file: missing closing EOFSM");
+        return res;
+      }
+    }
+
+
     automaton
     read_efsm(std::istream& is)
     {
@@ -22,59 +75,36 @@ namespace vcsn
       using string_t =
         boost::flyweight<std::string, boost::flyweights::no_tracking>;
 
-      // Look for the symbol table.
-      {
-        std::string cat;
-        while (!is.eof() && cat != "cat")
-          is >> cat;
-        if (is.eof())
-          raise(file, ": no \"cat\" symbol");
-        is.ignore(1024, '\n');
-      }
+      // Whether has both isysmbols and osymbols.
+      bool is_transducer = false;
 
+      // Look for the symbol table.
+      auto isyms = next_here_doc(is);
       // The single piece of information we need from the symbol
       // table: the representation of the empty word.
-      std::string one;
+      std::string ione = swallow_symbol_table(is);
+
+      // If we had "isymbols", we now expect "osymbols".
+      std::string oone = ione;
+      if (isyms == "isymbols")
       {
-        std::string line;
-        std::string val;
-        while (is.good())
-          {
-            std::getline(is, line, '\n');
-            std::istringstream ss{line};
-            // Eat blank lines.
-            ss >> one;
-            if (ss.fail())
-              continue;
-            ss >> val;
-            if (ss.fail())
-              raise(file, ": bad input format");
-            if (val == "0" || one == "EOFSM")
-              break;
-          }
+        is_transducer = true;
+        auto osyms = next_here_doc(is);
+        require(osyms == "osymbols",
+                "invalid file: expected osymbols: ", osyms);
+        oone = swallow_symbol_table(is);
       }
 
-      // Parse after cat is read.
-      {
-        std::string cat;
-        while (!is.eof() && cat != "cat")
-          is >> cat;
-        if (is.eof())
-          raise(file, ": no \"cat\" symbol");
-        is.ignore(1024, '\n');
-      }
-
-#define SKIP_SPACES()                           \
-      while (isspace(is.peek()))                \
-        is.ignore()
-      // Eat empty lines
-      SKIP_SPACES();
       vcsn::lazy_automaton_editor edit;
       edit.open(true);
 
       // The first transition also provides the initial state.
       bool first = true;
-        // Line: Source Destination Label [Weight].
+      auto trans = next_here_doc(is);
+      require(trans == "transitions",
+              "invalid file: expected transitions: ", trans);
+      // Line: Source Dest ILabel [OLabel] [Weight].
+      // Line: FinalState [Weight].
       std::string line;
       while (is.good())
         {
@@ -82,18 +112,27 @@ namespace vcsn
           if (line == "EOFSM")
             break;
           std::istringstream ss{line};
-          string_t s, d, l, w;
-          ss >> s >> d >> l >> w;
+          string_t s, d, l1, l2, w;
+          ss >> s >> d >> l1 >> l2 >> w;
           if (first)
             edit.add_initial(s);
-          if (l == one)
-            l = "\\e";
-          if (l.get().empty())
+          if (l1.get().empty())
             // FinalState [Weight]
             edit.add_final(s, d);
           else
-            // Src Dst Lbl Wgt
-            edit.add_transition(s, d, l, w);
+            {
+              if (l1 == ione)
+                l1 = "\\e";
+              if (is_transducer)
+                {
+                  if (l2 == oone)
+                    l2 = "\\e";
+                  l1 = "(" + l1.get() + "," + l2.get() + ")";
+                }
+              else
+                w = l2;
+              edit.add_transition(s, d, l1, w);
+            }
           first = false;
         }
 #undef SKIP_SPACES
@@ -103,7 +142,6 @@ namespace vcsn
       // Flush till EOF.
       while (is.get() != EOF)
         continue;
-
       return edit.result();
     }
 
