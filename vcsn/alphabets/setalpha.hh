@@ -137,7 +137,9 @@ namespace vcsn
     conv(std::istream& i) const
     {
       word_t res;
-      if (i.peek() == '\\')
+      require(!i.bad(),
+              "conv: invalid stream");
+      if (i.good() && i.peek() == '\\')
         {
           i.ignore();
           char c = i.peek();
