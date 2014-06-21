@@ -95,8 +95,8 @@ namespace vcsn
         }
 #undef SKIP_SPACES
 
-      if (line != "EOFSM")
-        raise(file, ": bad input format, missing EOFSM");
+      require(line == "EOFSM",
+              file, ": bad input format, missing EOFSM");
       // Flush till EOF.
       while (is.get() != EOF)
         continue;

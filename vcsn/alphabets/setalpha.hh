@@ -142,10 +142,10 @@ namespace vcsn
       if (i.good() && i.peek() == '\\')
         {
           i.ignore();
-          char c = i.peek();
+          int c = i.peek();
           if (c != 'e')
             throw std::domain_error("invalid label: unexpected \\"
-                                    + std::string{c});
+                                    + str_escape(c));
           i.ignore();
         }
       else

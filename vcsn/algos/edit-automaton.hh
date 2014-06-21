@@ -150,10 +150,9 @@ namespace vcsn
     {
       auto s = state_(src);
       auto d = state_(dst);
-      if (s == res_->pre() && d == res_->post())
-        raise("edit_automaton: invalid transition from pre to post: "
-              + src.get() + " -> " + dst.get()
-              + " (" + entry.get() + ")");
+      require(s != res_->pre() || d != res_->post(),
+              "edit_automaton: invalid transition from pre to post: ",
+              src, " -> ", dst, " (", entry, ")");
       if (s == res_->pre() || d == res_->post())
         {
           if (entry.get().empty())
@@ -172,9 +171,9 @@ namespace vcsn
                   res_->add_transition(s, d, res_->prepost_label(), w);
                 }
               else
-                raise(std::string{"edit_automaton: invalid "}
-                      + (s == res_->pre() ? "initial" : "final")
-                      + " entry: " + entry.get());
+                raise("edit_automaton: invalid ",
+                      s == res_->pre() ? "initial" : "final",
+                      " entry: ", entry.get());
             }
         }
       else
