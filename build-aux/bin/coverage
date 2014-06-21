@@ -13,13 +13,13 @@ lcov --capture                                  \
      --directory .                              \
      --gcov-tool "$gcov"                        \
      $no_external                               \
-     --output vcsn2.info
+     --output vcsn.info.tmp
 
 # There are files we really don't care about (e.g., generated parsers
 # and scanners) that pollute our statistics.  Note that we care about
 # the coverage of their sources (e.g., parse.yy), but not about the
 # coverage of the Bison infrastructure.
-lcov --remove vcsn2.info -o vcsn.info           \
+lcov --remove vcsn.info.tmp -o vcsn.info        \
    '*/dot/stack.hh'                             \
    '*/parse.cc'                                 \
    '*/parse.hh'                                 \
@@ -29,5 +29,5 @@ lcov --remove vcsn2.info -o vcsn.info           \
    '*/scan.cc'
 
 genhtml --legend --demangle-cpp                 \
-     --output-directory vcsn2.cov.html          \
+     --output-directory vcsn.cov.html           \
      vcsn.info
