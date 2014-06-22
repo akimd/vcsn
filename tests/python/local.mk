@@ -122,6 +122,7 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/a2x.efsm                         \
+  %D%/efsm.dir/a2xyz.efsm                       \
   %D%/efsm.dir/abs.efsm                         \
   %D%/efsm.dir/binary.efsm                      \
   %D%/efsm.dir/str.efsm                         \

@@ -271,18 +271,28 @@ namespace vcsn
   class lazy_automaton_editor
   {
   public:
+    /// A hash-cons'ed string type.
     using string_t = automaton_editor::string_t;
 
-  public:
+    /// Labelset types, increasing generality.
+    enum class labelset_type { empty, lal, lan, law };
+
     /// Add \a s as an initial state.
     void add_initial(string_t s, string_t w = {});
 
     /// Add \a s as a final state.
     void add_final(string_t s, string_t w = {});
 
-    /// Add a transition from \a src to \a dst, labeled by \a lbl.
+    /// Add an acceptor transition from \a src to \a dst, labeled by
+    /// \a lbl.
     void add_transition(string_t src, string_t dst,
                         string_t lbl, string_t w = {});
+
+    /// Add a transducer transition from \a src to \a dst, labeled by
+    /// \a (lbl1, lbl2).
+    void add_transition(string_t src, string_t dst,
+                        string_t lbl1, string_t lbl2,
+                        string_t w);
 
     /// Return the built automaton.
     dyn::automaton result();
@@ -302,10 +312,10 @@ namespace vcsn
     std::vector<std::pair<string_t, string_t>> initial_states_;
     /// The collected final states: (State, Weight).
     std::vector<std::pair<string_t, string_t>> final_states_;
-    /// Whether we saw a "\e" as label.
-    bool is_lan_ = false;
-    /// Whether we saw a multi-chars label.
-    bool is_law_ = false;
+    /// Labelset type for input tape.
+    labelset_type input_type_ = labelset_type::empty;
+    /// Labelset type for output tape.
+    labelset_type output_type_ = labelset_type::empty;
     /// Whether we saw a non-empty weight.
     bool weighted_ = false;
     /// Whether we saw a period in a the weight.

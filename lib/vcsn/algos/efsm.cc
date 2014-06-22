@@ -127,11 +127,13 @@ namespace vcsn
                 {
                   if (l2 == oone)
                     l2 = "\\e";
-                  l1 = "(" + l1.get() + "," + l2.get() + ")";
+                  edit.add_transition(s, d, l1, l2, w);
                 }
               else
-                w = l2;
-              edit.add_transition(s, d, l1, w);
+                {
+                  // l2 is actually the weight.
+                  edit.add_transition(s, d, l1, l2);
+                }
             }
           first = false;
         }

@@ -22,18 +22,50 @@ namespace vcsn
     final_states_.emplace_back(s, w);
   }
 
+  namespace
+  {
+    using labelset_type = lazy_automaton_editor::labelset_type;
+
+    labelset_type type(lazy_automaton_editor::string_t lbl)
+    {
+      if (lbl.get().empty())
+        return labelset_type::empty;
+      else if (lbl == "\\e")
+        return labelset_type::lan;
+      else if (1 < lbl.get().size())
+        return labelset_type::law;
+      else
+        return labelset_type::lal;
+    }
+
+    std::string to_string(labelset_type l)
+    {
+      switch (l)
+        {
+        case labelset_type::empty: return {};
+        case labelset_type::lal: return "lal_char()";
+        case labelset_type::lan: return "lan<lal_char()>";
+        case labelset_type::law: return "law_char()";
+        }
+    }
+  }
+
   /// Add transitions from \a src to \a dst, labeled by \a entry.
   void
   lazy_automaton_editor::add_transition(string_t src,
                                         string_t dst,
-                                        string_t lbl,
+                                        string_t lbl1,
+                                        string_t lbl2,
                                         string_t weight)
   {
-    transitions_.emplace_back(src, dst, lbl, weight);
-    if (lbl == "\\e")
-      is_lan_ = true;
-    else if (1 < lbl.get().size())
-      is_law_ = true;
+    input_type_ = std::max(input_type_, type(lbl1));
+    if (!lbl2.get().empty())
+      {
+        output_type_ = std::max(output_type_, type(lbl2));
+        lbl1 = "(" + lbl1.get() + "," + lbl2.get() + ")";
+      }
+    transitions_.emplace_back(src, dst, lbl1, weight);
+
     if (!weight.get().empty())
       {
         weighted_ = true;
@@ -41,6 +73,16 @@ namespace vcsn
             && weight.get().find('.') != std::string::npos)
           real_ = true;
       }
+  }
+
+  /// Add transitions from \a src to \a dst, labeled by \a entry.
+  void
+  lazy_automaton_editor::add_transition(string_t src,
+                                        string_t dst,
+                                        string_t lbl,
+                                        string_t weight)
+  {
+    add_transition(src, dst, lbl, {}, weight);
   }
 
   bool
@@ -53,12 +95,15 @@ namespace vcsn
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
-    std::string ctx = (is_law_ ? "law" :
-                       is_lan_ ? "lan" : "lal");
-    ctx += "_char()_";
+    std::cerr << int(input_type_) << int(output_type_) << "\n";
+    auto ctx = to_string(input_type_);
+    if (output_type_ != labelset_type::empty)
+      ctx = "lat<" + ctx + "," + to_string(output_type_) + ">";
+    ctx += "_";
     ctx += (real_ ? "r"
             : weighted_ ? "z"
             : "b");
+    std::cerr << ctx << std::endl;
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
     edit->open(open_);

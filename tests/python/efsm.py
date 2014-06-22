@@ -44,10 +44,16 @@ str = vcsn.context('law_char(acdeghilnprt)_b')\
       .ratexp('(grand)*(parent+child)').thompson().sort()
 check(str, 'str.efsm')
 
-# A transducer.
+# A transducer that looks like an acceptor when looking at the symbol
+# numbers.
 a2x = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_b')\
       .ratexp("('(a,x)'+'(b,y)'+'(c,z)')*").standard().sort()
-check(a2x, 'a2x.efsm', False)
+check(a2x, 'a2x.efsm')
+
+# A transducer that cannot be seen as an acceptor.
+a2xyz = vcsn.context('lat<lal_char(a),lal_char(xyz)>_b')\
+      .ratexp("('(a,x)'+'(a,y)'+'(a,z)')*").standard().sort()
+check(a2xyz, 'a2xyz.efsm')
 
 if have_ofst:
   # Check that Open FST and V2 understand the weights the same way.

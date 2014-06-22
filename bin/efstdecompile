@@ -7,17 +7,35 @@ medir=$(mktemp -d "/tmp/$me.XXXXXX") || exit 1
 # We are going to read the input several times.  Be sure to save it,
 # in case it were stdin.
 input=$medir/a.fst
-
 cat "$@" >$input
 
-# Is this an acceptor?
+isyms=$medir/isymbols.txt
+osyms=$medir/osymbols.txt
 trans=$medir/transitions.fsm
-if fstinfo $input | grep -q '^acceptor  *y$'; then
-  # This is an acceptor.
-  syms=$medir/symbols.txt
-  fstprint --acceptor --save_isymbols=$syms $input > $trans
 
-  # Sort symbols per number, not per value.
+# Is this an acceptor?
+#
+# fstprint features an "acceptor" y/n field.  Unfortunately it merely
+# checks whether the input and output symbols are always equal (so
+# it's unrelated to the --acceptor flag of fstcompile), and this check
+# is performed on the symbol numbers only, not even checking if the
+# symbol tables actually match (i.e., "(a,x)*" will actually be
+# considered an "acceptor" if a and x are both numbered 1).
+#
+# Therefore check that transitions have equal symbol numbers and that
+# symbol tables are equal.
+fstprint --save_isymbols=$isyms \
+         --save_osymbols=$osyms $input > $trans
+if fstinfo $input | grep -q '^acceptor  *y$' && cmp $isyms $osyms; then
+  acceptor=true
+  fstprint --acceptor \
+           --save_isymbols=$isyms $input > $trans
+else
+  acceptor=false
+fi
+
+# Use $(sort...) to sort symbols by number, not by value.
+if $acceptor; then
   cat <<EOF
 #! /bin/sh
 
@@ -25,7 +43,7 @@ me=\$(basename "\$0")
 medir=\$(mktemp -d "/tmp/\$me.XXXXXX") || exit 1
 
 cat >\$medir/symbols.txt <<\EOFSM
-$(sort -n -k2 $syms)
+$(sort -n -k2 $isyms)
 EOFSM
 
 cat >\$medir/transitions.fsm <<\EOFSM
@@ -42,13 +60,6 @@ rm -rf \$medir
 exit \$sta
 EOF
 else
-  # This is a transducer.
-  isyms=$medir/isymbols.txt
-  osyms=$medir/osymbols.txt
-  fstprint --save_isymbols=$isyms \
-           --save_osymbols=$osyms $input > $trans
-
-  # Sort symbols per number, not per value.
   cat <<EOF
 #! /bin/sh
 
