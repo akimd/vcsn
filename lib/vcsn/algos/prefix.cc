@@ -26,5 +26,13 @@ namespace vcsn
     {
       return detail::suffix_registry().call(aut);
     }
+
+    REGISTER_DEFINE(factor);
+
+    automaton
+    factor(const automaton& aut)
+    {
+      return detail::factor_registry().call(aut);
+    }
   }
 }

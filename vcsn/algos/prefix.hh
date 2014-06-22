@@ -85,6 +85,47 @@ namespace vcsn
     }
   }
 
+  /// Create a factor automaton from \a aut and return it
+  template <typename Aut>
+  Aut&
+  factor_here(Aut& aut)
+  {
+    for (auto s : useful_states(aut))
+      if (s != aut->pre() && s != aut->post())
+	{
+	  aut->set_initial(s);
+	  aut->set_final(s);
+	}
+    return aut;
+  }
+
+  template <typename Aut>
+  auto
+  factor(const Aut& aut)
+    ->decltype(::vcsn::copy(aut))
+  {
+    auto res = ::vcsn::copy(aut);
+    factor_here(res);
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      // Brige.
+      template <typename Aut>
+      automaton
+      factor(const automaton& aut)
+      {
+	const auto& a = aut->as<Aut>();
+	return make_automaton(factor(a));
+      }
+
+      REGISTER_DECLARE(factor,
+		       (const automaton& aut) -> automaton);
+    }
+  }
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_PREFIX_HH

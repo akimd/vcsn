@@ -161,6 +161,9 @@ namespace vcsn
     /// subexpressions and group the equal monomials.
     ratexp expand(const ratexp& e);
 
+    /// Create a factor automaton from \a aut.
+    automaton factor(const automaton& aut);
+
     /// Output in FAdo format.
     std::ostream& fado(const automaton& aut, std::ostream& out);
 

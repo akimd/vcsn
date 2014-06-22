@@ -159,6 +159,11 @@ struct automaton
 
   weight eval(const label& l) const;
 
+  automaton factor() const
+  {
+    return vcsn::dyn::factor(val_);
+  }
+
   std::string format(const std::string& format = "dot") const
   {
     std::ostringstream os;
@@ -823,6 +828,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)
     .def("_eval", &automaton::eval)
+    .def("factor", &automaton::factor)
     .def("format", &automaton::format)
     .def("infiltration", &automaton::infiltration)
     .def("insplit", &automaton::insplit)
