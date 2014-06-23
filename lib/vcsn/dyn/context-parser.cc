@@ -18,7 +18,8 @@ namespace vcsn
           || w == "product"
           || w == "ratexp"
           || w == "subset"
-          || w == "transpose")
+          || w == "transpose"
+          || w == "tuple")
         return make_automaton(w);
       else if (w == "context")
       {
@@ -235,7 +236,8 @@ namespace vcsn
           res = std::make_shared<automaton>(prefix + "_automaton",
                                             make_context());
         }
-      else if (prefix == "product")
+      else if (prefix == "product"
+               || prefix == "tuple")
         {
           eat(is_, "_automaton<");
           res = std::make_shared<automaton>(prefix + "_automaton",

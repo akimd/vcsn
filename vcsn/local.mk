@@ -105,8 +105,9 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/visitor.hxx                      \
   %D%/core/ratexp-automaton.hh                  \
   %D%/core/subset-automaton.hh                  \
-  %D%/core/transition.hh                        \
   %D%/core/transition-map.hh                    \
+  %D%/core/transition.hh                        \
+  %D%/core/tuple-automaton.hh                   \
   %D%/ctx/context.hh                            \
   %D%/ctx/fwd.hh                                \
   %D%/ctx/instantiate.hh                        \

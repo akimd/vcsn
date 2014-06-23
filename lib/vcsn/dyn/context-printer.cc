@@ -106,6 +106,8 @@ namespace vcsn
         header("vcsn/core/subset-automaton.hh");
       else if (type == "transpose_automaton")
         header("vcsn/algos/transpose.hh");
+      else if (type == "tuple_automaton")
+        header("vcsn/core/tuple-automaton.hh");
       else
         raise("unsupported automaton type: ", type);
 

@@ -1,20 +1,18 @@
 #ifndef VCSN_ALGOS_PRODUCT_HH
 # define VCSN_ALGOS_PRODUCT_HH
 
-# include <deque>
 # include <iostream>
 # include <map>
 # include <utility>
 
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/algos/strip.hh>
-# include <vcsn/core/automaton-decorator.hh>
+# include <vcsn/core/tuple-automaton.hh>
 # include <vcsn/core/transition-map.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
-# include <vcsn/misc/tuple.hh>
 # include <vcsn/misc/vector.hh>
 # include <vcsn/misc/zip-maps.hh>
 
@@ -79,32 +77,39 @@ namespace vcsn
     /// Build the (accessible part of the) product.
     template <typename... Auts>
     class product_automaton_impl
-      : public automaton_decorator<decltype(join_automata(std::declval<Auts>()...))>
+      : public tuple_automaton_impl<decltype(join_automata(std::declval<Auts>()...)),
+                                    Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "requires letterized labels");
 
       /// The type of the resulting automaton.
       using automaton_t = decltype(join_automata(std::declval<Auts>()...));
-      using super_t = automaton_decorator<automaton_t>;
+      using super_t = tuple_automaton_impl<automaton_t, Auts...>;
 
     public:
+      using typename super_t::pair_t;
+      using typename super_t::state_t;
+      template <size_t... I>
+      using seq = typename super_t::template seq<I...>;
+
+      using super_t::auts_;
+      using super_t::indices;
+      using super_t::pmap_;
+      using super_t::post_;
+      using super_t::pre_;
+      using super_t::todo_;
+
+      using super_t::state;
+
       static std::string sname()
       {
-        std::string res = "product_automaton";
-        const char* sep = "<";
-        using swallow = int[];
-        (void) swallow
-          {
-            (res += sep + Auts::element_type::sname(), sep = ", ", 0)...
-          };
-        res += ">";
-        return res;
+        return "product_automaton" + super_t::sname_(false);
       }
 
-      std::string vname(bool) const
+      std::string vname(bool full = true) const
       {
-        return sname();
+        return "product_automaton" + super_t::vname_(full, false);
       }
 
       /// The type of context of the result.
@@ -137,14 +142,9 @@ namespace vcsn
       using super_t::aut_;
 
       product_automaton_impl(const Auts&... aut)
-        : super_t(join_automata(aut...))
-        , auts_(aut...)
+        : super_t(join_automata(aut...), aut...)
         , transition_maps_{{aut, *aut_->weightset()}...}
-      {
-        // Common for all three algorithms here.
-        pmap_[pre_()] = aut_->pre();
-        pmap_[post_()] = aut_->post();
-      }
+      {}
 
       /// Compute the (accessible part of the) product.
       void product()
@@ -204,73 +204,7 @@ namespace vcsn
           }
       }
 
-      bool state_has_name(typename super_t::state_t s) const
-      {
-        return (s != super_t::pre()
-                && s != super_t::post()
-                && has(origins(), s));
-      }
-
-      std::ostream&
-      print_state_name(typename super_t::state_t s, std::ostream& o,
-                       const std::string& fmt = "text") const
-      {
-        return print_state_name_(s, o, fmt, indices);
-      }
-
-      /// Result state type.
-      using state_t = state_t_of<automaton_t>;
-      /// Tuple of states of input automata.
-      using pair_t = std::tuple<state_t_of<Auts>...>;
-
-      /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, pair_t>;
-
-      /// A map from result state to tuple of original states.
-      const origins_t& origins() const
-      {
-        if (origins_.empty())
-          for (const auto& p: pmap_)
-            origins_.emplace(p.second, p.first);
-        return origins_;
-      }
-
     private:
-      /// A static list of integers.
-      template <std::size_t... I>
-      using seq = vcsn::detail::index_sequence<I...>;
-      /// The list of automaton indices as a static list.
-      using indices_t = vcsn::detail::make_index_sequence<sizeof...(Auts)>;
-      static constexpr indices_t indices{};
-
-      /// The pre of the input automata.
-      pair_t pre_() const
-      {
-        return pre_(indices);
-      }
-
-      template <size_t... I>
-      pair_t pre_(seq<I...>) const
-      {
-        // clang 3.4 on top of libstdc++ wants this ctor to be
-        // explicitly called.
-        return pair_t{(std::get<I>(auts_)->pre())...};
-      }
-
-      /// The post of the input automata.
-      pair_t post_() const
-      {
-        return post_(indices);
-      }
-
-      template <size_t... I>
-      pair_t post_(seq<I...>) const
-      {
-        // clang 3.4 on top of libstdc++ wants this ctor to be
-        // explicitly called.
-        return pair_t{(std::get<I>(auts_)->post())...};
-      }
-
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
       void initialize_product()
@@ -285,28 +219,6 @@ namespace vcsn
         // Make the result automaton initial states: same as the
         // (synchronized) product of pre: synchronized transitions on $.
         add_product_transitions(aut_->pre(), pre_());
-      }
-
-      /// The state in the product corresponding to a pair of states
-      /// of operands.
-      ///
-      /// Add the given two source-automaton states to the worklist
-      /// for the given result automaton if they aren't already there,
-      /// updating the map; in any case return.
-      state_t state(pair_t state)
-      {
-        auto lb = pmap_.lower_bound(state);
-        if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
-          {
-            lb = pmap_.emplace_hint(lb, state, aut_->new_state());
-            todo_.emplace_back(state);
-          }
-        return lb->second;
-      }
-
-      state_t state(state_t_of<Auts>... ss)
-      {
-        return state(std::make_tuple(ss...));
       }
 
       /// The outgoing tuple of transitions from state tuple \a ss.
@@ -561,45 +473,8 @@ namespace vcsn
         return res;
       }
 
-      template <size_t... I>
-      std::ostream&
-      print_state_name_(typename super_t::state_t s, std::ostream& o,
-                        const std::string& fmt,
-                        seq<I...>) const
-      {
-        auto i = origins().find(s);
-        if (i == std::end(origins()))
-          this->print_state(s, o);
-        else
-          {
-            const char* sep = "";
-            using swallow = int[];
-            (void) swallow
-              {
-                (o << sep,
-                 std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
-                                                      o, fmt),
-                 sep = ", ",
-                 0)...
-               };
-          }
-        return o;
-      }
-
-      /// Input automata, supplied at construction time.
-      automata_t auts_;
-
-      /// Map state-tuple -> result-state.
-      using map = std::map<pair_t, state_t>;
-      map pmap_;
-
-      /// Worklist of state tuples.
-      std::deque<pair_t> todo_;
-
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
-
-      mutable origins_t origins_;
     };
   }
 
