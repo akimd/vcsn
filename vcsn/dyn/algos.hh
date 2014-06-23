@@ -459,6 +459,9 @@ namespace vcsn
     /// Create a suffix automaton from \a aut.
     automaton suffix(const automaton& aut);
 
+    /// Create a subsequence automaton from \a aut.
+    automaton subsequence(const automaton& aut);
+
     /// Sum of two standard automata.
     automaton sum(const automaton& lhs, const automaton& rhs);
 

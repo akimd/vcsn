@@ -34,5 +34,14 @@ namespace vcsn
     {
       return detail::factor_registry().call(aut);
     }
+
+    REGISTER_DEFINE(subsequence);
+
+    automaton
+    subsequence(const automaton& aut)
+    {
+      return detail::subsequence_registry().call(aut);
+    }
+
   }
 }

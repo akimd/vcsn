@@ -126,6 +126,62 @@ namespace vcsn
 		       (const automaton& aut) -> automaton);
     }
   }
+
+  /// Create a subsequence automaton from \a aut and return it
+  template <typename Aut>
+  Aut&
+  subsequence_here(Aut& aut)
+  {
+    const auto epsilon = aut->labelset()->one();
+
+    using automaton_t = typename Aut::element_type;
+    using state_t = state_t_of<automaton_t>;
+
+    for (auto s : aut->states())
+      {
+	std::vector<state_t> v;
+	for (auto tr : aut->in(s))
+	  {
+	    auto si = aut->src_of(tr);
+	    // Loop of set of transitions
+	    // Do not add transtions here
+	    // Put it to vector and add later
+	    v.push_back(si);
+	  }
+	for (auto si : v)
+	    if (s != si)
+	      aut->add_transition(si, s, epsilon);
+      }
+    return aut;
+  }
+
+  template <typename Aut>
+  auto
+  subsequence(const Aut& aut)
+    ->decltype(::vcsn::copy(aut))
+  {
+    auto res = ::vcsn::copy(aut);
+    subsequence_here(res);
+    return res;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      // Brige.
+      template <typename Aut>
+      automaton
+      subsequence(const automaton& aut)
+      {
+	const auto& a = aut->as<Aut>();
+	return make_automaton(subsequence(a));
+      }
+
+      REGISTER_DECLARE(subsequence,
+		       (const automaton& aut) -> automaton);
+    }
+  }
 } // namespace vcsn
 
 #endif // !VCSN_ALGOS_PREFIX_HH

@@ -55,6 +55,7 @@ namespace vcsn
       ALGO("right-mult", "left-mult");
       ALGO("shortest", "enumerate");
       ALGO("shuffle", "product");
+      ALGO("subsequence", "prefix");
       ALGO("trim", "accessible");
       ALGO("union-a", "union");
 #undef ALGO
