@@ -275,12 +275,12 @@ namespace vcsn
 
   /// \brief Format automaton to EFSM format, based on FSM format.
   ///
-  /// \tparam AutPtr an automaton type.
-  template <typename AutPtr>
+  /// \tparam Aut an automaton type.
+  template <typename Aut>
   std::ostream&
-  efsm(const AutPtr& aut, std::ostream& out)
+  efsm(const Aut& aut, std::ostream& out)
   {
-    detail::efsmer<AutPtr> efsm{aut, out};
+    detail::efsmer<Aut> efsm{aut, out};
     efsm();
     return out;
   }

@@ -120,7 +120,7 @@ namespace vcsn
       }
 
       REGISTER_DECLARE(concatenate,
-                        (const automaton&, const automaton&) -> automaton);
+                       (const automaton&, const automaton&) -> automaton);
     }
   }
 
@@ -128,12 +128,12 @@ namespace vcsn
   | chain(automaton, min, max).  |
   `-----------------------------*/
 
-  template <typename AutPtr>
-  AutPtr
-  chain(const AutPtr& aut, int min, int max)
+  template <typename Aut>
+  Aut
+  chain(const Aut& aut, int min, int max)
   {
-    AutPtr res =
-      make_shared_ptr<AutPtr>(aut->context());
+    Aut res =
+      make_shared_ptr<Aut>(aut->context());
     if (max == -1)
       {
         res = star(aut);
@@ -160,8 +160,7 @@ namespace vcsn
         if (min < max)
           {
             // Aut sum = automatonset.one();
-            AutPtr sum
-              = make_shared_ptr<AutPtr>(aut->context());
+            Aut sum = make_shared_ptr<Aut>(aut->context());
             {
               auto s = sum->new_state();
               sum->set_initial(s);

@@ -22,12 +22,12 @@ namespace vcsn
 
     /// \brief Format an automaton into Dot.
     ///
-    /// \tparam AutPtr an automaton type.
-    template <typename AutPtr>
-    class dotter: public outputter<AutPtr>
+    /// \tparam Aut an automaton type.
+    template <typename Aut>
+    class dotter: public outputter<Aut>
     {
     private:
-      using super_type = outputter<AutPtr>;
+      using super_type = outputter<Aut>;
       using typename super_type::automaton_t;
       using typename super_type::state_t;
       using typename super_type::transition_t;

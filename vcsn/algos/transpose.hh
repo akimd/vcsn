@@ -18,14 +18,13 @@ namespace vcsn
   namespace detail
   {
     /// Read-write on an automaton, that transposes everything.
-    template <typename AutPtr>
-    class transpose_automaton_impl : public automaton_decorator<AutPtr>
+    template <typename Aut>
+    class transpose_automaton_impl : public automaton_decorator<Aut>
     {
     public:
       /// The type of automaton to wrap.
-      using automaton_ptr = AutPtr;
-      using automaton_t = typename automaton_ptr::element_type;
-      using super = automaton_decorator<AutPtr>;
+      using automaton_t = Aut;
+      using super = automaton_decorator<Aut>;
       using automaton_nocv_t = typename super::automaton_nocv_t;
 
       using context_t = context_t_of<automaton_t>;
@@ -36,17 +35,14 @@ namespace vcsn
 
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
-      using kind_t = typename automaton_t::kind_t;
-
-      using labelset_ptr = typename automaton_t::labelset_ptr;
-      using weightset_ptr = typename automaton_t::weightset_ptr;
+      using kind_t = typename automaton_t::element_type::kind_t;
 
     public:
       using super::super;
 
       static std::string sname()
       {
-        return "transpose_automaton<" + automaton_t::sname() + ">";
+        return "transpose_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
       std::string vname(bool full = true) const
@@ -187,13 +183,13 @@ namespace vcsn
       | constexpr methods that transpose.  |
       `-----------------------------------*/
 
-# define DEFINE(Signature, Value)               \
-      static constexpr                          \
-      auto                                      \
-      Signature                                 \
-        -> decltype(automaton_t::Value)         \
-      {                                         \
-        return automaton_t::Value;              \
+# define DEFINE(Signature, Value)                       \
+      static constexpr                                  \
+      auto                                              \
+      Signature                                         \
+        -> decltype(automaton_t::element_type::Value)   \
+      {                                                 \
+        return automaton_t::element_type::Value;        \
       }
 
       DEFINE(post(), pre());
@@ -203,27 +199,27 @@ namespace vcsn
     };
   }
 
-  template <typename AutPtr>
+  template <typename Aut>
   using transpose_automaton
-    = std::shared_ptr<detail::transpose_automaton_impl<AutPtr>>;
+    = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;
 
   // Rely on the fact that int takes precedence over long to express
   // a precedence of this first function over the second one.
 
-  template <typename AutPtr>
+  template <typename Aut>
   inline
-  AutPtr
-  transpose(const transpose_automaton<AutPtr>& aut, int = 0)
+  Aut
+  transpose(const transpose_automaton<Aut>& aut, int = 0)
   {
     return aut->strip();
   }
 
-  template <typename AutPtr>
+  template <typename Aut>
   inline
-  transpose_automaton<AutPtr>
-  transpose(AutPtr aut, long = 0)
+  transpose_automaton<Aut>
+  transpose(Aut aut, long = 0)
   {
-    return make_shared_ptr<transpose_automaton<AutPtr>>(aut);
+    return make_shared_ptr<transpose_automaton<Aut>>(aut);
   }
 
   namespace dyn

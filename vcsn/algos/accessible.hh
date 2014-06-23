@@ -19,12 +19,11 @@ namespace vcsn
   `--------------------------------------------------*/
 
   // The set of accessible states, including pre(), and possibly post().
-  template <typename AutPtr>
-  std::set<state_t_of<AutPtr>>
-  accessible_states(const AutPtr& aptr)
+  template <typename Aut>
+  std::set<state_t_of<Aut>>
+  accessible_states(const Aut& aptr)
   {
-    using automaton_ptr = AutPtr;
-    using automaton_t = typename automaton_ptr::element_type;
+    using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
 
     // Reachable states.
@@ -54,17 +53,17 @@ namespace vcsn
   }
 
   // The set of coaccessible states, including post(), and possibly pre().
-  template <typename AutPtr>
-  std::set<state_t_of<AutPtr>>
-  coaccessible_states(const AutPtr& a)
+  template <typename Aut>
+  std::set<state_t_of<Aut>>
+  coaccessible_states(const Aut& a)
   {
     return accessible_states(transpose(a));
   }
 
   // The set of coaccessible states, including post(), and possibly pre().
-  template <typename AutPtr>
-  std::set<state_t_of<AutPtr>>
-  useful_states(const AutPtr& a)
+  template <typename Aut>
+  std::set<state_t_of<Aut>>
+  useful_states(const Aut& a)
   {
     auto accessible = accessible_states(a);
     auto coaccessible = coaccessible_states(a);
@@ -77,9 +76,9 @@ namespace vcsn
   `----------------------------------------------------*/
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename AutPtr>
+  template <typename Aut>
   size_t
-  num_accessible_states(const AutPtr& a)
+  num_accessible_states(const Aut& a)
   {
     auto set = accessible_states(a);
     size_t res = set.size();
@@ -92,17 +91,17 @@ namespace vcsn
   }
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename AutPtr>
+  template <typename Aut>
   size_t
-  num_coaccessible_states(const AutPtr& a)
+  num_coaccessible_states(const Aut& a)
   {
     return num_accessible_states(transpose(a));
   }
 
   /// Number of accessible states, not counting pre() and post().
-  template <typename AutPtr>
+  template <typename Aut>
   size_t
-  num_useful_states(const AutPtr& a)
+  num_useful_states(const Aut& a)
   {
     auto set = useful_states(a);
     size_t res = set.size();
@@ -145,35 +144,35 @@ namespace vcsn
   | is_trim, is_accessible, is_coaccessible, is_empty, is_useless.  |
   `----------------------------------------------------------------*/
 
-  template <typename AutPtr>
-  bool is_trim(const AutPtr& a)
+  template <typename Aut>
+  bool is_trim(const Aut& a)
   {
     return num_useful_states(a) == a->num_states();
   }
 
-  template <typename AutPtr>
-  bool is_useless(const AutPtr& a)
+  template <typename Aut>
+  bool is_useless(const Aut& a)
   {
     return num_useful_states(a) == 0;
   }
 
-  template <typename AutPtr>
-  bool is_accessible(const AutPtr& a)
+  template <typename Aut>
+  bool is_accessible(const Aut& a)
   {
     return num_accessible_states(a) == a->num_states();
   }
 
-  template <typename AutPtr>
-  bool is_coaccessible(const AutPtr& a)
+  template <typename Aut>
+  bool is_coaccessible(const Aut& a)
   {
     return num_coaccessible_states(a) == a->num_states();
   }
 
-  template <typename AutPtr>
-  bool is_empty(const AutPtr& a) ATTRIBUTE_PURE;
+  template <typename Aut>
+  bool is_empty(const Aut& a) ATTRIBUTE_PURE;
 
-  template <typename AutPtr>
-  bool is_empty(const AutPtr& a)
+  template <typename Aut>
+  bool is_empty(const Aut& a)
   {
     // FIXME: Beware of the case where there is a transition from
     // pre() to post().

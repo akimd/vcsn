@@ -216,11 +216,11 @@ namespace vcsn
 
   }
 
-  template <typename AutPtr>
+  template <typename Aut>
   std::ostream&
-  fado(const AutPtr& aut, std::ostream& out)
+  fado(const Aut& aut, std::ostream& out)
   {
-    detail::fadoer<AutPtr> fado{aut, out};
+    detail::fadoer<Aut> fado{aut, out};
     fado();
     return out;
   }
@@ -307,11 +307,11 @@ namespace vcsn
     };
   }
 
-  template <typename AutPtr>
+  template <typename Aut>
   std::ostream&
-  grail(const AutPtr& aut, std::ostream& out)
+  grail(const Aut& aut, std::ostream& out)
   {
-    detail::grailer<AutPtr> grail{aut, out};
+    detail::grailer<Aut> grail{aut, out};
     grail();
     return out;
   }

@@ -16,14 +16,13 @@ namespace vcsn
   /// In place star of a standard automaton.
   ///
   /// See standard_visitor::visit(star).
-  template <typename AutPtr>
-  AutPtr&
-  star_here(AutPtr& res)
+  template <typename Aut>
+  Aut&
+  star_here(Aut& res)
   {
     require(is_standard(res), __func__, ": input must be standard");
 
-    using automaton_ptr = AutPtr;
-    using automaton_t = typename automaton_ptr::element_type;
+    using automaton_t = Aut;
     using context_t = context_t_of<automaton_t>;
     using weightset_t = weightset_t_of<context_t>;
     using weight_t = weight_t_of<context_t>;

@@ -26,22 +26,21 @@ namespace vcsn
   {
     /// \brief The subset construction automaton from another.
     ///
-    /// \tparam AutPtr an automaton type.
+    /// \tparam Aut an automaton type.
     /// \precondition labelset is free.
     /// \precondition weightset is Boolean.
-    template <typename AutPtr>
+    template <typename Aut>
     class determinized_automaton_impl
-      : public automaton_decorator<typename AutPtr::element_type::automaton_nocv_t>
+      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
-      static_assert(labelset_t_of<AutPtr>::is_free(),
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
-      static_assert(std::is_same<weight_t_of<AutPtr>, bool>::value,
+      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
                     "determinize: requires Boolean weights");
 
     public:
-      using automaton_ptr = AutPtr;
-      using automaton_t = typename automaton_ptr::element_type;
-      using automaton_nocv_t = typename automaton_t::automaton_nocv_t;
+      using automaton_t = Aut;
+      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
@@ -54,7 +53,7 @@ namespace vcsn
       /// Build the determinizer.
       /// \param a         the automaton to determinize
       /// \param complete  whether to force the result to be complete
-      determinized_automaton_impl(const automaton_ptr& a, bool complete = false)
+      determinized_automaton_impl(const automaton_t& a, bool complete = false)
         : super_t(a->context())
         , input_(a)
         , complete_(complete)
@@ -85,7 +84,7 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "determinized_automaton<" + automaton_t::sname() + ">";
+        return "determinized_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
       std::string vname(bool full = true) const
@@ -190,7 +189,7 @@ namespace vcsn
       map map_;
 
       /// Input automaton.
-      automaton_ptr input_;
+      automaton_t input_;
 
       /// Whether to build a complete automaton.
       bool complete_ = false;
@@ -208,7 +207,7 @@ namespace vcsn
       state_set finals_;
 
       /// The generators.
-      const typename labelset_t_of<AutPtr>::genset_t letters_
+      const typename labelset_t_of<Aut>::genset_t letters_
         = input_->labelset()->genset();
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.

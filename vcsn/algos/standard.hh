@@ -10,6 +10,7 @@
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/ratexp.hh>
+# include <vcsn/misc/memory.hh>
 # include <vcsn/misc/raise.hh>
 
 namespace vcsn
@@ -125,8 +126,7 @@ namespace vcsn
       : public Context::const_visitor
     {
     public:
-      using automaton_ptr = Aut;
-      using automaton_t = typename automaton_ptr::element_type;
+      using automaton_t = Aut;
       using context_t = Context;
       using weightset_t = weightset_t_of<context_t>;
       using weight_t = weight_t_of<context_t>;
@@ -138,10 +138,10 @@ namespace vcsn
 
       standard_visitor(const context_t& ctx)
         : ws_(*ctx.weightset())
-        , res_(std::make_shared<automaton_t>(ctx))
+        , res_(make_shared_ptr<automaton_t>(ctx))
       {}
 
-      automaton_ptr
+      automaton_t
       operator()(const typename context_t::ratexp_t& v)
       {
         v->accept(*this);
@@ -310,8 +310,8 @@ namespace vcsn
 
     private:
       const weightset_t& ws_;
-      automaton_ptr res_;
-      state_t initial_ = automaton_t::null_state();
+      automaton_t res_;
+      state_t initial_ = automaton_t::element_type::null_state();
     };
 
   } // rat::
@@ -343,10 +343,10 @@ namespace vcsn
         // but we should actually be parameterized by its type too.
         using context_t = context_t_of<RatExpSet>;
         using ratexpset_t = RatExpSet;
-        using automaton_ptr = vcsn::mutable_automaton<context_t>;
+        using automaton_t = vcsn::mutable_automaton<context_t>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(standard<automaton_ptr>(e.ratexpset().context(),
-                                                      e.ratexp()));
+        return make_automaton(standard<automaton_t>(e.ratexpset().context(),
+                                                    e.ratexp()));
       }
 
       REGISTER_DECLARE(standard_ratexp,
