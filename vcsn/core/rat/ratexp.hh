@@ -19,7 +19,9 @@ namespace vcsn
     class exp
     {
     public:
-      virtual ~exp() = 0;
+#ifndef COVERAGE
+      virtual ~exp() = default;
+#endif
 
       /// The possible types of ratexps.
       using type_t = rat::type_t;

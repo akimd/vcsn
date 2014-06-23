@@ -9,11 +9,6 @@ namespace vcsn
   namespace rat
   {
 
-    inline
-    exp::~exp()
-    {}
-
-
 #define DEFINE_CTOR(Node)                       \
     template <typename Label, typename Weight>  \
     inline                                      \
