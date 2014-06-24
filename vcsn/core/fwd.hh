@@ -13,6 +13,7 @@ namespace vcsn
   template <class C>
   struct container_filter_range;
 
+
   // vcsn/core/mutable-automaton.hh
   namespace detail
   {
@@ -22,6 +23,7 @@ namespace vcsn
   template <typename Context>
   using mutable_automaton
     = std::shared_ptr<detail::mutable_automaton_impl<Context>>;
+
 
   // vcsn/core/ratexp-automaton.hh.
   namespace detail

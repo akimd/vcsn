@@ -5,6 +5,16 @@
 
 namespace vcsn
 {
+  // vcsn/algos/blind.hh
+  namespace detail
+  {
+    template <std::size_t TapeNum, typename Aut>
+    class blind_automaton_impl;
+  }
+  template <std::size_t TapeNum, typename Aut>
+  using blind_automaton
+    = std::shared_ptr<detail::blind_automaton_impl<TapeNum, Aut>>;
+
   // Beware that this file is dangerous, as it prevents automatic
   // instantiation of these algos.  It exists only to solve mutual
   // dependencies (e.g.: proper uses is-valid which uses proper).
@@ -27,17 +37,6 @@ namespace vcsn
     size_t
     num_eps_transitions(const Aut&);
   }
-
-  // vcsn/algos/compose.hh
-  namespace detail
-  {
-    template <std::size_t Band, typename Aut>
-    class blind_automaton_impl;
-  }
-
-  template <std::size_t Band, typename Aut>
-  using blind_automaton
-    = std::shared_ptr<detail::blind_automaton_impl<Band, Aut>>;
 
   // vcsn/algos/transpose.hh
   namespace detail

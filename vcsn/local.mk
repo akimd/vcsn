@@ -16,6 +16,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/are-equivalent.hh                   \
   %D%/algos/are-isomorphic.hh                   \
   %D%/algos/aut-to-exp.hh                       \
+  %D%/algos/blind.hh                            \
   %D%/algos/complement.hh                       \
   %D%/algos/complete.hh                         \
   %D%/algos/compose.hh                          \
