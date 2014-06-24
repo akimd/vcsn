@@ -237,10 +237,10 @@ namespace vcsn
       /// algorithm.  However, its _value_ differs: in the case of the
       /// product, the labelset is the meet of the labelsets, it is
       /// its join for shuffle and infiltration.
-      using weightset_t = join_t<weightset_t_of<context_t_of<Lhs>>,
-                                 weightset_t_of<context_t_of<Rhs>>>;
       using labelset_t = typename concat_tupleset<hidden_l_labelset_t,
                                                   hidden_r_labelset_t>::type;
+      using weightset_t = join_t<weightset_t_of<context_t_of<Lhs>>,
+                                 weightset_t_of<context_t_of<Rhs>>>;
 
       using res_label_t = typename labelset_t::value_t;
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
