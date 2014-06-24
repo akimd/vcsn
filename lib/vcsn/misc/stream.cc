@@ -106,7 +106,7 @@ namespace vcsn
   {
     is.clear();
     std::string buf;
-    is >> buf;
+    std::getline(is, buf, '\n');
     if (!is.good())
       // This shouldn't really happen; however it's best to fail cleanly.
       is.clear();
