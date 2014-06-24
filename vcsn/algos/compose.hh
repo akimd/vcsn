@@ -7,8 +7,7 @@
 
 # include <vcsn/algos/insplit.hh>
 # include <vcsn/algos/sort.hh>
-# include <vcsn/core/automaton-decorator.hh>
-# include <vcsn/core/mutable-automaton.hh>
+# include <vcsn/core/tuple-automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/labelset/tupleset.hh>
@@ -246,20 +245,17 @@ namespace vcsn
       using context_t = ::vcsn::context<labelset_t, weightset_t>;
 
       /// The type of the resulting automaton.
-      using automaton_t = mutable_automaton<context_t>;
+      using automaton_t = tuple_automaton<mutable_automaton<context_t>,
+                                          Lhs, Rhs>;
 
       /// Result state type.
       using state_t = state_t_of<automaton_t>;
       /// Tuple of states of input automata.
-      using pair_t = std::pair<state_t_of<Lhs>, state_t_of<Rhs>>;
-      /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, pair_t>;
+      using pair_t = typename automaton_t::element_type::pair_t;
 
       composer(const Lhs& lhs, const Rhs& rhs)
-        : lhs_(lhs)
-        , rhs_(rhs)
-        , res_(make_shared_ptr<automaton_t>(context_t{make_labelset_(lhs_->res_labelset(), rhs_->res_labelset()),
-                join(*lhs->weightset(), *rhs->weightset())}))
+        : res_(make_shared_ptr<automaton_t>(make_mutable_automaton(make_context_(lhs, rhs)),
+                                            lhs, rhs))
       {}
 
       static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
@@ -279,11 +275,11 @@ namespace vcsn
                           std::get<I2>(rl.sets())...};
       }
 
-      /// Reset the attributes before a new product.
-      void clear()
+      static context_t
+      make_context_(const Lhs& lhs, const Rhs& rhs)
       {
-        pmap_.clear();
-        todo_.clear();
+        return {make_labelset_(lhs->res_labelset(), rhs->res_labelset()),
+                join(*lhs->weightset(), *rhs->weightset())};
       }
 
       /// The (accessible part of the) product of \a lhs_ and \a rhs_.
@@ -292,107 +288,26 @@ namespace vcsn
         initialize_compose();
         const auto& ws = *res_->context().weightset();
 
-        while (!todo_.empty())
+        while (!res_->todo_.empty())
           {
-            pair_t psrc = todo_.front();
-            todo_.pop_front();
-            state_t src = pmap_[psrc];
+            pair_t psrc = res_->todo_.front();
+            res_->todo_.pop_front();
+            state_t src = res_->pmap_[psrc];
 
             add_compose_transitions(ws, src, psrc);
           }
         return std::move(res_);
       }
 
-
-      /// A map from result state to tuple of original states.
-      origins_t origins() const
-      {
-        origins_t res;
-        for (const auto& p: pmap_)
-          res.emplace(p.second, p.first);
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(const origins_t& orig, std::ostream& o)
-      {
-        o << "/* Origins.\n"
-             "    node [shape = box, style = rounded]\n";
-        for (auto p: orig)
-          if (p.first != automaton_t::element_type::pre()
-              && p.first != automaton_t::element_type::post())
-            {
-              o << "    " << p.first - 2
-                << " [label = \"";
-              o << p.second.first - 2 << "," << p.second.second - 2;
-              o << "\"]\n";
-            }
-        o << "*/\n";
-        return o;
-      }
-
     private:
-
-      /// The pre of the input automata.
-      pair_t pre_() const
-      {
-        return pair_t{lhs_->pre(), rhs_->pre()};
-      }
-
-      /// The post of the input automata.
-      pair_t post_() const
-      {
-        return pair_t{lhs_->post(), rhs_->post()};
-      }
-
-      /// Map state-tuple -> result-state.
-      using map = std::map<pair_t, state_t>;
-      map pmap_;
-
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
-
-      /// Input automata, supplied at construction time.
-      clhs_t lhs_;
-      crhs_t rhs_;
-
-      /// Worklist of state tuples.
-      std::deque<pair_t> todo_;
-
-      /// Add the pre and post states in the result automaton.  This
-      /// is needed for all three algorithms here.
-      void initialize()
-      {
-        pmap_[pre_()] = res_->pre();
-        pmap_[post_()] = res_->post();
-      }
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
       void initialize_compose()
       {
-        initialize();
-        todo_.emplace_back(pre_());
-      }
-
-      /// The state in the product corresponding to a pair of states
-      /// of operands.
-      ///
-      /// Add the given two source-automaton states to the worklist
-      /// for the given result automaton if they aren't already there,
-      /// updating the map; in any case return.
-      state_t state(state_t_of<Lhs> ls, state_t_of<Rhs> rs)
-      {
-        pair_t state{ls, rs};
-        auto lb = pmap_.lower_bound(state);
-        if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
-          {
-            lb = pmap_.emplace_hint(lb, state, res_->new_state());
-            todo_.emplace_back(state);
-          }
-        return lb->second;
+        res_->todo_.emplace_back(res_->pre_());
       }
 
       res_label_t join_label(hidden_l_label_t ll, hidden_r_label_t rl)
@@ -428,29 +343,31 @@ namespace vcsn
         // by the sort algorithm: thanks to that property we can scan
         // the two successor lists in lockstep. Thus if there is a one
         // transition, it is at the beginning.
-        auto ls = lhs_->all_out(psrc.first);
-        auto rs = rhs_->all_out(psrc.second);
+        auto& lhs = std::get<0>(res_->auts_);
+        auto& rhs = std::get<1>(res_->auts_);
+        auto ls = lhs->all_out(std::get<0>(psrc));
+        auto rs = rhs->all_out(std::get<1>(psrc));
         auto li = ls.begin();
         auto ri = rs.begin();
 
-        for (/* Nothing. */; li != ls.end() && is_one(lhs_, *li); ++li)
-          if (!has_only_ones_in(rhs_, psrc.second))
-            res_->new_transition(src, state(lhs_->dst_of(*li), psrc.second),
-                                join_label(lhs_->hidden_label_of(*li),
-                                           get_hidden_one(rhs_)),
-                                ws.mul(ws.conv(*lhs_->weightset(),
-                                               lhs_->weight_of(*li)),
-                                       ws.conv(*rhs_->weightset(),
-                                               rhs_->context().weightset()->one())));
+        for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
+          if (!has_only_ones_in(rhs, std::get<1>(psrc)))
+            res_->new_transition(src, res_->state(lhs->dst_of(*li), std::get<1>(psrc)),
+                                join_label(lhs->hidden_label_of(*li),
+                                           get_hidden_one(rhs)),
+                                ws.mul(ws.conv(*lhs->weightset(),
+                                               lhs->weight_of(*li)),
+                                       ws.conv(*rhs->weightset(),
+                                               rhs->context().weightset()->one())));
 
-        for (/* Nothing. */; ri != rs.end() && is_one(rhs_, *ri); ++ri)
-          res_->new_transition(src, state(psrc.first, rhs_->dst_of(*ri)),
-                              join_label(get_hidden_one(lhs_),
-                                         rhs_->hidden_label_of(*ri)),
-                              ws.mul(ws.conv(*lhs_->weightset(),
-                                             lhs_->context().weightset()->one()),
-                                     ws.conv(*rhs_->weightset(),
-                                             rhs_->weight_of(*ri))));
+        for (/* Nothing. */; ri != rs.end() && is_one(rhs, *ri); ++ri)
+          res_->new_transition(src, res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
+                              join_label(get_hidden_one(lhs),
+                                         rhs->hidden_label_of(*ri)),
+                              ws.mul(ws.conv(*lhs->weightset(),
+                                             lhs->context().weightset()->one()),
+                                     ws.conv(*rhs->weightset(),
+                                             rhs->weight_of(*ri))));
 
 
         for (/* Nothing. */;
@@ -458,35 +375,34 @@ namespace vcsn
              ++ li)
         {
           auto lt = *li;
-          label_t_of<clhs_t> label = lhs_->label_of(lt);
+          label_t_of<clhs_t> label = lhs->label_of(lt);
           // Skip right-hand transitions with labels we don't have
           // on the left hand.
-          while (middle_labelset_t::less_than(rhs_->label_of(*ri), label))
+          while (middle_labelset_t::less_than(rhs->label_of(*ri), label))
             if (++ ri == rs.end())
               return;
 
           // If the smallest label on the right-hand side is bigger
           // than the left-hand one, we have no hope of ever adding
           // transitions with this label.
-          if (middle_labelset_t::less_than(label, rhs_->label_of(*ri)))
+          if (middle_labelset_t::less_than(label, rhs->label_of(*ri)))
             continue;
 
-          assert(middle_labelset_t::equals(label, rhs_->label_of(*ri)));
+          assert(middle_labelset_t::equals(label, rhs->label_of(*ri)));
           auto rstart = ri;
-          while (middle_labelset_t::equals(rhs_->label_of(*ri), label))
+          while (middle_labelset_t::equals(rhs->label_of(*ri), label))
           {
             // These are always new transitions: first because the
             // source state is visited for the first time, and
             // second because the couple (left destination, label)
             // is unique, and so is (right destination, label).
-            res_->new_transition(src, state(lhs_->dst_of(lt), rhs_->dst_of(*ri)),
-                                join_label(lhs_->hidden_label_of(*li),
-                                           rhs_->hidden_label_of(*ri)),
-                                ws.mul(ws.conv(*lhs_->weightset(),
-                                               lhs_->weight_of(lt)),
-                                       ws.conv(*rhs_->weightset(),
-                                               rhs_->weight_of(*ri))));
-
+            res_->new_transition(src, res_->state(lhs->dst_of(lt), rhs->dst_of(*ri)),
+                                 join_label(lhs->hidden_label_of(*li),
+                                            rhs->hidden_label_of(*ri)),
+                                 ws.mul(ws.conv(*lhs->weightset(),
+                                                lhs->weight_of(lt)),
+                                        ws.conv(*rhs->weightset(),
+                                                rhs->weight_of(*ri))));
             if (++ ri == rs.end())
               break;
           }
@@ -585,10 +501,7 @@ namespace vcsn
     auto l = sort(make_blind_automaton<1>(lhs));
     auto r = sort(get_insplit(rhs));
     detail::composer<decltype(l), decltype(r)>compose(l, r);
-    auto res = compose.compose();
-    if (getenv("VCSN_ORIGINS"))
-      compose.print(compose.origins(), std::cout);
-    return res;
+    return compose.compose();
   }
 
   namespace dyn

@@ -108,7 +108,7 @@ namespace vcsn
         return origins_;
       }
 
-    protected:
+      // FIXME: protected:
       /// A static list of integers.
       template <std::size_t... I>
       using seq = vcsn::detail::index_sequence<I...>;
