@@ -599,15 +599,15 @@ namespace vcsn
       /// Bridge.
       template <typename Lhs, typename Rhs>
       automaton
-      compose(const automaton& lhs, const automaton& rhs)
+      compose(automaton& lhs, automaton& rhs)
       {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
+        auto& l = lhs->as<Lhs>();
+        auto& r = rhs->as<Rhs>();
         return make_automaton(compose(l, r));
       }
 
       REGISTER_DECLARE(compose,
-                       (const automaton&, const automaton&) -> automaton);
+                       (automaton&, automaton&) -> automaton);
     }
   }
 

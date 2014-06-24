@@ -125,7 +125,7 @@ struct automaton
     return vcsn::dyn::complete(val_);
   }
 
-  automaton compose(const automaton& rhs) const
+  automaton compose(automaton& rhs)
   {
     return vcsn::dyn::compose(val_, rhs.val_);
   }

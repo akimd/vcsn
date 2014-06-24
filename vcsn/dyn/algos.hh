@@ -64,7 +64,7 @@ namespace vcsn
     automaton complete(const automaton& aut);
 
     /// The composition of transducers \a lhs and \a rhs.
-    automaton compose(const automaton& lhs, const automaton& rhs);
+    automaton compose(automaton& lhs, automaton& rhs);
 
     /// Concatenate two standard automata.
     automaton concatenate(const automaton& lhs, const automaton& rhs);

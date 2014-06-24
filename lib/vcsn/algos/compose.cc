@@ -10,7 +10,7 @@ namespace vcsn
   {
     REGISTER_DEFINE(compose);
     automaton
-    compose(const automaton& lhs, const automaton& rhs)
+    compose(automaton& lhs, automaton& rhs)
     {
       return detail::compose_registry().call(lhs, rhs);
     }
