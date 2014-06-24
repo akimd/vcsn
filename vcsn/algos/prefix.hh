@@ -133,9 +133,7 @@ namespace vcsn
   subsequence_here(Aut& aut)
   {
     const auto epsilon = aut->labelset()->one();
-
-    using automaton_t = typename Aut::element_type;
-    using state_t = state_t_of<automaton_t>;
+    using state_t = state_t_of<Aut>;
 
     for (auto s : aut->states())
       {

@@ -384,7 +384,7 @@ digraph
 aut5 = '''
 digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lal_char(abc)_b"
 
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -397,7 +397,7 @@ digraph
 aut6 = '''
 digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lal_char(abc)_b"
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> 1 [label = "b"]
@@ -413,18 +413,7 @@ digraph
 aut7 = '''
 digraph
 {
-  vcsn_context = "lan_char(a)_b"
-
-  I0 -> 0
-  0 -> F0
-  0 -> 0 [label = "a"]
-}
-'''
-
-aut8 = '''
-digraph
-{
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lal_char(abc)_b"
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
@@ -441,21 +430,13 @@ digraph
 }
 '''
 
+def to_nullable_automate(aut):
+  return aut.replace("lal_char(", "lan_char(")
+
+
 # factor checking
 # ---------------
-factor_check('''
-digraph
-{
-  vcsn_context = "lal_char(abc)_b"
-
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  1 -> 2 [label = "b"]
-  2 -> 2 [label = "a"]
-  2 -> 3 [label = "c"]
-  3 -> F3
-}
-''', '''
+factor_check(aut5, '''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -495,21 +476,7 @@ digraph
 }
 ''')
 
-factor_check('''
-digraph
-{
-  vcsn_context = "lal_char(abc)_b"
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  1 -> 1 [label = "b"]
-  1 -> 2 [label = "c"]
-  2 -> 3 [label = "a"]
-  3 -> 4 [label = "b"]
-  3 -> 5 [label = "c"]
-  4 -> F4
-  6 -> 0 [label = "c"]
-}
-''', '''
+factor_check(aut6, '''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -577,25 +544,7 @@ digraph
 }
 ''')
 
-factor_check('''
-digraph
-{
-  vcsn_context = "lal_char(abc)_b"
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 2 [label = "b"]
-  1 -> 3 [label = "c"]
-  2 -> 3 [label = "b"]
-  2 -> 4 [label = "a"]
-  2 -> 5 [label = "c"]
-  3 -> 6 [label = "b"]
-  4 -> 2 [label = "a"]
-  4 -> 5 [label = "b"]
-  6 -> F6
-  6 -> 7 [label = "a"]
-  8 -> 0 [label = "c"]
-}
-''', '''
+factor_check(aut7, '''
 digraph
 {
   vcsn_context = "lal_char(abc)_b"
@@ -654,7 +603,7 @@ digraph
 
 # subsequence checking
 # ---------------
-subsequence_check(aut5, r'''
+subsequence_check(to_nullable_automate(aut5), r'''
 digraph
 {
   vcsn_context = "lan_char(abc)_b"
@@ -682,7 +631,7 @@ digraph
 }
 ''')
 
-subsequence_check(aut6, r'''
+subsequence_check(to_nullable_automate(aut6), r'''
 digraph
 {
   vcsn_context = "lan_char(abc)_b"
@@ -714,7 +663,7 @@ digraph
 }
 ''')
 
-subsequence_check(aut7, r'''
+subsequence_check(to_nullable_automate(aut3), r'''
 digraph
 {
   vcsn_context = "lan_char(a)_b"
@@ -734,7 +683,7 @@ digraph
 }
 ''')
 
-subsequence_check(aut8, r'''
+subsequence_check(to_nullable_automate(aut7), r'''
 digraph
 {
   vcsn_context = "lan_char(abc)_b"
