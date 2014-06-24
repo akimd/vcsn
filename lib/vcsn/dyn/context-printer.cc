@@ -92,7 +92,9 @@ namespace vcsn
     DEFINE(automaton)
     {
       auto type = t.get_type();
-      if (type == "determinized_automaton")
+      if (type == "blind_automaton")
+        header("vcsn/algos/compose.hh");
+      else if (type == "determinized_automaton")
         header("vcsn/algos/determinize.hh");
       else if (type == "mutable_automaton")
         header("vcsn/core/mutable-automaton.hh");

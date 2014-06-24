@@ -12,7 +12,8 @@ namespace vcsn
     std::shared_ptr<ast_node> context_parser::parse_()
     {
       std::string w = word();
-      if (w == "determinized"
+      if (w == "blind"
+          || w == "determinized"
           || w == "mutable"
           || w == "pair"
           || w == "product"
@@ -219,23 +220,35 @@ namespace vcsn
     context_parser::make_automaton(const std::string& prefix)
     {
       std::shared_ptr<automaton> res = nullptr;
-      if (prefix == "determinized"
-          || prefix == "linear"
-          || prefix == "pair"
-          || prefix == "ratexp"
-          || prefix == "subset"
-          || prefix == "transpose")
+      // blind_automaton<TapeNum, Aut>.
+      if (prefix == "blind")
+        {
+          eat(is_, "_automaton<");
+          res = std::make_shared<automaton>(prefix + "_automaton",
+                                            std::make_shared<other>(word()));
+          eat(is_, ',');
+          res->get_content().emplace_back(make_automaton(word()));
+        }
+      // xxx_automaton<Aut>.
+      else if (prefix == "determinized"
+               || prefix == "linear"
+               || prefix == "pair"
+               || prefix == "ratexp"
+               || prefix == "subset"
+               || prefix == "transpose")
         {
           eat(is_, "_automaton<");
           res = std::make_shared<automaton>(prefix + "_automaton",
                                             make_automaton(word()));
         }
+      // mutable_automaton<Context>.
       else if (prefix == "mutable")
         {
           eat(is_, "_automaton<");
           res = std::make_shared<automaton>(prefix + "_automaton",
                                             make_context());
         }
+      // xxx_automaton<Aut...>.
       else if (prefix == "product"
                || prefix == "tuple")
         {

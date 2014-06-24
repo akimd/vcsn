@@ -28,15 +28,16 @@ namespace vcsn
     num_eps_transitions(const Aut&);
   }
 
+  // vcsn/algos/compose.hh
   namespace detail
   {
     template <std::size_t Band, typename Aut>
     class blind_automaton_impl;
-
-    template <std::size_t Band, typename Aut>
-    using blind_automaton
-      = std::shared_ptr<blind_automaton_impl<Band, Aut>>;
   }
+
+  template <std::size_t Band, typename Aut>
+  using blind_automaton
+    = std::shared_ptr<detail::blind_automaton_impl<Band, Aut>>;
 
   // vcsn/algos/transpose.hh
   namespace detail

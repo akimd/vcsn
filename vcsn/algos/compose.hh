@@ -92,12 +92,12 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "blind_automaton<" + automaton_t::sname() + ">";
+        return "blind_automaton<" + std::to_string(Band) + ", " + automaton_t::element_type::sname() + ">";
       }
 
       std::string vname(bool full = true) const
       {
-        return "blind_automaton<" + this->aut_->vname(full) + ">";
+        return "blind_automaton<" + std::to_string(Band) + ", " + this->aut_->vname(full) + ">";
       }
 
       res_label_t
@@ -535,25 +535,27 @@ namespace vcsn
         return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
-
       /// The computed product.
       automaton_t res_;
     };
+  }
 
-    template <std::size_t Band, typename AutPtr>
-    using blind_automaton
-      = std::shared_ptr<detail::blind_automaton_impl<Band, AutPtr>>;
+  template <std::size_t Band, typename Aut>
+  using blind_automaton
+    = std::shared_ptr<detail::blind_automaton_impl<Band, Aut>>;
 
-    template <std::size_t Band, typename Aut>
-    blind_automaton<Band, Aut>
-    make_blind_automaton(Aut& aut)
-    {
-      return std::make_shared<detail::blind_automaton_impl<Band, Aut>>(aut);
-    }
+  template <std::size_t Band, typename Aut>
+  blind_automaton<Band, Aut>
+  make_blind_automaton(Aut& aut)
+  {
+    return std::make_shared<detail::blind_automaton_impl<Band, Aut>>(aut);
+  }
 
+  namespace detail
+  {
     template<typename Aut>
     typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                            detail::blind_automaton<0, Aut>>::type
+                            blind_automaton<0, Aut>>::type
     get_insplit(Aut& aut)
     {
       return insplit(make_blind_automaton<0>(aut));
@@ -561,7 +563,7 @@ namespace vcsn
 
     template<typename Aut>
     typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                            detail::blind_automaton<0, Aut>>::type
+                            blind_automaton<0, Aut>>::type
     get_insplit(Aut& aut)
     {
       return make_blind_automaton<0>(aut);
@@ -577,11 +579,11 @@ namespace vcsn
   template <typename Lhs, typename Rhs>
   auto
   compose(Lhs& lhs, Rhs& rhs)
-    -> typename detail::composer<detail::blind_automaton<1, Lhs>,
-                                 detail::blind_automaton<0, Rhs>>::automaton_t
+    -> typename detail::composer<blind_automaton<1, Lhs>,
+                                 blind_automaton<0, Rhs>>::automaton_t
   {
-    auto l = sort(detail::make_blind_automaton<1>(lhs));
-    auto r = sort(detail::get_insplit(rhs));
+    auto l = sort(make_blind_automaton<1>(lhs));
+    auto r = sort(get_insplit(rhs));
     detail::composer<decltype(l), decltype(r)>compose(l, r);
     auto res = compose.compose();
     if (getenv("VCSN_ORIGINS"))
