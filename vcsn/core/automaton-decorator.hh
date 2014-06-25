@@ -9,30 +9,36 @@ namespace vcsn
   namespace detail
   {
     /// Aggregate an automaton, and forward calls to it.
-    template <typename Aut>
+    ///
+    /// \tparam Aut
+    ///   The type of the wrapped automaton.
+    /// \tparam Context
+    ///   The context we pretend to feature.
+    template <typename Aut,
+              typename Context = context_t_of<Aut>>
     class automaton_decorator
     {
     public:
       /// The type of automaton to wrap.
       using automaton_t = Aut;
 
-    public:
       /// The (shared pointer) type to use it we have to create an
       /// automaton of the same (underlying) type.
       using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
 
-      using context_t = context_t_of<automaton_t>;
+      using context_t = Context;
+      using kind_t = typename context_t::kind_t;
+
+      using labelset_t = typename context_t::labelset_t;
+      using labelset_ptr = typename context_t::labelset_ptr;
+      using label_t = typename labelset_t::value_t;
+
+      using weightset_t = typename context_t::weightset_t;
+      using weightset_ptr = typename context_t::weightset_ptr;
+      using weight_t = typename weightset_t::value_t;
+
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      using label_t = label_t_of<automaton_t>;
-      using weight_t = weight_t_of<automaton_t>;
-
-      using labelset_t = labelset_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<automaton_t>;
-      using kind_t = typename automaton_t::element_type::kind_t;
-
-      using labelset_ptr = typename automaton_t::element_type::labelset_ptr;
-      using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
 
     public:
       automaton_decorator(automaton_t aut)
