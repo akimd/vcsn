@@ -13,26 +13,6 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename A, typename B>
-    struct maybe_blind_copier
-    {
-      void operator()(const A& src, B& dst)
-      {
-        copy_into(src, dst);
-      }
-    };
-
-    template <typename A, std::size_t I, typename B>
-    struct maybe_blind_copier<blind_automaton<I, A>, B>
-    {
-      void operator()(const blind_automaton<I, A>&, B&)
-      {
-        // We should check the type of the automaton (i.e. has_one()) instead
-        // of calling insplit, to avoid unnecessary copies
-        raise("Cannot copy a blind_automaton");
-      }
-    };
-
     template <typename Aut>
     class insplitter
     {
