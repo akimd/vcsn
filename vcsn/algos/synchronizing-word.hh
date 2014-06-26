@@ -81,17 +81,22 @@ namespace vcsn
     }
   }
 
+
+  /*-----------------.
+  | pair_automaton.  |
+  `-----------------*/
+
   namespace detail
   {
     template <typename Aut>
     class pair_automaton_impl
-      : public automaton_decorator<
-          typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
+    //: public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
     public:
       using automaton_t =  Aut;
-      using automaton_nocv_t =
-          typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
+        // typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;

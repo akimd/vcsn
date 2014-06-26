@@ -10,6 +10,7 @@
 # include <vector>
 
 # include <vcsn/core/automaton-decorator.hh>
+# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/fwd.hh>
@@ -31,7 +32,8 @@ namespace vcsn
     /// \precondition weightset is Boolean.
     template <typename Aut>
     class determinized_automaton_impl
-      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
+      : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
+    // : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
@@ -40,7 +42,8 @@ namespace vcsn
 
     public:
       using automaton_t = Aut;
-      using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
+      using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
+      // using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
