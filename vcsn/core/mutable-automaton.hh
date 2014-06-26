@@ -369,9 +369,9 @@ namespace vcsn
     }
 
     void
-    set_initial(state_t s, weight_t k)
+    set_initial(state_t s, weight_t w)
     {
-      set_transition(pre(), s, prepost_label_, k);
+      set_transition(pre(), s, prepost_label_, w);
     }
 
     void
@@ -381,9 +381,9 @@ namespace vcsn
     }
 
     weight_t
-    add_initial(state_t s, weight_t k)
+    add_initial(state_t s, weight_t w)
     {
-      return add_transition(pre(), s, prepost_label_, k);
+      return add_transition(pre(), s, prepost_label_, w);
     }
 
     void
@@ -393,9 +393,9 @@ namespace vcsn
     }
 
     void
-    set_final(state_t s, weight_t k)
+    set_final(state_t s, weight_t w)
     {
-      set_transition(s, post(), prepost_label_, k);
+      set_transition(s, post(), prepost_label_, w);
     }
 
     void
@@ -405,9 +405,9 @@ namespace vcsn
     }
 
     weight_t
-    add_final(state_t s, weight_t k)
+    add_final(state_t s, weight_t w)
     {
-      return add_transition(s, post(), prepost_label_, k);
+      return add_transition(s, post(), prepost_label_, w);
     }
 
     void
@@ -457,15 +457,15 @@ namespace vcsn
     /// \param src  source state
     /// \param dst  destination state
     /// \param l    label of the transition
-    /// \param k    weight of the transition
+    /// \param w    weight of the transition
     ///
     /// \pre the label is _not checked_, for efficiency.
     /// \pre ! has_transition(src, dst, l).
     transition_t
-    new_transition(state_t src, state_t dst, label_t l, weight_t k)
+    new_transition(state_t src, state_t dst, label_t l, weight_t w)
     {
       assert(!has_transition(src, dst, l));
-      if (weightset()->is_zero(k))
+      if (weightset()->is_zero(w))
         return null_transition();
       else
         {
@@ -485,7 +485,7 @@ namespace vcsn
           st.dst = dst;
           // FIXME: When src == pre() || dst == post(), label must be empty.
           st.set_label(l);
-          st.set_weight(k);
+          st.set_weight(w);
           states_[src].succ.emplace_back(t);
           states_[dst].pred.emplace_back(t);
           return t;
@@ -528,12 +528,12 @@ namespace vcsn
     /// \param src  source state
     /// \param dst  destination state
     /// \param l    label of the transition
-    /// \param k    weight of the transition
+    /// \param w    weight of the transition
     ///
     /// \pre the label is _not checked_, for efficiency.  Letters out
     /// of the alphabet will be accepted.
     transition_t
-    set_transition(state_t src, state_t dst, label_t l, weight_t k)
+    set_transition(state_t src, state_t dst, label_t l, weight_t w)
     {
       // It's illegal to connect pre() to post().
       // FIXME: reenable except for labels_are_one.
@@ -545,8 +545,8 @@ namespace vcsn
 
       transition_t t = get_transition(src, dst, l);
       if (t == null_transition())
-        t = new_transition(src, dst, l, k);
-      else if (weightset()->is_zero(k))
+        t = new_transition(src, dst, l, w);
+      else if (weightset()->is_zero(w))
         {
           del_transition(t);
           t = null_transition();
@@ -555,7 +555,7 @@ namespace vcsn
         {
           stored_transition_t& st = transitions_[t];
           st.set_label(l);
-          st.set_weight(k);
+          st.set_weight(w);
         }
       return t;
     }
@@ -573,22 +573,22 @@ namespace vcsn
     /// \param src  source state
     /// \param dst  destination state
     /// \param l    label of the transition
-    /// \param k    weight of the transition
+    /// \param w    weight of the transition
     ///
     /// \pre the label is _not checked_, for efficiency.  Letters out
     /// of the alphabet will be accepted.
     weight_t
-    add_transition(state_t src, state_t dst, label_t l, weight_t k)
+    add_transition(state_t src, state_t dst, label_t l, weight_t w)
     {
       transition_t t = get_transition(src, dst, l);
       if (t == null_transition())
-        new_transition(src, dst, l, k);
+        new_transition(src, dst, l, w);
       else
         {
-          k = weightset()->add(weight_of(t), k);
-          set_weight(t, k);
+          w = weightset()->add(weight_of(t), w);
+          set_weight(t, w);
         }
-      return k;
+      return w;
     }
 
     /// Same as above, with weight one.
@@ -638,31 +638,31 @@ namespace vcsn
     }
 
     weight_t
-    set_weight(transition_t t, weight_t k)
+    set_weight(transition_t t, weight_t w)
     {
-      if (weightset()->is_zero(k))
+      if (weightset()->is_zero(w))
         del_transition(t);
       else
-        transitions_[t].set_weight(k);
-      return k;
+        transitions_[t].set_weight(w);
+      return w;
     }
 
     weight_t
-    add_weight(transition_t t, weight_t k)
+    add_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->add(weight_of(t), k));
+      return set_weight(t, weightset()->add(weight_of(t), w));
     }
 
     weight_t
-    lmul_weight(transition_t t, weight_t k)
+    lmul_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->mul(k, weight_of(t)));
+      return set_weight(t, weightset()->mul(w, weight_of(t)));
     }
 
     weight_t
-    rmul_weight(transition_t t, weight_t k)
+    rmul_weight(transition_t t, weight_t w)
     {
-      return set_weight(t, weightset()->mul(weight_of(t), k));
+      return set_weight(t, weightset()->mul(weight_of(t), w));
     }
 
     // Iteration on states and transitions
