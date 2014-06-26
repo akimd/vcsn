@@ -19,16 +19,6 @@ namespace vcsn
 {
   namespace detail
   {
-    template <typename T1, typename T2>
-    struct concat_tupleset;
-
-    template <typename... T1, typename... T2>
-    struct concat_tupleset<tupleset<T1...>, tupleset<T2...>>
-    {
-      using type = tupleset<T1..., T2...>;
-    };
-
-
     /*---------------------------------.
     | composer<automaton, automaton>.  |
     `---------------------------------*/
