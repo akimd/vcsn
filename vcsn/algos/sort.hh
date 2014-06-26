@@ -85,74 +85,74 @@ namespace vcsn
       using res_state_t = state_t;
 
       using pair_t = std::pair<state_t, res_state_t>;
-      std::queue<pair_t> worklist_;
+      std::queue<pair_t> todo_;
 
       /// The map we're computing.
       std::unordered_map<state_t, res_state_t> map_;
 
       void initialize()
       {
-        worklist_ = std::move(std::queue<pair_t>()); // There's no clear method.
+        todo_ = std::move(std::queue<pair_t>()); // There's no clear method.
         map_.clear();
         map_[a_->pre()] = res_->pre();
         map_[a_->post()] = res_->post();
-        worklist_.push({a_->pre(), res_->pre()});
+        todo_.push({a_->pre(), res_->pre()});
       }
 
       void visit_successors_of(state_t s, res_state_t res_s)
       {
-        std::vector<transition_t> tt;
+        std::vector<transition_t> ts;
         // Here a_->out(s) would just as well as a_->all_out(s) but it
         // would be slower; later we have to test one condition per
         // transition anyway, which is just the additional work
         // performed by out.
         for (auto t: a_->all_out(s))
-          tt.emplace_back(t);
+          ts.emplace_back(t);
 
-        std::sort(tt.begin(), tt.end(),
-                  [&](const transition_t t1,
-                      const transition_t t2) -> bool
+        std::sort(ts.begin(), ts.end(),
+                  [&](const transition_t t1, const transition_t t2) -> bool
                   {
                     return transition_less_than(t1, t2);
                   });
 
-        for (auto t: tt)
-          {
-            state_t dst = a_->dst_of(t);
-            res_state_t res_dst;
-            if (map_.find(dst) == map_.end())
-              res_dst = treat_state(dst);
-            else
-              res_dst = map_.at(dst);
-            res_->new_transition_copy(res_s, res_dst, a_, t);
-          }
+        for (auto t: ts)
+          res_->new_transition_copy(res_s, state(a_->dst_of(t)), a_, t);
       }
 
-      /// Also return the res_ state.  This lets the caller avoid hash accesses.
-      res_state_t treat_state(state_t s)
+      /// The output state corresponding to state \a s.
+      /// If this is a new state, schedule it for visit.
+      res_state_t state(state_t s)
       {
-        state_t res = res_->new_state();
-        map_[s] = res;
-        worklist_.push({s, res});
+        // Benches show that the map_.emplace technique is slower, and
+        // then that operator[] is faster than emplace.
+        state_t res;
+        auto i = map_.find(s);
+        if (i == std::end(map_))
+          {
+            res = res_->new_state();
+            map_[s] = res;
+            todo_.push({s, res});
+          }
+        else
+          res = i->second;
         return res;
       }
 
       void visit_and_update_res()
       {
-        while (! worklist_.empty())
+        while (! todo_.empty())
           {
-            pair_t p = worklist_.front(); worklist_.pop();
-            state_t s = p.first; res_state_t res_s = p.second;
-            visit_successors_of(s, res_s);
-          } // while
+            pair_t p = todo_.front();
+            todo_.pop();
+            visit_successors_of(p.first, p.second);
+          }
       }
 
       void push_inaccessible_states()
       {
         // States are processed in order.
-        for (auto s: a_->all_states()) // Like above, a_->states_() would work.
-          if (!has(map_, s))
-            treat_state(s);
+        for (auto s: a_->all_states()) // Like above, a_->states() would work.
+          state(s);
       }
 
       bool transition_less_than(const transition_t t1,
@@ -175,7 +175,7 @@ namespace vcsn
         else if (a_->dst_of(t2) < a_->dst_of(t1))
           return false;
         else
-          return false; // The compiler optimizer will "factor" for us.
+          return false;
       }
 
     public:
