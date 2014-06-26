@@ -519,7 +519,9 @@ namespace vcsn
           l = aut->labelset()->transpose(l);
           w = aut->weightset()->transpose(w);
         }
-      return new_transition(src, dst, l, w);
+      return new_transition(src, dst,
+                            labelset()->conv(*aut->labelset(), l),
+                            weightset()->conv(*aut->weightset(), w));
     }
 
     /// Same as above, with weight one.
@@ -629,7 +631,9 @@ namespace vcsn
           l = aut->labelset()->transpose(l);
           w = aut->weightset()->transpose(w);
         }
-      return add_transition(src, dst, l, w);
+      return add_transition(src, dst,
+                            labelset()->conv(*aut->labelset(), l),
+                            weightset()->conv(*aut->weightset(), w));
     }
 
     std::string

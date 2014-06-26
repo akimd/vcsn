@@ -36,11 +36,6 @@ namespace vcsn
       template <typename Pred>
       void operator()(Pred keep_state)
       {
-        const auto& out_ls = *out_->labelset();
-        const auto& in_ls = *in_->labelset();
-        const auto& out_ws = *out_->weightset();
-        const auto& in_ws = *in_->weightset();
-
         // Copy the states.  We cannot iterate on the transitions
         // only, as we would lose the states without transitions.
         out_state[in_->pre()] = out_->pre();
@@ -54,9 +49,8 @@ namespace vcsn
             auto src = out_state.find(in_->src_of(t));
             auto dst = out_state.find(in_->dst_of(t));
             if (src != out_state.end() && dst != out_state.end())
-              out_->new_transition(src->second, dst->second,
-                                   out_ls.conv(in_ls, in_->label_of(t)),
-                                   out_ws.conv(in_ws, in_->weight_of(t)));
+              out_->new_transition_copy(src->second, dst->second,
+                                        in_, t);
           }
       }
 
