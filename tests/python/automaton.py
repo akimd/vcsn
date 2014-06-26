@@ -17,10 +17,50 @@ xfail(r'''digraph
   vcsn_context = "lal_char(a)_b"
 ''')
 
-# Syntax error: label not closed.
+# Syntax error: string not closed.
 xfail(r'''digraph
 {
   vcsn_context = "lal_char(a)_b
+}
+''')
+
+# Syntax error: attributes are assignments.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  a [attribute]
+}
+''')
+
+# Syntax error: attributes are assignments.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  a [attribute =]
+}
+''')
+
+# Syntax error: comma used after empty attribute.
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  a [,a=a]
+}
+''')
+
+# Syntax error: semicolon used after empty attribute
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  a [;a=a]
+}
+''')
+
+# Syntax error: semicolon used after empty attribute
+xfail(r'''digraph
+{
+  vcsn_context = "lal_char(a)_b"
+  a [a=a,;]
 }
 ''')
 
@@ -116,6 +156,10 @@ xfail(r'''digraph
 CHECK_EQ(vcsn.automaton(r'''digraph
 {
   vcsn_context = "lal_char()_b"
+  {
+    node [shape = circle]
+    0 [color = DimGray]
+  }
 }'''),
 vcsn.automaton(r'''digraph "a graph
                             name"
@@ -126,9 +170,10 @@ vcsn.automaton(r'''digraph "a graph
      multiline
      comment.  */
   "lal_char()_b"
-  graph [label = "graph attribute"]
-  edge [label = "edge attribute"]
-  node [label = "node attribute"]
+  graph [a = "graph attribute",]
+  edge [a = "edge attribute";]
+  node [a = "node attribute"]
+  0 [a1 = a1, a2 = a2; a3 = a3 a4 = a4]
 }'''))
 
 ## --------------------------- ##

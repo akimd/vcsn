@@ -159,7 +159,7 @@
 %printer { debug_stream() << $$; } <states_t>;
 
 // Rational expressions labeling the edges.
-%type <string_t> attr_assign a a_list.0 a_list.1 attr_list attr_list.opt;
+%type <string_t> attr_assign a_list.0 a_list.1 attr_list attr_list.opt;
 %%
 
 graph:
@@ -178,24 +178,11 @@ stmt_list:
 ;
 
 stmt:
-  node_stmt
-  {
-    $$.emplace_back(std::move($1));
-  }
-| edge_stmt
-  {
-    std::swap($$, $1);
-  }
-| attr_stmt
-  {
-  }
-| attr_assign
-  {
-  }
-| subgraph
-  {
-    std::swap($$, $1);
-  }
+  node_stmt   { $$.emplace_back(std::move($1)); }
+| edge_stmt   { std::swap($$, $1); }
+| attr_stmt   {}
+| attr_assign {}
+| subgraph    { std::swap($$, $1); }
 ;
 
 attr_stmt:
@@ -232,23 +219,16 @@ attr_assign:
       $$ = "";
   }
 
-// A single attribute.  Keep only labels.
-a:
-  ID           { $$ = ""; }
-| attr_assign  { std::swap($$, $1); }
-;
-
 // One or more attributes.
 a_list.1:
-  a comma.opt a_list.0
+  attr_assign comma.opt a_list.0
   {
     std::swap($$, $1.get().empty() ? $3 : $1);
   }
 ;
 
 comma.opt:
-  %empty
-| ","
+  %empty | "," | ";"
 ;
 
 semi.opt:
