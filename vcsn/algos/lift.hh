@@ -117,7 +117,7 @@ namespace vcsn
       lift_automaton(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(lift(a));
+        return make_automaton(::vcsn::lift(a));
       }
 
       REGISTER_DECLARE(lift_automaton,

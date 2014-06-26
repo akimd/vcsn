@@ -73,7 +73,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<Lhs>();
         const auto& r = rhs->as<Rhs>();
-        return make_automaton(difference(l, r));
+        return make_automaton(::vcsn::difference(l, r));
       }
 
       REGISTER_DECLARE(difference,

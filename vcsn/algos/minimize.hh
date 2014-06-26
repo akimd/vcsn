@@ -87,9 +87,9 @@ namespace vcsn
       {
         const auto& a = aut->as<Aut>();
         if (algo == "brzozowski")
-          return make_automaton(minimize_brzozowski(a));
+          return make_automaton(::vcsn::minimize_brzozowski(a));
         else
-          return make_automaton(minimize(a, algo));
+          return make_automaton(::vcsn::minimize(a, algo));
       }
 
       template <typename Aut, typename String>
@@ -99,7 +99,7 @@ namespace vcsn
       minimize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(minimize(a, algo));
+        return make_automaton(::vcsn::minimize(a, algo));
       }
 
       REGISTER_DECLARE

@@ -245,7 +245,7 @@ namespace vcsn
       determinize(const automaton& aut, bool complete)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(determinize(a, complete));
+        return make_automaton(::vcsn::determinize(a, complete));
       }
 
       REGISTER_DECLARE(determinize,

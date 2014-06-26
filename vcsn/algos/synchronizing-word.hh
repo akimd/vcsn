@@ -291,7 +291,7 @@ namespace vcsn
       pair(const automaton& aut, bool keep_initials = false)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(pair(a, keep_initials));
+        return make_automaton(::vcsn::pair(a, keep_initials));
       }
 
       REGISTER_DECLARE(pair, (const automaton&, bool) -> automaton);

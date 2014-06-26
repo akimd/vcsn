@@ -101,7 +101,7 @@ namespace vcsn
       standard(const automaton& aut)
       {
         auto res = copy(aut->as<Aut>());
-        standard_here(res);
+        ::vcsn::standard_here(res);
         return make_automaton(std::move(res));
       }
 
@@ -345,8 +345,8 @@ namespace vcsn
         using ratexpset_t = RatExpSet;
         using automaton_t = vcsn::mutable_automaton<context_t>;
         const auto& e = exp->as<ratexpset_t>();
-        return make_automaton(standard<automaton_t>(e.ratexpset().context(),
-                                                    e.ratexp()));
+        return make_automaton(::vcsn::standard<automaton_t>(e.ratexpset().context(),
+                                                            e.ratexp()));
       }
 
       REGISTER_DECLARE(standard_ratexp,

@@ -601,8 +601,8 @@ namespace vcsn
       linear(const ratexp& exp, bool use_spontaneous = true)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(linear(r.ratexpset(),
-                                     r.ratexp(), use_spontaneous));
+        return make_automaton(::vcsn::linear(r.ratexpset(),
+                                             r.ratexp(), use_spontaneous));
       }
 
       REGISTER_DECLARE(linear,

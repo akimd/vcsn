@@ -364,8 +364,8 @@ namespace vcsn
       derived_term(const ratexp& exp, bool breaking = false)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(derived_term(r.ratexpset(),
-                                           r.ratexp(), breaking));
+        return make_automaton(::vcsn::derived_term(r.ratexpset(),
+                                                   r.ratexp(), breaking));
       }
 
       REGISTER_DECLARE(derived_term,

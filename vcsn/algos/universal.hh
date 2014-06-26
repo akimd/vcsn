@@ -142,7 +142,7 @@ namespace vcsn
       universal(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(universal(a));
+        return make_automaton(::vcsn::universal(a));
       }
 
       REGISTER_DECLARE(universal,

@@ -65,7 +65,7 @@ namespace vcsn
       complement(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(complement(a));
+        return make_automaton(::vcsn::complement(a));
       }
 
       REGISTER_DECLARE(complement,

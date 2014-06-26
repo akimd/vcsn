@@ -121,7 +121,7 @@ namespace vcsn
       insplit(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(insplit(a));
+        return make_automaton(::vcsn::insplit(a));
       }
 
       REGISTER_DECLARE(insplit,

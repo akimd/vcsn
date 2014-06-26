@@ -599,7 +599,7 @@ namespace vcsn
       automaton proper(const automaton& aut, bool prune)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(proper(a, direction_t::BACKWARD, prune));
+        return make_automaton(::vcsn::proper(a, direction_t::BACKWARD, prune));
       }
 
       REGISTER_DECLARE(proper, (const automaton& aut, bool prune) -> automaton);

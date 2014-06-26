@@ -38,7 +38,7 @@ namespace vcsn
       suffix(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(suffix(a));
+        return make_automaton(::vcsn::suffix(a));
       }
 
       REGISTER_DECLARE(suffix,
@@ -77,7 +77,7 @@ namespace vcsn
       prefix(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(prefix(a));
+        return make_automaton(::vcsn::prefix(a));
       }
 
       REGISTER_DECLARE(prefix,
@@ -119,7 +119,7 @@ namespace vcsn
       factor(const automaton& aut)
       {
 	const auto& a = aut->as<Aut>();
-	return make_automaton(factor(a));
+	return make_automaton(::vcsn::factor(a));
       }
 
       REGISTER_DECLARE(factor,
@@ -173,7 +173,7 @@ namespace vcsn
       subsequence(const automaton& aut)
       {
 	const auto& a = aut->as<Aut>();
-	return make_automaton(subsequence(a));
+	return make_automaton(::vcsn::subsequence(a));
       }
 
       REGISTER_DECLARE(subsequence,
