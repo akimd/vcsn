@@ -95,7 +95,6 @@ namespace vcsn
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
-    std::cerr << int(input_type_) << int(output_type_) << "\n";
     auto ctx = to_string(input_type_);
     if (output_type_ != labelset_type::empty)
       ctx = "lat<" + ctx + "," + to_string(output_type_) + ">";
@@ -103,7 +102,6 @@ namespace vcsn
     ctx += (real_ ? "r"
             : weighted_ ? "z"
             : "b");
-    std::cerr << ctx << std::endl;
     auto c = vcsn::dyn::make_context(ctx);
     auto edit = vcsn::dyn::make_automaton_editor(c);
     edit->open(open_);
