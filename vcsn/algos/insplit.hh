@@ -64,11 +64,11 @@ namespace vcsn
         for (auto st : aut->all_states())
           for (bool epsilon : { false, true })
             if (exists(st, epsilon))
-              for (auto tr : aut->all_out(st))
-                res_->add_transition_copy(aut, states_assoc[pair_t(st, epsilon)],
-                                         states_assoc[pair_t(aut->dst_of(tr),
-                                                             is_one(aut, tr))],
-                                         tr, aut->weight_of(tr));
+              for (auto t : aut->all_out(st))
+                res_->add_transition_copy(states_assoc[pair_t(st, epsilon)],
+                                          states_assoc[pair_t(aut->dst_of(t),
+                                                              is_one(aut, t))],
+                                          aut, t);
 
         return std::move(res_);
       }

@@ -171,21 +171,25 @@ namespace vcsn
       }
 
       template <typename A>
-      transition_t new_transition_copy(const A& aut, state_t src,
-                                       state_t dst, transition_t t, weight_t k,
-                                       bool transpose = false)
+      transition_t
+      new_transition_copy(state_t src, state_t dst,
+                          const A& aut,
+                          typename A::element_type::transition_t t,
+                          bool transpose = false)
       {
-        return this->aut_->new_transition_copy(aut->strip(),
-                                               src, dst, t, k, transpose);
+        return this->aut_->new_transition_copy(src, dst,
+                                               aut->strip(), t, transpose);
       }
 
       template <typename A>
-      weight_t add_transition_copy(const A& aut, state_t src,
-                                   state_t dst, transition_t t, weight_t k,
-                                   bool transpose = false)
+      weight_t
+      add_transition_copy(state_t src, state_t dst,
+                          const A& aut,
+                          typename A::element_type::transition_t t,
+                          bool transpose = false)
       {
-        return this->aut_->add_transition_copy(aut->strip(),
-                                               src, dst, t, k, transpose);
+        return this->aut_->add_transition_copy(src, dst,
+                                               aut->strip(), t, transpose);
       }
     };
   }

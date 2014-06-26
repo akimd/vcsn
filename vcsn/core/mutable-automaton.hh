@@ -499,20 +499,26 @@ namespace vcsn
     ///
     /// \param src  source state
     /// \param dst  destination state
-    /// \param t    transition whose label to copy
-    /// \param k    weight of the transition
+    /// \param aut  the automaton whose transition will be copied.
+    /// \param t    transition of \a aut whose label and weight are to copy
+    /// \param transpose   whether label and weight should be transposed
     ///
     /// \pre the label is _not checked_, for efficiency.
     /// \pre ! has_transition(src, dst, label_of(l)).
     template <typename A>
     transition_t
-    new_transition_copy(const A& aut, state_t src, state_t dst, transition_t t,
-                        weight_t k, bool transpose = false)
+    new_transition_copy(state_t src, state_t dst,
+                        const A& aut, typename A::element_type::transition_t t,
+                        bool transpose = false)
     {
       auto l = aut->label_of(t);
-      return new_transition(src, dst, transpose ? aut->labelset()->transpose(l)
-                                                : l
-                                                , k);
+      auto w = aut->weight_of(t);
+      if (transpose)
+        {
+          l = aut->labelset()->transpose(l);
+          w = aut->weightset()->transpose(w);
+        }
+      return new_transition(src, dst, l, w);
     }
 
     /// Same as above, with weight one.
@@ -603,20 +609,26 @@ namespace vcsn
     ///
     /// \param src  source state
     /// \param dst  destination state
-    /// \param t    transition whose label to copy
-    /// \param k    weight of the transition
+    /// \param aut  the automaton whose transition will be copied.
+    /// \param t    transition of \a aut whose label and weight are to copy
+    /// \param transpose   whether label and weight should be transposed
     ///
     /// \pre the label is _not checked_, for efficiency.  Letters out
     /// of the alphabet will be accepted.
-    template <typename Aut>
+    template <typename A>
     weight_t
-    add_transition_copy(const Aut& aut, state_t src, state_t dst,
-                        transition_t t, weight_t k, bool transpose = false)
+    add_transition_copy(state_t src, state_t dst,
+                        const A& aut, typename A::element_type::transition_t t,
+                        bool transpose = false)
     {
       auto l = aut->label_of(t);
-      return add_transition(src, dst, transpose ? aut->labelset()->transpose(l)
-                                                : l,
-                                                k);
+      auto w = aut->weight_of(t);
+      if (transpose)
+        {
+          l = aut->labelset()->transpose(l);
+          w = aut->weightset()->transpose(w);
+        }
+      return add_transition(src, dst, l, w);
     }
 
     std::string

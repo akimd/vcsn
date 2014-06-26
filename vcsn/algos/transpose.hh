@@ -158,22 +158,18 @@ namespace vcsn
              add_initial(s, this->aut_->weightset()->transpose(k)));
 
       template <typename A>
-      DEFINE(add_transition_copy(const A& aut, state_t src,
-                                 state_t dst, transition_t t, weight_t k,
+      DEFINE(add_transition_copy(state_t src, state_t dst,
+                                 const A& aut,
+                                 typename A::element_type::transition_t t,
                                  bool transpose = false),
-             add_transition_copy(aut,
-                                 dst, src, t,
-                                 this->aut_->weightset()->transpose(k),
-                                 !transpose));
+             add_transition_copy(dst, src, aut, t, !transpose));
 
       template <typename A>
-      DEFINE(new_transition_copy(const A& aut, state_t src,
-                                 state_t dst, transition_t t, weight_t k,
+      DEFINE(new_transition_copy(state_t src, state_t dst,
+                                 const A& aut,
+                                 typename A::element_type::transition_t t,
                                  bool transpose = false),
-             new_transition_copy(aut,
-                                 dst, src, t,
-                                 this->aut_->weightset()->transpose(k),
-                                 !transpose));
+             new_transition_copy(dst, src, aut, t, !transpose));
 
 # undef DEFINE
 

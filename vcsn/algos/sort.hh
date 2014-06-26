@@ -124,10 +124,7 @@ namespace vcsn
               res_dst = treat_state(dst);
             else
               res_dst = map_.at(dst);
-            res_->new_transition_copy(a_, res_s,
-                                      res_dst,
-                                      t,
-                                      a_->weight_of(t));
+            res_->new_transition_copy(res_s, res_dst, a_, t);
           }
       }
 
