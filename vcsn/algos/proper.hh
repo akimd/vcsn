@@ -84,13 +84,6 @@ namespace vcsn
           proper_here_<weightset_t::star_status()>(aut, prune);
       }
 
-      static automaton_t proper(const automaton_t& aut, bool prune = true)
-      {
-        automaton_t res = copy(aut);
-        proper_here(res, prune);
-        return res;
-      }
-
       /**
          @brief The core of the (backward) epsilon-removal.
 
@@ -528,11 +521,6 @@ namespace vcsn
 #endif
       void proper_here(automaton_t&, bool = true)
       {}
-
-      static Aut proper(const automaton_t& aut, bool = true)
-      {
-        return copy(aut);
-      }
     };
 
   }
@@ -551,8 +539,8 @@ namespace vcsn
     return detail::properer<Aut>::in_situ_remover(aut, prune);
   }
 
-  /// Eliminate epsilon transitions in place.  Raise if the automaton
-  /// was not valid.
+  /// Eliminate spontaneous transitions in place.  Raise if the
+  /// automaton was not valid.
   template <typename Aut>
   inline
   void proper_here(Aut& aut, direction_t dir = direction_t::BACKWARD,
@@ -571,23 +559,19 @@ namespace vcsn
       }
   }
 
-  /// Eliminate epsilon transitions.  Raise if the automaton was not
-  /// valid.
+  /// Eliminate spontaneous transitions.  Raise if the input automaton
+  /// is invalid.
   template <typename Aut>
-  Aut proper(const Aut& aut, direction_t dir = direction_t::BACKWARD,
-             bool prune = true)
+  auto
+  proper(const Aut& aut, direction_t dir = direction_t::BACKWARD,
+         bool prune = true)
+    -> decltype(copy(aut))
   {
-    switch (dir)
-      {
-      case direction_t::BACKWARD:
-        return detail::properer<Aut>::proper(aut, prune);
-      case direction_t::FORWARD:
-        // FIXME: inconsistent implementation bw fwd and bwd.
-        Aut res = copy(aut);
-        proper_here(res, dir, prune);
-        return res;
-      }
-    abort();
+    // FIXME: We could avoid copying if the automaton is already
+    // proper.
+    auto res = copy(aut);
+    proper_here(res, dir, prune);
+    return res;
   }
 
   namespace dyn
