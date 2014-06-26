@@ -68,21 +68,23 @@ namespace vcsn
       /// If this is a new state, schedule it for visit.
       state_t state(const ratexp_t& r)
       {
-        state_t dst;
+        // Benches show that the map_.emplace technique is slower, and
+        // then that operator[] is faster than emplace.
+        state_t res;
         auto i = map_.find(r);
-        if (i == end(map_))
+        if (i == std::end(map_))
           {
             DEBUG_IF(
                      std::cerr << "New state: ";
                      rs_.print(r, std::cerr) << '\n';
                      );
-            dst = super_t::new_state();
-            map_[r] = dst;
+            res = super_t::new_state();
+            map_[r] = res;
             todo_.push(r);
           }
         else
-          dst = i->second;
-        return dst;
+          res = i->second;
+        return res;
       }
 
       using super_t::add_transition;

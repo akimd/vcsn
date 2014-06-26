@@ -96,6 +96,8 @@ namespace vcsn
       /// If this is a new state, schedule it for visit.
       state_t state(const state_set& ss)
       {
+        // Benches show that the map_.emplace technique is slower, and
+        // then that operator[] is faster than emplace.
         state_t res;
         auto i = map_.find(ss);
         if (i == std::end(map_))
