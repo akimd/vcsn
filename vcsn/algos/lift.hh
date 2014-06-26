@@ -69,12 +69,12 @@ namespace vcsn
   | lift(automaton).  |
   `------------------*/
 
-  template <typename AutPtr>
+  template <typename Aut>
   inline
-  detail::lifted_automaton_t<AutPtr>
-  lift(const AutPtr& a)
+  detail::lifted_automaton_t<Aut>
+  lift(const Aut& a)
   {
-    using auto_in_t = typename AutPtr::element_type;
+    using auto_in_t = typename Aut::element_type;
     using ctx_in_t = context_t_of<auto_in_t>;
     using state_in_t = state_t_of<auto_in_t>;
 

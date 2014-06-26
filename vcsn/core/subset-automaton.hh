@@ -12,12 +12,12 @@ namespace vcsn
 
   namespace detail
   {
-    template <typename AutPtr>
+    template <typename Aut>
     class subset_automaton_impl
-      : public automaton_decorator<typename AutPtr::element_type::automaton_nocv_t>
+      : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
     public:
-      using automaton_t = AutPtr;
+      using automaton_t = Aut;
       using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using label_t = label_t_of<automaton_t>;
