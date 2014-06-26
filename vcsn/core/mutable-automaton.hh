@@ -43,6 +43,7 @@ namespace vcsn
     using weight_t = typename weightset_t::value_t;
 
   protected:
+    /// The algebraic type of this automaton.
     context_t ctx_;
 
     /// Data stored per transition.

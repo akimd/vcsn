@@ -55,8 +55,8 @@ namespace vcsn
             auto dst = out_state.find(in_->dst_of(t));
             if (src != out_state.end() && dst != out_state.end())
               out_->new_transition(src->second, dst->second,
-                                  out_ls.conv(in_ls, in_->label_of(t)),
-                                  out_ws.conv(in_ws, in_->weight_of(t)));
+                                   out_ls.conv(in_ls, in_->label_of(t)),
+                                   out_ws.conv(in_ws, in_->weight_of(t)));
           }
       }
 
