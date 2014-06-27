@@ -2,6 +2,7 @@
 #include <vcsn/algos/edit-automaton.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/automaton.hh>
+#include <vcsn/misc/builtins.hh>
 
 namespace vcsn
 {
@@ -47,6 +48,7 @@ namespace vcsn
         case labelset_type::lan: return "lan<lal_char()>";
         case labelset_type::law: return "law_char()";
         }
+      BUILTIN_UNREACHABLE();
     }
   }
 
