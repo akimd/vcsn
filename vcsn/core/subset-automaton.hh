@@ -38,7 +38,7 @@ namespace vcsn
       using origins_t = std::map<state_t, state_set_t>;
       origins_t origins_;
 
-      const automaton_t& input_;
+      const automaton_t input_;
 
     public:
       subset_automaton_impl(const automaton_t& input)
