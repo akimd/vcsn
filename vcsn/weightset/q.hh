@@ -102,6 +102,13 @@ namespace vcsn
                      cm}.reduce();
     }
 
+    static value_t sub(const value_t l, const value_t r)
+    {
+      unsigned int cm = lcm(l.den, abs(r.den));
+      return value_t{l.num * int (cm / l.den) - r.num * int (cm / r.den),
+                     cm}.reduce();
+    }
+
     static value_t mul(const value_t l, const value_t r)
     {
       return value_t{l.num * r.num, l.den * r.den}.reduce();

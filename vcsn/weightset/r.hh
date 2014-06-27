@@ -60,6 +60,12 @@ namespace vcsn
     }
 
     static value_t
+    sub(const value_t l, const value_t r)
+    {
+      return l - r;
+    }
+
+    static value_t
     mul(const value_t l, const value_t r)
     {
       return l * r;
