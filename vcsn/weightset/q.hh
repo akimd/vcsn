@@ -118,7 +118,10 @@ namespace vcsn
     rdiv(const value_t l, const value_t r)
     {
       require(!is_zero(r), "div: division by zero");
-      return value_t{l.num * int(r.den), l.den * r.num}.reduce();
+      if (0 < r.num)
+        return value_t{l.num * int(r.den), l.den * r.num}.reduce();
+      else
+        return value_t{-l.num * int(r.den), l.den * -r.num}.reduce();
     }
 
     static value_t
