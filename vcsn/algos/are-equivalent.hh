@@ -1,6 +1,7 @@
 #ifndef VCSN_ALGOS_ARE_EQUIVALENT_HH
 # define VCSN_ALGOS_ARE_EQUIVALENT_HH
 
+# include <vcsn/algos/accessible.hh> // is_useless
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/determinize.hh>
