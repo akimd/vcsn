@@ -145,7 +145,7 @@ namespace vcsn
         auto rs = join(l.ratexpset(), r.ratexpset());
         auto lr = rs.conv(l.ratexpset(), l.ratexp());
         auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, sum(rs, lr, rr));
+        return make_ratexp(rs, ::vcsn::sum(rs, lr, rr));
       }
 
       REGISTER_DECLARE(sum_ratexp,

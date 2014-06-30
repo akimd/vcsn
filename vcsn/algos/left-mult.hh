@@ -140,7 +140,7 @@ namespace vcsn
         const auto& w = weight->as<WeightSet>().weight();
         const auto& e = exp->as<RatExpSet>();
         return make_ratexp(e.ratexpset(),
-                           left_mult(e.ratexpset(), w, e.ratexp()));
+                           ::vcsn::left_mult(e.ratexpset(), w, e.ratexp()));
       }
 
       REGISTER_DECLARE(left_mult_ratexp,
@@ -216,7 +216,7 @@ namespace vcsn
         const auto& w = weight->as<WeightSet>().weight();
         const auto& e = exp->as<RatExpSet>();
         return make_ratexp(e.ratexpset(),
-                           right_mult(e.ratexpset(), e.ratexp(), w));
+                           ::vcsn::right_mult(e.ratexpset(), e.ratexp(), w));
       }
 
       REGISTER_DECLARE(right_mult_ratexp,

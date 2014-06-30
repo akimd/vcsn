@@ -697,7 +697,7 @@ namespace vcsn
         auto rs = join(l.ratexpset(), r.ratexpset());
         auto lr = rs.conv(l.ratexpset(), l.ratexp());
         auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, shuffle(rs, lr, rr));
+        return make_ratexp(rs, ::vcsn::shuffle(rs, lr, rr));
       }
 
       REGISTER_DECLARE(shuffle_ratexp,
@@ -836,7 +836,7 @@ namespace vcsn
         auto rs = join(l.ratexpset(), r.ratexpset());
         auto lr = rs.conv(l.ratexpset(), l.ratexp());
         auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, conjunction(rs, lr, rr));
+        return make_ratexp(rs, ::vcsn::conjunction(rs, lr, rr));
       }
 
       REGISTER_DECLARE(conjunction_ratexp,

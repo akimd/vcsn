@@ -196,7 +196,7 @@ namespace vcsn
       {
         const auto& e = exp->as<RatExpSet>();
         return make_ratexp(e.ratexpset(),
-                           star_normal_form(e.ratexpset(), e.ratexp()));
+                           ::vcsn::star_normal_form(e.ratexpset(), e.ratexp()));
       }
 
       REGISTER_DECLARE(star_normal_form, (const ratexp& e) -> ratexp);

@@ -224,7 +224,7 @@ namespace vcsn
         auto rs = join(l.ratexpset(), r.ratexpset());
         auto lr = rs.conv(l.ratexpset(), l.ratexp());
         auto rr = rs.conv(r.ratexpset(), r.ratexp());
-        return make_ratexp(rs, concatenate(rs, lr, rr));
+        return make_ratexp(rs, ::vcsn::concatenate(rs, lr, rr));
       }
 
       REGISTER_DECLARE(concatenate_ratexp,
@@ -283,7 +283,7 @@ namespace vcsn
       {
         const auto& r = re->as<RatExpSet>();
         return make_ratexp(r.ratexpset(),
-                           chain(r.ratexpset(), r.ratexp(), min, max));
+                           ::vcsn::chain(r.ratexpset(), r.ratexp(), min, max));
       }
 
       REGISTER_DECLARE(chain_ratexp,

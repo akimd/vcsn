@@ -265,7 +265,7 @@ namespace vcsn
         using ratexpset_t = vcsn::ratexpset<context_t>;
         const auto& a = aut->as<Aut>();
         return make_ratexp(ratexpset_t(a->context()),
-                           aut_to_exp_naive(a));
+                           ::vcsn::aut_to_exp_naive(a));
       }
 
       REGISTER_DECLARE(aut_to_exp,

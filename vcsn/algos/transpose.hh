@@ -252,7 +252,7 @@ namespace vcsn
         const auto& e = exp->as<RatExpSet>();
 
         return make_ratexp(e.ratexpset(),
-                           transpose(e.ratexpset(),
+                           ::vcsn::transpose(e.ratexpset(),
                                      e.ratexp()));
       }
 
