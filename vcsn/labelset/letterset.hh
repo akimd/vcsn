@@ -207,7 +207,7 @@ namespace vcsn
     }
 
     std::ostream&
-    print_set(std::ostream& o, const std::string& format) const
+    print_set(std::ostream& o, const std::string& format = "text") const
     {
       if (format == "latex")
         this->genset().print_set(o, format);
