@@ -26,20 +26,35 @@ args = parser.parse_args()
 subst = dict()
 
 def diff_to_re(match):
-  frm = match.group(1)
-  to  = match.group(2)
-  frm = re.sub(r'^\t-',  '', frm, flags = re.MULTILINE).rstrip('\n')
-  to  = re.sub(r'^\t\+', '', to,  flags = re.MULTILINE).rstrip('\n')
-  print(frm, "=>", to, file=sys.stderr)
-  global subst
-  subst[frm] = to
+  '''Convert a portion of patch into a regex substitution to perform.
+  '''
+  frm = []
+  to  = []
+  is_diff = False
+  for l in match.group(1).splitlines():
+    # t in [-+ ]
+    t = l[1]
+    l = l[2:]
+    print(t, "=>", l, file=sys.stderr)
+    if t in ['-', ' ']:
+      is_diff = True
+      frm.append(l)
+    if t in ['+', ' ']:
+      is_diff = True
+      to.append(l)
+  if is_diff:
+    frm = "\n".join(frm)
+    to = "\n".join(to)
+    print(frm, "=>", to, file=sys.stderr)
+    global subst
+    subst[frm] = to
 
 def update(test, log):
   try:
     log = open(args.builddir + '/' + log).read()
     global subst
     subst = dict()
-    re.sub(r'((?:^\t-.*\n)+)((?:^\t\+.*\n)*)',
+    re.sub(r'((?:^\t[-+ ].*\n)+)',
            diff_to_re, log, flags = re.MULTILINE)
     if subst != dict():
       # Turn "subst{frm} => to" into a large RE.
