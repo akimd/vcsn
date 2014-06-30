@@ -205,6 +205,8 @@ def _lan_to_lal(a):
     dot = re.sub(r'"lan<(lal_char\(.*?\))>', r'"\1', dot)
     dot = re.sub(r'"lat<lan<(lal_char\(.*?\))>, *lan<(lal_char\(.*?\))>',
                  r'"lat<\1, \2', dot)
+    dot = re.sub(r'"lan<(lat<lal_char\(.*?\)(?:, *lal_char\(.*?\))*>)>',
+                 r'"\1', dot)
     return automaton(dot, 'dot')
 automaton.lan_to_lal = lambda self: _lan_to_lal(self)
 
