@@ -132,24 +132,19 @@ namespace vcsn
   Aut&
   subsequence_here(Aut& aut)
   {
-    const auto epsilon = aut->labelset()->one();
-    using state_t = state_t_of<Aut>;
+    const auto one = aut->labelset()->one();
 
+    std::vector<transition_t_of<Aut>> ts;
     for (auto s : aut->states())
       {
-	std::vector<state_t> v;
-	for (auto tr : aut->in(s))
-	  {
-	    auto si = aut->src_of(tr);
-	    // Loop of set of transitions
-	    // Do not add transtions here
-	    // Put it to vector and add later
-	    v.push_back(si);
-	  }
-	for (auto si : v)
-	    if (s != si)
-	      aut->add_transition(si, s, epsilon);
+        ts.clear();
+        for (auto t : aut->out(s))
+          if (!aut->labelset()->is_one(aut->label_of(t)))
+            ts.emplace_back(t);
+        for (auto t : ts)
+          aut->add_transition(s, aut->dst_of(t), one, aut->weight_of(t));
       }
+
     return aut;
   }
 
