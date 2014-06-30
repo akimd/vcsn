@@ -35,12 +35,12 @@ namespace vcsn
       return detail::factor_registry().call(aut);
     }
 
-    REGISTER_DEFINE(subsequence);
+    REGISTER_DEFINE(subword);
 
     automaton
-    subsequence(const automaton& aut)
+    subword(const automaton& aut)
     {
-      return detail::subsequence_registry().call(aut);
+      return detail::subword_registry().call(aut);
     }
 
   }

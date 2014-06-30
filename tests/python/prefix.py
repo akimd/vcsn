@@ -18,9 +18,9 @@ def factor_check(i, o):
   CHECK_EQ(o, i.factor())
   CHECK_EQ(o, i.factor().factor())
 
-def subsequence_check(i, o):
-  CHECK_EQ(o, i.subsequence())
-#  CHECK_EQ(o, i.subsequence().subsequence())
+def subword_check(i, o):
+  CHECK_EQ(o, i.subword())
+#  CHECK_EQ(o, i.subword().subword())
 
 def to_nullable_automate(aut):
   return vcsn.automaton(aut.format('dot').replace("lal_char(", "lan_char("))
@@ -541,9 +541,9 @@ factor_check(aut7, '''digraph
   8 -> 0 [label = "c", color = DimGray]
 }''')
 
-# subsequence checking
+# subword checking
 # ---------------
-subsequence_check(to_nullable_automate(aut5), r'''digraph
+subword_check(to_nullable_automate(aut5), r'''digraph
 {
   vcsn_context = "lan<lal_char(abc)>_z"
   rankdir = LR
@@ -567,7 +567,7 @@ subsequence_check(to_nullable_automate(aut5), r'''digraph
   3 -> F3
 }''')
 
-subsequence_check(to_nullable_automate(aut6), r'''digraph
+subword_check(to_nullable_automate(aut6), r'''digraph
 {
   vcsn_context = "lan<lal_char(abc)>_z"
   rankdir = LR
@@ -597,7 +597,7 @@ subsequence_check(to_nullable_automate(aut6), r'''digraph
   6 -> 0 [label = "\\e, c", color = DimGray]
 }''')
 
-subsequence_check(to_nullable_automate(aut3), r'''digraph
+subword_check(to_nullable_automate(aut3), r'''digraph
 {
   vcsn_context = "lan<lal_char(a)>_z"
   rankdir = LR
@@ -615,7 +615,7 @@ subsequence_check(to_nullable_automate(aut3), r'''digraph
   0 -> 0 [label = "\\e, a"]
 }''')
 
-subsequence_check(to_nullable_automate(aut7), r'''digraph
+subword_check(to_nullable_automate(aut7), r'''digraph
 {
   vcsn_context = "lan<lal_char(abc)>_z"
   rankdir = LR

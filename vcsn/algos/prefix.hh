@@ -127,10 +127,10 @@ namespace vcsn
     }
   }
 
-  /// Create a subsequence automaton from \a aut and return it
+  /// Create a subword automaton from \a aut and return it
   template <typename Aut>
   Aut&
-  subsequence_here(Aut& aut)
+  subword_here(Aut& aut)
   {
     const auto one = aut->labelset()->one();
 
@@ -150,11 +150,11 @@ namespace vcsn
 
   template <typename Aut>
   auto
-  subsequence(const Aut& aut)
+  subword(const Aut& aut)
     ->decltype(::vcsn::copy(aut))
   {
     auto res = ::vcsn::copy(aut);
-    subsequence_here(res);
+    subword_here(res);
     return res;
   }
 
@@ -165,13 +165,13 @@ namespace vcsn
       // Brige.
       template <typename Aut>
       automaton
-      subsequence(const automaton& aut)
+      subword(const automaton& aut)
       {
 	const auto& a = aut->as<Aut>();
-	return make_automaton(::vcsn::subsequence(a));
+	return make_automaton(::vcsn::subword(a));
       }
 
-      REGISTER_DECLARE(subsequence,
+      REGISTER_DECLARE(subword,
 		       (const automaton& aut) -> automaton);
     }
   }

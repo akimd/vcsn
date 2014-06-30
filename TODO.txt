@@ -6,14 +6,8 @@ conversion: it should be easy to see that the original *.chk and the
 final *.py are really alike.  Don't over-engineer something that hides the
 tests.
 
-** subsequence (or subword?), prefix, suffix, factor
-From an automaton generate another that corresponds to the subsequences,
-prefixes, suffixes and factors.
-
-Do that in the static API (templated), then the dyn:: API, then the Python
-API, then tests/.  Don't do TAF-Kit.
-
-Eventually, provide the same routines for ratexps.
+** subword, prefix, suffix, factor
+Provide the same routines for ratexps.
 
 * Naming issues
 ** Wrong names

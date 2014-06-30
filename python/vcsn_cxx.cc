@@ -339,9 +339,9 @@ struct automaton
     return vcsn::dyn::suffix(val_);
   }
 
-  automaton subsequence() const
+  automaton subword() const
   {
-    return vcsn::dyn::subsequence(val_);
+    return vcsn::dyn::subword(val_);
   }
 
   automaton sum(const automaton& rhs) const
@@ -872,7 +872,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("star", &automaton::star)
     .def("strip", &automaton::strip)
     .def("suffix", &automaton::suffix)
-    .def("subsequence", &automaton::subsequence)
+    .def("subword", &automaton::subword)
     .def("sum", &automaton::sum)
     .def("synchronizing_word", &automaton::synchronizing_word,
                                synchronizing_word())
