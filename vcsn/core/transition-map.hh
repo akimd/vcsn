@@ -16,7 +16,7 @@ namespace vcsn
     /// \tparam WeightSet
     ///    The set of weights into which the weights will be converted.
     /// \tparam Deterministic
-    ///    Wether the automaton is guaranteed to be deterministic.
+    ///    Whether the automaton is guaranteed to be deterministic.
     ///    If it is, transition_map[state][label] returns a single
     ///    result, otherwise a vector.
     /// \tparam AllOut
