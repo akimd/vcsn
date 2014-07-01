@@ -47,8 +47,9 @@ namespace vcsn
   }
 
   template <typename Aut>
-  Aut
+  auto
   complement(const Aut& aut)
+    -> decltype(copy(aut))
   {
     auto res = copy(aut);
     complement_here(res);

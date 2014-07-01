@@ -60,8 +60,9 @@ namespace vcsn
   }
 
   template <typename Aut>
-  Aut
+  auto
   complete(const Aut& aut)
+    -> decltype(::vcsn::copy(aut))
   {
     auto res = ::vcsn::copy(aut);
     complete_here(res);
