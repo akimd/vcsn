@@ -7,7 +7,11 @@
 
 namespace vcsn
 {
-  /// Create a suffix automaton from \a aut and return it.
+  /*---------.
+  | suffix.  |
+  `---------*/
+
+  /// Make all accessible states initial.
   template <typename Aut>
   Aut&
   suffix_here(Aut& aut)
@@ -47,7 +51,11 @@ namespace vcsn
   }
 
 
-  /// Create a prefix automaton from \a aut and return it.
+  /*---------.
+  | prefix.  |
+  `---------*/
+
+  /// Make all coaccessible states final.
   template <typename Aut>
   Aut&
   prefix_here(Aut& aut)
@@ -85,7 +93,11 @@ namespace vcsn
     }
   }
 
-  /// Create a factor automaton from \a aut and return it
+  /*---------.
+  | factor.  |
+  `---------*/
+
+  /// Make each useful state both initial and final.
   template <typename Aut>
   Aut&
   factor_here(Aut& aut)
@@ -113,7 +125,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Brige.
+      // Bridge.
       template <typename Aut>
       automaton
       factor(const automaton& aut)
@@ -127,7 +139,12 @@ namespace vcsn
     }
   }
 
-  /// Create a subword automaton from \a aut and return it
+  /*----------.
+  | subword.  |
+  `----------*/
+
+  /// Add spontaneous transitions for each non spontaneous transition,
+  /// with same source, destination and weight.
   template <typename Aut>
   Aut&
   subword_here(Aut& aut)
@@ -148,6 +165,7 @@ namespace vcsn
     return aut;
   }
 
+  /// Apply subword_here() to a copy of \a aut.
   template <typename Aut>
   auto
   subword(const Aut& aut)
@@ -162,7 +180,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Brige.
+      /// Bridge.
       template <typename Aut>
       automaton
       subword(const automaton& aut)
