@@ -207,8 +207,10 @@ namespace vcsn
       // of sizes.
       fr_.response = full_response::tag::trivially_different;
 
-      require(is_accessible(a1_) && is_accessible(a2_),
-              "are-isomorphic: input automata must both be accessible");
+      require(is_accessible(a1_),
+              "are-isomorphic: lhs automaton must be accessible");
+      require(is_accessible(a2_),
+              "are-isomorphic: rhs automaton must be accessible");
 
       // Before even initializing our data structures, which is
       // potentially expensive, try to simply compare the number of
