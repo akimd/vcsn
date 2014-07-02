@@ -20,16 +20,18 @@ namespace vcsn
 {
   /// Join between automata.
   template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<Auts>...>>
+  auto
   join_automata(Auts&&... auts)
+    -> decltype(make_mutable_automaton(join(auts->context()...)))
   {
     return make_mutable_automaton(join(auts->context()...));
   }
 
   /// Meet between automata.
   template <typename... Auts>
-  mutable_automaton<meet_t<context_t_of<Auts>...>>
+  auto
   meet_automata(Auts&&... auts)
+    -> decltype(make_mutable_automaton(meet(auts->context()...)))
   {
     return make_mutable_automaton(meet(auts->context()...));
   }
@@ -53,17 +55,20 @@ namespace vcsn
 
   /// Meet between automata in tuple.
   template <typename... Auts>
-  mutable_automaton<meet_t<context_t_of<Auts>...>>
+  auto
   meet(const std::tuple<Auts...>& auts)
+    -> decltype(meet_(auts,
+                      vcsn::detail::make_index_sequence<sizeof...(Auts)>{}))
   {
     auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
     return meet_(auts, indices);
   }
 
   template <typename... Auts, size_t... I>
-  mutable_automaton<meet_t<context_t_of<Auts>...>>
+  auto
   meet_(const std::tuple<Auts...>& auts,
         vcsn::detail::index_sequence<I...>)
+    -> decltype(meet_automata(std::get<I>(auts)...))
   {
     return meet_automata(std::get<I>(auts)...);
   }
