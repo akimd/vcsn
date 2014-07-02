@@ -29,7 +29,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    struct ratexp_automaton_impl;
+    class ratexp_automaton_impl;
   }
   template <typename Aut>
   using ratexp_automaton
