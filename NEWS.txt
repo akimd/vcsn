@@ -4,6 +4,23 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-07-04
+** determinization is more robust to large alphabets
+In order to optimize (Boolean) determinization, 'determinize' no longer
+accepts an optional 'complete' argument to require a deterministic complete
+automaton.  One must now call 'complete()' afterwards.
+
+The speed improvements are (erebus: OS X i7 2.9GHz 8GB, Clang 3.5 -O3 -DNDEBUG):
+
+    (1)   (2)   (3)
+   7.93s 7.80s 7.43s: a.determinize()      # a = ladybird(21)
+   6.64s 6.45s 0.84s: a.determinize()      # a = lal(a-zA-Z0-9).ladybird(18)
+
+where (1) is the "original" version, (2) is the version without the optional
+completion of the determinized automaton (yes, it was set to False in the
+bench of (1)), and (3) is the current version, which avoids considering
+unused letters.
+
 * 2014-06-24
 ** minimize: new subset decorators, except for the "brzozowski" variant
 Minimizing an automaton now yields a decorated automaton keeping track of

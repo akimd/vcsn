@@ -64,16 +64,6 @@ namespace vcsn
         for (auto t : input_->final_transitions())
           finals_.set(input_->src_of(t));
 
-        // Cache the successor states per letter.
-        for (auto st : input_->all_states())
-          for (auto l : letters_)
-            {
-              state_set& ss = successors_[st][l];
-              ss.resize(state_size_);
-              for (auto tr : input_->out(st, l))
-                ss.set(input_->dst_of(tr));
-            }
-
         // The input initial states.
         state_set next;
         next.resize(state_size_);
@@ -116,26 +106,49 @@ namespace vcsn
         return res;
       };
 
-      /// Determinize all the states.
+      /// Determinize all accessible states.
       void operator()()
       {
-        state_set next;
-        next.resize(state_size_);
+        std::map<label_t, state_set> ml;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
             state_t src = state(ss);
             todo_.pop();
-            for (auto l: letters_)
+
+            ml.clear();
+            for (auto s = ss.find_first(); s != ss.npos;
+                 s = ss.find_next(s))
               {
-                next.reset();
-                for (auto s = ss.find_first(); s != ss.npos;
-                     s = ss.find_next(s))
-                  next |= successors_[s][l];
-                // Don't generate the sink.
-                if (next.any())
-                  this->new_transition(src, state(next), l);
+                // Cache the output transitions of state s.
+                auto i = successors_.find(s);
+                if (i == successors_.end())
+                  {
+                    i = successors_.emplace(s, label_map_t{}).first;
+                    auto& j = i->second;
+                    for (auto t : input_->out(s))
+                      {
+                        auto l = input_->label_of(t);
+                        if (j.find(l) == j.end())
+                          j[l].resize(state_size_);
+                        j[l].set(input_->dst_of(t));
+                      }
+                  }
+
+                // Store in ml the possible destination per label.
+                for (const auto& p : i->second)
+                  {
+                    auto j = ml.find(p.first);
+                    if (j == ml.end())
+                      ml[p.first] = p.second;
+                    else
+                      j->second |= p.second;
+                  }
               }
+
+            // Outgoing transitions from the current (result) state.
+            for (const auto& e : ml)
+              this->new_transition(src, state(e.second), e.first);
           }
       }
 
@@ -206,13 +219,10 @@ namespace vcsn
       /// Set of final states in the input automaton.
       state_set finals_;
 
-      /// The generators.
-      const typename labelset_t_of<Aut>::genset_t letters_
-        = input_->labelset()->genset();
-
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-      using successors_t = std::vector<std::unordered_map<label_t, state_set>>;
-      successors_t successors_{state_size_};
+      using label_map_t = std::unordered_map<label_t, state_set>;
+      using successors_t = std::unordered_map<state_t, label_map_t>;
+      successors_t successors_;
     };
   }
 
