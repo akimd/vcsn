@@ -48,7 +48,7 @@ namespace vcsn
       producter(const Lhs& lhs, const Rhs& rhs, const std::string& which = "in_filter")
         : lhs_(std::move(which == "outsplitting" ?
                               sort(std::move(outsplit(lhs))) : sort(lhs))),
-          rhs_(std::move(sort(std::move(insplit(rhs))))),
+          rhs_(std::move(which == "no_insplit" ? sort(rhs) : sort(std::move(insplit(rhs))))),
           res_(join(lhs_.context(), rhs_.context()))
       {}
 
@@ -567,7 +567,7 @@ namespace vcsn
     -> typename detail::producter<Lhs, Rhs>::automaton_t
   {
     detail::producter<Lhs, Rhs> product(lhs, rhs, which);
-    assert(which == "outsplitting" || which == "in_filter");
+    assert(which == "outsplitting" || which == "in_filter" || which == "no_insplit");
     auto res = which == "outsplitting" ? product.outsplit_product() :
        product.product();
 
