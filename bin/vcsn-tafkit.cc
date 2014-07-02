@@ -354,12 +354,9 @@ struct determinize: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     auto aut = read_automaton(opts);
-    bool complete = (0 < opts.argv.size()
-                     ? boost::lexical_cast<bool>(opts.argv[0])
-                     : false);
 
     // Process.
-    auto res = vcsn::dyn::determinize(aut, complete);
+    auto res = vcsn::dyn::determinize(aut);
 
     // Output.
     opts.print(res);

@@ -27,7 +27,7 @@ namespace vcsn
 # if 0
   MAYBE_EXTERN template
   auto
-  determinize(const mutable_automaton<ctx::lal_char_b>& aut, bool complete)
+  determinize(const mutable_automaton<ctx::lal_char_b>& aut)
     -> mutable_automaton<ctx::lal_char_b>;
 
   /* fado. */
@@ -69,7 +69,7 @@ namespace vcsn
 
         REGISTER(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
-        REGISTER(determinize, aut_t, bool);
+        REGISTER(determinize, aut_t);
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);
         REGISTER(universal, aut_t);

@@ -57,7 +57,7 @@ namespace vcsn
     // Meet complement()'s requirements.
     auto r = strip(rhs);
     if (!is_deterministic(r))
-      r = strip(determinize(r, true));
+      r = complete(strip(determinize(r)));
     else if (!is_complete(r))
       r = complete(r);
     return strip(product(lhs, complement(r)));

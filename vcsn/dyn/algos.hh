@@ -117,9 +117,8 @@ namespace vcsn
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
-    /// \param complete  whether to force the result to be a complete automaton
     /// \pre  \a aut must be LAL.
-    automaton determinize(const automaton& aut, bool complete = false);
+    automaton determinize(const automaton& aut);
 
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.

@@ -14,14 +14,13 @@ def load(file):
 
 # check AUT EXP COMPLETE = False IS-DETERMINISTIC = False
 # ------------------------------
-def check(aut, exp, complete = False, deterministic = False):
+def check(aut, exp, deterministic = False):
     CHECK_EQ(deterministic, aut.is_deterministic())
-    det = aut.determinize(complete)
+    det = aut.determinize()
     exp = load(exp)
     CHECK_EQ(exp, det)
     CHECK_EQ(True, det.is_deterministic())
     # Idempotence.
-    print(det.determinize())
     CHECK_EQ(exp, det.determinize())
 
 ctx = vcsn.context('lal_char(ab)_b')
@@ -38,8 +37,6 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 ## ------------------------------- ##
 
 for name in ['deterministic', 'epsilon', 'empty']:
-  for complete in [False, True]:
-      print("check: ", name, complete)
-      aut = vcsn.automaton(load(name))
-      exp = "{}-det-{}".format(name, 1 if complete else 0);
-      check(aut, exp, complete, True)
+    aut = vcsn.automaton(load(name))
+    exp = "{}-det-{}".format(name, 0);
+    check(aut, exp, True)

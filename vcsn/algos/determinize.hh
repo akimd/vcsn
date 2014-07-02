@@ -55,11 +55,9 @@ namespace vcsn
 
       /// Build the determinizer.
       /// \param a         the automaton to determinize
-      /// \param complete  whether to force the result to be complete
-      determinized_automaton_impl(const automaton_t& a, bool complete = false)
+      determinized_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
-        , complete_(complete)
         , finals_(state_size_)
       {
         // Input final states.
@@ -135,7 +133,7 @@ namespace vcsn
                      s = ss.find_next(s))
                   next |= successors_[s][l];
                 // Don't generate the sink.
-                if (complete_ || next.any())
+                if (next.any())
                   this->new_transition(src, state(next), l);
               }
           }
@@ -196,9 +194,6 @@ namespace vcsn
       /// Input automaton.
       automaton_t input_;
 
-      /// Whether to build a complete automaton.
-      bool complete_ = false;
-
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
       /// the number of states.
@@ -229,10 +224,10 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  determinize(const Aut& a, bool complete = false)
+  determinize(const Aut& a)
     -> determinized_automaton<Aut>
   {
-    auto res = make_shared_ptr<determinized_automaton<Aut>>(a, complete);
+    auto res = make_shared_ptr<determinized_automaton<Aut>>(a);
     // Determinize.
     res->operator()();
     return res;
@@ -243,16 +238,16 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename Aut, typename Bool>
+      template <typename Aut>
       automaton
-      determinize(const automaton& aut, bool complete)
+      determinize(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::determinize(a, complete));
+        return make_automaton(::vcsn::determinize(a));
       }
 
       REGISTER_DECLARE(determinize,
-                       (const automaton& aut, bool complete) -> automaton);
+                       (const automaton& aut) -> automaton);
     }
   }
 
