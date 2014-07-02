@@ -80,4 +80,4 @@ namespace vcsn
   }
 }
 
-#endif /* !VCSN_DYN_CONTEXT_PRINTER_HH */
+#endif // !VCSN_DYN_CONTEXT_PRINTER_HH

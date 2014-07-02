@@ -43,4 +43,4 @@ namespace vcsn
   }
 }
 
-#endif /* !VCSN_DYN_SIGNATURE_PRINTER_HH */
+#endif // !VCSN_DYN_SIGNATURE_PRINTER_HH

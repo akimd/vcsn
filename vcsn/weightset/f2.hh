@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSETS_F2_HH
-# define VCSN_WEIGHTSETS_F2_HH
+#ifndef VCSN_WEIGHTSET_F2_HH
+# define VCSN_WEIGHTSET_F2_HH
 
 # include <cassert>
 # include <ostream>
@@ -178,4 +178,4 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(f2, f2, f2);
 }
 
-#endif // !VCSN_WEIGHTSETS_F2_HH
+#endif // !VCSN_WEIGHTSET_F2_HH

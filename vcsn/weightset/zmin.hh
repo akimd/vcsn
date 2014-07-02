@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSETS_ZMIN_HH
-# define VCSN_WEIGHTSETS_ZMIN_HH
+#ifndef VCSN_WEIGHTSET_ZMIN_HH
+# define VCSN_WEIGHTSET_ZMIN_HH
 
 # include <limits>
 # include <ostream>
@@ -194,4 +194,4 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(zmin, b, zmin);
 }
 
-#endif // !VCSN_WEIGHTSETS_ZMIN_HH
+#endif // !VCSN_WEIGHTSET_ZMIN_HH

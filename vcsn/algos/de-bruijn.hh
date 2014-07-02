@@ -1,5 +1,5 @@
-#ifndef VCSN_FACTORY_DE_BRUIJN_HH
-# define VCSN_FACTORY_DE_BRUIJN_HH
+#ifndef VCSN_ALGOS_DE_BRUIJN_HH
+# define VCSN_ALGOS_DE_BRUIJN_HH
 
 # include <iterator> // std::distance
 # include <stdexcept>
@@ -67,4 +67,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_FACTORY_DE_BRUIJN_HH
+#endif // !VCSN_ALGOS_DE_BRUIJN_HH

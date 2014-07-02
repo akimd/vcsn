@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_SUBSET_DECORATOR_HH
-# define VCSN_CORE_SUBSET_DECORATOR_HH
+#ifndef VCSN_CORE_SUBSET_AUTOMATON_HH
+# define VCSN_CORE_SUBSET_AUTOMATON_HH
 
 # include <map>
 # include <set>
@@ -118,4 +118,4 @@ namespace vcsn
 
 } // namespace vcsn
 
-#endif // ! VCSN_CORE_SUBSET_DECORATOR_HH
+#endif // !VCSN_CORE_SUBSET_AUTOMATON_HH

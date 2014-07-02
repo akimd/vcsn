@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSETS_B_HH
-# define VCSN_WEIGHTSETS_B_HH
+#ifndef VCSN_WEIGHTSET_B_HH
+# define VCSN_WEIGHTSET_B_HH
 
 # include <cassert>
 # include <ostream>
@@ -182,4 +182,4 @@ namespace vcsn
   VCSN_WEIGHTS_BINARY(b, b, b);
 }
 
-#endif // !VCSN_WEIGHTSETS_B_HH
+#endif // !VCSN_WEIGHTSET_B_HH

@@ -1,5 +1,5 @@
-#ifndef VCSN_MISC_FADO_HH
-# define VCSN_MISC_FADO_HH
+#ifndef LIB_VCSN_ALGOS_FWD_HH
+# define LIB_VCSN_ALGOS_FWD_HH
 
 # include <string>
 # include <sstream>
@@ -16,4 +16,4 @@ namespace vcsn
     automaton read_fado(std::istream& is);
   }
 }
-#endif // VCSN_MISC_FADO_HH
+#endif // !LIB_VCSN_ALGOS_FWD_HH

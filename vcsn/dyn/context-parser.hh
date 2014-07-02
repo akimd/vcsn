@@ -1,5 +1,5 @@
-#ifndef VCSN_DYN_PARSER_HH
-# define VCSN_DYN_PARSER_HH
+#ifndef VCSN_DYN_CONTEXT_PARSER_HH
+# define VCSN_DYN_CONTEXT_PARSER_HH
 
 # include <sstream>
 # include <string>
@@ -44,4 +44,4 @@ namespace vcsn
   }
 }
 
-#endif /* !VCSN_DYN_PARSER_HH */
+#endif // !VCSN_DYN_CONTEXT_PARSER_HH

@@ -1,5 +1,5 @@
-#ifndef VCSN_TUPLE_AUTOMATON_HH
-# define VCSN_TUPLE_AUTOMATON_HH
+#ifndef VCSN_CORE_TUPLE_AUTOMATON_HH
+# define VCSN_CORE_TUPLE_AUTOMATON_HH
 
 # include <deque>
 # include <iostream>
@@ -260,4 +260,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_TUPLE_AUTOMATON_HH
+#endif // !VCSN_CORE_TUPLE_AUTOMATON_HH

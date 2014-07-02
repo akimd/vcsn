@@ -262,4 +262,4 @@ namespace vcsn
 
 
 
-#endif /* !VCSN_DYN_TYPE_AST_HH */
+#endif // !VCSN_DYN_TYPE_AST_HH

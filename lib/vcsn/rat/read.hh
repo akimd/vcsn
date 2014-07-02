@@ -15,4 +15,4 @@ namespace vcsn
   }
 }
 
-#endif // ! LIB_VCSN_RAT_READ_HH
+#endif // !LIB_VCSN_RAT_READ_HH

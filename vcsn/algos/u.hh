@@ -1,5 +1,5 @@
-#ifndef VCSN_FACTORY_U_HH
-# define VCSN_FACTORY_U_HH
+#ifndef VCSN_ALGOS_U_HH
+# define VCSN_ALGOS_U_HH
 
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/alphabets/char.hh>
@@ -78,4 +78,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_FACTORY_U_HH
+#endif // !VCSN_ALGOS_U_HH

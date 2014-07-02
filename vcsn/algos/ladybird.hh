@@ -1,5 +1,5 @@
-#ifndef VCSN_FACTORY_LADYBIRD_HH
-# define VCSN_FACTORY_LADYBIRD_HH
+#ifndef VCSN_ALGOS_LADYBIRD_HH
+# define VCSN_ALGOS_LADYBIRD_HH
 
 # include <vector>
 
@@ -68,4 +68,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_FACTORY_LADYBIRD_HH
+#endif // !VCSN_ALGOS_LADYBIRD_HH

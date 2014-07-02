@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSETS_WEIGHTSET_HH
-# define VCSN_WEIGHTSETS_WEIGHTSET_HH
+#ifndef VCSN_WEIGHTSET_WEIGHTSET_HH
+# define VCSN_WEIGHTSET_WEIGHTSET_HH
 
 // It is much simpler and saner in C++ to put types and functions on
 // these types in the same namespace.  Since "using q =
@@ -42,4 +42,4 @@ namespace vcsn
   };
 }
 
-#endif // !VCSN_WEIGHTSETS_WEIGHTSET_HH
+#endif // !VCSN_WEIGHTSET_WEIGHTSET_HH

@@ -1,5 +1,5 @@
-#ifndef VCSN_WEIGHTSETS_FWD_HH
-# define VCSN_WEIGHTSETS_FWD_HH
+#ifndef VCSN_WEIGHTSET_FWD_HH
+# define VCSN_WEIGHTSET_FWD_HH
 
 namespace vcsn
 {
@@ -49,4 +49,4 @@ namespace vcsn
     return {};                                  \
   }
 
-#endif // !VCSN_WEIGHTSETS_FWD_HH
+#endif // !VCSN_WEIGHTSET_FWD_HH

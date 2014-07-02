@@ -1,5 +1,5 @@
-#ifndef VCSN_FACTORY_DIVKBASEB_HH
-# define VCSN_FACTORY_DIVKBASEB_HH
+#ifndef VCSN_ALGOS_DIVKBASEB_HH
+# define VCSN_ALGOS_DIVKBASEB_HH
 
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/alphabets/char.hh>
@@ -81,4 +81,4 @@ namespace vcsn
 
 }
 
-#endif // !VCSN_FACTORY_DIVKBASEB_HH
+#endif // !VCSN_ALGOS_DIVKBASEB_HH

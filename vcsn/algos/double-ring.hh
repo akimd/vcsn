@@ -1,5 +1,5 @@
-#ifndef VCSN_FACTORY_DOUBLE_RING_HH
-# define VCSN_FACTORY_DOUBLE_RING_HH
+#ifndef VCSN_ALGOS_DOUBLE_RING_HH
+# define VCSN_ALGOS_DOUBLE_RING_HH
 
 # include <map>
 
@@ -87,4 +87,4 @@ namespace vcsn
   }
 }
 
-#endif // !VCSN_FACTORY_DOUBLE_RING_HH
+#endif // !VCSN_ALGOS_DOUBLE_RING_HH

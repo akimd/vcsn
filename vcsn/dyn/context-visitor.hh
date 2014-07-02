@@ -30,4 +30,4 @@ namespace vcsn
   }
 }
 
-#endif /* !VCSN_DYN_CONTEXT_VISITOR_HH */
+#endif // !VCSN_DYN_CONTEXT_VISITOR_HH

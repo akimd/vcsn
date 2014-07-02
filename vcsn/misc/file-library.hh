@@ -3,8 +3,8 @@
  ** \brief Manage sets of inclusion paths.
  */
 
-#ifndef LIBPORT_FILE_LIBRARY_HH
-# define LIBPORT_FILE_LIBRARY_HH
+#ifndef VCSN_MISC_FILE_LIBRARY_HH
+# define VCSN_MISC_FILE_LIBRARY_HH
 
 # include <stdexcept>
 # include <list>
@@ -150,4 +150,4 @@ namespace vcsn
 
 # include <vcsn/misc/file-library.hxx>
 
-#endif // !LIBPORT_FILE_LIBRARY_HH
+#endif // !VCSN_MISC_FILE_LIBRARY_HH

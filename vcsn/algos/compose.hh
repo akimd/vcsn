@@ -331,4 +331,4 @@ namespace vcsn
 }
 
 
-#endif /* !VCSN_ALGOS_COMPOSE_HH */
+#endif // !VCSN_ALGOS_COMPOSE_HH

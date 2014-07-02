@@ -44,9 +44,8 @@
 //	#include <FlexLexer.h>
 //	...
 
-#ifndef __FLEX_LEXER_H
-// Never included before - need to define base class.
-#define __FLEX_LEXER_H
+#ifndef VCSN_MISC_FLEX_LEXER_HH
+# define VCSN_MISC_FLEX_LEXER_HH
 
 struct yy_buffer_state;
 typedef int yy_state_type;
@@ -192,4 +191,4 @@ protected:
 
 YY_FLEX_NAMESPACE_END
 
-#endif // FLEXLEXER_H
+#endif // !VCSN_MISC_FLEX_LEXER_HH

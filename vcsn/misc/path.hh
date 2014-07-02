@@ -3,8 +3,8 @@
  ** \brief Declaration of vcsn::path.
  */
 
-#ifndef LIBPORT_PATH_HH
-# define LIBPORT_PATH_HH
+#ifndef VCSN_MISC_PATH_HH
+# define VCSN_MISC_PATH_HH
 
 # include <string>
 # include <list>
@@ -112,4 +112,4 @@ namespace vcsn
 
 # include <vcsn/misc/path.hxx>
 
-#endif // !LIBPORT_PATH_HH
+#endif // !VCSN_MISC_PATH_HH
