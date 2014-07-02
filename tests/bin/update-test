@@ -25,6 +25,10 @@ args = parser.parse_args()
 
 subst = dict()
 
+def contents(file):
+  f = open(file)
+  return f.read()
+
 def diff_to_re(match):
   '''Convert a portion of patch into a regex substitution to perform.
   '''
@@ -35,7 +39,7 @@ def diff_to_re(match):
     # t in [-+ ]
     t = l[1]
     l = l[2:]
-    print(t, "=>", l, file=sys.stderr)
+    print(t, "->", l, file=sys.stderr)
     if t in ['-', ' ']:
       is_diff = True
       frm.append(l)
@@ -45,19 +49,40 @@ def diff_to_re(match):
   if is_diff:
     frm = "\n".join(frm)
     to = "\n".join(to)
-    print(frm, "=>", to, file=sys.stderr)
+    print(frm, "->", to, file=sys.stderr)
     global subst
     subst[frm] = to
 
+def exp_eff_to_re(match):
+  print("FOO", match.group(1), match.group(2), file=sys.stderr)
+  fr = ''
+  to  = ''
+  print("A1", file=sys.stderr)
+  for l in match.group(1).splitlines(keepends = True):
+    fr += l[1:]
+  # Drop the final \n.
+  fr = fr[:-1]
+  print("A2", file=sys.stderr)
+  for l in match.group(2).splitlines(keepends = True):
+    to += l[1:]
+  to = to[:-1]
+  print("3", file=sys.stderr)
+  print("HEY", "s{", fr, "}{", to, "}", sep='', file=sys.stderr)
+  global subst
+  subst[fr] = to
+
 def update(test, log):
   try:
-    log = open(args.builddir + '/' + log).read()
+    log = contents(args.builddir + '/' + log)
     global subst
     subst = dict()
-    re.sub(r'((?:^\t[-+ ].*\n)+)',
-           diff_to_re, log, flags = re.MULTILINE)
+    re.sub(r'Expected output::\n\n((?:^\t.*\n)+)\n'
+           +'Effective output::\n\n((?:^\t.*\n)+)\n',
+           exp_eff_to_re, log, flags = re.MULTILINE)
+#    re.sub(r'((?:^\t[-+ ].*\n)+)',
+#           diff_to_re, log, flags = re.MULTILINE)
     if subst != dict():
-      # Turn "subst{frm} => to" into a large RE.
+      # Turn "subst{frm} -> to" into a large RE.
       frm = '|'.join(map(re.escape, subst.keys()))
       test = re.sub(r'''(?<=['"\n])({frm})(?=['"\n])'''.format(frm=frm),
                    lambda m: subst[m.group(1)],
@@ -67,7 +92,7 @@ def update(test, log):
     return test
 
 for t in args.tests:
-  old = open(t).read()
+  old = contents(t)
   new = old
   for l in args.log + [t[:t.rfind('.')] + '.log']:
     print(l)
