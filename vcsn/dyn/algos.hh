@@ -40,6 +40,9 @@ namespace vcsn
     /// A ratexp denoting the language of \a aut.
     ratexp aut_to_exp_in_degree(const automaton& aut);
 
+    /// Produce a Černý automaton of \num_states states.
+    automaton cerny(const context& ctx, unsigned num_states);
+
     /// Repeated concatenation of \a aut with itself.
     automaton chain(const automaton& aut, int min, int max);
 

@@ -33,5 +33,12 @@ namespace vcsn
     {
       return detail::is_synchronizing_registry().call(aut);
     }
+
+    REGISTER_DEFINE(cerny);
+    automaton
+    cerny(const context& aut, unsigned num_states)
+    {
+      return detail::cerny_registry().call(aut, num_states);
+    }
   }
 }

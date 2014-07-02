@@ -48,6 +48,8 @@ struct context
     : context(vcsn::dyn::make_context(ctx))
   {}
 
+  automaton cerny(unsigned n) const;
+
   automaton de_bruijn(unsigned n) const;
 
   automaton divkbaseb(unsigned divisor, unsigned base) const;
@@ -730,6 +732,11 @@ ratexp automaton::to_ratexp() const
 | context implementation.  |
 `-------------------------*/
 
+automaton context::cerny(unsigned n) const
+{
+  return vcsn::dyn::cerny(val_, n);
+}
+
 automaton context::de_bruijn(unsigned n) const
 {
   return vcsn::dyn::de_bruijn(val_, n);
@@ -885,6 +892,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
   bp::class_<context>
     ("context",
      bp::init<const std::string&>())
+    .def("cerny", &context::cerny)
     .def("de_bruijn", &context::de_bruijn)
     .def("divkbaseb", &context::divkbaseb)
     .def("double_ring", &context::double_ring)
