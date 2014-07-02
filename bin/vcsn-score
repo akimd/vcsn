@@ -128,6 +128,17 @@ n = 12
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
 bench('a & {}'.format(n), 'a = std({})'.format(r), lambda: a & n)
 
+# compose.
+r = "['(a,a)'-'(i,z)']{4}"
+a = vcsn.context('lat<lal_char(a-z), lal_char(a-z)>_b') \
+        .ratexp(r).standard()
+bench('a.compose(a)', 'a = std({})'.format(r), lambda: a.compose(a))
+
+r = "['(a,a)'-'(i,z)']{4}"
+a = vcsn.context('lat<lan_char(a-z), lan_char(a-z)>_b') \
+        .ratexp(r).thompson()
+bench('a.compose(a)', 'a = thompson({})'.format(r), lambda: a.compose(a))
+
 # Minimize a big deterministic automaton over booleans.
 r = "[a-g]{800}"
 a = vcsn.context("lal_char(a-k)_b").ratexp(r).standard()
