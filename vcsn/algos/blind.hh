@@ -34,7 +34,7 @@ namespace vcsn
     class blind_automaton_impl : public automaton_decorator<Aut>
     {
     public:
-      /// The type of automaton to wrap.
+      /// The type of the wrapped automaton.
       using automaton_t = Aut;
       using super = automaton_decorator<Aut>;
 
@@ -42,14 +42,17 @@ namespace vcsn
       static_assert(Band < labelset_t_of<Aut>::size(),
                     "band outside of the tuple");
 
-      /// The type of the automata to produce from this kind o
-      /// automata.  For instance, insplitting on a
-      /// blind_automaton<const mutable_automaton<Ctx>> should
-      /// yield a blind_automaton<mutable_automaton<Ctx>>, without
-      /// the "inner" const.
+      /// The type of automata to produce this kind of automata.  For
+      /// instance, insplitting on a blind_automaton<const
+      /// mutable_automaton<Ctx>> should yield a
+      /// blind_automaton<mutable_automaton<Ctx>>, without the "inner"
+      /// const.
       using automaton_nocv_t
         = blind_automaton<Band,
                           typename automaton_t::element_type::automaton_nocv_t>;
+
+      /// This automaton's state and transition types are those of the
+      /// wrapped automaton.
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
       // Exposed label
@@ -199,8 +202,9 @@ namespace vcsn
     = std::shared_ptr<detail::blind_automaton_impl<Band, Aut>>;
 
   template <std::size_t Band, typename Aut>
-  blind_automaton<Band, Aut>
+  auto
   make_blind_automaton(Aut& aut)
+    -> blind_automaton<Band, Aut>
   {
     return std::make_shared<detail::blind_automaton_impl<Band, Aut>>(aut);
   }

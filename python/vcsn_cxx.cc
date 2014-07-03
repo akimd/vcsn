@@ -105,6 +105,7 @@ struct automaton
   {
     return vcsn::dyn::chain(val_, min, max);
   }
+  /// The type of the previous function.
   using bin_chain_t = automaton (automaton::*)(int min, int max) const;
 
   automaton chain(int min) const
@@ -502,6 +503,7 @@ struct ratexp
   {
     return vcsn::dyn::chain(val_, min, max);
   }
+  /// The type of the previous function.
   using bin_chain_t = ratexp (ratexp::*)(int min, int max) const;
 
   ratexp chain(int min) const

@@ -39,14 +39,17 @@ namespace vcsn
     public:
       using clhs_t = Lhs;
       using crhs_t = Rhs;
-      using hidden_l_label_t = typename clhs_t::element_type::res_label_t;
-      using hidden_r_label_t = typename crhs_t::element_type::res_label_t;
+      // clhs_t and crhs_t are permutation automata, yet we need to
+      // read the res_label_t from their wrapped automaton type.
       using hidden_l_labelset_t = typename clhs_t::element_type::res_labelset_t;
       using hidden_r_labelset_t = typename crhs_t::element_type::res_labelset_t;
+      using hidden_l_label_t = typename hidden_l_labelset_t::value_t;
+      using hidden_r_label_t = typename hidden_r_labelset_t::value_t;
 
       static_assert(std::is_same<labelset_t_of<clhs_t>,
-                    labelset_t_of<crhs_t>>::value,
+                                 labelset_t_of<crhs_t>>::value,
                     "common band must be of same type");
+
       using middle_labelset_t = labelset_t_of<clhs_t>;
       /// The type of context of the result.
       ///
@@ -159,8 +162,8 @@ namespace vcsn
       {
         // This relies on outgoing transitions being sorted by label
         // by the sort algorithm: thanks to that property we can scan
-        // the two successor lists in lockstep. Thus if there is a one
-        // transition, it is at the beginning.
+        // the two successor lists in lockstep. Thus if there is a
+        // sponteneous transition, it is at the beginning.
         auto& lhs = std::get<0>(res_->auts_);
         auto& rhs = std::get<1>(res_->auts_);
         auto ls = lhs->all_out(std::get<0>(psrc));
