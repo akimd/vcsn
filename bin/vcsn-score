@@ -76,8 +76,13 @@ bench('r.thompson()', 'r = {} on [a-z]? -> Z'.format(e),
 
 # determinize.
 n = 21
-a = b.ladybird(n)
+a = vcsn.context('lal_char(abc)_b').ladybird(n)
 bench('a.determinize()', 'a = ladybird({})'.format(n),
+      lambda: a.determinize())
+
+n = 18
+a = vcsn.context('lal_char(a-zA-Z0-9)_b').ladybird(n)
+bench('a.determinize()', 'a = lal(a-zA-Z0-9).ladybird({})'.format(n),
       lambda: a.determinize())
 
 # eval.
