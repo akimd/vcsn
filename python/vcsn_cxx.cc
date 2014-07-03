@@ -101,6 +101,11 @@ struct automaton
     return vcsn::dyn::accessible(val_);
   }
 
+  automaton blind(unsigned tape)
+  {
+    return vcsn::dyn::blind(val_, tape);
+  }
+
   automaton chain(int min, int max) const
   {
     return vcsn::dyn::chain(val_, min, max);
@@ -830,6 +835,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
     .def("accessible", &automaton::accessible)
+    .def("blind", &automaton::blind)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
     .def("complement", &automaton::complement)

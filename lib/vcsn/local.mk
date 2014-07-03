@@ -36,6 +36,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/are-equivalent.cc                   \
   %D%/algos/are-isomorphic.cc                   \
   %D%/algos/aut-to-exp.cc                       \
+  %D%/algos/blind.cc                            \
   %D%/algos/complement.cc                       \
   %D%/algos/complete.cc                         \
   %D%/algos/compose.cc                          \

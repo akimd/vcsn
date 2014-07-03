@@ -5,6 +5,7 @@
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/ctx/traits.hh>
+# include <vcsn/dyn/automaton.hh>
 # include <vcsn/labelset/tupleset.hh>
 # include <vcsn/misc/tuple.hh> // make_index_range
 
@@ -36,7 +37,7 @@ namespace vcsn
     public:
       /// The type of the wrapped automaton.
       using automaton_t = Aut;
-      using super = automaton_decorator<Aut>;
+      using super_t = automaton_decorator<Aut>;
 
       static_assert(context_t_of<Aut>::is_lat, "requires labels_are_tuples");
       static_assert(Band < labelset_t_of<Aut>::size(),
@@ -82,7 +83,7 @@ namespace vcsn
       using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
 
     public:
-      using super::super;
+      using super_t::super_t;
 
       blind_automaton_impl(const context_t_of<automaton_t>& ctx)
         : blind_automaton_impl(make_shared_ptr<automaton_t>(ctx))
@@ -97,7 +98,7 @@ namespace vcsn
       std::string vname(bool full = true) const
       {
         return ("blind_automaton<" + std::to_string(Band) + ", "
-                + this->aut_->vname(full) + ">");
+                + aut_->vname(full) + ">");
       }
 
       res_label_t
@@ -118,13 +119,16 @@ namespace vcsn
         return res_labelset_(hidden_indices);
       }
 
+      /// Apparent labelset.
       std::shared_ptr<labelset_t>
       labelset() const
       {
-        return std::make_shared<labelset_t>(std::get<Band>(this->aut_->labelset()->sets()));
+        return std::make_shared<labelset_t>(std::get<Band>(aut_->labelset()->sets()));
       }
 
     private:
+      using super_t::aut_;
+
       hidden_indices_t hidden_indices{};
 
       static typename labelset_t::value_t hide_(hidden_label_t l)
@@ -135,7 +139,7 @@ namespace vcsn
       template <std::size_t... I>
       res_label_t hidden_label_of_(transition_t t, index_sequence<I...>) const
       {
-        hidden_label_t l = this->aut_->label_of(t);
+        hidden_label_t l = aut_->label_of(t);
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -143,7 +147,7 @@ namespace vcsn
       typename std::enable_if<L::has_one(), res_label_t>::type
       hidden_one_(index_sequence<I...>) const
       {
-        hidden_label_t l = this->aut_->labelset()->one();
+        hidden_label_t l = aut_->labelset()->one();
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -157,7 +161,7 @@ namespace vcsn
       template <std::size_t... I>
       res_labelset_t res_labelset_(index_sequence<I...>) const
       {
-        return res_labelset_t{std::get<I>(this->aut_->labelset()->sets())...};
+        return res_labelset_t{std::get<I>(aut_->labelset()->sets())...};
       }
 
     public:
@@ -169,9 +173,10 @@ namespace vcsn
       auto label_of(transition_t t) const
         -> typename labelset_t::value_t
       {
-        return hide_(this->aut_->label_of(t));
+        return hide_(aut_->label_of(t));
       }
 
+      /// Copy the full wrapped transition.
       template <typename A>
       transition_t
       new_transition_copy(state_t src, state_t dst,
@@ -179,10 +184,11 @@ namespace vcsn
                           typename A::element_type::transition_t t,
                           bool transpose = false)
       {
-        return this->aut_->new_transition_copy(src, dst,
-                                               aut->strip(), t, transpose);
+        return aut_->new_transition_copy(src, dst,
+                                         aut->strip(), t, transpose);
       }
 
+      /// Copy the full wrapped transition.
       template <typename A>
       weight_t
       add_transition_copy(state_t src, state_t dst,
@@ -190,8 +196,8 @@ namespace vcsn
                           typename A::element_type::transition_t t,
                           bool transpose = false)
       {
-        return this->aut_->add_transition_copy(src, dst,
-                                               aut->strip(), t, transpose);
+        return aut_->add_transition_copy(src, dst,
+                                         aut->strip(), t, transpose);
       }
     };
   }
@@ -207,6 +213,30 @@ namespace vcsn
   {
     return std::make_shared<detail::blind_automaton_impl<Tape, Aut>>(aut);
   }
+
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Aut, typename Tape>
+      automaton
+      blind(automaton& aut, unsigned tape)
+      {
+        auto& a = aut->as<Aut>();
+        // FIXME: we currently have no support for values in parameters.
+        if (tape == 0)
+          return make_automaton(vcsn::blind<0>(a));
+        else
+          return make_automaton(vcsn::blind<1>(a));
+      }
+
+      REGISTER_DECLARE(blind,
+                       (automaton& aut, unsigned tape) -> automaton);
+    }
+  }
+
 }
 
 #endif // !VCSN_ALGOS_BLIND_HH
