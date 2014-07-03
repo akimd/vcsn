@@ -173,22 +173,18 @@ namespace vcsn
 
         for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
           if (!has_only_ones_in(rhs, std::get<1>(psrc)))
-            res_->new_transition(src, res_->state(lhs->dst_of(*li), std::get<1>(psrc)),
-                                join_label(lhs->hidden_label_of(*li),
-                                           get_hidden_one(rhs)),
-                                ws.mul(ws.conv(*lhs->weightset(),
-                                               lhs->weight_of(*li)),
-                                       ws.conv(*rhs->weightset(),
-                                               rhs->context().weightset()->one())));
+            res_->new_transition(src,
+                                 res_->state(lhs->dst_of(*li), std::get<1>(psrc)),
+                                 join_label(lhs->hidden_label_of(*li),
+                                            get_hidden_one(rhs)),
+                                 ws.conv(*lhs->weightset(), lhs->weight_of(*li)));
 
         for (/* Nothing. */; ri != rs.end() && is_one(rhs, *ri); ++ri)
-          res_->new_transition(src, res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
-                              join_label(get_hidden_one(lhs),
-                                         rhs->hidden_label_of(*ri)),
-                              ws.mul(ws.conv(*lhs->weightset(),
-                                             lhs->context().weightset()->one()),
-                                     ws.conv(*rhs->weightset(),
-                                             rhs->weight_of(*ri))));
+          res_->new_transition(src,
+                               res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
+                               join_label(get_hidden_one(lhs),
+                                          rhs->hidden_label_of(*ri)),
+                               ws.conv(*rhs->weightset(), rhs->weight_of(*ri)));
 
 
         for (/* Nothing. */;
