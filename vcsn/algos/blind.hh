@@ -197,18 +197,17 @@ namespace vcsn
     };
   }
 
-  template <std::size_t Band, typename Aut>
+  template <std::size_t Tape, typename Aut>
   using blind_automaton
-    = std::shared_ptr<detail::blind_automaton_impl<Band, Aut>>;
+    = std::shared_ptr<detail::blind_automaton_impl<Tape, Aut>>;
 
-  template <std::size_t Band, typename Aut>
-  auto
-  make_blind_automaton(Aut& aut)
-    -> blind_automaton<Band, Aut>
+  template <unsigned Tape, typename Aut>
+  inline
+  blind_automaton<Tape, Aut>
+  blind(Aut aut)
   {
-    return std::make_shared<detail::blind_automaton_impl<Band, Aut>>(aut);
+    return std::make_shared<detail::blind_automaton_impl<Tape, Aut>>(aut);
   }
-
 }
 
 #endif // !VCSN_ALGOS_BLIND_HH

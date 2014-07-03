@@ -275,23 +275,6 @@ namespace vcsn
       /// The computed product.
       automaton_t res_;
     };
-
-    template<typename Aut>
-    typename std::enable_if<labelset_t_of<Aut>::has_one(),
-                            blind_automaton<0, Aut>>::type
-    get_insplit(Aut& aut)
-    {
-      return insplit(make_blind_automaton<0>(aut));
-    }
-
-    template<typename Aut>
-    typename std::enable_if<!labelset_t_of<Aut>::has_one(),
-                            blind_automaton<0, Aut>>::type
-    get_insplit(Aut& aut)
-    {
-      return make_blind_automaton<0>(aut);
-    }
-
   }
 
   /*--------------------------------.
@@ -305,9 +288,9 @@ namespace vcsn
     -> typename detail::composer<blind_automaton<1, Lhs>,
                                  blind_automaton<0, Rhs>>::automaton_t
   {
-    auto l = sort(make_blind_automaton<1>(lhs));
-    auto r = sort(get_insplit(rhs));
-    detail::composer<decltype(l), decltype(r)>compose(l, r);
+    auto l = sort(blind<1>(lhs));
+    auto r = sort(insplit(blind<0>(rhs)));
+    detail::composer<decltype(l), decltype(r)> compose(l, r);
     return compose.compose();
   }
 

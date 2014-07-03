@@ -33,7 +33,7 @@ namespace vcsn
         : res_(make_shared_ptr<automaton_t>(aut->context()))
       {}
 
-      automaton_t split(const Aut& aut)
+      automaton_t operator()(const Aut& aut)
       {
         if (!labelset_t_of<Aut>::has_one())
             return aut;
@@ -95,20 +95,32 @@ namespace vcsn
         raise("lal should not reach this point!");
       }
 
-
       automaton_t res_;
     };
 
+    template<typename Aut>
+    typename std::enable_if<labelset_t_of<Aut>::has_one(), Aut>::type
+    insplit(Aut& aut)
+    {
+      insplitter<Aut> insplit{aut};
+      return insplit(aut);
+    }
+
+    template<typename Aut>
+    typename std::enable_if<!labelset_t_of<Aut>::has_one(), Aut>::type
+    insplit(Aut& aut)
+    {
+      return aut;
+    }
   } // namespace detail
 
   template <typename Aut>
   inline
   auto
   insplit(const Aut& aut)
-    -> decltype(detail::insplitter<const Aut>(aut).split(aut))
+    -> decltype(detail::insplit(aut))
   {
-    detail::insplitter<Aut> insplit{aut};
-    return insplit.split(aut);
+    return detail::insplit(aut);
   }
 
   namespace dyn
