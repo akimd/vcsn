@@ -26,18 +26,31 @@ namespace vcsn
       using type = tupleset<elem<I>...>;
     };
 
+
+    template <size_t Tape,
+              typename LabelSet, typename WeightSet>
+    auto blind_context(const context<LabelSet, WeightSet>& ctx)
+      -> context<typename LabelSet::template valueset_t<Tape>, WeightSet>
+    {
+      return {ctx.labelset()->template set<Tape>(), *ctx.weightset()};
+    }
+
+    template <typename Context, size_t Tape>
+    using blind_context_t = decltype(blind_context<Tape>(std::declval<Context>()));
+
     /*------------------.
     | blind_automaton.  |
     `------------------*/
 
     /// Read-write on an automaton, that hides all bands but one.
     template <std::size_t Band, typename Aut>
-    class blind_automaton_impl : public automaton_decorator<Aut>
+    class blind_automaton_impl
+      : public automaton_decorator<Aut,
+                                   blind_context_t<context_t_of<Aut>, Band>>
     {
     public:
       /// The type of the wrapped automaton.
       using automaton_t = Aut;
-      using super_t = automaton_decorator<Aut>;
 
       static_assert(context_t_of<Aut>::is_lat, "requires labels_are_tuples");
       static_assert(Band < labelset_t_of<Aut>::size(),
@@ -56,37 +69,48 @@ namespace vcsn
       /// wrapped automaton.
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
-      // Exposed label
-      using label_t
-        = typename std::tuple_element<Band, label_t_of<automaton_t>>::type;
-      // Underlying automaton label
-      using hidden_label_t = label_t_of<automaton_t>;
-      using weight_t = weight_t_of<automaton_t>;
-      using hidden_indices_t = concat_sequence<
-                               typename make_index_range<0, Band>::type,
-                               typename make_index_range<Band + 1,
-                                 std::tuple_size<hidden_label_t>::value
-                                   - Band - 1>::type>;
 
-      using labelset_t
-        = typename labelset_t_of<automaton_t>::template valueset_t<Band>;
-      using hidden_labelset_t = labelset_t_of<automaton_t>;
+      /// Underlying automaton context.
+      using full_context_t = context_t_of<automaton_t>;
+      /// Underlying automaton labelset.
+      using full_labelset_t = typename full_context_t::labelset_t;
+      /// Underlying automaton label.
+      using full_label_t = typename full_labelset_t::value_t;
 
-      // All bands except the exposed one
+      /// Exposed context.
+      using context_t = blind_context_t<full_context_t, Band>;
+
+      /// Exposed labelset.
+      using labelset_t = typename context_t::labelset_t;
+      using labelset_ptr = typename context_t::labelset_ptr;
+      using label_t = typename labelset_t::value_t;
+
+      /// Exposed weightset.
+      using weightset_t = typename context_t::weightset_t;
+      using weightset_ptr = typename context_t::weightset_ptr;
+      using weight_t = typename weightset_t::value_t;
+
+      /// Indices of the remaining tapes.
+      using hidden_indices_t
+        = concat_sequence
+          <typename make_index_range<0, Band>::type,
+           typename make_index_range<Band + 1,
+                                     std::tuple_size<full_label_t>::value - Band - 1>::type>;
+
+      // All bands except the exposed one.
       using res_labelset_t = typename hidden_label_type<Aut, hidden_indices_t>::type;
       using res_label_t = typename res_labelset_t::value_t;
-      using weightset_t = weightset_t_of<automaton_t>;
 
-      using labelset_ptr = std::shared_ptr<const labelset_t>;
-      using context_t = ::vcsn::context<res_labelset_t, weightset_t>;
-
-      using weightset_ptr = typename automaton_t::element_type::weightset_ptr;
+      using super_t = automaton_decorator<automaton_t, context_t>;
 
     public:
-      using super_t::super_t;
 
-      blind_automaton_impl(const context_t_of<automaton_t>& ctx)
+      blind_automaton_impl(const full_context_t& ctx)
         : blind_automaton_impl(make_shared_ptr<automaton_t>(ctx))
+      {}
+
+      blind_automaton_impl(const automaton_t& aut)
+        : super_t(aut)
       {}
 
       static std::string sname()
@@ -101,6 +125,16 @@ namespace vcsn
                 + aut_->vname(full) + ">");
       }
 
+      full_context_t full_context() const
+      {
+        return aut_->context();
+      }
+
+      context_t context() const
+      {
+        return context_;
+      }
+
       res_label_t
       hidden_label_of(transition_t t) const
       {
@@ -110,7 +144,7 @@ namespace vcsn
       res_label_t
       hidden_one() const
       {
-        return hidden_one_<hidden_labelset_t>(hidden_indices);
+        return hidden_one_<full_labelset_t>(hidden_indices);
       }
 
       res_labelset_t
@@ -123,7 +157,7 @@ namespace vcsn
       std::shared_ptr<labelset_t>
       labelset() const
       {
-        return std::make_shared<labelset_t>(std::get<Band>(aut_->labelset()->sets()));
+        return std::make_shared<labelset_t>(aut_->labelset()->template set<Band>());
       }
 
     private:
@@ -131,7 +165,7 @@ namespace vcsn
 
       hidden_indices_t hidden_indices{};
 
-      static typename labelset_t::value_t hide_(hidden_label_t l)
+      static label_t hide_(full_label_t l)
       {
         return std::get<Band>(l);
       }
@@ -139,7 +173,7 @@ namespace vcsn
       template <std::size_t... I>
       res_label_t hidden_label_of_(transition_t t, index_sequence<I...>) const
       {
-        hidden_label_t l = aut_->label_of(t);
+        full_label_t l = aut_->label_of(t);
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -147,7 +181,7 @@ namespace vcsn
       typename std::enable_if<L::has_one(), res_label_t>::type
       hidden_one_(index_sequence<I...>) const
       {
-        hidden_label_t l = aut_->labelset()->one();
+        full_label_t l = aut_->labelset()->one();
         return std::make_tuple(std::get<I>(l)...);
       }
 
@@ -171,7 +205,7 @@ namespace vcsn
       `----------------------------*/
 
       auto label_of(transition_t t) const
-        -> typename labelset_t::value_t
+        -> label_t
       {
         return hide_(aut_->label_of(t));
       }
@@ -199,6 +233,13 @@ namespace vcsn
         return aut_->add_transition_copy(src, dst,
                                          aut->strip(), t, transpose);
       }
+
+    private:
+      /// Our apparent context.  This is not a luxury to cache it:
+      /// benches show that in some cases, intensive (and admittedly
+      /// wrong: they should have been cached on the caller side)
+      /// calls to context() ruins the performances.
+      context_t context_ = blind_context<Band>(full_context());
     };
   }
 

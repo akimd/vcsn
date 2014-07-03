@@ -30,7 +30,7 @@ namespace vcsn
 
     public:
       permutation_automaton_impl(const automaton_t& input)
-        : super_t(make_shared_ptr<automaton_nocv_t>(input->context()))
+        : super_t(make_shared_ptr<automaton_nocv_t>(real_context(input)))
         , input_(input)
       {
         map_[input_->pre()] = super_t::pre();

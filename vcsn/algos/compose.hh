@@ -27,9 +27,9 @@ namespace vcsn
     template <typename Lhs, typename Rhs>
     class composer
     {
-      static_assert(context_t_of<Lhs>::is_lat,
+      static_assert(Lhs::element_type::full_context_t::is_lat,
                     "requires labels_are_tuples");
-      static_assert(context_t_of<Rhs>::is_lat,
+      static_assert(Rhs::element_type::full_context_t::is_lat,
                     "requires labels_are_tuples");
 
       /// A static list of integers.

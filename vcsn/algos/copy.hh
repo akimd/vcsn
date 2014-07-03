@@ -3,6 +3,7 @@
 
 # include <unordered_map>
 
+# include <vcsn/algos/fwd.hh> // blind_automaton.
 # include <vcsn/core/fwd.hh>
 # include <vcsn/core/rat/copy.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -108,6 +109,55 @@ namespace vcsn
     return copy_into(in, out, [](state_t_of<AutIn>) { return true; });
   }
 
+  namespace detail
+  {
+    template <typename Aut>
+    struct real_context_impl;
+
+    template <typename Aut>
+    auto
+    real_context(const Aut& aut)
+      -> decltype(real_context_impl<Aut>::context(aut));
+
+    template <typename Aut>
+    struct real_context_impl
+    {
+      static auto context(const Aut& aut)
+        -> decltype(aut->context())
+      {
+        return aut->context();
+      }
+    };
+
+    template <std::size_t Band, typename Aut>
+    struct real_context_impl<blind_automaton<Band, Aut>>
+    {
+      static auto context(const blind_automaton<Band, Aut>& aut)
+        -> decltype(aut->full_context())
+      {
+        return aut->full_context();
+      }
+    };
+
+    template <typename Aut>
+    struct real_context_impl<permutation_automaton<Aut>>
+    {
+      static auto context(const permutation_automaton<Aut>& aut)
+        -> decltype(real_context(aut->strip()))
+      {
+        return real_context(aut->strip());
+      }
+    };
+
+    template <typename Aut>
+    auto
+    real_context(const Aut& aut)
+      -> decltype(real_context_impl<Aut>::context(aut))
+    {
+      return real_context_impl<Aut>::context(aut);
+    }
+  }
+
   /// A copy of \a input keeping only its states that are accepted by
   /// \a keep_state.
   template <typename AutIn,
@@ -117,7 +167,7 @@ namespace vcsn
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
-    auto res = make_shared_ptr<AutOut>(input->context());
+    auto res = make_shared_ptr<AutOut>(detail::real_context(input));
     ::vcsn::copy_into(input, res, keep_state);
     return res;
   }

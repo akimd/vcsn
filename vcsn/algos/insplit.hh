@@ -30,7 +30,7 @@ namespace vcsn
 
     public:
       insplitter(const Aut& aut)
-        : res_(make_shared_ptr<automaton_t>(aut->context()))
+        : res_(make_shared_ptr<automaton_t>(real_context(aut)))
       {}
 
       automaton_t operator()(const Aut& aut)
