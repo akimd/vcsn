@@ -65,6 +65,11 @@ namespace vcsn
           finals_.set(input_->src_of(t));
 
         // The input initial states.
+        //
+        // We could start with pre only, but then on an input
+        // automaton without initial state, we would produce an empty
+        // automaton (no states).  This would not conform to Jacques'
+        // definition of determinization.
         state_set next;
         next.resize(state_size_);
         for (auto t : input_->initial_transitions())
