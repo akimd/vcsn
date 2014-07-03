@@ -284,8 +284,8 @@ namespace vcsn
     -> typename detail::composer<blind_automaton<1, Lhs>,
                                  blind_automaton<0, Rhs>>::automaton_t
   {
-    auto l = sort(blind<1>(lhs));
-    auto r = sort(insplit(blind<0>(rhs)));
+    auto l = sort(blind<1>(lhs))->strip();
+    auto r = sort(insplit(blind<0>(rhs)))->strip();
     detail::composer<decltype(l), decltype(r)> compose(l, r);
     return compose.compose();
   }

@@ -5,12 +5,16 @@
 # include <queue>
 # include <vector>
 
+# include <vcsn/core/permutation-automaton.hh>
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/algorithm.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/unordered_map.hh>
+
+# include <vcsn/algos/copy.hh> // real_context
+# include <vcsn/ctx/traits.hh> // base_t
 
 namespace vcsn
 {
@@ -43,7 +47,6 @@ namespace vcsn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Aut>
       bool
@@ -68,179 +71,109 @@ namespace vcsn
     template <typename Aut>
     class sorter
     {
-      using automaton_t = Aut;
-      using context_t = context_t_of<automaton_t>;
-      using weight_t = weight_t_of<automaton_t>;
-      using label_t = label_t_of<automaton_t>;
+      /// Input automaton type.
+      using input_automaton_t = Aut;
+
+      using input_state_t = state_t_of<input_automaton_t>;
+      using input_transition_t = transition_t_of<input_automaton_t>;
+
+      /// Result automaton type.
+      using automaton_t = permutation_automaton<input_automaton_t>;
       using state_t = state_t_of<automaton_t>;
-      using transition_t = transition_t_of<automaton_t>;
 
-      using labelset_t = labelset_t_of<automaton_t>;
-      using weightset_t = weightset_t_of<context_t>;
-      const automaton_t& a_;
-      const labelset_t& ls_;
-      const weightset_t& ws_;
-
-      automaton_t res_;
-      using res_state_t = state_t;
-
-      using pair_t = std::pair<state_t, res_state_t>;
-      std::queue<pair_t> todo_;
-
-      /// The map we're computing.
-      std::unordered_map<state_t, res_state_t> map_;
-
-      void initialize()
+      void visit_successors_of(input_state_t s, state_t res_s)
       {
-        todo_ = std::move(std::queue<pair_t>()); // There's no clear method.
-        map_.clear();
-        map_[a_->pre()] = res_->pre();
-        map_[a_->post()] = res_->post();
-        todo_.push({a_->pre(), res_->pre()});
-      }
-
-      void visit_successors_of(state_t s, res_state_t res_s)
-      {
-        std::vector<transition_t> ts;
+        std::vector<input_transition_t> ts;
         // Here a_->out(s) would just as well as a_->all_out(s) but it
         // would be slower; later we have to test one condition per
         // transition anyway, which is just the additional work
         // performed by out.
-        for (auto t: a_->all_out(s))
+        for (auto t: res_->input_->all_out(s))
           ts.emplace_back(t);
 
         std::sort(ts.begin(), ts.end(),
-                  [&](const transition_t t1, const transition_t t2) -> bool
+                  [&](const input_transition_t t1,
+                      const input_transition_t t2) -> bool
                   {
                     return transition_less_than(t1, t2);
                   });
 
         for (auto t: ts)
-          res_->new_transition_copy(res_s, state(a_->dst_of(t)), a_, t);
-      }
-
-      /// The output state corresponding to state \a s.
-      /// If this is a new state, schedule it for visit.
-      res_state_t state(state_t s)
-      {
-        // Benches show that the map_.emplace technique is slower, and
-        // then that operator[] is faster than emplace.
-        state_t res;
-        auto i = map_.find(s);
-        if (i == std::end(map_))
-          {
-            res = res_->new_state();
-            map_[s] = res;
-            todo_.push({s, res});
-          }
-        else
-          res = i->second;
-        return res;
+          res_->new_transition_copy(res_s, res_->state(res_->input_->dst_of(t)),
+                                    res_->input_, t);
       }
 
       void visit_and_update_res()
       {
-        while (! todo_.empty())
+        while (! res_->todo_.empty())
           {
-            pair_t p = todo_.front();
-            todo_.pop();
+            auto p = res_->todo_.front();
+            res_->todo_.pop();
             visit_successors_of(p.first, p.second);
           }
       }
 
       void push_inaccessible_states()
       {
-        // States are processed in order.
-        for (auto s: a_->all_states()) // Like above, a_->states() would work.
-          state(s);
+        // States are processed in order.  Like above, a_->states()
+        // would work.
+        for (auto s: res_->input_->all_states())
+          res_->state(s);
       }
 
-      bool transition_less_than(const transition_t t1,
-                                const transition_t t2) const
+      bool transition_less_than(const input_transition_t t1,
+                                const input_transition_t t2) const
         ATTRIBUTE_PURE
       {
         // We intentionally ignore source states: they should always
         // be identical when we call this.
-        assert(a_->src_of(t1) == a_->src_of(t2));
-        if (ls_.less_than(a_->label_of(t1), a_->label_of(t2)))
+        auto& aut = res_->input_;
+        assert(aut->src_of(t1) == aut->src_of(t2));
+        if (ls_.less_than(aut->label_of(t1), aut->label_of(t2)))
           return true;
-        else if (ls_.less_than(a_->label_of(t2), a_->label_of(t1)))
+        else if (ls_.less_than(aut->label_of(t2), aut->label_of(t1)))
           return false;
-        else if (ws_.less_than(a_->weight_of(t1), a_->weight_of(t2)))
+        else if (ws_.less_than(aut->weight_of(t1), aut->weight_of(t2)))
           return true;
-        else if (ws_.less_than(a_->weight_of(t2), a_->weight_of(t1)))
+        else if (ws_.less_than(aut->weight_of(t2), aut->weight_of(t1)))
           return false;
-        else if (a_->dst_of(t1) < a_->dst_of(t2))
+        else if (aut->dst_of(t1) < aut->dst_of(t2))
           return true;
-        else if (a_->dst_of(t2) < a_->dst_of(t1))
+        else if (aut->dst_of(t2) < aut->dst_of(t1))
           return false;
         else
           return false;
       }
 
     public:
-      sorter(const automaton_t& a)
-        : a_(a)
-        , ls_(*a_->labelset())
-        , ws_(*a_->weightset())
-        , res_(make_shared_ptr<automaton_t>(a_->context()))
+      sorter(const input_automaton_t& a)
+        : res_(make_shared_ptr<automaton_t>(a))
       {}
 
       automaton_t operator()()
       {
-        initialize();
         visit_and_update_res();
         push_inaccessible_states();
         visit_and_update_res();
         return std::move(res_);
       }
 
-      /// A map from renamed state to original state.
-      using origins_t = std::map<res_state_t, state_t>;
-      origins_t
-      origins()
-      {
-        origins_t res;
-        for (const auto& pair: map_)
-          if (pair.second != pair.first)
-            res[pair.second] = pair.first;
-        return res;
-      }
-
-      /// Print the origins.
-      static
-      std::ostream&
-      print(const origins_t& orig, std::ostream& o)
-      {
-        o << "/* Origins." << std::endl
-          << "    node [shape = box, style = rounded]" << std::endl;
-        for (auto p : orig)
-          if (2 <= p.first)
-            o << "    " << p.first - 2
-              << " [label = \"" << p.second - 2 << "\"]"
-              << std::endl;
-        o << "*/" << std::endl;
-        return o;
-      }
+    private:
+      /// Sorted automaton.
+      automaton_t res_;
+      const labelset_t_of<input_automaton_t>& ls_ = *res_->input_->labelset();
+      const weightset_t_of<input_automaton_t>& ws_ = *res_->input_->weightset();
     }; // class
   } // namespace
 
   template <typename Aut>
   inline
-  Aut
+  auto
   sort(const Aut& a)
+    -> permutation_automaton<Aut>
   {
     detail::sorter<Aut> sorter(a);
-    auto res = sorter();
-    // FIXME: Not terribly elegant.  But currently there's no mean to
-    // associate meta-data to states.
-    if (getenv("VCSN_ORIGINS"))
-      {
-        auto o = sorter.origins();
-        if (!o.empty())
-          sorter.print(o, std::cout);
-      }
-    return res;
+    return sorter();
   }
 
   namespace dyn

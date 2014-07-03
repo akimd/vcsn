@@ -25,6 +25,17 @@ namespace vcsn
     = std::shared_ptr<detail::mutable_automaton_impl<Context>>;
 
 
+  // vcsn/core/permutation-automaton.hh.
+  namespace detail
+  {
+    template <typename Aut>
+    class permutation_automaton_impl;
+  }
+  template <typename Aut>
+  using permutation_automaton
+    = std::shared_ptr<detail::permutation_automaton_impl<Aut>>;
+
+
   // vcsn/core/ratexp-automaton.hh.
   namespace detail
   {

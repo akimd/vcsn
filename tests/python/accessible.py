@@ -16,13 +16,11 @@ minab = load('lal_char_zmin/minab.gv')
 def check_accessible(input, output):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  if isinstance(output, str):
-    output = vcsn.automaton(output)
-  CHECK_EQ(True, output.is_accessible())
-  CHECK_EQ(output.sort(), input.accessible().sort())
+  CHECK_EQ(output, input.accessible())
+  CHECK_EQ(True, input.accessible().is_accessible())
 
 # Regression.
-a = vcsn.context('lal_char(abcd)_b').ratexp('ab+cd').standard()
+a = vcsn.context('lal_char(abcd)_b').ratexp('ab+cd').standard().sort().strip()
 check_accessible(a, a)
 
 # Cycle.
@@ -38,8 +36,7 @@ digraph {
     3 -> F5
     4 -> 1 [label="a"]
 }''',
-'''
-digraph
+'''digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
@@ -63,8 +60,7 @@ digraph
   3 -> F3
   3 -> 4 [label = "a"]
   4 -> 2 [label = "a"]
-}
-''')
+}''')
 
 
 # No final state.
@@ -78,8 +74,7 @@ digraph {
     4 -> 1 [label="a"]
 }
 ''',
-'''
-digraph
+'''digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
@@ -98,8 +93,7 @@ digraph
   0 -> 1 [label = "a", color = DimGray]
   1 -> 2 [label = "a", color = DimGray]
   2 -> 3 [label = "a", color = DimGray]
-}
-''')
+}''')
 
 # No initial state.
 check_accessible('''
@@ -112,13 +106,11 @@ digraph {
     4 -> 1[label="a"]
 }
 ''',
-'''
-digraph
+'''digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
-}
-''')
+}''')
 
 
 # Simple input.
@@ -133,8 +125,7 @@ digraph {
     4 -> 1[label="a"]
 }
 ''',
-'''
-digraph
+'''digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
@@ -155,8 +146,7 @@ digraph
   1 -> 2 [label = "a"]
   2 -> 3 [label = "a"]
   3 -> F3
-}
-''')
+}''')
 
 
 ## --------- ##
@@ -309,12 +299,12 @@ digraph
 def check_trim(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
-  if isinstance(exp, str):
-    exp = vcsn.automaton(exp)
-  CHECK_EQ(True, exp.is_trim())
-  CHECK_EQ(True, exp.is_accessible())
-  CHECK_EQ(True, exp.is_coaccessible())
-  CHECK_EQ(exp, input.trim())
+  aut = input.trim()
+  CHECK_EQ(exp, aut)
+  CHECK_EQ(True, aut.is_trim())
+  CHECK_EQ(True, aut.is_accessible())
+  CHECK_EQ(True, aut.is_coaccessible())
+
   CHECK_EQ(exp, input.coaccessible().accessible())
   CHECK_EQ(exp, input.accessible().coaccessible())
 
@@ -331,8 +321,7 @@ digraph
   1 -> 2 [label = a]
   I0 -> 0
 }
-''', '''
-digraph
+''', '''digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
@@ -349,8 +338,7 @@ digraph
   I0 -> 0
   0 -> 1 [label = "a"]
   1 -> F1
-}
-''')
+}''')
 
 check_trim('''
 digraph
@@ -365,8 +353,7 @@ digraph
   4 -> 0 [label = a]
   4 -> 5 [label = a]
 }
-''', '''
-digraph
+''', '''digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
@@ -386,5 +373,4 @@ digraph
   0 -> 2 [label = "a"]
   1 -> F1
   2 -> 0 [label = "a"]
-}
-''')
+}''')

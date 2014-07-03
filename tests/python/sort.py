@@ -9,24 +9,20 @@ def check(input, exp):
   if isinstance(input, str):
     input = vcsn.automaton(input)
   CHECK_EQ(False, input.is_out_sorted())
-  if isinstance(exp, str):
-    exp = vcsn.automaton(exp)
-  CHECK_EQ(True, exp.is_out_sorted())
-  CHECK_EQ(exp, input.sort())
+  aut = input.sort()
+  CHECK_EQ(exp, aut)
+  CHECK_EQ(True, aut.is_out_sorted())
 
 a = vcsn.automaton(r'''digraph
 {
   vcsn_context = "lal_char(a-e)_b"
   I -> 0
   2 -> F
-  0 -> 1 [label = b]
-  0 -> 2 [label = a]
-  1 -> 2 [label = b]
-  1 -> 0 [label = a]
-  2 -> 0 [label = b]
-  2 -> 1 [label = a]
+  0 -> 1 -> 2 -> 0 [label = b]
+  0 -> 2 -> 1 -> 0 [label = a]
 }''')
-b = vcsn.automaton(r'''digraph
+
+check(a, '''digraph
 {
   vcsn_context = "lal_char(abcde)_b"
   rankdir = LR
@@ -37,20 +33,41 @@ b = vcsn.automaton(r'''digraph
   }
   {
     node [shape = circle]
-    0
-    1
-    2
+    0 [label = "0", shape = box, style = rounded]
+    1 [label = "1", shape = box, style = rounded]
+    2 [label = "2", shape = box, style = rounded]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
   0 -> 2 [label = "b"]
   1 -> F1
-  1 -> 2 [label = "a"]
   1 -> 0 [label = "b"]
+  1 -> 2 [label = "a"]
   2 -> 0 [label = "a"]
   2 -> 1 [label = "b"]
-}
-''')
-check(a, b)
+}''')
 
-check(a.transpose(), b)
+check(a.transpose(), '''digraph
+{
+  vcsn_context = "lal_char(abcde)_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle]
+    0 [label = "1", shape = box, style = rounded]
+    1 [label = "0", shape = box, style = rounded]
+    2 [label = "2", shape = box, style = rounded]
+  }
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "b"]
+  1 -> F1
+  1 -> 0 [label = "b"]
+  1 -> 2 [label = "a"]
+  2 -> 0 [label = "a"]
+  2 -> 1 [label = "b"]
+}''')

@@ -10,7 +10,7 @@ def check(re, exp):
     # automaton we drop the hole in the state numbers created by
     # standard.
     a = ctx.ratexp(re).thompson()
-    CHECK_EQ(exp, str(a.sort()))
+    CHECK_EQ(exp, a)
     CHECK_EQ(True, a.is_normalized())
 
 def xfail(re):
@@ -58,7 +58,7 @@ r'''digraph
   {
     node [shape = point, width = 0]
     I0
-    F7
+    F1
   }
   {
     node [shape = circle]
@@ -72,16 +72,16 @@ r'''digraph
     7
   }
   I0 -> 0
-  0 -> 1 [label = "\\e"]
   0 -> 2 [label = "\\e"]
-  0 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> 5 [label = "a"]
-  3 -> 6 [label = "\\e"]
-  4 -> 7 [label = "\\e"]
-  5 -> 7 [label = "\\e"]
+  0 -> 4 [label = "\\e"]
+  0 -> 6 [label = "\\e"]
+  1 -> F1
+  2 -> 3 [label = "\\e"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "a"]
+  5 -> 1 [label = "\\e"]
   6 -> 7 [label = "\\e"]
-  7 -> F7
+  7 -> 1 [label = "\\e"]
 }''')
 
 # Z: "<12>\e+<23>a+<34>b".
@@ -93,7 +93,7 @@ r'''digraph
   {
     node [shape = point, width = 0]
     I0
-    F7
+    F1
   }
   {
     node [shape = circle]
@@ -107,16 +107,16 @@ r'''digraph
     7
   }
   I0 -> 0
-  0 -> 1 [label = "\\e"]
   0 -> 2 [label = "\\e"]
-  0 -> 3 [label = "\\e"]
-  1 -> 4 [label = "<12>\\e"]
-  2 -> 5 [label = "<23>a"]
-  3 -> 6 [label = "<34>b"]
-  4 -> 7 [label = "\\e"]
-  5 -> 7 [label = "\\e"]
-  6 -> 7 [label = "\\e"]
-  7 -> F7
+  0 -> 4 [label = "\\e"]
+  0 -> 6 [label = "\\e"]
+  1 -> F1
+  2 -> 3 [label = "<12>\\e"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "<23>a"]
+  5 -> 1 [label = "\\e"]
+  6 -> 7 [label = "<34>b"]
+  7 -> 1 [label = "\\e"]
 }''')
 
 # left weight.
@@ -128,7 +128,7 @@ r'''digraph
   {
     node [shape = point, width = 0]
     I0
-    F9
+    F1
   }
   {
     node [shape = circle]
@@ -144,19 +144,19 @@ r'''digraph
     9
   }
   I0 -> 0
-  0 -> 1 [label = "<12>\\e"]
   0 -> 2 [label = "<12>\\e"]
-  0 -> 3 [label = "<12>\\e"]
   0 -> 4 [label = "<12>\\e"]
-  1 -> 5 [label = "\\e"]
-  2 -> 6 [label = "a"]
-  3 -> 7 [label = "<10>b"]
-  4 -> 8 [label = "<10>\\e"]
-  5 -> 9 [label = "\\e"]
-  6 -> 9 [label = "\\e"]
-  7 -> 9 [label = "\\e"]
-  8 -> 9 [label = "\\e"]
-  9 -> F9
+  0 -> 6 [label = "<12>\\e"]
+  0 -> 8 [label = "<12>\\e"]
+  1 -> F1
+  2 -> 3 [label = "\\e"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "a"]
+  5 -> 1 [label = "\\e"]
+  6 -> 7 [label = "<10>b"]
+  7 -> 1 [label = "\\e"]
+  8 -> 9 [label = "<10>\\e"]
+  9 -> 1 [label = "\\e"]
 }''')
 
 # right weight.
@@ -168,7 +168,7 @@ r'''digraph
   {
     node [shape = point, width = 0]
     I0
-    F9
+    F1
   }
   {
     node [shape = circle]
@@ -184,19 +184,19 @@ r'''digraph
     9
   }
   I0 -> 0
-  0 -> 1 [label = "\\e"]
   0 -> 2 [label = "\\e"]
-  0 -> 3 [label = "\\e"]
   0 -> 4 [label = "\\e"]
-  1 -> 5 [label = "\\e"]
-  2 -> 6 [label = "a"]
-  3 -> 7 [label = "<2>b"]
-  4 -> 8 [label = "<3>\\e"]
-  5 -> 9 [label = "<10>\\e"]
-  6 -> 9 [label = "<10>\\e"]
-  7 -> 9 [label = "<10>\\e"]
-  8 -> 9 [label = "<10>\\e"]
-  9 -> F9
+  0 -> 6 [label = "\\e"]
+  0 -> 8 [label = "\\e"]
+  1 -> F1
+  2 -> 3 [label = "\\e"]
+  3 -> 1 [label = "<10>\\e"]
+  4 -> 5 [label = "a"]
+  5 -> 1 [label = "<10>\\e"]
+  6 -> 7 [label = "<2>b"]
+  7 -> 1 [label = "<10>\\e"]
+  8 -> 9 [label = "<3>\\e"]
+  9 -> 1 [label = "<10>\\e"]
 }''')
 
 ## ------------ ##
@@ -259,8 +259,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I2
+    F3
   }
   {
     node [shape = circle]
@@ -269,13 +269,13 @@ r'''digraph
     2
     3
   }
-  I0 -> 0
+  I2 -> 2
   0 -> 1 [label = "\\e"]
-  0 -> 2 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
   1 -> 3 [label = "\\e"]
-  2 -> F2
-  3 -> 1 [label = "\\e"]
-  3 -> 2 [label = "\\e"]
+  2 -> 0 [label = "\\e"]
+  2 -> 3 [label = "\\e"]
+  3 -> F3
 }''')
 
 check('(?@lan_char(ab)_z)(<2>a)*',
@@ -285,8 +285,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I2
+    F3
   }
   {
     node [shape = circle]
@@ -295,13 +295,13 @@ r'''digraph
     2
     3
   }
-  I0 -> 0
-  0 -> 1 [label = "\\e"]
-  0 -> 2 [label = "\\e"]
-  1 -> 3 [label = "<2>a"]
-  2 -> F2
-  3 -> 1 [label = "\\e"]
-  3 -> 2 [label = "\\e"]
+  I2 -> 2
+  0 -> 1 [label = "<2>a"]
+  1 -> 0 [label = "\\e"]
+  1 -> 3 [label = "\\e"]
+  2 -> 0 [label = "\\e"]
+  2 -> 3 [label = "\\e"]
+  3 -> F3
 }''')
 
 check('(?@lan_char(ab)_z)<2>a*<3>',
@@ -311,8 +311,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I2
+    F3
   }
   {
     node [shape = circle]
@@ -321,13 +321,13 @@ r'''digraph
     2
     3
   }
-  I0 -> 0
-  0 -> 1 [label = "<2>\\e"]
-  0 -> 2 [label = "<6>\\e"]
-  1 -> 3 [label = "a"]
-  2 -> F2
-  3 -> 1 [label = "\\e"]
-  3 -> 2 [label = "<3>\\e"]
+  I2 -> 2
+  0 -> 1 [label = "a"]
+  1 -> 0 [label = "\\e"]
+  1 -> 3 [label = "<3>\\e"]
+  2 -> 0 [label = "<2>\\e"]
+  2 -> 3 [label = "<6>\\e"]
+  3 -> F3
 }''')
 
 check('(?@lan_char(ab)_z)(<2>a+<3>b)*',
@@ -337,8 +337,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I6
+    F7
   }
   {
     node [shape = circle]
@@ -351,18 +351,18 @@ r'''digraph
     6
     7
   }
-  I0 -> 0
-  0 -> 1 [label = "\\e"]
+  I6 -> 6
   0 -> 2 [label = "\\e"]
-  1 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> F2
-  3 -> 5 [label = "<2>a"]
-  4 -> 6 [label = "<3>b"]
-  5 -> 7 [label = "\\e"]
+  0 -> 4 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
+  1 -> 7 [label = "\\e"]
+  2 -> 3 [label = "<2>a"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "<3>b"]
+  5 -> 1 [label = "\\e"]
+  6 -> 0 [label = "\\e"]
   6 -> 7 [label = "\\e"]
-  7 -> 1 [label = "\\e"]
-  7 -> 2 [label = "\\e"]
+  7 -> F7
 }''')
 
 check('(?@lan_char(ab)_z)<2>(<3>a+<5>b)*<7>',
@@ -372,8 +372,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I6
+    F7
   }
   {
     node [shape = circle]
@@ -386,18 +386,18 @@ r'''digraph
     6
     7
   }
-  I0 -> 0
-  0 -> 1 [label = "<2>\\e"]
-  0 -> 2 [label = "<14>\\e"]
-  1 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> F2
-  3 -> 5 [label = "<3>a"]
-  4 -> 6 [label = "<5>b"]
-  5 -> 7 [label = "\\e"]
-  6 -> 7 [label = "\\e"]
-  7 -> 1 [label = "\\e"]
-  7 -> 2 [label = "<7>\\e"]
+  I6 -> 6
+  0 -> 2 [label = "\\e"]
+  0 -> 4 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
+  1 -> 7 [label = "<7>\\e"]
+  2 -> 3 [label = "<3>a"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "<5>b"]
+  5 -> 1 [label = "\\e"]
+  6 -> 0 [label = "<2>\\e"]
+  6 -> 7 [label = "<14>\\e"]
+  7 -> F7
 }''')
 
 check('(?@lan_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
@@ -407,8 +407,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I4
+    F5
   }
   {
     node [shape = circle]
@@ -419,15 +419,15 @@ r'''digraph
     4
     5
   }
-  I0 -> 0
-  0 -> 1 [label = "<2>\\e"]
-  0 -> 2 [label = "<14>\\e"]
-  1 -> 3 [label = "<3>a"]
-  2 -> F2
-  3 -> 4 [label = "\\e"]
-  4 -> 5 [label = "<5>b"]
-  5 -> 1 [label = "\\e"]
-  5 -> 2 [label = "<7>\\e"]
+  I4 -> 4
+  0 -> 1 [label = "<3>a"]
+  1 -> 2 [label = "\\e"]
+  2 -> 3 [label = "<5>b"]
+  3 -> 0 [label = "\\e"]
+  3 -> 5 [label = "<7>\\e"]
+  4 -> 0 [label = "<2>\\e"]
+  4 -> 5 [label = "<14>\\e"]
+  5 -> F5
 }''')
 
 check('(?@lan_char(ab)_z)a**',
@@ -437,8 +437,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I4
+    F5
   }
   {
     node [shape = circle]
@@ -449,17 +449,17 @@ r'''digraph
     4
     5
   }
-  I0 -> 0
-  0 -> 1 [label = "\\e"]
-  0 -> 2 [label = "\\e"]
+  I4 -> 4
+  0 -> 1 [label = "a"]
+  1 -> 0 [label = "\\e"]
   1 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> F2
-  3 -> 5 [label = "a"]
-  4 -> 1 [label = "\\e"]
+  2 -> 0 [label = "\\e"]
+  2 -> 3 [label = "\\e"]
+  3 -> 2 [label = "\\e"]
+  3 -> 5 [label = "\\e"]
   4 -> 2 [label = "\\e"]
-  5 -> 3 [label = "\\e"]
-  5 -> 4 [label = "\\e"]
+  4 -> 5 [label = "\\e"]
+  5 -> F5
 }''')
 
 ## ---------- ##
@@ -473,8 +473,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I10
+    F11
   }
   {
     node [shape = circle]
@@ -491,22 +491,22 @@ r'''digraph
     10
     11
   }
-  I0 -> 0
-  0 -> 1 [label = "\\e"]
+  I10 -> 10
   0 -> 2 [label = "\\e"]
-  1 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> F2
-  3 -> 5 [label = "<e>\\e"]
-  4 -> 6 [label = "a"]
-  5 -> 7 [label = "\\e"]
-  6 -> 8 [label = "\\e"]
-  7 -> 1 [label = "\\e"]
-  7 -> 2 [label = "\\e"]
-  8 -> 9 [label = "b"]
-  9 -> 10 [label = "\\e"]
-  10 -> 11 [label = "c"]
-  11 -> 7 [label = "\\e"]
+  0 -> 4 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
+  1 -> 11 [label = "\\e"]
+  2 -> 3 [label = "<e>\\e"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "a"]
+  5 -> 6 [label = "\\e"]
+  6 -> 7 [label = "b"]
+  7 -> 8 [label = "\\e"]
+  8 -> 9 [label = "c"]
+  9 -> 1 [label = "\\e"]
+  10 -> 0 [label = "\\e"]
+  10 -> 11 [label = "\\e"]
+  11 -> F11
 }''')
 
 check('(?@lan_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+ab<f>)*',
@@ -516,8 +516,8 @@ r'''digraph
   rankdir = LR
   {
     node [shape = point, width = 0]
-    I0
-    F2
+    I8
+    F9
   }
   {
     node [shape = circle]
@@ -532,20 +532,20 @@ r'''digraph
     8
     9
   }
-  I0 -> 0
-  0 -> 1 [label = "\\e"]
+  I8 -> 8
   0 -> 2 [label = "\\e"]
-  1 -> 3 [label = "\\e"]
-  1 -> 4 [label = "\\e"]
-  2 -> F2
-  3 -> 5 [label = "<e>\\e"]
-  4 -> 6 [label = "a"]
-  5 -> 7 [label = "\\e"]
-  6 -> 8 [label = "\\e"]
+  0 -> 4 [label = "\\e"]
+  1 -> 0 [label = "\\e"]
+  1 -> 9 [label = "\\e"]
+  2 -> 3 [label = "<e>\\e"]
+  3 -> 1 [label = "\\e"]
+  4 -> 5 [label = "a"]
+  5 -> 6 [label = "\\e"]
+  6 -> 7 [label = "<f>b"]
   7 -> 1 [label = "\\e"]
-  7 -> 2 [label = "\\e"]
-  8 -> 9 [label = "<f>b"]
-  9 -> 7 [label = "\\e"]
+  8 -> 0 [label = "\\e"]
+  8 -> 9 [label = "\\e"]
+  9 -> F9
 }''')
 
 # Make sure that the initial weight of the rhs of the concatenation is
@@ -558,7 +558,7 @@ r'''digraph
   {
     node [shape = point, width = 0]
     I0
-    F7
+    F3
   }
   {
     node [shape = circle]
@@ -574,11 +574,11 @@ r'''digraph
   I0 -> 0
   0 -> 1 [label = "<x>a"]
   1 -> 2 [label = "\\e"]
-  2 -> 3 [label = "\\e"]
   2 -> 4 [label = "\\e"]
-  3 -> 5 [label = "<y>\\e"]
-  4 -> 6 [label = "<z>a"]
-  5 -> 7 [label = "\\e"]
-  6 -> 7 [label = "\\e"]
-  7 -> F7
+  2 -> 6 [label = "\\e"]
+  3 -> F3
+  4 -> 5 [label = "<y>\\e"]
+  5 -> 3 [label = "\\e"]
+  6 -> 7 [label = "<z>a"]
+  7 -> 3 [label = "\\e"]
 }''')

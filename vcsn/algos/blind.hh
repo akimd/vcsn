@@ -68,8 +68,7 @@ namespace vcsn
                                    - Band - 1>::type>;
 
       using labelset_t
-        = typename std::tuple_element<Band,
-                                      typename labelset_t_of<automaton_t>::valuesets_t>::type;
+        = typename labelset_t_of<automaton_t>::template valueset_t<Band>;
       using hidden_labelset_t = labelset_t_of<automaton_t>;
 
       // All bands except the exposed one
@@ -128,7 +127,7 @@ namespace vcsn
     private:
       hidden_indices_t hidden_indices{};
 
-      static label_t hide_(hidden_label_t l)
+      static typename labelset_t::value_t hide_(hidden_label_t l)
       {
         return std::get<Band>(l);
       }
@@ -168,7 +167,7 @@ namespace vcsn
       `----------------------------*/
 
       auto label_of(transition_t t) const
-        -> decltype(hide_(this->aut_->label_of(t)))
+        -> typename labelset_t::value_t
       {
         return hide_(this->aut_->label_of(t));
       }

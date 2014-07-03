@@ -3,14 +3,11 @@
 import vcsn
 from test import *
 
-# check complete algorithm
-# ------------------------
-def check(i, o):
+def check(i, exp):
   i = vcsn.automaton(i)
-  o = vcsn.automaton(o)
-  CHECK_EQ(o.sort(), i.insplit().sort())
+  CHECK_EQ(exp, i.insplit())
   # Idempotence.
-  CHECK_EQ(o.sort(), o.insplit().sort())
+  CHECK_EQ(exp, i.insplit().insplit())
 
 
 check('''
@@ -43,23 +40,22 @@ digraph
   0 -> 2 [label = "b"]
   1 -> 2 [label = "c"]
   2 -> F2
-}
-''')
+}''')
 
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lan_char(abc)_b"
 
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 2 [label = "\\\\e"]
+  0 -> 2 [label = "\\e"]
   1 -> 2 [label = "c"]
   2 -> F2
-}''','''digraph
+}''',r'''digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lan<lal_char(abc)>_b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -76,26 +72,25 @@ digraph
   }
   I0 -> 0
   0 -> 1 [label = "a"]
-  0 -> 3 [label = "\\\\e"]
-  1 -> 2 [label = "c"]
+  0 -> 2 [label = "\\e"]
+  1 -> 3 [label = "c"]
   2 -> F2
   3 -> F3
-}
-''')
+}''')
 
-check('''
+check(r'''
 digraph
 {
   vcsn_context = "lan_char(abc)_b"
 
   I0 -> 0
-  0 -> 1 [label = "\\\\e"]
-  0 -> 2 [label = "\\\\e"]
+  0 -> 1 [label = "\\e"]
+  0 -> 2 [label = "\\e"]
   1 -> 2 [label = "c"]
   2 -> F2
-}''','''digraph
+}''', r'''digraph
 {
-  vcsn_context = "lan_char(abc)_b"
+  vcsn_context = "lan<lal_char(abc)>_b"
   rankdir = LR
   {
     node [shape = point, width = 0]
@@ -111,10 +106,9 @@ digraph
     3
   }
   I0 -> 0
-  0 -> 1 [label = "\\\\e"]
-  0 -> 3 [label = "\\\\e"]
-  1 -> 2 [label = "c"]
+  0 -> 1 [label = "\\e"]
+  0 -> 2 [label = "\\e"]
+  1 -> 3 [label = "c"]
   2 -> F2
   3 -> F3
-}
-''')
+}''')

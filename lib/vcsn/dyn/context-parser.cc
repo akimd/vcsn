@@ -16,6 +16,7 @@ namespace vcsn
           || w == "determinized"
           || w == "mutable"
           || w == "pair"
+          || w == "permutation"
           || w == "product"
           || w == "ratexp"
           || w == "subset"
@@ -233,6 +234,7 @@ namespace vcsn
       else if (prefix == "determinized"
                || prefix == "linear"
                || prefix == "pair"
+               || prefix == "permutation"
                || prefix == "ratexp"
                || prefix == "subset"
                || prefix == "transpose")

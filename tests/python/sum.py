@@ -10,8 +10,7 @@ ctxr = vcsn.context('lal_char(d)_r')
 
 ab = vcsn.context('lal_char(ab)_b').ratexp('(a+b)*').standard()
 bc = vcsn.context('lal_char(bc)_b').ratexp('(b+c)*').standard()
-result = vcsn.automaton('''
-digraph
+result = '''digraph
 {
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
@@ -50,9 +49,8 @@ digraph
   4 -> F4
   4 -> 3 [label = "b"]
   4 -> 4 [label = "c"]
-}
-''')
-CHECK_EQ(ab.sum(bc), result)
+}'''
+CHECK_EQ(result, ab.sum(bc))
 
 a = vcsn.automaton('''
 digraph
@@ -102,8 +100,7 @@ digraph
 }
 ''')
 
-result = vcsn.automaton('''
-digraph
+result = '''digraph
 {
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
@@ -122,22 +119,20 @@ digraph
   }
   I0 -> 0
   0 -> 1 [label = "[a-c]"]
-  0 -> 2 [label = "[a-c]"]
-  1 -> 3 [label = "b"]
+  0 -> 3 [label = "[a-c]"]
+  1 -> 2 [label = "b"]
   2 -> F2
   2 -> 2 [label = "a, b"]
   3 -> F3
   3 -> 3 [label = "a, b"]
-}
-''')
-CHECK_EQ(a.sum(b).sort(), result)
+}'''
+CHECK_EQ(result, a.sum(b))
 
 # Check union of contexts.
 a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
 b = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
 
-result = vcsn.automaton('''
-digraph
+result = '''digraph
 {
   vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
   rankdir = LR
@@ -162,9 +157,8 @@ digraph
   1 -> 1 [label = "a"]
   2 -> F2
   2 -> 2 [label = "b"]
-}
-''')
-CHECK_EQ(a.sum(b), result)
+}'''
+CHECK_EQ(result, a.sum(b))
 
 
 ## ------------------------- ##
