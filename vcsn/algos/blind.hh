@@ -204,10 +204,77 @@ namespace vcsn
       | const methods that change.  |
       `----------------------------*/
 
+      /// Apparent label of a transition.
       auto label_of(transition_t t) const
         -> label_t
       {
         return hide_(aut_->label_of(t));
+      }
+
+      // FIXME: http://llvm.org/bugs/show_bug.cgi?id=20175.
+      // using super_t::out;
+      auto
+      out(state_t s) const
+        -> decltype(aut_->out(s))
+      {
+        return aut_->out(s);
+      }
+
+      /// Indexes of all transitions leaving state \a s on label \a l.
+      /// Invalidated by del_transition() and del_state().
+      ///
+      /// FIXME: costly structure.
+      std::vector<transition_t>
+      out(state_t s, const label_t& l) const
+      {
+        std::vector<transition_t> res;
+        for (auto t: aut_->all_out(s))
+          if (labelset()->equals(label_of(t), l))
+            res.emplace_back(t);
+        return res;
+      }
+
+      /// Indexes of all transitions leaving state \a s on label \a l.
+      /// Invalidated by del_transition() and del_state().
+      ///
+      /// FIXME: costly structure.
+      using super_t::in;
+      std::vector<transition_t>
+      in(state_t s, const label_t& l) const
+      {
+        std::vector<transition_t> res;
+        for (auto t: aut_->all_in(s))
+          if (this->labelset()->equals(label_of(t), l))
+            res.emplace_back(t);
+        return res;
+      }
+
+      // FIXME: Having support for predicates in
+      // mutable_automaton::get_transition would help.
+      transition_t
+      get_transition(state_t src, state_t dst, label_t l) const
+      {
+        for (auto t: out(src, l))
+          if (aut_->dst_of(t) == dst)
+            return t;
+        return aut_->null_transition();
+      }
+
+      /// Apparent label of a transition.
+      bool
+      has_transition(state_t src, state_t dst, label_t l) const
+      {
+        return get_transition(src, dst, l) != aut_->null_transition();
+      }
+
+      using super_t::del_transition;
+      /// Apparent label of a transition.
+      void
+      del_transition(state_t src, state_t dst, label_t l)
+      {
+        auto t = get_transition(src, dst, l);
+        if (t != aut_->null_transition())
+          aut_->del_transition(t);
       }
 
       /// Copy the full wrapped transition.
@@ -233,6 +300,24 @@ namespace vcsn
         return aut_->add_transition_copy(src, dst,
                                          aut->strip(), t, transpose);
       }
+
+#define DEFINE(Name, Sig)                       \
+      auto Name Sig                             \
+      {                                         \
+        raise("blind: cannot provide " #Name);  \
+      }
+
+      DEFINE(add_transition,
+             (state_t, state_t, label_t, weight_t) -> weight_t);
+      DEFINE(add_transition,
+             (state_t, state_t, label_t) -> weight_t);
+      DEFINE(new_transition,
+             (state_t, state_t, label_t, weight_t) -> transition_t);
+      DEFINE(new_transition,
+             (state_t, state_t, label_t) -> transition_t);
+      DEFINE(set_transition,
+             (state_t, state_t, label_t, weight_t) -> transition_t);
+#undef DEFINE
 
     private:
       /// Our apparent context.  This is not a luxury to cache it:
