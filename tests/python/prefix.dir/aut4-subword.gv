@@ -1,0 +1,35 @@
+digraph
+{
+  vcsn_context = "lan<lal_char(abc)>_z"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F6
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+    4
+    5 [color = DimGray]
+    6
+    7 [color = DimGray]
+    8 [color = DimGray]
+  }
+  I0 -> 0
+  0 -> 1 [label = "<3>\\e, <3>a"]
+  0 -> 2 [label = "\\e, b"]
+  1 -> 3 [label = "<5>\\e, <5>c"]
+  2 -> 3 [label = "\\e, b"]
+  2 -> 4 [label = "<7>\\e, <7>a"]
+  2 -> 5 [label = "\\e, c", color = DimGray]
+  3 -> 6 [label = "<2>\\e, <2>b"]
+  4 -> 2 [label = "\\e, a"]
+  4 -> 5 [label = "<9>\\e, <9>b", color = DimGray]
+  6 -> F6 [label = "<16>"]
+  6 -> 7 [label = "\\e, a", color = DimGray]
+  8 -> 0 [label = "\\e, c", color = DimGray]
+}

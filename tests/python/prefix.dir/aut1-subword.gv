@@ -1,0 +1,23 @@
+digraph
+{
+  vcsn_context = "lan<lal_char(abc)>_z"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F3
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+  }
+  I0 -> 0
+  0 -> 1 [label = "<3>\\e, <3>a"]
+  1 -> 2 [label = "<5>\\e, <5>b"]
+  2 -> 2 [label = "<7>\\e, <7>a"]
+  2 -> 3 [label = "<4>\\e, <4>c"]
+  3 -> F3 [label = "<11>"]
+}

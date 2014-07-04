@@ -150,6 +150,26 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/small-weighted.gv            \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
+  %D%/prefix.dir/aut1-factor.gv                 \
+  %D%/prefix.dir/aut1-prefix.gv                 \
+  %D%/prefix.dir/aut1-subword.gv                \
+  %D%/prefix.dir/aut1-suffix.gv                 \
+  %D%/prefix.dir/aut1.gv                        \
+  %D%/prefix.dir/aut2-factor.gv                 \
+  %D%/prefix.dir/aut2-prefix.gv                 \
+  %D%/prefix.dir/aut2-subword.gv                \
+  %D%/prefix.dir/aut2-suffix.gv                 \
+  %D%/prefix.dir/aut2.gv                        \
+  %D%/prefix.dir/aut3-factor.gv                 \
+  %D%/prefix.dir/aut3-prefix.gv                 \
+  %D%/prefix.dir/aut3-subword.gv                \
+  %D%/prefix.dir/aut3-suffix.gv                 \
+  %D%/prefix.dir/aut3.gv                        \
+  %D%/prefix.dir/aut4-factor.gv                 \
+  %D%/prefix.dir/aut4-prefix.gv                 \
+  %D%/prefix.dir/aut4-subword.gv                \
+  %D%/prefix.dir/aut4-suffix.gv                 \
+  %D%/prefix.dir/aut4.gv                        \
   %D%/product.dir/a.gv                          \
   %D%/product.dir/ab.gv                         \
   %D%/product.dir/abc.gv                        \
@@ -171,6 +191,7 @@ EXTRA_DIST +=                                   \
 %D%/infiltration.log:    $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/minimize.log:        $(wildcard $(srcdir)/%D%/minimize.dir/*)
 %D%/power.log:           $(wildcard $(srcdir)/%D%/power.dir/*)
+%D%/prefix.log:          $(wildcard $(srcdir)/%D%/prefix.dir/*)
 %D%/product.log:         $(wildcard $(srcdir)/%D%/product.dir/*)
 %D%/union.log:           $(wildcard $(srcdir)/%D%/union.dir/*)
 

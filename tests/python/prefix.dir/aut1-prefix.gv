@@ -1,0 +1,29 @@
+digraph
+{
+  vcsn_context = "lal_char(abc)_z"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+    F1
+    F2
+    F3
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+    3
+  }
+  I0 -> 0
+  0 -> F0
+  0 -> 1 [label = "<3>a"]
+  1 -> F1
+  1 -> 2 [label = "<5>b"]
+  2 -> F2
+  2 -> 2 [label = "<7>a"]
+  2 -> 3 [label = "<4>c"]
+  3 -> F3 [label = "<11>"]
+}
