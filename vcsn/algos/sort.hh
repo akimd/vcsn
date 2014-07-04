@@ -67,7 +67,7 @@ namespace vcsn
   `-------*/
   namespace detail
   {
-
+    /// A function to sort an automaton.
     template <typename Aut>
     class sorter
     {
@@ -81,7 +81,31 @@ namespace vcsn
       using automaton_t = permutation_automaton<input_automaton_t>;
       using state_t = state_t_of<automaton_t>;
 
-      void visit_successors_of(input_state_t s, state_t res_s)
+    public:
+      sorter(const input_automaton_t& a)
+        : res_(make_shared_ptr<automaton_t>(a))
+      {}
+
+      automaton_t operator()()
+      {
+        visit_and_update_res_();
+        push_inaccessible_states_();
+        visit_and_update_res_();
+        return std::move(res_);
+      }
+
+    private:
+      void visit_and_update_res_()
+      {
+        while (! res_->todo_.empty())
+          {
+            auto p = res_->todo_.front();
+            res_->todo_.pop();
+            visit_successors_of_(p.first, p.second);
+          }
+      }
+
+      void visit_successors_of_(input_state_t s, state_t res_s)
       {
         std::vector<input_transition_t> ts;
         // Here a_->out(s) would just as well as a_->all_out(s) but it
@@ -95,7 +119,7 @@ namespace vcsn
                   [&](const input_transition_t t1,
                       const input_transition_t t2) -> bool
                   {
-                    return transition_less_than(t1, t2);
+                    return transition_less_than_(t1, t2);
                   });
 
         for (auto t: ts)
@@ -103,17 +127,7 @@ namespace vcsn
                                     res_->input_, t);
       }
 
-      void visit_and_update_res()
-      {
-        while (! res_->todo_.empty())
-          {
-            auto p = res_->todo_.front();
-            res_->todo_.pop();
-            visit_successors_of(p.first, p.second);
-          }
-      }
-
-      void push_inaccessible_states()
+      void push_inaccessible_states_()
       {
         // States are processed in order.  Like above, a_->states()
         // would work.
@@ -121,8 +135,8 @@ namespace vcsn
           res_->state(s);
       }
 
-      bool transition_less_than(const input_transition_t t1,
-                                const input_transition_t t2) const
+      bool transition_less_than_(const input_transition_t t1,
+                                 const input_transition_t t2) const
         ATTRIBUTE_PURE
       {
         // We intentionally ignore source states: they should always
@@ -145,20 +159,6 @@ namespace vcsn
           return false;
       }
 
-    public:
-      sorter(const input_automaton_t& a)
-        : res_(make_shared_ptr<automaton_t>(a))
-      {}
-
-      automaton_t operator()()
-      {
-        visit_and_update_res();
-        push_inaccessible_states();
-        visit_and_update_res();
-        return std::move(res_);
-      }
-
-    private:
       /// Sorted automaton.
       automaton_t res_;
       const labelset_t_of<input_automaton_t>& ls_ = *res_->input_->labelset();
