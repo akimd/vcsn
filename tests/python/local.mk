@@ -25,7 +25,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/concatenate.py                            \
   %D%/constant-term.py                          \
   %D%/context.py                                \
-  %D%/de-bruijn.py                              \
   %D%/derivation.py                             \
   %D%/determinize.py                            \
   %D%/difference.py                             \
@@ -49,7 +48,6 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-valid.py                               \
   %D%/kmul.py                                   \
   %D%/label.py                                  \
-  %D%/ladybird.py                               \
   %D%/lift.py                                   \
   %D%/minimize.py                               \
   %D%/prefix.py                                 \
@@ -132,6 +130,12 @@ EXTRA_DIST +=                                   \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
   %D%/eliminate-state.dir/lao.gv                \
   %D%/factory.dir/clique-a-4.gv                 \
+  %D%/factory.dir/de-bruijn-2.gv                \
+  %D%/factory.dir/de-bruijn-3.gv                \
+  %D%/factory.dir/double-ring-1-0.gv            \
+  %D%/factory.dir/double-ring-4-2-3.gv          \
+  %D%/factory.dir/ladybird-2-zmin.gv            \
+  %D%/factory.dir/ladybird-2.gv                 \
   %D%/factory.dir/u-5.gv                        \
   %D%/minimize.dir/incomplete-non-trim.gv       \
   %D%/minimize.dir/incomplete-non-trim.moore.gv \

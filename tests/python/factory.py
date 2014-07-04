@@ -6,6 +6,16 @@ import vcsn
 from test import *
 
 ## ----------- ##
+## de_bruijn.  ##
+## ----------- ##
+
+CHECK_EQ(vcsn.automaton.load(medir + '/de-bruijn-2.gv'),
+         vcsn.context('lal_char(ab)_b').de_bruijn(2))
+
+CHECK_EQ(vcsn.automaton.load(medir + '/de-bruijn-3.gv'),
+         vcsn.context('lal_char(xyz)_b').de_bruijn(3))
+
+## ----------- ##
 ## divkbaseb.  ##
 ## ----------- ##
 
@@ -42,58 +52,28 @@ digraph
 '''))
 
 CHECK_EQ(ctx.double_ring(1, [0]),
-vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(abcd)_b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F0
-  }
-  {
-    node [shape = circle]
-    0
-  }
-  I0 -> 0
-  0 -> F0
-  0 -> 0 [label = "a, b"]
-}
-'''))
+vcsn.automaton.load(medir + '/double-ring-1-0.gv'))
 
 CHECK_EQ(ctx.double_ring(4, [2, 3]),
-vcsn.automaton('''
-digraph
-{
-  vcsn_context = "lal_char(abcd)_b"
-  rankdir = LR
-  {
-    node [shape = point, width = 0]
-    I0
-    F2
-    F3
-  }
-  {
-    node [shape = circle]
-    0
-    1
-    2
-    3
-  }
-  I0 -> 0
-  0 -> 1 [label = "a"]
-  0 -> 3 [label = "b"]
-  1 -> 0 [label = "b"]
-  1 -> 2 [label = "a"]
-  2 -> F2
-  2 -> 1 [label = "b"]
-  2 -> 3 [label = "a"]
-  3 -> F3
-  3 -> 0 [label = "a"]
-  3 -> 2 [label = "b"]
-}
-'''))
+vcsn.automaton.load(medir + '/double-ring-4-2-3.gv'))
+
+
+## ---------- ##
+## ladybird.  ##
+## ---------- ##
+
+b = vcsn.context('lal_char(abc)_b')
+z = vcsn.context('lal_char(abc)_z')
+
+exp = vcsn.automaton.load(medir + '/ladybird-2.gv')
+
+CHECK_EQ(exp, b.ladybird(2))
+CHECK_EQ(vcsn.automaton(str(exp).replace('_b', '_z')), z.ladybird(2))
+
+exp = vcsn.automaton.load(medir + '/ladybird-2-zmin.gv')
+CHECK_EQ(exp,
+         vcsn.context('lal_char(abc)_zmin').ladybird(2))
+
 
 ## -------- ##
 ## random.  ##
