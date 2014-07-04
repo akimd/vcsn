@@ -453,7 +453,7 @@ namespace vcsn
       word_t synchro(heuristic_t heuristic)
       {
         init_synchro();
-        while (0 < todo_.size())
+        while (!todo_.empty())
           {
             int min = std::numeric_limits<int>::max();
             state_t s_min = 0;
@@ -477,7 +477,7 @@ namespace vcsn
         init_synchro(true);
         bool first = true;
         state_t previous = 0;
-        while (0 < todo_.size())
+        while (!todo_.empty())
           {
             int min = std::numeric_limits<int>::max();
             state_t s_min = 0;
@@ -512,7 +512,7 @@ namespace vcsn
         // The drawback of this algorithm is that it does not guarantee us to
         // converge, so we this to counter prevent potential infinite loops.
         unsigned count = 0;
-        while (0 < todo_.size())
+        while (!todo_.empty())
           {
             // compute lmin = arg min { phi_3(l) } forall l in labelset
             label_t lmin;
