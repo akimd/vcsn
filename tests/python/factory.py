@@ -5,6 +5,15 @@
 import vcsn
 from test import *
 
+## ------- ##
+## cerny.  ##
+## ------- ##
+
+a = vcsn.context('lal_char(abc)_b').cerny(6)
+CHECK_EQ(a.info()['number of states'], 6)
+CHECK_EQ(vcsn.automaton.load(medir + '/cerny-6.gv'), a)
+
+
 ## ----------- ##
 ## de_bruijn.  ##
 ## ----------- ##

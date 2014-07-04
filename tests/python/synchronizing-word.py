@@ -185,3 +185,9 @@ CHECK_EQ(str(synchro_regression.synchronizing_word('greedy')), 'bbb')
 CHECK_EQ(str(synchro_regression.synchronizing_word('synchrop')), 'bbb')
 CHECK_EQ(str(synchro_regression.synchronizing_word('synchropl')), 'bbb')
 CHECK_EQ(str(synchro_regression.synchronizing_word('fastsynchro')), 'bbb')
+
+# Check that the minimum length of cerny's automata match the cerny's
+# conjecture.
+
+for i in (10, 20, 30, 42):
+    CHECK_EQ(len(str(b.cerny(i).synchronizing_word('cycle'))), (i - 1) ** 2)

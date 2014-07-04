@@ -129,6 +129,7 @@ EXTRA_DIST +=                                   \
   %D%/eliminate-state.dir/lao-elim-1.gv         \
   %D%/eliminate-state.dir/lao-elim-2.gv         \
   %D%/eliminate-state.dir/lao.gv                \
+  %D%/factory.dir/cerny-6.gv                    \
   %D%/factory.dir/clique-a-4.gv                 \
   %D%/factory.dir/de-bruijn-2.gv                \
   %D%/factory.dir/de-bruijn-3.gv                \
