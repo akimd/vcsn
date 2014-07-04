@@ -173,7 +173,7 @@ vcsn.automaton(r'''digraph "a graph
   graph [a = "graph attribute",]
   edge [a = "edge attribute";]
   node [a = "node attribute"]
-  0 [a1 = a1, a2 = a2; a3 = a3 a4 = a4]
+  0:port:nw [a1 = a1, a2 = a2; a3 = a3 a4 = a4]
 }'''))
 
 ## --------------------------- ##

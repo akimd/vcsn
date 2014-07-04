@@ -142,6 +142,7 @@
   RBRACKET "]"
   EQ       "="
   ARROW    "->"
+  COLON    ":"
   COMMA    ","
   SEMI     ";"
   END      0
@@ -295,7 +296,7 @@ node_stmt:
 ;
 
 node_id:
-  ID
+  ID port.opt
   {
     // We need the editor to exist.
     require(bool(driver_.edit_), @$, ": no vcsn_context");
@@ -309,6 +310,16 @@ node_id:
       // numbered by their order of appearance in the file.
       driver_.edit_->add_state($$);
   }
+;
+
+// Let's no bother with compass_pt.  Which means that we accept too
+// many inputs: we should check that the last ID is
+// (n|ne|e|se|s|sw|w|nw|c|_), but even dot itself accepts 'foo:bar'.
+// Note that compass points are explicitly not reserved keywords.
+port.opt:
+  %empty        {}
+| ":" ID        {}
+| ":" ID ":" ID {}
 ;
 
 subgraph:

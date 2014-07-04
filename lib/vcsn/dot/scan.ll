@@ -55,6 +55,7 @@ NUM     [-]?("."{digit}+|{digit}+("."{digit}*)?)
   "]"        return TOK(RBRACKET);
   "="        return TOK(EQ);
   "->"       return TOK(ARROW);
+  ":"        return TOK(COLON);
   ","        return TOK(COMMA);
   ";"        return TOK(SEMI);
 
