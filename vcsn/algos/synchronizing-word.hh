@@ -695,16 +695,16 @@ namespace vcsn
       states.push_back(res->new_state());
 
     for (unsigned i = 0; i < num_states; ++i)
-    {
-      bool la = true;
-      for (auto l : ctx.labelset()->genset())
-        {
-          auto dest = (la || i == num_states - 1) ? (i + 1) % num_states : i;
-          res->add_transition(states[i], states[dest], l,
-                              ctx.weightset()->one());
-          la = false;
-        }
-    }
+      {
+        bool la = true;
+        for (auto l : ctx.labelset()->genset())
+          {
+            auto dest = (la || i == num_states - 1) ? (i + 1) % num_states : i;
+            res->add_transition(states[i], states[dest], l,
+                                ctx.weightset()->one());
+            la = false;
+          }
+      }
 
     res->set_initial(states[0]);
     res->set_final(states[0]);
