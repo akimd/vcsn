@@ -38,5 +38,4 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 
 for name in ['deterministic', 'epsilon', 'empty']:
     aut = vcsn.automaton(load(name))
-    exp = "{}-det-{}".format(name, 0);
-    check(aut, exp, True)
+    check(aut, name + "-det", True)
