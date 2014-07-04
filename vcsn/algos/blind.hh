@@ -42,19 +42,19 @@ namespace vcsn
     | blind_automaton.  |
     `------------------*/
 
-    /// Read-write on an automaton, that hides all bands but one.
-    template <std::size_t Band, typename Aut>
+    /// Read-write on an automaton, that hides all tapes but one.
+    template <std::size_t Tape, typename Aut>
     class blind_automaton_impl
       : public automaton_decorator<Aut,
-                                   blind_context_t<context_t_of<Aut>, Band>>
+                                   blind_context_t<context_t_of<Aut>, Tape>>
     {
     public:
       /// The type of the wrapped automaton.
       using automaton_t = Aut;
 
       static_assert(context_t_of<Aut>::is_lat, "requires labels_are_tuples");
-      static_assert(Band < labelset_t_of<Aut>::size(),
-                    "band outside of the tuple");
+      static_assert(Tape < labelset_t_of<Aut>::size(),
+                    "tape outside of the tuple");
 
       /// The type of automata to produce this kind of automata.  For
       /// instance, insplitting on a blind_automaton<const
@@ -62,7 +62,7 @@ namespace vcsn
       /// blind_automaton<mutable_automaton<Ctx>>, without the "inner"
       /// const.
       using automaton_nocv_t
-        = blind_automaton<Band,
+        = blind_automaton<Tape,
                           typename automaton_t::element_type::automaton_nocv_t>;
 
       /// This automaton's state and transition types are those of the
@@ -78,7 +78,7 @@ namespace vcsn
       using full_label_t = typename full_labelset_t::value_t;
 
       /// Exposed context.
-      using context_t = blind_context_t<full_context_t, Band>;
+      using context_t = blind_context_t<full_context_t, Tape>;
 
       /// Exposed labelset.
       using labelset_t = typename context_t::labelset_t;
@@ -93,11 +93,11 @@ namespace vcsn
       /// Indices of the remaining tapes.
       using hidden_indices_t
         = concat_sequence
-          <typename make_index_range<0, Band>::type,
-           typename make_index_range<Band + 1,
-                                     std::tuple_size<full_label_t>::value - Band - 1>::type>;
+          <typename make_index_range<0, Tape>::type,
+           typename make_index_range<Tape + 1,
+                                     std::tuple_size<full_label_t>::value - Tape - 1>::type>;
 
-      // All bands except the exposed one.
+      // All tapes except the exposed one.
       using res_labelset_t = typename hidden_label_type<Aut, hidden_indices_t>::type;
       using res_label_t = typename res_labelset_t::value_t;
 
@@ -115,13 +115,13 @@ namespace vcsn
 
       static std::string sname()
       {
-        return ("blind_automaton<" + std::to_string(Band) + ", "
+        return ("blind_automaton<" + std::to_string(Tape) + ", "
                 + automaton_t::element_type::sname() + ">");
       }
 
       std::string vname(bool full = true) const
       {
-        return ("blind_automaton<" + std::to_string(Band) + ", "
+        return ("blind_automaton<" + std::to_string(Tape) + ", "
                 + aut_->vname(full) + ">");
       }
 
@@ -157,7 +157,7 @@ namespace vcsn
       std::shared_ptr<labelset_t>
       labelset() const
       {
-        return std::make_shared<labelset_t>(aut_->labelset()->template set<Band>());
+        return std::make_shared<labelset_t>(aut_->labelset()->template set<Tape>());
       }
 
     private:
@@ -167,7 +167,7 @@ namespace vcsn
 
       static label_t hide_(full_label_t l)
       {
-        return std::get<Band>(l);
+        return std::get<Tape>(l);
       }
 
       template <std::size_t... I>
@@ -324,7 +324,7 @@ namespace vcsn
       /// benches show that in some cases, intensive (and admittedly
       /// wrong: they should have been cached on the caller side)
       /// calls to context() ruins the performances.
-      context_t context_ = blind_context<Band>(full_context());
+      context_t context_ = blind_context<Tape>(full_context());
     };
   }
 

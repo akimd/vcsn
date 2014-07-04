@@ -129,10 +129,10 @@ namespace vcsn
       }
     };
 
-    template <std::size_t Band, typename Aut>
-    struct real_context_impl<blind_automaton<Band, Aut>>
+    template <std::size_t Tape, typename Aut>
+    struct real_context_impl<blind_automaton<Tape, Aut>>
     {
-      static auto context(const blind_automaton<Band, Aut>& aut)
+      static auto context(const blind_automaton<Tape, Aut>& aut)
         -> decltype(aut->full_context())
       {
         return aut->full_context();

@@ -296,9 +296,9 @@ namespace vcsn
                                 [ls.one()]);
       }
 
-      /// If every band after this one has only incoming epsilon transitions,
+      /// If every tape after this one has only incoming epsilon transitions,
       /// add in the result automaton all the outgoing epsilon transitions of
-      /// the Ith band.
+      /// the Ith tape.
       template <std::size_t I>
       void
       add_one_transitions_(const state_t src, const pair_t& psrc,
@@ -317,7 +317,7 @@ namespace vcsn
             }
       }
 
-      /// Check if all the bands after the Ith have only incoming epsilon
+      /// Check if all the tapes after the Ith have only incoming epsilon
       /// transitions.
       template <std::size_t... I>
       bool has_epsilon_in(const pair_t& psrc, std::size_t i, seq<I...>) const
@@ -330,7 +330,7 @@ namespace vcsn
         return false;
       }
 
-      /// Check if all the bands before the Ith have only outgoing epsilon
+      /// Check if all the tapes before the Ith have only outgoing epsilon
       /// transitions.
       template <std::size_t... I>
       bool has_only_epsilon_out(const pair_t& psrc, std::size_t i, seq<I...>)
@@ -461,7 +461,7 @@ namespace vcsn
           else
             // The src state is visited for the first time, so all
             // these transitions are new.  *Except* in the case where
-            // we have a loop on some bands.
+            // we have a loop on some tapes.
             //
             // If add_product_transitions was called before (in the
             // case of infiltration), there may even exist such a

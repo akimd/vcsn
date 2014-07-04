@@ -210,8 +210,8 @@ LAL x LAN are now supported:
 ** compose: new algorithm (static, dyn, Python)
 A new algorithm has been introduced to allow the composition of two
 transducers.  It computes the accessible part of the transducer resulting
-from the composition of the second band of the first transducer with the
-first band of the second one.
+from the composition of the second tape of the first transducer with the
+first tape of the second one.
 
   >>> c1 = vcsn.context('lat<lan_char(abc),lan_char(ijk)>_b')
   >>> c2 = vcsn.context('lat<lan_char(ijk),lan_char(xyz)>_b')

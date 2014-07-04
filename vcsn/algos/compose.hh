@@ -48,7 +48,7 @@ namespace vcsn
 
       static_assert(std::is_same<labelset_t_of<clhs_t>,
                                  labelset_t_of<crhs_t>>::value,
-                    "common band must be of same type");
+                    "common tape must be of same type");
 
       using middle_labelset_t = labelset_t_of<clhs_t>;
       /// The type of context of the result.
