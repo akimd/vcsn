@@ -21,6 +21,21 @@ completion of the determinized automaton (yes, it was set to False in the
 bench of (1)), and (3) is the current version, which avoids considering
 unused letters.
 
+* 2014-07-01
+** prefix, suffix, factor, subword: new algorithms
+These four new functions (static, dyn and Python) take an automaton and
+return another that accepts a superset of its language:
+
+  - suffix makes each accessible state final (with unit weight)
+
+  - prefix makes each coaccessible state initial
+
+  - factor makes each useful state initial and final
+
+  - subword applies the Magnus transform: for each non spontaneous
+    transition (src, label, weight, dst), it adds a spontaneous transition
+    (src, one, weight, dst).
+
 * 2014-06-24
 ** minimize: new subset decorators, except for the "brzozowski" variant
 Minimizing an automaton now yields a decorated automaton keeping track of
