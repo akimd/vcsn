@@ -109,7 +109,7 @@ suffix_check(aut1, '''digraph
     1
     2
   }
-  I0 -> 0
+  I0 -> 0 [label = "<2>"]
   I1 -> 1
   I2 -> 2
   0 -> 1 [label = "<3>a"]
@@ -238,7 +238,7 @@ prefix_check(aut1, '''digraph
   0 -> 1 [label = "<3>a"]
   1 -> F1
   1 -> 2 [label = "<5>b"]
-  2 -> F2
+  2 -> F2 [label = "<11>"]
   2 -> 2 [label = "<7>b"]
 }''')
 

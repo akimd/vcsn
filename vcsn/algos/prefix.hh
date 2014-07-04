@@ -17,7 +17,9 @@ namespace vcsn
   suffix_here(Aut& aut)
   {
     for (auto s : accessible_states(aut))
-      if (s != aut->pre() && s != aut->post())
+      if (s != aut->pre()
+          && s != aut->post()
+          && !aut->is_initial(s))
         aut->set_initial(s);
     return aut;
   }
@@ -105,8 +107,10 @@ namespace vcsn
     for (auto s : useful_states(aut))
       if (s != aut->pre() && s != aut->post())
 	{
-	  aut->set_initial(s);
-	  aut->set_final(s);
+	  if (!aut->is_initial(s))
+	    aut->set_initial(s);
+	  if (!aut->is_final(s))
+	    aut->set_final(s);
 	}
     return aut;
   }
