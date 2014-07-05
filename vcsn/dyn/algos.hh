@@ -5,15 +5,13 @@
 # include <string>
 # include <vector>
 
+# include <vcsn/algos/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
 
 namespace vcsn
 {
-  // vcsn/algo/edit-automaton.hh.
-  class automaton_editor;
-
   namespace dyn LIBVCSN_API
   {
     /// The accessible subautomaton of \a aut.
@@ -43,7 +41,7 @@ namespace vcsn
     /// Focus on a specific tape of a tupleset automaton.
     automaton blind(automaton& aut, unsigned tape);
 
-    /// Produce a Černý automaton of \num_states states.
+    /// Produce a Černý automaton of \a num_states states.
     automaton cerny(const context& ctx, unsigned num_states);
 
     /// Repeated concatenation of \a aut with itself.
