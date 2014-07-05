@@ -313,6 +313,11 @@ struct automaton
     return vcsn::dyn::proper(val_, prune);
   }
 
+  automaton reduce() const
+  {
+    return vcsn::dyn::reduce(val_);
+  }
+
   automaton right_mult(const weight& w) const;
 
   polynomial shortest(unsigned max) const;
@@ -878,6 +883,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper, proper())
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
+    .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)
     .def("shortest", &automaton::shortest)
     .def("_shuffle", &automaton::shuffle_).staticmethod("_shuffle")

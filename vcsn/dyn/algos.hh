@@ -412,6 +412,9 @@ namespace vcsn
     /// \param ctx   the context.
     weight read_weight(std::istream& is, const context& ctx);
 
+    /// Reduce \a aut.
+    automaton reduce(const automaton& aut);
+
     /// The right-mult automaton with \a w as weight.
     /// \precondition aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);

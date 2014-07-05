@@ -4,7 +4,10 @@
 #include<vcsn/weightset/z.hh>
 #include<vcsn/weightset/q.hh>
 #include<vcsn/weightset/r.hh>
-#include<vcsn/core/mutable_automaton.hh>
+#include<vcsn/core/mutable-automaton.hh>
+#include<vcsn/dyn/automaton.hh>
+#include<vcsn/algos/copy.hh>
+#include<vcsn/algos/transpose.hh>
 
 #include <vector>
 #include <map>
@@ -59,7 +62,7 @@ namespace vcsn {
       struct select {
       template<typename Reduc, typename Vector>
       static unsigned find_pivot (Reduc* that, const Vector& v, unsigned begin, unsigned *permutation) {
-			      	that->find_pivot(v, begin, permutation);
+        return that->find_pivot(v, begin, permutation);
 			      }
       template<typename Reduc, typename Vector>
       static void reduce_vector(Reduc* that, Vector& vbasis,
@@ -82,7 +85,7 @@ namespace vcsn {
       struct select<variadic_mul_mixin<q_impl>> : select<void>{
       template<typename Reduc, typename Vector>
       static unsigned find_pivot (Reduc* that, const Vector& v, unsigned begin, unsigned *permutation) {
-			      	that->find_pivot_by_norm(v, begin, permutation);
+        return that->find_pivot_by_norm(v, begin, permutation);
 			      }
       };
 
@@ -90,7 +93,7 @@ namespace vcsn {
       struct select<variadic_mul_mixin<r_impl>> : select<void>{
       template<typename Reduc, typename Vector>
       static unsigned find_pivot (Reduc* that, const Vector& v, unsigned begin, unsigned *permutation) {
-			      	that->find_pivot_by_norm(v, begin, permutation);
+        return that->find_pivot_by_norm(v, begin, permutation);
 			      }
       };
   	
@@ -98,7 +101,7 @@ namespace vcsn {
       struct select<variadic_mul_mixin<z_impl>> : select<void>{
       template<typename Reduc, typename Vector>
       static unsigned find_pivot (Reduc* that, const Vector& v, unsigned begin, unsigned *permutation) {
-			      	that->find_pivot_by_norm(v, begin, permutation);
+        return that->find_pivot_by_norm(v, begin, permutation);
 			      }
       template<typename Reduc, typename Vector>
       static void reduce_vector(Reduc* that, Vector& vbasis,
@@ -106,30 +109,30 @@ namespace vcsn {
 			     	that->z_reduce_vector(vbasis, current, b, permutation);
 			     }
       template<typename Reduc, typename Vector>
-      static void normalisation_vector(Reduc* that, Vector& v, unsigned pivot, unsigned *permutation) {}
+      static void normalisation_vector(Reduc*, Vector&, unsigned, unsigned*) {}
 
       template<typename Reduc, typename Basis>
-      static void bottom_up_reduction(Reduc* that, Basis& basis, unsigned *permutation) {}
+      static void bottom_up_reduction(Reduc*, Basis&, unsigned*) {}
       };
   	
     template<typename Aut, typename AutOutput>
     class reductioner {
-      static_assert(Aut::context_t::is_lal,
+      static_assert(context_t_of<Aut>::is_lal,
                     "requires labels_are_letters");
 
       using automaton_t = Aut;
-      using context_t = typename automaton_t::context_t;
+      using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
       using output_automaton_t = AutOutput;
-      using label_t = typename automaton_t::label_t;
-      using state_t = typename automaton_t::state_t;
-      using output_state_t = typename output_automaton_t::state_t;
+      using label_t = label_t_of<automaton_t>;
+      using state_t = state_t_of<automaton_t>;
+      using output_state_t = state_t_of<output_automaton_t>;
       using weight_t = typename context_t::weight_t;
       using vector_t = std::vector<weight_t>;
       using matrix_t = std::vector<std::map<std::size_t, weight_t> > ;
       using matrix_set_t = std::map<label_t, matrix_t>;
       
-      const automaton_t& input;
+      automaton_t input;
       const context_t& context;
       const typename context_t::weightset_ptr weightset;
       
@@ -143,9 +146,9 @@ namespace vcsn {
       
     public:
       reductioner(const automaton_t& input) : input(input), 
-					      context(input.context()), 
-					      weightset(input.context().weightset()),
-					      output(input.context())
+					      context(input->context()), 
+					      weightset(input->context().weightset()),
+					      output(make_shared_ptr<output_automaton_t>(input->context()))
       {}
 
       /// Create the linear representation of the input
@@ -153,7 +156,7 @@ namespace vcsn {
       { 
 	std::unordered_map<state_t, unsigned>	state_to_index;
 	unsigned i = 0;
-	for(auto s: input.states())
+	for(auto s: input->states())
 	  state_to_index[s] = i++;
 	dimension = i;
 	if(dimension==0)
@@ -161,17 +164,17 @@ namespace vcsn {
 	init.resize(i);
 	final.resize(i);
 	//Computation of the initial vector
-	for(auto t : input.initial_transitions())
-	  init[state_to_index[input.dst_of(t)]] = input.weight_of(t);
+	for(auto t : input->initial_transitions())
+	  init[state_to_index[input->dst_of(t)]] = input->weight_of(t);
 	//Computation of the final vector
-	for(auto t : input.final_transitions())
-	  final[state_to_index[input.src_of(t)]] = input.weight_of(t);
+	for(auto t : input->final_transitions())
+	  final[state_to_index[input->src_of(t)]] = input->weight_of(t);
 	//For each letter, we define an adjency matrix
-	for(auto t : input.transitions()) {
-	  auto it = letter_matrix_set.find(input.label_of(t));
+	for(auto t : input->transitions()) {
+	  auto it = letter_matrix_set.find(input->label_of(t));
 	  if (it == letter_matrix_set.end())
-	    it = letter_matrix_set.insert(make_pair(input.label_of(t), matrix_t(dimension))).first;
-	  it->second[state_to_index[input.src_of(t)]][state_to_index[input.dst_of(t)]] = input.weight_of(t);
+	    it = letter_matrix_set.insert(make_pair(input->label_of(t), matrix_t(dimension))).first;
+	  it->second[state_to_index[input->src_of(t)]][state_to_index[input->dst_of(t)]] = input->weight_of(t);
 	}
       }
       
@@ -220,7 +223,7 @@ namespace vcsn {
       ///Norm for real numbers; a "stable" pivot should minimize this norm
       static weight_t norm(const r_weight_t& w)
       {
-	return abs(w)+abs(1/w);
+	return fabs(w)+fabs(1/w);
       }
       
       ///Norm for integrs numbers
@@ -443,29 +446,29 @@ namespace vcsn {
 	//1. States
 	std::vector<output_state_t> states(basis.size());
 	for(unsigned b=0; b<basis.size(); ++b)
-	  states[b]=output.new_state();
+	  states[b]=output->new_state();
 	//2. Initial vector
 	vector_t vect_new_basis(basis.size());
 	vector_in_new_basis(basis, init, vect_new_basis, permutation);
 	for(unsigned b=0; b<basis.size(); ++b)
-	  output.set_initial(states[b], vect_new_basis[b]);
+	  output->set_initial(states[b], vect_new_basis[b]);
 	//3. Each vector of the basis is a state; computation of the final function and the successor function
 	for(unsigned v=0; v<basis.size(); ++v) {
 	  weight_t k=scalar_product(basis[v],final);
 	  if(!weightset->is_zero(k))
-	    output.set_final(states[v],k);
+	    output->set_final(states[v],k);
 	  for (auto mu : letter_matrix_set) {//mu is a pair (letter,matrix)
 	    vector_t current(dimension);
 	    product_vector_matrix(basis[v], mu.second, current);     
 	    vector_in_new_basis(basis, current, vect_new_basis, permutation);
 	    for(unsigned b=0; b<basis.size(); ++b) 
-	      output.new_transition(states[v], states[b], mu.first, vect_new_basis[b]);
+	      output->new_transition(states[v], states[b], mu.first, vect_new_basis[b]);
 	  }
 	}
       }
       
       
-      const output_automaton_t& get_output() const {
+      output_automaton_t get_output() const {
   	return output;
       }
     };
