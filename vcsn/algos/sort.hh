@@ -19,7 +19,6 @@
 namespace vcsn
 {
 
-
   /*------------------.
   | is_label_sorted.  |
   `------------------*/
@@ -115,6 +114,20 @@ namespace vcsn
         for (auto t: res_->input_->all_out(s))
           ts.emplace_back(t);
 
+        // There is a difference in performance between using lambdas
+        // or std::bind.  See
+        // http://www.gockelhut.com/c++/articles/lambda_vs_bind and
+        // especially the bench program
+        // http://www.gockelhut.com/c++/files/lambda_vs_bind.cpp.
+        //
+        // It gives, with -O3
+        //
+        //                       Clang 3.5    GCC 4.9
+        //  lambda                    1001        7000
+        //  bind                3716166405  2530142000
+        //  bound lambda        2438421993  1700834000
+        //  boost bind          2925777511  2529615000
+        //  boost bound lambda  2420710412  1683458000
         std::sort(ts.begin(), ts.end(),
                   [&](const input_transition_t t1,
                       const input_transition_t t2) -> bool
