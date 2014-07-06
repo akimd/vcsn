@@ -298,21 +298,16 @@ namespace vcsn
       find_pivot_by_norm(const vector_t& v, unsigned begin,
                          unsigned* permutation)
       {
+        // FIXME: we lack an initialization of min.
         weight_t min;
-        unsigned pivot= dimension;
-        for (unsigned i = begin; i <dimension; ++i)
-          if (!weightset->is_zero(v[permutation[i]]))
+        unsigned pivot = dimension;
+        for (unsigned i = begin; i < dimension; ++i)
+          if (!weightset->is_zero(v[permutation[i]])
+              && (pivot == dimension
+                  || weightset->less_than(norm(v[permutation[i]]), min)))
             {
-              if (pivot==dimension)
-                {
-                  pivot=i;
-                  min=norm(v[permutation[i]]);
-                }
-              else if(weightset->less_than(norm(v[permutation[i]]),min))
-                {
-                  pivot=i;
-                  min=norm(v[permutation[i]]);
-                }
+              pivot = i;
+              min = norm(v[permutation[i]]);
             }
         return pivot;
       }
@@ -375,7 +370,7 @@ namespace vcsn
         weight_t cp = current[pivot];
         weight_t a,b;
         weight_t g = gcd(bp, cp, a, b);
-        bp = bp/g;
+        bp /= g;
         cp /= g;
         for (unsigned i = nb; i < dimension; ++i)
           {
@@ -517,11 +512,7 @@ namespace vcsn
               if (pivot != dimension) //otherwise, current is null
                 {
                   if (pivot != basis.size())
-                    {
-                      unsigned j= permutation[pivot];
-                      permutation[pivot] = permutation[basis.size()];
-                      permutation[basis.size()] = j;
-                    }
+                    std::swap(permutation[pivot], permutation[basis.size()]);
                   type_t::normalisation_vector(this, current,
                                                basis.size(), permutation);
                   basis.push_back(current);
