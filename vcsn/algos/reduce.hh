@@ -243,25 +243,25 @@ namespace vcsn
                                  const matrix_t& m,
                                  vector_t& res)
       {
-        for (unsigned i=0; i<dimension; i++)
+        for (unsigned i = 0; i < dimension; i++)
           for (auto it : m[i])
             {
               unsigned j = it.first;
-              res[j] = weightset->add(res[j], weightset->mul( v[i],it.second));
+              res[j] = weightset->add(res[j], weightset->mul(v[i], it.second));
             }
       }
 
-      /// Computes the scalar product of two vectors
+      /// Computes the scalar product of two vectors.
       weight_t scalar_product(const vector_t& v,
                               const vector_t& w)
       {
-        weight_t res(weightset->zero());
+        weight_t res = weightset->zero();
         for (unsigned i = 0; i < dimension; ++i)
-          res = weightset->add(res, weightset->mul( v[i],w[i]));
+          res = weightset->add(res, weightset->mul(v[i], w[i]));
         return res;
       }
 
-       ///  Specializations for Q and R
+      ///  Specializations for Q and R.
       using z_weight_t = vcsn::detail::z_impl::value_t; // int or long
       using q_weight_t = vcsn::detail::q_impl::value_t;
       using r_weight_t = vcsn::detail::r_impl::value_t; // = double
@@ -281,24 +281,23 @@ namespace vcsn
         return w.den+abs(w.num);
       }
 
-      ///Norm for real numbers; a "stable" pivot should minimize this norm
+      /// Norm for real numbers; a "stable" pivot should minimize this norm.
       static weight_t norm(const r_weight_t& w)
       {
         return fabs(w)+fabs(1/w);
       }
 
-      ///Norm for integrs numbers
+      /// Norm for integers.
       static weight_t norm(const z_weight_t& w)
       {
         return abs(w);
       }
 
-      //Works both for Q and R
+      // Works for both Q and R.
       unsigned
       find_pivot_by_norm(const vector_t& v, unsigned begin,
                          unsigned* permutation)
       {
-        // FIXME: we lack an initialization of min.
         weight_t min;
         unsigned pivot = dimension;
         for (unsigned i = begin; i < dimension; ++i)
@@ -312,45 +311,45 @@ namespace vcsn
         return pivot;
       }
 
-      //End of Q/R specializations
+      // End of Q/R specializations.
 
 
-      //Specialization for Z
+      // Specialization for Z.
 
-      //Gcd function that also computes the Bezout coefficients
-      //It is used in the z reduction
+      // Gcd function that also computes the Bezout coefficients.
+      // Used in the z reduction.
       static z_weight_t
       gcd(z_weight_t x, z_weight_t y, z_weight_t& a, z_weight_t& b)
       {
+        z_weight_t res = 0;
         //gcd = ax + by
         if (y == 0)
           {
             a = 1;
             b = 0;
-            return x;
+            res = x;
           }
         else if (x < 0)
           {
-            z_weight_t res = gcd(-x, y, a, b);
+            res = gcd(-x, y, a, b);
             a = -a;
-            return res;
           }
         else if (y < 0)
           {
-            z_weight_t res = gcd(x, -y, a, b);
+            res = gcd(x, -y, a, b);
             b = -b;
-            return res;
           }
         else if (x < y)
-          return gcd(y, x, b, a);
+          res = gcd(y, x, b, a);
         else
           {
             z_weight_t z = x % y;  // z= x- (x/y)*y;
-            z_weight_t res = gcd(y, z, b, a);
+            res = gcd(y, z, b, a);
             //res=by+az = (b-a(x/y)) y + ax
             b -= a * (x / y);
-            return res;
           }
+        assert(res == a * x + b * y);
+        return res;
       }
 
       /*
@@ -380,7 +379,7 @@ namespace vcsn
           }
       }
 
-      //End of Z specializations
+      // End of Z specializations.
 
      /* Generic subroutines.
          These methods are written for any (skew) field.
@@ -431,9 +430,9 @@ namespace vcsn
         weight_t k = v[permutation[pivot]];
         if (!weightset->is_one(k))
           {
-            v[permutation[pivot]]=weightset->one();
+            v[permutation[pivot]] = weightset->one();
             for (unsigned r = pivot + 1; r < dimension; ++r)
-              v[permutation[r]] = weightset->rdiv(v[permutation[r]],k);
+              v[permutation[r]] = weightset->rdiv(v[permutation[r]], k);
           }
       }
 
@@ -449,10 +448,10 @@ namespace vcsn
 
       ///Compute the coordinate of a vector in the new basis
       void vector_in_new_basis(std::vector<vector_t>& basis,
-                              vector_t& current, vector_t& new_vector,
+                               vector_t& current, vector_t& new_vector,
                                unsigned* permutation)
       {
-        for (unsigned b=0; b < basis.size(); ++b)
+        for (unsigned b = 0; b < basis.size(); ++b)
           new_vector[b] = reduce_vector(basis[b], current, b, permutation);
       }
 
@@ -484,8 +483,8 @@ namespace vcsn
         if (pivot == dimension) //all components of init are 0
           return;
         // The pivot of the first basis vector is permutation[0];
-        permutation[0]=pivot;
-        permutation[pivot]=0;
+        permutation[0] = pivot;
+        permutation[pivot] = 0;
         // The initial vector is the first element of the new basis
         // (up to the normalisation w.r.t the pivot)
         vector_t first(init);
@@ -502,7 +501,7 @@ namespace vcsn
               vector_t current(dimension);
               product_vector_matrix(basis[nb], mu.second, current);
               //reduction of current w.r.t each basis vector;
-              for (unsigned b=0; b<basis.size(); ++b)
+              for (unsigned b = 0; b < basis.size(); ++b)
                 type_t::reduce_vector(this, basis[b],
                                       current, b, permutation);
               // After reduction, we put current in the basis if it is
@@ -522,18 +521,19 @@ namespace vcsn
         // now, we use each vector to reduce the preceding vectors in
         // the basis.  If weightset=Z we do not do it.
         type_t::bottom_up_reduction(this, basis, permutation);
-        //Construction of the output automaton
-        //1. States
+
+        // Construction of the output automaton
+        // 1. States
         std::vector<output_state_t> states(basis.size());
-        for (unsigned b=0; b<basis.size(); ++b)
+        for (unsigned b = 0; b < basis.size(); ++b)
           states[b] = output->new_state();
-        //2. Initial vector
+        // 2. Initial vector
         vector_t vect_new_basis(basis.size());
         vector_in_new_basis(basis, init, vect_new_basis, permutation);
         for (unsigned b = 0; b < basis.size(); ++b)
           output->set_initial(states[b], vect_new_basis[b]);
-        //3. Each vector of the basis is a state; computation of the
-        //final function and the successor function
+        // 3. Each vector of the basis is a state; computation of the
+        // final function and the successor function
         for (unsigned v = 0; v < basis.size(); ++v)
           {
             weight_t k = scalar_product(basis[v],final);
@@ -541,7 +541,7 @@ namespace vcsn
               output->set_final(states[v],k);
             for (auto mu : letter_matrix_set)
               {
-                //mu is a pair (letter,matrix)
+                // mu is a pair (letter,matrix).
                 vector_t current(dimension);
                 product_vector_matrix(basis[v], mu.second, current);
                 vector_in_new_basis(basis, current, vect_new_basis,
