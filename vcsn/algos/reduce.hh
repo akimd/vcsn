@@ -117,7 +117,7 @@ namespace vcsn
     };
 
     template <>
-    struct select<variadic_mul_mixin<q_impl>> : select<void>
+    struct select<q> : select<void>
     {
       template<typename Reduc, typename Vector>
       static unsigned
@@ -129,7 +129,7 @@ namespace vcsn
     };
 
     template <>
-    struct select<variadic_mul_mixin<r_impl>> : select<void>
+    struct select<r> : select<void>
     {
       template<typename Reduc, typename Vector>
       static unsigned
@@ -141,7 +141,7 @@ namespace vcsn
     };
 
     template <>
-    struct select<variadic_mul_mixin<z_impl>> : select<void>
+    struct select<z> : select<void>
     {
       template<typename Reduc, typename Vector>
       static unsigned
