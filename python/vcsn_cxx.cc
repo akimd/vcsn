@@ -10,6 +10,7 @@
 #endif
 
 #include <boost/python.hpp>
+#include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/context.hh> // vname
 #include <vcsn/misc/raise.hh>
@@ -68,6 +69,8 @@ struct context
   automaton random(unsigned num_states, float density = 0.1,
                    unsigned num_initial = 1, unsigned num_final = 1) const;
   automaton random_uniform(unsigned num_states) const;
+
+  ratexp series(const std::string& s) const;
 
   automaton u(unsigned num_states) const;
 
@@ -510,13 +513,23 @@ struct ratexp
     : val_(r)
   {}
 
-  ratexp(const context& ctx, const std::string& r)
+  ratexp(const context& ctx, const std::string& r,
+         vcsn::rat::identities i)
   {
     std::istringstream is(r);
-    auto rs = vcsn::dyn::make_ratexpset(ctx.val_);
+    auto rs = vcsn::dyn::make_ratexpset(ctx.val_, i);
     val_ = vcsn::dyn::read_ratexp(is, rs);
     if (is.peek() != -1)
       vcsn::fail_reading(is, "unexpected trailing characters");
+  }
+
+  ratexp(const context& ctx, const std::string& r)
+    : ratexp(ctx, r, vcsn::rat::identities::trivial)
+  {}
+
+  static ratexp series(const context& ctx, const std::string& r)
+  {
+    return ratexp(ctx, r, vcsn::rat::identities::series);
   }
 
   ratexp chain(int min, int max) const
@@ -558,10 +571,29 @@ struct ratexp
     return vcsn::dyn::derivation(val_, l.val_, breaking);
   }
 
-  ratexp copy(const ::context& ctx)
+  ratexp as_(const ::context& ctx, vcsn::rat::identities ids)
   {
-    auto rs = vcsn::dyn::make_ratexpset(ctx.val_);
+    auto rs = vcsn::dyn::make_ratexpset(ctx.val_, ids);
     return vcsn::dyn::copy(val_, rs);
+  }
+
+  ratexp as_ratexp_in(const ::context ctx)
+  {
+    return as_(ctx, vcsn::rat::identities::trivial);
+  }
+  ratexp as_ratexp()
+  {
+    return as_(::context(vcsn::dyn::context_of(val_)),
+                 vcsn::rat::identities::trivial);
+  }
+  ratexp as_series_in(const ::context ctx)
+  {
+    return as_(ctx, vcsn::rat::identities::series);
+  }
+  ratexp as_series()
+  {
+    return as_(::context(vcsn::dyn::context_of(val_)),
+                 vcsn::rat::identities::series);
   }
 
   automaton derived_term(bool breaking = false) const
@@ -594,6 +626,11 @@ struct ratexp
   bool is_equivalent(const ratexp& rhs) const
   {
     return vcsn::dyn::are_equivalent(val_, rhs.val_);
+  }
+
+  bool is_series() const
+  {
+    return vcsn::dyn::identities(val_) == vcsn::rat::identities::series;
   }
 
   bool is_valid() const
@@ -662,6 +699,11 @@ struct ratexp
 
   vcsn::dyn::ratexp val_;
 };
+
+ratexp context::series(const std::string& s) const
+{
+  return ratexp::series(*this, s);
+}
 
 /*---------.
 | weight.  |
@@ -926,6 +968,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("ladybird", &context::ladybird)
     .def("random", &context::random, random_overloads())
     .def("random_uniform", &context::random_uniform)
+    .def("series", &context::series)
     .def("u", &context::u)
     .def("word", &context::word)
    ;
@@ -959,7 +1002,8 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("conjunction", &ratexp::conjunction)
     .def("constant_term", &ratexp::constant_term)
     .def("context", &ratexp::context)
-    .def("copy", &ratexp::copy)
+    .def("_as_ratexp_in", &ratexp::as_ratexp_in)
+    .def("_as_series_in", &ratexp::as_series_in)
     .def("_derivation", &ratexp::derivation, derivation())
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("difference", &ratexp::difference)
@@ -967,11 +1011,14 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("first_order", &ratexp::first_order, first_order())
     .def("format", &ratexp::format)
     .def("is_equivalent", &ratexp::is_equivalent)
+    .def("is_series", &ratexp::is_series)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)
     .def("linear", &ratexp::linear, linear())
     .def("lift", &ratexp::lift)
+    .def("ratexp", &ratexp::as_ratexp)
     .def("right_mult", &ratexp::right_mult)
+    .def("series", &ratexp::as_series)
     .def("shuffle", &ratexp::shuffle)
     .def("split", &ratexp::split)
     .def("standard", &ratexp::standard)

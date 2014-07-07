@@ -46,6 +46,11 @@ namespace dyn
       return dyn::make_ratexp(rs_, down(v));
     }
 
+    DEFINE::identities() const -> rat::identities
+    {
+      return rs_.identities();
+    }
+
     DEFINE::zero() const -> value_t
     {
       return rs_.zero();

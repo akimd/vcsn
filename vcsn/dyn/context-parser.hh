@@ -4,8 +4,8 @@
 # include <sstream>
 # include <string>
 
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/dyn/type-ast.hh>
-
 # include <vcsn/misc/stream.hh>
 
 namespace vcsn
@@ -56,6 +56,7 @@ namespace vcsn
 
       /// "ratexpset" "<" <Context> ">".
       std::shared_ptr<ratexpset> ratexpset_();
+      std::shared_ptr<ratexpset> ratexpset_series_(); // No optional parameter
 
       /// "polynomialset" "<" <Context> ">".
       std::shared_ptr<polynomialset> polynomialset_();

@@ -4,6 +4,7 @@
 # include <iostream>
 
 # include <vcsn/ctx/traits.hh>
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/core/rat/visitor.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/cast.hh>
@@ -20,6 +21,7 @@ namespace vcsn
     public:
       using ratexpset_t = RatExpSet;
       using context_t = context_t_of<ratexpset_t>;
+      using identities_t = typename ratexpset_t::identities_t;
       using weight_t = typename context_t::weightset_t::value_t;
       using super_type = typename ratexpset_t::const_visitor;
       using node_t = typename super_type::node_t;
@@ -121,6 +123,7 @@ namespace vcsn
       std::string format_;
       /// Context to decode labels and weights.
       const context_t& ctx_;
+      const identities_t identities_;
       /// Whether to be overly verbose.
       const bool debug_;
 

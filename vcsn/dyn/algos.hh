@@ -6,6 +6,7 @@
 # include <vector>
 
 # include <vcsn/algos/fwd.hh>
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/ctx/fwd.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/export.hh>
@@ -188,6 +189,9 @@ namespace vcsn
     /// Whether the automaton has the twins property.
     bool has_twins_property(const automaton& aut);
 
+    /// The identities of ratexp \a exp.
+    rat::identities identities(const ratexp& exp);
+
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
     automaton infiltration(const automaton& lhs, const automaton& rhs);
@@ -305,7 +309,7 @@ namespace vcsn
     automaton_editor* make_automaton_editor(const context& ctx);
 
     /// Build an ratexpset from its context.
-    ratexpset make_ratexpset(const context& ctx);
+    ratexpset make_ratexpset(const context& ctx, ::vcsn::rat::identities is);
 
     /// The context for words.
     context make_word_context(const context& ctx);

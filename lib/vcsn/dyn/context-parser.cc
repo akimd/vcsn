@@ -44,7 +44,8 @@ namespace vcsn
                || w == "lan"
                || w == "lao"
                || w == "law"
-               || w == "ratexpset")
+               || w == "ratexpset"
+               || w == "seriesset")
         {
           std::shared_ptr<ast_node> res = labelset_(w);
           if (is_.peek() == '_')
@@ -76,7 +77,8 @@ namespace vcsn
         return std::make_shared<other>(w);
     }
 
-    std::shared_ptr<ast_node> context_parser::labelset_or_weightset_()
+    std::shared_ptr<ast_node>
+    context_parser::labelset_or_weightset_()
     {
       return labelset_or_weightset_(word());
     }
@@ -84,12 +86,16 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::labelset_or_weightset_(const std::string& w)
     {
-      if (w == "lal"
-          || w == "lan"
-          || w == "lao"
-          || w == "law"
-          || w == "lat"
-          || w == "ratexpset")
+      if (w == "lat")
+        return tupleset_();
+      else if (w == "ratexpset")
+        return ratexpset_();
+      else if (w == "seriesset")
+        return ratexpset_series_();
+      else if (w == "lal"
+               || w == "lan"
+               || w == "lao"
+               || w == "law")
         return labelset_(w);
       else if (w == "b"
                || w == "f2"
@@ -193,6 +199,8 @@ namespace vcsn
         return tupleset_();
       else if (kind == "ratexpset")
         return ratexpset_();
+      else if (kind == "seriesset")
+        return ratexpset_series_();
       raise("invalid labelset name: ", str_escape(kind));
     }
 
@@ -209,6 +217,8 @@ namespace vcsn
         return std::make_shared<weightset>(ws);
       else if (ws == "ratexpset")
         return ratexpset_();
+      else if (ws == "seriesset")
+        return ratexpset_series_();
       else if (ws == "polynomialset")
         return polynomialset_();
       else if (ws == "lat")
@@ -270,26 +280,44 @@ namespace vcsn
       return res;
     }
 
-    std::shared_ptr<tupleset> context_parser::tupleset_()
+    std::shared_ptr<tupleset>
+    context_parser::tupleset_()
     {
       eat(is_, '<');
       typename tupleset::value_t res;
       res.emplace_back(labelset_or_weightset_());
       while (is_.peek() == ',')
-        {
-          eat(is_, ',');
-          res.emplace_back(labelset_or_weightset_());
-        }
+      {
+        eat(is_, ',');
+        res.emplace_back(labelset_or_weightset_());
+      }
       eat(is_, '>');
       return std::make_shared<tupleset>(res);
     }
 
-    std::shared_ptr<ratexpset> context_parser::ratexpset_()
+    std::shared_ptr<ratexpset>
+    context_parser::ratexpset_()
     {
       eat(is_, '<');
-      auto res = std::make_shared<ratexpset>(context_());
+      auto context = context_();
       eat(is_, '>');
-      return res;
+      rat::identities identities = rat::identities::trivial;
+      if (is_.peek() == '(')
+        {
+          eat(is_, '(');
+          is_ >> identities;
+          eat(is_, ')');
+        }
+      return std::make_shared<ratexpset>(context, identities);
+    }
+
+    std::shared_ptr<ratexpset>
+    context_parser::ratexpset_series_()
+    {
+      eat(is_, '<');
+      auto context = context_();
+      eat(is_, '>');
+      return std::make_shared<ratexpset>(context, rat::identities::series);
     }
 
     std::shared_ptr<polynomialset> context_parser::polynomialset_()

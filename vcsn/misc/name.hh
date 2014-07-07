@@ -7,6 +7,7 @@
 # include <vector>
 # include <string>
 
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/misc/signature.hh>
 
 namespace vcsn
@@ -103,6 +104,7 @@ namespace vcsn
   DEFINE(const std::string);
   DEFINE(const std::vector<unsigned>);
   DEFINE(std::ostream);
+  DEFINE(vcsn::rat::identities);
 #undef DEFINE
 
   /// The signature of (Args...).

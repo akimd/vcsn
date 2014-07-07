@@ -33,6 +33,9 @@ namespace vcsn
   template <typename Aut>
   bool is_valid(const Aut& aut);
 
+  template <typename RatExpSet>
+  bool is_valid(const RatExpSet&, const typename RatExpSet::ratexp_t&);
+
   namespace detail_info
   {
     template <typename Aut>

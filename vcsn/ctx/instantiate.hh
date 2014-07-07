@@ -17,6 +17,7 @@
 # include <vcsn/algos/eval.hh>
 # include <vcsn/algos/expand.hh>
 # include <vcsn/algos/first-order.hh>
+# include <vcsn/algos/identities.hh>
 # include <vcsn/algos/info.hh>
 # include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/is-complete.hh>
@@ -52,6 +53,8 @@
 # include <vcsn/algos/ladybird.hh>
 # include <vcsn/algos/random.hh>
 # include <vcsn/algos/u.hh>
+
+# include <vcsn/core/rat/identities.hh>
 
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/polynomialset.hh>
@@ -316,6 +319,7 @@ namespace vcsn
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
         REGISTER(first_order, rs_t, bool);
+        REGISTER(identities, rs_t);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_ratexp, rs_t, std::ostream);
         REGISTER(is_empty, aut_t);
@@ -336,7 +340,7 @@ namespace vcsn
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
-        REGISTER(make_ratexpset, ctx_t);
+        REGISTER(make_ratexpset, ctx_t, rat::identities);
         REGISTER(make_word_context, ctx_t);
         REGISTER(minimize, aut_t, const std::string);
         REGISTER(multiply_weight, ws_t, ws_t);

@@ -272,7 +272,8 @@ namespace vcsn
         using context_t = context_t_of<Aut>;
         using ratexpset_t = vcsn::ratexpset<context_t>;
         const auto& a = aut->as<Aut>();
-        return make_ratexp(ratexpset_t(a->context()),
+        return make_ratexp(ratexpset_t(a->context(),
+                                       ratexpset_t::identities_t::trivial),
                            ::vcsn::aut_to_exp_naive(a));
       }
 

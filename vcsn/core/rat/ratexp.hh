@@ -141,6 +141,9 @@ namespace vcsn
         , sub_(that.sub_)
       {}
 
+      /// Return a copy of children.
+      ratexps_t subs() const;
+
       virtual void accept(typename node_t::const_visitor &v) const;
 
     private:

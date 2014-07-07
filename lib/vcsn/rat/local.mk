@@ -88,5 +88,6 @@ lib_libvcsn_la_SOURCES +=			\
   $(SOURCES_%C%_PARSE_YY)			\
   %D%/driver.hh %D%/driver.cc			\
   %D%/fwd.hh					\
+  %D%/identities.cc                             \
   %D%/read.hh %D%/read.cc			\
   %D%/scan.hh %D%/scan.cc

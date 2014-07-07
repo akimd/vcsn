@@ -46,6 +46,8 @@ namespace detail
       return dynamic_cast<const ratexpset_wrapper<RatExpSet>&>(*this);
     }
 
+    virtual rat::identities identities() const = 0;
+
     virtual value_t zero() const = 0;
     virtual value_t one() const = 0;
     /// Throws std::domain_error if w is not a valid label_t.
@@ -127,6 +129,8 @@ namespace detail
     /*--------------------------------------.
     | Specializations from ratexpset_base.  |
     `--------------------------------------*/
+
+    virtual rat::identities identities() const override;
 
     virtual value_t zero() const override;
     virtual value_t one() const override;

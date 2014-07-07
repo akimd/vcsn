@@ -201,7 +201,10 @@ exp:
 | exp exp %prec CONCAT
   {
     // See README.txt.
-    if (!$1.rparen && !$2.lparen)
+    if (!$1.rparen && !$2.lparen
+        // This is very ugly, but lets us parse "<2>abcd" as <2>(abcd)
+        // rather than (<2>a)(bcd).
+        && driver_.ratexpset_->identities() != rat::identities::series)
       $$ = MAKE(concat, $1.exp, $2.exp);
     else
       {

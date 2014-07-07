@@ -51,7 +51,9 @@ namespace vcsn
     lifted_context_t<context<LabelSet, WeightSet>>
     lift_context(const context<LabelSet, WeightSet>& ctx)
     {
-      auto rs_in = ratexpset<context<LabelSet, WeightSet>>(ctx);
+      auto rs_in
+        = ratexpset<context<LabelSet, WeightSet>>(ctx,
+                                                  rat::identities::trivial);
       return {oneset{}, rs_in};
     }
 
@@ -60,7 +62,7 @@ namespace vcsn
     lifted_ratexpset_t<ratexpset<Context>>
     lift_ratexpset(const ratexpset<Context>& rs)
     {
-      return {lift_context(rs.context())};
+      return {lift_context(rs.context()), rs.identities()};
     }
 
   }
@@ -80,7 +82,7 @@ namespace vcsn
 
     // Produce RatExps of the same context as the original automaton.
     using rs_in_t = ratexpset<ctx_in_t>;
-    rs_in_t rs_in{a->context()};
+    rs_in_t rs_in{a->context(), rs_in_t::identities_t::trivial};
 
     auto ctx_out = detail::lift_context(a->context());
     using auto_out_t = detail::lifted_automaton_t<auto_in_t>;

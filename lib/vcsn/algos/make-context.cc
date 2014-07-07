@@ -1,3 +1,4 @@
+#include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/dyn/signature-printer.hh>
 #include <vcsn/dyn/translate.hh>
@@ -53,9 +54,9 @@ namespace vcsn
 
     REGISTER_DEFINE(make_ratexpset);
     ratexpset
-    make_ratexpset(const context& ctx)
+    make_ratexpset(const context& ctx, ::vcsn::rat::identities ids)
     {
-      return detail::make_ratexpset_registry().call(ctx);
+      return detail::make_ratexpset_registry().call(ctx, ids);
     }
 
     /*--------------------.

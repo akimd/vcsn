@@ -3,6 +3,7 @@
 
 # include <memory>
 
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/weightset/weightset.hh>
 
 namespace vcsn

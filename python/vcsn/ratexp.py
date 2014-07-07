@@ -36,3 +36,19 @@ ratexp.info = lambda self, detailed = False: _info_to_dict(self.format('info'))
 
 ratexp.shortest = lambda self, num = 1: self.standard().shortest(num)
 ratexp.star = lambda self: self.chain(-1)
+
+def _copy_ratexp(self, context = None):
+    "Convert to ratexp, possibly in a different context"
+    if context is None:
+        return self._copy_ratexp()
+    else:
+        return self._copy_ratexp_in(context)
+ratexp.copy_ratexp = _copy_ratexp
+
+def _copy_series(self, context = None):
+    "Convert to series, possibly in a different context"
+    if context is None:
+        return self._copy_series()
+    else:
+        return self._copy_series_in(context)
+ratexp.copy_series = _copy_series

@@ -5,6 +5,37 @@ Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
 * 2014-07-24
+** "series" are now supported (static, dyn, Python)
+Ratexpsets now take a constructor parameter specifying which set of
+identities to enforce, currently with two possible values: "trivial" and
+"series".  Old-style ratexps only support trivial identities, while series
+also support sum commutativity and product distributivity over sum.
+Heterogeneous operations involving both trivial ratexps and series ratexps
+are possible.
+
+In case of a ratexpset belonging to a context, the default value for the
+optional parameter is always trivial.  The "seriesset" alias, which does not
+accept an identity parameter, is also supported.
+
+"Series" is technically a misnomer: the data structure is a better
+approximation of the mathematical concept of series and in particular yields
+a semiring structure, but actual series equality remains undecidable in the
+general case.
+
+Series currently depend on the commutativity of their weightset, and only
+support a subset of the available operations.
+
+  >>> vcsn.context('lal_char(a-c)_ratexpset<lal_char(x-z)_b>') # series
+  >>> vcsn.context('lal_char(a-c)_seriesset<lal_char(x-z)_b>') # series
+  >>> vcsn.context(ratexpset<lal_char(x-z)_b>_z')              # trivial
+  >>> vcsn.context('lal_char(a-c)_ratexpset<lal_char(x-z)_b>(trivial)')
+  >>> e = vcsn.context('lal_char(a-c)_z').ratexp('b+a+b'); e
+  b+a+b
+  >>> s = vcsn.context('lal_char(a-c)_z').series('b+a+b'); e
+  a+<2>b
+  >>> (e+s).is_series()
+  True
+
 ** has_twins_property: new algorithm
 Computes whether an automaton has the twins property.
 

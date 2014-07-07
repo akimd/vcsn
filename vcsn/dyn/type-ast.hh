@@ -5,6 +5,8 @@
 # include <memory>
 # include <vector>
 
+# include <vcsn/core/rat/identities.hh>
+
 # include <vcsn/dyn/context-visitor.hh>
 # include <vcsn/dyn/fwd.hh>
 
@@ -152,8 +154,10 @@ namespace vcsn
     class ratexpset: public ast_node
     {
     public:
-      ratexpset(std::shared_ptr<context> ctx)
+      ratexpset(std::shared_ptr<context> ctx,
+                rat::identities ids)
         : ctx_(ctx)
+        , identities_(ids)
       {}
 
       const std::shared_ptr<context> get_context() const
@@ -161,11 +165,17 @@ namespace vcsn
         return ctx_;
       }
 
+      rat::identities get_identities() const
+      {
+        return identities_;
+      }
+
       ACCEPT()
       virtual bool has_one() const { return true; }
 
     private:
       std::shared_ptr<context> ctx_;
+      rat::identities identities_;
     };
 
     class weightset: public ast_node

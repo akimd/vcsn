@@ -119,6 +119,12 @@ namespace vcsn
       return boost::make_iterator_range(*this, 1, 0);
     }
 
+    DEFINE(variadic)::subs() const
+      -> ratexps_t
+    {
+      return sub_;
+    }
+
     DEFINE(variadic)::accept(typename node_t::const_visitor& v) const
       -> void
     {

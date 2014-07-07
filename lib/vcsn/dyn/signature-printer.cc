@@ -83,6 +83,8 @@ namespace vcsn
       os_ << "ratexpset<";
       t.get_context()->accept(*this);
       os_ << '>';
+      if (full_)
+        os_ << '(' << t.get_identities() << ')';
     }
 
     DEFINE(weightset)

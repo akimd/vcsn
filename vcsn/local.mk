@@ -39,6 +39,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
   %D%/algos/has-twins-property.hh               \
+  %D%/algos/identities.hh                       \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-ambiguous.hh                     \
@@ -94,6 +95,7 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/fwd.hh                           \
   %D%/core/rat/hash.hh                          \
   %D%/core/rat/hash.hxx                         \
+  %D%/core/rat/identities.hh                    \
   %D%/core/rat/info.hh                          \
   %D%/core/rat/info.hxx                         \
   %D%/core/rat/less-than.hh                     \

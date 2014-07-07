@@ -47,7 +47,7 @@ namespace vcsn
 
       ratexp_automaton_impl(const context_t& ctx)
         : super_t(ctx)
-        , rs_(ctx)
+        , rs_(ctx, rat::identities::trivial)
       {}
 
       static std::string sname()

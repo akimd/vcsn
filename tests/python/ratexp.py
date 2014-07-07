@@ -165,3 +165,26 @@ check_format('lal_char(0123)_z',
              "<0123>0123",
              "<123>0123",
              r' \langle 123 \rangle \,0 \, 1 \, 2 \, 3')
+
+## -------- ##
+## Series.  ##
+## -------- ##
+def check(ctx, s1, exp):
+    eff = ctx.series(s1)
+    CHECK_EQ(exp, eff.format('text'))
+
+ctx = vcsn.context("lal_char(abcd)_z")
+check(ctx, 'a+b', 'a+b')
+check(ctx, '(a+a)*', '(<2>a)*')
+
+check(ctx, 'a+\z', 'a')
+check(ctx, '(<5>a)b', '<5>(ab)')
+check(ctx, '(<5>a)(b)(c*)', '<5>(abc*)')
+check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
+check(ctx, 'a*+b(c+<2>d)', 'a*+bc+<2>(bd)')
+
+ctx = vcsn.context("law_char(abcd)_z")
+
+check(ctx, '(a<5>)b', '<5>(ab)')
+check(ctx, 'a+b(c+<2>d)', 'a+bc+<2>(bd)')
+check(ctx, 'a*+b(c+<2>d)', 'bc+<2>(bd)+a*')

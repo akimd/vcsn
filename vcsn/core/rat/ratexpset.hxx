@@ -2,6 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
+#include <vcsn/algos/fwd.hh>
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/ratexp.hh>
@@ -18,13 +19,26 @@
 
 namespace vcsn
 {
+
   namespace rat
   {
 
   template <typename Context>
-  ratexpset_impl<Context>::ratexpset_impl(const context_t& ctx)
+  ratexpset_impl<Context>::ratexpset_impl(const context_t& ctx,
+                                          identities_t identities)
     : ctx_(ctx)
-  {}
+    , identities_(identities)
+  {
+    require_weightset_commutativity();
+  }
+
+  template <typename Context>
+  void ratexpset_impl<Context>::require_weightset_commutativity() const
+  {
+    require(identities_ != identities_t::series
+            || weightset_t_of<Context>::is_commutative_semiring(),
+            "series (currently) depend on weightset commutativity");
+  }
 
 #define DEFINE                                  \
   template <typename Context>                   \
@@ -41,17 +55,43 @@ namespace vcsn
   DEFINE::vname(bool full) const
     -> std::string
   {
-    return "ratexpset<" + context().vname(full) + '>';
+    std::string res;
+    if (full)
+      switch (identities_)
+        {
+        case identities_t::trivial:
+          res += "ratexpset<";
+          break;
+        case identities_t::series:
+          res += "seriesset<";
+          break;
+        default:
+          assert(false);
+        }
+    else
+      res += "ratexpset<";
+    res += context().vname(full) + '>';
+    // if (full)
+    //   // FIXME: why do I need rat::?  this->to_string is not applicable anyway!
+    //   res += "(" + rat::to_string(identities_) +")";
+    return res;
   }
 
   DEFINE::make(std::istream& is)
     -> ratexpset<Context>
   {
-    // name is, for instance, "ratexpset<lal_char(abcd)_z>".
+    // name is, for instance, "ratexpset<lal_char(abcd)_z>(trivial)".
     eat(is, "ratexpset<");
     auto ctx = Context::make(is);
     eat(is, '>');
-    return {ctx};
+    identities_t ids = rat::identities::trivial;
+    if (is.peek() == '(')
+      {
+        eat(is, '(');
+        is >> ids;
+        eat(is, ')');
+      }
+    return {ctx, ids};
   }
 
   DEFINE::open(bool o) const
@@ -63,6 +103,16 @@ namespace vcsn
   DEFINE::context() const -> const context_t&
   {
     return ctx_;
+  }
+
+  DEFINE::identities() const -> identities_t
+  {
+    return identities_;
+  }
+
+  DEFINE::is_series() const -> bool
+  {
+    return identities_ == identities_t::series;
   }
 
   DEFINE::labelset() const -> const labelset_ptr&
@@ -134,9 +184,104 @@ namespace vcsn
     else if (r->type() == type_t::zero)
       res = l;
     // END: Trivial Identity
+    else if (is_series())
+      res = add_nonzero_series_(l, r);
     else
       res = std::make_shared<sum_t>(gather<type_t::sum>(l, r));
     return res;
+  }
+
+  DEFINE::less_than_ignoring_weight_(value_t l, value_t r) const
+    -> bool
+  {
+    return less_than(unwrap_possible_lweight_(l), unwrap_possible_lweight_(r));
+  }
+
+  DEFINE::remove_from_sum_series_(ratexps_t addends,
+                                  typename ratexps_t::iterator i) const
+    -> value_t
+  {
+    switch (addends.size())
+      {
+      case 0:
+        assert(false); // Sum node with zero addends.
+      case 1:
+        return zero();
+      case 2:
+        addends.erase(i);
+        return addends[0];
+      default:
+        addends.erase(i);
+        return std::make_shared<sum_t>(std::move(addends));
+      };
+  }
+
+  DEFINE::insert_in_sum_series_(const sum_t& addends, value_t r) const
+    -> value_t
+  {
+    // We have to clone the addends (actually, their shared_ptr's)
+    // into something we can modify.
+    ratexps_t copy = addends.subs();
+    assert(copy.size() > 0);
+
+    // Find the right spot where to insert r.
+    const auto& ws = weightset();
+    auto rw = possibly_implicit_lweight_(r);
+    auto rn = unwrap_possible_lweight_(r);
+    auto closure =
+      [this] (value_t l, value_t r)
+      {
+        return less_than_ignoring_weight_(l, r);
+      };
+    const auto i = std::lower_bound(copy.begin(), copy.end(), rn, closure);
+    if (i != copy.end()
+        && equals(unwrap_possible_lweight_(*i), rn))
+      {
+        // An addend alraedy exists whose un-left-weighted value is rn.
+        const weight_t& iw = possibly_implicit_lweight_(*i);
+        const weight_t w = ws->add(rw, iw);
+        if (ws->is_zero(w))
+          return remove_from_sum_series_(std::move(copy), i);
+        else
+          *i = lmul(w, rn);
+      }
+    else
+      copy.insert(i, r);
+
+    return std::make_shared<sum_t>(std::move(copy));
+  }
+
+  DEFINE::merge_sum_series_(const sum_t& addends1, value_t aa2) const
+    -> value_t
+  {
+    value_t res = aa2;
+    for (const auto& e: addends1)
+      res = add_nonzero_series_(res, e);
+    return res;
+  }
+
+  DEFINE::add_nonzero_series_(value_t l, value_t r) const
+    -> value_t
+  {
+    assert(! is_zero(r));
+    if (l->type() == type_t::sum)
+      {
+        const auto ls = down_pointer_cast<const sum_t>(l);
+
+        if (r->type() == type_t::sum)
+          return merge_sum_series_(*ls, r);
+        else
+          return insert_in_sum_series_(*ls, r);
+      }
+    else
+      {
+        if (r->type() == type_t::sum)
+          return add_nonzero_series_(r, l);
+
+        // Neither argument is a sum.
+        auto ls = std::make_shared<sum_t>(ratexps_t{l}); // Not in normal form.
+        return insert_in_sum_series_(*ls, r);
+      }
   }
 
   DEFINE::type_ignoring_lweight_(value_t e) const
@@ -166,6 +311,27 @@ namespace vcsn
   DEFINE::mul(value_t l, value_t r) const
     -> value_t
   {
+    if (is_series())
+      return mul_series_(l, r);
+    else
+      return mul_expressions_(l, r);
+  }
+
+  DEFINE::mul_expressions_(value_t l, value_t r) const
+    -> value_t
+  {
+    return mul_(l, r, false);
+  }
+
+  DEFINE::mul_series_(value_t l, value_t r) const
+    -> value_t
+  {
+    return mul_(l, r, true);
+  }
+
+  DEFINE::mul_(value_t l, value_t r, bool series) const
+    -> value_t
+  {
     value_t res = nullptr;
     // Trivial Identity: T in TAF-Kit doc.
     // E.0 = 0.E = 0.
@@ -180,10 +346,136 @@ namespace vcsn
     else if (type_ignoring_lweight_(l) == type_t::one)
       res = lmul(possibly_implicit_lweight_(l), r);
     // END: Trivial Identity
+    else if (series) // Different from is_series().
+      res = nontrivial_mul_series_(l, r);
     else
-      res = std::make_shared<prod_t>(gather<type_t::prod>(l, r));
+      res = nontrivial_mul_expressions_(l, r);
     return res;
   }
+
+    DEFINE::is_unweighted_nonsum_(value_t v) const
+    -> bool
+    {
+      assert(v->type() != type_t::lweight);
+      // Of course we can assume v's subterms to be well-formed according
+      // to our invariants: for example zero won't occur within a product.
+      switch (v->type())
+        {
+        case type_t::sum:
+          return false;
+        default:
+          return true;
+        }
+    }
+
+  DEFINE::is_nonsum_(value_t v) const
+    -> bool
+  {
+    return is_unweighted_nonsum_(unwrap_possible_lweight_(v));
+  }
+
+  DEFINE::mul_atoms_(const label_t& a, const label_t& b) const
+    -> value_t
+  {
+    return mul_atoms_(a, b, typename is_law<Context>::type{});
+  }
+
+  DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::true_type) const
+    -> value_t
+  {
+    return std::make_shared<atom_t>(labelset()->concat(a, b));
+  }
+
+  DEFINE::mul_atoms_(const label_t& a, const label_t& b, std::false_type) const
+    -> value_t
+  {
+    return std::make_shared<prod_t>(values_t{std::make_shared<atom_t>(a),
+                                             std::make_shared<atom_t>(b)});
+  }
+
+  DEFINE::mul_unweighted_nontrivial_products_(value_t a, value_t b) const
+    -> value_t
+  {
+    assert(! is_zero(a));
+    assert(! is_zero(b));
+    assert(! is_one(a));
+    assert(! is_one(b));
+    assert(! std::dynamic_pointer_cast<const lweight_t>(a));
+    assert(! std::dynamic_pointer_cast<const lweight_t>(b));
+
+    // The result is a product holding a's factors followed by b's
+    // factors, with one exception: if the last factors of a can be
+    // combined with the first factor of b then the two have to be
+    // merged in the result.
+    return concat(a, b);
+  }
+
+  DEFINE::mul_products_(value_t a, value_t b) const
+    -> value_t
+  {
+    assert(! is_zero(a));
+    assert(! is_zero(b));
+    value_t na = unwrap_possible_lweight_(a), nb = unwrap_possible_lweight_(b);
+
+    switch (na->type())
+      {
+      case type_t::one:
+        return lmul(possibly_implicit_lweight_(a), b);
+      default:
+        switch (nb->type())
+          {
+          case type_t::one:
+            return lmul(weightset()->mul(possibly_implicit_lweight_(a),
+                                         possibly_implicit_lweight_(b)),
+                        na);
+          default:
+            return lmul(weightset()->mul(possibly_implicit_lweight_(a),
+                                         possibly_implicit_lweight_(b)),
+                        mul_unweighted_nontrivial_products_(na, nb));
+          } // inner switch
+      } // outer switch
+  }
+
+  DEFINE::nontrivial_mul_expressions_(value_t l, value_t r) const
+    -> value_t
+  {
+    return std::make_shared<prod_t>(gather<type_t::prod>(l, r));
+  }
+
+  DEFINE::nontrivial_mul_series_(value_t l, value_t r) const
+    -> value_t
+  {
+    // Compute the result by distributing product over sum.  We have
+    // to use add rather than just build a vector in order, since the
+    // addend order in the result will not follow the order in l.
+    const auto& lt = type_ignoring_lweight_(l), rt = type_ignoring_lweight_(r);
+    value_t res = zero();
+    if (lt == type_t::sum)
+      // l is a sum, and r might be as well.
+      for (const auto& la: *down_pointer_cast<const sum_t>(l))
+        res = add(res, mul(la, r));
+    else // l is not a sum.
+      {
+        if (rt == type_t::sum) // r is a sum, l is not.
+          for (const auto& ra: *down_pointer_cast<const sum_t>(r))
+            res = add(res, mul(l, ra));
+        else // neither is a sum.
+          {
+            if (is_nonsum_(l) && is_nonsum_(r))
+              return mul_products_(l, r);
+            else
+              {
+                weight_t lw = possibly_implicit_lweight_(l)
+                       , rw = possibly_implicit_lweight_(r);
+                value_t nl = unwrap_possible_lweight_(l)
+                      , nr = unwrap_possible_lweight_(r);
+                return lmul(weightset()->mul(lw, rw),
+                            std::make_shared<prod_t>(gather<type_t::prod>(nl, nr)));
+              }
+          }
+      }
+     return res;
+   }
 
   DEFINE::conjunction(value_t l, value_t r) const
     -> value_t
@@ -280,7 +572,7 @@ namespace vcsn
   DEFINE::concat_(value_t l, value_t r, std::false_type) const
     -> value_t
   {
-    return mul(l, r);
+    return mul_expressions_(l, r);
   }
 
   // Concatenation when LAW.
@@ -318,7 +610,7 @@ namespace vcsn
       }
     else
       // Handle all the trivial identities.
-      return mul(l, r);
+      return mul_expressions_(l, r);
   }
 
   DEFINE::star(value_t e) const
@@ -328,8 +620,13 @@ namespace vcsn
       // Trivial one
       // (0)* == 1
       return one();
+
+    value_t res = std::make_shared<star_t>(e);
+    if (is_series() && ! is_valid/*<ratexpset_impl<Context>>*/(*this, res))
+      throw std::runtime_error("star argument " + to_string(e)
+                               + " not starrable");
     else
-      return std::make_shared<star_t>(e);
+      return res;
   }
 
   DEFINE::complement(value_t e) const
@@ -382,8 +679,33 @@ namespace vcsn
     else if (auto lw = std::dynamic_pointer_cast<const lweight_t>(e))
       return lmul(weightset()->mul(w, lw->weight()), lw->sub());
     // General case: <k>E.
+    else if (is_series())
+      return nontrivial_lmul_series_(w, e);
     else
-      return std::make_shared<lweight_t>(w, e);
+      return nontrivial_lmul_expression_(w, e);
+  }
+
+  DEFINE::nontrivial_lmul_expression_(const weight_t& w, value_t s) const
+    -> value_t
+  {
+    return std::make_shared<lweight_t>(w, s);
+  }
+
+  DEFINE::nontrivial_lmul_series_(const weight_t& w, value_t s) const
+    -> value_t
+  {
+    if (s->type() != type_t::sum)
+      return nontrivial_lmul_expression_(w, s);
+     else
+      {
+        const auto& ss = down_pointer_cast<const sum_t>(s);
+        // We can build the result faster by emplace_back'ing addends without
+        // passing thru add; the order will be the same as in *ss.
+        ratexps_t addends;
+        for (auto& a: *ss)
+          addends.emplace_back(lmul(w, a));
+        return std::make_shared<sum_t>(std::move(addends));
+      }
   }
 
   DEFINE::rmul(value_t e, const weight_t& w) const
@@ -405,8 +727,42 @@ namespace vcsn
     else if (auto rw = std::dynamic_pointer_cast<const rweight_t>(e))
       return rmul(rw->sub(), weightset()->mul(rw->weight(), w));
     // General case: E<k>.
+    else if (is_series())
+      return nontrivial_rmul_series_(e, w);
     else
-      return std::make_shared<rweight_t>(w, e);
+      return nontrivial_rmul_expression_(e, w);
+  }
+
+  DEFINE::nontrivial_rmul_expression_(value_t e, const weight_t& w) const
+    -> value_t
+  {
+    return std::make_shared<rweight_t>(w, e);
+  }
+
+  DEFINE::nontrivial_rmul_series_(value_t s, const weight_t& w) const
+    -> value_t
+  {
+    if (s->type() != type_t::sum)
+      return nontrivial_rmul_expression_(s, w);
+    else
+      {
+        const auto& ss = down_pointer_cast<const sum_t>(s);
+        // Differently from the lmul case here the order of addends in
+        // the result may be different from the order in *ss, so we
+        // have to use add.
+        value_t res = zero();
+        for (auto& a: *ss)
+          res = add(res, rmul(a, w));
+        return res;
+      }
+   }
+
+  DEFINE::to_string(value_t e) const
+    -> std::string
+  {
+    std::ostringstream o;
+    print(e, o, "text");
+    return o.str();
   }
 
   /*----------------------------------.
@@ -456,10 +812,13 @@ namespace vcsn
     return hasher(v);
   }
 
-  DEFINE::conv(self_type, value_t v) const
+  DEFINE::conv(self_type rs, value_t v) const
     -> value_t
   {
-    return v;
+    if (identities() == rs.identities())
+      return v;
+    else
+      return copy(rs, *this, v);
   }
 
   template <typename Context>
@@ -497,17 +856,17 @@ namespace vcsn
     return lmul(weightset()->conv(ws, v), one());
   }
 
-  // Convert from another ratexpset \a ws to ourself.  Requires a full
+  // Convert from another ratexpset \a rs to ourself.  Requires a full
   // rewrite of the ratexp \a v.
   template <typename Context>
   template <typename Ctx2>
   inline
   auto
-  ratexpset_impl<Context>::conv(const ratexpset_impl<Ctx2>& ws,
+  ratexpset_impl<Context>::conv(const ratexpset_impl<Ctx2>& rs,
                                 typename ratexpset_impl<Ctx2>::value_t v) const
     -> value_t
   {
-    return copy(ws, *this, v);
+    return copy(rs, *this, v);
   }
 
   DEFINE::conv(std::istream& is) const
@@ -519,7 +878,7 @@ namespace vcsn
   }
 
   DEFINE::print(const value_t v, std::ostream& o,
-		const std::string& format) const
+                const std::string& format) const
     -> std::ostream&
   {
     using printer_t = printer<ratexpset_impl>;
@@ -565,7 +924,7 @@ namespace vcsn
 
     // [a-c].
     if (accept)
-      for (auto cc: ccs)
+      for (const auto& cc: ccs)
         {
           auto i = std::find(std::begin(gens), std::end(gens), cc.first);
           auto end = std::find(i, std::end(gens), cc.second);
@@ -586,7 +945,7 @@ namespace vcsn
       {
         // Match the letters that are in no interval.
         std::set<typename LabelSet_::letter_t> accepted;
-        for (auto cc: ccs)
+        for (const auto& cc: ccs)
           {
             auto i = std::find(std::begin(gens), std::end(gens), cc.first);
             auto end = std::find(i, std::end(gens), cc.second);

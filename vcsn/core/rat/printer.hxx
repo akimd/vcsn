@@ -42,6 +42,7 @@ namespace vcsn
                                 const bool debug)
       : out_(out)
       , ctx_(rs.context())
+      , identities_(rs.identities())
       , debug_(debug)
     {}
 
@@ -56,9 +57,18 @@ namespace vcsn
       -> std::ostream&
     {
       static bool print = !! getenv("VCSN_PRINT");
+      static bool debug = !! getenv("VCSN_DEBUG");
       if (print)
         out_ << '<' << v.type() << '>' << vcsn::incendl;
+      if (debug && format_ == "latex" && identities_ == identities_t::series)
+        out_ << "{\\color{red}{";
+      else if (debug && format_ == "latex" && identities_ == identities_t::trivial)
+        out_ << "{\\color{blue}{";
       v.accept(*this);
+      if (debug && format_ == "latex" && identities_ == identities_t::series)
+        out_ << "}}";
+      else if (debug && format_ == "latex" && identities_ == identities_t::trivial)
+        out_ << "}}";
       if (print)
         out_ << vcsn::decendl << "</" << v.type() << '>';
       return out_;
@@ -82,7 +92,8 @@ namespace vcsn
           conjunction_  = " \\& ";
           shuffle_      = " \\between ";
           product_      = " \\, ";
-          sum_          = " + ";
+          sum_
+            = (identities_ == identities_t::series) ? " \\oplus " : " + ";
           zero_         = "\\emptyset";
           one_          = "\\varepsilon";
           lmul_         = "\\,";

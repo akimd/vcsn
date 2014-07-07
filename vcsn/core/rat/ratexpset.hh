@@ -4,6 +4,7 @@
 # include <set>
 # include <string>
 
+# include <vcsn/core/rat/identities.hh>
 # include <vcsn/core/rat/printer.hh>
 # include <vcsn/core/rat/ratexp.hh>
 # include <vcsn/ctx/context.hh>
@@ -36,6 +37,7 @@ namespace vcsn
     using weightset_ptr = typename context_t::weightset_ptr;
     using label_t = label_t_of<context_t>;
     using weight_t = typename weightset_t::value_t;
+    using identities_t = rat::identities;
     using const_visitor = rat::const_visitor<label_t, weight_t>;
     /// Type of ratexps.
     //
@@ -73,6 +75,9 @@ namespace vcsn
     /// The value this is a set of: typeful shared pointers.
     using value_t = typename node_t::value_t;
 
+    /// A value sequence.
+    using values_t = std::vector<value_t>;
+
     using word_t = self_type;
     using letter_t = self_type;
 
@@ -85,8 +90,10 @@ namespace vcsn
     static self_type make(std::istream& is);
 
     /// Constructor.
-    /// \param ctx    the generator set for the labels, and the weight set.
-    ratexpset_impl(const context_t& ctx);
+    /// \param ctx        the generator set for the labels, and the weight set.
+    /// \param identities the identities to guarantee
+    ratexpset_impl(const context_t& ctx,
+                   identities_t identities); // FIXME: make this optional again?
 
     /// Whether unknown letters should be added, or rejected.
     /// \param o   whether to accept unknown letters
@@ -94,6 +101,11 @@ namespace vcsn
     bool open(bool o) const;
 
     const context_t& context() const;
+
+
+    identities_t identities() const;
+    bool is_series() const;
+
     const labelset_ptr& labelset() const;
     const weightset_ptr& weightset() const;
 
@@ -178,7 +190,19 @@ namespace vcsn
     {
       if (format == "latex")
         {
-          o << "\\mathsf{RatE}[";
+          o << "\\mathsf{";
+          switch (identities())
+            {
+            case identities_t::trivial:
+              o << "RatE";
+              break;
+            case identities_t::series:
+              o << "Series";
+              break;
+            default:
+              assert(false);
+            };
+          o << "}[";
           context().print_set(o, format);
           o << ']';
         }
@@ -231,7 +255,36 @@ namespace vcsn
     template <typename... Args>
     value_t letter_class(Args&&... chars) const;
 
+    std::string to_string(value_t e) const; // Mostly for internal convenience.
+
   private:
+    void require_weightset_commutativity() const;
+    bool less_than_ignoring_weight_(value_t l, value_t r) const;
+    value_t remove_from_sum_series_(ratexps_t addends,
+                                    typename ratexps_t::iterator i) const;
+    value_t insert_in_sum_series_(const sum_t& addends, value_t r) const;
+    value_t merge_sum_series_(const sum_t& addends1, value_t aa2) const;
+    value_t add_nonzero_series_(value_t l, value_t r) const;
+    exp::type_t type_ignoring_lweight_(value_t e) const;
+    weight_t possibly_implicit_lweight_(value_t e) const;
+    value_t unwrap_possible_lweight_(value_t e) const;
+    value_t mul_expressions_(value_t l, value_t r) const;
+    value_t mul_series_(value_t l, value_t r) const;
+    value_t mul_(value_t l, value_t r, bool series) const;
+    bool is_unweighted_nonsum_(value_t v) const;
+    bool is_nonsum_(value_t v) const;
+    value_t mul_atoms_(const label_t& l, const label_t& r) const;
+    value_t mul_atoms_(const label_t& l, const label_t& r, std::true_type) const; // law.
+    value_t mul_atoms_(const label_t& l, const label_t& r, std::false_type) const; // ! law.
+    value_t mul_unweighted_nontrivial_products_(value_t a, value_t b) const;
+    value_t mul_products_(value_t a, value_t b) const;
+    value_t nontrivial_mul_expressions_(value_t l, value_t r) const;
+    value_t nontrivial_mul_series_(value_t l, value_t r) const;
+    value_t nontrivial_lmul_expression_(const weight_t& w, value_t s) const;
+    value_t nontrivial_lmul_series_(const weight_t& w, value_t s) const;
+    value_t nontrivial_rmul_expression_(value_t e, const weight_t& w) const;
+    value_t nontrivial_rmul_series_(value_t e, const weight_t& w) const;
+
     /// Push \a v in \a res, applying associativity if possible.
     /// \tparam Type  the kind of ratexps on which to apply associativity.
     ///               Must be sum, conjunction, shuffle, or prod.
@@ -264,10 +317,7 @@ namespace vcsn
 
   private:
     context_t ctx_;
-
-    exp::type_t type_ignoring_lweight_(value_t e) const;
-    weight_t possibly_implicit_lweight_(value_t e) const;
-    value_t unwrap_possible_lweight_(value_t e) const;
+    const identities_t identities_;
   };
   } // rat::
 
@@ -291,7 +341,8 @@ namespace vcsn
   meet(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
     -> ratexpset<meet_t<Ctx1, Ctx2>>
   {
-    return meet(a.context(), b.context());
+    return {meet(a.context(), b.context()),
+            meet(a.identities(), b.identities())};
   }
 
   /// The union of two ratexpsets.
@@ -301,7 +352,8 @@ namespace vcsn
   join(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
     -> ratexpset<join_t<Ctx1, Ctx2>>
   {
-    return join(a.context(), b.context());
+    return {join(a.context(), b.context()),
+            join(a.identities(), b.identities())};
   }
 
   // Used as a labelset.
@@ -314,7 +366,8 @@ namespace vcsn
   {
     using ctx_t = context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
                           weightset_t_of<Ctx2>>;
-    return ctx_t{join(a, *b.labelset()), *b.weightset()};
+    return {ctx_t{join(a, *b.labelset()), *b.weightset()},
+            b.identities()};
   }
 
   template <typename Ctx1,  typename GenSet2>
@@ -354,7 +407,8 @@ namespace vcsn
   {
     using ctx_t = context<labelset_t_of<Context>,
                           join_t<weightset_t_of<Context>, z>>;
-    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
+            rs.identities()};
   }
 
   template <typename Context>
@@ -376,7 +430,8 @@ namespace vcsn
   {
     using ctx_t = context<labelset_t_of<Context>,
                           join_t<weightset_t_of<Context>, q>>;
-    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
+            rs.identities()};
   }
 
   template <typename Context>
@@ -398,7 +453,8 @@ namespace vcsn
   {
     using ctx_t = context<labelset_t_of<Context>,
                           join_t<weightset_t_of<Context>, r>>;
-    return ctx_t{*rs.labelset(), join(*rs.weightset(), ws)};
+    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
+            rs.identities()};
   }
 
   template <typename Context>

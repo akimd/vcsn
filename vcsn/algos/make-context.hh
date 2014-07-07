@@ -75,16 +75,17 @@ namespace vcsn
       | make_ratexpset.  |
       `-----------------*/
 
-      template <typename Ctx>
+      template <typename Ctx, typename Identities>
       ratexpset
-      make_ratexpset(const context& ctx)
+      make_ratexpset(const context& ctx, ::vcsn::rat::identities ids)
       {
         const auto& c = ctx->as<Ctx>();
-        return ::vcsn::dyn::make_ratexpset(::vcsn::ratexpset<Ctx>(c));
+        return ::vcsn::dyn::make_ratexpset(::vcsn::ratexpset<Ctx>(c, ids));
       }
 
       REGISTER_DECLARE(make_ratexpset,
-                       (const context& ctx) -> ratexpset);
+                       (const context& ctx, ::vcsn::rat::identities ids)
+                       -> ratexpset);
 
       /*--------------------.
       | make_word_context.  |

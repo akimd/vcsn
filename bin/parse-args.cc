@@ -8,6 +8,7 @@
 
 #include "parse-args.hh"
 #include <vcsn/config.hh>
+#include <vcsn/core/rat/identities.hh>
 #include <vcsn/dyn/algos.hh>
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/stream.hh>
@@ -102,7 +103,7 @@ vcsn::dyn::ratexp
 read_ratexp(const options& opts)
 {
   auto ctx = vcsn::dyn::make_context(opts.context);
-  auto rs = vcsn::dyn::make_ratexpset(ctx);
+  auto rs = vcsn::dyn::make_ratexpset(ctx, vcsn::rat::identities::trivial);
   auto is = input(opts);
   auto res = vcsn::dyn::read_ratexp(*is, rs, opts.input_format);
   check_eof(*is);
