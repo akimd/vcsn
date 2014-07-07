@@ -114,6 +114,15 @@ namespace vcsn
       {
         that->bottom_up_reduction(basis, permutation);
       }
+
+      template<typename Reduc, typename Basis, typename Vector>
+      static void
+      vector_in_new_basis(Reduc* that, Basis& basis,
+                          Vector& current, Vector& new_vector,
+                          unsigned* permutation)
+      {
+        that->vector_in_new_basis(basis, current, new_vector, permutation);
+      }
     };
 
     template <>
@@ -166,6 +175,15 @@ namespace vcsn
       template<typename Reduc, typename Basis>
       static void bottom_up_reduction(Reduc*, Basis&, unsigned*)
       {}
+
+      template<typename Reduc, typename Basis, typename Vector>
+      static void
+      vector_in_new_basis(Reduc* that, Basis& basis,
+                          Vector& current, Vector& new_vector,
+                          unsigned* permutation)
+      {
+        that->z_vector_in_new_basis(basis, current, new_vector, permutation);
+      }
     };
 
     template <typename Aut, typename AutOutput>
@@ -365,6 +383,24 @@ namespace vcsn
           }
       }
 
+      void z_vector_in_new_basis(std::vector<vector_t>& basis,
+                                 vector_t& current, vector_t& new_vector,
+                                 unsigned* permutation)
+      {
+        for (unsigned b = 0; b < basis.size(); ++b)
+          {
+            vector_t& vbasis = basis[b];
+            unsigned pivot = permutation[b]; //pivot of vector vbasis
+            new_vector[b] = current[pivot] / vbasis[pivot];
+            if (!ws_.is_zero(new_vector[b]))
+              {
+                current[pivot] = ws_.zero();
+                for (unsigned i = b+1; i < dimension; ++i)
+                  current[permutation[i]]
+                    -= new_vector[b] * vbasis[permutation[i]];
+              }
+          }
+      }
       // End of Z specializations.
 
      /* Generic subroutines.
@@ -432,7 +468,7 @@ namespace vcsn
             reduce_vector(basis[b], basis[c], b, permutation);
       }
 
-      ///Compute the coordinate of a vector in the new basis
+      /// Compute the coordinate of a vector in the new basis.
       void vector_in_new_basis(std::vector<vector_t>& basis,
                                vector_t& current, vector_t& new_vector,
                                unsigned* permutation)
@@ -515,7 +551,8 @@ namespace vcsn
           states[b] = res_->new_state();
         // 2. Initial vector
         vector_t vect_new_basis(basis.size());
-        vector_in_new_basis(basis, init, vect_new_basis, permutation);
+        type_t::vector_in_new_basis(this, basis, init,
+                                    vect_new_basis, permutation);
         for (unsigned b = 0; b < basis.size(); ++b)
           res_->set_initial(states[b], vect_new_basis[b]);
         // 3. Each vector of the basis is a state; computation of the
@@ -530,11 +567,11 @@ namespace vcsn
                 // mu is a pair (letter,matrix).
                 vector_t current(dimension);
                 product_vector_matrix(basis[v], mu.second, current);
-                vector_in_new_basis(basis, current, vect_new_basis,
-                                    permutation);
-                for (unsigned b = 0; b<basis.size(); ++b)
+                type_t::vector_in_new_basis(this, basis, current,
+                                            vect_new_basis, permutation);
+                for (unsigned b = 0; b < basis.size(); ++b)
                   res_->new_transition(states[v], states[b],
-                                         mu.first, vect_new_basis[b]);
+                                       mu.first, vect_new_basis[b]);
               }
         }
       }
