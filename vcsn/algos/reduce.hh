@@ -186,18 +186,6 @@ namespace vcsn
       using matrix_t = std::vector<std::map<std::size_t, weight_t> > ;
       using matrix_set_t = std::map<label_t, matrix_t>;
 
-      automaton_t input;
-      const context_t& context;
-      const typename context_t::weightset_ptr weightset;
-
-      output_automaton_t output;
-
-      //linear representation of the input
-      unsigned dimension;
-      vector_t init;
-      vector_t final;
-      matrix_set_t letter_matrix_set;
-
     public:
       reductioner(const automaton_t& input)
         : input(input)
@@ -558,6 +546,20 @@ namespace vcsn
       {
         return output;
       }
+
+    private:
+      automaton_t input;
+      const context_t& context;
+      const typename context_t::weightset_ptr weightset;
+
+      output_automaton_t output;
+
+      // Linear representation of the input.
+      unsigned dimension;
+      vector_t init;
+      vector_t final;
+      matrix_set_t letter_matrix_set;
+
     };
 
   }
