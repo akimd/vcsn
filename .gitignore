@@ -2,6 +2,8 @@
 *.lo
 *.o
 *.pyc
+*.tableFAdo
+*.tableGrail
 *.trs
 *bak
 *log
