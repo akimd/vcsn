@@ -180,12 +180,6 @@ vcsn.automaton(r'''digraph "a graph
 ## Conversions: dot and TikZ.  ##
 ## --------------------------- ##
 
-try:
-    import FAdo
-    has_fado = True
-except ImportError:
-    has_fado = False
-
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     a = vcsn.automaton.load(fn)

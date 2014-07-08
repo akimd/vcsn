@@ -3,6 +3,6 @@ digraph
   vcsn_context = "lao_z"
   0 -> 1 [label = "<42>"]
   0 -> 1 [label = "<51>"]
-  1 -> F1
-  I0 -> 0
+  1 -> F1 [label = "<999>"]
+  I0 -> 0 [label = "<666>"]
 }

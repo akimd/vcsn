@@ -52,8 +52,8 @@ namespace vcsn
             os_ << ',' << kind;
             if (ws_.show_one() || !ws_.is_one(w))
               {
-                os_ << ',' << kind << " text=$";
-                ws_.print(w, os_) << '$';
+                os_ << ',' << kind << " text=$\\langle ";
+                ws_.print(w, os_, "latex") << "\\rangle$";
               }
           }
       }
@@ -104,7 +104,7 @@ namespace vcsn
                     << " edge"
                     << (src == dst ? "[loop above]" : "")
                     << " node[above]"
-                    << " {$" << format_entry_(src, dst) << "$}"
+                    << " {$" << format_entry_(src, dst, "latex") << "$}"
                     << " (";
                 aut_->print_state(dst, os_);
                 os_ << ");\n";

@@ -7,8 +7,8 @@
 
 \begin{document}
 \begin{tikzpicture}[automaton]
-  \node[state,initial] (0) {$0$};
-  \node[state,accepting] (1) [right=of 0] {$1$};
-  \path[->] (0) edge node[above] {$<93>$} (1);
+  \node[state,initial,initial text=$\langle 666\rangle$] (0) {$0$};
+  \node[state,accepting,accepting text=$\langle 999\rangle$] (1) [right=of 0] {$1$};
+  \path[->] (0) edge node[above] {$\langle 93\rangle $} (1);
 \end{tikzpicture}
 \end{document}

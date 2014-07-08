@@ -87,6 +87,9 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/lal_char_b.in.gv            \
   %D%/automaton.dir/lal_char_b.out.gv           \
   %D%/automaton.dir/lal_char_b.tex              \
+  %D%/automaton.dir/lal_char_q.in.gv            \
+  %D%/automaton.dir/lal_char_q.out.gv           \
+  %D%/automaton.dir/lal_char_q.tex              \
   %D%/automaton.dir/lan_char_b.in.gv            \
   %D%/automaton.dir/lan_char_b.out.gv           \
   %D%/automaton.dir/lan_char_b.tex              \
@@ -102,10 +105,10 @@ EXTRA_DIST +=                                   \
   %D%/compose.dir/result.gv                     \
   %D%/compose.dir/right.gv                      \
   %D%/derivation.dir/e1-dt.gv                   \
-  %D%/derivation.dir/e2-dt.gv                   \
   %D%/derivation.dir/e2-dt-breaking.gv          \
-  %D%/derivation.dir/h3-dt.gv                   \
+  %D%/derivation.dir/e2-dt.gv                   \
   %D%/derivation.dir/h3-dt-breaking.gv          \
+  %D%/derivation.dir/h3-dt.gv                   \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/deterministic-det.gv      \
