@@ -39,7 +39,6 @@ def diff_to_re(match):
     # t in [-+ ]
     t = l[1]
     l = l[2:]
-    print(t, "->", l, file=sys.stderr)
     if t in ['-', ' ']:
       is_diff = True
       frm.append(l)
@@ -49,25 +48,22 @@ def diff_to_re(match):
   if is_diff:
     frm = "\n".join(frm)
     to = "\n".join(to)
-    print(frm, "->", to, file=sys.stderr)
     global subst
     subst[frm] = to
 
 def exp_eff_to_re(match):
-  print("FOO", match.group(1), match.group(2), file=sys.stderr)
   fr = ''
   to  = ''
-  print("A1", file=sys.stderr)
-  for l in match.group(1).splitlines(keepends = True):
+  # For some reason, with python-2.7 on OS X, I raise a
+  # exceptions.TypeError when I use (keepends = True) instead of
+  # (True)!!!
+  for l in match.group(1).splitlines(True):
     fr += l[1:]
   # Drop the final \n.
   fr = fr[:-1]
-  print("A2", file=sys.stderr)
-  for l in match.group(2).splitlines(keepends = True):
+  for l in match.group(2).splitlines(True):
     to += l[1:]
   to = to[:-1]
-  print("3", file=sys.stderr)
-  print("HEY", "s{", fr, "}{", to, "}", sep='', file=sys.stderr)
   global subst
   subst[fr] = to
 
@@ -84,18 +80,17 @@ def update(test, log):
     if subst != dict():
       # Turn "subst{frm} -> to" into a large RE.
       frm = '|'.join(map(re.escape, subst.keys()))
-      test = re.sub(r'''(?<=['"\n])({frm})(?=['"\n])'''.format(frm=frm),
-                   lambda m: subst[m.group(1)],
-                   test, flags = re.MULTILINE)
+      test = re.sub("(" + frm + ")",
+                    lambda m: subst[m.group(1)],
+                    test, flags = re.MULTILINE)
     return test
-  except:
+  except IOError:
     return test
 
 for t in args.tests:
   old = contents(t)
   new = old
   for l in args.log + [t[:t.rfind('.')] + '.log']:
-    print(l)
     new = update(new, l)
   if new != old:
     open(t, 'w').write(new)
