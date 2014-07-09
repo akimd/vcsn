@@ -83,8 +83,8 @@ check('signature',  a, exp)
 check('weighted',   a, exp)
 
 ## A small weighted automaton.
-a = aut("small-weighted.gv")
-exp = file_to_string("small-weighted.exp.gv")
+a = aut("small-z.gv")
+exp = file_to_string("small-z.exp.gv")
 xfail('brzozowski', a)
 xfail('moore',      a)
 xfail('signature',  a)

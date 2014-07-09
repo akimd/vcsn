@@ -149,8 +149,8 @@ EXTRA_DIST +=                                   \
   %D%/minimize.dir/redundant.exp.gv             \
   %D%/minimize.dir/redundant.gv                 \
   %D%/minimize.dir/small-nfa.exp.gv             \
-  %D%/minimize.dir/small-weighted.exp.gv        \
-  %D%/minimize.dir/small-weighted.gv            \
+  %D%/minimize.dir/small-z.exp.gv               \
+  %D%/minimize.dir/small-z.gv                   \
   %D%/power.dir/binary^0.gv                     \
   %D%/power.dir/binary^1.gv                     \
   %D%/prefix.dir/aut1-factor.gv                 \
