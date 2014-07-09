@@ -22,16 +22,15 @@ def xfail(algo, aut):
     else:
         FAIL('did not raise an exception', str(res))
 
-
 ## Simple minimization test.  The example comes from the "Theorie des
 ## langages" course notes by Akim Demaille.  Automaton 4.23 at page 59,
 ## as of revision a0761d6.
-redundant = aut("redundant.gv")
-redundant_exp = file_to_string("redundant.exp.gv")
-check('brzozowski', redundant, vcsn.automaton(redundant_exp))
-check('moore',      redundant, redundant_exp)
-check('signature',  redundant, redundant_exp)
-check('weighted',   redundant, redundant_exp)
+a = aut("redundant.gv")
+exp = file_to_string("redundant.exp.gv")
+check('brzozowski', a, vcsn.automaton(exp))
+check('moore',      a, exp)
+check('signature',  a, exp)
+check('weighted',   a, exp)
 
 ## An automaton equal to redundant.exp, with one transition removed.
 a = aut('incomplete-non-trim.gv')
@@ -63,40 +62,39 @@ all_states_final = vcsn.context('lal_char(a)_b').ratexp('a*').standard()
 check('moore', all_states_final, all_states_final.minimize('signature'))
 
 ## Minimize an intricate automaton into a linear one.
-intricate = vcsn.context('lal_char(a-k)_b') \
-                .ratexp('[a-k]{10}') \
-                .standard()
-intricate_exp = file_to_string("intricate.exp.gv")
-check('brzozowski', intricate, vcsn.automaton(intricate_exp))
-check('moore',      intricate, intricate_exp)
-check('signature',  intricate, intricate_exp)
-check('weighted',   intricate, intricate_exp)
+a = vcsn.context('lal_char(a-k)_b') \
+        .ratexp('[a-k]{10}') \
+        .standard()
+exp = file_to_string("intricate.exp.gv")
+check('brzozowski', a, vcsn.automaton(exp))
+check('moore',      a, exp)
+check('signature',  a, exp)
+check('weighted',   a, exp)
 
 ## Compute the quotient of a non-deterministic automaton, in this case
 ## yielding the minimal deterministic solution.
-smallnfa = vcsn.context('lal_char(a)_b') \
-               .ratexp('a{2}*+a{2}*') \
-               .standard()
-smallnfa_exp = file_to_string("small-nfa.exp.gv")
-check('brzozowski', smallnfa, vcsn.automaton(smallnfa_exp))
-xfail('moore',      smallnfa)
-check('signature',  smallnfa, smallnfa_exp)
-check('weighted',   smallnfa, smallnfa_exp)
+a = vcsn.context('lal_char(a)_b') \
+        .ratexp('a{2}*+a{2}*') \
+        .standard()
+exp = file_to_string("small-nfa.exp.gv")
+check('brzozowski', a, vcsn.automaton(exp))
+xfail('moore',      a)
+check('signature',  a, exp)
+check('weighted',   a, exp)
 
 ## A small weighted automaton.
-smallweighted = aut("small-weighted.gv")
-smallweighted_exp = file_to_string("small-weighted.exp.gv")
-xfail('brzozowski', smallweighted)
-xfail('moore',      smallweighted)
-xfail('signature',  smallweighted)
-check('weighted',   smallweighted, smallweighted_exp)
+a = aut("small-weighted.gv")
+exp = file_to_string("small-weighted.exp.gv")
+xfail('brzozowski', a)
+xfail('moore',      a)
+xfail('signature',  a)
+check('weighted',   a, exp)
 
 ## Non-lal automata.
-nonlal = \
-  vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard()
-nonlal_exp = file_to_string("nonlal.exp.gv")
-check("signature", nonlal, nonlal_exp)
-check("weighted",  nonlal, nonlal_exp)
+a = vcsn.context('law_char(a-c)_b').ratexp("abc(bc)*+acb(bc)*").standard()
+exp = file_to_string("nonlal.exp.gv")
+check("signature", a, exp)
+check("weighted",  a, exp)
 
 ## An already-minimal automaton.  This used to fail with Moore,
 ## because of a subtly wrong optimization attempt in
