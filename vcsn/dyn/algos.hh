@@ -118,6 +118,12 @@ namespace vcsn
     /// \pre  \a aut must be LAL.
     automaton determinize(const automaton& aut);
 
+
+    /// The determinized weighted automaton.
+    /// \param aut       the weighted automaton to determinize
+    /// \pre  \a aut must be LAL.
+    automaton determinize_weight(const automaton& aut);
+
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.
     /// \param lhs   a LAL automaton

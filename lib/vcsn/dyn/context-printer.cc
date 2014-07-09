@@ -96,6 +96,8 @@ namespace vcsn
         header("vcsn/algos/blind.hh");
       else if (type == "determinized_automaton")
         header("vcsn/algos/determinize.hh");
+      else if (type == "detweighted_automaton")
+        header("vcsn/algos/determinize.hh");
       else if (type == "mutable_automaton")
         header("vcsn/core/mutable-automaton.hh");
       else if (type == "pair_automaton")

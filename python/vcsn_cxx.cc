@@ -153,6 +153,11 @@ struct automaton
     return vcsn::dyn::determinize(val_);
   }
 
+  automaton determinize_weight() const
+  {
+    return vcsn::dyn::determinize_weight(val_);
+  }
+
   automaton difference(const automaton& rhs) const
   {
     return vcsn::dyn::difference(val_, rhs.val_);
@@ -848,6 +853,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("concatenate", &automaton::concatenate)
     .def("context", &automaton::context)
     .def("determinize", &automaton::determinize)
+    .def("determinize_weight", &automaton::determinize_weight)
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)

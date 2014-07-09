@@ -39,3 +39,18 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 for name in ['deterministic', 'epsilon', 'empty']:
     aut = vcsn.automaton(load(name))
     check(aut, name + "-det", True)
+
+## --------------------------------------------------------- ##
+## Mohri example for determinization of weighted automaton.  ##
+## --------------------------------------------------------- ##
+def mohri_example_check(i, o):
+  deter = i.determinize_weight()
+  CHECK_EQ(False, i.is_deterministic())
+  CHECK_EQ(True, deter.is_deterministic())
+  CHECK_EQ(o, deter)
+
+mohri_aut_in = vcsn.automaton(load("weighted-aut-in"))
+
+mohri_aut_out = load("weighted-aut-out")
+
+mohri_example_check(mohri_aut_in, mohri_aut_out)

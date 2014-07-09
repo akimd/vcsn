@@ -120,6 +120,8 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
+  %D%/determinize.dir/weighted-aut-in.gv        \
+  %D%/determinize.dir/weighted-aut-out.gv       \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/a2x.efsm                         \
   %D%/efsm.dir/a2xyz.efsm                       \

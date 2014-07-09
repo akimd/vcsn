@@ -14,6 +14,7 @@ namespace vcsn
       std::string w = word();
       if (w == "blind"
           || w == "determinized"
+          || w == "detweighted"
           || w == "mutable"
           || w == "pair"
           || w == "permutation"
@@ -232,6 +233,7 @@ namespace vcsn
         }
       // xxx_automaton<Aut>.
       else if (prefix == "determinized"
+               || prefix == "detweighted"
                || prefix == "linear"
                || prefix == "pair"
                || prefix == "permutation"

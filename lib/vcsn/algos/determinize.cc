@@ -14,5 +14,14 @@ namespace vcsn
     {
       return detail::determinize_registry().call(aut);
     }
+
+
+    REGISTER_DEFINE(determinize_weight);
+
+    automaton
+    determinize_weight(const automaton& aut)
+    {
+      return detail::determinize_weight_registry().call(aut);
+    }
   }
 }
