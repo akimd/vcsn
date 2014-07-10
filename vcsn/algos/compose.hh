@@ -171,20 +171,29 @@ namespace vcsn
         auto li = ls.begin();
         auto ri = rs.begin();
 
-        for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
-          if (!has_only_ones_in(rhs, std::get<1>(psrc)))
+        bool has_eps_out = false;
+        if (!has_only_ones_in(rhs, std::get<1>(psrc)))
+          for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
+          {
+            has_eps_out = true;
             res_->new_transition(src,
                                  res_->state(lhs->dst_of(*li), std::get<1>(psrc)),
                                  join_label(lhs->hidden_label_of(*li),
                                             get_hidden_one(rhs)),
                                  ws.conv(*lhs->weightset(), lhs->weight_of(*li)));
+          }
+        else
+          for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
+            continue;
+            // Loop through the spontaneous transitions, to avoid treating them
 
-        for (/* Nothing. */; ri != rs.end() && is_one(rhs, *ri); ++ri)
-          res_->new_transition(src,
-                               res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
-                               join_label(get_hidden_one(lhs),
-                                          rhs->hidden_label_of(*ri)),
-                               ws.conv(*rhs->weightset(), rhs->weight_of(*ri)));
+        if (!has_eps_out || li != ls.end())
+          for (/* Nothing. */; ri != rs.end() && is_one(rhs, *ri); ++ri)
+            res_->new_transition(src,
+                                 res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
+                                 join_label(get_hidden_one(lhs),
+                                            rhs->hidden_label_of(*ri)),
+                                 ws.conv(*rhs->weightset(), rhs->weight_of(*ri)));
 
 
         for (/* Nothing. */;
