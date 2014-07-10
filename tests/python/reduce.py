@@ -3,6 +3,12 @@
 
 import vcsn
 
+def check_reduce(a, exp):
+    eff = a.reduce()
+    CHECK_EQ(exp, eff)
+    CHECK_EQ(exp, eff.reduce())
+    CHECK_EQ(a.shortest(10), eff.shortest(10))
+
 from test import *
 
 # The following tests yields two different results, depending whether
@@ -89,6 +95,49 @@ def exp(ws):
 for ws in ['z', 'q', 'r']:
     ctx = vcsn.context('lal_char(abc)_' + ws)
     a = ctx.ratexp(r).standard()
-    eff = a.reduce()
-    CHECK_EQ(exp(ws), eff)
-    CHECK_EQ(exp(ws), eff.reduce())
+    check_reduce(a, exp(ws))
+
+
+## ------------------------------- ##
+## TAF-Kit Sec. 3.3.1, Fig. 3.14.  ##
+## ------------------------------- ##
+
+a = vcsn.automaton('''
+digraph {
+    vcsn_context = "lal_char(abc)_z"
+    I -> 0
+    1 -> F
+    0 -> 0 [label = "a, b"]
+    0 -> 1 [label = "b"]
+    0 -> 2 [label = "<2>b"]
+    2 -> 2 [label = "<2>a, <2>b"]
+    2 -> 1 [label = "<2>b"]
+    1 -> 1 [label = "<4>a, <4>b"]
+}
+''')
+check_reduce(a, '''digraph
+{
+  vcsn_context = "lal_char(abc)_z"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle]
+    0
+    1
+    2
+  }
+  I0 -> 0
+  0 -> 0 [label = "a, <9>b"]
+  0 -> 1 [label = "b"]
+  1 -> F1
+  1 -> 0 [label = "<8>a, <-56>b"]
+  1 -> 1 [label = "<4>a"]
+  1 -> 2 [label = "<-1>a, <-3>b"]
+  2 -> 0 [label = "<16>a, <-112>b"]
+  2 -> 1 [label = "<-8>b"]
+  2 -> 2 [label = "<2>a, <-2>b"]
+}''')

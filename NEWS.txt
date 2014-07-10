@@ -4,6 +4,12 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-07-10
+** reduce: new algorithm on automata
+Implements the Schützenberger algorithm for reduction of representations for
+any skew field.  As a special case, automata with weights in Z are also
+supported.
+
 * 2014-07-04
 ** determinization is more robust to large alphabets
 In order to optimize (Boolean) determinization, 'determinize' no longer
