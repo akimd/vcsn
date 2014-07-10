@@ -158,3 +158,13 @@ bench('a.minimize("moore")', 'a = std({0})'.format(r),
 a = vcsn.context("lal_char(a-c)_b").de_bruijn(6).determinize()
 bench('a.synchronizing_word()', 'a = de_bruijn(6)',
       lambda: a.synchronizing_word())
+
+# reduce.
+r = "[a-g]{300}"
+a = vcsn.context("lal_char(a-k)_z").ratexp(r).standard()
+bench('a.reduce()', 'a = std({0}) on [a-k] -> Z'.format(r),
+      lambda: a.reduce())
+r = "[a-g]{300}"
+a = vcsn.context("lal_char(a-k)_q").ratexp(r).standard()
+bench('a.reduce()', 'a = std({0}) on [a-k] -> Q'.format(r),
+      lambda: a.reduce())
