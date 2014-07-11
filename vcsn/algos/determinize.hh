@@ -6,7 +6,6 @@
 # include <string>
 # include <type_traits>
 # include <map>
-# include <unordered_map>
 # include <vector>
 # include <queue>
 
@@ -17,6 +16,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/map.hh> // vcsn::has
+# include <vcsn/misc/unordered_map.hh> // vcsn::has
 # include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
@@ -355,23 +355,18 @@ namespace vcsn
       {
         init_initial_state();
 
-        // Store set of state destination by (state, weight) of each label.
-        std::unordered_map<label_t, state_name_t,
+        // label -> <destination, sum of weights>.
+        std::unordered_map<label_t,
+                           std::pair<state_name_t, weight_t>,
                            vcsn::hash<labelset_t_of<automaton_t>>,
-                           vcsn::equal_to<labelset_t_of<automaton_t>>> mls2w;
-
-        // Store the weights of each label.
-        std::unordered_map<label_t, weight_t,
-                           vcsn::hash<labelset_t_of<automaton_t>>,
-                           vcsn::equal_to<labelset_t_of<automaton_t>>> mlw;
+                           vcsn::equal_to<labelset_t_of<automaton_t>>> dests;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.front());
             todo_.pop();
             auto src = map_[ss];
 
-            mls2w.clear();
-            mlw.clear();
+            dests.clear();
             for (const auto& p : ss)
               {
                 auto s = p.first;
@@ -382,35 +377,22 @@ namespace vcsn
                     auto dst = input_->dst_of(t);
                     auto w = ws_.mul(v, input_->weight_of(t));
 
-                    // Calculate weight on each trasition and
-                    // update to the map mls2w with (state, weight)
-                    if (mls2w.find(l) == mls2w.end())
-                      {
-                        mls2w[l][dst] = w;
-                        mlw[l] = w;
-                      }
-                    else if (mls2w[l].find(dst) == mls2w[l].end())
-                      {
-                        mls2w[l][dst] = w;
-                        mlw[l] = ws_.add(mlw[l], w);
-                      }
-                    else
-                      {
-                        mls2w[l][dst] = ws_.add(mls2w[l][dst], w);
-                        mlw[l] = ws_.add(mlw[l], w);
-                      }
+                    // For each letter, update destination state, and
+                    // sum of weights.
+                    if (!has(dests, l))
+                      dests.emplace(l, make_pair(ns_.zero(), ws_.zero()));
+                    auto& d = dests[l];
+                    ns_.add_here(d.first, dst, w);
+                    d.second = ws_.add(d.second, w);
                   }
               }
 
-            for (auto& e : mls2w)
-              {
-                auto l = e.first;
-                // The semiring the mul distribute over plus
-                // so (vi*wi / w) + (vj*wj/w) = (vi*wi + vj*wj)/w.
-                for (auto& f : e.second)
-                  f.second = ws_.rdiv(f.second, mlw[l]);
-                this->new_transition(src, state_(e.second), l, mlw[l]);
-              }
+            for (auto& d : dests)
+              this->new_transition(src,
+                                   state_(ns_.ldiv_here(d.second.second,
+                                                        d.second.first)),
+                                   d.first,
+                                   d.second.second);
           }
       }
 
