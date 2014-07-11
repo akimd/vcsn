@@ -19,12 +19,12 @@ namespace vcsn
 
     /// Whether define the same language.
     /// \pre The labelsets of lhs and rhs are free.
-    /// \pre lhs and rhs are Boolean
+    /// \pre lhs and rhs are Boolean, or on Z, or on a field.
     bool are_equivalent(const automaton& lhs, const automaton& rhs);
 
     /// Whether define the same language.
     /// \pre The labelsets of lhs and rhs are free.
-    /// \pre lhs and rhs are Boolean
+    /// \pre lhs and rhs are Boolean, or on Z, or on a field.
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
     /// Whether there exists an isomorphism between \a lhs's states

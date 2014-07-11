@@ -5,9 +5,13 @@
 # include <vcsn/algos/complement.hh>
 # include <vcsn/algos/complete.hh>
 # include <vcsn/algos/determinize.hh>
+# include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/product.hh>
+# include <vcsn/algos/reduce.hh>
 # include <vcsn/algos/strip.hh>
-# include <vcsn/dyn/fwd.hh>
+# include <vcsn/algos/union.hh>
+# include <vcsn/dyn/automaton.hh>
+# include <vcsn/dyn/ratexp.hh>
 
 namespace vcsn
 {
@@ -16,19 +20,42 @@ namespace vcsn
   | are_equivalent(automaton, automaton).  |
   `---------------------------------------*/
 
+  /// Check equivalence between Boolean automata on a free labelset.
   template <typename Aut1, typename Aut2>
-  bool
+  auto
   are_equivalent(const Aut1& a1, const Aut2& a2)
+    -> typename std::enable_if<(labelset_t_of<Aut1>::is_free()
+                                && std::is_same<weightset_t_of<Aut1>, b>::value
+                                && labelset_t_of<Aut2>::is_free()
+                                && std::is_same<weightset_t_of<Aut2>, b>::value),
+                               bool>::type
   {
     return (is_useless(difference(a1, a2))
             && is_useless(difference(a2, a1)));
   }
 
+
+  /// Check equivalence between Boolean automata on fields, or Z.
+  template <typename Aut1, typename Aut2>
+  auto
+  are_equivalent(const Aut1& a1, const Aut2& a2)
+    -> decltype((a1->weightset()->sub(a1->weightset()->zero(),
+                                      a1->weightset()->one()),
+                 true))
+  {
+    const auto& ws2 = *a2->weightset();
+    // d = a1 U -a2.
+    auto d = union_a(a1,
+                     left_mult(ws2.sub(ws2.zero(), ws2.one()),
+                               a2));
+    return is_empty(reduce(d));
+  }
+
+
   namespace dyn
   {
     namespace detail
     {
-
       /// Bridge.
       template <typename Aut1, typename Aut2>
       bool
@@ -36,11 +63,11 @@ namespace vcsn
       {
         const auto& a1 = aut1->as<Aut1>();
         const auto& a2 = aut2->as<Aut2>();
-        return are_equivalent(a1, a2);
+        return ::vcsn::are_equivalent(a1, a2);
       }
 
       REGISTER_DECLARE(are_equivalent,
-                        (const automaton&, const automaton&) -> bool);
+                       (const automaton&, const automaton&) -> bool);
     }
   }
 

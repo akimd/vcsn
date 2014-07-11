@@ -135,13 +135,13 @@ def CHECK_EQ(expected, effective, loc = None):
 
 def CHECK_EQUIV(a1, a2):
     """Check that `a1` and `a2` are equivalent."""
-    is_bool = re.compile('lal_char\([a-z]*\)_b')
     a1 = a1.strip()
     a2 = a2.strip()
-    if is_bool.match(str(a1.context())) and is_bool.match(str(a1.context())):
-        CHECK_EQ(True, a1.is_equivalent(a2))
-    else:
-        CHECK_EQ(a1.proper().shortest(4), a2.proper().shortest(4))
+    if str(a1.context()).startswith('lan'):
+        a1 = a1.proper()
+    if str(a2.context()).startswith('lan'):
+        a2 = a2.proper()
+    CHECK_EQ(True, a1.is_equivalent(a2))
 
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that `a1` and `a2` are isomorphic."
