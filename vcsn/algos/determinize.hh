@@ -348,7 +348,7 @@ namespace vcsn
 
             mls2w.clear();
             mlw.clear();
-            for (auto p : ss)
+            for (const auto& p : ss)
               {
                 auto s = p.first;
                 auto v = p.second;
@@ -356,24 +356,24 @@ namespace vcsn
                   {
                     auto l = input_->label_of(t);
                     auto dst = input_->dst_of(t);
-                    auto tmp = ws_.mul(v, input_->weight_of(t));
+                    auto w = ws_.mul(v, input_->weight_of(t));
 
                     // Calculate weight on each trasition and
                     // update to the map mls2w with (state, weight)
                     if (mls2w.find(l) == mls2w.end())
                       {
-                        mls2w[l][dst] = tmp;
-                        mlw[l] = tmp;
+                        mls2w[l][dst] = w;
+                        mlw[l] = w;
                       }
                     else if (mls2w[l].find(dst) == mls2w[l].end())
                       {
-                        mls2w[l][dst] = tmp;
-                        mlw[l] = ws_.add(mlw[l], tmp);
+                        mls2w[l][dst] = w;
+                        mlw[l] = ws_.add(mlw[l], w);
                       }
                     else
                       {
-                        mls2w[l][dst] = ws_.add(mls2w[l][dst], tmp);
-                        mlw[l] = ws_.add(mlw[l], tmp);
+                        mls2w[l][dst] = ws_.add(mls2w[l][dst], w);
+                        mlw[l] = ws_.add(mlw[l], w);
                       }
                   }
               }
