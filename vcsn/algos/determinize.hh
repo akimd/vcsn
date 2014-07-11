@@ -385,7 +385,6 @@ namespace vcsn
                 // so (vi*wi / w) + (vj*wj/w) = (vi*wi + vj*wj)/w.
                 for (auto& f : e.second)
                   f.second = ws_.rdiv(f.second, mlw[l]);
-
                 this->new_transition(src, state_(e.second), l, mlw[l]);
               }
           }
@@ -412,11 +411,8 @@ namespace vcsn
               {
                 o << sep;
                 sep = ", ";
-                o << "(";
+                print_weight(ws_, s.second, o, fmt);
                 input_->print_state_name(s.first, o, fmt);
-                o << sep;
-                this->weightset()->print(s.second, o);
-                o << ")";
               }
           }
         return o;
