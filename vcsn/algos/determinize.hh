@@ -111,7 +111,7 @@ namespace vcsn
         else
           res = i->second;
         return res;
-      };
+      }
 
       /// Determinize all accessible states.
       void operator()()
@@ -296,6 +296,9 @@ namespace vcsn
       using state_t = state_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
 
+      /// An output state is a list of weighted input states.
+      using state_name_t = std::map<state_t, weight_t>;
+
       /// Build the weighted determinizer.
       /// \param a         the weighted automaton to determinize
       detweighted_automaton_impl(const automaton_t& a)
@@ -316,16 +319,13 @@ namespace vcsn
       // Initialize initial state of new weighted automaton.
       void init_initial_state()
       {
-        map_state2weight_t ss;
+        state_name_t ss;
         for (auto t : input_->initial_transitions())
           ss.emplace(input_->dst_of(t), input_->weight_of(t));
 
         auto s = this->new_state();
         this->set_initial(s);
-
         map_[ss] = s;
-        orgs_[s] = ss;
-
         todo_.push(ss);
       }
 
@@ -336,7 +336,7 @@ namespace vcsn
         init_initial_state();
 
         // Store set of state destination by (state, weight) of each label.
-        std::unordered_map<label_t, map_state2weight_t,
+        std::unordered_map<label_t, state_name_t,
                            vcsn::hash<labelset_t_of<automaton_t>>,
                            vcsn::equal_to<labelset_t_of<automaton_t>>> mls2w;
 
@@ -398,7 +398,6 @@ namespace vcsn
                   {
                     auto ns = this->new_state();
                     g = map_.emplace(e.second, ns).first;
-                    orgs_[ns] = e.second;
                     todo_.push(e.second);
 
                     // TODOs: Improve finding the final state
@@ -417,16 +416,15 @@ namespace vcsn
       {
         return (s != super_t::pre()
                 && s != super_t::post()
-                // && has(origins(), s));
-                && (orgs_.find(s) != orgs_.end()));
+                && has(origins(), s));
       }
 
       std::ostream&
       print_state_name(state_t ss, std::ostream& o,
                        const std::string& fmt = "text") const
       {
-        auto i = orgs_.find(ss);
-        if (i == orgs_.end())
+        auto i = origins().find(ss);
+        if (i == origins().end())
           this->print_state(ss, o);
         else
           {
@@ -445,44 +443,24 @@ namespace vcsn
         return o;
       }
 
-      // TODOs: Use origins set to show states
       /// A map from determinized states to sets of original states.
-      using origins_t = std::map<state_t, std::set<state_t>>;
+      using origins_t = std::map<state_t, state_name_t>;
       mutable origins_t origins_;
       const origins_t&
       origins() const
       {
+        if (origins_.empty())
+          for (const auto& p: map_)
+            origins_.emplace(p.second, p.first);
         return origins_;
       }
 
     private:
-      /// Set of input states -> output state.
-      using map_state2weight_t = std::map<state_t, weight_t>;
-      struct map_less;
-      std::map<map_state2weight_t, state_t, map_less> map_;
-
-      // Map from determinized states to set of (state, weight)
-      std::map<state_t, map_state2weight_t> orgs_;
-
-      /// Input automaton.
-      automaton_t input_;
-
-      /// Its weightset.
-      weightset_t ws_ = *input_->weightset();
-
-      /// We use state numbers as indexes, so we need to know the last
-      /// state number.  If states were removed, it is not the same as
-      /// the number of states.
-      size_t state_size_ = input_->all_states().back() + 1;
-
-      /// The sets of (input) states waiting to be processed.
-      using queue = std::queue<map_state2weight_t>;
-      queue todo_;
-
-      struct map_less
+      /// Compare two output states.
+      struct state_name_less
       {
-        bool operator()(const map_state2weight_t& m1,
-                       const map_state2weight_t& m2) const
+        bool operator()(const state_name_t& m1,
+                        const state_name_t& m2) const
         {
           auto pm1 = m1.cbegin();
           auto pm2 = m2.cbegin();
@@ -504,6 +482,24 @@ namespace vcsn
           return pm1 == m1.cend() && pm2 != m2.cend();
         }
       };
+
+      /// Map from state name to state number.
+      std::map<state_name_t, state_t, state_name_less> map_;
+
+      /// Input automaton.
+      automaton_t input_;
+
+      /// Its weightset.
+      weightset_t ws_ = *input_->weightset();
+
+      /// We use state numbers as indexes, so we need to know the last
+      /// state number.  If states were removed, it is not the same as
+      /// the number of states.
+      size_t state_size_ = input_->all_states().back() + 1;
+
+      /// The sets of (input) states waiting to be processed.
+      using queue = std::queue<state_name_t>;
+      queue todo_;
     };
   }
 
