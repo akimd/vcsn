@@ -50,40 +50,48 @@ del auts
 # derived_term
 e = "(a+b)*b(<2>a+<2>b){150}"
 r = vcsn.context('lal_char(ab)_z').ratexp(e)
-bench('r.derived_term()', 'r = {}   on [ab]   -> Z'.format(e),
+bench('r.derived_term()', 'r = {}, c = [ab] -> Z'.format(e),
       lambda: r.derived_term())
 
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.derived_term()', 'r = {}   on [a-z]  -> Z'.format(e),
+bench('r.derived_term()', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.derived_term())
 
 # linear
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.linear()', 'r = {}   on [a-z]  -> Z'.format(e),
+bench('r.linear()', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.linear())
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.standard()', 'r = {} on [a-z]  -> Z'.format(e),
+bench('r.standard()', 'r = {}, c = [a-z] -> Z'.format(e),
       lambda: r.standard())
 
 # thompson
 e = "(a+b)*b(<2>a+<2>b){20000}"
 r = vcsn.context('lan_char(a-z)_z').ratexp(e)
-bench('r.thompson()', 'r = {} on [a-z]? -> Z'.format(e),
+bench('r.thompson()', 'r = {}, c = [a-z]? -> Z'.format(e),
       lambda: r.thompson())
 
 # determinize.
-n = 21
-a = vcsn.context('lal_char(abc)_b').ladybird(n)
-bench('a.determinize()', 'a = ladybird({})'.format(n),
-      lambda: a.determinize())
+for n in [21, 18]:
+    a = vcsn.context('lal_char(abc)_b').ladybird(n)
+    bench('a.determinize()', 'a = ladybird({})'.format(n),
+          lambda: a.determinize())
 
 n = 18
 a = vcsn.context('lal_char(a-zA-Z0-9)_b').ladybird(n)
-bench('a.determinize()', 'a = lal(a-zA-Z0-9).ladybird({})'.format(n),
+bench('a.determinize()', 'a = ladybird({}), c = [a-zA-Z0-9] -> B'.format(n),
       lambda: a.determinize())
+
+n = 13
+a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
+bench('a.determinize()', 'a = de_bruijn({}), c = [abc] -> B'.format(n),
+      lambda: a.determinize())
+a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
+bench('a.determinize("weighted")', 'a = de_bruijn({}), c = [abc] -> Q'.format(n),
+      lambda: a.determinize_weight())
 
 # eval.
 n = 150
@@ -162,9 +170,9 @@ bench('a.synchronizing_word()', 'a = de_bruijn(6)',
 # reduce.
 r = "[a-g]{300}"
 a = vcsn.context("lal_char(a-k)_z").ratexp(r).standard()
-bench('a.reduce()', 'a = std({0}) on [a-k] -> Z'.format(r),
+bench('a.reduce()', 'a = std({0}), c = [a-k] -> Z'.format(r),
       lambda: a.reduce())
 r = "[a-g]{300}"
 a = vcsn.context("lal_char(a-k)_q").ratexp(r).standard()
-bench('a.reduce()', 'a = std({0}) on [a-k] -> Q'.format(r),
+bench('a.reduce()', 'a = std({0}), c = [a-k] -> Q'.format(r),
       lambda: a.reduce())

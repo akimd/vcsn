@@ -12,10 +12,9 @@ def normalize(k):
     # Fix: extraneous paren.
     k = re.sub(r'ladybird\(21\)\)', 'ladybird(21)', k)
     # Fix: Incorrect use of .format.
-    k = re.sub(r'a.shuffle\(a\)         # a = std\(\{\}\).format\(r\)',
-               r'a.shuffle(a)         # a = std([a-e]?{50})', k)
-    k = re.sub(r'a.product\(a\)         # a = std\(\{\}\).format\(r\)',
-               r'a.product(a)         # a = std([a-e]?{50})', k)
+    k = re.sub(r'(a.(?:product|shuffle)\(a\) *# a = std\(\{\}\).format\(r\))',
+               lambda m: m.group(1).replace('{}', '[a-e]?{50})'),
+               k)
     # Fix: now use 's' to denote a string, instead of 'a'.
     k = re.sub(r'read\(a\)              # a =',
                r'read(s)              # s =', k)
@@ -23,6 +22,11 @@ def normalize(k):
     k = re.sub(r'(# a = de_bruijn\(150\))$', r'\1, 1000x', k)
     k = re.sub(r'(# e = "\(\\e\+a\)" \* 500)$', r'\1, 100x', k)
     k = re.sub(r'(# r = b\.ratexp\("\(\\e\+a\)" \* 500\))$', r'\1, 1000x', k)
+    # Now, instead of "   on [a-z]  -> Z", ", c = [a-z] -> Z".
+    k = re.sub(r' +on (\[.*?\][?*]?) *-> *([BQZ])',
+               r', c = \1 -> \2', k)
+    k = re.sub(r'a = lal\(a-zA-Z0-9\).ladybird\(18\)',
+               r'a = ladybird(18), c = [a-zA-Z0-9] -> B', k)
     return k
 
 def read(fn):
