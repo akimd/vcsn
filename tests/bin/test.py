@@ -135,13 +135,31 @@ def CHECK_EQ(expected, effective, loc = None):
 
 def CHECK_EQUIV(a1, a2):
     """Check that `a1` and `a2` are equivalent."""
+    num = 10
     a1 = a1.strip()
     a2 = a2.strip()
     if str(a1.context()).startswith('lan'):
         a1 = a1.proper()
     if str(a2.context()).startswith('lan'):
         a2 = a2.proper()
-    CHECK_EQ(True, a1.is_equivalent(a2))
+
+    # Cannot compare automata on Zmin.
+    if str(a1.context()).endswith('zmin') or str(a2.context()).endswith('zmin'):
+        res = a1.shortest(num) == a2.shortest(num)
+    else:
+        res = a1.is_equivalent(a2)
+
+    if res:
+        PASS()
+    else:
+        FAIL("automata are not equivalent")
+        rst_file("Left automaton", a1)
+        rst_file("Right automaton", a2)
+        s1 = a1.shortest(num).format('list')
+        s2 = a2.shortest(num).format('list')
+        rst_file("Left automaton shortest", s1)
+        rst_file("Right automaton shortest", s2)
+        rst_diff(s1, s2)
 
 def CHECK_ISOMORPHIC(a1, a2):
     "Check that `a1` and `a2` are isomorphic."
