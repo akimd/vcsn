@@ -280,6 +280,15 @@ namespace vcsn
       return rdiv(r, l);
     }
 
+    /// Right exterior division.
+    value_t&
+    rdiv_here(value_t& v, const weight_t& w) const
+    {
+      for (auto& m: v)
+        m.second = weightset()->rdiv(m.second, w);
+      return v;
+    }
+
     static bool
     equals(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {
