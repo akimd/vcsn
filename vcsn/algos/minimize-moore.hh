@@ -8,6 +8,7 @@
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/algos/quotient.hh>
 # include <vcsn/misc/raise.hh>
+# include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -20,7 +21,7 @@ namespace vcsn
     template <typename Aut>
     class minimizer
     {
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
       static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");

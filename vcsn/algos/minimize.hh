@@ -7,6 +7,7 @@
 # include <vcsn/algos/minimize-signature.hh>
 # include <vcsn/algos/minimize-weighted.hh>
 # include <vcsn/dyn/automaton.hh>
+# include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -17,7 +18,7 @@ namespace vcsn
     constexpr bool can_use_brzozowski()
     {
       return labelset_t_of<Aut>::is_free()
-        && std::is_same<weight_t_of<Aut>, bool>::value;
+        && std::is_same<weightset_t_of<Aut>, b>::value;
     }
   }
 
@@ -25,7 +26,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+  typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
                           && labelset_t_of<Aut>::is_free(),
                           subset_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
@@ -43,7 +44,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<std::is_same<weight_t_of<Aut>, bool>::value
+  typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
                           && ! labelset_t_of<Aut>::is_free(),
                           subset_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
@@ -59,7 +60,7 @@ namespace vcsn
 
   template <typename Aut>
   inline
-  typename std::enable_if<!std::is_same<weight_t_of<Aut>, bool>::value,
+  typename std::enable_if<!std::is_same<weightset_t_of<Aut>, b>::value,
                           subset_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {

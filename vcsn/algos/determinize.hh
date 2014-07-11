@@ -16,6 +16,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/map.hh> // vcsn::has
+# include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -37,7 +38,7 @@ namespace vcsn
     {
       static_assert(labelset_t_of<Aut>::is_free(),
                     "determinize: requires free labelset");
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "determinize: requires Boolean weights");
 
     public:

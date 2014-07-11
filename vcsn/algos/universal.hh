@@ -6,6 +6,7 @@
 # include <vcsn/misc/set.hh>
 # include <vcsn/algos/determinize.hh>
 # include <vcsn/algos/transpose.hh>
+# include <vcsn/weightset/fwd.hh> // b
 
 namespace vcsn
 {
@@ -18,7 +19,7 @@ namespace vcsn
     public:
       static_assert(labelset_t_of<Aut>::is_free(),
                     "requires labels_are_letters");
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 
       using automaton_t = Aut;

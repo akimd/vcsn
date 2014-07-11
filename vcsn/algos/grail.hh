@@ -7,6 +7,7 @@
 # include <vcsn/algos/is-deterministic.hh>
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/escape.hh>
+# include <vcsn/weightset/fwd.hh> // b
 # include <vcsn/weightset/polynomialset.hh>
 
 namespace vcsn
@@ -165,7 +166,7 @@ namespace vcsn
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 
       using super_type = outputter<Aut>;
@@ -266,7 +267,7 @@ namespace vcsn
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
       // FIXME: Not right: F2 is also using bool, but it is not bool.
-      static_assert(std::is_same<weight_t_of<Aut>, bool>::value,
+      static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 
       using super_type = outputter<Aut>;
