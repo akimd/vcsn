@@ -40,17 +40,26 @@ for name in ['deterministic', 'epsilon', 'empty']:
     aut = vcsn.automaton(load(name))
     check(aut, name + "-det", True)
 
-## --------------------------------------------------------- ##
-## Mohri example for determinization of weighted automaton.  ##
-## --------------------------------------------------------- ##
-def mohri_example_check(i, o):
-  deter = i.determinize_weight()
-  CHECK_EQ(False, i.is_deterministic())
-  CHECK_EQ(True, deter.is_deterministic())
-  CHECK_EQ(o, deter)
 
-mohri_aut_in = vcsn.automaton(load("weighted-aut-in"))
+## ---------------------------------------##
+## Determinization of weighted automaton. ##
+## ---------------------------------------##
+def weighted_determinize_check(i, o, words = []):
+    deter = i.determinize_weight()
+    CHECK_EQ(True, deter.is_deterministic())
+    CHECK_EQ(o, deter)
+    oaut = vcsn.automaton(o)
+    for w in words:
+        CHECK_EQ(True, deter.eval(w) == oaut.eval(w))
 
-mohri_aut_out = load("weighted-aut-out")
+b_aut_in = vcsn.automaton(load("weighted-b-aut-in"))
+b_aut_out = load("weighted-b-aut-out")
+weighted_determinize_check(b_aut_in, b_aut_out, ["baa", "aa"])
 
-mohri_example_check(mohri_aut_in, mohri_aut_out)
+zmin_aut_in = vcsn.automaton(load("weighted-zmin-aut-in"))
+zmin_aut_out = load("weighted-zmin-aut-out")
+weighted_determinize_check(zmin_aut_in, zmin_aut_out, ["abc", "acd", "acb"])
+
+q_aut_in = vcsn.automaton(load("weighted-q-aut-in"))
+q_aut_out = load("weighted-q-aut-out")
+weighted_determinize_check(q_aut_in, q_aut_out, ["ac", "ab"])

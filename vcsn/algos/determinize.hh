@@ -269,7 +269,6 @@ namespace vcsn
   }
 
 
-
   /*---------------------------.
   | weighted determinization.  |
   `---------------------------*/
@@ -289,18 +288,20 @@ namespace vcsn
     public:
       using automaton_t = Aut;
       using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
-
-      using label_t = label_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
+      using label_t = label_t_of<automaton_t>;
+      using weightset_t = weightset_t_of<automaton_t>;
+
       using state_t = state_t_of<automaton_t>;
-      using weight_t = state_t_of<automaton_t>;
+      using weight_t = weight_t_of<automaton_t>;
 
       /// Build the weighted determinizer.
       /// \param a         the weighted automaton to determinize
       detweighted_automaton_impl(const automaton_t& a)
         : super_t(a->context())
-        , input_(a) { }
+        , input_(a)
+      {}
 
       static std::string sname()
       {
@@ -334,13 +335,15 @@ namespace vcsn
       {
         init_initial_state();
 
-        auto ws = this->weightset();
-
         // Store set of state destination by (state, weight) of each label.
-        std::unordered_map<label_t, map_state2weight_t> mls2w;
+        std::unordered_map<label_t, map_state2weight_t,
+                           vcsn::hash<labelset_t_of<automaton_t>>,
+                           vcsn::equal_to<labelset_t_of<automaton_t>>> mls2w;
 
         // Store the weights of each label.
-        std::unordered_map<label_t, weight_t> mlw;
+        std::unordered_map<label_t, weight_t,
+                           vcsn::hash<labelset_t_of<automaton_t>>,
+                           vcsn::equal_to<labelset_t_of<automaton_t>>> mlw;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.front());
@@ -357,7 +360,7 @@ namespace vcsn
                   {
                     auto l = input_->label_of(t);
                     auto dst = input_->dst_of(t);
-                    auto tmp = ws->mul(v, input_->weight_of(t));
+                    auto tmp = ws_.mul(v, input_->weight_of(t));
 
                     // Calculate weight on each trasition and
                     // update to the map mls2w with (state, weight)
@@ -369,12 +372,12 @@ namespace vcsn
                     else if (mls2w[l].find(dst) == mls2w[l].end())
                       {
                         mls2w[l][dst] = tmp;
-                        mlw[l] = ws->add(mlw[l], tmp);
+                        mlw[l] = ws_.add(mlw[l], tmp);
                       }
                     else
                       {
-                        mls2w[l][dst] = ws->add(mls2w[l][dst], tmp);
-                        mlw[l] = ws->add(mlw[l], tmp);
+                        mls2w[l][dst] = ws_.add(mls2w[l][dst], tmp);
+                        mlw[l] = ws_.add(mlw[l], tmp);
                       }
                   }
               }
@@ -383,11 +386,12 @@ namespace vcsn
               {
                 auto l = e.first;
                 // Calculate the inverse of w'
-                auto inv = ws->rdiv(ws->one(), mlw[l]);
+                auto inv = ws_.rdiv(ws_.one(), mlw[l]);
+
                 // The semiring the mul distribute over plus
                 // so (inv * vi*wi) + (inv * vj*wj) = invv * ((vi*wi) + (vj*wj))
                 for (auto& f : e.second)
-                  f.second = ws->mul(inv, f.second);
+                  f.second = ws_.mul(inv, f.second);
 
                 auto g = map_.find(e.second);
                 if (g == map_.end())
@@ -399,8 +403,10 @@ namespace vcsn
 
                     // TODOs: Improve finding the final state
                     for (auto k : e.second)
-                        if (input_->is_final(k.first))
-                          this->set_final(ns);
+                      if (input_->is_final(k.first))
+                        this->add_final(ns,
+                                        ws_.mul(k.second,
+                                                input_->get_final_weight(k.first)));
                   }
                 this->add_transition(src, g->second, l, mlw[l]);
               }
@@ -431,7 +437,9 @@ namespace vcsn
                 sep = ", ";
                 o << "(";
                 input_->print_state_name(s.first, o, fmt);
-                o << sep << s.second << ")";
+                o << sep;
+                this->weightset()->print(s.second, o);
+                o << ")";
               }
           }
         return o;
@@ -450,14 +458,17 @@ namespace vcsn
     private:
       /// Set of input states -> output state.
       using map_state2weight_t = std::map<state_t, weight_t>;
-      using map = std::unordered_map<map_state2weight_t, state_t>;
-      map map_;
+      struct map_less;
+      std::map<map_state2weight_t, state_t, map_less> map_;
 
       // Map from determinized states to set of (state, weight)
       std::map<state_t, map_state2weight_t> orgs_;
 
       /// Input automaton.
       automaton_t input_;
+
+      /// Its weightset.
+      weightset_t ws_ = *input_->weightset();
 
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
@@ -468,10 +479,31 @@ namespace vcsn
       using queue = std::queue<map_state2weight_t>;
       queue todo_;
 
-      /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-      using label_map_t = std::unordered_map<label_t, map_state2weight_t>;
-      using successors_t = std::unordered_map<state_t, label_map_t>;
-      successors_t successors_;
+      struct map_less
+      {
+        bool operator()(const map_state2weight_t& m1,
+                       const map_state2weight_t& m2) const
+        {
+          auto pm1 = m1.cbegin();
+          auto pm2 = m2.cbegin();
+          while (pm1 != m1.cend() && pm2 != m2.cend())
+          {
+            if (pm1->first < pm2->first)
+              return true;
+            if (pm2->first < pm1->first)
+              return false;
+
+            if (weightset_t::less_than(pm1->second, pm2->second))
+               return true;
+            if (weightset_t::less_than(pm2->second, pm1->second))
+               return false;
+
+            pm1++; pm2++;
+          }
+
+          return pm1 == m1.cend() && pm2 != m2.cend();
+        }
+      };
     };
   }
 

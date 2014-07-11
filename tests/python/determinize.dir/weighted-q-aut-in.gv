@@ -1,0 +1,15 @@
+digraph
+{
+  vcsn_context = "lal_char(abc)_q"
+
+  I0 -> 0
+  0 -> 1 [label = "<2>a"]
+  0 -> 2 [label = "<3>a"]
+  0 -> 3 [label = "<4>a"]
+  1 -> 4 [label = "<7>c"]
+  2 -> 5 [label = "<6>b"]
+  3 -> 6 [label = "<9>b"]
+  4 -> F4 [label = "<3>"]
+  5 -> F5 [label = "<5>"]
+  6 -> F6 [label = "<6>"]
+}

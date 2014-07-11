@@ -1,3 +1,4 @@
+
 ## Vaucanson 2, a generic library for finite state machines.
 ## Copyright (C) 2013, 2014 Vaucanson Group.
 ##
@@ -120,8 +121,12 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
-  %D%/determinize.dir/weighted-aut-in.gv        \
-  %D%/determinize.dir/weighted-aut-out.gv       \
+  %D%/determinize.dir/weighted-b-aut-in.gv      \
+  %D%/determinize.dir/weighted-b-aut-out.gv     \
+  %D%/determinize.dir/weighted-q-aut-in.gv      \
+  %D%/determinize.dir/weighted-q-aut-out.gv     \
+  %D%/determinize.dir/weighted-zmin-aut-in.gv   \
+  %D%/determinize.dir/weighted-zmin-aut-out.gv  \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/a2x.efsm                         \
   %D%/efsm.dir/a2xyz.efsm                       \
