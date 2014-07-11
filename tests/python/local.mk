@@ -112,6 +112,8 @@ EXTRA_DIST +=                                   \
   %D%/derivation.dir/h3-dt-breaking.gv          \
   %D%/derivation.dir/h3-dt.gv                   \
   %D%/determinize.dir/de-bruijn-3-det.gv        \
+  %D%/determinize.dir/b-det.gv                  \
+  %D%/determinize.dir/b.gv                      \
   %D%/determinize.dir/de-bruijn-8-det.gv        \
   %D%/determinize.dir/deterministic-det.gv      \
   %D%/determinize.dir/deterministic.gv          \
@@ -121,12 +123,10 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/epsilon.gv                \
   %D%/determinize.dir/ladybird-4-det.gv         \
   %D%/determinize.dir/ladybird-8-det.gv         \
-  %D%/determinize.dir/weighted-b-aut-in.gv      \
-  %D%/determinize.dir/weighted-b-aut-out.gv     \
-  %D%/determinize.dir/weighted-q-aut-in.gv      \
-  %D%/determinize.dir/weighted-q-aut-out.gv     \
-  %D%/determinize.dir/weighted-zmin-aut-in.gv   \
-  %D%/determinize.dir/weighted-zmin-aut-out.gv  \
+  %D%/determinize.dir/q-det.gv                  \
+  %D%/determinize.dir/q.gv                      \
+  %D%/determinize.dir/zmin-det.gv               \
+  %D%/determinize.dir/zmin.gv                   \
   %D%/efsm.dir/a1.efsm                          \
   %D%/efsm.dir/a2x.efsm                         \
   %D%/efsm.dir/a2xyz.efsm                       \

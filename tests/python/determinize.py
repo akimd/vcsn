@@ -41,25 +41,16 @@ for name in ['deterministic', 'epsilon', 'empty']:
     check(aut, name + "-det", True)
 
 
-## ---------------------------------------##
-## Determinization of weighted automaton. ##
-## ---------------------------------------##
-def weighted_determinize_check(i, o, words = []):
-    deter = i.determinize_weight()
-    CHECK_EQ(True, deter.is_deterministic())
-    CHECK_EQ(o, deter)
-    oaut = vcsn.automaton(o)
-    for w in words:
-        CHECK_EQ(True, deter.eval(w) == oaut.eval(w))
+## -------------------------------------- ##
+## Determinization of weighted automata.  ##
+## -------------------------------------- ##
+def check(aut, exp):
+    eff = aut.determinize_weight()
+    CHECK_EQ(exp, eff)
+    CHECK_EQ(True, eff.is_deterministic())
+    CHECK_EQUIV(aut, eff)
 
-b_aut_in = vcsn.automaton(load("weighted-b-aut-in"))
-b_aut_out = load("weighted-b-aut-out")
-weighted_determinize_check(b_aut_in, b_aut_out, ["baa", "aa"])
-
-zmin_aut_in = vcsn.automaton(load("weighted-zmin-aut-in"))
-zmin_aut_out = load("weighted-zmin-aut-out")
-weighted_determinize_check(zmin_aut_in, zmin_aut_out, ["abc", "acd", "acb"])
-
-q_aut_in = vcsn.automaton(load("weighted-q-aut-in"))
-q_aut_out = load("weighted-q-aut-out")
-weighted_determinize_check(q_aut_in, q_aut_out, ["ac", "ab"])
+for name in ['b', 'zmin', 'q']:
+    aut = vcsn.automaton(load(name))
+    exp = load(name + "-det")
+    check(aut, exp)
