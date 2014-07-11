@@ -322,11 +322,7 @@ namespace vcsn
         state_name_t ss;
         for (auto t : input_->initial_transitions())
           ss.emplace(input_->dst_of(t), input_->weight_of(t));
-
-        auto s = this->new_state();
-        this->set_initial(s);
-        map_[ss] = s;
-        todo_.push(ss);
+        this->set_initial(state_(ss));
       }
 
       /// The determinization of weighted automaton
@@ -385,29 +381,12 @@ namespace vcsn
             for (auto& e : mls2w)
               {
                 auto l = e.first;
-                // Calculate the inverse of w'
-                auto inv = ws_.rdiv(ws_.one(), mlw[l]);
-
                 // The semiring the mul distribute over plus
-                // so (inv * vi*wi) + (inv * vj*wj) = invv * ((vi*wi) + (vj*wj))
+                // so (vi*wi / w) + (vj*wj/w) = (vi*wi + vj*wj)/w.
                 for (auto& f : e.second)
-                  f.second = ws_.mul(inv, f.second);
+                  f.second = ws_.rdiv(f.second, mlw[l]);
 
-                auto g = map_.find(e.second);
-                if (g == map_.end())
-                  {
-                    auto ns = this->new_state();
-                    g = map_.emplace(e.second, ns).first;
-                    todo_.push(e.second);
-
-                    // TODOs: Improve finding the final state
-                    for (auto k : e.second)
-                      if (input_->is_final(k.first))
-                        this->add_final(ns,
-                                        ws_.mul(k.second,
-                                                input_->get_final_weight(k.first)));
-                  }
-                this->add_transition(src, g->second, l, mlw[l]);
+                this->new_transition(src, state_(e.second), l, mlw[l]);
               }
           }
       }
@@ -481,6 +460,33 @@ namespace vcsn
 
           return pm1 == m1.cend() && pm2 != m2.cend();
         }
+      };
+
+      /// The state for set of states \a ss.
+      /// If this is a new state, schedule it for visit.
+      state_t state_(const state_name_t& name)
+      {
+        // Benches show that the map_.emplace technique is slower, and
+        // then that operator[] is faster than emplace.
+        state_t res;
+        auto i = map_.find(name);
+        if (i == std::end(map_))
+          {
+            res = this->new_state();
+            map_[name] = res;
+
+            // TODOs: Improve finding the final state
+            for (const auto& p : name)
+              if (input_->is_final(p.first))
+                this->add_final(res,
+                                ws_.mul(p.second,
+                                        input_->get_final_weight(p.first)));
+
+            todo_.push(name);
+          }
+        else
+          res = i->second;
+        return res;
       };
 
       /// Map from state name to state number.
