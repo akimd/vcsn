@@ -93,7 +93,7 @@ namespace vcsn
         for (const auto& v: e)
           {
             v->accept(*this);
-            ps_.add_weight(res, res_);
+            ps_.add_here(res, res_);
           }
         res_ = std::move(res);
       }
@@ -111,7 +111,7 @@ namespace vcsn
             v->accept(*this);
             for (unsigned j = i + 1; j < n; ++j)
               res_ = ps_.rmul(res_, e[j]);
-            ps_.add_weight(res, ps_.lmul(constant, res_));
+            ps_.add_here(res, ps_.lmul(constant, res_));
             constant = ws_.mul(constant, constant_term(rs_, v));
           }
         res_ = std::move(res);
@@ -146,9 +146,9 @@ namespace vcsn
                   else
                     ratexps.emplace_back(e[j]);
                 // FIXME: we need better n-ary constructors.
-                ps_.add_weight(res,
-                               std::make_shared<shuffle_t>(ratexps),
-                               m.second);
+                ps_.add_here(res,
+                             std::make_shared<shuffle_t>(ratexps),
+                             m.second);
               }
           }
         res_ = std::move(res);
@@ -180,7 +180,7 @@ namespace vcsn
         e.sub()->accept(*this);
         polynomial_t res;
         for (const auto& m: res_)
-          ps_.add_weight(res, rs_.rmul(m.first, e.weight()), m.second);
+          ps_.add_here(res, rs_.rmul(m.first, e.weight()), m.second);
         res_ = res;
       }
 

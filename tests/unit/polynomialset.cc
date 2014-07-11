@@ -49,7 +49,7 @@ check_assoc(const PolynomialSet& ps)
   u = ps.mul(u, u);
   ASSERT_EQ(format(ps, u), "<4>\\e + <96>ab + <576>abab");
 
-  ps.add_weight(v, "ab", 96 - 24);
+  ps.add_here(v, "ab", 96 - 24);
   ps.set_weight(v, "", 4);
   ps.set_weight(v, "abab", 576);
   assert(u == v);

@@ -183,8 +183,8 @@ namespace vcsn
               es_.rmul_here(res_, r);
 
               for (const auto& p: rhs.polynomials)
-                ps_.add_weight(res_.polynomials[p.first],
-                               ps_.lmul(res_.constant, p.second));
+                ps_.add_here(res_.polynomials[p.first],
+                             ps_.lmul(res_.constant, p.second));
               res_.constant = ws_.mul(res_.constant, rhs.constant);
             }
       }
@@ -275,13 +275,13 @@ namespace vcsn
               // Now, recursively develop the quotient of monomials,
               // directly in res_.
               if (transposed_)
-                ps_.add_weight(res_.polynomials[one],
-                               rs_.transposition(rs_.ldiv(lm.first, rm.first)),
-                               ws_.transpose(ws_.ldiv(lm.second, rm.second)));
+                ps_.add_here(res_.polynomials[one],
+                             rs_.transposition(rs_.ldiv(lm.first, rm.first)),
+                             ws_.transpose(ws_.ldiv(lm.second, rm.second)));
               else
-                ps_.add_weight(res_.polynomials[one],
-                               rs_.ldiv(lm.first, rm.first),
-                               ws_.ldiv(lm.second, rm.second));
+                ps_.add_here(res_.polynomials[one],
+                             rs_.ldiv(lm.first, rm.first),
+                             ws_.ldiv(lm.second, rm.second));
         es_.normalize(res_);
       }
 
@@ -373,7 +373,7 @@ namespace vcsn
             // (ii) prev:fo(rhs)
             for (const auto& p: r.polynomials)
               for (const auto& m: p.second)
-                ps_.add_weight(res.polynomials[p.first],
+                ps_.add_here(res.polynomials[p.first],
                                rs_.shuffle(prev, m.first), m.second);
 
             prev = rs_.shuffle(prev, rhs);
@@ -405,7 +405,7 @@ namespace vcsn
 
         // Turn the polynomials into a ratexp, and complement it.
         for (auto l: rs_.labelset()->genset())
-          ps_.add_weight
+          ps_.add_here
             (res_.polynomials[l],
              polynomial_t{{rs_.complement(es_.as_ratexp(res.polynomials[l])),
                            ws_.one()}});

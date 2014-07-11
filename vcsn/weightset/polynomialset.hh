@@ -111,24 +111,24 @@ namespace vcsn
 
     /// v += p.
     value_t&
-    add_weight(value_t& v, const value_t& p) const
+    add_here(value_t& v, const value_t& p) const
     {
       for (const auto& m: p)
-        add_weight(v, m);
+        add_here(v, m);
       return v;
     }
 
     /// v += m.
     value_t&
-    add_weight(value_t& v, const monomial_t& p) const
+    add_here(value_t& v, const monomial_t& p) const
     {
-      return add_weight(v, p.first, p.second);
+      return add_here(v, p.first, p.second);
     }
 
     // FIXME: rename at least this version.
     /// v += (l, k).
     value_t&
-    add_weight(value_t& v, const label_t& l, const weight_t k) const
+    add_here(value_t& v, const label_t& l, const weight_t k) const
     {
       if (!label_is_zero(*labelset(), &l))
         {
@@ -167,7 +167,7 @@ namespace vcsn
     {
       value_t res = l;
       for (auto& i : r)
-        add_weight(res, i.first, i.second);
+        add_here(res, i.first, i.second);
       return res;
     }
 
@@ -178,7 +178,7 @@ namespace vcsn
       value_t res;
       for (auto i: l)
         for (auto j: r)
-          add_weight(res,
+          add_here(res,
                      labelset()->concat(i.first, j.first),
                      weightset()->mul(i.second, j.second));
       return res;
@@ -192,7 +192,7 @@ namespace vcsn
       value_t res;
       for (auto i: l)
         for (auto j: r)
-          add_weight(res,
+          add_here(res,
                      labelset()->conjunction(i.first, j.first),
                      weightset()->mul(i.second, j.second));
       return res;
@@ -213,7 +213,7 @@ namespace vcsn
           if (i != v.end())
             {
               value_t res;
-              add_weight(res, i->first, weightset()->star(i->second));
+              add_here(res, i->first, weightset()->star(i->second));
               return res;
             }
         }
@@ -228,7 +228,7 @@ namespace vcsn
       if (!weightset()->is_zero(w))
         // FIXME: What if there are divisors of 0?
         for (const auto& m: v)
-          add_weight(res, m.first, weightset()->mul(w, m.second));
+          add_here(res, m.first, weightset()->mul(w, m.second));
       return res;
     }
 
@@ -238,7 +238,7 @@ namespace vcsn
     {
       value_t res;
       for (auto i: v)
-        add_weight(res,
+        add_here(res,
                    // FIXME: This is wrong, it should be mul, not concat.
                    labelset()->concat(lhs, i.first),
                    i.second);
@@ -252,7 +252,7 @@ namespace vcsn
       value_t res;
       if (!weightset()->is_zero(w))
         for (const auto& m: v)
-          add_weight(res, m.first, weightset()->mul(m.second, w));
+          add_here(res, m.first, weightset()->mul(m.second, w));
       return res;
     }
 
@@ -262,7 +262,7 @@ namespace vcsn
     {
       value_t res;
       for (auto i: v)
-        add_weight(res,
+        add_here(res,
                    labelset()->concat(i.first, rhs),
                    i.second);
       return res;
@@ -382,8 +382,8 @@ namespace vcsn
       labelset_t tls = * labelset();
       weightset_t tws = * weightset();
       for (const auto& m: v)
-        // FIXME: rename this version of add_weight.
-        add_weight(res, tls.conv(sls, m.first), tws.conv(sws, m.second));
+        // FIXME: rename this version of add_here.
+        add_here(res, tls.conv(sls, m.first), tws.conv(sws, m.second));
       return res;
     }
 
@@ -519,7 +519,7 @@ namespace vcsn
               // Handle ranges
               if (i.peek() == '[')
                 for (auto c : labelset()->convs(i))
-                  add_weight(res, c, w);
+                  add_here(res, c, w);
               else
                 {
 
@@ -543,7 +543,7 @@ namespace vcsn
                           str_escape(i.peek()),
                           " contains an empty label"
                           " (did you mean \\e or \\z?)");
-                  add_weight(res, label, w);
+                  add_here(res, label, w);
                 }
             }
 

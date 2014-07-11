@@ -104,7 +104,7 @@ namespace vcsn
         for (const auto& v: e)
           {
             v->accept(*this);
-            ps_.add_weight(res, res_);
+            ps_.add_here(res, res_);
           }
         res_ = std::move(res);
       }
@@ -134,7 +134,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_weight(res, ps_.lmul(m.second, product(m.first, r)));
+          ps_.add_here(res, ps_.lmul(m.second, product(m.first, r)));
         return res;
       }
 
@@ -163,9 +163,9 @@ namespace vcsn
         // res = proper(B(l))&r.
         polynomial_t res;
         for (const auto& e: l_split)
-          ps_.add_weight(res, rs_.conjunction(e.first, r), e.second);
+          ps_.add_here(res, rs_.conjunction(e.first, r), e.second);
         // res += constant-term(B(l))B(r)
-        ps_.add_weight(res,
+        ps_.add_here(res,
                        ps_.lmul(l_split_const, split(r)));
         return res;
       }
@@ -177,7 +177,7 @@ namespace vcsn
       {
         polynomial_t res;
         for (const auto& m: l)
-          ps_.add_weight(res, ps_.lmul(m.second, conjunction(m.first, r)));
+          ps_.add_here(res, ps_.lmul(m.second, conjunction(m.first, r)));
         return res;
       }
 

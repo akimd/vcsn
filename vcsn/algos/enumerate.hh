@@ -71,8 +71,7 @@ namespace vcsn
         // special characters for the words.
         polynomial_t res;
         for (const auto& m: past_[aut_->post()])
-          ps_.add_weight(res,
-                         ls_.undelimit(m.first), m.second);
+          ps_.add_here(res, ls_.undelimit(m.first), m.second);
         return res;
       }
 
@@ -91,8 +90,7 @@ namespace vcsn
         polynomial_t res;
         for (const auto& m: past_[aut_->post()])
           {
-            ps_.add_weight(res,
-                           ls_.undelimit(m.first), m.second);
+            ps_.add_here(res, ls_.undelimit(m.first), m.second);
             if (--num == 0)
               break;
           }
@@ -116,7 +114,7 @@ namespace vcsn
                 // FIXME: monomial mul.
                 monomial_t n(ls_.concat(m.first, aut_->label_of(t)),
                              ws_.mul(m.second, aut_->weight_of(t)));
-                ps_.add_weight(past_[aut_->dst_of(t)], n);
+                ps_.add_here(past_[aut_->dst_of(t)], n);
                 q2.emplace_back(aut_->dst_of(t), n);
               }
           }

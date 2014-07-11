@@ -94,9 +94,9 @@ namespace vcsn
             polynomial_t sum = ps_.zero();
             for (const auto& l: res)
               for (const auto& r: expand(c))
-                ps_.add_weight(sum,
-                               rs_.conjunction(l.first, r.first),
-                               ws_.mul(l.second, r.second));
+                ps_.add_here(sum,
+                             rs_.conjunction(l.first, r.first),
+                             ws_.mul(l.second, r.second));
             res = sum;
           }
         res_ = std::move(res);

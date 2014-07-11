@@ -174,8 +174,6 @@ The Doxygen style documentation is way too poor.  Aim at completion.
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 
-Why "weight" in add_weight?  In place operations would be useful.
-
 We need to hide the map, and expose a polynomial_t type:
 
     /// Construction from a list of monomials.

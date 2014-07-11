@@ -124,8 +124,8 @@ namespace vcsn
         auto one = rs_.labelset()->one();
         if (!ws_.is_zero(res.constant))
           {
-            ps_.add_weight(res.polynomials[one],
-                           polynomial_t{{rs_.one(), res.constant}});
+            ps_.add_here(res.polynomials[one],
+                         polynomial_t{{rs_.one(), res.constant}});
             res.constant = ws_.zero();
           }
         return res;
@@ -165,7 +165,7 @@ namespace vcsn
       {
         lhs.constant = ws_.add(lhs.constant, rhs.constant);
         for (const auto& p: rhs.polynomials)
-          ps_.add_weight(lhs.polynomials[p.first], p.second);
+          ps_.add_here(lhs.polynomials[p.first], p.second);
       }
 
       /// Inplace left-multiplication by \a w of \a res.
@@ -183,8 +183,8 @@ namespace vcsn
         value_t res = {ws_.mul(lhs.constant, w), polys_t{}};
         for (auto& p: lhs.polynomials)
           for (const auto& m: p.second)
-            ps_.add_weight(res.polynomials[p.first],
-                           rs_.rmul(m.first, w), m.second);
+            ps_.add_here(res.polynomials[p.first],
+                         rs_.rmul(m.first, w), m.second);
         return res;
       }
 
@@ -224,10 +224,10 @@ namespace vcsn
           if (i != std::end(l.polynomials))
             for (const auto& rhs: r.polynomials)
               if (!rs_.labelset()->is_one(rhs.first))
-                ps_.add_weight(res.polynomials[one],
-                               ps_.conjunction(i->second,
-                                               ps_.lmul(rs_.atom(rhs.first),
-                                                        rhs.second)));
+                ps_.add_here(res.polynomials[one],
+                             ps_.conjunction(i->second,
+                                             ps_.lmul(rs_.atom(rhs.first),
+                                                      rhs.second)));
         }
         // Spontaneous transitions from the rhs.
         {
@@ -235,10 +235,10 @@ namespace vcsn
           if (i != std::end(r.polynomials))
             for (const auto& lhs: l.polynomials)
               if (!rs_.labelset()->is_one(lhs.first))
-                ps_.add_weight(res.polynomials[one],
-                               ps_.conjunction(ps_.lmul(rs_.atom(lhs.first),
-                                                        lhs.second),
-                                               i->second));
+                ps_.add_here(res.polynomials[one],
+                             ps_.conjunction(ps_.lmul(rs_.atom(lhs.first),
+                                                      lhs.second),
+                                             i->second));
         }
         normalize(res);
       }
@@ -266,7 +266,7 @@ namespace vcsn
         // because the (default) ctor will not eliminate the monomial
         // when constant is zero.
         polynomial_t res;
-        ps_.add_weight(res, rs_.one(), v.constant);
+        ps_.add_here(res, rs_.one(), v.constant);
         for (const auto& p: v.polynomials)
           // We may add a label on our maps, and later map it to 0.
           // In this case polynomialset builds '\z -> 1', i.e., it
@@ -274,9 +274,9 @@ namespace vcsn
           //
           // FIXME: shouldn't polynomialset do that itself?
           if (!ps_.is_zero(p.second))
-            ps_.add_weight(res,
-                           rs_.mul(rs_.atom(p.first), as_ratexp(p.second)),
-                           ws_.one());
+            ps_.add_here(res,
+                         rs_.mul(rs_.atom(p.first), as_ratexp(p.second)),
+                         ws_.one());
         return res;
       }
 
