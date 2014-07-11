@@ -297,7 +297,31 @@ namespace vcsn
       using weight_t = weight_t_of<automaton_t>;
 
       /// An output state is a list of weighted input states.
-      using state_name_t = std::map<state_t, weight_t>;
+      struct stateset
+      {
+        stateset(const automaton_t& aut)
+          : aut_(aut)
+        {}
+
+        using value_t = state_t;
+        using kind_t = void;
+        static bool less_than(state_t l, state_t r)
+        {
+          return l < r;
+        }
+
+        std::ostream&
+        print(state_t s, std::ostream& out,
+              const std::string& format = "text") const
+        {
+          return aut_->print_state_name(s, out, format);
+        }
+
+        automaton_t aut_;
+      };
+
+      using state_nameset_t = polynomialset<context<stateset, weightset_t>>;
+      using state_name_t = typename state_nameset_t::value_t;
 
       /// Build the weighted determinizer.
       /// \param a         the weighted automaton to determinize
@@ -405,16 +429,7 @@ namespace vcsn
         if (i == origins().end())
           this->print_state(ss, o);
         else
-          {
-            const char* sep = "";
-            for (auto s : i->second)
-              {
-                o << sep;
-                sep = ", ";
-                print_weight(ws_, s.second, o, fmt);
-                input_->print_state_name(s.first, o, fmt);
-              }
-          }
+          ns_.print(i->second, o, fmt, ", ");
         return o;
       }
 
@@ -431,33 +446,6 @@ namespace vcsn
       }
 
     private:
-      /// Compare two output states.
-      struct state_name_less
-      {
-        bool operator()(const state_name_t& m1,
-                        const state_name_t& m2) const
-        {
-          auto pm1 = m1.cbegin();
-          auto pm2 = m2.cbegin();
-          while (pm1 != m1.cend() && pm2 != m2.cend())
-          {
-            if (pm1->first < pm2->first)
-              return true;
-            if (pm2->first < pm1->first)
-              return false;
-
-            if (weightset_t::less_than(pm1->second, pm2->second))
-               return true;
-            if (weightset_t::less_than(pm2->second, pm1->second))
-               return false;
-
-            pm1++; pm2++;
-          }
-
-          return pm1 == m1.cend() && pm2 != m2.cend();
-        }
-      };
-
       /// The state for set of states \a ss.
       /// If this is a new state, schedule it for visit.
       state_t state_(const state_name_t& name)
@@ -486,13 +474,16 @@ namespace vcsn
       };
 
       /// Map from state name to state number.
-      std::map<state_name_t, state_t, state_name_less> map_;
+      std::map<state_name_t, state_t, vcsn::less<state_nameset_t>> map_;
 
       /// Input automaton.
       automaton_t input_;
 
       /// Its weightset.
       weightset_t ws_ = *input_->weightset();
+
+      /// The polynomialset that stores weighted states.
+      state_nameset_t ns_ = {{stateset(input_), *input_->weightset()}};
 
       /// We use state numbers as indexes, so we need to know the last
       /// state number.  If states were removed, it is not the same as
