@@ -6,9 +6,17 @@ import re
 from vcsn_cxx import automaton, label, weight
 from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
 
-def _one_epsilon(s):
-    "Convert s to use the genuine epsilon character."
-    return re.sub(r'\\\\e', '&epsilon;', s)
+def _latex_to_html(s):
+    "Convert LaTeX angle brackets and \\e to HTML entities."
+    return (s.replace('<', '&lang;')
+            .replace('>', '&rang;')
+            .replace(r'\\e', '&epsilon;'))
+
+def _pretty_dot(s):
+    "Improve pretty-printing in a dot source."
+    return re.sub(r'(label * = *)(".*?")',
+                  lambda m: m.group(1) + _latex_to_html(m.group(2)),
+                  s)
 
 automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
@@ -84,7 +92,7 @@ def _automaton_display(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
     from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
-        dot = _one_epsilon(self.format("dot"))
+        dot = _pretty_dot(self.format("dot"))
         if mode == "tooltip":
             dot = re.sub(r'label = (".*?"), shape = box, style = rounded',
                          r'tooltip = \1',
@@ -120,7 +128,7 @@ def _automaton_interact(self):
 
 automaton.display = _automaton_interact
 
-automaton.dot = lambda self: _one_epsilon(self.format('dot'))
+automaton.dot = lambda self: _pretty_dot(self.format('dot'))
 
 def _automaton_eval(self, w):
     """Evaluation of word `w` on `self`, with possible conversion from
