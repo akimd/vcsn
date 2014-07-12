@@ -280,6 +280,15 @@ namespace vcsn
       return rdiv(r, l);
     }
 
+    /// Left exterior division.
+    value_t&
+    ldiv_here(const weight_t& w, value_t& v) const
+    {
+      for (auto& m: v)
+        m.second = weightset()->ldiv(w, m.second);
+      return v;
+    }
+
     /// Right exterior division.
     value_t&
     rdiv_here(value_t& v, const weight_t& w) const
