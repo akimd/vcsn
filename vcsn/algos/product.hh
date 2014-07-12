@@ -358,8 +358,7 @@ namespace vcsn
       template <typename Aut>
       constexpr typename std::enable_if<!labelset_t_of<Aut>::has_one(),
                               bool>::type
-      is_one(const Aut&, transition_t_of<Aut>)
-      const
+      is_one(const Aut&, transition_t_of<Aut>) const
       {
         return false;
       }
