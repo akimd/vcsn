@@ -74,10 +74,13 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
         import subprocess
         p1 = subprocess.Popen(['dot2tex', '--prog', engine],
                               stdin=subprocess.PIPE,
-                              stdout=open(tmp + ".tex", "w"))
+                              stdout=open(tmp + ".tex", "w"),
+                              stderr=subprocess.PIPE)
         p1.stdin.write(dot2tex.encode('utf-8'))
         p1.stdin.close()
-        res = p1.communicate()
+        out, err = p1.communicate()
+        if p1.wait():
+            raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
         subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
                                "--output", tmp + ".pdf", tmp + ".tex"])
         subprocess.check_call(["pdf2svg", tmp + ".pdf", tmp + ".svg"])
@@ -148,47 +151,48 @@ def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
     format via pipes.
     '''
-    import subprocess
-    p1 = subprocess.Popen(['efstcompile'],
-                          stdin=subprocess.PIPE,
-                          stdout=subprocess.PIPE)
-    p2 = subprocess.Popen(cmd,
-                          stdin=p1.stdout,
-                          stdout=subprocess.PIPE)
+    from subprocess import Popen, PIPE
+    p1 = Popen(['efstcompile'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p2 = Popen(cmd, stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
+    p3 = Popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-    p3 = subprocess.Popen(['efstdecompile'],
-                          stdin=p2.stdout,
-                          stdout=subprocess.PIPE)
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
     p1.stdin.write(aut.format('efsm').encode('utf-8'))
     p1.stdin.close()
-    res = p3.communicate()[0]
+    res, err = p3.communicate()
+    if p1.wait():
+        raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+    if p2.wait():
+        raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
+    if p3.wait():
+        raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res, "efsm")
 
 def _automaton_fst_files(cmd, *aut):
     '''Run the command `cmd` on the automata `aut` coded in OpenFST
     format, via files.
     '''
-    import subprocess
-    files = []
+    from subprocess import Popen, PIPE
     import tempfile
-    import subprocess
+    files = []
     for a in aut:
         file = tempfile.NamedTemporaryFile().name + '.fst'
-        proc = subprocess.Popen(['efstcompile'],
-                                stdin=subprocess.PIPE,
-                                stdout=open(file, 'w'))
+        proc = Popen(['efstcompile'],
+                     stdin=PIPE, stdout=open(file, 'w'), stderr=PIPE)
         proc.stdin.write(a.format('efsm').encode('utf-8'))
-        proc.stdin.close()
-        proc.communicate()
-        files += [file]
-    proc = subprocess.Popen([cmd] + files,
-                            stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE)
-    decode = subprocess.Popen(['efstdecompile'],
-                              stdin=proc.stdout,
-                              stdout=subprocess.PIPE)
-    res = decode.communicate()[0]
+#        proc.stdin.close()
+        out, err = proc.communicate()
+        if proc.wait():
+            raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+        files.append(file)
+    proc = Popen([cmd] + files, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    decode = Popen(['efstdecompile'],
+                   stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
+    res, err = decode.communicate()
+    if proc.wait():
+        raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
+    if decode.wait():
+        raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res, "efsm")
 
 automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)

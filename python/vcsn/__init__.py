@@ -1,19 +1,24 @@
+from __future__ import print_function
+
 import os
 import sys
 
 from vcsn_cxx import *
 from vcsn_version import *
 
-def _dot_to_svg(dot, engine="dot"):
+def _dot_to_svg(dot, engine="dot", *args):
     "Return the conversion of a Dot source into SVG."
     import subprocess
-    proc = subprocess.Popen([engine, '-Tsvg'],
+    proc = subprocess.Popen([engine, '-Tsvg'] + list(args),
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     proc.stdin.write(dot.encode('utf-8'))
-    res = proc.communicate()
-    return res[0].decode('utf-8')
+    out, err = proc.communicate()
+    status = proc.wait()
+    if status:
+        raise RuntimeError("dot failed: " + err.decode('utf-8'))
+    return out.decode('utf-8')
 
 def _info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.
