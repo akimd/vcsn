@@ -7,19 +7,19 @@ cat >$medir/symbols.txt <<\EOFSM
 \e	0
 a	1
 c	2
-child	3
-d	4
-e	5
-g	6
-grand	7
-h	8
-i	9
-l	10
-n	11
-p	12
-parent	13
-r	14
-t	15
+d	3
+e	4
+g	5
+h	6
+i	7
+l	8
+n	9
+p	10
+r	11
+t	12
+child	13
+grand	14
+parent	15
 EOFSM
 
 cat >$medir/transitions.fsm <<\EOFSM

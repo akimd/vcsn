@@ -170,7 +170,7 @@ namespace vcsn
       template <typename LabelSet, typename Labels, typename GetLabel>
       auto add_alphabet(const LabelSet& ls, Labels& labels,
                         GetLabel get_label, int)
-      -> decltype(ls.genset(), void ())
+      -> decltype(ls.genset(), void())
       {
         for (auto l : ls.genset())
           labels.insert(get_label(ls.value(l)));
@@ -209,33 +209,25 @@ namespace vcsn
                            GetLabel get_label)
       {
         // The labels we declare.
-        using label_t = typename LabelSet::value_t;
-        using symbols_t = std::map<label_t, unsigned>;
+        using labelset_t = LabelSet;
+        using label_t = typename labelset_t::value_t;
 
-        symbols_t syms;
-        {
-          std::set<label_t> labels;
-          add_alphabet(*aut_->labelset(), labels, get_label, 0);
-          for (auto t : aut_->transitions())
-            labels.insert(get_label(aut_->label_of(t)));
-          // 0 is reserved for one and special.
-          syms[ls.special()] = 0;
-          unsigned num = 1;
-          for (auto l: labels)
-            syms.emplace(l, ls.is_one(l) ? 0 : num++);
-        }
+        std::set<label_t, vcsn::less<labelset_t>> labels;
+        add_alphabet(*aut_->labelset(), labels, get_label, 0);
+        for (auto t : aut_->transitions())
+          labels.insert(get_label(aut_->label_of(t)));
 
         // Sorted per label name, which is fine, and deterministic.
         // Start with special/epsilon.  Show it as \e.
         os_ <<
           "cat >" << name << " <<\\EOFSM\n"
           "\\e\t0\n";
-        for (const auto& p: syms)
-          // Don't define 0 again.
-          if (p.second)
+        size_t num = 0;
+        for (const auto& l: labels)
+          if (!ls.is_one(l))
             {
-              ls.print(p.first, os_);
-              os_ << '\t' << p.second << '\n';
+              ls.print(l, os_);
+              os_ << '\t' << ++num << '\n';
             }
         os_ <<
           "EOFSM\n"
