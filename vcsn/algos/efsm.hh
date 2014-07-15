@@ -167,6 +167,20 @@ namespace vcsn
           }
       }
 
+      template <typename LabelSet, typename Labels, typename GetLabel>
+      auto add_alphabet(const LabelSet& ls, Labels& labels,
+                        GetLabel get_label, int)
+      -> decltype(ls.genset(), void ())
+      {
+        for (auto l : ls.genset())
+          labels.insert(get_label(ls.value(l)));
+      }
+
+      template <typename LabelSet, typename Labels, typename GetLabel>
+      void add_alphabet(const LabelSet&, Labels&,
+                        GetLabel, long)
+      {}
+
       /// Output the mapping from label name, to label number.
       ///
       /// The FSM format uses integers for labels.  Reserve 0 for
@@ -201,6 +215,7 @@ namespace vcsn
         symbols_t syms;
         {
           std::set<label_t> labels;
+          add_alphabet(*aut_->labelset(), labels, get_label, 0);
           for (auto t : aut_->transitions())
             labels.insert(get_label(aut_->label_of(t)));
           // 0 is reserved for one and special.
