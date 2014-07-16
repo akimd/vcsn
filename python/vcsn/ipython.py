@@ -19,6 +19,7 @@ class EditAutomatonWidget:
             aut = self.ipython.shell.user_ns[self.name].strip()
         else:
             aut = vcsn.context('lal_char(abc)_b').ratexp(r'\e').standard()
+            self.ipython.shell.user_ns[self.name] = aut
         daut = from_dot(str(aut))
 
         self.text = widgets.TextareaWidget(value = daut)
