@@ -42,22 +42,6 @@ namespace vcsn
       return res;
     }
   };
-
-  /// Print a weight when needed, between angle brackets.
-  template <typename WeightSet>
-  std::ostream&
-  print_weight(const WeightSet& ws, const typename WeightSet::value_t& w,
-               std::ostream& out, const std::string& format = "text")
-  {
-    static bool parens = getenv("VCSN_PARENS");
-    if (parens || ws.show_one() || !ws.is_one(w))
-      {
-        out << (format == "latex" ? "\\langle " : "<");
-        ws.print(w, out, format);
-        out << (format == "latex" ? "\\rangle " : ">");
-      }
-    return out;
-  }
 }
 
 #endif // !VCSN_WEIGHTSET_WEIGHTSET_HH

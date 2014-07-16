@@ -575,7 +575,7 @@ namespace vcsn
           const std::string& format = "text") const
     {
       static bool parens = getenv("VCSN_PARENS");
-      print_weight(*weightset(), m.second, out, format);
+      print_weight_(m.second, out, format);
       if (parens)
         out << (format == "latex" ? "\\left(" : "(");
       labelset()->print(m.first, out, format);
@@ -618,6 +618,21 @@ namespace vcsn
     }
 
   private:
+    /// Print a weight.
+    std::ostream&
+    print_weight_(const weight_t& w, std::ostream& out,
+                  const std::string& format = "text") const
+    {
+      static bool parens = getenv("VCSN_PARENS");
+      if (parens || weightset()->show_one() || !weightset()->is_one(w))
+        {
+          out << (format == "latex" ? "\\langle " : std::string{langle});
+          weightset()->print(w, out, format);
+          out << (format == "latex" ? "\\rangle " : std::string{rangle});
+        }
+      return out;
+    }
+
     /// Print a polynomial value without ranges.
     std::ostream&
     print_without_ranges_(const value_t& v, std::ostream& out,
@@ -665,7 +680,7 @@ namespace vcsn
         }
 
       // The weight.
-      print_weight(*weightset(), first_w, out, format);
+      print_weight_(first_w, out, format);
 
       // Print the character class.  letters are sorted, since
       // polynomials are shortlex-sorted on the labels.
