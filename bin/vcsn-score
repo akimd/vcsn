@@ -85,13 +85,12 @@ a = vcsn.context('lal_char(a-zA-Z0-9)_b').ladybird(n)
 bench('a.determinize()', 'a = ladybird({}), c = [a-zA-Z0-9] -> B'.format(n),
       lambda: a.determinize())
 
-n = 13
-a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
-bench('a.determinize()', 'a = de_bruijn({}), c = [abc] -> B'.format(n),
-      lambda: a.determinize())
-a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
-bench('a.determinize("weighted")', 'a = de_bruijn({}), c = [abc] -> Q'.format(n),
-      lambda: a.determinize_weight())
+for n in [13, 14]:
+  a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
+  bench('a.determinize()', 'a = de_bruijn({})'.format(n),
+        lambda: a.determinize())
+  bench('a.determinize("weighted")', 'a = de_bruijn({})'.format(n),
+        lambda: a.determinize_weight())
 
 # eval.
 n = 150

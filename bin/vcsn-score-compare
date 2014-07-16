@@ -27,6 +27,10 @@ def normalize(k):
                r', c = \1 -> \2', k)
     k = re.sub(r'a = lal\(a-zA-Z0-9\).ladybird\(18\)',
                r'a = ladybird(18), c = [a-zA-Z0-9] -> B', k)
+    # We never worked on Q in score, it was a typo.  And working with
+    # B is good enough anyway and more relevant.
+    k = re.sub(r'(determinize.*de_bruijn\(\d+\)), c = \[abc\] -> [BQ]',
+               r'\1', k)
     return k
 
 def read(fn):
