@@ -2,9 +2,19 @@
 ## automaton.  ##
 ## ----------- ##
 
+import tempfile
+import os
 import re
+import subprocess
+
 from vcsn_cxx import automaton, label, weight
 from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
+
+def _tmp_file(suffix, **kwargs):
+    '''A NamedTemporaryFile suitable for Vaucanson.'''
+    return tempfile.NamedTemporaryFile(prefix = 'vcsn-',
+                                       suffix='.' + suffix,
+                                       **kwargs)
 
 def _latex_to_html(s):
     "Convert LaTeX angle brackets and \\e to HTML entities."
@@ -69,23 +79,22 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
         return _dot_to_svg(self.dot(), engine)
     elif format == "dot2tex":
         dot2tex = self.format("dot2tex")
-        import tempfile
-        tmp = tempfile.NamedTemporaryFile().name
-        import subprocess
-        p1 = subprocess.Popen(['dot2tex', '--prog', engine],
-                              stdin=subprocess.PIPE,
-                              stdout=open(tmp + ".tex", "w"),
-                              stderr=subprocess.PIPE)
-        p1.stdin.write(dot2tex.encode('utf-8'))
-        p1.stdin.close()
-        out, err = p1.communicate()
-        if p1.wait():
-            raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
-        subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
-                               "--output", tmp + ".pdf", tmp + ".tex"])
-        subprocess.check_call(["pdf2svg", tmp + ".pdf", tmp + ".svg"])
-        from IPython.display import SVG
-        return SVG(filename=tmp + '.svg')
+        with _tmp_file('tex') as tex, \
+             _tmp_file('pdf') as pdf, \
+             _tmp_file('svg') as svg:
+            p1 = subprocess.Popen(['dot2tex', '--prog', engine],
+                                  stdin=subprocess.PIPE,
+                                  stdout=tex,
+                                  stderr=subprocess.PIPE)
+            p1.stdin.write(dot2tex.encode('utf-8'))
+            out, err = p1.communicate()
+            if p1.wait():
+                raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
+            subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
+                                   "--output", pdf.name, tex.name])
+            subprocess.check_call(["pdf2svg", pdf.name, svg.name])
+            from IPython.display import SVG
+            return SVG(filename=svg.name)
     else:
         raise(ValueError("invalid format: ", format))
 
@@ -173,18 +182,16 @@ def _automaton_fst_files(cmd, *aut):
     format, via files.
     '''
     from subprocess import Popen, PIPE
-    import tempfile
     files = []
     for a in aut:
-        file = tempfile.NamedTemporaryFile().name + '.fst'
-        proc = Popen(['efstcompile'],
-                     stdin=PIPE, stdout=open(file, 'w'), stderr=PIPE)
-        proc.stdin.write(a.format('efsm').encode('utf-8'))
-#        proc.stdin.close()
-        out, err = proc.communicate()
-        if proc.wait():
-            raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
-        files.append(file)
+        with _tmp_file(suffix = 'fst', delete = False) as fst:
+            proc = Popen(['efstcompile'],
+                         stdin=PIPE, stdout=fst, stderr=PIPE)
+            proc.stdin.write(a.format('efsm').encode('utf-8'))
+            out, err = proc.communicate()
+            if proc.wait():
+                raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+            files.append(fst.name)
     proc = Popen([cmd] + files, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = Popen(['efstdecompile'],
                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
@@ -193,6 +200,8 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
+    for f in files:
+        os.remove(f)
     return automaton(res, "efsm")
 
 automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
