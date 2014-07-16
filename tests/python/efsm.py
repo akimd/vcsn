@@ -10,8 +10,8 @@ from vcsn.automaton import _automaton_fst, _automaton_fst_files
 # Calling 'fstprint --help' is tempting, but it exits 1.
 have_ofst = which('fstprint') is not None
 
-def check (aut, fefsm, check_read = True):
-  'Check the conversion from Dot to FSM, and back.'
+def check(aut, fefsm, check_read = True):
+  'Check the conversion to and from FSM.'
   # Text in efsm format.
   efsm = open(medir + "/" + fefsm).read().strip()
 
@@ -20,17 +20,18 @@ def check (aut, fefsm, check_read = True):
   if check_read:
     CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
 
-  # Check OpenFST's support for EFSM I/O.
+  # Check that OpenFST accepts and reproduces our EFSM files.
   if check_read:
     if have_ofst:
       CHECK_EQ(aut, _automaton_fst('cat', aut))
     else:
       SKIP('OpenFST is missing')
 
-a1 = load('lal_char_b/a1.gv')
-check(a1, 'a1.efsm')
-bin = load('lal_char_z/binary.gv')
-check(bin, 'binary.efsm')
+a = load('lal_char_b/a1.gv')
+check(a, 'a1.efsm')
+a = load('lal_char_z/binary.gv')
+check(a, 'binary.efsm')
+
 # Check the case of an automaton without any transition.
 a = vcsn.context('lal_char()_b').ratexp('\e').standard()
 check(a, 'one.efsm')
@@ -40,25 +41,25 @@ check(a, 'one.efsm')
 # Note that "sort" is critical here, otherwise the transitions
 # are not issued in the state-order, so when we read back, the
 # states numbers are different.
-abs = vcsn.context('lan_char(ab)_b').ratexp('ab*').thompson().sort().strip()
-check(abs, 'abs.efsm')
+a = vcsn.context('lan_char(ab)_b').ratexp('ab*').thompson().sort().strip()
+check(a, 'abs.efsm')
 
 # Using law_char(a-z)_b is tempting, but when reading back, we take
 # the smallest possible alphabet.
-str = vcsn.context('law_char(acdeghilnprt)_b')\
+a = vcsn.context('law_char(acdeghilnprt)_b')\
       .ratexp('(grand)*(parent+child)').thompson().sort().strip()
-check(str, 'str.efsm')
+check(a, 'str.efsm')
 
 # A transducer that looks like an acceptor when looking at the symbol
 # numbers.
-a2x = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_b')\
+a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_b')\
       .ratexp("('(a,x)'+'(b,y)'+'(c,z)')*").standard().sort().strip()
-check(a2x, 'a2x.efsm')
+check(a, 'a2x.efsm')
 
 # A transducer that cannot be seen as an acceptor.
-a2xyz = vcsn.context('lat<lal_char(a),lal_char(xyz)>_b')\
+a = vcsn.context('lat<lal_char(a),lal_char(xyz)>_b')\
       .ratexp("('(a,x)'+'(a,y)'+'(a,z)')*").standard().sort().strip()
-check(a2xyz, 'a2xyz.efsm')
+check(a, 'a2xyz.efsm')
 
 if have_ofst:
   # Check that Open FST and V2 understand the weights the same way.
