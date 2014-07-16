@@ -148,14 +148,9 @@ struct automaton
     return vcsn::dyn::context_of(val_);
   }
 
-  automaton determinize() const
+  automaton determinize(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::determinize(val_);
-  }
-
-  automaton determinize_weight() const
-  {
-    return vcsn::dyn::determinize_weight(val_);
+    return vcsn::dyn::determinize(val_, algo);
   }
 
   automaton difference(const automaton& rhs) const
@@ -825,11 +820,12 @@ ratexp ratexp::right_mult(const weight& w) const
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(linear, linear, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(random_overloads, random, 1, 4);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(synchronizing_word, synchronizing_word,
                                        0, 1);
@@ -852,8 +848,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("compose", &automaton::compose)
     .def("concatenate", &automaton::concatenate)
     .def("context", &automaton::context)
-    .def("determinize", &automaton::determinize)
-    .def("determinize_weight", &automaton::determinize_weight)
+    .def("determinize", &automaton::determinize, determinize())
     .def("difference", &automaton::difference)
     .def("eliminate_state", &automaton::eliminate_state)
     .def("enumerate", &automaton::enumerate)

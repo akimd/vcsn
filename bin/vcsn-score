@@ -90,7 +90,7 @@ for n in [13, 14]:
   bench('a.determinize()', 'a = de_bruijn({})'.format(n),
         lambda: a.determinize())
   bench('a.determinize("weighted")', 'a = de_bruijn({})'.format(n),
-        lambda: a.determinize_weight())
+        lambda: a.determinize("weighted"))
 
 # eval.
 n = 150

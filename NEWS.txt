@@ -4,6 +4,22 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-07-16
+** determinize supports weighted automata
+The determinize algorithm (dyn and Python) now accepts an optional 'algo'
+argument.
+
+When 'algo' is:
+
+  - "boolean"
+    the fast Boolean-only implementation is used.  It always terminates.
+
+  - "weighted"
+    any weightset is supported.  On some inputs, it may not terminate.
+
+  - "auto" (default value)
+    "boolean" if the automaton is Boolean, "weighted" otherwise.
+
 * 2014-07-11
 ** are-equivalent is generalized
 The 'are_equivalent' algorithm (a1.is_equivalent(a2) in Python) now supports

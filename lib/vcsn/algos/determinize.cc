@@ -10,18 +10,9 @@ namespace vcsn
     REGISTER_DEFINE(determinize);
 
     automaton
-    determinize(const automaton& aut)
+    determinize(const automaton& aut, const std::string& algo)
     {
-      return detail::determinize_registry().call(aut);
-    }
-
-
-    REGISTER_DEFINE(determinize_weight);
-
-    automaton
-    determinize_weight(const automaton& aut)
-    {
-      return detail::determinize_weight_registry().call(aut);
+      return detail::determinize_registry().call(aut, algo);
     }
   }
 }

@@ -69,7 +69,7 @@ namespace vcsn
 
         REGISTER(are_equivalent, aut_t, aut_t);
         REGISTER(complement, aut_t);
-        REGISTER(determinize, aut_t);
+        REGISTER(determinize, aut_t, const std::string);
         REGISTER(fado, aut_t, std::ostream);
         REGISTER(grail, aut_t, std::ostream);
         REGISTER(universal, aut_t);

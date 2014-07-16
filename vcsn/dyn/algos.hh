@@ -115,14 +115,14 @@ namespace vcsn
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
+    /// \param algo
+    ///     "boolean"     use efficient bitsets
+    ///     "weighted"    accept non Boolean automata (might not terminate)
+    ///     "auto"        "boolean" if the automaton is Boolean,
+    ///                   "weighted" otherwise.
     /// \pre  \a aut must be LAL.
-    automaton determinize(const automaton& aut);
-
-
-    /// The determinized weighted automaton.
-    /// \param aut       the weighted automaton to determinize
-    /// \pre  \a aut must be LAL.
-    automaton determinize_weight(const automaton& aut);
+    automaton determinize(const automaton& aut,
+                          const std::string& algo  = "weighted");
 
     /// An automaton whose behavior is that of \a lhs on words not
     /// accepted by \a rhs.

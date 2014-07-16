@@ -12,16 +12,19 @@ def load(file):
 ## de bruijn/ladybird.  ##
 ## -------------------- ##
 
-# check AUT EXP COMPLETE = False IS-DETERMINISTIC = False
-# ------------------------------
-def check(aut, exp, deterministic = False):
+# check AUT EXP DETERMINISTIC = False
+# -----------------------------------
+def check(aut, expfile, algo = "auto", deterministic = False):
+    print("check:", expfile)
     CHECK_EQ(deterministic, aut.is_deterministic())
     det = aut.determinize()
-    exp = load(exp)
+    exp = load(expfile)
     CHECK_EQ(exp, det)
     CHECK_EQ(True, det.is_deterministic())
-    # Idempotence.
-    CHECK_EQ(exp, det.determinize())
+    # In the case of "Zmin", we always display the weight, so we stack
+    # them: <0>0 becomes <0><0>0, etc.
+    if expfile != "zmin-det":
+        CHECK_EQ(exp, det.determinize(algo))
 
 ctx = vcsn.context('lal_char(ab)_b')
 check(ctx.de_bruijn(3), 'de-bruijn-3-det')
@@ -36,21 +39,15 @@ check(ctx.ladybird(8), 'ladybird-8-det')
 ## Simple deterministic automata.  ##
 ## ------------------------------- ##
 
-for name in ['deterministic', 'epsilon', 'empty']:
+for name in ['deterministic', 'empty', 'epsilon']:
     aut = vcsn.automaton(load(name))
-    check(aut, name + "-det", True)
+    check(aut, name + "-det", deterministic = True)
+    check(aut, name + "-det", deterministic = True, algo = "weighted")
 
 
 ## -------------------------------------- ##
 ## Determinization of weighted automata.  ##
 ## -------------------------------------- ##
-def check(aut, exp):
-    eff = aut.determinize_weight()
-    CHECK_EQ(exp, eff)
-    CHECK_EQ(True, eff.is_deterministic())
-    CHECK_EQUIV(aut, eff)
-
-for name in ['b', 'zmin', 'q']:
+for name in ['b', 'q', 'zmin']:
     aut = vcsn.automaton(load(name))
-    exp = load(name + "-det")
-    check(aut, exp)
+    check(aut, name + '-det')

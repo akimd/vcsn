@@ -5,8 +5,6 @@
 # include <stack>
 # include <string>
 # include <type_traits>
-# include <map>
-# include <vector>
 # include <queue>
 
 # include <vcsn/core/automaton-decorator.hh>
@@ -16,6 +14,7 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 # include <vcsn/misc/map.hh> // vcsn::has
+# include <vcsn/misc/raise.hh> // b
 # include <vcsn/misc/unordered_map.hh> // vcsn::has
 # include <vcsn/weightset/fwd.hh> // b
 
@@ -116,7 +115,7 @@ namespace vcsn
       /// Determinize all accessible states.
       void operator()()
       {
-        std::map<label_t, state_set> ml;
+        std::map<label_t, state_set, vcsn::less<labelset_t_of<Aut>>> ml;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
@@ -249,25 +248,6 @@ namespace vcsn
     res->operator()();
     return res;
   }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Aut>
-      automaton
-      determinize(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::determinize(a));
-      }
-
-      REGISTER_DECLARE(determinize,
-                       (const automaton& aut) -> automaton);
-    }
-  }
-
 
   /*---------------------------.
   | weighted determinization.  |
@@ -485,30 +465,61 @@ namespace vcsn
   template <typename Aut>
   inline
   auto
-  determinize_weight(const Aut& a)
+  determinize_weighted(const Aut& a)
     -> detweighted_automaton<Aut>
   {
     auto res = make_shared_ptr<detweighted_automaton<Aut>>(a);
-    // Determinize.
     res->operator()();
     return res;
   }
+
+
 
   namespace dyn
   {
     namespace detail
     {
-      /// Bridge.
-      template <typename Aut>
-      automaton
-      determinize_weight(const automaton& aut)
+      template <typename Aut, typename Type>
+      using if_boolean_t
+        = typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value,
+                                  Type>::type;
+
+      template <typename Aut, typename Type>
+      using if_not_boolean_t
+        = typename std::enable_if<!std::is_same<weightset_t_of<Aut>, b>::value,
+                                  Type>::type;
+
+
+      /// Boolean Bridge.
+      template <typename Aut, typename String>
+      if_boolean_t<Aut, automaton>
+      determinize(const automaton& aut, const std::string& algo)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::determinize_weight(a));
+        if (algo == "auto" || algo == "boolean")
+          return make_automaton(::vcsn::determinize(a));
+        else if (algo == "weighted")
+          return make_automaton(::vcsn::determinize_weighted(a));
+        else
+          raise("determinize: invalid algorithm: ", str_escape(algo));
       }
 
-      REGISTER_DECLARE(determinize_weight,
-                       (const automaton& aut) -> automaton);
+      /// Weighted Bridge.
+      template <typename Aut, typename String>
+      if_not_boolean_t<Aut, automaton>
+      determinize(const automaton& aut, const std::string& algo)
+      {
+        const auto& a = aut->as<Aut>();
+        if (algo == "boolean")
+          raise("determinize: cannot apply Boolean determinization");
+        else if (algo == "auto" || algo == "weighted")
+          return make_automaton(::vcsn::determinize_weighted(a));
+        else
+          raise("determinize: invalid algorithm: ", str_escape(algo));
+      }
+
+      REGISTER_DECLARE(determinize,
+                       (const automaton& aut, const std::string& algo) -> automaton);
     }
   }
 
