@@ -356,10 +356,9 @@ namespace vcsn
         init_initial_state();
 
         // label -> <destination, sum of weights>.
-        std::unordered_map<label_t,
-                           std::pair<state_name_t, weight_t>,
-                           vcsn::hash<labelset_t_of<automaton_t>>,
-                           vcsn::equal_to<labelset_t_of<automaton_t>>> dests;
+        std::map<label_t,
+                 std::pair<state_name_t, weight_t>,
+                 vcsn::less<labelset_t_of<automaton_t>>> dests;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.front());
