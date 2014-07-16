@@ -97,6 +97,10 @@ namespace vcsn
   /// Create ctx and return the built automaton.
   dyn::automaton lazy_automaton_editor::result()
   {
+    // If there are no transitions (e.g., standard("\e")), consider
+    // the labelset is a plain lal.
+    if (input_type_ == labelset_type::empty)
+      input_type_ = labelset_type::lal;
     auto ctx = to_string(input_type_);
     if (output_type_ != labelset_type::empty)
       ctx = "lat<" + ctx + "," + to_string(output_type_) + ">";

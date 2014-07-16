@@ -31,6 +31,10 @@ a1 = load('lal_char_b/a1.gv')
 check(a1, 'a1.efsm')
 bin = load('lal_char_z/binary.gv')
 check(bin, 'binary.efsm')
+# Check the case of an automaton without any transition.
+a = vcsn.context('lal_char()_b').ratexp('\e').standard()
+check(a, 'one.efsm')
+
 
 # Check the support of spontaneous transitions.
 # Note that "sort" is critical here, otherwise the transitions
