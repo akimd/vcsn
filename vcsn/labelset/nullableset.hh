@@ -8,9 +8,10 @@
 
 # include <vcsn/alphabets/setalpha.hh> // intersect
 # include <vcsn/core/kind.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/labelset/labelset.hh>
-# include <vcsn/labelset/fwd.hh>
+# include <vcsn/labelset/oneset.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -260,6 +261,12 @@ namespace vcsn
       return v;
     }
 
+    value_t
+    conv(oneset, typename oneset::value_t) const
+    {
+      return one();
+    }
+
     const labelset_ptr labelset() const
     {
       return ls_;
@@ -440,6 +447,30 @@ namespace vcsn
     /*-------.
     | Join.  |
     `-------*/
+
+    /// oneset v LS -> nullableset<LS> if !LS::has_one.
+    template <typename LS>
+    struct join_impl<oneset, LS,
+                     enable_if_t<!LS::has_one()>>
+    {
+      using type = nullableset<LS>;
+      static type join(const oneset&, const LS& ls)
+      {
+        return {ls};
+      }
+    };
+
+    /// oneset v LS -> LS if LS::has_one.
+    template <typename LS>
+    struct join_impl<oneset, LS,
+                     enable_if_t<LS::has_one()>>
+    {
+      using type = LS;
+      static type join(const oneset&, const LS& ls)
+      {
+        return ls;
+      }
+    };
 
     /// The join with another labelset.
     template <typename LS1, typename LS2>
