@@ -140,3 +140,55 @@ check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
   0 -> 1 [label = "<3.1>(a,d)"]
   1 -> F1
 }""")
+
+###############################################
+## Check mixed epsilon and letters going out ##
+###############################################
+
+
+a1 = vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lat<lan<lal_char(xyz)>, lan<lal_char(abc)>>_b"
+  I0 -> 0
+  0 -> 1 [label = "(x, a)"]
+  1 -> F1
+  0 -> 5 [label = "(y, \\e)"]
+  5 -> F5
+}''')
+
+
+a2 = vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lat<lan<lal_char(abc)>, lan<lal_char(def)>>_b"
+  I0 -> 0
+  0 -> 5 [label = "(\\e, d)"]
+  5 -> 6 [label = "(a, e)"]
+  6 -> F6
+}''')
+
+res = r'''digraph
+{
+  vcsn_context = "lat<lan<lal_char(xyz)>,lan<lal_char(def)>>_b"
+  rankdir = LR
+  {
+    node [shape = point, width = 0]
+    I0
+    F4
+  }
+  {
+    node [shape = circle]
+    0 [label = "0, 0", shape = box, style = rounded]
+    1 [label = "1, 0", shape = box, style = rounded] [color = DimGray]
+    2 [label = "0, 1", shape = box, style = rounded]
+    3 [label = "1, 1", shape = box, style = rounded] [color = DimGray]
+    4 [label = "2, 2", shape = box, style = rounded]
+  }
+  I0 -> 0
+  0 -> 1 [label = "(y,\\e)", color = DimGray]
+  0 -> 2 [label = "(\\e,d)"]
+  1 -> 3 [label = "(\\e,d)", color = DimGray]
+  2 -> 4 [label = "(x,e)"]
+  4 -> F4
+}'''
+
+check(a1, a2, res)
