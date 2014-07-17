@@ -24,9 +24,19 @@ def _latex_to_html(s):
 
 def _pretty_dot(s):
     "Improve pretty-printing in a dot source."
-    return re.sub(r'(label * = *)(".*?")',
-                  lambda m: m.group(1) + _latex_to_html(m.group(2)),
-                  s)
+    s = re.sub(r'(label * = *)(".*?")',
+               lambda m: m.group(1) + _latex_to_html(m.group(2)),
+               s)
+    # It looks like we could pass -E/-N option to dot to set defaults
+    # at the last moment, unfortutately in that case, it takes
+    # precedence on "edge" and "node" attributes defined in the file
+    # itself, which would, for instance, discard the shape=circle
+    # attribute.
+    s = s.replace('rankdir = LR',
+                  'rankdir = LR\n'
+                  'edge [arrowhead=vee, arrowsize=.6]\n'
+                  'node [fillcolor="cadetblue1", style=filled]')
+    return s
 
 automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
@@ -104,7 +114,7 @@ def _automaton_display(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
     from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
-        dot = _pretty_dot(self.format("dot"))
+        dot = self.dot()
         if mode == "tooltip":
             dot = re.sub(r'label = (".*?"), shape = box, style = rounded',
                          r'tooltip = \1',
