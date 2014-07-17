@@ -17,6 +17,7 @@
 # include <vcsn/weightset/z.hh>
 # include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/r.hh>
+# include <vcsn/weightset/zmin.hh>
 
 namespace vcsn
 {
@@ -178,6 +179,7 @@ namespace vcsn
     value_t conv(const z& ws, typename z::value_t v) const;
     value_t conv(const q& ws, typename q::value_t v) const;
     value_t conv(const r& ws, typename r::value_t v) const;
+    value_t conv(const zmin& ws, typename zmin::value_t v) const;
     template <typename Ctx2>
     value_t conv(const ratexpset_impl<Ctx2>& ws,
                  typename ratexpset_impl<Ctx2>::value_t v) const;
@@ -422,6 +424,28 @@ namespace vcsn
       }
     };
 
+    // Zmin.
+    template <typename Context>
+    struct join_impl<zmin, ratexpset<Context>>
+    {
+      using context_t = context<labelset_t_of<Context>,
+                                join_t<zmin, weightset_t_of<Context>>>;
+      using type = ratexpset<context_t>;
+      static type join(const zmin& ws, const ratexpset<Context>& rs)
+      {
+        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
+                          rs.identities()};
+      }
+    };
+
+  }
+
+  /// Shorthand to ratexpset constructor.
+  template <typename Context>
+  ratexpset<Context>
+  make_ratexpset(const Context& ctx, rat::identities identities)
+  {
+    return {ctx, identities};
   }
 
   /// The meet of two ratexpsets.

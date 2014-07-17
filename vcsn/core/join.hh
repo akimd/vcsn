@@ -6,9 +6,18 @@ namespace vcsn
   namespace detail
   {
 
+    /// A simple enable_if.
+    template <bool Cond>
+    using enable_if_t = typename std::enable_if<Cond>::type;
+
     /// A structure that implements the computation of join(V1, V2).
-    /// "type" is the type of the result, and "join" computes the value.
-    template <typename V1, typename V2>
+    /// "type" is the type of the result, and "join" computes the
+    /// value.
+    ///
+    /// "Enable" is used to discard implementation we want to
+    /// eliminate (e.g., to avoid ambiguous specializations).
+    template <typename V1, typename V2,
+              typename Enable = void>
     struct join_impl
     {};
 

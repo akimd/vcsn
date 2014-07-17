@@ -856,6 +856,12 @@ namespace vcsn
     return lmul(weightset()->conv(ws, v), one());
   }
 
+  DEFINE::conv(const zmin& ws, typename zmin::value_t v) const
+    -> value_t
+  {
+    return lmul(weightset()->conv(ws, v), one());
+  }
+
   // Convert from another ratexpset \a rs to ourself.  Requires a full
   // rewrite of the ratexp \a v.
   template <typename Context>

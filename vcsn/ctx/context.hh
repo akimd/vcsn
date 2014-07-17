@@ -155,6 +155,17 @@ namespace vcsn
     weightset_ptr ws_;
   };
 
+
+  /// Shorthand to build a context.
+  template <typename LabelSet, typename WeightSet>
+  context<LabelSet, WeightSet>
+  make_context(const LabelSet& ls, const WeightSet& ws)
+  {
+    return {ls, ws};
+  }
+
+
+
   /*-----------------.
   | join_t, meet_t.  |
   `-----------------*/
