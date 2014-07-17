@@ -167,6 +167,9 @@ namespace vcsn
   AutOut
   copy(const AutIn& input, Pred keep_state)
   {
+    // FIXME: here, we need a means to convert the given input context
+    // (e.g. letter -> B) into the destination one (e.g., letter ->
+    // Q).  The automaton constructor wants the exact context type.
     auto res = make_shared_ptr<AutOut>(detail::real_context(input));
     ::vcsn::copy_into(input, res, keep_state);
     return res;

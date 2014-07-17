@@ -1,11 +1,4 @@
 * Exercises (AP, VT)
-** Convert more tests to Python (easy)
-Choose tests/tafkit/foo.chk, and turn it into tests/python/foo.py.  Take
-inspiration from tests/python/derivation.py.  Try to be "dumb" in the
-conversion: it should be easy to see that the original *.chk and the
-final *.py are really alike.  Don't over-engineer something that hides the
-tests.
-
 ** subword, prefix, suffix, factor
 Provide the same routines for ratexps.
 
@@ -140,6 +133,30 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** join and meet are messy
+The current implementation has too many short coming.
+
+- join should work with automata mixed with weights
+  currently we explicitly state that the result is a mutable_automaton,
+  it could be something different.
+
+- join should code commutativity once for all
+
+- join should code variadicity once for all
+
+- join is spread all over the place
+  There are common bits in context.hh and others in algos/product.hh.
+
+** copy
+We need a more robust copy function that can promote to a supertype.
+See the hairy code and comment in
+
+      /// Bridge.
+      template <typename WeightSet, typename Aut>
+      automaton
+      left_mult(const weight& weight, const automaton& aut)
+
+
 ** Use Boost.Format to support multiple formats
 We have loads of code that open-code the output format.  This is
 wrong.  We should rather have format strings such as
