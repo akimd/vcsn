@@ -107,6 +107,13 @@ namespace vcsn
       return sizeof...(ValueSets);
     }
 
+    template <std::size_t... I>
+    static constexpr bool
+    is_commutative_semiring()
+    {
+      return all_<valueset_t<I>::is_commutative_semiring()...>();
+    }
+
     /// Build from the description in \a is.
     static tupleset make(std::istream& is)
     {
