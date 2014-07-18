@@ -151,15 +151,17 @@ def _automaton_fst_files(cmd, *aut):
     from subprocess import Popen, PIPE
     files = []
     for a in aut:
-        with _tmp_file(suffix = 'fst', delete = False) as fst:
-            proc = Popen(['efstcompile'],
-                         stdin=PIPE, stdout=fst, stderr=PIPE)
-            proc.stdin.write(a.format('efsm').encode('utf-8'))
-            out, err = proc.communicate()
-            if proc.wait():
-                raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
-            files.append(fst.name)
-    proc = Popen([cmd] + files, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        fst = _tmp_file(suffix='fst')
+        proc = Popen(['efstcompile'],
+                     stdin=PIPE, stdout=fst, stderr=PIPE)
+        proc.stdin.write(a.format('efsm').encode('utf-8'))
+        out, err = proc.communicate()
+        if proc.wait():
+            raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+        files.append(fst)
+
+    proc = Popen([cmd] + [f.name for f in files],
+                 stdin=PIPE, stdout=PIPE, stderr=PIPE)
     decode = Popen(['efstdecompile'],
                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
@@ -167,8 +169,6 @@ def _automaton_fst_files(cmd, *aut):
         raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
-    for f in files:
-        os.remove(f)
     return automaton(res, "efsm")
 
 automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
