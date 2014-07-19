@@ -81,7 +81,7 @@ class Daut:
         return scanner.scan(s)[0]
 
     def attr_dot(self, s):
-        '''Receive a Dot lists of attributes, and if the first
+        '''Receive a Dot list of attributes, and if the first
         is not a proper assignment, consider it's the label, so
         prepend 'label=' to it.
         '''
@@ -113,7 +113,7 @@ class Daut:
             if attrs:
                 attrs[0] = re.sub("label *= *", '', attrs[0])
             # Join on ";" rather that ",".
-            s = "[" + ", ".join(attrs) + "]"
+            s = "[" + "; ".join(attrs) + "]"
         return s
 
     def transition_daut(self, s, d, a):
