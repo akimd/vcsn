@@ -397,6 +397,7 @@ namespace vcsn
     }
 
 
+    ATTRIBUTE_PURE
     static bool monomial_less_than(const monomial_t& lhs,
                                    const monomial_t& rhs)
     {
@@ -691,9 +692,9 @@ namespace vcsn
         {
           auto end = std::mismatch(it, letters_end, alphabet.find(*it)).first;
           labelset()->print(*it, out, format);
-          // No ranges for less than two letters.
+          // No ranges for two letters or less.
           auto width = std::distance(it, end);
-          if (2 <= width)
+          if (2 < width)
             {
               it += width - 1;
               out << '-';
