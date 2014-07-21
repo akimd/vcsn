@@ -133,6 +133,10 @@ Introduce aaaaa+aaaab+...+bbbbb for length n.
 (1+a)^n
 
 * Refactoring
+** Beware of our use of subprocess
+I think my code is really wrong.
+http://stackoverflow.com/questions/6341451/piping-together-several-subprocesses
+
 ** join and meet are messy
 The current implementation has too many short coming.
 

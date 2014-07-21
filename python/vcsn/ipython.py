@@ -4,8 +4,7 @@ from IPython.display import display, SVG
 from IPython.html import widgets
 
 import vcsn
-from vcsn import _dot_to_svg
-from vcsn.automaton import _pretty_dot
+from vcsn.dot import _dot_to_svg, _dot_pretty
 from IPython.utils.warn import info, error
 
 # The class MUST call this class decorator at creation time
@@ -42,7 +41,7 @@ class EditAutomatonWidget:
             dot = self.text.value.encode('utf-8')
             dot = to_dot(dot)
             self.ipython.shell.user_ns[self.name] = vcsn.automaton(dot)
-            self.svg.value = _dot_to_svg(_pretty_dot(dot))
+            self.svg.value = _dot_to_svg(_dot_pretty(dot))
        except RuntimeError, e:
             self.error.value = str(e)
 

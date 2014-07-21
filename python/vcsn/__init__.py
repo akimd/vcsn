@@ -6,29 +6,6 @@ import sys
 from vcsn_cxx import *
 from vcsn_version import *
 
-def _dot_to_svg(dot, engine="dot", *args):
-    "Return the conversion of a Dot source into SVG."
-    from subprocess import PIPE, Popen
-    # http://www.graphviz.org/content/rendering-automata
-    p1 = Popen([engine] + list(args),
-               stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    p2 = Popen(['gvpr', '-c', 'E[head.name == "F*"]{lp=pos=""}'],
-               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
-    p3 = Popen(['neato', '-n2', '-Tsvg'],
-               stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
-    p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
-    p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot.encode('utf-8'))
-    p1.stdin.close()
-    out, err = p3.communicate()
-    if p1.wait():
-        raise RuntimeError(engine + " failed: " + err.decode('utf-8'))
-    if p2.wait():
-        raise RuntimeError("gprv failed: " + err.decode('utf-8'))
-    if p3.wait():
-        raise RuntimeError("neato failed: " + err.decode('utf-8'))
-    return out.decode('utf-8')
-
 def _info_to_dict(info):
     """Convert a "key: value" list of lines into a dictionary.
     Convert Booleans into bool, and likewise for integers.
@@ -77,7 +54,11 @@ def _right_mult(self, rhs):
     else:
         return self.right_mult(self.context().weight(str(rhs)))
 
-
+def _tmp_file(suffix, **kwargs):
+    '''A NamedTemporaryFile suitable for Vaucanson.'''
+    return tempfile.NamedTemporaryFile(prefix = 'vcsn-',
+                                       suffix='.' + suffix,
+                                       **kwargs)
 
 from vcsn.automaton  import *
 from vcsn.context    import *

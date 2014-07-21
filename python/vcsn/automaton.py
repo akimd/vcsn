@@ -8,43 +8,8 @@ import re
 import subprocess
 
 from vcsn_cxx import automaton, label, weight
-from vcsn import _dot_to_svg, _info_to_dict, _left_mult, _right_mult
-
-def _tmp_file(suffix, **kwargs):
-    '''A NamedTemporaryFile suitable for Vaucanson.'''
-    return tempfile.NamedTemporaryFile(prefix = 'vcsn-',
-                                       suffix='.' + suffix,
-                                       **kwargs)
-
-def _latex_to_html(s):
-    "Convert LaTeX angle brackets and \\e to HTML entities."
-    return (s.replace('<', '&lang;')
-            .replace('>', '&rang;')
-            .replace(r'\\e', '&epsilon;'))
-
-def _pretty_dot(s):
-    "Improve pretty-printing in a dot source."
-    s = re.sub(r'(label * = *)(".*?")',
-               lambda m: m.group(1) + _latex_to_html(m.group(2)),
-               s)
-    # It looks like we could pass -E/-N option to dot to set defaults
-    # at the last moment, unfortutately in that case, it takes
-    # precedence on "edge" and "node" attributes defined in the file
-    # itself, which would, for instance, discard the shape=circle
-    # attribute.
-    #
-    # FIXME: Make a dot.py file where we group all this.  This replace
-    # could also be replaced by a use of gvpr.
-    s = s.replace('rankdir = LR',
-                  'rankdir = LR\n'
-                  '  edge [arrowhead = vee, arrowsize = .6]\n'
-                  '  node [fillcolor = cadetblue1, style = filled]')
-    # Nodes with values have a "style = rounded" which overrides the
-    # global 'style = filled'.  Also set the size to something nicer
-    # than the default (which makes box too wide).
-    s = s.replace('style = rounded',
-                  'style = "filled,rounded", width = .5')
-    return s
+from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
+from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex
 
 automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
@@ -96,49 +61,33 @@ def _automaton_as_svg(self, format = "dot", engine = "dot"):
     if format == "dot":
         return _dot_to_svg(self.dot(), engine)
     elif format == "dot2tex":
-        dot2tex = self.format("dot2tex")
-        with _tmp_file('tex') as tex, \
-             _tmp_file('pdf') as pdf, \
-             _tmp_file('svg') as svg:
-            p1 = subprocess.Popen(['dot2tex', '--prog', engine],
-                                  stdin=subprocess.PIPE,
-                                  stdout=tex,
-                                  stderr=subprocess.PIPE)
-            p1.stdin.write(dot2tex.encode('utf-8'))
-            out, err = p1.communicate()
-            if p1.wait():
-                raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
-            subprocess.check_call(["texi2pdf", "--batch", "--clean", "--quiet",
-                                   "--output", pdf.name, tex.name])
-            subprocess.check_call(["pdf2svg", pdf.name, svg.name])
-            from IPython.display import SVG
-            return SVG(filename=svg.name)
+        return _dot_to_svg_dot2tex(self.format("dot2tex"), engine)
     else:
         raise(ValueError("invalid format: ", format))
 
 automaton.as_svg = lambda self, fmt = "dot", engine = "dot": _automaton_as_svg(self, fmt, engine)
 
-def _automaton_display(self, mode, engine = "dot"):
+def _automaton_convert(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
     from IPython.display import display, SVG
     if mode == "dot" or mode == "tooltip":
-        dot = self.dot()
-        if mode == "tooltip":
-            dot = re.sub(r'label = (".*?"), shape = box, style = rounded',
-                         r'tooltip = \1',
-                         dot)
-        svg = _dot_to_svg(dot, engine)
-        display(SVG(svg))
+        svg = _dot_to_svg(self.dot(mode), engine)
+        return SVG(svg)
     elif mode == "dot2tex":
-        display(self.as_svg(mode, engine))
+        return SVG(self.as_svg(mode, engine))
     elif mode == "info":
-        display(self.info(False))
+        return self.info(False)
     elif mode == "info,detailed":
-        display(self.info(True))
+        return self.info(True)
     elif mode == "type":
-        display(repr(self))
+        return repr(self)
     else:
         raise(ValueError("invalid display format: " + mode))
+
+def _automaton_display(self, mode, engine = "dot"):
+    """Display automaton `self` in `mode` with Graphviz `engine`."""
+    from IPython.display import display, SVG
+    display(_automaton_convert(self, mode, engine))
 
 # Requires IPython 2.0.
 def _automaton_interact(self):
@@ -158,7 +107,7 @@ def _automaton_interact(self):
 
 automaton.display = _automaton_interact
 
-automaton.dot = lambda self: _pretty_dot(self.format('dot'))
+automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)
 
 def _automaton_eval(self, w):
     """Evaluation of word `w` on `self`, with possible conversion from
