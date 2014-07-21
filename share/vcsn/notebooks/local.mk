@@ -22,7 +22,8 @@ dist_notebooks_data =				\
   '%D%/index.ipynb'				\
   '%D%/Some developer documentation.ipynb'	\
   '%D%/algos/index.ipynb'			\
-  '%D%/algos/determinize.ipynb'
+  '%D%/algos/automaton.determinize.ipynb'       \
+  '%D%/algos/automaton.standard.ipynb'
 
 dist-hook: dist-hook-%C%
 dist-hook-%C%:
