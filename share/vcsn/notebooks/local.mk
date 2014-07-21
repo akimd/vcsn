@@ -17,11 +17,11 @@ notebooksdir = $(datadir)/vcsn/notebooks
 # and it is really unacceptable to forbid them.  So work around
 # Automake.
 dist_notebooks_data =				\
-  '%D%/00 - Welcome to Vaucanson.ipynb'		\
   '%D%/01 - Playing with contexts.ipynb'	\
   '%D%/02 - Basic operations on automata.ipynb'	\
+  '%D%/index.ipynb'				\
   '%D%/Some developer documentation.ipynb'	\
-  '%D%/algos/Index.ipynb'			\
+  '%D%/algos/index.ipynb'			\
   '%D%/algos/determinize.ipynb'
 
 dist-hook: dist-hook-%C%
@@ -34,8 +34,8 @@ dist-hook-%C%:
 	  || exit 1;						\
 	done
 
-# $f: share/vcsn/notebooks/algos/Index.ipynb
-# $b: algos/Index.ipynb
+# $f: share/vcsn/notebooks/algos/index.ipynb
+# $b: algos/index.ipynb
 install-data-hook: install-hook-%C%
 install-hook-%C%:
 	@$(NORMAL_INSTALL)
