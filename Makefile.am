@@ -39,3 +39,7 @@ EXTRA_DIST += COPYING.txt NEWS.txt TODO.txt README.txt \
 .PHONY: coverage
 coverage:
 	CXX='$(CXX)' $(top_srcdir)/build-aux/bin/coverage
+
+PANDOC = pandoc
+README.html: README.txt
+	$(PANDOC)  -s --toc --from rst --to html5 -o $@ $<

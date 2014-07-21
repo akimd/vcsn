@@ -1,16 +1,3 @@
-Vaucanson 2, a generic library for finite state machines.
-Copyright (C) 2012-2013 The Vaucanson Group.
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 3
-of the License, or (at your option) any later version.
-
-The complete GNU General Public Licence Notice can be found as the
-'COPYING.txt' file in the root directory.
-
-The Vaucanson Group consists of people listed in the 'AUTHORS.txt' file.
-
 ===========================
  Introduction to Vaucanson
 ===========================
@@ -18,6 +5,9 @@ The Vaucanson Group consists of people listed in the 'AUTHORS.txt' file.
 Vaucanson_, a C++ generic library for weighted finite state machines.
 
 .. _Vaucanson: http://vaucanson.lrde.epita.fr
+
+Vaucanson 2, a generic library for finite state machines.
+Copyright (C) 2012-2014 The Vaucanson Group.
 
 .. contents::
 
@@ -75,16 +65,12 @@ Build Requirements
 ------------------
 
 Vaucanson was tested with the `GNU Compiler Collection (GCC)`_ version
-4.8, 4.9 and Clang++ 3.3, 3.4, and 3.5. GCC 4.8 and 4.9 are known to
-be unable to compile properly some parts of Vaucanson (improper
-behavior at runtime), but that's in rare situations most users should
-not face.
+4.8, 4.9 and Clang++ 3.3, 3.4, and 3.5.
 
 .. _GNU Compiler Collection (GCC): http://gcc.gnu.org/
 
-TAF-Kit and some test cases can use the Dot format to save automaton
-in a human readable file.  You should install Graphviz_ to visualize
-these ``.gv`` files or run the test suite.
+Vaucanson uses the Dot format to save automaton in a human readable
+file.  You should install Graphviz_ to visualize these ``.gv`` files.
 
 .. _Graphviz: http://www.research.att.com/sw/tools/graphviz/
 
@@ -134,13 +120,16 @@ build-aux
 
 share
    Data files to be installed on your system.  They include
-   example automata.
+   example automata and notebooks.
 
 lib
    Various libraries, including instantiation of some contexts.
 
 vcsn
-   The Vaucanson C++ Library.
+   The Vaucanson C++ Library headers.
+
+python
+   The Python binding.
 
 bin
    TAF-Kit sources.
@@ -152,19 +141,25 @@ tests
 Using Vaucanson
 ===============
 
-There is no documentation currently.  However, be sure to read
-``NEWS.txt`` which includes many examples of how to run commands and
-algorithms, and have a look at the tests/taf-kit directory, which
-contains many ease to read tests.
+Vaucanson 2.0 lacks a serious documentation, this is definitely a
+weakness.  However:
 
+- the directory share/vcsn/notebooks contains some (sparse)
+  documentation, also available on line.  The `online notebooks`_ will
+  be frequently updated, so please be sure to check there.
 
-See Also
-========
+- the file ``NEWS.txt`` includes many examples of how to run commands
+  and algorithms.
 
-There are other sources of interest in the distribution.
+- the directory tests/python contains tons of test cases written in
+  Python.
 
-- Headline news about the project can be found in the file
-  ``NEWS.txt`` at the root of the source tree.
+- the C++ low-level interface is documented via comments in the header
+  files (``vcsn/algos/*.hh``).
+
+- the `dyn::` C++ interface is documented in ``vcsn/dyn/algos.hh``.
+
+.. _`on line notebooks`: https://www.lrde.epita.fr/dload/vaucanson/2.0/notebooks/
 
 
 Starting from the repository
@@ -182,8 +177,15 @@ you need more tools:
 Licence
 =======
 
-Vaucanson 2 is released under the GNU General Public Licence v3+. See
-the file ``COPYING.txt`` (at the root of the source tree) for details.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or (at
+your option) any later version.
+
+The complete GNU General Public Licence Notice can be found as the
+``COPYING.txt`` file in the root directory.
+
+The Vaucanson Group consists of people listed in the ``AUTHORS.txt`` file.
 
 
 
