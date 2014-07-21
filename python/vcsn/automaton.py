@@ -137,9 +137,9 @@ def _automaton_fst(cmd, aut):
     p1.stdin.close()
     res, err = p3.communicate()
     if p1.wait():
-        raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))
+        raise RuntimeError("efstcompile failed: " + p1.stderr.read().decode('utf-8'))
     if p2.wait():
-        raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
+        raise RuntimeError(" ".join(cmd) + " failed: " + p2.stderr.read().decode('utf-8'))
     if p3.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res, "efsm")
@@ -166,7 +166,7 @@ def _automaton_fst_files(cmd, *aut):
                    stdin=proc.stdout, stdout=PIPE, stderr=PIPE)
     res, err = decode.communicate()
     if proc.wait():
-        raise RuntimeError(" ".join(cmd) + " failed: " + err.decode('utf-8'))
+        raise RuntimeError(" ".join(cmd) + " failed: " + proc.stderr.read().decode('utf-8'))
     if decode.wait():
         raise RuntimeError("efstdecompile failed: " + err.decode('utf-8'))
     return automaton(res, "efsm")
