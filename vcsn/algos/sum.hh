@@ -4,6 +4,7 @@
 # include <map>
 
 # include <vcsn/algos/product.hh> // join_automata
+# include <vcsn/algos/standard.hh> // is_standard
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
