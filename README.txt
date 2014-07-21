@@ -39,6 +39,30 @@ report bugs to either our issue tracker
 http://vaucanson.lrde.epita.fr/, or to vaucanson-bugs@lrde.epita.fr.
 
 
+Using Vaucanson
+===============
+
+Vaucanson 2.0 lacks a serious documentation, this is definitely a
+weakness.  However:
+
+- the directory share/vcsn/notebooks contains some (sparse)
+  documentation, also available on line.  The `online notebooks`_ will
+  be frequently updated, so please be sure to check there.
+
+- the file ``NEWS.txt`` includes many examples of how to run commands
+  and algorithms.
+
+- the directory tests/python contains tons of test cases written in
+  Python.
+
+- the C++ low-level interface is documented via comments in the header
+  files (``vcsn/algos/*.hh``).
+
+- the `dyn::` C++ interface is documented in ``vcsn/dyn/algos.hh``.
+
+.. _`on line notebooks`: https://www.lrde.epita.fr/dload/vaucanson/2.0/notebooks/
+
+
 Installation
 ============
 
@@ -136,30 +160,6 @@ bin
 
 tests
    The test suites.
-
-
-Using Vaucanson
-===============
-
-Vaucanson 2.0 lacks a serious documentation, this is definitely a
-weakness.  However:
-
-- the directory share/vcsn/notebooks contains some (sparse)
-  documentation, also available on line.  The `online notebooks`_ will
-  be frequently updated, so please be sure to check there.
-
-- the file ``NEWS.txt`` includes many examples of how to run commands
-  and algorithms.
-
-- the directory tests/python contains tons of test cases written in
-  Python.
-
-- the C++ low-level interface is documented via comments in the header
-  files (``vcsn/algos/*.hh``).
-
-- the `dyn::` C++ interface is documented in ``vcsn/dyn/algos.hh``.
-
-.. _`on line notebooks`: https://www.lrde.epita.fr/dload/vaucanson/2.0/notebooks/
 
 
 Starting from the repository
