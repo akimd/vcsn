@@ -97,7 +97,7 @@ digraph
   1 -> F1
 }
 ''')
-    
+
 CHECK_EQ(a.chain(3), vcsn.automaton('''
 digraph
 {
