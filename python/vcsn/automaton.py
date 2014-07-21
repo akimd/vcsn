@@ -133,7 +133,7 @@ def _automaton_fst(cmd, aut):
     p3 = Popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(aut.format('efsm').encode('utf-8'))
+    p1.stdin.write(aut.format('efsm'))
     p1.stdin.close()
     res, err = p3.communicate()
     if p1.wait():
@@ -154,7 +154,7 @@ def _automaton_fst_files(cmd, *aut):
         fst = _tmp_file(suffix='fst')
         proc = Popen(['efstcompile'],
                      stdin=PIPE, stdout=fst, stderr=PIPE)
-        proc.stdin.write(a.format('efsm').encode('utf-8'))
+        proc.stdin.write(a.format('efsm'))
         out, err = proc.communicate()
         if proc.wait():
             raise RuntimeError("efstcompile failed: " + err.decode('utf-8'))

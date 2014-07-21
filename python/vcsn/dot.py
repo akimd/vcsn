@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 from subprocess import check_call, PIPE, Popen
@@ -6,9 +7,9 @@ from vcsn import _tmp_file
 
 def _latex_to_html(s):
     "Convert LaTeX angle brackets and \\e to HTML entities."
-    return (s.replace('<', '&lang;')
-            .replace('>', '&rang;')
-            .replace(r'\\e', '&epsilon;'))
+    return (s.replace('<', '⟨')
+            .replace('>', '⟩')
+            .replace(r'\\e', 'ε'))
 
 def _labels_as_tooltips(s):
     return re.sub(r'label = (".*?"), shape = box, style = rounded',
@@ -57,7 +58,7 @@ def _dot_to_svg(dot, engine="dot", *args):
                stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
-    p1.stdin.write(dot.encode('utf-8'))
+    p1.stdin.write(dot)
     p1.stdin.close()
     out, err = p3.communicate()
     if p1.wait():
@@ -78,7 +79,7 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
          _tmp_file('svg') as svg:
         p1 = Popen(['dot2tex', '--prog', engine],
                    stdin=PIPE, stdout=tex, stderr=PIPE)
-        p1.stdin.write(dot.encode('utf-8'))
+        p1.stdin.write(dot)
         out, err = p1.communicate()
         if p1.wait():
             raise RuntimeError("dot2tex failed: " + err.decode('utf-8'))
