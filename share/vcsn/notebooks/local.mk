@@ -64,3 +64,21 @@ uninstall-hook-%C%:
 	    rm -f "$$dir/$$b" || exit 1;		\
 	  fi						\
 	done
+
+# The generated HTML files still point to ipynb files, which is ok for
+# nbviewer, but not for us.  So s/ipynb/html/.
+IPYTHON = ipython
+NBCONVERT = $(IPYTHON) nbconvert
+html:
+	rm -rf notebooks
+	for f in $(dist_notebooks_data);				 \
+	do								 \
+	  out=$$(echo "$$f" 						 \
+	         | sed -e 's,^%D%/,notebooks/,;s/\.ipynb$$//');		 \
+	  dest=$$(dirname "$$out");					 \
+	  $(MKDIR_P) "$$dest" || exit 1;				 \
+	  $(NBCONVERT) --output="$$out" $(abs_top_srcdir)/"$$f"		 \
+	    || exit 1;							 \
+	  perl -pi -e 's{(<a href=".*?\.)ipynb(">)}{$$1html$$2}' "$$out.html" \
+	    || exit 1;							 \
+	done
