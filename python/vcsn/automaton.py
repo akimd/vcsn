@@ -32,10 +32,18 @@ def _pretty_dot(s):
     # precedence on "edge" and "node" attributes defined in the file
     # itself, which would, for instance, discard the shape=circle
     # attribute.
+    #
+    # FIXME: Make a dot.py file where we group all this.  This replace
+    # could also be replaced by a use of gvpr.
     s = s.replace('rankdir = LR',
                   'rankdir = LR\n'
-                  'edge [arrowhead=vee, arrowsize=.6]\n'
-                  'node [fillcolor="cadetblue1", style=filled]')
+                  '  edge [arrowhead = vee, arrowsize = .6]\n'
+                  '  node [fillcolor = cadetblue1, style = filled]')
+    # Nodes with values have a "style = rounded" which overrides the
+    # global 'style = filled'.  Also set the size to something nicer
+    # than the default (which makes box too wide).
+    s = s.replace('style = rounded',
+                  'style = "filled,rounded", width = .5')
     return s
 
 automaton.__eq__ = lambda self, other: str(self) == str(other)
@@ -171,8 +179,8 @@ def _automaton_fst(cmd, aut):
     format via pipes.
     '''
     from subprocess import Popen, PIPE
-    p1 = Popen(['efstcompile'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    p2 = Popen(cmd, stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
+    p1 = Popen(['efstcompile'],   stdin=PIPE,      stdout=PIPE, stderr=PIPE)
+    p2 = Popen(cmd,               stdin=p1.stdout, stdout=PIPE, stderr=PIPE)
     p3 = Popen(['efstdecompile'], stdin=p2.stdout, stdout=PIPE, stderr=PIPE)
     p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
     p2.stdout.close()  # Allow p2 to receive a SIGPIPE if p3 exits.
