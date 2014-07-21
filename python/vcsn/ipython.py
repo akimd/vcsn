@@ -84,9 +84,7 @@ class Daut:
         is not a proper assignment, consider it's the label, so
         prepend 'label=' to it.
         '''
-        if s is None:
-            s = ""
-        else:
+        if s:
             s.strip()
             if s.startswith('[') and s.endswith(']'):
                 s = s[1:-1]
@@ -98,31 +96,35 @@ class Daut:
                     attrs[i] = "color={a}, fontcolor={a}".format(a = a)
             # Join on ";" rather that ",".
             s = "[" + "; ".join(attrs) + "]"
+        else:
+            s = ""
         return s
 
     def attr_daut(self, s):
+        '''Return a list of attributes with the Daut syntax.'''
         import re
-        if s is None:
-            s = ""
-        else:
+        if s:
             s.strip()
             if s.startswith('[') and s.endswith(']'):
                 s = s[1:-1]
             attrs = [a.strip() for a in self.attr_split(s)]
             if attrs:
                 attrs[0] = re.sub("label *= *", '', attrs[0])
-            # Join on ";" rather that ",".
-            s = "[" + "; ".join(attrs) + "]"
+            # Join on ";" rather that "," to avoid confusion with
+            # multiple labels.
+            s = "; ".join(attrs)
+        else:
+            s = ""
         return s
 
     def transition_daut(self, s, d, a):
-        return "{} -> {} {}".format(s, d, a)
+        return "{} -> {} {}".format(s or '$', d or '$', a)
 
     def transition_dot(self, s, d, a):
-        if s == "":
+        if s == "" or s == "$":
             s = "I" + d
             self.hidden.append(s)
-        if d == "":
+        if d == "" or d == "$":
             d = "F" + s
             self.hidden.append(d)
         return "  {} -> {} {}".format(s, d, self.attr_dot(a))
@@ -133,18 +135,18 @@ class Daut:
 
     def parse_transition(self, match):
         s = match.group(1)
-        d = match.group(2)
-        attr = self.attr_daut(match.group(3))
         if s.startswith('I'):
-            s = ''
+            s = '$'
+        d = match.group(2)
         if d.startswith('F'):
-            d = ''
+            d = '$'
+        attr = self.attr_daut(match.group(3))
         return (s, d, attr)
 
     def daut_to_dot(self, s):
         import re
         self.hidden = []
-        s = re.sub('^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id = self.id),
+        s = re.sub('^ *({id}|\$)? *-> *({id}|\$)? *(.*?)?$'.format(id = self.id),
                    lambda m: self.transition_dot(*self.parse_transition(m)),
                    s, flags = re.MULTILINE)
         return '''digraph
