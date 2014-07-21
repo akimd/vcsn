@@ -20,7 +20,9 @@ dist_notebooks_data =				\
   '%D%/00 - Welcome to Vaucanson.ipynb'		\
   '%D%/01 - Playing with contexts.ipynb'	\
   '%D%/02 - Basic operations on automata.ipynb'	\
-  '%D%/Some developer documentation.ipynb'
+  '%D%/Some developer documentation.ipynb'	\
+  '%D%/algos/Index.ipynb'			\
+  '%D%/algos/determinize.ipynb'
 
 dist-hook: dist-hook-%C%
 dist-hook-%C%:
