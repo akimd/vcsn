@@ -22,22 +22,41 @@ namespace vcsn
       std::shared_ptr<ast_node> parse();
 
     private:
-      std::shared_ptr<ast_node> parse_();
+      /// Accept anything.
+      std::shared_ptr<ast_node> any_();
+
+      /// Return the next word in the stream.  Does not consider that
+      /// underscore is word-constituent.
       std::string word();
-      std::string get_alpha();
-      std::shared_ptr<context> make_context();
-      std::shared_ptr<context> make_context(const std::string& word);
-      std::shared_ptr<ast_node> make_labelset();
-      std::shared_ptr<ast_node> make_labelset(const std::string& kind);
-      std::shared_ptr<ast_node> make_weightset();
-      std::shared_ptr<ast_node> make_weightset(const std::string& ws);
-      std::shared_ptr<automaton> make_automaton(const std::string& prefix);
-      std::shared_ptr<tupleset> make_tupleset();
-      std::shared_ptr<ratexpset> make_ratexpset();
-      std::shared_ptr<polynomialset> make_polynomialset();
-      std::shared_ptr<ast_node> make_labelset_or_weightset();
-      std::shared_ptr<ast_node>
-        make_labelset_or_weightset(const std::string& kind);
+
+      /// List of letters.
+      std::string alphabet_();
+
+      /// <LabelSet>_<WeightSet>.
+      std::shared_ptr<context> context_();
+      std::shared_ptr<context> context_(const std::string& word);
+
+      /// <LabelSet>.
+      std::shared_ptr<ast_node> labelset_();
+      std::shared_ptr<ast_node> labelset_(const std::string& kind);
+
+      /// <WeightSet>.
+      std::shared_ptr<ast_node> weightset_();
+      std::shared_ptr<ast_node> weightset_(const std::string& ws);
+
+      /// <Automaton> "<" <Context> ">".
+      std::shared_ptr<automaton> automaton_(const std::string& prefix);
+      std::shared_ptr<tupleset> tupleset_();
+
+      /// "ratexpset" "<" <Context> ">".
+      std::shared_ptr<ratexpset> ratexpset_();
+
+      /// "polynomialset" "<" <Context> ">".
+      std::shared_ptr<polynomialset> polynomialset_();
+
+      /// <LabelSet> | <WeightSet>
+      std::shared_ptr<ast_node> labelset_or_weightset_();
+      std::shared_ptr<ast_node> labelset_or_weightset_(const std::string& kind);
 
       std::istringstream& is_;
     };
