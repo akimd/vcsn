@@ -12,6 +12,9 @@ def check(ctx, exp = None):
 # Invalid context: missing parens.
 XFAIL(lambda: vcsn.context("lal_char_b"))
 
+# Invalid context: invalid weightset.
+XFAIL(lambda: vcsn.context("lal_char(a)_UNKNOWN"))
+
 # Invalid context: trailing garbage.
 XFAIL(lambda: vcsn.context("lal_char(a)_b_z"))
 

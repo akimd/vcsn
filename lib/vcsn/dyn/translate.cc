@@ -114,16 +114,23 @@ namespace vcsn
           boost::filesystem::rename(tmp + ".cc", base + ".cc");
         }
 
-        /// Generate C++ syntax for type ctx (which might use our
-        /// syntax: 'lal_char(ab)_z').
+        /// Generate C++ syntax for context \a ctx (which might use
+        /// our syntax: 'lal_char(ab)_z').
+        void print_context(const std::string& ctx)
+        {
+          is.clear();
+          is.str(ctx);
+          auto ast = parser_.parse_context();
+          ast->accept(printer_);
+        }
+
+        /// Generate C++ syntax for type \a type.
         void print_type(const std::string& type)
         {
           is.clear();
           is.str(type);
           auto ast = parser_.parse();
           ast->accept(printer_);
-          if (is.peek() != -1)
-            vcsn::fail_reading(is, "unexpected trailing characters");
         }
 
         /// Run C++ compiler with arguments \a s.
@@ -201,7 +208,7 @@ namespace vcsn
           std::string base =
             plugindir() + "contexts/" + split(detail::context_base::sname(ctx));
           os << "using ctx_t =" << incendl;
-          print_type(ctx);
+          print_context(ctx);
           os << ';' << decendl
              <<
             "\n"

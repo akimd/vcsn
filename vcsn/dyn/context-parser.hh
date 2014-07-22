@@ -19,7 +19,11 @@ namespace vcsn
         : is_(is)
       {}
 
+      /// Accept anything.
       std::shared_ptr<ast_node> parse();
+
+      /// Accept only a valid context.
+      std::shared_ptr<ast_node> parse_context();
 
     private:
       /// Accept anything.
@@ -35,6 +39,8 @@ namespace vcsn
       /// <LabelSet>_<WeightSet>.
       std::shared_ptr<context> context_();
       std::shared_ptr<context> context_(const std::string& word);
+      /// When the labelset was already parsed.
+      std::shared_ptr<context> context_(const std::shared_ptr<ast_node>& ls);
 
       /// <LabelSet>.
       std::shared_ptr<ast_node> labelset_();

@@ -9,6 +9,22 @@ namespace vcsn
   namespace ast
   {
 
+    std::shared_ptr<ast_node> context_parser::parse()
+    {
+      auto res = any_();
+      if (is_.peek() != -1)
+        vcsn::fail_reading(is_, "unexpected trailing characters");
+      return res;
+    }
+
+    std::shared_ptr<ast_node> context_parser::parse_context()
+    {
+      auto res = context_();
+      if (is_.peek() != -1)
+        vcsn::fail_reading(is_, "unexpected trailing characters");
+      return res;
+    }
+
     std::shared_ptr<ast_node> context_parser::any_()
     {
       std::string w = word();
@@ -32,20 +48,14 @@ namespace vcsn
         {
           std::shared_ptr<ast_node> res = labelset_(w);
           if (is_.peek() == '_')
-            {
-              eat(is_, '_');
-              return std::make_shared<context>(res, weightset_());
-            }
+            return context_(res);
           return res;
         }
       else if (w == "lat")
         {
           std::shared_ptr<tupleset> res = tupleset_();
           if (is_.peek() == '_')
-            {
-              eat(is_, '_');
-              return std::make_shared<context>(res, weightset_());
-            }
+            return context_(res);
           return res;
         }
       else if (w == "b"
@@ -64,14 +74,6 @@ namespace vcsn
         }
       else
         return std::make_shared<other>(w);
-    }
-
-    std::shared_ptr<ast_node> context_parser::parse()
-    {
-      auto res = any_();
-      if (is_.peek() != -1)
-        vcsn::fail_reading(is_, "unexpected trailing characters");
-      return res;
     }
 
     std::shared_ptr<ast_node> context_parser::labelset_or_weightset_()
@@ -139,11 +141,16 @@ namespace vcsn
     }
 
     std::shared_ptr<context>
-    context_parser::context_(const std::string& word)
+    context_parser::context_(const std::shared_ptr<ast_node>& ls)
     {
-      std::shared_ptr<ast_node> ls = labelset_(word);
       eat(is_, '_');
       return std::make_shared<context>(ls, weightset_());
+    }
+
+    std::shared_ptr<context>
+    context_parser::context_(const std::string& word)
+    {
+      return context_(labelset_(word));
     }
 
     std::shared_ptr<ast_node> context_parser::labelset_()
