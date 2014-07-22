@@ -62,16 +62,23 @@ namespace vcsn
         else
           {
             // No, try to compile it.
-            vcsn::dyn::compile(name_, sig);
-            if (auto fun = get0(sig))
-              return *fun;
-            else
+            try
               {
-                std::string err = (name_ + ": no implementation available for "
-                                   + sig.to_string());
-                err += "\n  available versions:";
+                vcsn::dyn::compile(name_, sig);
+                auto fun = get0(sig);
+                require(fun,
+                        "compilation succeeded, but function is unavailable");
+                return *fun;
+              }
+            catch (const std::runtime_error& e)
+              {
+                std::string err = name_ + ": no such implementation\n";
+                err += "  failed signature:\n";
+                  err += "    " + sig.to_string() + "\n";
+                err += "  available versions:\n";
                 for (auto p: map_)
-                  err += "\n    " + p.first.to_string();
+                  err += "    " + p.first.to_string() + "\n";
+                err += e.what();
                 raise(err);
               }
           }
