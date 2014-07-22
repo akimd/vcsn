@@ -36,43 +36,6 @@ namespace vcsn
     return make_mutable_automaton(meet(auts->context()...));
   }
 
-  /// Join between automata in tuple.
-  template <typename... Auts>
-  mutable_automaton<join_t<context_t_of<Auts>...>>
-  join(const std::tuple<Auts...>& auts)
-  {
-    auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-    return join_(auts, indices);
-  }
-
-  template <typename... Auts, size_t... I>
-  mutable_automaton<join_t<context_t_of<Auts>...>>
-  join_(const std::tuple<Auts...>& auts,
-        vcsn::detail::index_sequence<I...>)
-  {
-    return join_automata(std::get<I>(auts)...);
-  }
-
-  /// Meet between automata in tuple.
-  template <typename... Auts>
-  auto
-  meet(const std::tuple<Auts...>& auts)
-    -> decltype(meet_(auts,
-                      vcsn::detail::make_index_sequence<sizeof...(Auts)>{}))
-  {
-    auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
-    return meet_(auts, indices);
-  }
-
-  template <typename... Auts, size_t... I>
-  auto
-  meet_(const std::tuple<Auts...>& auts,
-        vcsn::detail::index_sequence<I...>)
-    -> decltype(meet_automata(std::get<I>(auts)...))
-  {
-    return meet_automata(std::get<I>(auts)...);
-  }
-
   namespace detail
   {
     /*---------------------------------.
@@ -80,16 +43,15 @@ namespace vcsn
     `---------------------------------*/
 
     /// Build the (accessible part of the) product.
-    template <typename... Auts>
+    template <typename Aut, typename... Auts>
     class product_automaton_impl
-      : public tuple_automaton_impl<decltype(join_automata(std::declval<Auts>()...)),
-                                    Auts...>
+      : public tuple_automaton_impl<Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
                     "requires letterized labels");
 
       /// The type of the resulting automaton.
-      using automaton_t = decltype(join_automata(std::declval<Auts>()...));
+      using automaton_t = Aut;
       using super_t = tuple_automaton_impl<automaton_t, Auts...>;
 
     public:
@@ -109,21 +71,16 @@ namespace vcsn
 
       static std::string sname()
       {
-        return "product_automaton" + super_t::sname_(false);
+        return "product_automaton" + super_t::sname_();
       }
 
       std::string vname(bool full = true) const
       {
-        return "product_automaton" + super_t::vname_(full, false);
+        return "product_automaton" + super_t::vname_(full);
       }
 
-      /// The type of context of the result.
-      ///
-      /// The type is the "join" of the contexts, independently of the
-      /// algorithm.  However, its _value_ differs: in the case of the
-      /// product, the labelset is the meet of the labelsets, it is
-      /// its join for shuffle and infiltration.
-      using context_t = join_t<context_t_of<Auts>...>;
+      /// The context of the result.
+      using context_t = context_t_of<Aut>;
       using labelset_t = labelset_t_of<context_t>;
       using weightset_t = weightset_t_of<context_t>;
 
@@ -146,15 +103,14 @@ namespace vcsn
 
       using super_t::aut_;
 
-      product_automaton_impl(const Auts&... aut)
-        : super_t(join_automata(aut...), aut...)
-        , transition_maps_{{aut, *aut_->weightset()}...}
+      product_automaton_impl(Aut aut, const Auts&... auts)
+        : super_t(aut, auts...)
+        , transition_maps_{{auts, *aut_->weightset()}...}
       {}
 
       /// Compute the (accessible part of the) product.
       void product()
       {
-        aut_ = meet(auts_);
         initialize_product();
 
         while (!todo_.empty())
@@ -170,7 +126,6 @@ namespace vcsn
       /// Compute the (accessible part of the) shuffle product.
       void shuffle()
       {
-        aut_ = join(auts_);
         initialize_shuffle();
 
         while (!todo_.empty())
@@ -186,8 +141,6 @@ namespace vcsn
       /// Compute the (accessible part of the) infiltration product.
       void infiltration()
       {
-        aut_ = join(auts_);
-
         // Infiltrate is a mix of product and shuffle operations, and
         // the initial states for shuffle are a superset of the
         // initial states for product:
@@ -483,18 +436,18 @@ namespace vcsn
   }
 
   /// A product automaton as a shared pointer.
-  template <typename... Auts>
+  template <typename Aut, typename... Auts>
   using product_automaton
-    = std::shared_ptr<detail::product_automaton_impl<Auts...>>;
+    = std::shared_ptr<detail::product_automaton_impl<Aut, Auts...>>;
 
-  template <typename... Auts>
+  template <typename Aut, typename... Auts>
   inline
   auto
-  make_product_automaton(const Auts&... auts)
-    -> product_automaton<Auts...>
+  make_product_automaton(Aut aut, const Auts&... auts)
+    -> product_automaton<Aut, Auts...>
   {
-    using res_t = product_automaton<Auts...>;
-    return make_shared_ptr<res_t>(auts...);
+    using res_t = product_automaton<Aut, Auts...>;
+    return make_shared_ptr<res_t>(aut, auts...);
   }
 
 
@@ -507,9 +460,11 @@ namespace vcsn
   inline
   auto
   product(const Auts&... as)
-    -> product_automaton<Auts...>
+    -> product_automaton<decltype(meet_automata(as...)),
+                         Auts...>
   {
-    auto res = make_product_automaton(as...);
+    auto res = make_product_automaton(meet_automata(as...),
+                                      as...);
     res->product();
     return res;
   }
@@ -580,9 +535,10 @@ namespace vcsn
   inline
   auto
   shuffle(const Auts&... as)
-    -> product_automaton<Auts...>
+    -> product_automaton<decltype(join_automata(as...)),
+                         Auts...>
   {
-    auto res = make_product_automaton(as...);
+    auto res = make_product_automaton(join_automata(as...), as...);
     res->shuffle();
     return res;
   }
@@ -675,9 +631,10 @@ namespace vcsn
   inline
   auto
   infiltration(const Lhs& lhs, const Rhs& rhs)
-    -> product_automaton<Lhs, Rhs>
+    -> product_automaton<decltype(join_automata(lhs, rhs)), Lhs, Rhs>
   {
-    auto res = make_product_automaton(lhs, rhs);
+    auto res = make_product_automaton(join_automata(lhs, rhs),
+                                      lhs, rhs);
     res->infiltration();
     return res;
   }

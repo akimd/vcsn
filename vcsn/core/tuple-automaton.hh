@@ -118,12 +118,10 @@ namespace vcsn
       static constexpr indices_t indices{};
 
       /// The sname of the sub automata.
-      static std::string sname_(bool with_aut = true)
+      static std::string sname_()
       {
-        std::string res = "<";
+        std::string res = "<" + Aut::element_type::sname() + ", ";
         const char* sep = "";
-        if (with_aut)
-          res += Aut::element_type::sname() + ", ";
         using swallow = int[];
         (void) swallow
           {
@@ -134,18 +132,16 @@ namespace vcsn
       }
 
       /// The vname of the sub automata.
-      std::string vname_(bool full = true, bool with_aut = true) const
+      std::string vname_(bool full = true) const
       {
-        return vname_(full, with_aut, indices);
+        return vname_(full, indices);
       }
 
       template <size_t... I>
-      std::string vname_(bool full, bool with_aut, seq<I...>) const
+      std::string vname_(bool full, seq<I...>) const
       {
-        std::string res = "<";
+        std::string res = "<" + aut_->vname(full) + ", ";
         const char* sep = "";
-        if (with_aut)
-          res += aut_->vname(full) + ", ";
         using swallow = int[];
         (void) swallow
           {
