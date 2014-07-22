@@ -57,6 +57,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/fado.cc                             \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.cc                            \
+  %D%/algos/has-twins-property.cc               \
   %D%/algos/info.cc                             \
   %D%/algos/insplit.cc                          \
   %D%/algos/is-ambiguous.cc                     \

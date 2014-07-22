@@ -19,6 +19,7 @@ namespace vcsn
     return res;
   }
 
+  /// Whether \a e is member of \a m.
   template <typename Key, typename T,
             typename Hash, typename KeyEqual, typename Alloc>
   inline

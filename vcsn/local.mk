@@ -38,6 +38,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/first-order.hh                      \
   %D%/algos/fwd.hh                              \
   %D%/algos/grail.hh                            \
+  %D%/algos/has-twins-property.hh               \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-ambiguous.hh                     \

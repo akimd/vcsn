@@ -4,6 +4,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+* 2014-07-24
+** has_twins_property: new algorithm
+Computes whether an automaton has the twins property.
+
 * 2014-07-16
 ** determinize supports weighted automata
 The determinize algorithm (dyn and Python) now accepts an optional 'algo'
@@ -23,7 +27,7 @@ When 'algo' is:
 * 2014-07-11
 ** are-equivalent is generalized
 The 'are_equivalent' algorithm (a1.is_equivalent(a2) in Python) now supports
-weights in fields (e.g., q or r), but also on z.  The labelset still must be
+weights in fields (e.g., Q or R), but also on Z.  The labelset still must be
 free.
 
 * 2014-07-10

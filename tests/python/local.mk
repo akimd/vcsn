@@ -36,6 +36,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/expand.py                                 \
   %D%/factory.py                                \
   %D%/first-order.py                            \
+  %D%/has-twins-property.py                     \
   %D%/infiltration.py                           \
   %D%/info.py                                   \
   %D%/insplit.py                                \

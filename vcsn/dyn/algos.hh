@@ -185,6 +185,9 @@ namespace vcsn
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
 
+    /// Whether the automaton has the twins property.
+    bool has_twins_property(const automaton& aut);
+
     /// The infiltration of automata \a lhs and \a rhs.
     /// Performs the union of the alphabets.
     automaton infiltration(const automaton& lhs, const automaton& rhs);
@@ -205,6 +208,9 @@ namespace vcsn
     /// or non-epsilon ones.
     /// \pre aut is lal or lan
     automaton insplit(const automaton& aut);
+
+    /// The automaton with all its weights inverted (w -> 1/w).
+    automaton inverse(const automaton& aut);
 
     /// Whether \a aut is accessible.
     bool is_accessible(const automaton& aut);
