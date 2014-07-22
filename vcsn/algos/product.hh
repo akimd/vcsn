@@ -498,42 +498,6 @@ namespace vcsn
   }
 
 
-  /*--------------------------------.
-  | product(automaton, automaton).  |
-  `--------------------------------*/
-
-  /// Build the (accessible part of the) product.
-  template <typename Lhs, typename Rhs>
-  inline
-  auto
-  product(const Lhs& lhs, const Rhs& rhs)
-    -> product_automaton<Lhs, Rhs>
-  {
-    auto res = make_product_automaton(lhs, rhs);
-    res->product();
-    return res;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      product(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::product(l, r));
-      }
-
-      REGISTER_DECLARE(product,
-                       (const automaton&, const automaton&) -> automaton);
-    }
-  }
-
   /*------------------------.
   | product(automaton...).  |
   `------------------------*/
@@ -579,7 +543,20 @@ namespace vcsn
         return make_automaton(vcsn::product(do_insplit<I, Auts>(as[I]->as<Auts>())...));
       }
 
-      /// Bridge.
+      /// Binary bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      product(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(::vcsn::product(l, r));
+      }
+
+      REGISTER_DECLARE(product,
+                       (const automaton&, const automaton&) -> automaton);
+
+      /// Variadic bridge.
       template <typename... Auts>
       automaton
       product_vector(const std::vector<automaton>& as)
@@ -593,40 +570,6 @@ namespace vcsn
     }
   }
 
-  /*--------------------------------.
-  | shuffle(automaton, automaton).  |
-  `--------------------------------*/
-
-  /// Build the (accessible part of the) shuffle.
-  template <typename Lhs, typename Rhs>
-  inline
-  auto
-  shuffle(const Lhs& lhs, const Rhs& rhs)
-    -> product_automaton<Lhs, Rhs>
-  {
-    auto res = make_product_automaton(lhs, rhs);
-    res->shuffle();
-    return res;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename Lhs, typename Rhs>
-      automaton
-      shuffle(const automaton& lhs, const automaton& rhs)
-      {
-        const auto& l = lhs->as<Lhs>();
-        const auto& r = rhs->as<Rhs>();
-        return make_automaton(::vcsn::shuffle(l, r));
-      }
-
-      REGISTER_DECLARE(shuffle,
-                       (const automaton&, const automaton&) -> automaton);
-    }
-  }
 
   /*------------------------.
   | shuffle(automaton...).  |
@@ -657,7 +600,20 @@ namespace vcsn
         return make_automaton(res);
       }
 
-      /// Bridge.
+      /// Binary bridge.
+      template <typename Lhs, typename Rhs>
+      automaton
+      shuffle(const automaton& lhs, const automaton& rhs)
+      {
+        const auto& l = lhs->as<Lhs>();
+        const auto& r = rhs->as<Rhs>();
+        return make_automaton(::vcsn::shuffle(l, r));
+      }
+
+      REGISTER_DECLARE(shuffle,
+                       (const automaton&, const automaton&) -> automaton);
+
+      /// Variadic bridge.
       template <typename... Auts>
       automaton
       shuffle_vector(const std::vector<automaton>& as)
