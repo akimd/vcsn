@@ -16,14 +16,15 @@ notebooksdir = $(datadir)/vcsn/notebooks
 # Unfortunately, we can't deal with space in file names in Automake,
 # and it is really unacceptable to forbid them.  So work around
 # Automake.
-dist_notebooks_data =				\
-  '%D%/01 - Playing with contexts.ipynb'	\
-  '%D%/02 - Basic operations on automata.ipynb'	\
-  '%D%/index.ipynb'				\
-  '%D%/Some developer documentation.ipynb'	\
-  '%D%/algos/index.ipynb'			\
-  '%D%/algos/automaton.determinize.ipynb'       \
-  '%D%/algos/automaton.standard.ipynb'
+dist_notebooks_data =                                   \
+  '%D%/01 - Playing with contexts.ipynb'                \
+  '%D%/02 - Basic operations on automata.ipynb'         \
+  '%D%/index.ipynb'                                     \
+  '%D%/Some developer documentation.ipynb'              \
+  '%D%/algos/index.ipynb'                               \
+  '%D%/algos/automaton.determinize.ipynb'               \
+  '%D%/algos/automaton.standard.ipynb'                  \
+  '%D%/algos/automaton.synchronizing_word.ipynb'
 
 dist-hook: dist-hook-%C%
 dist-hook-%C%:
