@@ -18,11 +18,6 @@ We should really name "concat" as "mul" in our labelsets.
 ** sum should be add
 
 * Build
-** --enable-compilation-mode
-Do not set GLIBCXX_DEBUG in speed mode.  And anyway, we have segv when both
-NDEBUG and GLIBCXX_DEBUG are used.  It would be nice to find where and send
-a bug report...
-
 ** -fsanitize=address
 Try that on the BF.
 
@@ -54,9 +49,6 @@ Check + and *.
 ** proper
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
-
-** efsm
-Check support from Python, not just TAF-Kit.
 
 * Bugs
 ** Parse error
@@ -176,7 +168,7 @@ generic, and "more portable".  Note, however, that Boost.Format is
 header-only.  A mixture of both might be the best: where they suffice,
 format _are_ superior.
 
-** Eliminate rat::exp (Antoine)
+** Eliminate rat::exp
 It does seem to be useful, except for one thing: dyn::ratexpset uses a
 shared_ptr to exp (which is rat::exp_t is) as a means to handle ratexps.  It
 would make much more sense for dyn::ratexpset to use dyn::ratexp as an
