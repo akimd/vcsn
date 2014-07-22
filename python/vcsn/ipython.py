@@ -135,10 +135,10 @@ class Daut:
 
     def parse_transition(self, match):
         s = match.group(1)
-        if s.startswith('I'):
+        if s is None or s.startswith('I'):
             s = '$'
         d = match.group(2)
-        if d.startswith('F'):
+        if d is None or d.startswith('F'):
             d = '$'
         attr = self.attr_daut(match.group(3))
         return (s, d, attr)
