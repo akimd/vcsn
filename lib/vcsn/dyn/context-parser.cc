@@ -24,13 +24,6 @@ namespace vcsn
           || w == "transpose"
           || w == "tuple")
         return automaton_(w);
-      else if (w == "context")
-        {
-          eat(is_, '<');
-          std::shared_ptr<context> res = context_();
-          eat(is_, '>');
-          return res;
-        }
       else if (w == "lal"
                || w == "lan"
                || w == "lao"
