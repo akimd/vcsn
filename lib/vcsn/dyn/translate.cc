@@ -198,7 +198,8 @@ namespace vcsn
         void compile(const std::string& ctx)
         {
           printer_.header("vcsn/ctx/instantiate.hh");
-          std::string base = plugindir() + "contexts/" + split(detail::context_base::sname(ctx));
+          std::string base =
+            plugindir() + "contexts/" + split(detail::context_base::sname(ctx));
           os << "using ctx_t =" << incendl;
           print_type(ctx);
           os << ';' << decendl
@@ -218,7 +219,8 @@ namespace vcsn
         {
           printer_.header("vcsn/misc/name.hh"); // ssignature
           printer_.header_algo(name);
-          std::string base = plugindir() + "algos/" + name + "/" + split(sig.to_string());
+          std::string base =
+            plugindir() + "algos/" + name + "/" + split(sig.to_string());
           int count = 0;
           std::string types;
           for (const auto& s: sig)

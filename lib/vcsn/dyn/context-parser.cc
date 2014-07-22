@@ -25,51 +25,51 @@ namespace vcsn
           || w == "tuple")
         return make_automaton(w);
       else if (w == "context")
-      {
-        eat(is_, '<');
-        std::shared_ptr<context> res = make_context();
-        eat(is_, '>');
-        return res;
-      }
+        {
+          eat(is_, '<');
+          std::shared_ptr<context> res = make_context();
+          eat(is_, '>');
+          return res;
+        }
       else if (w == "lal"
-            || w == "lan"
-            || w == "lao"
-            || w == "law"
-            || w == "ratexpset")
-      {
-        std::shared_ptr<ast_node> res = make_labelset(w);
-        if (is_.peek() == '_')
+               || w == "lan"
+               || w == "lao"
+               || w == "law"
+               || w == "ratexpset")
         {
-          eat(is_, '_');
-          return std::make_shared<context>(res, make_weightset());
+          std::shared_ptr<ast_node> res = make_labelset(w);
+          if (is_.peek() == '_')
+            {
+              eat(is_, '_');
+              return std::make_shared<context>(res, make_weightset());
+            }
+          return res;
         }
-        return res;
-      }
       else if (w == "lat")
-      {
-        std::shared_ptr<tupleset> res = make_tupleset();
-        if (is_.peek() == '_')
         {
-          eat(is_, '_');
-          return std::make_shared<context>(res, make_weightset());
+          std::shared_ptr<tupleset> res = make_tupleset();
+          if (is_.peek() == '_')
+            {
+              eat(is_, '_');
+              return std::make_shared<context>(res, make_weightset());
+            }
+          return res;
         }
-        return res;
-      }
       else if (w == "b"
-            || w == "f2"
-            || w == "q"
-            || w == "r"
-            || w == "z"
-            || w == "zmin")
+               || w == "f2"
+               || w == "q"
+               || w == "r"
+               || w == "z"
+               || w == "zmin")
         return make_weightset(w);
       else if (w == "polynomialset")
-      {
-        eat(is_, '<');
-        std::shared_ptr<polynomialset> res =
-          std::make_shared<polynomialset>(make_context());
-        eat(is_, '>');
-        return res;
-      }
+        {
+          eat(is_, '<');
+          std::shared_ptr<polynomialset> res =
+            std::make_shared<polynomialset>(make_context());
+          eat(is_, '>');
+          return res;
+        }
       else
         return std::make_shared<other>(w);
     }
@@ -91,18 +91,18 @@ namespace vcsn
     context_parser::make_labelset_or_weightset(const std::string& w)
     {
       if (w == "lal"
-       || w == "lan"
-       || w == "lao"
-       || w == "law"
-       || w == "lat"
-       || w == "ratexpset")
+          || w == "lan"
+          || w == "lao"
+          || w == "law"
+          || w == "lat"
+          || w == "ratexpset")
         return make_labelset(w);
       else if (w == "b"
-            || w == "f2"
-            || w == "q"
-            || w == "r"
-            || w == "z"
-            || w == "zmin")
+               || w == "f2"
+               || w == "q"
+               || w == "r"
+               || w == "z"
+               || w == "zmin")
         return make_weightset(w);
       else
         raise("invalid weightset or labelset name: " + w);
@@ -133,11 +133,11 @@ namespace vcsn
       res += '(';
       int c = is_.get();
       while ((c = is_.get()) != EOF)
-      {
-        res += c;
-        if (c == ')')
-          break;
-      }
+        {
+          res += c;
+          if (c == ')')
+            break;
+        }
       return res;
     }
 
@@ -163,33 +163,33 @@ namespace vcsn
     context_parser::make_labelset(const std::string& kind)
     {
       if (kind == "lal" || kind == "law")
-      {
-        eat(is_, "_char");
-        if (kind == "lal")
-          return std::make_shared<letterset>(get_alpha());
-        else if (kind == "law")
-          return std::make_shared<wordset>(get_alpha());
-      }
+        {
+          eat(is_, "_char");
+          if (kind == "lal")
+            return std::make_shared<letterset>(get_alpha());
+          else if (kind == "law")
+            return std::make_shared<wordset>(get_alpha());
+        }
       else if (kind == "lao")
         return std::make_shared<oneset>();
       else if (kind == "lan")
-      {
-        if (is_.peek() == '_')
         {
-          eat(is_, "_char");
-          return std::make_shared<nullableset>(std::make_shared<letterset>
-                                               (get_alpha()));
+          if (is_.peek() == '_')
+            {
+              eat(is_, "_char");
+              return std::make_shared<nullableset>(std::make_shared<letterset>
+                                                   (get_alpha()));
+            }
+          else
+            {
+              eat(is_, '<');
+              std::shared_ptr<ast_node> res = make_labelset();
+              if (!res->has_one())
+                res = std::make_shared<nullableset>(res);
+              eat(is_, '>');
+              return res;
+            }
         }
-        else
-        {
-          eat(is_, '<');
-          std::shared_ptr<ast_node> res = make_labelset();
-          if (!res->has_one())
-            res = std::make_shared<nullableset>(res);
-          eat(is_, '>');
-          return res;
-        }
-      }
       else if (kind == "lat")
         return make_tupleset();
       else if (kind == "ratexpset")
@@ -277,10 +277,10 @@ namespace vcsn
       typename tupleset::value_t res;
       res.emplace_back(make_labelset_or_weightset());
       while (is_.peek() == ',')
-      {
-        eat(is_, ',');
-        res.emplace_back(make_labelset_or_weightset());
-      }
+        {
+          eat(is_, ',');
+          res.emplace_back(make_labelset_or_weightset());
+        }
       eat(is_, '>');
       return std::make_shared<tupleset>(res);
     }
