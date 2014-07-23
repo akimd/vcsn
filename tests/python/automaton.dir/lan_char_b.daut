@@ -1,0 +1,4 @@
+context = "lan<lal_char(a)>_b"
+$ -> 0
+0 -> 1 "\\e, a"
+1 -> $

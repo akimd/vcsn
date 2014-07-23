@@ -191,6 +191,21 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(tikz, a.format('tikz'))
 
 
+## ------ ##
+## Daut.  ##
+## ------ ##
+
+from vcsn.dot import to_dot, from_dot
+for fn in glob.glob(os.path.join(medir, '*.in.gv')):
+    a = vcsn.automaton.load(fn)
+
+    daut = from_dot(a.format('dot'))
+    exp = open(fn.replace('.in.gv', '.daut')).read().strip()
+    CHECK_EQ(exp, daut)
+
+    CHECK_EQ(a, vcsn.automaton(to_dot(daut)))
+
+
 ## ------------------- ##
 ## Conversions: FAdo.  ##
 ## ------------------- ##

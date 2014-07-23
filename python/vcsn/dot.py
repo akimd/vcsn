@@ -87,3 +87,143 @@ def _dot_to_svg_dot2tex(dot, engine="dot", *args):
                     "--output", pdf.name, tex.name])
         check_call(["pdf2svg", pdf.name, svg.name])
         return open(svg.name).read()
+
+
+class Daut:
+
+    def __init__(self):
+        self.transitions = []
+        self.id = r'(?:\w+|"(?:[^\\"]|\\.)*")'
+
+    # Using split(',') is tempting, but will break strings
+    # that contain commas --- e.g., [label = "a, b"].
+    def attr_dot_split(self, s):
+        attr = r'{id}(?:\s*=\s*{id})?'.format(id = self.id)
+
+        scanner = re.Scanner([
+            (",;", None),
+            (attr, lambda scanner, tok: tok),
+            (r"\s+", None),
+            ])
+        return scanner.scan(s)[0]
+
+    def parse_attr_dot(self, s):
+        if s:
+            s.strip()
+            if s.startswith('[') and s.endswith(']'):
+                s = s[1:-1]
+            res = [a.strip() for a in self.attr_dot_split(s)]
+            return res
+        else:
+            res = []
+        return res
+
+    def attr_dot(self, attrs):
+        '''Receive a Dot list of attributes, and if the first
+        is not a proper assignment, consider it's the label, so
+        prepend 'label=' to it.
+        '''
+        if attrs and not attrs[0].startswith("label"):
+            attrs[0] = 'label = "{}"'.format(attrs[0].strip('"'))
+        for i, a in enumerate(attrs):
+            if a in ['blue', 'red', 'green']:
+                attrs[i] = "color={a}, fontcolor={a}".format(a = a)
+        # Join on ";" rather that ",".
+        if attrs:
+            return "[" + "; ".join(attrs) + "]"
+        else:
+            return "";
+
+    def parse_attr_daut(self, s):
+        if s:
+            s.strip()
+            if s.startswith('[') and s.endswith(']'):
+                s = s[1:-1]
+            res = [a.strip() for a in s.split(';')]
+        else:
+            res = []
+        return res
+
+    def attr_daut(self, attrs):
+        '''Return a list of attributes with the Daut syntax.'''
+        if attrs:
+            attrs[0] = re.sub("label *= *", '', attrs[0])
+            return "; ".join(attrs)
+        else:
+            return ""
+
+    def transition_daut(self, s, d, a):
+        a = self.attr_daut(a)
+        return "{} -> {}{}{}".format(s or '$', d or '$',
+                                     " " if a else "", a)
+
+    def transition_dot(self, s, d, a):
+        if s == "" or s == "$":
+            s = "I" + d
+            self.hidden.append(s)
+        if d == "" or d == "$":
+            d = "F" + s
+            self.hidden.append(d)
+        a = self.attr_dot(a)
+        return "  {} -> {}{}{}".format(s, d, " " if a else "", a)
+
+    def parse_context(self, match):
+        self.context = match.group(1)
+
+    def parse_transition(self, match, format):
+        '''Return (source, destination, attributes) with Daut syntax.'''
+        s = match.group(1)
+        if s is None or s.startswith('I'):
+            s = '$'
+        d = match.group(2)
+        if d is None or d.startswith('F'):
+            d = '$'
+        if format == "dot":
+            attr = self.parse_attr_dot(match.group(3))
+        else:
+            attr = self.parse_attr_daut(match.group(3))
+        return (s, d, attr)
+
+    def daut_to_dot(self, s):
+        '''Convert from Daut syntax to Dot.'''
+        self.context = "lal_char(abc)_b"
+        self.hidden = []
+        s = re.sub('^ *(?:vcsn_)?(?:context|ctx) *= *"?(.*?)"?$',
+                   self.parse_context, s, flags = re.MULTILINE)
+        s = re.sub('^ *({id}|\$)? *-> *({id}|\$)? *(.*?)$'.format(id = self.id),
+                   lambda m: self.transition_dot(*self.parse_transition(m, "daut")),
+                   s, flags = re.MULTILINE)
+        return '''digraph
+{{
+  vcsn_context = "{context}"
+  rankdir = LR
+  {{
+    node [shape = point, width = 0]
+    {hidden}
+  }}
+  node [shape = circle]
+  {transitions}
+}}'''.format(context = self.context,
+             transitions = s,
+             hidden=" ".join(self.hidden))
+
+    def dot_to_daut(self, s):
+        '''Convert from Dot syntax to Daut.'''
+        res = []
+        s = re.sub('^ *vcsn_context *= *"(.*?)"$',
+                   lambda m: res.append('context = "{}"'.format(m.group(1))),
+                   s, flags = re.MULTILINE)
+        re.sub('^ *({id}?) *-> *({id}?) *(\[.*?\])?$'.format(id = self.id),
+               lambda m: res.append(self.transition_daut(*self.parse_transition(m, "dot"))),
+               s, flags = re.MULTILINE)
+        return "\n".join(res)
+
+def to_dot(s):
+    '''Read a Daut input, translate to regular Dot.'''
+    d = Daut()
+    return d.daut_to_dot(s)
+
+def from_dot(s):
+    '''Read a Dot input, simplify it into Daut.'''
+    d = Daut()
+    return d.dot_to_daut(s)
