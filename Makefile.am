@@ -26,6 +26,7 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(VISIBILITY_CXXFLAGS)
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 
 include bin/local.mk
+include doc/local.mk
 include lib/local.mk
 include python/local.mk
 include share/local.mk

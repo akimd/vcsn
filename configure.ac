@@ -209,6 +209,19 @@ AC_ARG_VAR([BISON], [Bison parser generator])
 AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 
+
+## --------------- ##
+## Documentation.  ##
+## --------------- ##
+
+VCSN_DOXYGEN
+AC_CONFIG_FILES([doc/vcsn.dox])
+
+
+## --------------- ##
+## Configuration.  ##
+## --------------- ##
+
 # lib/config.h is unprefixed, and not installed, vcsn/config.hh is
 # prefixed and installed.
 AC_CONFIG_HEADERS([lib/config.h:vcsn/config.in.h])
