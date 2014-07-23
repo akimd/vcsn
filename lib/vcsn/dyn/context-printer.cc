@@ -102,14 +102,14 @@ namespace vcsn
         header("vcsn/core/mutable-automaton.hh");
       else if (type == "pair_automaton")
         header("vcsn/algos/synchronizing-word.hh");
+      else if (type == "partition_automaton")
+        header("vcsn/core/partition-automaton.hh");
       else if (type == "product_automaton")
         header("vcsn/algos/product.hh");
       else if (type == "permutation_automaton")
         header("vcsn/core/permutation-automaton.hh");
       else if (type == "ratexp_automaton")
         header("vcsn/core/ratexp-automaton.hh");
-      else if (type == "subset_automaton")
-        header("vcsn/core/subset-automaton.hh");
       else if (type == "transpose_automaton")
         header("vcsn/algos/transpose.hh");
       else if (type == "tuple_automaton")

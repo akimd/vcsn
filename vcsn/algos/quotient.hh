@@ -7,7 +7,7 @@
 
 # include <vcsn/algos/accessible.hh>
 # include <vcsn/algos/is-deterministic.hh>
-# include <vcsn/core/subset-automaton.hh>
+# include <vcsn/core/partition-automaton.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/misc/dynamic_bitset.hh>
 
@@ -22,7 +22,7 @@ namespace vcsn
     {
     public:
       using automaton_t = Aut;
-      using subset_automaton_t = subset_automaton<automaton_t>;
+      using partition_automaton_t = partition_automaton<automaton_t>;
 
       using class_t = unsigned;
       using state_t = state_t_of<automaton_t>;
@@ -65,15 +65,15 @@ namespace vcsn
       }
 
       /// Build the resulting automaton.
-      subset_automaton_t build_result_(const automaton_t& aut)
+      partition_automaton_t build_result_(const automaton_t& aut)
       {
         state_to_class_t state_to_class;
         for (unsigned c = 0; c < num_classes_; ++c)
           for (auto s: class_to_set_[c])
             state_to_class[s] = c;
 
-        subset_automaton_t res
-          = make_shared_ptr<subset_automaton_t>(aut);
+        partition_automaton_t res
+          = make_shared_ptr<partition_automaton_t>(aut);
         class_to_res_state_.resize(num_classes_);
         for (unsigned c = 0; c < num_classes_; ++c)
           {
@@ -101,7 +101,7 @@ namespace vcsn
       }
 
       /// The minimized automaton.
-      subset_automaton_t operator()(const automaton_t& aut)
+      partition_automaton_t operator()(const automaton_t& aut)
       {
         return build_result_(aut);
       }
@@ -141,7 +141,7 @@ namespace vcsn
   auto
   quotient(const Aut& a,
            typename detail::quotienter<Aut>::class_to_set_t& classes)
-    -> subset_automaton<Aut>
+    -> partition_automaton<Aut>
   {
     detail::quotienter<Aut> quotient(classes);
     return quotient(a);

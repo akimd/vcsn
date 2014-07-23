@@ -33,10 +33,10 @@ namespace vcsn
           || w == "detweighted"
           || w == "mutable"
           || w == "pair"
+          || w == "partition"
           || w == "permutation"
           || w == "product"
           || w == "ratexp"
-          || w == "subset"
           || w == "transpose"
           || w == "tuple")
         return automaton_(w);
@@ -235,9 +235,9 @@ namespace vcsn
                || prefix == "detweighted"
                || prefix == "linear"
                || prefix == "pair"
+               || prefix == "partition"
                || prefix == "permutation"
                || prefix == "ratexp"
-               || prefix == "subset"
                || prefix == "transpose")
         {
           eat(is_, "_automaton<");

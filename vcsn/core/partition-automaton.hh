@@ -1,5 +1,5 @@
-#ifndef VCSN_CORE_SUBSET_AUTOMATON_HH
-# define VCSN_CORE_SUBSET_AUTOMATON_HH
+#ifndef VCSN_CORE_PARTITION_AUTOMATON_HH
+# define VCSN_CORE_PARTITION_AUTOMATON_HH
 
 # include <map>
 # include <set>
@@ -13,7 +13,7 @@ namespace vcsn
   namespace detail
   {
     template <typename Aut>
-    class subset_automaton_impl
+    class partition_automaton_impl
       : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
     public:
@@ -41,7 +41,7 @@ namespace vcsn
       const automaton_t input_;
 
     public:
-      subset_automaton_impl(const automaton_t& input)
+      partition_automaton_impl(const automaton_t& input)
         : super_t(input->context())
         , input_(input)
       {}
@@ -51,12 +51,12 @@ namespace vcsn
       // subclassed anyway?
       static std::string sname()
       {
-        return "subset_automaton<" + automaton_t::element_type::sname() + ">";
+        return "partition_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
       std::string vname(bool full = true) const
       {
-        return "subset_automaton<" + input_->vname(full) + ">";
+        return "partition_automaton<" + input_->vname(full) + ">";
       }
 
       bool state_has_name(state_t s) const
@@ -113,9 +113,9 @@ namespace vcsn
 
   /// A subset automaton as a shared pointer.
   template <typename Aut>
-  using subset_automaton
-    = std::shared_ptr<detail::subset_automaton_impl<Aut>>;
+  using partition_automaton
+    = std::shared_ptr<detail::partition_automaton_impl<Aut>>;
 
 } // namespace vcsn
 
-#endif // !VCSN_CORE_SUBSET_AUTOMATON_HH
+#endif // !VCSN_CORE_PARTITION_AUTOMATON_HH

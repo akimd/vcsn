@@ -86,6 +86,7 @@ nobase_include_HEADERS =                        \
   %D%/core/fwd.hh                               \
   %D%/core/kind.hh                              \
   %D%/core/mutable-automaton.hh                 \
+  %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/expansionset.hh                  \
@@ -107,7 +108,6 @@ nobase_include_HEADERS =                        \
   %D%/core/rat/visitor.hh                       \
   %D%/core/rat/visitor.hxx                      \
   %D%/core/ratexp-automaton.hh                  \
-  %D%/core/subset-automaton.hh                  \
   %D%/core/transition-map.hh                    \
   %D%/core/transition.hh                        \
   %D%/core/tuple-automaton.hh                   \

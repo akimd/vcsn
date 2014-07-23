@@ -406,7 +406,7 @@ namespace vcsn
       }
 
       /// The minimized automaton.
-      subset_automaton<automaton_t> operator()()
+      partition_automaton<automaton_t> operator()()
       {
         build_classes_();
         return quotient(a_, class_to_set_);
@@ -419,7 +419,7 @@ namespace vcsn
   inline
   auto
   minimize_signature(const Aut& a)
-    -> subset_automaton<Aut>
+    -> partition_automaton<Aut>
   {
     detail_signature::minimizer<Aut> minimize(a);
     return minimize();

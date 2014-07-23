@@ -28,7 +28,7 @@ namespace vcsn
   inline
   typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
                           && labelset_t_of<Aut>::is_free(),
-                          subset_automaton<Aut>>::type
+                          partition_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "moore")
@@ -46,7 +46,7 @@ namespace vcsn
   inline
   typename std::enable_if<std::is_same<weightset_t_of<Aut>, b>::value
                           && ! labelset_t_of<Aut>::is_free(),
-                          subset_automaton<Aut>>::type
+                          partition_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "signature")
@@ -61,7 +61,7 @@ namespace vcsn
   template <typename Aut>
   inline
   typename std::enable_if<!std::is_same<weightset_t_of<Aut>, b>::value,
-                          subset_automaton<Aut>>::type
+                          partition_automaton<Aut>>::type
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "weighted")
