@@ -21,8 +21,8 @@ namespace vcsn
 
   /// Merge transitions of \a b into those of \a res.
   ///
-  /// \precondition The context of \a res must include that of \a b.
-  /// \precondition res and b must be standard.
+  /// \pre The context of \a res must include that of \a b.
+  /// \pre res and b must be standard.
   template <typename A, typename B>
   A&
   sum_here(A& res, const B& b)

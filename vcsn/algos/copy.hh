@@ -22,7 +22,7 @@ namespace vcsn
   namespace detail
   {
     /// Copy an automaton.
-    /// \precondition AutIn <: AutOut.
+    /// \pre AutIn <: AutOut.
     template <typename AutIn, typename AutOut>
     struct copier
     {
@@ -91,7 +91,7 @@ namespace vcsn
   }
 
   /// Copy an automaton.
-  /// \precondition AutIn <: AutOut.
+  /// \pre AutIn <: AutOut.
   template <typename AutIn, typename AutOut, typename Pred>
   inline
   void

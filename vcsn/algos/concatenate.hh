@@ -22,8 +22,8 @@ namespace vcsn
 
   /// Append automaton \a b to \a res.
   ///
-  /// \precondition The context of \a res must include that of \a b.
-  /// \precondition both are standard.
+  /// \pre The context of \a res must include that of \a b.
+  /// \pre both are standard.
   template <typename A, typename B>
   A&
   concatenate_here(A& res, const B& b)

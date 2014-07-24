@@ -16,7 +16,7 @@ namespace vcsn
 
   /// Merge transitions of \a b into those of \a res.
   ///
-  /// \precondition AutIn <: AutOut.
+  /// \pre AutIn <: AutOut.
   template <typename A, typename B>
   inline
   A&

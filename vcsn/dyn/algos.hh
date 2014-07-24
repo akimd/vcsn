@@ -27,8 +27,8 @@ namespace vcsn
     /// \pre lhs and rhs are Boolean, or on Z, or on a field.
     bool are_equivalent(const ratexp& lhs, const ratexp& rhs);
 
-    /// Whether there exists an isomorphism between \a lhs's states
-    /// states and \a rhs's states.
+    /// Whether there exists an isomorphism between the states of \a
+    /// lhs and those of \a rhs.
     bool are_isomorphic(const automaton& lhs, const automaton& rhs);
 
     /// A ratexp denoting the language of \a aut.
@@ -273,7 +273,7 @@ namespace vcsn
     automaton ladybird(const context& ctx, unsigned n);
 
     /// The left-multiplication of an automaton with \a w as weight.
-    /// \precondition aut is standard.
+    /// \pre aut is standard.
     automaton left_mult(const weight& w, const automaton& aut);
 
     /// The left-multiplication of a ratexp with \a w as weight.
@@ -422,7 +422,7 @@ namespace vcsn
     automaton reduce(const automaton& aut);
 
     /// The right-mult automaton with \a w as weight.
-    /// \precondition aut is standard.
+    /// \pre aut is standard.
     automaton right_mult(const automaton& aut, const weight& w);
 
     /// The right-multiplication of a ratexp with \a w as weight.

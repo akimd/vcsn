@@ -10,7 +10,7 @@
 namespace vcsn
 {
   /// Whether \a aut is complete.
-  /// \precondition \a aut is LTL
+  /// \pre \a aut is LTL
   template <typename Aut>
   bool is_complete(const Aut& aut)
   {

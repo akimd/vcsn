@@ -9,7 +9,7 @@
 namespace vcsn
 {
 
-  /// These definitions come in handy every time we define variadic tuples.
+  // These definitions come in handy every time we define variadic tuples.
   namespace detail
   {
 

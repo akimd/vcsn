@@ -240,7 +240,7 @@ namespace vcsn
       }
 
       /// Update the heap for \a s.
-      /// \precondition  its profile is updated.
+      /// \pre  its profile is updated.
       void update_heap_(state_t s)
       {
         if (3 < debug_)

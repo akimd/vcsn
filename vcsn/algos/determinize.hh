@@ -29,8 +29,8 @@ namespace vcsn
     /// \brief The subset construction automaton from another.
     ///
     /// \tparam Aut an automaton type.
-    /// \precondition labelset is free.
-    /// \precondition weightset is Boolean.
+    /// \pre labelset is free.
+    /// \pre weightset is Boolean.
     template <typename Aut>
     class determinized_automaton_impl
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
@@ -257,7 +257,7 @@ namespace vcsn
     /// \brief The weighted determinization of weighted automaton.
     ///
     /// \tparam Aut an weighted automaton type.
-    /// \precondition labelset is free.
+    /// \pre labelset is free.
     template <typename Aut>
     class detweighted_automaton_impl
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
