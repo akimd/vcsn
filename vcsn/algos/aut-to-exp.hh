@@ -132,6 +132,14 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lar,
                     "requires labels_are_ratexps");
+      // FIXME: ratexpset<lal_char(a-c)_z>_q for instance cannot work,
+      // because we need to move the q weights inside the
+      // lal_char(a-c)_z ratexps, which obviously not possible.  So we
+      // need to require that there is a subtype relationship between
+      // the weightset and the weightset of the ratexp.
+      //
+      // Yet as of 2014-07, there is no means to check that subtype
+      // relationship in Vaucanson.
 
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;

@@ -221,32 +221,6 @@ namespace vcsn
 
       template <typename Ctx>
       bool
-      register_kind_functions(labels_are_ratexps)
-      {
-        using ctx_t = Ctx;
-        using aut_t = vcsn::mutable_automaton<ctx_t>;
-
-        using namespace dyn::detail;
-
-        REGISTER(eliminate_state, aut_t, int);
-
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
-      register_kind_functions(labels_are_tuples)
-      ATTRIBUTE_CONST;
-
-      template <typename Ctx>
-      bool
-      register_kind_functions(labels_are_tuples)
-      {
-        return true;
-      }
-
-      template <typename Ctx>
-      bool
       register_kind_functions(labels_are_nullable)
       {
         using ctx_t = Ctx;
@@ -259,6 +233,22 @@ namespace vcsn
         REGISTER(ladybird, ctx_t, unsigned);
         REGISTER(u, ctx_t, unsigned);
 
+        return true;
+      }
+
+      template <typename Ctx>
+      ATTRIBUTE_CONST
+      bool
+      register_kind_functions(labels_are_ratexps)
+      {
+        return true;
+      }
+
+      template <typename Ctx>
+      ATTRIBUTE_CONST
+      bool
+      register_kind_functions(labels_are_tuples)
+      {
         return true;
       }
 
