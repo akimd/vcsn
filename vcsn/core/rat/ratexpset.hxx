@@ -2,7 +2,7 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <vcsn/algos/fwd.hh>
+#include <vcsn/algos/fwd.hh> // is-valid
 #include <vcsn/core/rat/copy.hh>
 #include <vcsn/core/rat/less-than.hh>
 #include <vcsn/core/rat/ratexp.hh>
@@ -620,13 +620,13 @@ namespace vcsn
       // Trivial one
       // (0)* == 1
       return one();
-
-    value_t res = std::make_shared<star_t>(e);
-    if (is_series() && ! is_valid/*<ratexpset_impl<Context>>*/(*this, res))
-      throw std::runtime_error("star argument " + to_string(e)
-                               + " not starrable");
     else
-      return res;
+      {
+        value_t res = std::make_shared<star_t>(e);
+        require(!is_series() || is_valid(*this, res),
+                "star argument ", e, " not starrable");
+        return res;
+      }
   }
 
   DEFINE::complement(value_t e) const

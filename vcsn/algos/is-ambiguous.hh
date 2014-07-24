@@ -36,6 +36,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <class Aut>
       bool is_ambiguous(const automaton& aut)
       {

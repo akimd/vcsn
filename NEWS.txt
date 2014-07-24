@@ -31,7 +31,7 @@ support a subset of the available operations.
   >>> vcsn.context('lal_char(a-c)_ratexpset<lal_char(x-z)_b>(trivial)')
   >>> e = vcsn.context('lal_char(a-c)_z').ratexp('b+a+b'); e
   b+a+b
-  >>> s = vcsn.context('lal_char(a-c)_z').series('b+a+b'); e
+  >>> s = vcsn.context('lal_char(a-c)_z').series('b+a+b'); s
   a+<2>b
   >>> (e+s).is_series()
   True
