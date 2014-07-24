@@ -36,32 +36,32 @@ namespace vcsn
       /// List of letters.
       std::string alphabet_();
 
-      /// <LabelSet>_<WeightSet>.
+      /// `<LabelSet>_<WeightSet>`.
       std::shared_ptr<context> context_();
       std::shared_ptr<context> context_(const std::string& word);
       /// When the labelset was already parsed.
       std::shared_ptr<context> context_(const std::shared_ptr<ast_node>& ls);
 
-      /// <LabelSet>.
+      /// `<LabelSet>`.
       std::shared_ptr<ast_node> labelset_();
       std::shared_ptr<ast_node> labelset_(const std::string& kind);
 
-      /// <WeightSet>.
+      /// `<WeightSet>`.
       std::shared_ptr<ast_node> weightset_();
       std::shared_ptr<ast_node> weightset_(const std::string& ws);
 
-      /// <Automaton> "<" <Context> ">".
+      /// `<Automaton> "<" <Context> ">"`.
       std::shared_ptr<automaton> automaton_(const std::string& prefix);
       std::shared_ptr<tupleset> tupleset_();
 
-      /// "ratexpset" "<" <Context> ">".
+      /// `"ratexpset" "<" <Context> ">"`.
       std::shared_ptr<ratexpset> ratexpset_();
       std::shared_ptr<ratexpset> ratexpset_series_(); // No optional parameter
 
-      /// "polynomialset" "<" <Context> ">".
+      /// `"polynomialset" "<" <Context> ">"`.
       std::shared_ptr<polynomialset> polynomialset_();
 
-      /// <LabelSet> | <WeightSet>
+      /// `<LabelSet> | <WeightSet>`
       std::shared_ptr<ast_node> labelset_or_weightset_();
       std::shared_ptr<ast_node> labelset_or_weightset_(const std::string& kind);
 

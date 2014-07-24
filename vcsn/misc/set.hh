@@ -63,7 +63,7 @@ namespace vcsn
   std::ostream&
   print(const std::set<T, Compare, Alloc>& set, std::ostream& o);
 
-  /// Whether set1 \subset set2.
+  /// Whether \a set1 ⊆ \a set2.
   template <typename Container1, typename Container2>
   bool subset(const Container1& set1, const Container2& set2)
   ATTRIBUTE_PURE;

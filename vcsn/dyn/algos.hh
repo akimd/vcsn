@@ -274,6 +274,7 @@ namespace vcsn
 
     /// The minimized automaton.
     /// \param aut       the automaton to minimize
+    /// \param algo      the specific algorithm to use
     /// \pre  \a aut must be LAL.
     /// \pre  \a aut must be deterministic.
     automaton minimize(const automaton& aut,
@@ -374,6 +375,8 @@ namespace vcsn
     automaton proper(const automaton& aut, bool prune = true);
 
     /// Produce a random automaton.
+    /// \param ctx
+    ///    The context of the result.
     /// \param num_states
     ///    The number of states wanted in the automata
     ///    (>0).  All states will be connected, and there will be no dead
@@ -395,6 +398,8 @@ namespace vcsn
                                unsigned num_final = 1);
 
     /// Produce a random uniform automaton.
+    /// \param ctx
+    ///    The context of the result.
     /// \param num_states
     ///    The number of states wanted in the automata (>0).
     automaton random_automaton_uniform(const context& ctx,

@@ -76,6 +76,7 @@ namespace vcsn
          -- non_starrable / absval:
          is_valid is called before launching the algorithm.
          @param aut The automaton in which epsilon-transitions will be removed
+         @param prune   Whether to remove states that become inaccessible.
          @throw runtime_error if the input is not valid
       */
       static void proper_here(automaton_t& aut, bool prune = true)
@@ -111,6 +112,7 @@ namespace vcsn
          If the method returns false, \a aut is corrupted.
 
          @param aut The automaton in which epsilon-transitions will be removed
+         @param prune   Whether to remove states that become inaccessible.
          @return true if the proper succeeds, or false otherwise.
       */
 

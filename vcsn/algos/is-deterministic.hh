@@ -10,7 +10,7 @@
 namespace vcsn
 {
 
-  /// Whether state \s is deterministic.
+  /// Whether state \a s is deterministic in \a aut.
   template <typename Aut>
   inline bool
   is_deterministic(const Aut& aut, state_t_of<Aut> s)
