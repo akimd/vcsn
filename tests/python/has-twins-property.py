@@ -96,6 +96,36 @@ aut4 = vcsn.automaton('''digraph
   7 -> 2 [label = "<13>d"]
 }''')
 
+aut5 = vcsn.automaton('''digraph
+{
+  vcsn_context = "lal_char(abcd)_q"
+  I0 -> 0
+  0 -> 1 [label = "<2/3>a"]
+  0 -> 2 [label = "<3/5>a"]
+  1 -> 3 [label = "<4>b"]
+  1 -> 4 [label = "<2>c"]
+  2 -> 4 [label = "<7>d"]
+  2 -> 5 [label = "<2>b"]
+  3 -> 1 [label = "<6>d"]
+  4 -> F4
+  5 -> 2 [label = "<12>d"]
+}''')
+
+aut6 = vcsn.automaton('''digraph
+{
+  vcsn_context = "lal_char(abcd)_q"
+  I0 -> 0
+  0 -> 1 [label = "<2/3>a"]
+  0 -> 2 [label = "<3/5>a"]
+  1 -> 3 [label = "<4>b"]
+  1 -> 4 [label = "<2>c"]
+  2 -> 4 [label = "<7>d"]
+  2 -> 5 [label = "<2>b"]
+  3 -> 1 [label = "<6>d"]
+  4 -> F4
+  5 -> 2 [label = "<17>d"]
+}''')
+
 def inverse_check(i, o):
   CHECK_EQ(o, i.inverse())
 
@@ -106,5 +136,7 @@ def has_twins_property_check():
   CHECK_EQ(False, aut2.has_twins_property())
   CHECK_EQ(True, aut3.has_twins_property())
   CHECK_EQ(False, aut4.has_twins_property())
+  CHECK_EQ(True, aut5.has_twins_property())
+  CHECK_EQ(False, aut6.has_twins_property())
 
 has_twins_property_check()

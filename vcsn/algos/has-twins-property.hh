@@ -219,7 +219,7 @@ namespace vcsn
             auto dst = aut->dst_of(t);
             if (!has(wm, dst))
               wm.emplace(dst, ws.mul(wm[src], aut->weight_of(t)));
-            if (wm[dst] != ws.mul(wm[src], aut->weight_of(t)))
+            if (!ws.equals(wm[dst], ws.mul(wm[src], aut->weight_of(t))))
               return false;
           }
         return true;
