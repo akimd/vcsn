@@ -268,13 +268,13 @@ namespace vcsn
       using is_transducer_t =
         std::integral_constant<bool,
                                2 <= rank<labelset_t_of<automaton_t>>::value>;
-      static is_transducer_t is_transducer;
+      const is_transducer_t is_transducer = {};
 
       /// File name for input tape symbols.
-      static constexpr const char* isymbols_ =
+      const char* isymbols_ =
         is_transducer ? "$medir/isymbols.txt" : "$medir/symbols.txt";
       /// File name for output tape symbols.
-      static constexpr const char* osymbols_ =
+      const char* osymbols_ =
         is_transducer ? "$medir/osymbols.txt" : "$medir/symbols.txt";
     };
   }
