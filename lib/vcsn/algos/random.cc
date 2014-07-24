@@ -19,12 +19,12 @@ namespace vcsn
     }
 
 
-    REGISTER_DEFINE(random_uniform);
+    REGISTER_DEFINE(random_deterministic);
 
     automaton
-    random_automaton_uniform(const context& ctx, unsigned num_states)
+    random_automaton_deterministic(const context& ctx, unsigned num_states)
     {
-      return detail::random_uniform_registry().call(ctx, num_states);
+      return detail::random_deterministic_registry().call(ctx, num_states);
     }
   }
 }

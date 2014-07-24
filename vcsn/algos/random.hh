@@ -202,9 +202,37 @@ namespace vcsn
     return std::move(res);
   }
 
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
+      template <typename Ctx, typename, typename, typename, typename>
+      automaton
+      random(const context& ctx,
+             unsigned num_states, float density,
+             unsigned num_initial = 1, unsigned num_final = 1)
+      {
+        const auto& c = ctx->as<Ctx>();
+        return make_automaton(vcsn::random(c, num_states, density,
+                                           num_initial, num_final));
+      }
+
+      REGISTER_DECLARE(random,
+                       (const context& ctx,
+                        unsigned n, float density,
+                        unsigned num_initial, unsigned num_final) -> automaton);
+    }
+  }
+
+
+  /*-----------------------.
+  | random_deterministic.  |
+  `-----------------------*/
+
   template <typename Ctx>
   mutable_automaton<Ctx>
-  random_uniform(const Ctx& ctx, unsigned num_states)
+  random_deterministic(const Ctx& ctx, unsigned num_states)
   {
     require(0 < num_states, "num_states must be > 0");
 
@@ -240,33 +268,16 @@ namespace vcsn
   {
     namespace detail
     {
-      /// Bridge.
-      template <typename Ctx, typename, typename, typename, typename>
-      automaton
-      random(const context& ctx,
-             unsigned num_states, float density,
-             unsigned num_initial = 1, unsigned num_final = 1)
-      {
-        const auto& c = ctx->as<Ctx>();
-        return make_automaton(vcsn::random(c, num_states, density,
-                                           num_initial, num_final));
-      }
-
-      REGISTER_DECLARE(random,
-                       (const context& ctx,
-                        unsigned n, float density,
-                        unsigned num_initial, unsigned num_final) -> automaton);
-
-
+      /// Bridge
       template <typename Ctx, typename>
       automaton
-      random_uniform(const context& ctx, unsigned num_states)
+      random_deterministic(const context& ctx, unsigned num_states)
       {
         const auto& c = ctx->as<Ctx>();
-        return make_automaton(vcsn::random_uniform(c, num_states));
+        return make_automaton(vcsn::random_deterministic(c, num_states));
       }
 
-      REGISTER_DECLARE(random_uniform,
+      REGISTER_DECLARE(random_deterministic,
                        (const context& ctx, unsigned n) -> automaton);
 
     }

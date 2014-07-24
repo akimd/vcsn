@@ -102,10 +102,10 @@ CHECK_EQ(a.info()['number of final states'], 30)
 
 
 ## ---------------- ##
-## random_uniform.  ##
+## random_deterministic.  ##
 ## ---------------- ##
 
-a = vcsn.context('lal_char(a)_b').random_uniform(100)
+a = vcsn.context('lal_char(a)_b').random_deterministic(100)
 CHECK_EQ(a.info()['type'], 'mutable_automaton<lal_char(a)_b>')
 CHECK_EQ(a.info()['number of states'], 100)
 CHECK_EQ(a.info()['number of initial states'], 1)

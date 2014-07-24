@@ -192,7 +192,7 @@ namespace vcsn
         REGISTER(power, aut_t, unsigned);
         REGISTER(print_polynomial, wps_t, std::ostream, const std::string);
         REGISTER(product, aut_t, aut_t);
-        REGISTER(random_uniform, ctx_t, unsigned);
+        REGISTER(random_deterministic, ctx_t, unsigned);
         REGISTER(shortest, aut_t, unsigned);
         REGISTER(shuffle, aut_t, aut_t);
         REGISTER(synchronizing_word, aut_t, const std::string);
