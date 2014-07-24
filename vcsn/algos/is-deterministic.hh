@@ -17,7 +17,7 @@ namespace vcsn
   {
     using automaton_t = Aut;
     static_assert(labelset_t_of<automaton_t>::is_free(),
-                  "requires labels_are_letters");
+                  "requires free labelset");
 
     using label_t = label_t_of<automaton_t>;
     std::unordered_set<label_t> seen;
@@ -33,7 +33,7 @@ namespace vcsn
   num_deterministic_states(const Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
-                  "requires labels_are_letters");
+                  "requires free labelset");
 
     size_t res = 0;
     for (auto s: aut->states())
@@ -48,7 +48,7 @@ namespace vcsn
   is_deterministic(const Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
-                  "requires labels_are_letters");
+                  "requires free labelset");
 
     if (1 < aut->initial_transitions().size())
       return false;

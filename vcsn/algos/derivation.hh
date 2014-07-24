@@ -207,7 +207,7 @@ namespace vcsn
              bool breaking = false)
   {
     static_assert(RatExpSet::context_t::labelset_t::is_free(),
-                  "requires labels_are_letters");
+                  "requires free labelset");
     rat::derivation_visitor<RatExpSet> derivation{rs};
     auto res = derivation(e, a);
     if (breaking)

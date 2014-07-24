@@ -18,7 +18,7 @@ namespace vcsn
     {
     public:
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires labels_are_letters");
+                    "requires free labelset");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 

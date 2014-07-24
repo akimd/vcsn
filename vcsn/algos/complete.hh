@@ -17,7 +17,7 @@ namespace vcsn
   complete_here(Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
-                  "requires labels_are_letters");
+                  "requires free labelset");
 
     using automaton_t = Aut;
     using state_t = state_t_of<automaton_t>;
