@@ -23,6 +23,7 @@ dist_notebooks_data =                                   \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/index.ipynb'                               \
   '%D%/algos/automaton.determinize.ipynb'               \
+  '%D%/algos/automaton.is_deterministic.ipynb'          \
   '%D%/algos/automaton.standard.ipynb'                  \
   '%D%/algos/automaton.synchronizing_word.ipynb'
 
