@@ -69,14 +69,14 @@ namespace vcsn
       /// Update res_ by hashing the node type; this is needed for any node.
       void combine_type(const node_t& node);
 
-      /// Traverse a nullary node (atom, \z, \e).
+      /// Traverse a nullary node (atom, `\z`, `\e`).
       void visit_nullary(const node_t& v);
 
-      /// Traverse a unary node (*, {c}).
+      /// Traverse a unary node (`*`, `{c}`).
       template <rat::exp::type_t Type>
       void visit_unary(const unary_t<Type>& v);
 
-      /// Traverse an n-ary node (+, ., &, :).
+      /// Traverse an n-ary node (`+`, concatenation, `&`, `:`).
       template <rat::exp::type_t Type>
       void visit_variadic(const variadic_t<Type>& v);
 
