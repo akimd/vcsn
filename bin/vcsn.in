@@ -15,15 +15,20 @@ help ()
   cat <<EOF
 usage: vcsn COMMAND ARGS...
 
-COMMAND can be:
+If COMMAND is "notebook", run Vaucanson as an IPython Notebook.
 
-  accessible equivalent exp cat chain coaccessible complement complete
-  concatenate term bruijn derivation term determinize difference
-  divkbaseb ring state enumerate evaluate expand infiltration
-  ambiguous complete deterministic empty acyclic normalized proper
-  standard trim useless valid ladybird mult lift minimize power
-  product proper random mult shortest shuffle split standard form star
-  sum thompson transpose trim u union universal
+If COMMAND is one of the following commands, run the corresponding
+TAF-Kit program:
+
+  accessible are-equivalent are-isomorphic aut-to-exp cat coaccessible
+  complement complete compose concatenate constant-term derivation
+  derived-term de-bruijn derivation divkbaseb term determinize
+  difference divkbaseb double-ring eliminate-state enumerate evaluate
+  expand infiltration is-ambiguous is-complete is-deterministic
+  is-empty is-eps-acyclic is-normalized is-proper is-standard is-trim
+  is-useless is-valid ladybird left-mult lift minimize power product
+  proper right-mult shortest shuffle split standard star
+  star-normal-form sum thompson transpose trim u union universal
 
 For more information, run:
 
