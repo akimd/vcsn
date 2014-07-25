@@ -117,6 +117,9 @@ components are used:
 
 .. _Boost: http://www.boost.org/
 
+Doxygen_ is used to generate the C++ reference documentation.
+
+.. _Doxygen: http://doxygen.org
 
 Libraries installed in non-standard directories
 -----------------------------------------------
@@ -173,6 +176,11 @@ you need more tools:
 - Bison 3.0 or newer
 - Flex 2.5.35 or newer
 
+Before the configuration steps, run::
+
+        ./bootstrap
+
+to set up the GNU Build system.
 
 Licence
 =======
@@ -185,7 +193,6 @@ your option) any later version.
 The complete GNU General Public Licence Notice can be found as the
 ``COPYING.txt`` file in the root directory.
 
-The Vaucanson Group consists of people listed in the ``AUTHORS.txt`` file.
 
 
 

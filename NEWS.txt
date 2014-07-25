@@ -5,6 +5,25 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+# Vaucanson 2.0
+
+## 2014-07-25
+
+More than two years after the initial commit in our repository, the
+Vaucanson team is happy the announce the first release of Vaucanson 2!
+
+People who worked on this release:
+
+- Akim Demaille
+- Alexandre Duret-Lutz
+- Alfred M. Szmidt
+- Antoine Pietri
+- Canh Luu
+- Jacques Sakarovitch
+- Luca Saiu
+- Sylvain Lombardy
+- Valentin Tolmer
+
 ## 2014-07-24
 ### "series" are now supported (static, dyn, Python)
 Ratexpsets now take a constructor parameter specifying which set of
@@ -610,6 +629,8 @@ on determinism or other properties.  Preliminary measures show
 performance to be close to "signature", or even clearly superior in
 the case of sparse automata such as dictionaries.
 
+# Vaucanson 2b.3
+
 ## 2014-02-03
 Release of our fourth beta, vaucanson-2b.3.  Available on MacPorts as
 "vaucanson".
@@ -740,6 +761,7 @@ Python,
 
 builds a context whose alphabet covers letters, digits, and underscore.
 
+# Vaucanson 2b.2
 ## 2014-01-10
 Release of our third beta, vaucanson-2b.2.  Available on MacPorts as
 "vaucanson".
@@ -981,6 +1003,7 @@ with a B-automaton.
     $ vcsn product -f 2.gv 1.gv | vcsn aut-to-exp
     \e+<3>b.(<3>b)*
 
+# Vaucanson 2b.1
 ## 2013-11-13
 Release of our second beta, vaucanson-2b.1.  Available on MacPorts as
 "vaucanson".
@@ -1139,6 +1162,8 @@ under the starred subexpressions) group and sort the equal monomials.
 
     $ vcsn expand -C 'lal_char(abc)_z' -e '(a+b)?{2}*'
     (\e+<2>a+<2>b+(a.a)+(a.b)+(b.a)+(b.b))*
+
+# Vaucanson 2b.0
 
 ## 2013-10-22
 Release of our first beta, vaucanson-2b.0.
