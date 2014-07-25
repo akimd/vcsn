@@ -11,12 +11,12 @@ from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
 from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex
 
-automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: _conjunction(l, r)
+automaton.__eq__ = lambda self, other: str(self) == str(other)
 automaton.__invert__ = automaton.complement
-automaton.__mul__ = _right_mult
 automaton.__mod__ = automaton.difference
+automaton.__mul__ = _right_mult
 automaton.__or__ = automaton.union
 automaton.__pow__ = automaton.power
 automaton.__repr__ = lambda self: self.info()['type']
@@ -117,6 +117,7 @@ def _automaton_eval(self, w):
     if not isinstance(w, label):
         w = c.word(str(w))
     return self._eval(w)
+automaton.__call__ = _automaton_eval
 automaton.eval = _automaton_eval
 
 def _automaton_load(file, format = "dot"):

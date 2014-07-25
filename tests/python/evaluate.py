@@ -8,6 +8,7 @@ from test import *
 def check(aut, word, exp):
     exp = ctx.weight(exp)
     CHECK_EQ(exp, aut.eval(word))
+    CHECK_EQ(exp, aut(word))
 
 ## ------------ ##
 ## lal_char_z.  ##
