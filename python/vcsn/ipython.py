@@ -45,7 +45,7 @@ class EditAutomatonWidget:
             dot = to_dot(dot)
             self.ipython.shell.user_ns[self.name] = vcsn.automaton(dot)
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
-       except RuntimeError, e:
+       except RuntimeError as e:
             self.error.value = str(e)
 
 @magics_class

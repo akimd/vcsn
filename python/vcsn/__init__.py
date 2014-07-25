@@ -67,3 +67,9 @@ from vcsn.label      import *
 from vcsn.polynomial import *
 from vcsn.ratexp     import *
 from vcsn.weight     import *
+
+# Load IPython specific support if we can.
+try:
+    from vcsn.ipython import *
+except (ImportError, NameError):
+    pass
