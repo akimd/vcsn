@@ -45,35 +45,37 @@ namespace vcsn
     private:
 
       std::ostringstream& os_;
-        /// Headers to include.
-        ///
-        /// Sadly enough functions about tupleset must be defined
-        /// after the functions that define the behavior of the
-        /// components.  The genuine case is that of "print_set",
-        /// which fails for the same reasons as the following does not
-        /// compile:
-        ///
-        /// template <typename T>
-        /// struct wrapper
-        /// {
-        ///   T t;
-        /// };
-        ///
-        /// template <typename T>
-        /// void print(const wrapper<T>& w)
-        /// {
-        ///   print(w.t);
-        /// }
-        ///
-        /// void print(int){}
-        ///
-        /// int main()
-        /// {
-        ///   wrapper<int> w;
-        ///   print(w);
-        /// }
-        ///
-        /// So we use a second set for "late" headers.
+      /// Headers to include.
+      ///
+      /// Sadly enough functions about tupleset must be defined
+      /// after the functions that define the behavior of the
+      /// components.  The genuine case is that of "print_set",
+      /// which fails for the same reasons as the following does not
+      /// compile:
+      ///
+      /// @code
+      /// template <typename T>
+      /// struct wrapper
+      /// {
+      ///   T t;
+      /// };
+      ///
+      /// template <typename T>
+      /// void print(const wrapper<T>& w)
+      /// {
+      ///   print(w.t);
+      /// }
+      ///
+      /// void print(int){}
+      ///
+      /// int main()
+      /// {
+      ///   wrapper<int> w;
+      ///   print(w);
+      /// }
+      /// @endcode
+      ///
+      /// So we use a second set for "late" headers.
       std::set<std::string> headers_;
       std::set<std::string> headers_late_;
     };

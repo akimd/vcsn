@@ -55,6 +55,7 @@ namespace vcsn
       {}
 
       /// Format a TikZ attribute.
+      /// \param sep   the separator to print before (if we print something).
       /// \param kind  the attribute name (e.g., "initial").
       /// \param w     the associated weight (e.g., initial weight).
       bool format(const std::string& sep,

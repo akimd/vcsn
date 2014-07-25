@@ -195,6 +195,7 @@ namespace vcsn
     };
   }
 
+  /// An automaton wrapper that presents the transposed automaton.
   template <typename Aut>
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;

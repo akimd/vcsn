@@ -63,22 +63,29 @@ namespace detail
     /// produce a new word that concatenates them.  Otherwise, use \a mul.
     virtual value_t concat(value_t l, value_t r) const = 0;
     virtual value_t star(value_t e) const = 0;
+
     /// Add a complement operator.
     virtual value_t complement(value_t e) const = 0;
+
     /// Add a transposition operator.
     virtual value_t transposition(value_t e) const = 0;
+
     /// Left-multiplication by a weight.
     virtual value_t lmul(const std::string& w, value_t e) const = 0;
+
     /// Right-multiplication by a weight.
     virtual value_t rmul(value_t e, const std::string& w) const = 0;
 
     using letter_class_t = std::set<std::pair<std::string, std::string>>;
+
     /// A ratexp matching one character amongst \a chars.
+    /// \param chars
+    ///   The letter class as a set of ranges.
     /// \param accept
     ///   Whether to accept these characters ([abc]) as opposed
     ///   to refusing them ([^abc]).
     virtual value_t letter_class(const letter_class_t& chars,
-                               bool accept = true) const = 0;
+                                 bool accept = true) const = 0;
 
     virtual dyn::ratexp make_ratexp(const value_t& v) const = 0;
 

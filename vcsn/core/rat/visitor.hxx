@@ -10,7 +10,7 @@ namespace vcsn
     template <typename Label, typename Weight>                          \
     inline                                                              \
     void                                                                \
-    const_visitor<Label, Weight>::visit(const Type<Label, Weight>& Name)
+    const_visitor<Label, Weight>::visit(const Type ## _t& Name)
 
     VISIT(prod, v)
     {
