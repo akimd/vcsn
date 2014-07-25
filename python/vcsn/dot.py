@@ -40,7 +40,11 @@ def _dot_pretty(s, mode = "dot"):
                   'rankdir = LR\n'
                   '  edge [arrowhead = vee, arrowsize = .6]\n'
                   '  node [fillcolor = cadetblue1, style = filled]')
-    # Nodes with values have a "style = rounded" which overrides the
+    # Useless states should be filled in gray, instead of having a
+    # gray contour.  Fill with a lighter gray.
+    s = s.replace('[color = DimGray]',
+                  '[fillcolor = lightgray, style = filled]')
+    # States with values have a "style = rounded" which overrides the
     # global 'style = filled'.  Also set the size to something nicer
     # than the default (which makes box too wide).
     s = s.replace('style = rounded',
