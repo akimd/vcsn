@@ -42,13 +42,14 @@ check(r'''digraph
 {
   vcsn_context = "law_char(ab)_r"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -76,6 +77,7 @@ check(r'''digraph
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -84,7 +86,7 @@ check(r'''digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -142,6 +144,7 @@ check('''digraph
 {
   vcsn_context = "law_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -149,7 +152,7 @@ check('''digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -214,13 +217,14 @@ check(r'''digraph
 {
   vcsn_context = "lan<lal_char(z)>_ratexpset<lal_char(abcd)_z>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F4
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     4
   }
@@ -268,6 +272,7 @@ check(r'''digraph
 {
   vcsn_context = "lan<lal_char(z)>_ratexpset<lal_char(abcdefgh)_z>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -275,7 +280,7 @@ check(r'''digraph
     F7
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1 [color = DimGray]
     7 [color = DimGray]
@@ -302,13 +307,14 @@ check_to_lal(r'''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -335,6 +341,7 @@ check(r'''digraph
 {
   vcsn_context = "lat<lan<lal_char(ab)>,lan<lal_char(xy)>>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -343,7 +350,7 @@ check(r'''digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -375,6 +382,7 @@ check(r'''digraph
 {
   vcsn_context = "lat<lan<lal_char(ab)>,lal_char(xy)>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -382,7 +390,7 @@ check(r'''digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -415,6 +423,7 @@ check_to_lal(r'''digraph
 {
   vcsn_context = "lat<lan<lal_char(ab)>,lal_char(xy)>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -422,7 +431,7 @@ check_to_lal(r'''digraph
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

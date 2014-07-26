@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import vcsn
 from test import *
@@ -175,6 +176,88 @@ vcsn.automaton(r'''digraph "a graph
   node [a = "node attribute"]
   0:port:nw [a1 = a1, a2 = a2; a3 = a3 a4 = a4]
 }'''))
+
+
+## ------------ ##
+## Pretty dot.  ##
+## ------------ ##
+
+from vcsn.dot import _dot_pretty
+# Make sure to check the rendering useful/useless named/nameless
+# states, weights, and spontaneous transitions.
+c = vcsn.context('lan_char(ab)_z')
+a = c.ratexp('<2>a+<2>b').thompson()
+CHECK_EQ('''digraph
+{
+  vcsn_context = "lan<lal_char(ab)>_z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    0
+    1
+    2
+    3
+    4
+    5
+  }
+  I0 -> 0
+  0 -> 2 [label = "ε"]
+  0 -> 4 [label = "ε"]
+  1 -> F1
+  2 -> 3 [label = "⟨2⟩a"]
+  3 -> 1 [label = "ε"]
+  4 -> 5 [label = "⟨2⟩b"]
+  5 -> 1 [label = "ε"]
+}''',
+         _dot_pretty(a.dot()))
+
+CHECK_EQ('''digraph
+{
+  vcsn_context = "lan<lal_char(ab)>_z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F11
+  }
+  {
+    node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "2, 0", shape = box]
+    2 [label = "4, 0", shape = box]
+    3 [label = "2, 2", shape = box]
+    4 [label = "2, 4", shape = box, fillcolor = lightgray]
+    5 [label = "4, 2", shape = box, fillcolor = lightgray]
+    6 [label = "4, 4", shape = box]
+    7 [label = "3, 3", shape = box]
+    8 [label = "5, 5", shape = box]
+    9 [label = "1, 3", shape = box]
+    10 [label = "1, 5", shape = box]
+    11 [label = "1, 1", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "ε"]
+  0 -> 2 [label = "ε"]
+  1 -> 3 [label = "ε"]
+  1 -> 4 [label = "ε", color = DimGray]
+  2 -> 5 [label = "ε", color = DimGray]
+  2 -> 6 [label = "ε"]
+  3 -> 7 [label = "⟨4⟩a"]
+  6 -> 8 [label = "⟨4⟩b"]
+  7 -> 9 [label = "ε"]
+  8 -> 10 [label = "ε"]
+  9 -> 11 [label = "ε"]
+  10 -> 11 [label = "ε"]
+  11 -> F11
+}''',
+         _dot_pretty((a&a).dot()))
 
 ## --------------------------- ##
 ## Conversions: dot and TikZ.  ##

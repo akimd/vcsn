@@ -27,17 +27,18 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(a)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
-    2 [label = "1, 0", shape = box, style = rounded]
-    3 [label = "0, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
+    2 [label = "1, 0", shape = box]
+    3 [label = "0, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -54,29 +55,30 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F9
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
-    2 [label = "1, 0", shape = box, style = rounded]
-    3 [label = "0, 1", shape = box, style = rounded]
-    4 [label = "2, 2", shape = box, style = rounded]
-    5 [label = "2, 1", shape = box, style = rounded]
-    6 [label = "1, 2", shape = box, style = rounded]
-    7 [label = "2, 0", shape = box, style = rounded]
-    8 [label = "0, 2", shape = box, style = rounded]
-    9 [label = "3, 3", shape = box, style = rounded]
-    10 [label = "3, 2", shape = box, style = rounded]
-    11 [label = "2, 3", shape = box, style = rounded]
-    12 [label = "3, 1", shape = box, style = rounded]
-    13 [label = "1, 3", shape = box, style = rounded]
-    14 [label = "3, 0", shape = box, style = rounded]
-    15 [label = "0, 3", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
+    2 [label = "1, 0", shape = box]
+    3 [label = "0, 1", shape = box]
+    4 [label = "2, 2", shape = box]
+    5 [label = "2, 1", shape = box]
+    6 [label = "1, 2", shape = box]
+    7 [label = "2, 0", shape = box]
+    8 [label = "0, 2", shape = box]
+    9 [label = "3, 3", shape = box]
+    10 [label = "3, 2", shape = box]
+    11 [label = "2, 3", shape = box]
+    12 [label = "3, 1", shape = box]
+    13 [label = "1, 3", shape = box]
+    14 [label = "3, 0", shape = box]
+    15 [label = "0, 3", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -115,25 +117,26 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abcxy)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F11
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 0", shape = box, style = rounded]
-    2 [label = "0, 1", shape = box, style = rounded]
-    3 [label = "2, 0", shape = box, style = rounded]
-    4 [label = "1, 1", shape = box, style = rounded]
-    5 [label = "0, 2", shape = box, style = rounded]
-    6 [label = "3, 0", shape = box, style = rounded]
-    7 [label = "2, 1", shape = box, style = rounded]
-    8 [label = "1, 2", shape = box, style = rounded]
-    9 [label = "3, 1", shape = box, style = rounded]
-    10 [label = "2, 2", shape = box, style = rounded]
-    11 [label = "3, 2", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 0", shape = box]
+    2 [label = "0, 1", shape = box]
+    3 [label = "2, 0", shape = box]
+    4 [label = "1, 1", shape = box]
+    5 [label = "0, 2", shape = box]
+    6 [label = "3, 0", shape = box]
+    7 [label = "2, 1", shape = box]
+    8 [label = "1, 2", shape = box]
+    9 [label = "3, 1", shape = box]
+    10 [label = "2, 2", shape = box]
+    11 [label = "3, 2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]

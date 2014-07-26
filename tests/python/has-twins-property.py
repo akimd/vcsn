@@ -40,13 +40,14 @@ oaut1 = '''digraph
 {
   vcsn_context = "lal_char(abcd)_zmin"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

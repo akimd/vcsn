@@ -2,6 +2,7 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -10,11 +11,11 @@ digraph
     F3
   }
   {
-    node [shape = circle]
-    0 [label = "a*a(a*+b*)", shape = box, style = rounded]
-    1 [label = "b*a(a*+b*)", shape = box, style = rounded]
-    2 [label = "a*", shape = box, style = rounded]
-    3 [label = "b*", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "a*a(a*+b*)", shape = box]
+    1 [label = "b*a(a*+b*)", shape = box]
+    2 [label = "a*", shape = box]
+    3 [label = "b*", shape = box]
   }
   I0 -> 0
   I1 -> 1

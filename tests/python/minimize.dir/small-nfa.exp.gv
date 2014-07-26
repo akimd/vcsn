@@ -2,15 +2,16 @@ digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
-    0 [label = "{0, 3, 6}", shape = box, style = rounded]
-    1 [label = "{1, 4}", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "{0, 3, 6}", shape = box]
+    1 [label = "{1, 4}", shape = box]
   }
   I0 -> 0
   0 -> F0

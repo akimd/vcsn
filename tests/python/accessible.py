@@ -40,13 +40,14 @@ digraph {
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -78,12 +79,13 @@ digraph {
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0 [color = DimGray]
     1 [color = DimGray]
     2 [color = DimGray]
@@ -110,6 +112,7 @@ digraph {
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
 }''')
 
 
@@ -129,13 +132,14 @@ digraph {
 {
   vcsn_context = "law_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2
@@ -325,13 +329,14 @@ digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -357,13 +362,14 @@ digraph
 {
   vcsn_context = "lal_char(a)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

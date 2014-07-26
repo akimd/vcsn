@@ -429,6 +429,7 @@ digraph
 {
   vcsn_context = "law_char(ab)_zmin"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -437,7 +438,7 @@ digraph
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

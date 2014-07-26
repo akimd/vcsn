@@ -33,15 +33,16 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0 [color = DimGray]
-    1 [label = "0, 1", shape = box, style = rounded] [color = DimGray]
-    2 [label = "0, 2", shape = box, style = rounded] [color = DimGray]
-    3 [label = "0, 3", shape = box, style = rounded] [color = DimGray]
-    4 [label = "1, 2", shape = box, style = rounded] [color = DimGray]
-    5 [label = "1, 3", shape = box, style = rounded] [color = DimGray]
-    6 [label = "2, 3", shape = box, style = rounded] [color = DimGray]
+    1 [label = "0, 1", shape = box, color = DimGray]
+    2 [label = "0, 2", shape = box, color = DimGray]
+    3 [label = "0, 3", shape = box, color = DimGray]
+    4 [label = "1, 2", shape = box, color = DimGray]
+    5 [label = "1, 3", shape = box, color = DimGray]
+    6 [label = "2, 3", shape = box, color = DimGray]
   }
   0 -> 0 [label = "a, b", color = DimGray]
   1 -> 0 [label = "a", color = DimGray]

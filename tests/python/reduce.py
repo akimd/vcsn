@@ -58,15 +58,16 @@ def exp(ws):
     if ws == 'z':
         return '''digraph
 {
-  vcsn_context = "lal_char(abc)_''' + ws + '''"
+  vcsn_context = "lal_char(abc)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -74,23 +75,25 @@ def exp(ws):
   0 -> 0 [label = "<10>a, <5>b"]
 }'''
     else:
+        # Using replace instead of format allows to use update-tests.
         return '''digraph
 {
-  vcsn_context = "lal_char(abc)_''' + ws + '''"
+  vcsn_context = "lal_char(abc)_q"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0 [label = "<2>"]
   0 -> F0 [label = "<11>"]
   0 -> 0 [label = "<10>a, <5>b"]
-}'''
+}'''.replace('q', ws)
 
 for ws in ['z', 'q', 'r']:
     ctx = vcsn.context('lal_char(abc)_' + ws)
@@ -119,13 +122,14 @@ check_reduce(a, '''digraph
 {
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

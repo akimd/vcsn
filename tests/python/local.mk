@@ -200,7 +200,7 @@ EXTRA_DIST +=                                   \
 
 %D%/aut-to-exp.log:      $(wildcard $(srcdir)/%D%/aut-to-exp.dir/*)
 %D%/automaton.log:       $(wildcard $(srcdir)/%D%/automaton.dir/*)
-%D%/compose.log:         $(wildcard $(srcdir)/%D%/compose/*)
+%D%/compose.log:         $(wildcard $(srcdir)/%D%/compose.dir/*)
 %D%/derivation.log:      $(wildcard $(srcdir)/%D%/derivation.dir/*)
 %D%/determinize.log:     $(wildcard $(srcdir)/%D%/determinize.dir/*)
 %D%/eliminate-state.log: $(wildcard $(srcdir)/%D%/eliminate-state.dir/*)

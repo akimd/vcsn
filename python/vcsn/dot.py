@@ -5,8 +5,12 @@ from subprocess import check_call, PIPE, Popen
 
 from vcsn import _tmp_file
 
-def _latex_to_html(s):
-    "Convert LaTeX angle brackets and \\e to HTML entities."
+def _label_pretty(s):
+    '''Convert angle brackets and \\e to UTF-8.  We used to use
+    HTML entities, but it resulted in wider arrows: dot is probably
+    counting the number of characters to compute the width, instead
+    of the real width of the glyphs.
+    '''
     return (s.replace('<', '⟨')
             .replace('>', '⟩')
             .replace(r'\\e', 'ε'))
@@ -15,6 +19,14 @@ def _labels_as_tooltips(s):
     return re.sub(r'label = (".*?"), shape = box, style = rounded',
                   r'tooltip = \1',
                   s)
+
+def _dot_gray_node(m):
+    '''Replace gray node contours by gray nodes.'''
+    if ' -> ' in m.group(1):
+        return m.group(1) + m.group(2)
+    else:
+        return m.group(1) + m.group(2).replace('color = DimGray',
+                                               'fillcolor = lightgray')
 
 def _dot_pretty(s, mode = "dot"):
     '''Improve pretty-printing in a dot source.
@@ -25,7 +37,7 @@ def _dot_pretty(s, mode = "dot"):
     If `mode` is tooltip, convert node labels to tooltips.
     '''
     s = re.sub(r'(label * = *)(".*?")',
-               lambda m: m.group(1) + _latex_to_html(m.group(2)),
+               lambda m: m.group(1) + _label_pretty(m.group(2)),
                s)
     if mode == "tooltip":
         s = _labels_as_tooltips(s)
@@ -36,19 +48,12 @@ def _dot_pretty(s, mode = "dot"):
     # attribute.
     #
     # FIXME: This 'replace' might also be replaced by a use of gvpr.
-    s = s.replace('rankdir = LR',
-                  'rankdir = LR\n'
-                  '  edge [arrowhead = vee, arrowsize = .6]\n'
-                  '  node [fillcolor = cadetblue1, style = filled]')
+    s = s.replace('node [shape = circle, style = rounded, width = 0.5]',
+                  'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]')
     # Useless states should be filled in gray, instead of having a
-    # gray contour.  Fill with a lighter gray.
-    s = s.replace('[color = DimGray]',
-                  '[fillcolor = lightgray, style = filled]')
-    # States with values have a "style = rounded" which overrides the
-    # global 'style = filled'.  Also set the size to something nicer
-    # than the default (which makes box too wide).
-    s = s.replace('style = rounded',
-                  'style = "filled,rounded", width = .5')
+    # gray contour.  Fill with a lighter gray.  But don't change the
+    # color of the arrows.
+    s = re.sub('^(.*)(\[.*\])$', _dot_gray_node, s, flags = re.MULTILINE);
     return s
 
 def _dot_to_svg(dot, engine="dot", *args):

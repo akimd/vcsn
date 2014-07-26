@@ -12,13 +12,14 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lao_ratexpset<lal_char(abc)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2

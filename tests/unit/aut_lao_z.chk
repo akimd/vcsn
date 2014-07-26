@@ -5,13 +5,14 @@ digraph
 {
   vcsn_context = "lao_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2 [color = DimGray]
@@ -38,13 +39,14 @@ digraph
 {
   vcsn_context = "lao_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     2 [color = DimGray]
@@ -60,12 +62,13 @@ digraph
 {
   vcsn_context = "lao_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     1 [color = DimGray]
     2 [color = DimGray]
   }
@@ -76,12 +79,13 @@ digraph
 {
   vcsn_context = "lao_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     1 [color = DimGray]
     2 [color = DimGray]
   }

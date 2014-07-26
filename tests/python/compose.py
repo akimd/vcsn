@@ -20,15 +20,16 @@ check(c1.ratexp("'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
 {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "(a,d)"]
@@ -39,6 +40,7 @@ a = """digraph
 {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -46,9 +48,9 @@ a = """digraph
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -72,14 +74,15 @@ check(c1.ratexp("'(a, x)'*").standard(), c2.ratexp("'(y, d)'*").standard(),
 {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -97,15 +100,16 @@ check(c_ratb.ratexp("<o>'(a, x)'").standard(),
 {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_ratexpset<lal_char(mno)_q>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<<3/2>o>(a,d)"]
@@ -126,15 +130,16 @@ check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
 {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_r"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "<3.1>(a,d)"]
@@ -170,18 +175,19 @@ res = r'''digraph
 {
   vcsn_context = "lat<lan<lal_char(xyz)>,lan<lal_char(def)>>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F4
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "1, 0", shape = box, style = rounded] [color = DimGray]
-    2 [label = "0, 1", shape = box, style = rounded]
-    3 [label = "1, 1", shape = box, style = rounded] [color = DimGray]
-    4 [label = "2, 2", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 0", shape = box, color = DimGray]
+    2 [label = "0, 1", shape = box]
+    3 [label = "1, 1", shape = box, color = DimGray]
+    4 [label = "2, 2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "(y,\\e)", color = DimGray]

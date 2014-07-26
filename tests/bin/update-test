@@ -72,8 +72,8 @@ def update(test, log):
     log = contents(args.builddir + '/' + log)
     global subst
     subst = dict()
-    re.sub(r'Expected output::\n\n((?:^\t.*\n)+)\n'
-           +'Effective output::\n\n((?:^\t.*\n)+)\n',
+    re.sub(r'Expected out.*?::\n\n((?:^\t.*\n)+)\n'
+           +'Effective out.*?::\n\n((?:^\t.*\n)+)\n',
            exp_eff_to_re, log, flags = re.MULTILINE)
 #    re.sub(r'((?:^\t[-+ ].*\n)+)',
 #           diff_to_re, log, flags = re.MULTILINE)

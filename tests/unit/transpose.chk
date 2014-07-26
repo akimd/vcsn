@@ -5,13 +5,14 @@ digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     I2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0 [color = DimGray]
     1 [color = DimGray]
     2 [color = DimGray]
@@ -26,13 +27,14 @@ digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     F0
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0 [color = DimGray]
     1 [color = DimGray]
     2 [color = DimGray]
@@ -47,13 +49,14 @@ digraph
 {
   vcsn_context = "law_char(abcd)_ratexpset<lal_char(wxyz)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }

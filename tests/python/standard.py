@@ -92,13 +92,14 @@ exp = '''digraph
 {
   vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I1
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     1
   }
   I1 -> 1
@@ -133,12 +134,13 @@ check('(?@lal_char(ab)_b)\z',
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0 [color = DimGray]
   }
   I0 -> 0 [color = DimGray]
@@ -150,13 +152,14 @@ check('(?@lal_char(ab)_b)\e',
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -169,13 +172,14 @@ check('(?@lal_char(ab)_b)a',
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -190,6 +194,7 @@ check('(?@lal_char(ab)_b)a+b',
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -197,7 +202,7 @@ check('(?@lal_char(ab)_b)a+b',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -218,13 +223,14 @@ check('(?@lal_char(abc)_b)abc',
 {
   vcsn_context = "lal_char(abc)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F4
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -243,6 +249,7 @@ check('(?@lal_char(abcd)_b)ab+cd',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -250,7 +257,7 @@ check('(?@lal_char(abcd)_b)ab+cd',
     F6
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -272,13 +279,14 @@ check('(?@lal_char(abcd)_b)a(b+c)d',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F4
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -300,13 +308,14 @@ check('(?@lal_char(abcd)_b)(ab+cd+abcd)abc',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F12
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -347,13 +356,14 @@ check('(?@lal_char(abcd)_b)\z*',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -365,13 +375,14 @@ check('(?@lal_char(abcd)_b)\e*',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -383,6 +394,7 @@ check('(?@lal_char(abcd)_b)a*',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -390,7 +402,7 @@ check('(?@lal_char(abcd)_b)a*',
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -406,6 +418,7 @@ check('(?@lal_char(abcd)_b)(a+b)*',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -414,7 +427,7 @@ check('(?@lal_char(abcd)_b)(a+b)*',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -436,6 +449,7 @@ check('(?@lal_char(abcd)_b)(ab)*',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -443,7 +457,7 @@ check('(?@lal_char(abcd)_b)(ab)*',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -461,6 +475,7 @@ check('(?@lal_char(abcd)_b)a**',
 {
   vcsn_context = "lal_char(abcd)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -468,7 +483,7 @@ check('(?@lal_char(abcd)_b)a**',
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -490,6 +505,7 @@ check('(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)',
 {
   vcsn_context = "lal_char(a)_ratexpset<lal_char(xyz)_b>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -497,7 +513,7 @@ check('(?@lal_char(a)_ratexpset<lal_char(xyz)_b>)<x>a(<y>\e+<z>a)',
     F4
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     4
@@ -521,13 +537,14 @@ check('(?@lal_char(ab)_z)<12>\e',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -544,6 +561,7 @@ check('(?@lal_char(ab)_z)\e+a+\e',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -551,7 +569,7 @@ check('(?@lal_char(ab)_z)\e+a+\e',
     F2
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
   }
@@ -567,6 +585,7 @@ check('(?@lal_char(ab)_z)<12>\e+<23>a+<34>b',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -575,7 +594,7 @@ check('(?@lal_char(ab)_z)<12>\e+<23>a+<34>b',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
     3
@@ -594,6 +613,7 @@ check('(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -602,7 +622,7 @@ check('(?@lal_char(ab)_z)<12>(\e+a+<10>b+<10>\e)',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
     3
@@ -621,6 +641,7 @@ check('(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -629,7 +650,7 @@ check('(?@lal_char(ab)_z)(\e+a+<2>b+<3>\e)<10>',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
     3
@@ -652,13 +673,14 @@ check('(?@lal_char(ab)_z)<12>(ab)<23>',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -678,13 +700,14 @@ check('(?@lal_char(ab)_z)\z*',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
   }
   I0 -> 0
@@ -698,6 +721,7 @@ check('(?@lal_char(ab)_z)(<2>a)*',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -705,7 +729,7 @@ check('(?@lal_char(ab)_z)(<2>a)*',
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -721,6 +745,7 @@ check('(?@lal_char(ab)_z)<2>a*<3>',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -728,7 +753,7 @@ check('(?@lal_char(ab)_z)<2>a*<3>',
     F1
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
   }
@@ -744,6 +769,7 @@ check('(?@lal_char(ab)_z)(<2>a+<3>b)*',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -752,7 +778,7 @@ check('(?@lal_char(ab)_z)(<2>a+<3>b)*',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -774,6 +800,7 @@ check('(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -782,7 +809,7 @@ check('(?@lal_char(ab)_z)<2>(<3>a+<5>b)*<7>',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -804,6 +831,7 @@ check('(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
 {
   vcsn_context = "lal_char(ab)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -811,7 +839,7 @@ check('(?@lal_char(ab)_z)<2>(<3>(ab)<5>)*<7>',
     F3
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     1
     3
@@ -835,6 +863,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
 {
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -842,7 +871,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+abc)*',
     F5
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
     4
@@ -862,6 +891,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+(ab)<f>)*',
 {
   vcsn_context = "lal_char(abcd)_ratexpset<lal_char(efgh)_z>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -869,7 +899,7 @@ check('(?@lal_char(abcd)_ratexpset<lal_char(efgh)_z>)(<e>\e+(ab)<f>)*',
     F4
   }
   {
-    node [shape = circle]
+    node [shape = circle, style = rounded, width = 0.5]
     0
     2
     4

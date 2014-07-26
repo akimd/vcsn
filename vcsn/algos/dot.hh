@@ -80,8 +80,10 @@ namespace vcsn
       print_state_(state_t s)
       {
         aut_->print_state(s, os_);
+        bool has_attributes = false;
         if (dot2tex_)
           {
+            has_attributes = true;
             os_ << " [";
             std::string style;
             std::string sep;
@@ -108,32 +110,49 @@ namespace vcsn
               }
             if (format(sep, "accepting", aut_->get_final_weight(s)))
               close = "\"";
-            os_ << close << ']';
+            os_ << close;
           }
         else
           {
             // Dot format.
             if (aut_->state_has_name(s))
               {
+                has_attributes = true;
                 os_ << " [label = \"";
                 aut_->print_state_name(s, os_, "text");
                 static bool debug = getenv("VCSN_DEBUG");
                 if (debug)
                   os_ << " (" << s << ')';
-                os_ << "\", shape = box, style = rounded]";
+                os_ << "\", shape = box";
               }
           }
+        if (!has(useful_, s))
+          {
+            if (has_attributes)
+              os_ << ", ";
+            else
+              {
+                os_ << " [";
+                has_attributes = true;
+              }
+            os_ << gray;
+          }
+        if (has_attributes)
+          os_ << ']';
       }
 
       std::ostream& operator()()
       {
-        auto useful = useful_states(aut_);
-
         os_ <<
           "digraph\n"
           "{\n"
           "  vcsn_context = \"" << aut_->context().vname() << "\"\n"
-          "  rankdir = LR\n";
+          "  rankdir = LR\n"
+          "  edge ["
+            << (dot2tex_
+                ? "texmode = math, lblstyle = auto"
+                : "arrowhead = vee, arrowsize = .6")
+            << "]\n";
 
         if (dot2tex_)
           os_ <<
@@ -180,27 +199,27 @@ namespace vcsn
         //
         // because 2 was already "declared", and dot does not associate
         // "color = gray" to it.
+        //
+        // Set the width to something nicer than the default and shape
+        // to rounded.  Useless for circle, but useful for shape =
+        // box, and simpler to set it once for all.
         if (!aut_->states().empty())
           {
             os_ << "  {\n"
                 << "    node ["
                 << (dot2tex_
                     ? "texmode = math, style = state"
-                    : "shape = circle")
+                    : "shape = circle, style = rounded, width = 0.5")
                 << "]\n";
             for (auto s : aut_->states())
               {
                 os_ << "    ";
                 print_state_(s);
-                if (!has(useful, s))
-                  os_ << " [" << gray << ']';
                 os_ << '\n';
               }
             os_ << "  }\n";
           }
 
-        if (dot2tex_)
-          os_ << "  edge [texmode = math, lblstyle = auto]\n";
         for (auto src : dot2tex_ ? aut_->states() : aut_->all_states())
           {
             // Sort by destination state.
@@ -237,7 +256,7 @@ namespace vcsn
 
                 std::string s = format_entry_(src, dst,
                                               dot2tex_ ? "latex" : "text");
-                bool useless = !has(useful, src) || !has(useful, dst);
+                bool useless = !has(useful_, src) || !has(useful_, dst);
                 if (!s.empty() || useless)
                   {
                     os_ << " [";
@@ -259,6 +278,8 @@ namespace vcsn
 
       /// Whether to format for dot2tex.
       bool dot2tex_ = false;
+      /// Useful states.
+      std::set<state_t_of<Aut>> useful_ = useful_states(aut_);
     };
   }
 

@@ -25,6 +25,7 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(b)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -32,9 +33,9 @@ CHECK_EQ('''digraph
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "3, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "3, 1", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -54,13 +55,14 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char()_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded] [color = DimGray]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
 }''', str(lhs & rhs))
@@ -77,14 +79,15 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char()_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
   }
   I0 -> 0
   0 -> F0
@@ -156,6 +159,7 @@ exp = '''digraph
 {
   vcsn_context = "lal_char(abc)_z"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
@@ -163,11 +167,11 @@ exp = '''digraph
     F3
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "0, 1", shape = box, style = rounded]
-    2 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
-    3 [label = "1, 0", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "0, 1", shape = box]
+    2 [label = "2, 1", shape = box, color = DimGray]
+    3 [label = "1, 0", shape = box]
   }
   I0 -> 0 [label = "<6>"]
   0 -> F0
@@ -240,15 +244,16 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
   }
   {
-    node [shape = circle]
-    0 [label = "0", shape = box, style = rounded] [color = DimGray]
-    1 [label = "1", shape = box, style = rounded] [color = DimGray]
-    2 [label = "2", shape = box, style = rounded] [color = DimGray]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0", shape = box, color = DimGray]
+    1 [label = "1", shape = box, color = DimGray]
+    2 [label = "2", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
@@ -258,15 +263,16 @@ digraph
 {
   vcsn_context = "lal_char(ab)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
   }
   {
-    node [shape = circle]
-    0 [label = "0", shape = box, style = rounded] [color = DimGray]
-    1 [label = "1", shape = box, style = rounded] [color = DimGray]
-    2 [label = "2", shape = box, style = rounded] [color = DimGray]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0", shape = box, color = DimGray]
+    1 [label = "1", shape = box, color = DimGray]
+    2 [label = "2", shape = box, color = DimGray]
   }
   I0 -> 0 [color = DimGray]
   0 -> 1 [label = "a", color = DimGray]
@@ -305,39 +311,40 @@ res = r'''digraph
 {
   vcsn_context = "lan<lal_char(b)>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F6
   }
   {
-    node [shape = circle]
-    0 [label = "6, 6", shape = box, style = rounded]
-    1 [label = "0, 6", shape = box, style = rounded]
-    2 [label = "7, 6", shape = box, style = rounded]
-    3 [label = "2, 6", shape = box, style = rounded] [color = DimGray]
-    4 [label = "4, 6", shape = box, style = rounded]
-    5 [label = "7, 0", shape = box, style = rounded] [color = DimGray]
-    6 [label = "7, 7", shape = box, style = rounded]
-    7 [label = "2, 0", shape = box, style = rounded] [color = DimGray]
-    8 [label = "2, 7", shape = box, style = rounded] [color = DimGray]
-    9 [label = "4, 0", shape = box, style = rounded]
-    10 [label = "4, 7", shape = box, style = rounded] [color = DimGray]
-    11 [label = "7, 2", shape = box, style = rounded] [color = DimGray]
-    12 [label = "7, 4", shape = box, style = rounded] [color = DimGray]
-    13 [label = "2, 2", shape = box, style = rounded] [color = DimGray]
-    14 [label = "2, 4", shape = box, style = rounded] [color = DimGray]
-    15 [label = "4, 2", shape = box, style = rounded]
-    16 [label = "4, 4", shape = box, style = rounded] [color = DimGray]
-    17 [label = "5, 3", shape = box, style = rounded]
-    18 [label = "1, 3", shape = box, style = rounded]
-    19 [label = "7, 3", shape = box, style = rounded]
-    20 [label = "0, 3", shape = box, style = rounded]
-    21 [label = "7, 1", shape = box, style = rounded]
-    22 [label = "2, 3", shape = box, style = rounded] [color = DimGray]
-    23 [label = "4, 3", shape = box, style = rounded]
-    24 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
-    25 [label = "4, 1", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "6, 6", shape = box]
+    1 [label = "0, 6", shape = box]
+    2 [label = "7, 6", shape = box]
+    3 [label = "2, 6", shape = box, color = DimGray]
+    4 [label = "4, 6", shape = box]
+    5 [label = "7, 0", shape = box, color = DimGray]
+    6 [label = "7, 7", shape = box]
+    7 [label = "2, 0", shape = box, color = DimGray]
+    8 [label = "2, 7", shape = box, color = DimGray]
+    9 [label = "4, 0", shape = box]
+    10 [label = "4, 7", shape = box, color = DimGray]
+    11 [label = "7, 2", shape = box, color = DimGray]
+    12 [label = "7, 4", shape = box, color = DimGray]
+    13 [label = "2, 2", shape = box, color = DimGray]
+    14 [label = "2, 4", shape = box, color = DimGray]
+    15 [label = "4, 2", shape = box]
+    16 [label = "4, 4", shape = box, color = DimGray]
+    17 [label = "5, 3", shape = box]
+    18 [label = "1, 3", shape = box]
+    19 [label = "7, 3", shape = box]
+    20 [label = "0, 3", shape = box]
+    21 [label = "7, 1", shape = box]
+    22 [label = "2, 3", shape = box, color = DimGray]
+    23 [label = "4, 3", shape = box]
+    24 [label = "2, 1", shape = box, color = DimGray]
+    25 [label = "4, 1", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -382,105 +389,106 @@ res = r'''digraph
 {
   vcsn_context = "lan<lal_char(b)>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F14
   }
   {
-    node [shape = circle]
-    0 [label = "6, 6, 8", shape = box, style = rounded]
-    1 [label = "0, 6, 8", shape = box, style = rounded]
-    2 [label = "7, 6, 8", shape = box, style = rounded]
-    3 [label = "2, 6, 8", shape = box, style = rounded] [color = DimGray]
-    4 [label = "4, 6, 8", shape = box, style = rounded]
-    5 [label = "7, 0, 8", shape = box, style = rounded] [color = DimGray]
-    6 [label = "7, 7, 8", shape = box, style = rounded]
-    7 [label = "2, 0, 8", shape = box, style = rounded] [color = DimGray]
-    8 [label = "2, 7, 8", shape = box, style = rounded] [color = DimGray]
-    9 [label = "4, 0, 8", shape = box, style = rounded]
-    10 [label = "4, 7, 8", shape = box, style = rounded] [color = DimGray]
-    11 [label = "7, 2, 8", shape = box, style = rounded] [color = DimGray]
-    12 [label = "7, 4, 8", shape = box, style = rounded] [color = DimGray]
-    13 [label = "7, 7, 0", shape = box, style = rounded] [color = DimGray]
-    14 [label = "7, 7, 9", shape = box, style = rounded]
-    15 [label = "2, 2, 8", shape = box, style = rounded] [color = DimGray]
-    16 [label = "2, 4, 8", shape = box, style = rounded] [color = DimGray]
-    17 [label = "2, 7, 0", shape = box, style = rounded] [color = DimGray]
-    18 [label = "2, 7, 9", shape = box, style = rounded] [color = DimGray]
-    19 [label = "4, 2, 8", shape = box, style = rounded]
-    20 [label = "4, 4, 8", shape = box, style = rounded] [color = DimGray]
-    21 [label = "4, 7, 0", shape = box, style = rounded] [color = DimGray]
-    22 [label = "4, 7, 9", shape = box, style = rounded] [color = DimGray]
-    23 [label = "7, 2, 0", shape = box, style = rounded] [color = DimGray]
-    24 [label = "7, 2, 9", shape = box, style = rounded] [color = DimGray]
-    25 [label = "7, 4, 0", shape = box, style = rounded] [color = DimGray]
-    26 [label = "7, 4, 9", shape = box, style = rounded] [color = DimGray]
-    27 [label = "7, 7, 2", shape = box, style = rounded] [color = DimGray]
-    28 [label = "7, 7, 4", shape = box, style = rounded] [color = DimGray]
-    29 [label = "7, 7, 6", shape = box, style = rounded] [color = DimGray]
-    30 [label = "2, 2, 0", shape = box, style = rounded] [color = DimGray]
-    31 [label = "2, 2, 9", shape = box, style = rounded] [color = DimGray]
-    32 [label = "2, 4, 0", shape = box, style = rounded] [color = DimGray]
-    33 [label = "2, 4, 9", shape = box, style = rounded] [color = DimGray]
-    34 [label = "2, 7, 2", shape = box, style = rounded] [color = DimGray]
-    35 [label = "2, 7, 4", shape = box, style = rounded] [color = DimGray]
-    36 [label = "2, 7, 6", shape = box, style = rounded] [color = DimGray]
-    37 [label = "4, 2, 0", shape = box, style = rounded]
-    38 [label = "4, 2, 9", shape = box, style = rounded] [color = DimGray]
-    39 [label = "4, 4, 0", shape = box, style = rounded] [color = DimGray]
-    40 [label = "4, 4, 9", shape = box, style = rounded] [color = DimGray]
-    41 [label = "4, 7, 2", shape = box, style = rounded] [color = DimGray]
-    42 [label = "4, 7, 4", shape = box, style = rounded] [color = DimGray]
-    43 [label = "4, 7, 6", shape = box, style = rounded] [color = DimGray]
-    44 [label = "7, 2, 2", shape = box, style = rounded] [color = DimGray]
-    45 [label = "7, 2, 4", shape = box, style = rounded] [color = DimGray]
-    46 [label = "7, 2, 6", shape = box, style = rounded] [color = DimGray]
-    47 [label = "7, 4, 2", shape = box, style = rounded] [color = DimGray]
-    48 [label = "7, 4, 4", shape = box, style = rounded] [color = DimGray]
-    49 [label = "7, 4, 6", shape = box, style = rounded] [color = DimGray]
-    50 [label = "2, 2, 2", shape = box, style = rounded] [color = DimGray]
-    51 [label = "2, 2, 4", shape = box, style = rounded] [color = DimGray]
-    52 [label = "2, 2, 6", shape = box, style = rounded] [color = DimGray]
-    53 [label = "2, 4, 2", shape = box, style = rounded] [color = DimGray]
-    54 [label = "2, 4, 4", shape = box, style = rounded] [color = DimGray]
-    55 [label = "2, 4, 6", shape = box, style = rounded] [color = DimGray]
-    56 [label = "4, 2, 2", shape = box, style = rounded]
-    57 [label = "4, 2, 4", shape = box, style = rounded] [color = DimGray]
-    58 [label = "4, 2, 6", shape = box, style = rounded] [color = DimGray]
-    59 [label = "4, 4, 2", shape = box, style = rounded] [color = DimGray]
-    60 [label = "4, 4, 4", shape = box, style = rounded] [color = DimGray]
-    61 [label = "4, 4, 6", shape = box, style = rounded] [color = DimGray]
-    62 [label = "5, 3, 3", shape = box, style = rounded]
-    63 [label = "1, 3, 3", shape = box, style = rounded]
-    64 [label = "7, 3, 3", shape = box, style = rounded]
-    65 [label = "0, 3, 3", shape = box, style = rounded]
-    66 [label = "7, 1, 3", shape = box, style = rounded]
-    67 [label = "2, 3, 3", shape = box, style = rounded] [color = DimGray]
-    68 [label = "4, 3, 3", shape = box, style = rounded]
-    69 [label = "7, 7, 3", shape = box, style = rounded]
-    70 [label = "7, 0, 3", shape = box, style = rounded] [color = DimGray]
-    71 [label = "2, 1, 3", shape = box, style = rounded] [color = DimGray]
-    72 [label = "4, 1, 3", shape = box, style = rounded]
-    73 [label = "7, 7, 1", shape = box, style = rounded]
-    74 [label = "7, 2, 3", shape = box, style = rounded] [color = DimGray]
-    75 [label = "7, 4, 3", shape = box, style = rounded] [color = DimGray]
-    76 [label = "2, 7, 3", shape = box, style = rounded] [color = DimGray]
-    77 [label = "2, 0, 3", shape = box, style = rounded] [color = DimGray]
-    78 [label = "4, 7, 3", shape = box, style = rounded] [color = DimGray]
-    79 [label = "4, 0, 3", shape = box, style = rounded]
-    80 [label = "7, 2, 1", shape = box, style = rounded] [color = DimGray]
-    81 [label = "7, 4, 1", shape = box, style = rounded] [color = DimGray]
-    82 [label = "2, 7, 1", shape = box, style = rounded] [color = DimGray]
-    83 [label = "2, 2, 3", shape = box, style = rounded] [color = DimGray]
-    84 [label = "2, 4, 3", shape = box, style = rounded] [color = DimGray]
-    85 [label = "4, 7, 1", shape = box, style = rounded] [color = DimGray]
-    86 [label = "4, 2, 3", shape = box, style = rounded]
-    87 [label = "4, 4, 3", shape = box, style = rounded] [color = DimGray]
-    88 [label = "2, 2, 1", shape = box, style = rounded] [color = DimGray]
-    89 [label = "2, 4, 1", shape = box, style = rounded] [color = DimGray]
-    90 [label = "4, 2, 1", shape = box, style = rounded]
-    91 [label = "4, 4, 1", shape = box, style = rounded] [color = DimGray]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "6, 6, 8", shape = box]
+    1 [label = "0, 6, 8", shape = box]
+    2 [label = "7, 6, 8", shape = box]
+    3 [label = "2, 6, 8", shape = box, color = DimGray]
+    4 [label = "4, 6, 8", shape = box]
+    5 [label = "7, 0, 8", shape = box, color = DimGray]
+    6 [label = "7, 7, 8", shape = box]
+    7 [label = "2, 0, 8", shape = box, color = DimGray]
+    8 [label = "2, 7, 8", shape = box, color = DimGray]
+    9 [label = "4, 0, 8", shape = box]
+    10 [label = "4, 7, 8", shape = box, color = DimGray]
+    11 [label = "7, 2, 8", shape = box, color = DimGray]
+    12 [label = "7, 4, 8", shape = box, color = DimGray]
+    13 [label = "7, 7, 0", shape = box, color = DimGray]
+    14 [label = "7, 7, 9", shape = box]
+    15 [label = "2, 2, 8", shape = box, color = DimGray]
+    16 [label = "2, 4, 8", shape = box, color = DimGray]
+    17 [label = "2, 7, 0", shape = box, color = DimGray]
+    18 [label = "2, 7, 9", shape = box, color = DimGray]
+    19 [label = "4, 2, 8", shape = box]
+    20 [label = "4, 4, 8", shape = box, color = DimGray]
+    21 [label = "4, 7, 0", shape = box, color = DimGray]
+    22 [label = "4, 7, 9", shape = box, color = DimGray]
+    23 [label = "7, 2, 0", shape = box, color = DimGray]
+    24 [label = "7, 2, 9", shape = box, color = DimGray]
+    25 [label = "7, 4, 0", shape = box, color = DimGray]
+    26 [label = "7, 4, 9", shape = box, color = DimGray]
+    27 [label = "7, 7, 2", shape = box, color = DimGray]
+    28 [label = "7, 7, 4", shape = box, color = DimGray]
+    29 [label = "7, 7, 6", shape = box, color = DimGray]
+    30 [label = "2, 2, 0", shape = box, color = DimGray]
+    31 [label = "2, 2, 9", shape = box, color = DimGray]
+    32 [label = "2, 4, 0", shape = box, color = DimGray]
+    33 [label = "2, 4, 9", shape = box, color = DimGray]
+    34 [label = "2, 7, 2", shape = box, color = DimGray]
+    35 [label = "2, 7, 4", shape = box, color = DimGray]
+    36 [label = "2, 7, 6", shape = box, color = DimGray]
+    37 [label = "4, 2, 0", shape = box]
+    38 [label = "4, 2, 9", shape = box, color = DimGray]
+    39 [label = "4, 4, 0", shape = box, color = DimGray]
+    40 [label = "4, 4, 9", shape = box, color = DimGray]
+    41 [label = "4, 7, 2", shape = box, color = DimGray]
+    42 [label = "4, 7, 4", shape = box, color = DimGray]
+    43 [label = "4, 7, 6", shape = box, color = DimGray]
+    44 [label = "7, 2, 2", shape = box, color = DimGray]
+    45 [label = "7, 2, 4", shape = box, color = DimGray]
+    46 [label = "7, 2, 6", shape = box, color = DimGray]
+    47 [label = "7, 4, 2", shape = box, color = DimGray]
+    48 [label = "7, 4, 4", shape = box, color = DimGray]
+    49 [label = "7, 4, 6", shape = box, color = DimGray]
+    50 [label = "2, 2, 2", shape = box, color = DimGray]
+    51 [label = "2, 2, 4", shape = box, color = DimGray]
+    52 [label = "2, 2, 6", shape = box, color = DimGray]
+    53 [label = "2, 4, 2", shape = box, color = DimGray]
+    54 [label = "2, 4, 4", shape = box, color = DimGray]
+    55 [label = "2, 4, 6", shape = box, color = DimGray]
+    56 [label = "4, 2, 2", shape = box]
+    57 [label = "4, 2, 4", shape = box, color = DimGray]
+    58 [label = "4, 2, 6", shape = box, color = DimGray]
+    59 [label = "4, 4, 2", shape = box, color = DimGray]
+    60 [label = "4, 4, 4", shape = box, color = DimGray]
+    61 [label = "4, 4, 6", shape = box, color = DimGray]
+    62 [label = "5, 3, 3", shape = box]
+    63 [label = "1, 3, 3", shape = box]
+    64 [label = "7, 3, 3", shape = box]
+    65 [label = "0, 3, 3", shape = box]
+    66 [label = "7, 1, 3", shape = box]
+    67 [label = "2, 3, 3", shape = box, color = DimGray]
+    68 [label = "4, 3, 3", shape = box]
+    69 [label = "7, 7, 3", shape = box]
+    70 [label = "7, 0, 3", shape = box, color = DimGray]
+    71 [label = "2, 1, 3", shape = box, color = DimGray]
+    72 [label = "4, 1, 3", shape = box]
+    73 [label = "7, 7, 1", shape = box]
+    74 [label = "7, 2, 3", shape = box, color = DimGray]
+    75 [label = "7, 4, 3", shape = box, color = DimGray]
+    76 [label = "2, 7, 3", shape = box, color = DimGray]
+    77 [label = "2, 0, 3", shape = box, color = DimGray]
+    78 [label = "4, 7, 3", shape = box, color = DimGray]
+    79 [label = "4, 0, 3", shape = box]
+    80 [label = "7, 2, 1", shape = box, color = DimGray]
+    81 [label = "7, 4, 1", shape = box, color = DimGray]
+    82 [label = "2, 7, 1", shape = box, color = DimGray]
+    83 [label = "2, 2, 3", shape = box, color = DimGray]
+    84 [label = "2, 4, 3", shape = box, color = DimGray]
+    85 [label = "4, 7, 1", shape = box, color = DimGray]
+    86 [label = "4, 2, 3", shape = box]
+    87 [label = "4, 4, 3", shape = box, color = DimGray]
+    88 [label = "2, 2, 1", shape = box, color = DimGray]
+    89 [label = "2, 4, 1", shape = box, color = DimGray]
+    90 [label = "4, 2, 1", shape = box]
+    91 [label = "4, 4, 1", shape = box, color = DimGray]
   }
   I0 -> 0
   0 -> 1 [label = "\\e"]
@@ -652,18 +660,19 @@ res = r'''digraph
 {
   vcsn_context = "lan<lal_char(abc)>_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F4
   }
   {
-    node [shape = circle]
-    0 [label = "0, 0", shape = box, style = rounded]
-    1 [label = "2, 0", shape = box, style = rounded] [color = DimGray]
-    2 [label = "0, 1", shape = box, style = rounded]
-    3 [label = "2, 1", shape = box, style = rounded] [color = DimGray]
-    4 [label = "1, 2", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "2, 0", shape = box, color = DimGray]
+    2 [label = "0, 1", shape = box]
+    3 [label = "2, 1", shape = box, color = DimGray]
+    4 [label = "1, 2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "\\e", color = DimGray]

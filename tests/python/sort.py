@@ -26,16 +26,17 @@ check(a, '''digraph
 {
   vcsn_context = "lal_char(abcde)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "0", shape = box, style = rounded]
-    1 [label = "1", shape = box, style = rounded]
-    2 [label = "2", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0", shape = box]
+    1 [label = "1", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]
@@ -51,16 +52,17 @@ check(a.transpose(), '''digraph
 {
   vcsn_context = "lal_char(abcde)_b"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F1
   }
   {
-    node [shape = circle]
-    0 [label = "1", shape = box, style = rounded]
-    1 [label = "0", shape = box, style = rounded]
-    2 [label = "2", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "1", shape = box]
+    1 [label = "0", shape = box]
+    2 [label = "2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "a"]

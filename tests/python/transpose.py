@@ -15,16 +15,17 @@ CHECK_EQ('''digraph
 {
   vcsn_context = "lal_char(abc)_ratexpset<lal_char(xyz)_z>"
   rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
   {
     node [shape = point, width = 0]
     I0
     F0
   }
   {
-    node [shape = circle]
-    0 [label = "(<xyz>abc)*", shape = box, style = rounded]
-    1 [label = "bc(<xyz>abc)*", shape = box, style = rounded]
-    2 [label = "c(<xyz>abc)*", shape = box, style = rounded]
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "(<xyz>abc)*", shape = box]
+    1 [label = "bc(<xyz>abc)*", shape = box]
+    2 [label = "c(<xyz>abc)*", shape = box]
   }
   I0 -> 0
   0 -> F0
