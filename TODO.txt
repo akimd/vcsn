@@ -1,4 +1,4 @@
-* Exercises (AP, VT)
+* Exercises
 ** subword, prefix, suffix, factor
 Provide the same routines for ratexps.
 
@@ -50,6 +50,13 @@ Check + and *.
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
 
+** conjunction
+Check star-normal-form, standard, thompson.  Check the trivial identities.
+What should be the definition of the B (breaking/splitting) operator?  I
+have taken a definition which is modeled after the one of concatenation (on
+order "not to break too much") rather that something like expand.  What are
+the expected features of the right definition?
+
 * Bugs
 ** Parse error
 We need to provide more acurate locations in error messages.  For instance,
@@ -88,9 +95,6 @@ that's because we need to multiply weights of different natures, which is
 something already solved in product (using conv).  See also the previous
 item.
 
-** products: lazyness
-We need a lazy implementation of product.
-
 ** is-valid(automaton)
 In the case of RW, check that the ratexp is valid.
 
@@ -100,12 +104,14 @@ crange should not feature size and empty if !VCSN_DEBUG.
 ** star-normal-form
 It does not work for weighted ratexps.
 
-** conjunction
-Check star-normal-form, standard, thompson.  Check the trivial identities.
-What should be the definition of the B (breaking/splitting) operator?  I
-have taken a definition which is modeled after the one of concatenation (on
-order "not to break too much") rather that something like expand.  What are
-the expected features of the right definition?
+* Improvements
+** products: lazyness
+We need a lazy implementation of product.
+
+** open contexts
+We should accept "lal_char_b" etc. as valid context names, which means that
+they are open.  Would be useful for %automaton for instance.  edit-automaton
+would close the context when it returns the result.
 
 * Cleanup
 ** automaton_t members in decorators
@@ -142,6 +148,10 @@ The current implementation has too many short coming.
 
 - join is spread all over the place
   There are common bits in context.hh and others in algos/product.hh.
+
+
+See vcsn/experiments.git/join, there is something there which could be a
+good start.
 
 ** copy
 We need a more robust copy function that can promote to a supertype.
@@ -285,7 +295,7 @@ See what V1 did.
 
 ** Incremental
 Transform the current implementation of the "naive" heuristics into
-some incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
+something incremental.  See what TAF-Kit.pdf B.1.4.1 says about it.
 
 ** Rename to a better name.
 Drop "aut", because we have more entries than that.  Drop "to", as it's
@@ -296,8 +306,9 @@ used everywhere else.
 ** Implement implicit conversions
 So that, for instance, we can run is-derministic on a proper lan.
 
-* change product signature to take a vector<const automaton&> instead of a
-vector<automaton>
+** product
+Change product signature to take a vector<const automaton&> instead of a
+vector<automaton>.
 
 * I/O
 ** fado
@@ -377,9 +388,9 @@ Is this what we want?
   need it.
 
 * mutable_automaton::set_transition
-We should find a means to forbid transition from pre to post.  This
-was the case initially, but it is a useless constraint in aut-to-exp.
-Maybe it should be efforced only in non labels_are_unit case.
+We should find a means to forbid transition from pre to post.  This was the
+case initially, but it is troublesome aut-to-exp.  Maybe it should be
+efforced only in non labels_are_unit case.
 
 * Readings
 About dyn/static bridge:

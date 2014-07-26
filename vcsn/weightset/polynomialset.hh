@@ -125,7 +125,6 @@ namespace vcsn
       return add_here(v, p.first, p.second);
     }
 
-    // FIXME: rename at least this version.
     /// v += (l, k).
     value_t&
     add_here(value_t& v, const label_t& l, const weight_t k) const
@@ -391,7 +390,6 @@ namespace vcsn
       labelset_t tls = * labelset();
       weightset_t tws = * weightset();
       for (const auto& m: v)
-        // FIXME: rename this version of add_here.
         add_here(res, tls.conv(sls, m.first), tws.conv(sws, m.second));
       return res;
     }
