@@ -117,7 +117,7 @@ namespace vcsn
       return v == one();
     }
 
-    static constexpr bool is_commutative_semiring() { return true; }
+    static constexpr bool is_commutative() { return true; }
 
     static constexpr bool show_one() { return true; }
     static constexpr star_status_t star_status() { return star_status_t::TOPS; }

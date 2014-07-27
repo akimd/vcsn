@@ -133,7 +133,7 @@ namespace vcsn
     bool is_zero(value_t v) const ATTRIBUTE_PURE;
     static bool is_one(value_t v) ATTRIBUTE_PURE;
 
-    static constexpr bool is_commutative_semiring()
+    static constexpr bool is_commutative()
     {
       return false;
     }

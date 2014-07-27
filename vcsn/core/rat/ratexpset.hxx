@@ -36,7 +36,7 @@ namespace vcsn
   void ratexpset_impl<Context>::require_weightset_commutativity() const
   {
     require(identities_ != identities_t::series
-            || weightset_t_of<Context>::is_commutative_semiring(),
+            || weightset_t_of<Context>::is_commutative(),
             "series (currently) depend on weightset commutativity");
   }
 

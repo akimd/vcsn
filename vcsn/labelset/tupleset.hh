@@ -109,9 +109,9 @@ namespace vcsn
 
     template <std::size_t... I>
     static constexpr bool
-    is_commutative_semiring()
+    is_commutative()
     {
-      return all_<valueset_t<I>::is_commutative_semiring()...>();
+      return all_<valueset_t<I>::is_commutative()...>();
     }
 
     /// Build from the description in \a is.
