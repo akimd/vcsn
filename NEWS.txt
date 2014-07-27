@@ -109,15 +109,15 @@ unused letters.
 These four new functions (static, dyn and Python) take an automaton and
 return another that accepts a superset of its language:
 
-    - suffix makes each accessible state final (with unit weight)
+- suffix makes each accessible state final (with unit weight)
 
-    - prefix makes each coaccessible state initial
+- prefix makes each coaccessible state initial
 
-    - factor makes each useful state initial and final
+- factor makes each useful state initial and final
 
-    - subword applies the Magnus transform: for each non spontaneous
-      transition (src, label, weight, dst), it adds a spontaneous transition
-      (src, one, weight, dst).
+- subword applies the Magnus transform: for each non spontaneous
+  transition (src, label, weight, dst), it adds a spontaneous transition
+  (src, one, weight, dst).
 
 ## 2014-06-24
 ### minimize: new subset decorators, except for the "brzozowski" variant
