@@ -71,7 +71,7 @@ def _dot_to_svg(dot, engine="dot", *args):
     p1.stdin.close()
     out, err = p3.communicate()
     if p1.wait():
-        raise RuntimeError(engine + " failed: " + p1.stderr.redd().decode('utf-8'))
+        raise RuntimeError(engine + " failed: " + p1.stderr.read().decode('utf-8'))
     if p2.wait():
         raise RuntimeError("gprv failed: " + p2.stderr.read().decode('utf-8'))
     if p3.wait():
