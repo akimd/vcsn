@@ -39,7 +39,7 @@ namespace vcsn
   }
 
   /// Static signature.
-  template <typename ... Args>
+  template <typename... Args>
   inline
   signature
   ssignature()
@@ -107,8 +107,69 @@ namespace vcsn
   DEFINE(vcsn::rat::identities);
 #undef DEFINE
 
+
+  /*--------------------.
+  | integral_constant.  |
+  `--------------------*/
+
+
+  template <typename T, T Value>
+  struct snamer<std::integral_constant<T, Value>>
+  {
+    std::string operator()()
+    {
+      return "std::integral_constant<unsigned, " + std::to_string(Value) + ">";
+    }
+  };
+
+  template <typename T, T Value>
+  struct vnamer<std::integral_constant<T, Value>>
+  {
+    using type = std::integral_constant<T, Value>;
+    std::string operator()(type)
+    {
+      return sname<type>();
+    }
+  };
+
+  /// A simple placeholder for integral constants.
+  ///
+  /// Consider the case of `blind(automaton, tape)`: it must turn the
+  /// `tape` (runtime) argument into a (compile time) parameter.
+  ///
+  /// The compile-time parameter as a value is painful, as it is an
+  /// exception, it is a nuisance for perfect forwarding which is
+  /// tailoyred for type parameters (not value parameters), etc. so it
+  /// is turned into a type parameter thanks to
+  /// std::integral_constant.
+  ///
+  /// Now the tricky part is therefore going from a runtime integer to
+  /// a std::integral_constant.  This is done by having dyn::blind
+  /// turn its "unsigned tape" argument into a "integral_constant
+  /// tape" one, and the latter, when queried by the signature
+  /// extraction mechanism, must simply say "I'm
+  /// std::integral_constant<unsigned, tape>".
+  struct integral_constant
+  {
+    std::string name;
+  };
+
+  template <>
+  struct vnamer<integral_constant>
+  {
+    std::string operator()(integral_constant t)
+    {
+      return t.name;
+    }
+  };
+
+
+  /*-------------.
+  | vsignature.  |
+  `-------------*/
+
   /// The signature of (Args...).
-  template <typename ... Args>
+  template <typename... Args>
   inline
   signature
   vsignature(Args&&... args)

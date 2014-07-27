@@ -19,6 +19,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/accessible.py                             \
   %D%/aut-to-exp.py                             \
   %D%/automaton.py                              \
+  %D%/blind.py                                  \
   %D%/chain.py                                  \
   %D%/complement.py                             \
   %D%/complete.py                               \

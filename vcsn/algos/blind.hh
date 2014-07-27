@@ -7,6 +7,7 @@
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/labelset/tupleset.hh>
+# include <vcsn/misc/name.hh> // integral_parameter
 # include <vcsn/misc/tuple.hh> // make_index_range
 
 namespace vcsn
@@ -348,18 +349,14 @@ namespace vcsn
       /// Bridge.
       template <typename Aut, typename Tape>
       automaton
-      blind(automaton& aut, unsigned tape)
+      blind(automaton& aut, integral_constant)
       {
         auto& a = aut->as<Aut>();
-        // FIXME: we currently have no support for values in parameters.
-        if (tape == 0)
-          return make_automaton(vcsn::blind<0>(a));
-        else
-          return make_automaton(vcsn::blind<1>(a));
+        return make_automaton(vcsn::blind<Tape::value>(a));
       }
 
       REGISTER_DECLARE(blind,
-                       (automaton& aut, unsigned tape) -> automaton);
+                       (automaton& aut, integral_constant tape) -> automaton);
     }
   }
 

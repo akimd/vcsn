@@ -73,6 +73,16 @@ namespace vcsn
           eat(is_, '>');
           return res;
         }
+      else if (w == "std::integral")
+        {
+          // std::integral_constant<unsigned, 2>.
+          w += eat(is_, "_constant<");
+          w += word();
+          w += eat(is_, ',');
+          w += word();
+          w += eat(is_, '>');
+          return std::make_shared<other>(w);
+        }
       else
         return std::make_shared<other>(w);
     }
