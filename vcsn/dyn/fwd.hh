@@ -103,6 +103,6 @@ namespace vcsn
 # define REGISTER_DECLARE(Name, Signature)                      \
   using Name ## _t = auto Signature;                            \
   LIBVCSN_API                                                   \
-  bool Name ## _register(const signature& sig, Name ## _t fn);
+  bool Name ## _register(const signature& sig, Name ## _t fn)
 
 #endif // !VCSN_DYN_FWD_HH
