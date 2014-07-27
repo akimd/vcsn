@@ -217,15 +217,13 @@ CHECK_EQ('''<uxvy+uxyv+xuvy+xuyv>aabb
 ## n-ary.  ##
 ## ------- ##
 
-ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
+ctx = vcsn.context('lal_char(x)_seriesset<lal_char(abcd)_b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+
 CHECK_EQ('<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx',
-    a['a']
-    # FIXME: strip otherwise we get too long a file name.
-    .shuffle(a['b']).strip()
-    .shuffle(a['c']).strip()
-    .shuffle(a['d']).strip()
-    .enumerate(10)
-    .format('list'))
+         a['a'].shuffle(a['b'], a['c'], a['d'])
+         .strip()
+         .enumerate(10)
+         .format('list'))
