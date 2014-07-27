@@ -5,7 +5,6 @@
 # include <map>
 # include <stdexcept>
 
-# include <vcsn/dyn/context.hh> // sname
 # include <vcsn/dyn/translate.hh> // compile
 # include <vcsn/misc/name.hh>
 # include <vcsn/misc/signature.hh>
@@ -98,8 +97,8 @@ namespace vcsn
       call(Args&&... args)
         -> decltype(std::declval<Fun>()(args...))
       {
-        const auto& sig = vsignature(std::forward<Args>(args)...);
-        return (get(sig))(std::forward<Args>(args)...);
+        return call(vsignature(std::forward<Args>(args)...),
+                    std::forward<Args>(args)...);
       }
 
       template <typename T>
