@@ -43,9 +43,6 @@ standard(exp).  We should use fewer contexts, to speed up our development.
 ** operations on polynomials
 Check + and *.
 
-** operations on weights
-Check + and *.
-
 ** proper
 Check the case where we do not want to eliminate states.  Actually check
 that "a.proper(False).accessible() == a.proper()".
