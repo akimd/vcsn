@@ -10,15 +10,14 @@
 
 namespace vcsn
 {
-  namespace
+  namespace detail
   {
 
     template <typename Aut,
               bool has_one = context_t_of<Aut>::has_one()>
     struct epsilon_acyclic;
 
-    /// @class epsilon_acylic
-    /// @brief Detect epsilon-circuits.
+    /// Detect epsilon-circuits.
     ///
     /// In this algorithm, only epsilon-transitions are considered.
     template <typename Aut>
@@ -109,7 +108,7 @@ namespace vcsn
   ATTRIBUTE_CONST
   bool is_eps_acyclic(const Aut& aut)
   {
-    epsilon_acyclic<Aut> t{aut};
+    detail::epsilon_acyclic<Aut> t{aut};
     return t.is_eps_acyclic();
   }
 
