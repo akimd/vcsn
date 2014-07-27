@@ -41,14 +41,16 @@ namespace vcsn LIBVCSN_API
   /// Check lookahead character and advance.
   /// \param is the stream to read.
   /// \param c  the expected character.
+  /// \returns c
   /// \throws std::runtime_error if the next character is not \a c.
-  void eat(std::istream& is, char c);
+  char eat(std::istream& is, char c);
 
   /// Check lookahead string and advance.
   /// \param is the stream to read.
   /// \param s  the expected string.
+  /// \returns s
   /// \throws std::runtime_error if the next character is not \a s.
-  void eat(std::istream& is, const std::string& s);
+  const std::string& eat(std::istream& is, const std::string& s);
 
   /// Throw an exception after failing to read from \a is.
   /// Reset the stream to a "good" state, and read the presumably

@@ -34,15 +34,16 @@ namespace vcsn
           str_escape(lbracket), o.str());
   }
 
-  void eat(std::istream& is, char c)
+  char eat(std::istream& is, char c)
   {
     require(is.peek() == c,
             "unexpected: ", str_escape(is.peek()),
             ": expected ", str_escape(c));
     is.ignore();
+    return c;
   }
 
-  void eat(std::istream& is, const std::string& expect)
+  const std::string& eat(std::istream& is, const std::string& expect)
   {
     std::string s;
     char c;
@@ -54,6 +55,7 @@ namespace vcsn
       }
     require(s == expect,
             "unexpected: ", str_escape(s), ": expected ", str_escape(expect));
+    return expect;
   }
 
   // http://stackoverflow.com/questions/2602013.

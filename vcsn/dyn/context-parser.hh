@@ -51,7 +51,7 @@ namespace vcsn
       std::shared_ptr<ast_node> weightset_(const std::string& ws);
 
       /// `<Automaton> "<" <Context> ">"`.
-      std::shared_ptr<automaton> automaton_(const std::string& prefix);
+      std::shared_ptr<automaton> automaton_(std::string prefix);
       std::shared_ptr<tupleset> tupleset_();
 
       /// `"ratexpset" "<" <Context> ">"`.

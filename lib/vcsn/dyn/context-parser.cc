@@ -228,14 +228,15 @@ namespace vcsn
     }
 
     std::shared_ptr<automaton>
-    context_parser::automaton_(const std::string& prefix)
+    context_parser::automaton_(std::string prefix)
     {
       std::shared_ptr<automaton> res = nullptr;
       // blind_automaton<TapeNum, Aut>.
       if (prefix == "blind")
         {
-          eat(is_, "_automaton<");
-          res = std::make_shared<automaton>(prefix + "_automaton",
+          prefix += eat(is_, "_automaton");
+          eat(is_, '<');
+          res = std::make_shared<automaton>(prefix,
                                             std::make_shared<other>(word()));
           eat(is_, ',');
           res->get_content().emplace_back(automaton_(word()));
@@ -250,23 +251,26 @@ namespace vcsn
                || prefix == "ratexp"
                || prefix == "transpose")
         {
-          eat(is_, "_automaton<");
-          res = std::make_shared<automaton>(prefix + "_automaton",
+          prefix += eat(is_, "_automaton");
+          eat(is_, '<');
+          res = std::make_shared<automaton>(prefix,
                                             automaton_(word()));
         }
       // mutable_automaton<Context>.
       else if (prefix == "mutable")
         {
-          eat(is_, "_automaton<");
-          res = std::make_shared<automaton>(prefix + "_automaton",
+          prefix += eat(is_, "_automaton");
+          eat(is_, '<');
+          res = std::make_shared<automaton>(prefix,
                                             context_());
         }
       // xxx_automaton<Aut...>.
       else if (prefix == "product"
                || prefix == "tuple")
         {
-          eat(is_, "_automaton<");
-          res = std::make_shared<automaton>(prefix + "_automaton",
+          prefix += eat(is_, "_automaton");
+          eat(is_, '<');
+          res = std::make_shared<automaton>(prefix,
                                             automaton_(word()));
           while (is_.peek() == ',')
             {
