@@ -1,6 +1,6 @@
 /**
  ** \file vcsn/misc/file-library.hxx
- ** \brief implements inline function of vcsn/file-library.hh
+ ** \brief Implement inline functions of vcsn/misc/file-library.hh
  */
 
 #ifndef LIBPORT_FILE_LIBRARY_HXX

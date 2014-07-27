@@ -5,6 +5,7 @@ namespace vcsn
 {
   namespace detail
   {
+    /// Implementation details of the dot parser.
     namespace dot
     {
       // lib/vcsn/dot/driver.hh.

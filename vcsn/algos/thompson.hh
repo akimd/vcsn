@@ -13,6 +13,8 @@ namespace vcsn
 {
   namespace rat
   {
+    /// Compute the Thompson automaton of an expression.
+    ///
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
     template <typename Aut,

@@ -20,6 +20,7 @@ namespace vcsn
   | is_standard(automaton).  |
   `-------------------------*/
 
+  /// Whether \a a is standard.
   template <typename Aut>
   bool
   is_standard(const Aut& a)
@@ -53,7 +54,7 @@ namespace vcsn
   | standard(automaton).  |
   `----------------------*/
 
-  /// \brief Turn \a aut into a standard automaton.
+  /// Turn \a aut into a standard automaton.
   ///
   /// \tparam Aut an automaton type, not a pointer type.
   template <typename Aut>
@@ -116,7 +117,7 @@ namespace vcsn
 
   namespace rat
   {
-    /// \brief Convert a ratexp to a standard automaton.
+    /// Convert a ratexp to a standard automaton.
     ///
     /// \tparam Aut      relative the generated automaton
     /// \tparam Context  relative to the RatExp.
@@ -317,7 +318,7 @@ namespace vcsn
   } // rat::
 
 
-  /// \brief Convert a ratexp to a standard automaton.
+  /// Convert a ratexp to a standard automaton.
   ///
   /// \tparam Aut      relative to the generated automaton.
   /// \tparam Context  relative to the RatExp.
