@@ -12,22 +12,22 @@ namespace vcsn
   namespace ast
   {
 
-    void context_printer::header_algo(std::string n)
+    void context_printer::header_algo(const std::string& algo)
     {
-      // We use '-' instead of '_' in file names.
-      boost::replace_all(n, "_", "-");
+      // We use '-' instead of '_' in header file names.
+      auto h = boost::replace_all_copy(algo, "_", "-");
       // We don't use any suffix in the file names.
       for (auto s: {"-expansion", "-label", "-polynomial",
                     "-ratexp", "-vector", "-weight"})
-        if (boost::ends_with(n, s))
-          boost::erase_tail(n, strlen(s));
+        if (boost::ends_with(h, s))
+          boost::erase_tail(h, strlen(s));
       // Open code some mismatches between algo name, and header name.
       //
       // FIXME: algorithms should register this themselves.
       if (false) {}
 #define ALGO(In, Out)                           \
-      else if (n == In)                         \
-        n = Out
+      else if (h == In)                         \
+        h = Out
       ALGO("chain", "concatenate");
       ALGO("coaccessible", "accessible");
       ALGO("conjunction", "product");
@@ -60,11 +60,15 @@ namespace vcsn
       ALGO("trim", "accessible");
       ALGO("union-a", "union");
 #undef ALGO
-      n = "vcsn/algos/" + n + ".hh";
-      headers_late_.insert(n);
+      // Exceptions.
+      if (algo == "is_valid_ratexp")
+        h = "is-valid-ratexp";
+
+      h = "vcsn/algos/" + h + ".hh";
+      headers_late_.insert(h);
     }
 
-    void context_printer::header(std::string h)
+    void context_printer::header(const std::string& h)
     {
       headers_.insert(h);
     }

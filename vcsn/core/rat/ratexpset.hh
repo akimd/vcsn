@@ -183,7 +183,7 @@ namespace vcsn
     }
 
     std::ostream& print(const value_t v, std::ostream& o,
-			const std::string& format = "text") const;
+                        const std::string& format = "text") const;
 
     std::ostream&
     print_set(std::ostream& o, const std::string& format = "text") const
@@ -474,11 +474,11 @@ namespace vcsn
 #endif // !VCSN_CORE_RAT_RATEXPSET_HH
 
 // This is ugly, yet I don't know how to address this circular
-// dependency another way: ratexpset.hxx uses is-valid.hh, which, of
-// course, also uses ratexpset.hh.
+// dependency another way: ratexpset.hxx uses is-valid-ratexp.hh,
+// which, of course, also uses ratexpset.hh.
 //
 // So let's have ratexpset.hh first accept a forward declaration (via
 // algos/fwd.hh), then provide here the needed definition.  Do not
 // leave this inside the CPP guard.
 
-#include <vcsn/algos/is-valid.hh>
+#include <vcsn/algos/is-valid-ratexp.hh>

@@ -3,12 +3,8 @@
 
 # include <stdexcept>
 # include <type_traits>
-# include <unordered_map>
 # include <utility>
-# include <vector>
 
-# include <vcsn/algos/fwd.hh>
-# include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-proper.hh>
@@ -158,44 +154,6 @@ namespace vcsn
 
      REGISTER_DECLARE(is_valid,
                       (const automaton& aut) -> bool);
-    }
-  }
-
-
-  /*-------------------.
-  | is_valid(ratexp).  |
-  `-------------------*/
-
-  template <typename RatExpSet>
-  bool
-  is_valid(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
-  {
-    rat::constant_term_visitor<RatExpSet> constant_term{rs};
-    try
-    {
-      constant_term(e);
-      return true;
-    }
-    catch (const std::runtime_error&)
-    {
-      return false;
-    }
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename RatExpSet>
-      bool
-      is_valid_ratexp(const ratexp& exp)
-      {
-        const auto& e = exp->as<RatExpSet>();
-        return is_valid<RatExpSet>(e.ratexpset(), e.ratexp());
-      }
-
-      REGISTER_DECLARE(is_valid_ratexp, (const ratexp& e) -> bool);
     }
   }
 } // namespace vcsn

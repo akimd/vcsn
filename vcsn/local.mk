@@ -49,6 +49,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/is-normalized.hh                    \
   %D%/algos/is-proper.hh                        \
   %D%/algos/is-valid.hh                         \
+  %D%/algos/is-valid-ratexp.hh                  \
   %D%/algos/ladybird.hh                         \
   %D%/algos/left-mult.hh                        \
   %D%/algos/lift.hh                             \

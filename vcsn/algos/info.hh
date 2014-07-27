@@ -10,6 +10,7 @@
 # include <vcsn/algos/is-eps-acyclic.hh>
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-valid.hh>
+# include <vcsn/algos/is-valid-ratexp.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/core/rat/info.hh>

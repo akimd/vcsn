@@ -1,5 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/is-valid.hh>
+#include <vcsn/algos/is-valid-ratexp.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
 

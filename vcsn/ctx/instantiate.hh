@@ -26,6 +26,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-proper.hh>
 # include <vcsn/algos/is-valid.hh>
+# include <vcsn/algos/is-valid-ratexp.hh>
 # include <vcsn/algos/left-mult.hh>
 # include <vcsn/algos/lift.hh>
 # include <vcsn/algos/make-context.hh>
