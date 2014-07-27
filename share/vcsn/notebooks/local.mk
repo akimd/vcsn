@@ -28,6 +28,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.is_deterministic.ipynb'          \
   '%D%/algos/automaton.standard.ipynb'                  \
   '%D%/algos/automaton.synchronizing_word.ipynb'        \
+  '%D%/algos/ratexp.is_valid.ipynb'                     \
   '%D%/algos/ratexp.standard.ipynb'
 
 dist-hook: dist-hook-%C%
