@@ -107,11 +107,10 @@ namespace vcsn
       return sizeof...(ValueSets);
     }
 
-    template <std::size_t... I>
     static constexpr bool
     is_commutative()
     {
-      return all_<valueset_t<I>::is_commutative()...>();
+      return is_commutative_(indices);
     }
 
     /// Build from the description in \a is.
@@ -419,6 +418,13 @@ namespace vcsn
         }
       res.push_back('>');
       return res;
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    is_commutative_(seq<I...>)
+    {
+      return all_<valueset_t<I>::is_commutative()...>();
     }
 
     template <std::size_t... I>
