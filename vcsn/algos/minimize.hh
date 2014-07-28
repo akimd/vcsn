@@ -36,7 +36,7 @@ namespace vcsn
     else if (algo == "signature")
       return minimize_signature(a);
     else if (algo == "weighted")
-      return minimize_weighted(a); // FIXME: fix
+      return minimize_weighted(a);
     else
       raise("minimize: invalid algorithm (Boolean, free labelset): ",
             str_escape(algo));
@@ -52,7 +52,7 @@ namespace vcsn
     if (algo == "signature")
       return minimize_signature(a);
     else if (algo == "weighted")
-      return minimize_weighted(a); // FIXME: fix
+      return minimize_weighted(a);
     else
       raise("minimize: invalid algorithm (Boolean, non-free labelset): ",
             str_escape(algo));
@@ -65,7 +65,7 @@ namespace vcsn
   minimize(const Aut& a, const std::string& algo)
   {
     if (algo == "weighted")
-      return minimize_weighted(a); // FIXME: fix
+      return minimize_weighted(a);
     else
       raise("minimize: invalid algorithm (non-Boolean): ", str_escape(algo));
   }
@@ -95,7 +95,7 @@ namespace vcsn
 
       template <typename Aut, typename String>
       inline
-      typename std::enable_if<! ::vcsn::detail::can_use_brzozowski<Aut>(),
+      typename std::enable_if<!::vcsn::detail::can_use_brzozowski<Aut>(),
                               automaton>::type
       minimize(const automaton& aut, const std::string& algo)
       {

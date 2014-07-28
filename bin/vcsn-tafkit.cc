@@ -204,7 +204,7 @@ struct are_equivalent: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     automaton lhs = read_automaton(opts);
-    // FIXME: hack.
+    // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
     automaton rhs = read_automaton(opts2);
@@ -222,7 +222,7 @@ struct are_equivalent: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     ratexp lhs = read_ratexp(opts);
-    // FIXME: hack.
+    // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
     ratexp rhs = read_ratexp(opts2);
@@ -243,7 +243,7 @@ struct are_isomorphic: vcsn_function
     using namespace vcsn::dyn;
     // Input.
     automaton lhs = read_automaton(opts);
-    // FIXME: hack.
+    // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
     automaton rhs = read_automaton(opts2);
@@ -416,7 +416,7 @@ struct left_mult: vcsn_function
     automaton aut = read_automaton(opts);
     assert(1 <= opts.argv.size());
 
-    // FIXME: hack.
+    // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;
@@ -480,7 +480,7 @@ struct right_mult: vcsn_function
     automaton aut = read_automaton(opts);
     assert(1 <= opts.argv.size());
 
-    // FIXME: hack.
+    // Hack.
     options opts2 = opts;
     opts2.input = opts.argv[0];
     opts2.input_is_file = false;

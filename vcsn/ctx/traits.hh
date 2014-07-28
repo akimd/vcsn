@@ -3,8 +3,6 @@
 
 # include <memory>
 
-# include <vcsn/core/rat/identities.hh> // FIXME: likely useless
-
 namespace vcsn
 {
 

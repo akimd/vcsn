@@ -27,11 +27,7 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
-      // The underlying state type.  FIXME: isn't this always
-      // state_t_of<mutable_automaton>?  I think we need a guarantee of
-      // it always being an integer type.  If this is correct then I
-      // think state_t should be a separate global definition: something
-      // like vcsn::state_t.
+      /// The underlying state type.
       using state_t = state_t_of<automaton_t>;
 
       /// The state names: a set of the original automaton states.
@@ -51,9 +47,7 @@ namespace vcsn
         , input_(input)
       {}
 
-      // FIXME: do we want this, or should we leave it to the
-      // underlying automaton, as super_t does?  Or is this always
-      // subclassed anyway?
+      /// Static name.
       static std::string sname()
       {
         return "partition_automaton<" + automaton_t::element_type::sname() + ">";
@@ -67,10 +61,6 @@ namespace vcsn
 
       bool state_has_name(state_t s) const
       {
-        // FIXME: why in the world do I have to write super_t::pre()
-        // or this->pre() rather than simply pre()?  Inheritance from
-        // super_t is public, and pre is a public method.  I must be
-        // missing some fine semantic difference.
         return s != super_t::pre() && s != super_t::post();
       }
 
@@ -93,7 +83,6 @@ namespace vcsn
 
       /// Make a new state representing the given input state set,
       /// which is required to be new -- no error-checking on this.
-      /// FIXME: shall I keep a reverse-origin for that?
       state_t
       new_state(const state_name_t& set)
       {

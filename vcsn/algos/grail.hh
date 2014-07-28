@@ -165,7 +165,6 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
-      // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 
@@ -266,7 +265,6 @@ namespace vcsn
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
                     "requires labels_are_(letters|nullable)");
-      // FIXME: Not right: F2 is also using bool, but it is not bool.
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
                     "requires Boolean weights");
 
