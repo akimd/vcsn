@@ -121,6 +121,7 @@ namespace vcsn
     }
 
     static constexpr bool is_commutative() { return true; }
+    static constexpr bool is_idempotent() { return false; }
 
     static constexpr bool show_one() { return false; }
 

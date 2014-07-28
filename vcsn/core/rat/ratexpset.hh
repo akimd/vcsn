@@ -138,6 +138,13 @@ namespace vcsn
       return false;
     }
 
+    static constexpr bool is_idempotent()
+    {
+      // FIXME: well, the truth is that we are idempotent if the
+      // weightset is, _and_ we apply ACI to addition.
+      return weightset_t::is_idempotent();
+    }
+
     static constexpr bool show_one()
     {
       return false;

@@ -113,6 +113,12 @@ namespace vcsn
       return is_commutative_(indices);
     }
 
+    static constexpr bool
+    is_idempotent()
+    {
+      return is_idempotent_(indices);
+    }
+
     /// Build from the description in \a is.
     static tupleset make(std::istream& is)
     {
@@ -425,6 +431,13 @@ namespace vcsn
     is_commutative_(seq<I...>)
     {
       return all_<valueset_t<I>::is_commutative()...>();
+    }
+
+    template <std::size_t... I>
+    static constexpr bool
+    is_idempotent_(seq<I...>)
+    {
+      return all_<valueset_t<I>::is_idempotent()...>();
     }
 
     template <std::size_t... I>
