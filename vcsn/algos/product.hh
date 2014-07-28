@@ -530,7 +530,7 @@ namespace vcsn
   | shuffle(automaton...).  |
   `------------------------*/
 
-  /// Build the (accessible part of the) product.
+  /// The (accessible part of the) shuffle product.
   template <typename... Auts>
   inline
   auto
@@ -547,15 +547,6 @@ namespace vcsn
   {
     namespace detail
     {
-      template <typename... Auts, size_t... I>
-      automaton
-      shuffle_(const std::vector<automaton>& as,
-               vcsn::detail::index_sequence<I...>)
-      {
-        auto res = vcsn::shuffle(as[I]->as<Auts>()...);
-        return make_automaton(res);
-      }
-
       /// Binary bridge.
       template <typename Lhs, typename Rhs>
       automaton
@@ -568,6 +559,16 @@ namespace vcsn
 
       REGISTER_DECLARE(shuffle,
                        (const automaton&, const automaton&) -> automaton);
+
+      /// Variadic bridge helper.
+      template <typename... Auts, size_t... I>
+      automaton
+      shuffle_(const std::vector<automaton>& as,
+               vcsn::detail::index_sequence<I...>)
+      {
+        auto res = vcsn::shuffle(as[I]->as<Auts>()...);
+        return make_automaton(res);
+      }
 
       /// Variadic bridge.
       template <typename... Auts>
@@ -622,19 +623,19 @@ namespace vcsn
   }
 
 
-  /*-------------------------------------.
-  | infiltration(automaton, automaton).  |
-  `-------------------------------------*/
+  /*-----------------------------.
+  | infiltration(automaton...).  |
+  `-----------------------------*/
 
-  /// Build the (accessible part of the) infiltration.
-  template <typename Lhs, typename Rhs>
+  /// The (accessible part of the) infiltration product.
+  template <typename... Auts>
   inline
   auto
-  infiltration(const Lhs& lhs, const Rhs& rhs)
-    -> product_automaton<decltype(join_automata(lhs, rhs)), Lhs, Rhs>
+  infiltration(const Auts&... as)
+    -> product_automaton<decltype(join_automata(as...)),
+                         Auts...>
   {
-    auto res = make_product_automaton(join_automata(lhs, rhs),
-                                      lhs, rhs);
+    auto res = make_product_automaton(join_automata(as...), as...);
     res->infiltration();
     return res;
   }
@@ -644,7 +645,7 @@ namespace vcsn
     namespace detail
     {
 
-      /// Bridge.
+      /// Binary bridge.
       template <typename Lhs, typename Rhs>
       automaton
       infiltration(const automaton& lhs, const automaton& rhs)
@@ -656,6 +657,28 @@ namespace vcsn
 
       REGISTER_DECLARE(infiltration,
                        (const automaton&, const automaton&) -> automaton);
+
+      /// Variadic bridge helper.
+      template <typename... Auts, size_t... I>
+      automaton
+      infiltration_(const std::vector<automaton>& as,
+               vcsn::detail::index_sequence<I...>)
+      {
+        auto res = vcsn::infiltration(as[I]->as<Auts>()...);
+        return make_automaton(res);
+      }
+
+      /// Variadic bridge.
+      template <typename... Auts>
+      automaton
+      infiltration_vector(const std::vector<automaton>& as)
+      {
+        auto indices = vcsn::detail::make_index_sequence<sizeof...(Auts)>{};
+        return infiltration_<Auts...>(as, indices);
+      }
+
+      REGISTER_DECLARE(infiltration_vector,
+                       (const std::vector<automaton>&) -> automaton);
     }
   }
 

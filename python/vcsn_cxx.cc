@@ -187,9 +187,9 @@ struct automaton
     return vcsn::dyn::has_twins_property(val_);
   }
 
-  automaton infiltration(const automaton& rhs) const
+  static automaton infiltration_(const boost::python::list& auts)
   {
-    return vcsn::dyn::infiltration(val_, rhs.val_);
+    return vcsn::dyn::infiltration(automata_(auts));
   }
 
   automaton insplit() const
@@ -908,7 +908,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("factor", &automaton::factor)
     .def("format", &automaton::format)
     .def("has_twins_property", &automaton::has_twins_property)
-    .def("infiltration", &automaton::infiltration)
+    .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
     .def("insplit", &automaton::insplit)
     .def("inverse", &automaton::inverse)
     .def("is_accessible", &automaton::is_accessible)

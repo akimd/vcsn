@@ -187,22 +187,22 @@ CHECK_EQ('<uxvy>ab + <uxvy+xuvy>aab + <uxvy+uxyv>abb + <uxvy+uxyv+xuvy+xuyv>aabb
     str(uavb.infiltration(xayb).enumerate(4)))
 
 
-## ------- ##
-## n-ary.  ##
-## ------- ##
+## --------------------------------------------- ##
+## n-ary: not yet implemented for infiltration.  ##
+## --------------------------------------------- ##
 
-ctx = vcsn.context('lal_char(x)_ratexpset<lal_char(abcd)_b>')
+ctx = vcsn.context('lal_char(x)_seriesset<lal_char(abcd)_b>')
 a = dict()
 for l in ['a', 'b', 'c', 'd']:
     a[l] = ctx.ratexp("<{}>x".format(l)).standard()
+
 CHECK_EQ('''<abcd>x
-<acdb+bcda+abdc+adbc+bdac+cdab+abcd+acbd+bcad+abcd+abcd+bacd+cabd+dabc>xx
-<adbc+adcb+bdac+bdca+cdab+cdba+acbd+acdb+bcad+bcda+abcd+abdc+abdc+acdb+abcd+abcd+acbd+adbc+badc+bcda+bacd+bacd+bcad+bdac+cadb+cbda+cabd+cabd+cbad+cdab+dacb+dbca+dabc+dabc+dbac+dcab>xxx
+<abcd+abdc+acbd+acdb+adbc+bacd+bcad+bcda+bdac+cabd+cdab+dabc>xx
+<abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab>xxx
 <abcd+abdc+acbd+acdb+adbc+adcb+bacd+badc+bcad+bcda+bdac+bdca+cabd+cadb+cbad+cbda+cdab+cdba+dabc+dacb+dbac+dbca+dcab+dcba>xxxx''',
-    a['a']
-    # FIXME: strip otherwise we get too long a file name.
-    .infiltration(a['b']).strip()
-    .infiltration(a['c']).strip()
-    .infiltration(a['d']).strip()
-    .enumerate(10)
-    .format('list'))
+         a['a']
+         .infiltration(a['b']).strip()
+         .infiltration(a['c']).strip()
+         .infiltration(a['d']).strip()
+         .enumerate(10)
+         .format('list'))

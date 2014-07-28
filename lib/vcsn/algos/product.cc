@@ -7,6 +7,10 @@ namespace vcsn
 
   namespace dyn
   {
+    /*----------.
+    | product.  |
+    `----------*/
+
     REGISTER_DEFINE(product);
     automaton
     product(const automaton& lhs, const automaton& rhs)
@@ -20,6 +24,10 @@ namespace vcsn
     {
       return detail::product_vector_registry().call_variadic(auts);
     }
+
+    /*----------.
+    | shuffle.  |
+    `----------*/
 
     REGISTER_DEFINE(shuffle);
     automaton
@@ -42,12 +50,27 @@ namespace vcsn
       return detail::shuffle_ratexp_registry().call(lhs, rhs);
     }
 
+    /*---------------.
+    | infiltration.  |
+    `---------------*/
+
     REGISTER_DEFINE(infiltration);
     automaton
     infiltration(const automaton& lhs, const automaton& rhs)
     {
       return detail::infiltration_registry().call(lhs, rhs);
     }
+
+    REGISTER_DEFINE(infiltration_vector);
+    automaton
+    infiltration(const std::vector<automaton>& auts)
+    {
+      return detail::infiltration_vector_registry().call_variadic(auts);
+    }
+
+    /*--------.
+    | power.  |
+    `--------*/
 
     REGISTER_DEFINE(power);
     automaton

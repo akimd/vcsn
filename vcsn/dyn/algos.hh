@@ -193,8 +193,12 @@ namespace vcsn
     rat::identities identities(const ratexp& exp);
 
     /// The infiltration of automata \a lhs and \a rhs.
-    /// Performs the union of the alphabets.
+    /// Performs the join of their types.
     automaton infiltration(const automaton& lhs, const automaton& rhs);
+
+    /// The infiltration product of automata.
+    /// Performs the join of their types.
+    automaton infiltration(const std::vector<automaton>& as);
 
     /// Output various facts about an automaton.
     /// \param aut  the automaton under study
@@ -530,7 +534,7 @@ namespace vcsn
     automaton u(const context& ctx, unsigned n);
 
     /// Union of two automata (plain graph union).
-    /// Performs the union of the contexts.
+    /// Performs the join of the contexts.
     automaton union_a(const automaton& lhs, const automaton& rhs);
 
     /// The universal automaton of \a aut.

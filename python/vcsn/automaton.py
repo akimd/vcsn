@@ -176,6 +176,8 @@ automaton.fstdeterminize = lambda self: _automaton_fst("fstdeterminize", self)
 automaton.fstintersect = lambda a, b: _automaton_fst_files("fstintersect", a, b)
 automaton.fstminimize = lambda self: _automaton_fst("fstminimize", self)
 
+automaton.infiltration = lambda *auts: automaton._infiltration(list(auts))
+
 automaton.info = lambda self, detailed = False: \
   _info_to_dict(self.format('info,detailed' if detailed else 'info'))
 
