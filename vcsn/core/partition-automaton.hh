@@ -9,9 +9,13 @@
 
 namespace vcsn
 {
-
   namespace detail
   {
+
+    /// An automaton wrapper whose states form a partition of the
+    /// state set of another automaton.
+    ///
+    /// \tparam Aut the type of the wrapped input automaton.
     template <typename Aut>
     class partition_automaton_impl
       : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
@@ -30,14 +34,15 @@ namespace vcsn
       // like vcsn::state_t.
       using state_t = state_t_of<automaton_t>;
 
-      /// A set of the original automaton states.
-      using state_set_t = std::set<state_t>;
+      /// The state names: a set of the original automaton states.
+      using state_name_t = std::set<state_t>;
 
     private:
       /// A map from each state to the origin state set it stands for.
-      using origins_t = std::map<state_t, state_set_t>;
+      using origins_t = std::map<state_t, state_name_t>;
       origins_t origins_;
 
+      /// The input automaton.
       const automaton_t input_;
 
     public:
@@ -54,6 +59,7 @@ namespace vcsn
         return "partition_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
+      /// Dynamic name.
       std::string vname(bool full = true) const
       {
         return "partition_automaton<" + input_->vname(full) + ">";
@@ -83,11 +89,13 @@ namespace vcsn
         return o << "}";
       }
 
+      using super_t::new_state;
+
       /// Make a new state representing the given input state set,
       /// which is required to be new -- no error-checking on this.
       /// FIXME: shall I keep a reverse-origin for that?
       state_t
-      new_state(const state_set_t& set)
+      new_state(const state_name_t& set)
       {
         state_t res = new_state();
         origins_[res] = set;
@@ -97,21 +105,15 @@ namespace vcsn
       state_t
       new_state(const std::vector<state_t>& v)
       {
-        state_set_t set;
+        state_name_t set;
         for (auto s: v)
           set.emplace(s);
         return new_state(std::move(set));
       }
-
-      state_t
-      new_state()
-      {
-        return super_t::new_state();
-      }
     }; // class
   } // namespace detail
 
-  /// A subset automaton as a shared pointer.
+  /// A partition automaton as a shared pointer.
   template <typename Aut>
   using partition_automaton
     = std::shared_ptr<detail::partition_automaton_impl<Aut>>;

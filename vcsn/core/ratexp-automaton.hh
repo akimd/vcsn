@@ -25,10 +25,6 @@
 
 namespace vcsn
 {
-  /*-------------------.
-  | ratexp_automaton.  |
-  `-------------------*/
-
   namespace detail
   {
     /// An incremental automaton whose states are ratexps.
@@ -50,11 +46,13 @@ namespace vcsn
         , rs_(ctx, rat::identities::trivial)
       {}
 
+      /// Static name.
       static std::string sname()
       {
         return "ratexp_automaton<" + super_t::sname() + ">";
       }
 
+      /// Dynamic name.
       std::string vname(bool full = true) const
       {
         return "ratexp_automaton<" + super_t::vname(full) + ">";

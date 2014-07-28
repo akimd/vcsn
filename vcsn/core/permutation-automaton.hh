@@ -9,9 +9,11 @@
 
 namespace vcsn
 {
-
   namespace detail
   {
+    /// An automaton isomorphic to another one.
+    ///
+    /// \tparam Aut the type of the wrapped input automaton.
     template <typename Aut>
     class permutation_automaton_impl
       : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
@@ -23,8 +25,8 @@ namespace vcsn
       using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
-      /// Input automaton state type.
-      using input_state_t = state_t_of<automaton_t>;
+      /// Symbolic state name: input automaton state type.
+      using state_name_t = state_t_of<automaton_t>;
       /// Sorted automaton state type.
       using state_t = state_t_of<automaton_nocv_t>;
 
@@ -38,11 +40,13 @@ namespace vcsn
         todo_.push({input_->pre(), super_t::pre()});
       }
 
+      /// Static name.
       static std::string sname()
       {
         return "permutation_automaton<" + automaton_t::element_type::sname() + ">";
       }
 
+      /// Dynamic name.
       std::string vname(bool full = true) const
       {
         return "permutation_automaton<" + input_->vname(full) + ">";
@@ -61,7 +65,7 @@ namespace vcsn
       }
 
       state_t
-      state(input_state_t s)
+      state(state_name_t s)
       {
         // Benches show that the map_.emplace technique is slower, and
         // then that operator[] is faster than emplace.
@@ -79,7 +83,7 @@ namespace vcsn
       }
 
       /// A map from each state to the origin state set it stands for.
-      using origins_t = std::map<state_t, input_state_t>;
+      using origins_t = std::map<state_t, state_name_t>;
 
       /// Ordered map: state -> its derived term.
       const origins_t&
@@ -91,11 +95,11 @@ namespace vcsn
         return origins_;
       }
 
-      using pair_t = std::pair<input_state_t, state_t>;
+      using pair_t = std::pair<state_name_t, state_t>;
       std::queue<pair_t> todo_;
 
       /// Input-state -> sorted-state.
-      std::unordered_map<input_state_t, state_t> map_;
+      std::unordered_map<state_name_t, state_t> map_;
 
       mutable origins_t origins_;
 

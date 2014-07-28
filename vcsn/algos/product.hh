@@ -55,7 +55,7 @@ namespace vcsn
       using super_t = tuple_automaton_impl<automaton_t, Auts...>;
 
     public:
-      using typename super_t::pair_t;
+      using typename super_t::state_name_t;
       using typename super_t::state_t;
       template <size_t... I>
       using seq = typename super_t::template seq<I...>;
@@ -115,7 +115,7 @@ namespace vcsn
 
         while (!todo_.empty())
           {
-            pair_t psrc = todo_.front();
+            state_name_t psrc = todo_.front();
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
@@ -130,7 +130,7 @@ namespace vcsn
 
         while (!todo_.empty())
           {
-            pair_t psrc = todo_.front();
+            state_name_t psrc = todo_.front();
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
@@ -148,7 +148,7 @@ namespace vcsn
 
         while (!todo_.empty())
           {
-            pair_t psrc = todo_.front();
+            state_name_t psrc = todo_.front();
             todo_.pop_front();
             state_t src = pmap_[psrc];
 
@@ -181,14 +181,14 @@ namespace vcsn
 
       /// The outgoing tuple of transitions from state tuple \a ss.
       std::tuple<typename transition_map_t<Auts>::map_t&...>
-      out_(const pair_t& ss)
+      out_(const state_name_t& ss)
       {
         return out_(ss, indices);
       }
 
       template <size_t... I>
       std::tuple<typename transition_map_t<Auts>::map_t&...>
-      out_(const pair_t& ss, seq<I...>)
+      out_(const state_name_t& ss, seq<I...>)
       {
         return std::tie(std::get<I>(transition_maps_)[std::get<I>(ss)]...);
       }
@@ -198,7 +198,7 @@ namespace vcsn
       /// given pair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
       void add_product_transitions(const state_t src,
-                                   const pair_t& psrc)
+                                   const state_name_t& psrc)
       {
         for (auto t: zip_map_tuple(out_(psrc)))
           // These are always new transitions: first because the
@@ -220,7 +220,7 @@ namespace vcsn
       /// (i.e. only for the labelsets that have epsilons).
       template <std::size_t... I>
       void
-      add_one_transitions_(const state_t src, const pair_t& psrc, seq<I...>)
+      add_one_transitions_(const state_t src, const state_name_t& psrc, seq<I...>)
       {
         using swallow = int[];
         (void) swallow
@@ -233,7 +233,7 @@ namespace vcsn
       /// In the case where the labelset doesn't have epsilon, do nothing
       template <std::size_t I, typename L>
       typename std::enable_if<!L::has_one(), void>::type
-      maybe_add_one_transitions_(const L&, const state_t, const pair_t&)
+      maybe_add_one_transitions_(const L&, const state_t, const state_name_t&)
       {}
 
       /// If the labelset has epsilon, add the relevant epsilon-transitions
@@ -241,7 +241,7 @@ namespace vcsn
       template <std::size_t I, typename L>
       typename std::enable_if<L::has_one(), void>::type
       maybe_add_one_transitions_(const L& ls, const state_t src,
-                                 const pair_t& psrc)
+                                 const state_name_t& psrc)
       {
         add_one_transitions_<I>(src, psrc,
                                 std::get<I>(transition_maps_)
@@ -254,7 +254,7 @@ namespace vcsn
       /// the Ith tape.
       template <std::size_t I>
       void
-      add_one_transitions_(const state_t src, const pair_t& psrc,
+      add_one_transitions_(const state_t src, const state_name_t& psrc,
                            const typename
                            transition_map_t<input_automaton_t<I>>::transitions_t&
                            epsilon_out)
@@ -273,7 +273,7 @@ namespace vcsn
       /// Check if all the tapes after the Ith have only incoming epsilon
       /// transitions.
       template <std::size_t... I>
-      bool has_epsilon_in(const pair_t& psrc, std::size_t i, seq<I...>) const
+      bool has_epsilon_in(const state_name_t& psrc, std::size_t i, seq<I...>) const
       {
         bool has_ones[] = { has_only_ones_in(std::get<I>(auts_),
                                              std::get<I>(psrc))... };
@@ -286,7 +286,7 @@ namespace vcsn
       /// Check if all the tapes before the Ith have only outgoing epsilon
       /// transitions.
       template <std::size_t... I>
-      bool has_only_epsilon_out(const pair_t& psrc, std::size_t i, seq<I...>)
+      bool has_only_epsilon_out(const state_name_t& psrc, std::size_t i, seq<I...>)
       {
         bool has_ones[] = { has_only_ones_out(I, std::get<I>(auts_),
                                               std::get<I>(psrc))... };
@@ -363,7 +363,7 @@ namespace vcsn
       /// given tuple of input state automata.  Update the worklist
       /// with the needed source-state pairs.
       void add_shuffle_transitions(const state_t src,
-                                   const pair_t& psrc)
+                                   const state_name_t& psrc)
       {
         weight_t final = add_shuffle_transitions_(src, psrc, indices);
         aut_->set_final(src, final);
@@ -375,7 +375,7 @@ namespace vcsn
       /// Return the product of the final states.
       template <size_t... I>
       weight_t add_shuffle_transitions_(const state_t src,
-                                        const pair_t& psrc,
+                                        const state_name_t& psrc,
                                         seq<I...>)
       {
         weight_t res = aut_->weightset()->one();
@@ -397,7 +397,7 @@ namespace vcsn
       template <size_t I>
       weight_t
       add_shuffle_transitions_(const state_t src,
-                               const pair_t& psrc)
+                               const state_name_t& psrc)
       {
         // Whether is a final state.
         weight_t res = aut_->weightset()->zero();

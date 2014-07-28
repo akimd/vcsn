@@ -67,6 +67,7 @@ namespace vcsn
       using input_automaton_t
         = base_t<typename std::tuple_element<I, automata_t>::type>;
 
+      /// The result automaton.
       using super_t::aut_;
 
       tuple_automaton_impl(const automaton_t& aut, const Auts&... auts)
@@ -93,11 +94,11 @@ namespace vcsn
 
       /// Result state type.
       using state_t = state_t_of<automaton_t>;
-      /// Tuple of states of input automata.
-      using pair_t = std::tuple<state_t_of<Auts>...>;
+      /// State names: Tuple of states of input automata.
+      using state_name_t = std::tuple<state_t_of<Auts>...>;
 
       /// A map from result state to tuple of original states.
-      using origins_t = std::map<state_t, pair_t>;
+      using origins_t = std::map<state_t, state_name_t>;
 
       /// A map from result state to tuple of original states.
       const origins_t& origins() const
@@ -152,31 +153,31 @@ namespace vcsn
       }
 
       /// The name of the pre of the output automaton.
-      pair_t pre_() const
+      state_name_t pre_() const
       {
         return pre_(indices);
       }
 
       template <size_t... I>
-      pair_t pre_(seq<I...>) const
+      state_name_t pre_(seq<I...>) const
       {
         // clang 3.4 on top of libstdc++ wants this ctor to be
         // explicitly called.
-        return pair_t{(std::get<I>(auts_)->pre())...};
+        return state_name_t{(std::get<I>(auts_)->pre())...};
       }
 
       /// The name of the post of the output automaton.
-      pair_t post_() const
+      state_name_t post_() const
       {
         return post_(indices);
       }
 
       template <size_t... I>
-      pair_t post_(seq<I...>) const
+      state_name_t post_(seq<I...>) const
       {
         // clang 3.4 on top of libstdc++ wants this ctor to be
         // explicitly called.
-        return pair_t{(std::get<I>(auts_)->post())...};
+        return state_name_t{(std::get<I>(auts_)->post())...};
       }
 
       /// The state in the product corresponding to a pair of states
@@ -185,7 +186,7 @@ namespace vcsn
       /// Add the given two source-automaton states to the worklist
       /// for the given result automaton if they aren't already there,
       /// updating the map; in any case return.
-      state_t state(pair_t state)
+      state_t state(state_name_t state)
       {
         auto lb = pmap_.lower_bound(state);
         if (lb == pmap_.end() || pmap_.key_comp()(state, lb->first))
@@ -230,11 +231,11 @@ namespace vcsn
       automata_t auts_;
 
       /// Map state-tuple -> result-state.
-      using map = std::map<pair_t, state_t>;
+      using map = std::map<state_name_t, state_t>;
       map pmap_;
 
       /// Worklist of state tuples.
-      std::deque<pair_t> todo_;
+      std::deque<state_name_t> todo_;
 
       mutable origins_t origins_;
     };

@@ -72,7 +72,7 @@ namespace vcsn
       /// Result state type.
       using state_t = state_t_of<automaton_t>;
       /// Tuple of states of input automata.
-      using pair_t = typename automaton_t::element_type::pair_t;
+      using state_name_t = typename automaton_t::element_type::state_name_t;
 
       composer(const Lhs& lhs, const Rhs& rhs)
         : res_(make_shared_ptr<automaton_t>(make_mutable_automaton(make_context_(lhs, rhs)),
@@ -111,7 +111,7 @@ namespace vcsn
 
         while (!res_->todo_.empty())
           {
-            pair_t psrc = res_->todo_.front();
+            state_name_t psrc = res_->todo_.front();
             res_->todo_.pop_front();
             state_t src = res_->pmap_[psrc];
 
@@ -158,7 +158,7 @@ namespace vcsn
       /// the needed source-state pairs.
       void add_compose_transitions(const weightset_t& ws,
                                    const state_t src,
-                                   const pair_t& psrc)
+                                   const state_name_t& psrc)
       {
         // This relies on outgoing transitions being sorted by label
         // by the sort algorithm: thanks to that property we can scan
