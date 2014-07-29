@@ -10,6 +10,7 @@
 
 namespace vcsn LIBVCSN_API
 {
+  /// Signature of a function call.
   struct signature
   {
     using sig_t = std::vector<std::string>;

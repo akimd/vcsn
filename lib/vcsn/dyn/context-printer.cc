@@ -73,6 +73,18 @@ namespace vcsn
       headers_.insert(h);
     }
 
+    void context_printer::linkflags(const std::string& flags)
+    {
+      // We rely on this initial space when not empty.
+      linkflags_ += ' ';
+      linkflags_ += flags;
+    }
+
+    const std::string& context_printer::linkflags() const
+    {
+      return linkflags_;
+    }
+
     std::ostream& context_printer::print(std::ostream& o)
     {
       //o << "// " << is.str() << "\n";
@@ -194,6 +206,8 @@ namespace vcsn
     DEFINE(weightset)
     {
       header("vcsn/weightset/" + t.get_type() + ".hh");
+      if (t.get_type() == "qmp")
+        linkflags("-lgmp -lgmpxx");
       os_ << "vcsn::" << t.get_type();
     }
 

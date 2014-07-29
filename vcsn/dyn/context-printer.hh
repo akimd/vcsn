@@ -23,6 +23,12 @@ namespace vcsn
       /// Record that we need an include for this algorithm.
       void header_algo(const std::string& algo);
 
+      /// Record that we need these linker flags.
+      void linkflags(const std::string& h);
+
+      /// Get the link flags.
+      const std::string& linkflags() const;
+
       /// Generate the code to compile on \a o.
       std::ostream& print(std::ostream& o);
 
@@ -78,6 +84,9 @@ namespace vcsn
       /// So we use a second set for "late" headers.
       std::set<std::string> headers_;
       std::set<std::string> headers_late_;
+
+      /// Flags to pass to the linker.
+      std::string linkflags_;
     };
   }
 }

@@ -215,6 +215,7 @@ nobase_include_HEADERS =                        \
   %D%/weightset/fwd.hh                          \
   %D%/weightset/polynomialset.hh                \
   %D%/weightset/q.hh                            \
+  %D%/weightset/qmp.hh                          \
   %D%/weightset/r.hh                            \
   %D%/weightset/weightset.hh                    \
   %D%/weightset/z.hh                            \

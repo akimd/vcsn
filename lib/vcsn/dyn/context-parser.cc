@@ -62,6 +62,7 @@ namespace vcsn
       else if (w == "b"
                || w == "f2"
                || w == "q"
+               || w == "qmp"
                || w == "r"
                || w == "z"
                || w == "zmin")
@@ -110,6 +111,7 @@ namespace vcsn
       else if (w == "b"
                || w == "f2"
                || w == "q"
+               || w == "qmp"
                || w == "r"
                || w == "z"
                || w == "zmin")
@@ -222,7 +224,7 @@ namespace vcsn
     std::shared_ptr<ast_node>
     context_parser::weightset_(const std::string& ws)
     {
-      if (ws == "b" || ws == "f2"  || ws == "q"
+      if (ws == "b" || ws == "f2" || ws == "q" || ws == "qmp"
           || ws == "r" || ws == "z" || ws == "zmin")
         return std::make_shared<weightset>(ws);
       else if (ws == "ratexpset")

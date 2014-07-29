@@ -229,7 +229,7 @@ namespace vcsn
               " -o '" + tmp + ".o'", tmp);
           auto ldflags = xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS);
           cxx("-fPIC " + ldflags + " -lvcsn '" + tmp + ".o' -shared"
-              " -o '" + tmp + ".so'", tmp);
+              " -o '" + tmp + ".so'" + printer_.linkflags(), tmp);
           boost::filesystem::rename(tmp + ".so", base + ".so");
           static bool first = true;
           if (first)

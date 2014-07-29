@@ -14,6 +14,9 @@ namespace vcsn
     // q.hh.
     class q_impl;
 
+    // qmp.hh.
+    class qmp_impl;
+
     // r.hh.
     class r_impl;
 
@@ -35,6 +38,7 @@ namespace vcsn
   using b    = variadic_mul_mixin<detail::b_impl>;
   using f2   = variadic_mul_mixin<detail::f2_impl>;
   using q    = variadic_mul_mixin<detail::q_impl>;
+  using qmp  = variadic_mul_mixin<detail::qmp_impl>;
   using r    = variadic_mul_mixin<detail::r_impl>;
   using z    = variadic_mul_mixin<detail::z_impl>;
   using zmin = variadic_mul_mixin<detail::zmin_impl>;
