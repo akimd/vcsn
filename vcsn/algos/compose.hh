@@ -28,9 +28,9 @@ namespace vcsn
     class composer
     {
       static_assert(Lhs::element_type::full_context_t::is_lat,
-                    "requires labels_are_tuples");
+                    "compose: lhs labelset must be a tupleset");
       static_assert(Rhs::element_type::full_context_t::is_lat,
-                    "requires labels_are_tuples");
+                    "compose: rhs labelset must be a tupleset");
 
       /// A static list of integers.
       template <std::size_t... I>
@@ -48,7 +48,7 @@ namespace vcsn
 
       static_assert(std::is_same<labelset_t_of<clhs_t>,
                                  labelset_t_of<crhs_t>>::value,
-                    "common tape must be of same type");
+                    "compose: common tape must be of same type");
 
       using middle_labelset_t = labelset_t_of<clhs_t>;
       /// The type of context of the result.

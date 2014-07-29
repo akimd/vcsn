@@ -48,7 +48,7 @@ namespace vcsn
       : public tuple_automaton_impl<Aut, Auts...>
     {
       static_assert(all_<labelset_t_of<Auts>::is_letterized()...>(),
-                    "requires letterized labels");
+                    "product: requires letterized labels");
 
       /// The type of the resulting automaton.
       using automaton_t = Aut;

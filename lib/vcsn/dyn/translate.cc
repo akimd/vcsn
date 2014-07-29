@@ -147,7 +147,10 @@ namespace vcsn
         void cxx(std::string cmd, const std::string& tmp)
         {
           auto err =  tmp + ".err";
-          cmd = xgetenv("VCSN_CXX", VCSN_CXX)
+          // We try to read the error message via a regexp below.  So
+          // avoid translation (we did "erreur" instead of "error").
+          cmd = "LC_ALL=C "
+            + xgetenv("VCSN_CXX", VCSN_CXX)
             + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
             + " " + cmd;
 

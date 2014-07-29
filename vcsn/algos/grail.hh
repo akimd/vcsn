@@ -164,9 +164,9 @@ namespace vcsn
     class fadoer: public outputter<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
-                    "requires labels_are_(letters|nullable)");
+                    "fado: requires letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "requires Boolean weights");
+                    "fado: requires Boolean weights");
 
       using super_type = outputter<Aut>;
 
@@ -264,9 +264,9 @@ namespace vcsn
     class grailer: public outputter<Aut>
     {
       static_assert(context_t_of<Aut>::is_lal || context_t_of<Aut>::is_lan,
-                    "requires labels_are_(letters|nullable)");
+                    "grail: requires letter or nullable labels");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "requires Boolean weights");
+                    "grail:requires Boolean weights");
 
       using super_type = outputter<Aut>;
 

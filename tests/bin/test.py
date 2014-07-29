@@ -107,11 +107,16 @@ def PASS(*msg, **kwargs):
 def SKIP(*msg):
     PASS('SKIP', *msg)
 
-def XFAIL(fun):
+def XFAIL(fun, exp = None):
     try:
         fun()
-    except RuntimeError:
-        PASS()
+    except RuntimeError as e:
+        if exp is None or exp in str(e):
+            PASS()
+        else:
+            FAIL('does not include the expected error message')
+            rst_file("Expected error", exp)
+            rst_file("Effective error", str(e))
     else:
         FAIL('did not raise an exception', str(fun))
 

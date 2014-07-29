@@ -15,7 +15,7 @@ namespace vcsn
   bool is_complete(const Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
-                  "requires free labelset");
+                  "is_complete: requires free labelset");
 
     if (aut->num_initials() == 0)
       return false;

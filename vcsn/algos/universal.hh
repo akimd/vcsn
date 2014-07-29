@@ -18,9 +18,9 @@ namespace vcsn
     {
     public:
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "requires free labelset");
+                    "universal: requires free labelset");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "requires Boolean weights");
+                    "universal: requires Boolean weights");
 
       using automaton_t = Aut;
       using state_t = state_t_of<automaton_t>;

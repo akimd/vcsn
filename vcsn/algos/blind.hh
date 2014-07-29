@@ -53,9 +53,10 @@ namespace vcsn
       /// The type of the wrapped automaton.
       using automaton_t = Aut;
 
-      static_assert(context_t_of<Aut>::is_lat, "requires labels_are_tuples");
+      static_assert(context_t_of<Aut>::is_lat,
+                    "blind: requires labels_are_tuples");
       static_assert(Tape < labelset_t_of<Aut>::size(),
-                    "tape outside of the tuple");
+                    "blind: invalid tape number");
 
       /// The type of automata to produce this kind of automata.  For
       /// instance, insplitting on a blind_automaton<const

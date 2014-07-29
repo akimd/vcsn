@@ -25,7 +25,7 @@ namespace vcsn
     class minimizer
     {
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "requires Boolean weights");
+                    "minimize: signature: requires Boolean weights");
 
       using automaton_t = Aut;
 

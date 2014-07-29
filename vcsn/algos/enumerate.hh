@@ -32,7 +32,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<Aut>;
       static_assert(context_t::labelset_t::is_free(),
-                    "requires free labelset");
+                    "enumerate: requires free labelset");
 
       using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;

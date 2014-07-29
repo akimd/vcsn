@@ -69,9 +69,6 @@ namespace vcsn
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_one>
     {
-      static_assert(context_t_of<Aut>::is_lao,
-                    "requires labels_are_one");
-
       using automaton_t = typename std::remove_cv<Aut>::type;
       using state_t = state_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
@@ -130,8 +127,6 @@ namespace vcsn
     template <typename Aut>
     struct state_eliminator<Aut, labels_are_ratexps>
     {
-      static_assert(context_t_of<Aut>::is_lar,
-                    "requires labels_are_ratexps");
       // FIXME: ratexpset<lal_char(a-c)_z>_q for instance cannot work,
       // because we need to move the q weights inside the
       // lal_char(a-c)_z ratexps, which obviously not possible.  So we

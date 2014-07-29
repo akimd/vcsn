@@ -13,9 +13,11 @@ def check(re, exp):
     CHECK_EQ(exp, a)
     CHECK_EQ(True, a.is_normalized())
 
-def xfail(re):
+def xfail(re, err = None):
     r = ctx.ratexp(re)
-    XFAIL(lambda: r.thompson())
+    XFAIL(lambda: r.thompson(), err)
+
+xfail('(?@lal_char(abc)_b)a', 'requires nullable labels')
 
 # We don't support conjunction.
 xfail('a*&b*')

@@ -21,9 +21,9 @@ namespace vcsn
   complement_here(Aut& aut)
   {
     static_assert(labelset_t_of<Aut>::is_free(),
-                  "requires free labelset");
+                  "complement: requires free labelset");
     static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                  "requires Boolean weights");
+                  "complement: requires Boolean weights");
 
     using automaton_t = Aut;
 
