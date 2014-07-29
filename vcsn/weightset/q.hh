@@ -69,6 +69,7 @@ namespace vcsn
     ATTRIBUTE_PURE
     static unsigned int gcd(unsigned int a, unsigned int b)
     {
+      require(!is_zero(b), "gcd: rhs cannot be zero");
       while (b)
       {
         unsigned int t = a;
