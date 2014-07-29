@@ -69,9 +69,12 @@ namespace vcsn
                         "compilation succeeded, but function is unavailable");
                 return *fun;
               }
-            catch (const std::runtime_error& e)
+            catch (const jit_error& e)
               {
-                std::string err = name_ + ": no such implementation\n";
+                std::string err
+                  = e.assertions.empty()
+                  ? name_ + ": no such implementation\n"
+                  : e.assertions;
                 err += "  failed signature:\n";
                   err += "    " + sig.to_string() + "\n";
                 err += "  available versions:\n";

@@ -76,7 +76,10 @@ The print functions take the printee first, then the stream.
 Force ratexpset to build AST variadic nodes with only two children.
 
 ** VCSN_DEBUG
-Improve the display with debugging information.
+Don't remove temporary files (which is especially useful to keep debug
+symbols in plugins).
+
+Augment output with debugging information.
 *** dot
 display in parens the real state numbers.
 *** is_ambigious

@@ -19,6 +19,7 @@
 #include <vcsn/misc/escape.hh>
 #include <vcsn/misc/indent.hh>
 #include <vcsn/misc/raise.hh>
+#include <vcsn/misc/regex.hh>
 #include <vcsn/misc/signature.hh>
 #include <vcsn/misc/stream.hh>
 
@@ -26,6 +27,12 @@ namespace vcsn
 {
   namespace dyn
   {
+
+    jit_error::jit_error(const std::string& a, const std::string& what)
+      : std::runtime_error(what)
+      , assertions(a)
+    {}
+
     namespace
     {
       /// \a getenv(var) if defined, otherwise \a val.
@@ -134,18 +141,48 @@ namespace vcsn
         }
 
         /// Run C++ compiler with arguments \a s.
-        void cxx(std::string s)
+        ///
+        /// \param cmd  the compiler arguments
+        /// \param tmp  the base name for temporary files
+        void cxx(std::string cmd, const std::string& tmp)
         {
-          // Break the compilation/linking in two steps, in case we
-          // are using ccache, which does not handle
-          // compilation-and-linking in a single run.
-          s = xgetenv("VCSN_CXX", VCSN_CXX)
+          auto err =  tmp + ".err";
+          cmd = xgetenv("VCSN_CXX", VCSN_CXX)
             + " " + xgetenv("VCSN_CXXFLAGS", VCSN_CXXFLAGS)
-            + " " + s;
+            + " " + cmd;
+
           if (getenv("VCSN_DEBUG"))
-            std::cerr << "run: " << s << std::endl;
-          if (system(s.c_str()))
-            raise("cannot run: ", s);
+            std::cerr << "run: " << cmd << std::endl;
+          std::string assertions;
+          if (system((cmd + + " 2>'" + err + "'").c_str()))
+            {
+              // Try to find assertion failures in the error log.
+              //
+              // $ g++-mp-4.9 -std=c++11 main.cc
+              // main.cc: In function 'int main()':
+              // main.cc:3:3: error: static assertion failed: foo
+              //    static_assert(0, "foo");
+              //    ^
+              // $ clang++-mp-3.5 -std=c++11 main.cc
+              // main.cc:3:3: error: static_assert failed "foo"
+              //   static_assert(0, "foo");
+              //   ^             ~
+              // 1 error generated.
+              auto is = open_input_file(err);
+              static std::regex r1("error: static assertion failed: (.*)$",
+                                   std::regex::extended);
+              static std::regex r2("error: static_assert failed \"(.*)\"$",
+                                   std::regex::extended);
+              std::string line;
+              std::smatch smatch;
+              while (std::getline(*is, line))
+                {
+                  if (std::regex_search(line, smatch, r1)
+                      || std::regex_search(line, smatch, r2))
+                    assertions += std::string(smatch[1]) + "\n";
+                }
+              throw jit_error(assertions, "  failed command:\n    " + cmd);
+            }
         }
 
         /// Where the runtime compilation files must be put.
@@ -176,16 +213,20 @@ namespace vcsn
         ///
         /// Avoid locks, but avoid races by using temporary files, and
         /// using rename, which is atomic.
+        ///
+        /// Break the compilation/linking in two steps, in case we
+        /// are using ccache, which does not handle
+        /// compilation-and-linking in a single run.
         void jit(const std::string& base)
         {
-          /// Use a temporary base name for object file.
+          // Use a temporary base name for object file.
           std::string tmp = tmpname(base);
           auto cppflags = xgetenv("VCSN_CPPFLAGS", VCSN_CPPFLAGS);
           cxx("-fPIC " + cppflags + " '" + base + ".cc' -c"
-              " -o '" + tmp + ".o'");
+              " -o '" + tmp + ".o'", tmp);
           auto ldflags = xgetenv("VCSN_LDFLAGS", VCSN_LDFLAGS);
           cxx("-fPIC " + ldflags + " -lvcsn '" + tmp + ".o' -shared"
-              " -o '" + tmp + ".so'");
+              " -o '" + tmp + ".so'", tmp);
           boost::filesystem::rename(tmp + ".so", base + ".so");
           static bool first = true;
           if (first)
@@ -196,9 +237,14 @@ namespace vcsn
           lt_dlhandle lib = lt_dlopen((base + ".so").c_str());
           require(lib, "cannot load lib: ", base, ".so: ", lt_dlerror());
           // Upon success, remove the .o file, it useless and large
-          // (10x compared to the *.so on erebus using clang).  Keep
-          // the .cc file for inspection.
-          boost::filesystem::remove(tmp + ".o");
+          // (10x compared to the *.so on erebus using clang).  Note
+          // that the debug symbols are in there, so when debugging,
+          // leave them!
+          if (!getenv("VCSN_DEBUG"))
+            {
+              boost::filesystem::remove(tmp + ".cc");
+              boost::filesystem::remove(tmp + ".o");
+            }
         }
 
         /// Compile, and load, a DSO with instantiations for \a ctx.
