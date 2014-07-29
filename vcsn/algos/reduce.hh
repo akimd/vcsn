@@ -357,7 +357,7 @@ namespace vcsn
       }
 
       /*
-        gcd= a.vbasis[pivot] + b.current[pivot]
+        gcd = a.vbasis[pivot] + b.current[pivot]
         current[pivot] is made zero with a unimodular linear transformation
         This also modifies the basis vector
         [ vbasis  ] := [        a                      b       ] . [ vbasis   ]
@@ -441,7 +441,7 @@ namespace vcsn
         for (unsigned i = b+1; i < dimension; ++i)
           current[permutation[i]]
             = ws_.sub(current[permutation[i]],
-                             ws_.mul(ratio, vbasis[permutation[i]]));
+                      ws_.mul(ratio, vbasis[permutation[i]]));
         return ratio;
       }
 
