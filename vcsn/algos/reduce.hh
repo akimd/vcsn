@@ -186,8 +186,8 @@ namespace vcsn
       }
     };
 
-    template <typename Aut, typename AutOutput>
-    class reductioner
+    template <typename Aut>
+    class left_reductioner
     {
       static_assert(context_t_of<Aut>::is_lal,
                     "reduce: requires free labelset");
@@ -195,7 +195,7 @@ namespace vcsn
       using automaton_t = Aut;
       using context_t = context_t_of<automaton_t>;
       using weightset_t = typename context_t::weightset_t;
-      using output_automaton_t = AutOutput;
+      using output_automaton_t = typename automaton_t::element_type::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using output_state_t = state_t_of<output_automaton_t>;
@@ -205,7 +205,7 @@ namespace vcsn
       using matrix_set_t = std::map<label_t, matrix_t>;
 
     public:
-      reductioner(const automaton_t& input)
+      left_reductioner(const automaton_t& input)
         : input_(input)
         , res_(make_shared_ptr<output_automaton_t>(input_->context()))
       {}
@@ -483,7 +483,7 @@ namespace vcsn
           An automaton where states correspond to the vectors of this basis is built
        */
     public:
-      void left_reduce()
+      output_automaton_t operator()()
       {
         // Used to select the proper overload depending on weightset_t.
         using type_t = select<weightset_t>;
@@ -503,7 +503,7 @@ namespace vcsn
         // A non zero entry is chosen as pivot
         unsigned pivot = type_t::find_pivot(this, init, 0, permutation);
         if (pivot == dimension) //all components of init are 0
-          return;
+          return res_;
         // The pivot of the first basis vector is permutation[0];
         permutation[0] = pivot;
         permutation[pivot] = 0;
@@ -574,11 +574,6 @@ namespace vcsn
                                        mu.first, vect_new_basis[b]);
               }
         }
-      }
-
-
-      output_automaton_t get_output() const
-      {
         return res_;
       }
 
@@ -593,21 +588,26 @@ namespace vcsn
       vector_t init;
       vector_t final;
       matrix_set_t letter_matrix_set;
-
     };
 
   }
 
   template<typename Aut>
-  Aut reduce(const Aut& input)
+  auto
+  left_reduce(const Aut& input)
+    -> decltype(copy(input))
   {
-    auto tmp = transpose(input);
-    detail::reductioner<decltype(tmp), Aut> algo(tmp);
-    algo.left_reduce();
-    auto tmp2 = transpose(algo.get_output());
-    detail::reductioner<decltype(tmp), Aut> algo2(tmp2);
-    algo2.left_reduce();
-    return copy(algo2.get_output());
+    detail::left_reductioner<Aut> left_reduce(input);
+    return left_reduce();
+  }
+
+
+  template<typename Aut>
+  auto
+  reduce(const Aut& input)
+    -> decltype(copy(input))
+  {
+    return left_reduce(transpose(left_reduce(transpose(input))));
   }
 
   namespace dyn

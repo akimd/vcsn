@@ -145,3 +145,9 @@ check_reduce(a, '''digraph
   2 -> 1 [label = "<-8>b"]
   2 -> 2 [label = "<2>a, <-2>b"]
 }''')
+
+
+# Make sure decorated automata work properly.
+q = vcsn.context('lal_char(abc)_q')
+r = q.ratexp('<2>aa+<3>ab')
+CHECK_EQ('<2>a(a+<3/2>b)', r.derived_term().reduce().ratexp())
