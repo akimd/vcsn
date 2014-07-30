@@ -130,13 +130,13 @@ result = '''digraph
 }'''
 CHECK_EQ(result, a.sum(b))
 
-# Check union of contexts.
+# Check join of contexts.
 a = vcsn.context('lal_char(a)_ratexpset<lal_char(x)_b>').ratexp('<x>a*').standard()
-b = vcsn.context('lal_char(b)_ratexpset<lal_char(y)_b>').ratexp('<y>b*').standard()
+b = vcsn.context('lal_char(b)_q').ratexp('<1/2>b*').standard()
 
-result = '''digraph
+result = r'''digraph
 {
-  vcsn_context = "lal_char(ab)_ratexpset<lal_char(xy)_b>"
+  vcsn_context = "lal_char(ab)_ratexpset<lal_char(x)_q>"
   rankdir = LR
   edge [arrowhead = vee, arrowsize = .6]
   {
@@ -153,9 +153,9 @@ result = '''digraph
     2
   }
   I0 -> 0
-  0 -> F0 [label = "<x+y>"]
+  0 -> F0 [label = "<x+<1/2>\\e>"]
   0 -> 1 [label = "<x>a"]
-  0 -> 2 [label = "<y>b"]
+  0 -> 2 [label = "<<1/2>\\e>b"]
   1 -> F1
   1 -> 1 [label = "a"]
   2 -> F2

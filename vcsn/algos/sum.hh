@@ -46,10 +46,14 @@ namespace vcsn
         {
           if (b->dst_of(t) == b->post())
             res->add_transition(m[b->src_of(t)], m[b->dst_of(t)],
-                               b->label_of(t), b->weight_of(t));
+                                b->label_of(t),
+                                res->weightset()->conv(*b->weightset(),
+                                                       b->weight_of(t)));
           else
             res->new_transition(m[b->src_of(t)], m[b->dst_of(t)],
-                               b->label_of(t), b->weight_of(t));
+                                b->label_of(t),
+                                res->weightset()->conv(*b->weightset(),
+                                                       b->weight_of(t)));
         }
     return res;
   }
