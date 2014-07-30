@@ -5,6 +5,17 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-07-30
+### Several fixes
+The reduce algorithm applied only to not-decorated automata.  Support
+for F2 was broken.
+
+### Improvements
+Error messages about failed algorithm instantiations are much clearer:
+they display failed preconditions.
+
+Blind is no longer limited to tape 0 or tape 1.
+
 # Vaucanson 2.0
 
 ## 2014-07-25
