@@ -336,8 +336,7 @@ namespace vcsn
         init_initial_state();
 
         // label -> <destination, sum of weights>.
-        std::map<label_t,
-                 std::pair<state_name_t, weight_t>,
+        std::map<label_t, state_name_t,
                  vcsn::less<labelset_t_of<automaton_t>>> dests;
         while (!todo_.empty())
           {
@@ -359,19 +358,21 @@ namespace vcsn
                     // For each letter, update destination state, and
                     // sum of weights.
                     if (!has(dests, l))
-                      dests.emplace(l, make_pair(ns_.zero(), ws_.zero()));
+                      dests.emplace(l, ns_.zero());
                     auto& d = dests[l];
-                    ns_.add_here(d.first, dst, w);
-                    d.second = ws_.add(d.second, w);
+                    ns_.add_here(d, dst, w);
                   }
               }
 
             for (auto& d : dests)
-              this->new_transition(src,
-                                   state_(ns_.ldiv_here(d.second.second,
-                                                        d.second.first)),
-                                   d.first,
-                                   d.second.second);
+              if (!ns_.is_zero(d.second))
+              {
+                weight_t w = begin(d.second)->second;
+                this->new_transition(src,
+                                     state_(ns_.ldiv_here(w, d.second)),
+                                     d.first,
+                                     w);
+              }
           }
       }
 
