@@ -70,7 +70,7 @@ automaton.as_svg = lambda self, fmt = "dot", engine = "dot": _automaton_as_svg(s
 def _automaton_convert(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
     from IPython.display import display, SVG
-    if mode == "dot" or mode == "tooltip":
+    if mode in ["dot", "tooltip", "transitions"]:
         svg = _dot_to_svg(self.dot(mode), engine)
         return SVG(svg)
     elif mode == "dot2tex":
@@ -100,7 +100,7 @@ def _automaton_interact(self):
         modes = ['info', 'dot']
     else:
         modes = ['dot', 'info']
-    modes += ['info,detailed', 'tooltip', 'type', 'dot2tex']
+    modes += ['info,detailed', 'tooltip', 'transitions', 'type', 'dot2tex']
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
     interact(lambda mode, engine: _automaton_display(self, mode, engine),
              mode = modes, engine = engines)

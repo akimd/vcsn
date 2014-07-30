@@ -20,6 +20,14 @@ def _labels_as_tooltips(s):
                   r'tooltip = \1',
                   s)
 
+def _nodes_as_points(s):
+    '''Transform all the nodes into simple points, as to reveal only
+    the transitions.'''
+    s = s.replace('node [shape = circle, style = rounded, width = 0.5]',
+                  'node [shape = point, fillcolor = cadetblue1, style = "filled", width = 0]')
+    s = s.replace('shape = box', '')
+    return s
+
 def _dot_gray_node(m):
     '''Replace gray node contours by gray nodes.'''
     if ' -> ' in m.group(1):
@@ -41,6 +49,8 @@ def _dot_pretty(s, mode = "dot"):
                s)
     if mode == "tooltip":
         s = _labels_as_tooltips(s)
+    elif mode == "transitions":
+        s = _nodes_as_points(s)
     # It looks like we could pass -E/-N option to dot to set defaults
     # at the last moment, unfortutately in that case, it takes
     # precedence on "edge" and "node" attributes defined in the file
