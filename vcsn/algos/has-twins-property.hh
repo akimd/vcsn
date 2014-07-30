@@ -233,32 +233,30 @@ namespace vcsn
                           const Aut& aut)
       {
         transitions_t res;
-        std::set<transition_t> marked;
+        std::set<state_t> marked;
         std::stack<transition_t> todo;
 
         auto s0 = *component.begin();
-        for (auto t : aut->out(s0))
-          {
-            if (has(component, aut->dst_of(t)))
-              {
-                todo.push(t);
-                marked.emplace(t);
-              }
-          }
-
+        marked.emplace(s0);
+        todo.push(s0);
         while (!todo.empty())
           {
-            auto e = todo.top();
+            auto s = todo.top();
             todo.pop();
-            res.emplace_back(e);
 
-            for (auto f : aut->out(aut->dst_of(e)))
-              if (has(component, aut->dst_of(f))
-                  && !has(marked, f))
-                {
-                  todo.push(f);
-                  marked.emplace(f);
-                }
+            for (auto t : aut->out(s))
+              {
+                auto dst = aut->dst_of(t);
+                if (has(component, dst))
+                  {
+                    if (marked.find(dst) == marked.end())
+                      {
+                        marked.emplace(dst);
+                        todo.push(dst);
+                      }
+                    res.emplace_back(t);
+                  }
+              }
           }
         return res;
       }
