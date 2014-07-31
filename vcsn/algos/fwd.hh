@@ -14,12 +14,14 @@ namespace vcsn
   // vcsn/algos/blind.hh
   namespace detail
   {
-    template <std::size_t TapeNum, typename Aut>
+    template <std::size_t Tape, typename Aut>
     class blind_automaton_impl;
   }
-  template <std::size_t TapeNum, typename Aut>
+
+  /// A blind automaton as a shared pointer.
+  template <std::size_t Tape, typename Aut>
   using blind_automaton
-    = std::shared_ptr<detail::blind_automaton_impl<TapeNum, Aut>>;
+    = std::shared_ptr<detail::blind_automaton_impl<Tape, Aut>>;
 
   // vcsn/algos/edit-automaton.hh.
   class automaton_editor;
@@ -53,6 +55,7 @@ namespace vcsn
     class transpose_automaton_impl;
   }
 
+  /// An automaton wrapper that presents the transposed automaton.
   template <typename Aut>
   using transpose_automaton
     = std::shared_ptr<detail::transpose_automaton_impl<Aut>>;

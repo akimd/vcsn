@@ -6,6 +6,7 @@
 # include <unordered_map>
 
 # include <vcsn/core/automaton-decorator.hh>
+# include <vcsn/core/fwd.hh> // permutation_automaton
 
 namespace vcsn
 {
@@ -107,12 +108,6 @@ namespace vcsn
       const automaton_t input_;
     }; // class
   } // namespace detail
-
-  /// A permutation automaton as a shared pointer.
-  template <typename Aut>
-  using permutation_automaton
-    = std::shared_ptr<detail::permutation_automaton_impl<Aut>>;
-
 } // namespace vcsn
 
 #endif // ! VCSN_CORE_PERMUTATION_DECORATOR_HH

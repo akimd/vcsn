@@ -160,6 +160,7 @@ nobase_include_HEADERS =                        \
   %D%/dyn/type-ast.hh                           \
   %D%/dyn/weight.hh                             \
   %D%/empty.hh                                  \
+  %D%/fwd.hh                                    \
   %D%/labelset/fwd.hh                           \
   %D%/labelset/genset-labelset.hh               \
   %D%/labelset/labelset.hh                      \

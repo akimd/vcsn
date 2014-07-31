@@ -330,10 +330,6 @@ namespace vcsn
     };
   }
 
-  template <std::size_t Tape, typename Aut>
-  using blind_automaton
-    = std::shared_ptr<detail::blind_automaton_impl<Tape, Aut>>;
-
   template <unsigned Tape, typename Aut>
   inline
   blind_automaton<Tape, Aut>

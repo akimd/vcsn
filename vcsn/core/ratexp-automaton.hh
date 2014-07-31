@@ -10,6 +10,7 @@
 # include <vcsn/misc/stream.hh> // format
 # include <vcsn/misc/unordered_map.hh>
 
+# include <vcsn/core/fwd.hh> // ratexp_automaton
 # include <vcsn/core/automaton-decorator.hh>
 # include <vcsn/core/rat/ratexpset.hh>
 
@@ -147,12 +148,6 @@ namespace vcsn
       smap map_;
     };
   }
-
-  /// A ratexp automaton as a shared pointer.
-  template <typename Aut>
-  using ratexp_automaton
-    = std::shared_ptr<detail::ratexp_automaton_impl<Aut>>;
-
 }
 
 #endif // !VCSN_CORE_RATEXP_AUTOMATON_HH

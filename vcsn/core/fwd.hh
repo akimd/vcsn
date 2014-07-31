@@ -31,6 +31,8 @@ namespace vcsn
     template <typename Aut>
     class permutation_automaton_impl;
   }
+
+  /// A permutation automaton as a shared pointer.
   template <typename Aut>
   using permutation_automaton
     = std::shared_ptr<detail::permutation_automaton_impl<Aut>>;
@@ -42,6 +44,8 @@ namespace vcsn
     template <typename Aut>
     class ratexp_automaton_impl;
   }
+
+  /// A ratexp automaton as a shared pointer.
   template <typename Aut>
   using ratexp_automaton
     = std::shared_ptr<detail::ratexp_automaton_impl<Aut>>;
