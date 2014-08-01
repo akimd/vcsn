@@ -320,13 +320,20 @@ namespace vcsn
       return res;
     }
 
+    ATTRIBUTE_PURE
+    static bool monomial_equals(const monomial_t& lhs,
+                                const monomial_t& rhs)
+    {
+      return (labelset_t::equals(lhs.first, rhs.first)
+              && weightset_t::equals(lhs.second, rhs.second));
+    }
+
     static bool
     equals(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {
       return l.size() == r.size()
-        // FIXME: this is wrong, it uses operator== instead of equals().
-        && std::equal(l.begin(), l.end(),
-                      r.begin());
+        && std::equal(l.begin(), l.end(), r.begin(),
+                      monomial_equals);
     }
 
     const value_t&

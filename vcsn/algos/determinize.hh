@@ -287,9 +287,19 @@ namespace vcsn
 
         using value_t = state_t;
         using kind_t = void;
+        static bool equals(state_t l, state_t r)
+        {
+          return l == r;
+        }
+
         static bool less_than(state_t l, state_t r)
         {
           return l < r;
+        }
+
+        static size_t hash(state_t s)
+        {
+          return hash_value(s);
         }
 
         std::ostream&
@@ -436,7 +446,10 @@ namespace vcsn
       };
 
       /// Map from state name to state number.
-      std::map<state_name_t, state_t, vcsn::less<state_nameset_t>> map_;
+      using map_t = std::unordered_map<state_name_t, state_t,
+                                       vcsn::hash<state_nameset_t>,
+                                       vcsn::equal_to<state_nameset_t>>;
+      map_t map_;
 
       /// Input automaton.
       automaton_t input_;
