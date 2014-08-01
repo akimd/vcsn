@@ -176,54 +176,29 @@ namespace vcsn
         std::unordered_map<state_t, weight_t> wm;
         const auto& ws = *aut->weightset();
         auto s0 = *component.begin();
-        wm[s0] = ws.one();
-
-        for (auto t : transitions_by_dfs_(component, aut))
-          {
-            auto src = aut->src_of(t);
-            auto dst = aut->dst_of(t);
-            if (!has(wm, dst))
-              wm.emplace(dst, ws.mul(wm[src], aut->weight_of(t)));
-            if (!ws.equals(wm[dst], ws.mul(wm[src], aut->weight_of(t))))
-              return false;
-          }
-        return true;
-      }
-
-    private:
-      using transitions_t = std::vector<transition_t>;
-      /// Visit all of edges of a component by depth first search.
-      transitions_t
-      transitions_by_dfs_(const component_t& component,
-                          const Aut& aut)
-      {
-        transitions_t res;
-        std::set<state_t> marked;
-        std::stack<transition_t> todo;
-
-        auto s0 = *component.begin();
-        marked.emplace(s0);
+        std::stack<state_t> todo;
         todo.push(s0);
+        wm[s0] = ws.one();
         while (!todo.empty())
           {
             auto s = todo.top();
             todo.pop();
-
             for (auto t : aut->out(s))
               {
                 auto dst = aut->dst_of(t);
                 if (has(component, dst))
                   {
-                    if (marked.find(dst) == marked.end())
+                    if (!has(wm, dst))
                       {
-                        marked.emplace(dst);
                         todo.push(dst);
+                        wm.emplace(dst, ws.mul(wm[s], aut->weight_of(t)));
                       }
-                    res.emplace_back(t);
+                    else if (!ws.equals(wm[dst], ws.mul(wm[s], aut->weight_of(t))))
+                      return false;
                   }
               }
           }
-        return res;
+        return true;
       }
     };
   }
