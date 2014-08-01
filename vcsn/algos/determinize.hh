@@ -228,7 +228,7 @@ namespace vcsn
       using label_map_t = std::unordered_map<label_t, state_name_t,
                                              vcsn::hash<labelset_t>,
                                              vcsn::equal_to<labelset_t>>;
-      using successors_t = std::unordered_map<state_t, label_map_t>;
+      using successors_t = std::map<state_t, label_map_t>;
       successors_t successors_;
     };
   }
