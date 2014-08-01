@@ -34,22 +34,21 @@ namespace vcsn
     template <typename Aut>
     class determinized_automaton_impl
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
-    // : public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: requires free labelset");
+                    "determinize: boolean: requires free labelset");
       static_assert(std::is_same<weightset_t_of<Aut>, b>::value,
-                    "determinize: requires Boolean weights");
+                    "determinize: boolean: requires Boolean weights");
 
     public:
       using automaton_t = Aut;
       using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
-      // using automaton_nocv_t = typename automaton_t::element_type::automaton_nocv_t;
       using label_t = label_t_of<automaton_t>;
+      using labelset_t = labelset_t_of<automaton_t>;
       using super_t = automaton_decorator<automaton_nocv_t>;
 
-      /// Set of (input) states.
-      using state_set = dynamic_bitset;
+      /// The name: set of (input) states.
+      using state_name_t = dynamic_bitset;
 
       /// Result automaton state type.
       using state_t = state_t_of<automaton_t>;
@@ -71,12 +70,12 @@ namespace vcsn
         // automaton without initial state, we would produce an empty
         // automaton (no states).  This would not conform to Jacques'
         // definition of determinization.
-        state_set next;
-        next.resize(state_size_);
+        state_name_t n;
+        n.resize(state_size_);
         for (auto t : input_->initial_transitions())
-          next.set(input_->dst_of(t));
+          n.set(input_->dst_of(t));
         // Also pushes the initial state in the todo.
-        this->set_initial(state(next));
+        this->set_initial(state(n));
       }
 
       static std::string sname()
@@ -91,7 +90,7 @@ namespace vcsn
 
       /// The state for set of states \a ss.
       /// If this is a new state, schedule it for visit.
-      state_t state(const state_set& ss)
+      state_t state(const state_name_t& ss)
       {
         // Benches show that the map_.emplace technique is slower, and
         // then that operator[] is faster than emplace.
@@ -115,7 +114,7 @@ namespace vcsn
       /// Determinize all accessible states.
       void operator()()
       {
-        std::map<label_t, state_set, vcsn::less<labelset_t_of<Aut>>> ml;
+        std::map<label_t, state_name_t, vcsn::less<labelset_t_of<Aut>>> ml;
         while (!todo_.empty())
           {
             auto ss = std::move(todo_.top());
@@ -166,12 +165,12 @@ namespace vcsn
       }
 
       std::ostream&
-      print_state_name(state_t ss, std::ostream& o,
+      print_state_name(state_t s, std::ostream& o,
                        const std::string& fmt = "text") const
       {
-        auto i = origins().find(ss);
+        auto i = origins().find(s);
         if (i == std::end(origins()))
-          this->print_state(ss, o);
+          this->print_state(s, o);
         else
           {
             const char* sep = "";
@@ -207,8 +206,8 @@ namespace vcsn
 
     private:
       /// Set of input states -> output state.
-      using map = std::unordered_map<state_set, state_t>;
-      map map_;
+      using map_t = std::unordered_map<state_name_t, state_t>;
+      map_t map_;
 
       /// Input automaton.
       automaton_t input_;
@@ -219,14 +218,16 @@ namespace vcsn
       size_t state_size_ = input_->all_states().back() + 1;
 
       /// The sets of (input) states waiting to be processed.
-      using stack = std::stack<state_set>;
+      using stack = std::stack<state_name_t>;
       stack todo_;
 
       /// Set of final states in the input automaton.
-      state_set finals_;
+      state_name_t finals_;
 
       /// successors[SOURCE-STATE][LABEL] = DEST-STATESET.
-      using label_map_t = std::unordered_map<label_t, state_set>;
+      using label_map_t = std::unordered_map<label_t, state_name_t,
+                                             vcsn::hash<labelset_t>,
+                                             vcsn::equal_to<labelset_t>>;
       using successors_t = std::unordered_map<state_t, label_map_t>;
       successors_t successors_;
     };
@@ -263,7 +264,7 @@ namespace vcsn
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
     {
       static_assert(labelset_t_of<Aut>::is_free(),
-                    "determinize: requires free labelset");
+                    "determinize: weighted: requires free labelset");
 
     public:
       using automaton_t = Aut;
@@ -271,6 +272,7 @@ namespace vcsn
       using super_t = automaton_decorator<automaton_nocv_t>;
 
       using label_t = label_t_of<automaton_t>;
+      using labelset_t = labelset_t_of<automaton_t>;
       using weightset_t = weightset_t_of<automaton_t>;
 
       using state_t = state_t_of<automaton_t>;
@@ -444,11 +446,6 @@ namespace vcsn
 
       /// (Nameset) The polynomialset that stores weighted states.
       state_nameset_t ns_ = {{stateset(input_), *input_->weightset()}};
-
-      /// We use state numbers as indexes, so we need to know the last
-      /// state number.  If states were removed, it is not the same as
-      /// the number of states.
-      size_t state_size_ = input_->all_states().back() + 1;
 
       /// The sets of (input) states waiting to be processed.
       using queue = std::queue<state_name_t>;
