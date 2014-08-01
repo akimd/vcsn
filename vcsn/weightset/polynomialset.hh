@@ -310,6 +310,16 @@ namespace vcsn
       return v;
     }
 
+    weight_t
+    normalize_here(value_t& v) const
+    {
+      // In the general case, normalize by the first (non null)
+      // weight.
+      weight_t res = begin(v)->second;
+      ldiv_here(res, v);
+      return res;
+    }
+
     static bool
     equals(const value_t& l, const value_t& r) ATTRIBUTE_PURE
     {

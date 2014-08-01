@@ -366,13 +366,11 @@ namespace vcsn
 
             for (auto& d : dests)
               if (!ns_.is_zero(d.second))
-              {
-                weight_t w = begin(d.second)->second;
-                this->new_transition(src,
-                                     state_(ns_.ldiv_here(w, d.second)),
-                                     d.first,
-                                     w);
-              }
+                {
+                  weight_t w = ns_.normalize_here(d.second);
+                  this->new_transition(src, state_(d.second),
+                                       d.first, w);
+                }
           }
       }
 
@@ -444,7 +442,7 @@ namespace vcsn
       /// Its weightset.
       weightset_t ws_ = *input_->weightset();
 
-      /// The polynomialset that stores weighted states.
+      /// (Nameset) The polynomialset that stores weighted states.
       state_nameset_t ns_ = {{stateset(input_), *input_->weightset()}};
 
       /// We use state numbers as indexes, so we need to know the last
