@@ -166,8 +166,7 @@ namespace vcsn
     add(const value_t& l, const value_t& r) const
     {
       value_t res = l;
-      for (auto& i : r)
-        add_here(res, i.first, i.second);
+      add_here(res, r);
       return res;
     }
 
@@ -214,7 +213,7 @@ namespace vcsn
     value_t
     star(const value_t& v) const
     {
-      // The only starrable polynomialsets are scalars (if they are
+      // The only starrable polynomials are scalars (if they are
       // starrable too).
       auto s = v.size();
       if (s == 0)
@@ -223,11 +222,7 @@ namespace vcsn
         {
           auto i = v.find(labelset()->one());
           if (i != v.end())
-            {
-              value_t res;
-              add_here(res, i->first, weightset()->star(i->second));
-              return res;
-            }
+            return {{i->first, weightset()->star(i->second)}};
         }
       raise(sname(), ": star: invalid value: ", vcsn::format(*this, v));
     }
@@ -238,7 +233,6 @@ namespace vcsn
     {
       value_t res;
       if (!weightset()->is_zero(w))
-        // FIXME: What if there are divisors of 0?
         for (const auto& m: v)
           add_here(res, m.first, weightset()->mul(w, m.second));
       return res;
@@ -339,14 +333,13 @@ namespace vcsn
     const value_t&
     one() const
     {
-      static value_t one_{monomial_one()};
-      return one_;
+      static value_t res{monomial_one()};
+      return res;
     }
 
     const monomial_t&
     monomial_one() const
     {
-      // Singleton.
       static monomial_t res{labelset()->one(), weightset()->one()};
       return res;
     }
@@ -365,8 +358,8 @@ namespace vcsn
     const value_t&
     zero() const
     {
-      static value_t zero_;
-      return zero_;
+      static value_t res;
+      return res;
     }
 
     bool
@@ -388,16 +381,6 @@ namespace vcsn
       return v;
     }
 
-  private:
-    value_t
-    conv_from_this_weightset(const typename weightset_t::value_t& v) const
-    {
-      monomial_t m{labelset()->one(),
-                   weightset()->mul(v, weightset()->one())};
-      return value_t{m};
-    }
-
-  public:
     /// FIXME: use enable_if to prevent this from being instantiated
     /// when WS is a polynomialset.  Then use this same technique for
     /// ratexps.
@@ -405,7 +388,7 @@ namespace vcsn
     value_t
     conv(const WS& ws, const typename WS::value_t& v) const
     {
-      return conv_from_this_weightset(weightset()->conv(ws, v));
+      return {{labelset()->one(), weightset()->conv(ws, v)}};
     }
 
     /// Convert from another polynomialset to type_t.
