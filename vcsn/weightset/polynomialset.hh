@@ -17,6 +17,7 @@
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
+# include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
 {
@@ -194,6 +195,18 @@ namespace vcsn
           add_here(res,
                    labelset()->conjunction(i.first, j.first),
                    weightset()->mul(i.second, j.second));
+      return res;
+    }
+
+    /// The sum of the weights of the common labels.
+    weight_t
+    scalar_product(const value_t& l, const value_t& r) const
+    {
+      weight_t res = weightset()->zero();
+      for (auto i: zip_maps<vcsn::as_tuple>(l, r))
+        res = weightset()->add(res,
+                               weightset()->mul(std::get<0>(i).second,
+                                                std::get<1>(i).second));
       return res;
     }
 
