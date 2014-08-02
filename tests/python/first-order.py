@@ -13,7 +13,7 @@ def check(re, exp, use_spontaneous = False):
     `derived_term` compute the same result.
     '''
     r = c.ratexp(re)
-    eff = r.first_order(use_spontaneous)
+    eff = r.first_order()
     print("d: {} => {}".format(r, eff));
     CHECK_EQ(exp, str(eff))
     # Check that if derived_term can do it, them it's the same
@@ -91,38 +91,6 @@ check('(<xy>abc<yz>){T}', 'c.[<zy>(<xy>ab){T}]')
 check('(ab)*{T}', '<\e> + b.[a(ab)*{T}]')
 check('(<xy>(abc)<yz>)*{T}', '<\e> + c.[<zy>(ab){T}<yx>(<xy>(abc)<yz>)*{T}]')
 
-# Lquotient
-check('\e{\}\z', '<\z>')
-check('\e{\}\e', '<\e>')
-check('\e{\}abc', 'a.[bc]')
-check('a{\}a', '<\e>')
-check('a{\}b', '<\z>')
-
-check('a{\}<x>a', '<x>')
-check('<x>a{\}<y>a', '<x{\}y>')
-check('a{\}(<x>a)*', '<x> + a.[<xx>(<x>a)*]')
-check('a*{\}a', '<\e> + a.[\e]')
-#check('a*{\}a*', '<\e*> + a.[<\e*>a*]')
-#check('(<x>a)*{\}(<y>a)*', '<(x{\}y)*> + a.[<(x{\}y)*y>(<y>a)*]')
-
-# Right quotient.
-check('\z{/}\e', '<\z>')
-check('\e{/}\e', '<\e>')
-check('abc{/}\e', 'a.[bc]')
-check('a{/}a', '<\e>')
-check('a{/}b', '<\z>')
-
-check('(<x>a){/}a', '<x>')
-check('<x>a{/}<y>a', '<y{\}x>')
-check('a{/}(<x>a)*', '<x{\}\e> + a.[\e]')
-# I don't know for sure this is right :(
-#check('(<x>a)*{/}(a)*',
-#'<x*> + a.[<x>(<x>a){T}*{T}(a{\}(<x>a){T})*{T}]')
-check('a*{/}a', '<\e> + a.[a*]')
-#check('a*{/}a*', '<\e*> + a.[a*{T}(a{\}a)*{T}]')
-# I don't know for sure this is right :(
-#check('(<x>a)*{/}(<y>a)*',
-#'<(y{\}x){T}*> + a.[<x>(<x>a){T}*{T}((<y>a){T}{\}(<x>a){T})*{T}]')
 
 
 ## ------------------------------ ##
@@ -132,47 +100,47 @@ check('a*{/}a', '<\e> + a.[a*]')
 c = vcsn.context("lan_char(abcd)_ratexpset<lal_char(xyz)_z>")
 
 # Lquotient with spontaneous transitions.
-check('\e{\}\z', '<\z>', True)
-check('\e{\}\e', '<\e>', True)
-check('\e{\}abc', 'a.[bc]', True)
-check('a{\}a', '<\e>', True)
-check('a{\}b', '<\z>', True)
+check('\e{\}\z', '<\z>')
+check('\e{\}\e', '<\e>')
+check('\e{\}abc', 'a.[bc]')
+check('a{\}a', '<\e>')
+check('a{\}b', '<\z>')
 
-check('a{\}<x>a', '<x>', True)
-check('<x>a{\}<y>a', '<x{\}y>', True)
-check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]', True)
-check('a*{\}a', '\e.[a*{\}\e] + a.[\e]', True)
-check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]', True)
-check('(<x>a)*{\}(<y>a)*', '<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]', True)
+check('a{\}<x>a', '<x>')
+check('<x>a{\}<y>a', '<x{\}y>')
+check('a{\}(<x>a)*', '\e.[<x>(<x>a)*]')
+check('a*{\}a', '\e.[a*{\}\e] + a.[\e]')
+check('a*{\}a*', '<\e> + \e.[a*{\}a*] + a.[a*]')
+check('(<x>a)*{\}(<y>a)*', '<\e> + \e.[<x{\}y>(<x>a)*{\}(<y>a)*] + a.[<y>(<y>a)*]')
 
 # Left quotient vs. conjunction.
-check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]', True)
+check('(ab{\}ab)c&c', '\e.[(b{\}b)c&c]')
 
 # Right quotient with spontaneous transitions.
-check('\z{/}\e', '<\z>', True)
-check('\e{/}\e', '<\e>', True)
-check('a{/}a', '<\e>', True)
-check('a{/}b', '<\z>', True)
-check('abcd{/}\e', 'a.[bcd]', True)
-check('abcd{/}d', '\e.[(abc){T}{T}]', True)
-check('abcd{/}cd', '\e.[(c{\}(abc){T}){T}]', True)
-check('abcd{/}bcd', '\e.[((bc){T}{\}(abc){T}){T}]', True)
-check('abcd{/}abcd', '\e.[((abc){T}{\}(abc){T}){T}]', True)
+check('\z{/}\e', '<\z>')
+check('\e{/}\e', '<\e>')
+check('a{/}a', '<\e>')
+check('a{/}b', '<\z>')
+check('abcd{/}\e', 'a.[bcd]')
+check('abcd{/}d', '\e.[(abc){T}{T}]')
+check('abcd{/}cd', '\e.[(c{\}(abc){T}){T}]')
+check('abcd{/}bcd', '\e.[((bc){T}{\}(abc){T}){T}]')
+check('abcd{/}abcd', '\e.[((abc){T}{\}(abc){T}){T}]')
 
-check('(<x>a){/}a', '\e.[(<x>\e){T}]', True)
-check('<x>a{/}<y>a', '\e.[(<y>\e{\}<x>\e){T}]', True)
-check('a{/}(<x>a)*', '\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]', True)
+check('(<x>a){/}a', '\e.[(<x>\e){T}]')
+check('<x>a{/}<y>a', '\e.[(<y>\e{\}<x>\e){T}]')
+check('a{/}(<x>a)*', '\e.[(<x>(<x>a)*{T}{\}\e){T}] + a.[\e]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(a)*',
-'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]', True)
-check('a*{/}a', '\e.[a*{T}{T}]', True)
-check('a*{/}a*', '<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]', True)
+'<\e> + \e.[(a*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
+check('a*{/}a', '\e.[a*{T}{T}]')
+check('a*{/}a*', '<\e> + \e.[(a*{T}{\}a*{T}){T}] + a.[a*]')
 # I don't know for sure this is right :(
 check('(<x>a)*{/}(<y>a)*',
-'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]', True)
+'<\e> + \e.[(<y>(<y>a)*{T}{\}<x>(<x>a)*{T}){T}] + a.[<x>(<x>a)*]')
 
 # Right quotient vs. conjunction.
-check('(ab{/}ab)c&c', '\e.[(a{\}a){T}c&c]', True)
+check('(ab{/}ab)c&c', '\e.[(a{\}a){T}c&c]')
 
 
 

@@ -182,9 +182,7 @@ namespace vcsn
 
     /// First order development of a \a exp.
     /// \param exp              the input ratexp
-    /// \param use_spontaenous  whether to generate "spontaneous" terms
-    ///                         instead of recursive development
-    expansion first_order(const ratexp& exp, bool use_spontaenous = true);
+    expansion first_order(const ratexp& exp);
 
     /// Output in Grail format.
     std::ostream& grail(const automaton& aut, std::ostream& out);
@@ -303,12 +301,9 @@ namespace vcsn
     /// The lifted LAO rational expression from \a e.
     ratexp lift(const ratexp& e);
 
-    /// FIXME: The derived-term automaton of \a e.
+    /// The derived-term automaton of \a e.
     /// \param e         the input ratexp
-    /// \param use_spontaenous
-    ///     whether to generate "spontaneous" terms
-    ///     instead of recursive development
-    automaton linear(const ratexp& e, bool use_spontaenous = false);
+    automaton linear(const ratexp& e);
 
     /// Build a context from its name.
     context make_context(const std::string& name);

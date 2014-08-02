@@ -60,9 +60,8 @@ namespace vcsn
       using polys_t = typename expansionset_t::polys_t;
       using expansion_t = typename expansionset_t::value_t;
 
-      first_order_visitor(const ratexpset_t& rs, bool use_spontaneous = true)
+      first_order_visitor(const ratexpset_t& rs)
         : rs_(rs)
-        , use_spontaneous_(use_spontaneous)
       {}
 
       expansion_t operator()(const ratexp_t& v)
@@ -238,14 +237,7 @@ namespace vcsn
                  std::cerr << "Start: ";
                  rs_.print(e.shared_from_this, std::cerr()) << " =>\n";
                  );
-        if (use_spontaneous_)
-          visit_ldiv_with_one(e);
-        else
-          visit_ldiv_without_one(e);
-      }
 
-      void visit_ldiv_with_one(const ldiv_t& e)
-      {
         bool transposed = transposed_;
         transposed_ = false;
         expansion_t lhs = first_order(e[0]);
@@ -283,62 +275,6 @@ namespace vcsn
                              rs_.ldiv(lm.first, rm.first),
                              ws_.ldiv(lm.second, rm.second));
         es_.normalize(res_);
-      }
-
-      void visit_ldiv_without_one(const ldiv_t& e)
-      {
-        // Special case the quotient of stars.
-        ratexp_t lchild = star_child(e[0]);
-        ratexp_t rchild = star_child(e[1]);
-        // This is wrong, and I can't find how I supposedly
-        // demonstrated that.  Won't work with a*\(ab)* for instance.
-        if (false && lchild && rchild)
-          {
-            // (e*) \ (f*) = (e\f)* . f*
-            auto q = rs_.mul(rs_.star(rs_.ldiv(lchild, rchild)),
-                             rs_.star(rchild));
-            res_ = first_order(q);
-          }
-        else
-          {
-            bool transposed = transposed_;
-            transposed_ = false;
-            expansion_t lhs = first_order(e[0]);
-            expansion_t rhs = first_order(e[1]);
-            transposed_ = transposed;
-            DEBUG_IF(
-                     std::cerr << "Lhs: "; print_(lhs, std::cerr) << '\n';
-                     std::cerr << "Rhs: "; print_(rhs, std::cerr) << '\n';
-                     );
-            res_ = es_.zero();
-            // lp: (label, left_polynomial)
-            if (!ws_.is_zero(lhs.constant))
-              {
-                if (transposed_)
-                  {
-                    auto rhs_transposed = first_order(e[1]);
-                    es_.add_here(res_,
-                                 es_.ldiv_here(lhs.constant, rhs_transposed));
-                  }
-                else
-                  es_.add_here(res_, es_.ldiv_here(lhs.constant, rhs));
-              }
-            for (const auto& p: zip_maps(lhs.polynomials, rhs.polynomials))
-              for (const auto& lm: std::get<0>(p.second))
-                for (const auto& rm: std::get<1>(p.second))
-                  {
-                    // Now, recursively develop the quotient of
-                    // monomials, directly in res_.
-                    auto q = rs_.ldiv(lm.first, rm.first);
-                    DEBUG_IF(std::cerr << "Rec: (");
-                    auto p = first_order(q);
-                    DEBUG_IF(print_(p, std::cerr) << '\n');
-                    // (1/2)*2 is wrong in Z, (1*2)/2 is ok.
-                    es_.add_here(res_,
-                                 es_.ldiv_here(lm.second,
-                                               es_.lmul_here(rm.second, p)));
-                  }
-          }
       }
 
       VCSN_RAT_VISIT(conjunction, e)
@@ -467,8 +403,6 @@ namespace vcsn
       /// Manipulate the expansions.
       expansionset_t es_ = expansionset_t(rs_);
 
-      /// Whether to use spontaneous transitions.
-      bool use_spontaneous_;
       /// Whether to work transposed.
       bool transposed_ = false;
       /// The result.
@@ -481,10 +415,9 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   typename rat::expansionset<RatExpSet>::value_t
-  first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e,
-              bool use_spontaneous = true)
+  first_order(const RatExpSet& rs, const typename RatExpSet::ratexp_t& e)
   {
-    rat::first_order_visitor<RatExpSet> first_order{rs, use_spontaneous};
+    rat::first_order_visitor<RatExpSet> first_order{rs};
     return first_order.first_order(e);
   }
 
@@ -493,20 +426,19 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Bool>
+      template <typename RatExpSet>
       expansion
-      first_order(const ratexp& exp, bool use_spontaneous = true)
+      first_order(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>();
         const auto& rs = e.ratexpset();
         auto es = vcsn::rat::expansionset<RatExpSet>(rs);
         return make_expansion(es,
-                              first_order<RatExpSet>(rs, e.ratexp(),
-                                                     use_spontaneous));
+                              first_order<RatExpSet>(rs, e.ratexp()));
       }
 
       REGISTER_DECLARE(first_order,
-                       (const ratexp& e, bool use_spontaneous) -> expansion);
+                       (const ratexp& e) -> expansion);
     }
   }
 
@@ -535,9 +467,8 @@ namespace vcsn
       using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
       using polynomial_t = typename polynomialset_t::value_t;
 
-      linearer(const ratexpset_t& rs, bool use_spontaneous = true)
+      linearer(const ratexpset_t& rs)
         : rs_(rs)
-        , use_spontaneous_(use_spontaneous)
         , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
@@ -553,7 +484,7 @@ namespace vcsn
             // Also loads todo_.
             res_->set_initial(p.first, p.second);
         }
-        rat::first_order_visitor<ratexpset_t> expand{rs_, use_spontaneous_};
+        rat::first_order_visitor<ratexpset_t> expand{rs_};
 
         while (!res_->todo_.empty())
           {
@@ -572,7 +503,6 @@ namespace vcsn
     private:
       /// The ratexp's set.
       ratexpset_t rs_;
-      bool use_spontaneous_ = true;
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.
@@ -584,10 +514,9 @@ namespace vcsn
   template <typename RatExpSet>
   inline
   ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
-  linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
-         bool use_spontaneous = true)
+  linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
   {
-    detail::linearer<RatExpSet> dt{rs, use_spontaneous};
+    detail::linearer<RatExpSet> dt{rs};
     return dt(r);
   }
 
@@ -596,17 +525,16 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Bool>
+      template <typename RatExpSet>
       automaton
-      linear(const ratexp& exp, bool use_spontaneous = true)
+      linear(const ratexp& exp)
       {
         const auto& r = exp->as<RatExpSet>();
-        return make_automaton(::vcsn::linear(r.ratexpset(),
-                                             r.ratexp(), use_spontaneous));
+        return make_automaton(::vcsn::linear(r.ratexpset(), r.ratexp()));
       }
 
       REGISTER_DECLARE(linear,
-                       (const ratexp& e, bool use_spontaneous) -> automaton);
+                       (const ratexp& e) -> automaton);
     }
   }
 } // vcsn::

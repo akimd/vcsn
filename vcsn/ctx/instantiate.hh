@@ -317,7 +317,7 @@ namespace vcsn
         REGISTER(dot, aut_t, std::ostream, bool);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
-        REGISTER(first_order, rs_t, bool);
+        REGISTER(first_order, rs_t);
         REGISTER(identities, rs_t);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_ratexp, rs_t, std::ostream);
@@ -335,7 +335,7 @@ namespace vcsn
         REGISTER(left_mult_ratexp, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_ratexp, rs_t);
-        REGISTER(linear, rs_t, bool);
+        REGISTER(linear, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);
