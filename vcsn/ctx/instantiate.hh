@@ -10,6 +10,7 @@
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/copy.hh>
 # include <vcsn/algos/derivation.hh>
+# include <vcsn/algos/derived-term.hh>
 # include <vcsn/algos/dot.hh>
 # include <vcsn/algos/edit-automaton.hh>
 # include <vcsn/algos/efsm.hh>
