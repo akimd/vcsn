@@ -2,6 +2,17 @@
 ** subword, prefix, suffix, factor
 Provide the same routines for ratexps.
 
+* Documentation
+** Doxygen
+The Doxygen style documentation is way too poor.  Aim at completion.
+
+** Documentation notebooks
+They should also include complexity information.
+
+** IPython
+We should have a means to open the documentation page of a given function.
+Something similar to IPython's "?" shortcut.
+
 * Naming issues
 ** Wrong names
 power for ratexp denotes {n,m} which is related to concat, not to mul.
@@ -188,9 +199,6 @@ Getting rid of this will allow rat::node to use single inheritance.
 On second thought, while it is definitely handy, it is not normal that
 contexts depend on ratexpset.
 
-** More documentation
-The Doxygen style documentation is way too poor.  Aim at completion.
-
 ** polynomialset
 It seems that monomials would be a useful abstraction.
 
@@ -251,6 +259,14 @@ is factored a lot, using std::copy for instance.
 
 Keep it factored, but for instance, introduce a std::copy that walks only
 the accessible parts.
+
+** ambiguous_word
+We are clearly traversing the automaton too many times: once to find a pair
+of "ambiguous states", then another time to compute am ambiguous word.  If
+speed were an issue, we should do it another way.
+
+In particular, it might be a good idea to use a distance map to ensure that
+we good (one of the) shortest ambiguous word.
 
 ** constant-term
 To compute the constant-term of a ratexp, we compute that of its subratexp,
