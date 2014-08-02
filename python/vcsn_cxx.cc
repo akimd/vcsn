@@ -613,9 +613,9 @@ struct ratexp
     return vcsn::dyn::expand(val_);
   }
 
-  expansion first_order(bool use_spontaneous = true) const
+  expansion first_order() const
   {
-    return vcsn::dyn::first_order(val_, use_spontaneous);
+    return vcsn::dyn::first_order(val_);
   }
 
   std::string format(const std::string& format = "text") const
@@ -647,9 +647,9 @@ struct ratexp
     return vcsn::dyn::lift(val_);
   }
 
-  automaton linear(bool use_spontaneous = true) const
+  automaton linear() const
   {
-    return vcsn::dyn::linear(val_, use_spontaneous);
+    return vcsn::dyn::linear(val_);
   }
 
   ratexp right_mult(const weight& w) const;
@@ -880,8 +880,6 @@ BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(chain, chain, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derivation, derivation, 1, 2);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(derived_term, derived_term, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(determinize, determinize, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(first_order, first_order, 0, 1);
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(linear, linear, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(minimize, minimize, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(pair, pair, 0, 1);
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(proper, proper, 0, 1);
@@ -1016,13 +1014,13 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("derived_term", &ratexp::derived_term, derived_term())
     .def("difference", &ratexp::difference)
     .def("expand", &ratexp::expand)
-    .def("first_order", &ratexp::first_order, first_order())
+    .def("first_order", &ratexp::first_order)
     .def("format", &ratexp::format)
     .def("is_equivalent", &ratexp::is_equivalent)
     .def("is_series", &ratexp::is_series)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)
-    .def("linear", &ratexp::linear, linear())
+    .def("linear", &ratexp::linear)
     .def("lift", &ratexp::lift)
     .def("ratexp", &ratexp::as_ratexp)
     .def("right_mult", &ratexp::right_mult)
