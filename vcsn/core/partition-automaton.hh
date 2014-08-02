@@ -66,17 +66,22 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& fmt = "text") const
+                       const std::string& fmt = "text",
+                       bool delimit = false) const
       {
         const auto& set = origins_.at(s);
-        const char* separator = "{";
+        const char* separator = "";
+        if (delimit)
+          o << '{';
         for (auto s : set)
           {
             o << separator;
-            input_->print_state_name(s, o, fmt);
+            input_->print_state_name(s, o, fmt, true);
             separator = ", ";
           }
-        return o << "}";
+        if (delimit)
+          o << '}';
+        return o;
       }
 
       using super_t::new_state;
