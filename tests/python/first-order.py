@@ -8,10 +8,9 @@ c = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 def is_wordset(c):
     return str(c).startswith("law_")
 
-def check(re, exp, use_spontaneous = False, no_linear = False):
+def check(re, exp, use_spontaneous = False):
     '''Check that fo(re) = exp.  Also check that `linear` and
-    `derived_term` compute the same result, unless `no_linear = True`.
-    `no_linear` exists for a bad reason: our isomorphism check fails.
+    `derived_term` compute the same result.
     '''
     r = c.ratexp(re)
     eff = r.first_order(use_spontaneous)
@@ -19,7 +18,7 @@ def check(re, exp, use_spontaneous = False, no_linear = False):
     CHECK_EQ(exp, str(eff))
     # Check that if derived_term can do it, them it's the same
     # automaton.
-    if not use_spontaneous and not no_linear and not is_wordset(c):
+    if not use_spontaneous and not is_wordset(c):
         try:
             dt = r.derived_term()
         except:
@@ -60,8 +59,7 @@ check('(<x>a+<y>b)*&(<z>b+<x>c)*', '<\e> + b.[<yz>(<x>a+<y>b)*&(<z>b+<x>c)*]')
 #   @@ -1 +1 @@
 #   -<xyz+xzy+yxz+yzx+zxy+zyx>aaa
 #   +<zyx+zxy+yzx+yxz+xzy+xyz>aaa
-check('<x>a:<y>a:<z>a', 'a.[<z><x>a:<y>a + <y><x>a:<z>a + <x><y>a:<z>a]',
-      no_linear = True)
+check('<x>a:<y>a:<z>a', 'a.[<z><x>a:<y>a + <y><x>a:<z>a + <x><y>a:<z>a]')
 check('(<x>a<y>b)*:(<x>a<x>c)*', '<\e> + a.[<x>(<x>a<y>b)*:<x>c(<x>a<x>c)* + <x><y>b(<x>a<y>b)*:(<x>a<x>c)*]')
 
 # Star.
