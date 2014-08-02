@@ -18,6 +18,9 @@ namespace vcsn
     /// The accessible subautomaton of \a aut.
     automaton accessible(const automaton& aut);
 
+    /// An ambiguous word, or raise if there is none.
+    label ambiguous_word(const automaton& aut);
+
     /// Whether define the same language.
     /// \pre The labelsets of lhs and rhs are free.
     /// \pre lhs and rhs are Boolean, or on Z, or on a field.

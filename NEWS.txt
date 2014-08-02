@@ -5,6 +5,11 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-08-02
+### ambiguous_word: new algorithm
+Returns an ambiguous word of an automaton, or raises if the automaton
+is unambiguous.
+
 ## 2014-07-30
 ### Several fixes
 The reduce algorithm applied only to not-decorated automata.  Support

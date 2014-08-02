@@ -15,6 +15,7 @@ digraph
 }
 ''')
 CHECK_EQ(False, a.is_ambiguous())
+XFAIL(lambda: a.ambiguous_word(), "automaton is unambiguous")
 CHECK_EQ(False, a.is_deterministic())
 
 # Not deterministic, and ambiguous.
@@ -30,6 +31,7 @@ digraph
 }
 ''')
 CHECK_EQ(True, a.is_ambiguous())
+CHECK_EQ("a", a.ambiguous_word())
 CHECK_EQ(False, a.is_deterministic())
 
 # Likewise, but with a non-commutative product.
@@ -45,6 +47,7 @@ digraph
 }
 ''')
 CHECK_EQ(True, a.is_ambiguous())
+CHECK_EQ("a", a.ambiguous_word())
 CHECK_EQ(False, a.is_deterministic())
 
 # deterministic, and unambiguous (obviously).
@@ -60,4 +63,5 @@ digraph
 }
 ''')
 CHECK_EQ(False, a.is_ambiguous())
+XFAIL(lambda: a.ambiguous_word(), "automaton is unambiguous")
 CHECK_EQ(True, a.is_deterministic())

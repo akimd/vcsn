@@ -28,6 +28,7 @@ namespace vcsn
 #define ALGO(In, Out)                           \
       else if (h == In)                         \
         h = Out
+      ALGO("ambiguous-word", "is-ambiguous");
       ALGO("chain", "concatenate");
       ALGO("coaccessible", "accessible");
       ALGO("conjunction", "product");

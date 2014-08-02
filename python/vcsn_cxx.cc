@@ -104,6 +104,8 @@ struct automaton
     return vcsn::dyn::accessible(val_);
   }
 
+  label ambiguous_word() const;
+
   automaton blind(unsigned tape)
   {
     return vcsn::dyn::blind(val_, tape);
@@ -752,6 +754,11 @@ automaton::automaton(const ratexp& r)
   *this = r.derived_term();
 }
 
+label automaton::ambiguous_word() const
+{
+  return vcsn::dyn::ambiguous_word(val_);
+}
+
 polynomial automaton::enumerate(unsigned max) const
 {
   return vcsn::dyn::enumerate(val_, max);
@@ -892,6 +899,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def(bp::init<const std::string&, bp::optional<const std::string&>>())
 
     .def("accessible", &automaton::accessible)
+    .def("ambiguous_word", &automaton::ambiguous_word)
     .def("blind", &automaton::blind)
     .def("chain", static_cast<automaton::bin_chain_t>(&automaton::chain), chain())
     .def("coaccessible", &automaton::coaccessible)
