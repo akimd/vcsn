@@ -74,23 +74,42 @@ r = vcsn.context('lan_char(a-z)_z').ratexp(e)
 bench('r.thompson()', 'r = {}, c = [a-z]? -> Z'.format(e),
       lambda: r.thompson())
 
-# determinize.
-for n in [21, 18]:
+# determinize.  These are the well know worst cases.  21 is too long,
+# slowly moving to use 18 as reference.
+for n in [18, 21]:
     a = vcsn.context('lal_char(abc)_b').ladybird(n)
     bench('a.determinize()', 'a = ladybird({})'.format(n),
           lambda: a.determinize())
 
+# In the case of 18, check that we scale well with the size of the
+# (context's) alphabet.
 n = 18
 a = vcsn.context('lal_char(a-zA-Z0-9)_b').ladybird(n)
 bench('a.determinize()', 'a = ladybird({}), c = [a-zA-Z0-9] -> B'.format(n),
       lambda: a.determinize())
 
-for n in [13, 14]:
+# See how boolean vs. weighted determinization goes.
+for n in [13, 14, 16]:
   a = vcsn.context('lal_char(abc)_b').de_bruijn(n)
   bench('a.determinize()', 'a = de_bruijn({})'.format(n),
         lambda: a.determinize())
   bench('a.determinize("weighted")', 'a = de_bruijn({})'.format(n),
         lambda: a.determinize("weighted"))
+
+# Something more realistic: the previous automata explode in an
+# exponential number of states, and half of them end up being final.
+# This exagerates the importance of the handling of the final states.
+# 
+# The following bench tries to be more realistic (i.e., more NLP
+# like): the automata are almost deterministic (and easy to
+# determinize), are "wide", and have few final states.
+n = 100
+r = '([^]+a){{{}}}'.format(n)
+a = vcsn.context('lal_char(a-zA-Z0-9)_b').ratexp(r).standard()
+bench('a.determinize()', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r),
+      lambda: a.determinize())
+bench('a.determinize("weighted")', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r),
+      lambda: a.determinize("weighted"))
 
 # eval.
 n = 150
