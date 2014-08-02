@@ -178,8 +178,8 @@ namespace vcsn
       for (auto i: l)
         for (auto j: r)
           add_here(res,
-                     labelset()->concat(i.first, j.first),
-                     weightset()->mul(i.second, j.second));
+                   labelset()->concat(i.first, j.first),
+                   weightset()->mul(i.second, j.second));
       return res;
     }
 
@@ -192,8 +192,8 @@ namespace vcsn
       for (auto i: l)
         for (auto j: r)
           add_here(res,
-                     labelset()->conjunction(i.first, j.first),
-                     weightset()->mul(i.second, j.second));
+                   labelset()->conjunction(i.first, j.first),
+                   weightset()->mul(i.second, j.second));
       return res;
     }
 
@@ -238,9 +238,9 @@ namespace vcsn
       value_t res;
       for (auto i: v)
         add_here(res,
-                   // FIXME: This is wrong, it should be mul, not concat.
-                   labelset()->concat(lhs, i.first),
-                   i.second);
+                 // FIXME: This is wrong, it should be mul, not concat.
+                 labelset()->concat(lhs, i.first),
+                 i.second);
       return res;
     }
 
@@ -262,8 +262,8 @@ namespace vcsn
       value_t res;
       for (auto i: v)
         add_here(res,
-                   labelset()->concat(i.first, rhs),
-                   i.second);
+                 labelset()->concat(i.first, rhs),
+                 i.second);
       return res;
     }
 
