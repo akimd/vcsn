@@ -118,7 +118,8 @@ namespace vcsn
 
       std::ostream&
       print_state_name(state_t s, std::ostream& o,
-                       const std::string& fmt) const
+                       const std::string& fmt = "text",
+                       bool = false) const
       {
         auto i = origins().find(s);
         if (i == std::end(origins()))

@@ -87,9 +87,15 @@ namespace vcsn
 
       std::ostream&
       print_state_name(typename super_t::state_t s, std::ostream& o,
-                       const std::string& fmt = "text") const
+                       const std::string& fmt = "text", bool delimit = false)
+                      const
       {
-        return print_state_name_(s, o, fmt, indices);
+        if (delimit)
+          o << '(';
+        print_state_name_(s, o, fmt, indices);
+        if (delimit)
+          o << ')';
+        return o;
       }
 
       /// Result state type.
@@ -219,7 +225,7 @@ namespace vcsn
               {
                 (o << sep,
                  std::get<I>(auts_)->print_state_name(std::get<I>(i->second),
-                                                      o, fmt),
+                                                      o, fmt, true),
                  sep = ", ",
                  0)...
                };

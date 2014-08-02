@@ -21,10 +21,9 @@ def check(aut, expfile, algo = "auto", deterministic = False):
     exp = load(expfile)
     CHECK_EQ(exp, det)
     CHECK_EQ(True, det.is_deterministic())
-    # In the case of "Zmin", we always display the weight, so we stack
-    # them: <0>0 becomes <0><0>0, etc.
-    if expfile != "zmin-det":
-        CHECK_EQ(exp, det.determinize(algo))
+    # Because we stack additional "{...}", the rendering is different,
+    # so strip.
+    CHECK_EQ(det.strip(), det.determinize(algo).strip())
 
 ctx = vcsn.context('lal_char(ab)_b')
 check(ctx.de_bruijn(3), 'de-bruijn-3-det')

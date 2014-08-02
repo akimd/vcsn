@@ -346,7 +346,8 @@ namespace vcsn
 
     std::ostream&
     print_state_name(state_t s, std::ostream& o,
-                     const std::string& = "text") const
+                     const std::string& = "text",
+                     bool = true) const
     {
       return print_state(s, o);
     }
