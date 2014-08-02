@@ -320,7 +320,18 @@ namespace vcsn
       detweighted_automaton_impl(const automaton_t& a)
         : super_t(a->context())
         , input_(a)
-      {}
+      {
+        // The initial state.
+        state_name_t n;
+        for (auto t : input_->initial_transitions())
+          n.emplace(input_->dst_of(t), input_->weight_of(t));
+        this->set_initial(state_(n));
+
+        // Post.
+        n.clear();
+        n.emplace(input_->post(), ws_.one());
+        map_[n] = super_t::post();
+      }
 
       static std::string sname()
       {
@@ -332,21 +343,10 @@ namespace vcsn
         return "detweighted_automaton<" + input_->vname(full) + ">";
       }
 
-      // Initialize initial state of new weighted automaton.
-      void init_initial_state()
-      {
-        state_name_t ss;
-        for (auto t : input_->initial_transitions())
-          ss.emplace(input_->dst_of(t), input_->weight_of(t));
-        this->set_initial(state_(ss));
-      }
-
       /// The determinization of weighted automaton
       /// with the idea based on Mohri's algorithm.
       void operator()()
       {
-        init_initial_state();
-
         // label -> <destination, sum of weights>.
         std::map<label_t, state_name_t,
                  vcsn::less<labelset_t_of<automaton_t>>> dests;
@@ -361,7 +361,7 @@ namespace vcsn
               {
                 auto s = p.first;
                 auto v = p.second;
-                for (auto t : input_->out(s))
+                for (auto t : input_->all_out(s))
                   {
                     auto l = input_->label_of(t);
                     auto dst = input_->dst_of(t);
@@ -430,14 +430,6 @@ namespace vcsn
           {
             res = this->new_state();
             map_[name] = res;
-
-            // TODOs: Improve finding the final state
-            for (const auto& p : name)
-              if (input_->is_final(p.first))
-                this->add_final(res,
-                                ws_.mul(p.second,
-                                        input_->get_final_weight(p.first)));
-
             todo_.push(name);
           }
         else
@@ -458,7 +450,7 @@ namespace vcsn
       weightset_t ws_ = *input_->weightset();
 
       /// (Nameset) The polynomialset that stores weighted states.
-      state_nameset_t ns_ = {{stateset(input_), *input_->weightset()}};
+      state_nameset_t ns_ = {{stateset(input_), ws_}};
 
       /// The sets of (input) states waiting to be processed.
       using queue = std::queue<state_name_t>;
