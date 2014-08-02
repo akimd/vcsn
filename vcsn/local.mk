@@ -25,6 +25,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/copy.hh                             \
   %D%/algos/de-bruijn.hh                        \
   %D%/algos/derivation.hh                       \
+  %D%/algos/derived-term.hh                     \
   %D%/algos/determinize.hh                      \
   %D%/algos/distance.hh                         \
   %D%/algos/divkbaseb.hh                        \

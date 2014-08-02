@@ -1,5 +1,6 @@
 #include <vcsn/dyn/automaton.hh>
 #include <vcsn/algos/derivation.hh>
+#include <vcsn/algos/derived-term.hh>
 #include <vcsn/algos/first-order.hh>
 #include <vcsn/dyn/algos.hh>
 #include <lib/vcsn/algos/registry.hh>
