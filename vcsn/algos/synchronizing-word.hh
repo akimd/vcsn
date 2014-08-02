@@ -92,12 +92,10 @@ namespace vcsn
     template <typename Aut>
     class pair_automaton_impl
       : public automaton_decorator<mutable_automaton<context_t_of<Aut>>>
-    //: public automaton_decorator<typename Aut::element_type::automaton_nocv_t>
     {
     public:
       using automaton_t =  Aut;
       using automaton_nocv_t = mutable_automaton<context_t_of<Aut>>;
-        // typename automaton_t::element_type::automaton_nocv_t;
       using context_t = context_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
       using transition_t = transition_t_of<automaton_t>;
@@ -173,8 +171,8 @@ namespace vcsn
 
       state_t get_q0() const
       {
-        require(!keep_initials_, "can't get_q0() on a pairer that "
-                "keeps origins");
+        require(!keep_initials_,
+                "can't get_q0() on a pairer that keeps origins");
         return q0_;
       }
 
@@ -292,6 +290,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut, typename>
       automaton
       pair(const automaton& aut, bool keep_initials = false)
@@ -351,8 +350,9 @@ namespace vcsn
       void init_synchro(bool keep_initials = false)
       {
         init_pair(keep_initials);
-        require(pair_->states().size() == paths_.size() +
-                pair_->singletons().size(), "automaton is not synchronizing");
+        require(pair_->states().size()
+                == paths_.size() + pair_->singletons().size(),
+                "automaton is not synchronizing");
 
         for (auto s : pair_->states())
           if (!pair_->is_singleton(s))
@@ -612,6 +612,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut>
       bool is_synchronizing(const automaton& aut)
       {
@@ -651,6 +652,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Aut, typename String>
       label
       synchronizing_word(const automaton& aut, const std::string& algo)
@@ -716,6 +718,7 @@ namespace vcsn
   {
     namespace detail
     {
+      /// Bridge.
       template <typename Ctx, typename>
       automaton
       cerny(const context& ctx, unsigned num_states)

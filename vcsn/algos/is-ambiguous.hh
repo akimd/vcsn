@@ -7,6 +7,15 @@
 
 namespace vcsn
 {
+
+  /*---------------.
+  | is_ambiguous.  |
+  `---------------*/
+
+  /// Whether an automaton is ambiguous.
+  ///
+  /// \param in aut        the automaton
+  /// \returns whether ambiguous.
   template <typename Aut>
   bool is_ambiguous(const Aut& aut)
   {
@@ -28,9 +37,6 @@ namespace vcsn
     return false;
   }
 
-  /*--------------------.
-  | dyn::is_ambiguous.  |
-  `--------------------*/
 
   namespace dyn
   {

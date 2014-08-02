@@ -508,7 +508,7 @@ namespace vcsn
     /// Sum of two weights.
     weight sum(const weight& lhs, const weight& rhs);
 
-    /// Return the smallest synchronizing word, or raise if there is none.
+    /// A synchronizing word, or raise if there is none.
     label synchronizing_word(const automaton& aut,
                              const std::string& algo = "greedy");
 

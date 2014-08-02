@@ -47,9 +47,9 @@ namespace vcsn
                 auto cur_p = parent.find(p);
                 unsigned cur_d;
                 if (cur_p == parent.end())
-                    cur_d = 1;
+                  cur_d = 1;
                 else
-                    cur_d = cur_p->second.first + 1;
+                  cur_d = cur_p->second.first + 1;
                 parent[s] = {cur_d, t};
               }
           }
@@ -57,10 +57,15 @@ namespace vcsn
     return parent;
   }
 
+  /// A shortest path between two states.
+  ///
+  /// \param aut    the automaton
+  /// \param start  the starting state
+  /// \param end    the target state
   template<typename Aut>
   std::vector<transition_t_of<Aut>>
-  path_bfs(const Aut& aut, state_t_of<Aut> start,
-                               state_t_of<Aut> end)
+  path_bfs(const Aut& aut,
+           state_t_of<Aut> start, state_t_of<Aut> end)
   {
     using context_t = context_t_of<Aut>;
     using automaton_t =  mutable_automaton<context_t>;
@@ -101,6 +106,7 @@ namespace vcsn
                 }
             }
       }
+    // FIXME: why don't we raise here?
     return std::vector<transition_t>();
   }
 }
