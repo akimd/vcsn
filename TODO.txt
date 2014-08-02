@@ -255,9 +255,9 @@ In vcsn/ctx/instantiate.hh, we shouldn't need to say
 ** accessible etc.
 The extraction of the accessible subautomaton currently requires several
 traversals of the automaton, although one would suffice.  This is because it
-is factored a lot, using std::copy for instance.
+is factored a lot, using vcsn::copy for instance.
 
-Keep it factored, but for instance, introduce a std::copy that walks only
+Keep it factored, but for instance, introduce a vcsn::copy that walks only
 the accessible parts.
 
 ** ambiguous_word
