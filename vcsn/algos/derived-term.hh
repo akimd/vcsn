@@ -46,16 +46,7 @@ namespace vcsn
 
       automaton_t via_derivation(const ratexp_t& ratexp)
       {
-        weightset_t ws = *rs_.weightset();
-        // Turn the ratexp into a polynomial.
-        {
-          polynomial_t initial
-            = breaking_ ? split(rs_, ratexp)
-            : polynomial_t{{ratexp, ws.one()}};
-          for (const auto& p: initial)
-            // Also loads todo_.
-            res_->set_initial(p.first, p.second);
-        }
+        init_(ratexp);
 
         const auto& ls = rs_.labelset()->genset();
         while (!res_->todo_.empty())
@@ -73,18 +64,9 @@ namespace vcsn
 
       automaton_t via_expansion(const ratexp_t& ratexp)
       {
-        weightset_t ws = *rs_.weightset();
-        // Turn the ratexp into a polynomial.
-        {
-          polynomial_t initial
-            = breaking_ ? split(rs_, ratexp)
-            : polynomial_t{{ratexp, ws.one()}};
-          for (const auto& p: initial)
-            // Also loads todo_.
-            res_->set_initial(p.first, p.second);
-        }
-        rat::first_order_visitor<ratexpset_t> expand{rs_};
+        init_(ratexp);
 
+        rat::first_order_visitor<ratexpset_t> expand{rs_};
         while (!res_->todo_.empty())
           {
             ratexp_t src = res_->todo_.top();
@@ -100,6 +82,18 @@ namespace vcsn
       }
 
     private:
+      void init_(const ratexp_t& ratexp)
+      {
+        weightset_t ws = *rs_.weightset();
+        // Turn the ratexp into a polynomial.
+        polynomial_t initial
+          = breaking_ ? split(rs_, ratexp)
+          : polynomial_t{{ratexp, ws.one()}};
+        for (const auto& p: initial)
+          // Also loads todo_.
+          res_->set_initial(p.first, p.second);
+      }
+
       /// The ratexp's set.
       ratexpset_t rs_;
       /// Whether to perform a breaking derivation.
