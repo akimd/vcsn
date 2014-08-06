@@ -18,7 +18,6 @@ notebooksdir = $(datadir)/vcsn/notebooks
 # Automake.
 dist_notebooks_data =                                   \
   '%D%/01 - Playing with contexts.ipynb'                \
-  '%D%/02 - Basic operations on automata.ipynb'         \
   '%D%/index.ipynb'                                     \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/index.ipynb'                               \
@@ -31,8 +30,11 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.reduce.ipynb'                    \
   '%D%/algos/automaton.standard.ipynb'                  \
   '%D%/algos/automaton.synchronizing_word.ipynb'        \
+  '%D%/algos/automaton.transpose.ipynb'                 \
   '%D%/algos/ratexp.is_valid.ipynb'                     \
-  '%D%/algos/ratexp.standard.ipynb'
+  '%D%/algos/ratexp.standard.ipynb'                     \
+  '%D%/algos/ratexp.transpose.ipynb'                    \
+  '%D%/algos/ratexp.transposition.ipynb'
 
 dist-hook: dist-hook-%C%
 dist-hook-%C%:
