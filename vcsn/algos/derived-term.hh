@@ -75,8 +75,14 @@ namespace vcsn
             auto expansion = expand(src);
             res_->set_final(s, expansion.constant);
             for (const auto& p: expansion.polynomials)
-              for (const auto& m: p.second)
-                res_->add_transition(s, m.first, p.first, m.second);
+              if (breaking_)
+                for (const auto& m1: p.second)
+                  for (const auto& m2: split(rs_, m1.first))
+                    res_->add_transition(s, m2.first, p.first,
+                                         ws_.mul(m1.second, m2.second));
+              else
+                for (const auto& m: p.second)
+                  res_->add_transition(s, m.first, p.first, m.second);
           }
         return res_;
       }
@@ -84,11 +90,10 @@ namespace vcsn
     private:
       void init_(const ratexp_t& ratexp)
       {
-        weightset_t ws = *rs_.weightset();
         // Turn the ratexp into a polynomial.
         polynomial_t initial
           = breaking_ ? split(rs_, ratexp)
-          : polynomial_t{{ratexp, ws.one()}};
+          : polynomial_t{{ratexp, ws_.one()}};
         for (const auto& p: initial)
           // Also loads todo_.
           res_->set_initial(p.first, p.second);
@@ -96,6 +101,8 @@ namespace vcsn
 
       /// The ratexp's set.
       ratexpset_t rs_;
+      /// Its weightset.
+      weightset_t ws_ = *rs_.weightset();
       /// Whether to perform a breaking derivation.
       bool breaking_ = false;
       /// The resulting automaton.

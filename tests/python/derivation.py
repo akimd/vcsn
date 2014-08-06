@@ -7,6 +7,20 @@ from test import *
 
 ctx = vcsn.context("lal_char(abc)_ratexpset<lal_char(xyz)_z>")
 
+def check_derived_term(r, exp, algo):
+    CHECK_EQ(open(medir + '/' + exp + '.gv').read().strip(),
+             r.derived_term(algo))
+
+def check_dt(r, exp):
+    'Check derived-term automaton.'
+    for algo in ['derivation', 'expansion']:
+        check_derived_term(r, exp, algo)
+
+def check_bdt(r, exp):
+    'Check broken derived-term automaton.'
+    for algo in ['breaking_derivation', 'breaking_expansion']:
+        check_derived_term(r, exp, algo)
+
 def check(re, s, exp, breaking = False):
     "Check that d/ds(re) = exp."
     if not isinstance(re, vcsn.ratexp):
@@ -131,8 +145,7 @@ check(E1t, 'ab',  "<2/9>b*"+E1)
 check(E1t, 'ba',  "<2/9>a*"+E1)
 check(E1t, 'bb', "<10/9>b*"+E1)
 
-CHECK_EQ(open(medir + '/e1-dt.gv').read().strip(),
-         str(E1t.derived_term()))
+check_dt(E1t, 'e1-dt')
 
 
 ###########################
@@ -195,8 +208,7 @@ check(E2t, 'ba', F2)
 check(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 3.
-CHECK_EQ(open(medir + '/e2-dt.gv').read().strip(),
-         str(E2t.derived_term()))
+check_dt(E2t, 'e2-dt')
 
 # FIXME: Support for polynomials.
 # Example 4.
@@ -214,12 +226,9 @@ check_br(E2t, 'ba', "a* + b*")
 check_br(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 6.
-CHECK_EQ(open(medir + '/e2-dt-breaking.gv').read().strip(),
-         str(E2t.derived_term("breaking_derivation")))
+check_bdt(E2t, 'e2-dt-breaking')
 
 # Figure 3.
 fig3 = vcsn.context('lal_char(abcd)_b').ratexp('a(b+c+d)')
-CHECK_EQ(open(medir + '/h3-dt.gv').read().strip(),
-         str(fig3.derived_term()))
-CHECK_EQ(open(medir + '/h3-dt-breaking.gv').read().strip(),
-         str(fig3.derived_term("breaking_derivation")))
+check_dt(fig3, 'h3-dt')
+check_bdt(fig3, 'h3-dt-breaking')
