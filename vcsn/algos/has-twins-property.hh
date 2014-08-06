@@ -8,6 +8,7 @@
 
 # include <vcsn/misc/unordered_set.hh>
 # include <vcsn/misc/unordered_map.hh>
+# include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/accessible.hh>
@@ -16,6 +17,7 @@
 
 namespace vcsn
 {
+
   /*----------.
   |  reverse  |
   `----------*/
@@ -55,6 +57,62 @@ namespace vcsn
 
       REGISTER_DECLARE(inverse,
                        (const automaton&) -> automaton);
+    }
+  }
+
+  /*--------------------.
+  | cycle_unambiguous.  |
+  `--------------------*/
+
+  /// Whether \a aut is cycle-unambiguous.
+  template <typename Aut>
+  bool
+  is_cycle_unambiguous(const Aut& aut)
+  {
+    bool cycle_unambiguous = false;
+    auto aut2 = copy(aut);
+
+    // Change all initial states and final states
+    // to normal states.
+    for (auto t : aut2->initial_transitions())
+      aut2->unset_initial(aut2->dst_of(t));
+    for (auto t : aut2->final_transitions())
+      aut2->unset_final(aut2->src_of(t));
+
+    // With each state, set initial and final
+    // state, if the automaton is ambiguous so
+    // it is also cycle-unambiguous.
+    for (auto s : aut2->states())
+      {
+        aut2->set_initial(s);
+        aut2->set_final(s);
+        if (is_ambiguous(aut))
+          {
+            cycle_unambiguous = true;
+            break;
+          }
+        aut2->unset_initial(s);
+        aut2->unset_final(s);
+      }
+
+    return cycle_unambiguous;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      // Bridge.
+      template <typename Aut>
+      bool
+      is_cycle_unambiguous(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return ::vcsn::is_cycle_unambiguous(a);
+      }
+
+      REGISTER_DECLARE(is_cycle_unambiguous,
+                       (const automaton&) -> bool);
     }
   }
 

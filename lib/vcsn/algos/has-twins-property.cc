@@ -7,6 +7,16 @@ namespace vcsn
 {
   namespace dyn
   {
+
+    REGISTER_DEFINE(is_cycle_unambiguous);
+
+    bool
+    is_cycle_unambiguous(const automaton& aut)
+    {
+      return detail::is_cycle_unambiguous_registry().call(aut);
+    }
+
+
     REGISTER_DEFINE(has_twins_property);
 
     bool

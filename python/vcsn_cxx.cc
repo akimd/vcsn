@@ -224,6 +224,11 @@ struct automaton
     return vcsn::dyn::is_complete(val_);
   }
 
+  bool is_cycle_unambiguous() const
+  {
+    return vcsn::dyn::is_cycle_unambiguous(val_);
+  }
+
   bool is_deterministic() const
   {
     return vcsn::dyn::is_deterministic(val_);
@@ -916,6 +921,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)
     .def("is_complete", &automaton::is_complete)
+    .def("is_cycle_unambiguous", &automaton::is_cycle_unambiguous)
     .def("is_deterministic", &automaton::is_deterministic)
     .def("is_empty", &automaton::is_empty)
     .def("is_eps_acyclic", &automaton::is_eps_acyclic)
