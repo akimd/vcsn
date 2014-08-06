@@ -174,7 +174,6 @@ namespace vcsn
         REGISTER(concatenate_polynomial, wps_t, wps_t);
         REGISTER(de_bruijn, ctx_t, unsigned);
         REGISTER(derivation, rs_t, wls_t, bool);
-        REGISTER(derived_term, rs_t, bool);
         REGISTER(difference_ratexp, rs_t, b_rs_t);
         REGISTER(divkbaseb, ctx_t, unsigned, unsigned);
         REGISTER(double_ring, ctx_t, unsigned, const std::vector<unsigned>);
@@ -315,6 +314,7 @@ namespace vcsn
         REGISTER(context_of, aut_t);
         REGISTER(context_of_ratexp, rs_t);
         REGISTER(copy, aut_t);
+        REGISTER(derived_term, rs_t, const std::string);
         REGISTER(dot, aut_t, std::ostream, bool);
         REGISTER(efsm, aut_t, std::ostream);
         REGISTER(expand, rs_t);
@@ -336,7 +336,6 @@ namespace vcsn
         REGISTER(left_mult_ratexp, ws_t, rs_t);
         REGISTER(lift_automaton, aut_t);
         REGISTER(lift_ratexp, rs_t);
-        REGISTER(linear, rs_t);
         REGISTER(list_polynomial, rps_t, std::ostream);
         REGISTER(make_automaton_editor, ctx_t);
         REGISTER(make_context, ctx_t);

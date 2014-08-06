@@ -215,11 +215,11 @@ check_br(E2t, 'bb', "b*a({})".format(F2))
 
 # Example 6.
 CHECK_EQ(open(medir + '/e2-dt-breaking.gv').read().strip(),
-         str(E2t.derived_term(True)))
+         str(E2t.derived_term("breaking_derivation")))
 
 # Figure 3.
 fig3 = vcsn.context('lal_char(abcd)_b').ratexp('a(b+c+d)')
 CHECK_EQ(open(medir + '/h3-dt.gv').read().strip(),
          str(fig3.derived_term()))
 CHECK_EQ(open(medir + '/h3-dt-breaking.gv').read().strip(),
-         str(fig3.derived_term(True)))
+         str(fig3.derived_term("breaking_derivation")))

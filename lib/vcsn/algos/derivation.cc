@@ -26,27 +26,14 @@ namespace vcsn
     REGISTER_DEFINE(derived_term);
 
     automaton
-    derived_term(const ratexp& e, bool breaking)
+    derived_term(const ratexp& e, const std::string& algo)
     {
-      return getenv("VCSN_LINEAR")
-        ? linear(e)
-        : detail::derived_term_registry().call(e, breaking);
+      return detail::derived_term_registry().call(e, algo);
     }
 
-    /*--------------.
-    | linear(exp).  |
-    `--------------*/
-
-    REGISTER_DEFINE(linear);
-    automaton
-    linear(const ratexp& e)
-    {
-      return detail::linear_registry().call(e);
-    }
-
-    /*---------------------------.
-    | first_order(exp, string).  |
-    `---------------------------*/
+    /*-------------------.
+    | first_order(exp).  |
+    `-------------------*/
     REGISTER_DEFINE(first_order);
 
     expansion

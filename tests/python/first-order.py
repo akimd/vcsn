@@ -9,8 +9,8 @@ def is_wordset(c):
     return str(c).startswith("law_")
 
 def check(re, exp, use_spontaneous = False):
-    '''Check that fo(re) = exp.  Also check that `linear` and
-    `derived_term` compute the same result.
+    '''Check that fo(re) = exp.  Also check that both derived_term algorithms
+    (`derivation` and `expansion`) compute the same result.
     '''
     r = c.ratexp(re)
     eff = r.first_order()
@@ -20,11 +20,11 @@ def check(re, exp, use_spontaneous = False):
     # automaton.
     if not use_spontaneous and not is_wordset(c):
         try:
-            dt = r.derived_term()
+            dt = r.derived_term("derivation")
         except:
             pass
         else:
-            CHECK_ISOMORPHIC(dt, r.linear())
+            CHECK_ISOMORPHIC(dt, r.derived_term("expansion"))
 
 ##########################
 ## Regular derivation.  ##
@@ -161,7 +161,7 @@ check(E1t,  '<2> + a.[<1/3>a*{}] + b.[<2/3>b*{}]'.format(E1, E1))
 
 # check_conjunction RE1 RE2...
 # -----------------------------
-# Check linear(conjunction) = conjunction(linear).
+# Check derived-term(conjunction) = conjunction(derived-term).
 def check_conjunction(*ratexps, **kwargs):
     rat = None
     auts = []
@@ -171,11 +171,11 @@ def check_conjunction(*ratexps, **kwargs):
             rat = exp
         else:
             rat &= exp
-        auts += [exp.linear()]
+        auts += [exp.derived_term("expansion")]
     # Product of automata.
     a1 = vcsn.automaton._product(auts)
     # Automaton of product.
-    a2 = rat.linear()
+    a2 = rat.derived_term("expansion")
     if 'equiv' in kwargs:
         CHECK_EQUIV(a1, a2)
     else:

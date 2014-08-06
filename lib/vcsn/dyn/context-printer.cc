@@ -46,7 +46,6 @@ namespace vcsn
       ALGO("is-synchronized-by", "synchronizing-word");
       ALGO("is-trim", "accessible");
       ALGO("is-useless", "accessible");
-      ALGO("linear", "first-order");
       ALGO("list", "print");
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");

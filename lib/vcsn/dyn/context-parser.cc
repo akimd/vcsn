@@ -256,7 +256,6 @@ namespace vcsn
       // xxx_automaton<Aut>.
       else if (prefix == "determinized"
                || prefix == "detweighted"
-               || prefix == "linear"
                || prefix == "pair"
                || prefix == "partition"
                || prefix == "permutation"

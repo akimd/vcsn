@@ -3,6 +3,7 @@
 
 # include <vcsn/algos/constant-term.hh>
 # include <vcsn/algos/derivation.hh>
+# include <vcsn/algos/first-order.hh>
 # include <vcsn/algos/split.hh>
 # include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/core/ratexp-automaton.hh>
@@ -43,7 +44,7 @@ namespace vcsn
         , res_{make_shared_ptr<automaton_t>(rs_.context())}
       {}
 
-      automaton_t operator()(const ratexp_t& ratexp)
+      automaton_t via_derivation(const ratexp_t& ratexp)
       {
         weightset_t ws = *rs_.weightset();
         // Turn the ratexp into a polynomial.
@@ -67,7 +68,35 @@ namespace vcsn
               for (const auto& m: derivation(rs_, src, l, breaking_))
                 res_->add_transition(s, m.first, l, m.second);
           }
-        return std::move(res_);
+        return res_;
+      }
+
+      automaton_t via_expansion(const ratexp_t& ratexp)
+      {
+        weightset_t ws = *rs_.weightset();
+        // Turn the ratexp into a polynomial.
+        {
+          polynomial_t initial
+            = breaking_ ? split(rs_, ratexp)
+            : polynomial_t{{ratexp, ws.one()}};
+          for (const auto& p: initial)
+            // Also loads todo_.
+            res_->set_initial(p.first, p.second);
+        }
+        rat::first_order_visitor<ratexpset_t> expand{rs_};
+
+        while (!res_->todo_.empty())
+          {
+            ratexp_t src = res_->todo_.top();
+            auto s = res_->state(src);
+            res_->todo_.pop();
+            auto expansion = expand(src);
+            res_->set_final(s, expansion.constant);
+            for (const auto& p: expansion.polynomials)
+              for (const auto& m: p.second)
+                res_->add_transition(s, m.first, p.first, m.second);
+          }
+        return res_;
       }
 
     private:
@@ -80,15 +109,28 @@ namespace vcsn
     };
   }
 
-  /// Derive a ratexp wrt to a string.
+  /// The derived-term automaton, computed by derivation.
   template <typename RatExpSet>
   inline
   ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
-  derived_term(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r,
-               bool breaking = false)
+  derived_term_derivation(const RatExpSet& rs,
+                          const typename RatExpSet::ratexp_t& r,
+                          bool breaking = false)
   {
     detail::derived_termer<RatExpSet> dt{rs, breaking};
-    return dt(r);
+    return dt.via_derivation(r);
+  }
+
+  /// The derived-term automaton, computed by expansion.
+  template <typename RatExpSet>
+  inline
+  ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
+  derived_term_expansion(const RatExpSet& rs,
+                         const typename RatExpSet::ratexp_t& r,
+                         bool breaking = false)
+  {
+    detail::derived_termer<RatExpSet> dt{rs, breaking};
+    return dt.via_expansion(r);
   }
 
   namespace dyn
@@ -96,17 +138,51 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
-      template <typename RatExpSet, typename Book>
-      automaton
-      derived_term(const ratexp& exp, bool breaking = false)
+      template <typename RatExpSet, typename String>
+      inline
+      typename std::enable_if<RatExpSet::context_t::labelset_t::is_free(),
+                              automaton>::type
+      derived_term(const ratexp& exp, const std::string& algo)
       {
-        const auto& r = exp->as<RatExpSet>();
-        return make_automaton(::vcsn::derived_term(r.ratexpset(),
-                                                   r.ratexp(), breaking));
+        const auto& e = exp->as<RatExpSet>();
+        const auto& rs = e.ratexpset();
+        const auto& r = e.ratexp();
+        auto res
+          = algo == "derivation"
+          ? ::vcsn::derived_term_derivation(rs, r)
+          : algo == "breaking_derivation"
+          ? ::vcsn::derived_term_derivation(rs, r, true)
+          : algo == "auto" || algo == "expansion"
+          ? ::vcsn::derived_term_expansion(rs, r)
+          : algo == "breaking_expansion"
+          ? ::vcsn::derived_term_expansion(rs, r, true)
+          : nullptr;
+        require(!!res, "derived_term: invalid algorithm: " + algo);
+        return make_automaton(res);
+      }
+
+      /// Bridge.
+      template <typename RatExpSet, typename String>
+      inline
+      typename std::enable_if<!RatExpSet::context_t::labelset_t::is_free(),
+                              automaton>::type
+      derived_term(const ratexp& exp, const std::string& algo)
+      {
+        const auto& e = exp->as<RatExpSet>();
+        const auto& rs = e.ratexpset();
+        const auto& r = e.ratexp();
+        auto res
+          = algo == "auto" || algo == "expansion"
+          ? ::vcsn::derived_term_expansion(rs, r)
+          : algo == "breaking_expansion"
+          ? ::vcsn::derived_term_expansion(rs, r, true)
+          : nullptr;
+        require(!!res, "derived_term: invalid algorithm: " + algo);
+        return make_automaton(res);
       }
 
       REGISTER_DECLARE(derived_term,
-                       (const ratexp& e, bool breaking) -> automaton);
+                       (const ratexp& e, const std::string& algo) -> automaton);
     }
   }
 
