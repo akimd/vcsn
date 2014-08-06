@@ -334,12 +334,10 @@ struct derived_term: vcsn_function
     // Input.
     using namespace vcsn::dyn;
     ratexp exp = read_ratexp(opts);
-    bool breaking = (0 < opts.argv.size()
-                     ? boost::lexical_cast<bool>(opts.argv[0])
-                     : false);
+    std::string algo = 1 <= opts.argv.size() ? opts.argv[0] : "auto";
 
     // Process.
-    automaton res = vcsn::dyn::derived_term(exp, breaking);
+    automaton res = vcsn::dyn::derived_term(exp, algo);
 
     // Output.
     opts.print(res);

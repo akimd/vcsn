@@ -47,20 +47,21 @@ for fmt in ['dot', 'efsm', 'fado']:
           lambda: vcsn.automaton(auts[fmt], fmt))
 del auts
 
-# derived_term
+## -------------- ##
+## derived_term.  ##
+## -------------- ##
 e = "(a+b)*b(<2>a+<2>b){150}"
 r = vcsn.context('lal_char(ab)_z').ratexp(e)
-bench('r.derived_term()', 'r = {}, c = [ab] -> Z'.format(e),
-      lambda: r.derived_term())
+bench('r.derived_term("derivation")', 'r = {}, c = [ab] -> Z'.format(e),
+      lambda: r.derived_term("derivation"))
 
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.derived_term()', 'r = {}, c = [a-z] -> Z'.format(e),
-      lambda: r.derived_term())
+bench('r.derived_term("derivation")', 'r = {}, c = [a-z] -> Z'.format(e),
+      lambda: r.derived_term("derivation"))
 
-# linear
 r = vcsn.context('lal_char(a-z)_z').ratexp(e)
-bench('r.linear()', 'r = {}, c = [a-z] -> Z'.format(e),
-      lambda: r.linear())
+bench('r.derived_term("expansion")', 'r = {}, c = [a-z] -> Z'.format(e),
+      lambda: r.derived_term("expansion"))
 
 # standard
 e = "(a+b)*b(<2>a+<2>b){20000}"
@@ -113,14 +114,14 @@ bench('a.determinize("weighted")', 'a = std({}), c = [a-zA-Z0-9] -> B'.format(r)
 
 # eval.
 n = 150
-# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
+# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
 a = b.de_bruijn(n)
 bench('a.eval("a"*{})'.format(n+1), 'a = de_bruijn({})'.format(n),
       lambda: a.eval('a'*(n+1)), number=1000)
 
 # shortest.
 n = 9
-# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term()
+# too slow: db = b.ratexp('(a+b)*a(a+b){' + str(n) + '}').derived_term('derivation')
 a = b.de_bruijn(n)
 bench('a.shortest(5)', 'a = de_bruijn({})'.format(n),
       lambda: a.shortest(5))

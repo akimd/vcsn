@@ -609,9 +609,9 @@ struct ratexp
                  vcsn::rat::identities::series);
   }
 
-  automaton derived_term(bool breaking = false) const
+  automaton derived_term(const std::string& algo = "auto") const
   {
-    return vcsn::dyn::derived_term(val_, breaking);
+    return vcsn::dyn::derived_term(val_, algo);
   }
 
   ratexp difference(const ratexp& rhs) const
@@ -656,11 +656,6 @@ struct ratexp
   ratexp lift() const
   {
     return vcsn::dyn::lift(val_);
-  }
-
-  automaton linear() const
-  {
-    return vcsn::dyn::linear(val_);
   }
 
   ratexp right_mult(const weight& w) const;
@@ -1033,7 +1028,6 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_series", &ratexp::is_series)
     .def("is_valid", &ratexp::is_valid)
     .def("left_mult", &ratexp::left_mult)
-    .def("linear", &ratexp::linear)
     .def("lift", &ratexp::lift)
     .def("ratexp", &ratexp::as_ratexp)
     .def("right_mult", &ratexp::right_mult)

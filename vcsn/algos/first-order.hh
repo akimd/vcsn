@@ -162,7 +162,7 @@ namespace vcsn
               // break.  This optimization (as opposed to performing
               // all the remaining iterations and repeatedly calling
               // ps.mul) improves the score for
-              // linear([ab]*a[ab]{150}) from 0.32s to 0.23s on
+              // derived-term([ab]*a[ab]{150}) from 0.32s to 0.23s on
               // erebus, clang++ 3.4.
               ratexp_t rhss
                 = transposed_
@@ -439,102 +439,6 @@ namespace vcsn
 
       REGISTER_DECLARE(first_order,
                        (const ratexp& e) -> expansion);
-    }
-  }
-
-
-  /*-----------------.
-  | linear(ratexp).  |
-  `-----------------*/
-
-  namespace detail
-  {
-    /// Build the derived-term automaton via expansions.
-    template <typename RatExpSet>
-    struct linearer
-    {
-      using ratexpset_t = RatExpSet;
-      using ratexp_t = typename ratexpset_t::value_t;
-
-      using context_t = context_t_of<ratexpset_t>;
-      using weightset_t = weightset_t_of<context_t>;
-      using weight_t = weight_t_of<context_t>;
-
-      using automaton_t = ratexp_automaton<mutable_automaton<context_t>>;
-      using state_t = state_t_of<automaton_t>;
-
-      /// Symbolic states: the derived terms are polynomials of ratexps.
-      using polynomialset_t = rat::ratexp_polynomialset_t<ratexpset_t>;
-      using polynomial_t = typename polynomialset_t::value_t;
-
-      linearer(const ratexpset_t& rs)
-        : rs_(rs)
-        , res_{make_shared_ptr<automaton_t>(rs_.context())}
-      {}
-
-      automaton_t operator()(const ratexp_t& ratexp)
-      {
-        weightset_t ws = *rs_.weightset();
-        // Turn the ratexp into a polynomial.
-        {
-          polynomial_t initial
-            = breaking_ ? split(rs_, ratexp)
-            : polynomial_t{{ratexp, ws.one()}};
-          for (const auto& p: initial)
-            // Also loads todo_.
-            res_->set_initial(p.first, p.second);
-        }
-        rat::first_order_visitor<ratexpset_t> expand{rs_};
-
-        while (!res_->todo_.empty())
-          {
-            ratexp_t src = res_->todo_.top();
-            auto s = res_->state(src);
-            res_->todo_.pop();
-            auto expansion = expand(src);
-            res_->set_final(s, expansion.constant);
-            for (const auto& p: expansion.polynomials)
-              for (const auto& m: p.second)
-                res_->add_transition(s, m.first, p.first, m.second);
-          }
-        return res_;
-      }
-
-    private:
-      /// The ratexp's set.
-      ratexpset_t rs_;
-      /// Whether to perform a breaking derivation.
-      bool breaking_ = false;
-      /// The resulting automaton.
-      automaton_t res_;
-    };
-  }
-
-  /// Derive a ratexp wrt to a string.
-  template <typename RatExpSet>
-  inline
-  ratexp_automaton<mutable_automaton<typename RatExpSet::context_t>>
-  linear(const RatExpSet& rs, const typename RatExpSet::ratexp_t& r)
-  {
-    detail::linearer<RatExpSet> dt{rs};
-    return dt(r);
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      /// Bridge.
-      template <typename RatExpSet>
-      automaton
-      linear(const ratexp& exp)
-      {
-        const auto& r = exp->as<RatExpSet>();
-        return make_automaton(::vcsn::linear(r.ratexpset(), r.ratexp()));
-      }
-
-      REGISTER_DECLARE(linear,
-                       (const ratexp& e) -> automaton);
     }
   }
 } // vcsn::

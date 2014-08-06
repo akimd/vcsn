@@ -113,9 +113,15 @@ namespace vcsn
                           bool breaking = false);
 
     /// The derived-term automaton of \a e.
-    /// \param e         the input ratexp
-    /// \param breaking  whether to split the result
-    automaton derived_term(const ratexp& e, bool breaking = false);
+    /// \param e      the input ratexp
+    /// \param algo   how the derived terms are computed:
+    ///    "auto"                  alias for "expansion"
+    ///    "derivation"            compute by derivation
+    ///    "breaking_derivation"   compute by breaking derivation
+    ///    "expansion"             compute by expansion
+    ///    "breaking_expansion"    compute by breaking expansion
+    automaton derived_term(const ratexp& e,
+                           const std::string& algo = "auto");
 
     /// The determinized automaton.
     /// \param aut       the automaton to determinize
@@ -307,10 +313,6 @@ namespace vcsn
 
     /// The lifted LAO rational expression from \a e.
     ratexp lift(const ratexp& e);
-
-    /// The derived-term automaton of \a e.
-    /// \param e         the input ratexp
-    automaton linear(const ratexp& e);
 
     /// Build a context from its name.
     context make_context(const std::string& name);
