@@ -157,7 +157,9 @@ namespace vcsn
   `--------------------*/
 
   template <typename Aut>
-  Aut create_aut_from(const std::unordered_set<state_t_of<Aut>> com, const Aut& aut)
+  Aut
+  aut_of_component(const std::unordered_set<state_t_of<Aut>>& com,
+                   const Aut& aut)
   {
     auto res = make_shared_ptr<Aut>(aut->context());
     std::unordered_map<state_t_of<Aut>, state_t_of<Aut>> map;
@@ -200,7 +202,7 @@ namespace vcsn
       return is_cycle_unambiguous_scc(aut);
     for (const auto &c : coms)
       {
-        const auto& a = create_aut_from(c, aut);
+        const auto& a = aut_of_component(c, aut);
         if (is_cycle_unambiguous_scc(a))
           return true;
       }
@@ -327,7 +329,8 @@ namespace vcsn
   template <typename Aut>
   bool has_twins_property(const Aut& aut)
   {
-    // TODO: Check cycle-unambiguous.
+    bool is_cycle_uabg = is_cycle_unambiguous(aut);
+    assert(!is_cycle_uabg);
     auto trim = ::vcsn::trim(aut);
     auto inv = inverse(trim);
     auto a = ::vcsn::product(inv, trim);
