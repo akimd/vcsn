@@ -230,6 +230,21 @@ namespace vcsn
         return ls.genset();
       }
     };
+
+    /*-------.
+    | Join.  |
+    `-------*/
+
+    template <typename GenSet>
+    struct join_impl<letterset<GenSet>, letterset<GenSet>>
+    {
+      using type = letterset<GenSet>;
+      static type join(const letterset<GenSet>& lhs,
+                       const letterset<GenSet>& rhs)
+      {
+        return {get_union(lhs.genset(), rhs.genset())};
+      }
+    };
   }
 
   /// Compute the meet with another labelset.
@@ -238,14 +253,6 @@ namespace vcsn
   meet(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
   {
     return {intersection(lhs.genset(), rhs.genset())};
-  }
-
-  /// Compute the join with another labelset.
-  template <typename GenSet>
-  letterset<GenSet>
-  join(const letterset<GenSet>& lhs, const letterset<GenSet>& rhs)
-  {
-    return {get_union(lhs.genset(), rhs.genset())};
   }
 }
 

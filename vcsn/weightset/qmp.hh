@@ -7,6 +7,7 @@
 # include <cstddef> // https://gcc.gnu.org/gcc-4.9/porting_to.html
 # include <gmpxx.h>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -198,15 +199,15 @@ namespace vcsn
       return o;
     }
   };
+
+    /*-------.
+    | join.  |
+    `-------*/
+
+    VCSN_JOIN_SIMPLE(b, qmp);
+    VCSN_JOIN_SIMPLE(z, qmp);
+    VCSN_JOIN_SIMPLE(q, qmp);
   }
-
-  VCSN_WEIGHTS_BINARY(qmp, qmp, qmp);
-
-  VCSN_WEIGHTS_BINARY(z, qmp, qmp);
-  VCSN_WEIGHTS_BINARY(qmp, z, qmp);
-
-  VCSN_WEIGHTS_BINARY(b, qmp, qmp);
-  VCSN_WEIGHTS_BINARY(qmp, b, qmp);
 }
 
 #endif // !VCSN_WEIGHTSET_QMP_HH

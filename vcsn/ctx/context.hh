@@ -5,6 +5,7 @@
 # include <memory>
 # include <string>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/core/kind.hh>
 # include <vcsn/core/rat/fwd.hh>
 # include <vcsn/ctx/fwd.hh>
@@ -159,35 +160,12 @@ namespace vcsn
   `-----------------*/
 
   template <typename... ValueSets>
-  using join_t = decltype(join(std::declval<ValueSets>()...));
-
-  template <typename... ValueSets>
   using meet_t = decltype(meet(std::declval<ValueSets>()...));
 
 
   /*-------------------------.
   | Variadic join and meet.  |
   `-------------------------*/
-
-  /// The join of a single valueset.
-  /// Useful for variadic operator on a single argument.
-  template <typename ValueSet>
-  auto
-  join(const ValueSet& vs)
-    -> ValueSet
-  {
-    return vs;
-  }
-
-  template <typename ValueSet1, typename ValueSet2,
-            typename ValueSet3, typename... VSs>
-  auto
-  join(const ValueSet1& vs1, const ValueSet2& vs2, const ValueSet3& vs3,
-       const VSs&... vs)
-    -> decltype(join(join(vs1, vs2), vs3, vs...))
-  {
-    return join(join(vs1, vs2), vs3, vs...);
-  }
 
   /// The meet of a single valueset.
   /// Useful for variadic operator on a single argument.
@@ -214,20 +192,40 @@ namespace vcsn
   | join(context, context).  |
   `-------------------------*/
 
-  /// The join of two contexts.
-  template <typename LhsLabelSet, typename LhsWeightSet,
-            typename RhsLabelSet, typename RhsWeightSet>
-  auto
-  join(const context<LhsLabelSet, LhsWeightSet>& a,
-       const context<RhsLabelSet, RhsWeightSet>& b)
-    -> context<join_t<LhsLabelSet, RhsLabelSet>,
-               join_t<LhsWeightSet, RhsWeightSet>>
+  namespace detail
   {
-    auto ls = join(*a.labelset(), *b.labelset());
-    auto ws = join(*a.weightset(), *b.weightset());
-    return {ls, ws};
-  }
+    /// The join of two contexts.
+    template <typename LS1, typename WS1,
+              typename LS2, typename WS2>
+    struct join_impl<context<LS1, WS1>, context<LS2, WS2>,
+                     if_different_t<context<LS1, WS1>, context<LS2, WS2>>>
+    {
+      using labelset_t = join_t<LS1, LS2>;
+      using weightset_t = join_t<WS1, WS2>;
+      using type = context<labelset_t, weightset_t>;
 
+      static type join(const context<LS1, WS1>& ctx1,
+                       const context<LS2, WS2>& ctx2)
+      {
+        return {vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
+                vcsn::join(*ctx1.weightset(), *ctx2.weightset())};
+      }
+    };
+
+    /// The join of two contexts.
+    template <typename LS, typename WS>
+    struct join_impl<context<LS, WS>, context<LS, WS>>
+    {
+      using type = context<LS, WS>;
+
+      static type join(const context<LS, WS>& ctx1,
+                       const context<LS, WS>& ctx2)
+      {
+        return {vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
+                vcsn::join(*ctx1.weightset(), *ctx2.weightset())};
+      }
+    };
+  }
 
   /*-------------------------.
   | meet(context, context).  |

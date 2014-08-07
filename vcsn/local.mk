@@ -88,6 +88,7 @@ nobase_include_HEADERS =                        \
   %D%/core/automaton-decorator.hh               \
   %D%/core/crange.hh                            \
   %D%/core/fwd.hh                               \
+  %D%/core/join.hh                              \
   %D%/core/kind.hh                              \
   %D%/core/mutable-automaton.hh                 \
   %D%/core/partition-automaton.hh               \

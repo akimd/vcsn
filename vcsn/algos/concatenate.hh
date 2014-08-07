@@ -8,7 +8,9 @@
 # include <vcsn/algos/product.hh> // join_automata
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/sum.hh>
+# include <vcsn/core/join.hh>
 # include <vcsn/core/mutable-automaton.hh>
+# include <vcsn/core/rat/ratexpset.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/polynomial.hh>
 # include <vcsn/dyn/weight.hh>
@@ -221,7 +223,7 @@ namespace vcsn
       {
         const auto& l = lhs->as<RatExpSetLhs>();
         const auto& r = rhs->as<RatExpSetRhs>();
-        auto rs = join(l.ratexpset(), r.ratexpset());
+        auto rs = vcsn::join(l.ratexpset(), r.ratexpset());
         auto lr = rs.conv(l.ratexpset(), l.ratexp());
         auto rr = rs.conv(r.ratexpset(), r.ratexp());
         return make_ratexp(rs, ::vcsn::concatenate(rs, lr, rr));

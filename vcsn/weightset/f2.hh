@@ -175,8 +175,6 @@ namespace vcsn
     }
   };
   }// detail::
-
-  VCSN_WEIGHTS_BINARY(f2, f2, f2);
 }
 
 #endif // !VCSN_WEIGHTSET_F2_HH

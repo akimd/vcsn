@@ -45,14 +45,6 @@ namespace vcsn
       return is;
     }
 
-    identities join(identities i1, identities i2)
-    {
-      if (i1 == identities::series || i2 == identities::series)
-        return identities::series;
-      else
-        return identities::trivial;
-    }
-
     identities meet(identities i1, identities i2)
     {
       if (i1 == identities::trivial || i2 == identities::trivial)

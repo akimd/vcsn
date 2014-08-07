@@ -45,12 +45,4 @@ namespace vcsn
 
 } // namespace vcsn
 
-#define VCSN_WEIGHTS_BINARY(Lhs, Rhs, Res)      \
-  /** The join of two weightsets. */            \
-  inline                                        \
-  Res join(const Lhs&, const Rhs&)              \
-  {                                             \
-    return {};                                  \
-  }
-
 #endif // !VCSN_WEIGHTSET_FWD_HH
