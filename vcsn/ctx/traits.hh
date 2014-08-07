@@ -49,17 +49,17 @@ namespace vcsn
   {
 # define DEFINE(Traits)                                         \
     template <typename ValueSet>                                \
-    struct Traits ## _t_of_impl<std::shared_ptr<ValueSet>>      \
-      : Traits ## _t_of_impl<base_t<ValueSet>>                  \
+    struct Traits ## _of_impl<std::shared_ptr<ValueSet>>        \
+      : Traits ## _of_impl<base_t<ValueSet>>                    \
     {}
 
-    DEFINE(context);
-    DEFINE(label);
-    DEFINE(labelset);
-    DEFINE(state);
-    DEFINE(transition);
-    DEFINE(weight);
-    DEFINE(weightset);
+    DEFINE(context_t);
+    DEFINE(label_t);
+    DEFINE(labelset_t);
+    DEFINE(state_t);
+    DEFINE(transition_t);
+    DEFINE(weight_t);
+    DEFINE(weightset_t);
 # undef DEFINE
   }
 }
