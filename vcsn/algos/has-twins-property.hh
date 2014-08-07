@@ -60,61 +60,6 @@ namespace vcsn
     }
   }
 
-  /*--------------------.
-  | cycle_unambiguous.  |
-  `--------------------*/
-
-  /// Whether \a aut is cycle-unambiguous.
-  template <typename Aut>
-  bool
-  is_cycle_unambiguous(const Aut& aut)
-  {
-    bool cycle_unambiguous = false;
-    auto aut2 = copy(aut);
-
-    // Change all initial states and final states
-    // to normal states.
-    for (auto t : aut2->initial_transitions())
-      aut2->unset_initial(aut2->dst_of(t));
-    for (auto t : aut2->final_transitions())
-      aut2->unset_final(aut2->src_of(t));
-
-    // With each state, set initial and final
-    // state, if the automaton is ambiguous so
-    // it is also cycle-unambiguous.
-    for (auto s : aut2->states())
-      {
-        aut2->set_initial(s);
-        aut2->set_final(s);
-        if (is_ambiguous(aut))
-          {
-            cycle_unambiguous = true;
-            break;
-          }
-        aut2->unset_initial(s);
-        aut2->unset_final(s);
-      }
-
-    return cycle_unambiguous;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      // Bridge.
-      template <typename Aut>
-      bool
-      is_cycle_unambiguous(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return ::vcsn::is_cycle_unambiguous(a);
-      }
-
-      REGISTER_DECLARE(is_cycle_unambiguous,
-                       (const automaton&) -> bool);
-    }
-  }
 
 
   /*-------------.
@@ -205,6 +150,58 @@ namespace vcsn
   {
     detail::scc_tarjan<Aut> scc(aut);
     return scc.components();
+  }
+
+
+  /*--------------------.
+  | cycle_unambiguous.  |
+  `--------------------*/
+
+  /// Whether \a aut is cycle-unambiguous.
+  template <typename Aut>
+  bool is_cycle_unambiguous(const Aut& aut)
+  {
+    auto prod = product(aut, aut);
+    auto coms = components(prod);
+    auto origins = prod->origins();
+    bool cond_equal, cond_not_equal;
+    // In one strong connected component,
+    // if exist two states (s1, s1) and (s1, s2)
+    // with s1 # s2 then it has two cycle same label
+    // from s->s1-> s and s->s2->s.
+    for (auto c : coms)
+      {
+        cond_equal = cond_not_equal = false;
+        for (auto s : c)
+          {
+            auto p = origins[s];
+            if (std::get<0>(p) != std::get<1>(p))
+              cond_equal = true;
+            else
+              cond_not_equal = true;
+            if (cond_equal && cond_not_equal)
+              return true;
+          }
+      }
+    return false;
+  }
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      // Bridge.
+      template <typename Aut>
+      bool
+      is_cycle_unambiguous(const automaton& aut)
+      {
+        const auto& a = aut->as<Aut>();
+        return ::vcsn::is_cycle_unambiguous(a);
+      }
+
+      REGISTER_DECLARE(is_cycle_unambiguous,
+                       (const automaton&) -> bool);
+    }
   }
 
 

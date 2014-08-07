@@ -141,3 +141,64 @@ def has_twins_property_check():
   CHECK_EQ(False, aut6.has_twins_property())
 
 has_twins_property_check()
+
+aut1 = vcsn.automaton('''digraph {
+  vcsn_context = "lal_char(abc)_b"
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  1 -> 0 [label = "b"]
+  1 -> 3 [label = "b"]
+  2 -> 1 [label = "c"]
+  2 -> 2 [label = "b"]
+  3 -> F3
+  3 -> 1 [label = "c"]
+}''')
+
+aut2 = vcsn.automaton('''digraph {
+  vcsn_context = "lal_char(abc)_b"
+  I0 -> 0
+  0 -> 1 [label = "a"]
+  0 -> 2 [label = "a"]
+  1 -> 0 [label = "b"]
+  1 -> 3 [label = "b"]
+  2 -> 1 [label = "c"]
+  2 -> 2 [label = "b"]
+  3 -> F3
+  3 -> 1 [label = "b"]
+}''')
+
+aut3 = vcsn.automaton('''
+digraph
+{
+  vcsn_context = "lal_char(abc)_b"
+  I0 -> 0
+  0 -> 1 [label = "c"]
+  1 -> 2 [label = "a"]
+  2 -> 3 [label = "b"]
+  2 -> 4 [label = "b"]
+  3 -> 5 [label = "c"]
+  3 -> 6 [label = "c"]
+  4 -> 7 [label = "c"]
+  5 -> 2 [label = "a"]
+  6 -> 0 [label = "b"]
+  7 -> F7
+  7 -> 2 [label = "a"]
+}''')
+
+def check_is_cycle_unambiguous():
+  CHECK_EQ(True, aut1.is_cycle_unambiguous())
+  CHECK_EQ(False, aut2.is_cycle_unambiguous())
+  CHECK_EQ(True, aut3.is_cycle_unambiguous())
+
+  CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
+           ladybird(5).is_cycle_unambiguous())
+  CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
+           de_bruijn(5).is_cycle_unambiguous())
+  CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
+           ladybird(20).is_cycle_unambiguous())
+  CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
+           de_bruijn(20).is_cycle_unambiguous())
+
+
+check_is_cycle_unambiguous()
