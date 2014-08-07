@@ -436,25 +436,49 @@ namespace vcsn
         return make_wordset(*ls.labelset());
       }
     };
+
+    /*-------.
+    | Join.  |
+    `-------*/
+
+#define DEFINE(Lhs, Rhs)                                \
+    template <typename GenSet>                          \
+    struct join_impl<Lhs, Rhs>                          \
+    {                                                   \
+      using type = Rhs;                                 \
+      static type join(const Lhs& lhs, const Rhs& rhs)  \
+      {                                                 \
+        return {get_union(lhs.genset(), rhs.genset())}; \
+      }                                                 \
+    }
+
+    /// The join with another labelset.
+    DEFINE(letterset<GenSet>,              nullableset<letterset<GenSet>>);
+    DEFINE(nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
+#undef DEFINE
+
   }
 
+  /*-------.
+  | Meet.  |
+  `-------*/
 
-#define DEFINE(Func, Operation, Lhs, Rhs, Res)                \
+#define DEFINE(Lhs, Rhs, Res)                                 \
   template <typename GenSet>                                  \
   Res                                                         \
-  Func(const Lhs& lhs, const Rhs& rhs)                        \
+  meet(const Lhs& lhs, const Rhs& rhs)                        \
   {                                                           \
-    return {Operation(lhs.genset(), rhs.genset())};           \
+    return {intersection(lhs.genset(), rhs.genset())};        \
   }
 
   /// Compute the meet with another labelset.
-  DEFINE(meet, intersection, nullableset<letterset<GenSet>>,
+  DEFINE(nullableset<letterset<GenSet>>,
          nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
 
-  DEFINE(meet, intersection, letterset<GenSet>,
+  DEFINE(letterset<GenSet>,
          nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
 
-  DEFINE(meet, intersection, nullableset<letterset<GenSet>>,
+  DEFINE(nullableset<letterset<GenSet>>,
          letterset<GenSet>, nullableset<letterset<GenSet>>);
 
   template <typename Lls, typename Rls>
@@ -463,24 +487,6 @@ namespace vcsn
   {
     return nullableset<meet_t<Lls, Rls>>{meet(*lhs.labelset(), *rhs.labelset())};
   }
-
-  /// compute the join with another labelset.
-  DEFINE(join, get_union, nullableset<letterset<GenSet>>,
-         nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
-
-  DEFINE(join, get_union, letterset<GenSet>,
-         nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
-
-  DEFINE(join, get_union, nullableset<letterset<GenSet>>,
-         letterset<GenSet>, nullableset<letterset<GenSet>>);
-
-  template <typename Lls, typename Rls>
-  nullableset<join_t<Lls, Rls>>
-  join(const nullableset<Lls>& lhs, const nullableset<Rls>& rhs)
-  {
-    return nullableset<join_t<Lls, Rls>>{join(*lhs.labelset(), *rhs.labelset())};
-  }
-
 
 #undef DEFINE
 

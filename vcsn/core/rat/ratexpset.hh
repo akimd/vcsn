@@ -339,6 +339,102 @@ namespace vcsn
         return ls;
       }
     };
+
+    /// The join of two ratexpsets.
+    template <typename Ctx1, typename Ctx2>
+    struct join_impl<ratexpset<Ctx1>, ratexpset<Ctx2>,
+                     if_different_t<Ctx1, Ctx2>>
+    {
+      using type = ratexpset<join_t<Ctx1, Ctx2>>;
+
+      static type join(const ratexpset<Ctx1>& lhs, const ratexpset<Ctx2>& rhs)
+      {
+        return {vcsn::join(lhs.context(), rhs.context()),
+                vcsn::join(lhs.identities(), rhs.identities())};
+      }
+    };
+
+    template <typename Ctx>
+    struct join_impl<ratexpset<Ctx>, ratexpset<Ctx>>
+    {
+      using type = ratexpset<Ctx>;
+
+      static type join(const ratexpset<Ctx>& lhs, const ratexpset<Ctx>& rhs)
+      {
+        return {vcsn::join(lhs.context(), rhs.context()),
+                vcsn::join(lhs.identities(), rhs.identities())};
+      }
+    };
+
+    /// Join of a letterset and a ratexpset.
+    // FIXME: what about the other labelsets?
+    template <typename GenSet1,  typename Ctx2>
+    struct join_impl<letterset<GenSet1>, ratexpset<Ctx2>>
+    {
+      using context_t = context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
+                                weightset_t_of<Ctx2>>;
+      using type = ratexpset<context_t>;
+
+      static type join(const letterset<GenSet1>& a, const ratexpset<Ctx2>& b)
+      {
+        return {context_t{vcsn::join(a, *b.labelset()), *b.weightset()},
+                          b.identities()};
+      }
+    };
+
+    // B.  FIXME: screams for refactoring!
+    template <typename Context>
+    struct join_impl<b, ratexpset<Context>>
+    {
+      using type = ratexpset<Context>;
+      static type join(const b&, const ratexpset<Context>& rhs)
+      {
+        return rhs;
+      }
+    };
+
+    // Z.
+    template <typename Context>
+    struct join_impl<z, ratexpset<Context>>
+    {
+      using context_t = context<labelset_t_of<Context>,
+                                join_t<z, weightset_t_of<Context>>>;
+      using type = ratexpset<context_t>;
+      static type join(const z& ws, const ratexpset<Context>& rs)
+      {
+        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
+                          rs.identities()};
+      }
+    };
+
+    // Q.
+    template <typename Context>
+    struct join_impl<q, ratexpset<Context>>
+    {
+      using context_t = context<labelset_t_of<Context>,
+                                join_t<q, weightset_t_of<Context>>>;
+      using type = ratexpset<context_t>;
+      static type join(const q& ws, const ratexpset<Context>& rs)
+      {
+        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
+                          rs.identities()};
+      }
+    };
+
+    // R.
+    template <typename Context>
+    struct join_impl<r, ratexpset<Context>>
+    {
+      using context_t = context<labelset_t_of<Context>,
+                                join_t<r, weightset_t_of<Context>>>;
+      using type = ratexpset<context_t>;
+      static type join(const r& ws, const ratexpset<Context>& rs)
+      {
+        return {context_t{*rs.labelset(), vcsn::join(ws, *rs.weightset())},
+                          rs.identities()};
+      }
+    };
+
   }
 
   /// The meet of two ratexpsets.
@@ -350,128 +446,6 @@ namespace vcsn
   {
     return {meet(a.context(), b.context()),
             meet(a.identities(), b.identities())};
-  }
-
-  /// The union of two ratexpsets.
-  template <typename Ctx1, typename Ctx2>
-  inline
-  auto
-  join(const ratexpset<Ctx1>& a, const ratexpset<Ctx2>& b)
-    -> ratexpset<join_t<Ctx1, Ctx2>>
-  {
-    return {join(a.context(), b.context()),
-            join(a.identities(), b.identities())};
-  }
-
-  // Used as a labelset.
-  template <typename GenSet1,  typename Ctx2>
-  inline
-  auto
-  join(const letterset<GenSet1>& a, const ratexpset<Ctx2>& b)
-    -> ratexpset<context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
-                         weightset_t_of<Ctx2>>>
-  {
-    using ctx_t = context<join_t<letterset<GenSet1>, labelset_t_of<Ctx2>>,
-                          weightset_t_of<Ctx2>>;
-    return {ctx_t{join(a, *b.labelset()), *b.weightset()},
-            b.identities()};
-  }
-
-  template <typename Ctx1,  typename GenSet2>
-  inline
-  auto
-  join(const ratexpset<Ctx1>& a, const letterset<GenSet2>& b)
-    -> decltype(join(b, a))
-  {
-    return join(b, a);
-  }
-
-  // B.  FIXME: screams for refactoring!
-
-  template <typename Context>
-  inline
-  ratexpset<Context>
-  join(const ratexpset<Context>& a, const b&)
-  {
-    return a;
-  }
-
-  template <typename Context>
-  inline
-  ratexpset<Context>
-  join(const b& a, const ratexpset<Context>& b)
-  {
-    return join(b, a);
-  }
-
-  // Z.
-  template <typename Context>
-  inline
-  auto
-  join(const ratexpset<Context>& rs, const z& ws)
-      -> ratexpset<context<labelset_t_of<Context>,
-                           join_t<weightset_t_of<Context>, z>>>
-  {
-    using ctx_t = context<labelset_t_of<Context>,
-                          join_t<weightset_t_of<Context>, z>>;
-    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
-            rs.identities()};
-  }
-
-  template <typename Context>
-  inline
-  auto
-  join(const z& ws, const ratexpset<Context>& rs)
-    -> join_t<ratexpset<Context>, z>
-  {
-    return join(rs, ws);
-  }
-
-  // Q.
-  template <typename Context>
-  inline
-  auto
-  join(const ratexpset<Context>& rs, const q& ws)
-      -> ratexpset<context<labelset_t_of<Context>,
-                           join_t<weightset_t_of<Context>, q>>>
-  {
-    using ctx_t = context<labelset_t_of<Context>,
-                          join_t<weightset_t_of<Context>, q>>;
-    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
-            rs.identities()};
-  }
-
-  template <typename Context>
-  inline
-  auto
-  join(const q& ws, const ratexpset<Context>& rs)
-    -> join_t<ratexpset<Context>, q>
-  {
-    return join(rs, ws);
-  }
-
-  // R.
-  template <typename Context>
-  inline
-  auto
-  join(const ratexpset<Context>& rs, const r& ws)
-      -> ratexpset<context<labelset_t_of<Context>,
-                           join_t<weightset_t_of<Context>, r>>>
-  {
-    using ctx_t = context<labelset_t_of<Context>,
-                          join_t<weightset_t_of<Context>, r>>;
-    return {ctx_t{*rs.labelset(), join(*rs.weightset(), ws)},
-            rs.identities()};
-  }
-
-  template <typename Context>
-  inline
-  auto
-  join(const r& ws, const ratexpset<Context>& rs)
-  // FIXME: loops if wrong order.
-    -> join_t<ratexpset<Context>, r>
-  {
-    return join(rs, ws);
   }
 
 } // namespace vcsn

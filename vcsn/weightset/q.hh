@@ -4,6 +4,7 @@
 # include <string>
 # include <ostream>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -278,15 +279,14 @@ namespace vcsn
       return o;
     }
   };
+
+    /*-------.
+    | join.  |
+    `-------*/
+
+    VCSN_JOIN_SIMPLE(b, q);
+    VCSN_JOIN_SIMPLE(z, q);
   }
-
-  VCSN_WEIGHTS_BINARY(q, q, q);
-
-  VCSN_WEIGHTS_BINARY(z, q, q);
-  VCSN_WEIGHTS_BINARY(q, z, q);
-
-  VCSN_WEIGHTS_BINARY(b, q, q);
-  VCSN_WEIGHTS_BINARY(q, b, q);
 }
 
 #endif // !VCSN_WEIGHTSET_Q_HH

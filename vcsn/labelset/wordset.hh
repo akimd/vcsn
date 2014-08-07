@@ -5,6 +5,7 @@
 # include <set>
 
 # include <vcsn/core/kind.hh>
+# include <vcsn/labelset/fwd.hh>
 # include <vcsn/labelset/genset-labelset.hh>
 # include <vcsn/labelset/labelset.hh>
 # include <vcsn/misc/attributes.hh>
@@ -236,6 +237,28 @@ namespace vcsn
         return ls;
       }
     };
+
+    /*-------.
+    | Join.  |
+    `-------*/
+
+    /// Declare that Lhs v Rhs => Rhs (on the union of alphabets).
+#define DEFINE(Lhs, Rhs)                                \
+    template <typename GenSet>                          \
+    struct join_impl<Lhs, Rhs>                          \
+    {                                                   \
+      using type = Rhs;                                 \
+      static type join(const Lhs& lhs, const Rhs& rhs)  \
+      {                                                 \
+        return {get_union(lhs.genset(), rhs.genset())}; \
+      }                                                 \
+    }
+
+    /// The join with another labelset.
+    DEFINE(letterset<GenSet>,              wordset<GenSet>);
+    DEFINE(nullableset<letterset<GenSet>>, wordset<GenSet>);
+    DEFINE(wordset<GenSet>,                wordset<GenSet>);
+#undef DEFINE
   }
 
   /// Compute the meet with another alphabet.
@@ -245,14 +268,6 @@ namespace vcsn
   meet(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
   {
     return {intersection(lhs.genset(), rhs.genset())};
-  }
-
-  /// Compute the union with another alphabet.
-  template <typename GenSet>
-  wordset<GenSet>
-  join(const wordset<GenSet>& lhs, const wordset<GenSet>& rhs)
-  {
-    return {get_union(lhs.genset(), rhs.genset())};
   }
 }
 

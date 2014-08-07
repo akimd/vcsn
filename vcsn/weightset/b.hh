@@ -180,7 +180,5 @@ namespace vcsn
   };
   } // detail::
 
-  VCSN_WEIGHTS_BINARY(b, b, b);
 }
-
 #endif // !VCSN_WEIGHTSET_B_HH

@@ -6,6 +6,7 @@
 # include <string>
 # include <utility>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
@@ -187,12 +188,9 @@ namespace vcsn
       return o;
     }
   };
+
+    VCSN_JOIN_SIMPLE(b, zmin);
   }
-
-  VCSN_WEIGHTS_BINARY(zmin, zmin, zmin);
-
-  VCSN_WEIGHTS_BINARY(b, zmin, zmin);
-  VCSN_WEIGHTS_BINARY(zmin, b, zmin);
 }
 
 #endif // !VCSN_WEIGHTSET_ZMIN_HH

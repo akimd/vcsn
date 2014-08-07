@@ -4,12 +4,14 @@
 # include <string>
 # include <ostream>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
 # include <vcsn/weightset/fwd.hh>
 # include <vcsn/weightset/b.hh>
 # include <vcsn/weightset/q.hh>
+# include <vcsn/weightset/qmp.hh>
 # include <vcsn/weightset/z.hh>
 # include <vcsn/weightset/weightset.hh>
 
@@ -198,18 +200,13 @@ namespace vcsn
       return o;
     }
   };
+
+    VCSN_JOIN_SIMPLE(b, r);
+    VCSN_JOIN_SIMPLE(z, r);
+    VCSN_JOIN_SIMPLE(q, r);
+    VCSN_JOIN_SIMPLE(qmp, r);
   }
 
-  VCSN_WEIGHTS_BINARY(r, r, r);
-
-  VCSN_WEIGHTS_BINARY(q, r, r);
-  VCSN_WEIGHTS_BINARY(r, q, r);
-
-  VCSN_WEIGHTS_BINARY(z, r, r);
-  VCSN_WEIGHTS_BINARY(r, z, r);
-
-  VCSN_WEIGHTS_BINARY(b, r, r);
-  VCSN_WEIGHTS_BINARY(r, b, r);
 }
 
 #endif // !VCSN_WEIGHTSET_R_HH

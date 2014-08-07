@@ -4,6 +4,7 @@
 # include <ostream>
 # include <string>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -180,12 +181,14 @@ namespace vcsn
       return o;
     }
   };
+
+    /*-------.
+    | join.  |
+    `-------*/
+
+    VCSN_JOIN_SIMPLE(b, z);
   }
 
-  VCSN_WEIGHTS_BINARY(z, z, z);
-
-  VCSN_WEIGHTS_BINARY(b, z, z);
-  VCSN_WEIGHTS_BINARY(z, b, z);
 }
 
 #endif // !VCSN_WEIGHTSET_Z_HH

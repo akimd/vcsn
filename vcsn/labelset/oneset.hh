@@ -201,20 +201,26 @@ namespace vcsn
         return {};
       }
     };
+
+    /*-------.
+    | Join.  |
+    `-------*/
+
+    template <>
+    struct join_impl<oneset, oneset>
+    {
+      using type = oneset;
+      static type join(const oneset&, const oneset&)
+      {
+        return {};
+      }
+    };
   }
 
   /// The meet of two labelsets.
   inline
   oneset
   meet(const oneset&, const oneset&)
-  {
-    return {};
-  }
-
-  /// The union of two labelsets.
-  inline
-  oneset
-  join(const oneset&, const oneset&)
   {
     return {};
   }
