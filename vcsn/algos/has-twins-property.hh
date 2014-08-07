@@ -61,7 +61,6 @@ namespace vcsn
   }
 
 
-
   /*-------------.
   | scc_tarjan.  |
   `-------------*/
@@ -157,9 +156,61 @@ namespace vcsn
   | cycle_unambiguous.  |
   `--------------------*/
 
+  template <typename Aut>
+  Aut create_aut_from(const std::unordered_set<state_t_of<Aut>> com, const Aut& aut)
+  {
+    auto res = make_shared_ptr<Aut>(aut->context());
+    std::unordered_map<state_t_of<Aut>, state_t_of<Aut>> map;
+    auto s0 = *com.begin();
+    map[s0] = res->new_state();
+    res->set_initial(map[s0]);
+    for (auto s : com)
+      {
+        if (!has(map, s))
+          map[s] = res->new_state();
+        for (auto t : aut->out(s))
+          {
+            auto dst = aut->dst_of(t);
+            if (!has(com, dst))
+              continue;
+            if (!has(map, dst))
+              map[dst] = res->new_state();
+            res->new_transition(map[s], map[dst], aut->label_of(t));
+          }
+      }
+    return res;
+  }
+
   /// Whether \a aut is cycle-unambiguous.
   template <typename Aut>
   bool is_cycle_unambiguous(const Aut& aut)
+  {
+    // Find all strongly connected components
+    const auto& coms = components(aut);
+    if (getenv("VCSN_DEBUG"))
+      {
+        std::cerr << "number states of automaton: " <<
+          aut->num_states() << std::endl;
+        std::cerr << "number components: " <<
+          coms.size() << std::endl;
+      }
+
+    // Check each component if it is cycle-unambiguous.
+    if (coms.size() == 1)
+      return is_cycle_unambiguous_scc(aut);
+    for (const auto &c : coms)
+      {
+        const auto& a = create_aut_from(c, aut);
+        if (is_cycle_unambiguous_scc(a))
+          return true;
+      }
+    return false;
+  }
+
+  /// Whether \a aut is cycle-unambiguous.
+  /// Precondition: aut is a strongly connected component.
+  template <typename Aut>
+  bool is_cycle_unambiguous_scc(const Aut& aut)
   {
     auto prod = product(aut, aut);
     auto coms = components(prod);
