@@ -206,3 +206,13 @@ r = "<3>a((<2>c<3>b<4>a)*){50}<7>c+<2>a((<3>c<5>b<4>a)*){50}<5>a"
 a = vcsn.context("lal_char(a-c)_q").ratexp(r).standard()
 bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
       lambda: a.has_twins_property())
+
+r = "(((abc)*){50}+(((acb)*){50}))abc(a+ab*c)(bc+b(a+ab*c))*b"
+a = vcsn.context("lal_char(abc)_b").ratexp(r).derived_term()
+bench('a.is_cycle_unambiguous()', 'a = std({0}), c = [abc] -> B'.format(r),
+      lambda: a.is_cycle_unambiguous())
+
+r = "(((abc)*){50}+(((acb)*){50}))abc(a+ab*c)(bb+b(a+ab*c))*b"
+a = vcsn.context("lal_char(abc)_b").ratexp(r).derived_term()
+bench('a.is_cycle_unambiguous()', 'a = std({0}), c = [abc] -> B'.format(r),
+      lambda: a.is_cycle_unambiguous())

@@ -186,10 +186,19 @@ digraph
   7 -> 2 [label = "a"]
 }''')
 
+r1 = "((abc)*){5}abc" + format(aut1.ratexp())
+aut4 = vcsn.context("lal_char(abc)_b").ratexp(r1).derived_term()
+
+r2 = "((abc)*){5}abc" + format(aut2.ratexp())
+aut5 = vcsn.context("lal_char(abc)_b").ratexp(r2).derived_term()
+
+
 def check_is_cycle_unambiguous():
   CHECK_EQ(True, aut1.is_cycle_unambiguous())
   CHECK_EQ(False, aut2.is_cycle_unambiguous())
   CHECK_EQ(True, aut3.is_cycle_unambiguous())
+  CHECK_EQ(True, aut4.is_cycle_unambiguous())
+  CHECK_EQ(False, aut5.is_cycle_unambiguous())
 
   CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
            ladybird(5).is_cycle_unambiguous())
