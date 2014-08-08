@@ -1,0 +1,305 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+\documentclass[a4]{book}
+
+\usepackage{minitoc} % for \addstarredchapter
+\usepackage{xspace}
+
+\newcommand{\vgi}[0]{\textsc{VGI}\xspace}
+\newcommand{\vcsn}[0]{\textsc{Vaucanson}\xspace}
+\newcommand{\vcsnversion}[0]{2.0.0f}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adapted from nbconvert output: begin
+\usepackage{graphicx} % Used to insert images
+\usepackage{adjustbox} % Used to constrain images to a maximum size 
+\usepackage{color} % Allow colors to be defined
+\usepackage{enumerate} % Needed for markdown enumerations to work
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+\usepackage{fancyvrb} % verbatim replacement that allows latex
+\usepackage{grffile} % extends the file name processing of package graphics 
+% to support a larger range
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage{hyperref}
+\usepackage{longtable} % longtable support required by pandoc >1.10
+\usepackage{booktabs}  % table support for pandoc > 1.12.2
+
+    \definecolor{orange}{cmyk}{0,0.4,0.8,0.2}
+    \definecolor{darkorange}{rgb}{.71,0.21,0.01}
+    \definecolor{darkgreen}{rgb}{.12,.54,.11}
+    \definecolor{myteal}{rgb}{.26, .44, .56}
+    \definecolor{gray}{gray}{0.45}
+    \definecolor{lightgray}{gray}{.95}
+    \definecolor{mediumgray}{gray}{.8}
+    \definecolor{inputbackground}{rgb}{.95, .95, .85}
+    \definecolor{outputbackground}{rgb}{.95, .95, .95}
+    \definecolor{traceback}{rgb}{1, .95, .95}
+    % ansi colors
+    \definecolor{red}{rgb}{.6,0,0}
+    \definecolor{green}{rgb}{0,.65,0}
+    \definecolor{brown}{rgb}{0.6,0.6,0}
+    \definecolor{blue}{rgb}{0,.145,.698}
+    \definecolor{purple}{rgb}{.698,.145,.698}
+    \definecolor{cyan}{rgb}{0,.698,.698}
+    \definecolor{lightgray}{gray}{0.5}
+    
+    % bright ansi colors
+    \definecolor{darkgray}{gray}{0.25}
+    \definecolor{lightred}{rgb}{1.0,0.39,0.28}
+    \definecolor{lightgreen}{rgb}{0.48,0.99,0.0}
+    \definecolor{lightblue}{rgb}{0.53,0.81,0.92}
+    \definecolor{lightpurple}{rgb}{0.87,0.63,0.87}
+    \definecolor{lightcyan}{rgb}{0.5,1.0,0.83}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=blue,
+      linkcolor=darkorange,
+      citecolor=darkgreen,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adapted from nbconvert output: end
+
+\def\TEST{\textcolor{darkgreen}}
+\newcommand{\NOTE}[1]{\small {\textcolor{red}{[}}{\textcolor{blue}{#1}}{\textcolor{red}{]}}}
+\newcommand{\urlsmall}[1]{{\scriptsize\url{#1}}}
+\newcommand{\REMOVE}[1]{{\textcolor{brown}{[{\bf Remove}:~{\em #1}]}}}
+\newcommand{\SUGGESTIONS}[1]{{\textcolor{brown}{[{\bf I accept suggestions}:~{#1}]}}}
+\newcommand{\TOOMUCH}[1]{{\textcolor{brown}{[{\bf Is this too much?}~{#1}]}}}
+\newcommand{\REREAD}[1]{{\textcolor{brown}{[{\bf Re-read}:~{#1}]}}}
+\newcommand{\TODO}[1]{{\textcolor{red}{[{\bf To do}:~{#1}]}}}
+\newcommand{\TODOF}[1]{\footnote{\TODO{#1}}}
+\newcommand{\NEW}[1]{\textcolor{darkgreen}{\textbf{[New:} {#1}\textbf{]}}}
+\newcommand{\REPHRASED}[1]{\textcolor{darkgreen}{\textbf{[Rephrased:} {#1}\textbf{]}}}
+\newcommand{\RATIONALEF}[1]{\footnote{\RATIONALE{#1}}}
+\newcommand{\TODOQ}[1]{{\textcolor{red}{#1}}}
+\newcommand{\PREMISEWHICHCOULDBEPROVEN}[1]{}%{{\textcolor{purple}{#1}}}
+\newcommand{\DONE}[1]{{\textcolor{darkgreen}{[{\bf Done}:~{#1}]}}}
+\newcommand{\DONEQ}[1]{\textcolor{darkgreen}{#1}}
+\newcommand{\Q}[1]{\textcolor{red}{[\textit{#1}]}}
+\newcommand{\STRONG}[1]{{\textcolor{red}{[{\bf Too strong}:~{#1}]}}}
+\newcommand{\STRONGQ}[1]{{\textcolor{red}{#1}}}
+\newcommand{\VIOLENT}[1]{{\textcolor{red}{[{\bf Too violent}:~{#1}]}}}
+\newcommand{\MAYBEVIOLENT}[1]{{\textcolor{red}{{\bf [Violent?]}~{#1}}}}
+\newcommand{\VIOLENTQ}[1]{\STRONGQ{#1}}
+\newcommand{\USELESS}[1]{{\textcolor{brown}{[{\bf Useless?}:~{#1}]}}}
+\newcommand{\REFORMULATE}[1]{{\textcolor{brown}{[{\bf Reformulate}:~{#1}]}}}
+\newcommand{\MOVE}[1]{{\textcolor{blue}{[{\bf Move}:~{#1}]}}}
+\newcommand{\MOVEQ}[1]{{\textcolor{blue}{#1}}}
+\newcommand{\MAYBEMOVE}[1]{{\textcolor{blue}{[{\bf Move?}~{#1}]}}}
+\newcommand{\MAYBE}[1]{{\textcolor{darkgreen}{{\bf ?}{#1}{\bf ?}}}}
+\newcommand{\MAYBEQ}[1]{{\textcolor{darkgreen}{#1}}}
+\newcommand{\IMPORTANT}[1]{{\textcolor{blue}{[{\bf Important}:~{\em #1}]}}}
+\newcommand{\REMINDER}[1]{{\textcolor{purple}{[{\bf Reminder}:~{\em #1}]}}}
+\newcommand{\RATIONALE}[1]{{\textcolor{purple}{[{\bf Rationale}:~{\em #1}]}}}
+\newcommand{\IMP}[1]{\IMPORTANT{#1}}
+\newcommand{\CHECKINTHEEND}[1]{{\textcolor{brown}{[{\bf Check at the end}:~{\em #1}]}}}
+\newcommand{\CHECK}[1]{{\textcolor{brown}{[{\bf Check}:~{\em #1}]}}}
+\newcommand{\MYOR}[2]{\textcolor{red}{{\bf [}{{\textcolor{darkgreen}{#1}}{\bf ~OR~}{{\textcolor{darkgreen}{#2}}{\bf ]}}}}}
+\newcommand{\ORTWO}[2]{\textcolor{red}{{\bf [}{{\textcolor{darkgreen}{#1}}{\bf ~OR~}{{\textcolor{darkgreen}{#2}}{\bf ]}}}}}
+\newcommand{\ORTHREE}[3]{\textcolor{red}{{\bf [}{{\textcolor{darkgreen}{#1}}{\bf ~OR~}{{\textcolor{darkgreen}{#2}}{\bf ~OR~}{{\textcolor{darkgreen}{#3}}{\bf ]}}}}}}
+\newcommand{\ORFOUR}[4]{\textcolor{red}{{\bf [}{{\textcolor{darkgreen}{#1}}{\bf ~OR~}{{\textcolor{darkgreen}{#2}}{\bf ~OR~}{{\textcolor{darkgreen}{#3}}{\bf ~OR~}{{\textcolor{darkgreen}{#4}}{\bf ]}}}}}}}
+\newcommand{\SYNONYM}[1]{\textcolor{blue}{{\bf [Find a synonym}:~{\em #1}{\bf ]}}}
+\newcommand{\UNSURE}[1]{\textcolor{red}{{\bf [I'm not sure of this}:~{\em #1}{\bf ]}}}
+\newcommand{\WORD}[1]{\textcolor{purple}{{\bf [Is there a better term?}~{\em #1}{\bf ]}}}
+\newcommand{\TERM}[1]{\WORD{#1}}
+\newcommand{\LANGUAGE}[1]{\WORD{#1}}
+\newcommand{\GRAMMAR}[1]{\textcolor{red}{{\bf [Is this correct in English?}~{\em #1}{\bf ]}}}
+\newcommand{\GRAMMARQ}[1]{\textcolor{red}{#1}}
+\newcommand{\ENGLISH}[1]{\GRAMMAR{#1}}
+\newcommand{\ITALIANISM}[1]{\textcolor{red}{{\bf [Is this an italianism?}~{\em #1}{\bf ]}}}
+\newcommand{\EXCESSIVE}[1]{\textcolor{red}{{\bf [This may be excessive}:~{\em #1}{\bf ]}}}
+\newcommand{\HACKER}[1]{\textcolor{red}{{\bf [This is informal jargon}:~{\em #1}{\bf ]}}}
+\newcommand{\JARGON}[1]{\textcolor{red}{{\bf [This is informal jargon}:~{\em #1}{\bf ]}}}
+\newcommand{\INFORMAL}[1]{\textcolor{red}{{\bf [This is informal}:~{\em #1}{\bf ]}}}
+\newcommand{\UGLY}[1]{\textcolor{red}{{\bf [ugly}:~{\em #1}{\bf ]}}}
+\newcommand{\DISLIKE}[1]{\textcolor{red}{{\bf [I don't like this}:~{\em #1}{\bf ]}}}
+\newcommand{\DONTLIKE}[1]{\DISLIKE{#1}}
+\newcommand{\GENIAL}[1]{{\textcolor{darkgreen}{[{\bf A genial idea}:~{#1}]}}}
+\newcommand{\GOOD}[1]{{\textcolor{darkgreen}{[{\bf Good}:~{#1}]}}}
+\newcommand{\IGNORE}[1]{}
+\newcommand{\OBSOLETE}[1]{{\textcolor{brown}{[{\bf Obsolete}:~{#1}]}}}
+\newcommand{\OBSOLETEQ}[1]{{\textcolor{brown}{#1}}}
+\newcommand{\SW}[1]{{\textcolor{darkgreen}{[{\bf Somewhere}:~{#1}]}}}
+\newcommand{\SOMEWHERE}[1]{\SW{#1}}
+\newcommand{\MAYBESOMEWHERE}[1]{\MAYBE{\SOMEWHERE{#1}}}
+\newcommand{\SOMEWHEREMAYBE}[1]{\MAYBESOMEWHERE{#1}}
+\newcommand{\FILL}[0]{{\textcolor{red}{\bf [Fill this...]}}}
+\newcommand{\SOMETHING}[0]{{\textcolor{red}{\bf [Something]}}}
+\newcommand{\PROBABLYNOT}[1]{{\textcolor{red}{[{\bf Probably not}:~{#1}]}}}
+\newcommand{\NO}[1]{\textcolor{brown}{{\bf [I don't like this}:~{\em #1}{\bf ]}}}
+\newcommand{\NOTREALLY}[1]{\textcolor{brown}{{\bf [Not really}:~{\em #1}{\bf ]}}}
+\newcommand{\WHYNOT}[1]{\textcolor{red}{{\bf [Why not?}~{\em #1}{\bf ]}}}
+\newcommand{\WHYNOTQ}[1]{\textcolor{red}{#1}}
+\newcommand{\YES}[1]{\textcolor{red}{{\bf [Yes}:~{\em #1}{\bf ]}}}
+\newcommand{\YESQ}[1]{\textcolor{red}{#1}}
+\newcommand{\WRONG}[1]{\textcolor{brown}{{\bf [Wrong}:~{\em #1}{\bf ]}}}
+\newcommand{\WRONGQ}[1]{\RED{#1}}
+\newcommand{\LONG}[1]{\textcolor{red}{{\bf [Only for the long version}:~{\em #1}{\bf ]}}}
+\newcommand{\SHORT}[1]{\textcolor{red}{{\bf [Only for the short version}:~{\em #1}{\bf ]}}}
+\newcommand{\LONGSHORT}[2]{\LONG{#1}{\SHORT{#2}}}
+\newcommand{\SHORTLONG}[2]{\SHORT{#1}{\LONG{#2}}}
+\newcommand{\TEMP}[1]{{\textcolor{darkgreen}{[{#1}]}}}
+\newcommand{\META}[1]{\textcolor{darkgreen}{[{\em {#1}}]}}
+\newcommand{\WR}[1]{{\textcolor{darkgreen}{[would rephrase: {\em {#1}}]}}}
+\newcommand{\INVISIBLE}[1]{{\textcolor{white}{{#1}}}}
+\newcommand{\SKIPALINE}[0]{{\\\INVISIBLE{.}\\}}
+%\newcommand{\NOTHING}[0]{}
+\newcommand{\NOTHING}[0]{\INVISIBLE{\em hack}}
+\def\TEMPBLOCK{\textcolor{darkgreen}}
+
+\newcommand{\PushLine}{\hbox{}\hfill\hbox{}}
+
+\makeatletter
+
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else%
+  \hbox{}%
+  \thispagestyle{empty}%              % Empty header styles
+  \newpage%
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+
+\makeatother
+
+\usepackage{color}
+\definecolor{linkcol}{rgb}{0,0,0.4} 
+\definecolor{citecol}{rgb}{0.5,0,0} 
