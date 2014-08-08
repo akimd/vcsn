@@ -1,0 +1,46 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+\include{format-and-defs}
+
+%\title{Vaucanson 2}
+%\subtitle{A general-purpose automaton system}
+%\author{Akim Demaille, Luca Saiu}
+%\date{2014-08-08}
+
+
+\begin{document}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Front matter
+\pagenumbering{roman}
+\include{title-page}
+
+\tableofcontents
+
+\mainmatter
+\pagenumbering{arabic}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Tutorial
+\part{Practical tutorial}
+
+%\include{index}
+\include{01---Playing-with-contexts}
+\include{02---Basic-operations-on-automata}
+\include{Some-developer-documentation}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Reference
+\part{Reference documentation}
+\include{automaton.ambiguous-word}
+\include{automaton.complete}
+\include{automaton.determinize}
+\include{automaton.is-complete}
+\include{automaton.is-deterministic}
+\include{automaton.is-standard}
+\include{automaton.reduce}
+\include{automaton.standard}
+\include{automaton.synchronizing-word}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Appendices
+\part{Appendices}
+
+\include{bibliography}
+
+\end{document}
