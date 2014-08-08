@@ -768,42 +768,30 @@ namespace vcsn
     return res;
   }
 
-  // FIXME: this works perfectly well, but I'd like a two-parameter version.
-  template <typename PLS1, typename PWS1,
-            typename PLS2, typename PWS2>
-  inline
-  auto
-  join(const polynomialset<context<PLS1, PWS1>>& p1,
-       const polynomialset<context<PLS2, PWS2>>& p2)
-    -> polynomialset<context<join_t<PLS1, PLS2>,
-                             join_t<PWS1, PWS2>>>
+  namespace detail
   {
-    return {join(p1.context(), p2.context())};
-  }
+    template <typename Ctx1, typename Ctx2>
+    struct join_impl<polynomialset<Ctx1>, polynomialset<Ctx2>>
+    {
+      using type = polynomialset<join_t<Ctx1, Ctx2>>;
+      static type join(const polynomialset<Ctx1>& ps1,
+                       const polynomialset<Ctx2>& ps2)
+      {
+        return {vcsn::join(ps1.context(), ps2.context())};
+      }
+    };
 
-  template <typename WS1,
-            typename PLS2, typename PWS2>
-  inline
-  auto
-  join(const WS1& w1,
-       const polynomialset<context<PLS2, PWS2>>& p2)
-    -> polynomialset<context<PLS2, join_t<WS1, PWS2>>>
-  {
-    using ctx_t = context<PLS2, join_t<WS1, PWS2>>;
-    return ctx_t{* p2.labelset(), join(w1, * p2.weightset())};
+    template <typename WS1, typename Ctx2>
+    struct join_impl<WS1, polynomialset<Ctx2>>
+    {
+      using type = polynomialset<context<typename Ctx2::labelset_t,
+                                         join_t<WS1, typename Ctx2::weightset_t>>>;
+      static type join(const WS1& ws1, const polynomialset<Ctx2>& ps2)
+      {
+        return {*ps2.labelset(), vcsn::join(ws1, *ps2.weightset())};
+      }
+    };
   }
-
-  template <typename PLS1, typename PWS1,
-            typename WS2>
-  inline
-  auto
-  join(const polynomialset<context<PLS1, PWS1>>& p1,
-       const WS2& w2)
-    -> polynomialset<context<PLS1, join_t<PWS1, WS2>>>
-  {
-    return join(w2, p1);
-  }
-
 }
 
 #endif // !VCSN_WEIGHTSET_POLYNOMIALSET_HH

@@ -441,22 +441,30 @@ namespace vcsn
     | Join.  |
     `-------*/
 
-#define DEFINE(Lhs, Rhs)                                \
-    template <typename GenSet>                          \
-    struct join_impl<Lhs, Rhs>                          \
-    {                                                   \
-      using type = Rhs;                                 \
-      static type join(const Lhs& lhs, const Rhs& rhs)  \
-      {                                                 \
-        return {get_union(lhs.genset(), rhs.genset())}; \
-      }                                                 \
-    }
+    /// The join with another labelset.
+    template <typename LS1, typename LS2>
+    struct join_impl<LS1, nullableset<LS2>>
+    {
+      using type = nullableset<join_t<LS1, LS2>>;
+      static type join(const LS1& ls1, const nullableset<LS2>& ls2)
+      {
+        return {::vcsn::join(ls1, *ls2.labelset())};
+      }
+    };
 
     /// The join with another labelset.
-    DEFINE(letterset<GenSet>,              nullableset<letterset<GenSet>>);
-    DEFINE(nullableset<letterset<GenSet>>, nullableset<letterset<GenSet>>);
-#undef DEFINE
-
+    ///
+    /// We specialize the previous case to avoid nesting nullableset
+    /// inside nullableset.
+    template <typename LS1, typename LS2>
+    struct join_impl<nullableset<LS1>, nullableset<LS2>>
+    {
+      using type = nullableset<join_t<LS1, LS2>>;
+      static type join(const nullableset<LS1>& ls1, const nullableset<LS2>& ls2)
+      {
+        return {::vcsn::join(*ls1.labelset(), *ls2.labelset())};
+      }
+    };
   }
 
   /*-------.

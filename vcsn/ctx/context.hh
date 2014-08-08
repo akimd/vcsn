@@ -197,8 +197,7 @@ namespace vcsn
     /// The join of two contexts.
     template <typename LS1, typename WS1,
               typename LS2, typename WS2>
-    struct join_impl<context<LS1, WS1>, context<LS2, WS2>,
-                     if_different_t<context<LS1, WS1>, context<LS2, WS2>>>
+    struct join_impl<context<LS1, WS1>, context<LS2, WS2>>
     {
       using labelset_t = join_t<LS1, LS2>;
       using weightset_t = join_t<WS1, WS2>;
@@ -206,20 +205,6 @@ namespace vcsn
 
       static type join(const context<LS1, WS1>& ctx1,
                        const context<LS2, WS2>& ctx2)
-      {
-        return {vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
-                vcsn::join(*ctx1.weightset(), *ctx2.weightset())};
-      }
-    };
-
-    /// The join of two contexts.
-    template <typename LS, typename WS>
-    struct join_impl<context<LS, WS>, context<LS, WS>>
-    {
-      using type = context<LS, WS>;
-
-      static type join(const context<LS, WS>& ctx1,
-                       const context<LS, WS>& ctx2)
       {
         return {vcsn::join(*ctx1.labelset(), *ctx2.labelset()),
                 vcsn::join(*ctx1.weightset(), *ctx2.weightset())};

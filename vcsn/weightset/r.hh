@@ -205,6 +205,7 @@ namespace vcsn
     VCSN_JOIN_SIMPLE(z, r);
     VCSN_JOIN_SIMPLE(q, r);
     VCSN_JOIN_SIMPLE(qmp, r);
+    VCSN_JOIN_SIMPLE(r, r);
   }
 
 }

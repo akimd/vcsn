@@ -190,6 +190,7 @@ namespace vcsn
   };
 
     VCSN_JOIN_SIMPLE(b, zmin);
+    VCSN_JOIN_SIMPLE(zmin, zmin);
   }
 }
 
