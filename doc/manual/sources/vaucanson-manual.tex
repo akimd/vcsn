@@ -1,0 +1,98 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+\input{format-and-defs}
+\input{format-and-defs--from-vaucanson-1}
+
+\makeindex[intoc]
+
+\begin{document}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Front matter
+\pagenumbering{roman}
+\input{title-page}
+
+% FIXME: add abstract, acknowledgments and the like
+
+% Add Contents to PDF bookmarks:
+\hypertarget{contents}{}
+\bookmark[level=chapter,dest=contents]{Contents}
+\tableofcontents
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Main matter
+\mainmatter
+\pagenumbering{arabic}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Tutorial
+\part{Tutorial}
+
+% Little hack to make a starred chapter appear in TOC and PDF bookmarks:
+\phantomsection
+\cleardoublepage
+\addstarredchapter{Introduction}
+
+\chapter*{Introduction [to be written later]}
+\index{introduction}
+\FILL
+
+\chapter{Getting started}
+\input{getting-started}
+
+\chapter{How to use notebooks}
+\input{How-to-use-notebooks}
+%% \index{notebook}
+%% \index{IPython notebook}
+%% \index{IPython}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Reference
+\part{Reference}
+
+\FIXME{Follow §3 in \vcsn 1: \vcsn 1 sections become \vcsn 2 chapters}
+
+\chapter{Graph operations}
+\label{graph-operations}
+\input{Graph-operations}
+
+\chapter{Graphical User Interface [unwritten]}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Appendices
+\part{Appendices}
+\begin{appendices}
+\chapter{Automata factories [to be written]}
+
+\chapter{Synchronizing word}
+\input{automaton.synchronizing-word}
+
+\chapter{Algorithm specifications [to be written]}
+
+\chapter{Automaton factories [to be written]}
+
+\chapter{Some developer documentation}
+\input{Some-developer-documentation}
+\TODO{how to modify documentation, particularly with notebooks}
+
+\section{How to generate a virtual machine image}
+The process employed to build a vagrant virtual machine
+is explained in the files
+\FILE{doc/vagrant/README}
+and
+\FILE{doc/vagrant/README.unstable64}, available within the source tree.
+
+
+\chapter{How to add to this document}
+\input{how-to-add-to-this-document}
+
+\end{appendices}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Back matter
+
+\backmatter
+
+\phantomsection
+\cleardoublepage
+\input{bibliography}
+%\input{index}
+
+\phantomsection
+\cleardoublepage
+\printindex
+
+\end{document}

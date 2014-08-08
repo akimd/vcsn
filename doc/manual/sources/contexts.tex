@@ -1,0 +1,46 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+\chapter{An extraordinary and funny chapter}
+
+The Vaucanson system relies on a central concept: a \textit{context}
+denotes type information about an automaton or a regular expression.
+\\
+\\
+A context is made of two parts:
+\begin{itemize}
+\item a \textit{labelset} $L$, denoting the type of labels, members of
+  a \textit{monoid};
+\item a \textit{weightset} $W$, denoting the type of weights, members
+  of a \textit{semiring}.
+\end{itemize}
+When writing a context $C$ composed of a labelset $L$ and a weightset
+$W$ we use the notation $C = L \to W$, intuitively hinting at the
+type of an automaton transition ``consuming'' a label in $L$ and
+``producing'' a weight in $W$.
+\\
+\\
+{{\rm%\small
+\begin{tabular}{ll}
+\textit{context} $::=$ & \SPACERF\textit{labelset} $\to$ \textit{weightset}
+\\\\
+\textit{labelset} $::=$ & \SPACERF\textit{alphabet}
+\SPACERP \textit{alphabet}$^?$
+\SPACERP \textit{alphabet}$^*$
+\SPACERP \textit{labelset} $\times$ \textit{labelset}
+\SPACERP \textsf{RatE[}\textit{context}\textsf{]}
+\\\\
+\textit{weightset} $::=$ & \SPACERF$\SET{B}$
+\SPACERP $\SET{Z}_{min}$
+\SPACERP $\SET{Q}$
+\SPACERP $\SET{R}$
+\SPACERP \textsf{Series[}\textit{context}\textsf{]}
+%% \\\\
+%% \textit{s-expression} $::=$ & \SPACERF\textit{atom} & \{ \textit{atom} \}
+%% \SPACERP\CODE{(}\ \textit{s-expression}\ \textit{rest} & \{ s-cons(\textit{s-expression}, \textit{rest}) \}
+%% \SPACERP\textit{prefix}\ \textit{s-expression} & \{
+%% s-cons(lookup(\textit{prefix}), s-cons(\textit{s-expression}, \CODE{()})) \}
+%% \\\\ \textit{rest} $::=$ & \SPACERF\CODE{)} & \{ \CODE{()} \}
+%% \SPACERP\CODE{.\ }\textit{s-expression}\ \CODE{)} & \{ \textit{s-expression} \}
+%% \SPACERP\textit{s-expression}\ \textit{rest} & \{ s-cons(\textit{s-expression},
+%% \textit{rest}) \}
+\end{tabular}
+}}
