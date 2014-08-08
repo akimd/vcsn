@@ -187,6 +187,7 @@ namespace vcsn
     `-------*/
 
     VCSN_JOIN_SIMPLE(b, z);
+    VCSN_JOIN_SIMPLE(z, z);
   }
 
 }

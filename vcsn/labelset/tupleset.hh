@@ -129,6 +129,13 @@ namespace vcsn
       return res;
     }
 
+    /// The join with another tupleset.
+    tupleset
+    join(const tupleset& rhs) const
+    {
+      return join_(rhs, indices);
+    }
+
     /// The componants valuesets, as a tuple.
     const valuesets_t& sets() const
     {
@@ -756,7 +763,7 @@ namespace vcsn
     tupleset
     join_(const tupleset& rhs, seq<I...>) const
     {
-      return tupleset{join(set<I>(), rhs.set<I>())...};
+      return tupleset{vcsn::join(set<I>(), rhs.set<I>())...};
     }
 
     /// The meet with another tupleset.
@@ -779,30 +786,6 @@ namespace vcsn
     friend
     tupleset
     meet(const b&, const tupleset& rhs)
-    {
-      return rhs;
-    }
-
-    /// The join with another tupleset.
-    friend
-    tupleset
-    join(const tupleset& lhs, const tupleset& rhs)
-    {
-      return lhs.join_(rhs, indices);
-    }
-
-    /// The join with the B weightset.
-    friend
-    tupleset
-    join(const tupleset& lhs, const b&)
-    {
-      return lhs;
-    }
-
-    /// The join with the B weightset.
-    friend
-    tupleset
-    join(const b&, const tupleset& rhs)
     {
       return rhs;
     }
@@ -838,6 +821,16 @@ namespace vcsn
       static type value(const labelset_t& ls)
       {
         return value(ls, detail::make_index_sequence<sizeof...(LabelSets)>{});
+      }
+    };
+
+    template <typename... VS1, typename... VS2>
+    struct join_impl<tupleset<VS1...>, tupleset<VS2...>>
+    {
+      using type = tupleset<join_t<VS1, VS2>...>;
+      static type join(const tupleset<VS1...>& lhs, const tupleset<VS2...>& rhs)
+      {
+        return lhs.join(rhs);
       }
     };
   }

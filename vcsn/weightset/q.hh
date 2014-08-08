@@ -286,6 +286,7 @@ namespace vcsn
 
     VCSN_JOIN_SIMPLE(b, q);
     VCSN_JOIN_SIMPLE(z, q);
+    VCSN_JOIN_SIMPLE(q, q);
   }
 }
 

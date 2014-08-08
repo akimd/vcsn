@@ -6,33 +6,11 @@ namespace vcsn
   namespace detail
   {
 
-    /// A simple enable_if.
-    template <typename T, typename U>
-    using if_different_t
-    = typename std::enable_if<!std::is_same<T, U>::value>::type;
-
     /// A structure that implements the computation of join(V1, V2).
     /// "type" is the type of the result, and "join" computes the value.
-    ///
-    /// "Enable" is used to discard implementation we want to eliminate (to
-    /// avoid ambiguous specializations).  Use if_different_t for instance,
-    /// to rule out a specialization such as "exp<U>, exp<V>" which is
-    /// ambiguous with the specialization "<T, T>" when T is "exp<U>".
-    template <typename V1, typename V2,
-              typename Enable = void>
+    template <typename V1, typename V2>
     struct join_impl
     {};
-
-    /// The simplest case: a type with itself (idempotence).
-    template <typename T>
-    struct join_impl<T, T>
-    {
-      using type = T;
-      static type join(type v1, type)
-      {
-        return v1;
-      }
-    };
 
     /// Dealing with commutativity: two implementations of join_:
     /// forward and reversed, ordered by preference by the use of "0

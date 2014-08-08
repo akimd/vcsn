@@ -342,24 +342,11 @@ namespace vcsn
 
     /// The join of two ratexpsets.
     template <typename Ctx1, typename Ctx2>
-    struct join_impl<ratexpset<Ctx1>, ratexpset<Ctx2>,
-                     if_different_t<Ctx1, Ctx2>>
+    struct join_impl<ratexpset<Ctx1>, ratexpset<Ctx2>>
     {
       using type = ratexpset<join_t<Ctx1, Ctx2>>;
 
       static type join(const ratexpset<Ctx1>& lhs, const ratexpset<Ctx2>& rhs)
-      {
-        return {vcsn::join(lhs.context(), rhs.context()),
-                vcsn::join(lhs.identities(), rhs.identities())};
-      }
-    };
-
-    template <typename Ctx>
-    struct join_impl<ratexpset<Ctx>, ratexpset<Ctx>>
-    {
-      using type = ratexpset<Ctx>;
-
-      static type join(const ratexpset<Ctx>& lhs, const ratexpset<Ctx>& rhs)
       {
         return {vcsn::join(lhs.context(), rhs.context()),
                 vcsn::join(lhs.identities(), rhs.identities())};

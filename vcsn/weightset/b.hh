@@ -5,6 +5,7 @@
 # include <ostream>
 # include <string>
 
+# include <vcsn/core/join.hh>
 # include <vcsn/misc/escape.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
@@ -178,6 +179,12 @@ namespace vcsn
       return o;
     }
   };
+
+    /*-------.
+    | join.  |
+    `-------*/
+
+    VCSN_JOIN_SIMPLE(b, b);
   } // detail::
 
 }
