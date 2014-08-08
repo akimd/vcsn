@@ -1,0 +1,95 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+The Vaucanson system is free software, and as such comes with full source code.
+However, particularly as a convenience to prospective users who want to quickly
+start exploring the software, we also provide a virtual machine image.
+
+The virtual machine image is particularly easy to use and requires no set up;
+we recommend it as a first choice to all beginners.
+
+\section{Using the Virtual Machine image}
+The Virtual Machine image works on x86 and x86\_64 machines, using any
+operating system supported by VirtualBox.  It relies on VirtualBox and Vagrant,
+which can be found at \url{https://www.virtualbox.org/wiki/Downloads} and
+\url{http://www.vagrantup.com/downloads.html}.  The following assumes that the
+user already installed the two dependencies, using packages or any appropriate
+method.
+
+\subsection{Virtual machine download and startup}
+The virtual machine image itself is a single file taking about \FIXME{1GB}.
+The current version \vcsnversion{} can be found at
+\url{http://vaucanson-project.org/releases/Vaucanson-\vcsnversion-VM.tar}.  The
+user should download it, open a terminal and enter the directory containing the
+file \FILE{Vaucanson-\vcsnversion-VM.tar} with the appropriate \CODE{cd} command.
+\\\\
+At this point the user should issue the following command to extract the
+archive, at the shell prompt --- here indicated as ``\CODE{\$ }'':
+\begin{alltt}
+$ tar -xfv Vaucanson-\vcsnversion-VM.tar
+\end{alltt}
+This will create a \FILE{Vaucanson-\vcsnversion-VM} subdirectory; the user
+should enter it and then start \CODE{vagrant}, which will use the configuration
+file contained there:
+\begin{alltt}
+$ cd Vaucanson-\vcsnversion-VM
+$ vagrant up
+\end{alltt}
+The last command will boot the virtual machine, consisting of a full GNU/Linux
+system running a Vaucanson server on a port accessible as port 8888 on the host
+machine.  In order to connect with it the user should open a web browser and
+open the \url{http://localhost:8888} URL, connecting to the local machine on
+port 8888.  The directory \FILE{Vaucanson-\vcsnversion-VM} is \textit{shared}
+between the virtual machine and the host machine, which can be convenient to
+exchange files, such as notebooks.
+
+To turn off the virtual machine the user should issue the command:
+\begin{alltt}
+$ vagrant halt
+\end{alltt}
+
+The file \FILE{Vaucanson-\vcsnversion-VM.tar} can be safely removed to save
+space.
+
+
+
+\CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site --no-browser --ip='*' \&}
+
+Sources:
+
+\FIXME{it could be as simple as typing the following line from the source directory:}\\
+\CODE{\$ ./tests/bin/vcsn notebook}
+
+\FIXME{but we strongly recommend using a \TDEF{site file}, in this example
+  named \FILE{/opt/vcsn-site.py}:}\\
+\CODE{\$ PYTHONPATH=/opt ./tests/bin/vcsn notebook -m vcsn-site}
+
+A site file contains Python commands to be automatically run at the beginning
+of every IPython Notebook session.  The one used in the virtual machine image
+simply contains the two lines:
+\begin{lstlisting}
+from vcsn import *
+from vcsn.functional import *
+\end{lstlisting}
+Thanks to these global declarations the user can refer to identifiers bound in
+the \CODE{vcsn} and \CODE{vcsn.functional} modules without prepending long module
+names every time: for example she will be able to simply type
+``\CODE{context('a-z',  'z')}''
+in lieu of the more verbose
+``\CODE{vcsn.functional.context('a-z',  'z')}''.
+
+We will omit explicit module names in the following, assuming the user to
+either use a site file or manually type the two \CODE{import} lines above at
+the beginning of every notebook.
+
+
+\section{Compiling and installing from sources}
+Since the software does dynamic compilation of complex C++ files, we strongly
+recommend ccache to speed it up.
+
+\subsection{Requirements}
+
+\subsection{GNU/Linux}
+\subsection{Mac OS X}
+\FIXME{The ``ports'' system is recommended.  If you don't use ports then pay attention to prerequisites.}
+
+\label{assume-we-build-in-the-source-directory}
+\FIXME{source and build directories: we assume they are the same in the following.}

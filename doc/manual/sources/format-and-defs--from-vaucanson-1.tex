@@ -1,0 +1,446 @@
+% -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
+
+%% This comes from the Vaucanson 1 documentation, with very few changes.
+%% It will help us to share LaTeX fragments.
+
+%%% flag definition
+% draft controls  frames, labels showing, footer, comments, etc.
+\newif\ifdraft \draftfalse % \drafttrue  %
+\newif\ifital \italfalse %\italtrue
+\newcommand{\JSLandscape}%
+   {\ifital \thispagestyle{empty}\mbox{ }\clearpage%
+       \addtocounter{page}{-1}\fi}
+\newif\iflong \longfalse   % \longtrue  %
+\newcommand{\longonly}[1]{\iflong{#1}\else{}\fi}
+\newcommand{\shortlong}[2]{\iflong{#2}\else{#1}\fi}
+\newcommand{\longshort}[2]{\iflong{#1}\else{#2}\fi}
+\newcommand{\shortonly}[1]{\iflong{}\else{#1}\fi}
+\newcommand{\longclear}{\iflong{\clearpage}\else{}\fi}
+\newcommand{\shortclear}{\iflong{}\else{\clearpage}\fi}
+
+\usepackage{calc}
+\newcounter{hours}\newcounter{minutes}
+\newcommand\printtime{\setcounter{hours}{\time/60}%
+  \setcounter{minutes}{\time-\value{hours}*60}%
+  \thehours\,h\,\theminutes}
+\newcommand{\writedate}{}
+\newcounter{heure}\setcounter{heure}{\time}%
+\makeatletter
+\def\@oddfoot {{\footnotesize
+%\longshort{\makebox[0pt][l]{\texttt{Version with commments}}}%
+%          {\makebox[0pt][l]{\texttt{\vcsnv \tafkit Documentation}}}
+% \longshort{\makebox[0pt][l]{\texttt{Version FSMNLP 2011 with commments}}}%
+%           {\makebox[0pt][l]{\texttt{FSMNLP 2011 Special Edition}}}
+%\hfil -- {\normalsize \thepage} -- \hfil
+%\longshort{\makebox[0pt][r]{\texttt{for the \vcsn Group}}}%
+%          {\makebox[0pt][r]{\texttt{\today}}}%
+}}
+\def\@evenfoot{{\footnotesize
+%\longshort{\makebox[0pt][l]{\texttt{Working document --- Do not circulate}}}%
+%          {\makebox[0pt][l]{\texttt{\vcsnv \tafkit Documentation}}}
+% \longshort{\makebox[0pt][l]{\texttt{Working document --- Do not circulate}}}%
+%           {\makebox[0pt][l]{\texttt{FSMNLP 2011 Special Edition}}}
+%\hfil -- {\normalsize \thepage} -- \hfil
+%\longshort{\makebox[0pt][r]{\texttt{Compiled \today \e at \printtime}}}%\theheure
+%          {\makebox[0pt][r]{\texttt{\today}}}%
+}}
+\makeatother
+\addtolength{\footskip}{20pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[utf8]{inputenc}
+%\input{texinputs/accent_keys}
+\usepackage{a4wide}
+\usepackage[american]{babel}
+\usepackage{amsmath,amsfonts,amscd,amssymb}
+\usepackage{xspace}
+\usepackage{textcomp}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{vaucanson-g}
+\usepackage{subfigure}
+% \usepackage{showlabels}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\input{texinputs/js_symboles3}% symboles macros
+%\input{texinputs/js_macros3}% symboles macros
+\newcommand{\shuffle}{\mathbin{\between}}
+\newcommand{\autplus}{+}
+\newcommand{\autprod}{\cdot}%{\curvearrowright}
+\newcommand{\autstarsymb}{*}%{\circlearrowleft}
+\newcommand{\autstar}[1]{#1^\autstarsymb}
+\newcommand{\lgt}[1]{\left|#1\right|}
+\newcommand{\lbl}[1]{\ell(#1)}
+\newcommand{\wgt}[1]{w(#1)}
+%%%%%%%%%%%%%\section{environments}
+\newtheorem{theorem}{Theorem}
+\newtheorem{property}{Property}
+
+%%%%%%%%%%%%%\section{references}
+%% \usepackage{hyperref}
+%%   \hypersetup{breaklinks, plainpages=false}
+%%   \hypersetup{colorlinks, citecolor=blue, linkcolor=blue, urlcolor=blue}
+\usepackage[open,numbered]{bookmark}
+
+%% cleveref must be loaded after hyperref.
+\usepackage[nameinlink]{cleveref}
+  \crefname{appendix}{Appendix}{Appendice}
+  \crefname{chapter}{Chapter}{Chapters}
+  \crefname{corollary}{Corollary}{Corollaries}
+  \crefname{definition}{Definition}{Definitions}
+  \crefname{example}{Example}{Examples}
+  \crefname{exercise}{Exercise}{Exercises}
+  \crefname{fact}{Fact}{Facts}
+  \crefname{figure}{Figure}{Figures}
+  \crefname{lemma}{Lemma}{Lemmas}
+  \crefname{note}{Note}{Notes}
+  \crefname{problem}{Problem}{Problems}
+  \crefname{property}{Property}{Properties}
+  \crefname{proposition}{Proposition}{Propositions}
+  \crefname{remark}{Remark}{Remarks}
+  \crefname{section}{Section}{Sections}
+  \crefname{table}{Table}{Tables}
+  \crefname{theorem}{Theorem}{Theorems}
+  \newcommand{\apndx}[1]{\cref{chp:#1}}%
+  \newcommand{\appnd}[1]{\cref{app:#1}}%
+  \newcommand{\chptr}[1]{\cref{chp:#1}}%
+  \newcommand{\corol}[1]{\cref{cor:#1}}%
+  \newcommand{\defin}[1]{\cref{def:#1}}%
+  \newcommand{\equat}[1]{\cref{equ:#1})}%
+  \newcommand{\equnm}[1]{(\ref{equ:#1})\xspace}%
+  \newcommand{\examp}[1]{\cref{exa:#1}}%
+  \newcommand{\exerc}[1]{\cref{exe:#1}}%
+  \newcommand{\factx}[1]{\cref{fac:#1}}%??? do not follow
+  \newcommand{\figur}[1]{\cref{fig:#1}}%
+  \newcommand{\lemme}[1]{\cref{lem:#1}}%
+  \newcommand{\nnote}[1]{\cref{not:#1}}%
+  \newcommand{\probl}[1]{\cref{prb:#1}}%
+  \newcommand{\prope}[1]{\cref{pty:#1}}%
+  \newcommand{\propo}[1]{\cref{pro:#1}}%
+  \newcommand{\remar}[1]{\cref{rem:#1}}%
+  \newcommand{\sbsct}[1]{\cref{ssc:#1}}%
+  \newcommand{\secti}[1]{\cref{sec:#1}}%
+  \newcommand{\tabla}[1]{\cref{tab:#1}}%
+  \newcommand{\theor}[1]{\cref{the:#1}}%
+
+%%%%%%%%%%%%%\section{Two-column layout}
+\newcommand{\miniskip}{\vspace*{0.5ex}}%
+%%% Two types of two-column layout
+\newlength{\TwClIndent}\setlength{\TwClIndent}{1.8cm}% indent (negative)
+\newlength{\TwClSpace}\setlength{\TwClSpace}{1.2em}% space between columns
+\newlength{\parindenttemp}% for indentation in minipage
+\setlength{\parindenttemp}{\parindent}%
+%
+\newlength{\TwClTxtWid}% Width of "text" column
+\newlength{\TwClFigWid}% Width of "figure" column
+\newcommand{\TwClOne}{0.681}%
+\newcommand{\TwClTwo}{0.8}%
+\newcommand{\TwClThree}{0.5}%
+%
+\newcommand{\SetTwClPrm}[1]%
+   {\setlength{\TwClTxtWid}{#1\textwidth}%
+    \setlength{\TwClFigWid}{\textwidth}%
+    \addtolength{\TwClFigWid}{-\TwClTxtWid}%
+    \addtolength{\TwClTxtWid}{-.5\TwClSpace}%
+    \addtolength{\TwClFigWid}{-.5\TwClSpace}%
+    \addtolength{\TwClFigWid}{\TwClIndent}}%
+\newenvironment{TwClFig}%[1][\TwClOne]
+   {\medskip\medskip\noindent%
+    \hspace*{-\TwClIndent}%
+    \begin{minipage}[c]{\TwClFigWid}%
+    \par\vspace*{0mm}% top alignment
+    \begin{center}}%
+   {\end{center}\end{minipage}}%
+\newenvironment{TwClTxt}%
+   {\hspace*{\TwClSpace}%
+    \begin{minipage}[c]{\TwClTxtWid}%
+    \par\vspace*{0mm}% top alignment
+    \footnotesize}%
+   {\normalsize\end{minipage}\medskip\medskip}%
+\newenvironment{SwClCmd}%[1][\TwClOne]
+   {\medskip\medskip\noindent%
+    \hspace*{-\TwClIndent}%
+    \begin{minipage}[c]{\TwClFigWid}%
+    \par\vspace*{0mm}% top alignment
+    \small}%\footnotesize
+   {\normalsize\end{minipage}}%
+\newenvironment{SwClTxt}%
+   {\hspace*{\TwClSpace}% \setlength{\parindent}{\parindenttemp}%
+    \begin{minipage}[c]{\TwClTxtWid}%
+    \par\vspace*{0mm}}%% top alignment
+   {\end{minipage}\medskip}%\medskip
+%
+\newlength{\OneClIndent}\setlength{\OneClIndent}{2em}% indent (negative)
+\newlength{\OneClTxtWid}% Width of "text" column
+\setlength{\OneClTxtWid}{\textwidth}
+\addtolength{\OneClTxtWid}{-\OneClIndent}%
+\newcommand{\CmdCmt}[2]%[\TwClOne]
+   {\noindent%
+    #1%
+    \par
+    \hspace*{\OneClIndent}%
+    \begin{minipage}[c]{\OneClTxtWid}%
+    \par\vspace*{0mm}% top alignment
+    #2%
+    \end{minipage}%
+    \smallskip\miniskip
+    }%
+\newcommand{\PushLine}{\hbox{}\hfill\hbox{}}
+%%%%%% \section{negative vertical space}
+\newcommand{\bigskipneg}{\vspace*{-5ex}} %960728
+\newcommand{\medskipneg}{\vspace*{-2ex}} %960728
+\newcommand{\smallskipneg}{\vspace*{-1ex}} %960728
+\newcommand{\miniskipneg}{\vspace*{-0.25ex}} %960728
+%%%%%%%%%%%%%\section{List macros}
+\newcommand{\jsListe}[1]%
+   {\noindent\makebox[\parindent][r]{\rm(#1)}\hspace*{.8em}\ignorespaces}
+%
+\newcommand{\thi}{\jsListe{i}}
+\newcommand{\thii}{\jsListe{ii}}
+\newcommand{\thiii}{\jsListe{iii}}
+\newcommand{\thiv}{\jsListe{iv}}
+\newcommand{\thv}{\jsListe{v}}
+\newcommand{\thvi}{\jsListe{vi}}
+\newcommand{\thvii}{\jsListe{vii}}
+\newcommand{\thip}{\jsListe{i'}}
+\newcommand{\thiip}{\jsListe{ii'}}
+\newcommand{\thiiip}{\jsListe{iii'}}
+\newcommand{\thivp}{\jsListe{iv'}}
+\newcommand{\thvp}{\jsListe{v'}}
+\newcommand{\thvip}{\jsListe{vi'}}
+\newcommand{\point}{\makebox[2.4em][l]{$\bullet$}}
+\newcommand{\thp}{\makebox[2.4em][l]{$\bullet$}}
+\newcommand{\pointr}{\makebox[2.4em][r]{$\bullet$ \ }}
+\newcommand{\pointn}{\noindent \makebox[1.2em]{$\bullet$}\ignorespaces}
+\newcommand{\tiret}{\noindent\makebox[2.4em][r]{-- \msp}}
+\newcommand{\thI}{\jsListe{I}}
+\newcommand{\thII}{\jsListe{II}}
+\newcommand{\thIII}{\jsListe{III}}
+%
+\newcommand{\tha}{\jsListe{a}}
+\newcommand{\thb}{\jsListe{b}}
+\newcommand{\thc}{\jsListe{c}}
+\newcommand{\thd}{\jsListe{d}}
+\newcommand{\thejs}{\jsListe{e}}
+\newcommand{\thf}{\jsListe{f}}
+\newcommand{\thg}{\jsListe{g}}
+%
+\newcommand{\thnz}{\jsListe{0}}
+\newcommand{\thnu}{\jsListe{1}}
+\newcommand{\thnd}{\jsListe{2}}
+\newcommand{\thnt}{\jsListe{3}}
+\newcommand{\thnq}{\jsListe{4}}
+\newcommand{\thnc}{\jsListe{5}}
+\newcommand{\thns}{\jsListe{6}}
+\newcommand{\thA}{\jsListe{A}}
+\newcommand{\thB}{\jsListe{B}}
+\newcommand{\thC}{\jsListe{C}}
+%
+%%%%%
+\newcommand{\B}{\Bmbb}
+\newcommand{\C}{\Cmbb}
+\newcommand{\F}{\Fmbb}
+\newcommand{\K}{\Kmbb}
+\newcommand{\N}{\Nmbb}
+\newcommand{\Q}{\Qmbb}
+\newcommand{\R}{\Rmbb}
+\newcommand{\T}{\Tmbb}
+\newcommand{\Z}{\Zmbb}
+\newcommand{\Ed}{\Emsf}
+\newcommand{\Fd}{\Fmsf}
+\newcommand{\Gd}{\Gmsf}
+\newcommand{\kd}{\kmsf}
+\newcommand{\zed}{\mathsf{0}}
+\newcommand{\und}{\mathsf{1}}
+% \newcommand{\zeK}{0_{\K}}
+% \newcommand{\unK}{1_{\K}}
+%
+\newcommand{\Zmin}{\Z\mathrm{min}}
+\newcommand{\Zmax}{\Z\mathrm{max}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Cpp}{\texttt{C++}\xspace}
+\newcommand{\gpp}{\texttt{g++}\xspace}
+\newcommand{\tex}{\TeX\xspace}
+\newcommand{\latex}{\LaTeX\xspace}
+\newcommand{\tafkit}{\textsc{TAF-Kit}\xspace}
+%\newcommand{\vcsn}{\textsc{Vaucanson}\xspace}
+\def\VcsnVersion{\vcsnversion}
+\def\VcsnVrsnOld{1.4.1}
+% \def\VcsnVersion{1.3.9}
+\newcommand{\vcsnv}{\vcsn\VcsnVersion\xspace}
+\newcommand{\vcsnvo}{\vcsn\VcsnVrsnOld\xspace}
+\newcommand{\tafkitv}{\tafkit\VcsnVersion\xspace}
+\newcommand{\Vauc}{\vcsn}% for compatibility
+\newcommand{\fsmxml}{\textsc{Fsm\,XML}\xspace}
+\newcommand{\xml}{\texttt{XML}\xspace}
+\newcommand{\XML}{\xml}% for compatibility
+%\newcommand{\vgi}{\textsc{Vgi}\xspace}
+\newcommand{\fst}{\textsc{OpenFst}\xspace}
+%%% FSMXML
+\newcommand{\Prec}{\medskip\noindent\textbf{\textsl{Precondition}:}\e}
+\newcommand{\Spec}{\medskip\noindent\textbf{\textsl{Specification}:}%
+                   \par\smallskip\noindent}
+\newcommand{\Comt}{\medskip\noindent\textbf{\textsl{Comments}:}\xspace}
+\newcommand{\Cave}{\medskip\noindent\textbf{\textsl{Caveat}:}\xspace}
+\newcommand{\Exam}{\medskip\noindent\textbf{\textsl{Example}:}\xspace}
+\newcommand{\vrglst}{,\e}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\newcommand{\Cxx}{%
+  \valign{\vfil\hbox{##}\vfil\cr
+    {C\kern-.1em}\cr
+    $\hbox{\fontsize\sf@size\z@\textbf{+\kern-0.05em+}}$\cr}%
+    \xspace
+}
+\makeatother
+%% ----------------------- %%
+%% Texinfo like commands.  %%
+%% ----------------------- %%
+\newcommand\vcdef[1]{\textsl{#1}}
+\newcommand\kbd[1]{\textsl{\texttt{#1}}}
+\newcommand\file[1]{`\texttt{#1}'}
+\newcommand\command[1]{\texttt{#1}}
+\newcommand\var[1]{{\ttfamily\itshape #1}}
+\newcommand\code[1]{\texttt{#1}}
+\newcommand\typet[1]{\texttt{#1}\texttt{\_t}\xspace}
+\newcommand\type[1]{\texttt{#1}\xspace}
+\newcommand\cc{\texttt{::}}
+\newcommand\samp[1]{`\texttt{#1}'}
+\newcommand\option[1]{`\texttt{#1}'}
+\newcommand{\taffn}[1]{\code{#1}}
+
+\newcommand{\bs}{\symbol{'134}}%
+%%%%%%%%%%%%%%index%%%%%%%%%%%%%
+\newcommand{\Indexsc}[1]{\index{#1@\textsc{#1}}}
+\newcommand{\Indextt}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\IndexFct}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\IndexFctIs}[1]{\index{#1@\texttt{is-#1}}}
+\newcommand{\IndexCom}[1]{\index{#1@\texttt{\bs#1}}}
+\newcommand{\IndexEnv}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\IndexOpt}[1]{\index{#1@\texttt{--#1}}}
+\newcommand{\IndirInd}[2]{\index{#1@\texttt{#1}|see{#2}}%
+                          \index{#2!#1@\texttt{#1}}}
+\newcommand{\SubIndtt}[2]{\index{#2!#1@\texttt{#1}}}
+%%%%%%%% special print + index %%%%%%%%%%%%%%%
+\newcommand{\emphind}[1]{\emph{#1}\index{#1}}
+\newcommand{\Option}[1]{\texttt{--#1}\index{#1@\texttt{--#1}}}
+\newcommand{\ShortOpt}[1]{\texttt{-#1}\index{#1@\texttt{-#1}}}
+\newcommand{\FctInd}[1]{\texttt{#1}\index{#1@\texttt{#1}}}
+%%%%%%%% special print %%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\Prm}[1]{\textsl{#1}}
+\newcommand{\Prm}[1]{{\ttfamily\itshape #1}}
+% \newcommand{\Com}[1]{\texttt{\bs#1}}
+\newcommand{\Fct}[1]{\texttt{#1}}
+\newcommand{\Fctp}[1]{\texttt{#1()}}
+\newcommand{\Fctq}[2]{\texttt{#1(#2)}}
+\newcommand{\FctPar}[2]{\Fct{#1} $\mathtt{<}$\Prm{#2}$\mathtt{>}$}
+\newcommand{\Fctaut}[1]{\FctPar{#1}{aut}}
+\newcommand{\Fctexp}[1]{\FctPar{#1}{exp}}
+\newcommand{\FctParD}[3]{\Fct{#1} $\mathtt{<}$\Prm{#2}$\mathtt{>}$ %
+                                  $\mathtt{<}$\Prm{#3}$\mathtt{>}$}
+\newcommand{\FctautD}[1]{\FctParD{#1}{aut1}{aut2}}
+\newcommand{\Fctkaut}[1]{\FctParD{#1}{aut}{k}}
+\newcommand{\FctexpD}[1]{\FctParD{#1}{exp1}{exp2}}
+\newcommand{\Fctkexp}[1]{\FctParD{#1}{exp}{k}}
+\newcommand{\Fcttra}[1]{\FctPar{#1}{tdc}}
+\newcommand{\FcttraD}[1]{\FctParD{#1}{tdc1}{tdc2}}
+\newcommand{\Fcttraaut}[1]{\FctParD{#1}{tdc}{aut}}
+%
+\newcommand{\fm}{\vcdef{fm}\xspace}
+\newcommand{\fmp}{\vcdef{fmp}\xspace}
+\newcommand{\fmpt}{\vcdef{fmp-transducer}\xspace}
+\newcommand{\fmpts}{\vcdef{fmp-transducers}\xspace}
+\newcommand{\rwt}{\vcdef{rw-transducer}\xspace}
+\newcommand{\rwts}{\vcdef{rw-transducers}\xspace}
+\newcommand{\lal}{\code{lal}\xspace}
+\newcommand{\laa}{\code{laa}\xspace}
+\newcommand{\law}{\code{law}\xspace}
+\newcommand{\lam}{\code{lam}\xspace}
+\newcommand{\las}{\code{las}\xspace}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\dvjs}{\vcdef{Decided at VJS}\xspace}
+
+% \newcommand{\ComInd}[1]{\texttt{\bs#1}\index{#1@\texttt{\bs#1}}}
+% \newcommand{\ComPar}[2]{\texttt{\bs#1\{}}
+% \newcommand{\ComParInd}[2]%
+%    {\texttt{\bs#1\{}\Prm{#2}\texttt{\}}\index{#1@\texttt{\bs#1}}}
+% \newcommand{\ComParPar}[3]%
+%    {\texttt{\bs#1\{}\Prm{#2}\texttt{\}\{}\Prm{#3}\texttt{\}}}
+% \newcommand{\ComParParInd}[3]%
+%    {\texttt{\bs#1\{}\Prm{#2}\texttt{\}\{}\Prm{#3}\texttt{\}}%
+%     \index{#1@\texttt{\bs#1}}}
+%
+
+%% Display an interactive session.
+\usepackage{alltt}
+\newenvironment{shell}
+{\begin{alltt}}
+{\end{alltt}}
+% @VcsnVersion@
+\newcommand{\bslash}{\texttt{\symbol{92}}}
+\newcommand{\nojs}{\texttt{\symbol{176}}}
+%% XML Tag.
+\newcommand{\xtag}[1]{\texttt{<#1>}}
+\newcommand{\xftag}[1]{\texttt{</#1>}}
+\newcommand{\xtagf}[1]{\texttt{<#1/>}}
+\newcommand{\xval}[1]{\textsl{\texttt{#1}}}
+\newcommand{\xattr}[1]{\texttt{#1}}
+\newcommand{\BTRE}{\texttt{\{Body::typedRegExp\}}}
+\newcommand{\tagindent}{\hspace*{\tagindentl}}
+\newcommand{\tagsp}{\hspace*{\tagspl}}
+\newcommand{\token}{token,\xspace}
+\newcommand{\strng}{string,\xspace}
+\newcommand{\req}{req.\xspace}
+\newcommand{\opt}{opt.\xspace}
+\newcommand{\occ}{occ.\xspace}
+\newcommand{\oneocc}{}
+\newcommand{\ptn}{$\cdot$\xspace}
+\newcommand{\trt}{{\normalfont\bfseries\textendash}\xspace}
+
+\newenvironment{Com}
+{%
+% \renewcommand{\theenumi}{\alph{enumi}}
+\medskip
+\noindent
+\textit{Comment}:
+% \par
+\itshape}%
+{%
+% \renewcommand{\theenumi}{\arabic{enumi}}%
+% \renewcommand{\theenumii}{\theenumi.\arabic{enumii}}%
+\medskip}
+ \newenvironment{ComV}
+ {\renewcommand{\theenumi}{\alph{enumi}}
+ \medskip
+ \noindent
+ \textit{Comment for the \vcsn Group}:
+ % \par
+ \itshape}%
+ {\renewcommand{\theenumi}{\arabic{enumi}}%
+  \renewcommand{\theenumii}{\theenumi.\arabic{enumii}}%
+  \medskip}
+\newenvironment{ComVd}[1]
+{\renewcommand{\theenumi}{\alph{enumi}}
+\medskip
+\noindent
+\textit{Comment for the \vcsn Group} (#1):
+% \par
+\itshape}%
+{\renewcommand{\theenumi}{\arabic{enumi}}%
+ \renewcommand{\theenumii}{\theenumi.\arabic{enumii}}%
+ \medskip}
+\newenvironment{QstV}
+{\medskip
+\noindent
+\textit{Question for the \vcsn Group}:
+\itshape}%
+{\medskip}
+%%% for chA
+\newcounter{enumitemp}
+%%%
+\SetTwClPrm{\TwClOne}%
+\SetVCDirectory{figures/}
+\newcommand{\VGIFig}{figures/VGI/}
+% \ShowFrame
+%========== hyphenation===========================
+% add words to TeX's hyphenation exception list
+\hyphenation{semi-ring}
+\hyphenation{simu-la-tion}
