@@ -24,6 +24,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.ambiguous_word.ipynb'            \
   '%D%/algos/automaton.complete.ipynb'                  \
   '%D%/algos/automaton.determinize.ipynb'               \
+  '%D%/algos/automaton.is_ambiguous.ipynb'              \
   '%D%/algos/automaton.is_complete.ipynb'               \
   '%D%/algos/automaton.is_deterministic.ipynb'          \
   '%D%/algos/automaton.is_standard.ipynb'               \
