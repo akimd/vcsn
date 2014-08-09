@@ -47,7 +47,9 @@ namespace vcsn
 
     static value_t zero()
     {
-      return value_t{0, 1};
+      // Not value_t{0, 1} to avoid the (const char* s, int base)
+      // constructor.
+      return value_t{mpz_class(0), 1};
     }
 
     static value_t one()
