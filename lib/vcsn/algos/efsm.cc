@@ -137,7 +137,6 @@ namespace vcsn
             }
           first = false;
         }
-#undef SKIP_SPACES
 
       require(line == "EOFSM",
               file, ": bad input format, missing EOFSM");
