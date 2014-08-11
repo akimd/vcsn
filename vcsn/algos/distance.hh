@@ -38,7 +38,7 @@ namespace vcsn
         state_t p = todo.front();
         todo.pop();
         marked.insert(p);
-        for (auto t : aut->in(p))
+        for (auto t : aut->all_in(p))
           {
             auto s = aut->src_of(t);
             if (marked.find(s) == marked.end())
@@ -96,7 +96,7 @@ namespace vcsn
             return rpath;
           }
         else
-          for (auto t : aut->out(p))
+          for (auto t : aut->all_out(p))
             {
               auto s = aut->dst_of(t);
               if (marked.find(s) == marked.end())
