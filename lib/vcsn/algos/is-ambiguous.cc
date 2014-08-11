@@ -4,14 +4,16 @@
 
 namespace vcsn
 {
-  /*---------------.
-  | is_ambiguous.  |
-  `---------------*/
-
   namespace dyn
   {
-    REGISTER_DEFINE(is_ambiguous);
+    REGISTER_DEFINE(ambiguous_word);
+    label
+    ambiguous_word(const automaton& aut)
+    {
+      return detail::ambiguous_word_registry().call(aut);
+    }
 
+    REGISTER_DEFINE(is_ambiguous);
     bool
     is_ambiguous(const automaton& aut)
     {

@@ -22,6 +22,7 @@ dist_notebooks_data =                                   \
   '%D%/index.ipynb'                                     \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/index.ipynb'                               \
+  '%D%/algos/automaton.ambiguous_word.ipynb'            \
   '%D%/algos/automaton.complete.ipynb'                  \
   '%D%/algos/automaton.determinize.ipynb'               \
   '%D%/algos/automaton.is_complete.ipynb'               \
