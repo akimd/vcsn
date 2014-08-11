@@ -66,7 +66,7 @@ from vcsn.expansion  import *
 from vcsn.label      import *
 from vcsn.polynomial import *
 from vcsn.ratexp     import *
-from vcsn.vpi        import *
+# from vcsn.functional import *  ## No: this is no longer imported by default.
 from vcsn.weight     import *
 
 # Load IPython specific support if we can.
