@@ -26,7 +26,7 @@ namespace vcsn
 
       /// Left-multiplication by a weight.
       static automaton_t&
-      left_mult_here(automaton_t& res, const weight_t& w)
+      left_mult_here(const weight_t& w, automaton_t& res)
       {
         weightset_t ws(*res->context().weightset());
         if (ws.is_zero(w))
@@ -79,18 +79,19 @@ namespace vcsn
   template <typename Aut>
   inline
   Aut&
-  left_mult_here(Aut& res, const weight_t_of<Aut>& w)
+  left_mult_here(const weight_t_of<Aut>& w, Aut& res)
   {
-    return detail::standard_operations<Aut>::left_mult_here(res, w);
+    return detail::standard_operations<Aut>::left_mult_here(w, res);
   }
 
-  template <typename Aut>
+  template <typename AutIn,
+            typename AutOut = typename AutIn::element_type::automaton_nocv_t>
   inline
-  typename Aut::element_type::automaton_nocv_t
-  left_mult(const weight_t_of<Aut>& w, const Aut& aut)
+  AutOut
+  left_mult(const weight_t_of<AutOut>& w, const AutIn& aut)
   {
-    auto res = copy(aut);
-    left_mult_here(res, w);
+    auto res = copy<AutIn, AutOut>(aut);
+    left_mult_here(w, res);
     return res;
   }
 
@@ -103,9 +104,18 @@ namespace vcsn
       automaton
       left_mult(const weight& weight, const automaton& aut)
       {
-        const auto& a = aut->as<Aut>();
-        const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(::vcsn::left_mult(w, a));
+        const auto& a1 = aut->as<Aut>();
+        const auto& w1 = weight->as<WeightSet>();
+        // FIXME: this is hairy because there is no elegant means (so
+        // far) to copy an automaton to a supertype, because the
+        // incoming context is not automatically converted to the
+        // supertype by vcsn::copy.
+        auto ctx = make_context(*a1->labelset(),
+                                join(w1.weightset(), *a1->weightset()));
+        auto a2 = make_mutable_automaton(ctx);
+        copy_into(a1, a2);
+        auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
+        return make_automaton(::vcsn::left_mult_here(w2, a2));
       }
 
       REGISTER_DECLARE(left_mult,
@@ -214,9 +224,15 @@ namespace vcsn
       automaton
       right_mult(const automaton& aut, const weight& weight)
       {
-        const auto& a = aut->as<Aut>();
-        const auto& w = weight->as<WeightSet>().weight();
-        return make_automaton(::vcsn::right_mult(a, w));
+        const auto& a1 = aut->as<Aut>();
+        const auto& w1 = weight->as<WeightSet>();
+        // FIXME: see comment for left_mult.
+        auto ctx = make_context(*a1->labelset(),
+                                join(*a1->weightset(), w1.weightset()));
+        auto a2 = make_mutable_automaton(ctx);
+        copy_into(a1, a2);
+        auto w2 = ctx.weightset()->conv(w1.weightset(), w1.weight());
+        return make_automaton(::vcsn::right_mult_here(a2, w2));
       }
 
       REGISTER_DECLARE(right_mult,
