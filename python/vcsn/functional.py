@@ -1,6 +1,6 @@
-## =========================== ##
-## Vaucanson Python Interface  ##
-## =========================== ##
+## ==================== ##
+## Functional interface ##
+## ==================== ##
 
 # Import globals from the vcsn module
 from vcsn import *
@@ -71,9 +71,9 @@ automaton.unset_final = \
   lambda self, state: self.set_finalness(state, False)
 
 
-## ---------------------------------------------------------- ##
-## Alternative definitions for Jacques: meta-level machinery  ##
-## ---------------------------------------------------------- ##
+## --------------------------------------------------------- ##
+## Alternative functional definitions: meta-level machinery  ##
+## --------------------------------------------------------- ##
 
 import sys
 
