@@ -13,6 +13,10 @@
 namespace vcsn
 {
 
+  /*---------------.
+  | make_context.  |
+  `---------------*/
+
   template <typename Ctx>
   Ctx
   make_context(const std::string& name)
@@ -37,12 +41,34 @@ namespace vcsn
     namespace detail
     {
       /// Bridge.
+      template <typename Ctx>
+      context
+      make_context(const std::string& name)
+      {
+        return dyn::make_context(vcsn::make_context<Ctx>(name));
+      }
+
+      REGISTER_DECLARE(make_context,
+                       (const std::string& name) -> context);
+    }
+  }
+
+
+  /*-------------.
+  | context_of.  |
+  `-------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
+      /// Bridge.
       template <typename Aut>
       context
       context_of(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_context(a->context());
+        return dyn::make_context(a->context());
       }
 
       REGISTER_DECLARE(context_of,
@@ -54,26 +80,24 @@ namespace vcsn
       context_of_ratexp(const ratexp& exp)
       {
         const auto& e = exp->as<RatExpSet>().ratexpset();
-        return make_context(e.context());
+        return dyn::make_context(e.context());
       }
 
       REGISTER_DECLARE(context_of_ratexp,
                        (const ratexp& exp) -> context);
+    }
+  }
 
-      /// Bridge.
-      template <typename Ctx>
-      context
-      make_context(const std::string& name)
-      {
-        return dyn::make_context(vcsn::make_context<Ctx>(name));
-      }
 
-      REGISTER_DECLARE(make_context,
-                       (const std::string& name) -> context);
 
-      /*-----------------.
-      | make_ratexpset.  |
-      `-----------------*/
+  /*-----------------.
+  | make_ratexpset.  |
+  `-----------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
 
       template <typename Ctx, typename Identities>
       ratexpset
@@ -86,10 +110,17 @@ namespace vcsn
       REGISTER_DECLARE(make_ratexpset,
                        (const context& ctx, ::vcsn::rat::identities ids)
                        -> ratexpset);
+    }
+  }
 
-      /*--------------------.
-      | make_word_context.  |
-      `--------------------*/
+  /*--------------------.
+  | make_word_context.  |
+  `--------------------*/
+
+  namespace dyn
+  {
+    namespace detail
+    {
 
       template <typename Ctx>
       context

@@ -31,7 +31,7 @@ check(r'lal_char(\--\-)_b', r'lal_char(-)_b')
 check('lal_char(ab)_q')
 check('ratexpset<lal_char(ab)_b>_b')
 
-# Arguable useless, but stresses our tupleset implementation.
+# Arguably useless, but stresses our tupleset implementation.
 check('lat<lat<lal_char(a)>>_b')
 
 check('lat<lal_char(a),lal_char(a)>_b')
