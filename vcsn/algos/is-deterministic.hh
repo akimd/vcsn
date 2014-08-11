@@ -16,9 +16,6 @@ namespace vcsn
   is_sequential(const Aut& aut, state_t_of<Aut> s)
   {
     using automaton_t = Aut;
-    static_assert(labelset_t_of<automaton_t>::is_free(),
-                  "is_deterministic: requires free labelset");
-
     using label_t = label_t_of<automaton_t>;
     std::unordered_set<label_t> seen;
     for (auto t : aut->all_out(s))
