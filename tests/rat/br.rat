@@ -148,7 +148,10 @@ a{T} => a
 
 %labels: letters
 
-# Difference: same precedence as shuffle (but why???).
+# Preference.
+<e>a<+<f>b => <e>a+a{c}&<f>b
+
+# Difference.
 <e>a%(<f>b)* == (<e>a)%((<f>b)*)
 
 # More complex computations.
