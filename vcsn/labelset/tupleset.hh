@@ -668,8 +668,8 @@ namespace vcsn
     conv_(std::istream& i, seq<I...>) const
     {
 #  if VCSN_HAVE_CORRECT_LIST_INITIALIZER_ORDER
-      return std::make_tuple((eat_separator_<I>(i, '(', ','),
-                              set<I>().conv(i))...);
+      return value_t{(eat_separator_<I>(i, '(', ','),
+                      set<I>().conv(i))...};
 #  else
       return
         detail::make_gcc_tuple((eat_separator_<sizeof...(ValueSets)-1 - I>(i, '(', ','),
