@@ -68,6 +68,10 @@
       static
       exp_t power(const dyn::ratexpset& rs, exp_t e, std::tuple<int, int> range);
 
+      /// Generate a ratexp for "e <+ f = e % f + f".
+      static
+      exp_t prefer(const dyn::ratexpset& rs, exp_t e, exp_t f);
+
       /// Use our local scanner object.
       static
       inline
@@ -138,6 +142,7 @@
   ONE        "\\e"
   PERCENT    "%"
   PLUS       "+"
+  LT_PLUS    "<+"
   RBRACKET   "]"
   RPAREN     ")"
   TRANSPOSITION "{T}"
@@ -152,9 +157,9 @@
 %type <braced_ratexp> exp input weights;
 %type <std::set<std::pair<std::string,std::string>>> class;
 
-%left "+"
-%left ":" "%"
-%left "&"
+%left "+" "<+"
+%left "%"
+%left "&" ":"
 %left "{/}"
 %right "{\\}"
 %left "."
@@ -192,6 +197,7 @@ exp:
 | exp "&" exp                 { $$ = MAKE(conjunction, $1.exp, $3.exp); }
 | exp ":" exp                 { $$ = MAKE(shuffle, $1.exp, $3.exp); }
 | exp "+" exp                 { $$ = MAKE(add, $1.exp, $3.exp); }
+| exp "<+" exp                { $$ = prefer(driver_.ratexpset_, $1.exp, $3.exp); }
 | exp "{\\}" exp              { $$ = MAKE(ldiv, $1.exp, $3.exp); }
 | exp "{/}" exp               { $$ = MAKE(rdiv, $1.exp, $3.exp); }
 | exp "%" exp                 { $$ = MAKE(conjunction,
@@ -280,6 +286,13 @@ namespace vcsn
     power(const dyn::ratexpset& es, exp_t e, std::tuple<int, int> range)
     {
       return power(es, e, std::get<0>(range), std::get<1>(range));
+    }
+
+    // "e <+ f = e + f % e = e + e{c} & f".
+    static
+    exp_t prefer(const dyn::ratexpset& rs, exp_t e, exp_t f)
+    {
+      return rs->add(e, rs->conjunction(rs->complement(e), f));
     }
 
     void

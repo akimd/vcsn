@@ -64,6 +64,7 @@ char      ([a-zA-Z0-9_]|\\[<>{}()+.*:\"])
   ":"     return TOK(COLON);
   "%"     return TOK(PERCENT);
   "+"     return TOK(PLUS);
+  "<+"    return TOK(LT_PLUS);
   "."     return TOK(DOT);
   "{\\}"  return TOK(BACKSLASH);
   "{/}"   return TOK(SLASH);
