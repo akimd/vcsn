@@ -1,14 +1,15 @@
 #!/bin/bash -e
 
-#set -x
+# set -x
 
-export destinationdir="$(pwd)"
-export sourcedir="$(pwd)/sources"
-export scratchdir="$(pwd)/scratch"
+export thisdir="$(readlink -f $(dirname $0))"
+export destinationdir="$thisdir"
+export sourcedir="$thisdir/sources"
+export scratchdir="$thisdir/scratch"
 
-# rm -rf "$scratchdir"/*
-cp "$sourcedir"/*.{tex,bib} "$scratchdir"/
+rm -rf "$scratchdir"/*
 mkdir "$scratchdir" &> /dev/null || true
+cp "$sourcedir"/*.{tex,bib} "$scratchdir"/
 cd "$scratchdir"
 
 for file in "$sourcedir"/notebooks/*.ipynb; do
