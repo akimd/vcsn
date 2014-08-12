@@ -89,17 +89,18 @@ namespace vcsn
 
       using super_t::add_transition;
       void
-      add_transition(const ratexp_t& src, const ratexp_t& dst,
-                     const label_t& l, const weight_t& w)
-      {
-        super_t::add_transition(state(src), state(dst), l, w);
-      }
-
-      void
       add_transition(state_t src, const ratexp_t& dst,
                      const label_t& l, const weight_t& w)
       {
         super_t::add_transition(src, state(dst), l, w);
+      }
+
+      using super_t::new_transition;
+      void
+      new_transition(state_t src, const ratexp_t& dst,
+                     const label_t& l, const weight_t& w)
+      {
+        super_t::new_transition(src, state(dst), l, w);
       }
 
       using super_t::set_initial;
