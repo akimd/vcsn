@@ -57,7 +57,7 @@ namespace vcsn
             res_->set_final(s, constant_term(rs_, src));
             for (auto l : ls)
               for (const auto& m: derivation(rs_, src, l, breaking_))
-                res_->add_transition(s, m.first, l, m.second);
+                res_->new_transition(s, m.first, l, m.second);
           }
         return res_;
       }
@@ -78,11 +78,11 @@ namespace vcsn
               if (breaking_)
                 for (const auto& m1: p.second)
                   for (const auto& m2: split(rs_, m1.first))
-                    res_->add_transition(s, m2.first, p.first,
+                    res_->new_transition(s, m2.first, p.first,
                                          ws_.mul(m1.second, m2.second));
               else
                 for (const auto& m: p.second)
-                  res_->add_transition(s, m.first, p.first, m.second);
+                  res_->new_transition(s, m.first, p.first, m.second);
           }
         return res_;
       }
