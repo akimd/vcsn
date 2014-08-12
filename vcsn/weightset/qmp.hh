@@ -4,6 +4,7 @@
 # include <string>
 # include <ostream>
 
+# include <cstddef> // https://gcc.gnu.org/gcc-4.9/porting_to.html
 # include <gmpxx.h>
 
 # include <vcsn/misc/attributes.hh>
