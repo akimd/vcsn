@@ -72,6 +72,7 @@ namespace vcsn
           "\\begin{tikzpicture}[automaton]\n"
           ;
 
+        state_t prev = aut_->null_state();
         for (auto s : aut_->states())
           {
             os_ << "  \\node[state";
@@ -80,15 +81,16 @@ namespace vcsn
             os_ << "] (";
             aut_->print_state(s, os_);
             os_ << ')';
-            if (2 < s)
+            if (prev != aut_->null_state())
               {
                 os_ << " [right=of ";
-                aut_->print_state(s - 1, os_);
+                aut_->print_state(prev, os_);
                 os_ << ']';
               }
             os_ << " {$";
             aut_->print_state(s, os_);
             os_ << "$};\n";
+            prev = s;
         }
 
         for (auto src : aut_->states())
