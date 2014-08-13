@@ -15,8 +15,8 @@ namespace vcsn
 
   /// Whether an automaton is ambiguous.
   ///
-  /// \param in aut        the automaton
-  /// \param out witness   if ambiguous, a pair of "ambiguous" states.
+  /// \param[in] aut        the automaton
+  /// \param[out] witness   if ambiguous, a pair of "ambiguous" states.
   /// \returns whether ambiguous.
   template <typename Aut>
   bool is_ambiguous(const Aut& aut,
