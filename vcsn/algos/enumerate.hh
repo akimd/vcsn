@@ -42,7 +42,6 @@ namespace vcsn
       using label_t = label_t_of<automaton_t>;
       using weight_t = weight_t_of<automaton_t>;
       using state_t = state_t_of<automaton_t>;
-      using genset_t = typename labelset_t_of<automaton_t>::genset_t;
       using word_t = typename labelset_t::word_t;
 
       /// Same as polynomial_t::value_type.
