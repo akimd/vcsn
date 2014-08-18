@@ -15,6 +15,8 @@
 include $(top_srcdir)/build-aux/make/doxygen.mk
 include $(top_srcdir)/build-aux/make/html-dir.mk
 
+include %D%/manual/local.mk
+
 EXTRA_DIST +=					\
   %D%/figs/vcsn.png				\
   %D%/figs/vcsn.mini.png
@@ -45,3 +47,8 @@ doxygen:
 
 .PHONY: doc
 doc: doxygen # FIXME: add more doc dependencies
+
+# PDF manual
+.PHONY: manual
+manual:
+	$(top_srcdir)/doc/manual/COMPILE-MANUAL
