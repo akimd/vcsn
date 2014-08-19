@@ -194,6 +194,11 @@ struct automaton
     return vcsn::dyn::infiltration(automata_(auts));
   }
 
+  automaton inject_xdot() const
+  {
+    return vcsn::dyn::inject_xdot(val_);
+  }
+
   automaton insplit() const
   {
     return vcsn::dyn::insplit(val_);
@@ -915,6 +920,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("format", &automaton::format)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
+    .def("inject_xdot", &automaton::inject_xdot)
     .def("insplit", &automaton::insplit)
     .def("inverse", &automaton::inverse)
     .def("is_accessible", &automaton::is_accessible)

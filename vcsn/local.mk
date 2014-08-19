@@ -41,6 +41,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/grail.hh                            \
   %D%/algos/has-twins-property.hh               \
   %D%/algos/identities.hh                       \
+  %D%/algos/inject-xdot.hh                      \
   %D%/algos/info.hh                             \
   %D%/algos/insplit.hh                          \
   %D%/algos/is-ambiguous.hh                     \
@@ -83,6 +84,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/u.hh                                \
   %D%/algos/union.hh                            \
   %D%/algos/universal.hh                        \
+  %D%/algos/xdot.hh                             \
   %D%/alphabets/char.hh                         \
   %D%/alphabets/setalpha.hh                     \
   %D%/core/automaton-decorator.hh               \

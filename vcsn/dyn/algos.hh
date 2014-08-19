@@ -212,6 +212,9 @@ namespace vcsn
     /// Output various facts about \a exp.
     std::ostream& info(const ratexp& exp, std::ostream& out);
 
+    /// Inject \a aut into an xdot-automaton, with default attributes.
+    automaton inject_xdot(const automaton& aut);
+
     /// Split automaton on the incoming transition.
     /// Every state either has only epsilon incoming transitions
     /// or non-epsilon ones.

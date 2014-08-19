@@ -48,6 +48,7 @@
 # include <vcsn/algos/tikz.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/algos/union.hh>
+# include <vcsn/algos/xdot.hh> // inject_xdot
 
 # include <vcsn/algos/de-bruijn.hh>
 # include <vcsn/algos/divkbaseb.hh>
@@ -322,6 +323,7 @@ namespace vcsn
         REGISTER(identities, rs_t);
         REGISTER(info, aut_t, std::ostream, bool);
         REGISTER(info_ratexp, rs_t, std::ostream);
+        REGISTER(inject_xdot, aut_t);
         REGISTER(is_empty, aut_t);
         REGISTER(is_eps_acyclic, aut_t);
         REGISTER(is_normalized, aut_t);

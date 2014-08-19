@@ -9,6 +9,11 @@
 
 namespace vcsn
 {
+  // using xdot_key = std::string;
+  // using xdot_value = std::string;
+  // using xdot_properties =
+  //   std::vector<std::pair<xdot_key, xdot_value>>;
+
   namespace detail
   {
 
@@ -45,7 +50,8 @@ namespace vcsn
       xdot_automaton_impl(const automaton_t& input)
         : super_t(input->context())
         , input_(input)
-      {}
+      {
+      }
 
       /// Static name.
       static std::string sname()
@@ -59,9 +65,15 @@ namespace vcsn
         return "xdot_automaton<" + input_->vname(full) + ">";
       }
 
-      bool state_has_name(state_t s) const
+      bool state_has_name(state_t /*s*/) const
       {
-        return s != super_t::pre() && s != super_t::post();
+        // FIXME: ams: implement this so that it returns true only
+        // when there is data attached to a state.  The commented-out
+        // version was probably OK for you as well, but of course you
+        // have to make sure that data is actually there before
+        // returning true for a state.
+        return false;
+        //return s != super_t::pre() && s != super_t::post();
       }
 
       std::ostream&
