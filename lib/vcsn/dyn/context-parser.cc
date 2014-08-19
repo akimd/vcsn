@@ -38,7 +38,8 @@ namespace vcsn
           || w == "product"
           || w == "ratexp"
           || w == "transpose"
-          || w == "tuple")
+          || w == "tuple"
+          || w == "xdot")
         return automaton_(w);
       else if (w == "lal"
                || w == "lan"
@@ -261,7 +262,8 @@ namespace vcsn
                || prefix == "partition"
                || prefix == "permutation"
                || prefix == "ratexp"
-               || prefix == "transpose")
+               || prefix == "transpose"
+               || prefix == "xdot")
         {
           prefix += eat(is_, "_automaton");
           eat(is_, '<');

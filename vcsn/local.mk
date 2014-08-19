@@ -92,6 +92,7 @@ nobase_include_HEADERS =                        \
   %D%/core/mutable-automaton.hh                 \
   %D%/core/partition-automaton.hh               \
   %D%/core/permutation-automaton.hh             \
+  %D%/core/xdot-automaton.hh                    \
   %D%/core/rat/copy.hh                          \
   %D%/core/rat/expansionset.hh                  \
   %D%/core/rat/fwd.hh                           \
