@@ -47,8 +47,3 @@ doxygen:
 
 .PHONY: doc
 doc: doxygen # FIXME: add more doc dependencies
-
-# PDF manual
-.PHONY: manual
-manual:
-	$(top_srcdir)/doc/manual/COMPILE-MANUAL

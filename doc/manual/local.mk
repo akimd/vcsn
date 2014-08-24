@@ -11,3 +11,7 @@
 ##
 ## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
+# PDF manual
+.PHONY: manual
+manual:
+	$(top_srcdir)/doc/manual/COMPILE-MANUAL
