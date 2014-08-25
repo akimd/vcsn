@@ -183,7 +183,7 @@ namespace vcsn
     if (detailed)
       ECHO("is synchronizing", detail_info::is_synchronizing(aut));
     ECHO("is trim", is_trim(aut));
-    ECHO("is useless", is_useless(aut));
+    // ECHO("is useless", is_useless(aut));
 #undef ECHO
     // No eol for the last one.
     out << "is valid: " << is_valid(aut);
