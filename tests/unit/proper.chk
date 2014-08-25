@@ -21,7 +21,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<lal_char(ab)_b>
@@ -43,7 +42,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<lal_char(ab)_b>
@@ -65,7 +63,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<lal_char(ab)_b>
@@ -87,7 +84,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 ***LAW***
 type: mutable_automaton<law_char(ab)_b>
@@ -109,7 +105,6 @@ is normalized: 0
 is proper: 0
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_b>
@@ -131,7 +126,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_b>
@@ -153,7 +147,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<law_char(ab)_b>
@@ -175,7 +168,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 ***LAL Z***
 type: mutable_automaton<lal_char(ab)_z>
@@ -197,7 +189,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<lal_char(ab)_z>
@@ -219,7 +210,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<lal_char(ab)_z>
@@ -241,7 +231,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 ***LAW Z***
 * Circuit of eps-transition
@@ -264,7 +253,6 @@ is normalized: 0
 is proper: 0
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No circuit of eps-transition
@@ -287,7 +275,6 @@ is normalized: 0
 is proper: 0
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_z>
@@ -309,7 +296,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_z>
@@ -331,7 +317,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper_here:
 type: mutable_automaton<law_char(ab)_z>
@@ -353,7 +338,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 ***LAW Z-min+***
 * Circuit of eps-transition
@@ -376,7 +360,6 @@ is normalized: 0
 is proper: 0
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 0
 Exception: invalid automaton
 * No negative circuit
@@ -399,7 +382,6 @@ is normalized: 0
 is proper: 0
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 proper:
 type: mutable_automaton<law_char(ab)_zmin>
@@ -421,7 +403,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 forward_proper:
 type: mutable_automaton<law_char(ab)_zmin>
@@ -443,7 +424,6 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 digraph
 {
@@ -497,6 +477,5 @@ is normalized: 0
 is proper: 1
 is standard: 0
 is trim: 1
-is useless: 0
 is valid: 1
 EOF
