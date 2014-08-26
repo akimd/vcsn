@@ -1,43 +1,78 @@
 #!/bin/bash -e
 
-# set -x
-
+# Define variables so as not to hardcode paths later.
 export thisdir="$(readlink -f $(dirname $0))"
 export destinationdir="$thisdir"
 export sourcedir="$thisdir/sources"
 export scratchdir="$thisdir/scratch"
 
+# Clean up scratch directory, copy files there, and enter it.
+# Everything will be executed from the scratch directory.
 rm -rf "$scratchdir"/*
 mkdir "$scratchdir" &> /dev/null || true
 cp "$sourcedir"/*.{tex,bib} "$scratchdir"/
 cd "$scratchdir"
 
+# If the LATEXONLY environment variable is defined, don't translate
+# notebooks into LaTeX.  Otherwise translate each file in the
+# notebooks/ subdirectory.
 if [[ "$LATEXONLY" == "" ]]; then
+    # For each notebook file in $sourcedir/notebooks/:
     for file in "$sourcedir"/notebooks/*.ipynb; do
+        # Rename the file converting spaces and underscores into
+        # dashses, which is friendler to Unix and to LaTeX:
         echo Converting "$file"...
         export title="$(basename "$(echo $file)" .ipynb \
             | sed 's/^[0-9]\+[- ]*//' | sed 's/_/\\_/g')"
         export goodfilename="$(basename "$(echo $file | tr [:blank:] '-' \
             | tr _ '-')")"
         export goodbasename="$(basename "$goodfilename" .ipynb)"
-        cp "$file" "$goodfilename" || true
+        # While copying the file from "$sourcedir"/notebooks to the
+        # scratch directory, transform <!--I indexentry --> comments
+        # into ADDTOINDEXBEGINindexentryADDTOINDEXEND.  This will
+        # survive the transformation by ipython nbconvert.
+        cat "$file" \
+            | sed 's/<!--I\( \)*\(.*[^ ]\)\( \)*-->/ADDTOINDEXBEGIN\2ADDTOINDEXEND/g' \
+            > "$goodfilename"
+
+        # Use ipython nbconvert to translate the notebook into a LaTeX
+        # file; however ipython nbconvert is meant to generate a
+        # single, whole-document PDF, not a piece of a larger document.
+        # I'll modify the output right after this to make it usable for us.
         ipython nbconvert --to latex "$goodfilename" &> /dev/null
 
+        # Split the generated LaTeX file into header and rest.  Throw
+        # away the header.  Perform some easy transformations on rest,
+        # commenting-out some toplevel LaTeX commands we don't want
+        # such as \begin{document}, \maketitle and \end{document}, and
+        # expand ADDTOINDEXBEGINindexentryADDTOINDEXEND into
+        # \index{indexentry}.
         export goodtexname="$goodbasename.tex"
-        cp "$goodtexname" "$goodtexname.orig"
-        export goodtextmpname="$goodbasename.tex.tmp"
-        csplit -q "$goodtexname" '/^ *\\begin{document} *$/1'
+        export goodorigtexname="$goodtexname.orig"
+        mv "$goodtexname" "$goodorigtexname"
+        csplit -q "$goodorigtexname" '/^ *\\begin{document} *$/1'
         rm xx00
-        echo "\\chapter{$title}" > "$goodtexname"
         cat xx01 \
             | sed 's/^\( \)*\\\(maketitle\|end{document}\)/% commented-out: \\\2/g' \
+            | sed 's/ADDTOINDEXBEGIN/\\index{/g' \
+            | sed 's/ADDTOINDEXEND/\}/g' \
                   >> "$goodtexname"
         rm xx01
     done
 fi
 
-echo "Compiling the big LaTeX file: pass 1..."
+# At the end of the loop we have LaTeX files in the scratch directory:
+# some are hand-written, some are machine-generated -- there's no
+# difference.  The main file vaucanson-manual.tex can use \input to
+# use any of them.
 
+
+# Perform an ordinary LaTeX compilation of the main file, including
+# index generation and BibTeX.  Three LaTeX passes should be enough.
+# Suppress LaTeX output redirecting it into /tmp/output unless there
+# is an error; if there is an error, show the file content before
+# failing.
+echo "Compiling the big LaTeX file: pass 1..."
 rm -f vaucanson-manual.idx
 pdflatex vaucanson-manual < /dev/null &> /tmp/output || (cat /tmp/output ; exit -1)
 echo "Compiling the big LaTeX file: BibTeX..."
@@ -50,5 +85,7 @@ pdflatex vaucanson-manual < /dev/null &> /tmp/output || (cat /tmp/output ; exit 
 echo "Compiling the big LaTeX file: pass 3..."
 pdflatex vaucanson-manual < /dev/null &> /tmp/output || (cat /tmp/output ; exit -1)
 
+# If we arrived here everyrhing worked.  Copy the generated PDF file
+# out of the scratch directory into the manual directory.
 echo "Copying the compiled PDF file..."
 cp "$scratchdir"/vaucanson-manual.pdf "$destinationdir"

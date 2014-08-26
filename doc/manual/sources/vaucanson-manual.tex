@@ -1,69 +1,81 @@
 % -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
-\include{format-and-defs}
-\include{format-and-defs--from-vaucanson-1}
+\input{format-and-defs}
+\input{format-and-defs--from-vaucanson-1}
 
-%\title{Vaucanson 2}
-%\subtitle{A general-purpose automaton system}
-%\author{Akim Demaille, Luca Saiu}
-%\date{2014-08-08}
-
+\makeindex[intoc]
 
 \begin{document}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%% Front matter
 \pagenumbering{roman}
-\include{title-page}
+\input{title-page}
 
+% FIXME: add abstract, acknowledgments and the like
+
+% Add Contents to PDF bookmarks:
+\hypertarget{contents}{}
+\bookmark[level=chapter,dest=contents]{Contents}
 \tableofcontents
 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Main matter
 \mainmatter
 \pagenumbering{arabic}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%% Tutorial
-\part{Practical tutorial}
+\part{Tutorial}
 
-%\include{index}
+% Little hack to make a starred chapter appear in TOC and PDF bookmarks:
+\phantomsection
+\cleardoublepage
+\addstarredchapter{Introduction}
 
-% %%%%%%%%%
-%\chapter{Tutorial}
+\chapter*{Introduction [to be written later]}
+\index{introduction}
+\FILL
 
-\include{01---Playing-with-contexts}
-\include{Some-developer-documentation}
+\chapter{Getting started}
+\input{getting-started}
+
+\chapter{How to use notebooks}
+\index{notebook}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%% Reference
-\part{General reference}
-\include{contexts}
+\part{Reference}
 
-\part{Automaton reference}
+\FIXME{Follow §3 in \vcsn 1: \vcsn 1 sections become \vcsn 2 chapters}
 
-% %%%%%%%%%
-%\chapter{Automata functions}
+\chapter{Graph operations}
+\input{Graph-operations}
 
-\include{automaton.ambiguous-word}
-\include{automaton.complete}
-\include{automaton.determinize}
-\include{automaton.is-complete}
-\include{automaton.is-deterministic}
-\include{automaton.is-standard}
-\include{automaton.reduce}
-\include{automaton.standard}
-\include{automaton.synchronizing-word}
-\include{automaton.transpose}
-
-\part{New part}
-\include{Graph-operations}
-
-
-% %%%%%%%%%
-\part{Rational expression reference}
-%\chapter{Rational expression functions}
-
-\include{ratexp.transpose}
-\include{ratexp.transposition}
+\chapter{Graphical User Interface [unwritten]}
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%% Appendices
 \part{Appendices}
+\begin{appendices}
+\chapter{Automaton factories [to be written]}
 
-\include{bibliography}
+\chapter{Some developer documentation}
+\input{Some-developer-documentation}
+\TODO{how to modify documentation, particularly with notebooks}
+
+\chapter{Synchronizing word}
+\input{automaton.synchronizing-word}
+
+\chapter{Algorithm specification [to be written]}
+
+\end{appendices}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%% Back matter
+
+\backmatter
+
+\phantomsection
+\cleardoublepage
+\input{bibliography}
+%\input{index}
+
+\phantomsection
+\cleardoublepage
+\printindex
 
 \end{document}

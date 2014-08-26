@@ -1,5 +1,6 @@
 % -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
-\documentclass[a4]{book}
+\documentclass{book}
+%\documentclass{book}
 
 \usepackage{minitoc} % for \addstarredchapter
 \usepackage{xspace}
@@ -8,12 +9,15 @@
 \newcommand{\vcsn}[0]{\textsc{Vaucanson}\xspace}
 \newcommand{\vcsnversion}[0]{2.0.0f}
 
+\usepackage[paper=a4paper]{geometry}
+\usepackage{url}
+
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adapted from nbconvert output: begin
 \usepackage{graphicx} % Used to insert images
 \usepackage{adjustbox} % Used to constrain images to a maximum size 
 \usepackage{color} % Allow colors to be defined
 \usepackage{enumerate} % Needed for markdown enumerations to work
-\usepackage{geometry} % Used to adjust the document margins
+%\usepackage{geometry} % Used to adjust the document margins
 \usepackage{amsmath} % Equations
 \usepackage{amssymb} % Equations
 \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
@@ -21,10 +25,16 @@
 \usepackage{fancyvrb} % verbatim replacement that allows latex
 \usepackage{grffile} % extends the file name processing of package graphics 
 % to support a larger range
+
+% This has to be loaded before hyperref to make Index entries into hyperlinks.\
+\usepackage{imakeidx}
+
 % The hyperref package gives us a pdf with properly built
 % internal navigation ('pdf bookmarks' for the table of contents,
 % internal cross-reference links, web links for URLs, etc.)
-\usepackage{hyperref}
+%\usepackage{hyperref}
+\usepackage[colorlinks=false,linkcolor=blue,filecolor=blue,citecolor=blue,urlcolor=red,pagebackref,hyperindex=true]{hyperref}
+\usepackage{appendix}
 \usepackage{longtable} % longtable support required by pandoc >1.10
 \usepackage{booktabs}  % table support for pandoc > 1.12.2
 \usepackage{listings}
@@ -185,20 +195,11 @@
 
 
 
-    
     % Prevent overflowing lines due to hard-to-break entities
     \sloppy
-    % Setup hyperref package
-    \hypersetup{
-      breaklinks=true,  % so long urls are correctly broken across lines
-      colorlinks=true,
-      urlcolor=blue,
-      linkcolor=darkorange,
-      citecolor=darkgreen,
-      }
-    % Slightly bigger margins than the latex defaults
-    
-    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+    %% % Slightly bigger margins than the latex defaults
+    %\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Adapted from nbconvert output: end
 
 \def\TEST{\textcolor{darkgreen}}
@@ -209,6 +210,7 @@
 \newcommand{\TOOMUCH}[1]{{\textcolor{brown}{[{\bf Is this too much?}~{#1}]}}}
 \newcommand{\REREAD}[1]{{\textcolor{brown}{[{\bf Re-read}:~{#1}]}}}
 \newcommand{\TODO}[1]{{\textcolor{red}{[{\bf To do}:~{#1}]}}}
+\newcommand{\FIXME}[1]{{\textcolor{red}{[{\bf FIXME}:~{#1}]}}}
 \newcommand{\TODOF}[1]{\footnote{\TODO{#1}}}
 \newcommand{\NEW}[1]{\textcolor{darkgreen}{\textbf{[New:} {#1}\textbf{]}}}
 \newcommand{\REPHRASED}[1]{\textcolor{darkgreen}{\textbf{[Rephrased:} {#1}\textbf{]}}}
@@ -1276,3 +1278,47 @@
 \newcommand{\LARGERTHANSMALL}{\fontsize{12}{14}\selectfont}
 
 \usepackage{censor}
+
+% I don't want page number on ``Part'' pages:
+\makeatletter
+\renewcommand\part{%
+  \if@openright
+\cleardoublepage
+  \else
+\clearpage
+  \fi
+  \thispagestyle{empty}%
+  \if@twocolumn
+\onecolumn
+\@tempswatrue
+  \else
+\@tempswafalse
+  \fi
+  \null\vfil
+  \secdef\@part\@spart}
+\makeatother
+
+\hypersetup
+{
+  breaklinks=true,  % so long urls are correctly broken across lines
+%  colorlinks=true,
+  hidelinks=true, % Even if those squares are useful, I hate to see them --Luca Saiu.
+    %%   urlcolor=blue,
+    %%   linkcolor=darkorange,
+    %%   citecolor=darkgreen,
+  %% bookmarksopen=true,
+  %pdftitle={\SHORTTITLE},
+  %pdftitle={\TTITLE},
+  pdftitle={\vcsn \vcsnversion},
+  pdfauthor="{Luca SAIU, Akim DEMAILLE, Jacques SAKAROVITCH et al.}", 
+  pdfsubject={\vcsn \vcsnversion} %subject of the document
+  %% pdfhighlight=/O, %effect of clicking on a link
+  %% colorlinks=true, %couleurs sur les liens hypertextes
+  %% %% %colorlinks=false, %couleurs sur les liens hypertextes
+  %% pdfpagemode=None,
+  %% pdfpagelayout=SinglePage,
+  %% pdffitwindow=true,
+  %% linkcolor=linkcol, %couleur des liens hypertextes internes
+  %% citecolor=citecol, %couleur des liens pour les citations
+  %% urlcolor=linkcol %couleur des liens pour les url
+}
