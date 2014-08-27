@@ -15,7 +15,7 @@ m4_pattern_forbid([^(AX|BOOST|TC|URBI|VCSN)_])
 
 AC_PREREQ([2.69])
 
-AC_INIT([Vaucanson], [2.0],
+AC_INIT([Vaucanson], [2.0.0f],
         [vaucanson-bugs@lrde.epita.fr], [],
         [http://vaucanson.lrde.epita.fr/])
 AC_CONFIG_AUX_DIR([build-aux/bin])
@@ -210,6 +210,19 @@ AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 AC_ARG_VAR([DOXYGEN], [doxygen documentation generator])
 AC_CHECK_PROGS([DOXYGEN], [doxygen], 'nodoxygen')
+if test "x$DOXYGEN" = "xnodoxygen"; then
+  AC_MSG_WARN([You need to install doxygen to generate reference documentation])
+fi
+
+AC_CHECK_PROG([HAS_PANDOC], [pandoc], 'yes', 'no')
+if test "x$HAS_PANDOC" = "xno"; then
+  AC_MSG_WARN([You need to install Pandoc to regenerate the manual])
+fi
+
+AC_CHECK_PROG([HAS_IPYTHON], [ipython], 'yes', 'no')
+if test "x$HAS_IPYTHON" = "xyes"; then
+  AC_MSG_ERROR([IPython not found])
+fi
 
 ## --------------------------- ##
 ## Configure-generated files.  ##
