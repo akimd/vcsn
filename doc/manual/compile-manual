@@ -8,56 +8,69 @@ export scratchdir="$thisdir/scratch"
 
 # Clean up scratch directory, copy files there, and enter it.
 # Everything will be executed from the scratch directory.
-rm -rf "$scratchdir"/*
+#rm -rf "$scratchdir"/*
 mkdir "$scratchdir" &> /dev/null || true
-cp "$sourcedir"/*.{tex,bib} "$scratchdir"/
+cp -a "$sourcedir"/*.{tex,bib} "$scratchdir"/
 cd "$scratchdir"
 
 # If the LATEXONLY environment variable is defined, don't translate
 # notebooks into LaTeX.  Otherwise translate each file in the
 # notebooks/ subdirectory.
 if [[ "$LATEXONLY" == "" ]]; then
-    # For each notebook file in $sourcedir/notebooks/:
+    # For each notebook file in $sourcedir/notebooks/ ...
     for file in "$sourcedir"/notebooks/*.ipynb; do
-        # Rename the file converting spaces and underscores into
-        # dashses, which is friendler to Unix and to LaTeX:
-        echo Converting "$file"...
-        export title="$(basename "$(echo $file)" .ipynb \
-            | sed 's/^[0-9]\+[- ]*//' | sed 's/_/\\_/g')"
+        # Compute the file names we are going to work on later into
+        # variables.  The renaming simply consists in changing spaces
+        # and underscores into dashes, which is "friendlier" to Unix
+        # and to LaTeX.
         export goodfilename="$(basename "$(echo $file | tr [:blank:] '-' \
             | tr _ '-')")"
         export goodbasename="$(basename "$goodfilename" .ipynb)"
-        # While copying the file from "$sourcedir"/notebooks to the
-        # scratch directory, transform <!--I indexentry --> comments
-        # into ADDTOINDEXBEGINindexentryADDTOINDEXEND.  This will
-        # survive the transformation by ipython nbconvert.
+        export goodtexname="$goodbasename.tex"
+        export goodorigtexname="$goodtexname.orig"
+
+        # If the file we are supposed to generate is newer than its
+        # source then don't bother doing this slow conversion and skip
+        # directly to the next file in the for loop.
+        if test "$goodtexname" -nt "$file"; then
+            echo No need to convert "$file"...
+            continue
+        fi
+
+        # Copy the file into the scratch directory, giving it a
+        # friendly name.  While copying the file from
+        # "$sourcedir"/notebooks to the scratch directory, transform
+        # <!--I entry --> comments into
+        # VAUCANSONREPLACEMENTADDTOINDEXentryVAUCANSONREPLACEMENTCLOSEBRACE.
+        # This will survive the transformation by ipython nbconvert.
+        echo Converting "$file"...
         cat "$file" \
-            | sed 's/<!--I\( \)*\(.*[^ ]\)\( \)*-->/ADDTOINDEXBEGIN\2ADDTOINDEXEND/g' \
+            | sed 's/<!--I\( \)*\(.*[^ ]\)\( \)*-->/VAUCANSONREPLACEMENTADDTOINDEX\2VAUCANSONREPLACEMENTCLOSEBRACE/g' \
             > "$goodfilename"
 
         # Use ipython nbconvert to translate the notebook into a LaTeX
-        # file; however ipython nbconvert is meant to generate a
-        # single, whole-document PDF, not a piece of a larger document.
-        # I'll modify the output right after this to make it usable for us.
+        # file named $goodtexname; however ipython nbconvert is meant
+        # to generate a single, whole-document PDF, not a piece of a
+        # larger document.  I'll modify the output right after this to
+        # make it usable for us.
         ipython nbconvert --to latex "$goodfilename" &> /dev/null
 
         # Split the generated LaTeX file into header and rest.  Throw
         # away the header.  Perform some easy transformations on rest,
         # commenting-out some toplevel LaTeX commands we don't want
         # such as \begin{document}, \maketitle and \end{document}, and
-        # expand ADDTOINDEXBEGINindexentryADDTOINDEXEND into
-        # \index{indexentry}.
-        export goodtexname="$goodbasename.tex"
-        export goodorigtexname="$goodtexname.orig"
+        # expand
+        # VAUCANSONREPLACEMENTADDTOINDEXentryVAUCANSONREPLACEMENTCLOSEBRACE
+        # into \index{entry}.
         mv "$goodtexname" "$goodorigtexname"
-        csplit -q "$goodorigtexname" '/^ *\\begin{document} *$/1'
-        rm xx00
-        cat xx01 \
+        csplit -f "$goodbasename." -q "$goodorigtexname" '/^ *\\begin{document} *$/1'
+        rm "$goodbasename.00"
+        cat "$goodbasename.01" \
             | sed 's/^\( \)*\\\(maketitle\|end{document}\)/% commented-out: \\\2/g' \
-            | sed 's/ADDTOINDEXBEGIN/\\index{/g' \
-            | sed 's/ADDTOINDEXEND/\}/g' \
+            | sed 's/VAUCANSONREPLACEMENTADDTOINDEX/\\index{/g' \
+            | sed 's/VAUCANSONREPLACEMENTCLOSEBRACE/\}/g' \
                   >> "$goodtexname"
-        rm xx01
+        rm "$goodbasename.01"
     done
 fi
 

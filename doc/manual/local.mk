@@ -14,4 +14,10 @@
 # PDF manual
 .PHONY: manual
 manual:
-	$(top_srcdir)/doc/manual/COMPILE-MANUAL
+	$(top_srcdir)/doc/manual/compile-manual
+
+$(top_srcdir)/doc/manual/vaucanson-manual.pdf: manual
+
+EXTRA_DIST += \
+  $(top_srcdir)/doc/manual/compile-manual \
+  $(top_srcdir)/doc/manual/vaucanson-manual.pdf
