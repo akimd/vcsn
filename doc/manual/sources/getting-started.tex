@@ -1,9 +1,58 @@
 % -*- mode: latex; fill-column: 79; mode: auto-fill; mode: flyspell; buffer-file-coding-system: utf-8 -*-
 \FILL
 
+
+\CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site --no-browser --ip='*' \&}
+
+Sources:
+
+\FIXME{it could be as simple as typing the following line from the source directory:}\\
+\CODE{\$ ./tests/bin/vcsn notebook}
+
+\FIXME{but we strongly recommend using a \TDEF{site file}, in this example
+  named \FILE{/opt/vcsn-site.py}:}\\
+\CODE{\$ PYTHONPATH=/opt ./tests/bin/vcsn notebook -m vcsn-site}
+
+A site file contains Python commands to be automatically run at the beginning
+of every IPython Notebook session.  The one used in the virtual machine image
+simply contains the two lines:
+\begin{lstlisting}
+from vcsn import *
+from vcsn.functional import *
+\end{lstlisting}
+Thanks to these global declarations the user can refer to identifiers bound in
+the \CODE{vcsn} and \CODE{vcsn.functional} modules without prepending long module
+names every time: for example she will be able to simply type
+``\CODE{context('a-z',  'z')}''
+in lieu of the more verbose
+``\CODE{vcsn.functional.context('a-z',  'z')}''.
+
+We will omit explicit module names in the following, assuming the user to
+either use a site file or manually type the two \CODE{import} lines above at
+the beginning of every notebook.
+
+
+
 \section{Using the Virtual Machine image}
 \FIXME{recycle: text written by Jacques with Alfred; Alfred has a
   copy; I've never seen it.}
+
+\begin{lstlisting}
+To install the Vaucanson virtual machine, please follow these procedures,
+ - Install VirtualBox https://www.virtualbox.org/wiki/Downloads.
+ - Install Vagrant from http://www.vagrantup.com/downloads.html
+ - Download the Vaucanson Virtual Machine from http://vaucanson-project.org/releases/Vaucanson-2.0.0f-VM.tar
+ - In a terminal, issue the following commands (in the same directory
+   where the Vaucanson VM was downloaded):
+   $ tar -xf Vaucanson-2.0.0f-VM.tar
+   $ cd Vaucanson-2.0.0f-VM
+   $ vagrant up
+ - You can remove the Vaucanson-2.0.0f-VM.tar if you wish to save space.
+ - Connect your web browser to http://localhost:8888
+  - Have fun!
+ - To turn of the virtual machine,
+   $ vagrant halt
+\end{lstlisting}
 
 \section{Compiling and installing from sources}
 \subsection{GNU/Linux}
