@@ -15,7 +15,7 @@ user already installed the two dependencies, using packages or any appropriate
 method.
 
 \subsection{Virtual machine download and startup}
-The virtual machine image itself is a single file taking about \FIXME{1GB}.
+The virtual machine image itself is a single file taking about 800MB.
 The current version \vcsnversion{} can be found at
 \url{http://vaucanson-project.org/releases/Vaucanson-\vcsnversion-VM.tar}.  The
 user should download it, open a terminal and enter the directory containing the
@@ -49,7 +49,9 @@ $ vagrant halt
 The file \FILE{Vaucanson-\vcsnversion-VM.tar} can be safely removed to save
 space.
 
+\TODO{the following contains some correct information but needs reorganization}
 
+\section{Startig up after compiling from sources}
 
 \CODE{PYTHONPATH=/opt /usr/local/bin/vcsn notebook -m vcsn-site --no-browser --ip='*' \&}
 
