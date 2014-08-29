@@ -1,3 +1,4 @@
+.gitignore
 *.la
 *.lo
 *.o
@@ -50,3 +51,6 @@
 Makefile
 \#*#
 stamp-h*
+/*.ipynb
+/doc/manual/vaucanson-manual.pdf
+/doc/manual/scratch
