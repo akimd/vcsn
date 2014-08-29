@@ -224,6 +224,14 @@ if test "x$HAS_IPYTHON" = "xyes"; then
   AC_MSG_ERROR([IPython not found])
 fi
 
+# Check headers and libraries.  Why wasn't this done before?  There
+# must have been some good reason, so I'll just add a quick line here.
+AC_CHECK_HEADER([gmp.h], , [AC_MSG_ERROR([Cannot find gmp.h])])
+AC_CHECK_LIB(gmp, __gmpz_init2,
+             AC_DEFINE([HAVE_LIB_GMP], 1, [Define to 1 if we have libgmp]),
+             [AC_MSG_ERROR([Cannot find libgmp])])
+
+
 ## --------------------------- ##
 ## Configure-generated files.  ##
 ## --------------------------- ##
