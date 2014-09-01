@@ -5,6 +5,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-01
+### compatibility with Boost 1.56
+Some changes in Boost require adjustments.
+
 ## 2014-08-02
 ### ambiguous_word: new algorithm
 Returns an ambiguous word of an automaton, or raises if the automaton

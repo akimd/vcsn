@@ -52,7 +52,7 @@ namespace vcsn
     /// Add a transition from \a src to \a dst.
     virtual void add_transition(string_t src, string_t dst,
                                 string_t label,
-                                string_t weight = {}) = 0;
+                                string_t weight = string_t{}) = 0;
 
     virtual bool open(bool o) = 0;
 
@@ -129,13 +129,13 @@ namespace vcsn
     }
 
     virtual void
-    add_initial(string_t s, string_t weight = {}) override final
+    add_initial(string_t s, string_t weight = string_t{}) override final
     {
       res_->add_initial(state_(s), weight_(weight));
     }
 
     virtual void
-    add_final(string_t s, string_t weight = {}) override final
+    add_final(string_t s, string_t weight = string_t{}) override final
     {
       res_->add_final(state_(s), weight_(weight));
     }
@@ -143,7 +143,7 @@ namespace vcsn
     virtual void
     add_transition(string_t src, string_t dst,
                    string_t label,
-                   string_t weight = {}) override final
+                   string_t weight = string_t{}) override final
     {
       // In case of states we don't know, we'd like to register s
       // first, then d, in an attempt to keep the order in which we
@@ -278,15 +278,15 @@ namespace vcsn
     enum class labelset_type { empty, lal, lan, law };
 
     /// Add \a s as an initial state.
-    void add_initial(string_t s, string_t w = {});
+    void add_initial(string_t s, string_t w = string_t{});
 
     /// Add \a s as a final state.
-    void add_final(string_t s, string_t w = {});
+    void add_final(string_t s, string_t w = string_t{});
 
     /// Add an acceptor transition from \a src to \a dst, labeled by
     /// \a lbl.
     void add_transition(string_t src, string_t dst,
-                        string_t lbl, string_t w = {});
+                        string_t lbl, string_t w = string_t{});
 
     /// Add a transducer transition from \a src to \a dst, labeled by
     /// \a (lbl1, lbl2).

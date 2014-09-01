@@ -84,7 +84,7 @@ namespace vcsn
                                         string_t lbl,
                                         string_t weight)
   {
-    add_transition(src, dst, lbl, {}, weight);
+    add_transition(src, dst, lbl, string_t{}, weight);
   }
 
   bool
