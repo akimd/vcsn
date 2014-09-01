@@ -59,6 +59,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/power.py                                  \
   %D%/product.py                                \
   %D%/proper.py                                 \
+  %D%/push-weights.py                           \
   %D%/ratexp.py                                 \
   %D%/reduce.py                                 \
   %D%/scc.py                                    \

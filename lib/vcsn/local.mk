@@ -78,6 +78,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/print.cc                            \
   %D%/algos/product.cc                          \
   %D%/algos/proper.cc                           \
+  %D%/algos/push-weights.cc                     \
   %D%/algos/random.cc                           \
   %D%/algos/read.cc                             \
   %D%/algos/registry.hh                         \

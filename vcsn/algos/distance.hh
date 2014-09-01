@@ -15,6 +15,58 @@
 
 namespace vcsn
 {
+  /// Single source shortest distance.
+  /// Find shortest path from state \a s0
+  /// to all states of automaton \a aut.
+  template <typename Aut>
+  std::unordered_map<state_t_of<Aut>, weight_t_of<Aut>>
+  ss_shortest_distance(Aut aut, state_t_of<Aut> s0)
+  {
+    using weight_t = weight_t_of<Aut>;
+    using state_t = state_t_of<Aut>;
+
+    std::unordered_map<state_t, weight_t> d;
+    std::unordered_map<state_t, weight_t> r;
+    auto ws = *aut->weightset();
+    for (auto s : aut->all_states())
+      {
+        d.emplace(s, ws.zero());
+        r.emplace(s, ws.zero());
+      }
+
+    std::queue<state_t> todos;
+    std::unordered_set<state_t> marked;
+    d[s0] = ws.one();
+    r[s0] = ws.one();
+    todos.emplace(s0);
+    marked.emplace(s0);
+    while (!todos.empty())
+      {
+        auto s = todos.front();
+        todos.pop();
+        auto r1 = r[s];
+        r[s] = ws.zero();
+        for (auto t : aut->all_out(s))
+          {
+            auto dst = aut->dst_of(t);
+            auto w1 = ws.mul(r1, aut->weight_of(t));
+            auto w = ws.add(d[dst], w1);
+            if (!ws.equals(d[dst], w))
+              {
+                d[dst] = w;
+                r[dst] = ws.add(r[dst], w1);
+                if (!has(marked, dst))
+                  {
+                    todos.emplace(dst);
+                    marked.emplace(dst);
+                  }
+              }
+          }
+    }
+    d[s0] = ws.one();
+    return d;
+  }
+
   template<typename Aut>
   std::unordered_map<state_t_of<Aut>,
                      std::pair<unsigned,

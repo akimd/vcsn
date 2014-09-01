@@ -385,6 +385,9 @@ namespace vcsn
     /// \param prune  whether to delete states that become inaccessible
     automaton proper(const automaton& aut, bool prune = true);
 
+    /// The weight pushing automaton of \a aut.
+    automaton push_weights(const automaton& aut);
+
     /// Produce a random automaton.
     /// \param ctx
     ///    The context of the result.
@@ -549,6 +552,7 @@ namespace vcsn
 
     /// The universal automaton of \a aut.
     automaton universal(const automaton& aut);
+
   }
 }
 

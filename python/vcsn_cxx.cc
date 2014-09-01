@@ -343,6 +343,11 @@ struct automaton
     return vcsn::dyn::proper(val_, prune);
   }
 
+  automaton push_weights() const
+  {
+    return vcsn::dyn::push_weights(val_);
+  }
+
   automaton reduce() const
   {
     return vcsn::dyn::reduce(val_);
@@ -956,6 +961,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("power", &automaton::power)
     .def("_product", &automaton::product_).staticmethod("_product")
     .def("_proper", &automaton::proper, proper())
+    .def("push_weights", &automaton::push_weights)
     .def("ratexp", &automaton::to_ratexp, "Conversion to ratexp.")
     .def("reduce", &automaton::reduce)
     .def("right_mult", &automaton::right_mult)

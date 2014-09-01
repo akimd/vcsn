@@ -35,6 +35,7 @@
 # include <vcsn/algos/print.hh>
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/proper.hh>
+# include <vcsn/algos/push-weights.hh>
 # include <vcsn/algos/read.hh>
 # include <vcsn/algos/sort.hh>
 # include <vcsn/algos/split.hh>
@@ -351,6 +352,7 @@ namespace vcsn
         REGISTER(print_ratexp, rs_t, std::ostream, const std::string);
         REGISTER(print_weight, ws_t, std::ostream, const std::string);
         REGISTER(proper, aut_t, bool);
+        REGISTER(push_weights, aut_t);
         REGISTER(random, ctx_t, unsigned, float, unsigned, unsigned);
         REGISTER(read_label, std::istream, ctx_t);
         REGISTER(read_polynomial, ctx_t, std::istream);
