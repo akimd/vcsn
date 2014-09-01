@@ -180,7 +180,7 @@ namespace vcsn
     print_set(std::ostream& o, const std::string& format = "text") const
     {
       if (format == "latex")
-        o << "\\mathbb{Z}_{min}";
+        o << "\\mathbb{Z}_{\\text{min}}";
       else if (format == "text")
         o << vname();
       else

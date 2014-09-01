@@ -191,7 +191,7 @@ namespace vcsn
     print_set(std::ostream& o, const std::string& format = "text") const
     {
       if (format == "latex")
-        o << "\\mathbb{Q}_{mp}";
+        o << "\\mathbb{Q}_{\\text{mp}}";
       else if (format == "text")
         o << vname();
       else
