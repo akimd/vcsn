@@ -132,6 +132,8 @@ EXTRA_DIST +=                                   \
   %D%/determinize.dir/ladybird-8-det.gv         \
   %D%/determinize.dir/q-det.gv                  \
   %D%/determinize.dir/q.gv                      \
+  %D%/determinize.dir/z-det.gv                  \
+  %D%/determinize.dir/z.gv                      \
   %D%/determinize.dir/zmin-det.gv               \
   %D%/determinize.dir/zmin.gv                   \
   %D%/efsm.dir/a1.efsm                          \

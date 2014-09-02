@@ -47,6 +47,6 @@ for name in ['deterministic', 'empty', 'epsilon']:
 ## -------------------------------------- ##
 ## Determinization of weighted automata.  ##
 ## -------------------------------------- ##
-for name in ['b', 'q', 'zmin']:
+for name in ['b', 'q', 'z', 'zmin']:
     aut = vcsn.automaton(load(name))
     check(aut, name + '-det')

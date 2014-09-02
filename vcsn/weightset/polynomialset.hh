@@ -14,6 +14,7 @@
 # include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/map.hh>
+# include <vcsn/misc/math.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh>
@@ -304,12 +305,34 @@ namespace vcsn
       return v;
     }
 
+    /// In the general case, normalize by the first (non null) weight.
+    template <typename WeightSet,
+              typename std::enable_if<!std::is_same<WeightSet, z>::value, int>::type = 0>
+    typename WeightSet::value_t
+    norm_(value_t& v) const
+    {
+      return begin(v)->second;
+    }
+
+    /// For Z, take the GCD, with the sign of the first value.
+    template <typename WeightSet,
+              typename std::enable_if<std::is_same<WeightSet, z>::value, int>::type = 0>
+    typename WeightSet::value_t
+    norm_(value_t& v) const
+    {
+      int sign = 0 < begin(v)->second ? 1 : -1;
+      auto res = abs(begin(v)->second);
+      for (const auto& m: v)
+        res = detail::gcd(res, abs(m.second));
+      res *= sign;
+      return res;
+    }
+
+    /// Normalize v in place, and return the factor which was divided.
     weight_t
     normalize_here(value_t& v) const
     {
-      // In the general case, normalize by the first (non null)
-      // weight.
-      weight_t res = begin(v)->second;
+      auto res = norm_<weightset_t>(v);
       ldiv_here(res, v);
       return res;
     }
