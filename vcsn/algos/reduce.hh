@@ -360,7 +360,7 @@ namespace vcsn
         gcd = a.vbasis[pivot] + b.current[pivot]
         current[pivot] is made zero with a unimodular linear transformation
         This also modifies the basis vector
-        [ vbasis  ] := [        a                      b       ] . [ vbasis   ]
+        [ vbasis  ] := [        a                      b       ] . [ vbasis  ]
         [ current ]    [-current[pivot]/gcd   vbasis[pivot]/gcd]   [ current ]
       */
       void z_reduce_vector(vector_t& vbasis, vector_t& current,
