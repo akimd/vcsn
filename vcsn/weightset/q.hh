@@ -5,15 +5,15 @@
 # include <ostream>
 
 # include <vcsn/core/join.hh>
-# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
+# include <vcsn/misc/math.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weightset/fwd.hh>
 # include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/z.hh>
+# include <vcsn/weightset/fwd.hh>
 # include <vcsn/weightset/weightset.hh>
+# include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {
@@ -64,27 +64,6 @@ namespace vcsn
     static unsigned int abs(int a)
     {
       return a < 0 ? -a : a;
-    }
-
-    // Greatest common divisor.
-    ATTRIBUTE_PURE
-    static unsigned int gcd(unsigned int a, unsigned int b)
-    {
-      require(!is_zero(b), "gcd: rhs cannot be zero");
-      while (b)
-      {
-        unsigned int t = a;
-        a = b;
-        b = t % b;
-      }
-      return a;
-    }
-
-    // Lowest common multiple
-    ATTRIBUTE_PURE
-    static unsigned int lcm(unsigned int a, unsigned int b)
-    {
-      return a / gcd(a, b) * b;
     }
 
     static value_t zero()

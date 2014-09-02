@@ -190,6 +190,7 @@ nobase_include_HEADERS =                        \
   %D%/misc/hash.hh                              \
   %D%/misc/indent.hh                            \
   %D%/misc/map.hh                               \
+  %D%/misc/math.hh                              \
   %D%/misc/memory.hh                            \
   %D%/misc/military-order.hh                    \
   %D%/misc/name.hh                              \
