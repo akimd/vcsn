@@ -8,12 +8,12 @@ namespace vcsn
   namespace dyn
   {
 
-    REGISTER_DEFINE(is_cycle_unambiguous);
+    REGISTER_DEFINE(is_cycle_ambiguous);
 
     bool
-    is_cycle_unambiguous(const automaton& aut)
+    is_cycle_ambiguous(const automaton& aut)
     {
-      return detail::is_cycle_unambiguous_registry().call(aut);
+      return detail::is_cycle_ambiguous_registry().call(aut);
     }
 
 

@@ -193,21 +193,21 @@ r2 = "((abc)*){5}abc" + format(aut2.ratexp())
 aut5 = vcsn.context("lal_char(abc)_b").ratexp(r2).derived_term()
 
 
-def check_is_cycle_unambiguous():
-  CHECK_EQ(True, aut1.is_cycle_unambiguous())
-  CHECK_EQ(False, aut2.is_cycle_unambiguous())
-  CHECK_EQ(True, aut3.is_cycle_unambiguous())
-  CHECK_EQ(True, aut4.is_cycle_unambiguous())
-  CHECK_EQ(False, aut5.is_cycle_unambiguous())
+def check_is_cycle_ambiguous():
+  CHECK_EQ(True, aut1.is_cycle_ambiguous())
+  CHECK_EQ(False, aut2.is_cycle_ambiguous())
+  CHECK_EQ(True, aut3.is_cycle_ambiguous())
+  CHECK_EQ(True, aut4.is_cycle_ambiguous())
+  CHECK_EQ(False, aut5.is_cycle_ambiguous())
 
   CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
-           ladybird(5).is_cycle_unambiguous())
+           ladybird(5).is_cycle_ambiguous())
   CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
-           de_bruijn(5).is_cycle_unambiguous())
+           de_bruijn(5).is_cycle_ambiguous())
   CHECK_EQ(True, vcsn.context("lal_char(abc)_b").
-           ladybird(20).is_cycle_unambiguous())
+           ladybird(20).is_cycle_ambiguous())
   CHECK_EQ(False, vcsn.context("lal_char(abc)_b").
-           de_bruijn(20).is_cycle_unambiguous())
+           de_bruijn(20).is_cycle_ambiguous())
 
 
-check_is_cycle_unambiguous()
+check_is_cycle_ambiguous()

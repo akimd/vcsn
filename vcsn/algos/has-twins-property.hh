@@ -80,10 +80,8 @@ namespace vcsn
       scc_tarjan(const Aut& aut)
       {
         for (auto s : aut->states())
-          {
             if (!has(marked_, s))
               dfs(s, aut);
-          }
       }
 
       const components_t components()
@@ -112,6 +110,7 @@ namespace vcsn
             low_[s] = min;
             return;
           }
+
         state_t w;
         components_.emplace_back(component_t{});
         do
@@ -152,9 +151,9 @@ namespace vcsn
   }
 
 
-  /*--------------------.
-  | cycle_unambiguous.  |
-  `--------------------*/
+  /*------------------.
+  | cycle_ambiguous.  |
+  `------------------*/
 
   template <typename Aut>
   Aut
@@ -183,9 +182,9 @@ namespace vcsn
     return res;
   }
 
-  /// Whether \a aut is cycle-unambiguous.
+  /// Whether \a aut is cycle-nambiguous.
   template <typename Aut>
-  bool is_cycle_unambiguous(const Aut& aut)
+  bool is_cycle_ambiguous(const Aut& aut)
   {
     // Find all strongly connected components
     const auto& coms = components(aut);
@@ -197,31 +196,30 @@ namespace vcsn
           coms.size() << std::endl;
       }
 
-    // Check each component if it is cycle-unambiguous.
+    // Check each component if it is cycle-ambiguous.
     if (coms.size() == 1)
-      return is_cycle_unambiguous_scc(aut);
+      return is_cycle_ambiguous_scc(aut);
     for (const auto &c : coms)
       {
         const auto& a = aut_of_component(c, aut);
-        if (is_cycle_unambiguous_scc(a))
+        if (is_cycle_ambiguous_scc(a))
           return true;
       }
     return false;
   }
 
-  /// Whether \a aut is cycle-unambiguous.
+  /// Whether \a aut is cycle-ambiguous.
   /// Precondition: aut is a strongly connected component.
   template <typename Aut>
-  bool is_cycle_unambiguous_scc(const Aut& aut)
+  bool is_cycle_ambiguous_scc(const Aut& aut)
   {
     auto prod = product(aut, aut);
     auto coms = components(prod);
     auto origins = prod->origins();
     bool cond_equal, cond_not_equal;
-    // In one strong connected component,
-    // if exist two states (s1, s1) and (s1, s2)
-    // with s1 # s2 then it has two cycle same label
-    // from s->s1-> s and s->s2->s.
+    // In one SCC of prod, if there exist two states (s0, s0) and (s1,
+    // s2) with s1 != s2 then aut has two cycles with the same label:
+    // s0->s1->s0 and s0->s2->s0.
     for (auto c : coms)
       {
         cond_equal = cond_not_equal = false;
@@ -246,13 +244,13 @@ namespace vcsn
       // Bridge.
       template <typename Aut>
       bool
-      is_cycle_unambiguous(const automaton& aut)
+      is_cycle_ambiguous(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return ::vcsn::is_cycle_unambiguous(a);
+        return ::vcsn::is_cycle_ambiguous(a);
       }
 
-      REGISTER_DECLARE(is_cycle_unambiguous,
+      REGISTER_DECLARE(is_cycle_ambiguous,
                        (const automaton&) -> bool);
     }
   }
@@ -329,8 +327,9 @@ namespace vcsn
   template <typename Aut>
   bool has_twins_property(const Aut& aut)
   {
-    bool is_cycle_uabg = is_cycle_unambiguous(aut);
-    assert(!is_cycle_uabg);
+    require(!is_cycle_ambiguous(aut),
+            "has_twins_property: requires a cycle-unambiguous automaton");
+
     auto trim = ::vcsn::trim(aut);
     auto inv = inverse(trim);
     auto a = ::vcsn::product(inv, trim);

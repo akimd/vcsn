@@ -241,8 +241,8 @@ namespace vcsn
     /// \pre \a aut is LAL.
     bool is_complete(const automaton& aut);
 
-    /// Whether the automaton is cycle-unambiguous.
-    bool is_cycle_unambiguous(const automaton& aut);
+    /// Whether the automaton is cycle-ambiguous.
+    bool is_cycle_ambiguous(const automaton& aut);
 
     /// Whether \a aut is deterministic.
     /// \pre \a aut is LAL.
