@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 22
+# serial 23
 ], [#
 ], [])])
 
@@ -764,6 +764,14 @@ BOOST_DEFUN([MultiArray],
 [BOOST_FIND_HEADER([boost/multi_array.hpp])])
 
 
+# BOOST_NUMERIC_UBLAS()
+# --------------------------
+# Look for Boost.NumericUblas (Basic Linear Algebra)
+BOOST_DEFUN([Numeric_Ublas],
+[BOOST_FIND_HEADER([boost/numeric/ublas/vector.hpp])
+])# BOOST_NUMERIC_UBLAS
+
+
 # BOOST_NUMERIC_CONVERSION()
 # --------------------------
 # Look for Boost.NumericConversion (policy-based numeric conversion)
@@ -1172,7 +1180,8 @@ m4_define([_BOOST_mingw_test],
 AC_DEFUN([_BOOST_FIND_COMPILER_TAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
-AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag],
+AC_CACHE_CHECK([for the toolset name used by Boost for $CXX],
+               [boost_cv_lib_tag],
 [boost_cv_lib_tag=unknown
 if test x$boost_cv_inc_path != xno; then
   AC_LANG_PUSH([C++])dnl
@@ -1190,23 +1199,27 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
-    _BOOST_mingw_test(4,8) \
+    _BOOST_mingw_test(4, 10) \
+    _BOOST_gcc_test(4, 10) \
+    _BOOST_mingw_test(4, 9) \
+    _BOOST_gcc_test(4, 9) \
+    _BOOST_mingw_test(4, 8) \
     _BOOST_gcc_test(4, 8) \
-    _BOOST_mingw_test(4,7) \
+    _BOOST_mingw_test(4, 7) \
     _BOOST_gcc_test(4, 7) \
-    _BOOST_mingw_test(4,6) \
+    _BOOST_mingw_test(4, 6) \
     _BOOST_gcc_test(4, 6) \
-    _BOOST_mingw_test(4,5) \
+    _BOOST_mingw_test(4, 5) \
     _BOOST_gcc_test(4, 5) \
-    _BOOST_mingw_test(4,4) \
+    _BOOST_mingw_test(4, 4) \
     _BOOST_gcc_test(4, 4) \
-    _BOOST_mingw_test(4,3) \
+    _BOOST_mingw_test(4, 3) \
     _BOOST_gcc_test(4, 3) \
-    _BOOST_mingw_test(4,2) \
+    _BOOST_mingw_test(4, 2) \
     _BOOST_gcc_test(4, 2) \
-    _BOOST_mingw_test(4,1) \
+    _BOOST_mingw_test(4, 1) \
     _BOOST_gcc_test(4, 1) \
-    _BOOST_mingw_test(4,0) \
+    _BOOST_mingw_test(4, 0) \
     _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
