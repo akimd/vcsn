@@ -11,6 +11,15 @@ The normalization of states now uses the GCD of the weights, which
 means that now all the Z-automata that are determinizable can be
 determinized in Z, without having to convert them as Q-automata.
 
+### New weightset: qmp
+Initial support for multiprecision rational numbers.
+
+    >>> a = vcsn.context('lal_char(abc)_qmp').ratexp('<2/3>a').standard() & 70
+    >>> a('a')
+    1180591620717411303424/2503155504993241601315571986085849
+
+Requires the GMP library.
+
 ## 2014-09-01
 ### compatibility with Boost 1.56
 Some changes in Boost require adjustments.

@@ -8,15 +8,15 @@
 # include <gmpxx.h>
 
 # include <vcsn/core/join.hh>
-# include <vcsn/misc/attributes.hh>
 # include <vcsn/misc/hash.hh>
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/star_status.hh>
 # include <vcsn/misc/stream.hh> // eat
-# include <vcsn/weightset/fwd.hh>
 # include <vcsn/weightset/b.hh>
-# include <vcsn/weightset/z.hh>
+# include <vcsn/weightset/fwd.hh>
+# include <vcsn/weightset/q.hh>
 # include <vcsn/weightset/weightset.hh>
+# include <vcsn/weightset/z.hh>
 
 namespace vcsn
 {

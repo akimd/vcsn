@@ -66,6 +66,23 @@ order "not to break too much") rather that something like expand.  What are
 the expected features of the right definition?
 
 * Bugs
+** Python: _conjunction
+This wrapper is not good enough.  For instance:
+
+    >>> a = vcsn.context('lal_char(abc)_qmp').ratexp('<2/3>a').standard() & 300
+    >>> a
+    mutable_automaton<lal_char(abc)_qmp>
+    >>> a('a')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: '_conjunction' object is not callable
+    >>> a = a.value()
+    >>> a('a')
+    2037035976334486086268445688409378161051468393665936250636140449354381299763336706183397376/136891479058588375991326027382088315966463695625337436471480190078368997177499076593800206155688941388250484440597994042813512732765695774566001
+
+It is not normal that we have to call _conjunction.value(), it should be
+perfectly transparent.
+
 ** Parse error
 We need to provide more acurate locations in error messages.  For instance,
 create a dot file with an incorrect context definition, and see the failure.
