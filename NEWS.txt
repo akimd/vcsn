@@ -5,6 +5,12 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-03
+### determinize provides a better support for Z
+The normalization of states now uses the GCD of the weights, which
+means that now all the Z-automata that are determinizable can be
+determinized in Z, without having to convert them as Q-automata.
+
 ## 2014-09-01
 ### compatibility with Boost 1.56
 Some changes in Boost require adjustments.
