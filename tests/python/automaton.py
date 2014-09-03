@@ -259,24 +259,28 @@ CHECK_EQ('''digraph
 }''',
          _dot_pretty((a&a).dot()))
 
-## --------------------------- ##
-## Conversions: dot and TikZ.  ##
-## --------------------------- ##
+## ------------------------------- ##
+## Output: dot, dot2tex and TikZ.  ##
+## ------------------------------- ##
 
 import glob
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
+    print(fn)
     a = vcsn.automaton.load(fn)
 
-    gv   = open(fn.replace('.in.gv', '.out.gv')).read().strip()
-    CHECK_EQ(gv, a.format('dot'))
+    exp = open(fn.replace('.in.gv', '.out.gv')).read().strip()
+    CHECK_EQ(exp, a.format('dot'))
 
-    tikz = open(fn.replace('.in.gv', '.tex')).read().strip()
-    CHECK_EQ(tikz, a.format('tikz'))
+    exp  = open(fn.replace('.in.gv', '.tex.gv')).read().strip()
+    CHECK_EQ(exp, a.format('dot2tex'))
+
+    exp = open(fn.replace('.in.gv', '.tex')).read().strip()
+    CHECK_EQ(exp, a.format('tikz'))
 
 
-## ------ ##
-## Daut.  ##
-## ------ ##
+## ----------- ##
+## I/O: Daut.  ##
+## ----------- ##
 
 from vcsn.dot import to_dot, from_dot
 for fn in glob.glob(os.path.join(medir, '*.in.gv')):
@@ -289,9 +293,9 @@ for fn in glob.glob(os.path.join(medir, '*.in.gv')):
     CHECK_EQ(a, vcsn.automaton(to_dot(daut)))
 
 
-## ------------------- ##
-## Conversions: FAdo.  ##
-## ------------------- ##
+## ----------- ##
+## I/O: FAdo.  ##
+## ----------- ##
 
 try:
     import FAdo
@@ -323,9 +327,9 @@ for fn in glob.glob(os.path.join(medir, '*.fado')):
     CHECK_EQ(fado, a.format('fado'))
     check_fado(a)
 
-## -------------------- ##
-## Conversions: Grail.  ##
-## -------------------- ##
+## --------------- ##
+## Output: Grail.  ##
+## --------------- ##
 
 def check_grail(aut):
     '''Check that FAdo accepts aut.format('grail') as input.'''

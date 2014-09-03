@@ -389,7 +389,7 @@ At some point, someone should really work on the XML formalism.
 Look for other implementations (cf. "Five determinization algorithms").  And
 pay attention to the case of large alphabets.
 
-** minimization (LS)
+** minimization
 Implement more minimization algorithms (Hopcroft, Revuz, Brzozowski...).
 Work for trim automata.
 

@@ -1,0 +1,14 @@
+digraph
+{
+  vcsn_context = "lal_char(abc)_q"
+  rankdir = LR
+  edge [texmode = math, lblstyle = auto]
+  d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"
+  d2tdocpreamble = "    \usepackage{amssymb}    \usetikzlibrary{arrows, automata}    \tikzstyle{automaton}=[shorten >=1pt, pos=.4, >=stealth', initial text=]    \tikzstyle{named}=[rectangle, rounded corners]    \tikzstyle{initial}=[initial by arrow]    \tikzstyle{accepting}=[accepting by arrow]  "
+  {
+    node [texmode = math, style = state]
+    0 [style = "state, initial, initial text={3}"]
+    1 [style = "state, accepting, accepting text={2}"]
+  }
+  0 -> 1 [label = "\\langle \\frac{1}{2}\\rangle a, \\langle \\frac{1}{3}\\rangle b"]
+}

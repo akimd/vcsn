@@ -1,0 +1,14 @@
+digraph
+{
+  vcsn_context = "lao_z"
+  rankdir = LR
+  edge [texmode = math, lblstyle = auto]
+  d2toptions = "--format tikz --tikzedgelabels --graphstyle=automaton --crop --nominsize --autosize"
+  d2tdocpreamble = "    \usepackage{amssymb}    \usetikzlibrary{arrows, automata}    \tikzstyle{automaton}=[shorten >=1pt, pos=.4, >=stealth', initial text=]    \tikzstyle{named}=[rectangle, rounded corners]    \tikzstyle{initial}=[initial by arrow]    \tikzstyle{accepting}=[accepting by arrow]  "
+  {
+    node [texmode = math, style = state]
+    0 [style = "state, initial, initial text={666}"]
+    1 [style = "state, accepting, accepting text={999}"]
+  }
+  0 -> 1 [label = "\\langle 93\\rangle "]
+}

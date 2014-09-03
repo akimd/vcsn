@@ -92,24 +92,29 @@ EXTRA_DIST +=                                   \
   %D%/automaton.dir/lal_char_b.in.gv            \
   %D%/automaton.dir/lal_char_b.out.gv           \
   %D%/automaton.dir/lal_char_b.tex              \
+  %D%/automaton.dir/lal_char_b.tex.gv           \
   %D%/automaton.dir/lal_char_q.daut             \
   %D%/automaton.dir/lal_char_q.in.gv            \
   %D%/automaton.dir/lal_char_q.out.gv           \
   %D%/automaton.dir/lal_char_q.tex              \
+  %D%/automaton.dir/lal_char_q.tex.gv           \
   %D%/automaton.dir/lan_char_b.daut             \
   %D%/automaton.dir/lan_char_b.in.gv            \
   %D%/automaton.dir/lan_char_b.out.gv           \
   %D%/automaton.dir/lan_char_b.tex              \
+  %D%/automaton.dir/lan_char_b.tex.gv           \
   %D%/automaton.dir/lao_z.daut                  \
   %D%/automaton.dir/lao_z.in.gv                 \
   %D%/automaton.dir/lao_z.out.gv                \
   %D%/automaton.dir/lao_z.tex                   \
+  %D%/automaton.dir/lao_z.tex.gv                \
   %D%/automaton.dir/nfa.fado                    \
   %D%/automaton.dir/nfa.gv                      \
   %D%/automaton.dir/pyramid.daut                \
   %D%/automaton.dir/pyramid.in.gv               \
   %D%/automaton.dir/pyramid.out.gv              \
   %D%/automaton.dir/pyramid.tex                 \
+  %D%/automaton.dir/pyramid.tex.gv              \
   %D%/compose.dir/left.gv                       \
   %D%/compose.dir/result.gv                     \
   %D%/compose.dir/right.gv                      \
