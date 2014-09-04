@@ -126,6 +126,23 @@
 
 %param { driver& driver_ }
 
+%code top
+{
+  /// Run Stm, and bounces exceptions into parse errors at Loc.
+#define TRY(Loc, Stm)                           \
+  do {                                          \
+    try                                         \
+      {                                         \
+        Stm;                                    \
+      }                                         \
+    catch (std::exception& e)                   \
+      {                                         \
+        error(Loc, e.what());                   \
+        YYERROR;                                \
+      }                                         \
+  } while (false)
+}
+
 %initial-action
 {
   @$ = driver_.location_;
@@ -284,7 +301,7 @@ edge_stmt:
   path attr_list.opt[label]
   {
     for (auto t: $path.transitions)
-      driver_.edit_->add_entry(t.first, t.second, $label);
+      TRY(@2, driver_.edit_->add_entry(t.first, t.second, $label));
   }
 ;
 
@@ -302,13 +319,13 @@ node_id:
     require(bool(driver_.edit_), @$, ": no vcsn_context");
     std::swap($$, $1);
     if ($$.get()[0] == 'I')
-      driver_.edit_->add_pre($$);
+      TRY(@1, driver_.edit_->add_pre($$));
     else if ($$.get()[0] == 'F')
-      driver_.edit_->add_post($$);
+      TRY(@1, driver_.edit_->add_post($$));
     else
       // This is not needed, but it ensures that the states will be
       // numbered by their order of appearance in the file.
-      driver_.edit_->add_state($$);
+      TRY(@1, driver_.edit_->add_state($$));
   }
 ;
 
