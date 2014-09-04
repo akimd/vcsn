@@ -83,10 +83,6 @@ This wrapper is not good enough.  For instance:
 It is not normal that we have to call _conjunction.value(), it should be
 perfectly transparent.
 
-** Parse error
-We need to provide more acurate locations in error messages.  For instance,
-create a dot file with an incorrect context definition, and see the failure.
-
 ** shortest
 Loops forever:
 

@@ -5,6 +5,18 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-04
+### Fixes
+I/O with OpenFST now properly supports initial weights and multiple
+initial states.
+
+Dot I/O of multiple-tape automata with initial weights is fixed.
+
+Dot parse errors now provide locations.
+
+The preconditions of reduce have been relaxed from labels-are-letters
+to labelset-is-free.
+
 ## 2014-09-03
 ### determinize provides a better support for Z
 The normalization of states now uses the GCD of the weights, which

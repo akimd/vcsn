@@ -97,20 +97,29 @@ namespace vcsn
       }
 
     private:
+      template <typename LS>
+      void output_label_(const LS& ls, const typename LS::value_t& l)
+      {
+        if (ls.is_special(l))
+          os_ << "\\e";
+        else
+          ls.print(l, os_);
+      }
+
       /// Acceptor.
       template <typename Label>
       void output_label_(const Label& l, std::false_type)
       {
-        ls_.print(l, os_);
+        output_label_(ls_, l);
       }
 
       /// Two-tape automaton.
       template <typename Label>
       void output_label_(const Label& l, std::true_type)
       {
-        ls_.template set<0>().print(std::get<0>(l), os_);
+        output_label_(ls_.template set<0>(), std::get<0>(l));
         os_ << '\t';
-        ls_.template set<1>().print(std::get<1>(l), os_);
+        output_label_(ls_.template set<1>(), std::get<1>(l));
       }
 
       void output_transition_(const transition_t t)
@@ -121,10 +130,7 @@ namespace vcsn
             os_ << '\t';
             aut_->print_state(aut_->dst_of(t), os_);
             os_ << '\t';
-            if (ls_.is_special(aut_->label_of(t)))
-              os_ << "\\e";
-            else
-              output_label_(aut_->label_of(t), is_transducer);
+            output_label_(aut_->label_of(t), is_transducer);
           }
 
         if (ws_.show_one() || !ws_.is_one(aut_->weight_of(t)))
@@ -137,13 +143,20 @@ namespace vcsn
       /// Output all the transitions, and final states.
       void output_transitions_()
       {
-        // FSM format supports a single initial state, which requires,
-        // when we have several initial states, to "exhibit" pre() and
-        // spontaneous transitions.  Avoid this when possible.
-        if (aut_->initial_transitions().size() != 1)
-          for (auto t : aut_->initial_transitions())
+        // FSM format supports a single initial state with one as
+        // weight.  This requires, when we have several initial
+        // states or an non, to "exhibit" pre() and spontaneous transitions.
+        // Avoid this when possible.
+        auto inis =  aut_->initial_transitions();
+        if (inis.size() != 1
+            || !ws_.is_one(aut_->weight_of(inis.front())))
+          for (auto t : inis)
             {
               os_ << '\n';
+              // Yes, this means that we display pre as -1U, which is
+              // a large unsigned integer.  But that is well supported
+              // by OpenFST which renumbers the states continuously
+              // from 0.
               output_transition_(t);
             }
 
