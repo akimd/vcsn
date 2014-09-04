@@ -18,28 +18,32 @@
 namespace vcsn
 {
 
-  /*----------.
-  |  reverse  |
-  `----------*/
+  /*---------.
+  |  invert  |
+  `---------*/
 
-  /// Inverse the weight of all edges of \a aut.
+  /// Invert the weight each transition non zero of \a aut.
   template <typename Aut>
   Aut&
-  inverse_here(Aut& aut)
+  invert_here(Aut& aut)
   {
     const auto& ws = *aut->weightset();
     for (auto t : aut->all_transitions())
-      aut->set_weight(t, ws.rdiv(ws.one(), aut->weight_of(t)));
+      {
+        auto w = aut->weight_of(t);
+        if (!ws.is_zero(w))
+          aut->set_weight(t, ws.rdiv(ws.one(), w));
+      }
     return aut;
   }
 
   template <typename Aut>
   auto
-  inverse(const Aut& aut)
+  invert(const Aut& aut)
     -> decltype(::vcsn::copy(aut))
   {
     auto res = copy(aut);
-    return inverse_here(res);
+    return invert_here(res);
   }
 
   namespace dyn
@@ -49,13 +53,13 @@ namespace vcsn
       // Bridge.
       template <typename Aut>
       automaton
-      inverse(const automaton& aut)
+      invert(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
-        return make_automaton(::vcsn::inverse(a));
+        return make_automaton(::vcsn::invert(a));
       }
 
-      REGISTER_DECLARE(inverse,
+      REGISTER_DECLARE(invert,
                        (const automaton&) -> automaton);
     }
   }
@@ -240,7 +244,7 @@ namespace vcsn
             "has_twins_property: requires a cycle-unambiguous automaton");
 
     auto trim = ::vcsn::trim(aut);
-    auto inv = inverse(trim);
+    auto inv = invert(trim);
     auto a = product(inv, trim);
 
     // Find all components of automate a.

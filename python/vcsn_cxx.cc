@@ -199,9 +199,9 @@ struct automaton
     return vcsn::dyn::insplit(val_);
   }
 
-  automaton inverse() const
+  automaton invert() const
   {
-    return vcsn::dyn::inverse(val_);
+    return vcsn::dyn::invert(val_);
   }
 
   bool is_accessible() const
@@ -921,7 +921,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("has_twins_property", &automaton::has_twins_property)
     .def("_infiltration", &automaton::infiltration_).staticmethod("_infiltration")
     .def("insplit", &automaton::insplit)
-    .def("inverse", &automaton::inverse)
+    .def("invert", &automaton::invert)
     .def("is_accessible", &automaton::is_accessible)
     .def("is_ambiguous", &automaton::is_ambiguous)
     .def("is_coaccessible", &automaton::is_coaccessible)

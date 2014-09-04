@@ -38,7 +38,7 @@ namespace vcsn
       ALGO("eliminate-state", "aut-to-exp");
       ALGO("factor", "prefix");
       ALGO("infiltration", "product");
-      ALGO("inverse", "has-twins-property");
+      ALGO("invert", "has-twins-property");
       ALGO("is-accessible", "accessible");
       ALGO("is-cycle-ambiguous", "has-twins-property");
       ALGO("is-coaccessible", "accessible");

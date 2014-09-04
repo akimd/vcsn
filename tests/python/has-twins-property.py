@@ -127,10 +127,10 @@ aut6 = vcsn.automaton('''digraph
   5 -> 2 [label = "<17>d"]
 }''')
 
-def inverse_check(i, o):
-  CHECK_EQ(o, i.inverse())
+def invert_check(i, o):
+  CHECK_EQ(o, i.invert())
 
-inverse_check(aut1, oaut1)
+invert_check(aut1, oaut1)
 
 def has_twins_property_check():
   CHECK_EQ(True, aut1.has_twins_property())
