@@ -52,6 +52,7 @@ namespace vcsn
       ALGO("make-ratexpset", "make-context");
       ALGO("make-word-context", "make-context");
       ALGO("multiply", "concatenate");
+      ALGO("num-sccs", "scc");
       ALGO("pair", "synchronizing-word");
       ALGO("suffix", "prefix");
       ALGO("power", "product");

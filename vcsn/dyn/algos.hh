@@ -450,6 +450,9 @@ namespace vcsn
     /// The right-multiplication of a ratexp with \a w as weight.
     ratexp right_mult(const ratexp& aut, const weight& w);
 
+    /// The number of strongly connected components.
+    int num_sccs(const automaton& aut);
+
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);
 

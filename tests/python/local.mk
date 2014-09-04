@@ -60,6 +60,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/proper.py                                 \
   %D%/ratexp.py                                 \
   %D%/reduce.py                                 \
+  %D%/scc.py                                    \
   %D%/shuffle.py                                \
   %D%/sort.py                                   \
   %D%/split.py                                  \

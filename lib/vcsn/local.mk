@@ -80,6 +80,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/random.cc                           \
   %D%/algos/read.cc                             \
   %D%/algos/registry.hh                         \
+  %D%/algos/scc.cc                              \
   %D%/algos/sort.cc                             \
   %D%/algos/standard.cc                         \
   %D%/algos/star.cc                             \

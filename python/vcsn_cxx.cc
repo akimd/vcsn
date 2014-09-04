@@ -308,6 +308,11 @@ struct automaton
     return vcsn::dyn::minimize(val_, algo);
   }
 
+  int num_sccs() const
+  {
+    return vcsn::dyn::num_sccs(val_);
+  }
+
   automaton pair(bool keep_initials = false) const
   {
     return vcsn::dyn::pair(val_, keep_initials);
@@ -939,6 +944,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("left_mult", &automaton::left_mult)
     .def("lift", &automaton::lift)
     .def("minimize", &automaton::minimize, minimize())
+    .def("num_sccs", &automaton::num_sccs)
     .def("pair", &automaton::pair, pair())
     .def("prefix", &automaton::prefix)
     .def("power", &automaton::power)

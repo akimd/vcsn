@@ -68,6 +68,7 @@ nobase_include_HEADERS =                        \
   %D%/algos/random.hh                           \
   %D%/algos/read.hh                             \
   %D%/algos/reduce.hh                           \
+  %D%/algos/scc.hh                              \
   %D%/algos/sort.hh                             \
   %D%/algos/split.hh                            \
   %D%/algos/standard.hh                         \
