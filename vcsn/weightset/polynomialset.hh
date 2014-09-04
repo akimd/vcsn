@@ -566,7 +566,6 @@ namespace vcsn
                   add_here(res, c, w);
               else
                 {
-
                   // Register the current position in the stream, so that
                   // we reject inputs such as "a++a" in LAW (where the
                   // labelset::conv would accept the empty string between

@@ -25,11 +25,12 @@ namespace vcsn
   bool
   is_standard(const Aut& a)
   {
+    auto inis = a->initial_transitions();
     return
-      a->num_initials() == 1
-      && a->weightset()->is_one(a->weight_of(a->initial_transitions().front()))
+      inis.size() == 1
+      && a->weightset()->is_one(a->weight_of(inis.front()))
       // No arrival on the initial state.
-      && a->in(a->dst_of(a->initial_transitions().front())).empty();
+      && a->in(a->dst_of(inis.front())).empty();
   }
 
   namespace dyn

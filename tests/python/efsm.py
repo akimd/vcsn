@@ -10,22 +10,20 @@ from vcsn.automaton import _automaton_fst, _automaton_fst_files
 # Calling 'fstprint --help' is tempting, but it exits 1.
 have_ofst = which('fstprint') is not None
 
-def check(aut, fefsm, check_read = True):
+def check(aut, fefsm):
   'Check the conversion to and from FSM.'
   # Text in efsm format.
   efsm = open(medir + "/" + fefsm).read().strip()
 
   # Check support for EFSM I/O.
   CHECK_EQ(efsm, aut.format('efsm'))
-  if check_read:
-    CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
+  CHECK_EQ(efsm, vcsn.automaton(efsm, 'efsm').format('efsm'))
 
   # Check that OpenFST accepts and reproduces our EFSM files.
-  if check_read:
-    if have_ofst:
-      CHECK_EQ(aut, _automaton_fst('cat', aut))
-    else:
-      SKIP('OpenFST is missing')
+  if have_ofst:
+    CHECK_EQ(aut, _automaton_fst('cat', aut))
+  else:
+    SKIP('OpenFST is missing')
 
 a = load('lal_char_b/a1.gv')
 check(a, 'a1.efsm')
