@@ -210,7 +210,7 @@ namespace vcsn
 
       label_t one_(std::false_type)
       {
-        raise(me(), ": quotient requires LAN");
+        raise(me(), ": quotient requires a labelset with a neutral");
       }
 
       /// If r is e*, return e.
