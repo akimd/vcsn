@@ -75,7 +75,8 @@ def exp(ws):
   0 -> 0 [label = "<10>a, <5>b"]
 }'''
     else:
-        # Using replace instead of format allows to use update-tests.
+        # Using replace() instead of format() allows to use
+        # bin/update-tests.
         return '''digraph
 {
   vcsn_context = "lal_char(abc)_q"
@@ -100,6 +101,27 @@ for ws in ['z', 'q', 'r']:
     a = ctx.ratexp(r).standard()
     check_reduce(a, exp(ws))
 
+a = vcsn.context('lat<lal_char(abc),lal_char(xyz)>_z') \
+    .ratexp("<2>(<3>'(a,x)'+<5>'(b,y)'+<7>'(a,x)')*<11>") \
+    .standard()
+check_reduce(a, '''digraph
+{
+  vcsn_context = "lat<lal_char(abc),lal_char(xyz)>_z"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F0
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0
+  }
+  I0 -> 0
+  0 -> F0 [label = "<22>"]
+  0 -> 0 [label = "<10>(a,x), <5>(b,y)"]
+}''')
 
 ## ------------------------------- ##
 ## TAF-Kit Sec. 3.3.1, Fig. 3.14.  ##

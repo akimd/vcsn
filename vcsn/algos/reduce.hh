@@ -189,7 +189,7 @@ namespace vcsn
     template <typename Aut>
     class left_reductioner
     {
-      static_assert(context_t_of<Aut>::is_lal,
+      static_assert(labelset_t_of<Aut>::is_free(),
                     "reduce: requires free labelset");
 
       using automaton_t = Aut;
