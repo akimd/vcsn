@@ -186,6 +186,8 @@ namespace vcsn
                 }
               throw jit_error(assertions, "  failed command:\n    " + cmd);
             }
+          else if (!getenv("VCSN_DEBUG"))
+            boost::filesystem::remove(err);
         }
 
         /// Where the runtime compilation files must be put.
