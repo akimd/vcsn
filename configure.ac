@@ -68,6 +68,21 @@ m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody],
     std::set<int> is;
     is.emplace(42);
   }
+
+  // Clang++ 3.5, for a while, was unable to process properly
+  // the for-loop because its variable, r, is a typedef...
+  // It failed as follows:
+  //
+  // error: unexpected ':' in nested name specifier; did you mean '::'?
+  //    for (auto r: std::set<int>{1, 2})
+  //               ^
+  //               ::
+  using r = std::set<int>;
+  void bar()
+  {
+    for (int r: std::set<int>{1, 2})
+      continue;
+  }
 ])])
 
 for f in '-std=c++11' '-std=c++11 -stdlib=libc++'
