@@ -40,26 +40,34 @@ AC_LANG([C++])
 
 m4_define([_AX_CXX_COMPILE_STDCXX_11_testbody],
 [AC_LANG_SOURCE([#include <memory>
+#include <set>
 #include <string>
 
-   template <typename T>
-    struct check
-    {
-      static_assert(sizeof(int) <= sizeof(T), "not big enough");
-    };
+  template <typename T>
+  struct check
+  {
+    static_assert(sizeof(int) <= sizeof(T), "not big enough");
+  };
 
-    typedef check<check<bool>> right_angle_brackets;
+  using right_angle_brackets = check<check<bool>>;
 
-    auto f = std::make_shared<std::string>("shared_ptr");
+  auto f = std::make_shared<std::string>("shared_ptr");
 
-    int a;
-    decltype(a) b;
+  int a;
+  decltype(a) b;
 
-    typedef check<int> check_type;
-    check_type c;
-    check_type&& cr = static_cast<check_type&&>(c);
+  typedef check<int> check_type;
+  check_type c;
+  check_type&& cr = static_cast<check_type&&>(c);
 
-    auto d = a;
+  auto d = a;
+
+  // Some versions of libstdc++ do not support std::set::emplace.
+  void foo()
+  {
+    std::set<int> is;
+    is.emplace(42);
+  }
 ])])
 
 for f in '-std=c++11' '-std=c++11 -stdlib=libc++'
