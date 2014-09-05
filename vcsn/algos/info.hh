@@ -4,6 +4,7 @@
 # include <iostream>
 
 # include <vcsn/algos/accessible.hh>
+# include <vcsn/algos/has-twins-property.hh>
 # include <vcsn/algos/is-ambiguous.hh>
 # include <vcsn/algos/is-complete.hh>
 # include <vcsn/algos/is-deterministic.hh>
@@ -11,6 +12,7 @@
 # include <vcsn/algos/is-normalized.hh>
 # include <vcsn/algos/is-valid.hh>
 # include <vcsn/algos/is-valid-ratexp.hh>
+# include <vcsn/algos/scc.hh>
 # include <vcsn/algos/standard.hh>
 # include <vcsn/algos/synchronizing-word.hh>
 # include <vcsn/core/rat/info.hh>
@@ -148,6 +150,27 @@ namespace vcsn
     {
       return num_eps_transitions_(aut);
     }
+
+    /*---------------------.
+    | is_cycle_ambiguous.  |
+    `---------------------*/
+
+    template <typename Aut>
+    typename std::enable_if<labelset_t_of<Aut>::is_free(),
+                            bool>::type
+    is_cycle_ambiguous(const Aut& a)
+    {
+      return vcsn::is_cycle_ambiguous(a);
+    }
+
+    template <typename Aut>
+    typename std::enable_if<!labelset_t_of<Aut>::is_free(),
+                            std::string>::type
+    is_cycle_ambiguous(const Aut&)
+    {
+      return "N/A";
+    }
+
   }
 
   /*--------------------------.
@@ -171,8 +194,12 @@ namespace vcsn
     ECHO("number of deterministic states",
          detail_info::num_deterministic_states(aut));
     ECHO("number of eps transitions", detail_info::num_eps_transitions(aut));
+    ECHO("number of strongly connected components", num_sccs(aut));
     if (detailed)
-      ECHO("is ambiguous", detail_info::is_ambiguous(aut));
+      {
+        ECHO("is ambiguous", detail_info::is_ambiguous(aut));
+        ECHO("is cycle ambiguous", detail_info::is_cycle_ambiguous(aut));
+      }
     ECHO("is complete", detail_info::is_complete(aut));
     ECHO("is deterministic", detail_info::is_deterministic(aut));
     ECHO("is empty", is_empty(aut));
