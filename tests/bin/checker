@@ -193,7 +193,7 @@ rst_expect ()
   else
     rst_pre "Expected $base for $me"    $base.exp
     rst_pre "Effective $base for $me"   $base.eff
-    rst_pre "Diffs on $base for $me"    $base.diff
+    rst_pre "Diff on $base for $me"     $base.diff
     res=1
   fi
   return $res
