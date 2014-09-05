@@ -451,7 +451,7 @@ namespace vcsn
     ratexp right_mult(const ratexp& aut, const weight& w);
 
     /// The number of strongly connected components.
-    int num_sccs(const automaton& aut);
+    std::size_t num_sccs(const automaton& aut);
 
     /// The at-most \a max first accepted words.
     polynomial shortest(const automaton& aut, unsigned max = 1);

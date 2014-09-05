@@ -308,7 +308,7 @@ struct automaton
     return vcsn::dyn::minimize(val_, algo);
   }
 
-  int num_sccs() const
+  std::size_t num_sccs() const
   {
     return vcsn::dyn::num_sccs(val_);
   }

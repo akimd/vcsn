@@ -8,7 +8,6 @@
 
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/core/mutable-automaton.hh>
 # include <vcsn/algos/transpose.hh>
 # include <vcsn/misc/unordered_map.hh>
 # include <vcsn/misc/unordered_set.hh>
@@ -46,7 +45,7 @@ namespace vcsn
     private:
       void dfs(state_t s, const Aut& aut)
       {
-        int min = curr_vertex_num_++;
+        std::size_t min = curr_vertex_num_++;
         low_.emplace(s, min);
         marked_.emplace(s);
         stack_.push(s);
@@ -81,15 +80,15 @@ namespace vcsn
       }
 
       /// The current component number.
-      int curr_comp_num_ = 0;
+      std::size_t curr_comp_num_ = 0;
       /// The current visited vertex
-      int curr_vertex_num_ = 0;
+      std::size_t curr_vertex_num_ = 0;
       /// All compnents
       components_t components_;
       /// List visited vertices
       std::unordered_set<state_t> marked_;
       /// low_[s] is minimum of vertex that it can go
-      std::unordered_map<state_t, int> low_;
+      std::unordered_map<state_t, std::size_t> low_;
       /// Contains list vertices same the component
       std::stack<state_t> stack_;
     };
@@ -102,7 +101,7 @@ namespace vcsn
 
   namespace detail
   {
-    /// Get all vertexs in reverse postorder
+    /// Get all vertices in reverse postorder
     /// by using depth first search.
     template <typename Aut>
     class reverse_postorder_impl
@@ -205,7 +204,7 @@ namespace vcsn
       }
 
       /// The current component number.
-      int num_ = 0;
+      std::size_t num_ = 0;
       components_t components_;
       std::unordered_set<state_t> marked_;
     };
@@ -239,7 +238,7 @@ namespace vcsn
 
   /// Get number of strongly connected components.
   template <typename Aut>
-  int num_sccs(const Aut& aut)
+  std::size_t num_sccs(const Aut& aut)
   {
     return scc(aut).size();
   }
@@ -250,14 +249,14 @@ namespace vcsn
     {
       // Bridge.
       template <typename Aut>
-      int num_sccs(const automaton& aut)
+      std::size_t num_sccs(const automaton& aut)
       {
         const auto& a = aut->as<Aut>();
         return ::vcsn::num_sccs(a);
       }
 
       REGISTER_DECLARE(num_sccs,
-                       (const automaton&) -> int);
+                       (const automaton&) -> std::size_t);
     }
   }
 

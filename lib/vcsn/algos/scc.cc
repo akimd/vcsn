@@ -14,7 +14,7 @@ namespace vcsn
 
     REGISTER_DEFINE(num_sccs);
 
-    int
+    std::size_t
     num_sccs(const automaton& aut)
     {
       return detail::num_sccs_registry().call(aut);
