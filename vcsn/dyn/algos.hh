@@ -224,7 +224,7 @@ namespace vcsn
     /// \pre aut is lal or lan
     automaton insplit(const automaton& aut);
 
-    /// Relace each transtion's weight non zero bye its inverse.
+    /// Same automaton, but with the inverse of each weight.
     automaton invert(const automaton& aut);
 
     /// Whether \a aut is accessible.

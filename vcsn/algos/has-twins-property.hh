@@ -6,14 +6,13 @@
 # include <unordered_map>
 # include <vector>
 
-# include <vcsn/algos/accessible.hh>
-# include <vcsn/algos/scc.hh>
-# include <vcsn/algos/is-ambiguous.hh>
+# include <vcsn/algos/accessible.hh> // vcsn::trim
 # include <vcsn/algos/product.hh>
+# include <vcsn/algos/scc.hh>
 # include <vcsn/dyn/automaton.hh>
 # include <vcsn/dyn/fwd.hh>
-# include <vcsn/misc/unordered_set.hh>
-# include <vcsn/misc/unordered_map.hh>
+# include <vcsn/misc/unordered_set.hh> // vcsn::has
+# include <vcsn/misc/unordered_map.hh> // vcsn::has
 
 namespace vcsn
 {
@@ -22,7 +21,7 @@ namespace vcsn
   |  invert  |
   `---------*/
 
-  /// Invert the weight each transition non zero of \a aut.
+  /// Invert the weight of each transition of \a aut.
   template <typename Aut>
   Aut&
   invert_here(Aut& aut)
@@ -31,8 +30,7 @@ namespace vcsn
     for (auto t : aut->all_transitions())
       {
         auto w = aut->weight_of(t);
-        if (!ws.is_zero(w))
-          aut->set_weight(t, ws.rdiv(ws.one(), w));
+        aut->set_weight(t, ws.rdiv(ws.one(), w));
       }
     return aut;
   }
@@ -212,7 +210,8 @@ namespace vcsn
                         todo.push(dst);
                         wm.emplace(dst, ws.mul(wm[s], aut->weight_of(t)));
                       }
-                    else if (!ws.equals(wm[dst], ws.mul(wm[s], aut->weight_of(t))))
+                    else if (!ws.equals(wm[dst],
+                                        ws.mul(wm[s], aut->weight_of(t))))
                       return false;
                   }
               }
