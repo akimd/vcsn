@@ -52,6 +52,18 @@ namespace vcsn
           return i->second;
       }
 
+      /// A message about a failed signature compilation.
+      std::string signatures(const signature& sig) const
+      {
+        std::string res;
+        res += "  failed signature:\n";
+        res += "    " + sig.to_string() + "\n";
+        res += "  available versions:\n";
+        for (auto p: map_)
+          res += "    " + p.first.to_string() + "\n";
+        return res;
+      }
+
       /// Get function for signature \a sig.
       const Fun& get(const signature& sig)
       {
@@ -66,22 +78,18 @@ namespace vcsn
                 vcsn::dyn::compile(name_, sig);
                 auto fun = get0(sig);
                 require(fun,
-                        "compilation succeeded, but function is unavailable");
+                        name_,
+                        ": compilation succeeded, but function is unavailable\n",
+                        signatures(sig));
                 return *fun;
               }
             catch (const jit_error& e)
               {
-                std::string err
-                  = e.assertions.empty()
-                  ? name_ + ": no such implementation\n"
-                  : e.assertions;
-                err += "  failed signature:\n";
-                  err += "    " + sig.to_string() + "\n";
-                err += "  available versions:\n";
-                for (auto p: map_)
-                  err += "    " + p.first.to_string() + "\n";
-                err += e.what();
-                raise(err);
+                raise(e.assertions.empty()
+                      ? name_ + ": no such implementation\n"
+                      : e.assertions,
+                      signatures(sig),
+                      e.what());
               }
           }
       }
