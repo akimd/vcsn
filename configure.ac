@@ -174,6 +174,8 @@ if test "$vcsn_cv_cxx_is_clang" = no; then
       [VISIBILITY_CXXFLAGS="$VISIBILITY_CXXFLAGS -fvisibility-inlines-hidden"])])
 fi
 
+VCSN_LDFLAGS_AS_NEEDED
+
 # Check for Python, for the VCSN Python interface.
 AM_PATH_PYTHON
 
