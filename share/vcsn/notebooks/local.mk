@@ -26,8 +26,10 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.coaccessible.ipynb'              \
   '%D%/algos/automaton.complete.ipynb'                  \
   '%D%/algos/automaton.determinize.ipynb'               \
+  '%D%/algos/automaton.has_twins_property.ipynb'        \
   '%D%/algos/automaton.is_ambiguous.ipynb'              \
   '%D%/algos/automaton.is_complete.ipynb'               \
+  '%D%/algos/automaton.is_cycle_ambiguous.ipynb'        \
   '%D%/algos/automaton.is_deterministic.ipynb'          \
   '%D%/algos/automaton.is_functional.ipynb'             \
   '%D%/algos/automaton.is_standard.ipynb'               \
