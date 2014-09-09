@@ -109,13 +109,14 @@ namespace vcsn
     private:
       std::ostream& print_(const set_t& ss, std::ostream& o) const
       {
-        const char* sep = "{";
+        o << '{';
+        const char* sep = "";
         for (auto s : ss)
           {
             o << sep << s;
             sep = ", ";
           }
-        return o << "}";
+        return o << '}';
       }
       std::ostream& print_(const class_to_set_t& c2ss, std::ostream& o) const
       {

@@ -54,7 +54,8 @@ namespace vcsn
     public:
       static std::ostream& print_(const set_t& ss, std::ostream& o)
       {
-        const char* sep = "{";
+        o << '{';
+        const char* sep = "";
         for (auto s : ss)
           {
             o << sep << s;
@@ -87,8 +88,8 @@ namespace vcsn
         std::ostream&
         operator<<(std::ostream& o, const state_output_for_label_t& out)
         {
-          o << "out{" << out.label;
-          const char* sep = " => ";
+          o << "out{" << out.label << " => ";
+          const char* sep = "";
           for (auto s: out.to_states)
             {
               o << sep << s;
@@ -273,13 +274,14 @@ namespace vcsn
           for (const auto& o_s : mm)
             {
               print_(*o_s.first, o);
-              const char* sep = " : {";
+              o << " : {";
+              const char* sep = "";
               for (auto s: o_s.second)
                 {
                   o << sep << s << '%' << mm.state_to_class_.at(s);
                   sep = ", ";
                 }
-              o << "}" << iendl;
+              o << '}' << iendl;
             }
           o << '}' << decendl;
           return o;

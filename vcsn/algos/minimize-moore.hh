@@ -57,7 +57,8 @@ namespace vcsn
 
       std::ostream& print_(const set_t& ss, std::ostream& o) const
       {
-        const char* sep = "{";
+        o << '{';
+        const char* sep = "";
         for (auto s : ss)
           {
             o << sep << s;
