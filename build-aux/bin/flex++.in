@@ -58,18 +58,11 @@ else
   rm -f $output_log
 fi
 
-# Tweak Flex's output.
-#
-# - Paste the pragma bits which will save us from stupid warnings.
-#
-# - Use "output.hh" as header.
-#
-# - Use "output" in synclines, not output.tmp.
-#
-# - Disable the declarations of yyalloc, yyrealloc and yyfree
-#   declarations, which are not in YY_FLEX_NAMESPACE, while the
-#   implementations are.
+# Address a number of shortcomings, and portability issues.  See
+# comments below.
 perl -pi -e '
+  # Paste the pragma bits which will save us from stupid warnings.
+  #
   # Cannot use a print in a BEGIN here, stdout is not set up.
   if ($. == 1)
   {
@@ -91,10 +84,22 @@ perl -pi -e '
 EOF
   }
 
+  # Use "output.hh" as header.
   s{<FlexLexer\.h>}{<'"$output_header"'>}g;
+
+  # Use "output" in synclines, not output.tmp.
   s{\Q'"$output"'.tmp\E}{'"$output"'}g;
+
+  # Disable the declarations of yyalloc, yyrealloc and yyfree
+  # declarations, which are not in YY_FLEX_NAMESPACE, while the
+  # implementations are.
   s{(^void \*yy(re)?alloc.*;)}{// $1}g;
   s{(^void yyfree.*;)}{// $1}g;
+
+  # Work around Apple Flex not using the same interface as stock Flex
+  # regarding yyFlexLexer::LexerInput and yyFlexLexer::LexerOutput.
+  s{size_t(.*)LexerInput\((.*)size_t}{int$1LexerInput($2int};
+  s{void(.*)LexerOutput\((.*)size_t}{void$1LexerOutput($2int};
 ' "$output.tmp"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"

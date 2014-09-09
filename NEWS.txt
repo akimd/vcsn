@@ -5,6 +5,15 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-09
+### Build fixes
+Portability issues with Mac OS X's own version of Flex are fixed.
+
+Fixed runtime compilations failing to find Boost headers in some cases.
+
+Fixed nasty shared-library issues at runtime on Ubuntu due to their
+use of -Wl,--as-needed.
+
 ## 2014-09-04
 ### Fixes
 I/O with OpenFST now properly supports initial weights and multiple
