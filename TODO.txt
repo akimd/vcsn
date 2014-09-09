@@ -129,11 +129,6 @@ It does not work for weighted ratexps.
 ** products: lazyness
 We need a lazy implementation of product.
 
-** open contexts
-We should accept "lal_char_b" etc. as valid context names, which means that
-they are open.  Would be useful for %automaton for instance.  edit-automaton
-would close the context when it returns the result.
-
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say

@@ -40,9 +40,9 @@ namespace vcsn
 
     static set_alphabet make(std::istream& is)
     {
-      // name: char(abc)_ratexpset<law_char(xyz)_b>.
-      //       ^^^^ ^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
-      //        |    |        weightset
+      // name: char(abc)
+      //       ^^^^ ^^^
+      //        |    |
       //        |    +-- gens
       //        +-- letter_type
       std::string letter_type;
@@ -50,20 +50,26 @@ namespace vcsn
         char c;
         while (is >> c)
           {
-            if (c == '(')
+            if (c == '(' || c == '_')
               {
                 is.unget();
                 break;
               }
             letter_type.append(1, c);
           }
+        require(letter_type == "char");
       }
-      // The list of generators (letters).
-      letters_t gens;
-      // Previously read character.
-      int prev = -1;
+
+      // The result.
+      set_alphabet res;
+
+      // This labelset might be open: no initial letter is given, they
+      // will be discovered afterwards.
+      if (is.peek() == '(')
       {
         eat(is, '(');
+        // Previously read character.
+        int prev = -1;
         char l;
         while (is >> l && l != ')')
           switch (l)
@@ -83,7 +89,7 @@ namespace vcsn
                               "unexpected end after escape in character class");
                     }
                   for (l = prev; l <= l2; ++l)
-                    gens.insert(l);
+                    res.add_letter(l);
                   prev = -1;
                   continue;
                 }
@@ -99,11 +105,13 @@ namespace vcsn
 
             default:
             insert:
-              gens.insert(l);
+              res.add_letter(l);
               prev = l;
           }
       }
-      return gens;
+      else
+        res.open_ = true;
+      return res;
     }
 
     set_alphabet() = default;
@@ -213,7 +221,8 @@ namespace vcsn
     {
       if (format == "latex")
         {
-          const char *sep = "\\{";
+          o << "\\{";
+          const char *sep = "";
           for (auto c: *this)
             {
               o << sep << c;

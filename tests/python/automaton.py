@@ -65,14 +65,6 @@ xfail(r'''digraph
 }
 ''')
 
-# Invalid context: missing parens.
-xfail(r'''digraph
-{
-  vcsn_context = "lal_char_b"
-  I0 -> 0 -> F0
-}
-''')
-
 # Invalid label: letter not in alphabet.
 xfail(r'''digraph
 {
@@ -152,6 +144,18 @@ xfail(r'''digraph
   I0 -> 0
 }
 ''')
+
+# An open context (letters are not specified).
+CHECK_EQ(vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char(abcd)_b"
+  0 -> 0 [label="a, b, c, d"]
+}'''),
+vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lal_char_b"
+  0 -> 0 [label="a, b, c, d"]
+}'''))
 
 # Coverage: different rarely used features.
 CHECK_EQ(vcsn.automaton(r'''digraph
