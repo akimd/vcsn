@@ -206,20 +206,20 @@ AC_SUBST([LIBDIR],     [`URBI_RESOLVE_DIR([$pkglibdir])`])
 AC_SUBST([PYEXECDIR],  [`URBI_RESOLVE_DIR([$pyexecdir])`])
 
 # We compile C++ at runtime.
-AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR"],
+AC_DEFINE_UNQUOTED([CPPFLAGS], ["$CPPFLAGS -I$INCLUDEDIR $BOOST_CPPFLAGS"],
                    [Define to the preprocessor flags.])
 AC_DEFINE_UNQUOTED([CXX], ["$CXX"],
                    [Define to the C++ compiler.])
 AC_DEFINE_UNQUOTED([CXXFLAGS], ["$CXXFLAGS"],
                    [Define to the C++ compiler flags.])
 AC_DEFINE_UNQUOTED([DATADIR], ["$DATADIR"],
-                   [Define to the location of data files.])
+                   [Define to the location of the data files.])
 AC_DEFINE_UNQUOTED([INCLUDEDIR], ["INCLUDEDIR"],
-                   [Define to the location of header files.])
+                   [Define to the location of the headers.])
 AC_DEFINE_UNQUOTED([LDFLAGS], ["$LDFLAGS -L$LIBDIR"],
                    [Define to the linker flags.])
 AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"],
-                   [Define to the location of libs files.])
+                   [Define to the location of the libraries.])
 
 ## -------------------- ##
 ## Auxiliary programs.  ##
