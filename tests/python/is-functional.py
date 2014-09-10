@@ -34,6 +34,30 @@ a = vcsn.automaton('''digraph {
 }''')
 CHECK_EQ(False, a.is_functional())
 
+a = vcsn.automaton('''digraph {
+  vcsn_context = "lat<lal_char(abc),lal_char(xyz)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  1 -> 2 [label = "(b, y)"]
+  2 -> F
+  0 -> 3 [label = "(a, y)"]
+  3 -> 4 [label = "(b, y)"]
+  4 -> F
+}''')
+CHECK_EQ(False, a.is_functional())
+
+a = vcsn.automaton('''digraph {
+  vcsn_context = "lat<lal_char(abc),lal_char(xyz)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(a, x)"]
+  1 -> 2 [label = "(b, y)"]
+  2 -> F
+  0 -> 3 [label = "(a, x)"]
+  3 -> 4 [label = "(b, y)"]
+  4 -> F
+}''')
+CHECK_EQ(True, a.is_functional())
+
 a = vcsn.automaton(r'''digraph {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>_b"
   I0 -> 0

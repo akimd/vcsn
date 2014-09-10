@@ -46,12 +46,16 @@ namespace vcsn
     todo.push(pre);
     marked.emplace(pre);
     ios.emplace(pre, ls.one());
+    // When reaching the final state, there must be no residue.
+    // Instead of checking this case especially, just make sure
+    // that when we reach post, we only collected (\e, \e).
+    ios.emplace(aut->post(), ls.one());
 
     while (!todo.empty())
       {
         auto s = todo.front();
         todo.pop();
-        for (auto t : aut->out(s))
+        for (auto t : aut->all_out(s))
           {
             auto l = aut->label_of(t);
             auto dst = aut->dst_of(t);
@@ -59,14 +63,11 @@ namespace vcsn
               {
                 auto p = ios[s];
                 p = ls.concat(p, l);
-                auto c = ls1.lgcd(std::get<0>(p), std::get<1>(p));
-                std::get<0>(p) = ls1.ldiv(c, std::get<0>(p));
-                std::get<1>(p) = ls1.ldiv(c, std::get<1>(p));
+                // Eliminate longest common prefix.
+                ls.lnormalize_here(p);
                 if (!has(ios, dst))
                   ios.emplace(dst, p);
                 else if (!ls.equals(p, ios[dst]))
-                  return false;
-                if (aut->is_final(dst) && !ls.is_one(ios[dst]))
                   return false;
               }
             if (!has(marked, dst))

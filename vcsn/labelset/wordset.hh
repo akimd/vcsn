@@ -242,6 +242,13 @@ namespace vcsn
               ", ", str_escape(w2));
       return w2.substr(size(w1));
     }
+
+    /// w2 := w1 \ w2.
+    static value_t& ldiv_here(const value_t& w1, value_t& w2)
+    {
+      w2 = ldiv(w1, w2);
+      return w2;
+    }
   };
 
   namespace detail

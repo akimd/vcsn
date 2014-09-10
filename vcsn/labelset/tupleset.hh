@@ -312,6 +312,13 @@ namespace vcsn
       return ldiv_(l, r, indices);
     }
 
+    /// This tupleset must be homegeneous.
+    typename valueset_t<0>::value_t
+    lnormalize_here(value_t& v) const
+    {
+      return lnormalize_here_(v, indices);
+    }
+
     value_t
     star(const value_t& l) const
     {
@@ -650,6 +657,18 @@ namespace vcsn
     ldiv_(const value_t& l, const value_t& r, seq<I...>) const
     {
       return value_t{set<I>().ldiv(std::get<I>(l), std::get<I>(r))...};
+    }
+
+    template <std::size_t... I>
+    typename valueset_t<0>::value_t
+    lnormalize_here_(value_t& vs, seq<I...>) const
+    {
+      typename valueset_t<0>::value_t res = std::get<0>(vs);
+      for (auto v: {std::get<I>(vs)...})
+        res = set<0>().lgcd(res, v);
+      using swallow = int[];
+      (void) swallow { (set<0>().ldiv_here(res, std::get<I>(vs)), 0)... };
+      return res;
     }
 
     template <std::size_t... I>
