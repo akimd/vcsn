@@ -40,19 +40,29 @@ namespace vcsn
     word_t
     concat(const letter_t l, const letter_t r) const
     {
-      return {l, r};
+      if (l == one_letter())
+        {
+          if (r == one_letter())
+            return {};
+          else
+            return {l};
+        }
+      else if (r == one_letter())
+        return {l};
+      else
+        return {l, r};
     }
 
     word_t
     concat(const word_t& l, const letter_t r) const
     {
-      return l + r;
+      return r == one_letter() ? l : l + r;
     }
 
     word_t
     concat(const letter_t l, const word_t& r) const
     {
-      return l + r;
+      return l == one_letter() ? r : l + r;
     }
 
     word_t
