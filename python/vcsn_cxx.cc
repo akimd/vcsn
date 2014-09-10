@@ -249,6 +249,11 @@ struct automaton
     return vcsn::dyn::are_equivalent(val_, rhs.val_);
   }
 
+  bool is_functional() const
+  {
+    return vcsn::dyn::is_functional(val_);
+  }
+
   bool is_isomorphic(const automaton& rhs) const
   {
     return vcsn::dyn::are_isomorphic(val_, rhs.val_);
@@ -931,6 +936,7 @@ BOOST_PYTHON_MODULE(vcsn_cxx)
     .def("is_empty", &automaton::is_empty)
     .def("is_eps_acyclic", &automaton::is_eps_acyclic)
     .def("is_equivalent", &automaton::is_equivalent)
+    .def("is_functional", &automaton::is_functional)
     .def("is_isomorphic", &automaton::is_isomorphic)
     .def("is_normalized", &automaton::is_normalized)
     .def("is_proper", &automaton::is_proper)

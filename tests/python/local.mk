@@ -45,6 +45,7 @@ PY_LOG_DRIVER = $(TAP_DRIVER)
   %D%/is-complete.py                            \
   %D%/is-deterministic.py                       \
   %D%/is-equivalent.py                          \
+  %D%/is-functional.py                          \
   %D%/is-isomorphic.py                          \
   %D%/is-normalized.py                          \
   %D%/is-proper.py                              \

@@ -254,6 +254,10 @@ namespace vcsn
     /// Whether has no cycle of spontaneous transitions.
     bool is_eps_acyclic(const automaton& aut);
 
+    /// Whether \a aut is functional.
+    /// \pre \a aut is a transducer.
+    bool is_functional(const automaton& aut);
+
     /// Whether is normalized (in the Thompson sense).
     bool is_normalized(const automaton& aut);
 

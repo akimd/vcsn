@@ -65,6 +65,7 @@ lib_libvcsn_la_SOURCES =                        \
   %D%/algos/is-complete.cc                      \
   %D%/algos/is-deterministic.cc                 \
   %D%/algos/is-eps-acyclic.cc                   \
+  %D%/algos/is-functional.cc                    \
   %D%/algos/is-normalized.cc                    \
   %D%/algos/is-proper.cc                        \
   %D%/algos/is-valid.cc                         \
