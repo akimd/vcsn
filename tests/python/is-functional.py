@@ -3,6 +3,10 @@
 import vcsn
 from test import *
 
+## ----------- ##
+## LAL x LAL.  ##
+## ----------- ##
+
 a = vcsn.automaton('''digraph {
   vcsn_context = "lat<lal_char(abc), lal_char(xyz)>_z"
   I0 -> 0
@@ -58,6 +62,18 @@ a = vcsn.automaton('''digraph {
 }''')
 CHECK_EQ(True, a.is_functional())
 
+a = vcsn.automaton('''digraph {
+  vcsn_context = "lat<lal_char(ab), lal_char(xy)>_z"
+  I0 -> 0
+  0 -> 1 [label = "<2>(a, x), <3>(b, y)"]
+  1 -> F1
+}''')
+CHECK_EQ(True, a.is_functional())
+
+## ----- ##
+## LAN.  ##
+## ----- ##
+
 a = vcsn.automaton(r'''digraph {
   vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(xyz)>>_b"
   I0 -> 0
@@ -81,10 +97,31 @@ a = vcsn.automaton(r'''digraph {
 }''')
 CHECK_EQ(False, a.is_functional())
 
-a = vcsn.automaton('''digraph {
-  vcsn_context = "lat<lal_char(ab), lal_char(xy)>_z"
+## ----- ##
+## LAW.  ##
+## ----- ##
+
+a = vcsn.automaton(r'''digraph {
+  vcsn_context = "lat<law_char(abc),law_char(xyz)>_b"
   I0 -> 0
-  0 -> 1 [label = "<2>(a, x), <3>(b, y)"]
-  1 -> F1
+  0 -> 1 [label = "(aaa, x)"]
+  1 -> 2 [label = "(a, x)"]
+  2 -> F
+  0 -> 1 [label = "(aa, \\e)"]
+  2 -> 3 [label = "(aa, xxx)"]
+  3 -> F
 }''')
 CHECK_EQ(True, a.is_functional())
+
+a = vcsn.automaton(r'''digraph {
+  vcsn_context = "lat<law_char(abc),law_char(xyz)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(aaa, xx)"]
+  1 -> 2 [label = "(a, x)"]
+  2 -> F
+  0 -> 1 [label = "(aa, x)"]
+  2 -> 3 [label = "(aa, xx)"]
+  3 -> F
+}''')
+CHECK_EQ(True, a.is_functional())
+
