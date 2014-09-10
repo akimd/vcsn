@@ -4,6 +4,8 @@
 # include <memory>
 # include <set>
 
+# include <boost/algorithm/string/predicate.hpp> // starts_with
+
 # include <vcsn/core/kind.hh>
 # include <vcsn/labelset/fwd.hh>
 # include <vcsn/labelset/genset-labelset.hh>
@@ -223,6 +225,22 @@ namespace vcsn
       else
         raise("invalid format: ", format);
       return o;
+    }
+
+    /// The longest common prefix.
+    static value_t lgcd(const value_t& w1, const value_t& w2)
+    {
+      return {w1.begin(), std::mismatch(w1.begin(), w1.end(), w2.begin()).first};
+    }
+
+    /// Compute w1 \ w2 = w1^{-1}w2.
+    /// Precondition: w1 is prefix of w2.
+    static value_t ldiv(const value_t& w1, const value_t& w2)
+    {
+      using boost::algorithm::starts_with;
+      require(starts_with(w2, w1), "ldiv: invalid arguments: ", str_escape(w1),
+              ", ", str_escape(w2));
+      return w2.substr(size(w1));
     }
   };
 
