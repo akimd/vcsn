@@ -19,5 +19,12 @@ namespace vcsn
     {
       return detail::is_ambiguous_registry().call(aut);
     }
+
+    REGISTER_DEFINE(is_cycle_ambiguous);
+    bool
+    is_cycle_ambiguous(const automaton& aut)
+    {
+      return detail::is_cycle_ambiguous_registry().call(aut);
+    }
   }
 }

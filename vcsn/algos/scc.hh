@@ -236,6 +236,36 @@ namespace vcsn
       }
   }
 
+  /// Generate a subautomaton corresponding to an SCC.
+  template <typename Aut>
+  typename Aut::element_type::automaton_nocv_t
+  aut_of_component(const std::unordered_set<state_t_of<Aut>>& com,
+                   const Aut& aut)
+  {
+    using res_t = typename Aut::element_type::automaton_nocv_t;
+    res_t res = make_shared_ptr<res_t>(aut->context());
+    std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
+    auto s0 = *com.begin();
+    map[s0] = res->new_state();
+    res->set_initial(map[s0]);
+    for (auto s : com)
+      {
+        if (!has(map, s))
+          map[s] = res->new_state();
+        for (auto t : aut->out(s))
+          {
+            auto dst = aut->dst_of(t);
+            if (!has(com, dst))
+              continue;
+            if (!has(map, dst))
+              map[dst] = res->new_state();
+            res->new_transition(map[s], map[dst], aut->label_of(t));
+          }
+      }
+    return res;
+  }
+
+
   /// Get number of strongly connected components.
   template <typename Aut>
   std::size_t num_sccs(const Aut& aut)

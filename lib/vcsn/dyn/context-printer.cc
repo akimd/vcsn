@@ -40,7 +40,7 @@ namespace vcsn
       ALGO("infiltration", "product");
       ALGO("invert", "has-twins-property");
       ALGO("is-accessible", "accessible");
-      ALGO("is-cycle-ambiguous", "has-twins-property");
+      ALGO("is-cycle-ambiguous", "is-ambiguous");
       ALGO("is-coaccessible", "accessible");
       ALGO("is-empty", "accessible");
       ALGO("is-out-sorted", "sort");

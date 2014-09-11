@@ -7,6 +7,7 @@
 # include <vector>
 
 # include <vcsn/algos/accessible.hh> // vcsn::trim
+# include <vcsn/algos/is-ambiguous.hh> // is_cycle_ambiguous
 # include <vcsn/algos/product.hh>
 # include <vcsn/algos/scc.hh>
 # include <vcsn/dyn/automaton.hh>
@@ -18,7 +19,7 @@ namespace vcsn
 {
 
   /*---------.
-  |  invert  |
+  | invert.  |
   `---------*/
 
   /// Invert the weight of each transition of \a aut.
@@ -62,111 +63,6 @@ namespace vcsn
     }
   }
 
-  /*------------------.
-  | cycle_ambiguous.  |
-  `------------------*/
-
-  template <typename Aut>
-  typename Aut::element_type::automaton_nocv_t
-  aut_of_component(const std::unordered_set<state_t_of<Aut>>& com,
-                   const Aut& aut)
-  {
-    using res_t = typename Aut::element_type::automaton_nocv_t;
-    res_t res = make_shared_ptr<res_t>(aut->context());
-    std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
-    auto s0 = *com.begin();
-    map[s0] = res->new_state();
-    res->set_initial(map[s0]);
-    for (auto s : com)
-      {
-        if (!has(map, s))
-          map[s] = res->new_state();
-        for (auto t : aut->out(s))
-          {
-            auto dst = aut->dst_of(t);
-            if (!has(com, dst))
-              continue;
-            if (!has(map, dst))
-              map[dst] = res->new_state();
-            res->new_transition(map[s], map[dst], aut->label_of(t));
-          }
-      }
-    return res;
-  }
-
-  /// Whether \a aut is cycle-nambiguous.
-  template <typename Aut>
-  bool is_cycle_ambiguous(const Aut& aut)
-  {
-    // Find all strongly connected components.
-    const auto& coms = scc(aut);
-    if (getenv("VCSN_DEBUG"))
-      {
-        std::cerr << "number states of automaton: " <<
-          aut->num_states() << std::endl;
-        std::cerr << "number components: " <<
-          coms.size() << std::endl;
-      }
-
-    // Check each component if it is cycle-ambiguous.
-    if (coms.size() == 1)
-      return is_cycle_ambiguous_scc(aut);
-    for (const auto &c : coms)
-      {
-        const auto& a = aut_of_component(c, aut);
-        if (is_cycle_ambiguous_scc(a))
-          return true;
-      }
-    return false;
-  }
-
-  /// Whether \a aut is cycle-ambiguous.
-  /// Precondition: aut is a strongly connected component.
-  template <typename Aut>
-  bool is_cycle_ambiguous_scc(const Aut& aut)
-  {
-    auto prod = product(aut, aut);
-    auto coms = scc(prod);
-    auto origins = prod->origins();
-    bool cond_equal, cond_not_equal;
-    // In one SCC of prod, if there exist two states (s0, s0) and (s1,
-    // s2) with s1 != s2 then aut has two cycles with the same label:
-    // s0->s1->s0 and s0->s2->s0.
-    for (auto c : coms)
-      {
-        cond_equal = cond_not_equal = false;
-        for (auto s : c)
-          {
-            auto p = origins[s];
-            if (std::get<0>(p) != std::get<1>(p))
-              cond_equal = true;
-            else
-              cond_not_equal = true;
-            if (cond_equal && cond_not_equal)
-              return true;
-          }
-      }
-    return false;
-  }
-
-  namespace dyn
-  {
-    namespace detail
-    {
-      // Bridge.
-      template <typename Aut>
-      bool
-      is_cycle_ambiguous(const automaton& aut)
-      {
-        const auto& a = aut->as<Aut>();
-        return ::vcsn::is_cycle_ambiguous(a);
-      }
-
-      REGISTER_DECLARE(is_cycle_ambiguous,
-                       (const automaton&) -> bool);
-    }
-  }
-
 
   /*-----------------.
   | cycle_identity.  |
@@ -185,10 +81,8 @@ namespace vcsn
       using state_t = state_t_of<Aut>;
       using component_t = std::unordered_set<state_t> ;
 
-      cycle_identity_impl() {}
-
-      // Calcule the weight with depth first search by weight
-      // and compare the weight of two state is unique.
+      /// Compute the weight with depth first search by weight and
+      /// compare the weight of two state is unique.
       bool check(const component_t& component, const Aut& aut)
       {
         std::unordered_map<state_t, weight_t> wm;
