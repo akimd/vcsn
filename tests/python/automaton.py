@@ -157,6 +157,18 @@ vcsn.automaton(r'''digraph
   0 -> 0 [label="a, b, c, d"]
 }'''))
 
+# An open tuple context.
+CHECK_EQ(vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lat<lal_char,law_char>_b"
+  0 -> 0 [label="(a,x),(b,xyz),(c,\\e)"]
+}'''),
+vcsn.automaton(r'''digraph
+{
+  vcsn_context = "lat<lal_char(abc),law_char(xyz)>_b"
+  0 -> 0 [label="(a,x),(b,xyz),(c,\\e)"]
+}'''))
+
 # Coverage: different rarely used features.
 CHECK_EQ(vcsn.automaton(r'''digraph
 {

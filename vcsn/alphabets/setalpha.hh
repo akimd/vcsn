@@ -44,21 +44,8 @@ namespace vcsn
       //       ^^^^ ^^^
       //        |    |
       //        |    +-- gens
-      //        +-- letter_type
-      std::string letter_type;
-      {
-        char c;
-        while (is >> c)
-          {
-            if (c == '(' || c == '_')
-              {
-                is.unget();
-                break;
-              }
-            letter_type.append(1, c);
-          }
-        require(letter_type == "char");
-      }
+      //        +-- letter_type, currently only "char".
+      eat(is, "char");
 
       // The result.
       set_alphabet res;
