@@ -67,12 +67,13 @@ namespace vcsn
   `------------------*/
 
   template <typename Aut>
-  Aut
+  typename Aut::element_type::automaton_nocv_t
   aut_of_component(const std::unordered_set<state_t_of<Aut>>& com,
                    const Aut& aut)
   {
-    auto res = make_shared_ptr<Aut>(aut->context());
-    std::unordered_map<state_t_of<Aut>, state_t_of<Aut>> map;
+    using res_t = typename Aut::element_type::automaton_nocv_t;
+    res_t res = make_shared_ptr<res_t>(aut->context());
+    std::unordered_map<state_t_of<Aut>, state_t_of<res_t>> map;
     auto s0 = *com.begin();
     map[s0] = res->new_state();
     res->set_initial(map[s0]);
