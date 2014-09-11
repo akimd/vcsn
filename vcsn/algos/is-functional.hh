@@ -10,7 +10,6 @@
 # include <vcsn/dyn/fwd.hh>
 # include <vcsn/labelset/tupleset.hh>
 # include <vcsn/misc/unordered_map.hh>
-# include <vcsn/misc/unordered_set.hh>
 
 namespace vcsn
 {
@@ -29,27 +28,25 @@ namespace vcsn
     using state_t = state_t_of<Aut>;
     using labelset_t = labelset_t_of<Aut>;
 
-    /// Words of the two-tape automaton: pairs of words.
+    /// Words of the k-tape automaton: k-tuples of words.
     using wordset_t = detail::law_t<labelset_t>;
     using word_t = typename wordset_t::value_t;
     wordset_t ls = make_wordset(*aut->labelset());
     /// Common labelset for both tapes.
     auto ls1 = ls.template set<0>();
-
-    // Input/Output path of a state.
-    std::unordered_map<state_t, word_t> ios;
+    /// Residue of input and output path of states by eliminate
+    /// longest common prefix.
+    std::unordered_map<state_t, word_t> rs;
 
     auto coaccessibles = coaccessible_states(aut);
-    std::unordered_set<state_t> marked;
     std::queue<state_t> todo;
     auto pre = aut->pre();
     todo.push(pre);
-    marked.emplace(pre);
-    ios.emplace(pre, ls.one());
+    rs.emplace(pre, ls.one());
     // When reaching the final state, there must be no residue.
     // Instead of checking this case especially, just make sure
     // that when we reach post, we only collected (\e, \e).
-    ios.emplace(aut->post(), ls.one());
+    rs.emplace(aut->post(), ls.one());
 
     while (!todo.empty())
       {
@@ -61,19 +58,17 @@ namespace vcsn
             auto dst = aut->dst_of(t);
             if (has(coaccessibles, dst))
               {
-                auto p = ios[s];
+                auto p = rs[s];
                 p = ls.concat(p, l);
                 // Eliminate longest common prefix.
                 ls.lnormalize_here(p);
-                if (!has(ios, dst))
-                  ios.emplace(dst, p);
-                else if (!ls.equals(p, ios[dst]))
+                if (!has(rs, dst))
+                  {
+                    rs.emplace(dst, p);
+                    todo.emplace(dst);
+                  }
+                else if (!ls.equals(p, rs[dst]))
                   return false;
-              }
-            if (!has(marked, dst))
-              {
-                marked.emplace(dst);
-                todo.emplace(dst);
               }
           }
       }

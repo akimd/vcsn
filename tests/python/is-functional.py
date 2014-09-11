@@ -97,6 +97,19 @@ a = vcsn.automaton(r'''digraph {
 }''')
 CHECK_EQ(False, a.is_functional())
 
+# states non coaccessible
+a = vcsn.automaton(r'''digraph {
+  vcsn_context = "lat<lan_char(abc), lan_char(xyz)>_b"
+  I0 -> 0
+  0 -> 1 [label = "(a, x), (b, y)"]
+  1 -> F1
+  0 -> 2 [label = "(b, y)"]
+  0 -> 3 [label = "(b, y)"]
+  2 -> 4 [label = "(c, x)"]
+  3 -> 4 [label = "(c, z)"]
+}''')
+CHECK_EQ(True, a.is_functional())
+
 ## ----- ##
 ## LAW.  ##
 ## ----- ##
