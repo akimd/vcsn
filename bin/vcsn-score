@@ -216,3 +216,12 @@ r = "(((abc)*){50}+(((acb)*){50}))abc(a+ab*c)(bb+b(a+ab*c))*b"
 a = vcsn.context("lal_char(abc)_b").ratexp(r).derived_term()
 bench('a.is_cycle_ambiguous()', 'a = der({0}), c = [abc] -> B'.format(r),
       lambda: a.is_cycle_ambiguous())
+
+# is_functional.
+r = "(('(a, x)'+'(b, y)'+'(c, z)'){500}){+}'(c, z)'"
+a = vcsn.context("lat<lal_char(abc), lal_char(xyz)>_b").ratexp(r).standard()
+bench('a.is_functional()', 'a = std({})'.format(r), lambda: a.is_functional())
+
+r = "(('(a, x)'+'(b, y)'+'(c, z)'){500}){+}('(c, z)'+'(c, y)')"
+a = vcsn.context("lat<lal_char(abc), lal_char(xyz)>_b").ratexp(r).standard()
+bench('a.is_functional()', 'a = std({})'.format(r), lambda: a.is_functional())
