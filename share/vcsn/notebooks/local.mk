@@ -27,6 +27,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.is_ambiguous.ipynb'              \
   '%D%/algos/automaton.is_complete.ipynb'               \
   '%D%/algos/automaton.is_deterministic.ipynb'          \
+  '%D%/algos/automaton.is_functional.ipynb'             \
   '%D%/algos/automaton.is_standard.ipynb'               \
   '%D%/algos/automaton.reduce.ipynb'                    \
   '%D%/algos/automaton.standard.ipynb'                  \
