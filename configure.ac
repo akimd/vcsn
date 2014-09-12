@@ -235,6 +235,13 @@ AC_CHECK_PROGS([BISON], [bison])
 AC_CONFIG_FILES([build-aux/bin/bison++], [chmod +x build-aux/bin/bison++])
 
 
+## ----------- ##
+## Libraries.  ##
+## ----------- ##
+
+AC_CHECK_HEADERS([ltdl.h], [],
+                 [AC_MSG_ERROR([libltdl (a component from Libtool) is needed])])
+
 ## --------------- ##
 ## Documentation.  ##
 ## --------------- ##
