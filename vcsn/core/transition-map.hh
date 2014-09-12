@@ -26,8 +26,9 @@ namespace vcsn
               typename WeightSet = weightset_t_of<Aut>,
               bool Deterministic = false,
               bool AllOut = false>
-    struct transition_map
+    class transition_map
     {
+    public:
       using weightset_t = WeightSet;
       using weight_t = typename weightset_t::value_t;
       struct transition
@@ -42,8 +43,6 @@ namespace vcsn
                                     transition,
                                     std::vector<transition>>::type;
       using map_t = std::map<label_t_of<Aut>, transitions_t>;
-      using maps_t = std::map<state_t_of<Aut>, map_t>;
-      maps_t maps_;
 
       transition_map(const Aut& aut, const weightset_t& ws)
         : aut_(aut)
@@ -53,6 +52,19 @@ namespace vcsn
       transition_map(const Aut& aut)
         : transition_map(aut, *aut->weightset())
       {}
+
+      /// Outgoing transitions of state \a s, sorted by label.
+      map_t& operator[](state_t_of<Aut> s)
+      {
+        auto lb = maps_.lower_bound(s);
+        if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
+          return build_map_(lb, s);
+        else
+          return lb->second;
+      }
+
+    private:
+      using maps_t = std::map<state_t_of<Aut>, map_t>;
 
       /// Insert l -> t in map.
       template <bool Deterministic_>
@@ -91,15 +103,8 @@ namespace vcsn
         return res;
       }
 
-      map_t& operator[](state_t_of<Aut> s)
-      {
-        auto lb = maps_.lower_bound(s);
-        if (lb == maps_.end() || maps_.key_comp()(s, lb->first))
-          return build_map_(lb, s);
-        else
-          return lb->second;
-      }
-
+      /// The cache.
+      maps_t maps_;
       /// The automaton whose transitions are cached.
       const Aut& aut_;
       /// The result weightset.
