@@ -21,7 +21,9 @@ dist_notebooks_data =                                   \
   '%D%/index.ipynb'                                     \
   '%D%/Some developer documentation.ipynb'              \
   '%D%/algos/index.ipynb'                               \
+  '%D%/algos/automaton.accessible.ipynb'                \
   '%D%/algos/automaton.ambiguous_word.ipynb'            \
+  '%D%/algos/automaton.coaccessible.ipynb'              \
   '%D%/algos/automaton.complete.ipynb'                  \
   '%D%/algos/automaton.determinize.ipynb'               \
   '%D%/algos/automaton.is_ambiguous.ipynb'              \
@@ -33,6 +35,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.standard.ipynb'                  \
   '%D%/algos/automaton.synchronizing_word.ipynb'        \
   '%D%/algos/automaton.transpose.ipynb'                 \
+  '%D%/algos/automaton.trim.ipynb'                      \
   '%D%/algos/ratexp.is_valid.ipynb'                     \
   '%D%/algos/ratexp.standard.ipynb'                     \
   '%D%/algos/ratexp.transpose.ipynb'                    \
