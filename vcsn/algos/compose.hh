@@ -7,13 +7,15 @@
 
 # include <vcsn/algos/blind.hh>
 # include <vcsn/algos/insplit.hh>
-# include <vcsn/algos/sort.hh>
+# include <vcsn/core/transition-map.hh>
 # include <vcsn/core/tuple-automaton.hh>
 # include <vcsn/ctx/context.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/labelset/tupleset.hh>
+# include <vcsn/misc/vector.hh> // cross_tuple
 # include <vcsn/misc/raise.hh>
 # include <vcsn/misc/tuple.hh> // make_index_sequence
+# include <vcsn/misc/zip-maps.hh> // make_index_sequence
 
 namespace vcsn
 {
@@ -77,6 +79,8 @@ namespace vcsn
       composer(const Lhs& lhs, const Rhs& rhs)
         : res_(make_shared_ptr<automaton_t>(make_mutable_automaton(make_context_(lhs, rhs)),
                                             lhs, rhs))
+        , transition_maps_{{lhs, *res_->weightset()},
+                           {rhs, *res_->weightset()}}
       {}
 
       static labelset_t make_labelset_(const hidden_l_labelset_t& ll,
@@ -107,7 +111,6 @@ namespace vcsn
       automaton_t compose()
       {
         initialize_compose();
-        const auto& ws = *res_->context().weightset();
 
         while (!res_->todo_.empty())
           {
@@ -115,7 +118,7 @@ namespace vcsn
             res_->todo_.pop_front();
             state_t src = res_->pmap_[psrc];
 
-            add_compose_transitions(ws, src, psrc);
+            add_compose_transitions(src, psrc);
           }
         return std::move(res_);
       }
@@ -123,6 +126,11 @@ namespace vcsn
     private:
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
+
+      /// The type of our transition maps: convert the weight to weightset_t,
+      /// non deterministic, and including transitions to post().
+      template <typename A>
+      using transition_map_t = transition_map<A, weightset_t, false, true, true>;
 
       /// Fill the worklist with the initial source-state pairs, as
       /// needed for the product algorithm.
@@ -156,88 +164,75 @@ namespace vcsn
       /// the given result input state, which must correspond to the
       /// given pair of input state automata.  Update the worklist with
       /// the needed source-state pairs.
-      void add_compose_transitions(const weightset_t& ws,
-                                   const state_t src,
+      void add_compose_transitions(const state_t src,
                                    const state_name_t& psrc)
       {
-        // This relies on outgoing transitions being sorted by label
-        // by the sort algorithm: thanks to that property we can scan
-        // the two successor lists in lockstep. Thus if there is a
-        // sponteneous transition, it is at the beginning.
         auto& lhs = std::get<0>(res_->auts_);
         auto& rhs = std::get<1>(res_->auts_);
-        auto ls = lhs->all_out(std::get<0>(psrc));
-        auto rs = rhs->all_out(std::get<1>(psrc));
-        auto li = ls.begin();
-        auto ri = rs.begin();
+
+        // Outgoing transition cache.
+        const auto& ltm = std::get<0>(transition_maps_)[std::get<0>(psrc)];
+        const auto& rtm = std::get<1>(transition_maps_)[std::get<1>(psrc)];
 
         bool has_eps_out = false;
         if (!has_only_ones_in(rhs, std::get<1>(psrc)))
-          for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
           {
-            has_eps_out = true;
-            res_->new_transition(src,
-                                 res_->state(lhs->dst_of(*li), std::get<1>(psrc)),
-                                 join_label(lhs->hidden_label_of(*li),
-                                            get_hidden_one(rhs)),
-                                 ws.conv(*lhs->weightset(), lhs->weight_of(*li)));
+            // "Loop" only on the spontaneous transitions.  "One" is
+            // guaranteed to be first in the transition maps.
+            if (!ltm.empty()
+                && lhs->labelset()->is_one(ltm.begin()->first))
+              {
+                has_eps_out = true;
+                for (auto t: ltm.begin()->second)
+                  res_->new_transition(src,
+                                       res_->state(t.dst, std::get<1>(psrc)),
+                                       join_label(lhs->hidden_label_of(t.transition),
+                                                  get_hidden_one(rhs)),
+                                       t.wgt);
+              }
           }
-        else
-          for (/* Nothing. */; li != ls.end() && is_one(lhs, *li); ++li)
-            continue;
-            // Loop through the spontaneous transitions, to avoid treating them
 
-        if (!has_eps_out || li != ls.end())
-          for (/* Nothing. */; ri != rs.end() && is_one(rhs, *ri); ++ri)
-            res_->new_transition(src,
-                                 res_->state(std::get<0>(psrc), rhs->dst_of(*ri)),
-                                 join_label(get_hidden_one(lhs),
-                                            rhs->hidden_label_of(*ri)),
-                                 ws.conv(*rhs->weightset(), rhs->weight_of(*ri)));
+        // If lhs did not issue spontaneous transitions but has
+        // non-spontaneous transitions, issue follow all the rhs
+        // spontaneous-transitions.
+        const bool lhs_has_non_sp_trans =
+          !lhs->labelset()->is_one(ltm.begin()->first)
+          || 2 <= ltm.size();
 
-
-        for (/* Nothing. */;
-             li != ls.end() && ri != rs.end();
-             ++ li)
-        {
-          auto lt = *li;
-          label_t_of<clhs_t> label = lhs->label_of(lt);
-          // Skip right-hand transitions with labels we don't have
-          // on the left hand.
-          while (middle_labelset_t::less_than(rhs->label_of(*ri), label))
-            if (++ ri == rs.end())
-              return;
-
-          // If the smallest label on the right-hand side is bigger
-          // than the left-hand one, we have no hope of ever adding
-          // transitions with this label.
-          if (middle_labelset_t::less_than(label, rhs->label_of(*ri)))
-            continue;
-
-          assert(middle_labelset_t::equals(label, rhs->label_of(*ri)));
-          auto rstart = ri;
-          while (middle_labelset_t::equals(rhs->label_of(*ri), label))
+        if (!has_eps_out || lhs_has_non_sp_trans)
           {
+            if (!rtm.empty()
+                && rhs->labelset()->is_one(rtm.begin()->first))
+              {
+                for (auto t: rtm.begin()->second)
+                  res_->new_transition(src,
+                                       res_->state(std::get<0>(psrc), t.dst),
+                                       join_label(get_hidden_one(lhs),
+                                                  rhs->hidden_label_of(t.transition)),
+                                       t.wgt);
+              }
+          }
+
+        for (auto t: zip_maps(ltm, rtm))
+          // The type of the common label is that of the visible tape
+          // of either automata.
+          if (!lhs->labelset()->is_one(t.first))
             // These are always new transitions: first because the
-            // source state is visited for the first time, and
-            // second because the couple (left destination, label)
-            // is unique, and so is (right destination, label).
-            res_->new_transition(src, res_->state(lhs->dst_of(lt), rhs->dst_of(*ri)),
-                                 join_label(lhs->hidden_label_of(*li),
-                                            rhs->hidden_label_of(*ri)),
-                                 ws.mul(ws.conv(*lhs->weightset(),
-                                                lhs->weight_of(lt)),
-                                        ws.conv(*rhs->weightset(),
-                                                rhs->weight_of(*ri))));
-            if (++ ri == rs.end())
-              break;
-          }
-
-          // Move the right-hand iterator back to the beginning of
-          // the matching part.  This will be needed if the next
-          // left-hand transition has the same label.
-          ri = rstart;
-        }
+            // source state is visited for the first time, and second
+            // because the couple (left destination, label) is unique,
+            // and so is (right destination, label).
+            cross_tuple
+              ([&] (const typename transition_map_t<Lhs>::transition& lts,
+                    const typename transition_map_t<Rhs>::transition& rts)
+               {
+                 res_->new_transition
+                   (src,
+                    res_->state(lts.dst, rts.dst),
+                    join_label(lhs->hidden_label_of(lts.transition),
+                               rhs->hidden_label_of(rts.transition)),
+                    res_->weightset()->mul(lts.wgt, rts.wgt));
+               },
+               t.second);
       }
 
       template <typename A>
@@ -279,6 +274,8 @@ namespace vcsn
 
       /// The computed product.
       automaton_t res_;
+      /// Transition caches.
+      std::tuple<transition_map_t<Lhs>, transition_map_t<Rhs>> transition_maps_;
     };
   }
 
@@ -293,8 +290,8 @@ namespace vcsn
     -> typename detail::composer<blind_automaton<1, Lhs>,
                                  blind_automaton<0, Rhs>>::automaton_t
   {
-    auto l = sort(blind<1>(lhs))->strip();
-    auto r = sort(insplit(blind<0>(rhs)))->strip();
+    auto l = blind<1>(lhs);
+    auto r = insplit(blind<0>(rhs));
     detail::composer<decltype(l), decltype(r)> compose(l, r);
     return compose.compose();
   }

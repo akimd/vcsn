@@ -154,10 +154,10 @@ res = r'''digraph
   {
     node [shape = circle, style = rounded, width = 0.5]
     0 [label = "0, 0", shape = box]
-    1 [label = "1, 0", shape = box, color = DimGray]
+    1 [label = "2, 0", shape = box, color = DimGray]
     2 [label = "0, 1", shape = box]
-    3 [label = "1, 1", shape = box, color = DimGray]
-    4 [label = "2, 2", shape = box]
+    3 [label = "2, 1", shape = box, color = DimGray]
+    4 [label = "1, 2", shape = box]
   }
   I0 -> 0
   0 -> 1 [label = "(y,\\e)", color = DimGray]

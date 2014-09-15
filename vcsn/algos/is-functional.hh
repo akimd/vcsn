@@ -81,8 +81,8 @@ namespace vcsn
   bool is_functional(const Aut& aut)
   {
     // Compose aut and its invert.
-    auto l = sort(blind<0>(aut))->strip();
-    auto r = sort(insplit(blind<0>(aut)))->strip();
+    auto l = blind<0>(aut);
+    auto r = insplit(blind<0>(aut));
     detail::composer<decltype(l), decltype(r)> compose(l, r);
     auto c = compose.compose();
     return is_identity(c);
