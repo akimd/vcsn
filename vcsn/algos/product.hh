@@ -216,11 +216,12 @@ namespace vcsn
         add_one_transitions_(src, psrc, indices);
       }
 
-      /// Add the epsilon transitions leaving the state src, if it is relevant
-      /// (i.e. only for the labelsets that have epsilons).
+      /// Add the spontaneous transitions leaving state \a src, if it
+      /// is relevant (i.e. only for the labelsets that have one).
       template <std::size_t... I>
       void
-      add_one_transitions_(const state_t src, const state_name_t& psrc, seq<I...>)
+      add_one_transitions_(const state_t src, const state_name_t& psrc,
+                           seq<I...>)
       {
         using swallow = int[];
         (void) swallow
@@ -230,14 +231,14 @@ namespace vcsn
         };
       }
 
-      /// In the case where the labelset doesn't have epsilon, do nothing
+      /// In the case where the labelset doesn't have one, do nothing
       template <std::size_t I, typename L>
       typename std::enable_if<!L::has_one(), void>::type
       maybe_add_one_transitions_(const L&, const state_t, const state_name_t&)
       {}
 
-      /// If the labelset has epsilon, add the relevant epsilon-transitions
-      /// leaving the state
+      /// If the labelset has one, add the relevant
+      /// spontaneous-transitions leaving the state
       template <std::size_t I, typename L>
       typename std::enable_if<L::has_one(), void>::type
       maybe_add_one_transitions_(const L& ls, const state_t src,
@@ -249,9 +250,9 @@ namespace vcsn
                                 [ls.one()]);
       }
 
-      /// If every tape after this one has only incoming epsilon transitions,
-      /// add in the result automaton all the outgoing epsilon transitions of
-      /// the Ith tape.
+      /// If every tape after this one has only incoming spontaneous
+      /// transitions, add in the result automaton all the outgoing
+      /// spontaneous transitions of the Ith tape.
       template <std::size_t I>
       void
       add_one_transitions_(const state_t src, const state_name_t& psrc,
@@ -270,8 +271,8 @@ namespace vcsn
             }
       }
 
-      /// Check if all the tapes after the Ith have only incoming epsilon
-      /// transitions.
+      /// Check if all the tapes after the Ith have only incoming
+      /// spontaneous transitions.
       template <std::size_t... I>
       bool has_epsilon_in(const state_name_t& psrc, std::size_t i, seq<I...>) const
       {
@@ -283,8 +284,8 @@ namespace vcsn
         return false;
       }
 
-      /// Check if all the tapes before the Ith have only outgoing epsilon
-      /// transitions.
+      /// Check if all the tapes before the Ith have only outgoing
+      /// spontaneous transitions.
       template <std::size_t... I>
       bool has_only_epsilon_out(const state_name_t& psrc, std::size_t i, seq<I...>)
       {
@@ -296,8 +297,8 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the transition is epsilon (in the case of a labelset with
-      /// epsilon).
+      /// Check if the transition is spontaneous (in the case of a
+      /// labelset with one).
       template <typename Aut_>
       typename std::enable_if<labelset_t_of<Aut_>::has_one(),
                               bool>::type
@@ -306,7 +307,7 @@ namespace vcsn
         return aut->labelset()->is_one(aut->label_of(tr));
       }
 
-      /// Same as above, but for labelsets without epsilon, so it's always
+      /// Same as above, but for labelsets without one, so it's always
       /// false.
       template <typename Aut_>
       constexpr typename std::enable_if<!labelset_t_of<Aut_>::has_one(),
@@ -316,8 +317,9 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the state has only incoming epsilon transitions.
-      /// As it is in the case of the epsilon-free labelset, it's always false.
+      /// Check if the state has only incoming spontaneous
+      /// transitions.  As it is in the case of the one-free labelset,
+      /// it's always false.
       template <typename Aut_>
       constexpr typename std::enable_if<!labelset_t_of<Aut_>::has_one(),
                   bool>::type
@@ -327,10 +329,11 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the state has only incoming epsilon transitions.
+      /// Check if the state has only incoming spontaneous
+      /// transitions.
       template <typename Aut_>
       typename std::enable_if<labelset_t_of<Aut_>::has_one(),
-                 bool>::type
+                              bool>::type
       has_only_ones_in(const Aut_& rhs, state_t_of<Aut_> rst) const
       {
         auto rin = rhs->all_in(rst);
