@@ -5,6 +5,8 @@ import re
 from IPython.core.magic import (Magics, magics_class, line_magic)
 from IPython.display import display, SVG
 from IPython.html import widgets
+from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
+
 
 import vcsn
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
@@ -12,9 +14,10 @@ from IPython.utils.warn import info, error
 
 # The class MUST call this class decorator at creation time
 class EditAutomatonWidget:
-    def __init__(self, ipython, name):
+    def __init__(self, ipython, name, format, mode):
         self.ipython = ipython
         self.name = name
+        self.format = format
         if self.name in self.ipython.shell.user_ns:
             # Strip the automaton, as we cannot preserve the state names
             # anyway.
@@ -22,39 +25,57 @@ class EditAutomatonWidget:
         else:
             aut = vcsn.context('lal_char(abc)_b').ratexp(r'\e').standard()
             self.ipython.shell.user_ns[self.name] = aut
-        daut = from_dot(str(aut))
 
-        self.text = widgets.TextareaWidget(value = daut)
+        text = aut.format(self.format)
+        self.text = widgets.TextareaWidget(value = text)
         height = self.text.value.count('\n')
         self.text.set_css({'lines': '500'})
         self.text.on_trait_change(lambda: self.update())
-
         self.error = widgets.HTMLWidget(value = '')
         self.svg = widgets.HTMLWidget(value = aut._repr_svg_())
+        if mode == "h":
+            wc1 = widgets.ContainerWidget()
+            wc1.children = [self.text]
 
-        cw = widgets.ContainerWidget()
-        cw.remove_class('vbox')
-        cw.add_class('hbox')
-        cw.children = [self.svg, self.error, self.text]
-        display(cw)
+            wc2 = widgets.ContainerWidget()
+            wc2.children = [wc1, self.svg]
+            wc3 = widgets.ContainerWidget()
+            wc3.children = [wc2, self.error]
+            display(wc3)
+            wc2.remove_class('vbox')
+            wc2.add_class('hbox')
+        elif mode == "v":
+            wc = widgets.ContainerWidget()
+            wc.remove_class('vbox')
+            wc.add_class('hbox')
+            wc.children = [self.svg, self.error, self.text]
+            display(wc)
 
     def update(self):
-       try:
+        try:
             self.error.value = ''
-            dot = self.text.value.encode('utf-8')
-            dot = to_dot(dot)
-            self.ipython.shell.user_ns[self.name] = vcsn.automaton(dot)
+            txt = self.text.value.encode('utf-8')
+            a = vcsn.automaton(txt, self.format)
+            self.ipython.shell.user_ns[self.name] = a
+            dot = to_dot(txt) if self.format == "daut" else a.format('dot')
             self.svg.value = _dot_to_svg(_dot_pretty(dot))
-       except RuntimeError as e:
+        except RuntimeError as e:
             self.error.value = str(e)
+
 
 @magics_class
 class EditAutomaton(Magics):
-
+    @magic_arguments()
+    @argument('var', type=str, help='The name of the variable to edit.')
+    @argument('format', type=str, nargs ='?', default = 'daut',
+              help='''The name of the format to edit the automaton in
+              (you can choose dot, daut, efsm ...). By default : daut''')
+    @argument('mode', type=str, nargs ='?', default = 'h',
+              help='The name of the visual mode to display the automaton.')
     @line_magic
-    def automaton(ipython, line):
-        name = line.split()[0]
-        EditAutomatonWidget(ipython, name)
+    def automaton(self, arg):
+        args = parse_argstring(self.automaton, arg)
+        EditAutomatonWidget(self, args.var, args.format, args.mode)
 
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
