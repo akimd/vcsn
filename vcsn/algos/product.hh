@@ -13,7 +13,7 @@
 # include <vcsn/ctx/traits.hh>
 # include <vcsn/dyn/automaton.hh> // dyn::make_automaton
 # include <vcsn/dyn/ratexp.hh> // dyn::make_ratexp
-# include <vcsn/misc/vector.hh>
+# include <vcsn/misc/vector.hh> // cross_tuple
 # include <vcsn/misc/zip-maps.hh>
 
 namespace vcsn
@@ -86,11 +86,6 @@ namespace vcsn
 
       using label_t = typename labelset_t::value_t;
       using weight_t = typename weightset_t::value_t;
-
-      /// The type of our transition maps: convert the weight to weightset_t,
-      /// non deterministic, and including transitions to post().
-      template <typename A>
-      using transition_map_t = transition_map<A, weightset_t, false, true>;
 
     public:
       /// The type of input automata.
@@ -178,6 +173,11 @@ namespace vcsn
         // (synchronized) product of pre: synchronized transitions on $.
         add_product_transitions(aut_->pre(), pre_());
       }
+
+      /// The type of our transition maps: convert the weight to weightset_t,
+      /// non deterministic, and including transitions to post().
+      template <typename A>
+      using transition_map_t = transition_map<A, weightset_t, false, true>;
 
       /// The outgoing tuple of transitions from state tuple \a ss.
       std::tuple<typename transition_map_t<Auts>::map_t&...>
