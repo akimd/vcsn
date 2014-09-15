@@ -258,11 +258,11 @@ namespace vcsn
       add_one_transitions_(const state_t src, const state_name_t& psrc,
                            const typename
                            transition_map_t<input_automaton_t<I>>::transitions_t&
-                           epsilon_out)
+                           one_out)
       {
-        if (!has_epsilon_in(psrc, I + 1, indices)
-            && !has_only_epsilon_out(psrc, I, indices))
-          for (auto t : epsilon_out)
+        if (!has_one_in(psrc, I + 1, indices)
+            && !has_only_one_out(psrc, I, indices))
+          for (auto t : one_out)
             {
               auto pdst = psrc;
               std::get<I>(pdst) = t.dst;
@@ -274,7 +274,8 @@ namespace vcsn
       /// Check if all the tapes after the Ith have only incoming
       /// spontaneous transitions.
       template <std::size_t... I>
-      bool has_epsilon_in(const state_name_t& psrc, std::size_t i, seq<I...>) const
+      bool has_one_in(const state_name_t& psrc, std::size_t i,
+                      seq<I...>) const
       {
         bool has_ones[] = { has_only_ones_in(std::get<I>(auts_),
                                              std::get<I>(psrc))... };
@@ -287,7 +288,8 @@ namespace vcsn
       /// Check if all the tapes before the Ith have only outgoing
       /// spontaneous transitions.
       template <std::size_t... I>
-      bool has_only_epsilon_out(const state_name_t& psrc, std::size_t i, seq<I...>)
+      bool has_only_one_out(const state_name_t& psrc, std::size_t i,
+                            seq<I...>)
       {
         bool has_ones[] = { has_only_ones_out(I, std::get<I>(auts_),
                                               std::get<I>(psrc))... };
@@ -329,8 +331,7 @@ namespace vcsn
         return false;
       }
 
-      /// Check if the state has only incoming spontaneous
-      /// transitions.
+      /// Whether the state has only incoming spontaneous transitions.
       template <typename Aut_>
       typename std::enable_if<labelset_t_of<Aut_>::has_one(),
                               bool>::type
@@ -341,10 +342,10 @@ namespace vcsn
         return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
-      /// Check if the state has only incoming epsilon transitions.
+      /// Whether the state has only outgoing spontaneous transitions.
       template <typename Aut_>
       typename std::enable_if<labelset_t_of<Aut_>::has_one(),
-                 bool>::type
+                              bool>::type
       has_only_ones_out(size_t I, const Aut_& a, state_t_of<Aut_> st)
       {
         auto p = out_pair_t{I, st};
@@ -431,7 +432,7 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
-      /// Map (automaton, state) -> has_only_epsilon_out
+      /// Map (automaton, state) -> has_only_one_out
       using out_pair_t = std::pair<size_t, state_t>;
       using out_map_t = std::map<out_pair_t, bool>;
       out_map_t out_map;
