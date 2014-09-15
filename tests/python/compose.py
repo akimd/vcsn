@@ -127,8 +127,8 @@ a1 = vcsn.automaton(r'''digraph
   I0 -> 0
   0 -> 1 [label = "(x, a)"]
   1 -> F1
-  0 -> 5 [label = "(y, \\e)"]
-  5 -> F5
+  0 -> 2 [label = "(y, \\e)"]
+  2 -> F2
 }''')
 
 
@@ -136,9 +136,9 @@ a2 = vcsn.automaton(r'''digraph
 {
   vcsn_context = "lat<lan<lal_char(abc)>, lan<lal_char(def)>>_b"
   I0 -> 0
-  0 -> 5 [label = "(\\e, d)"]
-  5 -> 6 [label = "(a, e)"]
-  6 -> F6
+  0 -> 1 [label = "(\\e, d)"]
+  1 -> 2 [label = "(a, e)"]
+  2 -> F2
 }''')
 
 res = r'''digraph
