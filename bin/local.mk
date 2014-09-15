@@ -15,7 +15,9 @@ dist_bin_SCRIPTS +=                             \
   %D%/efstcompile                               \
   %D%/efstdecompile                             \
   %D%/vcsn-notebook                             \
-  %D%/vcsn-score
+  %D%/vcsn-ps                                   \
+  %D%/vcsn-score                                \
+  %D%/vcsn-score-compare
 
 nodist_bin_SCRIPTS +=                           \
   %D%/vcsn

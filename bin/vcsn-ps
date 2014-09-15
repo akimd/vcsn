@@ -1,0 +1,4 @@
+#! /bin/sh
+
+ps auxww |
+  perl -ne "s{^.*'.*?/lib/plugins/(.*?)\.cc'.*$}{========\$1}g && print \$_"
