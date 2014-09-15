@@ -116,36 +116,6 @@ check(c_ratb.ratexp("<o>'(a, x)'").standard(),
   1 -> F1
 }''')
 
-##########################
-## Fibonacci normalizer ##
-##########################
-
-check(vcsn.automaton.load(medir + "/left.gv"),
-      vcsn.automaton.load(medir + "/right.gv"),
-      open(medir + "/result.gv").read().strip())
-
-c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>_r")
-check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
-      '''digraph
-{
-  vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_r"
-  rankdir = LR
-  edge [arrowhead = vee, arrowsize = .6]
-  {
-    node [shape = point, width = 0]
-    I0
-    F1
-  }
-  {
-    node [shape = circle, style = rounded, width = 0.5]
-    0 [label = "0, 0", shape = box]
-    1 [label = "1, 1", shape = box]
-  }
-  I0 -> 0
-  0 -> 1 [label = "<3.1>(a,d)"]
-  1 -> F1
-}''')
-
 ###############################################
 ## Check mixed epsilon and letters going out ##
 ###############################################
@@ -198,3 +168,34 @@ res = r'''digraph
 }'''
 
 check(a1, a2, res)
+
+
+c_r = vcsn.context("lat<lan_char(abc),lan_char(xyz)>_r")
+check(c_r.ratexp("<3.1>'(a, x)'").standard(), c2.ratexp("'(x, d)'").standard(),
+      '''digraph
+{
+  vcsn_context = "lat<lan<lal_char(abc)>,lan<lal_char(def)>>_r"
+  rankdir = LR
+  edge [arrowhead = vee, arrowsize = .6]
+  {
+    node [shape = point, width = 0]
+    I0
+    F1
+  }
+  {
+    node [shape = circle, style = rounded, width = 0.5]
+    0 [label = "0, 0", shape = box]
+    1 [label = "1, 1", shape = box]
+  }
+  I0 -> 0
+  0 -> 1 [label = "<3.1>(a,d)"]
+  1 -> F1
+}''')
+
+##########################
+## Fibonacci normalizer ##
+##########################
+
+check(vcsn.automaton.load(medir + "/left.gv"),
+      vcsn.automaton.load(medir + "/right.gv"),
+      open(medir + "/result.gv").read().strip())
