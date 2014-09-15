@@ -159,6 +159,11 @@ r = "[a-e]?{30}"
 a = vcsn.context("lal_char(a-e)_z").ratexp(r).standard()
 bench('a.infiltration(a)', 'a = std({})'.format(r), lambda: a.infiltration(a))
 
+# Product with spontaneous transitions.
+r = "[a-e]?{80}"
+a = vcsn.context("lan_char(a-e)_z").ratexp(r).thompson()
+bench('a.product(a)', 'a = thompson({})'.format(r), lambda: a._product([a,a]))
+
 # power.
 r = "[a-e]*b(<2>[a-e])*"
 n = 12
