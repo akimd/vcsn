@@ -244,31 +244,19 @@ namespace vcsn
       maybe_add_one_transitions_(const L& ls, const state_t src,
                                  const state_name_t& psrc)
       {
-        add_one_transitions_<I>(src, psrc,
-                                std::get<I>(transition_maps_)
-                                [std::get<I>(psrc)]
-                                [ls.one()]);
-      }
-
-      /// If every tape after this one has only incoming spontaneous
-      /// transitions, add in the result automaton all the outgoing
-      /// spontaneous transitions of the Ith tape.
-      template <std::size_t I>
-      void
-      add_one_transitions_(const state_t src, const state_name_t& psrc,
-                           const typename
-                           transition_map_t<input_automaton_t<I>>::transitions_t&
-                           one_out)
-      {
         if (!has_one_in(psrc, I + 1, indices)
             && !has_only_one_out(psrc, I, indices))
-          for (auto t : one_out)
-            {
-              auto pdst = psrc;
-              std::get<I>(pdst) = t.dst;
-              aut_->new_transition(src, state(pdst),
-                                   aut_->labelset()->one(), t.wgt);
-            }
+          {
+            // one is guaranteed to be first.
+            const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+            if (ls.is_one(tmap.begin()->first))
+              for (auto t : tmap.begin()->second)
+                {
+                  auto pdst = psrc;
+                  std::get<I>(pdst) = t.dst;
+                  aut_->new_transition(src, state(pdst), ls.one(), t.wgt);
+                }
+          }
       }
 
       /// Check if all the tapes after the Ith have only incoming
