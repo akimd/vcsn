@@ -5,6 +5,14 @@ from subprocess import check_call, PIPE, Popen
 
 from vcsn import _tmp_file
 
+# Style of states in dot.
+state_style = 'node [shape = circle, style = rounded, width = 0.5]'
+state_colored = 'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]'
+state_point = 'node [shape = point, width = 0]'
+
+# Style of transitions in dot.
+edge_style = 'edge [arrowhead = vee, arrowsize = .6]'
+
 def _label_pretty(s):
     '''Convert angle brackets and \\e to UTF-8.  We used to use
     HTML entities, but it resulted in wider arrows: dot is probably
@@ -23,8 +31,7 @@ def _labels_as_tooltips(s):
 def _nodes_as_points(s):
     '''Transform all the nodes into simple points, as to reveal only
     the transitions.'''
-    s = s.replace('node [shape = circle, style = rounded, width = 0.5]',
-                  'node [shape = point, fillcolor = cadetblue1, style = "filled", width = 0]')
+    s = s.replace(state_style, state_point)
     s = s.replace('shape = box', '')
     return s
 
@@ -58,8 +65,7 @@ def _dot_pretty(s, mode = "dot"):
     # attribute.
     #
     # FIXME: This 'replace' might also be replaced by a use of gvpr.
-    s = s.replace('node [shape = circle, style = rounded, width = 0.5]',
-                  'node [fillcolor = cadetblue1, shape = circle, style = "filled,rounded", width = 0.5]')
+    s = s.replace(state_style, state_colored)
     # Useless states should be filled in gray, instead of having a
     # gray contour.  Fill with a lighter gray.  But don't change the
     # color of the arrows.
@@ -216,14 +222,17 @@ class Daut:
 {{
   vcsn_context = "{context}"
   rankdir = LR
+  {edge_style}
   {{
     node [shape = point, width = 0]
     {hidden}
   }}
-  node [shape = circle]
+  {state_style}
   {transitions}
 }}'''.format(context = self.context,
              transitions = s,
+             state_style = state_style,
+             edge_style = edge_style,
              hidden=" ".join(self.hidden))
 
     def dot_to_daut(self, s):
