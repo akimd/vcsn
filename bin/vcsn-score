@@ -207,31 +207,19 @@ bench('a.reduce()', 'a = std({0}), c = [a-k] -> Q'.format(r),
       lambda: a.reduce())
 
 # twins property.
-r = "<3>a((<2>c<3>b<4>a)*){50}<7>c+<2>a((<3>c<2>b<4>a)*){50}<5>a"
-a = vcsn.context("lal_char(a-c)_q").ratexp(r).standard()
+r = "[a-c]{200}*+[a-c]{200}*"
+a = vcsn.context("lal_char(a-c)_zmin").ratexp(r).standard()
 bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
       lambda: a.has_twins_property())
 
-r = "<3>a((<2>c<3>b<4>a)*){50}<7>c+<2>a((<3>c<5>b<4>a)*){50}<5>a"
-a = vcsn.context("lal_char(a-c)_q").ratexp(r).standard()
-bench('a.has_twins_property()', 'a = std({0}), c = [abc] -> Q'.format(r),
-      lambda: a.has_twins_property())
-
-r = "(((abc)*){50}+(((acb)*){50}))abc(a+ab*c)(bc+b(a+ab*c))*b"
-a = vcsn.context("lal_char(abc)_b").ratexp(r).derived_term()
-bench('a.is_cycle_ambiguous()', 'a = der({0}), c = [abc] -> B'.format(r),
-      lambda: a.is_cycle_ambiguous())
-
-r = "(((abc)*){50}+(((acb)*){50}))abc(a+ab*c)(bb+b(a+ab*c))*b"
-a = vcsn.context("lal_char(abc)_b").ratexp(r).derived_term()
+# cycle ambiguous.
+r = "[a-c]{2000}(<2>ab+a<3>b)"
+a = vcsn.context("lal_char(abc)_z").ratexp(r).derived_term()
 bench('a.is_cycle_ambiguous()', 'a = der({0}), c = [abc] -> B'.format(r),
       lambda: a.is_cycle_ambiguous())
 
 # is_functional.
-r = "(('(a, x)'+'(b, y)'+'(c, z)'){500}){+}'(c, z)'"
-a = vcsn.context("lat<lal_char(abc), lal_char(xyz)>_b").ratexp(r).standard()
-bench('a.is_functional()', 'a = std({})'.format(r), lambda: a.is_functional())
-
-r = "(('(a, x)'+'(b, y)'+'(c, z)'){500}){+}('(c, z)'+'(c, y)')"
-a = vcsn.context("lat<lal_char(abc), lal_char(xyz)>_b").ratexp(r).standard()
-bench('a.is_functional()', 'a = std({})'.format(r), lambda: a.is_functional())
+r = "'(a, x)'{2000}'(b, y)'"
+a = vcsn.context("lat<lal_char(ab), lal_char(xy)>_b").ratexp(r).standard()
+bench('a.is_functional()', 'a = std({})'.format(r),
+      lambda: a.is_functional())
