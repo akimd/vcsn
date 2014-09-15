@@ -279,8 +279,7 @@ namespace vcsn
       bool has_only_one_out(const state_name_t& psrc, std::size_t i,
                             seq<I...>)
       {
-        bool has_ones[] = { has_only_ones_out(I, std::get<I>(auts_),
-                                              std::get<I>(psrc))... };
+        bool has_ones[] = { has_only_ones_out<I>(psrc)... };
         for (size_t j = 0; j < i; ++j)
           if (has_ones[j])
             return true;
@@ -330,24 +329,20 @@ namespace vcsn
         return rtr != rin.end() && is_one(rhs, *rtr) && !rhs->is_initial(rst);
       }
 
-      /// Whether the state has only outgoing spontaneous transitions.
-      template <typename Aut_>
-      typename std::enable_if<labelset_t_of<Aut_>::has_one(),
-                              bool>::type
-      has_only_ones_out(size_t I, const Aut_& a, state_t_of<Aut_> st)
+      /// Whether the Ith state of \a psrc in the Ith input automaton
+      /// has no non-spontaneous outgoing transitions.
+      template <size_t I>
+      bool
+      has_only_ones_out(const state_name_t& psrc)
       {
-        auto p = out_pair_t{I, st};
-        auto lb = out_map.lower_bound(p);
-        if (lb != out_map.end() && !out_map.key_comp()(p, lb->first))
-          return lb->second;
-        for (auto t : a->all_out(st))
-          if (!is_one(a, t))
-          {
-            out_map.insert(lb, typename out_map_t::value_type(p, false));
-            return false;
-          }
-        out_map.insert(lb, typename out_map_t::value_type(p, true));
-        return true;
+        const auto& tmap = std::get<I>(transition_maps_)[std::get<I>(psrc)];
+        auto s = tmap.size();
+        if (s == 0)
+          return true;
+        else if (2 <= s)
+          return false;
+        else
+          return std::get<I>(auts_)->labelset()->is_one(tmap.begin()->first);
       }
 
       /// Add transitions to the given result automaton, starting from
@@ -420,10 +415,6 @@ namespace vcsn
 
       /// Transition caches.
       std::tuple<transition_map_t<Auts>...> transition_maps_;
-      /// Map (automaton, state) -> has_only_one_out
-      using out_pair_t = std::pair<size_t, state_t>;
-      using out_map_t = std::map<out_pair_t, bool>;
-      out_map_t out_map;
     };
   }
 
