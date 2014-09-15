@@ -32,7 +32,7 @@ void options::print(bool a) const
 
 void options::print(vcsn::dyn::automaton a) const
 {
-  *out << vcsn::dyn::sort(a) << std::endl;
+  *out << a << std::endl;
 }
 
 void options::print(vcsn::dyn::ratexp a) const
