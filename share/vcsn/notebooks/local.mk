@@ -18,9 +18,8 @@ notebooksdir = $(datadir)/vcsn/notebooks
 # Automake.
 dist_notebooks_data =                                   \
   '%D%/01 - Playing with contexts.ipynb'                \
-  '%D%/index.ipynb'                                     \
+  '%D%/02 - Playing with magic command.ipynb'           \
   '%D%/Some developer documentation.ipynb'              \
-  '%D%/algos/index.ipynb'                               \
   '%D%/algos/automaton.accessible.ipynb'                \
   '%D%/algos/automaton.ambiguous_word.ipynb'            \
   '%D%/algos/automaton.coaccessible.ipynb'              \
@@ -39,10 +38,12 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.synchronizing_word.ipynb'        \
   '%D%/algos/automaton.transpose.ipynb'                 \
   '%D%/algos/automaton.trim.ipynb'                      \
+  '%D%/algos/index.ipynb'                               \
   '%D%/algos/ratexp.is_valid.ipynb'                     \
   '%D%/algos/ratexp.standard.ipynb'                     \
   '%D%/algos/ratexp.transpose.ipynb'                    \
-  '%D%/algos/ratexp.transposition.ipynb'
+  '%D%/algos/ratexp.transposition.ipynb'                \
+  '%D%/index.ipynb'
 
 dist-hook: dist-hook-%C%
 dist-hook-%C%:
