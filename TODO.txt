@@ -129,6 +129,12 @@ It does not work for weighted ratexps.
 ** products: lazyness
 We need a lazy implementation of product.
 
+** product: is_idempotent
+We don't need to insplit in the case of idempotent semirings.
+
+** product: lazy insplit
+Explore the possibility to apply insplitting lazily.
+
 * Cleanup
 ** automaton_t members in decorators
 In most cases it's reasonable to use const shared_pointer (which is to say

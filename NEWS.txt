@@ -5,6 +5,10 @@ This file describes user visible changes in the course of the development of
 Vaucanson 2, in reverse chronological order.  On occasions, significant
 changes in the internal API may also be documented.
 
+## 2014-09-17
+### is_cycle_ambiguous: new algorithm
+Whether an automaton is cycle-ambiguous (or "exponentially ambiguous").
+
 ## 2014-09-09
 ### Build fixes
 Portability issues with Mac OS X's own version of Flex are fixed.
@@ -12,7 +16,7 @@ Portability issues with Mac OS X's own version of Flex are fixed.
 Fixed runtime compilations failing to find Boost headers in some cases.
 
 Fixed nasty shared-library issues at runtime on Ubuntu due to their
-use of -Wl,--as-needed.
+use of `-Wl,--as-needed`.
 
 ## 2014-09-04
 ### Fixes
@@ -214,12 +218,12 @@ Lift arbitrary restrictions on the labelset of the 'weighted' and
 
 ## 2014-06-04
 ### More systematic use of decorators
-In addition to the venerable transpose_automaton, several automaton
-decorator types have been introduced (blind_automaton,
-determinized_automaton, pair_automaton, product_automaton,
-ratexp_automaton), and are now used in the many algorithms, including:
-compose, determinize, product, shuffle, infiltration, synchronizing_word,
-etc.
+In addition to the venerable `transpose_automaton`, several automaton
+decorator types have been introduced (`blind_automaton`,
+`determinized_automaton`, `pair_automaton`, `product_automaton`,
+`ratexp_automaton`), and are now used in the many algorithms,
+including: `compose`, `determinize`, `product`, `shuffle`,
+`infiltration`, `synchronizing_word`, etc.
 
 Coupled with the fact that automata can now display state names (as opposed
 to numbers) in Dot output, one gets rich displays of automata.  For
@@ -231,7 +235,7 @@ instance:
 now displays an automaton whose states are labeled as sets of ratexps:
 "{aa+ab}", "{a, b}", and "{\e}".
 
-Use 'automaton.strip()' to remove state names.
+Use `automaton.strip()` to remove state names.
 
 ## 2014-05-30
 ### dot2tex format
@@ -282,10 +286,11 @@ This, however, resulted in too many constraints, especially when one wants
 to embed automata in other structures (which is for instance the case of
 transpose_automaton which wraps an automaton).
 
-To address these issues, types such as vcsn::mutable_automaton<Ctx> are now
-std::shared_ptr.  This does change the programming style, both when
-instantiating an automaton (typically now using make_mutable_automaton), and
-when using it (with '->' instead of '.'):
+To address these issues, types such as `vcsn::mutable_automaton<Ctx>`
+are now `std::shared_ptr`.  This does change the programming style,
+both when instantiating an automaton (typically now using
+`make_mutable_automaton`), and when using it (with `->` instead of
+`.`):
 
 Instead of:
 
@@ -526,7 +531,7 @@ or edit your .git/config file to update the URL.
 You may also visit <http://gitlab.lrde.epita.fr/vcsn/vaucanson1>.
 
 ## 2014-04-05
-### ratexps conjunctions
+### conjunctions of ratexps
 The "intersection" operation on ratexps is renamed as "conjunction".
 
 ## 2014-03-28

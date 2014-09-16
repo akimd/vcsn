@@ -149,22 +149,23 @@ namespace vcsn
   {
     auto prod = product(aut, aut);
     auto coms = scc(prod);
-    auto origins = prod->origins();
-    bool cond_equal, cond_not_equal;
-    // In one SCC of prod, if there exist two states (s0, s0) and (s1,
-    // s2) with s1 != s2 then aut has two cycles with the same label:
+    const auto& origins = prod->origins();
+    // In one SCC of prod = aut & aut, if there exist two states (s0,
+    // s0) (on the diagonal) and (s1, s2) with s1 != s2 (off the
+    // diagonal) then aut has two cycles with the same label:
     // s0->s1->s0 and s0->s2->s0.
     for (auto c : coms)
       {
-        cond_equal = cond_not_equal = false;
+        bool on = false;
+        bool off = false;
         for (auto s : c)
           {
-            auto p = origins[s];
-            if (std::get<0>(p) != std::get<1>(p))
-              cond_equal = true;
+            auto p = origins.at(s);
+            if (std::get<0>(p) == std::get<1>(p))
+              on = true;
             else
-              cond_not_equal = true;
-            if (cond_equal && cond_not_equal)
+              off = true;
+            if (on && off)
               return true;
           }
       }
