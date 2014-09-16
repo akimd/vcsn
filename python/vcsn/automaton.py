@@ -89,6 +89,18 @@ def _automaton_display(self, mode, engine = "dot"):
     from IPython.display import display, SVG
     display(_automaton_convert(self, mode, engine))
 
+# automaton.__init__
+# The point is to add support for the "daut" format.  So we save
+# the original, C++ based, implementation of __init__ as _init,
+# and then provide a new __init__.
+automaton._init = automaton.__init__
+def _automaton_init(self, text, fmt = "dot"):
+    if fmt == "daut":
+        self._init(to_dot(text), "dot")
+    else:
+        self._init(text, fmt)
+automaton.__init__ = lambda *args: _automaton_init(*args)
+
 # Requires IPython 2.0.
 def _automaton_interact(self):
     """Display automaton `self` with a local menu to the select
