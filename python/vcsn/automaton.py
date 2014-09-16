@@ -104,11 +104,11 @@ def _automaton_interact(self):
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
     interact(lambda mode, engine: _automaton_display(self, mode, engine),
              mode = modes, engine = engines)
-
 automaton.display = _automaton_interact
 
 automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)
 
+# automaton.eval.
 def _automaton_eval(self, w):
     """Evaluation of word `w` on `self`, with possible conversion from
     plain string to genuine label object.
@@ -120,9 +120,6 @@ def _automaton_eval(self, w):
 automaton.__call__ = _automaton_eval
 automaton.eval = _automaton_eval
 
-def _automaton_load(file, format = "dot"):
-    return automaton(open(file, "r").read(), format)
-automaton.load = staticmethod(_automaton_load)
 
 def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
@@ -200,6 +197,10 @@ def _lan_to_lal(a):
                  r'"\1', dot)
     return automaton(dot, 'dot')
 automaton.lan_to_lal = lambda self: _lan_to_lal(self)
+
+def _automaton_load(file, format = "dot"):
+    return automaton(open(file, "r").read(), format)
+automaton.load = staticmethod(_automaton_load)
 
 # Somewhat cheating: in Python, proper returns a LAL, not a LAN.
 # _proper is the genuine binding to dyn::proper.
