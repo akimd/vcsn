@@ -9,7 +9,7 @@ import subprocess
 
 from vcsn_cxx import automaton, label, weight
 from vcsn import _info_to_dict, _left_mult, _right_mult, _tmp_file
-from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex
+from vcsn.dot import _dot_pretty, _dot_to_svg, _dot_to_svg_dot2tex, from_dot, to_dot
 
 automaton.__add__ = automaton.sum
 automaton.__and__ = lambda l, r: _conjunction(l, r)
@@ -120,6 +120,13 @@ def _automaton_eval(self, w):
 automaton.__call__ = _automaton_eval
 automaton.eval = _automaton_eval
 
+# automaton.format
+def _automaton_format(self, fmt = "daut"):
+    if fmt == "daut":
+        return from_dot(self._format('dot'))
+    else:
+        return self._format(fmt)
+automaton.format = _automaton_format
 
 def _automaton_fst(cmd, aut):
     '''Run the command `cmd` on the automaton `aut` coded in OpenFST
