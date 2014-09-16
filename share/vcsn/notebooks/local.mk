@@ -33,6 +33,7 @@ dist_notebooks_data =                                   \
   '%D%/algos/automaton.is_deterministic.ipynb'          \
   '%D%/algos/automaton.is_functional.ipynb'             \
   '%D%/algos/automaton.is_standard.ipynb'               \
+  '%D%/algos/automaton.proper.ipynb'                    \
   '%D%/algos/automaton.reduce.ipynb'                    \
   '%D%/algos/automaton.standard.ipynb'                  \
   '%D%/algos/automaton.synchronizing_word.ipynb'        \
