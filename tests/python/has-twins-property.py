@@ -67,7 +67,6 @@ digraph
 CHECK_EQ(False, aut2.has_twins_property())
 
 
-
 aut3 = vcsn.automaton('''digraph
 {
   vcsn_context = "lal_char(abcd)_zmin"
@@ -106,7 +105,6 @@ aut4 = vcsn.automaton('''digraph
 CHECK_EQ(False, aut4.has_twins_property())
 
 
-
 aut5 = vcsn.automaton('''digraph
 {
   vcsn_context = "lal_char(abcd)_q"
@@ -139,3 +137,33 @@ aut6 = vcsn.automaton('''digraph
   5 -> 2 [label = "<17>d"]
 }''')
 CHECK_EQ(False, aut6.has_twins_property())
+
+
+aut7 = vcsn.automaton('''digraph {
+  vcsn_context = "lal_char(abc)_z"
+  I0 -> 0
+  0 -> 1 [label ="<3>a"]
+  0 -> 2 [label = "<5>a"]
+  1 -> 3 [label = "<3>b"]
+  1 -> F3
+  2 -> 4 [label = "<2>b"]
+  2 -> F3
+  3 -> 1 [label = "<2>a"]
+  4 -> 2 [label = "<3>a"]
+}''')
+CHECK_EQ(True, aut7.has_twins_property())
+
+
+aut8 = vcsn.automaton('''digraph {
+  vcsn_context = "lal_char(abc)_z"
+  I0 -> 0
+  0 -> 1 [label ="<3>a"]
+  0 -> 2 [label = "<5>a"]
+  1 -> 3 [label = "<3>b"]
+  1 -> F3
+  2 -> 4 [label = "<2>b"]
+  2 -> F3
+  3 -> 1 [label = "<2>a"]
+  4 -> 2 [label = "<5>a"]
+}''')
+CHECK_EQ(False, aut8.has_twins_property())
