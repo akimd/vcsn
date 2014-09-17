@@ -2,11 +2,10 @@ from __future__ import print_function
 
 import re
 
-from IPython.core.magic import (Magics, magics_class, line_magic)
+from IPython.core.magic import (Magics, magics_class, line_cell_magic)
 from IPython.display import display, SVG
 from IPython.html import widgets
 from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
-
 
 import vcsn
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
@@ -62,20 +61,26 @@ class EditAutomatonWidget:
         except RuntimeError as e:
             self.error.value = str(e)
 
-
 @magics_class
 class EditAutomaton(Magics):
     @magic_arguments()
     @argument('var', type=str, help='The name of the variable to edit.')
     @argument('format', type=str, nargs ='?', default = 'daut',
               help='''The name of the format to edit the automaton in
-              (you can choose dot, daut, efsm ...). By default : daut''')
+              (dot, daut, efsm...).  Default: daut.''')
     @argument('mode', type=str, nargs ='?', default = 'h',
-              help='The name of the visual mode to display the automaton.')
-    @line_magic
-    def automaton(self, arg):
-        args = parse_argstring(self.automaton, arg)
-        EditAutomatonWidget(self, args.var, args.format, args.mode)
+              help='''The name of the visual mode to display the automaton
+              (h for horizontal and v for vertical).  Default: h.''')
+    @line_cell_magic
+    def automaton(self, line, cell=None):
+        args = parse_argstring(self.automaton, line)
+        if cell is None:
+            EditAutomatonWidget(self, args.var, args.format, args.mode)
+        else:
+            a =  vcsn.automaton(cell.encode('utf-8'), args.format)
+            self.shell.user_ns[args.var] = a
+            from IPython.display import display
+            display(a)
 
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
