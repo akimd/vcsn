@@ -288,7 +288,7 @@ namespace vcsn
       return power(es, e, std::get<0>(range), std::get<1>(range));
     }
 
-    // "e <+ f = e + f % e = e + e{c} & f".
+    // "e <+ f = e + (f % e) = e + e{c} & f".
     static
     exp_t prefer(const dyn::ratexpset& rs, exp_t e, exp_t f)
     {
