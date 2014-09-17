@@ -2,8 +2,6 @@
 # define VCSN_ALGOS_HAS_TWINS_PROPERTY_HH
 
 # include <stack>
-# include <unordered_set>
-# include <unordered_map>
 # include <vector>
 
 # include <vcsn/algos/accessible.hh> // vcsn::trim
@@ -106,18 +104,19 @@ namespace vcsn
             for (auto t : aut->out(s))
               {
                 auto dst = aut->dst_of(t);
+                auto w = aut->weight_of(t);
                 if (has(component, dst))
                   {
                     if (!has(wm, dst))
                       {
                         todo.push(dst);
-                        wm.emplace(dst, ws.mul(wm[s], aut->weight_of(t)));
+                        wm.emplace(dst, ws.mul(wm[s], w));
                       }
                     // FIXME: return the counter example?
                     else if (!ws.equals(wm[dst],
-                                        ws.mul(wm[s], aut->weight_of(t))))
+                                        ws.mul(wm[s], w)))
                       return false;
-                  }
+                    }
               }
           }
         return true;
