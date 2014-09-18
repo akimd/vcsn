@@ -12,14 +12,13 @@ The main \LaTeX{} source file is
 chapter.
 
 \section{Including IPython notebooks}
-The documentation build system includes a facility automatically
-converting IPython notebook files into \LaTeX{} documents, which is
-particularly useful for chapters or sections containing many examples:
-for them to be accessible the user only needs to include notebook
-files (or links to them) in the \FILE{doc/manual/sources/notebooks}
-subdirectory.  The build system will convert each notebook into a
-\LaTeX{} file, on which other \LaTeX{} files can freely use
-\verb!\input! or \verb!\include!.
+The documentation build system includes a facility automatically converting
+IPython notebook files into \LaTeX{} documents, particularly convenient for
+chapters or sections containing many examples: for them to be accessible the
+user only needs to include notebook files (or links to them) in the
+\FILE{doc/manual/sources/notebooks} subdirectory.  The build system will
+convert each notebook into a \LaTeX{} file, on which other \LaTeX{} files can
+freely use \verb!\input! or \verb!\include!.
 
 In order to be more friendly to \LaTeX (and Unix), an IPython notebook
 file with extension \FILE{.ipynb} is automatically translated into a
@@ -38,6 +37,12 @@ contains the following line:
 As shown in the line above, the user should not specify a directory
 when referring a translated notebook file.
 
+\index{heading} An IPython notebook translated into \LaTeX{} does not
+necessarily constitute a distinct chapter and in fact does not include, by
+default, any chapter or section heading.  This permits to use translated
+notebooks even for single examples, to be included within chapters entirely
+hand-written in \LaTeX{}.
+
 \subsection{IPython notebook markup extension}
 A notebook to be translated into \LaTeX{} will usually consist in some
 combination of Python expressions with their evaluated results, and
@@ -50,8 +55,10 @@ markup.
 
 We implemented a minor extension to the Markdown language by allowing
 the user to add an \textit{index entry} for the manual in Markdown
-comments starting with a capital \CODE{I} character, not preceded by
-spaces.
+comments starting with a capital \CODE{I} character \textit{not} preceded by
+  spaces, such as ``\CODE{<!--I \emph{entry}-->}''.  There has to be no space
+  between ``\CODE{<!--}'' and ``\CODE{I}'' for the comment to be taken into
+  account as an index entry.
 
 For example a notebook could contain the following Markdown text in a cell:
 \begin{verbatim}
@@ -67,7 +74,7 @@ Determinization of weighted automata is not always possible.
 \end{verbatim}
 
 The included index entry is allowed to contain arbitrary \LaTeX{}
-text, math and macro calls, as in:
+code including math and macro calls, as in:
 \begin{verbatim}
 \input{<!--I $\pi$ -->}
 \end{verbatim}
@@ -80,8 +87,8 @@ The bulk of the translation from IPython notebooks to \LaTeX{} is implemented
 in the \CODE{ipython nbconvert} tool.  The Vaucanson source code
 includes the script \FILE{doc/manual/compile-manual} to automatically
 invoke it and then patch its output.  As the script is reasonably simple
-and well-commented it can be extended to support more comment
-extensions.
+and well-commented it can be extended to support more Markdown comment
+extensions in the future.
 
 \section{Building}
 \index{make}
@@ -101,3 +108,5 @@ files.
 Documentation is currently generated under the \textit{source}
 directory, which will be noticeable to users configuring from a
 different \textit{build} directory.
+\\\\
+Vaucanson tarballs include a pre-compiled PDF manual along with the sources.
