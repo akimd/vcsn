@@ -49,7 +49,7 @@ namespace vcsn
   {
     namespace detail
     {
-      // Bridge.
+      /// Bridge.
       template <typename Aut>
       automaton
       invert(const automaton& aut)
@@ -70,8 +70,13 @@ namespace vcsn
 
   namespace detail
   {
-    /// Whether the weight of beetween two states on component,
-    /// it is always unique.
+    /// Whether all the paths between any two states have the same
+    /// weight (i.e., for all s0, s1, any two paths p0, p1 between s0
+    /// and s1 have the same weight w_{s0,s1}).
+    ///
+    /// Because we are on an SCC, it suffices to check on a DFS that
+    /// every state is reached with a unique weight from any chosen
+    /// "initial" state.
     template <typename Aut>
     class cycle_identity_impl
     {
@@ -79,12 +84,14 @@ namespace vcsn
       using transition_t = transition_t_of<Aut>;
       using weight_t = weight_t_of<Aut>;
       using state_t = state_t_of<Aut>;
+      // FIXME: ordered?
       using component_t = std::unordered_set<state_t> ;
 
-      /// Compute the weight with depth first search by weight and
-      /// compare the weight of two state is unique.
+      /// By DFS starting in s0, check that all the states are reached
+      /// with a single weight.
       bool check(const component_t& component, const Aut& aut)
       {
+        // FIXME: check ordered_map, or even polynomial of state.
         std::unordered_map<state_t, weight_t> wm;
         const auto& ws = *aut->weightset();
         auto s0 = *component.begin();
@@ -95,6 +102,7 @@ namespace vcsn
           {
             auto s = todo.top();
             todo.pop();
+            // FIXME: all_out should suffice, and probably faster.
             for (auto t : aut->out(s))
               {
                 auto dst = aut->dst_of(t);
@@ -105,6 +113,7 @@ namespace vcsn
                         todo.push(dst);
                         wm.emplace(dst, ws.mul(wm[s], aut->weight_of(t)));
                       }
+                    // FIXME: return the counter example?
                     else if (!ws.equals(wm[dst],
                                         ws.mul(wm[s], aut->weight_of(t))))
                       return false;
