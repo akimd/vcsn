@@ -69,7 +69,7 @@ automaton.as_svg = lambda self, fmt = "dot", engine = "dot": _automaton_as_svg(s
 
 def _automaton_convert(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
-    from IPython.display import display, SVG
+    from IPython.display import SVG
     if mode in ["dot", "tooltip", "transitions"]:
         svg = _dot_to_svg(self.dot(mode), engine)
         return SVG(svg)
@@ -86,7 +86,7 @@ def _automaton_convert(self, mode, engine = "dot"):
 
 def _automaton_display(self, mode, engine = "dot"):
     """Display automaton `self` in `mode` with Graphviz `engine`."""
-    from IPython.display import display, SVG
+    from IPython.display import display
     display(_automaton_convert(self, mode, engine))
 
 # automaton.__init__
@@ -101,21 +101,20 @@ def _automaton_init(self, text, fmt = "dot"):
         self._init(text, fmt)
 automaton.__init__ = lambda *args: _automaton_init(*args)
 
-# Requires IPython 2.0.
 def _automaton_interact(self):
     """Display automaton `self` with a local menu to the select
     the display mode.  Pay attention to not displaying large
     automata by default.
     """
-    from IPython.html.widgets import interact
+    from ipython import interact_h
     if 20 < self.state_number():
         modes = ['info', 'dot']
     else:
         modes = ['dot', 'info']
     modes += ['info,detailed', 'tooltip', 'transitions', 'type', 'dot2tex']
     engines = ['dot', 'neato', 'twopi', 'circo', 'fdp', 'sfdp', 'patchwork']
-    interact(lambda mode, engine: _automaton_display(self, mode, engine),
-             mode = modes, engine = engines)
+    interact_h(lambda engine, mode: _automaton_display(self, mode, engine),
+                mode = modes, engine = engines)
 automaton.display = _automaton_interact
 
 automaton.dot = lambda self, mode = "dot": _dot_pretty(self.format('dot'), mode)

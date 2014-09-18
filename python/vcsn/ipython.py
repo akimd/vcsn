@@ -3,13 +3,14 @@ from __future__ import print_function
 import re
 
 from IPython.core.magic import (Magics, magics_class, line_cell_magic)
+from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
 from IPython.display import display, SVG
 from IPython.html import widgets
-from IPython.core.magic_arguments import (argument, magic_arguments, parse_argstring)
+from IPython.html.widgets import interactive
+from IPython.utils.warn import info, error
 
 import vcsn
 from vcsn.dot import _dot_to_svg, _dot_pretty, to_dot, from_dot
-from IPython.utils.warn import info, error
 
 # The class MUST call this class decorator at creation time
 class EditAutomatonWidget:
@@ -84,3 +85,16 @@ class EditAutomaton(Magics):
 
 ip = get_ipython()
 ip.register_magics(EditAutomaton)
+
+
+def interact_h(_interact_f, **kwargs):
+    '''Similar to IPython's interact function, but with widgets
+    packed horizontally.'''
+    f = _interact_f
+    w = interactive(f, **kwargs)
+    f.widget = w
+    # Weirdly enough, be sure to display before changing the class.
+    display(w)
+    w.remove_class('vbox')
+    w.add_class('hbox')
+    return f
